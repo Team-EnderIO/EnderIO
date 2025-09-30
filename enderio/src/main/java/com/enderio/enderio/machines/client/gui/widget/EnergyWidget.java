@@ -2,7 +2,7 @@ package com.enderio.enderio.machines.client.gui.widget;
 
 import com.enderio.core.client.gui.widgets.EIOWidget;
 import com.enderio.core.common.util.TooltipUtil;
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.machines.common.io.energy.ILargeMachineEnergyStorage;
 import com.enderio.enderio.machines.common.io.energy.IMachineEnergyStorage;
@@ -18,7 +18,7 @@ import java.util.function.Supplier;
 
 public class EnergyWidget extends EIOWidget {
 
-    protected static final ResourceLocation WIDGETS = EnderIO.loc("textures/gui/widgets.png");
+    protected static final ResourceLocation WIDGETS = EnderIOAPI.loc("textures/gui/widgets.png");
 
     private final Supplier<IMachineEnergyStorage> storageSupplier;
 

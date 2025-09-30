@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.client.gui.screen;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.client.gui.widget.EIOCommonWidgets;
 import com.enderio.enderio.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.enderio.common.lang.EIOLang;
@@ -14,7 +14,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class VacuumChestScreen extends MachineScreen<VacuumChestMenu> {
 
-    private static final ResourceLocation VACUUM_CHEST_BG = EnderIO.loc("textures/gui/screen/vacuum_chest.png");
+    private static final ResourceLocation VACUUM_CHEST_BG = EnderIOAPI.loc("textures/gui/screen/vacuum_chest.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 206;
 

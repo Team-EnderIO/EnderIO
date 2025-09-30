@@ -1,43 +1,35 @@
 package com.enderio.enderio.api.farm;
 
+import com.enderio.enderio.api.conduits.model.RegisterConduitModelModifiersEvent;
 import com.enderio.enderio.api.integration.IntegrationManager;
 import com.google.common.collect.ImmutableList;
+import it.unimi.dsi.fastutil.Pair;
+import net.neoforged.fml.ModLoader;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FarmTaskManager {
-    private final ArrayList<TaskEntry> tasks = new ArrayList<>();
-    private static ImmutableList<FarmTask> TASKS_IMMUTABLE;
+    private static List<FarmTask> TASKS_IMMUTABLE;
 
     public static final int PLANT = 1;
     public static final int BONEMEAL = 3;
     public static final int HARVEST = 5;
 
-    private FarmTaskManager() {
-
-    }
-
     public static List<FarmTask> getTasks() {
         if (TASKS_IMMUTABLE == null) {
-            FarmTaskManager manager = new FarmTaskManager();
-            IntegrationManager.forAll(integration -> integration.registerFarmTasks(manager));
-            manager.tasks.sort(TaskEntry::compareTo);
-            TASKS_IMMUTABLE = ImmutableList.copyOf(manager.tasks.stream().map(e -> e.task).toList());
+            var event = new RegisterFarmTasksEvent();
+            ModLoader.postEvent(event);
+
+            TASKS_IMMUTABLE = event.getTasks().stream()
+                .sorted(Comparator.comparingInt(pair -> pair.first().priority()))
+                .map(Pair::second)
+                .toList();
         }
+
         return TASKS_IMMUTABLE;
-    }
-
-    public void addTask(int priority, FarmTask task) {
-        tasks.add(new TaskEntry(priority, task));
-    }
-
-    public record TaskEntry(int priority, FarmTask task) implements Comparable<TaskEntry> {
-
-        @Override
-        public int compareTo(@NotNull FarmTaskManager.TaskEntry o) {
-            return priority - o.priority;
-        }
     }
 }

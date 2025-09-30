@@ -1,6 +1,6 @@
 package com.enderio.enderio.common.tag;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.common.block.glass.GlassCollisionPredicate;
 import com.enderio.enderio.common.block.glass.GlassIdentifier;
 import com.enderio.enderio.common.block.glass.GlassLighting;
@@ -139,7 +139,7 @@ public class EIOTags {
         }
 
         private static TagKey<Item> tag(String name) {
-            return ItemTags.create(EnderIO.loc(name));
+            return ItemTags.create(EnderIOAPI.loc(name));
         }
     }
 
@@ -161,12 +161,15 @@ public class EIOTags {
         public static final TagKey<Block> BLOCKS_SOULARIUM = commonTag("storage_blocks/soularium");
         public static final TagKey<Block> BLOCKS_VIBRANT_ALLOY = commonTag("storage_blocks/vibrant_alloy");
 
+        // TODO: Needs a better name?
+        public static final TagKey<Block> BLOCKS_TELEPORTATION = tag("blocks_travel_when_stood_on");
+
         private static TagKey<Block> commonTag(String name) {
             return BlockTags.create(ResourceLocation.fromNamespaceAndPath(COMMON, name));
         }
 
         private static TagKey<Block> tag(String name) {
-            return BlockTags.create(EnderIO.loc(name));
+            return BlockTags.create(EnderIOAPI.loc(name));
         }
     }
 
@@ -185,7 +188,7 @@ public class EIOTags {
         }
 
         private static TagKey<Fluid> tag(String name) {
-            return FluidTags.create(EnderIO.loc(name));
+            return FluidTags.create(EnderIOAPI.loc(name));
         }
     }
 
@@ -198,7 +201,7 @@ public class EIOTags {
         public static final TagKey<EntityType<?>> SOUL_VIAL_BLACKLIST = tag("soul_vial_blacklist");
 
         private static TagKey<EntityType<?>> tag(String pName) {
-            return TagKey.create(Registries.ENTITY_TYPE, EnderIO.loc(pName));
+            return TagKey.create(Registries.ENTITY_TYPE, EnderIOAPI.loc(pName));
         }
 
     }

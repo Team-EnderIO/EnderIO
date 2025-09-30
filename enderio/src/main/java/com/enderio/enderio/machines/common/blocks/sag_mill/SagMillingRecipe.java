@@ -1,8 +1,8 @@
 package com.enderio.enderio.machines.common.blocks.sag_mill;
 
 import com.enderio.core.common.recipes.OutputStack;
-import com.enderio.core.common.util.TagUtil;
 import com.enderio.enderio.api.grindingball.GrindingBallData;
+import com.enderio.enderio.common.util.OptionalItemUtility;
 import com.enderio.enderio.machines.common.blocks.base.MachineRecipe;
 import com.enderio.enderio.machines.common.init.MachineRecipes;
 import com.mojang.datafixers.util.Either;
@@ -214,7 +214,7 @@ public record SagMillingRecipe(Ingredient input, List<OutputItem> outputs, int e
                             SizedTagOutput::itemTag, ByteBufCodecs.INT, SizedTagOutput::count, SizedTagOutput::new);
 
             public ItemStack getItemStack() {
-                return TagUtil.getOptionalItem(itemTag).map(item -> new ItemStack(item, count)).orElse(ItemStack.EMPTY);
+                return OptionalItemUtility.getOptionalItem(itemTag).map(item -> new ItemStack(item, count)).orElse(ItemStack.EMPTY);
             }
         }
     }

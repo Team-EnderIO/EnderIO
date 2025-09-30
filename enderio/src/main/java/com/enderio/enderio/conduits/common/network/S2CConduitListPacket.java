@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits.common.network;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.conduits.common.conduit.bundle.ConduitBundleBlockEntity;
 import net.minecraft.core.Holder;
@@ -14,7 +14,7 @@ import java.util.List;
 public record S2CConduitListPacket(int containerId, List<Holder<Conduit<?, ?>>> conduits)
         implements CustomPacketPayload {
 
-    public static final Type<S2CConduitListPacket> TYPE = new Type<>(EnderIO.loc("conduit_list"));
+    public static final Type<S2CConduitListPacket> TYPE = new Type<>(EnderIOAPI.loc("conduit_list"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, S2CConduitListPacket> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT, S2CConduitListPacket::containerId,

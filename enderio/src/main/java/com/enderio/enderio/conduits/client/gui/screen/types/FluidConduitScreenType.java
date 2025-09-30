@@ -1,7 +1,7 @@
 package com.enderio.enderio.conduits.client.gui.screen.types;
 
 import com.enderio.core.common.util.TooltipUtil;
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.conduits.screen.ConduitMenuDataAccess;
 import com.enderio.enderio.api.conduits.screen.ConduitScreenHelper;
 import com.enderio.enderio.api.conduits.screen.IOConduitScreenType;
@@ -35,13 +35,13 @@ import java.util.function.Supplier;
 
 public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConnectionConfig> {
 
-    private static final ResourceLocation ICON_ROUND_ROBIN_ENABLED = EnderIO.loc("icon/round_robin_enabled");
-    private static final ResourceLocation ICON_ROUND_ROBIN_DISABLED = EnderIO.loc("icon/round_robin_disabled");
-    private static final ResourceLocation ICON_SELF_FEED_ENABLED = EnderIO.loc("icon/self_feed_enabled");
-    private static final ResourceLocation ICON_SELF_FEED_DISABLED = EnderIO.loc("icon/self_feed_disabled");
+    private static final ResourceLocation ICON_ROUND_ROBIN_ENABLED = EnderIOAPI.loc("icon/round_robin_enabled");
+    private static final ResourceLocation ICON_ROUND_ROBIN_DISABLED = EnderIOAPI.loc("icon/round_robin_disabled");
+    private static final ResourceLocation ICON_SELF_FEED_ENABLED = EnderIOAPI.loc("icon/self_feed_enabled");
+    private static final ResourceLocation ICON_SELF_FEED_DISABLED = EnderIOAPI.loc("icon/self_feed_disabled");
 
-    private static final ResourceLocation ICON_INCREASE = EnderIO.loc("icon/increase");
-    private static final ResourceLocation ICON_DECREASE = EnderIO.loc("icon/decrease");
+    private static final ResourceLocation ICON_INCREASE = EnderIOAPI.loc("icon/increase");
+    private static final ResourceLocation ICON_DECREASE = EnderIOAPI.loc("icon/decrease");
 
     @Override
     public void renderLabels(ConduitMenuDataAccess<FluidConduitConnectionConfig> dataAccess, GuiGraphics guiGraphics, int startX, int startY, Font font,
@@ -164,7 +164,7 @@ public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConn
     }
 
     private static class FluidWidget extends AbstractWidget {
-        private static final ResourceLocation WIDGET_TEXTURE = EnderIO.loc("textures/gui/fluidbackground.png");
+        private static final ResourceLocation WIDGET_TEXTURE = EnderIOAPI.loc("textures/gui/fluidbackground.png");
 
         private final Runnable onPress;
         private final Supplier<Fluid> currentFluid;

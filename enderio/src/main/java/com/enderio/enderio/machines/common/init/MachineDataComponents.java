@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.init;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.grindingball.GrindingBallData;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.machines.common.attachment.ActionRange;
@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 
 public class MachineDataComponents {
     private static final DeferredRegister<DataComponentType<?>> DATA_COMPONENT_TYPES = DeferredRegister
-            .create(Registries.DATA_COMPONENT_TYPE, EnderIO.MOD_ID);
+            .create(Registries.DATA_COMPONENT_TYPE, EnderIOAPI.MOD_ID);
 
     public static final Supplier<DataComponentType<IOConfig>> IO_CONFIG = savedAndSynced("io_config", IOConfig.CODEC,
             IOConfig.STREAM_CODEC);

@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits.common.network;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -11,7 +11,7 @@ public record SetConduitConnectionConfigPacket(int containerId, ConnectionConfig
         implements CustomPacketPayload {
 
     public static final Type<SetConduitConnectionConfigPacket> TYPE = new Type<>(
-            EnderIO.loc("client_set_conduit_connection_config"));
+            EnderIOAPI.loc("client_set_conduit_connection_config"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, SetConduitConnectionConfigPacket> STREAM_CODEC = StreamCodec
             .composite(ByteBufCodecs.INT, SetConduitConnectionConfigPacket::containerId, ConnectionConfig.STREAM_CODEC,

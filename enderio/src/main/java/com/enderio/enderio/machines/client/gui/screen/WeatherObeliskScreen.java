@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.client.gui.screen;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.machines.client.gui.screen.base.MachineScreen;
 import com.enderio.enderio.machines.client.gui.widget.FluidStackWidget;
 import com.enderio.enderio.machines.client.gui.widget.ProgressWidget;
@@ -12,7 +12,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class WeatherObeliskScreen extends MachineScreen<WeatherObeliskMenu> {
 
-    public static final ResourceLocation WEATHER_BG = EnderIO.loc("textures/gui/screen/weather_obelisk.png");
+    public static final ResourceLocation WEATHER_BG = EnderIOAPI.loc("textures/gui/screen/weather_obelisk.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
 

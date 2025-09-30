@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.network;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.machines.common.souldata.EngineSoul;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.FriendlyByteBuf;
@@ -15,7 +15,7 @@ import java.util.Map;
 public record SoulEngineSoulPacket(Map<ResourceLocation, EngineSoul.SoulData> map)
     implements CustomPacketPayload {
 
-    public static final Type<SoulEngineSoulPacket> TYPE = new Type<>(EnderIO.loc("soul_engine_soul"));
+    public static final Type<SoulEngineSoulPacket> TYPE = new Type<>(EnderIOAPI.loc("soul_engine_soul"));
 
     public static final StreamCodec<ByteBuf, SoulEngineSoulPacket> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.map(HashMap::new, ResourceLocation.STREAM_CODEC, EngineSoul.STREAM_CODEC),

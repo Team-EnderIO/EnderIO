@@ -1,6 +1,6 @@
 package com.enderio.enderio.armory.common.item.darksteel.upgrades.flight;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -9,7 +9,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 public record FlightEnabledPacket(boolean enabled) implements CustomPacketPayload {
 
     public static final CustomPacketPayload.Type<FlightEnabledPacket> TYPE = new CustomPacketPayload.Type<>(
-            EnderIO.loc("flight_upgrade_enabled"));
+            EnderIOAPI.loc("flight_upgrade_enabled"));
 
     public static final StreamCodec<ByteBuf, FlightEnabledPacket> STREAM_CODEC = StreamCodec.composite(ByteBufCodecs.BOOL,
             FlightEnabledPacket::enabled, FlightEnabledPacket::new);

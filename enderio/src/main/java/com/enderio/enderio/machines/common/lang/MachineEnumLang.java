@@ -1,7 +1,7 @@
 package com.enderio.enderio.machines.common.lang;
 
 import com.enderio.core.common.lang.EnumTranslationMap;
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.machines.EnderIOMachines;
 import com.enderio.enderio.machines.common.blocks.alloy.AlloySmelterMode;
 import com.enderio.enderio.machines.common.blocks.powered_spawner.PoweredSpawnerMode;
@@ -20,7 +20,7 @@ public class MachineEnumLang {
                     .build();
 
     private static <T extends Enum<T>> EnumTranslationMap.Builder<T> builder(Class<T> enumClass, String prefix) {
-        return new EnumTranslationMap.Builder<>(EnderIO.MOD_ID, MachineEnumLang::addTranslation, enumClass, prefix);
+        return new EnumTranslationMap.Builder<>(EnderIOAPI.MOD_ID, MachineEnumLang::addTranslation, enumClass, prefix);
     }
 
     private static Component addTranslation(String prefix, ResourceLocation key, String english) {

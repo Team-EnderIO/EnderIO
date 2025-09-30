@@ -1,6 +1,6 @@
 package com.enderio.enderio.armory.data.tags;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.armory.common.tag.ArmoryTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -14,7 +14,7 @@ public class ArmoryBlockTagsProvider extends BlockTagsProvider {
 
     public ArmoryBlockTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider,
             @Nullable ExistingFileHelper existingFileHelper) {
-        super(output, lookupProvider, EnderIO.MOD_ID, existingFileHelper);
+        super(output, lookupProvider, EnderIOAPI.MOD_ID, existingFileHelper);
     }
 
     @Override

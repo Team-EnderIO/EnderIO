@@ -1,6 +1,6 @@
 package com.enderio.enderio.armory.common.init;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.armory.common.capability.DarkSteelCapability;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.component.DataComponentType;
@@ -15,7 +15,7 @@ import static com.enderio.enderio.armory.common.capability.DarkSteelCapability.D
 public class ArmoryDataComponents {
 
     private static final DeferredRegister<DataComponentType<?>> DATA_COMPONENT_TYPES = DeferredRegister
-            .create(Registries.DATA_COMPONENT_TYPE, EnderIO.MOD_ID);
+            .create(Registries.DATA_COMPONENT_TYPE, EnderIOAPI.MOD_ID);
 
     public static final Supplier<DataComponentType<DarkSteelCapability.DarkSteelItemUpgrades>> DARK_STEEL_ITEM_UPGRADES = saved(
             "dark_steel_upgrades", ITEM_UPGRADES_CODEC);

@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.data.recipes;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.common.init.EIOFluids;
 import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.machines.common.blocks.fluid_tank.TankRecipe;
@@ -73,12 +73,12 @@ public class TankRecipeProvider extends RecipeProvider {
     }
 
     protected void buildEmptying(Ingredient input, ItemLike output, FluidStack fluid, RecipeOutput recipeOutput) {
-        recipeOutput.accept(EnderIO.loc("tank_empty/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath()),
+        recipeOutput.accept(EnderIOAPI.loc("tank_empty/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath()),
                 new TankRecipe(input, new ItemStack(output), fluid, TankRecipe.Mode.EMPTY), null);
     }
 
     protected void buildFilling(Ingredient input, ItemLike output, FluidStack fluid, RecipeOutput recipeOutput) {
-        recipeOutput.accept(EnderIO.loc("tank_fill/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath()),
+        recipeOutput.accept(EnderIOAPI.loc("tank_fill/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath()),
                 new TankRecipe(input, new ItemStack(output), fluid, TankRecipe.Mode.FILL), null);
     }
 

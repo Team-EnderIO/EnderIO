@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.client.gui.screen;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.client.gui.widget.EIOCommonWidgets;
 import com.enderio.enderio.client.gui.widget.RedstoneControlPickerWidget;
 import com.enderio.enderio.common.lang.EIOLang;
@@ -21,15 +21,15 @@ import java.util.Objects;
 
 public class PoweredSpawnerScreen extends MachineScreen<PoweredSpawnerMenu> {
 
-    public static final ResourceLocation BG_TEXTURE_SPAWN = EnderIO
+    public static final ResourceLocation BG_TEXTURE_SPAWN = EnderIOAPI
             .loc("textures/gui/screen/powered_spawner_spawn.png");
-    public static final ResourceLocation BG_TEXTURE_CAPTURE = EnderIO
+    public static final ResourceLocation BG_TEXTURE_CAPTURE = EnderIOAPI
             .loc("textures/gui/screen/powered_spawner_capture.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 187;
 
-    private static final ResourceLocation SPAWN_PROGRESS_SPRITE = EnderIO.loc("screen/powered_spawner/spawn_progress");
-    private static final ResourceLocation CAPTURE_PROGRESS_SPRITE = EnderIO
+    private static final ResourceLocation SPAWN_PROGRESS_SPRITE = EnderIOAPI.loc("screen/powered_spawner/spawn_progress");
+    private static final ResourceLocation CAPTURE_PROGRESS_SPRITE = EnderIOAPI
             .loc("screen/powered_spawner/capture_progress");
 
     private NewProgressWidget spawnProgress;

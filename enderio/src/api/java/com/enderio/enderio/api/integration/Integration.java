@@ -56,18 +56,4 @@ public interface Integration {
     default ClientIntegration getClientIntegration() {
         return ClientIntegration.NOOP;
     }
-
-    default void createData(GatherDataEvent event) {
-    }
-
-    /**
-     * @param player The Player that wants to teleport
-     * @return whether the player can teleport to a nearby block
-     */
-    default boolean canBlockTeleport(Player player) {
-        return false;
-    }
-
-    default void registerFarmTasks(FarmTaskManager manager) {
-    }
 }

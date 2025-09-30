@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.network;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.machines.common.blocks.powered_spawner.MobSpawnMode;
 import com.enderio.enderio.machines.common.souldata.SpawnerSoul;
 import io.netty.buffer.ByteBuf;
@@ -16,7 +16,7 @@ import java.util.Map;
 // Clientbound
 public record PoweredSpawnerSoulPacket(Map<ResourceLocation, SpawnerSoul.SoulData> map) implements CustomPacketPayload {
 
-    public static final Type<PoweredSpawnerSoulPacket> TYPE = new Type<>(EnderIO.loc("powered_spawner_soul"));
+    public static final Type<PoweredSpawnerSoulPacket> TYPE = new Type<>(EnderIOAPI.loc("powered_spawner_soul"));
 
     public static final StreamCodec<ByteBuf, PoweredSpawnerSoulPacket> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.map(HashMap::new, ResourceLocation.STREAM_CODEC, SpawnerSoul.STREAM_CODEC),

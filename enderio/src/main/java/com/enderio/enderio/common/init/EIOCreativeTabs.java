@@ -1,7 +1,7 @@
 package com.enderio.enderio.common.init;
 
 import com.enderio.EnderIOBase;
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
@@ -15,20 +15,20 @@ import java.util.function.Consumer;
 
 public class EIOCreativeTabs {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister
-            .create(Registries.CREATIVE_MODE_TAB, EnderIO.MOD_ID);
+            .create(Registries.CREATIVE_MODE_TAB, EnderIOAPI.MOD_ID);
 
     public static final ResourceKey<CreativeModeTab> MAIN = ResourceKey.create(Registries.CREATIVE_MODE_TAB,
-            EnderIO.loc("main"));
+            EnderIOAPI.loc("main"));
     public static final ResourceKey<CreativeModeTab> GEAR = ResourceKey.create(Registries.CREATIVE_MODE_TAB,
-            EnderIO.loc("gear"));
+            EnderIOAPI.loc("gear"));
     public static final ResourceKey<CreativeModeTab> BLOCKS = ResourceKey.create(Registries.CREATIVE_MODE_TAB,
-            EnderIO.loc("blocks"));
+            EnderIOAPI.loc("blocks"));
     public static final ResourceKey<CreativeModeTab> MACHINES = ResourceKey.create(Registries.CREATIVE_MODE_TAB,
-            EnderIO.loc("machines"));
+            EnderIOAPI.loc("machines"));
     public static final ResourceKey<CreativeModeTab> SOULS = ResourceKey.create(Registries.CREATIVE_MODE_TAB,
-            EnderIO.loc("souls"));
+            EnderIOAPI.loc("souls"));
     public static final ResourceKey<CreativeModeTab> CONDUITS = ResourceKey.create(Registries.CREATIVE_MODE_TAB,
-            EnderIO.loc("conduits"));
+            EnderIOAPI.loc("conduits"));
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MAIN_TAB = createTab(MAIN, "main", "Ender IO",
             tab -> tab.icon(() -> new ItemStack(EIOItems.CREATIVE_ICON_NONE.get()))

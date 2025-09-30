@@ -1,6 +1,6 @@
 package com.enderio.enderio.common.init;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.common.loot.BrokenSpawnerLootModifier;
 import com.enderio.enderio.common.loot.SetLootCapacitorFunction;
 import com.enderio.enderio.common.paint.CopyPaintFunction;
@@ -17,12 +17,12 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 @SuppressWarnings("unused")
 public class EIOLootModifiers {
     private static final DeferredRegister<MapCodec<? extends IGlobalLootModifier>> SERIALIZERS = DeferredRegister
-            .create(NeoForgeRegistries.GLOBAL_LOOT_MODIFIER_SERIALIZERS, EnderIO.MOD_ID);
+            .create(NeoForgeRegistries.GLOBAL_LOOT_MODIFIER_SERIALIZERS, EnderIOAPI.MOD_ID);
 
     private static final DeferredRegister<LootItemConditionType> CONDITIONS = DeferredRegister
-            .create(Registries.LOOT_CONDITION_TYPE, EnderIO.MOD_ID);
+            .create(Registries.LOOT_CONDITION_TYPE, EnderIOAPI.MOD_ID);
     private static final DeferredRegister<LootItemFunctionType<?>> FUNCTIONS = DeferredRegister
-            .create(Registries.LOOT_FUNCTION_TYPE, EnderIO.MOD_ID);
+            .create(Registries.LOOT_FUNCTION_TYPE, EnderIOAPI.MOD_ID);
 
     // public static DeferredHolder<MapCodec<? extends IGlobalLootModifier>,
     // MapCodec<AutoSmeltModifier>> AUTO_SMELT =

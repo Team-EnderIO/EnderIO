@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.blocks.powered_spawner;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.UseOnly;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
@@ -59,7 +59,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
             MachinesConfig.COMMON.ENERGY.POWERED_SPAWNER_CAPACITY);
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE,
             MachinesConfig.COMMON.ENERGY.POWERED_SPAWNER_USAGE);
-    public static final ResourceLocation NO_MOB = EnderIO.loc("no_mob");
+    public static final ResourceLocation NO_MOB = EnderIOAPI.loc("no_mob");
 
     private static final PoweredSpawnerMode DEFAULT_MODE = PoweredSpawnerMode.SPAWN;
     private PoweredSpawnerMode mode = DEFAULT_MODE;

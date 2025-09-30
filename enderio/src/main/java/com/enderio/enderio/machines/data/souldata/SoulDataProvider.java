@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.data.souldata;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.common.init.EIOFluids;
 import com.enderio.enderio.machines.common.blocks.powered_spawner.MobSpawnMode;
 import com.enderio.enderio.machines.common.souldata.EngineSoul;
@@ -205,7 +205,7 @@ public class SoulDataProvider implements DataProvider {
         private FinshedSoulData(Codec<T> codec, T data, String id) {
             this.codec = codec;
             this.data = data;
-            this.id = EnderIO.loc(id);
+            this.id = EnderIOAPI.loc(id);
         }
 
         private FinshedSoulData(Codec<T> codec, T data, ResourceLocation id) {

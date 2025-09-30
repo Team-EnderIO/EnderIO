@@ -1,6 +1,6 @@
 package com.enderio.enderio.data.loot;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.common.event.EIOChestLootEvent;
 import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.common.loot.SetLootCapacitorFunction;
@@ -70,7 +70,7 @@ public class ChestLootProvider implements LootTableSubProvider {
             .withPool(lootPool)
             .setParamSet(LootContextParamSet.builder().build());
 
-        writer.accept(ResourceKey.create(Registries.LOOT_TABLE, EnderIO.loc(COMMON_LOOT_TABLE_NAME)), lootTable);
+        writer.accept(ResourceKey.create(Registries.LOOT_TABLE, EnderIOAPI.loc(COMMON_LOOT_TABLE_NAME)), lootTable);
     }
 
     private void generateAlloyLoot(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> writer) {
@@ -115,6 +115,6 @@ public class ChestLootProvider implements LootTableSubProvider {
             .withPool(lootPool)
             .setParamSet(LootContextParamSet.builder().build());
 
-        writer.accept(ResourceKey.create(Registries.LOOT_TABLE, EnderIO.loc(ALLOY_LOOT_TABLE_NAME)), lootTable);
+        writer.accept(ResourceKey.create(Registries.LOOT_TABLE, EnderIOAPI.loc(ALLOY_LOOT_TABLE_NAME)), lootTable);
     }
 }

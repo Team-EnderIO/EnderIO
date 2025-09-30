@@ -1,6 +1,6 @@
 package com.enderio.enderio.data.recipe;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.common.init.EIOBlocks;
 import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.common.tag.EIOTags;
@@ -108,7 +108,7 @@ public class MaterialRecipeProvider extends RecipeProvider {
                 .define('S', Items.SUGAR)
                 .define('C', EIOItems.CAKE_BASE.get())
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CAKE_BASE.get()))
-                .save(recipeOutput, EnderIO.loc("cake"));
+                .save(recipeOutput, EnderIOAPI.loc("cake"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.STICK, 16)
                 .pattern("W")
@@ -117,7 +117,7 @@ public class MaterialRecipeProvider extends RecipeProvider {
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance
                                 .hasItems(ItemPredicate.Builder.item().of(ItemTags.LOGS).build()))
-                .save(recipeOutput, EnderIO.loc("stick"));
+                .save(recipeOutput, EnderIOAPI.loc("stick"));
     }
 
     private void addAlloys(RecipeOutput recipeOutput) {
@@ -146,39 +146,39 @@ public class MaterialRecipeProvider extends RecipeProvider {
                 .smelting(Ingredient.of(EIOItems.POWDERED_IRON.get()), RecipeCategory.MISC, Items.IRON_INGOT, 0, 200)
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.POWDERED_IRON.get()))
-                .save(recipeOutput, EnderIO.loc(Items.IRON_INGOT.getDescriptionId() + "_from_smelting"));
+                .save(recipeOutput, EnderIOAPI.loc(Items.IRON_INGOT.getDescriptionId() + "_from_smelting"));
 
         SimpleCookingRecipeBuilder
                 .blasting(Ingredient.of(EIOItems.POWDERED_IRON.get()), RecipeCategory.MISC, Items.IRON_INGOT, 0, 100)
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.POWDERED_IRON.get()))
-                .save(recipeOutput, EnderIO.loc(Items.IRON_INGOT.getDescriptionId() + "_from_blasting"));
+                .save(recipeOutput, EnderIOAPI.loc(Items.IRON_INGOT.getDescriptionId() + "_from_blasting"));
 
         SimpleCookingRecipeBuilder
                 .smelting(Ingredient.of(EIOItems.POWDERED_GOLD.get()), RecipeCategory.MISC, Items.GOLD_INGOT, 0, 200)
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.POWDERED_GOLD.get()))
-                .save(recipeOutput, EnderIO.loc(Items.GOLD_INGOT.getDescriptionId() + "_from_smelting"));
+                .save(recipeOutput, EnderIOAPI.loc(Items.GOLD_INGOT.getDescriptionId() + "_from_smelting"));
 
         SimpleCookingRecipeBuilder
                 .blasting(Ingredient.of(EIOItems.POWDERED_GOLD.get()), RecipeCategory.MISC, Items.GOLD_INGOT, 0, 100)
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.POWDERED_GOLD.get()))
-                .save(recipeOutput, EnderIO.loc(Items.GOLD_INGOT.getDescriptionId() + "_from_blasting"));
+                .save(recipeOutput, EnderIOAPI.loc(Items.GOLD_INGOT.getDescriptionId() + "_from_blasting"));
 
         SimpleCookingRecipeBuilder
                 .smelting(Ingredient.of(EIOItems.POWDERED_COPPER.get()), RecipeCategory.MISC, Items.COPPER_INGOT, 0,
                         200)
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.POWDERED_COPPER.get()))
-                .save(recipeOutput, EnderIO.loc(Items.COPPER_INGOT.getDescriptionId() + "_from_smelting"));
+                .save(recipeOutput, EnderIOAPI.loc(Items.COPPER_INGOT.getDescriptionId() + "_from_smelting"));
 
         SimpleCookingRecipeBuilder
                 .blasting(Ingredient.of(EIOItems.POWDERED_COPPER.get()), RecipeCategory.MISC, Items.COPPER_INGOT, 0,
                         100)
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.POWDERED_COPPER.get()))
-                .save(recipeOutput, EnderIO.loc(Items.COPPER_INGOT.getDescriptionId() + "_from_blasting"));
+                .save(recipeOutput, EnderIOAPI.loc(Items.COPPER_INGOT.getDescriptionId() + "_from_blasting"));
     }
 
     private void addCraftingComponents(RecipeOutput recipeOutput) {
@@ -199,14 +199,14 @@ public class MaterialRecipeProvider extends RecipeProvider {
                         new ItemStack(EIOItems.CONDUIT_BINDER.get(), 2), 0, 200)
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER_COMPOSITE.get()))
-                .save(recipeOutput, EnderIO.loc(EIOItems.CONDUIT_BINDER.getId().getPath() + "_from_smelting"));
+                .save(recipeOutput, EnderIOAPI.loc(EIOItems.CONDUIT_BINDER.getId().getPath() + "_from_smelting"));
 
         SimpleCookingRecipeBuilder
                 .blasting(Ingredient.of(EIOItems.CONDUIT_BINDER_COMPOSITE.get()), RecipeCategory.MISC,
                         new ItemStack(EIOItems.CONDUIT_BINDER.get(), 2), 0, 100)
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER_COMPOSITE.get()))
-                .save(recipeOutput, EnderIO.loc(EIOItems.CONDUIT_BINDER.getId().getPath() + "_from_blasting"));
+                .save(recipeOutput, EnderIOAPI.loc(EIOItems.CONDUIT_BINDER.getId().getPath() + "_from_blasting"));
     }
 
     private void addCapacitors(RecipeOutput recipeOutput) {
@@ -333,7 +333,7 @@ public class MaterialRecipeProvider extends RecipeProvider {
                 .pattern("NNN")
                 .define('N', nugget)
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ingot))
-                .save(recipeOutput, EnderIO.loc(nugget.getDescriptionId() + "_to_ingot"));
+                .save(recipeOutput, EnderIOAPI.loc(nugget.getDescriptionId() + "_to_ingot"));
     }
 
     private void upgradeGear(RecipeOutput recipeOutput, Item resultGear, ItemLike inputGear, ItemLike cross,

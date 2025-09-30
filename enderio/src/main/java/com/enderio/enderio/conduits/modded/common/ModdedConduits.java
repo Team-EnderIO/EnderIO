@@ -1,7 +1,7 @@
 package com.enderio.enderio.conduits.modded.common;
 
 import com.enderio.EnderIOBase;
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.conduits.modded.common.modules.ConduitCommonModule;
 import com.enderio.enderio.conduits.modded.common.modules.Integrations;
 import com.enderio.enderio.conduits.modded.common.modules.appeng.AE2ConduitsModule;
@@ -21,7 +21,7 @@ import java.util.function.Supplier;
 
 import static java.util.Map.entry;
 
-@Mod(value = EnderIO.MOD_ID)
+@Mod(value = EnderIOAPI.MOD_ID)
 public class ModdedConduits {
     public static final Regilite REGILITE = EnderIOBase.REGILITE;
 

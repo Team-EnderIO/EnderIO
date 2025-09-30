@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.client.gui.screen;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.machines.common.blocks.obelisks.aversion.AversionObeliskBlockEntity;
 import com.enderio.enderio.machines.common.blocks.obelisks.aversion.AversionObeliskMenu;
 import net.minecraft.network.chat.Component;
@@ -9,7 +9,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class AversionObeliskScreen extends ObeliskScreen<AversionObeliskBlockEntity, AversionObeliskMenu> {
 
-    public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/screen/aversion.png");
+    public static final ResourceLocation BG_TEXTURE = EnderIOAPI.loc("textures/gui/screen/aversion.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
 

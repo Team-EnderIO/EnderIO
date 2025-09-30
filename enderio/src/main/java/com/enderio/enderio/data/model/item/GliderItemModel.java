@@ -1,6 +1,6 @@
 package com.enderio.enderio.data.model.item;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -11,7 +11,7 @@ public class GliderItemModel {
     public static void create(Item item, ItemModelProvider prov) {
         ResourceLocation registryName = BuiltInRegistries.ITEM.getKey(item);
         prov.getBuilder(registryName.getNamespace() + ":enderio_glider/" + registryName.getPath())
-                .parent(prov.getExistingFile(EnderIO.loc("glider/glider3d")))
+                .parent(prov.getExistingFile(EnderIOAPI.loc("glider/glider3d")))
                 .texture("0", registryName.getNamespace() + ":block/glider/" + registryName.getPath());
         // TODO: Couln't get the texture loaded from the models directory so moved it to
         // blocks

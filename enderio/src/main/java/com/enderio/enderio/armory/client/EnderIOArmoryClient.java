@@ -1,6 +1,6 @@
 package com.enderio.enderio.armory.client;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.armory.client.renderer.ElytraUpgradeRenderLayer;
 import com.enderio.enderio.armory.client.renderer.MultiEnergyBarDecorator;
 import com.enderio.enderio.armory.client.renderer.SolarUpgradeRenderLayer;
@@ -18,7 +18,7 @@ import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.NeoForge;
 
 @EventBusSubscriber(value = Dist.CLIENT)
-@Mod(value = EnderIO.MOD_ID, dist = Dist.CLIENT)
+@Mod(value = EnderIOAPI.MOD_ID, dist = Dist.CLIENT)
 public class EnderIOArmoryClient {
 
     public EnderIOArmoryClient(ModContainer modContainer) {

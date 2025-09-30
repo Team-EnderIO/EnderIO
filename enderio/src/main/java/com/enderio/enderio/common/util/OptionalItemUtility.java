@@ -1,15 +1,17 @@
-package com.enderio.core.common.util;
+package com.enderio.enderio.common.util;
 
-import com.enderio.core.EnderCore;
-import com.enderio.core.common.integration.AlmostUnifiedIntegration;
-import java.util.Optional;
+import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.enderio.common.compat.almostunified.AlmostUnifiedCompat;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 
-public class TagUtil {
+import java.util.Optional;
+
+public class OptionalItemUtility {
+
     /**
      * Get an optional item from a tag.
      * An optional item means the item may not actually be present, and if it isn't it is handled gracefully.
@@ -19,9 +21,8 @@ public class TagUtil {
      * - Then goes down the tag looking in the order of modid precedence (from EnderIO config).
      * - If we found nothing in our specified lists, we will pick the first present item.
      */
-    // TODO: Uses hardcoded enderio modid, clearly needs to live in base, not core.
     public static Optional<Item> getOptionalItem(TagKey<Item> tagKey) {
-        Item preferredItem = AlmostUnifiedIntegration.getTagTargetItem(tagKey);
+        Item preferredItem = AlmostUnifiedCompat.getTagTargetItem(tagKey);
         if (preferredItem != null) {
             return Optional.of(preferredItem);
         }
@@ -34,12 +35,12 @@ public class TagUtil {
 
         // Search for an EnderIO item
         Optional<Item> enderItem = tag.get()
-                .stream()
-                .filter(itemHolder -> BuiltInRegistries.ITEM.getKey(itemHolder.value())
-                        .getNamespace()
-                        .equals("enderio"))
-                .map(Holder::value)
-                .findFirst();
+            .stream()
+            .filter(itemHolder -> BuiltInRegistries.ITEM.getKey(itemHolder.value())
+                .getNamespace()
+                .equals(EnderIOAPI.MOD_ID))
+            .map(Holder::value)
+            .findFirst();
 
         if (enderItem.isPresent()) {
             return enderItem;

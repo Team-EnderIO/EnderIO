@@ -7,6 +7,7 @@ import com.enderio.enderio.api.travel.TravelTargetApi;
 import com.enderio.enderio.common.config.BaseConfig;
 import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.common.network.RequestTravelPacket;
+import com.enderio.enderio.common.tag.EIOTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
@@ -56,7 +57,7 @@ public class TravelHandler {
     }
 
     public static boolean canBlockTeleport(Player player) {
-        return IntegrationManager.anyMatch(integration -> integration.canBlockTeleport(player));
+        return !player.level().getBlockState(player.blockPosition().below()).is(EIOTags.Blocks.BLOCKS_TELEPORTATION);
     }
 
     public static boolean hasResources(ItemStack stack) {

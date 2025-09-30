@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.integrations.jei;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.common.integrations.jei.subtype.SoulBindableSubtypeInterpreter;
 import com.enderio.enderio.machines.client.gui.screen.AlloySmelterScreen;
 import com.enderio.enderio.machines.client.gui.screen.EnchanterScreen;
@@ -47,7 +47,7 @@ import net.minecraft.world.item.ItemStack;
 public class MachinesJEI implements IModPlugin {
     @Override
     public ResourceLocation getPluginUid() {
-        return EnderIO.loc("machines");
+        return EnderIOAPI.loc("machines");
     }
 
     @Override

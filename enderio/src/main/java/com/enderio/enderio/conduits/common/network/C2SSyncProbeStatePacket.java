@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits.common.network;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.conduits.common.items.ConduitProbeItem;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -8,7 +8,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 public record C2SSyncProbeStatePacket(ConduitProbeItem.State state) implements CustomPacketPayload {
 
-    public static final Type<C2SSyncProbeStatePacket> TYPE = new Type<>(EnderIO.loc("sync_probe_state"));
+    public static final Type<C2SSyncProbeStatePacket> TYPE = new Type<>(EnderIOAPI.loc("sync_probe_state"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, C2SSyncProbeStatePacket> STREAM_CODEC = StreamCodec.composite(
         ConduitProbeItem.State.STREAM_CODEC,

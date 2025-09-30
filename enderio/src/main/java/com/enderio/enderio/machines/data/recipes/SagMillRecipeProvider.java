@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.data.recipes;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.common.tag.EIOTags;
 import com.enderio.enderio.machines.common.blocks.sag_mill.SagMillingRecipe;
@@ -280,12 +280,12 @@ public class SagMillRecipeProvider extends RecipeProvider {
 
     protected void build(String name, Ingredient input, List<SagMillingRecipe.OutputItem> outputs, int energy,
             RecipeOutput recipeOutput) {
-        build(EnderIO.loc("sag_milling/" + name), input, outputs, energy, BonusType.MULTIPLY_OUTPUT, recipeOutput);
+        build(EnderIOAPI.loc("sag_milling/" + name), input, outputs, energy, BonusType.MULTIPLY_OUTPUT, recipeOutput);
     }
 
     protected void build(String name, Ingredient input, List<SagMillingRecipe.OutputItem> outputs, int energy,
             BonusType bonusType, RecipeOutput recipeOutput) {
-        build(EnderIO.loc("sag_milling/" + name), input, outputs, energy, bonusType, recipeOutput);
+        build(EnderIOAPI.loc("sag_milling/" + name), input, outputs, energy, bonusType, recipeOutput);
     }
 
     protected void build(ResourceLocation id, Ingredient input, List<SagMillingRecipe.OutputItem> outputs, int energy,

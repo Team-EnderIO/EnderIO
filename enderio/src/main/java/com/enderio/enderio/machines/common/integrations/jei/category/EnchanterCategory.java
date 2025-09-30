@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.integrations.jei.category;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.machines.client.gui.screen.EnchanterScreen;
 import com.enderio.enderio.machines.common.init.MachineBlocks;
 import com.enderio.enderio.machines.common.integrations.jei.util.MachineRecipeCategory;
@@ -28,7 +28,7 @@ import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
 
 public class EnchanterCategory extends MachineRecipeCategory<WrappedEnchanterRecipe> {
 
-    public static final RecipeType<WrappedEnchanterRecipe> TYPE = RecipeType.create(EnderIO.MOD_ID, "enchanter",
+    public static final RecipeType<WrappedEnchanterRecipe> TYPE = RecipeType.create(EnderIOAPI.MOD_ID, "enchanter",
             WrappedEnchanterRecipe.class);
 
     private final IDrawable background;

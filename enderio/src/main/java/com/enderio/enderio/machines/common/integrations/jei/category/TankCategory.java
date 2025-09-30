@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.integrations.jei.category;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.common.integrations.jei.JEIUtils;
 import com.enderio.enderio.machines.client.gui.screen.FluidTankScreen;
 import com.enderio.enderio.machines.common.blocks.fluid_tank.FluidTankBlockEntity;
@@ -23,7 +23,7 @@ import java.util.List;
 
 // TODO: 1.20.1+ Add a custom TankRecipe for JEI to show mending and maybe fill/empty too.
 public class TankCategory implements IRecipeCategory<RecipeHolder<TankRecipe>> {
-    public static final RecipeType<RecipeHolder<TankRecipe>> TYPE = JEIUtils.createRecipeType(EnderIO.MOD_ID, "tank",
+    public static final RecipeType<RecipeHolder<TankRecipe>> TYPE = JEIUtils.createRecipeType(EnderIOAPI.MOD_ID, "tank",
             TankRecipe.class);
 
     private final IDrawable background;

@@ -1,7 +1,7 @@
 package com.enderio.enderio.machines.common.integrations.jei.category;
 
 import com.enderio.core.common.util.TooltipUtil;
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.grindingball.GrindingBallData;
 import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.common.integrations.jei.JEIUtils;
@@ -37,10 +37,10 @@ import java.util.Locale;
 import static mezz.jei.api.recipe.RecipeIngredientRole.*;
 
 public class SagMillCategory extends MachineRecipeCategory<RecipeHolder<SagMillingRecipe>> {
-    public static final RecipeType<RecipeHolder<SagMillingRecipe>> TYPE = JEIUtils.createRecipeType(EnderIO.MOD_ID,
+    public static final RecipeType<RecipeHolder<SagMillingRecipe>> TYPE = JEIUtils.createRecipeType(EnderIOAPI.MOD_ID,
             "sagmilling", SagMillingRecipe.class);
 
-    private static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/viewer/sag_mill.png");
+    private static final ResourceLocation BG_TEXTURE = EnderIOAPI.loc("textures/gui/viewer/sag_mill.png");
     private static final int WIDTH = 123;
     private static final int HEIGHT = 65;
 

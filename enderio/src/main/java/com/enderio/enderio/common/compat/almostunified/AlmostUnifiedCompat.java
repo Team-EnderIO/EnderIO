@@ -1,4 +1,4 @@
-package com.enderio.core.common.integration;
+package com.enderio.enderio.common.compat.almostunified;
 
 import com.almostreliable.unified.api.AlmostUnified;
 import net.minecraft.tags.TagKey;
@@ -6,7 +6,7 @@ import net.minecraft.world.item.Item;
 import net.neoforged.fml.ModList;
 import org.jetbrains.annotations.Nullable;
 
-public class AlmostUnifiedIntegration {
+public class AlmostUnifiedCompat {
     public static boolean isLoaded() {
         return ModList.get().isLoaded("almostunified");
     }

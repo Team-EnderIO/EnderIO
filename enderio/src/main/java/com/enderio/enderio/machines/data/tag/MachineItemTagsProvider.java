@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.data.tag;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.machines.common.tag.MachineTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -26,7 +26,7 @@ public class MachineItemTagsProvider extends ItemTagsProvider {
 
     public MachineItemTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider,
             CompletableFuture<TagLookup<Block>> blockTags, ExistingFileHelper existingFileHelper) {
-        super(output, lookupProvider, blockTags, EnderIO.MOD_ID, existingFileHelper);
+        super(output, lookupProvider, blockTags, EnderIOAPI.MOD_ID, existingFileHelper);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits.tests.item;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.conduits.common.conduit.type.item.ItemConduit;
 import com.enderio.enderio.conduits.common.conduit.type.item.ItemConduitConnectionConfig;
@@ -21,7 +21,7 @@ import java.util.function.Supplier;
 @ForEachTest(groups = "conduit.item")
 public class ItemConduitTests {
 
-    private static final String THREE_CHESTS = EnderIO.MOD_ID + ":item_conduit_three_chests";
+    private static final String THREE_CHESTS = EnderIOAPI.MOD_ID + ":item_conduit_three_chests";
 
     // @formatter:off
     @RegisterStructureTemplate(THREE_CHESTS)

@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.datamap;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
@@ -16,7 +16,7 @@ public class VatReagent {
         Codec.DOUBLE);
 
     public static final AdvancedDataMapType<Item, Map<TagKey<Item>, Double>, DataMapValueRemover.Default<Map<TagKey<Item>, Double>, Item>> DATA_MAP = AdvancedDataMapType
-        .builder(EnderIO.loc("vat_reagent"), Registries.ITEM, CODEC)
+        .builder(EnderIOAPI.loc("vat_reagent"), Registries.ITEM, CODEC)
         .synced(CODEC, true)
         .build();
 

@@ -1,7 +1,7 @@
 package com.enderio.enderio.machines.client.gui.icon;
 
 import com.enderio.core.client.icon.EnumIconMap;
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.machines.common.blocks.alloy.AlloySmelterMode;
 import com.enderio.enderio.machines.common.blocks.base.state.MachineStateType;
 import com.enderio.enderio.machines.common.blocks.powered_spawner.PoweredSpawnerMode;
@@ -18,10 +18,10 @@ public class MachineEnumIcons {
             "machine_state_type_new");
 
     private static <T extends Enum<T>> EnumIconMap<T> createAll(Class<T> enumClass, String iconFolder) {
-        return new EnumIconMap<>(EnderIO.MOD_ID, enumClass, iconFolder);
+        return new EnumIconMap<>(EnderIOAPI.MOD_ID, enumClass, iconFolder);
     }
 
     private static <T extends Enum<T>> EnumIconMap.Builder<T> builder(Class<T> enumClass, String iconFolder) {
-        return new EnumIconMap.Builder<>(EnderIO.MOD_ID, enumClass, iconFolder);
+        return new EnumIconMap.Builder<>(EnderIOAPI.MOD_ID, enumClass, iconFolder);
     }
 }

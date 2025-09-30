@@ -1,7 +1,7 @@
 package com.enderio.enderio.client;
 
 import com.enderio.core.client.item.FluidBarDecorator;
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.soul.SoulBoundUtils;
 import com.enderio.enderio.client.decorator.GlassIconDecorator;
 import com.enderio.enderio.client.paint.model.PaintedBlockGeometry;
@@ -47,7 +47,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @EventBusSubscriber(value = Dist.CLIENT)
-@Mod(value = EnderIO.MOD_ID, dist = Dist.CLIENT)
+@Mod(value = EnderIOAPI.MOD_ID, dist = Dist.CLIENT)
 public class EnderIOBaseClient {
 
     private static final Map<Item, ModelResourceLocation> HANG_GLIDER_MODEL_LOCATION = new HashMap<>();
@@ -66,7 +66,7 @@ public class EnderIOBaseClient {
             ItemProperties.register(EIOItems.SOUL_VIAL.get(), SoulVialItem.FILLED_MODEL_PROPERTY,
                 (stack, level, player, seed) -> SoulBoundUtils.isBound(stack) ? 1 : 0);
 
-            ItemProperties.register(EIOItems.ENDERIOS.asItem(), EnderIO.loc("inverted"),
+            ItemProperties.register(EIOItems.ENDERIOS.asItem(), EnderIOAPI.loc("inverted"),
                 (ClampedItemPropertyFunction) (itemStack, clientLevel, livingEntity, seed) -> {
                     Component name = itemStack.get(DataComponents.CUSTOM_NAME);
                     if (name != null && name.getContents() instanceof PlainTextContents literal && literal.text().equalsIgnoreCase("soiredne")) {
@@ -143,7 +143,7 @@ public class EnderIOBaseClient {
 
     @SubscribeEvent
     public static void modelInit(ModelEvent.RegisterGeometryLoaders event) {
-        event.register(EnderIO.loc("painted_block"), new PaintedBlockGeometry.Loader());
+        event.register(EnderIOAPI.loc("painted_block"), new PaintedBlockGeometry.Loader());
     }
 
     @SubscribeEvent

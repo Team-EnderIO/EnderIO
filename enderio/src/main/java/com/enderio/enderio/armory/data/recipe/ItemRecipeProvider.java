@@ -1,6 +1,6 @@
 package com.enderio.enderio.armory.data.recipe;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.armory.common.init.ArmoryItems;
 import com.enderio.enderio.armory.common.item.darksteel.upgrades.solar.SolarUpgradeTier;
 import com.enderio.enderio.common.init.EIOBlocks;
@@ -113,7 +113,7 @@ public class ItemRecipeProvider extends RecipeProvider {
     private void addDarkSteelUpgrades(RecipeOutput recipeOutput) {
 
         ItemStack output = ArmoryItems.DARK_STEEL_UPGRADE_BLANK.toStack();
-        ResourceLocation id = EnderIO
+        ResourceLocation id = EnderIOAPI
                 .loc("alloy_smelting/" + BuiltInRegistries.ITEM.getKey(output.getItem()).getPath());
         List<@NotNull SizedIngredient> inputs = List.of(SizedIngredient.of(EIOBlocks.DARK_STEEL_BARS, 1),
                 SizedIngredient.of(Items.CLAY_BALL, 1), SizedIngredient.of(Items.STRING, 4));

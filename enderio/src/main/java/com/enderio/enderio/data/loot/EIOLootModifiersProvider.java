@@ -1,6 +1,6 @@
 package com.enderio.enderio.data.loot;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.common.loot.BrokenSpawnerLootModifier;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 public class EIOLootModifiersProvider extends GlobalLootModifierProvider {
 
     public EIOLootModifiersProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-        super(output, registries, EnderIO.MOD_ID);
+        super(output, registries, EnderIOAPI.MOD_ID);
     }
 
     @Override
@@ -69,6 +69,6 @@ public class EIOLootModifiersProvider extends GlobalLootModifierProvider {
         add(modifierName,
                 new AddTableLootModifier(
                         new LootItemCondition[] { AnyOfCondition.anyOf(mappedTargetConditions).build() },
-                        ResourceKey.create(Registries.LOOT_TABLE, EnderIO.loc("chests/" + modifierName))));
+                        ResourceKey.create(Registries.LOOT_TABLE, EnderIOAPI.loc("chests/" + modifierName))));
     }
 }

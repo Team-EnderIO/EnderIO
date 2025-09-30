@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.data.recipes;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.common.init.EIOFluids;
 import com.enderio.enderio.machines.common.blocks.obelisks.weather.WeatherChangeRecipe;
 import net.minecraft.core.HolderLookup;
@@ -21,11 +21,11 @@ public class WeatherChangeRecipeProvider extends RecipeProvider {
 
     @Override
     protected void buildRecipes(RecipeOutput recipeOutput) {
-        build(EnderIO.loc("clear"), EIOFluids.LIQUID_SUNSHINE.getSource(), 1000, WeatherChangeRecipe.WeatherMode.CLEAR,
+        build(EnderIOAPI.loc("clear"), EIOFluids.LIQUID_SUNSHINE.getSource(), 1000, WeatherChangeRecipe.WeatherMode.CLEAR,
                 recipeOutput);
-        build(EnderIO.loc("rain"), EIOFluids.CLOUD_SEED.getSource(), 1000, WeatherChangeRecipe.WeatherMode.RAIN,
+        build(EnderIOAPI.loc("rain"), EIOFluids.CLOUD_SEED.getSource(), 1000, WeatherChangeRecipe.WeatherMode.RAIN,
                 recipeOutput);
-        build(EnderIO.loc("lightning"), EIOFluids.CLOUD_SEED_CONCENTRATED.getSource(), 1000,
+        build(EnderIOAPI.loc("lightning"), EIOFluids.CLOUD_SEED_CONCENTRATED.getSource(), 1000,
                 WeatherChangeRecipe.WeatherMode.LIGHTNING, recipeOutput);
 
     }

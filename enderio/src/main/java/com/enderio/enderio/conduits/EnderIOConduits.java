@@ -1,7 +1,7 @@
 package com.enderio.enderio.conduits;
 
 import com.enderio.EnderIOBase;
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.conduits.common.init.ConduitBlockEntities;
@@ -36,7 +36,7 @@ import net.neoforged.neoforge.registries.NewRegistryEvent;
 import java.util.Set;
 
 @EventBusSubscriber
-@Mod(EnderIO.MOD_ID)
+@Mod(EnderIOAPI.MOD_ID)
 public class EnderIOConduits {
     public static final Regilite REGILITE = EnderIOBase.REGILITE;
 
@@ -74,7 +74,7 @@ public class EnderIOConduits {
     @SubscribeEvent
     public static void onData(GatherDataEvent event) {
         // Includes ModdedConduits datagen
-        event.createDatapackRegistryObjects(createDatapackEntriesBuilder(), ModdedConduits::buildConduitConditions, Set.of(EnderIO.MOD_ID));
+        event.createDatapackRegistryObjects(createDatapackEntriesBuilder(), ModdedConduits::buildConduitConditions, Set.of(EnderIOAPI.MOD_ID));
 
         PackOutput packOutput = event.getGenerator().getPackOutput();
         var registries = event.getLookupProvider();

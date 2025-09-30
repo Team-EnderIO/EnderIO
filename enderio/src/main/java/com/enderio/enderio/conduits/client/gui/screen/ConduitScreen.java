@@ -3,7 +3,7 @@ package com.enderio.enderio.conduits.client.gui.screen;
 import com.enderio.core.client.gui.screen.EnderContainerScreen;
 import com.enderio.core.client.gui.widgets.IconButton;
 import com.enderio.core.client.gui.widgets.ToggleIconButton;
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
@@ -36,7 +36,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
-    public static final ResourceLocation TEXTURE = EnderIO.loc("textures/gui/conduit.png");
+    public static final ResourceLocation TEXTURE = EnderIOAPI.loc("textures/gui/conduit.png");
     private static final int WIDTH = 206;
     private static final int HEIGHT = 195;
 
@@ -166,7 +166,7 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
 
     private class ScreenHelper implements ConduitScreenHelper {
 
-        private static final ResourceLocation ICON_CONFIGURE = EnderIO.loc("icon/configure");
+        private static final ResourceLocation ICON_CONFIGURE = EnderIOAPI.loc("icon/configure");
 
         @Override
         public AbstractWidget addCheckbox(int x, int y, Supplier<Boolean> getter, Consumer<Boolean> setter) {

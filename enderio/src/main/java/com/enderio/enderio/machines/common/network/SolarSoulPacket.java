@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.network;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.machines.common.souldata.SolarSoul;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -13,7 +13,7 @@ import java.util.Map;
 
 public record SolarSoulPacket(Map<ResourceLocation, SolarSoul.SoulData> map) implements CustomPacketPayload {
 
-    public static final Type<SolarSoulPacket> TYPE = new Type<>(EnderIO.loc("solar_soul"));
+    public static final Type<SolarSoulPacket> TYPE = new Type<>(EnderIOAPI.loc("solar_soul"));
 
     public static final StreamCodec<ByteBuf, SolarSoulPacket> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.map(HashMap::new, ResourceLocation.STREAM_CODEC, SolarSoul.STREAM_CODEC),

@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.mixin;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.machines.common.blocks.alloy.AlloySmeltingRecipe;
 import com.enderio.enderio.machines.common.config.MachinesConfig;
 import com.enderio.enderio.machines.common.init.MachineRecipes;
@@ -60,7 +60,7 @@ public abstract class RecipeManagerMixin {
                 accessor.getExperience(), true);
 
         String path = "smelting/" + originalId.getNamespace() + "/" + originalId.getPath();
-        ResourceLocation id = EnderIO.loc(path);
+        ResourceLocation id = EnderIOAPI.loc(path);
         return Optional.of(new RecipeHolder<>(id, recipe));
     }
 }

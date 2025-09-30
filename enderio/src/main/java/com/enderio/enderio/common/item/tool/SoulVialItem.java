@@ -2,7 +2,7 @@ package com.enderio.enderio.common.item.tool;
 
 import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.common.util.TooltipUtil;
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.api.soul.SoulBoundUtils;
 import com.enderio.enderio.common.init.EIODataComponents;
@@ -49,7 +49,7 @@ import java.util.function.Consumer;
 @EventBusSubscriber
 public class SoulVialItem extends Item implements AdvancedTooltipProvider {
 
-    public static final ResourceLocation FILLED_MODEL_PROPERTY = EnderIO.loc("soul_vial_filled");
+    public static final ResourceLocation FILLED_MODEL_PROPERTY = EnderIOAPI.loc("soul_vial_filled");
 
     /**
      * Should match key from {@link LivingEntity#addAdditionalSaveData(CompoundTag)}

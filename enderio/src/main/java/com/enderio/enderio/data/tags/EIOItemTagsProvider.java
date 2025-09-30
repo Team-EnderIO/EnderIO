@@ -1,6 +1,6 @@
 package com.enderio.enderio.data.tags;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.common.tag.EIOTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -17,7 +17,7 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
 
     public EIOItemTagsProvider(PackOutput pPackOutput, CompletableFuture<HolderLookup.Provider> pProvider,
             CompletableFuture<TagLookup<Block>> pLookup, @Nullable ExistingFileHelper existingFileHelper) {
-        super(pPackOutput, pProvider, pLookup, EnderIO.MOD_ID, existingFileHelper);
+        super(pPackOutput, pProvider, pLookup, EnderIOAPI.MOD_ID, existingFileHelper);
     }
 
     @Override

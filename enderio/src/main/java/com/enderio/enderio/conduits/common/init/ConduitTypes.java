@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits.common.init;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
@@ -30,7 +30,7 @@ import java.util.function.Supplier;
 
 public class ConduitTypes {
     private static final DeferredRegister<ConduitType<?>> CONDUIT_TYPES = DeferredRegister
-            .create(EnderIORegistries.CONDUIT_TYPE, EnderIO.MOD_ID);
+            .create(EnderIORegistries.CONDUIT_TYPE, EnderIOAPI.MOD_ID);
 
     public static final Supplier<ConduitType<EnergyConduit>> ENERGY = CONDUIT_TYPES.register("energy",
             () -> ConduitType.builder(EnergyConduit.CODEC).exposeCapability(Capabilities.EnergyStorage.BLOCK).build());
@@ -46,7 +46,7 @@ public class ConduitTypes {
 
     public static class Data {
         private static final DeferredRegister<ConduitDataType<?>> CONDUIT_DATA_TYPES = DeferredRegister
-                .create(EnderIORegistries.CONDUIT_DATA_TYPE, EnderIO.MOD_ID);
+                .create(EnderIORegistries.CONDUIT_DATA_TYPE, EnderIOAPI.MOD_ID);
 
         public static final Supplier<ConduitDataType<LegacyItemConduitData>> ITEM = CONDUIT_DATA_TYPES.register("item",
                 () -> new ConduitDataType<>(LegacyItemConduitData.CODEC, LegacyItemConduitData.STREAM_CODEC,
@@ -63,7 +63,7 @@ public class ConduitTypes {
 
     public static class ConnectionTypes {
         private static final DeferredRegister<ConnectionConfigType<?>> CONNECTION_TYPES = DeferredRegister
-                .create(EnderIORegistries.CONDUIT_CONNECTION_CONFIG_TYPE, EnderIO.MOD_ID);
+                .create(EnderIORegistries.CONDUIT_CONNECTION_CONFIG_TYPE, EnderIOAPI.MOD_ID);
 
         public static final Supplier<ConnectionConfigType<ItemConduitConnectionConfig>> ITEM = CONNECTION_TYPES
                 .register("item", () -> ItemConduitConnectionConfig.TYPE);
@@ -80,7 +80,7 @@ public class ConduitTypes {
 
     public static class NodeData {
         private static final DeferredRegister<NodeDataType<?>> NODE_DATA_TYPES = DeferredRegister
-                .create(EnderIORegistries.CONDUIT_NODE_DATA_TYPE, EnderIO.MOD_ID);
+                .create(EnderIORegistries.CONDUIT_NODE_DATA_TYPE, EnderIOAPI.MOD_ID);
 
         public static final Supplier<NodeDataType<ItemConduitNodeData>> ITEM = NODE_DATA_TYPES.register("item",
                 () -> ItemConduitNodeData.TYPE);
@@ -88,7 +88,7 @@ public class ConduitTypes {
 
     public static class ContextTypes {
         public static final DeferredRegister<ConduitNetworkContextType<?>> CONDUIT_NETWORK_CONTEXT_TYPES = DeferredRegister
-                .create(EnderIORegistries.CONDUIT_NETWORK_CONTEXT_TYPE, EnderIO.MOD_ID);
+                .create(EnderIORegistries.CONDUIT_NETWORK_CONTEXT_TYPE, EnderIOAPI.MOD_ID);
 
         public static final Supplier<ConduitNetworkContextType<EnergyConduitNetworkContext>> ENERGY = CONDUIT_NETWORK_CONTEXT_TYPES
                 .register("energy", () -> EnergyConduitNetworkContext.TYPE);

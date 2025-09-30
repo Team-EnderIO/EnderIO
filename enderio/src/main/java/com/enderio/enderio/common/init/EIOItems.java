@@ -2,7 +2,7 @@ package com.enderio.enderio.common.init;
 
 import com.enderio.EnderIOBase;
 import com.enderio.core.data.model.ModelHelper;
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.capacitor.CapacitorData;
 import com.enderio.enderio.api.grindingball.GrindingBallData;
@@ -376,7 +376,7 @@ public class EIOItems {
                     .setModelProvider((prov, ctx) -> prov.basicItem(ctx.get())
                             .override()
                             .predicate(SoulVialItem.FILLED_MODEL_PROPERTY, 1)
-                            .model(prov.basicItem(EnderIO.loc("soul_vial_filled")))
+                            .model(prov.basicItem(EnderIOAPI.loc("soul_vial_filled")))
                             .end())
                     .addCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM, SoulCapabilityProviders.READ_ONLY_COMPONENT_SOUL_BINDABLE_PROVIDER)
                     .addCapability(EnderIOCapabilities.SOUL_HANDLER_ITEM, SoulCapabilityProviders.SINGLE_COMPONENT_SOUL_HANDLER_PROVIDER);
@@ -542,17 +542,17 @@ public class EIOItems {
     	ENDERIOS.setModelProvider((prov, ctx) -> {});
     
         // XP rod rename
-        ITEM_REGISTRY.addAlias(EnderIO.loc("experience_rod"), VOID_VIAL.getId());
+        ITEM_REGISTRY.addAlias(EnderIOAPI.loc("experience_rod"), VOID_VIAL.getId());
 
         // Unified soul vials
-        ITEM_REGISTRY.addAlias(EnderIO.loc("empty_soul_vial"), SOUL_VIAL.getId());
-        ITEM_REGISTRY.addAlias(EnderIO.loc("filled_soul_vial"), SOUL_VIAL.getId());
+        ITEM_REGISTRY.addAlias(EnderIOAPI.loc("empty_soul_vial"), SOUL_VIAL.getId());
+        ITEM_REGISTRY.addAlias(EnderIOAPI.loc("filled_soul_vial"), SOUL_VIAL.getId());
 
 		// Filter renames
-        ITEM_REGISTRY.addAlias(EnderIO.loc("basic_filter"), BASIC_ITEM_FILTER.getId());
-        ITEM_REGISTRY.addAlias(EnderIO.loc("advanced_filter"), ADVANCED_ITEM_FILTER.getId());
-        ITEM_REGISTRY.addAlias(EnderIO.loc("fluid_filter"), BASIC_FLUID_FILTER.getId());
-        ITEM_REGISTRY.addAlias(EnderIO.loc("entity_filter"), BASIC_SOUL_FILTER.getId());
+        ITEM_REGISTRY.addAlias(EnderIOAPI.loc("basic_filter"), BASIC_ITEM_FILTER.getId());
+        ITEM_REGISTRY.addAlias(EnderIOAPI.loc("advanced_filter"), ADVANCED_ITEM_FILTER.getId());
+        ITEM_REGISTRY.addAlias(EnderIOAPI.loc("fluid_filter"), BASIC_FLUID_FILTER.getId());
+        ITEM_REGISTRY.addAlias(EnderIOAPI.loc("entity_filter"), BASIC_SOUL_FILTER.getId());
 
         ITEM_REGISTRY.register(bus);
     }

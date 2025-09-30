@@ -1,6 +1,6 @@
 package com.enderio.enderio.data.tags;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.common.init.EIOFluids;
 import com.enderio.enderio.common.tag.EIOTags;
 import net.minecraft.core.HolderLookup;
@@ -15,7 +15,7 @@ public class EIOFluidTagsProvider extends FluidTagsProvider {
 
     public EIOFluidTagsProvider(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pProvider,
             @Nullable ExistingFileHelper existingFileHelper) {
-        super(pOutput, pProvider, EnderIO.MOD_ID, existingFileHelper);
+        super(pOutput, pProvider, EnderIOAPI.MOD_ID, existingFileHelper);
     }
 
     @Override

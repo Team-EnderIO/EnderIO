@@ -1,6 +1,6 @@
 package com.enderio.enderio.common.init;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.common.advancement.UseGliderTrigger;
 import com.enderio.enderio.common.paint.PaintingTrigger;
 import net.minecraft.advancements.CriterionTrigger;
@@ -11,7 +11,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class EIOCriterions {
     private static final DeferredRegister<CriterionTrigger<?>> TRIGGERS = DeferredRegister
-            .create(Registries.TRIGGER_TYPE, EnderIO.MOD_ID);
+            .create(Registries.TRIGGER_TYPE, EnderIOAPI.MOD_ID);
 
     public static final DeferredHolder<CriterionTrigger<?>, UseGliderTrigger> USE_GLIDER = TRIGGERS.register("use_glider",
             UseGliderTrigger::new);

@@ -1,6 +1,6 @@
 package com.enderio.enderio.data.recipe;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.common.recipe.FireCraftingRecipe;
 import net.minecraft.core.HolderLookup;
@@ -21,7 +21,7 @@ public class FireCraftingRecipeProvider extends RecipeProvider {
 
     @Override
     protected void buildRecipes(RecipeOutput recipeOutput) {
-        recipeOutput.accept(EnderIO.loc("fire_crafting/bedrock_infinity"),
+        recipeOutput.accept(EnderIOAPI.loc("fire_crafting/bedrock_infinity"),
                 new FireCraftingRecipe(List.of(
                         new FireCraftingRecipe.Result(EIOItems.GRAINS_OF_INFINITY.get().getDefaultInstance(), 1, 3,
                                 0.8f),
@@ -29,7 +29,7 @@ public class FireCraftingRecipeProvider extends RecipeProvider {
                         List.of(Blocks.BEDROCK), List.of(), List.of(Level.OVERWORLD), Optional.empty()),
                 null);
 
-        recipeOutput.accept(EnderIO.loc("fire_crafting/deepslate_infinity"),
+        recipeOutput.accept(EnderIOAPI.loc("fire_crafting/deepslate_infinity"),
                 new FireCraftingRecipe(
                         List.of(new FireCraftingRecipe.Result(EIOItems.GRAINS_OF_INFINITY.get().getDefaultInstance(), 1,
                                 1, 0.4f)),

@@ -1,7 +1,7 @@
 package com.enderio.enderio.client.gui.widget;
 
 import com.enderio.core.client.gui.widgets.ToggleIconButton;
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.WidgetSprites;
@@ -12,11 +12,11 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class EIOCommonWidgets {
-    private static final ResourceLocation ICON_RANGE_ENABLE = EnderIO.loc("icon/range_enable");
-    private static final ResourceLocation ICON_RANGE_DISABLE = EnderIO.loc("icon/range_disable");
+    private static final ResourceLocation ICON_RANGE_ENABLE = EnderIOAPI.loc("icon/range_enable");
+    private static final ResourceLocation ICON_RANGE_DISABLE = EnderIOAPI.loc("icon/range_disable");
 
-    private static final ResourceLocation PLUS = EnderIO.loc("buttons/plus_small");
-    private static final ResourceLocation MINUS = EnderIO.loc("buttons/minus_small");
+    private static final ResourceLocation PLUS = EnderIOAPI.loc("buttons/plus_small");
+    private static final ResourceLocation MINUS = EnderIOAPI.loc("buttons/minus_small");
     private static final WidgetSprites RANGE_PLUS_SPRITES = new WidgetSprites(PLUS, PLUS);
     private static final WidgetSprites RANGE_MINUS_SPRITES = new WidgetSprites(MINUS, MINUS);
 

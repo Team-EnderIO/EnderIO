@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits.modded.common.modules.mekanism;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
@@ -78,16 +78,16 @@ public class MekanismModule implements ConduitCommonModule {
     private static final MenuRegistry MENU_REGISTRY = ModdedConduits.REGILITE.menuRegistry();
 
     private static final DeferredRegister<ConduitType<?>> CONDUIT_TYPES = DeferredRegister
-            .create(EnderIORegistries.CONDUIT_TYPE, EnderIO.MOD_ID);
+            .create(EnderIORegistries.CONDUIT_TYPE, EnderIOAPI.MOD_ID);
 
     public static final DeferredRegister<ConduitDataType<?>> CONDUIT_DATA_TYPES = DeferredRegister
-            .create(EnderIORegistries.CONDUIT_DATA_TYPE, EnderIO.MOD_ID);
+            .create(EnderIORegistries.CONDUIT_DATA_TYPE, EnderIOAPI.MOD_ID);
 
     public static final DeferredRegister<ConnectionConfigType<?>> CONDUIT_CONNECTION_CONFIG_TYPES = DeferredRegister
-            .create(EnderIORegistries.CONDUIT_CONNECTION_CONFIG_TYPE, EnderIO.MOD_ID);
+            .create(EnderIORegistries.CONDUIT_CONNECTION_CONFIG_TYPE, EnderIOAPI.MOD_ID);
 
     public static final DeferredRegister<ConduitNetworkContextType<?>> CONDUIT_NETWORK_CONTEXT_TYPES = DeferredRegister
-            .create(EnderIORegistries.CONDUIT_NETWORK_CONTEXT_TYPE, EnderIO.MOD_ID);
+            .create(EnderIORegistries.CONDUIT_NETWORK_CONTEXT_TYPE, EnderIOAPI.MOD_ID);
 
     static {
         CONDUIT_CONNECTION_CONFIG_TYPES.register("chemical", () -> ChemicalConduitConnectionConfig.TYPE);
@@ -97,7 +97,7 @@ public class MekanismModule implements ConduitCommonModule {
     }
 
     private static final DeferredRegister.DataComponents DATA_COMPONENT_TYPES = DeferredRegister
-            .createDataComponents(EnderIO.MOD_ID);
+            .createDataComponents(EnderIOAPI.MOD_ID);
 
     // endregion
 
@@ -123,14 +123,14 @@ public class MekanismModule implements ConduitCommonModule {
         .addCapability(EnderIOCapabilities.FILTER_MENU_PROVIDER, AbstractFilterItem.FILTER_MENU_PROVIDER);
 
     static {
-        ITEM_REGISTRY.addAlias(EnderIO.loc("chemical_filter"), BASIC_CHEMICAL_FILTER.getId());
+        ITEM_REGISTRY.addAlias(EnderIOAPI.loc("chemical_filter"), BASIC_CHEMICAL_FILTER.getId());
     }
 
     public static final RegiliteMenu<EnderChemicalFilterMenu> CHEMICAL_FILTER_MENU = MENU_REGISTRY
             .registerMenu("chemical_filter", EnderChemicalFilterItem.Type.BASIC::openMenu, () -> EnderChemicalFilterScreen::new);
 
     public static class Capabilities {
-        public static final ItemCapability<ChemicalFilter, Void> CHEMICAL_FILTER = ItemCapability.createVoid(EnderIO.loc("chemical_filter"), ChemicalFilter.class);
+        public static final ItemCapability<ChemicalFilter, Void> CHEMICAL_FILTER = ItemCapability.createVoid(EnderIOAPI.loc("chemical_filter"), ChemicalFilter.class);
 
         public static final BlockCapability<IChemicalHandler, Direction> CHEMICAL = BlockCapability.createSided(
                 ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID, "chemical_handler"),
@@ -145,24 +145,24 @@ public class MekanismModule implements ConduitCommonModule {
         }
     }
 
-    private static final Component LANG_HEAT_CONDUIT = addTranslation("item", EnderIO.loc("conduit.heat"),
+    private static final Component LANG_HEAT_CONDUIT = addTranslation("item", EnderIOAPI.loc("conduit.heat"),
             "Heat Conduit");
-    private static final Component LANG_CHEMICAL_CONDUIT = addTranslation("item", EnderIO.loc("conduit.chemical"),
+    private static final Component LANG_CHEMICAL_CONDUIT = addTranslation("item", EnderIOAPI.loc("conduit.chemical"),
             "Chemical Conduit");
     private static final Component LANG_PRESSURIZED_CHEMICAL_CONDUIT = addTranslation("item",
-            EnderIO.loc("conduit.pressurized_chemical"), "Pressurized Chemical Conduit");
+            EnderIOAPI.loc("conduit.pressurized_chemical"), "Pressurized Chemical Conduit");
     private static final Component LANG_ENDER_CHEMICAL_CONDUIT = addTranslation("item",
-            EnderIO.loc("conduit.ender_chemical"), "Ender Chemical Conduit");
+            EnderIOAPI.loc("conduit.ender_chemical"), "Ender Chemical Conduit");
 
     public static final Component LANG_MULTI_CHEMICAL_TOOLTIP = addTranslation("item",
-            EnderIO.loc("conduit.chemical.multi"), "Allows multiple chemical types to be transported on the same line");
+            EnderIOAPI.loc("conduit.chemical.multi"), "Allows multiple chemical types to be transported on the same line");
 
     public static final Component CHEMICAL_CONDUIT_CHANGE_FLUID1 = addTranslation("gui",
-            EnderIO.loc("chemical_conduit.change_fluid1"), "Locked Chemical:");
+            EnderIOAPI.loc("chemical_conduit.change_fluid1"), "Locked Chemical:");
     public static final Component CHEMICAL_CONDUIT_CHANGE_FLUID2 = addTranslation("gui",
-            EnderIO.loc("chemical_conduit.change_fluid2"), "Click to reset!");
+            EnderIOAPI.loc("chemical_conduit.change_fluid2"), "Click to reset!");
     public static final MutableComponent CHEMICAL_CONDUIT_CHANGE_FLUID3 = addTranslation("gui",
-            EnderIO.loc("chemical_conduit.change_fluid3"), "Chemical: %s");
+            EnderIOAPI.loc("chemical_conduit.change_fluid3"), "Chemical: %s");
 
     private static final TagKey<Item> OSMIUM = ItemTags
             .create(ResourceLocation.fromNamespaceAndPath("c", "ingots/osmium"));
@@ -172,13 +172,13 @@ public class MekanismModule implements ConduitCommonModule {
     }
 
     public static final ResourceKey<Conduit<?, ?>> CHEMICAL = ResourceKey.create(EnderIORegistries.Keys.CONDUIT,
-            EnderIO.loc("chemical"));
+            EnderIOAPI.loc("chemical"));
     public static final ResourceKey<Conduit<?, ?>> PRESSURIZED_CHEMICAL = ResourceKey
-            .create(EnderIORegistries.Keys.CONDUIT, EnderIO.loc("pressurized_chemical"));
+            .create(EnderIORegistries.Keys.CONDUIT, EnderIOAPI.loc("pressurized_chemical"));
     public static final ResourceKey<Conduit<?, ?>> ENDER_CHEMICAL = ResourceKey
-            .create(EnderIORegistries.Keys.CONDUIT, EnderIO.loc("ender_chemical"));
+            .create(EnderIORegistries.Keys.CONDUIT, EnderIOAPI.loc("ender_chemical"));
     public static final ResourceKey<Conduit<?, ?>> HEAT = ResourceKey.create(EnderIORegistries.Keys.CONDUIT,
-            EnderIO.loc("heat"));
+            EnderIOAPI.loc("heat"));
 
     @Override
     public void initialize(IEventBus modEventBus) {
@@ -194,12 +194,12 @@ public class MekanismModule implements ConduitCommonModule {
 
     @Override
     public void bootstrapConduits(BootstrapContext<Conduit<?, ?>> context) {
-        context.register(HEAT, new HeatConduit(EnderIO.loc("block/conduit/heat"), LANG_HEAT_CONDUIT));
+        context.register(HEAT, new HeatConduit(EnderIOAPI.loc("block/conduit/heat"), LANG_HEAT_CONDUIT));
         context.register(CHEMICAL,
-                new ChemicalConduit(EnderIO.loc("block/conduit/chemical"), LANG_CHEMICAL_CONDUIT, 750, false));
-        context.register(PRESSURIZED_CHEMICAL, new ChemicalConduit(EnderIO.loc("block/conduit/pressurized_chemical"),
+                new ChemicalConduit(EnderIOAPI.loc("block/conduit/chemical"), LANG_CHEMICAL_CONDUIT, 750, false));
+        context.register(PRESSURIZED_CHEMICAL, new ChemicalConduit(EnderIOAPI.loc("block/conduit/pressurized_chemical"),
                 LANG_PRESSURIZED_CHEMICAL_CONDUIT, 2_000, false));
-        context.register(ENDER_CHEMICAL, new ChemicalConduit(EnderIO.loc("block/conduit/ender_chemical"),
+        context.register(ENDER_CHEMICAL, new ChemicalConduit(EnderIOAPI.loc("block/conduit/ender_chemical"),
                 LANG_ENDER_CHEMICAL_CONDUIT, 64_000, true));
     }
 
@@ -230,7 +230,7 @@ public class MekanismModule implements ConduitCommonModule {
                         BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID,
                                 "basic_pressurized_tube")))
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
-                .save(mekRecipeOutput, EnderIO.loc("mek_basic_pressurized_tube"));
+                .save(mekRecipeOutput, EnderIOAPI.loc("mek_basic_pressurized_tube"));
 
         ShapedRecipeBuilder
                 .shaped(RecipeCategory.BUILDING_BLOCKS,
@@ -243,7 +243,7 @@ public class MekanismModule implements ConduitCommonModule {
                         BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID,
                                 "advanced_pressurized_tube")))
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
-                .save(mekRecipeOutput, EnderIO.loc("mek_advanced_pressurized_tube"));
+                .save(mekRecipeOutput, EnderIOAPI.loc("mek_advanced_pressurized_tube"));
 
         ShapedRecipeBuilder
                 .shaped(RecipeCategory.BUILDING_BLOCKS, ConduitApiImpl.INSTANCE.getConduitItem(enderChemicalConduit, 3))
@@ -255,7 +255,7 @@ public class MekanismModule implements ConduitCommonModule {
                         BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID,
                                 "elite_pressurized_tube")))
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
-                .save(mekRecipeOutput, EnderIO.loc("mek_elite_pressurized_tube"));
+                .save(mekRecipeOutput, EnderIOAPI.loc("mek_elite_pressurized_tube"));
 
         ShapedRecipeBuilder
                 .shaped(RecipeCategory.BUILDING_BLOCKS,
@@ -268,7 +268,7 @@ public class MekanismModule implements ConduitCommonModule {
                         BuiltInRegistries.ITEM.get(
                                 ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID, "alloy_infused")))
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
-                .save(mekRecipeOutput, EnderIO.loc("mek_basic_pressurized_tube_upgrade"));
+                .save(mekRecipeOutput, EnderIOAPI.loc("mek_basic_pressurized_tube_upgrade"));
 
         ShapedRecipeBuilder
                 .shaped(RecipeCategory.BUILDING_BLOCKS, ConduitApiImpl.INSTANCE.getConduitItem(enderChemicalConduit, 8))
@@ -280,7 +280,7 @@ public class MekanismModule implements ConduitCommonModule {
                         BuiltInRegistries.ITEM.get(
                                 ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID, "alloy_reinforced")))
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
-                .save(mekRecipeOutput, EnderIO.loc("mek_advanced_pressurized_tube_upgrade"));
+                .save(mekRecipeOutput, EnderIOAPI.loc("mek_advanced_pressurized_tube_upgrade"));
 
         ShapedRecipeBuilder
                 .shaped(RecipeCategory.BUILDING_BLOCKS, ConduitApiImpl.INSTANCE.getConduitItem(heatConduit, 3))
@@ -292,7 +292,7 @@ public class MekanismModule implements ConduitCommonModule {
                         BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID,
                                 "advanced_thermodynamic_conductor")))
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
-                .save(mekRecipeOutput, EnderIO.loc("mek_advanced_thermodynamic_conductor"));
+                .save(mekRecipeOutput, EnderIOAPI.loc("mek_advanced_thermodynamic_conductor"));
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BASIC_CHEMICAL_FILTER)
                 .pattern(" P ")
@@ -302,7 +302,7 @@ public class MekanismModule implements ConduitCommonModule {
                 .define('O', OSMIUM)
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(OSMIUM)))
-                .save(mekRecipeOutput, EnderIO.loc("mek_chemical_filter"));
+                .save(mekRecipeOutput, EnderIOAPI.loc("mek_chemical_filter"));
     }
 
     private void registerPayloadHandlers(RegisterPayloadHandlersEvent event) {

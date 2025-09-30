@@ -1,6 +1,6 @@
 package com.enderio;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.common.config.BaseConfig;
 import com.enderio.enderio.common.config.BaseConfigLang;
@@ -69,9 +69,9 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @EventBusSubscriber
-@Mod(EnderIO.MOD_ID)
+@Mod(EnderIOAPI.MOD_ID)
 public class EnderIOBase {
-    public static final Regilite REGILITE = new Regilite(EnderIO.MOD_ID);
+    public static final Regilite REGILITE = new Regilite(EnderIOAPI.MOD_ID);
 
     public static IEventBus modEventBus;
     public static ModContainer modContainer;
@@ -82,7 +82,7 @@ public class EnderIOBase {
 
         // Ensure the enderio config subdirectory is present.
         try {
-            Files.createDirectories(FMLPaths.CONFIGDIR.get().resolve(EnderIO.MOD_ID));
+            Files.createDirectories(FMLPaths.CONFIGDIR.get().resolve(EnderIOAPI.MOD_ID));
         } catch (IOException e) {
             e.printStackTrace();
         }

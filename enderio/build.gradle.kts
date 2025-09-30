@@ -75,6 +75,7 @@ sourceSets {
 }
 
 val regiliteVersion: String by project
+val almostunifiedVersion: String by project
 val jeiMinecraftVersion: String by project
 val jeiVersion: String by project
 val cctMinecraftVersion: String by project
@@ -98,9 +99,12 @@ configurations {
 dependencies {
     api("com.enderio:Regilite:$regiliteVersion")
 
-    // EnderIO Base will bundle Regilite and EnderCore in production.
+    // EnderIO will bundle Regilite and EnderCore in production.
     jarJar("com.enderio:Regilite:$regiliteVersion")
     jarJar(project(":endercore"))
+
+    // Almost Unified
+    compileOnly("com.almostreliable.mods:almostunified-neoforge:1.21.1-${almostunifiedVersion}:api")
 
     // JEI
     compileOnly("mezz.jei:jei-$jeiMinecraftVersion-common-api:$jeiVersion")

@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.data.recipes;
 
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.common.init.EIOBlocks;
 import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.common.tag.EIOTags;
@@ -66,7 +66,7 @@ public class SlicingRecipeProvider extends RecipeProvider {
     }
 
     protected void build(Item output, List<Ingredient> inputs, int energy, RecipeOutput recipeOutput) {
-        recipeOutput.accept(EnderIO.loc("slicing/" + BuiltInRegistries.ITEM.getKey(output).getPath()),
+        recipeOutput.accept(EnderIOAPI.loc("slicing/" + BuiltInRegistries.ITEM.getKey(output).getPath()),
                 new SlicingRecipe(new ItemStack(output), inputs, energy), null);
     }
 

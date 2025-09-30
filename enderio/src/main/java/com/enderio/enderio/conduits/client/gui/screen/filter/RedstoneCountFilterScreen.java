@@ -1,7 +1,7 @@
 package com.enderio.enderio.conduits.client.gui.screen.filter;
 
 import com.enderio.core.client.gui.screen.EIOScreen;
-import com.enderio.enderio.api.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.client.gui.widget.DyeColorPickerWidget;
 import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.conduits.common.init.ConduitLang;
@@ -15,7 +15,7 @@ import org.joml.Vector2i;
 
 public class RedstoneCountFilterScreen extends EIOScreen<RedstoneCountFilterMenu> {
     private static final Vector2i BG_SIZE = new Vector2i(183, 201);
-    private static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/40/item_filter.png");
+    private static final ResourceLocation BG_TEXTURE = EnderIOAPI.loc("textures/gui/40/item_filter.png");
 
     public RedstoneCountFilterScreen(RedstoneCountFilterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
