@@ -5,10 +5,6 @@ import com.enderio.core.common.menu.SlotWithOverlay;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.mojang.blaze3d.systems.RenderSystem;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.GuiGraphics;
@@ -25,6 +21,14 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public abstract class EnderContainerScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> {
 
@@ -205,7 +209,12 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
 
     @Override
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
-        for (var layer : overlayWidgets.keySet()) {
+
+        // Check the layers in reverse order for correct click propagation (from top to bottom layer)
+        List<Integer> sortedLayers = new ArrayList<>(overlayWidgets.keySet());
+        sortedLayers.sort(Comparator.reverseOrder());
+
+        for (int layer : sortedLayers) {
             for (var overlay : overlayWidgets.get(layer)) {
                 if (!(overlay instanceof AbstractWidget widget) || widget.isActive()) {
                     if (overlay.isMouseOver(pMouseX, pMouseY)) {
@@ -221,7 +230,10 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
 
     @Override
     public boolean mouseReleased(double pMouseX, double pMouseY, int pButton) {
-        for (var layer : overlayWidgets.keySet()) {
+        List<Integer> sortedLayers = new ArrayList<>(overlayWidgets.keySet());
+        sortedLayers.sort(Comparator.reverseOrder());
+
+        for (int layer : sortedLayers) {
             for (var overlay : overlayWidgets.get(layer)) {
                 if (!(overlay instanceof AbstractWidget widget) || widget.isActive()) {
                     if (overlay.isMouseOver(pMouseX, pMouseY)) {
@@ -234,10 +246,12 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
         return super.mouseReleased(pMouseX, pMouseY, pButton);
     }
 
-    // Always pass mouse drag event through widgets first.
     @Override
     public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
-        for (var layer : overlayWidgets.keySet()) {
+        List<Integer> sortedLayers = new ArrayList<>(overlayWidgets.keySet());
+        sortedLayers.sort(Comparator.reverseOrder());
+
+        for (int layer : sortedLayers) {
             for (var overlay : overlayWidgets.get(layer)) {
                 if (!(overlay instanceof AbstractWidget widget) || widget.isActive()) {
                     if (overlay.isMouseOver(pMouseX, pMouseY)) {
@@ -256,7 +270,10 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
 
     @Override
     public boolean mouseScrolled(double pMouseX, double pMouseY, double pScrollX, double pScrollY) {
-        for (var layer : overlayWidgets.keySet()) {
+        List<Integer> sortedLayers = new ArrayList<>(overlayWidgets.keySet());
+        sortedLayers.sort(Comparator.reverseOrder());
+
+        for (int layer : sortedLayers) {
             for (var overlay : overlayWidgets.get(layer)) {
                 if (!(overlay instanceof AbstractWidget widget) || widget.isActive()) {
                     if (overlay.isMouseOver(pMouseX, pMouseY)) {
@@ -268,6 +285,7 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
 
         return super.mouseScrolled(pMouseX, pMouseY, pScrollX, pScrollY);
     }
+
 
     /**
      * @deprecated Use {@link #onKeyPressed(int, int, int)} instead.

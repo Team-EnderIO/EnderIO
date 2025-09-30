@@ -5,12 +5,13 @@ import com.enderio.base.api.EnderIO;
 import com.enderio.base.api.capacitor.CapacitorModifier;
 import com.enderio.base.common.block.glass.GlassLighting;
 import com.enderio.core.common.util.TooltipUtil;
-import java.util.Locale;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
+
+import java.util.Locale;
 
 public class EIOLang {
     public static final Component BLOCK_BLAST_RESISTANT = TooltipUtil
@@ -204,6 +205,19 @@ public class EIOLang {
     public static final Component VISIBLE = addTranslation("gui", EnderIO.loc("visible.true"), "Visible");
     public static final Component NOT_VISIBLE = addTranslation("gui", EnderIO.loc("visible.false"), "Hidden");
 
+
+    public static final Component CHANNEL_PRIVATE = addTranslation("gui", EnderIO.loc("channel.private"),
+        "Channel is private");
+    public static final Component CHANNEL_PUBLIC = addTranslation("gui", EnderIO.loc("channel.public"),
+        "Channel is public");
+    public static final Component DELETE_CHANNEL = addTranslation("gui", EnderIO.loc("channel.delete_channel"),
+        "Delete channel");
+    public static final Component ADD_CHANNEL = addTranslation("gui", EnderIO.loc("channel.add_channel"),
+        "Add channel");
+
+    public static final Component AVAILABLE = addTranslation("gui", EnderIO.loc("channel.available"), "Available");
+    public static final Component SEND = addTranslation("gui", EnderIO.loc("channel.send"), "Send");
+    public static final Component RECEIVE = addTranslation("gui", EnderIO.loc("channel.receive"), "Receive");
     // endregion
 
     // region Entity Storage

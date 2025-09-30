@@ -400,6 +400,9 @@ public class MachineBlocks {
                     prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName()))))
             .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
 
+    public static final RegiliteBlock<ProgressMachineBlock<?>> TRANSCEIVER = progressMachine("transceiver",
+        () -> MachineBlockEntities.TRANSCEIVER).setTranslation("Dimensional Transceiver");
+
     // used when single methods needs to be overridden in the block class
     private static <T extends MachineBlock<?>> RegiliteBlock<T> baseMachine(RegiliteBlock<T> machineBlock,
             BiConsumer<BlockStateProvider, DataGenContext<Block, T>> blockStateProvider) {

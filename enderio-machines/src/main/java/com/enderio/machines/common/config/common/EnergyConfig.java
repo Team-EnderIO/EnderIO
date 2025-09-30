@@ -57,6 +57,9 @@ public class EnergyConfig {
     public final ModConfigSpec.ConfigValue<Integer> RELOCATOR_USAGE;
     public final ModConfigSpec.ConfigValue<Integer> ATTRACTOR_CAPACITY;
     public final ModConfigSpec.ConfigValue<Integer> ATTRACTOR_USAGE;
+    public final ModConfigSpec.ConfigValue<Integer> TRANSCEIVER_CAPACITY;
+    public final ModConfigSpec.ConfigValue<Integer> TRANSCEIVER_USAGE;
+
 
     public EnergyConfig(ModConfigSpec.Builder builder) {
         builder.push("energy");
@@ -234,6 +237,13 @@ public class EnergyConfig {
                 .defineInRange("capacity", 64_000, 1, Integer.MAX_VALUE);
         ATTRACTOR_USAGE = builder.comment("The base energy consumption in uI/t.")
                 .defineInRange("usage", 20, 1, Integer.MAX_VALUE);
+        builder.pop();
+
+        builder.push("transceiver");
+        TRANSCEIVER_CAPACITY = builder.comment("The base energy capacity in uI.")
+            .defineInRange("capacity", 250_000, 1, Integer.MAX_VALUE);
+        TRANSCEIVER_USAGE = builder.comment("The base energy consumption in uI/t.")
+            .defineInRange("usage", 10000, 1, Integer.MAX_VALUE);
         builder.pop();
 
         builder.pop();

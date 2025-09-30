@@ -48,6 +48,7 @@ import com.enderio.machines.common.blocks.vacuum.xp.XPVacuumBlockEntity;
 import com.enderio.machines.common.blocks.vat.VatBlockEntity;
 import com.enderio.machines.common.blocks.wired_charger.WiredChargerBlockEntity;
 import com.enderio.machines.common.blocks.wireless_charger.WirelessChargerBlockEntity;
+import com.enderio.machines.common.transceiver.TransceiverBlockEntity;
 import com.enderio.regilite.holder.RegiliteBlockEntity;
 import com.enderio.regilite.registry.BlockEntityRegistry;
 import com.google.common.collect.ImmutableMap;
@@ -237,6 +238,11 @@ public class MachineBlockEntities {
     public static final RegiliteBlockEntity<MindKillerBlockEntity> MIND_KILLER = BLOCK_ENTITY_REGISTRY.registerBlockEntity("mind_killer",
         MindKillerBlockEntity::new, MachineBlocks.MIND_KILLER)
                     .setRenderer(() -> ObeliskBER.factory(() -> Items.ZOMBIE_HEAD)); //TODO Custom model and BER maybe?
+
+    public static final RegiliteBlockEntity<TransceiverBlockEntity> TRANSCEIVER = register("transceiver",
+        TransceiverBlockEntity::new, MachineBlocks.TRANSCEIVER)
+        .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
+        .apply(MachineBlockEntities::fluidHandlerCapability);
 
     @SafeVarargs
     private static <B extends BlockEntity> RegiliteBlockEntity<B> register(String name,
