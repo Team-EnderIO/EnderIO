@@ -36,10 +36,6 @@ import com.enderio.enderio.data.recipe.FireCraftingRecipeProvider;
 import com.enderio.enderio.data.recipe.GlassRecipeProvider;
 import com.enderio.enderio.data.recipe.ItemRecipeProvider;
 import com.enderio.enderio.data.recipe.MaterialRecipeProvider;
-import com.enderio.enderio.data.tags.EIOBlockTagsProvider;
-import com.enderio.enderio.data.tags.EIOEntityTagsProvider;
-import com.enderio.enderio.data.tags.EIOFluidTagsProvider;
-import com.enderio.enderio.data.tags.EIOItemTagsProvider;
 import com.enderio.regilite.Regilite;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
@@ -143,14 +139,6 @@ public class EnderIOBase {
         provider.addSubProvider(event.includeServer(), new FilterRecipeProvider(packOutput, lookupProvider));
         provider.addSubProvider(event.includeServer(), new EIOLootModifiersProvider(packOutput, lookupProvider));
 
-        var b = new EIOBlockTagsProvider(packOutput, lookupProvider, existingFileHelper);
-        provider.addSubProvider(event.includeServer(), b);
-        provider.addSubProvider(event.includeServer(),
-                new EIOItemTagsProvider(packOutput, lookupProvider, b.contentsGetter(), existingFileHelper));
-        provider.addSubProvider(event.includeServer(),
-                new EIOFluidTagsProvider(packOutput, lookupProvider, existingFileHelper));
-        provider.addSubProvider(event.includeServer(),
-                new EIOEntityTagsProvider(packOutput, lookupProvider, existingFileHelper));
         provider.addSubProvider(event.includeServer(), new AdvancementProvider(packOutput, lookupProvider,
                 existingFileHelper, List.of(new EIOAdvancementGenerator())));
         provider.addSubProvider(event.includeServer(),

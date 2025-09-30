@@ -1,4 +1,4 @@
-package com.enderio.enderio.data.tags;
+package com.enderio.enderio.datagen.tags;
 
 import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.common.init.EIOFluids;

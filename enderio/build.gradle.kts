@@ -31,7 +31,17 @@ configurations {
     create("apiRuntimeOnly") {
         extendsFrom(runtimeOnly.get())
     }
-    create("apiLocalRuntime") {
+
+    create("datagenAnnotationProcessor") {
+        extendsFrom(annotationProcessor.get())
+    }
+    create("datagenCompileOnly") {
+        extendsFrom(compileOnly.get())
+    }
+    create("datagenImplementation") {
+        extendsFrom(implementation.get())
+    }
+    create("datagenRuntimeOnly") {
         extendsFrom(runtimeOnly.get())
     }
 
@@ -45,9 +55,6 @@ configurations {
         extendsFrom(implementation.get())
     }
     create("gametestRuntimeOnly") {
-        extendsFrom(runtimeOnly.get())
-    }
-    create("gametestLocalRuntime") {
         extendsFrom(runtimeOnly.get())
     }
 }
@@ -67,10 +74,15 @@ sourceSets {
         compileClasspath += sourceSets["api"].output
     }
 
+    create("datagen") {
+        compileClasspath += sourceSets["api"].output
+        compileClasspath += sourceSets.main.get().output
+    }
+
     create("gametest") {
         compileClasspath += sourceSets["api"].output
         compileClasspath += sourceSets.main.get().output
-        runtimeClasspath += configurations.getByName("gametestLocalRuntime")
+        //runtimeClasspath += configurations.getByName("gametestLocalRuntime")
     }
 }
 
@@ -194,11 +206,13 @@ neoForge {
     }
 
     addModdingDependenciesTo(sourceSets.getByName("api"))
+    addModdingDependenciesTo(sourceSets.getByName("datagen"))
     addModdingDependenciesTo(sourceSets.getByName("gametest"))
 
     mods {
         create("enderio") {
             sourceSet(sourceSets.getByName("api"))
+            sourceSet(sourceSets.getByName("datagen"))
             sourceSet(sourceSets.getByName("main"))
         }
 
