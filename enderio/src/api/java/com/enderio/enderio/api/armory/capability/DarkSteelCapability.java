@@ -1,8 +1,12 @@
 package com.enderio.enderio.api.armory.capability;
 
+import org.jetbrains.annotations.ApiStatus;
+
 import java.util.Collection;
 import java.util.Optional;
 
+// Not finished.
+@ApiStatus.Internal
 public interface DarkSteelCapability {
 
     void addUpgrade(DarkSteelUpgrade upgrade);

@@ -6,7 +6,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.ApiStatus;
 
+// Not finished.
+@ApiStatus.Internal
 public interface DarkSteelUpgrade {// extends INBTSerializable<Tag> {
 
     Component getDisplayName();
