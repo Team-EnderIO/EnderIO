@@ -10,7 +10,7 @@
   <h3 align="center">EnderIO</h3>
 
   <p align="center">
-    The full-fat tech mod for Minecraft 1.21
+    The full-fat tech mod for Minecraft 1.21.1
     <br />
     <a href="https://github.com/SleepyTrousers/EnderIO-Rewrite/wiki"><strong>Browse the Wiki »</strong></a>
     <br />
@@ -74,7 +74,7 @@ The Ender IO Team are official Akliz partners! Akliz provides high-performance g
 
 | Minecraft Version | Ender IO Version(s) | Support Status |
 |-------------------|---------------------| -------------- |
-| 1.21.1            | 8.x                 | 🚧             |
+| 1.21.1            | 8.x                 | ✅             |
 | 1.21.1            | 7.x                 | ❌             |
 | 1.20.1            | 6.x                 | ❌*            |
 | < 1.20.1          | < 6.x               | ❌             |
@@ -105,10 +105,10 @@ repositories {
 
 dependencies {
     // Include Ender IO API for compilation
-    compileOnly fg.deobf("com.enderio:enderio-<module>:<VERSION>:api")
+    compileOnly fg.deobf("com.enderio:enderio:<VERSION>:api")
     
     // Use EnderIO at runtime
-    runtimeOnly fg.deobf("com.enderio:enderio-<module>:<VERSION>")
+    runtimeOnly fg.deobf("com.enderio:enderio:<VERSION>")
 }
 ```
 If you need any feature in the api, contact us.
@@ -124,11 +124,10 @@ If you need any feature in the api, contact us.
 > Before selecting a task from the tracker to do, make sure to comment to say that you are working on it so other's don't do the same thing!
 > If you are planning on contributing something that isn't tracked, consider either making an issue to discuss your proposal, or pushing a very early draft PR for discussion
 
-1. Ensure you meet the [Forge prerequisites](https://docs.minecraftforge.net/en/latest/gettingstarted/#prerequisites).
+1. Ensure you meet the [NeoForge prerequisites](https://docs.neoforged.net/docs/gettingstarted/#prerequisites).
 1. Fork this repository under your own profile, this will mean you can push your changes to GitHub for Pull Requests later.
 1. Clone down the forked repository using a git client or cli.
 1. Open the project in your preferred IDE and wait for the gradle import.
-1. Follow any other relevant Forge setup [for your IDE](https://docs.minecraftforge.net/en/latest/gettingstarted/#from-zero-to-modding).
 1. Work on your feature or fix, try to commit for each major thing you do.
 1. Create a draft pull request early for big changes to receive early feedback.
 
