@@ -1,11 +1,9 @@
-import com.hypherionmc.modpublisher.properties.ModLoader
 import java.net.URI
 import java.text.SimpleDateFormat
 import java.util.Date
 
 plugins {
     id("net.neoforged.moddev")
-    id("com.hypherionmc.modutils.modpublisher") version "2.+"
 }
 
 val minecraftVersion: String by project
@@ -136,7 +134,6 @@ neoForge {
         create("data") {
             data()
 
-            // TODO: 1.22 - separate mod id.
             programArguments.addAll(
                     "--mod", "enderio_modded_conduits",
                     // TODO: Fix missing models...

@@ -8,7 +8,7 @@ plugins {
     id("com.hypherionmc.modutils.modpublisher") version "2.+"
 }
 
-evaluationDependsOn(":enderio-modded-conduits") // Because of the sourceset reference
+//evaluationDependsOn(":enderio-modded-conduits") // Because of the sourceset reference
 
 val minecraftVersion: String by project
 val neoForgeVersion: String by project
@@ -100,6 +100,7 @@ dependencies {
     jarJar(project(":endercore"))
 
     // Include built-in "addons"
+    jarJar(project(":enderio-armory"))
     jarJar(project(":enderio-modded-conduits"))
 
     // Almost Unified
@@ -205,6 +206,10 @@ neoForge {
             sourceSet(sourceSets.getByName("gametest"))
         }
 
+        create("enderio_armory") {
+            sourceSet(project(":enderio-armory").sourceSets.getByName("main"))
+        }
+
         create("enderio_modded_conduits") {
             sourceSet(project(":enderio-modded-conduits").sourceSets.getByName("main"))
         }
@@ -215,17 +220,27 @@ neoForge {
             logLevel = org.slf4j.event.Level.INFO
         }
 
+        // Client & Server runs contain default addons for ease.
+        // Data + Game Test focus purely on the core mod.
         create("client") {
             client()
 
-            loadedMods.set(listOf(mods.getByName("enderio"), mods.getByName("enderio_modded_conduits")))
+            loadedMods.set(listOf(
+                    mods.getByName("enderio"),
+                    mods.getByName("enderio_armory"),
+                    mods.getByName("enderio_modded_conduits")
+            ))
         }
 
         create("server") {
             server()
             gameDirectory = project.file("run/server")
 
-            loadedMods.set(listOf(mods.getByName("enderio")))
+            loadedMods.set(listOf(
+                    mods.getByName("enderio"),
+                    mods.getByName("enderio_armory"),
+                    mods.getByName("enderio_modded_conduits")
+            ))
         }
 
         create("data") {
