@@ -76,7 +76,7 @@ public class EnderIO {
     public static ModContainer modContainer;
 
     public static ResourceLocation rl(String path) {
-        return EnderIO.rl(path);
+        return EnderIOAPI.rl(path);
     }
 
     public EnderIO(IEventBus modEventBus, ModContainer modContainer) {
