@@ -2,7 +2,7 @@ package com.enderio.enderio.api.soul.binding.ingredients;
 
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.api.soul.SoulBoundUtils;
-import com.enderio.enderio.api.soul.SoulCaptureApi;
+import com.enderio.enderio.common.util.EntityCaptureUtils;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.component.DataComponents;
@@ -43,7 +43,7 @@ public class FilledSoulStorageIngredient implements ICustomIngredient {
             errorStack.set(DataComponents.CUSTOM_NAME, Component.literal("Item cannot be bound: " + defaultStack.getHoverName()));
             itemStacks = new ItemStack[] {errorStack};
         } else {
-            itemStacks = SoulCaptureApi.INSTANCE.getCapturableEntityTypes().stream().map(entityType -> {
+            itemStacks = EntityCaptureUtils.getCapturableEntityTypes().stream().map(entityType -> {
                 var stack = item.getDefaultInstance();
                 if (SoulBoundUtils.tryBindSoul(stack, Soul.of(entityType))) {
                     return Optional.of(stack);

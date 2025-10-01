@@ -2,7 +2,7 @@ package com.enderio.enderio.api.soul.binding.ingredients;
 
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.api.soul.SoulBoundUtils;
-import com.enderio.enderio.api.soul.SoulCaptureApi;
+import com.enderio.enderio.common.util.EntityCaptureUtils;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.component.DataComponents;
@@ -55,7 +55,7 @@ public class AnySoulBindableIngredient implements ICustomIngredient {
 
         // Pre-compute all stacks
         itemStacks = Stream.concat(
-            Stream.of(unboundStack), SoulCaptureApi.INSTANCE.getCapturableEntityTypes().stream().map(entityType -> {
+            Stream.of(unboundStack), EntityCaptureUtils.getCapturableEntityTypes().stream().map(entityType -> {
                 var stack = item.getDefaultInstance();
                 if (SoulBoundUtils.tryBindSoul(stack, Soul.of(entityType))) {
                     return Optional.of(stack);

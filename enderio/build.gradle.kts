@@ -46,6 +46,11 @@ configurations {
     create("gametestRuntimeOnly") {
         extendsFrom(runtimeOnly.get())
     }
+
+    testRuntimeOnly {
+        // TODO: Mekanism breaks our unit tests...
+        exclude(group = "mekanism", module = "Mekanism")
+    }
 }
 
 sourceSets {
@@ -176,10 +181,9 @@ dependencies {
     }
 }
 
-// TODO
-//tasks.test {
-//    useJUnitPlatform()
-//}
+tasks.test {
+    useJUnitPlatform()
+}
 
 neoForge {
     version = neoForgeVersion

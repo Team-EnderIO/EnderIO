@@ -149,12 +149,13 @@ neoForge {
             loadedMods.set(listOf(mods.getByName("enderio_modded_conduits")))
         }
 
-        create("gameTestServer") {
-            type = "gameTestServer"
-
-            sourceSet = sourceSets.getByName("gametest")
-            loadedMods.set(listOf(mods.getByName("enderio_modded_conduits"), mods.getByName("enderio_modded_conduits_tests")))
-        }
+        // TODO: When we add gametests for modded conduits...
+//        create("gameTestServer") {
+//            type = "gameTestServer"
+//
+//            sourceSet = sourceSets.getByName("gametest")
+//            loadedMods.set(listOf(mods.getByName("enderio_modded_conduits"), mods.getByName("enderio_modded_conduits_tests")))
+//        }
     }
 
     unitTest {
