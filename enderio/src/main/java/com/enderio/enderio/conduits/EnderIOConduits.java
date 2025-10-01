@@ -16,8 +16,6 @@ import com.enderio.enderio.conduits.common.integrations.Integrations;
 import com.enderio.enderio.conduits.data.ConduitTagProvider;
 import com.enderio.enderio.conduits.data.recipe.ConduitRecipes;
 import com.enderio.enderio.conduits.integration.ftb_ultimine.FTBUltimineCompat;
-import com.enderio.enderio.conduits.modded.common.ModdedConduits;
-import com.enderio.enderio.conduits.modded.data.ModConduitRecipeProvider;
 import com.enderio.enderio.data.EIODataProvider;
 import com.enderio.regilite.Regilite;
 import net.minecraft.core.RegistrySetBuilder;
@@ -73,7 +71,7 @@ public class EnderIOConduits {
     @SubscribeEvent
     public static void onData(GatherDataEvent event) {
         // Includes ModdedConduits datagen
-        event.createDatapackRegistryObjects(createDatapackEntriesBuilder(), ModdedConduits::buildConduitConditions, Set.of(EnderIO.MOD_ID));
+        event.createDatapackRegistryObjects(createDatapackEntriesBuilder(), Set.of(EnderIO.MOD_ID));
 
         PackOutput packOutput = event.getGenerator().getPackOutput();
         var registries = event.getLookupProvider();
@@ -86,16 +84,10 @@ public class EnderIOConduits {
         provider.addSubProvider(event.includeServer(), new ConduitRecipes(packOutput, registries));
 
         event.getGenerator().addProvider(true, provider);
-
-        event.getGenerator()
-            .addProvider(event.includeServer(), new ModConduitRecipeProvider(packOutput, registries));
     }
 
     private static RegistrySetBuilder createDatapackEntriesBuilder() {
         return new RegistrySetBuilder()
-            .add(EnderIORegistries.Keys.CONDUIT, (context) -> {
-                Conduits.bootstrap(context);
-                ModdedConduits.executeOnLoadedModules(module -> module.bootstrapConduits(context));
-            });
+            .add(EnderIORegistries.Keys.CONDUIT, Conduits::bootstrap);
     }
 }

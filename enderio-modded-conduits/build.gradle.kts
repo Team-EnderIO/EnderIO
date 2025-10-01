@@ -8,8 +8,6 @@ plugins {
     id("com.hypherionmc.modutils.modpublisher") version "2.+"
 }
 
-evaluationDependsOn(":enderio-modded-conduits") // Because of the sourceset reference
-
 val minecraftVersion: String by project
 val neoForgeVersion: String by project
 
@@ -18,22 +16,7 @@ apply(from = rootProject.file("buildSrc/shared.gradle.kts"))
 // Mojang ships Java 21 to end users in 1.20.5+, so your mod should target Java 21.
 java.toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 
-println("Building Ender IO version ${project.version}")
-
 configurations {
-    create("datagenAnnotationProcessor") {
-        extendsFrom(annotationProcessor.get())
-    }
-    create("datagenCompileOnly") {
-        extendsFrom(compileOnly.get())
-    }
-    create("datagenImplementation") {
-        extendsFrom(implementation.get())
-    }
-    create("datagenRuntimeOnly") {
-        extendsFrom(runtimeOnly.get())
-    }
-
     create("gametestAnnotationProcessor") {
         extendsFrom(annotationProcessor.get())
     }
@@ -55,13 +38,11 @@ sourceSets {
         }
     }
 
-    create("datagen") {
-        compileClasspath += sourceSets.main.get().output
+    test {
     }
 
     create("gametest") {
         compileClasspath += sourceSets.main.get().output
-        //runtimeClasspath += configurations.getByName("gametestLocalRuntime")
     }
 }
 
@@ -89,22 +70,8 @@ configurations {
 
 dependencies {
     api("com.enderio:Regilite:$regiliteVersion")
-
-    // EnderIO will bundle Regilite and EnderCore in production.
-    jarJar("com.enderio:Regilite:$regiliteVersion")
-    jarJar(project(":endercore"))
-
-    // Include built-in "addons"
-    jarJar(project(":enderio-modded-conduits"))
-
-    // Almost Unified
-    compileOnly("com.almostreliable.mods:almostunified-neoforge:1.21.1-${almostunifiedVersion}:api")
-
-    // JEI
-    compileOnly("mezz.jei:jei-$jeiMinecraftVersion-common-api:$jeiVersion")
-    compileOnly("mezz.jei:jei-$jeiMinecraftVersion-neoforge-api:$jeiVersion")
-    runtimeOnly("mezz.jei:jei-$jeiMinecraftVersion-common:$jeiVersion")
-    runtimeOnly("mezz.jei:jei-$jeiMinecraftVersion-neoforge:$jeiVersion")
+    api(project(":enderio"))
+    accessTransformers(project(":enderio"))
 
     // CC: Tweaked
     compileOnly("cc.tweaked:cc-tweaked-$cctMinecraftVersion-core-api:$cctVersion")
@@ -112,34 +79,9 @@ dependencies {
     // TODO: Does not start on latest NeoForge
 //    runtimeOnly("cc.tweaked:cc-tweaked-$cctMinecraftVersion-forge:$cctVersion")
 
-    // Jade for conduit addon
-    compileOnly("curse.maven:jade-324717:${jadeFileId}")
-    runtimeOnly("curse.maven:jade-324717:${jadeFileId}")
-
-    //Athena ctm
-    runtimeOnly("maven.modrinth:athena-ctm:${athenaVersion}")
-
     // AE2
     compileOnly("appeng:appliedenergistics2:${ae2Version}:api")
     runtimeOnly("appeng:appliedenergistics2:${ae2Version}")
-
-    // Enchantment descriptions
-    //runtimeOnly("net.darkhax.bookshelf:Bookshelf-NeoForge-${minecraft_version}:${bookshelf_version}")
-    //runtimeOnly("net.darkhax.enchdesc:EnchantmentDescriptions-NeoForge-${minecraft_version}:${ench_desc_version}")
-
-    // The One Probe https://github.com/McJtyMods/TheOneProbe/issues/548
-    //compileOnly("mcjty.theoneprobe:theoneprobe:${top_version}:api") {
-    //    transitive = false
-    //}
-    //runtimeOnly("mcjty.theoneprobe:theoneprobe:${top_version}") {
-    //    transitive = false
-    //}
-
-    //fluxnetworks
-    ////runtimeOnly("curse.maven:fluxnetworks-248020:4651164")
-
-    // Patchouli
-    //runtimeOnly("vazkii.patchouli:Patchouli:${patchouli_version}")
 
     // Mekanism
     compileOnly("mekanism:Mekanism:${mekanismMinecraftVersion}-${mekanismVersion}:api")
@@ -152,15 +94,6 @@ dependencies {
     //Laserio
     compileOnly("curse.maven:laserio-${curseforge_laserio_id}:${curseforge_laserio_file}")
     runtimeOnly("curse.maven:laserio-${curseforge_laserio_id}:${curseforge_laserio_file}")
-
-    // Graphlib
-    api("dev.gigaherz.graph:GraphLib3:$graphlibVersion")
-    jarJar("dev.gigaherz.graph:GraphLib3:$graphlibVersion") {
-        version {
-            strictly(graphlibVersionRange)
-            prefer(graphlibVersion)
-        }
-    }
 
     // FTB Ultimine Addon
     compileOnly("dev.ftb.mods:ftb-ultimine-neoforge:${ftbUltimineVersion}")
@@ -176,33 +109,22 @@ dependencies {
     }
 }
 
-// TODO
-//tasks.test {
-//    useJUnitPlatform()
-//}
+tasks.test {
+    useJUnitPlatform()
+}
 
 neoForge {
     version = neoForgeVersion
 
-    accessTransformers {
-        publish(project.file("src/main/resources/META-INF/accesstransformer.cfg"))
-    }
-
-    addModdingDependenciesTo(sourceSets.getByName("datagen"))
     addModdingDependenciesTo(sourceSets.getByName("gametest"))
 
     mods {
-        create("enderio") {
-            sourceSet(sourceSets.getByName("datagen"))
+        create("enderio_modded_conduits") {
             sourceSet(sourceSets.getByName("main"))
         }
 
-        create("enderio_tests") {
+        create("enderio_modded_conduits_tests") {
             sourceSet(sourceSets.getByName("gametest"))
-        }
-
-        create("enderio_modded_conduits") {
-            sourceSet(project(":enderio-modded-conduits").sourceSets.getByName("main"))
         }
     }
 
@@ -211,24 +133,12 @@ neoForge {
             logLevel = org.slf4j.event.Level.INFO
         }
 
-        create("client") {
-            client()
-
-            loadedMods.set(listOf(mods.getByName("enderio"), mods.getByName("enderio_modded_conduits")))
-        }
-
-        create("server") {
-            server()
-            gameDirectory = project.file("run/server")
-
-            loadedMods.set(listOf(mods.getByName("enderio")))
-        }
-
         create("data") {
             data()
 
+            // TODO: 1.22 - separate mod id.
             programArguments.addAll(
-                    "--mod", "enderio",
+                    "--mod", "enderio_modded_conduits",
                     // TODO: Fix missing models...
                     //"--all",
                     "--server", "--client",
@@ -236,27 +146,27 @@ neoForge {
                     "--existing", file("src/main/resources").absolutePath,
             )
 
-            loadedMods.set(listOf(mods.getByName("enderio")))
+            loadedMods.set(listOf(mods.getByName("enderio_modded_conduits")))
         }
 
         create("gameTestServer") {
             type = "gameTestServer"
 
             sourceSet = sourceSets.getByName("gametest")
-            loadedMods.set(listOf(mods.getByName("enderio"), mods.getByName("enderio_tests")))
+            loadedMods.set(listOf(mods.getByName("enderio_modded_conduits"), mods.getByName("enderio_modded_conduits_tests")))
         }
     }
 
     unitTest {
         enable()
-        testedMod = mods["enderio"]
+        testedMod = mods["enderio_modded_conduits"]
     }
 }
 
 tasks.withType<Jar> {
     manifest {
         attributes(mapOf(
-                "Specification-Title" to "Ender IO",
+                "Specification-Title" to "Ender IO - Modded Conduits",
                 "Specification-Vendor" to "Team Ender IO",
                 "Specification-Version" to "1",
                 "Implementation-Title" to project.name,
@@ -267,60 +177,13 @@ tasks.withType<Jar> {
     }
 }
 
-tasks.register<Jar>("apiJar") {
-    archiveClassifier.set("api")
-
-    from(sourceSets["main"].output)
-    from(sourceSets["main"].allJava)
-    include("com/enderio/enderio/api/**")
-}
-
 tasks.register<Jar>("sourcesJar") {
     archiveClassifier.set("sources")
     from(sourceSets["main"].allJava)
 }
 
 tasks.build {
-    dependsOn(tasks["apiJar"])
     dependsOn(tasks["sourcesJar"])
-}
-
-val curseforge_projectId: String by project
-val modrinth_projectId: String by project
-
-if (getReleaseType() != null) {
-    if (System.getenv("CHANGELOG") != null) {
-        publisher {
-
-            apiKeys {
-                curseforge(System.getenv("CURSEFORGE_TOKEN"))
-            }
-
-            debug.set(System.getenv("PUBLISH") != "true")
-
-            curseID.set(curseforge_projectId)
-
-            versionType.set(getReleaseType())
-            projectVersion.set("${project.version}")
-
-            displayName.set("Ender IO - ${project.version}")
-            changelog.set(System.getenv("CHANGELOG"))
-
-            setGameVersions("1.21.1")
-            setLoaders(ModLoader.NEOFORGE)
-
-            curseEnvironment.set("both")
-            artifact.set(tasks.jar)
-
-            setJavaVersions(JavaVersion.VERSION_21)
-
-            curseDepends {
-                optional("jei", /*"patchouli",*/ "stitch", "applied-energistics-2", "mekanism", "cc-tweaked")
-            }
-        }
-    } else {
-        println("Release disabled, no changelog found in environment");
-    }
 }
 
 fun getReleaseType(): String? {
@@ -348,12 +211,11 @@ publishing {
             version = "${project.version}"
 
             from(components["java"])
-            artifact(tasks["apiJar"])
             artifact(tasks["sourcesJar"])
 
             pom {
-                name.set("EnderIO")
-                description.set("Ender IO")
+                name.set("EnderIO - Modded Conduits")
+                description.set("Ender IO - Modded Conduits Addon")
                 url.set("https://github.com/Team-EnderIO/EnderIO")
 
                 licenses {

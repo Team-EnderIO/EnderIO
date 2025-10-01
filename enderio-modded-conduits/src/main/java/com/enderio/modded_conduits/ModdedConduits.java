@@ -1,0 +1,81 @@
+package com.enderio.modded_conduits;
+
+import com.enderio.EnderIO;
+import com.enderio.enderio.api.EnderIORegistries;
+import com.enderio.modded_conduits.common.ModuleModIds;
+import com.enderio.modded_conduits.common.modules.ConduitCommonModule;
+import com.enderio.modded_conduits.common.modules.Integrations;
+import com.enderio.modded_conduits.common.modules.appeng.AE2ConduitsModule;
+import com.enderio.modded_conduits.common.modules.mekanism.MekanismModule;
+import com.enderio.modded_conduits.common.modules.refinedstorage.RefinedStorageCommonModule;
+import com.enderio.modded_conduits.data.ModConduitRecipeProvider;
+import com.enderio.regilite.Regilite;
+import net.minecraft.core.RegistrySetBuilder;
+import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceKey;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.common.conditions.ICondition;
+import net.neoforged.neoforge.data.event.GatherDataEvent;
+
+import java.util.Map;
+import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+import static java.util.Map.entry;
+
+@Mod(value = ModdedConduits.MOD_ID)
+@EventBusSubscriber(modid = ModdedConduits.MOD_ID)
+public class ModdedConduits {
+    public static final String MOD_ID = EnderIO.MOD_ID + "_modded_conduits";
+
+    // TODO: 1.22 - our own mod id.
+    public static final Regilite REGILITE = new Regilite(EnderIO.MOD_ID);
+
+    private static final Map<String, Supplier<ConduitCommonModule>> CONDUIT_MODULES = Map.ofEntries(
+            entry(ModuleModIds.APPLIED_ENERGISTICS, () -> AE2ConduitsModule.INSTANCE),
+            entry(ModuleModIds.MEKANISM, () -> MekanismModule.INSTANCE),
+            entry(ModuleModIds.REFINED_STORAGE, () -> RefinedStorageCommonModule.INSTANCE));
+
+    public static IEventBus modEventBus;
+
+    public ModdedConduits(IEventBus modEventBus) {
+        ModdedConduits.modEventBus = modEventBus;
+        Integrations.register();
+        executeOnLoadedModules(module -> module.initialize(modEventBus));
+        REGILITE.register(modEventBus);
+    }
+
+    public static void buildConduitConditions(BiConsumer<ResourceKey<?>, ICondition> conditions) {
+        executeOnLoadedModules(module -> module.buildConduitConditions(conditions));
+    }
+
+    public static void executeOnLoadedModules(Consumer<ConduitCommonModule> action) {
+        for (var module : CONDUIT_MODULES.entrySet()) {
+            if (ModList.get().isLoaded(module.getKey())) {
+                action.accept(module.getValue().get());
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onData(GatherDataEvent event) {
+        event.createDatapackRegistryObjects(createDatapackEntriesBuilder(), ModdedConduits::buildConduitConditions, Set.of(EnderIO.MOD_ID));
+
+        PackOutput packOutput = event.getGenerator().getPackOutput();
+        var registries = event.getLookupProvider();
+
+        event.getGenerator()
+            .addProvider(event.includeServer(), new ModConduitRecipeProvider(packOutput, registries));
+    }
+
+    private static RegistrySetBuilder createDatapackEntriesBuilder() {
+        return new RegistrySetBuilder().add(EnderIORegistries.Keys.CONDUIT,
+            (context) -> ModdedConduits.executeOnLoadedModules(module -> module.bootstrapConduits(context)));
+    }
+}
