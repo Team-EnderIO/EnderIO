@@ -309,13 +309,11 @@ if (getReleaseType() != null) {
 
             apiKeys {
                 curseforge(System.getenv("CURSEFORGE_TOKEN"))
-                modrinth(System.getenv("MODRINTH_TOKEN"))
             }
 
             debug.set(System.getenv("PUBLISH") != "true")
 
             curseID.set(curseforge_projectId)
-            modrinthID.set(modrinth_projectId)
 
             versionType.set(getReleaseType())
             projectVersion.set("${project.version}")
@@ -333,10 +331,6 @@ if (getReleaseType() != null) {
 
             curseDepends {
                 optional("jei", /*"patchouli",*/ "stitch", "applied-energistics-2", "mekanism", "cc-tweaked")
-            }
-
-            modrinthDepends {
-                optional("jei", "stitch", "ae2", "mekanism", "cc-tweaked")
             }
         }
     } else {
