@@ -16,13 +16,13 @@ featureFlags="META-INF/feature_flags.json"
 [[dependencies.enderio_armory]]
 modId="minecraft"
 type="required"
-versionRange="${mcversion}"
+versionRange="${minecraft_version_range}"
 side="BOTH"
 
 [[dependencies.enderio_armory]]
 modId="neoforge"
 type="required"
-versionRange="${neo_version}"
+versionRange="${neoforge_version}"
 side="BOTH"
 
 [[dependencies.enderio_armory]]

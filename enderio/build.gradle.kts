@@ -1,59 +1,21 @@
 import com.hypherionmc.modpublisher.properties.ModLoader
-import java.net.URI
+import org.gradle.kotlin.dsl.invoke
 import java.text.SimpleDateFormat
 import java.util.Date
 
 plugins {
-    id("net.neoforged.moddev")
-    id("com.hypherionmc.modutils.modpublisher") version "2.+"
+    id("mod-common-conventions")
+    alias(libs.plugins.modpublisher)
 }
 
-// Because of the sourceset reference
+// Because of the sourceset references to the addons
 evaluationDependsOn(":enderio-armory")
 evaluationDependsOn(":enderio-modded-conduits")
 
-val minecraftVersion: String by project
-val neoForgeVersion: String by project
-
-apply(from = rootProject.file("buildSrc/shared.gradle.kts"))
-
-// Mojang ships Java 21 to end users in 1.20.5+, so your mod should target Java 21.
-java.toolchain.languageVersion.set(JavaLanguageVersion.of(21))
-
 println("Building Ender IO version ${project.version}")
 
-configurations {
-    create("datagenAnnotationProcessor") {
-        extendsFrom(annotationProcessor.get())
-    }
-    create("datagenCompileOnly") {
-        extendsFrom(compileOnly.get())
-    }
-    create("datagenImplementation") {
-        extendsFrom(implementation.get())
-    }
-    create("datagenRuntimeOnly") {
-        extendsFrom(runtimeOnly.get())
-    }
-
-    create("gametestAnnotationProcessor") {
-        extendsFrom(annotationProcessor.get())
-    }
-    create("gametestCompileOnly") {
-        extendsFrom(compileOnly.get())
-    }
-    create("gametestImplementation") {
-        extendsFrom(implementation.get())
-    }
-    create("gametestRuntimeOnly") {
-        extendsFrom(runtimeOnly.get())
-    }
-
-    testRuntimeOnly {
-        // TODO: Mekanism breaks our unit tests...
-        exclude(group = "mekanism", module = "Mekanism")
-    }
-}
+val localRuntime by configurations.creating
+configurations.runtimeClasspath.get().extendsFrom(localRuntime)
 
 sourceSets {
     main {
@@ -62,137 +24,130 @@ sourceSets {
         }
     }
 
-    create("datagen") {
+    val datagen by creating {
         compileClasspath += sourceSets.main.get().output
     }
 
-    create("gametest") {
+    val gametest by creating {
         compileClasspath += sourceSets.main.get().output
         //runtimeClasspath += configurations.getByName("gametestLocalRuntime")
     }
 }
 
-val regiliteVersion: String by project
-val almostunifiedVersion: String by project
-val jeiMinecraftVersion: String by project
-val jeiVersion: String by project
-val cctMinecraftVersion: String by project
-val cctVersion: String by project
-val athenaVersion: String by project
-val ae2Version: String by project
-val refinedstorageVersion: String by project
-val jadeFileId: String by project
-val mekanismMinecraftVersion: String by project
-val mekanismVersion: String by project
-val curseforge_laserio_id: String by project
-val curseforge_laserio_file: String by project
-val graphlibVersion: String by project
-val graphlibVersionRange: String by project
-val ftbUltimineVersion: String by project
-
-configurations {
-    runtimeClasspath.get().extendsFrom(create("localRuntime"))
+val testImplementation by configurations.getting
+testImplementation.extendsFrom(configurations.implementation.get())
+val testCompileOnly by configurations.getting
+testCompileOnly.extendsFrom(configurations.compileOnly.get())
+val testRuntimeOnly by configurations.getting {
+    // TODO: Mekanism breaks our unit tests...
+    exclude(group = "mekanism", module = "Mekanism")
+    extendsFrom(configurations.runtimeOnly.get())
 }
+val testAnnotationProcessor by configurations.getting
+testAnnotationProcessor.extendsFrom(configurations.annotationProcessor.get())
+
+val datagenImplementation by configurations.getting
+datagenImplementation.extendsFrom(configurations.implementation.get())
+val datagenCompileOnly by configurations.getting
+datagenCompileOnly.extendsFrom(configurations.compileOnly.get())
+val datagenRuntimeOnly by configurations.getting
+datagenRuntimeOnly.extendsFrom(configurations.runtimeOnly.get())
+val datagenAnnotationProcessor by configurations.getting
+datagenAnnotationProcessor.extendsFrom(configurations.annotationProcessor.get())
+
+val gametestImplementation by configurations.getting
+gametestImplementation.extendsFrom(configurations.implementation.get())
+val gametestCompileOnly by configurations.getting
+gametestCompileOnly.extendsFrom(configurations.compileOnly.get())
+val gametestRuntimeOnly by configurations.getting
+gametestRuntimeOnly.extendsFrom(configurations.runtimeOnly.get())
+val gametestAnnotationProcessor by configurations.getting
+gametestAnnotationProcessor.extendsFrom(configurations.annotationProcessor.get())
 
 dependencies {
-    api("com.enderio:Regilite:$regiliteVersion")
+    // Include and bundle regilite
+    api(libs.regilite)
+    jarJar(libs.regilite)
 
     // EnderIO will bundle Regilite and EnderCore in production.
-    jarJar("com.enderio:Regilite:$regiliteVersion")
+    api(project(":endercore"))
     jarJar(project(":endercore"))
 
     // Include built-in "addons"
     jarJar(project(":enderio-armory"))
-    add("localRuntime", project(":enderio-armory"))
+    localRuntime(project(":enderio-armory"))
     jarJar(project(":enderio-modded-conduits"))
-    add("localRuntime", project(":enderio-modded-conduits"))
+    localRuntime(project(":enderio-modded-conduits"))
 
     // Almost Unified
-    compileOnly("com.almostreliable.mods:almostunified-neoforge:1.21.1-${almostunifiedVersion}:api")
+    compileOnly(variantOf(libs.almostUnified) {
+        classifier("api")
+    })
 
     // JEI
-    compileOnly("mezz.jei:jei-$jeiMinecraftVersion-common-api:$jeiVersion")
-    compileOnly("mezz.jei:jei-$jeiMinecraftVersion-neoforge-api:$jeiVersion")
-    runtimeOnly("mezz.jei:jei-$jeiMinecraftVersion-common:$jeiVersion")
-    runtimeOnly("mezz.jei:jei-$jeiMinecraftVersion-neoforge:$jeiVersion")
+    compileOnly(libs.bundles.jeiApi)
+    localRuntime(libs.bundles.jei)
 
     // CC: Tweaked
-    compileOnly("cc.tweaked:cc-tweaked-$cctMinecraftVersion-core-api:$cctVersion")
-    compileOnly("cc.tweaked:cc-tweaked-$cctMinecraftVersion-forge-api:$cctVersion")
-    // TODO: Does not start on latest NeoForge
-//    runtimeOnly("cc.tweaked:cc-tweaked-$cctMinecraftVersion-forge:$cctVersion")
+    compileOnly(libs.bundles.ccTweakedApi)
+    localRuntime(libs.ccTweakedForge)
 
     // Jade for conduit addon
-    compileOnly("curse.maven:jade-324717:${jadeFileId}")
-    runtimeOnly("curse.maven:jade-324717:${jadeFileId}")
+    compileOnly(libs.jade)
+    localRuntime(libs.jade)
 
     //Athena ctm
-    runtimeOnly("maven.modrinth:athena-ctm:${athenaVersion}")
+    localRuntime(libs.athena)
 
     // AE2
-    compileOnly("appeng:appliedenergistics2:${ae2Version}:api")
-    runtimeOnly("appeng:appliedenergistics2:${ae2Version}")
+    compileOnly(variantOf(libs.ae2) {
+        classifier("api")
+    })
 
-    // Enchantment descriptions
-    //runtimeOnly("net.darkhax.bookshelf:Bookshelf-NeoForge-${minecraft_version}:${bookshelf_version}")
-    //runtimeOnly("net.darkhax.enchdesc:EnchantmentDescriptions-NeoForge-${minecraft_version}:${ench_desc_version}")
+    localRuntime(libs.ae2)
 
-    // The One Probe https://github.com/McJtyMods/TheOneProbe/issues/548
-    //compileOnly("mcjty.theoneprobe:theoneprobe:${top_version}:api") {
-    //    transitive = false
-    //}
-    //runtimeOnly("mcjty.theoneprobe:theoneprobe:${top_version}") {
-    //    transitive = false
-    //}
-
-    //fluxnetworks
-    ////runtimeOnly("curse.maven:fluxnetworks-248020:4651164")
-
-    // Patchouli
-    //runtimeOnly("vazkii.patchouli:Patchouli:${patchouli_version}")
+    // TODO: Re-add Enchantment descriptions if we add enchantments again
 
     // Mekanism
-    compileOnly("mekanism:Mekanism:${mekanismMinecraftVersion}-${mekanismVersion}:api")
-    runtimeOnly("mekanism:Mekanism:${mekanismMinecraftVersion}-${mekanismVersion}")
+    compileOnly(variantOf(libs.mekanism) {
+        classifier("api")
+    })
+
+    localRuntime(libs.mekanism)
 
     // Refined Storage
-    compileOnly("com.refinedmods.refinedstorage:refinedstorage-neoforge:${refinedstorageVersion}")
-    runtimeOnly("com.refinedmods.refinedstorage:refinedstorage-neoforge:${refinedstorageVersion}")
+    compileOnly(libs.refinedStorage)
+    localRuntime(libs.refinedStorage)
 
     //Laserio
-    compileOnly("curse.maven:laserio-${curseforge_laserio_id}:${curseforge_laserio_file}")
-    runtimeOnly("curse.maven:laserio-${curseforge_laserio_id}:${curseforge_laserio_file}")
+    compileOnly(libs.laserio)
+    localRuntime(libs.laserio)
 
     // Graphlib
-    api("dev.gigaherz.graph:GraphLib3:$graphlibVersion")
-    jarJar("dev.gigaherz.graph:GraphLib3:$graphlibVersion") {
-        version {
-            strictly(graphlibVersionRange)
-            prefer(graphlibVersion)
-        }
-    }
+    api(libs.graphlib)
+    jarJar(libs.graphlib)
 
     // FTB Ultimine Addon
-    compileOnly("dev.ftb.mods:ftb-ultimine-neoforge:${ftbUltimineVersion}")
-    runtimeOnly("dev.ftb.mods:ftb-ultimine-neoforge:${ftbUltimineVersion}")
+    compileOnly(libs.ftbUltimine)
+    localRuntime(libs.ftbUltimine)
 
     // Unit tests
-    testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    testImplementation("net.neoforged:testframework:${neoForgeVersion}")
+    testImplementation(libs.junitJupiter)
+    testRuntimeOnly(libs.junitPlatformLauncher)
+    testImplementation(libs.neoforgeTestFramework)
 
     // Setup gametests
-    add("gametestImplementation", "net.neoforged:testframework:$neoForgeVersion") {
+    gametestImplementation(libs.neoforgeTestFramework) {
         isTransitive = false
     }
 }
 
-tasks.test {
-    useJUnitPlatform()
-}
+//tasks.test {
+//    useJUnitPlatform()
+//}
 
 neoForge {
-    version = neoForgeVersion
+    version = libs.versions.neoforge.get()
 
     accessTransformers {
         publish(project.file("src/main/resources/META-INF/accesstransformer.cfg"))
@@ -201,23 +156,13 @@ neoForge {
     addModdingDependenciesTo(sourceSets.getByName("datagen"))
     addModdingDependenciesTo(sourceSets.getByName("gametest"))
 
-    mods {
-        create("enderio") {
-            sourceSet(sourceSets.getByName("datagen"))
-            sourceSet(sourceSets.getByName("main"))
-        }
+    val modEnderio by mods.creating {
+        sourceSet(sourceSets.getByName("datagen"))
+        sourceSet(sourceSets.getByName("main"))
+    }
 
-        create("enderio_tests") {
-            sourceSet(sourceSets.getByName("gametest"))
-        }
-
-        create("enderio_armory") {
-            sourceSet(project(":enderio-armory").sourceSets.getByName("main"))
-        }
-
-        create("enderio_modded_conduits") {
-            sourceSet(project(":enderio-modded-conduits").sourceSets.getByName("main"))
-        }
+    val modEnderioTests by mods.creating {
+        sourceSet(sourceSets.getByName("gametest"))
     }
 
     runs {
@@ -227,28 +172,19 @@ neoForge {
 
         // Client & Server runs contain default addons for ease.
         // Data + Game Test focus purely on the core mod.
-        create("client") {
+        val client by creating {
             client()
-
-            loadedMods.set(listOf(
-                    mods.getByName("enderio"),
-                    mods.getByName("enderio_armory"),
-                    mods.getByName("enderio_modded_conduits")
-            ))
+            loadedMods.set(listOf(modEnderio))
         }
 
-        create("server") {
+        val server by creating {
             server()
-            gameDirectory = project.file("run/server")
 
-            loadedMods.set(listOf(
-                    mods.getByName("enderio"),
-                    mods.getByName("enderio_armory"),
-                    mods.getByName("enderio_modded_conduits")
-            ))
+            gameDirectory = project.file("run/server")
+            loadedMods = listOf(modEnderio)
         }
 
-        create("data") {
+        val data by creating {
             data()
 
             programArguments.addAll(
@@ -260,22 +196,45 @@ neoForge {
                     "--existing", file("src/main/resources").absolutePath,
             )
 
-            loadedMods.set(listOf(mods.getByName("enderio")))
+            loadedMods = listOf(modEnderio)
         }
 
-        create("gameTestServer") {
+        val gameTestServer by creating {
             type = "gameTestServer"
 
             sourceSet = sourceSets.getByName("gametest")
-            loadedMods.set(listOf(mods.getByName("enderio"), mods.getByName("enderio_tests")))
+            loadedMods = listOf(modEnderio, modEnderioTests)
         }
     }
 
     unitTest {
         enable()
-        testedMod = mods["enderio"]
+        testedMod = modEnderio
     }
 }
+
+// Expand variables in mods.toml
+var generateModMetadata = tasks.register<ProcessResources>("generateModMetadata") {
+    val replaceProperties = mapOf(
+            "mod_version" to project.version,
+            "minecraft_version_range" to libs.versions.minecraft.get(),
+            "neoforge_version" to libs.versions.neoforge.get(),
+            "loader_version_range" to "[4,)", // TODO
+            "mekanism_version_range" to libs.versions.mekanismMod.get(),
+            "ae2_version_range" to libs.versions.ae2.get(),
+            "refinedstorage_version_range" to libs.versions.refinedStorage.get(),
+            "ftb_ultimine_version_range" to libs.versions.ftbUltimine.get(),
+    )
+
+    inputs.properties(replaceProperties)
+    expand(replaceProperties)
+    from("src/main/templates")
+    into("build/generated/sources/modMetadata")
+}
+
+// Add results to source set and to IDE sync
+sourceSets.main.get().resources.srcDir(generateModMetadata)
+neoForge.ideSyncTask(generateModMetadata)
 
 tasks.withType<Jar> {
     manifest {
@@ -341,11 +300,11 @@ if (getReleaseType() != null) {
             setJavaVersions(JavaVersion.VERSION_21)
 
             curseDepends {
-                optional("jei", /*"patchouli",*/ "stitch", "applied-energistics-2", "mekanism", "cc-tweaked")
+                optional("jei", "athena", "applied-energistics-2", "mekanism", "cc-tweaked")
             }
 
             modrinthDepends {
-                optional("jei", "stitch", "ae2", "mekanism", "cc-tweaked")
+                optional("jei", "athena-ctm", "ae2", "mekanism", "cc-tweaked")
             }
         }
     } else {

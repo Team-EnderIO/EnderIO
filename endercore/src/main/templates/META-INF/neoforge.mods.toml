@@ -12,14 +12,14 @@ description="Supporting library for Ender IO and its Modules"
 displayURL="https://enderio.com/"
 logoFile="logo.png"
 
-[[dependencies.enderio]]
+[[dependencies.endercore]]
 modId="minecraft"
 type="required"
-versionRange="${mcversion}"
+versionRange="${minecraft_version_range}"
 side="BOTH"
 
-[[dependencies.enderio]]
+[[dependencies.endercore]]
 modId="neoforge"
 type="required"
-versionRange="${neo_version}"
+versionRange="${neoforge_version}"
 side="BOTH"

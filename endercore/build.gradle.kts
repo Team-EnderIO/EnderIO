@@ -1,26 +1,21 @@
 val minecraftVersion: String by project
 val minecraftVersionRange: String by project
-val neoForgeVersion: String by project
 val neoForgeVersionRange: String by project
 val loaderVersionRange: String by project
 
-apply(from = rootProject.file("buildSrc/shared.gradle.kts"))
+plugins {
+    id("mod-common-conventions")
+}
 
 // Mojang ships Java 21 to end users in 1.20.5+, so your mod should target Java 21.
 java.toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 
-val regiliteVersion: String by project
-val almostunifiedVersion: String by project
-
 dependencies {
     // Regilite
-    api("com.enderio:Regilite:${regiliteVersion}")
+    api(libs.regilite)
 
-    // Almost Unified
-    compileOnly("com.almostreliable.mods:almostunified-neoforge:1.21.1-${almostunifiedVersion}:api")
-
-    testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testImplementation(libs.junitJupiter)
+    testRuntimeOnly(libs.junitPlatformLauncher)
 }
 
 tasks.test {
@@ -28,7 +23,7 @@ tasks.test {
 }
 
 neoForge {
-    version = neoForgeVersion
+    version = libs.versions.neoforge.get()
 
     mods {
         create("endercore") {
@@ -41,6 +36,25 @@ neoForge {
         testedMod = mods["endercore"]
     }
 }
+
+// Expand variables in mods.toml
+var generateModMetadata = tasks.register<ProcessResources>("generateModMetadata") {
+    val replaceProperties = mapOf(
+            "mod_version" to project.version,
+            "minecraft_version_range" to libs.versions.minecraft.get(),
+            "neoforge_version" to libs.versions.neoforge.get(),
+            "loader_version_range" to "[4,)", // TODO
+    )
+
+    inputs.properties(replaceProperties)
+    expand(replaceProperties)
+    from("src/main/templates")
+    into("build/generated/sources/modMetadata")
+}
+
+// Add results to source set and to IDE sync
+sourceSets.main.get().resources.srcDir(generateModMetadata)
+neoForge.ideSyncTask(generateModMetadata)
 
 publishing {
     publications {

@@ -3,13 +3,8 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 plugins {
-    id("net.neoforged.moddev")
+    id("mod-common-conventions")
 }
-
-val minecraftVersion: String by project
-val neoForgeVersion: String by project
-
-apply(from = rootProject.file("buildSrc/shared.gradle.kts"))
 
 // Mojang ships Java 21 to end users in 1.20.5+, so your mod should target Java 21.
 java.toolchain.languageVersion.set(JavaLanguageVersion.of(21))
@@ -44,40 +39,24 @@ sourceSets {
     }
 }
 
-val regiliteVersion: String by project
-val almostunifiedVersion: String by project
-val jeiMinecraftVersion: String by project
-val jeiVersion: String by project
-val cctMinecraftVersion: String by project
-val cctVersion: String by project
-val athenaVersion: String by project
-val ae2Version: String by project
-val refinedstorageVersion: String by project
-val jadeFileId: String by project
-val mekanismMinecraftVersion: String by project
-val mekanismVersion: String by project
-val curseforge_laserio_id: String by project
-val curseforge_laserio_file: String by project
-val graphlibVersion: String by project
-val graphlibVersionRange: String by project
-val ftbUltimineVersion: String by project
+val gametestImplementation by configurations.getting
 
 configurations {
     runtimeClasspath.get().extendsFrom(create("localRuntime"))
 }
 
 dependencies {
-    api("com.enderio:Regilite:$regiliteVersion")
+    api(libs.regilite)
     api(project(":enderio"))
     accessTransformers(project(":enderio"))
 
     // Unit tests
-    testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    testImplementation("net.neoforged:testframework:${neoForgeVersion}")
+    testImplementation(libs.junitJupiter)
+    testRuntimeOnly(libs.junitPlatformLauncher)
+    testImplementation(libs.neoforgeTestFramework)
 
     // Setup gametests
-    add("gametestImplementation", "net.neoforged:testframework:$neoForgeVersion") {
+    gametestImplementation( libs.neoforgeTestFramework) {
         isTransitive = false
     }
 }
@@ -87,7 +66,7 @@ tasks.test {
 }
 
 neoForge {
-    version = neoForgeVersion
+    version = libs.versions.neoforge.get()
 
     addModdingDependenciesTo(sourceSets.getByName("gametest"))
 
@@ -136,6 +115,25 @@ neoForge {
     }
 }
 
+// Expand variables in mods.toml
+var generateModMetadata = tasks.register<ProcessResources>("generateModMetadata") {
+    val replaceProperties = mapOf(
+            "mod_version" to project.version,
+            "minecraft_version_range" to libs.versions.minecraft.get(),
+            "neoforge_version" to libs.versions.neoforge.get(),
+            "loader_version_range" to "[4,)", // TODO
+    )
+
+    inputs.properties(replaceProperties)
+    expand(replaceProperties)
+    from("src/main/templates")
+    into("build/generated/sources/modMetadata")
+}
+
+// Add results to source set and to IDE sync
+sourceSets.main.get().resources.srcDir(generateModMetadata)
+neoForge.ideSyncTask(generateModMetadata)
+
 tasks.withType<Jar> {
     manifest {
         attributes(mapOf(
@@ -157,23 +155,6 @@ tasks.register<Jar>("sourcesJar") {
 
 tasks.build {
     dependsOn(tasks["sourcesJar"])
-}
-
-fun getReleaseType(): String? {
-    // If we"re doing a proper build
-    if (System.getenv("BUILD_VERSION") != null) {
-        val version_string = System.getenv("BUILD_VERSION")
-
-        if (version_string.lowercase().contains("alpha")) {
-            return "alpha"
-        } else if (version_string.lowercase().contains("beta")) {
-            return "beta"
-        }
-
-        return "release"
-    }
-
-    return "dev"
 }
 
 publishing {
