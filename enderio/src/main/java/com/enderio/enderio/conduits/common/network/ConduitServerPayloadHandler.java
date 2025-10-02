@@ -8,9 +8,9 @@ import com.enderio.enderio.conduits.common.conduit.type.fluid.FluidConduitNetwor
 import com.enderio.enderio.conduits.common.init.ConduitItems;
 import com.enderio.enderio.conduits.common.init.ConduitTypes;
 import com.enderio.enderio.conduits.common.items.ConduitProbeItem;
-import com.enderio.enderio.conduits.common.redstone.DoubleRedstoneChannel;
-import com.enderio.enderio.conduits.common.redstone.RedstoneCountFilter;
-import com.enderio.enderio.conduits.common.redstone.RedstoneTimerFilter;
+import com.enderio.enderio.common.filter.redstone.DoubleRedstoneChannel;
+import com.enderio.enderio.common.filter.redstone.RedstoneCountFilter;
+import com.enderio.enderio.common.filter.redstone.RedstoneTimerFilter;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;

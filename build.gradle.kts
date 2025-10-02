@@ -2,7 +2,7 @@ import java.net.URI
 
 plugins {
     id("maven-publish")
-    id("net.neoforged.moddev") version "2.0.88" apply false
+    id("net.neoforged.moddev") version "2.0.112" apply false
     id("idea")
 }
 

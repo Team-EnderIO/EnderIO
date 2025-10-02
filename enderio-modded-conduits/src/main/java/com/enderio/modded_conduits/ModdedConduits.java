@@ -4,7 +4,6 @@ import com.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.modded_conduits.common.ModuleModIds;
 import com.enderio.modded_conduits.common.modules.ConduitCommonModule;
-import com.enderio.modded_conduits.common.modules.Integrations;
 import com.enderio.modded_conduits.common.modules.appeng.AE2ConduitsModule;
 import com.enderio.modded_conduits.common.modules.mekanism.MekanismModule;
 import com.enderio.modded_conduits.common.modules.refinedstorage.RefinedStorageCommonModule;
@@ -46,7 +45,6 @@ public class ModdedConduits {
 
     public ModdedConduits(IEventBus modEventBus) {
         ModdedConduits.modEventBus = modEventBus;
-        Integrations.register();
         executeOnLoadedModules(module -> module.initialize(modEventBus));
         REGILITE.register(modEventBus);
     }

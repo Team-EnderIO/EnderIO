@@ -2,6 +2,10 @@ package com.enderio;
 
 import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.EnderIORegistries;
+import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.common.compat.cctweaked.ComputerCraftCompat;
+import com.enderio.enderio.common.compat.ftb_ultimine.FTBUltimineCompat;
+import com.enderio.enderio.common.compat.laserio.LaserIOCompat;
 import com.enderio.enderio.common.config.BaseConfig;
 import com.enderio.enderio.common.config.BaseConfigLang;
 import com.enderio.enderio.common.filter.fluid.FluidFilterSlot;
@@ -37,6 +41,7 @@ import com.enderio.enderio.data.recipe.GlassRecipeProvider;
 import com.enderio.enderio.data.recipe.ItemRecipeProvider;
 import com.enderio.enderio.data.recipe.MaterialRecipeProvider;
 import com.enderio.regilite.Regilite;
+import com.mojang.logging.LogUtils;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
@@ -48,6 +53,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.InterModComms;
 import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
@@ -57,13 +63,17 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.data.AdvancementProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
+import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
+import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 @EventBusSubscriber
 @Mod(EnderIO.MOD_ID)
@@ -78,6 +88,14 @@ public class EnderIO {
     public static ResourceLocation rl(String path) {
         return EnderIOAPI.rl(path);
     }
+
+    private static Map<String, Consumer<IEventBus>> MOD_INTEGRATIONS = Map.ofEntries(
+        Map.entry("computercraft", eventBus -> ComputerCraftCompat.init()),
+        Map.entry("ftbultimine", eventBus -> FTBUltimineCompat.init()),
+        Map.entry("laserio", LaserIOCompat::init)
+    );
+
+    private final Logger logger = LogUtils.getLogger();
 
     public EnderIO(IEventBus modEventBus, ModContainer modContainer) {
         EnderIO.modEventBus = modEventBus;
@@ -116,10 +134,19 @@ public class EnderIO {
         EIOIngredientTypes.register(modEventBus);
         REGILITE.register(modEventBus);
 
+        // Handle mod compat
+        for (Map.Entry<String, Consumer<IEventBus>> entry : MOD_INTEGRATIONS.entrySet()) {
+            logger.debug("Activating mod integration for {}", entry.getKey());
+            if (ModList.get().isLoaded(entry.getKey())) {
+                entry.getValue().accept(modEventBus);
+            }
+        }
+
         // Run datagen after registrate is finished.
         modEventBus.addListener(EventPriority.LOWEST, this::onGatherData);
         modEventBus.addListener(SoulVialItem::onCommonSetup);
         modEventBus.addListener(this::registerRegistries);
+        modEventBus.addListener(this::registerDatapackRegistries);
         Integrations.register();
 
         NeoForge.EVENT_BUS.addListener(PlayerMovementHandler::onPlayerTick);
@@ -128,6 +155,15 @@ public class EnderIO {
     private void registerRegistries(NewRegistryEvent event) {
         event.register(EnderIORegistries.TRAVEL_TARGET_TYPES);
         event.register(EnderIORegistries.TRAVEL_TARGET_SERIALIZERS);
+        event.register(EnderIORegistries.CONDUIT_TYPE);
+        event.register(EnderIORegistries.CONDUIT_DATA_TYPE);
+        event.register(EnderIORegistries.CONDUIT_CONNECTION_CONFIG_TYPE);
+        event.register(EnderIORegistries.CONDUIT_NODE_DATA_TYPE);
+        event.register(EnderIORegistries.CONDUIT_NETWORK_CONTEXT_TYPE);
+    }
+
+    private void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {
+        event.dataPackRegistry(EnderIORegistries.Keys.CONDUIT, Conduit.DIRECT_CODEC, Conduit.DIRECT_CODEC);
     }
 
     public void onGatherData(GatherDataEvent event) {

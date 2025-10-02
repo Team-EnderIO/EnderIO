@@ -6,9 +6,9 @@ import com.enderio.enderio.conduits.client.gui.screen.filter.RedstoneCountFilter
 import com.enderio.enderio.conduits.client.gui.screen.filter.RedstoneDoubleChannelFilterScreen;
 import com.enderio.enderio.conduits.client.gui.screen.filter.RedstoneTimerFilterScreen;
 import com.enderio.enderio.conduits.common.conduit.menu.ConduitMenu;
-import com.enderio.enderio.conduits.common.menu.RedstoneCountFilterMenu;
-import com.enderio.enderio.conduits.common.menu.RedstoneDoubleChannelFilterMenu;
-import com.enderio.enderio.conduits.common.menu.RedstoneTimerFilterMenu;
+import com.enderio.enderio.common.filter.redstone.RedstoneCountFilterMenu;
+import com.enderio.enderio.common.filter.redstone.RedstoneDoubleChannelFilterMenu;
+import com.enderio.enderio.common.filter.redstone.RedstoneTimerFilterMenu;
 import com.enderio.regilite.holder.RegiliteMenu;
 import com.enderio.regilite.registry.MenuRegistry;
 import net.neoforged.bus.api.IEventBus;

@@ -8,7 +8,9 @@ plugins {
     id("com.hypherionmc.modutils.modpublisher") version "2.+"
 }
 
-//evaluationDependsOn(":enderio-modded-conduits") // Because of the sourceset reference
+// Because of the sourceset reference
+evaluationDependsOn(":enderio-armory")
+evaluationDependsOn(":enderio-modded-conduits")
 
 val minecraftVersion: String by project
 val neoForgeVersion: String by project
@@ -101,7 +103,9 @@ dependencies {
 
     // Include built-in "addons"
     jarJar(project(":enderio-armory"))
+    add("localRuntime", project(":enderio-armory"))
     jarJar(project(":enderio-modded-conduits"))
+    add("localRuntime", project(":enderio-modded-conduits"))
 
     // Almost Unified
     compileOnly("com.almostreliable.mods:almostunified-neoforge:1.21.1-${almostunifiedVersion}:api")
@@ -170,6 +174,7 @@ dependencies {
 
     // FTB Ultimine Addon
     compileOnly("dev.ftb.mods:ftb-ultimine-neoforge:${ftbUltimineVersion}")
+    runtimeOnly("dev.ftb.mods:ftb-ultimine-neoforge:${ftbUltimineVersion}")
 
     // Unit tests
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")

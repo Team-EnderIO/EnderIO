@@ -13,7 +13,7 @@ import com.enderio.enderio.common.filter.AbstractFilterItem;
 import com.enderio.enderio.common.init.EIOCreativeTabs;
 import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.conduits.common.conduit.ConduitApiImpl;
-import com.enderio.enderio.conduits.common.recipe.ConduitIngredient;
+import com.enderio.enderio.api.conduits.ConduitIngredient;
 import com.enderio.modded_conduits.client.modules.mekanism.screens.EnderChemicalFilterScreen;
 import com.enderio.modded_conduits.ModdedConduits;
 import com.enderio.modded_conduits.common.modules.ConduitCommonModule;
@@ -28,6 +28,7 @@ import com.enderio.modded_conduits.common.modules.mekanism.chemical_filter.Ender
 import com.enderio.modded_conduits.common.modules.mekanism.chemical_filter.EnderChemicalFilterMenu;
 import com.enderio.modded_conduits.common.modules.mekanism.heat.HeatConduit;
 import com.enderio.modded_conduits.common.modules.mekanism.heat.HeatConduitConnectionConfig;
+import com.enderio.modded_conduits.common.modules.mekanism.laserio.MekanismLaserIOCompat;
 import com.enderio.regilite.holder.RegiliteItem;
 import com.enderio.regilite.holder.RegiliteMenu;
 import com.enderio.regilite.registry.ItemRegistry;
@@ -55,6 +56,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.ItemCapability;
 import net.neoforged.neoforge.common.conditions.ICondition;
@@ -190,6 +192,10 @@ public class MekanismModule implements ConduitCommonModule {
         ITEM_REGISTRY.register(modEventBus);
         MENU_REGISTRY.register(modEventBus);
         modEventBus.addListener(this::registerPayloadHandlers);
+
+        if (ModList.get().isLoaded("laserio")) {
+            MekanismLaserIOCompat.init(modEventBus);
+        }
     }
 
     @Override

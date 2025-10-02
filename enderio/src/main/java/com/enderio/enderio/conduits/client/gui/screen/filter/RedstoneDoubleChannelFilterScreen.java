@@ -4,7 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.enderio.client.gui.widget.DyeColorPickerWidget;
 import com.enderio.enderio.conduits.common.init.ConduitLang;
-import com.enderio.enderio.conduits.common.menu.RedstoneDoubleChannelFilterMenu;
+import com.enderio.enderio.common.filter.redstone.RedstoneDoubleChannelFilterMenu;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
