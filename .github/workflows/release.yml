@@ -45,9 +45,10 @@ jobs:
           name: release-build
           path: enderio/build/libs/*.jar
 
-      - name: Publish to CurseForge
+      - name: Publish to CurseForge and Modrinth
         env:
           CURSEFORGE_TOKEN: ${{ secrets.TOKEN_CURSEFORGE }}
+          MODRINTH_TOKEN: ${{ secrets.TOKEN_MODRINTH }}
         run: ./gradlew publishMod
 
       - name: Upload to GitHub Releases
