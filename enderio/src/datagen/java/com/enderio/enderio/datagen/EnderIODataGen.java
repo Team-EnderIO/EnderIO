@@ -32,6 +32,9 @@ public class EnderIODataGen {
     }
 
     public void onGatherData(GatherDataEvent event) {
+        // Create datapack registry objects
+        event.createDatapackRegistryObjects(createDatapackEntriesBuilder(), Set.of(EnderIO.MOD_ID));
+
         DataGenerator generator = event.getGenerator();
         PackOutput packOutput = event.getGenerator().getPackOutput();
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
@@ -52,9 +55,6 @@ public class EnderIODataGen {
         provider.addSubProvider(event.includeServer(), new ConduitRecipes(packOutput, lookupProvider));
 
         generator.addProvider(true, provider);
-
-        // Create datapack registry objects
-        event.createDatapackRegistryObjects(createDatapackEntriesBuilder(), Set.of(EnderIO.MOD_ID));
     }
 
     private static RegistrySetBuilder createDatapackEntriesBuilder() {
