@@ -1,9 +1,9 @@
 package com.enderio.enderio.common.compat.cctweaked;
 
 import com.enderio.enderio.api.conduits.ConduitRedstoneSignalAware;
-import com.enderio.enderio.conduits.common.conduit.bundle.ConduitBundleBlockEntity;
-import com.enderio.enderio.conduits.common.conduit.type.redstone.RedstoneConduitConnectionConfig;
-import com.enderio.enderio.conduits.common.conduit.type.redstone.RedstoneConduitNetworkContext;
+import com.enderio.enderio.common.conduits.bundle.ConduitBundleBlockEntity;
+import com.enderio.enderio.common.conduits.type.redstone.RedstoneConduitConnectionConfig;
+import com.enderio.enderio.common.conduits.type.redstone.RedstoneConduitNetworkContext;
 import com.enderio.enderio.conduits.common.init.ConduitTypes;
 import dan200.computercraft.api.redstone.BundledRedstoneProvider;
 import net.minecraft.core.BlockPos;

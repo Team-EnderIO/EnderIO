@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits.common.network;
 
-import com.enderio.enderio.conduits.common.conduit.menu.ConduitMenu;
+import com.enderio.enderio.common.conduits.menu.ConduitMenu;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class ConduitCommonPayloadHandler {

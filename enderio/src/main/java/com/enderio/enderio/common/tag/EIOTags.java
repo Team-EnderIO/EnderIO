@@ -117,8 +117,6 @@ public class EIOTags {
         public static final TagKey<Item> STORAGE_BLOCKS_QUARTZ = commonTag("storage_blocks/quartz");
         public static final TagKey<Item> STORAGE_BLOCKS_AMETHYST = commonTag("storage_blocks/amethyst");
 
-        public static final TagKey<Item> FERTILIZERS = commonTag("fertilizers");
-
         public static final Map<GlassIdentifier, TagKey<Item>> GLASS_TAGS = createGlassTags();
 
         public static Map<GlassIdentifier, TagKey<Item>> createGlassTags() {
@@ -149,7 +147,7 @@ public class EIOTags {
         }
 
         public static final TagKey<Block> FUSED_QUARTZ = commonTag("glass_blocks/fused_quartz");
-        public static final TagKey<Block> CLEAR_GLASS = tag("glass_blocks/clear_glass");
+        public static final TagKey<Block> CLEAR_GLASS = commonTag("glass_blocks/clear_glass");
 
         public static final TagKey<Block> BLOCKS_CONDUCTIVE_ALLOY = commonTag("storage_blocks/conductive_alloy");
         public static final TagKey<Block> BLOCKS_COPPER_ALLOY = commonTag("storage_blocks/copper_alloy");
@@ -163,6 +161,8 @@ public class EIOTags {
 
         // TODO: Needs a better name?
         public static final TagKey<Block> BLOCKS_TELEPORTATION = tag("blocks_travel_when_stood_on");
+
+        public static final TagKey<Block> REDSTONE_CONNECTABLE = tag("redstone_connectable");
 
         private static TagKey<Block> commonTag(String name) {
             return BlockTags.create(ResourceLocation.fromNamespaceAndPath(COMMON, name));
@@ -179,7 +179,6 @@ public class EIOTags {
 
         public static final TagKey<Fluid> COLD_FIRE_IGNITER_FUEL = tag("fluid_fuel/cold_fire_igniter");
         public static final TagKey<Fluid> STAFF_OF_LEVITY_FUEL = tag("fluid_fuel/staff_of_levity");
-        public static final TagKey<Fluid> EXPERIENCE = commonTag("experience");
         public static final TagKey<Fluid> SOLAR_PANEL_LIGHT = tag("solar_panel_light");
         public static final TagKey<Fluid> SOLAR_PANEL_DARK = tag("solar_panel_dark");
 

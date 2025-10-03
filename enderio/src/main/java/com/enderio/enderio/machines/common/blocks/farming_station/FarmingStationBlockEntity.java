@@ -155,7 +155,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
                 .slotAccess(SW)
                 .inputSlot()
                 .slotAccess(NW)
-                .inputSlot(2, (integer, stack) -> stack.is(EIOTags.Items.FERTILIZERS))
+                .inputSlot(2, (integer, stack) -> stack.is(Tags.Items.FERTILIZERS))
                 .slotAccess(BONEMEAL)
                 .outputSlot(6)
                 .slotAccess(OUTPUT)

@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits.tests.regression;
 
-import com.enderio.enderio.conduits.common.conduit.legacy.DynamicConnectionState;
+import com.enderio.enderio.common.conduits.legacy.DynamicConnectionState;
 import com.google.gson.JsonParser;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.server.MinecraftServer;

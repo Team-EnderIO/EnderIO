@@ -5,7 +5,7 @@ import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.common.tag.EIOTags;
-import com.enderio.enderio.conduits.common.conduit.ConduitBlockItem;
+import com.enderio.enderio.common.conduits.ConduitBlockItem;
 import com.enderio.enderio.conduits.common.init.ConduitItems;
 import com.enderio.enderio.conduits.common.init.Conduits;
 import com.enderio.enderio.api.conduits.ConduitIngredient;

@@ -41,6 +41,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.fml.LogicalSide;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
@@ -167,7 +168,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
     // region Fluid Storage
     @Override
     public @Nullable MachineTankLayout getTankLayout() {
-        return MachineTankLayout.builder().tank(TANK, 10000, f -> f.is(EIOTags.Fluids.EXPERIENCE)).build();
+        return MachineTankLayout.builder().tank(TANK, 10000, f -> f.is(Tags.Fluids.EXPERIENCE)).build();
     }
 
     @Override

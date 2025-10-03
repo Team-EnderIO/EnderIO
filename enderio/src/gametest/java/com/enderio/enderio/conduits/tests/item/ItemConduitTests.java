@@ -2,8 +2,8 @@ package com.enderio.enderio.conduits.tests.item;
 
 import com.enderio.EnderIO;
 import com.enderio.enderio.api.io.RedstoneControl;
-import com.enderio.enderio.conduits.common.conduit.type.item.ItemConduit;
-import com.enderio.enderio.conduits.common.conduit.type.item.ItemConduitConnectionConfig;
+import com.enderio.enderio.common.conduits.type.item.ItemConduit;
+import com.enderio.enderio.common.conduits.type.item.ItemConduitConnectionConfig;
 import com.enderio.enderio.conduits.common.init.Conduits;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;

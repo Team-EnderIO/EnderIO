@@ -12,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.FluidUtil;
@@ -120,7 +121,7 @@ public class InternalTankTasks {
     ) {
         FluidStack fluid = tank.getFluid(blockEntity);
 
-        if (!fluid.isEmpty() && fluid.is(EIOTags.Fluids.EXPERIENCE)
+        if (!fluid.isEmpty() && fluid.is(Tags.Fluids.EXPERIENCE)
             && fluidDrainOutput.getItemStack(blockEntity).isEmpty()) {
 
             ItemStack tool = fluidDrainInput.getItemStack(blockEntity);

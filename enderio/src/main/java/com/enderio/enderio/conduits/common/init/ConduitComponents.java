@@ -3,7 +3,7 @@ package com.enderio.enderio.conduits.common.init;
 import com.enderio.EnderIO;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.facade.FacadeType;
-import com.enderio.enderio.conduits.common.items.ConduitProbeItem;
+import com.enderio.enderio.common.conduits.probe.ConduitProbeItem;
 import com.enderio.enderio.common.filter.redstone.DoubleRedstoneChannel;
 import com.enderio.enderio.common.filter.redstone.RedstoneCountFilter;
 import com.enderio.enderio.common.filter.redstone.RedstoneTLatchFilter;

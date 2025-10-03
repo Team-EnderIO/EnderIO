@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -50,7 +51,7 @@ public class EIOFluids {
 
     public static final RegiliteFluid<FluidType> XP_JUICE = fluid("xp_juice", "XP Juice",
             FluidType.Properties.create().lightLevel(10).density(800).viscosity(1500), 10)
-                    .addFluidTags(EIOTags.Fluids.EXPERIENCE);
+                    .addFluidTags(Tags.Fluids.EXPERIENCE);
 
     public static final RegiliteFluid<FluidType> LIQUID_SUNSHINE = fluid("liquid_sunshine", "Liquid Sunshine",
             FluidType.Properties.create().density(200).viscosity(400).lightLevel(15).temperature(300), 15).addFluidTags(EIOTags.Fluids.SOLAR_PANEL_LIGHT);

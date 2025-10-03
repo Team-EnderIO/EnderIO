@@ -12,7 +12,7 @@ import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataType;
 import com.enderio.enderio.common.filter.AbstractFilterItem;
 import com.enderio.enderio.common.init.EIOCreativeTabs;
 import com.enderio.enderio.common.init.EIOItems;
-import com.enderio.enderio.conduits.common.conduit.ConduitApiImpl;
+import com.enderio.enderio.common.conduits.ConduitApiImpl;
 import com.enderio.enderio.api.conduits.ConduitIngredient;
 import com.enderio.modded_conduits.client.modules.mekanism.screens.EnderChemicalFilterScreen;
 import com.enderio.modded_conduits.ModdedConduits;

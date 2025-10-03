@@ -4,7 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.core.client.RenderUtil;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.model.ConduitModelModifier;
-import com.enderio.enderio.conduits.common.conduit.type.fluid.FluidConduit;
+import com.enderio.enderio.common.conduits.type.fluid.FluidConduit;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;

@@ -9,7 +9,7 @@ import com.enderio.enderio.conduits.client.model.ConduitTextureEmissiveQuadTrans
 import com.enderio.enderio.conduits.client.model.conduit.facades.ClientFacadeVisibility;
 import com.enderio.enderio.conduits.client.model.conduit.modifier.ConduitModelModifiers;
 import com.enderio.enderio.conduits.common.Area;
-import com.enderio.enderio.conduits.common.conduit.OffsetHelper;
+import com.enderio.enderio.common.conduits.OffsetHelper;
 import com.mojang.math.Axis;
 import com.mojang.math.Transformation;
 import net.minecraft.client.Minecraft;

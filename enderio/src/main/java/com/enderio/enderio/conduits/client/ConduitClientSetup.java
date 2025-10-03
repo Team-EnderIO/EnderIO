@@ -17,7 +17,7 @@ import com.enderio.enderio.conduits.client.model.conduit.modifier.RedstoneCondui
 import com.enderio.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.enderio.conduits.common.init.ConduitItems;
 import com.enderio.enderio.conduits.common.init.ConduitTypes;
-import com.enderio.enderio.conduits.common.items.ConduitProbeItem;
+import com.enderio.enderio.common.conduits.probe.ConduitProbeItem;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;

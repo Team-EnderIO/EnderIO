@@ -1,6 +1,6 @@
 package com.enderio.enderio.mixin;
 
-import com.enderio.enderio.conduits.common.conduit.bundle.ConduitBundleBlockEntity;
+import com.enderio.enderio.common.conduits.bundle.ConduitBundleBlockEntity;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.renderer.block.BlockModelShaper;

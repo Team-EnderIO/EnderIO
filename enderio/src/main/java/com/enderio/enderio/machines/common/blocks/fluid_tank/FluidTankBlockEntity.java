@@ -29,6 +29,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
@@ -141,7 +142,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
         // Mending
         FluidStack fluid = TANK.getFluid(this);
 
-        if (item.isDamageableItem() && !fluid.isEmpty() && fluid.is(EIOTags.Fluids.EXPERIENCE)) {
+        if (item.isDamageableItem() && !fluid.isEmpty() && fluid.is(Tags.Fluids.EXPERIENCE)) {
             var enchantmentsRecipe = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
             var mendingEnchantment = enchantmentsRecipe.getOrThrow(Enchantments.MENDING);
 

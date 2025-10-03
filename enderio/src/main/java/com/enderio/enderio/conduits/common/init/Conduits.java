@@ -3,11 +3,6 @@ package com.enderio.enderio.conduits.common.init;
 import com.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
-import com.enderio.enderio.conduits.common.conduit.type.energy.EnergyConduit;
-import com.enderio.enderio.conduits.common.conduit.type.fluid.FluidConduit;
-import com.enderio.enderio.conduits.common.conduit.type.item.ItemConduit;
-import com.enderio.enderio.conduits.common.conduit.type.redstone.RedstoneConduit;
-import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 
 public class Conduits {

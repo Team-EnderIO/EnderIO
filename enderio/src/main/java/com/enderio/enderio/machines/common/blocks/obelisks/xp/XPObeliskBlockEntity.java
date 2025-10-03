@@ -23,6 +23,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
@@ -55,7 +56,7 @@ public class XPObeliskBlockEntity extends MachineBlockEntity implements FluidTan
     @Override
     public MachineTankLayout getTankLayout() {
         return new MachineTankLayout.Builder()
-                .tank(TANK, Integer.MAX_VALUE, fluidStack -> fluidStack.is(EIOTags.Fluids.EXPERIENCE))
+                .tank(TANK, Integer.MAX_VALUE, fluidStack -> fluidStack.is(Tags.Fluids.EXPERIENCE))
                 .build();
     }
 

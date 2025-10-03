@@ -19,6 +19,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -66,7 +67,7 @@ public class VoidVialItem extends Item {
             var fluidHandler = level.getCapability(Capabilities.FluidHandler.BLOCK, pos, null);
             if (fluidHandler != null) {
                 FluidStack availableFluid = fluidHandler.getFluidInTank(0);
-                if (availableFluid.is(EIOTags.Fluids.EXPERIENCE) && availableFluid.getAmount() > 0) {
+                if (availableFluid.is(Tags.Fluids.EXPERIENCE) && availableFluid.getAmount() > 0) {
                     int requiredXp = player.getXpNeededForNextLevel();
                     int fluidVolume = requiredXp * ExperienceUtil.EXP_TO_FLUID;
 

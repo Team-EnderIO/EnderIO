@@ -1,7 +1,7 @@
 package com.enderio.enderio.conduits.client.input;
 
 import com.enderio.enderio.conduits.common.init.ConduitItems;
-import com.enderio.enderio.conduits.common.items.ConduitProbeItem;
+import com.enderio.enderio.common.conduits.probe.ConduitProbeItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.item.ItemStack;

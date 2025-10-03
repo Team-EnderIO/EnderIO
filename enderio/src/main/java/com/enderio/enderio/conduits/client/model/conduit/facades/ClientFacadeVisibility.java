@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits.client.model.conduit.facades;
 
-import com.enderio.enderio.conduits.common.conduit.bundle.ConduitBundleBlockEntity;
+import com.enderio.enderio.common.conduits.bundle.ConduitBundleBlockEntity;
 import com.mojang.blaze3d.systems.RenderSystem;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.client.Minecraft;

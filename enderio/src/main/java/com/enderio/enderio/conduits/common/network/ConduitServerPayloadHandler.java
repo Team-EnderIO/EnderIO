@@ -2,12 +2,12 @@ package com.enderio.enderio.conduits.common.network;
 
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
-import com.enderio.enderio.conduits.common.conduit.bundle.ConduitBundleBlockEntity;
-import com.enderio.enderio.conduits.common.conduit.menu.ConduitMenu;
-import com.enderio.enderio.conduits.common.conduit.type.fluid.FluidConduitNetworkContext;
+import com.enderio.enderio.common.conduits.bundle.ConduitBundleBlockEntity;
+import com.enderio.enderio.common.conduits.menu.ConduitMenu;
+import com.enderio.enderio.common.conduits.type.fluid.FluidConduitNetworkContext;
 import com.enderio.enderio.conduits.common.init.ConduitItems;
 import com.enderio.enderio.conduits.common.init.ConduitTypes;
-import com.enderio.enderio.conduits.common.items.ConduitProbeItem;
+import com.enderio.enderio.common.conduits.probe.ConduitProbeItem;
 import com.enderio.enderio.common.filter.redstone.DoubleRedstoneChannel;
 import com.enderio.enderio.common.filter.redstone.RedstoneCountFilter;
 import com.enderio.enderio.common.filter.redstone.RedstoneTimerFilter;
