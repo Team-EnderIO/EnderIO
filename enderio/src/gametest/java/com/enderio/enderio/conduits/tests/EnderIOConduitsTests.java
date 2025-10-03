@@ -18,7 +18,7 @@ import org.lwjgl.glfw.GLFW;
 @Mod(EnderIOConduitsTests.MOD_ID)
 public class EnderIOConduitsTests {
 
-    public static final String MOD_ID = "enderio";
+    public static final String MOD_ID = "enderio_tests";
 
     public EnderIOConduitsTests(IEventBus eventBus, ModContainer container) {
         final MutableTestFramework framework = FrameworkConfiguration

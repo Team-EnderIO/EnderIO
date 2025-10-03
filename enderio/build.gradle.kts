@@ -137,8 +137,7 @@ dependencies {
     testImplementation(libs.neoforgeTestFramework)
 
     // Setup gametests
-    // TODO: Separate this properly again
-    implementation(libs.neoforgeTestFramework) {
+    gametestImplementation(libs.neoforgeTestFramework) {
         isTransitive = false
     }
 }
@@ -156,6 +155,9 @@ neoForge {
     val modEnderio by mods.creating {
         sourceSet(sourceSets.getByName("datagen"))
         sourceSet(sourceSets.getByName("main"))
+    }
+
+    val modEnderioGametests by mods.creating {
         sourceSet(sourceSets.getByName("gametest"))
     }
 
@@ -168,16 +170,19 @@ neoForge {
         // Data + Game Test focus purely on the core mod.
         val client by creating {
             client()
+            loadedMods = listOf(modEnderio)
         }
 
         val server by creating {
             server()
+            loadedMods = listOf(modEnderio)
 
             gameDirectory = project.file("run/server")
         }
 
         val data by creating {
             data()
+            loadedMods = listOf(modEnderio)
 
             programArguments.addAll(
                     "--mod", "enderio",
@@ -191,8 +196,8 @@ neoForge {
 
         val gameTestServer by creating {
             type = "gameTestServer"
-
-            sourceSet = sourceSets.getByName("gametest")
+            loadedMods = listOf(modEnderio, modEnderioGametests)
+            sourceSet = sourceSets["gametest"]
         }
     }
 
