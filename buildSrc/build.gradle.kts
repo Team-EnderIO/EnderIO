@@ -7,5 +7,5 @@ repositories {
 }
 
 dependencies {
-    implementation("me.qoomon.git-versioning:me.qoomon.git-versioning.gradle.plugin:6.4.4")
+    implementation("com.palantir.git-version:com.palantir.git-version.gradle.plugin:4.0.0")
 }

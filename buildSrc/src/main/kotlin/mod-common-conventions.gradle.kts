@@ -1,3 +1,4 @@
+import com.palantir.gradle.gitversion.VersionDetails
 import java.net.URI
 
 val libs = versionCatalogs.named("libs")
@@ -6,7 +7,7 @@ plugins {
     `java-library`
     `maven-publish`
     idea
-    id("me.qoomon.git-versioning")
+    id("com.palantir.git-version")
 }
 
 apply(plugin = "net.neoforged.moddev")
@@ -66,14 +67,16 @@ publishing {
     }
 }
 
-gitVersioning.apply {
-    refs {
-        branch(".+") {
-            version = "\${describe.tag.version.core:-1.0.0}.\${describe.distance}-\${ref}\${dirty}+\${commit.short}"
-        }
+val versionDetails: groovy.lang.Closure<VersionDetails> by extra
+var details = versionDetails()
 
-        tag("v(?<version>.*)") {
-            version = "\${ref.version}"
-        }
-    }
+// TODO: Palantir doesn't let us filter for v prefixes on tags, this could cause issues if we tag anything else.
+//       this plugin isn't perfect, but it'll do in the short term.
+var versionRegex = Regex("""\d+(\.\d+)+""")
+var tagVersion = versionRegex.find(details.lastTag)?.value ?: "1.0.0"
+
+if (details.commitDistance == 0 && details.isCleanTag) {
+    version = tagVersion
+} else {
+    version = "$tagVersion.${details.commitDistance}-${details.branchName.replace("/", "-")}+${details.gitHash}"
 }
