@@ -45,5 +45,4 @@ jei = ["jeiCommon", "jeiNeoforge"]
 ccTweakedApi = ["ccTweakedCoreApi", "ccTweakedForgeApi"]
 
 [plugins]
-moddev = { id = "net.neoforged.moddev", version = "2.0.112" }
 modpublisher = { id = "com.hypherionmc.modutils.modpublisher", version = "2.+" }

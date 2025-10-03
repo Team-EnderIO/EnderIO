@@ -5,9 +5,10 @@ val libs = versionCatalogs.named("libs")
 plugins {
     `java-library`
     `maven-publish`
+    idea
 }
 
-apply(plugin = libs.findPlugin("moddev").get().get().pluginId)
+apply(plugin = "net.neoforged.moddev")
 
 group = "com.enderio"
 
@@ -19,95 +20,11 @@ if (buildVersion != null) {
     version = "$versionSeries-dev"
 }
 
-repositories {
-    repositories {
-        maven {
-            name = "Rover656 Maven"
-            url = uri("https://maven.rover656.dev/releases")
-            content {
-                includeGroup("com.enderio")
-
-                // Mirrors
-                includeGroup("dev.gigaherz.graph")
-            }
-        }
-
-        maven {
-            name = "ModMaven"
-            url = uri("https://modmaven.dev")
-            content {
-                includeGroup("mezz.jei")
-                includeGroup("mcjty.theoneprobe")
-                includeGroup("appeng")
-                includeGroup("mekanism")
-            }
-        }
-
-        maven {
-            name = "SquidDev Maven"
-            url = uri("https://maven.squiddev.cc")
-            content {
-                includeGroup("cc.tweaked")
-            }
-        }
-
-        maven {
-            name = "Jared's Maven"
-            url = uri("https://maven.blamejared.com")
-            content {
-                includeGroup("vazkii.patchouli")
-                includeGroup("net.darkhax.bookshelf")
-                includeGroup("net.darkhax.enchdesc")
-                includeGroup("com.almostreliable.mods")
-            }
-        }
-
-        maven {
-            name = "Curse Maven"
-            url = uri("https://cursemaven.com")
-            content {
-                includeGroup("curse.maven")
-            }
-        }
-
-        maven {
-            name = "Modrinth Maven"
-            url = uri("https://api.modrinth.com/maven")
-            content {
-                includeGroup("maven.modrinth")
-            }
-        }
-
-        maven {
-            name = "FTB Maven"
-            url = uri("https://maven.ftb.dev/releases")
-            content {
-                includeGroup("dev.ftb.mods")
-            }
-        }
-
-        maven {
-            name = "Architectury Maven"
-            url = uri("https://maven.architectury.dev/")
-            content {
-                includeGroup("dev.architectury")
-            }
-        }
-
-        maven {
-            url = uri("https://maven.pkg.github.com/refinedmods/refinedstorage2")
-            credentials {
-                username = "anything"
-                password = "\u0067hp_oGjcDFCn8jeTzIj4Ke9pLoEVtpnZMP4VQgaX"
-            }
-        }
-
-        mavenLocal() {
-            content {
-                includeGroup("com.enderio")
-                includeGroup("net.neoforged")
-            }
-        }
+// IDEA no longer automatically downloads sources/javadoc jars for dependencies, so we need to explicitly enable the behavior.
+idea {
+    module {
+        isDownloadSources = true
+        isDownloadJavadoc = true
     }
 }
 
@@ -137,9 +54,9 @@ tasks.withType<JavaCompile> {
     options.compilerArgs.addAll(arrayOf("-Xmaxerrs", "400"))
 }
 
-//tasks.test {
-//    useJUnitPlatform()
-//}
+tasks.test {
+    useJUnitPlatform()
+}
 
 publishing {
     repositories {

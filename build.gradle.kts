@@ -1,6 +1,6 @@
 plugins {
     id("maven-publish")
-    alias(libs.plugins.moddev) apply false
+    id("net.neoforged.moddev")
     id("idea")
 }
 
@@ -12,6 +12,7 @@ idea {
         isDownloadSources = true
     }
 }
+
 
 // ============
 // Utilities

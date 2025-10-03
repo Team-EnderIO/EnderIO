@@ -159,9 +159,6 @@ neoForge {
     val modEnderio by mods.creating {
         sourceSet(sourceSets.getByName("datagen"))
         sourceSet(sourceSets.getByName("main"))
-    }
-
-    val modEnderioTests by mods.creating {
         sourceSet(sourceSets.getByName("gametest"))
     }
 
@@ -174,14 +171,12 @@ neoForge {
         // Data + Game Test focus purely on the core mod.
         val client by creating {
             client()
-            loadedMods.set(listOf(modEnderio))
         }
 
         val server by creating {
             server()
 
             gameDirectory = project.file("run/server")
-            loadedMods = listOf(modEnderio)
         }
 
         val data by creating {
@@ -195,15 +190,12 @@ neoForge {
                     "--output", file("src/generated/resources").absolutePath,
                     "--existing", file("src/main/resources").absolutePath,
             )
-
-            loadedMods = listOf(modEnderio)
         }
 
         val gameTestServer by creating {
             type = "gameTestServer"
 
             sourceSet = sourceSets.getByName("gametest")
-            loadedMods = listOf(modEnderio, modEnderioTests)
         }
     }
 
