@@ -2,7 +2,6 @@ plugins {
     id("maven-publish")
     id("net.neoforged.moddev")
     id("idea")
-    id("com.palantir.git-version")
 }
 
 println("Release type: ${getReleaseType()}")

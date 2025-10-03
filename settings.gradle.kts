@@ -2,7 +2,6 @@ pluginManagement {
     plugins {
         id("net.neoforged.moddev") version "2.0.112"
         id("net.neoforged.moddev.repositories") version "2.0.112"
-        id("com.palantir.git-version") version "4.0.0"
     }
 
     repositories {

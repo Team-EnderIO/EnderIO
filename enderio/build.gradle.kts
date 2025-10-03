@@ -137,7 +137,7 @@ dependencies {
     testImplementation(libs.neoforgeTestFramework)
 
     // Setup gametests
-    gametestImplementation(libs.neoforgeTestFramework) {
+    implementation(libs.neoforgeTestFramework) {
         isTransitive = false
     }
 }
