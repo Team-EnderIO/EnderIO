@@ -5,3 +5,7 @@ plugins {
 repositories {
     gradlePluginPortal()
 }
+
+dependencies {
+    implementation("com.palantir.git-version:com.palantir.git-version.gradle.plugin:4.0.0")
+}
