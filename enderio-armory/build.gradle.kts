@@ -125,9 +125,17 @@ var generateModMetadata = tasks.register<ProcessResources>("generateModMetadata"
     )
 
     inputs.properties(replaceProperties)
-    expand(replaceProperties)
-    from("src/main/templates")
     into("build/generated/sources/modMetadata")
+
+    from("src/main/templates") {
+        filesMatching("META-INF/neoforge.mods.toml") {
+            expand(replaceProperties)
+        }
+    }
+
+    from("${rootDir}/docs/img/") {
+        include("logo.png")
+    }
 }
 
 // Add results to source set and to IDE sync
