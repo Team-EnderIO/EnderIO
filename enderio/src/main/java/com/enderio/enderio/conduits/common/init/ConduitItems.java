@@ -4,7 +4,7 @@ import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.conduits.facade.FacadeType;
 import com.enderio.enderio.common.init.EIOCreativeTabs;
 import com.enderio.enderio.conduits.EnderIOConduits;
-import com.enderio.enderio.conduits.client.ConduitFacadeColor;
+import com.enderio.enderio.client.color.ConduitFacadeColor;
 import com.enderio.enderio.common.conduits.facades.ComponentBackedConduitFacadeProvider;
 import com.enderio.enderio.common.conduits.facades.ConduitFacadeItem;
 import com.enderio.enderio.common.conduits.probe.ConduitProbeItem;

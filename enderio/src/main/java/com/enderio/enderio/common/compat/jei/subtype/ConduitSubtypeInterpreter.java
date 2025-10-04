@@ -1,0 +1,32 @@
+package com.enderio.enderio.common.compat.jei.subtype;
+
+import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.conduits.common.init.ConduitComponents;
+import mezz.jei.api.ingredients.subtypes.ISubtypeInterpreter;
+import mezz.jei.api.ingredients.subtypes.UidContext;
+import net.minecraft.core.Holder;
+import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
+
+public class ConduitSubtypeInterpreter implements ISubtypeInterpreter<ItemStack> {
+
+    @Override
+    public @Nullable Object getSubtypeData(ItemStack ingredient, UidContext context) {
+        Holder<Conduit<?, ?>> conduit = ingredient.get(ConduitComponents.CONDUIT);
+        if (conduit != null) {
+            return conduit.getRegisteredName();
+        }
+
+        return null;
+    }
+
+    @Override
+    public String getLegacyStringSubtypeInfo(ItemStack ingredient, UidContext context) {
+        Holder<Conduit<?, ?>> conduit = ingredient.get(ConduitComponents.CONDUIT);
+        if (conduit != null) {
+            return conduit.getRegisteredName();
+        }
+
+        return "";
+    }
+}

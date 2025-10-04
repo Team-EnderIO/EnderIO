@@ -1,7 +1,7 @@
 package com.enderio.enderio.machines.common.integrations.jei.category;
 
 import com.enderio.EnderIO;
-import com.enderio.enderio.machines.client.gui.screen.EnchanterScreen;
+import com.enderio.enderio.client.gui.screens.machines.EnchanterScreen;
 import com.enderio.enderio.machines.common.init.MachineBlocks;
 import com.enderio.enderio.machines.common.integrations.jei.util.MachineRecipeCategory;
 import com.enderio.enderio.machines.common.integrations.jei.util.WrappedEnchanterRecipe;

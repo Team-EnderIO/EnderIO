@@ -6,7 +6,7 @@ import com.enderio.enderio.api.soul.SoulBoundUtils;
 import com.enderio.enderio.client.decorator.GlassIconDecorator;
 import com.enderio.enderio.client.paint.model.PaintedBlockGeometry;
 import com.enderio.enderio.client.particle.RangeParticle;
-import com.enderio.enderio.client.renderer.block.EnderSkullRenderer;
+import com.enderio.enderio.client.renderer.blockentity.EnderSkullRenderer;
 import com.enderio.enderio.client.renderer.glider.ActiveGliderRenderLayer;
 import com.enderio.enderio.client.travel.TravelTargetRendering;
 import com.enderio.enderio.common.block.skull.EnderSkullBlock;

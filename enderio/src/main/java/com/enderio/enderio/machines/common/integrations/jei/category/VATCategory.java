@@ -1,8 +1,8 @@
 package com.enderio.enderio.machines.common.integrations.jei.category;
 
 import com.enderio.EnderIO;
-import com.enderio.enderio.common.integrations.jei.JEIUtils;
-import com.enderio.enderio.machines.client.gui.screen.VatScreen;
+import com.enderio.enderio.common.compat.jei.JEIUtils;
+import com.enderio.enderio.client.gui.screens.machines.VatScreen;
 import com.enderio.enderio.machines.common.blocks.vat.FermentingRecipe;
 import com.enderio.enderio.machines.common.blocks.vat.VatBlockEntity;
 import com.enderio.enderio.machines.common.datamap.VatReagent;

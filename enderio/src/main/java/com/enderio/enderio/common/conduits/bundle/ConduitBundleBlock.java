@@ -6,7 +6,7 @@ import com.enderio.enderio.api.conduits.ConduitRedstoneSignalAware;
 import com.enderio.enderio.api.conduits.bundle.AddConduitResult;
 import com.enderio.enderio.api.conduits.connection.ConnectionStatus;
 import com.enderio.enderio.client.models.conduit.facades.FacadeUtil;
-import com.enderio.enderio.conduits.client.particle.ConduitBreakParticle;
+import com.enderio.enderio.client.particle.ConduitBreakParticle;
 import com.enderio.enderio.common.conduits.ConduitBlockItem;
 import com.enderio.enderio.common.conduits.menu.ConduitMenu;
 import com.enderio.enderio.common.conduits.type.redstone.RedstoneConduit;

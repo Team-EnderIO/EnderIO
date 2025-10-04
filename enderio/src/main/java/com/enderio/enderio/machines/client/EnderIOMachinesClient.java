@@ -2,11 +2,11 @@ package com.enderio.enderio.machines.client;
 
 import com.enderio.EnderIO;
 import com.enderio.enderio.api.travel.RegisterTravelRenderersEvent;
-import com.enderio.enderio.machines.client.rendering.item.FluidTankBEWLR;
-import com.enderio.enderio.machines.client.rendering.model.IOOverlayBakedModel;
-import com.enderio.enderio.machines.client.rendering.travel.EnderfaceRenderer;
-import com.enderio.enderio.machines.client.rendering.travel.TravelAnchorHud;
-import com.enderio.enderio.machines.client.rendering.travel.TravelAnchorRenderer;
+import com.enderio.enderio.client.renderer.item.FluidTankBEWLR;
+import com.enderio.enderio.client.models.IOOverlayBakedModel;
+import com.enderio.enderio.client.renderer.travel.EnderfaceRenderer;
+import com.enderio.enderio.client.renderer.travel.TravelAnchorHud;
+import com.enderio.enderio.client.renderer.travel.TravelAnchorRenderer;
 import com.enderio.enderio.machines.common.init.MachineBlocks;
 import com.enderio.enderio.machines.common.init.MachineTravelTargets;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;

@@ -4,7 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.api.grindingball.GrindingBallData;
 import com.enderio.enderio.common.init.EIODataComponents;
-import com.enderio.enderio.common.integrations.jei.JEIUtils;
+import com.enderio.enderio.common.compat.jei.JEIUtils;
 import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.common.tag.EIOTags;
 import com.enderio.enderio.machines.common.blocks.sag_mill.SagMillingRecipe;
