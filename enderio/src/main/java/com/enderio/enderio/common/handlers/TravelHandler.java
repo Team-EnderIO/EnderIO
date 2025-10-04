@@ -1,4 +1,4 @@
-package com.enderio.enderio.common.handler;
+package com.enderio.enderio.common.handlers;
 
 import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.enderio.api.travel.TravelTarget;

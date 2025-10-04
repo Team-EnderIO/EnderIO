@@ -1,6 +1,6 @@
 package com.enderio.enderio.common.init;
 
-import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.client.paint.PaintedSandRenderer;
 import com.enderio.enderio.common.paint.PaintedSandEntity;
 import com.enderio.regilite.holder.RegiliteEntity;

@@ -1,6 +1,6 @@
 package com.enderio.enderio.client.gui.screens.machines;
 
-import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.client.gui.screens.machines.base.LegacyMachineScreen;
 import com.enderio.enderio.client.gui.widgets.EnergyWidget;
 import com.enderio.enderio.client.gui.widgets.RedstoneControlPickerWidget;

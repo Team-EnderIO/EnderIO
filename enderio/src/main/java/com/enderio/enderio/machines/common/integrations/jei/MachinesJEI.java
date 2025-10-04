@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.integrations.jei;
 
-import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.client.gui.screens.machines.AlloySmelterScreen;
 import com.enderio.enderio.client.gui.screens.machines.EnchanterScreen;
 import com.enderio.enderio.client.gui.screens.machines.FluidTankScreen;

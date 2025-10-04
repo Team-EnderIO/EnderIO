@@ -1,6 +1,6 @@
 package com.enderio.modded_conduits.client;
 
-import com.enderio.modded_conduits.ModdedConduits;
+import com.enderio.modded_conduits.common.ModdedConduits;
 import com.enderio.modded_conduits.client.modules.mekanism.MekanismClientModule;
 import com.enderio.modded_conduits.common.ModuleModIds;
 import net.neoforged.api.distmarker.Dist;

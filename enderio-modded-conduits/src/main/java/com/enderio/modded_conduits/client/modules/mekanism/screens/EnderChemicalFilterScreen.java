@@ -3,7 +3,7 @@ package com.enderio.modded_conduits.client.modules.mekanism.screens;
 import com.enderio.core.client.gui.screen.EnderContainerScreen;
 import com.enderio.core.client.gui.widgets.IconButton;
 import com.enderio.core.client.gui.widgets.ToggleIconButton;
-import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.common.filter.AbstractFilterMenu;
 import com.enderio.enderio.common.filter.item.general.EnderItemFilterMenu;
 import com.enderio.enderio.common.lang.EIOLang;

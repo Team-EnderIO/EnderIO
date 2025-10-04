@@ -1,6 +1,6 @@
 package com.enderio.endergy.common.lang;
 
-import com.enderio.endergy.EnderIOEndergy;
+import com.enderio.endergy.common.EnderIOEndergy;
 import net.minecraft.network.chat.Component;
 
 public class EndergyConduitComponents {

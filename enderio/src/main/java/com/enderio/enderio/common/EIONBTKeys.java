@@ -1,4 +1,4 @@
-package com.enderio.enderio;
+package com.enderio.enderio.common;
 
 import com.enderio.core.CoreNBTKeys;
 

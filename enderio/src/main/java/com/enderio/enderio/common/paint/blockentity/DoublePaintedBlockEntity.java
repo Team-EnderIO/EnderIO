@@ -1,6 +1,6 @@
 package com.enderio.enderio.common.paint.blockentity;
 
-import com.enderio.enderio.EIONBTKeys;
+import com.enderio.enderio.common.EIONBTKeys;
 import com.enderio.enderio.common.init.EIOBlockEntities;
 import com.enderio.enderio.common.paint.PaintUtils;
 import net.minecraft.core.BlockPos;

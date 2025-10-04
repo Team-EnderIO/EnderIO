@@ -5,7 +5,7 @@ import com.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.armory.common.tag.ArmoryTags;
 import com.enderio.core.common.energy.ItemStackEnergy;
-import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.common.EnderIO;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlotGroup;

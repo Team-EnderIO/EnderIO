@@ -1,4 +1,4 @@
-package com.enderio.endergy;
+package com.enderio.endergy.common;
 
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.fml.common.Mod;

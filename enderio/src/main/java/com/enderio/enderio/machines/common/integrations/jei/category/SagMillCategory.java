@@ -1,7 +1,7 @@
 package com.enderio.enderio.machines.common.integrations.jei.category;
 
 import com.enderio.core.common.util.TooltipUtil;
-import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.api.grindingball.GrindingBallData;
 import com.enderio.enderio.common.compat.jei.JEIUtils;
 import com.enderio.enderio.common.init.EIODataComponents;

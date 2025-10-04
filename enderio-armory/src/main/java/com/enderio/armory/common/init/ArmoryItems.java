@@ -1,6 +1,6 @@
 package com.enderio.armory.common.init;
 
-import com.enderio.armory.EnderIOArmory;
+import com.enderio.armory.common.EnderIOArmory;
 import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.armory.common.item.darksteel.DarkSteelAxeItem;
 import com.enderio.armory.common.item.darksteel.DarkSteelBootsItem;

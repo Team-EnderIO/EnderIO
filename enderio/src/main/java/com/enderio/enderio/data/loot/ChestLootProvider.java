@@ -1,6 +1,6 @@
 package com.enderio.enderio.data.loot;
 
-import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.common.event.EIOChestLootEvent;
 import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.common.loot.SetLootCapacitorFunction;

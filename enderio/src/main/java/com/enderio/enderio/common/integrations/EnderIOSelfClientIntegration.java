@@ -1,7 +1,7 @@
 package com.enderio.enderio.common.integrations;
 
 import com.enderio.enderio.api.integration.ClientIntegration;
-import com.enderio.enderio.client.EnderIOBaseClient;
+import com.enderio.enderio.client.EnderIOClient;
 import com.enderio.enderio.common.init.EIOItems;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -24,7 +24,7 @@ public class EnderIOSelfClientIntegration implements ClientIntegration {
         if (activeGliderItem.isEmpty()) {
             return;
         }
-        BakedModel bakedModel = EnderIOBaseClient.GLIDER_MODELS.get(activeGliderItem.get());
+        BakedModel bakedModel = EnderIOClient.GLIDER_MODELS.get(activeGliderItem.get());
         if (bakedModel == null) {
             return;
         }

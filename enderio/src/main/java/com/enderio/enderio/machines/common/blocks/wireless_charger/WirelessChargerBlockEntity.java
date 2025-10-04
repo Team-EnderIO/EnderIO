@@ -5,6 +5,7 @@ import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.enderio.api.io.IOMode;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
+import com.enderio.enderio.common.tag.EIOTags;
 import com.enderio.enderio.machines.common.MachineNBTKeys;
 import com.enderio.enderio.machines.common.attachment.ActionRange;
 import com.enderio.enderio.machines.common.attachment.RangedActor;
@@ -17,7 +18,6 @@ import com.enderio.enderio.machines.common.datamap.RangeExtender;
 import com.enderio.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.enderio.machines.common.init.MachineDataComponents;
 import com.enderio.enderio.machines.common.io.IOConfig;
-import com.enderio.enderio.machines.common.tag.MachineTags;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -199,10 +199,10 @@ public class WirelessChargerBlockEntity extends PoweredMachineBlockEntity implem
         int rangeExtension = 0;
         if (level != null) {
             BlockState bs = level.getBlockState(getBlockPos().above());
-            if (bs.is(MachineTags.Blocks.RANGE_EXTENDER)) {
+            if (bs.is(EIOTags.Blocks.RANGE_EXTENDER)) {
                 Map<TagKey<Block>, Integer> map = bs.getBlockHolder().getData(RangeExtender.DATA_MAP);
                 if (map != null) {
-                    rangeExtension = map.getOrDefault(MachineTags.Blocks.RANGE_EXTENDER, 0);
+                    rangeExtension = map.getOrDefault(EIOTags.Blocks.RANGE_EXTENDER, 0);
                 }
             }
         }

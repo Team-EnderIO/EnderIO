@@ -1,7 +1,7 @@
 package com.enderio.enderio.machines.common.init;
 
 import com.enderio.core.data.model.ModelHelper;
-import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.client.paint.PaintedBlockColor;
@@ -9,6 +9,7 @@ import com.enderio.enderio.common.init.EIOCreativeTabs;
 import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.common.paint.item.PaintedBlockItem;
 import com.enderio.enderio.common.soul.SoulCapabilityProviders;
+import com.enderio.enderio.common.tag.EIOTags;
 import com.enderio.enderio.data.loot.DecorLootTable;
 import com.enderio.enderio.data.model.block.EIOBlockState;
 import com.enderio.enderio.machines.EnderIOMachines;
@@ -45,7 +46,6 @@ import com.enderio.enderio.machines.common.blocks.vacuum.xp.XPVacuumBlockEntity;
 import com.enderio.enderio.machines.common.blocks.vat.VatBlock;
 import com.enderio.enderio.machines.common.blocks.wireless_charger.WirelessAntennaBlock;
 import com.enderio.enderio.machines.common.item.CapacitorBankItem;
-import com.enderio.enderio.machines.common.tag.MachineTags;
 import com.enderio.enderio.machines.data.loot.MachinesLootTable;
 import com.enderio.enderio.machines.data.model.MachineModelUtil;
 import com.enderio.regilite.data.DataGenContext;
@@ -207,7 +207,7 @@ public class MachineBlocks {
                     .strength(2.5f, 8)
                     .isViewBlocking((pState, pLevel, pPos) -> false)
                     .noOcclusion())
-            .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE, MachineTags.Blocks.MIND_KILLER)
+            .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE, EIOTags.Blocks.MIND_KILLER)
             .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(),
                 prov.models().getExistingFile(EnderIO.rl("block/" + ctx.getName()))))
             .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
@@ -463,7 +463,7 @@ public class MachineBlocks {
                                 .isViewBlocking((pState, pLevel, pPos) -> false)
                                 .noOcclusion())
                 .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE,
-                        MachineTags.Blocks.RANGE_EXTENDER)
+                    EIOTags.Blocks.RANGE_EXTENDER)
                 .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(),
                         prov.models().getExistingFile(EnderIO.rl("block/" + ctx.getName()))))
                 .setTranslation(translation)

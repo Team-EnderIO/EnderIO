@@ -1,6 +1,6 @@
 package com.enderio.enderio.datagen.common.recipes;
 
-import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.common.init.EIOBlocks;
 import com.enderio.enderio.machines.common.blocks.painting.PaintingRecipe;
 import com.enderio.enderio.machines.common.init.MachineBlocks;

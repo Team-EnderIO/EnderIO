@@ -1,7 +1,7 @@
 package com.enderio.armory.data.tags;
 
 import com.enderio.armory.common.tag.ArmoryTags;
-import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.common.EnderIO;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;

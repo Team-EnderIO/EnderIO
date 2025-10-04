@@ -1,4 +1,4 @@
-package com.enderio.enderio.common.handler;
+package com.enderio.enderio.common.handlers;
 
 import com.enderio.enderio.common.config.BaseConfig;
 import com.enderio.enderio.common.init.EIORecipes;

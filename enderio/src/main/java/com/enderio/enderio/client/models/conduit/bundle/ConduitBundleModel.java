@@ -46,7 +46,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static com.enderio.enderio.conduits.client.ConduitClientSetup.*;
+import static com.enderio.enderio.client.models.ConduitAdditionalModels.*;
 
 public class ConduitBundleModel implements IDynamicBakedModel {
     public static final ModelProperty<ModelData> FACADE_MODEL_DATA = new ModelProperty<>();

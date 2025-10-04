@@ -1,6 +1,6 @@
 package com.enderio.armory.common.init;
 
-import com.enderio.armory.EnderIOArmory;
+import com.enderio.armory.common.EnderIOArmory;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.flag.FeatureFlag;
 import net.minecraft.world.flag.FeatureFlags;

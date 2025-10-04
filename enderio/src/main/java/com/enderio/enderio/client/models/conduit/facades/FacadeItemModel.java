@@ -1,8 +1,8 @@
 package com.enderio.enderio.client.models.conduit.facades;
 
 import com.enderio.core.data.model.ModelHelper;
+import com.enderio.enderio.client.models.ConduitAdditionalModels;
 import com.enderio.enderio.common.init.EIODataComponents;
-import com.enderio.enderio.conduits.client.ConduitClientSetup;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -23,8 +23,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.enderio.enderio.conduits.client.ConduitClientSetup.modelOf;
 
 public class FacadeItemModel implements IDynamicBakedModel {
 
@@ -48,7 +46,7 @@ public class FacadeItemModel implements IDynamicBakedModel {
         List<BakedQuad> bakedQuads = new ArrayList<>();
         if (facade != null) {
             bakedQuads.addAll(getItemModel().getQuads(facade.defaultBlockState(), side, rand, extraData, renderType));
-            bakedQuads.addAll(modelOf(ConduitClientSetup.CONDUIT_FACADE_OVERLAY).getQuads(null, side, rand, extraData,
+            bakedQuads.addAll(ConduitAdditionalModels.modelOf(ConduitAdditionalModels.CONDUIT_FACADE_OVERLAY).getQuads(null, side, rand, extraData,
                     renderType));
         } else {
             bakedQuads.addAll(facadeModel.getQuads(null, side, rand, extraData, renderType));
@@ -88,7 +86,7 @@ public class FacadeItemModel implements IDynamicBakedModel {
 
     @Override
     public ItemTransforms getTransforms() {
-        return modelOf(ConduitClientSetup.CONDUIT_FACADE_OVERLAY).getTransforms();
+        return ConduitAdditionalModels.modelOf(ConduitAdditionalModels.CONDUIT_FACADE_OVERLAY).getTransforms();
     }
 
     @Override

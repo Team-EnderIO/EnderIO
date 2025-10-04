@@ -1,0 +1,27 @@
+package com.enderio.enderio.common.compat.inventorysorter;
+
+import com.enderio.enderio.common.filter.fluid.FluidFilterSlot;
+import com.enderio.enderio.common.filter.item.ItemFilterSlot;
+import com.enderio.enderio.machines.common.blocks.base.menu.GhostMachineSlot;
+import com.enderio.enderio.machines.common.blocks.base.menu.MachineSlot;
+import com.enderio.enderio.machines.common.blocks.base.menu.PreviewMachineSlot;
+import com.enderio.enderio.machines.common.blocks.enchanter.EnchanterMenu;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.InterModComms;
+import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
+
+public class InventorySorterCompat {
+    public static void init(IEventBus eventBus) {
+        eventBus.addListener(InventorySorterCompat::sendIMC);
+    }
+
+    private static void sendIMC(InterModEnqueueEvent event) {
+        InterModComms.sendTo("inventorysorter", "slotblacklist", ItemFilterSlot.class::getName);
+        InterModComms.sendTo("inventorysorter", "slotblacklist", FluidFilterSlot.class::getName);
+        InterModComms.sendTo("inventorysorter", "slotblacklist", MachineSlot.class::getName);
+        InterModComms.sendTo("inventorysorter", "slotblacklist", GhostMachineSlot.class::getName);
+        InterModComms.sendTo("inventorysorter", "slotblacklist", PreviewMachineSlot.class::getName);
+        InterModComms.sendTo("inventorysorter", "slotblacklist",
+            EnchanterMenu.EnchanterOutputMachineSlot.class::getName);
+    }
+}

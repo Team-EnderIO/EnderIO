@@ -1,6 +1,6 @@
 package com.enderio.endergy.datapack_registries;
 
-import com.enderio.endergy.EnderIOEndergy;
+import com.enderio.endergy.common.EnderIOEndergy;
 import com.enderio.endergy.common.EndergyConduits;
 import com.enderio.endergy.common.lang.EndergyConduitComponents;
 import com.enderio.enderio.api.conduits.Conduit;

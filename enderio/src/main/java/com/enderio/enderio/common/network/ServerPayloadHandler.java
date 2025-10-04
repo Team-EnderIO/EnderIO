@@ -4,7 +4,7 @@ import com.enderio.enderio.api.travel.TravelTarget;
 import com.enderio.enderio.api.travel.TravelTargetApi;
 import com.enderio.enderio.common.filter.FilterSlot;
 import com.enderio.enderio.common.filter.fluid.FluidFilterSlot;
-import com.enderio.enderio.common.handler.TravelHandler;
+import com.enderio.enderio.common.handlers.TravelHandler;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;

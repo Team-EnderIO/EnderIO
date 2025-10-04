@@ -1,6 +1,6 @@
 package com.enderio.enderio.datagen.common.recipes;
 
-import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.common.block.glass.FusedQuartzBlock;
 import com.enderio.enderio.common.block.glass.GlassBlocks;

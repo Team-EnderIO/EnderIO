@@ -1,6 +1,6 @@
 package com.enderio.modded_conduits.common.modules.mekanism;
 
-import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
@@ -14,7 +14,7 @@ import com.enderio.enderio.common.conduits.ConduitApiImpl;
 import com.enderio.enderio.common.filter.AbstractFilterItem;
 import com.enderio.enderio.common.init.EIOCreativeTabs;
 import com.enderio.enderio.common.init.EIOItems;
-import com.enderio.modded_conduits.ModdedConduits;
+import com.enderio.modded_conduits.common.ModdedConduits;
 import com.enderio.modded_conduits.client.modules.mekanism.screens.EnderChemicalFilterScreen;
 import com.enderio.modded_conduits.common.modules.ConduitCommonModule;
 import com.enderio.modded_conduits.common.modules.mekanism.chemical.C2SClearLockedChemicalPacket;

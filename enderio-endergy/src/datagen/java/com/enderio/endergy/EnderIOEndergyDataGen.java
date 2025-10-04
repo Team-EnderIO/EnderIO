@@ -1,5 +1,6 @@
 package com.enderio.endergy;
 
+import com.enderio.endergy.common.EnderIOEndergy;
 import com.enderio.endergy.datapack_registries.ConduitsBootstrap;
 import com.enderio.enderio.api.EnderIORegistries;
 import net.minecraft.core.HolderLookup;

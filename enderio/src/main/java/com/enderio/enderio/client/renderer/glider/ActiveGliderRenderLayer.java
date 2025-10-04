@@ -3,7 +3,7 @@ package com.enderio.enderio.client.renderer.glider;
 import com.enderio.enderio.api.integration.ClientIntegration;
 import com.enderio.enderio.api.integration.Integration;
 import com.enderio.enderio.api.integration.IntegrationManager;
-import com.enderio.enderio.common.hangglider.PlayerMovementHandler;
+import com.enderio.enderio.common.handlers.PlayerMovementHandler;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.model.PlayerModel;

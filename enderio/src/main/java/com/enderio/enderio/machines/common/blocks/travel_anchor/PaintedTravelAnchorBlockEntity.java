@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.blocks.travel_anchor;
 
-import com.enderio.enderio.EIONBTKeys;
+import com.enderio.enderio.common.EIONBTKeys;
 import com.enderio.enderio.common.paint.PaintUtils;
 import com.enderio.enderio.common.paint.blockentity.PaintedBlockEntity;
 import com.enderio.enderio.common.paint.blockentity.SinglePaintedBlockEntity;

@@ -1,7 +1,7 @@
 package com.enderio.armory.client.renderer;
 
 import com.enderio.enderio.api.integration.ClientIntegration;
-import com.enderio.enderio.client.EnderIOBaseClient;
+import com.enderio.enderio.client.EnderIOClient;
 import com.enderio.enderio.common.init.EIOItems;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -18,7 +18,7 @@ public class GliderIntegrationClient implements ClientIntegration {
     public void renderHangGlider(PoseStack posestack, MultiBufferSource buffer, int light, int overlay,
             AbstractClientPlayer player, float pPartialTick) {
 
-        BakedModel bakedModel = EnderIOBaseClient.GLIDER_MODELS.get(EIOItems.GLIDER.asItem());
+        BakedModel bakedModel = EnderIOClient.GLIDER_MODELS.get(EIOItems.GLIDER.asItem());
         if (bakedModel == null) {
             return;
         }

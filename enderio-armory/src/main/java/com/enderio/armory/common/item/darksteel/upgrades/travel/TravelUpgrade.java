@@ -6,7 +6,7 @@ import com.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgradeRegistr
 import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.enderio.api.travel.TravelTarget;
 import com.enderio.enderio.common.config.BaseConfig;
-import com.enderio.enderio.common.handler.TravelHandler;
+import com.enderio.enderio.common.handlers.TravelHandler;
 import com.enderio.enderio.common.init.EIODataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;

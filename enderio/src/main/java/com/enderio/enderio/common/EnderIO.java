@@ -1,16 +1,15 @@
-package com.enderio.enderio;
+package com.enderio.enderio.common;
 
 import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.common.compat.cctweaked.ComputerCraftCompat;
 import com.enderio.enderio.common.compat.ftb_ultimine.FTBUltimineCompat;
+import com.enderio.enderio.common.compat.inventorysorter.InventorySorterCompat;
 import com.enderio.enderio.common.compat.laserio.LaserIOCompat;
 import com.enderio.enderio.common.config.BaseConfig;
 import com.enderio.enderio.common.config.BaseConfigLang;
-import com.enderio.enderio.common.filter.fluid.FluidFilterSlot;
-import com.enderio.enderio.common.filter.item.ItemFilterSlot;
-import com.enderio.enderio.common.hangglider.PlayerMovementHandler;
+import com.enderio.enderio.common.handlers.PlayerMovementHandler;
 import com.enderio.enderio.common.init.EIOAttachments;
 import com.enderio.enderio.common.init.EIOBlockEntities;
 import com.enderio.enderio.common.init.EIOBlocks;
@@ -32,7 +31,7 @@ import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.common.tag.EIOTags;
 import com.enderio.enderio.data.EIODataProvider;
 import com.enderio.enderio.data.loot.ChestLootProvider;
-import com.enderio.enderio.data.loot.EIOLootModifiersProvider;
+import com.enderio.enderio.machines.common.lang.MachineLang;
 import com.enderio.regilite.Regilite;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.HolderLookup;
@@ -40,21 +39,21 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.repository.Pack;
+import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.InterModComms;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
+import net.neoforged.neoforge.event.AddPackFindersEvent;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import org.slf4j.Logger;
@@ -67,7 +66,6 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-@EventBusSubscriber
 @Mod(EnderIO.MOD_ID)
 public class EnderIO {
     public static final String MOD_ID = EnderIOAPI.MOD_ID;
@@ -81,10 +79,11 @@ public class EnderIO {
         return EnderIOAPI.rl(path);
     }
 
-    private static Map<String, Consumer<IEventBus>> MOD_INTEGRATIONS = Map.ofEntries(
+    private static final Map<String, Consumer<IEventBus>> MOD_INTEGRATIONS = Map.ofEntries(
         Map.entry("computercraft", eventBus -> ComputerCraftCompat.init()),
         Map.entry("ftbultimine", eventBus -> FTBUltimineCompat.init()),
-        Map.entry("laserio", LaserIOCompat::init)
+        Map.entry("laserio", LaserIOCompat::init),
+        Map.entry("inventorysorter", InventorySorterCompat::init)
     );
 
     private final Logger logger = LogUtils.getLogger();
@@ -139,6 +138,8 @@ public class EnderIO {
         modEventBus.addListener(SoulVialItem::onCommonSetup);
         modEventBus.addListener(this::registerRegistries);
         modEventBus.addListener(this::registerDatapackRegistries);
+        modEventBus.addListener(this::addBuiltInPacks);
+
         Integrations.register();
 
         NeoForge.EVENT_BUS.addListener(PlayerMovementHandler::onPlayerTick);
@@ -166,8 +167,6 @@ public class EnderIO {
 
         EIODataProvider provider = new EIODataProvider("base");
 
-        provider.addSubProvider(event.includeServer(), new EIOLootModifiersProvider(packOutput, lookupProvider));
-
         provider.addSubProvider(event.includeServer(),
                 new LootTableProvider(packOutput, Collections.emptySet(), List
                         .of(new LootTableProvider.SubProviderEntry(ChestLootProvider::new, LootContextParamSets.CHEST)),
@@ -175,9 +174,18 @@ public class EnderIO {
         generator.addProvider(true, provider);
     }
 
-    @SubscribeEvent
-    public static void sendIMC(InterModEnqueueEvent event) {
-        InterModComms.sendTo("inventorysorter", "slotblacklist", ItemFilterSlot.class::getName);
-        InterModComms.sendTo("inventorysorter", "slotblacklist", FluidFilterSlot.class::getName);
+    public void addBuiltInPacks(final AddPackFindersEvent event) {
+        event.addPackFinders(
+            ResourceLocation.fromNamespaceAndPath(EnderIO.MOD_ID, "data/enderio/datapacks/farming_station"),
+            PackType.SERVER_DATA, MachineLang.FARMING_STATION_EXPERIMENT, PackSource.FEATURE, false,
+            Pack.Position.TOP);
+
+        event.addPackFinders(
+            ResourceLocation.fromNamespaceAndPath(EnderIO.MOD_ID, "data/enderio/datapacks/enderface"),
+            PackType.SERVER_DATA, MachineLang.ENDERFACE_EXPERIMENT, PackSource.FEATURE, false, Pack.Position.TOP);
+
+        event.addPackFinders(
+            ResourceLocation.fromNamespaceAndPath(EnderIO.MOD_ID, "data/enderio/datapacks/niard"),
+            PackType.SERVER_DATA, MachineLang.NIARD_EXPERIMENT, PackSource.FEATURE, false, Pack.Position.TOP);
     }
 }

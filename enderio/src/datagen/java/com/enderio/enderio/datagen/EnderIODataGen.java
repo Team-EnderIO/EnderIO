@@ -1,6 +1,6 @@
 package com.enderio.enderio.datagen;
 
-import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.data.EIODataProvider;
@@ -9,6 +9,7 @@ import com.enderio.enderio.datagen.common.advancement.MachinesAdvancementGenerat
 import com.enderio.enderio.datagen.common.data_maps.RangeExtenderDataMapProvider;
 import com.enderio.enderio.datagen.common.data_maps.ReagentDataMapProvider;
 import com.enderio.enderio.datagen.common.datapack_registries.ConduitsBootstrap;
+import com.enderio.enderio.datagen.common.loot.EIOLootModifiersProvider;
 import com.enderio.enderio.datagen.common.recipes.AlloyRecipeProvider;
 import com.enderio.enderio.datagen.common.recipes.BlockRecipeProvider;
 import com.enderio.enderio.datagen.common.recipes.ConduitRecipeProvider;
@@ -99,6 +100,8 @@ public class EnderIODataGen {
         provider.addSubProvider(event.includeServer(), new RangeExtenderDataMapProvider(packOutput, lookupProvider));
 
         provider.addSubProvider(event.includeServer(), new SoulDataProvider(packOutput));
+
+        provider.addSubProvider(event.includeServer(), new EIOLootModifiersProvider(packOutput, lookupProvider));
 
         generator.addProvider(true, provider);
     }

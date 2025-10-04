@@ -1,6 +1,6 @@
 package com.enderio.enderio.common.config;
 
-import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.common.EnderIO;
 
 public class BaseConfigLang {
     public static void register() {

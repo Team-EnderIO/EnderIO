@@ -1,7 +1,7 @@
 package com.enderio.enderio.client.renderer.travel;
 
 import com.enderio.enderio.api.travel.TravelTarget;
-import com.enderio.enderio.common.handler.TravelHandler;
+import com.enderio.enderio.common.handlers.TravelHandler;
 import com.enderio.enderio.machines.common.init.MachineBlocks;
 import com.enderio.enderio.machines.common.travel.AnchorTravelTarget;
 import net.minecraft.client.DeltaTracker;

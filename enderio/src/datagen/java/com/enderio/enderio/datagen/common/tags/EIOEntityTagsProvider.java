@@ -2,7 +2,6 @@ package com.enderio.enderio.datagen.common.tags;
 
 import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.common.tag.EIOTags;
-import com.enderio.enderio.machines.common.tag.MachineTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
@@ -27,6 +26,6 @@ public class EIOEntityTagsProvider extends EntityTypeTagsProvider {
 
         this.tag(EIOTags.EntityTypes.SOUL_VIAL_WHITELIST);
 
-        this.tag(MachineTags.EntityTypes.SPAWNER_BLACKLIST).addTag(Tags.EntityTypes.BOSSES).add(EntityType.WARDEN);
+        this.tag(EIOTags.EntityTypes.SPAWNER_BLACKLIST).addTag(Tags.EntityTypes.BOSSES).add(EntityType.WARDEN);
     }
 }

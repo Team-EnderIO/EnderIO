@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.blocks.powered_spawner;
 
-import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.UseOnly;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
@@ -12,6 +12,7 @@ import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.common.item.tool.SoulVialItem;
 import com.enderio.enderio.common.particle.RangeParticleData;
+import com.enderio.enderio.common.tag.EIOTags;
 import com.enderio.enderio.machines.common.MachineNBTKeys;
 import com.enderio.enderio.machines.common.blocks.base.blockentity.PoweredMachineBlockEntity;
 import com.enderio.enderio.machines.common.blocks.base.blockentity.flags.CapacitorSupport;
@@ -27,7 +28,6 @@ import com.enderio.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.enderio.machines.common.init.MachineDataComponents;
 import com.enderio.enderio.machines.common.lang.MachineLang;
 import com.enderio.enderio.machines.common.souldata.SpawnerSoul;
-import com.enderio.enderio.machines.common.tag.MachineTags;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -121,7 +121,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
             return null;
         }
 
-        if (entityType.is(MachineTags.EntityTypes.SPAWNER_BLACKLIST)) {
+        if (entityType.is(EIOTags.EntityTypes.SPAWNER_BLACKLIST)) {
             setReason(SpawnerBlockedReason.DISABLED);
             return null;
         }
@@ -216,7 +216,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     public void onLoad() {
         super.onLoad();
         taskHost.onLevelReady();
-        mindKiller = level.getBlockState(worldPosition.above()).is(MachineTags.Blocks.MIND_KILLER);
+        mindKiller = level.getBlockState(worldPosition.above()).is(EIOTags.Blocks.MIND_KILLER);
     }
 
     @Override
@@ -410,7 +410,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     public void neighborChanged(Block neighborBlock, BlockPos neighborPos) {
         super.neighborChanged(neighborBlock, neighborPos);
         if (level != null && !level.isClientSide() && getBlockPos().above().equals(neighborPos)) {
-            mindKiller = level.getBlockState(neighborPos).is(MachineTags.Blocks.MIND_KILLER);
+            mindKiller = level.getBlockState(neighborPos).is(EIOTags.Blocks.MIND_KILLER);
         }
     }
 

@@ -1,6 +1,6 @@
 package com.enderio.enderio.datagen.common.recipes;
 
-import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.common.init.EIOFluids;
 import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.machines.common.blocks.fluid_tank.TankRecipe;

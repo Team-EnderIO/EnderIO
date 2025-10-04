@@ -1,6 +1,6 @@
 package com.enderio.enderio.common.init;
 
-import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.common.loot.BrokenSpawnerLootModifier;
 import com.enderio.enderio.common.loot.SetLootCapacitorFunction;
 import com.enderio.enderio.common.paint.CopyPaintFunction;

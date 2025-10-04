@@ -5,7 +5,7 @@ import com.enderio.enderio.api.travel.TravelRenderer;
 import com.enderio.enderio.api.travel.TravelTarget;
 import com.enderio.enderio.api.travel.TravelTargetApi;
 import com.enderio.enderio.api.travel.TravelTargetType;
-import com.enderio.enderio.common.handler.TravelHandler;
+import com.enderio.enderio.common.handlers.TravelHandler;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;

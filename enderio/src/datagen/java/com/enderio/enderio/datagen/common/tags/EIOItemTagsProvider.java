@@ -2,7 +2,6 @@ package com.enderio.enderio.datagen.common.tags;
 
 import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.common.tag.EIOTags;
-import com.enderio.enderio.machines.common.tag.MachineTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
@@ -102,19 +101,19 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
     }
 
     private void addReagentTags() {
-        tag(MachineTags.Items.CROPS).addTag(Tags.Items.CROPS);
-        tag(MachineTags.Items.SEEDS).addTag(Tags.Items.SEEDS);
-        tag(MachineTags.Items.MEAT).addTag(ItemTags.MEAT);
-        tag(MachineTags.Items.EXPLOSIVES).add(Items.TNT, Items.FIREWORK_STAR, Items.FIREWORK_ROCKET, Items.FIRE_CHARGE, Items.GUNPOWDER);
-        tag(MachineTags.Items.NATURAL_LIGHTS).add(Items.GLOWSTONE_DUST, Items.GLOWSTONE, Items.SEA_LANTERN,
+        tag(EIOTags.Items.CROPS).addTag(Tags.Items.CROPS);
+        tag(EIOTags.Items.SEEDS).addTag(Tags.Items.SEEDS);
+        tag(EIOTags.Items.MEAT).addTag(ItemTags.MEAT);
+        tag(EIOTags.Items.EXPLOSIVES).add(Items.TNT, Items.FIREWORK_STAR, Items.FIREWORK_ROCKET, Items.FIRE_CHARGE, Items.GUNPOWDER);
+        tag(EIOTags.Items.NATURAL_LIGHTS).add(Items.GLOWSTONE_DUST, Items.GLOWSTONE, Items.SEA_LANTERN,
             Items.SEA_PICKLE, Items.GLOW_LICHEN, Items.GLOW_BERRIES, Items.GLOW_INK_SAC);
-        tag(MachineTags.Items.SUNFLOWER).add(Items.SUNFLOWER, Items.TORCHFLOWER);
-        tag(MachineTags.Items.BLAZE_POWDER).add(Items.BLAZE_POWDER);
-        tag(MachineTags.Items.AMETHYST).add(Items.AMETHYST_SHARD);
-        tag(MachineTags.Items.PRISMARINE).add(Items.PRISMARINE_SHARD);
-        tag(MachineTags.Items.CLOUD_COLD).add(Items.SNOW, Items.SNOW_BLOCK, Items.SNOWBALL, Items.ICE, Items.PACKED_ICE,
+        tag(EIOTags.Items.SUNFLOWER).add(Items.SUNFLOWER, Items.TORCHFLOWER);
+        tag(EIOTags.Items.BLAZE_POWDER).add(Items.BLAZE_POWDER);
+        tag(EIOTags.Items.AMETHYST).add(Items.AMETHYST_SHARD);
+        tag(EIOTags.Items.PRISMARINE).add(Items.PRISMARINE_SHARD);
+        tag(EIOTags.Items.CLOUD_COLD).add(Items.SNOW, Items.SNOW_BLOCK, Items.SNOWBALL, Items.ICE, Items.PACKED_ICE,
             Items.BLUE_ICE);
-        tag(MachineTags.Items.LIGHTNING_ROD).add(Items.LIGHTNING_ROD);
-        tag(MachineTags.Items.WIND_CHARGES).add(Items.WIND_CHARGE);
+        tag(EIOTags.Items.LIGHTNING_ROD).add(Items.LIGHTNING_ROD);
+        tag(EIOTags.Items.WIND_CHARGES).add(Items.WIND_CHARGE);
     }
 }

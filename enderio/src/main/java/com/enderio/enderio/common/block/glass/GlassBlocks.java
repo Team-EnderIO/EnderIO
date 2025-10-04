@@ -1,6 +1,6 @@
 package com.enderio.enderio.common.block.glass;
 
-import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.common.init.EIOCreativeTabs;
 import com.enderio.enderio.common.tag.EIOTags;
 import com.enderio.regilite.holder.RegiliteBlock;

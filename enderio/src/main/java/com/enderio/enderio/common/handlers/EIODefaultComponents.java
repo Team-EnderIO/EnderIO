@@ -1,4 +1,4 @@
-package com.enderio.enderio.common.event;
+package com.enderio.enderio.common.handlers;
 
 import com.enderio.enderio.api.grindingball.GrindingBallData;
 import com.enderio.enderio.common.init.EIODataComponents;

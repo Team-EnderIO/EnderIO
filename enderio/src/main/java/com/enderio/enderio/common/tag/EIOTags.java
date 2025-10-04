@@ -1,6 +1,6 @@
 package com.enderio.enderio.common.tag;
 
-import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.common.block.glass.GlassCollisionPredicate;
 import com.enderio.enderio.common.block.glass.GlassIdentifier;
 import com.enderio.enderio.common.block.glass.GlassLighting;
@@ -119,6 +119,19 @@ public class EIOTags {
 
         public static final Map<GlassIdentifier, TagKey<Item>> GLASS_TAGS = createGlassTags();
 
+        public static final TagKey<Item> SEEDS = tag("seeds");
+        public static final TagKey<Item> CROPS = tag("crops");
+        public static final TagKey<Item> MEAT = tag("meat");
+        public static final TagKey<Item> EXPLOSIVES = tag("explosives");
+        public static final TagKey<Item> BLAZE_POWDER = tag("blaze_powder");
+        public static final TagKey<Item> NATURAL_LIGHTS = tag("natural_lights");
+        public static final TagKey<Item> SUNFLOWER = tag("sunflower");
+        public static final TagKey<Item> AMETHYST = tag("amethyst");
+        public static final TagKey<Item> CLOUD_COLD = tag("cloud_cold");
+        public static final TagKey<Item> PRISMARINE = tag("prismarine");
+        public static final TagKey<Item> LIGHTNING_ROD = tag("lightning_rod");
+        public static final TagKey<Item> WIND_CHARGES = tag("wind_charges");
+
         public static Map<GlassIdentifier, TagKey<Item>> createGlassTags() {
             Map<GlassIdentifier, TagKey<Item>> map = new HashMap<>();
             for (GlassLighting lighting : GlassLighting.values()) {
@@ -164,6 +177,9 @@ public class EIOTags {
 
         public static final TagKey<Block> REDSTONE_CONNECTABLE = tag("redstone_connectable");
 
+        public static final TagKey<Block> RANGE_EXTENDER = tag("range_extender");
+        public static final TagKey<Block> MIND_KILLER = tag("mind_killer");
+
         private static TagKey<Block> commonTag(String name) {
             return BlockTags.create(ResourceLocation.fromNamespaceAndPath(COMMON, name));
         }
@@ -196,6 +212,7 @@ public class EIOTags {
         }
 
         // TODO: 1.22: Rename allow/deny list.
+        public static final TagKey<EntityType<?>> SPAWNER_BLACKLIST = tag("spawner_blacklist");
         public static final TagKey<EntityType<?>> SOUL_VIAL_WHITELIST = tag("soul_vial_whitelist");
         public static final TagKey<EntityType<?>> SOUL_VIAL_BLACKLIST = tag("soul_vial_blacklist");
 

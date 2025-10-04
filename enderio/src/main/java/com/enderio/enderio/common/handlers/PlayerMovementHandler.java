@@ -1,4 +1,4 @@
-package com.enderio.enderio.common.hangglider;
+package com.enderio.enderio.common.handlers;
 
 import com.enderio.enderio.api.UseOnly;
 import com.enderio.enderio.api.glider.GliderMovementInfo;

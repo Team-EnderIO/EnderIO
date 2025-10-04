@@ -1,6 +1,6 @@
 package com.enderio.enderio.common.paint;
 
-import com.enderio.enderio.EIONBTKeys;
+import com.enderio.enderio.common.EIONBTKeys;
 import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.common.init.EIOEntities;
 import net.minecraft.core.registries.BuiltInRegistries;

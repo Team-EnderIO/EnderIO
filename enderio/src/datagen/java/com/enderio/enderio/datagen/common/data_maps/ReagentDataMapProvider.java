@@ -1,7 +1,7 @@
 package com.enderio.enderio.datagen.common.data_maps;
 
+import com.enderio.enderio.common.tag.EIOTags;
 import com.enderio.enderio.machines.common.datamap.VatReagent;
-import com.enderio.enderio.machines.common.tag.MachineTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.TagKey;
@@ -21,25 +21,25 @@ public class ReagentDataMapProvider extends DataMapProvider {
     }
 
     protected void gather() {
-        reagent(net.minecraft.world.item.Items.SUGAR_CANE, MachineTags.Items.CROPS, 0.5D);
+        reagent(net.minecraft.world.item.Items.SUGAR_CANE, EIOTags.Items.CROPS, 0.5D);
 
-        reagent(net.minecraft.world.item.Items.GLOWSTONE_DUST, MachineTags.Items.NATURAL_LIGHTS, 0.25D);
-        reagent(net.minecraft.world.item.Items.SEA_PICKLE, MachineTags.Items.NATURAL_LIGHTS, 0.25D);
-        reagent(net.minecraft.world.item.Items.GLOW_INK_SAC, MachineTags.Items.NATURAL_LIGHTS, 0.5D);
-        reagent(net.minecraft.world.item.Items.GLOW_LICHEN, MachineTags.Items.NATURAL_LIGHTS, 0.20D);
-        reagent(net.minecraft.world.item.Items.GLOW_BERRIES, MachineTags.Items.NATURAL_LIGHTS, 0.15D);
+        reagent(net.minecraft.world.item.Items.GLOWSTONE_DUST, EIOTags.Items.NATURAL_LIGHTS, 0.25D);
+        reagent(net.minecraft.world.item.Items.SEA_PICKLE, EIOTags.Items.NATURAL_LIGHTS, 0.25D);
+        reagent(net.minecraft.world.item.Items.GLOW_INK_SAC, EIOTags.Items.NATURAL_LIGHTS, 0.5D);
+        reagent(net.minecraft.world.item.Items.GLOW_LICHEN, EIOTags.Items.NATURAL_LIGHTS, 0.20D);
+        reagent(net.minecraft.world.item.Items.GLOW_BERRIES, EIOTags.Items.NATURAL_LIGHTS, 0.15D);
 
-        reagent(net.minecraft.world.item.Items.FIRE_CHARGE, MachineTags.Items.EXPLOSIVES, 0.5D);
-        reagent(net.minecraft.world.item.Items.FIREWORK_STAR, MachineTags.Items.EXPLOSIVES, 0.4D);
-        reagent(net.minecraft.world.item.Items.FIREWORK_ROCKET, MachineTags.Items.EXPLOSIVES, 0.4D);
-        reagent(net.minecraft.world.item.Items.GUNPOWDER, MachineTags.Items.EXPLOSIVES, 0.25D);
+        reagent(net.minecraft.world.item.Items.FIRE_CHARGE, EIOTags.Items.EXPLOSIVES, 0.5D);
+        reagent(net.minecraft.world.item.Items.FIREWORK_STAR, EIOTags.Items.EXPLOSIVES, 0.4D);
+        reagent(net.minecraft.world.item.Items.FIREWORK_ROCKET, EIOTags.Items.EXPLOSIVES, 0.4D);
+        reagent(net.minecraft.world.item.Items.GUNPOWDER, EIOTags.Items.EXPLOSIVES, 0.25D);
 
-        reagent(net.minecraft.world.item.Items.TORCHFLOWER, MachineTags.Items.SUNFLOWER, 1.2D);
+        reagent(net.minecraft.world.item.Items.TORCHFLOWER, EIOTags.Items.SUNFLOWER, 1.2D);
 
-        reagent(net.minecraft.world.item.Items.SNOW, MachineTags.Items.CLOUD_COLD, 0.12D);
-        reagent(net.minecraft.world.item.Items.SNOWBALL, MachineTags.Items.CLOUD_COLD, 0.11D);
-        reagent(net.minecraft.world.item.Items.PACKED_ICE, MachineTags.Items.CLOUD_COLD, 9D);
-        reagent(net.minecraft.world.item.Items.BLUE_ICE, MachineTags.Items.CLOUD_COLD, 81D);
+        reagent(net.minecraft.world.item.Items.SNOW, EIOTags.Items.CLOUD_COLD, 0.12D);
+        reagent(net.minecraft.world.item.Items.SNOWBALL, EIOTags.Items.CLOUD_COLD, 0.11D);
+        reagent(net.minecraft.world.item.Items.PACKED_ICE, EIOTags.Items.CLOUD_COLD, 9D);
+        reagent(net.minecraft.world.item.Items.BLUE_ICE, EIOTags.Items.CLOUD_COLD, 81D);
 
         var builder = builder(VatReagent.DATA_MAP);
         dataMap.forEach((item, map) -> {

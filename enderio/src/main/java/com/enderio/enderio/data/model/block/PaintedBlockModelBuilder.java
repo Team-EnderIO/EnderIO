@@ -1,6 +1,6 @@
 package com.enderio.enderio.data.model.block;
 
-import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.common.EnderIO;
 import com.google.gson.JsonObject;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;

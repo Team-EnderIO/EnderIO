@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.integrations.jei.category;
 
-import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.client.gui.screens.machines.SoulEngineScreen;
 import com.enderio.enderio.common.item.tool.SoulVialItem;

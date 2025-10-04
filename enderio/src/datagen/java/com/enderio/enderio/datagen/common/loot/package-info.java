@@ -1,4 +1,4 @@
 @javax.annotation.ParametersAreNonnullByDefault
 @net.minecraft.MethodsReturnNonnullByDefault
 
-package com.enderio.enderio.common.hangglider;
+package com.enderio.enderio.datagen.common.loot;

@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common;
 
-import com.enderio.enderio.EIONBTKeys;
+import com.enderio.enderio.common.EIONBTKeys;
 
 /**
  * Common NBT Keys.

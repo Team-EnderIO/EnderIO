@@ -6,7 +6,7 @@ import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.core.common.item.CreativeTabVariants;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.common.config.BaseConfig;
-import com.enderio.enderio.common.handler.TravelHandler;
+import com.enderio.enderio.common.handlers.TravelHandler;
 import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.common.lang.EIOLang;
 import net.minecraft.network.chat.Component;

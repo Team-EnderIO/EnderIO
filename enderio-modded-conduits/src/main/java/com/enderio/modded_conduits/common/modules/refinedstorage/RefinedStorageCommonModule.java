@@ -1,6 +1,6 @@
 package com.enderio.modded_conduits.common.modules.refinedstorage;
 
-import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitApi;
@@ -9,7 +9,7 @@ import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.node.NodeDataType;
 import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataType;
 import com.enderio.enderio.common.init.EIOItems;
-import com.enderio.modded_conduits.ModdedConduits;
+import com.enderio.modded_conduits.common.ModdedConduits;
 import com.enderio.modded_conduits.common.ModuleModIds;
 import com.enderio.modded_conduits.common.modules.ConduitCommonModule;
 import com.refinedmods.refinedstorage.common.content.Tags;

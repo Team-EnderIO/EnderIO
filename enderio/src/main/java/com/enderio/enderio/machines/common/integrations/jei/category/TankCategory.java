@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.integrations.jei.category;
 
-import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.client.gui.screens.machines.FluidTankScreen;
 import com.enderio.enderio.common.compat.jei.JEIUtils;
 import com.enderio.enderio.machines.common.blocks.fluid_tank.FluidTankBlockEntity;

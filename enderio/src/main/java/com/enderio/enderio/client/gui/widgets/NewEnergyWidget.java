@@ -2,7 +2,7 @@ package com.enderio.enderio.client.gui.widgets;
 
 import com.enderio.core.client.gui.widgets.EIOWidget;
 import com.enderio.core.common.util.TooltipUtil;
-import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.machines.common.io.energy.ILargeMachineEnergyStorage;
 import com.enderio.enderio.machines.common.io.energy.IMachineEnergyStorage;

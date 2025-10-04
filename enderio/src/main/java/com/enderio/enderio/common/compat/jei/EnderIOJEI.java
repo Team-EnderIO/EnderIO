@@ -1,7 +1,7 @@
 package com.enderio.enderio.common.compat.jei;
 
 import com.enderio.core.client.gui.screen.EnderContainerScreen;
-import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.common.block.glass.GlassBlocks;
 import com.enderio.enderio.common.compat.jei.category.FireCraftingCategory;
 import com.enderio.enderio.common.compat.jei.extension.ShapedEntityStorageCategoryExtension;
