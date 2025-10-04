@@ -14,7 +14,7 @@ import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.facade.FacadeType;
 import com.enderio.enderio.api.conduits.network.node.NodeData;
-import com.enderio.enderio.client.models.conduit.bundle.ConduitBundleRenderState;
+import com.enderio.enderio.client.content.conduits.model.bundle.ConduitBundleRenderState;
 import com.enderio.enderio.common.foundation.EIONBTKeys;
 import com.enderio.enderio.common.foundation.block.entity.Wrenchable;
 import com.enderio.enderio.common.content.conduits.ConduitBlockItem;

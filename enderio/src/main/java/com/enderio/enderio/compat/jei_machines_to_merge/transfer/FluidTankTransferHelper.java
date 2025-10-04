@@ -1,7 +1,7 @@
 package com.enderio.enderio.compat.jei_machines_to_merge.transfer;
 
-import com.enderio.enderio.common.content.machines.fluid_tank.FluidTankMenu;
-import com.enderio.enderio.common.content.machines.fluid_tank.TankRecipe;
+import com.enderio.enderio.common.content.fluid_tank.FluidTankMenu;
+import com.enderio.enderio.common.content.fluid_tank.TankRecipe;
 import com.enderio.enderio.common.init.MachineMenus;
 import com.enderio.enderio.compat.jei_machines_to_merge.category.TankCategory;
 import com.enderio.enderio.common.foundation.network.packets.ServerboundTransferItemsPacket;

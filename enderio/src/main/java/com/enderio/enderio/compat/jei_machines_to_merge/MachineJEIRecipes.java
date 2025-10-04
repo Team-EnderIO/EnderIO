@@ -1,7 +1,7 @@
 package com.enderio.enderio.compat.jei_machines_to_merge;
 
 import com.enderio.enderio.common.content.machines.alloy.AlloySmeltingRecipe;
-import com.enderio.enderio.common.content.machines.fluid_tank.TankRecipe;
+import com.enderio.enderio.common.content.fluid_tank.TankRecipe;
 import com.enderio.enderio.common.content.machines.obelisks.weather.WeatherChangeRecipe;
 import com.enderio.enderio.common.content.machines.sag_mill.SagMillingRecipe;
 import com.enderio.enderio.common.content.machines.slicer.SlicingRecipe;

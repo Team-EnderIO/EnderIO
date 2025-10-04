@@ -1,7 +1,7 @@
 package com.enderio.enderio.compat.jei_machines_to_merge.category;
 
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.client.gui.screens.machines.StirlingGeneratorScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.StirlingGeneratorScreen;
 import com.enderio.enderio.compat.jei.JEIUtils;
 import com.enderio.enderio.common.content.machines.alloy.AlloySmeltingRecipe;
 import com.enderio.enderio.common.init.MachineBlocks;

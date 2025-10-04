@@ -13,7 +13,7 @@ import com.enderio.enderio.common.foundation.block.entity.flags.CapacitorSupport
 import com.enderio.enderio.common.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.common.foundation.inventory.SingleSlotAccess;
 import com.enderio.enderio.common.foundation.state.MachineState;
-import com.enderio.enderio.common.content.machines.fluid_tank.InternalTankTasks;
+import com.enderio.enderio.common.content.fluid_tank.InternalTankTasks;
 import com.enderio.enderio.common.config.machines.MachinesConfig;
 import com.enderio.enderio.common.init.MachineBlockEntities;
 import com.enderio.enderio.common.init.MachineDataComponents;

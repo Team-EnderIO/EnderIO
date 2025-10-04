@@ -4,7 +4,7 @@ import com.enderio.core.common.recipes.RecipeTypeSerializerPair;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.common.content.machines.alloy.AlloySmeltingRecipe;
 import com.enderio.enderio.common.content.enchanter.EnchanterRecipe;
-import com.enderio.enderio.common.content.machines.fluid_tank.TankRecipe;
+import com.enderio.enderio.common.content.fluid_tank.TankRecipe;
 import com.enderio.enderio.common.content.machines.obelisks.weather.WeatherChangeRecipe;
 import com.enderio.enderio.common.content.machines.painting.PaintingRecipe;
 import com.enderio.enderio.common.content.machines.sag_mill.SagMillingRecipe;

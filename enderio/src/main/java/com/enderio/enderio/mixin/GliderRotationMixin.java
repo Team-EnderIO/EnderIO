@@ -1,6 +1,6 @@
 package com.enderio.enderio.mixin;
 
-import com.enderio.enderio.client.renderer.glider.ActiveGliderRenderLayer;
+import com.enderio.enderio.client.content.tools.ActiveGliderRenderLayer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.world.entity.LivingEntity;

@@ -2,7 +2,7 @@ package com.enderio.enderio.compat.jei_machines_to_merge.category;
 
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.soul.Soul;
-import com.enderio.enderio.client.gui.screens.machines.SoulEngineScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.SoulEngineScreen;
 import com.enderio.enderio.common.content.vials.SoulVialItem;
 import com.enderio.enderio.common.content.machines.soul_engine.SoulEngineBlockEntity;
 import com.enderio.enderio.common.init.MachineBlocks;

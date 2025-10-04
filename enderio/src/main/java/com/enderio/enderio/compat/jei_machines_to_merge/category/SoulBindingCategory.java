@@ -3,7 +3,7 @@ package com.enderio.enderio.compat.jei_machines_to_merge.category;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.api.soul.SoulBoundUtils;
-import com.enderio.enderio.client.gui.screens.machines.SoulBinderScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.SoulBinderScreen;
 import com.enderio.enderio.compat.jei.JEIUtils;
 import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.common.content.vials.SoulVialItem;

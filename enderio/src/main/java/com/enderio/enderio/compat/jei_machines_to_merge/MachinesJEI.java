@@ -1,15 +1,15 @@
 package com.enderio.enderio.compat.jei_machines_to_merge;
 
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.client.gui.screens.machines.AlloySmelterScreen;
-import com.enderio.enderio.client.gui.screens.machines.EnchanterScreen;
-import com.enderio.enderio.client.gui.screens.machines.FluidTankScreen;
-import com.enderio.enderio.client.gui.screens.machines.SagMillScreen;
-import com.enderio.enderio.client.gui.screens.machines.SlicerScreen;
-import com.enderio.enderio.client.gui.screens.machines.SoulBinderScreen;
-import com.enderio.enderio.client.gui.screens.machines.VatScreen;
-import com.enderio.enderio.client.gui.screens.machines.WeatherObeliskScreen;
-import com.enderio.enderio.client.gui.screens.machines.base.MachineScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.AlloySmelterScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.EnchanterScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.FluidTankScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.SagMillScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.SlicerScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.SoulBinderScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.VatScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.WeatherObeliskScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.base.MachineScreen;
 import com.enderio.enderio.compat.jei.subtype.SoulBindableSubtypeInterpreter;
 import com.enderio.enderio.common.content.machines.alloy.AlloySmelterMenu;
 import com.enderio.enderio.common.content.enchanter.EnchanterMenu;
