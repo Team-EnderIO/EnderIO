@@ -1,0 +1,8 @@
+{
+  "type": "enderio:energy",
+  "description": {
+    "translate": "item.enderio_endergyconduit.stellar_energy"
+  },
+  "texture": "enderio_endergy:block/conduit/stellar_energy",
+  "transfer_rate": 2147483647
+}

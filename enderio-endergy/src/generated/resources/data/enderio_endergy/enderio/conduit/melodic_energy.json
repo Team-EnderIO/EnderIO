@@ -1,0 +1,8 @@
+{
+  "type": "enderio:energy",
+  "description": {
+    "translate": "item.enderio.conduit.energy"
+  },
+  "texture": "enderio_endergy:block/conduit/melodic_energy",
+  "transfer_rate": 327680
+}
