@@ -2,7 +2,7 @@ package com.enderio.enderio.machines.common.integrations.jei.transfer;
 
 import com.enderio.enderio.machines.common.blocks.crafter.CrafterMenu;
 import com.enderio.enderio.machines.common.init.MachineMenus;
-import com.enderio.enderio.machines.common.network.UpdateCrafterTemplatePacket;
+import com.enderio.enderio.common.network.packets.ServerboundUpdateCrafterTemplatePacket;
 import com.mojang.logging.LogUtils;
 import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -97,7 +97,7 @@ public class CrafterRecipeTransferHandler implements IRecipeTransferHandler<Craf
         }
 
         if (doTransfer) {
-            PacketDistributor.sendToServer(new UpdateCrafterTemplatePacket(placedStacks));
+            PacketDistributor.sendToServer(new ServerboundUpdateCrafterTemplatePacket(placedStacks));
         }
 
         return null;

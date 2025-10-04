@@ -3,10 +3,10 @@ package com.enderio.enderio.common.conduits.probe;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.enderio.enderio.common.conduits.bundle.ConduitBundleBlockEntity;
-import com.enderio.enderio.conduits.common.init.ConduitComponents;
-import com.enderio.enderio.conduits.common.init.ConduitItems;
-import com.enderio.enderio.conduits.common.init.ConduitLang;
-import com.enderio.enderio.conduits.common.network.C2SSyncProbeStatePacket;
+import com.enderio.enderio.common.init.ConduitComponents;
+import com.enderio.enderio.common.init.ConduitItems;
+import com.enderio.enderio.common.init.ConduitLang;
+import com.enderio.enderio.common.network.packets.ServerboundSyncProbeStatePacket;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
@@ -170,7 +170,7 @@ public class ConduitProbeItem extends Item {
         stack.set(ConduitComponents.PROBE_STATE, state);
 
         if (player.level().isClientSide()) {
-            PacketDistributor.sendToServer(new C2SSyncProbeStatePacket(state));
+            PacketDistributor.sendToServer(new ServerboundSyncProbeStatePacket(state));
         }
     }
 

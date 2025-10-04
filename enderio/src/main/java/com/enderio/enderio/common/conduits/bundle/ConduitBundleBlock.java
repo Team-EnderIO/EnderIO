@@ -12,12 +12,12 @@ import com.enderio.enderio.common.conduits.menu.ConduitMenu;
 import com.enderio.enderio.common.conduits.type.redstone.RedstoneConduit;
 import com.enderio.enderio.common.conduits.type.redstone.RedstoneConduitConnectionConfig;
 import com.enderio.enderio.common.conduits.type.redstone.RedstoneConduitNetworkContext;
-import com.enderio.enderio.conduits.common.init.ConduitBlockEntities;
-import com.enderio.enderio.conduits.common.init.ConduitComponents;
-import com.enderio.enderio.conduits.common.init.ConduitTypes;
-import com.enderio.enderio.conduits.common.network.C2SBreakConduitPacket;
-import com.enderio.enderio.conduits.common.network.C2SDestroyEntireConduitBundlePacket;
-import com.enderio.enderio.conduits.common.network.C2SRemoveConduitFacadePacket;
+import com.enderio.enderio.common.init.ConduitBlockEntities;
+import com.enderio.enderio.common.init.ConduitComponents;
+import com.enderio.enderio.common.init.ConduitTypes;
+import com.enderio.enderio.common.network.packets.ServerboundBreakConduitPacket;
+import com.enderio.enderio.common.network.packets.ServerboundDestroyEntireConduitBundlePacket;
+import com.enderio.enderio.common.network.packets.ServerboundRemoveConduitFacadePacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -288,7 +288,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
             }
 
             // Ask the server to remove the bundle
-            PacketDistributor.sendToServer(new C2SDestroyEntireConduitBundlePacket(pos));
+            PacketDistributor.sendToServer(new ServerboundDestroyEntireConduitBundlePacket(pos));
             return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
         }
 
@@ -303,7 +303,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
             }
 
             // Ask the server to remove the facade
-            PacketDistributor.sendToServer(new C2SRemoveConduitFacadePacket(pos));
+            PacketDistributor.sendToServer(new ServerboundRemoveConduitFacadePacket(pos));
         } else {
             Holder<Conduit<?, ?>> conduit = null;
 
@@ -323,7 +323,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
             conduitBundle.removeConduit(conduit, droppedItem -> {});
 
             // Ask the server to remove the conduit
-            PacketDistributor.sendToServer(new C2SBreakConduitPacket(pos, conduit));
+            PacketDistributor.sendToServer(new ServerboundBreakConduitPacket(pos, conduit));
         }
 
         return false;

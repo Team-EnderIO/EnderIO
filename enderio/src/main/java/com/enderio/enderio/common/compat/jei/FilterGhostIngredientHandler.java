@@ -4,8 +4,8 @@ import com.enderio.core.client.gui.screen.EnderContainerScreen;
 import com.enderio.enderio.common.filter.FilterSlot;
 import com.enderio.enderio.common.filter.fluid.FluidFilterSlot;
 import com.enderio.enderio.common.filter.item.ItemFilterSlot;
-import com.enderio.enderio.common.network.C2SSetFluidFilterSlot;
-import com.enderio.enderio.common.network.C2SSetItemFilterSlot;
+import com.enderio.enderio.common.network.packets.ServerboundSetFluidFilterSlotPacket;
+import com.enderio.enderio.common.network.packets.ServerboundSetItemFilterSlotPacket;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.handlers.IGhostIngredientHandler;
 import mezz.jei.api.ingredients.ITypedIngredient;
@@ -69,7 +69,7 @@ public class FilterGhostIngredientHandler implements IGhostIngredientHandler<End
         @Override
         public void accept(I ingredient) {
             slot.setResource((ItemStack) ingredient);
-            PacketDistributor.sendToServer(new C2SSetItemFilterSlot(containerId, slotIndex, (ItemStack) ingredient));
+            PacketDistributor.sendToServer(new ServerboundSetItemFilterSlotPacket(containerId, slotIndex, (ItemStack) ingredient));
         }
     }
 
@@ -83,7 +83,7 @@ public class FilterGhostIngredientHandler implements IGhostIngredientHandler<End
         @Override
         public void accept(I ingredient) {
             slot.safeInsert((ItemStack) ingredient);
-            PacketDistributor.sendToServer(new C2SSetItemFilterSlot(containerId, slotIndex, (ItemStack) ingredient));
+            PacketDistributor.sendToServer(new ServerboundSetItemFilterSlotPacket(containerId, slotIndex, (ItemStack) ingredient));
         }
     }
 
@@ -97,7 +97,7 @@ public class FilterGhostIngredientHandler implements IGhostIngredientHandler<End
         @Override
         public void accept(I ingredient) {
             slot.setResource((FluidStack) ingredient);
-            PacketDistributor.sendToServer(new C2SSetFluidFilterSlot(containerId, slotIndex, (FluidStack) ingredient));
+            PacketDistributor.sendToServer(new ServerboundSetFluidFilterSlotPacket(containerId, slotIndex, (FluidStack) ingredient));
         }
     }
 

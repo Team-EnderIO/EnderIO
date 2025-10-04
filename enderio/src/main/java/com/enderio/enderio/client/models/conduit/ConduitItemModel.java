@@ -2,7 +2,7 @@ package com.enderio.enderio.client.models.conduit;
 
 import com.enderio.core.client.RenderUtil;
 import com.enderio.enderio.api.conduits.Conduit;
-import com.enderio.enderio.conduits.common.init.ConduitComponents;
+import com.enderio.enderio.common.init.ConduitComponents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.block.model.BakedQuad;

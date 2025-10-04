@@ -2,8 +2,8 @@ package com.enderio.enderio.common.filter.redstone;
 
 import com.enderio.enderio.api.filter.RedstoneOutputFilter;
 import com.enderio.enderio.api.filter.RedstoneOutputFilterContext;
-import com.enderio.enderio.conduits.common.init.ConduitComponents;
-import com.enderio.enderio.conduits.common.network.CountFilterPacket;
+import com.enderio.enderio.common.init.ConduitComponents;
+import com.enderio.enderio.common.network.packets.ServerboundCountFilterPacket;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
@@ -77,7 +77,7 @@ public class RedstoneCountFilter implements RedstoneOutputFilter {
                 new Component(component.channel1, component.maxCount, component.count, lastActive));
     }
 
-    public void setState(CountFilterPacket packet) {
+    public void setState(ServerboundCountFilterPacket packet) {
         stack.set(ConduitComponents.REDSTONE_COUNT_FILTER,
                 new Component(packet.channel1(), packet.maxCount(), packet.count(), packet.active()));
     }

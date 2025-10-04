@@ -4,7 +4,7 @@ import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.common.conduits.type.item.ItemConduit;
 import com.enderio.enderio.common.conduits.type.item.ItemConduitConnectionConfig;
-import com.enderio.enderio.conduits.common.init.Conduits;
+import com.enderio.enderio.common.init.Conduits;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.world.item.Items;

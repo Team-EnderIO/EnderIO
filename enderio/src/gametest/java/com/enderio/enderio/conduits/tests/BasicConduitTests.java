@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits.tests;
 
-import com.enderio.enderio.conduits.common.init.Conduits;
+import com.enderio.enderio.common.init.Conduits;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.testframework.DynamicTest;

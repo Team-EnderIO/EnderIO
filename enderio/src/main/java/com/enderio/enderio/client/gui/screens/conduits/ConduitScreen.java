@@ -16,7 +16,7 @@ import com.enderio.enderio.client.gui.widgets.ConduitSelectionButton;
 import com.enderio.enderio.client.gui.widgets.DyeColorPickerWidget;
 import com.enderio.enderio.client.gui.widgets.RedstoneControlPickerWidget;
 import com.enderio.enderio.common.conduits.menu.ConduitMenu;
-import com.enderio.enderio.conduits.common.init.ConduitLang;
+import com.enderio.enderio.common.init.ConduitLang;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Renderable;

@@ -3,7 +3,7 @@ package com.enderio.enderio.common.conduits.facades;
 import com.enderio.enderio.api.conduits.facade.ConduitFacadeProvider;
 import com.enderio.enderio.api.conduits.facade.FacadeType;
 import com.enderio.enderio.common.init.EIODataComponents;
-import com.enderio.enderio.conduits.common.init.ConduitComponents;
+import com.enderio.enderio.common.init.ConduitComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;

@@ -6,7 +6,7 @@ import com.enderio.enderio.api.conduits.screen.ConduitMenuDataAccess;
 import com.enderio.enderio.api.conduits.screen.ConduitScreenHelper;
 import com.enderio.enderio.api.conduits.screen.IOConduitScreenType;
 import com.enderio.enderio.common.lang.EIOLang;
-import com.enderio.enderio.conduits.common.init.ConduitLang;
+import com.enderio.enderio.common.init.ConduitLang;
 import com.enderio.modded_conduits.common.modules.mekanism.MekanismModule;
 import com.enderio.modded_conduits.common.modules.mekanism.chemical.C2SClearLockedChemicalPacket;
 import com.enderio.modded_conduits.common.modules.mekanism.chemical.ChemicalConduit;

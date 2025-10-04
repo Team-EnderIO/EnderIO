@@ -3,7 +3,7 @@ package com.enderio.enderio.machines.common.blocks.farming_station.tasks;
 import com.enderio.enderio.api.farm.FarmInteraction;
 import com.enderio.enderio.api.farm.FarmTask;
 import com.enderio.enderio.api.farm.FarmingStation;
-import com.enderio.enderio.machines.common.utility.TreeHelper;
+import com.enderio.enderio.common.util.TreeHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Blocks;

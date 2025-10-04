@@ -3,7 +3,7 @@ package com.enderio.enderio.machines.common.blocks.base.menu;
 import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.machines.common.blocks.base.blockentity.PoweredMachineBlockEntity;
 import com.enderio.enderio.machines.common.blocks.base.energy.EnergyStorageInfo;
-import com.enderio.enderio.machines.common.network.menu.EnergyStorageSyncSlot;
+import com.enderio.enderio.common.network.menu_sync.EnergyStorageSyncSlot;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;

@@ -4,7 +4,7 @@ import com.enderio.enderio.machines.common.blocks.obelisks.weather.WeatherChange
 import com.enderio.enderio.machines.common.blocks.obelisks.weather.WeatherObeliskMenu;
 import com.enderio.enderio.machines.common.init.MachineMenus;
 import com.enderio.enderio.machines.common.integrations.jei.category.WeatherChangeCategory;
-import com.enderio.enderio.machines.common.network.TransferItemsPacket;
+import com.enderio.enderio.common.network.packets.ServerboundTransferItemsPacket;
 import mezz.jei.api.gui.ingredient.IRecipeSlotView;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.RecipeType;
@@ -71,7 +71,7 @@ public class WeatherObeliskTransferHelper implements IRecipeTransferHandler<Weat
         }
 
         if (doTransfer) {
-            PacketDistributor.sendToServer(new TransferItemsPacket(List.of(Ingredient.of(fireWork)), WeatherObeliskMenu.INPUTS_INDEX,WeatherObeliskMenu.LAST_INDEX + 1, maxTransfer));
+            PacketDistributor.sendToServer(new ServerboundTransferItemsPacket(List.of(Ingredient.of(fireWork)), WeatherObeliskMenu.INPUTS_INDEX,WeatherObeliskMenu.LAST_INDEX + 1, maxTransfer));
         }
         return null;
     }

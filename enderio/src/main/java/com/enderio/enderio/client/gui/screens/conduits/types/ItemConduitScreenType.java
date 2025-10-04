@@ -7,7 +7,7 @@ import com.enderio.enderio.api.conduits.screen.IOConduitScreenType;
 import com.enderio.enderio.common.conduits.type.item.ItemConduit;
 import com.enderio.enderio.common.conduits.type.item.ItemConduitConnectionConfig;
 import com.enderio.enderio.common.lang.EIOLang;
-import com.enderio.enderio.conduits.common.init.ConduitLang;
+import com.enderio.enderio.common.init.ConduitLang;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;

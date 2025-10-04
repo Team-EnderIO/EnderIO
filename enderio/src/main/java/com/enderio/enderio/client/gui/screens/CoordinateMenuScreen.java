@@ -4,7 +4,7 @@ import com.enderio.core.client.gui.screen.EnderContainerScreen;
 import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.common.menu.CoordinateMenu;
-import com.enderio.enderio.common.network.UpdateCoordinateSelectionNameMenuPacket;
+import com.enderio.enderio.common.network.packets.ServerboundUpdateCoordinateSelectionNameMenuPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -78,6 +78,6 @@ public class CoordinateMenuScreen extends EnderContainerScreen<CoordinateMenu> {
     }
 
     private void onNameChanged(String name) {
-        PacketDistributor.sendToServer(new UpdateCoordinateSelectionNameMenuPacket(getMenu().containerId, name));
+        PacketDistributor.sendToServer(new ServerboundUpdateCoordinateSelectionNameMenuPacket(getMenu().containerId, name));
     }
 }

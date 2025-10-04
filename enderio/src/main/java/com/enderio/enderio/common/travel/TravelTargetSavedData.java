@@ -1,9 +1,9 @@
 package com.enderio.enderio.common.travel;
 
 import com.enderio.enderio.api.travel.TravelTarget;
-import com.enderio.enderio.common.network.SyncTravelDataPacket;
-import com.enderio.enderio.common.network.TravelTargetRemovedPacket;
-import com.enderio.enderio.common.network.TravelTargetUpdatedPacket;
+import com.enderio.enderio.common.network.packets.ClientboundSyncTravelDataPacket;
+import com.enderio.enderio.common.network.packets.ClientboundTravelTargetRemovedPacket;
+import com.enderio.enderio.common.network.packets.ClientboundTravelTargetUpdatedPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -75,7 +75,7 @@ public class TravelTargetSavedData extends SavedData {
     // Adds or updates.
     public void setTravelTarget(Level level, TravelTarget target) {
         if (level instanceof ServerLevel serverLevel) {
-            PacketDistributor.sendToPlayersInDimension(serverLevel, new TravelTargetUpdatedPacket(target));
+            PacketDistributor.sendToPlayersInDimension(serverLevel, new ClientboundTravelTargetUpdatedPacket(target));
         }
 
         travelTargets.put(target.pos(), target);
@@ -83,7 +83,7 @@ public class TravelTargetSavedData extends SavedData {
 
     public void removeTravelTargetAt(Level level, BlockPos pos) {
         if (level instanceof ServerLevel serverLevel) {
-            PacketDistributor.sendToPlayersInDimension(serverLevel, new TravelTargetRemovedPacket(pos));
+            PacketDistributor.sendToPlayersInDimension(serverLevel, new ClientboundTravelTargetRemovedPacket(pos));
         }
 
         travelTargets.remove(pos);
@@ -128,7 +128,7 @@ public class TravelTargetSavedData extends SavedData {
         if (player instanceof ServerPlayer serverPlayer) {
             var savedData = TravelTargetSavedData.getTravelData(serverPlayer.level());
             var serializedData = savedData.save(new CompoundTag(), serverPlayer.level().registryAccess());
-            PacketDistributor.sendToPlayer(serverPlayer, new SyncTravelDataPacket(serializedData));
+            PacketDistributor.sendToPlayer(serverPlayer, new ClientboundSyncTravelDataPacket(serializedData));
         }
     }
 
@@ -138,7 +138,7 @@ public class TravelTargetSavedData extends SavedData {
         if (player instanceof ServerPlayer serverPlayer) {
             var savedData = TravelTargetSavedData.getTravelData(serverPlayer.level());
             var serializedData = savedData.save(new CompoundTag(), serverPlayer.level().registryAccess());
-            PacketDistributor.sendToPlayer(serverPlayer, new SyncTravelDataPacket(serializedData));
+            PacketDistributor.sendToPlayer(serverPlayer, new ClientboundSyncTravelDataPacket(serializedData));
         }
     }
 }

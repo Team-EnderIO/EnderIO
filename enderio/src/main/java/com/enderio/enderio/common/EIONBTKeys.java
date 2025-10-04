@@ -24,4 +24,11 @@ public class EIONBTKeys extends CoreNBTKeys {
     public static final String ACTIVE = "Active";
 
     // endregion
+
+    // region Conduits
+
+    public static final String CONDUIT_BUNDLE = "ConduitBundle";
+    public static final String CONDUIT_EXTRA_DATA = "ConduitExtraData";
+
+    // endregion
 }

@@ -7,11 +7,11 @@ import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.common.conduits.bundle.ConduitBundleBlockEntity;
-import com.enderio.enderio.conduits.common.init.ConduitMenus;
-import com.enderio.enderio.conduits.common.network.C2SOpenConduitFilterMenu;
-import com.enderio.enderio.conduits.common.network.S2CConduitExtraGuiDataPacket;
-import com.enderio.enderio.conduits.common.network.S2CConduitListPacket;
-import com.enderio.enderio.conduits.common.network.SetConduitConnectionConfigPacket;
+import com.enderio.enderio.common.init.ConduitMenus;
+import com.enderio.enderio.common.network.packets.ServerboundOpenConduitFilterMenu;
+import com.enderio.enderio.common.network.packets.ClientboundConduitExtraGuiDataPacket;
+import com.enderio.enderio.common.network.packets.ClientboundConduitListPacket;
+import com.enderio.enderio.common.network.packets.SetConduitConnectionConfigPacket;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
@@ -228,7 +228,7 @@ public class ConduitMenu extends BaseEnderMenu {
                         (ConduitBundleBlockEntity) connectionAccessor, side, conduit));
             }
         } else {
-            PacketDistributor.sendToServer(new C2SOpenConduitFilterMenu(containerId, slot));
+            PacketDistributor.sendToServer(new ServerboundOpenConduitFilterMenu(containerId, slot));
         }
     }
 
@@ -247,13 +247,13 @@ public class ConduitMenu extends BaseEnderMenu {
             var extraGuiData = extraGuiData();
             if (!Objects.equals(extraGuiData, remoteExtraGuiData)) {
                 PacketDistributor.sendToPlayer(serverPlayer,
-                        new S2CConduitExtraGuiDataPacket(containerId, extraGuiData));
+                        new ClientboundConduitExtraGuiDataPacket(containerId, extraGuiData));
                 this.remoteExtraGuiData = extraGuiData;
             }
 
             var conduitList = connectionAccessor.getAllOpenableConduits(side);
             if (conduitListHashCode != conduitList.hashCode()) {
-                PacketDistributor.sendToPlayer(serverPlayer, new S2CConduitListPacket(containerId, conduitList));
+                PacketDistributor.sendToPlayer(serverPlayer, new ClientboundConduitListPacket(containerId, conduitList));
                 conduitListHashCode = conduitList.hashCode();
             }
         }

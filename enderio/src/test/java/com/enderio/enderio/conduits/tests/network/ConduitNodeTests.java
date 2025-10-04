@@ -7,7 +7,7 @@ import com.enderio.enderio.api.conduits.network.node.NodeDataType;
 import com.enderio.enderio.common.conduits.network.ConduitNodeImpl;
 import com.enderio.enderio.common.conduits.type.item.ItemConduitConnectionConfig;
 import com.enderio.enderio.common.conduits.type.item.ItemConduitNodeData;
-import com.enderio.enderio.conduits.common.init.Conduits;
+import com.enderio.enderio.common.init.Conduits;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.MinecraftServer;

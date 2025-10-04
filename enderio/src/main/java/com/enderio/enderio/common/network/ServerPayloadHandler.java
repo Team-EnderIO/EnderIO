@@ -5,6 +5,10 @@ import com.enderio.enderio.api.travel.TravelTargetApi;
 import com.enderio.enderio.common.filter.FilterSlot;
 import com.enderio.enderio.common.filter.fluid.FluidFilterSlot;
 import com.enderio.enderio.common.handlers.TravelHandler;
+import com.enderio.enderio.common.network.packets.ServerboundRequestTravelPacket;
+import com.enderio.enderio.common.network.packets.ServerboundSetFluidFilterSlotPacket;
+import com.enderio.enderio.common.network.packets.ServerboundSetItemFilterSlotPacket;
+import com.enderio.enderio.common.network.packets.ServerboundUpdateCoordinateSelectionNameMenuPacket;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
@@ -18,7 +22,7 @@ public class ServerPayloadHandler {
         return INSTANCE;
     }
 
-    public void handleCoordinateSelectionName(UpdateCoordinateSelectionNameMenuPacket packet, IPayloadContext context) {
+    public void handleCoordinateSelectionName(ServerboundUpdateCoordinateSelectionNameMenuPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
             if (context.player() instanceof ServerPlayer serverPlayer) {
                 packet.getMenu(context).updateName(packet.name(), serverPlayer);
@@ -26,7 +30,7 @@ public class ServerPayloadHandler {
         });
     }
 
-    public void handleTravelRequest(RequestTravelPacket packet, IPayloadContext context) {
+    public void handleTravelRequest(ServerboundRequestTravelPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
             var player = context.player();
 
@@ -53,7 +57,7 @@ public class ServerPayloadHandler {
         });
     }
 
-    public void handleSetItemFilterSlot(C2SSetItemFilterSlot packet, IPayloadContext context) {
+    public void handleSetItemFilterSlot(ServerboundSetItemFilterSlotPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
             var currentMenu = context.player().containerMenu;
 
@@ -68,7 +72,7 @@ public class ServerPayloadHandler {
         });
     }
 
-    public void handleSetFluidFilterSlot(C2SSetFluidFilterSlot packet, IPayloadContext context) {
+    public void handleSetFluidFilterSlot(ServerboundSetFluidFilterSlotPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
             var currentMenu = context.player().containerMenu;
 

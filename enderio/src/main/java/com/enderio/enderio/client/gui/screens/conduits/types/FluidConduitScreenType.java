@@ -8,8 +8,8 @@ import com.enderio.enderio.api.conduits.screen.IOConduitScreenType;
 import com.enderio.enderio.common.conduits.type.fluid.FluidConduit;
 import com.enderio.enderio.common.conduits.type.fluid.FluidConduitConnectionConfig;
 import com.enderio.enderio.common.lang.EIOLang;
-import com.enderio.enderio.conduits.common.init.ConduitLang;
-import com.enderio.enderio.conduits.common.network.C2SClearLockedFluidPacket;
+import com.enderio.enderio.common.init.ConduitLang;
+import com.enderio.enderio.common.network.packets.ServerboundClearLockedFluidPacket;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -75,7 +75,7 @@ public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConn
         // Locked fluid widget
         if (dataAccess.conduit() instanceof FluidConduit fluidConduit && !fluidConduit.isMultiFluid()) {
             screen.addRenderableWidget(new FluidWidget(startX, startY + 20, () -> getLockedFluid(dataAccess),
-                    () -> PacketDistributor.sendToServer(new C2SClearLockedFluidPacket(dataAccess.getBlockPos()))));
+                    () -> PacketDistributor.sendToServer(new ServerboundClearLockedFluidPacket(dataAccess.getBlockPos()))));
         } else {
             // Channel colors
             screen.addColorPicker(startX, startY + 20, ConduitLang.CONDUIT_CHANNEL,

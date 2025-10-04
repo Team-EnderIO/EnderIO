@@ -7,7 +7,7 @@ import com.enderio.enderio.client.models.ModelRenderUtil;
 import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.machines.common.blockentity.base.LegacyMachineBlockEntity;
 import com.enderio.enderio.machines.common.config.MachinesConfig;
-import com.enderio.enderio.machines.common.network.CycleIOConfigPacket;
+import com.enderio.enderio.common.network.packets.ServerboundCycleIOConfigPacket;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
@@ -229,7 +229,7 @@ public class IOConfigOverlay extends BaseOverlay {
                         return true;
                     } else if (entity instanceof IOConfigurable) {
                         PacketDistributor
-                                .sendToServer(new CycleIOConfigPacket(selectedFace.blockPos, selectedFace.side));
+                                .sendToServer(new ServerboundCycleIOConfigPacket(selectedFace.blockPos, selectedFace.side));
                         this.playDownSound(MINECRAFT.getSoundManager());
                         return true;
                     }

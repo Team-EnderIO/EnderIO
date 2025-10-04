@@ -20,7 +20,7 @@ import com.enderio.enderio.machines.common.init.MachineDataComponents;
 import com.enderio.enderio.machines.common.io.IOConfig;
 import com.enderio.enderio.machines.common.io.SidedIOConfigurable;
 import com.enderio.enderio.machines.common.io.TransferUtil;
-import com.enderio.enderio.machines.common.network.CycleIOConfigPacket;
+import com.enderio.enderio.common.network.packets.ServerboundCycleIOConfigPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -514,7 +514,7 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
         } else {
             if (level.isClientSide()) {
                 if (isIOConfigMutable()) {
-                    PacketDistributor.sendToServer(new CycleIOConfigPacket(worldPosition, context.getClickedFace()));
+                    PacketDistributor.sendToServer(new ServerboundCycleIOConfigPacket(worldPosition, context.getClickedFace()));
                 }
             }
 

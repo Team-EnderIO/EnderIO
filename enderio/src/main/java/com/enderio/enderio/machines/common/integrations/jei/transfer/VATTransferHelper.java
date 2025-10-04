@@ -4,7 +4,7 @@ import com.enderio.enderio.machines.common.blocks.vat.FermentingRecipe;
 import com.enderio.enderio.machines.common.blocks.vat.VatMenu;
 import com.enderio.enderio.machines.common.init.MachineMenus;
 import com.enderio.enderio.machines.common.integrations.jei.category.VATCategory;
-import com.enderio.enderio.machines.common.network.TransferItemsPacket;
+import com.enderio.enderio.common.network.packets.ServerboundTransferItemsPacket;
 import mezz.jei.api.gui.ingredient.IRecipeSlotView;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.RecipeType;
@@ -76,7 +76,7 @@ public class VATTransferHelper implements IRecipeTransferHandler<VatMenu, Recipe
         }
 
         if (doTransfer) {
-            PacketDistributor.sendToServer(new TransferItemsPacket(List.of(left, right), VatMenu.INPUTS_INDEX,VatMenu.LAST_INDEX + 1, maxTransfer));
+            PacketDistributor.sendToServer(new ServerboundTransferItemsPacket(List.of(left, right), VatMenu.INPUTS_INDEX,VatMenu.LAST_INDEX + 1, maxTransfer));
         }
         return null;
     }

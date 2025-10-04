@@ -5,7 +5,7 @@ import com.enderio.enderio.api.travel.TravelTarget;
 import com.enderio.enderio.api.travel.TravelTargetApi;
 import com.enderio.enderio.common.config.BaseConfig;
 import com.enderio.enderio.common.init.EIODataComponents;
-import com.enderio.enderio.common.network.RequestTravelPacket;
+import com.enderio.enderio.common.network.packets.ServerboundRequestTravelPacket;
 import com.enderio.enderio.common.tag.EIOTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -133,7 +133,7 @@ public class TravelHandler {
                 serverPlayer.connection.resetPosition();
                 player.playNotifySound(SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 0.75F, 1F);
             } else if (sendToServer) {
-                PacketDistributor.sendToServer(new RequestTravelPacket(target.pos()));
+                PacketDistributor.sendToServer(new ServerboundRequestTravelPacket(target.pos()));
             }
 
             player.resetFallDistance();

@@ -11,7 +11,7 @@ import com.enderio.enderio.common.init.EIOBlocks;
 import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.common.item.misc.BrokenSpawnerItem;
 import com.enderio.enderio.common.recipe.ShapedEntityStorageRecipe;
-import com.enderio.enderio.conduits.common.init.ConduitBlocks;
+import com.enderio.enderio.common.init.ConduitBlocks;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaTypes;

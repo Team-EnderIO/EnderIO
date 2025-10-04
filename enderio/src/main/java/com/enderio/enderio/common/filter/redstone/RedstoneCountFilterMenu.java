@@ -1,8 +1,8 @@
 package com.enderio.enderio.common.filter.redstone;
 
 import com.enderio.enderio.api.EnderIOCapabilities;
-import com.enderio.enderio.conduits.common.init.ConduitMenus;
-import com.enderio.enderio.conduits.common.network.CountFilterPacket;
+import com.enderio.enderio.common.init.ConduitMenus;
+import com.enderio.enderio.common.network.packets.ServerboundCountFilterPacket;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
@@ -57,7 +57,7 @@ public class RedstoneCountFilterMenu extends AbstractContainerMenu {
     public void setCount(String maxCount) {
         try {
             filter.setMaxCount(Integer.parseInt(maxCount));
-            PacketDistributor.sendToServer(new CountFilterPacket(filter.getChannel(), filter.getMaxCount(), filter.getCount(), filter.isDeactivated()));
+            PacketDistributor.sendToServer(new ServerboundCountFilterPacket(filter.getChannel(), filter.getMaxCount(), filter.getCount(), filter.isDeactivated()));
         } catch (Exception e) {
 
         }
@@ -65,7 +65,7 @@ public class RedstoneCountFilterMenu extends AbstractContainerMenu {
 
     public void setChannel(DyeColor channel) {
         filter.setChannel(channel);
-        PacketDistributor.sendToServer(new CountFilterPacket(filter.getChannel(), filter.getMaxCount(), filter.getCount(), filter.isDeactivated()));
+        PacketDistributor.sendToServer(new ServerboundCountFilterPacket(filter.getChannel(), filter.getMaxCount(), filter.getCount(), filter.isDeactivated()));
     }
 
     public void addInventorySlots(int xPos, int yPos, Inventory inventory) {

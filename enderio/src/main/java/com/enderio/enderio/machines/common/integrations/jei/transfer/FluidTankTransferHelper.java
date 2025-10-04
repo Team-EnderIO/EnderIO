@@ -4,7 +4,7 @@ import com.enderio.enderio.machines.common.blocks.fluid_tank.FluidTankMenu;
 import com.enderio.enderio.machines.common.blocks.fluid_tank.TankRecipe;
 import com.enderio.enderio.machines.common.init.MachineMenus;
 import com.enderio.enderio.machines.common.integrations.jei.category.TankCategory;
-import com.enderio.enderio.machines.common.network.TransferItemsPacket;
+import com.enderio.enderio.common.network.packets.ServerboundTransferItemsPacket;
 import mezz.jei.api.gui.ingredient.IRecipeSlotView;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.RecipeType;
@@ -80,7 +80,7 @@ public class FluidTankTransferHelper implements IRecipeTransferHandler<FluidTank
             } else {
                 toSend.set(2, item);
             }
-            PacketDistributor.sendToServer(new TransferItemsPacket(toSend, 0,3 + 1, maxTransfer));
+            PacketDistributor.sendToServer(new ServerboundTransferItemsPacket(toSend, 0,3 + 1, maxTransfer));
         }
         return null;
     }

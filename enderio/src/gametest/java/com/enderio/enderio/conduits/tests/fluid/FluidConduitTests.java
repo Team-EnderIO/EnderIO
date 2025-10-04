@@ -4,7 +4,7 @@ import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.common.conduits.type.fluid.FluidConduit;
 import com.enderio.enderio.common.conduits.type.fluid.FluidConduitConnectionConfig;
-import com.enderio.enderio.conduits.common.init.Conduits;
+import com.enderio.enderio.common.init.Conduits;
 import com.enderio.enderio.machines.common.init.MachineBlocks;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;

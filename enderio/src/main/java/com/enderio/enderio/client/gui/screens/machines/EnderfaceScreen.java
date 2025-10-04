@@ -2,7 +2,7 @@ package com.enderio.enderio.client.gui.screens.machines;
 
 import com.enderio.enderio.machines.common.blocks.enderface.EnderfaceBlockEntity;
 import com.enderio.enderio.machines.common.config.MachinesConfig;
-import com.enderio.enderio.machines.common.network.EnderfaceInteractPacket;
+import com.enderio.enderio.common.network.packets.ServerboundEnderfaceInteractPacket;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
@@ -495,7 +495,7 @@ public class EnderfaceScreen extends Screen {
                 System.out.println(world.getBlockState(selectedPos));
             }
             // Open menu here
-            PacketDistributor.sendToServer(new EnderfaceInteractPacket(
+            PacketDistributor.sendToServer(new ServerboundEnderfaceInteractPacket(
                     new BlockHitResult(selectedLocation, selectedSide, selectedPos, false)));
             return true;
         }

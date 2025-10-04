@@ -6,8 +6,8 @@ import com.enderio.enderio.common.conduits.type.energy.EnergyConduit;
 import com.enderio.enderio.common.conduits.type.fluid.FluidConduit;
 import com.enderio.enderio.common.conduits.type.item.ItemConduit;
 import com.enderio.enderio.common.conduits.type.redstone.RedstoneConduit;
-import com.enderio.enderio.conduits.common.init.ConduitLang;
-import com.enderio.enderio.conduits.common.init.Conduits;
+import com.enderio.enderio.common.init.ConduitLang;
+import com.enderio.enderio.common.init.Conduits;
 import net.minecraft.data.worldgen.BootstrapContext;
 
 public class ConduitsBootstrap {

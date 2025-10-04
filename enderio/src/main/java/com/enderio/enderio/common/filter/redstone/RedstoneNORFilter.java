@@ -2,7 +2,7 @@ package com.enderio.enderio.common.filter.redstone;
 
 import com.enderio.enderio.api.filter.RedstoneOutputFilter;
 import com.enderio.enderio.api.filter.RedstoneOutputFilterContext;
-import com.enderio.enderio.conduits.common.init.ConduitComponents;
+import com.enderio.enderio.common.init.ConduitComponents;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 

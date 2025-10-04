@@ -1,8 +1,8 @@
 package com.enderio.enderio.common.filter.redstone;
 
 import com.enderio.enderio.api.EnderIOCapabilities;
-import com.enderio.enderio.conduits.common.init.ConduitMenus;
-import com.enderio.enderio.conduits.common.network.TimerFilterPacket;
+import com.enderio.enderio.common.init.ConduitMenus;
+import com.enderio.enderio.common.network.packets.ServerboundTimerFilterPacket;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
@@ -46,7 +46,7 @@ public class RedstoneTimerFilterMenu extends AbstractContainerMenu {
     public void setTimer(String timer) {
         try {
             filter.setMaxTicks(Integer.parseInt(timer));
-            PacketDistributor.sendToServer(new TimerFilterPacket(filter.getTicks(), filter.getMaxTicks()));
+            PacketDistributor.sendToServer(new ServerboundTimerFilterPacket(filter.getTicks(), filter.getMaxTicks()));
         } catch (Exception e) {
 
         }

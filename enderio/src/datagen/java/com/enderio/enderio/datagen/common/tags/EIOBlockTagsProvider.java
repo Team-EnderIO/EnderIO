@@ -2,7 +2,7 @@ package com.enderio.enderio.datagen.common.tags;
 
 import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.common.tag.EIOTags;
-import com.enderio.enderio.conduits.common.init.ConduitBlocks;
+import com.enderio.enderio.common.init.ConduitBlocks;
 import com.enderio.enderio.machines.common.init.MachineBlocks;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;

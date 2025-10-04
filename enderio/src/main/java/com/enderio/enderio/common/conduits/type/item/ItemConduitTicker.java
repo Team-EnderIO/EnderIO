@@ -3,7 +3,7 @@ package com.enderio.enderio.common.conduits.type.item;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.enderio.enderio.api.conduits.ticker.ConduitTicker;
-import com.enderio.enderio.conduits.common.init.ConduitTypes;
+import com.enderio.enderio.common.init.ConduitTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;

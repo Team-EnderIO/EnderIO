@@ -6,7 +6,7 @@ import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.machines.common.blocks.base.blockentity.MachineBlockEntity;
 import com.enderio.enderio.machines.common.blocks.base.inventory.MachineInventory;
 import com.enderio.enderio.machines.common.blocks.base.state.MachineState;
-import com.enderio.enderio.machines.common.network.menu.MachineStatesSyncSlot;
+import com.enderio.enderio.common.network.menu_sync.MachineStatesSyncSlot;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;

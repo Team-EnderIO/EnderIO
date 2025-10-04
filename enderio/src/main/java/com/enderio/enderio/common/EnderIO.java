@@ -10,6 +10,14 @@ import com.enderio.enderio.common.compat.laserio.LaserIOCompat;
 import com.enderio.enderio.common.config.BaseConfig;
 import com.enderio.enderio.common.config.BaseConfigLang;
 import com.enderio.enderio.common.handlers.PlayerMovementHandler;
+import com.enderio.enderio.common.init.ConduitBlockEntities;
+import com.enderio.enderio.common.init.ConduitBlocks;
+import com.enderio.enderio.common.init.ConduitComponents;
+import com.enderio.enderio.common.init.ConduitIngredientTypes;
+import com.enderio.enderio.common.init.ConduitItems;
+import com.enderio.enderio.common.init.ConduitLang;
+import com.enderio.enderio.common.init.ConduitMenus;
+import com.enderio.enderio.common.init.ConduitTypes;
 import com.enderio.enderio.common.init.EIOAttachments;
 import com.enderio.enderio.common.init.EIOBlockEntities;
 import com.enderio.enderio.common.init.EIOBlocks;
@@ -123,6 +131,16 @@ public class EnderIO {
         EIOAttachments.register(modEventBus);
         EIOCriterions.register(modEventBus);
         EIOIngredientTypes.register(modEventBus);
+
+        ConduitTypes.register(modEventBus);
+        ConduitBlockEntities.register(modEventBus);
+        ConduitMenus.register(modEventBus);
+        ConduitBlocks.register(modEventBus);
+        ConduitItems.register(modEventBus);
+        ConduitComponents.register(modEventBus);
+        ConduitIngredientTypes.register(modEventBus);
+        ConduitLang.register();
+
         REGILITE.register(modEventBus);
 
         // Handle mod compat

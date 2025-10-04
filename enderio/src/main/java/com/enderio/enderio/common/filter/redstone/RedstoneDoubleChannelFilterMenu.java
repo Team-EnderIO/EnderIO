@@ -2,8 +2,8 @@ package com.enderio.enderio.common.filter.redstone;
 
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.filter.RedstoneOutputFilter;
-import com.enderio.enderio.conduits.common.init.ConduitMenus;
-import com.enderio.enderio.conduits.common.network.DoubleChannelPacket;
+import com.enderio.enderio.common.init.ConduitMenus;
+import com.enderio.enderio.common.network.packets.ServerboundDoubleChannelPacket;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
@@ -71,12 +71,12 @@ public class RedstoneDoubleChannelFilterMenu extends AbstractContainerMenu {
 
     public void setFirstChannel(DyeColor colorControl) {
         channels.setFirstChannel(colorControl);
-        PacketDistributor.sendToServer(new DoubleChannelPacket(channels.getFirstChannel(), channels.getSecondChannel()));
+        PacketDistributor.sendToServer(new ServerboundDoubleChannelPacket(channels.getFirstChannel(), channels.getSecondChannel()));
     }
 
     public void setSecondChannel(DyeColor colorControl) {
         channels.setSecondChannel(colorControl);
-        PacketDistributor.sendToServer(new DoubleChannelPacket(channels.getFirstChannel(), channels.getSecondChannel()));
+        PacketDistributor.sendToServer(new ServerboundDoubleChannelPacket(channels.getFirstChannel(), channels.getSecondChannel()));
     }
 
     public void addInventorySlots(int xPos, int yPos, Inventory inventory) {

@@ -15,6 +15,7 @@ import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.facade.FacadeType;
 import com.enderio.enderio.api.conduits.network.node.NodeData;
 import com.enderio.enderio.client.models.conduit.bundle.ConduitBundleRenderState;
+import com.enderio.enderio.common.EIONBTKeys;
 import com.enderio.enderio.common.blockentity.Wrenchable;
 import com.enderio.enderio.common.conduits.ConduitBlockItem;
 import com.enderio.enderio.common.conduits.ConduitSorter;
@@ -26,9 +27,8 @@ import com.enderio.enderio.common.conduits.menu.ConduitMenu;
 import com.enderio.enderio.common.conduits.network.ConduitNetworkSavedData;
 import com.enderio.enderio.common.conduits.network.ConduitNodeImpl;
 import com.enderio.enderio.common.conduits.network.IConduitNodeAttachment;
-import com.enderio.enderio.conduits.ConduitNBTKeys;
-import com.enderio.enderio.conduits.common.init.ConduitBlockEntities;
-import com.enderio.enderio.conduits.common.init.ConduitTypes;
+import com.enderio.enderio.common.init.ConduitBlockEntities;
+import com.enderio.enderio.common.init.ConduitTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
@@ -1400,9 +1400,9 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
 
-        if (tag.contains(ConduitNBTKeys.CONDUIT_BUNDLE)) {
+        if (tag.contains(EIONBTKeys.CONDUIT_BUNDLE)) {
             // Convert the legacy bundle to the new format
-            var bundle = LegacyConduitBundle.parse(registries, tag.getCompound(ConduitNBTKeys.CONDUIT_BUNDLE));
+            var bundle = LegacyConduitBundle.parse(registries, tag.getCompound(EIONBTKeys.CONDUIT_BUNDLE));
             loadFromLegacyBundle(bundle);
         } else {
             // New save format
@@ -1477,8 +1477,8 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
 
         // Load node data used for recovery
-        if (tag.contains(ConduitNBTKeys.CONDUIT_EXTRA_DATA)) {
-            lazyNodeNBT = tag.getList(ConduitNBTKeys.CONDUIT_EXTRA_DATA, Tag.TAG_COMPOUND);
+        if (tag.contains(EIONBTKeys.CONDUIT_EXTRA_DATA)) {
+            lazyNodeNBT = tag.getList(EIONBTKeys.CONDUIT_EXTRA_DATA, Tag.TAG_COMPOUND);
         } else if (tag.contains(NODE_DATA_KEY)) {
             var list = tag.getList(NODE_DATA_KEY, Tag.TAG_COMPOUND);
             lazyNodeData = new HashMap<>();

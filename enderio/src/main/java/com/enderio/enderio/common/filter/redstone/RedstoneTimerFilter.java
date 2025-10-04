@@ -1,7 +1,7 @@
 package com.enderio.enderio.common.filter.redstone;
 
 import com.enderio.enderio.api.filter.RedstoneInputFilter;
-import com.enderio.enderio.conduits.common.init.ConduitComponents;
+import com.enderio.enderio.common.init.ConduitComponents;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
