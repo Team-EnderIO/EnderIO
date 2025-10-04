@@ -1,6 +1,6 @@
 package com.enderio.enderio.client.gui.widgets;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.core.client.gui.widgets.EIOWidget;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.common.lang.EIOLang;

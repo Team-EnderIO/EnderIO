@@ -1,6 +1,6 @@
 package com.enderio.enderio.client.gui.screens.conduits.types;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.api.conduits.screen.ConduitMenuDataAccess;
 import com.enderio.enderio.api.conduits.screen.ConduitScreenHelper;

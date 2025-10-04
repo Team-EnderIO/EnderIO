@@ -1,9 +1,7 @@
 package com.enderio.endergy;
 
-import com.enderio.EnderIO;
 import com.enderio.endergy.datapack_registries.ConduitsBootstrap;
 import com.enderio.enderio.api.EnderIORegistries;
-import com.enderio.enderio.data.EIODataProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.data.DataGenerator;

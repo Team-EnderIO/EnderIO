@@ -1,6 +1,6 @@
 package com.enderio.modded_conduits.common.modules.refinedstorage;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitApi;

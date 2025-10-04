@@ -1,6 +1,6 @@
 package com.enderio.enderio.client.renderer.travel;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.Minecraft;

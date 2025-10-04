@@ -1,6 +1,6 @@
 package com.enderio.enderio.common.compat.jei;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.core.client.gui.screen.EnderContainerScreen;
 import com.enderio.enderio.common.block.glass.GlassBlocks;
 import com.enderio.enderio.common.compat.jei.subtype.ConduitSubtypeInterpreter;

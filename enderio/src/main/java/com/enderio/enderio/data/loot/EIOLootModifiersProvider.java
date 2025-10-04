@@ -1,6 +1,6 @@
 package com.enderio.enderio.data.loot;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.common.loot.BrokenSpawnerLootModifier;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -28,16 +28,6 @@ public class EIOLootModifiersProvider extends GlobalLootModifierProvider {
     protected void start() {
         // TODO: NEO-PORT: neoforge:global_loot_modifiers file gets overwritten when
         // armory is enabled.
-
-//        add("auto_smelt", new AutoSmeltModifier(
-//            new LootItemCondition[]{
-//                MatchTool.toolMatches(ItemPredicate.Builder.item().withSubPredicate(ItemSubPredicates.ENCHANTMENTS,
-//                    ItemEnchantmentsPredicate.enchantments(
-//                        List.of(new EnchantmentPredicate(EIOEnchantments.AUTO_SMELT.get(), MinMaxBounds.Ints.atLeast(1)))
-//                    ))
-//                ).build()
-//            }
-//        ));
 
         add("broken_spawner", new BrokenSpawnerLootModifier(new LootItemCondition[] {
                 LootItemBlockStatePropertyCondition.hasBlockStateProperties(Blocks.SPAWNER).build() }));

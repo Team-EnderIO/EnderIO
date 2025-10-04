@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.integrations.jei.category;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.api.soul.SoulBoundUtils;
 import com.enderio.enderio.common.init.EIOItems;

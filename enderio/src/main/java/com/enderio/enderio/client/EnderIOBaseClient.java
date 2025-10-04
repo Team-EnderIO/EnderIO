@@ -1,6 +1,6 @@
 package com.enderio.enderio.client;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.core.client.item.FluidBarDecorator;
 import com.enderio.enderio.api.soul.SoulBoundUtils;
 import com.enderio.enderio.client.decorator.GlassIconDecorator;

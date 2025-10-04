@@ -1,6 +1,6 @@
 package com.enderio.enderio.common.advancement;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;

@@ -1,6 +1,6 @@
 package com.enderio.enderio.client.gui.screens.machines;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.client.gui.widgets.RedstoneControlPickerWidget;
 import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.client.gui.screens.machines.base.LegacyMachineScreen;

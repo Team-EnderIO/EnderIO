@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.network;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;

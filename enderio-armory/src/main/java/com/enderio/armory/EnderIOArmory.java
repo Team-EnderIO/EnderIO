@@ -1,6 +1,6 @@
 package com.enderio.armory;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.integration.IntegrationManager;
 import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.armory.common.config.ArmoryConfigLang;

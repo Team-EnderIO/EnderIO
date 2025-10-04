@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits.common.network;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.common.conduits.probe.ConduitProbeItem;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;

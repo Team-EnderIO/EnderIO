@@ -1,6 +1,6 @@
 package com.enderio.enderio.common.init;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.client.gui.screens.CoordinateMenuScreen;
 import com.enderio.enderio.client.gui.screens.filters.EnderFluidFilterScreen;
 import com.enderio.enderio.client.gui.screens.filters.EnderItemFilterScreen;

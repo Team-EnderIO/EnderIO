@@ -1,6 +1,6 @@
 package com.enderio.enderio.common.network;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.core.common.network.CustomMenuPacketPayload;
 import com.enderio.enderio.common.menu.CoordinateMenu;
 import net.minecraft.network.RegistryFriendlyByteBuf;

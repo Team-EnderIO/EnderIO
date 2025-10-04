@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.data.souldata;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.common.init.EIOFluids;
 import com.enderio.enderio.machines.common.blocks.powered_spawner.MobSpawnMode;
 import com.enderio.enderio.machines.common.souldata.EngineSoul;

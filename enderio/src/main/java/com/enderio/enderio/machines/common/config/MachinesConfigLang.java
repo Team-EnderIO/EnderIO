@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.config;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.machines.EnderIOMachines;
 
 public class MachinesConfigLang {

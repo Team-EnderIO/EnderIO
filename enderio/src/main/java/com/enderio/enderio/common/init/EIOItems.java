@@ -1,6 +1,6 @@
 package com.enderio.enderio.common.init;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.core.data.model.ModelHelper;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.capacitor.CapacitorData;

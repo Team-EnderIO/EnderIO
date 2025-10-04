@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.client;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.travel.RegisterTravelRenderersEvent;
 import com.enderio.enderio.client.renderer.item.FluidTankBEWLR;
 import com.enderio.enderio.client.models.IOOverlayBakedModel;

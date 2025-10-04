@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.blocks.base.menu;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.machines.common.blocks.base.blockentity.PoweredMachineBlockEntity;
 import com.enderio.enderio.machines.common.blocks.base.energy.EnergyStorageInfo;
 import com.enderio.enderio.machines.common.network.menu.EnergyStorageSyncSlot;

@@ -1,6 +1,6 @@
 package com.enderio.enderio.client.models;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.io.IOConfigurable;
 import com.enderio.enderio.api.io.IOMode;
 import com.enderio.enderio.machines.common.blockentity.base.LegacyMachineBlockEntity;

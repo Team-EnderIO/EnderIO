@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.conduits.common.init.ConduitBlockEntities;
 import com.enderio.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.enderio.conduits.common.init.ConduitComponents;

@@ -1,6 +1,6 @@
 package com.enderio.enderio.client.gui.screens.machines;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.core.client.gui.screen.EnderContainerScreen;
 import com.enderio.enderio.machines.common.blocks.enchanter.EnchanterMenu;
 import net.minecraft.client.Minecraft;

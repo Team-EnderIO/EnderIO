@@ -1,6 +1,6 @@
 package com.enderio.armory.common.init;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.armory.common.item.darksteel.upgrades.direct.DirectUpgradeLootCondition;
 import com.enderio.armory.common.item.darksteel.upgrades.direct.DirectUpgradeLootModifier;
 import com.mojang.serialization.MapCodec;

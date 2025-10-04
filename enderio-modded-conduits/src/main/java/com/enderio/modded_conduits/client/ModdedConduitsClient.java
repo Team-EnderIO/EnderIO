@@ -1,6 +1,5 @@
 package com.enderio.modded_conduits.client;
 
-import com.enderio.EnderIO;
 import com.enderio.modded_conduits.ModdedConduits;
 import com.enderio.modded_conduits.client.modules.mekanism.MekanismClientModule;
 import com.enderio.modded_conduits.common.ModuleModIds;

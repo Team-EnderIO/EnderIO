@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.tag;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;

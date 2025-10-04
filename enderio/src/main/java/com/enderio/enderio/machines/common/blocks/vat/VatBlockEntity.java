@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.blocks.vat;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.core.common.util.NamedFluidContents;
 import com.enderio.enderio.api.UseOnly;

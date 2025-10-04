@@ -1,6 +1,6 @@
 package com.enderio.armory.common.item.darksteel.upgrades.speed;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.armory.api.capability.DarkSteelUpgrade;
 import com.enderio.armory.api.capability.UpgradeTier;
 import com.enderio.armory.common.config.ArmoryConfig;

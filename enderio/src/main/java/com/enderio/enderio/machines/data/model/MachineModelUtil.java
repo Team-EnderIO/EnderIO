@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.data.model;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.core.data.model.ModelHelper;
 import com.enderio.enderio.machines.common.block.SolarPanelBlock;
 import com.enderio.enderio.machines.common.blockentity.solar.SolarPanelTier;

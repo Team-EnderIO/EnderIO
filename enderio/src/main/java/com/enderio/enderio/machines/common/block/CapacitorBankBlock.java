@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.block;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.core.common.util.TooltipUtil;

@@ -1,6 +1,6 @@
 package com.enderio.enderio.datagen.common.datapack_registries;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.common.conduits.type.energy.EnergyConduit;
 import com.enderio.enderio.common.conduits.type.fluid.FluidConduit;

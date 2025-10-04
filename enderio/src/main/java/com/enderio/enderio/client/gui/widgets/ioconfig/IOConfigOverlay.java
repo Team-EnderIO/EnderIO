@@ -1,6 +1,6 @@
 package com.enderio.enderio.client.gui.widgets.ioconfig;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.core.client.gui.screen.BaseOverlay;
 import com.enderio.enderio.api.io.IOConfigurable;
 import com.enderio.enderio.common.lang.EIOLang;

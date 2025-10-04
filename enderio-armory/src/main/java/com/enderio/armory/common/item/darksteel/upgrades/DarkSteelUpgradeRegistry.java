@@ -1,6 +1,6 @@
 package com.enderio.armory.common.item.darksteel.upgrades;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.armory.api.capability.DarkSteelUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.direct.DirectUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.empowered.EmpoweredUpgrade;

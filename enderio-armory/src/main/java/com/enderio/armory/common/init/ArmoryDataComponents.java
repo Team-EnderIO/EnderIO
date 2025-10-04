@@ -1,6 +1,6 @@
 package com.enderio.armory.common.init;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.armory.common.capability.DarkSteelCapability;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.component.DataComponentType;

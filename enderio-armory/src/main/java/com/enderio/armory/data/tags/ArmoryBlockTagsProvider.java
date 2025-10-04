@@ -1,6 +1,6 @@
 package com.enderio.armory.data.tags;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.armory.common.tag.ArmoryTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;

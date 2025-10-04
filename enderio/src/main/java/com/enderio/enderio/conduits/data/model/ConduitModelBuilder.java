@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits.data.model;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import net.neoforged.neoforge.client.model.generators.CustomLoaderBuilder;
 import net.neoforged.neoforge.client.model.generators.ModelBuilder;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;

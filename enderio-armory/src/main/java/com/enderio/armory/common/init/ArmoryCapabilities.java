@@ -1,6 +1,6 @@
 package com.enderio.armory.common.init;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.armory.api.capability.DarkSteelCapability;
 import com.enderio.armory.common.capability.DarkSteelEnergyStorage;
 import com.enderio.armory.common.capability.DarkSteelHelper;

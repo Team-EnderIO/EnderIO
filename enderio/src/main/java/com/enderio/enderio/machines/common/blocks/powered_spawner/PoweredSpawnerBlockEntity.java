@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.blocks.powered_spawner;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.UseOnly;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;

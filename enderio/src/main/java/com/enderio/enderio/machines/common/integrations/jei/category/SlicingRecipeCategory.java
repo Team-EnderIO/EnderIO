@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.integrations.jei.category;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.common.compat.jei.JEIUtils;
 import com.enderio.enderio.machines.common.blocks.slicer.SlicingRecipe;
 import com.enderio.enderio.machines.common.init.MachineBlocks;

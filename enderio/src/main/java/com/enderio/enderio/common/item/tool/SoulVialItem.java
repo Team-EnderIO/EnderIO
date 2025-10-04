@@ -1,6 +1,6 @@
 package com.enderio.enderio.common.item.tool;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.api.soul.Soul;

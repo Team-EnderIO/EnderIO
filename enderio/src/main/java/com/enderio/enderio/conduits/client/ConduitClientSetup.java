@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits.client;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.conduits.model.RegisterConduitModelModifiersEvent;
 import com.enderio.enderio.api.conduits.screen.RegisterConduitScreenTypesEvent;
 import com.enderio.enderio.client.extensions.block.ConduitBundleExtension;

@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.data.EIODataProvider;
 import com.enderio.enderio.machines.common.blocks.base.menu.GhostMachineSlot;
 import com.enderio.enderio.machines.common.blocks.base.menu.MachineSlot;
@@ -20,21 +20,7 @@ import com.enderio.enderio.machines.common.lang.MachineLang;
 import com.enderio.enderio.machines.common.tag.MachineTags;
 import com.enderio.enderio.machines.data.advancements.MachinesAdvancementGenerator;
 import com.enderio.enderio.machines.data.datamap.RangeExtenderDataProvider;
-import com.enderio.enderio.machines.data.reagentdata.ReagentProvider;
-import com.enderio.enderio.machines.data.recipes.AlloyRecipeProvider;
-import com.enderio.enderio.machines.data.recipes.EnchanterRecipeProvider;
-import com.enderio.enderio.machines.data.recipes.FermentingRecipeProvider;
-import com.enderio.enderio.machines.data.recipes.MachineRecipeProvider;
-import com.enderio.enderio.machines.data.recipes.PaintingRecipeProvider;
-import com.enderio.enderio.machines.data.recipes.SagMillRecipeProvider;
-import com.enderio.enderio.machines.data.recipes.SlicingRecipeProvider;
-import com.enderio.enderio.machines.data.recipes.SoulBindingRecipeProvider;
-import com.enderio.enderio.machines.data.recipes.TankRecipeProvider;
-import com.enderio.enderio.machines.data.recipes.WeatherChangeRecipeProvider;
 import com.enderio.enderio.machines.data.souldata.SoulDataProvider;
-import com.enderio.enderio.machines.data.tag.MachineBlockTagsProvider;
-import com.enderio.enderio.machines.data.tag.MachineEntityTypeTagsProvider;
-import com.enderio.enderio.machines.data.tag.MachineItemTagsProvider;
 import com.enderio.regilite.Regilite;
 import net.minecraft.Util;
 import net.minecraft.core.HolderLookup;
@@ -102,28 +88,9 @@ public class EnderIOMachines {
 
         EIODataProvider provider = new EIODataProvider("machines");
 
-        provider.addSubProvider(event.includeServer(), new MachineRecipeProvider(packOutput, lookupProvider));
-        provider.addSubProvider(event.includeServer(), new AlloyRecipeProvider(packOutput, lookupProvider));
-        provider.addSubProvider(event.includeServer(), new EnchanterRecipeProvider(packOutput, lookupProvider));
-        provider.addSubProvider(event.includeServer(), new FermentingRecipeProvider(packOutput, lookupProvider));
-        provider.addSubProvider(event.includeServer(), new SagMillRecipeProvider(packOutput, lookupProvider));
-        provider.addSubProvider(event.includeServer(), new SlicingRecipeProvider(packOutput, lookupProvider));
-        provider.addSubProvider(event.includeServer(), new SoulBindingRecipeProvider(packOutput, lookupProvider));
-        provider.addSubProvider(event.includeServer(), new TankRecipeProvider(packOutput, lookupProvider));
-        provider.addSubProvider(event.includeServer(), new PaintingRecipeProvider(packOutput, lookupProvider));
         provider.addSubProvider(event.includeServer(), new SoulDataProvider(packOutput));
-        provider.addSubProvider(event.includeServer(),
-                new MachineEntityTypeTagsProvider(packOutput, lookupProvider, event.getExistingFileHelper()));
-        var b = new MachineBlockTagsProvider(packOutput, lookupProvider, event.getExistingFileHelper());
-        provider.addSubProvider(event.includeServer(), b);
-        provider.addSubProvider(event.includeServer(), new ReagentProvider(packOutput, lookupProvider)); // Reagent Data
-                                                                                                         // needs to be
-                                                                                                         // before
-                                                                                                         // ItemTags
-        provider.addSubProvider(event.includeServer(), new MachineItemTagsProvider(packOutput, lookupProvider,
-                b.contentsGetter(), event.getExistingFileHelper()));
+
         provider.addSubProvider(event.includeServer(), new RangeExtenderDataProvider(packOutput, lookupProvider));
-        provider.addSubProvider(event.includeServer(), new WeatherChangeRecipeProvider(packOutput, lookupProvider));
 
         generator.addProvider(true, provider);
         provider.addSubProvider(event.includeServer(), new AdvancementProvider(packOutput, event.getLookupProvider(),

@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits.common.init;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.conduits.ConduitIngredient;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.crafting.IngredientType;

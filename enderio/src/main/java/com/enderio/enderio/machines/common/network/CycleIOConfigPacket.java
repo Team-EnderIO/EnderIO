@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.network;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

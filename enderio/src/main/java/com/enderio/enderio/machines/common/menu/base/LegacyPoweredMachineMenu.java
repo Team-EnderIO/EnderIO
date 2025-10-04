@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.menu.base;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.machines.common.blockentity.base.LegacyPoweredMachineBlockEntity;
 import com.enderio.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import net.minecraft.resources.ResourceLocation;

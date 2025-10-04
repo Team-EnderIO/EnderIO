@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits.common.init;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
 import net.minecraft.resources.ResourceKey;

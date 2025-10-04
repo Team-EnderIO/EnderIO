@@ -1,6 +1,6 @@
 package com.enderio.enderio.client.gui.icon;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.core.client.icon.EnumIconMap;
 import com.enderio.enderio.machines.common.blocks.alloy.AlloySmelterMode;
 import com.enderio.enderio.machines.common.blocks.base.state.MachineStateType;

@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.init;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.flag.FeatureFlag;
 import net.minecraft.world.flag.FeatureFlags;

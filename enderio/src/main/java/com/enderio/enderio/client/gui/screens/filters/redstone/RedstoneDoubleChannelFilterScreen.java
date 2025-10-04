@@ -1,6 +1,6 @@
 package com.enderio.enderio.client.gui.screens.filters.redstone;
 
-import com.enderio.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.enderio.client.gui.widgets.DyeColorPickerWidget;
 import com.enderio.enderio.conduits.common.init.ConduitLang;
