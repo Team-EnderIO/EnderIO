@@ -4,7 +4,7 @@ import com.enderio.core.data.recipe.SubRecipeProvider;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.common.init.EIOFluids;
 import com.enderio.enderio.common.init.EIOItems;
-import com.enderio.enderio.machines.common.blocks.fluid_tank.TankRecipe;
+import com.enderio.enderio.common.content.machines.fluid_tank.TankRecipe;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.RecipeOutput;

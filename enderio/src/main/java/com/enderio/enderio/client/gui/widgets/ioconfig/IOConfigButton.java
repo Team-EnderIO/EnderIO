@@ -2,7 +2,7 @@ package com.enderio.enderio.client.gui.widgets.ioconfig;
 
 import com.enderio.core.client.gui.widgets.EnderButton;
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.common.lang.EIOLang;
+import com.enderio.enderio.common.foundation.lang.EIOLang;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Tooltip;

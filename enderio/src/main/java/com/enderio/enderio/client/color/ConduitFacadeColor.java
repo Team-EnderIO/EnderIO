@@ -1,7 +1,7 @@
 package com.enderio.enderio.client.color;
 
 import com.enderio.enderio.client.models.conduit.facades.ClientFacadeVisibility;
-import com.enderio.enderio.common.conduits.bundle.ConduitBundleBlockEntity;
+import com.enderio.enderio.common.content.conduits.bundle.ConduitBundleBlockEntity;
 import com.enderio.enderio.common.init.EIODataComponents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;

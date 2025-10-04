@@ -1,7 +1,7 @@
 package com.enderio.enderio.client.decorator;
 
 import com.enderio.enderio.client.gui.icon.EIOEnumIcons;
-import com.enderio.enderio.common.block.glass.FusedQuartzBlock;
+import com.enderio.enderio.common.content.glass.FusedQuartzBlock;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;

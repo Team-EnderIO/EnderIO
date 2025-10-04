@@ -1,7 +1,7 @@
 package com.enderio.enderio.tests.util;
 
-import com.enderio.enderio.common.tag.EIOTags;
-import com.enderio.enderio.common.util.EntityCaptureUtils;
+import com.enderio.enderio.common.foundation.tag.EIOTags;
+import com.enderio.enderio.common.foundation.util.EntityCaptureUtils;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.EntityType;

@@ -2,11 +2,11 @@ package com.enderio.enderio.datagen.common.recipes;
 
 import com.enderio.core.data.recipe.SubRecipeProvider;
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.common.block.glass.GlassBlocks;
-import com.enderio.enderio.common.block.glass.GlassCollisionPredicate;
+import com.enderio.enderio.common.content.glass.GlassBlocks;
+import com.enderio.enderio.common.content.glass.GlassCollisionPredicate;
 import com.enderio.enderio.common.init.EIOBlocks;
 import com.enderio.enderio.common.init.EIOItems;
-import com.enderio.enderio.common.tag.EIOTags;
+import com.enderio.enderio.common.foundation.tag.EIOTags;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;

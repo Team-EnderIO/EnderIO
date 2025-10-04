@@ -2,7 +2,7 @@ package com.enderio.enderio.datagen.common.loot;
 
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.common.init.EIOItems;
-import com.enderio.enderio.common.loot.SetLootCapacitorFunction;
+import com.enderio.enderio.common.foundation.loot.SetLootCapacitorFunction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.loot.LootTableSubProvider;

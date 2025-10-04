@@ -1,8 +1,8 @@
 package com.enderio.enderio.client.gui.widgets;
 
 import com.enderio.core.common.util.TooltipUtil;
-import com.enderio.enderio.machines.common.integrations.IntegrationUtility;
-import com.enderio.enderio.machines.common.lang.MachineLang;
+import com.enderio.enderio.compat.ModCompatHelper;
+import com.enderio.enderio.common.foundation.lang.MachineLang;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -103,7 +103,7 @@ public class NewProgressWidget extends AbstractWidget {
         // Update the contents of the tooltip whenever its hovered, don't waste any time
         // doing it when not hovered.
         // Should also mean when tooltip is false it never gets populated
-        if (this.isHovered() && showTooltip && !IntegrationUtility.hasRecipeViewer()) {
+        if (this.isHovered() && showTooltip && !ModCompatHelper.hasRecipeViewer()) {
             Minecraft minecraft = Minecraft.getInstance();
 
             guiGraphics.renderTooltip(minecraft.font,

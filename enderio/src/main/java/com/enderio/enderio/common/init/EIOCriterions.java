@@ -1,8 +1,8 @@
 package com.enderio.enderio.common.init;
 
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.common.advancement.UseGliderTrigger;
-import com.enderio.enderio.common.paint.PaintingTrigger;
+import com.enderio.enderio.common.content.tools.hang_glider.UseGliderTrigger;
+import com.enderio.enderio.common.content.paint.PaintingTrigger;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.core.registries.Registries;
 import net.neoforged.bus.api.IEventBus;

@@ -4,7 +4,7 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.client.gui.screens.machines.base.MachineScreen;
 import com.enderio.enderio.client.gui.widgets.FluidStackWidget;
 import com.enderio.enderio.client.gui.widgets.ProgressWidget;
-import com.enderio.enderio.machines.common.blocks.obelisks.weather.WeatherObeliskMenu;
+import com.enderio.enderio.common.content.machines.obelisks.weather.WeatherObeliskMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;

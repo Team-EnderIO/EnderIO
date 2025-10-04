@@ -4,7 +4,7 @@ import com.enderio.endergy.common.EnderIOEndergy;
 import com.enderio.endergy.common.EndergyConduits;
 import com.enderio.endergy.common.lang.EndergyConduitComponents;
 import com.enderio.enderio.api.conduits.Conduit;
-import com.enderio.enderio.common.conduits.type.energy.EnergyConduit;
+import com.enderio.enderio.common.content.conduits.type.energy.EnergyConduit;
 import com.enderio.enderio.common.init.ConduitLang;
 import net.minecraft.data.worldgen.BootstrapContext;
 

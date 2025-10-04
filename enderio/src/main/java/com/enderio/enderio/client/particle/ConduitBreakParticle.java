@@ -1,7 +1,7 @@
 package com.enderio.enderio.client.particle;
 
 import com.enderio.enderio.api.conduits.Conduit;
-import com.enderio.enderio.common.conduits.bundle.ConduitShape;
+import com.enderio.enderio.common.content.conduits.bundle.ConduitShape;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleEngine;

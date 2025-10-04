@@ -3,7 +3,7 @@ package com.enderio.enderio.client.models;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.io.IOConfigurable;
 import com.enderio.enderio.api.io.IOMode;
-import com.enderio.enderio.machines.common.blockentity.base.LegacyMachineBlockEntity;
+import com.enderio.enderio.common.foundation.block.entity.legacy.LegacyMachineBlockEntity;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import net.minecraft.client.Minecraft;

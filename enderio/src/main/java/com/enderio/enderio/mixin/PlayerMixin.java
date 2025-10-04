@@ -1,6 +1,6 @@
 package com.enderio.enderio.mixin;
 
-import com.enderio.enderio.machines.common.blocks.enderface.EnderfaceBlockEntity;
+import com.enderio.enderio.common.content.enderface.EnderfaceBlockEntity;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityType;

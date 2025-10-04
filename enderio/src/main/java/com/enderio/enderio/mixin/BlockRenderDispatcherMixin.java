@@ -1,6 +1,6 @@
 package com.enderio.enderio.mixin;
 
-import com.enderio.enderio.common.conduits.bundle.ConduitBundleBlockEntity;
+import com.enderio.enderio.common.content.conduits.bundle.ConduitBundleBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;

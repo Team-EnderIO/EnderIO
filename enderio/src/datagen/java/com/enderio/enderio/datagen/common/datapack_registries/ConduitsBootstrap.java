@@ -2,10 +2,10 @@ package com.enderio.enderio.datagen.common.datapack_registries;
 
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.conduits.Conduit;
-import com.enderio.enderio.common.conduits.type.energy.EnergyConduit;
-import com.enderio.enderio.common.conduits.type.fluid.FluidConduit;
-import com.enderio.enderio.common.conduits.type.item.ItemConduit;
-import com.enderio.enderio.common.conduits.type.redstone.RedstoneConduit;
+import com.enderio.enderio.common.content.conduits.type.energy.EnergyConduit;
+import com.enderio.enderio.common.content.conduits.type.fluid.FluidConduit;
+import com.enderio.enderio.common.content.conduits.type.item.ItemConduit;
+import com.enderio.enderio.common.content.conduits.type.redstone.RedstoneConduit;
 import com.enderio.enderio.common.init.ConduitLang;
 import com.enderio.enderio.common.init.Conduits;
 import net.minecraft.data.worldgen.BootstrapContext;

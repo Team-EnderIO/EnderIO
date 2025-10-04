@@ -3,7 +3,7 @@ package com.enderio.enderio.client.extensions.block;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.client.models.conduit.facades.ClientFacadeVisibility;
 import com.enderio.enderio.client.particle.ConduitBreakParticle;
-import com.enderio.enderio.common.conduits.bundle.ConduitBundleBlockEntity;
+import com.enderio.enderio.common.content.conduits.bundle.ConduitBundleBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.core.BlockPos;

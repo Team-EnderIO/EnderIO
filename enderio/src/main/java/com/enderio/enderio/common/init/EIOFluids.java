@@ -1,7 +1,7 @@
 package com.enderio.enderio.common.init;
 
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.common.tag.EIOTags;
+import com.enderio.enderio.common.foundation.tag.EIOTags;
 import com.enderio.regilite.holder.RegiliteFluid;
 import com.enderio.regilite.registry.BlockRegistry;
 import com.enderio.regilite.registry.FluidRegistry;

@@ -1,6 +1,6 @@
 package com.enderio.enderio.client.renderer.blockentity;
 
-import com.enderio.enderio.common.blockentity.EnderSkullBlockEntity;
+import com.enderio.enderio.common.foundation.block.entity.EnderSkullBlockEntity;
 import com.enderio.enderio.common.init.EIOBlocks;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;

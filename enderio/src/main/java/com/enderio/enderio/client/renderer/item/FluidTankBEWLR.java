@@ -1,8 +1,8 @@
 package com.enderio.enderio.client.renderer.item;
 
 import com.enderio.core.client.FluidRendererUtil;
-import com.enderio.enderio.machines.common.blocks.fluid_tank.FluidTankBlockEntity;
-import com.enderio.enderio.machines.common.blocks.fluid_tank.FluidTankBlockItem;
+import com.enderio.enderio.common.content.machines.fluid_tank.FluidTankBlockEntity;
+import com.enderio.enderio.common.content.machines.fluid_tank.FluidTankBlockItem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;

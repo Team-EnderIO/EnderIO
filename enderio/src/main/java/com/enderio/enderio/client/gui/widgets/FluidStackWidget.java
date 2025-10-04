@@ -1,9 +1,9 @@
 package com.enderio.enderio.client.gui.widgets;
 
 import com.enderio.core.client.gui.widgets.EIOWidget;
-import com.enderio.enderio.machines.common.blocks.base.fluid.FluidStorageInfo;
-import com.enderio.enderio.machines.common.io.fluid.MachineFluidTank;
-import com.enderio.enderio.machines.common.lang.MachineLang;
+import com.enderio.enderio.common.foundation.fluid.FluidStorageInfo;
+import com.enderio.enderio.common.foundation.io.fluid.MachineFluidTank;
+import com.enderio.enderio.common.foundation.lang.MachineLang;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;

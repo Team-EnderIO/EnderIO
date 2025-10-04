@@ -1,6 +1,6 @@
 package com.enderio.enderio.client.particle;
 
-import com.enderio.enderio.common.particle.RangeParticleData;
+import com.enderio.enderio.common.foundation.particle.RangeParticleData;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;

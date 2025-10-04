@@ -12,7 +12,7 @@ import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.conduits.ticker.ConduitTicker;
 import com.enderio.enderio.api.io.RedstoneControl;
-import com.enderio.enderio.common.conduits.ConduitBlockItem;
+import com.enderio.enderio.common.content.conduits.ConduitBlockItem;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

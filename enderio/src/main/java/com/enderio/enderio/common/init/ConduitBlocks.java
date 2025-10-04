@@ -2,9 +2,9 @@ package com.enderio.enderio.common.init;
 
 import com.enderio.enderio.client.color.ConduitFacadeColor;
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.common.conduits.ConduitBlockItem;
-import com.enderio.enderio.common.conduits.bundle.ConduitBundleBlock;
-import com.enderio.enderio.common.tag.EIOTags;
+import com.enderio.enderio.common.content.conduits.ConduitBlockItem;
+import com.enderio.enderio.common.content.conduits.bundle.ConduitBundleBlock;
+import com.enderio.enderio.common.foundation.tag.EIOTags;
 import com.enderio.enderio.data.model.block.ConduitBlockState;
 import com.enderio.regilite.holder.RegiliteBlock;
 import com.enderio.regilite.registry.BlockRegistry;

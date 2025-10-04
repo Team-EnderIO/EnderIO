@@ -1,6 +1,6 @@
 package com.enderio.enderio.data.loot;
 
-import com.enderio.enderio.common.paint.CopyPaintFunction;
+import com.enderio.enderio.common.content.paint.CopyPaintFunction;
 import com.enderio.regilite.data.RegiliteBlockLootProvider;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.world.level.block.Block;

@@ -1,9 +1,9 @@
 package com.enderio.enderio.datagen.common.advancement;
 
-import com.enderio.enderio.machines.common.block.CapacitorBankBlock;
-import com.enderio.enderio.machines.common.blockentity.capacitorbank.CapacitorTier;
-import com.enderio.enderio.machines.common.init.MachineBlocks;
-import com.enderio.enderio.machines.common.lang.MachineLang;
+import com.enderio.enderio.common.content.machines.capacitor_bank.CapacitorBankBlock;
+import com.enderio.enderio.common.content.machines.capacitor_bank.CapacitorTier;
+import com.enderio.enderio.common.init.MachineBlocks;
+import com.enderio.enderio.common.foundation.lang.MachineLang;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementType;

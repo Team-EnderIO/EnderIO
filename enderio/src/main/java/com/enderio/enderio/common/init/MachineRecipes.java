@@ -1,0 +1,65 @@
+package com.enderio.enderio.common.init;
+
+import com.enderio.core.common.recipes.RecipeTypeSerializerPair;
+import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.common.content.machines.alloy.AlloySmeltingRecipe;
+import com.enderio.enderio.common.content.enchanter.EnchanterRecipe;
+import com.enderio.enderio.common.content.machines.fluid_tank.TankRecipe;
+import com.enderio.enderio.common.content.machines.obelisks.weather.WeatherChangeRecipe;
+import com.enderio.enderio.common.content.machines.painting.PaintingRecipe;
+import com.enderio.enderio.common.content.machines.sag_mill.SagMillingRecipe;
+import com.enderio.enderio.common.content.machines.slicer.SlicingRecipe;
+import com.enderio.enderio.common.content.machines.soul_binder.SoulBindingRecipe;
+import com.enderio.enderio.common.content.machines.vat.FermentingRecipe;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
+
+import java.util.function.Supplier;
+
+public class MachineRecipes {
+
+    private static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(Registries.RECIPE_TYPE,
+            EnderIO.MOD_ID);
+    private static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister
+            .create(Registries.RECIPE_SERIALIZER, EnderIO.MOD_ID);
+
+    public static final RecipeTypeSerializerPair<EnchanterRecipe, EnchanterRecipe.Serializer> ENCHANTING = register(
+            "enchanting", EnchanterRecipe.Serializer::new);
+    public static final RecipeTypeSerializerPair<AlloySmeltingRecipe, AlloySmeltingRecipe.Serializer> ALLOY_SMELTING = register(
+            "alloy_smelting", AlloySmeltingRecipe.Serializer::new);
+    public static final RecipeTypeSerializerPair<SagMillingRecipe, SagMillingRecipe.Serializer> SAG_MILLING = register(
+            "sag_milling", SagMillingRecipe.Serializer::new);
+    public static final RecipeTypeSerializerPair<SlicingRecipe, SlicingRecipe.Serializer> SLICING = register("slicing",
+            SlicingRecipe.Serializer::new);
+    public static final RecipeTypeSerializerPair<SoulBindingRecipe, SoulBindingRecipe.Serializer> SOUL_BINDING = register(
+            "soul_binding", SoulBindingRecipe.Serializer::new);
+    public static final RecipeTypeSerializerPair<TankRecipe, TankRecipe.Serializer> TANK = register("tank",
+            TankRecipe.Serializer::new);
+    public static final RecipeTypeSerializerPair<PaintingRecipe, PaintingRecipe.Serializer> PAINTING = register(
+            "painting", PaintingRecipe.Serializer::new);
+    public static final RecipeTypeSerializerPair<FermentingRecipe, FermentingRecipe.Serializer> VAT_FERMENTING = register(
+            "vat_fermenting", FermentingRecipe.Serializer::new);
+    public static final RecipeTypeSerializerPair<WeatherChangeRecipe, WeatherChangeRecipe.Serializer> WEATHER_CHANGE = register(
+            "weather_change", WeatherChangeRecipe.Serializer::new);
+
+    private static <I extends Recipe<?>> DeferredHolder<RecipeType<?>, RecipeType<I>> registerType(String name) {
+        return RECIPE_TYPES.register(name, () -> RecipeType.simple(EnderIO.rl(name)));
+    }
+
+    private static <R extends Recipe<?>, S extends RecipeSerializer<? extends R>> RecipeTypeSerializerPair<R, S> register(
+            String name, Supplier<S> serializerFactory) {
+        var type = RECIPE_TYPES.<RecipeType<R>>register(name, () -> RecipeType.simple(EnderIO.rl(name)));
+        var serializer = RECIPE_SERIALIZERS.register(name, serializerFactory);
+        return new RecipeTypeSerializerPair<>(type, serializer);
+    }
+
+    public static void register(IEventBus bus) {
+        RECIPE_TYPES.register(bus);
+        RECIPE_SERIALIZERS.register(bus);
+    }
+}

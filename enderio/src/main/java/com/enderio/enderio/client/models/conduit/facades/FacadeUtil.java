@@ -1,6 +1,6 @@
 package com.enderio.enderio.client.models.conduit.facades;
 
-import com.enderio.enderio.common.tag.EIOTags;
+import com.enderio.enderio.common.foundation.tag.EIOTags;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;

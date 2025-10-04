@@ -3,13 +3,23 @@ package com.enderio.enderio;
 import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.common.config.machines.MachinesConfig;
+import com.enderio.enderio.common.config.machines.MachinesConfigLang;
+import com.enderio.enderio.common.foundation.lang.MachineEnumLang;
+import com.enderio.enderio.common.init.MachineAttachments;
+import com.enderio.enderio.common.init.MachineBlockEntities;
+import com.enderio.enderio.common.init.MachineBlocks;
+import com.enderio.enderio.common.init.MachineDataComponents;
+import com.enderio.enderio.common.init.MachineMenus;
+import com.enderio.enderio.common.init.MachineRecipes;
+import com.enderio.enderio.common.init.MachineTravelTargets;
 import com.enderio.enderio.compat.cctweaked.ComputerCraftCompat;
 import com.enderio.enderio.compat.ftb_ultimine.FTBUltimineCompat;
 import com.enderio.enderio.compat.inventorysorter.InventorySorterCompat;
 import com.enderio.enderio.compat.laserio.LaserIOCompat;
-import com.enderio.enderio.common.config.BaseConfig;
-import com.enderio.enderio.common.config.BaseConfigLang;
-import com.enderio.enderio.common.handlers.PlayerMovementHandler;
+import com.enderio.enderio.common.config.base.BaseConfig;
+import com.enderio.enderio.common.config.base.BaseConfigLang;
+import com.enderio.enderio.common.content.tools.hang_glider.PlayerMovementHandler;
 import com.enderio.enderio.common.init.ConduitBlockEntities;
 import com.enderio.enderio.common.init.ConduitBlocks;
 import com.enderio.enderio.common.init.ConduitComponents;
@@ -32,12 +42,12 @@ import com.enderio.enderio.common.init.EIOLootModifiers;
 import com.enderio.enderio.common.init.EIOMenus;
 import com.enderio.enderio.common.init.EIOParticles;
 import com.enderio.enderio.common.init.EIORecipes;
-import com.enderio.enderio.common.integrations.Integrations;
-import com.enderio.enderio.common.item.tool.SoulVialItem;
-import com.enderio.enderio.common.lang.EIOEnumLang;
-import com.enderio.enderio.common.lang.EIOLang;
-import com.enderio.enderio.common.tag.EIOTags;
-import com.enderio.enderio.machines.common.lang.MachineLang;
+import com.enderio.enderio.common.foundation.integrations.Integrations;
+import com.enderio.enderio.common.content.vials.SoulVialItem;
+import com.enderio.enderio.common.foundation.lang.EIOEnumLang;
+import com.enderio.enderio.common.foundation.lang.EIOLang;
+import com.enderio.enderio.common.foundation.tag.EIOTags;
+import com.enderio.enderio.common.foundation.lang.MachineLang;
 import com.enderio.regilite.Regilite;
 import com.mojang.logging.LogUtils;
 import net.minecraft.resources.ResourceLocation;
@@ -97,6 +107,8 @@ public class EnderIO {
         // Register config files
         modContainer.registerConfig(ModConfig.Type.COMMON, BaseConfig.COMMON_SPEC, "enderio/base-common.toml");
         modContainer.registerConfig(ModConfig.Type.CLIENT, BaseConfig.CLIENT_SPEC, "enderio/base-client.toml");
+        modContainer.registerConfig(ModConfig.Type.COMMON, MachinesConfig.COMMON_SPEC, "enderio/machines-common.toml");
+        modContainer.registerConfig(ModConfig.Type.CLIENT, MachinesConfig.CLIENT_SPEC, "enderio/machines-client.toml");
         BaseConfigLang.register();
 
         // Perform initialization and registration for everything so things are
@@ -127,6 +139,17 @@ public class EnderIO {
         ConduitComponents.register(modEventBus);
         ConduitIngredientTypes.register(modEventBus);
         ConduitLang.register();
+
+        MachineDataComponents.register(modEventBus);
+        MachineTravelTargets.register(modEventBus);
+        MachineBlocks.register(modEventBus);
+        MachineBlockEntities.register(modEventBus);
+        MachineMenus.register(modEventBus);
+        MachineRecipes.register(modEventBus);
+        MachineAttachments.register(modEventBus);
+        MachineLang.register();
+        MachinesConfigLang.register();
+        MachineEnumLang.register();
 
         REGILITE.register(modEventBus);
 

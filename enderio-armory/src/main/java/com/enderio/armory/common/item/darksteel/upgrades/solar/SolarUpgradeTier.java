@@ -4,7 +4,7 @@ import com.enderio.armory.api.capability.DarkSteelUpgrade;
 import com.enderio.armory.api.capability.UpgradeTier;
 import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.armory.common.lang.ArmoryLang;
-import com.enderio.enderio.machines.common.blockentity.solar.SolarPanelTier;
+import com.enderio.enderio.common.content.machines.solar_panel.SolarPanelTier;
 import net.minecraft.network.chat.Component;
 import net.neoforged.neoforge.common.ModConfigSpec;
 

@@ -3,7 +3,7 @@ package com.enderio.armory.common.item.darksteel.upgrades.solar;
 import com.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
 import com.enderio.armory.common.item.darksteel.upgrades.TieredUpgrade;
 import com.enderio.armory.common.lang.ArmoryLang;
-import com.enderio.enderio.machines.common.blockentity.solar.SolarPanelTier;
+import com.enderio.enderio.common.content.machines.solar_panel.SolarPanelTier;
 import net.minecraft.network.chat.Component;
 
 import java.util.Collection;

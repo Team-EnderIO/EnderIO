@@ -3,7 +3,7 @@ package com.enderio.enderio.compat.jei;
 import com.enderio.enderio.compat.jei.helper.FakeGrindingRecipe;
 import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.common.init.EIORecipes;
-import com.enderio.enderio.common.recipe.FireCraftingRecipe;
+import com.enderio.enderio.common.content.fire_crafting.FireCraftingRecipe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.item.ItemStack;

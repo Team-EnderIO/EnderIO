@@ -3,7 +3,7 @@ package com.enderio.enderio.client.models.conduit.bundle;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.client.models.conduit.modifier.ConduitModelModifiers;
-import com.enderio.enderio.common.conduits.OffsetHelper;
+import com.enderio.enderio.common.content.conduits.OffsetHelper;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;

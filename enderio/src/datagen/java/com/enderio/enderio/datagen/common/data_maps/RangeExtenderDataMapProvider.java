@@ -1,8 +1,8 @@
 package com.enderio.enderio.datagen.common.data_maps;
 
-import com.enderio.enderio.common.tag.EIOTags;
-import com.enderio.enderio.machines.common.datamap.RangeExtender;
-import com.enderio.enderio.machines.common.init.MachineBlocks;
+import com.enderio.enderio.common.foundation.tag.EIOTags;
+import com.enderio.enderio.common.foundation.datamap.RangeExtender;
+import com.enderio.enderio.common.init.MachineBlocks;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.TagKey;

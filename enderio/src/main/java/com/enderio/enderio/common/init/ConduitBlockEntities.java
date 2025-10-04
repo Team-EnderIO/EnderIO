@@ -2,7 +2,7 @@ package com.enderio.enderio.common.init;
 
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.common.conduits.bundle.ConduitBundleBlockEntity;
+import com.enderio.enderio.common.content.conduits.bundle.ConduitBundleBlockEntity;
 import com.enderio.regilite.holder.RegiliteBlockEntity;
 import com.enderio.regilite.registry.BlockEntityRegistry;
 import net.neoforged.bus.api.IEventBus;

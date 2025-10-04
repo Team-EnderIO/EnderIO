@@ -1,8 +1,8 @@
 package com.enderio.enderio.client.gui.widgets;
 
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.common.lang.EIOLang;
-import com.enderio.enderio.machines.common.io.energy.IMachineEnergyStorage;
+import com.enderio.enderio.common.foundation.lang.EIOLang;
+import com.enderio.enderio.common.foundation.io.energy.IMachineEnergyStorage;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;

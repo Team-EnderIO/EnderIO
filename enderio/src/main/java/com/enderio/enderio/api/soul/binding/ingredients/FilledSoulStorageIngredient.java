@@ -2,7 +2,7 @@ package com.enderio.enderio.api.soul.binding.ingredients;
 
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.api.soul.SoulBoundUtils;
-import com.enderio.enderio.common.util.EntityCaptureUtils;
+import com.enderio.enderio.common.foundation.util.EntityCaptureUtils;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.component.DataComponents;

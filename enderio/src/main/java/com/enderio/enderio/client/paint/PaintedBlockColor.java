@@ -1,9 +1,9 @@
 package com.enderio.enderio.client.paint;
 
 import com.enderio.enderio.common.init.EIODataComponents;
-import com.enderio.enderio.common.paint.block.PaintedBlock;
-import com.enderio.enderio.common.paint.block.PaintedSlabBlock;
-import com.enderio.enderio.common.paint.blockentity.PaintedBlockEntity;
+import com.enderio.enderio.common.content.paint.block.PaintedBlock;
+import com.enderio.enderio.common.content.paint.block.PaintedSlabBlock;
+import com.enderio.enderio.common.content.paint.blockentity.PaintedBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;

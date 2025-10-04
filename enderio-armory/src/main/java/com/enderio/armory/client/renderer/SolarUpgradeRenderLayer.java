@@ -2,7 +2,7 @@ package com.enderio.armory.client.renderer;
 
 import com.enderio.armory.common.item.darksteel.upgrades.solar.SolarUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.solar.SolarUpgradeHandler;
-import com.enderio.enderio.machines.common.init.MachineBlocks;
+import com.enderio.enderio.common.init.MachineBlocks;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;

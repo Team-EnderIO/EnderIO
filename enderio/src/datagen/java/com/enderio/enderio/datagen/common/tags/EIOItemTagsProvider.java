@@ -1,7 +1,7 @@
 package com.enderio.enderio.datagen.common.tags;
 
 import com.enderio.enderio.api.EnderIOAPI;
-import com.enderio.enderio.common.tag.EIOTags;
+import com.enderio.enderio.common.foundation.tag.EIOTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;

@@ -7,7 +7,7 @@ import com.enderio.armory.common.tag.ArmoryTags;
 import com.enderio.enderio.api.glider.GliderMovementInfo;
 import com.enderio.enderio.api.integration.ClientIntegration;
 import com.enderio.enderio.api.integration.Integration;
-import com.enderio.enderio.common.lang.EIOLang;
+import com.enderio.enderio.common.foundation.lang.EIOLang;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
