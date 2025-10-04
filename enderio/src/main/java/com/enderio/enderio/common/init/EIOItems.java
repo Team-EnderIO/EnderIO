@@ -12,7 +12,7 @@ import com.enderio.enderio.common.content.filters.item.general.EnderItemFilterIt
 import com.enderio.enderio.common.content.filters.soul.EnderSoulFilterItem;
 import com.enderio.enderio.common.content.capacitors.CapacitorItem;
 import com.enderio.enderio.common.content.capacitors.LootCapacitorItem;
-import com.enderio.enderio.common.foundation.item.BrokenSpawnerItem;
+import com.enderio.enderio.common.content.broken_spawner.BrokenSpawnerItem;
 import com.enderio.enderio.common.foundation.item.CreativeTabIconItem;
 import com.enderio.enderio.common.content.fun.EnderiosItem;
 import com.enderio.enderio.common.content.tools.hang_glider.HangGliderItem;

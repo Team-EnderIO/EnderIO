@@ -1,4 +1,4 @@
-package com.enderio.enderio.common.foundation.item;
+package com.enderio.enderio.common.content.broken_spawner;
 
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.common.init.EIODataComponents;

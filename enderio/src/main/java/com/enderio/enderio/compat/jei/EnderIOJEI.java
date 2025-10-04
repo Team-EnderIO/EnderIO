@@ -9,7 +9,7 @@ import com.enderio.enderio.compat.jei.subtype.ConduitSubtypeInterpreter;
 import com.enderio.enderio.compat.jei.subtype.SoulBindableSubtypeInterpreter;
 import com.enderio.enderio.common.init.EIOBlocks;
 import com.enderio.enderio.common.init.EIOItems;
-import com.enderio.enderio.common.foundation.item.BrokenSpawnerItem;
+import com.enderio.enderio.common.content.broken_spawner.BrokenSpawnerItem;
 import com.enderio.enderio.common.foundation.soul.ShapedEntityStorageRecipe;
 import com.enderio.enderio.common.init.ConduitBlocks;
 import mezz.jei.api.IModPlugin;

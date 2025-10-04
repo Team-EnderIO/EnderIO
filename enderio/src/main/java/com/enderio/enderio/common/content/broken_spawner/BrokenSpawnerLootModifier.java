@@ -1,8 +1,7 @@
-package com.enderio.enderio.common.foundation.loot;
+package com.enderio.enderio.common.content.broken_spawner;
 
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.common.config.base.BaseConfig;
-import com.enderio.enderio.common.foundation.item.BrokenSpawnerItem;
 import com.enderio.enderio.common.foundation.tag.EIOTags;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

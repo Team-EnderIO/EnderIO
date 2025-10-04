@@ -1,4 +1,4 @@
-package com.enderio.enderio.common.foundation.loot;
+package com.enderio.enderio.common.content.capacitors;
 
 import com.enderio.enderio.api.capacitor.CapacitorData;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;

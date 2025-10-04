@@ -1,8 +1,8 @@
 package com.enderio.enderio.common.init;
 
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.common.foundation.loot.BrokenSpawnerLootModifier;
-import com.enderio.enderio.common.foundation.loot.SetLootCapacitorFunction;
+import com.enderio.enderio.common.content.broken_spawner.BrokenSpawnerLootModifier;
+import com.enderio.enderio.common.content.capacitors.SetLootCapacitorFunction;
 import com.enderio.enderio.common.content.paint.CopyPaintFunction;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.registries.Registries;
