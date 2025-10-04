@@ -1,6 +1,6 @@
 package com.enderio.enderio.data.model.item;
 
-import com.enderio.enderio.common.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.google.gson.JsonObject;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.client.model.generators.CustomLoaderBuilder;

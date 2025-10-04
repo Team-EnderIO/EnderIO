@@ -1,6 +1,6 @@
 package com.enderio.enderio.common.init;
 
-import com.enderio.enderio.common.EnderIO;
+import com.enderio.enderio.EnderIO;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredRegister;

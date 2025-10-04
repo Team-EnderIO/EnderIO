@@ -3,7 +3,7 @@ package com.enderio.enderio.machines.common.block;
 import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.core.common.util.TooltipUtil;
-import com.enderio.enderio.common.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.machines.common.blockentity.base.LegacyMachineBlockEntity;
 import com.enderio.enderio.machines.common.blockentity.capacitorbank.CapacitorBankBlockEntity;

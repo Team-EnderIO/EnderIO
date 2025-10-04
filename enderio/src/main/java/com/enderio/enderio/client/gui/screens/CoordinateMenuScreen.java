@@ -1,7 +1,7 @@
 package com.enderio.enderio.client.gui.screens;
 
 import com.enderio.core.client.gui.screen.EnderContainerScreen;
-import com.enderio.enderio.common.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.common.menu.CoordinateMenu;
 import com.enderio.enderio.common.network.packets.ServerboundUpdateCoordinateSelectionNameMenuPacket;

@@ -1,6 +1,6 @@
 package com.enderio.enderio.datagen.common.loot;
 
-import com.enderio.enderio.common.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.common.loot.BrokenSpawnerLootModifier;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;

@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.lang;
 
-import com.enderio.enderio.common.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.machines.EnderIOMachines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;

@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.datamap;
 
-import com.enderio.enderio.common.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;

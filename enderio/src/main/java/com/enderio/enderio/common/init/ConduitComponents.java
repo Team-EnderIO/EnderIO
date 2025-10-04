@@ -1,7 +1,7 @@
 package com.enderio.enderio.common.init;
 
 import com.enderio.enderio.api.EnderIODataComponents;
-import com.enderio.enderio.common.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.conduits.facade.FacadeType;
 import com.enderio.enderio.common.conduits.probe.ConduitProbeItem;
 import com.enderio.enderio.common.filters.redstone.DoubleRedstoneChannel;

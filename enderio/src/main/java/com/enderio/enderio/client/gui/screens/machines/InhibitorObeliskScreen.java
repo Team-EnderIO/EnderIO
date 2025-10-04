@@ -1,6 +1,6 @@
 package com.enderio.enderio.client.gui.screens.machines;
 
-import com.enderio.enderio.common.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.machines.common.blocks.obelisks.inhibitor.InhibitorObeliskBlockEntity;
 import com.enderio.enderio.machines.common.blocks.obelisks.inhibitor.InhibitorObeliskMenu;
 import net.minecraft.network.chat.Component;

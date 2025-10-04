@@ -1,6 +1,6 @@
 package com.enderio.enderio.common.init;
 
-import com.enderio.enderio.common.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.soul.binding.ingredients.AnySoulBindableIngredient;
 import com.enderio.enderio.api.soul.binding.ingredients.EmptySoulBindableIngredient;
 import com.enderio.enderio.api.soul.binding.ingredients.FilledSoulStorageIngredient;

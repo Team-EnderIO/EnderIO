@@ -3,7 +3,7 @@ package com.enderio.enderio.client.gui.screens.conduits;
 import com.enderio.core.client.gui.screen.EnderContainerScreen;
 import com.enderio.core.client.gui.widgets.IconButton;
 import com.enderio.core.client.gui.widgets.ToggleIconButton;
-import com.enderio.enderio.common.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;

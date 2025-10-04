@@ -1,6 +1,6 @@
 package com.enderio.enderio.common.network.packets;
 
-import com.enderio.enderio.common.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.common.conduits.bundle.ConduitBundleBlockEntity;
 import net.minecraft.core.Holder;

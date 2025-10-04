@@ -1,6 +1,6 @@
 package com.enderio.enderio.common.init;
 
-import com.enderio.enderio.common.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.common.blockentity.EnderSkullBlockEntity;
 import com.enderio.enderio.common.paint.blockentity.DoublePaintedBlockEntity;
 import com.enderio.enderio.common.paint.blockentity.SinglePaintedBlockEntity;

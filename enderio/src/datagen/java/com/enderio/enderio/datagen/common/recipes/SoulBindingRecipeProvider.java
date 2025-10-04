@@ -1,7 +1,7 @@
 package com.enderio.enderio.datagen.common.recipes;
 
 import com.enderio.core.data.recipe.SubRecipeProvider;
-import com.enderio.enderio.common.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.soul.binding.ingredients.AnySoulBindableIngredient;
 import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.common.tag.EIOTags;
@@ -12,9 +12,7 @@ import com.enderio.enderio.machines.common.souldata.EngineSoul;
 import com.enderio.enderio.machines.common.souldata.FarmSoul;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -26,7 +24,6 @@ import net.minecraft.world.level.block.InfestedBlock;
 import net.neoforged.neoforge.common.Tags;
 
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
 public class SoulBindingRecipeProvider extends SubRecipeProvider {
 

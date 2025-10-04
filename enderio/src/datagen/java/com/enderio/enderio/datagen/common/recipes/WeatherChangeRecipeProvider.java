@@ -1,18 +1,14 @@
 package com.enderio.enderio.datagen.common.recipes;
 
 import com.enderio.core.data.recipe.SubRecipeProvider;
-import com.enderio.enderio.common.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.common.init.EIOFluids;
 import com.enderio.enderio.machines.common.blocks.obelisks.weather.WeatherChangeRecipe;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
-
-import java.util.concurrent.CompletableFuture;
 
 public class WeatherChangeRecipeProvider extends SubRecipeProvider {
 

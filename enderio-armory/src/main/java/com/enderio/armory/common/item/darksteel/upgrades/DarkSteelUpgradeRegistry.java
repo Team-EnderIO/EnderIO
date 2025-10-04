@@ -12,7 +12,7 @@ import com.enderio.armory.common.item.darksteel.upgrades.nightvision.NightVisisi
 import com.enderio.armory.common.item.darksteel.upgrades.solar.SolarUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.speed.SpeedUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.travel.TravelUpgrade;
-import com.enderio.enderio.common.EnderIO;
+import com.enderio.enderio.EnderIO;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;

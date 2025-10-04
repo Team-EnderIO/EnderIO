@@ -1,7 +1,7 @@
 package com.enderio.enderio.client.gui.widgets;
 
 import com.enderio.core.client.gui.widgets.ToggleIconButton;
-import com.enderio.enderio.common.EnderIO;
+import com.enderio.enderio.EnderIO;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.WidgetSprites;

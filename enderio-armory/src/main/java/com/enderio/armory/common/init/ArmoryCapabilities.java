@@ -4,7 +4,7 @@ import com.enderio.armory.api.capability.DarkSteelCapability;
 import com.enderio.armory.common.capability.DarkSteelEnergyStorage;
 import com.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.armory.common.item.darksteel.upgrades.empowered.EmpoweredUpgrade;
-import com.enderio.enderio.common.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.common.init.EIODataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;

@@ -1,6 +1,6 @@
 package com.enderio.modded_conduits.common.modules.mekanism;
 
-import com.enderio.enderio.common.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;

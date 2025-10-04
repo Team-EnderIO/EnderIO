@@ -1,6 +1,6 @@
 package com.enderio.enderio.machines.common.integrations.jei;
 
-import com.enderio.enderio.common.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.client.gui.screens.machines.AlloySmelterScreen;
 import com.enderio.enderio.client.gui.screens.machines.EnchanterScreen;
 import com.enderio.enderio.client.gui.screens.machines.FluidTankScreen;
@@ -10,7 +10,7 @@ import com.enderio.enderio.client.gui.screens.machines.SoulBinderScreen;
 import com.enderio.enderio.client.gui.screens.machines.VatScreen;
 import com.enderio.enderio.client.gui.screens.machines.WeatherObeliskScreen;
 import com.enderio.enderio.client.gui.screens.machines.base.MachineScreen;
-import com.enderio.enderio.common.compat.jei.subtype.SoulBindableSubtypeInterpreter;
+import com.enderio.enderio.compat.jei.subtype.SoulBindableSubtypeInterpreter;
 import com.enderio.enderio.machines.common.blocks.alloy.AlloySmelterMenu;
 import com.enderio.enderio.machines.common.blocks.enchanter.EnchanterMenu;
 import com.enderio.enderio.machines.common.blocks.sag_mill.SagMillMenu;

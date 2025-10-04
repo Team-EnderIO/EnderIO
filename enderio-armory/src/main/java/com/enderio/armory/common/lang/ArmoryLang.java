@@ -1,7 +1,7 @@
 package com.enderio.armory.common.lang;
 
 import com.enderio.armory.common.EnderIOArmory;
-import com.enderio.enderio.common.EnderIO;
+import com.enderio.enderio.EnderIO;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;

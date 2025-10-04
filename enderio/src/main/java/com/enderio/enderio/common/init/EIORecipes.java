@@ -2,7 +2,7 @@ package com.enderio.enderio.common.init;
 
 import com.enderio.core.common.recipes.RecipeTypeSerializerPair;
 import com.enderio.core.common.recipes.WrappedShapedRecipe;
-import com.enderio.enderio.common.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.common.recipe.FireCraftingRecipe;
 import com.enderio.enderio.common.recipe.ShapedEntityStorageRecipe;
 import net.minecraft.core.registries.Registries;

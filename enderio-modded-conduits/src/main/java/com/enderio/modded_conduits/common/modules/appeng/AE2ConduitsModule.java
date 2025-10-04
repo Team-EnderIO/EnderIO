@@ -3,7 +3,7 @@ package com.enderio.modded_conduits.common.modules.appeng;
 import appeng.api.AECapabilities;
 import appeng.api.ids.AEItemIds;
 import appeng.api.util.AEColor;
-import com.enderio.enderio.common.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;

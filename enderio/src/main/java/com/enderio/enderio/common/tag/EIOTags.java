@@ -1,6 +1,6 @@
 package com.enderio.enderio.common.tag;
 
-import com.enderio.enderio.common.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.common.block.glass.GlassCollisionPredicate;
 import com.enderio.enderio.common.block.glass.GlassIdentifier;
 import com.enderio.enderio.common.block.glass.GlassLighting;

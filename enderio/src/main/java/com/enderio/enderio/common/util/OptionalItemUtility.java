@@ -1,7 +1,7 @@
 package com.enderio.enderio.common.util;
 
-import com.enderio.enderio.common.EnderIO;
-import com.enderio.enderio.common.compat.almostunified.AlmostUnifiedCompat;
+import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.compat.almostunified.AlmostUnifiedCompat;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;

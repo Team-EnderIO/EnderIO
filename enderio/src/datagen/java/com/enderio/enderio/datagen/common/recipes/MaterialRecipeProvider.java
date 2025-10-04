@@ -1,7 +1,7 @@
 package com.enderio.enderio.datagen.common.recipes;
 
 import com.enderio.core.data.recipe.SubRecipeProvider;
-import com.enderio.enderio.common.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.common.init.EIOBlocks;
 import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.common.tag.EIOTags;

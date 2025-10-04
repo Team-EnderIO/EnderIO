@@ -1,6 +1,6 @@
 package com.enderio.enderio.mixin;
 
-import com.enderio.enderio.common.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.machines.common.blocks.alloy.AlloySmeltingRecipe;
 import com.enderio.enderio.machines.common.config.MachinesConfig;
 import com.enderio.enderio.machines.common.init.MachineRecipes;

@@ -2,7 +2,7 @@ package com.enderio.armory.data.loot;
 
 import com.enderio.armory.common.item.darksteel.upgrades.direct.DirectUpgradeLootCondition;
 import com.enderio.armory.common.item.darksteel.upgrades.direct.DirectUpgradeLootModifier;
-import com.enderio.enderio.common.EnderIO;
+import com.enderio.enderio.EnderIO;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;

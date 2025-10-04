@@ -1,6 +1,6 @@
 package com.enderio.modded_conduits.common;
 
-import com.enderio.enderio.common.EnderIO;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.modded_conduits.common.modules.ConduitCommonModule;
 import com.enderio.modded_conduits.common.modules.appeng.AE2ConduitsModule;
