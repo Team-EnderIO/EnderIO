@@ -1,10 +1,10 @@
 package com.enderio.enderio.common.content.machines.vacuum.chest;
 
 import com.enderio.enderio.api.EnderIOCapabilities;
+import com.enderio.enderio.common.config.machines.MachinesConfig;
+import com.enderio.enderio.common.content.machines.vacuum.VacuumMachineBlockEntity;
 import com.enderio.enderio.common.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.common.foundation.inventory.MachineInventoryLayout.Builder;
-import com.enderio.enderio.common.content.machines.vacuum.VacuumMachineBlockEntity;
-import com.enderio.enderio.common.config.machines.MachinesConfig;
 import com.enderio.enderio.common.init.MachineBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.item.ItemEntity;

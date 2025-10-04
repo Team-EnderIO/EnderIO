@@ -2,7 +2,6 @@ package com.enderio.enderio.api.conduits;
 
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.ServiceLoader;
 

@@ -2,8 +2,8 @@ package com.enderio.enderio.common.content.machines.sag_mill;
 
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.enderio.api.components.GrindingBallData;
-import com.enderio.enderio.common.foundation.util.OptionalItemUtility;
 import com.enderio.enderio.common.foundation.MachineRecipe;
+import com.enderio.enderio.common.foundation.util.OptionalItemUtility;
 import com.enderio.enderio.common.init.MachineRecipes;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;

@@ -2,11 +2,11 @@ package com.enderio.enderio.common.init;
 
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.io.RedstoneControl;
-import com.enderio.enderio.common.foundation.attachment.ActionRange;
-import com.enderio.enderio.common.foundation.io.IOConfig;
 import com.enderio.enderio.common.content.machines.obelisks.aversion.AversionObeliskManager;
 import com.enderio.enderio.common.content.machines.obelisks.inhibitor.InhibitorObeliskManager;
 import com.enderio.enderio.common.content.machines.obelisks.relocator.RelocatorObeliskManager;
+import com.enderio.enderio.common.foundation.attachment.ActionRange;
+import com.enderio.enderio.common.foundation.io.IOConfig;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredRegister;

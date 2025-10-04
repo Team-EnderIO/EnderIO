@@ -2,15 +2,15 @@ package com.enderio.enderio.common.content.machines.vacuum;
 
 import com.enderio.enderio.api.UseOnly;
 import com.enderio.enderio.api.io.IOMode;
-import com.enderio.enderio.common.foundation.util.AttractionUtil;
 import com.enderio.enderio.common.foundation.MachineNBTKeys;
 import com.enderio.enderio.common.foundation.attachment.ActionRange;
 import com.enderio.enderio.common.foundation.attachment.RangedActor;
 import com.enderio.enderio.common.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.common.foundation.inventory.SingleSlotAccess;
+import com.enderio.enderio.common.foundation.io.IOConfig;
+import com.enderio.enderio.common.foundation.util.AttractionUtil;
 import com.enderio.enderio.common.init.MachineAttachments;
 import com.enderio.enderio.common.init.MachineDataComponents;
-import com.enderio.enderio.common.foundation.io.IOConfig;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;

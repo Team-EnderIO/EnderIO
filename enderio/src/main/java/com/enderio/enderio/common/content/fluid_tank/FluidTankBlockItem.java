@@ -2,8 +2,8 @@ package com.enderio.enderio.common.content.fluid_tank;
 
 import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.common.util.TooltipUtil;
-import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.common.foundation.lang.EIOLang;
+import com.enderio.enderio.common.init.EIODataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;

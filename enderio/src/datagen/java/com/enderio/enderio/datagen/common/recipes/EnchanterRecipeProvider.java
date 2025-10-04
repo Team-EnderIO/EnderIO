@@ -2,9 +2,9 @@ package com.enderio.enderio.datagen.common.recipes;
 
 import com.enderio.core.data.recipe.SubRecipeProvider;
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.common.init.EIOItems;
-import com.enderio.enderio.common.foundation.tag.EIOTags;
 import com.enderio.enderio.common.content.enchanter.EnchanterRecipe;
+import com.enderio.enderio.common.foundation.tag.EIOTags;
+import com.enderio.enderio.common.init.EIOItems;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;

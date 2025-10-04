@@ -1,10 +1,10 @@
 package com.enderio.enderio.common.content.fluid_tank;
 
-import com.enderio.enderio.common.foundation.util.ExperienceUtil;
 import com.enderio.enderio.common.foundation.attachment.FluidTankUser;
 import com.enderio.enderio.common.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.common.foundation.inventory.SingleSlotAccess;
 import com.enderio.enderio.common.foundation.io.fluid.TankAccess;
+import com.enderio.enderio.common.foundation.util.ExperienceUtil;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;

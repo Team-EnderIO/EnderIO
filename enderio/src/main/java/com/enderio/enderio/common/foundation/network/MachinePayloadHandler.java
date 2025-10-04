@@ -1,5 +1,8 @@
 package com.enderio.enderio.common.foundation.network;
 
+import com.enderio.enderio.common.content.enderface.EnderfaceBlockEntity;
+import com.enderio.enderio.common.content.machines.crafter.CrafterMenu;
+import com.enderio.enderio.common.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.common.foundation.network.packets.ClientboundFarmStationSoulPacket;
 import com.enderio.enderio.common.foundation.network.packets.ClientboundPoweredSpawnerSoulPacket;
 import com.enderio.enderio.common.foundation.network.packets.ClientboundSolarSoulPacket;
@@ -8,9 +11,6 @@ import com.enderio.enderio.common.foundation.network.packets.ServerboundCycleIOC
 import com.enderio.enderio.common.foundation.network.packets.ServerboundEnderfaceInteractPacket;
 import com.enderio.enderio.common.foundation.network.packets.ServerboundTransferItemsPacket;
 import com.enderio.enderio.common.foundation.network.packets.ServerboundUpdateCrafterTemplatePacket;
-import com.enderio.enderio.common.foundation.block.entity.MachineBlockEntity;
-import com.enderio.enderio.common.content.machines.crafter.CrafterMenu;
-import com.enderio.enderio.common.content.enderface.EnderfaceBlockEntity;
 import com.enderio.enderio.common.foundation.souldata.EngineSoul;
 import com.enderio.enderio.common.foundation.souldata.FarmSoul;
 import com.enderio.enderio.common.foundation.souldata.SolarSoul;

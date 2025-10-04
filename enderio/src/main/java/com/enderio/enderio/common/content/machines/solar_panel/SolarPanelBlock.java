@@ -2,9 +2,9 @@ package com.enderio.enderio.common.content.machines.solar_panel;
 
 import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.common.util.TooltipUtil;
-import com.enderio.enderio.common.foundation.lang.EIOLang;
-import com.enderio.enderio.common.foundation.block.legacy.LegacyMachineBlock;
 import com.enderio.enderio.common.foundation.block.entity.legacy.LegacyMachineBlockEntity;
+import com.enderio.enderio.common.foundation.block.legacy.LegacyMachineBlock;
+import com.enderio.enderio.common.foundation.lang.EIOLang;
 import com.enderio.enderio.common.foundation.lang.MachineLang;
 import com.enderio.regilite.holder.RegiliteBlockEntity;
 import net.minecraft.core.BlockPos;

@@ -3,9 +3,9 @@ package com.enderio.enderio.client.foundation.icon;
 import com.enderio.core.client.icon.EnumIconMap;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.io.RedstoneControl;
+import com.enderio.enderio.common.content.filters.item.general.DamageFilterMode;
 import com.enderio.enderio.common.content.glass.GlassCollisionPredicate;
 import com.enderio.enderio.common.content.glass.GlassLighting;
-import com.enderio.enderio.common.content.filters.item.general.DamageFilterMode;
 import net.minecraft.world.item.DyeColor;
 
 public class EIOEnumIcons {

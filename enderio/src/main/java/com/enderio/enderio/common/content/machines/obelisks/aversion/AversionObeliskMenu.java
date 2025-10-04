@@ -1,7 +1,7 @@
 package com.enderio.enderio.common.content.machines.obelisks.aversion;
 
-import com.enderio.enderio.common.foundation.menu.MachineSlot;
 import com.enderio.enderio.common.content.machines.obelisks.ObeliskMenu;
+import com.enderio.enderio.common.foundation.menu.MachineSlot;
 import com.enderio.enderio.common.init.MachineBlockEntities;
 import com.enderio.enderio.common.init.MachineMenus;
 import net.minecraft.network.RegistryFriendlyByteBuf;

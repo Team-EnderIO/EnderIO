@@ -1,7 +1,7 @@
 package com.enderio.enderio.common.content.machines.powered_spawner;
 
-import com.enderio.enderio.common.foundation.task.PoweredMachineTask;
 import com.enderio.enderio.common.foundation.io.energy.IMachineEnergyStorage;
+import com.enderio.enderio.common.foundation.task.PoweredMachineTask;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;

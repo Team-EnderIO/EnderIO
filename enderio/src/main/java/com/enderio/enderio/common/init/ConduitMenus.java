@@ -1,10 +1,10 @@
 package com.enderio.enderio.common.init;
 
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.client.content.conduits.gui.ConduitScreen;
 import com.enderio.enderio.client.content.filters.redstone.RedstoneCountFilterScreen;
 import com.enderio.enderio.client.content.filters.redstone.RedstoneDoubleChannelFilterScreen;
 import com.enderio.enderio.client.content.filters.redstone.RedstoneTimerFilterScreen;
-import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.common.content.conduits.menu.ConduitMenu;
 import com.enderio.enderio.common.content.filters.redstone.RedstoneCountFilterMenu;
 import com.enderio.enderio.common.content.filters.redstone.RedstoneDoubleChannelFilterMenu;

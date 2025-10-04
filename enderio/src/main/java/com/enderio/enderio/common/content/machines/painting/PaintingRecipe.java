@@ -1,10 +1,10 @@
 package com.enderio.enderio.common.content.machines.painting;
 
 import com.enderio.core.common.recipes.OutputStack;
-import com.enderio.enderio.common.init.EIODataComponents;
+import com.enderio.enderio.common.config.machines.MachinesConfig;
 import com.enderio.enderio.common.content.paint.BlockPaintData;
 import com.enderio.enderio.common.foundation.MachineRecipe;
-import com.enderio.enderio.common.config.machines.MachinesConfig;
+import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.common.init.MachineRecipes;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

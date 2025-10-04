@@ -2,9 +2,9 @@ package com.enderio.enderio.common.content.tools;
 
 import com.enderio.core.common.capability.StrictFluidHandlerItemStack;
 import com.enderio.enderio.common.config.base.BaseConfig;
+import com.enderio.enderio.common.foundation.tag.EIOTags;
 import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.common.init.EIOFluids;
-import com.enderio.enderio.common.foundation.tag.EIOTags;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;

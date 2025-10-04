@@ -1,8 +1,8 @@
 package com.enderio.enderio.common.init;
 
 import com.enderio.core.common.util.NamedFluidContents;
-import com.enderio.enderio.api.EnderIODataComponents;
 import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.api.EnderIODataComponents;
 import com.enderio.enderio.api.attachment.CoordinateSelection;
 import com.enderio.enderio.api.capacitor.CapacitorData;
 import com.enderio.enderio.api.soul.Soul;

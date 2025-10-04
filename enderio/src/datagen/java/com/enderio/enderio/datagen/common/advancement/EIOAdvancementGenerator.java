@@ -1,8 +1,8 @@
 package com.enderio.enderio.datagen.common.advancement;
 
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.common.foundation.lang.EIOLang;
 import com.enderio.enderio.common.content.paint.PaintingTrigger;
+import com.enderio.enderio.common.foundation.lang.EIOLang;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementType;

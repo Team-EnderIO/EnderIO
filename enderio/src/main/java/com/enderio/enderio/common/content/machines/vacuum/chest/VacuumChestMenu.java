@@ -1,8 +1,8 @@
 package com.enderio.enderio.common.content.machines.vacuum.chest;
 
-import com.enderio.enderio.common.foundation.menu.MachineSlot;
 import com.enderio.enderio.common.content.machines.vacuum.VacuumMachineBlockEntity;
 import com.enderio.enderio.common.content.machines.vacuum.VacuumMenu;
+import com.enderio.enderio.common.foundation.menu.MachineSlot;
 import com.enderio.enderio.common.init.MachineBlockEntities;
 import com.enderio.enderio.common.init.MachineMenus;
 import net.minecraft.network.RegistryFriendlyByteBuf;

@@ -1,7 +1,7 @@
 package com.enderio.enderio.common.content.machines.obelisks.aversion;
 
-import com.enderio.enderio.common.init.MachineAttachments;
 import com.enderio.enderio.common.content.machines.obelisks.ObeliskAreaManager;
+import com.enderio.enderio.common.init.MachineAttachments;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.MobSpawnType;

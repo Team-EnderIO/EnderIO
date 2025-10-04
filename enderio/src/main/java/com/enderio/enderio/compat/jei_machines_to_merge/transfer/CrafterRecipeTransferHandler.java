@@ -1,8 +1,8 @@
 package com.enderio.enderio.compat.jei_machines_to_merge.transfer;
 
 import com.enderio.enderio.common.content.machines.crafter.CrafterMenu;
-import com.enderio.enderio.common.init.MachineMenus;
 import com.enderio.enderio.common.foundation.network.packets.ServerboundUpdateCrafterTemplatePacket;
+import com.enderio.enderio.common.init.MachineMenus;
 import com.mojang.logging.LogUtils;
 import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;

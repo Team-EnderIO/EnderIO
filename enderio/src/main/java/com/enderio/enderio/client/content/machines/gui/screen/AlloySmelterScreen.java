@@ -8,8 +8,8 @@ import com.enderio.enderio.client.content.machines.gui.widget.AlloySmelterModeWi
 import com.enderio.enderio.client.content.machines.gui.widget.NewCapacitorEnergyWidget;
 import com.enderio.enderio.client.foundation.widgets.NewProgressWidget;
 import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget;
-import com.enderio.enderio.common.foundation.lang.EIOLang;
 import com.enderio.enderio.common.content.machines.alloy.AlloySmelterMenu;
+import com.enderio.enderio.common.foundation.lang.EIOLang;
 import com.enderio.enderio.common.foundation.lang.MachineLang;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;

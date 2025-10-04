@@ -1,10 +1,10 @@
 package com.enderio.enderio.common.content.paint.block;
 
-import com.enderio.enderio.common.init.EIOBlockEntities;
-import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.common.content.paint.BlockPaintData;
 import com.enderio.enderio.common.content.paint.blockentity.DoublePaintedBlockEntity;
 import com.enderio.enderio.common.content.paint.blockentity.PaintedBlockEntity;
+import com.enderio.enderio.common.init.EIOBlockEntities;
+import com.enderio.enderio.common.init.EIODataComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;

@@ -7,10 +7,10 @@ import com.enderio.enderio.client.content.machines.gui.widget.FermentationWidget
 import com.enderio.enderio.client.foundation.widgets.FluidStackWidget;
 import com.enderio.enderio.client.foundation.widgets.ProgressWidget;
 import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget;
-import com.enderio.enderio.common.foundation.lang.EIOLang;
 import com.enderio.enderio.common.content.machines.vat.FermentingRecipe;
 import com.enderio.enderio.common.content.machines.vat.VatMenu;
 import com.enderio.enderio.common.foundation.io.fluid.MachineFluidTank;
+import com.enderio.enderio.common.foundation.lang.EIOLang;
 import com.enderio.enderio.common.foundation.lang.MachineLang;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;

@@ -1,10 +1,10 @@
 package com.enderio.enderio.common.foundation.network;
 
 import com.enderio.enderio.api.travel.TravelTargetApi;
+import com.enderio.enderio.common.content.travel.TravelTargetSavedData;
 import com.enderio.enderio.common.foundation.network.packets.ClientboundSyncTravelDataPacket;
 import com.enderio.enderio.common.foundation.network.packets.ClientboundTravelTargetRemovedPacket;
 import com.enderio.enderio.common.foundation.network.packets.ClientboundTravelTargetUpdatedPacket;
-import com.enderio.enderio.common.content.travel.TravelTargetSavedData;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class ClientPayloadHandler {

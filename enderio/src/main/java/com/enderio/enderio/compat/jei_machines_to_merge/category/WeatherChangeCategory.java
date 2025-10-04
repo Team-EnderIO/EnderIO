@@ -2,12 +2,12 @@ package com.enderio.enderio.compat.jei_machines_to_merge.category;
 
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.client.content.machines.gui.screen.WeatherObeliskScreen;
-import com.enderio.enderio.compat.jei.JEIUtils;
 import com.enderio.enderio.common.content.machines.obelisks.weather.WeatherChangeRecipe;
 import com.enderio.enderio.common.content.machines.obelisks.weather.WeatherObeliskBlockEntity;
-import com.enderio.enderio.common.init.MachineBlocks;
-import com.enderio.enderio.compat.jei_machines_to_merge.util.MachineRecipeCategory;
 import com.enderio.enderio.common.foundation.lang.MachineLang;
+import com.enderio.enderio.common.init.MachineBlocks;
+import com.enderio.enderio.compat.jei.JEIUtils;
+import com.enderio.enderio.compat.jei_machines_to_merge.util.MachineRecipeCategory;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;

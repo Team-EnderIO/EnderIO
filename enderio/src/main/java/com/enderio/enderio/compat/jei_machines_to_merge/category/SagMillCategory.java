@@ -1,16 +1,16 @@
 package com.enderio.enderio.compat.jei_machines_to_merge.category;
 
 import com.enderio.core.common.util.TooltipUtil;
-import com.enderio.enderio.api.EnderIODataComponents;
 import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.api.EnderIODataComponents;
 import com.enderio.enderio.api.components.GrindingBallData;
-import com.enderio.enderio.compat.jei.JEIUtils;
-import com.enderio.enderio.common.foundation.lang.EIOLang;
-import com.enderio.enderio.common.foundation.tag.EIOTags;
 import com.enderio.enderio.common.content.machines.sag_mill.SagMillingRecipe;
-import com.enderio.enderio.common.init.MachineBlocks;
-import com.enderio.enderio.compat.jei_machines_to_merge.util.MachineRecipeCategory;
+import com.enderio.enderio.common.foundation.lang.EIOLang;
 import com.enderio.enderio.common.foundation.lang.MachineLang;
+import com.enderio.enderio.common.foundation.tag.EIOTags;
+import com.enderio.enderio.common.init.MachineBlocks;
+import com.enderio.enderio.compat.jei.JEIUtils;
+import com.enderio.enderio.compat.jei_machines_to_merge.util.MachineRecipeCategory;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;

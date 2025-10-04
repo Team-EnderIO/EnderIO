@@ -1,10 +1,10 @@
 package com.enderio.enderio.common.init;
 
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.client.content.tools.CoordinateMenuScreen;
 import com.enderio.enderio.client.content.filters.EnderFluidFilterScreen;
 import com.enderio.enderio.client.content.filters.EnderItemFilterScreen;
 import com.enderio.enderio.client.content.filters.EnderSoulFilterScreen;
+import com.enderio.enderio.client.content.tools.CoordinateMenuScreen;
 import com.enderio.enderio.common.content.filters.fluid.EnderFluidFilterItem;
 import com.enderio.enderio.common.content.filters.fluid.EnderFluidFilterMenu;
 import com.enderio.enderio.common.content.filters.item.general.EnderItemFilterItem;

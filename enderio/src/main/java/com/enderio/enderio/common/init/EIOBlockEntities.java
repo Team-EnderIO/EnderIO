@@ -1,9 +1,9 @@
 package com.enderio.enderio.common.init;
 
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.common.foundation.block.entity.EnderSkullBlockEntity;
 import com.enderio.enderio.common.content.paint.blockentity.DoublePaintedBlockEntity;
 import com.enderio.enderio.common.content.paint.blockentity.SinglePaintedBlockEntity;
+import com.enderio.enderio.common.foundation.block.entity.EnderSkullBlockEntity;
 import com.enderio.regilite.holder.RegiliteBlockEntity;
 import com.enderio.regilite.registry.BlockEntityRegistry;
 import net.neoforged.bus.api.IEventBus;

@@ -1,9 +1,9 @@
 package com.enderio.enderio.common.content.travel.travel_anchor;
 
-import com.enderio.enderio.common.foundation.EIONBTKeys;
 import com.enderio.enderio.common.content.paint.PaintUtils;
 import com.enderio.enderio.common.content.paint.blockentity.PaintedBlockEntity;
 import com.enderio.enderio.common.content.paint.blockentity.SinglePaintedBlockEntity;
+import com.enderio.enderio.common.foundation.EIONBTKeys;
 import com.enderio.enderio.common.init.MachineBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;

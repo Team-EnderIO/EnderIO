@@ -1,8 +1,8 @@
 package com.enderio.enderio.common.content.machines.vacuum.xp;
 
+import com.enderio.enderio.common.content.machines.vacuum.VacuumMenu;
 import com.enderio.enderio.common.foundation.fluid.FluidStorageInfo;
 import com.enderio.enderio.common.foundation.fluid.FluidStorageSyncSlot;
-import com.enderio.enderio.common.content.machines.vacuum.VacuumMenu;
 import com.enderio.enderio.common.init.MachineBlockEntities;
 import com.enderio.enderio.common.init.MachineMenus;
 import net.minecraft.network.RegistryFriendlyByteBuf;

@@ -2,8 +2,8 @@ package com.enderio.enderio.common.content.filters.redstone;
 
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.filter.RedstoneOutputFilter;
-import com.enderio.enderio.common.init.ConduitMenus;
 import com.enderio.enderio.common.foundation.network.packets.ServerboundDoubleChannelPacket;
+import com.enderio.enderio.common.init.ConduitMenus;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;

@@ -5,8 +5,8 @@ import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.travel.TravelTarget;
 import com.enderio.enderio.api.travel.TravelTargetSerializer;
 import com.enderio.enderio.api.travel.TravelTargetType;
-import com.enderio.enderio.common.content.travel.travel_anchor.AnchorTravelTarget;
 import com.enderio.enderio.common.content.enderface.EnderfaceTravelTarget;
+import com.enderio.enderio.common.content.travel.travel_anchor.AnchorTravelTarget;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 

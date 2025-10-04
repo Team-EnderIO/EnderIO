@@ -1,8 +1,8 @@
 package com.enderio.enderio.common.content.glass;
 
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.common.init.EIOCreativeTabs;
 import com.enderio.enderio.common.foundation.tag.EIOTags;
+import com.enderio.enderio.common.init.EIOCreativeTabs;
 import com.enderio.regilite.holder.RegiliteBlock;
 import com.enderio.regilite.registry.BlockRegistry;
 import com.enderio.regilite.registry.ItemRegistry;

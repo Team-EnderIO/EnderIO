@@ -1,8 +1,8 @@
 package com.enderio.enderio.common.content.paint;
 
+import com.enderio.enderio.common.content.paint.blockentity.PaintedBlockEntity;
 import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.common.init.EIOLootModifiers;
-import com.enderio.enderio.common.content.paint.blockentity.PaintedBlockEntity;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

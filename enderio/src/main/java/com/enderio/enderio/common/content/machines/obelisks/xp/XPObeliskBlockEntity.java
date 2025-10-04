@@ -1,15 +1,15 @@
 package com.enderio.enderio.common.content.machines.obelisks.xp;
 
-import com.enderio.enderio.common.init.EIODataComponents;
-import com.enderio.enderio.common.init.EIOFluids;
-import com.enderio.enderio.common.foundation.util.ExperienceUtil;
 import com.enderio.enderio.common.foundation.attachment.FluidTankUser;
 import com.enderio.enderio.common.foundation.block.entity.MachineBlockEntity;
-import com.enderio.enderio.common.init.MachineBlockEntities;
 import com.enderio.enderio.common.foundation.io.fluid.MachineFluidHandler;
 import com.enderio.enderio.common.foundation.io.fluid.MachineFluidTank;
 import com.enderio.enderio.common.foundation.io.fluid.MachineTankLayout;
 import com.enderio.enderio.common.foundation.io.fluid.TankAccess;
+import com.enderio.enderio.common.foundation.util.ExperienceUtil;
+import com.enderio.enderio.common.init.EIODataComponents;
+import com.enderio.enderio.common.init.EIOFluids;
+import com.enderio.enderio.common.init.MachineBlockEntities;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;

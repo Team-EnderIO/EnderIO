@@ -1,8 +1,8 @@
 package com.enderio.enderio.common.content.paint.block;
 
+import com.enderio.enderio.common.content.paint.blockentity.PaintedBlockEntity;
 import com.enderio.enderio.common.init.EIOBlockEntities;
 import com.enderio.enderio.common.init.EIOBlocks;
-import com.enderio.enderio.common.content.paint.blockentity.PaintedBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;

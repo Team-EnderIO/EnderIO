@@ -2,8 +2,8 @@ package com.enderio.enderio.common.foundation.energy;
 
 import com.enderio.enderio.api.io.IOConfigurable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.enderio.common.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.common.config.machines.MachinesConfig;
+import com.enderio.enderio.common.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.common.foundation.io.energy.IMachineEnergyStorage;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;

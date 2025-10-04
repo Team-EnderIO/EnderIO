@@ -2,7 +2,6 @@ package com.enderio.enderio.compat.jei.subtype;
 
 import com.enderio.enderio.api.EnderIODataComponents;
 import com.enderio.enderio.api.conduits.Conduit;
-import com.enderio.enderio.common.init.ConduitComponents;
 import mezz.jei.api.ingredients.subtypes.ISubtypeInterpreter;
 import mezz.jei.api.ingredients.subtypes.UidContext;
 import net.minecraft.core.Holder;

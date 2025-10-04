@@ -1,18 +1,18 @@
 package com.enderio.enderio.common.content.fluid_tank;
 
-import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.common.foundation.attachment.FluidTankUser;
 import com.enderio.enderio.common.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.common.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.common.foundation.inventory.SingleSlotAccess;
-import com.enderio.enderio.common.foundation.state.MachineState;
-import com.enderio.enderio.common.init.MachineBlockEntities;
-import com.enderio.enderio.common.init.MachineRecipes;
 import com.enderio.enderio.common.foundation.io.fluid.FluidItemInteractive;
 import com.enderio.enderio.common.foundation.io.fluid.MachineFluidHandler;
 import com.enderio.enderio.common.foundation.io.fluid.MachineFluidTank;
 import com.enderio.enderio.common.foundation.io.fluid.MachineTankLayout;
 import com.enderio.enderio.common.foundation.io.fluid.TankAccess;
+import com.enderio.enderio.common.foundation.state.MachineState;
+import com.enderio.enderio.common.init.EIODataComponents;
+import com.enderio.enderio.common.init.MachineBlockEntities;
+import com.enderio.enderio.common.init.MachineRecipes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;

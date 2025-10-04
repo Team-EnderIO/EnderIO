@@ -2,8 +2,8 @@ package com.enderio.enderio.client.content.travel;
 
 import com.enderio.enderio.api.travel.TravelTarget;
 import com.enderio.enderio.common.content.travel.TravelHandler;
-import com.enderio.enderio.common.init.MachineBlocks;
 import com.enderio.enderio.common.content.travel.travel_anchor.AnchorTravelTarget;
+import com.enderio.enderio.common.init.MachineBlocks;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;

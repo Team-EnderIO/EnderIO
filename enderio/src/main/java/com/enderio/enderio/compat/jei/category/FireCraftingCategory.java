@@ -2,10 +2,10 @@ package com.enderio.enderio.compat.jei.category;
 
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.compat.jei.JEIUtils;
-import com.enderio.enderio.common.init.EIOFluids;
-import com.enderio.enderio.common.foundation.lang.EIOLang;
 import com.enderio.enderio.common.content.fire_crafting.FireCraftingRecipe;
+import com.enderio.enderio.common.foundation.lang.EIOLang;
+import com.enderio.enderio.common.init.EIOFluids;
+import com.enderio.enderio.compat.jei.JEIUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.math.Axis;
 import mezz.jei.api.gui.ITickTimer;

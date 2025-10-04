@@ -1,8 +1,8 @@
 package com.enderio.enderio.common.content.paint.block;
 
-import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.common.content.paint.BlockPaintData;
 import com.enderio.enderio.common.content.paint.blockentity.PaintedBlockEntity;
+import com.enderio.enderio.common.init.EIODataComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;

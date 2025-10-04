@@ -1,9 +1,9 @@
 package com.enderio.enderio.common.init;
 
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.conduits.facade.FacadeType;
 import com.enderio.enderio.client.content.conduits.ConduitFacadeColor;
-import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.common.content.conduits.facades.ComponentBackedConduitFacadeProvider;
 import com.enderio.enderio.common.content.conduits.facades.ConduitFacadeItem;
 import com.enderio.enderio.common.content.conduits.probe.ConduitProbeItem;

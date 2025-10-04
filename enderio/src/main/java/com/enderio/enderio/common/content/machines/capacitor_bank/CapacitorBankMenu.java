@@ -1,7 +1,7 @@
 package com.enderio.enderio.common.content.machines.capacitor_bank;
 
-import com.enderio.enderio.common.init.MachineMenus;
 import com.enderio.enderio.common.foundation.menu.legacy.LegacyPoweredMachineMenu;
+import com.enderio.enderio.common.init.MachineMenus;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.level.block.entity.BlockEntity;

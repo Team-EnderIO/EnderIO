@@ -1,9 +1,9 @@
 package com.enderio.enderio.common.content.vials;
 
 import com.enderio.core.common.network.EmitParticlePacket;
-import com.enderio.enderio.common.init.EIOFluids;
 import com.enderio.enderio.common.foundation.lang.EIOLang;
 import com.enderio.enderio.common.foundation.util.ExperienceUtil;
+import com.enderio.enderio.common.init.EIOFluids;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.core.particles.ParticleTypes;

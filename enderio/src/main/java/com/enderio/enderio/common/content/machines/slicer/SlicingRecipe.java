@@ -2,8 +2,8 @@ package com.enderio.enderio.common.content.machines.slicer;
 
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.enderio.common.foundation.MachineRecipe;
-import com.enderio.enderio.common.init.MachineRecipes;
 import com.enderio.enderio.common.foundation.util.ValidatingListCodec;
+import com.enderio.enderio.common.init.MachineRecipes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

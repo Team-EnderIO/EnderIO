@@ -7,8 +7,8 @@ import com.enderio.enderio.client.content.machines.gui.widget.CapacitorEnergyWid
 import com.enderio.enderio.client.foundation.widgets.EIOCommonWidgets;
 import com.enderio.enderio.client.foundation.widgets.FluidStackWidget;
 import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget;
-import com.enderio.enderio.common.foundation.lang.EIOLang;
 import com.enderio.enderio.common.content.machines.niard.NiardMenu;
+import com.enderio.enderio.common.foundation.lang.EIOLang;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;

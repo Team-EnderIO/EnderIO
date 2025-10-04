@@ -2,9 +2,9 @@ package com.enderio.enderio.compat.jei_machines_to_merge.transfer;
 
 import com.enderio.enderio.common.content.machines.obelisks.weather.WeatherChangeRecipe;
 import com.enderio.enderio.common.content.machines.obelisks.weather.WeatherObeliskMenu;
+import com.enderio.enderio.common.foundation.network.packets.ServerboundTransferItemsPacket;
 import com.enderio.enderio.common.init.MachineMenus;
 import com.enderio.enderio.compat.jei_machines_to_merge.category.WeatherChangeCategory;
-import com.enderio.enderio.common.foundation.network.packets.ServerboundTransferItemsPacket;
 import mezz.jei.api.gui.ingredient.IRecipeSlotView;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.RecipeType;

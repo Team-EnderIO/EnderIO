@@ -1,9 +1,9 @@
 package com.enderio.armory.client;
 
-import com.enderio.armory.common.EnderIOArmory;
 import com.enderio.armory.client.renderer.ElytraUpgradeRenderLayer;
 import com.enderio.armory.client.renderer.MultiEnergyBarDecorator;
 import com.enderio.armory.client.renderer.SolarUpgradeRenderLayer;
+import com.enderio.armory.common.EnderIOArmory;
 import com.enderio.armory.common.init.ArmoryItems;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.neoforged.api.distmarker.Dist;

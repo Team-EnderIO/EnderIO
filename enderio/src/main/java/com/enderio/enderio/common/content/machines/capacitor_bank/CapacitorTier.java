@@ -1,7 +1,7 @@
 package com.enderio.enderio.common.content.machines.capacitor_bank;
 
-import com.enderio.enderio.common.foundation.block.entity.multienergy.CapacityTier;
 import com.enderio.enderio.common.config.machines.MachinesConfig;
+import com.enderio.enderio.common.foundation.block.entity.multienergy.CapacityTier;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public enum CapacitorTier implements CapacityTier {

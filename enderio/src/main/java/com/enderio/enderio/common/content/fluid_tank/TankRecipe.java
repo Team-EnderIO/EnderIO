@@ -1,7 +1,7 @@
 package com.enderio.enderio.common.content.fluid_tank;
 
-import com.enderio.enderio.common.init.MachineRecipes;
 import com.enderio.enderio.common.foundation.io.fluid.MachineFluidTank;
+import com.enderio.enderio.common.init.MachineRecipes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

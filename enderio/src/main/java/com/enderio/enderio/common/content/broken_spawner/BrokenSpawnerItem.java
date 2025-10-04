@@ -1,9 +1,9 @@
 package com.enderio.enderio.common.content.broken_spawner;
 
 import com.enderio.enderio.api.soul.Soul;
+import com.enderio.enderio.common.foundation.util.EntityCaptureUtils;
 import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.common.init.EIOItems;
-import com.enderio.enderio.common.foundation.util.EntityCaptureUtils;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 

@@ -2,8 +2,8 @@ package com.enderio.enderio.common.content.capacitors;
 
 import com.enderio.enderio.api.capacitor.CapacitorData;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
-import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.common.foundation.lang.EIOLang;
+import com.enderio.enderio.common.init.EIODataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;

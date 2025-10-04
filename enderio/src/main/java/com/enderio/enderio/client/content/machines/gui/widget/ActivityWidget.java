@@ -1,9 +1,9 @@
 package com.enderio.enderio.client.content.machines.gui.widget;
 
 import com.enderio.enderio.client.foundation.icon.MachineEnumIcons;
+import com.enderio.enderio.common.foundation.lang.MachineLang;
 import com.enderio.enderio.common.foundation.state.MachineState;
 import com.enderio.enderio.common.foundation.state.MachineStateType;
-import com.enderio.enderio.common.foundation.lang.MachineLang;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
