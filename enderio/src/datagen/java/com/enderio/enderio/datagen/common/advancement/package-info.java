@@ -1,4 +1,4 @@
 @javax.annotation.ParametersAreNonnullByDefault
 @net.minecraft.MethodsReturnNonnullByDefault
 
-package com.enderio.enderio.machines.data.souldata;
+package com.enderio.enderio.datagen.common.advancement;

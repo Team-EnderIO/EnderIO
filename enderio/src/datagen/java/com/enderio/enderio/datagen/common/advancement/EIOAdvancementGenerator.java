@@ -1,4 +1,4 @@
-package com.enderio.enderio.datagen.client;
+package com.enderio.enderio.datagen.common.advancement;
 
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.common.lang.EIOLang;

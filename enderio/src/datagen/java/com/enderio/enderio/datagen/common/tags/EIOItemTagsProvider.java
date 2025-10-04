@@ -98,6 +98,10 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
 
         tag(EIOTags.Items.STORAGE_BLOCKS_AMETHYST).add(Items.AMETHYST_BLOCK);
 
+        addReagentTags();
+    }
+
+    private void addReagentTags() {
         tag(MachineTags.Items.CROPS).addTag(Tags.Items.CROPS);
         tag(MachineTags.Items.SEEDS).addTag(Tags.Items.SEEDS);
         tag(MachineTags.Items.MEAT).addTag(ItemTags.MEAT);

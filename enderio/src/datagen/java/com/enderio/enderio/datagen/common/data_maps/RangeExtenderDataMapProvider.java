@@ -1,4 +1,4 @@
-package com.enderio.enderio.machines.data.datamap;
+package com.enderio.enderio.datagen.common.data_maps;
 
 import com.enderio.enderio.machines.common.datamap.RangeExtender;
 import com.enderio.enderio.machines.common.init.MachineBlocks;
@@ -13,10 +13,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-public class RangeExtenderDataProvider extends DataMapProvider {
+public class RangeExtenderDataMapProvider extends DataMapProvider {
     private final Map<Block, Map<TagKey<Block>, Integer>> data = new HashMap<>();
 
-    public RangeExtenderDataProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+    public RangeExtenderDataMapProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider) {
         super(packOutput, lookupProvider);
     }
 

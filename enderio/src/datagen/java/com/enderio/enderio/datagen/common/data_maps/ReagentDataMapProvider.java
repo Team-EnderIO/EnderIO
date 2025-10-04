@@ -1,4 +1,4 @@
-package com.enderio.enderio.datagen.common.reagentdata;
+package com.enderio.enderio.datagen.common.data_maps;
 
 import com.enderio.enderio.machines.common.datamap.VatReagent;
 import com.enderio.enderio.machines.common.tag.MachineTags;
@@ -12,11 +12,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-public class ReagentProvider extends DataMapProvider {
+public class ReagentDataMapProvider extends DataMapProvider {
 
     private final Map<Item, Map<TagKey<Item>, Double>> dataMap = new HashMap<>();
 
-    public ReagentProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+    public ReagentDataMapProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider) {
         super(packOutput, lookupProvider);
     }
 

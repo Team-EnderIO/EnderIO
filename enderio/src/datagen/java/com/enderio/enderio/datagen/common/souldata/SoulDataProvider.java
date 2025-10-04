@@ -1,4 +1,4 @@
-package com.enderio.enderio.machines.data.souldata;
+package com.enderio.enderio.datagen.common.souldata;
 
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.common.init.EIOFluids;

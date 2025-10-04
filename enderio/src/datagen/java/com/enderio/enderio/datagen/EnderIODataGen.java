@@ -4,9 +4,11 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.data.EIODataProvider;
-import com.enderio.enderio.datagen.client.EIOAdvancementGenerator;
+import com.enderio.enderio.datagen.common.advancement.EIOAdvancementGenerator;
+import com.enderio.enderio.datagen.common.advancement.MachinesAdvancementGenerator;
+import com.enderio.enderio.datagen.common.data_maps.RangeExtenderDataMapProvider;
 import com.enderio.enderio.datagen.common.datapack_registries.ConduitsBootstrap;
-import com.enderio.enderio.datagen.common.reagentdata.ReagentProvider;
+import com.enderio.enderio.datagen.common.data_maps.ReagentDataMapProvider;
 import com.enderio.enderio.datagen.common.recipes.AlloyRecipeProvider;
 import com.enderio.enderio.datagen.common.recipes.BlockRecipeProvider;
 import com.enderio.enderio.datagen.common.recipes.ConduitRecipeProvider;
@@ -24,6 +26,7 @@ import com.enderio.enderio.datagen.common.recipes.SlicingRecipeProvider;
 import com.enderio.enderio.datagen.common.recipes.SoulBindingRecipeProvider;
 import com.enderio.enderio.datagen.common.recipes.TankRecipeProvider;
 import com.enderio.enderio.datagen.common.recipes.WeatherChangeRecipeProvider;
+import com.enderio.enderio.datagen.common.souldata.SoulDataProvider;
 import com.enderio.enderio.datagen.common.tags.EIOBlockTagsProvider;
 import com.enderio.enderio.datagen.common.tags.EIOEntityTagsProvider;
 import com.enderio.enderio.datagen.common.tags.EIOFluidTagsProvider;
@@ -72,7 +75,7 @@ public class EnderIODataGen {
             new EIOEntityTagsProvider(packOutput, lookupProvider, existingFileHelper));
 
         provider.addSubProvider(event.includeServer(), new AdvancementProvider(packOutput, lookupProvider,
-            existingFileHelper, List.of(new EIOAdvancementGenerator())));
+            existingFileHelper, List.of(new EIOAdvancementGenerator(), new MachinesAdvancementGenerator())));
 
         provider.addSubProvider(event.includeServer(), new MaterialRecipeProvider(packOutput, lookupProvider));
         provider.addSubProvider(event.includeServer(), new BlockRecipeProvider(packOutput, lookupProvider));
@@ -92,7 +95,10 @@ public class EnderIODataGen {
         provider.addSubProvider(event.includeServer(), new PaintingRecipeProvider(packOutput, lookupProvider));
         provider.addSubProvider(event.includeServer(), new WeatherChangeRecipeProvider(packOutput, lookupProvider));
 
-        provider.addSubProvider(event.includeServer(), new ReagentProvider(packOutput, lookupProvider));
+        provider.addSubProvider(event.includeServer(), new ReagentDataMapProvider(packOutput, lookupProvider));
+        provider.addSubProvider(event.includeServer(), new RangeExtenderDataMapProvider(packOutput, lookupProvider));
+
+        provider.addSubProvider(event.includeServer(), new SoulDataProvider(packOutput));
 
         generator.addProvider(true, provider);
     }

@@ -1,4 +1,4 @@
-package com.enderio.enderio.machines.data.advancements;
+package com.enderio.enderio.datagen.common.advancement;
 
 import com.enderio.enderio.machines.common.block.CapacitorBankBlock;
 import com.enderio.enderio.machines.common.blockentity.capacitorbank.CapacitorTier;

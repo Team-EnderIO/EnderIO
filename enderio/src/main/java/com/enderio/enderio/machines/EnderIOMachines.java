@@ -18,9 +18,6 @@ import com.enderio.enderio.machines.common.init.MachineTravelTargets;
 import com.enderio.enderio.machines.common.lang.MachineEnumLang;
 import com.enderio.enderio.machines.common.lang.MachineLang;
 import com.enderio.enderio.machines.common.tag.MachineTags;
-import com.enderio.enderio.machines.data.advancements.MachinesAdvancementGenerator;
-import com.enderio.enderio.machines.data.datamap.RangeExtenderDataProvider;
-import com.enderio.enderio.machines.data.souldata.SoulDataProvider;
 import com.enderio.regilite.Regilite;
 import net.minecraft.Util;
 import net.minecraft.core.HolderLookup;
@@ -39,11 +36,9 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
-import net.neoforged.neoforge.common.data.AdvancementProvider;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @EventBusSubscriber
@@ -77,24 +72,6 @@ public class EnderIOMachines {
         InterModComms.sendTo("inventorysorter", "slotblacklist", PreviewMachineSlot.class::getName);
         InterModComms.sendTo("inventorysorter", "slotblacklist",
                 EnchanterMenu.EnchanterOutputMachineSlot.class::getName);
-    }
-
-    @SubscribeEvent
-    public static void gatherData(GatherDataEvent event) {
-        DataGenerator generator = event.getGenerator();
-        PackOutput packOutput = generator.getPackOutput();
-        CompletableFuture<HolderLookup.Provider> lookupProvider = CompletableFuture
-                .supplyAsync(VanillaRegistries::createLookup, Util.backgroundExecutor());
-
-        EIODataProvider provider = new EIODataProvider("machines");
-
-        provider.addSubProvider(event.includeServer(), new SoulDataProvider(packOutput));
-
-        provider.addSubProvider(event.includeServer(), new RangeExtenderDataProvider(packOutput, lookupProvider));
-
-        generator.addProvider(true, provider);
-        provider.addSubProvider(event.includeServer(), new AdvancementProvider(packOutput, event.getLookupProvider(),
-                event.getExistingFileHelper(), List.of(new MachinesAdvancementGenerator())));
     }
 
     @SubscribeEvent
