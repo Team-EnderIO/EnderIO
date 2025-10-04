@@ -1,6 +1,5 @@
 package com.enderio.armory.common.item.darksteel;
 
-import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
 import com.enderio.armory.common.item.darksteel.upgrades.StepAssistUpgrade;
@@ -8,6 +7,7 @@ import com.enderio.armory.common.item.darksteel.upgrades.empowered.EmpoweredUpgr
 import com.enderio.armory.common.item.darksteel.upgrades.jump.JumpUpgrade;
 import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.armory.common.tag.ArmoryTags;
+import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;

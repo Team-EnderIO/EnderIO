@@ -1,7 +1,7 @@
 package com.enderio.modded_conduits.client.modules.mekanism.screens;
 
-import com.enderio.enderio.EnderIO;
 import com.enderio.core.common.util.TooltipUtil;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.conduits.screen.ConduitMenuDataAccess;
 import com.enderio.enderio.api.conduits.screen.ConduitScreenHelper;
 import com.enderio.enderio.api.conduits.screen.IOConduitScreenType;

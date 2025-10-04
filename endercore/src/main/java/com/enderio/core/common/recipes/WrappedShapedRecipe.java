@@ -1,7 +1,6 @@
 package com.enderio.core.common.recipes;
 
 import com.mojang.serialization.MapCodec;
-import java.util.function.Function;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -15,6 +14,8 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Function;
 
 // Based on https://github.com/mekanism/Mekanism/blob/1.20.4/src/main/java/mekanism/common/recipe/WrappedShapedRecipe.java.
 // Thanks to Mekanism

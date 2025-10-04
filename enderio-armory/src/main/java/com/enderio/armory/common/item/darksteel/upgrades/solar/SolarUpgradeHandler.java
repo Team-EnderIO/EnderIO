@@ -1,10 +1,10 @@
 package com.enderio.armory.common.item.darksteel.upgrades.solar;
 
-import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.armory.api.capability.DarkSteelCapability;
 import com.enderio.armory.common.init.ArmoryCapabilities;
 import com.enderio.armory.common.init.ArmoryDataComponents;
 import com.enderio.armory.common.tag.ArmoryTags;
+import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.enderio.machines.common.blockentity.solar.SolarPanelBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EquipmentSlot;

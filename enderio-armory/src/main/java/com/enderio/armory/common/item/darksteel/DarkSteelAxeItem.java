@@ -1,9 +1,5 @@
 package com.enderio.armory.common.item.darksteel;
 
-import com.enderio.core.common.energy.ItemStackEnergy;
-import com.enderio.core.common.item.CreativeTabVariants;
-import com.enderio.core.common.util.BlockUtil;
-import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.armory.common.init.ArmoryItems;
@@ -13,6 +9,10 @@ import com.enderio.armory.common.item.darksteel.upgrades.direct.DirectUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.empowered.EmpoweredUpgrade;
 import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.armory.common.tag.ArmoryTags;
+import com.enderio.core.common.energy.ItemStackEnergy;
+import com.enderio.core.common.item.CreativeTabVariants;
+import com.enderio.core.common.util.BlockUtil;
+import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;

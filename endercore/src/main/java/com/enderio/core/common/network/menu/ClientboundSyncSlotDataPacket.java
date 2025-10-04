@@ -2,11 +2,12 @@ package com.enderio.core.common.network.menu;
 
 import com.enderio.core.EnderCore;
 import com.enderio.core.common.network.menu.payload.SlotPayload;
-import java.util.List;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+
+import java.util.List;
 
 public record ClientboundSyncSlotDataPacket(int containerId, List<PayloadPair> payloads)
         implements CustomPacketPayload {

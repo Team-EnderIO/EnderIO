@@ -1,7 +1,6 @@
 package com.enderio.enderio.machines.common.blocks.fluid_tank;
 
 import com.enderio.enderio.common.init.EIODataComponents;
-import com.enderio.enderio.common.tag.EIOTags;
 import com.enderio.enderio.machines.common.attachment.FluidTankUser;
 import com.enderio.enderio.machines.common.blocks.base.blockentity.MachineBlockEntity;
 import com.enderio.enderio.machines.common.blocks.base.inventory.MachineInventoryLayout;

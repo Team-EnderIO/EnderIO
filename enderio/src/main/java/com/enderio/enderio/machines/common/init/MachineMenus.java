@@ -1,6 +1,5 @@
 package com.enderio.enderio.machines.common.init;
 
-import com.enderio.enderio.machines.EnderIOMachines;
 import com.enderio.enderio.client.gui.screens.machines.AlloySmelterScreen;
 import com.enderio.enderio.client.gui.screens.machines.AttractorObeliskScreen;
 import com.enderio.enderio.client.gui.screens.machines.AversionObeliskScreen;
@@ -29,6 +28,7 @@ import com.enderio.enderio.client.gui.screens.machines.WiredChargerScreen;
 import com.enderio.enderio.client.gui.screens.machines.WirelessChargerScreen;
 import com.enderio.enderio.client.gui.screens.machines.XPObeliskScreen;
 import com.enderio.enderio.client.gui.screens.machines.XPVacuumScreen;
+import com.enderio.enderio.machines.EnderIOMachines;
 import com.enderio.enderio.machines.common.blocks.alloy.AlloySmelterMenu;
 import com.enderio.enderio.machines.common.blocks.crafter.CrafterMenu;
 import com.enderio.enderio.machines.common.blocks.drain.DrainMenu;

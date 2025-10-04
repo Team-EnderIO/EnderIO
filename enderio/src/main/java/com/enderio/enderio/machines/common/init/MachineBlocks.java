@@ -1,7 +1,7 @@
 package com.enderio.enderio.machines.common.init;
 
-import com.enderio.enderio.EnderIO;
 import com.enderio.core.data.model.ModelHelper;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.client.paint.PaintedBlockColor;

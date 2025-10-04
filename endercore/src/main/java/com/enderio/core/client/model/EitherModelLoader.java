@@ -4,7 +4,6 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import java.util.function.Function;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -19,6 +18,8 @@ import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.client.model.geometry.IGeometryBakingContext;
 import net.neoforged.neoforge.client.model.geometry.IGeometryLoader;
 import net.neoforged.neoforge.client.model.geometry.IUnbakedGeometry;
+
+import java.util.function.Function;
 
 /**
  * A geometry loader to change the backed model depending on the mods loaded. Thanks to ThatGravyBoat from the Athena dev team for this idea and the code. It's really appreciated

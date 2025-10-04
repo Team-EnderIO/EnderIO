@@ -1,5 +1,6 @@
 package com.enderio.enderio.client.models.conduit.bundle;
 
+import com.enderio.core.common.util.Area;
 import com.enderio.core.data.model.ModelHelper;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.model.ConduitModelModifier;
@@ -8,7 +9,6 @@ import com.enderio.enderio.client.models.ColorQuadTransformer;
 import com.enderio.enderio.client.models.ConduitTextureEmissiveQuadTransformer;
 import com.enderio.enderio.client.models.conduit.facades.ClientFacadeVisibility;
 import com.enderio.enderio.client.models.conduit.modifier.ConduitModelModifiers;
-import com.enderio.core.common.util.Area;
 import com.enderio.enderio.common.conduits.OffsetHelper;
 import com.mojang.math.Axis;
 import com.mojang.math.Transformation;

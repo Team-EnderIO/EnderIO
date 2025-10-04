@@ -1,9 +1,10 @@
 package com.enderio.core.common.network.menu.payload;
 
-import java.util.List;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+
+import java.util.List;
 
 public record ListSlotPayload(List<SlotPayload> contents) implements SlotPayload {
 

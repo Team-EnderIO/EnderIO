@@ -3,11 +3,12 @@ package com.enderio.core;
 import com.enderio.core.common.graph.BasicNetwork;
 import com.enderio.core.common.graph.Network;
 import com.mojang.datafixers.util.Pair;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 
 public class NetworkTests {
 

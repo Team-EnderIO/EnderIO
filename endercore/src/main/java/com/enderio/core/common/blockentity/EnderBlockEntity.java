@@ -4,13 +4,6 @@ import com.enderio.core.common.network.ClientboundDataSlotChange;
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.core.common.network.ServerboundCDataSlotUpdate;
 import io.netty.buffer.Unpooled;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.CopyOnWriteArrayList;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -30,6 +23,14 @@ import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Base block entity class for EnderIO.

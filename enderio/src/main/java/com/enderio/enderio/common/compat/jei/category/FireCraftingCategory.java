@@ -1,9 +1,9 @@
 package com.enderio.enderio.common.compat.jei.category;
 
-import com.enderio.enderio.EnderIO;
 import com.enderio.core.common.util.TooltipUtil;
-import com.enderio.enderio.common.init.EIOFluids;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.common.compat.jei.JEIUtils;
+import com.enderio.enderio.common.init.EIOFluids;
 import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.common.recipe.FireCraftingRecipe;
 import com.mojang.blaze3d.systems.RenderSystem;

@@ -1,14 +1,14 @@
 package com.enderio.enderio.common.compat.jei;
 
-import com.enderio.enderio.EnderIO;
 import com.enderio.core.client.gui.screen.EnderContainerScreen;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.common.block.glass.GlassBlocks;
-import com.enderio.enderio.common.compat.jei.subtype.ConduitSubtypeInterpreter;
-import com.enderio.enderio.common.init.EIOBlocks;
-import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.common.compat.jei.category.FireCraftingCategory;
 import com.enderio.enderio.common.compat.jei.extension.ShapedEntityStorageCategoryExtension;
+import com.enderio.enderio.common.compat.jei.subtype.ConduitSubtypeInterpreter;
 import com.enderio.enderio.common.compat.jei.subtype.SoulBindableSubtypeInterpreter;
+import com.enderio.enderio.common.init.EIOBlocks;
+import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.common.item.misc.BrokenSpawnerItem;
 import com.enderio.enderio.common.recipe.ShapedEntityStorageRecipe;
 import com.enderio.enderio.conduits.common.init.ConduitBlocks;

@@ -1,11 +1,12 @@
 package com.enderio.core.client.icon;
 
+import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Locale;
 import java.util.stream.Collectors;
-import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.Nullable;
 
 // TODO: Use StringRepresentable instead of enum names.
 public class EnumIconMap<T extends Enum<T>> {

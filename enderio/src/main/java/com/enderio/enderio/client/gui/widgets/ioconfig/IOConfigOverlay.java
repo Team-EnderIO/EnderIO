@@ -1,10 +1,10 @@
 package com.enderio.enderio.client.gui.widgets.ioconfig;
 
-import com.enderio.enderio.EnderIO;
 import com.enderio.core.client.gui.screen.BaseOverlay;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.io.IOConfigurable;
-import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.client.models.ModelRenderUtil;
+import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.machines.common.blockentity.base.LegacyMachineBlockEntity;
 import com.enderio.enderio.machines.common.config.MachinesConfig;
 import com.enderio.enderio.machines.common.network.CycleIOConfigPacket;

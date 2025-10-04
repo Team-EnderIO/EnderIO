@@ -2,13 +2,14 @@ package com.enderio.core.common.util;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Codec;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.neoforged.neoforge.fluids.FluidStack;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public record NamedFluidContents(ImmutableMap<String, FluidStack> fluidMap) {
     public static final Codec<NamedFluidContents> CODEC = Codec.unboundedMap(Codec.STRING, FluidStack.OPTIONAL_CODEC)

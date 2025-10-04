@@ -1,10 +1,10 @@
 package com.enderio.armory.common.item.darksteel.upgrades.nightvision;
 
-import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.armory.common.init.ArmoryDataComponents;
 import com.enderio.armory.common.tag.ArmoryTags;
+import com.enderio.core.common.energy.ItemStackEnergy;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;

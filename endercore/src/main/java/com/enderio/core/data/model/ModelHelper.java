@@ -2,7 +2,6 @@ package com.enderio.core.data.model;
 
 import com.enderio.regilite.data.DataGenContext;
 import com.enderio.regilite.data.RegiliteItemModelProvider;
-import java.util.function.Supplier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -12,6 +11,8 @@ import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.client.model.generators.BlockModelBuilder;
 import net.neoforged.neoforge.client.model.generators.BlockModelProvider;
 import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
+
+import java.util.function.Supplier;
 
 public class ModelHelper {
 

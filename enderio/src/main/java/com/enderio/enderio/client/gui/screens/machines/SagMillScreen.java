@@ -1,15 +1,15 @@
 package com.enderio.enderio.client.gui.screens.machines;
 
-import com.enderio.enderio.EnderIO;
 import com.enderio.core.common.util.TooltipUtil;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.grindingball.GrindingBallData;
-import com.enderio.enderio.client.gui.widgets.RedstoneControlPickerWidget;
-import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.client.gui.screens.machines.base.MachineScreen;
 import com.enderio.enderio.client.gui.widgets.ActivityWidget;
 import com.enderio.enderio.client.gui.widgets.NewCapacitorEnergyWidget;
 import com.enderio.enderio.client.gui.widgets.NewProgressWidget;
+import com.enderio.enderio.client.gui.widgets.RedstoneControlPickerWidget;
+import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.machines.common.blocks.sag_mill.SagMillMenu;
 import com.enderio.enderio.machines.common.lang.MachineLang;
 import net.minecraft.client.gui.GuiGraphics;

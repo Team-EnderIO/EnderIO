@@ -1,8 +1,8 @@
 package com.enderio.enderio.common.compat.jei;
 
+import com.enderio.enderio.common.compat.jei.helper.FakeGrindingRecipe;
 import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.common.init.EIORecipes;
-import com.enderio.enderio.common.compat.jei.helper.FakeGrindingRecipe;
 import com.enderio.enderio.common.recipe.FireCraftingRecipe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;

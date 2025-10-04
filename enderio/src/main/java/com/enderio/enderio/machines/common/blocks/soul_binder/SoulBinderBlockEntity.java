@@ -8,7 +8,6 @@ import com.enderio.enderio.api.soul.SoulBoundUtils;
 import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.common.init.EIOFluids;
 import com.enderio.enderio.common.init.EIOItems;
-import com.enderio.enderio.common.tag.EIOTags;
 import com.enderio.enderio.common.util.ExperienceUtil;
 import com.enderio.enderio.machines.common.attachment.FluidTankUser;
 import com.enderio.enderio.machines.common.blocks.base.blockentity.PoweredMachineBlockEntity;

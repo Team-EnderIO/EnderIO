@@ -2,8 +2,8 @@ package com.enderio.enderio.machines.common.integrations.jei.category;
 
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.soul.Soul;
-import com.enderio.enderio.common.item.tool.SoulVialItem;
 import com.enderio.enderio.client.gui.screens.machines.SoulEngineScreen;
+import com.enderio.enderio.common.item.tool.SoulVialItem;
 import com.enderio.enderio.machines.common.blocks.soul_engine.SoulEngineBlockEntity;
 import com.enderio.enderio.machines.common.init.MachineBlocks;
 import com.enderio.enderio.machines.common.lang.MachineLang;

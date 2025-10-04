@@ -1,7 +1,6 @@
 package com.enderio.enderio.machines;
 
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.data.EIODataProvider;
 import com.enderio.enderio.machines.common.blocks.base.menu.GhostMachineSlot;
 import com.enderio.enderio.machines.common.blocks.base.menu.MachineSlot;
 import com.enderio.enderio.machines.common.blocks.base.menu.PreviewMachineSlot;
@@ -19,11 +18,6 @@ import com.enderio.enderio.machines.common.lang.MachineEnumLang;
 import com.enderio.enderio.machines.common.lang.MachineLang;
 import com.enderio.enderio.machines.common.tag.MachineTags;
 import com.enderio.regilite.Regilite;
-import net.minecraft.Util;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.PackOutput;
-import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
@@ -36,10 +30,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
-import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
-
-import java.util.concurrent.CompletableFuture;
 
 @EventBusSubscriber
 @Mod(EnderIO.MOD_ID)

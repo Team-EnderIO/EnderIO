@@ -1,9 +1,9 @@
 package com.enderio.armory.common.item.darksteel;
 
-import com.enderio.core.client.item.AdvancedTooltipProvider;
-import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.armory.api.capability.DarkSteelUpgrade;
 import com.enderio.armory.common.lang.ArmoryLang;
+import com.enderio.core.client.item.AdvancedTooltipProvider;
+import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;

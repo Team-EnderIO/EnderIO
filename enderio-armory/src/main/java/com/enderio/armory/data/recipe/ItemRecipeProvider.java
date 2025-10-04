@@ -1,8 +1,8 @@
 package com.enderio.armory.data.recipe;
 
-import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.armory.common.init.ArmoryItems;
 import com.enderio.armory.common.item.darksteel.upgrades.solar.SolarUpgradeTier;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.common.init.EIOBlocks;
 import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.common.tag.EIOTags;

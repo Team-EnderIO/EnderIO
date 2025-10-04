@@ -3,11 +3,12 @@ package com.enderio.core.common.network.menu;
 import com.enderio.core.common.network.menu.payload.NullSlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayload;
 import com.enderio.core.common.network.menu.payload.StringSlotPayload;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 
 public abstract class StringSyncSlot implements SyncSlot {
 

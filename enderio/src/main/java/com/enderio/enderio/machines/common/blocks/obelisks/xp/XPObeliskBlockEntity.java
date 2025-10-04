@@ -2,7 +2,6 @@ package com.enderio.enderio.machines.common.blocks.obelisks.xp;
 
 import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.common.init.EIOFluids;
-import com.enderio.enderio.common.tag.EIOTags;
 import com.enderio.enderio.common.util.ExperienceUtil;
 import com.enderio.enderio.machines.common.attachment.FluidTankUser;
 import com.enderio.enderio.machines.common.blocks.base.blockentity.MachineBlockEntity;

@@ -1,9 +1,5 @@
 package com.enderio.core.client.gui.screen;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -16,6 +12,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.joml.Vector2i;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Deprecated(forRemoval = true, since = "7.0")
 public abstract class EIOScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T>

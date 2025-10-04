@@ -1,13 +1,13 @@
 package com.enderio.enderio.machines.common.init;
 
 import com.enderio.enderio.api.EnderIOCapabilities;
-import com.enderio.enderio.common.init.EIOBlocks;
-import com.enderio.enderio.common.init.EIOItems;
-import com.enderio.enderio.machines.EnderIOMachines;
 import com.enderio.enderio.client.renderer.blockentity.CapacitorBankBER;
 import com.enderio.enderio.client.renderer.blockentity.FluidTankBER;
 import com.enderio.enderio.client.renderer.blockentity.NiardBER;
 import com.enderio.enderio.client.renderer.blockentity.ObeliskBER;
+import com.enderio.enderio.common.init.EIOBlocks;
+import com.enderio.enderio.common.init.EIOItems;
+import com.enderio.enderio.machines.EnderIOMachines;
 import com.enderio.enderio.machines.common.attachment.FluidTankUser;
 import com.enderio.enderio.machines.common.blockentity.CreativePowerBlockEntity;
 import com.enderio.enderio.machines.common.blockentity.base.LegacyMachineBlockEntity;

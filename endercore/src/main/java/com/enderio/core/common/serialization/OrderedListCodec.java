@@ -2,10 +2,11 @@ package com.enderio.core.common.serialization;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.NonNullList;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalInt;
-import net.minecraft.core.NonNullList;
 
 /**
  * Ensures the serialized list retains it's order.

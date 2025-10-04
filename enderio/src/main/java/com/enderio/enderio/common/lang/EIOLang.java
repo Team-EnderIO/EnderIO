@@ -1,7 +1,7 @@
 package com.enderio.enderio.common.lang;
 
-import com.enderio.enderio.EnderIO;
 import com.enderio.core.common.util.TooltipUtil;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.common.block.glass.GlassLighting;
 import net.minecraft.ChatFormatting;

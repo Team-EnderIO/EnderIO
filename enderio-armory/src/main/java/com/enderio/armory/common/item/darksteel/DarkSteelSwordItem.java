@@ -1,9 +1,5 @@
 package com.enderio.armory.common.item.darksteel;
 
-import com.enderio.enderio.EnderIO;
-import com.enderio.core.client.item.AdvancedTooltipProvider;
-import com.enderio.core.common.energy.ItemStackEnergy;
-import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.armory.common.init.ArmoryFeatureFlags;
 import com.enderio.armory.common.init.ArmoryItems;
@@ -13,6 +9,10 @@ import com.enderio.armory.common.item.darksteel.upgrades.empowered.EmpoweredUpgr
 import com.enderio.armory.common.item.darksteel.upgrades.travel.TravelUpgrade;
 import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.armory.common.tag.ArmoryTags;
+import com.enderio.core.client.item.AdvancedTooltipProvider;
+import com.enderio.core.common.energy.ItemStackEnergy;
+import com.enderio.core.common.util.TooltipUtil;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.common.init.EIOBlocks;
 import com.enderio.enderio.common.init.EIODataComponents;
 import net.minecraft.core.component.DataComponents;

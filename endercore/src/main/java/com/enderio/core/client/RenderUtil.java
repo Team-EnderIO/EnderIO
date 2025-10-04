@@ -1,8 +1,5 @@
 package com.enderio.core.client;
 
-import static net.neoforged.neoforge.client.model.IQuadTransformer.COLOR;
-import static net.neoforged.neoforge.client.model.IQuadTransformer.STRIDE;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.LightTexture;
@@ -11,6 +8,9 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.neoforged.neoforge.client.model.IQuadTransformer;
 import org.joml.Vector3f;
+
+import static net.neoforged.neoforge.client.model.IQuadTransformer.COLOR;
+import static net.neoforged.neoforge.client.model.IQuadTransformer.STRIDE;
 
 public class RenderUtil {
     /**

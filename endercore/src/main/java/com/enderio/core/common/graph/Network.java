@@ -10,12 +10,13 @@ import com.mojang.datafixers.Products;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * A graph-backed network structure, with support for merging and splitting networks.

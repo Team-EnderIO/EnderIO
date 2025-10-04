@@ -1,7 +1,6 @@
 import com.hypherionmc.modpublisher.properties.ModLoader
-import org.gradle.kotlin.dsl.invoke
 import java.text.SimpleDateFormat
-import java.util.Date
+import java.util.*
 
 plugins {
     id("mod-common-conventions")

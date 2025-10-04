@@ -1,7 +1,5 @@
 package com.enderio.armory;
 
-import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.api.integration.IntegrationManager;
 import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.armory.common.config.ArmoryConfigLang;
 import com.enderio.armory.common.init.ArmoryDataComponents;
@@ -21,6 +19,8 @@ import com.enderio.armory.common.tag.ArmoryTags;
 import com.enderio.armory.data.loot.ArmoryLootModifiersProvider;
 import com.enderio.armory.data.recipe.ItemRecipeProvider;
 import com.enderio.armory.data.tags.ArmoryBlockTagsProvider;
+import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.api.integration.IntegrationManager;
 import com.enderio.enderio.data.EIODataProvider;
 import com.enderio.regilite.Regilite;
 import net.minecraft.core.HolderLookup;

@@ -1,12 +1,13 @@
 package com.enderio.core.common.network.menu.payload;
 
 import io.netty.buffer.ByteBuf;
-import java.util.function.IntFunction;
-import java.util.function.Supplier;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ByIdMap;
+
+import java.util.function.IntFunction;
+import java.util.function.Supplier;
 
 public enum SlotPayloadType {
     // Basic data types

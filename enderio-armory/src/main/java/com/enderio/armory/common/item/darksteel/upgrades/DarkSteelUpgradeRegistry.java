@@ -1,6 +1,5 @@
 package com.enderio.armory.common.item.darksteel.upgrades;
 
-import com.enderio.enderio.EnderIO;
 import com.enderio.armory.api.capability.DarkSteelUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.direct.DirectUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.empowered.EmpoweredUpgrade;
@@ -13,6 +12,7 @@ import com.enderio.armory.common.item.darksteel.upgrades.nightvision.NightVisisi
 import com.enderio.armory.common.item.darksteel.upgrades.solar.SolarUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.speed.SpeedUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.travel.TravelUpgrade;
+import com.enderio.enderio.EnderIO;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;

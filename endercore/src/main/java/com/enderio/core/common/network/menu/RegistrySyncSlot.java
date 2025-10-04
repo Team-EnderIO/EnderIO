@@ -2,13 +2,14 @@ package com.enderio.core.common.network.menu;
 
 import com.enderio.core.common.network.menu.payload.IntSlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayload;
-import java.util.Objects;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public abstract class RegistrySyncSlot<T> implements SyncSlot {
 

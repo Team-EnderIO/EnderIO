@@ -3,7 +3,6 @@ package com.enderio.enderio.common.item.tool;
 import com.enderio.core.common.network.EmitParticlePacket;
 import com.enderio.enderio.common.init.EIOFluids;
 import com.enderio.enderio.common.lang.EIOLang;
-import com.enderio.enderio.common.tag.EIOTags;
 import com.enderio.enderio.common.util.ExperienceUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ColorParticleOption;

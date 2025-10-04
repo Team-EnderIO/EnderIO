@@ -11,7 +11,6 @@ import com.enderio.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.api.soul.binding.SoulBindable;
 import com.enderio.enderio.common.init.EIODataComponents;
-import com.enderio.enderio.common.tag.EIOTags;
 import com.enderio.enderio.machines.common.MachineNBTKeys;
 import com.enderio.enderio.machines.common.attachment.ActionRange;
 import com.enderio.enderio.machines.common.attachment.RangedActor;

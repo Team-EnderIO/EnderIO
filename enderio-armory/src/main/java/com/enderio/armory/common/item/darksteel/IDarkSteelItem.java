@@ -1,15 +1,15 @@
 package com.enderio.armory.common.item.darksteel;
 
-import com.enderio.core.client.item.AdvancedTooltipProvider;
-import com.enderio.core.common.energy.ItemStackEnergy;
-import com.enderio.core.common.item.CreativeTabVariants;
-import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.armory.api.capability.DarkSteelUpgrade;
 import com.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.armory.common.init.ArmoryFeatureFlags;
 import com.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
 import com.enderio.armory.common.item.darksteel.upgrades.empowered.EmpoweredUpgrade;
 import com.enderio.armory.common.lang.ArmoryLang;
+import com.enderio.core.client.item.AdvancedTooltipProvider;
+import com.enderio.core.common.energy.ItemStackEnergy;
+import com.enderio.core.common.item.CreativeTabVariants;
+import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.common.lang.EIOLang;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;

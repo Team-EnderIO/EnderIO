@@ -1,15 +1,16 @@
 package com.enderio.core.client.gui.widgets;
 
 import com.enderio.core.EnderCore;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class ToggleIconButton extends EnderButton {
 

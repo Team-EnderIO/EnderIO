@@ -1,6 +1,5 @@
 package com.enderio.armory.common.item.darksteel.upgrades.jump;
 
-import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.armory.api.capability.DarkSteelCapability;
 import com.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.armory.common.config.ArmoryConfig;
@@ -10,6 +9,7 @@ import com.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgradeRegistr
 import com.enderio.armory.common.item.darksteel.upgrades.TieredUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.flight.ElytraUpgrade;
 import com.enderio.armory.common.tag.ArmoryTags;
+import com.enderio.core.common.energy.ItemStackEnergy;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;

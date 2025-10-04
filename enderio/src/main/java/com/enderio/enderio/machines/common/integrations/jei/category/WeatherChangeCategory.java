@@ -1,8 +1,8 @@
 package com.enderio.enderio.machines.common.integrations.jei.category;
 
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.common.compat.jei.JEIUtils;
 import com.enderio.enderio.client.gui.screens.machines.WeatherObeliskScreen;
+import com.enderio.enderio.common.compat.jei.JEIUtils;
 import com.enderio.enderio.machines.common.blocks.obelisks.weather.WeatherChangeRecipe;
 import com.enderio.enderio.machines.common.blocks.obelisks.weather.WeatherObeliskBlockEntity;
 import com.enderio.enderio.machines.common.init.MachineBlocks;

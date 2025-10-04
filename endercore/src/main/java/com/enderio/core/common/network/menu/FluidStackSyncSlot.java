@@ -3,11 +3,12 @@ package com.enderio.core.common.network.menu;
 import com.enderio.core.common.network.menu.payload.FluidStackSlotPayload;
 import com.enderio.core.common.network.menu.payload.IntSlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayload;
+import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.fluids.FluidStack;
+
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.fluids.FluidStack;
 
 public abstract class FluidStackSyncSlot implements SyncSlot {
 

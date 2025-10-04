@@ -1,13 +1,13 @@
 package com.enderio.enderio.client.gui.screens.conduits.types;
 
-import com.enderio.enderio.EnderIO;
 import com.enderio.core.common.util.TooltipUtil;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.conduits.screen.ConduitMenuDataAccess;
 import com.enderio.enderio.api.conduits.screen.ConduitScreenHelper;
 import com.enderio.enderio.api.conduits.screen.IOConduitScreenType;
-import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.common.conduits.type.fluid.FluidConduit;
 import com.enderio.enderio.common.conduits.type.fluid.FluidConduitConnectionConfig;
+import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.conduits.common.init.ConduitLang;
 import com.enderio.enderio.conduits.common.network.C2SClearLockedFluidPacket;
 import com.mojang.blaze3d.systems.RenderSystem;

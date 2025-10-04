@@ -2,8 +2,6 @@ package com.enderio.enderio.conduits.common.init;
 
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.conduits.facade.FacadeType;
-import com.enderio.enderio.common.init.EIOCreativeTabs;
-import com.enderio.enderio.conduits.EnderIOConduits;
 import com.enderio.enderio.client.color.ConduitFacadeColor;
 import com.enderio.enderio.common.conduits.facades.ComponentBackedConduitFacadeProvider;
 import com.enderio.enderio.common.conduits.facades.ConduitFacadeItem;
@@ -13,6 +11,8 @@ import com.enderio.enderio.common.filter.redstone.RedstoneCountFilter;
 import com.enderio.enderio.common.filter.redstone.RedstoneFilterItem;
 import com.enderio.enderio.common.filter.redstone.RedstoneTLatchFilter;
 import com.enderio.enderio.common.filter.redstone.RedstoneTimerFilter;
+import com.enderio.enderio.common.init.EIOCreativeTabs;
+import com.enderio.enderio.conduits.EnderIOConduits;
 import com.enderio.enderio.conduits.data.model.FacadeItemModelBuilder;
 import com.enderio.regilite.holder.RegiliteItem;
 import com.enderio.regilite.registry.ItemRegistry;

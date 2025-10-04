@@ -2,8 +2,9 @@ package com.enderio.core;
 
 import com.enderio.core.common.graph.BasicNetwork;
 import com.enderio.core.common.graph.INetworkNode;
-import java.util.Objects;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 public class TestNode implements INetworkNode<BasicNetwork<TestNode>, TestNode> {
 

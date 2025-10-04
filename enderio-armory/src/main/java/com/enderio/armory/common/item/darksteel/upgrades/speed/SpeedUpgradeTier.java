@@ -1,10 +1,10 @@
 package com.enderio.armory.common.item.darksteel.upgrades.speed;
 
-import com.enderio.enderio.EnderIO;
 import com.enderio.armory.api.capability.DarkSteelUpgrade;
 import com.enderio.armory.api.capability.UpgradeTier;
 import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.armory.common.lang.ArmoryLang;
+import com.enderio.enderio.EnderIO;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;

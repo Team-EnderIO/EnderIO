@@ -1,12 +1,12 @@
 package com.enderio.armory.common.item.darksteel.upgrades.flight;
 
-import com.enderio.enderio.api.glider.GliderMovementInfo;
-import com.enderio.enderio.api.integration.ClientIntegration;
-import com.enderio.enderio.api.integration.Integration;
 import com.enderio.armory.client.renderer.GliderIntegrationClient;
 import com.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.armory.common.init.ArmoryDataComponents;
 import com.enderio.armory.common.tag.ArmoryTags;
+import com.enderio.enderio.api.glider.GliderMovementInfo;
+import com.enderio.enderio.api.integration.ClientIntegration;
+import com.enderio.enderio.api.integration.Integration;
 import com.enderio.enderio.common.lang.EIOLang;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;

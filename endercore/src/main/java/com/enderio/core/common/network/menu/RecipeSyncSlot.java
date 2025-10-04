@@ -3,15 +3,16 @@ package com.enderio.core.common.network.menu;
 import com.enderio.core.common.network.menu.payload.NullSlotPayload;
 import com.enderio.core.common.network.menu.payload.ResourceLocationSlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayload;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public abstract class RecipeSyncSlot<T extends Recipe<?>> implements SyncSlot {
 

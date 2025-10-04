@@ -1,9 +1,9 @@
 package com.enderio.enderio.client.gui.screens.conduits;
 
-import com.enderio.enderio.EnderIO;
 import com.enderio.core.client.gui.screen.EnderContainerScreen;
 import com.enderio.core.client.gui.widgets.IconButton;
 import com.enderio.core.client.gui.widgets.ToggleIconButton;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
@@ -11,10 +11,10 @@ import com.enderio.enderio.api.conduits.screen.ConduitMenuDataAccess;
 import com.enderio.enderio.api.conduits.screen.ConduitScreenHelper;
 import com.enderio.enderio.api.conduits.screen.ConduitScreenType;
 import com.enderio.enderio.api.io.RedstoneControl;
+import com.enderio.enderio.client.gui.screens.conduits.types.ConduitScreenTypes;
+import com.enderio.enderio.client.gui.widgets.ConduitSelectionButton;
 import com.enderio.enderio.client.gui.widgets.DyeColorPickerWidget;
 import com.enderio.enderio.client.gui.widgets.RedstoneControlPickerWidget;
-import com.enderio.enderio.client.gui.widgets.ConduitSelectionButton;
-import com.enderio.enderio.client.gui.screens.conduits.types.ConduitScreenTypes;
 import com.enderio.enderio.common.conduits.menu.ConduitMenu;
 import com.enderio.enderio.conduits.common.init.ConduitLang;
 import net.minecraft.client.gui.GuiGraphics;

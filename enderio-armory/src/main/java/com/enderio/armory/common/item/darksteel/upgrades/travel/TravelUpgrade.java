@@ -1,10 +1,10 @@
 package com.enderio.armory.common.item.darksteel.upgrades.travel;
 
 import com.enderio.armory.api.capability.DarkSteelUpgrade;
-import com.enderio.enderio.api.travel.TravelTarget;
 import com.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
 import com.enderio.armory.common.lang.ArmoryLang;
+import com.enderio.enderio.api.travel.TravelTarget;
 import com.enderio.enderio.common.config.BaseConfig;
 import com.enderio.enderio.common.handler.TravelHandler;
 import com.enderio.enderio.common.init.EIODataComponents;

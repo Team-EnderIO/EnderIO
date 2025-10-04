@@ -1,12 +1,12 @@
 package com.enderio.armory.common.item.darksteel.upgrades.explosive;
 
-import com.enderio.core.common.energy.ItemStackEnergy;
-import com.enderio.core.common.network.EmitParticlesPacket;
-import com.enderio.core.common.util.BlockUtil;
 import com.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.armory.common.item.darksteel.upgrades.SpoonUpgrade;
 import com.enderio.armory.common.tag.ArmoryTags;
+import com.enderio.core.common.energy.ItemStackEnergy;
+import com.enderio.core.common.network.EmitParticlesPacket;
+import com.enderio.core.common.util.BlockUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;

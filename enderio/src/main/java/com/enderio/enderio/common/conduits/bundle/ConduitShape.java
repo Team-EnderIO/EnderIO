@@ -1,9 +1,9 @@
 package com.enderio.enderio.common.conduits.bundle;
 
+import com.enderio.core.common.util.Area;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.api.conduits.connection.ConnectionStatus;
-import com.enderio.core.common.util.Area;
 import com.enderio.enderio.common.conduits.OffsetHelper;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;

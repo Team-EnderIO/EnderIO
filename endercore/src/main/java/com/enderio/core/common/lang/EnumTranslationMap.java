@@ -1,10 +1,11 @@
 package com.enderio.core.common.lang;
 
-import java.util.EnumMap;
-import java.util.Locale;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.EnumMap;
+import java.util.Locale;
 
 public class EnumTranslationMap<T extends Enum<T>> {
     private final EnumMap<T, Component> translations;

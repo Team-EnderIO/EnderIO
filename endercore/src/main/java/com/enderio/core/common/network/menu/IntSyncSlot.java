@@ -2,9 +2,10 @@ package com.enderio.core.common.network.menu;
 
 import com.enderio.core.common.network.menu.payload.IntSlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayload;
+import net.minecraft.world.level.Level;
+
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import net.minecraft.world.level.Level;
 
 public abstract class IntSyncSlot implements SyncSlot {
 

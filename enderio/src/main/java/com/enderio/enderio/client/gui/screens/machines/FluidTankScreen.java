@@ -1,11 +1,11 @@
 package com.enderio.enderio.client.gui.screens.machines;
 
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.client.gui.widgets.RedstoneControlPickerWidget;
-import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.client.gui.screens.machines.base.MachineScreen;
 import com.enderio.enderio.client.gui.widgets.ActivityWidget;
 import com.enderio.enderio.client.gui.widgets.FluidStackWidget;
+import com.enderio.enderio.client.gui.widgets.RedstoneControlPickerWidget;
+import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.machines.common.blocks.fluid_tank.FluidTankMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
