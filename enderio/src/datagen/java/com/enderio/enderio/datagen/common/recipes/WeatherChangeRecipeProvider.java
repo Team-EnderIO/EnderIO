@@ -1,5 +1,6 @@
 package com.enderio.enderio.datagen.common.recipes;
 
+import com.enderio.core.data.recipe.SubRecipeProvider;
 import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.common.init.EIOFluids;
 import com.enderio.enderio.machines.common.blocks.obelisks.weather.WeatherChangeRecipe;
@@ -13,14 +14,10 @@ import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.concurrent.CompletableFuture;
 
-public class WeatherChangeRecipeProvider extends RecipeProvider {
-
-    public WeatherChangeRecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-        super(output, registries);
-    }
+public class WeatherChangeRecipeProvider extends SubRecipeProvider {
 
     @Override
-    protected void buildRecipes(RecipeOutput recipeOutput) {
+    public void buildRecipes(RecipeOutput recipeOutput, HolderLookup.Provider registries) {
         build(EnderIO.rl("clear"), EIOFluids.LIQUID_SUNSHINE.getSource(), 1000, WeatherChangeRecipe.WeatherMode.CLEAR,
                 recipeOutput);
         build(EnderIO.rl("rain"), EIOFluids.CLOUD_SEED.getSource(), 1000, WeatherChangeRecipe.WeatherMode.RAIN,

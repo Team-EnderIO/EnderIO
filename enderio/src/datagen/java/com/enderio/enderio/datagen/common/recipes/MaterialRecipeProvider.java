@@ -1,5 +1,6 @@
 package com.enderio.enderio.datagen.common.recipes;
 
+import com.enderio.core.data.recipe.SubRecipeProvider;
 import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.common.init.EIOBlocks;
 import com.enderio.enderio.common.init.EIOItems;
@@ -7,10 +8,8 @@ import com.enderio.enderio.common.tag.EIOTags;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
@@ -24,15 +23,9 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.Tags;
 
-import java.util.concurrent.CompletableFuture;
-
-public class MaterialRecipeProvider extends RecipeProvider {
-    public MaterialRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
-        super(packOutput, registries);
-    }
-
+public class MaterialRecipeProvider extends SubRecipeProvider {
     @Override
-    protected void buildRecipes(RecipeOutput recipeOutput) {
+    public void buildRecipes(RecipeOutput recipeOutput, HolderLookup.Provider registries) {
         addVanilla(recipeOutput);
         addAlloys(recipeOutput);
         addIngots(recipeOutput);

@@ -21,7 +21,6 @@ import com.enderio.armory.data.recipe.ItemRecipeProvider;
 import com.enderio.armory.data.tags.ArmoryBlockTagsProvider;
 import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.api.integration.IntegrationManager;
-import com.enderio.enderio.data.EIODataProvider;
 import com.enderio.regilite.Regilite;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -86,16 +85,13 @@ public class EnderIOArmory {
         PackOutput packOutput = event.getGenerator().getPackOutput();
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
         ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
+        var generator = event.getGenerator();
 
-        EIODataProvider provider = new EIODataProvider("armory");
-
-        provider.addSubProvider(event.includeServer(), new ItemRecipeProvider(packOutput, lookupProvider));
-        provider.addSubProvider(event.includeServer(), new ArmoryLootModifiersProvider(packOutput, lookupProvider));
+        generator.addProvider(event.includeServer(), new ItemRecipeProvider(packOutput, lookupProvider));
+        generator.addProvider(event.includeServer(), new ArmoryLootModifiersProvider(packOutput, lookupProvider));
 
         var b = new ArmoryBlockTagsProvider(packOutput, lookupProvider, existingFileHelper);
-        provider.addSubProvider(event.includeServer(), b);
-
-        event.getGenerator().addProvider(true, provider);
+        generator.addProvider(event.includeServer(), b);
     }
 
     @SubscribeEvent

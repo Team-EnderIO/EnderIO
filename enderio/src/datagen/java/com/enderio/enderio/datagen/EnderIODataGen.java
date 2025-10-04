@@ -3,15 +3,16 @@ package com.enderio.enderio.datagen;
 import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.EnderIORegistries;
-import com.enderio.enderio.data.EIODataProvider;
 import com.enderio.enderio.datagen.common.advancement.EIOAdvancementGenerator;
 import com.enderio.enderio.datagen.common.advancement.MachinesAdvancementGenerator;
 import com.enderio.enderio.datagen.common.data_maps.RangeExtenderDataMapProvider;
 import com.enderio.enderio.datagen.common.data_maps.ReagentDataMapProvider;
 import com.enderio.enderio.datagen.common.datapack_registries.ConduitsBootstrap;
+import com.enderio.enderio.datagen.common.loot.ChestLootProvider;
 import com.enderio.enderio.datagen.common.loot.EIOLootModifiersProvider;
 import com.enderio.enderio.datagen.common.recipes.AlloyRecipeProvider;
-import com.enderio.enderio.datagen.common.recipes.BlockRecipeProvider;
+import com.enderio.enderio.datagen.common.recipes.EnderIORecipeProvider;
+import com.enderio.enderio.datagen.common.recipes.MiscBlockRecipeProvider;
 import com.enderio.enderio.datagen.common.recipes.ConduitRecipeProvider;
 import com.enderio.enderio.datagen.common.recipes.EnchanterRecipeProvider;
 import com.enderio.enderio.datagen.common.recipes.FermentingRecipeProvider;
@@ -36,6 +37,8 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
+import net.minecraft.data.loot.LootTableProvider;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
@@ -43,6 +46,7 @@ import net.neoforged.neoforge.common.data.AdvancementProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -63,47 +67,31 @@ public class EnderIODataGen {
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
         ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
 
-        // TODO: Remove this wrapper...
-        EIODataProvider provider = new EIODataProvider("new");
-
         var b = new EIOBlockTagsProvider(packOutput, lookupProvider, existingFileHelper);
-        provider.addSubProvider(event.includeServer(), b);
-        provider.addSubProvider(event.includeServer(),
+        generator.addProvider(event.includeServer(), b);
+        generator.addProvider(event.includeServer(),
             new EIOItemTagsProvider(packOutput, lookupProvider, b.contentsGetter(), existingFileHelper));
-        provider.addSubProvider(event.includeServer(),
+        generator.addProvider(event.includeServer(),
             new EIOFluidTagsProvider(packOutput, lookupProvider, existingFileHelper));
-        provider.addSubProvider(event.includeServer(),
+        generator.addProvider(event.includeServer(),
             new EIOEntityTagsProvider(packOutput, lookupProvider, existingFileHelper));
 
-        provider.addSubProvider(event.includeServer(), new AdvancementProvider(packOutput, lookupProvider,
+        generator.addProvider(event.includeServer(), new AdvancementProvider(packOutput, lookupProvider,
             existingFileHelper, List.of(new EIOAdvancementGenerator(), new MachinesAdvancementGenerator())));
 
-        provider.addSubProvider(event.includeServer(), new MaterialRecipeProvider(packOutput, lookupProvider));
-        provider.addSubProvider(event.includeServer(), new BlockRecipeProvider(packOutput, lookupProvider));
-        provider.addSubProvider(event.includeServer(), new ItemRecipeProvider(packOutput, lookupProvider));
-        provider.addSubProvider(event.includeServer(), new GlassRecipeProvider(packOutput, lookupProvider));
-        provider.addSubProvider(event.includeServer(), new FireCraftingRecipeProvider(packOutput, lookupProvider));
-        provider.addSubProvider(event.includeServer(), new FilterRecipeProvider(packOutput, lookupProvider));
-        provider.addSubProvider(event.includeServer(), new ConduitRecipeProvider(packOutput, lookupProvider));
-        provider.addSubProvider(event.includeServer(), new MachineRecipeProvider(packOutput, lookupProvider));
-        provider.addSubProvider(event.includeServer(), new AlloyRecipeProvider(packOutput, lookupProvider));
-        provider.addSubProvider(event.includeServer(), new EnchanterRecipeProvider(packOutput, lookupProvider));
-        provider.addSubProvider(event.includeServer(), new FermentingRecipeProvider(packOutput, lookupProvider));
-        provider.addSubProvider(event.includeServer(), new SagMillRecipeProvider(packOutput, lookupProvider));
-        provider.addSubProvider(event.includeServer(), new SlicingRecipeProvider(packOutput, lookupProvider));
-        provider.addSubProvider(event.includeServer(), new SoulBindingRecipeProvider(packOutput, lookupProvider));
-        provider.addSubProvider(event.includeServer(), new TankRecipeProvider(packOutput, lookupProvider));
-        provider.addSubProvider(event.includeServer(), new PaintingRecipeProvider(packOutput, lookupProvider));
-        provider.addSubProvider(event.includeServer(), new WeatherChangeRecipeProvider(packOutput, lookupProvider));
+        generator.addProvider(event.includeServer(), new EnderIORecipeProvider(packOutput, lookupProvider));
 
-        provider.addSubProvider(event.includeServer(), new ReagentDataMapProvider(packOutput, lookupProvider));
-        provider.addSubProvider(event.includeServer(), new RangeExtenderDataMapProvider(packOutput, lookupProvider));
+        generator.addProvider(event.includeServer(), new ReagentDataMapProvider(packOutput, lookupProvider));
+        generator.addProvider(event.includeServer(), new RangeExtenderDataMapProvider(packOutput, lookupProvider));
 
-        provider.addSubProvider(event.includeServer(), new SoulDataProvider(packOutput));
+        generator.addProvider(event.includeServer(), new SoulDataProvider(packOutput));
 
-        provider.addSubProvider(event.includeServer(), new EIOLootModifiersProvider(packOutput, lookupProvider));
+        generator.addProvider(event.includeServer(), new EIOLootModifiersProvider(packOutput, lookupProvider));
 
-        generator.addProvider(true, provider);
+        generator.addProvider(event.includeServer(),
+            new LootTableProvider(packOutput, Collections.emptySet(), List.of(
+                new LootTableProvider.SubProviderEntry(ChestLootProvider::new, LootContextParamSets.CHEST)
+            ), lookupProvider));
     }
 
     private static RegistrySetBuilder createDatapackEntriesBuilder() {

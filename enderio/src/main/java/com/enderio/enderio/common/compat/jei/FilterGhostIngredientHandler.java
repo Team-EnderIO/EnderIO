@@ -1,9 +1,9 @@
 package com.enderio.enderio.common.compat.jei;
 
 import com.enderio.core.client.gui.screen.EnderContainerScreen;
-import com.enderio.enderio.common.filter.FilterSlot;
-import com.enderio.enderio.common.filter.fluid.FluidFilterSlot;
-import com.enderio.enderio.common.filter.item.ItemFilterSlot;
+import com.enderio.enderio.common.filters.FilterSlot;
+import com.enderio.enderio.common.filters.fluid.FluidFilterSlot;
+import com.enderio.enderio.common.filters.item.ItemFilterSlot;
 import com.enderio.enderio.common.network.packets.ServerboundSetFluidFilterSlotPacket;
 import com.enderio.enderio.common.network.packets.ServerboundSetItemFilterSlotPacket;
 import mezz.jei.api.constants.VanillaTypes;

@@ -1,5 +1,6 @@
 package com.enderio.enderio.datagen.common.recipes;
 
+import com.enderio.core.data.recipe.SubRecipeProvider;
 import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.common.tag.EIOTags;
@@ -24,16 +25,12 @@ import java.util.concurrent.CompletableFuture;
 import static com.enderio.enderio.common.init.EIOItems.*;
 import static net.minecraft.world.item.Items.*;
 
-public class SagMillRecipeProvider extends RecipeProvider {
+public class SagMillRecipeProvider extends SubRecipeProvider {
 
     private static final int BASE_ENERGY_PER_OPERATION = 2400;
 
-    public SagMillRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
-        super(packOutput, registries);
-    }
-
     @Override
-    protected void buildRecipes(RecipeOutput recipeOutput) {
+    public void buildRecipes(RecipeOutput recipeOutput, HolderLookup.Provider registries) {
 
         buildOreBlockRecipes(recipeOutput);
         buildRawOreRecipes(recipeOutput);

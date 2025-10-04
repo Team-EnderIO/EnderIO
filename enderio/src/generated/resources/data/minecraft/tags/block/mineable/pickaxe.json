@@ -36,6 +36,7 @@
     "enderio:silent_light_weighted_pressure_plate",
     "enderio:painted_redstone_block",
     "enderio:painted_wall",
+    "enderio:conduit",
     "enderio:fluid_tank",
     "enderio:pressurized_fluid_tank",
     "enderio:enchanter",
@@ -75,7 +76,6 @@
     "enderio:aversion_obelisk",
     "enderio:relocator_obelisk",
     "enderio:attractor_obelisk",
-    "enderio:weather_obelisk",
-    "enderio:conduit"
+    "enderio:weather_obelisk"
   ]
 }

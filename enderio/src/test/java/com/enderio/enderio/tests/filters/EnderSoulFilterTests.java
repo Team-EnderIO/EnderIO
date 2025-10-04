@@ -1,7 +1,7 @@
 package com.enderio.enderio.tests.filters;
 
 import com.enderio.enderio.api.soul.Soul;
-import com.enderio.enderio.common.filter.soul.EnderSoulFilter;
+import com.enderio.enderio.common.filters.soul.EnderSoulFilter;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;

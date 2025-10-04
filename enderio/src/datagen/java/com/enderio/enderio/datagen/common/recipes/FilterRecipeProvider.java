@@ -1,27 +1,20 @@
 package com.enderio.enderio.datagen.common.recipes;
 
+import com.enderio.core.data.recipe.SubRecipeProvider;
 import com.enderio.enderio.common.init.EIOItems;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.common.Tags;
 
-import java.util.concurrent.CompletableFuture;
-
-public class FilterRecipeProvider extends RecipeProvider {
-
-    public FilterRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
-        super(packOutput, registries);
-    }
+public class FilterRecipeProvider extends SubRecipeProvider {
 
     @Override
-    protected void buildRecipes(RecipeOutput recipeOutput) {
+    public void buildRecipes(RecipeOutput recipeOutput, HolderLookup.Provider registries) {
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.BASIC_ITEM_FILTER.get())
                 .define('P', Ingredient.of(Items.PAPER, EIOItems.BLACK_PAPER)) // TODO: c:paper?
                 .define('H', Items.HOPPER)

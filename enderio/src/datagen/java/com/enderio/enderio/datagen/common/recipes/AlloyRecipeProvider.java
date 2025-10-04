@@ -1,5 +1,6 @@
 package com.enderio.enderio.datagen.common.recipes;
 
+import com.enderio.core.data.recipe.SubRecipeProvider;
 import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.common.block.glass.FusedQuartzBlock;
@@ -13,9 +14,7 @@ import com.enderio.enderio.common.tag.EIOTags;
 import com.enderio.enderio.machines.common.blocks.alloy.AlloySmeltingRecipe;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ItemStack;
@@ -29,16 +28,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
-public class AlloyRecipeProvider extends RecipeProvider {
-
-    public AlloyRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
-        super(packOutput, registries);
-    }
+public class AlloyRecipeProvider extends SubRecipeProvider {
 
     @Override
-    protected void buildRecipes(RecipeOutput recipeOutput) {
+    public void buildRecipes(RecipeOutput recipeOutput, HolderLookup.Provider registries) {
         // TODO: Review all recipes and alloy compositions
         // TODO: Experience values need set properly, i just used a filler value off the
         // top of my head

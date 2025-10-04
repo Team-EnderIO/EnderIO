@@ -2,8 +2,8 @@ package com.enderio.enderio.common.network;
 
 import com.enderio.enderio.api.travel.TravelTarget;
 import com.enderio.enderio.api.travel.TravelTargetApi;
-import com.enderio.enderio.common.filter.FilterSlot;
-import com.enderio.enderio.common.filter.fluid.FluidFilterSlot;
+import com.enderio.enderio.common.filters.FilterSlot;
+import com.enderio.enderio.common.filters.fluid.FluidFilterSlot;
 import com.enderio.enderio.common.handlers.TravelHandler;
 import com.enderio.enderio.common.network.packets.ServerboundRequestTravelPacket;
 import com.enderio.enderio.common.network.packets.ServerboundSetFluidFilterSlotPacket;

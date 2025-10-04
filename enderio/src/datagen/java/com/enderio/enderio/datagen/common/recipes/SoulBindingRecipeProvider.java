@@ -1,5 +1,6 @@
 package com.enderio.enderio.datagen.common.recipes;
 
+import com.enderio.core.data.recipe.SubRecipeProvider;
 import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.api.soul.binding.ingredients.AnySoulBindableIngredient;
 import com.enderio.enderio.common.init.EIOItems;
@@ -27,14 +28,10 @@ import net.neoforged.neoforge.common.Tags;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-public class SoulBindingRecipeProvider extends RecipeProvider {
-
-    public SoulBindingRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
-        super(packOutput, registries);
-    }
+public class SoulBindingRecipeProvider extends SubRecipeProvider {
 
     @Override
-    protected void buildRecipes(RecipeOutput recipeOutput) {
+    public void buildRecipes(RecipeOutput recipeOutput, HolderLookup.Provider registries) {
         build(EIOItems.ENTICING_CRYSTAL, Ingredient.of(Tags.Items.GEMS_EMERALD), 51200, 4, EntityType.VILLAGER,
                 recipeOutput);
         build(EIOItems.ENDER_CRYSTAL, Ingredient.of(EIOTags.Items.GEMS_VIBRANT_CRYSTAL), 76800, 6, EntityType.ENDERMAN,

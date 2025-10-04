@@ -3,7 +3,7 @@ package com.enderio.enderio.client.gui.screens.filters.redstone;
 import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.client.gui.widgets.DyeColorPickerWidget;
-import com.enderio.enderio.common.filter.redstone.RedstoneCountFilterMenu;
+import com.enderio.enderio.common.filters.redstone.RedstoneCountFilterMenu;
 import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.common.init.ConduitLang;
 import net.minecraft.client.gui.components.Button;

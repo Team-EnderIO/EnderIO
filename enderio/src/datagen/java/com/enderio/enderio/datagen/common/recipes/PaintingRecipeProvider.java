@@ -1,5 +1,6 @@
 package com.enderio.enderio.datagen.common.recipes;
 
+import com.enderio.core.data.recipe.SubRecipeProvider;
 import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.common.init.EIOBlocks;
 import com.enderio.enderio.machines.common.blocks.painting.PaintingRecipe;
@@ -17,14 +18,10 @@ import net.minecraft.world.level.ItemLike;
 
 import java.util.concurrent.CompletableFuture;
 
-public class PaintingRecipeProvider extends RecipeProvider {
-
-    public PaintingRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
-        super(packOutput, registries);
-    }
+public class PaintingRecipeProvider extends SubRecipeProvider {
 
     @Override
-    protected void buildRecipes(RecipeOutput recipeOutput) {
+    public void buildRecipes(RecipeOutput recipeOutput, HolderLookup.Provider registries) {
         build(EIOBlocks.PAINTED_FENCE, Ingredient.of(ItemTags.WOODEN_FENCES), recipeOutput);
         build(EIOBlocks.PAINTED_FENCE_GATE, Ingredient.of(ItemTags.FENCE_GATES), recipeOutput);
         build(EIOBlocks.PAINTED_SAND, Ingredient.of(ItemTags.SAND), recipeOutput);

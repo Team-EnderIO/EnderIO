@@ -1,5 +1,6 @@
 package com.enderio.enderio.datagen.common.recipes;
 
+import com.enderio.core.data.recipe.SubRecipeProvider;
 import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
@@ -14,10 +15,8 @@ import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.world.item.Items;
@@ -26,22 +25,12 @@ import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 
-import java.util.concurrent.CompletableFuture;
-
-public class ConduitRecipeProvider extends RecipeProvider {
-
-    private final CompletableFuture<HolderLookup.Provider> registries;
-
-    public ConduitRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
-        super(packOutput, registries);
-        this.registries = registries;
-    }
+public class ConduitRecipeProvider extends SubRecipeProvider {
 
     @Override
-    protected void buildRecipes(RecipeOutput recipeOutput) {
+    public void buildRecipes(RecipeOutput recipeOutput, HolderLookup.Provider registries) {
         // We know that the registries are now available.
-        HolderLookup.Provider lookupProvider = registries.resultNow();
-        HolderGetter<Conduit<?, ?>> conduitRegistry = lookupProvider
+        HolderGetter<Conduit<?, ?>> conduitRegistry = registries
                 .lookupOrThrow(EnderIORegistries.Keys.CONDUIT);
 
         var itemConduit = conduitRegistry.getOrThrow(Conduits.ITEM);

@@ -1,6 +1,6 @@
 package com.enderio.enderio.tests.filters;
 
-import com.enderio.enderio.common.filter.item.mod_id.ModIdItemFilter;
+import com.enderio.enderio.common.filters.item.mod_id.ModIdItemFilter;
 import com.enderio.enderio.common.init.EIOItems;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;

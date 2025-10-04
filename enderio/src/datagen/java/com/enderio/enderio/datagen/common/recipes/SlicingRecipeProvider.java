@@ -1,5 +1,6 @@
 package com.enderio.enderio.datagen.common.recipes;
 
+import com.enderio.core.data.recipe.SubRecipeProvider;
 import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.common.init.EIOBlocks;
 import com.enderio.enderio.common.init.EIOItems;
@@ -19,14 +20,10 @@ import net.neoforged.neoforge.common.Tags;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class SlicingRecipeProvider extends RecipeProvider {
-
-    public SlicingRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
-        super(packOutput, registries);
-    }
+public class SlicingRecipeProvider extends SubRecipeProvider {
 
     @Override
-    protected void buildRecipes(RecipeOutput recipeOutput) {
+    public void buildRecipes(RecipeOutput recipeOutput, HolderLookup.Provider registries) {
         // TODO: Tormented enderman head
 
         build(EIOItems.ZOMBIE_ELECTRODE.get(),

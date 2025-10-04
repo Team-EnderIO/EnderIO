@@ -1,5 +1,6 @@
 package com.enderio.enderio.datagen.common.recipes;
 
+import com.enderio.core.data.recipe.SubRecipeProvider;
 import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.common.block.glass.GlassBlocks;
 import com.enderio.enderio.common.block.glass.GlassCollisionPredicate;
@@ -9,25 +10,17 @@ import com.enderio.enderio.common.tag.EIOTags;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 
-import java.util.concurrent.CompletableFuture;
-
-public class GlassRecipeProvider extends RecipeProvider {
-    public GlassRecipeProvider(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> registries) {
-        super(pOutput, registries);
-    }
-
+public class GlassRecipeProvider extends SubRecipeProvider {
     @Override
-    protected void buildRecipes(RecipeOutput recipeOutput) {
+    public void buildRecipes(RecipeOutput recipeOutput, HolderLookup.Provider registries) {
         for (GlassBlocks glassBlocks : EIOBlocks.GLASS_BLOCKS.values()) {
             recolor(glassBlocks, recipeOutput);
             if (glassBlocks.getGlassIdentifier().collisionPredicate() == GlassCollisionPredicate.NONE) {

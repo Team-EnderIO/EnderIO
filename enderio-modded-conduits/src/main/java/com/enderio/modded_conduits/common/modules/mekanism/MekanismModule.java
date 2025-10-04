@@ -11,7 +11,7 @@ import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContextType;
 import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataType;
 import com.enderio.enderio.common.conduits.ConduitApiImpl;
-import com.enderio.enderio.common.filter.AbstractFilterItem;
+import com.enderio.enderio.common.filters.AbstractFilterItem;
 import com.enderio.enderio.common.init.EIOCreativeTabs;
 import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.modded_conduits.common.ModdedConduits;

@@ -1,5 +1,6 @@
 package com.enderio.enderio.datagen.common.recipes;
 
+import com.enderio.core.data.recipe.SubRecipeProvider;
 import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.common.tag.EIOTags;
@@ -8,9 +9,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
@@ -19,22 +18,12 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
 
-import java.util.concurrent.CompletableFuture;
-
-public class EnchanterRecipeProvider extends RecipeProvider {
-
-    private final CompletableFuture<HolderLookup.Provider> registries;
-
-    public EnchanterRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
-        super(packOutput, registries);
-        this.registries = registries;
-    }
+public class EnchanterRecipeProvider extends SubRecipeProvider {
 
     @Override
-    protected void buildRecipes(RecipeOutput recipeOutput) {
+    public void buildRecipes(RecipeOutput recipeOutput, HolderLookup.Provider registries) {
         // We know that the registries are now available.
-        HolderLookup.Provider lookupProvider = registries.resultNow();
-        HolderGetter<Enchantment> enchantmentRegistry = lookupProvider.lookupOrThrow(Registries.ENCHANTMENT);
+        HolderGetter<Enchantment> enchantmentRegistry = registries.lookupOrThrow(Registries.ENCHANTMENT);
 
         // vanilla
         build(enchantmentRegistry, Enchantments.PROTECTION, SizedIngredient.of(EIOTags.Items.INGOTS_DARK_STEEL, 16), 1,

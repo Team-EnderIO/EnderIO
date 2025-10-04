@@ -37,21 +37,13 @@ import com.enderio.enderio.common.item.tool.SoulVialItem;
 import com.enderio.enderio.common.lang.EIOEnumLang;
 import com.enderio.enderio.common.lang.EIOLang;
 import com.enderio.enderio.common.tag.EIOTags;
-import com.enderio.enderio.data.EIODataProvider;
-import com.enderio.enderio.data.loot.ChestLootProvider;
 import com.enderio.enderio.machines.common.lang.MachineLang;
 import com.enderio.regilite.Regilite;
 import com.mojang.logging.LogUtils;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.PackOutput;
-import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
-import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
@@ -59,8 +51,6 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
@@ -68,10 +58,7 @@ import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 @Mod(EnderIO.MOD_ID)
@@ -152,7 +139,6 @@ public class EnderIO {
         }
 
         // Run datagen after registrate is finished.
-        modEventBus.addListener(EventPriority.LOWEST, this::onGatherData);
         modEventBus.addListener(SoulVialItem::onCommonSetup);
         modEventBus.addListener(this::registerRegistries);
         modEventBus.addListener(this::registerDatapackRegistries);
@@ -175,21 +161,6 @@ public class EnderIO {
 
     private void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {
         event.dataPackRegistry(EnderIORegistries.Keys.CONDUIT, Conduit.DIRECT_CODEC, Conduit.DIRECT_CODEC);
-    }
-
-    public void onGatherData(GatherDataEvent event) {
-        DataGenerator generator = event.getGenerator();
-        PackOutput packOutput = event.getGenerator().getPackOutput();
-        CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
-        ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
-
-        EIODataProvider provider = new EIODataProvider("base");
-
-        provider.addSubProvider(event.includeServer(),
-                new LootTableProvider(packOutput, Collections.emptySet(), List
-                        .of(new LootTableProvider.SubProviderEntry(ChestLootProvider::new, LootContextParamSets.CHEST)),
-                        lookupProvider));
-        generator.addProvider(true, provider);
     }
 
     public void addBuiltInPacks(final AddPackFindersEvent event) {

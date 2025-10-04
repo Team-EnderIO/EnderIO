@@ -1,7 +1,7 @@
 package com.enderio.enderio.tests.filters;
 
-import com.enderio.enderio.common.filter.item.general.DamageFilterMode;
-import com.enderio.enderio.common.filter.item.general.EnderItemFilter;
+import com.enderio.enderio.common.filters.item.general.DamageFilterMode;
+import com.enderio.enderio.common.filters.item.general.EnderItemFilter;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;

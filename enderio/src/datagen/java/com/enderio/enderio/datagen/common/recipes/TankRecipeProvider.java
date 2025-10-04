@@ -1,5 +1,6 @@
 package com.enderio.enderio.datagen.common.recipes;
 
+import com.enderio.core.data.recipe.SubRecipeProvider;
 import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.common.init.EIOFluids;
 import com.enderio.enderio.common.init.EIOItems;
@@ -18,14 +19,10 @@ import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.concurrent.CompletableFuture;
 
-public class TankRecipeProvider extends RecipeProvider {
-
-    public TankRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
-        super(packOutput, registries);
-    }
+public class TankRecipeProvider extends SubRecipeProvider {
 
     @Override
-    protected void buildRecipes(RecipeOutput recipeOutput) {
+    public void buildRecipes(RecipeOutput recipeOutput, HolderLookup.Provider registries) {
         // TODO: Tag support for tank recipes.
         buildEmptying(Ingredient.of(Items.EXPERIENCE_BOTTLE), Items.GLASS_BOTTLE,
                 new FluidStack(EIOFluids.XP_JUICE.getSource(), 250), recipeOutput);

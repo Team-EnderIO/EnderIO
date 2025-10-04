@@ -1,7 +1,7 @@
 package com.enderio.enderio.common.compat.inventorysorter;
 
-import com.enderio.enderio.common.filter.fluid.FluidFilterSlot;
-import com.enderio.enderio.common.filter.item.ItemFilterSlot;
+import com.enderio.enderio.common.filters.fluid.FluidFilterSlot;
+import com.enderio.enderio.common.filters.item.ItemFilterSlot;
 import com.enderio.enderio.machines.common.blocks.base.menu.GhostMachineSlot;
 import com.enderio.enderio.machines.common.blocks.base.menu.MachineSlot;
 import com.enderio.enderio.machines.common.blocks.base.menu.PreviewMachineSlot;

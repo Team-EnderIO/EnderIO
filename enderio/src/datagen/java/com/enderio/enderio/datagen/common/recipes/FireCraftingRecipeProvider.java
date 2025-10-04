@@ -1,26 +1,20 @@
 package com.enderio.enderio.datagen.common.recipes;
 
+import com.enderio.core.data.recipe.SubRecipeProvider;
 import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.common.init.EIOItems;
 import com.enderio.enderio.common.recipe.FireCraftingRecipe;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
-public class FireCraftingRecipeProvider extends RecipeProvider {
-    public FireCraftingRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
-        super(packOutput, registries);
-    }
-
+public class FireCraftingRecipeProvider extends SubRecipeProvider {
     @Override
-    protected void buildRecipes(RecipeOutput recipeOutput) {
+    public void buildRecipes(RecipeOutput recipeOutput, HolderLookup.Provider registries) {
         recipeOutput.accept(EnderIO.rl("fire_crafting/bedrock_infinity"),
                 new FireCraftingRecipe(List.of(
                         new FireCraftingRecipe.Result(EIOItems.GRAINS_OF_INFINITY.get().getDefaultInstance(), 1, 3,

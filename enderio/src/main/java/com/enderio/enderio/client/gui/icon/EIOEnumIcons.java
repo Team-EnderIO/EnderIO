@@ -5,7 +5,7 @@ import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.common.block.glass.GlassCollisionPredicate;
 import com.enderio.enderio.common.block.glass.GlassLighting;
-import com.enderio.enderio.common.filter.item.general.DamageFilterMode;
+import com.enderio.enderio.common.filters.item.general.DamageFilterMode;
 import net.minecraft.world.item.DyeColor;
 
 public class EIOEnumIcons {

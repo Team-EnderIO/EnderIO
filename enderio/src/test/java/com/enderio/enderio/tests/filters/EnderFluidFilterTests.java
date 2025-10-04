@@ -1,6 +1,6 @@
 package com.enderio.enderio.tests.filters;
 
-import com.enderio.enderio.common.filter.fluid.EnderFluidFilter;
+import com.enderio.enderio.common.filters.fluid.EnderFluidFilter;
 import com.enderio.enderio.common.init.EIOFluids;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
