@@ -3,8 +3,9 @@ package com.enderio.enderio.client.tooltip;
 import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.api.EnderIOCapabilities;
+import com.enderio.enderio.api.EnderIODataComponents;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
-import com.enderio.enderio.api.grindingball.GrindingBallData;
+import com.enderio.enderio.api.components.GrindingBallData;
 import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.common.lang.EIOLang;
 import net.minecraft.client.gui.screens.Screen;
@@ -65,9 +66,9 @@ public class TooltipHandler {
     }
 
     private static void addGrindingBallTooltips(ItemStack itemStack, List<Component> components, boolean showAdvanced) {
-        if (itemStack.has(EIODataComponents.GRINDING_BALL)) {
+        if (itemStack.has(EnderIODataComponents.GRINDING_BALL)) {
             if (showAdvanced) {
-                GrindingBallData data = itemStack.get(EIODataComponents.GRINDING_BALL);
+                GrindingBallData data = itemStack.get(EnderIODataComponents.GRINDING_BALL);
                 components.add(TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_MAIN_OUTPUT,
                         (int) (data.outputMultiplier() * 100)));
                 components.add(TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_BONUS_OUTPUT,

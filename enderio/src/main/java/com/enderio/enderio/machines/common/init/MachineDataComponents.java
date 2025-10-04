@@ -1,7 +1,7 @@
 package com.enderio.enderio.machines.common.init;
 
 import com.enderio.enderio.common.EnderIO;
-import com.enderio.enderio.api.grindingball.GrindingBallData;
+import com.enderio.enderio.api.components.GrindingBallData;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.machines.common.attachment.ActionRange;
 import com.enderio.enderio.machines.common.blocks.alloy.AlloySmelterMode;

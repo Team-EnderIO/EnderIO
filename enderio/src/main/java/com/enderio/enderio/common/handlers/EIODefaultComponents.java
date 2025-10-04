@@ -1,6 +1,7 @@
 package com.enderio.enderio.common.handlers;
 
-import com.enderio.enderio.api.grindingball.GrindingBallData;
+import com.enderio.enderio.api.EnderIODataComponents;
+import com.enderio.enderio.api.components.GrindingBallData;
 import com.enderio.enderio.common.init.EIODataComponents;
 import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -11,7 +12,7 @@ import net.neoforged.neoforge.event.ModifyDefaultComponentsEvent;
 public class EIODefaultComponents {
     @SubscribeEvent
     public static void modifyDefaultComponents(ModifyDefaultComponentsEvent event) {
-        event.modify(Items.FLINT, i -> i.set(EIODataComponents.GRINDING_BALL.get(),
+        event.modify(Items.FLINT, i -> i.set(EnderIODataComponents.GRINDING_BALL,
             new GrindingBallData(1.2F, 1.25F, 0.85F, 24000)));
     }
 }

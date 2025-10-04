@@ -1,5 +1,6 @@
 package com.enderio.enderio.api.conduits;
 
+import com.enderio.enderio.api.EnderIODataComponents;
 import com.enderio.enderio.common.conduits.ConduitBlockItem;
 import com.enderio.enderio.common.init.ConduitBlocks;
 import com.enderio.enderio.common.init.ConduitComponents;
@@ -44,11 +45,11 @@ public class ConduitIngredient implements ICustomIngredient {
             return false;
         }
 
-        if (!stack.has(ConduitComponents.CONDUIT)) {
+        if (!stack.has(EnderIODataComponents.CONDUIT)) {
             return false;
         }
 
-        Holder<Conduit<?, ?>> conduit = stack.get(ConduitComponents.CONDUIT);
+        Holder<Conduit<?, ?>> conduit = stack.get(EnderIODataComponents.CONDUIT);
         if (conduit == null) {
             return false;
         }

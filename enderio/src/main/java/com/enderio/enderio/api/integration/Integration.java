@@ -12,6 +12,7 @@ import java.util.Optional;
  * These are all the methods a Integration can override or call.
  * Please make sure that all methods only reference API of the integrated mod or Minecraft classes, so that this can be part of the API, after stable release
  */
+@Deprecated(forRemoval = true, since = "8.0.5")
 public interface Integration {
 
     default void addEventListener(IEventBus modEventBus, IEventBus forgeEventBus) {

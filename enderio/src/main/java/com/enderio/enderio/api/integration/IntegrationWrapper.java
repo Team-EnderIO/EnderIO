@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+@Deprecated(forRemoval = true, since = "8.0.5")
 public class IntegrationWrapper<T extends Integration> {
 
     private final String modid;

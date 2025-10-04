@@ -1,8 +1,9 @@
 package com.enderio.enderio.machines.common.blocks.sag_mill;
 
+import com.enderio.enderio.api.EnderIODataComponents;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;
-import com.enderio.enderio.api.grindingball.GrindingBallData;
+import com.enderio.enderio.api.components.GrindingBallData;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.machines.common.blocks.base.blockentity.PoweredMachineBlockEntity;
@@ -101,7 +102,7 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
                 .slotAccess(INPUT)
                 .outputSlot(4)
                 .slotAccess(OUTPUT)
-                .inputSlot((slot, stack) -> stack.has(EIODataComponents.GRINDING_BALL))
+                .inputSlot((slot, stack) -> stack.has(EnderIODataComponents.GRINDING_BALL))
                 .slotAccess(GRINDING_BALL)
                 .capacitor()
                 .build();
@@ -144,7 +145,7 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
                 if (recipe.bonusType().useGrindingBall() && grindingBallData.isIdentity()) {
                     ItemStack ball = GRINDING_BALL.getItemStack(inv);
                     if (!ball.isEmpty()) {
-                        var data = ball.getOrDefault(EIODataComponents.GRINDING_BALL, GrindingBallData.IDENTITY);
+                        var data = ball.getOrDefault(EnderIODataComponents.GRINDING_BALL, GrindingBallData.IDENTITY);
                         setGrindingBallData(data);
                         if (!data.isIdentity()) {
                             ball.shrink(1);

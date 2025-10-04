@@ -1,6 +1,7 @@
 package com.enderio.enderio.common.conduits.bundle;
 
 import com.enderio.enderio.api.EnderIOCapabilities;
+import com.enderio.enderio.api.EnderIODataComponents;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitRedstoneSignalAware;
 import com.enderio.enderio.api.conduits.bundle.AddConduitResult;
@@ -244,7 +245,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
         }
 
         if (level.getBlockEntity(pos) instanceof ConduitBundleBlockEntity conduitBundle) {
-            Holder<Conduit<?, ?>> conduit = stack.get(ConduitComponents.CONDUIT);
+            Holder<Conduit<?, ?>> conduit = stack.get(EnderIODataComponents.CONDUIT);
             if (conduit != null) {
                 // Use the primary connection face, if available from placement.
                 Direction primaryConnectionSide = conduitBundle.primaryConnectionSide;
@@ -355,7 +356,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
     private ItemInteractionResult addConduit(ItemStack stack, Level level, BlockPos pos, Player player,
             ConduitBundleBlockEntity conduitBundle) {
         // Get the conduit from the item
-        Holder<Conduit<?, ?>> conduit = stack.get(ConduitComponents.CONDUIT);
+        Holder<Conduit<?, ?>> conduit = stack.get(EnderIODataComponents.CONDUIT);
         if (conduit == null) {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }

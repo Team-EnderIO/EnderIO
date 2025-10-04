@@ -3,7 +3,7 @@ package com.enderio.enderio.client.gui.screens.machines;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.api.EnderIOAPI;
-import com.enderio.enderio.api.grindingball.GrindingBallData;
+import com.enderio.enderio.api.components.GrindingBallData;
 import com.enderio.enderio.client.gui.screens.machines.base.MachineScreen;
 import com.enderio.enderio.client.gui.widgets.ActivityWidget;
 import com.enderio.enderio.client.gui.widgets.NewCapacitorEnergyWidget;

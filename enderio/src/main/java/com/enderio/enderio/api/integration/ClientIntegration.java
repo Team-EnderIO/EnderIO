@@ -5,6 +5,7 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.player.Player;
 
+@Deprecated(forRemoval = true, since = "8.0.5")
 public interface ClientIntegration {
 
     ClientIntegration NOOP = new ClientIntegration() {};

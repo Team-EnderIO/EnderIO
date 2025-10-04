@@ -6,7 +6,7 @@ import com.enderio.core.common.network.menu.payload.IntSlotPayload;
 import com.enderio.core.common.network.menu.payload.ListSlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayloadType;
-import com.enderio.enderio.api.grindingball.GrindingBallData;
+import com.enderio.enderio.api.components.GrindingBallData;
 import net.minecraft.world.level.Level;
 
 import java.util.List;

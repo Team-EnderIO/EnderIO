@@ -1,4 +1,4 @@
-package com.enderio.enderio.api.grindingball;
+package com.enderio.enderio.api.components;
 
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;

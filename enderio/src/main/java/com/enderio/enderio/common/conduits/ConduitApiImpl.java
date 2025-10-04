@@ -15,11 +15,6 @@ public class ConduitApiImpl implements ConduitApi {
     }
 
     @Override
-    public Ingredient getConduitIngredient(Holder<Conduit<?, ?>> conduit) {
-        return ConduitIngredient.of(conduit);
-    }
-
-    @Override
     public int getConduitSortIndex(Holder<Conduit<?, ?>> conduit) {
         return ConduitSorter.getSortIndex(conduit);
     }

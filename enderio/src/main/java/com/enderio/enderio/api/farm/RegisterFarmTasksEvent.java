@@ -4,9 +4,11 @@ import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.Pair;
 import net.neoforged.bus.api.Event;
 import net.neoforged.fml.event.IModBusEvent;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.List;
 
+@ApiStatus.Experimental
 public class RegisterFarmTasksEvent extends Event implements IModBusEvent {
     private final List<Pair<FarmTaskType, FarmTask>> tasks = Lists.newArrayList();
 

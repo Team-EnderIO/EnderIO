@@ -2,6 +2,7 @@ package com.enderio.enderio.common.conduits;
 
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.api.EnderIOCapabilities;
+import com.enderio.enderio.api.EnderIODataComponents;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.common.conduits.bundle.ConduitBundleBlockEntity;
@@ -41,13 +42,13 @@ public class ConduitBlockItem extends BlockItem {
 
     public static ItemStack getStackFor(Holder<Conduit<?, ?>> conduit, int count) {
         var stack = new ItemStack(ConduitBlocks.CONDUIT.asItem(), count);
-        stack.set(ConduitComponents.CONDUIT, conduit);
+        stack.set(EnderIODataComponents.CONDUIT, conduit);
         return stack;
     }
 
     @Override
     public Component getName(ItemStack pStack) {
-        Holder<Conduit<?, ?>> conduit = pStack.get(ConduitComponents.CONDUIT);
+        Holder<Conduit<?, ?>> conduit = pStack.get(EnderIODataComponents.CONDUIT);
         if (conduit == null) {
             return super.getName(pStack);
         }
@@ -86,7 +87,7 @@ public class ConduitBlockItem extends BlockItem {
     protected boolean placeBlock(BlockPlaceContext context, BlockState state) {
         // Ensure the originalStack being used is valid for placement.
         var stack = context.getItemInHand();
-        if (!stack.has(ConduitComponents.CONDUIT)) {
+        if (!stack.has(EnderIODataComponents.CONDUIT)) {
             var facadeProvider = stack.getCapability(EnderIOCapabilities.CONDUIT_FACADE_PROVIDER);
             if (facadeProvider == null || !facadeProvider.isValid()) {
                 return false;
@@ -122,7 +123,7 @@ public class ConduitBlockItem extends BlockItem {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents,
             TooltipFlag tooltipFlag) {
-        Holder<Conduit<?, ?>> conduit = stack.get(ConduitComponents.CONDUIT);
+        Holder<Conduit<?, ?>> conduit = stack.get(EnderIODataComponents.CONDUIT);
         if (conduit != null) {
             conduit.value().addToTooltip(context, tooltipComponents::add, tooltipFlag);
 

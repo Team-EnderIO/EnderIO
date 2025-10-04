@@ -1,8 +1,9 @@
 package com.enderio.enderio.machines.common.integrations.jei.category;
 
 import com.enderio.core.common.util.TooltipUtil;
+import com.enderio.enderio.api.EnderIODataComponents;
 import com.enderio.enderio.common.EnderIO;
-import com.enderio.enderio.api.grindingball.GrindingBallData;
+import com.enderio.enderio.api.components.GrindingBallData;
 import com.enderio.enderio.common.compat.jei.JEIUtils;
 import com.enderio.enderio.common.init.EIODataComponents;
 import com.enderio.enderio.common.lang.EIOLang;
@@ -149,7 +150,7 @@ public class SagMillCategory extends MachineRecipeCategory<RecipeHolder<SagMilli
                         .getEnergyCost(recipeSlotsView.getSlotViews()
                                 .get(1)
                                 .getDisplayedItemStack()
-                                .map(i -> i.getOrDefault(EIODataComponents.GRINDING_BALL, GrindingBallData.IDENTITY))
+                                .map(i -> i.getOrDefault(EnderIODataComponents.GRINDING_BALL, GrindingBallData.IDENTITY))
                                 .orElse(GrindingBallData.IDENTITY))));
     }
 }

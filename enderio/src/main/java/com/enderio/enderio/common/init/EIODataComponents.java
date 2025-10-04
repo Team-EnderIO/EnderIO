@@ -1,10 +1,11 @@
 package com.enderio.enderio.common.init;
 
 import com.enderio.core.common.util.NamedFluidContents;
+import com.enderio.enderio.api.EnderIODataComponents;
 import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.api.attachment.CoordinateSelection;
 import com.enderio.enderio.api.capacitor.CapacitorData;
-import com.enderio.enderio.api.grindingball.GrindingBallData;
+import com.enderio.enderio.api.components.GrindingBallData;
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.common.filter.fluid.EnderFluidFilter;
 import com.enderio.enderio.common.filter.item.general.EnderItemFilter;
@@ -57,10 +58,6 @@ public class EIODataComponents {
             .registerComponentType("coordinate_selection", builder -> builder.persistent(CoordinateSelection.CODEC)
                     .networkSynchronized(CoordinateSelection.STREAM_CODEC));
 
-    public static final Supplier<DataComponentType<GrindingBallData>> GRINDING_BALL = DATA_COMPONENT_TYPES
-            .registerComponentType("grinding_ball", builder -> builder.persistent(GrindingBallData.CODEC)
-                    .networkSynchronized(GrindingBallData.STREAM_CODEC));
-
     public static final Supplier<DataComponentType<EnderItemFilter>> ITEM_FILTER = DATA_COMPONENT_TYPES
             .registerComponentType("item_filter", builder -> builder.persistent(EnderItemFilter.CODEC)
                     .networkSynchronized(EnderItemFilter.STREAM_CODEC));
@@ -89,6 +86,8 @@ public class EIODataComponents {
         // Remap entity to soul
         DATA_COMPONENT_TYPES.addAlias(EnderIO.rl("stored_entity"), EnderIO.rl("soul"));
         DATA_COMPONENT_TYPES.addAlias(EnderIO.rl("entity_filter"), EnderIO.rl("soul_filter"));
+
+        DATA_COMPONENT_TYPES.register("grinding_ball", () -> EnderIODataComponents.GRINDING_BALL);
 
         DATA_COMPONENT_TYPES.register(bus);
     }

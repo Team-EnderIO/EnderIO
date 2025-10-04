@@ -11,6 +11,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+@Deprecated(forRemoval = true, since = "8.0.5")
 public class IntegrationManager {
 
     private static final List<Integration> ALL_INTEGRATIONS = new ArrayList<>();

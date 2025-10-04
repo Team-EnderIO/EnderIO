@@ -1,7 +1,7 @@
 package com.enderio.enderio.machines.common.blocks.sag_mill;
 
 import com.enderio.core.common.network.menu.FloatSyncSlot;
-import com.enderio.enderio.api.grindingball.GrindingBallData;
+import com.enderio.enderio.api.components.GrindingBallData;
 import com.enderio.enderio.machines.common.blocks.base.menu.MachineSlot;
 import com.enderio.enderio.machines.common.blocks.base.menu.PoweredMachineMenu;
 import com.enderio.enderio.machines.common.init.MachineBlockEntities;

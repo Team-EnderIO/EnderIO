@@ -1,6 +1,7 @@
 package com.enderio.enderio.client.models.conduit;
 
 import com.enderio.core.client.RenderUtil;
+import com.enderio.enderio.api.EnderIODataComponents;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.common.init.ConduitComponents;
 import net.minecraft.client.Minecraft;
@@ -49,7 +50,7 @@ public class ConduitItemModel extends BakedModelWrapper<BakedModel> {
         @Override
         public BakedModel resolve(BakedModel pModel, ItemStack pStack, @Nullable ClientLevel pLevel,
                 @Nullable LivingEntity pEntity, int pSeed) {
-            Holder<Conduit<?, ?>> conduit = pStack.get(ConduitComponents.CONDUIT);
+            Holder<Conduit<?, ?>> conduit = pStack.get(EnderIODataComponents.CONDUIT);
             return CACHE.computeIfAbsent(conduit, t -> createBakedModel(t, pModel));
         }
 

@@ -6,6 +6,7 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 /**
  * These are all the methods an Integration can override or call.
  */
+@Deprecated(forRemoval = true, since = "8.0.5")
 public interface IntegrationMethods {
 
     default void createData(GatherDataEvent event) {

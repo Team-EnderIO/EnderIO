@@ -1,5 +1,6 @@
 package com.enderio.enderio.common.init;
 
+import com.enderio.enderio.api.EnderIODataComponents;
 import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.facade.FacadeType;
@@ -22,17 +23,9 @@ public class ConduitComponents {
     private static final DeferredRegister.DataComponents DATA_COMPONENT_TYPES = DeferredRegister
             .createDataComponents(EnderIO.MOD_ID);
 
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Holder<Conduit<?, ?>>>> CONDUIT = DATA_COMPONENT_TYPES
-            .registerComponentType("conduit",
-                    builder -> builder.persistent(Conduit.CODEC).networkSynchronized(Conduit.STREAM_CODEC));
-
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<FacadeType>> FACADE_TYPE = DATA_COMPONENT_TYPES
             .registerComponentType("facade_type",
                     builder -> builder.persistent(FacadeType.CODEC).networkSynchronized(FacadeType.STREAM_CODEC));
-
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> EXTRACTION_SPEED_UPGRADE_TIER = DATA_COMPONENT_TYPES
-            .registerComponentType("extraction_speed_upgrade_tier",
-                    builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT));
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<DoubleRedstoneChannel.Component>> REDSTONE_AND_FILTER = DATA_COMPONENT_TYPES
             .registerComponentType("redstone_and_filter",
@@ -98,6 +91,7 @@ public class ConduitComponents {
                             .networkSynchronized(ConduitProbeItem.State.STREAM_CODEC));
 
     public static void register(IEventBus bus) {
+        DATA_COMPONENT_TYPES.register("conduit", () -> EnderIODataComponents.CONDUIT);
         DATA_COMPONENT_TYPES.register(bus);
     }
 }

@@ -1,10 +1,11 @@
 package com.enderio.enderio.common.init;
 
 import com.enderio.core.data.model.ModelHelper;
+import com.enderio.enderio.api.EnderIODataComponents;
 import com.enderio.enderio.common.EnderIO;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.capacitor.CapacitorData;
-import com.enderio.enderio.api.grindingball.GrindingBallData;
+import com.enderio.enderio.api.components.GrindingBallData;
 import com.enderio.enderio.common.filter.AbstractFilterItem;
 import com.enderio.enderio.common.filter.fluid.EnderFluidFilterItem;
 import com.enderio.enderio.common.filter.item.general.EnderItemFilterItem;
@@ -340,7 +341,7 @@ public class EIOItems {
     private static RegiliteItem<MaterialItem> grindingBall(String name, GrindingBallData grindingBallData) {
         return ITEM_REGISTRY
                 .registerItem(name,
-                        props -> new MaterialItem(props.component(EIODataComponents.GRINDING_BALL, grindingBallData),
+                        props -> new MaterialItem(props.component(EnderIODataComponents.GRINDING_BALL, grindingBallData),
                                 false))
                 .addItemTags(EIOTags.Items.GRINDING_BALLS)
                 .setTab(EIOCreativeTabs.MAIN);

@@ -1,7 +1,7 @@
 package com.enderio.enderio.machines.common.blocks.sag_mill;
 
 import com.enderio.core.common.recipes.OutputStack;
-import com.enderio.enderio.api.grindingball.GrindingBallData;
+import com.enderio.enderio.api.components.GrindingBallData;
 import com.enderio.enderio.common.util.OptionalItemUtility;
 import com.enderio.enderio.machines.common.blocks.base.MachineRecipe;
 import com.enderio.enderio.machines.common.init.MachineRecipes;

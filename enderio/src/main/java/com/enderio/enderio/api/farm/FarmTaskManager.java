@@ -2,10 +2,12 @@ package com.enderio.enderio.api.farm;
 
 import it.unimi.dsi.fastutil.Pair;
 import net.neoforged.fml.ModLoader;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Comparator;
 import java.util.List;
 
+@ApiStatus.Experimental
 public class FarmTaskManager {
     private static List<FarmTask> TASKS_IMMUTABLE;
 
