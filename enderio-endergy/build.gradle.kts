@@ -56,11 +56,7 @@ dependencies {
 
 neoForge {
     version = libs.versions.neoforge.get()
-
-    accessTransformers {
-        publish(project.file("src/main/resources/META-INF/accesstransformer.cfg"))
-    }
-
+    
     addModdingDependenciesTo(sourceSets.getByName("datagen"))
 
     val modEndergy by mods.creating {
