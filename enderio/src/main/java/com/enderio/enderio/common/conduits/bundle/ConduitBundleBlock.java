@@ -16,6 +16,7 @@ import com.enderio.enderio.conduits.common.init.ConduitBlockEntities;
 import com.enderio.enderio.conduits.common.init.ConduitComponents;
 import com.enderio.enderio.conduits.common.init.ConduitTypes;
 import com.enderio.enderio.conduits.common.network.C2SBreakConduitPacket;
+import com.enderio.enderio.conduits.common.network.C2SDestroyEntireConduitBundlePacket;
 import com.enderio.enderio.conduits.common.network.C2SRemoveConduitFacadePacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -267,43 +268,28 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
             return false;
         }
 
+        // Handle all other break types over the network.
+        // If any of these are cancelled, updated block entity data can be sent without issue.
+        if (!level.isClientSide()) {
+            return false;
+        }
+
         // If this is a simple block break, handle it now.
         // We do this so that if the server vetoes the block break, the block entity data is in tact.
         if (conduitBundle.isEmpty() ||
             (conduitBundle.getConduits().size() == 1 && !conduitBundle.hasFacade()) ||
             (conduitBundle.getConduits().isEmpty() && conduitBundle.hasFacade())) {
 
-            if (level.isClientSide()) {
-                if (!conduitBundle.getConduits().isEmpty()) {
-                    var conduit = conduitBundle.getConduits().getFirst();
-                    ConduitBreakParticle.addDestroyEffects(pos, state, conduit.value());
-                } else {
-                    // TODO: Facade particles?
-                }
+            if (!conduitBundle.getConduits().isEmpty()) {
+                var conduit = conduitBundle.getConduits().getFirst();
+                ConduitBreakParticle.addDestroyEffects(pos, state, conduit.value());
             } else {
-                // Duplicate list to avoid concurrent modification
-                var conduits = conduitBundle.getConduits().stream().toList();
-                for (var conduit : conduits) {
-                    conduitBundle.removeConduit(conduit, droppedItem -> {
-                        if (!player.getAbilities().instabuild) {
-                            popResource(level, pos, droppedItem);
-                        }
-                    });
-                }
-
-                if (!conduitBundle.getFacadeProvider().isEmpty() &&
-                    !player.getAbilities().instabuild) {
-                    popResource(level, pos, conduitBundle.getFacadeProvider());
-                }
+                // TODO: Facade particles?
             }
 
+            // Ask the server to remove the bundle
+            PacketDistributor.sendToServer(new C2SDestroyEntireConduitBundlePacket(pos));
             return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
-        }
-
-        // Handle all other break types over the network.
-        // If any of these are cancelled, updated block entity data can be sent without issue.
-        if (!level.isClientSide()) {
-            return false;
         }
 
         // Remove facade, if visible

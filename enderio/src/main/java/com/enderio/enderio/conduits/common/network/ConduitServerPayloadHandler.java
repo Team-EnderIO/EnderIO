@@ -188,4 +188,47 @@ public class ConduitServerPayloadHandler {
             }
         });
     }
+
+    public void handle(C2SDestroyEntireConduitBundlePacket packet, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            var player = (ServerPlayer)context.player();
+            var level = player.level();
+            var pos = packet.pos();
+
+            // Ensure player can break this block
+            if (!player.canInteractWithBlock(pos, 1.0)) {
+                return;
+            }
+
+            var blockState = level.getBlockState(pos);
+            var blockEntity = level.getBlockEntity(pos);
+            if (blockEntity instanceof ConduitBundleBlockEntity conduitBundle) {
+                // Fire block break event.
+                BlockEvent.BreakEvent event = CommonHooks.fireBlockBreak(level, player.gameMode.getGameModeForPlayer(), player, pos, blockState);
+                if (event.isCanceled()) {
+                    // Send block entity data back
+                    level.sendBlockUpdated(pos, blockState, blockState, Block.UPDATE_ALL);
+                    return;
+                }
+
+                // Duplicate list to avoid concurrent modification
+                var conduits = conduitBundle.getConduits().stream().toList();
+                for (var conduit : conduits) {
+                    conduitBundle.removeConduit(conduit, droppedItem -> {
+                        if (!player.getAbilities().instabuild) {
+                            var center = pos.getCenter();
+                            level.addFreshEntity(new ItemEntity(level, center.x, center.y, center.z, droppedItem.copy()));
+                        }
+                    });
+                }
+
+                if (!conduitBundle.getFacadeProvider().isEmpty() &&
+                    !player.getAbilities().instabuild) {
+                    conduitBundle.dropFacadeItem();
+                }
+
+                level.removeBlock(pos, false);
+            }
+        });
+    }
 }

@@ -45,6 +45,9 @@ public class ConduitNetwork {
 
         registrar.playToServer(C2SRemoveConduitFacadePacket.TYPE, C2SRemoveConduitFacadePacket.STREAM_CODEC,
                 ConduitServerPayloadHandler.getInstance()::handle);
+
+        registrar.playToServer(C2SDestroyEntireConduitBundlePacket.TYPE, C2SDestroyEntireConduitBundlePacket.STREAM_CODEC,
+                ConduitServerPayloadHandler.getInstance()::handle);
     }
 
 }
