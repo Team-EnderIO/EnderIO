@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits.client;
 
-import com.enderio.enderio.conduits.client.model.conduit.facades.ClientFacadeVisibility;
+import com.enderio.enderio.client.models.conduit.facades.ClientFacadeVisibility;
 import com.enderio.enderio.common.conduits.bundle.ConduitBundleBlockEntity;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import it.unimi.dsi.fastutil.longs.LongSet;

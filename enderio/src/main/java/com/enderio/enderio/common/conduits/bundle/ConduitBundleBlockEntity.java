@@ -16,7 +16,7 @@ import com.enderio.enderio.api.conduits.facade.FacadeType;
 import com.enderio.enderio.api.conduits.network.node.NodeData;
 import com.enderio.enderio.common.blockentity.Wrenchable;
 import com.enderio.enderio.conduits.ConduitNBTKeys;
-import com.enderio.enderio.conduits.client.model.conduit.bundle.ConduitBundleRenderState;
+import com.enderio.enderio.client.models.conduit.bundle.ConduitBundleRenderState;
 import com.enderio.enderio.common.conduits.ConduitBlockItem;
 import com.enderio.enderio.common.conduits.ConduitSorter;
 import com.enderio.enderio.common.conduits.legacy.ConduitDataContainer;

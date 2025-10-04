@@ -56,7 +56,7 @@ dependencies {
 
 neoForge {
     version = libs.versions.neoforge.get()
-    
+
     addModdingDependenciesTo(sourceSets.getByName("datagen"))
 
     val modEndergy by mods.creating {
