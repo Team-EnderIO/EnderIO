@@ -67,18 +67,6 @@ neoForge {
             logLevel = org.slf4j.event.Level.INFO
         }
 
-        // Client & Server runs contain default addons for ease.
-        // Data + Game Test focus purely on the core mod.
-        val client by creating {
-            client()
-        }
-
-        val server by creating {
-            server()
-
-            gameDirectory = project.file("run/server")
-        }
-
         val data by creating {
             data()
 

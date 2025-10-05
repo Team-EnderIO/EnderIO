@@ -7,10 +7,6 @@ plugins {
     alias(libs.plugins.modpublisher)
 }
 
-// Because of the sourceset references to the addons
-evaluationDependsOn(":enderio-armory")
-evaluationDependsOn(":enderio-modded-conduits")
-
 println("Building Ender IO version ${project.version}")
 
 val localRuntime by configurations.creating
@@ -77,6 +73,9 @@ dependencies {
     localRuntime(project(":enderio-armory"))
     jarJar(project(":enderio-modded-conduits"))
     localRuntime(project(":enderio-modded-conduits"))
+
+    // Bring all other "addons" into the dev env for testing - but do not bundle them in the jar
+    localRuntime(project(":enderio-endergy"))
 
     // Almost Unified
     compileOnly(variantOf(libs.almostUnified) {
