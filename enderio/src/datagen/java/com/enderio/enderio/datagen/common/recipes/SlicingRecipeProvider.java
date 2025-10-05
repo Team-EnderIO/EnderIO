@@ -2,10 +2,10 @@ package com.enderio.enderio.datagen.common.recipes;
 
 import com.enderio.core.data.recipe.SubRecipeProvider;
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.common.content.machines.slicer.SlicingRecipe;
-import com.enderio.enderio.common.foundation.tag.EIOTags;
-import com.enderio.enderio.common.init.EIOBlocks;
-import com.enderio.enderio.common.init.EIOItems;
+import com.enderio.enderio.content.machines.slicer.SlicingRecipe;
+import com.enderio.enderio.foundation.tag.EIOTags;
+import com.enderio.enderio.init.EIOBlocks;
+import com.enderio.enderio.init.EIOItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.RecipeOutput;

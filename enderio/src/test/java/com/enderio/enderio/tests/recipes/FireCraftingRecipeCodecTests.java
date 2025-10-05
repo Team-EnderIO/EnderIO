@@ -1,6 +1,6 @@
 package com.enderio.enderio.tests.recipes;
 
-import com.enderio.enderio.common.content.fire_crafting.FireCraftingRecipe;
+import com.enderio.enderio.content.fire_crafting.FireCraftingRecipe;
 import com.google.gson.JsonParser;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.server.MinecraftServer;

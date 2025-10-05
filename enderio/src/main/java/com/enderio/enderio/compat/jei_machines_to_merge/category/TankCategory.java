@@ -2,11 +2,11 @@ package com.enderio.enderio.compat.jei_machines_to_merge.category;
 
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.client.content.machines.gui.screen.FluidTankScreen;
-import com.enderio.enderio.common.content.fluid_tank.FluidTankBlockEntity;
-import com.enderio.enderio.common.content.fluid_tank.TankRecipe;
-import com.enderio.enderio.common.foundation.lang.MachineLang;
-import com.enderio.enderio.common.init.MachineBlocks;
 import com.enderio.enderio.compat.jei.JEIUtils;
+import com.enderio.enderio.content.fluid_tank.FluidTankBlockEntity;
+import com.enderio.enderio.content.fluid_tank.TankRecipe;
+import com.enderio.enderio.foundation.lang.MachineLang;
+import com.enderio.enderio.init.MachineBlocks;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.helpers.IGuiHelper;

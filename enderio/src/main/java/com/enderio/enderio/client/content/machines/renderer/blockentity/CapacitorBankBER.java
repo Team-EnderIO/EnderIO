@@ -2,9 +2,9 @@ package com.enderio.enderio.client.content.machines.renderer.blockentity;
 
 import com.enderio.core.client.RenderUtil;
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.common.content.machines.capacitor_bank.CapacitorBankBlockEntity;
-import com.enderio.enderio.common.content.machines.capacitor_bank.DisplayMode;
-import com.enderio.enderio.common.foundation.block.entity.multienergy.CapacityTier;
+import com.enderio.enderio.content.machines.capacitor_bank.CapacitorBankBlockEntity;
+import com.enderio.enderio.content.machines.capacitor_bank.DisplayMode;
+import com.enderio.enderio.foundation.block.entity.multienergy.CapacityTier;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;

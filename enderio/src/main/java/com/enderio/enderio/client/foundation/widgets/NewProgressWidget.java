@@ -1,8 +1,8 @@
 package com.enderio.enderio.client.foundation.widgets;
 
 import com.enderio.core.common.util.TooltipUtil;
-import com.enderio.enderio.common.foundation.lang.MachineLang;
 import com.enderio.enderio.compat.ModCompatHelper;
+import com.enderio.enderio.foundation.lang.MachineLang;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;

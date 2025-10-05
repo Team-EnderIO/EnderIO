@@ -1,6 +1,6 @@
 package com.enderio.modded_conduits.common.modules.mekanism.chemical_filter;
 
-import com.enderio.enderio.common.content.filters.FilterSlot;
+import com.enderio.enderio.content.filters.FilterSlot;
 import com.enderio.modded_conduits.common.modules.mekanism.MekanismModule;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalHandler;

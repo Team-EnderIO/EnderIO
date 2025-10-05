@@ -2,10 +2,10 @@ package com.enderio.enderio.conduits.tests.fluid;
 
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.io.RedstoneControl;
-import com.enderio.enderio.common.content.conduits.type.fluid.FluidConduit;
-import com.enderio.enderio.common.content.conduits.type.fluid.FluidConduitConnectionConfig;
-import com.enderio.enderio.common.init.Conduits;
-import com.enderio.enderio.common.init.MachineBlocks;
+import com.enderio.enderio.content.conduits.type.fluid.FluidConduit;
+import com.enderio.enderio.content.conduits.type.fluid.FluidConduitConnectionConfig;
+import com.enderio.enderio.init.Conduits;
+import com.enderio.enderio.init.MachineBlocks;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.world.level.block.Blocks;

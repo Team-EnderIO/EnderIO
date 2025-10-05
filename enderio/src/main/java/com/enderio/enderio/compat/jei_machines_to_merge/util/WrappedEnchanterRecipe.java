@@ -1,6 +1,6 @@
 package com.enderio.enderio.compat.jei_machines_to_merge.util;
 
-import com.enderio.enderio.common.content.enchanter.EnchanterRecipe;
+import com.enderio.enderio.content.enchanter.EnchanterRecipe;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;

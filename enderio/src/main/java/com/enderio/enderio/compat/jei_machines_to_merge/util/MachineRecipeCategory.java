@@ -1,8 +1,8 @@
 package com.enderio.enderio.compat.jei_machines_to_merge.util;
 
 import com.enderio.core.common.util.TooltipUtil;
-import com.enderio.enderio.common.foundation.MachineRecipe;
-import com.enderio.enderio.common.foundation.lang.EIOLang;
+import com.enderio.enderio.foundation.MachineRecipe;
+import com.enderio.enderio.foundation.lang.EIOLang;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;

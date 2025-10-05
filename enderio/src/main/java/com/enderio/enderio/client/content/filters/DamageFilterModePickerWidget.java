@@ -2,8 +2,8 @@ package com.enderio.enderio.client.content.filters;
 
 import com.enderio.core.client.gui.widgets.BaseEnumPickerWidget;
 import com.enderio.enderio.client.foundation.icon.EIOEnumIcons;
-import com.enderio.enderio.common.content.filters.item.general.DamageFilterMode;
-import com.enderio.enderio.common.foundation.lang.EIOEnumLang;
+import com.enderio.enderio.content.filters.item.general.DamageFilterMode;
+import com.enderio.enderio.foundation.lang.EIOEnumLang;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;

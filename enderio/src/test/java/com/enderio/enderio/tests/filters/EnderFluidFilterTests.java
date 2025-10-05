@@ -1,7 +1,7 @@
 package com.enderio.enderio.tests.filters;
 
-import com.enderio.enderio.common.content.filters.fluid.EnderFluidFilter;
-import com.enderio.enderio.common.init.EIOFluids;
+import com.enderio.enderio.content.filters.fluid.EnderFluidFilter;
+import com.enderio.enderio.init.EIOFluids;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.Rarity;

@@ -1,7 +1,7 @@
 package com.enderio.modded_conduits.common.modules.mekanism.chemical_filter;
 
-import com.enderio.enderio.common.content.filters.AbstractFilterItem;
-import com.enderio.enderio.common.content.filters.AbstractFilterMenu;
+import com.enderio.enderio.content.filters.AbstractFilterItem;
+import com.enderio.enderio.content.filters.AbstractFilterMenu;
 import com.enderio.modded_conduits.common.modules.mekanism.MekanismModule;
 import com.enderio.regilite.holder.RegiliteMenu;
 import me.liliandev.ensure.ensures.EnsureSide;

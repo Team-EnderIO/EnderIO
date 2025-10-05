@@ -2,9 +2,9 @@ package com.enderio.enderio.tests.recipes;
 
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.api.soul.SoulBoundUtils;
-import com.enderio.enderio.common.content.vials.SoulVialItem;
-import com.enderio.enderio.common.foundation.soul.ShapedEntityStorageRecipe;
-import com.enderio.enderio.common.init.EIOItems;
+import com.enderio.enderio.content.vials.SoulVialItem;
+import com.enderio.enderio.foundation.soul.ShapedEntityStorageRecipe;
+import com.enderio.enderio.init.EIOItems;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;

@@ -1,15 +1,15 @@
 package com.enderio.enderio.compat.jei_machines_to_merge;
 
-import com.enderio.enderio.common.content.fluid_tank.TankRecipe;
-import com.enderio.enderio.common.content.machines.alloy.AlloySmeltingRecipe;
-import com.enderio.enderio.common.content.machines.obelisks.weather.WeatherChangeRecipe;
-import com.enderio.enderio.common.content.machines.sag_mill.SagMillingRecipe;
-import com.enderio.enderio.common.content.machines.slicer.SlicingRecipe;
-import com.enderio.enderio.common.content.machines.soul_binder.SoulBindingRecipe;
-import com.enderio.enderio.common.content.machines.vat.FermentingRecipe;
-import com.enderio.enderio.common.foundation.souldata.EngineSoul;
-import com.enderio.enderio.common.init.MachineRecipes;
 import com.enderio.enderio.compat.jei_machines_to_merge.util.WrappedEnchanterRecipe;
+import com.enderio.enderio.content.fluid_tank.TankRecipe;
+import com.enderio.enderio.content.machines.alloy.AlloySmeltingRecipe;
+import com.enderio.enderio.content.machines.obelisks.weather.WeatherChangeRecipe;
+import com.enderio.enderio.content.machines.sag_mill.SagMillingRecipe;
+import com.enderio.enderio.content.machines.slicer.SlicingRecipe;
+import com.enderio.enderio.content.machines.soul_binder.SoulBindingRecipe;
+import com.enderio.enderio.content.machines.vat.FermentingRecipe;
+import com.enderio.enderio.foundation.souldata.EngineSoul;
+import com.enderio.enderio.init.MachineRecipes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.item.crafting.RecipeHolder;

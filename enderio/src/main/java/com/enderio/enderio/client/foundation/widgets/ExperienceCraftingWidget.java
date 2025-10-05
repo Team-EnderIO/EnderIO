@@ -1,8 +1,8 @@
 package com.enderio.enderio.client.foundation.widgets;
 
 import com.enderio.core.client.gui.widgets.EIOWidget;
-import com.enderio.enderio.common.foundation.fluid.FluidStorageInfo;
-import com.enderio.enderio.common.foundation.util.ExperienceUtil;
+import com.enderio.enderio.foundation.fluid.FluidStorageInfo;
+import com.enderio.enderio.foundation.util.ExperienceUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;

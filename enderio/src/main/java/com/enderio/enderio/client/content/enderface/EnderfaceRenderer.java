@@ -3,7 +3,7 @@ package com.enderio.enderio.client.content.enderface;
 import com.enderio.enderio.api.travel.TravelRenderer;
 import com.enderio.enderio.client.foundation.renderer.OutlineBuffer;
 import com.enderio.enderio.client.foundation.renderer.OutlineRenderType;
-import com.enderio.enderio.common.content.enderface.EnderfaceTravelTarget;
+import com.enderio.enderio.content.enderface.EnderfaceTravelTarget;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.ChatFormatting;

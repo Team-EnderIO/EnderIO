@@ -2,8 +2,8 @@ package com.enderio.enderio.datagen.common.recipes;
 
 import com.enderio.core.data.recipe.SubRecipeProvider;
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.common.content.machines.obelisks.weather.WeatherChangeRecipe;
-import com.enderio.enderio.common.init.EIOFluids;
+import com.enderio.enderio.content.machines.obelisks.weather.WeatherChangeRecipe;
+import com.enderio.enderio.init.EIOFluids;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;

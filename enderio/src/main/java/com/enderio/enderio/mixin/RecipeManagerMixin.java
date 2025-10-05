@@ -1,9 +1,9 @@
 package com.enderio.enderio.mixin;
 
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.common.config.machines.MachinesConfig;
-import com.enderio.enderio.common.content.machines.alloy.AlloySmeltingRecipe;
-import com.enderio.enderio.common.init.MachineRecipes;
+import com.enderio.enderio.config.machines.MachinesConfig;
+import com.enderio.enderio.content.machines.alloy.AlloySmeltingRecipe;
+import com.enderio.enderio.init.MachineRecipes;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 import net.minecraft.resources.ResourceLocation;

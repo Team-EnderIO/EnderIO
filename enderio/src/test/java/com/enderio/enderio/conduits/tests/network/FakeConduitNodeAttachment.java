@@ -4,7 +4,7 @@ import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.connection.ConnectionStatus;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
-import com.enderio.enderio.common.content.conduits.network.IConduitNodeAttachment;
+import com.enderio.enderio.content.conduits.network.IConduitNodeAttachment;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.DyeColor;

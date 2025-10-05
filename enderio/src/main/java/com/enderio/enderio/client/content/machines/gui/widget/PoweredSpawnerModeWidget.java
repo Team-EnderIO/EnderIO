@@ -2,8 +2,8 @@ package com.enderio.enderio.client.content.machines.gui.widget;
 
 import com.enderio.core.client.gui.widgets.BaseEnumPickerWidget;
 import com.enderio.enderio.client.foundation.icon.MachineEnumIcons;
-import com.enderio.enderio.common.content.machines.powered_spawner.PoweredSpawnerMode;
-import com.enderio.enderio.common.foundation.lang.MachineEnumLang;
+import com.enderio.enderio.content.machines.powered_spawner.PoweredSpawnerMode;
+import com.enderio.enderio.foundation.lang.MachineEnumLang;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;

@@ -1,7 +1,7 @@
 package com.enderio.enderio.datagen.common.data_maps;
 
-import com.enderio.enderio.common.foundation.datamap.VatReagent;
-import com.enderio.enderio.common.foundation.tag.EIOTags;
+import com.enderio.enderio.foundation.datamap.VatReagent;
+import com.enderio.enderio.foundation.tag.EIOTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.TagKey;

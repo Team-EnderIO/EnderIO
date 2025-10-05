@@ -2,9 +2,9 @@ package com.enderio.enderio.datagen.common.recipes;
 
 import com.enderio.core.data.recipe.SubRecipeProvider;
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.common.content.machines.vat.FermentingRecipe;
-import com.enderio.enderio.common.foundation.tag.EIOTags;
-import com.enderio.enderio.common.init.EIOFluids;
+import com.enderio.enderio.content.machines.vat.FermentingRecipe;
+import com.enderio.enderio.foundation.tag.EIOTags;
+import com.enderio.enderio.init.EIOFluids;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.RecipeOutput;

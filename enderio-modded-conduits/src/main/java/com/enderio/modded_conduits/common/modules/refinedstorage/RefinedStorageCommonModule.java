@@ -8,7 +8,7 @@ import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.node.NodeDataType;
 import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataType;
-import com.enderio.enderio.common.init.EIOItems;
+import com.enderio.enderio.init.EIOItems;
 import com.enderio.modded_conduits.common.ModdedConduits;
 import com.enderio.modded_conduits.common.ModuleModIds;
 import com.enderio.modded_conduits.common.modules.ConduitCommonModule;

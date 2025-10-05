@@ -2,10 +2,10 @@ package com.enderio.enderio.datagen.common.recipes;
 
 import com.enderio.core.data.recipe.SubRecipeProvider;
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.common.content.machines.sag_mill.SagMillingRecipe;
-import com.enderio.enderio.common.content.machines.sag_mill.SagMillingRecipe.BonusType;
-import com.enderio.enderio.common.foundation.tag.EIOTags;
-import com.enderio.enderio.common.init.EIOItems;
+import com.enderio.enderio.content.machines.sag_mill.SagMillingRecipe;
+import com.enderio.enderio.content.machines.sag_mill.SagMillingRecipe.BonusType;
+import com.enderio.enderio.foundation.tag.EIOTags;
+import com.enderio.enderio.init.EIOItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
@@ -19,7 +19,7 @@ import net.neoforged.neoforge.common.Tags;
 
 import java.util.List;
 
-import static com.enderio.enderio.common.init.EIOItems.*;
+import static com.enderio.enderio.init.EIOItems.*;
 import static net.minecraft.world.item.Items.*;
 
 public class SagMillRecipeProvider extends SubRecipeProvider {

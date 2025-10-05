@@ -1,7 +1,7 @@
 package com.enderio.enderio.client.content.conduits;
 
 import com.enderio.enderio.client.content.conduits.model.facades.ClientFacadeVisibility;
-import com.enderio.enderio.common.content.conduits.bundle.ConduitBundleBlockEntity;
+import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.RenderType;

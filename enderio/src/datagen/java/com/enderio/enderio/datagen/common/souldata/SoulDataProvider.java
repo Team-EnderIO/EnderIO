@@ -1,13 +1,13 @@
 package com.enderio.enderio.datagen.common.souldata;
 
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.common.content.machines.powered_spawner.MobSpawnMode;
-import com.enderio.enderio.common.foundation.souldata.EngineSoul;
-import com.enderio.enderio.common.foundation.souldata.FarmSoul;
-import com.enderio.enderio.common.foundation.souldata.SolarSoul;
-import com.enderio.enderio.common.foundation.souldata.SoulData;
-import com.enderio.enderio.common.foundation.souldata.SpawnerSoul;
-import com.enderio.enderio.common.init.EIOFluids;
+import com.enderio.enderio.content.machines.powered_spawner.MobSpawnMode;
+import com.enderio.enderio.foundation.souldata.EngineSoul;
+import com.enderio.enderio.foundation.souldata.FarmSoul;
+import com.enderio.enderio.foundation.souldata.SolarSoul;
+import com.enderio.enderio.foundation.souldata.SoulData;
+import com.enderio.enderio.foundation.souldata.SpawnerSoul;
+import com.enderio.enderio.init.EIOFluids;
 import com.google.common.collect.Sets;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

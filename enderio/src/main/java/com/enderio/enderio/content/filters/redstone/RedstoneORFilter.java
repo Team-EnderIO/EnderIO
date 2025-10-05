@@ -1,0 +1,20 @@
+package com.enderio.enderio.content.filters.redstone;
+
+import com.enderio.enderio.api.filter.RedstoneOutputFilter;
+import com.enderio.enderio.api.filter.RedstoneOutputFilterContext;
+import com.enderio.enderio.init.ConduitComponents;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
+
+public class RedstoneORFilter extends DoubleRedstoneChannel implements RedstoneOutputFilter {
+
+    public RedstoneORFilter(ItemStack stack) {
+        super(stack, ConduitComponents.REDSTONE_OR_FILTER);
+    }
+
+    @Override
+    public int getOutputSignal(RedstoneOutputFilterContext context, DyeColor control) {
+        boolean b = context.isActive(getFirstChannel()) || context.isActive(getSecondChannel());
+        return b ? 15 : 0;
+    }
+}

@@ -1,8 +1,8 @@
 package com.enderio.enderio.client.content.machines.gui.screen;
 
-import com.enderio.enderio.common.config.machines.MachinesConfig;
-import com.enderio.enderio.common.content.enderface.EnderfaceBlockEntity;
-import com.enderio.enderio.common.foundation.network.packets.ServerboundEnderfaceInteractPacket;
+import com.enderio.enderio.config.machines.MachinesConfig;
+import com.enderio.enderio.content.enderface.EnderfaceBlockEntity;
+import com.enderio.enderio.foundation.network.packets.ServerboundEnderfaceInteractPacket;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;

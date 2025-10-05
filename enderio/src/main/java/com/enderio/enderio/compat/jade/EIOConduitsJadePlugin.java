@@ -2,7 +2,7 @@ package com.enderio.enderio.compat.jade;
 
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.client.content.conduits.model.facades.FacadeUtil;
-import com.enderio.enderio.common.init.ConduitBlocks;
+import com.enderio.enderio.init.ConduitBlocks;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IWailaClientRegistration;
 import snownee.jade.api.IWailaPlugin;

@@ -1,7 +1,7 @@
 package com.enderio.enderio.datagen.common.recipes;
 
 import com.enderio.core.data.recipe.SubRecipeProvider;
-import com.enderio.enderio.common.init.EIOItems;
+import com.enderio.enderio.init.EIOItems;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.recipes.RecipeCategory;

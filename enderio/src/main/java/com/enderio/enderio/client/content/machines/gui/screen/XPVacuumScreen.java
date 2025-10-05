@@ -5,8 +5,8 @@ import com.enderio.enderio.client.content.machines.gui.screen.base.MachineScreen
 import com.enderio.enderio.client.foundation.widgets.EIOCommonWidgets;
 import com.enderio.enderio.client.foundation.widgets.FluidStackStaticWidget;
 import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget;
-import com.enderio.enderio.common.content.machines.vacuum.xp.XPVacuumMenu;
-import com.enderio.enderio.common.foundation.lang.EIOLang;
+import com.enderio.enderio.content.machines.vacuum.xp.XPVacuumMenu;
+import com.enderio.enderio.foundation.lang.EIOLang;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;

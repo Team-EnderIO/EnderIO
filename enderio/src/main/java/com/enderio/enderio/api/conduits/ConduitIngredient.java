@@ -1,8 +1,8 @@
 package com.enderio.enderio.api.conduits;
 
 import com.enderio.enderio.api.EnderIODataComponents;
-import com.enderio.enderio.common.content.conduits.ConduitBlockItem;
-import com.enderio.enderio.common.init.ConduitBlocks;
+import com.enderio.enderio.content.conduits.ConduitBlockItem;
+import com.enderio.enderio.init.ConduitBlocks;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;

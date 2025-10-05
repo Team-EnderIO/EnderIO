@@ -1,6 +1,6 @@
 package com.enderio.enderio.client.content.paint;
 
-import com.enderio.enderio.common.content.paint.PaintedSandEntity;
+import com.enderio.enderio.content.paint.PaintedSandEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;

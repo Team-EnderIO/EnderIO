@@ -1,7 +1,7 @@
 package com.enderio.armory.common.init;
 
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.common.init.EIOItems;
+import com.enderio.enderio.init.EIOItems;
 import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;

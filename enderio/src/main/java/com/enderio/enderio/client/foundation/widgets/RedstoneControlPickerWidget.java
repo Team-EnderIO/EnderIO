@@ -3,7 +3,7 @@ package com.enderio.enderio.client.foundation.widgets;
 import com.enderio.core.client.gui.widgets.BaseEnumPickerWidget;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.client.foundation.icon.EIOEnumIcons;
-import com.enderio.enderio.common.foundation.lang.EIOEnumLang;
+import com.enderio.enderio.foundation.lang.EIOEnumLang;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;

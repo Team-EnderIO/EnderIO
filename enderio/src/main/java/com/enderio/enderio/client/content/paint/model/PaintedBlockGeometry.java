@@ -1,6 +1,6 @@
 package com.enderio.enderio.client.content.paint.model;
 
-import com.enderio.enderio.common.content.paint.PaintUtils;
+import com.enderio.enderio.content.paint.PaintUtils;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;

@@ -1,11 +1,11 @@
 package com.enderio.enderio.compat.inventorysorter;
 
-import com.enderio.enderio.common.content.enchanter.EnchanterMenu;
-import com.enderio.enderio.common.content.filters.fluid.FluidFilterSlot;
-import com.enderio.enderio.common.content.filters.item.ItemFilterSlot;
-import com.enderio.enderio.common.foundation.menu.GhostMachineSlot;
-import com.enderio.enderio.common.foundation.menu.MachineSlot;
-import com.enderio.enderio.common.foundation.menu.PreviewMachineSlot;
+import com.enderio.enderio.content.enchanter.EnchanterMenu;
+import com.enderio.enderio.content.filters.fluid.FluidFilterSlot;
+import com.enderio.enderio.content.filters.item.ItemFilterSlot;
+import com.enderio.enderio.foundation.menu.GhostMachineSlot;
+import com.enderio.enderio.foundation.menu.MachineSlot;
+import com.enderio.enderio.foundation.menu.PreviewMachineSlot;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.InterModComms;
 import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;

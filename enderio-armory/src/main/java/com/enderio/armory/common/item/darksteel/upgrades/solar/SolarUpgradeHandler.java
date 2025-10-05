@@ -5,7 +5,7 @@ import com.enderio.armory.common.init.ArmoryCapabilities;
 import com.enderio.armory.common.init.ArmoryDataComponents;
 import com.enderio.armory.common.tag.ArmoryTags;
 import com.enderio.core.common.energy.ItemStackEnergy;
-import com.enderio.enderio.common.content.machines.solar_panel.SolarPanelBlockEntity;
+import com.enderio.enderio.content.machines.solar_panel.SolarPanelBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;

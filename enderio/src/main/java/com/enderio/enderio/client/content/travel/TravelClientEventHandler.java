@@ -1,6 +1,6 @@
 package com.enderio.enderio.client.content.travel;
 
-import com.enderio.enderio.common.content.travel.TravelHandler;
+import com.enderio.enderio.content.travel.TravelHandler;
 import net.minecraft.client.player.Input;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;

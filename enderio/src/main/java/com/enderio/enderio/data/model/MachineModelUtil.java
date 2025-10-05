@@ -2,9 +2,9 @@ package com.enderio.enderio.data.model;
 
 import com.enderio.core.data.model.ModelHelper;
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.common.content.machines.solar_panel.SolarPanelBlock;
-import com.enderio.enderio.common.content.machines.solar_panel.SolarPanelTier;
-import com.enderio.enderio.common.foundation.block.ProgressMachineBlock;
+import com.enderio.enderio.content.machines.solar_panel.SolarPanelBlock;
+import com.enderio.enderio.content.machines.solar_panel.SolarPanelTier;
+import com.enderio.enderio.foundation.block.ProgressMachineBlock;
 import com.enderio.regilite.data.DataGenContext;
 import com.enderio.regilite.data.RegiliteItemModelProvider;
 import net.minecraft.resources.ResourceLocation;

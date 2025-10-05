@@ -2,9 +2,9 @@ package com.enderio.enderio.datagen.common.recipes;
 
 import com.enderio.core.data.recipe.SubRecipeProvider;
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.common.content.machines.painting.PaintingRecipe;
-import com.enderio.enderio.common.init.EIOBlocks;
-import com.enderio.enderio.common.init.MachineBlocks;
+import com.enderio.enderio.content.machines.painting.PaintingRecipe;
+import com.enderio.enderio.init.EIOBlocks;
+import com.enderio.enderio.init.MachineBlocks;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.RecipeOutput;

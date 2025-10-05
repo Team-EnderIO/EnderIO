@@ -1,7 +1,7 @@
 package com.enderio.enderio.compat.jei_machines_to_merge.util;
 
 import com.enderio.core.common.recipes.OutputStack;
-import com.enderio.enderio.common.foundation.MachineRecipe;
+import com.enderio.enderio.foundation.MachineRecipe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.RegistryAccess;

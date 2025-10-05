@@ -2,8 +2,8 @@ package com.enderio.enderio.compat.ftb_ultimine;
 
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.client.content.conduits.model.facades.FacadeUtil;
-import com.enderio.enderio.common.content.conduits.bundle.ConduitBundleBlockEntity;
-import com.enderio.enderio.common.init.ConduitBlocks;
+import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
+import com.enderio.enderio.init.ConduitBlocks;
 import dev.ftb.mods.ftbultimine.api.blockbreaking.BlockBreakHandler;
 import dev.ftb.mods.ftbultimine.api.shape.Shape;
 import net.minecraft.core.BlockPos;

@@ -2,7 +2,7 @@ package com.enderio.armory.client.renderer;
 
 import com.enderio.enderio.api.integration.ClientIntegration;
 import com.enderio.enderio.client.EnderIOClient;
-import com.enderio.enderio.common.init.EIOItems;
+import com.enderio.enderio.init.EIOItems;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;

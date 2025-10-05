@@ -1,7 +1,7 @@
 package com.enderio.modded_conduits.common.modules.mekanism.chemical_filter;
 
 import com.enderio.core.common.network.menu.BoolSyncSlot;
-import com.enderio.enderio.common.content.filters.AbstractFilterMenu;
+import com.enderio.enderio.content.filters.AbstractFilterMenu;
 import com.enderio.modded_conduits.common.modules.mekanism.MekanismModule;
 import me.liliandev.ensure.ensures.EnsureSide;
 import mekanism.api.chemical.ChemicalStack;

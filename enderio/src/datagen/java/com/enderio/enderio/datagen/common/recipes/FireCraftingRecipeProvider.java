@@ -2,8 +2,8 @@ package com.enderio.enderio.datagen.common.recipes;
 
 import com.enderio.core.data.recipe.SubRecipeProvider;
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.common.content.fire_crafting.FireCraftingRecipe;
-import com.enderio.enderio.common.init.EIOItems;
+import com.enderio.enderio.content.fire_crafting.FireCraftingRecipe;
+import com.enderio.enderio.init.EIOItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.world.level.Level;

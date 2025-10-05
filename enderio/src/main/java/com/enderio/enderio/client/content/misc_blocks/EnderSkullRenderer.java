@@ -1,7 +1,7 @@
 package com.enderio.enderio.client.content.misc_blocks;
 
-import com.enderio.enderio.common.foundation.block.entity.EnderSkullBlockEntity;
-import com.enderio.enderio.common.init.EIOBlocks;
+import com.enderio.enderio.foundation.block.entity.EnderSkullBlockEntity;
+import com.enderio.enderio.init.EIOBlocks;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;

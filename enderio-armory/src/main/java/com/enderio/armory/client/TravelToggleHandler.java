@@ -3,7 +3,7 @@ package com.enderio.armory.client;
 import com.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.armory.common.item.darksteel.upgrades.travel.TravelEndabledUpdatePacket;
 import com.enderio.armory.common.item.darksteel.upgrades.travel.TravelUpgrade;
-import com.enderio.enderio.common.init.EIODataComponents;
+import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.event.MovementInputUpdateEvent;

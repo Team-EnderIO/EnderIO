@@ -9,10 +9,10 @@ import com.enderio.enderio.client.content.machines.gui.widget.PoweredSpawnerMode
 import com.enderio.enderio.client.foundation.widgets.EIOCommonWidgets;
 import com.enderio.enderio.client.foundation.widgets.NewProgressWidget;
 import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget;
-import com.enderio.enderio.common.content.machines.powered_spawner.PoweredSpawnerMenu;
-import com.enderio.enderio.common.foundation.lang.EIOLang;
-import com.enderio.enderio.common.foundation.lang.MachineEnumLang;
-import com.enderio.enderio.common.foundation.lang.MachineLang;
+import com.enderio.enderio.content.machines.powered_spawner.PoweredSpawnerMenu;
+import com.enderio.enderio.foundation.lang.EIOLang;
+import com.enderio.enderio.foundation.lang.MachineEnumLang;
+import com.enderio.enderio.foundation.lang.MachineLang;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;

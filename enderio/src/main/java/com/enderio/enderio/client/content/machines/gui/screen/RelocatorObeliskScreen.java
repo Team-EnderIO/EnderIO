@@ -1,8 +1,8 @@
 package com.enderio.enderio.client.content.machines.gui.screen;
 
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.common.content.machines.obelisks.relocator.RelocatorObeliskBlockEntity;
-import com.enderio.enderio.common.content.machines.obelisks.relocator.RelocatorObeliskMenu;
+import com.enderio.enderio.content.machines.obelisks.relocator.RelocatorObeliskBlockEntity;
+import com.enderio.enderio.content.machines.obelisks.relocator.RelocatorObeliskMenu;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
