@@ -1,7 +1,6 @@
 package com.enderio.enderio.foundation.block.legacy;
 
 import com.enderio.enderio.foundation.block.entity.legacy.LegacyMachineBlockEntity;
-import com.enderio.regilite.holder.RegiliteBlockEntity;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
@@ -53,19 +52,11 @@ public class LegacyMachineBlock extends BaseEntityBlock {
     private final Supplier<BlockEntityType<? extends LegacyMachineBlockEntity>> blockEntityType;
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
-    private LegacyMachineBlock(Supplier<BlockEntityType<? extends LegacyMachineBlockEntity>> blockEntityType,
+    public LegacyMachineBlock(Supplier<BlockEntityType<? extends LegacyMachineBlockEntity>> blockEntityType,
             Properties properties) {
         super(properties);
 
         this.blockEntityType = blockEntityType;
-        BlockState any = this.getStateDefinition().any();
-        this.registerDefaultState(any.hasProperty(FACING) ? any.setValue(FACING, Direction.NORTH) : any);
-    }
-
-    public LegacyMachineBlock(RegiliteBlockEntity<? extends LegacyMachineBlockEntity> blockEntityType,
-            Properties properties) {
-        super(properties);
-        this.blockEntityType = blockEntityType::get;
         BlockState any = this.getStateDefinition().any();
         this.registerDefaultState(any.hasProperty(FACING) ? any.setValue(FACING, Direction.NORTH) : any);
     }

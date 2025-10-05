@@ -15,7 +15,7 @@ import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import com.enderio.enderio.foundation.recipe.MachineRecipeCaches;
 import com.enderio.enderio.foundation.task.PoweredCraftingMachineTask;
 import com.enderio.enderio.foundation.task.host.CraftingMachineTaskHost;
-import com.enderio.enderio.init.MachineBlockEntities;
+import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.MachineDataComponents;
 import com.enderio.enderio.init.MachineRecipes;
 import net.minecraft.core.BlockPos;
@@ -49,7 +49,7 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
     private final CraftingMachineTaskHost<SagMillingRecipe, SagMillingRecipe.Input> craftingTaskHost;
 
     public SagMillBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(MachineBlockEntities.SAG_MILL.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
+        super(EIOBlockEntities.SAG_MILL.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
                 EnergyIOMode.Input, CAPACITY, USAGE);
 
         craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy, MachineRecipes.SAG_MILLING.type().get(),

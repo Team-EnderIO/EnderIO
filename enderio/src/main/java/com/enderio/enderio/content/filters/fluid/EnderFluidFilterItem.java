@@ -6,7 +6,6 @@ import com.enderio.enderio.content.filters.AbstractFilterMenu;
 import com.enderio.enderio.foundation.lang.EIOLang;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOMenus;
-import com.enderio.regilite.holder.RegiliteMenu;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.RegistryFriendlyByteBuf;

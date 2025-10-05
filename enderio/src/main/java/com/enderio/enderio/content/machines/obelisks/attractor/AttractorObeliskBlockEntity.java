@@ -12,7 +12,7 @@ import com.enderio.enderio.content.machines.obelisks.ObeliskAreaManager;
 import com.enderio.enderio.content.machines.obelisks.ObeliskBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
-import com.enderio.enderio.init.MachineBlockEntities;
+import com.enderio.enderio.init.EIOBlockEntities;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -55,7 +55,7 @@ public class AttractorObeliskBlockEntity extends ObeliskBlockEntity<AttractorObe
     private FakePlayer fakePlayer;
 
     public AttractorObeliskBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(MachineBlockEntities.ATTRACTOR_OBELISK.get(), worldPosition, blockState, false, CapacitorSupport.REQUIRED,
+        super(EIOBlockEntities.ATTRACTOR_OBELISK.get(), worldPosition, blockState, false, CapacitorSupport.REQUIRED,
                 EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE);
         targetPos = new Vec3(worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5);
     }

@@ -1,7 +1,7 @@
 package com.enderio.enderio.content.machines.niard;
 
 import com.enderio.enderio.foundation.block.ProgressMachineBlock;
-import com.enderio.regilite.holder.RegiliteBlockEntity;
+import com.enderio.enderio.init.EIOBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
@@ -11,10 +11,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
-public class NiardBlock extends ProgressMachineBlock<NiardBlockEntity> {
+public final class NiardBlock extends ProgressMachineBlock<NiardBlockEntity> {
 
-    public NiardBlock(RegiliteBlockEntity<? extends NiardBlockEntity> blockEntityType, Properties properties) {
-        super(blockEntityType, properties);
+    public NiardBlock(Properties properties) {
+        super(EIOBlockEntities.NIARD::get, properties);
     }
 
     @Override

@@ -3,8 +3,8 @@ package com.enderio.enderio.content.machines.drain;
 import com.enderio.enderio.foundation.fluid.FluidStorageInfo;
 import com.enderio.enderio.foundation.fluid.FluidStorageSyncSlot;
 import com.enderio.enderio.foundation.menu.PoweredMachineMenu;
+import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOMenus;
-import com.enderio.enderio.init.MachineBlockEntities;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -25,7 +25,7 @@ public class DrainMenu extends PoweredMachineMenu<DrainBlockEntity> {
     }
 
     public DrainMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
-        super(EIOMenus.DRAIN.get(), containerId, playerInventory, buf, MachineBlockEntities.DRAIN.get());
+        super(EIOMenus.DRAIN.get(), containerId, playerInventory, buf, EIOBlockEntities.DRAIN.get());
         addSlots();
 
         fluidSlot = addSyncSlot(FluidStorageSyncSlot.standalone());

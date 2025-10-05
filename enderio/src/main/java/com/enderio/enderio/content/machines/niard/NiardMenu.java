@@ -4,8 +4,8 @@ import com.enderio.enderio.foundation.fluid.FluidStorageInfo;
 import com.enderio.enderio.foundation.fluid.FluidStorageSyncSlot;
 import com.enderio.enderio.foundation.menu.MachineSlot;
 import com.enderio.enderio.foundation.menu.PoweredMachineMenu;
+import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOMenus;
-import com.enderio.enderio.init.MachineBlockEntities;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -26,7 +26,7 @@ public class NiardMenu extends PoweredMachineMenu<NiardBlockEntity> {
     }
 
     public NiardMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
-        super(EIOMenus.NIARD.get(), containerId, playerInventory, buf, MachineBlockEntities.NIARD.get());
+        super(EIOMenus.NIARD.get(), containerId, playerInventory, buf, EIOBlockEntities.NIARD.get());
         addSlots();
 
         fluidSlot = addSyncSlot(FluidStorageSyncSlot.standalone());

@@ -8,7 +8,7 @@ import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
-import com.enderio.enderio.init.MachineBlockEntities;
+import com.enderio.enderio.init.EIOBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -32,7 +32,7 @@ public class WiredChargerBlockEntity extends PoweredMachineBlockEntity {
     private float progress = 0;
 
     public WiredChargerBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(MachineBlockEntities.WIRED_CHARGER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
+        super(EIOBlockEntities.WIRED_CHARGER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
                 EnergyIOMode.Input, CAPACITY, USAGE);
     }
 

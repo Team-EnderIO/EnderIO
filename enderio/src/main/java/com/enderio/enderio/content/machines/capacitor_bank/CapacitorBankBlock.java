@@ -8,7 +8,6 @@ import com.enderio.enderio.foundation.block.entity.legacy.LegacyMachineBlockEnti
 import com.enderio.enderio.foundation.block.entity.multienergy.CapacityTier;
 import com.enderio.enderio.foundation.block.legacy.LegacyMachineBlock;
 import com.enderio.enderio.foundation.lang.EIOLang;
-import com.enderio.regilite.holder.RegiliteBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -19,6 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -28,6 +28,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 @EventBusSubscriber
 public class CapacitorBankBlock extends LegacyMachineBlock implements AdvancedTooltipProvider {
@@ -41,7 +42,7 @@ public class CapacitorBankBlock extends LegacyMachineBlock implements AdvancedTo
     public static final ResourceLocation PLACE_ADVANCEMENT_ID = EnderIO.rl("place_capacitor_bank");
 
     public CapacitorBankBlock(Properties properties,
-            RegiliteBlockEntity<? extends LegacyMachineBlockEntity> blockEntityType, CapacityTier tier) {
+            Supplier<BlockEntityType<? extends LegacyMachineBlockEntity>> blockEntityType, CapacityTier tier) {
         super(blockEntityType, properties);
         this.tier = tier;
     }

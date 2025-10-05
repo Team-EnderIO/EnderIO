@@ -3,8 +3,8 @@ package com.enderio.enderio.content.machines.vacuum.chest;
 import com.enderio.enderio.content.machines.vacuum.VacuumMachineBlockEntity;
 import com.enderio.enderio.content.machines.vacuum.VacuumMenu;
 import com.enderio.enderio.foundation.menu.MachineSlot;
+import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOMenus;
-import com.enderio.enderio.init.MachineBlockEntities;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -17,7 +17,7 @@ public class VacuumChestMenu extends VacuumMenu<VacuumChestBlockEntity> {
 
     public VacuumChestMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
         super(EIOMenus.VACUUM_CHEST.get(), containerId, playerInventory, buf,
-                MachineBlockEntities.VACUUM_CHEST.get());
+            EIOBlockEntities.VACUUM_CHEST.get());
         addSlots();
     }
 

@@ -19,9 +19,9 @@ import com.enderio.enderio.foundation.io.fluid.MachineFluidTank;
 import com.enderio.enderio.foundation.io.fluid.MachineTankLayout;
 import com.enderio.enderio.foundation.io.fluid.TankAccess;
 import com.enderio.enderio.foundation.state.MachineState;
+import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.MachineAttachments;
-import com.enderio.enderio.init.MachineBlockEntities;
 import com.enderio.enderio.init.MachineDataComponents;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -70,7 +70,7 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements Range
     private ActionRange actionRange = DEFAULT_RANGE;
 
     public DrainBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(MachineBlockEntities.DRAIN.get(), worldPosition, blockState, false, CapacitorSupport.REQUIRED,
+        super(EIOBlockEntities.DRAIN.get(), worldPosition, blockState, false, CapacitorSupport.REQUIRED,
                 EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE);
         fluidHandler = createFluidHandler();
     }

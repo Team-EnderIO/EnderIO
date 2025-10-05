@@ -6,7 +6,7 @@ import com.enderio.enderio.api.travel.TravelTargetApi;
 import com.enderio.enderio.config.base.BaseConfig;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.foundation.block.EIOBlockEntity;
-import com.enderio.enderio.init.MachineBlockEntities;
+import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.MachineFeatureFlags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -28,7 +28,7 @@ public class EnderfaceBlockEntity extends EIOBlockEntity {
     private final NetworkDataSlot<EnderfaceTravelTarget> travelTargetDataSlot;
 
     public EnderfaceBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(MachineBlockEntities.ENDERFACE.get(), worldPosition, blockState);
+        super(EIOBlockEntities.ENDERFACE.get(), worldPosition, blockState);
 
         travelTargetDataSlot = addDataSlot(
                 EnderfaceTravelTarget.DATA_SLOT_TYPE.create(this::getOrCreateTravelTarget, this::setTravelTarget));

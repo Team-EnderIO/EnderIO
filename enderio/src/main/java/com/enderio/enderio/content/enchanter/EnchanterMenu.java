@@ -4,8 +4,8 @@ import com.enderio.core.common.menu.BaseBlockEntityMenu;
 import com.enderio.enderio.foundation.inventory.MachineInventory;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import com.enderio.enderio.foundation.menu.MachineSlot;
+import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOMenus;
-import com.enderio.enderio.init.MachineBlockEntities;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -24,7 +24,7 @@ public class EnchanterMenu extends BaseBlockEntityMenu<EnchanterBlockEntity> {
     }
 
     public EnchanterMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
-        super(EIOMenus.ENCHANTER.get(), containerId, playerInventory, buf, MachineBlockEntities.ENCHANTER.get());
+        super(EIOMenus.ENCHANTER.get(), containerId, playerInventory, buf, EIOBlockEntities.ENCHANTER.get());
         addSlots();
     }
 

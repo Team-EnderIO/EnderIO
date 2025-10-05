@@ -21,10 +21,10 @@ import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.foundation.task.PoweredCraftingMachineTask;
 import com.enderio.enderio.foundation.task.host.CraftingMachineTaskHost;
 import com.enderio.enderio.foundation.util.ExperienceUtil;
+import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOFluids;
 import com.enderio.enderio.init.EIOItems;
-import com.enderio.enderio.init.MachineBlockEntities;
 import com.enderio.enderio.init.MachineRecipes;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.BlockPos;
@@ -70,7 +70,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
     private final CraftingMachineTaskHost<SoulBindingRecipe, SoulBindingRecipe.Input> craftingTaskHost;
 
     public SoulBinderBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(MachineBlockEntities.SOUL_BINDER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
+        super(EIOBlockEntities.SOUL_BINDER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
                 EnergyIOMode.Input, CAPACITY, USAGE);
         fluidHandler = createFluidHandler();
 

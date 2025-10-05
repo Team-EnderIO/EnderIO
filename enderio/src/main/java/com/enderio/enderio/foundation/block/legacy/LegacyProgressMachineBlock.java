@@ -1,13 +1,15 @@
 package com.enderio.enderio.foundation.block.legacy;
 
 import com.enderio.enderio.foundation.block.entity.legacy.LegacyMachineBlockEntity;
-import com.enderio.regilite.holder.RegiliteBlockEntity;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+
+import java.util.function.Supplier;
 
 /**
  * A block that can display its powered state when performing its action.
@@ -17,7 +19,7 @@ public class LegacyProgressMachineBlock extends LegacyMachineBlock {
 
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
-    public LegacyProgressMachineBlock(RegiliteBlockEntity<? extends LegacyMachineBlockEntity> blockEntityType,
+    public LegacyProgressMachineBlock(Supplier<BlockEntityType<? extends LegacyMachineBlockEntity>> blockEntityType,
             Properties properties) {
         super(blockEntityType, properties);
         this.registerDefaultState(

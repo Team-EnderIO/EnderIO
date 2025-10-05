@@ -10,8 +10,8 @@ import com.enderio.enderio.foundation.io.fluid.MachineFluidTank;
 import com.enderio.enderio.foundation.io.fluid.MachineTankLayout;
 import com.enderio.enderio.foundation.io.fluid.TankAccess;
 import com.enderio.enderio.foundation.state.MachineState;
+import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
-import com.enderio.enderio.init.MachineBlockEntities;
 import com.enderio.enderio.init.MachineRecipes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -48,7 +48,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
         public static final int CAPACITY = 16 * FluidType.BUCKET_VOLUME;
 
         public Standard(BlockPos worldPosition, BlockState blockState) {
-            super(MachineBlockEntities.FLUID_TANK.get(), worldPosition, blockState);
+            super(EIOBlockEntities.FLUID_TANK.get(), worldPosition, blockState);
         }
 
         @Override
@@ -61,7 +61,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
         public static final int CAPACITY = 32 * FluidType.BUCKET_VOLUME;
 
         public Enhanced(BlockPos worldPosition, BlockState blockState) {
-            super(MachineBlockEntities.PRESSURIZED_FLUID_TANK.get(), worldPosition, blockState);
+            super(EIOBlockEntities.PRESSURIZED_FLUID_TANK.get(), worldPosition, blockState);
         }
 
         @Override

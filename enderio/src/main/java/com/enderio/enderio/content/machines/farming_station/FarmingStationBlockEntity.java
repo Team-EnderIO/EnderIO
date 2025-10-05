@@ -21,8 +21,8 @@ import com.enderio.enderio.foundation.inventory.MultiSlotAccess;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import com.enderio.enderio.foundation.souldata.FarmSoul;
 import com.enderio.enderio.foundation.state.MachineState;
+import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
-import com.enderio.enderio.init.MachineBlockEntities;
 import com.enderio.enderio.init.MachineDataComponents;
 import com.mojang.authlib.GameProfile;
 import me.liliandev.ensure.ensures.EnsureSide;
@@ -100,7 +100,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     private FakePlayer farmPlayer;
 
     public FarmingStationBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(MachineBlockEntities.FARMING_STATION.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
+        super(EIOBlockEntities.FARMING_STATION.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
                 EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE);
     }
 

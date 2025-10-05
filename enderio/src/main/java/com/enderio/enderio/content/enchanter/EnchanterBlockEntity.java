@@ -6,7 +6,7 @@ import com.enderio.enderio.foundation.inventory.MachineInventory;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import com.enderio.enderio.foundation.io.DumbIOConfigurable;
-import com.enderio.enderio.init.MachineBlockEntities;
+import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.MachineRecipes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -38,7 +38,7 @@ public class EnchanterBlockEntity extends EnderBlockEntity implements MenuProvid
     private final MachineInventory inventory;
 
     public EnchanterBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(MachineBlockEntities.ENCHANTER.get(), worldPosition, blockState);
+        super(EIOBlockEntities.ENCHANTER.get(), worldPosition, blockState);
 
         inventory = createInventory();
     }

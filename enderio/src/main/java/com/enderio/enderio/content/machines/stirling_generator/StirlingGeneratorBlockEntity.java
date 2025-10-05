@@ -14,7 +14,7 @@ import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import com.enderio.enderio.foundation.io.energy.MachineEnergyStorage;
 import com.enderio.enderio.foundation.state.MachineState;
-import com.enderio.enderio.init.MachineBlockEntities;
+import com.enderio.enderio.init.EIOBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -47,7 +47,7 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
     private int burnDuration;
 
     public StirlingGeneratorBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(MachineBlockEntities.STIRLING_GENERATOR.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
+        super(EIOBlockEntities.STIRLING_GENERATOR.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
                 EnergyIOMode.Output, CAPACITY, FixedScalable.ZERO);
     }
 

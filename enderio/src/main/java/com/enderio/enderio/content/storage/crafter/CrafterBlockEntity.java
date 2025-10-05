@@ -9,7 +9,7 @@ import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.foundation.inventory.MultiSlotAccess;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
-import com.enderio.enderio.init.MachineBlockEntities;
+import com.enderio.enderio.init.EIOBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -45,7 +45,7 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
     private final Queue<ItemStack> outputBuffer = new ArrayDeque<>();
 
     public CrafterBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(MachineBlockEntities.CRAFTER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
+        super(EIOBlockEntities.CRAFTER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
                 EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE);
     }
 

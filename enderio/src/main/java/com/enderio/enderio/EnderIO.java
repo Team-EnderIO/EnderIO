@@ -38,7 +38,6 @@ import com.enderio.enderio.init.EIOMenus;
 import com.enderio.enderio.init.EIOParticles;
 import com.enderio.enderio.init.EIORecipes;
 import com.enderio.enderio.init.MachineAttachments;
-import com.enderio.enderio.init.MachineBlockEntities;
 import com.enderio.enderio.init.MachineBlocks;
 import com.enderio.enderio.init.MachineDataComponents;
 import com.enderio.enderio.init.MachineRecipes;
@@ -135,7 +134,6 @@ public class EnderIO {
         MachineDataComponents.register(modEventBus);
         MachineTravelTargets.register(modEventBus);
         MachineBlocks.register(modEventBus);
-        MachineBlockEntities.register(modEventBus);
         MachineRecipes.register(modEventBus);
         MachineAttachments.register(modEventBus);
         MachineLang.register();

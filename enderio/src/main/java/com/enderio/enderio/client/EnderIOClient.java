@@ -56,6 +56,10 @@ import com.enderio.enderio.client.content.machines.gui.screen.WiredChargerScreen
 import com.enderio.enderio.client.content.machines.gui.screen.WirelessChargerScreen;
 import com.enderio.enderio.client.content.machines.gui.screen.XPObeliskScreen;
 import com.enderio.enderio.client.content.machines.gui.screen.XPVacuumScreen;
+import com.enderio.enderio.client.content.machines.renderer.blockentity.CapacitorBankBER;
+import com.enderio.enderio.client.content.machines.renderer.blockentity.FluidTankBER;
+import com.enderio.enderio.client.content.machines.renderer.blockentity.NiardBER;
+import com.enderio.enderio.client.content.machines.renderer.blockentity.ObeliskBER;
 import com.enderio.enderio.client.content.misc_blocks.EnderSkullRenderer;
 import com.enderio.enderio.client.content.paint.model.PaintedBlockGeometry;
 import com.enderio.enderio.client.content.tools.ActiveGliderRenderLayer;
@@ -91,6 +95,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.PlainTextContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
@@ -205,6 +210,29 @@ public class EnderIOClient {
     }
 
     @SubscribeEvent
+    public static void modelRenderer(EntityRenderersEvent.RegisterRenderers event) {
+        for (var capBank : EIOBlockEntities.CAPACITOR_BANKS.values()) {
+            event.registerBlockEntityRenderer(capBank.get(), CapacitorBankBER::new);
+        }
+
+        event.registerBlockEntityRenderer(EIOBlockEntities.NIARD.get(), NiardBER::new);
+        event.registerBlockEntityRenderer(EIOBlockEntities.XP_OBELISK.get(), c -> new ObeliskBER(EIOItems.VOID_VIAL::get));
+        event.registerBlockEntityRenderer(EIOBlockEntities.INHIBITOR_OBELISK.get(), c -> new ObeliskBER(() -> Items.ENDER_PEARL));
+        event.registerBlockEntityRenderer(EIOBlockEntities.AVERSION_OBELISK.get(), c -> new ObeliskBER(EIOBlocks.ENDERMAN_HEAD::asItem));
+        event.registerBlockEntityRenderer(EIOBlockEntities.RELOCATOR_OBELISK.get(), c -> new ObeliskBER(() -> Items.PRISMARINE));
+        event.registerBlockEntityRenderer(EIOBlockEntities.ATTRACTOR_OBELISK.get(), c -> new ObeliskBER(EIOItems.ELECTROMAGNET::get));
+        event.registerBlockEntityRenderer(EIOBlockEntities.WEATHER_OBELISK.get(), c -> new ObeliskBER(() -> Items.FIREWORK_ROCKET));
+
+        // TODO:  Custom model and BER for mind killer maybe?
+        event.registerBlockEntityRenderer(EIOBlockEntities.MIND_KILLER.get(), c -> new ObeliskBER(() -> Items.ZOMBIE_HEAD));
+
+        event.registerBlockEntityRenderer(EIOBlockEntities.FLUID_TANK.get(), FluidTankBER::new);
+        event.registerBlockEntityRenderer(EIOBlockEntities.PRESSURIZED_FLUID_TANK.get(), FluidTankBER::new);
+
+        event.registerBlockEntityRenderer(EIOBlockEntities.ENDER_SKULL.get(), EnderSkullRenderer::new);
+    }
+
+    @SubscribeEvent
     public static void additionalModels(ModelEvent.RegisterAdditional event) {
         Set<ResourceLocation> gliderModels = Minecraft.getInstance()
                 .getResourceManager()
@@ -275,11 +303,6 @@ public class EnderIOClient {
         event.register(EnderIO.rl("conduit"), new ConduitBundleGeometry.Loader());
         event.register(EnderIO.rl("conduit_item"), new ConduitItemModelLoader());
         event.register(EnderIO.rl("facades_item"), new FacadeItemGeometry.Loader());
-    }
-
-    @SubscribeEvent
-    public static void modelRenderer(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerBlockEntityRenderer(EIOBlockEntities.ENDER_SKULL.get(), EnderSkullRenderer::new);
     }
 
     @SubscribeEvent

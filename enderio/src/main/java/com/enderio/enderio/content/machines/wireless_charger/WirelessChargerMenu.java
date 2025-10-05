@@ -2,8 +2,8 @@ package com.enderio.enderio.content.machines.wireless_charger;
 
 import com.enderio.core.common.network.menu.IntSyncSlot;
 import com.enderio.enderio.foundation.menu.PoweredMachineMenu;
+import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOMenus;
-import com.enderio.enderio.init.MachineBlockEntities;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -25,7 +25,7 @@ public class WirelessChargerMenu extends PoweredMachineMenu<WirelessChargerBlock
 
     public WirelessChargerMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
         super(EIOMenus.WIRELESS_CHARGER.get(), containerId, playerInventory, buf,
-                MachineBlockEntities.WIRELESS_CHARGER.get());
+            EIOBlockEntities.WIRELESS_CHARGER.get());
         addSlots();
 
         maxRange = addSyncSlot(IntSyncSlot.standalone());

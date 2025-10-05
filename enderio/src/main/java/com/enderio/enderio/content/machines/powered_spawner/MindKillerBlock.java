@@ -1,6 +1,6 @@
 package com.enderio.enderio.content.machines.powered_spawner;
 
-import com.enderio.enderio.init.MachineBlockEntities;
+import com.enderio.enderio.init.EIOBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
@@ -25,6 +25,6 @@ public class MindKillerBlock extends Block implements EntityBlock {
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return MachineBlockEntities.MIND_KILLER.get().create(blockPos, blockState);
+        return EIOBlockEntities.MIND_KILLER.get().create(blockPos, blockState);
     }
 }

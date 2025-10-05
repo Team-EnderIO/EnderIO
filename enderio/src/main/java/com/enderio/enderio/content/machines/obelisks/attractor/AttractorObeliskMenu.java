@@ -2,8 +2,8 @@ package com.enderio.enderio.content.machines.obelisks.attractor;
 
 import com.enderio.enderio.content.machines.obelisks.ObeliskMenu;
 import com.enderio.enderio.foundation.menu.MachineSlot;
+import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOMenus;
-import com.enderio.enderio.init.MachineBlockEntities;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -16,7 +16,7 @@ public class AttractorObeliskMenu extends ObeliskMenu<AttractorObeliskBlockEntit
 
     public AttractorObeliskMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
         super(EIOMenus.ATTRACTOR_OBELISK.get(), containerId, playerInventory, buf,
-                MachineBlockEntities.ATTRACTOR_OBELISK.get());
+            EIOBlockEntities.ATTRACTOR_OBELISK.get());
         addSlots();
     }
 

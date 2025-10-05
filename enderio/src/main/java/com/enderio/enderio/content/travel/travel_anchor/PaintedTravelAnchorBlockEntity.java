@@ -4,7 +4,7 @@ import com.enderio.enderio.content.paint.PaintUtils;
 import com.enderio.enderio.content.paint.block.entity.PaintedBlockEntity;
 import com.enderio.enderio.content.paint.block.entity.SinglePaintedBlockEntity;
 import com.enderio.enderio.foundation.EIONBTKeys;
-import com.enderio.enderio.init.MachineBlockEntities;
+import com.enderio.enderio.init.EIOBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -25,7 +25,7 @@ public class PaintedTravelAnchorBlockEntity extends TravelAnchorBlockEntity impl
     private Block paint;
 
     public PaintedTravelAnchorBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
-        super(MachineBlockEntities.PAINTED_TRAVEL_ANCHOR.get(), pWorldPosition, pBlockState);
+        super(EIOBlockEntities.PAINTED_TRAVEL_ANCHOR.get(), pWorldPosition, pBlockState);
     }
 
     @Override

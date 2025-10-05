@@ -12,7 +12,7 @@ import com.enderio.enderio.foundation.block.entity.multienergy.MultiEnergyStorag
 import com.enderio.enderio.foundation.io.energy.ILargeMachineEnergyStorage;
 import com.enderio.enderio.foundation.io.energy.MachineEnergyStorage;
 import com.enderio.enderio.foundation.tag.EIOTags;
-import com.enderio.enderio.init.MachineBlockEntities;
+import com.enderio.enderio.init.EIOBlockEntities;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
 import dev.gigaherz.graph3.Mergeable;
@@ -67,7 +67,7 @@ public class CapacitorBankBlockEntity extends LegacyPoweredMachineBlockEntity im
 
     public CapacitorBankBlockEntity(BlockPos worldPosition, BlockState blockState, CapacitorTier tier) {
         super(EnergyIOMode.Both, new FixedScalable(tier::getStorageCapacity),
-                new FixedScalable(tier::getStorageCapacity), MachineBlockEntities.CAPACITOR_BANKS.get(tier).get(),
+                new FixedScalable(tier::getStorageCapacity), EIOBlockEntities.CAPACITOR_BANKS.get(tier).get(),
                 worldPosition, blockState);
         this.tier = tier;
         this.node = new MultiEnergyNode(() -> energyStorage,

@@ -8,7 +8,7 @@ import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.foundation.inventory.MultiSlotAccess;
-import com.enderio.enderio.init.MachineBlockEntities;
+import com.enderio.enderio.init.EIOBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -28,7 +28,7 @@ public class ImpulseHopperBlockEntity extends PoweredMachineBlockEntity {
     public static final MultiSlotAccess GHOST = new MultiSlotAccess();
 
     public ImpulseHopperBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(MachineBlockEntities.IMPULSE_HOPPER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
+        super(EIOBlockEntities.IMPULSE_HOPPER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
                 EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE);
     }
 

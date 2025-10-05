@@ -3,8 +3,8 @@ package com.enderio.enderio.content.machines.wired_charger;
 import com.enderio.core.common.network.menu.FloatSyncSlot;
 import com.enderio.enderio.foundation.menu.MachineSlot;
 import com.enderio.enderio.foundation.menu.PoweredMachineMenu;
+import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOMenus;
-import com.enderio.enderio.init.MachineBlockEntities;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -23,7 +23,7 @@ public class WiredChargerMenu extends PoweredMachineMenu<WiredChargerBlockEntity
 
     public WiredChargerMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
         super(EIOMenus.WIRED_CHARGER.get(), containerId, playerInventory, buf,
-                MachineBlockEntities.WIRED_CHARGER.get());
+            EIOBlockEntities.WIRED_CHARGER.get());
         addSlots();
 
         chargeProgressSlot = addSyncSlot(FloatSyncSlot.standalone());

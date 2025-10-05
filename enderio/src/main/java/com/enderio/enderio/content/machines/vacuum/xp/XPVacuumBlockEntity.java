@@ -7,9 +7,9 @@ import com.enderio.enderio.foundation.io.fluid.MachineFluidHandler;
 import com.enderio.enderio.foundation.io.fluid.MachineFluidTank;
 import com.enderio.enderio.foundation.io.fluid.MachineTankLayout;
 import com.enderio.enderio.foundation.io.fluid.TankAccess;
+import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOFluids;
-import com.enderio.enderio.init.MachineBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
@@ -31,7 +31,7 @@ public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb>
     private static final TankAccess TANK = new TankAccess();
 
     public XPVacuumBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
-        super(MachineBlockEntities.XP_VACUUM.get(), pWorldPosition, pBlockState, ExperienceOrb.class);
+        super(EIOBlockEntities.XP_VACUUM.get(), pWorldPosition, pBlockState, ExperienceOrb.class);
         fluidHandler = createFluidHandler();
     }
 

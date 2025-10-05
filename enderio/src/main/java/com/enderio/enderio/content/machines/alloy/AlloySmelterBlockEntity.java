@@ -16,7 +16,7 @@ import com.enderio.enderio.foundation.io.energy.IMachineEnergyStorage;
 import com.enderio.enderio.foundation.recipe.MachineRecipeCaches;
 import com.enderio.enderio.foundation.task.PoweredCraftingMachineTask;
 import com.enderio.enderio.foundation.task.host.CraftingMachineTaskHost;
-import com.enderio.enderio.init.MachineBlockEntities;
+import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.MachineDataComponents;
 import com.enderio.enderio.init.MachineRecipes;
 import com.mojang.logging.LogUtils;
@@ -64,7 +64,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public AlloySmelterBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
-        super(MachineBlockEntities.ALLOY_SMELTER.get(), pWorldPosition, pBlockState, true, CapacitorSupport.REQUIRED,
+        super(EIOBlockEntities.ALLOY_SMELTER.get(), pWorldPosition, pBlockState, true, CapacitorSupport.REQUIRED,
                 EnergyIOMode.Input, CAPACITY, USAGE);
 
         // Crafting task host

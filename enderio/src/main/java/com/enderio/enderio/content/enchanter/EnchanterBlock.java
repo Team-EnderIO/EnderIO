@@ -1,6 +1,5 @@
 package com.enderio.enderio.content.enchanter;
 
-import com.enderio.enderio.init.MachineBlockEntities;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -65,7 +64,7 @@ public class EnchanterBlock extends Block implements EntityBlock {
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return MachineBlockEntities.ENCHANTER.create(pPos, pState);
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new EnchanterBlockEntity(pos, state);
     }
 }

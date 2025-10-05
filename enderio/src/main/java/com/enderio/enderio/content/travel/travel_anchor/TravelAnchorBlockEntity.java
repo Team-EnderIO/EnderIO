@@ -6,7 +6,7 @@ import com.enderio.enderio.api.travel.TravelTargetApi;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
-import com.enderio.enderio.init.MachineBlockEntities;
+import com.enderio.enderio.init.EIOBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -28,7 +28,7 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
     private final NetworkDataSlot<AnchorTravelTarget> travelTargetDataSlot;
 
     public TravelAnchorBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
-        this(MachineBlockEntities.TRAVEL_ANCHOR.get(), pWorldPosition, pBlockState);
+        this(EIOBlockEntities.TRAVEL_ANCHOR.get(), pWorldPosition, pBlockState);
     }
 
     public TravelAnchorBlockEntity(BlockEntityType<?> type, BlockPos pWorldPosition, BlockState pBlockState) {

@@ -3,8 +3,8 @@ package com.enderio.enderio.content.machines.soul_engine;
 import com.enderio.enderio.foundation.fluid.FluidStorageInfo;
 import com.enderio.enderio.foundation.fluid.FluidStorageSyncSlot;
 import com.enderio.enderio.foundation.menu.PoweredMachineMenu;
+import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOMenus;
-import com.enderio.enderio.init.MachineBlockEntities;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -22,7 +22,7 @@ public class SoulEngineMenu extends PoweredMachineMenu<SoulEngineBlockEntity> {
 
     public SoulEngineMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
         super(EIOMenus.SOUL_ENGINE.get(), containerId, playerInventory, buf,
-                MachineBlockEntities.SOUL_ENGINE.get());
+            EIOBlockEntities.SOUL_ENGINE.get());
         addSlots();
 
         fluidTankSlot = addSyncSlot(FluidStorageSyncSlot.standalone());

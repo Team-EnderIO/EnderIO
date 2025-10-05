@@ -4,8 +4,8 @@ import com.enderio.core.common.network.menu.EnumSyncSlot;
 import com.enderio.core.common.network.menu.FloatSyncSlot;
 import com.enderio.enderio.foundation.menu.MachineSlot;
 import com.enderio.enderio.foundation.menu.PoweredMachineMenu;
+import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOMenus;
-import com.enderio.enderio.init.MachineBlockEntities;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -30,7 +30,7 @@ public class AlloySmelterMenu extends PoweredMachineMenu<AlloySmelterBlockEntity
     // Client constructor
     public AlloySmelterMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
         super(EIOMenus.ALLOY_SMELTER.get(), containerId, playerInventory, buf,
-                MachineBlockEntities.ALLOY_SMELTER.get());
+            EIOBlockEntities.ALLOY_SMELTER.get());
         addSlots();
 
         progressSlot = addSyncSlot(FloatSyncSlot.standalone());

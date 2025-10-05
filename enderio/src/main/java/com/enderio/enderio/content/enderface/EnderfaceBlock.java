@@ -2,7 +2,7 @@ package com.enderio.enderio.content.enderface;
 
 import com.enderio.enderio.api.travel.TravelTargetApi;
 import com.enderio.enderio.foundation.block.EIOEntityBlock;
-import com.enderio.enderio.init.MachineBlockEntities;
+import com.enderio.enderio.init.EIOBlockEntities;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -13,7 +13,7 @@ public class EnderfaceBlock extends EIOEntityBlock<EnderfaceBlockEntity> {
     private static final MapCodec<EnderfaceBlock> CODEC = simpleCodec(EnderfaceBlock::new);
 
     public EnderfaceBlock(Properties properties) {
-        super(MachineBlockEntities.ENDERFACE::get, properties);
+        super(EIOBlockEntities.ENDERFACE::get, properties);
     }
 
     @Override

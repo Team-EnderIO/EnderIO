@@ -5,7 +5,7 @@ import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.content.machines.vacuum.VacuumMachineBlockEntity;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout.Builder;
-import com.enderio.enderio.init.MachineBlockEntities;
+import com.enderio.enderio.init.EIOBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
@@ -19,7 +19,7 @@ import java.util.function.Predicate;
 public class VacuumChestBlockEntity extends VacuumMachineBlockEntity<ItemEntity> {
 
     public VacuumChestBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
-        super(MachineBlockEntities.VACUUM_CHEST.get(), pWorldPosition, pBlockState, ItemEntity.class);
+        super(EIOBlockEntities.VACUUM_CHEST.get(), pWorldPosition, pBlockState, ItemEntity.class);
     }
 
     @Override

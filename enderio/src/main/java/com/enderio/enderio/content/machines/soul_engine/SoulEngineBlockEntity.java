@@ -19,8 +19,8 @@ import com.enderio.enderio.foundation.io.fluid.MachineTankLayout;
 import com.enderio.enderio.foundation.io.fluid.TankAccess;
 import com.enderio.enderio.foundation.souldata.EngineSoul;
 import com.enderio.enderio.foundation.state.MachineState;
+import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
-import com.enderio.enderio.init.MachineBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -73,7 +73,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     private boolean reloadCache = !reload;
 
     public SoulEngineBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(MachineBlockEntities.SOUL_ENGINE.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
+        super(EIOBlockEntities.SOUL_ENGINE.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
                 EnergyIOMode.Output, CAPACITY, FixedScalable.ZERO);
         fluidHandler = createFluidHandler();
     }

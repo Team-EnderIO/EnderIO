@@ -1,13 +1,15 @@
 package com.enderio.enderio.foundation.block;
 
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
-import com.enderio.regilite.holder.RegiliteBlockEntity;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+
+import java.util.function.Supplier;
 
 /**
  * A block that can display its powered state when performing its action.
@@ -16,8 +18,8 @@ public class ProgressMachineBlock<T extends MachineBlockEntity> extends MachineB
 
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
-    public ProgressMachineBlock(RegiliteBlockEntity<? extends T> blockEntityType, Properties properties) {
-        super(blockEntityType::get, properties);
+    public ProgressMachineBlock(Supplier<BlockEntityType<? extends T>> blockEntityType, Properties properties) {
+        super(blockEntityType, properties);
         this.registerDefaultState(
                 this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(POWERED, false));
     }

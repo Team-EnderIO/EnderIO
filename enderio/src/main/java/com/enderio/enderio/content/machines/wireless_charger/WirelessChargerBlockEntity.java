@@ -16,7 +16,7 @@ import com.enderio.enderio.foundation.energy.PoweredMachineEnergyStorage;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.foundation.io.IOConfig;
 import com.enderio.enderio.foundation.tag.EIOTags;
-import com.enderio.enderio.init.MachineBlockEntities;
+import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.MachineDataComponents;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -57,7 +57,7 @@ public class WirelessChargerBlockEntity extends PoweredMachineBlockEntity implem
     private @Nullable AABB bounds;
 
     public WirelessChargerBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(MachineBlockEntities.WIRELESS_CHARGER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
+        super(EIOBlockEntities.WIRELESS_CHARGER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
                 EnergyIOMode.Input, CAPACITY, USAGE);
         actionRange = new ActionRange(MachinesConfig.COMMON.WIRELESS_CHARGER_RANGE.get(), false);
         energyUpkeep = MachinesConfig.COMMON.ENERGY.WIRELESS_CHARGER_UPKEEP;

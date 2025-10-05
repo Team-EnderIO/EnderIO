@@ -1,7 +1,7 @@
 package com.enderio.enderio.content.travel.travel_anchor;
 
 import com.enderio.enderio.content.paint.block.PaintedBlock;
-import com.enderio.enderio.init.MachineBlockEntities;
+import com.enderio.enderio.init.EIOBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
@@ -21,13 +21,13 @@ public class PaintedTravelAnchorBlock extends TravelAnchorBlock<PaintedTravelAnc
         implements PaintedBlock {
 
     public PaintedTravelAnchorBlock(Properties props) {
-        super(MachineBlockEntities.PAINTED_TRAVEL_ANCHOR::get, props);
+        super(EIOBlockEntities.PAINTED_TRAVEL_ANCHOR::get, props);
     }
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return MachineBlockEntities.PAINTED_TRAVEL_ANCHOR.create(pPos, pState);
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new PaintedTravelAnchorBlockEntity(pos, state);
     }
 
     @Override

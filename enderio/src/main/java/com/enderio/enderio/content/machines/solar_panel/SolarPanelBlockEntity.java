@@ -13,8 +13,8 @@ import com.enderio.enderio.foundation.io.IOConfig;
 import com.enderio.enderio.foundation.io.energy.MachineEnergyStorage;
 import com.enderio.enderio.foundation.souldata.SolarSoul;
 import com.enderio.enderio.foundation.tag.EIOTags;
+import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
-import com.enderio.enderio.init.MachineBlockEntities;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
 import dev.gigaherz.graph3.Mergeable;
@@ -51,7 +51,7 @@ public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
 
     public SolarPanelBlockEntity(BlockPos worldPosition, BlockState blockState, SolarPanelTier tier) {
         super(EnergyIOMode.Output, new FixedScalable(tier::getStorageCapacity),
-                new FixedScalable(tier::getStorageCapacity), MachineBlockEntities.SOLAR_PANELS.get(tier).get(),
+                new FixedScalable(tier::getStorageCapacity), EIOBlockEntities.SOLAR_PANELS.get(tier).get(),
                 worldPosition, blockState);
 
         this.tier = tier;

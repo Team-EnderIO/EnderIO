@@ -19,8 +19,8 @@ import com.enderio.enderio.foundation.io.fluid.MachineFluidTank;
 import com.enderio.enderio.foundation.io.fluid.MachineTankLayout;
 import com.enderio.enderio.foundation.io.fluid.TankAccess;
 import com.enderio.enderio.foundation.state.MachineState;
+import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
-import com.enderio.enderio.init.MachineBlockEntities;
 import com.enderio.enderio.init.MachineDataComponents;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -71,7 +71,7 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
 
 
     public NiardBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(MachineBlockEntities.NIARD.get(), worldPosition, blockState, false, CapacitorSupport.REQUIRED,
+        super(EIOBlockEntities.NIARD.get(), worldPosition, blockState, false, CapacitorSupport.REQUIRED,
             EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE);
 
         fluidHandler = createFluidHandler();

@@ -9,7 +9,7 @@ import com.enderio.enderio.content.machines.obelisks.ObeliskAreaManager;
 import com.enderio.enderio.content.machines.obelisks.ObeliskBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
-import com.enderio.enderio.init.MachineBlockEntities;
+import com.enderio.enderio.init.EIOBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Inventory;
@@ -30,7 +30,7 @@ public class InhibitorObeliskBlockEntity extends ObeliskBlockEntity<InhibitorObe
             MachinesConfig.COMMON.INHIBITOR_RANGE);
 
     public InhibitorObeliskBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(MachineBlockEntities.INHIBITOR_OBELISK.get(), worldPosition, blockState, false, CapacitorSupport.REQUIRED,
+        super(EIOBlockEntities.INHIBITOR_OBELISK.get(), worldPosition, blockState, false, CapacitorSupport.REQUIRED,
                 EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE);
     }
 

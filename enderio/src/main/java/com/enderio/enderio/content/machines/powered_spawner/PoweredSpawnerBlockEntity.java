@@ -23,10 +23,10 @@ import com.enderio.enderio.foundation.state.MachineStateType;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.foundation.task.MachineTask;
 import com.enderio.enderio.foundation.task.host.MachineTaskHost;
+import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOItems;
 import com.enderio.enderio.init.MachineAttachments;
-import com.enderio.enderio.init.MachineBlockEntities;
 import com.enderio.enderio.init.MachineDataComponents;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.core.BlockPos;
@@ -75,7 +75,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     private boolean mindKiller = false;
 
     public PoweredSpawnerBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(MachineBlockEntities.POWERED_SPAWNER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
+        super(EIOBlockEntities.POWERED_SPAWNER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
                 EnergyIOMode.Input, CAPACITY, USAGE);
 
         taskHost = new MachineTaskHost(this, this::hasEnergy) {

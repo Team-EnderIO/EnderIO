@@ -17,8 +17,8 @@ import com.enderio.enderio.foundation.io.fluid.TankAccess;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.foundation.task.CraftingMachineTask;
 import com.enderio.enderio.foundation.task.host.CraftingMachineTaskHost;
+import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
-import com.enderio.enderio.init.MachineBlockEntities;
 import com.enderio.enderio.init.MachineRecipes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -55,7 +55,7 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
     private final CraftingMachineTaskHost<FermentingRecipe, FermentingRecipe.Input> craftingTaskHost;
 
     public VatBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(MachineBlockEntities.VAT.get(), worldPosition, blockState, true);
+        super(EIOBlockEntities.VAT.get(), worldPosition, blockState, true);
         fluidHandler = createFluidHandler();
 
         craftingTaskHost = new CraftingMachineTaskHost<>(this, () -> true, MachineRecipes.VAT_FERMENTING.type().get(),

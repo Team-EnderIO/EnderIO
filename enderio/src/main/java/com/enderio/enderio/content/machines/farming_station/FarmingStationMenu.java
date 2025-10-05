@@ -2,8 +2,8 @@ package com.enderio.enderio.content.machines.farming_station;
 
 import com.enderio.enderio.foundation.menu.MachineSlot;
 import com.enderio.enderio.foundation.menu.PoweredMachineMenu;
+import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOMenus;
-import com.enderio.enderio.init.MachineBlockEntities;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -20,7 +20,7 @@ public class FarmingStationMenu extends PoweredMachineMenu<FarmingStationBlockEn
 
     public FarmingStationMenu(int pContainerId, Inventory inventory, RegistryFriendlyByteBuf buf) {
         super(EIOMenus.FARMING_STATION.get(), pContainerId, inventory, buf,
-                MachineBlockEntities.FARMING_STATION.get());
+            EIOBlockEntities.FARMING_STATION.get());
         addSlots();
 
     }

@@ -6,8 +6,8 @@ import com.enderio.enderio.foundation.fluid.FluidStorageInfo;
 import com.enderio.enderio.foundation.fluid.FluidStorageSyncSlot;
 import com.enderio.enderio.foundation.menu.MachineMenu;
 import com.enderio.enderio.foundation.menu.MachineSlot;
+import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOMenus;
-import com.enderio.enderio.init.MachineBlockEntities;
 import com.enderio.enderio.init.MachineRecipes;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -42,7 +42,7 @@ public class VatMenu extends MachineMenu<VatBlockEntity> {
     }
 
     public VatMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
-        super(EIOMenus.VAT.get(), containerId, playerInventory, buf, MachineBlockEntities.VAT.get());
+        super(EIOMenus.VAT.get(), containerId, playerInventory, buf, EIOBlockEntities.VAT.get());
         addSlots();
 
         craftingProgressSlot = addSyncSlot(FloatSyncSlot.standalone());

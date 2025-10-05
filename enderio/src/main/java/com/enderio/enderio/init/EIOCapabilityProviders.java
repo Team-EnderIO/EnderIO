@@ -22,6 +22,8 @@ public class EIOCapabilityProviders {
         registerConduitCapabilities(event);
     }
 
+    // region Conduits
+
     private static void registerConduitCapabilities(RegisterCapabilitiesEvent event) {
         EnderIORegistries.CONDUIT_TYPE.entrySet()
             .stream()
@@ -34,4 +36,12 @@ public class EIOCapabilityProviders {
         event.registerBlockEntity(capability, EIOBlockEntities.CONDUIT.get(),
             ConduitBundleBlockEntity.createCapabilityProvider(capability));
     }
+
+    // endregion
+
+    // region Machines
+
+
+
+    // endregion
 }

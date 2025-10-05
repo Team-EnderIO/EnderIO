@@ -6,7 +6,6 @@ import com.enderio.enderio.foundation.block.entity.legacy.LegacyMachineBlockEnti
 import com.enderio.enderio.foundation.block.legacy.LegacyMachineBlock;
 import com.enderio.enderio.foundation.lang.EIOLang;
 import com.enderio.enderio.foundation.lang.MachineLang;
-import com.enderio.regilite.holder.RegiliteBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -15,6 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -23,6 +23,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 public class SolarPanelBlock extends LegacyMachineBlock implements AdvancedTooltipProvider {
 
@@ -38,7 +39,7 @@ public class SolarPanelBlock extends LegacyMachineBlock implements AdvancedToolt
     private static final VoxelShape SHAPE = Block.box(0, 0, 0, 16, 3, 16);
     private final ISolarPanelTier tier;
 
-    public SolarPanelBlock(RegiliteBlockEntity<? extends LegacyMachineBlockEntity> blockEntityType,
+    public SolarPanelBlock(Supplier<BlockEntityType<? extends LegacyMachineBlockEntity>> blockEntityType,
             Properties properties, ISolarPanelTier tier) {
         super(blockEntityType, properties);
         registerDefaultState(getStateDefinition().any()

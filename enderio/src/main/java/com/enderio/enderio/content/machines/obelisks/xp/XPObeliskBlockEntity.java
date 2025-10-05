@@ -7,9 +7,9 @@ import com.enderio.enderio.foundation.io.fluid.MachineFluidTank;
 import com.enderio.enderio.foundation.io.fluid.MachineTankLayout;
 import com.enderio.enderio.foundation.io.fluid.TankAccess;
 import com.enderio.enderio.foundation.util.ExperienceUtil;
+import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOFluids;
-import com.enderio.enderio.init.MachineBlockEntities;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -37,7 +37,7 @@ public class XPObeliskBlockEntity extends MachineBlockEntity implements FluidTan
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public XPObeliskBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(MachineBlockEntities.XP_OBELISK.get(), worldPosition, blockState, true);
+        super(EIOBlockEntities.XP_OBELISK.get(), worldPosition, blockState, true);
         fluidHandler = createFluidHandler();
     }
 
