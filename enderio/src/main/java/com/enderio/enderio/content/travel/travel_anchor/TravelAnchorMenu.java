@@ -2,19 +2,19 @@ package com.enderio.enderio.content.travel.travel_anchor;
 
 import com.enderio.enderio.foundation.menu.GhostMachineSlot;
 import com.enderio.enderio.foundation.menu.MachineMenu;
+import com.enderio.enderio.init.EIOMenus;
 import com.enderio.enderio.init.MachineBlockEntities;
-import com.enderio.enderio.init.MachineMenus;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 
 public class TravelAnchorMenu extends MachineMenu<TravelAnchorBlockEntity> {
     public TravelAnchorMenu(int containerId, Inventory inventory, TravelAnchorBlockEntity blockEntity) {
-        super(MachineMenus.TRAVEL_ANCHOR.get(), containerId, inventory, blockEntity);
+        super(EIOMenus.TRAVEL_ANCHOR.get(), containerId, inventory, blockEntity);
         addSlots();
     }
 
     public TravelAnchorMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
-        super(MachineMenus.TRAVEL_ANCHOR.get(), containerId, playerInventory, buf,
+        super(EIOMenus.TRAVEL_ANCHOR.get(), containerId, playerInventory, buf,
                 MachineBlockEntities.TRAVEL_ANCHOR.get(), MachineBlockEntities.PAINTED_TRAVEL_ANCHOR.get());
         addSlots();
     }

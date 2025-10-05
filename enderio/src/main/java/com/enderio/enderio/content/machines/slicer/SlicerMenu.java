@@ -3,8 +3,8 @@ package com.enderio.enderio.content.machines.slicer;
 import com.enderio.core.common.network.menu.FloatSyncSlot;
 import com.enderio.enderio.foundation.menu.MachineSlot;
 import com.enderio.enderio.foundation.menu.PoweredMachineMenu;
+import com.enderio.enderio.init.EIOMenus;
 import com.enderio.enderio.init.MachineBlockEntities;
-import com.enderio.enderio.init.MachineMenus;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -16,14 +16,14 @@ public class SlicerMenu extends PoweredMachineMenu<SlicerBlockEntity> {
     private final FloatSyncSlot craftingProgressSlot;
 
     public SlicerMenu(int pContainerId, Inventory inventory, SlicerBlockEntity blockEntity) {
-        super(MachineMenus.SLICE_N_SPLICE.get(), pContainerId, inventory, blockEntity);
+        super(EIOMenus.SLICE_N_SPLICE.get(), pContainerId, inventory, blockEntity);
         addSlots();
 
         craftingProgressSlot = addSyncSlot(FloatSyncSlot.readOnly(blockEntity::getCraftingProgress));
     }
 
     public SlicerMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
-        super(MachineMenus.SLICE_N_SPLICE.get(), containerId, playerInventory, buf,
+        super(EIOMenus.SLICE_N_SPLICE.get(), containerId, playerInventory, buf,
                 MachineBlockEntities.SLICE_AND_SPLICE.get());
         addSlots();
 

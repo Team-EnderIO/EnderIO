@@ -13,6 +13,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
@@ -65,11 +66,11 @@ public class EnderFluidFilterItem extends AbstractFilterItem<EnderFluidFilter> {
     public enum Type {
         BASIC(() -> EIOMenus.BASIC_FLUID_FILTER, 1, true);
 
-        private final Supplier<RegiliteMenu<EnderFluidFilterMenu>> menuType;
+        private final Supplier<Supplier<MenuType<EnderFluidFilterMenu>>> menuType;
         private final int rowCount;
         private final boolean canMatchComponents;
 
-        Type(Supplier<RegiliteMenu<EnderFluidFilterMenu>> menuType, int rowCount, boolean canMatchComponents) {
+        Type(Supplier<Supplier<MenuType<EnderFluidFilterMenu>>> menuType, int rowCount, boolean canMatchComponents) {
             this.menuType = menuType;
             this.rowCount = rowCount;
             this.canMatchComponents = canMatchComponents;

@@ -2,7 +2,7 @@ package com.enderio.enderio.content.filters.redstone;
 
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.foundation.network.packets.ServerboundTimerFilterPacket;
-import com.enderio.enderio.init.ConduitMenus;
+import com.enderio.enderio.init.EIOMenus;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
@@ -31,7 +31,7 @@ public class RedstoneTimerFilterMenu extends AbstractContainerMenu {
     }
 
     protected RedstoneTimerFilterMenu(int pContainerId, Inventory inventory, ItemStack pStack) {
-        this(ConduitMenus.REDSTONE_TIMER_FILTER.get(), pContainerId, inventory, pStack);
+        this(EIOMenus.REDSTONE_TIMER_FILTER.get(), pContainerId, inventory, pStack);
     }
 
 

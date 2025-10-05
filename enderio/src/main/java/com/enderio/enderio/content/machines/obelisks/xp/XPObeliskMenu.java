@@ -2,8 +2,8 @@ package com.enderio.enderio.content.machines.obelisks.xp;
 
 import com.enderio.core.common.network.menu.FluidStackSyncSlot;
 import com.enderio.enderio.foundation.menu.MachineMenu;
+import com.enderio.enderio.init.EIOMenus;
 import com.enderio.enderio.init.MachineBlockEntities;
-import com.enderio.enderio.init.MachineMenus;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -21,13 +21,13 @@ public class XPObeliskMenu extends MachineMenu<XPObeliskBlockEntity> {
     private final FluidStackSyncSlot tankSyncSlot;
 
     public XPObeliskMenu(int pContainerId, Inventory inventory, XPObeliskBlockEntity blockEntity) {
-        super(MachineMenus.XP_OBELISK.get(), pContainerId, inventory, blockEntity);
+        super(EIOMenus.XP_OBELISK.get(), pContainerId, inventory, blockEntity);
 
         tankSyncSlot = addSyncSlot(FluidStackSyncSlot.readOnly(() -> blockEntity.getFluidTank().getFluid()));
     }
 
     public XPObeliskMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
-        super(MachineMenus.XP_OBELISK.get(), containerId, playerInventory, buf, MachineBlockEntities.XP_OBELISK.get());
+        super(EIOMenus.XP_OBELISK.get(), containerId, playerInventory, buf, MachineBlockEntities.XP_OBELISK.get());
 
         tankSyncSlot = addSyncSlot(FluidStackSyncSlot.standalone());
     }

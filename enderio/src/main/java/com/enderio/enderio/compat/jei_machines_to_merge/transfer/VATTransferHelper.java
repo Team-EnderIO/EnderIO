@@ -4,7 +4,7 @@ import com.enderio.enderio.compat.jei_machines_to_merge.category.VATCategory;
 import com.enderio.enderio.content.machines.vat.FermentingRecipe;
 import com.enderio.enderio.content.machines.vat.VatMenu;
 import com.enderio.enderio.foundation.network.packets.ServerboundTransferItemsPacket;
-import com.enderio.enderio.init.MachineMenus;
+import com.enderio.enderio.init.EIOMenus;
 import mezz.jei.api.gui.ingredient.IRecipeSlotView;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.RecipeType;
@@ -40,7 +40,7 @@ public class VATTransferHelper implements IRecipeTransferHandler<VatMenu, Recipe
 
     @Override
     public Optional<MenuType<VatMenu>> getMenuType() {
-        return Optional.of(MachineMenus.VAT.get());
+        return Optional.of(EIOMenus.VAT.get());
     }
 
     @Override

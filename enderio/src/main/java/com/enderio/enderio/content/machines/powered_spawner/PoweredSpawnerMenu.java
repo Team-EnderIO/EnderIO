@@ -6,8 +6,8 @@ import com.enderio.enderio.foundation.inventory.MachineInventory;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import com.enderio.enderio.foundation.menu.MachineSlot;
 import com.enderio.enderio.foundation.menu.PoweredMachineMenu;
+import com.enderio.enderio.init.EIOMenus;
 import com.enderio.enderio.init.MachineBlockEntities;
-import com.enderio.enderio.init.MachineMenus;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -20,7 +20,7 @@ public class PoweredSpawnerMenu extends PoweredMachineMenu<PoweredSpawnerBlockEn
     private final EnumSyncSlot<PoweredSpawnerMode> modeSlot;
 
     public PoweredSpawnerMenu(int pContainerId, Inventory inventory, PoweredSpawnerBlockEntity blockEntity) {
-        super(MachineMenus.POWERED_SPAWNER.get(), pContainerId, inventory, blockEntity);
+        super(EIOMenus.POWERED_SPAWNER.get(), pContainerId, inventory, blockEntity);
         addSlots();
 
         spawnProgressSlot = addSyncSlot(FloatSyncSlot.readOnly(blockEntity::getSpawnProgress));
@@ -29,7 +29,7 @@ public class PoweredSpawnerMenu extends PoweredMachineMenu<PoweredSpawnerBlockEn
     }
 
     public PoweredSpawnerMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
-        super(MachineMenus.POWERED_SPAWNER.get(), containerId, playerInventory, buf,
+        super(EIOMenus.POWERED_SPAWNER.get(), containerId, playerInventory, buf,
                 MachineBlockEntities.POWERED_SPAWNER.get());
         addSlots();
 

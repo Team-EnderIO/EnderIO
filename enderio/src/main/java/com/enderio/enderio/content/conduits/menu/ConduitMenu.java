@@ -11,7 +11,7 @@ import com.enderio.enderio.foundation.network.packets.ClientboundConduitExtraGui
 import com.enderio.enderio.foundation.network.packets.ClientboundConduitListPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundOpenConduitFilterMenu;
 import com.enderio.enderio.foundation.network.packets.SetConduitConnectionConfigPacket;
-import com.enderio.enderio.init.ConduitMenus;
+import com.enderio.enderio.init.EIOMenus;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
@@ -72,7 +72,7 @@ public class ConduitMenu extends BaseEnderMenu {
 
     public ConduitMenu(int containerId, Inventory playerInventory, ConduitBundleBlockEntity conduitBundle,
             Holder<Conduit<?, ?>> conduit, Direction side) {
-        super(ConduitMenus.CONDUIT_MENU.get(), containerId, playerInventory);
+        super(EIOMenus.CONDUIT_MENU.get(), containerId, playerInventory);
 
         this.pos = conduitBundle.getBlockPos();
         this.side = side;
@@ -87,7 +87,7 @@ public class ConduitMenu extends BaseEnderMenu {
     }
 
     public ConduitMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
-        super(ConduitMenus.CONDUIT_MENU.get(), containerId, playerInventory);
+        super(EIOMenus.CONDUIT_MENU.get(), containerId, playerInventory);
 
         pos = buf.readBlockPos();
         side = buf.readEnum(Direction.class);

@@ -3,20 +3,20 @@ package com.enderio.enderio.content.machines.impulse_hopper;
 import com.enderio.enderio.foundation.menu.GhostMachineSlot;
 import com.enderio.enderio.foundation.menu.MachineSlot;
 import com.enderio.enderio.foundation.menu.PoweredMachineMenu;
+import com.enderio.enderio.init.EIOMenus;
 import com.enderio.enderio.init.MachineBlockEntities;
-import com.enderio.enderio.init.MachineMenus;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 
 public class ImpulseHopperMenu extends PoweredMachineMenu<ImpulseHopperBlockEntity> {
 
     public ImpulseHopperMenu(int containerId, Inventory inventory, ImpulseHopperBlockEntity blockEntity) {
-        super(MachineMenus.IMPULSE_HOPPER.get(), containerId, inventory, blockEntity);
+        super(EIOMenus.IMPULSE_HOPPER.get(), containerId, inventory, blockEntity);
         addSlots();
     }
 
     public ImpulseHopperMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
-        super(MachineMenus.IMPULSE_HOPPER.get(), containerId, playerInventory, buf,
+        super(EIOMenus.IMPULSE_HOPPER.get(), containerId, playerInventory, buf,
                 MachineBlockEntities.IMPULSE_HOPPER.get());
         addSlots();
     }

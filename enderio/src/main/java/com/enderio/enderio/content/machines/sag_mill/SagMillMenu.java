@@ -4,8 +4,8 @@ import com.enderio.core.common.network.menu.FloatSyncSlot;
 import com.enderio.enderio.api.components.GrindingBallData;
 import com.enderio.enderio.foundation.menu.MachineSlot;
 import com.enderio.enderio.foundation.menu.PoweredMachineMenu;
+import com.enderio.enderio.init.EIOMenus;
 import com.enderio.enderio.init.MachineBlockEntities;
-import com.enderio.enderio.init.MachineMenus;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -19,7 +19,7 @@ public class SagMillMenu extends PoweredMachineMenu<SagMillBlockEntity> {
     private final GrindingBallDataSyncSlot grindingBallDataSlot;
 
     public SagMillMenu(int pContainerId, Inventory inventory, SagMillBlockEntity blockEntity) {
-        super(MachineMenus.SAG_MILL.get(), pContainerId, inventory, blockEntity);
+        super(EIOMenus.SAG_MILL.get(), pContainerId, inventory, blockEntity);
         addSlots();
 
         craftingProgressSlot = addSyncSlot(FloatSyncSlot.readOnly(blockEntity::getCraftingProgress));
@@ -28,7 +28,7 @@ public class SagMillMenu extends PoweredMachineMenu<SagMillBlockEntity> {
     }
 
     public SagMillMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
-        super(MachineMenus.SAG_MILL.get(), containerId, playerInventory, buf, MachineBlockEntities.SAG_MILL.get());
+        super(EIOMenus.SAG_MILL.get(), containerId, playerInventory, buf, MachineBlockEntities.SAG_MILL.get());
         addSlots();
 
         craftingProgressSlot = addSyncSlot(FloatSyncSlot.standalone());

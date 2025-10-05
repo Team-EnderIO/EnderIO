@@ -7,6 +7,7 @@ import com.enderio.enderio.api.conduits.screen.RegisterConduitScreenTypesEvent;
 import com.enderio.enderio.api.soul.SoulBoundUtils;
 import com.enderio.enderio.api.travel.RegisterTravelRenderersEvent;
 import com.enderio.enderio.client.content.conduits.ConduitBundleExtension;
+import com.enderio.enderio.client.content.conduits.gui.ConduitScreen;
 import com.enderio.enderio.client.content.conduits.gui.screen_type.ConduitScreenTypes;
 import com.enderio.enderio.client.content.conduits.gui.screen_type.EnergyConduitScreenType;
 import com.enderio.enderio.client.content.conduits.gui.screen_type.FluidConduitScreenType;
@@ -18,12 +19,47 @@ import com.enderio.enderio.client.content.conduits.model.facades.FacadeItemGeome
 import com.enderio.enderio.client.content.conduits.model.modifier.FluidConduitModelModifier;
 import com.enderio.enderio.client.content.conduits.model.modifier.RedstoneConduitModelModifier;
 import com.enderio.enderio.client.content.enderface.EnderfaceRenderer;
+import com.enderio.enderio.client.content.filters.EnderFluidFilterScreen;
+import com.enderio.enderio.client.content.filters.EnderItemFilterScreen;
+import com.enderio.enderio.client.content.filters.EnderSoulFilterScreen;
+import com.enderio.enderio.client.content.filters.redstone.RedstoneCountFilterScreen;
+import com.enderio.enderio.client.content.filters.redstone.RedstoneDoubleChannelFilterScreen;
+import com.enderio.enderio.client.content.filters.redstone.RedstoneTimerFilterScreen;
 import com.enderio.enderio.client.content.fluid_tank.FluidTankBEWLR;
 import com.enderio.enderio.client.content.glass.GlassIconDecorator;
 import com.enderio.enderio.client.content.machines.IOOverlayBakedModel;
+import com.enderio.enderio.client.content.machines.gui.screen.AlloySmelterScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.AttractorObeliskScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.AversionObeliskScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.CapacitorBankScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.CrafterScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.DrainScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.EnchanterScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.FarmingStationScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.FluidTankScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.ImpulseHopperScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.InhibitorObeliskScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.NiardScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.PaintingMachineScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.PoweredSpawnerScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.RelocatorObeliskScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.SagMillScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.SlicerScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.SoulBinderScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.SoulEngineScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.StirlingGeneratorScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.TravelAnchorScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.VacuumChestScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.VatScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.WeatherObeliskScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.WiredChargerScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.WirelessChargerScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.XPObeliskScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.XPVacuumScreen;
 import com.enderio.enderio.client.content.misc_blocks.EnderSkullRenderer;
 import com.enderio.enderio.client.content.paint.model.PaintedBlockGeometry;
 import com.enderio.enderio.client.content.tools.ActiveGliderRenderLayer;
+import com.enderio.enderio.client.content.tools.CoordinateMenuScreen;
 import com.enderio.enderio.client.content.travel.TravelAnchorHud;
 import com.enderio.enderio.client.content.travel.TravelAnchorRenderer;
 import com.enderio.enderio.client.content.travel.TravelTargetRendering;
@@ -37,6 +73,7 @@ import com.enderio.enderio.init.ConduitTypes;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOItems;
+import com.enderio.enderio.init.EIOMenus;
 import com.enderio.enderio.init.EIOParticles;
 import com.enderio.enderio.init.MachineBlocks;
 import com.enderio.enderio.init.MachineTravelTargets;
@@ -64,6 +101,7 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
@@ -114,6 +152,56 @@ public class EnderIOClient {
                     return state == ConduitProbeItem.State.COPY_PASTE ? 1.0f : 0.0f;
                 });
         });
+    }
+
+    @SubscribeEvent
+    public static void registerScreens(RegisterMenuScreensEvent event) {
+        // Filter screens
+        event.register(EIOMenus.BASIC_ITEM_FILTER.get(), EnderItemFilterScreen::new);
+        event.register(EIOMenus.ADVANCED_ITEM_FILTER.get(), EnderItemFilterScreen::new);
+        event.register(EIOMenus.BIG_ITEM_FILTER.get(), EnderItemFilterScreen::new);
+        event.register(EIOMenus.BIG_ADVANCED_ITEM_FILTER.get(), EnderItemFilterScreen::new);
+        event.register(EIOMenus.BASIC_FLUID_FILTER.get(), EnderFluidFilterScreen::new);
+        event.register(EIOMenus.BASIC_SOUL_FILTER.get(), EnderSoulFilterScreen::new);
+        event.register(EIOMenus.REDSTONE_DOUBLE_CHANNEL_FILTER.get(), RedstoneDoubleChannelFilterScreen::new);
+        event.register(EIOMenus.REDSTONE_TIMER_FILTER.get(), RedstoneTimerFilterScreen::new);
+        event.register(EIOMenus.REDSTONE_COUNT_FILTER.get(), RedstoneCountFilterScreen::new);
+
+        // Machines
+        event.register(EIOMenus.ALLOY_SMELTER.get(), AlloySmelterScreen::new);
+        event.register(EIOMenus.SAG_MILL.get(), SagMillScreen::new);
+        event.register(EIOMenus.STIRLING_GENERATOR.get(), StirlingGeneratorScreen::new);
+        event.register(EIOMenus.SLICE_N_SPLICE.get(), SlicerScreen::new);
+        event.register(EIOMenus.IMPULSE_HOPPER.get(), ImpulseHopperScreen::new);
+        event.register(EIOMenus.SOUL_BINDER.get(), SoulBinderScreen::new);
+        event.register(EIOMenus.POWERED_SPAWNER.get(), PoweredSpawnerScreen::new);
+        event.register(EIOMenus.VACUUM_CHEST.get(), VacuumChestScreen::new);
+        event.register(EIOMenus.XP_VACUUM.get(), XPVacuumScreen::new);
+        event.register(EIOMenus.CRAFTER.get(), CrafterScreen::new);
+        event.register(EIOMenus.DRAIN.get(), DrainScreen::new);
+        event.register(EIOMenus.NIARD.get(), NiardScreen::new);
+        event.register(EIOMenus.WIRED_CHARGER.get(), WiredChargerScreen::new);
+        event.register(EIOMenus.WIRELESS_CHARGER.get(), WirelessChargerScreen::new);
+        event.register(EIOMenus.PAINTING_MACHINE.get(), PaintingMachineScreen::new);
+        event.register(EIOMenus.SOUL_ENGINE.get(), SoulEngineScreen::new);
+        event.register(EIOMenus.TRAVEL_ANCHOR.get(), TravelAnchorScreen::new);
+        event.register(EIOMenus.XP_OBELISK.get(), XPObeliskScreen::new);
+        event.register(EIOMenus.FARMING_STATION.get(), FarmingStationScreen::new);
+        event.register(EIOMenus.INHIBITOR_OBELISK.get(), InhibitorObeliskScreen::new);
+        event.register(EIOMenus.AVERSION_OBELISK.get(), AversionObeliskScreen::new);
+        event.register(EIOMenus.RELOCATOR_OBELISK.get(), RelocatorObeliskScreen::new);
+        event.register(EIOMenus.ATTRACTOR_OBELISK.get(), AttractorObeliskScreen::new);
+        event.register(EIOMenus.WEATHER_OBELISK.get(), WeatherObeliskScreen::new);
+        event.register(EIOMenus.VAT.get(), VatScreen::new);
+
+        // Storage
+        event.register(EIOMenus.CAPACITOR_BANK.get(), CapacitorBankScreen::new);
+        event.register(EIOMenus.FLUID_TANK.get(), FluidTankScreen::new);
+
+        // Misc screens
+        event.register(EIOMenus.COORDINATE.get(), CoordinateMenuScreen::new);
+        event.register(EIOMenus.CONDUIT_MENU.get(), ConduitScreen::new);
+        event.register(EIOMenus.ENCHANTER.get(), EnchanterScreen::new);
     }
 
     @SubscribeEvent

@@ -1,11 +1,11 @@
-package com.enderio.enderio.content.machines.crafter;
+package com.enderio.enderio.content.storage.crafter;
 
 import com.enderio.enderio.foundation.menu.GhostMachineSlot;
 import com.enderio.enderio.foundation.menu.MachineSlot;
 import com.enderio.enderio.foundation.menu.PoweredMachineMenu;
 import com.enderio.enderio.foundation.menu.PreviewMachineSlot;
+import com.enderio.enderio.init.EIOMenus;
 import com.enderio.enderio.init.MachineBlockEntities;
-import com.enderio.enderio.init.MachineMenus;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -16,12 +16,12 @@ public class CrafterMenu extends PoweredMachineMenu<CrafterBlockEntity> {
     public static final int LAST_INDEX = 20;
 
     public CrafterMenu(int containerId, Inventory inventory, CrafterBlockEntity blockEntity) {
-        super(MachineMenus.CRAFTER.get(), containerId, inventory, blockEntity);
+        super(EIOMenus.CRAFTER.get(), containerId, inventory, blockEntity);
         addSlots();
     }
 
     public CrafterMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
-        super(MachineMenus.CRAFTER.get(), containerId, playerInventory, buf, MachineBlockEntities.CRAFTER.get());
+        super(EIOMenus.CRAFTER.get(), containerId, playerInventory, buf, MachineBlockEntities.CRAFTER.get());
         addSlots();
     }
 

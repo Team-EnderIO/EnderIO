@@ -3,8 +3,8 @@ package com.enderio.enderio.content.machines.painting;
 import com.enderio.core.common.network.menu.FloatSyncSlot;
 import com.enderio.enderio.foundation.menu.MachineSlot;
 import com.enderio.enderio.foundation.menu.PoweredMachineMenu;
+import com.enderio.enderio.init.EIOMenus;
 import com.enderio.enderio.init.MachineBlockEntities;
-import com.enderio.enderio.init.MachineMenus;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -13,14 +13,14 @@ public class PaintingMachineMenu extends PoweredMachineMenu<PaintingMachineBlock
     private final FloatSyncSlot craftingProgressSlot;
 
     public PaintingMachineMenu(Inventory inventory, int pContainerId, PaintingMachineBlockEntity blockEntity) {
-        super(MachineMenus.PAINTING_MACHINE.get(), pContainerId, inventory, blockEntity);
+        super(EIOMenus.PAINTING_MACHINE.get(), pContainerId, inventory, blockEntity);
         addSlots();
 
         craftingProgressSlot = addSyncSlot(FloatSyncSlot.readOnly(blockEntity::getCraftingProgress));
     }
 
     public PaintingMachineMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
-        super(MachineMenus.PAINTING_MACHINE.get(), containerId, playerInventory, buf,
+        super(EIOMenus.PAINTING_MACHINE.get(), containerId, playerInventory, buf,
                 MachineBlockEntities.PAINTING_MACHINE.get());
         addSlots();
 

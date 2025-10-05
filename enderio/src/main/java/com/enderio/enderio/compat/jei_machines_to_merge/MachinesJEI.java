@@ -29,8 +29,8 @@ import com.enderio.enderio.content.machines.alloy.AlloySmelterMenu;
 import com.enderio.enderio.content.machines.sag_mill.SagMillMenu;
 import com.enderio.enderio.content.machines.slicer.SlicerMenu;
 import com.enderio.enderio.content.machines.soul_binder.SoulBinderMenu;
+import com.enderio.enderio.init.EIOMenus;
 import com.enderio.enderio.init.MachineBlocks;
-import com.enderio.enderio.init.MachineMenus;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
@@ -95,21 +95,21 @@ public class MachinesJEI implements IModPlugin {
 
     @Override
     public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
-        registration.addRecipeTransferHandler(AlloySmelterMenu.class, MachineMenus.ALLOY_SMELTER.get(),
+        registration.addRecipeTransferHandler(AlloySmelterMenu.class, EIOMenus.ALLOY_SMELTER.get(),
                 AlloySmeltingCategory.TYPE, AlloySmelterMenu.INPUTS_INDEX, AlloySmelterMenu.INPUT_COUNT,
                 AlloySmelterMenu.LAST_INDEX + 1, 36);
 
-        registration.addRecipeTransferHandler(EnchanterMenu.class, MachineMenus.ENCHANTER.get(), EnchanterCategory.TYPE,
+        registration.addRecipeTransferHandler(EnchanterMenu.class, EIOMenus.ENCHANTER.get(), EnchanterCategory.TYPE,
                 EnchanterMenu.INPUTS_INDEX, EnchanterMenu.INPUT_COUNT, EnchanterMenu.LAST_INDEX + 1, 36);
 
-        registration.addRecipeTransferHandler(SagMillMenu.class, MachineMenus.SAG_MILL.get(), SagMillCategory.TYPE,
+        registration.addRecipeTransferHandler(SagMillMenu.class, EIOMenus.SAG_MILL.get(), SagMillCategory.TYPE,
                 SagMillMenu.INPUTS_INDEX, SagMillMenu.INPUT_COUNT, SagMillMenu.LAST_INDEX + 1, 36);
 
-        registration.addRecipeTransferHandler(SlicerMenu.class, MachineMenus.SLICE_N_SPLICE.get(),
+        registration.addRecipeTransferHandler(SlicerMenu.class, EIOMenus.SLICE_N_SPLICE.get(),
                 SlicingRecipeCategory.TYPE, SlicerMenu.INPUTS_INDEX, SlicerMenu.INPUT_COUNT, SlicerMenu.LAST_INDEX + 1,
                 36);
 
-        registration.addRecipeTransferHandler(SoulBinderMenu.class, MachineMenus.SOUL_BINDER.get(),
+        registration.addRecipeTransferHandler(SoulBinderMenu.class, EIOMenus.SOUL_BINDER.get(),
                 SoulBindingCategory.TYPE, SoulBinderMenu.INPUTS_INDEX, SoulBinderMenu.INPUT_COUNT,
                 SoulBinderMenu.LAST_INDEX + 1, 36);
 

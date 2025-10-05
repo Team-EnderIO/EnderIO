@@ -1,7 +1,7 @@
 package com.enderio.enderio.content.machines.capacitor_bank;
 
 import com.enderio.enderio.foundation.menu.legacy.LegacyPoweredMachineMenu;
-import com.enderio.enderio.init.MachineMenus;
+import com.enderio.enderio.init.EIOMenus;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class CapacitorBankMenu extends LegacyPoweredMachineMenu<CapacitorBankBlockEntity> {
     public CapacitorBankMenu(int pContainerId, @Nullable CapacitorBankBlockEntity blockEntity, Inventory inventory) {
-        super(MachineMenus.CAPACITOR_BANK.get(), pContainerId, blockEntity, inventory);
+        super(EIOMenus.CAPACITOR_BANK.get(), pContainerId, blockEntity, inventory);
         addPlayerInventorySlots(8, 84);
     }
 

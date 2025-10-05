@@ -3,6 +3,7 @@ package com.enderio.enderio.content.filters.item.general;
 import com.enderio.enderio.api.filter.ItemFilter;
 import com.enderio.enderio.content.filters.AbstractFilterItem;
 import com.enderio.enderio.content.filters.AbstractFilterMenu;
+import com.enderio.enderio.content.filters.fluid.EnderFluidFilterMenu;
 import com.enderio.enderio.foundation.lang.EIOLang;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOMenus;
@@ -13,6 +14,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
@@ -67,12 +69,12 @@ public class EnderItemFilterItem extends AbstractFilterItem<EnderItemFilter> {
         BIG(() -> EIOMenus.BIG_ITEM_FILTER, 4, false, false),
         BIG_ADVANCED(() -> EIOMenus.BIG_ADVANCED_ITEM_FILTER, 4, true, true);
 
-        private final Supplier<RegiliteMenu<EnderItemFilterMenu>> menuType;
+        private final Supplier<Supplier<MenuType<EnderItemFilterMenu>>> menuType;
         private final int rowCount;
         private final boolean canMatchComponents;
         private final boolean canFilterByDamage;
 
-        Type(Supplier<RegiliteMenu<EnderItemFilterMenu>> menuType, int rowCount, boolean canMatchComponents,
+        Type(Supplier<Supplier<MenuType<EnderItemFilterMenu>>> menuType, int rowCount, boolean canMatchComponents,
                 boolean canFilterByDamage) {
             this.menuType = menuType;
             this.rowCount = rowCount;

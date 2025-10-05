@@ -5,8 +5,8 @@ import com.enderio.enderio.foundation.fluid.FluidStorageInfo;
 import com.enderio.enderio.foundation.fluid.FluidStorageSyncSlot;
 import com.enderio.enderio.foundation.menu.MachineMenu;
 import com.enderio.enderio.foundation.menu.MachineSlot;
+import com.enderio.enderio.init.EIOMenus;
 import com.enderio.enderio.init.MachineBlockEntities;
-import com.enderio.enderio.init.MachineMenus;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -19,7 +19,7 @@ public class WeatherObeliskMenu extends MachineMenu<WeatherObeliskBlockEntity> {
     private final FloatSyncSlot craftingProgressSlot;
 
     protected WeatherObeliskMenu(int containerId, Inventory playerInventory, WeatherObeliskBlockEntity blockEntity) {
-        super(MachineMenus.WEATHER_OBELISK.get(), containerId, playerInventory, blockEntity);
+        super(EIOMenus.WEATHER_OBELISK.get(), containerId, playerInventory, blockEntity);
 
         tank = addSyncSlot(FluidStorageSyncSlot.readOnly(() -> FluidStorageInfo.of(blockEntity.getTank())));
         craftingProgressSlot = addSyncSlot(FloatSyncSlot.readOnly(blockEntity::getCraftingProgress));
@@ -28,7 +28,7 @@ public class WeatherObeliskMenu extends MachineMenu<WeatherObeliskBlockEntity> {
     }
 
     public WeatherObeliskMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
-        super(MachineMenus.WEATHER_OBELISK.get(), containerId, playerInventory, buf,
+        super(EIOMenus.WEATHER_OBELISK.get(), containerId, playerInventory, buf,
                 MachineBlockEntities.WEATHER_OBELISK.get());
 
         tank = addSyncSlot(FluidStorageSyncSlot.standalone());

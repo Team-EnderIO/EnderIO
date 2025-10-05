@@ -4,7 +4,7 @@ import com.enderio.enderio.compat.jei_machines_to_merge.category.WeatherChangeCa
 import com.enderio.enderio.content.machines.obelisks.weather.WeatherChangeRecipe;
 import com.enderio.enderio.content.machines.obelisks.weather.WeatherObeliskMenu;
 import com.enderio.enderio.foundation.network.packets.ServerboundTransferItemsPacket;
-import com.enderio.enderio.init.MachineMenus;
+import com.enderio.enderio.init.EIOMenus;
 import mezz.jei.api.gui.ingredient.IRecipeSlotView;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.RecipeType;
@@ -40,7 +40,7 @@ public class WeatherObeliskTransferHelper implements IRecipeTransferHandler<Weat
 
     @Override
     public Optional<MenuType<WeatherObeliskMenu>> getMenuType() {
-        return Optional.of(MachineMenus.WEATHER_OBELISK.get());
+        return Optional.of(EIOMenus.WEATHER_OBELISK.get());
     }
 
     @Override

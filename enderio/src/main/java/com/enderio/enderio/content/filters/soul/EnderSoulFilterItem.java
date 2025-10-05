@@ -3,6 +3,7 @@ package com.enderio.enderio.content.filters.soul;
 import com.enderio.enderio.api.filter.SoulFilter;
 import com.enderio.enderio.content.filters.AbstractFilterItem;
 import com.enderio.enderio.content.filters.AbstractFilterMenu;
+import com.enderio.enderio.content.filters.item.general.EnderItemFilterMenu;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOMenus;
 import com.enderio.regilite.holder.RegiliteMenu;
@@ -11,6 +12,7 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 
@@ -46,11 +48,11 @@ public class EnderSoulFilterItem extends AbstractFilterItem<EnderSoulFilter> {
     public enum Type {
         BASIC(() -> EIOMenus.BASIC_SOUL_FILTER, 1, true);
 
-        private final Supplier<RegiliteMenu<EnderSoulFilterMenu>> menuType;
+        private final Supplier<Supplier<MenuType<EnderSoulFilterMenu>>> menuType;
         private final int rowCount;
         private final boolean canMatchComponents;
 
-        Type(Supplier<RegiliteMenu<EnderSoulFilterMenu>> menuType, int rowCount, boolean canMatchComponents) {
+        Type(Supplier<Supplier<MenuType<EnderSoulFilterMenu>>> menuType, int rowCount, boolean canMatchComponents) {
             this.menuType = menuType;
             this.rowCount = rowCount;
             this.canMatchComponents = canMatchComponents;

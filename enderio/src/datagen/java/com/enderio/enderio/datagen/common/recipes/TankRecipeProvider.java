@@ -2,7 +2,7 @@ package com.enderio.enderio.datagen.common.recipes;
 
 import com.enderio.core.data.recipe.SubRecipeProvider;
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.content.fluid_tank.TankRecipe;
+import com.enderio.enderio.content.storage.fluid_tank.TankRecipe;
 import com.enderio.enderio.init.EIOFluids;
 import com.enderio.enderio.init.EIOItems;
 import net.minecraft.core.HolderLookup;

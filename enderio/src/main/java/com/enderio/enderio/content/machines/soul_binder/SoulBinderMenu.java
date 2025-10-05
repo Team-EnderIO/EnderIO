@@ -5,8 +5,8 @@ import com.enderio.enderio.foundation.fluid.FluidStorageInfo;
 import com.enderio.enderio.foundation.fluid.FluidStorageSyncSlot;
 import com.enderio.enderio.foundation.menu.MachineSlot;
 import com.enderio.enderio.foundation.menu.PoweredMachineMenu;
+import com.enderio.enderio.init.EIOMenus;
 import com.enderio.enderio.init.MachineBlockEntities;
-import com.enderio.enderio.init.MachineMenus;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -19,7 +19,7 @@ public class SoulBinderMenu extends PoweredMachineMenu<SoulBinderBlockEntity> {
     private final FluidStorageSyncSlot tankSyncSlot;
 
     public SoulBinderMenu(int containerId, Inventory inventory, SoulBinderBlockEntity blockEntity) {
-        super(MachineMenus.SOUL_BINDER.get(), containerId, inventory, blockEntity);
+        super(EIOMenus.SOUL_BINDER.get(), containerId, inventory, blockEntity);
         addSlots();
 
         craftingProgressSlot = addSyncSlot(FloatSyncSlot.readOnly(blockEntity::getCraftingProgress));
@@ -28,7 +28,7 @@ public class SoulBinderMenu extends PoweredMachineMenu<SoulBinderBlockEntity> {
     }
 
     public SoulBinderMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
-        super(MachineMenus.SOUL_BINDER.get(), containerId, playerInventory, buf,
+        super(EIOMenus.SOUL_BINDER.get(), containerId, playerInventory, buf,
                 MachineBlockEntities.SOUL_BINDER.get());
         addSlots();
 

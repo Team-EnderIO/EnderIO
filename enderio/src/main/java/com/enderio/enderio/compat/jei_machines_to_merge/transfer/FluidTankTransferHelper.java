@@ -1,10 +1,10 @@
 package com.enderio.enderio.compat.jei_machines_to_merge.transfer;
 
 import com.enderio.enderio.compat.jei_machines_to_merge.category.TankCategory;
-import com.enderio.enderio.content.fluid_tank.FluidTankMenu;
-import com.enderio.enderio.content.fluid_tank.TankRecipe;
+import com.enderio.enderio.content.storage.fluid_tank.FluidTankMenu;
+import com.enderio.enderio.content.storage.fluid_tank.TankRecipe;
 import com.enderio.enderio.foundation.network.packets.ServerboundTransferItemsPacket;
-import com.enderio.enderio.init.MachineMenus;
+import com.enderio.enderio.init.EIOMenus;
 import mezz.jei.api.gui.ingredient.IRecipeSlotView;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.RecipeType;
@@ -39,7 +39,7 @@ public class FluidTankTransferHelper implements IRecipeTransferHandler<FluidTank
 
     @Override
     public Optional<MenuType<FluidTankMenu>> getMenuType() {
-        return Optional.of(MachineMenus.FLUID_TANK.get());
+        return Optional.of(EIOMenus.FLUID_TANK.get());
     }
 
     @Override

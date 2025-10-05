@@ -9,11 +9,11 @@ import com.enderio.enderio.client.content.machines.renderer.blockentity.ObeliskB
 import com.enderio.enderio.content.dev_tools.CreativePowerBlockEntity;
 import com.enderio.enderio.content.enchanter.EnchanterBlockEntity;
 import com.enderio.enderio.content.enderface.EnderfaceBlockEntity;
-import com.enderio.enderio.content.fluid_tank.FluidTankBlockEntity;
+import com.enderio.enderio.content.storage.fluid_tank.FluidTankBlockEntity;
 import com.enderio.enderio.content.machines.alloy.AlloySmelterBlockEntity;
 import com.enderio.enderio.content.machines.capacitor_bank.CapacitorBankBlockEntity;
 import com.enderio.enderio.content.machines.capacitor_bank.CapacitorTier;
-import com.enderio.enderio.content.machines.crafter.CrafterBlockEntity;
+import com.enderio.enderio.content.storage.crafter.CrafterBlockEntity;
 import com.enderio.enderio.content.machines.drain.DrainBlockEntity;
 import com.enderio.enderio.content.machines.farming_station.FarmingStationBlockEntity;
 import com.enderio.enderio.content.machines.impulse_hopper.ImpulseHopperBlockEntity;

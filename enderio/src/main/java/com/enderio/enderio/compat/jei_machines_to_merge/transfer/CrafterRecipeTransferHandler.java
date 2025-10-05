@@ -1,8 +1,8 @@
 package com.enderio.enderio.compat.jei_machines_to_merge.transfer;
 
-import com.enderio.enderio.content.machines.crafter.CrafterMenu;
+import com.enderio.enderio.content.storage.crafter.CrafterMenu;
 import com.enderio.enderio.foundation.network.packets.ServerboundUpdateCrafterTemplatePacket;
-import com.enderio.enderio.init.MachineMenus;
+import com.enderio.enderio.init.EIOMenus;
 import com.mojang.logging.LogUtils;
 import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -43,7 +43,7 @@ public class CrafterRecipeTransferHandler implements IRecipeTransferHandler<Craf
 
     @Override
     public Optional<MenuType<CrafterMenu>> getMenuType() {
-        return Optional.of(MachineMenus.CRAFTER.get());
+        return Optional.of(EIOMenus.CRAFTER.get());
     }
 
     @Override

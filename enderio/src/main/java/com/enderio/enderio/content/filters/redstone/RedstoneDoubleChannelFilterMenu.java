@@ -3,7 +3,7 @@ package com.enderio.enderio.content.filters.redstone;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.filter.RedstoneOutputFilter;
 import com.enderio.enderio.foundation.network.packets.ServerboundDoubleChannelPacket;
-import com.enderio.enderio.init.ConduitMenus;
+import com.enderio.enderio.init.EIOMenus;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
@@ -43,7 +43,7 @@ public class RedstoneDoubleChannelFilterMenu extends AbstractContainerMenu {
     }
 
     protected RedstoneDoubleChannelFilterMenu(int pContainerId, Inventory inventory, ItemStack pStack) {
-        this(ConduitMenus.REDSTONE_DOUBLE_CHANNEL_FILTER.get(), pContainerId, inventory, pStack);
+        this(EIOMenus.REDSTONE_DOUBLE_CHANNEL_FILTER.get(), pContainerId, inventory, pStack);
     }
 
 

@@ -3,7 +3,7 @@ package com.enderio.enderio.init;
 import com.enderio.core.common.recipes.RecipeTypeSerializerPair;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.content.enchanter.EnchanterRecipe;
-import com.enderio.enderio.content.fluid_tank.TankRecipe;
+import com.enderio.enderio.content.storage.fluid_tank.TankRecipe;
 import com.enderio.enderio.content.machines.alloy.AlloySmeltingRecipe;
 import com.enderio.enderio.content.machines.obelisks.weather.WeatherChangeRecipe;
 import com.enderio.enderio.content.machines.painting.PaintingRecipe;

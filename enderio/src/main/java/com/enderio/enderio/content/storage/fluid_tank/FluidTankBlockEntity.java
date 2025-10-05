@@ -1,4 +1,4 @@
-package com.enderio.enderio.content.fluid_tank;
+package com.enderio.enderio.content.storage.fluid_tank;
 
 import com.enderio.enderio.foundation.attachment.FluidTankUser;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;

@@ -1,4 +1,4 @@
-package com.enderio.enderio.content.machines.crafter;
+package com.enderio.enderio.content.storage.crafter;
 
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;

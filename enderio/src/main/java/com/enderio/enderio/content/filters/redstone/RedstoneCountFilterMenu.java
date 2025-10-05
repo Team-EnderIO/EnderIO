@@ -2,7 +2,7 @@ package com.enderio.enderio.content.filters.redstone;
 
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.foundation.network.packets.ServerboundCountFilterPacket;
-import com.enderio.enderio.init.ConduitMenus;
+import com.enderio.enderio.init.EIOMenus;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
@@ -32,7 +32,7 @@ public class RedstoneCountFilterMenu extends AbstractContainerMenu {
     }
 
     public RedstoneCountFilterMenu(int pContainerId, Inventory inventory, ItemStack pStack) {
-        this(ConduitMenus.REDSTONE_COUNT_FILTER.get(), pContainerId, inventory, pStack);
+        this(EIOMenus.REDSTONE_COUNT_FILTER.get(), pContainerId, inventory, pStack);
     }
 
     public static RedstoneCountFilterMenu factory(int i, Inventory inventory, RegistryFriendlyByteBuf registryFriendlyByteBuf) {

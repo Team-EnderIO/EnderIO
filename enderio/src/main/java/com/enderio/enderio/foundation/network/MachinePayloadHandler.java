@@ -1,7 +1,7 @@
 package com.enderio.enderio.foundation.network;
 
 import com.enderio.enderio.content.enderface.EnderfaceBlockEntity;
-import com.enderio.enderio.content.machines.crafter.CrafterMenu;
+import com.enderio.enderio.content.storage.crafter.CrafterMenu;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.network.packets.ClientboundFarmStationSoulPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundPoweredSpawnerSoulPacket;

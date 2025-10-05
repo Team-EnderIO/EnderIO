@@ -23,7 +23,6 @@ import com.enderio.enderio.init.ConduitComponents;
 import com.enderio.enderio.init.ConduitIngredientTypes;
 import com.enderio.enderio.init.ConduitItems;
 import com.enderio.enderio.init.ConduitLang;
-import com.enderio.enderio.init.ConduitMenus;
 import com.enderio.enderio.init.ConduitTypes;
 import com.enderio.enderio.init.EIOAttachments;
 import com.enderio.enderio.init.EIOBlockEntities;
@@ -43,7 +42,6 @@ import com.enderio.enderio.init.MachineAttachments;
 import com.enderio.enderio.init.MachineBlockEntities;
 import com.enderio.enderio.init.MachineBlocks;
 import com.enderio.enderio.init.MachineDataComponents;
-import com.enderio.enderio.init.MachineMenus;
 import com.enderio.enderio.init.MachineRecipes;
 import com.enderio.enderio.init.MachineTravelTargets;
 import com.enderio.regilite.Regilite;
@@ -130,7 +128,6 @@ public class EnderIO {
 
         ConduitTypes.register(modEventBus);
         ConduitBlockEntities.register(modEventBus);
-        ConduitMenus.register(modEventBus);
         ConduitBlocks.register(modEventBus);
         ConduitItems.register(modEventBus);
         ConduitComponents.register(modEventBus);
@@ -141,7 +138,6 @@ public class EnderIO {
         MachineTravelTargets.register(modEventBus);
         MachineBlocks.register(modEventBus);
         MachineBlockEntities.register(modEventBus);
-        MachineMenus.register(modEventBus);
         MachineRecipes.register(modEventBus);
         MachineAttachments.register(modEventBus);
         MachineLang.register();
