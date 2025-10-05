@@ -30,7 +30,7 @@ public class EnderSkullBlock extends SkullBlock {
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return EIOBlockEntities.ENDER_SKULL.create(pos, state);
+        return new EnderSkullBlockEntity(pos, state);
     }
 
     @Nullable

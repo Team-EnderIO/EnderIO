@@ -16,7 +16,6 @@ import com.enderio.enderio.content.conduits.type.redstone.RedstoneConduitNetwork
 import com.enderio.enderio.foundation.network.packets.ServerboundBreakConduitPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundDestroyEntireConduitBundlePacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundRemoveConduitFacadePacket;
-import com.enderio.enderio.init.ConduitBlockEntities;
 import com.enderio.enderio.init.ConduitTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -77,7 +76,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return ConduitBlockEntities.CONDUIT.create(blockPos, blockState);
+        return new ConduitBundleBlockEntity(blockPos, blockState);
     }
 
     @Override

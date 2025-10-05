@@ -32,7 +32,7 @@ public class PaintedSlabBlock extends SlabBlock implements EntityBlock, PaintedB
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return EIOBlockEntities.DOUBLE_PAINTED.create(pos, state);
+        return new DoublePaintedBlockEntity(pos, state);
     }
 
     @Override

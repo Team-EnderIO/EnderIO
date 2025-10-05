@@ -17,7 +17,6 @@ import com.enderio.enderio.foundation.lang.EIOLang;
 import com.enderio.enderio.foundation.lang.MachineEnumLang;
 import com.enderio.enderio.foundation.lang.MachineLang;
 import com.enderio.enderio.foundation.tag.EIOTags;
-import com.enderio.enderio.init.ConduitBlockEntities;
 import com.enderio.enderio.init.ConduitBlocks;
 import com.enderio.enderio.init.ConduitComponents;
 import com.enderio.enderio.init.ConduitIngredientTypes;
@@ -127,7 +126,6 @@ public class EnderIO {
         EIOIngredientTypes.register(modEventBus);
 
         ConduitTypes.register(modEventBus);
-        ConduitBlockEntities.register(modEventBus);
         ConduitBlocks.register(modEventBus);
         ConduitItems.register(modEventBus);
         ConduitComponents.register(modEventBus);

@@ -1,5 +1,6 @@
 package com.enderio.enderio.content.paint.block;
 
+import com.enderio.enderio.content.paint.block.entity.SinglePaintedBlockEntity;
 import com.enderio.enderio.init.EIOBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
@@ -20,8 +21,8 @@ public class PaintedWallBlock extends WallBlock implements EntityBlock, PaintedB
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return EIOBlockEntities.SINGLE_PAINTED.create(pPos, pState);
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new SinglePaintedBlockEntity(pos, state);
     }
 
     @Override

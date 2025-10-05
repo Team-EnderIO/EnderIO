@@ -18,7 +18,7 @@ public class WallEnderSkullBlock extends WallSkullBlock {
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return EIOBlockEntities.ENDER_SKULL.create(pos, state);
+        return new EnderSkullBlockEntity(pos, state);
     }
 
     @Nullable

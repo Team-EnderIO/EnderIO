@@ -2,6 +2,7 @@ package com.enderio.enderio.content.paint.block;
 
 import com.enderio.enderio.content.paint.PaintedSandEntity;
 import com.enderio.enderio.content.paint.block.entity.PaintedBlockEntity;
+import com.enderio.enderio.content.paint.block.entity.SinglePaintedBlockEntity;
 import com.enderio.enderio.init.EIOBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -32,7 +33,7 @@ public class PaintedSandBlock extends ColoredFallingBlock implements EntityBlock
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return EIOBlockEntities.SINGLE_PAINTED.create(pos, state);
+        return new SinglePaintedBlockEntity(pos, state);
     }
 
     @Override

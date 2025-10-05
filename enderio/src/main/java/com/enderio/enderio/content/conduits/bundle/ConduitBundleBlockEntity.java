@@ -27,8 +27,8 @@ import com.enderio.enderio.content.conduits.network.ConduitNodeImpl;
 import com.enderio.enderio.content.conduits.network.IConduitNodeAttachment;
 import com.enderio.enderio.foundation.EIONBTKeys;
 import com.enderio.enderio.foundation.block.entity.Wrenchable;
-import com.enderio.enderio.init.ConduitBlockEntities;
 import com.enderio.enderio.init.ConduitTypes;
+import com.enderio.enderio.init.EIOBlockEntities;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
@@ -139,7 +139,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     private boolean isLoading = false;
 
     public ConduitBundleBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(ConduitBlockEntities.CONDUIT.get(), worldPosition, blockState);
+        super(EIOBlockEntities.CONDUIT.get(), worldPosition, blockState);
     }
 
     @Override
