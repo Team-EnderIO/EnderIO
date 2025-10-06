@@ -171,13 +171,13 @@ public record SagMillingRecipe(Ingredient input, List<OutputItem> outputs, int e
 
     public record OutputItem(Either<ItemStack, SizedTagOutput> output, float chance, boolean isOptional) {
 
-        private static final Codec<OutputItem> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+        public static final Codec<OutputItem> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 Codec.either(ItemStack.CODEC, SizedTagOutput.CODEC).fieldOf("item").forGetter(OutputItem::output),
                 Codec.FLOAT.optionalFieldOf("chance", 1f).forGetter(OutputItem::chance),
                 Codec.BOOL.optionalFieldOf("optional", false).forGetter(OutputItem::isOptional))
                 .apply(instance, OutputItem::new));
 
-        private static final StreamCodec<RegistryFriendlyByteBuf, OutputItem> STREAM_CODEC = StreamCodec.composite(
+        public static final StreamCodec<RegistryFriendlyByteBuf, OutputItem> STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.either(ItemStack.STREAM_CODEC, SizedTagOutput.STREAM_CODEC), OutputItem::output,
                 ByteBufCodecs.FLOAT, OutputItem::chance, ByteBufCodecs.BOOL, OutputItem::isOptional, OutputItem::new);
 
