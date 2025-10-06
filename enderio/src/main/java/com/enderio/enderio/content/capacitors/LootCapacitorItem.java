@@ -2,7 +2,6 @@ package com.enderio.enderio.content.capacitors;
 
 import com.enderio.enderio.api.capacitor.CapacitorData;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
-import com.enderio.enderio.foundation.lang.EIOLang;
 import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -33,16 +32,16 @@ public class LootCapacitorItem extends CapacitorItem {
         float base = capacitorData.base();
 
         if (base < 1f) {
-            return EIOLang.LOOT_CAPACITOR_BASE_DUD;
+            return CapacitorLang.LOOT_CAPACITOR_BASE_DUD;
         } else if (base < 1.5f) {
-            return EIOLang.LOOT_CAPACITOR_BASE_NORMAL;
+            return CapacitorLang.LOOT_CAPACITOR_BASE_NORMAL;
         } else if (base < 2.5f) {
-            return EIOLang.LOOT_CAPACITOR_BASE_ENHANCED;
+            return CapacitorLang.LOOT_CAPACITOR_BASE_ENHANCED;
         } else if (base < 3.5f) {
-            return EIOLang.LOOT_CAPACITOR_BASE_WONDER;
+            return CapacitorLang.LOOT_CAPACITOR_BASE_WONDER;
         }
 
-        return EIOLang.LOOT_CAPACITOR_BASE_IMPOSSIBLE;
+        return CapacitorLang.LOOT_CAPACITOR_BASE_IMPOSSIBLE;
     }
 
     private MutableComponent getModifierType(CapacitorData capacitorData) {
@@ -54,16 +53,16 @@ public class LootCapacitorItem extends CapacitorItem {
 
         // TODO: Use a map for this instead.
         if (firstType.get() == CapacitorModifier.ENERGY_CAPACITY) {
-            return EIOLang.LOOT_CAPACITOR_TYPE_ENERGY_CAPACITY;
+            return CapacitorLang.LOOT_CAPACITOR_TYPE_ENERGY_CAPACITY;
         } else if (firstType.get() == CapacitorModifier.ENERGY_USE) {
-            return EIOLang.LOOT_CAPACITOR_TYPE_ENERGY_USE;
+            return CapacitorLang.LOOT_CAPACITOR_TYPE_ENERGY_USE;
         } else if (firstType.get() == CapacitorModifier.FUEL_EFFICIENCY) {
-            return EIOLang.LOOT_CAPACITOR_TYPE_FUEL_EFFICIENCY;
+            return CapacitorLang.LOOT_CAPACITOR_TYPE_FUEL_EFFICIENCY;
         } else if (firstType.get() == CapacitorModifier.BURNING_ENERGY_GENERATION) {
-            return EIOLang.LOOT_CAPACITOR_TYPE_BURNING_ENERGY_GENERATION;
+            return CapacitorLang.LOOT_CAPACITOR_TYPE_BURNING_ENERGY_GENERATION;
         }
 
-        return EIOLang.LOOT_CAPACITOR_TYPE_UNKNOWN;
+        return CapacitorLang.LOOT_CAPACITOR_TYPE_UNKNOWN;
     }
 
     private MutableComponent getModifierQuality(CapacitorData capacitorData) {
@@ -76,21 +75,21 @@ public class LootCapacitorItem extends CapacitorItem {
         float modifier = firstModifier.get();
 
         if (modifier < 1f) {
-            return EIOLang.LOOT_CAPACITOR_MODIFIER_FAILED;
+            return CapacitorLang.LOOT_CAPACITOR_MODIFIER_FAILED;
         } else if (modifier < 1.5f) {
-            return EIOLang.LOOT_CAPACITOR_MODIFIER_SIMPLE;
+            return CapacitorLang.LOOT_CAPACITOR_MODIFIER_SIMPLE;
         } else if (modifier < 2.5f) {
-            return EIOLang.LOOT_CAPACITOR_MODIFIER_NICE;
+            return CapacitorLang.LOOT_CAPACITOR_MODIFIER_NICE;
         } else if (modifier < 3f) {
-            return EIOLang.LOOT_CAPACITOR_MODIFIER_GOOD;
+            return CapacitorLang.LOOT_CAPACITOR_MODIFIER_GOOD;
         } else if (modifier < 3.5f) {
-            return EIOLang.LOOT_CAPACITOR_MODIFIER_ENHANCED;
+            return CapacitorLang.LOOT_CAPACITOR_MODIFIER_ENHANCED;
         } else if (modifier < 4f) {
-            return EIOLang.LOOT_CAPACITOR_MODIFIER_PREMIUM;
+            return CapacitorLang.LOOT_CAPACITOR_MODIFIER_PREMIUM;
         } else if (modifier < 4.25f) {
-            return EIOLang.LOOT_CAPACITOR_MODIFIER_INCREDIBLY;
+            return CapacitorLang.LOOT_CAPACITOR_MODIFIER_INCREDIBLY;
         }
 
-        return EIOLang.LOOT_CAPACITOR_MODIFIER_UNSTABLE;
+        return CapacitorLang.LOOT_CAPACITOR_MODIFIER_UNSTABLE;
     }
 }

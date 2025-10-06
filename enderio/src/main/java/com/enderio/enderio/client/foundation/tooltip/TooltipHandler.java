@@ -6,6 +6,7 @@ import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.EnderIODataComponents;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.components.GrindingBallData;
+import com.enderio.enderio.content.capacitors.CapacitorLang;
 import com.enderio.enderio.foundation.lang.EIOLang;
 import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.client.gui.screens.Screen;
@@ -55,7 +56,7 @@ public class TooltipHandler {
 
             NumberFormat fmt = NumberFormat.getInstance(Locale.ENGLISH);
             components
-                    .add(TooltipUtil.styledWithArgs(EIOLang.CAPACITOR_TOOLTIP_BASE, fmt.format(capacitorData.base())));
+                    .add(TooltipUtil.styledWithArgs(CapacitorLang.CAPACITOR_TOOLTIP_BASE, fmt.format(capacitorData.base())));
 
             for (Map.Entry<CapacitorModifier, Float> modifier : capacitorData.modifiers().entrySet()) {
                 components.add(TooltipUtil.styledWithArgs(

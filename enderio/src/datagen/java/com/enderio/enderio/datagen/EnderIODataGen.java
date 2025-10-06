@@ -3,6 +3,7 @@ package com.enderio.enderio.datagen;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.EnderIORegistries;
+import com.enderio.enderio.datagen.client.EIOLanguageProvider;
 import com.enderio.enderio.datagen.common.advancement.EIOAdvancementGenerator;
 import com.enderio.enderio.datagen.common.advancement.MachinesAdvancementGenerator;
 import com.enderio.enderio.datagen.common.data_maps.RangeExtenderDataMapProvider;
@@ -38,6 +39,7 @@ import java.util.concurrent.CompletableFuture;
 public class EnderIODataGen {
 
     public EnderIODataGen(IEventBus eventBus) {
+        // Temp: Runs after Regilite.
         eventBus.addListener(EventPriority.LOWEST, this::onGatherData);
     }
 
@@ -75,6 +77,8 @@ public class EnderIODataGen {
             new LootTableProvider(packOutput, Collections.emptySet(), List.of(
                 new LootTableProvider.SubProviderEntry(ChestLootProvider::new, LootContextParamSets.CHEST)
             ), lookupProvider));
+
+        generator.addProvider(event.includeClient(), new EIOLanguageProvider(packOutput));
     }
 
     private static RegistrySetBuilder createDatapackEntriesBuilder() {
