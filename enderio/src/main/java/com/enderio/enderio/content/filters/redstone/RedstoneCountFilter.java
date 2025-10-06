@@ -3,7 +3,7 @@ package com.enderio.enderio.content.filters.redstone;
 import com.enderio.enderio.api.filter.RedstoneOutputFilter;
 import com.enderio.enderio.api.filter.RedstoneOutputFilterContext;
 import com.enderio.enderio.foundation.network.packets.ServerboundCountFilterPacket;
-import com.enderio.enderio.init.ConduitComponents;
+import com.enderio.enderio.init.EIODataComponents;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
@@ -44,47 +44,47 @@ public class RedstoneCountFilter implements RedstoneOutputFilter {
     }
 
     public DyeColor getChannel() {
-        return stack.get(ConduitComponents.REDSTONE_COUNT_FILTER).channel1();
+        return stack.get(EIODataComponents.REDSTONE_COUNT_FILTER).channel1();
     }
 
     public int getMaxCount() {
-        return stack.get(ConduitComponents.REDSTONE_COUNT_FILTER).maxCount();
+        return stack.get(EIODataComponents.REDSTONE_COUNT_FILTER).maxCount();
     }
 
     public void setMaxCount(int maxCount) {
-        var component = stack.get(ConduitComponents.REDSTONE_COUNT_FILTER);
-        stack.set(ConduitComponents.REDSTONE_COUNT_FILTER,
+        var component = stack.get(EIODataComponents.REDSTONE_COUNT_FILTER);
+        stack.set(EIODataComponents.REDSTONE_COUNT_FILTER,
                 new Component(component.channel1, maxCount, component.count, component.deactivated));
     }
 
     public int getCount() {
-        return stack.get(ConduitComponents.REDSTONE_COUNT_FILTER).count();
+        return stack.get(EIODataComponents.REDSTONE_COUNT_FILTER).count();
     }
 
     public void setCount(int count) {
-        var component = stack.get(ConduitComponents.REDSTONE_COUNT_FILTER);
-        stack.set(ConduitComponents.REDSTONE_COUNT_FILTER,
+        var component = stack.get(EIODataComponents.REDSTONE_COUNT_FILTER);
+        stack.set(EIODataComponents.REDSTONE_COUNT_FILTER,
                 new Component(component.channel1, component.maxCount, count, component.deactivated));
     }
 
     public boolean isDeactivated() {
-        return stack.get(ConduitComponents.REDSTONE_COUNT_FILTER).deactivated();
+        return stack.get(EIODataComponents.REDSTONE_COUNT_FILTER).deactivated();
     }
 
     public void setDeactivated(boolean lastActive) {
-        var component = stack.get(ConduitComponents.REDSTONE_COUNT_FILTER);
-        stack.set(ConduitComponents.REDSTONE_COUNT_FILTER,
+        var component = stack.get(EIODataComponents.REDSTONE_COUNT_FILTER);
+        stack.set(EIODataComponents.REDSTONE_COUNT_FILTER,
                 new Component(component.channel1, component.maxCount, component.count, lastActive));
     }
 
     public void setState(ServerboundCountFilterPacket packet) {
-        stack.set(ConduitComponents.REDSTONE_COUNT_FILTER,
+        stack.set(EIODataComponents.REDSTONE_COUNT_FILTER,
                 new Component(packet.channel1(), packet.maxCount(), packet.count(), packet.active()));
     }
 
     public void setChannel(DyeColor channel) {
-        var component = stack.get(ConduitComponents.REDSTONE_COUNT_FILTER);
-        stack.set(ConduitComponents.REDSTONE_COUNT_FILTER,
+        var component = stack.get(EIODataComponents.REDSTONE_COUNT_FILTER);
+        stack.set(EIODataComponents.REDSTONE_COUNT_FILTER,
                 new Component(channel, component.maxCount, component.count, component.deactivated));
     }
 

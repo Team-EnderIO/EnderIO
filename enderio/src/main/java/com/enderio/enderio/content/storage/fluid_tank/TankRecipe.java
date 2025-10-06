@@ -1,7 +1,7 @@
 package com.enderio.enderio.content.storage.fluid_tank;
 
 import com.enderio.enderio.foundation.io.fluid.MachineFluidTank;
-import com.enderio.enderio.init.MachineRecipes;
+import com.enderio.enderio.init.EIORecipes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -93,12 +93,12 @@ public record TankRecipe(Ingredient input, ItemStack output, FluidStack fluid, M
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return MachineRecipes.TANK.serializer().get();
+        return EIORecipes.TANK.serializer().get();
     }
 
     @Override
     public RecipeType<?> getType() {
-        return MachineRecipes.TANK.type().get();
+        return EIORecipes.TANK.type().get();
     }
 
     public record Input(ItemStack fillItem, ItemStack emptyItem, MachineFluidTank fluidTank) implements RecipeInput {

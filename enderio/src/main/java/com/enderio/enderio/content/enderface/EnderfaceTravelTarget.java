@@ -4,7 +4,7 @@ import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.enderio.api.travel.TravelTarget;
 import com.enderio.enderio.api.travel.TravelTargetSerializer;
 import com.enderio.enderio.api.travel.TravelTargetType;
-import com.enderio.enderio.init.MachineTravelTargets;
+import com.enderio.enderio.init.EIOTravelTargets;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
@@ -29,12 +29,12 @@ public record EnderfaceTravelTarget(BlockPos pos) implements TravelTarget {
 
     @Override
     public TravelTargetType<?> type() {
-        return MachineTravelTargets.ENDERFACE_TYPE.get();
+        return EIOTravelTargets.ENDERFACE_TYPE.get();
     }
 
     @Override
     public TravelTargetSerializer<?> serializer() {
-        return MachineTravelTargets.ENDERFACE_SERIALIZER.get();
+        return EIOTravelTargets.ENDERFACE_SERIALIZER.get();
     }
 
     @Override

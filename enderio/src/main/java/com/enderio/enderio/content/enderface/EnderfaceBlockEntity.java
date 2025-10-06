@@ -7,7 +7,7 @@ import com.enderio.enderio.config.base.BaseConfig;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.foundation.block.EIOBlockEntity;
 import com.enderio.enderio.init.EIOBlockEntities;
-import com.enderio.enderio.init.MachineFeatureFlags;
+import com.enderio.enderio.init.EIOFeatureFlags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.SectionPos;
@@ -86,7 +86,7 @@ public class EnderfaceBlockEntity extends EIOBlockEntity {
     }
 
     public static boolean canPlayerInteractWithBlock(Player player, Level level, BlockPos pos) {
-        if (!level.enabledFeatures().contains(MachineFeatureFlags.ENDERFACE)) {
+        if (!level.enabledFeatures().contains(EIOFeatureFlags.ENDERFACE)) {
             return false;
         }
 

@@ -3,7 +3,7 @@ package com.enderio.enderio.mixin;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.content.machines.alloy.AlloySmeltingRecipe;
-import com.enderio.enderio.init.MachineRecipes;
+import com.enderio.enderio.init.EIORecipes;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 import net.minecraft.resources.ResourceLocation;
@@ -37,7 +37,7 @@ public abstract class RecipeManagerMixin {
         if (recipeWithConditions.carrier() instanceof SmeltingRecipe smeltingRecipe) {
 
             enderio$convertSmeltingRecipe(recipeId, smeltingRecipe).ifPresent(convertedHolder -> {
-                byType.put(MachineRecipes.ALLOY_SMELTING.type().get(), convertedHolder);
+                byType.put(EIORecipes.ALLOY_SMELTING.type().get(), convertedHolder);
                 byName.put(convertedHolder.id(), convertedHolder);
             });
         }

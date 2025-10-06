@@ -9,7 +9,7 @@ import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.foundation.tag.EIOTags;
-import com.enderio.enderio.init.ConduitTypes;
+import com.enderio.enderio.init.EIOConduitTypes;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
@@ -46,7 +46,7 @@ public record RedstoneConduit(ResourceLocation texture, ResourceLocation activeT
 
     @Override
     public ConduitType<RedstoneConduit> type() {
-        return ConduitTypes.REDSTONE.get();
+        return EIOConduitTypes.REDSTONE.get();
     }
 
     @Override

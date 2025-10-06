@@ -17,8 +17,7 @@ import com.enderio.enderio.foundation.io.energy.ImmutableMachineEnergyStorage;
 import com.enderio.enderio.foundation.io.energy.MachineEnergyStorage;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.init.EIODataComponents;
-import com.enderio.enderio.init.MachineAttachments;
-import com.enderio.enderio.init.MachineDataComponents;
+import com.enderio.enderio.init.EIOAttachments;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -374,22 +373,22 @@ public abstract class LegacyPoweredMachineBlockEntity extends LegacyMachineBlock
     protected void applyImplicitComponents(DataComponentInput components) {
         super.applyImplicitComponents(components);
         energyStorage.setEnergyStored(components.getOrDefault(EIODataComponents.ENERGY, 0));
-        setData(MachineAttachments.REDSTONE_CONTROL,
-                components.getOrDefault(MachineDataComponents.REDSTONE_CONTROL, RedstoneControl.ALWAYS_ACTIVE));
+        setData(EIOAttachments.REDSTONE_CONTROL,
+                components.getOrDefault(EIODataComponents.REDSTONE_CONTROL, RedstoneControl.ALWAYS_ACTIVE));
     }
 
     @Override
     protected void collectImplicitComponents(DataComponentMap.Builder components) {
         super.collectImplicitComponents(components);
         components.set(EIODataComponents.ENERGY, energyStorage.getEnergyStored());
-        components.set(MachineDataComponents.REDSTONE_CONTROL, getData(MachineAttachments.REDSTONE_CONTROL));
+        components.set(EIODataComponents.REDSTONE_CONTROL, getData(EIOAttachments.REDSTONE_CONTROL));
     }
 
     @Override
     public void removeComponentsFromTag(CompoundTag tag) {
         super.removeComponentsFromTag(tag);
         tag.remove(MachineNBTKeys.ENERGY);
-        removeData(MachineAttachments.REDSTONE_CONTROL);
+        removeData(EIOAttachments.REDSTONE_CONTROL);
     }
 
     // endregion

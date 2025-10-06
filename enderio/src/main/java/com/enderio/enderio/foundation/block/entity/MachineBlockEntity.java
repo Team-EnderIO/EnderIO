@@ -18,8 +18,8 @@ import com.enderio.enderio.foundation.io.SidedIOConfigurable;
 import com.enderio.enderio.foundation.io.TransferUtil;
 import com.enderio.enderio.foundation.network.packets.ServerboundCycleIOConfigPacket;
 import com.enderio.enderio.foundation.state.MachineState;
-import com.enderio.enderio.init.MachineAttachments;
-import com.enderio.enderio.init.MachineDataComponents;
+import com.enderio.enderio.init.EIODataComponents;
+import com.enderio.enderio.init.EIOAttachments;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -583,9 +583,9 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
 
         // Same for IO Config
         // TODO: Ender IO 8 - remove.
-        if (hasData(MachineAttachments.IO_CONFIG)) {
-            ioConfig = getData(MachineAttachments.IO_CONFIG);
-            removeData(MachineAttachments.IO_CONFIG);
+        if (hasData(EIOAttachments.IO_CONFIG)) {
+            ioConfig = getData(EIOAttachments.IO_CONFIG);
+            removeData(EIOAttachments.IO_CONFIG);
         } else if (tag.contains(MachineNBTKeys.IO_CONFIG)) {
             ioConfig = IOConfig.parseOptional(registries, tag.getCompound(MachineNBTKeys.IO_CONFIG));
 
@@ -596,9 +596,9 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
 
         if (supportsRedstoneControl()) {
             // TODO: Ender IO 8 - remove.
-            if (hasData(MachineAttachments.REDSTONE_CONTROL)) {
-                redstoneControl = getData(MachineAttachments.REDSTONE_CONTROL);
-                removeData(MachineAttachments.REDSTONE_CONTROL);
+            if (hasData(EIOAttachments.REDSTONE_CONTROL)) {
+                redstoneControl = getData(EIOAttachments.REDSTONE_CONTROL);
+                removeData(EIOAttachments.REDSTONE_CONTROL);
             } else if (tag.contains(MachineNBTKeys.REDSTONE_CONTROL)) {
                 redstoneControl = RedstoneControl.parse(registries,
                         Objects.requireNonNull(tag.get(MachineNBTKeys.REDSTONE_CONTROL)));
@@ -620,11 +620,11 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
         }
 
         if (isIOConfigMutable()) {
-            ioConfig = componentInput.getOrDefault(MachineDataComponents.IO_CONFIG, IOConfig.empty());
+            ioConfig = componentInput.getOrDefault(EIODataComponents.IO_CONFIG, IOConfig.empty());
         }
 
         if (supportsRedstoneControl()) {
-            var redstoneControl = componentInput.get(MachineDataComponents.REDSTONE_CONTROL);
+            var redstoneControl = componentInput.get(EIODataComponents.REDSTONE_CONTROL);
             if (redstoneControl != null) {
                 this.redstoneControl = redstoneControl;
             }
@@ -640,11 +640,11 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
         }
 
         if (isIOConfigMutable()) {
-            components.set(MachineDataComponents.IO_CONFIG, ioConfig);
+            components.set(EIODataComponents.IO_CONFIG, ioConfig);
         }
 
         if (supportsRedstoneControl()) {
-            components.set(MachineDataComponents.REDSTONE_CONTROL, redstoneControl);
+            components.set(EIODataComponents.REDSTONE_CONTROL, redstoneControl);
         }
     }
 

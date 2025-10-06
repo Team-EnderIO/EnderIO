@@ -3,7 +3,7 @@ package com.enderio.enderio.content.machines.slicer;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.enderio.foundation.MachineRecipe;
 import com.enderio.enderio.foundation.util.ValidatingListCodec;
-import com.enderio.enderio.init.MachineRecipes;
+import com.enderio.enderio.init.EIORecipes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -56,12 +56,12 @@ public record SlicingRecipe(ItemStack output, List<Ingredient> inputs, int energ
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return MachineRecipes.SLICING.serializer().get();
+        return EIORecipes.SLICING.serializer().get();
     }
 
     @Override
     public RecipeType<?> getType() {
-        return MachineRecipes.SLICING.type().get();
+        return EIORecipes.SLICING.type().get();
     }
 
     public record Input(List<ItemStack> inputs) implements RecipeInput {

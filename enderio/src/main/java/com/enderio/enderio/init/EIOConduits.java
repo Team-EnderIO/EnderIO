@@ -5,7 +5,7 @@ import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
 import net.minecraft.resources.ResourceKey;
 
-public class Conduits {
+public class EIOConduits {
 
     public static final ResourceKey<Conduit<?, ?>> ENERGY = ResourceKey.create(EnderIORegistries.Keys.CONDUIT,
             EnderIO.rl("energy"));

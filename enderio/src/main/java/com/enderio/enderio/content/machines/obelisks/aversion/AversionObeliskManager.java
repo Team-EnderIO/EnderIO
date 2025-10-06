@@ -1,7 +1,7 @@
 package com.enderio.enderio.content.machines.obelisks.aversion;
 
 import com.enderio.enderio.content.machines.obelisks.ObeliskAreaManager;
-import com.enderio.enderio.init.MachineAttachments;
+import com.enderio.enderio.init.EIOAttachments;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.MobSpawnType;
@@ -16,7 +16,7 @@ import java.util.Set;
 public class AversionObeliskManager extends ObeliskAreaManager<AversionObeliskBlockEntity> {
 
     public static AversionObeliskManager getManager(ServerLevel serverLevel) {
-        return serverLevel.getData(MachineAttachments.AVERSION_OBELISK_MANAGER);
+        return serverLevel.getData(EIOAttachments.AVERSION_OBELISK_MANAGER);
     }
 
     @SuppressWarnings("unused")
@@ -30,7 +30,7 @@ public class AversionObeliskManager extends ObeliskAreaManager<AversionObeliskBl
         // If there is no obelisk manager, there is nothing to do.
         ServerLevelAccessor levelAccessor = event.getLevel();
         ServerLevel level = levelAccessor.getLevel();
-        if (!level.hasData(MachineAttachments.AVERSION_OBELISK_MANAGER)) {
+        if (!level.hasData(EIOAttachments.AVERSION_OBELISK_MANAGER)) {
             return;
         }
 

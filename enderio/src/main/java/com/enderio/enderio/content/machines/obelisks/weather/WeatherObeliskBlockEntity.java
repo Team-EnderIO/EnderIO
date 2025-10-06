@@ -16,7 +16,7 @@ import com.enderio.enderio.foundation.task.CraftingMachineTask;
 import com.enderio.enderio.foundation.task.host.CraftingMachineTaskHost;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
-import com.enderio.enderio.init.MachineRecipes;
+import com.enderio.enderio.init.EIORecipes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
@@ -54,7 +54,7 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity implements Flu
         fluidHandler = createFluidHandler();
 
         craftingTaskHost = new CraftingMachineTaskHost<>(this, this::canAcceptTask,
-                MachineRecipes.WEATHER_CHANGE.type().get(), this::createTask, this::createRecipeInput) {
+                EIORecipes.WEATHER_CHANGE.type().get(), this::createTask, this::createRecipeInput) {
 
             @Override
             protected boolean shouldStartNewTask() {

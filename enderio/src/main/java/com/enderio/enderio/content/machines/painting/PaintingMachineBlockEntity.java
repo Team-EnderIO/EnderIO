@@ -17,7 +17,7 @@ import com.enderio.enderio.foundation.task.host.CraftingMachineTaskHost;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOCriterions;
 import com.enderio.enderio.init.EIODataComponents;
-import com.enderio.enderio.init.MachineRecipes;
+import com.enderio.enderio.init.EIORecipes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -58,7 +58,7 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
 
         area = AABB.ofSize(worldPosition.getCenter(), 10, 10, 10);
 
-        craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy, MachineRecipes.PAINTING.type().get(),
+        craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy, EIORecipes.PAINTING.type().get(),
                 this::createTask, this::createRecipeInput);
     }
 

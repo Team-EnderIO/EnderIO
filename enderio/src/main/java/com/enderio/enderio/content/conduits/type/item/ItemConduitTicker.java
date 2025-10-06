@@ -3,7 +3,7 @@ package com.enderio.enderio.content.conduits.type.item;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.enderio.enderio.api.conduits.ticker.ConduitTicker;
-import com.enderio.enderio.init.ConduitTypes;
+import com.enderio.enderio.init.EIOConduitTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -30,8 +30,8 @@ public class ItemConduitTicker implements ConduitTicker<ItemConduit> {
                 }
 
                 // Get node data for round robin index and connection config
-                var nodeData = extractConnection.node().getOrCreateNodeData(ConduitTypes.NodeData.ITEM.get());
-                var connectionConfig = extractConnection.connectionConfig(ConduitTypes.ConnectionTypes.ITEM.get());
+                var nodeData = extractConnection.node().getOrCreateNodeData(EIOConduitTypes.NodeData.ITEM.get());
+                var connectionConfig = extractConnection.connectionConfig(EIOConduitTypes.ConnectionTypes.ITEM.get());
 
                 // Get extraction filter
                 var extractFilter = extractConnection.inventory()

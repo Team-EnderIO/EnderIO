@@ -16,8 +16,8 @@ import com.enderio.enderio.foundation.io.IOConfig;
 import com.enderio.enderio.foundation.io.SidedIOConfigurable;
 import com.enderio.enderio.foundation.io.TransferUtil;
 import com.enderio.enderio.foundation.state.MachineState;
-import com.enderio.enderio.init.MachineAttachments;
-import com.enderio.enderio.init.MachineDataComponents;
+import com.enderio.enderio.init.EIODataComponents;
+import com.enderio.enderio.init.EIOAttachments;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -101,8 +101,8 @@ public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
         // Create IO Config.
         this.defaultIOConfig = getDefaultIOConfig();
 
-        if (!this.hasData(MachineAttachments.IO_CONFIG)) {
-            this.setData(MachineAttachments.IO_CONFIG, defaultIOConfig);
+        if (!this.hasData(EIOAttachments.IO_CONFIG)) {
+            this.setData(EIOAttachments.IO_CONFIG, defaultIOConfig);
         }
 
         // If the machine declares an inventory layout, use it to create a handler
@@ -146,7 +146,7 @@ public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
 
     private IOConfig getIOConfig() {
         if (isIOConfigMutable()) {
-            return getData(MachineAttachments.IO_CONFIG);
+            return getData(EIOAttachments.IO_CONFIG);
         }
 
         return defaultIOConfig;
@@ -204,7 +204,7 @@ public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
             throw new IllegalStateException("Cannot set IO config when isIOConfigMutable is false.");
         }
 
-        setData(MachineAttachments.IO_CONFIG, config);
+        setData(EIOAttachments.IO_CONFIG, config);
 
         if (level == null) {
             return;
@@ -285,7 +285,7 @@ public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
             throw new IllegalStateException("This machine does not support redstone control.");
         }
 
-        return getData(MachineAttachments.REDSTONE_CONTROL);
+        return getData(EIOAttachments.REDSTONE_CONTROL);
     }
 
     public void setRedstoneControl(RedstoneControl redstoneControl) {
@@ -301,7 +301,7 @@ public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
     }
 
     private void internalSetRedstoneControl(RedstoneControl redstoneControl) {
-        setData(MachineAttachments.REDSTONE_CONTROL, redstoneControl);
+        setData(EIOAttachments.REDSTONE_CONTROL, redstoneControl);
         setChanged();
         updateRedstone();
     }
@@ -482,8 +482,8 @@ public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
         }
 
         if (isIOConfigMutable()) {
-            setData(MachineAttachments.IO_CONFIG,
-                    components.getOrDefault(MachineDataComponents.IO_CONFIG, IOConfig.empty()));
+            setData(EIOAttachments.IO_CONFIG,
+                    components.getOrDefault(EIODataComponents.IO_CONFIG, IOConfig.empty()));
         }
     }
 
@@ -496,7 +496,7 @@ public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
         }
 
         if (isIOConfigMutable()) {
-            components.set(MachineDataComponents.IO_CONFIG, getData(MachineAttachments.IO_CONFIG));
+            components.set(EIODataComponents.IO_CONFIG, getData(EIOAttachments.IO_CONFIG));
         }
     }
 
@@ -505,7 +505,7 @@ public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
     public void removeComponentsFromTag(CompoundTag tag) {
         super.removeComponentsFromTag(tag);
         tag.remove(MachineNBTKeys.ITEMS);
-        removeData(MachineAttachments.IO_CONFIG);
+        removeData(EIOAttachments.IO_CONFIG);
     }
 
     // endregion

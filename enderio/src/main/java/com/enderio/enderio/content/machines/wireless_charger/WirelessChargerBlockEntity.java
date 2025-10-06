@@ -17,7 +17,7 @@ import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.foundation.io.IOConfig;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOBlockEntities;
-import com.enderio.enderio.init.MachineDataComponents;
+import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -156,7 +156,7 @@ public class WirelessChargerBlockEntity extends PoweredMachineBlockEntity implem
     @Override
     protected void applyImplicitComponents(DataComponentInput components) {
         super.applyImplicitComponents(components);
-        var actionRange = components.get(MachineDataComponents.ACTION_RANGE);
+        var actionRange = components.get(EIODataComponents.ACTION_RANGE);
         if (actionRange != null) {
             this.actionRange = actionRange;
         }
@@ -165,7 +165,7 @@ public class WirelessChargerBlockEntity extends PoweredMachineBlockEntity implem
     @Override
     protected void collectImplicitComponents(DataComponentMap.Builder components) {
         super.collectImplicitComponents(components);
-        components.set(MachineDataComponents.ACTION_RANGE, actionRange);
+        components.set(EIODataComponents.ACTION_RANGE, actionRange);
     }
 
     @Override

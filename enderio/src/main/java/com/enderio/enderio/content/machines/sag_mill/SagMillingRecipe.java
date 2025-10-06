@@ -4,7 +4,7 @@ import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.enderio.api.components.GrindingBallData;
 import com.enderio.enderio.foundation.MachineRecipe;
 import com.enderio.enderio.foundation.util.OptionalItemUtility;
-import com.enderio.enderio.init.MachineRecipes;
+import com.enderio.enderio.init.EIORecipes;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -125,12 +125,12 @@ public record SagMillingRecipe(Ingredient input, List<OutputItem> outputs, int e
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return MachineRecipes.SAG_MILLING.serializer().get();
+        return EIORecipes.SAG_MILLING.serializer().get();
     }
 
     @Override
     public RecipeType<?> getType() {
-        return MachineRecipes.SAG_MILLING.type().get();
+        return EIORecipes.SAG_MILLING.type().get();
     }
 
     public enum BonusType implements StringRepresentable {

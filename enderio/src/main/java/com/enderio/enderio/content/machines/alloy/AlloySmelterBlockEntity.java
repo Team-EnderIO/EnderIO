@@ -17,8 +17,8 @@ import com.enderio.enderio.foundation.recipe.MachineRecipeCaches;
 import com.enderio.enderio.foundation.task.PoweredCraftingMachineTask;
 import com.enderio.enderio.foundation.task.host.CraftingMachineTaskHost;
 import com.enderio.enderio.init.EIOBlockEntities;
-import com.enderio.enderio.init.MachineDataComponents;
-import com.enderio.enderio.init.MachineRecipes;
+import com.enderio.enderio.init.EIODataComponents;
+import com.enderio.enderio.init.EIORecipes;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -69,7 +69,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
         // Crafting task host
         craftingTaskHost = new AlloySmeltingMachineTaskHost(this, this::canAcceptTask,
-                MachineRecipes.ALLOY_SMELTING.type().get(), this::createTask, this::createRecipeInput);
+                EIORecipes.ALLOY_SMELTING.type().get(), this::createTask, this::createRecipeInput);
     }
 
     protected boolean canAcceptTask() {
@@ -334,13 +334,13 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         super.applyImplicitComponents(components);
 
         // TODO: 1.21: Write crafting host into the item components.
-        mode = components.getOrDefault(MachineDataComponents.ALLOY_SMELTER_MODE, AlloySmelterMode.ALL);
+        mode = components.getOrDefault(EIODataComponents.ALLOY_SMELTER_MODE, AlloySmelterMode.ALL);
     }
 
     @Override
     protected void collectImplicitComponents(DataComponentMap.Builder components) {
         super.collectImplicitComponents(components);
-        components.set(MachineDataComponents.ALLOY_SMELTER_MODE, mode);
+        components.set(EIODataComponents.ALLOY_SMELTER_MODE, mode);
     }
 
     @Override

@@ -5,7 +5,7 @@ import com.enderio.enderio.api.travel.TravelTarget;
 import com.enderio.enderio.api.travel.TravelTargetSerializer;
 import com.enderio.enderio.api.travel.TravelTargetType;
 import com.enderio.enderio.config.base.BaseConfig;
-import com.enderio.enderio.init.MachineTravelTargets;
+import com.enderio.enderio.init.EIOTravelTargets;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -62,12 +62,12 @@ public record AnchorTravelTarget(BlockPos pos, String name, Item icon, boolean i
 
     @Override
     public TravelTargetType<?> type() {
-        return MachineTravelTargets.TRAVEL_ANCHOR_TYPE.get();
+        return EIOTravelTargets.TRAVEL_ANCHOR_TYPE.get();
     }
 
     @Override
     public TravelTargetSerializer<?> serializer() {
-        return MachineTravelTargets.TRAVEL_ANCHOR_SERIALIZER.get();
+        return EIOTravelTargets.TRAVEL_ANCHOR_SERIALIZER.get();
     }
 
     public static class Serializer implements TravelTargetSerializer<AnchorTravelTarget> {

@@ -2,7 +2,7 @@ package com.enderio.enderio.content.conduits.type.item;
 
 import com.enderio.enderio.api.conduits.network.node.NodeData;
 import com.enderio.enderio.api.conduits.network.node.NodeDataType;
-import com.enderio.enderio.init.ConduitTypes;
+import com.enderio.enderio.init.EIOConduitTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -36,7 +36,7 @@ public final class ItemConduitNodeData implements NodeData {
 
     @Override
     public NodeDataType<?> type() {
-        return ConduitTypes.NodeData.ITEM.get();
+        return EIOConduitTypes.NodeData.ITEM.get();
     }
 
     public int getIndex(Direction side) {

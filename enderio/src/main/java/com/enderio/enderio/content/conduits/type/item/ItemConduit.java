@@ -13,7 +13,7 @@ import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataAccessor;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.init.ConduitLang;
-import com.enderio.enderio.init.ConduitTypes;
+import com.enderio.enderio.init.EIOConduitTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -56,7 +56,7 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
 
     @Override
     public ConduitType<ItemConduit> type() {
-        return ConduitTypes.ITEM.get();
+        return EIOConduitTypes.ITEM.get();
     }
 
     @Override
@@ -113,7 +113,7 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
 
     @Override
     public ConnectionConfigType<ItemConduitConnectionConfig> connectionConfigType() {
-        return ConduitTypes.ConnectionTypes.ITEM.get();
+        return EIOConduitTypes.ConnectionTypes.ITEM.get();
     }
 
     @Override
@@ -126,7 +126,7 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
     @Override
     public void copyLegacyData(ConduitNode node, ConduitDataAccessor legacyDataAccessor,
             BiConsumer<Direction, ConnectionConfig> connectionConfigSetter) {
-        var legacyData = legacyDataAccessor.getData(ConduitTypes.Data.ITEM.get());
+        var legacyData = legacyDataAccessor.getData(EIOConduitTypes.Data.ITEM.get());
         if (legacyData == null) {
             return;
         }
@@ -187,7 +187,7 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
 
         CompoundTag tag = new CompoundTag();
         tag.putBoolean("HasRedstoneSignal", node.hasRedstoneSignal(config.extractRedstoneChannel()));
-        tag.putBoolean("HasRedstoneConduit", conduitBundle.hasConduitOfType(ConduitTypes.REDSTONE.get()));
+        tag.putBoolean("HasRedstoneConduit", conduitBundle.hasConduitOfType(EIOConduitTypes.REDSTONE.get()));
         return tag;
     }
 

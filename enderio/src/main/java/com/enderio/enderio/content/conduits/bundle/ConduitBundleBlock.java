@@ -16,7 +16,7 @@ import com.enderio.enderio.content.conduits.type.redstone.RedstoneConduitNetwork
 import com.enderio.enderio.foundation.network.packets.ServerboundBreakConduitPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundDestroyEntireConduitBundlePacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundRemoveConduitFacadePacket;
-import com.enderio.enderio.init.ConduitTypes;
+import com.enderio.enderio.init.EIOConduitTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -466,7 +466,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
 
         if (level.getBlockEntity(pos) instanceof ConduitBundleBlockEntity conduitBundle) {
             // Get the redstone conduit
-            var redstoneConduit = conduitBundle.getConduitByType(ConduitTypes.REDSTONE.get());
+            var redstoneConduit = conduitBundle.getConduitByType(EIOConduitTypes.REDSTONE.get());
             if (redstoneConduit == null) {
                 return false;
             }
@@ -502,7 +502,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
             }
 
             // Get the redstone conduit
-            var redstoneConduit = conduitBundle.getConduitByType(ConduitTypes.REDSTONE.get());
+            var redstoneConduit = conduitBundle.getConduitByType(EIOConduitTypes.REDSTONE.get());
             if (redstoneConduit == null) {
                 return 0;
             }

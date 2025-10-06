@@ -21,7 +21,6 @@ import com.enderio.enderio.foundation.io.fluid.TankAccess;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
-import com.enderio.enderio.init.MachineDataComponents;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -249,7 +248,7 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
             tank.setFluid(storedFluid.copy());
         }
 
-        var actionRange = components.get(MachineDataComponents.ACTION_RANGE);
+        var actionRange = components.get(EIODataComponents.ACTION_RANGE);
         if (actionRange != null) {
             this.actionRange = actionRange;
         }
@@ -264,7 +263,7 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
             components.set(EIODataComponents.ITEM_FLUID_CONTENT, SimpleFluidContent.copyOf(tank.getFluid()));
         }
 
-        components.set(MachineDataComponents.ACTION_RANGE, actionRange);
+        components.set(EIODataComponents.ACTION_RANGE, actionRange);
     }
 
     @Override

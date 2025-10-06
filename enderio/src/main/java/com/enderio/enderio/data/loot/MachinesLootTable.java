@@ -1,7 +1,6 @@
 package com.enderio.enderio.data.loot;
 
 import com.enderio.enderio.init.EIODataComponents;
-import com.enderio.enderio.init.MachineDataComponents;
 import com.enderio.regilite.data.RegiliteBlockLootProvider;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
@@ -27,8 +26,8 @@ public class MachinesLootTable {
                 LootItem.lootTableItem(block).apply(CopyComponentsFunction.copyComponents(CopyComponentsFunction.Source.BLOCK_ENTITY)
                     .include(componentType)
                     .include(EIODataComponents.ENERGY.get())
-                    .include(MachineDataComponents.IO_CONFIG.get())
-                    .include(MachineDataComponents.REDSTONE_CONTROL.get())
+                    .include(EIODataComponents.IO_CONFIG.get())
+                    .include(EIODataComponents.REDSTONE_CONTROL.get())
                     .include(DataComponents.CONTAINER)
                 ))));
     }

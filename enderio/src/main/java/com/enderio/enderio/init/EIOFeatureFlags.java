@@ -5,7 +5,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.flag.FeatureFlag;
 import net.minecraft.world.flag.FeatureFlags;
 
-public class MachineFeatureFlags {
+public class EIOFeatureFlags {
     public static final FeatureFlag FARMING_STATION = FeatureFlags.REGISTRY
             .getFlag(ResourceLocation.fromNamespaceAndPath(EnderIO.MOD_ID, "farming_station"));
 

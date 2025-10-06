@@ -7,7 +7,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.registries.datamaps.RegisterDataMapTypesEvent;
 
 @EventBusSubscriber
-public class MachineDataMaps {
+public class EIODataMaps {
     @SubscribeEvent
     public static void registerDataMap(RegisterDataMapTypesEvent event) {
         event.register(VatReagent.DATA_MAP);

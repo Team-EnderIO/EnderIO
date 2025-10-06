@@ -16,8 +16,8 @@ import com.enderio.enderio.foundation.recipe.MachineRecipeCaches;
 import com.enderio.enderio.foundation.task.PoweredCraftingMachineTask;
 import com.enderio.enderio.foundation.task.host.CraftingMachineTaskHost;
 import com.enderio.enderio.init.EIOBlockEntities;
-import com.enderio.enderio.init.MachineDataComponents;
-import com.enderio.enderio.init.MachineRecipes;
+import com.enderio.enderio.init.EIODataComponents;
+import com.enderio.enderio.init.EIORecipes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
@@ -52,7 +52,7 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
         super(EIOBlockEntities.SAG_MILL.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
                 EnergyIOMode.Input, CAPACITY, USAGE);
 
-        craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy, MachineRecipes.SAG_MILLING.type().get(),
+        craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy, EIORecipes.SAG_MILLING.type().get(),
                 this::createTask, this::createRecipeInput);
     }
 
@@ -210,9 +210,9 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
     protected void applyImplicitComponents(DataComponentInput components) {
         super.applyImplicitComponents(components);
 
-        grindingBallData = components.getOrDefault(MachineDataComponents.SAG_MILL_GRINDING_BALL,
+        grindingBallData = components.getOrDefault(EIODataComponents.SAG_MILL_GRINDING_BALL,
                 GrindingBallData.IDENTITY);
-        grindingBallDamage = components.getOrDefault(MachineDataComponents.SAG_MILL_GRINDING_BALL_DAMAGE, 0);
+        grindingBallDamage = components.getOrDefault(EIODataComponents.SAG_MILL_GRINDING_BALL_DAMAGE, 0);
     }
 
     @Override
@@ -220,8 +220,8 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
         super.collectImplicitComponents(components);
 
         if (getGrindingBallDamage() > 0) {
-            components.set(MachineDataComponents.SAG_MILL_GRINDING_BALL, grindingBallData);
-            components.set(MachineDataComponents.SAG_MILL_GRINDING_BALL_DAMAGE, grindingBallDamage);
+            components.set(EIODataComponents.SAG_MILL_GRINDING_BALL, grindingBallData);
+            components.set(EIODataComponents.SAG_MILL_GRINDING_BALL_DAMAGE, grindingBallDamage);
         }
     }
 

@@ -12,7 +12,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
 
-public class MachineTravelTargets {
+public class EIOTravelTargets {
     public static final DeferredRegister<TravelTargetType<?>> TRAVEL_TARGET_TYPES = DeferredRegister
             .create(EnderIORegistries.TRAVEL_TARGET_TYPES, EnderIO.MOD_ID);
 

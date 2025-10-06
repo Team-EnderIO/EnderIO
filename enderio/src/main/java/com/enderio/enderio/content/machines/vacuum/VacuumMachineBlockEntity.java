@@ -9,8 +9,8 @@ import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import com.enderio.enderio.foundation.io.IOConfig;
 import com.enderio.enderio.foundation.util.AttractionUtil;
-import com.enderio.enderio.init.MachineAttachments;
-import com.enderio.enderio.init.MachineDataComponents;
+import com.enderio.enderio.init.EIODataComponents;
+import com.enderio.enderio.init.EIOAttachments;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -165,9 +165,9 @@ public abstract class VacuumMachineBlockEntity<T extends Entity> extends Machine
         super.loadAdditional(tag, registries);
 
         // TODO: Ender IO 8 - remove support for old attachment loading
-        if (hasData(MachineAttachments.ACTION_RANGE)) {
-            actionRange = getData(MachineAttachments.ACTION_RANGE);
-            removeData(MachineAttachments.ACTION_RANGE);
+        if (hasData(EIOAttachments.ACTION_RANGE)) {
+            actionRange = getData(EIOAttachments.ACTION_RANGE);
+            removeData(EIOAttachments.ACTION_RANGE);
         } else if (tag.contains(MachineNBTKeys.ACTION_RANGE)) {
             actionRange = ActionRange.parse(registries, Objects.requireNonNull(tag.get(MachineNBTKeys.ACTION_RANGE)));
         } else {
@@ -179,7 +179,7 @@ public abstract class VacuumMachineBlockEntity<T extends Entity> extends Machine
     protected void applyImplicitComponents(DataComponentInput componentInput) {
         super.applyImplicitComponents(componentInput);
 
-        var actionRange = componentInput.get(MachineDataComponents.ACTION_RANGE);
+        var actionRange = componentInput.get(EIODataComponents.ACTION_RANGE);
         if (actionRange != null) {
             this.actionRange = actionRange;
         }
@@ -191,7 +191,7 @@ public abstract class VacuumMachineBlockEntity<T extends Entity> extends Machine
 
         // Only if unchanged.
         if (!actionRange.equals(DEFAULT_RANGE)) {
-            components.set(MachineDataComponents.ACTION_RANGE, actionRange);
+            components.set(EIODataComponents.ACTION_RANGE, actionRange);
         }
     }
 

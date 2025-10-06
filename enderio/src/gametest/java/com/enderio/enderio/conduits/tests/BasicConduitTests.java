@@ -1,6 +1,6 @@
 package com.enderio.enderio.conduits.tests;
 
-import com.enderio.enderio.init.Conduits;
+import com.enderio.enderio.init.EIOConduits;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.testframework.DynamicTest;
@@ -18,7 +18,7 @@ public class BasicConduitTests {
                 .set(0, 0, 5, Blocks.CHEST.defaultBlockState()));
 
         test.onGameTest(ConduitGameTestHelper.class, helper -> {
-            var itemConduit = helper.getConduit(Conduits.ITEM);
+            var itemConduit = helper.getConduit(EIOConduits.ITEM);
 
             helper.startSequence()
                     // Reset in case of repeated runs (in client)
@@ -43,7 +43,7 @@ public class BasicConduitTests {
         test.registerGameTestTemplate(() -> StructureTemplateBuilder.withSize(3, 1, 3));
 
         test.onGameTest(ConduitGameTestHelper.class, helper -> {
-            var itemConduit = helper.getConduit(Conduits.ITEM);
+            var itemConduit = helper.getConduit(EIOConduits.ITEM);
 
             helper.startSequence()
                     // Reset in case of repeated runs (in client)

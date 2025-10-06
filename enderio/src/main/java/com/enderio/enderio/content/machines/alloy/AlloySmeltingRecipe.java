@@ -2,7 +2,7 @@ package com.enderio.enderio.content.machines.alloy;
 
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.enderio.foundation.MachineRecipe;
-import com.enderio.enderio.init.MachineRecipes;
+import com.enderio.enderio.init.EIORecipes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -155,12 +155,12 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return MachineRecipes.ALLOY_SMELTING.serializer().get();
+        return EIORecipes.ALLOY_SMELTING.serializer().get();
     }
 
     @Override
     public RecipeType<?> getType() {
-        return MachineRecipes.ALLOY_SMELTING.type().get();
+        return EIORecipes.ALLOY_SMELTING.type().get();
     }
 
     public record Input(List<ItemStack> inputs, int inputsConsumed) implements RecipeInput {

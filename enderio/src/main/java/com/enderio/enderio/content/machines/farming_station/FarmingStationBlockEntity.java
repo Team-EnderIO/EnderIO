@@ -23,7 +23,6 @@ import com.enderio.enderio.foundation.souldata.FarmSoul;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
-import com.enderio.enderio.init.MachineDataComponents;
 import com.mojang.authlib.GameProfile;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -486,7 +485,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     protected void applyImplicitComponents(DataComponentInput components) {
         super.applyImplicitComponents(components);
 
-        var actionRange = components.get(MachineDataComponents.ACTION_RANGE);
+        var actionRange = components.get(EIODataComponents.ACTION_RANGE);
         if (actionRange != null) {
             this.actionRange = actionRange;
         }
@@ -500,7 +499,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
 
         // Only if unchanged.
         if (!actionRange.equals(DEFAULT_RANGE)) {
-            components.set(MachineDataComponents.ACTION_RANGE, actionRange);
+            components.set(EIODataComponents.ACTION_RANGE, actionRange);
         }
 
         if (boundSoul.hasEntity()) {

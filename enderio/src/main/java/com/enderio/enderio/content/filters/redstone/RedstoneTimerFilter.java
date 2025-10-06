@@ -1,7 +1,7 @@
 package com.enderio.enderio.content.filters.redstone;
 
 import com.enderio.enderio.api.filter.RedstoneInputFilter;
-import com.enderio.enderio.init.ConduitComponents;
+import com.enderio.enderio.init.EIODataComponents;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
@@ -37,19 +37,19 @@ public class RedstoneTimerFilter implements RedstoneInputFilter {
     }
 
     public int getMaxTicks() {
-        return stack.get(ConduitComponents.REDSTONE_TIMER_FILTER).maxTicks();
+        return stack.get(EIODataComponents.REDSTONE_TIMER_FILTER).maxTicks();
     }
 
     public int getTicks() {
-        return stack.get(ConduitComponents.REDSTONE_TIMER_FILTER).ticks();
+        return stack.get(EIODataComponents.REDSTONE_TIMER_FILTER).ticks();
     }
 
     public void setTimer(int ticks, int maxTicks) {
-        stack.set(ConduitComponents.REDSTONE_TIMER_FILTER, new Component(ticks, maxTicks));
+        stack.set(EIODataComponents.REDSTONE_TIMER_FILTER, new Component(ticks, maxTicks));
     }
 
     public void setMaxTicks(int maxTicks) {
-        stack.set(ConduitComponents.REDSTONE_TIMER_FILTER, new Component(0, maxTicks));
+        stack.set(EIODataComponents.REDSTONE_TIMER_FILTER, new Component(0, maxTicks));
     }
 
     public record Component(int ticks, int maxTicks) {

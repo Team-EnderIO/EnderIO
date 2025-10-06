@@ -1,7 +1,7 @@
 package com.enderio.enderio.content.enchanter;
 
 import com.enderio.enderio.config.machines.MachinesConfig;
-import com.enderio.enderio.init.MachineRecipes;
+import com.enderio.enderio.init.EIORecipes;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
@@ -139,12 +139,12 @@ public record EnchanterRecipe(Holder<Enchantment> enchantment, int costMultiplie
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return MachineRecipes.ENCHANTING.serializer().get();
+        return EIORecipes.ENCHANTING.serializer().get();
     }
 
     @Override
     public RecipeType<?> getType() {
-        return MachineRecipes.ENCHANTING.type().get();
+        return EIORecipes.ENCHANTING.type().get();
     }
 
     public record Input(ItemStack bookItem, ItemStack catalyst, ItemStack lapis) implements RecipeInput {

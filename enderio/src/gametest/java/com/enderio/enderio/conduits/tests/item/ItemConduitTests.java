@@ -4,7 +4,7 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.content.conduits.type.item.ItemConduit;
 import com.enderio.enderio.content.conduits.type.item.ItemConduitConnectionConfig;
-import com.enderio.enderio.init.Conduits;
+import com.enderio.enderio.init.EIOConduits;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.world.item.Items;
@@ -43,7 +43,7 @@ public class ItemConduitTests {
             () -> StructureTemplateBuilder.withSize(1, 1, 3).set(0, 0, 0, Blocks.CHEST.defaultBlockState()).set(0, 0, 2, Blocks.CHEST.defaultBlockState()));
 
         test.onGameTest(ItemConduitGameTestHelper.class, helper -> {
-            var itemConduit = helper.getConduit(Conduits.ITEM);
+            var itemConduit = helper.getConduit(EIOConduits.ITEM);
             final int tickRate = itemConduit.value().networkTickRate();
 
             helper.startSequence()
@@ -80,7 +80,7 @@ public class ItemConduitTests {
     @GameTest(template = THREE_CHESTS)
     @TestHolder(description = "Ensures item conduits prioritise closest container first.")
     public static void itemConduitDistancePriority(final ItemConduitGameTestHelper helper) {
-        var itemConduit = helper.getConduit(Conduits.ITEM);
+        var itemConduit = helper.getConduit(EIOConduits.ITEM);
         final int tickRate = itemConduit.value().networkTickRate();
 
         helper.startSequence()
@@ -111,7 +111,7 @@ public class ItemConduitTests {
     @GameTest(template = THREE_CHESTS)
     @TestHolder(description = "Ensures item conduits prioritise highest priority container first, before closest.")
     public static void itemConduitManualPriority(final ItemConduitGameTestHelper helper) {
-        var itemConduit = helper.getConduit(Conduits.ITEM);
+        var itemConduit = helper.getConduit(EIOConduits.ITEM);
         final int tickRate = itemConduit.value().networkTickRate();
 
         helper.startSequence()
@@ -142,7 +142,7 @@ public class ItemConduitTests {
     @GameTest(template = THREE_CHESTS)
     @TestHolder(description = "Ensures item conduit round robin works.")
     public static void itemConduitRoundRobin(final ItemConduitGameTestHelper helper) {
-        var itemConduit = helper.getConduit(Conduits.ITEM);
+        var itemConduit = helper.getConduit(EIOConduits.ITEM);
         final int tickRate = itemConduit.value().networkTickRate();
         final int transferRate = ((ItemConduit) itemConduit.value()).transferRatePerCycle();
 

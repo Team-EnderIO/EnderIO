@@ -13,7 +13,7 @@ import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataAccessor;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.init.ConduitLang;
-import com.enderio.enderio.init.ConduitTypes;
+import com.enderio.enderio.init.EIOConduitTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -59,7 +59,7 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
 
     @Override
     public ConduitType<FluidConduit> type() {
-        return ConduitTypes.FLUID.get();
+        return EIOConduitTypes.FLUID.get();
     }
 
     @Override
@@ -146,7 +146,7 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
     @Override
     public void copyLegacyData(ConduitNode node, ConduitDataAccessor legacyDataAccessor,
             BiConsumer<Direction, ConnectionConfig> connectionConfigSetter) {
-        var legacyData = legacyDataAccessor.getData(ConduitTypes.Data.FLUID.get());
+        var legacyData = legacyDataAccessor.getData(EIOConduitTypes.Data.FLUID.get());
         if (legacyData == null) {
             return;
         }

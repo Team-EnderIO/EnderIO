@@ -8,7 +8,7 @@ import com.enderio.enderio.foundation.menu.MachineMenu;
 import com.enderio.enderio.foundation.menu.MachineSlot;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOMenus;
-import com.enderio.enderio.init.MachineRecipes;
+import com.enderio.enderio.init.EIORecipes;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -38,7 +38,7 @@ public class VatMenu extends MachineMenu<VatBlockEntity> {
         outputTankSlot = addSyncSlot(
                 FluidStorageSyncSlot.readOnly(() -> FluidStorageInfo.of(blockEntity.getOutputTank())));
         recipeSlot = addSyncSlot(
-                RecipeSyncSlot.readOnly(MachineRecipes.VAT_FERMENTING.type().get(), blockEntity::getRecipe));
+                RecipeSyncSlot.readOnly(EIORecipes.VAT_FERMENTING.type().get(), blockEntity::getRecipe));
     }
 
     public VatMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
@@ -48,7 +48,7 @@ public class VatMenu extends MachineMenu<VatBlockEntity> {
         craftingProgressSlot = addSyncSlot(FloatSyncSlot.standalone());
         inputTankSlot = addSyncSlot(FluidStorageSyncSlot.standalone());
         outputTankSlot = addSyncSlot(FluidStorageSyncSlot.standalone());
-        recipeSlot = addSyncSlot(RecipeSyncSlot.standalone(MachineRecipes.VAT_FERMENTING.type().get()));
+        recipeSlot = addSyncSlot(RecipeSyncSlot.standalone(EIORecipes.VAT_FERMENTING.type().get()));
     }
 
     private void addSlots() {

@@ -9,7 +9,7 @@ import com.enderio.enderio.content.machines.soul_binder.SoulBindingRecipe;
 import com.enderio.enderio.content.machines.vat.FermentingRecipe;
 import com.enderio.enderio.content.storage.fluid_tank.TankRecipe;
 import com.enderio.enderio.foundation.souldata.EngineSoul;
-import com.enderio.enderio.init.MachineRecipes;
+import com.enderio.enderio.init.EIORecipes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -30,24 +30,24 @@ public class MachineJEIRecipes {
 
     public List<RecipeHolder<AlloySmeltingRecipe>> getAlloySmeltingRecipes() {
         List<RecipeHolder<AlloySmeltingRecipe>> recipes = new ArrayList<>();
-        recipes.addAll(recipeManager.getAllRecipesFor(MachineRecipes.ALLOY_SMELTING.type().get()));
+        recipes.addAll(recipeManager.getAllRecipesFor(EIORecipes.ALLOY_SMELTING.type().get()));
         return recipes;
     }
 
     public List<RecipeHolder<SlicingRecipe>> getSlicingRecipes() {
-        return recipeManager.getAllRecipesFor(MachineRecipes.SLICING.type().get());
+        return recipeManager.getAllRecipesFor(EIORecipes.SLICING.type().get());
     }
 
     public List<RecipeHolder<SoulBindingRecipe>> getSoulBindingRecipes() {
-        return recipeManager.getAllRecipesFor(MachineRecipes.SOUL_BINDING.type().get());
+        return recipeManager.getAllRecipesFor(EIORecipes.SOUL_BINDING.type().get());
     }
 
     public List<RecipeHolder<TankRecipe>> getTankRecipes() {
-        return recipeManager.getAllRecipesFor(MachineRecipes.TANK.type().get());
+        return recipeManager.getAllRecipesFor(EIORecipes.TANK.type().get());
     }
 
     public List<WrappedEnchanterRecipe> getEnchanterRecipes() {
-        return recipeManager.getAllRecipesFor(MachineRecipes.ENCHANTING.type().get())
+        return recipeManager.getAllRecipesFor(EIORecipes.ENCHANTING.type().get())
                 .stream()
                 .<WrappedEnchanterRecipe>mapMulti((recipe, consumer) -> {
                     for (int i = 1; i <= recipe.value().enchantment().value().getMaxLevel(); i++) {
@@ -58,7 +58,7 @@ public class MachineJEIRecipes {
     }
 
     public List<RecipeHolder<SagMillingRecipe>> getSagMillingRecipes() {
-        return recipeManager.getAllRecipesFor(MachineRecipes.SAG_MILLING.type().get());
+        return recipeManager.getAllRecipesFor(EIORecipes.SAG_MILLING.type().get());
     }
 
     public List<EngineSoul.SoulData> getMobGeneratorRecipes() {
@@ -66,10 +66,10 @@ public class MachineJEIRecipes {
     }
 
     public List<RecipeHolder<FermentingRecipe>> getVATRecipes() {
-        return recipeManager.getAllRecipesFor(MachineRecipes.VAT_FERMENTING.type().get());
+        return recipeManager.getAllRecipesFor(EIORecipes.VAT_FERMENTING.type().get());
     }
 
     public List<RecipeHolder<WeatherChangeRecipe>> getWeatherRecipes() {
-        return recipeManager.getAllRecipesFor(MachineRecipes.WEATHER_CHANGE.type().get());
+        return recipeManager.getAllRecipesFor(EIORecipes.WEATHER_CHANGE.type().get());
     }
 }

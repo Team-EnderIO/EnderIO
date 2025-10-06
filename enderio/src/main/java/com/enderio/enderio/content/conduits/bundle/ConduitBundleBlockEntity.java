@@ -27,7 +27,7 @@ import com.enderio.enderio.content.conduits.network.ConduitNodeImpl;
 import com.enderio.enderio.content.conduits.network.IConduitNodeAttachment;
 import com.enderio.enderio.foundation.EIONBTKeys;
 import com.enderio.enderio.foundation.block.entity.Wrenchable;
-import com.enderio.enderio.init.ConduitTypes;
+import com.enderio.enderio.init.EIOConduitTypes;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -663,7 +663,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         removeNeighborConnections(conduit);
 
         // Fire redstone updates, if applicable.
-        if (conduit.value().type() == ConduitTypes.REDSTONE.get()) {
+        if (conduit.value().type() == EIOConduitTypes.REDSTONE.get()) {
             for (Direction side : Direction.values()) {
                 redstoneConduitChanged(side);
             }
@@ -1053,7 +1053,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             return false;
         }
 
-        var redstoneConduit = getConduitByType(ConduitTypes.REDSTONE.get());
+        var redstoneConduit = getConduitByType(EIOConduitTypes.REDSTONE.get());
         if (redstoneConduit == null) {
             return false;
         }
@@ -1064,7 +1064,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             return false;
         }
 
-        var context = network.getContext(ConduitTypes.ContextTypes.REDSTONE.get());
+        var context = network.getContext(EIOConduitTypes.ContextTypes.REDSTONE.get());
         if (context == null) {
             return false;
         }
@@ -1610,7 +1610,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
                 }
             }
 
-            if (conduit.value().type() == ConduitTypes.REDSTONE.get()) {
+            if (conduit.value().type() == EIOConduitTypes.REDSTONE.get()) {
                 redstoneConduitChanged(side);
             }
         }
@@ -1639,7 +1639,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         public void setConfig(Direction side, ConnectionConfig config) {
             configs.put(side, config);
 
-            if (conduit.value().type() == ConduitTypes.REDSTONE.get()) {
+            if (conduit.value().type() == EIOConduitTypes.REDSTONE.get()) {
                 redstoneConduitChanged(side);
             }
         }

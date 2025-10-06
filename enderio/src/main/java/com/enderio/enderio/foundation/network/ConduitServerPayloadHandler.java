@@ -19,7 +19,7 @@ import com.enderio.enderio.foundation.network.packets.ServerboundRemoveConduitFa
 import com.enderio.enderio.foundation.network.packets.ServerboundSyncProbeStatePacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundTimerFilterPacket;
 import com.enderio.enderio.init.ConduitItems;
-import com.enderio.enderio.init.ConduitTypes;
+import com.enderio.enderio.init.EIOConduitTypes;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -75,7 +75,7 @@ public class ConduitServerPayloadHandler {
             var level = context.player().level();
             var be = level.getBlockEntity(packet.pos());
             if (be instanceof ConduitBundle conduitBundle) {
-                var fluidConduit = conduitBundle.getConduitByType(ConduitTypes.FLUID.get());
+                var fluidConduit = conduitBundle.getConduitByType(EIOConduitTypes.FLUID.get());
                 if (fluidConduit != null) {
                     var node = conduitBundle.getConduitNode(fluidConduit);
 

@@ -12,7 +12,7 @@ import com.enderio.enderio.foundation.io.fluid.TankAccess;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
-import com.enderio.enderio.init.MachineRecipes;
+import com.enderio.enderio.init.EIORecipes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
@@ -122,7 +122,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
         // fill recipes
         if (level != null) {
             List<RecipeHolder<TankRecipe>> allRecipes = level.getRecipeManager()
-                    .getAllRecipesFor(MachineRecipes.TANK.type().get());
+                    .getAllRecipesFor(EIORecipes.TANK.type().get());
             return allRecipes.stream()
                     .anyMatch((recipe) -> recipe.value().mode() == TankRecipe.Mode.EMPTY
                             && recipe.value().input().test(item));
@@ -153,7 +153,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
         // drain recipes
         if (level != null) {
             List<RecipeHolder<TankRecipe>> allRecipes = level.getRecipeManager()
-                    .getAllRecipesFor(MachineRecipes.TANK.type().get());
+                    .getAllRecipesFor(EIORecipes.TANK.type().get());
             return allRecipes.stream()
                     .anyMatch((recipe) -> recipe.value().mode() == TankRecipe.Mode.FILL
                             && recipe.value().input().test(item));
@@ -183,7 +183,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
         if (level != null) {
             if (!level.isClientSide()) {
                 currentRecipe = level.getRecipeManager()
-                        .getRecipeFor(MachineRecipes.TANK.type().get(), createRecipeInput(), level);
+                        .getRecipeFor(EIORecipes.TANK.type().get(), createRecipeInput(), level);
             }
         }
     }
@@ -274,7 +274,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
         if (level != null) {
             if (!level.isClientSide()) {
                 currentRecipe = level.getRecipeManager()
-                        .getRecipeFor(MachineRecipes.TANK.type().get(), createRecipeInput(), level);
+                        .getRecipeFor(EIORecipes.TANK.type().get(), createRecipeInput(), level);
             }
 
             level.getLightEngine().checkBlock(worldPosition);

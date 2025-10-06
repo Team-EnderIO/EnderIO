@@ -16,8 +16,8 @@ import com.enderio.enderio.foundation.io.IOConfig;
 import com.enderio.enderio.foundation.lang.MachineLang;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.foundation.state.MachineStateType;
-import com.enderio.enderio.init.MachineAttachments;
-import com.enderio.enderio.init.MachineDataComponents;
+import com.enderio.enderio.init.EIODataComponents;
+import com.enderio.enderio.init.EIOAttachments;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -220,9 +220,9 @@ public abstract class ObeliskBlockEntity<T extends ObeliskBlockEntity<T>> extend
         super.loadAdditional(tag, registries);
 
         // TODO: Ender IO 8 - remove support for old attachment loading
-        if (hasData(MachineAttachments.ACTION_RANGE)) {
-            actionRange = getData(MachineAttachments.ACTION_RANGE);
-            removeData(MachineAttachments.ACTION_RANGE);
+        if (hasData(EIOAttachments.ACTION_RANGE)) {
+            actionRange = getData(EIOAttachments.ACTION_RANGE);
+            removeData(EIOAttachments.ACTION_RANGE);
         } else if (tag.contains(MachineNBTKeys.ACTION_RANGE)) {
             actionRange = ActionRange.parse(registries, Objects.requireNonNull(tag.get(MachineNBTKeys.ACTION_RANGE)));
         } else {
@@ -234,7 +234,7 @@ public abstract class ObeliskBlockEntity<T extends ObeliskBlockEntity<T>> extend
     protected void applyImplicitComponents(DataComponentInput components) {
         super.applyImplicitComponents(components);
 
-        var actionRange = components.get(MachineDataComponents.ACTION_RANGE);
+        var actionRange = components.get(EIODataComponents.ACTION_RANGE);
         if (actionRange != null) {
             this.actionRange = actionRange;
         }
@@ -243,7 +243,7 @@ public abstract class ObeliskBlockEntity<T extends ObeliskBlockEntity<T>> extend
     @Override
     protected void collectImplicitComponents(DataComponentMap.Builder components) {
         super.collectImplicitComponents(components);
-        components.set(MachineDataComponents.ACTION_RANGE, actionRange);
+        components.set(EIODataComponents.ACTION_RANGE, actionRange);
     }
 
     @Override

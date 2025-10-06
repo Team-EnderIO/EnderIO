@@ -28,7 +28,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
 
-public class ConduitTypes {
+public class EIOConduitTypes {
     private static final DeferredRegister<ConduitType<?>> CONDUIT_TYPES = DeferredRegister
             .create(EnderIORegistries.CONDUIT_TYPE, EnderIO.MOD_ID);
 

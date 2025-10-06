@@ -1,6 +1,6 @@
 package com.enderio.enderio.content.machines.slicer;
 
-import com.enderio.enderio.init.MachineRecipes;
+import com.enderio.enderio.init.EIORecipes;
 import net.minecraft.Util;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -83,7 +83,7 @@ public class SlicerRecipeManager {
         }
 
         for (RecipeHolder<SlicingRecipe> slicingRecipe : manager
-                .getAllRecipesFor(MachineRecipes.SLICING.type().get())) {
+                .getAllRecipesFor(EIORecipes.SLICING.type().get())) {
             for (int i = 0; i < 6; i++) {
                 Ingredient ingredient = slicingRecipe.value().inputs().get(i);
                 if (ingredient.isSimple()) {

@@ -1,7 +1,7 @@
 package com.enderio.enderio.content.machines.obelisks.relocator;
 
 import com.enderio.enderio.content.machines.obelisks.ObeliskAreaManager;
-import com.enderio.enderio.init.MachineAttachments;
+import com.enderio.enderio.init.EIOAttachments;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.MobSpawnType;
@@ -16,7 +16,7 @@ import java.util.Set;
 public class RelocatorObeliskManager extends ObeliskAreaManager<RelocatorObeliskBlockEntity> {
 
     public static RelocatorObeliskManager getManager(ServerLevel serverLevel) {
-        return serverLevel.getData(MachineAttachments.RELOCATOR_OBELISK_MANAGER);
+        return serverLevel.getData(EIOAttachments.RELOCATOR_OBELISK_MANAGER);
     }
 
     @SuppressWarnings("unused")
@@ -30,7 +30,7 @@ public class RelocatorObeliskManager extends ObeliskAreaManager<RelocatorObelisk
         // If there is no obelisk manager, there is nothing to do.
         ServerLevelAccessor levelAccessor = event.getLevel();
         ServerLevel level = levelAccessor.getLevel();
-        if (!level.hasData(MachineAttachments.RELOCATOR_OBELISK_MANAGER)) {
+        if (!level.hasData(EIOAttachments.RELOCATOR_OBELISK_MANAGER)) {
             return;
         }
 

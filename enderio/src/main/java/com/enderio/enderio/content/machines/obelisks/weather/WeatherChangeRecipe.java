@@ -2,7 +2,7 @@ package com.enderio.enderio.content.machines.obelisks.weather;
 
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.enderio.foundation.MachineRecipe;
-import com.enderio.enderio.init.MachineRecipes;
+import com.enderio.enderio.init.EIORecipes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -52,12 +52,12 @@ public record WeatherChangeRecipe(FluidStack fluid, WeatherMode mode)
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return MachineRecipes.WEATHER_CHANGE.serializer().get();
+        return EIORecipes.WEATHER_CHANGE.serializer().get();
     }
 
     @Override
     public RecipeType<?> getType() {
-        return MachineRecipes.WEATHER_CHANGE.type().get();
+        return EIORecipes.WEATHER_CHANGE.type().get();
     }
 
     public record Input(FluidStack fluid) implements RecipeInput {

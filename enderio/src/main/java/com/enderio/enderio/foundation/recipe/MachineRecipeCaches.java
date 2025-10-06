@@ -5,7 +5,7 @@ import com.enderio.enderio.content.machines.painting.PaintingRecipe;
 import com.enderio.enderio.content.machines.sag_mill.SagMillingRecipe;
 import com.enderio.enderio.content.machines.soul_binder.SoulBindingRecipe;
 import com.enderio.enderio.content.machines.vat.FermentingRecipe;
-import com.enderio.enderio.init.MachineRecipes;
+import com.enderio.enderio.init.EIORecipes;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
@@ -14,22 +14,22 @@ import net.neoforged.neoforge.event.AddReloadListenerEvent;
 @EventBusSubscriber
 public class MachineRecipeCaches {
     public static final RecipeInputCache<AlloySmeltingRecipe.Input, AlloySmeltingRecipe> ALLOY_SMELTING_ONLY_ALLOY = new RecipeInputCache<>(
-            MachineRecipes.ALLOY_SMELTING.type(), recipe -> !recipe.isSmelting());
+            EIORecipes.ALLOY_SMELTING.type(), recipe -> !recipe.isSmelting());
 
     public static final RecipeInputCache<AlloySmeltingRecipe.Input, AlloySmeltingRecipe> ALLOY_SMELTING_ONLY_SMELTING = new RecipeInputCache<>(
-            MachineRecipes.ALLOY_SMELTING.type(), AlloySmeltingRecipe::isSmelting);
+            EIORecipes.ALLOY_SMELTING.type(), AlloySmeltingRecipe::isSmelting);
 
     public static final RecipeInputCache<PaintingRecipe.Input, PaintingRecipe> PAINTING = new RecipeInputCache<>(
-            MachineRecipes.PAINTING.type());
+            EIORecipes.PAINTING.type());
 
     public static final RecipeInputCache<SagMillingRecipe.Input, SagMillingRecipe> SAG_MILLING = new RecipeInputCache<>(
-            MachineRecipes.SAG_MILLING.type());
+            EIORecipes.SAG_MILLING.type());
 
     public static final RecipeInputCache<SoulBindingRecipe.Input, SoulBindingRecipe> SOUL_BINDING = new RecipeInputCache<>(
-            MachineRecipes.SOUL_BINDING.type());
+            EIORecipes.SOUL_BINDING.type());
 
     public static final RecipeInputCache<FermentingRecipe.Input, FermentingRecipe> FERMENTING = new RecipeInputCache<>(
-            MachineRecipes.VAT_FERMENTING.type());
+            EIORecipes.VAT_FERMENTING.type());
 
     @SubscribeEvent
     public static void registerReloadListener(AddReloadListenerEvent event) {

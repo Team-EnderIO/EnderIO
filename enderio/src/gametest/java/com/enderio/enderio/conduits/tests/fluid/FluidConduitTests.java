@@ -4,7 +4,7 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.content.conduits.type.fluid.FluidConduit;
 import com.enderio.enderio.content.conduits.type.fluid.FluidConduitConnectionConfig;
-import com.enderio.enderio.init.Conduits;
+import com.enderio.enderio.init.EIOConduits;
 import com.enderio.enderio.init.MachineBlocks;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
@@ -46,7 +46,7 @@ public class FluidConduitTests {
             .set(0, 0, 2, MachineBlocks.FLUID_TANK.get().defaultBlockState()));
 
         test.onGameTest(FluidConduitGameTestHelper.class, helper -> {
-            var fluidConduit = helper.getConduit(Conduits.FLUID);
+            var fluidConduit = helper.getConduit(EIOConduits.FLUID);
             final int tickRate = fluidConduit.value().networkTickRate();
 
             helper.startSequence()
@@ -83,7 +83,7 @@ public class FluidConduitTests {
     @GameTest(template = THREE_TANKS)
     @TestHolder(description = "Ensures fluid conduits prioritise closest container first.")
     public static void fluidConduitDistancePriority(final FluidConduitGameTestHelper helper) {
-        var fluidConduit = helper.getConduit(Conduits.FLUID);
+        var fluidConduit = helper.getConduit(EIOConduits.FLUID);
         final int tickRate = fluidConduit.value().networkTickRate();
 
         helper.startSequence()
@@ -114,7 +114,7 @@ public class FluidConduitTests {
     @GameTest(template = THREE_TANKS)
     @TestHolder(description = "Ensures fluid conduits prioritise highest priority container first, before closest.")
     public static void fluidConduitManualPriority(final FluidConduitGameTestHelper helper) {
-        var fluidConduit = helper.getConduit(Conduits.PRESSURIZED_FLUID);
+        var fluidConduit = helper.getConduit(EIOConduits.PRESSURIZED_FLUID);
         final int tickRate = fluidConduit.value().networkTickRate();
 
         if (!((FluidConduit)fluidConduit.value()).doesSupportPriority()) {

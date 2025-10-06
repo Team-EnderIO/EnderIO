@@ -2,7 +2,7 @@ package com.enderio.enderio.content.filters.redstone;
 
 import com.enderio.enderio.api.filter.RedstoneOutputFilter;
 import com.enderio.enderio.api.filter.RedstoneOutputFilterContext;
-import com.enderio.enderio.init.ConduitComponents;
+import com.enderio.enderio.init.EIODataComponents;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
@@ -36,15 +36,15 @@ public class RedstoneTLatchFilter implements RedstoneOutputFilter {
     }
 
     public boolean isActive() {
-        return stack.get(ConduitComponents.REDSTONE_TLATCH_FILTER).active();
+        return stack.get(EIODataComponents.REDSTONE_TLATCH_FILTER).active();
     }
 
     public boolean isDeactivated() {
-        return stack.get(ConduitComponents.REDSTONE_TLATCH_FILTER).deactivated();
+        return stack.get(EIODataComponents.REDSTONE_TLATCH_FILTER).deactivated();
     }
 
     public void setState(boolean active, boolean deactivated) {
-        stack.set(ConduitComponents.REDSTONE_TLATCH_FILTER, new Component(active, deactivated));
+        stack.set(EIODataComponents.REDSTONE_TLATCH_FILTER, new Component(active, deactivated));
     }
 
     public record Component(boolean active, boolean deactivated) {

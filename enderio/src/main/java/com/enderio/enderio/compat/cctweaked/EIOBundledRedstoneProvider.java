@@ -4,7 +4,7 @@ import com.enderio.enderio.api.conduits.ConduitRedstoneSignalAware;
 import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
 import com.enderio.enderio.content.conduits.type.redstone.RedstoneConduitConnectionConfig;
 import com.enderio.enderio.content.conduits.type.redstone.RedstoneConduitNetworkContext;
-import com.enderio.enderio.init.ConduitTypes;
+import com.enderio.enderio.init.EIOConduitTypes;
 import dan200.computercraft.api.redstone.BundledRedstoneProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -21,7 +21,7 @@ public class EIOBundledRedstoneProvider implements BundledRedstoneProvider {
         BlockEntity be = world.getBlockEntity(pos);
 
         if (be instanceof ConduitBundleBlockEntity conduit) {
-            var redstoneConduit = conduit.getConduitByType(ConduitTypes.REDSTONE.get());
+            var redstoneConduit = conduit.getConduitByType(EIOConduitTypes.REDSTONE.get());
             if (redstoneConduit == null) {
                 return -1;
             }

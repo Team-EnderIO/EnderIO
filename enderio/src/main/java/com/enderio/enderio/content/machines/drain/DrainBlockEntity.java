@@ -21,8 +21,7 @@ import com.enderio.enderio.foundation.io.fluid.TankAccess;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
-import com.enderio.enderio.init.MachineAttachments;
-import com.enderio.enderio.init.MachineDataComponents;
+import com.enderio.enderio.init.EIOAttachments;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -267,9 +266,9 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements Range
         loadTank(lookupProvider, pTag);
 
         // TODO: Ender IO 8 - remove support for old attachment loading
-        if (hasData(MachineAttachments.ACTION_RANGE)) {
-            actionRange = getData(MachineAttachments.ACTION_RANGE);
-            removeData(MachineAttachments.ACTION_RANGE);
+        if (hasData(EIOAttachments.ACTION_RANGE)) {
+            actionRange = getData(EIOAttachments.ACTION_RANGE);
+            removeData(EIOAttachments.ACTION_RANGE);
         } else if (pTag.contains(MachineNBTKeys.ACTION_RANGE)) {
             actionRange = ActionRange.parse(lookupProvider,
                     Objects.requireNonNull(pTag.get(MachineNBTKeys.ACTION_RANGE)));
@@ -282,7 +281,7 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements Range
     protected void applyImplicitComponents(DataComponentInput components) {
         super.applyImplicitComponents(components);
 
-        var actionRange = components.get(MachineDataComponents.ACTION_RANGE);
+        var actionRange = components.get(EIODataComponents.ACTION_RANGE);
         if (actionRange != null) {
             this.actionRange = actionRange;
         }
@@ -300,7 +299,7 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements Range
 
         // Only if unchanged.
         if (!actionRange.equals(DEFAULT_RANGE)) {
-            components.set(MachineDataComponents.ACTION_RANGE, actionRange);
+            components.set(EIODataComponents.ACTION_RANGE, actionRange);
         }
 
         var tank = TANK.getTank(this);

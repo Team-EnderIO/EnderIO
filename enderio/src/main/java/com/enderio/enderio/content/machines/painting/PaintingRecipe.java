@@ -5,7 +5,7 @@ import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.content.paint.BlockPaintData;
 import com.enderio.enderio.foundation.MachineRecipe;
 import com.enderio.enderio.init.EIODataComponents;
-import com.enderio.enderio.init.MachineRecipes;
+import com.enderio.enderio.init.EIORecipes;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderLookup;
@@ -75,12 +75,12 @@ public record PaintingRecipe(Ingredient input, ItemStack output) implements Mach
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return MachineRecipes.PAINTING.serializer().get();
+        return EIORecipes.PAINTING.serializer().get();
     }
 
     @Override
     public RecipeType<?> getType() {
-        return MachineRecipes.PAINTING.type().get();
+        return EIORecipes.PAINTING.type().get();
     }
 
     public record Input(ItemStack template, ItemStack paint) implements RecipeInput {

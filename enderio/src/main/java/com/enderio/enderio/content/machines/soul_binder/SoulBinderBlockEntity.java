@@ -25,7 +25,7 @@ import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOFluids;
 import com.enderio.enderio.init.EIOItems;
-import com.enderio.enderio.init.MachineRecipes;
+import com.enderio.enderio.init.EIORecipes;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -76,7 +76,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
 
         // Create the crafting task host
         craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy,
-                MachineRecipes.SOUL_BINDING.type().get(), this::createTask, this::createRecipeInput);
+                EIORecipes.SOUL_BINDING.type().get(), this::createTask, this::createRecipeInput);
     }
 
     @Override
@@ -128,7 +128,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
 
         if (level != null && level.isClientSide) {
             clientRecipe = level.getRecipeManager()
-                    .getRecipeFor(MachineRecipes.SOUL_BINDING.type().get(), createFakeRecipeInput(), level)
+                    .getRecipeFor(EIORecipes.SOUL_BINDING.type().get(), createFakeRecipeInput(), level)
                     .orElse(null);
         }
     }
@@ -152,7 +152,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
         // This should always set a valid recipe.
         if (level != null && clientRecipe == null && hasValidRecipe()) {
             clientRecipe = level.getRecipeManager()
-                    .getRecipeFor(MachineRecipes.SOUL_BINDING.type().get(), createFakeRecipeInput(), level)
+                    .getRecipeFor(EIORecipes.SOUL_BINDING.type().get(), createFakeRecipeInput(), level)
                     .orElse(null);
         }
 

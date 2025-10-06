@@ -4,9 +4,9 @@ import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
 import com.enderio.enderio.foundation.network.packets.ServerboundSyncProbeStatePacket;
-import com.enderio.enderio.init.ConduitComponents;
 import com.enderio.enderio.init.ConduitItems;
 import com.enderio.enderio.init.ConduitLang;
+import com.enderio.enderio.init.EIODataComponents;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
@@ -101,7 +101,7 @@ public class ConduitProbeItem extends Item {
                 .ifPresent(cloned -> configData.conduitData().put(conduitKey, cloned));
             }
         });
-        itemStack.set(ConduitComponents.PROBE_CONFIG, configData);
+        itemStack.set(EIODataComponents.PROBE_CONFIG, configData);
 
         if (!configData.conduitData().isEmpty()) {
             MutableComponent message = Component.empty();
@@ -119,7 +119,7 @@ public class ConduitProbeItem extends Item {
     }
 
     public void handlePaste(ConduitBundleBlockEntity conduitBlock, Direction face, ItemStack itemStack, Player player) {
-        ProbeConfigData configData = itemStack.get(ConduitComponents.PROBE_CONFIG);
+        ProbeConfigData configData = itemStack.get(EIODataComponents.PROBE_CONFIG);
         if (configData == null) {
             return;
         }
@@ -148,7 +148,7 @@ public class ConduitProbeItem extends Item {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
 
         tooltipComponents.add(TooltipUtil.styledWithArgs(ConduitLang.CONDUIT_PROBE_MODE_TOOLTIP, getState(stack).getStateText()));
-        ProbeConfigData configData = stack.get(ConduitComponents.PROBE_CONFIG);
+        ProbeConfigData configData = stack.get(EIODataComponents.PROBE_CONFIG);
         if (configData != null && !configData.conduitData().isEmpty()) {
             
             tooltipComponents.add(ConduitLang.CONDUIT_PROBE_CONTAINS_COPIED.withStyle(ChatFormatting.GRAY));
@@ -159,7 +159,7 @@ public class ConduitProbeItem extends Item {
     }
 
     public static State getState(ItemStack stack) {
-        return stack.getOrDefault(ConduitComponents.PROBE_STATE, State.PROBE);
+        return stack.getOrDefault(EIODataComponents.PROBE_STATE, State.PROBE);
     }
     
     public static void setState(Player player, ItemStack stack, State state) {
@@ -167,7 +167,7 @@ public class ConduitProbeItem extends Item {
             throw new IllegalArgumentException("Invalid item passed to setState.");
         }
 
-        stack.set(ConduitComponents.PROBE_STATE, state);
+        stack.set(EIODataComponents.PROBE_STATE, state);
 
         if (player.level().isClientSide()) {
             PacketDistributor.sendToServer(new ServerboundSyncProbeStatePacket(state));

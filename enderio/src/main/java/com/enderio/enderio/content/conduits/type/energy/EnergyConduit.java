@@ -8,7 +8,7 @@ import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.init.ConduitLang;
-import com.enderio.enderio.init.ConduitTypes;
+import com.enderio.enderio.init.EIOConduitTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -51,7 +51,7 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
 
     @Override
     public ConduitType<EnergyConduit> type() {
-        return ConduitTypes.ENERGY.get();
+        return EIOConduitTypes.ENERGY.get();
     }
 
     @Override
@@ -121,7 +121,7 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
 
     @Override
     public ConnectionConfigType<EnergyConduitConnectionConfig> connectionConfigType() {
-        return ConduitTypes.ConnectionTypes.ENERGY.get();
+        return EIOConduitTypes.ConnectionTypes.ENERGY.get();
     }
 
     @Override

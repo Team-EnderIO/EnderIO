@@ -2,7 +2,6 @@ package com.enderio.enderio.content.conduits.facades;
 
 import com.enderio.enderio.api.conduits.facade.ConduitFacadeProvider;
 import com.enderio.enderio.api.conduits.facade.FacadeType;
-import com.enderio.enderio.init.ConduitComponents;
 import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -37,6 +36,6 @@ public class ComponentBackedConduitFacadeProvider implements ConduitFacadeProvid
 
     @Override
     public FacadeType type() {
-        return itemStack.getOrDefault(ConduitComponents.FACADE_TYPE, FacadeType.BASIC);
+        return itemStack.getOrDefault(EIODataComponents.FACADE_TYPE, FacadeType.BASIC);
     }
 }

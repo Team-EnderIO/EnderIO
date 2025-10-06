@@ -18,7 +18,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 
 @EventBusSubscriber
-public class MachineFarmTasks {
+public class EIOFarmTasks {
     @SubscribeEvent
     public static void register(RegisterFarmTasksEvent event) {
         event.register(FarmTaskType.PLANT, PlantCropFarmTask.INSTANCE);

@@ -73,14 +73,14 @@ import com.enderio.enderio.content.misc_blocks.skull.EnderSkullBlock;
 import com.enderio.enderio.content.vials.SoulVialItem;
 import com.enderio.enderio.init.ConduitBlocks;
 import com.enderio.enderio.init.ConduitItems;
-import com.enderio.enderio.init.ConduitTypes;
+import com.enderio.enderio.init.EIOConduitTypes;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOItems;
 import com.enderio.enderio.init.EIOMenus;
 import com.enderio.enderio.init.EIOParticles;
 import com.enderio.enderio.init.MachineBlocks;
-import com.enderio.enderio.init.MachineTravelTargets;
+import com.enderio.enderio.init.EIOTravelTargets;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
@@ -341,24 +341,24 @@ public class EnderIOClient {
 
     @SubscribeEvent
     public static void registerTravelRenderers(RegisterTravelRenderersEvent event) {
-        event.register(MachineTravelTargets.TRAVEL_ANCHOR_TYPE.get(), TravelAnchorRenderer::new);
-        event.register(MachineTravelTargets.ENDERFACE_TYPE.get(), EnderfaceRenderer::new);
+        event.register(EIOTravelTargets.TRAVEL_ANCHOR_TYPE.get(), TravelAnchorRenderer::new);
+        event.register(EIOTravelTargets.ENDERFACE_TYPE.get(), EnderfaceRenderer::new);
     }
 
     // region Conduits
 
     @SubscribeEvent
     public static void registerConduitCoreModelModifiers(RegisterConduitModelModifiersEvent event) {
-        event.register(ConduitTypes.REDSTONE.get(), RedstoneConduitModelModifier::new);
-        event.register(ConduitTypes.FLUID.get(), FluidConduitModelModifier::new);
+        event.register(EIOConduitTypes.REDSTONE.get(), RedstoneConduitModelModifier::new);
+        event.register(EIOConduitTypes.FLUID.get(), FluidConduitModelModifier::new);
     }
 
     @SubscribeEvent
     public static void registerConduitScreenTypes(RegisterConduitScreenTypesEvent event) {
-        event.register(ConduitTypes.ENERGY.get(), new EnergyConduitScreenType());
-        event.register(ConduitTypes.FLUID.get(), new FluidConduitScreenType());
-        event.register(ConduitTypes.REDSTONE.get(), new RedstoneConduitScreenType());
-        event.register(ConduitTypes.ITEM.get(), new ItemConduitScreenType());
+        event.register(EIOConduitTypes.ENERGY.get(), new EnergyConduitScreenType());
+        event.register(EIOConduitTypes.FLUID.get(), new FluidConduitScreenType());
+        event.register(EIOConduitTypes.REDSTONE.get(), new RedstoneConduitScreenType());
+        event.register(EIOConduitTypes.ITEM.get(), new ItemConduitScreenType());
     }
 
     // endregion

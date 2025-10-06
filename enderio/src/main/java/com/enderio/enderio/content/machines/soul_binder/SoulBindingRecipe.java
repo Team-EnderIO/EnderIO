@@ -9,7 +9,7 @@ import com.enderio.enderio.foundation.recipe.FluidRecipeInput;
 import com.enderio.enderio.foundation.souldata.SoulDataReloadListener;
 import com.enderio.enderio.foundation.util.ExperienceUtil;
 import com.enderio.enderio.init.EIOItems;
-import com.enderio.enderio.init.MachineRecipes;
+import com.enderio.enderio.init.EIORecipes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -126,12 +126,12 @@ public record SoulBindingRecipe(ItemStack output, Ingredient input, int energy, 
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return MachineRecipes.SOUL_BINDING.serializer().get();
+        return EIORecipes.SOUL_BINDING.serializer().get();
     }
 
     @Override
     public RecipeType<?> getType() {
-        return MachineRecipes.SOUL_BINDING.type().get();
+        return EIORecipes.SOUL_BINDING.type().get();
     }
 
     public record Input(ItemStack boundSoulItem, ItemStack itemToBind, FluidStack experience)

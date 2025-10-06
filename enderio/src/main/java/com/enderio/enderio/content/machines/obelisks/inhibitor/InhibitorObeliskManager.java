@@ -1,7 +1,7 @@
 package com.enderio.enderio.content.machines.obelisks.inhibitor;
 
 import com.enderio.enderio.content.machines.obelisks.ObeliskAreaManager;
-import com.enderio.enderio.init.MachineAttachments;
+import com.enderio.enderio.init.EIOAttachments;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -14,7 +14,7 @@ import java.util.Set;
 public class InhibitorObeliskManager extends ObeliskAreaManager<InhibitorObeliskBlockEntity> {
 
     public static InhibitorObeliskManager getManager(ServerLevel level) {
-        return level.getData(MachineAttachments.INHIBITOR_OBELISK_MANAGER);
+        return level.getData(EIOAttachments.INHIBITOR_OBELISK_MANAGER);
     }
 
     @SuppressWarnings("unused")
@@ -31,7 +31,7 @@ public class InhibitorObeliskManager extends ObeliskAreaManager<InhibitorObelisk
         }
 
         // If there is no obelisk manager, there is nothing to do.
-        if (!serverLevel.hasData(MachineAttachments.INHIBITOR_OBELISK_MANAGER)) {
+        if (!serverLevel.hasData(EIOAttachments.INHIBITOR_OBELISK_MANAGER)) {
             return;
         }
 

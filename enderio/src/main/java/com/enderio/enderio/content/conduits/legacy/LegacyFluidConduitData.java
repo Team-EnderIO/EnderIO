@@ -3,7 +3,7 @@ package com.enderio.enderio.content.conduits.legacy;
 import com.enderio.enderio.api.conduits.network.node.NodeData;
 import com.enderio.enderio.api.conduits.network.node.legacy.ConduitData;
 import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataType;
-import com.enderio.enderio.init.ConduitTypes;
+import com.enderio.enderio.init.EIOConduitTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -78,7 +78,7 @@ public class LegacyFluidConduitData implements ConduitData<LegacyFluidConduitDat
 
     @Override
     public ConduitDataType<LegacyFluidConduitData> type() {
-        return ConduitTypes.Data.FLUID.get();
+        return EIOConduitTypes.Data.FLUID.get();
     }
 
     @Override

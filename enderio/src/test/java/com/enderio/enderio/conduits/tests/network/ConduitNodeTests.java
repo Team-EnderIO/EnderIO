@@ -7,7 +7,7 @@ import com.enderio.enderio.api.conduits.network.node.NodeDataType;
 import com.enderio.enderio.content.conduits.network.ConduitNodeImpl;
 import com.enderio.enderio.content.conduits.type.item.ItemConduitConnectionConfig;
 import com.enderio.enderio.content.conduits.type.item.ItemConduitNodeData;
-import com.enderio.enderio.init.Conduits;
+import com.enderio.enderio.init.EIOConduits;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.MinecraftServer;
@@ -22,7 +22,7 @@ public class ConduitNodeTests {
     @Test
     public void detachedNodeIsLoaded(MinecraftServer server) {
         var conduitsRegistry = server.registryAccess().registryOrThrow(EnderIORegistries.Keys.CONDUIT);
-        var itemConduit = conduitsRegistry.getHolderOrThrow(Conduits.ITEM);
+        var itemConduit = conduitsRegistry.getHolderOrThrow(EIOConduits.ITEM);
 
         var conduitNode = new ConduitNodeImpl(itemConduit, BlockPos.ZERO);
         Assertions.assertFalse(conduitNode.isLoaded());
@@ -32,7 +32,7 @@ public class ConduitNodeTests {
     @Test
     public void testHasNodeData_TypedDataAvailable(MinecraftServer server) {
         var conduitsRegistry = server.registryAccess().registryOrThrow(EnderIORegistries.Keys.CONDUIT);
-        var itemConduit = conduitsRegistry.getHolderOrThrow(Conduits.ITEM);
+        var itemConduit = conduitsRegistry.getHolderOrThrow(EIOConduits.ITEM);
 
         var conduitNode = new ConduitNodeImpl(itemConduit, BlockPos.ZERO);
 
@@ -51,7 +51,7 @@ public class ConduitNodeTests {
     @Test
     public void testHasNodeData_DifferentDataTypeStored(MinecraftServer server) {
         var conduitsRegistry = server.registryAccess().registryOrThrow(EnderIORegistries.Keys.CONDUIT);
-        var itemConduit = conduitsRegistry.getHolderOrThrow(Conduits.ITEM);
+        var itemConduit = conduitsRegistry.getHolderOrThrow(EIOConduits.ITEM);
 
         var conduitNode = new ConduitNodeImpl(itemConduit, BlockPos.ZERO);
 
@@ -67,7 +67,7 @@ public class ConduitNodeTests {
     @Test
     public void testGetNodeDataWithType_TypedDataAvailable(MinecraftServer server) {
         var conduitsRegistry = server.registryAccess().registryOrThrow(EnderIORegistries.Keys.CONDUIT);
-        var itemConduit = conduitsRegistry.getHolderOrThrow(Conduits.ITEM);
+        var itemConduit = conduitsRegistry.getHolderOrThrow(EIOConduits.ITEM);
 
         var conduitNode = new ConduitNodeImpl(itemConduit, BlockPos.ZERO);
 
@@ -89,7 +89,7 @@ public class ConduitNodeTests {
     @Test
     public void testGetNodeDataWithType_DifferentDataTypeStored(MinecraftServer server) {
         var conduitsRegistry = server.registryAccess().registryOrThrow(EnderIORegistries.Keys.CONDUIT);
-        var itemConduit = conduitsRegistry.getHolderOrThrow(Conduits.ITEM);
+        var itemConduit = conduitsRegistry.getHolderOrThrow(EIOConduits.ITEM);
 
         var conduitNode = new ConduitNodeImpl(itemConduit, BlockPos.ZERO);
 
@@ -106,7 +106,7 @@ public class ConduitNodeTests {
     @Test
     public void testGetOrCreateNodeData_NoDataBefore(MinecraftServer server) {
         var conduitsRegistry = server.registryAccess().registryOrThrow(EnderIORegistries.Keys.CONDUIT);
-        var itemConduit = conduitsRegistry.getHolderOrThrow(Conduits.ITEM);
+        var itemConduit = conduitsRegistry.getHolderOrThrow(EIOConduits.ITEM);
 
         var conduitNode = new ConduitNodeImpl(itemConduit, BlockPos.ZERO);
 
@@ -122,7 +122,7 @@ public class ConduitNodeTests {
     @Test
     public void testGetOrCreateNodeData_SameDataTypeBefore(MinecraftServer server) {
         var conduitsRegistry = server.registryAccess().registryOrThrow(EnderIORegistries.Keys.CONDUIT);
-        var itemConduit = conduitsRegistry.getHolderOrThrow(Conduits.ITEM);
+        var itemConduit = conduitsRegistry.getHolderOrThrow(EIOConduits.ITEM);
 
         var conduitNode = new ConduitNodeImpl(itemConduit, BlockPos.ZERO);
 
@@ -144,7 +144,7 @@ public class ConduitNodeTests {
     @Test
     public void testGetOrCreateNodeData_DifferentTypeStored(MinecraftServer server) {
         var conduitsRegistry = server.registryAccess().registryOrThrow(EnderIORegistries.Keys.CONDUIT);
-        var itemConduit = conduitsRegistry.getHolderOrThrow(Conduits.ITEM);
+        var itemConduit = conduitsRegistry.getHolderOrThrow(EIOConduits.ITEM);
 
         var conduitNode = new ConduitNodeImpl(itemConduit, BlockPos.ZERO);
 
@@ -163,7 +163,7 @@ public class ConduitNodeTests {
     @Test
     public void ensureMethodsWhichRequireAttachmentThrow(MinecraftServer server) {
         var conduitsRegistry = server.registryAccess().registryOrThrow(EnderIORegistries.Keys.CONDUIT);
-        var itemConduit = conduitsRegistry.getHolderOrThrow(Conduits.ITEM);
+        var itemConduit = conduitsRegistry.getHolderOrThrow(EIOConduits.ITEM);
 
         var conduitNode = new ConduitNodeImpl(itemConduit, BlockPos.ZERO);
 

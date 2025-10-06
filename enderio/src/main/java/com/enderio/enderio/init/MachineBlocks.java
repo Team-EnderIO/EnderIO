@@ -137,7 +137,7 @@ public class MachineBlocks {
                             .strength(2.5f, 8)
                             .noOcclusion()
                             .isViewBlocking((pState, pLevel, pPos) -> false)
-                            .requiredFeatures(MachineFeatureFlags.ENDERFACE))
+                            .requiredFeatures(EIOFeatureFlags.ENDERFACE))
             .setLootTable(MachinesLootTable::copyComponents)
             .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
             .setTranslation("Ender IO")
@@ -290,7 +290,7 @@ public class MachineBlocks {
                 .strength(2.5f, 8)
                 .isViewBlocking((pState, pLevel, pPos) -> false)
                 .noOcclusion()
-                .requiredFeatures(MachineFeatureFlags.NIARD)
+                .requiredFeatures(EIOFeatureFlags.NIARD)
             )
             .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
             .setLootTable(MachinesLootTable::copyComponents)
@@ -324,7 +324,7 @@ public class MachineBlocks {
 
     public static final RegiliteBlock<ProgressMachineBlock> FARMING_STATION = BLOCK_REGISTRY.registerBlock(
             "farming_station", properties -> new ProgressMachineBlock(EIOBlockEntities.FARMING_STATION, properties),
-            BlockBehaviour.Properties.of().strength(2.5f, 8).requiredFeatures(MachineFeatureFlags.FARMING_STATION))
+            BlockBehaviour.Properties.of().strength(2.5f, 8).requiredFeatures(EIOFeatureFlags.FARMING_STATION))
             .setLootTable(MachinesLootTable::copyComponents)
             .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
             .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(),

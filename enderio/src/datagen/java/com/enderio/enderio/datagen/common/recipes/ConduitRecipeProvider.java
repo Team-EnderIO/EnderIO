@@ -9,7 +9,7 @@ import com.enderio.enderio.content.conduits.ConduitBlockItem;
 import com.enderio.enderio.content.machines.painting.PaintingRecipe;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.ConduitItems;
-import com.enderio.enderio.init.Conduits;
+import com.enderio.enderio.init.EIOConduits;
 import com.enderio.enderio.init.EIOItems;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.HolderGetter;
@@ -33,14 +33,14 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
         HolderGetter<Conduit<?, ?>> conduitRegistry = registries
                 .lookupOrThrow(EnderIORegistries.Keys.CONDUIT);
 
-        var itemConduit = conduitRegistry.getOrThrow(Conduits.ITEM);
-        var fluidConduit = conduitRegistry.getOrThrow(Conduits.FLUID);
-        var pressurizedFluidConduit = conduitRegistry.getOrThrow(Conduits.PRESSURIZED_FLUID);
-        var enderFluidConduit = conduitRegistry.getOrThrow(Conduits.ENDER_FLUID);
-        var energyConduit = conduitRegistry.getOrThrow(Conduits.ENERGY);
-        var enhancedEnergyConduit = conduitRegistry.getOrThrow(Conduits.ENHANCED_ENERGY);
-        var enderEnergyConduit = conduitRegistry.getOrThrow(Conduits.ENDER_ENERGY);
-        var redstoneConduit = conduitRegistry.getOrThrow(Conduits.REDSTONE);
+        var itemConduit = conduitRegistry.getOrThrow(EIOConduits.ITEM);
+        var fluidConduit = conduitRegistry.getOrThrow(EIOConduits.FLUID);
+        var pressurizedFluidConduit = conduitRegistry.getOrThrow(EIOConduits.PRESSURIZED_FLUID);
+        var enderFluidConduit = conduitRegistry.getOrThrow(EIOConduits.ENDER_FLUID);
+        var energyConduit = conduitRegistry.getOrThrow(EIOConduits.ENERGY);
+        var enhancedEnergyConduit = conduitRegistry.getOrThrow(EIOConduits.ENHANCED_ENERGY);
+        var enderEnergyConduit = conduitRegistry.getOrThrow(EIOConduits.ENDER_ENERGY);
+        var redstoneConduit = conduitRegistry.getOrThrow(EIOConduits.REDSTONE);
 
         buildFilterRecipes(recipeOutput);
         buildFilterConversionRecipes(recipeOutput);

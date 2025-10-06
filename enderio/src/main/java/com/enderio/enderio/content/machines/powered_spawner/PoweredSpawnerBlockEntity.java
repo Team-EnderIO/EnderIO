@@ -26,8 +26,7 @@ import com.enderio.enderio.foundation.task.host.MachineTaskHost;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOItems;
-import com.enderio.enderio.init.MachineAttachments;
-import com.enderio.enderio.init.MachineDataComponents;
+import com.enderio.enderio.init.EIOAttachments;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -355,10 +354,10 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
         }
 
         // TODO: Ender IO 8 - remove support for old attachment loading
-        if (hasData(MachineAttachments.ACTION_RANGE)) {
-            var actionRange = getData(MachineAttachments.ACTION_RANGE);
+        if (hasData(EIOAttachments.ACTION_RANGE)) {
+            var actionRange = getData(EIOAttachments.ACTION_RANGE);
             isRangeVisible = actionRange.isVisible();
-            removeData(MachineAttachments.ACTION_RANGE);
+            removeData(EIOAttachments.ACTION_RANGE);
         }
 
         isRangeVisible = pTag.contains(MachineNBTKeys.IS_RANGE_VISIBLE)
@@ -374,12 +373,12 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
         boundSoul = components.getOrDefault(EIODataComponents.SOUL, Soul.EMPTY);
 
         // TODO: Ender IO 8 - remove.
-        var actionRange = components.get(MachineDataComponents.ACTION_RANGE);
+        var actionRange = components.get(EIODataComponents.ACTION_RANGE);
         if (actionRange != null) {
             this.isRangeVisible = actionRange.isVisible();
         }
 
-        Boolean isVisible = components.get(MachineDataComponents.IS_RANGE_VISIBLE);
+        Boolean isVisible = components.get(EIODataComponents.IS_RANGE_VISIBLE);
         if (isVisible != null) {
             this.isRangeVisible = isVisible;
         }
@@ -391,7 +390,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
 
         // Only if unchanged.
         if (isRangeVisible) {
-            components.set(MachineDataComponents.IS_RANGE_VISIBLE, true);
+            components.set(EIODataComponents.IS_RANGE_VISIBLE, true);
         }
 
         if (boundSoul.hasEntity()) {
