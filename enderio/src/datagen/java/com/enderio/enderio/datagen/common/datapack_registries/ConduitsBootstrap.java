@@ -28,8 +28,8 @@ public class ConduitsBootstrap {
 
         // Fluid conduits tick every 5 ticks, so remember the transfer rate per tick will be *5 for each operation.
         register(context, EIOConduits.FLUID, (desc) -> new FluidConduit(EnderIO.rl("block/conduit/fluid"), desc, 200, false, false));
-        register(context, EIOConduits.PRESSURIZED_FLUID, (desc) -> new FluidConduit(EnderIO.rl("block/conduit/pressurized_fluid"), desc, 1_000, false, false));
-        register(context, EIOConduits.ENDER_FLUID, (desc) -> new FluidConduit(EnderIO.rl("block/conduit/ender_fluid"), desc, 8_000, false, false));
+        register(context, EIOConduits.PRESSURIZED_FLUID, (desc) -> new FluidConduit(EnderIO.rl("block/conduit/pressurized_fluid"), desc, 1_000, false, true));
+        register(context, EIOConduits.ENDER_FLUID, (desc) -> new FluidConduit(EnderIO.rl("block/conduit/ender_fluid"), desc, 8_000, true, true));
 
         register(context, EIOConduits.ITEM, (desc) -> new ItemConduit(EnderIO.rl("block/conduit/item"), desc, 32, 20));
         register(context, EIOConduits.ENHANCED_ITEM, (desc) -> new ItemConduit(EnderIO.rl("block/conduit/item"), desc, 64, 20));
