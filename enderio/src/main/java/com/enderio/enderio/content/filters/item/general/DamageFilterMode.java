@@ -1,13 +1,18 @@
 package com.enderio.enderio.content.filters.item.general;
 
+import com.enderio.core.common.lang.EnumLangMap;
+import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.api.io.RedstoneControl;
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ByIdMap;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 
@@ -28,6 +33,9 @@ public enum DamageFilterMode implements StringRepresentable {
             ByIdMap.OutOfBoundsStrategy.ZERO);
     public static final StreamCodec<ByteBuf, DamageFilterMode> STREAM_CODEC = ByteBufCodecs.idMapper(BY_ID, v -> v.id);
 
+    private static final EnumLangMap<DamageFilterMode> LANG_MAP = new EnumLangMap<>(DamageFilterMode.class, EnderIO.MOD_ID,
+        "damage_filter_mode");
+
     private final int id;
     private final String name;
 
@@ -46,5 +54,9 @@ public enum DamageFilterMode implements StringRepresentable {
     @Override
     public String getSerializedName() {
         return name;
+    }
+
+    public MutableComponent getComponent() {
+        return Objects.requireNonNull(LANG_MAP.get(this));
     }
 }

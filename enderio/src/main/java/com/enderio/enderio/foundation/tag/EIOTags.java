@@ -22,18 +22,7 @@ public class EIOTags {
 
     public static final String COMMON = "c";
 
-    public static void register() {
-        Items.init();
-        Blocks.init();
-        Fluids.init();
-        EntityTypes.init();
-    }
-
     public static class Items {
-
-        private static void init() {
-        }
-
         public static final TagKey<Item> GRINDING_BALLS = tag("grinding_balls");
 
         public static final TagKey<Item> HIDE_FACADES = tag("enderio/hide_facades");
@@ -155,10 +144,6 @@ public class EIOTags {
     }
 
     public static class Blocks {
-
-        private static void init() {
-        }
-
         public static final TagKey<Block> FUSED_QUARTZ = commonTag("glass_blocks/fused_quartz");
         public static final TagKey<Block> CLEAR_GLASS = commonTag("glass_blocks/clear_glass");
 
@@ -190,9 +175,6 @@ public class EIOTags {
     }
 
     public static class Fluids {
-        private static void init() {
-        }
-
         public static final TagKey<Fluid> COLD_FIRE_IGNITER_FUEL = tag("fluid_fuel/cold_fire_igniter");
         public static final TagKey<Fluid> STAFF_OF_LEVITY_FUEL = tag("fluid_fuel/staff_of_levity");
         public static final TagKey<Fluid> SOLAR_PANEL_LIGHT = tag("solar_panel_light");
@@ -208,9 +190,6 @@ public class EIOTags {
     }
 
     public static class EntityTypes {
-        private static void init() {
-        }
-
         // TODO: 1.22: Rename allow/deny list.
         public static final TagKey<EntityType<?>> SPAWNER_BLACKLIST = tag("spawner_blacklist");
         public static final TagKey<EntityType<?>> SOUL_VIAL_WHITELIST = tag("soul_vial_whitelist");

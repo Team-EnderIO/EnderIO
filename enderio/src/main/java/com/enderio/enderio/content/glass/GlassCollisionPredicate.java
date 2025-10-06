@@ -1,6 +1,9 @@
 package com.enderio.enderio.content.glass;
 
+import com.enderio.core.common.lang.EnumLangMap;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.init.EIOItems;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
@@ -23,6 +26,9 @@ public enum GlassCollisionPredicate {
     MOBS_BLOCK(ctx -> !(ctx.getEntity() instanceof Mob)),
     ANIMALS_PASS(ctx -> ctx.getEntity() instanceof Animal),
     ANIMALS_BLOCK(ctx -> !(ctx.getEntity() instanceof Animal));
+
+    private static final EnumLangMap<GlassCollisionPredicate> LANG_MAP = new EnumLangMap<>(GlassCollisionPredicate.class, EnderIO.MOD_ID,
+        "glass_collision", GlassCollisionPredicate.NONE);
 
     private final Predicate<EntityCollisionContext> predicate;
 
@@ -80,5 +86,10 @@ public enum GlassCollisionPredicate {
             case PLAYERS_BLOCK -> PLAYERS_PASS;
             case PLAYERS_PASS -> PLAYERS_BLOCK;
         };
+    }
+
+    @Nullable
+    public MutableComponent getComponent() {
+        return LANG_MAP.get(this);
     }
 }

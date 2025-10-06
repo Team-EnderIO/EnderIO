@@ -61,7 +61,7 @@ public class FusedQuartzBlock extends TransparentBlock {
             pTooltip.add(EIOLang.FUSED_QUARTZ_BLOCKS_LIGHT);
         }
 
-        Component collisionTooltip = EIOEnumLang.GLASS_COLLISION.get(collisionPredicate);
+        Component collisionTooltip = collisionPredicate.getComponent();
         if (collisionTooltip != null) {
             pTooltip.add(collisionTooltip);
         }

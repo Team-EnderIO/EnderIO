@@ -1,7 +1,10 @@
 package com.enderio.enderio.datagen.client;
 
 import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.content.capacitors.CapacitorLang;
+import com.enderio.enderio.content.filters.item.general.DamageFilterMode;
+import com.enderio.enderio.content.glass.GlassCollisionPredicate;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.regilite.Regilite;
 import com.enderio.regilite.data.RegiliteDataProvider;
@@ -23,6 +26,7 @@ public class EIOLanguageProvider extends LanguageProvider {
     protected void addTranslations() {
         addTagTranslations();
         addCapacitorTooltipTranslations();
+        addEnumLang();
 
         // Gross hack until Regilite is out.
         try {
@@ -117,6 +121,34 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(CapacitorLang.LOOT_CAPACITOR_MODIFIER_PREMIUM, "Premium");
         add(CapacitorLang.LOOT_CAPACITOR_MODIFIER_INCREDIBLY, "Incredibly");
         add(CapacitorLang.LOOT_CAPACITOR_MODIFIER_UNSTABLE, "Unstable");
+    }
+
+    // Ignore nulls here, we know what should have lang keys.
+    @SuppressWarnings("DataFlowIssue")
+    private void addEnumLang() {
+        add(RedstoneControl.ALWAYS_ACTIVE.getComponent(), "Always Active");
+        add(RedstoneControl.ACTIVE_WITH_SIGNAL.getComponent(), "Active With Signal");
+        add(RedstoneControl.ACTIVE_WITHOUT_SIGNAL.getComponent(), "Active without Signal");
+        add(RedstoneControl.NEVER_ACTIVE.getComponent(), "Never Active");
+
+        add(GlassCollisionPredicate.PLAYERS_PASS.getComponent(), "Not solid to players");
+        add(GlassCollisionPredicate.PLAYERS_BLOCK.getComponent(), "Only solid to players");
+        add(GlassCollisionPredicate.MOBS_PASS.getComponent(), "Not solid to monsters");
+        add(GlassCollisionPredicate.MOBS_BLOCK.getComponent(), "Only solid to monsters");
+        add(GlassCollisionPredicate.ANIMALS_PASS.getComponent(), "Not solid to animals");
+        add(GlassCollisionPredicate.ANIMALS_BLOCK.getComponent(), "Only solid to animals");
+
+        add(DamageFilterMode.IGNORE.getComponent(), "Ignore Damage");
+        add(DamageFilterMode.UP_TO_25.getComponent(), "Up to 25%% Damaged");
+        add(DamageFilterMode.MORE_THAN_25.getComponent(), "More than 25%% Damaged");
+        add(DamageFilterMode.UP_TO_50.getComponent(), "Up to 50%% Damaged");
+        add(DamageFilterMode.MORE_THAN_50.getComponent(), "More than 50%% Damaged");
+        add(DamageFilterMode.UP_TO_75.getComponent(), "Up to 75%% Damaged");
+        add(DamageFilterMode.MORE_THAN_75.getComponent(), "More than 75%% Damaged");
+        add(DamageFilterMode.NOT_DAMAGED.getComponent(), "Not Damaged");
+        add(DamageFilterMode.ONLY_DAMAGED.getComponent(), "Only Damaged");
+        add(DamageFilterMode.IS_DAMAGEABLE.getComponent(), "Can Be Damaged");
+        add(DamageFilterMode.NOT_DAMAGEABLE.getComponent(), "Cannot Be Damaged");
     }
 
     private void add(Component component, String translation) {

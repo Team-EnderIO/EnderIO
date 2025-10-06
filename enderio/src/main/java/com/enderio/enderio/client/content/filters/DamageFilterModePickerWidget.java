@@ -3,10 +3,8 @@ package com.enderio.enderio.client.content.filters;
 import com.enderio.core.client.gui.widgets.BaseEnumPickerWidget;
 import com.enderio.enderio.client.foundation.icon.EIOEnumIcons;
 import com.enderio.enderio.content.filters.item.general.DamageFilterMode;
-import com.enderio.enderio.foundation.lang.EIOEnumLang;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -19,9 +17,8 @@ public class DamageFilterModePickerWidget extends BaseEnumPickerWidget<DamageFil
     }
 
     @Override
-    @Nullable
     public Component getValueTooltip(DamageFilterMode value) {
-        return EIOEnumLang.DAMAGE_FILTER_MODE.get(value);
+        return value.getComponent();
     }
 
     @Override
