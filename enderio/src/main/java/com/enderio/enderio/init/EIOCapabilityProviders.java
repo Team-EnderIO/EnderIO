@@ -5,9 +5,11 @@ import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
+@EventBusSubscriber
 public class EIOCapabilityProviders {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void markProxyableCapabilities(RegisterCapabilitiesEvent event) {
@@ -36,12 +38,6 @@ public class EIOCapabilityProviders {
         event.registerBlockEntity(capability, EIOBlockEntities.CONDUIT.get(),
             ConduitBundleBlockEntity.createCapabilityProvider(capability));
     }
-
-    // endregion
-
-    // region Machines
-
-
 
     // endregion
 }
