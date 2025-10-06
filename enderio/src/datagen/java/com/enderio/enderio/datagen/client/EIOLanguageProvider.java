@@ -1,16 +1,24 @@
 package com.enderio.enderio.datagen.client;
 
 import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.api.EnderIORegistries;
+import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.content.capacitors.CapacitorLang;
+import com.enderio.enderio.content.conduits.ConduitLang;
 import com.enderio.enderio.content.filters.item.general.DamageFilterMode;
 import com.enderio.enderio.content.glass.GlassCollisionPredicate;
+import com.enderio.enderio.content.machines.alloy.AlloySmelterMode;
+import com.enderio.enderio.content.machines.powered_spawner.PoweredSpawnerMode;
 import com.enderio.enderio.foundation.tag.EIOTags;
+import com.enderio.enderio.init.EIOConduits;
 import com.enderio.regilite.Regilite;
 import com.enderio.regilite.data.RegiliteDataProvider;
+import net.minecraft.Util;
 import net.minecraft.data.PackOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.resources.ResourceKey;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
 import java.lang.reflect.Field;
@@ -24,9 +32,11 @@ public class EIOLanguageProvider extends LanguageProvider {
 
     @Override
     protected void addTranslations() {
-        addTagTranslations();
-        addCapacitorTooltipTranslations();
-        addEnumLang();
+        addTags();
+        addCapacitorTooltips();
+        addEnumNames();
+        addConduitDescriptions();
+        addConduitLang();
 
         // Gross hack until Regilite is out.
         try {
@@ -56,7 +66,7 @@ public class EIOLanguageProvider extends LanguageProvider {
         }
     }
 
-    private void addTagTranslations() {
+    private void addTags() {
         add(EIOTags.Items.GRINDING_BALLS, "Grinding Balls");
         add(EIOTags.Items.HIDE_FACADES, "Hides Facades");
         add(EIOTags.Items.GLIDER, "Gliders");
@@ -94,7 +104,7 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOTags.EntityTypes.SOUL_VIAL_WHITELIST, "Soul Vial Whitelist");
     }
 
-    private void addCapacitorTooltipTranslations() {
+    private void addCapacitorTooltips() {
         add(CapacitorLang.CAPACITOR_TOOLTIP_BASE, "Base Modifier: %s");
         add(CapacitorLang.CAPACITOR_TOOLTIP_ENERGY_CAPACITY, "Energy Capacity Modifier: %s");
         add(CapacitorLang.CAPACITOR_TOOLTIP_ENERGY_USE, "Energy Use Modifier: %s");
@@ -125,18 +135,13 @@ public class EIOLanguageProvider extends LanguageProvider {
 
     // Ignore nulls here, we know what should have lang keys.
     @SuppressWarnings("DataFlowIssue")
-    private void addEnumLang() {
+    private void addEnumNames() {
         add(RedstoneControl.ALWAYS_ACTIVE.getComponent(), "Always Active");
         add(RedstoneControl.ACTIVE_WITH_SIGNAL.getComponent(), "Active With Signal");
         add(RedstoneControl.ACTIVE_WITHOUT_SIGNAL.getComponent(), "Active without Signal");
         add(RedstoneControl.NEVER_ACTIVE.getComponent(), "Never Active");
 
-        add(GlassCollisionPredicate.PLAYERS_PASS.getComponent(), "Not solid to players");
-        add(GlassCollisionPredicate.PLAYERS_BLOCK.getComponent(), "Only solid to players");
-        add(GlassCollisionPredicate.MOBS_PASS.getComponent(), "Not solid to monsters");
-        add(GlassCollisionPredicate.MOBS_BLOCK.getComponent(), "Only solid to monsters");
-        add(GlassCollisionPredicate.ANIMALS_PASS.getComponent(), "Not solid to animals");
-        add(GlassCollisionPredicate.ANIMALS_BLOCK.getComponent(), "Only solid to animals");
+        // region Filters
 
         add(DamageFilterMode.IGNORE.getComponent(), "Ignore Damage");
         add(DamageFilterMode.UP_TO_25.getComponent(), "Up to 25%% Damaged");
@@ -149,6 +154,94 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(DamageFilterMode.ONLY_DAMAGED.getComponent(), "Only Damaged");
         add(DamageFilterMode.IS_DAMAGEABLE.getComponent(), "Can Be Damaged");
         add(DamageFilterMode.NOT_DAMAGEABLE.getComponent(), "Cannot Be Damaged");
+
+        // endregion
+
+        // region Glass
+
+        add(GlassCollisionPredicate.PLAYERS_PASS.getComponent(), "Not solid to players");
+        add(GlassCollisionPredicate.PLAYERS_BLOCK.getComponent(), "Only solid to players");
+        add(GlassCollisionPredicate.MOBS_PASS.getComponent(), "Not solid to monsters");
+        add(GlassCollisionPredicate.MOBS_BLOCK.getComponent(), "Only solid to monsters");
+        add(GlassCollisionPredicate.ANIMALS_PASS.getComponent(), "Not solid to animals");
+        add(GlassCollisionPredicate.ANIMALS_BLOCK.getComponent(), "Only solid to animals");
+
+        // endregion
+
+        // region Machines
+
+        add(AlloySmelterMode.ALL.getComponent(), "Alloying and Smelting");
+        add(AlloySmelterMode.ALLOYS.getComponent(), "Alloying Only");
+        add(AlloySmelterMode.FURNACE.getComponent(), "Smelting Only");
+
+        add(PoweredSpawnerMode.SPAWN.getComponent(), "Spawn Mobs");
+        add(PoweredSpawnerMode.CAPTURE.getComponent(), "Capture Mobs");
+
+        // endregion
+    }
+
+    private void addConduitDescriptions() {
+        add(EIOConduits.ENERGY, "Energy Conduit");
+        add(EIOConduits.ENHANCED_ENERGY, "Enhanced Energy Conduit");
+        add(EIOConduits.ENDER_ENERGY, "Ender Energy Conduit");
+        add(EIOConduits.REDSTONE, "Redstone Conduit");
+        add(EIOConduits.FLUID, "Fluid Conduit");
+        add(EIOConduits.PRESSURIZED_FLUID, "Pressurized Fluid Conduit");
+        add(EIOConduits.ENDER_FLUID, "Ender Fluid Conduit");
+        add(EIOConduits.ITEM, "Item Conduit");
+        add(EIOConduits.ENHANCED_ITEM, "Enhanced Item Conduit");
+        add(EIOConduits.ENDER_ITEM, "Ender Item Conduit");
+    }
+
+    private void addConduitLang() {
+        add(ConduitLang.CHANNEL, "Channel");
+        add(ConduitLang.REDSTONE_CHANNEL, "Signal Color");
+        add(ConduitLang.ROUND_ROBIN_ENABLED, "Round Robin Enabled");
+        add(ConduitLang.ROUND_ROBIN_DISABLED, "Round Robin Disabled");
+        add(ConduitLang.SELF_FEED_ENABLED, "Self Feed Enabled");
+        add(ConduitLang.SELF_FEED_DISABLED, "Self Feed Disabled");
+
+        add(ConduitLang.INSERT, "Insert");
+        add(ConduitLang.EXTRACT, "Extract");
+        add(ConduitLang.INPUT, "Input");
+        add(ConduitLang.OUTPUT, "Output");
+        add(ConduitLang.PRIORITY, "Priority");
+
+        add(ConduitLang.ERROR_NO_SCREEN_TYPE, "Error: No screen type defined");
+
+        add(ConduitLang.FLUID_CONDUIT_CHANGE_FLUID1, "Locked Fluid: ");
+        add(ConduitLang.FLUID_CONDUIT_CHANGE_FLUID2, "Click to reset!");
+        add(ConduitLang.FLUID_CONDUIT_CHANGE_FLUID3, "Fluid: %s");
+
+        add(ConduitLang.REDSTONE_CONDUIT_SIGNAL_COLOR, "Signal Color");
+        add(ConduitLang.REDSTONE_CONDUIT_STRONG_SIGNAL, "Strong Signal");
+
+        add(ConduitLang.GRAPH_TICK_RATE_TOOLTIP, "Network Ticks: %s/sec");
+        add(ConduitLang.ENERGY_RATE_TOOLTIP, "Max Output %s \u00B5I/t");
+        add(ConduitLang.FLUID_RAW_RATE_TOOLTIP, "Rate: %s mB/network tick");
+        add(ConduitLang.FLUID_EFFECTIVE_RATE_TOOLTIP, "Effective Rate: %s mB/t");
+        add(ConduitLang.MULTI_FLUID_TOOLTIP, "Allows multiple fluids to be transported on the same line");
+        add(ConduitLang.ITEM_RAW_RATE_TOOLTIP, "Rate: %s Items/network tick");
+        add(ConduitLang.ITEM_EFFECTIVE_RATE_TOOLTIP, "Effective Rate: %s Items/sec");
+
+        add(ConduitLang.TRANSPARENT_FACADE_TOOLTIP, "Transparent: Hides conduits when painted with a translucent block");
+        add(ConduitLang.BLAST_RESIST_FACADE_TOOLTIP, "Hardened: Resists breaking and explosions");
+
+        add(ConduitLang.CONDUIT_PROBE_MODE_TOOLTIP, "Mode %s");
+        add(ConduitLang.CONDUIT_PROBE_STATE_PROBE, "Contains copied conduit data:");
+        add(ConduitLang.CONDUIT_PROBE_STATE_COPY_PASTE, "Probe");
+        add(ConduitLang.CONDUIT_PROBE_CONTAINS_COPIED, "Copy/Paste");
+        add(ConduitLang.CONDUIT_PROBE_MESSAGE_SWITCHED_MODE, "Switched conduit probe mode to %s");
+        add(ConduitLang.CONDUIT_PROBE_MESSAGE_COPIED, "Copied data: %s");
+        add(ConduitLang.CONDUIT_PROBE_MESSAGE_PASTED, "Pasted data: %s");
+    }
+
+    private void addContainerTitles() {
+        // TODO: we should use container.<X> keys.
+    }
+
+    private void add(ResourceKey<Conduit<?, ?>> key, String translation) {
+        add(Component.translatable(Util.makeDescriptionId(EnderIORegistries.Keys.CONDUIT.location().getPath(), key.location())), translation);
     }
 
     private void add(Component component, String translation) {

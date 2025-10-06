@@ -5,8 +5,8 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.conduits.screen.ConduitMenuDataAccess;
 import com.enderio.enderio.api.conduits.screen.ConduitScreenHelper;
 import com.enderio.enderio.api.conduits.screen.IOConduitScreenType;
+import com.enderio.enderio.content.conduits.ConduitLang;
 import com.enderio.enderio.foundation.lang.EIOLang;
-import com.enderio.enderio.init.ConduitLang;
 import com.enderio.modded_conduits.common.modules.mekanism.MekanismModule;
 import com.enderio.modded_conduits.common.modules.mekanism.chemical.C2SClearLockedChemicalPacket;
 import com.enderio.modded_conduits.common.modules.mekanism.chemical.ChemicalConduit;
@@ -46,7 +46,7 @@ public class ChemicalConduitScreenType extends IOConduitScreenType<ChemicalCondu
                     () -> PacketDistributor.sendToServer(new C2SClearLockedChemicalPacket(dataAccess.getBlockPos()))));
         } else {
             // Channel colors
-            screen.addColorPicker(startX, startY + 20, ConduitLang.CONDUIT_CHANNEL,
+            screen.addColorPicker(startX, startY + 20, ConduitLang.CHANNEL,
                     () -> dataAccess.getConnectionConfig().insertChannel(),
                     value -> dataAccess.updateConnectionConfig(config -> config.withInsertChannel(value)));
         }
@@ -61,7 +61,7 @@ public class ChemicalConduitScreenType extends IOConduitScreenType<ChemicalCondu
 
         if (dataAccess.conduit() instanceof ChemicalConduit fluidConduit && fluidConduit.isMultiChemical()) {
             // Channel colors
-            screen.addColorPicker(startX, startY + 20, ConduitLang.CONDUIT_CHANNEL,
+            screen.addColorPicker(startX, startY + 20, ConduitLang.CHANNEL,
                     () -> dataAccess.getConnectionConfig().extractChannel(),
                     value -> dataAccess.updateConnectionConfig(config -> config.withExtractChannel(value)));
         }

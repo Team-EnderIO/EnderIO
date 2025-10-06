@@ -11,7 +11,6 @@ import com.enderio.enderio.client.foundation.widgets.NewProgressWidget;
 import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget;
 import com.enderio.enderio.content.machines.powered_spawner.PoweredSpawnerMenu;
 import com.enderio.enderio.foundation.lang.EIOLang;
-import com.enderio.enderio.foundation.lang.MachineEnumLang;
 import com.enderio.enderio.foundation.lang.MachineLang;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -108,7 +107,7 @@ public class PoweredSpawnerScreen extends MachineScreen<PoweredSpawnerMenu> {
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
-        String modeLabel = Objects.requireNonNull(MachineEnumLang.POWERED_SPAWNER_MODE.get(menu.getMode())).getString();
+        String modeLabel = Objects.requireNonNull(menu.getMode().getComponent()).getString();
         guiGraphics.drawString(font, modeLabel, imageWidth / 2f - font.width(modeLabel) / 2f, 25, 0xFFFFFFFF, true);
 
         var entityType = getMenu().getBlockEntity().getEntityType();

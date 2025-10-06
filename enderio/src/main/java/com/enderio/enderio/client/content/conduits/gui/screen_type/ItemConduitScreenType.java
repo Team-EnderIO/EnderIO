@@ -4,10 +4,10 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.conduits.screen.ConduitMenuDataAccess;
 import com.enderio.enderio.api.conduits.screen.ConduitScreenHelper;
 import com.enderio.enderio.api.conduits.screen.IOConduitScreenType;
+import com.enderio.enderio.content.conduits.ConduitLang;
 import com.enderio.enderio.content.conduits.type.item.ItemConduit;
 import com.enderio.enderio.content.conduits.type.item.ItemConduitConnectionConfig;
 import com.enderio.enderio.foundation.lang.EIOLang;
-import com.enderio.enderio.init.ConduitLang;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -30,7 +30,7 @@ public class ItemConduitScreenType extends IOConduitScreenType<ItemConduitConnec
         super.renderLabels(dataAccess, guiGraphics, startX, startY, font, mouseX, mouseY);
 
         String priority = String.valueOf(dataAccess.getConnectionConfig().priority());
-        guiGraphics.drawString(font, ConduitLang.CONDUIT_PRIORITY, 22, 7 + 4 + 4 + 8 + 16 + 12, 0x000000, false);
+        guiGraphics.drawString(font, ConduitLang.PRIORITY, 22, 7 + 4 + 4 + 8 + 16 + 12, 0x000000, false);
         guiGraphics.drawString(font, priority, 90 - font.width(priority), 7 + 4 + 4 + 8 + 16 + 12, 0x000000, false);
 
         // TODO: Show redstone signal indicators using the extra NBT payload.
@@ -54,7 +54,7 @@ public class ItemConduitScreenType extends IOConduitScreenType<ItemConduitConnec
         super.createLeftWidgets(screen, startX, startY, dataAccess);
 
         // Channel color
-        screen.addColorPicker(startX, startY + 20, ConduitLang.CONDUIT_CHANNEL,
+        screen.addColorPicker(startX, startY + 20, ConduitLang.CHANNEL,
                 () -> dataAccess.getConnectionConfig().insertChannel(),
                 value -> dataAccess.updateConnectionConfig(config -> config.withInsertChannel(value)));
 
@@ -73,7 +73,7 @@ public class ItemConduitScreenType extends IOConduitScreenType<ItemConduitConnec
         super.createRightWidgets(screen, startX, startY, dataAccess);
 
         // Channel color
-        screen.addColorPicker(startX, startY + 20, ConduitLang.CONDUIT_CHANNEL,
+        screen.addColorPicker(startX, startY + 20, ConduitLang.CHANNEL,
                 () -> dataAccess.getConnectionConfig().extractChannel(),
                 value -> dataAccess.updateConnectionConfig(config -> config.withExtractChannel(value)));
 

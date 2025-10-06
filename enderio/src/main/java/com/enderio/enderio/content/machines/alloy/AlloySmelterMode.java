@@ -1,12 +1,16 @@
 package com.enderio.enderio.content.machines.alloy;
 
+import com.enderio.core.common.lang.EnumLangMap;
+import com.enderio.enderio.EnderIO;
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ByIdMap;
 import net.minecraft.util.StringRepresentable;
 
+import java.util.Objects;
 import java.util.function.IntFunction;
 
 /**
@@ -34,6 +38,9 @@ public enum AlloySmelterMode implements StringRepresentable {
             ByIdMap.OutOfBoundsStrategy.ZERO);
     public static final StreamCodec<ByteBuf, AlloySmelterMode> STREAM_CODEC = ByteBufCodecs.idMapper(BY_ID, v -> v.id);
 
+    private static final EnumLangMap<AlloySmelterMode> LANG_MAP = new EnumLangMap<>(AlloySmelterMode.class, EnderIO.MOD_ID,
+        "alloy_smelter_mode");
+
     private final int id;
     private final String name;
     private final boolean canAlloy;
@@ -57,5 +64,9 @@ public enum AlloySmelterMode implements StringRepresentable {
     @Override
     public String getSerializedName() {
         return name;
+    }
+
+    public MutableComponent getComponent() {
+        return Objects.requireNonNull(LANG_MAP.get(this));
     }
 }

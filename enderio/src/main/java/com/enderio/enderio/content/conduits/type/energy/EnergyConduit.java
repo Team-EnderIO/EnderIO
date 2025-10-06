@@ -1,17 +1,19 @@
 package com.enderio.enderio.content.conduits.type.energy;
 
 import com.enderio.core.common.util.TooltipUtil;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.io.RedstoneControl;
-import com.enderio.enderio.init.ConduitLang;
+import com.enderio.enderio.content.conduits.ConduitLang;
 import com.enderio.enderio.init.EIOConduitTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -37,11 +39,7 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
             .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(Conduit::texture),
                     ComponentSerialization.CODEC.fieldOf("description").forGetter(Conduit::description),
                     Codec.INT.fieldOf("transfer_rate").forGetter(EnergyConduit::transferRatePerTick))
-            .apply(builder, EnergyConduit::of));
-
-    public static EnergyConduit of(ResourceLocation texture, Component description, int transferRate) {
-        return new EnergyConduit(texture, description, transferRate);
-    }
+            .apply(builder, EnergyConduit::new));
 
     // Not configurable - energy is instantaneous
     @Override

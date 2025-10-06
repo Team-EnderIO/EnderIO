@@ -3,8 +3,8 @@ package com.enderio.modded_conduits.client.modules.mekanism.screens;
 import com.enderio.enderio.api.conduits.screen.ConduitMenuDataAccess;
 import com.enderio.enderio.api.conduits.screen.ConduitScreenHelper;
 import com.enderio.enderio.api.conduits.screen.IOConduitScreenType;
+import com.enderio.enderio.content.conduits.ConduitLang;
 import com.enderio.enderio.foundation.lang.EIOLang;
-import com.enderio.enderio.init.ConduitLang;
 import com.enderio.modded_conduits.common.modules.mekanism.heat.HeatConduitConnectionConfig;
 
 public class HeatConduitScreenType extends IOConduitScreenType<HeatConduitConnectionConfig> {

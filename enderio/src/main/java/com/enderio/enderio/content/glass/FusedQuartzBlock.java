@@ -1,7 +1,6 @@
 package com.enderio.enderio.content.glass;
 
 import com.enderio.enderio.config.base.BaseConfig;
-import com.enderio.enderio.foundation.lang.EIOEnumLang;
 import com.enderio.enderio.foundation.lang.EIOLang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;

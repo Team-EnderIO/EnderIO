@@ -14,8 +14,8 @@ import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.client.content.conduits.gui.screen_type.ConduitScreenTypes;
 import com.enderio.enderio.client.foundation.widgets.DyeColorPickerWidget;
 import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget;
+import com.enderio.enderio.content.conduits.ConduitLang;
 import com.enderio.enderio.content.conduits.menu.ConduitMenu;
-import com.enderio.enderio.init.ConduitLang;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Renderable;
@@ -96,7 +96,7 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
         if (screenTypeContainer.hasScreenType()) {
             screenTypeContainer.renderLabels(guiGraphics, mouseX, mouseY);
         } else {
-            guiGraphics.drawString(this.font, ConduitLang.CONDUIT_ERROR_NO_SCREEN_TYPE, 22, 7 + 4, 0xffff5733, false);
+            guiGraphics.drawString(this.font, ConduitLang.ERROR_NO_SCREEN_TYPE, 22, 7 + 4, 0xffff5733, false);
         }
     }
 

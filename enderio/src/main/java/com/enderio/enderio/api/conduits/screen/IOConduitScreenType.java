@@ -2,6 +2,7 @@ package com.enderio.enderio.api.conduits.screen;
 
 import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.conduits.connection.config.IOConnectionConfig;
+import com.enderio.enderio.content.conduits.ConduitLang;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -18,9 +19,8 @@ import org.jetbrains.annotations.ApiStatus;
 // TODO: Needs to be an interface and some of this internal stuff stowed away.
 public abstract class IOConduitScreenType<U extends IOConnectionConfig> extends ConduitScreenType<U> {
 
-    // TODO: Need to reconsider this API.
-    private static final Component DEFAULT_LEFT_TITLE = Component.translatable("gui.enderio.conduit.insert");
-    private static final Component DEFAULT_RIGHT_TITLE = Component.translatable("gui.enderio.conduit.extract");
+    private static final Component DEFAULT_LEFT_TITLE = ConduitLang.INSERT;
+    private static final Component DEFAULT_RIGHT_TITLE = ConduitLang.EXTRACT;
     private static final ResourceLocation BG_TEXTURE = EnderIOAPI.rl("textures/gui/conduit.png");
 
     // Rows of 9, counts slot width and it's outline edge.

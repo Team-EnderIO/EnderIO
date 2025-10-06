@@ -8,7 +8,6 @@ import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
 import com.enderio.enderio.foundation.lang.EIOLang;
 import com.enderio.enderio.init.ConduitBlocks;
-import com.enderio.enderio.init.ConduitLang;
 import com.enderio.enderio.init.EIOCreativeTabs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;

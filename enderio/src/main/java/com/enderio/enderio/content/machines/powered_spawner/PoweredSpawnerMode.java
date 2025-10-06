@@ -1,15 +1,19 @@
 package com.enderio.enderio.content.machines.powered_spawner;
 
+import com.enderio.core.common.lang.EnumLangMap;
+import com.enderio.enderio.EnderIO;
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ByIdMap;
 import net.minecraft.util.StringRepresentable;
 
+import java.util.Objects;
 import java.util.function.IntFunction;
 
 public enum PoweredSpawnerMode implements StringRepresentable {
@@ -20,6 +24,9 @@ public enum PoweredSpawnerMode implements StringRepresentable {
             ByIdMap.OutOfBoundsStrategy.ZERO);
     public static final StreamCodec<ByteBuf, PoweredSpawnerMode> STREAM_CODEC = ByteBufCodecs.idMapper(BY_ID,
             v -> v.id);
+
+    private static final EnumLangMap<PoweredSpawnerMode> LANG_MAP = new EnumLangMap<>(PoweredSpawnerMode.class, EnderIO.MOD_ID,
+        "powered_spawner_mode");
 
     private final int id;
     private final String name;
@@ -40,5 +47,9 @@ public enum PoweredSpawnerMode implements StringRepresentable {
 
     public static PoweredSpawnerMode parse(HolderLookup.Provider lookupProvider, Tag tag) {
         return CODEC.parse(lookupProvider.createSerializationContext(NbtOps.INSTANCE), tag).getOrThrow();
+    }
+
+    public MutableComponent getComponent() {
+        return Objects.requireNonNull(LANG_MAP.get(this));
     }
 }

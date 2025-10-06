@@ -3,8 +3,8 @@ package com.enderio.enderio.client.content.conduits.gui.screen_type;
 import com.enderio.enderio.api.conduits.screen.ConduitMenuDataAccess;
 import com.enderio.enderio.api.conduits.screen.ConduitScreenHelper;
 import com.enderio.enderio.api.conduits.screen.IOConduitScreenType;
+import com.enderio.enderio.content.conduits.ConduitLang;
 import com.enderio.enderio.content.conduits.type.redstone.RedstoneConduitConnectionConfig;
-import com.enderio.enderio.init.ConduitLang;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 
@@ -12,8 +12,8 @@ public class RedstoneConduitScreenType extends IOConduitScreenType<RedstoneCondu
 
     public RedstoneConduitScreenType() {
         // TODO: Should be ctor params.
-        leftTitle = ConduitLang.CONDUIT_INPUT;
-        rightTitle = ConduitLang.CONDUIT_OUTPUT;
+        leftTitle = ConduitLang.INPUT;
+        rightTitle = ConduitLang.OUTPUT;
     }
 
     @Override
@@ -22,7 +22,7 @@ public class RedstoneConduitScreenType extends IOConduitScreenType<RedstoneCondu
         super.createLeftWidgets(screen, startX, startY, dataAccess);
 
         // Send channel
-        screen.addColorPicker(startX, startY + 20, ConduitLang.CONDUIT_CHANNEL,
+        screen.addColorPicker(startX, startY + 20, ConduitLang.CHANNEL,
                 () -> dataAccess.getConnectionConfig().extractChannel(),
                 value -> dataAccess.updateConnectionConfig(config -> config.withExtractChannel(value)));
     }
@@ -33,7 +33,7 @@ public class RedstoneConduitScreenType extends IOConduitScreenType<RedstoneCondu
         super.createRightWidgets(screen, startX, startY, dataAccess);
 
         // Send channel
-        screen.addColorPicker(startX, startY + 20, ConduitLang.CONDUIT_CHANNEL,
+        screen.addColorPicker(startX, startY + 20, ConduitLang.CHANNEL,
                 () -> dataAccess.getConnectionConfig().insertChannel(),
                 value -> dataAccess.updateConnectionConfig(config -> config.withInsertChannel(value)));
 
@@ -69,12 +69,12 @@ public class RedstoneConduitScreenType extends IOConduitScreenType<RedstoneCondu
             int startX, int startY, Font font, int mouseX, int mouseY) {
         super.renderLabels(dataAccess, guiGraphics, startX, startY, font, mouseX, mouseY);
 
-        guiGraphics.drawString(font, ConduitLang.CONDUIT_REDSTONE_SIGNAL_COLOR, startX + PADDED_SLOT_SIZE,
+        guiGraphics.drawString(font, ConduitLang.REDSTONE_CONDUIT_SIGNAL_COLOR, startX + PADDED_SLOT_SIZE,
                 startY + 20 + 4, 4210752, false);
-        guiGraphics.drawString(font, ConduitLang.CONDUIT_REDSTONE_SIGNAL_COLOR,
+        guiGraphics.drawString(font, ConduitLang.REDSTONE_CONDUIT_SIGNAL_COLOR,
                 startX + RIGHT_START_X + PADDED_SLOT_SIZE, startY + 20 + 4, 4210752, false);
 
-        guiGraphics.drawString(font, ConduitLang.CONDUIT_REDSTONE_STRONG_SIGNAL,
+        guiGraphics.drawString(font, ConduitLang.REDSTONE_CONDUIT_STRONG_SIGNAL,
                 startX + RIGHT_START_X + PADDED_SLOT_SIZE, startY + 40 + 4, 4210752, false);
     }
 }

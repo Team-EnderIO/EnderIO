@@ -5,11 +5,11 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.conduits.screen.ConduitMenuDataAccess;
 import com.enderio.enderio.api.conduits.screen.ConduitScreenHelper;
 import com.enderio.enderio.api.conduits.screen.IOConduitScreenType;
+import com.enderio.enderio.content.conduits.ConduitLang;
 import com.enderio.enderio.content.conduits.type.fluid.FluidConduit;
 import com.enderio.enderio.content.conduits.type.fluid.FluidConduitConnectionConfig;
 import com.enderio.enderio.foundation.lang.EIOLang;
 import com.enderio.enderio.foundation.network.packets.ServerboundClearLockedFluidPacket;
-import com.enderio.enderio.init.ConduitLang;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -50,7 +50,7 @@ public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConn
 
         if (dataAccess.conduit() instanceof FluidConduit fluidConduit && fluidConduit.doesSupportPriority()) {
             String priority = String.valueOf(dataAccess.getConnectionConfig().insertPriority());
-            guiGraphics.drawString(font, ConduitLang.CONDUIT_PRIORITY, 22, 7 + 4 + 4 + 8 + 16 + 12, 0x000000, false);
+            guiGraphics.drawString(font, ConduitLang.PRIORITY, 22, 7 + 4 + 4 + 8 + 16 + 12, 0x000000, false);
             guiGraphics.drawString(font, priority, 90 - font.width(priority), 7 + 4 + 4 + 8 + 16 + 12, 0x000000, false);
         }
     }
@@ -78,7 +78,7 @@ public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConn
                     () -> PacketDistributor.sendToServer(new ServerboundClearLockedFluidPacket(dataAccess.getBlockPos()))));
         } else {
             // Channel colors
-            screen.addColorPicker(startX, startY + 20, ConduitLang.CONDUIT_CHANNEL,
+            screen.addColorPicker(startX, startY + 20, ConduitLang.CHANNEL,
                     () -> dataAccess.getConnectionConfig().insertChannel(),
                     value -> dataAccess.updateConnectionConfig(config -> config.withInsertChannel(value)));
         }
@@ -101,7 +101,7 @@ public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConn
 
         if (dataAccess.conduit() instanceof FluidConduit fluidConduit && fluidConduit.isMultiFluid()) {
             // Channel colors
-            screen.addColorPicker(startX, startY + 20, ConduitLang.CONDUIT_CHANNEL,
+            screen.addColorPicker(startX, startY + 20, ConduitLang.CHANNEL,
                     () -> dataAccess.getConnectionConfig().extractChannel(),
                     value -> dataAccess.updateConnectionConfig(config -> config.withExtractChannel(value)));
         }

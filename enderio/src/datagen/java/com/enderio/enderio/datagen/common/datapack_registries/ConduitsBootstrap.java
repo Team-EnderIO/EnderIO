@@ -1,40 +1,43 @@
 package com.enderio.enderio.datagen.common.datapack_registries;
 
 import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.content.conduits.type.energy.EnergyConduit;
 import com.enderio.enderio.content.conduits.type.fluid.FluidConduit;
 import com.enderio.enderio.content.conduits.type.item.ItemConduit;
 import com.enderio.enderio.content.conduits.type.redstone.RedstoneConduit;
-import com.enderio.enderio.init.ConduitLang;
 import com.enderio.enderio.init.EIOConduits;
+import net.minecraft.Util;
 import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+
+import java.util.function.Function;
 
 public class ConduitsBootstrap {
     public static void bootstrap(BootstrapContext<Conduit<?, ?>> context) {
         // TODO: These rates are still up for change, but will refine through testing.
-        context.register(EIOConduits.ENERGY,
-            new EnergyConduit(EnderIO.rl("block/conduit/energy"), ConduitLang.ENERGY_CONDUIT, 6000));
-        context.register(EIOConduits.ENHANCED_ENERGY, new EnergyConduit(EnderIO.rl("block/conduit/enhanced_energy"),
-            ConduitLang.ENHANCED_ENERGY_CONDUIT, 48_000));
-        context.register(EIOConduits.ENDER_ENERGY,
-            new EnergyConduit(EnderIO.rl("block/conduit/ender_energy"), ConduitLang.ENDER_ENERGY_CONDUIT, 384_000));
 
-        context.register(EIOConduits.REDSTONE, new RedstoneConduit(EnderIO.rl("block/conduit/redstone"),
-            EnderIO.rl("block/conduit/redstone_active"), ConduitLang.REDSTONE_CONDUIT));
+        register(context, EIOConduits.ENERGY, (desc) -> new EnergyConduit(EnderIO.rl("block/conduit/energy"), desc, 6000));
+        register(context, EIOConduits.ENHANCED_ENERGY, (desc) -> new EnergyConduit(EnderIO.rl("block/conduit/enhanced_energy"), desc, 48_000));
+        register(context, EIOConduits.ENDER_ENERGY, (desc) -> new EnergyConduit(EnderIO.rl("block/conduit/ender_energy"), desc, 384_000));
+
+        register(context, EIOConduits.REDSTONE,
+            (desc) -> new RedstoneConduit(EnderIO.rl("block/conduit/redstone"), EnderIO.rl("block/conduit/redstone_active"), desc));
 
         // Fluid conduits tick every 5 ticks, so remember the transfer rate per tick will be *5 for each operation.
-        context.register(EIOConduits.FLUID,
-            new FluidConduit(EnderIO.rl("block/conduit/fluid"), ConduitLang.FLUID_CONDUIT, 200, false, false));
-        context.register(EIOConduits.PRESSURIZED_FLUID, new FluidConduit(EnderIO.rl("block/conduit/pressurized_fluid"),
-            ConduitLang.PRESSURIZED_FLUID_CONDUIT, 1_000, false, true));
-        context.register(EIOConduits.ENDER_FLUID,
-            new FluidConduit(EnderIO.rl("block/conduit/ender_fluid"), ConduitLang.ENDER_FLUID_CONDUIT, 8_000, true, true));
+        register(context, EIOConduits.FLUID, (desc) -> new FluidConduit(EnderIO.rl("block/conduit/fluid"), desc, 200, false, false));
+        register(context, EIOConduits.PRESSURIZED_FLUID, (desc) -> new FluidConduit(EnderIO.rl("block/conduit/pressurized_fluid"), desc, 1_000, false, false));
+        register(context, EIOConduits.ENDER_FLUID, (desc) -> new FluidConduit(EnderIO.rl("block/conduit/ender_fluid"), desc, 8_000, false, false));
 
-        context.register(EIOConduits.ITEM, new ItemConduit(EnderIO.rl("block/conduit/item"), ConduitLang.ITEM_CONDUIT, 32, 20));
-        context.register(EIOConduits.ENHANCED_ITEM,
-            new ItemConduit(EnderIO.rl("block/conduit/item"), ConduitLang.ENHANCED_ITEM_CONDUIT, 64, 20));
-        context.register(EIOConduits.ENDER_ITEM,
-            new ItemConduit(EnderIO.rl("block/conduit/item"), ConduitLang.ENDER_ITEM_CONDUIT, 64, 10));
+        register(context, EIOConduits.ITEM, (desc) -> new ItemConduit(EnderIO.rl("block/conduit/item"), desc, 32, 20));
+        register(context, EIOConduits.ENHANCED_ITEM, (desc) -> new ItemConduit(EnderIO.rl("block/conduit/item"), desc, 64, 20));
+        register(context, EIOConduits.ENDER_ITEM, (desc) -> new ItemConduit(EnderIO.rl("block/conduit/item"), desc, 64, 10));
+    }
+
+    private static void register(BootstrapContext<Conduit<?, ?>> context, ResourceKey<Conduit<?, ?>> key, Function<Component, Conduit<?, ?>> factory) {
+        context.register(key,
+            factory.apply(Component.translatable(Util.makeDescriptionId(EnderIORegistries.Keys.CONDUIT.location().getPath(), key.location()))));
     }
 }

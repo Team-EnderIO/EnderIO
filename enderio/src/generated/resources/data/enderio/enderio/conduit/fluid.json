@@ -1,7 +1,7 @@
 {
   "type": "enderio:fluid",
   "description": {
-    "translate": "item.enderio.conduit.fluid"
+    "translate": "conduit.enderio.fluid"
   },
   "is_multi_fluid": false,
   "texture": "enderio:block/conduit/fluid",

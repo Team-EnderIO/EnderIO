@@ -2,10 +2,10 @@ package com.enderio.enderio.content.conduits.probe;
 
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
+import com.enderio.enderio.content.conduits.ConduitLang;
 import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
 import com.enderio.enderio.foundation.network.packets.ServerboundSyncProbeStatePacket;
 import com.enderio.enderio.init.ConduitItems;
-import com.enderio.enderio.init.ConduitLang;
 import com.enderio.enderio.init.EIODataComponents;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

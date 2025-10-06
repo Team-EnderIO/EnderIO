@@ -3,7 +3,6 @@ package com.enderio.enderio.client.content.machines.gui.widget;
 import com.enderio.core.client.gui.widgets.BaseEnumPickerWidget;
 import com.enderio.enderio.client.foundation.icon.MachineEnumIcons;
 import com.enderio.enderio.content.machines.alloy.AlloySmelterMode;
-import com.enderio.enderio.foundation.lang.MachineEnumLang;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
@@ -18,10 +17,9 @@ public class AlloySmelterModeWidget extends BaseEnumPickerWidget<AlloySmelterMod
         super(pX, pY, 16, 16, AlloySmelterMode.class, getter, setter, true, optionName);
     }
 
-    @Nullable
     @Override
     public Component getValueTooltip(AlloySmelterMode value) {
-        return MachineEnumLang.ALLOY_SMELTER_MODE.get(value);
+        return value.getComponent();
     }
 
     @Override

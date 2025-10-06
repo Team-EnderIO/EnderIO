@@ -1,7 +1,7 @@
 {
   "type": "enderio:item",
   "description": {
-    "translate": "item.enderio.conduit.ender_item"
+    "translate": "conduit.enderio.ender_item"
   },
   "texture": "enderio:block/conduit/item",
   "ticks_per_cycle": 10,
