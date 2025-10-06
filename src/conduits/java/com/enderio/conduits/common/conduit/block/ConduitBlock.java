@@ -237,6 +237,19 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
         return Optional.of(result);
     }
 
+    public Optional<InteractionResult> handleBlockPlace(BlockPlaceContext context) {
+        Level level = context.getLevel();
+        @Nullable
+        Player player = context.getPlayer();
+        BlockPos blockpos = context.getClickedPos();
+        ItemStack itemstack = context.getItemInHand();
+
+        if (player != null && level.getBlockEntity(blockpos) instanceof ConduitBlockEntity conduit) {
+            return addConduit(conduit, player, itemstack, level.isClientSide);
+        }
+        return Optional.empty();
+    }
+
     private Optional<InteractionResult> handleYeta(ConduitBlockEntity conduit, Player player, ItemStack stack, BlockHitResult hit, boolean isClientSide) {
         if (stack.is(EIOTags.Items.WRENCH)) {
             @Nullable ConduitType<?> type = conduit.getShape().getConduit(hit.getBlockPos(), hit);
