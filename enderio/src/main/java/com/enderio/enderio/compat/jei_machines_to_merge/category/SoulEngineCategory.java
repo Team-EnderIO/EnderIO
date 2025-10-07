@@ -3,8 +3,9 @@ package com.enderio.enderio.compat.jei_machines_to_merge.category;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.client.content.machines.gui.screen.SoulEngineScreen;
+import com.enderio.enderio.compat.jei.JEILang;
 import com.enderio.enderio.content.machines.soul_engine.SoulEngineBlockEntity;
-import com.enderio.enderio.content.vials.SoulVialItem;
+import com.enderio.enderio.content.tools.vials.SoulVialItem;
 import com.enderio.enderio.foundation.lang.MachineLang;
 import com.enderio.enderio.foundation.souldata.EngineSoul;
 import com.enderio.enderio.init.MachineBlocks;
@@ -56,7 +57,7 @@ public class SoulEngineCategory implements IRecipeCategory<EngineSoul.SoulData> 
 
     @Override
     public Component getTitle() {
-        return MachineLang.CATEGORY_SOUL_ENGINE;
+        return JEILang.SOUL_ENGINE_TITLE;
     }
 
     @Override

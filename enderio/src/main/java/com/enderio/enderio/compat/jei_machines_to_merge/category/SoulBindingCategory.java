@@ -4,11 +4,12 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.api.soul.SoulBoundUtils;
 import com.enderio.enderio.client.content.machines.gui.screen.SoulBinderScreen;
+import com.enderio.enderio.compat.jei.JEILang;
 import com.enderio.enderio.compat.jei.JEIUtils;
 import com.enderio.enderio.compat.jei_machines_to_merge.util.MachineRecipeCategory;
 import com.enderio.enderio.compat.jei_machines_to_merge.util.RecipeUtil;
 import com.enderio.enderio.content.machines.soul_binder.SoulBindingRecipe;
-import com.enderio.enderio.content.vials.SoulVialItem;
+import com.enderio.enderio.content.tools.vials.SoulVialItem;
 import com.enderio.enderio.foundation.lang.MachineLang;
 import com.enderio.enderio.foundation.souldata.SoulData;
 import com.enderio.enderio.foundation.souldata.SoulDataReloadListener;
@@ -57,7 +58,7 @@ public class SoulBindingCategory extends MachineRecipeCategory<RecipeHolder<Soul
 
     @Override
     public Component getTitle() {
-        return MachineLang.CATEGORY_SOUL_BINDING;
+        return JEILang.SOUL_BINDING_TITLE;
     }
 
     @Override

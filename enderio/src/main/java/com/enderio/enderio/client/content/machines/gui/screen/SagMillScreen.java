@@ -9,6 +9,7 @@ import com.enderio.enderio.client.content.machines.gui.widget.ActivityWidget;
 import com.enderio.enderio.client.content.machines.gui.widget.NewCapacitorEnergyWidget;
 import com.enderio.enderio.client.foundation.widgets.NewProgressWidget;
 import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget;
+import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.machines.sag_mill.SagMillMenu;
 import com.enderio.enderio.foundation.lang.EIOLang;
 import com.enderio.enderio.foundation.lang.MachineLang;
@@ -30,8 +31,7 @@ public class SagMillScreen extends MachineScreen<SagMillMenu> {
     private static final int HEIGHT = 208;
 
     private static final ResourceLocation PROGRESS_SPRITE = EnderIO.rl("screen/sag_mill/progress");
-    private static final ResourceLocation BALL_DURABILITY_SPRITE = EnderIOAPI
-            .rl("screen/sag_mill/grinding_ball_durability");
+    private static final ResourceLocation BALL_DURABILITY_SPRITE = EnderIOAPI.rl("screen/sag_mill/grinding_ball_durability");
 
     public SagMillScreen(SagMillMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -48,18 +48,16 @@ public class SagMillScreen extends MachineScreen<SagMillMenu> {
         super.init();
         centerAlignTitleLabelX();
 
-        addRenderableOnly(NewProgressWidget.topDown(leftPos + 80, topPos + 47, 16, 24, PROGRESS_SPRITE,
-                menu::getCraftingProgress, true));
+        addRenderableOnly(NewProgressWidget.topDown(leftPos + 80, topPos + 47, 16, 24, PROGRESS_SPRITE, menu::getCraftingProgress, true));
 
         addRenderableOnly(new ActivityWidget(leftPos + 153, topPos + 89, menu::getMachineStates, true));
 
-        addRenderableOnly(new NewCapacitorEnergyWidget(leftPos + 7, topPos + 27, menu::getEnergyStorage,
-                menu::isCapacitorInstalled));
+        addRenderableOnly(new NewCapacitorEnergyWidget(leftPos + 7, topPos + 27, menu::getEnergyStorage, menu::isCapacitorInstalled));
 
         addRenderableOnly(new GrindingBallWidget(142 + leftPos, 39 + topPos));
 
-        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6 + 55,
-                menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
+        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6 + 55, menu::getRedstoneControl, menu::setRedstoneControl,
+            EIOLang.REDSTONE_MODE));
 
         var overlay = addIOConfigOverlay(1, leftPos + 7, topPos + 125, 162, 76);
         addIOConfigButton(leftPos + imageWidth - 6 - 16, topPos + 6 + 55 - 16 - 2, overlay);
@@ -91,8 +89,7 @@ public class SagMillScreen extends MachineScreen<SagMillMenu> {
         public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
         }
 
-        @Nullable
-        private GrindingBallData tooltipDataCache;
+        @Nullable private GrindingBallData tooltipDataCache;
         private float tooltipDuraCache;
 
         @Override
@@ -102,8 +99,7 @@ public class SagMillScreen extends MachineScreen<SagMillMenu> {
 
             int yOffset = (int) Math.ceil(this.height * (1.0f - durability));
 
-            guiGraphics.blitSprite(BALL_DURABILITY_SPRITE, WIDTH, HEIGHT, 0, yOffset, getX(), getY() + yOffset, WIDTH,
-                    HEIGHT - yOffset);
+            guiGraphics.blitSprite(BALL_DURABILITY_SPRITE, WIDTH, HEIGHT, 0, yOffset, getX(), getY() + yOffset, WIDTH, HEIGHT - yOffset);
 
             if (this.isHoveredOrFocused() && (tooltipDataCache != data || tooltipDuraCache != durability)) {
                 tooltipDataCache = data;
@@ -114,14 +110,11 @@ public class SagMillScreen extends MachineScreen<SagMillMenu> {
                 if (durability > 0) {
                     // Build tooltip pieces
                     List<Component> tooltipComponents = List.of(
-                            TooltipUtil.styledWithArgs(
-                                    MachineLang.SAG_MILL_GRINDINGBALL_REMAINING, (int) (durability * 100)),
-                            MachineLang.SAG_MILL_GRINDINGBALL_TITLE,
-                            TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_MAIN_OUTPUT,
-                                    (int) (data.outputMultiplier() * 100)),
-                            TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_BONUS_OUTPUT,
-                                    (int) (data.bonusMultiplier() * 100)),
-                            TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_POWER_USE, (int) (data.powerUse() * 100)));
+                        TooltipUtil.styledWithArgs(MachinesLang.SAG_MILL_GRINDING_BALL_REMAINING, (int) (durability * 100)),
+                        MachinesLang.SAG_MILL_GRINDING_BALL_TITLE,
+                        TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_MAIN_OUTPUT, (int) (data.outputMultiplier() * 100)),
+                        TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_BONUS_OUTPUT, (int) (data.bonusMultiplier() * 100)),
+                        TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_POWER_USE, (int) (data.powerUse() * 100)));
 
                     // Combine together.
                     for (int i = 0; i < tooltipComponents.size(); i++) {

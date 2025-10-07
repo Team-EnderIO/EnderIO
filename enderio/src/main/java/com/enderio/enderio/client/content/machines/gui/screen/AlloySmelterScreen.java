@@ -8,6 +8,7 @@ import com.enderio.enderio.client.content.machines.gui.widget.AlloySmelterModeWi
 import com.enderio.enderio.client.content.machines.gui.widget.NewCapacitorEnergyWidget;
 import com.enderio.enderio.client.foundation.widgets.NewProgressWidget;
 import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget;
+import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.machines.alloy.AlloySmelterMenu;
 import com.enderio.enderio.foundation.lang.EIOLang;
 import com.enderio.enderio.foundation.lang.MachineLang;
@@ -55,7 +56,7 @@ public class AlloySmelterScreen extends MachineScreen<AlloySmelterMenu> {
                 menu::isCapacitorInstalled));
 
         addRenderableWidget(new AlloySmelterModeWidget(leftPos + imageWidth - 6 - 16, topPos + 6 + 55, menu::getMode,
-                menu::setMode, MachineLang.ALLOY_SMELTER_MODE));
+                menu::setMode, MachinesLang.ALLOY_SMELTER_MODE));
 
         addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6 + 55 - (16 + 2),
                 menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));

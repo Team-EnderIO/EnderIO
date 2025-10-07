@@ -2,6 +2,7 @@ package com.enderio.enderio.compat.jei_machines_to_merge.category;
 
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.client.content.machines.gui.screen.FluidTankScreen;
+import com.enderio.enderio.compat.jei.JEILang;
 import com.enderio.enderio.compat.jei.JEIUtils;
 import com.enderio.enderio.content.storage.fluid_tank.FluidTankBlockEntity;
 import com.enderio.enderio.content.storage.fluid_tank.TankRecipe;
@@ -41,7 +42,7 @@ public class TankCategory implements IRecipeCategory<RecipeHolder<TankRecipe>> {
 
     @Override
     public Component getTitle() {
-        return MachineLang.CATEGORY_TANK;
+        return JEILang.TANK_TITLE;
     }
 
     @Override

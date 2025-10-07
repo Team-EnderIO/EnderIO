@@ -7,6 +7,7 @@ import com.enderio.enderio.client.content.machines.gui.widget.FermentationWidget
 import com.enderio.enderio.client.foundation.widgets.FluidStackWidget;
 import com.enderio.enderio.client.foundation.widgets.ProgressWidget;
 import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget;
+import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.machines.vat.FermentingRecipe;
 import com.enderio.enderio.content.machines.vat.VatMenu;
 import com.enderio.enderio.foundation.io.fluid.MachineFluidTank;
@@ -61,10 +62,10 @@ public class VatScreen extends MachineScreen<VatMenu> {
         addRenderableWidget(new ActivityWidget(leftPos + imageWidth - 6 - 16, topPos + 16 * 4, menu::getMachineStates));
 
         ImageButton transfer = new ImageButton(leftPos + 29, topPos + 62, 16, 16, MOVE_SPRITES, (b) -> handleButtonPress(VatMenu.MOVE_TO_OUTPUT_TANK_BUTTON_ID));
-        transfer.setTooltip(Tooltip.create(MachineLang.TRANSFER_TANK));
+        transfer.setTooltip(Tooltip.create(MachinesLang.VAT_TRANSFER_TANK));
         addRenderableWidget(transfer);
         ImageButton dump = new ImageButton(leftPos + 131, topPos + 62, 16, 16, VOID_SPRITES, (b) -> handleButtonPress(VatMenu.DUMP_OUTPUT_TANK_BUTTON_ID));
-        dump.setTooltip(Tooltip.create(MachineLang.DUMP_TANK));
+        dump.setTooltip(Tooltip.create(MachinesLang.VAT_DUMP_TANK));
         addRenderableWidget(dump);
 
         var overlay = addIOConfigOverlay(1, leftPos + 7, topPos + 83, 162, 76);

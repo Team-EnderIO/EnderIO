@@ -3,6 +3,7 @@ package com.enderio.enderio.content.filters.fluid;
 import com.enderio.enderio.api.filter.FluidFilter;
 import com.enderio.enderio.content.filters.AbstractFilterItem;
 import com.enderio.enderio.content.filters.AbstractFilterMenu;
+import com.enderio.enderio.content.filters.FiltersLang;
 import com.enderio.enderio.foundation.lang.EIOLang;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOMenus;
@@ -58,7 +59,7 @@ public class EnderFluidFilterItem extends AbstractFilterItem<EnderFluidFilter> {
         // filter has invalid settings that they can't see.
         var filter = getFilter(stack);
         if (filter.shouldCompareComponents() && !type.canMatchComponents()) {
-            tooltipComponents.add(EIOLang.FILTER_CONFIG_NOT_ALLOWED_COMPONENT_MATCH);
+            tooltipComponents.add(FiltersLang.FILTER_CONFIG_NOT_ALLOWED_COMPONENT_MATCH);
         }
     }
 

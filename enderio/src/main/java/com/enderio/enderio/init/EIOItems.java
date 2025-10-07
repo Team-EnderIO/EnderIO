@@ -23,8 +23,8 @@ import com.enderio.enderio.content.tools.coordinate_selector.CoordinateSelectorI
 import com.enderio.enderio.content.tools.coordinate_selector.LocationPrintoutItem;
 import com.enderio.enderio.content.tools.hang_glider.HangGliderItem;
 import com.enderio.enderio.content.travel.TravelStaffItem;
-import com.enderio.enderio.content.vials.SoulVialItem;
-import com.enderio.enderio.content.vials.VoidVialItem;
+import com.enderio.enderio.content.tools.vials.SoulVialItem;
+import com.enderio.enderio.content.tools.vials.VoidVialItem;
 import com.enderio.enderio.foundation.item.CreativeTabIconItem;
 import com.enderio.enderio.foundation.item.LoreItem;
 import com.enderio.enderio.foundation.item.MaterialItem;

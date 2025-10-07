@@ -7,6 +7,7 @@ import com.enderio.enderio.client.content.machines.gui.widget.ActivityWidget;
 import com.enderio.enderio.client.content.machines.gui.widget.CapacitorEnergyWidget;
 import com.enderio.enderio.client.foundation.widgets.ProgressWidget;
 import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget;
+import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.machines.stirling_generator.StirlingGeneratorMenu;
 import com.enderio.enderio.foundation.lang.EIOLang;
 import com.enderio.enderio.foundation.lang.MachineLang;
@@ -59,8 +60,8 @@ public class StirlingGeneratorScreen extends MachineScreen<StirlingGeneratorMenu
         super.renderLabels(guiGraphics, pMouseX, pMouseY);
         float genRate = menu.getBlockEntity().getGenerationRate();
         float efficiency = menu.getBlockEntity().getFuelEfficiency();
-        MutableComponent gen = TooltipUtil.withArgs(MachineLang.GENERATING, FORMAT.format(genRate));
-        MutableComponent eff = TooltipUtil.withArgs(MachineLang.FUEL_EFFICIENCY, (int) efficiency);
+        MutableComponent gen = TooltipUtil.withArgs(MachinesLang.GENERATING, FORMAT.format(genRate));
+        MutableComponent eff = TooltipUtil.withArgs(MachinesLang.FUEL_EFFICIENCY, (int) efficiency);
         guiGraphics.drawString(font, gen, imageWidth / 2 - font.width(gen.getString()) / 2, 9, 0, false);
         if (menu.getBlockEntity().isCapacitorInstalled()) {
             guiGraphics.drawString(font, eff, imageWidth / 2 - font.width(eff.getString()) / 2, 9 + font.lineHeight + 2,

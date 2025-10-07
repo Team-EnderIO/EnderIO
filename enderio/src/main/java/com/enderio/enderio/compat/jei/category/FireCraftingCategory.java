@@ -2,9 +2,9 @@ package com.enderio.enderio.compat.jei.category;
 
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.compat.jei.JEILang;
 import com.enderio.enderio.compat.jei.JEIUtils;
 import com.enderio.enderio.content.fire_crafting.FireCraftingRecipe;
-import com.enderio.enderio.foundation.lang.EIOLang;
 import com.enderio.enderio.init.EIOFluids;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.math.Axis;
@@ -76,7 +76,7 @@ public class FireCraftingCategory implements IRecipeCategory<RecipeHolder<FireCr
 
     @Override
     public Component getTitle() {
-        return EIOLang.JEI_FIRE_CRAFTING_TITLE;
+        return JEILang.FIRE_CRAFTING_TITLE;
     }
 
     @Override
@@ -96,7 +96,7 @@ public class FireCraftingCategory implements IRecipeCategory<RecipeHolder<FireCr
         if (mouseX >= 87 && mouseX <= 105 && mouseY >= 25 && mouseY <= 38) {
             List<ResourceKey<Level>> validDimensions = recipe.value().dimensions();
             List<Component> tooltip = new ArrayList<>(validDimensions.size() + 1);
-            tooltip.add(EIOLang.JEI_FIRE_CRAFTING_VALID_DIMENSIONS);
+            tooltip.add(JEILang.FIRE_CRAFTING_VALID_DIMENSIONS);
 
             for (ResourceKey<Level> dim : validDimensions) {
                 tooltip.add(Component.literal("- " + dim.location()));
@@ -108,7 +108,7 @@ public class FireCraftingCategory implements IRecipeCategory<RecipeHolder<FireCr
         if (mouseX >= 17 && mouseX <= 47 && mouseY >= 31 && mouseY <= 57) {
             List<Block> bases = recipe.value().getAllBaseBlocks();
             List<Component> tooltip = new ArrayList<>(bases.size() + 1);
-            tooltip.add(EIOLang.JEI_FIRE_CRAFTING_VALID_BLOCKS);
+            tooltip.add(JEILang.FIRE_CRAFTING_VALID_BLOCKS);
 
             for (Block block : bases) {
                 tooltip.add(Component.literal("- ").append(block.getName()));
@@ -132,14 +132,14 @@ public class FireCraftingCategory implements IRecipeCategory<RecipeHolder<FireCr
                         int index = slotView.getItemStacks().toList().indexOf(stack);
                         var result = recipe.value().results().get(index);
 
-                        tooltip.add(TooltipUtil.withArgs(EIOLang.JEI_FIRE_CRAFTING_CHANCE,
+                        tooltip.add(TooltipUtil.withArgs(JEILang.FIRE_CRAFTING_CHANCE,
                                 Math.round(result.chance() * 100)));
 
                         if (result.minCount() != result.maxCount()) {
-                            tooltip.add(TooltipUtil.withArgs(EIOLang.JEI_FIRE_CRAFTING_DROPS,
+                            tooltip.add(TooltipUtil.withArgs(JEILang.FIRE_CRAFTING_DROPS,
                                     result.minCount() + "-" + result.maxCount()));
                         } else {
-                            tooltip.add(TooltipUtil.withArgs(EIOLang.JEI_FIRE_CRAFTING_DROPS, result.minCount()));
+                            tooltip.add(TooltipUtil.withArgs(JEILang.FIRE_CRAFTING_DROPS, result.minCount()));
                         }
                     });
                 });

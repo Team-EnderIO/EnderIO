@@ -1,7 +1,7 @@
 package com.enderio.enderio.client.content.machines.gui.widget;
 
 import com.enderio.enderio.client.foundation.icon.MachineEnumIcons;
-import com.enderio.enderio.foundation.lang.MachineLang;
+import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.foundation.state.MachineStateType;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -71,7 +71,7 @@ public class ActivityWidget extends AbstractWidget {
                     .map(s -> (Component) s.component())
                     .toList();
             if (list.isEmpty()) {
-                list = List.of(MachineLang.TOOLTIP_IDLE);
+                list = List.of(MachinesLang.STATUS_IDLE);
             }
 
             guiGraphics.renderTooltip(minecraft.font, list, Optional.empty(), mouseX, mouseY);

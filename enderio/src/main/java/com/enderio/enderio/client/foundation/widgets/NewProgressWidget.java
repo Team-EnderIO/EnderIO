@@ -2,6 +2,7 @@ package com.enderio.enderio.client.foundation.widgets;
 
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.compat.ModCompatHelper;
+import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.foundation.lang.MachineLang;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -107,7 +108,7 @@ public class NewProgressWidget extends AbstractWidget {
             Minecraft minecraft = Minecraft.getInstance();
 
             guiGraphics.renderTooltip(minecraft.font,
-                    TooltipUtil.withArgs(MachineLang.PROGRESS_TOOLTIP, (int) (progressSupplier.get() * 100)), mouseX,
+                    TooltipUtil.withArgs(MachinesLang.TOOLTIP_PROGRESS, (int) (progressSupplier.get() * 100)), mouseX,
                     mouseY);
         }
     }

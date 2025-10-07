@@ -1,5 +1,6 @@
 package com.enderio.enderio.foundation.util;
 
+import com.enderio.enderio.content.tools.ToolsLang;
 import com.enderio.enderio.foundation.lang.EIOLang;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.google.common.collect.ImmutableList;
@@ -40,9 +41,9 @@ public class EntityCaptureUtils {
 
     public enum CapturableStatus {
         CAPTURABLE(Component.empty()),
-        BOSS(EIOLang.SOUL_VIAL_ERROR_BOSS),
-        BLACKLISTED(EIOLang.SOUL_VIAL_ERROR_BLACKLISTED),
-        INCOMPATIBLE(EIOLang.SOUL_VIAL_ERROR_FAILED);
+        BOSS(ToolsLang.SOUL_VIAL_ERROR_BOSS),
+        BLACKLISTED(ToolsLang.SOUL_VIAL_ERROR_BLACKLISTED),
+        INCOMPATIBLE(ToolsLang.SOUL_VIAL_ERROR_FAILED);
 
         CapturableStatus(Component errorMessage) {
             this.errorMessage = errorMessage;

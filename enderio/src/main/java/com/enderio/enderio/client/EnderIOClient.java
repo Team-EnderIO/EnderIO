@@ -71,7 +71,7 @@ import com.enderio.enderio.client.content.travel.TravelTargetRendering;
 import com.enderio.enderio.client.foundation.particle.RangeParticle;
 import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
 import com.enderio.enderio.content.misc_blocks.skull.EnderSkullBlock;
-import com.enderio.enderio.content.vials.SoulVialItem;
+import com.enderio.enderio.content.tools.vials.SoulVialItem;
 import com.enderio.enderio.init.ConduitBlocks;
 import com.enderio.enderio.init.ConduitItems;
 import com.enderio.enderio.init.EIOConduitTypes;

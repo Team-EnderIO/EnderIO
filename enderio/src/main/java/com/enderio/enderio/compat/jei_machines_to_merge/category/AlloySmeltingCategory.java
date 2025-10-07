@@ -2,6 +2,7 @@ package com.enderio.enderio.compat.jei_machines_to_merge.category;
 
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.client.content.machines.gui.screen.StirlingGeneratorScreen;
+import com.enderio.enderio.compat.jei.JEILang;
 import com.enderio.enderio.compat.jei.JEIUtils;
 import com.enderio.enderio.compat.jei_machines_to_merge.util.MachineRecipeCategory;
 import com.enderio.enderio.compat.jei_machines_to_merge.util.RecipeUtil;
@@ -60,7 +61,7 @@ public class AlloySmeltingCategory extends MachineRecipeCategory<RecipeHolder<Al
 
     @Override
     public Component getTitle() {
-        return MachineLang.CATEGORY_ALLOY_SMELTING;
+        return JEILang.ALLOY_SMELTING_TITLE;
     }
 
     @Override

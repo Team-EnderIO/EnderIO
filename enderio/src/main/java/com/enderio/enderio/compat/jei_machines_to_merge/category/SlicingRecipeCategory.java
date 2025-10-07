@@ -1,6 +1,7 @@
 package com.enderio.enderio.compat.jei_machines_to_merge.category;
 
 import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.compat.jei.JEILang;
 import com.enderio.enderio.compat.jei.JEIUtils;
 import com.enderio.enderio.compat.jei_machines_to_merge.util.MachineRecipeCategory;
 import com.enderio.enderio.compat.jei_machines_to_merge.util.RecipeUtil;
@@ -48,7 +49,7 @@ public class SlicingRecipeCategory extends MachineRecipeCategory<RecipeHolder<Sl
 
     @Override
     public Component getTitle() {
-        return MachineLang.CATEGORY_SLICING;
+        return JEILang.SLICING_TITLE;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.enderio.enderio.content.vials;
+package com.enderio.enderio.content.tools.vials;
 
 import com.enderio.core.common.network.EmitParticlePacket;
 import com.enderio.enderio.foundation.lang.EIOLang;

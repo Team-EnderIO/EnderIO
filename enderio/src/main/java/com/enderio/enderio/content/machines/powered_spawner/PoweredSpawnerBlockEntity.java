@@ -9,7 +9,8 @@ import com.enderio.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.api.soul.binding.SoulBindable;
 import com.enderio.enderio.config.machines.MachinesConfig;
-import com.enderio.enderio.content.vials.SoulVialItem;
+import com.enderio.enderio.content.machines.MachinesLang;
+import com.enderio.enderio.content.tools.vials.SoulVialItem;
 import com.enderio.enderio.foundation.MachineNBTKeys;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
@@ -420,9 +421,12 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     // endregion
 
     public enum SpawnerBlockedReason {
-        TOO_MANY_MOB(MachineLang.TOO_MANY_MOB), TOO_MANY_SPAWNER(MachineLang.TOO_MANY_SPAWNER),
-        UNKNOWN_MOB(MachineLang.UNKNOWN), OTHER_MOD(MachineLang.OTHER_MOD), DISABLED(MachineLang.DISABLED),
-        INPUT_EMPTY(MachineLang.TOOLTIP_INPUT_EMPTY), OUTPUT_FULL(MachineLang.TOOLTIP_OUTPUT_FULL),
+        TOO_MANY_MOB(MachinesLang.POWERED_SPAWNER_STATUS_OVERCROWDED_MOBS),
+        TOO_MANY_SPAWNER(MachinesLang.POWERED_SPAWNER_STATUS_OVERCROWDED_SPAWNERS),
+        UNKNOWN_MOB(MachinesLang.POWERED_SPAWNER_STATUS_UNKNOWN_MOB),
+        OTHER_MOD(MachinesLang.POWERED_SPAWNER_STATUS_OTHER_MOD),
+        DISABLED(MachinesLang.POWERED_SPAWNER_STATUS_DISABLED),
+        INPUT_EMPTY(MachinesLang.STATUS_INPUT_EMPTY), OUTPUT_FULL(MachinesLang.STATUS_OUTPUT_FULL),
         NONE(Component.literal("NONE"));
 
         private final MutableComponent component;

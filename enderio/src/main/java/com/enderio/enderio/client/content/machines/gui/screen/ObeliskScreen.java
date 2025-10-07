@@ -6,6 +6,7 @@ import com.enderio.enderio.client.content.machines.gui.widget.ActivityWidget;
 import com.enderio.enderio.client.content.machines.gui.widget.CapacitorEnergyWidget;
 import com.enderio.enderio.client.foundation.widgets.EIOCommonWidgets;
 import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget;
+import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.machines.obelisks.ObeliskBlockEntity;
 import com.enderio.enderio.content.machines.obelisks.ObeliskMenu;
 import com.enderio.enderio.foundation.lang.EIOLang;
@@ -79,7 +80,7 @@ public abstract class ObeliskScreen<J extends ObeliskBlockEntity<J>, T extends O
                 false);
 
         guiGraphics.drawString(font,
-                TooltipUtil.withArgs(MachineLang.OBELISK_UPKEEP, getMenu().getBlockEntity().getPerTickEnergyCost()),
+                TooltipUtil.withArgs(MachinesLang.OBELISK_UPKEEP, getMenu().getBlockEntity().getPerTickEnergyCost()),
                 imageWidth / 2 - font.width(EIOLang.MAX_RANGE) / 2, 62, 0, false);
 
         super.renderLabels(guiGraphics, pMouseX, pMouseY);

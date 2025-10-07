@@ -4,6 +4,7 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.client.content.machines.gui.screen.base.MachineScreen;
 import com.enderio.enderio.client.foundation.widgets.ExperienceWidget;
 import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget;
+import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.machines.obelisks.xp.XPObeliskMenu;
 import com.enderio.enderio.foundation.lang.EIOLang;
 import com.enderio.enderio.foundation.lang.MachineLang;
@@ -52,19 +53,19 @@ public class XPObeliskScreen extends MachineScreen<XPObeliskMenu> {
         int offset = size + padding;
         Vector2i midLeft = new Vector2i(leftPos + imageWidth / 2 - size / 2 - offset, topPos + 58);
         addRenderableWidget(makeButton(midLeft.x(), midLeft.y() - offset, size, XPObeliskMenu.ADD_1_LEVEL_BUTTON_ID,
-                XP_ADD_ONE, MachineLang.RETRIEVE_1));
+                XP_ADD_ONE, MachinesLang.XP_RETRIEVE_1));
         addRenderableWidget(makeButton(midLeft.x(), midLeft.y() + padding, size, XPObeliskMenu.REMOVE_1_LEVEL_BUTTON_ID,
-                XP_REMOVE_ONE, MachineLang.STORE_1));
+                XP_REMOVE_ONE, MachinesLang.XP_STORE_1));
         midLeft = midLeft.add(offset, 0);
         addRenderableWidget(makeButton(midLeft.x(), midLeft.y() - offset, size, XPObeliskMenu.ADD_10_LEVELS_BUTTON_ID,
-                XP_ADD_MULTI, MachineLang.RETRIEVE_10));
+                XP_ADD_MULTI, MachinesLang.XP_RETRIEVE_10));
         addRenderableWidget(makeButton(midLeft.x(), midLeft.y() + padding, size,
-                XPObeliskMenu.REMOVE_10_LEVELS_BUTTON_ID, XP_REMOVE_MULTI, MachineLang.STORE_10));
+                XPObeliskMenu.REMOVE_10_LEVELS_BUTTON_ID, XP_REMOVE_MULTI, MachinesLang.XP_STORE_10));
         midLeft = midLeft.add(offset, 0);
         addRenderableWidget(makeButton(midLeft.x(), midLeft.y() - offset, size, XPObeliskMenu.ADD_ALL_XP_BUTTON_ID,
-                XP_ADD_ALL, MachineLang.RETRIEVE_ALL));
+                XP_ADD_ALL, MachinesLang.XP_RETRIEVE_ALL));
         addRenderableWidget(makeButton(midLeft.x(), midLeft.y() + padding, size, XPObeliskMenu.REMOVE_ALL_XP_BUTTON_ID,
-                XP_REMOVE_ALL, MachineLang.STORE_ALL));
+                XP_REMOVE_ALL, MachinesLang.XP_STORE_ALL));
 
         var overlay = addIOConfigOverlay(1, leftPos + 7, topPos + 7, 136, 102);
         addIOConfigButton(leftPos + imageWidth - 6 - 16, topPos + 24, overlay);

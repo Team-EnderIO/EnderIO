@@ -16,44 +16,11 @@ public class EIOLang {
     public static final Component BLOCK_BLAST_RESISTANT = TooltipUtil
             .style(addTranslation("tooltip", EnderIO.rl("block.blast_resistant"), "Blast resistant"));
 
-    // region GUI Interactions
-
-    public static final Component OK = addTranslation("gui", EnderIO.rl("ok"), "Ok");
-    public static final Component CANCEL = addTranslation("gui", EnderIO.rl("cancel"), "Cancel");
-
-    // endregion
-
-    // region Fused Quartz
-
-    public static final Component FUSED_QUARTZ_EMITS_LIGHT = TooltipUtil
-            .style(addTranslation("tooltip", EnderIO.rl("fused_quartz.emits_light"), "Emits light"));
-    public static final Component FUSED_QUARTZ_BLOCKS_LIGHT = TooltipUtil
-            .style(addTranslation("tooltip", EnderIO.rl("fused_quartz.blocks_light"), "Blocks light"));
-
-    // endregion
-
     // region Items
 
     public static final Component DARK_STEEL_LADDER_FASTER = TooltipUtil
             .style(addTranslation("tooltip", EnderIO.rl("dark_steel_ladder.faster"), "Faster than regular ladders"));
 
-    public static final Component SOUL_VIAL_ERROR_PLAYER = addTranslation("message",
-            EnderIO.rl("soul_vial.error_player"), "You cannot put player in a bottle!");
-    public static final Component SOUL_VIAL_ERROR_BOSS = addTranslation("message", EnderIO.rl("soul_vial.error_boss"),
-            "Nice try. Bosses don't like bottles.");
-    public static final Component SOUL_VIAL_ERROR_BLACKLISTED = addTranslation("message",
-            EnderIO.rl("soul_vial.error_blacklisted"), "This entity has been blacklisted.");
-    public static final Component SOUL_VIAL_ERROR_FAILED = addTranslation("message",
-            EnderIO.rl("soul_vial.error_failed"), "This entity cannot be captured.");
-    public static final Component SOUL_VIAL_ERROR_DEAD = addTranslation("message", EnderIO.rl("soul_vial.error_dead"),
-            "Cannot capture a dead mob!");
-    public static final MutableComponent SOUL_VIAL_TOOLTIP_HEALTH = addTranslation("tooltip",
-            EnderIO.rl("soul_vial.health"), "Health: %s/%s");
-
-    public static final Component COORDINATE_SELECTOR_NO_PAPER = addTranslation("info",
-            EnderIO.rl("coordinate_selector.no_paper"), "No paper in inventory");
-    public static final Component COORDINATE_SELECTOR_NO_BLOCK = addTranslation("info",
-            EnderIO.rl("coordinate_selector.no_block"), "No block in range");
     public static final Component TOO_MANY_LEVELS = addTranslation("info", EnderIO.rl("too_many_levels"),
             "You have more than 21862 levels, that's too much XP.");
 
@@ -64,33 +31,12 @@ public class EIOLang {
     public static final MutableComponent FLUID_TANK_TOOLTIP = addTranslation("tooltip",
             EnderIO.rl("fluid_tank.tank_tooltip"), "%d/%d mb of %s");// [amount]/[capacity] mb of [FluidName]
 
-    public static final MutableComponent CONFIGURED = TooltipUtil
-            .style(addTranslation("tooltip", EnderIO.rl("configured"), "Configured"));
-    public static final MutableComponent FILTER_CONFIG_NOT_ALLOWED_COMPONENT_MATCH = addTranslation("tooltip",
-            EnderIO.rl("filter.not_allowed_component_match"),
-            "This filter uses component matching which is no longer available to this item. Clear this filter using the crafting grid to remove this warning.")
-                    .withStyle(ChatFormatting.RED);
-
     // endregion
 
     public static final Component GLIDER_DISABLED = addTranslation("message", EnderIO.rl("glider.disable"),
             "Gliding is disabled: ");
     public static final Component GLIDER_DISABLED_FALL_FLYING = addTranslation("message",
             EnderIO.rl("glider.disable.fall_flying"), "Elytra Flight");
-
-    // region Filters
-
-    public static final Component FILTER = addTranslation("gui", EnderIO.rl("filter"), "Filter");
-    public static final Component CONFIRM = addTranslation("gui", EnderIO.rl("confirm"), "Confirm");
-
-    // endregion
-
-    // region Graves
-
-    public static final Component GRAVE_WRONG_OWNER = addTranslation("message", EnderIO.rl("grave.wrong_owner"),
-            "This grave is not yours! You cannot open it.");
-
-    // endregion
 
     // region Grinding balls
 
@@ -144,9 +90,6 @@ public class EIOLang {
 
     // region Entity Storage
 
-    public static final MutableComponent TOOLTIP_SOULBOUND = addTranslation("gui", EnderIO.rl("soulbound"),
-            "Bound Soul: ");
-
     public static final MutableComponent TOOLTIP_NO_SOULBOUND = addTranslation("gui", EnderIO.rl("no_soulbound"),
             "This item can have a soul bound to it.");
 
@@ -183,30 +126,6 @@ public class EIOLang {
     public static final Component SHOW_DETAIL_TOOLTIP = addTranslation("tooltip",
             EnderIO.rl("gui.show_advanced_tooltip"), "<Hold Shift>").withStyle(ChatFormatting.GRAY,
                     ChatFormatting.ITALIC);
-
-    // endregion
-
-    // region Guidebook
-
-    public static final Component GUIDEBOOK_TITLE = addTranslation("guidebook", EnderIO.rl("book_title"),
-            "Book Title");
-    public static final Component GUIDEBOOK_LANDING_TEXT = addTranslation("guidebook", EnderIO.rl("landing_text"),
-            "Landing Text");
-
-    // endregion
-
-    // region JEI
-
-    public static final Component JEI_FIRE_CRAFTING_TITLE = addTranslation("jei", EnderIO.rl("fire_crafting"), "title",
-            "Fire Crafting");
-    public static final Component JEI_FIRE_CRAFTING_VALID_BLOCKS = addTranslation("jei", EnderIO.rl("fire_crafting"),
-            "valid_blocks", "Valid Blocks:");
-    public static final Component JEI_FIRE_CRAFTING_VALID_DIMENSIONS = addTranslation("jei",
-            EnderIO.rl("fire_crafting"), "valid_dimensions", "Valid Dimensions:");
-    public static final MutableComponent JEI_FIRE_CRAFTING_CHANCE = addTranslation("jei", EnderIO.rl("fire_crafting"),
-            "chance", "%s%% Chance");
-    public static final MutableComponent JEI_FIRE_CRAFTING_DROPS = addTranslation("jei", EnderIO.rl("fire_crafting"),
-            "drops", "Drops %s");
 
     // endregion
 

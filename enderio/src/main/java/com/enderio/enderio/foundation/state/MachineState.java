@@ -1,8 +1,8 @@
 package com.enderio.enderio.foundation.state;
 
 import com.enderio.core.common.network.NetworkDataSlot;
+import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.foundation.lang.EIOLang;
-import com.enderio.enderio.foundation.lang.MachineLang;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
@@ -15,27 +15,27 @@ import java.util.Set;
 
 public record MachineState(MachineStateType type, MutableComponent component) {
 
-    public static final MachineState ACTIVE = new MachineState(MachineStateType.ACTIVE, MachineLang.TOOLTIP_ACTIVE);
-    public static final MachineState IDLE = new MachineState(MachineStateType.IDLE, MachineLang.TOOLTIP_IDLE);
+    public static final MachineState ACTIVE = new MachineState(MachineStateType.ACTIVE, MachinesLang.STATUS_ACTIVE);
+    public static final MachineState IDLE = new MachineState(MachineStateType.IDLE, MachinesLang.STATUS_IDLE);
     public static final MachineState EMPTY_INPUT = new MachineState(MachineStateType.IDLE,
-            MachineLang.TOOLTIP_INPUT_EMPTY);
+        MachinesLang.STATUS_INPUT_EMPTY);
     public static final MachineState NO_SOURCE = new MachineState(MachineStateType.ERROR,
-            MachineLang.TOOLTIP_NO_SOURCE);
+        MachinesLang.STATUS_DRAIN_NO_SOURCE);
     public static final MachineState EMPTY_TANK = new MachineState(MachineStateType.ERROR,
-            MachineLang.TOOLTIP_EMPTY_TANK);
+        MachinesLang.STATUS_EMPTY_TANK);
     public static final MachineState FULL_TANK = new MachineState(MachineStateType.ERROR,
-            MachineLang.TOOLTIP_FULL_TANK);
-    public static final MachineState NO_POWER = new MachineState(MachineStateType.ERROR, MachineLang.TOOLTIP_NO_POWER);
+        MachinesLang.STATUS_FULL_TANK);
+    public static final MachineState NO_POWER = new MachineState(MachineStateType.ERROR, MachinesLang.STATUS_NO_ENERGY);
     public static final MachineState FULL_POWER = new MachineState(MachineStateType.ERROR,
-            MachineLang.TOOLTIP_FULL_POWER);
+        MachinesLang.STATUS_ENERGY_FULL);
     public static final MachineState NO_CAPACITOR = new MachineState(MachineStateType.ERROR,
-            MachineLang.TOOLTIP_NO_CAPACITOR);
+        MachinesLang.STATUS_NO_CAPACITOR);
     public static final MachineState NOT_SOULBOUND = new MachineState(MachineStateType.ERROR,
-            EIOLang.TOOLTIP_NO_SOULBOUND);
+        EIOLang.TOOLTIP_NO_SOULBOUND);
     public static final MachineState FULL_OUTPUT = new MachineState(MachineStateType.ERROR,
-            MachineLang.TOOLTIP_OUTPUT_FULL);
+        MachinesLang.STATUS_OUTPUT_FULL);
     public static final MachineState REDSTONE = new MachineState(MachineStateType.DISABLED,
-            MachineLang.TOOLTIP_BLOCKED_RESTONE);
+        MachinesLang.STATUS_BLOCKED_REDSTONE);
 
     public static final Codec<MachineState> CODEC = RecordCodecBuilder
             .create(instance -> instance.group(MachineStateType.CODEC.fieldOf("Type").forGetter(MachineState::type),

@@ -4,8 +4,10 @@ import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIODataComponents;
 import com.enderio.enderio.api.components.GrindingBallData;
+import com.enderio.enderio.compat.jei.JEILang;
 import com.enderio.enderio.compat.jei.JEIUtils;
 import com.enderio.enderio.compat.jei_machines_to_merge.util.MachineRecipeCategory;
+import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.machines.sag_mill.SagMillingRecipe;
 import com.enderio.enderio.foundation.lang.EIOLang;
 import com.enderio.enderio.foundation.lang.MachineLang;
@@ -59,7 +61,7 @@ public class SagMillCategory extends MachineRecipeCategory<RecipeHolder<SagMilli
 
     @Override
     public Component getTitle() {
-        return MachineLang.CATEGORY_SAG_MILL;
+        return JEILang.SAG_MILL_TITLE;
     }
 
     @Override
@@ -116,9 +118,9 @@ public class SagMillCategory extends MachineRecipeCategory<RecipeHolder<SagMilli
                         ? NumberFormat.getIntegerInstance(Locale.ENGLISH).format(item.chance() * 100)
                         : "<1";
                 if (recipe.value().bonusType().useGrindingBall()) {
-                    tooltip.add(TooltipUtil.styledWithArgs(MachineLang.TOOLTIP_SAG_MILL_CHANCE_BALL, chance));
+                    tooltip.add(TooltipUtil.styledWithArgs(MachinesLang.SAG_MILL_CHANCE_GRINDING_BALL, chance));
                 } else {
-                    tooltip.add(TooltipUtil.styledWithArgs(MachineLang.TOOLTIP_SAG_MILL_CHANCE, chance));
+                    tooltip.add(TooltipUtil.styledWithArgs(MachinesLang.SAG_MILL_CHANCE, chance));
                 }
             }
         };

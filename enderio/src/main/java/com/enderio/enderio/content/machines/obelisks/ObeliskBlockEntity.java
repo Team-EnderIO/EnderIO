@@ -6,6 +6,7 @@ import com.enderio.enderio.api.capacitor.CapacitorScalable;
 import com.enderio.enderio.api.filter.SoulFilter;
 import com.enderio.enderio.api.io.IOMode;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
+import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.foundation.MachineNBTKeys;
 import com.enderio.enderio.foundation.attachment.ActionRange;
 import com.enderio.enderio.foundation.attachment.RangedActor;
@@ -123,7 +124,7 @@ public abstract class ObeliskBlockEntity<T extends ObeliskBlockEntity<T>> extend
     }
 
     protected void updateFilterState() {
-        updateMachineState(new MachineState(MachineStateType.ERROR, MachineLang.NO_SOUL_FILTER),
+        updateMachineState(new MachineState(MachineStateType.ERROR, MachinesLang.OBELISK_NO_SOUL_FILTER),
                 requiresFilter() && getSoulFilter() == null);
     }
 

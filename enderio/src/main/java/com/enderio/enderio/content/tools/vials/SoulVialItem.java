@@ -1,10 +1,11 @@
-package com.enderio.enderio.content.vials;
+package com.enderio.enderio.content.tools.vials;
 
 import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.api.soul.SoulBoundUtils;
+import com.enderio.enderio.content.tools.ToolsLang;
 import com.enderio.enderio.foundation.lang.EIOLang;
 import com.enderio.enderio.foundation.util.EntityCaptureUtils;
 import com.enderio.enderio.init.EIODataComponents;
@@ -98,7 +99,7 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
         var entityTag = soul.entityTag();
         if (entityTag.contains(KEY_HEALTH)) {
             float health = entityTag.getFloat(KEY_HEALTH);
-            tooltips.add(TooltipUtil.styledWithArgs(EIOLang.SOUL_VIAL_TOOLTIP_HEALTH, health, maxHealth));
+            tooltips.add(TooltipUtil.styledWithArgs(ToolsLang.SOUL_VIAL_TOOLTIP_HEALTH, health, maxHealth));
         }
     }
 
@@ -167,12 +168,12 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
         }
 
         if (entity instanceof Player) {
-            displayCallback.accept(EIOLang.SOUL_VIAL_ERROR_PLAYER);
+            displayCallback.accept(ToolsLang.SOUL_VIAL_ERROR_PLAYER);
             return Optional.empty();
         }
 
         if (!entity.isAlive()) {
-            displayCallback.accept(EIOLang.SOUL_VIAL_ERROR_DEAD);
+            displayCallback.accept(ToolsLang.SOUL_VIAL_ERROR_DEAD);
             return Optional.empty();
         }
 

@@ -4,12 +4,17 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.io.RedstoneControl;
+import com.enderio.enderio.compat.jei.JEILang;
 import com.enderio.enderio.content.capacitors.CapacitorLang;
 import com.enderio.enderio.content.conduits.ConduitLang;
+import com.enderio.enderio.content.filters.FiltersLang;
 import com.enderio.enderio.content.filters.item.general.DamageFilterMode;
 import com.enderio.enderio.content.glass.GlassCollisionPredicate;
+import com.enderio.enderio.content.glass.GlassLang;
+import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.machines.alloy.AlloySmelterMode;
 import com.enderio.enderio.content.machines.powered_spawner.PoweredSpawnerMode;
+import com.enderio.enderio.content.tools.ToolsLang;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOConduits;
 import com.enderio.enderio.init.EIOEntities;
@@ -39,6 +44,11 @@ public class EIOLanguageProvider extends LanguageProvider {
         addConduitDescriptions();
         addConduitLang();
         addEntities();
+        addToolsLang();
+        addFiltersLang();
+        addJeiLang();
+        addGlassLang();
+        addMachineLang();
 
         // Gross hack until Regilite is out.
         try {
@@ -244,6 +254,98 @@ public class EIOLanguageProvider extends LanguageProvider {
 
     private void addEntities() {
         add(EIOEntities.PAINTED_SAND.get(), "Falling Painted Sand");
+    }
+
+    private void addToolsLang() {
+        add(ToolsLang.COORDINATE_SELECTOR_NO_PAPER, "No paper in inventory");
+        add(ToolsLang.COORDINATE_SELECTOR_NO_BLOCK, "No block in range");
+
+        add(ToolsLang.SOUL_VIAL_ERROR_PLAYER, "You cannot put player in a bottle!");
+        add(ToolsLang.SOUL_VIAL_ERROR_BOSS, "Nice try. Bosses don't like bottles.");
+        add(ToolsLang.SOUL_VIAL_ERROR_BLACKLISTED, "This entity has been blacklisted.");
+        add(ToolsLang.SOUL_VIAL_ERROR_FAILED, "This entity cannot be captured.");
+        add(ToolsLang.SOUL_VIAL_ERROR_DEAD, "Cannot capture a dead mob!");
+
+        add(ToolsLang.SOUL_VIAL_TOOLTIP_HEALTH, "Health: %s/%s");
+    }
+
+    private void addFiltersLang() {
+        add(FiltersLang.CONFIGURED, "Configured");
+        add(FiltersLang.FILTER_CONFIG_NOT_ALLOWED_COMPONENT_MATCH, "This filter uses component matching which is no longer available to this item. Clear this filter using the crafting grid to remove this warning.");
+
+        add(FiltersLang.GUI_FILTER, "Filter");
+        add(FiltersLang.GUI_CONFIRM, "Confirm");
+    }
+
+    private void addJeiLang() {
+        add(JEILang.FIRE_CRAFTING_TITLE, "Fire Crafting");
+        add(JEILang.FIRE_CRAFTING_VALID_BLOCKS, "Valid Blocks:");
+        add(JEILang.FIRE_CRAFTING_VALID_DIMENSIONS, "Valid Dimensions:");
+        add(JEILang.FIRE_CRAFTING_CHANCE, "%s%% Chance");
+        add(JEILang.FIRE_CRAFTING_DROPS, "Drops %s");
+
+        add(JEILang.ALLOY_SMELTING_TITLE, "Alloy Smelting");
+        add(JEILang.ENCHANTER_TITLE, "Enchanting");
+        add(JEILang.SAG_MILL_TITLE, "SAG Milling");
+        add(JEILang.SLICING_TITLE, "Slicing");
+        add(JEILang.SOUL_BINDING_TITLE, "Soul Binding");
+        add(JEILang.TANK_TITLE, "Fluid Tank");
+        add(JEILang.SOUL_ENGINE_TITLE, "Soul Engine");
+        add(JEILang.VAT_TITLE, "VAT Fermentation");
+        add(JEILang.WEATHER_CHANGE_TITLE, "Weather Obelisk");
+    }
+
+    private void addGlassLang() {
+        add(GlassLang.EMITS_LIGHT, "Emits Light");
+        add(GlassLang.BLOCKS_LIGHT, "Blocks Light");
+    }
+
+    private void addMachineLang() {
+        add(MachinesLang.TOOLTIP_PROGRESS, "Progress %s%%");
+
+        add(MachinesLang.STATUS_ACTIVE, "The machine is active");
+        add(MachinesLang.STATUS_IDLE, "The machine is idle");
+        add(MachinesLang.STATUS_NO_CAPACITOR, "Install a capacitor to be able to use this machine");
+        add(MachinesLang.STATUS_NO_ENERGY, "There is not enough power to use the machine");
+        add(MachinesLang.STATUS_ENERGY_FULL, "The energy storage is full");
+        add(MachinesLang.STATUS_DRAIN_NO_SOURCE, "The Drain needs a source block under it to work");
+        add(MachinesLang.STATUS_EMPTY_TANK, "The tank is empty");
+        add(MachinesLang.STATUS_FULL_TANK, "The tank is full");
+        add(MachinesLang.STATUS_BLOCKED_REDSTONE, "The machine is blocked by redstone");
+        add(MachinesLang.STATUS_OUTPUT_FULL, "There is not enough room for the output");
+        add(MachinesLang.STATUS_INPUT_EMPTY, "There is no item in the input");
+
+        add(MachinesLang.GUI_NO_FLUID, "No Fluid");
+
+        add(MachinesLang.GENERATING, "Generating %s\u00B5I/t");
+        add(MachinesLang.FUEL_EFFICIENCY, "Efficiency %s%%");
+
+        add(MachinesLang.ALLOY_SMELTER_MODE, "Smelting Mode");
+        add(MachinesLang.POWERED_SPAWNER_MODE, "Spawner Mode");
+
+        add(MachinesLang.SAG_MILL_GRINDING_BALL_TITLE, "SAG Mill Grinding Ball");
+        add(MachinesLang.SAG_MILL_GRINDING_BALL_REMAINING, "Remaining: %s%%");
+        add(MachinesLang.SAG_MILL_CHANCE, "Chance: %s%%");
+        add(MachinesLang.SAG_MILL_CHANCE_GRINDING_BALL, "Chance: %s%% (modified by grinding ball)");
+
+        add(MachinesLang.OBELISK_UPKEEP, "Upkeep %s\u00B5I/t");
+        add(MachinesLang.OBELISK_NO_SOUL_FILTER, "No Soul Filter Installed");
+
+        add(MachinesLang.XP_RETRIEVE_1, "Retrieve 1 level of XP");
+        add(MachinesLang.XP_RETRIEVE_10, "Retrieve 10 levels of XP");
+        add(MachinesLang.XP_RETRIEVE_ALL, "Retrieve all levels of XP");
+        add(MachinesLang.XP_STORE_1, "Store 1 level of XP");
+        add(MachinesLang.XP_STORE_10, "Store 10 levels of XP");
+        add(MachinesLang.XP_STORE_ALL, "Store all levels of XP");
+
+        add(MachinesLang.VAT_TRANSFER_TANK, "Transfer tank contents");
+        add(MachinesLang.VAT_DUMP_TANK, "Void tank contents");
+
+        add(MachinesLang.POWERED_SPAWNER_STATUS_OVERCROWDED_MOBS, "Too many mobs");
+        add(MachinesLang.POWERED_SPAWNER_STATUS_OVERCROWDED_SPAWNERS, "Too many spawners");
+        add(MachinesLang.POWERED_SPAWNER_STATUS_OTHER_MOD, "Blocked by another mod");
+        add(MachinesLang.POWERED_SPAWNER_STATUS_DISABLED, "Disabled by config");
+        add(MachinesLang.POWERED_SPAWNER_STATUS_UNKNOWN_MOB, "Unknown mob");
     }
 
     private void add(ResourceKey<Conduit<?, ?>> key, String translation) {

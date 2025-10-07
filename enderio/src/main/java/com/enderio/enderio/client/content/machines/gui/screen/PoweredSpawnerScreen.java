@@ -9,6 +9,7 @@ import com.enderio.enderio.client.content.machines.gui.widget.PoweredSpawnerMode
 import com.enderio.enderio.client.foundation.widgets.EIOCommonWidgets;
 import com.enderio.enderio.client.foundation.widgets.NewProgressWidget;
 import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget;
+import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.machines.powered_spawner.PoweredSpawnerMenu;
 import com.enderio.enderio.foundation.lang.EIOLang;
 import com.enderio.enderio.foundation.lang.MachineLang;
@@ -63,7 +64,7 @@ public class PoweredSpawnerScreen extends MachineScreen<PoweredSpawnerMenu> {
                 (ignored) -> handleButtonPress(PoweredSpawnerMenu.VISIBILITY_BUTTON_ID)));
 
         addRenderableWidget(new PoweredSpawnerModeWidget(leftPos + imageWidth - 6 - 16 - 18, topPos + 6, menu::getMode,
-                menu::setMode, MachineLang.POWERED_SPAWNER_MODE));
+                menu::setMode, MachinesLang.POWERED_SPAWNER_MODE));
 
         addRenderableWidget(new ActivityWidget(152 + leftPos, 68 + topPos, menu::getMachineStates));
 

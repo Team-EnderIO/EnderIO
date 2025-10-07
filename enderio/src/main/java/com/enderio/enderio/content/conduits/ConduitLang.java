@@ -67,9 +67,9 @@ public class ConduitLang {
     public static final MutableComponent CONDUIT_PROBE_STATE_PROBE = tooltip("probe/probe");
     public static final MutableComponent CONDUIT_PROBE_STATE_COPY_PASTE = tooltip("probe/copy_paste");
     public static final MutableComponent CONDUIT_PROBE_CONTAINS_COPIED = tooltip("probe/mode/contains_copied");
-    public static final MutableComponent CONDUIT_PROBE_MESSAGE_SWITCHED_MODE = chat("probe/switched_mode");
-    public static final MutableComponent CONDUIT_PROBE_MESSAGE_COPIED = chat("probe/copied");
-    public static final MutableComponent CONDUIT_PROBE_MESSAGE_PASTED = chat("probe/pasted");
+    public static final MutableComponent CONDUIT_PROBE_MESSAGE_SWITCHED_MODE = message("probe/switched_mode");
+    public static final MutableComponent CONDUIT_PROBE_MESSAGE_COPIED = message("probe/copied");
+    public static final MutableComponent CONDUIT_PROBE_MESSAGE_PASTED = message("probe/pasted");
 
     // endregion
 
@@ -81,8 +81,8 @@ public class ConduitLang {
         return create("tooltip", path);
     }
 
-    private static MutableComponent chat(String path) {
-        return create("chat", path);
+    private static MutableComponent message(String path) {
+        return create("message", path);
     }
 
     private static MutableComponent create(String type, String path) {

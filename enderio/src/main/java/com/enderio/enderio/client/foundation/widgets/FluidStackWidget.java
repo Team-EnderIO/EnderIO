@@ -1,6 +1,7 @@
 package com.enderio.enderio.client.foundation.widgets;
 
 import com.enderio.core.client.gui.widgets.EIOWidget;
+import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.foundation.fluid.FluidStorageInfo;
 import com.enderio.enderio.foundation.io.fluid.MachineFluidTank;
 import com.enderio.enderio.foundation.lang.MachineLang;
@@ -97,7 +98,7 @@ public class FluidStackWidget extends EIOWidget {
             var storage = fluidStorageSupplier.get();
 
             if (storage.contents().isEmpty()) {
-                guiGraphics.renderComponentTooltip(minecraft.font, List.of(MachineLang.EMPTY_FLUID_TANK), mouseX,
+                guiGraphics.renderComponentTooltip(minecraft.font, List.of(MachinesLang.GUI_NO_FLUID), mouseX,
                         mouseY);
             } else {
                 guiGraphics.renderTooltip(minecraft.font,

@@ -53,11 +53,11 @@ public class FusedQuartzBlock extends TransparentBlock {
         }
 
         if (glassLighting == GlassLighting.EMITTING) {
-            pTooltip.add(EIOLang.FUSED_QUARTZ_EMITS_LIGHT);
+            pTooltip.add(GlassLang.EMITS_LIGHT);
         }
 
         if (glassLighting == GlassLighting.BLOCKING) {
-            pTooltip.add(EIOLang.FUSED_QUARTZ_BLOCKS_LIGHT);
+            pTooltip.add(GlassLang.BLOCKS_LIGHT);
         }
 
         Component collisionTooltip = collisionPredicate.getComponent();

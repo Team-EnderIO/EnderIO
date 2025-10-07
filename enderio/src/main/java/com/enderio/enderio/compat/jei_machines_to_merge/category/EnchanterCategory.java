@@ -2,6 +2,7 @@ package com.enderio.enderio.compat.jei_machines_to_merge.category;
 
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.client.content.machines.gui.screen.EnchanterScreen;
+import com.enderio.enderio.compat.jei.JEILang;
 import com.enderio.enderio.compat.jei_machines_to_merge.util.MachineRecipeCategory;
 import com.enderio.enderio.compat.jei_machines_to_merge.util.WrappedEnchanterRecipe;
 import com.enderio.enderio.foundation.lang.MachineLang;
@@ -51,7 +52,7 @@ public class EnchanterCategory extends MachineRecipeCategory<WrappedEnchanterRec
 
     @Override
     public Component getTitle() {
-        return MachineLang.CATEGORY_ENCHANTER;
+        return JEILang.ENCHANTER_TITLE;
     }
 
     @Override
