@@ -371,7 +371,7 @@
   "enderio.redstone_control.active_without_signal": "Active without Signal",
   "enderio.redstone_control.always_active": "Always Active",
   "enderio.redstone_control.never_active": "Never Active",
-  "entity.enderio.painted_sand": "Painted Sand",
+  "entity.enderio.painted_sand": "Falling Painted Sand",
   "fluid_type.enderio.cloud_seed": "Cloud Seed",
   "fluid_type.enderio.cloud_seed_concentrated": "Cloud Seed Concentrated",
   "fluid_type.enderio.dew_of_the_void": "Fluid of the Void",

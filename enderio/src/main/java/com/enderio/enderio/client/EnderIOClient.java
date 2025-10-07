@@ -61,6 +61,7 @@ import com.enderio.enderio.client.content.machines.renderer.blockentity.FluidTan
 import com.enderio.enderio.client.content.machines.renderer.blockentity.NiardBER;
 import com.enderio.enderio.client.content.machines.renderer.blockentity.ObeliskBER;
 import com.enderio.enderio.client.content.misc_blocks.EnderSkullRenderer;
+import com.enderio.enderio.client.content.paint.PaintedSandRenderer;
 import com.enderio.enderio.client.content.paint.model.PaintedBlockGeometry;
 import com.enderio.enderio.client.content.tools.ActiveGliderRenderLayer;
 import com.enderio.enderio.client.content.tools.CoordinateMenuScreen;
@@ -76,6 +77,7 @@ import com.enderio.enderio.init.ConduitItems;
 import com.enderio.enderio.init.EIOConduitTypes;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOBlocks;
+import com.enderio.enderio.init.EIOEntities;
 import com.enderio.enderio.init.EIOItems;
 import com.enderio.enderio.init.EIOMenus;
 import com.enderio.enderio.init.EIOParticles;
@@ -230,6 +232,8 @@ public class EnderIOClient {
         event.registerBlockEntityRenderer(EIOBlockEntities.PRESSURIZED_FLUID_TANK.get(), FluidTankBER::new);
 
         event.registerBlockEntityRenderer(EIOBlockEntities.ENDER_SKULL.get(), EnderSkullRenderer::new);
+
+        event.registerEntityRenderer(EIOEntities.PAINTED_SAND.get(), PaintedSandRenderer::new);
     }
 
     @SubscribeEvent

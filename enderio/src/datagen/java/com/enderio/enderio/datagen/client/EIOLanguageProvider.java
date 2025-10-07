@@ -12,6 +12,7 @@ import com.enderio.enderio.content.machines.alloy.AlloySmelterMode;
 import com.enderio.enderio.content.machines.powered_spawner.PoweredSpawnerMode;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOConduits;
+import com.enderio.enderio.init.EIOEntities;
 import com.enderio.regilite.Regilite;
 import com.enderio.regilite.data.RegiliteDataProvider;
 import net.minecraft.Util;
@@ -37,6 +38,7 @@ public class EIOLanguageProvider extends LanguageProvider {
         addEnumNames();
         addConduitDescriptions();
         addConduitLang();
+        addEntities();
 
         // Gross hack until Regilite is out.
         try {
@@ -238,6 +240,10 @@ public class EIOLanguageProvider extends LanguageProvider {
 
     private void addContainerTitles() {
         // TODO: we should use container.<X> keys.
+    }
+
+    private void addEntities() {
+        add(EIOEntities.PAINTED_SAND.get(), "Falling Painted Sand");
     }
 
     private void add(ResourceKey<Conduit<?, ?>> key, String translation) {
