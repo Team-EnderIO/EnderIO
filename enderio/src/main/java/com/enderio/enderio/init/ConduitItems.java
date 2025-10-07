@@ -44,7 +44,6 @@ public class ConduitItems {
                 .setModelProvider((prov,
                         ctx) -> prov.getBuilder(name).customLoader(FacadeItemModelBuilder::begin).model(name).end())
                 .setTab(EIOCreativeTabs.CONDUITS)
-                .setColorSupplier(() -> ConduitFacadeColor::new)
                 .addCapability(EnderIOCapabilities.CONDUIT_FACADE_PROVIDER,
                         ComponentBackedConduitFacadeProvider.PROVIDER);
     }

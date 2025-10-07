@@ -1,6 +1,3 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "enderio:item/ender_resonator"
-  }
+  "parent": "enderio:item/ender_resonator"
 }

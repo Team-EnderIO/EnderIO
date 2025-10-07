@@ -15,6 +15,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 public class ConduitFacadeColor implements BlockColor, ItemColor {
+
+    public static final ConduitFacadeColor INSTANCE = new ConduitFacadeColor();
+
+    private ConduitFacadeColor() {
+    }
+
     @Override
     public int getColor(BlockState state, @Nullable BlockAndTintGetter level, @Nullable BlockPos pos, int tintIndex) {
         if (tintIndex >= 0) {

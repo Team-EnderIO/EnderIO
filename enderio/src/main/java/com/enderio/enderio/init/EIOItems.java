@@ -1,5 +1,6 @@
 package com.enderio.enderio.init;
 
+import com.enderio.core.common.registries.ItemDeferredRegister;
 import com.enderio.core.data.model.ModelHelper;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIOCapabilities;
@@ -40,6 +41,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.registries.DeferredItem;
 
 import java.util.function.Function;
 
@@ -47,66 +49,71 @@ import java.util.function.Function;
 public class EIOItems {
     private static final ItemRegistry ITEM_REGISTRY = EnderIO.REGILITE.itemRegistry();
 
+    private static final ItemDeferredRegister ITEMS = ItemDeferredRegister.create(EnderIO.MOD_ID);
+
+    // ======== NEW ========
+
     // region Alloys
 
-    public static final RegiliteItem<MaterialItem> COPPER_ALLOY_INGOT = materialItem("copper_alloy_ingot");
-    public static final RegiliteItem<MaterialItem> ENERGETIC_ALLOY_INGOT = materialItem("energetic_alloy_ingot");
-    public static final RegiliteItem<MaterialItem> VIBRANT_ALLOY_INGOT = materialItem("vibrant_alloy_ingot");
-    public static final RegiliteItem<MaterialItem> REDSTONE_ALLOY_INGOT = materialItem("redstone_alloy_ingot");
-    public static final RegiliteItem<MaterialItem> CONDUCTIVE_ALLOY_INGOT = materialItem("conductive_alloy_ingot");
-    public static final RegiliteItem<MaterialItem> PULSATING_ALLOY_INGOT = materialItem("pulsating_alloy_ingot");
-    public static final RegiliteItem<MaterialItem> DARK_STEEL_INGOT = materialItem("dark_steel_ingot");
-    public static final RegiliteItem<MaterialItem> SOULARIUM_INGOT = materialItem("soularium_ingot");
-    public static final RegiliteItem<MaterialItem> END_STEEL_INGOT = materialItem("end_steel_ingot");
+    public static final DeferredItem<MaterialItem> COPPER_ALLOY_INGOT = material("copper_alloy_ingot");
+    public static final DeferredItem<MaterialItem> ENERGETIC_ALLOY_INGOT = material("energetic_alloy_ingot");
+    public static final DeferredItem<MaterialItem> VIBRANT_ALLOY_INGOT = material("vibrant_alloy_ingot");
+    public static final DeferredItem<MaterialItem> REDSTONE_ALLOY_INGOT = material("redstone_alloy_ingot");
+    public static final DeferredItem<MaterialItem> CONDUCTIVE_ALLOY_INGOT = material("conductive_alloy_ingot");
+    public static final DeferredItem<MaterialItem> PULSATING_ALLOY_INGOT = material("pulsating_alloy_ingot");
+    public static final DeferredItem<MaterialItem> DARK_STEEL_INGOT = material("dark_steel_ingot");
+    public static final DeferredItem<MaterialItem> SOULARIUM_INGOT = material("soularium_ingot");
+    public static final DeferredItem<MaterialItem> END_STEEL_INGOT = material("end_steel_ingot");
 
-    public static final RegiliteItem<MaterialItem> COPPER_ALLOY_NUGGET = materialItem("copper_alloy_nugget");
-    public static final RegiliteItem<MaterialItem> ENERGETIC_ALLOY_NUGGET = materialItem("energetic_alloy_nugget");
-    public static final RegiliteItem<MaterialItem> VIBRANT_ALLOY_NUGGET = materialItem("vibrant_alloy_nugget");
-    public static final RegiliteItem<MaterialItem> REDSTONE_ALLOY_NUGGET = materialItem("redstone_alloy_nugget");
-    public static final RegiliteItem<MaterialItem> CONDUCTIVE_ALLOY_NUGGET = materialItem("conductive_alloy_nugget");
-    public static final RegiliteItem<MaterialItem> PULSATING_ALLOY_NUGGET = materialItem("pulsating_alloy_nugget");
-    public static final RegiliteItem<MaterialItem> DARK_STEEL_NUGGET = materialItem("dark_steel_nugget");
-    public static final RegiliteItem<MaterialItem> SOULARIUM_NUGGET = materialItem("soularium_nugget");
-    public static final RegiliteItem<MaterialItem> END_STEEL_NUGGET = materialItem("end_steel_nugget");
+    public static final DeferredItem<MaterialItem> COPPER_ALLOY_NUGGET = material("copper_alloy_nugget");
+    public static final DeferredItem<MaterialItem> ENERGETIC_ALLOY_NUGGET = material("energetic_alloy_nugget");
+    public static final DeferredItem<MaterialItem> VIBRANT_ALLOY_NUGGET = material("vibrant_alloy_nugget");
+    public static final DeferredItem<MaterialItem> REDSTONE_ALLOY_NUGGET = material("redstone_alloy_nugget");
+    public static final DeferredItem<MaterialItem> CONDUCTIVE_ALLOY_NUGGET = material("conductive_alloy_nugget");
+    public static final DeferredItem<MaterialItem> PULSATING_ALLOY_NUGGET = material("pulsating_alloy_nugget");
+    public static final DeferredItem<MaterialItem> DARK_STEEL_NUGGET = material("dark_steel_nugget");
+    public static final DeferredItem<MaterialItem> SOULARIUM_NUGGET = material("soularium_nugget");
+    public static final DeferredItem<MaterialItem> END_STEEL_NUGGET = material("end_steel_nugget");
 
     // endregion
 
     // region Crafting Components
 
-    public static final RegiliteItem<MaterialItem> SILICON = materialItem("silicon");
-
-    public static final RegiliteItem<MaterialItem> GRAINS_OF_INFINITY = materialItem("grains_of_infinity")
-            .setTranslation("Grains of Infinity");
-
-    public static final RegiliteItem<MaterialItem> INFINITY_ROD = materialItem("infinity_rod");
-
-    public static final RegiliteItem<MaterialItem> CONDUIT_BINDER_COMPOSITE = materialItem("conduit_binder_composite");
-
-    public static final RegiliteItem<MaterialItem> CONDUIT_BINDER = materialItem("conduit_binder");
-
-    public static final RegiliteItem<MaterialItem> ZOMBIE_ELECTRODE = materialItem("zombie_electrode");
-
-    public static final RegiliteItem<MaterialItem> Z_LOGIC_CONTROLLER = materialItem("z_logic_controller")
-            .setTranslation("Z-Logic Controller");
-
-    public static final RegiliteItem<MaterialItem> FRANK_N_ZOMBIE = materialItemGlinted("frank_n_zombie")
-            .setTranslation("Frank'N'Zombie")
-            .setModelProvider((prov, ctx) -> ModelHelper.mimicItem(prov, ctx, EIOItems.Z_LOGIC_CONTROLLER));
-
-    public static final RegiliteItem<MaterialItem> ENDER_RESONATOR = materialItem("ender_resonator");
-
-    public static final RegiliteItem<MaterialItem> SENTIENT_ENDER = materialItemGlinted("sentient_ender")
-            .setModelProvider((prov, ctx) -> ModelHelper.mimicItem(prov, ctx, EIOItems.ENDER_RESONATOR));
-
-    public static final RegiliteItem<MaterialItem> SKELETAL_CONTRACTOR = materialItem("skeletal_contractor");
-    public static final RegiliteItem<MaterialItem> GUARDIAN_DIODE = materialItem("guardian_diode");
-
-    public static final RegiliteItem<LoreItem> SUSPICIOUS_SEED = ITEM_REGISTRY
-            .registerItem("suspicious_seed", props -> new LoreItem(props, true, EIOLang.SUSPICIOUS_SEED_LORE),
-                    new Item.Properties().rarity(Rarity.RARE))
-            .setTab(EIOCreativeTabs.MAIN);
+    public static final DeferredItem<MaterialItem> SILICON = material("silicon");
+    public static final DeferredItem<MaterialItem> GRAINS_OF_INFINITY = material("grains_of_infinity");
+    public static final DeferredItem<MaterialItem> INFINITY_ROD = material("infinity_rod");
+    public static final DeferredItem<MaterialItem> CONDUIT_BINDER_COMPOSITE = material("conduit_binder_composite");
+    public static final DeferredItem<MaterialItem> CONDUIT_BINDER = material("conduit_binder");
+    public static final DeferredItem<MaterialItem> ZOMBIE_ELECTRODE = material("zombie_electrode");
+    public static final DeferredItem<MaterialItem> Z_LOGIC_CONTROLLER = material("z_logic_controller");
+    public static final DeferredItem<MaterialItem> FRANK_N_ZOMBIE = materialGlinted("frank_n_zombie");
+    public static final DeferredItem<MaterialItem> ENDER_RESONATOR = material("ender_resonator");
+    public static final DeferredItem<MaterialItem> SENTIENT_ENDER = materialGlinted("sentient_ender");
+    public static final DeferredItem<MaterialItem> SKELETAL_CONTRACTOR = material("skeletal_contractor");
+    public static final DeferredItem<MaterialItem> GUARDIAN_DIODE = material("guardian_diode");
+    public static final DeferredItem<LoreItem> SUSPICIOUS_SEED = lore("suspicious_seed", EIOLang.SUSPICIOUS_SEED_LORE);
 
     // endregion
+
+    private static DeferredItem<MaterialItem> material(String name) {
+        return ITEMS.builder(name, p -> new MaterialItem(p, false))
+            .tab(EIOCreativeTabs.MAIN)
+            .build();
+    }
+
+    private static DeferredItem<MaterialItem> materialGlinted(String name) {
+        return ITEMS.builder(name, p -> new MaterialItem(p, true))
+            .tab(EIOCreativeTabs.MAIN)
+            .build();
+    }
+
+    private static DeferredItem<LoreItem> lore(String name, Component lore) {
+        return ITEMS.builder(name, p -> new LoreItem(p, true, lore), new Item.Properties().rarity(Rarity.RARE))
+            .tab(EIOCreativeTabs.MAIN)
+            .build();
+    }
+
+    // ======== OLD ========
 
     // region Capacitors
 
@@ -489,6 +496,8 @@ public class EIOItems {
     // endregion
 
     public static void register(IEventBus bus) {
+        ITEMS.register(bus);
+
     	ENDERIOS.setModelProvider((prov, ctx) -> {});
     
         // XP rod rename

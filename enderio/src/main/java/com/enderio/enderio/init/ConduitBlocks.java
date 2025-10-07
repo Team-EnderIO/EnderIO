@@ -27,7 +27,6 @@ public class ConduitBlocks {
                             .noOcclusion()
                             .dynamicShape()
                             .mapColor(MapColor.STONE))
-            .setColorSupplier(() -> ConduitFacadeColor::new)
             .setTranslation("Conduit Bundle")
             .setBlockStateProvider(ConduitBlockState::conduit)
             .addBlockTags(BlockTags.MINEABLE_WITH_PICKAXE)

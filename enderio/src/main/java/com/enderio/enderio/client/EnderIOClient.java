@@ -7,6 +7,7 @@ import com.enderio.enderio.api.conduits.screen.RegisterConduitScreenTypesEvent;
 import com.enderio.enderio.api.soul.SoulBoundUtils;
 import com.enderio.enderio.api.travel.RegisterTravelRenderersEvent;
 import com.enderio.enderio.client.content.conduits.ConduitBundleExtension;
+import com.enderio.enderio.client.content.conduits.ConduitFacadeColor;
 import com.enderio.enderio.client.content.conduits.gui.ConduitScreen;
 import com.enderio.enderio.client.content.conduits.gui.screen_type.ConduitScreenTypes;
 import com.enderio.enderio.client.content.conduits.gui.screen_type.EnergyConduitScreenType;
@@ -61,6 +62,7 @@ import com.enderio.enderio.client.content.machines.renderer.blockentity.FluidTan
 import com.enderio.enderio.client.content.machines.renderer.blockentity.NiardBER;
 import com.enderio.enderio.client.content.machines.renderer.blockentity.ObeliskBER;
 import com.enderio.enderio.client.content.misc_blocks.EnderSkullRenderer;
+import com.enderio.enderio.client.content.paint.PaintedBlockColor;
 import com.enderio.enderio.client.content.paint.PaintedSandRenderer;
 import com.enderio.enderio.client.content.paint.model.PaintedBlockGeometry;
 import com.enderio.enderio.client.content.tools.ActiveGliderRenderLayer;
@@ -106,6 +108,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
+import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
@@ -234,6 +237,46 @@ public class EnderIOClient {
         event.registerBlockEntityRenderer(EIOBlockEntities.ENDER_SKULL.get(), EnderSkullRenderer::new);
 
         event.registerEntityRenderer(EIOEntities.PAINTED_SAND.get(), PaintedSandRenderer::new);
+    }
+
+    @SubscribeEvent
+    public static void registerBlockColorHandlers(RegisterColorHandlersEvent.Block event) {
+        event.register(ConduitFacadeColor.INSTANCE, ConduitBlocks.CONDUIT.get());
+
+        event.register(PaintedBlockColor.INSTANCE,
+            EIOBlocks.PAINTED_FENCE.get(),
+            EIOBlocks.PAINTED_FENCE_GATE.get(),
+            EIOBlocks.PAINTED_SAND.get(),
+            EIOBlocks.PAINTED_STAIRS.get(),
+            EIOBlocks.PAINTED_CRAFTING_TABLE.get(),
+            EIOBlocks.PAINTED_REDSTONE_BLOCK.get(),
+            EIOBlocks.PAINTED_TRAPDOOR.get(),
+            EIOBlocks.PAINTED_WOODEN_PRESSURE_PLATE.get(),
+            EIOBlocks.PAINTED_SLAB.get(),
+            EIOBlocks.PAINTED_GLOWSTONE.get(),
+            EIOBlocks.PAINTED_WALL.get());
+    }
+
+    @SubscribeEvent
+    public static void registerItemColorHandlers(RegisterColorHandlersEvent.Item event) {
+        event.register(ConduitFacadeColor.INSTANCE,
+            ConduitItems.CONDUIT_FACADE.get(),
+            ConduitItems.TRANSPARENT_CONDUIT_FACADE.get(),
+            ConduitItems.HARDENED_CONDUIT_FACADE.get(),
+            ConduitItems.TRANSPARENT_HARDENED_CONDUIT_FACADE.get());
+
+        event.register(PaintedBlockColor.INSTANCE,
+            EIOBlocks.PAINTED_FENCE.get(),
+            EIOBlocks.PAINTED_FENCE_GATE.get(),
+            EIOBlocks.PAINTED_SAND.get(),
+            EIOBlocks.PAINTED_STAIRS.get(),
+            EIOBlocks.PAINTED_CRAFTING_TABLE.get(),
+            EIOBlocks.PAINTED_REDSTONE_BLOCK.get(),
+            EIOBlocks.PAINTED_TRAPDOOR.get(),
+            EIOBlocks.PAINTED_WOODEN_PRESSURE_PLATE.get(),
+            EIOBlocks.PAINTED_SLAB.get(),
+            EIOBlocks.PAINTED_GLOWSTONE.get(),
+            EIOBlocks.PAINTED_WALL.get());
     }
 
     @SubscribeEvent

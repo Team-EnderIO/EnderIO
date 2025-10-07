@@ -557,14 +557,12 @@ public class EIOBlocks {
         return BLOCK_REGISTRY
             .registerBlock(name, blockFactory, BlockBehaviour.Properties.ofFullCopy(copyFrom).noOcclusion())
             .setBlockStateProvider((prov, ctx) -> EIOBlockState.paintedBlock(name, prov, ctx.get(), copyFrom, itemTextureRotation))
-            .setColorSupplier(() -> PaintedBlockColor::new)
             .setLootTable(DecorLootTable::withPaint)
             .addBlockTags(tags)
             .createBlockItem(
                 ITEM_REGISTRY,
                 b -> itemFactory.apply(b, new Item.Properties()),
-                item -> item
-                    .setColorSupplier(() -> PaintedBlockColor::new));
+                item -> {});
     }
 
     public static void register(IEventBus bus) {

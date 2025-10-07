@@ -18,6 +18,7 @@ import com.enderio.enderio.content.tools.ToolsLang;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOConduits;
 import com.enderio.enderio.init.EIOEntities;
+import com.enderio.enderio.init.EIOItems;
 import com.enderio.regilite.Regilite;
 import com.enderio.regilite.data.RegiliteDataProvider;
 import net.minecraft.Util;
@@ -49,6 +50,7 @@ public class EIOLanguageProvider extends LanguageProvider {
         addJeiLang();
         addGlassLang();
         addMachineLang();
+        addItems();
 
         // Gross hack until Regilite is out.
         try {
@@ -346,6 +348,44 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(MachinesLang.POWERED_SPAWNER_STATUS_OTHER_MOD, "Blocked by another mod");
         add(MachinesLang.POWERED_SPAWNER_STATUS_DISABLED, "Disabled by config");
         add(MachinesLang.POWERED_SPAWNER_STATUS_UNKNOWN_MOB, "Unknown mob");
+    }
+
+    private void addItems() {
+        // Alloys
+        add(EIOItems.COPPER_ALLOY_INGOT.get(), "Copper Alloy Ingot");
+        add(EIOItems.ENERGETIC_ALLOY_INGOT.get(), "Energetic Alloy Ingot");
+        add(EIOItems.VIBRANT_ALLOY_INGOT.get(), "Vibrant Alloy Ingot");
+        add(EIOItems.REDSTONE_ALLOY_INGOT.get(), "Redstone Alloy Ingot");
+        add(EIOItems.CONDUCTIVE_ALLOY_INGOT.get(), "Conductive Alloy Ingot");
+        add(EIOItems.PULSATING_ALLOY_INGOT.get(), "Pulsating Alloy Ingot");
+        add(EIOItems.DARK_STEEL_INGOT.get(), "Dark Steel Ingot");
+        add(EIOItems.SOULARIUM_INGOT.get(), "Soularium Ingot");
+        add(EIOItems.END_STEEL_INGOT.get(), "End Steel Ingot");
+
+        add(EIOItems.COPPER_ALLOY_NUGGET.get(), "Copper Alloy Nugget");
+        add(EIOItems.ENERGETIC_ALLOY_NUGGET.get(), "Energetic Alloy Nugget");
+        add(EIOItems.VIBRANT_ALLOY_NUGGET.get(), "Vibrant Alloy Nugget");
+        add(EIOItems.REDSTONE_ALLOY_NUGGET.get(), "Redstone Alloy Nugget");
+        add(EIOItems.CONDUCTIVE_ALLOY_NUGGET.get(), "Conductive Alloy Nugget");
+        add(EIOItems.PULSATING_ALLOY_NUGGET.get(), "Pulsating Alloy Nugget");
+        add(EIOItems.DARK_STEEL_NUGGET.get(), "Dark Steel Nugget");
+        add(EIOItems.SOULARIUM_NUGGET.get(), "Soularium Nugget");
+        add(EIOItems.END_STEEL_NUGGET.get(), "End Steel Nugget");
+
+        // Crafting Components
+        add(EIOItems.SILICON.get(), "Silicon");
+        add(EIOItems.GRAINS_OF_INFINITY.get(), "Grains of Infinity");
+        add(EIOItems.INFINITY_ROD.get(), "Infinity Rod");
+        add(EIOItems.CONDUIT_BINDER_COMPOSITE.get(), "Conduit Binder Composite");
+        add(EIOItems.CONDUIT_BINDER.get(), "Conduit Binder");
+        add(EIOItems.ZOMBIE_ELECTRODE.get(), "Zombie Electrode");
+        add(EIOItems.Z_LOGIC_CONTROLLER.get(), "Z-Logic Controller");
+        add(EIOItems.FRANK_N_ZOMBIE.get(), "Frank'N'Zombie");
+        add(EIOItems.ENDER_RESONATOR.get(), "Ender Resonator");
+        add(EIOItems.SENTIENT_ENDER.get(), "Sentient Ender");
+        add(EIOItems.SKELETAL_CONTRACTOR.get(), "Skeletal Contractor");
+        add(EIOItems.GUARDIAN_DIODE.get(), "Guardian Diode");
+        add(EIOItems.SUSPICIOUS_SEED.get(), "Suspicious Seed");
     }
 
     private void add(ResourceKey<Conduit<?, ?>> key, String translation) {
