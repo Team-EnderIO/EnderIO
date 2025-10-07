@@ -67,6 +67,7 @@ publishing {
     }
 }
 
+// TODO: Make this work outside of a git context.
 val versionDetails: groovy.lang.Closure<VersionDetails> by extra
 var details = versionDetails()
 
@@ -77,6 +78,8 @@ var tagVersion = versionRegex.find(details.lastTag)?.value ?: "1.0.0"
 
 if (details.commitDistance == 0 && details.isCleanTag) {
     version = tagVersion
-} else {
+} else if (details.branchName != null) {
     version = "$tagVersion.${details.commitDistance}-${details.branchName.replace("/", "-")}+${details.gitHash}"
+} else {
+    version = "$tagVersion.${details.commitDistance}-dev+${details.gitHash}"
 }
