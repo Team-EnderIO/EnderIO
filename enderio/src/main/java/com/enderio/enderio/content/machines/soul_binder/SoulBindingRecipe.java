@@ -11,6 +11,7 @@ import com.enderio.enderio.foundation.util.ExperienceUtil;
 import com.enderio.enderio.init.EIOItems;
 import com.enderio.enderio.init.EIORecipes;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
@@ -163,7 +164,7 @@ public record SoulBindingRecipe(ItemStack output, Ingredient input, int energy, 
 
     public static class Serializer implements RecipeSerializer<SoulBindingRecipe> {
 
-        private static final MapCodec<SoulBindingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
+        private static final MapCodec<SoulBindingRecipe> CODEC = RecordCodecBuilder.<SoulBindingRecipe>mapCodec(instance -> instance
                 .group(ItemStack.CODEC.fieldOf("output").forGetter(SoulBindingRecipe::output),
                         Ingredient.CODEC_NONEMPTY.fieldOf("input").forGetter(SoulBindingRecipe::input),
                         Codec.INT.fieldOf("energy").forGetter(SoulBindingRecipe::energy),
@@ -173,7 +174,16 @@ public record SoulBindingRecipe(ItemStack output, Ingredient input, int energy, 
                         Codec.STRING.optionalFieldOf("soul_data").forGetter(SoulBindingRecipe::soulData),
                         Codec.BOOL.optionalFieldOf("copyInputComponents", false)
                                 .forGetter(SoulBindingRecipe::copyInputComponents))
-                .apply(instance, SoulBindingRecipe::new));
+                .apply(instance, SoulBindingRecipe::new))
+                .validate(recipe -> {
+                    int entityType = recipe.entityType().isPresent() ? 1 : 0;
+                    int mobCategory = recipe.mobCategory().isPresent() ? 1 : 0;
+                    int soulData = recipe.soulData().isPresent() ? 1 : 0;
+                    if (entityType + mobCategory + soulData > 1) {
+                        return DataResult.error(() -> "Soul Binding recipe properties entity_type, mob_category and soul_data are mutually exclusive.");
+                    }
+                    return DataResult.success(recipe);
+                });
 
         public static final StreamCodec<RegistryFriendlyByteBuf, SoulBindingRecipe> STREAM_CODEC = MassiveStreamCodec
                 .composite(ItemStack.STREAM_CODEC, SoulBindingRecipe::output, Ingredient.CONTENTS_STREAM_CODEC,
