@@ -7,9 +7,6 @@ plugins {
     id("mod-common-conventions")
 }
 
-// Mojang ships Java 21 to end users in 1.20.5+, so your mod should target Java 21.
-java.toolchain.languageVersion.set(JavaLanguageVersion.of(21))
-
 dependencies {
     // Regilite
     api(libs.regilite)

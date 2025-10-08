@@ -9,8 +9,6 @@ plugins {
 
 println("Building Ender IO version ${project.version}")
 
-val localRuntime by configurations.creating
-configurations.runtimeClasspath.get().extendsFrom(localRuntime)
 
 sourceSets {
     main {
@@ -19,47 +17,70 @@ sourceSets {
         }
     }
 
-    val datagen by creating {
+    create("datagen") {
         compileClasspath += sourceSets.main.get().output
     }
 
-    val gametest by creating {
+    create("gametest") {
         compileClasspath += sourceSets.main.get().output
         //runtimeClasspath += configurations.getByName("gametestLocalRuntime")
     }
 }
 
-val testImplementation by configurations.getting
-testImplementation.extendsFrom(configurations.implementation.get())
-val testCompileOnly by configurations.getting
-testCompileOnly.extendsFrom(configurations.compileOnly.get())
-val testRuntimeOnly by configurations.getting {
-    // TODO: Mekanism breaks our unit tests...
-    exclude(group = "mekanism", module = "Mekanism")
-    extendsFrom(configurations.runtimeOnly.get())
+configurations {
+    val localRuntime by creating
+
+    runtimeClasspath {
+        extendsFrom(localRuntime)
+    }
+
+    testImplementation {
+        extendsFrom(implementation.get())
+    }
+
+    testCompileOnly  {
+        extendsFrom(compileOnly.get())
+    }
+
+    testRuntimeOnly  {
+        // TODO: Mekanism breaks our unit tests...
+        exclude(group = "mekanism", module = "Mekanism")
+        extendsFrom(runtimeOnly.get())
+    }
+
+    testAnnotationProcessor  {
+        extendsFrom(annotationProcessor.get())
+    }
+
+    val datagenImplementation by getting {
+        extendsFrom(implementation.get())
+    }
+    val datagenCompileOnly by getting {
+        extendsFrom(compileOnly.get())
+    }
+    val datagenRuntimeOnly by getting {
+        extendsFrom(runtimeOnly.get())
+    }
+    val datagenAnnotationProcessor by getting {
+        extendsFrom(annotationProcessor.get())
+    }
+    val gametestImplementation by getting {
+        extendsFrom(implementation.get())
+    }
+    val gametestCompileOnly by getting {
+        extendsFrom(compileOnly.get())
+    }
+    val gametestRuntimeOnly by getting {
+        extendsFrom(runtimeOnly.get())
+    }
+    val gametestAnnotationProcessor by getting {
+        extendsFrom(annotationProcessor.get())
+    }
 }
-val testAnnotationProcessor by configurations.getting
-testAnnotationProcessor.extendsFrom(configurations.annotationProcessor.get())
 
-val datagenImplementation by configurations.getting
-datagenImplementation.extendsFrom(configurations.implementation.get())
-val datagenCompileOnly by configurations.getting
-datagenCompileOnly.extendsFrom(configurations.compileOnly.get())
-val datagenRuntimeOnly by configurations.getting
-datagenRuntimeOnly.extendsFrom(configurations.runtimeOnly.get())
-val datagenAnnotationProcessor by configurations.getting
-datagenAnnotationProcessor.extendsFrom(configurations.annotationProcessor.get())
-
-val gametestImplementation by configurations.getting
-gametestImplementation.extendsFrom(configurations.implementation.get())
-val gametestCompileOnly by configurations.getting
-gametestCompileOnly.extendsFrom(configurations.compileOnly.get())
-val gametestRuntimeOnly by configurations.getting
-gametestRuntimeOnly.extendsFrom(configurations.runtimeOnly.get())
-val gametestAnnotationProcessor by configurations.getting
-gametestAnnotationProcessor.extendsFrom(configurations.annotationProcessor.get())
 
 dependencies {
+    val localRuntime by configurations.getting
     // Include and bundle regilite
     api(libs.regilite)
     jarJar(libs.regilite)
@@ -135,6 +156,7 @@ dependencies {
     testImplementation(libs.neoforgeTestFramework)
 
     // Setup gametests
+    val gametestImplementation by configurations.getting
     gametestImplementation(libs.neoforgeTestFramework) {
         isTransitive = false
     }
@@ -312,14 +334,14 @@ if (getReleaseType() != null) {
     }
 }
 
-fun getReleaseType(): String? {
+fun getReleaseType(): String {
     // If we"re doing a proper build
     if (System.getenv("BUILD_VERSION") != null) {
-        val version_string = System.getenv("BUILD_VERSION")
+        val versionString = System.getenv("BUILD_VERSION").lowercase()
 
-        if (version_string.lowercase().contains("alpha")) {
+        if (versionString.contains("alpha")) {
             return "alpha"
-        } else if (version_string.lowercase().contains("beta")) {
+        } else if (versionString.contains("beta")) {
             return "beta"
         }
 

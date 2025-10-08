@@ -6,9 +6,6 @@ plugins {
     alias(libs.plugins.modpublisher)
 }
 
-val localRuntime by configurations.creating
-configurations.runtimeClasspath.get().extendsFrom(localRuntime)
-
 sourceSets {
     main {
         resources {
@@ -16,31 +13,55 @@ sourceSets {
         }
     }
 
-    val datagen by creating {
+    create("datagen") {
         compileClasspath += sourceSets.main.get().output
     }
 }
 
-val testImplementation by configurations.getting
-testImplementation.extendsFrom(configurations.implementation.get())
-val testCompileOnly by configurations.getting
-testCompileOnly.extendsFrom(configurations.compileOnly.get())
-val testRuntimeOnly by configurations.getting {
-    // TODO: Mekanism breaks our unit tests...
-    exclude(group = "mekanism", module = "Mekanism")
-    extendsFrom(configurations.runtimeOnly.get())
-}
-val testAnnotationProcessor by configurations.getting
-testAnnotationProcessor.extendsFrom(configurations.annotationProcessor.get())
+configurations {
+    val localRuntime by creating
 
-val datagenImplementation by configurations.getting
-datagenImplementation.extendsFrom(configurations.implementation.get())
-val datagenCompileOnly by configurations.getting
-datagenCompileOnly.extendsFrom(configurations.compileOnly.get())
-val datagenRuntimeOnly by configurations.getting
-datagenRuntimeOnly.extendsFrom(configurations.runtimeOnly.get())
-val datagenAnnotationProcessor by configurations.getting
-datagenAnnotationProcessor.extendsFrom(configurations.annotationProcessor.get())
+    runtimeClasspath {
+        extendsFrom(localRuntime)
+    }
+
+    testImplementation {
+        extendsFrom(implementation.get())
+    }
+
+    testCompileOnly {
+        extendsFrom(compileOnly.get())
+    }
+
+
+    testRuntimeOnly {
+        // TODO: Mekanism breaks our unit tests...
+        exclude(group = "mekanism", module = "Mekanism")
+        extendsFrom(runtimeOnly.get())
+    }
+
+    testAnnotationProcessor {
+        extendsFrom(annotationProcessor.get())
+    }
+
+    val datagenImplementation by getting {
+        extendsFrom(implementation.get())
+    }
+
+    val datagenCompileOnly by getting {
+        extendsFrom(compileOnly.get())
+    }
+
+    val datagenRuntimeOnly by getting {
+        extendsFrom(runtimeOnly.get())
+    }
+
+    val datagenAnnotationProcessor by getting {
+        extendsFrom(annotationProcessor.get())
+    }
+}
+
+
 
 dependencies {
     // Include and bundle regilite
@@ -190,14 +211,14 @@ val modrinth_projectId: String by project
 //    }
 //}
 
-fun getReleaseType(): String? {
+fun getReleaseType(): String {
     // If we"re doing a proper build
     if (System.getenv("BUILD_VERSION") != null) {
-        val version_string = System.getenv("BUILD_VERSION")
+        val versionString = System.getenv("BUILD_VERSION").lowercase()
 
-        if (version_string.lowercase().contains("alpha")) {
+        if (versionString.contains("alpha")) {
             return "alpha"
-        } else if (version_string.lowercase().contains("beta")) {
+        } else if (versionString.contains("beta")) {
             return "beta"
         }
 

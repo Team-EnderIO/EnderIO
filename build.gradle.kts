@@ -18,14 +18,14 @@ idea {
 // Utilities
 // ============
 
-fun getReleaseType(): String? {
+fun getReleaseType(): String {
     // If we"re doing a proper build
     if (System.getenv("BUILD_VERSION") != null) {
-        val version_string = System.getenv("BUILD_VERSION")
+        val versionString = System.getenv("BUILD_VERSION").lowercase()
 
-        if (version_string.lowercase().contains("alpha")) {
+        if (versionString.contains("alpha")) {
             return "alpha"
-        } else if (version_string.lowercase().contains("beta")) {
+        } else if (versionString.contains("beta")) {
             return "beta"
         }
 

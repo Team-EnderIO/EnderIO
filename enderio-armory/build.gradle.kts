@@ -5,10 +5,11 @@ plugins {
     id("mod-common-conventions")
 }
 
-// Mojang ships Java 21 to end users in 1.20.5+, so your mod should target Java 21.
-java.toolchain.languageVersion.set(JavaLanguageVersion.of(21))
-
 configurations {
+    val localRuntime by creating
+    runtimeClasspath {
+        extendsFrom(localRuntime)
+    }
     create("gametestAnnotationProcessor") {
         extendsFrom(annotationProcessor.get())
     }
@@ -38,11 +39,7 @@ sourceSets {
     }
 }
 
-val gametestImplementation by configurations.getting
 
-configurations {
-    runtimeClasspath.get().extendsFrom(create("localRuntime"))
-}
 
 dependencies {
     api(libs.regilite)
@@ -55,6 +52,7 @@ dependencies {
     testImplementation(libs.neoforgeTestFramework)
 
     // Setup gametests
+    val gametestImplementation by configurations.getting
     gametestImplementation( libs.neoforgeTestFramework) {
         isTransitive = false
     }
