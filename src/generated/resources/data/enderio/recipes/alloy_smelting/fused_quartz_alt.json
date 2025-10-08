@@ -6,7 +6,7 @@
     {
       "count": 1,
       "ingredient": {
-        "tag": "forge:storage_blocks/quartz"
+        "item": "minecraft:quartz_block"
       }
     }
   ],
