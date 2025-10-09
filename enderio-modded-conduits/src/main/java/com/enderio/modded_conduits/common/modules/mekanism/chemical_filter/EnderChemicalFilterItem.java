@@ -27,8 +27,8 @@ public class EnderChemicalFilterItem extends AbstractFilterItem<EnderChemicalFil
     }
 
     @Override
-    protected Supplier<DataComponentType<EnderChemicalFilter>> dataComponentType() {
-        return MekanismModule.CHEMICAL_FILTER;
+    protected DataComponentType<EnderChemicalFilter> dataComponentType() {
+        return MekanismModule.CHEMICAL_FILTER.get();
     }
 
     @Override

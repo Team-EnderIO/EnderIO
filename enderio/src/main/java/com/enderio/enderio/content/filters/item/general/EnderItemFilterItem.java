@@ -34,7 +34,7 @@ public class EnderItemFilterItem extends AbstractFilterItem<EnderItemFilter> {
     }
 
     @Override
-    protected Supplier<DataComponentType<EnderItemFilter>> dataComponentType() {
+    protected DataComponentType<EnderItemFilter> dataComponentType() {
         return EIODataComponents.ITEM_FILTER;
     }
 

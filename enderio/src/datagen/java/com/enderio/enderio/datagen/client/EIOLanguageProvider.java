@@ -372,12 +372,30 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOItems.SOULARIUM_NUGGET.get(), "Soularium Nugget");
         add(EIOItems.END_STEEL_NUGGET.get(), "End Steel Nugget");
 
+        // Grinding balls
+        add(EIOItems.SOULARIUM_BALL.get(), "Soularium Grinding Ball");
+        add(EIOItems.CONDUCTIVE_ALLOY_BALL.get(), "Conductive Alloy Grinding Ball");
+        add(EIOItems.PULSATING_ALLOY_BALL.get(), "Pulsating Alloy Grinding Ball");
+        add(EIOItems.REDSTONE_ALLOY_BALL.get(), "Redstone Alloy Grinding Ball");
+        add(EIOItems.ENERGETIC_ALLOY_BALL.get(), "Energetic Alloy Grinding Ball");
+        add(EIOItems.VIBRANT_ALLOY_BALL.get(), "Vibrant Alloy Grinding Ball");
+        add(EIOItems.COPPER_ALLOY_BALL.get(), "Copper Alloy Grinding Ball");
+        add(EIOItems.DARK_STEEL_BALL.get(), "Dark Steel Grinding Ball");
+        add(EIOItems.END_STEEL_BALL.get(), "End Steel Grinding Ball");
+
         // Crafting Components
         add(EIOItems.SILICON.get(), "Silicon");
         add(EIOItems.GRAINS_OF_INFINITY.get(), "Grains of Infinity");
         add(EIOItems.INFINITY_ROD.get(), "Infinity Rod");
         add(EIOItems.CONDUIT_BINDER_COMPOSITE.get(), "Conduit Binder Composite");
         add(EIOItems.CONDUIT_BINDER.get(), "Conduit Binder");
+
+        // TODO: Does Bimetal make sense anymore?
+        add(EIOItems.GEAR_IRON.get(), "Infinity Bimetal Gear");
+        add(EIOItems.GEAR_ENERGIZED.get(), "Energized Bimetal Gear");
+        add(EIOItems.GEAR_VIBRANT.get(), "Vibrant Bimetal Gear");
+        add(EIOItems.GEAR_DARK_STEEL.get(), "Dark Bimetal Gear");
+
         add(EIOItems.ZOMBIE_ELECTRODE.get(), "Zombie Electrode");
         add(EIOItems.Z_LOGIC_CONTROLLER.get(), "Z-Logic Controller");
         add(EIOItems.FRANK_N_ZOMBIE.get(), "Frank'N'Zombie");
@@ -386,6 +404,92 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOItems.SKELETAL_CONTRACTOR.get(), "Skeletal Contractor");
         add(EIOItems.GUARDIAN_DIODE.get(), "Guardian Diode");
         add(EIOItems.SUSPICIOUS_SEED.get(), "Suspicious Seed");
+
+        // Capacitors
+        add(EIOItems.BASIC_CAPACITOR.get(), "Basic Capacitor");
+        add(EIOItems.DOUBLE_LAYER_CAPACITOR.get(), "Double-Layer Capacitor");
+        add(EIOItems.OCTADIC_CAPACITOR.get(), "Octadic Capacitor");
+        add(EIOItems.LOOT_CAPACITOR.get(), "Loot Capacitor");
+
+        // Crystals
+        add(EIOItems.PULSATING_CRYSTAL.get(), "Pulsating Crystal");
+        add(EIOItems.VIBRANT_CRYSTAL.get(), "Vibrant Crystal");
+        add(EIOItems.ENDER_CRYSTAL.get(), "Ender Crystal");
+        add(EIOItems.ENTICING_CRYSTAL.get(), "Enticing Crystal");
+        add(EIOItems.WEATHER_CRYSTAL.get(), "Weather Crystal");
+        add(EIOItems.PRESCIENT_CRYSTAL.get(), "Prescient Crystal");
+
+        // Powders and Fragments
+        add(EIOItems.FLOUR.get(), "Flour");
+        add(EIOItems.POWDERED_COAL.get(), "Powdered Coal");
+        add(EIOItems.POWDERED_IRON.get(), "Powdered Iron");
+        add(EIOItems.POWDERED_GOLD.get(), "Powdered Gold");
+        add(EIOItems.POWDERED_COPPER.get(), "Powdered Copper");
+        add(EIOItems.POWDERED_TIN.get(), "Powdered Tin");
+        add(EIOItems.POWDERED_ENDER_PEARL.get(), "Powdered Ender Pearl");
+        add(EIOItems.POWDERED_OBSIDIAN.get(), "Powdered Obsidian");
+        add(EIOItems.POWDERED_COBALT.get(), "Powdered Cobalt");
+        add(EIOItems.POWDERED_LAPIS_LAZULI.get(), "Powdered Lapis Lazuli");
+        add(EIOItems.POWDERED_QUARTZ.get(), "Powdered Quartz");
+        add(EIOItems.PRESCIENT_POWDER.get(), "Grains of Prescience");
+        add(EIOItems.VIBRANT_POWDER.get(), "Grains of Vibrancy");
+        add(EIOItems.PULSATING_POWDER.get(), "Grains of Piezallity");
+        add(EIOItems.ENDER_CRYSTAL_POWDER.get(), "Grains of the End");
+        add(EIOItems.PHOTOVOLTAIC_COMPOSITE.get(), "Photovoltaic Composite");
+        add(EIOItems.SOUL_POWDER.get(), "Soul Powder");
+        add(EIOItems.CONFUSION_POWDER.get(), "Confusion Powder");
+        add(EIOItems.WITHERING_POWDER.get(), "Withering Powder");
+
+        // Dyes
+        add(EIOItems.DYE_GREEN.get(), "Organic Green Dye");
+        add(EIOItems.DYE_BROWN.get(), "Organic Brown Dye");
+        add(EIOItems.DYE_BLACK.get(), "Organic Black Dye");
+
+        // Misc Materials
+        add(EIOItems.PHOTOVOLTAIC_PLATE.get(), "Photovoltaic Plate");
+        add(EIOItems.NUTRITIOUS_STICK.get(), "Nutritious Stick");
+        add(EIOItems.PLANT_MATTER_GREEN.get(), "Clippings and Trimmings");
+        add(EIOItems.PLANT_MATTER_BROWN.get(), "Twigs and Prunings");
+        add(EIOItems.GLIDER_WING.get(), "Glider Wing");
+        add(EIOItems.ANIMAL_TOKEN.get(), "Animal Token");
+        add(EIOItems.MONSTER_TOKEN.get(), "Monster Token");
+        add(EIOItems.PLAYER_TOKEN.get(), "Player Token");
+        add(EIOItems.CAKE_BASE.get(), "Cake Base");
+        add(EIOItems.BLACK_PAPER.get(), "Black Paper");
+        add(EIOItems.CLAYED_GLOWSTONE.get(), "Clayed Glowstone");
+        add(EIOItems.NETHERCOTTA.get(), "Nethercotta");
+        add(EIOItems.REDSTONE_FILTER_BASE.get(), "Redstone Filter Base");
+        add(EIOItems.BROKEN_SPAWNER.get(), "Broken Spawner");
+
+        // Gliders
+        add(EIOItems.GLIDER.get(), "Glider");
+
+        // Fun
+        add(EIOItems.ENDERIOS.get(), "\"Enderios\"");
+
+        // Tools
+        add(EIOItems.SOUL_VIAL.get(), "Soul Vial");
+        add(EIOItems.VOID_VIAL.get(), "Vial of the Void");
+        add(EIOItems.YETA_WRENCH.get(), "Yeta Wrench");
+        add(EIOItems.COORDINATE_SELECTOR.get(), "Coordinate Selector");
+        add(EIOItems.LOCATION_PRINTOUT.get(), "Location Printout");
+        add(EIOItems.LEVITATION_STAFF.get(), "Staff of Levity");
+        add(EIOItems.TRAVEL_STAFF.get(), "Staff of Travelling");
+        add(EIOItems.ELECTROMAGNET.get(), "Electromagnet");
+        add(EIOItems.COLD_FIRE_IGNITER.get(), "Cold Fire Igniter");
+
+        // Filters
+        add(EIOItems.BASIC_ITEM_FILTER.get(), "Basic Item Filter");
+        add(EIOItems.BIG_ITEM_FILTER.get(), "Big Item Filter");
+        add(EIOItems.ADVANCED_ITEM_FILTER.get(), "Advanced Item Filter");
+        add(EIOItems.BIG_ADVANCED_ITEM_FILTER.get(), "Big Advanced Item Filter");
+
+        add(EIOItems.BASIC_FLUID_FILTER.get(), "Basic Fluid Filter");
+
+        add(EIOItems.BASIC_SOUL_FILTER.get(), "Basic Soul Filter");
+
+        // Creative Tab Icon
+        add(EIOItems.CREATIVE_ICON.get(), "Internal Item - Unobtainable");
     }
 
     private void add(ResourceKey<Conduit<?, ?>> key, String translation) {

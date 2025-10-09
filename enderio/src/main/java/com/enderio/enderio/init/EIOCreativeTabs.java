@@ -1,69 +1,123 @@
 package com.enderio.enderio.init;
 
+import com.enderio.core.common.item.CreativeTabVariants;
+import com.enderio.core.common.item.ICustomCreativeTabEntries;
 import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.api.EnderIORegistries;
+import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.content.broken_spawner.BrokenSpawnerItem;
+import com.enderio.enderio.content.conduits.ConduitBlockItem;
+import com.enderio.enderio.content.tools.vials.SoulVialItem;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-import java.util.function.Consumer;
+import java.util.Comparator;
+import java.util.stream.Stream;
 
 public class EIOCreativeTabs {
-    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister
-            .create(Registries.CREATIVE_MODE_TAB, EnderIO.MOD_ID);
+    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, EnderIO.MOD_ID);
 
-    public static final ResourceKey<CreativeModeTab> MAIN = ResourceKey.create(Registries.CREATIVE_MODE_TAB,
-            EnderIO.rl("main"));
-    public static final ResourceKey<CreativeModeTab> GEAR = ResourceKey.create(Registries.CREATIVE_MODE_TAB,
-            EnderIO.rl("gear"));
-    public static final ResourceKey<CreativeModeTab> BLOCKS = ResourceKey.create(Registries.CREATIVE_MODE_TAB,
-            EnderIO.rl("blocks"));
-    public static final ResourceKey<CreativeModeTab> MACHINES = ResourceKey.create(Registries.CREATIVE_MODE_TAB,
-            EnderIO.rl("machines"));
-    public static final ResourceKey<CreativeModeTab> SOULS = ResourceKey.create(Registries.CREATIVE_MODE_TAB,
-            EnderIO.rl("souls"));
-    public static final ResourceKey<CreativeModeTab> CONDUITS = ResourceKey.create(Registries.CREATIVE_MODE_TAB,
-            EnderIO.rl("conduits"));
+    public static final ResourceKey<CreativeModeTab> MAIN = ResourceKey.create(Registries.CREATIVE_MODE_TAB, EnderIO.rl("enderio"));
 
-    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MAIN_TAB = createTab(MAIN, "main", "Ender IO",
-            tab -> tab.icon(() -> new ItemStack(EIOItems.CREATIVE_ICON_NONE.get()))
-                    .withTabsBefore(CreativeModeTabs.SPAWN_EGGS));
-
-    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> GEAR_TAB = createTab(GEAR, "gear",
-            "Ender IO Gear", tab -> tab.icon(() -> new ItemStack(EIOItems.CREATIVE_ICON_ITEMS.get()))
-                    .withTabsBefore(CreativeModeTabs.SPAWN_EGGS, MAIN));
-
-    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> BLOCKS_TAB = createTab(BLOCKS, "blocks",
-            "Ender IO Blocks", tab -> tab.icon(() -> new ItemStack(EIOItems.CREATIVE_ICON_MATERIALS.get()))
-                    .withTabsBefore(CreativeModeTabs.SPAWN_EGGS, MAIN, GEAR));
-
-    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MACHINES_TAB = createTab(MACHINES, "machines",
-            "Ender IO Machines", tab -> tab.icon(() -> new ItemStack(EIOItems.CREATIVE_ICON_MACHINES.get()))
-                    .withTabsBefore(CreativeModeTabs.SPAWN_EGGS, MAIN, GEAR, BLOCKS));
-
-    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> SOULS_TAB = createTab(SOULS, "souls",
-            "Ender IO Souls", tab -> tab.icon(() -> new ItemStack(EIOItems.CREATIVE_ICON_MOBS.get()))
-                    .withTabsBefore(CreativeModeTabs.SPAWN_EGGS, MAIN, GEAR, BLOCKS, MACHINES));
-
-    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> CONDUITS_TAB = createTab(CONDUITS, "conduits",
-            "Ender IO Conduits", tab -> tab.icon(() -> new ItemStack(EIOItems.CREATIVE_ICON_CONDUITS.get()))
-                    .withTabsBefore(CreativeModeTabs.SPAWN_EGGS, MAIN, GEAR, BLOCKS, MACHINES, SOULS));
-
-    private static DeferredHolder<CreativeModeTab, CreativeModeTab> createTab(ResourceKey<CreativeModeTab> key,
-            String name, String translation, Consumer<CreativeModeTab.Builder> builder) {
-        return CREATIVE_MODE_TABS.register(name, () -> {
-            CreativeModeTab.Builder config = CreativeModeTab.builder()
-                    .title(EnderIO.REGILITE.addTranslation("itemGroup", key.location(), translation));
-            builder.accept(config);
-            return config.build();
-        });
-    }
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TAB = CREATIVE_MODE_TABS.register("enderio", () ->
+        CreativeModeTab.builder()
+            .title(EnderIO.REGILITE.addTranslation("itemGroup", EnderIO.rl("enderio"), "Ender IO"))
+            .icon(() -> new ItemStack(EIOItems.CREATIVE_ICON.get()))
+            .withTabsBefore(CreativeModeTabs.SPAWN_EGGS)
+            .withSearchBar()
+            .displayItems((CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) -> {
+                // TODO: Perhaps we need an easier way to provide exclusions so we don't need to subclass ICustomCreativeTabEntries all the time.
+                addAll(EIOItems.ITEMS, parameters, output);
+                // TODO: Not necessarily the final resting place.
+                addAllConduits(parameters, output);
+                addSoulItems(parameters, output);
+            })
+            .build());
 
     public static void register(IEventBus bus) {
         CREATIVE_MODE_TABS.register(bus);
+        bus.addListener(EIOCreativeTabs::addToExistingTabs);
+    }
+
+    private static void addToExistingTabs(BuildCreativeModeTabContentsEvent event) {
+        if (event.getTabKey() == CreativeModeTabs.COLORED_BLOCKS) {
+            for (var glassSet : EIOBlocks.GLASS_BLOCKS.values()) {
+                for (var glassBlock : glassSet.getAllBlocks().toList()) {
+                    event.accept(glassBlock, CreativeModeTab.TabVisibility.PARENT_TAB_ONLY);
+                }
+            }
+        } else if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
+            // TODO: Finish this list
+            event.acceptAll(Stream
+                .of(EIOItems.COPPER_ALLOY_INGOT, EIOItems.ENERGETIC_ALLOY_INGOT, EIOItems.VIBRANT_ALLOY_INGOT, EIOItems.REDSTONE_ALLOY_INGOT,
+                    EIOItems.CONDUCTIVE_ALLOY_INGOT, EIOItems.PULSATING_ALLOY_INGOT, EIOItems.DARK_STEEL_INGOT, EIOItems.SOULARIUM_INGOT,
+                    EIOItems.END_STEEL_INGOT)
+                .map(i -> i.get().getDefaultInstance())
+                .toList());
+        }
+    }
+
+    private static void addAll(DeferredRegister<Item> items, CreativeModeTab.ItemDisplayParameters properties, CreativeModeTab.Output output) {
+        // TODO: Could we use an Ender IO-specific event to interject when adding items.
+        //       for example in the modded conduits addon, insert chemical filter after EIO's normal filters
+        //       or in endergy add ingots after EIO's normal ingots and so on...
+        for (var entry : items.getEntries()) {
+            var item = entry.get();
+            if (item instanceof ICustomCreativeTabEntries customCreativeTabEntries) {
+                if (customCreativeTabEntries.shouldAddDefaultItem()) {
+                    output.accept(item);
+                }
+
+                customCreativeTabEntries.addAdditionalCreativeTabEntries(properties, output);
+            } else {
+                output.accept(item);
+
+                // TODO: Remove this old interface
+                if (item instanceof CreativeTabVariants variants) {
+                    variants.addAllVariants(output);
+                }
+            }
+        }
+    }
+
+    private static void addAllConduits(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
+        var registry = parameters.holders().lookupOrThrow(EnderIORegistries.Keys.CONDUIT);
+        var conduitTypes = registry.listElements().toList();
+
+        var conduitClassTypes = conduitTypes.stream()
+            .map(e -> e.value().getClass())
+            .sorted(Comparator.comparing(Class::getName))
+            .distinct()
+            .toList();
+
+        for (var conduitClass : conduitClassTypes) {
+            var matchingConduitTypes = conduitTypes.stream()
+                .filter(e -> e.value().getClass() == conduitClass)
+                // GRIM...
+                .sorted((o1, o2) -> compareConduitTo(o1.value(), o2.value()))
+                .toList();
+
+            for (var conduitType : matchingConduitTypes) {
+                output.accept(ConduitBlockItem.getStackFor(conduitType, 1), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+            }
+        }
+    }
+
+    private static <T extends Conduit<T, ?>> int compareConduitTo(Conduit<T, ?> o1, Conduit<?, ?> o2) {
+        return o1.compareTo((T) o2);
+    }
+
+    // Add soul items at the bottom to avoid pollution
+    private static void addSoulItems(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
+        output.acceptAll(BrokenSpawnerItem.getPossibleStacks());
+        output.acceptAll(SoulVialItem.getAllFilled());
     }
 }

@@ -25,9 +25,9 @@ public class MachinesLootTable {
             .withPool(new LootPool.Builder().add(
                 LootItem.lootTableItem(block).apply(CopyComponentsFunction.copyComponents(CopyComponentsFunction.Source.BLOCK_ENTITY)
                     .include(componentType)
-                    .include(EIODataComponents.ENERGY.get())
-                    .include(EIODataComponents.IO_CONFIG.get())
-                    .include(EIODataComponents.REDSTONE_CONTROL.get())
+                    .include(EIODataComponents.ENERGY)
+                    .include(EIODataComponents.IO_CONFIG)
+                    .include(EIODataComponents.REDSTONE_CONTROL)
                     .include(DataComponents.CONTAINER)
                 ))));
     }

@@ -85,7 +85,7 @@ public class GlassBlocks {
             );
 
         block.createBlockItem(itemRegistry, item -> {
-            item.setTab(EIOCreativeTabs.BLOCKS)
+            item.setTab(EIOCreativeTabs.MAIN)
                 .addItemTags(
                     glassIdentifier.explosion_resistance() ? EIOTags.Items.FUSED_QUARTZ : EIOTags.Items.CLEAR_GLASS,
                     EIOTags.Items.GLASS_TAGS.get(glassIdentifier)
@@ -129,7 +129,7 @@ public class GlassBlocks {
             );
 
         block.createBlockItem(itemRegistry, item -> {
-            item.setTab(EIOCreativeTabs.BLOCKS)
+            item.setTab(EIOCreativeTabs.MAIN)
                 .setColorSupplier(() -> () -> (stack, tintIndex) -> color.getMapColor().col)
                 .addItemTags(
                     glassIdentifier.explosion_resistance() ? EIOTags.Items.FUSED_QUARTZ : EIOTags.Items.CLEAR_GLASS,

@@ -12,12 +12,12 @@ import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 public class SoulCapabilityProviders {
 
     public static final ICapabilityProvider<ItemStack, Void, SoulBindable> COMPONENT_SOUL_BINDABLE_PROVIDER = (stack,
-                                                                                                               ctx) -> new ComponentSoulBindable(stack, EIODataComponents.SOUL.get());
+        ctx) -> new ComponentSoulBindable(stack, EIODataComponents.SOUL);
 
     public static final ICapabilityProvider<ItemStack, Void, SoulBindable> READ_ONLY_COMPONENT_SOUL_BINDABLE_PROVIDER = (stack,
-                                                                                                                         ctx) -> new ReadOnlyComponentSoulBindable(stack, EIODataComponents.SOUL.get());
+        ctx) -> new ReadOnlyComponentSoulBindable(stack, EIODataComponents.SOUL);
 
     // Only allows access to the capability if one storage is in the stack.
     public static final ICapabilityProvider<ItemStack, Void, SoulHandler> SINGLE_COMPONENT_SOUL_HANDLER_PROVIDER = (stack,
-        ctx) -> new SingleComponentSoulHandler(stack, EIODataComponents.SOUL.get());
+        ctx) -> new SingleComponentSoulHandler(stack, EIODataComponents.SOUL);
 }

@@ -30,7 +30,7 @@ public abstract class AbstractFilterItem<T> extends Item implements FilterMenuPr
         super(properties);
     }
 
-    protected abstract Supplier<DataComponentType<T>> dataComponentType();
+    protected abstract DataComponentType<T> dataComponentType();
     protected abstract T defaultFilter();
     protected abstract AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, AbstractFilterMenu.FilterAccess filterAccess);
 

@@ -3,7 +3,7 @@ package com.enderio.enderio.content.tools;
 import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.client.item.EnergyBarDecorator;
 import com.enderio.core.common.energy.ItemStackEnergy;
-import com.enderio.core.common.item.CreativeTabVariants;
+import com.enderio.core.common.item.ICustomCreativeTabEntries;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.foundation.lang.EIOLang;
 import com.enderio.enderio.init.EIODataComponents;
@@ -23,10 +23,10 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import java.util.List;
 
-public abstract class PoweredToggledItem extends Item implements AdvancedTooltipProvider, CreativeTabVariants {
+public abstract class PoweredToggledItem extends Item implements AdvancedTooltipProvider, ICustomCreativeTabEntries {
 
     public static final ICapabilityProvider<ItemStack, Void, IEnergyStorage> ENERGY_STORAGE_PROVIDER =
-        (stack, v) -> new ComponentEnergyStorage(stack, EIODataComponents.ENERGY.get(), ((PoweredToggledItem)stack.getItem()).getMaxEnergy());
+        (stack, v) -> new ComponentEnergyStorage(stack, EIODataComponents.ENERGY, ((PoweredToggledItem)stack.getItem()).getMaxEnergy());
 
     public PoweredToggledItem(Properties pProperties) {
         super(pProperties
@@ -77,8 +77,7 @@ public abstract class PoweredToggledItem extends Item implements AdvancedTooltip
     }
 
     @Override
-    public void addAllVariants(CreativeModeTab.Output modifier) {
-        modifier.accept(this);
+    public void addAdditionalCreativeTabEntries(CreativeModeTab.ItemDisplayParameters properties, CreativeModeTab.Output modifier) {
         modifier.accept(getCharged(this));
     }
 

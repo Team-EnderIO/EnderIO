@@ -3,7 +3,6 @@ package com.enderio.enderio.init;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.conduits.facade.FacadeType;
-import com.enderio.enderio.client.content.conduits.ConduitFacadeColor;
 import com.enderio.enderio.content.conduits.facades.ComponentBackedConduitFacadeProvider;
 import com.enderio.enderio.content.conduits.facades.ConduitFacadeItem;
 import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
@@ -43,7 +42,7 @@ public class ConduitItems {
                 // TODO: Model for when there is no "paint"
                 .setModelProvider((prov,
                         ctx) -> prov.getBuilder(name).customLoader(FacadeItemModelBuilder::begin).model(name).end())
-                .setTab(EIOCreativeTabs.CONDUITS)
+                .setTab(EIOCreativeTabs.MAIN)
                 .addCapability(EnderIOCapabilities.CONDUIT_FACADE_PROVIDER,
                         ComponentBackedConduitFacadeProvider.PROVIDER);
     }
@@ -94,18 +93,18 @@ public class ConduitItems {
         .addCapability(EnderIOCapabilities.REDSTONE_EXTRACT_FILTER, RedstoneFilterItem.TIMER_FILTER_PROVIDER);
 
     public static <T> RegiliteItem<RedstoneFilterItem> createRedstoneFilter(String name,
-            DeferredHolder<DataComponentType<?>, DataComponentType<T>> type, T defaultValue,
+            DataComponentType<T> type, T defaultValue,
         @Nullable Supplier<MenuType<?>> menu) {
         return ITEM_REGISTRY
                 .registerItem(name,
                         properties -> new RedstoneFilterItem(properties.component(type, defaultValue), menu))
-                .setTab(EIOCreativeTabs.CONDUITS);
+                .setTab(EIOCreativeTabs.MAIN);
     }
 
     public static final RegiliteItem<ConduitProbeItem> CONDUIT_PROBE = ITEM_REGISTRY
         .registerItem("conduit_probe", props -> new ConduitProbeItem(props.stacksTo(1)))
         .setModelProvider((prov, ctx) -> {})
-        .setTab(EIOCreativeTabs.CONDUITS);
+        .setTab(EIOCreativeTabs.MAIN);
 
     public static void register(IEventBus bus) {
         ITEM_REGISTRY.register(bus);

@@ -1,5 +1,6 @@
 package com.enderio.enderio.content.capacitors;
 
+import com.enderio.core.common.item.ICustomCreativeTabEntries;
 import com.enderio.enderio.api.capacitor.CapacitorData;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.init.EIODataComponents;
@@ -7,9 +8,15 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 
-public class LootCapacitorItem extends CapacitorItem {
+public class LootCapacitorItem extends CapacitorItem implements ICustomCreativeTabEntries {
     public LootCapacitorItem(Properties properties) {
         super(properties);
+    }
+
+    // Hidden from creative menu
+    @Override
+    public boolean shouldAddDefaultItem() {
+        return false;
     }
 
     @Override

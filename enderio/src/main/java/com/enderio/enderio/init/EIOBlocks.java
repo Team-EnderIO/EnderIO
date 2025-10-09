@@ -1,7 +1,6 @@
 package com.enderio.enderio.init;
 
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.client.content.paint.PaintedBlockColor;
 import com.enderio.enderio.content.cold_fire.ColdFireBlock;
 import com.enderio.enderio.content.decor.DarkSteelLadderBlock;
 import com.enderio.enderio.content.glass.GlassBlocks;
@@ -140,7 +139,7 @@ public class EIOBlocks {
         .addBlockTags(BlockTags.CLIMBABLE, BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
         .createBlockItem(ITEM_REGISTRY, item -> item
             .setModelProvider((prov, ctx) -> prov.basicItem(ctx.get(), prov.modLoc("block/dark_steel_ladder")))
-            .setTab(EIOCreativeTabs.BLOCKS));
+            .setTab(EIOCreativeTabs.MAIN));
 
     public static final RegiliteBlock<IronBarsBlock> DARK_STEEL_BARS = BLOCK_REGISTRY
         .registerBlock("dark_steel_bars", IronBarsBlock::new,
@@ -151,7 +150,7 @@ public class EIOBlocks {
             BlockTags.MINEABLE_WITH_PICKAXE
         )
         .createBlockItem(ITEM_REGISTRY, item -> item
-            .setTab(EIOCreativeTabs.BLOCKS)
+            .setTab(EIOCreativeTabs.MAIN)
             .setModelProvider((prov, ctx) -> prov.basicItem(ctx.get(), prov.modLoc("block/dark_steel_bars")))
         );
 
@@ -165,7 +164,7 @@ public class EIOBlocks {
         .addBlockTags(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL, BlockTags.DOORS)
         .createBlockItem(ITEM_REGISTRY, item -> item
             .setModelProvider((prov, ctx) -> prov.basicItem(ctx.get()))
-            .setTab(EIOCreativeTabs.BLOCKS)
+            .setTab(EIOCreativeTabs.MAIN)
         );
 
     public static final RegiliteBlock<TrapDoorBlock> DARK_STEEL_TRAPDOOR = BLOCK_REGISTRY
@@ -175,7 +174,7 @@ public class EIOBlocks {
         .addBlockTags(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL, BlockTags.TRAPDOORS)
         .createBlockItem(ITEM_REGISTRY, item -> item
             .setModelProvider((prov, ctx) -> prov.withExistingParent(ctx.getName(), prov.modLoc("block/dark_steel_trapdoor_bottom")))
-            .setTab(EIOCreativeTabs.BLOCKS)
+            .setTab(EIOCreativeTabs.MAIN)
         );
 
     public static final RegiliteBlock<IronBarsBlock> END_STEEL_BARS = BLOCK_REGISTRY
@@ -187,7 +186,7 @@ public class EIOBlocks {
             BlockTags.MINEABLE_WITH_PICKAXE
         )
         .createBlockItem(ITEM_REGISTRY, item -> item
-            .setTab(EIOCreativeTabs.BLOCKS)
+            .setTab(EIOCreativeTabs.MAIN)
             .setModelProvider((prov, ctx) -> prov.basicItem(ctx.get(), prov.modLoc("block/end_steel_bars")))
         );
 
@@ -205,7 +204,7 @@ public class EIOBlocks {
             BlockTags.MINEABLE_WITH_PICKAXE
         )
         .createBlockItem(ITEM_REGISTRY, item -> item
-            .setTab(EIOCreativeTabs.BLOCKS)
+            .setTab(EIOCreativeTabs.MAIN)
         );
 
     // endregion
@@ -257,7 +256,7 @@ public class EIOBlocks {
         .createBlockItem(ITEM_REGISTRY, item -> item
             .setModelProvider((prov, ctx) -> prov.basicItem(ctx.get(), prov.modLoc("item/soul_chain")))
             .addItemTags(Tags.Items.CHAINS)
-            .setTab(EIOCreativeTabs.BLOCKS)
+            .setTab(EIOCreativeTabs.MAIN)
         );
 
     public static final RegiliteBlock<ColdFireBlock> COLD_FIRE = BLOCK_REGISTRY
@@ -414,7 +413,7 @@ public class EIOBlocks {
                 blockTag
             )
             .createBlockItem(ITEM_REGISTRY, item -> item
-                .setTab(EIOCreativeTabs.BLOCKS)
+                .setTab(EIOCreativeTabs.MAIN)
                 .addItemTags(itemTag)
             );
     }
@@ -429,7 +428,7 @@ public class EIOBlocks {
                 BlockTags.MINEABLE_WITH_PICKAXE
             )
             .createBlockItem(ITEM_REGISTRY, item -> item
-                .setTab(EIOCreativeTabs.BLOCKS)
+                .setTab(EIOCreativeTabs.MAIN)
             );
     }
 
@@ -450,7 +449,7 @@ public class EIOBlocks {
             })
             .addBlockTags(BlockTags.NEEDS_STONE_TOOL, BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.PRESSURE_PLATES)
             .createBlockItem(ITEM_REGISTRY, item -> item
-                .setTab(EIOCreativeTabs.BLOCKS)
+                .setTab(EIOCreativeTabs.MAIN)
             );
     }
 
@@ -469,7 +468,7 @@ public class EIOBlocks {
             })
             .createBlockItem(ITEM_REGISTRY, item -> item
                 .setModelProvider((prov, ctx) -> prov.withExistingParent(ctx.getName(), upModelLoc))
-                .setTab(EIOCreativeTabs.BLOCKS)
+                .setTab(EIOCreativeTabs.MAIN)
             );
     }
 
@@ -489,7 +488,7 @@ public class EIOBlocks {
             .addBlockTags(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.PRESSURE_PLATES)
             .createBlockItem(ITEM_REGISTRY, item -> item
                 .setModelProvider((prov, ctx) -> prov.withExistingParent(ctx.getName(), upModelLoc))
-                .setTab(EIOCreativeTabs.BLOCKS)
+                .setTab(EIOCreativeTabs.MAIN)
             );
     }
 
@@ -520,7 +519,7 @@ public class EIOBlocks {
             })
             .createBlockItem(ITEM_REGISTRY, item -> item
                 .setModelProvider((prov, ctx) -> prov.withExistingParent(ctx.getName(), prov.mcLoc("item/lever")))
-                .setTab(EIOCreativeTabs.BLOCKS)
+                .setTab(EIOCreativeTabs.MAIN)
             );
     }
 
@@ -528,7 +527,7 @@ public class EIOBlocks {
         .registerBlock("industrial_insulation_block", IndustrialInsulationBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.SPONGE))
         .setTranslation("Industrial Insulation")
         .createBlockItem(ITEM_REGISTRY, item -> item
-            .setTab(EIOCreativeTabs.BLOCKS)
+            .setTab(EIOCreativeTabs.MAIN)
         );
 
     @SafeVarargs

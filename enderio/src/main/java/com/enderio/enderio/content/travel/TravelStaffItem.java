@@ -4,6 +4,7 @@ import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.client.item.EnergyBarDecorator;
 import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.core.common.item.CreativeTabVariants;
+import com.enderio.core.common.item.ICustomCreativeTabEntries;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.config.base.BaseConfig;
 import com.enderio.enderio.foundation.lang.EIOLang;
@@ -25,13 +26,13 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import java.util.List;
 
-public class TravelStaffItem extends Item implements AdvancedTooltipProvider, CreativeTabVariants {
+public class TravelStaffItem extends Item implements AdvancedTooltipProvider, ICustomCreativeTabEntries {
 
     public static final ICapabilityProvider<ItemStack, Void, IEnergyStorage> ENERGY_STORAGE_PROVIDER = (stack,
-            v) -> new ComponentEnergyStorage(stack, EIODataComponents.ENERGY.get(), TravelStaffItem.getMaxEnergy());
+            v) -> new ComponentEnergyStorage(stack, EIODataComponents.ENERGY, TravelStaffItem.getMaxEnergy());
 
     public TravelStaffItem(Properties properties) {
-        super(properties.component(EIODataComponents.TRAVEL_ITEM, true));
+        super(properties.component(EIODataComponents.TRAVEL_ITEM, true).stacksTo(1));
     }
 
     @Override
@@ -108,8 +109,7 @@ public class TravelStaffItem extends Item implements AdvancedTooltipProvider, Cr
     }
 
     @Override
-    public void addAllVariants(CreativeModeTab.Output modifier) {
-        modifier.accept(this);
+    public void addAdditionalCreativeTabEntries(CreativeModeTab.ItemDisplayParameters properties, CreativeModeTab.Output modifier) {
         ItemStack is = new ItemStack(this);
         ItemStackEnergy.setFull(is);
         modifier.accept(is);

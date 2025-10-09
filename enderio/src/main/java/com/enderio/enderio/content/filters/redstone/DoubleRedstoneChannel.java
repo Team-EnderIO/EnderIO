@@ -14,32 +14,32 @@ public class DoubleRedstoneChannel {
 
     public static final Component INSTANCE = new Component(DyeColor.GREEN, DyeColor.BROWN);
 
-    private final Supplier<DataComponentType<Component>> componentType;
+    private final DataComponentType<Component> componentType;
     private final ItemStack stack;
 
-    public DoubleRedstoneChannel(ItemStack stack, Supplier<DataComponentType<Component>> componentType) {
+    public DoubleRedstoneChannel(ItemStack stack, DataComponentType<Component> componentType) {
         this.stack = stack;
         this.componentType = componentType;
     }
 
     public DyeColor getFirstChannel() {
-        return stack.get(componentType.get()).channel1();
+        return stack.get(componentType).channel1();
     }
 
     public DyeColor getSecondChannel() {
-        return stack.get(componentType.get()).channel2();
+        return stack.get(componentType).channel2();
     }
 
     public void setFirstChannel(DyeColor channel1) {
-        stack.set(componentType.get(), new Component(channel1, getSecondChannel()));
+        stack.set(componentType, new Component(channel1, getSecondChannel()));
     }
 
     public void setSecondChannel(DyeColor channel2) {
-        stack.set(componentType.get(), new Component(getFirstChannel(), channel2));
+        stack.set(componentType, new Component(getFirstChannel(), channel2));
     }
 
     public void setChannels(DyeColor channel1, DyeColor channel2) {
-        stack.set(componentType.get(), new Component(channel1, channel2));
+        stack.set(componentType, new Component(channel1, channel2));
     }
 
     public record Component(DyeColor channel1, DyeColor channel2) {

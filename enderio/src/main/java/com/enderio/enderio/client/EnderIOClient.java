@@ -72,6 +72,7 @@ import com.enderio.enderio.client.content.travel.TravelAnchorRenderer;
 import com.enderio.enderio.client.content.travel.TravelTargetRendering;
 import com.enderio.enderio.client.foundation.particle.RangeParticle;
 import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
+import com.enderio.enderio.content.fun.EnderiosItem;
 import com.enderio.enderio.content.misc_blocks.skull.EnderSkullBlock;
 import com.enderio.enderio.content.tools.vials.SoulVialItem;
 import com.enderio.enderio.init.ConduitBlocks;
@@ -146,7 +147,7 @@ public class EnderIOClient {
             ItemProperties.register(EIOItems.SOUL_VIAL.get(), SoulVialItem.FILLED_MODEL_PROPERTY,
                 (stack, level, player, seed) -> SoulBoundUtils.isBound(stack) ? 1 : 0);
 
-            ItemProperties.register(EIOItems.ENDERIOS.asItem(), EnderIO.rl("inverted"),
+            ItemProperties.register(EIOItems.ENDERIOS.asItem(), EnderiosItem.INVERTED_PROPERTY,
                 (ClampedItemPropertyFunction) (itemStack, clientLevel, livingEntity, seed) -> {
                     Component name = itemStack.get(DataComponents.CUSTOM_NAME);
                     if (name != null && name.getContents() instanceof PlainTextContents literal && literal.text().equalsIgnoreCase("soiredne")) {

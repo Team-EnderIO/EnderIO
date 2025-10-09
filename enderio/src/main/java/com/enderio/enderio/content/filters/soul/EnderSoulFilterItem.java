@@ -29,7 +29,7 @@ public class EnderSoulFilterItem extends AbstractFilterItem<EnderSoulFilter> {
     }
 
     @Override
-    protected Supplier<DataComponentType<EnderSoulFilter>> dataComponentType() {
+    protected DataComponentType<EnderSoulFilter> dataComponentType() {
         return EIODataComponents.SOUL_FILTER;
     }
 

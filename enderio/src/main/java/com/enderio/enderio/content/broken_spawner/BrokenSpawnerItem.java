@@ -1,5 +1,6 @@
 package com.enderio.enderio.content.broken_spawner;
 
+import com.enderio.core.common.item.ICustomCreativeTabEntries;
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.foundation.util.EntityCaptureUtils;
 import com.enderio.enderio.init.EIODataComponents;
@@ -10,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BrokenSpawnerItem extends Item {
+public class BrokenSpawnerItem extends Item implements ICustomCreativeTabEntries {
     public BrokenSpawnerItem(Properties pProperties) {
         super(pProperties);
     }
@@ -28,5 +29,11 @@ public class BrokenSpawnerItem extends Item {
             items.add(forSoul(Soul.of(entity)));
         }
         return items;
+    }
+
+    // Hide default unbound variant from creative tab.
+    @Override
+    public boolean shouldAddDefaultItem() {
+        return false;
     }
 }

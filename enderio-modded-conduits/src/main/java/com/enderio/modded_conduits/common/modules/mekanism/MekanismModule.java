@@ -120,7 +120,7 @@ public class MekanismModule implements ConduitCommonModule {
 
     public static final RegiliteItem<EnderChemicalFilterItem> BASIC_CHEMICAL_FILTER = ITEM_REGISTRY
         .registerItem("basic_chemical_filter", props -> new EnderChemicalFilterItem(props, EnderChemicalFilterItem.Type.BASIC))
-        .setTab(EIOCreativeTabs.GEAR)
+        .setTab(EIOCreativeTabs.MAIN)
         .addCapability(Capabilities.CHEMICAL_FILTER, EnderChemicalFilterItem.CHEMICAL_FILTER_PROVIDER)
         .addCapability(EnderIOCapabilities.FILTER_MENU_PROVIDER, AbstractFilterItem.FILTER_MENU_PROVIDER);
 

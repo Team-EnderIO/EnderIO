@@ -26,7 +26,7 @@ import java.util.Optional;
 public class LocationPrintoutItem extends Item {
 
     public LocationPrintoutItem(Properties pProperties) {
-        super(pProperties);
+        super(pProperties.stacksTo(1));
     }
 
     @Override

@@ -19,7 +19,7 @@ import java.util.List;
 public class FluidTankBlockItem extends BlockItem implements AdvancedTooltipProvider {
 
     public static final ICapabilityProvider<ItemStack, Void, IFluidHandlerItem> FLUID_HANDLER_PROVIDER = (stack,
-            v) -> new FluidHandlerItemStack(EIODataComponents.ITEM_FLUID_CONTENT, stack,
+            v) -> new FluidHandlerItemStack(() -> EIODataComponents.ITEM_FLUID_CONTENT, stack,
                     ((FluidTankBlockItem) stack.getItem()).capacity);
 
     protected final int capacity;

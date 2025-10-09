@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "enderio:item/enderface_none"
+    "layer0": "enderio:item/creative_tab_icon"
   }
 }

@@ -2,6 +2,7 @@ package com.enderio.enderio.content.cold_fire;
 
 import com.enderio.core.common.capability.StrictFluidHandlerItemStack;
 import com.enderio.core.common.item.CreativeTabVariants;
+import com.enderio.core.common.item.ICustomCreativeTabEntries;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIODataComponents;
@@ -33,10 +34,10 @@ import org.apache.logging.log4j.LogManager;
 
 import java.util.List;
 
-public class ColdFireIgniter extends Item implements CreativeTabVariants {
+public class ColdFireIgniter extends Item implements ICustomCreativeTabEntries {
 
     public static final ICapabilityProvider<ItemStack, Void, IFluidHandlerItem> FLUID_HANDLER_PROVIDER =
-        (stack, v) -> new StrictFluidHandlerItemStack(EIODataComponents.ITEM_FLUID_CONTENT, stack, 1000, EIOTags.Fluids.COLD_FIRE_IGNITER_FUEL);
+        (stack, v) -> new StrictFluidHandlerItemStack(() -> EIODataComponents.ITEM_FLUID_CONTENT, stack, 1000, EIOTags.Fluids.COLD_FIRE_IGNITER_FUEL);
 
     public ColdFireIgniter(Properties properties) {
         super(properties);
@@ -110,9 +111,7 @@ public class ColdFireIgniter extends Item implements CreativeTabVariants {
     }
 
     @Override
-    public void addAllVariants(CreativeModeTab.Output modifier) {
-        modifier.accept(this);
-
+    public void addAdditionalCreativeTabEntries(CreativeModeTab.ItemDisplayParameters properties, CreativeModeTab.Output modifier) {
         ItemStack is = new ItemStack(this);
 
         var fluidHandler = is.getCapability(Capabilities.FluidHandler.ITEM);

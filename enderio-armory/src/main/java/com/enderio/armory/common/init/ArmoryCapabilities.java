@@ -20,7 +20,7 @@ public class ArmoryCapabilities {
             v) -> new com.enderio.armory.common.capability.DarkSteelCapability(stack);
 
     public static final ICapabilityProvider<ItemStack, Void, IEnergyStorage> DARK_STEEL_ENERGY_STORAGE_PROVIDER = (stack,
-            v) -> new DarkSteelEnergyStorage(stack, EIODataComponents.ENERGY.get(),
+            v) -> new DarkSteelEnergyStorage(stack, EIODataComponents.ENERGY,
                     DarkSteelHelper.getEmpoweredUpgrade(stack).map(EmpoweredUpgrade::getMaxEnergyStored).orElse(0),
                     DarkSteelHelper.getEmpoweredUpgrade(stack).map(EmpoweredUpgrade::getMaxEnergyTransfer).orElse(0));
 

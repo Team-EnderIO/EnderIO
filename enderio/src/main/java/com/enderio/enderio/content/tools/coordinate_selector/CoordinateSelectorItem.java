@@ -26,7 +26,7 @@ import net.minecraft.world.phys.HitResult;
 public class CoordinateSelectorItem extends Item {
 
     public CoordinateSelectorItem(Properties pProperties) {
-        super(pProperties);
+        super(pProperties.stacksTo(1));
     }
 
     @Override

@@ -11,6 +11,14 @@ public class MaterialItem extends Item {
         this.hasGlint = hasGlint;
     }
 
+    public static MaterialItem plain(Properties props) {
+        return new MaterialItem(props, false);
+    }
+
+    public static MaterialItem glinted(Properties props) {
+        return new MaterialItem(props, true);
+    }
+
     @Override
     public boolean isFoil(ItemStack itemStack) {
         return hasGlint;

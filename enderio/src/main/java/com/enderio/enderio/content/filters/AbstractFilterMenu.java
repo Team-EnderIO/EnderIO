@@ -49,7 +49,7 @@ public abstract class AbstractFilterMenu<T> extends BaseEnderMenu {
         this.playerInventorySlot = addSyncSlot(IntSyncSlot.standalone());
     }
 
-    protected abstract Supplier<DataComponentType<T>> dataComponentType();
+    protected abstract DataComponentType<T> dataComponentType();
     protected abstract T defaultFilter();
 
     @EnsureSide(EnsureSide.Side.SERVER)

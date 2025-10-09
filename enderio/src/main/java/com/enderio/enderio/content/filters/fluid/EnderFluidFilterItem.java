@@ -34,7 +34,7 @@ public class EnderFluidFilterItem extends AbstractFilterItem<EnderFluidFilter> {
     }
 
     @Override
-    protected Supplier<DataComponentType<EnderFluidFilter>> dataComponentType() {
+    protected DataComponentType<EnderFluidFilter> dataComponentType() {
         return EIODataComponents.FLUID_FILTER;
     }
 

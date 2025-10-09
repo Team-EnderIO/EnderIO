@@ -11,7 +11,7 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 public class CapacitorBankItem extends BlockItem {
 
     public static final ICapabilityProvider<ItemStack, Void, IEnergyStorage> ENERGY_STORAGE_PROVIDER =
-        (stack, v) -> new ComponentEnergyStorage(stack, EIODataComponents.ENERGY.get(), ((CapacitorBankItem)stack.getItem()).tier.getStorageCapacity()) {
+        (stack, v) -> new ComponentEnergyStorage(stack, EIODataComponents.ENERGY, ((CapacitorBankItem)stack.getItem()).tier.getStorageCapacity()) {
             @Override
             public int extractEnergy(int toExtract, boolean simulate) {
                 int extract = toExtract / stack.getCount();

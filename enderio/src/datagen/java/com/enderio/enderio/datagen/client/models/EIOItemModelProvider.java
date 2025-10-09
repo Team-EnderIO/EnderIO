@@ -1,8 +1,15 @@
 package com.enderio.enderio.datagen.client.models;
 
 import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.content.fun.EnderiosItem;
+import com.enderio.enderio.content.tools.vials.SoulVialItem;
 import com.enderio.enderio.init.EIOItems;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.ItemLike;
+import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
@@ -34,12 +41,29 @@ public class EIOItemModelProvider extends ItemModelProvider {
         basicItem(EIOItems.SOULARIUM_NUGGET.get());
         basicItem(EIOItems.END_STEEL_NUGGET.get());
 
+        // Grinding Balls
+        basicItem(EIOItems.COPPER_ALLOY_BALL.get());
+        basicItem(EIOItems.ENERGETIC_ALLOY_BALL.get());
+        basicItem(EIOItems.VIBRANT_ALLOY_BALL.get());
+        basicItem(EIOItems.REDSTONE_ALLOY_BALL.get());
+        basicItem(EIOItems.CONDUCTIVE_ALLOY_BALL.get());
+        basicItem(EIOItems.PULSATING_ALLOY_BALL.get());
+        basicItem(EIOItems.DARK_STEEL_BALL.get());
+        basicItem(EIOItems.SOULARIUM_BALL.get());
+        basicItem(EIOItems.END_STEEL_BALL.get());
+
         // Crafting Components
         basicItem(EIOItems.SILICON.get());
         basicItem(EIOItems.GRAINS_OF_INFINITY.get());
         basicItem(EIOItems.INFINITY_ROD.get());
         basicItem(EIOItems.CONDUIT_BINDER_COMPOSITE.get());
         basicItem(EIOItems.CONDUIT_BINDER.get());
+
+        basicItem(EIOItems.GEAR_IRON.get());
+        basicItem(EIOItems.GEAR_ENERGIZED.get());
+        basicItem(EIOItems.GEAR_VIBRANT.get());
+        basicItem(EIOItems.GEAR_DARK_STEEL.get());
+
         basicItem(EIOItems.ZOMBIE_ELECTRODE.get());
         basicItem(EIOItems.Z_LOGIC_CONTROLLER.get());
         withExistingParent(EIOItems.FRANK_N_ZOMBIE.getId().toString(), EIOItems.Z_LOGIC_CONTROLLER.getId());
@@ -48,5 +72,110 @@ public class EIOItemModelProvider extends ItemModelProvider {
         basicItem(EIOItems.SKELETAL_CONTRACTOR.get());
         basicItem(EIOItems.GUARDIAN_DIODE.get());
         basicItem(EIOItems.SUSPICIOUS_SEED.get());
+
+        // Capacitors
+        basicItem(EIOItems.BASIC_CAPACITOR.get());
+        basicItem(EIOItems.DOUBLE_LAYER_CAPACITOR.get());
+        basicItem(EIOItems.OCTADIC_CAPACITOR.get());
+        basicItem(EIOItems.LOOT_CAPACITOR.get()); // TODO: Multiple variants of loot capacitor.
+
+        // Crystals
+        basicItem(EIOItems.PULSATING_CRYSTAL.get());
+        basicItem(EIOItems.VIBRANT_CRYSTAL.get());
+        basicItem(EIOItems.ENDER_CRYSTAL.get());
+        basicItem(EIOItems.ENTICING_CRYSTAL.get());
+        basicItem(EIOItems.WEATHER_CRYSTAL.get());
+        basicItem(EIOItems.PRESCIENT_CRYSTAL.get());
+
+        // Powders and Fragments
+        basicItem(EIOItems.FLOUR.get());
+        basicItem(EIOItems.POWDERED_COAL.get());
+        basicItem(EIOItems.POWDERED_IRON.get());
+        basicItem(EIOItems.POWDERED_GOLD.get());
+        basicItem(EIOItems.POWDERED_COPPER.get());
+        basicItem(EIOItems.POWDERED_TIN.get());
+        basicItem(EIOItems.POWDERED_ENDER_PEARL.get());
+        basicItem(EIOItems.POWDERED_OBSIDIAN.get());
+        basicItem(EIOItems.POWDERED_COBALT.get());
+        basicItem(EIOItems.POWDERED_LAPIS_LAZULI.get());
+        basicItem(EIOItems.POWDERED_QUARTZ.get());
+        basicItem(EIOItems.PRESCIENT_POWDER.get());
+        basicItem(EIOItems.VIBRANT_POWDER.get());
+        basicItem(EIOItems.PULSATING_POWDER.get());
+        basicItem(EIOItems.ENDER_CRYSTAL_POWDER.get());
+        basicItem(EIOItems.PHOTOVOLTAIC_COMPOSITE.get());
+        basicItem(EIOItems.SOUL_POWDER.get());
+        basicItem(EIOItems.CONFUSION_POWDER.get());
+        basicItem(EIOItems.WITHERING_POWDER.get());
+
+        // Dyes
+        basicItem(EIOItems.DYE_GREEN.get());
+        basicItem(EIOItems.DYE_BROWN.get());
+        basicItem(EIOItems.DYE_BLACK.get());
+
+        // Misc Materials
+        basicItem(EIOItems.PHOTOVOLTAIC_PLATE.get());
+        basicItem(EIOItems.NUTRITIOUS_STICK.get());
+        basicItem(EIOItems.PLANT_MATTER_GREEN.get());
+        basicItem(EIOItems.PLANT_MATTER_BROWN.get());
+        basicItem(EIOItems.GLIDER_WING.get());
+        basicItem(EIOItems.ANIMAL_TOKEN.get());
+        basicItem(EIOItems.MONSTER_TOKEN.get());
+        basicItem(EIOItems.PLAYER_TOKEN.get());
+        basicItem(EIOItems.CAKE_BASE.get());
+        basicItem(EIOItems.BLACK_PAPER.get());
+        basicItem(EIOItems.CLAYED_GLOWSTONE.get());
+        basicItem(EIOItems.NETHERCOTTA.get());
+        basicItem(EIOItems.REDSTONE_FILTER_BASE.get());
+        fakeBlock(EIOItems.BROKEN_SPAWNER.get());
+
+        // Gliders
+        basicItem(EIOItems.GLIDER.get());
+
+        // Fun
+        // TODO: Should we generate enderios model?
+        basicItem(EIOItems.ENDERIOS.get())
+            .override()
+            .predicate(EnderiosItem.INVERTED_PROPERTY, 1)
+            .model(basicItem(EnderIO.rl("soiredne")))
+            .end();
+
+        // Tools
+        basicItem(EIOItems.SOUL_VIAL.get())
+            .override()
+            .predicate(SoulVialItem.FILLED_MODEL_PROPERTY, 1)
+            .model(basicItem(EnderIO.rl("soul_vial_filled")))
+            .end();
+
+        basicItem(EIOItems.VOID_VIAL.get());
+        basicItem(EIOItems.YETA_WRENCH.get());
+        basicItem(EIOItems.COORDINATE_SELECTOR.get());
+        basicItem(EIOItems.LOCATION_PRINTOUT.get());
+        basicItem(EIOItems.LEVITATION_STAFF.get());
+        basicItem(EIOItems.TRAVEL_STAFF.get());
+        basicItem(EIOItems.ELECTROMAGNET.get());
+        basicItem(EIOItems.COLD_FIRE_IGNITER.get());
+
+        // Filters
+        basicItem(EIOItems.BASIC_ITEM_FILTER.get());
+        basicItem(EIOItems.BIG_ITEM_FILTER.get());
+        basicItem(EIOItems.ADVANCED_ITEM_FILTER.get());
+        basicItem(EIOItems.BIG_ADVANCED_ITEM_FILTER.get());
+
+        basicItem(EIOItems.BASIC_FLUID_FILTER.get());
+
+        basicItem(EIOItems.BASIC_SOUL_FILTER.get());
+
+        // Creative Tab Icon
+        basicItem(EIOItems.CREATIVE_ICON.get());
+    }
+
+    private ItemModelBuilder fakeBlock(ItemLike item) {
+        return fakeBlock(BuiltInRegistries.ITEM.getKey(item.asItem()));
+    }
+
+    private ItemModelBuilder fakeBlock(ResourceLocation item) {
+        return withExistingParent(item.toString(), mcLoc("block/cube_all"))
+            .texture("all", ResourceLocation.fromNamespaceAndPath(item.getNamespace(), "item/" + item.getPath()));
     }
 }

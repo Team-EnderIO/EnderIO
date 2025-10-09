@@ -64,7 +64,7 @@ public class EnderFluidFilterMenu extends AbstractFilterMenu<EnderFluidFilter> {
     }
 
     @Override
-    protected Supplier<DataComponentType<EnderFluidFilter>> dataComponentType() {
+    protected DataComponentType<EnderFluidFilter> dataComponentType() {
         return EIODataComponents.FLUID_FILTER;
     }
 

@@ -93,7 +93,7 @@ public class MachineBlocks {
             .createBlockItem(ITEM_REGISTRY, block -> new FluidTankBlockItem(block, new Item.Properties(), 16000),
                     item -> item.setModelProvider((prov, ctx) -> {
                     })
-                            .setTab(EIOCreativeTabs.MACHINES)
+                            .setTab(EIOCreativeTabs.MAIN)
                             .addCapability(Capabilities.FluidHandler.ITEM, FluidTankBlockItem.FLUID_HANDLER_PROVIDER));
 
     public static final RegiliteBlock<FluidTankBlock> PRESSURIZED_FLUID_TANK = BLOCK_REGISTRY
@@ -117,7 +117,7 @@ public class MachineBlocks {
             .createBlockItem(ITEM_REGISTRY, (block) -> new FluidTankBlockItem(block, new Item.Properties(), 32000),
                     item -> item.setModelProvider((prov, ctx) -> {
                     })
-                            .setTab(EIOCreativeTabs.MACHINES)
+                            .setTab(EIOCreativeTabs.MAIN)
                             .addCapability(Capabilities.FluidHandler.ITEM, FluidTankBlockItem.FLUID_HANDLER_PROVIDER));
 
     public static final RegiliteBlock<EnchanterBlock> ENCHANTER = BLOCK_REGISTRY
@@ -129,7 +129,7 @@ public class MachineBlocks {
             .setLootTable(MachinesLootTable::copyComponents)
             .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
             .setBlockStateProvider(MachineModelUtil::machineBlock)
-            .createBlockItem(ITEM_REGISTRY, item -> item.setTab(EIOCreativeTabs.MACHINES));
+            .createBlockItem(ITEM_REGISTRY, item -> item.setTab(EIOCreativeTabs.MAIN));
 
     public static final RegiliteBlock<EnderfaceBlock> ENDERFACE = BLOCK_REGISTRY
             .registerBlock("enderface", EnderfaceBlock::new,
@@ -143,7 +143,7 @@ public class MachineBlocks {
             .setTranslation("Ender IO")
             .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(),
                     prov.models().cubeAll("enderface", EnderIO.rl("block/enderface")).renderType("translucent")))
-            .createBlockItem(ITEM_REGISTRY, item -> item.setTab(EIOCreativeTabs.MACHINES));
+            .createBlockItem(ITEM_REGISTRY, item -> item.setTab(EIOCreativeTabs.MAIN));
 
     public static final RegiliteBlock<ProgressMachineBlock<?>> ALLOY_SMELTER = progressMachine("alloy_smelter",
             () -> EIOBlockEntities.ALLOY_SMELTER::get);
@@ -167,7 +167,7 @@ public class MachineBlocks {
             .registerBlock("creative_power",
                     props -> new LegacyMachineBlock(EIOBlockEntities.CREATIVE_POWER::get, props),
                     BlockBehaviour.Properties.of())
-            .createBlockItem(ITEM_REGISTRY, item -> item.setTab(EIOCreativeTabs.MACHINES));
+            .createBlockItem(ITEM_REGISTRY, item -> item.setTab(EIOCreativeTabs.MAIN));
 
     public static final RegiliteBlock<ProgressMachineBlock<?>> STIRLING_GENERATOR = progressMachine(
             "stirling_generator", () -> EIOBlockEntities.STIRLING_GENERATOR::get);
@@ -189,13 +189,13 @@ public class MachineBlocks {
                     properties -> new ProgressMachineBlock<>(EIOBlockEntities.POWERED_SPAWNER::get, properties),
                     BlockBehaviour.Properties.of().strength(2.5f, 8))
             .setLootTable(
-                    (l, t) -> MachinesLootTable.copyStandardComponentsWith(l, t, EIODataComponents.SOUL.get()))
+                    (l, t) -> MachinesLootTable.copyStandardComponentsWith(l, t, EIODataComponents.SOUL))
             .setBlockStateProvider(MachineModelUtil::progressMachineBlock)
             .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
             .createBlockItem(ITEM_REGISTRY,
                     b -> new BlockItem(b,
                             new Item.Properties().component(EIODataComponents.SOUL, Soul.EMPTY)),
-                    item -> item.setTab(EIOCreativeTabs.MACHINES)
+                    item -> item.setTab(EIOCreativeTabs.MAIN)
                             .addCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM, SoulCapabilityProviders.COMPONENT_SOUL_BINDABLE_PROVIDER));
 
     public static final RegiliteBlock<MindKillerBlock> MIND_KILLER =  BLOCK_REGISTRY
@@ -207,7 +207,7 @@ public class MachineBlocks {
             .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE, EIOTags.Blocks.MIND_KILLER)
             .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(),
                 prov.models().getExistingFile(EnderIO.rl("block/" + ctx.getName()))))
-            .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
+            .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MAIN)));
 
     public static final RegiliteBlock<MachineBlock<VacuumChestBlockEntity>> VACUUM_CHEST = BLOCK_REGISTRY
             .registerBlock("vacuum_chest", p -> new MachineBlock<>(EIOBlockEntities.VACUUM_CHEST::get, p),
@@ -216,7 +216,7 @@ public class MachineBlocks {
             .setLootTable(MachinesLootTable::copyComponents)
             .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(),
                     prov.models().getExistingFile(EnderIO.rl("block/" + ctx.getName()))))
-            .createBlockItem(ITEM_REGISTRY, item -> item.setTab(EIOCreativeTabs.MACHINES));
+            .createBlockItem(ITEM_REGISTRY, item -> item.setTab(EIOCreativeTabs.MAIN));
 
     public static final RegiliteBlock<MachineBlock<XPVacuumBlockEntity>> XP_VACUUM = BLOCK_REGISTRY
             .registerBlock("xp_vacuum", p -> new MachineBlock<>(EIOBlockEntities.XP_VACUUM::get, p),
@@ -226,7 +226,7 @@ public class MachineBlocks {
             .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(),
                     prov.models().getExistingFile(EnderIO.rl("block/" + ctx.getName()))))
             .setTranslation("XP Vacuum")
-            .createBlockItem(ITEM_REGISTRY, item -> item.setTab(EIOCreativeTabs.MACHINES));
+            .createBlockItem(ITEM_REGISTRY, item -> item.setTab(EIOCreativeTabs.MAIN));
 
     public static final RegiliteBlock<TravelAnchorBlock<TravelAnchorBlockEntity>> TRAVEL_ANCHOR = BLOCK_REGISTRY
             .registerBlock("travel_anchor",
@@ -236,7 +236,7 @@ public class MachineBlocks {
             .setLootTable(MachinesLootTable::copyComponents)
             .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(),
                     prov.models().getExistingFile(EnderIO.rl("block/" + ctx.getName()))))
-            .createBlockItem(ITEM_REGISTRY, item -> item.setTab(EIOCreativeTabs.MACHINES));
+            .createBlockItem(ITEM_REGISTRY, item -> item.setTab(EIOCreativeTabs.MAIN));
 
     public static final RegiliteBlock<PaintedTravelAnchorBlock> PAINTED_TRAVEL_ANCHOR = BLOCK_REGISTRY
             .registerBlock("painted_travel_anchor", PaintedTravelAnchorBlock::new,
@@ -279,7 +279,7 @@ public class MachineBlocks {
             .createBlockItem(ITEM_REGISTRY,
                     b -> new BlockItem(b,
                             new Item.Properties().component(EIODataComponents.SOUL, Soul.EMPTY)),
-                    item -> item.setTab(EIOCreativeTabs.MACHINES)
+                    item -> item.setTab(EIOCreativeTabs.MAIN)
                             .addCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM, SoulCapabilityProviders.COMPONENT_SOUL_BINDABLE_PROVIDER));
 
     public static final RegiliteBlock<ProgressMachineBlock<?>> DRAIN = progressMachine("drain",
@@ -307,7 +307,7 @@ public class MachineBlocks {
                     BlockBehaviour.Properties.ofFullCopy(Blocks.OBSERVER))
             .addBlockTags(BlockTags.MINEABLE_WITH_PICKAXE)
             .setBlockStateProvider((prov, ctx) -> prov.models().getExistingFile(EnderIO.rl("block/" + ctx.getName())))
-            .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
+            .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MAIN)));
 
     public static final RegiliteBlock<MachineBlock<XPObeliskBlockEntity>> XP_OBELISK = BLOCK_REGISTRY
             .registerBlock("xp_obelisk", props -> new MachineBlock<>(EIOBlockEntities.XP_OBELISK::get, props),
@@ -320,7 +320,7 @@ public class MachineBlocks {
             .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(),
                     prov.models().getExistingFile(EnderIO.rl("block/" + ctx.getName()))))
             .setTranslation("XP Obelisk")
-            .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
+            .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MAIN)));
 
     public static final RegiliteBlock<ProgressMachineBlock> FARMING_STATION = BLOCK_REGISTRY.registerBlock(
             "farming_station", properties -> new ProgressMachineBlock(EIOBlockEntities.FARMING_STATION, properties),
@@ -329,7 +329,7 @@ public class MachineBlocks {
             .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
             .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(),
                     prov.models().getExistingFile(EnderIO.rl("block/" + ctx.getName()))))
-            .createBlockItem(ITEM_REGISTRY, item -> item.setTab(EIOCreativeTabs.MACHINES));
+            .createBlockItem(ITEM_REGISTRY, item -> item.setTab(EIOCreativeTabs.MAIN));
 
     public static final RegiliteBlock<MachineBlock<InhibitorObeliskBlockEntity>> INHIBITOR_OBELISK = BLOCK_REGISTRY
             .registerBlock("inhibitor_obelisk",
@@ -342,7 +342,7 @@ public class MachineBlocks {
             .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
             .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(),
                     prov.models().getExistingFile(EnderIO.rl("block/" + ctx.getName()))))
-            .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
+            .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MAIN)));
 
     public static final RegiliteBlock<MachineBlock<AversionObeliskBlockEntity>> AVERSION_OBELISK = BLOCK_REGISTRY
             .registerBlock("aversion_obelisk",
@@ -355,7 +355,7 @@ public class MachineBlocks {
             .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
             .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(),
                     prov.models().getExistingFile(EnderIO.rl("block/" + ctx.getName()))))
-            .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
+            .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MAIN)));
 
     public static final RegiliteBlock<MachineBlock<RelocatorObeliskBlockEntity>> RELOCATOR_OBELISK = BLOCK_REGISTRY
             .registerBlock("relocator_obelisk",
@@ -368,7 +368,7 @@ public class MachineBlocks {
             .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
             .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(),
                     prov.models().getExistingFile(EnderIO.rl("block/" + ctx.getName()))))
-            .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
+            .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MAIN)));
 
     public static final RegiliteBlock<MachineBlock<AttractorObeliskBlockEntity>> ATTRACTOR_OBELISK = BLOCK_REGISTRY
             .registerBlock("attractor_obelisk",
@@ -381,7 +381,7 @@ public class MachineBlocks {
             .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
             .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(),
                     prov.models().getExistingFile(EnderIO.rl("block/" + ctx.getName()))))
-            .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
+            .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MAIN)));
 
     public static final RegiliteBlock<MachineBlock<WeatherObeliskBlockEntity>> WEATHER_OBELISK = BLOCK_REGISTRY
             .registerBlock("weather_obelisk",
@@ -394,7 +394,7 @@ public class MachineBlocks {
             .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
             .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(),
                     prov.models().getExistingFile(EnderIO.rl("block/" + ctx.getName()))))
-            .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
+            .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MAIN)));
 
     // used when single methods needs to be overridden in the block class
     private static <T extends MachineBlock<?>> RegiliteBlock<T> baseMachine(RegiliteBlock<T> machineBlock,
@@ -402,7 +402,7 @@ public class MachineBlocks {
         return machineBlock.setLootTable(MachinesLootTable::copyComponents)
                 .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
                 .setBlockStateProvider(blockStateProvider)
-                .createBlockItem(ITEM_REGISTRY, item -> item.setTab(EIOCreativeTabs.MACHINES));
+                .createBlockItem(ITEM_REGISTRY, item -> item.setTab(EIOCreativeTabs.MAIN));
     }
 
     private static RegiliteBlock<MachineBlock<?>> machine(String name,
@@ -430,7 +430,7 @@ public class MachineBlocks {
                 .setLootTable(MachinesLootTable::copyComponents)
                 .createBlockItem(ITEM_REGISTRY,
                         item -> item.setModelProvider((prov, ctx) -> MachineModelUtil.solarPanel(prov, ctx, tier))
-                                .setTab(EIOCreativeTabs.MACHINES)
+                                .setTab(EIOCreativeTabs.MAIN)
                                 .addCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM, SoulCapabilityProviders.COMPONENT_SOUL_BINDABLE_PROVIDER));
     }
 
@@ -446,7 +446,7 @@ public class MachineBlocks {
                 .createBlockItem(ITEM_REGISTRY, block -> new CapacitorBankItem(block, new Item.Properties()),
                         item -> item.setModelProvider((prov, ctx) -> {
                         })
-                                .setTab(EIOCreativeTabs.MACHINES)
+                                .setTab(EIOCreativeTabs.MAIN)
                                 .addCapability(Capabilities.EnergyStorage.ITEM,
                                         CapacitorBankItem.ENERGY_STORAGE_PROVIDER));
     }
@@ -463,7 +463,7 @@ public class MachineBlocks {
                 .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(),
                         prov.models().getExistingFile(EnderIO.rl("block/" + ctx.getName()))))
                 .setTranslation(translation)
-                .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
+                .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MAIN)));
     }
 
     public static void register(IEventBus bus) {

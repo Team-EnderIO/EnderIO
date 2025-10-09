@@ -21,7 +21,7 @@ import java.util.Optional;
 public class YetaWrenchItem extends Item {
 
     public YetaWrenchItem(Properties pProperties) {
-        super(pProperties);
+        super(pProperties.stacksTo(1));
     }
 
     @Override
