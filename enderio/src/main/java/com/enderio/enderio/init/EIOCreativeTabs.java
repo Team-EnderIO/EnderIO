@@ -61,9 +61,8 @@ public class EIOCreativeTabs {
         } else if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
             // TODO: Finish this list
             event.acceptAll(Stream
-                .of(EIOItems.COPPER_ALLOY_INGOT, EIOItems.ENERGETIC_ALLOY_INGOT, EIOItems.VIBRANT_ALLOY_INGOT, EIOItems.REDSTONE_ALLOY_INGOT,
-                    EIOItems.CONDUCTIVE_ALLOY_INGOT, EIOItems.PULSATING_ALLOY_INGOT, EIOItems.DARK_STEEL_INGOT, EIOItems.SOULARIUM_INGOT,
-                    EIOItems.END_STEEL_INGOT)
+                .of(EIOItems.CONDUCTIVE_ALLOY_INGOT, EIOItems.ENERGETIC_ALLOY_INGOT, EIOItems.VIBRANT_ALLOY_INGOT, EIOItems.REDSTONE_ALLOY_INGOT,
+                    EIOItems.PULSATING_ALLOY_INGOT, EIOItems.DARK_STEEL_INGOT, EIOItems.SOULARIUM_INGOT, EIOItems.END_STEEL_INGOT)
                 .map(i -> i.get().getDefaultInstance())
                 .toList());
         }

@@ -32,32 +32,29 @@ public class EIOItemModelProvider extends ItemModelProvider {
     @Override
     protected void registerModels() {
         // Alloys
-        basicItem(EIOItems.COPPER_ALLOY_INGOT.get());
+        basicItem(EIOItems.CONDUCTIVE_ALLOY_INGOT.get());
         basicItem(EIOItems.ENERGETIC_ALLOY_INGOT.get());
         basicItem(EIOItems.VIBRANT_ALLOY_INGOT.get());
         basicItem(EIOItems.REDSTONE_ALLOY_INGOT.get());
-        basicItem(EIOItems.CONDUCTIVE_ALLOY_INGOT.get());
         basicItem(EIOItems.PULSATING_ALLOY_INGOT.get());
         basicItem(EIOItems.DARK_STEEL_INGOT.get());
         basicItem(EIOItems.SOULARIUM_INGOT.get());
         basicItem(EIOItems.END_STEEL_INGOT.get());
 
-        basicItem(EIOItems.COPPER_ALLOY_NUGGET.get());
+        basicItem(EIOItems.CONDUCTIVE_ALLOY_NUGGET.get());
         basicItem(EIOItems.ENERGETIC_ALLOY_NUGGET.get());
         basicItem(EIOItems.VIBRANT_ALLOY_NUGGET.get());
         basicItem(EIOItems.REDSTONE_ALLOY_NUGGET.get());
-        basicItem(EIOItems.CONDUCTIVE_ALLOY_NUGGET.get());
         basicItem(EIOItems.PULSATING_ALLOY_NUGGET.get());
         basicItem(EIOItems.DARK_STEEL_NUGGET.get());
         basicItem(EIOItems.SOULARIUM_NUGGET.get());
         basicItem(EIOItems.END_STEEL_NUGGET.get());
 
         // Grinding Balls
-        basicItem(EIOItems.COPPER_ALLOY_BALL.get());
+        basicItem(EIOItems.CONDUCTIVE_ALLOY_BALL.get());
         basicItem(EIOItems.ENERGETIC_ALLOY_BALL.get());
         basicItem(EIOItems.VIBRANT_ALLOY_BALL.get());
         basicItem(EIOItems.REDSTONE_ALLOY_BALL.get());
-        basicItem(EIOItems.CONDUCTIVE_ALLOY_BALL.get());
         basicItem(EIOItems.PULSATING_ALLOY_BALL.get());
         basicItem(EIOItems.DARK_STEEL_BALL.get());
         basicItem(EIOItems.SOULARIUM_BALL.get());
@@ -229,11 +226,10 @@ public class EIOItemModelProvider extends ItemModelProvider {
         // region Blocks
 
         // Alloys
-        simpleBlockItem(EIOBlocks.COPPER_ALLOY_BLOCK.get());
+        simpleBlockItem(EIOBlocks.CONDUCTIVE_ALLOY_BLOCK.get());
         simpleBlockItem(EIOBlocks.ENERGETIC_ALLOY_BLOCK.get());
         simpleBlockItem(EIOBlocks.VIBRANT_ALLOY_BLOCK.get());
         simpleBlockItem(EIOBlocks.REDSTONE_ALLOY_BLOCK.get());
-        simpleBlockItem(EIOBlocks.CONDUCTIVE_ALLOY_BLOCK.get());
         simpleBlockItem(EIOBlocks.PULSATING_ALLOY_BLOCK.get());
         simpleBlockItem(EIOBlocks.DARK_STEEL_BLOCK.get());
         simpleBlockItem(EIOBlocks.SOULARIUM_BLOCK.get());

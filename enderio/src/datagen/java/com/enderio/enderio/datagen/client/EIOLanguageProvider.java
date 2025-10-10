@@ -401,21 +401,19 @@ public class EIOLanguageProvider extends LanguageProvider {
 
     private void addItems() {
         // Alloys
-        add(EIOItems.COPPER_ALLOY_INGOT.get(), "Copper Alloy Ingot");
+        add(EIOItems.CONDUCTIVE_ALLOY_INGOT.get(), "Conductive Alloy Ingot");
         add(EIOItems.ENERGETIC_ALLOY_INGOT.get(), "Energetic Alloy Ingot");
         add(EIOItems.VIBRANT_ALLOY_INGOT.get(), "Vibrant Alloy Ingot");
         add(EIOItems.REDSTONE_ALLOY_INGOT.get(), "Redstone Alloy Ingot");
-        add(EIOItems.CONDUCTIVE_ALLOY_INGOT.get(), "Conductive Alloy Ingot");
         add(EIOItems.PULSATING_ALLOY_INGOT.get(), "Pulsating Alloy Ingot");
         add(EIOItems.DARK_STEEL_INGOT.get(), "Dark Steel Ingot");
         add(EIOItems.SOULARIUM_INGOT.get(), "Soularium Ingot");
         add(EIOItems.END_STEEL_INGOT.get(), "End Steel Ingot");
 
-        add(EIOItems.COPPER_ALLOY_NUGGET.get(), "Copper Alloy Nugget");
+        add(EIOItems.CONDUCTIVE_ALLOY_NUGGET.get(), "Conductive Alloy Nugget");
         add(EIOItems.ENERGETIC_ALLOY_NUGGET.get(), "Energetic Alloy Nugget");
         add(EIOItems.VIBRANT_ALLOY_NUGGET.get(), "Vibrant Alloy Nugget");
         add(EIOItems.REDSTONE_ALLOY_NUGGET.get(), "Redstone Alloy Nugget");
-        add(EIOItems.CONDUCTIVE_ALLOY_NUGGET.get(), "Conductive Alloy Nugget");
         add(EIOItems.PULSATING_ALLOY_NUGGET.get(), "Pulsating Alloy Nugget");
         add(EIOItems.DARK_STEEL_NUGGET.get(), "Dark Steel Nugget");
         add(EIOItems.SOULARIUM_NUGGET.get(), "Soularium Nugget");
@@ -428,7 +426,6 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOItems.REDSTONE_ALLOY_BALL.get(), "Redstone Alloy Grinding Ball");
         add(EIOItems.ENERGETIC_ALLOY_BALL.get(), "Energetic Alloy Grinding Ball");
         add(EIOItems.VIBRANT_ALLOY_BALL.get(), "Vibrant Alloy Grinding Ball");
-        add(EIOItems.COPPER_ALLOY_BALL.get(), "Copper Alloy Grinding Ball");
         add(EIOItems.DARK_STEEL_BALL.get(), "Dark Steel Grinding Ball");
         add(EIOItems.END_STEEL_BALL.get(), "End Steel Grinding Ball");
 
@@ -565,11 +562,10 @@ public class EIOLanguageProvider extends LanguageProvider {
 
     private void addBlocks() {
         // Alloys
-        add(EIOBlocks.COPPER_ALLOY_BLOCK.get(), "Copper Alloy Block");
+        add(EIOBlocks.CONDUCTIVE_ALLOY_BLOCK.get(), "Conductive Alloy Block");
         add(EIOBlocks.ENERGETIC_ALLOY_BLOCK.get(), "Energetic Alloy Block");
         add(EIOBlocks.VIBRANT_ALLOY_BLOCK.get(), "Vibrant Alloy Block");
         add(EIOBlocks.REDSTONE_ALLOY_BLOCK.get(), "Redstone Alloy Block");
-        add(EIOBlocks.CONDUCTIVE_ALLOY_BLOCK.get(), "Conductive Alloy Block");
         add(EIOBlocks.PULSATING_ALLOY_BLOCK.get(), "Pulsating Alloy Block");
         add(EIOBlocks.DARK_STEEL_BLOCK.get(), "Dark Steel Block");
         add(EIOBlocks.SOULARIUM_BLOCK.get(), "Soularium Block");
