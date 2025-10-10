@@ -7,7 +7,7 @@ import com.enderio.enderio.client.content.machines.gui.widget.NewCapacitorEnergy
 import com.enderio.enderio.client.foundation.widgets.NewProgressWidget;
 import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget;
 import com.enderio.enderio.content.machines.slicer.SlicerMenu;
-import com.enderio.enderio.foundation.lang.EIOLang;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -44,7 +44,7 @@ public class SlicerScreen extends MachineScreen<SlicerMenu> {
                 menu::isCapacitorInstalled));
 
         addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6 + 55,
-                menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
+                menu::getRedstoneControl, menu::setRedstoneControl, EIOCommonLang.REDSTONE_MODE));
 
         var overlay = addIOConfigOverlay(1, leftPos + 7, topPos + 125, 162, 76);
         addIOConfigButton(leftPos + imageWidth - 6 - 16, topPos + 6 + 55 - 16 - 2, overlay);

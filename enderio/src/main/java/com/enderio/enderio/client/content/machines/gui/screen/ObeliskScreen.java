@@ -9,8 +9,7 @@ import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget
 import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.machines.obelisks.ObeliskBlockEntity;
 import com.enderio.enderio.content.machines.obelisks.ObeliskMenu;
-import com.enderio.enderio.foundation.lang.EIOLang;
-import com.enderio.enderio.foundation.lang.MachineLang;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.init.EIOItems;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
@@ -42,11 +41,11 @@ public abstract class ObeliskScreen<J extends ObeliskBlockEntity<J>, T extends O
                 menu::isCapacitorInstalled));
 
         addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6,
-                menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
+                menu::getRedstoneControl, menu::setRedstoneControl, EIOCommonLang.REDSTONE_MODE));
 
-        addRenderableWidget(EIOCommonWidgets.createRange(leftPos + imageWidth - 6 - 16, topPos + 34, EIOLang.HIDE_RANGE,
-                EIOLang.SHOW_RANGE, menu::isRangeVisible,
-                (ignored) -> handleButtonPress(ObeliskMenu.VISIBILITY_BUTTON_ID)));
+        addRenderableWidget(EIOCommonWidgets.createRange(leftPos + imageWidth - 6 - 16, topPos + 34, MachinesLang.HIDE_RANGE,
+            MachinesLang.SHOW_RANGE, menu::isRangeVisible,
+            (ignored) -> handleButtonPress(ObeliskMenu.VISIBILITY_BUTTON_ID)));
 
         addRenderableWidget(EIOCommonWidgets.createRangeIncrease(leftPos + imageWidth - 2 * 16, topPos + 2 + 16 * 2,
                 (b) -> handleButtonPress(ObeliskMenu.INCREASE_BUTTON_ID)));
@@ -71,9 +70,9 @@ public abstract class ObeliskScreen<J extends ObeliskBlockEntity<J>, T extends O
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
-        guiGraphics.drawString(font, EIOLang.RANGE, imageWidth - 6 - font.width(EIOLang.RANGE), 16 + 8, 4210752, false);
+        guiGraphics.drawString(font, MachinesLang.RANGE, imageWidth - 6 - font.width(MachinesLang.RANGE), 16 + 8, 4210752, false);
 
-        guiGraphics.drawString(font, EIOLang.MAX_RANGE, imageWidth / 2 - font.width(EIOLang.MAX_RANGE) / 2, 5, 0,
+        guiGraphics.drawString(font, MachinesLang.MAX_RANGE, imageWidth / 2 - font.width(MachinesLang.MAX_RANGE) / 2, 5, 0,
                 false);
         String maxRange = getMenu().getMaxRange() + "";
         guiGraphics.drawString(font, maxRange, imageWidth / 2 - font.width(maxRange) / 2, 5 + font.lineHeight + 3, 0,
@@ -81,7 +80,7 @@ public abstract class ObeliskScreen<J extends ObeliskBlockEntity<J>, T extends O
 
         guiGraphics.drawString(font,
                 TooltipUtil.withArgs(MachinesLang.OBELISK_UPKEEP, getMenu().getBlockEntity().getPerTickEnergyCost()),
-                imageWidth / 2 - font.width(EIOLang.MAX_RANGE) / 2, 62, 0, false);
+                imageWidth / 2 - font.width(MachinesLang.MAX_RANGE) / 2, 62, 0, false);
 
         super.renderLabels(guiGraphics, pMouseX, pMouseY);
     }

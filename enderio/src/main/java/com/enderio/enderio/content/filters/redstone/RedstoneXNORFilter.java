@@ -9,7 +9,7 @@ import net.minecraft.world.item.ItemStack;
 public class RedstoneXNORFilter extends DoubleRedstoneChannel implements RedstoneOutputFilter {
 
     public RedstoneXNORFilter(ItemStack stack) {
-        super(stack, EIODataComponents.REDSTONE_XNOR_FILTER);
+        super(stack, EIODataComponents.REDSTONE_FILTER_DOUBLE_CHANNEL);
     }
 
     @Override

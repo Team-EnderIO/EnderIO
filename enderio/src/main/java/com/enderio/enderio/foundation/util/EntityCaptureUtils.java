@@ -1,7 +1,6 @@
 package com.enderio.enderio.foundation.util;
 
 import com.enderio.enderio.content.tools.ToolsLang;
-import com.enderio.enderio.foundation.lang.EIOLang;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.core.registries.BuiltInRegistries;

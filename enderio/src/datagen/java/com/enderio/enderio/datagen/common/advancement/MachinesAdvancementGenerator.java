@@ -1,8 +1,8 @@
 package com.enderio.enderio.datagen.common.advancement;
 
+import com.enderio.enderio.content.advancements.AdvancementsLang;
 import com.enderio.enderio.content.machines.capacitor_bank.CapacitorBankBlock;
 import com.enderio.enderio.content.machines.capacitor_bank.CapacitorTier;
-import com.enderio.enderio.foundation.lang.MachineLang;
 import com.enderio.enderio.init.MachineBlocks;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
@@ -32,7 +32,7 @@ public class MachinesAdvancementGenerator implements AdvancementProvider.Advance
         Advancement.Builder builder = Advancement.Builder
             .advancement()
             .parent(ResourceLocation.withDefaultNamespace("adventure/root"))
-            .display(MachineBlocks.CAPACITOR_BANKS.get(CapacitorTier.BASIC), MachineLang.PLACE_CAPACITOR_BANK_ADVANCEMENT_TITLE, MachineLang.PLACE_CAPACITOR_BANK_ADVANCEMENT_DESCRIPTION, null, AdvancementType.TASK, true,
+            .display(MachineBlocks.CAPACITOR_BANKS.get(CapacitorTier.BASIC), AdvancementsLang.PLACE_CAPACITOR_BANK_ADVANCEMENT_TITLE, AdvancementsLang.PLACE_CAPACITOR_BANK_ADVANCEMENT_DESCRIPTION, null, AdvancementType.TASK, true,
                 true, false)
             .addCriterion("place_capacitor_bank", placedBlock(MachineBlocks.CAPACITOR_BANKS.values().stream().map(DeferredHolder::get)
                 .sorted(Comparator.comparing(BuiltInRegistries.BLOCK::getKey)).toArray(CapacitorBankBlock[]::new)));

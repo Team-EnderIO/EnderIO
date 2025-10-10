@@ -3,11 +3,10 @@ package com.enderio.enderio.content.travel;
 import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.client.item.EnergyBarDecorator;
 import com.enderio.core.common.energy.ItemStackEnergy;
-import com.enderio.core.common.item.CreativeTabVariants;
 import com.enderio.core.common.item.ICustomCreativeTabEntries;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.config.base.BaseConfig;
-import com.enderio.enderio.foundation.lang.EIOLang;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -140,7 +139,7 @@ public class TravelStaffItem extends Item implements AdvancedTooltipProvider, IC
             List<Component> tooltips) {
         String energy = String.format("%,d", ItemStackEnergy.getEnergyStored(itemStack)) + "/"
                 + String.format("%,d", ItemStackEnergy.getMaxEnergyStored(itemStack));
-        tooltips.add(TooltipUtil.styledWithArgs(EIOLang.ENERGY_AMOUNT, energy));
+        tooltips.add(TooltipUtil.styledWithArgs(EIOCommonLang.ENERGY_AMOUNT, energy));
     }
 
     protected enum ActivationStatus {

@@ -11,8 +11,7 @@ import com.enderio.enderio.client.foundation.widgets.NewProgressWidget;
 import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget;
 import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.machines.powered_spawner.PoweredSpawnerMenu;
-import com.enderio.enderio.foundation.lang.EIOLang;
-import com.enderio.enderio.foundation.lang.MachineLang;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -57,11 +56,11 @@ public class PoweredSpawnerScreen extends MachineScreen<PoweredSpawnerMenu> {
                 menu::isCapacitorInstalled));
 
         addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6,
-                menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
+                menu::getRedstoneControl, menu::setRedstoneControl, EIOCommonLang.REDSTONE_MODE));
 
         addRenderableWidget(EIOCommonWidgets.createRange(leftPos + imageWidth - 6 - 16, topPos + 6 + (16 + 2),
-                EIOLang.HIDE_RANGE, EIOLang.SHOW_RANGE, menu::isRangeVisible,
-                (ignored) -> handleButtonPress(PoweredSpawnerMenu.VISIBILITY_BUTTON_ID)));
+            MachinesLang.HIDE_RANGE, MachinesLang.SHOW_RANGE, menu::isRangeVisible,
+            (ignored) -> handleButtonPress(PoweredSpawnerMenu.VISIBILITY_BUTTON_ID)));
 
         addRenderableWidget(new PoweredSpawnerModeWidget(leftPos + imageWidth - 6 - 16 - 18, topPos + 6, menu::getMode,
                 menu::setMode, MachinesLang.POWERED_SPAWNER_MODE));

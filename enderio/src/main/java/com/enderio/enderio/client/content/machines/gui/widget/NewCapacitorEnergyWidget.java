@@ -1,8 +1,9 @@
 package com.enderio.enderio.client.content.machines.gui.widget;
 
 import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.foundation.io.energy.IMachineEnergyStorage;
-import com.enderio.enderio.foundation.lang.EIOLang;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -43,8 +44,8 @@ public class NewCapacitorEnergyWidget extends NewEnergyWidget {
     public void renderCapacitorTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         Minecraft minecraft = Minecraft.getInstance();
         List<Component> list = new ArrayList<>();
-        list.add(EIOLang.NOCAP_TITLE.withStyle(ChatFormatting.DARK_AQUA));
-        String[] split = EIOLang.NOCAP_DESC.getString().split("\n");
+        list.add(MachinesLang.NOCAP_TITLE.withStyle(ChatFormatting.DARK_AQUA));
+        String[] split = MachinesLang.NOCAP_DESC.getString().split("\n");
         for (String s : split) {
             list.add(Component.literal(s.stripLeading().stripTrailing()));
         }

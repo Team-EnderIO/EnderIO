@@ -5,8 +5,9 @@ import com.enderio.enderio.client.content.machines.gui.screen.base.MachineScreen
 import com.enderio.enderio.client.foundation.widgets.EIOCommonWidgets;
 import com.enderio.enderio.client.foundation.widgets.FluidStackStaticWidget;
 import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget;
+import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.machines.vacuum.xp.XPVacuumMenu;
-import com.enderio.enderio.foundation.lang.EIOLang;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -33,11 +34,11 @@ public class XPVacuumScreen extends MachineScreen<XPVacuumMenu> {
         addRenderableOnly(new FluidStackStaticWidget(leftPos + 27, topPos + 22, 32, 32, menu::getFluidTank));
 
         addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6,
-                menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
+                menu::getRedstoneControl, menu::setRedstoneControl, EIOCommonLang.REDSTONE_MODE));
 
-        addRenderableWidget(EIOCommonWidgets.createRange(leftPos + imageWidth - 6 - 16, topPos + 34, EIOLang.HIDE_RANGE,
-                EIOLang.SHOW_RANGE, menu::isRangeVisible,
-                (ignored) -> handleButtonPress(XPVacuumMenu.VISIBILITY_BUTTON_ID)));
+        addRenderableWidget(EIOCommonWidgets.createRange(leftPos + imageWidth - 6 - 16, topPos + 34, MachinesLang.HIDE_RANGE,
+            MachinesLang.SHOW_RANGE, menu::isRangeVisible,
+            (ignored) -> handleButtonPress(XPVacuumMenu.VISIBILITY_BUTTON_ID)));
 
         addRenderableWidget(EIOCommonWidgets.createRangeIncrease(leftPos + imageWidth - 6 - 8 - 2 - 16, topPos + 34,
                 (b) -> handleButtonPress(XPVacuumMenu.INCREASE_BUTTON_ID)));
@@ -52,7 +53,7 @@ public class XPVacuumScreen extends MachineScreen<XPVacuumMenu> {
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
-        guiGraphics.drawString(font, EIOLang.RANGE, this.imageWidth - 6 - this.font.width(EIOLang.RANGE), 24, 4210752,
+        guiGraphics.drawString(font, MachinesLang.RANGE, this.imageWidth - 6 - this.font.width(MachinesLang.RANGE), 24, 4210752,
                 false);
         guiGraphics.drawString(font, menu.getRange() + "", leftPos + imageWidth - 6 - 16 - 2 - 8 - 10, topPos + 38, 0,
                 false);

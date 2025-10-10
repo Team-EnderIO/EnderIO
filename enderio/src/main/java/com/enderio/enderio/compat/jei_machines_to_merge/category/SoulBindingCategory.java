@@ -10,7 +10,7 @@ import com.enderio.enderio.compat.jei_machines_to_merge.util.MachineRecipeCatego
 import com.enderio.enderio.compat.jei_machines_to_merge.util.RecipeUtil;
 import com.enderio.enderio.content.machines.soul_binder.SoulBindingRecipe;
 import com.enderio.enderio.content.tools.vials.SoulVialItem;
-import com.enderio.enderio.foundation.lang.MachineLang;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.foundation.souldata.SoulData;
 import com.enderio.enderio.foundation.souldata.SoulDataReloadListener;
 import com.enderio.enderio.init.EIOItems;
@@ -183,7 +183,7 @@ public class SoulBindingCategory extends MachineRecipeCategory<RecipeHolder<Soul
         Minecraft mc = Minecraft.getInstance();
         if (mouseX > 5 && mouseY > 34 && mouseX < 5 + mc.font.width(getBasicEnergyString(recipe))
                 && mouseY < 34 + mc.font.lineHeight) {
-            return List.of(MachineLang.TOOLTIP_ENERGY_EQUIVALENCE);
+            return List.of(EIOCommonLang.TOOLTIP_ENERGY_EQUIVALENCE);
         }
 
         return List.of();

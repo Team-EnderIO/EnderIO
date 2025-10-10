@@ -7,7 +7,7 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.foundation.block.entity.legacy.LegacyMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.multienergy.CapacityTier;
 import com.enderio.enderio.foundation.block.legacy.LegacyMachineBlock;
-import com.enderio.enderio.foundation.lang.EIOLang;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -75,7 +75,7 @@ public class CapacitorBankBlock extends LegacyMachineBlock implements AdvancedTo
     public void addCommonTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
         String energy = String.format("%,d", ItemStackEnergy.getEnergyStored(itemStack)) + "/"
                 + String.format("%,d", ItemStackEnergy.getMaxEnergyStored(itemStack));
-        tooltips.add(TooltipUtil.styledWithArgs(EIOLang.ENERGY_AMOUNT, energy));
+        tooltips.add(TooltipUtil.styledWithArgs(EIOCommonLang.ENERGY_AMOUNT, energy));
     }
 
     @SubscribeEvent

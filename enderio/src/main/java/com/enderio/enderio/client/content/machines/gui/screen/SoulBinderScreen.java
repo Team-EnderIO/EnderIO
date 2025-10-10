@@ -8,7 +8,7 @@ import com.enderio.enderio.client.foundation.widgets.ExperienceCraftingWidget;
 import com.enderio.enderio.client.foundation.widgets.ProgressWidget;
 import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget;
 import com.enderio.enderio.content.machines.soul_binder.SoulBinderMenu;
-import com.enderio.enderio.foundation.lang.EIOLang;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -37,7 +37,7 @@ public class SoulBinderScreen extends MachineScreen<SoulBinderMenu> {
                 menu::isCapacitorInstalled));
 
         addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6,
-                menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
+                menu::getRedstoneControl, menu::setRedstoneControl, EIOCommonLang.REDSTONE_MODE));
 
         addRenderableOnly(new ExperienceCraftingWidget(56 + leftPos, 68 + topPos, 65, 5, menu::getFluidTank,
                 menu::getExperience));

@@ -14,6 +14,13 @@ public class ToolsLang {
 
     // endregion
 
+    // region Glider
+
+    public static final MutableComponent GLIDER_DISABLED = message("glider/disable");
+    public static final MutableComponent GLIDER_DISABLED_FALL_FLYING = message("glider/disable/fall_flying");
+
+    // endregion
+
     // region Vials
 
     public static final MutableComponent SOUL_VIAL_ERROR_PLAYER = message("soul_vial/error/player");

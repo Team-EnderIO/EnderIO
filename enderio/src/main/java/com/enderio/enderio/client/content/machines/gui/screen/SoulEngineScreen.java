@@ -7,7 +7,7 @@ import com.enderio.enderio.client.content.machines.gui.widget.CapacitorEnergyWid
 import com.enderio.enderio.client.foundation.widgets.FluidStackWidget;
 import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget;
 import com.enderio.enderio.content.machines.soul_engine.SoulEngineMenu;
-import com.enderio.enderio.foundation.lang.EIOLang;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.foundation.souldata.EngineSoul;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -37,7 +37,7 @@ public class SoulEngineScreen extends MachineScreen<SoulEngineMenu> {
                 menu::isCapacitorInstalled));
 
         addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6,
-                menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
+                menu::getRedstoneControl, menu::setRedstoneControl, EIOCommonLang.REDSTONE_MODE));
 
         addRenderableOnly(new FluidStackWidget(80 + leftPos, 21 + topPos, 16, 47, menu::getFluidTank));
 

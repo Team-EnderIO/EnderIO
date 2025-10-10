@@ -3,7 +3,8 @@ package com.enderio.enderio.foundation.integrations;
 import com.enderio.enderio.api.glider.GliderMovementInfo;
 import com.enderio.enderio.api.integration.ClientIntegration;
 import com.enderio.enderio.api.integration.Integration;
-import com.enderio.enderio.foundation.lang.EIOLang;
+import com.enderio.enderio.content.tools.ToolsLang;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -19,7 +20,7 @@ public class EnderIOSelfIntegration implements Integration {
     public static final EnderIOSelfIntegration INSTANCE = new EnderIOSelfIntegration();
     @Override
     public Optional<Component> hangGliderDisabledReason(Player player) {
-        return player.isFallFlying() ? Optional.of(EIOLang.GLIDER_DISABLED_FALL_FLYING) : Optional.empty();
+        return player.isFallFlying() ? Optional.of(ToolsLang.GLIDER_DISABLED_FALL_FLYING) : Optional.empty();
     }
 
     @Override

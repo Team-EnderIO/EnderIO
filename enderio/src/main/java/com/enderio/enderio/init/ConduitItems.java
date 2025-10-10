@@ -47,65 +47,6 @@ public class ConduitItems {
                         ComponentBackedConduitFacadeProvider.PROVIDER);
     }
 
-    public static final RegiliteItem<RedstoneFilterItem> NOT_FILTER = createRedstoneFilter("redstone_not_filter",
-        EIODataComponents.REDSTONE_NOT_FILTER, Unit.INSTANCE, null)
-        .addCapability(EnderIOCapabilities.REDSTONE_INSERT_FILTER, RedstoneFilterItem.NOT_FILTER_PROVIDER_INSERT)
-        .addCapability(EnderIOCapabilities.REDSTONE_EXTRACT_FILTER, RedstoneFilterItem.NOT_FILTER_PROVIDER_EXTRACT);
-
-    public static final RegiliteItem<RedstoneFilterItem> OR_FILTER = createRedstoneFilter("redstone_or_filter",
-        EIODataComponents.REDSTONE_OR_FILTER, DoubleRedstoneChannel.INSTANCE, EIOMenus.REDSTONE_DOUBLE_CHANNEL_FILTER::get)
-        .addCapability(EnderIOCapabilities.REDSTONE_INSERT_FILTER, RedstoneFilterItem.OR_FILTER_PROVIDER);
-
-    public static final RegiliteItem<RedstoneFilterItem> AND_FILTER = createRedstoneFilter("redstone_and_filter",
-        EIODataComponents.REDSTONE_AND_FILTER, DoubleRedstoneChannel.INSTANCE, EIOMenus.REDSTONE_DOUBLE_CHANNEL_FILTER::get)
-        .addCapability(EnderIOCapabilities.REDSTONE_INSERT_FILTER, RedstoneFilterItem.AND_FILTER_PROVIDER);
-
-    public static final RegiliteItem<RedstoneFilterItem> NOR_FILTER = createRedstoneFilter("redstone_nor_filter",
-        EIODataComponents.REDSTONE_NOR_FILTER, DoubleRedstoneChannel.INSTANCE, EIOMenus.REDSTONE_DOUBLE_CHANNEL_FILTER::get)
-        .addCapability(EnderIOCapabilities.REDSTONE_INSERT_FILTER, RedstoneFilterItem.NOR_FILTER_PROVIDER);
-
-    public static final RegiliteItem<RedstoneFilterItem> NAND_FILTER = createRedstoneFilter("redstone_nand_filter",
-        EIODataComponents.REDSTONE_NAND_FILTER, DoubleRedstoneChannel.INSTANCE, EIOMenus.REDSTONE_DOUBLE_CHANNEL_FILTER::get)
-        .addCapability(EnderIOCapabilities.REDSTONE_INSERT_FILTER, RedstoneFilterItem.NAND_FILTER_PROVIDER);
-
-    public static final RegiliteItem<RedstoneFilterItem> XOR_FILTER = createRedstoneFilter("redstone_xor_filter",
-        EIODataComponents.REDSTONE_XOR_FILTER, DoubleRedstoneChannel.INSTANCE, EIOMenus.REDSTONE_DOUBLE_CHANNEL_FILTER::get)
-        .addCapability(EnderIOCapabilities.REDSTONE_INSERT_FILTER, RedstoneFilterItem.XOR_FILTER_PROVIDER);
-
-    public static final RegiliteItem<RedstoneFilterItem> XNOR_FILTER = createRedstoneFilter("redstone_xnor_filter",
-        EIODataComponents.REDSTONE_XNOR_FILTER, DoubleRedstoneChannel.INSTANCE, EIOMenus.REDSTONE_DOUBLE_CHANNEL_FILTER::get)
-        .addCapability(EnderIOCapabilities.REDSTONE_INSERT_FILTER, RedstoneFilterItem.XNOR_FILTER_PROVIDER);
-
-    public static final RegiliteItem<RedstoneFilterItem> TLATCH_FILTER = createRedstoneFilter("redstone_toggle_filter",
-        EIODataComponents.REDSTONE_TLATCH_FILTER, RedstoneTLatchFilter.INSTANCE, null)
-        .addCapability(EnderIOCapabilities.REDSTONE_INSERT_FILTER, RedstoneFilterItem.TLATCH_FILTER_PROVIDER);
-
-    public static final RegiliteItem<RedstoneFilterItem> COUNT_FILTER = createRedstoneFilter("redstone_counting_filter",
-        EIODataComponents.REDSTONE_COUNT_FILTER, RedstoneCountFilter.INSTANCE, EIOMenus.REDSTONE_COUNT_FILTER::get)
-        .addCapability(EnderIOCapabilities.REDSTONE_INSERT_FILTER, RedstoneFilterItem.COUNT_FILTER_PROVIDER);
-
-    public static final RegiliteItem<RedstoneFilterItem> SENSOR_FILTER = createRedstoneFilter("redstone_sensor_filter",
-        EIODataComponents.REDSTONE_SENSOR_FILTER, Unit.INSTANCE, null)
-        .addCapability(EnderIOCapabilities.REDSTONE_EXTRACT_FILTER, RedstoneFilterItem.SENSOR_FILTER_PROVIDER);
-
-    public static final RegiliteItem<RedstoneFilterItem> TIMER_FILTER = createRedstoneFilter("redstone_timer_filter",
-        EIODataComponents.REDSTONE_TIMER_FILTER, RedstoneTimerFilter.INSTANCE, EIOMenus.REDSTONE_TIMER_FILTER::get)
-        .addCapability(EnderIOCapabilities.REDSTONE_EXTRACT_FILTER, RedstoneFilterItem.TIMER_FILTER_PROVIDER);
-
-    public static <T> RegiliteItem<RedstoneFilterItem> createRedstoneFilter(String name,
-            DataComponentType<T> type, T defaultValue,
-        @Nullable Supplier<MenuType<?>> menu) {
-        return ITEM_REGISTRY
-                .registerItem(name,
-                        properties -> new RedstoneFilterItem(properties.component(type, defaultValue), menu))
-                .setTab(EIOCreativeTabs.MAIN);
-    }
-
-    public static final RegiliteItem<ConduitProbeItem> CONDUIT_PROBE = ITEM_REGISTRY
-        .registerItem("conduit_probe", props -> new ConduitProbeItem(props.stacksTo(1)))
-        .setModelProvider((prov, ctx) -> {})
-        .setTab(EIOCreativeTabs.MAIN);
-
     public static void register(IEventBus bus) {
         ITEM_REGISTRY.register(bus);
     }

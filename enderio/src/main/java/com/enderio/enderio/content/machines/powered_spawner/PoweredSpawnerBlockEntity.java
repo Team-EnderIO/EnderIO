@@ -16,7 +16,6 @@ import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
-import com.enderio.enderio.foundation.lang.MachineLang;
 import com.enderio.enderio.foundation.particle.RangeParticleData;
 import com.enderio.enderio.foundation.souldata.SpawnerSoul;
 import com.enderio.enderio.foundation.state.MachineState;

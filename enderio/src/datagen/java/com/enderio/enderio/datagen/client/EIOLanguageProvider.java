@@ -5,16 +5,19 @@ import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.compat.jei.JEILang;
+import com.enderio.enderio.content.advancements.AdvancementsLang;
 import com.enderio.enderio.content.capacitors.CapacitorLang;
 import com.enderio.enderio.content.conduits.ConduitLang;
 import com.enderio.enderio.content.filters.FiltersLang;
 import com.enderio.enderio.content.filters.item.general.DamageFilterMode;
 import com.enderio.enderio.content.glass.GlassCollisionPredicate;
 import com.enderio.enderio.content.glass.GlassLang;
+import com.enderio.enderio.content.glass.GlassLighting;
 import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.machines.alloy.AlloySmelterMode;
 import com.enderio.enderio.content.machines.powered_spawner.PoweredSpawnerMode;
 import com.enderio.enderio.content.tools.ToolsLang;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOConduits;
 import com.enderio.enderio.init.EIOEntities;
@@ -26,9 +29,11 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.DyeColor;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
 import java.lang.reflect.Field;
+import java.util.Locale;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -51,6 +56,8 @@ public class EIOLanguageProvider extends LanguageProvider {
         addGlassLang();
         addMachineLang();
         addItems();
+        addAdvancementsLang();
+        addCommonLang();
 
         // Gross hack until Regilite is out.
         try {
@@ -262,6 +269,9 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(ToolsLang.COORDINATE_SELECTOR_NO_PAPER, "No paper in inventory");
         add(ToolsLang.COORDINATE_SELECTOR_NO_BLOCK, "No block in range");
 
+        add(ToolsLang.GLIDER_DISABLED, "Gliding is disabled: ");
+        add(ToolsLang.GLIDER_DISABLED_FALL_FLYING, "Elytra Flight");
+
         add(ToolsLang.SOUL_VIAL_ERROR_PLAYER, "You cannot put player in a bottle!");
         add(ToolsLang.SOUL_VIAL_ERROR_BOSS, "Nice try. Bosses don't like bottles.");
         add(ToolsLang.SOUL_VIAL_ERROR_BLACKLISTED, "This entity has been blacklisted.");
@@ -300,6 +310,41 @@ public class EIOLanguageProvider extends LanguageProvider {
     private void addGlassLang() {
         add(GlassLang.EMITS_LIGHT, "Emits Light");
         add(GlassLang.BLOCKS_LIGHT, "Blocks Light");
+
+        for (var lighting : GlassLighting.values()) {
+            String lightingName = lighting != GlassLighting.NONE ? lighting.englishName() + " " : "";
+            String lightingKeyName = lighting != GlassLighting.NONE ? "_" + lighting.shortName() : "";
+
+            add(Util.makeDescriptionId("block", EnderIO.rl("clear_glass" + lightingKeyName)), lightingName + "Clear Glass");
+            add(Util.makeDescriptionId("block", EnderIO.rl("fused_quartz" + lightingKeyName)), lightingName + "Fused Quartz");
+
+            for (var color : DyeColor.values()) {
+                String colorName = createEnglishPrefix(color);
+
+                add(Util.makeDescriptionId("block", EnderIO.rl("clear_glass" + lightingKeyName + "_" + color.getName().toLowerCase(Locale.ROOT))),
+                    colorName + lightingName + "Clear Glass");
+                add(Util.makeDescriptionId("block", EnderIO.rl("fused_quartz" + lightingKeyName + "_" + color.getName().toLowerCase(Locale.ROOT))),
+                    colorName + lightingName + "Fused Quartz");
+            }
+        }
+    }
+
+    private static String createEnglishPrefix(DyeColor color) {
+        StringBuilder builder = new StringBuilder();
+        boolean nextUpper = true;
+        for (char c : color.getName().replace("_", " ").toCharArray()) {
+            if (nextUpper) {
+                builder.append(Character.toUpperCase(c));
+                nextUpper = false;
+                continue;
+            }
+            if (c == ' ') {
+                nextUpper = true;
+            }
+            builder.append(c);
+        }
+        builder.append(" ");
+        return builder.toString();
     }
 
     private void addMachineLang() {
@@ -321,6 +366,14 @@ public class EIOLanguageProvider extends LanguageProvider {
 
         add(MachinesLang.GENERATING, "Generating %s\u00B5I/t");
         add(MachinesLang.FUEL_EFFICIENCY, "Efficiency %s%%");
+
+        add(MachinesLang.RANGE, "Range");
+        add(MachinesLang.MAX_RANGE, "Maximum Range");
+        add(MachinesLang.SHOW_RANGE, "Show Range");
+        add(MachinesLang.HIDE_RANGE, "Hide Range");
+
+        add(MachinesLang.NOCAP_TITLE, "Capacitor Missing");
+        add(MachinesLang.NOCAP_DESC, "Insert any capacitor so \n this machine can work!");
 
         add(MachinesLang.ALLOY_SMELTER_MODE, "Smelting Mode");
         add(MachinesLang.POWERED_SPAWNER_MODE, "Spawner Mode");
@@ -348,6 +401,15 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(MachinesLang.POWERED_SPAWNER_STATUS_OTHER_MOD, "Blocked by another mod");
         add(MachinesLang.POWERED_SPAWNER_STATUS_DISABLED, "Disabled by config");
         add(MachinesLang.POWERED_SPAWNER_STATUS_UNKNOWN_MOB, "Unknown mob");
+
+        add(MachinesLang.PHOTOVOLTAIC_CELL, "Solar Power!");
+        add(MachinesLang.PHOTOVOLTAIC_CELL_ADVANCED, "Produces Power during daylight hours");
+        add(MachinesLang.PHOTOVOLTAIC_CELL_ADVANCED2, "Must have a clear line of sight to the sky");
+        add(MachinesLang.PHOTOVOLTAIC_CELL_ADVANCED3, "Max Output: ");
+
+        add(MachinesLang.FARMING_STATION_EXPERIMENT, "Ender IO: Farming Station");
+        add(MachinesLang.ENDERFACE_EXPERIMENT, "Ender IO: The Ender IO");
+        add(MachinesLang.NIARD_EXPERIMENT, "Ender IO: Niard");
     }
 
     private void addItems() {
@@ -458,7 +520,6 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOItems.BLACK_PAPER.get(), "Black Paper");
         add(EIOItems.CLAYED_GLOWSTONE.get(), "Clayed Glowstone");
         add(EIOItems.NETHERCOTTA.get(), "Nethercotta");
-        add(EIOItems.REDSTONE_FILTER_BASE.get(), "Redstone Filter Base");
         add(EIOItems.BROKEN_SPAWNER.get(), "Broken Spawner");
 
         // Gliders
@@ -477,6 +538,7 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOItems.TRAVEL_STAFF.get(), "Staff of Travelling");
         add(EIOItems.ELECTROMAGNET.get(), "Electromagnet");
         add(EIOItems.COLD_FIRE_IGNITER.get(), "Cold Fire Igniter");
+        add(EIOItems.CONDUIT_PROBE.get(), "Conduit Probe");
 
         // Filters
         add(EIOItems.BASIC_ITEM_FILTER.get(), "Basic Item Filter");
@@ -488,8 +550,66 @@ public class EIOLanguageProvider extends LanguageProvider {
 
         add(EIOItems.BASIC_SOUL_FILTER.get(), "Basic Soul Filter");
 
+        add(EIOItems.REDSTONE_FILTER_BASE.get(), "Redstone Filter Base");
+        add(EIOItems.NOT_FILTER.get(), "Redstone NOT Filter");
+        add(EIOItems.OR_FILTER.get(), "Redstone OR Filter");
+        add(EIOItems.AND_FILTER.get(), "Redstone AND Filter");
+        add(EIOItems.NOR_FILTER.get(), "Redstone NOR Filter");
+        add(EIOItems.NAND_FILTER.get(), "Redstone NAND Filter");
+        add(EIOItems.XOR_FILTER.get(), "Redstone XOR Filter");
+        add(EIOItems.XNOR_FILTER.get(), "Redstone XNOR Filter");
+        add(EIOItems.TLATCH_FILTER.get(), "Redstone Toggle Filter");
+        add(EIOItems.COUNT_FILTER.get(), "Redstone Count Filter");
+        add(EIOItems.SENSOR_FILTER.get(), "Redstone Sensor Filter");
+        add(EIOItems.TIMER_FILTER.get(), "Redstone Timer Filter");
+
         // Creative Tab Icon
         add(EIOItems.CREATIVE_ICON.get(), "Internal Item - Unobtainable");
+    }
+
+    private void addCommonLang() {
+        add(EIOCommonLang.TOOLTIP_ENERGY_EQUIVALENCE, "A unit of energy, equivalent to FE.");
+        add(EIOCommonLang.BLOCK_BLAST_RESISTANT, "Blast resistant");
+
+        add(EIOCommonLang.REDSTONE_MODE, "Redstone Mode");
+
+        add(EIOCommonLang.TANK_EMPTY_STRING, "Empty tank");
+        add(EIOCommonLang.FLUID_TANK_TOOLTIP, "%d/%d mb of %s"); // [amount]/[capacity] mb of [FluidName]
+
+        add(EIOCommonLang.ENERGY_AMOUNT, "%s \u00B5I");
+
+        add(EIOCommonLang.VISIBLE, "Visible");
+        add(EIOCommonLang.NOT_VISIBLE, "Hidden");
+
+        add(EIOCommonLang.TOOLTIP_NO_SOULBOUND, "This item can have a soul bound to it.");
+
+        add(EIOCommonLang.SUSPICIOUS_SEED_LORE, "The seed appears to interact with nearby experience orbs...");
+
+        add(EIOCommonLang.SHOW_DETAIL_TOOLTIP, "<Hold Shift>");
+
+        add(EIOCommonLang.IOCONFIG, "IO Configuration");
+        add(EIOCommonLang.TOGGLE_NEIGHBOUR, "Show/Hide Neighbours");
+
+        add(EIOCommonLang.PUSH, "Push");
+        add(EIOCommonLang.PULL, "Pull");
+        add(EIOCommonLang.BOTH, "Push / Pull");
+        add(EIOCommonLang.DISABLED, "Disabled");
+        add(EIOCommonLang.NONE, "None");
+    }
+
+    private void addAdvancementsLang() {
+        add(AdvancementsLang.PLACE_CAPACITOR_BANK_ADVANCEMENT_TITLE, "Modular Power Storage");
+        add(AdvancementsLang.PLACE_CAPACITOR_BANK_ADVANCEMENT_DESCRIPTION, "Build a Capacitor Bank");
+        add(AdvancementsLang.MULTIBLOCK_CONNECTED_TEXTURES, "If you are looking for connected textures on the capacitor bank, you might want to install Athena on your client.");
+
+        add(AdvancementsLang.USE_GLIDER_ADVANCEMENT_TITLE, "Majestic");
+        add(AdvancementsLang.USE_GLIDER_ADVANCEMENT_DESCRIPTION, "Do you really trust some leather?");
+
+        add(AdvancementsLang.RICH_ADVANCEMENT_TITLE, "Don't tell the others");
+        add(AdvancementsLang.RICH_ADVANCEMENT_DESCRIPTION, "Make others think you are rich");
+
+        add(AdvancementsLang.RICHER_ADVANCEMENT_TITLE, "Is this real?");
+        add(AdvancementsLang.RICHER_ADVANCEMENT_DESCRIPTION, "Make others think you are richer");
     }
 
     private void add(ResourceKey<Conduit<?, ?>> key, String translation) {

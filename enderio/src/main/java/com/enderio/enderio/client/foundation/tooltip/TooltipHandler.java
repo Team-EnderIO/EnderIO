@@ -7,7 +7,7 @@ import com.enderio.enderio.api.EnderIODataComponents;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.components.GrindingBallData;
 import com.enderio.enderio.content.capacitors.CapacitorLang;
-import com.enderio.enderio.foundation.lang.EIOLang;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -70,12 +70,12 @@ public class TooltipHandler {
         if (itemStack.has(EnderIODataComponents.GRINDING_BALL)) {
             if (showAdvanced) {
                 GrindingBallData data = itemStack.get(EnderIODataComponents.GRINDING_BALL);
-                components.add(TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_MAIN_OUTPUT,
+                components.add(TooltipUtil.styledWithArgs(EIOCommonLang.GRINDINGBALL_MAIN_OUTPUT,
                         (int) (data.outputMultiplier() * 100)));
-                components.add(TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_BONUS_OUTPUT,
+                components.add(TooltipUtil.styledWithArgs(EIOCommonLang.GRINDINGBALL_BONUS_OUTPUT,
                         (int) (data.bonusMultiplier() * 100)));
                 components
-                        .add(TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_POWER_USE, (int) (data.powerUse() * 100)));
+                        .add(TooltipUtil.styledWithArgs(EIOCommonLang.GRINDINGBALL_POWER_USE, (int) (data.powerUse() * 100)));
             } else {
                 addShowDetailsTooltip(components);
             }
@@ -94,7 +94,7 @@ public class TooltipHandler {
             if (soul.hasEntity()) {
                 components.add(TooltipUtil.style(Component.translatable(soul.entityType().getDescriptionId())));
             } else {
-                components.add(TooltipUtil.style(EIOLang.TOOLTIP_NO_SOULBOUND));
+                components.add(TooltipUtil.style(EIOCommonLang.TOOLTIP_NO_SOULBOUND));
             }
         }
     }
@@ -131,8 +131,8 @@ public class TooltipHandler {
     // endregion
 
     private static void addShowDetailsTooltip(List<Component> components) {
-        if (!components.contains(EIOLang.SHOW_DETAIL_TOOLTIP)) {
-            components.add(EIOLang.SHOW_DETAIL_TOOLTIP);
+        if (!components.contains(EIOCommonLang.SHOW_DETAIL_TOOLTIP)) {
+            components.add(EIOCommonLang.SHOW_DETAIL_TOOLTIP);
         }
     }
 

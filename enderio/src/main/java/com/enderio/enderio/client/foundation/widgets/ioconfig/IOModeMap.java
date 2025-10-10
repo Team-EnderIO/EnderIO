@@ -1,7 +1,8 @@
 package com.enderio.enderio.client.foundation.widgets.ioconfig;
 
 import com.enderio.enderio.api.io.IOMode;
-import com.enderio.enderio.foundation.lang.EIOLang;
+import com.enderio.enderio.content.machines.MachinesLang;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 
@@ -10,15 +11,15 @@ import java.util.Comparator;
 
 public enum IOModeMap {
 
-    NONE(IOMode.NONE, EIOLang.NONE, new Rect2i(0, 0, 0, 0)),
+    NONE(IOMode.NONE, EIOCommonLang.NONE, new Rect2i(0, 0, 0, 0)),
 
-    PUSH(IOMode.PUSH, EIOLang.PUSH, new Rect2i(16, 0, 16, 8)),
+    PUSH(IOMode.PUSH, EIOCommonLang.PUSH, new Rect2i(16, 0, 16, 8)),
 
-    PULL(IOMode.PULL, EIOLang.PULL, new Rect2i(0, 0, 16, 8)),
+    PULL(IOMode.PULL, EIOCommonLang.PULL, new Rect2i(0, 0, 16, 8)),
 
-    BOTH(IOMode.BOTH, EIOLang.BOTH, new Rect2i(0, 0, 32, 8)),
+    BOTH(IOMode.BOTH, EIOCommonLang.BOTH, new Rect2i(0, 0, 32, 8)),
 
-    DISABLED(IOMode.DISABLED, EIOLang.DISABLED, new Rect2i(32, 0, 16, 16));
+    DISABLED(IOMode.DISABLED, EIOCommonLang.DISABLED, new Rect2i(32, 0, 16, 16));
 
     private static final IOModeMap[] BY_MODE = Arrays.stream(values()).sorted(Comparator.comparingInt(m -> m.mode.ordinal())).toArray(IOModeMap[]::new);
 

@@ -6,8 +6,9 @@ import com.enderio.enderio.client.content.machines.gui.widget.ActivityWidget;
 import com.enderio.enderio.client.content.machines.gui.widget.CapacitorEnergyWidget;
 import com.enderio.enderio.client.foundation.widgets.EIOCommonWidgets;
 import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget;
+import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.machines.farming_station.FarmingStationMenu;
-import com.enderio.enderio.foundation.lang.EIOLang;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -34,14 +35,14 @@ public class FarmingStationScreen extends MachineScreen<FarmingStationMenu> {
                 menu::isCapacitorInstalled));
 
         addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 16, topPos + 6,
-                menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
+                menu::getRedstoneControl, menu::setRedstoneControl, EIOCommonLang.REDSTONE_MODE));
 
         var overlay = addIOConfigOverlay(1, leftPos + 7, topPos + 86, 162, 76);
         addIOConfigButton(leftPos + imageWidth - 16, topPos + 6 + 16 + 2, overlay);
 
         addRenderableWidget(EIOCommonWidgets.createRange(leftPos + imageWidth - 16, topPos + 6 + (16 + 2) * 2,
-                EIOLang.HIDE_RANGE, EIOLang.SHOW_RANGE, menu::isRangeVisible,
-                (ignore) -> handleButtonPress(FarmingStationMenu.VISIBILITY_BUTTON_ID)));
+            MachinesLang.HIDE_RANGE, MachinesLang.SHOW_RANGE, menu::isRangeVisible,
+            (ignore) -> handleButtonPress(FarmingStationMenu.VISIBILITY_BUTTON_ID)));
 
         addRenderableOnly(new ActivityWidget(leftPos + imageWidth - 16, topPos + 62, menu::getMachineStates, false));
 

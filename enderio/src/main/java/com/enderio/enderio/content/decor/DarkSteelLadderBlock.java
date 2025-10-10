@@ -1,6 +1,6 @@
 package com.enderio.enderio.content.decor;
 
-import com.enderio.enderio.foundation.lang.EIOLang;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -19,6 +19,6 @@ public class DarkSteelLadderBlock extends LadderBlock {
     @Override
     public void appendHoverText(ItemStack pStack, Item.TooltipContext pContext, List<Component> pTooltip, TooltipFlag pFlag) {
         super.appendHoverText(pStack, pContext, pTooltip, pFlag);
-        pTooltip.add(EIOLang.DARK_STEEL_LADDER_FASTER);
+        pTooltip.add(EIOCommonLang.DARK_STEEL_LADDER_FASTER);
     }
 }

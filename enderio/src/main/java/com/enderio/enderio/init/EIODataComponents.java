@@ -85,38 +85,17 @@ public class EIODataComponents {
     public static final DataComponentType<EnderSoulFilter> SOUL_FILTER = register("soul_filter",
         builder -> builder.persistent(EnderSoulFilter.CODEC).networkSynchronized(EnderSoulFilter.STREAM_CODEC));
 
-    public static final DataComponentType<DoubleRedstoneChannel.Component> REDSTONE_AND_FILTER = register("redstone_and_filter",
+    public static final DataComponentType<DoubleRedstoneChannel.Component> REDSTONE_FILTER_DOUBLE_CHANNEL = register("redstone_filter_double_channel",
         builder -> builder.persistent(DoubleRedstoneChannel.Component.CODEC).networkSynchronized(DoubleRedstoneChannel.Component.STREAM_CODEC));
 
     public static final DataComponentType<RedstoneCountFilter.Component> REDSTONE_COUNT_FILTER = register("redstone_count_filter",
         builder -> builder.persistent(RedstoneCountFilter.Component.CODEC).networkSynchronized(RedstoneCountFilter.Component.STREAM_CODEC));
-
-    public static final DataComponentType<DoubleRedstoneChannel.Component> REDSTONE_NAND_FILTER = register("redstone_nand_filter",
-        builder -> builder.persistent(DoubleRedstoneChannel.Component.CODEC).networkSynchronized(DoubleRedstoneChannel.Component.STREAM_CODEC));
-
-    public static final DataComponentType<DoubleRedstoneChannel.Component> REDSTONE_NOR_FILTER = register("redstone_nor_filter",
-        builder -> builder.persistent(DoubleRedstoneChannel.Component.CODEC).networkSynchronized(DoubleRedstoneChannel.Component.STREAM_CODEC));
-
-    public static final DataComponentType<Unit> REDSTONE_NOT_FILTER = register("redstone_not_filter",
-        builder -> builder.persistent(Codec.unit(Unit.INSTANCE)).networkSynchronized(StreamCodec.unit(Unit.INSTANCE)));
-
-    public static final DataComponentType<DoubleRedstoneChannel.Component> REDSTONE_OR_FILTER = register("redstone_or_filter",
-        builder -> builder.persistent(DoubleRedstoneChannel.Component.CODEC).networkSynchronized(DoubleRedstoneChannel.Component.STREAM_CODEC));
-
-    public static final DataComponentType<Unit> REDSTONE_SENSOR_FILTER = register("redstone_sensor_filter",
-        builder -> builder.persistent(Codec.unit(Unit.INSTANCE)).networkSynchronized(StreamCodec.unit(Unit.INSTANCE)));
 
     public static final DataComponentType<RedstoneTimerFilter.Component> REDSTONE_TIMER_FILTER = register("redstone_timer_filter",
         builder -> builder.persistent(RedstoneTimerFilter.Component.CODEC).networkSynchronized(RedstoneTimerFilter.Component.STREAM_CODEC));
 
     public static final DataComponentType<RedstoneTLatchFilter.Component> REDSTONE_TLATCH_FILTER = register("redstone_tlatch_filter",
         builder -> builder.persistent(RedstoneTLatchFilter.Component.CODEC).networkSynchronized(RedstoneTLatchFilter.Component.STREAM_CODEC));
-
-    public static final DataComponentType<DoubleRedstoneChannel.Component> REDSTONE_XNOR_FILTER = register("redstone_xnor_filter",
-        builder -> builder.persistent(DoubleRedstoneChannel.Component.CODEC).networkSynchronized(DoubleRedstoneChannel.Component.STREAM_CODEC));
-
-    public static final DataComponentType<DoubleRedstoneChannel.Component> REDSTONE_XOR_FILTER = register("redstone_xor_filter",
-        builder -> builder.persistent(DoubleRedstoneChannel.Component.CODEC).networkSynchronized(DoubleRedstoneChannel.Component.STREAM_CODEC));
 
     // endregion
 
@@ -179,6 +158,14 @@ public class EIODataComponents {
 
         DATA_COMPONENT_TYPES.register("conduit", () -> EnderIODataComponents.CONDUIT);
         DATA_COMPONENT_TYPES.register("grinding_ball", () -> EnderIODataComponents.GRINDING_BALL);
+
+        // Flatten redstone filter component types
+        DATA_COMPONENT_TYPES.addAlias(EnderIO.rl("redstone_and_filter"), EnderIO.rl("redstone_filter_double_channel"));
+        DATA_COMPONENT_TYPES.addAlias(EnderIO.rl("redstone_or_filter"), EnderIO.rl("redstone_filter_double_channel"));
+        DATA_COMPONENT_TYPES.addAlias(EnderIO.rl("redstone_nand_filter"), EnderIO.rl("redstone_filter_double_channel"));
+        DATA_COMPONENT_TYPES.addAlias(EnderIO.rl("redstone_nor_filter"), EnderIO.rl("redstone_filter_double_channel"));
+        DATA_COMPONENT_TYPES.addAlias(EnderIO.rl("redstone_xnor_filter"), EnderIO.rl("redstone_filter_double_channel"));
+        DATA_COMPONENT_TYPES.addAlias(EnderIO.rl("redstone_xor_filter"), EnderIO.rl("redstone_filter_double_channel"));
 
         DATA_COMPONENT_TYPES.register(bus);
     }

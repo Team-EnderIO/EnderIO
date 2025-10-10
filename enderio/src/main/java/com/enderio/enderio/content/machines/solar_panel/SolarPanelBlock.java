@@ -2,10 +2,10 @@ package com.enderio.enderio.content.machines.solar_panel;
 
 import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.common.util.TooltipUtil;
+import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.foundation.block.entity.legacy.LegacyMachineBlockEntity;
 import com.enderio.enderio.foundation.block.legacy.LegacyMachineBlock;
-import com.enderio.enderio.foundation.lang.EIOLang;
-import com.enderio.enderio.foundation.lang.MachineLang;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -104,14 +104,14 @@ public class SolarPanelBlock extends LegacyMachineBlock implements AdvancedToolt
 
     @Override
     public void addCommonTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
-        tooltips.add(MachineLang.PHOTOVOLTAIC_CELL);
+        tooltips.add(MachinesLang.PHOTOVOLTAIC_CELL);
     }
 
     @Override
     public void addDetailedTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
-        tooltips.add(MachineLang.PHOTOVOLTAIC_CELL_ADVANCED);
-        tooltips.add(MachineLang.PHOTOVOLTAIC_CELL_ADVANCED2);
-        tooltips.add(MachineLang.PHOTOVOLTAIC_CELL_ADVANCED3.copy()
-                .append(TooltipUtil.withArgs(EIOLang.ENERGY_AMOUNT, tier.getProductionRate())));
+        tooltips.add(MachinesLang.PHOTOVOLTAIC_CELL_ADVANCED);
+        tooltips.add(MachinesLang.PHOTOVOLTAIC_CELL_ADVANCED2);
+        tooltips.add(MachinesLang.PHOTOVOLTAIC_CELL_ADVANCED3.copy()
+                .append(TooltipUtil.withArgs(EIOCommonLang.ENERGY_AMOUNT, tier.getProductionRate())));
     }
 }

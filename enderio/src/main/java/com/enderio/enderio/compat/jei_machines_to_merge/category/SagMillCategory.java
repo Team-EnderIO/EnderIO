@@ -9,8 +9,7 @@ import com.enderio.enderio.compat.jei.JEIUtils;
 import com.enderio.enderio.compat.jei_machines_to_merge.util.MachineRecipeCategory;
 import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.machines.sag_mill.SagMillingRecipe;
-import com.enderio.enderio.foundation.lang.EIOLang;
-import com.enderio.enderio.foundation.lang.MachineLang;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.MachineBlocks;
 import mezz.jei.api.constants.VanillaTypes;
@@ -139,14 +138,14 @@ public class SagMillCategory extends MachineRecipeCategory<RecipeHolder<SagMilli
         Minecraft mc = Minecraft.getInstance();
         if (mouseX > 83 && mouseY > 47 && mouseX < 83 + mc.font.width(getEnergyString(recipe, recipeSlotsView))
                 && mouseY < 47 + mc.font.lineHeight) {
-            return List.of(MachineLang.TOOLTIP_ENERGY_EQUIVALENCE);
+            return List.of(EIOCommonLang.TOOLTIP_ENERGY_EQUIVALENCE);
         }
 
         return List.of();
     }
 
     private Component getEnergyString(RecipeHolder<SagMillingRecipe> recipe, IRecipeSlotsView recipeSlotsView) {
-        return TooltipUtil.withArgs(EIOLang.ENERGY_AMOUNT, NumberFormat.getIntegerInstance(Locale.ENGLISH)
+        return TooltipUtil.withArgs(EIOCommonLang.ENERGY_AMOUNT, NumberFormat.getIntegerInstance(Locale.ENGLISH)
                 .format(recipe.value()
                         .getEnergyCost(recipeSlotsView.getSlotViews()
                                 .get(1)

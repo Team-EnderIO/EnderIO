@@ -6,7 +6,7 @@ import com.enderio.enderio.api.conduits.screen.ConduitScreenHelper;
 import com.enderio.enderio.api.conduits.screen.IOConduitScreenType;
 import com.enderio.enderio.content.conduits.ConduitLang;
 import com.enderio.enderio.content.conduits.type.energy.EnergyConduitConnectionConfig;
-import com.enderio.enderio.foundation.lang.EIOLang;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -68,7 +68,7 @@ public class EnergyConduitScreenType extends IOConduitScreenType<EnergyConduitCo
                 .extractRedstoneControl()
                 .isRedstoneSensitive());
 
-        screen.addRedstoneControlPicker(startX, startY + 20, EIOLang.REDSTONE_MODE,
+        screen.addRedstoneControlPicker(startX, startY + 20, EIOCommonLang.REDSTONE_MODE,
                 () -> dataAccess.getConnectionConfig().extractRedstoneControl(),
                 value -> dataAccess.updateConnectionConfig(config -> config.withExtractRedstoneControl(value)));
     }

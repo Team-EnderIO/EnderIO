@@ -4,7 +4,6 @@ import com.enderio.core.client.gui.widgets.EIOWidget;
 import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.foundation.fluid.FluidStorageInfo;
 import com.enderio.enderio.foundation.io.fluid.MachineFluidTank;
-import com.enderio.enderio.foundation.lang.MachineLang;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;

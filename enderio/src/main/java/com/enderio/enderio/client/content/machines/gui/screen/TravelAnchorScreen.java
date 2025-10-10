@@ -5,7 +5,7 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.client.content.machines.gui.screen.base.MachineScreen;
 import com.enderio.enderio.content.travel.travel_anchor.TravelAnchorMenu;
-import com.enderio.enderio.foundation.lang.EIOLang;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
@@ -49,7 +49,7 @@ public class TravelAnchorScreen extends MachineScreen<TravelAnchorMenu> {
         nameInput.setEditable(true);
 
         addRenderableWidget(ToggleIconButton.of(leftPos + 150, topPos + 10, 16, 16, VISIBLE_BUTTON, NOT_VISIBLE_BUTTON,
-                EIOLang.VISIBLE, EIOLang.NOT_VISIBLE, menu::isVisible, menu::setVisible));
+                EIOCommonLang.VISIBLE, EIOCommonLang.NOT_VISIBLE, menu::isVisible, menu::setVisible));
     }
 
     @Override

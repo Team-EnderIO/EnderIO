@@ -2,7 +2,7 @@ package com.enderio.enderio.foundation.state;
 
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.enderio.content.machines.MachinesLang;
-import com.enderio.enderio.foundation.lang.EIOLang;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
@@ -31,7 +31,7 @@ public record MachineState(MachineStateType type, MutableComponent component) {
     public static final MachineState NO_CAPACITOR = new MachineState(MachineStateType.ERROR,
         MachinesLang.STATUS_NO_CAPACITOR);
     public static final MachineState NOT_SOULBOUND = new MachineState(MachineStateType.ERROR,
-        EIOLang.TOOLTIP_NO_SOULBOUND);
+        EIOCommonLang.TOOLTIP_NO_SOULBOUND);
     public static final MachineState FULL_OUTPUT = new MachineState(MachineStateType.ERROR,
         MachinesLang.STATUS_OUTPUT_FULL);
     public static final MachineState REDSTONE = new MachineState(MachineStateType.DISABLED,

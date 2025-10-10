@@ -6,7 +6,6 @@ import com.enderio.enderio.client.content.machines.gui.screen.SoulEngineScreen;
 import com.enderio.enderio.compat.jei.JEILang;
 import com.enderio.enderio.content.machines.soul_engine.SoulEngineBlockEntity;
 import com.enderio.enderio.content.tools.vials.SoulVialItem;
-import com.enderio.enderio.foundation.lang.MachineLang;
 import com.enderio.enderio.foundation.souldata.EngineSoul;
 import com.enderio.enderio.init.MachineBlocks;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;

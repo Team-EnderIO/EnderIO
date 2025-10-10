@@ -8,7 +8,6 @@ import com.enderio.enderio.compat.jei_machines_to_merge.util.MachineRecipeCatego
 import com.enderio.enderio.content.machines.vat.FermentingRecipe;
 import com.enderio.enderio.content.machines.vat.VatBlockEntity;
 import com.enderio.enderio.foundation.datamap.VatReagent;
-import com.enderio.enderio.foundation.lang.MachineLang;
 import com.enderio.enderio.init.MachineBlocks;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;

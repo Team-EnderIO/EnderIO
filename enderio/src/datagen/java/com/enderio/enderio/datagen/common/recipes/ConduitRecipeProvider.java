@@ -166,7 +166,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 .save(recipeOutput, EnderIO.rl("redstone_conduit"));
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ConduitItems.CONDUIT_PROBE)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.CONDUIT_PROBE)
                 .pattern("ARA")
                 .pattern("PCP")
                 .pattern("RIR")
@@ -181,9 +181,9 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
 
     private void buildFilterErasureRecipes(RecipeOutput recipeOutput) {
         // List of all filter items to create erasure recipes for
-        ItemLike[] filterItems = { ConduitItems.OR_FILTER, ConduitItems.NOR_FILTER, ConduitItems.AND_FILTER,
-                ConduitItems.NAND_FILTER, ConduitItems.XOR_FILTER, ConduitItems.XNOR_FILTER, ConduitItems.COUNT_FILTER,
-                ConduitItems.TIMER_FILTER };
+        ItemLike[] filterItems = { EIOItems.OR_FILTER, EIOItems.NOR_FILTER, EIOItems.AND_FILTER,
+            EIOItems.NAND_FILTER, EIOItems.XOR_FILTER, EIOItems.XNOR_FILTER, EIOItems.COUNT_FILTER,
+            EIOItems.TIMER_FILTER };
 
         // Create erasure recipe for each filter
         for (ItemLike filter : filterItems) {
@@ -196,7 +196,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
     }
 
     private void buildFilterRecipes(RecipeOutput recipeOutput) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ConduitItems.NOT_FILTER)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.NOT_FILTER)
                 .define('T', Items.REDSTONE_TORCH)
                 .define('B', EIOItems.REDSTONE_FILTER_BASE)
                 .define('I', EIOTags.Items.INGOTS_REDSTONE_ALLOY)
@@ -204,7 +204,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
                 .unlockedBy("has_ingredient", has(EIOItems.REDSTONE_FILTER_BASE))
                 .save(recipeOutput);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ConduitItems.OR_FILTER)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.OR_FILTER)
                 .define('B', EIOItems.REDSTONE_FILTER_BASE)
                 .define('I', EIOTags.Items.INGOTS_REDSTONE_ALLOY)
                 .pattern(" I ")
@@ -213,7 +213,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
                 .unlockedBy("has_ingredient", has(EIOItems.REDSTONE_FILTER_BASE))
                 .save(recipeOutput);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ConduitItems.AND_FILTER)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.AND_FILTER)
                 .define('B', EIOItems.REDSTONE_FILTER_BASE)
                 .define('T', Items.REDSTONE_TORCH)
                 .pattern(" T ")
@@ -222,7 +222,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
                 .unlockedBy("has_ingredient", has(EIOItems.REDSTONE_FILTER_BASE))
                 .save(recipeOutput);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ConduitItems.XOR_FILTER)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.XOR_FILTER)
                 .define('B', EIOItems.REDSTONE_FILTER_BASE)
                 .define('T', Items.REDSTONE_TORCH)
                 .define('I', EIOTags.Items.INGOTS_REDSTONE_ALLOY)
@@ -232,7 +232,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
                 .unlockedBy("has_ingredient", has(EIOItems.REDSTONE_FILTER_BASE))
                 .save(recipeOutput);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ConduitItems.TLATCH_FILTER)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.TLATCH_FILTER)
                 .define('B', EIOItems.REDSTONE_FILTER_BASE)
                 .define('L', Items.LEVER)
                 .define('I', EIOTags.Items.INGOTS_REDSTONE_ALLOY)
@@ -240,7 +240,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
                 .unlockedBy("has_ingredient", has(EIOItems.REDSTONE_FILTER_BASE))
                 .save(recipeOutput);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ConduitItems.COUNT_FILTER)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.COUNT_FILTER)
                 .define('B', EIOItems.REDSTONE_FILTER_BASE)
                 .define('I', EIOTags.Items.INGOTS_REDSTONE_ALLOY)
                 .pattern("I  ")
@@ -249,7 +249,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
                 .unlockedBy("has_ingredient", has(EIOItems.REDSTONE_FILTER_BASE))
                 .save(recipeOutput);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ConduitItems.SENSOR_FILTER)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.SENSOR_FILTER)
                 .define('B', EIOItems.REDSTONE_FILTER_BASE)
                 .define('I', EIOTags.Items.INGOTS_REDSTONE_ALLOY)
                 .define('C', Items.COMPARATOR)
@@ -257,7 +257,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
                 .unlockedBy("has_ingredient", has(EIOItems.REDSTONE_FILTER_BASE))
                 .save(recipeOutput);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ConduitItems.TIMER_FILTER)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.TIMER_FILTER)
                 .define('B', EIOItems.REDSTONE_FILTER_BASE)
                 .define('I', EIOTags.Items.INGOTS_REDSTONE_ALLOY)
                 .define('C', Items.CLOCK)
@@ -267,40 +267,40 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
     }
 
     private void buildFilterConversionRecipes(RecipeOutput recipeOutput) {
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ConduitItems.OR_FILTER)
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, EIOItems.OR_FILTER)
                 .requires(Items.REDSTONE_TORCH)
-                .requires(ConduitItems.NOR_FILTER)
-                .unlockedBy("has_ingredient", has(ConduitItems.NOR_FILTER))
+                .requires(EIOItems.NOR_FILTER)
+                .unlockedBy("has_ingredient", has(EIOItems.NOR_FILTER))
                 .save(recipeOutput, EnderIO.rl("or_filter_from_nor_filter"));
 
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ConduitItems.NOR_FILTER)
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, EIOItems.NOR_FILTER)
                 .requires(Items.REDSTONE_TORCH)
-                .requires(ConduitItems.OR_FILTER)
-                .unlockedBy("has_ingredient", has(ConduitItems.OR_FILTER))
+                .requires(EIOItems.OR_FILTER)
+                .unlockedBy("has_ingredient", has(EIOItems.OR_FILTER))
                 .save(recipeOutput, EnderIO.rl("nor_filter_from_or_filter"));
 
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ConduitItems.AND_FILTER)
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, EIOItems.AND_FILTER)
                 .requires(Items.REDSTONE_TORCH)
-                .requires(ConduitItems.NAND_FILTER)
-                .unlockedBy("has_ingredient", has(ConduitItems.NAND_FILTER))
+                .requires(EIOItems.NAND_FILTER)
+                .unlockedBy("has_ingredient", has(EIOItems.NAND_FILTER))
                 .save(recipeOutput, EnderIO.rl("and_filter_from_nand_filter"));
 
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ConduitItems.NAND_FILTER)
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, EIOItems.NAND_FILTER)
                 .requires(Items.REDSTONE_TORCH)
-                .requires(ConduitItems.AND_FILTER)
-                .unlockedBy("has_ingredient", has(ConduitItems.AND_FILTER))
+                .requires(EIOItems.AND_FILTER)
+                .unlockedBy("has_ingredient", has(EIOItems.AND_FILTER))
                 .save(recipeOutput, EnderIO.rl("nand_filter_from_and_filter"));
 
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ConduitItems.XOR_FILTER)
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, EIOItems.XOR_FILTER)
                 .requires(Items.REDSTONE_TORCH)
-                .requires(ConduitItems.XNOR_FILTER)
-                .unlockedBy("has_ingredient", has(ConduitItems.XNOR_FILTER))
+                .requires(EIOItems.XNOR_FILTER)
+                .unlockedBy("has_ingredient", has(EIOItems.XNOR_FILTER))
                 .save(recipeOutput, EnderIO.rl("xor_filter_from_xnor_filter"));
 
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ConduitItems.XNOR_FILTER)
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, EIOItems.XNOR_FILTER)
                 .requires(Items.REDSTONE_TORCH)
-                .requires(ConduitItems.XOR_FILTER)
-                .unlockedBy("has_ingredient", has(ConduitItems.XOR_FILTER))
+                .requires(EIOItems.XOR_FILTER)
+                .unlockedBy("has_ingredient", has(EIOItems.XOR_FILTER))
                 .save(recipeOutput, EnderIO.rl("xnor_filter_from_xor_filter"));
     }
 

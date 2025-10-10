@@ -5,7 +5,7 @@ import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.foundation.io.energy.ILargeMachineEnergyStorage;
 import com.enderio.enderio.foundation.io.energy.IMachineEnergyStorage;
-import com.enderio.enderio.foundation.lang.EIOLang;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -68,7 +68,7 @@ public class EnergyWidget extends EIOWidget {
 
             NumberFormat fmt = NumberFormat.getInstance(Locale.ENGLISH);
             guiGraphics.renderTooltip(minecraft.font,
-                TooltipUtil.withArgs(EIOLang.ENERGY_AMOUNT, fmt.format(getEnergyStored(storage)) + "/" + fmt.format(
+                TooltipUtil.withArgs(EIOCommonLang.ENERGY_AMOUNT, fmt.format(getEnergyStored(storage)) + "/" + fmt.format(
                getMaxEnergyStored(storage))), mouseX, mouseY);
         }
     }

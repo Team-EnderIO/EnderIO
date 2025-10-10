@@ -6,7 +6,6 @@ import com.enderio.enderio.compat.jei.JEILang;
 import com.enderio.enderio.compat.jei.JEIUtils;
 import com.enderio.enderio.content.storage.fluid_tank.FluidTankBlockEntity;
 import com.enderio.enderio.content.storage.fluid_tank.TankRecipe;
-import com.enderio.enderio.foundation.lang.MachineLang;
 import com.enderio.enderio.init.MachineBlocks;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;

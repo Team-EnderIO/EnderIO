@@ -1,8 +1,9 @@
 package com.enderio.enderio.datagen.common.advancement;
 
 import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.content.advancements.AdvancementsLang;
 import com.enderio.enderio.content.paint.PaintingTrigger;
-import com.enderio.enderio.foundation.lang.EIOLang;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementType;
@@ -28,14 +29,14 @@ public class EIOAdvancementGenerator implements AdvancementProvider.AdvancementG
 
         AdvancementHolder rich = Advancement.Builder.advancement()
             .parent(ResourceLocation.withDefaultNamespace("adventure/root"))
-            .display(Items.DIAMOND_BLOCK, EIOLang.RICH_ADVANCEMENT_TITLE, EIOLang.RICH_ADVANCEMENT_DESCRIPTION, null, AdvancementType.TASK, true,
+            .display(Items.DIAMOND_BLOCK, AdvancementsLang.RICH_ADVANCEMENT_TITLE, AdvancementsLang.RICH_ADVANCEMENT_DESCRIPTION, null, AdvancementType.TASK, true,
                 true, false)
             .addCriterion("paint", PaintingTrigger.TriggerInstance.painted(Blocks.DIAMOND_BLOCK))
             .save(consumer, EnderIO.rl("adventure/rich").toString());
 
         Advancement.Builder.advancement()
             .parent(rich)
-            .display(Items.NETHERITE_BLOCK, EIOLang.RICHER_ADVANCEMENT_TITLE, EIOLang.RICHER_ADVANCEMENT_DESCRIPTION, null, AdvancementType.TASK, true,
+            .display(Items.NETHERITE_BLOCK, AdvancementsLang.RICHER_ADVANCEMENT_TITLE, AdvancementsLang.RICHER_ADVANCEMENT_DESCRIPTION, null, AdvancementType.TASK, true,
                 true, false)
             .addCriterion("paint", PaintingTrigger.TriggerInstance.painted(Blocks.NETHERITE_BLOCK))
             .save(consumer, EnderIO.rl("adventure/richer").toString());

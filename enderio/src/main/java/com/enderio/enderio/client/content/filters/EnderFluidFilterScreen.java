@@ -8,7 +8,7 @@ import com.enderio.enderio.content.filters.AbstractFilterMenu;
 import com.enderio.enderio.content.filters.fluid.EnderFluidFilterMenu;
 import com.enderio.enderio.content.filters.fluid.FluidFilterSlot;
 import com.enderio.enderio.content.filters.item.general.EnderItemFilterMenu;
-import com.enderio.enderio.foundation.lang.EIOLang;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.AbstractTexture;
@@ -81,7 +81,7 @@ public class EnderFluidFilterScreen extends EnderContainerScreen<EnderFluidFilte
         if (getMenu().type.canMatchComponents()) {
             addRenderableWidget(new ToggleIconButton(xPos, yPos, 16, 16,
                     (b) -> b ? ICON_MATCH_COMPONENTS : ICON_IGNORE_COMPONENTS,
-                    (b) -> b ? EIOLang.FILTER_MATCH_COMPONENTS : EIOLang.FILTER_IGNORE_COMPONENTS,
+                    (b) -> b ? EIOCommonLang.FILTER_MATCH_COMPONENTS : EIOCommonLang.FILTER_IGNORE_COMPONENTS,
                     getMenu()::shouldCompareComponents,
                     (b) -> handleButtonPress(EnderItemFilterMenu.SHOULD_COMPARE_COMPONENTS_BUTTON_ID)));
 
@@ -90,7 +90,7 @@ public class EnderFluidFilterScreen extends EnderContainerScreen<EnderFluidFilte
 
         addRenderableWidget(
                 new ToggleIconButton(xPos, yPos, 16, 16, (b) -> b ? ICON_DENY_LIST : ICON_ALLOW_LIST,
-                        (b) -> b ? EIOLang.FILTER_DENY_LIST : EIOLang.FILTER_ALLOW_LIST, getMenu()::isInverted,
+                        (b) -> b ? EIOCommonLang.FILTER_DENY_LIST : EIOCommonLang.FILTER_ALLOW_LIST, getMenu()::isInverted,
                         (b) -> handleButtonPress(EnderItemFilterMenu.IS_INVERTED_BUTTON_ID)));
 
         xPos -= 18;

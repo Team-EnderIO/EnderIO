@@ -6,8 +6,9 @@ import com.enderio.enderio.client.content.machines.gui.widget.ActivityWidget;
 import com.enderio.enderio.client.foundation.widgets.EIOCommonWidgets;
 import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget;
 import com.enderio.enderio.content.filters.FiltersLang;
+import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.machines.vacuum.chest.VacuumChestMenu;
-import com.enderio.enderio.foundation.lang.EIOLang;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -32,11 +33,11 @@ public class VacuumChestScreen extends MachineScreen<VacuumChestMenu> {
         super.init();
 
         addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 8 - 16, topPos + 105,
-                menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
+                menu::getRedstoneControl, menu::setRedstoneControl, EIOCommonLang.REDSTONE_MODE));
 
         addRenderableWidget(EIOCommonWidgets.createRange(leftPos + imageWidth - 8 - 16 * 2 - 2, topPos + 105,
-                EIOLang.HIDE_RANGE, EIOLang.SHOW_RANGE, menu::isRangeVisible,
-                (ignored) -> handleButtonPress(VacuumChestMenu.VISIBILITY_BUTTON_ID)));
+            MachinesLang.HIDE_RANGE, MachinesLang.SHOW_RANGE, menu::isRangeVisible,
+            (ignored) -> handleButtonPress(VacuumChestMenu.VISIBILITY_BUTTON_ID)));
 
         addRenderableWidget(EIOCommonWidgets.createRangeIncrease(leftPos + imageWidth - 8 - 8, topPos + 86,
                 (b) -> handleButtonPress(VacuumChestMenu.INCREASE_BUTTON_ID)));
@@ -55,7 +56,7 @@ public class VacuumChestScreen extends MachineScreen<VacuumChestMenu> {
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
         guiGraphics.drawString(font, FiltersLang.GUI_FILTER, 8, 74, 4210752, false);
-        guiGraphics.drawString(font, EIOLang.RANGE, imageWidth - 8 - font.width(EIOLang.RANGE), 74, 4210752, false);
+        guiGraphics.drawString(font, MachinesLang.RANGE, imageWidth - 8 - font.width(MachinesLang.RANGE), 74, 4210752, false);
         guiGraphics.drawString(font, menu.getRange() + "", leftPos + imageWidth - 8 - 8 - 10, topPos + 90, 0, false);
         super.renderLabels(guiGraphics, pMouseX, pMouseY);
     }

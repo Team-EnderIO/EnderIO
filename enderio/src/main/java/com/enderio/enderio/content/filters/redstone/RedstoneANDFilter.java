@@ -9,7 +9,7 @@ import net.minecraft.world.item.ItemStack;
 public class RedstoneANDFilter extends DoubleRedstoneChannel implements RedstoneOutputFilter {
 
     public RedstoneANDFilter(ItemStack stack) {
-        super(stack, EIODataComponents.REDSTONE_AND_FILTER);
+        super(stack, EIODataComponents.REDSTONE_FILTER_DOUBLE_CHANNEL);
     }
 
     @Override

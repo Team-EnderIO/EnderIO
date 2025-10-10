@@ -11,8 +11,7 @@ import com.enderio.enderio.client.foundation.widgets.NewProgressWidget;
 import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget;
 import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.machines.sag_mill.SagMillMenu;
-import com.enderio.enderio.foundation.lang.EIOLang;
-import com.enderio.enderio.foundation.lang.MachineLang;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
@@ -57,7 +56,7 @@ public class SagMillScreen extends MachineScreen<SagMillMenu> {
         addRenderableOnly(new GrindingBallWidget(142 + leftPos, 39 + topPos));
 
         addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6 + 55, menu::getRedstoneControl, menu::setRedstoneControl,
-            EIOLang.REDSTONE_MODE));
+            EIOCommonLang.REDSTONE_MODE));
 
         var overlay = addIOConfigOverlay(1, leftPos + 7, topPos + 125, 162, 76);
         addIOConfigButton(leftPos + imageWidth - 6 - 16, topPos + 6 + 55 - 16 - 2, overlay);
@@ -112,9 +111,9 @@ public class SagMillScreen extends MachineScreen<SagMillMenu> {
                     List<Component> tooltipComponents = List.of(
                         TooltipUtil.styledWithArgs(MachinesLang.SAG_MILL_GRINDING_BALL_REMAINING, (int) (durability * 100)),
                         MachinesLang.SAG_MILL_GRINDING_BALL_TITLE,
-                        TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_MAIN_OUTPUT, (int) (data.outputMultiplier() * 100)),
-                        TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_BONUS_OUTPUT, (int) (data.bonusMultiplier() * 100)),
-                        TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_POWER_USE, (int) (data.powerUse() * 100)));
+                        TooltipUtil.styledWithArgs(EIOCommonLang.GRINDINGBALL_MAIN_OUTPUT, (int) (data.outputMultiplier() * 100)),
+                        TooltipUtil.styledWithArgs(EIOCommonLang.GRINDINGBALL_BONUS_OUTPUT, (int) (data.bonusMultiplier() * 100)),
+                        TooltipUtil.styledWithArgs(EIOCommonLang.GRINDINGBALL_POWER_USE, (int) (data.powerUse() * 100)));
 
                     // Combine together.
                     for (int i = 0; i < tooltipComponents.size(); i++) {

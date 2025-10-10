@@ -5,7 +5,6 @@ import com.enderio.enderio.client.content.machines.gui.screen.EnchanterScreen;
 import com.enderio.enderio.compat.jei.JEILang;
 import com.enderio.enderio.compat.jei_machines_to_merge.util.MachineRecipeCategory;
 import com.enderio.enderio.compat.jei_machines_to_merge.util.WrappedEnchanterRecipe;
-import com.enderio.enderio.foundation.lang.MachineLang;
 import com.enderio.enderio.init.MachineBlocks;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;

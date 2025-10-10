@@ -1,6 +1,7 @@
 package com.enderio.enderio.datagen.client.models;
 
 import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
 import com.enderio.enderio.content.fun.EnderiosItem;
 import com.enderio.enderio.content.tools.vials.SoulVialItem;
 import com.enderio.enderio.init.EIOItems;
@@ -11,6 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 public class EIOItemModelProvider extends ItemModelProvider {
@@ -126,7 +128,6 @@ public class EIOItemModelProvider extends ItemModelProvider {
         basicItem(EIOItems.BLACK_PAPER.get());
         basicItem(EIOItems.CLAYED_GLOWSTONE.get());
         basicItem(EIOItems.NETHERCOTTA.get());
-        basicItem(EIOItems.REDSTONE_FILTER_BASE.get());
         fakeBlock(EIOItems.BROKEN_SPAWNER.get());
 
         // Gliders
@@ -156,6 +157,13 @@ public class EIOItemModelProvider extends ItemModelProvider {
         basicItem(EIOItems.ELECTROMAGNET.get());
         basicItem(EIOItems.COLD_FIRE_IGNITER.get());
 
+        getBuilder(EIOItems.CONDUIT_PROBE.getId().toString())
+            .parent(new ModelFile.UncheckedModelFile("item/generated"))
+            .texture("layer0", EnderIO.rl("item/conduit_probe_probe"))
+                .override()
+                .predicate(ConduitProbeItem.PROBE_STATE_PREDICATE, 1)
+                .model(basicItem(EnderIO.rl("conduit_probe_copy")));
+
         // Filters
         basicItem(EIOItems.BASIC_ITEM_FILTER.get());
         basicItem(EIOItems.BIG_ITEM_FILTER.get());
@@ -165,6 +173,19 @@ public class EIOItemModelProvider extends ItemModelProvider {
         basicItem(EIOItems.BASIC_FLUID_FILTER.get());
 
         basicItem(EIOItems.BASIC_SOUL_FILTER.get());
+
+        basicItem(EIOItems.REDSTONE_FILTER_BASE.get());
+        basicItem(EIOItems.NOT_FILTER.get());
+        basicItem(EIOItems.OR_FILTER.get());
+        basicItem(EIOItems.AND_FILTER.get());
+        basicItem(EIOItems.NOR_FILTER.get());
+        basicItem(EIOItems.NAND_FILTER.get());
+        basicItem(EIOItems.XOR_FILTER.get());
+        basicItem(EIOItems.XNOR_FILTER.get());
+        basicItem(EIOItems.TLATCH_FILTER.get());
+        basicItem(EIOItems.COUNT_FILTER.get());
+        basicItem(EIOItems.SENSOR_FILTER.get());
+        basicItem(EIOItems.TIMER_FILTER.get());
 
         // Creative Tab Icon
         basicItem(EIOItems.CREATIVE_ICON.get());

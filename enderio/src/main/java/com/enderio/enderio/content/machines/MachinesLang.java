@@ -30,6 +30,16 @@ public class MachinesLang {
     public static final MutableComponent GENERATING = gui("generator/generating");
     public static final MutableComponent FUEL_EFFICIENCY = gui("generator/efficiency");
 
+    // Range TODO: Maybe common
+    public static final Component RANGE = gui("range");
+    public static final Component MAX_RANGE = gui("range/max");
+    public static final Component SHOW_RANGE = gui("range/show");
+    public static final Component HIDE_RANGE = gui("range/hide");
+
+    // Capacitors
+    public static final MutableComponent NOCAP_TITLE = gui("nocap/title");
+    public static final MutableComponent NOCAP_DESC = gui("nocap/desc");
+
     // endregion
 
     public static final MutableComponent ALLOY_SMELTER_MODE = gui("alloy_smelter/mode");
@@ -79,12 +89,33 @@ public class MachinesLang {
 
     // endregion
 
+    // region Solar Panel
+
+    public static final MutableComponent PHOTOVOLTAIC_CELL = tooltip("photovoltaic_cell/main");
+    public static final MutableComponent PHOTOVOLTAIC_CELL_ADVANCED = tooltip("photovoltaic_cell/advanced");
+    public static final MutableComponent PHOTOVOLTAIC_CELL_ADVANCED2 = tooltip("photovoltaic_cell/advanced2");
+    public static final MutableComponent PHOTOVOLTAIC_CELL_ADVANCED3 = tooltip("photovoltaic_cell/advanced3");
+
+    // endregion
+
+    // region Experiments
+
+    public static final MutableComponent FARMING_STATION_EXPERIMENT = pack("experiment/farming_station");
+    public static final MutableComponent ENDERFACE_EXPERIMENT = pack("experiment/ender_io");
+    public static final MutableComponent NIARD_EXPERIMENT = pack("experiment/niard");
+
+    // endregion
+
     private static MutableComponent gui(String path) {
         return create("gui", path);
     }
 
     private static MutableComponent tooltip(String path) {
         return create("tooltip", path);
+    }
+
+    private static MutableComponent pack(String path) {
+        return create("pack", path);
     }
 
     private static MutableComponent create(String type, String path) {

@@ -20,6 +20,7 @@ import com.enderio.enderio.foundation.network.packets.ServerboundSyncProbeStateP
 import com.enderio.enderio.foundation.network.packets.ServerboundTimerFilterPacket;
 import com.enderio.enderio.init.ConduitItems;
 import com.enderio.enderio.init.EIOConduitTypes;
+import com.enderio.enderio.init.EIOItems;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -107,7 +108,7 @@ public class ConduitServerPayloadHandler {
             ItemStack heldStack = context.player().getMainHandItem();
 
             // Sanity check before updating item
-            if (heldStack.is(ConduitItems.CONDUIT_PROBE)) {
+            if (heldStack.is(EIOItems.CONDUIT_PROBE)) {
                 ConduitProbeItem.setState(context.player(), heldStack, packet.state());
             }
         });

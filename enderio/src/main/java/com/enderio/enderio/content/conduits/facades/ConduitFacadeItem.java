@@ -2,7 +2,7 @@ package com.enderio.enderio.content.conduits.facades;
 
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.content.conduits.ConduitLang;
-import com.enderio.enderio.foundation.lang.EIOLang;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.init.ConduitBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -86,7 +86,7 @@ public class ConduitFacadeItem extends BlockItem {
                     tooltipComponents.add(ConduitLang.BLAST_RESIST_FACADE_TOOLTIP);
                 }
             } else {
-                tooltipComponents.add(EIOLang.SHOW_DETAIL_TOOLTIP);
+                tooltipComponents.add(EIOCommonLang.SHOW_DETAIL_TOOLTIP);
             }
         }
     }

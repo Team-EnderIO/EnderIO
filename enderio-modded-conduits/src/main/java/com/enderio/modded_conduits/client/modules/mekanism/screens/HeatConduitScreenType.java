@@ -4,7 +4,7 @@ import com.enderio.enderio.api.conduits.screen.ConduitMenuDataAccess;
 import com.enderio.enderio.api.conduits.screen.ConduitScreenHelper;
 import com.enderio.enderio.api.conduits.screen.IOConduitScreenType;
 import com.enderio.enderio.content.conduits.ConduitLang;
-import com.enderio.enderio.foundation.lang.EIOLang;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.modded_conduits.common.modules.mekanism.heat.HeatConduitConnectionConfig;
 
 public class HeatConduitScreenType extends IOConduitScreenType<HeatConduitConnectionConfig> {
@@ -23,7 +23,7 @@ public class HeatConduitScreenType extends IOConduitScreenType<HeatConduitConnec
                 .extractRedstoneControl()
                 .isRedstoneSensitive());
 
-        screen.addRedstoneControlPicker(startX, startY + 22, EIOLang.REDSTONE_MODE,
+        screen.addRedstoneControlPicker(startX, startY + 22, EIOCommonLang.REDSTONE_MODE,
                 () -> dataAccess.getConnectionConfig().extractRedstoneControl(),
                 value -> dataAccess.updateConnectionConfig(config -> config.withExtractRedstoneControl(value)));
     }

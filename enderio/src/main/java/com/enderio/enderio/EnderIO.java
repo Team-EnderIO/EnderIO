@@ -11,9 +11,9 @@ import com.enderio.enderio.config.base.BaseConfig;
 import com.enderio.enderio.config.base.BaseConfigLang;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.config.machines.MachinesConfigLang;
+import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.foundation.integrations.Integrations;
-import com.enderio.enderio.foundation.lang.EIOLang;
-import com.enderio.enderio.foundation.lang.MachineLang;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.init.ConduitBlocks;
 import com.enderio.enderio.init.ConduitItems;
 import com.enderio.enderio.init.EIOConduitTypes;
@@ -104,7 +104,7 @@ public class EnderIO {
         EIOBlockEntities.register(modEventBus);
         EIOFluids.register(modEventBus);
         EIOMenus.register(modEventBus);
-        EIOLang.register();
+        EIOCommonLang.register();
         EIORecipes.register(modEventBus);
         EIOLootModifiers.register(modEventBus);
         EIOParticles.register(modEventBus);
@@ -118,7 +118,6 @@ public class EnderIO {
         ConduitBlocks.register(modEventBus);
         ConduitItems.register(modEventBus);
         MachineBlocks.register(modEventBus);
-        MachineLang.register();
         MachinesConfigLang.register();
 
         REGILITE.register(modEventBus);
@@ -156,15 +155,15 @@ public class EnderIO {
     public void addBuiltInPacks(final AddPackFindersEvent event) {
         event.addPackFinders(
             ResourceLocation.fromNamespaceAndPath(EnderIO.MOD_ID, "data/enderio/datapacks/farming_station"),
-            PackType.SERVER_DATA, MachineLang.FARMING_STATION_EXPERIMENT, PackSource.FEATURE, false,
+            PackType.SERVER_DATA, MachinesLang.FARMING_STATION_EXPERIMENT, PackSource.FEATURE, false,
             Pack.Position.TOP);
 
         event.addPackFinders(
             ResourceLocation.fromNamespaceAndPath(EnderIO.MOD_ID, "data/enderio/datapacks/enderface"),
-            PackType.SERVER_DATA, MachineLang.ENDERFACE_EXPERIMENT, PackSource.FEATURE, false, Pack.Position.TOP);
+            PackType.SERVER_DATA, MachinesLang.ENDERFACE_EXPERIMENT, PackSource.FEATURE, false, Pack.Position.TOP);
 
         event.addPackFinders(
             ResourceLocation.fromNamespaceAndPath(EnderIO.MOD_ID, "data/enderio/datapacks/niard"),
-            PackType.SERVER_DATA, MachineLang.NIARD_EXPERIMENT, PackSource.FEATURE, false, Pack.Position.TOP);
+            PackType.SERVER_DATA, MachinesLang.NIARD_EXPERIMENT, PackSource.FEATURE, false, Pack.Position.TOP);
     }
 }

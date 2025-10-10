@@ -1,7 +1,7 @@
 package com.enderio.enderio.content.tools.vials;
 
 import com.enderio.core.common.network.EmitParticlePacket;
-import com.enderio.enderio.foundation.lang.EIOLang;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.foundation.util.ExperienceUtil;
 import com.enderio.enderio.init.EIOFluids;
 import net.minecraft.core.BlockPos;
@@ -81,7 +81,7 @@ public class VoidVialItem extends Item {
                 return false;
             }
         } catch (ArithmeticException ex) {
-            player.displayClientMessage(EIOLang.TOO_MANY_LEVELS, true);
+            player.displayClientMessage(EIOCommonLang.TOO_MANY_LEVELS, true);
         }
 
         return false;
@@ -107,7 +107,7 @@ public class VoidVialItem extends Item {
                 return false;
             }
         } catch (ArithmeticException ex) {
-            player.displayClientMessage(EIOLang.TOO_MANY_LEVELS, true);
+            player.displayClientMessage(EIOCommonLang.TOO_MANY_LEVELS, true);
         }
 
         return false;

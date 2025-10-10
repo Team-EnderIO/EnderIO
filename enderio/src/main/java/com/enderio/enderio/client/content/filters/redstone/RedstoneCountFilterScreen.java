@@ -6,7 +6,6 @@ import com.enderio.enderio.client.foundation.widgets.DyeColorPickerWidget;
 import com.enderio.enderio.content.conduits.ConduitLang;
 import com.enderio.enderio.content.filters.FiltersLang;
 import com.enderio.enderio.content.filters.redstone.RedstoneCountFilterMenu;
-import com.enderio.enderio.foundation.lang.EIOLang;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;

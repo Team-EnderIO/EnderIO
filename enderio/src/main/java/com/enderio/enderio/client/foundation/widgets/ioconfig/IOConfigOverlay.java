@@ -5,8 +5,9 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.io.IOConfigurable;
 import com.enderio.enderio.client.foundation.model.ModelRenderUtil;
 import com.enderio.enderio.config.machines.MachinesConfig;
+import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.foundation.block.entity.legacy.LegacyMachineBlockEntity;
-import com.enderio.enderio.foundation.lang.EIOLang;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.foundation.network.packets.ServerboundCycleIOConfigPacket;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -464,7 +465,7 @@ public class IOConfigOverlay extends BaseOverlay {
     private void renderNeighbourButton(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         guiGraphics.blitSprite(NEIGHBOURS_BTN, neighBtnRect.getX(), neighBtnRect.getY(), 16, 16);
         if (neighBtnRect.contains(mouseX, mouseY)) {
-            guiGraphics.renderTooltip(MINECRAFT.font, EIOLang.TOGGLE_NEIGHBOUR.copy().withStyle(ChatFormatting.WHITE),
+            guiGraphics.renderTooltip(MINECRAFT.font, EIOCommonLang.TOGGLE_NEIGHBOUR.copy().withStyle(ChatFormatting.WHITE),
                     mouseX, mouseY);
         }
     }

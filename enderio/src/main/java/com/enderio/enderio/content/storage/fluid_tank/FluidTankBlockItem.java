@@ -2,7 +2,7 @@ package com.enderio.enderio.content.storage.fluid_tank;
 
 import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.common.util.TooltipUtil;
-import com.enderio.enderio.foundation.lang.EIOLang;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -47,9 +47,9 @@ public class FluidTankBlockItem extends BlockItem implements AdvancedTooltipProv
         if (fluidHandler != null) {
             if (fluidHandler instanceof FluidHandlerItemStack itemFluidHandler) {
                 if (itemFluidHandler.getFluid().isEmpty()) {
-                    tooltips.add(TooltipUtil.style(EIOLang.TANK_EMPTY_STRING));
+                    tooltips.add(TooltipUtil.style(EIOCommonLang.TANK_EMPTY_STRING));
                 } else {
-                    tooltips.add(TooltipUtil.styledWithArgs(EIOLang.FLUID_TANK_TOOLTIP,
+                    tooltips.add(TooltipUtil.styledWithArgs(EIOCommonLang.FLUID_TANK_TOOLTIP,
                             itemFluidHandler.getFluid().getAmount(), capacity,
                             itemFluidHandler.getFluid().getFluid().getFluidType().getDescription().getString()));
                 }

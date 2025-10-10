@@ -6,7 +6,7 @@ import com.enderio.enderio.api.conduits.screen.ConduitMenuDataAccess;
 import com.enderio.enderio.api.conduits.screen.ConduitScreenHelper;
 import com.enderio.enderio.api.conduits.screen.IOConduitScreenType;
 import com.enderio.enderio.content.conduits.ConduitLang;
-import com.enderio.enderio.foundation.lang.EIOLang;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.modded_conduits.common.modules.mekanism.MekanismModule;
 import com.enderio.modded_conduits.common.modules.mekanism.chemical.C2SClearLockedChemicalPacket;
 import com.enderio.modded_conduits.common.modules.mekanism.chemical.ChemicalConduit;
@@ -91,7 +91,7 @@ public class ChemicalConduitScreenType extends IOConduitScreenType<ChemicalCondu
                 .extractRedstoneControl()
                 .isRedstoneSensitive());
 
-        screen.addRedstoneControlPicker(startX, startY + 40, EIOLang.REDSTONE_MODE,
+        screen.addRedstoneControlPicker(startX, startY + 40, EIOCommonLang.REDSTONE_MODE,
                 () -> dataAccess.getConnectionConfig().extractRedstoneControl(),
                 value -> dataAccess.updateConnectionConfig(config -> config.withExtractRedstoneControl(value)));
 

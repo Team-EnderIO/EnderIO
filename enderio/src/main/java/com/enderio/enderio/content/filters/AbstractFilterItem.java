@@ -1,7 +1,6 @@
 package com.enderio.enderio.content.filters;
 
 import com.enderio.enderio.api.filter.FilterMenuProvider;
-import com.enderio.enderio.foundation.lang.EIOLang;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -20,7 +19,6 @@ import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 public abstract class AbstractFilterItem<T> extends Item implements FilterMenuProvider {
 

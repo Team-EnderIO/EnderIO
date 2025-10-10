@@ -2,7 +2,6 @@ package com.enderio.enderio.content.tools.coordinate_selector;
 
 import com.enderio.enderio.api.attachment.CoordinateSelection;
 import com.enderio.enderio.content.tools.ToolsLang;
-import com.enderio.enderio.foundation.lang.EIOLang;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;

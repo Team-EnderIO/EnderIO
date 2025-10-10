@@ -1,7 +1,7 @@
 package com.enderio.enderio.content.glass;
 
 import com.enderio.enderio.config.base.BaseConfig;
-import com.enderio.enderio.foundation.lang.EIOLang;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.DyeColor;
@@ -49,7 +49,7 @@ public class FusedQuartzBlock extends TransparentBlock {
         super.appendHoverText(pStack, pContext, pTooltip, pFlag);
 
         if (explosionResistant) {
-            pTooltip.add(EIOLang.BLOCK_BLAST_RESISTANT);
+            pTooltip.add(EIOCommonLang.BLOCK_BLAST_RESISTANT);
         }
 
         if (glassLighting == GlassLighting.EMITTING) {

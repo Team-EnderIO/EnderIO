@@ -6,9 +6,10 @@ import com.enderio.enderio.client.content.machines.gui.widget.ActivityWidget;
 import com.enderio.enderio.client.content.machines.gui.widget.CapacitorEnergyWidget;
 import com.enderio.enderio.client.foundation.widgets.EIOCommonWidgets;
 import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget;
+import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.machines.obelisks.aversion.AversionObeliskMenu;
 import com.enderio.enderio.content.machines.wireless_charger.WirelessChargerMenu;
-import com.enderio.enderio.foundation.lang.EIOLang;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -34,15 +35,15 @@ public class WirelessChargerScreen extends MachineScreen<WirelessChargerMenu> {
                 menu::isCapacitorInstalled));
 
         addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6,
-                menu::getRedstoneControl, menu::setRedstoneControl, EIOLang.REDSTONE_MODE));
+                menu::getRedstoneControl, menu::setRedstoneControl, EIOCommonLang.REDSTONE_MODE));
 
         var overlay = addIOConfigOverlay(1, leftPos + 7, topPos + 83, 162, 76);
         addIOConfigButton(leftPos + imageWidth - 6 - 16, topPos + 24, overlay);
 
         int rangeOffset = 50;
         addRenderableWidget(EIOCommonWidgets.createRange(leftPos + imageWidth - 6 - 16, topPos + rangeOffset,
-                EIOLang.HIDE_RANGE, EIOLang.SHOW_RANGE, menu::isRangeVisible,
-                (ignored) -> handleButtonPress(AversionObeliskMenu.VISIBILITY_BUTTON_ID)));
+            MachinesLang.HIDE_RANGE, MachinesLang.SHOW_RANGE, menu::isRangeVisible,
+            (ignored) -> handleButtonPress(AversionObeliskMenu.VISIBILITY_BUTTON_ID)));
 
         addRenderableWidget(EIOCommonWidgets.createRangeIncrease(leftPos + imageWidth - 2 * 16,
                 topPos + rangeOffset + 1, (b) -> handleButtonPress(AversionObeliskMenu.INCREASE_BUTTON_ID)));
@@ -72,9 +73,9 @@ public class WirelessChargerScreen extends MachineScreen<WirelessChargerMenu> {
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
         int rangeOffset = 50;
-        guiGraphics.drawString(font, EIOLang.RANGE, imageWidth - 9 - font.width(EIOLang.RANGE), rangeOffset - 10,
+        guiGraphics.drawString(font, MachinesLang.RANGE, imageWidth - 9 - font.width(MachinesLang.RANGE), rangeOffset - 10,
                 4210752, false);
-        guiGraphics.drawString(font, EIOLang.MAX_RANGE, imageWidth / 2 - font.width(EIOLang.MAX_RANGE) / 2, 20, 0,
+        guiGraphics.drawString(font, MachinesLang.MAX_RANGE, imageWidth / 2 - font.width(MachinesLang.MAX_RANGE) / 2, 20, 0,
                 false);
         String maxRange = getMenu().getMaxRange() + "";
         guiGraphics.drawString(font, maxRange, imageWidth / 2 - font.width(maxRange) / 2, 20 + font.lineHeight + 3, 0,

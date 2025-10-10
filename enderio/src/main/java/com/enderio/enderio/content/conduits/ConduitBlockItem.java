@@ -5,7 +5,7 @@ import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.EnderIODataComponents;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
-import com.enderio.enderio.foundation.lang.EIOLang;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.init.ConduitBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -19,7 +19,6 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.fml.common.EventBusSubscriber;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -126,7 +125,7 @@ public class ConduitBlockItem extends BlockItem {
             }
 
             if (showDetailTooltip) {
-                tooltipComponents.add(EIOLang.SHOW_DETAIL_TOOLTIP);
+                tooltipComponents.add(EIOCommonLang.SHOW_DETAIL_TOOLTIP);
             }
         }
 

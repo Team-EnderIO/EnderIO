@@ -4,7 +4,6 @@ import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.content.filters.FiltersLang;
 import com.enderio.enderio.content.filters.redstone.RedstoneTimerFilterMenu;
-import com.enderio.enderio.foundation.lang.EIOLang;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;

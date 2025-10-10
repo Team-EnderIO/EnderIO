@@ -3,7 +3,6 @@ package com.enderio.enderio.client.content.tools;
 import com.enderio.core.client.gui.screen.EnderContainerScreen;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.content.tools.coordinate_selector.CoordinateMenu;
-import com.enderio.enderio.foundation.lang.EIOLang;
 import com.enderio.enderio.foundation.network.packets.ServerboundUpdateCoordinateSelectionNameMenuPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;

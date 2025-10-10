@@ -1,12 +1,14 @@
 package com.enderio.enderio.content.conduits.probe;
 
 import com.enderio.core.common.util.TooltipUtil;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.enderio.enderio.content.conduits.ConduitLang;
 import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
 import com.enderio.enderio.foundation.network.packets.ServerboundSyncProbeStatePacket;
 import com.enderio.enderio.init.ConduitItems;
 import com.enderio.enderio.init.EIODataComponents;
+import com.enderio.enderio.init.EIOItems;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
@@ -38,8 +40,10 @@ import java.util.Set;
 
 public class ConduitProbeItem extends Item {
 
+    public static final ResourceLocation PROBE_STATE_PREDICATE = EnderIO.rl("probe_state");
+
     public ConduitProbeItem(Properties pProperties) {
-        super(pProperties);
+        super(pProperties.stacksTo(1));
     }
 
     @Override
@@ -163,7 +167,7 @@ public class ConduitProbeItem extends Item {
     }
     
     public static void setState(Player player, ItemStack stack, State state) {
-        if (!stack.is(ConduitItems.CONDUIT_PROBE)) {
+        if (!stack.is(EIOItems.CONDUIT_PROBE)) {
             throw new IllegalArgumentException("Invalid item passed to setState.");
         }
 
@@ -175,7 +179,7 @@ public class ConduitProbeItem extends Item {
     }
 
     public static void switchState(Player player, ItemStack stack) {
-        if (!stack.is(ConduitItems.CONDUIT_PROBE)) {
+        if (!stack.is(EIOItems.CONDUIT_PROBE)) {
             throw new IllegalArgumentException("Invalid item passed to switchState.");
         }
 

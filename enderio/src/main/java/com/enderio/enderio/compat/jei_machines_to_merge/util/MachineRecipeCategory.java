@@ -2,7 +2,7 @@ package com.enderio.enderio.compat.jei_machines_to_merge.util;
 
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.foundation.MachineRecipe;
-import com.enderio.enderio.foundation.lang.EIOLang;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
@@ -29,12 +29,12 @@ public abstract class MachineRecipeCategory<T> implements IRecipeCategory<T> {
     }
 
     protected static <T extends MachineRecipe<?>> Component getBasicEnergyString(RecipeHolder<T> recipe) {
-        return TooltipUtil.withArgs(EIOLang.ENERGY_AMOUNT,
+        return TooltipUtil.withArgs(EIOCommonLang.ENERGY_AMOUNT,
                 NumberFormat.getIntegerInstance(Locale.ENGLISH).format(recipe.value().getBaseEnergyCost()));
     }
 
     protected static <T extends MachineRecipe<?>> Component getBasicEnergyString(T recipe) {
-        return TooltipUtil.withArgs(EIOLang.ENERGY_AMOUNT,
+        return TooltipUtil.withArgs(EIOCommonLang.ENERGY_AMOUNT,
                 NumberFormat.getIntegerInstance(Locale.ENGLISH).format(recipe.getBaseEnergyCost()));
     }
 }

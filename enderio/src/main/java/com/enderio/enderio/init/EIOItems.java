@@ -9,8 +9,10 @@ import com.enderio.enderio.content.broken_spawner.BrokenSpawnerItem;
 import com.enderio.enderio.content.capacitors.CapacitorItem;
 import com.enderio.enderio.content.capacitors.LootCapacitorItem;
 import com.enderio.enderio.content.cold_fire.ColdFireIgniter;
+import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
 import com.enderio.enderio.content.filters.fluid.EnderFluidFilterItem;
 import com.enderio.enderio.content.filters.item.general.EnderItemFilterItem;
+import com.enderio.enderio.content.filters.redstone.RedstoneFilterItem;
 import com.enderio.enderio.content.filters.soul.EnderSoulFilterItem;
 import com.enderio.enderio.content.fun.EnderiosItem;
 import com.enderio.enderio.content.tools.ElectromagnetItem;
@@ -23,7 +25,7 @@ import com.enderio.enderio.content.travel.TravelStaffItem;
 import com.enderio.enderio.content.tools.vials.SoulVialItem;
 import com.enderio.enderio.content.tools.vials.VoidVialItem;
 import com.enderio.enderio.foundation.item.CreativeTabIconItem;
-import com.enderio.enderio.foundation.lang.EIOLang;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
@@ -122,7 +124,7 @@ public class EIOItems {
     public static final DeferredItem<Item> SENTIENT_ENDER = basicGlinted("sentient_ender");
     public static final DeferredItem<Item> SKELETAL_CONTRACTOR = basic("skeletal_contractor");
     public static final DeferredItem<Item> GUARDIAN_DIODE = basic("guardian_diode");
-    public static final DeferredItem<Item> SUSPICIOUS_SEED = lore("suspicious_seed", EIOLang.SUSPICIOUS_SEED_LORE);
+    public static final DeferredItem<Item> SUSPICIOUS_SEED = lore("suspicious_seed", EIOCommonLang.SUSPICIOUS_SEED_LORE);
 
     // endregion
 
@@ -199,7 +201,6 @@ public class EIOItems {
     public static final DeferredItem<Item> BLACK_PAPER = basic("black_paper");
     public static final DeferredItem<Item> CLAYED_GLOWSTONE = basic("clayed_glowstone");
     public static final DeferredItem<Item> NETHERCOTTA = basic("nethercotta");
-    public static final DeferredItem<Item> REDSTONE_FILTER_BASE = basic("redstone_filter_base");
 
     public static final DeferredItem<BrokenSpawnerItem> BROKEN_SPAWNER = ITEMS.registerItem("broken_spawner", BrokenSpawnerItem::new);
 
@@ -245,6 +246,7 @@ public class EIOItems {
     public static final DeferredItem<TravelStaffItem> TRAVEL_STAFF = ITEMS.registerItem("staff_of_travelling", TravelStaffItem::new);
     public static final DeferredItem<ElectromagnetItem> ELECTROMAGNET = ITEMS.registerItem("electromagnet", ElectromagnetItem::new);
     public static final DeferredItem<ColdFireIgniter> COLD_FIRE_IGNITER = ITEMS.registerItem("cold_fire_igniter", ColdFireIgniter::new);
+    public static final DeferredItem<ConduitProbeItem> CONDUIT_PROBE = ITEMS.registerItem("conduit_probe", ConduitProbeItem::new);
 
     // endregion
 
@@ -259,6 +261,20 @@ public class EIOItems {
     public static final DeferredItem<EnderFluidFilterItem> BASIC_FLUID_FILTER = ITEMS.registerItem("basic_fluid_filter", props -> new EnderFluidFilterItem(props, EnderFluidFilterItem.Type.BASIC));
 
     public static final DeferredItem<EnderSoulFilterItem> BASIC_SOUL_FILTER = ITEMS.registerItem("basic_soul_filter", props -> new EnderSoulFilterItem(props, EnderSoulFilterItem.Type.BASIC));
+
+    public static final DeferredItem<Item> REDSTONE_FILTER_BASE = basic("redstone_filter_base");
+
+    public static final DeferredItem<RedstoneFilterItem> NOT_FILTER = ITEMS.registerItem("redstone_not_filter", p -> new RedstoneFilterItem(p, RedstoneFilterItem.Type.NOT));
+    public static final DeferredItem<RedstoneFilterItem> OR_FILTER = ITEMS.registerItem("redstone_or_filter", p -> new RedstoneFilterItem(p, RedstoneFilterItem.Type.OR));
+    public static final DeferredItem<RedstoneFilterItem> AND_FILTER = ITEMS.registerItem("redstone_and_filter", p -> new RedstoneFilterItem(p, RedstoneFilterItem.Type.AND));
+    public static final DeferredItem<RedstoneFilterItem> NOR_FILTER = ITEMS.registerItem("redstone_nor_filter", p -> new RedstoneFilterItem(p, RedstoneFilterItem.Type.NOR));
+    public static final DeferredItem<RedstoneFilterItem> NAND_FILTER = ITEMS.registerItem("redstone_nand_filter", p -> new RedstoneFilterItem(p, RedstoneFilterItem.Type.NAND));
+    public static final DeferredItem<RedstoneFilterItem> XOR_FILTER = ITEMS.registerItem("redstone_xor_filter", p -> new RedstoneFilterItem(p, RedstoneFilterItem.Type.XOR));
+    public static final DeferredItem<RedstoneFilterItem> XNOR_FILTER = ITEMS.registerItem("redstone_xnor_filter", p -> new RedstoneFilterItem(p, RedstoneFilterItem.Type.XNOR));
+    public static final DeferredItem<RedstoneFilterItem> TLATCH_FILTER = ITEMS.registerItem("redstone_toggle_filter", p -> new RedstoneFilterItem(p, RedstoneFilterItem.Type.TLATCH));
+    public static final DeferredItem<RedstoneFilterItem> COUNT_FILTER = ITEMS.registerItem("redstone_counting_filter", p -> new RedstoneFilterItem(p, RedstoneFilterItem.Type.COUNT));
+    public static final DeferredItem<RedstoneFilterItem> SENSOR_FILTER = ITEMS.registerItem("redstone_sensor_filter", p -> new RedstoneFilterItem(p, RedstoneFilterItem.Type.SENSOR));
+    public static final DeferredItem<RedstoneFilterItem> TIMER_FILTER = ITEMS.registerItem("redstone_timer_filter", p -> new RedstoneFilterItem(p, RedstoneFilterItem.Type.TIMER));
 
     // endregion
 

@@ -2,8 +2,12 @@ package com.enderio.enderio.content.filters.redstone;
 
 import com.enderio.enderio.api.filter.RedstoneInputFilter;
 import com.enderio.enderio.api.filter.RedstoneOutputFilter;
+import com.enderio.enderio.init.EIODataComponents;
+import com.enderio.enderio.init.EIOMenus;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Unit;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.MenuProvider;
@@ -18,6 +22,7 @@ import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 public class RedstoneFilterItem extends Item {
 
@@ -51,16 +56,16 @@ public class RedstoneFilterItem extends Item {
     public static final ICapabilityProvider<ItemStack, Void, RedstoneInputFilter> NOT_FILTER_PROVIDER_EXTRACT =
         (stack, v) -> RedstoneNOTFilter.INSTANCE;
 
-    @Nullable
-    private final Supplier<MenuType<?>> menu;
+    private final Type type;
 
-    public RedstoneFilterItem(Properties pProperties, @Nullable Supplier<MenuType<?>> menu) {
-        super(pProperties);
-        this.menu = menu;
+    public RedstoneFilterItem(Properties pProperties, Type type) {
+        super(type.componentApplicator().apply(pProperties));
+        this.type = type;
     }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
+        var menu = type.menu();
         if (pPlayer instanceof ServerPlayer serverPlayer && menu != null) {
             openMenu(serverPlayer);
         }
@@ -76,8 +81,44 @@ public class RedstoneFilterItem extends Item {
 
             @Override
             public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
-                return menu.get().create(pContainerId, pInventory);
+                return type.menu().create(pContainerId, pInventory);
             }
         });
+    }
+
+    public enum Type {
+        NOT(p -> p, null),
+        OR(p -> p.component(EIODataComponents.REDSTONE_FILTER_DOUBLE_CHANNEL, DoubleRedstoneChannel.INSTANCE), EIOMenus.REDSTONE_DOUBLE_CHANNEL_FILTER::get),
+        AND(p -> p.component(EIODataComponents.REDSTONE_FILTER_DOUBLE_CHANNEL, DoubleRedstoneChannel.INSTANCE), EIOMenus.REDSTONE_DOUBLE_CHANNEL_FILTER::get),
+        NOR(p -> p.component(EIODataComponents.REDSTONE_FILTER_DOUBLE_CHANNEL, DoubleRedstoneChannel.INSTANCE), EIOMenus.REDSTONE_DOUBLE_CHANNEL_FILTER::get),
+        NAND(p -> p.component(EIODataComponents.REDSTONE_FILTER_DOUBLE_CHANNEL, DoubleRedstoneChannel.INSTANCE), EIOMenus.REDSTONE_DOUBLE_CHANNEL_FILTER::get),
+        XOR(p -> p.component(EIODataComponents.REDSTONE_FILTER_DOUBLE_CHANNEL, DoubleRedstoneChannel.INSTANCE), EIOMenus.REDSTONE_DOUBLE_CHANNEL_FILTER::get),
+        XNOR(p -> p.component(EIODataComponents.REDSTONE_FILTER_DOUBLE_CHANNEL, DoubleRedstoneChannel.INSTANCE), EIOMenus.REDSTONE_DOUBLE_CHANNEL_FILTER::get),
+        TLATCH(p -> p.component(EIODataComponents.REDSTONE_TLATCH_FILTER, RedstoneTLatchFilter.INSTANCE), null),
+        COUNT(p -> p.component(EIODataComponents.REDSTONE_COUNT_FILTER, RedstoneCountFilter.INSTANCE), EIOMenus.REDSTONE_COUNT_FILTER::get),
+        SENSOR(p -> p, null),
+        TIMER(p -> p.component(EIODataComponents.REDSTONE_TIMER_FILTER, RedstoneTimerFilter.INSTANCE), EIOMenus.REDSTONE_TIMER_FILTER::get);
+
+        private UnaryOperator<Item.Properties> componentApplicator;
+
+        @Nullable
+        private Supplier<MenuType<?>> menu;
+
+        Type(UnaryOperator<Item.Properties> componentApplicator, @Nullable Supplier<MenuType<?>> menu) {
+            this.componentApplicator = componentApplicator;
+            this.menu = menu;
+        }
+
+        public UnaryOperator<Item.Properties> componentApplicator() {
+            return componentApplicator;
+        }
+
+        public @Nullable MenuType<?> menu() {
+            if (menu == null) {
+                return null;
+            }
+
+            return menu.get();
+        }
     }
 }

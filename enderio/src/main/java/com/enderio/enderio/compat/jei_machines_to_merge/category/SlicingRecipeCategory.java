@@ -6,7 +6,6 @@ import com.enderio.enderio.compat.jei.JEIUtils;
 import com.enderio.enderio.compat.jei_machines_to_merge.util.MachineRecipeCategory;
 import com.enderio.enderio.compat.jei_machines_to_merge.util.RecipeUtil;
 import com.enderio.enderio.content.machines.slicer.SlicingRecipe;
-import com.enderio.enderio.foundation.lang.MachineLang;
 import com.enderio.enderio.init.MachineBlocks;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;

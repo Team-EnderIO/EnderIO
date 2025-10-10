@@ -2,7 +2,8 @@ package com.enderio.enderio.client.foundation.widgets.ioconfig;
 
 import com.enderio.core.client.gui.widgets.EnderButton;
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.foundation.lang.EIOLang;
+import com.enderio.enderio.content.machines.MachinesLang;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Tooltip;
@@ -22,10 +23,10 @@ public class IOConfigButton extends EnderButton {
     }
 
     public IOConfigButton(int x, int y, IOConfigOverlay configRenderer, @Nullable Consumer<Boolean> callback) {
-        super(x, y, 16, 16, EIOLang.IOCONFIG);
+        super(x, y, 16, 16, EIOCommonLang.IOCONFIG);
         this.configRenderer = configRenderer;
         this.callback = callback;
-        setTooltip(Tooltip.create(EIOLang.IOCONFIG.copy().withStyle(ChatFormatting.WHITE)));
+        setTooltip(Tooltip.create(EIOCommonLang.IOCONFIG.copy().withStyle(ChatFormatting.WHITE)));
     }
 
     @Override

@@ -6,7 +6,6 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.api.soul.SoulBoundUtils;
 import com.enderio.enderio.content.tools.ToolsLang;
-import com.enderio.enderio.foundation.lang.EIOLang;
 import com.enderio.enderio.foundation.util.EntityCaptureUtils;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOItems;
