@@ -273,6 +273,8 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
                     removeTickingNode(node);
                 }
             }
+
+            dirtyNodes.clear();
         }
 
         if (haveConnectionsChanged) {
