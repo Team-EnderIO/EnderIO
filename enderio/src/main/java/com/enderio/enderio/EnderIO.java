@@ -8,12 +8,9 @@ import com.enderio.enderio.compat.ftb_ultimine.FTBUltimineCompat;
 import com.enderio.enderio.compat.inventorysorter.InventorySorterCompat;
 import com.enderio.enderio.compat.laserio.LaserIOCompat;
 import com.enderio.enderio.config.base.BaseConfig;
-import com.enderio.enderio.config.base.BaseConfigLang;
 import com.enderio.enderio.config.machines.MachinesConfig;
-import com.enderio.enderio.config.machines.MachinesConfigLang;
 import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.foundation.integrations.Integrations;
-import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.init.ConduitBlocks;
 import com.enderio.enderio.init.ConduitItems;
 import com.enderio.enderio.init.EIOConduitTypes;
@@ -93,7 +90,6 @@ public class EnderIO {
         modContainer.registerConfig(ModConfig.Type.CLIENT, BaseConfig.CLIENT_SPEC, "enderio/base-client.toml");
         modContainer.registerConfig(ModConfig.Type.COMMON, MachinesConfig.COMMON_SPEC, "enderio/machines-common.toml");
         modContainer.registerConfig(ModConfig.Type.CLIENT, MachinesConfig.CLIENT_SPEC, "enderio/machines-client.toml");
-        BaseConfigLang.register();
 
         // Perform initialization and registration for everything so things are
         // registered.
@@ -117,7 +113,6 @@ public class EnderIO {
         ConduitBlocks.register(modEventBus);
         ConduitItems.register(modEventBus);
         MachineBlocks.register(modEventBus);
-        MachinesConfigLang.register();
 
         REGILITE.register(modEventBus);
 

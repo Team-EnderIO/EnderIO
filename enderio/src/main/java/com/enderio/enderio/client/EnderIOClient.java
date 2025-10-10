@@ -134,7 +134,8 @@ public class EnderIOClient {
     public static final Map<Item, BakedModel> GLIDER_MODELS = new HashMap<>();
 
     public EnderIOClient(ModContainer modContainer) {
-        modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
+        // TODO: Re-enable after config rework.
+//        modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
     }
 
     @SubscribeEvent
