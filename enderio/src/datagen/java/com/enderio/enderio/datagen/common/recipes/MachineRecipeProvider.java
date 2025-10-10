@@ -156,13 +156,14 @@ public class MachineRecipeProvider extends SubRecipeProvider {
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOBlocks.SAG_MILL.get())
                 .define('F', Items.FLINT)
-                .define('I', EIOTags.Items.INGOTS_DARK_STEEL)
+                .define('I', Tags.Items.INGOTS_IRON)
                 .define('G', EIOTags.Items.GEARS_IRON)
                 .define('V', EIOBlocks.VOID_CHASSIS.get())
+                .define('O', Tags.Items.OBSIDIANS)
                 .define('P', Items.PISTON)
-                .pattern("FFF")
+                .pattern("GFG")
                 .pattern("IVI")
-                .pattern("GPG")
+                .pattern("OPO")
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.VOID_CHASSIS.get()))
                 .save(recipeOutput);
