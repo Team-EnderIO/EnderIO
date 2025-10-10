@@ -1,6 +1,6 @@
 {
   "type": "enderio:alloy_smelting",
-  "energy": 4800,
+  "energy": 5600,
   "experience": 0.3,
   "inputs": [
     {
@@ -10,6 +10,10 @@
     {
       "count": 1,
       "tag": "c:ender_pearls"
+    },
+    {
+      "count": 1,
+      "tag": "c:dusts/glowstone"
     }
   ],
   "output": {
