@@ -5,6 +5,7 @@ import com.enderio.core.client.gui.widgets.IconButton;
 import com.enderio.core.client.gui.widgets.ToggleIconButton;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.content.filters.AbstractFilterMenu;
+import com.enderio.enderio.content.filters.FiltersLang;
 import com.enderio.enderio.content.filters.fluid.EnderFluidFilterMenu;
 import com.enderio.enderio.content.filters.fluid.FluidFilterSlot;
 import com.enderio.enderio.content.filters.item.general.EnderItemFilterMenu;
@@ -81,7 +82,7 @@ public class EnderFluidFilterScreen extends EnderContainerScreen<EnderFluidFilte
         if (getMenu().type.canMatchComponents()) {
             addRenderableWidget(new ToggleIconButton(xPos, yPos, 16, 16,
                     (b) -> b ? ICON_MATCH_COMPONENTS : ICON_IGNORE_COMPONENTS,
-                    (b) -> b ? EIOCommonLang.FILTER_MATCH_COMPONENTS : EIOCommonLang.FILTER_IGNORE_COMPONENTS,
+                    (b) -> b ? FiltersLang.FILTER_MATCH_COMPONENTS : FiltersLang.FILTER_IGNORE_COMPONENTS,
                     getMenu()::shouldCompareComponents,
                     (b) -> handleButtonPress(EnderItemFilterMenu.SHOULD_COMPARE_COMPONENTS_BUTTON_ID)));
 
@@ -90,7 +91,7 @@ public class EnderFluidFilterScreen extends EnderContainerScreen<EnderFluidFilte
 
         addRenderableWidget(
                 new ToggleIconButton(xPos, yPos, 16, 16, (b) -> b ? ICON_DENY_LIST : ICON_ALLOW_LIST,
-                        (b) -> b ? EIOCommonLang.FILTER_DENY_LIST : EIOCommonLang.FILTER_ALLOW_LIST, getMenu()::isInverted,
+                        (b) -> b ? FiltersLang.FILTER_DENY_LIST : FiltersLang.FILTER_ALLOW_LIST, getMenu()::isInverted,
                         (b) -> handleButtonPress(EnderItemFilterMenu.IS_INVERTED_BUTTON_ID)));
 
         xPos -= 18;

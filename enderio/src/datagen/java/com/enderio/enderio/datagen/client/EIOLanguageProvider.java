@@ -285,6 +285,12 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(FiltersLang.CONFIGURED, "Configured");
         add(FiltersLang.FILTER_CONFIG_NOT_ALLOWED_COMPONENT_MATCH, "This filter uses component matching which is no longer available to this item. Clear this filter using the crafting grid to remove this warning.");
 
+        add(FiltersLang.FILTER_ALLOW_LIST, "Allow List");
+        add(FiltersLang.FILTER_DENY_LIST, "Deny List");
+        add(FiltersLang.FILTER_MATCH_COMPONENTS, "Match Components");
+        add(FiltersLang.FILTER_IGNORE_COMPONENTS, "Ignore Components");
+        add(FiltersLang.DAMAGE_FILTER_MODE, "Damage Filter");
+
         add(FiltersLang.GUI_FILTER, "Filter");
         add(FiltersLang.GUI_CONFIRM, "Confirm");
     }
@@ -595,6 +601,13 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOCommonLang.BOTH, "Push / Pull");
         add(EIOCommonLang.DISABLED, "Disabled");
         add(EIOCommonLang.NONE, "None");
+
+        add(EIOCommonLang.GRINDINGBALL_MAIN_OUTPUT, "Main Output %s%%");
+        add(EIOCommonLang.GRINDINGBALL_BONUS_OUTPUT, "Bonus Output %s%%");
+        add(EIOCommonLang.GRINDINGBALL_POWER_USE, "Power Use %s%%");
+
+        add(EIOCommonLang.DARK_STEEL_LADDER_FASTER, "Faster than regular ladders");
+        add(EIOCommonLang.TOO_MANY_LEVELS, "You have more than 21862 levels, that's too much XP.");
     }
 
     private void addAdvancementsLang() {

@@ -6,6 +6,7 @@ import com.enderio.core.client.gui.widgets.ToggleIconButton;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.content.filters.AbstractFilterMenu;
+import com.enderio.enderio.content.filters.FiltersLang;
 import com.enderio.enderio.content.filters.soul.EnderSoulFilterMenu;
 import com.enderio.enderio.content.filters.soul.SoulFilterSlot;
 import com.enderio.enderio.content.tools.vials.SoulVialItem;
@@ -78,7 +79,7 @@ public class EnderSoulFilterScreen extends EnderContainerScreen<EnderSoulFilterM
             // TODO: Change to NBT...
             addRenderableWidget(new ToggleIconButton(xPos, yPos, 16, 16,
                     (b) -> b ? ICON_MATCH_COMPONENTS : ICON_IGNORE_COMPONENTS,
-                    (b) -> b ? EIOCommonLang.FILTER_MATCH_COMPONENTS : EIOCommonLang.FILTER_IGNORE_COMPONENTS,
+                    (b) -> b ? FiltersLang.FILTER_MATCH_COMPONENTS : FiltersLang.FILTER_IGNORE_COMPONENTS,
                     getMenu()::shouldCompareTags,
                     (b) -> handleButtonPress(EnderSoulFilterMenu.SHOULD_COMPARE_TAGS_BUTTON_ID)));
 
@@ -87,7 +88,7 @@ public class EnderSoulFilterScreen extends EnderContainerScreen<EnderSoulFilterM
 
         addRenderableWidget(
                 new ToggleIconButton(xPos, yPos, 16, 16, (b) -> b ? ICON_DENY_LIST : ICON_ALLOW_LIST,
-                        (b) -> b ? EIOCommonLang.FILTER_DENY_LIST : EIOCommonLang.FILTER_ALLOW_LIST, getMenu()::isInverted,
+                        (b) -> b ? FiltersLang.FILTER_DENY_LIST : FiltersLang.FILTER_ALLOW_LIST, getMenu()::isInverted,
                         (b) -> handleButtonPress(EnderSoulFilterMenu.IS_INVERTED_BUTTON_ID)));
 
         xPos -= 18;

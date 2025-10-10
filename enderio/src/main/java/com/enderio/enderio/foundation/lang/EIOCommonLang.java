@@ -47,6 +47,24 @@ public class EIOCommonLang {
     public static final Component DISABLED = gui("ioconfig/disabled");
     public static final Component NONE = gui("ioconfig/none");
 
+    // region Grinding balls
+
+    public static final MutableComponent GRINDINGBALL_MAIN_OUTPUT = tooltip("grinding_ball_main_output");
+    public static final MutableComponent GRINDINGBALL_BONUS_OUTPUT = tooltip("grinding_ball_bonus_output");
+    public static final MutableComponent GRINDINGBALL_POWER_USE = tooltip("grinding_ball_power_use");
+
+    // endregion
+
+    // region Temp
+
+    // TODO: Need to move these around - just want to get rid of Regilite first.
+
+    public static final Component DARK_STEEL_LADDER_FASTER = TooltipUtil.style(tooltip("dark_steel_ladder.faster"));
+
+    public static final MutableComponent TOO_MANY_LEVELS = message("too_many_levels");
+
+    // endregion
+
     private static MutableComponent gui(String path) {
         return create("gui", path);
     }
@@ -55,52 +73,11 @@ public class EIOCommonLang {
         return create("tooltip", path);
     }
 
+    private static MutableComponent message(String path) {
+        return create("message", path);
+    }
+
     private static MutableComponent create(String type, String path) {
         return Component.translatable(Util.makeDescriptionId(type, EnderIO.rl(path)));
-    }
-
-    // region Items
-
-    public static final Component DARK_STEEL_LADDER_FASTER = TooltipUtil
-            .style(addTranslation("tooltip", EnderIO.rl("dark_steel_ladder.faster"), "Faster than regular ladders"));
-
-    public static final Component TOO_MANY_LEVELS = addTranslation("info", EnderIO.rl("too_many_levels"),
-            "You have more than 21862 levels, that's too much XP.");
-
-    // endregion
-
-
-
-    // region Grinding balls
-
-    public static final MutableComponent GRINDINGBALL_MAIN_OUTPUT = addTranslation("tooltip",
-            EnderIO.rl("grinding_ball_main_output"), "Main Output %s%%");
-    public static final MutableComponent GRINDINGBALL_BONUS_OUTPUT = addTranslation("tooltip",
-            EnderIO.rl("grinding_ball_bonus_output"), "Bonus Output %s%%");
-    public static final MutableComponent GRINDINGBALL_POWER_USE = addTranslation("tooltip",
-            EnderIO.rl("grinding_ball_power_use"), "Power Use %s%%");
-
-    // endregion
-
-    // region GUI
-
-    public static final Component FILTER_ALLOW_LIST = addTranslation("gui", EnderIO.rl("filter.allow_list"),
-            "Allow List");
-    public static final Component FILTER_DENY_LIST = addTranslation("gui", EnderIO.rl("filter.deny_list"),
-            "Deny List");
-    public static final Component FILTER_MATCH_COMPONENTS = addTranslation("gui",
-            EnderIO.rl("filter.match_components"), "Match Components");
-    public static final Component FILTER_IGNORE_COMPONENTS = addTranslation("gui",
-            EnderIO.rl("filter.ignore_components"), "Ignore Components");
-    public static final Component DAMAGE_FILTER_MODE = addTranslation("gui", EnderIO.rl("filter.damage"),
-            "Damage Filter");
-
-    // endregion
-
-    private static MutableComponent addTranslation(String prefix, ResourceLocation id, String translation) {
-        return EnderIO.REGILITE.addTranslation(prefix, id, translation);
-    }
-
-    public static void register() {
     }
 }

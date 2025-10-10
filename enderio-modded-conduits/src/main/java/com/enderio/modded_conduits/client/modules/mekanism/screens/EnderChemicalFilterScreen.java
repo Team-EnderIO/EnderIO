@@ -5,6 +5,7 @@ import com.enderio.core.client.gui.widgets.IconButton;
 import com.enderio.core.client.gui.widgets.ToggleIconButton;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.content.filters.AbstractFilterMenu;
+import com.enderio.enderio.content.filters.FiltersLang;
 import com.enderio.enderio.content.filters.item.general.EnderItemFilterMenu;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.modded_conduits.common.modules.mekanism.chemical_filter.ChemicalFilterSlot;
@@ -78,7 +79,7 @@ public class EnderChemicalFilterScreen extends EnderContainerScreen<EnderChemica
 
         addRenderableWidget(
             new ToggleIconButton(xPos, yPos, 16, 16, (b) -> b ? ICON_DENY_LIST : ICON_ALLOW_LIST,
-                (b) -> b ? EIOCommonLang.FILTER_DENY_LIST : EIOCommonLang.FILTER_ALLOW_LIST, getMenu()::isInverted,
+                (b) -> b ? FiltersLang.FILTER_DENY_LIST : FiltersLang.FILTER_ALLOW_LIST, getMenu()::isInverted,
                 (b) -> handleButtonPress(EnderItemFilterMenu.IS_INVERTED_BUTTON_ID)));
 
         xPos -= 18;
