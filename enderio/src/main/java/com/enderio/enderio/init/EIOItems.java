@@ -154,7 +154,6 @@ public class EIOItems {
 
     // region Powders and Fragments
 
-    public static final DeferredItem<Item> FLOUR = basic("flour");
     public static final DeferredItem<Item> POWDERED_COAL = basic("powdered_coal");
     public static final DeferredItem<Item> POWDERED_IRON = basic("powdered_iron");
     public static final DeferredItem<Item> POWDERED_GOLD = basic("powdered_gold");
@@ -194,7 +193,6 @@ public class EIOItems {
     public static final DeferredItem<Item> ANIMAL_TOKEN = basicGlinted("animal_token");
     public static final DeferredItem<Item> MONSTER_TOKEN = basicGlinted("monster_token");
     public static final DeferredItem<Item> PLAYER_TOKEN = basicGlinted("player_token");
-    public static final DeferredItem<Item> CAKE_BASE = basic("cake_base");
     public static final DeferredItem<Item> BLACK_PAPER = basic("black_paper");
     public static final DeferredItem<Item> CLAYED_GLOWSTONE = basic("clayed_glowstone");
     public static final DeferredItem<Item> NETHERCOTTA = basic("nethercotta");

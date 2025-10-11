@@ -466,7 +466,6 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOItems.PRESCIENT_CRYSTAL.get(), "Prescient Crystal");
 
         // Powders and Fragments
-        add(EIOItems.FLOUR.get(), "Flour");
         add(EIOItems.POWDERED_COAL.get(), "Powdered Coal");
         add(EIOItems.POWDERED_IRON.get(), "Powdered Iron");
         add(EIOItems.POWDERED_GOLD.get(), "Powdered Gold");
@@ -500,7 +499,6 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOItems.ANIMAL_TOKEN.get(), "Animal Token");
         add(EIOItems.MONSTER_TOKEN.get(), "Monster Token");
         add(EIOItems.PLAYER_TOKEN.get(), "Player Token");
-        add(EIOItems.CAKE_BASE.get(), "Cake Base");
         add(EIOItems.BLACK_PAPER.get(), "Black Paper");
         add(EIOItems.CLAYED_GLOWSTONE.get(), "Clayed Glowstone");
         add(EIOItems.NETHERCOTTA.get(), "Nethercotta");

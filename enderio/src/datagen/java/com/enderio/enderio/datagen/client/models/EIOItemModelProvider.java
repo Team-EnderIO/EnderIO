@@ -96,7 +96,6 @@ public class EIOItemModelProvider extends ItemModelProvider {
         basicItem(EIOItems.PRESCIENT_CRYSTAL.get());
 
         // Powders and Fragments
-        basicItem(EIOItems.FLOUR.get());
         basicItem(EIOItems.POWDERED_COAL.get());
         basicItem(EIOItems.POWDERED_IRON.get());
         basicItem(EIOItems.POWDERED_GOLD.get());
@@ -130,7 +129,6 @@ public class EIOItemModelProvider extends ItemModelProvider {
         basicItem(EIOItems.ANIMAL_TOKEN.get());
         basicItem(EIOItems.MONSTER_TOKEN.get());
         basicItem(EIOItems.PLAYER_TOKEN.get());
-        basicItem(EIOItems.CAKE_BASE.get());
         basicItem(EIOItems.BLACK_PAPER.get());
         basicItem(EIOItems.CLAYED_GLOWSTONE.get());
         basicItem(EIOItems.NETHERCOTTA.get());

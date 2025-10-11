@@ -152,14 +152,6 @@ public class AlloyRecipeProvider extends SubRecipeProvider {
                 SizedIngredient.of(Items.NETHER_WART, 4), SizedIngredient.of(Items.CLAY_BALL, 6)), 7600, 0.3f,
                 recipeOutput);
 
-        build(new ItemStack(EIOItems.CAKE_BASE.get(), 2),
-                List.of(SizedIngredient.of(EIOItems.FLOUR.get(), 3), SizedIngredient.of(Items.EGG, 1)), 2000, 0.3f,
-                recipeOutput);
-
-        build(new ItemStack(Items.COOKIE, 8),
-                List.of(SizedIngredient.of(EIOItems.FLOUR.get(), 1), SizedIngredient.of(Items.COCOA_BEANS, 1)), 2000,
-                0.3f, recipeOutput);
-
         build(new ItemStack(EIOItems.PHOTOVOLTAIC_PLATE.get()),
                 List.of(SizedIngredient.of(EIOItems.PHOTOVOLTAIC_COMPOSITE.get(), 3)), 5600, 0.3f, recipeOutput);
 

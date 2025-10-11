@@ -73,10 +73,6 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
                 List.of(output(POWDERED_QUARTZ.get(), 1), output(POWDERED_QUARTZ.get(), 0.1f)),
                 BASE_ENERGY_PER_OPERATION, BonusType.CHANCE_ONLY, recipeOutput);
 
-        build("wheat", Ingredient.of(Tags.Items.CROPS_WHEAT),
-                List.of(output(FLOUR.get()), output(Tags.Items.SEEDS_WHEAT, 1, 0.2f, true)), BASE_ENERGY_PER_OPERATION,
-                recipeOutput);
-
         build("cobblestone", Ingredient.of(Tags.Items.COBBLESTONES_NORMAL),
                 List.of(output(GRAVEL, 0.7f), output(GRAVEL, 0.3f), output(SAND, 0.1f), output(FLINT, 0.05f)),
                 BASE_ENERGY_PER_OPERATION, recipeOutput);

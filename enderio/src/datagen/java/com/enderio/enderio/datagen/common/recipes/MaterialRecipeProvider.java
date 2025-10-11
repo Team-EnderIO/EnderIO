@@ -94,15 +94,6 @@ public class MaterialRecipeProvider extends SubRecipeProvider {
     }
 
     private void addVanilla(RecipeOutput recipeOutput) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.FOOD, Items.CAKE)
-                .pattern("MMM")
-                .pattern("SCS")
-                .define('M', Items.MILK_BUCKET)
-                .define('S', Items.SUGAR)
-                .define('C', EIOItems.CAKE_BASE.get())
-                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CAKE_BASE.get()))
-                .save(recipeOutput, EnderIO.rl("cake"));
-
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.STICK, 16)
                 .pattern("W")
                 .pattern("W")
