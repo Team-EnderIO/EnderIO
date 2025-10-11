@@ -11,11 +11,18 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.registries.DeferredBlock;
+import net.neoforged.neoforge.registries.DeferredItem;
+
+import java.util.Objects;
 
 public class EIOItemModelProvider extends ItemModelProvider {
     public EIOItemModelProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
@@ -209,7 +216,9 @@ public class EIOItemModelProvider extends ItemModelProvider {
         // Creative Tab Icon
         basicItem(EIOItems.CREATIVE_ICON.get());
 
-        // Add block items
+        // region Blocks
+
+        // Alloys
         simpleBlockItem(EIOBlocks.COPPER_ALLOY_BLOCK.get());
         simpleBlockItem(EIOBlocks.ENERGETIC_ALLOY_BLOCK.get());
         simpleBlockItem(EIOBlocks.VIBRANT_ALLOY_BLOCK.get());
@@ -219,6 +228,21 @@ public class EIOItemModelProvider extends ItemModelProvider {
         simpleBlockItem(EIOBlocks.DARK_STEEL_BLOCK.get());
         simpleBlockItem(EIOBlocks.SOULARIUM_BLOCK.get());
         simpleBlockItem(EIOBlocks.END_STEEL_BLOCK.get());
+
+        // Chassis
+        simpleBlockItem(EIOBlocks.VOID_CHASSIS.get());
+        simpleBlockItem(EIOBlocks.ENSOULED_CHASSIS.get());
+
+        // Dark Steel Building Blocks
+        flatBlockItem(EIOBlocks.DARK_STEEL_LADDER.get());
+        flatBlockItem(EIOBlocks.DARK_STEEL_BARS.get());
+        basicItem(EIOBlocks.DARK_STEEL_DOOR.asItem());
+        simpleBlockItem(EIOBlocks.DARK_STEEL_TRAPDOOR.get());
+        withExistingParent(EIOBlocks.DARK_STEEL_TRAPDOOR.getId().toString(), modLoc("block/dark_steel_trapdoor_bottom"));
+        flatBlockItem(EIOBlocks.END_STEEL_BARS.get());
+        simpleBlockItem(EIOBlocks.REINFORCED_OBSIDIAN.get());
+
+        // endregion
     }
 
     private ItemModelBuilder fakeBlock(ItemLike item) {
@@ -228,5 +252,14 @@ public class EIOItemModelProvider extends ItemModelProvider {
     private ItemModelBuilder fakeBlock(ResourceLocation item) {
         return withExistingParent(item.toString(), mcLoc("block/cube_all"))
             .texture("all", ResourceLocation.fromNamespaceAndPath(item.getNamespace(), "item/" + item.getPath()));
+    }
+
+    public ItemModelBuilder flatBlockItem(Block item) {
+        return flatBlockItem(Objects.requireNonNull(BuiltInRegistries.BLOCK.getKey(item)));
+    }
+
+    public ItemModelBuilder flatBlockItem(ResourceLocation block) {
+        return this.getBuilder(block.toString()).parent(new ModelFile.UncheckedModelFile("item/generated"))
+            .texture("layer0", ResourceLocation.fromNamespaceAndPath(block.getNamespace(), "block/" + block.getPath()));
     }
 }

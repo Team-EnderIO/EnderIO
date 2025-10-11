@@ -25,6 +25,11 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
+        tag(BlockTags.CLIMBABLE).add(EIOBlocks.DARK_STEEL_LADDER.get());
+        tag(BlockTags.DOORS).add(EIOBlocks.DARK_STEEL_DOOR.get());
+        tag(BlockTags.TRAPDOORS).add(EIOBlocks.DARK_STEEL_TRAPDOOR.get());
+        tag(BlockTags.WITHER_IMMUNE).add(EIOBlocks.REINFORCED_OBSIDIAN.get());
+
         tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .add(EIOBlocks.COPPER_ALLOY_BLOCK.get())
             .add(EIOBlocks.ENERGETIC_ALLOY_BLOCK.get())
@@ -35,6 +40,14 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
             .add(EIOBlocks.DARK_STEEL_BLOCK.get())
             .add(EIOBlocks.SOULARIUM_BLOCK.get())
             .add(EIOBlocks.END_STEEL_BLOCK.get())
+            .add(EIOBlocks.VOID_CHASSIS.get())
+            .add(EIOBlocks.ENSOULED_CHASSIS.get())
+            .add(EIOBlocks.DARK_STEEL_LADDER.get())
+            .add(EIOBlocks.DARK_STEEL_BARS.get())
+            .add(EIOBlocks.DARK_STEEL_DOOR.get())
+            .add(EIOBlocks.DARK_STEEL_TRAPDOOR.get())
+            .add(EIOBlocks.END_STEEL_BARS.get())
+            .add(EIOBlocks.REINFORCED_OBSIDIAN.get())
             .add(ConduitBlocks.CONDUIT_BUNDLE.get());
 
         // Blocks that need stone tools
@@ -47,7 +60,20 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
             .add(EIOBlocks.PULSATING_ALLOY_BLOCK.get())
             .add(EIOBlocks.DARK_STEEL_BLOCK.get())
             .add(EIOBlocks.SOULARIUM_BLOCK.get())
-            .add(EIOBlocks.END_STEEL_BLOCK.get());
+            .add(EIOBlocks.END_STEEL_BLOCK.get())
+            .add(EIOBlocks.VOID_CHASSIS.get())
+            .add(EIOBlocks.ENSOULED_CHASSIS.get());
+
+        // Iron tools
+        tag(BlockTags.NEEDS_IRON_TOOL)
+            .add(EIOBlocks.DARK_STEEL_LADDER.get())
+            .add(EIOBlocks.DARK_STEEL_BARS.get())
+            .add(EIOBlocks.DARK_STEEL_DOOR.get())
+            .add(EIOBlocks.DARK_STEEL_TRAPDOOR.get())
+            .add(EIOBlocks.END_STEEL_BARS.get());
+
+        tag(BlockTags.NEEDS_DIAMOND_TOOL)
+            .add(EIOBlocks.REINFORCED_OBSIDIAN.get());
 
         tag(Tags.Blocks.STORAGE_BLOCKS).addTag(EIOTags.Blocks.BLOCKS_CONDUCTIVE_ALLOY)
                 .addTag(EIOTags.Blocks.BLOCKS_COPPER_ALLOY)
@@ -73,6 +99,7 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
 
         tag(Tags.Blocks.RELOCATION_NOT_SUPPORTED).add(ConduitBlocks.CONDUIT_BUNDLE.get());
 
+        // Alloys
         tag(EIOTags.Blocks.BLOCKS_COPPER_ALLOY).add(EIOBlocks.COPPER_ALLOY_BLOCK.get());
         tag(EIOTags.Blocks.BLOCKS_ENERGETIC_ALLOY).add(EIOBlocks.ENERGETIC_ALLOY_BLOCK.get());
         tag(EIOTags.Blocks.BLOCKS_VIBRANT_ALLOY).add(EIOBlocks.VIBRANT_ALLOY_BLOCK.get());

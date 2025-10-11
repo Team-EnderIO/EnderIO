@@ -9,6 +9,14 @@
     "enderio:dark_steel_block",
     "enderio:soularium_block",
     "enderio:end_steel_block",
+    "enderio:void_chassis",
+    "enderio:ensouled_chassis",
+    "enderio:dark_steel_ladder",
+    "enderio:dark_steel_bars",
+    "enderio:dark_steel_door",
+    "enderio:dark_steel_trapdoor",
+    "enderio:end_steel_bars",
+    "enderio:reinforced_obsidian_block",
     "enderio:conduit"
   ]
 }

@@ -23,6 +23,7 @@ public class EIOBlockLootProvider extends BlockLootSubProvider {
 
     @Override
     protected void generate() {
+        // Alloys
         dropSelf(EIOBlocks.COPPER_ALLOY_BLOCK.get());
         dropSelf(EIOBlocks.ENERGETIC_ALLOY_BLOCK.get());
         dropSelf(EIOBlocks.VIBRANT_ALLOY_BLOCK.get());
@@ -32,5 +33,17 @@ public class EIOBlockLootProvider extends BlockLootSubProvider {
         dropSelf(EIOBlocks.DARK_STEEL_BLOCK.get());
         dropSelf(EIOBlocks.SOULARIUM_BLOCK.get());
         dropSelf(EIOBlocks.END_STEEL_BLOCK.get());
+
+        // Chassis
+        dropSelf(EIOBlocks.VOID_CHASSIS.get());
+        dropSelf(EIOBlocks.ENSOULED_CHASSIS.get());
+
+        // Dark Steel Building Blocks
+        dropSelf(EIOBlocks.DARK_STEEL_LADDER.get());
+        dropSelf(EIOBlocks.DARK_STEEL_BARS.get());
+        add(EIOBlocks.DARK_STEEL_DOOR.get(), createDoorTable(EIOBlocks.DARK_STEEL_DOOR.get()));
+        dropSelf(EIOBlocks.DARK_STEEL_TRAPDOOR.get());
+        dropSelf(EIOBlocks.END_STEEL_BARS.get());
+        dropSelf(EIOBlocks.REINFORCED_OBSIDIAN.get());
     }
 }

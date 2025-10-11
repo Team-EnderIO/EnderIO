@@ -15,7 +15,7 @@
     },
     {
       "apply": {
-        "model": "enderio:block/end_steel_bars_no_side"
+        "model": "enderio:block/end_steel_bars_noside"
       },
       "when": {
         "north": "false"
@@ -31,7 +31,7 @@
     },
     {
       "apply": {
-        "model": "enderio:block/end_steel_bars_no_side_alt",
+        "model": "enderio:block/end_steel_bars_noside_alt",
         "y": 90
       },
       "when": {
@@ -49,7 +49,7 @@
     },
     {
       "apply": {
-        "model": "enderio:block/end_steel_bars_no_side",
+        "model": "enderio:block/end_steel_bars_noside",
         "y": 270
       },
       "when": {
@@ -67,7 +67,7 @@
     },
     {
       "apply": {
-        "model": "enderio:block/end_steel_bars_no_side_alt"
+        "model": "enderio:block/end_steel_bars_noside_alt"
       },
       "when": {
         "east": "false"

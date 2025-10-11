@@ -584,6 +584,7 @@ public class EIOLanguageProvider extends LanguageProvider {
     }
 
     private void addBlocks() {
+        // Alloys
         add(EIOBlocks.COPPER_ALLOY_BLOCK.get(), "Copper Alloy Block");
         add(EIOBlocks.ENERGETIC_ALLOY_BLOCK.get(), "Energetic Alloy Block");
         add(EIOBlocks.VIBRANT_ALLOY_BLOCK.get(), "Vibrant Alloy Block");
@@ -593,6 +594,18 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOBlocks.DARK_STEEL_BLOCK.get(), "Dark Steel Block");
         add(EIOBlocks.SOULARIUM_BLOCK.get(), "Soularium Block");
         add(EIOBlocks.END_STEEL_BLOCK.get(), "End Steel Block");
+
+        // Chassis
+        add(EIOBlocks.VOID_CHASSIS.get(), "Void Chassis");
+        add(EIOBlocks.ENSOULED_CHASSIS.get(), "Ensouled Chassis");
+
+        // Dark Steel Building Blocks
+        add(EIOBlocks.DARK_STEEL_LADDER.get(), "Dark Steel Ladder");
+        add(EIOBlocks.DARK_STEEL_BARS.get(), "Dark Steel Bars");
+        add(EIOBlocks.DARK_STEEL_DOOR.get(), "Dark Steel Door");
+        add(EIOBlocks.DARK_STEEL_TRAPDOOR.get(), "Dark Steel Trapdoor");
+        add(EIOBlocks.END_STEEL_BARS.get(), "End Steel Bars");
+        add(EIOBlocks.REINFORCED_OBSIDIAN.get(), "Reinforced Obsidian");
 
         add(ConduitBlocks.CONDUIT_BUNDLE.get(), "Conduit Bundle");
     }

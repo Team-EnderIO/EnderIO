@@ -66,14 +66,17 @@ import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.client.model.generators.VariantBlockStateBuilder;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.registries.DeferredBlock;
+import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -104,6 +107,56 @@ public class EIOBlocks {
 
     // endregion
 
+    // region Chassis
+
+    // Iron tier
+    public static final DeferredBlock<Block> VOID_CHASSIS = registerChassisBlock("void_chassis");
+
+    // Void chassis + some kind of dragons breath derrived process
+    //    public static final RegiliteBlock<Block> REKINDLED_VOID_CHASSIS = registerChassisBlock("rekindled_void_chassis");
+
+    // Soularium + soul/nether
+    public static final DeferredBlock<Block> ENSOULED_CHASSIS = registerChassisBlock("ensouled_chassis");
+
+    // Ensnared + Some kind of other material
+    // This is for machines that require a bound soul
+    //    public static final RegiliteBlock<Block> TRAPPED_CHASSIS = registerChassisBlock("trapped_chassis");
+
+    // Dark steel + sculk
+    //    public static final RegiliteBlock<Block> SCULK_CHASSIS = registerChassisBlock("sculk_chassis");
+
+    private static DeferredBlock<Block> registerChassisBlock(String name) {
+        return registerWithItem(name, Block::new, BlockBehaviour.Properties.of().noOcclusion().sound(SoundType.METAL).mapColor(MapColor.METAL).strength(5, 6));
+    }
+
+    // endregion
+
+    // region Dark Steel Building Blocks
+
+    public static final DeferredBlock<DarkSteelLadderBlock> DARK_STEEL_LADDER = registerWithItem("dark_steel_ladder", DarkSteelLadderBlock::new, BlockBehaviour.Properties.of().strength(0.4f).requiresCorrectToolForDrops().sound(SoundType.METAL).mapColor(MapColor.METAL).noOcclusion());
+
+    public static final DeferredBlock<IronBarsBlock> DARK_STEEL_BARS = registerWithItem("dark_steel_bars", IronBarsBlock::new,
+            BlockBehaviour.Properties.of().strength(5.0f, 1000.0f).requiresCorrectToolForDrops().sound(SoundType.METAL).noOcclusion());
+
+    public static final DeferredBlock<DoorBlock> DARK_STEEL_DOOR = registerWithItem("dark_steel_door", props -> new DoorBlock(BlockSetType.IRON, props),
+            BlockBehaviour.Properties.of().strength(5.0f, 2000.0f).sound(SoundType.METAL).mapColor(MapColor.METAL).noOcclusion());
+
+    public static final DeferredBlock<TrapDoorBlock> DARK_STEEL_TRAPDOOR = registerWithItem("dark_steel_trapdoor", props -> new TrapDoorBlock(BlockSetType.IRON, props),
+            BlockBehaviour.Properties.of().strength(5.0f, 2000.0f).sound(SoundType.METAL).mapColor(MapColor.METAL).noOcclusion());
+
+    public static final DeferredBlock<IronBarsBlock> END_STEEL_BARS = registerWithItem("end_steel_bars", IronBarsBlock::new,
+            BlockBehaviour.Properties.of().strength(5.0f, 1000.0f).requiresCorrectToolForDrops().sound(SoundType.METAL).noOcclusion());
+
+    public static final DeferredBlock<ReinforcedObsidianBlock> REINFORCED_OBSIDIAN = registerWithItem("reinforced_obsidian_block", ReinforcedObsidianBlock::new,
+            BlockBehaviour.Properties.of()
+                .sound(SoundType.STONE)
+                .strength(50, 2000)
+                .requiresCorrectToolForDrops()
+                .mapColor(MapColor.COLOR_BLACK)
+                .instrument(NoteBlockInstrument.BASEDRUM));
+
+    // endregion
+
     private static <B extends Block> DeferredBlock<B> registerWithItem(String name, Function<BlockBehaviour.Properties, ? extends B> func, BlockBehaviour.Properties props) {
         var blockHolder = BLOCKS.<B>registerBlock(name, func, props);
         ITEMS.registerSimpleBlockItem(blockHolder);
@@ -114,109 +167,6 @@ public class EIOBlocks {
 
     private static final BlockRegistry BLOCK_REGISTRY = EnderIO.REGILITE.blockRegistry();
     private static final ItemRegistry ITEM_REGISTRY = EnderIO.REGILITE.itemRegistry();
-
-    // region Chassis
-
-    // Iron tier
-    public static final RegiliteBlock<Block> VOID_CHASSIS = chassisBlock("void_chassis");
-
-    // Void chassis + some kind of dragons breath derrived process
-    //    public static final RegiliteBlock<Block> REKINDLED_VOID_CHASSIS = chassisBlock("rekindled_void_chassis");
-
-    // Soularium + soul/nether
-    public static final RegiliteBlock<Block> ENSOULED_CHASSIS = chassisBlock("ensouled_chassis");
-
-    // Ensnared + Some kind of other material
-    // This is for machines that require a bound soul
-    //    public static final RegiliteBlock<Block> TRAPPED_CHASSIS = chassisBlock("trapped_chassis");
-
-    // Dark steel + sculk
-    //    public static final RegiliteBlock<Block> SCULK_CHASSIS = chassisBlock("sculk_chassis");
-
-    // endregion
-
-    // endregion
-
-    // region Dark Steel Building Blocks
-
-    public static final RegiliteBlock<DarkSteelLadderBlock> DARK_STEEL_LADDER = BLOCK_REGISTRY
-        .registerBlock("dark_steel_ladder", DarkSteelLadderBlock::new, BlockBehaviour.Properties.of().strength(0.4f).requiresCorrectToolForDrops().sound(SoundType.METAL).mapColor(MapColor.METAL).noOcclusion())
-        .setBlockStateProvider((prov, ctx) -> prov.horizontalBlock(ctx.get(), prov
-            .models()
-            .withExistingParent(ctx.getName(), prov.mcLoc("block/ladder"))
-            .renderType(prov.mcLoc("cutout_mipped"))
-            .texture("particle", prov.blockTexture(ctx.get()))
-            .texture("texture", prov.blockTexture(ctx.get()))))
-        .addBlockTags(BlockTags.CLIMBABLE, BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
-        .createBlockItem(ITEM_REGISTRY, item -> item
-            .setModelProvider((prov, ctx) -> prov.basicItem(ctx.get(), prov.modLoc("block/dark_steel_ladder")))
-            .setTab(EIOCreativeTabs.MAIN));
-
-    public static final RegiliteBlock<IronBarsBlock> DARK_STEEL_BARS = BLOCK_REGISTRY
-        .registerBlock("dark_steel_bars", IronBarsBlock::new,
-            BlockBehaviour.Properties.of().strength(5.0f, 1000.0f).requiresCorrectToolForDrops().sound(SoundType.METAL).noOcclusion())
-        .setBlockStateProvider(EIOBlockState::paneBlock)
-        .addBlockTags(
-            BlockTags.NEEDS_IRON_TOOL,
-            BlockTags.MINEABLE_WITH_PICKAXE
-        )
-        .createBlockItem(ITEM_REGISTRY, item -> item
-            .setTab(EIOCreativeTabs.MAIN)
-            .setModelProvider((prov, ctx) -> prov.basicItem(ctx.get(), prov.modLoc("block/dark_steel_bars")))
-        );
-
-    public static final RegiliteBlock<DoorBlock> DARK_STEEL_DOOR = BLOCK_REGISTRY
-        .registerBlock("dark_steel_door", props -> new DoorBlock(BlockSetType.IRON, props),
-            BlockBehaviour.Properties.of().strength(5.0f, 2000.0f).sound(SoundType.METAL).mapColor(MapColor.METAL).noOcclusion())
-        .setLootTable(RegiliteBlockLootProvider::createDoor)
-        .setBlockStateProvider(
-            (prov, ctx) -> prov.doorBlockWithRenderType(ctx.get(), prov.modLoc("block/dark_steel_door_bottom"), prov.modLoc("block/dark_steel_door_top"),
-                prov.mcLoc("cutout")))
-        .addBlockTags(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL, BlockTags.DOORS)
-        .createBlockItem(ITEM_REGISTRY, item -> item
-            .setModelProvider((prov, ctx) -> prov.basicItem(ctx.get()))
-            .setTab(EIOCreativeTabs.MAIN)
-        );
-
-    public static final RegiliteBlock<TrapDoorBlock> DARK_STEEL_TRAPDOOR = BLOCK_REGISTRY
-        .registerBlock("dark_steel_trapdoor", props -> new TrapDoorBlock(BlockSetType.IRON, props),
-            BlockBehaviour.Properties.of().strength(5.0f, 2000.0f).sound(SoundType.METAL).mapColor(MapColor.METAL).noOcclusion())
-        .setBlockStateProvider((prov, ctx) -> prov.trapdoorBlockWithRenderType(ctx.get(), prov.modLoc("block/dark_steel_trapdoor"), true, prov.mcLoc("cutout")))
-        .addBlockTags(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL, BlockTags.TRAPDOORS)
-        .createBlockItem(ITEM_REGISTRY, item -> item
-            .setModelProvider((prov, ctx) -> prov.withExistingParent(ctx.getName(), prov.modLoc("block/dark_steel_trapdoor_bottom")))
-            .setTab(EIOCreativeTabs.MAIN)
-        );
-
-    public static final RegiliteBlock<IronBarsBlock> END_STEEL_BARS = BLOCK_REGISTRY
-        .registerBlock("end_steel_bars", IronBarsBlock::new,
-            BlockBehaviour.Properties.of().strength(5.0f, 1000.0f).requiresCorrectToolForDrops().sound(SoundType.METAL).noOcclusion())
-        .setBlockStateProvider(EIOBlockState::paneBlock)
-        .addBlockTags(
-            BlockTags.NEEDS_IRON_TOOL,
-            BlockTags.MINEABLE_WITH_PICKAXE
-        )
-        .createBlockItem(ITEM_REGISTRY, item -> item
-            .setTab(EIOCreativeTabs.MAIN)
-            .setModelProvider((prov, ctx) -> prov.basicItem(ctx.get(), prov.modLoc("block/end_steel_bars")))
-        );
-
-    public static final RegiliteBlock<ReinforcedObsidianBlock> REINFORCED_OBSIDIAN = BLOCK_REGISTRY
-        .registerBlock("reinforced_obsidian_block", ReinforcedObsidianBlock::new,
-            BlockBehaviour.Properties.of()
-                .sound(SoundType.STONE)
-                .strength(50, 2000)
-                .requiresCorrectToolForDrops()
-                .mapColor(MapColor.COLOR_BLACK)
-                .instrument(NoteBlockInstrument.BASEDRUM))
-        .addBlockTags(
-            BlockTags.WITHER_IMMUNE,
-            BlockTags.NEEDS_DIAMOND_TOOL,
-            BlockTags.MINEABLE_WITH_PICKAXE
-        )
-        .createBlockItem(ITEM_REGISTRY, item -> item
-            .setTab(EIOCreativeTabs.MAIN)
-        );
 
     // endregion
 
@@ -414,34 +364,6 @@ public class EIOBlocks {
             BlockBehaviour.Properties.ofFullCopy(Blocks.SKELETON_SKULL).strength(1.0F).lootFrom(ENDERMAN_HEAD).pushReaction(PushReaction.DESTROY))
         .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(prov.mcLoc("block/skull"))))
         .setTranslation("");
-
-    private static RegiliteBlock<Block> metalBlock(String name, TagKey<Block> blockTag, TagKey<Item> itemTag) {
-        return BLOCK_REGISTRY
-            .registerBlock(name, Block::new, BlockBehaviour.Properties.of().sound(SoundType.METAL).mapColor(MapColor.METAL).strength(5, 6).requiresCorrectToolForDrops())
-            .addBlockTags(
-                BlockTags.NEEDS_STONE_TOOL,
-                BlockTags.MINEABLE_WITH_PICKAXE,
-                blockTag
-            )
-            .createBlockItem(ITEM_REGISTRY, item -> item
-                .setTab(EIOCreativeTabs.MAIN)
-                .addItemTags(itemTag)
-            );
-    }
-
-    private static RegiliteBlock<Block> chassisBlock(String name) {
-        return BLOCK_REGISTRY
-            .registerBlock(name, Block::new, BlockBehaviour.Properties.of().noOcclusion().sound(SoundType.METAL).mapColor(MapColor.METAL).strength(5, 6))
-            .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(),
-                prov.models().cubeAll(name, prov.blockTexture(ctx.get())).renderType(prov.mcLoc("translucent"))))
-            .addBlockTags(
-                BlockTags.NEEDS_STONE_TOOL,
-                BlockTags.MINEABLE_WITH_PICKAXE
-            )
-            .createBlockItem(ITEM_REGISTRY, item -> item
-                .setTab(EIOCreativeTabs.MAIN)
-            );
-    }
 
     private static RegiliteBlock<EIOPressurePlateBlock> pressurePlateBlock(String name, ResourceLocation texture, EIOPressurePlateBlock.Detector type,
         boolean silent) {
