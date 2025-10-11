@@ -76,7 +76,6 @@ import com.enderio.enderio.content.fun.EnderiosItem;
 import com.enderio.enderio.content.misc_blocks.skull.EnderSkullBlock;
 import com.enderio.enderio.content.tools.vials.SoulVialItem;
 import com.enderio.enderio.init.ConduitBlocks;
-import com.enderio.enderio.init.ConduitItems;
 import com.enderio.enderio.init.EIOConduitTypes;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOBlocks;
@@ -116,8 +115,6 @@ import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
-import net.neoforged.neoforge.client.gui.ConfigurationScreen;
-import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.util.Lazy;
 
@@ -243,7 +240,7 @@ public class EnderIOClient {
 
     @SubscribeEvent
     public static void registerBlockColorHandlers(RegisterColorHandlersEvent.Block event) {
-        event.register(ConduitFacadeColor.INSTANCE, ConduitBlocks.CONDUIT.get());
+        event.register(ConduitFacadeColor.INSTANCE, ConduitBlocks.CONDUIT_BUNDLE.get());
 
         event.register(PaintedBlockColor.INSTANCE,
             EIOBlocks.PAINTED_FENCE.get(),
@@ -262,10 +259,10 @@ public class EnderIOClient {
     @SubscribeEvent
     public static void registerItemColorHandlers(RegisterColorHandlersEvent.Item event) {
         event.register(ConduitFacadeColor.INSTANCE,
-            ConduitItems.CONDUIT_FACADE.get(),
-            ConduitItems.TRANSPARENT_CONDUIT_FACADE.get(),
-            ConduitItems.HARDENED_CONDUIT_FACADE.get(),
-            ConduitItems.TRANSPARENT_HARDENED_CONDUIT_FACADE.get());
+            EIOItems.CONDUIT_FACADE.get(),
+            EIOItems.TRANSPARENT_CONDUIT_FACADE.get(),
+            EIOItems.HARDENED_CONDUIT_FACADE.get(),
+            EIOItems.TRANSPARENT_HARDENED_CONDUIT_FACADE.get());
 
         event.register(PaintedBlockColor.INSTANCE,
             EIOBlocks.PAINTED_FENCE.get(),
@@ -375,7 +372,7 @@ public class EnderIOClient {
 
     @SubscribeEvent
     public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
-        event.registerBlock(ConduitBundleExtension.INSTANCE, ConduitBlocks.CONDUIT);
+        event.registerBlock(ConduitBundleExtension.INSTANCE, ConduitBlocks.CONDUIT_BUNDLE);
 
         event.registerItem(new IClientItemExtensions() {
             // Minecraft can be null during datagen

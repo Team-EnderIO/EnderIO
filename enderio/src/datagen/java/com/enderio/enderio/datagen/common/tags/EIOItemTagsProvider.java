@@ -3,6 +3,7 @@ package com.enderio.enderio.datagen.common.tags;
 import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.ConduitBlocks;
+import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -57,6 +58,8 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
         addHideFacadesTags();
         addGliderTags();
         addReagentTags();
+
+        addBlockItemTags();
     }
 
     private void addIngotTags() {
@@ -203,7 +206,7 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
     private void addHideFacadesTags() {
         tag(EIOTags.Items.HIDE_FACADES)
             .add(EIOItems.YETA_WRENCH.get())
-            .add(ConduitBlocks.CONDUIT.asItem());
+            .add(ConduitBlocks.CONDUIT_BUNDLE.asItem());
     }
 
     private void addGliderTags() {
@@ -225,5 +228,17 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
             Items.BLUE_ICE);
         tag(EIOTags.Items.LIGHTNING_ROD).add(Items.LIGHTNING_ROD);
         tag(EIOTags.Items.WIND_CHARGES).add(Items.WIND_CHARGE);
+    }
+
+    private void addBlockItemTags() {
+        tag(EIOTags.Items.BLOCKS_COPPER_ALLOY).add(EIOBlocks.COPPER_ALLOY_BLOCK.asItem());
+        tag(EIOTags.Items.BLOCKS_ENERGETIC_ALLOY).add(EIOBlocks.ENERGETIC_ALLOY_BLOCK.asItem());
+        tag(EIOTags.Items.BLOCKS_VIBRANT_ALLOY).add(EIOBlocks.VIBRANT_ALLOY_BLOCK.asItem());
+        tag(EIOTags.Items.BLOCKS_REDSTONE_ALLOY).add(EIOBlocks.REDSTONE_ALLOY_BLOCK.asItem());
+        tag(EIOTags.Items.BLOCKS_CONDUCTIVE_ALLOY).add(EIOBlocks.CONDUCTIVE_ALLOY_BLOCK.asItem());
+        tag(EIOTags.Items.BLOCKS_PULSATING_ALLOY).add(EIOBlocks.PULSATING_ALLOY_BLOCK.asItem());
+        tag(EIOTags.Items.BLOCKS_DARK_STEEL).add(EIOBlocks.DARK_STEEL_BLOCK.asItem());
+        tag(EIOTags.Items.BLOCKS_SOULARIUM).add(EIOBlocks.SOULARIUM_BLOCK.asItem());
+        tag(EIOTags.Items.BLOCKS_END_STEEL).add(EIOBlocks.END_STEEL_BLOCK.asItem());
     }
 }

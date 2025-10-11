@@ -3,6 +3,7 @@ package com.enderio.enderio.datagen.common.tags;
 import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.ConduitBlocks;
+import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.MachineBlocks;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -24,6 +25,30 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
+        tag(BlockTags.MINEABLE_WITH_PICKAXE)
+            .add(EIOBlocks.COPPER_ALLOY_BLOCK.get())
+            .add(EIOBlocks.ENERGETIC_ALLOY_BLOCK.get())
+            .add(EIOBlocks.VIBRANT_ALLOY_BLOCK.get())
+            .add(EIOBlocks.REDSTONE_ALLOY_BLOCK.get())
+            .add(EIOBlocks.CONDUCTIVE_ALLOY_BLOCK.get())
+            .add(EIOBlocks.PULSATING_ALLOY_BLOCK.get())
+            .add(EIOBlocks.DARK_STEEL_BLOCK.get())
+            .add(EIOBlocks.SOULARIUM_BLOCK.get())
+            .add(EIOBlocks.END_STEEL_BLOCK.get())
+            .add(ConduitBlocks.CONDUIT_BUNDLE.get());
+
+        // Blocks that need stone tools
+        tag(BlockTags.NEEDS_STONE_TOOL)
+            .add(EIOBlocks.COPPER_ALLOY_BLOCK.get())
+            .add(EIOBlocks.ENERGETIC_ALLOY_BLOCK.get())
+            .add(EIOBlocks.VIBRANT_ALLOY_BLOCK.get())
+            .add(EIOBlocks.REDSTONE_ALLOY_BLOCK.get())
+            .add(EIOBlocks.CONDUCTIVE_ALLOY_BLOCK.get())
+            .add(EIOBlocks.PULSATING_ALLOY_BLOCK.get())
+            .add(EIOBlocks.DARK_STEEL_BLOCK.get())
+            .add(EIOBlocks.SOULARIUM_BLOCK.get())
+            .add(EIOBlocks.END_STEEL_BLOCK.get());
+
         tag(Tags.Blocks.STORAGE_BLOCKS).addTag(EIOTags.Blocks.BLOCKS_CONDUCTIVE_ALLOY)
                 .addTag(EIOTags.Blocks.BLOCKS_COPPER_ALLOY)
                 .addTag(EIOTags.Blocks.BLOCKS_DARK_STEEL)
@@ -46,6 +71,16 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
                 Blocks.WAXED_WEATHERED_COPPER_BULB, Blocks.WAXED_OXIDIZED_COPPER_BULB, Blocks.CRAFTER)
             .addTags(BlockTags.DOORS, BlockTags.TRAPDOORS, BlockTags.REDSTONE_ORES);
 
-        tag(Tags.Blocks.RELOCATION_NOT_SUPPORTED).add(ConduitBlocks.CONDUIT.get());
+        tag(Tags.Blocks.RELOCATION_NOT_SUPPORTED).add(ConduitBlocks.CONDUIT_BUNDLE.get());
+
+        tag(EIOTags.Blocks.BLOCKS_COPPER_ALLOY).add(EIOBlocks.COPPER_ALLOY_BLOCK.get());
+        tag(EIOTags.Blocks.BLOCKS_ENERGETIC_ALLOY).add(EIOBlocks.ENERGETIC_ALLOY_BLOCK.get());
+        tag(EIOTags.Blocks.BLOCKS_VIBRANT_ALLOY).add(EIOBlocks.VIBRANT_ALLOY_BLOCK.get());
+        tag(EIOTags.Blocks.BLOCKS_REDSTONE_ALLOY).add(EIOBlocks.REDSTONE_ALLOY_BLOCK.get());
+        tag(EIOTags.Blocks.BLOCKS_CONDUCTIVE_ALLOY).add(EIOBlocks.CONDUCTIVE_ALLOY_BLOCK.get());
+        tag(EIOTags.Blocks.BLOCKS_PULSATING_ALLOY).add(EIOBlocks.PULSATING_ALLOY_BLOCK.get());
+        tag(EIOTags.Blocks.BLOCKS_DARK_STEEL).add(EIOBlocks.DARK_STEEL_BLOCK.get());
+        tag(EIOTags.Blocks.BLOCKS_SOULARIUM).add(EIOBlocks.SOULARIUM_BLOCK.get());
+        tag(EIOTags.Blocks.BLOCKS_END_STEEL).add(EIOBlocks.END_STEEL_BLOCK.get());
     }
 }

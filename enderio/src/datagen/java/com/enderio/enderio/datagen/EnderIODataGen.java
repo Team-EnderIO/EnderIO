@@ -4,6 +4,7 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.datagen.client.EIOLanguageProvider;
+import com.enderio.enderio.datagen.client.models.EIOBlockStateProvider;
 import com.enderio.enderio.datagen.client.models.EIOItemModelProvider;
 import com.enderio.enderio.datagen.common.advancement.EIOAdvancementGenerator;
 import com.enderio.enderio.datagen.common.advancement.MachinesAdvancementGenerator;
@@ -11,6 +12,7 @@ import com.enderio.enderio.datagen.common.data_maps.RangeExtenderDataMapProvider
 import com.enderio.enderio.datagen.common.data_maps.ReagentDataMapProvider;
 import com.enderio.enderio.datagen.common.datapack_registries.ConduitsBootstrap;
 import com.enderio.enderio.datagen.common.loot.ChestLootProvider;
+import com.enderio.enderio.datagen.common.loot.EIOBlockLootProvider;
 import com.enderio.enderio.datagen.common.loot.EIOLootModifiersProvider;
 import com.enderio.enderio.datagen.common.recipes.EnderIORecipeProvider;
 import com.enderio.enderio.datagen.common.souldata.SoulDataProvider;
@@ -76,10 +78,12 @@ public class EnderIODataGen {
 
         generator.addProvider(event.includeServer(),
             new LootTableProvider(packOutput, Collections.emptySet(), List.of(
+                new LootTableProvider.SubProviderEntry(EIOBlockLootProvider::new, LootContextParamSets.BLOCK),
                 new LootTableProvider.SubProviderEntry(ChestLootProvider::new, LootContextParamSets.CHEST)
             ), lookupProvider));
 
         generator.addProvider(event.includeClient(), new EIOItemModelProvider(packOutput, existingFileHelper));
+        generator.addProvider(event.includeClient(), new EIOBlockStateProvider(packOutput, existingFileHelper));
         generator.addProvider(event.includeClient(), new EIOLanguageProvider(packOutput));
     }
 

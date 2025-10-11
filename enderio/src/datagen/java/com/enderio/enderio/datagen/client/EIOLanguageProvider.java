@@ -19,6 +19,8 @@ import com.enderio.enderio.content.machines.powered_spawner.PoweredSpawnerMode;
 import com.enderio.enderio.content.tools.ToolsLang;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.foundation.tag.EIOTags;
+import com.enderio.enderio.init.ConduitBlocks;
+import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOConduits;
 import com.enderio.enderio.init.EIOEntities;
 import com.enderio.enderio.init.EIOItems;
@@ -56,6 +58,7 @@ public class EIOLanguageProvider extends LanguageProvider {
         addGlassLang();
         addMachineLang();
         addItems();
+        addBlocks();
         addAdvancementsLang();
         addCommonLang();
 
@@ -569,8 +572,29 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOItems.SENSOR_FILTER.get(), "Redstone Sensor Filter");
         add(EIOItems.TIMER_FILTER.get(), "Redstone Timer Filter");
 
+        // Conduits
+        add(EIOItems.CONDUIT.get(), "<MISSING> Conduit");
+        add(EIOItems.CONDUIT_FACADE.get(), "Conduit Facade");
+        add(EIOItems.TRANSPARENT_CONDUIT_FACADE.get(), "Transparent Conduit Facade");
+        add(EIOItems.HARDENED_CONDUIT_FACADE.get(), "Hardened Conduit Facade");
+        add(EIOItems.TRANSPARENT_HARDENED_CONDUIT_FACADE.get(), "Transparent Hardened Conduit Facade");
+
         // Creative Tab Icon
         add(EIOItems.CREATIVE_ICON.get(), "Internal Item - Unobtainable");
+    }
+
+    private void addBlocks() {
+        add(EIOBlocks.COPPER_ALLOY_BLOCK.get(), "Copper Alloy Block");
+        add(EIOBlocks.ENERGETIC_ALLOY_BLOCK.get(), "Energetic Alloy Block");
+        add(EIOBlocks.VIBRANT_ALLOY_BLOCK.get(), "Vibrant Alloy Block");
+        add(EIOBlocks.REDSTONE_ALLOY_BLOCK.get(), "Redstone Alloy Block");
+        add(EIOBlocks.CONDUCTIVE_ALLOY_BLOCK.get(), "Conductive Alloy Block");
+        add(EIOBlocks.PULSATING_ALLOY_BLOCK.get(), "Pulsating Alloy Block");
+        add(EIOBlocks.DARK_STEEL_BLOCK.get(), "Dark Steel Block");
+        add(EIOBlocks.SOULARIUM_BLOCK.get(), "Soularium Block");
+        add(EIOBlocks.END_STEEL_BLOCK.get(), "End Steel Block");
+
+        add(ConduitBlocks.CONDUIT_BUNDLE.get(), "Conduit Bundle");
     }
 
     private void addCommonLang() {

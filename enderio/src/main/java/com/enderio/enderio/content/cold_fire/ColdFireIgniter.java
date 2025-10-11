@@ -111,14 +111,14 @@ public class ColdFireIgniter extends Item implements ICustomCreativeTabEntries {
     }
 
     @Override
-    public void addAdditionalCreativeTabEntries(CreativeModeTab.ItemDisplayParameters properties, CreativeModeTab.Output modifier) {
+    public void addAdditionalCreativeTabEntries(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
         ItemStack is = new ItemStack(this);
 
         var fluidHandler = is.getCapability(Capabilities.FluidHandler.ITEM);
         if (fluidHandler != null) {
             if (fluidHandler instanceof StrictFluidHandlerItemStack strictFluidHandlerItemStack) {
                 strictFluidHandlerItemStack.setFluid(new FluidStack(EIOFluids.VAPOR_OF_LEVITY.getSource(), fluidHandler.getTankCapacity(0)));
-                modifier.accept(is);
+                output.accept(is);
             }
         }
     }

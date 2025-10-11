@@ -7,6 +7,6 @@ public interface ICustomCreativeTabEntries {
         return true;
     }
 
-    default void addAdditionalCreativeTabEntries(CreativeModeTab.ItemDisplayParameters properties, CreativeModeTab.Output modifier) {
+    default void addAdditionalCreativeTabEntries(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
     }
 }

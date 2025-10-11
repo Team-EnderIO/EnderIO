@@ -4,6 +4,7 @@ import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.content.cold_fire.ColdFireIgniter;
 import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
+import com.enderio.enderio.content.conduits.facades.ComponentBackedConduitFacadeProvider;
 import com.enderio.enderio.content.filters.AbstractFilterItem;
 import com.enderio.enderio.content.filters.fluid.EnderFluidFilterItem;
 import com.enderio.enderio.content.filters.item.general.EnderItemFilter;
@@ -102,6 +103,10 @@ public class EIOCapabilityProviders {
         event.registerItem(EnderIOCapabilities.SOUL_HANDLER_ITEM,
             SoulCapabilityProviders.SINGLE_COMPONENT_SOUL_HANDLER_PROVIDER,
             EIOItems.SOUL_VIAL);
+
+        // Conduit facades
+        event.registerItem(EnderIOCapabilities.CONDUIT_FACADE_PROVIDER, ComponentBackedConduitFacadeProvider.PROVIDER,
+            EIOItems.CONDUIT_FACADE, EIOItems.TRANSPARENT_CONDUIT_FACADE, EIOItems.HARDENED_CONDUIT_FACADE, EIOItems.TRANSPARENT_HARDENED_CONDUIT_FACADE);
     }
 
     // region Conduits

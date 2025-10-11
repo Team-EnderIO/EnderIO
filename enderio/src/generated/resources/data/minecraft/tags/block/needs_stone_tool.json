@@ -8,12 +8,6 @@
     "enderio:pulsating_alloy_block",
     "enderio:dark_steel_block",
     "enderio:soularium_block",
-    "enderio:end_steel_block",
-    "enderio:void_chassis",
-    "enderio:ensouled_chassis",
-    "enderio:dark_steel_pressure_plate",
-    "enderio:silent_dark_steel_pressure_plate",
-    "enderio:soularium_pressure_plate",
-    "enderio:silent_soularium_pressure_plate"
+    "enderio:end_steel_block"
   ]
 }

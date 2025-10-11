@@ -73,7 +73,7 @@ public class EnderIOJEI implements IModPlugin {
     public void registerItemSubtypes(ISubtypeRegistration registration) {
         registration.registerSubtypeInterpreter(EIOItems.SOUL_VIAL.get(), new SoulBindableSubtypeInterpreter());
         registration.registerSubtypeInterpreter(EIOItems.BROKEN_SPAWNER.get(), new SoulBindableSubtypeInterpreter());
-        registration.registerSubtypeInterpreter(ConduitBlocks.CONDUIT.asItem(), new ConduitSubtypeInterpreter());
+        registration.registerSubtypeInterpreter(ConduitBlocks.CONDUIT_BUNDLE.asItem(), new ConduitSubtypeInterpreter());
     }
 
     @Override

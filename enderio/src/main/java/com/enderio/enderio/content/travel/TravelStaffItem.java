@@ -108,10 +108,10 @@ public class TravelStaffItem extends Item implements AdvancedTooltipProvider, IC
     }
 
     @Override
-    public void addAdditionalCreativeTabEntries(CreativeModeTab.ItemDisplayParameters properties, CreativeModeTab.Output modifier) {
+    public void addAdditionalCreativeTabEntries(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
         ItemStack is = new ItemStack(this);
         ItemStackEnergy.setFull(is);
-        modifier.accept(is);
+        output.accept(is);
     }
 
     @Override

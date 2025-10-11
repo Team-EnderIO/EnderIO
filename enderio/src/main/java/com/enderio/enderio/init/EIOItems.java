@@ -5,10 +5,13 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIODataComponents;
 import com.enderio.enderio.api.capacitor.CapacitorData;
 import com.enderio.enderio.api.components.GrindingBallData;
+import com.enderio.enderio.api.conduits.facade.FacadeType;
 import com.enderio.enderio.content.broken_spawner.BrokenSpawnerItem;
 import com.enderio.enderio.content.capacitors.CapacitorItem;
 import com.enderio.enderio.content.capacitors.LootCapacitorItem;
 import com.enderio.enderio.content.cold_fire.ColdFireIgniter;
+import com.enderio.enderio.content.conduits.ConduitBlockItem;
+import com.enderio.enderio.content.conduits.facades.ConduitFacadeItem;
 import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
 import com.enderio.enderio.content.filters.fluid.EnderFluidFilterItem;
 import com.enderio.enderio.content.filters.item.general.EnderItemFilterItem;
@@ -26,6 +29,7 @@ import com.enderio.enderio.content.tools.vials.SoulVialItem;
 import com.enderio.enderio.content.tools.vials.VoidVialItem;
 import com.enderio.enderio.foundation.item.CreativeTabIconItem;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
+import com.enderio.regilite.holder.RegiliteItem;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
@@ -247,6 +251,27 @@ public class EIOItems {
     public static final DeferredItem<ElectromagnetItem> ELECTROMAGNET = ITEMS.registerItem("electromagnet", ElectromagnetItem::new);
     public static final DeferredItem<ColdFireIgniter> COLD_FIRE_IGNITER = ITEMS.registerItem("cold_fire_igniter", ColdFireIgniter::new);
     public static final DeferredItem<ConduitProbeItem> CONDUIT_PROBE = ITEMS.registerItem("conduit_probe", ConduitProbeItem::new);
+
+    // endregion
+
+    // region Conduits
+
+    // While these are block items, I think they're weird enough to be considered separate items.
+
+    public static final DeferredItem<ConduitBlockItem> CONDUIT = ITEMS.registerItem("conduit", ConduitBlockItem::new);
+
+    // TODO: Why is facade type being stored as a component... it could just be part of the block item
+    public static final DeferredItem<ConduitFacadeItem> CONDUIT_FACADE = ITEMS.registerItem("conduit_facade", ConduitFacadeItem::new,
+        new Item.Properties().component(EIODataComponents.FACADE_TYPE, FacadeType.BASIC));
+
+    public static final DeferredItem<ConduitFacadeItem> TRANSPARENT_CONDUIT_FACADE = ITEMS.registerItem("transparent_conduit_facade", ConduitFacadeItem::new,
+        new Item.Properties().component(EIODataComponents.FACADE_TYPE, FacadeType.TRANSPARENT));
+
+    public static final DeferredItem<ConduitFacadeItem> HARDENED_CONDUIT_FACADE = ITEMS.registerItem("hardened_conduit_facade", ConduitFacadeItem::new,
+        new Item.Properties().component(EIODataComponents.FACADE_TYPE, FacadeType.HARDENED));
+
+    public static final DeferredItem<ConduitFacadeItem> TRANSPARENT_HARDENED_CONDUIT_FACADE = ITEMS.registerItem("transparent_hardened_conduit_facade",
+        ConduitFacadeItem::new, new Item.Properties().component(EIODataComponents.FACADE_TYPE, FacadeType.TRANSPARENT_HARDENED));
 
     // endregion
 

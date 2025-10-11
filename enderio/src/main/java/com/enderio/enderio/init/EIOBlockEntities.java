@@ -77,7 +77,7 @@ public class EIOBlockEntities {
         });
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ConduitBundleBlockEntity>> CONDUIT = BLOCK_ENTITY_TYPES.register("conduit",
-        ConduitBundleBlockEntity::new, ConduitBlocks.CONDUIT::get);
+        ConduitBundleBlockEntity::new, ConduitBlocks.CONDUIT_BUNDLE::get);
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CreativePowerBlockEntity>> CREATIVE_POWER = BLOCK_ENTITY_TYPES
         .builder("creative_power", CreativePowerBlockEntity::new, MachineBlocks.CREATIVE_POWER::get)

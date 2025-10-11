@@ -3,10 +3,8 @@ package com.enderio.enderio.init;
 import com.enderio.core.common.item.CreativeTabVariants;
 import com.enderio.core.common.item.ICustomCreativeTabEntries;
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.content.broken_spawner.BrokenSpawnerItem;
-import com.enderio.enderio.content.conduits.ConduitBlockItem;
 import com.enderio.enderio.content.tools.vials.SoulVialItem;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -19,7 +17,6 @@ import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-import java.util.Comparator;
 import java.util.stream.Stream;
 
 public class EIOCreativeTabs {
@@ -34,10 +31,8 @@ public class EIOCreativeTabs {
             .withTabsBefore(CreativeModeTabs.SPAWN_EGGS)
             .withSearchBar()
             .displayItems((CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) -> {
-                // TODO: Perhaps we need an easier way to provide exclusions so we don't need to subclass ICustomCreativeTabEntries all the time.
                 addAll(EIOItems.ITEMS, parameters, output);
-                // TODO: Not necessarily the final resting place.
-                addAllConduits(parameters, output);
+                addAll(EIOBlocks.ITEMS, parameters, output);
                 addSoulItems(parameters, output);
             })
             .build());
@@ -86,33 +81,6 @@ public class EIOCreativeTabs {
                 }
             }
         }
-    }
-
-    private static void addAllConduits(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
-        var registry = parameters.holders().lookupOrThrow(EnderIORegistries.Keys.CONDUIT);
-        var conduitTypes = registry.listElements().toList();
-
-        var conduitClassTypes = conduitTypes.stream()
-            .map(e -> e.value().getClass())
-            .sorted(Comparator.comparing(Class::getName))
-            .distinct()
-            .toList();
-
-        for (var conduitClass : conduitClassTypes) {
-            var matchingConduitTypes = conduitTypes.stream()
-                .filter(e -> e.value().getClass() == conduitClass)
-                // GRIM...
-                .sorted((o1, o2) -> compareConduitTo(o1.value(), o2.value()))
-                .toList();
-
-            for (var conduitType : matchingConduitTypes) {
-                output.accept(ConduitBlockItem.getStackFor(conduitType, 1), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
-            }
-        }
-    }
-
-    private static <T extends Conduit<T, ?>> int compareConduitTo(Conduit<T, ?> o1, Conduit<?, ?> o2) {
-        return o1.compareTo((T) o2);
     }
 
     // Add soul items at the bottom to avoid pollution

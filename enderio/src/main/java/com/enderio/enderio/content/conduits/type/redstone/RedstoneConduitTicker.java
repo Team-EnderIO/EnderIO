@@ -41,10 +41,10 @@ public class RedstoneConduitTicker implements ConduitTicker<RedstoneConduit> {
             if (context.isNew() || context.getSignal(channel) != context.getSignalLastTick(channel)) {
 
                 for (var insertConnection : network.insertConnections(channel)) {
-                    level.updateNeighborsAt(insertConnection.node().pos(), ConduitBlocks.CONDUIT.get());
+                    level.updateNeighborsAt(insertConnection.node().pos(), ConduitBlocks.CONDUIT_BUNDLE.get());
 
                     if (insertConnection.connectionConfig(RedstoneConduitConnectionConfig.TYPE).isStrongOutputSignal()) {
-                        level.updateNeighborsAt(insertConnection.connectedBlockPos(), ConduitBlocks.CONDUIT.get());
+                        level.updateNeighborsAt(insertConnection.connectedBlockPos(), ConduitBlocks.CONDUIT_BUNDLE.get());
                     }
                 }
             }

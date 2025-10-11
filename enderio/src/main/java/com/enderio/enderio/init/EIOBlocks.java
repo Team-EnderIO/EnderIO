@@ -65,6 +65,8 @@ import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.client.model.generators.VariantBlockStateBuilder;
 import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.registries.DeferredBlock;
+import net.neoforged.neoforge.registries.DeferredRegister;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -78,31 +80,40 @@ import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
 public class EIOBlocks {
-    private static final BlockRegistry BLOCK_REGISTRY = EnderIO.REGILITE.blockRegistry();
-    private static final ItemRegistry ITEM_REGISTRY = EnderIO.REGILITE.itemRegistry();
+    public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(EnderIO.MOD_ID);
+    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(EnderIO.MOD_ID);
+
+    // ======== NEW
 
     // region Alloy Blocks
 
-    public static final RegiliteBlock<Block> COPPER_ALLOY_BLOCK = metalBlock("copper_alloy_block", EIOTags.Blocks.BLOCKS_COPPER_ALLOY,
-        EIOTags.Items.BLOCKS_COPPER_ALLOY);
-    public static final RegiliteBlock<Block> ENERGETIC_ALLOY_BLOCK = metalBlock("energetic_alloy_block", EIOTags.Blocks.BLOCKS_ENERGETIC_ALLOY,
-        EIOTags.Items.BLOCKS_ENERGETIC_ALLOY);
-    public static final RegiliteBlock<Block> VIBRANT_ALLOY_BLOCK = metalBlock("vibrant_alloy_block", EIOTags.Blocks.BLOCKS_VIBRANT_ALLOY,
-        EIOTags.Items.BLOCKS_VIBRANT_ALLOY);
-    public static final RegiliteBlock<Block> REDSTONE_ALLOY_BLOCK = metalBlock("redstone_alloy_block", EIOTags.Blocks.BLOCKS_REDSTONE_ALLOY,
-        EIOTags.Items.BLOCKS_REDSTONE_ALLOY);
-    public static final RegiliteBlock<Block> CONDUCTIVE_ALLOY_BLOCK = metalBlock("conductive_alloy_block", EIOTags.Blocks.BLOCKS_CONDUCTIVE_ALLOY,
-        EIOTags.Items.BLOCKS_CONDUCTIVE_ALLOY);
-    public static final RegiliteBlock<Block> PULSATING_ALLOY_BLOCK = metalBlock("pulsating_alloy_block", EIOTags.Blocks.BLOCKS_PULSATING_ALLOY,
-        EIOTags.Items.BLOCKS_PULSATING_ALLOY);
-    public static final RegiliteBlock<Block> DARK_STEEL_BLOCK = metalBlock("dark_steel_block", EIOTags.Blocks.BLOCKS_DARK_STEEL,
-        EIOTags.Items.BLOCKS_DARK_STEEL);
-    public static final RegiliteBlock<Block> SOULARIUM_BLOCK = metalBlock("soularium_block", EIOTags.Blocks.BLOCKS_SOULARIUM,
-        EIOTags.Items.BLOCKS_SOULARIUM);
-    public static final RegiliteBlock<Block> END_STEEL_BLOCK = metalBlock("end_steel_block", EIOTags.Blocks.BLOCKS_END_STEEL,
-        EIOTags.Items.BLOCKS_END_STEEL);
+    public static final DeferredBlock<Block> COPPER_ALLOY_BLOCK = registerMetalBlock("copper_alloy_block");
+    public static final DeferredBlock<Block> ENERGETIC_ALLOY_BLOCK = registerMetalBlock("energetic_alloy_block");
+    public static final DeferredBlock<Block> VIBRANT_ALLOY_BLOCK = registerMetalBlock("vibrant_alloy_block");
+    public static final DeferredBlock<Block> REDSTONE_ALLOY_BLOCK = registerMetalBlock("redstone_alloy_block");
+    public static final DeferredBlock<Block> CONDUCTIVE_ALLOY_BLOCK = registerMetalBlock("conductive_alloy_block");
+    public static final DeferredBlock<Block> PULSATING_ALLOY_BLOCK = registerMetalBlock("pulsating_alloy_block");
+    public static final DeferredBlock<Block> DARK_STEEL_BLOCK = registerMetalBlock("dark_steel_block");
+    public static final DeferredBlock<Block> SOULARIUM_BLOCK = registerMetalBlock("soularium_block");
+    public static final DeferredBlock<Block> END_STEEL_BLOCK = registerMetalBlock("end_steel_block");
+
+    private static DeferredBlock<Block> registerMetalBlock(String name) {
+        return registerWithItem(name, Block::new,
+            BlockBehaviour.Properties.of().sound(SoundType.METAL).mapColor(MapColor.METAL).strength(5, 6).requiresCorrectToolForDrops());
+    }
 
     // endregion
+
+    private static <B extends Block> DeferredBlock<B> registerWithItem(String name, Function<BlockBehaviour.Properties, ? extends B> func, BlockBehaviour.Properties props) {
+        var blockHolder = BLOCKS.<B>registerBlock(name, func, props);
+        ITEMS.registerSimpleBlockItem(blockHolder);
+        return blockHolder;
+    }
+
+    // ======== OLD
+
+    private static final BlockRegistry BLOCK_REGISTRY = EnderIO.REGILITE.blockRegistry();
+    private static final ItemRegistry ITEM_REGISTRY = EnderIO.REGILITE.itemRegistry();
 
     // region Chassis
 
@@ -565,6 +576,9 @@ public class EIOBlocks {
     }
 
     public static void register(IEventBus bus) {
+        BLOCKS.register(bus);
+        ITEMS.register(bus);
+
         BLOCK_REGISTRY.register(bus);
         ITEM_REGISTRY.register(bus);
     }

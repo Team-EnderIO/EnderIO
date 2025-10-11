@@ -23,7 +23,7 @@ import java.util.Map;
 
 public class ConduitFacadeItem extends BlockItem {
     public ConduitFacadeItem(Properties properties) {
-        super(ConduitBlocks.CONDUIT.get(), properties);
+        super(ConduitBlocks.CONDUIT_BUNDLE.get(), properties);
     }
 
     @Override

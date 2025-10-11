@@ -8,7 +8,6 @@ import com.enderio.enderio.api.conduits.ConduitIngredient;
 import com.enderio.enderio.content.conduits.ConduitBlockItem;
 import com.enderio.enderio.content.machines.painting.PaintingRecipe;
 import com.enderio.enderio.foundation.tag.EIOTags;
-import com.enderio.enderio.init.ConduitItems;
 import com.enderio.enderio.init.EIOConduits;
 import com.enderio.enderio.init.EIOItems;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
@@ -305,7 +304,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
     }
 
     private void buildFacadeCraftingRecipes(RecipeOutput recipeOutput) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ConduitItems.CONDUIT_FACADE)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.CONDUIT_FACADE)
                 .pattern("BBB")
                 .pattern("B B")
                 .pattern("BBB")
@@ -313,16 +312,16 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 .save(recipeOutput);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ConduitItems.HARDENED_CONDUIT_FACADE)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.HARDENED_CONDUIT_FACADE)
                 .pattern(" O ")
                 .pattern("OFO")
                 .pattern(" O ")
                 .define('O', EIOTags.Items.DUSTS_OBSIDIAN)
-                .define('F', ConduitItems.CONDUIT_FACADE)
+                .define('F', EIOItems.CONDUIT_FACADE)
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 .save(recipeOutput);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ConduitItems.TRANSPARENT_CONDUIT_FACADE)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.TRANSPARENT_CONDUIT_FACADE)
                 .pattern("BBB")
                 .pattern("BGB")
                 .pattern("BBB")
@@ -331,36 +330,36 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 .save(recipeOutput);
 
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ConduitItems.TRANSPARENT_CONDUIT_FACADE)
-                .requires(ConduitItems.CONDUIT_FACADE)
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, EIOItems.TRANSPARENT_CONDUIT_FACADE)
+                .requires(EIOItems.CONDUIT_FACADE)
                 .requires(EIOTags.Items.CLEAR_GLASS)
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 .save(recipeOutput, EnderIO.rl("transparent_conduit_facade_from_conduit_facade"));
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ConduitItems.TRANSPARENT_HARDENED_CONDUIT_FACADE)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.TRANSPARENT_HARDENED_CONDUIT_FACADE)
                 .pattern(" O ")
                 .pattern("OFO")
                 .pattern(" O ")
                 .define('O', EIOTags.Items.DUSTS_OBSIDIAN)
-                .define('F', ConduitItems.TRANSPARENT_CONDUIT_FACADE)
+                .define('F', EIOItems.TRANSPARENT_CONDUIT_FACADE)
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 .save(recipeOutput);
 
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ConduitItems.TRANSPARENT_HARDENED_CONDUIT_FACADE)
-                .requires(ConduitItems.HARDENED_CONDUIT_FACADE)
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, EIOItems.TRANSPARENT_HARDENED_CONDUIT_FACADE)
+                .requires(EIOItems.HARDENED_CONDUIT_FACADE)
                 .requires(EIOTags.Items.CLEAR_GLASS)
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 .save(recipeOutput, EnderIO.rl("transparent_hardened_conduit_facade_from_hardened_conduit_facade"));
     }
 
     private void buildFacadePaintingRecipes(RecipeOutput recipeOutput) {
-        paintingRecipe(ConduitItems.CONDUIT_FACADE, Ingredient.of(ConduitItems.CONDUIT_FACADE), recipeOutput);
-        paintingRecipe(ConduitItems.HARDENED_CONDUIT_FACADE, Ingredient.of(ConduitItems.HARDENED_CONDUIT_FACADE),
+        paintingRecipe(EIOItems.CONDUIT_FACADE, Ingredient.of(EIOItems.CONDUIT_FACADE), recipeOutput);
+        paintingRecipe(EIOItems.HARDENED_CONDUIT_FACADE, Ingredient.of(EIOItems.HARDENED_CONDUIT_FACADE),
                 recipeOutput);
-        paintingRecipe(ConduitItems.TRANSPARENT_CONDUIT_FACADE, Ingredient.of(ConduitItems.TRANSPARENT_CONDUIT_FACADE),
+        paintingRecipe(EIOItems.TRANSPARENT_CONDUIT_FACADE, Ingredient.of(EIOItems.TRANSPARENT_CONDUIT_FACADE),
                 recipeOutput);
-        paintingRecipe(ConduitItems.TRANSPARENT_HARDENED_CONDUIT_FACADE,
-                Ingredient.of(ConduitItems.TRANSPARENT_HARDENED_CONDUIT_FACADE), recipeOutput);
+        paintingRecipe(EIOItems.TRANSPARENT_HARDENED_CONDUIT_FACADE,
+                Ingredient.of(EIOItems.TRANSPARENT_HARDENED_CONDUIT_FACADE), recipeOutput);
     }
 
     // TODO: I want to have a builder for all EIO recipes in the API.

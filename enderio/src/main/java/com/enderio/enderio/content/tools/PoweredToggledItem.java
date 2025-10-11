@@ -77,8 +77,8 @@ public abstract class PoweredToggledItem extends Item implements AdvancedTooltip
     }
 
     @Override
-    public void addAdditionalCreativeTabEntries(CreativeModeTab.ItemDisplayParameters properties, CreativeModeTab.Output modifier) {
-        modifier.accept(getCharged(this));
+    public void addAdditionalCreativeTabEntries(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
+        output.accept(getCharged(this));
     }
 
     @Override

@@ -40,7 +40,7 @@ public class ConduitIngredient implements ICustomIngredient {
 
     @Override
     public boolean test(ItemStack stack) {
-        if (!stack.is(ConduitBlocks.CONDUIT.asItem())) {
+        if (!stack.is(ConduitBlocks.CONDUIT_BUNDLE.asItem())) {
             return false;
         }
 

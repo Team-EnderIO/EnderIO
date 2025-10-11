@@ -18,7 +18,6 @@ import com.enderio.enderio.foundation.network.packets.ServerboundOpenConduitFilt
 import com.enderio.enderio.foundation.network.packets.ServerboundRemoveConduitFacadePacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundSyncProbeStatePacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundTimerFilterPacket;
-import com.enderio.enderio.init.ConduitItems;
 import com.enderio.enderio.init.EIOConduitTypes;
 import com.enderio.enderio.init.EIOItems;
 import net.minecraft.server.level.ServerPlayer;

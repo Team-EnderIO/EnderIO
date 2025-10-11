@@ -16,7 +16,7 @@ public class EIOConduitsJadePlugin implements IWailaPlugin {
     @Override
     public void registerClient(IWailaClientRegistration registration) {
         // Show the correct conduit (or facade item)
-        registration.usePickedResult(ConduitBlocks.CONDUIT.get());
+        registration.usePickedResult(ConduitBlocks.CONDUIT_BUNDLE.get());
 
         // Completely replace the block accessor with the facade block if it exists
         registration.addRayTraceCallback((hitResult, accessor, originalAccessor) -> {

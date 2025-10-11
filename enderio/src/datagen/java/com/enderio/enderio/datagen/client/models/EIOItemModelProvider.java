@@ -4,6 +4,8 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
 import com.enderio.enderio.content.fun.EnderiosItem;
 import com.enderio.enderio.content.tools.vials.SoulVialItem;
+import com.enderio.enderio.data.model.item.FacadeItemModelBuilder;
+import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOItems;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -187,8 +189,36 @@ public class EIOItemModelProvider extends ItemModelProvider {
         basicItem(EIOItems.SENSOR_FILTER.get());
         basicItem(EIOItems.TIMER_FILTER.get());
 
+        // Conduit facades
+        getBuilder(EIOItems.CONDUIT_FACADE.getId().toString())
+            .customLoader(FacadeItemModelBuilder::begin)
+            .model(EIOItems.CONDUIT_FACADE.getId().getPath());
+
+        getBuilder(EIOItems.TRANSPARENT_CONDUIT_FACADE.getId().toString())
+            .customLoader(FacadeItemModelBuilder::begin)
+            .model(EIOItems.TRANSPARENT_CONDUIT_FACADE.getId().getPath());
+
+        getBuilder(EIOItems.HARDENED_CONDUIT_FACADE.getId().toString())
+            .customLoader(FacadeItemModelBuilder::begin)
+            .model(EIOItems.HARDENED_CONDUIT_FACADE.getId().getPath());
+
+        getBuilder(EIOItems.TRANSPARENT_HARDENED_CONDUIT_FACADE.getId().toString())
+            .customLoader(FacadeItemModelBuilder::begin)
+            .model(EIOItems.TRANSPARENT_HARDENED_CONDUIT_FACADE.getId().getPath());
+
         // Creative Tab Icon
         basicItem(EIOItems.CREATIVE_ICON.get());
+
+        // Add block items
+        simpleBlockItem(EIOBlocks.COPPER_ALLOY_BLOCK.get());
+        simpleBlockItem(EIOBlocks.ENERGETIC_ALLOY_BLOCK.get());
+        simpleBlockItem(EIOBlocks.VIBRANT_ALLOY_BLOCK.get());
+        simpleBlockItem(EIOBlocks.REDSTONE_ALLOY_BLOCK.get());
+        simpleBlockItem(EIOBlocks.CONDUCTIVE_ALLOY_BLOCK.get());
+        simpleBlockItem(EIOBlocks.PULSATING_ALLOY_BLOCK.get());
+        simpleBlockItem(EIOBlocks.DARK_STEEL_BLOCK.get());
+        simpleBlockItem(EIOBlocks.SOULARIUM_BLOCK.get());
+        simpleBlockItem(EIOBlocks.END_STEEL_BLOCK.get());
     }
 
     private ItemModelBuilder fakeBlock(ItemLike item) {

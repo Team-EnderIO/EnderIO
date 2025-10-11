@@ -28,7 +28,7 @@ public class ConduitSpectatorOpenScreenEvent {
 
         BlockState state = level.getBlockState(hit.getBlockPos());
 
-        if (state.is(ConduitBlocks.CONDUIT)) {
+        if (state.is(ConduitBlocks.CONDUIT_BUNDLE)) {
             if (level.getBlockEntity(pos) instanceof ConduitBundleBlockEntity conduitBundle) {
                 // TODO: The connection shouldn't include the plate.. if we hit the plate open
                 // the first conduit?
