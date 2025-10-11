@@ -8,7 +8,7 @@ import com.enderio.enderio.foundation.network.packets.ClientboundSolarSoulPacket
 import com.enderio.enderio.foundation.network.packets.ClientboundSoulEngineSoulPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundSyncTravelDataPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundTravelTargetRemovedPacket;
-import com.enderio.enderio.foundation.network.packets.ClientboundTravelTargetUpdatedPacket;
+import com.enderio.enderio.foundation.network.packets.ClientboundEnderPOIUpdatedPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundBreakConduitPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundClearLockedFluidPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundCountFilterPacket;
@@ -54,7 +54,7 @@ public class EIONetwork {
         registrar.playToClient(ClientboundSyncTravelDataPacket.TYPE, ClientboundSyncTravelDataPacket.STREAM_CODEC,
             ClientPayloadHandler.getInstance()::handleSyncTravelDataPacket);
 
-        registrar.playToClient(ClientboundTravelTargetUpdatedPacket.TYPE, ClientboundTravelTargetUpdatedPacket.STREAM_CODEC,
+        registrar.playToClient(ClientboundEnderPOIUpdatedPacket.TYPE, ClientboundEnderPOIUpdatedPacket.STREAM_CODEC,
             ClientPayloadHandler.getInstance()::handleAddTravelTarget);
 
         registrar.playToClient(ClientboundTravelTargetRemovedPacket.TYPE, ClientboundTravelTargetRemovedPacket.STREAM_CODEC,

@@ -1,10 +1,10 @@
 package com.enderio.enderio.content.travel;
 
 import com.enderio.core.common.energy.ItemStackEnergy;
-import com.enderio.enderio.api.travel.TravelTarget;
-import com.enderio.enderio.api.travel.TravelTargetApi;
+import com.enderio.enderio.api.poi.EnderPOI;
+import com.enderio.enderio.api.poi.EnderPOIApi;
 import com.enderio.enderio.config.base.BaseConfig;
-import com.enderio.enderio.foundation.network.packets.ServerboundRequestTravelPacket;
+import com.enderio.enderio.content.travel.travel_anchor.AnchorTravelTarget;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.core.BlockPos;
@@ -26,7 +26,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
@@ -55,8 +54,9 @@ public class TravelHandler {
         return comp != null && comp;
     }
 
+    //TODO rename tag? It's also interactions
     public static boolean canBlockTeleport(Player player) {
-        return !player.level().getBlockState(player.blockPosition().below()).is(EIOTags.Blocks.BLOCKS_TELEPORTATION);
+        return player.level().getBlockState(player.blockPosition().below()).is(EIOTags.Blocks.BLOCKS_TELEPORTATION);
     }
 
     public static boolean hasResources(ItemStack stack) {
@@ -91,59 +91,6 @@ public class TravelHandler {
         } else {
             return false;
         }
-    }
-
-    public static boolean blockTeleport(Level level, Player player) {
-        return blockTeleport(level, player, false);
-    }
-
-    public static boolean blockTeleport(Level level, Player player, boolean sendToServer) {
-        return getTeleportAnchorTarget(player)
-                .filter(iTravelTarget -> blockTeleportTo(level, player, iTravelTarget, sendToServer))
-                .isPresent();
-    }
-
-    public static boolean interact(Level level, Player player) {
-        return getInteractionTarget(player).filter(iTravelTarget -> interactWithTarget(level, player, iTravelTarget))
-                .isPresent();
-    }
-
-    public static boolean blockElevatorTeleport(Level level, Player player, Direction direction, boolean sendToServer) {
-        if (direction.getStepY() != 0) {
-            return getElevatorAnchorTarget(player, direction)
-                    .filter(iTravelTarget -> blockTeleportTo(level, player, iTravelTarget, sendToServer))
-                    .isPresent();
-        }
-        return false;
-    }
-
-    public static boolean blockTeleportTo(Level level, Player player, TravelTarget target, boolean sendToServer) {
-        Optional<Double> height = isTeleportPositionClear(level, target.pos());
-        if (height.isEmpty()) {
-            return false;
-        }
-        BlockPos blockPos = target.pos();
-        Vec3 teleportPosition = new Vec3(blockPos.getX() + 0.5f, blockPos.getY() + height.get() + 1,
-                blockPos.getZ() + 0.5f);
-        teleportPosition = teleportEvent(player, teleportPosition).orElse(null);
-        if (teleportPosition != null) {
-            if (player instanceof ServerPlayer serverPlayer) {
-                player.teleportTo(teleportPosition.x(), teleportPosition.y(), teleportPosition.z());
-                // Stop "moved too quickly" warnings
-                serverPlayer.connection.resetPosition();
-                player.playNotifySound(SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 0.75F, 1F);
-            } else if (sendToServer) {
-                PacketDistributor.sendToServer(new ServerboundRequestTravelPacket(target.pos()));
-            }
-
-            player.resetFallDistance();
-            return true;
-        }
-        return false;
-    }
-
-    private static boolean interactWithTarget(Level level, Player player, TravelTarget target) {
-        return target.interact(level, player);
     }
 
     public static Optional<Vec3> teleportPosition(Level level, Player player) {
@@ -238,32 +185,25 @@ public class TravelHandler {
         return null;
     }
 
-    public static Optional<TravelTarget> getInteractionTarget(Player player) {
+    public static Optional<EnderPOI> getEnderPOIs(Player player) {
         Vec3 positionVec = player.position().add(0, player.getEyeHeight(), 0);
 
-        return TravelTargetApi.INSTANCE.getInItemRange(player.level(), player.blockPosition())
-                .filter(TravelTarget::canInteract)
-                .filter(target -> target.pos().distToCenterSqr(player.position()) > MIN_TELEPORTATION_DISTANCE_SQUARED)
-                .filter(target -> Math.abs(getAngleRadians(positionVec, target.pos(), player.getYRot(),
-                        player.getXRot())) <= Math.toRadians(15))
-                .min(Comparator.comparingDouble(target -> Math
-                        .abs(getAngleRadians(positionVec, target.pos(), player.getYRot(), player.getXRot()))));
+        return EnderPOIApi.INSTANCE.getInItemRange(player.level(), player.blockPosition())
+            .filter(EnderPOI::isActive)
+            .filter(target -> target.pos().distToCenterSqr(player.position()) > MIN_TELEPORTATION_DISTANCE_SQUARED)
+            .filter(target -> Math.abs(getAngleRadians(positionVec, target.pos(), player.getYRot(),
+                player.getXRot())) <= Math.toRadians(15))
+            .filter(target -> {
+                if (target instanceof AnchorTravelTarget) {
+                    return isTeleportPositionClear(player.level(), target.pos()).isPresent();
+                }
+                return true;
+            })
+            .min(Comparator.comparingDouble(target -> Math
+                .abs(getAngleRadians(positionVec, target.pos(), player.getYRot(), player.getXRot()))));
     }
 
-    public static Optional<TravelTarget> getTeleportAnchorTarget(Player player) {
-        Vec3 positionVec = player.position().add(0, player.getEyeHeight(), 0);
-
-        return TravelTargetApi.INSTANCE.getInItemRange(player.level(), player.blockPosition())
-                .filter(TravelTarget::canTeleportTo)
-                .filter(target -> target.pos().distToCenterSqr(player.position()) > MIN_TELEPORTATION_DISTANCE_SQUARED)
-                .filter(target -> Math.abs(getAngleRadians(positionVec, target.pos(), player.getYRot(),
-                        player.getXRot())) <= Math.toRadians(15))
-                .filter(target -> isTeleportPositionClear(player.level(), target.pos()).isPresent())
-                .min(Comparator.comparingDouble(target -> Math
-                        .abs(getAngleRadians(positionVec, target.pos(), player.getYRot(), player.getXRot()))));
-    }
-
-    public static Optional<TravelTarget> getElevatorAnchorTarget(Player player, Direction direction) {
+    public static Optional<EnderPOI> getElevatorAnchorTarget(Player player, Direction direction) {
         int anchorRange = BaseConfig.COMMON.ITEMS.TRAVELLING_BLOCK_TO_BLOCK_RANGE.get();
         BlockPos anchorPos = player.blockPosition().below();
 
@@ -281,11 +221,11 @@ public class TravelHandler {
             lowerY = anchorY - anchorRange - 1;
         }
 
-        return TravelTargetApi.INSTANCE.getAll(player.level())
+        return EnderPOIApi.INSTANCE.getAll(player.level())
                 .stream()
                 .filter(target -> target.pos().getX() == anchorX && target.pos().getZ() == anchorZ)
                 .filter(target -> target.pos().getY() > lowerY && target.pos().getY() < upperY)
-                .filter(TravelTarget::canJumpTo)
+                .filter(t -> t instanceof AnchorTravelTarget anchor && anchor.canJumpTo())
                 .filter(target -> isTeleportPositionClear(player.level(), target.pos()).isPresent())
                 .min(Comparator.comparingDouble(target -> Math.abs(target.pos().getY() - anchorY)));
     }
@@ -321,7 +261,7 @@ public class TravelHandler {
         return Optional.empty();
     }
 
-    private static Optional<Vec3> teleportEvent(Player player, Vec3 target) {
+    public static Optional<Vec3> teleportEvent(Player player, Vec3 target) {
         EntityTeleportEvent event = new EntityTeleportEvent(player, target.x(), target.y(), target.z());
         if (NeoForge.EVENT_BUS.post(event).isCanceled()) {
             return Optional.empty();

@@ -1,8 +1,8 @@
 package com.enderio.enderio.content.enderface;
 
 import com.enderio.core.common.network.NetworkDataSlot;
-import com.enderio.enderio.api.travel.TravelTarget;
-import com.enderio.enderio.api.travel.TravelTargetApi;
+import com.enderio.enderio.api.poi.EnderPOI;
+import com.enderio.enderio.api.poi.EnderPOIApi;
 import com.enderio.enderio.config.base.BaseConfig;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.foundation.block.EIOBlockEntity;
@@ -21,7 +21,7 @@ import net.minecraft.world.level.chunk.status.ChunkStatus;
 import java.util.Optional;
 
 public class EnderfaceBlockEntity extends EIOBlockEntity {
-    private float lastUiPitch = -45;
+    private float lastUiPitch = 45;
     private float lastUiYaw = 45;
     private float lastUiDistance = 10;
 
@@ -32,12 +32,6 @@ public class EnderfaceBlockEntity extends EIOBlockEntity {
 
         travelTargetDataSlot = addDataSlot(
                 EnderfaceTravelTarget.DATA_SLOT_TYPE.create(this::getOrCreateTravelTarget, this::setTravelTarget));
-    }
-
-    @Override
-    protected void saveAdditionalSynced(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditionalSynced(tag, registries);
-        // TODO save ui pitch, etc
     }
 
     public float getLastUiPitch() {
@@ -64,8 +58,14 @@ public class EnderfaceBlockEntity extends EIOBlockEntity {
         this.lastUiDistance = lastUiDistance;
     }
 
+    @Override
+    protected void saveAdditionalSynced(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditionalSynced(tag, registries);
+        // TODO save ui pitch, etc
+    }
+
     private EnderfaceTravelTarget getOrCreateTravelTarget() {
-        Optional<TravelTarget> travelTarget = TravelTargetApi.INSTANCE.get(level, worldPosition);
+        Optional<EnderPOI> travelTarget = EnderPOIApi.INSTANCE.get(level, worldPosition);
         if (travelTarget.isPresent() && travelTarget.get() instanceof EnderfaceTravelTarget anchorTravelTarget) {
             return anchorTravelTarget;
         }
@@ -76,7 +76,7 @@ public class EnderfaceBlockEntity extends EIOBlockEntity {
     }
 
     private void setTravelTarget(EnderfaceTravelTarget target) {
-        TravelTargetApi.INSTANCE.set(level, target);
+        EnderPOIApi.INSTANCE.set(level, target);
     }
 
     public boolean canBeUsedByPlayer(Player player) {

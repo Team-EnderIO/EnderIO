@@ -5,6 +5,7 @@ import com.enderio.core.client.item.EnergyBarDecorator;
 import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.core.common.item.ICustomCreativeTabEntries;
 import com.enderio.core.common.util.TooltipUtil;
+import com.enderio.enderio.api.poi.EnderPOI;
 import com.enderio.enderio.config.base.BaseConfig;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.init.EIODataComponents;
@@ -24,6 +25,7 @@ import net.neoforged.neoforge.energy.ComponentEnergyStorage;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import java.util.List;
+import java.util.Optional;
 
 public class TravelStaffItem extends Item implements AdvancedTooltipProvider, ICustomCreativeTabEntries {
 
@@ -88,12 +90,9 @@ public class TravelStaffItem extends Item implements AdvancedTooltipProvider, IC
                 return true;
             }
         } else {
-            if (TravelHandler.blockTeleport(level, player)) {
+            Optional<EnderPOI> enderPOIs = TravelHandler.getEnderPOIs(player);
+            if (enderPOIs.isPresent() && enderPOIs.get().onActivation(level, player)) {
                 player.getCooldowns().addCooldown(item, BaseConfig.COMMON.ITEMS.TRAVELLING_BLINK_DISABLED_TIME.get());
-                return true;
-            } else if (TravelHandler.interact(level, player)) {
-                player.getCooldowns().addCooldown(this, BaseConfig.COMMON.ITEMS.TRAVELLING_BLINK_DISABLED_TIME.get());
-                return true;
             }
         }
         return false;

@@ -1,5 +1,6 @@
 package com.enderio.enderio.client.content.travel;
 
+import com.enderio.enderio.api.poi.EnderPOI;
 import com.enderio.enderio.content.travel.TravelHandler;
 import net.minecraft.client.player.Input;
 import net.minecraft.core.Direction;
@@ -11,6 +12,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.MovementInputUpdateEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+
+import java.util.Optional;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class TravelClientEventHandler {
@@ -32,20 +35,16 @@ public class TravelClientEventHandler {
             return;
         }
         if (isNewJump) {
-            boolean success = TravelHandler.blockElevatorTeleport(player.level(), player, Direction.UP, true);
-            if (!success) {
-                success = TravelHandler.blockTeleport(player.level(), player, true);
-            }
+            Optional<EnderPOI> enderPOI = TravelHandler.getElevatorAnchorTarget(player, Direction.UP);
+            boolean success = enderPOI.isPresent() && enderPOI.get().onActivation(player.level(), player);
             if (success) {
                 JUMP_COOLDOWN = 7;
             } else {
                 JUMP_COOLDOWN = 0;
             }
         } else if (isNewCrouch) {
-            boolean success = TravelHandler.blockElevatorTeleport(player.level(), player, Direction.DOWN, true);
-            if (!success) {
-                TravelHandler.blockTeleport(player.level(), player, true);
-            }
+            Optional<EnderPOI> enderPOI = TravelHandler.getElevatorAnchorTarget(player, Direction.DOWN);
+            enderPOI.ifPresent(poi -> poi.onActivation(player.level(), player));
         }
 
         if (JUMP_COOLDOWN > 0) {
@@ -62,7 +61,8 @@ public class TravelClientEventHandler {
             .getEntity()
             .getItemInHand(InteractionHand.OFF_HAND)
             .isEmpty() && event.getItemStack().isEmpty()) {
-            if (TravelHandler.blockTeleport(event.getLevel(), event.getEntity(), true)) {
+            Optional<EnderPOI> enderPOI = TravelHandler.getEnderPOIs(player);
+            if (enderPOI.isPresent() && enderPOI.get().onActivation(event.getLevel(), event.getEntity())) {
                 player.swing(event.getHand(), true);
                 // TODO: 20.6: Is this important?
                 //event.setCancellationResult(InteractionResult.SUCCESS);
@@ -76,7 +76,8 @@ public class TravelClientEventHandler {
         if (!TravelHandler.canBlockTeleport(player)) {
             return;
         }
-        if (TravelHandler.blockTeleport(event.getLevel(), event.getEntity(), true)) {
+        Optional<EnderPOI> enderPOI = TravelHandler.getEnderPOIs(player);
+        if (enderPOI.isPresent() && enderPOI.get().onActivation(event.getLevel(), event.getEntity())) {
             event.setCancellationResult(InteractionResult.SUCCESS);
             event.setCanceled(true);
         }
@@ -88,7 +89,8 @@ public class TravelClientEventHandler {
         if (!TravelHandler.canBlockTeleport(player)) {
             return;
         }
-        if (TravelHandler.blockTeleport(event.getLevel(), event.getEntity(), true)) {
+        Optional<EnderPOI> enderPOI = TravelHandler.getEnderPOIs(player);
+        if (enderPOI.isPresent() && enderPOI.get().onActivation(event.getLevel(), event.getEntity())) {
             event.setCancellationResult(InteractionResult.SUCCESS);
             event.setCanceled(true);
         }

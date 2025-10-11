@@ -4,7 +4,7 @@ import com.enderio.armory.api.capability.DarkSteelUpgrade;
 import com.enderio.armory.common.capability.DarkSteelHelper;
 import com.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
 import com.enderio.armory.common.lang.ArmoryLang;
-import com.enderio.enderio.api.travel.TravelTarget;
+import com.enderio.enderio.api.poi.EnderPOI;
 import com.enderio.enderio.config.base.BaseConfig;
 import com.enderio.enderio.content.travel.TravelHandler;
 import com.enderio.enderio.init.EIODataComponents;
@@ -102,14 +102,14 @@ public class TravelUpgrade implements DarkSteelUpgrade {
     }
 
     private static boolean performAction(Item item, Level level, Player player) {
-        Optional<TravelTarget> target = TravelHandler.getTeleportAnchorTarget(player);
+        Optional<EnderPOI> target = TravelHandler.getEnderPOIs(player);
         if (target.isEmpty()) {
             if (TravelHandler.shortTeleport(level, player)) {
                 player.getCooldowns().addCooldown(item, BaseConfig.COMMON.ITEMS.TRAVELLING_BLINK_DISABLED_TIME.get());
                 return true;
             }
         } else {
-            if (TravelHandler.blockTeleport(level, player)) {
+            if (target.get().onActivation(level, player)) {
                 player.getCooldowns().addCooldown(item, BaseConfig.COMMON.ITEMS.TRAVELLING_BLINK_DISABLED_TIME.get());
                 return true;
             }

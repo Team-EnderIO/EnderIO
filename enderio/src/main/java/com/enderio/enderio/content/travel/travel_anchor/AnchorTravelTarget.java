@@ -1,10 +1,12 @@
 package com.enderio.enderio.content.travel.travel_anchor;
 
 import com.enderio.core.common.network.NetworkDataSlot;
-import com.enderio.enderio.api.travel.TravelTarget;
-import com.enderio.enderio.api.travel.TravelTargetSerializer;
-import com.enderio.enderio.api.travel.TravelTargetType;
+import com.enderio.enderio.api.poi.EnderPOI;
+import com.enderio.enderio.api.poi.EnderPOISerializer;
+import com.enderio.enderio.api.poi.EnderPOIType;
 import com.enderio.enderio.config.base.BaseConfig;
+import com.enderio.enderio.content.travel.TravelHandler;
+import com.enderio.enderio.foundation.network.packets.ServerboundRequestTravelPacket;
 import com.enderio.enderio.init.EIOTravelTargets;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -15,9 +17,18 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.network.PacketDistributor;
 
-public record AnchorTravelTarget(BlockPos pos, String name, Item icon, boolean isVisible) implements TravelTarget {
+import java.util.Optional;
+
+public record AnchorTravelTarget(BlockPos pos, String name, Item icon, boolean isVisible) implements EnderPOI {
 
     public static final NetworkDataSlot.CodecType<AnchorTravelTarget> DATA_SLOT_TYPE = new NetworkDataSlot.CodecType<>(
             Serializer.CODEC.codec(), Serializer.STREAM_CODEC);
@@ -34,17 +45,7 @@ public record AnchorTravelTarget(BlockPos pos, String name, Item icon, boolean i
         return new AnchorTravelTarget(pos, name, icon, isVisible);
     }
 
-    @Override
-    public boolean canTravelTo() {
-        return isVisible;
-    }
-
-    @Override
-    public boolean canTeleportTo() {
-        return isVisible();
-    }
-
-    @Override
+    //@Override
     public boolean canJumpTo() {
         // TODO: Protected & Private Anchors
         return true;
@@ -61,16 +62,47 @@ public record AnchorTravelTarget(BlockPos pos, String name, Item icon, boolean i
     }
 
     @Override
-    public TravelTargetType<?> type() {
+    public boolean isActive() {
+        return isVisible;
+    }
+
+    @Override
+    public boolean onActivation(Level level, Player player) {
+        Optional<Double> height = TravelHandler.isTeleportPositionClear(level, this.pos());
+        if (height.isEmpty()) {
+            return false;
+        }
+        BlockPos blockPos = this.pos();
+        Vec3 teleportPosition = new Vec3(blockPos.getX() + 0.5f, blockPos.getY() + height.get() + 1,
+            blockPos.getZ() + 0.5f);
+        teleportPosition = TravelHandler.teleportEvent(player, teleportPosition).orElse(null);
+        if (teleportPosition != null) {
+            if (player instanceof ServerPlayer serverPlayer) {
+                player.teleportTo(teleportPosition.x(), teleportPosition.y(), teleportPosition.z());
+                // Stop "moved too quickly" warnings
+                serverPlayer.connection.resetPosition();
+                player.playNotifySound(SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 0.75F, 1F);
+            } else {
+                PacketDistributor.sendToServer(new ServerboundRequestTravelPacket(this.pos()));
+            }
+
+            player.resetFallDistance();
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public EnderPOIType<?> type() {
         return EIOTravelTargets.TRAVEL_ANCHOR_TYPE.get();
     }
 
     @Override
-    public TravelTargetSerializer<?> serializer() {
+    public EnderPOISerializer<?> serializer() {
         return EIOTravelTargets.TRAVEL_ANCHOR_SERIALIZER.get();
     }
 
-    public static class Serializer implements TravelTargetSerializer<AnchorTravelTarget> {
+    public static class Serializer implements EnderPOISerializer<AnchorTravelTarget> {
 
         public static final MapCodec<AnchorTravelTarget> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
                 .group(BlockPos.CODEC.fieldOf("pos").forGetter(AnchorTravelTarget::pos),

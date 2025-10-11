@@ -1,6 +1,6 @@
 package com.enderio.enderio.content.travel.travel_anchor;
 
-import com.enderio.enderio.api.travel.TravelTargetApi;
+import com.enderio.enderio.api.poi.EnderPOIApi;
 import com.enderio.enderio.foundation.block.MachineBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -17,7 +17,7 @@ public class TravelAnchorBlock<T extends TravelAnchorBlockEntity> extends Machin
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
         if (level.getBlockEntity(pos) instanceof TravelAnchorBlockEntity anchorBlock) {
-            TravelTargetApi.INSTANCE.removeAt(level, pos);
+            EnderPOIApi.INSTANCE.removeAt(level, pos);
         }
 
         super.onRemove(state, level, pos, newState, movedByPiston);

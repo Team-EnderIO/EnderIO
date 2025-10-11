@@ -1,6 +1,6 @@
 package com.enderio.enderio.client.content.travel;
 
-import com.enderio.enderio.api.travel.TravelRenderer;
+import com.enderio.enderio.api.poi.POIRenderer;
 import com.enderio.enderio.client.foundation.renderer.OutlineBuffer;
 import com.enderio.enderio.client.foundation.renderer.OutlineRenderType;
 import com.enderio.enderio.content.travel.travel_anchor.AnchorTravelTarget;
@@ -33,7 +33,7 @@ import org.joml.Vector3f;
 
 import java.util.Optional;
 
-public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> {
+public class TravelAnchorRenderer implements POIRenderer<AnchorTravelTarget> {
     public static final RenderType BOLD_LINES = OutlineRenderType.createLines("bold_lines", 3);
     public static final RenderType VERY_BOLD_LINES = OutlineRenderType.createLines("very_bold_lines", 5);
 

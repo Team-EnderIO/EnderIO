@@ -1,6 +1,6 @@
 package com.enderio.enderio.client.content.travel;
 
-import com.enderio.enderio.api.travel.TravelTarget;
+import com.enderio.enderio.api.poi.EnderPOI;
 import com.enderio.enderio.content.travel.TravelHandler;
 import com.enderio.enderio.content.travel.travel_anchor.AnchorTravelTarget;
 import com.enderio.enderio.init.MachineBlocks;
@@ -41,7 +41,7 @@ public class TravelAnchorHud implements LayeredDraw.Layer {
                 .ifPresent(target -> showElevatorTarget(guiGraphics, minecraft.font, target, Direction.DOWN));
     }
 
-    private static void showElevatorTarget(GuiGraphics guiGraphics, Font font, TravelTarget target,
+    private static void showElevatorTarget(GuiGraphics guiGraphics, Font font, EnderPOI target,
             Direction direction) {
         String txt = switch (direction) {
         case UP -> "↑";

@@ -1,9 +1,9 @@
 package com.enderio.enderio.content.travel;
 
-import com.enderio.enderio.api.travel.TravelTarget;
+import com.enderio.enderio.api.poi.EnderPOI;
+import com.enderio.enderio.foundation.network.packets.ClientboundEnderPOIUpdatedPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundSyncTravelDataPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundTravelTargetRemovedPacket;
-import com.enderio.enderio.foundation.network.packets.ClientboundTravelTargetUpdatedPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -36,7 +36,7 @@ public class TravelTargetSavedData extends SavedData {
     private static final Map<ResourceKey<Level>, TravelTargetSavedData> CLIENT_DATA = new ConcurrentHashMap<>();
 
     public static final String TARGETS = "targets";
-    private final Map<BlockPos, TravelTarget> travelTargets = new HashMap<>();
+    private final Map<BlockPos, EnderPOI> travelTargets = new HashMap<>();
 
     public TravelTargetSavedData() {
     }
@@ -55,15 +55,15 @@ public class TravelTargetSavedData extends SavedData {
         }
     }
 
-    public Optional<TravelTarget> getTravelTarget(BlockPos pos) {
+    public Optional<EnderPOI> getTravelTarget(BlockPos pos) {
         return Optional.ofNullable(travelTargets.get(pos));
     }
 
-    public Collection<TravelTarget> getTravelTargets() {
+    public Collection<EnderPOI> getTravelTargets() {
         return travelTargets.values();
     }
 
-    public Stream<TravelTarget> getTravelTargetsInItemRange(BlockPos center) {
+    public Stream<EnderPOI> getTravelTargetsInItemRange(BlockPos center) {
         return travelTargets.entrySet()
                 .stream()
                 .filter(entry -> entry.getValue().item2BlockRange() == Integer.MAX_VALUE
@@ -73,9 +73,9 @@ public class TravelTargetSavedData extends SavedData {
     }
 
     // Adds or updates.
-    public void setTravelTarget(Level level, TravelTarget target) {
+    public void setTravelTarget(Level level, EnderPOI target) {
         if (level instanceof ServerLevel serverLevel) {
-            PacketDistributor.sendToPlayersInDimension(serverLevel, new ClientboundTravelTargetUpdatedPacket(target));
+            PacketDistributor.sendToPlayersInDimension(serverLevel, new ClientboundEnderPOIUpdatedPacket(target));
         }
 
         travelTargets.put(target.pos(), target);
@@ -97,8 +97,8 @@ public class TravelTargetSavedData extends SavedData {
         return nbt;
     }
 
-    private <T extends TravelTarget> Tag saveTarget(HolderLookup.Provider lookupProvider, T target) {
-        return TravelTarget.CODEC.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), target)
+    private <T extends EnderPOI> Tag saveTarget(HolderLookup.Provider lookupProvider, T target) {
+        return EnderPOI.CODEC.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), target)
                 .getOrThrow();
     }
 
@@ -111,8 +111,8 @@ public class TravelTargetSavedData extends SavedData {
                 .forEach(target -> travelTargets.put(target.pos(), target));
     }
 
-    private TravelTarget loadTarget(HolderLookup.Provider lookupProvider, Tag tag) {
-        return TravelTarget.CODEC.decode(lookupProvider.createSerializationContext(NbtOps.INSTANCE), tag)
+    private EnderPOI loadTarget(HolderLookup.Provider lookupProvider, Tag tag) {
+        return EnderPOI.CODEC.decode(lookupProvider.createSerializationContext(NbtOps.INSTANCE), tag)
                 .getOrThrow()
                 .getFirst();
     }
