@@ -2,14 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "P": [
-      {
-        "item": "minecraft:paper"
-      },
-      {
-        "item": "enderio:black_paper"
-      }
-    ],
+    "P": {
+      "item": "minecraft:paper"
+    },
     "S": {
       "item": "enderio:soul_vial"
     }

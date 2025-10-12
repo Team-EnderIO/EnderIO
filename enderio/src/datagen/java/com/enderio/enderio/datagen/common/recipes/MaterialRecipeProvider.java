@@ -65,18 +65,12 @@ public class MaterialRecipeProvider extends SubRecipeProvider {
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.SOULARIUM_INGOT.get()))
                 .save(recipeOutput);
 
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, EIOItems.BLACK_PAPER)
-                .requires(Items.PAPER)
-                .requires(Tags.Items.DYES_BLACK)
-                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Items.PAPER))
-                .save(recipeOutput);
-
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.REDSTONE_FILTER_BASE)
                 .pattern("RPR")
                 .pattern("PIP")
                 .pattern("RPR")
                 .define('R', EIOTags.Items.INGOTS_REDSTONE_ALLOY)
-                .define('P', Ingredient.of(Items.PAPER, EIOItems.BLACK_PAPER))
+                .define('P',Items.PAPER)
                 .define('I', Tags.Items.INGOTS_IRON)
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.REDSTONE_ALLOY_INGOT))

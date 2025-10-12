@@ -185,7 +185,6 @@ public class EIOItems {
     public static final DeferredItem<Item> ANIMAL_TOKEN = basicGlinted("animal_token");
     public static final DeferredItem<Item> MONSTER_TOKEN = basicGlinted("monster_token");
     public static final DeferredItem<Item> PLAYER_TOKEN = basicGlinted("player_token");
-    public static final DeferredItem<Item> BLACK_PAPER = basic("black_paper");
     public static final DeferredItem<Item> CLAYED_GLOWSTONE = basic("clayed_glowstone");
     public static final DeferredItem<Item> NETHERCOTTA = basic("nethercotta");
 

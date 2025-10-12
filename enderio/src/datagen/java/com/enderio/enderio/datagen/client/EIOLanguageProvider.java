@@ -494,7 +494,6 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOItems.ANIMAL_TOKEN.get(), "Animal Token");
         add(EIOItems.MONSTER_TOKEN.get(), "Monster Token");
         add(EIOItems.PLAYER_TOKEN.get(), "Player Token");
-        add(EIOItems.BLACK_PAPER.get(), "Black Paper");
         add(EIOItems.CLAYED_GLOWSTONE.get(), "Clayed Glowstone");
         add(EIOItems.NETHERCOTTA.get(), "Nethercotta");
         add(EIOItems.BROKEN_SPAWNER.get(), "Broken Spawner");

@@ -304,7 +304,7 @@ public class MekanismModule implements ConduitCommonModule {
                 .pattern(" P ")
                 .pattern("POP")
                 .pattern(" P ")
-                .define('P', Ingredient.of(Items.PAPER, EIOItems.BLACK_PAPER)) // TODO: c:paper?
+                .define('P', Items.PAPER)
                 .define('O', OSMIUM)
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(OSMIUM)))
