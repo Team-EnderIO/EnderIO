@@ -495,7 +495,6 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOItems.MONSTER_TOKEN.get(), "Monster Token");
         add(EIOItems.PLAYER_TOKEN.get(), "Player Token");
         add(EIOItems.CLAYED_GLOWSTONE.get(), "Clayed Glowstone");
-        add(EIOItems.NETHERCOTTA.get(), "Nethercotta");
         add(EIOItems.BROKEN_SPAWNER.get(), "Broken Spawner");
 
         // Gliders

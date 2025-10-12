@@ -186,7 +186,6 @@ public class EIOItems {
     public static final DeferredItem<Item> MONSTER_TOKEN = basicGlinted("monster_token");
     public static final DeferredItem<Item> PLAYER_TOKEN = basicGlinted("player_token");
     public static final DeferredItem<Item> CLAYED_GLOWSTONE = basic("clayed_glowstone");
-    public static final DeferredItem<Item> NETHERCOTTA = basic("nethercotta");
 
     public static final DeferredItem<BrokenSpawnerItem> BROKEN_SPAWNER = ITEMS.registerItem("broken_spawner", BrokenSpawnerItem::new);
 
