@@ -175,14 +175,6 @@ public class EIOItems {
 
     // endregion
 
-    // region Dyes
-
-    public static final DeferredItem<Item> DYE_GREEN = basic("organic_green_dye");
-    public static final DeferredItem<Item> DYE_BROWN = basic("organic_brown_dye");
-    public static final DeferredItem<Item> DYE_BLACK = basic("organic_black_dye");
-
-    // endregion
-
     // region Misc Materials
 
     public static final DeferredItem<Item> PHOTOVOLTAIC_PLATE = basic("photovoltaic_plate");

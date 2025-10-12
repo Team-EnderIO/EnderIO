@@ -115,11 +115,6 @@ public class EIOItemModelProvider extends ItemModelProvider {
         basicItem(EIOItems.CONFUSION_POWDER.get());
         basicItem(EIOItems.WITHERING_POWDER.get());
 
-        // Dyes
-        basicItem(EIOItems.DYE_GREEN.get());
-        basicItem(EIOItems.DYE_BROWN.get());
-        basicItem(EIOItems.DYE_BLACK.get());
-
         // Misc Materials
         basicItem(EIOItems.PHOTOVOLTAIC_PLATE.get());
         basicItem(EIOItems.NUTRITIOUS_STICK.get());

@@ -195,9 +195,6 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
         tag(EIOTags.Items.STORAGE_BLOCKS_QUARTZ).add(Items.QUARTZ_BLOCK);
         tag(EIOTags.Items.STORAGE_BLOCKS_AMETHYST).add(Items.AMETHYST_BLOCK);
 
-        tag(Tags.Items.DYES_GREEN).add(EIOItems.DYE_GREEN.get());
-        tag(Tags.Items.DYES_BROWN).add(EIOItems.DYE_BROWN.get());
-        tag(Tags.Items.DYES_BLACK).add(EIOItems.DYE_BLACK.get());
         tag(EIOTags.Items.SILICON).add(EIOItems.SILICON.get());
         tag(EIOTags.Items.WRENCH).add(EIOItems.YETA_WRENCH.get());
     }

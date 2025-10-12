@@ -80,26 +80,26 @@ public class AlloyRecipeProvider extends SubRecipeProvider {
 
         // region Dyes
 
-        build(new ItemStack(EIOItems.DYE_GREEN.get()), "clippings",
+        build(new ItemStack(Items.GREEN_DYE), "clippings",
                 List.of(SizedIngredient.of(EIOItems.PLANT_MATTER_GREEN.get(), 6), SizedIngredient.of(Items.EGG, 1)),
                 1000, 0.3f, recipeOutput);
-        build(new ItemStack(EIOItems.DYE_GREEN.get(), 2), "double_clippings",
+        build(new ItemStack(Items.GREEN_DYE, 2), "double_clippings",
                 List.of(SizedIngredient.of(EIOItems.PLANT_MATTER_GREEN.get(), 12),
                         SizedIngredient.of(Tags.Items.SLIMEBALLS, 1)),
                 1600, 0.3f, recipeOutput);
 
-        build(new ItemStack(EIOItems.DYE_BROWN.get()), "twigs",
+        build(new ItemStack(Items.BROWN_DYE), "twigs",
                 List.of(SizedIngredient.of(EIOItems.PLANT_MATTER_BROWN.get(), 6), SizedIngredient.of(Items.EGG, 1)),
                 1000, 0.3f, recipeOutput);
-        build(new ItemStack(EIOItems.DYE_BROWN.get(), 2), "twigs_double",
+        build(new ItemStack(Items.BROWN_DYE, 2), "twigs_double",
                 List.of(SizedIngredient.of(EIOItems.PLANT_MATTER_BROWN.get(), 12),
                         SizedIngredient.of(Tags.Items.SLIMEBALLS, 1)),
                 1600, 0.3f, recipeOutput);
 
-        build(new ItemStack(EIOItems.DYE_BLACK.get()),
+        build(new ItemStack(Items.BLACK_DYE),
                 List.of(SizedIngredient.of(EIOTags.Items.DUSTS_COAL, 1), SizedIngredient.of(Items.EGG, 1)), 1000, 0.3f,
                 recipeOutput);
-        build(new ItemStack(EIOItems.DYE_BLACK.get(), 2), "double",
+        build(new ItemStack(Items.BLACK_DYE, 2), "double",
                 List.of(SizedIngredient.of(EIOTags.Items.DUSTS_COAL, 2), SizedIngredient.of(Tags.Items.SLIMEBALLS, 1)),
                 1600, 0.3f, recipeOutput);
 

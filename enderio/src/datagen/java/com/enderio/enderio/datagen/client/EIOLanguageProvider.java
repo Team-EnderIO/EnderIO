@@ -485,11 +485,6 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOItems.CONFUSION_POWDER.get(), "Confusion Powder");
         add(EIOItems.WITHERING_POWDER.get(), "Withering Powder");
 
-        // Dyes
-        add(EIOItems.DYE_GREEN.get(), "Organic Green Dye");
-        add(EIOItems.DYE_BROWN.get(), "Organic Brown Dye");
-        add(EIOItems.DYE_BLACK.get(), "Organic Black Dye");
-
         // Misc Materials
         add(EIOItems.PHOTOVOLTAIC_PLATE.get(), "Photovoltaic Plate");
         add(EIOItems.NUTRITIOUS_STICK.get(), "Nutritious Stick");
