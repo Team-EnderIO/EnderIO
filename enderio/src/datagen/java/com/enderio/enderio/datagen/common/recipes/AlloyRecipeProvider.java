@@ -161,10 +161,6 @@ public class AlloyRecipeProvider extends SubRecipeProvider {
 
 //        build(new ItemStack(EIOItems.DARK_STEEL_UPGRADE_BLANK.get()), List.of(SizedIngredient.of(EIOBlocks.DARK_STEEL_BARS.get()), SizedIngredient.of(Items.CLAY_BALL), SizedIngredient.of(4, Tags.Items.STRING)), 30000, 0.3f, recipeOutput);
 
-        build(new ItemStack(EIOItems.CLAYED_GLOWSTONE.get(), 2),
-                List.of(SizedIngredient.of(Tags.Items.DUSTS_GLOWSTONE, 1), SizedIngredient.of(Items.CLAY_BALL, 1)),
-                3200, 0.3f, recipeOutput);
-
         build(new ItemStack(EIOBlocks.INDUSTRIAL_INSULATION.get()),
                 List.of(SizedIngredient.of(EIOTags.Items.DUSTS_LAPIS, 1), SizedIngredient.of(ItemTags.WOOL, 1),
                         SizedIngredient.of(EIOTags.Items.INSULATION_METAL, 1)),

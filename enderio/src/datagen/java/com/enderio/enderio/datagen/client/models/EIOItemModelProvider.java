@@ -124,7 +124,6 @@ public class EIOItemModelProvider extends ItemModelProvider {
         basicItem(EIOItems.ANIMAL_TOKEN.get());
         basicItem(EIOItems.MONSTER_TOKEN.get());
         basicItem(EIOItems.PLAYER_TOKEN.get());
-        basicItem(EIOItems.CLAYED_GLOWSTONE.get());
         fakeBlock(EIOItems.BROKEN_SPAWNER.get());
 
         // Gliders
