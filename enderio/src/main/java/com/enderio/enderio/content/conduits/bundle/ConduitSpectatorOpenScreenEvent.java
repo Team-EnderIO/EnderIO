@@ -1,7 +1,7 @@
 package com.enderio.enderio.content.conduits.bundle;
 
 import com.enderio.enderio.content.conduits.menu.ConduitMenu;
-import com.enderio.enderio.init.ConduitBlocks;
+import com.enderio.enderio.init.EIOBlocks;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.block.state.BlockState;
@@ -28,7 +28,7 @@ public class ConduitSpectatorOpenScreenEvent {
 
         BlockState state = level.getBlockState(hit.getBlockPos());
 
-        if (state.is(ConduitBlocks.CONDUIT_BUNDLE)) {
+        if (state.is(EIOBlocks.CONDUIT_BUNDLE)) {
             if (level.getBlockEntity(pos) instanceof ConduitBundleBlockEntity conduitBundle) {
                 // TODO: The connection shouldn't include the plate.. if we hit the plate open
                 // the first conduit?

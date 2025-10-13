@@ -3,7 +3,7 @@ package com.enderio.enderio.content.conduits.type.redstone;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.enderio.enderio.api.conduits.ticker.ConduitTicker;
-import com.enderio.enderio.init.ConduitBlocks;
+import com.enderio.enderio.init.EIOBlocks;
 import net.minecraft.server.level.ServerLevel;
 
 public class RedstoneConduitTicker implements ConduitTicker<RedstoneConduit> {
@@ -41,10 +41,10 @@ public class RedstoneConduitTicker implements ConduitTicker<RedstoneConduit> {
             if (context.isNew() || context.getSignal(channel) != context.getSignalLastTick(channel)) {
 
                 for (var insertConnection : network.insertConnections(channel)) {
-                    level.updateNeighborsAt(insertConnection.node().pos(), ConduitBlocks.CONDUIT_BUNDLE.get());
+                    level.updateNeighborsAt(insertConnection.node().pos(), EIOBlocks.CONDUIT_BUNDLE.get());
 
                     if (insertConnection.connectionConfig(RedstoneConduitConnectionConfig.TYPE).isStrongOutputSignal()) {
-                        level.updateNeighborsAt(insertConnection.connectedBlockPos(), ConduitBlocks.CONDUIT_BUNDLE.get());
+                        level.updateNeighborsAt(insertConnection.connectedBlockPos(), EIOBlocks.CONDUIT_BUNDLE.get());
                     }
                 }
             }

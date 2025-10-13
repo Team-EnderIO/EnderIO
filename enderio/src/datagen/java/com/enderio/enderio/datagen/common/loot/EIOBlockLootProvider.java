@@ -45,5 +45,15 @@ public class EIOBlockLootProvider extends BlockLootSubProvider {
         dropSelf(EIOBlocks.DARK_STEEL_TRAPDOOR.get());
         dropSelf(EIOBlocks.END_STEEL_BARS.get());
         dropSelf(EIOBlocks.REINFORCED_OBSIDIAN.get());
+
+        // Resetting Levers
+        for (var lever : EIOBlocks.RESETTING_LEVERS) {
+            dropSelf(lever.get());
+        }
+
+        // Miscellaneous
+        dropSelf(EIOBlocks.SOUL_CHAIN.get());
+        dropSelf(EIOBlocks.ENDERMAN_HEAD.get());
+        dropSelf(EIOBlocks.INDUSTRIAL_INSULATION.get());
     }
 }

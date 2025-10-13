@@ -3,7 +3,7 @@ package com.enderio.enderio.compat.ftb_ultimine;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.client.content.conduits.model.facades.FacadeUtil;
 import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
-import com.enderio.enderio.init.ConduitBlocks;
+import com.enderio.enderio.init.EIOBlocks;
 import dev.ftb.mods.ftbultimine.api.blockbreaking.BlockBreakHandler;
 import dev.ftb.mods.ftbultimine.api.shape.Shape;
 import net.minecraft.core.BlockPos;
@@ -33,7 +33,7 @@ public enum ConduitBlockBreakHandler implements BlockBreakHandler {
         //       Returning PASS means it's not our block.
         var level = player.level();
         var blockEntity = level.getBlockEntity(pos);
-        if (!state.is(ConduitBlocks.CONDUIT_BUNDLE) ||
+        if (!state.is(EIOBlocks.CONDUIT_BUNDLE) ||
             !(blockEntity instanceof ConduitBundleBlockEntity conduitBundle)) {
             return Result.PASS;
         }

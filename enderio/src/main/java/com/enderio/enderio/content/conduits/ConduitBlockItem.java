@@ -8,7 +8,7 @@ import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
-import com.enderio.enderio.init.ConduitBlocks;
+import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -21,7 +21,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,7 +30,7 @@ import java.util.List;
 public class ConduitBlockItem extends BlockItem implements ICustomCreativeTabEntries {
 
     public ConduitBlockItem(Properties properties) {
-        super(ConduitBlocks.CONDUIT_BUNDLE.get(), properties);
+        super(EIOBlocks.CONDUIT_BUNDLE.get(), properties);
     }
 
     public static ItemStack getStackFor(Holder<Conduit<?, ?>> conduit, int count) {
@@ -102,10 +101,10 @@ public class ConduitBlockItem extends BlockItem implements ICustomCreativeTabEnt
                 var horizontalDirection = context.getHorizontalDirection();
 
                 if (level.getBlockState(context.getClickedPos().relative(clickedFace.getOpposite()))
-                        .is(ConduitBlocks.CONDUIT_BUNDLE.get())) {
+                        .is(EIOBlocks.CONDUIT_BUNDLE.get())) {
                     conduitBundle.primaryConnectionSide = clickedFace.getOpposite();
                 } else if (level.getBlockState(context.getClickedPos().relative(horizontalDirection.getOpposite()))
-                        .is(ConduitBlocks.CONDUIT_BUNDLE.get())) {
+                        .is(EIOBlocks.CONDUIT_BUNDLE.get())) {
                     conduitBundle.primaryConnectionSide = horizontalDirection.getOpposite();
                 }
             }

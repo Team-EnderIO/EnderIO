@@ -242,6 +242,16 @@ public class EIOItemModelProvider extends ItemModelProvider {
         flatBlockItem(EIOBlocks.END_STEEL_BARS.get());
         simpleBlockItem(EIOBlocks.REINFORCED_OBSIDIAN.get());
 
+        // Resetting Levers
+        for (var lever : EIOBlocks.RESETTING_LEVERS) {
+            withExistingParent(lever.getId().toString(), mcLoc("item/lever"));
+        }
+
+        // Miscellaneous
+        basicItem(EIOBlocks.SOUL_CHAIN.asItem());
+        withExistingParent(EIOBlocks.ENDERMAN_HEAD.getId().toString(), mcLoc("item/template_skull"));
+        simpleBlockItem(EIOBlocks.INDUSTRIAL_INSULATION.get());
+
         // endregion
     }
 

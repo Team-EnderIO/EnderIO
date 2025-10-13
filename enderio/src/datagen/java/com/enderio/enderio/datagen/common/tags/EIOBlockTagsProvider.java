@@ -2,7 +2,6 @@ package com.enderio.enderio.datagen.common.tags;
 
 import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.foundation.tag.EIOTags;
-import com.enderio.enderio.init.ConduitBlocks;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.MachineBlocks;
 import net.minecraft.core.HolderLookup;
@@ -29,6 +28,10 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
         tag(BlockTags.DOORS).add(EIOBlocks.DARK_STEEL_DOOR.get());
         tag(BlockTags.TRAPDOORS).add(EIOBlocks.DARK_STEEL_TRAPDOOR.get());
         tag(BlockTags.WITHER_IMMUNE).add(EIOBlocks.REINFORCED_OBSIDIAN.get());
+        tag(Tags.Blocks.CHAINS).add(EIOBlocks.SOUL_CHAIN.get());
+        tag(Tags.Blocks.SKULLS)
+            .add(EIOBlocks.ENDERMAN_HEAD.get())
+            .add(EIOBlocks.WALL_ENDERMAN_HEAD.get());
 
         tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .add(EIOBlocks.COPPER_ALLOY_BLOCK.get())
@@ -48,7 +51,8 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
             .add(EIOBlocks.DARK_STEEL_TRAPDOOR.get())
             .add(EIOBlocks.END_STEEL_BARS.get())
             .add(EIOBlocks.REINFORCED_OBSIDIAN.get())
-            .add(ConduitBlocks.CONDUIT_BUNDLE.get());
+            .add(EIOBlocks.CONDUIT_BUNDLE.get())
+            .add(EIOBlocks.SOUL_CHAIN.get());
 
         // Blocks that need stone tools
         tag(BlockTags.NEEDS_STONE_TOOL)
@@ -70,7 +74,8 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
             .add(EIOBlocks.DARK_STEEL_BARS.get())
             .add(EIOBlocks.DARK_STEEL_DOOR.get())
             .add(EIOBlocks.DARK_STEEL_TRAPDOOR.get())
-            .add(EIOBlocks.END_STEEL_BARS.get());
+            .add(EIOBlocks.END_STEEL_BARS.get())
+            .add(EIOBlocks.SOUL_CHAIN.get());
 
         tag(BlockTags.NEEDS_DIAMOND_TOOL)
             .add(EIOBlocks.REINFORCED_OBSIDIAN.get());
@@ -97,7 +102,7 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
                 Blocks.WAXED_WEATHERED_COPPER_BULB, Blocks.WAXED_OXIDIZED_COPPER_BULB, Blocks.CRAFTER)
             .addTags(BlockTags.DOORS, BlockTags.TRAPDOORS, BlockTags.REDSTONE_ORES);
 
-        tag(Tags.Blocks.RELOCATION_NOT_SUPPORTED).add(ConduitBlocks.CONDUIT_BUNDLE.get());
+        tag(Tags.Blocks.RELOCATION_NOT_SUPPORTED).add(EIOBlocks.CONDUIT_BUNDLE.get());
 
         // Alloys
         tag(EIOTags.Blocks.BLOCKS_COPPER_ALLOY).add(EIOBlocks.COPPER_ALLOY_BLOCK.get());

@@ -3,7 +3,7 @@ package com.enderio.enderio.content.conduits.facades;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.content.conduits.ConduitLang;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
-import com.enderio.enderio.init.ConduitBlocks;
+import com.enderio.enderio.init.EIOBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
@@ -23,7 +23,7 @@ import java.util.Map;
 
 public class ConduitFacadeItem extends BlockItem {
     public ConduitFacadeItem(Properties properties) {
-        super(ConduitBlocks.CONDUIT_BUNDLE.get(), properties);
+        super(EIOBlocks.CONDUIT_BUNDLE.get(), properties);
     }
 
     @Override

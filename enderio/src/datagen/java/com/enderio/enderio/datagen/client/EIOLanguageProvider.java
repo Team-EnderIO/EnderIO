@@ -19,7 +19,6 @@ import com.enderio.enderio.content.machines.powered_spawner.PoweredSpawnerMode;
 import com.enderio.enderio.content.tools.ToolsLang;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.foundation.tag.EIOTags;
-import com.enderio.enderio.init.ConduitBlocks;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOConduits;
 import com.enderio.enderio.init.EIOEntities;
@@ -607,7 +606,19 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOBlocks.END_STEEL_BARS.get(), "End Steel Bars");
         add(EIOBlocks.REINFORCED_OBSIDIAN.get(), "Reinforced Obsidian");
 
-        add(ConduitBlocks.CONDUIT_BUNDLE.get(), "Conduit Bundle");
+        // Resetting Levers
+        for (var lever : EIOBlocks.RESETTING_LEVERS) {
+            int duration = lever.get().delay() / 20;
+            String durationLabel = "(" + (duration >= 60 ? duration / 60 : duration) + " " + (duration == 60 ? "minute" : duration > 60 ? "minutes" : "seconds") + ")";
+            add(lever.get(), "Resetting Lever " + (lever.get().inverted() ? "Inverted " : "") + durationLabel);
+        }
+
+        // Miscellaneous
+        add(EIOBlocks.CONDUIT_BUNDLE.get(), "Conduit Bundle");
+        add(EIOBlocks.SOUL_CHAIN.get(), "Soul Chain");
+        add(EIOBlocks.COLD_FIRE.get(), "Cold Fire");
+        add(EIOBlocks.ENDERMAN_HEAD.get(), "Enderman Head");
+        add(EIOBlocks.INDUSTRIAL_INSULATION.get(), "Industrial Insulation");
     }
 
     private void addCommonLang() {

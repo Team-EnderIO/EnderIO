@@ -75,7 +75,6 @@ import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
 import com.enderio.enderio.content.fun.EnderiosItem;
 import com.enderio.enderio.content.misc_blocks.skull.EnderSkullBlock;
 import com.enderio.enderio.content.tools.vials.SoulVialItem;
-import com.enderio.enderio.init.ConduitBlocks;
 import com.enderio.enderio.init.EIOConduitTypes;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOBlocks;
@@ -240,7 +239,7 @@ public class EnderIOClient {
 
     @SubscribeEvent
     public static void registerBlockColorHandlers(RegisterColorHandlersEvent.Block event) {
-        event.register(ConduitFacadeColor.INSTANCE, ConduitBlocks.CONDUIT_BUNDLE.get());
+        event.register(ConduitFacadeColor.INSTANCE, EIOBlocks.CONDUIT_BUNDLE.get());
 
         event.register(PaintedBlockColor.INSTANCE,
             EIOBlocks.PAINTED_FENCE.get(),
@@ -372,7 +371,7 @@ public class EnderIOClient {
 
     @SubscribeEvent
     public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
-        event.registerBlock(ConduitBundleExtension.INSTANCE, ConduitBlocks.CONDUIT_BUNDLE);
+        event.registerBlock(ConduitBundleExtension.INSTANCE, EIOBlocks.CONDUIT_BUNDLE);
 
         event.registerItem(new IClientItemExtensions() {
             // Minecraft can be null during datagen

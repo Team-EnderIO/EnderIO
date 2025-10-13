@@ -2,7 +2,6 @@ package com.enderio.enderio.datagen.common.tags;
 
 import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.foundation.tag.EIOTags;
-import com.enderio.enderio.init.ConduitBlocks;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOItems;
 import net.minecraft.core.HolderLookup;
@@ -206,7 +205,7 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
     private void addHideFacadesTags() {
         tag(EIOTags.Items.HIDE_FACADES)
             .add(EIOItems.YETA_WRENCH.get())
-            .add(ConduitBlocks.CONDUIT_BUNDLE.asItem());
+            .add(EIOBlocks.CONDUIT_BUNDLE.asItem());
     }
 
     private void addGliderTags() {
@@ -240,5 +239,7 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
         tag(EIOTags.Items.BLOCKS_DARK_STEEL).add(EIOBlocks.DARK_STEEL_BLOCK.asItem());
         tag(EIOTags.Items.BLOCKS_SOULARIUM).add(EIOBlocks.SOULARIUM_BLOCK.asItem());
         tag(EIOTags.Items.BLOCKS_END_STEEL).add(EIOBlocks.END_STEEL_BLOCK.asItem());
+
+        tag(Tags.Items.CHAINS).add(EIOBlocks.SOUL_CHAIN.asItem());
     }
 }

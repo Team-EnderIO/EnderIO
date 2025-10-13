@@ -2,6 +2,7 @@ package com.enderio.enderio.init;
 
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.content.cold_fire.ColdFireBlock;
+import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlock;
 import com.enderio.enderio.content.decor.DarkSteelLadderBlock;
 import com.enderio.enderio.content.glass.GlassBlocks;
 import com.enderio.enderio.content.glass.GlassCollisionPredicate;
@@ -157,6 +158,66 @@ public class EIOBlocks {
 
     // endregion
 
+    // region Painted Blocks
+
+    // endregion
+
+    // region Resetting Levers
+
+    public static final Set<DeferredBlock<ResettingLeverBlock>> RESETTING_LEVERS = new HashSet<>();
+
+    public static final DeferredBlock<ResettingLeverBlock> RESETTING_LEVER_FIVE = registerResettingLever("resetting_lever_five", 5, false);
+    public static final DeferredBlock<ResettingLeverBlock> RESETTING_LEVER_FIVE_INV = registerResettingLever("resetting_lever_five_inv", 5, true);
+    public static final DeferredBlock<ResettingLeverBlock> RESETTING_LEVER_TEN = registerResettingLever("resetting_lever_ten", 10, false);
+    public static final DeferredBlock<ResettingLeverBlock> RESETTING_LEVER_TEN_INV = registerResettingLever("resetting_lever_ten_inv", 10, true);
+    public static final DeferredBlock<ResettingLeverBlock> RESETTING_LEVER_THIRTY = registerResettingLever("resetting_lever_thirty", 30, false);
+    public static final DeferredBlock<ResettingLeverBlock> RESETTING_LEVER_THIRTY_INV = registerResettingLever("resetting_lever_thirty_inv", 30, true);
+    public static final DeferredBlock<ResettingLeverBlock> RESETTING_LEVER_SIXTY = registerResettingLever("resetting_lever_sixty", 60, false);
+    public static final DeferredBlock<ResettingLeverBlock> RESETTING_LEVER_SIXTY_INV = registerResettingLever("resetting_lever_sixty_inv", 60, true);
+    public static final DeferredBlock<ResettingLeverBlock> RESETTING_LEVER_THREE_HUNDRED = registerResettingLever("resetting_lever_three_hundred", 300, false);
+    public static final DeferredBlock<ResettingLeverBlock> RESETTING_LEVER_THREE_HUNDRED_INV = registerResettingLever("resetting_lever_three_hundred_inv", 300, true);
+
+    private static DeferredBlock<ResettingLeverBlock> registerResettingLever(String name, int delay, boolean inverted) {
+        var blockHolder = registerWithItem(name, p -> new ResettingLeverBlock(delay, inverted), BlockBehaviour.Properties.of());
+        RESETTING_LEVERS.add(blockHolder);
+        return blockHolder;
+    }
+
+    // endregion
+
+    // region Miscellaneous
+
+    // Note: Due to the unique nature of the conduit bundle, all block items are registered in EIOItems instead.
+    public static final DeferredBlock<ConduitBundleBlock> CONDUIT_BUNDLE = BLOCKS.registerBlock("conduit",
+        ConduitBundleBlock::new, BlockBehaviour.Properties.of()
+            .strength(1.5f, 10)
+            .noLootTable()
+            .noOcclusion()
+            .dynamicShape()
+            .mapColor(MapColor.STONE));
+
+    public static final DeferredBlock<ChainBlock> SOUL_CHAIN = registerWithItem("soul_chain", ChainBlock::new,
+        BlockBehaviour.Properties.of()
+            .requiresCorrectToolForDrops()
+            .strength(5.0F, 6.0F)
+            .sound(SoundType.CHAIN)
+            .noOcclusion()
+            .mapColor(MapColor.NONE));
+
+    public static final DeferredBlock<ColdFireBlock> COLD_FIRE = BLOCKS
+        .registerBlock("cold_fire", ColdFireBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.FIRE).noLootTable());
+
+    public static final DeferredBlock<EnderSkullBlock> ENDERMAN_HEAD = registerWithItem("enderman_head", EnderSkullBlock::new,
+            BlockBehaviour.Properties.ofFullCopy(Blocks.SKELETON_SKULL).instrument(NoteBlockInstrument.SKELETON).strength(1.0F).pushReaction(PushReaction.DESTROY));
+
+    public static final DeferredBlock<WallEnderSkullBlock> WALL_ENDERMAN_HEAD = BLOCKS.registerBlock("wall_enderman_head", WallEnderSkullBlock::new,
+        BlockBehaviour.Properties.ofFullCopy(Blocks.SKELETON_SKULL).strength(1.0F).lootFrom(ENDERMAN_HEAD).pushReaction(PushReaction.DESTROY));
+
+    public static final DeferredBlock<IndustrialInsulationBlock> INDUSTRIAL_INSULATION = registerWithItem("industrial_insulation",
+        IndustrialInsulationBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.SPONGE));
+
+    // endregion
+
     private static <B extends Block> DeferredBlock<B> registerWithItem(String name, Function<BlockBehaviour.Properties, ? extends B> func, BlockBehaviour.Properties props) {
         var blockHolder = BLOCKS.<B>registerBlock(name, func, props);
         ITEMS.registerSimpleBlockItem(blockHolder);
@@ -186,52 +247,6 @@ public class EIOBlocks {
         }
         return map;
     }
-
-    // endregion
-
-    // region Miscellaneous
-
-    public static final RegiliteBlock<ChainBlock> SOUL_CHAIN = BLOCK_REGISTRY
-        .registerBlock("soul_chain", ChainBlock::new,
-            BlockBehaviour.Properties.of()
-                .requiresCorrectToolForDrops()
-                .strength(5.0F, 6.0F)
-                .sound(SoundType.CHAIN)
-                .noOcclusion()
-                .mapColor(MapColor.NONE))
-        .addBlockTags(
-            BlockTags.NEEDS_IRON_TOOL,
-            BlockTags.MINEABLE_WITH_PICKAXE,
-            Tags.Blocks.CHAINS
-        )
-        .setBlockStateProvider((prov, ctx) -> {
-            var model = prov
-                .models()
-                .withExistingParent(ctx.getName(), prov.mcLoc("block/chain"))
-                .renderType(prov.mcLoc("cutout_mipped"))
-                .texture("particle", prov.blockTexture(ctx.get()))
-                .texture("all", prov.blockTexture(ctx.get()));
-
-            prov.axisBlock(ctx.get(), model, model);
-        })
-        .createBlockItem(ITEM_REGISTRY, item -> item
-            .setModelProvider((prov, ctx) -> prov.basicItem(ctx.get(), prov.modLoc("item/soul_chain")))
-            .addItemTags(Tags.Items.CHAINS)
-            .setTab(EIOCreativeTabs.MAIN)
-        );
-
-    public static final RegiliteBlock<ColdFireBlock> COLD_FIRE = BLOCK_REGISTRY
-        .registerBlock("cold_fire", ColdFireBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.FIRE).noLootTable())
-        .setBlockStateProvider((prov, ctx) -> {
-            // This generates the models used for the blockstate in our resources.
-            // One day we may bother to datagen that file.
-            String[] toCopy = { "fire_floor0", "fire_floor1", "fire_side0", "fire_side1", "fire_side_alt0", "fire_side_alt1", "fire_up0", "fire_up1",
-                "fire_up_alt0", "fire_up_alt1" };
-
-            for (String name : toCopy) {
-                prov.models().withExistingParent(name, prov.mcLoc(name)).renderType("cutout");
-            }
-        });
 
     // endregion
 
@@ -287,30 +302,6 @@ public class EIOBlocks {
 
     // endregion
 
-    // region resetting levers
-
-    public static final RegiliteBlock<ResettingLeverBlock> RESETTING_LEVER_FIVE = resettingLeverBlock("resetting_lever_five", 5, false);
-
-    public static final RegiliteBlock<ResettingLeverBlock> RESETTING_LEVER_FIVE_INV = resettingLeverBlock("resetting_lever_five_inv", 5, true);
-
-    public static final RegiliteBlock<ResettingLeverBlock> RESETTING_LEVER_TEN = resettingLeverBlock("resetting_lever_ten", 10, false);
-
-    public static final RegiliteBlock<ResettingLeverBlock> RESETTING_LEVER_TEN_INV = resettingLeverBlock("resetting_lever_ten_inv", 10, true);
-
-    public static final RegiliteBlock<ResettingLeverBlock> RESETTING_LEVER_THIRTY = resettingLeverBlock("resetting_lever_thirty", 30, false);
-
-    public static final RegiliteBlock<ResettingLeverBlock> RESETTING_LEVER_THIRTY_INV = resettingLeverBlock("resetting_lever_thirty_inv", 30, true);
-
-    public static final RegiliteBlock<ResettingLeverBlock> RESETTING_LEVER_SIXTY = resettingLeverBlock("resetting_lever_sixty", 60, false);
-
-    public static final RegiliteBlock<ResettingLeverBlock> RESETTING_LEVER_SIXTY_INV = resettingLeverBlock("resetting_lever_sixty_inv", 60, true);
-
-    public static final RegiliteBlock<ResettingLeverBlock> RESETTING_LEVER_THREE_HUNDRED = resettingLeverBlock("resetting_lever_three_hundred", 300, false);
-
-    public static final RegiliteBlock<ResettingLeverBlock> RESETTING_LEVER_THREE_HUNDRED_INV = resettingLeverBlock("resetting_lever_three_hundred_inv", 300, true);
-
-    // endregion
-
     private static final List<Supplier<? extends Block>> PAINTED = new ArrayList<>();
 
     public static final RegiliteBlock<PaintedFenceBlock> PAINTED_FENCE = paintedBlock("painted_fence", PaintedFenceBlock::new, Blocks.OAK_FENCE,
@@ -347,23 +338,6 @@ public class EIOBlocks {
         BlockTags.WALLS, BlockTags.MINEABLE_WITH_PICKAXE);
 
     // endregion
-
-    public static final RegiliteBlock<EnderSkullBlock> ENDERMAN_HEAD = BLOCK_REGISTRY
-        .registerBlock("enderman_head", EnderSkullBlock::new,
-            BlockBehaviour.Properties.ofFullCopy(Blocks.SKELETON_SKULL).instrument(NoteBlockInstrument.SKELETON).strength(1.0F).pushReaction(PushReaction.DESTROY))
-        .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(prov.mcLoc("block/skull"))))
-        .createBlockItem(ITEM_REGISTRY,
-            // TODO: Properties being handled right? Maybe cleaner if we have a factory that takes properties, then a properties arg.
-            (enderSkullBlock) -> new EnderSkullBlockItem(enderSkullBlock, new Item.Properties(), Direction.DOWN),
-            item -> item
-                .setTab(EIOCreativeTabs.MAIN)
-                .setModelProvider((prov, ctx) -> prov.withExistingParent(ctx.getName(), "item/template_skull")));
-
-    public static final RegiliteBlock<WallEnderSkullBlock> WALL_ENDERMAN_HEAD = BLOCK_REGISTRY
-        .registerBlock("wall_enderman_head", WallEnderSkullBlock::new,
-            BlockBehaviour.Properties.ofFullCopy(Blocks.SKELETON_SKULL).strength(1.0F).lootFrom(ENDERMAN_HEAD).pushReaction(PushReaction.DESTROY))
-        .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(prov.mcLoc("block/skull"))))
-        .setTranslation("");
 
     private static RegiliteBlock<EIOPressurePlateBlock> pressurePlateBlock(String name, ResourceLocation texture, EIOPressurePlateBlock.Detector type,
         boolean silent) {
@@ -425,44 +399,6 @@ public class EIOBlocks {
             );
     }
 
-    private static RegiliteBlock<ResettingLeverBlock> resettingLeverBlock(String name, int duration, boolean inverted) {
-        String durationLabel = "(" + (duration >= 60 ? duration / 60 : duration) + " " + (duration == 60 ? "minute" : duration > 60 ? "minutes" : "seconds") + ")";
-
-        return BLOCK_REGISTRY
-            .registerBlock(name, props -> new ResettingLeverBlock(duration, inverted), BlockBehaviour.Properties.of())
-            .setTranslation("Resetting Lever " + (inverted ? "Inverted " : "") + durationLabel)
-            .setBlockStateProvider((prov, ctx) -> {
-                BlockModelProvider modProv = prov.models();
-                ModelFile.ExistingModelFile baseModel = modProv.getExistingFile(prov.mcLoc("block/lever"));
-                ModelFile.ExistingModelFile onModel = modProv.getExistingFile(prov.mcLoc("block/lever_on"));
-
-                VariantBlockStateBuilder vb = prov.getVariantBuilder(ctx.get());
-
-                vb.forAllStates(blockState -> {
-                    ModelFile.ExistingModelFile model = blockState.getValue(ResettingLeverBlock.POWERED) ? onModel : baseModel;
-                    int rotationX =
-                        blockState.getValue(LeverBlock.FACE) == AttachFace.CEILING ? 180 : blockState.getValue(LeverBlock.FACE) == AttachFace.WALL ? 90 : 0;
-                    Direction f = blockState.getValue(LeverBlock.FACING);
-                    int rotationY = f.get2DDataValue() * 90;
-                    if (blockState.getValue(LeverBlock.FACE) != AttachFace.CEILING) {
-                        rotationY = (rotationY + 180) % 360;
-                    }
-                    return new ConfiguredModel[] { new ConfiguredModel(model, rotationX, rotationY, false) };
-                });
-            })
-            .createBlockItem(ITEM_REGISTRY, item -> item
-                .setModelProvider((prov, ctx) -> prov.withExistingParent(ctx.getName(), prov.mcLoc("item/lever")))
-                .setTab(EIOCreativeTabs.MAIN)
-            );
-    }
-
-    public static final RegiliteBlock<IndustrialInsulationBlock> INDUSTRIAL_INSULATION = BLOCK_REGISTRY
-        .registerBlock("industrial_insulation_block", IndustrialInsulationBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.SPONGE))
-        .setTranslation("Industrial Insulation")
-        .createBlockItem(ITEM_REGISTRY, item -> item
-            .setTab(EIOCreativeTabs.MAIN)
-        );
-
     @SafeVarargs
     private static <T extends Block> RegiliteBlock<T> paintedBlock(String name, Function<BlockBehaviour.Properties, T> blockFactory,
         Block copyFrom, TagKey<Block>... tags) {
@@ -498,6 +434,9 @@ public class EIOBlocks {
     }
 
     public static void register(IEventBus bus) {
+        BLOCKS.addAlias(EnderIO.rl("industrial_insulation_block"), EnderIO.rl("industrial_insulation"));
+        ITEMS.addAlias(EnderIO.rl("industrial_insulation_block"), EnderIO.rl("industrial_insulation"));
+
         BLOCKS.register(bus);
         ITEMS.register(bus);
 

@@ -9,7 +9,6 @@ import com.enderio.enderio.compat.jei.subtype.SoulBindableSubtypeInterpreter;
 import com.enderio.enderio.content.broken_spawner.BrokenSpawnerItem;
 import com.enderio.enderio.content.glass.GlassBlocks;
 import com.enderio.enderio.foundation.soul.ShapedEntityStorageRecipe;
-import com.enderio.enderio.init.ConduitBlocks;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOItems;
 import mezz.jei.api.IModPlugin;
@@ -73,7 +72,7 @@ public class EnderIOJEI implements IModPlugin {
     public void registerItemSubtypes(ISubtypeRegistration registration) {
         registration.registerSubtypeInterpreter(EIOItems.SOUL_VIAL.get(), new SoulBindableSubtypeInterpreter());
         registration.registerSubtypeInterpreter(EIOItems.BROKEN_SPAWNER.get(), new SoulBindableSubtypeInterpreter());
-        registration.registerSubtypeInterpreter(ConduitBlocks.CONDUIT_BUNDLE.asItem(), new ConduitSubtypeInterpreter());
+        registration.registerSubtypeInterpreter(EIOItems.CONDUIT.get(), new ConduitSubtypeInterpreter());
     }
 
     @Override

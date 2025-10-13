@@ -3,7 +3,7 @@ package com.enderio.enderio.compat.ftb_ultimine;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.client.content.conduits.model.facades.FacadeUtil;
 import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
-import com.enderio.enderio.init.ConduitBlocks;
+import com.enderio.enderio.init.EIOBlocks;
 import dev.ftb.mods.ftbultimine.api.blockselection.BlockSelectionHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -19,13 +19,13 @@ public enum ConduitBlockSelectionHandler implements BlockSelectionHandler {
         var level = player.level();
 
         var origBlockEntity = level.getBlockEntity(origPos);
-        if (!state.is(ConduitBlocks.CONDUIT_BUNDLE) ||
+        if (!state.is(EIOBlocks.CONDUIT_BUNDLE) ||
             !(origBlockEntity instanceof ConduitBundleBlockEntity origConduitBundle)) {
             return Result.PASS;
         }
 
         var blockEntity = level.getBlockEntity(pos);
-        if (!state.is(ConduitBlocks.CONDUIT_BUNDLE) ||
+        if (!state.is(EIOBlocks.CONDUIT_BUNDLE) ||
             !(blockEntity instanceof ConduitBundleBlockEntity conduitBundle)) {
             return Result.PASS;
         }

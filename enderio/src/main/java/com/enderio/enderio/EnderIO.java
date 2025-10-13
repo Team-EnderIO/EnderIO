@@ -11,7 +11,6 @@ import com.enderio.enderio.config.base.BaseConfig;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.foundation.integrations.Integrations;
-import com.enderio.enderio.init.ConduitBlocks;
 import com.enderio.enderio.init.EIOConduitTypes;
 import com.enderio.enderio.init.EIOAttachments;
 import com.enderio.enderio.init.EIOBlockEntities;
@@ -109,7 +108,6 @@ public class EnderIO {
         EIOConduitTypes.register(modEventBus);
         EIOTravelTargets.register(modEventBus);
 
-        ConduitBlocks.register(modEventBus);
         MachineBlocks.register(modEventBus);
 
         REGILITE.register(modEventBus);

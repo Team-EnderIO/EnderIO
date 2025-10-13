@@ -2,7 +2,7 @@ package com.enderio.enderio.compat.jade;
 
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.client.content.conduits.model.facades.FacadeUtil;
-import com.enderio.enderio.init.ConduitBlocks;
+import com.enderio.enderio.init.EIOBlocks;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IWailaClientRegistration;
 import snownee.jade.api.IWailaPlugin;
@@ -16,7 +16,7 @@ public class EIOConduitsJadePlugin implements IWailaPlugin {
     @Override
     public void registerClient(IWailaClientRegistration registration) {
         // Show the correct conduit (or facade item)
-        registration.usePickedResult(ConduitBlocks.CONDUIT_BUNDLE.get());
+        registration.usePickedResult(EIOBlocks.CONDUIT_BUNDLE.get());
 
         // Completely replace the block accessor with the facade block if it exists
         registration.addRayTraceCallback((hitResult, accessor, originalAccessor) -> {

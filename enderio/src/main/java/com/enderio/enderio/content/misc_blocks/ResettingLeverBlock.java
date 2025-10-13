@@ -24,6 +24,14 @@ public class ResettingLeverBlock extends LeverBlock {
         this.inverted = inverted;
     }
 
+    public int delay() {
+        return delay;
+    }
+
+    public boolean inverted() {
+        return inverted;
+    }
+
     @Override
     protected InteractionResult useWithoutItem(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, BlockHitResult pHit) {
         if (!pState.getValue(POWERED)) {
