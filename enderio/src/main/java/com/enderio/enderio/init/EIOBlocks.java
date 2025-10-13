@@ -239,6 +239,25 @@ public class EIOBlocks {
 
     // endregion
 
+    // region Glass Blocks
+
+    public static final Map<GlassIdentifier, GlassBlocks> GLASS_BLOCKS = fillGlassMap();
+
+    private static Map<GlassIdentifier, GlassBlocks> fillGlassMap() {
+        Map<GlassIdentifier, GlassBlocks> map = new HashMap<>();
+        for (GlassLighting lighting : GlassLighting.values()) {
+            for (GlassCollisionPredicate collisionPredicate : GlassCollisionPredicate.values()) {
+                for (Boolean isFused : new boolean[] { false, true }) {
+                    GlassIdentifier identifier = new GlassIdentifier(lighting, collisionPredicate, isFused);
+                    map.put(identifier, new GlassBlocks(BLOCKS, ITEMS, identifier));
+                }
+            }
+        }
+        return map;
+    }
+
+    // endregion
+
     private static <B extends Block> DeferredBlock<B> registerWithItem(String name, Function<BlockBehaviour.Properties, ? extends B> func, BlockBehaviour.Properties props) {
         var blockHolder = BLOCKS.<B>registerBlock(name, func, props);
         ITEMS.registerSimpleBlockItem(blockHolder);
@@ -249,25 +268,6 @@ public class EIOBlocks {
 
     private static final BlockRegistry BLOCK_REGISTRY = EnderIO.REGILITE.blockRegistry();
     private static final ItemRegistry ITEM_REGISTRY = EnderIO.REGILITE.itemRegistry();
-
-    // endregion
-
-    // region Fused Quartz/Glass
-
-    public static final Map<GlassIdentifier, GlassBlocks> GLASS_BLOCKS = fillGlassMap();
-
-    private static Map<GlassIdentifier, GlassBlocks> fillGlassMap() {
-        Map<GlassIdentifier, GlassBlocks> map = new HashMap<>();
-        for (GlassLighting lighting : GlassLighting.values()) {
-            for (GlassCollisionPredicate collisionPredicate : GlassCollisionPredicate.values()) {
-                for (Boolean isFused : new boolean[] { false, true }) {
-                    GlassIdentifier identifier = new GlassIdentifier(lighting, collisionPredicate, isFused);
-                    map.put(identifier, new GlassBlocks(BLOCK_REGISTRY, ITEM_REGISTRY, identifier));
-                }
-            }
-        }
-        return map;
-    }
 
     // endregion
 

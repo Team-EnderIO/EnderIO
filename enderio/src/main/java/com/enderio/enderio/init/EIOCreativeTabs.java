@@ -4,36 +4,28 @@ import com.enderio.core.common.item.CreativeTabVariants;
 import com.enderio.core.common.item.ICustomCreativeTabEntries;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.content.broken_spawner.BrokenSpawnerItem;
+import com.enderio.enderio.content.glass.FusedQuartzBlock;
+import com.enderio.enderio.content.paint.block.PaintedBlock;
 import com.enderio.enderio.content.tools.vials.SoulVialItem;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.ItemLike;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-import java.util.Set;
-import java.util.function.Supplier;
+import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public class EIOCreativeTabs {
-    private static final Set<Supplier<? extends ItemLike>> EXCLUSIONS = Set.of(
-        EIOBlocks.PAINTED_FENCE,
-        EIOBlocks.PAINTED_FENCE_GATE,
-        EIOBlocks.PAINTED_SAND,
-        EIOBlocks.PAINTED_STAIRS,
-        EIOBlocks.PAINTED_CRAFTING_TABLE,
-        EIOBlocks.PAINTED_REDSTONE_BLOCK,
-        EIOBlocks.PAINTED_TRAPDOOR,
-        EIOBlocks.PAINTED_WOODEN_PRESSURE_PLATE,
-        EIOBlocks.PAINTED_SLAB,
-        EIOBlocks.PAINTED_GLOWSTONE,
-        EIOBlocks.PAINTED_WALL
+    private static final List<Predicate<Item>> EXCLUSIONS_PREDICATE = List.of(
+        i -> i instanceof BlockItem blockItem && blockItem.getBlock() instanceof PaintedBlock
     );
 
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, EnderIO.MOD_ID);
@@ -83,7 +75,7 @@ public class EIOCreativeTabs {
         for (var entry : items.getEntries()) {
             var item = entry.get();
 
-            if (EXCLUSIONS.stream().anyMatch(i -> i.get().asItem() == item)) {
+            if (EXCLUSIONS_PREDICATE.stream().anyMatch(p -> p.test(item))) {
                 continue;
             }
 

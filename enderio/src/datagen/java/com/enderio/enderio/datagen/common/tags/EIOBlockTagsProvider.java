@@ -1,6 +1,7 @@
 package com.enderio.enderio.datagen.common.tags;
 
 import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.enderio.content.glass.GlassLighting;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.MachineBlocks;
@@ -116,6 +117,7 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
         tag(EIOTags.Blocks.BLOCKS_END_STEEL).add(EIOBlocks.END_STEEL_BLOCK.get());
 
         addPaintedBlocks();
+        addGlassBlocks();
     }
 
     private void addPaintedBlocks() {
@@ -142,5 +144,31 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
         tag(BlockTags.WOODEN_PRESSURE_PLATES).add(EIOBlocks.PAINTED_WOODEN_PRESSURE_PLATE.get());
         tag(BlockTags.WOODEN_SLABS).add(EIOBlocks.PAINTED_SLAB.get());
         tag(BlockTags.WALLS).add(EIOBlocks.PAINTED_WALL.get());
+    }
+
+    private void addGlassBlocks() {
+        var fusedQuartzTag = tag(EIOTags.Blocks.FUSED_QUARTZ);
+        var enlightenedFusedQuartzTag = tag(EIOTags.Blocks.ENLIGHTENED_FUSED_QUARTZ);
+        var darkFusedQuartzTag = tag(EIOTags.Blocks.DARK_FUSED_QUARTZ);
+        var clearGlassTag = tag(EIOTags.Blocks.CLEAR_GLASS);
+
+        for (var glassBlocks : EIOBlocks.GLASS_BLOCKS.values()) {
+            for (var glassBlock : glassBlocks.getAllBlocks().toList()) {
+                var block = glassBlock.get();
+                if (block.glassIdentifier().explosionResistance()) {
+                    fusedQuartzTag.add(block);
+
+                    if (block.glassIdentifier().lighting() == GlassLighting.EMITTING) {
+                        enlightenedFusedQuartzTag.add(block);
+                    }
+
+                    if (block.glassIdentifier().lighting() == GlassLighting.BLOCKING) {
+                        darkFusedQuartzTag.add(block);
+                    }
+                } else {
+                    clearGlassTag.add(block);
+                }
+            }
+        }
     }
 }

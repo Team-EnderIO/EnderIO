@@ -1,6 +1,7 @@
 package com.enderio.enderio.datagen.common.tags;
 
 import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.enderio.content.glass.GlassLighting;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOItems;
@@ -25,8 +26,8 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
-        // copy(EIOTags.Blocks.CLEAR_GLASS, EIOTags.Items.CLEAR_GLASS);
-        // copy(EIOTags.Blocks.FUSED_QUARTZ, EIOTags.Items.FUSED_QUARTZ);
+        copy(EIOTags.Blocks.CLEAR_GLASS, EIOTags.Items.CLEAR_GLASS);
+        copy(EIOTags.Blocks.FUSED_QUARTZ, EIOTags.Items.FUSED_QUARTZ);
 
         addDustsTags();
         addIngotTags();
@@ -35,16 +36,16 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
 
         tag(Tags.Items.STORAGE_BLOCKS)
             .addTag(EIOTags.Items.STORAGE_BLOCKS_AMETHYST)
-                .addTag(EIOTags.Items.STORAGE_BLOCKS_QUARTZ)
-                .addTag(EIOTags.Items.BLOCKS_CONDUCTIVE_ALLOY)
-                .addTag(EIOTags.Items.BLOCKS_COPPER_ALLOY)
-                .addTag(EIOTags.Items.BLOCKS_DARK_STEEL)
-                .addTag(EIOTags.Items.BLOCKS_END_STEEL)
-                .addTag(EIOTags.Items.BLOCKS_ENERGETIC_ALLOY)
-                .addTag(EIOTags.Items.BLOCKS_PULSATING_ALLOY)
-                .addTag(EIOTags.Items.BLOCKS_REDSTONE_ALLOY)
-                .addTag(EIOTags.Items.BLOCKS_SOULARIUM)
-                .addTag(EIOTags.Items.BLOCKS_VIBRANT_ALLOY);
+            .addTag(EIOTags.Items.STORAGE_BLOCKS_QUARTZ)
+            .addTag(EIOTags.Items.BLOCKS_CONDUCTIVE_ALLOY)
+            .addTag(EIOTags.Items.BLOCKS_COPPER_ALLOY)
+            .addTag(EIOTags.Items.BLOCKS_DARK_STEEL)
+            .addTag(EIOTags.Items.BLOCKS_END_STEEL)
+            .addTag(EIOTags.Items.BLOCKS_ENERGETIC_ALLOY)
+            .addTag(EIOTags.Items.BLOCKS_PULSATING_ALLOY)
+            .addTag(EIOTags.Items.BLOCKS_REDSTONE_ALLOY)
+            .addTag(EIOTags.Items.BLOCKS_SOULARIUM)
+            .addTag(EIOTags.Items.BLOCKS_VIBRANT_ALLOY);
 
         addCrystalTags();
         addGearTags();
@@ -230,15 +231,32 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
     }
 
     private void addBlockItemTags() {
-        tag(EIOTags.Items.BLOCKS_COPPER_ALLOY).add(EIOBlocks.COPPER_ALLOY_BLOCK.asItem());
-        tag(EIOTags.Items.BLOCKS_ENERGETIC_ALLOY).add(EIOBlocks.ENERGETIC_ALLOY_BLOCK.asItem());
-        tag(EIOTags.Items.BLOCKS_VIBRANT_ALLOY).add(EIOBlocks.VIBRANT_ALLOY_BLOCK.asItem());
-        tag(EIOTags.Items.BLOCKS_REDSTONE_ALLOY).add(EIOBlocks.REDSTONE_ALLOY_BLOCK.asItem());
-        tag(EIOTags.Items.BLOCKS_CONDUCTIVE_ALLOY).add(EIOBlocks.CONDUCTIVE_ALLOY_BLOCK.asItem());
-        tag(EIOTags.Items.BLOCKS_PULSATING_ALLOY).add(EIOBlocks.PULSATING_ALLOY_BLOCK.asItem());
-        tag(EIOTags.Items.BLOCKS_DARK_STEEL).add(EIOBlocks.DARK_STEEL_BLOCK.asItem());
-        tag(EIOTags.Items.BLOCKS_SOULARIUM).add(EIOBlocks.SOULARIUM_BLOCK.asItem());
-        tag(EIOTags.Items.BLOCKS_END_STEEL).add(EIOBlocks.END_STEEL_BLOCK.asItem());
+        copy(EIOTags.Blocks.BLOCKS_COPPER_ALLOY, EIOTags.Items.BLOCKS_COPPER_ALLOY);
+        copy(EIOTags.Blocks.BLOCKS_ENERGETIC_ALLOY, EIOTags.Items.BLOCKS_ENERGETIC_ALLOY);
+        copy(EIOTags.Blocks.BLOCKS_VIBRANT_ALLOY, EIOTags.Items.BLOCKS_VIBRANT_ALLOY);
+        copy(EIOTags.Blocks.BLOCKS_REDSTONE_ALLOY, EIOTags.Items.BLOCKS_REDSTONE_ALLOY);
+        copy(EIOTags.Blocks.BLOCKS_CONDUCTIVE_ALLOY, EIOTags.Items.BLOCKS_CONDUCTIVE_ALLOY);
+        copy(EIOTags.Blocks.BLOCKS_PULSATING_ALLOY, EIOTags.Items.BLOCKS_PULSATING_ALLOY);
+        copy(EIOTags.Blocks.BLOCKS_DARK_STEEL, EIOTags.Items.BLOCKS_DARK_STEEL);
+        copy(EIOTags.Blocks.BLOCKS_SOULARIUM, EIOTags.Items.BLOCKS_SOULARIUM);
+        copy(EIOTags.Blocks.BLOCKS_END_STEEL, EIOTags.Items.BLOCKS_END_STEEL);
+
+        copy(EIOTags.Blocks.FUSED_QUARTZ, EIOTags.Items.FUSED_QUARTZ);
+        copy(EIOTags.Blocks.ENLIGHTENED_FUSED_QUARTZ, EIOTags.Items.ENLIGHTENED_FUSED_QUARTZ);
+        copy(EIOTags.Blocks.DARK_FUSED_QUARTZ, EIOTags.Items.DARK_FUSED_QUARTZ);
+        copy(EIOTags.Blocks.CLEAR_GLASS, EIOTags.Items.CLEAR_GLASS);
+
+        // TODO: This is a nightmare
+        for (var entry : EIOBlocks.GLASS_BLOCKS.entrySet()) {
+            var glassIdentifier = entry.getKey();
+            var glassBlocks = entry.getValue();
+
+            var tag = tag(EIOTags.Items.GLASS_TAGS.get(glassIdentifier));
+            for (var glassBlock : glassBlocks.getAllBlocks().toList()) {
+                var item = glassBlock.asItem();
+                tag.add(item);
+            }
+        }
 
         tag(Tags.Items.CHAINS).add(EIOBlocks.SOUL_CHAIN.asItem());
     }

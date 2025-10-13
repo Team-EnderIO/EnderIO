@@ -116,13 +116,13 @@ public class AlloyRecipeProvider extends SubRecipeProvider {
             GlassIdentifier identifier = glassGroup.getKey();
             if (identifier.collisionPredicate() == GlassCollisionPredicate.NONE) {
                 FusedQuartzBlock clear = glassGroup.getValue().CLEAR.get();
-                var mainIngredient = identifier.explosion_resistance() ? SizedIngredient.of(Tags.Items.GEMS_QUARTZ, 4)
+                var mainIngredient = identifier.explosionResistance() ? SizedIngredient.of(Tags.Items.GEMS_QUARTZ, 4)
                         : SizedIngredient.of(Tags.Items.GLASS_BLOCKS_COLORLESS, 1);
                 @Nullable
-                var altIngredient = identifier.explosion_resistance()
+                var altIngredient = identifier.explosionResistance()
                         ? SizedIngredient.of(EIOTags.Items.STORAGE_BLOCKS_QUARTZ, 1)
                         : null;
-                var energy = identifier.explosion_resistance() ? 6400 : 3200;
+                var energy = identifier.explosionResistance() ? 6400 : 3200;
                 if (identifier.lighting() == GlassLighting.NONE) {
                     glass(clear, mainIngredient, altIngredient, energy, 0.3f, recipeOutput);
                 } else {

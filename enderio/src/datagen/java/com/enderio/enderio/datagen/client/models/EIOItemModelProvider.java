@@ -252,6 +252,16 @@ public class EIOItemModelProvider extends ItemModelProvider {
             withExistingParent(lever.getId().toString(), mcLoc("item/lever"));
         }
 
+        // Glass Blocks
+        var fusedQuartzModel = modLoc("block/fused_quartz");
+        var clearGlassModel = modLoc("block/clear_glass");
+
+        for (var glassBlocks : EIOBlocks.GLASS_BLOCKS.values()) {
+            for (var block : glassBlocks.getAllBlocks().toList()) {
+                withExistingParent(block.getId().toString(), block.get().glassIdentifier().explosionResistance() ? fusedQuartzModel : clearGlassModel);
+            }
+        }
+
         // Miscellaneous
         basicItem(EIOBlocks.SOUL_CHAIN.asItem());
         withExistingParent(EIOBlocks.ENDERMAN_HEAD.getId().toString(), mcLoc("item/template_skull"));

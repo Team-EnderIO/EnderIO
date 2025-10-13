@@ -253,6 +253,12 @@ public class EnderIOClient {
             EIOBlocks.PAINTED_SLAB.get(),
             EIOBlocks.PAINTED_GLOWSTONE.get(),
             EIOBlocks.PAINTED_WALL.get());
+
+        for (var glassBlocks : EIOBlocks.GLASS_BLOCKS.values()) {
+            for (var entry : glassBlocks.COLORS.entrySet()) {
+                event.register((state, level, pos, tintIndex) -> entry.getKey().getMapColor().col, entry.getValue().get());
+            }
+        }
     }
 
     @SubscribeEvent
@@ -275,6 +281,12 @@ public class EnderIOClient {
             EIOBlocks.PAINTED_SLAB.get(),
             EIOBlocks.PAINTED_GLOWSTONE.get(),
             EIOBlocks.PAINTED_WALL.get());
+
+        for (var glassBlocks : EIOBlocks.GLASS_BLOCKS.values()) {
+            for (var entry : glassBlocks.COLORS.entrySet()) {
+                event.register((stack, tintIndex) -> entry.getKey().getMapColor().col, entry.getValue().asItem());
+            }
+        }
     }
 
     @SubscribeEvent

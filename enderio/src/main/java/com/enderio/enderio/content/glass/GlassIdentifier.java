@@ -1,17 +1,17 @@
 package com.enderio.enderio.content.glass;
 
-public record GlassIdentifier(GlassLighting lighting, GlassCollisionPredicate collisionPredicate, boolean explosion_resistance) {
+public record GlassIdentifier(GlassLighting lighting, GlassCollisionPredicate collisionPredicate, boolean explosionResistance) {
     public GlassIdentifier withoutLight() {
-        return new GlassIdentifier(GlassLighting.NONE, collisionPredicate, explosion_resistance);
+        return new GlassIdentifier(GlassLighting.NONE, collisionPredicate, explosionResistance);
     }
 
     public GlassIdentifier withCollision(GlassCollisionPredicate collisionPredicate) {
-        return new GlassIdentifier(lighting, collisionPredicate, explosion_resistance);
+        return new GlassIdentifier(lighting, collisionPredicate, explosionResistance);
     }
 
     public String glassName() {
         StringBuilder main = new StringBuilder();
-        if (explosion_resistance()) {
+        if (explosionResistance()) {
             main.append("fused_quartz");
         } else {
             main.append("clear_glass");

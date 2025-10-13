@@ -89,6 +89,16 @@ public class EIOBlockStateProvider extends BlockStateProvider {
             });
         }
 
+        // Glass Blocks
+        ModelFile fusedQuartzModel = models().getExistingFile(modLoc("block/fused_quartz"));
+        ModelFile clearGlassModel = models().getExistingFile(modLoc("block/clear_glass"));
+
+        for (var glassBlocks : EIOBlocks.GLASS_BLOCKS.values()) {
+            for (var block : glassBlocks.getAllBlocks().toList()) {
+                simpleBlock(block.get(), block.get().glassIdentifier().explosionResistance() ? fusedQuartzModel : clearGlassModel);
+            }
+        }
+
         // Miscellaneous
         simpleBlock(EIOBlocks.CONDUIT_BUNDLE.get(), models().getBuilder(EIOBlocks.CONDUIT_BUNDLE.getId().toString()).customLoader(ConduitModelBuilder::begin).end());
         chainBlock(EIOBlocks.SOUL_CHAIN.get());

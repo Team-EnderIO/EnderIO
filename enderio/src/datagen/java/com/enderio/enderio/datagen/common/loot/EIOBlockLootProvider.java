@@ -70,6 +70,13 @@ public class EIOBlockLootProvider extends BlockLootSubProvider {
             dropSelf(lever.get());
         }
 
+        // Glass blocks
+        for (var glassBlocks : EIOBlocks.GLASS_BLOCKS.values()) {
+            for (var glassBlock : glassBlocks.getAllBlocks().toList()) {
+                dropSelf(glassBlock.get());
+            }
+        }
+
         // Miscellaneous
         dropSelf(EIOBlocks.SOUL_CHAIN.get());
         dropSelf(EIOBlocks.ENDERMAN_HEAD.get());

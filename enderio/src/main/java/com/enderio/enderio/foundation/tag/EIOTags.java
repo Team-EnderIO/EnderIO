@@ -145,6 +145,8 @@ public class EIOTags {
 
     public static class Blocks {
         public static final TagKey<Block> FUSED_QUARTZ = commonTag("glass_blocks/fused_quartz");
+        public static final TagKey<Block> ENLIGHTENED_FUSED_QUARTZ = commonTag("glass_blocks/enlighted_fused_quartz");
+        public static final TagKey<Block> DARK_FUSED_QUARTZ = commonTag("glass_blocks/dark_fused_quartz");
         public static final TagKey<Block> CLEAR_GLASS = commonTag("glass_blocks/clear_glass");
 
         public static final TagKey<Block> BLOCKS_CONDUCTIVE_ALLOY = commonTag("storage_blocks/conductive_alloy");
