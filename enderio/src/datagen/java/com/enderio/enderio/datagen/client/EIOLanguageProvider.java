@@ -605,6 +605,19 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOBlocks.DARK_STEEL_TRAPDOOR.get(), "Dark Steel Trapdoor");
         add(EIOBlocks.END_STEEL_BARS.get(), "End Steel Bars");
         add(EIOBlocks.REINFORCED_OBSIDIAN.get(), "Reinforced Obsidian");
+        
+        // Painted Blocks
+        add(EIOBlocks.PAINTED_FENCE.get(), "Painted Fence");
+        add(EIOBlocks.PAINTED_FENCE_GATE.get(), "Painted Fence Gate");
+        add(EIOBlocks.PAINTED_SAND.get(), "Painted Sand");
+        add(EIOBlocks.PAINTED_STAIRS.get(), "Painted Stairs");
+        add(EIOBlocks.PAINTED_CRAFTING_TABLE.get(), "Painted Crafting Table");
+        add(EIOBlocks.PAINTED_REDSTONE_BLOCK.get(), "Painted Redstone Block");
+        add(EIOBlocks.PAINTED_TRAPDOOR.get(), "Painted Trapdoor");
+        add(EIOBlocks.PAINTED_WOODEN_PRESSURE_PLATE.get(), "Painted Wooden Pressure Plate");
+        add(EIOBlocks.PAINTED_SLAB.get(), "Painted Slab");
+        add(EIOBlocks.PAINTED_GLOWSTONE.get(), "Painted Glowstone");
+        add(EIOBlocks.PAINTED_WALL.get(), "Painted Wall");
 
         // Resetting Levers
         for (var lever : EIOBlocks.RESETTING_LEVERS) {

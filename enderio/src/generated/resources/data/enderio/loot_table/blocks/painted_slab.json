@@ -3,21 +3,24 @@
   "pools": [
     {
       "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:inverted",
+          "term": {
+            "block": "enderio:painted_slab",
+            "condition": "minecraft:block_state_property",
+            "properties": {
+              "type": "top"
+            }
+          }
+        },
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
       "entries": [
         {
           "type": "minecraft:item",
-          "conditions": [
-            {
-              "condition": "minecraft:inverted",
-              "term": {
-                "block": "enderio:painted_slab",
-                "condition": "minecraft:block_state_property",
-                "properties": {
-                  "type": "top"
-                }
-              }
-            }
-          ],
           "functions": [
             {
               "function": "enderio:copy_paint",
@@ -31,21 +34,24 @@
     },
     {
       "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:inverted",
+          "term": {
+            "block": "enderio:painted_slab",
+            "condition": "minecraft:block_state_property",
+            "properties": {
+              "type": "bottom"
+            }
+          }
+        },
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
       "entries": [
         {
           "type": "minecraft:item",
-          "conditions": [
-            {
-              "condition": "minecraft:inverted",
-              "term": {
-                "block": "enderio:painted_slab",
-                "condition": "minecraft:block_state_property",
-                "properties": {
-                  "type": "bottom"
-                }
-              }
-            }
-          ],
           "functions": [
             {
               "function": "enderio:copy_paint",

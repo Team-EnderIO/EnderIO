@@ -114,5 +114,33 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
         tag(EIOTags.Blocks.BLOCKS_DARK_STEEL).add(EIOBlocks.DARK_STEEL_BLOCK.get());
         tag(EIOTags.Blocks.BLOCKS_SOULARIUM).add(EIOBlocks.SOULARIUM_BLOCK.get());
         tag(EIOTags.Blocks.BLOCKS_END_STEEL).add(EIOBlocks.END_STEEL_BLOCK.get());
+
+        addPaintedBlocks();
+    }
+
+    private void addPaintedBlocks() {
+        tag(BlockTags.MINEABLE_WITH_AXE)
+            .add(EIOBlocks.PAINTED_FENCE.get())
+            .add(EIOBlocks.PAINTED_FENCE_GATE.get())
+            .add(EIOBlocks.PAINTED_STAIRS.get())
+            .add(EIOBlocks.PAINTED_CRAFTING_TABLE.get())
+            .add(EIOBlocks.PAINTED_TRAPDOOR.get())
+            .add(EIOBlocks.PAINTED_WOODEN_PRESSURE_PLATE.get())
+            .add(EIOBlocks.PAINTED_SLAB.get());
+
+        tag(BlockTags.MINEABLE_WITH_SHOVEL).add(EIOBlocks.PAINTED_SAND.get());
+
+        tag(BlockTags.MINEABLE_WITH_PICKAXE)
+            .add(EIOBlocks.PAINTED_REDSTONE_BLOCK.get())
+            .add(EIOBlocks.PAINTED_WALL.get());
+
+        tag(BlockTags.WOODEN_FENCES).add(EIOBlocks.PAINTED_FENCE.get());
+        tag(BlockTags.FENCE_GATES).add(EIOBlocks.PAINTED_FENCE_GATE.get());
+        tag(BlockTags.SAND).add(EIOBlocks.PAINTED_SAND.get());
+        tag(BlockTags.WOODEN_STAIRS).add(EIOBlocks.PAINTED_STAIRS.get());
+        tag(BlockTags.WOODEN_TRAPDOORS).add(EIOBlocks.PAINTED_TRAPDOOR.get());
+        tag(BlockTags.WOODEN_PRESSURE_PLATES).add(EIOBlocks.PAINTED_WOODEN_PRESSURE_PLATE.get());
+        tag(BlockTags.WOODEN_SLABS).add(EIOBlocks.PAINTED_SLAB.get());
+        tag(BlockTags.WALLS).add(EIOBlocks.PAINTED_WALL.get());
     }
 }

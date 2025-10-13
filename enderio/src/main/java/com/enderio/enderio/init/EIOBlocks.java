@@ -37,6 +37,7 @@ import com.enderio.regilite.data.RegiliteBlockLootProvider;
 import com.enderio.regilite.holder.RegiliteBlock;
 import com.enderio.regilite.registry.BlockRegistry;
 import com.enderio.regilite.registry.ItemRegistry;
+import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -159,6 +160,26 @@ public class EIOBlocks {
     // endregion
 
     // region Painted Blocks
+
+    public static Set<Pair<DeferredBlock<? extends Block>, Block>> PAINTED_BLOCKS = new HashSet<>();
+
+    public static final DeferredBlock<PaintedFenceBlock> PAINTED_FENCE = registerPainted("painted_fence", PaintedFenceBlock::new, Blocks.OAK_FENCE);
+    public static final DeferredBlock<PaintedFenceGateBlock> PAINTED_FENCE_GATE = registerPainted("painted_fence_gate", PaintedFenceGateBlock::new, Blocks.OAK_FENCE_GATE);
+    public static final DeferredBlock<PaintedSandBlock> PAINTED_SAND = registerPainted("painted_sand", PaintedSandBlock::new, Blocks.SAND);
+    public static final DeferredBlock<PaintedStairBlock> PAINTED_STAIRS = registerPainted("painted_stairs", PaintedStairBlock::new, Blocks.OAK_STAIRS);
+    public static final DeferredBlock<PaintedCraftingTableBlock> PAINTED_CRAFTING_TABLE = registerPainted("painted_crafting_table", PaintedCraftingTableBlock::new, Blocks.CRAFTING_TABLE);
+    public static final DeferredBlock<PaintedRedstoneBlock> PAINTED_REDSTONE_BLOCK = registerPainted("painted_redstone_block", PaintedRedstoneBlock::new, Blocks.REDSTONE_BLOCK);
+    public static final DeferredBlock<PaintedTrapDoorBlock> PAINTED_TRAPDOOR = registerPainted("painted_trapdoor", PaintedTrapDoorBlock::new, Blocks.OAK_TRAPDOOR);
+    public static final DeferredBlock<PaintedWoodenPressurePlateBlock> PAINTED_WOODEN_PRESSURE_PLATE = registerPainted("painted_wooden_pressure_plate", PaintedWoodenPressurePlateBlock::new, Blocks.OAK_PRESSURE_PLATE);
+    public static final DeferredBlock<PaintedSlabBlock> PAINTED_SLAB = registerPainted("painted_slab", PaintedSlabBlock::new, Blocks.OAK_SLAB);
+    public static final DeferredBlock<SinglePaintedBlock> PAINTED_GLOWSTONE = registerPainted("painted_glowstone", SinglePaintedBlock::new, Blocks.GLOWSTONE);
+    public static final DeferredBlock<PaintedWallBlock> PAINTED_WALL = registerPainted("painted_wall", PaintedWallBlock::new, Blocks.COBBLESTONE_WALL);
+
+    private static <B extends Block> DeferredBlock<B> registerPainted(String name, Function<BlockBehaviour.Properties, B> factory, Block reference) {
+        var blockHolder = registerWithItem(name, factory, BlockBehaviour.Properties.ofFullCopy(reference).noOcclusion());
+        PAINTED_BLOCKS.add(Pair.of(blockHolder, reference));
+        return blockHolder;
+    }
 
     // endregion
 
@@ -300,45 +321,6 @@ public class EIOBlocks {
     public static final RegiliteBlock<SilentWeightedPressurePlateBlock> SILENT_LIGHT_WEIGHTED_PRESSURE_PLATE = silentWeightedPressurePlateBlock(
         (WeightedPressurePlateBlock) Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE);
 
-    // endregion
-
-    private static final List<Supplier<? extends Block>> PAINTED = new ArrayList<>();
-
-    public static final RegiliteBlock<PaintedFenceBlock> PAINTED_FENCE = paintedBlock("painted_fence", PaintedFenceBlock::new, Blocks.OAK_FENCE,
-        BlockTags.WOODEN_FENCES, BlockTags.MINEABLE_WITH_AXE);
-
-    public static final RegiliteBlock<PaintedFenceGateBlock> PAINTED_FENCE_GATE = paintedBlock("painted_fence_gate", PaintedFenceGateBlock::new,
-        Blocks.OAK_FENCE_GATE, BlockTags.FENCE_GATES, BlockTags.MINEABLE_WITH_AXE);
-
-    public static final RegiliteBlock<PaintedSandBlock> PAINTED_SAND = paintedBlock("painted_sand", PaintedSandBlock::new, Blocks.SAND, BlockTags.SAND,
-        BlockTags.MINEABLE_WITH_SHOVEL);
-
-    public static final RegiliteBlock<PaintedStairBlock> PAINTED_STAIRS = paintedBlock("painted_stairs", PaintedStairBlock::new, Blocks.OAK_STAIRS, Direction.WEST,
-        BlockTags.WOODEN_STAIRS, BlockTags.MINEABLE_WITH_AXE);
-
-    public static final RegiliteBlock<PaintedCraftingTableBlock> PAINTED_CRAFTING_TABLE = paintedBlock("painted_crafting_table", PaintedCraftingTableBlock::new,
-        Blocks.CRAFTING_TABLE, BlockTags.MINEABLE_WITH_AXE);
-
-    public static final RegiliteBlock<PaintedRedstoneBlock> PAINTED_REDSTONE_BLOCK = paintedBlock("painted_redstone_block", PaintedRedstoneBlock::new,
-        Blocks.REDSTONE_BLOCK, BlockTags.MINEABLE_WITH_PICKAXE);
-
-    public static final RegiliteBlock<PaintedTrapDoorBlock> PAINTED_TRAPDOOR = paintedBlock("painted_trapdoor", PaintedTrapDoorBlock::new, Blocks.OAK_TRAPDOOR,
-        BlockTags.WOODEN_TRAPDOORS, BlockTags.MINEABLE_WITH_AXE);
-
-    public static final RegiliteBlock<PaintedWoodenPressurePlateBlock> PAINTED_WOODEN_PRESSURE_PLATE = paintedBlock("painted_wooden_pressure_plate",
-        PaintedWoodenPressurePlateBlock::new, Blocks.OAK_PRESSURE_PLATE, BlockTags.WOODEN_PRESSURE_PLATES, BlockTags.MINEABLE_WITH_AXE);
-
-    public static final RegiliteBlock<PaintedSlabBlock> PAINTED_SLAB = paintedBlock("painted_slab", PaintedSlabBlock::new, PaintedSlabBlockItem::new,
-        Blocks.OAK_SLAB, BlockTags.WOODEN_SLABS, BlockTags.MINEABLE_WITH_AXE).setLootTable(DecorLootTable::paintedSlab);
-
-    public static final RegiliteBlock<SinglePaintedBlock> PAINTED_GLOWSTONE = paintedBlock("painted_glowstone", SinglePaintedBlock::new,
-        Blocks.GLOWSTONE);
-
-    public static final RegiliteBlock<PaintedWallBlock> PAINTED_WALL = paintedBlock("painted_wall", PaintedWallBlock::new, Blocks.COBBLESTONE_WALL,
-        BlockTags.WALLS, BlockTags.MINEABLE_WITH_PICKAXE);
-
-    // endregion
-
     private static RegiliteBlock<EIOPressurePlateBlock> pressurePlateBlock(String name, ResourceLocation texture, EIOPressurePlateBlock.Detector type,
         boolean silent) {
 
@@ -397,40 +379,6 @@ public class EIOBlocks {
                 .setModelProvider((prov, ctx) -> prov.withExistingParent(ctx.getName(), upModelLoc))
                 .setTab(EIOCreativeTabs.MAIN)
             );
-    }
-
-    @SafeVarargs
-    private static <T extends Block> RegiliteBlock<T> paintedBlock(String name, Function<BlockBehaviour.Properties, T> blockFactory,
-        Block copyFrom, TagKey<Block>... tags) {
-        return paintedBlock(name, blockFactory, copyFrom, null, tags);
-    }
-
-    @SafeVarargs
-    private static <T extends Block> RegiliteBlock<T> paintedBlock(String name, Function<BlockBehaviour.Properties, T> blockFactory,
-        Block copyFrom, @Nullable Direction itemTextureRotation, TagKey<Block>... tags) {
-        return paintedBlock(name, blockFactory, PaintedBlockItem::new, copyFrom, itemTextureRotation, tags);
-    }
-
-    @SafeVarargs
-    private static <T extends Block> RegiliteBlock<T> paintedBlock(String name, Function<BlockBehaviour.Properties, T> blockFactory,
-        BiFunction<? super T, Item.Properties, ? extends BlockItem> itemFactory, Block copyFrom, TagKey<Block>... tags) {
-        return paintedBlock(name, blockFactory, itemFactory, copyFrom, null, tags);
-    }
-
-    @SafeVarargs
-    private static <T extends Block> RegiliteBlock<T> paintedBlock(String name, Function<BlockBehaviour.Properties, T> blockFactory,
-        BiFunction<? super T, Item.Properties, ? extends BlockItem> itemFactory, Block copyFrom, @Nullable Direction itemTextureRotation,
-        TagKey<Block>... tags) {
-
-        return BLOCK_REGISTRY
-            .registerBlock(name, blockFactory, BlockBehaviour.Properties.ofFullCopy(copyFrom).noOcclusion())
-            .setBlockStateProvider((prov, ctx) -> EIOBlockState.paintedBlock(name, prov, ctx.get(), copyFrom, itemTextureRotation))
-            .setLootTable(DecorLootTable::withPaint)
-            .addBlockTags(tags)
-            .createBlockItem(
-                ITEM_REGISTRY,
-                b -> itemFactory.apply(b, new Item.Properties()),
-                item -> {});
     }
 
     public static void register(IEventBus bus) {

@@ -242,6 +242,11 @@ public class EIOItemModelProvider extends ItemModelProvider {
         flatBlockItem(EIOBlocks.END_STEEL_BARS.get());
         simpleBlockItem(EIOBlocks.REINFORCED_OBSIDIAN.get());
 
+        // Painted Blocks
+        for (var pair : EIOBlocks.PAINTED_BLOCKS) {
+            simpleBlockItem(pair.left().get());
+        }
+
         // Resetting Levers
         for (var lever : EIOBlocks.RESETTING_LEVERS) {
             withExistingParent(lever.getId().toString(), mcLoc("item/lever"));

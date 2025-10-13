@@ -2,7 +2,9 @@ package com.enderio.enderio.datagen.client.models;
 
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.content.misc_blocks.ResettingLeverBlock;
+import com.enderio.enderio.content.paint.block.PaintedStairBlock;
 import com.enderio.enderio.data.model.block.ConduitModelBuilder;
+import com.enderio.enderio.data.model.block.PaintedBlockModelBuilder;
 import com.enderio.enderio.init.EIOBlocks;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -50,6 +52,22 @@ public class EIOBlockStateProvider extends BlockStateProvider {
         paneBlockWithRenderType(EIOBlocks.END_STEEL_BARS.get(), blockTexture(EIOBlocks.END_STEEL_BARS.get()), blockTexture(EIOBlocks.END_STEEL_BARS.get()),
             "cutout_mipped");
         simpleBlock(EIOBlocks.REINFORCED_OBSIDIAN.get());
+
+        // Painted Blocks
+        for (var pair : EIOBlocks.PAINTED_BLOCKS) {
+            Block block = pair.left().get();
+            Direction itemTextureDirection = Direction.NORTH;
+
+            if (block instanceof PaintedStairBlock) {
+                itemTextureDirection = Direction.WEST;
+            }
+
+            simpleBlock(pair.left().get(), models().getBuilder(name(pair.left().get()))
+                .customLoader(PaintedBlockModelBuilder::begin)
+                .reference(pair.right())
+                .itemTextureRotation(itemTextureDirection)
+                .end());
+        }
 
         // Resetting Levers
         var baseModel = models().getExistingFile(mcLoc("block/lever"));
