@@ -9,25 +9,6 @@ import org.jetbrains.annotations.Nullable;
 
 public class EIOBlockState {
 
-    public static void paneBlock(BlockStateProvider prov, DataGenContext<Block, ? extends IronBarsBlock> ctx) {
-        prov.paneBlock(ctx.get(),
-            prov.models()
-                .panePost(ctx.getName().concat("_post"), prov.blockTexture(ctx.get()), prov.blockTexture(ctx.get()))
-                .renderType(prov.mcLoc("cutout_mipped")),
-            prov.models()
-                .paneSide(ctx.getName().concat("_side"), prov.blockTexture(ctx.get()), prov.blockTexture(ctx.get()))
-                .renderType(prov.mcLoc("cutout_mipped")),
-            prov.models()
-                .paneSideAlt(ctx.getName().concat("_side_alt"), prov.blockTexture(ctx.get()), prov.blockTexture(ctx.get()))
-                .renderType(prov.mcLoc("cutout_mipped")),
-            prov.models()
-                .paneNoSide(ctx.getName().concat("_no_side"), prov.blockTexture(ctx.get()))
-                .renderType(prov.mcLoc("cutout_mipped")),
-            prov.models()
-                .paneNoSideAlt(ctx.getName().concat("_no_side_alt"), prov.blockTexture(ctx.get()))
-                .renderType(prov.mcLoc("cutout_mipped")));
-    }
-
     public static <T extends Block> void paintedBlock(String name, BlockStateProvider prov, T ctx, Block toCopy, @Nullable Direction itemTextureRotation) {
         prov.simpleBlock(ctx, prov.models().getBuilder(name)
             .customLoader(PaintedBlockModelBuilder::begin)

@@ -3,5 +3,5 @@
 # are changed when only line endings change.
 * text=auto
 text eol=crlf
-src/generated/**/.cache/cache text eol=lf
-src/generated/**/*.json text eol=lf
+src/generated/**/.cache/cache text eol=lf linguist-generated=true
+src/generated/**/*.json text eol=lf linguist-generated=true

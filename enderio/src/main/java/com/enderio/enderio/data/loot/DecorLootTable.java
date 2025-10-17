@@ -21,21 +21,4 @@ public class DecorLootTable {
                 LootItem.lootTableItem(block).apply(CopyPaintFunction.copyPrimary())
             )));
     }
-
-    public static <T extends Block> void paintedSlab(RegiliteBlockLootProvider loot, T block) {
-        loot.add(block, LootTable
-            .lootTable()
-            .withPool(new LootPool.Builder().add(
-                LootItem
-                    .lootTableItem(block)
-                    .apply(CopyPaintFunction.copyPrimary())
-                .when(InvertedLootItemCondition.invert(new LootItemBlockStatePropertyCondition.Builder(block).setProperties(
-                    StatePropertiesPredicate.Builder.properties().hasProperty(SlabBlock.TYPE, SlabType.TOP))))))
-            .withPool(new LootPool.Builder().add(
-                LootItem
-                    .lootTableItem(block)
-                    .apply(CopyPaintFunction.copySecondary())
-                .when(InvertedLootItemCondition.invert(new LootItemBlockStatePropertyCondition.Builder(block).setProperties(
-                    StatePropertiesPredicate.Builder.properties().hasProperty(SlabBlock.TYPE, SlabType.BOTTOM)))))));
-    }
 }

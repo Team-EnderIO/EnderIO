@@ -206,6 +206,12 @@ public class EIOBlocks {
 
     // endregion
 
+    // region Pressure Plates
+
+
+
+    // endregion
+
     // region Miscellaneous
 
     // Note: Due to the unique nature of the conduit bundle, all block items are registered in EIOItems instead.
