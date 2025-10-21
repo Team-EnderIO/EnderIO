@@ -26,7 +26,7 @@ public class EIOConduitsJadePlugin implements IWailaPlugin {
                         && FacadeUtil.areFacadesVisible(blockAccessor.getPlayer())) {
                     return registration.blockAccessor()
                             .from(blockAccessor)
-                            .blockState(conduitBundle.getFacadeBlock().defaultBlockState())
+                            .fakeBlock(conduitBundle.getFacadeBlock().asItem().getDefaultInstance())
                             .build();
                 }
             }
