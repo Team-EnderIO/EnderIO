@@ -113,6 +113,9 @@ dependencyResolutionManagement {
 
         maven {
             url = uri("https://maven.creeperhost.net/release")
+            content {
+                includeGroup("com.refinedmods.refinedstorage")
+            }
         }
 
         mavenLocal() {
