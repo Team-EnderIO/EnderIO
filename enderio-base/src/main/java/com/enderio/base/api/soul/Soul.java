@@ -148,6 +148,10 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) {
     }
 
     public static boolean isSameEntitySameTag(Soul soul1, Soul soul2) {
+        if (!isSameEntity(soul1, soul2)) {
+            return false;
+        }
+
         return isSameTag(soul1.entityTag(), soul2.entityTag());
     }
 
