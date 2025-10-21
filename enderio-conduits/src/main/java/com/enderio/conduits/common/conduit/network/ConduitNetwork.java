@@ -260,6 +260,8 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNode> impleme
                     removeTickingNode(node);
                 }
             }
+
+            dirtyNodes.clear();
         }
 
         if (haveConnectionsChanged) {
