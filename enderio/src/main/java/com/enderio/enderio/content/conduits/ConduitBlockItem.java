@@ -23,9 +23,11 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+import net.minecraft.client.gui.screens.Screen;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Properties;
 
 public class ConduitBlockItem extends BlockItem implements ICustomCreativeTabEntries {
 
@@ -120,10 +122,10 @@ public class ConduitBlockItem extends BlockItem implements ICustomCreativeTabEnt
         if (conduit != null) {
             conduit.value().addToTooltip(context, tooltipComponents::add, tooltipFlag);
 
-            boolean showDetailTooltip = !tooltipFlag.hasShiftDown()
+            boolean showDetailTooltip = !Screen.hasShiftDown()
                     && (conduit.value().hasAdvancedTooltip() || conduit.value().showDebugTooltip());
 
-            if (conduit.value().showDebugTooltip() && tooltipFlag.hasShiftDown()) {
+            if (conduit.value().showDebugTooltip() && Screen.hasShiftDown()) {
                 tooltipComponents.add(TooltipUtil.styledWithArgs(ConduitLang.GRAPH_TICK_RATE_TOOLTIP,
                         20 / conduit.value().networkTickRate()));
             }
