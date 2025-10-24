@@ -27,7 +27,6 @@ import net.minecraft.client.gui.screens.Screen;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Properties;
 
 public class ConduitBlockItem extends BlockItem implements ICustomCreativeTabEntries {
 
