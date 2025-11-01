@@ -94,10 +94,7 @@ public class AttractorObeliskBlockEntity extends ObeliskBlockEntity<AttractorObe
     public void setLevel(Level level) {
         super.setLevel(level);
         if (level instanceof ServerLevel sl) {
-            if (this.getMachineOwner() == null) {
-                this.setMachineOwner(UUID.randomUUID()); // Fallback
-            }
-            fakePlayer = new FakePlayer(sl, new GameProfile(getMachineOwner(), "enderio:attractor:" + worldPosition));
+            fakePlayer = new FakePlayer(sl, new GameProfile(getMachineOwnerOrRandom(), "enderio:attractor:" + worldPosition));
             fakePlayer.setPos(targetPos.x, targetPos.y, targetPos.z);
         }
     }
