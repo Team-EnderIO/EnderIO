@@ -325,6 +325,10 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
         return this.owner;
     }
 
+    public UUID getMachineOwnerOrRandom() {
+        return Objects.requireNonNullElseGet(getMachineOwner(), UUID::randomUUID);
+    }
+
     // region Resource Distribution
 
     // TODO: I kind of want to rewrite this without relying on getSelfCapability.
