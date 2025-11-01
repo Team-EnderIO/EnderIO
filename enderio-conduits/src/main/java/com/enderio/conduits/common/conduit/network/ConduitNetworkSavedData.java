@@ -33,6 +33,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -190,9 +191,10 @@ public class ConduitNetworkSavedData extends SavedData {
                 .toList() // avoid CME
                 .forEach(this::onNetworkDiscarded);
 
-        // Detect any chunk tick state changes
+        // Detect any chunk load or tick state changes
         for (var chunkPos : networksByChunk.keySet()) {
-            boolean isTicking = serverLevel.shouldTickBlocksAt(chunkPos);
+            // Checking #hasChunk to resolve GH-1177. Unsure why hasChunk changes without firing a chunk unload event.
+            boolean isTicking = serverLevel.hasChunk(ChunkPos.getX(chunkPos), ChunkPos.getZ(chunkPos)) && serverLevel.shouldTickBlocksAt(chunkPos);
             if (!tickingChunksMap.containsKey(chunkPos) || isTicking != tickingChunksMap.get(chunkPos)) {
                 tickingChunksMap.put(chunkPos, isTicking);
                 networksByChunk.get(chunkPos).forEach(n -> n.onChunkTickStatusChanged(chunkPos));
