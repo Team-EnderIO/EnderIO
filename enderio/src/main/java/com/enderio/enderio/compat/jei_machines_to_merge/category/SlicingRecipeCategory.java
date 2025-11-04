@@ -6,7 +6,7 @@ import com.enderio.enderio.compat.jei.JEIUtils;
 import com.enderio.enderio.compat.jei_machines_to_merge.util.MachineRecipeCategory;
 import com.enderio.enderio.compat.jei_machines_to_merge.util.RecipeUtil;
 import com.enderio.enderio.content.machines.slicer.SlicingRecipe;
-import com.enderio.enderio.init.MachineBlocks;
+import com.enderio.enderio.init.EIOBlocks;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -38,7 +38,7 @@ public class SlicingRecipeCategory extends MachineRecipeCategory<RecipeHolder<Sl
 
     public SlicingRecipeCategory(IGuiHelper guiHelper) {
         this.background = guiHelper.createDrawable(BG_TEXTURE, 0, 0, WIDTH, HEIGHT);
-        this.icon = guiHelper.createDrawableItemStack(new ItemStack(MachineBlocks.SLICE_AND_SPLICE.get()));
+        this.icon = guiHelper.createDrawableItemStack(new ItemStack(EIOBlocks.SLICE_AND_SPLICE.get()));
     }
 
     @Override

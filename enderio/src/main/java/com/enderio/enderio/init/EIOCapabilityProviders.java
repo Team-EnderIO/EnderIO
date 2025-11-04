@@ -52,7 +52,7 @@ public class EIOCapabilityProviders {
             EIOItems.LEVITATION_STAFF, EIOItems.ELECTROMAGNET);
         event.registerItem(Capabilities.EnergyStorage.ITEM, TravelStaffItem.ENERGY_STORAGE_PROVIDER, EIOItems.TRAVEL_STAFF);
         // Capacitor Banks
-        for (var capacitorBankItem : MachineBlocks.CAPACITOR_BANK_ITEMS.values()) {
+        for (var capacitorBankItem : EIOBlocks.CAPACITOR_BANK_ITEMS.values()) {
             event.registerItem(Capabilities.EnergyStorage.ITEM, CapacitorBankItem.ENERGY_STORAGE_PROVIDER, capacitorBankItem);
         }
 
@@ -60,7 +60,7 @@ public class EIOCapabilityProviders {
         event.registerItem(Capabilities.FluidHandler.ITEM, LevitationStaffItem.FLUID_HANDLER_PROVIDER, EIOItems.LEVITATION_STAFF);
         event.registerItem(Capabilities.FluidHandler.ITEM, ColdFireIgniter.FLUID_HANDLER_PROVIDER, EIOItems.COLD_FIRE_IGNITER);
         event.registerItem(Capabilities.FluidHandler.ITEM, FluidTankBlockItem.FLUID_HANDLER_PROVIDER,
-            MachineBlocks.FLUID_TANK_ITEM, MachineBlocks.PRESSURIZED_FLUID_TANK_ITEM);
+            EIOBlocks.FLUID_TANK_ITEM, EIOBlocks.PRESSURIZED_FLUID_TANK_ITEM);
 
         // region Filters
 
@@ -98,11 +98,11 @@ public class EIOCapabilityProviders {
         event.registerItem(EnderIOCapabilities.SOUL_BINDABLE_ITEM,
             SoulCapabilityProviders.COMPONENT_SOUL_BINDABLE_PROVIDER,
             EIOItems.BROKEN_SPAWNER,
-            MachineBlocks.POWERED_SPAWNER_ITEM,
-            MachineBlocks.SOUL_ENGINE_ITEM);
+            EIOBlocks.POWERED_SPAWNER_ITEM,
+            EIOBlocks.SOUL_ENGINE_ITEM);
         
         // Solar Panels (soul bindable)
-        for (var solarPanelItem : MachineBlocks.SOLAR_PANEL_ITEMS.values()) {
+        for (var solarPanelItem : EIOBlocks.SOLAR_PANEL_ITEMS.values()) {
             event.registerItem(EnderIOCapabilities.SOUL_BINDABLE_ITEM,
                 SoulCapabilityProviders.COMPONENT_SOUL_BINDABLE_PROVIDER,
                 solarPanelItem);

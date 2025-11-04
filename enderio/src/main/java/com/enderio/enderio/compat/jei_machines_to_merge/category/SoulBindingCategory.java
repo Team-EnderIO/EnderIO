@@ -14,7 +14,7 @@ import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.foundation.souldata.SoulData;
 import com.enderio.enderio.foundation.souldata.SoulDataReloadListener;
 import com.enderio.enderio.init.EIOItems;
-import com.enderio.enderio.init.MachineBlocks;
+import com.enderio.enderio.init.EIOBlocks;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -48,7 +48,7 @@ public class SoulBindingCategory extends MachineRecipeCategory<RecipeHolder<Soul
 
     public SoulBindingCategory(IGuiHelper guiHelper) {
         this.background = guiHelper.createDrawable(SoulBinderScreen.BG_TEXTURE, 35, 30, 118, 44);
-        this.icon = guiHelper.createDrawableItemStack(new ItemStack(MachineBlocks.SOUL_BINDER.get()));
+        this.icon = guiHelper.createDrawableItemStack(new ItemStack(EIOBlocks.SOUL_BINDER.get()));
     }
 
     @Override

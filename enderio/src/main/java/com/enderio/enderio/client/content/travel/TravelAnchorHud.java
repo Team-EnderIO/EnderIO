@@ -3,7 +3,7 @@ package com.enderio.enderio.client.content.travel;
 import com.enderio.enderio.api.travel.TravelTarget;
 import com.enderio.enderio.content.travel.TravelHandler;
 import com.enderio.enderio.content.travel.travel_anchor.AnchorTravelTarget;
-import com.enderio.enderio.init.MachineBlocks;
+import com.enderio.enderio.init.EIOBlocks;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -63,7 +63,7 @@ public class TravelAnchorHud implements LayeredDraw.Layer {
             // Draw icon as an item
             Item icon = anchorTarget.icon();
             if (icon == Blocks.AIR.asItem()) {
-                icon = MachineBlocks.TRAVEL_ANCHOR.asItem();
+                icon = EIOBlocks.TRAVEL_ANCHOR.asItem();
             }
             ItemStack itemStack = icon.getDefaultInstance();
             int x = centerX + getOffset(CURSOR_GAP, ITEM_SIZE, direction.getStepX());

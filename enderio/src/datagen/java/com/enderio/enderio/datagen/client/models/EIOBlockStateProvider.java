@@ -11,7 +11,6 @@ import com.enderio.enderio.data.model.block.ConduitModelBuilder;
 import com.enderio.enderio.data.model.block.EIOBlockState;
 import com.enderio.enderio.data.model.block.PaintedBlockModelBuilder;
 import com.enderio.enderio.init.EIOBlocks;
-import com.enderio.enderio.init.MachineBlocks;
 import com.enderio.regilite.data.DataGenContext;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -131,93 +130,93 @@ public class EIOBlockStateProvider extends BlockStateProvider {
 
     private void machineBlocks() {
         // Fluid Tanks
-        fluidTankBlock(MachineBlocks.FLUID_TANK.get());
-        pressurizedFluidTankBlock(MachineBlocks.PRESSURIZED_FLUID_TANK.get());
+        fluidTankBlock(EIOBlocks.FLUID_TANK.get());
+        pressurizedFluidTankBlock(EIOBlocks.PRESSURIZED_FLUID_TANK.get());
 
         // Enchanter
-        machineBlock(MachineBlocks.ENCHANTER.get());
+        machineBlock(EIOBlocks.ENCHANTER.get());
 
         // Enderface
-        simpleBlock(MachineBlocks.ENDERFACE.get(),
+        simpleBlock(EIOBlocks.ENDERFACE.get(),
             models().cubeAll("enderface", EnderIO.rl("block/enderface")).renderType("translucent"));
 
         // Progress Machines
-        progressMachineBlock(MachineBlocks.ALLOY_SMELTER.get());
-        progressMachineBlock(MachineBlocks.PAINTING_MACHINE.get());
-        progressMachineBlock(MachineBlocks.WIRELESS_CHARGER.get());
-        progressMachineBlock(MachineBlocks.STIRLING_GENERATOR.get());
-        progressMachineBlock(MachineBlocks.SAG_MILL.get());
-        progressMachineBlock(MachineBlocks.SLICE_AND_SPLICE.get());
-        progressMachineBlock(MachineBlocks.IMPULSE_HOPPER.get());
-        progressMachineBlock(MachineBlocks.SOUL_BINDER.get());
-        progressMachineBlock(MachineBlocks.CRAFTER.get());
-        progressMachineBlock(MachineBlocks.DRAIN.get());
-        progressMachineBlock(MachineBlocks.POWERED_SPAWNER.get());
-        progressMachineBlock(MachineBlocks.SOUL_ENGINE.get());
+        progressMachineBlock(EIOBlocks.ALLOY_SMELTER.get());
+        progressMachineBlock(EIOBlocks.PAINTING_MACHINE.get());
+        progressMachineBlock(EIOBlocks.WIRELESS_CHARGER.get());
+        progressMachineBlock(EIOBlocks.STIRLING_GENERATOR.get());
+        progressMachineBlock(EIOBlocks.SAG_MILL.get());
+        progressMachineBlock(EIOBlocks.SLICE_AND_SPLICE.get());
+        progressMachineBlock(EIOBlocks.IMPULSE_HOPPER.get());
+        progressMachineBlock(EIOBlocks.SOUL_BINDER.get());
+        progressMachineBlock(EIOBlocks.CRAFTER.get());
+        progressMachineBlock(EIOBlocks.DRAIN.get());
+        progressMachineBlock(EIOBlocks.POWERED_SPAWNER.get());
+        progressMachineBlock(EIOBlocks.SOUL_ENGINE.get());
 
         // Machines
-        machineBlock(MachineBlocks.WIRED_CHARGER.get());
+        machineBlock(EIOBlocks.WIRED_CHARGER.get());
 
         // Wireless Antennas
-        simpleBlock(MachineBlocks.WIRELESS_CHARGER_ANTENNA.get(),
+        simpleBlock(EIOBlocks.WIRELESS_CHARGER_ANTENNA.get(),
             models().getExistingFile(EnderIO.rl("block/wireless_charger_antenna")));
-        simpleBlock(MachineBlocks.WIRELESS_CHARGER_ANTENNA_ADVANCED.get(),
+        simpleBlock(EIOBlocks.WIRELESS_CHARGER_ANTENNA_ADVANCED.get(),
             models().getExistingFile(EnderIO.rl("block/wireless_charger_antenna_advanced")));
 
         // Creative Power
-        simpleBlock(MachineBlocks.CREATIVE_POWER.get());
+        simpleBlock(EIOBlocks.CREATIVE_POWER.get());
 
         // Mind Killer
-        simpleBlock(MachineBlocks.MIND_KILLER.get(),
+        simpleBlock(EIOBlocks.MIND_KILLER.get(),
             models().getExistingFile(EnderIO.rl("block/mind_killer")));
 
         // Vacuum Machines
-        simpleBlock(MachineBlocks.VACUUM_CHEST.get(),
+        simpleBlock(EIOBlocks.VACUUM_CHEST.get(),
             models().getExistingFile(EnderIO.rl("block/vacuum_chest")));
-        simpleBlock(MachineBlocks.XP_VACUUM.get(),
+        simpleBlock(EIOBlocks.XP_VACUUM.get(),
             models().getExistingFile(EnderIO.rl("block/xp_vacuum")));
 
         // Travel Anchors
-        simpleBlock(MachineBlocks.TRAVEL_ANCHOR.get(),
+        simpleBlock(EIOBlocks.TRAVEL_ANCHOR.get(),
             models().getExistingFile(EnderIO.rl("block/travel_anchor")));
-        EIOBlockState.paintedBlock("painted_travel_anchor", this, MachineBlocks.PAINTED_TRAVEL_ANCHOR.get(),
+        EIOBlockState.paintedBlock("painted_travel_anchor", this, EIOBlocks.PAINTED_TRAVEL_ANCHOR.get(),
             Blocks.DIRT, null);
 
         // Solar Panels
-        for (var entry : MachineBlocks.SOLAR_PANELS.entrySet()) {
+        for (var entry : EIOBlocks.SOLAR_PANELS.entrySet()) {
             solarPanelBlock(entry.getValue().get(), entry.getKey());
         }
 
         // Capacitor Banks
-        for (var capacitorBank : MachineBlocks.CAPACITOR_BANKS.values()) {
+        for (var capacitorBank : EIOBlocks.CAPACITOR_BANKS.values()) {
             simpleBlock(capacitorBank.get(),
                 models().getExistingFile(EnderIO.rl(capacitorBank.getId().getPath())));
         }
 
         // Niard
-        machineBlock(MachineBlocks.NIARD.get());
+        machineBlock(EIOBlocks.NIARD.get());
 
         // VAT
-        machineBlock(MachineBlocks.VAT.get());
+        machineBlock(EIOBlocks.VAT.get());
 
         // Block Detector
-        simpleBlock(MachineBlocks.BLOCK_DETECTOR.get(),
+        simpleBlock(EIOBlocks.BLOCK_DETECTOR.get(),
             models().getExistingFile(EnderIO.rl("block/block_detector")));
 
         // Obelisks
-        simpleBlock(MachineBlocks.XP_OBELISK.get(),
+        simpleBlock(EIOBlocks.XP_OBELISK.get(),
             models().getExistingFile(EnderIO.rl("block/xp_obelisk")));
-        simpleBlock(MachineBlocks.FARMING_STATION.get(),
+        simpleBlock(EIOBlocks.FARMING_STATION.get(),
             models().getExistingFile(EnderIO.rl("block/farming_station")));
-        simpleBlock(MachineBlocks.INHIBITOR_OBELISK.get(),
+        simpleBlock(EIOBlocks.INHIBITOR_OBELISK.get(),
             models().getExistingFile(EnderIO.rl("block/inhibitor_obelisk")));
-        simpleBlock(MachineBlocks.AVERSION_OBELISK.get(),
+        simpleBlock(EIOBlocks.AVERSION_OBELISK.get(),
             models().getExistingFile(EnderIO.rl("block/aversion_obelisk")));
-        simpleBlock(MachineBlocks.RELOCATOR_OBELISK.get(),
+        simpleBlock(EIOBlocks.RELOCATOR_OBELISK.get(),
             models().getExistingFile(EnderIO.rl("block/relocator_obelisk")));
-        simpleBlock(MachineBlocks.ATTRACTOR_OBELISK.get(),
+        simpleBlock(EIOBlocks.ATTRACTOR_OBELISK.get(),
             models().getExistingFile(EnderIO.rl("block/attractor_obelisk")));
-        simpleBlock(MachineBlocks.WEATHER_OBELISK.get(),
+        simpleBlock(EIOBlocks.WEATHER_OBELISK.get(),
             models().getExistingFile(EnderIO.rl("block/weather_obelisk")));
     }
 

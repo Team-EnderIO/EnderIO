@@ -5,7 +5,6 @@ import com.enderio.enderio.content.paint.block.PaintedSlabBlock;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOFeatureFlags;
-import com.enderio.enderio.init.MachineBlocks;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
@@ -39,7 +38,7 @@ public class EIOBlockLootProvider extends BlockLootSubProvider {
             .stream()
             .map(e -> (Block) e.value())
             .toList();
-        var machineBlocks = MachineBlocks.BLOCKS.getEntries()
+        var machineBlocks = EIOBlocks.BLOCKS.getEntries()
             .stream()
             .map(e -> (Block) e.value())
             .toList();
@@ -99,73 +98,73 @@ public class EIOBlockLootProvider extends BlockLootSubProvider {
 
     private void addMachineLoot() {
         // Fluid Tanks
-        copyComponents(MachineBlocks.FLUID_TANK.get());
-        copyComponents(MachineBlocks.PRESSURIZED_FLUID_TANK.get());
+        copyComponents(EIOBlocks.FLUID_TANK.get());
+        copyComponents(EIOBlocks.PRESSURIZED_FLUID_TANK.get());
 
         // Enchanter
-        copyComponents(MachineBlocks.ENCHANTER.get());
+        copyComponents(EIOBlocks.ENCHANTER.get());
 
         // Enderface
-        copyComponents(MachineBlocks.ENDERFACE.get());
+        copyComponents(EIOBlocks.ENDERFACE.get());
 
         // Progress Machines
-        copyComponents(MachineBlocks.ALLOY_SMELTER.get());
-        copyComponents(MachineBlocks.PAINTING_MACHINE.get());
-        copyComponents(MachineBlocks.WIRELESS_CHARGER.get());
-        copyComponents(MachineBlocks.STIRLING_GENERATOR.get());
-        copyComponents(MachineBlocks.SAG_MILL.get());
-        copyComponents(MachineBlocks.SLICE_AND_SPLICE.get());
-        copyComponents(MachineBlocks.IMPULSE_HOPPER.get());
-        copyComponents(MachineBlocks.SOUL_BINDER.get());
-        copyComponents(MachineBlocks.CRAFTER.get());
-        copyComponents(MachineBlocks.DRAIN.get());
-        copyComponents(MachineBlocks.SOUL_ENGINE.get());
+        copyComponents(EIOBlocks.ALLOY_SMELTER.get());
+        copyComponents(EIOBlocks.PAINTING_MACHINE.get());
+        copyComponents(EIOBlocks.WIRELESS_CHARGER.get());
+        copyComponents(EIOBlocks.STIRLING_GENERATOR.get());
+        copyComponents(EIOBlocks.SAG_MILL.get());
+        copyComponents(EIOBlocks.SLICE_AND_SPLICE.get());
+        copyComponents(EIOBlocks.IMPULSE_HOPPER.get());
+        copyComponents(EIOBlocks.SOUL_BINDER.get());
+        copyComponents(EIOBlocks.CRAFTER.get());
+        copyComponents(EIOBlocks.DRAIN.get());
+        copyComponents(EIOBlocks.SOUL_ENGINE.get());
 
         // Machines
-        copyComponents(MachineBlocks.WIRED_CHARGER.get());
+        copyComponents(EIOBlocks.WIRED_CHARGER.get());
 
         // Powered Spawner (with soul component)
-        copyStandardComponentsWith(MachineBlocks.POWERED_SPAWNER.get(), EIODataComponents.SOUL);
+        copyStandardComponentsWith(EIOBlocks.POWERED_SPAWNER.get(), EIODataComponents.SOUL);
 
         // Vacuum Machines
-        copyComponents(MachineBlocks.VACUUM_CHEST.get());
-        copyComponents(MachineBlocks.XP_VACUUM.get());
+        copyComponents(EIOBlocks.VACUUM_CHEST.get());
+        copyComponents(EIOBlocks.XP_VACUUM.get());
 
         // Travel Anchors
-        copyComponents(MachineBlocks.TRAVEL_ANCHOR.get());
-        add(MachineBlocks.PAINTED_TRAVEL_ANCHOR.get(), createPaintedTable(MachineBlocks.PAINTED_TRAVEL_ANCHOR.get()));
+        copyComponents(EIOBlocks.TRAVEL_ANCHOR.get());
+        add(EIOBlocks.PAINTED_TRAVEL_ANCHOR.get(), createPaintedTable(EIOBlocks.PAINTED_TRAVEL_ANCHOR.get()));
 
         // Solar Panels
-        for (var solarPanel : MachineBlocks.SOLAR_PANELS.values()) {
+        for (var solarPanel : EIOBlocks.SOLAR_PANELS.values()) {
             copyComponents(solarPanel.get());
         }
 
         // Capacitor Banks
-        for (var capacitorBank : MachineBlocks.CAPACITOR_BANKS.values()) {
+        for (var capacitorBank : EIOBlocks.CAPACITOR_BANKS.values()) {
             copyComponents(capacitorBank.get());
         }
 
         // Niard
-        copyComponents(MachineBlocks.NIARD.get());
+        copyComponents(EIOBlocks.NIARD.get());
 
         // VAT
-        copyComponents(MachineBlocks.VAT.get());
+        copyComponents(EIOBlocks.VAT.get());
 
         // Obelisks
-        copyComponents(MachineBlocks.XP_OBELISK.get());
-        copyComponents(MachineBlocks.FARMING_STATION.get());
-        copyComponents(MachineBlocks.INHIBITOR_OBELISK.get());
-        copyComponents(MachineBlocks.AVERSION_OBELISK.get());
-        copyComponents(MachineBlocks.RELOCATOR_OBELISK.get());
-        copyComponents(MachineBlocks.ATTRACTOR_OBELISK.get());
-        copyComponents(MachineBlocks.WEATHER_OBELISK.get());
+        copyComponents(EIOBlocks.XP_OBELISK.get());
+        copyComponents(EIOBlocks.FARMING_STATION.get());
+        copyComponents(EIOBlocks.INHIBITOR_OBELISK.get());
+        copyComponents(EIOBlocks.AVERSION_OBELISK.get());
+        copyComponents(EIOBlocks.RELOCATOR_OBELISK.get());
+        copyComponents(EIOBlocks.ATTRACTOR_OBELISK.get());
+        copyComponents(EIOBlocks.WEATHER_OBELISK.get());
 
         // Mind Killer, Block Detector, Wireless Antennas, Creative Power - no special loot
-        dropSelf(MachineBlocks.MIND_KILLER.get());
-        dropSelf(MachineBlocks.BLOCK_DETECTOR.get());
-        dropSelf(MachineBlocks.WIRELESS_CHARGER_ANTENNA.get());
-        dropSelf(MachineBlocks.WIRELESS_CHARGER_ANTENNA_ADVANCED.get());
-        dropSelf(MachineBlocks.CREATIVE_POWER.get());
+        dropSelf(EIOBlocks.MIND_KILLER.get());
+        dropSelf(EIOBlocks.BLOCK_DETECTOR.get());
+        dropSelf(EIOBlocks.WIRELESS_CHARGER_ANTENNA.get());
+        dropSelf(EIOBlocks.WIRELESS_CHARGER_ANTENNA_ADVANCED.get());
+        dropSelf(EIOBlocks.CREATIVE_POWER.get());
     }
 
     private void copyComponents(Block block) {

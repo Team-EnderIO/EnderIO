@@ -4,7 +4,6 @@ import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.content.glass.GlassLighting;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOBlocks;
-import com.enderio.enderio.init.MachineBlocks;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
@@ -55,45 +54,45 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
             .add(EIOBlocks.CONDUIT_BUNDLE.get())
             .add(EIOBlocks.SOUL_CHAIN.get())
             // Machine Blocks
-            .add(MachineBlocks.FLUID_TANK.get())
-            .add(MachineBlocks.PRESSURIZED_FLUID_TANK.get())
-            .add(MachineBlocks.ENCHANTER.get())
-            .add(MachineBlocks.ENDERFACE.get())
-            .add(MachineBlocks.ALLOY_SMELTER.get())
-            .add(MachineBlocks.PAINTING_MACHINE.get())
-            .add(MachineBlocks.WIRELESS_CHARGER.get())
-            .add(MachineBlocks.STIRLING_GENERATOR.get())
-            .add(MachineBlocks.SAG_MILL.get())
-            .add(MachineBlocks.SLICE_AND_SPLICE.get())
-            .add(MachineBlocks.IMPULSE_HOPPER.get())
-            .add(MachineBlocks.SOUL_BINDER.get())
-            .add(MachineBlocks.CRAFTER.get())
-            .add(MachineBlocks.DRAIN.get())
-            .add(MachineBlocks.WIRED_CHARGER.get())
-            .add(MachineBlocks.WIRELESS_CHARGER_ANTENNA.get())
-            .add(MachineBlocks.WIRELESS_CHARGER_ANTENNA_ADVANCED.get())
-            .add(MachineBlocks.POWERED_SPAWNER.get())
-            .add(MachineBlocks.MIND_KILLER.get())
-            .add(MachineBlocks.VACUUM_CHEST.get())
-            .add(MachineBlocks.XP_VACUUM.get())
-            .add(MachineBlocks.TRAVEL_ANCHOR.get())
-            .add(MachineBlocks.PAINTED_TRAVEL_ANCHOR.get())
-            .add(MachineBlocks.SOUL_ENGINE.get())
-            .add(MachineBlocks.NIARD.get())
-            .add(MachineBlocks.VAT.get())
-            .add(MachineBlocks.XP_OBELISK.get())
-            .add(MachineBlocks.FARMING_STATION.get())
-            .add(MachineBlocks.INHIBITOR_OBELISK.get())
-            .add(MachineBlocks.AVERSION_OBELISK.get())
-            .add(MachineBlocks.RELOCATOR_OBELISK.get())
-            .add(MachineBlocks.ATTRACTOR_OBELISK.get())
-            .add(MachineBlocks.WEATHER_OBELISK.get());
+            .add(EIOBlocks.FLUID_TANK.get())
+            .add(EIOBlocks.PRESSURIZED_FLUID_TANK.get())
+            .add(EIOBlocks.ENCHANTER.get())
+            .add(EIOBlocks.ENDERFACE.get())
+            .add(EIOBlocks.ALLOY_SMELTER.get())
+            .add(EIOBlocks.PAINTING_MACHINE.get())
+            .add(EIOBlocks.WIRELESS_CHARGER.get())
+            .add(EIOBlocks.STIRLING_GENERATOR.get())
+            .add(EIOBlocks.SAG_MILL.get())
+            .add(EIOBlocks.SLICE_AND_SPLICE.get())
+            .add(EIOBlocks.IMPULSE_HOPPER.get())
+            .add(EIOBlocks.SOUL_BINDER.get())
+            .add(EIOBlocks.CRAFTER.get())
+            .add(EIOBlocks.DRAIN.get())
+            .add(EIOBlocks.WIRED_CHARGER.get())
+            .add(EIOBlocks.WIRELESS_CHARGER_ANTENNA.get())
+            .add(EIOBlocks.WIRELESS_CHARGER_ANTENNA_ADVANCED.get())
+            .add(EIOBlocks.POWERED_SPAWNER.get())
+            .add(EIOBlocks.MIND_KILLER.get())
+            .add(EIOBlocks.VACUUM_CHEST.get())
+            .add(EIOBlocks.XP_VACUUM.get())
+            .add(EIOBlocks.TRAVEL_ANCHOR.get())
+            .add(EIOBlocks.PAINTED_TRAVEL_ANCHOR.get())
+            .add(EIOBlocks.SOUL_ENGINE.get())
+            .add(EIOBlocks.NIARD.get())
+            .add(EIOBlocks.VAT.get())
+            .add(EIOBlocks.XP_OBELISK.get())
+            .add(EIOBlocks.FARMING_STATION.get())
+            .add(EIOBlocks.INHIBITOR_OBELISK.get())
+            .add(EIOBlocks.AVERSION_OBELISK.get())
+            .add(EIOBlocks.RELOCATOR_OBELISK.get())
+            .add(EIOBlocks.ATTRACTOR_OBELISK.get())
+            .add(EIOBlocks.WEATHER_OBELISK.get());
         
         // Solar Panels and Capacitor Banks
-        for (var solarPanel : MachineBlocks.SOLAR_PANELS.values()) {
+        for (var solarPanel : EIOBlocks.SOLAR_PANELS.values()) {
             tag(BlockTags.MINEABLE_WITH_PICKAXE).add(solarPanel.get());
         }
-        for (var capacitorBank : MachineBlocks.CAPACITOR_BANKS.values()) {
+        for (var capacitorBank : EIOBlocks.CAPACITOR_BANKS.values()) {
             tag(BlockTags.MINEABLE_WITH_PICKAXE).add(capacitorBank.get());
         }
 
@@ -120,42 +119,42 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
             .add(EIOBlocks.END_STEEL_BARS.get())
             .add(EIOBlocks.SOUL_CHAIN.get())
             // Machine Blocks
-            .add(MachineBlocks.FLUID_TANK.get())
-            .add(MachineBlocks.PRESSURIZED_FLUID_TANK.get())
-            .add(MachineBlocks.ENCHANTER.get())
-            .add(MachineBlocks.ENDERFACE.get())
-            .add(MachineBlocks.ALLOY_SMELTER.get())
-            .add(MachineBlocks.PAINTING_MACHINE.get())
-            .add(MachineBlocks.WIRELESS_CHARGER.get())
-            .add(MachineBlocks.STIRLING_GENERATOR.get())
-            .add(MachineBlocks.SAG_MILL.get())
-            .add(MachineBlocks.SLICE_AND_SPLICE.get())
-            .add(MachineBlocks.IMPULSE_HOPPER.get())
-            .add(MachineBlocks.SOUL_BINDER.get())
-            .add(MachineBlocks.CRAFTER.get())
-            .add(MachineBlocks.DRAIN.get())
-            .add(MachineBlocks.WIRED_CHARGER.get())
-            .add(MachineBlocks.WIRELESS_CHARGER_ANTENNA.get())
-            .add(MachineBlocks.WIRELESS_CHARGER_ANTENNA_ADVANCED.get())
-            .add(MachineBlocks.POWERED_SPAWNER.get())
-            .add(MachineBlocks.MIND_KILLER.get())
-            .add(MachineBlocks.VACUUM_CHEST.get())
-            .add(MachineBlocks.XP_VACUUM.get())
-            .add(MachineBlocks.TRAVEL_ANCHOR.get())
-            .add(MachineBlocks.PAINTED_TRAVEL_ANCHOR.get())
-            .add(MachineBlocks.SOUL_ENGINE.get())
-            .add(MachineBlocks.NIARD.get())
-            .add(MachineBlocks.VAT.get())
-            .add(MachineBlocks.XP_OBELISK.get())
-            .add(MachineBlocks.FARMING_STATION.get())
-            .add(MachineBlocks.INHIBITOR_OBELISK.get())
-            .add(MachineBlocks.AVERSION_OBELISK.get())
-            .add(MachineBlocks.RELOCATOR_OBELISK.get())
-            .add(MachineBlocks.ATTRACTOR_OBELISK.get())
-            .add(MachineBlocks.WEATHER_OBELISK.get());
+            .add(EIOBlocks.FLUID_TANK.get())
+            .add(EIOBlocks.PRESSURIZED_FLUID_TANK.get())
+            .add(EIOBlocks.ENCHANTER.get())
+            .add(EIOBlocks.ENDERFACE.get())
+            .add(EIOBlocks.ALLOY_SMELTER.get())
+            .add(EIOBlocks.PAINTING_MACHINE.get())
+            .add(EIOBlocks.WIRELESS_CHARGER.get())
+            .add(EIOBlocks.STIRLING_GENERATOR.get())
+            .add(EIOBlocks.SAG_MILL.get())
+            .add(EIOBlocks.SLICE_AND_SPLICE.get())
+            .add(EIOBlocks.IMPULSE_HOPPER.get())
+            .add(EIOBlocks.SOUL_BINDER.get())
+            .add(EIOBlocks.CRAFTER.get())
+            .add(EIOBlocks.DRAIN.get())
+            .add(EIOBlocks.WIRED_CHARGER.get())
+            .add(EIOBlocks.WIRELESS_CHARGER_ANTENNA.get())
+            .add(EIOBlocks.WIRELESS_CHARGER_ANTENNA_ADVANCED.get())
+            .add(EIOBlocks.POWERED_SPAWNER.get())
+            .add(EIOBlocks.MIND_KILLER.get())
+            .add(EIOBlocks.VACUUM_CHEST.get())
+            .add(EIOBlocks.XP_VACUUM.get())
+            .add(EIOBlocks.TRAVEL_ANCHOR.get())
+            .add(EIOBlocks.PAINTED_TRAVEL_ANCHOR.get())
+            .add(EIOBlocks.SOUL_ENGINE.get())
+            .add(EIOBlocks.NIARD.get())
+            .add(EIOBlocks.VAT.get())
+            .add(EIOBlocks.XP_OBELISK.get())
+            .add(EIOBlocks.FARMING_STATION.get())
+            .add(EIOBlocks.INHIBITOR_OBELISK.get())
+            .add(EIOBlocks.AVERSION_OBELISK.get())
+            .add(EIOBlocks.RELOCATOR_OBELISK.get())
+            .add(EIOBlocks.ATTRACTOR_OBELISK.get())
+            .add(EIOBlocks.WEATHER_OBELISK.get());
         
         // Solar Panels need iron tool
-        for (var solarPanel : MachineBlocks.SOLAR_PANELS.values()) {
+        for (var solarPanel : EIOBlocks.SOLAR_PANELS.values()) {
             tag(BlockTags.NEEDS_IRON_TOOL).add(solarPanel.get());
         }
 
@@ -173,8 +172,8 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
                 .addTag(EIOTags.Blocks.BLOCKS_VIBRANT_ALLOY);
 
         tag(EIOTags.Blocks.BLOCKS_TELEPORTATION)
-            .add(MachineBlocks.TRAVEL_ANCHOR.get())
-            .add(MachineBlocks.PAINTED_TRAVEL_ANCHOR.get());
+            .add(EIOBlocks.TRAVEL_ANCHOR.get())
+            .add(EIOBlocks.PAINTED_TRAVEL_ANCHOR.get());
 
         tag(EIOTags.Blocks.REDSTONE_CONNECTABLE)
             .add(Blocks.PISTON, Blocks.STICKY_PISTON, Blocks.REDSTONE_LAMP, Blocks.NOTE_BLOCK, Blocks.DISPENSER,
@@ -204,15 +203,15 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
 
     private void addMachineBlockTags() {
         // Mind Killer tag
-        tag(EIOTags.Blocks.MIND_KILLER).add(MachineBlocks.MIND_KILLER.get());
+        tag(EIOTags.Blocks.MIND_KILLER).add(EIOBlocks.MIND_KILLER.get());
         
         // Range Extender tags
         tag(EIOTags.Blocks.RANGE_EXTENDER)
-            .add(MachineBlocks.WIRELESS_CHARGER_ANTENNA.get())
-            .add(MachineBlocks.WIRELESS_CHARGER_ANTENNA_ADVANCED.get());
+            .add(EIOBlocks.WIRELESS_CHARGER_ANTENNA.get())
+            .add(EIOBlocks.WIRELESS_CHARGER_ANTENNA_ADVANCED.get());
         
         // Block Detector (mineable with pickaxe but no special tool requirement)
-        tag(BlockTags.MINEABLE_WITH_PICKAXE).add(MachineBlocks.BLOCK_DETECTOR.get());
+        tag(BlockTags.MINEABLE_WITH_PICKAXE).add(EIOBlocks.BLOCK_DETECTOR.get());
     }
 
     private void addPaintedBlocks() {

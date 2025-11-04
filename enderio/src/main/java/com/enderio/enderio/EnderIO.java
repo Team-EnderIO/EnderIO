@@ -26,7 +26,6 @@ import com.enderio.enderio.init.EIOLootModifiers;
 import com.enderio.enderio.init.EIOMenus;
 import com.enderio.enderio.init.EIOParticles;
 import com.enderio.enderio.init.EIORecipes;
-import com.enderio.enderio.init.MachineBlocks;
 import com.enderio.enderio.init.EIOTravelTargets;
 import com.enderio.regilite.Regilite;
 import com.mojang.logging.LogUtils;
@@ -108,7 +107,6 @@ public class EnderIO {
         EIOConduitTypes.register(modEventBus);
         EIOTravelTargets.register(modEventBus);
 
-        MachineBlocks.register(modEventBus);
 
         REGILITE.register(modEventBus);
 

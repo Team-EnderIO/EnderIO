@@ -5,7 +5,7 @@ import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.content.conduits.type.fluid.FluidConduit;
 import com.enderio.enderio.content.conduits.type.fluid.FluidConduitConnectionConfig;
 import com.enderio.enderio.init.EIOConduits;
-import com.enderio.enderio.init.MachineBlocks;
+import com.enderio.enderio.init.EIOBlocks;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.world.level.block.Blocks;
@@ -29,11 +29,11 @@ public class FluidConduitTests {
     public static final Supplier<StructureTemplate> THREE_TANKS_TEMPLATE = StructureTemplateBuilder.lazy(3, 1, 3,
         builder -> builder
             // Sender
-            .set(2, 0, 0, MachineBlocks.FLUID_TANK.get().defaultBlockState())
+            .set(2, 0, 0, EIOBlocks.FLUID_TANK.get().defaultBlockState())
 
             // Receivers
-            .set(0, 0, 2, MachineBlocks.FLUID_TANK.get().defaultBlockState())
-            .set(2, 0, 2, MachineBlocks.FLUID_TANK.get().defaultBlockState())
+            .set(0, 0, 2, EIOBlocks.FLUID_TANK.get().defaultBlockState())
+            .set(2, 0, 2, EIOBlocks.FLUID_TANK.get().defaultBlockState())
     );
     // @formatter:on
 
@@ -42,8 +42,8 @@ public class FluidConduitTests {
     public static void fluidConduitBasicTransfer(final DynamicTest test) {
         test.registerGameTestTemplate(() -> StructureTemplateBuilder
             .withSize(1, 1, 3)
-            .set(0, 0, 0, MachineBlocks.FLUID_TANK.get().defaultBlockState())
-            .set(0, 0, 2, MachineBlocks.FLUID_TANK.get().defaultBlockState()));
+            .set(0, 0, 0, EIOBlocks.FLUID_TANK.get().defaultBlockState())
+            .set(0, 0, 2, EIOBlocks.FLUID_TANK.get().defaultBlockState()));
 
         test.onGameTest(FluidConduitGameTestHelper.class, helper -> {
             var fluidConduit = helper.getConduit(EIOConduits.FLUID);

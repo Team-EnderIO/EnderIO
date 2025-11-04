@@ -2,7 +2,7 @@ package com.enderio.armory.client.renderer;
 
 import com.enderio.armory.common.item.darksteel.upgrades.solar.SolarUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.solar.SolarUpgradeHandler;
-import com.enderio.enderio.init.MachineBlocks;
+import com.enderio.enderio.init.EIOBlocks;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
@@ -32,7 +32,7 @@ public class SolarUpgradeRenderLayer extends RenderLayer<AbstractClientPlayer, P
         if (solarUpgradeOpt.isEmpty()) {
             return;
         }
-        ItemStack solItem = MachineBlocks.SOLAR_PANELS.get(solarUpgradeOpt.get().getPanelTier()).toStack();
+        ItemStack solItem = EIOBlocks.SOLAR_PANELS.get(solarUpgradeOpt.get().getPanelTier()).toStack();
 
         poseStack.pushPose();
         getParentModel().getHead().translateAndRotate(poseStack);

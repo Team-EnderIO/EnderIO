@@ -9,7 +9,7 @@ import com.enderio.enderio.foundation.souldata.EngineSoul;
 import com.enderio.enderio.foundation.souldata.FarmSoul;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOItems;
-import com.enderio.enderio.init.MachineBlocks;
+import com.enderio.enderio.init.EIOBlocks;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -40,11 +40,11 @@ public class SoulBindingRecipeProvider extends SubRecipeProvider {
         build(EIOItems.SENTIENT_ENDER, Ingredient.of(EIOItems.ENDER_RESONATOR), 51200, 4, EntityType.WITCH,
                 recipeOutput);
         build(EIOItems.BROKEN_SPAWNER, AnySoulBindableIngredient.of(EIOItems.BROKEN_SPAWNER), 288000, 8, recipeOutput);
-        build(MachineBlocks.POWERED_SPAWNER, AnySoulBindableIngredient.of(MachineBlocks.POWERED_SPAWNER), 288000, 8, true,
+        build(EIOBlocks.POWERED_SPAWNER, AnySoulBindableIngredient.of(EIOBlocks.POWERED_SPAWNER), 288000, 8, true,
                 recipeOutput);
-        build(MachineBlocks.SOUL_ENGINE, Ingredient.of(MachineBlocks.SOUL_ENGINE), 188000, 5, EngineSoul.NAME,
+        build(EIOBlocks.SOUL_ENGINE, Ingredient.of(EIOBlocks.SOUL_ENGINE), 188000, 5, EngineSoul.NAME,
                 recipeOutput);
-        build(MachineBlocks.FARMING_STATION, Ingredient.of(MachineBlocks.FARMING_STATION), 188000, 5, FarmSoul.NAME,
+        build(EIOBlocks.FARMING_STATION, Ingredient.of(EIOBlocks.FARMING_STATION), 188000, 5, FarmSoul.NAME,
                 recipeOutput);
         build(EIOItems.PLAYER_TOKEN, Ingredient.of(EIOItems.DARK_STEEL_BALL), 12800, 1, EntityType.VILLAGER,
                 recipeOutput);
@@ -52,14 +52,14 @@ public class SoulBindingRecipeProvider extends SubRecipeProvider {
                 recipeOutput);
         build(EIOItems.ANIMAL_TOKEN, Ingredient.of(EIOItems.SOULARIUM_BALL), 12800, 1, MobCategory.CREATURE,
                 recipeOutput);
-        build(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.ENERGETIC),
-                Ingredient.of(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.ENERGETIC)), 12800, 8, EntityType.PHANTOM,
+        build(EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.ENERGETIC),
+                Ingredient.of(EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.ENERGETIC)), 12800, 8, EntityType.PHANTOM,
                 recipeOutput);
-        build(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.PULSATING),
-                Ingredient.of(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.PULSATING)), 51200, 12, EntityType.PHANTOM,
+        build(EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.PULSATING),
+                Ingredient.of(EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.PULSATING)), 51200, 12, EntityType.PHANTOM,
                 recipeOutput);
-        build(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.VIBRANT),
-                Ingredient.of(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.VIBRANT)), 288000, 14, EntityType.PHANTOM,
+        build(EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.VIBRANT),
+                Ingredient.of(EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.VIBRANT)), 288000, 14, EntityType.PHANTOM,
                 recipeOutput);
 
         InfestedBlock.BLOCK_BY_HOST_BLOCK.forEach((original, infested) -> buildInfested(infested, original, recipeOutput));

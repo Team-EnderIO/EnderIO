@@ -30,7 +30,7 @@ import com.enderio.enderio.content.machines.sag_mill.SagMillMenu;
 import com.enderio.enderio.content.machines.slicer.SlicerMenu;
 import com.enderio.enderio.content.machines.soul_binder.SoulBinderMenu;
 import com.enderio.enderio.init.EIOMenus;
-import com.enderio.enderio.init.MachineBlocks;
+import com.enderio.enderio.init.EIOBlocks;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
@@ -52,17 +52,17 @@ public class MachinesJEI implements IModPlugin {
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-        registration.addRecipeCatalyst(new ItemStack(MachineBlocks.ALLOY_SMELTER.get()), AlloySmeltingCategory.TYPE,
+        registration.addRecipeCatalyst(new ItemStack(EIOBlocks.ALLOY_SMELTER.get()), AlloySmeltingCategory.TYPE,
                 RecipeTypes.SMELTING);
-        registration.addRecipeCatalyst(new ItemStack(MachineBlocks.ENCHANTER.get()), EnchanterCategory.TYPE);
-        registration.addRecipeCatalyst(new ItemStack(MachineBlocks.SAG_MILL.get()), SagMillCategory.TYPE);
-        registration.addRecipeCatalyst(new ItemStack(MachineBlocks.SLICE_AND_SPLICE.get()), SlicingRecipeCategory.TYPE);
-        registration.addRecipeCatalyst(new ItemStack(MachineBlocks.SOUL_BINDER.get()), SoulBindingCategory.TYPE);
-        registration.addRecipeCatalyst(new ItemStack(MachineBlocks.FLUID_TANK.get()), TankCategory.TYPE);
-        registration.addRecipeCatalyst(new ItemStack(MachineBlocks.PRESSURIZED_FLUID_TANK.get()), TankCategory.TYPE);
-        registration.addRecipeCatalyst(new ItemStack(MachineBlocks.SOUL_ENGINE.get()), SoulEngineCategory.TYPE);
-        registration.addRecipeCatalyst(new ItemStack(MachineBlocks.VAT.get()), VATCategory.TYPE);
-        registration.addRecipeCatalyst(new ItemStack(MachineBlocks.WEATHER_OBELISK.get()), WeatherChangeCategory.TYPE);
+        registration.addRecipeCatalyst(new ItemStack(EIOBlocks.ENCHANTER.get()), EnchanterCategory.TYPE);
+        registration.addRecipeCatalyst(new ItemStack(EIOBlocks.SAG_MILL.get()), SagMillCategory.TYPE);
+        registration.addRecipeCatalyst(new ItemStack(EIOBlocks.SLICE_AND_SPLICE.get()), SlicingRecipeCategory.TYPE);
+        registration.addRecipeCatalyst(new ItemStack(EIOBlocks.SOUL_BINDER.get()), SoulBindingCategory.TYPE);
+        registration.addRecipeCatalyst(new ItemStack(EIOBlocks.FLUID_TANK.get()), TankCategory.TYPE);
+        registration.addRecipeCatalyst(new ItemStack(EIOBlocks.PRESSURIZED_FLUID_TANK.get()), TankCategory.TYPE);
+        registration.addRecipeCatalyst(new ItemStack(EIOBlocks.SOUL_ENGINE.get()), SoulEngineCategory.TYPE);
+        registration.addRecipeCatalyst(new ItemStack(EIOBlocks.VAT.get()), VATCategory.TYPE);
+        registration.addRecipeCatalyst(new ItemStack(EIOBlocks.WEATHER_OBELISK.get()), WeatherChangeCategory.TYPE);
     }
 
     @Override
@@ -127,13 +127,13 @@ public class MachinesJEI implements IModPlugin {
 
     @Override
     public void registerItemSubtypes(ISubtypeRegistration registration) {
-        registration.registerSubtypeInterpreter(MachineBlocks.POWERED_SPAWNER.asItem(),
+        registration.registerSubtypeInterpreter(EIOBlocks.POWERED_SPAWNER.asItem(),
                 new SoulBindableSubtypeInterpreter());
 
-        registration.registerSubtypeInterpreter(MachineBlocks.SOUL_ENGINE.asItem(),
+        registration.registerSubtypeInterpreter(EIOBlocks.SOUL_ENGINE.asItem(),
                 new SoulBindableSubtypeInterpreter());
 
-        for (var solarPanel : MachineBlocks.SOLAR_PANELS.values()) {
+        for (var solarPanel : EIOBlocks.SOLAR_PANELS.values()) {
             registration.registerSubtypeInterpreter(solarPanel.asItem(), new SoulBindableSubtypeInterpreter());
         }
     }

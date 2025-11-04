@@ -82,7 +82,6 @@ import com.enderio.enderio.init.EIOEntities;
 import com.enderio.enderio.init.EIOItems;
 import com.enderio.enderio.init.EIOMenus;
 import com.enderio.enderio.init.EIOParticles;
-import com.enderio.enderio.init.MachineBlocks;
 import com.enderio.enderio.init.EIOTravelTargets;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -393,7 +392,7 @@ public class EnderIOClient {
             public BlockEntityWithoutLevelRenderer getCustomRenderer() {
                 return renderer.get();
             }
-        }, MachineBlocks.FLUID_TANK.asItem(), MachineBlocks.PRESSURIZED_FLUID_TANK.asItem());
+        }, EIOBlocks.FLUID_TANK.asItem(), EIOBlocks.PRESSURIZED_FLUID_TANK.asItem());
     }
 
     @SubscribeEvent

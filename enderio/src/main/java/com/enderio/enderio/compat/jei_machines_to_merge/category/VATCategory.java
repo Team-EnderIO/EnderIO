@@ -8,7 +8,7 @@ import com.enderio.enderio.compat.jei_machines_to_merge.util.MachineRecipeCatego
 import com.enderio.enderio.content.machines.vat.FermentingRecipe;
 import com.enderio.enderio.content.machines.vat.VatBlockEntity;
 import com.enderio.enderio.foundation.datamap.VatReagent;
-import com.enderio.enderio.init.MachineBlocks;
+import com.enderio.enderio.init.EIOBlocks;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -36,7 +36,7 @@ public class VATCategory extends MachineRecipeCategory<RecipeHolder<FermentingRe
 
     public VATCategory(IGuiHelper guiHelper) {
         this.background = guiHelper.createDrawable(VatScreen.VAT_BG, 28, 10, 120, 53);
-        this.icon = guiHelper.createDrawableItemStack(new ItemStack(MachineBlocks.VAT.get()));
+        this.icon = guiHelper.createDrawableItemStack(new ItemStack(EIOBlocks.VAT.get()));
     }
 
     @Override
