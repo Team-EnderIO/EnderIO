@@ -79,12 +79,15 @@ import com.enderio.enderio.init.EIOConduitTypes;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOEntities;
+import com.enderio.enderio.init.EIOFluids;
 import com.enderio.enderio.init.EIOItems;
 import com.enderio.enderio.init.EIOMenus;
 import com.enderio.enderio.init.EIOParticles;
 import com.enderio.enderio.init.EIOTravelTargets;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
@@ -104,6 +107,7 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.RenderTypeHelper;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
@@ -158,6 +162,11 @@ public class EnderIOClient {
                     ConduitProbeItem.State state = ConduitProbeItem.getState(stack);
                     return state == ConduitProbeItem.State.COPY_PASTE ? 1.0f : 0.0f;
                 });
+
+            // Register fluid render types
+            for (var fluid : EIOFluids.FLUIDS.fluidsRegister().getEntries()) {
+                ItemBlockRenderTypes.setRenderLayer(fluid.get(), RenderType.translucent());
+            }
         });
     }
 

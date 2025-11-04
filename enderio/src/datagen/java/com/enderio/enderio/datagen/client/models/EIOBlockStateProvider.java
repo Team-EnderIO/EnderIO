@@ -12,6 +12,7 @@ import com.enderio.enderio.data.model.block.EIOBlockState;
 import com.enderio.enderio.data.model.block.PaintedBlockModelBuilder;
 import com.enderio.enderio.foundation.block.ProgressMachineBlock;
 import com.enderio.enderio.init.EIOBlocks;
+import com.enderio.enderio.init.EIOFluids;
 import com.enderio.regilite.data.DataGenContext;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -148,10 +149,11 @@ public class EIOBlockStateProvider extends BlockStateProvider {
         silentWeightedPressurePlateBlock(EIOBlocks.SILENT_HEAVY_WEIGHTED_PRESSURE_PLATE.get(), (WeightedPressurePlateBlock) Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE);
         silentWeightedPressurePlateBlock(EIOBlocks.SILENT_LIGHT_WEIGHTED_PRESSURE_PLATE.get(), (WeightedPressurePlateBlock) Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE);
 
-        machineBlocks();
+        registerMachineBlocks();
+        registerFluidBlocks();
     }
 
-    private void machineBlocks() {
+    private void registerMachineBlocks() {
         // Fluid Tanks
         fluidTankBlock(EIOBlocks.FLUID_TANK.get());
         pressurizedFluidTankBlock(EIOBlocks.PRESSURIZED_FLUID_TANK.get());
@@ -241,6 +243,13 @@ public class EIOBlockStateProvider extends BlockStateProvider {
             models().getExistingFile(EnderIO.rl("block/attractor_obelisk")));
         simpleBlock(EIOBlocks.WEATHER_OBELISK.get(),
             models().getExistingFile(EnderIO.rl("block/weather_obelisk")));
+    }
+
+    private void registerFluidBlocks() {
+        var water = models().getExistingFile(mcLoc("block/water"));
+        for (var fluidBlock : EIOFluids.FLUIDS.blocksRegister().getEntries()) {
+            simpleBlock(fluidBlock.get(), water);
+        }
     }
 
     private void simpleTranslucentBlock(Block block) {

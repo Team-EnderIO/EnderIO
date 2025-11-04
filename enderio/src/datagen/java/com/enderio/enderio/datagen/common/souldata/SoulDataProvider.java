@@ -119,12 +119,12 @@ public class SoulDataProvider implements DataProvider {
         addSpawnerData(EntityType.ZOMBIFIED_PIGLIN, 32_000, MobSpawnMode.NEW, finshedSoulDataConsumer);
 
         addEngineData(EntityType.BLAZE, FluidTags.LAVA, 800, 18, finshedSoulDataConsumer);
-        addEngineData(EntityType.ZOMBIE, EIOFluids.NUTRIENT_DISTILLATION.getSource(), 1000, 18, finshedSoulDataConsumer);
-        addEngineData(EntityType.ZOMBIE_VILLAGER, EIOFluids.NUTRIENT_DISTILLATION.getSource(), 1000, 18,
+        addEngineData(EntityType.ZOMBIE, EIOFluids.NUTRIENT_DISTILLATION.source().get(), 1000, 18, finshedSoulDataConsumer);
+        addEngineData(EntityType.ZOMBIE_VILLAGER, EIOFluids.NUTRIENT_DISTILLATION.source().get(), 1000, 18,
                 finshedSoulDataConsumer);
-        addEngineData(EntityType.HUSK, EIOFluids.NUTRIENT_DISTILLATION.getSource(), 1000, 18, finshedSoulDataConsumer);
-        addEngineData(EntityType.ENDERMAN, EIOFluids.DEW_OF_THE_VOID.getSource(), 1200, 12, finshedSoulDataConsumer);
-        addEngineData(EntityType.CREEPER, EIOFluids.ROCKET_FUEL.getSource(), 800, 12, finshedSoulDataConsumer);
+        addEngineData(EntityType.HUSK, EIOFluids.NUTRIENT_DISTILLATION.source().get(), 1000, 18, finshedSoulDataConsumer);
+        addEngineData(EntityType.ENDERMAN, EIOFluids.DEW_OF_THE_VOID.source().get(), 1200, 12, finshedSoulDataConsumer);
+        addEngineData(EntityType.CREEPER, EIOFluids.ROCKET_FUEL.source().get(), 800, 12, finshedSoulDataConsumer);
 
         addFarmData(EntityType.BEE, 0.8f, 0, 1, finshedSoulDataConsumer);
         addFarmData(EntityType.VILLAGER, 1, 0, 1.2f, finshedSoulDataConsumer);

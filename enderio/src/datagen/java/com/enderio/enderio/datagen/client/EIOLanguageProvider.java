@@ -1,5 +1,6 @@
 package com.enderio.enderio.datagen.client;
 
+import com.enderio.core.common.registries.FluidDeferredHolders;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
@@ -22,16 +23,21 @@ import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOConduits;
 import com.enderio.enderio.init.EIOEntities;
+import com.enderio.enderio.init.EIOFluids;
 import com.enderio.enderio.init.EIOItems;
 import com.enderio.regilite.Regilite;
 import com.enderio.regilite.data.RegiliteDataProvider;
 import net.minecraft.Util;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.common.data.LanguageProvider;
+import net.neoforged.neoforge.fluids.FluidType;
 
 import java.lang.reflect.Field;
 import java.util.Locale;
@@ -58,35 +64,9 @@ public class EIOLanguageProvider extends LanguageProvider {
         addMachineLang();
         addItems();
         addBlocks();
+        addFluids();
         addAdvancementsLang();
         addCommonLang();
-
-        // Gross hack until Regilite is out.
-        try {
-            Field dataProviderField = Regilite.class.getDeclaredField("dataProvider");
-            dataProviderField.setAccessible(true);
-            RegiliteDataProvider dataProvider = (RegiliteDataProvider)dataProviderField.get(EnderIO.REGILITE);
-
-            Field langEntriesField = RegiliteDataProvider.class.getDeclaredField("langEntries");
-            langEntriesField.setAccessible(true);
-
-            //noinspection unchecked
-            Map<Supplier<String>, String> langEntries = (Map<Supplier<String>, String>)langEntriesField.get(dataProvider);
-
-            for (var entry : langEntries.entrySet()) {
-                if (entry.getValue().isEmpty()) {
-                    continue;
-                }
-
-                try {
-                    add(entry.getKey().get(), entry.getValue());
-                } catch (IllegalStateException ex) {
-                    // ignore - just a duplicate key.
-                }
-            }
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     private void addTags() {
@@ -643,7 +623,7 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOBlocks.SILENT_POLISHED_BLACKSTONE_PRESSURE_PLATE.get(), "Silent Polished Blackstone Pressure Plate");
         add(EIOBlocks.SILENT_HEAVY_WEIGHTED_PRESSURE_PLATE.get(), "Silent Heavy Weighted Pressure Plate");
         add(EIOBlocks.SILENT_LIGHT_WEIGHTED_PRESSURE_PLATE.get(), "Silent Light Weighted Pressure Plate");
-        
+
         // Miscellaneous
         add(EIOBlocks.CONDUIT_BUNDLE.get(), "Conduit Bundle");
         add(EIOBlocks.SOUL_CHAIN.get(), "Soul Chain");
@@ -709,6 +689,20 @@ public class EIOLanguageProvider extends LanguageProvider {
         }
     }
 
+    private void addFluids() {
+        add(EIOFluids.NUTRIENT_DISTILLATION, "Nutrient Distillation");
+        add(EIOFluids.DEW_OF_THE_VOID, "Dew of the Void");
+        add(EIOFluids.VAPOR_OF_LEVITY, "Vapor of Levity");
+        add(EIOFluids.HOOTCH, "Hootch");
+        add(EIOFluids.ROCKET_FUEL, "Rocket Fuel");
+        add(EIOFluids.FIRE_WATER, "Fire Water");
+        add(EIOFluids.XP_JUICE, "XP Juice");
+        add(EIOFluids.LIQUID_SUNSHINE, "Liquid Sunshine");
+        add(EIOFluids.LIQUID_DARKNESS, "Liquid Darkness");
+        add(EIOFluids.CLOUD_SEED, "Cloud Seed");
+        add(EIOFluids.CLOUD_SEED_CONCENTRATED, "Cloud Seed Concentrated");
+    }
+
     private void addCommonLang() {
         add(EIOCommonLang.TOOLTIP_ENERGY_EQUIVALENCE, "A unit of energy, equivalent to FE.");
         add(EIOCommonLang.BLOCK_BLAST_RESISTANT, "Blast resistant");
@@ -771,5 +765,18 @@ public class EIOLanguageProvider extends LanguageProvider {
         } else {
             throw new IllegalArgumentException("Component " + component + " is not translatable");
         }
+    }
+
+    public void add(FluidDeferredHolders key, String name) {
+        if (key.bucket() != null) {
+            add(key.bucket().get(), name + " Bucket");
+        }
+
+        add(key.block().get(), name);
+        add(key.type().get(), name);
+    }
+
+    public void add(FluidType key, String name) {
+        this.add(key.getDescriptionId(), name);
     }
 }

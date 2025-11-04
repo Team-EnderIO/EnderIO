@@ -29,13 +29,15 @@ import com.enderio.enderio.content.tools.vials.SoulVialItem;
 import com.enderio.enderio.content.tools.vials.VoidVialItem;
 import com.enderio.enderio.foundation.item.CreativeTabIconItem;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
-import com.enderio.regilite.holder.RegiliteItem;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.component.ItemLore;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 
 import java.util.List;
@@ -43,8 +45,6 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class EIOItems {
     public static final ItemDeferredRegister ITEMS = ItemDeferredRegister.create(EnderIO.MOD_ID);
-
-    // ======== NEW ========
 
     // region Alloys
 

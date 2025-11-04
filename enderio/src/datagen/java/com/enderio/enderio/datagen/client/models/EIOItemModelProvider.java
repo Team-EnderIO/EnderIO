@@ -6,16 +6,20 @@ import com.enderio.enderio.content.fun.EnderiosItem;
 import com.enderio.enderio.content.tools.vials.SoulVialItem;
 import com.enderio.enderio.data.model.item.FacadeItemModelBuilder;
 import com.enderio.enderio.init.EIOBlocks;
+import com.enderio.enderio.init.EIOFluids;
 import com.enderio.enderio.init.EIOItems;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.client.model.generators.loaders.DynamicFluidContainerModelBuilder;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.internal.versions.neoforge.NeoForgeVersion;
 
 import java.util.Locale;
 import java.util.Objects;
@@ -212,6 +216,14 @@ public class EIOItemModelProvider extends ItemModelProvider {
         // Creative Tab Icon
         basicItem(EIOItems.CREATIVE_ICON.get());
 
+        // Buckets
+        for (var item : EIOFluids.FLUIDS.itemsRegister().getEntries()) {
+            // They should all be bucket items.
+            if (item.get() instanceof BucketItem bucketItem) {
+                bucketItem(bucketItem);
+            }
+        }
+
         // region Blocks
 
         // Alloys
@@ -378,5 +390,12 @@ public class EIOItemModelProvider extends ItemModelProvider {
     public ItemModelBuilder flatBlockItem(ResourceLocation block) {
         return this.getBuilder(block.toString()).parent(new ModelFile.UncheckedModelFile("item/generated"))
             .texture("layer0", ResourceLocation.fromNamespaceAndPath(block.getNamespace(), "block/" + block.getPath()));
+    }
+
+    public ItemModelBuilder bucketItem(BucketItem item) {
+        return withExistingParent(BuiltInRegistries.ITEM.getKey(item).toString(), ResourceLocation.fromNamespaceAndPath(NeoForgeVersion.MOD_ID, "item/bucket"))
+            .customLoader(DynamicFluidContainerModelBuilder::begin)
+            .fluid(item.content)
+            .end();
     }
 }

@@ -175,7 +175,7 @@ public class XPObeliskBlockEntity extends MachineBlockEntity implements FluidTan
         cappedVolume = cappedVolume - cappedVolume % ExperienceUtil.EXP_TO_FLUID;
 
         // Determine the fluid to fill with
-        Fluid fillFluid = EIOFluids.XP_JUICE.getSource();
+        Fluid fillFluid = EIOFluids.XP_JUICE.source().get();
         var currentFluid = TANK.getFluid(this);
 
         if (!currentFluid.isEmpty() && !currentFluid.getFluid().isSame(fillFluid)) {

@@ -1,107 +1,89 @@
 package com.enderio.enderio.init;
 
+import com.enderio.core.common.registries.FluidDeferredHolders;
+import com.enderio.core.common.registries.FluidDeferredRegister;
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.foundation.tag.EIOTags;
-import com.enderio.regilite.holder.RegiliteFluid;
-import com.enderio.regilite.registry.BlockRegistry;
-import com.enderio.regilite.registry.FluidRegistry;
-import com.enderio.regilite.registry.ItemRegistry;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.world.item.BucketItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.LiquidBlock;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.Fluid;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.fluids.FluidType;
-import net.neoforged.neoforge.registries.DeferredRegister;
 
 // TODO: Fluid behaviours and some cleaning. https://github.com/SleepyTrousers/EnderIO-Rewrite/issues/34
 
-// TODO: Registrate tint color support, it was some reason omitted in my original PR
-
 @SuppressWarnings("unused")
 public class EIOFluids {
-    private static final FluidRegistry FLUID_TYPE_REGISTRY = EnderIO.REGILITE.fluidRegistry();
-    private static final DeferredRegister<Fluid> FLUID_REGISTRY = DeferredRegister.create(Registries.FLUID,
-            EnderIO.MOD_ID);
-    private static final ItemRegistry ITEM_REGISTRY = EnderIO.REGILITE.itemRegistry();
-    private static final BlockRegistry BLOCK_REGISTRY = EnderIO.REGILITE.blockRegistry();
 
-    public static final RegiliteFluid<FluidType> NUTRIENT_DISTILLATION = fluid("nutrient_distillation",
-            "Nutrient Distillation", FluidType.Properties.create().density(1500).viscosity(3000));
+    public static final FluidDeferredRegister FLUIDS = FluidDeferredRegister.create(EnderIO.MOD_ID);
 
-    public static final RegiliteFluid<FluidType> DEW_OF_THE_VOID = fluid("dew_of_the_void", "Fluid of the Void",
-            FluidType.Properties.create().density(200).viscosity(1000).temperature(175), 3);
+    public static final FluidDeferredHolders NUTRIENT_DISTILLATION = FLUIDS
+        .builder("nutrient_distillation")
+        .fluidProperties(p -> p.density(1500).viscosity(3000))
+        .defaultBucket()
+        .register();
 
-    public static final RegiliteFluid<FluidType> VAPOR_OF_LEVITY = gasFluid("vapor_of_levity", "Vapor of Levity",
-            FluidType.Properties.create().density(-10).viscosity(100).temperature(5));
+    public static final FluidDeferredHolders DEW_OF_THE_VOID = FLUIDS
+        .builder("dew_of_the_void")
+        .fluidProperties(p -> p.lightLevel(3).density(200).viscosity(1000).temperature(175))
+        .blockProperties(p -> p.lightLevel((state) -> 3))
+        .defaultBucket()
+        .register();
 
-    public static final RegiliteFluid<FluidType> HOOTCH = fluid("hootch", "Hootch",
-            FluidType.Properties.create().density(900).viscosity(1000));
+    public static final FluidDeferredHolders VAPOR_OF_LEVITY = FLUIDS
+        .builder("vapor_of_levity")
+        .fluidProperties(p -> p.density(-10).viscosity(100).temperature(5))
+        .defaultBucket()
+        .register();
 
-    public static final RegiliteFluid<FluidType> ROCKET_FUEL = fluid("rocket_fuel", "Rocket Fuel",
-            FluidType.Properties.create().density(900).viscosity(1000));
+    public static final FluidDeferredHolders HOOTCH = FLUIDS
+        .builder("hootch")
+        .fluidProperties(p -> p.density(900).viscosity(1000))
+        .defaultBucket()
+        .register();
 
-    public static final RegiliteFluid<FluidType> FIRE_WATER = fluid("fire_water", "Fire Water",
-            FluidType.Properties.create().density(900).viscosity(1000).temperature(2000), 5);
+    public static final FluidDeferredHolders ROCKET_FUEL = FLUIDS
+        .builder("rocket_fuel")
+        .fluidProperties(p -> p.density(900).viscosity(1000))
+        .defaultBucket()
+        .register();
 
-    public static final RegiliteFluid<FluidType> XP_JUICE = fluid("xp_juice", "XP Juice",
-            FluidType.Properties.create().lightLevel(10).density(800).viscosity(1500), 10)
-                    .addFluidTags(Tags.Fluids.EXPERIENCE);
+    public static final FluidDeferredHolders FIRE_WATER = FLUIDS
+        .builder("fire_water")
+        .fluidProperties(p -> p.lightLevel(5).density(900).viscosity(1000).temperature(2000))
+        .blockProperties(p -> p.lightLevel((state) -> 5))
+        .defaultBucket()
+        .register();
 
-    public static final RegiliteFluid<FluidType> LIQUID_SUNSHINE = fluid("liquid_sunshine", "Liquid Sunshine",
-            FluidType.Properties.create().density(200).viscosity(400).lightLevel(15).temperature(300), 15).addFluidTags(EIOTags.Fluids.SOLAR_PANEL_LIGHT);
+    public static final FluidDeferredHolders XP_JUICE = FLUIDS
+        .builder("xp_juice")
+        .fluidProperties(p -> p.lightLevel(10).density(800).viscosity(1500))
+        .blockProperties(p -> p.lightLevel((state) -> 10))
+        .defaultBucket()
+        .register();
 
-    public static final RegiliteFluid<FluidType> LIQUID_DARKNESS = fluid("liquid_darkness", "Liquid Darkness",
-        FluidType.Properties.create().density(500).viscosity(900).temperature(100)).addFluidTags(EIOTags.Fluids.SOLAR_PANEL_DARK);
+    public static final FluidDeferredHolders LIQUID_SUNSHINE = FLUIDS
+        .builder("liquid_sunshine")
+        .fluidProperties(p -> p.density(200).viscosity(400).lightLevel(15).temperature(300))
+        .blockProperties(p -> p.lightLevel((state) -> 15))
+        .defaultBucket()
+        .register();
 
-    public static final RegiliteFluid<FluidType> CLOUD_SEED = fluid("cloud_seed", "Cloud Seed",
-            FluidType.Properties.create().density(500).viscosity(800));
+    // TODO: Give blindness effect when swimming?
+    public static final FluidDeferredHolders LIQUID_DARKNESS = FLUIDS
+        .builder("liquid_darkness")
+        .fluidProperties(p -> p.density(500).viscosity(900).temperature(100))
+        .defaultBucket()
+        .register();
 
-    public static final RegiliteFluid<FluidType> CLOUD_SEED_CONCENTRATED = fluid("cloud_seed_concentrated",
-            "Cloud Seed Concentrated", FluidType.Properties.create().density(1000).viscosity(1200));
+    public static final FluidDeferredHolders CLOUD_SEED = FLUIDS
+        .builder("cloud_seed")
+        .fluidProperties(p -> p.density(500).viscosity(800))
+        .defaultBucket()
+        .register();
 
-    private static RegiliteFluid<FluidType> fluid(String name, String translation, FluidType.Properties properties, int lightLevel) {
-        return baseFluid(name, properties, lightLevel).setTranslation(translation)
-            .withBucket(ITEM_REGISTRY, fluid -> new BucketItem(fluid.get(), new Item.Properties().stacksTo(1)))
-            .setTab(EIOCreativeTabs.MAIN)
-            .setTranslation(translation + " Bucket")
-            .finishBucket();
-    }
-
-    private static RegiliteFluid<FluidType> fluid(String name, String translation, FluidType.Properties properties) {
-        return baseFluid(name, properties, 0).setTranslation(translation)
-                .withBucket(ITEM_REGISTRY, fluid -> new BucketItem(fluid.get(), new Item.Properties().stacksTo(1)))
-                .setTab(EIOCreativeTabs.MAIN)
-                .setTranslation(translation + " Bucket")
-                .finishBucket();
-    }
-
-    private static RegiliteFluid<FluidType> gasFluid(String name, String translation, FluidType.Properties properties) {
-        return baseFluid(name, properties, 0).setTranslation(translation)
-                .withBucket(ITEM_REGISTRY, fluid -> new BucketItem(fluid.get(), new Item.Properties().stacksTo(1)))
-                .setTab(EIOCreativeTabs.MAIN)
-                .setTranslation(translation + " Bucket")
-                .finishBucket();
-    }
-
-    private static RegiliteFluid<FluidType> baseFluid(String name, FluidType.Properties properties, int lightlevel) {
-        return FLUID_TYPE_REGISTRY.registerFluid(name, properties)
-                .setRenderType(() -> RenderType::translucent)
-                .createFluid(FLUID_REGISTRY)
-                .withBlock(BLOCK_REGISTRY,
-                        fluid -> new LiquidBlock(fluid.get(), BlockBehaviour.Properties.ofFullCopy(Blocks.WATER).lightLevel((state) -> lightlevel)))
-                .finishLiquidBlock();
-    }
+    public static final FluidDeferredHolders CLOUD_SEED_CONCENTRATED = FLUIDS
+        .builder("cloud_seed_concentrated")
+        .fluidProperties(p -> p.density(1000).viscosity(1200))
+        .defaultBucket()
+        .register();
 
     public static void register(IEventBus bus) {
-        FLUID_TYPE_REGISTRY.register(bus);
-        FLUID_REGISTRY.register(bus);
-        BLOCK_REGISTRY.register(bus);
-        ITEM_REGISTRY.register(bus);
+        FLUIDS.register(bus);
     }
 }

@@ -40,6 +40,7 @@ public class EIOCreativeTabs {
             .withSearchBar()
             .displayItems((CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) -> {
                 addAll(EIOItems.ITEMS, parameters, output);
+                addAll(EIOFluids.FLUIDS.itemsRegister(), parameters, output);
                 addAll(EIOBlocks.ITEMS, parameters, output);
                 addSoulItems(parameters, output);
             })
