@@ -5,24 +5,17 @@ import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
 import com.enderio.enderio.content.fun.EnderiosItem;
 import com.enderio.enderio.content.tools.vials.SoulVialItem;
 import com.enderio.enderio.data.model.item.FacadeItemModelBuilder;
-import com.enderio.enderio.content.machines.solar_panel.SolarPanelTier;
-import com.enderio.enderio.data.model.MachineModelUtil;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOItems;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import net.neoforged.neoforge.registries.DeferredBlock;
-import net.neoforged.neoforge.registries.DeferredItem;
 
 import java.util.Locale;
 import java.util.Objects;
@@ -269,6 +262,26 @@ public class EIOItemModelProvider extends ItemModelProvider {
         basicItem(EIOBlocks.SOUL_CHAIN.asItem());
         withExistingParent(EIOBlocks.ENDERMAN_HEAD.getId().toString(), mcLoc("item/template_skull"));
         simpleBlockItem(EIOBlocks.INDUSTRIAL_INSULATION.get());
+
+        // Pressure Plates
+        simpleBlockItem(EIOBlocks.DARK_STEEL_PRESSURE_PLATE.get());
+        simpleBlockItem(EIOBlocks.SILENT_DARK_STEEL_PRESSURE_PLATE.get());
+        simpleBlockItem(EIOBlocks.SOULARIUM_PRESSURE_PLATE.get());
+        simpleBlockItem(EIOBlocks.SILENT_SOULARIUM_PRESSURE_PLATE.get());
+
+        // Silent variants that wrap vanilla blocks — point items at the vanilla block models
+        withExistingParent(EIOBlocks.SILENT_OAK_PRESSURE_PLATE.getId().toString(), mcLoc("item/oak_pressure_plate"));
+        withExistingParent(EIOBlocks.SILENT_ACACIA_PRESSURE_PLATE.getId().toString(), mcLoc("item/acacia_pressure_plate"));
+        withExistingParent(EIOBlocks.SILENT_DARK_OAK_PRESSURE_PLATE.getId().toString(), mcLoc("item/dark_oak_pressure_plate"));
+        withExistingParent(EIOBlocks.SILENT_SPRUCE_PRESSURE_PLATE.getId().toString(), mcLoc("item/spruce_pressure_plate"));
+        withExistingParent(EIOBlocks.SILENT_BIRCH_PRESSURE_PLATE.getId().toString(), mcLoc("item/birch_pressure_plate"));
+        withExistingParent(EIOBlocks.SILENT_JUNGLE_PRESSURE_PLATE.getId().toString(), mcLoc("item/jungle_pressure_plate"));
+        withExistingParent(EIOBlocks.SILENT_CRIMSON_PRESSURE_PLATE.getId().toString(), mcLoc("item/crimson_pressure_plate"));
+        withExistingParent(EIOBlocks.SILENT_WARPED_PRESSURE_PLATE.getId().toString(), mcLoc("item/warped_pressure_plate"));
+        withExistingParent(EIOBlocks.SILENT_STONE_PRESSURE_PLATE.getId().toString(), mcLoc("item/stone_pressure_plate"));
+        withExistingParent(EIOBlocks.SILENT_POLISHED_BLACKSTONE_PRESSURE_PLATE.getId().toString(), mcLoc("item/polished_blackstone_pressure_plate"));
+        withExistingParent(EIOBlocks.SILENT_HEAVY_WEIGHTED_PRESSURE_PLATE.getId().toString(), mcLoc("item/heavy_weighted_pressure_plate"));
+        withExistingParent(EIOBlocks.SILENT_LIGHT_WEIGHTED_PRESSURE_PLATE.getId().toString(), mcLoc("item/light_weighted_pressure_plate"));
 
         // Machine Blocks
         addMachineItemModels();

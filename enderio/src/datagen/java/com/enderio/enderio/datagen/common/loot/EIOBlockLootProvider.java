@@ -79,6 +79,24 @@ public class EIOBlockLootProvider extends BlockLootSubProvider {
         for (var lever : EIOBlocks.RESETTING_LEVERS) {
             dropSelf(lever.get());
         }
+        
+        // Pressure plates
+        dropSelf(EIOBlocks.DARK_STEEL_PRESSURE_PLATE.get());
+        dropSelf(EIOBlocks.SILENT_DARK_STEEL_PRESSURE_PLATE.get());
+        dropSelf(EIOBlocks.SOULARIUM_PRESSURE_PLATE.get());
+        dropSelf(EIOBlocks.SILENT_SOULARIUM_PRESSURE_PLATE.get());
+        dropSelf(EIOBlocks.SILENT_OAK_PRESSURE_PLATE.get());
+        dropSelf(EIOBlocks.SILENT_ACACIA_PRESSURE_PLATE.get());
+        dropSelf(EIOBlocks.SILENT_DARK_OAK_PRESSURE_PLATE.get());
+        dropSelf(EIOBlocks.SILENT_SPRUCE_PRESSURE_PLATE.get());
+        dropSelf(EIOBlocks.SILENT_BIRCH_PRESSURE_PLATE.get());
+        dropSelf(EIOBlocks.SILENT_JUNGLE_PRESSURE_PLATE.get());
+        dropSelf(EIOBlocks.SILENT_CRIMSON_PRESSURE_PLATE.get());
+        dropSelf(EIOBlocks.SILENT_WARPED_PRESSURE_PLATE.get());
+        dropSelf(EIOBlocks.SILENT_STONE_PRESSURE_PLATE.get());
+        dropSelf(EIOBlocks.SILENT_POLISHED_BLACKSTONE_PRESSURE_PLATE.get());
+        dropSelf(EIOBlocks.SILENT_HEAVY_WEIGHTED_PRESSURE_PLATE.get());
+        dropSelf(EIOBlocks.SILENT_LIGHT_WEIGHTED_PRESSURE_PLATE.get());
 
         // Glass blocks
         for (var glassBlocks : EIOBlocks.GLASS_BLOCKS.values()) {

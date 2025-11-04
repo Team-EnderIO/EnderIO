@@ -10,6 +10,7 @@ import com.enderio.enderio.data.model.MachineModelUtil;
 import com.enderio.enderio.data.model.block.ConduitModelBuilder;
 import com.enderio.enderio.data.model.block.EIOBlockState;
 import com.enderio.enderio.data.model.block.PaintedBlockModelBuilder;
+import com.enderio.enderio.foundation.block.ProgressMachineBlock;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.regilite.data.DataGenContext;
 import net.minecraft.core.Direction;
@@ -20,6 +21,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ChainBlock;
 import net.minecraft.world.level.block.LeverBlock;
+import net.minecraft.world.level.block.PressurePlateBlock;
+import net.minecraft.world.level.block.WeightedPressurePlateBlock;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
@@ -124,6 +127,26 @@ public class EIOBlockStateProvider extends BlockStateProvider {
         simpleBlock(EIOBlocks.ENDERMAN_HEAD.get(), models().getExistingFile(mcLoc("block/skull")));
         simpleBlock(EIOBlocks.WALL_ENDERMAN_HEAD.get(), models().getExistingFile(mcLoc("block/skull")));
         simpleBlock(EIOBlocks.INDUSTRIAL_INSULATION.get());
+
+        // Pressure Plates
+        eioPressurePlateBlock(EIOBlocks.DARK_STEEL_PRESSURE_PLATE.get());
+        eioPressurePlateBlock(EIOBlocks.SILENT_DARK_STEEL_PRESSURE_PLATE.get());
+        eioPressurePlateBlock(EIOBlocks.SOULARIUM_PRESSURE_PLATE.get());
+        eioPressurePlateBlock(EIOBlocks.SILENT_SOULARIUM_PRESSURE_PLATE.get());
+        // Silent variants wrapping vanilla blocks
+        silentPressurePlateBlock(EIOBlocks.SILENT_OAK_PRESSURE_PLATE.get(), Blocks.OAK_PRESSURE_PLATE);
+        silentPressurePlateBlock(EIOBlocks.SILENT_ACACIA_PRESSURE_PLATE.get(), Blocks.ACACIA_PRESSURE_PLATE);
+        silentPressurePlateBlock(EIOBlocks.SILENT_DARK_OAK_PRESSURE_PLATE.get(), Blocks.DARK_OAK_PRESSURE_PLATE);
+        silentPressurePlateBlock(EIOBlocks.SILENT_SPRUCE_PRESSURE_PLATE.get(), Blocks.SPRUCE_PRESSURE_PLATE);
+        silentPressurePlateBlock(EIOBlocks.SILENT_BIRCH_PRESSURE_PLATE.get(), Blocks.BIRCH_PRESSURE_PLATE);
+        silentPressurePlateBlock(EIOBlocks.SILENT_JUNGLE_PRESSURE_PLATE.get(), Blocks.JUNGLE_PRESSURE_PLATE);
+        silentPressurePlateBlock(EIOBlocks.SILENT_CRIMSON_PRESSURE_PLATE.get(), Blocks.CRIMSON_PRESSURE_PLATE);
+        silentPressurePlateBlock(EIOBlocks.SILENT_WARPED_PRESSURE_PLATE.get(), Blocks.WARPED_PRESSURE_PLATE);
+        silentPressurePlateBlock(EIOBlocks.SILENT_STONE_PRESSURE_PLATE.get(), Blocks.STONE_PRESSURE_PLATE);
+        silentPressurePlateBlock(EIOBlocks.SILENT_POLISHED_BLACKSTONE_PRESSURE_PLATE.get(), Blocks.POLISHED_BLACKSTONE_PRESSURE_PLATE);
+        // Silent weighted
+        silentWeightedPressurePlateBlock(EIOBlocks.SILENT_HEAVY_WEIGHTED_PRESSURE_PLATE.get(), (WeightedPressurePlateBlock) Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE);
+        silentWeightedPressurePlateBlock(EIOBlocks.SILENT_LIGHT_WEIGHTED_PRESSURE_PLATE.get(), (WeightedPressurePlateBlock) Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE);
 
         machineBlocks();
     }
@@ -294,13 +317,48 @@ public class EIOBlockStateProvider extends BlockStateProvider {
         var poweredModel = wrapMachineModel(block, powered);
         getVariantBuilder(block)
             .forAllStates(state -> ConfiguredModel.builder()
-                .modelFile(state.getValue(com.enderio.enderio.foundation.block.ProgressMachineBlock.POWERED) ? poweredModel : unpoweredModel)
+                .modelFile(state.getValue(ProgressMachineBlock.POWERED) ? poweredModel : unpoweredModel)
                 .rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + 180) % 360)
                 .build());
     }
 
     private void solarPanelBlock(SolarPanelBlock block, SolarPanelTier tier) {
         MachineModelUtil.solarPanel(this, new DataGenContext<>(key(block), () -> block), tier);
+    }
+
+    private void eioPressurePlateBlock(Block block) {
+        String name = name(block);
+        ResourceLocation texture;
+        if (name.startsWith("silent_")) {
+            texture = EnderIO.rl("block/" + name.substring(7));
+        } else {
+            texture = blockTexture(block);
+        }
+
+        ModelFile down = models().withExistingParent(name + "_down", mcLoc("block/pressure_plate_down")).texture("texture", texture);
+        ModelFile up = models().withExistingParent(name, mcLoc("block/pressure_plate_up")).texture("texture", texture);
+        VariantBlockStateBuilder vb = getVariantBuilder(block);
+        vb.partialState().with(PressurePlateBlock.POWERED, true).addModels(new ConfiguredModel(down));
+        vb.partialState().with(PressurePlateBlock.POWERED, false).addModels(new ConfiguredModel(up));
+    }
+
+    private void silentPressurePlateBlock(Block block, Block vanillaBlock) {
+        ResourceLocation upModelLoc = BuiltInRegistries.BLOCK.getKey(vanillaBlock);
+        ResourceLocation downModelLoc = ResourceLocation.fromNamespaceAndPath(upModelLoc.getNamespace(), upModelLoc.getPath() + "_down");
+        VariantBlockStateBuilder vb = getVariantBuilder(block);
+        vb.partialState().with(PressurePlateBlock.POWERED, true).addModels(new ConfiguredModel(models().getExistingFile(downModelLoc)));
+        vb.partialState().with(PressurePlateBlock.POWERED, false).addModels(new ConfiguredModel(models().getExistingFile(upModelLoc)));
+    }
+
+    private void silentWeightedPressurePlateBlock(Block block, WeightedPressurePlateBlock vanillaBlock) {
+        ResourceLocation upModelLoc = BuiltInRegistries.BLOCK.getKey(vanillaBlock);
+        ResourceLocation downModelLoc = ResourceLocation.fromNamespaceAndPath(upModelLoc.getNamespace(), upModelLoc.getPath() + "_down");
+        getVariantBuilder(block).forAllStates(blockState -> {
+            if (blockState.getValue(net.minecraft.world.level.block.WeightedPressurePlateBlock.POWER) == 0) {
+                return new ConfiguredModel[] { new ConfiguredModel(models().getExistingFile(upModelLoc)) };
+            }
+            return new ConfiguredModel[] { new ConfiguredModel(models().getExistingFile(downModelLoc)) };
+        });
     }
 
     private ModelFile wrapMachineModel(Block block, ResourceLocation model) {

@@ -605,7 +605,7 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOBlocks.DARK_STEEL_TRAPDOOR.get(), "Dark Steel Trapdoor");
         add(EIOBlocks.END_STEEL_BARS.get(), "End Steel Bars");
         add(EIOBlocks.REINFORCED_OBSIDIAN.get(), "Reinforced Obsidian");
-        
+
         // Painted Blocks
         add(EIOBlocks.PAINTED_FENCE.get(), "Painted Fence");
         add(EIOBlocks.PAINTED_FENCE_GATE.get(), "Painted Fence Gate");
@@ -626,6 +626,24 @@ public class EIOLanguageProvider extends LanguageProvider {
             add(lever.get(), "Resetting Lever " + (lever.get().inverted() ? "Inverted " : "") + durationLabel);
         }
 
+        // Pressure plates
+        add(EIOBlocks.DARK_STEEL_PRESSURE_PLATE.get(), "Dark Steel Pressure Plate");
+        add(EIOBlocks.SILENT_DARK_STEEL_PRESSURE_PLATE.get(), "Silent Dark Steel Pressure Plate");
+        add(EIOBlocks.SOULARIUM_PRESSURE_PLATE.get(), "Soularium Pressure Plate");
+        add(EIOBlocks.SILENT_SOULARIUM_PRESSURE_PLATE.get(), "Silent Soularium Pressure Plate");
+        add(EIOBlocks.SILENT_OAK_PRESSURE_PLATE.get(), "Silent Oak Pressure Plate");
+        add(EIOBlocks.SILENT_ACACIA_PRESSURE_PLATE.get(), "Silent Acacia Pressure Plate");
+        add(EIOBlocks.SILENT_DARK_OAK_PRESSURE_PLATE.get(), "Silent Dark Oak Pressure Plate");
+        add(EIOBlocks.SILENT_SPRUCE_PRESSURE_PLATE.get(), "Silent Spruce Pressure Plate");
+        add(EIOBlocks.SILENT_BIRCH_PRESSURE_PLATE.get(), "Silent Birch Pressure Plate");
+        add(EIOBlocks.SILENT_JUNGLE_PRESSURE_PLATE.get(), "Silent Jungle Pressure Plate");
+        add(EIOBlocks.SILENT_CRIMSON_PRESSURE_PLATE.get(), "Silent Crimson Pressure Plate");
+        add(EIOBlocks.SILENT_WARPED_PRESSURE_PLATE.get(), "Silent Warped Pressure Plate");
+        add(EIOBlocks.SILENT_STONE_PRESSURE_PLATE.get(), "Silent Stone Pressure Plate");
+        add(EIOBlocks.SILENT_POLISHED_BLACKSTONE_PRESSURE_PLATE.get(), "Silent Polished Blackstone Pressure Plate");
+        add(EIOBlocks.SILENT_HEAVY_WEIGHTED_PRESSURE_PLATE.get(), "Silent Heavy Weighted Pressure Plate");
+        add(EIOBlocks.SILENT_LIGHT_WEIGHTED_PRESSURE_PLATE.get(), "Silent Light Weighted Pressure Plate");
+        
         // Miscellaneous
         add(EIOBlocks.CONDUIT_BUNDLE.get(), "Conduit Bundle");
         add(EIOBlocks.SOUL_CHAIN.get(), "Soul Chain");

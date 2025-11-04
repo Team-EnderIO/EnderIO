@@ -62,15 +62,11 @@ import com.enderio.enderio.foundation.block.MachineBlock;
 import com.enderio.enderio.foundation.block.ProgressMachineBlock;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.block.legacy.LegacyMachineBlock;
-import com.enderio.regilite.holder.RegiliteBlock;
-import com.enderio.regilite.registry.BlockRegistry;
-import com.enderio.regilite.registry.ItemRegistry;
 import com.google.common.collect.ImmutableMap;
 import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -89,10 +85,6 @@ import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.client.model.generators.BlockModelProvider;
-import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
-import net.neoforged.neoforge.client.model.generators.ModelFile;
-import net.neoforged.neoforge.client.model.generators.VariantBlockStateBuilder;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -231,7 +223,67 @@ public class EIOBlocks {
 
     // region Pressure Plates
 
+    public static final DeferredBlock<EIOPressurePlateBlock> DARK_STEEL_PRESSURE_PLATE = registerWithItem("dark_steel_pressure_plate",
+        props -> new EIOPressurePlateBlock(props, EIOPressurePlateBlock.PLAYER, false),
+        BlockBehaviour.Properties.of().strength(5, 6).mapColor(MapColor.METAL));
 
+    public static final DeferredBlock<EIOPressurePlateBlock> SILENT_DARK_STEEL_PRESSURE_PLATE = registerWithItem("silent_dark_steel_pressure_plate",
+        props -> new EIOPressurePlateBlock(props, EIOPressurePlateBlock.PLAYER, true),
+        BlockBehaviour.Properties.of().strength(5, 6).mapColor(MapColor.METAL));
+
+    public static final DeferredBlock<EIOPressurePlateBlock> SOULARIUM_PRESSURE_PLATE = registerWithItem("soularium_pressure_plate",
+        props -> new EIOPressurePlateBlock(props, EIOPressurePlateBlock.HOSTILE_MOB, false),
+        BlockBehaviour.Properties.of().strength(5, 6).mapColor(MapColor.METAL));
+
+    public static final DeferredBlock<EIOPressurePlateBlock> SILENT_SOULARIUM_PRESSURE_PLATE = registerWithItem("silent_soularium_pressure_plate",
+        props -> new EIOPressurePlateBlock(props, EIOPressurePlateBlock.HOSTILE_MOB, true),
+        BlockBehaviour.Properties.of().strength(5, 6).mapColor(MapColor.METAL));
+
+    public static final DeferredBlock<SilentPressurePlateBlock> SILENT_OAK_PRESSURE_PLATE = silentPressurePlateBlock(
+        (PressurePlateBlock) Blocks.OAK_PRESSURE_PLATE);
+
+    public static final DeferredBlock<SilentPressurePlateBlock> SILENT_ACACIA_PRESSURE_PLATE = silentPressurePlateBlock(
+        (PressurePlateBlock) Blocks.ACACIA_PRESSURE_PLATE);
+
+    public static final DeferredBlock<SilentPressurePlateBlock> SILENT_DARK_OAK_PRESSURE_PLATE = silentPressurePlateBlock(
+        (PressurePlateBlock) Blocks.DARK_OAK_PRESSURE_PLATE);
+
+    public static final DeferredBlock<SilentPressurePlateBlock> SILENT_SPRUCE_PRESSURE_PLATE = silentPressurePlateBlock(
+        (PressurePlateBlock) Blocks.SPRUCE_PRESSURE_PLATE);
+
+    public static final DeferredBlock<SilentPressurePlateBlock> SILENT_BIRCH_PRESSURE_PLATE = silentPressurePlateBlock(
+        (PressurePlateBlock) Blocks.BIRCH_PRESSURE_PLATE);
+
+    public static final DeferredBlock<SilentPressurePlateBlock> SILENT_JUNGLE_PRESSURE_PLATE = silentPressurePlateBlock(
+        (PressurePlateBlock) Blocks.JUNGLE_PRESSURE_PLATE);
+
+    public static final DeferredBlock<SilentPressurePlateBlock> SILENT_CRIMSON_PRESSURE_PLATE = silentPressurePlateBlock(
+        (PressurePlateBlock) Blocks.CRIMSON_PRESSURE_PLATE);
+
+    public static final DeferredBlock<SilentPressurePlateBlock> SILENT_WARPED_PRESSURE_PLATE = silentPressurePlateBlock(
+        (PressurePlateBlock) Blocks.WARPED_PRESSURE_PLATE);
+
+    public static final DeferredBlock<SilentPressurePlateBlock> SILENT_STONE_PRESSURE_PLATE = silentPressurePlateBlock(
+        (PressurePlateBlock) Blocks.STONE_PRESSURE_PLATE);
+
+    public static final DeferredBlock<SilentPressurePlateBlock> SILENT_POLISHED_BLACKSTONE_PRESSURE_PLATE = silentPressurePlateBlock(
+        (PressurePlateBlock) Blocks.POLISHED_BLACKSTONE_PRESSURE_PLATE);
+
+    public static final DeferredBlock<SilentWeightedPressurePlateBlock> SILENT_HEAVY_WEIGHTED_PRESSURE_PLATE = silentWeightedPressurePlateBlock(
+        (WeightedPressurePlateBlock) Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE);
+
+    public static final DeferredBlock<SilentWeightedPressurePlateBlock> SILENT_LIGHT_WEIGHTED_PRESSURE_PLATE = silentWeightedPressurePlateBlock(
+        (WeightedPressurePlateBlock) Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE);
+
+    private static DeferredBlock<SilentPressurePlateBlock> silentPressurePlateBlock(final PressurePlateBlock block) {
+        ResourceLocation upModelLoc = Objects.requireNonNull(BuiltInRegistries.BLOCK.getKey(block));
+        return registerWithItem("silent_" + upModelLoc.getPath(), props -> new SilentPressurePlateBlock(block), BlockBehaviour.Properties.of());
+    }
+
+    private static DeferredBlock<SilentWeightedPressurePlateBlock> silentWeightedPressurePlateBlock(WeightedPressurePlateBlock block) {
+        ResourceLocation upModelLoc = Objects.requireNonNull(BuiltInRegistries.BLOCK.getKey(block));
+        return registerWithItem("silent_" + upModelLoc.getPath(), props -> new SilentWeightedPressurePlateBlock(block), BlockBehaviour.Properties.of());
+    }
 
     // endregion
 
@@ -568,130 +620,12 @@ public class EIOBlocks {
         return blockHolder;
     }
 
-    // ======== OLD
-
-    private static final BlockRegistry BLOCK_REGISTRY = EnderIO.REGILITE.blockRegistry();
-    private static final ItemRegistry ITEM_REGISTRY = EnderIO.REGILITE.itemRegistry();
-
-    // region Pressure Plates
-
-    public static final RegiliteBlock<EIOPressurePlateBlock> DARK_STEEL_PRESSURE_PLATE = pressurePlateBlock("dark_steel_pressure_plate",
-        EnderIO.rl("block/dark_steel_pressure_plate"), EIOPressurePlateBlock.PLAYER, false);
-
-    public static final RegiliteBlock<EIOPressurePlateBlock> SILENT_DARK_STEEL_PRESSURE_PLATE = pressurePlateBlock("silent_dark_steel_pressure_plate",
-        EnderIO.rl("block/dark_steel_pressure_plate"), EIOPressurePlateBlock.PLAYER, true);
-
-    public static final RegiliteBlock<EIOPressurePlateBlock> SOULARIUM_PRESSURE_PLATE = pressurePlateBlock("soularium_pressure_plate",
-        EnderIO.rl("block/soularium_pressure_plate"), EIOPressurePlateBlock.HOSTILE_MOB, false);
-
-    public static final RegiliteBlock<EIOPressurePlateBlock> SILENT_SOULARIUM_PRESSURE_PLATE = pressurePlateBlock("silent_soularium_pressure_plate",
-        EnderIO.rl("block/soularium_pressure_plate"), EIOPressurePlateBlock.HOSTILE_MOB, true);
-
-    public static final RegiliteBlock<SilentPressurePlateBlock> SILENT_OAK_PRESSURE_PLATE = silentPressurePlateBlock(
-        (PressurePlateBlock) Blocks.OAK_PRESSURE_PLATE);
-
-    public static final RegiliteBlock<SilentPressurePlateBlock> SILENT_ACACIA_PRESSURE_PLATE = silentPressurePlateBlock(
-        (PressurePlateBlock) Blocks.ACACIA_PRESSURE_PLATE);
-
-    public static final RegiliteBlock<SilentPressurePlateBlock> SILENT_DARK_OAK_PRESSURE_PLATE = silentPressurePlateBlock(
-        (PressurePlateBlock) Blocks.DARK_OAK_PRESSURE_PLATE);
-
-    public static final RegiliteBlock<SilentPressurePlateBlock> SILENT_SPRUCE_PRESSURE_PLATE = silentPressurePlateBlock(
-        (PressurePlateBlock) Blocks.SPRUCE_PRESSURE_PLATE);
-
-    public static final RegiliteBlock<SilentPressurePlateBlock> SILENT_BIRCH_PRESSURE_PLATE = silentPressurePlateBlock(
-        (PressurePlateBlock) Blocks.BIRCH_PRESSURE_PLATE);
-
-    public static final RegiliteBlock<SilentPressurePlateBlock> SILENT_JUNGLE_PRESSURE_PLATE = silentPressurePlateBlock(
-        (PressurePlateBlock) Blocks.JUNGLE_PRESSURE_PLATE);
-
-    public static final RegiliteBlock<SilentPressurePlateBlock> SILENT_CRIMSON_PRESSURE_PLATE = silentPressurePlateBlock(
-        (PressurePlateBlock) Blocks.CRIMSON_PRESSURE_PLATE);
-
-    public static final RegiliteBlock<SilentPressurePlateBlock> SILENT_WARPED_PRESSURE_PLATE = silentPressurePlateBlock(
-        (PressurePlateBlock) Blocks.WARPED_PRESSURE_PLATE);
-
-    public static final RegiliteBlock<SilentPressurePlateBlock> SILENT_STONE_PRESSURE_PLATE = silentPressurePlateBlock(
-        (PressurePlateBlock) Blocks.STONE_PRESSURE_PLATE);
-
-    public static final RegiliteBlock<SilentPressurePlateBlock> SILENT_POLISHED_BLACKSTONE_PRESSURE_PLATE = silentPressurePlateBlock(
-        (PressurePlateBlock) Blocks.POLISHED_BLACKSTONE_PRESSURE_PLATE);
-
-    public static final RegiliteBlock<SilentWeightedPressurePlateBlock> SILENT_HEAVY_WEIGHTED_PRESSURE_PLATE = silentWeightedPressurePlateBlock(
-        (WeightedPressurePlateBlock) Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE);
-
-    public static final RegiliteBlock<SilentWeightedPressurePlateBlock> SILENT_LIGHT_WEIGHTED_PRESSURE_PLATE = silentWeightedPressurePlateBlock(
-        (WeightedPressurePlateBlock) Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE);
-
-    private static RegiliteBlock<EIOPressurePlateBlock> pressurePlateBlock(String name, ResourceLocation texture, EIOPressurePlateBlock.Detector type,
-        boolean silent) {
-
-        return BLOCK_REGISTRY
-            .registerBlock(name, props -> new EIOPressurePlateBlock(props, type, silent),
-                BlockBehaviour.Properties.of().strength(5, 6).mapColor(MapColor.METAL))
-            .setBlockStateProvider((prov, ctx) -> {
-                BlockModelProvider modProv = prov.models();
-                ModelFile dm = modProv.withExistingParent(name + "_down", prov.mcLoc("block/pressure_plate_down")).texture("texture", texture);
-                ModelFile um = modProv.withExistingParent(name, prov.mcLoc("block/pressure_plate_up")).texture("texture", texture);
-
-                VariantBlockStateBuilder vb = prov.getVariantBuilder(ctx.get());
-                vb.partialState().with(PressurePlateBlock.POWERED, true).addModels(new ConfiguredModel(dm));
-                vb.partialState().with(PressurePlateBlock.POWERED, false).addModels(new ConfiguredModel(um));
-            })
-            .addBlockTags(BlockTags.NEEDS_STONE_TOOL, BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.PRESSURE_PLATES)
-            .createBlockItem(ITEM_REGISTRY, item -> item
-                .setTab(EIOCreativeTabs.MAIN)
-            );
-    }
-
-    private static RegiliteBlock<SilentPressurePlateBlock> silentPressurePlateBlock(final PressurePlateBlock block) {
-        ResourceLocation upModelLoc = Objects.requireNonNull(BuiltInRegistries.BLOCK.getKey(block));
-        ResourceLocation downModelLoc = ResourceLocation.fromNamespaceAndPath(upModelLoc.getNamespace(), upModelLoc.getPath() + "_down");
-
-        return BLOCK_REGISTRY
-            .registerBlock("silent_" + upModelLoc.getPath(), props -> new SilentPressurePlateBlock(block),
-                BlockBehaviour.Properties.of())
-            .addBlockTags(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.PRESSURE_PLATES)
-            .setBlockStateProvider((prov, ctx) -> {
-                VariantBlockStateBuilder vb = prov.getVariantBuilder(ctx.get());
-                vb.partialState().with(PressurePlateBlock.POWERED, true).addModels(new ConfiguredModel(prov.models().getExistingFile(downModelLoc)));
-                vb.partialState().with(PressurePlateBlock.POWERED, false).addModels(new ConfiguredModel(prov.models().getExistingFile(upModelLoc)));
-            })
-            .createBlockItem(ITEM_REGISTRY, item -> item
-                .setModelProvider((prov, ctx) -> prov.withExistingParent(ctx.getName(), upModelLoc))
-                .setTab(EIOCreativeTabs.MAIN)
-            );
-    }
-
-    private static RegiliteBlock<SilentWeightedPressurePlateBlock> silentWeightedPressurePlateBlock(WeightedPressurePlateBlock block) {
-        ResourceLocation upModelLoc = Objects.requireNonNull(BuiltInRegistries.BLOCK.getKey(block));
-        ResourceLocation downModelLoc = ResourceLocation.fromNamespaceAndPath(upModelLoc.getNamespace(), upModelLoc.getPath() + "_down");
-
-        return BLOCK_REGISTRY
-            .registerBlock("silent_" + upModelLoc.getPath(), props -> new SilentWeightedPressurePlateBlock(block),
-                BlockBehaviour.Properties.of())
-            .setBlockStateProvider((prov, ctx) -> prov.getVariantBuilder(ctx.get()).forAllStates(blockState -> {
-                if (blockState.getValue(WeightedPressurePlateBlock.POWER) == 0) {
-                    return new ConfiguredModel[] { new ConfiguredModel(prov.models().getExistingFile(upModelLoc)) };
-                }
-                return new ConfiguredModel[] { new ConfiguredModel(prov.models().getExistingFile(downModelLoc)) };
-            }))
-            .addBlockTags(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.PRESSURE_PLATES)
-            .createBlockItem(ITEM_REGISTRY, item -> item
-                .setModelProvider((prov, ctx) -> prov.withExistingParent(ctx.getName(), upModelLoc))
-                .setTab(EIOCreativeTabs.MAIN)
-            );
-    }
-
     public static void register(IEventBus bus) {
         BLOCKS.addAlias(EnderIO.rl("industrial_insulation_block"), EnderIO.rl("industrial_insulation"));
         ITEMS.addAlias(EnderIO.rl("industrial_insulation_block"), EnderIO.rl("industrial_insulation"));
 
         BLOCKS.register(bus);
         ITEMS.register(bus);
-
-        BLOCK_REGISTRY.register(bus);
-        ITEM_REGISTRY.register(bus);
     }
 
 }

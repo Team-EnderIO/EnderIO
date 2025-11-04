@@ -199,6 +199,50 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
         addPaintedBlocks();
         addGlassBlocks();
         addMachineBlockTags();
+
+        // Pressure plates
+        tag(BlockTags.PRESSURE_PLATES)
+            .add(EIOBlocks.DARK_STEEL_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_DARK_STEEL_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SOULARIUM_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_SOULARIUM_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_OAK_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_ACACIA_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_DARK_OAK_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_SPRUCE_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_BIRCH_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_JUNGLE_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_CRIMSON_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_WARPED_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_STONE_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_POLISHED_BLACKSTONE_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_HEAVY_WEIGHTED_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_LIGHT_WEIGHTED_PRESSURE_PLATE.get());
+
+        tag(BlockTags.MINEABLE_WITH_PICKAXE)
+            .add(EIOBlocks.DARK_STEEL_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_DARK_STEEL_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SOULARIUM_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_SOULARIUM_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_OAK_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_ACACIA_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_DARK_OAK_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_SPRUCE_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_BIRCH_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_JUNGLE_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_CRIMSON_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_WARPED_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_STONE_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_POLISHED_BLACKSTONE_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_HEAVY_WEIGHTED_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_LIGHT_WEIGHTED_PRESSURE_PLATE.get());
+
+        // Only EIO metal plates require stone tools
+        tag(BlockTags.NEEDS_STONE_TOOL)
+            .add(EIOBlocks.DARK_STEEL_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_DARK_STEEL_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SOULARIUM_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_SOULARIUM_PRESSURE_PLATE.get());
     }
 
     private void addMachineBlockTags() {
