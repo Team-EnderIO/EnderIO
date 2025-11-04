@@ -5,8 +5,11 @@ import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
 import com.enderio.enderio.content.fun.EnderiosItem;
 import com.enderio.enderio.content.tools.vials.SoulVialItem;
 import com.enderio.enderio.data.model.item.FacadeItemModelBuilder;
+import com.enderio.enderio.content.machines.solar_panel.SolarPanelTier;
+import com.enderio.enderio.data.model.MachineModelUtil;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOItems;
+import com.enderio.enderio.init.MachineBlocks;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
@@ -22,6 +25,7 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredItem;
 
+import java.util.Locale;
 import java.util.Objects;
 
 public class EIOItemModelProvider extends ItemModelProvider {
@@ -267,7 +271,83 @@ public class EIOItemModelProvider extends ItemModelProvider {
         withExistingParent(EIOBlocks.ENDERMAN_HEAD.getId().toString(), mcLoc("item/template_skull"));
         simpleBlockItem(EIOBlocks.INDUSTRIAL_INSULATION.get());
 
+        // Machine Blocks
+        addMachineItemModels();
+
         // endregion
+    }
+
+    private void addMachineItemModels() {
+        // Fluid Tanks - no item model needed (empty)
+        
+        // Enchanter
+        simpleBlockItem(MachineBlocks.ENCHANTER.get());
+
+        // Enderface
+        simpleBlockItem(MachineBlocks.ENDERFACE.get());
+
+        // Progress Machines
+        simpleBlockItem(MachineBlocks.ALLOY_SMELTER.get());
+        simpleBlockItem(MachineBlocks.PAINTING_MACHINE.get());
+        simpleBlockItem(MachineBlocks.WIRELESS_CHARGER.get());
+        simpleBlockItem(MachineBlocks.STIRLING_GENERATOR.get());
+        simpleBlockItem(MachineBlocks.SAG_MILL.get());
+        simpleBlockItem(MachineBlocks.SLICE_AND_SPLICE.get());
+        simpleBlockItem(MachineBlocks.IMPULSE_HOPPER.get());
+        simpleBlockItem(MachineBlocks.SOUL_BINDER.get());
+        simpleBlockItem(MachineBlocks.CRAFTER.get());
+        simpleBlockItem(MachineBlocks.DRAIN.get());
+        simpleBlockItem(MachineBlocks.POWERED_SPAWNER.get());
+        simpleBlockItem(MachineBlocks.SOUL_ENGINE.get());
+
+        // Machines
+        simpleBlockItem(MachineBlocks.WIRED_CHARGER.get());
+
+        // Wireless Antennas
+        simpleBlockItem(MachineBlocks.WIRELESS_CHARGER_ANTENNA.get());
+        simpleBlockItem(MachineBlocks.WIRELESS_CHARGER_ANTENNA_ADVANCED.get());
+
+        // Creative Power
+        simpleBlockItem(MachineBlocks.CREATIVE_POWER.get());
+
+        // Mind Killer
+        simpleBlockItem(MachineBlocks.MIND_KILLER.get());
+
+        // Vacuum Machines
+        simpleBlockItem(MachineBlocks.VACUUM_CHEST.get());
+        simpleBlockItem(MachineBlocks.XP_VACUUM.get());
+
+        // Travel Anchors
+        simpleBlockItem(MachineBlocks.TRAVEL_ANCHOR.get());
+        simpleBlockItem(MachineBlocks.PAINTED_TRAVEL_ANCHOR.get());
+
+        // Solar Panels
+        for (var entry : MachineBlocks.SOLAR_PANELS.entrySet()) {
+            String tierName = entry.getKey().name().toLowerCase(Locale.ROOT);
+            withExistingParent(entry.getValue().getId().toString(), EnderIO.rl("item/photovoltaic_cell"))
+                .texture("side", "block/" + tierName + "_side")
+                .texture("panel", "block/" + tierName + "_top");
+        }
+
+        // Capacitor Banks - no item model needed (empty)
+
+        // Niard
+        simpleBlockItem(MachineBlocks.NIARD.get());
+
+        // VAT
+        simpleBlockItem(MachineBlocks.VAT.get());
+
+        // Block Detector
+        simpleBlockItem(MachineBlocks.BLOCK_DETECTOR.get());
+
+        // Obelisks
+        simpleBlockItem(MachineBlocks.XP_OBELISK.get());
+        simpleBlockItem(MachineBlocks.FARMING_STATION.get());
+        simpleBlockItem(MachineBlocks.INHIBITOR_OBELISK.get());
+        simpleBlockItem(MachineBlocks.AVERSION_OBELISK.get());
+        simpleBlockItem(MachineBlocks.RELOCATOR_OBELISK.get());
+        simpleBlockItem(MachineBlocks.ATTRACTOR_OBELISK.get());
+        simpleBlockItem(MachineBlocks.WEATHER_OBELISK.get());
     }
 
     private ItemModelBuilder fakeBlock(ItemLike item) {

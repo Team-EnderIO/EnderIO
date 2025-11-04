@@ -23,6 +23,7 @@ import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOConduits;
 import com.enderio.enderio.init.EIOEntities;
 import com.enderio.enderio.init.EIOItems;
+import com.enderio.enderio.init.MachineBlocks;
 import com.enderio.regilite.Regilite;
 import com.enderio.regilite.data.RegiliteDataProvider;
 import net.minecraft.Util;
@@ -632,6 +633,63 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOBlocks.COLD_FIRE.get(), "Cold Fire");
         add(EIOBlocks.ENDERMAN_HEAD.get(), "Enderman Head");
         add(EIOBlocks.INDUSTRIAL_INSULATION.get(), "Industrial Insulation");
+
+        // Machine Blocks
+        add(MachineBlocks.FLUID_TANK.get(), "Fluid Tank");
+        add(MachineBlocks.PRESSURIZED_FLUID_TANK.get(), "Pressurized Fluid Tank");
+        add(MachineBlocks.ENCHANTER.get(), "Enchanter");
+        add(MachineBlocks.ENDERFACE.get(), "Ender IO");
+        add(MachineBlocks.ALLOY_SMELTER.get(), "Alloy Smelter");
+        add(MachineBlocks.PAINTING_MACHINE.get(), "Painting Machine");
+        add(MachineBlocks.WIRELESS_CHARGER.get(), "Wireless Charger");
+        add(MachineBlocks.STIRLING_GENERATOR.get(), "Stirling Generator");
+        add(MachineBlocks.SAG_MILL.get(), "SAG Mill");
+        add(MachineBlocks.SLICE_AND_SPLICE.get(), "Slice'N'Splice");
+        add(MachineBlocks.IMPULSE_HOPPER.get(), "Impulse Hopper");
+        add(MachineBlocks.SOUL_BINDER.get(), "Soul Binder");
+        add(MachineBlocks.CRAFTER.get(), "Crafter");
+        add(MachineBlocks.DRAIN.get(), "Drain");
+        add(MachineBlocks.WIRED_CHARGER.get(), "Wired Charger");
+        add(MachineBlocks.WIRELESS_CHARGER_ANTENNA.get(), "Pulsating Wireless Antenna");
+        add(MachineBlocks.WIRELESS_CHARGER_ANTENNA_ADVANCED.get(), "Vibrant Wireless Antenna");
+        add(MachineBlocks.POWERED_SPAWNER.get(), "Powered Spawner");
+        add(MachineBlocks.MIND_KILLER.get(), "Mind Killer");
+        add(MachineBlocks.VACUUM_CHEST.get(), "Vacuum Chest");
+        add(MachineBlocks.XP_VACUUM.get(), "XP Vacuum");
+        add(MachineBlocks.TRAVEL_ANCHOR.get(), "Travel Anchor");
+        add(MachineBlocks.PAINTED_TRAVEL_ANCHOR.get(), "Painted Travel Anchor");
+        add(MachineBlocks.SOUL_ENGINE.get(), "Soul Engine");
+        add(MachineBlocks.NIARD.get(), "Niard");
+        add(MachineBlocks.VAT.get(), "VAT");
+        add(MachineBlocks.XP_OBELISK.get(), "XP Obelisk");
+        add(MachineBlocks.FARMING_STATION.get(), "Farming Station");
+        add(MachineBlocks.INHIBITOR_OBELISK.get(), "Inhibitor Obelisk");
+        add(MachineBlocks.AVERSION_OBELISK.get(), "Aversion Obelisk");
+        add(MachineBlocks.RELOCATOR_OBELISK.get(), "Relocator Obelisk");
+        add(MachineBlocks.ATTRACTOR_OBELISK.get(), "Attractor Obelisk");
+        add(MachineBlocks.WEATHER_OBELISK.get(), "Weather Obelisk");
+        add(MachineBlocks.BLOCK_DETECTOR.get(), "Block Detector");
+        add(MachineBlocks.CREATIVE_POWER.get(), "Creative Power");
+
+        // Solar Panels
+        for (var entry : MachineBlocks.SOLAR_PANELS.entrySet()) {
+            String displayName = switch (entry.getKey()) {
+                case ENERGETIC -> "Energetic Photovoltaic Module";
+                case PULSATING -> "Pulsating Photovoltaic Module";
+                case VIBRANT -> "Vibrant Photovoltaic Module";
+            };
+            add(entry.getValue().get(), displayName);
+        }
+
+        // Capacitor Banks
+        for (var entry : MachineBlocks.CAPACITOR_BANKS.entrySet()) {
+            String displayName = switch (entry.getKey()) {
+                case BASIC -> "Basic Capacitor Bank";
+                case ADVANCED -> "Advanced Capacitor Bank";
+                case VIBRANT -> "Vibrant Capacitor Bank";
+            };
+            add(entry.getValue().get(), displayName);
+        }
     }
 
     private void addCommonLang() {

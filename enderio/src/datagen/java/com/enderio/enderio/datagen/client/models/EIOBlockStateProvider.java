@@ -1,23 +1,33 @@
 package com.enderio.enderio.datagen.client.models;
 
+import com.enderio.core.data.model.ModelHelper;
 import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.content.machines.solar_panel.SolarPanelBlock;
+import com.enderio.enderio.content.machines.solar_panel.SolarPanelTier;
 import com.enderio.enderio.content.misc_blocks.ResettingLeverBlock;
 import com.enderio.enderio.content.paint.block.PaintedStairBlock;
+import com.enderio.enderio.data.model.MachineModelUtil;
 import com.enderio.enderio.data.model.block.ConduitModelBuilder;
+import com.enderio.enderio.data.model.block.EIOBlockState;
 import com.enderio.enderio.data.model.block.PaintedBlockModelBuilder;
 import com.enderio.enderio.init.EIOBlocks;
+import com.enderio.enderio.init.MachineBlocks;
+import com.enderio.regilite.data.DataGenContext;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ChainBlock;
 import net.minecraft.world.level.block.LeverBlock;
 import net.minecraft.world.level.block.state.properties.AttachFace;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.client.model.generators.VariantBlockStateBuilder;
+import net.neoforged.neoforge.client.model.generators.loaders.CompositeModelBuilder;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 public class EIOBlockStateProvider extends BlockStateProvider {
@@ -115,6 +125,100 @@ public class EIOBlockStateProvider extends BlockStateProvider {
         simpleBlock(EIOBlocks.ENDERMAN_HEAD.get(), models().getExistingFile(mcLoc("block/skull")));
         simpleBlock(EIOBlocks.WALL_ENDERMAN_HEAD.get(), models().getExistingFile(mcLoc("block/skull")));
         simpleBlock(EIOBlocks.INDUSTRIAL_INSULATION.get());
+
+        machineBlocks();
+    }
+
+    private void machineBlocks() {
+        // Fluid Tanks
+        fluidTankBlock(MachineBlocks.FLUID_TANK.get());
+        pressurizedFluidTankBlock(MachineBlocks.PRESSURIZED_FLUID_TANK.get());
+
+        // Enchanter
+        machineBlock(MachineBlocks.ENCHANTER.get());
+
+        // Enderface
+        simpleBlock(MachineBlocks.ENDERFACE.get(),
+            models().cubeAll("enderface", EnderIO.rl("block/enderface")).renderType("translucent"));
+
+        // Progress Machines
+        progressMachineBlock(MachineBlocks.ALLOY_SMELTER.get());
+        progressMachineBlock(MachineBlocks.PAINTING_MACHINE.get());
+        progressMachineBlock(MachineBlocks.WIRELESS_CHARGER.get());
+        progressMachineBlock(MachineBlocks.STIRLING_GENERATOR.get());
+        progressMachineBlock(MachineBlocks.SAG_MILL.get());
+        progressMachineBlock(MachineBlocks.SLICE_AND_SPLICE.get());
+        progressMachineBlock(MachineBlocks.IMPULSE_HOPPER.get());
+        progressMachineBlock(MachineBlocks.SOUL_BINDER.get());
+        progressMachineBlock(MachineBlocks.CRAFTER.get());
+        progressMachineBlock(MachineBlocks.DRAIN.get());
+        progressMachineBlock(MachineBlocks.POWERED_SPAWNER.get());
+        progressMachineBlock(MachineBlocks.SOUL_ENGINE.get());
+
+        // Machines
+        machineBlock(MachineBlocks.WIRED_CHARGER.get());
+
+        // Wireless Antennas
+        simpleBlock(MachineBlocks.WIRELESS_CHARGER_ANTENNA.get(),
+            models().getExistingFile(EnderIO.rl("block/wireless_charger_antenna")));
+        simpleBlock(MachineBlocks.WIRELESS_CHARGER_ANTENNA_ADVANCED.get(),
+            models().getExistingFile(EnderIO.rl("block/wireless_charger_antenna_advanced")));
+
+        // Creative Power
+        simpleBlock(MachineBlocks.CREATIVE_POWER.get());
+
+        // Mind Killer
+        simpleBlock(MachineBlocks.MIND_KILLER.get(),
+            models().getExistingFile(EnderIO.rl("block/mind_killer")));
+
+        // Vacuum Machines
+        simpleBlock(MachineBlocks.VACUUM_CHEST.get(),
+            models().getExistingFile(EnderIO.rl("block/vacuum_chest")));
+        simpleBlock(MachineBlocks.XP_VACUUM.get(),
+            models().getExistingFile(EnderIO.rl("block/xp_vacuum")));
+
+        // Travel Anchors
+        simpleBlock(MachineBlocks.TRAVEL_ANCHOR.get(),
+            models().getExistingFile(EnderIO.rl("block/travel_anchor")));
+        EIOBlockState.paintedBlock("painted_travel_anchor", this, MachineBlocks.PAINTED_TRAVEL_ANCHOR.get(),
+            Blocks.DIRT, null);
+
+        // Solar Panels
+        for (var entry : MachineBlocks.SOLAR_PANELS.entrySet()) {
+            solarPanelBlock(entry.getValue().get(), entry.getKey());
+        }
+
+        // Capacitor Banks
+        for (var capacitorBank : MachineBlocks.CAPACITOR_BANKS.values()) {
+            simpleBlock(capacitorBank.get(),
+                models().getExistingFile(EnderIO.rl(capacitorBank.getId().getPath())));
+        }
+
+        // Niard
+        machineBlock(MachineBlocks.NIARD.get());
+
+        // VAT
+        machineBlock(MachineBlocks.VAT.get());
+
+        // Block Detector
+        simpleBlock(MachineBlocks.BLOCK_DETECTOR.get(),
+            models().getExistingFile(EnderIO.rl("block/block_detector")));
+
+        // Obelisks
+        simpleBlock(MachineBlocks.XP_OBELISK.get(),
+            models().getExistingFile(EnderIO.rl("block/xp_obelisk")));
+        simpleBlock(MachineBlocks.FARMING_STATION.get(),
+            models().getExistingFile(EnderIO.rl("block/farming_station")));
+        simpleBlock(MachineBlocks.INHIBITOR_OBELISK.get(),
+            models().getExistingFile(EnderIO.rl("block/inhibitor_obelisk")));
+        simpleBlock(MachineBlocks.AVERSION_OBELISK.get(),
+            models().getExistingFile(EnderIO.rl("block/aversion_obelisk")));
+        simpleBlock(MachineBlocks.RELOCATOR_OBELISK.get(),
+            models().getExistingFile(EnderIO.rl("block/relocator_obelisk")));
+        simpleBlock(MachineBlocks.ATTRACTOR_OBELISK.get(),
+            models().getExistingFile(EnderIO.rl("block/attractor_obelisk")));
+        simpleBlock(MachineBlocks.WEATHER_OBELISK.get(),
+            models().getExistingFile(EnderIO.rl("block/weather_obelisk")));
     }
 
     private void simpleTranslucentBlock(Block block) {
@@ -139,6 +243,79 @@ public class EIOBlockStateProvider extends BlockStateProvider {
             .texture("all", blockTexture(block));
 
         axisBlock(block, model, model);
+    }
+
+    private void fluidTankBlock(Block block) {
+        String name = name(block);
+        ModelFile model = models()
+            .getBuilder(name)
+            .customLoader(CompositeModelBuilder::begin)
+            .child("tank",
+                ModelHelper.getExistingAsBuilder(models(),
+                    EnderIO.rl(String.format("block/%s_body", name))))
+            .child("overlay", ModelHelper.getExistingAsBuilder(models(), EnderIO.rl("block/io_overlay")))
+            .end()
+            .texture("particle", EnderIO.rl("block/machine_side"));
+        horizontalBlock(block, model);
+    }
+
+    private void pressurizedFluidTankBlock(Block block) {
+        String name = name(block);
+        ModelFile model = models()
+            .withExistingParent(name, mcLoc("block/block"))
+            .customLoader(CompositeModelBuilder::begin)
+            .child("tank",
+                ModelHelper.getExistingAsBuilder(models(),
+                    EnderIO.rl(String.format("block/%s_body", name))))
+            .child("overlay", ModelHelper.getExistingAsBuilder(models(), EnderIO.rl("block/io_overlay")))
+            .end()
+            .texture("particle", EnderIO.rl("block/machine_side"));
+        horizontalBlock(block, model);
+    }
+
+    private void machineBlock(Block block) {
+        String ns = key(block).getNamespace();
+        String path = key(block).getPath();
+        ModelFile model = wrapMachineModel(block,
+            ResourceLocation.fromNamespaceAndPath(ns, "block/" + path));
+        getVariantBuilder(block)
+            .forAllStates(state -> ConfiguredModel.builder()
+                .modelFile(model)
+                .rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + 180) % 360)
+                .build());
+    }
+
+    private void progressMachineBlock(Block block) {
+        String ns = key(block).getNamespace();
+        String path = key(block).getPath();
+        var unpowered = ResourceLocation.fromNamespaceAndPath(ns, "block/" + path);
+        var powered = ResourceLocation.fromNamespaceAndPath(ns, "block/" + path + "_active");
+
+        var unpoweredModel = wrapMachineModel(block, unpowered);
+        var poweredModel = wrapMachineModel(block, powered);
+        getVariantBuilder(block)
+            .forAllStates(state -> ConfiguredModel.builder()
+                .modelFile(state.getValue(com.enderio.enderio.foundation.block.ProgressMachineBlock.POWERED) ? poweredModel : unpoweredModel)
+                .rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + 180) % 360)
+                .build());
+    }
+
+    private void solarPanelBlock(SolarPanelBlock block, SolarPanelTier tier) {
+        MachineModelUtil.solarPanel(this, new DataGenContext<>(key(block), () -> block), tier);
+    }
+
+    private ModelFile wrapMachineModel(Block block, ResourceLocation model) {
+        String blockName = name(block);
+        return models()
+            .withExistingParent(model.getPath() + "_combined", mcLoc("block/block"))
+            .texture("particle",
+                blockName.equals("enchanter") ? EnderIO.rl("block/dark_steel_pressure_plate")
+                    : ResourceLocation.fromNamespaceAndPath(model.getNamespace(),
+                    "block/" + blockName + "_front"))
+            .customLoader(CompositeModelBuilder::begin)
+            .child("machine", ModelHelper.getExistingAsBuilder(models(), model))
+            .child("overlay", ModelHelper.getExistingAsBuilder(models(), EnderIO.rl("block/io_overlay")))
+            .end();
     }
 
     private ResourceLocation key(Block block) {

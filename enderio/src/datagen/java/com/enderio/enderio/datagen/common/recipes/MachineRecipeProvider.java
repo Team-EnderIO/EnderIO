@@ -24,6 +24,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.registries.DeferredBlock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -530,8 +531,8 @@ public class MachineRecipeProvider extends SubRecipeProvider {
         eraseRecipes(recipeOutput);
     }
 
-    private static final List<RegiliteBlock<?>> MACHINES = Util.make(() -> {
-        List<RegiliteBlock<?>> list = new ArrayList<>();
+    private static final List<DeferredBlock<?>> MACHINES = Util.make(() -> {
+        List<DeferredBlock<?>> list = new ArrayList<>();
         list.addAll(MachineBlocks.CAPACITOR_BANKS.values());
         list.add(MachineBlocks.FLUID_TANK);
         list.add(MachineBlocks.PRESSURIZED_FLUID_TANK);
