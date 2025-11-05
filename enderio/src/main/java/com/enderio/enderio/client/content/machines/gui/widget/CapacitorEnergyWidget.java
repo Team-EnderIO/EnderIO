@@ -2,7 +2,6 @@ package com.enderio.enderio.client.content.machines.gui.widget;
 
 import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.foundation.io.energy.IMachineEnergyStorage;
-import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.init.EIOItems;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;

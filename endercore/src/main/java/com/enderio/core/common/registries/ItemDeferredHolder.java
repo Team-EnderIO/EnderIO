@@ -1,18 +1,15 @@
 package com.enderio.core.common.registries;
 
 import com.google.common.collect.Multimap;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
-import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 public class ItemDeferredHolder<T extends Item> extends DeferredItem<T> {
     @Nullable Multimap<ResourceKey<CreativeModeTab>, BiConsumer<T, CreativeModeTab.Output>> tabOutputs;

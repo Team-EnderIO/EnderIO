@@ -1,7 +1,6 @@
 package com.enderio.enderio.client.foundation.widgets.ioconfig;
 
 import com.enderio.enderio.api.io.IOMode;
-import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;

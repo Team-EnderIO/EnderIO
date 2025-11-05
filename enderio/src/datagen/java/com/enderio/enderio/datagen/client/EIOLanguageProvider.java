@@ -25,24 +25,16 @@ import com.enderio.enderio.init.EIOConduits;
 import com.enderio.enderio.init.EIOEntities;
 import com.enderio.enderio.init.EIOFluids;
 import com.enderio.enderio.init.EIOItems;
-import com.enderio.regilite.Regilite;
-import com.enderio.regilite.data.RegiliteDataProvider;
 import net.minecraft.Util;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 import net.neoforged.neoforge.fluids.FluidType;
 
-import java.lang.reflect.Field;
 import java.util.Locale;
-import java.util.Map;
-import java.util.function.Supplier;
 
 public class EIOLanguageProvider extends LanguageProvider {
     public EIOLanguageProvider(PackOutput output) {

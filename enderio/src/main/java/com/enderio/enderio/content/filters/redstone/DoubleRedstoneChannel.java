@@ -8,8 +8,6 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.function.Supplier;
-
 public class DoubleRedstoneChannel {
 
     public static final Component INSTANCE = new Component(DyeColor.GREEN, DyeColor.BROWN);

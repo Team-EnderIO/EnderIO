@@ -4,7 +4,6 @@ import com.enderio.enderio.api.UseOnly;
 import com.enderio.enderio.api.glider.GliderMovementInfo;
 import com.enderio.enderio.api.integration.IntegrationManager;
 import com.enderio.enderio.content.tools.ToolsLang;
-import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.init.EIOCriterions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;

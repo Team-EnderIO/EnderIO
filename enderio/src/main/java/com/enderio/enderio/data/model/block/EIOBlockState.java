@@ -1,9 +1,7 @@
 package com.enderio.enderio.data.model.block;
 
-import com.enderio.regilite.data.DataGenContext;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.IronBarsBlock;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import org.jetbrains.annotations.Nullable;
 

@@ -14,8 +14,6 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Supplier;
-
 public class EnderSoulFilterMenu extends AbstractFilterMenu<EnderSoulFilter> {
 
     public static final int IS_INVERTED_BUTTON_ID = 1;

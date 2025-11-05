@@ -1,7 +1,6 @@
 package com.enderio.enderio.content.cold_fire;
 
 import com.enderio.core.common.capability.StrictFluidHandlerItemStack;
-import com.enderio.core.common.item.CreativeTabVariants;
 import com.enderio.core.common.item.ICustomCreativeTabEntries;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOBlocks;
