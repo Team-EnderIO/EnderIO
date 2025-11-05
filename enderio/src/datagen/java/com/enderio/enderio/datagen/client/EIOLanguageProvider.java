@@ -33,7 +33,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.DyeColor;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 import net.neoforged.neoforge.fluids.FluidType;
-import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.Locale;
 
@@ -667,7 +666,6 @@ public class EIOLanguageProvider extends LanguageProvider {
                 case ENERGETIC -> "Energetic Photovoltaic Module";
                 case PULSATING -> "Pulsating Photovoltaic Module";
                 case VIBRANT -> "Vibrant Photovoltaic Module";
-                default -> throw new NotImplementedException();
             };
             add(entry.getValue().get(), displayName);
         }
@@ -678,7 +676,6 @@ public class EIOLanguageProvider extends LanguageProvider {
                 case BASIC -> "Basic Capacitor Bank";
                 case ADVANCED -> "Advanced Capacitor Bank";
                 case VIBRANT -> "Vibrant Capacitor Bank";
-                default -> throw new NotImplementedException();
             };
             add(entry.getValue().get(), displayName);
         }
