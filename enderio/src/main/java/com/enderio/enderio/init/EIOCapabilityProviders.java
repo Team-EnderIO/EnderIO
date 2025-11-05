@@ -7,7 +7,6 @@ import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
 import com.enderio.enderio.content.conduits.facades.ComponentBackedConduitFacadeProvider;
 import com.enderio.enderio.content.filters.AbstractFilterItem;
 import com.enderio.enderio.content.filters.fluid.EnderFluidFilterItem;
-import com.enderio.enderio.content.filters.item.general.EnderItemFilter;
 import com.enderio.enderio.content.filters.item.general.EnderItemFilterItem;
 import com.enderio.enderio.content.filters.redstone.RedstoneANDFilter;
 import com.enderio.enderio.content.filters.redstone.RedstoneCountFilter;
@@ -20,8 +19,9 @@ import com.enderio.enderio.content.filters.redstone.RedstoneTLatchFilter;
 import com.enderio.enderio.content.filters.redstone.RedstoneTimerFilter;
 import com.enderio.enderio.content.filters.redstone.RedstoneXNORFilter;
 import com.enderio.enderio.content.filters.redstone.RedstoneXORFilter;
-import com.enderio.enderio.content.filters.soul.EnderSoulFilter;
 import com.enderio.enderio.content.filters.soul.EnderSoulFilterItem;
+import com.enderio.enderio.content.machines.capacitor_bank.CapacitorBankItem;
+import com.enderio.enderio.content.storage.fluid_tank.FluidTankBlockItem;
 import com.enderio.enderio.content.tools.LevitationStaffItem;
 import com.enderio.enderio.content.tools.PoweredToggledItem;
 import com.enderio.enderio.content.travel.TravelStaffItem;
@@ -51,10 +51,16 @@ public class EIOCapabilityProviders {
         event.registerItem(Capabilities.EnergyStorage.ITEM, PoweredToggledItem.ENERGY_STORAGE_PROVIDER,
             EIOItems.LEVITATION_STAFF, EIOItems.ELECTROMAGNET);
         event.registerItem(Capabilities.EnergyStorage.ITEM, TravelStaffItem.ENERGY_STORAGE_PROVIDER, EIOItems.TRAVEL_STAFF);
+        // Capacitor Banks
+        for (var capacitorBankItem : EIOBlocks.CAPACITOR_BANK_ITEMS.values()) {
+            event.registerItem(Capabilities.EnergyStorage.ITEM, CapacitorBankItem.ENERGY_STORAGE_PROVIDER, capacitorBankItem);
+        }
 
         // Register item fluid handlers
         event.registerItem(Capabilities.FluidHandler.ITEM, LevitationStaffItem.FLUID_HANDLER_PROVIDER, EIOItems.LEVITATION_STAFF);
         event.registerItem(Capabilities.FluidHandler.ITEM, ColdFireIgniter.FLUID_HANDLER_PROVIDER, EIOItems.COLD_FIRE_IGNITER);
+        event.registerItem(Capabilities.FluidHandler.ITEM, FluidTankBlockItem.FLUID_HANDLER_PROVIDER,
+            EIOBlocks.FLUID_TANK_ITEM, EIOBlocks.PRESSURIZED_FLUID_TANK_ITEM);
 
         // region Filters
 
@@ -91,7 +97,16 @@ public class EIOCapabilityProviders {
         // Register soul bindable items
         event.registerItem(EnderIOCapabilities.SOUL_BINDABLE_ITEM,
             SoulCapabilityProviders.COMPONENT_SOUL_BINDABLE_PROVIDER,
-            EIOItems.BROKEN_SPAWNER);
+            EIOItems.BROKEN_SPAWNER,
+            EIOBlocks.POWERED_SPAWNER_ITEM,
+            EIOBlocks.SOUL_ENGINE_ITEM);
+        
+        // Solar Panels (soul bindable)
+        for (var solarPanelItem : EIOBlocks.SOLAR_PANEL_ITEMS.values()) {
+            event.registerItem(EnderIOCapabilities.SOUL_BINDABLE_ITEM,
+                SoulCapabilityProviders.COMPONENT_SOUL_BINDABLE_PROVIDER,
+                solarPanelItem);
+        }
 
         // Register read-only soul bindable items
         // Soul vial uses a read-only ISoulBindable because the soul vial is a storage which can be used for binding, but is not directly bound to.

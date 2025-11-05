@@ -5,7 +5,6 @@ import com.enderio.enderio.client.foundation.icon.MachineEnumIcons;
 import com.enderio.enderio.content.machines.alloy.AlloySmelterMode;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.function.Consumer;

@@ -11,9 +11,6 @@ plugins {
 java.toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 
 dependencies {
-    // Regilite
-    api(libs.regilite)
-
     testImplementation(libs.junitJupiter)
     testRuntimeOnly(libs.junitPlatformLauncher)
 }

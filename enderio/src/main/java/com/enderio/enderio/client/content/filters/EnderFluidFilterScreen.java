@@ -9,7 +9,6 @@ import com.enderio.enderio.content.filters.FiltersLang;
 import com.enderio.enderio.content.filters.fluid.EnderFluidFilterMenu;
 import com.enderio.enderio.content.filters.fluid.FluidFilterSlot;
 import com.enderio.enderio.content.filters.item.general.EnderItemFilterMenu;
-import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.AbstractTexture;

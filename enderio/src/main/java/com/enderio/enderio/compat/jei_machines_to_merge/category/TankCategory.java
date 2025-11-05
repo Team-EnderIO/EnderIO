@@ -6,7 +6,7 @@ import com.enderio.enderio.compat.jei.JEILang;
 import com.enderio.enderio.compat.jei.JEIUtils;
 import com.enderio.enderio.content.storage.fluid_tank.FluidTankBlockEntity;
 import com.enderio.enderio.content.storage.fluid_tank.TankRecipe;
-import com.enderio.enderio.init.MachineBlocks;
+import com.enderio.enderio.init.EIOBlocks;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -31,7 +31,7 @@ public class TankCategory implements IRecipeCategory<RecipeHolder<TankRecipe>> {
 
     public TankCategory(IGuiHelper guiHelper) {
         this.background = guiHelper.createDrawable(FluidTankScreen.BG_TEXTURE, 41, 18, 94, 53);
-        this.icon = guiHelper.createDrawableItemStack(new ItemStack(MachineBlocks.FLUID_TANK.get()));
+        this.icon = guiHelper.createDrawableItemStack(new ItemStack(EIOBlocks.FLUID_TANK.get()));
     }
 
     @Override

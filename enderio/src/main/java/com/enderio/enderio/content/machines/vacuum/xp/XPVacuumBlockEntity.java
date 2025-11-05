@@ -47,7 +47,7 @@ public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb>
 
     @Override
     public void handleEntity(ExperienceOrb xpe) {
-        int filled = TANK.fill(this, new FluidStack(EIOFluids.XP_JUICE.getSource(), xpe.getValue() * EXP_TO_FLUID),
+        int filled = TANK.fill(this, new FluidStack(EIOFluids.XP_JUICE.source(), xpe.getValue() * EXP_TO_FLUID),
                 FluidAction.EXECUTE);
         if (filled == xpe.getValue() * EXP_TO_FLUID) {
             xpe.discard();

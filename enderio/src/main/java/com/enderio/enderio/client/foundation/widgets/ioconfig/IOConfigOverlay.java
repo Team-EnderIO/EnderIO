@@ -5,7 +5,6 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.io.IOConfigurable;
 import com.enderio.enderio.client.foundation.model.ModelRenderUtil;
 import com.enderio.enderio.config.machines.MachinesConfig;
-import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.foundation.block.entity.legacy.LegacyMachineBlockEntity;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.foundation.network.packets.ServerboundCycleIOConfigPacket;

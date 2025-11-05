@@ -1,5 +1,6 @@
 package com.enderio.enderio.datagen.client;
 
+import com.enderio.core.common.registries.FluidDeferredHolders;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
@@ -22,9 +23,8 @@ import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOConduits;
 import com.enderio.enderio.init.EIOEntities;
+import com.enderio.enderio.init.EIOFluids;
 import com.enderio.enderio.init.EIOItems;
-import com.enderio.regilite.Regilite;
-import com.enderio.regilite.data.RegiliteDataProvider;
 import net.minecraft.Util;
 import net.minecraft.data.PackOutput;
 import net.minecraft.network.chat.Component;
@@ -32,11 +32,9 @@ import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.DyeColor;
 import net.neoforged.neoforge.common.data.LanguageProvider;
+import net.neoforged.neoforge.fluids.FluidType;
 
-import java.lang.reflect.Field;
 import java.util.Locale;
-import java.util.Map;
-import java.util.function.Supplier;
 
 public class EIOLanguageProvider extends LanguageProvider {
     public EIOLanguageProvider(PackOutput output) {
@@ -58,35 +56,9 @@ public class EIOLanguageProvider extends LanguageProvider {
         addMachineLang();
         addItems();
         addBlocks();
+        addFluids();
         addAdvancementsLang();
         addCommonLang();
-
-        // Gross hack until Regilite is out.
-        try {
-            Field dataProviderField = Regilite.class.getDeclaredField("dataProvider");
-            dataProviderField.setAccessible(true);
-            RegiliteDataProvider dataProvider = (RegiliteDataProvider)dataProviderField.get(EnderIO.REGILITE);
-
-            Field langEntriesField = RegiliteDataProvider.class.getDeclaredField("langEntries");
-            langEntriesField.setAccessible(true);
-
-            //noinspection unchecked
-            Map<Supplier<String>, String> langEntries = (Map<Supplier<String>, String>)langEntriesField.get(dataProvider);
-
-            for (var entry : langEntries.entrySet()) {
-                if (entry.getValue().isEmpty()) {
-                    continue;
-                }
-
-                try {
-                    add(entry.getKey().get(), entry.getValue());
-                } catch (IllegalStateException ex) {
-                    // ignore - just a duplicate key.
-                }
-            }
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     private void addTags() {
@@ -605,7 +577,7 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOBlocks.DARK_STEEL_TRAPDOOR.get(), "Dark Steel Trapdoor");
         add(EIOBlocks.END_STEEL_BARS.get(), "End Steel Bars");
         add(EIOBlocks.REINFORCED_OBSIDIAN.get(), "Reinforced Obsidian");
-        
+
         // Painted Blocks
         add(EIOBlocks.PAINTED_FENCE.get(), "Painted Fence");
         add(EIOBlocks.PAINTED_FENCE_GATE.get(), "Painted Fence Gate");
@@ -626,15 +598,105 @@ public class EIOLanguageProvider extends LanguageProvider {
             add(lever.get(), "Resetting Lever " + (lever.get().inverted() ? "Inverted " : "") + durationLabel);
         }
 
+        // Pressure plates
+        add(EIOBlocks.DARK_STEEL_PRESSURE_PLATE.get(), "Dark Steel Pressure Plate");
+        add(EIOBlocks.SILENT_DARK_STEEL_PRESSURE_PLATE.get(), "Silent Dark Steel Pressure Plate");
+        add(EIOBlocks.SOULARIUM_PRESSURE_PLATE.get(), "Soularium Pressure Plate");
+        add(EIOBlocks.SILENT_SOULARIUM_PRESSURE_PLATE.get(), "Silent Soularium Pressure Plate");
+        add(EIOBlocks.SILENT_OAK_PRESSURE_PLATE.get(), "Silent Oak Pressure Plate");
+        add(EIOBlocks.SILENT_ACACIA_PRESSURE_PLATE.get(), "Silent Acacia Pressure Plate");
+        add(EIOBlocks.SILENT_DARK_OAK_PRESSURE_PLATE.get(), "Silent Dark Oak Pressure Plate");
+        add(EIOBlocks.SILENT_SPRUCE_PRESSURE_PLATE.get(), "Silent Spruce Pressure Plate");
+        add(EIOBlocks.SILENT_BIRCH_PRESSURE_PLATE.get(), "Silent Birch Pressure Plate");
+        add(EIOBlocks.SILENT_JUNGLE_PRESSURE_PLATE.get(), "Silent Jungle Pressure Plate");
+        add(EIOBlocks.SILENT_CRIMSON_PRESSURE_PLATE.get(), "Silent Crimson Pressure Plate");
+        add(EIOBlocks.SILENT_WARPED_PRESSURE_PLATE.get(), "Silent Warped Pressure Plate");
+        add(EIOBlocks.SILENT_STONE_PRESSURE_PLATE.get(), "Silent Stone Pressure Plate");
+        add(EIOBlocks.SILENT_POLISHED_BLACKSTONE_PRESSURE_PLATE.get(), "Silent Polished Blackstone Pressure Plate");
+        add(EIOBlocks.SILENT_HEAVY_WEIGHTED_PRESSURE_PLATE.get(), "Silent Heavy Weighted Pressure Plate");
+        add(EIOBlocks.SILENT_LIGHT_WEIGHTED_PRESSURE_PLATE.get(), "Silent Light Weighted Pressure Plate");
+
         // Miscellaneous
         add(EIOBlocks.CONDUIT_BUNDLE.get(), "Conduit Bundle");
         add(EIOBlocks.SOUL_CHAIN.get(), "Soul Chain");
         add(EIOBlocks.COLD_FIRE.get(), "Cold Fire");
         add(EIOBlocks.ENDERMAN_HEAD.get(), "Enderman Head");
         add(EIOBlocks.INDUSTRIAL_INSULATION.get(), "Industrial Insulation");
+
+        // Machine Blocks
+        add(EIOBlocks.FLUID_TANK.get(), "Fluid Tank");
+        add(EIOBlocks.PRESSURIZED_FLUID_TANK.get(), "Pressurized Fluid Tank");
+        add(EIOBlocks.ENCHANTER.get(), "Enchanter");
+        add(EIOBlocks.ENDERFACE.get(), "Ender IO");
+        add(EIOBlocks.ALLOY_SMELTER.get(), "Alloy Smelter");
+        add(EIOBlocks.PAINTING_MACHINE.get(), "Painting Machine");
+        add(EIOBlocks.WIRELESS_CHARGER.get(), "Wireless Charger");
+        add(EIOBlocks.STIRLING_GENERATOR.get(), "Stirling Generator");
+        add(EIOBlocks.SAG_MILL.get(), "SAG Mill");
+        add(EIOBlocks.SLICE_AND_SPLICE.get(), "Slice'N'Splice");
+        add(EIOBlocks.IMPULSE_HOPPER.get(), "Impulse Hopper");
+        add(EIOBlocks.SOUL_BINDER.get(), "Soul Binder");
+        add(EIOBlocks.CRAFTER.get(), "Crafter");
+        add(EIOBlocks.DRAIN.get(), "Drain");
+        add(EIOBlocks.WIRED_CHARGER.get(), "Wired Charger");
+        add(EIOBlocks.WIRELESS_CHARGER_ANTENNA.get(), "Pulsating Wireless Antenna");
+        add(EIOBlocks.WIRELESS_CHARGER_ANTENNA_ADVANCED.get(), "Vibrant Wireless Antenna");
+        add(EIOBlocks.POWERED_SPAWNER.get(), "Powered Spawner");
+        add(EIOBlocks.MIND_KILLER.get(), "Mind Killer");
+        add(EIOBlocks.VACUUM_CHEST.get(), "Vacuum Chest");
+        add(EIOBlocks.XP_VACUUM.get(), "XP Vacuum");
+        add(EIOBlocks.TRAVEL_ANCHOR.get(), "Travel Anchor");
+        add(EIOBlocks.PAINTED_TRAVEL_ANCHOR.get(), "Painted Travel Anchor");
+        add(EIOBlocks.SOUL_ENGINE.get(), "Soul Engine");
+        add(EIOBlocks.NIARD.get(), "Niard");
+        add(EIOBlocks.VAT.get(), "VAT");
+        add(EIOBlocks.XP_OBELISK.get(), "XP Obelisk");
+        add(EIOBlocks.FARMING_STATION.get(), "Farming Station");
+        add(EIOBlocks.INHIBITOR_OBELISK.get(), "Inhibitor Obelisk");
+        add(EIOBlocks.AVERSION_OBELISK.get(), "Aversion Obelisk");
+        add(EIOBlocks.RELOCATOR_OBELISK.get(), "Relocator Obelisk");
+        add(EIOBlocks.ATTRACTOR_OBELISK.get(), "Attractor Obelisk");
+        add(EIOBlocks.WEATHER_OBELISK.get(), "Weather Obelisk");
+        add(EIOBlocks.BLOCK_DETECTOR.get(), "Block Detector");
+        add(EIOBlocks.CREATIVE_POWER.get(), "Creative Power");
+
+        // Solar Panels
+        for (var entry : EIOBlocks.SOLAR_PANELS.entrySet()) {
+            String displayName = switch (entry.getKey()) {
+                case ENERGETIC -> "Energetic Photovoltaic Module";
+                case PULSATING -> "Pulsating Photovoltaic Module";
+                case VIBRANT -> "Vibrant Photovoltaic Module";
+            };
+            add(entry.getValue().get(), displayName);
+        }
+
+        // Capacitor Banks
+        for (var entry : EIOBlocks.CAPACITOR_BANKS.entrySet()) {
+            String displayName = switch (entry.getKey()) {
+                case BASIC -> "Basic Capacitor Bank";
+                case ADVANCED -> "Advanced Capacitor Bank";
+                case VIBRANT -> "Vibrant Capacitor Bank";
+            };
+            add(entry.getValue().get(), displayName);
+        }
+    }
+
+    private void addFluids() {
+        add(EIOFluids.NUTRIENT_DISTILLATION, "Nutrient Distillation");
+        add(EIOFluids.DEW_OF_THE_VOID, "Dew of the Void");
+        add(EIOFluids.VAPOR_OF_LEVITY, "Vapor of Levity");
+        add(EIOFluids.HOOTCH, "Hootch");
+        add(EIOFluids.ROCKET_FUEL, "Rocket Fuel");
+        add(EIOFluids.FIRE_WATER, "Fire Water");
+        add(EIOFluids.XP_JUICE, "XP Juice");
+        add(EIOFluids.LIQUID_SUNSHINE, "Liquid Sunshine");
+        add(EIOFluids.LIQUID_DARKNESS, "Liquid Darkness");
+        add(EIOFluids.CLOUD_SEED, "Cloud Seed");
+        add(EIOFluids.CLOUD_SEED_CONCENTRATED, "Cloud Seed Concentrated");
     }
 
     private void addCommonLang() {
+        add(EIOCommonLang.CREATIVE_TAB_TITLE, "Ender IO");
         add(EIOCommonLang.TOOLTIP_ENERGY_EQUIVALENCE, "A unit of energy, equivalent to FE.");
         add(EIOCommonLang.BLOCK_BLAST_RESISTANT, "Blast resistant");
 
@@ -696,5 +758,18 @@ public class EIOLanguageProvider extends LanguageProvider {
         } else {
             throw new IllegalArgumentException("Component " + component + " is not translatable");
         }
+    }
+
+    public void add(FluidDeferredHolders key, String name) {
+        if (key.bucket() != null) {
+            add(key.bucket().get(), name + " Bucket");
+        }
+
+        add(key.block().get(), name);
+        add(key.type().get(), name);
+    }
+
+    public void add(FluidType key, String name) {
+        this.add(key.getDescriptionId(), name);
     }
 }

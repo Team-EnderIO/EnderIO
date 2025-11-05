@@ -21,15 +21,15 @@ public class TankRecipeProvider extends SubRecipeProvider {
     public void buildRecipes(RecipeOutput recipeOutput, HolderLookup.Provider registries) {
         // TODO: Tag support for tank recipes.
         buildEmptying(Ingredient.of(Items.EXPERIENCE_BOTTLE), Items.GLASS_BOTTLE,
-                new FluidStack(EIOFluids.XP_JUICE.getSource(), 250), recipeOutput);
+                new FluidStack(EIOFluids.XP_JUICE.source().get(), 250), recipeOutput);
         buildFilling(Ingredient.of(Items.GLASS_BOTTLE), Items.EXPERIENCE_BOTTLE,
-                new FluidStack(EIOFluids.XP_JUICE.getSource(), 250), recipeOutput);
+                new FluidStack(EIOFluids.XP_JUICE.source().get(), 250), recipeOutput);
 
         buildEmptying(Ingredient.of(Items.WET_SPONGE), Items.SPONGE, new FluidStack(Fluids.WATER, 1000), recipeOutput);
         buildFilling(Ingredient.of(Items.SPONGE), Items.WET_SPONGE, new FluidStack(Fluids.WATER, 1000), recipeOutput);
 
         buildFilling(Ingredient.of(Items.STICK), EIOItems.NUTRITIOUS_STICK,
-                new FluidStack(EIOFluids.NUTRIENT_DISTILLATION.getSource(), 1000), recipeOutput);
+                new FluidStack(EIOFluids.NUTRIENT_DISTILLATION.source().get(), 1000), recipeOutput);
 
         buildFilling(Ingredient.of(Items.WHITE_CONCRETE_POWDER), Items.WHITE_CONCRETE,
                 new FluidStack(Fluids.WATER, 1000), recipeOutput);

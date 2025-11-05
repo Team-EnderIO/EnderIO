@@ -8,7 +8,7 @@ import com.enderio.enderio.compat.jei_machines_to_merge.util.MachineRecipeCatego
 import com.enderio.enderio.compat.jei_machines_to_merge.util.RecipeUtil;
 import com.enderio.enderio.content.machines.alloy.AlloySmeltingRecipe;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
-import com.enderio.enderio.init.MachineBlocks;
+import com.enderio.enderio.init.EIOBlocks;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
@@ -46,7 +46,7 @@ public class AlloySmeltingCategory extends MachineRecipeCategory<RecipeHolder<Al
 
     public AlloySmeltingCategory(IGuiHelper guiHelper) {
         this.background = guiHelper.createDrawable(BG_TEXTURE, 0, 0, WIDTH, HEIGHT);
-        this.icon = guiHelper.createDrawableItemStack(new ItemStack(MachineBlocks.ALLOY_SMELTER.get()));
+        this.icon = guiHelper.createDrawableItemStack(new ItemStack(EIOBlocks.ALLOY_SMELTER.get()));
 
         // TODO: Swap to our sprites.
         staticFlame = guiHelper.createDrawable(StirlingGeneratorScreen.BG_TEXTURE, 176, 0, 14, 14);

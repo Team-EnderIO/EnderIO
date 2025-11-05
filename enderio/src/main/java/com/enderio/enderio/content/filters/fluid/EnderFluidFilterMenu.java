@@ -14,8 +14,6 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Supplier;
-
 public class EnderFluidFilterMenu extends AbstractFilterMenu<EnderFluidFilter> {
 
     public static final int IS_INVERTED_BUTTON_ID = 1;

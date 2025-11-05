@@ -2,7 +2,7 @@ package com.enderio.enderio.datagen.common.data_maps;
 
 import com.enderio.enderio.foundation.datamap.RangeExtender;
 import com.enderio.enderio.foundation.tag.EIOTags;
-import com.enderio.enderio.init.MachineBlocks;
+import com.enderio.enderio.init.EIOBlocks;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.TagKey;
@@ -26,8 +26,8 @@ public class RangeExtenderDataMapProvider extends DataMapProvider {
 
     @Override
     protected void gather() {
-        addData(EIOTags.Blocks.RANGE_EXTENDER, MachineBlocks.WIRELESS_CHARGER_ANTENNA.get(), 16);
-        addData(EIOTags.Blocks.RANGE_EXTENDER, MachineBlocks.WIRELESS_CHARGER_ANTENNA_ADVANCED.get(), 32);
+        addData(EIOTags.Blocks.RANGE_EXTENDER, EIOBlocks.WIRELESS_CHARGER_ANTENNA.get(), 16);
+        addData(EIOTags.Blocks.RANGE_EXTENDER, EIOBlocks.WIRELESS_CHARGER_ANTENNA_ADVANCED.get(), 32);
 
         var builder = builder(RangeExtender.DATA_MAP);
         data.forEach((block, map) -> {

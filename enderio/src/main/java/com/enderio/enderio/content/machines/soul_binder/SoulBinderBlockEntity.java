@@ -142,7 +142,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
     private SoulBindingRecipe.Input createFakeRecipeInput() {
         return new SoulBindingRecipe.Input(INPUT_SOUL.getItemStack(getInventory()),
                 INPUT_OTHER.getItemStack(getInventory()),
-                new FluidStack(EIOFluids.XP_JUICE.getSource(), Integer.MAX_VALUE));
+                new FluidStack(EIOFluids.XP_JUICE.source(), Integer.MAX_VALUE));
     }
 
     // endregion

@@ -7,7 +7,7 @@ import com.enderio.enderio.compat.jei.JEIUtils;
 import com.enderio.enderio.compat.jei_machines_to_merge.util.MachineRecipeCategory;
 import com.enderio.enderio.content.machines.obelisks.weather.WeatherChangeRecipe;
 import com.enderio.enderio.content.machines.obelisks.weather.WeatherObeliskBlockEntity;
-import com.enderio.enderio.init.MachineBlocks;
+import com.enderio.enderio.init.EIOBlocks;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
@@ -38,7 +38,7 @@ public class WeatherChangeCategory extends MachineRecipeCategory<RecipeHolder<We
 
     public WeatherChangeCategory(IGuiHelper guiHelper) {
         this.background = guiHelper.createDrawable(WeatherObeliskScreen.WEATHER_BG, 18, 4, 120, 76);
-        this.icon = guiHelper.createDrawableItemStack(new ItemStack(MachineBlocks.WEATHER_OBELISK.get()));
+        this.icon = guiHelper.createDrawableItemStack(new ItemStack(EIOBlocks.WEATHER_OBELISK.get()));
 
         staticFlame = guiHelper.createDrawable(WeatherObeliskScreen.WEATHER_BG, 176, 0, 12, 32);
         animatedFlame = guiHelper.createAnimatedDrawable(staticFlame, 600, IDrawableAnimated.StartDirection.BOTTOM,

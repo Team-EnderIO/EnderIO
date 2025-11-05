@@ -11,7 +11,7 @@ import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.machines.sag_mill.SagMillingRecipe;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.foundation.tag.EIOTags;
-import com.enderio.enderio.init.MachineBlocks;
+import com.enderio.enderio.init.EIOBlocks;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
@@ -50,7 +50,7 @@ public class SagMillCategory extends MachineRecipeCategory<RecipeHolder<SagMilli
 
     public SagMillCategory(IGuiHelper guiHelper) {
         this.background = guiHelper.createDrawable(BG_TEXTURE, 0, 0, WIDTH, HEIGHT);
-        this.icon = guiHelper.createDrawableItemStack(new ItemStack(MachineBlocks.SAG_MILL.get()));
+        this.icon = guiHelper.createDrawableItemStack(new ItemStack(EIOBlocks.SAG_MILL.get()));
     }
 
     @Override

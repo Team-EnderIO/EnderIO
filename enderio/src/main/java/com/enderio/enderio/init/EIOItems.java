@@ -24,12 +24,11 @@ import com.enderio.enderio.content.tools.YetaWrenchItem;
 import com.enderio.enderio.content.tools.coordinate_selector.CoordinateSelectorItem;
 import com.enderio.enderio.content.tools.coordinate_selector.LocationPrintoutItem;
 import com.enderio.enderio.content.tools.hang_glider.HangGliderItem;
-import com.enderio.enderio.content.travel.TravelStaffItem;
 import com.enderio.enderio.content.tools.vials.SoulVialItem;
 import com.enderio.enderio.content.tools.vials.VoidVialItem;
+import com.enderio.enderio.content.travel.TravelStaffItem;
 import com.enderio.enderio.foundation.item.CreativeTabIconItem;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
-import com.enderio.regilite.holder.RegiliteItem;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
@@ -43,8 +42,6 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class EIOItems {
     public static final ItemDeferredRegister ITEMS = ItemDeferredRegister.create(EnderIO.MOD_ID);
-
-    // ======== NEW ========
 
     // region Alloys
 

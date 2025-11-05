@@ -17,7 +17,7 @@ public class EnderFluidFilterTests {
 
         Assertions.assertFalse(filter.test(null, new FluidStack(Fluids.WATER, 1000)).isEmpty());
         Assertions.assertTrue(filter.test(null, new FluidStack(Fluids.LAVA, 1000)).isEmpty());
-        Assertions.assertTrue(filter.test(null, new FluidStack(EIOFluids.HOOTCH.getSource(), 1000)).isEmpty());
+        Assertions.assertTrue(filter.test(null, new FluidStack(EIOFluids.HOOTCH.source(), 1000)).isEmpty());
     }
 
     @Test
@@ -26,7 +26,7 @@ public class EnderFluidFilterTests {
 
         Assertions.assertTrue(filter.test(null, new FluidStack(Fluids.WATER, 1000)).isEmpty());
         Assertions.assertFalse(filter.test(null, new FluidStack(Fluids.LAVA, 1000)).isEmpty());
-        Assertions.assertFalse(filter.test(null, new FluidStack(EIOFluids.HOOTCH.getSource(), 1000)).isEmpty());
+        Assertions.assertFalse(filter.test(null, new FluidStack(EIOFluids.HOOTCH.source(), 1000)).isEmpty());
     }
 
     @Test

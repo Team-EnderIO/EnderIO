@@ -75,17 +75,19 @@ import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
 import com.enderio.enderio.content.fun.EnderiosItem;
 import com.enderio.enderio.content.misc_blocks.skull.EnderSkullBlock;
 import com.enderio.enderio.content.tools.vials.SoulVialItem;
-import com.enderio.enderio.init.EIOConduitTypes;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOBlocks;
+import com.enderio.enderio.init.EIOConduitTypes;
 import com.enderio.enderio.init.EIOEntities;
+import com.enderio.enderio.init.EIOFluids;
 import com.enderio.enderio.init.EIOItems;
 import com.enderio.enderio.init.EIOMenus;
 import com.enderio.enderio.init.EIOParticles;
-import com.enderio.enderio.init.MachineBlocks;
 import com.enderio.enderio.init.EIOTravelTargets;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
@@ -159,6 +161,11 @@ public class EnderIOClient {
                     ConduitProbeItem.State state = ConduitProbeItem.getState(stack);
                     return state == ConduitProbeItem.State.COPY_PASTE ? 1.0f : 0.0f;
                 });
+
+            // Register fluid render types
+            for (var fluid : EIOFluids.FLUIDS.fluidsRegister().getEntries()) {
+                ItemBlockRenderTypes.setRenderLayer(fluid.get(), RenderType.translucent());
+            }
         });
     }
 
@@ -393,7 +400,7 @@ public class EnderIOClient {
             public BlockEntityWithoutLevelRenderer getCustomRenderer() {
                 return renderer.get();
             }
-        }, MachineBlocks.FLUID_TANK.asItem(), MachineBlocks.PRESSURIZED_FLUID_TANK.asItem());
+        }, EIOBlocks.FLUID_TANK.asItem(), EIOBlocks.PRESSURIZED_FLUID_TANK.asItem());
     }
 
     @SubscribeEvent

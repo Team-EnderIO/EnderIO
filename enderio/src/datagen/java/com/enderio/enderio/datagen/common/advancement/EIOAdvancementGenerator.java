@@ -3,7 +3,6 @@ package com.enderio.enderio.datagen.common.advancement;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.content.advancements.AdvancementsLang;
 import com.enderio.enderio.content.paint.PaintingTrigger;
-import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementType;

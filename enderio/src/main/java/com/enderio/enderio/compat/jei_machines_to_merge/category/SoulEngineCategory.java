@@ -7,7 +7,7 @@ import com.enderio.enderio.compat.jei.JEILang;
 import com.enderio.enderio.content.machines.soul_engine.SoulEngineBlockEntity;
 import com.enderio.enderio.content.tools.vials.SoulVialItem;
 import com.enderio.enderio.foundation.souldata.EngineSoul;
-import com.enderio.enderio.init.MachineBlocks;
+import com.enderio.enderio.init.EIOBlocks;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
@@ -46,7 +46,7 @@ public class SoulEngineCategory implements IRecipeCategory<EngineSoul.SoulData> 
 
     public SoulEngineCategory(IGuiHelper guiHelper) {
         this.background = guiHelper.createDrawable(SoulEngineScreen.BG_TEXTURE, 49, 18, 124, 53);
-        this.icon = guiHelper.createDrawableItemStack(new ItemStack(MachineBlocks.SOUL_ENGINE.get()));
+        this.icon = guiHelper.createDrawableItemStack(new ItemStack(EIOBlocks.SOUL_ENGINE.get()));
     }
 
     @Override

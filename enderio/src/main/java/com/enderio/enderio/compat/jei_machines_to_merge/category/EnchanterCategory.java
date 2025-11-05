@@ -5,7 +5,7 @@ import com.enderio.enderio.client.content.machines.gui.screen.EnchanterScreen;
 import com.enderio.enderio.compat.jei.JEILang;
 import com.enderio.enderio.compat.jei_machines_to_merge.util.MachineRecipeCategory;
 import com.enderio.enderio.compat.jei_machines_to_merge.util.WrappedEnchanterRecipe;
-import com.enderio.enderio.init.MachineBlocks;
+import com.enderio.enderio.init.EIOBlocks;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -36,7 +36,7 @@ public class EnchanterCategory extends MachineRecipeCategory<WrappedEnchanterRec
 
     public EnchanterCategory(IGuiHelper guiHelper) {
         this.background = guiHelper.createDrawable(EnchanterScreen.BG_TEXTURE, 15, 24, 146, 28 + 12);
-        this.icon = guiHelper.createDrawableItemStack(new ItemStack(MachineBlocks.ENCHANTER.get()));
+        this.icon = guiHelper.createDrawableItemStack(new ItemStack(EIOBlocks.ENCHANTER.get()));
     }
 
     @Override

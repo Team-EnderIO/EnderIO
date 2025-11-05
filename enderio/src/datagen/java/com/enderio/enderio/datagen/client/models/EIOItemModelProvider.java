@@ -6,22 +6,22 @@ import com.enderio.enderio.content.fun.EnderiosItem;
 import com.enderio.enderio.content.tools.vials.SoulVialItem;
 import com.enderio.enderio.data.model.item.FacadeItemModelBuilder;
 import com.enderio.enderio.init.EIOBlocks;
+import com.enderio.enderio.init.EIOFluids;
 import com.enderio.enderio.init.EIOItems;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.client.model.generators.loaders.DynamicFluidContainerModelBuilder;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import net.neoforged.neoforge.registries.DeferredBlock;
-import net.neoforged.neoforge.registries.DeferredItem;
+import net.neoforged.neoforge.internal.versions.neoforge.NeoForgeVersion;
 
+import java.util.Locale;
 import java.util.Objects;
 
 public class EIOItemModelProvider extends ItemModelProvider {
@@ -216,6 +216,14 @@ public class EIOItemModelProvider extends ItemModelProvider {
         // Creative Tab Icon
         basicItem(EIOItems.CREATIVE_ICON.get());
 
+        // Buckets
+        for (var item : EIOFluids.FLUIDS.itemsRegister().getEntries()) {
+            // They should all be bucket items.
+            if (item.get() instanceof BucketItem bucketItem) {
+                bucketItem(bucketItem);
+            }
+        }
+
         // region Blocks
 
         // Alloys
@@ -267,7 +275,103 @@ public class EIOItemModelProvider extends ItemModelProvider {
         withExistingParent(EIOBlocks.ENDERMAN_HEAD.getId().toString(), mcLoc("item/template_skull"));
         simpleBlockItem(EIOBlocks.INDUSTRIAL_INSULATION.get());
 
+        // Pressure Plates
+        simpleBlockItem(EIOBlocks.DARK_STEEL_PRESSURE_PLATE.get());
+        simpleBlockItem(EIOBlocks.SILENT_DARK_STEEL_PRESSURE_PLATE.get());
+        simpleBlockItem(EIOBlocks.SOULARIUM_PRESSURE_PLATE.get());
+        simpleBlockItem(EIOBlocks.SILENT_SOULARIUM_PRESSURE_PLATE.get());
+
+        // Silent variants that wrap vanilla blocks — point items at the vanilla block models
+        withExistingParent(EIOBlocks.SILENT_OAK_PRESSURE_PLATE.getId().toString(), mcLoc("item/oak_pressure_plate"));
+        withExistingParent(EIOBlocks.SILENT_ACACIA_PRESSURE_PLATE.getId().toString(), mcLoc("item/acacia_pressure_plate"));
+        withExistingParent(EIOBlocks.SILENT_DARK_OAK_PRESSURE_PLATE.getId().toString(), mcLoc("item/dark_oak_pressure_plate"));
+        withExistingParent(EIOBlocks.SILENT_SPRUCE_PRESSURE_PLATE.getId().toString(), mcLoc("item/spruce_pressure_plate"));
+        withExistingParent(EIOBlocks.SILENT_BIRCH_PRESSURE_PLATE.getId().toString(), mcLoc("item/birch_pressure_plate"));
+        withExistingParent(EIOBlocks.SILENT_JUNGLE_PRESSURE_PLATE.getId().toString(), mcLoc("item/jungle_pressure_plate"));
+        withExistingParent(EIOBlocks.SILENT_CRIMSON_PRESSURE_PLATE.getId().toString(), mcLoc("item/crimson_pressure_plate"));
+        withExistingParent(EIOBlocks.SILENT_WARPED_PRESSURE_PLATE.getId().toString(), mcLoc("item/warped_pressure_plate"));
+        withExistingParent(EIOBlocks.SILENT_STONE_PRESSURE_PLATE.getId().toString(), mcLoc("item/stone_pressure_plate"));
+        withExistingParent(EIOBlocks.SILENT_POLISHED_BLACKSTONE_PRESSURE_PLATE.getId().toString(), mcLoc("item/polished_blackstone_pressure_plate"));
+        withExistingParent(EIOBlocks.SILENT_HEAVY_WEIGHTED_PRESSURE_PLATE.getId().toString(), mcLoc("item/heavy_weighted_pressure_plate"));
+        withExistingParent(EIOBlocks.SILENT_LIGHT_WEIGHTED_PRESSURE_PLATE.getId().toString(), mcLoc("item/light_weighted_pressure_plate"));
+
+        // Machine Blocks
+        addMachineItemModels();
+
         // endregion
+    }
+
+    private void addMachineItemModels() {
+        // Fluid Tanks - no item model needed (empty)
+        
+        // Enchanter
+        simpleBlockItem(EIOBlocks.ENCHANTER.get());
+
+        // Enderface
+        simpleBlockItem(EIOBlocks.ENDERFACE.get());
+
+        // Progress Machines
+        simpleBlockItem(EIOBlocks.ALLOY_SMELTER.get());
+        simpleBlockItem(EIOBlocks.PAINTING_MACHINE.get());
+        simpleBlockItem(EIOBlocks.WIRELESS_CHARGER.get());
+        simpleBlockItem(EIOBlocks.STIRLING_GENERATOR.get());
+        simpleBlockItem(EIOBlocks.SAG_MILL.get());
+        simpleBlockItem(EIOBlocks.SLICE_AND_SPLICE.get());
+        simpleBlockItem(EIOBlocks.IMPULSE_HOPPER.get());
+        simpleBlockItem(EIOBlocks.SOUL_BINDER.get());
+        simpleBlockItem(EIOBlocks.CRAFTER.get());
+        simpleBlockItem(EIOBlocks.DRAIN.get());
+        simpleBlockItem(EIOBlocks.POWERED_SPAWNER.get());
+        simpleBlockItem(EIOBlocks.SOUL_ENGINE.get());
+
+        // Machines
+        simpleBlockItem(EIOBlocks.WIRED_CHARGER.get());
+
+        // Wireless Antennas
+        simpleBlockItem(EIOBlocks.WIRELESS_CHARGER_ANTENNA.get());
+        simpleBlockItem(EIOBlocks.WIRELESS_CHARGER_ANTENNA_ADVANCED.get());
+
+        // Creative Power
+        simpleBlockItem(EIOBlocks.CREATIVE_POWER.get());
+
+        // Mind Killer
+        simpleBlockItem(EIOBlocks.MIND_KILLER.get());
+
+        // Vacuum Machines
+        simpleBlockItem(EIOBlocks.VACUUM_CHEST.get());
+        simpleBlockItem(EIOBlocks.XP_VACUUM.get());
+
+        // Travel Anchors
+        simpleBlockItem(EIOBlocks.TRAVEL_ANCHOR.get());
+        simpleBlockItem(EIOBlocks.PAINTED_TRAVEL_ANCHOR.get());
+
+        // Solar Panels
+        for (var entry : EIOBlocks.SOLAR_PANELS.entrySet()) {
+            String tierName = entry.getKey().name().toLowerCase(Locale.ROOT);
+            withExistingParent(entry.getValue().getId().toString(), EnderIO.rl("item/photovoltaic_cell"))
+                .texture("side", "block/" + tierName + "_side")
+                .texture("panel", "block/" + tierName + "_top");
+        }
+
+        // Capacitor Banks - no item model needed (empty)
+
+        // Niard
+        simpleBlockItem(EIOBlocks.NIARD.get());
+
+        // VAT
+        simpleBlockItem(EIOBlocks.VAT.get());
+
+        // Block Detector
+        simpleBlockItem(EIOBlocks.BLOCK_DETECTOR.get());
+
+        // Obelisks
+        simpleBlockItem(EIOBlocks.XP_OBELISK.get());
+        simpleBlockItem(EIOBlocks.FARMING_STATION.get());
+        simpleBlockItem(EIOBlocks.INHIBITOR_OBELISK.get());
+        simpleBlockItem(EIOBlocks.AVERSION_OBELISK.get());
+        simpleBlockItem(EIOBlocks.RELOCATOR_OBELISK.get());
+        simpleBlockItem(EIOBlocks.ATTRACTOR_OBELISK.get());
+        simpleBlockItem(EIOBlocks.WEATHER_OBELISK.get());
     }
 
     private ItemModelBuilder fakeBlock(ItemLike item) {
@@ -286,5 +390,12 @@ public class EIOItemModelProvider extends ItemModelProvider {
     public ItemModelBuilder flatBlockItem(ResourceLocation block) {
         return this.getBuilder(block.toString()).parent(new ModelFile.UncheckedModelFile("item/generated"))
             .texture("layer0", ResourceLocation.fromNamespaceAndPath(block.getNamespace(), "block/" + block.getPath()));
+    }
+
+    public ItemModelBuilder bucketItem(BucketItem item) {
+        return withExistingParent(BuiltInRegistries.ITEM.getKey(item).toString(), ResourceLocation.fromNamespaceAndPath(NeoForgeVersion.MOD_ID, "item/bucket"))
+            .customLoader(DynamicFluidContainerModelBuilder::begin)
+            .fluid(item.content)
+            .end();
     }
 }

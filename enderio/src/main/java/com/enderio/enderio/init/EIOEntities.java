@@ -1,10 +1,7 @@
 package com.enderio.enderio.init;
 
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.client.content.paint.PaintedSandRenderer;
 import com.enderio.enderio.content.paint.PaintedSandEntity;
-import com.enderio.regilite.holder.RegiliteEntity;
-import com.enderio.regilite.registry.EntityRegistry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;

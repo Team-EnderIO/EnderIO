@@ -1,14 +1,7 @@
 package com.enderio.enderio.content.glass;
 
-import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.foundation.tag.EIOTags;
-import com.enderio.enderio.init.EIOCreativeTabs;
-import com.enderio.regilite.holder.RegiliteBlock;
-import com.enderio.regilite.registry.BlockRegistry;
-import com.enderio.regilite.registry.ItemRegistry;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.BlockGetter;

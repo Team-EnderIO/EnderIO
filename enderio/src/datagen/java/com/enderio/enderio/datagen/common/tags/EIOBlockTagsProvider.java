@@ -4,7 +4,6 @@ import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.content.glass.GlassLighting;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOBlocks;
-import com.enderio.enderio.init.MachineBlocks;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
@@ -12,8 +11,12 @@ import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public class EIOBlockTagsProvider extends BlockTagsProvider {
@@ -53,7 +56,61 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
             .add(EIOBlocks.END_STEEL_BARS.get())
             .add(EIOBlocks.REINFORCED_OBSIDIAN.get())
             .add(EIOBlocks.CONDUIT_BUNDLE.get())
-            .add(EIOBlocks.SOUL_CHAIN.get());
+            .add(EIOBlocks.SOUL_CHAIN.get())
+            // Machine Blocks
+            .add(EIOBlocks.FLUID_TANK.get())
+            .add(EIOBlocks.PRESSURIZED_FLUID_TANK.get())
+            .add(EIOBlocks.ENCHANTER.get())
+            .add(EIOBlocks.ENDERFACE.get())
+            .add(EIOBlocks.ALLOY_SMELTER.get())
+            .add(EIOBlocks.PAINTING_MACHINE.get())
+            .add(EIOBlocks.WIRELESS_CHARGER.get())
+            .add(EIOBlocks.STIRLING_GENERATOR.get())
+            .add(EIOBlocks.SAG_MILL.get())
+            .add(EIOBlocks.SLICE_AND_SPLICE.get())
+            .add(EIOBlocks.IMPULSE_HOPPER.get())
+            .add(EIOBlocks.SOUL_BINDER.get())
+            .add(EIOBlocks.CRAFTER.get())
+            .add(EIOBlocks.DRAIN.get())
+            .add(EIOBlocks.WIRED_CHARGER.get())
+            .add(EIOBlocks.WIRELESS_CHARGER_ANTENNA.get())
+            .add(EIOBlocks.WIRELESS_CHARGER_ANTENNA_ADVANCED.get())
+            .add(EIOBlocks.POWERED_SPAWNER.get())
+            .add(EIOBlocks.MIND_KILLER.get())
+            .add(EIOBlocks.VACUUM_CHEST.get())
+            .add(EIOBlocks.XP_VACUUM.get())
+            .add(EIOBlocks.TRAVEL_ANCHOR.get())
+            .add(EIOBlocks.PAINTED_TRAVEL_ANCHOR.get())
+            .add(EIOBlocks.SOUL_ENGINE.get())
+            .add(EIOBlocks.NIARD.get())
+            .add(EIOBlocks.VAT.get())
+            .add(EIOBlocks.XP_OBELISK.get())
+            .add(EIOBlocks.FARMING_STATION.get())
+            .add(EIOBlocks.INHIBITOR_OBELISK.get())
+            .add(EIOBlocks.AVERSION_OBELISK.get())
+            .add(EIOBlocks.RELOCATOR_OBELISK.get())
+            .add(EIOBlocks.ATTRACTOR_OBELISK.get())
+            .add(EIOBlocks.WEATHER_OBELISK.get());
+        
+        // Solar Panels and Capacitor Banks
+        var solarPanels = EIOBlocks.SOLAR_PANELS.values()
+            .stream()
+            .sorted(Comparator.comparing(DeferredHolder::getKey))
+            .toList();
+
+        for (var solarPanel : solarPanels) {
+            tag(BlockTags.MINEABLE_WITH_PICKAXE).add(solarPanel.get());
+            tag(BlockTags.NEEDS_IRON_TOOL).add(solarPanel.get());
+        }
+
+        var capacitorBanks = EIOBlocks.CAPACITOR_BANKS.values()
+            .stream()
+            .sorted(Comparator.comparing(DeferredHolder::getKey))
+            .toList();
+
+        for (var capacitorBank : capacitorBanks) {
+            tag(BlockTags.MINEABLE_WITH_PICKAXE).add(capacitorBank.get());
+        }
 
         // Blocks that need stone tools
         tag(BlockTags.NEEDS_STONE_TOOL)
@@ -76,7 +133,41 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
             .add(EIOBlocks.DARK_STEEL_DOOR.get())
             .add(EIOBlocks.DARK_STEEL_TRAPDOOR.get())
             .add(EIOBlocks.END_STEEL_BARS.get())
-            .add(EIOBlocks.SOUL_CHAIN.get());
+            .add(EIOBlocks.SOUL_CHAIN.get())
+            // Machine Blocks
+            .add(EIOBlocks.FLUID_TANK.get())
+            .add(EIOBlocks.PRESSURIZED_FLUID_TANK.get())
+            .add(EIOBlocks.ENCHANTER.get())
+            .add(EIOBlocks.ENDERFACE.get())
+            .add(EIOBlocks.ALLOY_SMELTER.get())
+            .add(EIOBlocks.PAINTING_MACHINE.get())
+            .add(EIOBlocks.WIRELESS_CHARGER.get())
+            .add(EIOBlocks.STIRLING_GENERATOR.get())
+            .add(EIOBlocks.SAG_MILL.get())
+            .add(EIOBlocks.SLICE_AND_SPLICE.get())
+            .add(EIOBlocks.IMPULSE_HOPPER.get())
+            .add(EIOBlocks.SOUL_BINDER.get())
+            .add(EIOBlocks.CRAFTER.get())
+            .add(EIOBlocks.DRAIN.get())
+            .add(EIOBlocks.WIRED_CHARGER.get())
+            .add(EIOBlocks.WIRELESS_CHARGER_ANTENNA.get())
+            .add(EIOBlocks.WIRELESS_CHARGER_ANTENNA_ADVANCED.get())
+            .add(EIOBlocks.POWERED_SPAWNER.get())
+            .add(EIOBlocks.MIND_KILLER.get())
+            .add(EIOBlocks.VACUUM_CHEST.get())
+            .add(EIOBlocks.XP_VACUUM.get())
+            .add(EIOBlocks.TRAVEL_ANCHOR.get())
+            .add(EIOBlocks.PAINTED_TRAVEL_ANCHOR.get())
+            .add(EIOBlocks.SOUL_ENGINE.get())
+            .add(EIOBlocks.NIARD.get())
+            .add(EIOBlocks.VAT.get())
+            .add(EIOBlocks.XP_OBELISK.get())
+            .add(EIOBlocks.FARMING_STATION.get())
+            .add(EIOBlocks.INHIBITOR_OBELISK.get())
+            .add(EIOBlocks.AVERSION_OBELISK.get())
+            .add(EIOBlocks.RELOCATOR_OBELISK.get())
+            .add(EIOBlocks.ATTRACTOR_OBELISK.get())
+            .add(EIOBlocks.WEATHER_OBELISK.get());
 
         tag(BlockTags.NEEDS_DIAMOND_TOOL)
             .add(EIOBlocks.REINFORCED_OBSIDIAN.get());
@@ -92,8 +183,8 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
                 .addTag(EIOTags.Blocks.BLOCKS_VIBRANT_ALLOY);
 
         tag(EIOTags.Blocks.BLOCKS_TELEPORTATION)
-            .add(MachineBlocks.TRAVEL_ANCHOR.get())
-            .add(MachineBlocks.PAINTED_TRAVEL_ANCHOR.get());
+            .add(EIOBlocks.TRAVEL_ANCHOR.get())
+            .add(EIOBlocks.PAINTED_TRAVEL_ANCHOR.get());
 
         tag(EIOTags.Blocks.REDSTONE_CONNECTABLE)
             .add(Blocks.PISTON, Blocks.STICKY_PISTON, Blocks.REDSTONE_LAMP, Blocks.NOTE_BLOCK, Blocks.DISPENSER,
@@ -118,6 +209,64 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
 
         addPaintedBlocks();
         addGlassBlocks();
+        addMachineBlockTags();
+
+        // Pressure plates
+        tag(BlockTags.PRESSURE_PLATES)
+            .add(EIOBlocks.DARK_STEEL_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_DARK_STEEL_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SOULARIUM_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_SOULARIUM_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_OAK_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_ACACIA_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_DARK_OAK_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_SPRUCE_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_BIRCH_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_JUNGLE_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_CRIMSON_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_WARPED_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_STONE_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_POLISHED_BLACKSTONE_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_HEAVY_WEIGHTED_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_LIGHT_WEIGHTED_PRESSURE_PLATE.get());
+
+        tag(BlockTags.MINEABLE_WITH_PICKAXE)
+            .add(EIOBlocks.DARK_STEEL_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_DARK_STEEL_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SOULARIUM_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_SOULARIUM_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_OAK_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_ACACIA_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_DARK_OAK_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_SPRUCE_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_BIRCH_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_JUNGLE_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_CRIMSON_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_WARPED_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_STONE_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_POLISHED_BLACKSTONE_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_HEAVY_WEIGHTED_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_LIGHT_WEIGHTED_PRESSURE_PLATE.get());
+
+        // Only EIO metal plates require stone tools
+        tag(BlockTags.NEEDS_STONE_TOOL)
+            .add(EIOBlocks.DARK_STEEL_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_DARK_STEEL_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SOULARIUM_PRESSURE_PLATE.get())
+            .add(EIOBlocks.SILENT_SOULARIUM_PRESSURE_PLATE.get());
+    }
+
+    private void addMachineBlockTags() {
+        // Mind Killer tag
+        tag(EIOTags.Blocks.MIND_KILLER).add(EIOBlocks.MIND_KILLER.get());
+        
+        // Range Extender tags
+        tag(EIOTags.Blocks.RANGE_EXTENDER)
+            .add(EIOBlocks.WIRELESS_CHARGER_ANTENNA.get())
+            .add(EIOBlocks.WIRELESS_CHARGER_ANTENNA_ADVANCED.get());
+        
+        // Block Detector (mineable with pickaxe but no special tool requirement)
+        tag(BlockTags.MINEABLE_WITH_PICKAXE).add(EIOBlocks.BLOCK_DETECTOR.get());
     }
 
     private void addPaintedBlocks() {
@@ -152,9 +301,19 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
         var darkFusedQuartzTag = tag(EIOTags.Blocks.DARK_FUSED_QUARTZ);
         var clearGlassTag = tag(EIOTags.Blocks.CLEAR_GLASS);
 
-        for (var glassBlocks : EIOBlocks.GLASS_BLOCKS.values()) {
-            for (var glassBlock : glassBlocks.getAllBlocks().toList()) {
-                var block = glassBlock.get();
+        var glassBlockCollections = EIOBlocks.GLASS_BLOCKS.entrySet()
+            .stream()
+            .sorted(Comparator.comparing(a -> a.getKey().glassName()))
+            .map(Map.Entry::getValue)
+            .toList();
+
+        for (var glassBlocks : glassBlockCollections) {
+            var glassItems = new ArrayList<>(glassBlocks.getAllBlocks()
+                .sorted(Comparator.comparing(DeferredHolder::getKey))
+                .map(DeferredHolder::get)
+                .toList());
+
+            for (var block : glassItems) {
                 if (block.glassIdentifier().explosionResistance()) {
                     fusedQuartzTag.add(block);
 

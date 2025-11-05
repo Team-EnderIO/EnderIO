@@ -10,7 +10,6 @@ import com.enderio.enderio.content.filters.FiltersLang;
 import com.enderio.enderio.content.filters.soul.EnderSoulFilterMenu;
 import com.enderio.enderio.content.filters.soul.SoulFilterSlot;
 import com.enderio.enderio.content.tools.vials.SoulVialItem;
-import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;

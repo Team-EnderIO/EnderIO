@@ -2,7 +2,6 @@ package com.enderio.enderio.content.filters.item.general;
 
 import com.enderio.core.common.lang.EnumLangMap;
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.api.io.RedstoneControl;
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.chat.MutableComponent;

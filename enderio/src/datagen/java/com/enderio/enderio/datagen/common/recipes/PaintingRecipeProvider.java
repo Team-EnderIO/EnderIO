@@ -4,7 +4,6 @@ import com.enderio.core.data.recipe.SubRecipeProvider;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.content.machines.painting.PaintingRecipe;
 import com.enderio.enderio.init.EIOBlocks;
-import com.enderio.enderio.init.MachineBlocks;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -29,7 +28,7 @@ public class PaintingRecipeProvider extends SubRecipeProvider {
         build(EIOBlocks.PAINTED_SLAB, Ingredient.of(ItemTags.WOODEN_SLABS), recipeOutput);
         build(EIOBlocks.PAINTED_WALL, Ingredient.of(ItemTags.WALLS), recipeOutput);
         build(EIOBlocks.PAINTED_GLOWSTONE, Ingredient.of(Items.GLOWSTONE), recipeOutput);
-        build(MachineBlocks.PAINTED_TRAVEL_ANCHOR, Ingredient.of(MachineBlocks.TRAVEL_ANCHOR), recipeOutput);
+        build(EIOBlocks.PAINTED_TRAVEL_ANCHOR, Ingredient.of(EIOBlocks.TRAVEL_ANCHOR), recipeOutput);
         // Painted block to painted block
         build(EIOBlocks.PAINTED_FENCE, Ingredient.of(EIOBlocks.PAINTED_FENCE), "_frompainted", recipeOutput);
         build(EIOBlocks.PAINTED_FENCE_GATE, Ingredient.of(EIOBlocks.PAINTED_FENCE_GATE), "_frompainted", recipeOutput);
@@ -45,7 +44,7 @@ public class PaintingRecipeProvider extends SubRecipeProvider {
         build(EIOBlocks.PAINTED_SLAB, Ingredient.of(EIOBlocks.PAINTED_SLAB), "_frompainted", recipeOutput);
         build(EIOBlocks.PAINTED_GLOWSTONE, Ingredient.of(EIOBlocks.PAINTED_GLOWSTONE), "_frompainted", recipeOutput);
         build(EIOBlocks.PAINTED_WALL, Ingredient.of(EIOBlocks.PAINTED_WALL), "_frompainted", recipeOutput);
-        build(MachineBlocks.PAINTED_TRAVEL_ANCHOR, Ingredient.of(MachineBlocks.PAINTED_TRAVEL_ANCHOR), "_frompainted",
+        build(EIOBlocks.PAINTED_TRAVEL_ANCHOR, Ingredient.of(EIOBlocks.PAINTED_TRAVEL_ANCHOR), "_frompainted",
                 recipeOutput);
     }
 

@@ -11,10 +11,10 @@ import com.enderio.enderio.config.base.BaseConfig;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.foundation.integrations.Integrations;
-import com.enderio.enderio.init.EIOConduitTypes;
 import com.enderio.enderio.init.EIOAttachments;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOBlocks;
+import com.enderio.enderio.init.EIOConduitTypes;
 import com.enderio.enderio.init.EIOCreativeTabs;
 import com.enderio.enderio.init.EIOCriterions;
 import com.enderio.enderio.init.EIODataComponents;
@@ -26,9 +26,7 @@ import com.enderio.enderio.init.EIOLootModifiers;
 import com.enderio.enderio.init.EIOMenus;
 import com.enderio.enderio.init.EIOParticles;
 import com.enderio.enderio.init.EIORecipes;
-import com.enderio.enderio.init.MachineBlocks;
 import com.enderio.enderio.init.EIOTravelTargets;
-import com.enderio.regilite.Regilite;
 import com.mojang.logging.LogUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
@@ -53,8 +51,6 @@ import java.util.function.Consumer;
 @Mod(EnderIO.MOD_ID)
 public class EnderIO {
     public static final String MOD_ID = EnderIOAPI.MOD_ID;
-
-    public static final Regilite REGILITE = new Regilite(EnderIO.MOD_ID);
 
     public static IEventBus modEventBus;
     public static ModContainer modContainer;
@@ -107,10 +103,6 @@ public class EnderIO {
         EIOIngredientTypes.register(modEventBus);
         EIOConduitTypes.register(modEventBus);
         EIOTravelTargets.register(modEventBus);
-
-        MachineBlocks.register(modEventBus);
-
-        REGILITE.register(modEventBus);
 
         // Handle mod compat
         for (Map.Entry<String, Consumer<IEventBus>> entry : MOD_INTEGRATIONS.entrySet()) {

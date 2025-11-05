@@ -1,7 +1,6 @@
 package com.enderio.enderio.content.cold_fire;
 
 import com.enderio.core.common.capability.StrictFluidHandlerItemStack;
-import com.enderio.core.common.item.CreativeTabVariants;
 import com.enderio.core.common.item.ICustomCreativeTabEntries;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOBlocks;
@@ -117,7 +116,7 @@ public class ColdFireIgniter extends Item implements ICustomCreativeTabEntries {
         var fluidHandler = is.getCapability(Capabilities.FluidHandler.ITEM);
         if (fluidHandler != null) {
             if (fluidHandler instanceof StrictFluidHandlerItemStack strictFluidHandlerItemStack) {
-                strictFluidHandlerItemStack.setFluid(new FluidStack(EIOFluids.VAPOR_OF_LEVITY.getSource(), fluidHandler.getTankCapacity(0)));
+                strictFluidHandlerItemStack.setFluid(new FluidStack(EIOFluids.VAPOR_OF_LEVITY.source(), fluidHandler.getTankCapacity(0)));
                 output.accept(is);
             }
         }
