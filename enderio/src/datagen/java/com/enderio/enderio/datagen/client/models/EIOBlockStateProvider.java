@@ -183,27 +183,21 @@ public class EIOBlockStateProvider extends BlockStateProvider {
         machineBlock(EIOBlocks.WIRED_CHARGER.get());
 
         // Wireless Antennas
-        simpleBlock(EIOBlocks.WIRELESS_CHARGER_ANTENNA.get(),
-            models().getExistingFile(EnderIO.rl("block/wireless_charger_antenna")));
-        simpleBlock(EIOBlocks.WIRELESS_CHARGER_ANTENNA_ADVANCED.get(),
-            models().getExistingFile(EnderIO.rl("block/wireless_charger_antenna_advanced")));
+        simpleBlockWithExistingModel(EIOBlocks.WIRELESS_CHARGER_ANTENNA.get());
+        simpleBlockWithExistingModel(EIOBlocks.WIRELESS_CHARGER_ANTENNA_ADVANCED.get());
 
         // Creative Power
         simpleBlock(EIOBlocks.CREATIVE_POWER.get());
 
         // Mind Killer
-        simpleBlock(EIOBlocks.MIND_KILLER.get(),
-            models().getExistingFile(EnderIO.rl("block/mind_killer")));
+        simpleBlockWithExistingModel(EIOBlocks.MIND_KILLER.get());
 
         // Vacuum Machines
-        simpleBlock(EIOBlocks.VACUUM_CHEST.get(),
-            models().getExistingFile(EnderIO.rl("block/vacuum_chest")));
-        simpleBlock(EIOBlocks.XP_VACUUM.get(),
-            models().getExistingFile(EnderIO.rl("block/xp_vacuum")));
+        simpleBlockWithExistingModel(EIOBlocks.VACUUM_CHEST.get());
+        simpleBlockWithExistingModel(EIOBlocks.XP_VACUUM.get());
 
         // Travel Anchors
-        simpleBlock(EIOBlocks.TRAVEL_ANCHOR.get(),
-            models().getExistingFile(EnderIO.rl("block/travel_anchor")));
+        simpleBlockWithExistingModel(EIOBlocks.TRAVEL_ANCHOR.get());
         EIOBlockState.paintedBlock("painted_travel_anchor", this, EIOBlocks.PAINTED_TRAVEL_ANCHOR.get(),
             Blocks.DIRT, null);
 
@@ -214,8 +208,7 @@ public class EIOBlockStateProvider extends BlockStateProvider {
 
         // Capacitor Banks
         for (var capacitorBank : EIOBlocks.CAPACITOR_BANKS.values()) {
-            simpleBlock(capacitorBank.get(),
-                models().getExistingFile(EnderIO.rl(capacitorBank.getId().getPath())));
+            simpleBlockWithExistingModel(capacitorBank.get());
         }
 
         // Niard
@@ -225,24 +218,16 @@ public class EIOBlockStateProvider extends BlockStateProvider {
         machineBlock(EIOBlocks.VAT.get());
 
         // Block Detector
-        simpleBlock(EIOBlocks.BLOCK_DETECTOR.get(),
-            models().getExistingFile(EnderIO.rl("block/block_detector")));
+        simpleBlockWithExistingModel(EIOBlocks.BLOCK_DETECTOR.get());
 
         // Obelisks
-        simpleBlock(EIOBlocks.XP_OBELISK.get(),
-            models().getExistingFile(EnderIO.rl("block/xp_obelisk")));
-        simpleBlock(EIOBlocks.FARMING_STATION.get(),
-            models().getExistingFile(EnderIO.rl("block/farming_station")));
-        simpleBlock(EIOBlocks.INHIBITOR_OBELISK.get(),
-            models().getExistingFile(EnderIO.rl("block/inhibitor_obelisk")));
-        simpleBlock(EIOBlocks.AVERSION_OBELISK.get(),
-            models().getExistingFile(EnderIO.rl("block/aversion_obelisk")));
-        simpleBlock(EIOBlocks.RELOCATOR_OBELISK.get(),
-            models().getExistingFile(EnderIO.rl("block/relocator_obelisk")));
-        simpleBlock(EIOBlocks.ATTRACTOR_OBELISK.get(),
-            models().getExistingFile(EnderIO.rl("block/attractor_obelisk")));
-        simpleBlock(EIOBlocks.WEATHER_OBELISK.get(),
-            models().getExistingFile(EnderIO.rl("block/weather_obelisk")));
+        simpleBlockWithExistingModel(EIOBlocks.XP_OBELISK.get());
+        simpleBlockWithExistingModel(EIOBlocks.FARMING_STATION.get());
+        simpleBlockWithExistingModel(EIOBlocks.INHIBITOR_OBELISK.get());
+        simpleBlockWithExistingModel(EIOBlocks.AVERSION_OBELISK.get());
+        simpleBlockWithExistingModel(EIOBlocks.RELOCATOR_OBELISK.get());
+        simpleBlockWithExistingModel(EIOBlocks.ATTRACTOR_OBELISK.get());
+        simpleBlockWithExistingModel(EIOBlocks.WEATHER_OBELISK.get());
     }
 
     private void registerFluidBlocks() {
@@ -405,6 +390,10 @@ public class EIOBlockStateProvider extends BlockStateProvider {
             .child("machine", ModelHelper.getExistingAsBuilder(models(), model))
             .child("overlay", ModelHelper.getExistingAsBuilder(models(), EnderIO.rl("block/io_overlay")))
             .end();
+    }
+
+    private void simpleBlockWithExistingModel(Block block) {
+        simpleBlock(block, models().getExistingFile(EnderIO.rl("block/" + name(block))));
     }
 
     private ResourceLocation key(Block block) {

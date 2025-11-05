@@ -266,7 +266,6 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
                 .map(i -> BuiltInRegistries.ITEM.getResourceKey(i).orElseThrow())
                 .toList());
 
-            glassItems.forEach(tag::add);
             tag.addAll(glassItems);
         }
 

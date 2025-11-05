@@ -33,15 +33,10 @@ public class EIOBlockLootProvider extends BlockLootSubProvider {
 
     @Override
     protected Iterable<Block> getKnownBlocks() {
-        var eioBlocks = EIOBlocks.BLOCKS.getEntries()
+        return EIOBlocks.BLOCKS.getEntries()
             .stream()
             .map(e -> (Block) e.value())
             .toList();
-        var machineBlocks = EIOBlocks.BLOCKS.getEntries()
-            .stream()
-            .map(e -> (Block) e.value())
-            .toList();
-        return java.util.stream.Stream.concat(eioBlocks.stream(), machineBlocks.stream()).toList();
     }
 
     @Override
