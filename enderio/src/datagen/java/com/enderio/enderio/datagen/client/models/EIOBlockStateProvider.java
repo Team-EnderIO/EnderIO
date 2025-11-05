@@ -6,14 +6,12 @@ import com.enderio.enderio.content.machines.solar_panel.SolarPanelBlock;
 import com.enderio.enderio.content.machines.solar_panel.SolarPanelTier;
 import com.enderio.enderio.content.misc_blocks.ResettingLeverBlock;
 import com.enderio.enderio.content.paint.block.PaintedStairBlock;
-import com.enderio.enderio.data.model.MachineModelUtil;
 import com.enderio.enderio.data.model.block.ConduitModelBuilder;
 import com.enderio.enderio.data.model.block.EIOBlockState;
 import com.enderio.enderio.data.model.block.PaintedBlockModelBuilder;
 import com.enderio.enderio.foundation.block.ProgressMachineBlock;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOFluids;
-import com.enderio.regilite.data.DataGenContext;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
@@ -32,6 +30,8 @@ import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.client.model.generators.VariantBlockStateBuilder;
 import net.neoforged.neoforge.client.model.generators.loaders.CompositeModelBuilder;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
+
+import java.util.Locale;
 
 public class EIOBlockStateProvider extends BlockStateProvider {
     public EIOBlockStateProvider(PackOutput output, ExistingFileHelper exFileHelper) {
@@ -332,7 +332,30 @@ public class EIOBlockStateProvider extends BlockStateProvider {
     }
 
     private void solarPanelBlock(SolarPanelBlock block, SolarPanelTier tier) {
-        MachineModelUtil.solarPanel(this, new DataGenContext<>(key(block), () -> block), tier);
+        String name = name(block);
+        String tierName = tier.name().toLowerCase(Locale.ROOT);
+
+        var baseModel = models()
+            .withExistingParent(name + "_base", EnderIO.rl("block/photovoltaic_cell_base"))
+            .texture("panel", "block/" + tierName + "_top")
+            .texture("side", "block/" + tierName + "_side");
+        var sideModel = models()
+            .withExistingParent(name + "_side", EnderIO.rl("block/photovoltaic_cell_side"))
+            .texture("side", "block/" + tierName + "_side");
+        var cornerModel = models()
+            .withExistingParent(name + "_corner", EnderIO.rl("block/photovoltaic_cell_corner"))
+            .texture("side", "block/" + tierName + "_side");
+
+        var builder = getMultipartBuilder(block);
+        builder.part().modelFile(baseModel).addModel();
+        builder.part().modelFile(sideModel).addModel().condition(SolarPanelBlock.NORTH, true);
+        builder.part().modelFile(sideModel).rotationY(90).addModel().condition(SolarPanelBlock.EAST, true);
+        builder.part().modelFile(sideModel).rotationY(180).addModel().condition(SolarPanelBlock.SOUTH, true);
+        builder.part().modelFile(sideModel).rotationY(270).addModel().condition(SolarPanelBlock.WEST, true);
+        builder.part().modelFile(cornerModel).addModel().condition(SolarPanelBlock.NORTH_EAST, true);
+        builder.part().modelFile(cornerModel).rotationY(90).addModel().condition(SolarPanelBlock.SOUTH_EAST, true);
+        builder.part().modelFile(cornerModel).rotationY(180).addModel().condition(SolarPanelBlock.SOUTH_WEST, true);
+        builder.part().modelFile(cornerModel).rotationY(270).addModel().condition(SolarPanelBlock.NORTH_WEST, true);
     }
 
     private void eioPressurePlateBlock(Block block) {

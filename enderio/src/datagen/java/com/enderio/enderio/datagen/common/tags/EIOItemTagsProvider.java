@@ -6,15 +6,23 @@ import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOItems;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public class EIOItemTagsProvider extends ItemTagsProvider {
@@ -246,16 +254,25 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
         copy(EIOTags.Blocks.DARK_FUSED_QUARTZ, EIOTags.Items.DARK_FUSED_QUARTZ);
         copy(EIOTags.Blocks.CLEAR_GLASS, EIOTags.Items.CLEAR_GLASS);
 
-        // TODO: This is a nightmare
-        for (var entry : EIOBlocks.GLASS_BLOCKS.entrySet()) {
+        var glassBlockCollections = EIOBlocks.GLASS_BLOCKS.entrySet()
+            .stream()
+            .sorted(Comparator.comparing(a -> a.getKey().glassName()))
+            .toList();
+
+        for (var entry : glassBlockCollections) {
             var glassIdentifier = entry.getKey();
             var glassBlocks = entry.getValue();
 
             var tag = tag(EIOTags.Items.GLASS_TAGS.get(glassIdentifier));
-            for (var glassBlock : glassBlocks.getAllBlocks().toList()) {
-                var item = glassBlock.asItem();
-                tag.add(item);
-            }
+
+            var glassItems = new ArrayList<>(glassBlocks.getAllBlocks()
+                .sorted(Comparator.comparing(DeferredHolder::getKey))
+                .map(i -> i.get().asItem())
+                .map(i -> BuiltInRegistries.ITEM.getResourceKey(i).orElseThrow())
+                .toList());
+
+            glassItems.forEach(tag::add);
+            tag.addAll(glassItems);
         }
 
         tag(Tags.Items.CHAINS).add(EIOBlocks.SOUL_CHAIN.asItem());

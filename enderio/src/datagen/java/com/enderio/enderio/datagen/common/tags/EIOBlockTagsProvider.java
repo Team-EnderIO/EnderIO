@@ -1,18 +1,24 @@
 package com.enderio.enderio.datagen.common.tags;
 
 import com.enderio.enderio.api.EnderIOAPI;
+import com.enderio.enderio.content.glass.GlassIdentifier;
 import com.enderio.enderio.content.glass.GlassLighting;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOBlocks;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public class EIOBlockTagsProvider extends BlockTagsProvider {
@@ -89,10 +95,22 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
             .add(EIOBlocks.WEATHER_OBELISK.get());
         
         // Solar Panels and Capacitor Banks
-        for (var solarPanel : EIOBlocks.SOLAR_PANELS.values()) {
+        var solarPanels = EIOBlocks.SOLAR_PANELS.values()
+            .stream()
+            .sorted(Comparator.comparing(DeferredHolder::getKey))
+            .toList();
+
+        for (var solarPanel : solarPanels) {
             tag(BlockTags.MINEABLE_WITH_PICKAXE).add(solarPanel.get());
+            tag(BlockTags.NEEDS_IRON_TOOL).add(solarPanel.get());
         }
-        for (var capacitorBank : EIOBlocks.CAPACITOR_BANKS.values()) {
+
+        var capacitorBanks = EIOBlocks.CAPACITOR_BANKS.values()
+            .stream()
+            .sorted(Comparator.comparing(DeferredHolder::getKey))
+            .toList();
+
+        for (var capacitorBank : capacitorBanks) {
             tag(BlockTags.MINEABLE_WITH_PICKAXE).add(capacitorBank.get());
         }
 
@@ -152,11 +170,6 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
             .add(EIOBlocks.RELOCATOR_OBELISK.get())
             .add(EIOBlocks.ATTRACTOR_OBELISK.get())
             .add(EIOBlocks.WEATHER_OBELISK.get());
-        
-        // Solar Panels need iron tool
-        for (var solarPanel : EIOBlocks.SOLAR_PANELS.values()) {
-            tag(BlockTags.NEEDS_IRON_TOOL).add(solarPanel.get());
-        }
 
         tag(BlockTags.NEEDS_DIAMOND_TOOL)
             .add(EIOBlocks.REINFORCED_OBSIDIAN.get());
@@ -290,9 +303,19 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
         var darkFusedQuartzTag = tag(EIOTags.Blocks.DARK_FUSED_QUARTZ);
         var clearGlassTag = tag(EIOTags.Blocks.CLEAR_GLASS);
 
-        for (var glassBlocks : EIOBlocks.GLASS_BLOCKS.values()) {
-            for (var glassBlock : glassBlocks.getAllBlocks().toList()) {
-                var block = glassBlock.get();
+        var glassBlockCollections = EIOBlocks.GLASS_BLOCKS.entrySet()
+            .stream()
+            .sorted(Comparator.comparing(a -> a.getKey().glassName()))
+            .map(Map.Entry::getValue)
+            .toList();
+
+        for (var glassBlocks : glassBlockCollections) {
+            var glassItems = new ArrayList<>(glassBlocks.getAllBlocks()
+                .sorted(Comparator.comparing(DeferredHolder::getKey))
+                .map(DeferredHolder::get)
+                .toList());
+
+            for (var block : glassItems) {
                 if (block.glassIdentifier().explosionResistance()) {
                     fusedQuartzTag.add(block);
 

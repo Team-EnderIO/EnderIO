@@ -1,5 +1,8 @@
 {
   "values": [
+    "enderio:energetic_photovoltaic_module",
+    "enderio:pulsating_photovoltaic_module",
+    "enderio:vibrant_photovoltaic_module",
     "enderio:dark_steel_ladder",
     "enderio:dark_steel_bars",
     "enderio:dark_steel_door",
@@ -38,9 +41,6 @@
     "enderio:aversion_obelisk",
     "enderio:relocator_obelisk",
     "enderio:attractor_obelisk",
-    "enderio:weather_obelisk",
-    "enderio:pulsating_photovoltaic_module",
-    "enderio:energetic_photovoltaic_module",
-    "enderio:vibrant_photovoltaic_module"
+    "enderio:weather_obelisk"
   ]
 }
