@@ -704,6 +704,7 @@ public class EIOLanguageProvider extends LanguageProvider {
     }
 
     private void addCommonLang() {
+        add(EIOCommonLang.CREATIVE_TAB_TITLE, "Ender IO");
         add(EIOCommonLang.TOOLTIP_ENERGY_EQUIVALENCE, "A unit of energy, equivalent to FE.");
         add(EIOCommonLang.BLOCK_BLAST_RESISTANT, "Blast resistant");
 

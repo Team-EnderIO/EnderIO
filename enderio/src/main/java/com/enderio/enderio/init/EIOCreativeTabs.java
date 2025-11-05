@@ -4,9 +4,9 @@ import com.enderio.core.common.item.CreativeTabVariants;
 import com.enderio.core.common.item.ICustomCreativeTabEntries;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.content.broken_spawner.BrokenSpawnerItem;
-import com.enderio.enderio.content.glass.FusedQuartzBlock;
 import com.enderio.enderio.content.paint.block.PaintedBlock;
 import com.enderio.enderio.content.tools.vials.SoulVialItem;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.BlockItem;
@@ -34,7 +34,7 @@ public class EIOCreativeTabs {
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TAB = CREATIVE_MODE_TABS.register("enderio", () ->
         CreativeModeTab.builder()
-            .title(EnderIO.REGILITE.addTranslation("itemGroup", EnderIO.rl("enderio"), "Ender IO"))
+            .title(EIOCommonLang.CREATIVE_TAB_TITLE)
             .icon(() -> new ItemStack(EIOItems.CREATIVE_ICON.get()))
             .withTabsBefore(CreativeModeTabs.SPAWN_EGGS)
             .withSearchBar()

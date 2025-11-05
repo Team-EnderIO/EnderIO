@@ -2,17 +2,14 @@ package com.enderio.enderio.foundation.lang;
 
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.content.glass.GlassLighting;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.DyeColor;
-
-import java.util.Locale;
 
 public class EIOCommonLang {
+
+    public static final MutableComponent CREATIVE_TAB_TITLE = create("itemGroup", "enderio");
 
     public static final MutableComponent TOOLTIP_ENERGY_EQUIVALENCE = tooltip("energy_equivalence");
 
