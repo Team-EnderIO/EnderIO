@@ -482,51 +482,27 @@ public class EIOBlocks {
         BlockBehaviour.Properties.ofFullCopy(Blocks.OBSERVER));
 
     // Obelisks
-    public static final DeferredBlock<MachineBlock<XPObeliskBlockEntity>> XP_OBELISK = registerWithItem("xp_obelisk",
-        props -> new MachineBlock<>(EIOBlockEntities.XP_OBELISK::get, props),
-        BlockBehaviour.Properties.of()
-            .strength(2.5f, 8)
-            .isViewBlocking((pState, pLevel, pPos) -> false)
-            .noOcclusion());
+    public static final DeferredBlock<MachineBlock<XPObeliskBlockEntity>> XP_OBELISK =
+        obelisk("xp_obelisk", () -> EIOBlockEntities.XP_OBELISK::get);
 
     public static final DeferredBlock<ProgressMachineBlock> FARMING_STATION = registerWithItem("farming_station",
         properties -> new ProgressMachineBlock(EIOBlockEntities.FARMING_STATION, properties),
         BlockBehaviour.Properties.of().strength(2.5f, 8).requiredFeatures(EIOFeatureFlags.FARMING_STATION));
 
-    public static final DeferredBlock<MachineBlock<InhibitorObeliskBlockEntity>> INHIBITOR_OBELISK = registerWithItem("inhibitor_obelisk",
-        props -> new MachineBlock<>(EIOBlockEntities.INHIBITOR_OBELISK::get, props),
-        BlockBehaviour.Properties.of()
-            .strength(2.5f, 8)
-            .isViewBlocking((pState, pLevel, pPos) -> false)
-            .noOcclusion());
+    public static final DeferredBlock<MachineBlock<InhibitorObeliskBlockEntity>> INHIBITOR_OBELISK =
+        obelisk("inhibitor_obelisk", () -> EIOBlockEntities.INHIBITOR_OBELISK::get);
 
-    public static final DeferredBlock<MachineBlock<AversionObeliskBlockEntity>> AVERSION_OBELISK = registerWithItem("aversion_obelisk",
-        props -> new MachineBlock<>(EIOBlockEntities.AVERSION_OBELISK::get, props),
-        BlockBehaviour.Properties.of()
-            .strength(2.5f, 8)
-            .isViewBlocking((pState, pLevel, pPos) -> false)
-            .noOcclusion());
+    public static final DeferredBlock<MachineBlock<AversionObeliskBlockEntity>> AVERSION_OBELISK =
+        obelisk("aversion_obelisk", () -> EIOBlockEntities.AVERSION_OBELISK::get);
 
-    public static final DeferredBlock<MachineBlock<RelocatorObeliskBlockEntity>> RELOCATOR_OBELISK = registerWithItem("relocator_obelisk",
-        props -> new MachineBlock<>(EIOBlockEntities.RELOCATOR_OBELISK::get, props),
-        BlockBehaviour.Properties.of()
-            .strength(2.5f, 8)
-            .isViewBlocking((pState, pLevel, pPos) -> false)
-            .noOcclusion());
+    public static final DeferredBlock<MachineBlock<RelocatorObeliskBlockEntity>> RELOCATOR_OBELISK =
+        obelisk("relocator_obelisk", () -> EIOBlockEntities.RELOCATOR_OBELISK::get);
 
-    public static final DeferredBlock<MachineBlock<AttractorObeliskBlockEntity>> ATTRACTOR_OBELISK = registerWithItem("attractor_obelisk",
-        props -> new MachineBlock<>(EIOBlockEntities.ATTRACTOR_OBELISK::get, props),
-        BlockBehaviour.Properties.of()
-            .strength(2.5f, 8)
-            .isViewBlocking((pState, pLevel, pPos) -> false)
-            .noOcclusion());
+    public static final DeferredBlock<MachineBlock<AttractorObeliskBlockEntity>> ATTRACTOR_OBELISK =
+        obelisk("attractor_obelisk", () -> EIOBlockEntities.ATTRACTOR_OBELISK::get);
 
-    public static final DeferredBlock<MachineBlock<WeatherObeliskBlockEntity>> WEATHER_OBELISK = registerWithItem("weather_obelisk",
-        props -> new MachineBlock<>(EIOBlockEntities.WEATHER_OBELISK::get, props),
-        BlockBehaviour.Properties.of()
-            .strength(2.5f, 8)
-            .isViewBlocking((pState, pLevel, pPos) -> false)
-            .noOcclusion());
+    public static final DeferredBlock<MachineBlock<WeatherObeliskBlockEntity>> WEATHER_OBELISK =
+        obelisk("weather_obelisk", () -> EIOBlockEntities.WEATHER_OBELISK::get);
 
     // Items that need capabilities (exposed as DeferredItems)
     public static final DeferredItem<FluidTankBlockItem> FLUID_TANK_ITEM = ITEMS.register("fluid_tank",
@@ -571,6 +547,16 @@ public class EIOBlocks {
         return registerWithItem(name,
             props -> new ProgressMachineBlock<>(regiliteBlockEntity.get(), props),
             BlockBehaviour.Properties.of().strength(2.5f, 8));
+    }
+
+    private static <T extends MachineBlockEntity> DeferredBlock<MachineBlock<T>> obelisk(String name,
+        Supplier<Supplier<BlockEntityType<T>>> blockEntityType) {
+        return registerWithItem(name,
+            props -> new MachineBlock<T>(blockEntityType.get()::get, props),
+            BlockBehaviour.Properties.of()
+                .strength(2.5f, 8)
+                .isViewBlocking((pState, pLevel, pPos) -> false)
+                .noOcclusion());
     }
 
     private static DeferredBlock<SolarPanelBlock> solarPanel(String name,
