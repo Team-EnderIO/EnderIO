@@ -1,4 +1,4 @@
-package com.enderio.enderio.data.model.block;
+package com.enderio.enderio.datagen.client.models.block;
 
 import com.enderio.enderio.EnderIO;
 import net.neoforged.neoforge.client.model.generators.CustomLoaderBuilder;

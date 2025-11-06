@@ -64,9 +64,9 @@ public class AlloyRecipeProvider extends SubRecipeProvider {
         build(EnderIO.rl("dark_steel_ingot_with_coal"),
                 List.of(SizedIngredient.of(Tags.Items.INGOTS_IRON, 1), SizedIngredient.of(Items.COAL, 2),
                         SizedIngredient.of(Tags.Items.OBSIDIANS, 1)),
-                new ItemStack(EIOItems.DARK_STEEL_INGOT.get()), 6400, 0.3f, recipeOutput);
+                new ItemStack(EIOItems.DARK_STEEL_INGOT.get()), 3200, 0.3f, recipeOutput);
         build(new ItemStack(EIOItems.DARK_STEEL_INGOT.get()), List.of(SizedIngredient.of(Tags.Items.INGOTS_IRON, 1),
-                SizedIngredient.of(EIOTags.Items.DUSTS_COAL, 1), SizedIngredient.of(Tags.Items.OBSIDIANS, 1)), 6400,
+                SizedIngredient.of(EIOTags.Items.DUSTS_COAL, 1), SizedIngredient.of(Tags.Items.OBSIDIANS, 1)), 3200,
                 0.3f, recipeOutput);
         build(new ItemStack(EIOItems.SOULARIUM_INGOT.get()),
                 List.of(new SizedIngredient(Ingredient.of(Items.SOUL_SAND, Items.SOUL_SOIL), 1),

@@ -4,7 +4,7 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
 import com.enderio.enderio.content.fun.EnderiosItem;
 import com.enderio.enderio.content.tools.vials.SoulVialItem;
-import com.enderio.enderio.data.model.item.FacadeItemModelBuilder;
+import com.enderio.enderio.datagen.client.models.item.FacadeItemModelBuilder;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOFluids;
 import com.enderio.enderio.init.EIOItems;

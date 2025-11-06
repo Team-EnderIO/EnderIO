@@ -1,4 +1,4 @@
-package com.enderio.enderio.data.model.item;
+package com.enderio.enderio.datagen.client.models.item;
 
 import com.enderio.enderio.EnderIO;
 import net.minecraft.core.registries.BuiltInRegistries;
