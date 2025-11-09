@@ -14,6 +14,7 @@ import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.mojang.authlib.GameProfile;
+import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
@@ -51,12 +52,27 @@ public class AttractorObeliskBlockEntity extends ObeliskBlockEntity<AttractorObe
     private final Vec3 targetPos;
 
     @UseOnly(LogicalSide.SERVER)
+    @Nullable
     private FakePlayer fakePlayer;
 
     public AttractorObeliskBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.ATTRACTOR_OBELISK.get(), worldPosition, blockState, false, CapacitorSupport.REQUIRED,
                 EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE);
         targetPos = new Vec3(worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5);
+    }
+
+    @EnsureSide(EnsureSide.Side.SERVER)
+    private FakePlayer getFakePlayer() {
+        if (!(level instanceof ServerLevel serverLevel)) {
+            throw new IllegalStateException("Level is null");
+        }
+
+        if (fakePlayer == null) {
+            fakePlayer = new FakePlayer(serverLevel, new GameProfile(getMachineOwnerOrRandom(), "enderio:attractor:" + worldPosition));
+            fakePlayer.setPos(targetPos.x, targetPos.y, targetPos.z);
+        }
+
+        return fakePlayer;
     }
 
     @Override
@@ -92,10 +108,6 @@ public class AttractorObeliskBlockEntity extends ObeliskBlockEntity<AttractorObe
     @Override
     public void setLevel(Level level) {
         super.setLevel(level);
-        if (level instanceof ServerLevel sl) {
-            fakePlayer = new FakePlayer(sl, new GameProfile(getMachineOwnerOrRandom(), "enderio:attractor:" + worldPosition));
-            fakePlayer.setPos(targetPos.x, targetPos.y, targetPos.z);
-        }
     }
 
     @Override
@@ -144,7 +156,7 @@ public class AttractorObeliskBlockEntity extends ObeliskBlockEntity<AttractorObe
 
     private void setTarget(Mob mob) {
         assert level != null;
-        mob.setTarget(fakePlayer);
+        mob.setTarget(getFakePlayer());
     }
 
     private void attractMob(Mob mob) {
@@ -168,8 +180,12 @@ public class AttractorObeliskBlockEntity extends ObeliskBlockEntity<AttractorObe
     @Override
     public void setRemoved() {
         super.setRemoved();
-        if (!level.isClientSide) {
-            fakePlayer.discard();
+
+        if (level != null && !level.isClientSide) {
+            if (fakePlayer != null) {
+                fakePlayer.discard();
+                fakePlayer = null;
+            }
         }
     }
 }
