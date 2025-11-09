@@ -1,5 +1,6 @@
 package com.enderio.enderio.foundation.block.entity;
 
+import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.UseOnly;
 import com.enderio.enderio.api.capacitor.CapacitorData;
 import com.enderio.enderio.api.capacitor.CapacitorScalable;
@@ -18,6 +19,7 @@ import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
@@ -234,16 +236,43 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
     }
 
     protected void updateCapacitorData() {
+        // Wait for the level to be loaded.
+        if (level == null) {
+            return;
+        }
+
         isCapacitorDataDirty = false;
 
         if (supportsCapacitor()) {
-            capacitorData = getCapacitorItem().getOrDefault(EIODataComponents.CAPACITOR_DATA, CapacitorData.NONE);
+            var capacitorItem = getCapacitorItem();
+            var capacitorExtension = capacitorItem.getCapability(EnderIOCapabilities.CAPACITOR_EXTENSION);
+            if (capacitorExtension != null) {
+                capacitorData = capacitorExtension.getCapacitorData(capacitorItem, level);
+            } else {
+                capacitorData = getCapacitorItem().getOrDefault(EIODataComponents.CAPACITOR_DATA, CapacitorData.NONE);
+            }
+
             updateCapacitorState();
         }
     }
 
     private void updateCapacitorState() {
         updateMachineState(MachineState.NO_CAPACITOR, supportsCapacitor() && !isCapacitorInstalled());
+    }
+
+    // TODO: Ensure this is called by all machines.
+    protected void onMachineUsed() {
+        if (supportsCapacitor()) {
+            if (!(level instanceof ServerLevel serverLevel)) {
+                return;
+            }
+
+            var capacitorItem = getCapacitorItem();
+            var capacitorExtension = capacitorItem.getCapability(EnderIOCapabilities.CAPACITOR_EXTENSION);
+            if (capacitorExtension != null) {
+                capacitorExtension.onMachineUsed(capacitorItem, serverLevel);
+            }
+        }
     }
 
     // region MachineInstallable Implementation

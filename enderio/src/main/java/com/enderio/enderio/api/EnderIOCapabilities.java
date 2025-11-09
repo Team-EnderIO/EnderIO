@@ -1,5 +1,6 @@
 package com.enderio.enderio.api;
 
+import com.enderio.enderio.api.capacitor.ICapacitorExtension;
 import com.enderio.enderio.api.conduits.facade.ConduitFacadeProvider;
 import com.enderio.enderio.api.filter.FilterMenuProvider;
 import com.enderio.enderio.api.filter.FluidFilter;
@@ -18,6 +19,9 @@ import org.jetbrains.annotations.Nullable;
 public class EnderIOCapabilities {
     public static final BlockCapability<SideConfig, Direction> SIDE_CONFIG = BlockCapability
         .createSided(EnderIOAPI.rl("side_config"), SideConfig.class);
+
+    public static final ItemCapability<ICapacitorExtension, Void> CAPACITOR_EXTENSION = ItemCapability
+        .createVoid(EnderIOAPI.rl("capacitor_extension"), ICapacitorExtension.class);
 
     public static final ItemCapability<FilterMenuProvider, Void> FILTER_MENU_PROVIDER = ItemCapability
         .createVoid(EnderIOAPI.rl("filter_menu_provider"), FilterMenuProvider.class);
