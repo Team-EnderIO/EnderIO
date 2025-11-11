@@ -33,6 +33,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
@@ -253,16 +254,17 @@ public class CapacitorBankBlockEntity extends LegacyPoweredMachineBlockEntity im
         clientConfigurables.addAll(list);
     }
 
-    private Map<GraphObject<Mergeable.Dummy>, ?> cachedMap;
-    private Graph<Mergeable.Dummy> cachedMapGraph;
+    private volatile Map<GraphObject<Mergeable.Dummy>, ?> cachedMap;
+    private volatile Graph<Mergeable.Dummy> cachedMapGraph;
 
     private Map<GraphObject<Mergeable.Dummy>, ?> getMap() {
         Graph<Mergeable.Dummy> graph = node.getGraph();
-        if(graph == null) return new HashMap<>();
+        if(graph == null) return Collections.emptyMap();
         if (cachedMap == null || cachedMapGraph != graph) {
             cachedMap = ReflectionUtil.getRawMap(graph);
             cachedMapGraph = graph;
         }
+        if (cachedMap == null) cachedMap = Collections.emptyMap();
         return cachedMap;
     }
 

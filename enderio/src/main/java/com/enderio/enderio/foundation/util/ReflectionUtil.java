@@ -24,6 +24,9 @@ public class ReflectionUtil {
 
     @SuppressWarnings("unchecked")
     public static Map<GraphObject<Mergeable.Dummy>, ?> getRawMap(Graph<Mergeable.Dummy> graph) {
+        if(GRAPH_OBJECTS_FIELD == null) {
+            return null;
+        }
         try {
             return (Map<GraphObject<Mergeable.Dummy>, ?>) GRAPH_OBJECTS_FIELD.get(graph);
         } catch (Exception ignored) {

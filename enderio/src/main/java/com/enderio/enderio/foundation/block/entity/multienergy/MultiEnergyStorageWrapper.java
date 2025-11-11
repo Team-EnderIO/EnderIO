@@ -46,15 +46,16 @@ public class MultiEnergyStorageWrapper extends MachineEnergyStorage implements I
         return (int)Math.min(Integer.MAX_VALUE, getLargeEnergyStored());
     }
 
-    private Map<GraphObject<Mergeable.Dummy>, ?> cachedMap;
-    private Graph<Mergeable.Dummy> cachedMapGraph;
+    private volatile Map<GraphObject<Mergeable.Dummy>, ?> cachedMap;
+    private volatile Graph<Mergeable.Dummy> cachedMapGraph;
 
     private Map<GraphObject<Mergeable.Dummy>, ?> getMap() {
-        if(this.graph == null) return new HashMap<>();
+        if(this.graph == null) return Collections.emptyMap();
         if (cachedMap == null || cachedMapGraph != graph) {
             cachedMap = ReflectionUtil.getRawMap(graph);
             cachedMapGraph = graph;
         }
+        if(this.cachedMap == null) return Collections.emptyMap();
         return cachedMap;
     }
 
