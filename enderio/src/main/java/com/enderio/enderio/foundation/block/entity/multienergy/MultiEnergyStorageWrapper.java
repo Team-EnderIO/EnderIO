@@ -4,14 +4,20 @@ import com.enderio.enderio.api.io.IOConfigurable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.enderio.foundation.io.energy.ILargeMachineEnergyStorage;
 import com.enderio.enderio.foundation.io.energy.MachineEnergyStorage;
+import com.enderio.enderio.foundation.util.ReflectionUtil;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
 import dev.gigaherz.graph3.Mergeable;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Supplier;
 
 public class MultiEnergyStorageWrapper extends MachineEnergyStorage implements ILargeMachineEnergyStorage {
@@ -40,22 +46,35 @@ public class MultiEnergyStorageWrapper extends MachineEnergyStorage implements I
         return (int)Math.min(Integer.MAX_VALUE, getLargeEnergyStored());
     }
 
+    private Map<GraphObject<Mergeable.Dummy>, ?> cachedMap;
+    private Graph<Mergeable.Dummy> cachedMapGraph;
+
+    private Map<GraphObject<Mergeable.Dummy>, ?> getMap() {
+        if(this.graph == null) return new HashMap<>();
+        if (cachedMap == null || cachedMapGraph != graph) {
+            cachedMap = ReflectionUtil.getRawMap(graph);
+            cachedMapGraph = graph;
+        }
+        return cachedMap;
+    }
 
     @Override
     public long getLargeEnergyStored() {
         if (graph == null) {
             return 0;
         }
+        Set<GraphObject<Mergeable.Dummy>> objects = getMap().keySet();
+        long sum = 0;
 
-        long cumulativeEnergy = 0;
-        for (GraphObject<Mergeable.Dummy> object : graph.getObjects()) {
-            if (object instanceof MultiEnergyNode panelNode) {
-                cumulativeEnergy += panelNode.getInternal().get().getEnergyStored();
+        for (GraphObject<Mergeable.Dummy> obj : objects) {
+            if (obj instanceof MultiEnergyNode node) {
+                sum += node.getInternal().get().getEnergyStored();
             }
         }
 
-        return cumulativeEnergy;
+        return sum;
     }
+
     @Override
     public int getMaxEnergyStored() {
         return (int)(Math.min(getLargeMaxEnergyStored(), Integer.MAX_VALUE));
