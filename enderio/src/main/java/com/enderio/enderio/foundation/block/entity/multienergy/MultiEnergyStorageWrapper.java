@@ -49,22 +49,23 @@ public class MultiEnergyStorageWrapper extends MachineEnergyStorage implements I
     private volatile Map<GraphObject<Mergeable.Dummy>, ?> cachedMap;
     private volatile Graph<Mergeable.Dummy> cachedMapGraph;
 
-    private Map<GraphObject<Mergeable.Dummy>, ?> getMap() {
-        if(this.graph == null) return null;
-        if (cachedMap == null || cachedMapGraph != graph) {
-            cachedMap = ReflectionUtil.getRawMap(graph);
-            cachedMapGraph = graph;
+    private Map<GraphObject<Mergeable.Dummy>, ?> getMap(Graph<Mergeable.Dummy> graph) {
+        if(graph == null) return null;
+        if (this.cachedMap == null || this.cachedMapGraph != graph) {
+            this.cachedMap = ReflectionUtil.getRawMap(graph);
+            this.cachedMapGraph = graph;
         }
-        if(cachedMap == null) cachedMap = Collections.emptyMap();
-        return cachedMap;
+        if(this.cachedMap == null) this.cachedMap = Collections.emptyMap();
+        return this.cachedMap;
     }
 
     @Override
     public long getLargeEnergyStored() {
-        if (graph == null) {
+        Graph<Mergeable.Dummy> graphSnapshot = this.graph;
+        if (graphSnapshot == null) {
             return 0;
         }
-        Map<GraphObject<Mergeable.Dummy>, ?> map = getMap();
+        Map<GraphObject<Mergeable.Dummy>, ?> map = getMap(graphSnapshot);
         Collection<GraphObject<Mergeable.Dummy>> objects = !map.isEmpty() ? map.keySet() : graph.getObjects();
         long sum = 0;
 
