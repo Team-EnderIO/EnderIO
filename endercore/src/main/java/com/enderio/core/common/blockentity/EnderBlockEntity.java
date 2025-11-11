@@ -166,7 +166,9 @@ public class EnderBlockEntity extends BlockEntity {
                 buf.writeInt(i);
                 dataSlots.get(i).write(buf);
             });
-            return buf.array();
+            byte[] data = new byte[buf.readableBytes()];
+            buf.readBytes(data);
+            return data;
         }finally {
             buf.release(); // release the buffer safely
         }
@@ -198,7 +200,9 @@ public class EnderBlockEntity extends BlockEntity {
             try{
                 buf.writeInt(dataSlots.indexOf(slot));
                 slot.write(buf, value);
-                PacketDistributor.sendToServer(new ClientboundDataSlotChange(getBlockPos(), buf.array()));
+                byte[] data = new byte[buf.readableBytes()];
+                buf.readBytes(data);
+                PacketDistributor.sendToServer(new ClientboundDataSlotChange(getBlockPos(), data));
             }finally {
                 buf.release(); // release the buffer safely
             }
