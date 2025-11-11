@@ -160,14 +160,16 @@ public class EnderBlockEntity extends BlockEntity {
 
         // Fine to use a normal byte buf here, we're not using codecs in here.
         RegistryFriendlyByteBuf buf = new RegistryFriendlyByteBuf(Unpooled.buffer(), level.registryAccess());
-        buf.writeInt(needsUpdate.size());
-        needsUpdate.forEach(i -> {
-            buf.writeInt(i);
-            dataSlots.get(i).write(buf);
-        });
-        byte[] arr = buf.array();
-        buf.release();
-        return arr;
+        try{
+            buf.writeInt(needsUpdate.size());
+            needsUpdate.forEach(i -> {
+                buf.writeInt(i);
+                dataSlots.get(i).write(buf);
+            });
+            return buf.array();
+        }finally {
+            buf.release(); // release the buffer safely
+        }
     }
 
     @Deprecated(forRemoval = true, since = "7.1")
@@ -193,10 +195,13 @@ public class EnderBlockEntity extends BlockEntity {
 
         if (dataSlots.contains(slot)) {
             RegistryFriendlyByteBuf buf = new RegistryFriendlyByteBuf(Unpooled.buffer(), level.registryAccess());
-            buf.writeInt(dataSlots.indexOf(slot));
-            slot.write(buf, value);
-            PacketDistributor.sendToServer(new ClientboundDataSlotChange(getBlockPos(), buf.array()));
-            buf.release();
+            try{
+                buf.writeInt(dataSlots.indexOf(slot));
+                slot.write(buf, value);
+                PacketDistributor.sendToServer(new ClientboundDataSlotChange(getBlockPos(), buf.array()));
+            }finally {
+                buf.release(); // release the buffer safely
+            }
             level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_NEIGHBORS);
         }
     }
