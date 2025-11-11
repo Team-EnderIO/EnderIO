@@ -62,6 +62,8 @@ public class EnderBlockEntity extends BlockEntity {
         blockEntity.endTick();
     }
 
+    private int nextTick = 0;
+
     /**
      * Perform server-side ticking
      */
@@ -69,7 +71,10 @@ public class EnderBlockEntity extends BlockEntity {
     public void serverTick() {
         // Perform syncing.
         if (level != null) {
-            sync();
+            if(nextTick-- == 0) { // do we really need to update it once a tick?
+                sync();
+                nextTick = 5;
+            }
         }
     }
 
