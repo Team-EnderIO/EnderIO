@@ -73,7 +73,7 @@ public class EnderBlockEntity extends BlockEntity {
         if (level != null) {
             if(nextTick-- == 0) { // do we really need to update it once a tick?
                 sync();
-                nextTick = 5;
+                nextTick = 4;
             }
         }
     }
