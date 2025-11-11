@@ -50,12 +50,12 @@ public class MultiEnergyStorageWrapper extends MachineEnergyStorage implements I
     private volatile Graph<Mergeable.Dummy> cachedMapGraph;
 
     private Map<GraphObject<Mergeable.Dummy>, ?> getMap() {
-        if(this.graph == null) return Collections.emptyMap();
+        if(this.graph == null) return null;
         if (cachedMap == null || cachedMapGraph != graph) {
             cachedMap = ReflectionUtil.getRawMap(graph);
             cachedMapGraph = graph;
         }
-        if(this.cachedMap == null) return Collections.emptyMap();
+        if(cachedMap == null) cachedMap = Collections.emptyMap();
         return cachedMap;
     }
 
@@ -64,7 +64,8 @@ public class MultiEnergyStorageWrapper extends MachineEnergyStorage implements I
         if (graph == null) {
             return 0;
         }
-        Set<GraphObject<Mergeable.Dummy>> objects = getMap().keySet();
+        Map<GraphObject<Mergeable.Dummy>, ?> map = getMap();
+        Collection<GraphObject<Mergeable.Dummy>> objects = !map.isEmpty() ? map.keySet() : graph.getObjects();
         long sum = 0;
 
         for (GraphObject<Mergeable.Dummy> obj : objects) {

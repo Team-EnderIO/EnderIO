@@ -274,7 +274,8 @@ public class CapacitorBankBlockEntity extends LegacyPoweredMachineBlockEntity im
         }
 
         // Get raw objects once - this is the expensive reflection call
-        Set<GraphObject<Mergeable.Dummy>> objects = getMap().keySet();
+        Map<GraphObject<Mergeable.Dummy>, ?> map = getMap();
+        Collection<GraphObject<Mergeable.Dummy>> objects = !map.isEmpty() ? map.keySet() : node.getGraph().getObjects();
         List<BlockPos> positions = new ArrayList<>(objects.size());
 
         for (GraphObject<Mergeable.Dummy> obj : objects) {
