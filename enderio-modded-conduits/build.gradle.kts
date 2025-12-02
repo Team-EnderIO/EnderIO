@@ -5,10 +5,13 @@ plugins {
     id("mod-common-conventions")
 }
 
-// Mojang ships Java 21 to end users in 1.20.5+, so your mod should target Java 21.
-java.toolchain.languageVersion.set(JavaLanguageVersion.of(21))
-
 configurations {
+    val localRuntime by creating
+
+    runtimeClasspath {
+        extendsFrom(localRuntime)
+    }
+
     create("gametestAnnotationProcessor") {
         extendsFrom(annotationProcessor.get())
     }
@@ -38,11 +41,7 @@ sourceSets {
     }
 }
 
-configurations {
-    runtimeClasspath.get().extendsFrom(create("localRuntime"))
-}
 
-val gametestImplementation by configurations.getting
 
 dependencies {
     api(libs.regilite)
@@ -77,6 +76,7 @@ dependencies {
     testImplementation(libs.neoforgeTestFramework)
 
     // Setup gametests
+    val gametestImplementation by configurations.getting
     gametestImplementation(libs.neoforgeTestFramework) {
         isTransitive = false
     }
@@ -185,14 +185,14 @@ tasks.build {
     dependsOn(tasks["sourcesJar"])
 }
 
-fun getReleaseType(): String? {
+fun getReleaseType(): String {
     // If we"re doing a proper build
     if (System.getenv("BUILD_VERSION") != null) {
-        val version_string = System.getenv("BUILD_VERSION")
+        val versionString = System.getenv("BUILD_VERSION").lowercase()
 
-        if (version_string.lowercase().contains("alpha")) {
+        if (versionString.contains("alpha")) {
             return "alpha"
-        } else if (version_string.lowercase().contains("beta")) {
+        } else if (versionString.contains("beta")) {
             return "beta"
         }
 

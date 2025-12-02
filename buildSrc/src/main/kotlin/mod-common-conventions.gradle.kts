@@ -73,8 +73,7 @@ var details = versionDetails()
 
 // TODO: Palantir doesn't let us filter for v prefixes on tags, this could cause issues if we tag anything else.
 //       this plugin isn't perfect, but it'll do in the short term.
-var versionRegex = Regex("""\d+(\.\d+)+""")
-var tagVersion = versionRegex.find(details.lastTag)?.value ?: "1.0.0"
+val tagVersion = Regex("""\d+(\.\d+)+""").find(details.lastTag)?.value ?: "1.0.0"
 
 if (details.commitDistance == 0 && details.isCleanTag) {
     version = tagVersion
