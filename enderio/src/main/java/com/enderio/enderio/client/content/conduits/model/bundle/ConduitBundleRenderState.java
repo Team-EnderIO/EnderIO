@@ -57,7 +57,7 @@ public class ConduitBundleRenderState {
             for (var conduit : renderState.conduits) {
                 if (bundle.getConnectionStatus(conduit, side).isEndpoint()) {
                     var connectionConfig = bundle.getConnectionConfig(conduit, side);
-                    var connectionRenderState = ConduitConnectionRenderState.of(conduit, connectionConfig);
+                    var connectionRenderState = ConduitConnectionRenderState.of(connectionConfig);
                     conduits.put(conduit, connectionRenderState);
                 }
             }

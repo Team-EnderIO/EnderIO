@@ -1,11 +1,9 @@
 package com.enderio.enderio.client.content.conduits.model.bundle;
 
-import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.enderio.enderio.api.conduits.connection.config.IOConnectionConfig;
 import com.enderio.enderio.api.conduits.connection.config.RedstoneSensitiveConnectionConfig;
 import me.liliandev.ensure.ensures.EnsureSide;
-import net.minecraft.core.Holder;
 import net.minecraft.world.item.DyeColor;
 
 public record ConduitConnectionRenderState(boolean canInput, DyeColor inputChannel, boolean canOutput,
@@ -16,17 +14,16 @@ public record ConduitConnectionRenderState(boolean canInput, DyeColor inputChann
     }
 
     @EnsureSide(EnsureSide.Side.CLIENT)
-    public static ConduitConnectionRenderState of(Holder<Conduit<?, ?>> conduit, ConnectionConfig connectionConfig) {
-        boolean canInput = false;
-        boolean canOutput = false;
-        DyeColor inputChannel = DyeColor.GREEN;
-        DyeColor outputChannel = DyeColor.GREEN;
+    public static ConduitConnectionRenderState of(ConnectionConfig connectionConfig) {
+        boolean canInsert = false;
+        boolean canExtract = false;
+        DyeColor insertChannel = DyeColor.GREEN;
+        DyeColor extractChannel = DyeColor.GREEN;
         if (connectionConfig instanceof IOConnectionConfig ioConnectionConfig) {
-            // TODO: Tidy the language here.
-            canInput = ioConnectionConfig.isInsert();
-            canOutput = ioConnectionConfig.isExtract();
-            inputChannel = ioConnectionConfig.insertChannel();
-            outputChannel = ioConnectionConfig.extractChannel();
+            canInsert = ioConnectionConfig.isInsert();
+            canExtract = ioConnectionConfig.isExtract();
+            insertChannel = ioConnectionConfig.insertChannel();
+            extractChannel = ioConnectionConfig.extractChannel();
         }
 
         boolean isRedstoneSensitive = false;
@@ -41,7 +38,7 @@ public record ConduitConnectionRenderState(boolean canInput, DyeColor inputChann
             }
         }
 
-        return new ConduitConnectionRenderState(canInput, inputChannel, canOutput, outputChannel, isRedstoneSensitive,
+        return new ConduitConnectionRenderState(canInsert, insertChannel, canExtract, extractChannel, isRedstoneSensitive,
                 redstoneChannel);
     }
 }

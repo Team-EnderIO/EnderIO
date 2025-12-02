@@ -35,8 +35,6 @@ public class SlicingRecipeProvider extends SubRecipeProvider {
                         Ingredient.of(Items.REDSTONE), Ingredient.of(EIOTags.Items.SILICON)),
                 20000, recipeOutput);
 
-        // TODO: Ender resonator
-
         build(EIOItems.SKELETAL_CONTRACTOR.get(),
                 List.of(Ingredient.of(EIOTags.Items.INGOTS_SOULARIUM), Ingredient.of(Items.SKELETON_SKULL),
                         Ingredient.of(EIOTags.Items.INGOTS_SOULARIUM), Ingredient.of(Items.ROTTEN_FLESH),

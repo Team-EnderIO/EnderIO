@@ -1,6 +1,7 @@
 package com.enderio.enderio.content.decor;
 
 import com.enderio.enderio.config.base.BaseConfig;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.init.EIOBlocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -9,6 +10,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 @EventBusSubscriber(value = Dist.CLIENT)
@@ -27,6 +29,13 @@ public class DarkSteelLadderHandler {
                     }
                 }
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onTooltip(ItemTooltipEvent event) {
+        if (event.getItemStack().is(EIOBlocks.DARK_STEEL_BLOCK.asItem())) {
+            event.getToolTip().add(EIOCommonLang.DARK_STEEL_LADDER_FASTER);
         }
     }
 }

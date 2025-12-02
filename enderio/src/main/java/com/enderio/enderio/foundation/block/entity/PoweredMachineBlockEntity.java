@@ -62,13 +62,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
                     "A machine which accepts a capacitor must have an inventory with a capacitor slot!");
         }
 
-        energyStorage = createEnergyStorage();
-    }
-
-    // TODO: Temporary to support the primitive alloy smelter in its current form.
-    @Deprecated(forRemoval = true, since = "7.1")
-    protected PoweredMachineEnergyStorage createEnergyStorage() {
-        return new PoweredMachineEnergyStorage(this);
+        energyStorage = new PoweredMachineEnergyStorage(this);
     }
 
     @Override

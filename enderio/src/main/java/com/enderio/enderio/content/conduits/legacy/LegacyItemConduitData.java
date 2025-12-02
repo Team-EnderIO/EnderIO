@@ -49,9 +49,6 @@ public class LegacyItemConduitData implements ConduitData<LegacyItemConduitData>
             compute(direction).applyGuiChanges(guiData.get(direction));
         }
 
-        // TODO: Soon we will swap to records which will mean this will be a new
-        // instance.
-        // This API has been designed with this pending change in mind.
         return this;
     }
 

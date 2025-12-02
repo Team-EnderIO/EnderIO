@@ -11,7 +11,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 // TODO: In future, support hiding specific conduit types too.
-// TODO: Move to client package.
 @EventBusSubscriber(value = Dist.CLIENT)
 public class ClientFacadeVisibility {
 

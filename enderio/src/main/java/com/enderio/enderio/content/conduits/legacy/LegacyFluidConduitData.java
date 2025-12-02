@@ -64,10 +64,6 @@ public class LegacyFluidConduitData implements ConduitData<LegacyFluidConduitDat
     @Override
     public LegacyFluidConduitData withClientChanges(LegacyFluidConduitData guiData) {
         this.shouldReset = guiData.shouldReset;
-
-        // TODO: Soon we will swap to records which will mean this will be a new
-        // instance.
-        // This API has been designed with this pending change in mind.
         return this;
     }
 

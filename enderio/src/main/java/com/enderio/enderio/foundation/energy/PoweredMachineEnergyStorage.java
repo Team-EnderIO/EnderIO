@@ -57,8 +57,7 @@ public class PoweredMachineEnergyStorage implements IEnergyStorage, INBTSerializ
         return consumeEnergy(energyToConsume, false);
     }
 
-    // TODO: Make final once Primitive Alloy Smelter is rewritten.
-    public int consumeEnergy(int energyToConsume, boolean simulate) {
+    public final int consumeEnergy(int energyToConsume, boolean simulate) {
         // Capped consumption rate
         energyToConsume = Math.min(energyToConsume, machine.getMaxEnergyUse());
 

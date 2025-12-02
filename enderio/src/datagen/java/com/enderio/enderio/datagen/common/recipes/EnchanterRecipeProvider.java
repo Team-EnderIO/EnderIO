@@ -83,14 +83,6 @@ public class EnchanterRecipeProvider extends SubRecipeProvider {
         build(enchantmentRegistry, Enchantments.QUICK_CHARGE, SizedIngredient.of(Items.SUGAR, 16), 1, recipeOutput);
         build(enchantmentRegistry, Enchantments.RIPTIDE, SizedIngredient.of(Items.FIREWORK_ROCKET, 8), 1, recipeOutput);
         build(enchantmentRegistry, Enchantments.SOUL_SPEED, SizedIngredient.of(Items.SOUL_SOIL, 16), 1, recipeOutput);
-//
-//
-//        //enderio
-//        build(EIOEnchantments.SOULBOUND.get(), SizedIngredient.of(EIOTags.Items.GEMS_ENDER_CRYSTAL, 1), 1, recipeOutput);
-//        build(EIOEnchantments.WITHERING.get(), SizedIngredient.of(EIOItems.WITHERING_POWDER.get(), 4), 1, recipeOutput);
-//        build(EIOEnchantments.REPELLENT.get(), SizedIngredient.of(Items.ENDER_PEARL, 4), 2, recipeOutput);
-//        build(EIOEnchantments.AUTO_SMELT.get(), SizedIngredient.of(Items.BLAZE_POWDER, 16), 1, recipeOutput); //TODO
-//        build(EIOEnchantments.XP_BOOST.get(), SizedIngredient.of(Items.EXPERIENCE_BOTTLE, 16), 1, recipeOutput); //TODO
     }
 
     protected void build(HolderGetter<Enchantment> enchantmentRegistry, ResourceKey<Enchantment> enchantment,

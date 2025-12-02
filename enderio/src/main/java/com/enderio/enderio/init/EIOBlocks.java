@@ -4,7 +4,6 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.content.cold_fire.ColdFireBlock;
 import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlock;
-import com.enderio.enderio.content.decor.DarkSteelLadderBlock;
 import com.enderio.enderio.content.enchanter.EnchanterBlock;
 import com.enderio.enderio.content.enderface.EnderfaceBlock;
 import com.enderio.enderio.content.glass.GlassBlocks;
@@ -74,6 +73,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ChainBlock;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.IronBarsBlock;
+import net.minecraft.world.level.block.LadderBlock;
 import net.minecraft.world.level.block.PressurePlateBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.TrapDoorBlock;
@@ -150,7 +150,7 @@ public class EIOBlocks {
 
     // region Dark Steel Building Blocks
 
-    public static final DeferredBlock<DarkSteelLadderBlock> DARK_STEEL_LADDER = registerWithItem("dark_steel_ladder", DarkSteelLadderBlock::new, BlockBehaviour.Properties.of().strength(0.4f).requiresCorrectToolForDrops().sound(SoundType.METAL).mapColor(MapColor.METAL).noOcclusion());
+    public static final DeferredBlock<LadderBlock> DARK_STEEL_LADDER = registerWithItem("dark_steel_ladder", LadderBlock::new, BlockBehaviour.Properties.of().strength(0.4f).requiresCorrectToolForDrops().sound(SoundType.METAL).mapColor(MapColor.METAL).noOcclusion());
 
     public static final DeferredBlock<IronBarsBlock> DARK_STEEL_BARS = registerWithItem("dark_steel_bars", IronBarsBlock::new,
             BlockBehaviour.Properties.of().strength(5.0f, 1000.0f).requiresCorrectToolForDrops().sound(SoundType.METAL).noOcclusion());

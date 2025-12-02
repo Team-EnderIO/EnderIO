@@ -109,9 +109,6 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
 
     private boolean validAxe(int slot, ItemStack stack) {
         if (stack.getItem() instanceof AxeItem axeItem) {
-            // TODO: 20.6: Need a better alternative.
-            // return TierSortingRegistry.getSortedTiers().indexOf(axeItem.getTier()) >
-            // TierSortingRegistry.getSortedTiers().indexOf(Tiers.WOOD);
             return axeItem.getTier() != Tiers.WOOD;
         }
         return false;
