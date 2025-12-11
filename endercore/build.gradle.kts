@@ -19,7 +19,7 @@ tasks.test {
 neoForge {
     enable {
         version = libs.versions.neoforge.get()
-        disableRecompilation = System.getenv("CI") == "true"
+        isDisableRecompilation = System.getenv("CI") == "true"
     }
 
     mods {
