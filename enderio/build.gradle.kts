@@ -162,7 +162,10 @@ dependencies {
 }
 
 neoForge {
-    version = libs.versions.neoforge.get()
+    enable {
+        version = libs.versions.neoforge.get()
+        disableRecompilation = System.getenv("CI") == "true"
+    }
 
     accessTransformers {
         publish(project.file("src/main/resources/META-INF/accesstransformer.cfg"))

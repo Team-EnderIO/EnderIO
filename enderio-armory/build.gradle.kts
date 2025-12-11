@@ -63,7 +63,10 @@ tasks.test {
 }
 
 neoForge {
-    version = libs.versions.neoforge.get()
+    enable {
+        version = libs.versions.neoforge.get()
+        disableRecompilation = System.getenv("CI") == "true"
+    }
 
     addModdingDependenciesTo(sourceSets.getByName("gametest"))
 
