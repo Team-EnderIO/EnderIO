@@ -34,7 +34,7 @@ public class ArmoryConfigLang {
 
         addTranslation("empowered", "Empowered");
         addTranslation("efficiencyBoost", "Efficiency Boost");
-        addTranslation("energyUsePerDamagePoint", "Energy use uer damage point");
+        addTranslation("energyUsePerDamagePoint", "Energy use per damage point");
         addTranslation("activationCost_l1", "Level I XP cost ");
         addTranslation("activationCost_l2", "Level II XP cost ");
         addTranslation("activationCost_l3", "Level III XP cost ");
