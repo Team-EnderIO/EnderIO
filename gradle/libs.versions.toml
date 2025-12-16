@@ -1,6 +1,6 @@
 [versions]
 minecraft = { strictly = "[1.21.1]", prefer = "1.21.1" }
-neoforge = "21.1.209"
+neoforge = "21.1.216"
 almostUnified = "1.21.1-1.0.0"
 jeiVersion = "19.25.0.321"
 ccTweaked = "1.113.1"
