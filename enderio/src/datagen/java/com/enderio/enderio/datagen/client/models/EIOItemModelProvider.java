@@ -173,6 +173,8 @@ public class EIOItemModelProvider extends ItemModelProvider {
                 .predicate(ConduitProbeItem.PROBE_STATE_PREDICATE, 1)
                 .model(basicItem(EnderIO.rl("conduit_probe_copy")));
 
+        handheldItem(EIOItems.DARK_STEEL_SWORD.get());
+
         // Filters
         basicItem(EIOItems.BASIC_ITEM_FILTER.get());
         basicItem(EIOItems.BIG_ITEM_FILTER.get());

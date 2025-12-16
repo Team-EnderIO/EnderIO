@@ -50,6 +50,8 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
             .addTag(EIOTags.Items.BLOCKS_SOULARIUM)
             .addTag(EIOTags.Items.BLOCKS_VIBRANT_ALLOY);
 
+        tag(ItemTags.SWORDS).add(EIOItems.DARK_STEEL_SWORD.get());
+
         addCrystalTags();
         addGearTags();
 

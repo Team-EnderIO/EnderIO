@@ -7,6 +7,7 @@ import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.compat.jei.JEILang;
 import com.enderio.enderio.content.advancements.AdvancementsLang;
+import com.enderio.enderio.content.armory.ArmoryLang;
 import com.enderio.enderio.content.capacitors.CapacitorLang;
 import com.enderio.enderio.content.conduits.ConduitLang;
 import com.enderio.enderio.content.filters.FiltersLang;
@@ -46,6 +47,7 @@ public class EIOLanguageProvider extends LanguageProvider {
         addTags();
         addCapacitorTooltips();
         addEnumNames();
+        addArmoryLang();
         addConduitDescriptions();
         addConduitLang();
         addEntities();
@@ -173,6 +175,11 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(PoweredSpawnerMode.CAPTURE.getComponent(), "Capture Mobs");
 
         // endregion
+    }
+
+    private void addArmoryLang() {
+        add(ArmoryLang.ENDER_HEAD_DROP_CHANCE, "%s%% chance to drop a mob head");
+        add(ArmoryLang.DURABILITY_AMOUNT, "Durability %s");
     }
 
     private void addConduitDescriptions() {
@@ -519,6 +526,8 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOItems.ELECTROMAGNET.get(), "Electromagnet");
         add(EIOItems.COLD_FIRE_IGNITER.get(), "Cold Fire Igniter");
         add(EIOItems.CONDUIT_PROBE.get(), "Conduit Probe");
+
+        add(EIOItems.DARK_STEEL_SWORD.get(), "The Ender");
 
         // Filters
         add(EIOItems.BASIC_ITEM_FILTER.get(), "Basic Item Filter");

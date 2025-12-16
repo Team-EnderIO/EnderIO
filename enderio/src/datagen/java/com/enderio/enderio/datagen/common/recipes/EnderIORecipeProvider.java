@@ -11,6 +11,7 @@ public class EnderIORecipeProvider extends EnderRecipeProvider {
         super(output, registries);
 
         addProvider(new AlloyRecipeProvider());
+        addProvider(new ArmoryRecipeProvider());
         addProvider(new ConduitRecipeProvider());
         addProvider(new EnchanterRecipeProvider());
         addProvider(new FermentingRecipeProvider());

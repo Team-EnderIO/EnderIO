@@ -130,6 +130,5 @@ dependencyResolutionManagement {
 include("ensure_plugin")
 include("endercore")
 include("enderio")
-include("enderio-armory")
 include("enderio-modded-conduits")
 include("enderio-endergy")

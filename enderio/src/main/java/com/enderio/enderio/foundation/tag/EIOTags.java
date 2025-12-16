@@ -167,6 +167,8 @@ public class EIOTags {
         public static final TagKey<Block> RANGE_EXTENDER = tag("range_extender");
         public static final TagKey<Block> MIND_KILLER = tag("mind_killer");
 
+        public static final TagKey<Block> INCORRECT_FOR_DARK_STEEL_TOOL = tag("incorrect_for_dark_steel_tool");
+
         private static TagKey<Block> commonTag(String name) {
             return BlockTags.create(ResourceLocation.fromNamespaceAndPath(COMMON, name));
         }

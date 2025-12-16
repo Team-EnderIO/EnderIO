@@ -89,8 +89,6 @@ dependencies {
     jarJar(project(":endercore"))
 
     // Include built-in "addons"
-    jarJar(project(":enderio-armory"))
-    localRuntime(project(":enderio-armory"))
     jarJar(project(":enderio-modded-conduits"))
     localRuntime(project(":enderio-modded-conduits"))
 

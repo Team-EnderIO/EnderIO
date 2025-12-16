@@ -70,7 +70,6 @@ dependencies {
 
     // EnderIO will bundle Regilite and EnderCore in production.
     api(project(":enderio"))
-    api(project(":enderio-armory"))
 }
 
 neoForge {

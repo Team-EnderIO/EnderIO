@@ -6,6 +6,7 @@ import com.enderio.enderio.api.EnderIODataComponents;
 import com.enderio.enderio.api.capacitor.CapacitorData;
 import com.enderio.enderio.api.components.GrindingBallData;
 import com.enderio.enderio.api.conduits.facade.FacadeType;
+import com.enderio.enderio.content.armory.DarkSteelSwordItem;
 import com.enderio.enderio.content.broken_spawner.BrokenSpawnerItem;
 import com.enderio.enderio.content.capacitors.CapacitorItem;
 import com.enderio.enderio.content.capacitors.LootCapacitorItem;
@@ -248,6 +249,9 @@ public class EIOItems {
     public static final DeferredItem<ElectromagnetItem> ELECTROMAGNET = ITEMS.registerItem("electromagnet", ElectromagnetItem::new);
     public static final DeferredItem<ColdFireIgniter> COLD_FIRE_IGNITER = ITEMS.registerItem("cold_fire_igniter", ColdFireIgniter::new);
     public static final DeferredItem<ConduitProbeItem> CONDUIT_PROBE = ITEMS.registerItem("conduit_probe", ConduitProbeItem::new);
+
+    public static final DeferredItem<DarkSteelSwordItem> DARK_STEEL_SWORD = ITEMS.registerItem("dark_steel_sword", DarkSteelSwordItem::new,
+        new Item.Properties().durability(2000));
 
     // endregion
 
