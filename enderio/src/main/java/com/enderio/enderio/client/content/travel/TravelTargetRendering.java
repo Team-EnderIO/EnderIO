@@ -1,10 +1,10 @@
 package com.enderio.enderio.client.content.travel;
 
-import com.enderio.enderio.api.travel.RegisterTravelRenderersEvent;
-import com.enderio.enderio.api.travel.TravelRenderer;
-import com.enderio.enderio.api.travel.TravelTarget;
-import com.enderio.enderio.api.travel.TravelTargetApi;
-import com.enderio.enderio.api.travel.TravelTargetType;
+import com.enderio.enderio.api.poi.EnderPOI;
+import com.enderio.enderio.api.poi.EnderPOIApi;
+import com.enderio.enderio.api.poi.EnderPOIType;
+import com.enderio.enderio.api.poi.POIRenderer;
+import com.enderio.enderio.api.poi.RegisterEnderPOIRenderersEvent;
 import com.enderio.enderio.content.travel.TravelHandler;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Camera;
@@ -26,10 +26,10 @@ import java.util.Map;
 @EventBusSubscriber(value = Dist.CLIENT)
 public class TravelTargetRendering {
 
-    private static Map<TravelTargetType<?>, TravelRenderer<?>> RENDERERS;
+    private static Map<EnderPOIType<?>, POIRenderer<?>> RENDERERS;
 
     public static void init() {
-        var event = new RegisterTravelRenderersEvent();
+        var event = new RegisterEnderPOIRenderersEvent();
         ModLoader.postEvent(event);
         var factories = event.getRenderers();
 
@@ -37,15 +37,15 @@ public class TravelTargetRendering {
         factories.forEach((t, f) -> RENDERERS.put(t, f.createRenderer()));
     }
 
-    public static <T extends TravelTarget> TravelRenderer<T> getRenderer(TravelTargetType<T> type) {
+    public static <T extends EnderPOI> POIRenderer<T> getRenderer(EnderPOIType<T> type) {
         // noinspection unchecked
-        return (TravelRenderer<T>) RENDERERS.get(type);
+        return (POIRenderer<T>) RENDERERS.get(type);
     }
 
-    private static <T extends TravelTarget> void render(T target, LevelRenderer levelRender, PoseStack poseStack,
+    private static <T extends EnderPOI> void render(T target, LevelRenderer levelRender, PoseStack poseStack,
             double distanceSquared, boolean isActive, float partialTick) {
         // noinspection unchecked
-        getRenderer((TravelTargetType<T>) target.type()).render(target, levelRender, poseStack, distanceSquared,
+        getRenderer((EnderPOIType<T>) target.type()).render(target, levelRender, poseStack, distanceSquared,
                 isActive, partialTick);
     }
 
@@ -64,8 +64,8 @@ public class TravelTargetRendering {
         boolean itemTeleport = TravelHandler.canItemTeleport(player);
 
         @Nullable
-        TravelTarget activeTarget = TravelHandler.getTeleportAnchorTarget(player).orElse(null);
-        for (TravelTarget target : TravelTargetApi.INSTANCE.getAll(level)) {
+        EnderPOI activeTarget = TravelHandler.getEnderPOIs(player).orElse(null);
+        for (EnderPOI target : EnderPOIApi.INSTANCE.getAll(level)) {
             double range = itemTeleport ? target.item2BlockRange() : target.block2BlockRange();
             double distanceSquared = target.pos().distToCenterSqr(player.position());
             if (range * range < distanceSquared || distanceSquared < TravelHandler.MIN_TELEPORTATION_DISTANCE_SQUARED

@@ -1,6 +1,6 @@
 package com.enderio.enderio.client.content.enderface;
 
-import com.enderio.enderio.api.travel.TravelRenderer;
+import com.enderio.enderio.api.poi.POIRenderer;
 import com.enderio.enderio.client.foundation.renderer.OutlineBuffer;
 import com.enderio.enderio.client.foundation.renderer.OutlineRenderType;
 import com.enderio.enderio.content.enderface.EnderfaceTravelTarget;
@@ -15,7 +15,7 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class EnderfaceRenderer implements TravelRenderer<EnderfaceTravelTarget> {
+public class EnderfaceRenderer implements POIRenderer<EnderfaceTravelTarget> {
     public static final RenderType BOLD_LINES = OutlineRenderType.createLines("bold_lines", 3);
     public static final RenderType VERY_BOLD_LINES = OutlineRenderType.createLines("very_bold_lines", 5);
 
@@ -26,9 +26,9 @@ public class EnderfaceRenderer implements TravelRenderer<EnderfaceTravelTarget> 
         poseStack.translate(travelData.pos().getX(), travelData.pos().getY(), travelData.pos().getZ());
         Minecraft minecraft = Minecraft.getInstance();
         OutlineBuffer buffer = OutlineBuffer.INSTANCE;
-        int color = 0xFFFFFF;
+        int color = ChatFormatting.GREEN.getColor()== null ? 0xFFFFFF : ChatFormatting.GREEN.getColor();
         if (active) {
-            color = ChatFormatting.GOLD.getColor() == null ? 0xFFFFFF : ChatFormatting.GOLD.getColor();
+            color = ChatFormatting.DARK_GREEN.getColor() == null ? 0xFFFFFF : ChatFormatting.DARK_GREEN.getColor();
         }
 
         // Render Model

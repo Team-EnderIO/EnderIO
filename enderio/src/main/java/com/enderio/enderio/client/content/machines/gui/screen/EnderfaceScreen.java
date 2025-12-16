@@ -64,7 +64,7 @@ public class EnderfaceScreen extends Screen {
     private final BlockPos enderfacePos;
     private final ClientLevel world;
 
-    private float pitch = -45;
+    private float pitch = 45;
     private float yaw = 45;
 
     private boolean chunkLoaded;
@@ -167,9 +167,9 @@ public class EnderfaceScreen extends Screen {
                 || InputConstants.isKeyDown(window, InputConstants.KEY_LSHIFT)) {
             distance -= dy * 15;
         } else {
-            yaw -= dx * 180;
+            yaw += dx * 180;
             pitch += dy * 180;
-            pitch = (float) Mth.clamp(pitch, -80, 80);
+            pitch = Mth.clamp(pitch, -80, 80);
         }
 
         return true;

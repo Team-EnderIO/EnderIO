@@ -4,8 +4,8 @@ import com.enderio.core.client.item.FluidBarDecorator;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.conduits.model.RegisterConduitModelModifiersEvent;
 import com.enderio.enderio.api.conduits.screen.RegisterConduitScreenTypesEvent;
+import com.enderio.enderio.api.poi.RegisterEnderPOIRenderersEvent;
 import com.enderio.enderio.api.soul.SoulBoundUtils;
-import com.enderio.enderio.api.travel.RegisterTravelRenderersEvent;
 import com.enderio.enderio.client.content.conduits.ConduitBundleExtension;
 import com.enderio.enderio.client.content.conduits.ConduitFacadeColor;
 import com.enderio.enderio.client.content.conduits.gui.ConduitScreen;
@@ -404,7 +404,7 @@ public class EnderIOClient {
     }
 
     @SubscribeEvent
-    public static void registerTravelRenderers(RegisterTravelRenderersEvent event) {
+    public static void registerTravelRenderers(RegisterEnderPOIRenderersEvent event) {
         event.register(EIOTravelTargets.TRAVEL_ANCHOR_TYPE.get(), TravelAnchorRenderer::new);
         event.register(EIOTravelTargets.ENDERFACE_TYPE.get(), EnderfaceRenderer::new);
     }

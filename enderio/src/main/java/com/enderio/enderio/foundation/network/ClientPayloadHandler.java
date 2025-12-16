@@ -1,10 +1,10 @@
 package com.enderio.enderio.foundation.network;
 
-import com.enderio.enderio.api.travel.TravelTargetApi;
+import com.enderio.enderio.api.poi.EnderPOIApi;
 import com.enderio.enderio.content.travel.TravelTargetSavedData;
 import com.enderio.enderio.foundation.network.packets.ClientboundSyncTravelDataPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundTravelTargetRemovedPacket;
-import com.enderio.enderio.foundation.network.packets.ClientboundTravelTargetUpdatedPacket;
+import com.enderio.enderio.foundation.network.packets.ClientboundEnderPOIUpdatedPacket;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class ClientPayloadHandler {
@@ -21,17 +21,17 @@ public class ClientPayloadHandler {
         });
     }
 
-    public void handleAddTravelTarget(ClientboundTravelTargetUpdatedPacket packet, IPayloadContext context) {
+    public void handleAddTravelTarget(ClientboundEnderPOIUpdatedPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
             var level = context.player().level();
-            TravelTargetApi.INSTANCE.set(level, packet.target());
+            EnderPOIApi.INSTANCE.set(level, packet.target());
         });
     }
 
     public void handleRemoveTravelTarget(ClientboundTravelTargetRemovedPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
             var level = context.player().level();
-            TravelTargetApi.INSTANCE.removeAt(level, packet.pos());
+            EnderPOIApi.INSTANCE.removeAt(level, packet.pos());
         });
     }
 }

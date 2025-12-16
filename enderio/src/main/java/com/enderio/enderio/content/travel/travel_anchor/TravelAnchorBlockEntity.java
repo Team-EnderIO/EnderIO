@@ -1,8 +1,8 @@
 package com.enderio.enderio.content.travel.travel_anchor;
 
 import com.enderio.core.common.network.NetworkDataSlot;
-import com.enderio.enderio.api.travel.TravelTarget;
-import com.enderio.enderio.api.travel.TravelTargetApi;
+import com.enderio.enderio.api.poi.EnderPOI;
+import com.enderio.enderio.api.poi.EnderPOIApi;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
@@ -102,7 +102,7 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
     }
 
     private AnchorTravelTarget getOrCreateTravelTarget() {
-        Optional<TravelTarget> travelTarget = TravelTargetApi.INSTANCE.get(level, worldPosition);
+        Optional<EnderPOI> travelTarget = EnderPOIApi.INSTANCE.get(level, worldPosition);
         if (travelTarget.isPresent() && travelTarget.get() instanceof AnchorTravelTarget anchorTravelTarget) {
             return anchorTravelTarget;
         }
@@ -113,7 +113,7 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
     }
 
     private void setTravelTarget(AnchorTravelTarget target) {
-        TravelTargetApi.INSTANCE.set(level, target);
+        EnderPOIApi.INSTANCE.set(level, target);
     }
 
 }

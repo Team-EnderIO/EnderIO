@@ -1,19 +1,23 @@
 package com.enderio.enderio.content.enderface;
 
 import com.enderio.core.common.network.NetworkDataSlot;
-import com.enderio.enderio.api.travel.TravelTarget;
-import com.enderio.enderio.api.travel.TravelTargetSerializer;
-import com.enderio.enderio.api.travel.TravelTargetType;
+import com.enderio.enderio.api.poi.EnderPOI;
+import com.enderio.enderio.api.poi.EnderPOISerializer;
+import com.enderio.enderio.api.poi.EnderPOIType;
+import com.enderio.enderio.client.content.machines.gui.screen.EnderfaceScreen;
 import com.enderio.enderio.init.EIOTravelTargets;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import me.liliandev.ensure.ensures.EnsureSide;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
-public record EnderfaceTravelTarget(BlockPos pos) implements TravelTarget {
+public record EnderfaceTravelTarget(BlockPos pos) implements EnderPOI {
     public static NetworkDataSlot.CodecType<EnderfaceTravelTarget> DATA_SLOT_TYPE = new NetworkDataSlot.CodecType<>(
             EnderfaceTravelTarget.Serializer.CODEC.codec(), EnderfaceTravelTarget.Serializer.STREAM_CODEC);
 
@@ -28,45 +32,29 @@ public record EnderfaceTravelTarget(BlockPos pos) implements TravelTarget {
     }
 
     @Override
-    public TravelTargetType<?> type() {
-        return EIOTravelTargets.ENDERFACE_TYPE.get();
-    }
-
-    @Override
-    public TravelTargetSerializer<?> serializer() {
-        return EIOTravelTargets.ENDERFACE_SERIALIZER.get();
-    }
-
-    @Override
-    public boolean canTeleportTo() {
-        return false;
-    }
-
-    @Override
-    public boolean canTravelTo() {
-        return false;
-    }
-
-    @Override
-    public boolean canJumpTo() {
-        return false;
-    }
-
-    @Override
-    public boolean canInteract() {
+    public boolean isActive() {
         return true;
     }
 
     @Override
-    public boolean interact(Level level, Player player) {
+    public boolean onActivation(Level level, Player player) {
         if (level.isClientSide) {
-            // TODO: Causes classload errors on dedicated servers.
-//            Minecraft.getInstance().setScreen(new EnderfaceScreen(pos.immutable(), Minecraft.getInstance().level));
+            Client.openScreen(level, pos);
         }
         return true;
     }
 
-    public static class Serializer implements TravelTargetSerializer<EnderfaceTravelTarget> {
+    @Override
+    public EnderPOIType<?> type() {
+        return EIOTravelTargets.ENDERFACE_TYPE.get();
+    }
+
+    @Override
+    public EnderPOISerializer<?> serializer() {
+        return EIOTravelTargets.ENDERFACE_SERIALIZER.get();
+    }
+
+    public static class Serializer implements EnderPOISerializer<EnderfaceTravelTarget> {
 
         public static MapCodec<EnderfaceTravelTarget> CODEC = RecordCodecBuilder.mapCodec(
                 instance -> instance.group(BlockPos.CODEC.fieldOf("pos").forGetter(EnderfaceTravelTarget::pos))
@@ -83,6 +71,15 @@ public record EnderfaceTravelTarget(BlockPos pos) implements TravelTarget {
         @Override
         public StreamCodec<RegistryFriendlyByteBuf, EnderfaceTravelTarget> streamCodec() {
             return STREAM_CODEC;
+        }
+    }
+
+    //TODO packet
+    private static class Client {
+
+        @EnsureSide(EnsureSide.Side.CLIENT)
+        public static void openScreen(Level level, BlockPos pos) {
+            Minecraft.getInstance().setScreen(new EnderfaceScreen(pos.immutable(), (ClientLevel) level));
         }
     }
 }

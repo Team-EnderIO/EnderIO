@@ -1,7 +1,7 @@
 package com.enderio.enderio.foundation.network;
 
-import com.enderio.enderio.api.travel.TravelTarget;
-import com.enderio.enderio.api.travel.TravelTargetApi;
+import com.enderio.enderio.api.poi.EnderPOI;
+import com.enderio.enderio.api.poi.EnderPOIApi;
 import com.enderio.enderio.content.filters.FilterSlot;
 import com.enderio.enderio.content.filters.fluid.FluidFilterSlot;
 import com.enderio.enderio.content.travel.TravelHandler;
@@ -34,10 +34,10 @@ public class ServerPayloadHandler {
         context.enqueueWork(() -> {
             var player = context.player();
 
-            Optional<TravelTarget> target = TravelTargetApi.INSTANCE.get(player.level(), packet.pos());
+            Optional<EnderPOI> target = EnderPOIApi.INSTANCE.get(player.level(), packet.pos());
 
             // These errors should only ever be triggered if there's some form of desync
-            if (!TravelHandler.canBlockTeleport(player)) {
+            if (!TravelHandler.canTeleport(player)) {
                 player.displayClientMessage(Component.nullToEmpty("ERROR: Cannot teleport"), true);
                 return;
             }
@@ -53,7 +53,7 @@ public class ServerPayloadHandler {
                 return;
             }
 
-            TravelHandler.blockTeleportTo(player.level(), player, target.get(), false);
+            target.get().onActivation(player.level(), player);
         });
     }
 

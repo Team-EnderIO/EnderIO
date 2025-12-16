@@ -1,4 +1,4 @@
 @javax.annotation.ParametersAreNonnullByDefault
 @net.minecraft.MethodsReturnNonnullByDefault
 
-package com.enderio.enderio.api.travel;
+package com.enderio.enderio.client.content.enderface;
