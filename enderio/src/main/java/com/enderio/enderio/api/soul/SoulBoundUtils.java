@@ -118,15 +118,17 @@ public class SoulBoundUtils {
      *         or an empty {@link Optional} if binding failed.
      */
     public static Optional<ItemStack> getBoundIfCapable(ItemStack itemStack, Soul soul) {
-        var soulBindable = itemStack.getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
+        // Copy so we don't bind the original input.
+        ItemStack result = itemStack.copy();
 
         // If there's no binding possible, allow it through
+        var soulBindable = result.getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
         if (soulBindable == null) {
-            return Optional.of(itemStack);
+            return Optional.of(result);
         }
 
         if (tryBindSoul(soulBindable, soul)) {
-            return Optional.of(itemStack);
+            return Optional.of(result);
         }
 
         return Optional.empty();
