@@ -2,6 +2,7 @@ package com.enderio.enderio.content.conduits.network;
 
 import com.enderio.core.common.graph.INetworkNode;
 import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.connection.ConnectionStatus;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
@@ -229,6 +230,13 @@ public final class ConduitNodeImpl implements INetworkNode<ConduitNetwork, Condu
     // endregion
 
     // region Connections
+
+    @Override
+    public ConnectionStatus getConnectionStatus(Direction side) {
+        ensureValid();
+        // noinspection DataFlowIssue
+        return conduitBundle.getConnectionStatus(conduit, side);
+    }
 
     @Override
     public boolean isConnectedToBlock(Direction side) {

@@ -1,10 +1,11 @@
 package com.enderio.enderio.content.conduits.type.energy;
 
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
+import net.minecraft.core.Direction;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
-public record EnergyConduitStorage(boolean isMutable, int transferRate, @Nullable ConduitNode node) implements IEnergyStorage {
+public record EnergyConduitStorage(@Nullable Direction side, int transferRate, @Nullable ConduitNode node) implements IEnergyStorage {
 
     private static final long ENERGY_BUFFER_SCALER = 4;
 
@@ -43,7 +44,7 @@ public record EnergyConduitStorage(boolean isMutable, int transferRate, @Nullabl
 
     @Override
     public int receiveEnergy(int toReceive, boolean simulate) {
-        if (node == null || !node.isLoaded() || !isMutable) {
+        if (node == null || !node.isLoaded() || !canReceive()) {
             return 0;
         }
 
@@ -62,6 +63,7 @@ public record EnergyConduitStorage(boolean isMutable, int transferRate, @Nullabl
 
     @Override
     public int extractEnergy(int toExtract, boolean simulate) {
+        // Pulling from energy conduits is forbidden.
         return 0;
     }
 
@@ -80,11 +82,23 @@ public record EnergyConduitStorage(boolean isMutable, int transferRate, @Nullabl
         return false;
     }
 
-    // The block will not expose this capability unless it can be extracted from
-    // This means we don't have to worry about checking if we can extract at this
-    // point.
     @Override
     public boolean canReceive() {
-        return true;
+        if (side == null || node == null) {
+            return false;
+        }
+
+        // Only allow extraction if we're configured to allow it.
+        if (!node.isConnectedToBlock(side)) {
+            return false;
+        }
+
+        var config = node.getConnectionConfig(side, EnergyConduitConnectionConfig.TYPE);
+        if (!config.isConnected()) {
+            return false;
+        }
+
+        boolean hasRedstoneSignal = node.hasRedstoneSignal(config.extractRedstoneChannel());
+        return config.isExtract() && config.extractRedstoneControl().isActive(hasRedstoneSignal);
     }
 }

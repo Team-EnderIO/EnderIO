@@ -1,5 +1,6 @@
 package com.enderio.enderio.api.conduits.network.node;
 
+import com.enderio.enderio.api.conduits.connection.ConnectionStatus;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.ConduitNetwork;
@@ -106,6 +107,9 @@ public interface ConduitNode {
      * @throws IllegalStateException if this node is not loaded
      */
     boolean hasRedstoneSignal(@Nullable DyeColor signalColor);
+
+    @ApiStatus.Experimental
+    ConnectionStatus getConnectionStatus(Direction side);
 
     /**
      * @param side side to check for.

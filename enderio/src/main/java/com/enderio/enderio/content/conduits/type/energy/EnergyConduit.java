@@ -3,6 +3,7 @@ package com.enderio.enderio.content.conduits.type.energy;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
+import com.enderio.enderio.api.conduits.connection.ConnectionStatus;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
@@ -84,27 +85,22 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
             BlockCapability<TCap, TContext> capability, @Nullable TContext context) {
 
         if (Capabilities.EnergyStorage.BLOCK == capability && (context == null || context instanceof Direction)) {
-            boolean isMutable = true;
+            Direction side = (Direction) context;
 
             if (node != null && context != null) {
-                Direction side = (Direction) context;
-
-                // No connection, no cap.
-                if (!node.isConnectedToBlock(side)) {
+                // Disabled, do not offer the capability (so if we're disconnected we allow auto connect).
+                // Note that this will introduce a minor quirk - if disabled, the cap will be invisible until re-enabled.
+                // in the case of Energizer rods in Powah, you will not be able to place one against the disabled conduit.
+                // This is necessary however, because many cables will retain a 'connected' appearance if the capability is still exposed.
+                // See GH-1184 for the original bug report.
+                // TODO: Review whether not hiding a disconnected cap could have other unforseen issues, such as cables attaching to conduits weirdly.
+                if (node.getConnectionStatus(side) == ConnectionStatus.DISABLED) {
                     return null;
                 }
-
-                var config = node.getConnectionConfig(side, connectionConfigType());
-                if (!config.isConnected() || !config.isExtract()) {
-                    return null;
-                }
-
-                boolean hasRedstoneSignal = node.hasRedstoneSignal(config.extractRedstoneChannel());
-                isMutable = config.extractRedstoneControl().isActive(hasRedstoneSignal);
             }
 
             // noinspection unchecked
-            return (TCap) new EnergyConduitStorage(isMutable, transferRatePerTick(), node);
+            return (TCap) new EnergyConduitStorage(side, transferRatePerTick(), node);
         }
 
         return null;
