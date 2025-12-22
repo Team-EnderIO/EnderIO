@@ -9,7 +9,9 @@ plugins {
 
 println("Building Ender IO version ${project.version}")
 
-
+tasks.withType(JavaCompile::class) {
+    options.compilerArgs.addAll(arrayOf("-Xmaxerrs", "1000"))
+}
 sourceSets {
     main {
         resources {

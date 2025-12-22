@@ -11,12 +11,13 @@ import com.enderio.enderio.content.filters.fluid.FluidFilterSlot;
 import com.enderio.enderio.content.filters.item.general.EnderItemFilterMenu;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
@@ -118,15 +119,15 @@ public class EnderFluidFilterScreen extends EnderContainerScreen<EnderFluidFilte
                 TextureAtlasSprite sprite = atlas.getSprite(still);
 
                 int color = props.getTintColor();
-                RenderSystem.setShaderColor(FastColor.ARGB32.red(color) / 255.0F,
-                        FastColor.ARGB32.green(color) / 255.0F, FastColor.ARGB32.blue(color) / 255.0F,
-                        FastColor.ARGB32.alpha(color) / 255.0F);
+                RenderSystem.setShaderColor(ARGB.red(color) / 255.0F,
+                    ARGB.green(color) / 255.0F, ARGB.blue(color) / 255.0F,
+                    ARGB.alpha(color) / 255.0F);
                 RenderSystem.enableBlend();
 
                 int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
                 int atlasHeight = (int) (sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
-                guiGraphics.blit(TextureAtlas.LOCATION_BLOCKS, slot.x, slot.y, 16, 16, sprite.getU0() * atlasWidth,
-                        sprite.getV0() * atlasHeight, sprite.contents().width(), sprite.contents().height(), atlasWidth,
+                guiGraphics.blit(RenderType::guiTextured, TextureAtlas.LOCATION_BLOCKS, slot.x, slot.y, sprite.getU0() * atlasWidth,
+                        sprite.getV0() * atlasHeight, 16, 16, sprite.contents().width(), sprite.contents().height(), atlasWidth,
                         atlasHeight);
                 RenderSystem.setShaderColor(1, 1, 1, 1);
             }

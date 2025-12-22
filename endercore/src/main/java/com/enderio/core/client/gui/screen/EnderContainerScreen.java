@@ -14,6 +14,7 @@ import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -85,7 +86,7 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
             for (var overlay : overlayRenderables.get(layer)) {
                 if (!(overlay instanceof AbstractWidget widget) || widget.isActive()) {
                     overlay.render(guiGraphics, mouseX, mouseY,
-                            Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(false));
+                            Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(false));
 
                     if (overlay instanceof BaseOverlay baseOverlay) {
                         zOffset += baseOverlay.getAdditionalZOffset();
@@ -139,7 +140,7 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
         if (slot instanceof SlotWithOverlay slotWithOverlay) {
             if (slotWithOverlay.getForegroundSprite() != null) {
                 RenderSystem.disableDepthTest();
-                guiGraphics.blitSprite(slotWithOverlay.getForegroundSprite(), slot.x, slot.y, 16, 16);
+                guiGraphics.blitSprite(RenderType::guiTextured, slotWithOverlay.getForegroundSprite(), slot.x, slot.y, 16, 16);
                 RenderSystem.enableDepthTest();
             }
         }

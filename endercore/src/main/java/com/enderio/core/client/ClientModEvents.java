@@ -11,7 +11,7 @@ import net.neoforged.neoforge.client.event.ModelEvent;
 public class ClientModEvents {
 
     @SubscribeEvent
-    public static void registerGeometryLoaders(ModelEvent.RegisterGeometryLoaders event) {
+    public static void registerGeometryLoaders(ModelEvent.RegisterLoaders event) {
         event.register(EnderCore.loc("modloaded"), new EitherModelLoader());
     }
 }

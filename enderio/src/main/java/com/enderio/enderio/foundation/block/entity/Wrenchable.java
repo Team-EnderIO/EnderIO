@@ -1,6 +1,6 @@
 package com.enderio.enderio.foundation.block.entity;
 
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.context.UseOnContext;
 
 // TODO: Move to API.
@@ -9,5 +9,5 @@ import net.minecraft.world.item.context.UseOnContext;
  * An interface that block entities may implement in order to implement special behaviours(other than to rotate the block) when right-clicked with the Yeta wrench.
  */
 public interface Wrenchable {
-    ItemInteractionResult onWrenched(UseOnContext context);
+    InteractionResult onWrenched(UseOnContext context);
 }

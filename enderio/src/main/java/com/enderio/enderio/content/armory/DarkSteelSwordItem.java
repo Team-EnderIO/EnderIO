@@ -13,6 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.item.ToolMaterial;
 import net.minecraft.world.item.component.ResolvableProfile;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,10 +21,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProvider, IDarkSteelItem {
-    public DarkSteelSwordItem(Properties pProperties) {
-        super(DarkSteelTiers.DARK_STEEL_TIER,
-                pProperties.attributes(createAttributes(DarkSteelTiers.DARK_STEEL_TIER, 3, -2.4F))
-                        .component(EIODataComponents.TRAVEL_ITEM, false));
+    public DarkSteelSwordItem(Properties properties) {
+        super(DarkSteelTiers.DARK_STEEL_TIER, 3, -2.4F, properties);
     }
 
     @Override

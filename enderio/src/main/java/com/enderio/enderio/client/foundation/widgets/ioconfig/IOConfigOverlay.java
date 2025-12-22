@@ -29,13 +29,14 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.EmptyBlockGetter;
@@ -377,13 +378,13 @@ public class IOConfigOverlay extends BaseOverlay {
             BakedModel bakedmodel = renderer.getBlockModel(blockState);
             modelData = bakedmodel.getModelData(MINECRAFT.level, blockPos, blockState, modelData);
             int blockColor = MINECRAFT.getBlockColors().getColor(blockState, MINECRAFT.level, blockPos, 0);
-            float r = FastColor.ARGB32.red(blockColor) / 255F;
-            float g = FastColor.ARGB32.green(blockColor) / 255F;
-            float b = FastColor.ARGB32.blue(blockColor) / 255F;
+            float r = ARGB.red(blockColor) / 255F;
+            float g = ARGB.green(blockColor) / 255F;
+            float b = ARGB.blue(blockColor) / 255F;
             for (RenderType renderType : bakedmodel.getRenderTypes(blockState, RandomSource.create(42), modelData)) {
                 renderer.getModelRenderer()
                         .renderModel(guiGraphics.pose().last(),
-                                buffers.getBuffer(RenderTypeHelper.getEntityRenderType(renderType, false)), blockState,
+                                buffers.getBuffer(RenderTypeHelper.getEntityRenderType(renderType)), blockState,
                                 bakedmodel, r, g, b, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, modelData,
                                 renderType);
             }
@@ -413,7 +414,7 @@ public class IOConfigOverlay extends BaseOverlay {
                 .begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
         RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
 
-        TextureAtlasSprite tex = MINECRAFT.getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(SELECTED_ICON);
+        TextureAtlasSprite tex = MINECRAFT.getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(SELECTED_ICON);
         RenderSystem.setShaderTexture(0, tex.atlasLocation());
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 

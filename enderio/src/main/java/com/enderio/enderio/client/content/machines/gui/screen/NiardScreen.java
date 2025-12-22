@@ -14,12 +14,13 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -63,7 +64,8 @@ public class NiardScreen extends MachineScreen<NiardMenu> {
 
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float v, int i, int i1) {
-        guiGraphics.blit(BG_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+        // TODO: 1.21.4: Hardcoded 256x256
+        guiGraphics.blit(RenderType::guiTextured, BG_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
 
         FluidStack fluidStack = menu.getFluidTank().contents();
 
@@ -85,10 +87,10 @@ public class NiardScreen extends MachineScreen<NiardMenu> {
 
                 int color = props.getTintColor();
                 RenderSystem.setShaderColor(
-                    FastColor.ARGB32.red(color) / 255.0F,
-                    FastColor.ARGB32.green(color) / 255.0F,
-                    FastColor.ARGB32.blue(color) / 255.0F,
-                    FastColor.ARGB32.alpha(color) / 255.0F
+                    ARGB.red(color) / 255.0F,
+                    ARGB.green(color) / 255.0F,
+                    ARGB.blue(color) / 255.0F,
+                    ARGB.alpha(color) / 255.0F
                 );
 
                 RenderSystem.enableBlend();
@@ -111,9 +113,9 @@ public class NiardScreen extends MachineScreen<NiardMenu> {
                 poseStack.scale(scaleX, scaleY, 1.0F);
 
                 guiGraphics.blit(
+                    RenderType::guiTextured,
                     TextureAtlas.LOCATION_BLOCKS,
                     0, 0,
-                    0,
                     uOffset, vOffset,
                     spriteWidth, spriteHeight,
                     atlasWidth, atlasHeight
@@ -124,7 +126,8 @@ public class NiardScreen extends MachineScreen<NiardMenu> {
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
                 RenderSystem.disableBlend();
 
-                guiGraphics.blit(BG_TEXTURE, x, y, 200, 0, width, height);
+                // TODO: 1.21.4: Hardcoded 256x256
+                guiGraphics.blit(RenderType::guiTextured, BG_TEXTURE, x, y, 200, 0, width, height, 256, 256);
             }
         }
     }

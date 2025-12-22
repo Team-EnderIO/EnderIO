@@ -18,7 +18,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -81,8 +81,8 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             lineType = VERY_BOLD_LINES;
         }
         VertexConsumer lines = buffer.getBuffer(lineType);
-        LevelRenderer.renderLineBox(poseStack, lines, 0, 0, 0, 1, 1, 1, FastColor.ARGB32.red(color) / 255F,
-                FastColor.ARGB32.green(color) / 255F, FastColor.ARGB32.blue(color) / 255F, 1);
+        LevelRenderer.renderLineBox(poseStack, lines, 0, 0, 0, 1, 1, 1, ARGB.red(color) / 255F,
+                ARGB.green(color) / 255F, ARGB.blue(color) / 255F, 1);
 
         LocalPlayer player = Minecraft.getInstance().player;
 

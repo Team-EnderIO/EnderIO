@@ -3,10 +3,14 @@ package com.enderio.enderio.client.content.conduits;
 import com.enderio.enderio.client.content.conduits.model.facades.ClientFacadeVisibility;
 import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
 import com.enderio.enderio.init.EIODataComponents;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
-import net.minecraft.client.color.item.ItemColor;
+import net.minecraft.client.color.item.ItemTintSource;
+import net.minecraft.client.color.item.ItemTintSources;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
@@ -14,7 +18,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class ConduitFacadeColor implements BlockColor, ItemColor {
+public class ConduitFacadeColor implements BlockColor, ItemTintSource {
 
     public static final ConduitFacadeColor INSTANCE = new ConduitFacadeColor();
 
@@ -47,6 +51,16 @@ public class ConduitFacadeColor implements BlockColor, ItemColor {
         }
 
         return 0xFFFFFF;
+    }
+
+    @Override
+    public int calculate(ItemStack itemStack, @Nullable ClientLevel clientLevel, @Nullable LivingEntity livingEntity) {
+        return 0;
+    }
+
+    @Override
+    public MapCodec<? extends ItemTintSource> type() {
+        return null;
     }
 
     @Override

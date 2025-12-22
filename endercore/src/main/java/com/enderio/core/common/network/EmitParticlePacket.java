@@ -16,7 +16,7 @@ public record EmitParticlePacket(ParticleOptions particleOptions, double x, doub
     public static final Type<EmitParticlePacket> TYPE = new Type<>(EnderCore.loc("emit_particle"));
 
     // @formatter:off
-    public static final StreamCodec<RegistryFriendlyByteBuf, EmitParticlePacket> STREAM_CODEC = NeoForgeStreamCodecs.composite(
+    public static final StreamCodec<RegistryFriendlyByteBuf, EmitParticlePacket> STREAM_CODEC = StreamCodec.composite(
         ParticleTypes.STREAM_CODEC,
         EmitParticlePacket::particleOptions,
         ByteBufCodecs.DOUBLE,

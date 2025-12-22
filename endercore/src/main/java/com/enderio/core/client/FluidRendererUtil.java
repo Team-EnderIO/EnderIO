@@ -3,6 +3,7 @@ package com.enderio.core.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -28,7 +29,7 @@ public class FluidRendererUtil {
         // Get fluid texture
         IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluid);
         TextureAtlasSprite texture = Minecraft.getInstance()
-            .getTextureAtlas(InventoryMenu.BLOCK_ATLAS)
+            .getTextureAtlas(TextureAtlas.LOCATION_BLOCKS)
             .apply(props.getStillTexture());
 
         // Get sizes

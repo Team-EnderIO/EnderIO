@@ -5,26 +5,23 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import net.minecraft.client.renderer.block.model.BlockModel;
-import net.minecraft.client.renderer.block.model.ItemOverrides;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.block.model.TextureSlots;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.resources.model.UnbakedModel;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.util.context.ContextMap;
 import net.neoforged.fml.ModList;
-import net.neoforged.neoforge.client.model.geometry.IGeometryBakingContext;
-import net.neoforged.neoforge.client.model.geometry.IGeometryLoader;
-import net.neoforged.neoforge.client.model.geometry.IUnbakedGeometry;
-
-import java.util.function.Function;
+import net.neoforged.neoforge.client.model.UnbakedModelLoader;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A geometry loader to change the backed model depending on the mods loaded. Thanks to ThatGravyBoat from the Athena dev team for this idea and the code. It's really appreciated
  */
-public class EitherModelLoader implements IGeometryLoader<EitherModelLoader.Unbaked> {
+// TODO: 1.21.4: kill in favour of conditional built-in resource packs.
+public class EitherModelLoader implements UnbakedModelLoader<EitherModelLoader.Unbaked> {
 
     @Override
     public Unbaked read(JsonObject json, JsonDeserializationContext context) throws JsonParseException {
@@ -33,18 +30,52 @@ public class EitherModelLoader implements IGeometryLoader<EitherModelLoader.Unba
         return new Unbaked(context.deserialize(element, BlockModel.class));
     }
 
-    public record Unbaked(BlockModel model) implements IUnbakedGeometry<Unbaked> {
+    public record Unbaked(BlockModel model) implements UnbakedModel {
 
         @Override
-        public BakedModel bake(IGeometryBakingContext context, ModelBaker baker,
-                Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState, ItemOverrides overrides) {
-            return model.bake(baker, model, spriteGetter, modelState, true);
+        public BakedModel bake(TextureSlots textureSlots, ModelBaker modelBaker, ModelState modelState, boolean b, boolean b1, ItemTransforms itemTransforms) {
+            return model.bake(textureSlots, modelBaker, modelState, !b, b1, itemTransforms);
         }
 
         @Override
-        public void resolveParents(Function<ResourceLocation, UnbakedModel> modelGetter,
-                IGeometryBakingContext context) {
-            model.resolveParents(modelGetter);
+        public void resolveDependencies(Resolver resolver) {
+            model.resolveDependencies(resolver);
+        }
+
+        @Override
+        public @Nullable Boolean getAmbientOcclusion() {
+            return model.getAmbientOcclusion();
+        }
+
+        @Override
+        public @Nullable GuiLight getGuiLight() {
+            return model.getGuiLight();
+        }
+
+        @Override
+        public @Nullable ItemTransforms getTransforms() {
+            return model.getTransforms();
+        }
+
+        @Override
+        public TextureSlots.Data getTextureSlots() {
+            return model.getTextureSlots();
+        }
+
+        @Override
+        public @Nullable UnbakedModel getParent() {
+            return model.getParent();
+        }
+
+        @Override
+        public BakedModel bake(TextureSlots textures, ModelBaker baker, ModelState modelState, boolean useAmbientOcclusion, boolean usesBlockLight,
+            ItemTransforms itemTransforms, ContextMap additionalProperties) {
+            return model.bake(textures, baker, modelState, useAmbientOcclusion, usesBlockLight, itemTransforms, additionalProperties);
+        }
+
+        @Override
+        public void fillAdditionalProperties(ContextMap.Builder propertiesBuilder) {
+            model.fillAdditionalProperties(propertiesBuilder);
         }
     }
 }

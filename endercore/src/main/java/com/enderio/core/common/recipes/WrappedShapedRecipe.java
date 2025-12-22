@@ -10,11 +10,15 @@ import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraft.world.item.crafting.display.RecipeDisplay;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 // Based on https://github.com/mekanism/Mekanism/blob/1.20.4/src/main/java/mekanism/common/recipe/WrappedShapedRecipe.java.
@@ -23,7 +27,7 @@ public abstract class WrappedShapedRecipe extends ShapedRecipe implements Crafti
     private final ShapedRecipe wrapped;
 
     protected WrappedShapedRecipe(ShapedRecipe wrapped) {
-        super(wrapped.getGroup(), wrapped.category(), wrapped.pattern, ItemStack.EMPTY, wrapped.showNotification());
+        super(wrapped.group(), wrapped.category(), wrapped.pattern, ItemStack.EMPTY, wrapped.showNotification());
         this.wrapped = wrapped;
     }
 
@@ -48,13 +52,18 @@ public abstract class WrappedShapedRecipe extends ShapedRecipe implements Crafti
     }
 
     @Override
-    public boolean canCraftInDimensions(int width, int height) {
-        return wrapped.canCraftInDimensions(width, height);
+    public PlacementInfo placementInfo() {
+        return wrapped.placementInfo();
     }
 
     @Override
-    public ItemStack getResultItem(HolderLookup.Provider lookupProvider) {
-        return wrapped.getResultItem(lookupProvider);
+    public boolean showNotification() {
+        return wrapped.showNotification();
+    }
+
+    @Override
+    public List<RecipeDisplay> display() {
+        return wrapped.display();
     }
 
     @Override
@@ -63,7 +72,7 @@ public abstract class WrappedShapedRecipe extends ShapedRecipe implements Crafti
     }
 
     @Override
-    public NonNullList<Ingredient> getIngredients() {
+    public List<Optional<Ingredient>> getIngredients() {
         return wrapped.getIngredients();
     }
 
@@ -73,13 +82,8 @@ public abstract class WrappedShapedRecipe extends ShapedRecipe implements Crafti
     }
 
     @Override
-    public String getGroup() {
-        return wrapped.getGroup();
-    }
-
-    @Override
-    public ItemStack getToastSymbol() {
-        return wrapped.getToastSymbol();
+    public String group() {
+        return wrapped.group();
     }
 
     @Override
@@ -90,11 +94,6 @@ public abstract class WrappedShapedRecipe extends ShapedRecipe implements Crafti
     @Override
     public int getHeight() {
         return wrapped.getHeight();
-    }
-
-    @Override
-    public boolean isIncomplete() {
-        return wrapped.isIncomplete();
     }
 
     public static class Serializer<T extends WrappedShapedRecipe> implements RecipeSerializer<T> {
@@ -120,7 +119,7 @@ public abstract class WrappedShapedRecipe extends ShapedRecipe implements Crafti
         public StreamCodec<RegistryFriendlyByteBuf, T> streamCodec() {
             if (streamCodec == null) {
                 streamCodec = RecipeSerializer.SHAPED_RECIPE.streamCodec()
-                        .map(wrapper, WrappedShapedRecipe::getWrapped);
+                    .map(wrapper, WrappedShapedRecipe::getWrapped);
             }
 
             return streamCodec;

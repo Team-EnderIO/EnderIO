@@ -6,6 +6,7 @@ import com.enderio.enderio.api.soul.SoulBoundUtils;
 import com.enderio.enderio.api.soul.storage.SoulHandler;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -62,8 +63,8 @@ public class EmptySoulBindableIngredient implements ICustomIngredient {
     }
 
     @Override
-    public Stream<ItemStack> getItems() {
-        return Stream.of(itemStack);
+    public Stream<Holder<Item>> items() {
+        return Stream.of(itemStack).map(ItemStack::getItemHolder);
     }
 
     @Override

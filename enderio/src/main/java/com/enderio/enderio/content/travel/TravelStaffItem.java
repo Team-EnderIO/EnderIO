@@ -11,7 +11,6 @@ import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -35,13 +34,14 @@ public class TravelStaffItem extends Item implements AdvancedTooltipProvider, IC
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
+    public InteractionResult use(Level level, Player player, InteractionHand usedHand) {
         ItemStack stack = player.getItemInHand(usedHand);
         if (getActivationStatus(stack).isAir()) {
             if (tryPerformAction(level, player, stack)) {
-                return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
+                return InteractionResult.SUCCESS;
             }
-            return InteractionResultHolder.fail(stack);
+
+            return InteractionResult.FAIL;
         }
         return super.use(level, player, usedHand);
     }
@@ -51,7 +51,7 @@ public class TravelStaffItem extends Item implements AdvancedTooltipProvider, IC
         if (getActivationStatus(context.getItemInHand()).isBlock()) {
             if (context.getPlayer() != null
                     && tryPerformAction(context.getLevel(), context.getPlayer(), context.getItemInHand())) {
-                return InteractionResult.sidedSuccess(context.getLevel().isClientSide());
+                return InteractionResult.SUCCESS;
             }
 
             return InteractionResult.FAIL;
@@ -63,7 +63,7 @@ public class TravelStaffItem extends Item implements AdvancedTooltipProvider, IC
     private boolean tryPerformAction(Level level, Player player, ItemStack stack) {
         boolean isCreative = player.isCreative();
         if (TravelHandler.hasResources(stack) || isCreative) {
-            if (performAction(this, level, player)) {
+            if (performAction(stack, level, player)) {
                 if (!level.isClientSide() && !isCreative) {
                     TravelHandler.consumeResources(stack);
                 }
@@ -81,18 +81,18 @@ public class TravelStaffItem extends Item implements AdvancedTooltipProvider, IC
      * Perform your action
      * @return true if it was a success and you want to consume the resources
      */
-    public boolean performAction(Item item, Level level, Player player) {
+    public boolean performAction(ItemStack itemStack, Level level, Player player) {
         if (player.isShiftKeyDown()) {
             if (TravelHandler.shortTeleport(level, player)) {
-                player.getCooldowns().addCooldown(item, BaseConfig.COMMON.ITEMS.TRAVELLING_BLINK_DISABLED_TIME.get());
+                player.getCooldowns().addCooldown(itemStack, BaseConfig.COMMON.ITEMS.TRAVELLING_BLINK_DISABLED_TIME.get());
                 return true;
             }
         } else {
             if (TravelHandler.blockTeleport(level, player)) {
-                player.getCooldowns().addCooldown(item, BaseConfig.COMMON.ITEMS.TRAVELLING_BLINK_DISABLED_TIME.get());
+                player.getCooldowns().addCooldown(itemStack, BaseConfig.COMMON.ITEMS.TRAVELLING_BLINK_DISABLED_TIME.get());
                 return true;
             } else if (TravelHandler.interact(level, player)) {
-                player.getCooldowns().addCooldown(this, BaseConfig.COMMON.ITEMS.TRAVELLING_BLINK_DISABLED_TIME.get());
+                player.getCooldowns().addCooldown(itemStack, BaseConfig.COMMON.ITEMS.TRAVELLING_BLINK_DISABLED_TIME.get());
                 return true;
             }
         }

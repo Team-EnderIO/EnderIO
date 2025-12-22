@@ -5,11 +5,12 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
 
@@ -60,14 +61,14 @@ public class FermentationWidget extends EIOWidget {
             TextureAtlasSprite sprite = atlas.getSprite(loc);
 
             int color = props.getTintColor();
-            RenderSystem.setShaderColor(FastColor.ARGB32.red(color) / 255.0F, FastColor.ARGB32.green(color) / 255.0F, FastColor.ARGB32.blue(color) / 255.0F,
-                FastColor.ARGB32.alpha(color) * opacity / 255.0F);
+            RenderSystem.setShaderColor(ARGB.red(color) / 255.0F, ARGB.green(color) / 255.0F, ARGB.blue(color) / 255.0F,
+                ARGB.alpha(color) * opacity / 255.0F);
             RenderSystem.enableBlend();
 
             int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
             int atlasHeight = (int) (sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
-            guiGraphics.blit(TextureAtlas.LOCATION_BLOCKS, x, y, width, height, sprite.getU0() * atlasWidth, sprite.getV0() * atlasHeight,
-                sprite.contents().width(), sprite.contents().height(), atlasWidth, atlasHeight);
+            guiGraphics.blit(RenderType::guiTextured, TextureAtlas.LOCATION_BLOCKS, x, y, sprite.getU0() * atlasWidth, sprite.getV0() * atlasHeight,
+                width, height, sprite.contents().width(), sprite.contents().height(), atlasWidth, atlasHeight);
             RenderSystem.setShaderColor(1, 1, 1, 1);
         }
     }

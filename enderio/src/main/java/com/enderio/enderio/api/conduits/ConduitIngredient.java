@@ -3,9 +3,11 @@ package com.enderio.enderio.api.conduits;
 import com.enderio.enderio.api.EnderIODataComponents;
 import com.enderio.enderio.content.conduits.ConduitBlockItem;
 import com.enderio.enderio.init.EIOBlocks;
+import com.enderio.enderio.init.EIOItems;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.common.crafting.ICustomIngredient;
@@ -56,8 +58,8 @@ public class ConduitIngredient implements ICustomIngredient {
     }
 
     @Override
-    public Stream<ItemStack> getItems() {
-        return Stream.of(ConduitBlockItem.getStackFor(conduit, 1));
+    public Stream<Holder<Item>> items() {
+        return Stream.of(EIOItems.CONDUIT);
     }
 
     @Override

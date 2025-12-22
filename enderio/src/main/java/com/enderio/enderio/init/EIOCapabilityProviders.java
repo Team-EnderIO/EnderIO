@@ -35,14 +35,6 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
 @EventBusSubscriber
 public class EIOCapabilityProviders {
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void markProxyableCapabilities(RegisterCapabilitiesEvent event) {
-        // TODO: Review these
-        event.setProxyable(EnderIOCapabilities.SIDE_CONFIG);
-        event.setProxyable(EnderIOCapabilities.SOUL_BINDABLE_BLOCK);
-        event.setProxyable(EnderIOCapabilities.SOUL_HANDLER_BLOCK);
-    }
-
     @SubscribeEvent
     public static void register(RegisterCapabilitiesEvent event) {
         registerConduitCapabilities(event);

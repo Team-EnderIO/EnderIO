@@ -8,7 +8,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -36,13 +35,13 @@ public class LocationPrintoutItem extends Item {
             if (pContext.getPlayer() instanceof ServerPlayer serverPlayer) {
                 handleRightClick(serverPlayer, optionalSelection.get(), pContext.getItemInHand());
             }
-            return InteractionResult.sidedSuccess(pContext.getLevel().isClientSide);
+            return InteractionResult.SUCCESS;
         }
         return super.useOn(pContext);
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
+    public InteractionResult use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         ItemStack itemInHand = pPlayer.getItemInHand(pUsedHand);
         Optional<CoordinateSelection> optionalSelection = getSelection(itemInHand);
         if (optionalSelection.isPresent() && pPlayer.isCrouching()) {
@@ -50,7 +49,8 @@ public class LocationPrintoutItem extends Item {
                 CoordinateSelection selection = optionalSelection.get();
                 handleRightClick(serverPlayer, selection, itemInHand);
             }
-            return InteractionResultHolder.sidedSuccess(itemInHand, pLevel.isClientSide);
+
+            return InteractionResult.SUCCESS;
         }
         return super.use(pLevel, pPlayer, pUsedHand);
     }

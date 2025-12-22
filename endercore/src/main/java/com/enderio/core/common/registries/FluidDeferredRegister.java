@@ -83,25 +83,7 @@ public class FluidDeferredRegister {
             this.name = name;
 
             fluidTypeProperties = FluidType.Properties.create();
-
-            fluidTypeFactory = (properties) -> new FluidType(properties) {
-                // TODO: Handle deprecation...
-                @Override
-                public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
-                    consumer.accept(new IClientFluidTypeExtensions() {
-                        @Override
-                        public ResourceLocation getStillTexture() {
-                            return ResourceLocation.fromNamespaceAndPath(namespace, "block/" + name + "_still");
-                        }
-
-                        @Override
-                        public ResourceLocation getFlowingTexture() {
-                            return ResourceLocation.fromNamespaceAndPath(namespace, "block/" + name + "_flowing");
-                        }
-                    });
-                }
-            };
-
+            fluidTypeFactory = FluidType::new;
             blockFactory = LiquidBlock::new;
             blockProperties = BlockBehaviour.Properties.ofFullCopy(Blocks.WATER);
         }

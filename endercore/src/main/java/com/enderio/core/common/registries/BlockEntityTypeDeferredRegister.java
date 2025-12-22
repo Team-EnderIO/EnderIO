@@ -36,8 +36,8 @@ public class BlockEntityTypeDeferredRegister extends DeferredRegister<BlockEntit
     @SafeVarargs
     public final <T extends BlockEntity> DeferredHolder<BlockEntityType<?>, BlockEntityType<T>> register(String name,
         BlockEntityType.BlockEntitySupplier<? extends T> factory, Supplier<Block>... validBlocks) {
-        return register(name, () -> BlockEntityType.Builder.<T>of(factory,
-            Arrays.stream(validBlocks).map(Supplier::get).toArray(Block[]::new)).build(null));
+        return register(name, () -> new BlockEntityType<>(factory,
+            Arrays.stream(validBlocks).map(Supplier::get).toArray(Block[]::new)));
     }
 
     // Builder for complex block entities with multiple valid blocks or capabilities.
@@ -105,8 +105,8 @@ public class BlockEntityTypeDeferredRegister extends DeferredRegister<BlockEntit
         }
 
         public DeferredHolder<BlockEntityType<?>, BlockEntityType<T>> build() {
-            var holder = (BlockEntityTypeDeferredHolder<T>)register(name, () -> BlockEntityType.Builder.<T>of(factory,
-                validBlocks.stream().map(Supplier::get).toArray(Block[]::new)).build(null));
+            var holder = (BlockEntityTypeDeferredHolder<T>)register(name, () -> new BlockEntityType<T>(factory,
+                validBlocks.stream().map(Supplier::get).toArray(Block[]::new)));
 
             holder.attachedCapabilities = attachedCapabilities;
 

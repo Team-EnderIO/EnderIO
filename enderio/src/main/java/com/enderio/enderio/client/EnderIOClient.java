@@ -94,6 +94,7 @@ import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -114,13 +115,16 @@ import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.util.Lazy;
+import net.neoforged.neoforge.fluids.FluidType;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -361,7 +365,7 @@ public class EnderIOClient {
     }
 
     @SubscribeEvent
-    public static void registerGeometryLoaders(ModelEvent.RegisterGeometryLoaders event) {
+    public static void registerGeometryLoaders(ModelEvent.RegisterLoaders event) {
         event.register(EnderIO.rl("painted_block"), new PaintedBlockGeometry.Loader());
         event.register(EnderIO.rl("io_overlay"), new IOOverlayBakedModel.Loader());
         event.register(EnderIO.rl("conduit"), new ConduitBundleGeometry.Loader());
@@ -401,6 +405,22 @@ public class EnderIOClient {
                 return renderer.get();
             }
         }, EIOBlocks.FLUID_TANK.asItem(), EIOBlocks.PRESSURIZED_FLUID_TANK.asItem());
+
+        for (Holder<FluidType> fluidType : EIOFluids.FLUIDS.fluidTypesRegister().getEntries()) {
+            String name = Objects.requireNonNull(fluidType.getKey()).location().getPath();
+
+            event.registerFluidType(new IClientFluidTypeExtensions() {
+                @Override
+                public ResourceLocation getStillTexture() {
+                    return EnderIO.rl("block/" + name + "_still");
+                }
+
+                @Override
+                public ResourceLocation getFlowingTexture() {
+                    return EnderIO.rl("block/" + name + "_flowing");
+                }
+            }, fluidType);
+        }
     }
 
     @SubscribeEvent

@@ -11,7 +11,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -90,16 +90,16 @@ public class LegacyMachineBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
             Player player, InteractionHand interactionHand, BlockHitResult hit) {
 
         BlockEntity entity = level.getBlockEntity(pos);
         if (!(entity instanceof LegacyMachineBlockEntity machineBlockEntity)) { // This also covers nulls
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            return InteractionResult.TRY_WITH_EMPTY_HAND;
         }
 
         var result = machineBlockEntity.onBlockEntityUsed(state, level, pos, player, interactionHand, hit);
-        if (result != ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION) {
+        if (result != InteractionResult.TRY_WITH_EMPTY_HAND) {
             return result;
         }
 

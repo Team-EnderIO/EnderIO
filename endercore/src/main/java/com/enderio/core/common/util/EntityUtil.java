@@ -19,12 +19,10 @@ public class EntityUtil {
      * @return The description ID.
      */
     public static String getEntityDescriptionId(ResourceLocation entityType) {
-        EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(entityType);
-        if (type == null) {
-            return "error"; // TODO: Proper key
-        }
-
-        return type.getDescriptionId();
+        // TODO: Proper key for error state
+        return BuiltInRegistries.ENTITY_TYPE
+            .getOptional(entityType)
+            .map(EntityType::getDescriptionId).orElse("error");
     }
 
     /**

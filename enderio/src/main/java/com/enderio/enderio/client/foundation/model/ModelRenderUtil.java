@@ -3,7 +3,7 @@ package com.enderio.enderio.client.foundation.model;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import net.neoforged.neoforge.client.model.pipeline.QuadBakingVertexConsumer;
 import org.joml.Vector3f;
 
@@ -79,9 +79,9 @@ public class ModelRenderUtil {
         float tw = sprite.contents().width() / 16f;
         float th = sprite.contents().height() / 16f;
 
-        float r = FastColor.ARGB32.red(color) / 255.0f;
-        float g = FastColor.ARGB32.green(color) / 255.0f;
-        float b = FastColor.ARGB32.blue(color) / 255.0f;
+        float r = ARGB.red(color) / 255.0f;
+        float g = ARGB.green(color) / 255.0f;
+        float b = ARGB.blue(color) / 255.0f;
 
         QuadBakingVertexConsumer baker = new QuadBakingVertexConsumer();
         baker.setSprite(sprite);

@@ -86,13 +86,13 @@ public abstract class RegistrySyncSlot<T> implements SyncSlot {
 
     @Override
     public SlotPayload createPayload(Level level, ChangeType changeType) {
-        return new IntSlotPayload(level.registryAccess().registryOrThrow(registryKey).getId(get()));
+        return new IntSlotPayload(level.registryAccess().lookupOrThrow(registryKey).getId(get()));
     }
 
     @Override
     public void unpackPayload(Level level, SlotPayload payload) {
         if (payload instanceof IntSlotPayload intSlotPayload) {
-            set(level.registryAccess().registryOrThrow(registryKey).byId(intSlotPayload.value()));
+            set(level.registryAccess().lookupOrThrow(registryKey).byId(intSlotPayload.value()));
         }
     }
 }

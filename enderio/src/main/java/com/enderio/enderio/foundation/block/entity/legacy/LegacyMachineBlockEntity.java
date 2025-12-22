@@ -27,7 +27,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -517,9 +517,9 @@ public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
 
     // TODO: Rename to onBlockEntityItemUsed?
     // called when a player uses the block entity, before menu is may open.
-    public ItemInteractionResult onBlockEntityUsed(BlockState state, Level level, BlockPos pos, Player player,
+    public InteractionResult onBlockEntityUsed(BlockState state, Level level, BlockPos pos, Player player,
             InteractionHand hand, BlockHitResult hit) {
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     public boolean stillValid(Player pPlayer) {
@@ -538,10 +538,10 @@ public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
     // is removed
     // @EnsureSide(EnsureSide.Side.SERVER)
     @Override
-    public ItemInteractionResult onWrenched(UseOnContext context) {
+    public InteractionResult onWrenched(UseOnContext context) {
         var player = context.getPlayer();
         if (player == null || level == null) {
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
 
         if (player.isSecondaryUseActive()) {// aka break block
@@ -570,7 +570,7 @@ public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
                 }
             }
         }
-        return ItemInteractionResult.sidedSuccess(level.isClientSide());
+        return InteractionResult.SUCCESS;
     }
 
     public boolean canOpenMenu() {

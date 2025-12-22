@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
 
@@ -51,9 +51,9 @@ public class FluidStackWidget extends EIOWidget {
                     TextureAtlasSprite sprite = atlas.getSprite(still);
 
                     int color = props.getTintColor();
-                    RenderSystem.setShaderColor(FastColor.ARGB32.red(color) / 255.0F,
-                            FastColor.ARGB32.green(color) / 255.0F, FastColor.ARGB32.blue(color) / 255.0F,
-                            FastColor.ARGB32.alpha(color) / 255.0F);
+                    RenderSystem.setShaderColor(ARGB.red(color) / 255.0F,
+                            ARGB.green(color) / 255.0F, ARGB.blue(color) / 255.0F,
+                            ARGB.alpha(color) / 255.0F);
                     RenderSystem.enableBlend();
 
                     int stored = fluidStack.getAmount();

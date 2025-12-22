@@ -19,13 +19,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ShearsItem;
-import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -108,10 +108,8 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
     }
 
     private boolean validAxe(int slot, ItemStack stack) {
-        if (stack.getItem() instanceof AxeItem axeItem) {
-            return axeItem.getTier() != Tiers.WOOD;
-        }
-        return false;
+        // TODO: 1.21.4: Need an EIO tag for axes that can't be used to slice.
+        return stack.is(ItemTags.AXES) && !stack.is(Items.WOODEN_AXE);
     }
 
     @Override

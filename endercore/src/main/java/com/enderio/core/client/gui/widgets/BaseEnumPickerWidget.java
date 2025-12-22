@@ -9,6 +9,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Vector2i;
@@ -177,7 +178,7 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
     @Override
     public void renderButtonFace(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         T value = getValue();
-        guiGraphics.blitSprite(getValueIcon(value), getX(), getY(), getWidth(), getHeight());
+        guiGraphics.blitSprite(RenderType::guiTextured, getValueIcon(value), getX(), getY(), getWidth(), getHeight());
 
         // TODO: Temp solution for the value changing externally (data sync)
         if (previousValue != value) {
@@ -295,7 +296,7 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
 
         @Override
         public void renderButtonFace(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-            guiGraphics.blitSprite(getValueIcon(value), getX(), getY(), iconWidth, iconHeight);
+            guiGraphics.blitSprite(RenderType::guiTextured, getValueIcon(value), getX(), getY(), iconWidth, iconHeight);
         }
     }
 }

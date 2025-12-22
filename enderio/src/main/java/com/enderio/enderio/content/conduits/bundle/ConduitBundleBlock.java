@@ -24,7 +24,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -333,17 +333,17 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
     // region Interactions
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
             Player player, InteractionHand hand, BlockHitResult hitResult) {
 
         if (level.getBlockEntity(pos) instanceof ConduitBundleBlockEntity conduitBundle) {
             var result = addConduit(stack, level, pos, player, conduitBundle);
-            if (result != ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION) {
+            if (result != InteractionResult.TRY_WITH_EMPTY_HAND) {
                 return result;
             }
 
             result = addFacade(stack, level, pos, player, conduitBundle);
-            if (result != ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION) {
+            if (result != InteractionResult.TRY_WITH_EMPTY_HAND) {
                 return result;
             }
         }
@@ -351,16 +351,16 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
         return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
     }
 
-    private ItemInteractionResult addConduit(ItemStack stack, Level level, BlockPos pos, Player player,
+    private InteractionResult addConduit(ItemStack stack, Level level, BlockPos pos, Player player,
             ConduitBundleBlockEntity conduitBundle) {
         // Get the conduit from the item
         Holder<Conduit<?, ?>> conduit = stack.get(EnderIODataComponents.CONDUIT);
         if (conduit == null) {
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            return InteractionResult.TRY_WITH_EMPTY_HAND;
         }
 
         if (!conduitBundle.canAddConduit(conduit)) {
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            return InteractionResult.TRY_WITH_EMPTY_HAND;
         }
 
         // Attempt to add to the bundle
@@ -387,7 +387,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
                         "ConduitBundleAccessor#canAddConduit returned true, but addConduit returned BLOCKED");
             }
 
-            return ItemInteractionResult.FAIL;
+            return InteractionResult.FAIL;
         }
 
         BlockState blockState = level.getBlockState(pos);
@@ -396,18 +396,18 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
                 (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
         level.gameEvent(GameEvent.BLOCK_PLACE, pos, GameEvent.Context.of(player, blockState));
 
-        return ItemInteractionResult.sidedSuccess(level.isClientSide());
+        return InteractionResult.sidedSuccess(level.isClientSide());
     }
 
-    private ItemInteractionResult addFacade(ItemStack stack, Level level, BlockPos pos, Player player,
+    private InteractionResult addFacade(ItemStack stack, Level level, BlockPos pos, Player player,
             ConduitBundleBlockEntity conduitBundle) {
         var facadeProvider = stack.getCapability(EnderIOCapabilities.CONDUIT_FACADE_PROVIDER);
         if (facadeProvider == null || !facadeProvider.isValid()) {
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            return InteractionResult.TRY_WITH_EMPTY_HAND;
         }
 
         if (conduitBundle.hasFacade()) {
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            return InteractionResult.TRY_WITH_EMPTY_HAND;
         }
 
         int lightLevelBefore = level.getLightEmission(pos);
@@ -429,7 +429,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
                 (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
         level.gameEvent(GameEvent.BLOCK_PLACE, pos, GameEvent.Context.of(player, blockState));
 
-        return ItemInteractionResult.sidedSuccess(level.isClientSide());
+        return InteractionResult.sidedSuccess(level.isClientSide());
     }
 
     @Override

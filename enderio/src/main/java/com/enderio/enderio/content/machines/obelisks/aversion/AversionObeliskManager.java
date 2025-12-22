@@ -4,7 +4,7 @@ import com.enderio.enderio.content.machines.obelisks.ObeliskAreaManager;
 import com.enderio.enderio.init.EIOAttachments;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -23,7 +23,7 @@ public class AversionObeliskManager extends ObeliskAreaManager<AversionObeliskBl
     @SubscribeEvent
     public static void onSpawnEvent(FinalizeSpawnEvent event) {
         // Only affects natural spawns
-        if (event.getSpawnType() != MobSpawnType.NATURAL) {
+        if (event.getSpawnType() != EntitySpawnReason.NATURAL) {
             return;
         }
 

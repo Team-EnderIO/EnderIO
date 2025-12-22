@@ -54,7 +54,8 @@ public class PaintedCraftingTableBlock extends CraftingTableBlock implements Ent
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player) {
+        // We ignore includeData because without this data the item won't work :P
         return getPaintedStack(level, pos, this);
     }
 

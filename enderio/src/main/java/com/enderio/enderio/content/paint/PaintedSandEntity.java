@@ -7,6 +7,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -61,19 +62,18 @@ public class PaintedSandEntity extends FallingBlockEntity implements IEntityWith
     @Override
     public void readSpawnData(RegistryFriendlyByteBuf additionalData) {
         ResourceLocation rl = additionalData.readResourceLocation();
-        Block block = BuiltInRegistries.BLOCK.get(rl);
+        Block block = BuiltInRegistries.BLOCK.getValue(rl);
         if (block != Blocks.AIR) {
             setPaint(block);
         }
     }
 
-    @Nullable
     @Override
-    public ItemEntity spawnAtLocation(ItemStack stack, float offsetY) {
+    public @Nullable ItemEntity spawnAtLocation(ServerLevel level, ItemStack stack, float yOffset) {
         if (!stack.isEmpty() && blockData != null) {
             stack.set(EIODataComponents.BLOCK_PAINT, BlockPaintData.of(getPaint()));
         }
 
-        return super.spawnAtLocation(stack, offsetY);
+        return super.spawnAtLocation(level, stack, yOffset);
     }
 }

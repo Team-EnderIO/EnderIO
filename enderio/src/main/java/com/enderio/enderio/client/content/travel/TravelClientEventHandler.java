@@ -1,10 +1,11 @@
 package com.enderio.enderio.client.content.travel;
 
 import com.enderio.enderio.content.travel.TravelHandler;
-import net.minecraft.client.player.Input;
+import net.minecraft.client.player.ClientInput;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Input;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -20,12 +21,12 @@ public class TravelClientEventHandler {
 
     @SubscribeEvent
     public static void movementInputUpdate(MovementInputUpdateEvent event) {
-        Input input = event.getInput();
+        ClientInput input = event.getInput();
         Player player = event.getEntity();
-        boolean isNewJump = input.jumping && !LAST_JUMPING;
-        LAST_JUMPING = input.jumping;
-        boolean isNewCrouch = input.shiftKeyDown && !LAST_SNEAKING;
-        LAST_SNEAKING = input.shiftKeyDown;
+        boolean isNewJump = input.keyPresses.jump() && !LAST_JUMPING;
+        LAST_JUMPING = input.keyPresses.jump();
+        boolean isNewCrouch = input.keyPresses.shift() && !LAST_SNEAKING;
+        LAST_SNEAKING = input.keyPresses.shift();
 
         if (!player.onGround() || !TravelHandler.canBlockTeleport(player)) {
             JUMP_COOLDOWN = 0;
@@ -50,7 +51,16 @@ public class TravelClientEventHandler {
 
         if (JUMP_COOLDOWN > 0) {
             JUMP_COOLDOWN -= 1;
-            input.jumping = false;
+
+            input.keyPresses = new Input(
+                input.keyPresses.forward(),
+                input.keyPresses.backward(),
+                input.keyPresses.left(),
+                input.keyPresses.right(),
+                false,
+                input.keyPresses.shift(),
+                input.keyPresses.sprint()
+            );
         }
     }
 

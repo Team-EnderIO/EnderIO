@@ -31,7 +31,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
@@ -487,10 +487,10 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
     // region Wrenchable Implementation
 
     @Override
-    public ItemInteractionResult onWrenched(UseOnContext context) {
+    public InteractionResult onWrenched(UseOnContext context) {
         var player = context.getPlayer();
         if (player == null || level == null) {
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
 
         // Holding shift
@@ -513,7 +513,7 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
 
             // TODO: custom sound when sound manager is up and running??
 
-            return ItemInteractionResult.sidedSuccess(level.isClientSide());
+            return InteractionResult.SUCCESS;
         } else {
             if (level.isClientSide()) {
                 if (isIOConfigMutable()) {
@@ -521,7 +521,7 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
                 }
             }
 
-            return ItemInteractionResult.sidedSuccess(level.isClientSide());
+            return InteractionResult.SUCCESS;
         }
     }
 

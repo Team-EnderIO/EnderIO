@@ -1,7 +1,6 @@
 package com.enderio.enderio.content.machines.vat;
 
 import com.enderio.core.common.network.menu.FloatSyncSlot;
-import com.enderio.core.common.network.menu.RecipeSyncSlot;
 import com.enderio.enderio.foundation.fluid.FluidStorageInfo;
 import com.enderio.enderio.foundation.fluid.FluidStorageSyncSlot;
 import com.enderio.enderio.foundation.menu.MachineMenu;

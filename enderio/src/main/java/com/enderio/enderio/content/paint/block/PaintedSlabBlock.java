@@ -48,11 +48,15 @@ public class PaintedSlabBlock extends SlabBlock implements EntityBlock, PaintedB
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player) {
+        // We ignore includeData because without this data the item won't work :P
         ItemStack stack = new ItemStack(this);
         if (level.getBlockEntity(pos) instanceof DoublePaintedBlockEntity paintedBlockEntity) {
             Optional<Block> paint;
-            if (target.getLocation().y - pos.getY() > 0.5) {
+
+            // TODO: 1.21.4: Check this still works
+            var hitResult = player.pick(player.blockInteractionRange(), 0, false);
+            if (hitResult.getLocation().y - pos.getY() > 0.5) {
                 paint = paintedBlockEntity.getSecondaryPaint();
             } else {
                 paint = paintedBlockEntity.getPrimaryPaint();

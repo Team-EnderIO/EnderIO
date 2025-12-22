@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class EnderfaceRenderer implements TravelRenderer<EnderfaceTravelTarget> {
@@ -51,8 +51,8 @@ public class EnderfaceRenderer implements TravelRenderer<EnderfaceTravelTarget> 
             lineType = VERY_BOLD_LINES;
         }
         VertexConsumer lines = buffer.getBuffer(lineType);
-        LevelRenderer.renderLineBox(poseStack, lines, 0, 0, 0, 1, 1, 1, FastColor.ARGB32.red(color) / 255F,
-                FastColor.ARGB32.green(color) / 255F, FastColor.ARGB32.blue(color) / 255F, 1);
+        LevelRenderer.renderLineBox(poseStack, lines, 0, 0, 0, 1, 1, 1, ARGB.red(color) / 255F,
+            ARGB.green(color) / 255F, ARGB.blue(color) / 255F, 1);
 
         poseStack.popPose();
         minecraft.renderBuffers().bufferSource().endBatch();

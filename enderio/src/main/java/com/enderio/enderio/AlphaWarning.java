@@ -11,8 +11,8 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 public class AlphaWarning {
     @SubscribeEvent
     public static void playerJoin(PlayerEvent.PlayerLoggedInEvent event) {
-        event.getEntity().sendSystemMessage(Component
+        event.getEntity().displayClientMessage(Component
             .literal("[Warning] Ender IO is in alpha - expect bugs and take backups often!")
-            .withStyle(ChatFormatting.YELLOW));
+            .withStyle(ChatFormatting.YELLOW), false);
     }
 }

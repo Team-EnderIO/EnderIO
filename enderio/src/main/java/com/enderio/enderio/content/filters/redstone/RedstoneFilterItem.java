@@ -62,7 +62,7 @@ public class RedstoneFilterItem extends Item {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
+    public InteractionResult use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         var menu = type.menu();
         if (pPlayer instanceof ServerPlayer serverPlayer && menu != null) {
             openMenu(serverPlayer);

@@ -11,7 +11,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -89,7 +89,7 @@ public class MachineBlock<T extends MachineBlockEntity> extends EIOEntityBlock<T
                     serverPlayer.openMenu(menuProvider, pos);
                 }
 
-                return InteractionResult.sidedSuccess(level.isClientSide());
+                return InteractionResult.SUCCESS;
             }
         }
 
@@ -106,7 +106,7 @@ public class MachineBlock<T extends MachineBlockEntity> extends EIOEntityBlock<T
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
         BlockHitResult hitResult) {
         if (!player.getAbilities().instabuild) {
             return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
@@ -120,7 +120,7 @@ public class MachineBlock<T extends MachineBlockEntity> extends EIOEntityBlock<T
                     Soul soul = soulHandler.getSoulInSlot(i);
                     if (soulBindable.isSoulValid(soul)) {
                         soulBindable.bindSoul(soul.copy());
-                        return ItemInteractionResult.SUCCESS;
+                        return InteractionResult.SUCCESS;
                     }
                 }
             }

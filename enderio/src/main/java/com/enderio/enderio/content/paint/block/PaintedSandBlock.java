@@ -37,7 +37,7 @@ public class PaintedSandBlock extends ColoredFallingBlock implements EntityBlock
 
     @Override
     public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRand) {
-        if (isFree(pLevel.getBlockState(pPos.below())) && pPos.getY() >= pLevel.getMinBuildHeight()) {
+        if (isFree(pLevel.getBlockState(pPos.below())) && pPos.getY() >= pLevel.getMinY()) {
             PaintedSandEntity paintedSandEntity = new PaintedSandEntity(pLevel, pPos.getX() + 0.5D, pPos.getY(), pPos.getZ() + 0.5D,
                 pLevel.getBlockState(pPos));
             this.falling(paintedSandEntity);
@@ -64,7 +64,8 @@ public class PaintedSandBlock extends ColoredFallingBlock implements EntityBlock
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player) {
+        // We ignore includeData because without this data the item won't work :P
         return getPaintedStack(level, pos, this);
     }
 

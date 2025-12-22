@@ -20,7 +20,7 @@ import java.util.Optional;
 
 public class PaintUtils {
     public static Block getBlockFromRL(String rl) {
-        return BuiltInRegistries.BLOCK.get(ResourceLocation.parse(rl));
+        return BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(rl));
     }
 
     public static Optional<SoundEvent> getPlaceSound(BlockState state, Level level, BlockPos pos, Player player, Class<? extends BlockItem> blockItemClass) {

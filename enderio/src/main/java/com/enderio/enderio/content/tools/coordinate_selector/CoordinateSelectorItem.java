@@ -8,7 +8,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -29,7 +28,7 @@ public class CoordinateSelectorItem extends Item {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
+    public InteractionResult use(Level pLevel, Player pPlayer, InteractionHand pHand) {
         ItemStack itemstack = pPlayer.getItemInHand(pHand);
         if (!checkPaper(pPlayer)) {
             return super.use(pLevel, pPlayer, pHand);
@@ -56,7 +55,7 @@ public class CoordinateSelectorItem extends Item {
             openMenu(serverPlayer, pLevel, hitResult.getBlockPos());
         }
 
-        return InteractionResultHolder.sidedSuccess(itemstack, pLevel.isClientSide);
+        return InteractionResult.SUCCESS;
     }
 
     @Override
@@ -66,7 +65,7 @@ public class CoordinateSelectorItem extends Item {
                 openMenu(serverPlayer, pContext.getLevel(), pContext.getClickedPos());
             }
 
-            return InteractionResult.sidedSuccess(pContext.getLevel().isClientSide);
+            return InteractionResult.SUCCESS;
         }
 
         return super.useOn(pContext);

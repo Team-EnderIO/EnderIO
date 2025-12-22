@@ -13,14 +13,14 @@ public abstract class EnderRecipeProvider extends RecipeProvider {
 
     private final List<SubRecipeProvider> subRecipeProviders = new ArrayList<>();
 
-    public EnderRecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-        super(output, registries);
+    protected EnderRecipeProvider(HolderLookup.Provider registries, RecipeOutput output) {
+        super(registries, output);
     }
 
     @Override
-    protected void buildRecipes(RecipeOutput recipeOutput, HolderLookup.Provider holderLookup) {
+    protected void buildRecipes() {
         for (var provider : subRecipeProviders) {
-            provider.buildRecipes(recipeOutput, holderLookup);
+            provider.buildRecipes(registries, output);
         }
     }
 

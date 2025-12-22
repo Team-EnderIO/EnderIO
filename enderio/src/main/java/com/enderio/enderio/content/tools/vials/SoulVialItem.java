@@ -20,6 +20,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -186,7 +187,7 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
 
         // Create a filled vial and put the entity's NBT inside.
         if (entity instanceof Mob mob && mob.getLeashHolder() != null) {
-            mob.dropLeash(true, true);
+            mob.dropLeash();
         }
 
         // Create the filled vial
@@ -216,7 +217,8 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
             float rotation = Mth.wrapDegrees(level.getRandom().nextFloat() * 360.0f);
 
             // Try to get the entity NBT from the item.
-            Optional<Entity> entity = EntityType.create(storedSoul.getEntityTagWithId(), level);
+            // TODO: 1.21.4: Do we need our own spawn reason? or is this fine?
+            Optional<Entity> entity = EntityType.create(storedSoul.getEntityTagWithId(), level, EntitySpawnReason.SPAWN_ITEM_USE);
 
             // Position the entity and add it.
             entity.ifPresent(ent -> {
