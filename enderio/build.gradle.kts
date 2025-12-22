@@ -81,19 +81,17 @@ configurations {
 
 dependencies {
     val localRuntime by configurations.getting
-    // Include and bundle regilite
-    jarJar(libs.regilite)
 
     // EnderIO bundles EnderCore.
     api(project(":endercore"))
     jarJar(project(":endercore"))
 
     // Include built-in "addons"
-    jarJar(project(":enderio-modded-conduits"))
-    localRuntime(project(":enderio-modded-conduits"))
+//    jarJar(project(":enderio-modded-conduits"))
+//    localRuntime(project(":enderio-modded-conduits"))
 
     // Bring all other "addons" into the dev env for testing - but do not bundle them in the jar
-    localRuntime(project(":enderio-endergy"))
+//    localRuntime(project(":enderio-endergy"))
 
     // Almost Unified
     compileOnly(variantOf(libs.almostUnified) {
@@ -200,8 +198,8 @@ neoForge {
             gameDirectory = project.file("run/server")
         }
 
-        val data by creating {
-            data()
+        val clientData by creating {
+            clientData()
             loadedMods = listOf(modEnderio)
 
             programArguments.addAll(

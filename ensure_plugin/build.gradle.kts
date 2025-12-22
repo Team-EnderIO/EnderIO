@@ -2,6 +2,12 @@ plugins {
     id("java-library")
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8" // Use the UTF-8 charset for Java compilation
     options.compilerArgs.add("--add-exports=jdk.compiler/com.sun.tools.javac.api=ensureplugin")
