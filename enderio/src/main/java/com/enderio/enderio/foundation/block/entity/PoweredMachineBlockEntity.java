@@ -275,11 +275,9 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
     public InteractionResult tryItemInstall(ItemStack stack, UseOnContext context) {
         if (stack.getItem() instanceof CapacitorItem && supportsCapacitor() && !isCapacitorInstalled()) {
             MachineInventory inventory = getInventory();
-            if (inventory != null) {
-                inventory.setStackInSlot(inventory.layout().getCapacitorSlot(), stack.copyWithCount(1));
-                stack.shrink(1);
-                return InteractionResult.sidedSuccess(context.getLevel().isClientSide());
-            }
+            inventory.setStackInSlot(inventory.layout().getCapacitorSlot(), stack.copyWithCount(1));
+            stack.shrink(1);
+            return InteractionResult.SUCCESS;
         }
 
         return InteractionResult.PASS;

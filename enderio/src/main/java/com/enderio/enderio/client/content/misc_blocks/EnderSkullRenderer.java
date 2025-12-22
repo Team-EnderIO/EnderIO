@@ -73,11 +73,10 @@ public class EnderSkullRenderer implements BlockEntityRenderer<EnderSkullBlockEn
     public static class EnderSkullModel extends SkullModelBase {
         private final ModelPart head;
         private final ModelPart hat;
-        private final ModelPart root;
         private boolean active = false;
 
         public EnderSkullModel(ModelPart root) {
-            this.root = root;
+            super(root);
             head = root.getChild("head");
             hat = root.getChild("hat");
         }
@@ -105,11 +104,6 @@ public class EnderSkullRenderer implements BlockEntityRenderer<EnderSkullBlockEn
             if (active) {
                 this.head.y =- 5f;
             }
-        }
-
-        @Override
-        public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, int packedColor) {
-            this.root.render(poseStack, buffer, packedLight, packedOverlay, packedColor);
         }
     }
 }

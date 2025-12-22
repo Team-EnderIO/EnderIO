@@ -289,13 +289,13 @@ public class CapacitorBankBlockEntity extends LegacyPoweredMachineBlockEntity im
         return removedEnergy / AVERAGE_IO_OVER_X_TICKS;
     }
 
-    public DisplayMode getDisplayMode(Direction direction) {
-        if (getLevel() == null || !Block.shouldRenderFace(getBlockState(), getLevel(), worldPosition, direction,
-                worldPosition.relative(direction))) {
+    public DisplayMode getDisplayMode(Direction face) {
+        if (getLevel() == null || !Block.shouldRenderFace(level, worldPosition, getBlockState(),
+            level.getBlockState(getBlockPos().relative(face)), face)) {
             return DisplayMode.NONE;
         }
 
-        return displayModes.get(direction);
+        return displayModes.get(face);
     }
 
     public void setDisplayMode(Direction direction, DisplayMode mode) {

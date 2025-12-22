@@ -86,7 +86,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     @Override
     public void serverTick() {
         if (reloadCache != reload && boundSoul.hasEntity()) {
-            Optional<EngineSoul.SoulData> op = EngineSoul.ENGINE.matches(boundSoul.entityType());
+            Optional<EngineSoul.SoulData> op = EngineSoul.RELOAD_LISTENER.matches(boundSoul.entityType());
             op.ifPresent(data -> soulData = data);
             reloadCache = reload;
         }
@@ -122,13 +122,13 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
 
     @Override
     public boolean isSoulValid(Soul soul) {
-        return EngineSoul.ENGINE.matches(soul.entityTypeId()).isPresent();
+        return EngineSoul.RELOAD_LISTENER.matches(soul.entityTypeId()).isPresent();
     }
 
     @Override
     public void bindSoul(Soul newSoul) {
         this.boundSoul = newSoul;
-        this.soulData = EngineSoul.ENGINE.matches(newSoul.entityTypeId()).get();
+        this.soulData = EngineSoul.RELOAD_LISTENER.matches(newSoul.entityTypeId()).get();
     }
 
     @Override

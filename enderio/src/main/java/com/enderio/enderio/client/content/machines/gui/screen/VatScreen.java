@@ -16,6 +16,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.WidgetSprites;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -75,13 +76,13 @@ public class VatScreen extends MachineScreen<VatMenu> {
     public void render(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
         super.render(guiGraphics, pMouseX, pMouseY, pPartialTicks);
 
-        guiGraphics.blitSprite(VAT_COVER, 76 + leftPos, 34 + topPos, 26, 28);
+        guiGraphics.blitSprite(RenderType::guiTextured, VAT_COVER, 76 + leftPos, 34 + topPos, 26, 28);
         drawModifierStrings(guiGraphics);
     }
 
     @Override
     protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
-        pGuiGraphics.blit(VAT_BG, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+        pGuiGraphics.blit(RenderType::guiTextured, VAT_BG, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
     private boolean isCrafting() {

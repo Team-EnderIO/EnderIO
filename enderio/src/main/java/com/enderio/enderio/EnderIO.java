@@ -11,6 +11,10 @@ import com.enderio.enderio.config.base.BaseConfig;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.foundation.integrations.Integrations;
+import com.enderio.enderio.foundation.souldata.EngineSoul;
+import com.enderio.enderio.foundation.souldata.FarmSoul;
+import com.enderio.enderio.foundation.souldata.SolarSoul;
+import com.enderio.enderio.foundation.souldata.SpawnerSoul;
 import com.enderio.enderio.init.EIOAttachments;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOBlocks;
@@ -39,6 +43,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
+import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import org.slf4j.Logger;
@@ -116,6 +121,7 @@ public class EnderIO {
         modEventBus.addListener(this::registerRegistries);
         modEventBus.addListener(this::registerDatapackRegistries);
         modEventBus.addListener(this::addBuiltInPacks);
+        modEventBus.addListener(this::addReloadListeners);
 
         Integrations.register();
     }
@@ -134,7 +140,7 @@ public class EnderIO {
         event.dataPackRegistry(EnderIORegistries.Keys.CONDUIT, Conduit.DIRECT_CODEC, Conduit.DIRECT_CODEC);
     }
 
-    public void addBuiltInPacks(final AddPackFindersEvent event) {
+    private void addBuiltInPacks(final AddPackFindersEvent event) {
         event.addPackFinders(
             ResourceLocation.fromNamespaceAndPath(EnderIO.MOD_ID, "data/enderio/datapacks/farming_station"),
             PackType.SERVER_DATA, MachinesLang.FARMING_STATION_EXPERIMENT, PackSource.FEATURE, false,
@@ -147,5 +153,12 @@ public class EnderIO {
         event.addPackFinders(
             ResourceLocation.fromNamespaceAndPath(EnderIO.MOD_ID, "data/enderio/datapacks/niard"),
             PackType.SERVER_DATA, MachinesLang.NIARD_EXPERIMENT, PackSource.FEATURE, false, Pack.Position.TOP);
+    }
+
+    private void addReloadListeners(AddServerReloadListenersEvent event) {
+        event.addListener(EnderIO.rl("engine_soul_data"), EngineSoul.RELOAD_LISTENER);
+        event.addListener(EnderIO.rl("farm_soul_data"), FarmSoul.RELOAD_LISTENER);
+        event.addListener(EnderIO.rl("solar_soul_data"), SolarSoul.RELOAD_LISTENER);
+        event.addListener(EnderIO.rl("spawner_soul_data"), SpawnerSoul.RELOAD_LISTENER);
     }
 }

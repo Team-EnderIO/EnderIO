@@ -22,6 +22,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResult;
@@ -38,6 +39,7 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
@@ -53,6 +55,7 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -134,9 +137,10 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
     // endregion
 
     // TODO: Review, I'm sure this could be neater
+
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos,
-            Player player) {
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player) {
+        // TODO: 1.21.4: This needs fixing.
         if (level instanceof Level realLevel
                 && state.getOptionalValue(BlockStateProperties.WATERLOGGED).orElse(false)) {
             var hitResult = Item.getPlayerPOVHitResult(realLevel, player, ClipContext.Fluid.NONE);
@@ -169,7 +173,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
             return ConduitBlockItem.getStackFor(conduit, 1);
         }
 
-        return super.getCloneItemStack(state, target, level, pos, player);
+        return super.getCloneItemStack(level, pos, state, includeData, player);
     }
 
     @Override
@@ -183,18 +187,16 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
     }
 
     @Override
-    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock,
-            BlockPos neighborPos, boolean movedByPiston) {
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, @Nullable Orientation orientation, boolean movedByPiston) {
+        super.neighborChanged(state, level, pos, neighborBlock, orientation, movedByPiston);
 
         if (level.getBlockEntity(pos) instanceof ConduitBundleBlockEntity conduit) {
             conduit.updateNeighborRedstone();
-            conduit.updateConnections(level, pos, neighborPos, true);
+            conduit.updateConnections(level, pos, pos, true);
 
             // Invalidate caps in case of redstone update or something else.
             level.invalidateCapabilities(pos);
         }
-
-        super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
     }
 
     // region Water-logging
@@ -211,17 +213,18 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level,
-            BlockPos currentPos, BlockPos neighborPos) {
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction,
+        BlockPos neighborPos, BlockState neighborState, RandomSource random) {
+
         if (state.getValue(WATERLOGGED)) {
-            level.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+            scheduledTickAccess.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
 
-        if (level.getBlockEntity(currentPos) instanceof ConduitBundleBlockEntity conduit) {
+        if (level.getBlockEntity(pos) instanceof ConduitBundleBlockEntity conduit) {
             conduit.updateShape();
         }
 
-        return super.updateShape(state, direction, neighborState, level, currentPos, neighborPos);
+        return super.updateShape(state, level, scheduledTickAccess, pos, direction, neighborPos, neighborState, random);
     }
 
     @Override
@@ -396,7 +399,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
                 (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
         level.gameEvent(GameEvent.BLOCK_PLACE, pos, GameEvent.Context.of(player, blockState));
 
-        return InteractionResult.sidedSuccess(level.isClientSide());
+        return InteractionResult.SUCCESS;
     }
 
     private InteractionResult addFacade(ItemStack stack, Level level, BlockPos pos, Player player,
@@ -429,7 +432,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
                 (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
         level.gameEvent(GameEvent.BLOCK_PLACE, pos, GameEvent.Context.of(player, blockState));
 
-        return InteractionResult.sidedSuccess(level.isClientSide());
+        return InteractionResult.SUCCESS;
     }
 
     @Override
@@ -445,7 +448,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
                         ConduitMenu.openConduitMenu(serverPlayer, conduitBundle, conduitConnection.getFirst(), conduitConnection.getSecond());
                     }
 
-                    return InteractionResult.sidedSuccess(level.isClientSide());
+                    return InteractionResult.SUCCESS;
                 }
             }
         }

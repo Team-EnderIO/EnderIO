@@ -12,6 +12,7 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.UseRemainder;
 import net.minecraft.world.level.Level;
 
 import java.util.Calendar;
@@ -19,14 +20,15 @@ import java.util.Calendar;
 public class EnderiosItem extends Item {
     public static final ResourceLocation INVERTED_PROPERTY = EnderIO.rl("enderios_inverted");
 
+    // TODO: 1.21.4: Does this still have a cooldown?
     private static final FoodProperties PROPERTIES = new FoodProperties.Builder()
         .nutrition(10)
         .saturationModifier(0.8f)
-        .usingConvertsTo(Items.BOWL)
         .build();
 
     public EnderiosItem(Properties pProperties) {
-        super(pProperties.food(PROPERTIES));
+        super(pProperties.food(PROPERTIES)
+            .component(DataComponents.USE_REMAINDER, new UseRemainder(new ItemStack(Items.BOWL))));
     }
 
     @Override

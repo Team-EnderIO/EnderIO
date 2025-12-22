@@ -32,18 +32,11 @@ import java.util.stream.Stream;
  * @param entityTag the entity's NBT tag.
  */
 public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) {
-    private static final Codec<Soul> NEW_CODEC = RecordCodecBuilder.create(
+    public static final Codec<Soul> CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
             BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("entity_type").forGetter(Soul::entityType),
             CompoundTag.CODEC.fieldOf("entity_tag").forGetter(Soul::entityTag)
         ).apply(instance, Soul::new));
-
-    private static final Codec<Soul> OLD_CODEC = RecordCodecBuilder.create(
-        instance -> instance.group(
-            CompoundTag.CODEC.fieldOf("entityTag").forGetter(Soul::entityTag)
-        ).apply(instance, Soul::new));
-
-    public static final Codec<Soul> CODEC = Codec.withAlternative(NEW_CODEC, OLD_CODEC);
 
     public static final StreamCodec<RegistryFriendlyByteBuf, Soul> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.registry(Registries.ENTITY_TYPE),
@@ -92,13 +85,6 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) {
         IGNORED_KEYS.forEach(entityTag::remove);
     }
 
-    // Legacy data support.
-    private Soul(CompoundTag tag) {
-        // Note: doesn't remove ID from the tag to ensure backwards compatibility.
-        // TODO: 1.22 - remove this.
-        this(BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(tag.getString(Entity.ID_TAG))), tag);
-    }
-
     public static final StreamCodec<RegistryFriendlyByteBuf, Soul> OPTIONAL_STREAM_CODEC = new StreamCodec<>() {
         @Override
         public Soul decode(RegistryFriendlyByteBuf byteBuf) {
@@ -128,7 +114,7 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) {
     }
 
     public static Soul of(ResourceLocation entityType) {
-        return of(BuiltInRegistries.ENTITY_TYPE.get(entityType));
+        return of(BuiltInRegistries.ENTITY_TYPE.getValue(entityType));
     }
 
     public static Soul of(EntityType<?> entityType) {

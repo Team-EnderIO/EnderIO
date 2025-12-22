@@ -3,9 +3,13 @@ package com.enderio.enderio.content.machines.block_detector;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.Mirror;
@@ -82,12 +86,25 @@ public class BlockDetectorBlock extends DirectionalBlock {
         return getSignal(pState, pLevel, pPos, pDirection);
     }
 
+    // TODO: 1.21.4: Check this change.
     @Override
-    protected BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState,
-            LevelAccessor pLevel, BlockPos pPos, BlockPos pNeighborPos) {
-        if (pState.getValue(FACING) == pDirection) {
-            pLevel.blockUpdated(pPos, pState.getBlock());
+    protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        level.blockUpdated(pos, state.getBlock());
+    }
+
+    @Override
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction,
+        BlockPos neighborPos, BlockState neighborState, RandomSource random) {
+        if (state.getValue(FACING) == direction) {
+            startSignal(level, scheduledTickAccess, pos);
         }
-        return super.updateShape(pState, pDirection, pNeighborState, pLevel, pPos, pNeighborPos);
+
+        return super.updateShape(state, level, scheduledTickAccess, pos, direction, neighborPos, neighborState, random);
+    }
+
+    private void startSignal(LevelReader level, ScheduledTickAccess scheduledTickAccess, BlockPos pos) {
+        if (!level.isClientSide() && !scheduledTickAccess.getBlockTicks().hasScheduledTick(pos, this)) {
+            scheduledTickAccess.scheduleTick(pos, this, 2);
+        }
     }
 }

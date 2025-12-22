@@ -9,6 +9,7 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeMap;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.fml.util.thread.EffectiveSide;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
@@ -132,7 +133,9 @@ public class RecipeInputCache<T extends RecipeInput, R extends Recipe<T>> {
     public void rebuildCache(RecipeManager recipeManager) {
         itemToRecipesCache.clear();
         recipeToIngredientCache.clear();
-        recipeManager.getAllRecipesFor(recipeType.get())
+
+        recipeManager.recipeMap()
+                .byType(recipeType.get())
                 .stream()
                 .filter(recipeHolder -> filter.test(recipeHolder.value()))
                 .forEach(recipe -> {

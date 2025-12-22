@@ -8,6 +8,7 @@ import com.enderio.enderio.content.travel.travel_anchor.TravelAnchorMenu;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -54,7 +55,7 @@ public class TravelAnchorScreen extends MachineScreen<TravelAnchorMenu> {
 
     @Override
     protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
-        pGuiGraphics.blit(TRAVEL_ANCHOR_BG, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+        pGuiGraphics.blit(RenderType::guiTextured, TRAVEL_ANCHOR_BG, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
     @Override

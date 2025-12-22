@@ -21,7 +21,7 @@ import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import java.util.List;
 import java.util.UUID;
 
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.GAME)
+@EventBusSubscriber()
 public class MobSpawnTask extends PoweredSpawnerTask {
 
     private float efficiency = 1;
@@ -92,7 +92,7 @@ public class MobSpawnTask extends PoweredSpawnerTask {
                 switch (spawnMode()) {
                 case COPY -> {
                     // TODO: Stop using BE to get entity tag data...
-                    entity = EntityType.loadEntityRecursive(blockEntity.getBoundSoul().getEntityTagWithId(), level,
+                    entity = EntityType.loadEntityRecursive(blockEntity.getBoundSoul().getEntityTagWithId(), level, EntitySpawnReason.SPAWNER,
                             entity1 -> {
                                 entity1.moveTo(x, y, z, entity1.getYRot(), entity1.getXRot());
                                 entity1.setUUID(UUID.randomUUID());
@@ -101,7 +101,7 @@ public class MobSpawnTask extends PoweredSpawnerTask {
                 }
                 case NEW -> {
                     // TODO: should we be using the ctor that accepts a position and spawn type etc.
-                    entity = entityType().create(level);
+                    entity = entityType().create(level, EntitySpawnReason.SPAWNER);
                     if (entity != null) {
                         entity.moveTo(x, y, z);
                     }

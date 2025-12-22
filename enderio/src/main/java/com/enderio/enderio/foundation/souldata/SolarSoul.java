@@ -9,13 +9,9 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
 
 import java.util.Optional;
 
-@EventBusSubscriber
 public class SolarSoul {
 
     public record SoulData(ResourceLocation entitytype, boolean daytime, boolean nighttime, Optional<ResourceKey<Level>> level) implements com.enderio.enderio.foundation.souldata.SoulData {
@@ -47,10 +43,5 @@ public class SolarSoul {
     );
 
     public static final String NAME = "solar";
-    public static final SoulDataReloadListener<SoulData> SOLAR = new SoulDataReloadListener<>(NAME, CODEC);
-
-    @SubscribeEvent
-    public static void addResource(AddReloadListenerEvent event) {
-        event.addListener(SOLAR);
-    }
+    public static final SoulDataReloadListener<SoulData> RELOAD_LISTENER = new SoulDataReloadListener<>(NAME, CODEC);
 }

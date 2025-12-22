@@ -8,6 +8,7 @@ import com.enderio.enderio.content.filters.AbstractFilterMenu;
 import com.enderio.enderio.content.filters.FiltersLang;
 import com.enderio.enderio.content.filters.item.general.EnderItemFilterMenu;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -95,7 +96,7 @@ public class EnderItemFilterScreen extends EnderContainerScreen<EnderItemFilterM
 
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float v, int i, int i1) {
-        guiGraphics.blit(backgroundTexture, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight);
+        guiGraphics.blit(RenderType::guiTextured, backgroundTexture, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
     @Override

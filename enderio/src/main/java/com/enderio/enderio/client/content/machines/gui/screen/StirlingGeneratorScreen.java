@@ -11,6 +11,7 @@ import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.machines.stirling_generator.StirlingGeneratorMenu;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -51,7 +52,7 @@ public class StirlingGeneratorScreen extends MachineScreen<StirlingGeneratorMenu
 
     @Override
     protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
-        pGuiGraphics.blit(BG_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+        pGuiGraphics.blit(RenderType::guiTextured, BG_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
     @Override

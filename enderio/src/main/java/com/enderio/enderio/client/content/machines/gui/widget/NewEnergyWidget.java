@@ -10,6 +10,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 
 import java.text.NumberFormat;
@@ -42,7 +43,7 @@ public class NewEnergyWidget extends EIOWidget {
         int renderableHeight = (int)(filledVolume * height);
         int hiddenHeight = height - renderableHeight;
 
-        guiGraphics.blitSprite(ENERGY_BAR_FILL_SPRITE, width, height, 0, hiddenHeight, x, y + hiddenHeight, width, renderableHeight);
+        guiGraphics.blitSprite(RenderType::guiTextured, ENERGY_BAR_FILL_SPRITE, width, height, 0, hiddenHeight, x, y + hiddenHeight, width, renderableHeight);
 
         RenderSystem.disableDepthTest();
 

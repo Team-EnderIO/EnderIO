@@ -28,7 +28,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,7 +51,7 @@ public class LegacyMachineBlock extends BaseEntityBlock {
                     .apply(instance, LegacyMachineBlock::new));
 
     private final Supplier<BlockEntityType<? extends LegacyMachineBlockEntity>> blockEntityType;
-    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     public LegacyMachineBlock(Supplier<BlockEntityType<? extends LegacyMachineBlockEntity>> blockEntityType,
             Properties properties) {
@@ -155,11 +156,11 @@ public class LegacyMachineBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock,
-            BlockPos neighborPos, boolean movedByPiston) {
-        super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, @Nullable Orientation orientation, boolean movedByPiston) {
+        super.neighborChanged(state, level, pos, neighborBlock, orientation, movedByPiston);
+
         if (level.getBlockEntity(pos) instanceof LegacyMachineBlockEntity machineBlock) {
-            machineBlock.neighborChanged(state, level, pos, neighborPos);
+            machineBlock.updateRedstone();
         }
     }
 
@@ -167,7 +168,7 @@ public class LegacyMachineBlock extends BaseEntityBlock {
     public void onNeighborChange(BlockState state, LevelReader level, BlockPos pos, BlockPos neighbor) {
         super.onNeighborChange(state, level, pos, neighbor);
         if (level.getBlockEntity(pos) instanceof LegacyMachineBlockEntity machineBlock) {
-            machineBlock.neighborChanged(state, level, pos, neighbor);
+            machineBlock.updateRedstone();
         }
     }
 }

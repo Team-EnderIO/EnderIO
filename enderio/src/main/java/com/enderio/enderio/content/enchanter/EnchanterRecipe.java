@@ -171,7 +171,7 @@ public record EnchanterRecipe(Holder<Enchantment> enchantment, int costMultiplie
                         .group(Enchantment.CODEC.fieldOf("enchantment").forGetter(EnchanterRecipe::enchantment),
                                 ExtraCodecs.POSITIVE_INT.fieldOf("cost_multiplier")
                                         .forGetter(EnchanterRecipe::costMultiplier),
-                                SizedIngredient.FLAT_CODEC.fieldOf("input").forGetter(EnchanterRecipe::input))
+                                SizedIngredient.NESTED_CODEC.fieldOf("input").forGetter(EnchanterRecipe::input))
                         .apply(inst, EnchanterRecipe::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, EnchanterRecipe> STREAM_CODEC = StreamCodec.composite(

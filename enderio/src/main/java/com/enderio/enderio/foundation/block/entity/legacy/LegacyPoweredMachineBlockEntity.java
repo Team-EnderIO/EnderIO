@@ -248,7 +248,7 @@ public abstract class LegacyPoweredMachineBlockEntity extends LegacyMachineBlock
             if (inventory != null && layout != null) {
                 inventory.setStackInSlot(layout.getCapacitorSlot(), stack.copyWithCount(1));
                 stack.shrink(1);
-                return InteractionResult.sidedSuccess(context.getLevel().isClientSide());
+                return InteractionResult.SUCCESS;
             }
         }
 

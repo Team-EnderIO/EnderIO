@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
@@ -65,7 +66,7 @@ public class CapacitorEnergyWidget extends EnergyWidget {
         guiGraphics.renderFakeItem(CAPACITOR, x - 4, y + height/2 - 8 + heightModifier);
 
         //noinspection IntegerDivisionInFloatingPointContext
-        guiGraphics.blit(WIDGETS, x, y + height/2 + 6, 0, 160 + tick / 10 * 9, 128, width, height, 256, 256);
+        guiGraphics.blit(RenderType::guiTextured, WIDGETS, x, y + height/2 + 6, 0, 160 + tick / 10 * 9, 128, width, height, 256, 256);
         RenderSystem.setShaderColor(1,1,1, 100/255f);
         RenderSystem.enableBlend();
         guiGraphics.renderFakeItem(CAPACITOR, x - 4, y + height/2 + 25);

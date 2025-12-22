@@ -28,7 +28,7 @@ public class ConduitSorter {
     public static void serverSortTypes(ServerStartedEvent event) {
         var conduitRegistry = event.getServer()
                 .registryAccess()
-                .registryOrThrow(EnderIORegistries.Keys.CONDUIT);
+                .lookupOrThrow(EnderIORegistries.Keys.CONDUIT);
         sortTypes(conduitRegistry);
     }
 
@@ -36,7 +36,7 @@ public class ConduitSorter {
     public static void clientSortTypes(ClientPlayerNetworkEvent.LoggingIn event) {
         var conduitRegistry = event.getPlayer()
                 .registryAccess()
-                .registryOrThrow(EnderIORegistries.Keys.CONDUIT);
+                .lookupOrThrow(EnderIORegistries.Keys.CONDUIT);
         sortTypes(conduitRegistry);
     }
 
@@ -58,7 +58,7 @@ public class ConduitSorter {
 
     private static <T extends Conduit<T, ?>> List<Holder<Conduit<?, ?>>> gatherConduitsForType(
             Registry<Conduit<?, ?>> registry, ConduitType<T> conduitType) {
-        return registry.holders()
+        return registry.listElements()
                 .filter(i -> i.value().type() == conduitType)
                 // Group by tier, then by name
                 .sorted(new Comparator<Holder<Conduit<?, ?>>>() {

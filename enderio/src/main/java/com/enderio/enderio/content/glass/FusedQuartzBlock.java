@@ -67,8 +67,9 @@ public class FusedQuartzBlock extends TransparentBlock {
     }
 
     @Override
-    public int getLightBlock(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
-        return glassIdentifier.lighting() == GlassLighting.BLOCKING ? pLevel.getMaxLightLevel() : 0;
+    protected int getLightBlock(BlockState state) {
+        // TODO: 1.21.4: Is there a constant for light level so this isn't a magic number?
+        return glassIdentifier.lighting() == GlassLighting.BLOCKING ? 15 : 0;
     }
 
     @Override

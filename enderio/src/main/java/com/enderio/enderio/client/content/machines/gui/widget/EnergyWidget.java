@@ -10,6 +10,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 
 import java.text.NumberFormat;
@@ -46,7 +47,7 @@ public class EnergyWidget extends EIOWidget {
         for (int i = 0; i < Math.ceil(renderableHeight / 16f); i++) {
             int drawingHeight = Math.min(16, renderableHeight - 16*i);
             int notDrawingHeight = 16 - drawingHeight;
-            guiGraphics.blit(WIDGETS, x, y + notDrawingHeight, 0, 0, 128 + notDrawingHeight, width, drawingHeight, 256, 256);
+            guiGraphics.blit(RenderType::guiTextured, WIDGETS, x, y + notDrawingHeight, 0, 0, 128 + notDrawingHeight, width, drawingHeight, 256, 256);
             guiGraphics.pose().translate(0,-16, 0);
         }
 

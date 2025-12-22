@@ -46,9 +46,9 @@ public class OutlineRenderType extends RenderType {
     @Override
     public void setupRenderState() {
         this.parent.setupRenderState();
-        if (Minecraft.getInstance().levelRenderer.entityTarget() != null) {
+        if (Minecraft.getInstance().levelRenderer.entityOutlineTarget() != null) {
             // noinspection ConstantConditions
-            Minecraft.getInstance().levelRenderer.entityTarget().bindWrite(false);
+            Minecraft.getInstance().levelRenderer.entityOutlineTarget().bindWrite(false);
         }
     }
 

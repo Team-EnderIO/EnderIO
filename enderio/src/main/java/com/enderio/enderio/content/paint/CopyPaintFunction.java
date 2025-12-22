@@ -40,7 +40,7 @@ public class CopyPaintFunction extends LootItemConditionalFunction {
 
     @Override
     protected ItemStack run(ItemStack pStack, LootContext pContext) {
-        BlockEntity blockEntity = pContext.getParamOrNull(LootContextParams.BLOCK_ENTITY);
+        BlockEntity blockEntity = pContext.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
 
         if (blockEntity instanceof PaintedBlockEntity paintedBlockEntity) {
             Optional<Block> currentPaint = shouldCopyPrimary

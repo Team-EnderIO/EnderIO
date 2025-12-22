@@ -5,7 +5,9 @@ import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.ShapeRenderer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -38,10 +40,10 @@ public class ConduitHighlightEvent {
             event.setCanceled(true);
             BlockPos pos = event.getTarget().getBlockPos();
             Vec3 camPos = event.getCamera().getPosition();
-            LevelRenderer.renderShape(event.getPoseStack(), event.getMultiBufferSource().getBuffer(RenderType.lines()),
+            ShapeRenderer.renderShape(event.getPoseStack(), event.getMultiBufferSource().getBuffer(RenderType.lines()),
                     conduit.getShape().getShapeFromHit(event.getTarget().getBlockPos(), event.getTarget()),
                     (double) pos.getX() - camPos.x, (double) pos.getY() - camPos.y, (double) pos.getZ() - camPos.z,
-                    0.0F, 0.0F, 0.0F, 0.4F);
+                ARGB.color(102, -16777216));
         }
     }
 }

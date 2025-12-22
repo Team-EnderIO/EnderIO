@@ -33,7 +33,7 @@ public interface ConduitModelModifier {
         return conduit.value().texture();
     }
 
-    default List<ModelResourceLocation> getModelDependencies() {
+    default List<ResourceLocation> getModelDependencies() {
         return List.of();
     }
 }

@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -123,6 +124,6 @@ public abstract class ProgressWidget extends AbstractWidget {
     }
 
     protected void renderSprite(GuiGraphics guiGraphics, int x, int y, int u, int v, int w, int h) {
-        guiGraphics.blit(backgroundImage, x, y, u, v, w, h);
+        guiGraphics.blit(RenderType::guiTextured, backgroundImage, x, y, u, v, w, h, 256, 256);
     }
 }

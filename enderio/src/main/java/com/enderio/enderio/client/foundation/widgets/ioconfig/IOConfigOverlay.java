@@ -412,7 +412,8 @@ public class IOConfigOverlay extends BaseOverlay {
 
         BufferBuilder bufferbuilder = Tesselator.getInstance()
                 .begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+        // TODO: 1.21.4: Was this needed?
+//        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
 
         TextureAtlasSprite tex = MINECRAFT.getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(SELECTED_ICON);
         RenderSystem.setShaderTexture(0, tex.atlasLocation());
@@ -450,7 +451,7 @@ public class IOConfigOverlay extends BaseOverlay {
                 var ioMode = ioConfigurable.getIOMode(selectedFace.side);
                 IOModeMap map = IOModeMap.getMapFromMode(ioMode);
                 Rect2i iconBounds = map.getRect();
-                guiGraphics.blitSprite(IO_CONFIG_OVERLAY, 48, 16, iconBounds.getX(), iconBounds.getY(), getX() + 4,
+                guiGraphics.blitSprite(RenderType::guiTextured, IO_CONFIG_OVERLAY, 48, 16, iconBounds.getX(), iconBounds.getY(), getX() + 4,
                         getY() + height - 4 - MINECRAFT.font.lineHeight - iconBounds.getHeight(), iconBounds.getWidth(),
                         iconBounds.getHeight());
                 guiGraphics.pose().pushPose();
@@ -463,7 +464,7 @@ public class IOConfigOverlay extends BaseOverlay {
     }
 
     private void renderNeighbourButton(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        guiGraphics.blitSprite(NEIGHBOURS_BTN, neighBtnRect.getX(), neighBtnRect.getY(), 16, 16);
+        guiGraphics.blitSprite(RenderType::guiTextured, NEIGHBOURS_BTN, neighBtnRect.getX(), neighBtnRect.getY(), 16, 16);
         if (neighBtnRect.contains(mouseX, mouseY)) {
             guiGraphics.renderTooltip(MINECRAFT.font, EIOCommonLang.TOGGLE_NEIGHBOUR.copy().withStyle(ChatFormatting.WHITE),
                     mouseX, mouseY);

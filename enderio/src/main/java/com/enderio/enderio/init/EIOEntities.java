@@ -3,6 +3,7 @@ package com.enderio.enderio.init;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.content.paint.PaintedSandEntity;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.neoforged.bus.api.IEventBus;
@@ -13,7 +14,8 @@ public class EIOEntities {
     private static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(Registries.ENTITY_TYPE, EnderIO.MOD_ID);
 
     public static final DeferredHolder<EntityType<?>, EntityType<PaintedSandEntity>> PAINTED_SAND = ENTITY_TYPES.register("painted_sand",
-        rl -> EntityType.Builder.<PaintedSandEntity>of(PaintedSandEntity::new, MobCategory.MISC).build(rl.getPath()));
+        rl -> EntityType.Builder.<PaintedSandEntity>of(PaintedSandEntity::new, MobCategory.MISC)
+            .build(ResourceKey.create(Registries.ENTITY_TYPE, rl)));
 
 
     public static void register(IEventBus bus) {

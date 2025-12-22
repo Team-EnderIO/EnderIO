@@ -6,11 +6,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
 
-@EventBusSubscriber
 public class EngineSoul {
 
     // TODO: 20.6: May be able to use FluidIngredient
@@ -42,10 +38,5 @@ public class EngineSoul {
     );
 
     public static final String NAME = "engine";
-    public static final SoulDataReloadListener<SoulData> ENGINE = new SoulDataReloadListener<>(NAME, CODEC);
-
-    @SubscribeEvent
-    public static void addResource(AddReloadListenerEvent event) {
-        event.addListener(ENGINE);
-    }
+    public static final SoulDataReloadListener<SoulData> RELOAD_LISTENER = new SoulDataReloadListener<>(NAME, CODEC);
 }

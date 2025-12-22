@@ -33,9 +33,9 @@ public class BrokenSpawnerLootModifier extends LootModifier {
 
     @Override
     protected ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
-        BlockEntity entity = context.getParam(LootContextParams.BLOCK_ENTITY);
+        BlockEntity entity = context.getParameter(LootContextParams.BLOCK_ENTITY);
         if (entity instanceof SpawnerBlockEntity spawnerBlockEntity) {
-            if (!context.getParam(LootContextParams.TOOL).is(EIOTags.Items.BROKEN_SPAWNER_BLACKLIST)) {
+            if (!context.getParameter(LootContextParams.TOOL).is(EIOTags.Items.BROKEN_SPAWNER_BLACKLIST)) {
                 if (context.getRandom().nextFloat() < BaseConfig.COMMON.BLOCKS.BROKEN_SPAWNER_DROP_CHANCE.get()) {
                     BaseSpawner spawner = spawnerBlockEntity.getSpawner();
                     CompoundTag entityTag = spawner.nextSpawnData.getEntityToSpawn();

@@ -6,11 +6,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
 
-@EventBusSubscriber
 public class FarmSoul {
 
     public record SoulData(ResourceLocation entitytype, float bonemeal, int seeds, float power)
@@ -34,10 +30,5 @@ public class FarmSoul {
             FarmSoul.SoulData::power, FarmSoul.SoulData::new);
 
     public static final String NAME = "farm";
-    public static final SoulDataReloadListener<FarmSoul.SoulData> FARM = new SoulDataReloadListener<>(NAME, CODEC);
-
-    @SubscribeEvent
-    public static void addResource(AddReloadListenerEvent event) {
-        event.addListener(FARM);
-    }
+    public static final SoulDataReloadListener<FarmSoul.SoulData> RELOAD_LISTENER = new SoulDataReloadListener<>(NAME, CODEC);
 }

@@ -7,14 +7,10 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
 
 /**
  * Class that holds all information related to the mob soul in a spawner
  */
-@EventBusSubscriber
 public class SpawnerSoul {
 
     /**
@@ -43,11 +39,5 @@ public class SpawnerSoul {
 
     public static final String NAME = "spawner";
 
-    // SoulData Manger for the spawner data
-    public static final SoulDataReloadListener<SoulData> SPAWNER = new SoulDataReloadListener<>(NAME, CODEC);
-
-    @SubscribeEvent
-    static void addResource(AddReloadListenerEvent event) {
-        event.addListener(SPAWNER);
-    }
+    public static final SoulDataReloadListener<SoulData> RELOAD_LISTENER = new SoulDataReloadListener<>(NAME, CODEC);
 }

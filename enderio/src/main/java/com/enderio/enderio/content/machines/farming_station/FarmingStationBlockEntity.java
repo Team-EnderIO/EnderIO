@@ -163,7 +163,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     @Override
     public void serverTick() {
         if (reloadCache != reload && boundSoul.hasEntity()) {
-            Optional<FarmSoul.SoulData> op = FarmSoul.FARM.matches(boundSoul.entityType());
+            Optional<FarmSoul.SoulData> op = FarmSoul.RELOAD_LISTENER.matches(boundSoul.entityType());
             op.ifPresent(data -> soulData = data);
             reloadCache = reload;
         }
@@ -429,13 +429,13 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
 
     @Override
     public boolean isSoulValid(Soul soul) {
-        return FarmSoul.FARM.matches(soul.entityTypeId()).isPresent();
+        return FarmSoul.RELOAD_LISTENER.matches(soul.entityTypeId()).isPresent();
     }
 
     @Override
     public void bindSoul(Soul newSoul) {
         this.boundSoul = newSoul;
-        this.soulData = FarmSoul.FARM.matches(newSoul.entityTypeId()).get();
+        this.soulData = FarmSoul.RELOAD_LISTENER.matches(newSoul.entityTypeId()).get();
     }
 
     @SubscribeEvent

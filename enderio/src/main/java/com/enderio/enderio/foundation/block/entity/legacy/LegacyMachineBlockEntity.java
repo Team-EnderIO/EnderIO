@@ -596,11 +596,7 @@ public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
         }
     }
 
-    public void neighborChanged(BlockState state, LevelReader level, BlockPos pos, BlockPos neighbor) {
-        updateRedstone();
-    }
-
-    private void updateRedstone() {
+    public void updateRedstone() {
         if (supportsRedstoneControl()) {
             boolean active = getRedstoneControl().isActive(this.level.hasNeighborSignal(worldPosition));
             updateMachineState(MachineState.REDSTONE, !active);

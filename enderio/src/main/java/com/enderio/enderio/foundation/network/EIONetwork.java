@@ -43,10 +43,10 @@ public class EIONetwork {
     @SubscribeEvent
     public static void register(final RegisterPayloadHandlersEvent event) {
         // Sync soul data (optional)
-        SpawnerSoul.SPAWNER.subscribeAsSyncable(ClientboundPoweredSpawnerSoulPacket::new);
-        EngineSoul.ENGINE.subscribeAsSyncable(ClientboundSoulEngineSoulPacket::new);
-        FarmSoul.FARM.subscribeAsSyncable(ClientboundFarmStationSoulPacket::new);
-        SolarSoul.SOLAR.subscribeAsSyncable(ClientboundSolarSoulPacket::new);
+        SpawnerSoul.RELOAD_LISTENER.subscribeAsSyncable(ClientboundPoweredSpawnerSoulPacket::new);
+        EngineSoul.RELOAD_LISTENER.subscribeAsSyncable(ClientboundSoulEngineSoulPacket::new);
+        FarmSoul.RELOAD_LISTENER.subscribeAsSyncable(ClientboundFarmStationSoulPacket::new);
+        SolarSoul.RELOAD_LISTENER.subscribeAsSyncable(ClientboundSolarSoulPacket::new);
 
         // TODO: Tidy up this class.
         final PayloadRegistrar registrar = event.registrar(PROTOCOL_VERSION);

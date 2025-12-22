@@ -12,6 +12,7 @@ import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.machines.alloy.AlloySmelterMenu;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -67,9 +68,9 @@ public class AlloySmelterScreen extends MachineScreen<AlloySmelterMenu> {
     @Override
     protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
         switch (menu.getMode()) {
-        case ALL -> pGuiGraphics.blit(BG_TEXTURE_AUTO, leftPos, topPos, 0, 0, imageWidth, imageHeight);
-        case ALLOYS -> pGuiGraphics.blit(BG_TEXTURE_ALLOY, leftPos, topPos, 0, 0, imageWidth, imageHeight);
-        case FURNACE -> pGuiGraphics.blit(BG_TEXTURE_FURNACE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+        case ALL -> pGuiGraphics.blit(RenderType::guiTextured, BG_TEXTURE_AUTO, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+        case ALLOYS -> pGuiGraphics.blit(RenderType::guiTextured, BG_TEXTURE_ALLOY, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+        case FURNACE -> pGuiGraphics.blit(RenderType::guiTextured, BG_TEXTURE_FURNACE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
         default -> throw new NotImplementedException();
         }
     }

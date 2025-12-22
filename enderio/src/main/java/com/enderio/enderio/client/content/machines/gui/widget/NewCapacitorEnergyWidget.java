@@ -7,6 +7,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -28,7 +29,7 @@ public class NewCapacitorEnergyWidget extends NewEnergyWidget {
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (!cap.get()) {
-            guiGraphics.blitSprite(ENERGY_BAR_ERROR_SPRITE, x, y, width, height);
+            guiGraphics.blitSprite(RenderType::guiTextured, ENERGY_BAR_ERROR_SPRITE, x, y, width, height);
 
             if (isHoveredOrFocused()) {
                 renderCapacitorTooltip(guiGraphics, mouseX, mouseY);

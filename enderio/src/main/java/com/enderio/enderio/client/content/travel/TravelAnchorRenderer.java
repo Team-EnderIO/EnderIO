@@ -15,6 +15,8 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.ShapeRenderer;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.network.chat.Component;
@@ -36,6 +38,8 @@ import java.util.Optional;
 public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> {
     public static final RenderType BOLD_LINES = OutlineRenderType.createLines("bold_lines", 3);
     public static final RenderType VERY_BOLD_LINES = OutlineRenderType.createLines("very_bold_lines", 5);
+
+    private final ItemStackRenderState scratchItemStackRenderState = new ItemStackRenderState();
 
     @Override
     public void render(AnchorTravelTarget travelData, LevelRenderer levelRenderer, PoseStack poseStack,
@@ -81,7 +85,7 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             lineType = VERY_BOLD_LINES;
         }
         VertexConsumer lines = buffer.getBuffer(lineType);
-        LevelRenderer.renderLineBox(poseStack, lines, 0, 0, 0, 1, 1, 1, ARGB.red(color) / 255F,
+        ShapeRenderer.renderLineBox(poseStack, lines, 0, 0, 0, 1, 1, 1, ARGB.red(color) / 255F,
                 ARGB.green(color) / 255F, ARGB.blue(color) / 255F, 1);
 
         LocalPlayer player = Minecraft.getInstance().player;
@@ -149,10 +153,13 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             poseStack.scale(-scale, scale, -scale);
 
             ItemStack stack = new ItemStack(travelData.icon());
-            BakedModel bakedmodel = minecraft.getItemRenderer().getModel(stack, minecraft.level, null, 0);
-            minecraft.getItemRenderer()
-                    .render(stack, ItemDisplayContext.GUI, true, poseStack, OutlineBuffer.INSTANCE, 15728880,
-                            OverlayTexture.NO_OVERLAY, bakedmodel);
+
+            // TODO: 1.21.4: Check this.
+            minecraft
+                .getItemModelResolver()
+                .updateForTopItem(this.scratchItemStackRenderState, stack, ItemDisplayContext.GUI, false, minecraft.level, null, 0);
+            this.scratchItemStackRenderState.render(poseStack, OutlineBuffer.INSTANCE, 15728880, OverlayTexture.NO_OVERLAY);
+
             poseStack.popPose();
         }
 

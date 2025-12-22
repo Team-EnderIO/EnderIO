@@ -30,19 +30,19 @@ public class MachinePayloadHandler {
         }
 
         public void handlePoweredSpawnerSoul(ClientboundPoweredSpawnerSoulPacket packet, IPayloadContext context) {
-            context.enqueueWork(() -> SpawnerSoul.SPAWNER.map = packet.map());
+            context.enqueueWork(() -> SpawnerSoul.RELOAD_LISTENER.map = packet.map());
         }
 
         public void handleSoulEngineSoul(ClientboundSoulEngineSoulPacket packet, IPayloadContext context) {
-            context.enqueueWork(() -> EngineSoul.ENGINE.map = packet.map());
+            context.enqueueWork(() -> EngineSoul.RELOAD_LISTENER.map = packet.map());
         }
 
         public void handleFarmingStationSoul(ClientboundFarmStationSoulPacket packet, IPayloadContext context) {
-            context.enqueueWork(() -> FarmSoul.FARM.map = packet.map());
+            context.enqueueWork(() -> FarmSoul.RELOAD_LISTENER.map = packet.map());
         }
 
         public void handleSolarSoul(ClientboundSolarSoulPacket packet, IPayloadContext context) {
-            context.enqueueWork(() -> SolarSoul.SOLAR.map = packet.map());
+            context.enqueueWork(() -> SolarSoul.RELOAD_LISTENER.map = packet.map());
         }
     }
 

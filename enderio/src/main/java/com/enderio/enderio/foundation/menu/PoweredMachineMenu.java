@@ -4,6 +4,7 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.energy.EnergyStorageInfo;
 import com.enderio.enderio.foundation.network.menu_sync.EnergyStorageSyncSlot;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -52,7 +53,6 @@ public class PoweredMachineMenu<T extends PoweredMachineBlockEntity> extends Mac
             throw new IllegalStateException("Unable to get capacitor slot index, inventory has no capacitor slot.");
         }
 
-        addSlot(new MachineSlot(inventory, layout.getCapacitorSlot(), x, y)).setBackground(InventoryMenu.BLOCK_ATLAS,
-                EMPTY_CAPACITOR_SLOT);
+        addSlot(new MachineSlot(inventory, layout.getCapacitorSlot(), x, y)).setBackground(EMPTY_CAPACITOR_SLOT);
     }
 }

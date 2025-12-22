@@ -78,7 +78,7 @@ public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
             getEnergyStorage().addEnergy(getGenerationRate());
         }
         if (reloadCache != reload && boundSoul.hasEntity()) {
-            Optional<SolarSoul.SoulData> op = SolarSoul.SOLAR.matches(boundSoul.entityType());
+            Optional<SolarSoul.SoulData> op = SolarSoul.RELOAD_LISTENER.matches(boundSoul.entityType());
             op.ifPresent(data -> soulData = data);
             reloadCache = reload;
         }

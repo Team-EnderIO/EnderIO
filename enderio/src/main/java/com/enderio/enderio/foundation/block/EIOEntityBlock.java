@@ -11,6 +11,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.redstone.Orientation;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
@@ -46,11 +47,12 @@ public abstract class EIOEntityBlock<T extends EIOBlockEntity> extends BaseEntit
     }
 
     @Override
-    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock,
-            BlockPos neighborPos, boolean movedByPiston) {
-        super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, @Nullable Orientation orientation,
+        boolean movedByPiston) {
+        super.neighborChanged(state, level, pos, neighborBlock, orientation, movedByPiston);
+
         if (level.getBlockEntity(pos) instanceof EIOBlockEntity blockEntity) {
-            blockEntity.neighborChanged(neighborBlock, neighborPos);
+            blockEntity.markRedstoneDirty();
         }
     }
 
@@ -58,7 +60,7 @@ public abstract class EIOEntityBlock<T extends EIOBlockEntity> extends BaseEntit
     public void onNeighborChange(BlockState state, LevelReader level, BlockPos pos, BlockPos neighbor) {
         super.onNeighborChange(state, level, pos, neighbor);
         if (level.getBlockEntity(pos) instanceof EIOBlockEntity blockEntity) {
-            blockEntity.neighborChanged(level.getBlockState(neighbor).getBlock(), neighbor);
+            blockEntity.onNeighbourBlockChanged(level.getBlockState(neighbor).getBlock(), neighbor);
         }
     }
 }

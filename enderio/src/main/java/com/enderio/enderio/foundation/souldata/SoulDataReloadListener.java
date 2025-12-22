@@ -21,12 +21,11 @@ SOFTWARE.
 package com.enderio.enderio.foundation.souldata;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.JsonOps;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -51,58 +50,24 @@ import java.util.function.Function;
  * to the forge events necessary for syncing datapack data to clients.
  * @param <T> The type of the objects that the codec is parsing jsons as
  */
-public class SoulDataReloadListener<T extends SoulData> extends SimpleJsonResourceReloadListener {
+// TODO: 1.21.4: Might make sense for soul datum to be in their own registry(ies). Then the codecs can be registry sensitive.
+public class SoulDataReloadListener<T extends SoulData> extends SimpleJsonResourceReloadListener<T> {
     private static final Gson GSON = new Gson();
     public Map<ResourceLocation, T> map = new HashMap<>();
-    private final Codec<T> codec;
     private final String folderName;
     private static final Map<String, SoulDataReloadListener<? extends SoulData>> LOADED_SOUL_DATA = new HashMap<>();
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    /**
-     * Creates a data manager with a custom gson parser
-     * @param folder The name of the data folder that we will load from, vanilla folderNames are "recipes", "loot_tables", etc<br>
-     * Jsons will be read from data/all_modids/folderName/all_jsons<br>
-     * folderName can include subfolders, e.g. "some_mod_that_adds_lots_of_data_loaders/cheeses"
-     * @param codec A codec to deserialize the json into your T, see javadocs above class
-     * @param gson A gson for parsing the raw json data into JsonElements. JsonElement-to-T conversion will be done by the codec,
-     * so gson type adapters shouldn't be necessary here
-     */
-    public SoulDataReloadListener(Gson gson, String folder, Codec<T> codec) {
-        super(gson, "eio_soul/" + folder);
-        this.codec = codec;
+    // TODO: 1.21.4: Rearrange order of parameters
+    protected SoulDataReloadListener(String folder, Codec codec) {
+        super(codec, FileToIdConverter.json("eio_soul/" + folder));
         this.folderName = "eio_soul/" + folder;
         LOADED_SOUL_DATA.put(folder, this);
     }
 
-    /**
-     * Creates a data manager with a standard gson parser
-     * @param folder The name of the data folder that we will load from, vanilla folderNames are "recipes", "loot_tables", etc<br>
-     * Jsons will be read from data/all_modids/folderName/all_jsons<br>
-     * folderName can include subfolders, e.g. "some_mod_that_adds_lots_of_data_loaders/cheeses"
-     * @param codec A codec to deserialize the json into your T, see javadocs above class
-     */
-    public SoulDataReloadListener(String folder, Codec<T> codec) {
-        this(GSON, folder, codec);
-    }
-
     @Override
-    protected void apply(Map<ResourceLocation, JsonElement> pObject, ResourceManager pResourceManager,
-            ProfilerFiller pProfiler) {
-        Map<ResourceLocation, T> newMap = new HashMap<>();
-
-        for (Map.Entry<ResourceLocation, JsonElement> element : pObject.entrySet()) {
-            codec.decode(JsonOps.INSTANCE, element.getValue())
-                    .ifSuccess(result -> newMap.put(result.getFirst().getKey(), result.getFirst())) // store the key
-                                                                                                    // from the
-                                                                                                    // ISoulData
-                                                                                                    // interface. Makes
-                                                                                                    // the look faster.
-                    .ifError(partial -> LOGGER.error("Failed to parse data json for {} due to: {}", element.getKey(),
-                            partial.message()));
-        }
-
-        this.map = newMap;
+    protected void apply(Map<ResourceLocation, T> soulData, ResourceManager resourceManager, ProfilerFiller profiler) {
+        this.map = new HashMap<>(soulData);
         LOGGER.info("Data loader for {} loaded {} jsons", this.folderName, this.map.size());
     }
 

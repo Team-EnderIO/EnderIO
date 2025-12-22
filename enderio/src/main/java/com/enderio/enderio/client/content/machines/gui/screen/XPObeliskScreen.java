@@ -11,6 +11,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.WidgetSprites;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -72,7 +73,7 @@ public class XPObeliskScreen extends MachineScreen<XPObeliskMenu> {
 
     @Override
     protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
-        pGuiGraphics.blit(BG, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+        pGuiGraphics.blit(RenderType::guiTextured, BG, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
     private ImageButton makeButton(int x, int y, int size, int id, ResourceLocation SPRITE, Component tooltip) {

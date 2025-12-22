@@ -99,7 +99,7 @@ public class EnderFluidFilterScreen extends EnderContainerScreen<EnderFluidFilte
 
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float v, int i, int i1) {
-        guiGraphics.blit(backgroundTexture, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight);
+        guiGraphics.blit(RenderType::guiTextured, backgroundTexture, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
     @Override

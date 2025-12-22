@@ -5,6 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
@@ -63,9 +64,9 @@ public class ConduitSelectionButton extends AbstractButton {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
-        guiGraphics.blit(ConduitScreen.TEXTURE, getX(), getY(), 227, 0, this.width, this.height);
+        guiGraphics.blit(RenderType::guiTextured, ConduitScreen.TEXTURE, getX(), getY(), 227, 0, this.width, this.height, 256, 256);
         if (currentConduit.get() == conduit) {
-            guiGraphics.blit(ConduitScreen.TEXTURE, getX() - 3, getY(), 224, 0, 3, this.height);
+            guiGraphics.blit(RenderType::guiTextured, ConduitScreen.TEXTURE, getX() - 3, getY(), 224, 0, 3, this.height, 256, 256);
         }
 
         // TODO: This shouldn't be a hard-coded path.
@@ -76,13 +77,13 @@ public class ConduitSelectionButton extends AbstractButton {
                     "conduit_icon/" + conduitKey.getPath());
         }
 
-        guiGraphics.blitSprite(iconLocation, getX() + 3, getY() + 6, 12, 12);
+        guiGraphics.blitSprite(RenderType::guiTextured, iconLocation, getX() + 3, getY() + 6, 12, 12);
 
         RenderSystem.disableDepthTest();
         RenderSystem.disableBlend();
     }
 
     @Override
-    protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
+    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
     }
 }

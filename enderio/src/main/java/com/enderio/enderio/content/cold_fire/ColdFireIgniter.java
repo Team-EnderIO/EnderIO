@@ -61,7 +61,7 @@ public class ColdFireIgniter extends Item implements ICustomCreativeTabEntries {
                     if (player instanceof ServerPlayer serverPlayer) {
                         CriteriaTriggers.PLACED_BLOCK.trigger(serverPlayer, blockpos, itemstack);
                     }
-                    return InteractionResult.sidedSuccess(level.isClientSide());
+                    return InteractionResult.SUCCESS;
                 }
             }
             return InteractionResult.FAIL;

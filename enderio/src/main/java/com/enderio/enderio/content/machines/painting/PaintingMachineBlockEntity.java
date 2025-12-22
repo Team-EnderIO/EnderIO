@@ -109,7 +109,7 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
                 return false;
             }
 
-            return block.defaultBlockState().getOcclusionShape(level, getBlockPos()) == Shapes.block();
+            return block.defaultBlockState().getOcclusionShape() == Shapes.block();
         }
         return false;
     }

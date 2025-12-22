@@ -13,6 +13,7 @@ import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.machines.powered_spawner.PoweredSpawnerMenu;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -95,7 +96,7 @@ public class PoweredSpawnerScreen extends MachineScreen<PoweredSpawnerMenu> {
 
     @Override
     protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
-        pGuiGraphics.blit(getBackgroundTexture(), leftPos, topPos, 0, 0, imageWidth, imageHeight);
+        pGuiGraphics.blit(RenderType::guiTextured, getBackgroundTexture(), leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
     private ResourceLocation getBackgroundTexture() {

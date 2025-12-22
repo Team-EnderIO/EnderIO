@@ -7,7 +7,7 @@ import net.minecraft.world.level.block.Block;
 
 public class EnderSkullBlockItem extends StandingAndWallBlockItem {
 
-    public EnderSkullBlockItem(Block block, Properties properties, Direction attachmentDirection) {
-        super(block, EIOBlocks.WALL_ENDERMAN_HEAD.get(), properties, attachmentDirection);
+    public EnderSkullBlockItem(Block block, Direction attachmentDirection, Properties properties) {
+        super(block, EIOBlocks.WALL_ENDERMAN_HEAD.get(), attachmentDirection, properties);
     }
 }

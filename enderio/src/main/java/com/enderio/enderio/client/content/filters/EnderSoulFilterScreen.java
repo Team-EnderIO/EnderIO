@@ -11,6 +11,7 @@ import com.enderio.enderio.content.filters.soul.EnderSoulFilterMenu;
 import com.enderio.enderio.content.filters.soul.SoulFilterSlot;
 import com.enderio.enderio.content.tools.vials.SoulVialItem;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -95,7 +96,7 @@ public class EnderSoulFilterScreen extends EnderContainerScreen<EnderSoulFilterM
 
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float v, int i, int i1) {
-        guiGraphics.blit(backgroundTexture, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight);
+        guiGraphics.blit(RenderType::guiTextured, backgroundTexture, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
     @Override

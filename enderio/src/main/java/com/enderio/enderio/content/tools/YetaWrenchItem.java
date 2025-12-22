@@ -12,7 +12,6 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 
@@ -33,7 +32,7 @@ public class YetaWrenchItem extends Item {
         SideConfig sideConfig = level.getCapability(EnderIOCapabilities.SIDE_CONFIG, pos, pContext.getClickedFace());
         if (sideConfig != null) {
             sideConfig.cycleMode();
-            return InteractionResult.sidedSuccess(level.isClientSide());
+            return InteractionResult.SUCCESS;
         }
 
         if (level.isClientSide()) {
@@ -42,7 +41,7 @@ public class YetaWrenchItem extends Item {
 
         // Look for rotation property
         BlockState state = level.getBlockState(pContext.getClickedPos());
-        Optional<Either<DirectionProperty, EnumProperty<Direction.Axis>>> property = getRotationProperty(state);
+        Optional<Either<EnumProperty<Direction>, EnumProperty<Direction.Axis>>> property = getRotationProperty(state);
         if (property.isPresent()) {
             BlockState newState = getNextState(pContext, state, property.get());
             pContext.getLevel()
@@ -53,14 +52,14 @@ public class YetaWrenchItem extends Item {
     }
 
     @SuppressWarnings("unchecked")
-    private static Optional<Either<DirectionProperty, EnumProperty<Direction.Axis>>> getRotationProperty(
+    private static Optional<Either<EnumProperty<Direction>, EnumProperty<Direction.Axis>>> getRotationProperty(
             BlockState state) {
         for (Property<?> property : state.getProperties()) {
-            if (property instanceof DirectionProperty directionProperty
-                    && directionProperty.getName().equals("facing")) {
+            if (property instanceof EnumProperty directionProperty && directionProperty.getName().equals("facing")) {
 
                 return Optional.of(Either.left(directionProperty));
             }
+
             if (property instanceof EnumProperty enumProperty && enumProperty.getName().equals("axis")
                     && enumProperty.getValueClass().equals(Direction.Axis.class)) {
 
@@ -71,7 +70,7 @@ public class YetaWrenchItem extends Item {
     }
 
     private static BlockState getNextState(UseOnContext pContext, BlockState state,
-            Either<DirectionProperty, EnumProperty<Direction.Axis>> property) {
+            Either<EnumProperty<Direction>, EnumProperty<Direction.Axis>> property) {
 
         if (property.left().isPresent()) {
             return handleProperty(pContext, state, property.left().get());

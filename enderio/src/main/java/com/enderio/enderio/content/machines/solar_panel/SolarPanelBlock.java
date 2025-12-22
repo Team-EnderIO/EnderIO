@@ -9,10 +9,12 @@ import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -66,40 +68,42 @@ public class SolarPanelBlock extends LegacyMachineBlock implements AdvancedToolt
     }
 
     @Override
-    public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState,
-            LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos) {
-        if (pDirection.getAxis().getPlane() == Direction.Plane.HORIZONTAL) {
-            if (pDirection == Direction.NORTH) {
-                pState = pState.setValue(NORTH, pNeighborState.getBlock() != this);
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction,
+        BlockPos neighborPos, BlockState neighborState, RandomSource random) {
+
+        if (direction.getAxis().getPlane() == Direction.Plane.HORIZONTAL) {
+            if (direction == Direction.NORTH) {
+                state = state.setValue(NORTH, neighborState.getBlock() != this);
             }
-            if (pDirection == Direction.EAST) {
-                pState = pState.setValue(EAST, pNeighborState.getBlock() != this);
+            if (direction == Direction.EAST) {
+                state = state.setValue(EAST, neighborState.getBlock() != this);
             }
-            if (pDirection == Direction.SOUTH) {
-                pState = pState.setValue(SOUTH, pNeighborState.getBlock() != this);
+            if (direction == Direction.SOUTH) {
+                state = state.setValue(SOUTH, neighborState.getBlock() != this);
             }
-            if (pDirection == Direction.WEST) {
-                pState = pState.setValue(WEST, pNeighborState.getBlock() != this);
+            if (direction == Direction.WEST) {
+                state = state.setValue(WEST, neighborState.getBlock() != this);
             }
-            pState = pState.setValue(NORTH_EAST,
-                    pState.getValue(NORTH) || pState.getValue(EAST)
-                            || pLevel.getBlockState(pCurrentPos.relative(Direction.NORTH).relative(Direction.EAST))
-                                    .getBlock() != this);
-            pState = pState.setValue(NORTH_WEST,
-                    pState.getValue(NORTH) || pState.getValue(WEST)
-                            || pLevel.getBlockState(pCurrentPos.relative(Direction.NORTH).relative(Direction.WEST))
-                                    .getBlock() != this);
-            pState = pState.setValue(SOUTH_EAST,
-                    pState.getValue(SOUTH) || pState.getValue(EAST)
-                            || pLevel.getBlockState(pCurrentPos.relative(Direction.SOUTH).relative(Direction.EAST))
-                                    .getBlock() != this);
-            pState = pState.setValue(SOUTH_WEST,
-                    pState.getValue(SOUTH) || pState.getValue(WEST)
-                            || pLevel.getBlockState(pCurrentPos.relative(Direction.SOUTH).relative(Direction.WEST))
-                                    .getBlock() != this);
-            return pState;
+            state = state.setValue(NORTH_EAST,
+                state.getValue(NORTH) || state.getValue(EAST)
+                    || level.getBlockState(pos.relative(Direction.NORTH).relative(Direction.EAST))
+                    .getBlock() != this);
+            state = state.setValue(NORTH_WEST,
+                state.getValue(NORTH) || state.getValue(WEST)
+                    || level.getBlockState(pos.relative(Direction.NORTH).relative(Direction.WEST))
+                    .getBlock() != this);
+            state = state.setValue(SOUTH_EAST,
+                state.getValue(SOUTH) || state.getValue(EAST)
+                    || level.getBlockState(pos.relative(Direction.SOUTH).relative(Direction.EAST))
+                    .getBlock() != this);
+            state = state.setValue(SOUTH_WEST,
+                state.getValue(SOUTH) || state.getValue(WEST)
+                    || level.getBlockState(pos.relative(Direction.SOUTH).relative(Direction.WEST))
+                    .getBlock() != this);
+            return state;
         }
-        return super.updateShape(pState, pDirection, pNeighborState, pLevel, pCurrentPos, pNeighborPos);
+
+        return super.updateShape(state, level, scheduledTickAccess, pos, direction, neighborPos, neighborState, random);
     }
 
     @Override

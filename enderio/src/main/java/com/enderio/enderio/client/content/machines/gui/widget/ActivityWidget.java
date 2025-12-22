@@ -9,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 
 import java.util.List;
@@ -49,10 +50,10 @@ public class ActivityWidget extends AbstractWidget {
         }
 
         if (useNewIcons) {
-            guiGraphics.blitSprite(Objects.requireNonNull(MachineEnumIcons.NEW_MACHINE_STATE_TYPE.get(prio.type())),
+            guiGraphics.blitSprite(RenderType::guiTextured, Objects.requireNonNull(MachineEnumIcons.NEW_MACHINE_STATE_TYPE.get(prio.type())),
                     getX(), getY(), 16, 16);
         } else {
-            guiGraphics.blitSprite(Objects.requireNonNull(MachineEnumIcons.MACHINE_STATE_TYPE.get(prio.type())), getX(),
+            guiGraphics.blitSprite(RenderType::guiTextured, Objects.requireNonNull(MachineEnumIcons.MACHINE_STATE_TYPE.get(prio.type())), getX(),
                     getY(), 16, 16);
         }
 

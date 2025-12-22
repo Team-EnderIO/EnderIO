@@ -27,7 +27,7 @@ public class OptionalItemUtility {
             return Optional.of(preferredItem);
         }
 
-        Optional<HolderSet.Named<Item>> tag = BuiltInRegistries.ITEM.getTag(tagKey);
+        Optional<HolderSet.Named<Item>> tag = BuiltInRegistries.ITEM.get(tagKey);
 
         if (tag.isEmpty()) {
             return Optional.empty();

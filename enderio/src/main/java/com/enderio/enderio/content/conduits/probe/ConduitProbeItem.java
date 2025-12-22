@@ -74,7 +74,7 @@ public class ConduitProbeItem extends Item {
                 }
             }
             case PROBE -> {
-                player.sendSystemMessage(Component.literal("This feature isn't implemented yet.").withStyle(ChatFormatting.RED));
+                player.displayClientMessage(Component.literal("This feature isn't implemented yet.").withStyle(ChatFormatting.RED), false);
             }
         }
         return InteractionResult.SUCCESS;
@@ -117,7 +117,7 @@ public class ConduitProbeItem extends Item {
                     message.append(createFieldTextComponent(field, connectionConfig));
                 }
             });
-            player.sendSystemMessage(TooltipUtil.withArgs(ConduitLang.CONDUIT_PROBE_MESSAGE_COPIED, message));
+            player.displayClientMessage(TooltipUtil.withArgs(ConduitLang.CONDUIT_PROBE_MESSAGE_COPIED, message), false);
         }
     }
 
@@ -140,7 +140,7 @@ public class ConduitProbeItem extends Item {
 
         if (!pastedConduits.isEmpty()) {
             String pastedConduitsString = String.join(", ", pastedConduits);
-            player.sendSystemMessage(TooltipUtil.withArgs(ConduitLang.CONDUIT_PROBE_MESSAGE_PASTED, pastedConduitsString));
+            player.displayClientMessage(TooltipUtil.withArgs(ConduitLang.CONDUIT_PROBE_MESSAGE_PASTED, pastedConduitsString), false);
         }
         conduitBlock.setChanged();
         conduitBlock.updateShape();

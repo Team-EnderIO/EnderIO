@@ -3,6 +3,7 @@ package com.enderio.enderio.client.content.machines.gui.screen;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.content.enderface.EnderfaceBlockEntity;
 import com.enderio.enderio.foundation.network.packets.ServerboundEnderfaceInteractPacket;
+import com.mojang.blaze3d.buffers.BufferUsage;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
@@ -205,12 +206,13 @@ public class EnderfaceScreen extends Screen {
         MeshData meshdata = builder != null ? builder.build() : null;
         if (meshdata != null) {
             if (type.sortOnUpload()) {
-                var sortState = meshdata.sortQuads(ENDERFACE_BUFFERS.get(type), RenderSystem.getVertexSorting());
+                var sortState = meshdata.sortQuads(ENDERFACE_BUFFERS.get(type), RenderSystem.getProjectionType().vertexSorting());
 
                 worldSortStates.put(type, sortState);
             }
 
-            VertexBuffer buffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
+            // TODO: 1.21.4: is this right?
+            VertexBuffer buffer = new VertexBuffer(BufferUsage.STATIC_WRITE);
             buffer.bind();
             buffer.upload(meshdata);
 

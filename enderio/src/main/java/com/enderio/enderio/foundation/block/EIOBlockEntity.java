@@ -5,6 +5,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.redstone.Orientation;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Blocks hosting a BE using this base class must derive from {@link EIOEntityBlock} or call the same hooks.
@@ -41,10 +43,13 @@ public class EIOBlockEntity extends EnderBlockEntity {
         }
     }
 
-    public void neighborChanged(Block neighborBlock, BlockPos neighborPos) {
+    public void markRedstoneDirty() {
         if (supportsRedstonePower()) {
             isRedstoneDirty = true;
         }
+    }
+
+    public void onNeighbourBlockChanged(Block neighborBlock, BlockPos neighborPos) {
     }
 
     // region Redstone

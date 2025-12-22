@@ -21,6 +21,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -80,12 +81,12 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
 
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float v, int i, int i1) {
-        guiGraphics.blit(TEXTURE, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight);
+        guiGraphics.blit(RenderType::guiTextured, TEXTURE, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight, 256, 256);
 
         var conduit = menu.getConduit();
         for (int slot = 0; slot < conduit.value().getInventorySize(); slot++) {
             var pos = conduit.value().getInventorySlotPosition(slot);
-            guiGraphics.blit(TEXTURE, getGuiLeft() + pos.x() - 1, getGuiTop() + pos.y() - 1, 206, 0, 18, 18);
+            guiGraphics.blit(RenderType::guiTextured, TEXTURE, getGuiLeft() + pos.x() - 1, getGuiTop() + pos.y() - 1, 206, 0, 18, 18, 256, 256);
         }
     }
 

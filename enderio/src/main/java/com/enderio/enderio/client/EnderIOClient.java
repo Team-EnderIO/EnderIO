@@ -93,7 +93,6 @@ import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -132,7 +131,7 @@ import java.util.Set;
 @Mod(value = EnderIO.MOD_ID, dist = Dist.CLIENT)
 public class EnderIOClient {
 
-    private static final Map<Item, ModelResourceLocation> HANG_GLIDER_MODEL_LOCATION = new HashMap<>();
+    private static final Map<Item, ResourceLocation> HANG_GLIDER_MODEL_LOCATION = new HashMap<>();
     public static final Map<Item, BakedModel> GLIDER_MODELS = new HashMap<>();
 
     public EnderIOClient(ModContainer modContainer) {
@@ -314,9 +313,8 @@ public class EnderIOClient {
                         .fromNamespaceAndPath(gliderModelPath.getNamespace(), gliderModelPath.getPath()
                                 .substring("models/".length(), gliderModelPath.getPath().length() - 5));
 
-                ModelResourceLocation modelLocation = ModelResourceLocation.standalone(modelLookupLocation);
-                event.register(modelLocation);
-                HANG_GLIDER_MODEL_LOCATION.put(gliderItem.get(), modelLocation);
+                event.register(modelLookupLocation);
+                HANG_GLIDER_MODEL_LOCATION.put(gliderItem.get(), modelLookupLocation);
             }
         }
     }
@@ -345,10 +343,8 @@ public class EnderIOClient {
     public static void bakingCompleted(ModelEvent.BakingCompleted event) {
         GLIDER_MODELS.clear();
         HANG_GLIDER_MODEL_LOCATION.forEach((item, modelRL) -> {
-            BakedModel bakedModel = event.getModels().get(modelRL);
-            if (bakedModel != null) {
-                GLIDER_MODELS.put(item, bakedModel);
-            }
+            BakedModel bakedModel = event.getModelManager().getStandaloneModel(modelRL);
+            GLIDER_MODELS.put(item, bakedModel);
         });
         HANG_GLIDER_MODEL_LOCATION.clear();
     }
@@ -381,8 +377,8 @@ public class EnderIOClient {
 
     @SubscribeEvent
     public static void registerEnderSkulls(EntityRenderersEvent.CreateSkullModels event) {
-        event.registerSkullModel(EnderSkullBlock.EIOSkulls.ENDERMAN, new EnderSkullRenderer.EnderSkullModel(
-                event.getEntityModelSet().bakeLayer(EnderSkullRenderer.ENDER_SKULL)));
+        event.registerSkullModel(EnderSkullBlock.EIOSkulls.ENDERMAN, entityModelSet -> new EnderSkullRenderer.EnderSkullModel(
+                entityModelSet.bakeLayer(EnderSkullRenderer.ENDER_SKULL)));
         SkullBlockRenderer.SKIN_BY_TYPE.put(EnderSkullBlock.EIOSkulls.ENDERMAN,
                 ResourceLocation.withDefaultNamespace("textures/entity/enderman/enderman.png"));
     }

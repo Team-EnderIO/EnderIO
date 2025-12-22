@@ -10,7 +10,6 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
 
 public class ReinforcedObsidianBlock extends Block {
 
@@ -25,7 +24,7 @@ public class ReinforcedObsidianBlock extends Block {
         if (BaseConfig.CLIENT.MACHINE_PARTICLES.get() && randomSource.nextFloat() < .25f) {
             Direction face = Direction.getRandom(randomSource);
             BlockPos spawnPos = pos.relative(face, 1);
-            if (!level.getBlockState(spawnPos).isSolidRender(level, spawnPos)) {
+            if (!level.getBlockState(spawnPos).isSolidRender()) {
 
                 double xd = face.getStepX() == 0 ? randomSource.nextDouble() : face.getStepX() < 0 ? -0.05 : 1.05;
                 double yd = face.getStepY() == 0 ? randomSource.nextDouble() : face.getStepY() < 0 ? -0.05 : 1.05;
@@ -36,7 +35,7 @@ public class ReinforcedObsidianBlock extends Block {
                 double z = pos.getZ() + zd;
 
                 int col = COLS[randomSource.nextInt(COLS.length)];
-                level.addParticle(new DustParticleOptions(Vec3.fromRGB24(col).toVector3f(), 1.0F), x, y, z, 0.0D, 0.0D, 0.0D);
+                level.addParticle(new DustParticleOptions(col, 1.0F), x, y, z, 0.0D, 0.0D, 0.0D);
             }
         }
     }

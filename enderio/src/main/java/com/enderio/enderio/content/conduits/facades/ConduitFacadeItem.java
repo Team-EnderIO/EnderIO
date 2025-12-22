@@ -39,8 +39,7 @@ public class ConduitFacadeItem extends BlockItem {
             // noinspection DataFlowIssue
             return blockState
                     .useItemOn(context.getItemInHand(), level, player, context.getHand(),
-                            context.getHitResult().withPosition(blockpos))
-                    .result();
+                            context.getHitResult().withPosition(blockpos));
         }
 
         return super.place(context);
@@ -60,11 +59,6 @@ public class ConduitFacadeItem extends BlockItem {
     @Override
     public void registerBlocks(Map<Block, Item> blockToItemMap, Item item) {
         // Do not register
-    }
-
-    @Override
-    public String getDescriptionId() {
-        return this.getOrCreateDescriptionId();
     }
 
     @Override

@@ -146,7 +146,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
         int energyCost = MachinesConfig.COMMON.DEFAULT_SPAWN_ENERGY_COST.get();
         MobSpawnMode spawnType = MachinesConfig.COMMON.SPAWN_TYPE.get();
 
-        var spawnDataOpt = SpawnerSoul.SPAWNER.matches(entityType);
+        var spawnDataOpt = SpawnerSoul.RELOAD_LISTENER.matches(entityType);
         if (spawnDataOpt.isPresent()) {
             var data = spawnDataOpt.get();
             energyCost = data.power();
@@ -247,7 +247,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
 
         MobSpawnMode spawnType = MachinesConfig.COMMON.SPAWN_TYPE.get();
 
-        var spawnDataOpt = SpawnerSoul.SPAWNER.matches(entityType);
+        var spawnDataOpt = SpawnerSoul.RELOAD_LISTENER.matches(entityType);
         if (spawnDataOpt.isPresent()) {
             spawnType = spawnDataOpt.get().spawnType();
         }
@@ -296,7 +296,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
 
     @Override
     public boolean isSoulValid(Soul soul) {
-        return SpawnerSoul.SPAWNER.matches(soul.entityTypeId()).isPresent();
+        return SpawnerSoul.RELOAD_LISTENER.matches(soul.entityTypeId()).isPresent();
     }
 
     @Override
@@ -406,8 +406,8 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     }
 
     @Override
-    public void neighborChanged(Block neighborBlock, BlockPos neighborPos) {
-        super.neighborChanged(neighborBlock, neighborPos);
+    public void onNeighbourBlockChanged(Block neighborBlock, BlockPos neighborPos) {
+        super.onNeighbourBlockChanged(neighborBlock, neighborPos);
         if (level != null && !level.isClientSide() && getBlockPos().above().equals(neighborPos)) {
             mindKiller = level.getBlockState(neighborPos).is(EIOTags.Blocks.MIND_KILLER);
         }

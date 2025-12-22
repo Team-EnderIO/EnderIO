@@ -8,6 +8,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -69,7 +70,7 @@ public class FluidStackWidget extends EIOWidget {
                     for (int i = 0; i < Math.ceil(renderableHeight / 16f); i++) {
                         int drawingHeight = Math.min(16, renderableHeight - 16 * i);
                         int notDrawingHeight = 16 - drawingHeight;
-                        guiGraphics.blit(TextureAtlas.LOCATION_BLOCKS, x, y + notDrawingHeight, 0,
+                        guiGraphics.blit(RenderType::guiTextured, TextureAtlas.LOCATION_BLOCKS, x, y + notDrawingHeight,
                                 sprite.getU0() * atlasWidth, sprite.getV0() * atlasHeight + notDrawingHeight, width,
                                 drawingHeight, atlasWidth, atlasHeight);
                         guiGraphics.pose().translate(0, -16, 0);

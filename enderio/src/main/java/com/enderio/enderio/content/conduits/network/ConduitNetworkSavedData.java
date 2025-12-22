@@ -201,7 +201,7 @@ public class ConduitNetworkSavedData extends SavedData {
         }
 
         Registry<Conduit<?, ?>> conduitRegistry = serverLevel.registryAccess()
-                .registryOrThrow(EnderIORegistries.Keys.CONDUIT);
+            .lookupOrThrow(EnderIORegistries.Keys.CONDUIT);
 
         for (var conduit : networks.keySet()) {
             // Skip non-ticking graphs.
@@ -348,7 +348,7 @@ public class ConduitNetworkSavedData extends SavedData {
             CompoundTag contextTag) {
         ResourceLocation serializerKey = ResourceLocation.parse(contextTag.getString("Type"));
         ConduitNetworkContextType<?> contextType = Objects.requireNonNull(
-                EnderIORegistries.CONDUIT_NETWORK_CONTEXT_TYPE.get(serializerKey),
+                EnderIORegistries.CONDUIT_NETWORK_CONTEXT_TYPE.getValue(serializerKey),
                 "Unable to find conduit network context type with key " + serializerKey);
 
         if (contextType.codec() == null) {

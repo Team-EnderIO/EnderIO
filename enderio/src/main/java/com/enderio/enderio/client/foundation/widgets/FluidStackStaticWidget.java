@@ -6,6 +6,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -51,8 +52,9 @@ public class FluidStackStaticWidget extends EIOWidget {
 
                     int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
                     int atlasHeight = (int) (sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
-                    guiGraphics.blit(TextureAtlas.LOCATION_BLOCKS, x, y, width, height, sprite.getU0() * atlasWidth,
-                            sprite.getV0() * atlasHeight, sprite.contents().width(), sprite.contents().height(),
+                    // TODO: 1.21.4: Check this
+                    guiGraphics.blit(RenderType::guiTextured, TextureAtlas.LOCATION_BLOCKS, x, y, sprite.getU0() * atlasWidth,
+                            sprite.getV0() * atlasHeight, width, height, sprite.contents().width(), sprite.contents().height(),
                             atlasWidth, atlasHeight);
                     RenderSystem.setShaderColor(1, 1, 1, 1);
 
