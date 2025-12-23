@@ -35,8 +35,10 @@ import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.loading.FMLPaths;
@@ -52,6 +54,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 @Mod(EnderIO.MOD_ID)
+@EventBusSubscriber(modid = EnderIO.MOD_ID)
 public class EnderIO {
     public static final String MOD_ID = EnderIOAPI.MOD_ID;
 
@@ -120,7 +123,6 @@ public class EnderIO {
         modEventBus.addListener(this::registerRegistries);
         modEventBus.addListener(this::registerDatapackRegistries);
         modEventBus.addListener(this::addBuiltInPacks);
-        modEventBus.addListener(this::addReloadListeners);
 
         Integrations.register();
     }
@@ -153,7 +155,8 @@ public class EnderIO {
             PackType.SERVER_DATA, MachinesLang.NIARD_EXPERIMENT, PackSource.FEATURE, false, Pack.Position.TOP);
     }
 
-    private void addReloadListeners(AddServerReloadListenersEvent event) {
+    @SubscribeEvent
+    public static void addReloadListeners(AddServerReloadListenersEvent event) {
         event.addListener(EnderIO.rl("engine_soul_data"), EngineSoul.RELOAD_LISTENER);
         event.addListener(EnderIO.rl("farm_soul_data"), FarmSoul.RELOAD_LISTENER);
         event.addListener(EnderIO.rl("solar_soul_data"), SolarSoul.RELOAD_LISTENER);
