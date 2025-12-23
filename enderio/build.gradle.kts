@@ -96,17 +96,17 @@ dependencies {
 //    localRuntime(project(":enderio-endergy"))
 
     // Almost Unified
-    compileOnly(variantOf(libs.almostUnified) {
-        classifier("api")
-    })
+//    compileOnly(variantOf(libs.almostUnified) {
+//        classifier("api")
+//    })
 
     // JEI
     compileOnly(libs.bundles.jeiApi)
     localRuntime(libs.bundles.jei)
 
     // CC: Tweaked
-    compileOnly(libs.bundles.ccTweakedApi)
-    localRuntime(libs.ccTweakedForge)
+//    compileOnly(libs.bundles.ccTweakedApi)
+//    localRuntime(libs.ccTweakedForge)
 
     // Jade for conduit addon
     compileOnly(libs.jade)
@@ -116,36 +116,36 @@ dependencies {
     localRuntime(libs.athena)
 
     // AE2
-    compileOnly(variantOf(libs.ae2) {
-        classifier("api")
-    })
+//    compileOnly(variantOf(libs.ae2) {
+//        classifier("api")
+//    })
 
-    localRuntime(libs.ae2)
+//    localRuntime(libs.ae2)
 
     // TODO: Re-add Enchantment descriptions if we add enchantments again
 
     // Mekanism
-    compileOnly(variantOf(libs.mekanism) {
-        classifier("api")
-    })
+//    compileOnly(variantOf(libs.mekanism) {
+//        classifier("api")
+//    })
 
-    localRuntime(libs.mekanism)
+//    localRuntime(libs.mekanism)
 
     // Refined Storage
-    compileOnly(libs.refinedStorage)
-    localRuntime(libs.refinedStorage)
+//    compileOnly(libs.refinedStorage)
+//    localRuntime(libs.refinedStorage)
 
     //Laserio
-    compileOnly(libs.laserio)
-    localRuntime(libs.laserio)
+//    compileOnly(libs.laserio)
+//    localRuntime(libs.laserio)
 
     // Graphlib
     api(libs.graphlib)
     jarJar(libs.graphlib)
 
     // FTB Ultimine Addon
-    compileOnly(libs.ftbUltimine)
-    localRuntime(libs.ftbUltimine)
+//    compileOnly(libs.ftbUltimine)
+//    localRuntime(libs.ftbUltimine)
 
     // Unit tests
     testImplementation(libs.junitJupiter)

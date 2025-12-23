@@ -1,11 +1,11 @@
-package com.enderio.enderio.compat.ftb_ultimine;
-
-import dev.ftb.mods.ftbultimine.api.blockbreaking.RegisterBlockBreakHandlerEvent;
-import dev.ftb.mods.ftbultimine.api.blockselection.RegisterBlockSelectionHandlerEvent;
-
-public class FTBUltimineCompat {
-    public static void init() {
-        RegisterBlockSelectionHandlerEvent.REGISTER.register(registry -> registry.registerHandler(ConduitBlockSelectionHandler.INSTANCE));
-        RegisterBlockBreakHandlerEvent.REGISTER.register(registry -> registry.registerHandler(ConduitBlockBreakHandler.INSTANCE));
-    }
-}
+//package com.enderio.enderio.compat.ftb_ultimine;
+//
+//import dev.ftb.mods.ftbultimine.api.blockbreaking.RegisterBlockBreakHandlerEvent;
+//import dev.ftb.mods.ftbultimine.api.blockselection.RegisterBlockSelectionHandlerEvent;
+//
+//public class FTBUltimineCompat {
+//    public static void init() {
+//        RegisterBlockSelectionHandlerEvent.REGISTER.register(registry -> registry.registerHandler(ConduitBlockSelectionHandler.INSTANCE));
+//        RegisterBlockBreakHandlerEvent.REGISTER.register(registry -> registry.registerHandler(ConduitBlockBreakHandler.INSTANCE));
+//    }
+//}

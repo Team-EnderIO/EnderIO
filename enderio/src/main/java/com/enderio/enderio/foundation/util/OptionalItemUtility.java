@@ -1,7 +1,6 @@
 package com.enderio.enderio.foundation.util;
 
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.compat.almostunified.AlmostUnifiedCompat;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -22,10 +21,10 @@ public class OptionalItemUtility {
      * - If we found nothing in our specified lists, we will pick the first present item.
      */
     public static Optional<Item> getOptionalItem(TagKey<Item> tagKey) {
-        Item preferredItem = AlmostUnifiedCompat.getTagTargetItem(tagKey);
-        if (preferredItem != null) {
-            return Optional.of(preferredItem);
-        }
+//        Item preferredItem = AlmostUnifiedCompat.getTagTargetItem(tagKey);
+//        if (preferredItem != null) {
+//            return Optional.of(preferredItem);
+//        }
 
         Optional<HolderSet.Named<Item>> tag = BuiltInRegistries.ITEM.get(tagKey);
 

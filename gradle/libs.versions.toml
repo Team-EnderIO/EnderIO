@@ -2,10 +2,10 @@
 minecraft = { strictly = "[1.21.4]", prefer = "1.21.4" }
 neoforge = "21.4.156"
 almostUnified = "1.21.1-1.0.0"
-jeiVersion = "19.25.0.321"
+jeiVersion = "20.0.0.4"
 ccTweaked = "1.113.1"
-jade = "15.10.3+neoforge"
-athena = "4.0.1"
+jade = "17.3.0+neoforge"
+athena = "4.2.1"
 ae2 = { strictly = "[19.0.23-beta,)", prefer = "19.0.23-beta" }
 mekanism = { strictly = "[1.21.1-10.7.0,)", prefer = "1.21.1-10.7.16.82" }
 mekanismMod = { strictly = "[10.7.0,)", prefer = "10.7.16.82" } # workaround for Mek having MC version in the version specifier.
@@ -18,22 +18,22 @@ ftbUltimine = { strictly = "[2101.1.7,2102)", prefer = "2101.1.7" }
 jetbrainsAnnotations = { group = "org.jetbrains", name = "annotations", version = "23.0.0"}
 neoforgeTestFramework = { group = "net.neoforged", name = "testframework", version.ref = "neoforge"}
 
-almostUnified = { group = "com.almostreliable.mods", name = "almostunified-neoforge", version.ref = "almostUnified" }
-jeiCommonApi = { group = "mezz.jei", name = "jei-1.21.1-common-api", version.ref = "jeiVersion" }
-jeiNeoforgeApi = { group = "mezz.jei", name = "jei-1.21.1-neoforge-api", version.ref = "jeiVersion" }
-jeiCommon = { group = "mezz.jei", name = "jei-1.21.1-common", version.ref = "jeiVersion" }
-jeiNeoforge = { group = "mezz.jei", name = "jei-1.21.1-neoforge", version.ref = "jeiVersion" }
-ccTweakedCoreApi = { group = "cc.tweaked", name = "cc-tweaked-1.21.1-core-api", version.ref = "ccTweaked" }
-ccTweakedForgeApi = { group = "cc.tweaked", name = "cc-tweaked-1.21.1-forge-api", version.ref = "ccTweaked" }
-ccTweakedForge = { group = "cc.tweaked", name = "cc-tweaked-1.21.1-forge", version.ref = "ccTweaked" }
+#almostUnified = { group = "com.almostreliable.mods", name = "almostunified-neoforge", version.ref = "almostUnified" }
+jeiCommonApi = { group = "mezz.jei", name = "jei-1.21.4-common-api", version.ref = "jeiVersion" }
+jeiNeoforgeApi = { group = "mezz.jei", name = "jei-1.21.4-neoforge-api", version.ref = "jeiVersion" }
+jeiCommon = { group = "mezz.jei", name = "jei-1.21.4-common", version.ref = "jeiVersion" }
+jeiNeoforge = { group = "mezz.jei", name = "jei-1.21.4-neoforge", version.ref = "jeiVersion" }
+#ccTweakedCoreApi = { group = "cc.tweaked", name = "cc-tweaked-1.21.1-core-api", version.ref = "ccTweaked" }
+#ccTweakedForgeApi = { group = "cc.tweaked", name = "cc-tweaked-1.21.1-forge-api", version.ref = "ccTweaked" }
+#ccTweakedForge = { group = "cc.tweaked", name = "cc-tweaked-1.21.1-forge", version.ref = "ccTweaked" }
 jade = { group = "maven.modrinth", name = "jade", version.ref = "jade" }
 athena = { group = "maven.modrinth", name = "athena-ctm", version.ref = "athena" }
-ae2 = { group = "appeng", name = "appliedenergistics2", version.ref = "ae2" }
-mekanism = { group = "mekanism", name = "Mekanism", version.ref = "mekanism" }
-refinedStorage = { group = "com.refinedmods.refinedstorage", name = "refinedstorage-neoforge", version.ref = "refinedStorage" }
-laserio = { group = "curse.maven", name = "laserio-626839", version.ref = "laserio" }
+#ae2 = { group = "appeng", name = "appliedenergistics2", version.ref = "ae2" }
+#mekanism = { group = "mekanism", name = "Mekanism", version.ref = "mekanism" }
+#refinedStorage = { group = "com.refinedmods.refinedstorage", name = "refinedstorage-neoforge", version.ref = "refinedStorage" }
+#laserio = { group = "curse.maven", name = "laserio-626839", version.ref = "laserio" }
 graphlib = { group = "dev.gigaherz.graph", name = "GraphLib3", version.ref = "graphlib"}
-ftbUltimine = { group = "dev.ftb.mods", name = "ftb-ultimine-neoforge", version.ref = "ftbUltimine" }
+#ftbUltimine = { group = "dev.ftb.mods", name = "ftb-ultimine-neoforge", version.ref = "ftbUltimine" }
 
 junitJupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version = "5.7.1"}
 junitPlatformLauncher = { group = "org.junit.platform", name = "junit-platform-launcher" }
@@ -41,7 +41,7 @@ junitPlatformLauncher = { group = "org.junit.platform", name = "junit-platform-l
 [bundles]
 jeiApi = ["jeiCommonApi", "jeiNeoforgeApi"]
 jei = ["jeiCommon", "jeiNeoforge"]
-ccTweakedApi = ["ccTweakedCoreApi", "ccTweakedForgeApi"]
+#ccTweakedApi = ["ccTweakedCoreApi", "ccTweakedForgeApi"]
 
 [plugins]
 modpublisher = { id = "com.hypherionmc.modutils.modpublisher", version = "2.+" }

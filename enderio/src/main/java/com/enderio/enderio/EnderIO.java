@@ -3,10 +3,7 @@ package com.enderio.enderio;
 import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
-import com.enderio.enderio.compat.cctweaked.ComputerCraftCompat;
-import com.enderio.enderio.compat.ftb_ultimine.FTBUltimineCompat;
 import com.enderio.enderio.compat.inventorysorter.InventorySorterCompat;
-import com.enderio.enderio.compat.laserio.LaserIOCompat;
 import com.enderio.enderio.config.base.BaseConfig;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.content.machines.MachinesLang;
@@ -66,9 +63,9 @@ public class EnderIO {
     }
 
     private static final Map<String, Consumer<IEventBus>> MOD_INTEGRATIONS = Map.ofEntries(
-        Map.entry("computercraft", eventBus -> ComputerCraftCompat.init()),
-        Map.entry("ftbultimine", eventBus -> FTBUltimineCompat.init()),
-        Map.entry("laserio", LaserIOCompat::init),
+//        Map.entry("computercraft", eventBus -> ComputerCraftCompat.init()),
+//        Map.entry("ftbultimine", eventBus -> FTBUltimineCompat.init()),
+//        Map.entry("laserio", LaserIOCompat::init),
         Map.entry("inventorysorter", InventorySorterCompat::init)
     );
 
