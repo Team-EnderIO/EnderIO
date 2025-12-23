@@ -49,11 +49,14 @@ public class CapacitorBankBER implements BlockEntityRenderer<CapacitorBankBlockE
         if (blockEntity.getLevel() != null) {
             for (Direction direction: HORIZONTAL_DIRECTIONS) {
                 BlockPos facingPos = blockEntity.getBlockPos().relative(direction);
-                if (Block.shouldRenderFace(blockEntity.getBlockState(), blockEntity.getLevel(), blockEntity.getBlockPos(), direction, facingPos)) {
+                if (Block.shouldRenderFace(blockEntity.getLevel(), blockEntity.getBlockPos(), blockEntity.getBlockState(),
+                    blockEntity.getLevel().getBlockState(facingPos), direction)) {
+
                     DisplayMode mode = blockEntity.getDisplayMode(direction);
                     if (mode == DisplayMode.BAR) {
                         renderBar(blockEntity, poseStack, bufferSource, direction);
                     }
+
                     if (mode == DisplayMode.IO) {
                         renderIO(blockEntity, poseStack, bufferSource, direction);
                     }
@@ -129,7 +132,7 @@ public class CapacitorBankBER implements BlockEntityRenderer<CapacitorBankBlockE
             if (!isLongInformation) {
                 poseStack.pushPose();
                 poseStack.translate(-font.width("I/0") / 2f, -font.lineHeight * 1.5f, 0);
-                font.drawInBatch("I/0", 0, 0, 0xFF000000, false, poseStack.last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, light, false);
+                font.drawInBatch("I/0", 0, 0, 0xFF000000, false, poseStack.last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, light);
                 poseStack.popPose();
                 poseStack.pushPose();
                 long energySurplus = capacitorBank.getAddedEnergy() - capacitorBank.getRemovedEnergy();
@@ -143,24 +146,24 @@ public class CapacitorBankBER implements BlockEntityRenderer<CapacitorBankBlockE
                 }
 
                 poseStack.translate(-font.width(String.valueOf(energySurplus)) / 2f, font.lineHeight * 0.5f, 0);
-                font.drawInBatch(String.valueOf(energySurplus), 0, 0, color, false, poseStack.last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, light, false);
+                font.drawInBatch(String.valueOf(energySurplus), 0, 0, color, false, poseStack.last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, light);
                 poseStack.popPose();
             } else {
                 poseStack.pushPose();
                 poseStack.translate(-font.width("Input") / 2f, -font.lineHeight * 3.5f, 0);
-                font.drawInBatch("Input", 0, 0, 0xFF000000, false, poseStack.last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, light, false);
+                font.drawInBatch("Input", 0, 0, 0xFF000000, false, poseStack.last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, light);
                 poseStack.popPose();
                 poseStack.pushPose();
                 poseStack.translate(-font.width(String.valueOf(capacitorBank.getAddedEnergy())) / 2f, -font.lineHeight * 1.5f, 0);
-                font.drawInBatch(String.valueOf(capacitorBank.getAddedEnergy()), 0, 0, 0xFF00FF00, false, poseStack.last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, light, false);
+                font.drawInBatch(String.valueOf(capacitorBank.getAddedEnergy()), 0, 0, 0xFF00FF00, false, poseStack.last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, light);
                 poseStack.popPose();
                 poseStack.pushPose();
                 poseStack.translate(-font.width("Output") / 2f, font.lineHeight * 0.5f, 0);
-                font.drawInBatch("Output", 0, 0, 0xFF000000, false, poseStack.last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, light, false);
+                font.drawInBatch("Output", 0, 0, 0xFF000000, false, poseStack.last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, light);
                 poseStack.popPose();
                 poseStack.pushPose();
                 poseStack.translate(-font.width(String.valueOf(capacitorBank.getRemovedEnergy())) / 2f, font.lineHeight * 2.5f, 0);
-                font.drawInBatch(String.valueOf(capacitorBank.getRemovedEnergy()), 0, 0, 0xFFFF0000, false, poseStack.last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, light, false);
+                font.drawInBatch(String.valueOf(capacitorBank.getRemovedEnergy()), 0, 0, 0xFFFF0000, false, poseStack.last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, light);
                 poseStack.popPose();
 
             }

@@ -85,7 +85,7 @@ public class ModelRenderUtil {
 
         QuadBakingVertexConsumer baker = new QuadBakingVertexConsumer();
         baker.setSprite(sprite);
-        baker.setDirection(Direction.getNearest(normal.x, normal.y, normal.z));
+        baker.setDirection(Direction.getApproximateNearest(normal.x, normal.y, normal.z));
         baker.addVertex(v1.x, v1.y, v1.z).setNormal(nx, ny, nz).setUv(sprite.getU(0), sprite.getV(0)).setColor(r, g, b, alpha);
         baker.addVertex(v2.x, v2.y, v2.z).setNormal(nx, ny, nz).setUv(sprite.getU(0), sprite.getV(th)).setColor(r, g, b, alpha);
         baker.addVertex(v3.x, v3.y, v3.z).setNormal(nx, ny, nz).setUv(sprite.getU(tw), sprite.getV(th)).setColor(r, g, b, alpha);

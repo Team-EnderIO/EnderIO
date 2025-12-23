@@ -18,7 +18,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class ConduitFacadeColor implements BlockColor, ItemTintSource {
+// TODO: 1.21.2: ItemTintSource
+public class ConduitFacadeColor implements BlockColor/*, ItemColor*/ {
 
     public static final ConduitFacadeColor INSTANCE = new ConduitFacadeColor();
 
@@ -53,26 +54,16 @@ public class ConduitFacadeColor implements BlockColor, ItemTintSource {
         return 0xFFFFFF;
     }
 
-    @Override
-    public int calculate(ItemStack itemStack, @Nullable ClientLevel clientLevel, @Nullable LivingEntity livingEntity) {
-        return 0;
-    }
-
-    @Override
-    public MapCodec<? extends ItemTintSource> type() {
-        return null;
-    }
-
-    @Override
-    public int getColor(ItemStack stack, int tintIndex) {
-        var facadeData = stack.get(EIODataComponents.BLOCK_PAINT);
-        if (facadeData != null) {
-            var block = facadeData.paint();
-            return Minecraft.getInstance().getItemColors().getColor(block.asItem().getDefaultInstance(), tintIndex);
-        }
-
-        return 0;
-    }
+//    @Override
+//    public int getColor(ItemStack stack, int tintIndex) {
+//        var facadeData = stack.get(EIODataComponents.BLOCK_PAINT);
+//        if (facadeData != null) {
+//            var block = facadeData.paint();
+//            return Minecraft.getInstance().getItemColors().getColor(block.asItem().getDefaultInstance(), tintIndex);
+//        }
+//
+//        return 0;
+//    }
 
     public static int moveTintIndex(int original) {
         return -original - 2;

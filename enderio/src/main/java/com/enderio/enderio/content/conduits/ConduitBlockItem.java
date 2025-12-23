@@ -30,7 +30,9 @@ import java.util.List;
 public class ConduitBlockItem extends BlockItem implements ICustomCreativeTabEntries {
 
     public ConduitBlockItem(Properties properties) {
-        super(EIOBlocks.CONDUIT_BUNDLE.get(), properties);
+        // Do not use block description, as that is Conduit Bundle.
+        // This will ensure missing conduits use the missing conduit string.
+        super(EIOBlocks.CONDUIT_BUNDLE.get(), properties.useItemDescriptionPrefix());
     }
 
     public static ItemStack getStackFor(Holder<Conduit<?, ?>> conduit, int count) {
@@ -47,13 +49,6 @@ public class ConduitBlockItem extends BlockItem implements ICustomCreativeTabEnt
         }
 
         return conduit.value().description();
-    }
-
-    // Do not use block description, as that is Conduit Bundle.
-    // This will ensure missing conduits use the missing conduit string.
-    @Override
-    public String getDescriptionId() {
-        return getOrCreateDescriptionId();
     }
 
     @Override

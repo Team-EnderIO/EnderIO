@@ -238,8 +238,8 @@ public class EnderfaceScreen extends Screen {
             }
 
             type.setupRenderState();
-            var chunkOffset = RenderSystem.getShader().CHUNK_OFFSET;
-            chunkOffset.set((float) 0, (float) 0, (float) 0);
+            var modelOffset = RenderSystem.getShader().MODEL_OFFSET;
+            modelOffset.set((float) 0, (float) 0, (float) 0);
             var modelView = new Matrix4f(RenderSystem.getModelViewMatrix());
             modelView.mul(pose.pose());
             vertexBuffer.drawWithShader(modelView, RenderSystem.getProjectionMatrix(), RenderSystem.getShader());
@@ -350,19 +350,19 @@ public class EnderfaceScreen extends Screen {
 
         VertexBuffer.unbind();
 
-        for (var blockEntity : worldBlockEntities) {
-            var renderer = blockEntityDispatcher.getRenderer(blockEntity);
-            if (renderer != null) {
-                var pos = blockEntity.getBlockPos();
-                graphics.pose().pushPose();
-                graphics.pose().translate(pos.getX() - origin.x, pos.getY() - origin.y, pos.getZ() - origin.z);
-                blockEntityDispatcher.render(blockEntity, partialTick, graphics.pose(), graphics.bufferSource());
-                graphics.pose().popPose();
+        // TODO: 1.21.4: Check this is right?
+        graphics.drawSpecial(bufferSource -> {
+            for (var blockEntity : worldBlockEntities) {
+                var renderer = blockEntityDispatcher.getRenderer(blockEntity);
+                if (renderer != null) {
+                    var pos = blockEntity.getBlockPos();
+                    graphics.pose().pushPose();
+                    graphics.pose().translate(pos.getX() - origin.x, pos.getY() - origin.y, pos.getZ() - origin.z);
+                    blockEntityDispatcher.render(blockEntity, partialTick, graphics.pose(), bufferSource);
+                    graphics.pose().popPose();
+                }
             }
-        }
-
-        // Force block entities to be flushed
-        graphics.bufferSource().endBatch();
+        });
 
         for (var layer : LAYERS_AFTER_BLOCK_ENTITIES) {
             this.renderCompiledLayer(graphics.pose().last(), layer);
@@ -375,9 +375,11 @@ public class EnderfaceScreen extends Screen {
                             selectedLocation.z - origin.z);
             graphics.pose().scale(0.3f, 0.3f, 0.3f);
             graphics.pose().translate(-0.5, -0.5, -0.5);
-            dispatcher.renderSingleBlock(Blocks.OAK_PLANKS.defaultBlockState(), graphics.pose(),
-                    graphics.bufferSource(), LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
-            graphics.bufferSource().endBatch();
+
+            // TODO: 1.21.4: Check this is right?
+            graphics.drawSpecial(bufferSource -> dispatcher.renderSingleBlock(Blocks.OAK_PLANKS.defaultBlockState(), graphics.pose(),
+                bufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY));
+
             graphics.pose().popPose();
         }
 

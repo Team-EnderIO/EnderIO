@@ -25,7 +25,9 @@ public class VatMenu extends MachineMenu<VatBlockEntity> {
     private final FloatSyncSlot craftingProgressSlot;
     private final FluidStorageSyncSlot inputTankSlot;
     private final FluidStorageSyncSlot outputTankSlot;
-    private final RecipeSyncSlot<FermentingRecipe> recipeSlot;
+
+    // TODO: 1.21.4: Deal with client not knowing recipes.
+//    private final RecipeSyncSlot<FermentingRecipe> recipeSlot;
 
     public VatMenu(int pContainerId, Inventory inventory, VatBlockEntity blockEntity) {
         super(EIOMenus.VAT.get(), pContainerId, inventory, blockEntity);
@@ -36,8 +38,8 @@ public class VatMenu extends MachineMenu<VatBlockEntity> {
                 FluidStorageSyncSlot.readOnly(() -> FluidStorageInfo.of(blockEntity.getInputTank())));
         outputTankSlot = addSyncSlot(
                 FluidStorageSyncSlot.readOnly(() -> FluidStorageInfo.of(blockEntity.getOutputTank())));
-        recipeSlot = addSyncSlot(
-                RecipeSyncSlot.readOnly(EIORecipes.VAT_FERMENTING.type().get(), blockEntity::getRecipe));
+//        recipeSlot = addSyncSlot(
+//                RecipeSyncSlot.readOnly(EIORecipes.VAT_FERMENTING.type().get(), blockEntity::getRecipe));
     }
 
     public VatMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
@@ -47,7 +49,7 @@ public class VatMenu extends MachineMenu<VatBlockEntity> {
         craftingProgressSlot = addSyncSlot(FloatSyncSlot.standalone());
         inputTankSlot = addSyncSlot(FluidStorageSyncSlot.standalone());
         outputTankSlot = addSyncSlot(FluidStorageSyncSlot.standalone());
-        recipeSlot = addSyncSlot(RecipeSyncSlot.standalone(EIORecipes.VAT_FERMENTING.type().get()));
+//        recipeSlot = addSyncSlot(RecipeSyncSlot.standalone(EIORecipes.VAT_FERMENTING.type().get()));
     }
 
     private void addSlots() {
@@ -71,7 +73,8 @@ public class VatMenu extends MachineMenu<VatBlockEntity> {
 
     @Nullable
     public RecipeHolder<FermentingRecipe> getRecipe() {
-        return recipeSlot.get();
+//        return recipeSlot.get();
+        return null;
     }
 
     @Override

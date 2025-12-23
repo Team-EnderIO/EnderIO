@@ -29,10 +29,11 @@ public class ColdFireBlock extends FireBlock {
         return true;
     }
 
-    @Override
-    public BlockState getStateWithAge(LevelAccessor level, BlockPos pos, int age) {
-        return coldFireStateFromFireState(super.getStateWithAge(level, pos, age));
-    }
+    // TODO: 1.21.4: getStateWithAge...
+//    @Override
+//    public BlockState getStateWithAge(LevelAccessor level, BlockPos pos, int age) {
+//        return coldFireStateFromFireState(super.getStateWithAge(level, pos, age));
+//    }
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {

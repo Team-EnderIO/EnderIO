@@ -6,7 +6,6 @@ import com.enderio.enderio.content.paint.block.entity.PaintedBlockEntity;
 import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
-import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
@@ -17,7 +16,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class PaintedBlockColor implements BlockColor, ItemColor {
+// TODO: 1.21.4: ItemTintSource handling
+public class PaintedBlockColor implements BlockColor/*, ItemColor*/ {
 
     public static PaintedBlockColor INSTANCE = new PaintedBlockColor();
 
@@ -46,16 +46,16 @@ public class PaintedBlockColor implements BlockColor, ItemColor {
         return 0xFFFFFF;
     }
 
-    @Override
-    public int getColor(ItemStack itemStack, int tintIndex) {
-        var paintData = itemStack.get(EIODataComponents.BLOCK_PAINT);
-        if (paintData != null) {
-            var block = paintData.paint();
-            return Minecraft.getInstance().getItemColors().getColor(block.asItem().getDefaultInstance(), tintIndex);
-        }
-
-        return 0;
-    }
+//    @Override
+//    public int getColor(ItemStack itemStack, int tintIndex) {
+//        var paintData = itemStack.get(EIODataComponents.BLOCK_PAINT);
+//        if (paintData != null) {
+//            var block = paintData.paint();
+//            return Minecraft.getInstance().getItemColors().getColor(block.asItem().getDefaultInstance(), tintIndex);
+//        }
+//
+//        return 0;
+//    }
 
     //Lets assume that no one uses negative tint indices, so that we can move bottomslab tint indices into the negative half
     public static int moveTintIndex(int original) {

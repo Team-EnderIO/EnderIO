@@ -19,8 +19,8 @@ public class EntityCaptureUtilityTests {
     @Test
     public void testIsBlacklistedBoss(MinecraftServer server) {
         // Get all bosses
-        var entityTypeRegistry = server.registryAccess().registryOrThrow(Registries.ENTITY_TYPE);
-        var bossesTag = entityTypeRegistry.getTag(Tags.EntityTypes.BOSSES).orElseThrow();
+        var entityTypeRegistry = server.registryAccess().lookupOrThrow(Registries.ENTITY_TYPE);
+        var bossesTag = entityTypeRegistry.get(Tags.EntityTypes.BOSSES).orElseThrow();
 
         Assertions.assertAll(bossesTag.stream()
             .map((bossEntityType) ->

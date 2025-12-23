@@ -15,7 +15,8 @@ import com.mojang.math.Transformation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
@@ -25,7 +26,6 @@ import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.ChunkRenderTypeSet;
@@ -299,11 +299,6 @@ public class ConduitBundleModel implements IDynamicBakedModel {
     }
 
     @Override
-    public boolean isCustomRenderer() {
-        return false;
-    }
-
-    @Override
     public TextureAtlasSprite getParticleIcon() {
         return ModelHelper.getMissingTexture();
     }
@@ -333,8 +328,8 @@ public class ConduitBundleModel implements IDynamicBakedModel {
     }
 
     @Override
-    public ItemOverrides getOverrides() {
-        return ItemOverrides.EMPTY;
+    public ItemTransforms getTransforms() {
+        return ItemTransforms.NO_TRANSFORMS;
     }
 
     @Override
@@ -359,7 +354,7 @@ public class ConduitBundleModel implements IDynamicBakedModel {
     }
 
     private static TextureAtlasSprite sprite(ResourceLocation location) {
-        return Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS).getSprite(location);
+        return Minecraft.getInstance().getModelManager().getAtlas(TextureAtlas.LOCATION_BLOCKS).getSprite(location);
     }
 
     private static boolean isMissingModel(BakedModel model) {

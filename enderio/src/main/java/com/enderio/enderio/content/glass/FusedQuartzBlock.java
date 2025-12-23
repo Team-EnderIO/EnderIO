@@ -22,21 +22,17 @@ import java.util.List;
 public class FusedQuartzBlock extends TransparentBlock {
     // TODO: Connected textures
     private final GlassIdentifier glassIdentifier;
-    private final String descriptionId;
 
     public FusedQuartzBlock(Properties pProps, GlassIdentifier glassIdentifier, @Nullable DyeColor color) {
-        super(pProps);
+        super(pProps.overrideDescription(getDescriptionId(glassIdentifier, color)));
         this.glassIdentifier = glassIdentifier;
+    }
 
+    private static String getDescriptionId(GlassIdentifier glassIdentifier, @Nullable DyeColor color) {
         String baseName = glassIdentifier.explosionResistance() ? "fused_quartz" : "clear_glass";
         String lightingName = glassIdentifier.lighting() != GlassLighting.NONE ? "_" + glassIdentifier.lighting().shortName() : "";
         String colorName = color != null ? "_" + color.getName() : "";
-        descriptionId = "block.enderio." + baseName + lightingName + colorName;
-    }
-
-    @Override
-    public String getDescriptionId() {
-        return descriptionId;
+        return "block.enderio." + baseName + lightingName + colorName;
     }
 
     @Override

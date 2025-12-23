@@ -30,8 +30,7 @@ import java.util.List;
 
 public class FluidConduitModelModifier implements ConduitModelModifier {
 
-    private static final ModelResourceLocation FLUID_MODEL = ModelResourceLocation
-            .standalone(EnderIO.rl("block/extra/fluids"));
+    private static final ResourceLocation FLUID_MODEL = EnderIO.rl("block/extra/fluids");
 
     @Override
     public List<BakedQuad> createConnectionQuads(Holder<Conduit<?, ?>> conduit, @Nullable CompoundTag extraWorldData,
@@ -49,12 +48,12 @@ public class FluidConduitModelModifier implements ConduitModelModifier {
         }
 
         ResourceLocation lockedFluidId = ResourceLocation.parse(extraWorldData.getString("LockedFluid"));
-        Fluid lockedFluid = BuiltInRegistries.FLUID.get(lockedFluidId);
+        Fluid lockedFluid = BuiltInRegistries.FLUID.getValue(lockedFluidId);
 
         if (!lockedFluid.isSame(Fluids.EMPTY)) {
             return new FluidPaintQuadTransformer(lockedFluid).process(Minecraft.getInstance()
                     .getModelManager()
-                    .getModel(FLUID_MODEL)
+                    .getStandaloneModel(FLUID_MODEL)
                     .getQuads(Blocks.COBBLESTONE.defaultBlockState(), facing, rand, ModelData.EMPTY, type));
         }
 

@@ -4,7 +4,6 @@ import com.enderio.core.client.item.FluidBarDecorator;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.conduits.model.RegisterConduitModelModifiersEvent;
 import com.enderio.enderio.api.conduits.screen.RegisterConduitScreenTypesEvent;
-import com.enderio.enderio.api.soul.SoulBoundUtils;
 import com.enderio.enderio.api.travel.RegisterTravelRenderersEvent;
 import com.enderio.enderio.client.content.conduits.ConduitBundleExtension;
 import com.enderio.enderio.client.content.conduits.ConduitFacadeColor;
@@ -14,9 +13,7 @@ import com.enderio.enderio.client.content.conduits.gui.screen_type.EnergyConduit
 import com.enderio.enderio.client.content.conduits.gui.screen_type.FluidConduitScreenType;
 import com.enderio.enderio.client.content.conduits.gui.screen_type.ItemConduitScreenType;
 import com.enderio.enderio.client.content.conduits.gui.screen_type.RedstoneConduitScreenType;
-import com.enderio.enderio.client.content.conduits.model.ConduitItemModelLoader;
-import com.enderio.enderio.client.content.conduits.model.bundle.ConduitBundleGeometry;
-import com.enderio.enderio.client.content.conduits.model.facades.FacadeItemGeometry;
+import com.enderio.enderio.client.content.conduits.model.bundle.UnbakedConduitBundleModelLoader;
 import com.enderio.enderio.client.content.conduits.model.modifier.FluidConduitModelModifier;
 import com.enderio.enderio.client.content.conduits.model.modifier.RedstoneConduitModelModifier;
 import com.enderio.enderio.client.content.enderface.EnderfaceRenderer;
@@ -26,9 +23,7 @@ import com.enderio.enderio.client.content.filters.EnderSoulFilterScreen;
 import com.enderio.enderio.client.content.filters.redstone.RedstoneCountFilterScreen;
 import com.enderio.enderio.client.content.filters.redstone.RedstoneDoubleChannelFilterScreen;
 import com.enderio.enderio.client.content.filters.redstone.RedstoneTimerFilterScreen;
-import com.enderio.enderio.client.content.fluid_tank.FluidTankBEWLR;
 import com.enderio.enderio.client.content.glass.GlassIconDecorator;
-import com.enderio.enderio.client.content.machines.IOOverlayBakedModel;
 import com.enderio.enderio.client.content.machines.gui.screen.AlloySmelterScreen;
 import com.enderio.enderio.client.content.machines.gui.screen.AttractorObeliskScreen;
 import com.enderio.enderio.client.content.machines.gui.screen.AversionObeliskScreen;
@@ -64,17 +59,12 @@ import com.enderio.enderio.client.content.machines.renderer.blockentity.ObeliskB
 import com.enderio.enderio.client.content.misc_blocks.EnderSkullRenderer;
 import com.enderio.enderio.client.content.paint.PaintedBlockColor;
 import com.enderio.enderio.client.content.paint.PaintedSandRenderer;
-import com.enderio.enderio.client.content.paint.model.PaintedBlockGeometry;
-import com.enderio.enderio.client.content.tools.ActiveGliderRenderLayer;
 import com.enderio.enderio.client.content.tools.CoordinateMenuScreen;
 import com.enderio.enderio.client.content.travel.TravelAnchorHud;
 import com.enderio.enderio.client.content.travel.TravelAnchorRenderer;
 import com.enderio.enderio.client.content.travel.TravelTargetRendering;
 import com.enderio.enderio.client.foundation.particle.RangeParticle;
-import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
-import com.enderio.enderio.content.fun.EnderiosItem;
 import com.enderio.enderio.content.misc_blocks.skull.EnderSkullBlock;
-import com.enderio.enderio.content.tools.vials.SoulVialItem;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOConduitTypes;
@@ -85,19 +75,11 @@ import com.enderio.enderio.init.EIOMenus;
 import com.enderio.enderio.init.EIOParticles;
 import com.enderio.enderio.init.EIOTravelTargets;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
-import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
-import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Holder;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.contents.PlainTextContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -115,10 +97,8 @@ import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
-import net.neoforged.neoforge.common.util.Lazy;
 import net.neoforged.neoforge.fluids.FluidType;
 
 import java.util.HashMap;
@@ -144,32 +124,33 @@ public class EnderIOClient {
         TravelTargetRendering.init();
         ConduitScreenTypes.init();
 
-        event.enqueueWork(() -> {
-            //switch to item model component in 1.21.2
-            ItemProperties.register(EIOItems.SOUL_VIAL.get(), SoulVialItem.FILLED_MODEL_PROPERTY,
-                (stack, level, player, seed) -> SoulBoundUtils.isBound(stack) ? 1 : 0);
-
-            ItemProperties.register(EIOItems.ENDERIOS.asItem(), EnderiosItem.INVERTED_PROPERTY,
-                (ClampedItemPropertyFunction) (itemStack, clientLevel, livingEntity, seed) -> {
-                    Component name = itemStack.get(DataComponents.CUSTOM_NAME);
-                    if (name != null && name.getContents() instanceof PlainTextContents literal && literal.text().equalsIgnoreCase("soiredne")) {
-                        return 1;
-                    }
-                    return 0;
-                });
-
-            // Register item property for conduit probe state switching
-            ItemProperties.register(EIOItems.CONDUIT_PROBE.get(), ConduitProbeItem.PROBE_STATE_PREDICATE,
-                (stack, level, player, seed) -> {
-                    ConduitProbeItem.State state = ConduitProbeItem.getState(stack);
-                    return state == ConduitProbeItem.State.COPY_PASTE ? 1.0f : 0.0f;
-                });
-
-            // Register fluid render types
-            for (var fluid : EIOFluids.FLUIDS.fluidsRegister().getEntries()) {
-                ItemBlockRenderTypes.setRenderLayer(fluid.get(), RenderType.translucent());
-            }
-        });
+        // TODO: 1.21.4: Item model components.
+//        event.enqueueWork(() -> {
+//            //switch to item model component in 1.21.2
+//            ItemProperties.register(EIOItems.SOUL_VIAL.get(), SoulVialItem.FILLED_MODEL_PROPERTY,
+//                (stack, level, player, seed) -> SoulBoundUtils.isBound(stack) ? 1 : 0);
+//
+//            ItemProperties.register(EIOItems.ENDERIOS.asItem(), EnderiosItem.INVERTED_PROPERTY,
+//                (ClampedItemPropertyFunction) (itemStack, clientLevel, livingEntity, seed) -> {
+//                    Component name = itemStack.get(DataComponents.CUSTOM_NAME);
+//                    if (name != null && name.getContents() instanceof PlainTextContents literal && literal.text().equalsIgnoreCase("soiredne")) {
+//                        return 1;
+//                    }
+//                    return 0;
+//                });
+//
+//            // Register item property for conduit probe state switching
+//            ItemProperties.register(EIOItems.CONDUIT_PROBE.get(), ConduitProbeItem.PROBE_STATE_PREDICATE,
+//                (stack, level, player, seed) -> {
+//                    ConduitProbeItem.State state = ConduitProbeItem.getState(stack);
+//                    return state == ConduitProbeItem.State.COPY_PASTE ? 1.0f : 0.0f;
+//                });
+//
+//            // Register fluid render types
+//            for (var fluid : EIOFluids.FLUIDS.fluidsRegister().getEntries()) {
+//                ItemBlockRenderTypes.setRenderLayer(fluid.get(), RenderType.translucent());
+//            }
+//        });
     }
 
     @SubscribeEvent
@@ -271,33 +252,34 @@ public class EnderIOClient {
         }
     }
 
-    @SubscribeEvent
-    public static void registerItemColorHandlers(RegisterColorHandlersEvent.Item event) {
-        event.register(ConduitFacadeColor.INSTANCE,
-            EIOItems.CONDUIT_FACADE.get(),
-            EIOItems.TRANSPARENT_CONDUIT_FACADE.get(),
-            EIOItems.HARDENED_CONDUIT_FACADE.get(),
-            EIOItems.TRANSPARENT_HARDENED_CONDUIT_FACADE.get());
-
-        event.register(PaintedBlockColor.INSTANCE,
-            EIOBlocks.PAINTED_FENCE.get(),
-            EIOBlocks.PAINTED_FENCE_GATE.get(),
-            EIOBlocks.PAINTED_SAND.get(),
-            EIOBlocks.PAINTED_STAIRS.get(),
-            EIOBlocks.PAINTED_CRAFTING_TABLE.get(),
-            EIOBlocks.PAINTED_REDSTONE_BLOCK.get(),
-            EIOBlocks.PAINTED_TRAPDOOR.get(),
-            EIOBlocks.PAINTED_WOODEN_PRESSURE_PLATE.get(),
-            EIOBlocks.PAINTED_SLAB.get(),
-            EIOBlocks.PAINTED_GLOWSTONE.get(),
-            EIOBlocks.PAINTED_WALL.get());
-
-        for (var glassBlocks : EIOBlocks.GLASS_BLOCKS.values()) {
-            for (var entry : glassBlocks.COLORS.entrySet()) {
-                event.register((stack, tintIndex) -> entry.getKey().getMapColor().col, entry.getValue().asItem());
-            }
-        }
-    }
+    // TODO: 1.21.4: Deal with the new item tint system
+//    @SubscribeEvent
+//    public static void registerItemColorHandlers(RegisterColorHandlersEvent.Item event) {
+//        event.register(ConduitFacadeColor.INSTANCE,
+//            EIOItems.CONDUIT_FACADE.get(),
+//            EIOItems.TRANSPARENT_CONDUIT_FACADE.get(),
+//            EIOItems.HARDENED_CONDUIT_FACADE.get(),
+//            EIOItems.TRANSPARENT_HARDENED_CONDUIT_FACADE.get());
+//
+//        event.register(PaintedBlockColor.INSTANCE,
+//            EIOBlocks.PAINTED_FENCE.get(),
+//            EIOBlocks.PAINTED_FENCE_GATE.get(),
+//            EIOBlocks.PAINTED_SAND.get(),
+//            EIOBlocks.PAINTED_STAIRS.get(),
+//            EIOBlocks.PAINTED_CRAFTING_TABLE.get(),
+//            EIOBlocks.PAINTED_REDSTONE_BLOCK.get(),
+//            EIOBlocks.PAINTED_TRAPDOOR.get(),
+//            EIOBlocks.PAINTED_WOODEN_PRESSURE_PLATE.get(),
+//            EIOBlocks.PAINTED_SLAB.get(),
+//            EIOBlocks.PAINTED_GLOWSTONE.get(),
+//            EIOBlocks.PAINTED_WALL.get());
+//
+//        for (var glassBlocks : EIOBlocks.GLASS_BLOCKS.values()) {
+//            for (var entry : glassBlocks.COLORS.entrySet()) {
+//                event.register((stack, tintIndex) -> entry.getKey().getMapColor().col, entry.getValue().asItem());
+//            }
+//        }
+//    }
 
     @SubscribeEvent
     public static void additionalModels(ModelEvent.RegisterAdditional event) {
@@ -334,7 +316,7 @@ public class EnderIOClient {
     public static void addLayers(EntityRenderersEvent.AddLayers event) {
         for (var skin : event.getSkins()) {
             if (event.getSkin(skin) instanceof PlayerRenderer playerRenderer) {
-                playerRenderer.addLayer(new ActiveGliderRenderLayer(playerRenderer));
+//                playerRenderer.addLayer(new ActiveGliderRenderLayer(playerRenderer));
             }
         }
     }
@@ -357,16 +339,16 @@ public class EnderIOClient {
     private static Optional<Item> findGliderForModelRL(ResourceLocation rl) {
         String namespace = rl.getNamespace();
         String path = rl.getPath().substring("models/enderio_glider/".length(), rl.getPath().length() - 5);
-        return Optional.of(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(namespace, path)));
+        return Optional.of(BuiltInRegistries.ITEM.getValue(ResourceLocation.fromNamespaceAndPath(namespace, path)));
     }
 
     @SubscribeEvent
     public static void registerGeometryLoaders(ModelEvent.RegisterLoaders event) {
-        event.register(EnderIO.rl("painted_block"), new PaintedBlockGeometry.Loader());
-        event.register(EnderIO.rl("io_overlay"), new IOOverlayBakedModel.Loader());
-        event.register(EnderIO.rl("conduit"), new ConduitBundleGeometry.Loader());
-        event.register(EnderIO.rl("conduit_item"), new ConduitItemModelLoader());
-        event.register(EnderIO.rl("facades_item"), new FacadeItemGeometry.Loader());
+//        event.register(EnderIO.rl("painted_block"), new PaintedBlockGeometry.Loader());
+//        event.register(EnderIO.rl("io_overlay"), new IOOverlayBakedModel.Loader());
+        event.register(EnderIO.rl("conduit"), UnbakedConduitBundleModelLoader.INSTANCE);
+//        event.register(EnderIO.rl("conduit_item"), new ConduitItemModelLoader());
+//        event.register(EnderIO.rl("facades_item"), new FacadeItemGeometry.Loader());
     }
 
     @SubscribeEvent
@@ -392,15 +374,16 @@ public class EnderIOClient {
     public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
         event.registerBlock(ConduitBundleExtension.INSTANCE, EIOBlocks.CONDUIT_BUNDLE);
 
-        event.registerItem(new IClientItemExtensions() {
-            // Minecraft can be null during datagen
-            final Lazy<BlockEntityWithoutLevelRenderer> renderer = Lazy.of(() -> FluidTankBEWLR.INSTANCE);
-
-            @Override
-            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                return renderer.get();
-            }
-        }, EIOBlocks.FLUID_TANK.asItem(), EIOBlocks.PRESSURIZED_FLUID_TANK.asItem());
+        // TODO: 1.21.4: How do we do this now?
+//        event.registerItem(new IClientItemExtensions() {
+//            // Minecraft can be null during datagen
+//            final Lazy<BlockEntityWithoutLevelRenderer> renderer = Lazy.of(() -> FluidTankBEWLR.INSTANCE);
+//
+//            @Override
+//            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+//                return renderer.get();
+//            }
+//        }, EIOBlocks.FLUID_TANK.asItem(), EIOBlocks.PRESSURIZED_FLUID_TANK.asItem());
 
         for (Holder<FluidType> fluidType : EIOFluids.FLUIDS.fluidTypesRegister().getEntries()) {
             String name = Objects.requireNonNull(fluidType.getKey()).location().getPath();

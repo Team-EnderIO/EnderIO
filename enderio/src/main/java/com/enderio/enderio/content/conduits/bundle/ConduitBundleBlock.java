@@ -140,7 +140,9 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
 
     @Override
     public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player) {
-        // TODO: 1.21.4: This needs fixing.
+        // TODO: 1.21.4: Check this works?
+        var target = player.pick(player.blockInteractionRange(), 0, false);
+
         if (level instanceof Level realLevel
                 && state.getOptionalValue(BlockStateProperties.WATERLOGGED).orElse(false)) {
             var hitResult = Item.getPlayerPOVHitResult(realLevel, player, ClipContext.Fluid.NONE);
@@ -152,7 +154,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
                 target = hitResult;
             } else {
                 return level.getBlockState(hitResult.getBlockPos())
-                        .getCloneItemStack(hitResult, level, hitResult.getBlockPos(), player);
+                        .getCloneItemStack(pos, level, includeData, player);
             }
         }
 
