@@ -2,6 +2,7 @@ package com.enderio.enderio.content.machines.slicer;
 
 import com.enderio.enderio.init.EIORecipes;
 import net.minecraft.Util;
+import net.minecraft.core.Holder;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -10,12 +11,11 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.util.thread.EffectiveSide;
-import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
+import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -55,14 +55,14 @@ public class SlicerRecipeManager {
     }
 
     @SubscribeEvent
-    public static void registerReloadListener(AddReloadListenerEvent event) {
+    public static void registerReloadListener(AddServerReloadListenersEvent event) {
         // Fired on datapack reload
         clearCache = true;
     }
 
     @SubscribeEvent
-    public static void onRecipesUpdated(RecipesUpdatedEvent event) {
-        rebuildCache(event.getRecipeManager());
+    public static void onRecipesUpdated(OnDatapackSyncEvent event) {
+        rebuildCache(event.getPlayerList().getServer().getRecipeManager());
     }
 
     private static void checkCacheRebuild() {
@@ -83,12 +83,12 @@ public class SlicerRecipeManager {
         }
 
         for (RecipeHolder<SlicingRecipe> slicingRecipe : manager
-                .getAllRecipesFor(EIORecipes.SLICING.type().get())) {
+                .recipeMap().byType(EIORecipes.SLICING.type().get())) {
             for (int i = 0; i < 6; i++) {
                 Ingredient ingredient = slicingRecipe.value().inputs().get(i);
                 if (ingredient.isSimple()) {
                     Set<Item> itemset = ITEMS.get(i);
-                    Arrays.stream(ingredient.getItems()).map(ItemStack::getItem).forEach(itemset::add);
+                    ingredient.items().map(Holder::value).forEach(itemset::add);
                 } else {
                     NON_OPTIMIZABLE_INGREDIENTS.get(i).add(ingredient);
                 }

@@ -17,11 +17,12 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FireBlock;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
+import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -34,14 +35,14 @@ public class FireCraftingHandler {
     private static final Random RANDOM = new Random();
     private static final ConcurrentMap<FireIndex, Long> FIRE_TRACKER = new ConcurrentHashMap<>();
 
-    private static List<RecipeHolder<FireCraftingRecipe>> cachedRecipes;
+    private static Collection<RecipeHolder<FireCraftingRecipe>> cachedRecipes;
     private static boolean recipesCached = false;
 
     private record FireIndex(BlockPos pos, ResourceKey<Level> dimension) {
     }
 
     @SubscribeEvent
-    public static void onRecipeUpdate(RecipesUpdatedEvent event) {
+    public static void onRecipeUpdate(OnDatapackSyncEvent event) {
         recipesCached = false;
     }
 
@@ -63,7 +64,7 @@ public class FireCraftingHandler {
 
             // Cache recipes
             if (!recipesCached) {
-                cachedRecipes = level.getRecipeManager().getAllRecipesFor(EIORecipes.FIRE_CRAFTING.type().get());
+                cachedRecipes = level.recipeAccess().recipeMap().byType(EIORecipes.FIRE_CRAFTING.type().get());
                 recipesCached = false;
             }
 
@@ -148,23 +149,25 @@ public class FireCraftingHandler {
     // Support worlds where firetick is disabled:
     @SubscribeEvent
     public static void onWorldTick(LevelTickEvent.Pre event) {
-        var level = event.getLevel();
+        if (!(event.getLevel() instanceof ServerLevel serverLevel)) {
+            return;
+        }
 
-        if (!FIRE_TRACKER.isEmpty() && !level.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK)) {
+        if (!FIRE_TRACKER.isEmpty() && !serverLevel.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK)) {
             // Create a list of positions that need to be turned to air. Fixes issues with
             // the fire tracker being modified while we iterate
             List<BlockPos> blocksToClear = new ArrayList<>();
 
             // Search for any fires that are due to spawn drops.
-            long gameTime = level.getGameTime();
+            long gameTime = serverLevel.getGameTime();
             for (Map.Entry<FireIndex, Long> fire : FIRE_TRACKER.entrySet()) {
-                if (!fire.getKey().dimension().equals(level.dimension())) {
+                if (!fire.getKey().dimension().equals(serverLevel.dimension())) {
                     continue;
                 }
 
                 BlockPos pos = fire.getKey().pos();
                 if (gameTime > fire.getValue()) {
-                    if (level.getBlockState(pos).getBlock() instanceof FireBlock) {
+                    if (serverLevel.getBlockState(pos).getBlock() instanceof FireBlock) {
                         blocksToClear.add(pos);
                     } else {
                         FIRE_TRACKER.remove(fire.getKey());
@@ -174,7 +177,7 @@ public class FireCraftingHandler {
 
             // Turn them to air to trigger the usual event.
             for (BlockPos pos : blocksToClear) {
-                level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+                serverLevel.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
             }
         }
     }

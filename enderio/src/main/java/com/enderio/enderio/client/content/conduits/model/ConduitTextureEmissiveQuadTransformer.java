@@ -29,7 +29,7 @@ public record ConduitTextureEmissiveQuadTransformer(TextureAtlasSprite newSprite
     }
 
     private static TextureAtlas blockAtlas() {
-        return Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS);
+        return Minecraft.getInstance().getModelManager().getAtlas(TextureAtlas.LOCATION_BLOCKS);
     }
 
 }

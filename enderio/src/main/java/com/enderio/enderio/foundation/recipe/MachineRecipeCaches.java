@@ -8,8 +8,8 @@ import com.enderio.enderio.content.machines.vat.FermentingRecipe;
 import com.enderio.enderio.init.EIORecipes;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
+import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 
 @EventBusSubscriber
 public class MachineRecipeCaches {
@@ -32,7 +32,7 @@ public class MachineRecipeCaches {
             EIORecipes.VAT_FERMENTING.type());
 
     @SubscribeEvent
-    public static void registerReloadListener(AddReloadListenerEvent event) {
+    public static void registerReloadListener(AddServerReloadListenersEvent event) {
         ALLOY_SMELTING_ONLY_ALLOY.markCacheDirty();
         ALLOY_SMELTING_ONLY_SMELTING.markCacheDirty();
         PAINTING.markCacheDirty();
@@ -42,12 +42,13 @@ public class MachineRecipeCaches {
     }
 
     @SubscribeEvent
-    public static void onRecipesUpdated(RecipesUpdatedEvent event) {
-        ALLOY_SMELTING_ONLY_ALLOY.rebuildCache(event.getRecipeManager());
-        ALLOY_SMELTING_ONLY_SMELTING.rebuildCache(event.getRecipeManager());
-        PAINTING.rebuildCache(event.getRecipeManager());
-        SAG_MILLING.rebuildCache(event.getRecipeManager());
-        SOUL_BINDING.rebuildCache(event.getRecipeManager());
-        FERMENTING.rebuildCache(event.getRecipeManager());
+    public static void onRecipesUpdated(OnDatapackSyncEvent event) {
+        var recipeManager = event.getPlayerList().getServer().getRecipeManager();
+        ALLOY_SMELTING_ONLY_ALLOY.rebuildCache(recipeManager);
+        ALLOY_SMELTING_ONLY_SMELTING.rebuildCache(recipeManager);
+        PAINTING.rebuildCache(recipeManager);
+        SAG_MILLING.rebuildCache(recipeManager);
+        SOUL_BINDING.rebuildCache(recipeManager);
+        FERMENTING.rebuildCache(recipeManager);
     }
 }

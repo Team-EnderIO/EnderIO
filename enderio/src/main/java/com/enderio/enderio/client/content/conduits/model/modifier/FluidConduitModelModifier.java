@@ -8,6 +8,7 @@ import com.enderio.enderio.content.conduits.type.fluid.FluidConduit;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Direction;
@@ -61,7 +62,7 @@ public class FluidConduitModelModifier implements ConduitModelModifier {
     }
 
     @Override
-    public List<ModelResourceLocation> getModelDependencies() {
+    public List<ResourceLocation> getModelDependencies() {
         return List.of(FLUID_MODEL);
     }
 
@@ -70,7 +71,7 @@ public class FluidConduitModelModifier implements ConduitModelModifier {
         public void processInPlace(BakedQuad quad) {
             IClientFluidTypeExtensions clientExtension = IClientFluidTypeExtensions.of(fluid);
             TextureAtlasSprite sprite = Minecraft.getInstance()
-                    .getTextureAtlas(InventoryMenu.BLOCK_ATLAS)
+                    .getTextureAtlas(TextureAtlas.LOCATION_BLOCKS)
                     .apply(clientExtension.getStillTexture());
             for (int i = 0; i < 4; i++) {
                 float[] uv0 = RenderUtil.unpackVertices(quad.getVertices(), i, IQuadTransformer.UV0, 2);

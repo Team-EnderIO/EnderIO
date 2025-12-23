@@ -1,6 +1,7 @@
 package com.enderio.core.client.icon;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;

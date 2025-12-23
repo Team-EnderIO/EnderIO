@@ -2,6 +2,7 @@ package com.enderio.enderio.foundation.recipe;
 
 import com.enderio.enderio.foundation.inventory.MachineInventory;
 import com.enderio.enderio.foundation.inventory.MultiSlotAccess;
+import net.minecraft.core.Holder;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -140,13 +141,15 @@ public class RecipeInputCache<T extends RecipeInput, R extends Recipe<T>> {
                 .filter(recipeHolder -> filter.test(recipeHolder.value()))
                 .forEach(recipe -> {
                     var items = recipe.value()
-                            .getIngredients()
+                            .placementInfo()
+                            .ingredients()
                             .stream()
-                            .flatMap(ingredient -> Arrays.stream(ingredient.getItems()))
-                            .map(ItemStack::getItem)
+                            .flatMap(Ingredient::items)
+                            .map(Holder::value)
                             .toList();
 
-                    recipeToIngredientCache.put(recipe, recipe.value().getIngredients());
+                    recipeToIngredientCache.put(recipe, recipe.value().placementInfo().ingredients());
+
                     for (Item item : items) {
                         itemToRecipesCache.computeIfAbsent(item, i -> new HashSet<>()).add(recipe);
                     }

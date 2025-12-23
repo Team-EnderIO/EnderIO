@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.NotImplementedException;
@@ -98,7 +99,7 @@ public class NewProgressWidget extends AbstractWidget {
         default -> throw new NotImplementedException();
         }
 
-        guiGraphics.blitSprite(sprite, width, height, u, v, x, y, uWidth, vHeight);
+        guiGraphics.blitSprite(RenderType::guiTextured, sprite, width, height, u, v, x, y, uWidth, vHeight);
 
         // Update the contents of the tooltip whenever its hovered, don't waste any time
         // doing it when not hovered.

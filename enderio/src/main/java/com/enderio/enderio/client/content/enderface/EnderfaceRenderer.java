@@ -10,6 +10,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.ShapeRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.util.ARGB;
@@ -51,7 +52,7 @@ public class EnderfaceRenderer implements TravelRenderer<EnderfaceTravelTarget> 
             lineType = VERY_BOLD_LINES;
         }
         VertexConsumer lines = buffer.getBuffer(lineType);
-        LevelRenderer.renderLineBox(poseStack, lines, 0, 0, 0, 1, 1, 1, ARGB.red(color) / 255F,
+        ShapeRenderer.renderLineBox(poseStack, lines, 0, 0, 0, 1, 1, 1, ARGB.red(color) / 255F,
             ARGB.green(color) / 255F, ARGB.blue(color) / 255F, 1);
 
         poseStack.popPose();
