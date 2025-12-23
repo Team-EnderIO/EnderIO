@@ -85,6 +85,11 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) {
         IGNORED_KEYS.forEach(entityTag::remove);
     }
 
+    // TODO: Can this be trusted? I feel like it needs better validation...
+    public Soul(CompoundTag entityTag) {
+        this(BuiltInRegistries.ENTITY_TYPE.getValue(ResourceLocation.parse(entityTag.getString(Entity.ID_TAG))), entityTag);
+    }
+
     public static final StreamCodec<RegistryFriendlyByteBuf, Soul> OPTIONAL_STREAM_CODEC = new StreamCodec<>() {
         @Override
         public Soul decode(RegistryFriendlyByteBuf byteBuf) {

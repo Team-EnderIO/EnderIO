@@ -23,10 +23,10 @@ public class SpawnEggSoulBindable implements SoulBindable {
         // Get custom entity data
         var customEntityData = spawnEgg.getOrDefault(DataComponents.ENTITY_DATA, CustomData.EMPTY);
         if (!customEntityData.isEmpty()) {
-            return new Soul(spawnEggItem.getType(spawnEgg), customEntityData.copyTag());
+            return new Soul(customEntityData.copyTag());
         }
 
-        return Soul.of(spawnEggItem.getType(spawnEgg));
+        return Soul.of(spawnEggItem.defaultType);
     }
 
     @Override
