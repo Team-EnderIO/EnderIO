@@ -39,6 +39,7 @@ public class ConduitAdditionalModels {
         event.register(CONDUIT_CONNECTOR);
         event.register(CONDUIT_CORE);
         event.register(BOX);
+        event.register(CONDUIT_CONNECTION_BOX);
         event.register(CONDUIT_IO_IN);
         event.register(CONDUIT_IO_IN_OUT);
         event.register(CONDUIT_IO_OUT);
@@ -56,6 +57,7 @@ public class ConduitAdditionalModels {
         MODELS.put(CONDUIT_CONNECTOR, event.getModelManager().getStandaloneModel(CONDUIT_CONNECTOR));
         MODELS.put(CONDUIT_CORE, event.getModelManager().getStandaloneModel(CONDUIT_CORE));
         MODELS.put(BOX, event.getModelManager().getStandaloneModel(BOX));
+        MODELS.put(CONDUIT_CONNECTION_BOX, event.getModelManager().getStandaloneModel(CONDUIT_CONNECTION_BOX));
         MODELS.put(CONDUIT_IO_IN, event.getModelManager().getStandaloneModel(CONDUIT_IO_IN));
         MODELS.put(CONDUIT_IO_IN_OUT, event.getModelManager().getStandaloneModel(CONDUIT_IO_IN_OUT));
         MODELS.put(CONDUIT_IO_OUT, event.getModelManager().getStandaloneModel(CONDUIT_IO_OUT));
