@@ -65,6 +65,8 @@ import com.google.common.collect.ImmutableMap;
 import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -95,6 +97,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -214,7 +217,7 @@ public class EIOBlocks {
     public static final DeferredBlock<ResettingLeverBlock> RESETTING_LEVER_THREE_HUNDRED_INV = registerResettingLever("resetting_lever_three_hundred_inv", 300, true);
 
     private static DeferredBlock<ResettingLeverBlock> registerResettingLever(String name, int delay, boolean inverted) {
-        var blockHolder = registerWithItem(name, p -> new ResettingLeverBlock(delay, inverted), BlockBehaviour.Properties.of());
+        var blockHolder = registerWithItem(name, p -> new ResettingLeverBlock(p, delay, inverted), BlockBehaviour.Properties.ofFullCopy(Blocks.LEVER));
         RESETTING_LEVERS.add(blockHolder);
         return blockHolder;
     }
@@ -277,12 +280,13 @@ public class EIOBlocks {
 
     private static DeferredBlock<SilentPressurePlateBlock> silentPressurePlateBlock(final PressurePlateBlock block) {
         ResourceLocation upModelLoc = Objects.requireNonNull(BuiltInRegistries.BLOCK.getKey(block));
-        return registerWithItem("silent_" + upModelLoc.getPath(), props -> new SilentPressurePlateBlock(block), BlockBehaviour.Properties.of());
+        return registerWithItem("silent_" + upModelLoc.getPath(), SilentPressurePlateBlock::new, BlockBehaviour.Properties.ofFullCopy(block));
     }
 
     private static DeferredBlock<SilentWeightedPressurePlateBlock> silentWeightedPressurePlateBlock(WeightedPressurePlateBlock block) {
         ResourceLocation upModelLoc = Objects.requireNonNull(BuiltInRegistries.BLOCK.getKey(block));
-        return registerWithItem("silent_" + upModelLoc.getPath(), props -> new SilentWeightedPressurePlateBlock(block), BlockBehaviour.Properties.of());
+        return registerWithItem("silent_" + upModelLoc.getPath(), props -> new SilentWeightedPressurePlateBlock(block.maxWeight, props),
+            BlockBehaviour.Properties.ofFullCopy(block));
     }
 
     // endregion
@@ -313,8 +317,8 @@ public class EIOBlocks {
             BlockBehaviour.Properties.ofFullCopy(Blocks.SKELETON_SKULL).instrument(NoteBlockInstrument.SKELETON).strength(1.0F).pushReaction(PushReaction.DESTROY));
 
     // TODO: 1.21.4: currently using plain register to access ENDERMAN_HEAD during properties construction. Any better options?
-    public static final DeferredBlock<WallEnderSkullBlock> WALL_ENDERMAN_HEAD = BLOCKS.register("wall_enderman_head", () -> new WallEnderSkullBlock(
-        BlockBehaviour.Properties.ofFullCopy(Blocks.SKELETON_SKULL).strength(1.0F).overrideLootTable(ENDERMAN_HEAD.get().getLootTable()).pushReaction(PushReaction.DESTROY)));
+    public static final DeferredBlock<WallEnderSkullBlock> WALL_ENDERMAN_HEAD = BLOCKS.register("wall_enderman_head", (rl) -> new WallEnderSkullBlock(
+        BlockBehaviour.Properties.ofFullCopy(Blocks.SKELETON_SKULL).setId(ResourceKey.create(Registries.BLOCK, rl)).strength(1.0F).overrideLootTable(ENDERMAN_HEAD.get().getLootTable()).pushReaction(PushReaction.DESTROY)));
 
     public static final DeferredBlock<IndustrialInsulationBlock> INDUSTRIAL_INSULATION = registerWithItem("industrial_insulation",
         IndustrialInsulationBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.SPONGE));
@@ -437,7 +441,7 @@ public class EIOBlocks {
     public static final DeferredBlock<PaintedTravelAnchorBlock> PAINTED_TRAVEL_ANCHOR = registerWithItem("painted_travel_anchor",
         PaintedTravelAnchorBlock::new,
         BlockBehaviour.Properties.of().strength(2.5f, 8).noOcclusion(),
-        block -> new PaintedBlockItem(block.get(), new Item.Properties()));
+        (p, block) -> new PaintedBlockItem(block.get(), p));
 
     // Solar Panels
     public static final Map<SolarPanelTier, DeferredBlock<SolarPanelBlock>> SOLAR_PANELS = Util.make(() -> {
@@ -506,22 +510,22 @@ public class EIOBlocks {
         obelisk("weather_obelisk", () -> EIOBlockEntities.WEATHER_OBELISK::get);
 
     // Items that need capabilities (exposed as DeferredItems)
-    public static final DeferredItem<FluidTankBlockItem> FLUID_TANK_ITEM = ITEMS.register("fluid_tank",
-        () -> new FluidTankBlockItem(FLUID_TANK.get(), new Item.Properties(), 16000));
-    public static final DeferredItem<FluidTankBlockItem> PRESSURIZED_FLUID_TANK_ITEM = ITEMS.register("pressurized_fluid_tank",
-        () -> new FluidTankBlockItem(PRESSURIZED_FLUID_TANK.get(), new Item.Properties(), 32000));
+    public static final DeferredItem<FluidTankBlockItem> FLUID_TANK_ITEM = ITEMS.registerItem("fluid_tank",
+        p -> new FluidTankBlockItem(FLUID_TANK.get(), p, 16000));
+    public static final DeferredItem<FluidTankBlockItem> PRESSURIZED_FLUID_TANK_ITEM = ITEMS.registerItem("pressurized_fluid_tank",
+        p -> new FluidTankBlockItem(PRESSURIZED_FLUID_TANK.get(), p, 32000));
 
-    public static final DeferredItem<BlockItem> POWERED_SPAWNER_ITEM = ITEMS.register("powered_spawner",
-        () -> new BlockItem(POWERED_SPAWNER.get(), new Item.Properties().component(EIODataComponents.SOUL, Soul.EMPTY)));
+    public static final DeferredItem<BlockItem> POWERED_SPAWNER_ITEM = ITEMS.registerItem("powered_spawner",
+        p -> new BlockItem(POWERED_SPAWNER.get(), p), new Item.Properties().component(EIODataComponents.SOUL, Soul.EMPTY));
 
-    public static final DeferredItem<BlockItem> SOUL_ENGINE_ITEM = ITEMS.register("soul_engine",
-        () -> new BlockItem(SOUL_ENGINE.get(), new Item.Properties().component(EIODataComponents.SOUL, Soul.EMPTY)));
+    public static final DeferredItem<BlockItem> SOUL_ENGINE_ITEM = ITEMS.registerItem("soul_engine",
+        p -> new BlockItem(SOUL_ENGINE.get(), p), new Item.Properties().component(EIODataComponents.SOUL, Soul.EMPTY));
 
     public static final Map<SolarPanelTier, DeferredItem<BlockItem>> SOLAR_PANEL_ITEMS = Util.make(() -> {
         Map<SolarPanelTier, DeferredItem<BlockItem>> items = new HashMap<>();
         for (var entry : SOLAR_PANELS.entrySet()) {
-            items.put(entry.getKey(), ITEMS.register(entry.getValue().getId().getPath(),
-                () -> new BlockItem(entry.getValue().get(), new Item.Properties().component(EIODataComponents.SOUL, Soul.EMPTY))));
+            items.put(entry.getKey(), ITEMS.registerItem(entry.getValue().getId().getPath(),
+                p -> new BlockItem(entry.getValue().get(), p), new Item.Properties().component(EIODataComponents.SOUL, Soul.EMPTY)));
         }
         return ImmutableMap.copyOf(items);
     });
@@ -529,8 +533,8 @@ public class EIOBlocks {
     public static final Map<CapacitorTier, DeferredItem<CapacitorBankItem>> CAPACITOR_BANK_ITEMS = Util.make(() -> {
         Map<CapacitorTier, DeferredItem<CapacitorBankItem>> items = new HashMap<>();
         for (var entry : CAPACITOR_BANKS.entrySet()) {
-            items.put(entry.getKey(), ITEMS.register(entry.getValue().getId().getPath(),
-                () -> new CapacitorBankItem(entry.getValue().get(), new Item.Properties())));
+            items.put(entry.getKey(), ITEMS.registerItem(entry.getValue().getId().getPath(),
+                p -> new CapacitorBankItem(entry.getValue().get(), p)));
         }
         return ImmutableMap.copyOf(items);
     });
@@ -595,15 +599,21 @@ public class EIOBlocks {
 
     // endregion
 
-    private static <B extends Block> DeferredBlock<B> registerWithItem(String name, Function<BlockBehaviour.Properties, ? extends B> func, BlockBehaviour.Properties props) {
-        var blockHolder = BLOCKS.<B>registerBlock(name, func, props);
+    private static <B extends Block> DeferredBlock<B> registerWithItem(String name, Function<BlockBehaviour.Properties, ? extends B> func, BlockBehaviour.Properties blockProperties) {
+        var blockHolder = BLOCKS.<B>registerBlock(name, func, blockProperties);
         ITEMS.registerSimpleBlockItem(blockHolder);
         return blockHolder;
     }
 
-    private static <B extends Block> DeferredBlock<B> registerWithItem(String name, Function<BlockBehaviour.Properties, ? extends B> func, BlockBehaviour.Properties props, Function<Supplier<B>, Item> itemFactory) {
-        var blockHolder = BLOCKS.<B>registerBlock(name, func, props);
-        ITEMS.register(name, () -> itemFactory.apply(blockHolder));
+    private static <B extends Block> DeferredBlock<B> registerWithItem(String name, Function<BlockBehaviour.Properties, ? extends B> func, BlockBehaviour.Properties blockProperties,
+        BiFunction<Item.Properties, Supplier<B>, Item> itemFactory) {
+        return registerWithItem(name, func, blockProperties, itemFactory, new Item.Properties());
+    }
+
+    private static <B extends Block> DeferredBlock<B> registerWithItem(String name, Function<BlockBehaviour.Properties, ? extends B> func, BlockBehaviour.Properties blockProperties,
+        BiFunction<Item.Properties, Supplier<B>, Item> itemFactory, Item.Properties itemProperties) {
+        var blockHolder = BLOCKS.<B>registerBlock(name, func, blockProperties);
+        ITEMS.registerItem(name, p -> itemFactory.apply(p, blockHolder), itemProperties);
         return blockHolder;
     }
 

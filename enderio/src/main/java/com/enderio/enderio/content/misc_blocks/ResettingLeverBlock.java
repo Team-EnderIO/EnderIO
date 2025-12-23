@@ -18,8 +18,8 @@ public class ResettingLeverBlock extends LeverBlock {
     private final int delay;
     private final boolean inverted;
 
-    public ResettingLeverBlock(int delaySeconds, boolean inverted) {
-        super(Properties.ofFullCopy(Blocks.LEVER));
+    public ResettingLeverBlock(Properties properties, int delaySeconds, boolean inverted) {
+        super(properties);
         this.delay = delaySeconds * 20;
         this.inverted = inverted;
     }

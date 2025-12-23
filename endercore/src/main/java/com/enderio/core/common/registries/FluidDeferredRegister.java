@@ -77,7 +77,7 @@ public class FluidDeferredRegister {
         private BlockBehaviour.Properties blockProperties;
 
         @Nullable
-        private Function<Fluid, BucketItem> bucketFactory;
+        private BiFunction<Fluid, Item.Properties, BucketItem> bucketFactory;
 
         private Builder(String name) {
             this.name = name;
@@ -98,12 +98,13 @@ public class FluidDeferredRegister {
             return this;
         }
 
+        // TODO: 1.21.4: bucket properties should maybe be separate and default with the stacksTo(1).
         public Builder defaultBucket() {
-            this.bucketFactory = (fluid) -> new BucketItem(fluid, new Item.Properties().stacksTo(1));
+            this.bucketFactory = (fluid, p) -> new BucketItem(fluid, p.stacksTo(1));
             return this;
         }
 
-        public Builder bucketFactory(Function<Fluid, BucketItem> bucketFactory) {
+        public Builder bucketFactory(BiFunction<Fluid, Item.Properties, BucketItem> bucketFactory) {
             this.bucketFactory = bucketFactory;
             return this;
         }
@@ -126,10 +127,10 @@ public class FluidDeferredRegister {
             fluid.type(fluidTypes.register(name, () -> fluidTypeFactory.apply(fluidTypeProperties)));
             fluid.source(fluids.register("fluid_" + name + "_still", () -> new BaseFlowingFluid.Source(fluid.createProperties())));
             fluid.flowing(fluids.register("fluid_" + name + "_flowing", () -> new BaseFlowingFluid.Flowing(fluid.createProperties())));
-            fluid.block(blocks.register(name, () -> blockFactory.apply(fluid.flowing().get(), blockProperties)));
+            fluid.block(blocks.registerBlock(name, p -> blockFactory.apply(fluid.flowing().get(), p), blockProperties));
 
             if (bucketFactory != null) {
-                fluid.bucket(items.register(name + "_bucket", () -> bucketFactory.apply(fluid.source().get())));
+                fluid.bucket(items.registerItem(name + "_bucket", p -> bucketFactory.apply(fluid.source().get(), p)));
             }
 
             return fluid;
