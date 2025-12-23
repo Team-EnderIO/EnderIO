@@ -37,8 +37,8 @@ public class ConduitGameTestHelper extends ExtendedGameTestHelper {
 
     public Holder<Conduit<?, ?>> getConduit(ResourceKey<Conduit<?, ?>> conduitType) {
         return getLevel().registryAccess()
-                .registryOrThrow(EnderIORegistries.Keys.CONDUIT)
-                .getHolderOrThrow(conduitType);
+                .lookupOrThrow(EnderIORegistries.Keys.CONDUIT)
+                .getOrThrow(conduitType);
     }
 
     public Player getPlayer() {

@@ -12,11 +12,15 @@ import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -27,13 +31,21 @@ import java.util.Optional;
 
 public class SoulBindingRecipeProvider extends SubRecipeProvider {
 
+    private HolderLookup.RegistryLookup<Item> items;
+
+    protected Ingredient ingredientFromTag(TagKey<Item> tag) {
+        return Ingredient.of(this.items.getOrThrow(tag));
+    }
+
     @Override
-    public void buildRecipes(RecipeOutput recipeOutput, HolderLookup.Provider registries) {
-        build(EIOItems.ENTICING_CRYSTAL, Ingredient.of(Tags.Items.GEMS_EMERALD), 51200, 4, EntityType.VILLAGER,
+    public void buildRecipes(HolderLookup.Provider registries, RecipeOutput recipeOutput) {
+        this.items = registries.lookupOrThrow(Registries.ITEM);
+
+        build(EIOItems.ENTICING_CRYSTAL, ingredientFromTag(Tags.Items.GEMS_EMERALD), 51200, 4, EntityType.VILLAGER,
                 recipeOutput);
-        build(EIOItems.ENDER_CRYSTAL, Ingredient.of(EIOTags.Items.GEMS_VIBRANT_CRYSTAL), 76800, 6, EntityType.ENDERMAN,
+        build(EIOItems.ENDER_CRYSTAL, ingredientFromTag(EIOTags.Items.GEMS_VIBRANT_CRYSTAL), 76800, 6, EntityType.ENDERMAN,
                 recipeOutput);
-        build(EIOItems.PRESCIENT_CRYSTAL, Ingredient.of(EIOTags.Items.GEMS_VIBRANT_CRYSTAL), 100000, 8,
+        build(EIOItems.PRESCIENT_CRYSTAL, ingredientFromTag(EIOTags.Items.GEMS_VIBRANT_CRYSTAL), 100000, 8,
                 EntityType.SHULKER, recipeOutput);
         build(EIOItems.FRANK_N_ZOMBIE, Ingredient.of(EIOItems.Z_LOGIC_CONTROLLER), 51200, 4, EntityType.ZOMBIE,
                 recipeOutput);
@@ -100,7 +112,7 @@ public class SoulBindingRecipeProvider extends SubRecipeProvider {
     protected void build(ItemLike output, Ingredient input, int energy, int exp, Optional<ResourceLocation> entityType,
             Optional<MobCategory> mobCategory, Optional<String> souldata, boolean copyInputData,
             RecipeOutput recipeOutput) {
-        recipeOutput.accept(EnderIO.rl("soulbinding/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath()),
+        recipeOutput.accept(ResourceKey.create(Registries.RECIPE, EnderIO.rl("soulbinding/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath())),
                 new SoulBindingRecipe(new ItemStack(output), input, energy, exp, entityType, mobCategory, souldata,
                         copyInputData),
                 null);

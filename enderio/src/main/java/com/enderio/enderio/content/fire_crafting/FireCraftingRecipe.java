@@ -1,5 +1,6 @@
 package com.enderio.enderio.content.fire_crafting;
 
+import com.enderio.enderio.init.EIORecipeBookCategories;
 import com.enderio.enderio.init.EIORecipes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -16,7 +17,9 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeBookCategory;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -29,13 +32,17 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 public record FireCraftingRecipe(List<Result> results, List<Block> bases, List<TagKey<Block>> baseTags,
-        List<ResourceKey<Level>> dimensions, Optional<Block> blockAfterBurning) implements Recipe<RecipeInput> {
+                                 List<ResourceKey<Level>> dimensions, Optional<Block> blockAfterBurning, PlacementInfo placementInfo) implements Recipe<RecipeInput> {
 
+    public FireCraftingRecipe(List<Result> results, List<Block> bases, List<TagKey<Block>> baseTags,
+        List<ResourceKey<Level>> dimensions, Optional<Block> blockAfterBurning) {
+        this(results, bases, baseTags, dimensions, blockAfterBurning, PlacementInfo.NOT_PLACEABLE);
+    }
     // Get all base blocks
     public List<Block> getAllBaseBlocks() {
         List<Block> blocks = new ArrayList<>(bases);
         for (TagKey<Block> blockTagKey : baseTags) {
-            BuiltInRegistries.BLOCK.getTag(blockTagKey)
+            BuiltInRegistries.BLOCK.get(blockTagKey)
                     .map(HolderSet.ListBacked::stream)
                     .orElse(Stream.empty())
                     .map(Holder::value)
@@ -68,16 +75,6 @@ public record FireCraftingRecipe(List<Result> results, List<Block> bases, List<T
     }
 
     @Override
-    public boolean canCraftInDimensions(int pWidth, int pHeight) {
-        return true;
-    }
-
-    @Override
-    public ItemStack getResultItem(HolderLookup.Provider lookupProvider) {
-        return ItemStack.EMPTY;
-    }
-
-    @Override
     public boolean isSpecial() {
         return true;
     }
@@ -88,8 +85,13 @@ public record FireCraftingRecipe(List<Result> results, List<Block> bases, List<T
     }
 
     @Override
-    public RecipeType<?> getType() {
+    public RecipeType<? extends Recipe<RecipeInput>> getType() {
         return EIORecipes.FIRE_CRAFTING.type().get();
+    }
+
+    @Override
+    public RecipeBookCategory recipeBookCategory() {
+        return EIORecipeBookCategories.FIRE.get();
     }
 
     public static class Serializer implements RecipeSerializer<FireCraftingRecipe> {

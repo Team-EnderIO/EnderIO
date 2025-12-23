@@ -33,6 +33,7 @@ public class EnchanterRecipeProvider extends SubRecipeProvider {
     public void buildRecipes(HolderLookup.Provider registries, RecipeOutput recipeOutput) {
         // We know that the registries are now available.
         HolderGetter<Enchantment> enchantmentRegistry = registries.lookupOrThrow(Registries.ENCHANTMENT);
+        this.items = registries.lookupOrThrow(Registries.ITEM);
 
         // vanilla
         build(enchantmentRegistry, Enchantments.PROTECTION, sizedFromTag(EIOTags.Items.INGOTS_DARK_STEEL, 16), 1,

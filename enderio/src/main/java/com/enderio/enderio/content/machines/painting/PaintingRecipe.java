@@ -4,31 +4,37 @@ import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.content.paint.BlockPaintData;
 import com.enderio.enderio.foundation.MachineRecipe;
+import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIODataComponents;
+import com.enderio.enderio.init.EIORecipeBookCategories;
 import com.enderio.enderio.init.EIORecipes;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.PlacementInfo;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeBookCategory;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.display.RecipeDisplay;
+import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public record PaintingRecipe(Ingredient input, ItemStack output) implements MachineRecipe<PaintingRecipe.Input> {
+public record PaintingRecipe(Ingredient input, ItemStack output, PlacementInfo placementInfo) implements MachineRecipe<PaintingRecipe.Input> {
 
-    @Override
-    public NonNullList<Ingredient> getIngredients() {
-        return NonNullList.of(Ingredient.EMPTY, input);
+    public PaintingRecipe(Ingredient input, ItemStack output) {
+        this(input, output, PlacementInfo.create(input));
     }
 
     @Override
@@ -69,18 +75,26 @@ public record PaintingRecipe(Ingredient input, ItemStack output) implements Mach
     }
 
     @Override
-    public ItemStack getResultItem(HolderLookup.Provider lookupProvider) {
-        return output.copy();
+    public List<RecipeDisplay> display() {
+        return List.of(new PaintingDisplay(input.display(),
+            new SlotDisplay.ItemStackSlotDisplay(output.copy()),
+            new SlotDisplay.ItemSlotDisplay(EIOBlocks.PAINTING_MACHINE.asItem())
+        ));
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<? extends Recipe<Input>> getSerializer() {
         return EIORecipes.PAINTING.serializer().get();
     }
 
     @Override
-    public RecipeType<?> getType() {
+    public RecipeType<? extends Recipe<Input>> getType() {
         return EIORecipes.PAINTING.type().get();
+    }
+
+    @Override
+    public RecipeBookCategory recipeBookCategory() {
+        return EIORecipeBookCategories.PAINTING.get();
     }
 
     public record Input(ItemStack template, ItemStack paint) implements RecipeInput {
@@ -97,6 +111,38 @@ public record PaintingRecipe(Ingredient input, ItemStack output) implements Mach
         @Override
         public int size() {
             return 2;
+        }
+    }
+
+    public record PaintingDisplay(SlotDisplay ingredient, SlotDisplay result, SlotDisplay craftingStation) implements RecipeDisplay {
+
+        public static final MapCodec<PaintingDisplay> MAP_CODEC = RecordCodecBuilder.mapCodec(
+            p_379634_ -> p_379634_.group(
+                    SlotDisplay.CODEC.fieldOf("ingredients").forGetter(PaintingDisplay::ingredient),
+                    SlotDisplay.CODEC.fieldOf("result").forGetter(PaintingDisplay::result),
+                    SlotDisplay.CODEC.fieldOf("crafting_station").forGetter(PaintingDisplay::craftingStation)
+                )
+                .apply(p_379634_, PaintingDisplay::new)
+        );
+        public static final StreamCodec<RegistryFriendlyByteBuf, PaintingDisplay> STREAM_CODEC = StreamCodec.composite(
+            SlotDisplay.STREAM_CODEC,
+            PaintingDisplay::ingredient,
+            SlotDisplay.STREAM_CODEC,
+            PaintingDisplay::result,
+            SlotDisplay.STREAM_CODEC,
+            PaintingDisplay::craftingStation,
+            PaintingDisplay::new
+        );
+        public static final RecipeDisplay.Type<PaintingDisplay> TYPE = new RecipeDisplay.Type<>(MAP_CODEC, STREAM_CODEC);
+
+        @Override
+        public Type<? extends RecipeDisplay> type() {
+            return TYPE;
+        }
+
+        @Override
+        public boolean isEnabled(FeatureFlagSet flagSet) {
+            return this.ingredient.isEnabled(flagSet) && RecipeDisplay.super.isEnabled(flagSet);
         }
     }
 

@@ -27,7 +27,7 @@ public class NiardBER implements BlockEntityRenderer<NiardBlockEntity> {
             FluidStack fluidStack = tank.getFluid();
 
             // Use entity translucent cull sheet so fluid renders in Fabulous
-            VertexConsumer buffer = bufferSource.getBuffer(Sheets.translucentCullBlockSheet());
+            VertexConsumer buffer = bufferSource.getBuffer(Sheets.translucentItemSheet());
 
             // Render the fluid
             PoseStack.Pose last = poseStack.last();

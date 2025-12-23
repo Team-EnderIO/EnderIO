@@ -45,20 +45,6 @@ public interface MachineRecipe<T extends RecipeInput> extends Recipe<T> {
     }
 
     @Override
-    default boolean canCraftInDimensions(int pWidth, int pHeight) {
-        return true;
-    }
-
-    /**
-     * @deprecated Should use {@link #getResultStacks(RegistryAccess)} instead.
-     */
-    @Deprecated
-    @Override
-    default ItemStack getResultItem(HolderLookup.Provider lookupProvider) {
-        return ItemStack.EMPTY;
-    }
-
-    @Override
     default boolean isSpecial() {
         return true;
     }

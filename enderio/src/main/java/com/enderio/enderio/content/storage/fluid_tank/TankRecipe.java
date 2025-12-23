@@ -1,6 +1,8 @@
 package com.enderio.enderio.content.storage.fluid_tank;
 
 import com.enderio.enderio.foundation.io.fluid.MachineFluidTank;
+import com.enderio.enderio.init.EIOBlocks;
+import com.enderio.enderio.init.EIORecipeBookCategories;
 import com.enderio.enderio.init.EIORecipes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -12,21 +14,31 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ByIdMap;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeBookCategory;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.display.RecipeDisplay;
+import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.apache.commons.lang3.NotImplementedException;
 
+import java.util.List;
 import java.util.function.IntFunction;
 
-public record TankRecipe(Ingredient input, ItemStack output, FluidStack fluid, Mode mode)
+public record TankRecipe(Ingredient input, ItemStack output, FluidStack fluid, Mode mode, PlacementInfo placementInfo)
         implements Recipe<TankRecipe.Input> {
+
+    public TankRecipe(Ingredient input, ItemStack output, FluidStack fluid, Mode mode) {
+        this(input, output, fluid, mode, PlacementInfo.create(input));
+    }
 
     public enum Mode implements StringRepresentable {
         FILL(0, "fill"), EMPTY(1, "empty");
@@ -77,13 +89,15 @@ public record TankRecipe(Ingredient input, ItemStack output, FluidStack fluid, M
     }
 
     @Override
-    public boolean canCraftInDimensions(int pWidth, int pHeight) {
-        return true;
+    public List<RecipeDisplay> display() {
+        return List.of( new TankDisplay(input.display(),
+            new SlotDisplay.ItemStackSlotDisplay(output.copy()),
+            new SlotDisplay.ItemSlotDisplay(EIOBlocks.FLUID_TANK_ITEM)));
     }
 
     @Override
-    public ItemStack getResultItem(HolderLookup.Provider lookupProvider) {
-        return output.copy();
+    public RecipeBookCategory recipeBookCategory() {
+        return EIORecipeBookCategories.TANK.get();
     }
 
     @Override
@@ -92,12 +106,12 @@ public record TankRecipe(Ingredient input, ItemStack output, FluidStack fluid, M
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<? extends Recipe<Input>> getSerializer() {
         return EIORecipes.TANK.serializer().get();
     }
 
     @Override
-    public RecipeType<?> getType() {
+    public RecipeType<? extends Recipe<Input>> getType() {
         return EIORecipes.TANK.type().get();
     }
 
@@ -118,11 +132,43 @@ public record TankRecipe(Ingredient input, ItemStack output, FluidStack fluid, M
         }
     }
 
+    public record TankDisplay(SlotDisplay ingredient, SlotDisplay result, SlotDisplay craftingStation) implements RecipeDisplay {
+
+        public static final MapCodec<TankDisplay> MAP_CODEC = RecordCodecBuilder.mapCodec(
+            p_379634_ -> p_379634_.group(
+                    SlotDisplay.CODEC.fieldOf("ingredients").forGetter(TankDisplay::ingredient),
+                    SlotDisplay.CODEC.fieldOf("result").forGetter(TankDisplay::result),
+                    SlotDisplay.CODEC.fieldOf("crafting_station").forGetter(TankDisplay::craftingStation)
+                )
+                .apply(p_379634_, TankDisplay::new)
+        );
+        public static final StreamCodec<RegistryFriendlyByteBuf, TankDisplay> STREAM_CODEC = StreamCodec.composite(
+            SlotDisplay.STREAM_CODEC,
+            TankDisplay::ingredient,
+            SlotDisplay.STREAM_CODEC,
+            TankDisplay::result,
+            SlotDisplay.STREAM_CODEC,
+            TankDisplay::craftingStation,
+            TankDisplay::new
+        );
+        public static final RecipeDisplay.Type<TankDisplay> TYPE = new RecipeDisplay.Type<>(MAP_CODEC, STREAM_CODEC);
+
+        @Override
+        public Type<? extends RecipeDisplay> type() {
+            return TYPE;
+        }
+
+        @Override
+        public boolean isEnabled(FeatureFlagSet flagSet) {
+            return this.ingredient.isEnabled(flagSet) && RecipeDisplay.super.isEnabled(flagSet);
+        }
+    }
+
     public static class Serializer implements RecipeSerializer<TankRecipe> {
 
         private static final MapCodec<TankRecipe> CODEC = RecordCodecBuilder
                 .mapCodec(instance -> instance
-                        .group(Ingredient.CODEC_NONEMPTY.fieldOf("input").forGetter(TankRecipe::input),
+                        .group(Ingredient.CODEC.fieldOf("input").forGetter(TankRecipe::input),
                                 ItemStack.CODEC.fieldOf("output").forGetter(TankRecipe::output),
                                 FluidStack.CODEC.fieldOf("fluid").forGetter(TankRecipe::fluid),
                                 Mode.CODEC.fieldOf("mode").forGetter(TankRecipe::mode))

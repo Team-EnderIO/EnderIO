@@ -3,18 +3,18 @@ package com.enderio.enderio.content.machines.soul_binder;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.network.MassiveStreamCodec;
-import com.enderio.enderio.api.soul.binding.ingredients.FilledSoulStorageIngredient;
 import com.enderio.enderio.foundation.MachineRecipe;
 import com.enderio.enderio.foundation.recipe.FluidRecipeInput;
 import com.enderio.enderio.foundation.souldata.SoulDataReloadListener;
 import com.enderio.enderio.foundation.util.ExperienceUtil;
+import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOItems;
+import com.enderio.enderio.init.EIORecipeBookCategories;
 import com.enderio.enderio.init.EIORecipes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -22,10 +22,16 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.PlacementInfo;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeBookCategory;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.display.RecipeDisplay;
+import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
 
@@ -34,8 +40,14 @@ import java.util.Objects;
 import java.util.Optional;
 
 public record SoulBindingRecipe(ItemStack output, Ingredient input, int energy, int experience,
+                                Optional<ResourceLocation> entityType, Optional<MobCategory> mobCategory, Optional<String> soulData,
+                                boolean copyInputComponents, PlacementInfo placementInfo) implements MachineRecipe<SoulBindingRecipe.Input> {
+
+    public SoulBindingRecipe(ItemStack output, Ingredient input, int energy, int experience,
         Optional<ResourceLocation> entityType, Optional<MobCategory> mobCategory, Optional<String> soulData,
-        boolean copyInputComponents) implements MachineRecipe<SoulBindingRecipe.Input> {
+        boolean copyInputComponents) {
+        this(output, input, energy, experience, entityType, mobCategory, soulData, copyInputComponents, PlacementInfo.create(input));
+    }
 
     public Ingredient getInput() {
         return input;
@@ -73,8 +85,15 @@ public record SoulBindingRecipe(ItemStack output, Ingredient input, int energy, 
     }
 
     @Override
-    public NonNullList<Ingredient> getIngredients() {
-        return NonNullList.of(Ingredient.EMPTY, FilledSoulStorageIngredient.of(EIOItems.SOUL_VIAL), input);
+    public List<RecipeDisplay> display() {
+        return List.of(new SoulBindingDisplay(input.display(),
+            new SlotDisplay.ItemStackSlotDisplay(output.copy()),
+            new SlotDisplay.ItemSlotDisplay(EIOBlocks.SOUL_BINDER.asItem())));
+    }
+
+    @Override
+    public RecipeBookCategory recipeBookCategory() {
+        return EIORecipeBookCategories.SOUL_BINDING.get();
     }
 
     @Override
@@ -126,12 +145,12 @@ public record SoulBindingRecipe(ItemStack output, Ingredient input, int energy, 
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<? extends Recipe<Input>> getSerializer() {
         return EIORecipes.SOUL_BINDING.serializer().get();
     }
 
     @Override
-    public RecipeType<?> getType() {
+    public RecipeType<? extends Recipe<Input>> getType() {
         return EIORecipes.SOUL_BINDING.type().get();
     }
 
@@ -162,11 +181,43 @@ public record SoulBindingRecipe(ItemStack output, Ingredient input, int energy, 
         }
     }
 
+    public record SoulBindingDisplay(SlotDisplay ingredient, SlotDisplay result, SlotDisplay craftingStation) implements RecipeDisplay {
+
+        public static final MapCodec<SoulBindingDisplay> MAP_CODEC = RecordCodecBuilder.mapCodec(
+            p_379634_ -> p_379634_.group(
+                    SlotDisplay.CODEC.fieldOf("ingredients").forGetter(SoulBindingDisplay::ingredient),
+                    SlotDisplay.CODEC.fieldOf("result").forGetter(SoulBindingDisplay::result),
+                    SlotDisplay.CODEC.fieldOf("crafting_station").forGetter(SoulBindingDisplay::craftingStation)
+                )
+                .apply(p_379634_, SoulBindingDisplay::new)
+        );
+        public static final StreamCodec<RegistryFriendlyByteBuf, SoulBindingDisplay> STREAM_CODEC = StreamCodec.composite(
+            SlotDisplay.STREAM_CODEC,
+            SoulBindingDisplay::ingredient,
+            SlotDisplay.STREAM_CODEC,
+            SoulBindingDisplay::result,
+            SlotDisplay.STREAM_CODEC,
+            SoulBindingDisplay::craftingStation,
+            SoulBindingDisplay::new
+        );
+        public static final RecipeDisplay.Type<SoulBindingDisplay> TYPE = new RecipeDisplay.Type<>(MAP_CODEC, STREAM_CODEC);
+
+        @Override
+        public Type<? extends RecipeDisplay> type() {
+            return TYPE;
+        }
+
+        @Override
+        public boolean isEnabled(FeatureFlagSet flagSet) {
+            return this.ingredient.isEnabled(flagSet) && RecipeDisplay.super.isEnabled(flagSet);
+        }
+    }
+
     public static class Serializer implements RecipeSerializer<SoulBindingRecipe> {
 
         private static final MapCodec<SoulBindingRecipe> CODEC = RecordCodecBuilder.<SoulBindingRecipe>mapCodec(instance -> instance
                 .group(ItemStack.CODEC.fieldOf("output").forGetter(SoulBindingRecipe::output),
-                        Ingredient.CODEC_NONEMPTY.fieldOf("input").forGetter(SoulBindingRecipe::input),
+                        Ingredient.CODEC.fieldOf("input").forGetter(SoulBindingRecipe::input),
                         Codec.INT.fieldOf("energy").forGetter(SoulBindingRecipe::energy),
                         Codec.INT.fieldOf("experience").forGetter(SoulBindingRecipe::experience),
                         ResourceLocation.CODEC.optionalFieldOf("entity_type").forGetter(SoulBindingRecipe::entityType),

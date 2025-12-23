@@ -3,26 +3,37 @@ package com.enderio.enderio.content.machines.slicer;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.enderio.foundation.MachineRecipe;
 import com.enderio.enderio.foundation.util.ValidatingListCodec;
+import com.enderio.enderio.init.EIOBlocks;
+import com.enderio.enderio.init.EIORecipeBookCategories;
 import com.enderio.enderio.init.EIORecipes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.PlacementInfo;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeBookCategory;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.display.RecipeDisplay;
+import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-public record SlicingRecipe(ItemStack output, List<Ingredient> inputs, int energy)
+public record SlicingRecipe(ItemStack output, List<Ingredient> inputs, int energy, PlacementInfo placementInfo)
         implements MachineRecipe<SlicingRecipe.Input> {
+
+    public SlicingRecipe(ItemStack output, List<Ingredient> inputs, int energy) {
+        this(output, inputs, energy, PlacementInfo.create(inputs));
+    }
 
     @Override
     public int getBaseEnergyCost() {
@@ -40,8 +51,15 @@ public record SlicingRecipe(ItemStack output, List<Ingredient> inputs, int energ
     }
 
     @Override
-    public NonNullList<Ingredient> getIngredients() {
-        return NonNullList.of(Ingredient.EMPTY, inputs.toArray(new Ingredient[0]));
+    public List<RecipeDisplay> display() {
+        return List.of(new SlicingDisplay(inputs.stream().map(Ingredient::display).toList(),
+            new SlotDisplay.ItemStackSlotDisplay(output.copy()),
+            new SlotDisplay.ItemSlotDisplay(EIOBlocks.SLICE_AND_SPLICE.asItem())));
+    }
+
+    @Override
+    public RecipeBookCategory recipeBookCategory() {
+        return EIORecipeBookCategories.SLICING.get();
     }
 
     @Override
@@ -55,12 +73,12 @@ public record SlicingRecipe(ItemStack output, List<Ingredient> inputs, int energ
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<? extends Recipe<Input>> getSerializer() {
         return EIORecipes.SLICING.serializer().get();
     }
 
     @Override
-    public RecipeType<?> getType() {
+    public RecipeType<? extends Recipe<Input>> getType() {
         return EIORecipes.SLICING.type().get();
     }
 
@@ -81,10 +99,42 @@ public record SlicingRecipe(ItemStack output, List<Ingredient> inputs, int energ
         }
     }
 
+    public record SlicingDisplay(List<SlotDisplay> ingredients, SlotDisplay result, SlotDisplay craftingStation) implements RecipeDisplay {
+
+        public static final MapCodec<SlicingDisplay> MAP_CODEC = RecordCodecBuilder.mapCodec(
+            p_379634_ -> p_379634_.group(
+                    SlotDisplay.CODEC.listOf().fieldOf("ingredients").forGetter(SlicingDisplay::ingredients),
+                    SlotDisplay.CODEC.fieldOf("result").forGetter(SlicingDisplay::result),
+                    SlotDisplay.CODEC.fieldOf("crafting_station").forGetter(SlicingDisplay::craftingStation)
+                )
+                .apply(p_379634_, SlicingDisplay::new)
+        );
+        public static final StreamCodec<RegistryFriendlyByteBuf, SlicingDisplay> STREAM_CODEC = StreamCodec.composite(
+            SlotDisplay.STREAM_CODEC.apply(ByteBufCodecs.list()),
+            SlicingDisplay::ingredients,
+            SlotDisplay.STREAM_CODEC,
+            SlicingDisplay::result,
+            SlotDisplay.STREAM_CODEC,
+            SlicingDisplay::craftingStation,
+            SlicingDisplay::new
+        );
+        public static final RecipeDisplay.Type<SlicingDisplay> TYPE = new RecipeDisplay.Type<>(MAP_CODEC, STREAM_CODEC);
+
+        @Override
+        public Type<? extends RecipeDisplay> type() {
+            return TYPE;
+        }
+
+        @Override
+        public boolean isEnabled(FeatureFlagSet flagSet) {
+            return this.ingredients.stream().allMatch(i -> i.isEnabled(flagSet)) && RecipeDisplay.super.isEnabled(flagSet);
+        }
+    }
+
     public static class Serializer implements RecipeSerializer<SlicingRecipe> {
         public static final MapCodec<SlicingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
                 .group(ItemStack.CODEC.fieldOf("output").forGetter(SlicingRecipe::output),
-                        new ValidatingListCodec<>(Ingredient.LIST_CODEC, 6).fieldOf("inputs")
+                        new ValidatingListCodec<>(Ingredient.CODEC.listOf(), 6).fieldOf("inputs")
                                 .forGetter(SlicingRecipe::inputs),
                         Codec.INT.fieldOf("energy").forGetter(SlicingRecipe::energy))
                 .apply(instance, SlicingRecipe::new));

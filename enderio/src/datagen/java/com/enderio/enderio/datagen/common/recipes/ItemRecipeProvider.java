@@ -6,24 +6,27 @@ import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOItems;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.Tags;
 
 public class ItemRecipeProvider extends SubRecipeProvider {
 
     @Override
-    public void buildRecipes(RecipeOutput recipeOutput, HolderLookup.Provider registries) {
-        addTools(recipeOutput);
-        addGliders(recipeOutput);
-        eraseFilterRecipes(recipeOutput);
+    public void buildRecipes(HolderLookup.Provider registries, RecipeOutput recipeOutput) {
+        var items = registries.lookupOrThrow(Registries.ITEM);
+        addTools(items, recipeOutput);
+        addGliders(items, recipeOutput);
+        eraseFilterRecipes(items, recipeOutput);
     }
 
-    private void addGliders(RecipeOutput recipeOutput) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, EIOItems.GLIDER_WING.get())
+    private void addGliders(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput) {
+        ShapedRecipeBuilder.shaped(items, RecipeCategory.TOOLS, EIOItems.GLIDER_WING.get())
                 .pattern("  D")
                 .pattern(" DL")
                 .pattern("DLL")
@@ -33,7 +36,7 @@ public class ItemRecipeProvider extends SubRecipeProvider {
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DARK_STEEL_INGOT.get()))
                 .save(recipeOutput);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, EIOItems.GLIDER.get())
+        ShapedRecipeBuilder.shaped(items, RecipeCategory.TOOLS, EIOItems.GLIDER.get())
                 .pattern(" D ")
                 .pattern("WDW")
                 .define('D', EIOItems.DARK_STEEL_INGOT.get())
@@ -51,8 +54,8 @@ public class ItemRecipeProvider extends SubRecipeProvider {
 //        }
     }
 
-    private void addTools(RecipeOutput recipeOutput) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, EIOItems.YETA_WRENCH.get())
+    private void addTools(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput) {
+        ShapedRecipeBuilder.shaped(items, RecipeCategory.TOOLS, EIOItems.YETA_WRENCH.get())
                 .define('I', Tags.Items.INGOTS_COPPER)
                 .define('G', EIOTags.Items.DUSTS_GRAINS_OF_INFINITY)
                 .pattern("I I")
@@ -62,14 +65,14 @@ public class ItemRecipeProvider extends SubRecipeProvider {
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GRAINS_OF_INFINITY.get()))
                 .save(recipeOutput);
 
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.TOOLS, EIOItems.COLD_FIRE_IGNITER.get())
+        ShapelessRecipeBuilder.shapeless(items, RecipeCategory.TOOLS, EIOItems.COLD_FIRE_IGNITER.get())
                 .requires(EIOTags.Items.INGOTS_DARK_STEEL)
                 .requires(Items.FLINT)
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DARK_STEEL_INGOT.get()))
                 .save(recipeOutput);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, EIOItems.COORDINATE_SELECTOR.get())
+        ShapedRecipeBuilder.shaped(items, RecipeCategory.TOOLS, EIOItems.COORDINATE_SELECTOR.get())
                 .define('I', EIOTags.Items.INGOTS_COPPER_ALLOY)
                 .define('C', Items.COMPASS)
                 .define('E', Tags.Items.ENDER_PEARLS)
@@ -80,7 +83,7 @@ public class ItemRecipeProvider extends SubRecipeProvider {
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.COPPER_ALLOY_INGOT.get()))
                 .save(recipeOutput);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, EIOItems.ELECTROMAGNET.get())
+        ShapedRecipeBuilder.shaped(items, RecipeCategory.TOOLS, EIOItems.ELECTROMAGNET.get())
                 .define('V', EIOTags.Items.GEMS_VIBRANT_CRYSTAL)
                 .define('C', EIOTags.Items.INGOTS_CONDUCTIVE_ALLOY)
                 .define('E', EIOTags.Items.INGOTS_COPPER_ALLOY)
@@ -91,7 +94,7 @@ public class ItemRecipeProvider extends SubRecipeProvider {
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.VIBRANT_CRYSTAL.get()))
                 .save(recipeOutput);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, EIOItems.VOID_VIAL.get())
+        ShapedRecipeBuilder.shaped(items, RecipeCategory.TOOLS, EIOItems.VOID_VIAL.get())
                 .pattern(" S ")
                 .pattern("QVQ")
                 .pattern("GQG")
@@ -103,7 +106,7 @@ public class ItemRecipeProvider extends SubRecipeProvider {
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.SOULARIUM_INGOT.get()))
                 .save(recipeOutput);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, EIOItems.LEVITATION_STAFF.get())
+        ShapedRecipeBuilder.shaped(items, RecipeCategory.TOOLS, EIOItems.LEVITATION_STAFF.get())
                 .define('C', EIOTags.Items.GEMS_PRESCIENT_CRYSTAL)
                 .define('R', EIOItems.INFINITY_ROD.get())
                 .pattern("  C")
@@ -113,7 +116,7 @@ public class ItemRecipeProvider extends SubRecipeProvider {
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.PULSATING_CRYSTAL.get()))
                 .save(recipeOutput);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, EIOItems.TRAVEL_STAFF.get())
+        ShapedRecipeBuilder.shaped(items, RecipeCategory.TOOLS, EIOItems.TRAVEL_STAFF.get())
                 .define('C', EIOTags.Items.GEMS_ENDER_CRYSTAL)
                 .define('I', EIOTags.Items.INGOTS_DARK_STEEL)
                 .pattern("  C")
@@ -124,20 +127,20 @@ public class ItemRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput);
     }
 
-    private void eraseFilterRecipes(RecipeOutput recipeOutput) {
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, EIOItems.BASIC_ITEM_FILTER)
+    private void eraseFilterRecipes(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput) {
+        ShapelessRecipeBuilder.shapeless(items, RecipeCategory.MISC, EIOItems.BASIC_ITEM_FILTER)
                 .requires(EIOItems.BASIC_ITEM_FILTER)
-                .unlockedBy("has_ingredient", has(EIOItems.BASIC_ITEM_FILTER))
-                .save(recipeOutput, EnderIO.rl("erase_basic_item_filter"));
+                .unlockedBy("has_ingredient", has(items, EIOItems.BASIC_ITEM_FILTER))
+                .save(recipeOutput, EnderIO.rl("erase_basic_item_filter").toString());
 
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, EIOItems.ADVANCED_ITEM_FILTER)
+        ShapelessRecipeBuilder.shapeless(items, RecipeCategory.MISC, EIOItems.ADVANCED_ITEM_FILTER)
                 .requires(EIOItems.ADVANCED_ITEM_FILTER)
-                .unlockedBy("has_ingredient", has(EIOItems.ADVANCED_ITEM_FILTER))
-                .save(recipeOutput, EnderIO.rl("erase_advanced_item_filter"));
+                .unlockedBy("has_ingredient", has(items, EIOItems.ADVANCED_ITEM_FILTER))
+                .save(recipeOutput, EnderIO.rl("erase_advanced_item_filter").toString());
 
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, EIOItems.BASIC_FLUID_FILTER)
+        ShapelessRecipeBuilder.shapeless(items, RecipeCategory.MISC, EIOItems.BASIC_FLUID_FILTER)
                 .requires(EIOItems.BASIC_FLUID_FILTER)
-                .unlockedBy("has_ingredient", has(EIOItems.BASIC_FLUID_FILTER))
-                .save(recipeOutput, EnderIO.rl("erase_basic_fluid_filter"));
+                .unlockedBy("has_ingredient", has(items, EIOItems.BASIC_FLUID_FILTER))
+                .save(recipeOutput, EnderIO.rl("erase_basic_fluid_filter").toString());
     }
 }

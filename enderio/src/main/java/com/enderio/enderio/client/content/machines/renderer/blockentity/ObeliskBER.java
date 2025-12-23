@@ -6,7 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -43,14 +43,14 @@ public class ObeliskBER implements BlockEntityRenderer<BlockEntity> {
                 position.x - blockEntity.getBlockPos().getX() - 0.5D) * 180.0f / Math.PI + 90);
         poseStack.mulPose(Axis.YP.rotationDegrees(-f1 + 180));
         ItemStack stack = new ItemStack(supplier.get());
-        BakedModel bakedmodel = minecraft.getItemRenderer().getModel(stack, blockEntity.getLevel(), null, 0);
+        ItemStackRenderState renderState = new ItemStackRenderState();
+        minecraft.getItemModelResolver().updateForTopItem(renderState, stack, ItemDisplayContext.GUI, false, blockEntity.getLevel(), null, 0);
         if (stack.getItem() instanceof BlockItem) { //Blocks are in iso, let's correct that
             poseStack.mulPose(Axis.YP.rotationDegrees(45));
             poseStack.mulPose(Axis.XP.rotationDegrees(-30));
             poseStack.scale(1.2f, 1.2f, 1.2f);
         }
-        minecraft.getItemRenderer()
-                .render(stack, ItemDisplayContext.GUI, true, poseStack, buffer, packedLight, packedOverlay, bakedmodel);
+        renderState.render(poseStack, buffer, packedLight, packedOverlay);
         poseStack.popPose();
     }
 }

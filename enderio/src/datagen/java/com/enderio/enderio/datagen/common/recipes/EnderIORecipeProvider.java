@@ -2,13 +2,11 @@ package com.enderio.enderio.datagen.common.recipes;
 
 import com.enderio.core.data.recipe.EnderRecipeProvider;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.data.PackOutput;
-
-import java.util.concurrent.CompletableFuture;
+import net.minecraft.data.recipes.RecipeOutput;
 
 public class EnderIORecipeProvider extends EnderRecipeProvider {
-    public EnderIORecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-        super(output, registries);
+    public EnderIORecipeProvider(HolderLookup.Provider registries, RecipeOutput output) {
+        super(registries, output);
 
         addProvider(new AlloyRecipeProvider());
         addProvider(new ArmoryRecipeProvider());

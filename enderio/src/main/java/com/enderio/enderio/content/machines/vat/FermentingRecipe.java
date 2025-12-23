@@ -4,6 +4,7 @@ import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.enderio.foundation.MachineRecipe;
 import com.enderio.enderio.foundation.datamap.VatReagent;
 import com.enderio.enderio.foundation.io.fluid.MachineFluidTank;
+import com.enderio.enderio.init.EIORecipeBookCategories;
 import com.enderio.enderio.init.EIORecipes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -18,6 +19,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.PlacementInfo;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeBookCategory;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -28,7 +32,12 @@ import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import java.util.List;
 
 public record FermentingRecipe(SizedFluidIngredient input, TagKey<Item> leftReagent, TagKey<Item> rightReagent,
-        FluidStack output, int ticks) implements MachineRecipe<FermentingRecipe.Input> {
+                               FluidStack output, int ticks, PlacementInfo placementInfo) implements MachineRecipe<FermentingRecipe.Input> {
+
+    public FermentingRecipe(SizedFluidIngredient input, TagKey<Item> leftReagent, TagKey<Item> rightReagent,
+        FluidStack output, int ticks) {
+        this(input, leftReagent, rightReagent, output, ticks, PlacementInfo.NOT_PLACEABLE); //TODO tag inputs don't work for ingredients
+    }
 
     @Override
     public int getBaseEnergyCost() {
@@ -68,13 +77,18 @@ public record FermentingRecipe(SizedFluidIngredient input, TagKey<Item> leftReag
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<? extends Recipe<Input>> getSerializer() {
         return EIORecipes.VAT_FERMENTING.serializer().get();
     }
 
     @Override
-    public RecipeType<?> getType() {
+    public RecipeType<? extends Recipe<Input>> getType() {
         return EIORecipes.VAT_FERMENTING.type().get();
+    }
+
+    @Override
+    public RecipeBookCategory recipeBookCategory() {
+        return EIORecipeBookCategories.FERMENTING.get();
     }
 
     public record Input(ItemStack leftReagent, ItemStack rightStack, MachineFluidTank inputTank)
@@ -105,7 +119,7 @@ public record FermentingRecipe(SizedFluidIngredient input, TagKey<Item> leftReag
                 .map(loc -> TagKey.create(Registries.ITEM, loc), TagKey::location);
 
         public static final MapCodec<FermentingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                SizedFluidIngredient.FLAT_CODEC.fieldOf("input").forGetter(FermentingRecipe::input),
+                SizedFluidIngredient.CODEC.fieldOf("input").forGetter(FermentingRecipe::input), //TODO make sure this handles empty
                 TagKey.codec(Registries.ITEM).fieldOf("left_reagent").forGetter(FermentingRecipe::leftReagent),
                 TagKey.codec(Registries.ITEM).fieldOf("right_reagent").forGetter(FermentingRecipe::rightReagent),
                 FluidStack.CODEC.fieldOf("output").forGetter(FermentingRecipe::output),

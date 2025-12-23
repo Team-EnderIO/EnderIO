@@ -2,6 +2,7 @@ package com.enderio.enderio.content.machines.obelisks.weather;
 
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.enderio.foundation.MachineRecipe;
+import com.enderio.enderio.init.EIORecipeBookCategories;
 import com.enderio.enderio.init.EIORecipes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -18,6 +19,9 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.FireworkExplosion;
 import net.minecraft.world.item.component.Fireworks;
+import net.minecraft.world.item.crafting.PlacementInfo;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeBookCategory;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -27,8 +31,12 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import java.util.List;
 import java.util.function.IntFunction;
 
-public record WeatherChangeRecipe(FluidStack fluid, WeatherMode mode)
+public record WeatherChangeRecipe(FluidStack fluid, WeatherMode mode, PlacementInfo placementInfo)
         implements MachineRecipe<WeatherChangeRecipe.Input> {
+
+    public WeatherChangeRecipe(FluidStack fluid, WeatherMode mode) {
+        this(fluid, mode, PlacementInfo.NOT_PLACEABLE);
+    }
 
     @Override
     public int getBaseEnergyCost() {
@@ -51,13 +59,23 @@ public record WeatherChangeRecipe(FluidStack fluid, WeatherMode mode)
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<? extends Recipe<Input>> getSerializer() {
         return EIORecipes.WEATHER_CHANGE.serializer().get();
     }
 
     @Override
-    public RecipeType<?> getType() {
+    public RecipeType<? extends Recipe<Input>> getType() {
         return EIORecipes.WEATHER_CHANGE.type().get();
+    }
+
+    @Override
+    public PlacementInfo placementInfo() {
+        return placementInfo;
+    }
+
+    @Override
+    public RecipeBookCategory recipeBookCategory() {
+        return EIORecipeBookCategories.WEATHER.get();
     }
 
     public record Input(FluidStack fluid) implements RecipeInput {

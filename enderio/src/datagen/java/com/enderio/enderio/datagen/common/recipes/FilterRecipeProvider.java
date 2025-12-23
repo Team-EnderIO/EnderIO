@@ -4,6 +4,7 @@ import com.enderio.core.data.recipe.SubRecipeProvider;
 import com.enderio.enderio.init.EIOItems;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
@@ -14,8 +15,10 @@ import net.neoforged.neoforge.common.Tags;
 public class FilterRecipeProvider extends SubRecipeProvider {
 
     @Override
-    public void buildRecipes(RecipeOutput recipeOutput, HolderLookup.Provider registries) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.BASIC_ITEM_FILTER.get())
+    public void buildRecipes(HolderLookup.Provider registries, RecipeOutput recipeOutput) {
+        var items = registries.lookupOrThrow(Registries.ITEM);
+
+        ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, EIOItems.BASIC_ITEM_FILTER.get())
                 .define('P', Ingredient.of(Items.PAPER, EIOItems.BLACK_PAPER)) // TODO: c:paper?
                 .define('H', Items.HOPPER)
                 .pattern(" P ")
@@ -24,7 +27,7 @@ public class FilterRecipeProvider extends SubRecipeProvider {
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Items.HOPPER))
                 .save(recipeOutput);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.ADVANCED_ITEM_FILTER.get())
+        ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, EIOItems.ADVANCED_ITEM_FILTER.get())
                 .define('P', Ingredient.of(Items.PAPER, EIOItems.BLACK_PAPER)) // TODO: c:paper?
                 .define('Z', EIOItems.Z_LOGIC_CONTROLLER)
                 .define('R', Tags.Items.DUSTS_REDSTONE)
@@ -35,7 +38,7 @@ public class FilterRecipeProvider extends SubRecipeProvider {
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.Z_LOGIC_CONTROLLER))
                 .save(recipeOutput);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.BASIC_FLUID_FILTER.get())
+        ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, EIOItems.BASIC_FLUID_FILTER.get())
                 .define('P', Ingredient.of(Items.PAPER, EIOItems.BLACK_PAPER)) // TODO: c:paper?
                 .define('B', Items.BUCKET)
                 .pattern(" P ")
@@ -44,7 +47,7 @@ public class FilterRecipeProvider extends SubRecipeProvider {
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Items.BUCKET))
                 .save(recipeOutput);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.BASIC_SOUL_FILTER.get())
+        ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, EIOItems.BASIC_SOUL_FILTER.get())
             .define('P', Ingredient.of(Items.PAPER, EIOItems.BLACK_PAPER)) // TODO: c:paper?
             .define('S', EIOItems.SOUL_VIAL)
             .pattern(" P ")

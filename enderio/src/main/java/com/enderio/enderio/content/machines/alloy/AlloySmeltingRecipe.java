@@ -2,23 +2,26 @@ package com.enderio.enderio.content.machines.alloy;
 
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.enderio.foundation.MachineRecipe;
+import com.enderio.enderio.init.EIOBlocks;
+import com.enderio.enderio.init.EIORecipeBookCategories;
 import com.enderio.enderio.init.EIORecipes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeBookCategory;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.display.RecipeDisplay;
+import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
 
@@ -149,6 +152,17 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
     }
 
     @Override
+    public List<RecipeDisplay> display() {
+        return List.of(
+            new AlloySmelterDisplay(
+                this.inputs.stream().map(s -> s.ingredient().display()).toList(),
+                new SlotDisplay.ItemStackSlotDisplay(this.output.copy()),
+                new SlotDisplay.ItemSlotDisplay(EIOBlocks.ALLOY_SMELTER.asItem())
+            )
+        );
+    }
+
+    @Override
     public List<OutputStack> getResultStacks(RegistryAccess registryAccess) {
         return List.of(OutputStack.of(output.copy()));
     }
@@ -166,14 +180,14 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
     @Override
     public PlacementInfo placementInfo() {
         if (placementInfo == null) {
-            placementInfo = PlacementInfo.create(inputs.stream().map(SizedIngredient::ingredient).toList()); //TODO is it fine to not have the size
+            placementInfo = PlacementInfo.create(inputs.stream().map(SizedIngredient::ingredient).toList());
         }
         return placementInfo;
     }
 
     @Override
     public RecipeBookCategory recipeBookCategory() {
-        return null;
+        return EIORecipeBookCategories.ALLOY_SMELTING.get();
     }
 
     public record Input(List<ItemStack> inputs, int inputsConsumed) implements RecipeInput {
@@ -206,10 +220,42 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
         }
     }
 
+    public record AlloySmelterDisplay(List<SlotDisplay> ingredients, SlotDisplay result, SlotDisplay craftingStation) implements RecipeDisplay {
+
+        public static final MapCodec<AlloySmelterDisplay> MAP_CODEC = RecordCodecBuilder.mapCodec(
+            p_379634_ -> p_379634_.group(
+                    SlotDisplay.CODEC.listOf().fieldOf("ingredients").forGetter(AlloySmelterDisplay::ingredients),
+                    SlotDisplay.CODEC.fieldOf("result").forGetter(AlloySmelterDisplay::result),
+                    SlotDisplay.CODEC.fieldOf("crafting_station").forGetter(AlloySmelterDisplay::craftingStation)
+                )
+                .apply(p_379634_, AlloySmelterDisplay::new)
+        );
+        public static final StreamCodec<RegistryFriendlyByteBuf, AlloySmelterDisplay> STREAM_CODEC = StreamCodec.composite(
+            SlotDisplay.STREAM_CODEC.apply(ByteBufCodecs.list()),
+            AlloySmelterDisplay::ingredients,
+            SlotDisplay.STREAM_CODEC,
+            AlloySmelterDisplay::result,
+            SlotDisplay.STREAM_CODEC,
+            AlloySmelterDisplay::craftingStation,
+            AlloySmelterDisplay::new
+        );
+        public static final RecipeDisplay.Type<AlloySmelterDisplay> TYPE = new RecipeDisplay.Type<>(MAP_CODEC, STREAM_CODEC);
+
+        @Override
+        public Type<? extends RecipeDisplay> type() {
+            return TYPE;
+        }
+
+        @Override
+        public boolean isEnabled(FeatureFlagSet flagSet) {
+            return this.ingredients.stream().allMatch(i -> i.isEnabled(flagSet)) && RecipeDisplay.super.isEnabled(flagSet);
+        }
+    }
+
     public static class Serializer implements RecipeSerializer<AlloySmeltingRecipe> {
         // Uses optional field for isSmelting to avoid polluting recipe generation.
         public static final MapCodec<AlloySmeltingRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst
-                .group(SizedIngredient.FLAT_CODEC.listOf().fieldOf("inputs").forGetter(AlloySmeltingRecipe::inputs),
+                .group(SizedIngredient.NESTED_CODEC.listOf().fieldOf("inputs").forGetter(AlloySmeltingRecipe::inputs), //TODO is nested right?
                         ItemStack.CODEC.fieldOf("output").forGetter(AlloySmeltingRecipe::output),
                         Codec.INT.fieldOf("energy").forGetter(AlloySmeltingRecipe::energy),
                         Codec.FLOAT.fieldOf("experience").forGetter(AlloySmeltingRecipe::experience),

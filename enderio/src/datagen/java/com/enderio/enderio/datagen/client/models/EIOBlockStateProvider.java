@@ -12,6 +12,17 @@ import com.enderio.enderio.datagen.client.models.block.PaintedBlockModelBuilder;
 import com.enderio.enderio.foundation.block.ProgressMachineBlock;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOFluids;
+import net.minecraft.client.data.models.BlockModelGenerators;
+import net.minecraft.client.data.models.ItemModelGenerators;
+import net.minecraft.client.data.models.ModelProvider;
+import net.minecraft.client.data.models.blockstates.Condition;
+import net.minecraft.client.data.models.blockstates.MultiPartGenerator;
+import net.minecraft.client.data.models.blockstates.Variant;
+import net.minecraft.client.data.models.blockstates.VariantProperties;
+import net.minecraft.client.data.models.model.ModelLocationUtils;
+import net.minecraft.client.data.models.model.ModelTemplate;
+import net.minecraft.client.data.models.model.ModelTemplates;
+import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
@@ -24,39 +35,123 @@ import net.minecraft.world.level.block.PressurePlateBlock;
 import net.minecraft.world.level.block.WeightedPressurePlateBlock;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.client.model.generators.VariantBlockStateBuilder;
 import net.neoforged.neoforge.client.model.generators.loaders.CompositeModelBuilder;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.client.model.generators.template.ExtendedModelTemplateBuilder;
 
 import java.util.Locale;
 
-public class EIOBlockStateProvider extends BlockStateProvider {
-    public EIOBlockStateProvider(PackOutput output, ExistingFileHelper exFileHelper) {
-        super(output, EnderIO.MOD_ID, exFileHelper);
+public class EIOBlockStateProvider extends ModelProvider {
+    public EIOBlockStateProvider(PackOutput output) {
+        super(output, EnderIO.MOD_ID);
     }
 
     @Override
-    protected void registerStatesAndModels() {
+    protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
         // Alloys
-        simpleBlock(EIOBlocks.COPPER_ALLOY_BLOCK.get());
-        simpleBlock(EIOBlocks.ENERGETIC_ALLOY_BLOCK.get());
-        simpleBlock(EIOBlocks.VIBRANT_ALLOY_BLOCK.get());
-        simpleBlock(EIOBlocks.REDSTONE_ALLOY_BLOCK.get());
-        simpleBlock(EIOBlocks.CONDUCTIVE_ALLOY_BLOCK.get());
-        simpleBlock(EIOBlocks.PULSATING_ALLOY_BLOCK.get());
-        simpleBlock(EIOBlocks.DARK_STEEL_BLOCK.get());
-        simpleBlock(EIOBlocks.SOULARIUM_BLOCK.get());
-        simpleBlock(EIOBlocks.END_STEEL_BLOCK.get());
+        simpleBlock(blockModels, EIOBlocks.COPPER_ALLOY_BLOCK.get());
+        simpleBlock(blockModels, EIOBlocks.ENERGETIC_ALLOY_BLOCK.get());
+        simpleBlock(blockModels, EIOBlocks.VIBRANT_ALLOY_BLOCK.get());
+        simpleBlock(blockModels, EIOBlocks.REDSTONE_ALLOY_BLOCK.get());
+        simpleBlock(blockModels, EIOBlocks.CONDUCTIVE_ALLOY_BLOCK.get());
+        simpleBlock(blockModels, EIOBlocks.PULSATING_ALLOY_BLOCK.get());
+        simpleBlock(blockModels, EIOBlocks.DARK_STEEL_BLOCK.get());
+        simpleBlock(blockModels, EIOBlocks.SOULARIUM_BLOCK.get());
+        simpleBlock(blockModels, EIOBlocks.END_STEEL_BLOCK.get());
 
         // Chassis
-        simpleTranslucentBlock(EIOBlocks.VOID_CHASSIS.get());
-        simpleTranslucentBlock(EIOBlocks.ENSOULED_CHASSIS.get());
+        simpleTranslucentBlock(blockModels, EIOBlocks.VOID_CHASSIS.get());
+        simpleTranslucentBlock(blockModels, EIOBlocks.ENSOULED_CHASSIS.get());
+
 
         // Dark Steel Building Blocks
-        ladderBlock(EIOBlocks.DARK_STEEL_LADDER.get());
+        blockModels.createNonTemplateHorizontalBlock(EIOBlocks.DARK_STEEL_LADDER.get());
+        blockModels.registerSimpleFlatItemModel(EIOBlocks.DARK_STEEL_LADDER.get());
+
+    }
+
+    private void simpleBlock(BlockModelGenerators blockModels, Block block) {
+        ResourceLocation resourcelocation = ModelTemplates.CUBE_ALL.create(block, TextureMapping.cube(block), blockModels.modelOutput);
+        blockModels.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(block, resourcelocation));
+    }
+
+    private void simpleTranslucentBlock(BlockModelGenerators blockModels, Block block) {
+        var CUBE_TRANS = ExtendedModelTemplateBuilder.of(ModelTemplates.CUBE_ALL).renderType("translucent").build();
+        ResourceLocation resourcelocation = CUBE_TRANS.create(block, TextureMapping.cube(block), blockModels.modelOutput);
+        blockModels.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(block, resourcelocation));
+    }
+
+    public void createBars(BlockModelGenerators blockModels, Block block) {
+        ResourceLocation resourcelocation = ModelLocationUtils.getModelLocation(block, "_post_ends");
+        ResourceLocation resourcelocation1 = ModelLocationUtils.getModelLocation(block, "_post");
+        ResourceLocation resourcelocation2 = ModelLocationUtils.getModelLocation(block, "_cap");
+        ResourceLocation resourcelocation3 = ModelLocationUtils.getModelLocation(block, "_cap_alt");
+        ResourceLocation resourcelocation4 = ModelLocationUtils.getModelLocation(block, "_side");
+        ResourceLocation resourcelocation5 = ModelLocationUtils.getModelLocation(block, "_side_alt");
+        blockModels.blockStateOutput
+            .accept(
+                MultiPartGenerator.multiPart(block)
+                    .with(Variant.variant().with(VariantProperties.MODEL, resourcelocation))
+                    .with(
+                        Condition.condition()
+                            .term(BlockStateProperties.NORTH, false)
+                            .term(BlockStateProperties.EAST, false)
+                            .term(BlockStateProperties.SOUTH, false)
+                            .term(BlockStateProperties.WEST, false),
+                        Variant.variant().with(VariantProperties.MODEL, resourcelocation1)
+                    )
+                    .with(
+                        Condition.condition()
+                            .term(BlockStateProperties.NORTH, true)
+                            .term(BlockStateProperties.EAST, false)
+                            .term(BlockStateProperties.SOUTH, false)
+                            .term(BlockStateProperties.WEST, false),
+                        Variant.variant().with(VariantProperties.MODEL, resourcelocation2)
+                    )
+                    .with(
+                        Condition.condition()
+                            .term(BlockStateProperties.NORTH, false)
+                            .term(BlockStateProperties.EAST, true)
+                            .term(BlockStateProperties.SOUTH, false)
+                            .term(BlockStateProperties.WEST, false),
+                        Variant.variant().with(VariantProperties.MODEL, resourcelocation2).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90)
+                    )
+                    .with(
+                        Condition.condition()
+                            .term(BlockStateProperties.NORTH, false)
+                            .term(BlockStateProperties.EAST, false)
+                            .term(BlockStateProperties.SOUTH, true)
+                            .term(BlockStateProperties.WEST, false),
+                        Variant.variant().with(VariantProperties.MODEL, resourcelocation3)
+                    )
+                    .with(
+                        Condition.condition()
+                            .term(BlockStateProperties.NORTH, false)
+                            .term(BlockStateProperties.EAST, false)
+                            .term(BlockStateProperties.SOUTH, false)
+                            .term(BlockStateProperties.WEST, true),
+                        Variant.variant().with(VariantProperties.MODEL, resourcelocation3).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90)
+                    )
+                    .with(Condition.condition().term(BlockStateProperties.NORTH, true), Variant.variant().with(VariantProperties.MODEL, resourcelocation4))
+                    .with(
+                        Condition.condition().term(BlockStateProperties.EAST, true),
+                        Variant.variant().with(VariantProperties.MODEL, resourcelocation4).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90)
+                    )
+                    .with(Condition.condition().term(BlockStateProperties.SOUTH, true), Variant.variant().with(VariantProperties.MODEL, resourcelocation5))
+                    .with(
+                        Condition.condition().term(BlockStateProperties.WEST, true),
+                        Variant.variant().with(VariantProperties.MODEL, resourcelocation5).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90)
+                    )
+            );
+        blockModels.registerSimpleFlatItemModel(block);
+    }
+
+
+    @Override
+    protected void registerStatesAndModels() {
+
         paneBlockWithRenderType(EIOBlocks.DARK_STEEL_BARS.get(), blockTexture(EIOBlocks.DARK_STEEL_BARS.get()), blockTexture(EIOBlocks.DARK_STEEL_BARS.get()),
             "cutout_mipped");
         doorBlockWithRenderType(EIOBlocks.DARK_STEEL_DOOR.get(), modLoc("block/dark_steel_door_bottom"), modLoc("block/dark_steel_door_top"),
@@ -235,12 +330,6 @@ public class EIOBlockStateProvider extends BlockStateProvider {
         for (var fluidBlock : EIOFluids.FLUIDS.blocksRegister().getEntries()) {
             simpleBlock(fluidBlock.get(), water);
         }
-    }
-
-    private void simpleTranslucentBlock(Block block) {
-        simpleBlock(block, models()
-            .cubeAll(name(block), blockTexture(block))
-            .renderType(mcLoc("translucent")));
     }
 
     private void ladderBlock(Block block) {

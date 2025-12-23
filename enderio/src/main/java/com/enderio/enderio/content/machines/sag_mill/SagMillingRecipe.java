@@ -4,13 +4,14 @@ import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.enderio.api.components.GrindingBallData;
 import com.enderio.enderio.foundation.MachineRecipe;
 import com.enderio.enderio.foundation.util.OptionalItemUtility;
+import com.enderio.enderio.init.EIOBlocks;
+import com.enderio.enderio.init.EIORecipeBookCategories;
 import com.enderio.enderio.init.EIORecipes;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -20,12 +21,18 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.ByIdMap;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.PlacementInfo;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeBookCategory;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.display.RecipeDisplay;
+import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
@@ -34,8 +41,12 @@ import java.util.Locale;
 import java.util.Random;
 import java.util.function.IntFunction;
 
-public record SagMillingRecipe(Ingredient input, List<OutputItem> outputs, int energy, BonusType bonusType)
+public record SagMillingRecipe(Ingredient input, List<OutputItem> outputs, int energy, BonusType bonusType, PlacementInfo placementInfo)
         implements MachineRecipe<SagMillingRecipe.Input> {
+
+    public SagMillingRecipe(Ingredient input, List<OutputItem> outputs, int energy, BonusType bonusType) {
+        this(input, outputs, energy, bonusType, PlacementInfo.create(input));
+    }
 
     private static final Random RANDOM = new Random();
 
@@ -114,8 +125,16 @@ public record SagMillingRecipe(Ingredient input, List<OutputItem> outputs, int e
     }
 
     @Override
-    public NonNullList<Ingredient> getIngredients() {
-        return NonNullList.of(Ingredient.EMPTY, input);
+    public List<RecipeDisplay> display() {
+        List<RecipeDisplay> displays = new ArrayList<>();
+        for (OutputItem item : outputs) {
+            if (item.chance >= 1.0f && item.isPresent()) {
+                displays.add(new SagMillingDisplay(input.display(),
+                        new SlotDisplay.ItemStackSlotDisplay(item.getItemStack().copy()),
+                        new SlotDisplay.ItemSlotDisplay(EIOBlocks.SAG_MILL.asItem())));
+            }
+        }
+        return displays;
     }
 
     @Override
@@ -124,13 +143,18 @@ public record SagMillingRecipe(Ingredient input, List<OutputItem> outputs, int e
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<? extends Recipe<Input>> getSerializer() {
         return EIORecipes.SAG_MILLING.serializer().get();
     }
 
     @Override
-    public RecipeType<?> getType() {
+    public RecipeType<? extends Recipe<Input>> getType() {
         return EIORecipes.SAG_MILLING.type().get();
+    }
+
+    @Override
+    public RecipeBookCategory recipeBookCategory() {
+        return EIORecipeBookCategories.SAG_MILL.get();
     }
 
     public enum BonusType implements StringRepresentable {
@@ -236,11 +260,43 @@ public record SagMillingRecipe(Ingredient input, List<OutputItem> outputs, int e
         }
     }
 
+    public record SagMillingDisplay(SlotDisplay ingredient, SlotDisplay result, SlotDisplay craftingStation) implements RecipeDisplay {
+
+        public static final MapCodec<SagMillingDisplay> MAP_CODEC = RecordCodecBuilder.mapCodec(
+            p_379634_ -> p_379634_.group(
+                    SlotDisplay.CODEC.fieldOf("ingredients").forGetter(SagMillingDisplay::ingredient),
+                    SlotDisplay.CODEC.fieldOf("result").forGetter(SagMillingDisplay::result),
+                    SlotDisplay.CODEC.fieldOf("crafting_station").forGetter(SagMillingDisplay::craftingStation)
+                )
+                .apply(p_379634_, SagMillingDisplay::new)
+        );
+        public static final StreamCodec<RegistryFriendlyByteBuf, SagMillingDisplay> STREAM_CODEC = StreamCodec.composite(
+            SlotDisplay.STREAM_CODEC,
+            SagMillingDisplay::ingredient,
+            SlotDisplay.STREAM_CODEC,
+            SagMillingDisplay::result,
+            SlotDisplay.STREAM_CODEC,
+            SagMillingDisplay::craftingStation,
+            SagMillingDisplay::new
+        );
+        public static final RecipeDisplay.Type<SagMillingDisplay> TYPE = new RecipeDisplay.Type<>(MAP_CODEC, STREAM_CODEC);
+
+        @Override
+        public Type<? extends RecipeDisplay> type() {
+            return TYPE;
+        }
+
+        @Override
+        public boolean isEnabled(FeatureFlagSet flagSet) {
+            return this.ingredient.isEnabled(flagSet) && RecipeDisplay.super.isEnabled(flagSet);
+        }
+    }
+
     public static class Serializer implements RecipeSerializer<SagMillingRecipe> {
 
         public static final MapCodec<SagMillingRecipe> CODEC = RecordCodecBuilder
                 .mapCodec(instance -> instance
-                        .group(Ingredient.CODEC_NONEMPTY.fieldOf("input").forGetter(SagMillingRecipe::input),
+                        .group(Ingredient.CODEC.fieldOf("input").forGetter(SagMillingRecipe::input),
                                 OutputItem.CODEC.listOf().fieldOf("outputs").forGetter(SagMillingRecipe::outputs),
                                 Codec.INT.fieldOf("energy").forGetter(SagMillingRecipe::energy),
                                 BonusType.CODEC.optionalFieldOf("bonus", BonusType.MULTIPLY_OUTPUT)

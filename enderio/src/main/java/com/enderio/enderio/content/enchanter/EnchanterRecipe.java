@@ -2,6 +2,7 @@ package com.enderio.enderio.content.enchanter;
 
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.init.EIOBlocks;
+import com.enderio.enderio.init.EIORecipeBookCategories;
 import com.enderio.enderio.init.EIORecipes;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -11,11 +12,11 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ExtraCodecs;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeBookCategories;
 import net.minecraft.world.item.crafting.RecipeBookCategory;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -102,7 +103,7 @@ public record EnchanterRecipe(Holder<Enchantment> enchantment, int costMultiplie
      * Get the enchanted book with the correct enchantment of level.
      */
     public ItemStack getBookForLevel(int level) {
-        return EnchantedBookItem.createForEnchantment(new EnchantmentInstance(enchantment, level));
+        return Items.BOOK.applyEnchantments(new ItemStack(Items.BOOK), List.of(new EnchantmentInstance(enchantment, level)));
     }
 
     // endregion
@@ -136,27 +137,14 @@ public record EnchanterRecipe(Holder<Enchantment> enchantment, int costMultiplie
 
     @Override
     public List<RecipeDisplay> display() {
-        return List.of(new RecipeDisplay() {
-            @Override
-            public SlotDisplay result() {
-                return new SlotDisplay.ItemSlotDisplay(Items.AIR);
-            }
-
-            @Override
-            public SlotDisplay craftingStation() {
-                return new SlotDisplay.ItemSlotDisplay(EIOBlocks.ENCHANTER.asItem());
-            }
-
-            @Override
-            public Type<? extends RecipeDisplay> type() {
-                return ;
-            }
-        });
+        return List.of(new EnchantingDisplay(input.ingredient().display(),
+            new SlotDisplay.ItemStackSlotDisplay(getBookForLevel(getEnchantmentLevel(input.count()))), //TODO is this the right way?
+            new SlotDisplay.ItemSlotDisplay(EIOBlocks.ENCHANTER.asItem())));
     }
 
     @Override
     public RecipeBookCategory recipeBookCategory() {
-        return ;
+        return EIORecipeBookCategories.ENCHANTING.get();
     }
 
     @Override
@@ -189,6 +177,38 @@ public record EnchanterRecipe(Holder<Enchantment> enchantment, int costMultiplie
         @Override
         public int size() {
             return 3;
+        }
+    }
+
+    public record EnchantingDisplay(SlotDisplay ingredient, SlotDisplay result, SlotDisplay craftingStation) implements RecipeDisplay {
+
+        public static final MapCodec<EnchantingDisplay> MAP_CODEC = RecordCodecBuilder.mapCodec(
+            p_379634_ -> p_379634_.group(
+                    SlotDisplay.CODEC.fieldOf("ingredients").forGetter(EnchantingDisplay::ingredient),
+                    SlotDisplay.CODEC.fieldOf("result").forGetter(EnchantingDisplay::result),
+                    SlotDisplay.CODEC.fieldOf("crafting_station").forGetter(EnchantingDisplay::craftingStation)
+                )
+                .apply(p_379634_, EnchantingDisplay::new)
+        );
+        public static final StreamCodec<RegistryFriendlyByteBuf, EnchantingDisplay> STREAM_CODEC = StreamCodec.composite(
+            SlotDisplay.STREAM_CODEC,
+            EnchantingDisplay::ingredient,
+            SlotDisplay.STREAM_CODEC,
+            EnchantingDisplay::result,
+            SlotDisplay.STREAM_CODEC,
+            EnchantingDisplay::craftingStation,
+            EnchantingDisplay::new
+        );
+        public static final RecipeDisplay.Type<EnchantingDisplay> TYPE = new RecipeDisplay.Type<>(MAP_CODEC, STREAM_CODEC);
+
+        @Override
+        public Type<? extends RecipeDisplay> type() {
+            return TYPE;
+        }
+
+        @Override
+        public boolean isEnabled(FeatureFlagSet flagSet) {
+            return this.ingredient.isEnabled(flagSet) && RecipeDisplay.super.isEnabled(flagSet);
         }
     }
 
