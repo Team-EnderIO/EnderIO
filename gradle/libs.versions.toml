@@ -1,11 +1,11 @@
 [versions]
-minecraft = { strictly = "[1.21.4]", prefer = "1.21.4" }
-neoforge = "21.4.156"
+minecraft = { strictly = "[1.21.8]", prefer = "1.21.8" }
+neoforge = "21.8.52"
 almostUnified = "1.21.1-1.0.0"
-jeiVersion = "20.0.0.4"
+jeiVersion = "24.2.0.6"
 ccTweaked = "1.113.1"
-jade = "17.3.0+neoforge"
-athena = "4.2.1"
+jade = "19.3.1+neoforge"
+#athena = "4.2.1"
 ae2 = { strictly = "[19.0.23-beta,)", prefer = "19.0.23-beta" }
 mekanism = { strictly = "[1.21.1-10.7.0,)", prefer = "1.21.1-10.7.16.82" }
 mekanismMod = { strictly = "[10.7.0,)", prefer = "10.7.16.82" } # workaround for Mek having MC version in the version specifier.
@@ -19,15 +19,15 @@ jetbrainsAnnotations = { group = "org.jetbrains", name = "annotations", version 
 neoforgeTestFramework = { group = "net.neoforged", name = "testframework", version.ref = "neoforge"}
 
 #almostUnified = { group = "com.almostreliable.mods", name = "almostunified-neoforge", version.ref = "almostUnified" }
-jeiCommonApi = { group = "mezz.jei", name = "jei-1.21.4-common-api", version.ref = "jeiVersion" }
-jeiNeoforgeApi = { group = "mezz.jei", name = "jei-1.21.4-neoforge-api", version.ref = "jeiVersion" }
-jeiCommon = { group = "mezz.jei", name = "jei-1.21.4-common", version.ref = "jeiVersion" }
-jeiNeoforge = { group = "mezz.jei", name = "jei-1.21.4-neoforge", version.ref = "jeiVersion" }
+jeiCommonApi = { group = "mezz.jei", name = "jei-1.21.8-common-api", version.ref = "jeiVersion" }
+jeiNeoforgeApi = { group = "mezz.jei", name = "jei-1.21.8-neoforge-api", version.ref = "jeiVersion" }
+jeiCommon = { group = "mezz.jei", name = "jei-1.21.8-common", version.ref = "jeiVersion" }
+jeiNeoforge = { group = "mezz.jei", name = "jei-1.21.8-neoforge", version.ref = "jeiVersion" }
 #ccTweakedCoreApi = { group = "cc.tweaked", name = "cc-tweaked-1.21.1-core-api", version.ref = "ccTweaked" }
 #ccTweakedForgeApi = { group = "cc.tweaked", name = "cc-tweaked-1.21.1-forge-api", version.ref = "ccTweaked" }
 #ccTweakedForge = { group = "cc.tweaked", name = "cc-tweaked-1.21.1-forge", version.ref = "ccTweaked" }
 jade = { group = "maven.modrinth", name = "jade", version.ref = "jade" }
-athena = { group = "maven.modrinth", name = "athena-ctm", version.ref = "athena" }
+#athena = { group = "maven.modrinth", name = "athena-ctm", version.ref = "athena" }
 #ae2 = { group = "appeng", name = "appliedenergistics2", version.ref = "ae2" }
 #mekanism = { group = "mekanism", name = "Mekanism", version.ref = "mekanism" }
 #refinedStorage = { group = "com.refinedmods.refinedstorage", name = "refinedstorage-neoforge", version.ref = "refinedStorage" }

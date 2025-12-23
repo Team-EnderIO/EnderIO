@@ -113,7 +113,7 @@ dependencies {
     localRuntime(libs.jade)
 
     //Athena ctm
-    localRuntime(libs.athena)
+//    localRuntime(libs.athena)
 
     // AE2
 //    compileOnly(variantOf(libs.ae2) {
