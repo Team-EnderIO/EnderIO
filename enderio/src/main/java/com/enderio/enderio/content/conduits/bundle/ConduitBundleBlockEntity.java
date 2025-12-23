@@ -144,7 +144,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         if (level != null) {
             checkConnection = checkConnection.next();
             if (checkConnection.isInitialized()) {
-                updateConnections(level, getBlockPos(), null, false);
+                updateConnections(level, false);
             }
 
             if (hasDirtyNodes) {
@@ -954,11 +954,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     }
 
     // TODO: I've not properly reviewed this method.
-    public void updateConnections(Level level, BlockPos pos, @Nullable BlockPos fromPos, boolean shouldActivate) {
-        if (fromPos != null && level.getBlockEntity(fromPos) instanceof ConduitBundleBlockEntity) {
-            return;
-        }
-
+    public void updateConnections(Level level, boolean shouldActivate) {
         for (Direction side : Direction.values()) {
             for (var conduit : conduits) {
                 if (shouldActivate && conduit.value().hasConnectionDelay()) {

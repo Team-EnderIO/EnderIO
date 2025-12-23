@@ -16,6 +16,7 @@ import com.enderio.enderio.content.conduits.type.redstone.RedstoneConduitNetwork
 import com.enderio.enderio.foundation.network.packets.ServerboundBreakConduitPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundDestroyEntireConduitBundlePacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundRemoveConduitFacadePacket;
+import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOConduitTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -190,15 +191,19 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
 
     @Override
     protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, @Nullable Orientation orientation, boolean movedByPiston) {
-        super.neighborChanged(state, level, pos, neighborBlock, orientation, movedByPiston);
-
         if (level.getBlockEntity(pos) instanceof ConduitBundleBlockEntity conduit) {
             conduit.updateNeighborRedstone();
-            conduit.updateConnections(level, pos, pos, true);
+
+            // If a non-conduit neighbor updates, re-scan for connections
+            if (neighborBlock != EIOBlocks.CONDUIT_BUNDLE.get()) {
+                conduit.updateConnections(level, true);
+            }
 
             // Invalidate caps in case of redstone update or something else.
             level.invalidateCapabilities(pos);
         }
+
+        super.neighborChanged(state, level, pos, neighborBlock, orientation, movedByPiston);
     }
 
     // region Water-logging
