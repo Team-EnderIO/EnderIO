@@ -1,6 +1,7 @@
 package com.enderio.enderio.content.enchanter;
 
 import com.enderio.enderio.config.machines.MachinesConfig;
+import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIORecipes;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -10,19 +11,25 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ExtraCodecs;
-import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeBookCategories;
+import net.minecraft.world.item.crafting.RecipeBookCategory;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.display.RecipeDisplay;
+import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 /**
  * A recipe for the enchanter.
@@ -123,13 +130,33 @@ public record EnchanterRecipe(Holder<Enchantment> enchantment, int costMultiplie
     }
 
     @Override
-    public boolean canCraftInDimensions(int pWidth, int pHeight) {
-        return true;
+    public PlacementInfo placementInfo() {
+        return PlacementInfo.create(input.ingredient());
     }
 
     @Override
-    public ItemStack getResultItem(HolderLookup.Provider lookupProvider) {
-        return ItemStack.EMPTY;
+    public List<RecipeDisplay> display() {
+        return List.of(new RecipeDisplay() {
+            @Override
+            public SlotDisplay result() {
+                return new SlotDisplay.ItemSlotDisplay(Items.AIR);
+            }
+
+            @Override
+            public SlotDisplay craftingStation() {
+                return new SlotDisplay.ItemSlotDisplay(EIOBlocks.ENCHANTER.asItem());
+            }
+
+            @Override
+            public Type<? extends RecipeDisplay> type() {
+                return ;
+            }
+        });
+    }
+
+    @Override
+    public RecipeBookCategory recipeBookCategory() {
+        return ;
     }
 
     @Override
@@ -138,12 +165,12 @@ public record EnchanterRecipe(Holder<Enchantment> enchantment, int costMultiplie
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<? extends Recipe<Input>> getSerializer() {
         return EIORecipes.ENCHANTING.serializer().get();
     }
 
     @Override
-    public RecipeType<?> getType() {
+    public RecipeType<? extends Recipe<Input>> getType() {
         return EIORecipes.ENCHANTING.type().get();
     }
 

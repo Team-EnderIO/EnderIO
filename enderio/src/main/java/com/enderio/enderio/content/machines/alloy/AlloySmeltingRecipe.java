@@ -13,12 +13,16 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.PlacementInfo;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeBookCategory;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Input> {
@@ -27,6 +31,8 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
     private final int energy;
     private final float experience;
     private final boolean isSmelting;
+    @Nullable
+    private PlacementInfo placementInfo;
 
     public AlloySmeltingRecipe(List<SizedIngredient> inputs, ItemStack output, int energy, float experience,
             boolean isSmelting) {
@@ -68,12 +74,6 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
     @Override
     public int getBaseEnergyCost() {
         return energy;
-    }
-
-    @Override
-    public NonNullList<Ingredient> getIngredients() {
-        return NonNullList.of(Ingredient.EMPTY,
-                inputs.stream().map(SizedIngredient::ingredient).toArray(Ingredient[]::new));
     }
 
     @Override
@@ -154,13 +154,26 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<? extends Recipe<Input>> getSerializer() {
         return EIORecipes.ALLOY_SMELTING.serializer().get();
     }
 
     @Override
-    public RecipeType<?> getType() {
+    public RecipeType<? extends Recipe<Input>> getType() {
         return EIORecipes.ALLOY_SMELTING.type().get();
+    }
+
+    @Override
+    public PlacementInfo placementInfo() {
+        if (placementInfo == null) {
+            placementInfo = PlacementInfo.create(inputs.stream().map(SizedIngredient::ingredient).toList()); //TODO is it fine to not have the size
+        }
+        return placementInfo;
+    }
+
+    @Override
+    public RecipeBookCategory recipeBookCategory() {
+        return null;
     }
 
     public record Input(List<ItemStack> inputs, int inputsConsumed) implements RecipeInput {

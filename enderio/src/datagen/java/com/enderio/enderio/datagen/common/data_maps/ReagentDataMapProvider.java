@@ -20,7 +20,7 @@ public class ReagentDataMapProvider extends DataMapProvider {
         super(packOutput, lookupProvider);
     }
 
-    protected void gather() {
+    protected void gather(HolderLookup.Provider provide) {
         reagent(net.minecraft.world.item.Items.SUGAR_CANE, EIOTags.Items.CROPS, 0.5D);
 
         reagent(net.minecraft.world.item.Items.GLOWSTONE_DUST, EIOTags.Items.NATURAL_LIGHTS, 0.25D);

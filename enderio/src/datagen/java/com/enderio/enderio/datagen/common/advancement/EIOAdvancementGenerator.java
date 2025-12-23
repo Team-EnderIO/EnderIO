@@ -7,17 +7,16 @@ import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementType;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.data.advancements.AdvancementSubProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
-import net.neoforged.neoforge.common.data.AdvancementProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
 import java.util.function.Consumer;
 
-public class EIOAdvancementGenerator implements AdvancementProvider.AdvancementGenerator {
+public class EIOAdvancementGenerator implements AdvancementSubProvider{
     @Override
-    public void generate(HolderLookup.Provider provider, Consumer<AdvancementHolder> consumer, ExistingFileHelper existingFileHelper) {
+    public void generate(HolderLookup.Provider provider, Consumer<AdvancementHolder> consumer) {
 //        Advancement.Builder builder = Advancement.Builder
 //            .advancement()
 //            .parent(new ResourceLocation("adventure/root"))

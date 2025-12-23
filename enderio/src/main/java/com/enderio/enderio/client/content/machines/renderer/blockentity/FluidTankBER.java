@@ -26,8 +26,8 @@ public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
         if (!tank.getFluid().isEmpty()) {
             FluidStack fluidStack = tank.getFluid();
 
-            // Use entity translucent cull sheet so fluid renders in Fabulous
-            VertexConsumer buffer = bufferSource.getBuffer(Sheets.translucentCullBlockSheet());
+            //TODO entity sheet is now gone, does it work in Fabulous? Use entity translucent cull sheet so fluid renders in Fabulous
+            VertexConsumer buffer = bufferSource.getBuffer(Sheets.translucentItemSheet());
 
             // Render the fluid
             PoseStack.Pose last = poseStack.last();

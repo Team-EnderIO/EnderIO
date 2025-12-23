@@ -5,6 +5,7 @@ import com.enderio.enderio.foundation.MachineRecipe;
 import com.enderio.enderio.foundation.task.CraftingMachineTask;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -83,9 +84,9 @@ public class CraftingMachineTaskHost<R extends MachineRecipe<T>, T extends Recip
 
     protected Optional<RecipeHolder<R>> findRecipe() {
         Level level = getLevel();
-        if (level == null) {
+        if (!(level instanceof ServerLevel serverLevel)) {
             return Optional.empty();
         }
-        return level.getRecipeManager().getRecipeFor(recipeType, recipeInputSupplier.get(), level);
+        return serverLevel.recipeAccess().getRecipeFor(recipeType, recipeInputSupplier.get(), level);
     }
 }

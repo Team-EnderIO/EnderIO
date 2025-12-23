@@ -25,7 +25,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
@@ -41,7 +40,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
+import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
@@ -209,8 +208,8 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
                 TagKey<Fluid> tag = TagKey.create(Registries.FLUID, ResourceLocation.parse(fluid.substring(1)));
                 return fluidStack.is(tag);
             } else {
-                Optional<Holder.Reference<Fluid>> delegate = BuiltInRegistries.FLUID
-                        .getHolder(ResourceKey.create(Registries.FLUID, ResourceLocation.parse(fluid)));
+                Optional<Holder.Reference<Fluid>> delegate = level.registryAccess().lookupOrThrow(Registries.FLUID)
+                        .get(ResourceKey.create(Registries.FLUID, ResourceLocation.parse(fluid)));
                 if (delegate.isPresent()) {
                     return fluidStack.getFluid().isSame(delegate.get().value());
                 }
@@ -289,7 +288,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     }
 
     @SubscribeEvent
-    static void onReload(RecipesUpdatedEvent event) {
+    static void onReload(OnDatapackSyncEvent event) {
         reload = !reload;
-    }
+    } //TODO verify this loads properly
 }

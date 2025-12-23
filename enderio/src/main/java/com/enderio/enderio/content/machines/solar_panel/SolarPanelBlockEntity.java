@@ -30,7 +30,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
+import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -310,7 +310,7 @@ public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
     }
 
     @SubscribeEvent
-    static void onReload(RecipesUpdatedEvent event) {
+    static void onReload(OnDatapackSyncEvent event) {
         reload = !reload;
     }
 

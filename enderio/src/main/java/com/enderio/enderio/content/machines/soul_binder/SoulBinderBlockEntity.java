@@ -126,11 +126,12 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
         super.onInventoryContentsChanged(slot);
         craftingTaskHost.newTaskAvailable();
 
-        if (level != null && level.isClientSide) {
-            clientRecipe = level.getRecipeManager()
-                    .getRecipeFor(EIORecipes.SOUL_BINDING.type().get(), createFakeRecipeInput(), level)
-                    .orElse(null);
-        }
+        //TODO this doesn't work, client has no recipes unless we sync
+//        if (level != null && level.isClientSide) {
+//            clientRecipe = level.getRecipeManager()
+//                    .getRecipeFor(EIORecipes.SOUL_BINDING.type().get(), createFakeRecipeInput(), level)
+//                    .orElse(null);
+//        }
     }
 
     private SoulBindingRecipe.Input createRecipeInput() {
@@ -151,9 +152,10 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
     public int getClientExp() {
         // This should always set a valid recipe.
         if (level != null && clientRecipe == null && hasValidRecipe()) {
-            clientRecipe = level.getRecipeManager()
-                    .getRecipeFor(EIORecipes.SOUL_BINDING.type().get(), createFakeRecipeInput(), level)
-                    .orElse(null);
+            //TODO this doesn't work, client has no recipes unless we sync
+//            clientRecipe = level.getRecipeManager()
+//                    .getRecipeFor(EIORecipes.SOUL_BINDING.type().get(), createFakeRecipeInput(), level)
+//                    .orElse(null);
         }
 
         return clientRecipe != null ? clientRecipe.value().experience() : 0;

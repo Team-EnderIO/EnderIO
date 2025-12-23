@@ -12,9 +12,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.registries.DeferredHolder;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -23,8 +21,8 @@ import java.util.concurrent.CompletableFuture;
 public class EIOItemTagsProvider extends ItemTagsProvider {
 
     public EIOItemTagsProvider(PackOutput pPackOutput, CompletableFuture<HolderLookup.Provider> pProvider,
-            CompletableFuture<TagLookup<Block>> pLookup, @Nullable ExistingFileHelper existingFileHelper) {
-        super(pPackOutput, pProvider, pLookup, EnderIOAPI.MOD_ID, existingFileHelper);
+            CompletableFuture<TagLookup<Block>> pLookup) {
+        super(pPackOutput, pProvider, pLookup, EnderIOAPI.MOD_ID);
     }
 
     @Override

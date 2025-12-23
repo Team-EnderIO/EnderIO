@@ -13,6 +13,7 @@ import com.enderio.enderio.init.EIOBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -21,6 +22,7 @@ import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.display.SlotDisplayContext;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
@@ -64,11 +66,13 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
     private void updateRecipe() {
         var input = getCraftingInput(GHOST);
 
-        recipe = getLevel().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, input, getLevel()).orElse(null);
+        if (getLevel() instanceof ServerLevel level) {
+            recipe = level.recipeAccess().getRecipeFor(RecipeType.CRAFTING, input, level).orElse(null);
+        }
         PREVIEW.setStackInSlot(this, ItemStack.EMPTY);
 
         if (recipe != null) {
-            PREVIEW.setStackInSlot(this, recipe.value().getResultItem(getLevel().registryAccess()));
+            PREVIEW.setStackInSlot(this, recipe.value().display().getFirst().result().resolveForFirstStack(SlotDisplayContext.fromLevel(getLevel())));
         }
     }
 
@@ -197,7 +201,7 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
         // consume power
         getEnergyStorage().consumeEnergy(MachinesConfig.COMMON.ENERGY.CRAFTING_RECIPE_COST.get(), false);
         // check resource reload
-        if (level.getRecipeManager().byKey(recipe.id()).orElse(null) != recipe) {
+        if (level instanceof ServerLevel serverLevel && serverLevel.recipeAccess().byKey(recipe.id()).orElse(null) != recipe) {
             recipe = null;
         }
     }

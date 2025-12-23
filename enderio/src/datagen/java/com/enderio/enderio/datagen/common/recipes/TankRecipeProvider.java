@@ -7,7 +7,9 @@ import com.enderio.enderio.init.EIOFluids;
 import com.enderio.enderio.init.EIOItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -18,7 +20,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 public class TankRecipeProvider extends SubRecipeProvider {
 
     @Override
-    public void buildRecipes(RecipeOutput recipeOutput, HolderLookup.Provider registries) {
+    public void buildRecipes(HolderLookup.Provider registries, RecipeOutput recipeOutput) {
         buildEmptying(Ingredient.of(Items.EXPERIENCE_BOTTLE), Items.GLASS_BOTTLE,
                 new FluidStack(EIOFluids.XP_JUICE.source().get(), 250), recipeOutput);
         buildFilling(Ingredient.of(Items.GLASS_BOTTLE), Items.EXPERIENCE_BOTTLE,
@@ -65,12 +67,12 @@ public class TankRecipeProvider extends SubRecipeProvider {
     }
 
     protected void buildEmptying(Ingredient input, ItemLike output, FluidStack fluid, RecipeOutput recipeOutput) {
-        recipeOutput.accept(EnderIO.rl("tank_empty/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath()),
+        recipeOutput.accept(ResourceKey.create(Registries.RECIPE, EnderIO.rl("tank_empty/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath())),
                 new TankRecipe(input, new ItemStack(output), fluid, TankRecipe.Mode.EMPTY), null);
     }
 
     protected void buildFilling(Ingredient input, ItemLike output, FluidStack fluid, RecipeOutput recipeOutput) {
-        recipeOutput.accept(EnderIO.rl("tank_fill/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath()),
+        recipeOutput.accept(ResourceKey.create(Registries.RECIPE, EnderIO.rl("tank_fill/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath())),
                 new TankRecipe(input, new ItemStack(output), fluid, TankRecipe.Mode.FILL), null);
     }
 

@@ -7,16 +7,13 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.FluidTagsProvider;
 import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
 public class EIOFluidTagsProvider extends FluidTagsProvider {
 
-    public EIOFluidTagsProvider(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pProvider,
-            @Nullable ExistingFileHelper existingFileHelper) {
-        super(pOutput, pProvider, EnderIOAPI.MOD_ID, existingFileHelper);
+    public EIOFluidTagsProvider(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pProvider) {
+        super(pOutput, pProvider, EnderIOAPI.MOD_ID);
     }
 
     @Override

@@ -18,6 +18,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -120,9 +121,10 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
         }
 
         // fill recipes
-        if (level != null) {
-            List<RecipeHolder<TankRecipe>> allRecipes = level.getRecipeManager()
-                    .getAllRecipesFor(EIORecipes.TANK.type().get());
+        if (level instanceof ServerLevel serverLevel) {
+            //TODO use the new methods to check instead of doing this ourselves
+            List<RecipeHolder<TankRecipe>> allRecipes = serverLevel.recipeAccess()
+                    .recipeMap().byType(EIORecipes.TANK.type().get()).stream().toList();
             return allRecipes.stream()
                     .anyMatch((recipe) -> recipe.value().mode() == TankRecipe.Mode.EMPTY
                             && recipe.value().input().test(item));
@@ -151,9 +153,9 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
         }
 
         // drain recipes
-        if (level != null) {
-            List<RecipeHolder<TankRecipe>> allRecipes = level.getRecipeManager()
-                    .getAllRecipesFor(EIORecipes.TANK.type().get());
+        if (level instanceof ServerLevel serverLevel) {
+            List<RecipeHolder<TankRecipe>> allRecipes = serverLevel.recipeAccess()
+                    .recipeMap().byType(EIORecipes.TANK.type().get()).stream().toList();
             return allRecipes.stream()
                     .anyMatch((recipe) -> recipe.value().mode() == TankRecipe.Mode.FILL
                             && recipe.value().input().test(item));
@@ -181,8 +183,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
         super.onInventoryContentsChanged(slot);
 
         if (level != null) {
-            if (!level.isClientSide()) {
-                currentRecipe = level.getRecipeManager()
+            if (level instanceof ServerLevel serverLevel) {
+                currentRecipe = serverLevel.recipeAccess()
                         .getRecipeFor(EIORecipes.TANK.type().get(), createRecipeInput(), level);
             }
         }
@@ -272,8 +274,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
     private void onTankContentsChanged() {
         if (level != null) {
-            if (!level.isClientSide()) {
-                currentRecipe = level.getRecipeManager()
+            if (level instanceof ServerLevel serverLevel) {
+                currentRecipe = serverLevel.recipeAccess()
                         .getRecipeFor(EIORecipes.TANK.type().get(), createRecipeInput(), level);
             }
 

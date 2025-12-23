@@ -62,8 +62,8 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
     @Override
     public MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
-                .inputSlot((slot, stack) -> stack.getBurnTime(RecipeType.SMELTING) > 0
-                        && stack.getCraftingRemainingItem().isEmpty())
+                .inputSlot((slot, stack) -> stack.getBurnTime(RecipeType.SMELTING, level.fuelValues()) > 0
+                        && stack.getCraftingRemainder().isEmpty())
                 .slotAccess(FUEL)
                 .capacitor()
                 .build();
@@ -87,7 +87,7 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
                 ItemStack fuel = FUEL.getItemStack(this);
                 if (!fuel.isEmpty()) {
                     // Get the burn time.
-                    int burningTime = fuel.getBurnTime(RecipeType.SMELTING);
+                    int burningTime = fuel.getBurnTime(RecipeType.SMELTING, level.fuelValues());
 
                     if (burningTime > 0) {
                         float burnSpeed = MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_BURN_SPEED.get().floatValue();

@@ -38,8 +38,7 @@ public class WiredChargerMenu extends PoweredMachineMenu<WiredChargerBlockEntity
         addArmorSlots(6, 12);
 
         // Add offhand slot
-        addSlot(new Slot(getPlayerInventory(), 40, 6, 84).setBackground(InventoryMenu.BLOCK_ATLAS,
-                InventoryMenu.EMPTY_ARMOR_SLOT_SHIELD));
+        addSlot(new Slot(getPlayerInventory(), 40, 6, 84).setBackground(InventoryMenu.EMPTY_ARMOR_SLOT_SHIELD));
     }
 
     public float getChargeProgress() {

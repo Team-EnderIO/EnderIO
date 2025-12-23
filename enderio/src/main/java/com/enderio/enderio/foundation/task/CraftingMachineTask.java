@@ -9,10 +9,13 @@ import com.enderio.enderio.foundation.io.fluid.MachineFluidHandler;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
@@ -90,7 +93,7 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
 
     @Nullable
     public ResourceLocation getRecipeId() {
-        return recipe.id();
+        return recipe.id().location();
     }
 
     // region Abstract Implementation
@@ -287,7 +290,10 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
     protected RecipeHolder<R> loadRecipe(ResourceLocation id) {
         try {
             // noinspection unchecked
-            return (RecipeHolder<R>) level.getRecipeManager().byKey(id).orElse(null);
+            if (level instanceof ServerLevel serverLevel) {
+                return  (RecipeHolder<R>) serverLevel.recipeAccess().byKey(ResourceKey.create(Registries.RECIPE,id)).orElse(null);
+            }
+            return null;
         } catch (ClassCastException ex) {
             // Can occur when loading a world with the old smelting recipe system.
             LOGGER.warn("Failed to cast recipe '{}' to the correct type, not loading in-progress recipe.", id);

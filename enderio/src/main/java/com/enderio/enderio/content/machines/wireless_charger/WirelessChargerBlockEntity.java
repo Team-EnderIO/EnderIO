@@ -98,8 +98,8 @@ public class WirelessChargerBlockEntity extends PoweredMachineBlockEntity implem
     }
 
     @Override
-    public void neighborChanged(Block neighborBlock, BlockPos neighborPos) {
-        super.neighborChanged(neighborBlock, neighborPos);
+    public void onNeighbourBlockChanged(Block neighborBlock, BlockPos neighborPos) {
+        super.onNeighbourBlockChanged(neighborBlock, neighborPos);
         if (level != null && !level.isClientSide() && getBlockPos().above().equals(neighborPos)) {
             calculateMaxRange();
             if (getRangeExtension() > 0 || actionRange.range() > maxRange) {

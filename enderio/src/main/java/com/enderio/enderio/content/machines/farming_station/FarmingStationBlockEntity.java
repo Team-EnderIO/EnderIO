@@ -46,12 +46,12 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
 import net.neoforged.neoforge.common.SpecialPlantable;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.ticket.AABBTicket;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
+import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -439,7 +439,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     }
 
     @SubscribeEvent
-    static void onReload(RecipesUpdatedEvent event) {
+    static void onReload(OnDatapackSyncEvent event) {
         reload = !reload;
     }
 

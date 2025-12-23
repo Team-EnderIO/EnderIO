@@ -14,6 +14,7 @@ import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -92,9 +93,11 @@ public class EnchanterBlockEntity extends EnderBlockEntity implements MenuProvid
 
                 EnchanterRecipe.Input recipeInput = createRecipeInput();
 
-                currentRecipe = level.getRecipeManager()
+                if (level instanceof ServerLevel serverLevel) {
+                    currentRecipe = serverLevel.recipeAccess()
                         .getRecipeFor(EIORecipes.ENCHANTING.type().get(), recipeInput, level)
                         .orElse(null);
+                }
                 if (!OUTPUT.isSlot(slot)) {
                     if (currentRecipe != null) {
                         OUTPUT.setStackInSlot(this,

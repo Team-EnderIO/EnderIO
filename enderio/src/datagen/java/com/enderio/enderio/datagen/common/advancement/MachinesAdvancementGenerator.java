@@ -13,21 +13,20 @@ import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.data.advancements.AdvancementSubProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.neoforged.neoforge.common.data.AdvancementProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public class MachinesAdvancementGenerator implements AdvancementProvider.AdvancementGenerator {
+public class MachinesAdvancementGenerator implements AdvancementSubProvider {
     @Override
-    public void generate(HolderLookup.Provider registries, Consumer<AdvancementHolder> saver, ExistingFileHelper existingFileHelper) {
+    public void generate(HolderLookup.Provider provider, Consumer<AdvancementHolder> consumer) {
 
         Advancement.Builder builder = Advancement.Builder
             .advancement()
@@ -37,7 +36,7 @@ public class MachinesAdvancementGenerator implements AdvancementProvider.Advance
             .addCriterion("place_capacitor_bank", placedBlock(EIOBlocks.CAPACITOR_BANKS.values().stream().map(DeferredHolder::get)
                 .sorted(Comparator.comparing(BuiltInRegistries.BLOCK::getKey)).toArray(CapacitorBankBlock[]::new)));
 
-        builder.save(saver, CapacitorBankBlock.PLACE_ADVANCEMENT_ID.toString());
+        builder.save(consumer, CapacitorBankBlock.PLACE_ADVANCEMENT_ID.toString());
     }
 
     public static Criterion<ItemUsedOnLocationTrigger.TriggerInstance> placedBlock(Block... block) {

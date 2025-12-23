@@ -12,7 +12,7 @@ import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
@@ -63,7 +63,7 @@ public class ChestLootProvider implements LootTableSubProvider {
         var lootTable = LootTable
             .lootTable()
             .withPool(lootPool)
-            .setParamSet(LootContextParamSet.builder().build());
+            .setParamSet(LootContextParamSets.EMPTY);
 
         writer.accept(ResourceKey.create(Registries.LOOT_TABLE, EnderIO.rl(COMMON_LOOT_TABLE_NAME)), lootTable);
     }
@@ -105,7 +105,7 @@ public class ChestLootProvider implements LootTableSubProvider {
         var lootTable = LootTable
             .lootTable()
             .withPool(lootPool)
-            .setParamSet(LootContextParamSet.builder().build());
+            .setParamSet(LootContextParamSets.EMPTY);
 
         writer.accept(ResourceKey.create(Registries.LOOT_TABLE, EnderIO.rl(ALLOY_LOOT_TABLE_NAME)), lootTable);
     }

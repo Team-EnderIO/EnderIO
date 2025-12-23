@@ -25,7 +25,7 @@ public class RangeExtenderDataMapProvider extends DataMapProvider {
     }
 
     @Override
-    protected void gather() {
+    protected void gather(HolderLookup.Provider provider) {
         addData(EIOTags.Blocks.RANGE_EXTENDER, EIOBlocks.WIRELESS_CHARGER_ANTENNA.get(), 16);
         addData(EIOTags.Blocks.RANGE_EXTENDER, EIOBlocks.WIRELESS_CHARGER_ANTENNA_ADVANCED.get(), 32);
 
