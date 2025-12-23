@@ -8,7 +8,6 @@ import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.conduits.network.node.NodeData;
 import com.enderio.enderio.api.conduits.network.node.NodeDataType;
-import com.enderio.enderio.content.conduits.legacy.ConduitDataContainer;
 import com.google.common.base.Preconditions;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -24,36 +23,19 @@ import java.util.Objects;
 import java.util.Optional;
 
 public final class ConduitNodeImpl implements INetworkNode<ConduitNetwork, ConduitNodeImpl>, ConduitNode {
-
-    // TODO: 1.22 - Remove legacy codec.
-    private static final Codec<ConduitNodeImpl> LEGACY_CODEC = RecordCodecBuilder.create(instance -> instance
-            .group(BlockPos.CODEC.fieldOf("pos").forGetter(ConduitNodeImpl::pos),
-                    ConduitDataContainer.CODEC.fieldOf("data").forGetter(i -> i.legacyDataContainer))
-            .apply(instance, ConduitNodeImpl::new));
-
-    private static final Codec<ConduitNodeImpl> NEW_CODEC = RecordCodecBuilder
-            .create(instance -> instance.group(BlockPos.CODEC.fieldOf("pos").forGetter(ConduitNodeImpl::pos),
-                    NodeData.GENERIC_CODEC.optionalFieldOf("data")
-                            .forGetter(i -> i.nodeData == null || !i.nodeData.type().isPersistent() ? Optional.empty()
-                                    : Optional.of(i.nodeData)))
-                    .apply(instance, ConduitNodeImpl::new));
-
-    public static final Codec<ConduitNodeImpl> CODEC = Codec.withAlternative(NEW_CODEC, LEGACY_CODEC);
+    public static final Codec<ConduitNodeImpl> CODEC = RecordCodecBuilder.create(instance -> instance
+        .group(BlockPos.CODEC.fieldOf("pos").forGetter(ConduitNodeImpl::pos), NodeData.GENERIC_CODEC
+            .optionalFieldOf("data")
+            .forGetter(i -> i.nodeData == null || !i.nodeData.type().isPersistent() ? Optional.empty() : Optional.of(i.nodeData)))
+        .apply(instance, ConduitNodeImpl::new));
 
     private final BlockPos pos;
 
-    @Nullable
-    private NodeData nodeData;
+    @Nullable private NodeData nodeData;
 
-    // TODO: Remove in 1.22
-    @Nullable
-    private ConduitDataContainer legacyDataContainer = null;
+    @Nullable private ConduitNetwork network;
 
-    @Nullable
-    private ConduitNetwork network;
-
-    @Nullable
-    private IConduitNodeAttachment conduitBundle;
+    @Nullable private IConduitNodeAttachment conduitBundle;
 
     private Holder<Conduit<?, ?>> conduit;
 
@@ -67,18 +49,6 @@ public final class ConduitNodeImpl implements INetworkNode<ConduitNetwork, Condu
         this.network = new ConduitNetwork(conduit, this);
     }
 
-    public ConduitNodeImpl(Holder<Conduit<?, ?>> conduit, BlockPos pos, ConduitDataContainer legacyDataContainer) {
-        this(conduit, pos, (NodeData) null);
-
-        // Extract node data from legacy data
-        var oldData = legacyDataContainer.getData();
-        if (oldData != null) {
-            // Store for copyLegacyData once we have a network.
-            this.legacyDataContainer = legacyDataContainer;
-            this.nodeData = oldData.toNodeData();
-        }
-    }
-
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private ConduitNodeImpl(BlockPos pos, Optional<NodeData> nodeData) {
         this.pos = pos;
@@ -86,24 +56,11 @@ public final class ConduitNodeImpl implements INetworkNode<ConduitNetwork, Condu
         // Does not create a network because we're loading.
     }
 
-    private ConduitNodeImpl(BlockPos pos, ConduitDataContainer legacyDataContainer) {
-        this(pos, Optional.empty());
-
-        // Extract node data from legacy data
-        var oldData = legacyDataContainer.getData();
-        if (oldData != null) {
-            // Store for copyLegacyData once we have a network.
-            this.legacyDataContainer = legacyDataContainer;
-            this.nodeData = oldData.toNodeData();
-        }
-    }
-
     public void attach(IConduitNodeAttachment conduitBundle, Holder<Conduit<?, ?>> conduit) {
         Preconditions.checkState(network != null, "Conduit node is not connected to a network.");
         this.conduitBundle = conduitBundle;
         this.conduit = conduit;
         network.onNodeUpdated(this);
-        tryCopyLegacyData();
     }
 
     public void detach() {
@@ -205,16 +162,14 @@ public final class ConduitNodeImpl implements INetworkNode<ConduitNetwork, Condu
     // region World Interaction
 
     @Override
-    public <TCapability> TCapability getNeighborSidedCapability(BlockCapability<TCapability, Direction> capability,
-            Direction side) {
+    public <TCapability> TCapability getNeighborSidedCapability(BlockCapability<TCapability, Direction> capability, Direction side) {
         ensureValid();
         // noinspection DataFlowIssue
         return conduitBundle.getNeighborSidedCapability(conduit, capability, side);
     }
 
     @Override
-    public <TCapability> TCapability getNeighborVoidCapability(BlockCapability<TCapability, Void> capability,
-            Direction side) {
+    public <TCapability> TCapability getNeighborVoidCapability(BlockCapability<TCapability, Void> capability, Direction side) {
         ensureValid();
         // noinspection DataFlowIssue
         return conduitBundle.getNeighborVoidCapability(conduit, capability, side);
@@ -302,7 +257,6 @@ public final class ConduitNodeImpl implements INetworkNode<ConduitNetwork, Condu
     @Override
     public void setNetwork(@Nullable ConduitNetwork network) {
         this.network = network;
-        tryCopyLegacyData();
     }
 
     // endregion
@@ -313,17 +267,5 @@ public final class ConduitNodeImpl implements INetworkNode<ConduitNetwork, Condu
         Preconditions.checkState(conduitBundle.hasLevel(), "Conduit bundle is not attached to a level");
         Preconditions.checkState(conduitBundle.getLevel().isLoaded(pos), "Conduit bundle is not loaded in a loaded chunk");
         Preconditions.checkState(isLoaded(), "Conduit node is not loaded - more specific error unavailable.");
-    }
-
-    private void tryCopyLegacyData() {
-        if (network != null && legacyDataContainer != null && isLoaded()) {
-            // We now know what type of conduit we are, so upgrade the connection data then
-            // drop legacy data
-            network.conduit()
-                    .value()
-                    .copyLegacyData(this, legacyDataContainer,
-                            (side, config) -> conduitBundle.setConnectionConfig(conduit, side, config));
-            legacyDataContainer = null;
-        }
     }
 }

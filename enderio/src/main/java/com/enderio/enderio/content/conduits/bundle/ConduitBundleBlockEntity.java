@@ -8,7 +8,6 @@ import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.ConduitUtility;
 import com.enderio.enderio.api.conduits.bundle.AddConduitResult;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
-import com.enderio.enderio.api.conduits.bundle.SlotType;
 import com.enderio.enderio.api.conduits.connection.ConnectionStatus;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
@@ -17,10 +16,6 @@ import com.enderio.enderio.api.conduits.network.node.NodeData;
 import com.enderio.enderio.client.content.conduits.model.bundle.ConduitBundleRenderState;
 import com.enderio.enderio.content.conduits.ConduitBlockItem;
 import com.enderio.enderio.content.conduits.ConduitSorter;
-import com.enderio.enderio.content.conduits.legacy.ConduitDataContainer;
-import com.enderio.enderio.content.conduits.legacy.ConnectionState;
-import com.enderio.enderio.content.conduits.legacy.DynamicConnectionState;
-import com.enderio.enderio.content.conduits.legacy.StaticConnectionStates;
 import com.enderio.enderio.content.conduits.menu.ConduitMenu;
 import com.enderio.enderio.content.conduits.network.ConduitNetworkSavedData;
 import com.enderio.enderio.content.conduits.network.ConduitNodeImpl;
@@ -1239,22 +1234,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
                 nodeData = lazyNodeData.remove(conduit);
             }
 
-            if (nodeData == null) {
-                // Attempt to load legacy recovery data.
-                ConduitDataContainer dataContainer = null;
-                if (lazyNodeNBT != null && typeIndex < lazyNodeNBT.size()) {
-                    dataContainer = ConduitDataContainer.parse(level.registryAccess(),
-                            lazyNodeNBT.getCompound(typeIndex));
-                }
-
-                if (dataContainer != null) {
-                    node = new ConduitNodeImpl(conduit, getBlockPos(), dataContainer);
-                } else {
-                    node = new ConduitNodeImpl(conduit, getBlockPos());
-                }
-            } else {
-                node = new ConduitNodeImpl(conduit, getBlockPos(), nodeData);
-            }
+            node = new ConduitNodeImpl(conduit, getBlockPos(), nodeData);
 
             setNode(conduit, node);
             lazyNodes.put(conduit, node);
@@ -1400,80 +1380,74 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
 
-        if (tag.contains(EIONBTKeys.CONDUIT_BUNDLE)) {
-            // Convert the legacy bundle to the new format
-            var bundle = LegacyConduitBundle.parse(registries, tag.getCompound(EIONBTKeys.CONDUIT_BUNDLE));
-            loadFromLegacyBundle(bundle);
-        } else {
-            // New save format
-            conduits.clear();
-            if (tag.contains(CONDUITS_KEY, Tag.TAG_LIST)) {
-                // Get untyped list tag.
-                ListTag conduitList = (ListTag) tag.get(CONDUITS_KEY);
-                for (var conduitTag : conduitList) {
-                    conduits.add(Conduit.CODEC.parse(registries.createSerializationContext(NbtOps.INSTANCE), conduitTag)
-                            .getOrThrow());
-                }
+        // New save format
+        conduits.clear();
+        if (tag.contains(CONDUITS_KEY, Tag.TAG_LIST)) {
+            // Get untyped list tag.
+            ListTag conduitList = (ListTag) tag.get(CONDUITS_KEY);
+            for (var conduitTag : conduitList) {
+                conduits.add(Conduit.CODEC.parse(registries.createSerializationContext(NbtOps.INSTANCE), conduitTag)
+                        .getOrThrow());
             }
+        }
 
-            // Load connections
-            conduitConnections.clear();
-            if (tag.contains(CONNECTIONS_KEY)) {
-                ListTag conduitConnectionsList = tag.getList(CONNECTIONS_KEY, Tag.TAG_LIST);
+        // Load connections
+        conduitConnections.clear();
+        if (tag.contains(CONNECTIONS_KEY)) {
+            ListTag conduitConnectionsList = tag.getList(CONNECTIONS_KEY, Tag.TAG_LIST);
 
-                for (int i = 0; i < conduitConnectionsList.size(); i++) {
-                    ListTag connectionsList = conduitConnectionsList.getList(i);
-                    Holder<Conduit<?, ?>> conduit = conduits.get(i);
+            for (int i = 0; i < conduitConnectionsList.size(); i++) {
+                ListTag connectionsList = conduitConnectionsList.getList(i);
+                Holder<Conduit<?, ?>> conduit = conduits.get(i);
 
-                    ConnectionContainer connections = new ConnectionContainer(conduit);
-                    for (int j = 0; j < connectionsList.size(); j++) {
-                        CompoundTag connectionTag = connectionsList.getCompound(j);
-                        Direction side = Direction.byName(connectionTag.getString("Side"));
-                        ConnectionStatus status = ConnectionStatus.byName(connectionTag.getString("Status"));
+                ConnectionContainer connections = new ConnectionContainer(conduit);
+                for (int j = 0; j < connectionsList.size(); j++) {
+                    CompoundTag connectionTag = connectionsList.getCompound(j);
+                    Direction side = Direction.byName(connectionTag.getString("Side"));
+                    ConnectionStatus status = ConnectionStatus.byName(connectionTag.getString("Status"));
 
-                        if (status == null) {
-                            status = ConnectionStatus.DISCONNECTED;
+                    if (status == null) {
+                        status = ConnectionStatus.DISCONNECTED;
+                    }
+
+                    if (side != null) {
+                        connections.setStatus(side, status);
+
+                        if (connectionTag.contains("Config")) {
+                            ConnectionConfig config = ConnectionConfig.GENERIC_CODEC
+                                    .parse(registries.createSerializationContext(NbtOps.INSTANCE),
+                                            connectionTag.get("Config"))
+                                    .getOrThrow();
+                            connections.setConfig(side, config);
                         }
 
-                        if (side != null) {
-                            connections.setStatus(side, status);
+                        if (connectionTag.contains("Inventory")) {
+                            ListTag inventoryListTag = connectionTag.getList("Inventory", Tag.TAG_COMPOUND);
+                            var inventory = connections.getInventory(side);
 
-                            if (connectionTag.contains("Config")) {
-                                ConnectionConfig config = ConnectionConfig.GENERIC_CODEC
-                                        .parse(registries.createSerializationContext(NbtOps.INSTANCE),
-                                                connectionTag.get("Config"))
-                                        .getOrThrow();
-                                connections.setConfig(side, config);
-                            }
+                            if (inventory != null) {
+                                if (inventory.getSlots() < inventoryListTag.size()) {
+                                    // TODO: Log a warning
+                                }
 
-                            if (connectionTag.contains("Inventory")) {
-                                ListTag inventoryListTag = connectionTag.getList("Inventory", Tag.TAG_COMPOUND);
-                                var inventory = connections.getInventory(side);
-
-                                if (inventory != null) {
-                                    if (inventory.getSlots() < inventoryListTag.size()) {
-                                        // TODO: Log a warning
-                                    }
-
-                                    for (int k = 0; k < inventoryListTag.size() && k < inventory.getSlots(); k++) {
-                                        ItemStack stack = ItemStack.parseOptional(registries,
-                                                inventoryListTag.getCompound(k));
-                                        inventory.setStackInSlot(k, stack);
-                                    }
+                                for (int k = 0; k < inventoryListTag.size() && k < inventory.getSlots(); k++) {
+                                    ItemStack stack = ItemStack.parseOptional(registries,
+                                            inventoryListTag.getCompound(k));
+                                    inventory.setStackInSlot(k, stack);
                                 }
                             }
                         }
                     }
-
-                    conduitConnections.put(conduit, connections);
                 }
-            }
 
-            if (tag.contains(FACADE_PROVIDER_KEY)) {
-                facadeProvider = ItemStack.parseOptional(registries, tag.getCompound(FACADE_PROVIDER_KEY));
-            } else {
-                facadeProvider = ItemStack.EMPTY;
+                conduitConnections.put(conduit, connections);
             }
+        }
+
+        if (tag.contains(FACADE_PROVIDER_KEY)) {
+            facadeProvider = ItemStack.parseOptional(registries, tag.getCompound(FACADE_PROVIDER_KEY));
+        } else {
+            facadeProvider = ItemStack.EMPTY;
         }
 
         // Load node data used for recovery
@@ -1717,115 +1691,4 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             return NEXT_NEXT;
         }
     }
-
-    // region Legacy Bundle Conversion
-
-    // TODO: Ender IO 9 - Remove.
-
-    // Matches the same data format as the original conduit bundle.
-    // Enables us to convert between the new and old formats easily.
-    private record LegacyConduitBundle(BlockPos pos, List<Holder<Conduit<?, ?>>> conduits,
-            Map<Direction, ConduitConnection> connections, ItemStack facadeItem,
-            Map<Holder<Conduit<?, ?>>, ConduitNodeImpl> conduitNodes) {
-
-        public static final Codec<LegacyConduitBundle> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                BlockPos.CODEC.fieldOf("pos").forGetter(i -> i.pos),
-                Conduit.CODEC.listOf().fieldOf("conduits").forGetter(i -> i.conduits),
-                Codec.unboundedMap(Direction.CODEC, ConduitConnection.CODEC)
-                        .fieldOf("connections")
-                        .forGetter(i -> i.connections),
-                ItemStack.OPTIONAL_CODEC.optionalFieldOf("facade", ItemStack.EMPTY).forGetter(i -> i.facadeItem),
-                Codec.unboundedMap(Conduit.CODEC, ConduitNodeImpl.CODEC).fieldOf("nodes").forGetter(i -> i.conduitNodes))
-                .apply(instance, LegacyConduitBundle::new));
-
-        public static LegacyConduitBundle parse(HolderLookup.Provider lookupProvider, Tag tag) {
-            return CODEC.decode(lookupProvider.createSerializationContext(NbtOps.INSTANCE), tag)
-                    .getOrThrow()
-                    .getFirst();
-        }
-
-        public static final class ConduitConnection {
-
-            public static final Codec<ConduitConnection> CODEC = ConnectionState.CODEC.listOf(0, MAX_CONDUITS)
-                    .xmap(ConduitConnection::new, i -> Arrays.stream(i.connectionStates).toList());
-
-            private final ConnectionState[] connectionStates = Util.make(() -> {
-                var states = new ConnectionState[MAX_CONDUITS];
-                Arrays.fill(states, StaticConnectionStates.DISCONNECTED);
-                return states;
-            });
-
-            private ConduitConnection(List<ConnectionState> connectionStates) {
-                if (connectionStates.size() > MAX_CONDUITS) {
-                    throw new IllegalArgumentException(
-                            "Cannot store more than " + MAX_CONDUITS + " conduit types per bundle.");
-                }
-
-                for (var i = 0; i < connectionStates.size(); i++) {
-                    this.connectionStates[i] = connectionStates.get(i);
-                }
-            }
-
-            public ConnectionState getConnectionState(int index) {
-                return connectionStates[index];
-            }
-        }
-    }
-
-    private void loadFromLegacyBundle(LegacyConduitBundle bundle) {
-        // Copy the conduit list
-        conduits = new ArrayList<>();
-        conduits.addAll(bundle.conduits);
-
-        // Copy facade provider
-        facadeProvider = bundle.facadeItem.copy();
-
-        // Copy legacy connections into the new bundle
-        conduitConnections = new HashMap<>();
-        for (var conduit : conduits) {
-            int conduitIndex = conduits.indexOf(conduit);
-            var connections = conduitConnections.computeIfAbsent(conduit, ConnectionContainer::new);
-
-            for (Direction side : Direction.values()) {
-                var legacySide = bundle.connections.get(side);
-
-                var state = legacySide.getConnectionState(conduitIndex);
-
-                if (state == StaticConnectionStates.CONNECTED || state == StaticConnectionStates.CONNECTED_ACTIVE) {
-                    connections.setStatus(side, ConnectionStatus.CONNECTED_CONDUIT);
-                } else if (state == StaticConnectionStates.DISCONNECTED) {
-                    connections.setStatus(side, ConnectionStatus.DISCONNECTED);
-                } else if (state == StaticConnectionStates.DISABLED) {
-                    connections.setStatus(side, ConnectionStatus.DISABLED);
-                } else if (state instanceof DynamicConnectionState dynamicState) {
-                    connections.setStatus(side, ConnectionStatus.CONNECTED_BLOCK);
-
-                    connections.setConfig(side,
-                            conduit.value()
-                                    .convertConnection(dynamicState.isInsert(), dynamicState.isExtract(),
-                                            dynamicState.insertChannel(), dynamicState.extractChannel(),
-                                            dynamicState.control(), dynamicState.redstoneChannel()));
-
-                    // Import the inventory.
-                    var inventory = getConnectionInventory(conduit, side);
-                    if (inventory == null) {
-                        continue;
-                    }
-
-                    int insertFilterSlot = conduit.value().getIndexForLegacySlot(SlotType.FILTER_INSERT);
-                    int extractFilterSlot = conduit.value().getIndexForLegacySlot(SlotType.FILTER_EXTRACT);
-
-                    if (insertFilterSlot >= 0) {
-                        inventory.setStackInSlot(insertFilterSlot, dynamicState.filterInsert());
-                    }
-
-                    if (extractFilterSlot >= 0) {
-                        inventory.setStackInSlot(extractFilterSlot, dynamicState.filterExtract());
-                    }
-                }
-            }
-        }
-    }
-
-    // endregion
 }

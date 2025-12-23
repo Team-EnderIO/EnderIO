@@ -117,12 +117,6 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
     }
 
     @Override
-    public EnergyConduitConnectionConfig convertConnection(boolean isInsert, boolean isExtract, DyeColor inputChannel,
-            DyeColor outputChannel, RedstoneControl redstoneControl, DyeColor redstoneChannel) {
-        return new EnergyConduitConnectionConfig(isInsert, isExtract, redstoneControl, redstoneChannel, 0);
-    }
-
-    @Override
     public void addToTooltip(Item.TooltipContext pContext, Consumer<Component> pTooltipAdder,
             TooltipFlag pTooltipFlag) {
         String transferLimitFormatted = String.format("%,d", transferRatePerTick());

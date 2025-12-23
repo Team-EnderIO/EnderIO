@@ -130,7 +130,6 @@ public class EnderIO {
         event.register(EnderIORegistries.TRAVEL_TARGET_TYPES);
         event.register(EnderIORegistries.TRAVEL_TARGET_SERIALIZERS);
         event.register(EnderIORegistries.CONDUIT_TYPE);
-        event.register(EnderIORegistries.CONDUIT_DATA_TYPE);
         event.register(EnderIORegistries.CONDUIT_CONNECTION_CONFIG_TYPE);
         event.register(EnderIORegistries.CONDUIT_NODE_DATA_TYPE);
         event.register(EnderIORegistries.CONDUIT_NETWORK_CONTEXT_TYPE);

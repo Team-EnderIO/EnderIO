@@ -6,10 +6,6 @@ import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContextType;
 import com.enderio.enderio.api.conduits.network.node.NodeDataType;
-import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataType;
-import com.enderio.enderio.content.conduits.legacy.LegacyFluidConduitData;
-import com.enderio.enderio.content.conduits.legacy.LegacyItemConduitData;
-import com.enderio.enderio.content.conduits.legacy.LegacyRedstoneConduitData;
 import com.enderio.enderio.content.conduits.type.energy.EnergyConduit;
 import com.enderio.enderio.content.conduits.type.energy.EnergyConduitConnectionConfig;
 import com.enderio.enderio.content.conduits.type.energy.EnergyConduitNetworkContext;
@@ -43,23 +39,6 @@ public class EIOConduitTypes {
 
     public static final Supplier<ConduitType<ItemConduit>> ITEM = CONDUIT_TYPES.register("item",
             () -> ConduitType.of(ItemConduit.CODEC));
-
-    public static class Data {
-        private static final DeferredRegister<ConduitDataType<?>> CONDUIT_DATA_TYPES = DeferredRegister
-                .create(EnderIORegistries.CONDUIT_DATA_TYPE, EnderIO.MOD_ID);
-
-        public static final Supplier<ConduitDataType<LegacyItemConduitData>> ITEM = CONDUIT_DATA_TYPES.register("item",
-                () -> new ConduitDataType<>(LegacyItemConduitData.CODEC, LegacyItemConduitData.STREAM_CODEC,
-                        LegacyItemConduitData::new));
-
-        public static final Supplier<ConduitDataType<LegacyFluidConduitData>> FLUID = CONDUIT_DATA_TYPES
-                .register("fluid", () -> new ConduitDataType<>(LegacyFluidConduitData.CODEC,
-                        LegacyFluidConduitData.STREAM_CODEC, LegacyFluidConduitData::new));
-
-        public static final Supplier<ConduitDataType<LegacyRedstoneConduitData>> REDSTONE = CONDUIT_DATA_TYPES
-                .register("redstone", () -> new ConduitDataType<>(LegacyRedstoneConduitData.CODEC,
-                        LegacyRedstoneConduitData.STREAM_CODEC, LegacyRedstoneConduitData::new));
-    }
 
     public static class ConnectionTypes {
         private static final DeferredRegister<ConnectionConfigType<?>> CONNECTION_TYPES = DeferredRegister
@@ -102,7 +81,6 @@ public class EIOConduitTypes {
 
     public static void register(IEventBus bus) {
         CONDUIT_TYPES.register(bus);
-        Data.CONDUIT_DATA_TYPES.register(bus);
         ConnectionTypes.CONNECTION_TYPES.register(bus);
         NodeData.NODE_DATA_TYPES.register(bus);
         ContextTypes.CONDUIT_NETWORK_CONTEXT_TYPES.register(bus);

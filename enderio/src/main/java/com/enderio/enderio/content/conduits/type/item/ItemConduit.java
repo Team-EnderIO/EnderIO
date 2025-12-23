@@ -5,12 +5,10 @@ import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
-import com.enderio.enderio.api.conduits.bundle.SlotType;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
-import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataAccessor;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.content.conduits.ConduitLang;
 import com.enderio.enderio.init.EIOConduitTypes;
@@ -117,35 +115,6 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
     }
 
     @Override
-    public ItemConduitConnectionConfig convertConnection(boolean isInsert, boolean isExtract, DyeColor inputChannel,
-            DyeColor outputChannel, RedstoneControl redstoneControl, DyeColor redstoneChannel) {
-        return new ItemConduitConnectionConfig(isInsert, inputChannel, isExtract, outputChannel, redstoneControl,
-                redstoneChannel, false, false, 0);
-    }
-
-    @Override
-    public void copyLegacyData(ConduitNode node, ConduitDataAccessor legacyDataAccessor,
-            BiConsumer<Direction, ConnectionConfig> connectionConfigSetter) {
-        var legacyData = legacyDataAccessor.getData(EIOConduitTypes.Data.ITEM.get());
-        if (legacyData == null) {
-            return;
-        }
-
-        // Copy connection config
-        for (Direction side : Direction.values()) {
-            if (node.isConnectedToBlock(side)) {
-                var oldSideConfig = legacyData.get(side);
-                var currentConfig = node.getConnectionConfig(side, ItemConduitConnectionConfig.TYPE);
-
-                connectionConfigSetter.accept(side,
-                        currentConfig.withIsRoundRobin(oldSideConfig.isRoundRobin)
-                                .withIsSelfFeed(oldSideConfig.isSelfFeed)
-                                .withPriority(oldSideConfig.priority));
-            }
-        }
-    }
-
-    @Override
     public int getInventorySize() {
         return 2;
     }
@@ -161,15 +130,6 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
         case EXTRACT_FILTER_SLOT -> new Vector2i(113, 71);
         case INSERT_FILTER_SLOT -> new Vector2i(23, 71);
         default -> throw new IndexOutOfBoundsException();
-        };
-    }
-
-    @Override
-    public int getIndexForLegacySlot(SlotType slotType) {
-        return switch (slotType) {
-        case FILTER_EXTRACT -> EXTRACT_FILTER_SLOT;
-        case FILTER_INSERT -> INSERT_FILTER_SLOT;
-        default -> -1;
         };
     }
 

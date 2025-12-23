@@ -2,15 +2,12 @@ package com.enderio.enderio.api.conduits;
 
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
-import com.enderio.enderio.api.conduits.bundle.SlotType;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
-import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataAccessor;
 import com.enderio.enderio.api.conduits.screen.ConduitScreenType;
 import com.enderio.enderio.api.conduits.ticker.ConduitTicker;
-import com.enderio.enderio.api.io.RedstoneControl;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -23,7 +20,6 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryFixedCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -36,7 +32,6 @@ import org.joml.Vector2i;
 
 import java.util.Comparator;
 import java.util.Set;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, TConnectionConfig extends ConnectionConfig>
@@ -224,15 +219,6 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
         throw new UnsupportedOperationException("This conduit does not have an inventory.");
     }
 
-    /**
-     * @param slotType The legacy slot type being queried.
-     * @return The index of this slot in the new layout, or <0 for not available.
-     */
-    @Deprecated(since = "8.0.0")
-    default int getIndexForLegacySlot(SlotType slotType) {
-        return -1;
-    }
-
     // endregion
 
     // region Custom Data Sync
@@ -276,35 +262,6 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
      */
     default boolean showDebugTooltip() {
         return false;
-    }
-
-    // endregion
-
-    // region Legacy Conduit Connections
-
-    /**
-     * Convert old conduit connection data into the new connection config.
-     * This is executed during world load, so no level is available to query.
-     * @implNote Only needs to be implemented if the conduit existed in Ender IO 7.1 or earlier.
-     * @deprecated Only for conversion of 7.X conduit data. Will be removed in 1.22.
-     */
-    @Deprecated(since = "8.0.0")
-    default TConnectionConfig convertConnection(boolean isInsert, boolean isExtract, DyeColor inputChannel,
-            DyeColor outputChannel, RedstoneControl redstoneControl, DyeColor redstoneChannel) {
-        return connectionConfigType().getDefault();
-    }
-
-    /**
-     * Copy legacy data from the old conduit data accessor to the new node however you wish.
-     * @implNote The node is guaranteed to have a network at this point, so the context can be accessed.
-     * @param node the node.
-     * @param legacyDataAccessor the legacy data.
-     * @param connectionConfigSetter a setter if the connection config needs to be updated.
-     * @deprecated Only for conversion of 7.X conduit data. Will be removed in 1.22.
-     */
-    @Deprecated(since = "8.0.0")
-    default void copyLegacyData(ConduitNode node, ConduitDataAccessor legacyDataAccessor,
-            BiConsumer<Direction, ConnectionConfig> connectionConfigSetter) {
     }
 
     // endregion
