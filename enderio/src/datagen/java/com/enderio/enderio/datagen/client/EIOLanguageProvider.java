@@ -473,7 +473,6 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOItems.POWDERED_TIN.get(), "Powdered Tin");
         add(EIOItems.POWDERED_ENDER_PEARL.get(), "Powdered Ender Pearl");
         add(EIOItems.POWDERED_OBSIDIAN.get(), "Powdered Obsidian");
-        add(EIOItems.POWDERED_COBALT.get(), "Powdered Cobalt");
         add(EIOItems.POWDERED_LAPIS_LAZULI.get(), "Powdered Lapis Lazuli");
         add(EIOItems.POWDERED_QUARTZ.get(), "Powdered Quartz");
         add(EIOItems.PRESCIENT_POWDER.get(), "Grains of Prescience");

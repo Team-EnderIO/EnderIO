@@ -38,7 +38,6 @@ public class EIOTags {
         public static final TagKey<Item> DUSTS_TIN = commonTag("dusts/tin");
         public static final TagKey<Item> DUSTS_ENDER = commonTag("dusts/ender_pearl");
         public static final TagKey<Item> DUSTS_OBSIDIAN = commonTag("dusts/obsidian");
-        public static final TagKey<Item> DUSTS_COBALT = commonTag("dusts/cobalt");
         public static final TagKey<Item> DUSTS_QUARTZ = commonTag("dusts/quartz");
         public static final TagKey<Item> DUSTS_SULFUR = commonTag("dusts/sulfur");
         public static final TagKey<Item> DUSTS_PRISMARINE = commonTag("dusts/prismarine");

@@ -161,7 +161,6 @@ public class EIOItems {
     public static final DeferredItem<Item> POWDERED_TIN = basic("powdered_tin");
     public static final DeferredItem<Item> POWDERED_ENDER_PEARL = basic("powdered_ender_pearl");
     public static final DeferredItem<Item> POWDERED_OBSIDIAN = basic("powdered_obsidian");
-    public static final DeferredItem<Item> POWDERED_COBALT = basic("powdered_cobalt");
     public static final DeferredItem<Item> POWDERED_LAPIS_LAZULI = basic("powdered_lapis_lazuli");
     public static final DeferredItem<Item> POWDERED_QUARTZ = basic("powdered_quartz");
     public static final DeferredItem<Item> PRESCIENT_POWDER = basic("prescient_powder");

@@ -103,7 +103,6 @@ public class EIOItemModelProvider extends ItemModelProvider {
         basicItem(EIOItems.POWDERED_TIN.get());
         basicItem(EIOItems.POWDERED_ENDER_PEARL.get());
         basicItem(EIOItems.POWDERED_OBSIDIAN.get());
-        basicItem(EIOItems.POWDERED_COBALT.get());
         basicItem(EIOItems.POWDERED_LAPIS_LAZULI.get());
         basicItem(EIOItems.POWDERED_QUARTZ.get());
         basicItem(EIOItems.PRESCIENT_POWDER.get());

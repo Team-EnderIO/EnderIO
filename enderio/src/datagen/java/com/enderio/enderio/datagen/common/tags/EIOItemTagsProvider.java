@@ -133,7 +133,6 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
         tag(EIOTags.Items.DUSTS_TIN).add(EIOItems.POWDERED_TIN.get());
         tag(EIOTags.Items.DUSTS_ENDER).add(EIOItems.POWDERED_ENDER_PEARL.get());
         tag(EIOTags.Items.DUSTS_OBSIDIAN).add(EIOItems.POWDERED_OBSIDIAN.get());
-        tag(EIOTags.Items.DUSTS_COBALT).add(EIOItems.POWDERED_COBALT.get());
         tag(EIOTags.Items.DUSTS_LAPIS).add(EIOItems.POWDERED_LAPIS_LAZULI.get());
         tag(EIOTags.Items.DUSTS_QUARTZ).add(EIOItems.POWDERED_QUARTZ.get());
         tag(EIOTags.Items.DUSTS_GRAINS_OF_INFINITY).add(EIOItems.GRAINS_OF_INFINITY.get());
@@ -152,7 +151,6 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
             .addTag(EIOTags.Items.DUSTS_TIN)
             .addTag(EIOTags.Items.DUSTS_ENDER)
             .addTag(EIOTags.Items.DUSTS_OBSIDIAN)
-            .addTag(EIOTags.Items.DUSTS_COBALT)
             .addTag(EIOTags.Items.DUSTS_PRISMARINE)
             .addTag(EIOTags.Items.DUSTS_GRAINS_OF_INFINITY)
             .addTag(EIOTags.Items.DUSTS_GRAINS_OF_PRESCIENCE)
