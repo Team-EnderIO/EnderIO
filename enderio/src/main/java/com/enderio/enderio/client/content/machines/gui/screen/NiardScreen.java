@@ -14,6 +14,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -65,7 +66,7 @@ public class NiardScreen extends MachineScreen<NiardMenu> {
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float v, int i, int i1) {
         // TODO: 1.21.4: Hardcoded 256x256
-        guiGraphics.blit(RenderType::guiTextured, BG_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
 
         FluidStack fluidStack = menu.getFluidTank().contents();
 
@@ -113,7 +114,7 @@ public class NiardScreen extends MachineScreen<NiardMenu> {
                 poseStack.scale(scaleX, scaleY, 1.0F);
 
                 guiGraphics.blit(
-                    RenderType::guiTextured,
+                    RenderPipelines.GUI_TEXTURED,
                     TextureAtlas.LOCATION_BLOCKS,
                     0, 0,
                     uOffset, vOffset,
@@ -127,7 +128,7 @@ public class NiardScreen extends MachineScreen<NiardMenu> {
                 RenderSystem.disableBlend();
 
                 // TODO: 1.21.4: Hardcoded 256x256
-                guiGraphics.blit(RenderType::guiTextured, BG_TEXTURE, x, y, 200, 0, width, height, 256, 256);
+                guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE, x, y, 200, 0, width, height, 256, 256);
             }
         }
     }

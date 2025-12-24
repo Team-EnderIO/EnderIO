@@ -8,7 +8,7 @@ import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget
 import com.enderio.enderio.content.machines.impulse_hopper.ImpulseHopperMenu;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -41,20 +41,20 @@ public class ImpulseHopperScreen extends MachineScreen<ImpulseHopperMenu> {
 
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
-        guiGraphics.blit(RenderType::guiTextured, BG_TEXTURE, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight, 256, 256);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight, 256, 256);
 
         // for all ghost slots
         for (int i = 0; i < 6; i++) {
             if (getMenu().getBlockEntity().ghostSlotHasItem(i)) {
                 if (getMenu().getBlockEntity().canPass(i)) {
-                    guiGraphics.blit(RenderType::guiTextured, BG_TEXTURE, getGuiLeft() + 43 + (18 * i), getGuiTop() + 26, 200, 9, 18, 9, 256, 256);
+                    guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE, getGuiLeft() + 43 + (18 * i), getGuiTop() + 26, 200, 9, 18, 9, 256, 256);
                 } else {
-                    guiGraphics.blit(RenderType::guiTextured, BG_TEXTURE, getGuiLeft() + 43 + (18 * i), getGuiTop() + 26, 200, 0, 18, 9, 256, 256);
+                    guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE, getGuiLeft() + 43 + (18 * i), getGuiTop() + 26, 200, 0, 18, 9, 256, 256);
                 }
                 if (getMenu().getBlockEntity().canHoldAndMerge(i)) {
-                    guiGraphics.blit(RenderType::guiTextured, BG_TEXTURE, getGuiLeft() + 43 + (18 * i), getGuiTop() + 53, 200, 9, 18, 9, 256, 256);
+                    guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE, getGuiLeft() + 43 + (18 * i), getGuiTop() + 53, 200, 9, 18, 9, 256, 256);
                 } else {
-                    guiGraphics.blit(RenderType::guiTextured, BG_TEXTURE, getGuiLeft() + 43 + (18 * i), getGuiTop() + 53, 200, 0, 18, 9, 256, 256);
+                    guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE, getGuiLeft() + 43 + (18 * i), getGuiTop() + 53, 200, 0, 18, 9, 256, 256);
                 }
             }
         }

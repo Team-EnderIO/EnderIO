@@ -13,7 +13,7 @@ import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.machines.powered_spawner.PoweredSpawnerMenu;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -96,7 +96,7 @@ public class PoweredSpawnerScreen extends MachineScreen<PoweredSpawnerMenu> {
 
     @Override
     protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
-        pGuiGraphics.blit(RenderType::guiTextured, getBackgroundTexture(), leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+        pGuiGraphics.blit(RenderPipelines.GUI_TEXTURED, getBackgroundTexture(), leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
     private ResourceLocation getBackgroundTexture() {
@@ -109,12 +109,12 @@ public class PoweredSpawnerScreen extends MachineScreen<PoweredSpawnerMenu> {
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
         String modeLabel = Objects.requireNonNull(menu.getMode().getComponent()).getString();
-        guiGraphics.drawString(font, modeLabel, imageWidth / 2f - font.width(modeLabel) / 2f, 25, 0xFFFFFFFF, true);
+        guiGraphics.drawString(font, modeLabel, (int) (imageWidth / 2f - font.width(modeLabel) / 2f), 25, 0xFFFFFFFF, true);
 
         var entityType = getMenu().getBlockEntity().getEntityType();
         if (entityType != null) {
             String name = entityType.getDescription().getString();
-            guiGraphics.drawString(font, name, imageWidth / 2f - font.width(name) / 2f, 65, 0xFFFFFFFF, true);
+            guiGraphics.drawString(font, name, (int) (imageWidth / 2f - font.width(name) / 2f), 65, 0xFFFFFFFF, true);
         }
 
         super.renderLabels(guiGraphics, pMouseX, pMouseY);

@@ -4,6 +4,7 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.datagen.client.EIOLanguageProvider;
+import com.enderio.enderio.datagen.client.models.EIOBlockStateProvider;
 import com.enderio.enderio.datagen.common.advancement.EIOAdvancementGenerator;
 import com.enderio.enderio.datagen.common.advancement.MachinesAdvancementGenerator;
 import com.enderio.enderio.datagen.common.data_maps.RangeExtenderDataMapProvider;
@@ -58,7 +59,7 @@ public class EnderIODataGen {
         var b = new EIOBlockTagsProvider(packOutput, lookupProvider);
         generator.addProvider(server, b);
         generator.addProvider(server,
-            new EIOItemTagsProvider(packOutput, lookupProvider, b.contentsGetter()));
+            new EIOItemTagsProvider(packOutput, lookupProvider));
         generator.addProvider(server,
             new EIOFluidTagsProvider(packOutput, lookupProvider));
         generator.addProvider(server,
@@ -84,7 +85,7 @@ public class EnderIODataGen {
             ), lookupProvider));
 
         //generator.addProvider(event.includeClient(), new EIOItemModelProvider(packOutput));
-        //generator.addProvider(event.includeClient(), new EIOBlockStateProvider(packOutput));
+        generator.addProvider(client, new EIOBlockStateProvider(packOutput));
         generator.addProvider(client, new EIOLanguageProvider(packOutput));
     }
 
