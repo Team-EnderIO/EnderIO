@@ -1,7 +1,6 @@
 package com.enderio.enderio.foundation.task.host;
 
 import com.enderio.core.common.blockentity.EnderBlockEntity;
-import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.enderio.api.UseOnly;
 import com.enderio.enderio.foundation.task.MachineTask;
 import net.minecraft.core.HolderLookup;

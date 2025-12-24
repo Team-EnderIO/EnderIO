@@ -1,6 +1,5 @@
 package com.enderio.enderio.foundation.io;
 
-import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.enderio.api.io.IOMode;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;

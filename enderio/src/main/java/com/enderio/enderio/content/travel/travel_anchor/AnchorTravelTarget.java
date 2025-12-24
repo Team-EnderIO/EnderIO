@@ -1,6 +1,5 @@
 package com.enderio.enderio.content.travel.travel_anchor;
 
-import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.enderio.api.travel.TravelTarget;
 import com.enderio.enderio.api.travel.TravelTargetSerializer;
 import com.enderio.enderio.api.travel.TravelTargetType;

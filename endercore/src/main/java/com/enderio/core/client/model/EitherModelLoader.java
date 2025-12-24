@@ -7,10 +7,9 @@ import com.google.gson.JsonParseException;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.block.model.TextureSlots;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.ModelBaker;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.UnbakedGeometry;
 import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.context.ContextMap;
 import net.neoforged.fml.ModList;
@@ -31,51 +30,44 @@ public class EitherModelLoader implements UnbakedModelLoader<EitherModelLoader.U
     }
 
     public record Unbaked(BlockModel model) implements UnbakedModel {
-
         @Override
-        public BakedModel bake(TextureSlots textureSlots, ModelBaker modelBaker, ModelState modelState, boolean b, boolean b1, ItemTransforms itemTransforms) {
-            return model.bake(textureSlots, modelBaker, modelState, !b, b1, itemTransforms);
+        public @Nullable Boolean ambientOcclusion() {
+            return model.ambientOcclusion();
         }
 
         @Override
-        public void resolveDependencies(Resolver resolver) {
-            model.resolveDependencies(resolver);
+        public @Nullable GuiLight guiLight() {
+            return model.guiLight();
         }
 
         @Override
-        public @Nullable Boolean getAmbientOcclusion() {
-            return model.getAmbientOcclusion();
+        public @Nullable ItemTransforms transforms() {
+            return model.transforms();
         }
 
         @Override
-        public @Nullable GuiLight getGuiLight() {
-            return model.getGuiLight();
+        public TextureSlots.Data textureSlots() {
+            return model.textureSlots();
         }
 
         @Override
-        public @Nullable ItemTransforms getTransforms() {
-            return model.getTransforms();
+        public @Nullable UnbakedGeometry geometry() {
+            return model.geometry();
         }
 
         @Override
-        public TextureSlots.Data getTextureSlots() {
-            return model.getTextureSlots();
-        }
-
-        @Override
-        public @Nullable UnbakedModel getParent() {
-            return model.getParent();
-        }
-
-        @Override
-        public BakedModel bake(TextureSlots textures, ModelBaker baker, ModelState modelState, boolean useAmbientOcclusion, boolean usesBlockLight,
-            ItemTransforms itemTransforms, ContextMap additionalProperties) {
-            return model.bake(textures, baker, modelState, useAmbientOcclusion, usesBlockLight, itemTransforms, additionalProperties);
+        public @Nullable ResourceLocation parent() {
+            return model.parent();
         }
 
         @Override
         public void fillAdditionalProperties(ContextMap.Builder propertiesBuilder) {
             model.fillAdditionalProperties(propertiesBuilder);
+        }
+
+        @Override
+        public void resolveDependencies(Resolver resolver) {
+            model.resolveDependencies(resolver);
         }
     }
 }

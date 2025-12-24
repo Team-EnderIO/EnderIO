@@ -2,14 +2,13 @@ package com.enderio.core.client.gui.widgets;
 
 import com.enderio.core.client.gui.screen.EnderScreen;
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Vector2i;
@@ -178,7 +177,7 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
     @Override
     public void renderButtonFace(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         T value = getValue();
-        guiGraphics.blitSprite(RenderType::guiTextured, getValueIcon(value), getX(), getY(), getWidth(), getHeight());
+        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, getValueIcon(value), getX(), getY(), getWidth(), getHeight());
 
         // TODO: Temp solution for the value changing externally (data sync)
         if (previousValue != value) {
@@ -226,10 +225,10 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
 
         @Override
         public void render(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
-            // TODO: is the depth test disable required?
-            RenderSystem.disableDepthTest();
+            // TODO: 1.21.8: is the depth test disable required?
+//            RenderSystem.disableDepthTest();
             super.render(guiGraphics, pMouseX, pMouseY, pPartialTicks);
-            RenderSystem.enableDepthTest();
+//            RenderSystem.enableDepthTest();
         }
 
         @Override
@@ -296,7 +295,7 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
 
         @Override
         public void renderButtonFace(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-            guiGraphics.blitSprite(RenderType::guiTextured, getValueIcon(value), getX(), getY(), iconWidth, iconHeight);
+            guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, getValueIcon(value), getX(), getY(), iconWidth, iconHeight);
         }
     }
 }

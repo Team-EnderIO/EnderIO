@@ -1,6 +1,5 @@
 package com.enderio.enderio.content.machines.solar_panel;
 
-import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.enderio.api.capacitor.FixedScalable;
 import com.enderio.enderio.api.io.IOMode;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;

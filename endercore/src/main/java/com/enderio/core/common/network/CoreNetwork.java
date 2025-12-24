@@ -22,12 +22,6 @@ public class CoreNetwork {
         registrar.playToClient(EmitParticlesPacket.TYPE, EmitParticlesPacket.STREAM_CODEC,
                 ClientPayloadHandler.getInstance()::handleEmitParticles);
 
-        registrar.playToClient(ServerboundCDataSlotUpdate.TYPE, ServerboundCDataSlotUpdate.STREAM_CODEC,
-                ClientPayloadHandler.getInstance()::handleDataSlotUpdate);
-
-        registrar.playToServer(ClientboundDataSlotChange.TYPE, ClientboundDataSlotChange.STREAM_CODEC,
-                ServerPayloadHandler.getInstance()::handleDataSlotChange);
-
         registrar.playToClient(ClientboundSyncSlotDataPacket.TYPE, ClientboundSyncSlotDataPacket.STREAM_CODEC,
                 ClientPayloadHandler.getInstance()::handleSyncSlotDataPacket);
 

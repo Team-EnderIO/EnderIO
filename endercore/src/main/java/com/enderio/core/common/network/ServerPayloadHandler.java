@@ -16,19 +16,6 @@ public class ServerPayloadHandler {
         return INSTANCE;
     }
 
-    public void handleDataSlotChange(ClientboundDataSlotChange change, IPayloadContext context) {
-        context.enqueueWork(() -> {
-            var level = context.player().level();
-            BlockEntity be = level.getBlockEntity(change.pos());
-            if (be instanceof EnderBlockEntity enderBlockEntity) {
-                var buf = new RegistryFriendlyByteBuf(Unpooled.wrappedBuffer(change.updateData()),
-                        level.registryAccess());
-                enderBlockEntity.serverHandleBufferChange(buf);
-                buf.release();
-            }
-        });
-    }
-
     public void handleSetSyncSlotDataPacket(ServerboundSetSyncSlotDataPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
             if (context.player().containerMenu.containerId == packet.containerId()) {

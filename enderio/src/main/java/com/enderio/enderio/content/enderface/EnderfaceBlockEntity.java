@@ -1,6 +1,5 @@
 package com.enderio.enderio.content.enderface;
 
-import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.enderio.api.travel.TravelTarget;
 import com.enderio.enderio.api.travel.TravelTargetApi;
 import com.enderio.enderio.config.base.BaseConfig;

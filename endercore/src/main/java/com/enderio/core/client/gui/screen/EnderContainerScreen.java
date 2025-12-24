@@ -14,6 +14,7 @@ import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -73,15 +74,17 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
         }
 
         // Move back to screen space rather than aligned to the background coordinates
-        guiGraphics.pose().pushPose();
-        guiGraphics.pose().translate(-leftPos, -topPos, 0.0D);
+        guiGraphics.pose().pushMatrix();
+//        guiGraphics.pose().translate(-leftPos, -topPos, 0.0D);
+        guiGraphics.pose().translate(-leftPos, -topPos);
 
+        // TODO: 1.21.8: Handle z offsets disappearing...
         int zOffset = 200;
         for (var layer : overlayRenderables.keySet()) {
             // Offset deeper for each layer.
-            guiGraphics.pose().pushPose();
+            guiGraphics.pose().pushMatrix();
             zOffset += 150;
-            guiGraphics.pose().translate(0.0D, 0.0D, zOffset);
+//            guiGraphics.pose().translate(0, 0, zOffset);
 
             for (var overlay : overlayRenderables.get(layer)) {
                 if (!(overlay instanceof AbstractWidget widget) || widget.isActive()) {
@@ -94,19 +97,20 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
                 }
             }
 
-            guiGraphics.pose().popPose();
+            guiGraphics.pose().popMatrix();
         }
 
-        guiGraphics.pose().popPose();
+        guiGraphics.pose().popMatrix();
 
-        guiGraphics.pose().translate(0, 0, zOffset);
+//        guiGraphics.pose().translate(0, 0, zOffset);
 
-        guiGraphics.pose().pushPose();
-        guiGraphics.pose().translate(-leftPos, -topPos, 0.0D);
+        guiGraphics.pose().pushMatrix();
+//        guiGraphics.pose().translate(-leftPos, -topPos, 0.0D);
+        guiGraphics.pose().translate(-leftPos, -topPos);
 
         renderTooltip(guiGraphics, mouseX, mouseY);
 
-        guiGraphics.pose().popPose();
+        guiGraphics.pose().popMatrix();
     }
 
     @Override
@@ -139,9 +143,10 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
 
         if (slot instanceof SlotWithOverlay slotWithOverlay) {
             if (slotWithOverlay.getForegroundSprite() != null) {
-                RenderSystem.disableDepthTest();
-                guiGraphics.blitSprite(RenderType::guiTextured, slotWithOverlay.getForegroundSprite(), slot.x, slot.y, 16, 16);
-                RenderSystem.enableDepthTest();
+                // TODO: 1.21.8: Check this?
+//                RenderSystem.disableDepthTest();
+                guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, slotWithOverlay.getForegroundSprite(), slot.x, slot.y, 16, 16);
+//                RenderSystem.enableDepthTest();
             }
         }
     }

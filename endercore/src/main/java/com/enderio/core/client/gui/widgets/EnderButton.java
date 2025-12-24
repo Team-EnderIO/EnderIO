@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.WidgetSprites;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -23,9 +24,7 @@ public abstract class EnderButton extends AbstractWidget {
 
     @Override
     protected void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-        RenderSystem.enableBlend();
-        RenderSystem.enableDepthTest();
-        pGuiGraphics.blitSprite(RenderType::guiTextured, SPRITES.get(this.active, this.isHovered()), this.getX(), this.getY(), this.getWidth(),
+        pGuiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, SPRITES.get(this.active, this.isHovered()), this.getX(), this.getY(), this.getWidth(),
                 this.getHeight());
         renderButtonFace(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
     }

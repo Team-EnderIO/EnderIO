@@ -1,6 +1,5 @@
 package com.enderio.enderio.foundation.block.entity.legacy.sync;
 
-import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.enderio.foundation.io.energy.IMachineEnergyStorage;
 import com.enderio.enderio.foundation.io.energy.ImmutableMachineEnergyStorage;
 import com.mojang.serialization.Codec;

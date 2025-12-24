@@ -1,6 +1,5 @@
 package com.enderio.enderio.foundation.block.entity.legacy;
 
-import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.enderio.api.capacitor.CapacitorData;
 import com.enderio.enderio.api.capacitor.CapacitorScalable;
 import com.enderio.enderio.api.io.RedstoneControl;

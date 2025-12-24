@@ -1,6 +1,5 @@
 package com.enderio.enderio.foundation.attachment;
 
-import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.enderio.foundation.particle.RangeParticleData;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

@@ -27,7 +27,7 @@ public class EnergyBarDecorator implements IItemDecorator {
         float fillRatio = energyStored / (float) maxEnergyStored;
 
         // Render the bar overlay
-        ItemBarRenderer.renderBar(guiGraphics, fillRatio, xOffset, yOffset, 0, BAR_COLOR);
+        ItemBarRenderer.renderBar(guiGraphics, fillRatio, xOffset, yOffset, BAR_COLOR);
         return false;
     }
 }

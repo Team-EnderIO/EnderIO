@@ -1,6 +1,5 @@
 package com.enderio.enderio.foundation.state;
 
-import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.mojang.serialization.Codec;
