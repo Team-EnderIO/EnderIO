@@ -113,7 +113,7 @@ public abstract class AbstractFilterMenu<T> extends BaseEnderMenu {
     @EnsureSide(EnsureSide.Side.SERVER)
     private int getPlayerInventorySlot() {
         if (filterAccess instanceof HandFilterAccess) {
-            return getPlayerInventory().selected;
+            return getPlayerInventory().getSelectedSlot();
         }
 
         return -1;

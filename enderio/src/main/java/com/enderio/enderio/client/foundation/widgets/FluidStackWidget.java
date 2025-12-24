@@ -4,17 +4,15 @@ import com.enderio.core.client.gui.widgets.EIOWidget;
 import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.foundation.fluid.FluidStorageInfo;
 import com.enderio.enderio.foundation.io.fluid.MachineFluidTank;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.ARGB;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
 
@@ -39,8 +37,7 @@ public class FluidStackWidget extends EIOWidget {
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         Minecraft minecraft = Minecraft.getInstance();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.enableDepthTest();
+        //TODO Blend + depth pipeline?
         FluidStorageInfo fluidTank = fluidStorageSupplier.get();
         if (!fluidTank.contents().isEmpty()) {
             FluidStack fluidStack = fluidTank.contents();
@@ -52,10 +49,6 @@ public class FluidStackWidget extends EIOWidget {
                     TextureAtlasSprite sprite = atlas.getSprite(still);
 
                     int color = props.getTintColor();
-                    RenderSystem.setShaderColor(ARGB.red(color) / 255.0F,
-                            ARGB.green(color) / 255.0F, ARGB.blue(color) / 255.0F,
-                            ARGB.alpha(color) / 255.0F);
-                    RenderSystem.enableBlend();
 
                     int stored = fluidStack.getAmount();
                     float capacity = fluidTank.capacity();
@@ -65,25 +58,23 @@ public class FluidStackWidget extends EIOWidget {
                     int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
                     int atlasHeight = (int) (sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
 
-                    guiGraphics.pose().pushPose();
-                    guiGraphics.pose().translate(0, height - 16, 0);
+                    guiGraphics.pose().pushMatrix();
+                    guiGraphics.pose().translate(0, height - 16);
                     for (int i = 0; i < Math.ceil(renderableHeight / 16f); i++) {
                         int drawingHeight = Math.min(16, renderableHeight - 16 * i);
                         int notDrawingHeight = 16 - drawingHeight;
-                        guiGraphics.blit(RenderType::guiTextured, TextureAtlas.LOCATION_BLOCKS, x, y + notDrawingHeight,
+                        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, TextureAtlas.LOCATION_BLOCKS, x, y + notDrawingHeight,
                                 sprite.getU0() * atlasWidth, sprite.getV0() * atlasHeight + notDrawingHeight, width,
-                                drawingHeight, atlasWidth, atlasHeight);
-                        guiGraphics.pose().translate(0, -16, 0);
+                                drawingHeight, atlasWidth, atlasHeight, color);
+                        guiGraphics.pose().translate(0, -16);
                     }
-                    RenderSystem.setShaderColor(1, 1, 1, 1);
 
-                    guiGraphics.pose().popPose();
+                    guiGraphics.pose().popMatrix();
                 }
             }
         }
 
         renderToolTip(guiGraphics, mouseX, mouseY);
-        RenderSystem.disableDepthTest();
     }
 
     @Override
@@ -98,11 +89,11 @@ public class FluidStackWidget extends EIOWidget {
             var storage = fluidStorageSupplier.get();
 
             if (storage.contents().isEmpty()) {
-                guiGraphics.renderComponentTooltip(minecraft.font, List.of(MachinesLang.GUI_NO_FLUID), mouseX,
+                guiGraphics.setComponentTooltipForNextFrame(minecraft.font, List.of(MachinesLang.GUI_NO_FLUID), mouseX,
                         mouseY);
             } else {
-                guiGraphics.renderTooltip(minecraft.font,
-                        Arrays.asList(storage.contents().getDisplayName().getVisualOrderText(),
+                guiGraphics.setTooltipForNextFrame(minecraft.font,
+                        Arrays.asList(storage.contents().getHoverName().getVisualOrderText(),
                                 Component.literal(storage.contents().getAmount() + "mB").getVisualOrderText()),
                         mouseX, mouseY);
             }

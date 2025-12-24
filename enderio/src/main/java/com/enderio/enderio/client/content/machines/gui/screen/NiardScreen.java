@@ -10,21 +10,18 @@ import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget
 import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.machines.niard.NiardMenu;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.ARGB;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
+import org.joml.Matrix3x2fStack;
 
 public class NiardScreen extends MachineScreen<NiardMenu> {
 
@@ -87,14 +84,6 @@ public class NiardScreen extends MachineScreen<NiardMenu> {
                 TextureAtlasSprite sprite = atlas.getSprite(still);
 
                 int color = props.getTintColor();
-                RenderSystem.setShaderColor(
-                    ARGB.red(color) / 255.0F,
-                    ARGB.green(color) / 255.0F,
-                    ARGB.blue(color) / 255.0F,
-                    ARGB.alpha(color) / 255.0F
-                );
-
-                RenderSystem.enableBlend();
 
                 int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
                 int atlasHeight = (int) (sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
@@ -104,14 +93,14 @@ public class NiardScreen extends MachineScreen<NiardMenu> {
                 int spriteWidth = (int)((sprite.getU1() - sprite.getU0()) * atlasWidth);
                 int spriteHeight = (int)((sprite.getV1() - sprite.getV0()) * atlasHeight);
 
-                PoseStack poseStack = guiGraphics.pose();
-                poseStack.pushPose();
+                Matrix3x2fStack poseStack = guiGraphics.pose();
+                poseStack.pushMatrix();
 
-                poseStack.translate(x, y, 0);
+                poseStack.translate(x, y);
 
                 float scaleX = (float) width / (float) spriteWidth;
                 float scaleY = (float) height / (float) spriteHeight;
-                poseStack.scale(scaleX, scaleY, 1.0F);
+                poseStack.scale(scaleX, scaleY);
 
                 guiGraphics.blit(
                     RenderPipelines.GUI_TEXTURED,
@@ -119,13 +108,11 @@ public class NiardScreen extends MachineScreen<NiardMenu> {
                     0, 0,
                     uOffset, vOffset,
                     spriteWidth, spriteHeight,
-                    atlasWidth, atlasHeight
+                    atlasWidth, atlasHeight,
+                    color
                 );
 
-                poseStack.popPose();
-
-                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-                RenderSystem.disableBlend();
+                poseStack.popMatrix();
 
                 // TODO: 1.21.4: Hardcoded 256x256
                 guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE, x, y, 200, 0, width, height, 256, 256);

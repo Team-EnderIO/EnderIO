@@ -12,7 +12,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 public class RedstoneCountFilterMenu extends AbstractContainerMenu {
@@ -57,7 +57,7 @@ public class RedstoneCountFilterMenu extends AbstractContainerMenu {
     public void setCount(String maxCount) {
         try {
             filter.setMaxCount(Integer.parseInt(maxCount));
-            PacketDistributor.sendToServer(new ServerboundCountFilterPacket(filter.getChannel(), filter.getMaxCount(), filter.getCount(), filter.isDeactivated()));
+            ClientPacketDistributor.sendToServer(new ServerboundCountFilterPacket(filter.getChannel(), filter.getMaxCount(), filter.getCount(), filter.isDeactivated()));
         } catch (Exception e) {
 
         }
@@ -65,7 +65,7 @@ public class RedstoneCountFilterMenu extends AbstractContainerMenu {
 
     public void setChannel(DyeColor channel) {
         filter.setChannel(channel);
-        PacketDistributor.sendToServer(new ServerboundCountFilterPacket(filter.getChannel(), filter.getMaxCount(), filter.getCount(), filter.isDeactivated()));
+        ClientPacketDistributor.sendToServer(new ServerboundCountFilterPacket(filter.getChannel(), filter.getMaxCount(), filter.getCount(), filter.isDeactivated()));
     }
 
     public void addInventorySlots(int xPos, int yPos, Inventory inventory) {

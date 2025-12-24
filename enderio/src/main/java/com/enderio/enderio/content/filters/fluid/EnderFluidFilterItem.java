@@ -15,9 +15,10 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 
-import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class EnderFluidFilterItem extends AbstractFilterItem<EnderFluidFilter> {
@@ -48,9 +49,8 @@ public class EnderFluidFilterItem extends AbstractFilterItem<EnderFluidFilter> {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents,
-            TooltipFlag tooltipFlag) {
-        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag flag) {
+        super.appendHoverText(stack, context, tooltipDisplay, tooltipAdder, flag);
 
         // Display warning on basic item filters which have been set to match on
         // NBT/Components.
@@ -58,7 +58,7 @@ public class EnderFluidFilterItem extends AbstractFilterItem<EnderFluidFilter> {
         // filter has invalid settings that they can't see.
         var filter = getFilter(stack);
         if (filter.shouldCompareComponents() && !type.canMatchComponents()) {
-            tooltipComponents.add(FiltersLang.FILTER_CONFIG_NOT_ALLOWED_COMPONENT_MATCH);
+            tooltipAdder.accept(FiltersLang.FILTER_CONFIG_NOT_ALLOWED_COMPONENT_MATCH);
         }
     }
 

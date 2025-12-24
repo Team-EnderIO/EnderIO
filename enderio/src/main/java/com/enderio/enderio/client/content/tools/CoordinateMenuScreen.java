@@ -8,12 +8,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 public class CoordinateMenuScreen extends EnderContainerScreen<CoordinateMenu> {
 
@@ -54,7 +54,7 @@ public class CoordinateMenuScreen extends EnderContainerScreen<CoordinateMenu> {
 
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float pPartialTicks, int pMouseX, int pMouseY) {
-        guiGraphics.blit(RenderType::guiTextured, BG_TEXTURE, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight, 256, 256);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight, 256, 256);
 
         int midX = this.width / 2;
         int y = topPos + 48;
@@ -79,6 +79,6 @@ public class CoordinateMenuScreen extends EnderContainerScreen<CoordinateMenu> {
     }
 
     private void onNameChanged(String name) {
-        PacketDistributor.sendToServer(new ServerboundUpdateCoordinateSelectionNameMenuPacket(getMenu().containerId, name));
+        ClientPacketDistributor.sendToServer(new ServerboundUpdateCoordinateSelectionNameMenuPacket(getMenu().containerId, name));
     }
 }

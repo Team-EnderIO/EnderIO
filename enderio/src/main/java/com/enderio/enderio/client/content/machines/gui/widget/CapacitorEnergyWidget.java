@@ -3,14 +3,13 @@ package com.enderio.enderio.client.content.machines.gui.widget;
 import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.foundation.io.energy.IMachineEnergyStorage;
 import com.enderio.enderio.init.EIOItems;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import org.joml.Matrix3x2fStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,11 +46,11 @@ public class CapacitorEnergyWidget extends EnergyWidget {
             list.add(Component.literal(s.stripLeading().stripTrailing()));
         }
 
-        PoseStack pose = guiGraphics.pose();
-        pose.pushPose();
-        pose.translate(0,0,1);
-        guiGraphics.renderComponentTooltip(minecraft.font, list, mouseX, mouseY);
-        pose.popPose();
+        Matrix3x2fStack pose = guiGraphics.pose();
+        pose.pushMatrix();
+        pose.translate(0,0); //TODO Z push not possible
+        guiGraphics.setComponentTooltipForNextFrame(minecraft.font, list, mouseX, mouseY); //TODO does this render?
+        pose.popMatrix();
     }
 
     public void renderCapacitor(GuiGraphics guiGraphics) {
@@ -65,13 +64,10 @@ public class CapacitorEnergyWidget extends EnergyWidget {
         int heightModifier = (int) Math.round(Math.sin(level.getGameTime() * 0.05) * 12);
         guiGraphics.renderFakeItem(CAPACITOR, x - 4, y + height/2 - 8 + heightModifier);
 
+        //TODO blend pipeline + ghost item
         //noinspection IntegerDivisionInFloatingPointContext
-        guiGraphics.blit(RenderType::guiTextured, WIDGETS, x, y + height/2 + 6, 0, 160 + tick / 10 * 9, 128, width, height, 256, 256);
-        RenderSystem.setShaderColor(1,1,1, 100/255f);
-        RenderSystem.enableBlend();
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, WIDGETS, x, y + height/2 + 6, 0, 160 + tick / 10 * 9, 128, width, height, 256, 256);
         guiGraphics.renderFakeItem(CAPACITOR, x - 4, y + height/2 + 25);
-        RenderSystem.disableBlend();
-        RenderSystem.setShaderColor(1,1,1, 1);
 
     }
 }

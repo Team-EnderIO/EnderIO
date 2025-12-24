@@ -6,11 +6,10 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.foundation.io.energy.ILargeMachineEnergyStorage;
 import com.enderio.enderio.foundation.io.energy.IMachineEnergyStorage;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.ResourceLocation;
 
 import java.text.NumberFormat;
@@ -36,23 +35,20 @@ public class EnergyWidget extends EIOWidget {
             return;
         }
 
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.enableDepthTest();
-
+        //TODO blend depth pipeline
         float filledVolume = (float)(getEnergyStored(storage) / (double) getMaxEnergyStored(storage));
         int renderableHeight = (int)(filledVolume * height);
 
-        guiGraphics.pose().pushPose();
-        guiGraphics.pose().translate(0, height-16, 0);
+        guiGraphics.pose().pushMatrix();
+        guiGraphics.pose().translate(0, height-16);
         for (int i = 0; i < Math.ceil(renderableHeight / 16f); i++) {
             int drawingHeight = Math.min(16, renderableHeight - 16*i);
             int notDrawingHeight = 16 - drawingHeight;
-            guiGraphics.blit(RenderType::guiTextured, WIDGETS, x, y + notDrawingHeight, 0, 0, 128 + notDrawingHeight, width, drawingHeight, 256, 256);
-            guiGraphics.pose().translate(0,-16, 0);
+            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, WIDGETS, x, y + notDrawingHeight, 0, 0, 128 + notDrawingHeight, width, drawingHeight, 256, 256);
+            guiGraphics.pose().translate(0,-16);
         }
 
-        RenderSystem.disableDepthTest();
-        guiGraphics.pose().popPose();
+        guiGraphics.pose().popMatrix();
 
         renderToolTip(guiGraphics, mouseX, mouseY);
     }
@@ -68,7 +64,7 @@ public class EnergyWidget extends EIOWidget {
             IMachineEnergyStorage storage = storageSupplier.get();
 
             NumberFormat fmt = NumberFormat.getInstance(Locale.ENGLISH);
-            guiGraphics.renderTooltip(minecraft.font,
+            guiGraphics.setTooltipForNextFrame(minecraft.font,
                 TooltipUtil.withArgs(EIOCommonLang.ENERGY_AMOUNT, fmt.format(getEnergyStored(storage)) + "/" + fmt.format(
                getMaxEnergyStored(storage))), mouseX, mouseY);
         }

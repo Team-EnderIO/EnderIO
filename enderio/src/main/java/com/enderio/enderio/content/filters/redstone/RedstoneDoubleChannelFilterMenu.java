@@ -13,7 +13,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 public class RedstoneDoubleChannelFilterMenu extends AbstractContainerMenu {
@@ -71,12 +71,12 @@ public class RedstoneDoubleChannelFilterMenu extends AbstractContainerMenu {
 
     public void setFirstChannel(DyeColor colorControl) {
         channels.setFirstChannel(colorControl);
-        PacketDistributor.sendToServer(new ServerboundDoubleChannelPacket(channels.getFirstChannel(), channels.getSecondChannel()));
+        ClientPacketDistributor.sendToServer(new ServerboundDoubleChannelPacket(channels.getFirstChannel(), channels.getSecondChannel()));
     }
 
     public void setSecondChannel(DyeColor colorControl) {
         channels.setSecondChannel(colorControl);
-        PacketDistributor.sendToServer(new ServerboundDoubleChannelPacket(channels.getFirstChannel(), channels.getSecondChannel()));
+        ClientPacketDistributor.sendToServer(new ServerboundDoubleChannelPacket(channels.getFirstChannel(), channels.getSecondChannel()));
     }
 
     public void addInventorySlots(int xPos, int yPos, Inventory inventory) {

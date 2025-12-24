@@ -11,7 +11,7 @@ import com.enderio.enderio.content.filters.soul.EnderSoulFilterMenu;
 import com.enderio.enderio.content.filters.soul.SoulFilterSlot;
 import com.enderio.enderio.content.tools.vials.SoulVialItem;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -96,7 +96,7 @@ public class EnderSoulFilterScreen extends EnderContainerScreen<EnderSoulFilterM
 
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float v, int i, int i1) {
-        guiGraphics.blit(RenderType::guiTextured, backgroundTexture, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight, 256, 256);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, backgroundTexture, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
     @Override
@@ -126,7 +126,7 @@ public class EnderSoulFilterScreen extends EnderContainerScreen<EnderSoulFilterM
 
             ItemStack renderStack = getRenderStack(soul);
             // TODO: Maybe add extra tooltip to show there is entity NBT?
-            guiGraphics.renderTooltip(font, getTooltipFromContainerItem(renderStack), renderStack.getTooltipImage(), renderStack, x, y);
+            guiGraphics.setTooltipForNextFrame(font, getTooltipFromContainerItem(renderStack), renderStack.getTooltipImage(), renderStack, x, y);
             return true;
         }
 

@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -116,7 +116,7 @@ public abstract class ProgressWidget extends AbstractWidget {
         if (this.isHovered() && showTooltip && !ModCompatHelper.hasRecipeViewer()) {
             Minecraft minecraft = Minecraft.getInstance();
 
-            guiGraphics.renderTooltip(minecraft.font,
+            guiGraphics.setTooltipForNextFrame(minecraft.font,
                     TooltipUtil.withArgs(MachinesLang.TOOLTIP_PROGRESS, (int) (progressSupplier.get() * 100)), mouseX,
                     mouseY);
         }
@@ -124,6 +124,6 @@ public abstract class ProgressWidget extends AbstractWidget {
     }
 
     protected void renderSprite(GuiGraphics guiGraphics, int x, int y, int u, int v, int w, int h) {
-        guiGraphics.blit(RenderType::guiTextured, backgroundImage, x, y, u, v, w, h, 256, 256);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, backgroundImage, x, y, u, v, w, h, 256, 256);
     }
 }

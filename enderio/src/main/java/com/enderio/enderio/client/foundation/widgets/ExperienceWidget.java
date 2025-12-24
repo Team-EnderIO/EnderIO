@@ -2,11 +2,10 @@ package com.enderio.enderio.client.foundation.widgets;
 
 import com.enderio.core.client.gui.widgets.EIOWidget;
 import com.enderio.enderio.foundation.util.ExperienceUtil;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.fluids.FluidStack;
 
@@ -27,29 +26,28 @@ public class ExperienceWidget extends EIOWidget {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.enableDepthTest();
+        //TODO depth pipeline
 
         ExperienceUtil.ExperienceLevel expLevel = ExperienceUtil
                 .getLevelFromFluidWithLeftover(getFluid.get().getAmount());
         int fill = (int) ((((float) expLevel.experience()) / ExperienceUtil.getXpNeededForNextLevel(expLevel.level()))
                 * this.width) - 1;
 
-        guiGraphics.blitSprite(RenderType::guiTextured, EXPERIENCE_BAR_BACKGROUND_SPRITE, this.x, this.y, this.width, this.height);
-        guiGraphics.blitSprite(RenderType::guiTextured, EXPERIENCE_BAR_PROGRESS_SPRITE, 182, 5, 0, 0, this.x, this.y, fill, 5);
+        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, EXPERIENCE_BAR_BACKGROUND_SPRITE, this.x, this.y, this.width, this.height);
+        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, EXPERIENCE_BAR_PROGRESS_SPRITE, 182, 5, 0, 0, this.x, this.y, fill, 5);
 
         var font = Minecraft.getInstance().font;
         String text = "" + expLevel.level();
         int xOffset = font.width(text) / 2;
-        guiGraphics.drawString(font, text, (this.x + this.width / 2f + 1) - xOffset, (float) this.y - this.height - 3,
+        guiGraphics.drawString(font, text, (int) ((this.x + this.width / 2f + 1) - xOffset), this.y - this.height - 3,
                 0, false);
-        guiGraphics.drawString(font, text, (this.x + this.width / 2f - 1) - xOffset, (float) this.y - this.height - 3,
+        guiGraphics.drawString(font, text, (int) ((this.x + this.width / 2f - 1) - xOffset), this.y - this.height - 3,
                 0, false);
-        guiGraphics.drawString(font, text, this.x + this.width / 2f - xOffset, (float) (this.y - this.height - 3 + 1),
+        guiGraphics.drawString(font, text, (int) (this.x + this.width / 2f - xOffset), (this.y - this.height - 3 + 1),
                 0, false);
-        guiGraphics.drawString(font, text, this.x + this.width / 2f - xOffset, (float) (this.y - this.height - 3 - 1),
+        guiGraphics.drawString(font, text, (int) (this.x + this.width / 2f - xOffset), (this.y - this.height - 3 - 1),
                 0, false);
-        guiGraphics.drawString(font, text, this.x + this.width / 2f - xOffset, (float) this.y - this.height - 3,
+        guiGraphics.drawString(font, text, (int) (this.x + this.width / 2f - xOffset), this.y - this.height - 3,
                 8453920, false);
     }
 

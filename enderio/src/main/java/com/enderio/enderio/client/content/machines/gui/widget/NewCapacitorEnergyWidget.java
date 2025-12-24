@@ -3,13 +3,13 @@ package com.enderio.enderio.client.content.machines.gui.widget;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.foundation.io.energy.IMachineEnergyStorage;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import org.joml.Matrix3x2fStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ public class NewCapacitorEnergyWidget extends NewEnergyWidget {
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (!cap.get()) {
-            guiGraphics.blitSprite(RenderType::guiTextured, ENERGY_BAR_ERROR_SPRITE, x, y, width, height);
+            guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, ENERGY_BAR_ERROR_SPRITE, x, y, width, height);
 
             if (isHoveredOrFocused()) {
                 renderCapacitorTooltip(guiGraphics, mouseX, mouseY);
@@ -50,10 +50,10 @@ public class NewCapacitorEnergyWidget extends NewEnergyWidget {
             list.add(Component.literal(s.stripLeading().stripTrailing()));
         }
 
-        PoseStack pose = guiGraphics.pose();
-        pose.pushPose();
-        pose.translate(0, 0, 1);
-        guiGraphics.renderComponentTooltip(minecraft.font, list, mouseX, mouseY);
-        pose.popPose();
+        Matrix3x2fStack pose = guiGraphics.pose();
+        pose.pushMatrix();
+        pose.translate(0, 0); //TODO can't push Z 1
+        guiGraphics.setComponentTooltipForNextFrame(minecraft.font, list, mouseX, mouseY);
+        pose.popMatrix();
     }
 }

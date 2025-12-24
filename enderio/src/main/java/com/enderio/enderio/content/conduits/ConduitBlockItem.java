@@ -19,13 +19,14 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
-import java.util.List;
+import java.util.function.Consumer;
 
 public class ConduitBlockItem extends BlockItem implements ICustomCreativeTabEntries {
 
@@ -108,26 +109,26 @@ public class ConduitBlockItem extends BlockItem implements ICustomCreativeTabEnt
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents,
-            TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag flag) {
+
         Holder<Conduit<?, ?>> conduit = stack.get(EnderIODataComponents.CONDUIT);
         if (conduit != null) {
-            conduit.value().addToTooltip(context, tooltipComponents::add, tooltipFlag);
+            conduit.value().addToTooltip(context, tooltipAdder::accept, flag);
 
-            boolean showDetailTooltip = !tooltipFlag.hasShiftDown()
+            boolean showDetailTooltip = !flag.hasShiftDown()
                     && (conduit.value().hasAdvancedTooltip() || conduit.value().showDebugTooltip());
 
-            if (conduit.value().showDebugTooltip() && tooltipFlag.hasShiftDown()) {
-                tooltipComponents.add(TooltipUtil.styledWithArgs(ConduitLang.GRAPH_TICK_RATE_TOOLTIP,
+            if (conduit.value().showDebugTooltip() && flag.hasShiftDown()) {
+                tooltipAdder.accept(TooltipUtil.styledWithArgs(ConduitLang.GRAPH_TICK_RATE_TOOLTIP,
                         20 / conduit.value().networkTickRate()));
             }
 
             if (showDetailTooltip) {
-                tooltipComponents.add(EIOCommonLang.SHOW_DETAIL_TOOLTIP);
+                tooltipAdder.accept(EIOCommonLang.SHOW_DETAIL_TOOLTIP);
             }
         }
 
-        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+        super.appendHoverText(stack, context, tooltipDisplay, tooltipAdder, flag);
     }
 
     @Override

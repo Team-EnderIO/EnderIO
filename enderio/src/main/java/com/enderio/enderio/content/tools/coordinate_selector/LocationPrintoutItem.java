@@ -15,12 +15,13 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public class LocationPrintoutItem extends Item {
 
@@ -86,13 +87,13 @@ public class LocationPrintoutItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack pStack, TooltipContext tooltipContext, List<Component> toolTip, TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, tooltipContext, toolTip, pIsAdvanced);
-        getSelection(pStack).ifPresent(selection -> {
-                toolTip.add(writeCoordinate('x', selection.pos().getX())
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag flag) {
+        super.appendHoverText(stack, context, tooltipDisplay, tooltipAdder, flag);
+        getSelection(stack).ifPresent(selection -> {
+            tooltipAdder.accept(writeCoordinate('x', selection.pos().getX())
                     .append(writeCoordinate('y', selection.pos().getY()))
                     .append(writeCoordinate('z', selection.pos().getZ())));
-                toolTip.add(Component.literal(selection.getLevelName()));
+            tooltipAdder.accept(Component.literal(selection.getLevelName()));
         });
     }
 

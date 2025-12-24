@@ -27,6 +27,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.fml.LogicalSide;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.ItemStackHandler;
@@ -168,7 +169,7 @@ public class ConduitMenu extends BaseEnderMenu {
             // Prevent editing while player is in spectator mode.
             if (!localPlayer.isSpectator()) {
                 connectionAccessor.setConnectionConfig(conduit, side, config);
-                PacketDistributor.sendToServer(new SetConduitConnectionConfigPacket(containerId, config));
+                ClientPacketDistributor.sendToServer(new SetConduitConnectionConfigPacket(containerId, config));
             }
         } else {
             connectionAccessor.setConnectionConfig(conduit, side, config);
@@ -228,7 +229,7 @@ public class ConduitMenu extends BaseEnderMenu {
                         (ConduitBundleBlockEntity) connectionAccessor, side, conduit));
             }
         } else {
-            PacketDistributor.sendToServer(new ServerboundOpenConduitFilterMenu(containerId, slot));
+            ClientPacketDistributor.sendToServer(new ServerboundOpenConduitFilterMenu(containerId, slot));
         }
     }
 

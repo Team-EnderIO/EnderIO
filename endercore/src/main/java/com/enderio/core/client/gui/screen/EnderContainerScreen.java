@@ -4,7 +4,6 @@ import com.enderio.core.common.menu.LegacyBaseBlockEntityMenu;
 import com.enderio.core.common.menu.SlotWithOverlay;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.GuiGraphics;
@@ -15,7 +14,6 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -132,6 +130,7 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
     }
 
     // Return true to cancel normal tooltips
+    //TODO this is no longer the case
     protected boolean renderCustomTooltip(GuiGraphics guiGraphics, int x, int y) {
         return false;
     }

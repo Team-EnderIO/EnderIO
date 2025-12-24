@@ -4,17 +4,17 @@ import com.enderio.enderio.client.foundation.icon.MachineEnumIcons;
 import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.foundation.state.MachineStateType;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -34,9 +34,7 @@ public class ActivityWidget extends AbstractWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.enableBlend();
-        RenderSystem.enableDepthTest();
+        //TODO blend depth pipeline
 
         MachineState prio = null;
         for (MachineState machineState : state.get()) {
@@ -50,15 +48,13 @@ public class ActivityWidget extends AbstractWidget {
         }
 
         if (useNewIcons) {
-            guiGraphics.blitSprite(RenderType::guiTextured, Objects.requireNonNull(MachineEnumIcons.NEW_MACHINE_STATE_TYPE.get(prio.type())),
+            guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, Objects.requireNonNull(MachineEnumIcons.NEW_MACHINE_STATE_TYPE.get(prio.type())),
                     getX(), getY(), 16, 16);
         } else {
-            guiGraphics.blitSprite(RenderType::guiTextured, Objects.requireNonNull(MachineEnumIcons.MACHINE_STATE_TYPE.get(prio.type())), getX(),
+            guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, Objects.requireNonNull(MachineEnumIcons.MACHINE_STATE_TYPE.get(prio.type())), getX(),
                     getY(), 16, 16);
         }
 
-        RenderSystem.disableBlend();
-        RenderSystem.disableDepthTest();
         renderToolTip(guiGraphics, mouseX, mouseY);
     }
 
@@ -75,7 +71,10 @@ public class ActivityWidget extends AbstractWidget {
                 list = List.of(MachinesLang.STATUS_IDLE);
             }
 
-            guiGraphics.renderTooltip(minecraft.font, list, Optional.empty(), mouseX, mouseY);
+            //TODO which is what we need? widget has it's own tooltip stuff, but it's a bit different
+            guiGraphics.renderTooltip(minecraft.font, list.stream().map(c -> ClientTooltipComponent.create(c.getVisualOrderText())).toList(), mouseX, mouseY,
+                DefaultTooltipPositioner.INSTANCE, null);
+
         }
     }
 

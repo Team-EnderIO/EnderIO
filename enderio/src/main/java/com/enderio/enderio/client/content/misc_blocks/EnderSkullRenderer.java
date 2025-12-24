@@ -3,7 +3,6 @@ package com.enderio.enderio.client.content.misc_blocks;
 import com.enderio.enderio.foundation.block.entity.EnderSkullBlockEntity;
 import com.enderio.enderio.init.EIOBlocks;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.SkullModelBase;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -43,7 +42,8 @@ public class EnderSkullRenderer implements BlockEntityRenderer<EnderSkullBlockEn
     }
 
     @Override
-    public void render(EnderSkullBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
+    public void render(EnderSkullBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight,
+        int packedOverlay, Vec3 cameraPos) {
         float f = blockEntity.getAnimation(partialTick);
         BlockState blockstate = blockEntity.getBlockState();
         boolean flag = blockstate.getBlock() instanceof WallSkullBlock;
@@ -67,7 +67,7 @@ public class EnderSkullRenderer implements BlockEntityRenderer<EnderSkullBlockEn
                 player.level().setBlock(blockEntity.getBlockPos(), blockstate.setValue(SkullBlock.ROTATION, rotation), 3);
             }
         }
-        SkullBlockRenderer.renderSkull(direction, f1, f, poseStack, buffer, packedLight, skullmodelbase, RENDERTYPE);
+        SkullBlockRenderer.renderSkull(direction, f1, f, poseStack, bufferSource, packedLight, skullmodelbase, RENDERTYPE);
     }
 
     public static class EnderSkullModel extends SkullModelBase {

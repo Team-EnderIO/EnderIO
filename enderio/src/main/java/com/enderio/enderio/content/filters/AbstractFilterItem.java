@@ -13,12 +13,13 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 public abstract class AbstractFilterItem<T> extends Item implements FilterMenuProvider {
 
@@ -83,12 +84,12 @@ public abstract class AbstractFilterItem<T> extends Item implements FilterMenuPr
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag flag) {
+        super.appendHoverText(stack, context, tooltipDisplay, tooltipAdder, flag);
 
         var filter = stack.getOrDefault(dataComponentType(), defaultFilter());
         if (!filter.equals(defaultFilter())) {
-            tooltipComponents.add(FiltersLang.CONFIGURED);
+            tooltipAdder.accept(FiltersLang.CONFIGURED);
         }
     }
 }

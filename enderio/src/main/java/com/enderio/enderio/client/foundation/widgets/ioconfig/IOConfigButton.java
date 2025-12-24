@@ -7,7 +7,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.ResourceLocation;
 
 import javax.annotation.Nullable;
@@ -31,7 +31,7 @@ public class IOConfigButton extends EnderButton {
 
     @Override
     public void renderButtonFace(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-        guiGraphics.blitSprite(RenderType::guiTextured, IO_CONFIG, getX(), getY(), width, height);
+        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, IO_CONFIG, getX(), getY(), width, height);
     }
 
     @Override

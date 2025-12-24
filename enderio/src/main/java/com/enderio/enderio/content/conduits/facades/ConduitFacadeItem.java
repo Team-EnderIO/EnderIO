@@ -12,14 +12,15 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class ConduitFacadeItem extends BlockItem {
     public ConduitFacadeItem(Properties properties) {
@@ -62,25 +63,24 @@ public class ConduitFacadeItem extends BlockItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents,
-            TooltipFlag tooltipFlag) {
-        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag flag) {
+        super.appendHoverText(stack, context, tooltipDisplay, tooltipAdder, flag);
 
         var facade = stack.getCapability(EnderIOCapabilities.CONDUIT_FACADE_PROVIDER);
         boolean hasFacadeTooltip = facade != null
                 && (facade.type().isBlastResistant() || facade.type().doesHideConduits());
 
         if (hasFacadeTooltip) {
-            if (tooltipFlag.hasShiftDown()) {
+            if (flag.hasShiftDown()) {
                 if (facade.type().doesHideConduits()) {
-                    tooltipComponents.add(ConduitLang.TRANSPARENT_FACADE_TOOLTIP);
+                    tooltipAdder.accept(ConduitLang.TRANSPARENT_FACADE_TOOLTIP);
                 }
 
                 if (facade.type().isBlastResistant()) {
-                    tooltipComponents.add(ConduitLang.BLAST_RESIST_FACADE_TOOLTIP);
+                    tooltipAdder.accept(ConduitLang.BLAST_RESIST_FACADE_TOOLTIP);
                 }
             } else {
-                tooltipComponents.add(EIOCommonLang.SHOW_DETAIL_TOOLTIP);
+                tooltipAdder.accept(EIOCommonLang.SHOW_DETAIL_TOOLTIP);
             }
         }
     }

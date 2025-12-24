@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
@@ -16,9 +17,10 @@ public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
 
     }
 
+
     @Override
-    public void render(FluidTankBlockEntity blockEntity, float partialTick, PoseStack poseStack,
-            MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
+    public void render(FluidTankBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight,
+        int packedOverlay, Vec3 cameraPos) {
 
         MachineFluidTank tank = blockEntity.getFluidTank();
 

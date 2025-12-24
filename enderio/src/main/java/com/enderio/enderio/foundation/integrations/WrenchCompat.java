@@ -3,10 +3,10 @@ package com.enderio.enderio.foundation.integrations;
 import com.enderio.enderio.foundation.block.entity.Wrenchable;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOItems;
+import net.minecraft.util.TriState;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 
 @EventBusSubscriber

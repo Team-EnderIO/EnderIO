@@ -18,6 +18,9 @@ import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtension
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
+
+import java.util.Set;
 
 // TODO: No longer lights in the inventory/hand like other machines...
 // TODO: PORT: Hook back up
@@ -65,6 +68,11 @@ public class FluidTankRenderer implements SpecialModelRenderer<IFluidHandlerItem
         }
 
         poseStack.popPose();
+    }
+
+    @Override
+    public void getExtents(Set<Vector3f> output) {
+
     }
 
     @Override

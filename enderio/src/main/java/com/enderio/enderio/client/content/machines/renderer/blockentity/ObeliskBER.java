@@ -32,8 +32,8 @@ public class ObeliskBER implements BlockEntityRenderer<BlockEntity> {
     }
 
     @Override
-    public void render(BlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource buffer,
-            int packedLight, int packedOverlay) {
+    public void render(BlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay,
+        Vec3 cameraPos) {
         poseStack.pushPose();
         poseStack.translate(0.5, 0.75, 0.5);
         poseStack.scale(0.5f, 0.5f, 0.5f);
@@ -44,13 +44,13 @@ public class ObeliskBER implements BlockEntityRenderer<BlockEntity> {
         poseStack.mulPose(Axis.YP.rotationDegrees(-f1 + 180));
         ItemStack stack = new ItemStack(supplier.get());
         ItemStackRenderState renderState = new ItemStackRenderState();
-        minecraft.getItemModelResolver().updateForTopItem(renderState, stack, ItemDisplayContext.GUI, false, blockEntity.getLevel(), null, 0);
+        minecraft.getItemModelResolver().updateForTopItem(renderState, stack, ItemDisplayContext.GUI, blockEntity.getLevel(), null, 0);
         if (stack.getItem() instanceof BlockItem) { //Blocks are in iso, let's correct that
             poseStack.mulPose(Axis.YP.rotationDegrees(45));
             poseStack.mulPose(Axis.XP.rotationDegrees(-30));
             poseStack.scale(1.2f, 1.2f, 1.2f);
         }
-        renderState.render(poseStack, buffer, packedLight, packedOverlay);
+        renderState.render(poseStack, bufferSource, packedLight, packedOverlay);
         poseStack.popPose();
     }
 }

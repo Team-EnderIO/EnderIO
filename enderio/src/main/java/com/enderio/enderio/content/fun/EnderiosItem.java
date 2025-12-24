@@ -41,12 +41,13 @@ public class EnderiosItem extends Item {
     }
 
     @Override
-    public void onCraftedBy(ItemStack stack, Level level, Player player) {
-        super.onCraftedBy(stack, level, player);
+    public void onCraftedBy(ItemStack stack, Player player) {
+        super.onCraftedBy(stack, player);
         if (player.getUUID().hashCode() == -1435081874 || isSpecialDay()) {
             stack.set(DataComponents.CUSTOM_NAME, Component.literal("SOIREDNE"));
         }
     }
+
     private static boolean isSpecialDay() {
         if (Calendar.getInstance().get(Calendar.MONTH) != Calendar.APRIL)
             return false;

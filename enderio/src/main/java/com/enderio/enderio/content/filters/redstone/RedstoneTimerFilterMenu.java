@@ -11,7 +11,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 public class RedstoneTimerFilterMenu extends AbstractContainerMenu {
@@ -46,7 +46,7 @@ public class RedstoneTimerFilterMenu extends AbstractContainerMenu {
     public void setTimer(String timer) {
         try {
             filter.setMaxTicks(Integer.parseInt(timer));
-            PacketDistributor.sendToServer(new ServerboundTimerFilterPacket(filter.getTicks(), filter.getMaxTicks()));
+            ClientPacketDistributor.sendToServer(new ServerboundTimerFilterPacket(filter.getTicks(), filter.getMaxTicks()));
         } catch (Exception e) {
 
         }

@@ -18,6 +18,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -31,7 +32,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import org.apache.logging.log4j.LogManager;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 public class ColdFireIgniter extends Item implements ICustomCreativeTabEntries {
 
@@ -92,19 +93,19 @@ public class ColdFireIgniter extends Item implements ICustomCreativeTabEntries {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext tooltipContext, List<Component> components, TooltipFlag flag) {
-        super.appendHoverText(stack, tooltipContext, components, flag);
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag flag) {
+        super.appendHoverText(stack, context, tooltipDisplay, tooltipAdder, flag);
 
         var tankCap = stack.getCapability(Capabilities.FluidHandler.ITEM);
         if (tankCap != null) {
             boolean isOneTank = tankCap.getTanks() == 1;
             if (!isOneTank) {
-                components.add(Component.literal("Fluids:"));
+                tooltipAdder.accept(Component.literal("Fluids:"));
             }
             for (int i = 0; i < tankCap.getTanks(); i++) {
                 String prefix = isOneTank ? "" : i + ": ";
                 Component postFix = tankCap.getFluidInTank(i).isEmpty() ? Component.literal("") : tankCap.getFluidInTank(i).getHoverName();
-                components.add(Component.literal(prefix + tankCap.getFluidInTank(i).getAmount() + " / " + tankCap.getTankCapacity(i) + " ").append(postFix));
+                tooltipAdder.accept(Component.literal(prefix + tankCap.getFluidInTank(i).getAmount() + " / " + tankCap.getTankCapacity(i) + " ").append(postFix));
             }
         }
     }

@@ -93,17 +93,16 @@ public class CoordinateMenu extends AbstractContainerMenu {
     }
 
     private static Optional<ItemStack> findPaper(Player player) {
-        for (ItemStack stack: player.getInventory().items) {
+        for (ItemStack stack: player.getInventory().getNonEquipmentItems()) {
             if (stack.getItem() == Items.PAPER) {
                 return Optional.of(stack);
             }
         }
 
-        for (ItemStack stack: player.getInventory().offhand) {
-            if (stack.getItem() == Items.PAPER) {
-                return Optional.of(stack);
-            }
+        if (player.getOffhandItem().getItem() == Items.PAPER) {
+            return Optional.of(player.getOffhandItem());
         }
+
 
         return Optional.empty();
     }

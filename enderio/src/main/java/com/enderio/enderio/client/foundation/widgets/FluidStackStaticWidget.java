@@ -2,17 +2,15 @@ package com.enderio.enderio.client.foundation.widgets;
 
 import com.enderio.core.client.gui.widgets.EIOWidget;
 import com.enderio.enderio.foundation.fluid.FluidStorageInfo;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.ARGB;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
 
@@ -32,8 +30,7 @@ public class FluidStackStaticWidget extends EIOWidget {
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         Minecraft minecraft = Minecraft.getInstance();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.enableDepthTest();
+        //TODO blend depth pipeline
         FluidStorageInfo fluidTank = fluidStorageSupplier.get();
         if (!fluidTank.contents().isEmpty()) {
             FluidStack fluidStack = fluidTank.contents();
@@ -45,25 +42,19 @@ public class FluidStackStaticWidget extends EIOWidget {
                     TextureAtlasSprite sprite = atlas.getSprite(still);
 
                     int color = props.getTintColor();
-                    RenderSystem.setShaderColor(ARGB.red(color) / 255.0F,
-                            ARGB.green(color) / 255.0F, ARGB.blue(color) / 255.0F,
-                            ARGB.alpha(color) / 255.0F);
-                    RenderSystem.enableBlend();
 
                     int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
                     int atlasHeight = (int) (sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
                     // TODO: 1.21.4: Check this
-                    guiGraphics.blit(RenderType::guiTextured, TextureAtlas.LOCATION_BLOCKS, x, y, sprite.getU0() * atlasWidth,
+                    guiGraphics.blit(RenderPipelines.GUI_TEXTURED, TextureAtlas.LOCATION_BLOCKS, x, y, sprite.getU0() * atlasWidth,
                             sprite.getV0() * atlasHeight, width, height, sprite.contents().width(), sprite.contents().height(),
-                            atlasWidth, atlasHeight);
-                    RenderSystem.setShaderColor(1, 1, 1, 1);
+                            atlasWidth, atlasHeight, color);
 
                 }
             }
             renderToolTip(guiGraphics, mouseX, mouseY);
         }
 
-        RenderSystem.disableDepthTest();
     }
 
     @Override
@@ -74,8 +65,8 @@ public class FluidStackStaticWidget extends EIOWidget {
     public void renderToolTip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (isHovered(mouseX, mouseY)) {
             Minecraft minecraft = Minecraft.getInstance();
-            guiGraphics.renderTooltip(minecraft.font, Arrays.asList(
-                    fluidStorageSupplier.get().contents().getDisplayName().getVisualOrderText(),
+            guiGraphics.setTooltipForNextFrame(minecraft.font, Arrays.asList(
+                    fluidStorageSupplier.get().contents().getHoverName().getVisualOrderText(),
                     Component.literal(fluidStorageSupplier.get().contents().getAmount() + "mB").getVisualOrderText()),
                     mouseX, mouseY);
         }

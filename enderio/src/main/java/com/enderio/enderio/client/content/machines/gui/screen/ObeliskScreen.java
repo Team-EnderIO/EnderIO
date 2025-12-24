@@ -11,10 +11,8 @@ import com.enderio.enderio.content.machines.obelisks.ObeliskBlockEntity;
 import com.enderio.enderio.content.machines.obelisks.ObeliskMenu;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.init.EIOItems;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -92,12 +90,8 @@ public abstract class ObeliskScreen<J extends ObeliskBlockEntity<J>, T extends O
             @Nullable String countString) {
         if (menu.getBlockEntity().requiresFilter() && slot.index == 1 && itemstack.isEmpty()) {
             ItemStack stack = new ItemStack(EIOItems.BASIC_SOUL_FILTER.get());
-            RenderSystem.setShaderColor(1, 1, 1, 100 / 255f);
-            RenderSystem.enableBlend();
+            //TODO ghost item rendering and blend pipeline
             guiGraphics.renderFakeItem(stack, slot.x, slot.y);
-            RenderSystem.disableBlend();
-            RenderSystem.setShaderColor(1, 1, 1, 1);
-
         } else {
             super.renderSlotContents(guiGraphics, itemstack, slot, countString);
         }

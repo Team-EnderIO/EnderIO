@@ -21,7 +21,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
@@ -44,7 +43,7 @@ public class CapacitorBankBER implements BlockEntityRenderer<CapacitorBankBlockE
 
     @Override
     public void render(CapacitorBankBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight,
-        int packedOverlay) {
+        int packedOverlay, Vec3 cameraPos) {
 
         if (blockEntity.getLevel() != null) {
             for (Direction direction: HORIZONTAL_DIRECTIONS) {

@@ -3,11 +3,10 @@ package com.enderio.enderio.client.foundation.widgets;
 import com.enderio.core.client.gui.widgets.EIOWidget;
 import com.enderio.enderio.foundation.fluid.FluidStorageInfo;
 import com.enderio.enderio.foundation.util.ExperienceUtil;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -30,8 +29,7 @@ public class ExperienceCraftingWidget extends EIOWidget {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.enableDepthTest();
+        //TODO blend depth pipeline
 
         int k = 1;
         if (maxXP.get() > 0) {
@@ -42,21 +40,21 @@ public class ExperienceCraftingWidget extends EIOWidget {
             }
         }
 
-        guiGraphics.blitSprite(RenderType::guiTextured, EXPERIENCE_BAR_BACKGROUND_SPRITE, this.x, this.y, this.width, this.height);
-        guiGraphics.blitSprite(RenderType::guiTextured, EXPERIENCE_BAR_PROGRESS_SPRITE, 182, 5, 0, 0, this.x, this.y, k, 5);
+        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, EXPERIENCE_BAR_BACKGROUND_SPRITE, this.x, this.y, this.width, this.height);
+        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, EXPERIENCE_BAR_PROGRESS_SPRITE, 182, 5, 0, 0, this.x, this.y, k, 5);
 
         var font = Minecraft.getInstance().font;
         String s = "" + maxXP.get();
-        guiGraphics.drawString(font, s, (this.x + this.width / 2f + 1), (float) this.y - this.height - 3, 0, false);
-        guiGraphics.drawString(font, s, (this.x + this.width / 2f - 1), (float) this.y - this.height - 3, 0, false);
-        guiGraphics.drawString(font, s, this.x + this.width / 2f, (float) (this.y - this.height - 3 + 1), 0, false);
-        guiGraphics.drawString(font, s, this.x + this.width / 2f, (float) (this.y - this.height - 3 - 1), 0, false);
-        guiGraphics.drawString(font, s, this.x + this.width / 2f, (float) this.y - this.height - 3, 8453920, false);
+        guiGraphics.drawString(font, s, (int) (this.x + this.width / 2f + 1), this.y - this.height - 3, 0, false);
+        guiGraphics.drawString(font, s, (int) (this.x + this.width / 2f - 1), (int) this.y - this.height - 3, 0, false);
+        guiGraphics.drawString(font, s, (int) (this.x + this.width / 2f), (this.y - this.height - 3 + 1), 0, false);
+        guiGraphics.drawString(font, s, (int) (this.x + this.width / 2f), (this.y - this.height - 3 - 1), 0, false);
+        guiGraphics.drawString(font, s, (int) (this.x + this.width / 2f),  this.y - this.height - 3, 8453920, false);
 
         if (isHovered(pMouseX, pMouseY)) {
             Minecraft minecraft = Minecraft.getInstance();
             guiGraphics
-                    .renderTooltip(
+                    .setTooltipForNextFrame(
                             minecraft.font, Component.literal(fluidStorageSupplier.get().contents().getAmount()
                                     + " mb / " + ExperienceUtil.getFluidFromLevel(maxXP.get()) + " mb"),
                             pMouseX, pMouseY);

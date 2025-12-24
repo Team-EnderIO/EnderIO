@@ -26,7 +26,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -38,7 +37,6 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
@@ -64,7 +62,7 @@ import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.fml.loading.FMLLoader;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -297,7 +295,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
             }
 
             // Ask the server to remove the bundle
-            PacketDistributor.sendToServer(new ServerboundDestroyEntireConduitBundlePacket(pos));
+            ClientPacketDistributor.sendToServer(new ServerboundDestroyEntireConduitBundlePacket(pos));
             return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
         }
 
@@ -312,7 +310,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
             }
 
             // Ask the server to remove the facade
-            PacketDistributor.sendToServer(new ServerboundRemoveConduitFacadePacket(pos));
+            ClientPacketDistributor.sendToServer(new ServerboundRemoveConduitFacadePacket(pos));
         } else {
             Holder<Conduit<?, ?>> conduit = null;
 
@@ -332,7 +330,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
             conduitBundle.removeConduit(conduit, droppedItem -> {});
 
             // Ask the server to remove the conduit
-            PacketDistributor.sendToServer(new ServerboundBreakConduitPacket(pos, conduit));
+            ClientPacketDistributor.sendToServer(new ServerboundBreakConduitPacket(pos, conduit));
         }
 
         return false;
