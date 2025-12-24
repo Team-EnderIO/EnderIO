@@ -6,6 +6,7 @@ import com.enderio.enderio.api.io.IOMode;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.api.io.SideConfig;
 import com.enderio.enderio.foundation.MachineNBTKeys;
+import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.MachineInventoryHolder;
 import com.enderio.enderio.foundation.block.entity.Wrenchable;
 import com.enderio.enderio.foundation.block.legacy.LegacyMachineBlock;
@@ -40,10 +41,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
-import net.neoforged.neoforge.client.model.data.ModelData;
-import net.neoforged.neoforge.client.model.data.ModelProperty;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.model.data.ModelData;
+import net.neoforged.neoforge.model.data.ModelProperty;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
@@ -64,7 +65,7 @@ public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
 
     private final IOConfig defaultIOConfig;
 
-    public static final ModelProperty<IOConfigurable> IO_CONFIG_PROPERTY = new ModelProperty<>();
+    private static final ModelProperty<IOConfigurable> IO_CONFIG_PROPERTY = MachineBlockEntity.IO_CONFIG_PROPERTY;
 
     private ModelData modelData = ModelData.EMPTY;
 

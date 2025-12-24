@@ -30,6 +30,7 @@ import com.enderio.enderio.init.EIOItems;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -44,6 +45,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.common.extensions.IOwnedSpawner;
 import org.jetbrains.annotations.Nullable;
@@ -321,54 +324,46 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     // region Serialization
 
     @Override
-    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.saveAdditional(pTag, lookupProvider);
-        taskHost.save(lookupProvider, pTag);
+    public void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.putChild("TaskHost", taskHost);
     }
 
     @Override
-    protected void saveAdditionalSynced(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditionalSynced(tag, registries);
+    protected void saveAdditionalSynced(ValueOutput output) {
+        super.saveAdditionalSynced(output);
 
         // Sync entity storage in case we want to render the entity or something in
         // future :)
-        tag.put(MachineNBTKeys.ENTITY_STORAGE, boundSoul.saveOptional(registries));
+        output.store(MachineNBTKeys.ENTITY_STORAGE, Soul.OPTIONAL_CODEC, boundSoul);
 
         if (mode != DEFAULT_MODE) {
             tag.put(MachineNBTKeys.MACHINE_MODE, mode.save(registries));
         }
 
-        if (isRangeVisible) {
-            tag.putBoolean(MachineNBTKeys.IS_RANGE_VISIBLE, isRangeVisible);
-        }
+        output.putBoolean(MachineNBTKeys.IS_RANGE_VISIBLE, isRangeVisible);
     }
 
     @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.loadAdditional(pTag, lookupProvider);
-        boundSoul = Soul.parseOptional(lookupProvider, pTag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
+    public void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+
+        input.read(MachineNBTKeys.ENTITY_STORAGE, Soul.OPTIONAL_CODEC)
+            .ifPresent(soul -> boundSoul = soul);
 
         if (pTag.contains(MachineNBTKeys.MACHINE_MODE)) {
             this.mode = PoweredSpawnerMode.parse(lookupProvider,
                     Objects.requireNonNull(pTag.get(MachineNBTKeys.MACHINE_MODE)));
         }
 
-        // TODO: Ender IO 8 - remove support for old attachment loading
-        if (hasData(EIOAttachments.ACTION_RANGE)) {
-            var actionRange = getData(EIOAttachments.ACTION_RANGE);
-            isRangeVisible = actionRange.isVisible();
-            removeData(EIOAttachments.ACTION_RANGE);
-        }
-
-        isRangeVisible = pTag.contains(MachineNBTKeys.IS_RANGE_VISIBLE)
-                && pTag.getBoolean(MachineNBTKeys.IS_RANGE_VISIBLE);
+        isRangeVisible = input.getBooleanOr(MachineNBTKeys.IS_RANGE_VISIBLE, false);
 
         // Load task host last
         taskHost.load(lookupProvider, pTag);
     }
 
     @Override
-    protected void applyImplicitComponents(DataComponentInput components) {
+    protected void applyImplicitComponents(DataComponentGetter components) {
         super.applyImplicitComponents(components);
         boundSoul = components.getOrDefault(EIODataComponents.SOUL, Soul.EMPTY);
 
@@ -399,10 +394,10 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     }
 
     @Override
-    public void removeComponentsFromTag(CompoundTag tag) {
-        super.removeComponentsFromTag(tag);
-        tag.remove(MachineNBTKeys.IS_RANGE_VISIBLE);
-        tag.remove(MachineNBTKeys.ENTITY_STORAGE);
+    public void removeComponentsFromTag(ValueOutput output) {
+        super.removeComponentsFromTag(output);
+        output.discard(MachineNBTKeys.IS_RANGE_VISIBLE);
+        output.discard(MachineNBTKeys.ENTITY_STORAGE);
     }
 
     @Override

@@ -15,6 +15,7 @@ import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
@@ -26,6 +27,8 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
@@ -290,31 +293,23 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
     // region Serialization
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        tag.put(MachineNBTKeys.ENERGY_STORED, energyStorage.serializeNBT(registries));
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.putChild(MachineNBTKeys.ENERGY, energyStorage);
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
 
-        if (tag.contains(MachineNBTKeys.ENERGY_STORED, Tag.TAG_INT)) {
-            energyStorage.deserializeNBT(registries, (IntTag) tag.get(MachineNBTKeys.ENERGY_STORED));
-        } else if (tag.contains(MachineNBTKeys.ENERGY, Tag.TAG_COMPOUND)) {
-            // SUPPORT LEGACY STORAGE FORMAT
-            CompoundTag energyTag = tag.getCompound(MachineNBTKeys.ENERGY);
-
-            if (energyTag.contains(MachineNBTKeys.ENERGY_STORED)) {
-                energyStorage.setEnergyStored(energyTag.getInt(MachineNBTKeys.ENERGY_STORED));
-            }
-        }
+        input.child(MachineNBTKeys.ENERGY)
+            .ifPresent(energyStorage::deserialize);
 
         updateCapacitorData();
     }
 
     @Override
-    protected void applyImplicitComponents(DataComponentInput componentInput) {
+    protected void applyImplicitComponents(DataComponentGetter componentInput) {
         super.applyImplicitComponents(componentInput);
         energyStorage.setEnergyStored(componentInput.getOrDefault(EIODataComponents.ENERGY, 0));
     }
@@ -326,9 +321,9 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
     }
 
     @Override
-    public void removeComponentsFromTag(CompoundTag tag) {
-        super.removeComponentsFromTag(tag);
-        tag.remove(MachineNBTKeys.ENERGY_STORED);
+    public void removeComponentsFromTag(ValueOutput output) {
+        super.removeComponentsFromTag(output);
+        output.discard(MachineNBTKeys.ENERGY);
     }
 
     // endregion

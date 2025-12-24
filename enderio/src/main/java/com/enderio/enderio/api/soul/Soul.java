@@ -1,25 +1,22 @@
 package com.enderio.enderio.api.soul;
 
-import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Leashable;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
 
 import java.util.List;
 import java.util.Objects;
@@ -32,11 +29,16 @@ import java.util.stream.Stream;
  * @param entityTag the entity's NBT tag.
  */
 public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) {
+    public static final Soul EMPTY = new Soul(null, new CompoundTag());
+
     public static final Codec<Soul> CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
             BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("entity_type").forGetter(Soul::entityType),
             CompoundTag.CODEC.fieldOf("entity_tag").forGetter(Soul::entityTag)
         ).apply(instance, Soul::new));
+
+    public static final Codec<Soul> OPTIONAL_CODEC = ExtraCodecs
+        .optionalEmptyMap(CODEC).xmap((optionalSoul) -> optionalSoul.orElse(EMPTY), (soul) -> soul.isEmpty() ? Optional.empty() : Optional.of(soul));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, Soul> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.registry(Registries.ENTITY_TYPE),
@@ -49,7 +51,7 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) {
     // Keys that should not be compared or saved
     // Note be careful adding new things to this list - it will affect saves.
     private static final List<String> IGNORED_KEYS = List.of(
-        Entity.ID_TAG, // We store the entity type separately to the entity data.
+        Entity.TAG_ID, // We store the entity type separately to the entity data.
         "Air",
         "Brain",
         "DeathTime",
@@ -66,7 +68,7 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) {
         "SleepingY",
         "SleepingZ",
         Leashable.LEASH_TAG,
-        Entity.UUID_TAG
+        Entity.TAG_UUID
     );
 
     // Do not compare obviously unreasonable NBT Keys
@@ -77,7 +79,7 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) {
         Bee.TAG_TICKS_SINCE_POLLINATION,
         Bee.TAG_CROPS_GROWN_SINCE_POLLINATION,
         Bee.TAG_HIVE_POS,
-        Entity.PASSENGERS_TAG
+        Entity.TAG_PASSENGERS
     );
 
     public Soul {
@@ -109,8 +111,6 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) {
             }
         }
     };
-
-    public static final Soul EMPTY = new Soul(null, new CompoundTag());
 
     public static Soul of(LivingEntity entity) {
         var entityTag = new CompoundTag();
@@ -157,7 +157,7 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) {
     }
 
     private static boolean isSameTag(CompoundTag tag1, CompoundTag tag2) {
-        var allKeys = Stream.concat(tag1.getAllKeys().stream(), tag2.getAllKeys().stream()).collect(Collectors.toSet());
+        var allKeys = Stream.concat(tag1.keySet().stream(), tag2.keySet().stream()).collect(Collectors.toSet());
         for (var key : allKeys) {
             if (IGNORED_KEYS.contains(key) ||
                 IGNORED_KEYS_DURING_COMPARISON.contains(key)) {
@@ -194,7 +194,7 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) {
 
     public CompoundTag getEntityTagWithId() {
         var tag = entityTag.copy();
-        tag.putString(Entity.ID_TAG, entityTypeId().toString());
+        tag.putString(Entity.TAG_ID, entityTypeId().toString());
         return tag;
     }
 
@@ -212,28 +212,5 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) {
         }
 
         return of(entityType());
-    }
-
-    private static final Logger LOGGER = LogUtils.getLogger();
-
-    public Tag save(HolderLookup.Provider lookupProvider) {
-        if (!this.hasEntity()) {
-            throw new IllegalStateException("Cannot encode empty StoredEntityData");
-        } else {
-            return CODEC.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), this).getOrThrow();
-        }
-    }
-
-    public Tag saveOptional(HolderLookup.Provider lookupProvider) {
-        return this.hasEntity() ? save(lookupProvider) : new CompoundTag();
-    }
-
-    public static Optional<Soul> parse(HolderLookup.Provider lookupProvider, Tag tag) {
-        return CODEC.parse(lookupProvider.createSerializationContext(NbtOps.INSTANCE), tag)
-            .resultOrPartial(error -> LOGGER.error("Tried to load invalid StoredEntityData: '{}'", error));
-    }
-
-    public static Soul parseOptional(HolderLookup.Provider lookupProvider, CompoundTag tag) {
-        return tag.isEmpty() ? EMPTY : parse(lookupProvider, tag).orElse(EMPTY);
     }
 }

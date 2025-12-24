@@ -50,10 +50,10 @@ public class TravelTargetRendering {
     }
 
     @SubscribeEvent
-    public static void renderLevel(RenderLevelStageEvent event) {
+    public static void renderLevel(RenderLevelStageEvent.AfterTripwireBlocks event) {
         ClientLevel level = Minecraft.getInstance().level;
         LocalPlayer player = Minecraft.getInstance().player;
-        if (level == null || player == null || event.getStage() != RenderLevelStageEvent.Stage.AFTER_TRIPWIRE_BLOCKS) {
+        if (level == null || player == null) {
             return;
         }
 

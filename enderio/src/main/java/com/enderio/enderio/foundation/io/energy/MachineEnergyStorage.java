@@ -7,7 +7,9 @@ import com.enderio.enderio.foundation.MachineNBTKeys;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,7 +20,7 @@ import java.util.function.Supplier;
  * Uses capacitor keys to determine maximum capacity and transfer rate.
  * Also provides sided access through capabilities.
  */
-public class MachineEnergyStorage implements IMachineEnergyStorage, INBTSerializable<CompoundTag> {
+public class MachineEnergyStorage implements IMachineEnergyStorage, ValueIOSerializable {
     private final IOConfigurable config;
     private final EnergyIOMode ioMode;
 
@@ -165,15 +167,13 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, INBTSerializ
     }
 
     @Override
-    public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
-        CompoundTag tag = new CompoundTag();
-        tag.putInt(MachineNBTKeys.ENERGY_STORED, getEnergyStored());
-        return tag;
+    public void serialize(ValueOutput valueOutput) {
+        valueOutput.putInt(MachineNBTKeys.ENERGY_STORED, energyStored);
     }
 
     @Override
-    public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
-        energyStored = nbt.getInt(MachineNBTKeys.ENERGY_STORED);
+    public void deserialize(ValueInput valueInput) {
+        energyStored = valueInput.getIntOr(MachineNBTKeys.ENERGY_STORED, 0);
     }
 
     private record Sided(MachineEnergyStorage wrapped, Direction side) implements IEnergyStorage {

@@ -24,6 +24,7 @@ import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -241,8 +242,8 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     @Override
     public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
         super.loadAdditional(pTag, lookupProvider);
-        burnedTicks = pTag.getInt(BURNED_TICKS);
-        boundSoul = Soul.parseOptional(lookupProvider, pTag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
+        burnedTicks = pTag.getIntOr(BURNED_TICKS, 0);
+        boundSoul = pTag.read(MachineNBTKeys.ENTITY_STORAGE, Soul.CODEC).orElse(Soul.EMPTY);
 
         updateMachineState(MachineState.NO_POWER, false);
         updateMachineState(MachineState.FULL_POWER,
@@ -252,7 +253,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     }
 
     @Override
-    protected void applyImplicitComponents(DataComponentInput components) {
+    protected void applyImplicitComponents(DataComponentGetter components) {
         super.applyImplicitComponents(components);
         boundSoul = components.getOrDefault(EIODataComponents.SOUL, Soul.EMPTY);
 

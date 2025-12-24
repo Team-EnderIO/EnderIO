@@ -29,12 +29,13 @@ public class ClientFacadeVisibility {
 
     private static void setFacadesVisible(boolean visible) {
         if (visible != FACADES_VISIBLE) {
-            RenderSystem.recordRenderCall(() -> {
+            // TODO: 1.21.8: What is the replacement here?
+//            RenderSystem.recordRenderCall(() -> {
                 ConduitBundleBlockEntity.CHUNK_FACADES.keySet().forEach((section) -> {
                     Minecraft.getInstance().levelRenderer.setSectionDirty(SectionPos.x(section), SectionPos.y(section),
                         SectionPos.z(section));
                 });
-            });
+//            });
         }
 
         FACADES_VISIBLE = visible;

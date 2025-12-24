@@ -48,9 +48,6 @@ public record MachineState(MachineStateType type, MutableComponent component) {
             ByteBufCodecs.STRING_UTF8.map(Component::translatable, Component::getString), MachineState::component,
             MachineState::new);
 
-    public static final NetworkDataSlot.CodecType<Set<MachineState>> DATA_SLOT_TYPE = NetworkDataSlot.CodecType
-            .createSet(CODEC, STREAM_CODEC.cast());
-
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {

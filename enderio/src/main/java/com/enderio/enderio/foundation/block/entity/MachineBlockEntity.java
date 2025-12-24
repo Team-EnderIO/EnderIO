@@ -9,7 +9,6 @@ import com.enderio.enderio.api.soul.binding.SoulBindable;
 import com.enderio.enderio.foundation.MachineNBTKeys;
 import com.enderio.enderio.foundation.block.EIOBlockEntity;
 import com.enderio.enderio.foundation.block.ProgressMachineBlock;
-import com.enderio.enderio.foundation.block.entity.legacy.LegacyMachineBlockEntity;
 import com.enderio.enderio.foundation.block.legacy.LegacyMachineBlock;
 import com.enderio.enderio.foundation.inventory.MachineInventory;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
@@ -18,14 +17,13 @@ import com.enderio.enderio.foundation.io.SidedIOConfigurable;
 import com.enderio.enderio.foundation.io.TransferUtil;
 import com.enderio.enderio.foundation.network.packets.ServerboundCycleIOConfigPacket;
 import com.enderio.enderio.foundation.state.MachineState;
-import com.enderio.enderio.init.EIOAttachments;
 import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.UUIDUtil;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -40,14 +38,16 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
-import net.neoforged.neoforge.client.model.data.ModelData;
-import net.neoforged.neoforge.client.model.data.ModelProperty;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.model.data.ModelData;
+import net.neoforged.neoforge.model.data.ModelProperty;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
@@ -72,7 +72,7 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
     public static final ICapabilityProvider<MachineBlockEntity, Void, SoulBindable> SOUL_BINDABLE = (be, ctx)
         -> be instanceof SoulBindable bindable ? bindable : null;
 
-    private static final ModelProperty<IOConfigurable> IO_CONFIG_PROPERTY = LegacyMachineBlockEntity.IO_CONFIG_PROPERTY;
+    public static final ModelProperty<IOConfigurable> IO_CONFIG_PROPERTY = new ModelProperty<>();
 
     @Nullable
     private final MachineInventory inventory;
@@ -517,7 +517,7 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
         } else {
             if (level.isClientSide()) {
                 if (isIOConfigMutable()) {
-                    PacketDistributor.sendToServer(new ServerboundCycleIOConfigPacket(worldPosition, context.getClickedFace()));
+                    ClientPacketDistributor.sendToServer(new ServerboundCycleIOConfigPacket(worldPosition, context.getClickedFace()));
                 }
             }
 
@@ -540,15 +540,15 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
     // region Serialization
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
 
         if (supportsRedstoneControl()) {
-            tag.put(MachineNBTKeys.REDSTONE_CONTROL, redstoneControl.save(registries));
+            output.store(MachineNBTKeys.REDSTONE_CONTROL, RedstoneControl.CODEC, redstoneControl);
         }
 
         if (hasInventory()) {
-            tag.put(MachineNBTKeys.ITEMS, inventory.serializeNBT(registries));
+            output.putChild(MachineNBTKeys.ITEMS, inventory);
         }
     }
 
@@ -559,63 +559,47 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
     }
 
     @Override
-    protected void saveAdditionalSynced(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditionalSynced(tag, registries);
+    protected void saveAdditionalSynced(ValueOutput output) {
+        super.saveAdditionalSynced(output);
 
         if (isIoConfigMutable && ioConfig != null) {
-            tag.put(MachineNBTKeys.IO_CONFIG, ioConfig.save(registries));
+            output.store(MachineNBTKeys.IO_CONFIG, IOConfig.CODEC, ioConfig);
         }
 
         if (owner != null) {
-            tag.putUUID(MachineNBTKeys.OWNER, this.owner);
+            output.store(MachineNBTKeys.OWNER, UUIDUtil.CODEC, owner);
         }
     }
 
     @SuppressWarnings("removal")
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
 
-        if (hasInventory() && tag.contains(MachineNBTKeys.ITEMS)) {
-            inventory.deserializeNBT(registries, tag.getCompound(MachineNBTKeys.ITEMS));
+        if (hasInventory()) {
+            input.child(MachineNBTKeys.ITEMS)
+                .ifPresent(inventory::deserialize);
         }
 
-        // Supports old attachments.
-        // We've been misusing attachments, they're intended for 3rd party data
-        // additions
-        // Reverting this will take some time
-
-        // Same for IO Config
-        // TODO: Ender IO 8 - remove.
-        if (hasData(EIOAttachments.IO_CONFIG)) {
-            ioConfig = getData(EIOAttachments.IO_CONFIG);
-            removeData(EIOAttachments.IO_CONFIG);
-        } else if (tag.contains(MachineNBTKeys.IO_CONFIG)) {
-            ioConfig = IOConfig.parseOptional(registries, tag.getCompound(MachineNBTKeys.IO_CONFIG));
-
-            if (level != null && level.isClientSide) {
-                clientIOConfigChanged();
-            }
-        }
+        input.read(MachineNBTKeys.IO_CONFIG, IOConfig.CODEC)
+            .ifPresent(ioConfig -> {
+                this.ioConfig = ioConfig;
+                if (level != null && level.isClientSide) {
+                    clientIOConfigChanged();
+                }
+            });
 
         if (supportsRedstoneControl()) {
-            // TODO: Ender IO 8 - remove.
-            if (hasData(EIOAttachments.REDSTONE_CONTROL)) {
-                redstoneControl = getData(EIOAttachments.REDSTONE_CONTROL);
-                removeData(EIOAttachments.REDSTONE_CONTROL);
-            } else if (tag.contains(MachineNBTKeys.REDSTONE_CONTROL)) {
-                redstoneControl = RedstoneControl.parse(registries,
-                        Objects.requireNonNull(tag.get(MachineNBTKeys.REDSTONE_CONTROL)));
-            }
+            input.read(MachineNBTKeys.REDSTONE_CONTROL, RedstoneControl.CODEC)
+                .ifPresent(control -> redstoneControl = control);
         }
 
-        if (tag.contains(MachineNBTKeys.OWNER)) {
-            owner = tag.getUUID(MachineNBTKeys.OWNER);
-        }
+        input.read(MachineNBTKeys.OWNER, UUIDUtil.CODEC)
+            .ifPresent(owner -> this.owner = owner);
     }
 
     @Override
-    protected void applyImplicitComponents(DataComponentInput componentInput) {
+    protected void applyImplicitComponents(DataComponentGetter componentInput) {
         super.applyImplicitComponents(componentInput);
 
         if (hasInventory()) {
@@ -654,11 +638,11 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
 
     @SuppressWarnings("deprecation")
     @Override
-    public void removeComponentsFromTag(CompoundTag tag) {
-        super.removeComponentsFromTag(tag);
-        tag.remove(MachineNBTKeys.ITEMS);
-        tag.remove(MachineNBTKeys.IO_CONFIG);
-        tag.remove(MachineNBTKeys.REDSTONE_CONTROL);
+    public void removeComponentsFromTag(ValueOutput output) {
+        super.removeComponentsFromTag(output);
+        output.discard(MachineNBTKeys.ITEMS);
+        output.discard(MachineNBTKeys.IO_CONFIG);
+        output.discard(MachineNBTKeys.REDSTONE_CONTROL);
     }
 
     // endregion

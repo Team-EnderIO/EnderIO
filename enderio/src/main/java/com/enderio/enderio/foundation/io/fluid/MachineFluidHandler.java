@@ -1,6 +1,7 @@
 package com.enderio.enderio.foundation.io.fluid;
 
 import com.enderio.core.CoreNBTKeys;
+import com.enderio.core.common.fluid.FluidStackWithTank;
 import com.enderio.enderio.api.io.IOConfigurable;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -8,7 +9,9 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
@@ -21,7 +24,7 @@ import java.util.function.IntConsumer;
 /**
  * MachineFluidStorage takes a list of fluid tanks and handles IO for them all.
  */
-public class MachineFluidHandler implements IFluidHandler, INBTSerializable<CompoundTag> {
+public class MachineFluidHandler implements IFluidHandler, ValueIOSerializable {
 
     public static final String TANK_INDEX = "Index";
     public static final String TANK_CONTENTS = "Contents";
@@ -211,7 +214,7 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
             return FluidStack.EMPTY;
         }
 
-        if (!getFluidInTank(tank).isEmpty() && !getFluidInTank(tank).isFluidEqual(resource)) {
+        if (!getFluidInTank(tank).isEmpty() && !FluidStack.isSameFluid(getFluidInTank(tank), resource)) {
             return FluidStack.EMPTY;
         }
 
@@ -258,26 +261,21 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
     }
 
     @Override
-    public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
-        ListTag nbtTagList = new ListTag();
+    public void serialize(ValueOutput valueOutput) {
+        var tankList = valueOutput.list(CoreNBTKeys.TANKS, FluidStackWithTank.CODEC);
         for (int i = 0; i < getTanks(); i++) {
-            CompoundTag tankTag = new CompoundTag();
-            tankTag.putInt(TANK_INDEX, i);
-            tankTag.put(TANK_CONTENTS, stacks.get(i).saveOptional(lookupProvider));
-            nbtTagList.add(tankTag);
+            tankList.add(new FluidStackWithTank(i, stacks.get(i)));
         }
-        CompoundTag nbt = new CompoundTag();
-        nbt.put(CoreNBTKeys.TANKS, nbtTagList);
-        return nbt;
     }
 
     @Override
-    public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
-        ListTag tagList = nbt.getList(CoreNBTKeys.TANKS, Tag.TAG_COMPOUND);
-        for (int i = 0; i < tagList.size(); i++) {
-            CompoundTag tankTag = tagList.getCompound(i);
-            int index = tankTag.getInt(TANK_INDEX);
-            stacks.set(index, FluidStack.parseOptional(lookupProvider, tankTag.getCompound(TANK_CONTENTS)));
+    public void deserialize(ValueInput valueInput) {
+        var tankList = valueInput.listOrEmpty(CoreNBTKeys.TANKS, FluidStackWithTank.CODEC);
+
+        for (var stackWithTank : tankList) {
+            if (stackWithTank.isValidInHandler(getTanks())) {
+                stacks.set(stackWithTank.tank(), stackWithTank.stack());
+            }
         }
     }
 

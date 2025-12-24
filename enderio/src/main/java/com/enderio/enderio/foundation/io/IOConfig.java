@@ -32,9 +32,6 @@ public record IOConfig(Map<Direction, IOMode> modes) {
             ByteBufCodecs.map(c -> new EnumMap<>(Direction.class), Direction.STREAM_CODEC, IOMode.STREAM_CODEC),
             IOConfig::modes, IOConfig::new);
 
-    public static final NetworkDataSlot.CodecType<IOConfig> DATA_SLOT_TYPE = new NetworkDataSlot.CodecType<>(CODEC,
-            STREAM_CODEC.cast());
-
     public static IOConfig copyOf(IOConfig other) {
         return new IOConfig(new EnumMap<>(other.modes()));
     }

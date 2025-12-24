@@ -18,6 +18,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -30,6 +31,7 @@ import net.minecraft.util.ARGB;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.function.Supplier;
@@ -76,7 +78,7 @@ public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConn
         // Locked fluid widget
         if (dataAccess.conduit() instanceof FluidConduit fluidConduit && !fluidConduit.isMultiFluid()) {
             screen.addRenderableWidget(new FluidWidget(startX, startY + 20, () -> getLockedFluid(dataAccess),
-                    () -> PacketDistributor.sendToServer(new ServerboundClearLockedFluidPacket(dataAccess.getBlockPos()))));
+                    () -> ClientPacketDistributor.sendToServer(new ServerboundClearLockedFluidPacket(dataAccess.getBlockPos()))));
         } else {
             // Channel colors
             screen.addColorPicker(startX, startY + 20, ConduitLang.CHANNEL,
@@ -157,11 +159,9 @@ public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConn
             return Fluids.EMPTY;
         }
 
-        if (!tag.contains("LockedFluid")) {
-            return Fluids.EMPTY;
-        }
-
-        return BuiltInRegistries.FLUID.getValue(ResourceLocation.parse(tag.getString("LockedFluid")));
+        return tag.getString("LockedFluid")
+            .map(rl -> BuiltInRegistries.FLUID.getValue(ResourceLocation.parse(rl)))
+            .orElse(Fluids.EMPTY);
     }
 
     private static class FluidWidget extends AbstractWidget {
@@ -193,11 +193,12 @@ public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConn
                 setTooltip(Tooltip.create(TooltipUtil.style(tooltip)));
             }
 
-            RenderSystem.enableBlend();
-            RenderSystem.defaultBlendFunc();
-            RenderSystem.enableDepthTest();
+            // TODO: 1.21.8: is this needed?
+//            RenderSystem.enableBlend();
+//            RenderSystem.defaultBlendFunc();
+//            RenderSystem.enableDepthTest();
             // TODO: 1.21.4: 256x256 hardcoded
-            guiGraphics.blit(RenderType::guiTextured, WIDGET_TEXTURE, getX(), getY(), 0, 0, this.width, this.height, 256, 256);
+            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, WIDGET_TEXTURE, getX(), getY(), 0, 0, this.width, this.height, 256, 256);
             if (currentFluid.get().isSame(Fluids.EMPTY)) {
                 return;
             }
@@ -211,22 +212,23 @@ public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConn
                 TextureAtlasSprite sprite = atlas.getSprite(still);
 
                 int color = props.getTintColor();
-                RenderSystem.setShaderColor(ARGB.red(color) / 255.0F,
-                    ARGB.green(color) / 255.0F, ARGB.blue(color) / 255.0F,
-                    ARGB.alpha(color) / 255.0F);
-                RenderSystem.enableBlend();
+//                RenderSystem.enableBlend();
 
                 int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
                 int atlasHeight = (int) (sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
 
-                guiGraphics.blit(RenderType::guiTextured, TextureAtlas.LOCATION_BLOCKS, getX() + 1, getY() + 1, sprite.getU0() * atlasWidth,
-                        sprite.getV0() * atlasHeight, 12, 12, atlasWidth, atlasHeight);
+//                guiGraphics.blit(RenderPipelines.GUI_TEXTURED, TextureAtlas.LOCATION_BLOCKS, getX() + 1, getY() + 1, sprite.getU0() * atlasWidth,
+//                        sprite.getV0() * atlasHeight, 12, 12, atlasWidth, atlasHeight);
 
-                RenderSystem.setShaderColor(1, 1, 1, 1);
+                // TODO: 1.21.8: is this the right way to tint?
+                guiGraphics.blit(RenderPipelines.GUI_TEXTURED, TextureAtlas.LOCATION_BLOCKS, getX() + 1, getY() + 1, sprite.getU0() * atlasWidth,
+                        sprite.getV0() * atlasHeight, 12, 12, 12, 12, atlasWidth, atlasHeight, color);
+
+//                RenderSystem.setShaderColor(1, 1, 1, 1);
             }
 
-            RenderSystem.disableBlend();
-            RenderSystem.disableDepthTest();
+//            RenderSystem.disableBlend();
+//            RenderSystem.disableDepthTest();
         }
 
         @Override

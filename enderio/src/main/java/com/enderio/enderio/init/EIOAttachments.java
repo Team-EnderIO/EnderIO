@@ -18,19 +18,6 @@ public class EIOAttachments {
     private static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister
             .create(NeoForgeRegistries.ATTACHMENT_TYPES, EnderIO.MOD_ID);
 
-    @Deprecated(forRemoval = true, since = "7.1")
-    public static final Supplier<AttachmentType<RedstoneControl>> REDSTONE_CONTROL = ATTACHMENT_TYPES.register(
-            "redstone_control",
-            () -> AttachmentType.builder(() -> RedstoneControl.ALWAYS_ACTIVE).serialize(RedstoneControl.CODEC).build());
-
-    @Deprecated(forRemoval = true, since = "7.1")
-    public static final Supplier<AttachmentType<ActionRange>> ACTION_RANGE = ATTACHMENT_TYPES.register("action_range",
-            () -> AttachmentType.builder(() -> new ActionRange(3, false)).serialize(ActionRange.CODEC).build());
-
-    @Deprecated(forRemoval = true, since = "7.1")
-    public static final Supplier<AttachmentType<IOConfig>> IO_CONFIG = ATTACHMENT_TYPES.register("io_config",
-            () -> AttachmentType.builder(IOConfig::empty).serialize(IOConfig.CODEC).build());
-
     public static final Supplier<AttachmentType<AversionObeliskManager>> AVERSION_OBELISK_MANAGER = ATTACHMENT_TYPES
             .register("aversion_obelisk_manager", () -> AttachmentType.builder(AversionObeliskManager::new).build());
 
