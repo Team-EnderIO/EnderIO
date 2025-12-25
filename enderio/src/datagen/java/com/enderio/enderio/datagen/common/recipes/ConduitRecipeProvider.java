@@ -33,12 +33,17 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
                 .lookupOrThrow(EnderIORegistries.Keys.CONDUIT);
 
         var itemConduit = conduitRegistry.getOrThrow(EIOConduits.ITEM);
+        var energeticItemConduit = conduitRegistry.getOrThrow(EIOConduits.ENERGETIC_ITEM);
+        var vibrantItemConduit = conduitRegistry.getOrThrow(EIOConduits.VIBRANT_ITEM);
+
         var fluidConduit = conduitRegistry.getOrThrow(EIOConduits.FLUID);
-        var pressurizedFluidConduit = conduitRegistry.getOrThrow(EIOConduits.PRESSURIZED_FLUID);
-        var enderFluidConduit = conduitRegistry.getOrThrow(EIOConduits.ENDER_FLUID);
+        var energeticFluidConduit = conduitRegistry.getOrThrow(EIOConduits.ENERGETIC_FLUID);
+        var vibrantFluidConduit = conduitRegistry.getOrThrow(EIOConduits.VIBRANT_FLUID);
+
         var energyConduit = conduitRegistry.getOrThrow(EIOConduits.ENERGY);
-        var enhancedEnergyConduit = conduitRegistry.getOrThrow(EIOConduits.ENHANCED_ENERGY);
-        var enderEnergyConduit = conduitRegistry.getOrThrow(EIOConduits.ENDER_ENERGY);
+        var energeticEnergyConduit = conduitRegistry.getOrThrow(EIOConduits.ENERGETIC_ENERGY);
+        var vibrantEnergyConduit = conduitRegistry.getOrThrow(EIOConduits.VIBRANT_ENERGY);
+
         var redstoneConduit = conduitRegistry.getOrThrow(EIOConduits.REDSTONE);
 
         buildFilterRecipes(recipeOutput);
@@ -49,44 +54,89 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
 
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(itemConduit, 8))
                 .pattern("BBB")
-                .pattern("PPP")
+                .pattern("CIC")
                 .pattern("BBB")
                 .define('B', EIOItems.CONDUIT_BINDER)
-                .define('P', EIOTags.Items.NUGGETS_PULSATING_ALLOY)
+                .define('I', EIOTags.Items.INGOTS_PULSATING_ALLOY)
+                .define('C', EIOTags.Items.INGOTS_CONDUCTIVE_ALLOY)
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 .save(recipeOutput, EnderIO.rl("item_conduit"));
 
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(energeticItemConduit, 8))
+                .pattern("BBB")
+                .pattern("IAI")
+                .pattern("BBB")
+                .define('B', EIOItems.CONDUIT_BINDER)
+                .define('A', EIOTags.Items.INGOTS_PULSATING_ALLOY)
+                .define('I', EIOTags.Items.INGOTS_ENERGETIC_ALLOY)
+                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
+                .save(recipeOutput, EnderIO.rl("energetic_item_conduit"));
+
+        ShapedRecipeBuilder
+            .shaped(RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(energeticItemConduit, 8))
+            .pattern("BBB")
+            .pattern("ICI")
+            .pattern("BBB")
+            .define('B', EIOItems.CONDUIT_BINDER)
+            .define('I', EIOTags.Items.INGOTS_ENERGETIC_ALLOY)
+            .define('C', ConduitIngredient.of(itemConduit))
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
+            .save(recipeOutput, EnderIO.rl("energetic_item_conduit_upgrade"));
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(vibrantItemConduit, 8))
+            .pattern("BBB")
+            .pattern("IAI")
+            .pattern("BBB")
+            .define('B', EIOItems.CONDUIT_BINDER)
+            .define('A', EIOTags.Items.INGOTS_PULSATING_ALLOY)
+            .define('I', EIOTags.Items.INGOTS_VIBRANT_ALLOY)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
+            .save(recipeOutput, EnderIO.rl("vibrant_item_conduit"));
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(vibrantItemConduit, 8))
+            .pattern("BBB")
+            .pattern("ICI")
+            .pattern("BBB")
+            .define('B', EIOItems.CONDUIT_BINDER)
+            .define('I', EIOTags.Items.INGOTS_VIBRANT_ALLOY)
+            .define('C', ConduitIngredient.of(energeticItemConduit))
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
+            .save(recipeOutput, EnderIO.rl("vibrant_item_conduit_upgrade"));
+
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(fluidConduit, 8))
                 .pattern("BBB")
-                .pattern("GGG")
+                .pattern("CGC")
                 .pattern("BBB")
                 .define('B', EIOItems.CONDUIT_BINDER)
                 .define('G', EIOTags.Items.CLEAR_GLASS)
+                .define('C', EIOTags.Items.INGOTS_CONDUCTIVE_ALLOY)
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 .save(recipeOutput, EnderIO.rl("fluid_conduit"));
 
         ShapedRecipeBuilder
-                .shaped(RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(pressurizedFluidConduit, 8))
+                .shaped(RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(energeticFluidConduit, 8))
                 .pattern("BBB")
-                .pattern("GGG")
+                .pattern("IGI")
                 .pattern("BBB")
                 .define('B', EIOItems.CONDUIT_BINDER)
                 .define('G', EIOTags.Items.FUSED_QUARTZ)
+                .define('I', EIOTags.Items.INGOTS_ENERGETIC_ALLOY)
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 .save(recipeOutput, EnderIO.rl("pressurized_fluid_conduit"));
 
         ShapedRecipeBuilder
-                .shaped(RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(pressurizedFluidConduit, 8))
+                .shaped(RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(energeticFluidConduit, 8))
                 .pattern("BBB")
-                .pattern("GCG")
+                .pattern("ICI")
                 .pattern("BBB")
                 .define('B', EIOItems.CONDUIT_BINDER)
-                .define('G', EIOTags.Items.FUSED_QUARTZ)
+                .define('I', EIOTags.Items.INGOTS_ENERGETIC_ALLOY)
                 .define('C', ConduitIngredient.of(fluidConduit))
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 .save(recipeOutput, EnderIO.rl("pressurized_fluid_conduit_upgrade"));
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(enderFluidConduit, 8))
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(vibrantFluidConduit, 8))
                 .pattern("BBB")
                 .pattern("IGI")
                 .pattern("BBB")
@@ -96,13 +146,13 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 .save(recipeOutput, EnderIO.rl("ender_fluid"));
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(enderFluidConduit, 8))
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(vibrantFluidConduit, 8))
                 .pattern("BBB")
                 .pattern("ICI")
                 .pattern("BBB")
                 .define('B', EIOItems.CONDUIT_BINDER)
-                .define('I', EIOItems.VIBRANT_ALLOY_INGOT)
-                .define('C', ConduitIngredient.of(pressurizedFluidConduit))
+                .define('I', EIOTags.Items.INGOTS_VIBRANT_ALLOY)
+                .define('C', ConduitIngredient.of(energeticFluidConduit))
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 .save(recipeOutput, EnderIO.rl("ender_fluid_conduit_upgrade"));
 
@@ -116,7 +166,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput, EnderIO.rl("energy_conduit"));
 
         ShapedRecipeBuilder
-                .shaped(RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(enhancedEnergyConduit, 8))
+                .shaped(RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(energeticEnergyConduit, 8))
                 .pattern("BBB")
                 .pattern("III")
                 .pattern("BBB")
@@ -126,7 +176,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput, EnderIO.rl("enhanced_energy_conduit"));
 
         ShapedRecipeBuilder
-                .shaped(RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(enhancedEnergyConduit, 8))
+                .shaped(RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(energeticEnergyConduit, 8))
                 .pattern("BBB")
                 .pattern("ICI")
                 .pattern("BBB")
@@ -136,7 +186,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 .save(recipeOutput, EnderIO.rl("enhanced_energy_conduit_upgrade"));
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(enderEnergyConduit, 8))
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(vibrantEnergyConduit, 8))
                 .pattern("BBB")
                 .pattern("III")
                 .pattern("BBB")
@@ -146,12 +196,12 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput, EnderIO.rl("ender_energy_conduit"));
 
         ShapedRecipeBuilder
-                .shaped(RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(enderEnergyConduit, 8))
+                .shaped(RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(vibrantEnergyConduit, 8))
                 .pattern("BBB")
                 .pattern("ICI")
                 .pattern("BBB")
                 .define('B', EIOItems.CONDUIT_BINDER)
-                .define('C', ConduitIngredient.of(enhancedEnergyConduit))
+                .define('C', ConduitIngredient.of(energeticEnergyConduit))
                 .define('I', EIOTags.Items.INGOTS_VIBRANT_ALLOY)
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 .save(recipeOutput, EnderIO.rl("ender_energy_conduit_upgrade"));

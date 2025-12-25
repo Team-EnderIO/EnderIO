@@ -56,7 +56,7 @@ public class AlloyRecipeProvider extends SubRecipeProvider {
         build(new ItemStack(EIOItems.REDSTONE_ALLOY_INGOT.get()),
                 List.of(SizedIngredient.of(Tags.Items.DUSTS_REDSTONE, 1), SizedIngredient.of(Tags.Items.INGOTS_COPPER, 1)),
                 3200, 0.3f, recipeOutput);
-        build(new ItemStack(EIOItems.PULSATING_ALLOY_INGOT.get()),
+        build(new ItemStack(EIOItems.PULSATING_ALLOY_INGOT.get(), 2),
                 List.of(SizedIngredient.of(Tags.Items.INGOTS_IRON, 1), SizedIngredient.of(Tags.Items.ENDER_PEARLS, 1)),
                 4800, 0.3f, recipeOutput);
         build(EnderIO.rl("dark_steel_ingot_with_coal"),

@@ -2,24 +2,24 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
+    "A": {
+      "tag": "c:ingots/pulsating_alloy"
+    },
     "B": {
       "item": "enderio:conduit_binder"
     },
-    "G": {
-      "tag": "c:glass_blocks/fused_quartz"
-    },
     "I": {
-      "tag": "c:ingots/energetic_alloy"
+      "tag": "c:ingots/vibrant_alloy"
     }
   },
   "pattern": [
     "BBB",
-    "IGI",
+    "IAI",
     "BBB"
   ],
   "result": {
     "components": {
-      "enderio:conduit": "enderio:pressurized_fluid"
+      "enderio:conduit": "enderio:ender_item"
     },
     "count": 8,
     "id": "enderio:conduit"

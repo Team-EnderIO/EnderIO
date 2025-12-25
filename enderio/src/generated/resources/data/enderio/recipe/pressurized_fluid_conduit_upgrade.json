@@ -9,13 +9,13 @@
       "type": "enderio:conduit",
       "conduit_type": "enderio:fluid"
     },
-    "G": {
-      "tag": "c:glass_blocks/fused_quartz"
+    "I": {
+      "tag": "c:ingots/energetic_alloy"
     }
   },
   "pattern": [
     "BBB",
-    "GCG",
+    "ICI",
     "BBB"
   ],
   "result": {

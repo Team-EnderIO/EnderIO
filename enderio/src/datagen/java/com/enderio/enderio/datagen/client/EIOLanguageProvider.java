@@ -184,15 +184,15 @@ public class EIOLanguageProvider extends LanguageProvider {
 
     private void addConduitDescriptions() {
         add(EIOConduits.ENERGY, "Energy Conduit");
-        add(EIOConduits.ENHANCED_ENERGY, "Enhanced Energy Conduit");
-        add(EIOConduits.ENDER_ENERGY, "Ender Energy Conduit");
+        add(EIOConduits.ENERGETIC_ENERGY, "Energetic Energy Conduit");
+        add(EIOConduits.VIBRANT_ENERGY, "Vibrant Energy Conduit");
         add(EIOConduits.REDSTONE, "Redstone Conduit");
         add(EIOConduits.FLUID, "Fluid Conduit");
-        add(EIOConduits.PRESSURIZED_FLUID, "Pressurized Fluid Conduit");
-        add(EIOConduits.ENDER_FLUID, "Ender Fluid Conduit");
+        add(EIOConduits.ENERGETIC_FLUID, "Energetic Fluid Conduit");
+        add(EIOConduits.VIBRANT_FLUID, "Vibrant Fluid Conduit");
         add(EIOConduits.ITEM, "Item Conduit");
-        add(EIOConduits.ENHANCED_ITEM, "Enhanced Item Conduit");
-        add(EIOConduits.ENDER_ITEM, "Ender Item Conduit");
+        add(EIOConduits.ENERGETIC_ITEM, "Energetic Item Conduit");
+        add(EIOConduits.VIBRANT_ITEM, "Vibrant Item Conduit");
     }
 
     private void addConduitLang() {
