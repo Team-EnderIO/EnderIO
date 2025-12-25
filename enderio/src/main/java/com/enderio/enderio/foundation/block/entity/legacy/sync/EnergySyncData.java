@@ -21,9 +21,6 @@ public record EnergySyncData(int energyStored, int maxEnergyStored, int maxEnerg
             EnergySyncData::energyStored, ByteBufCodecs.INT, EnergySyncData::maxEnergyStored, ByteBufCodecs.INT,
             EnergySyncData::maxEnergyUse, EnergySyncData::new);
 
-    public static final NetworkDataSlot.CodecType<EnergySyncData> DATA_SLOT_TYPE = new NetworkDataSlot.CodecType<>(CODEC,
-            STREAM_CODEC.cast());
-
     public static EnergySyncData from(IMachineEnergyStorage storage) {
         return new EnergySyncData(storage.getEnergyStored(), storage.getMaxEnergyStored(), storage.getMaxEnergyUse());
     }

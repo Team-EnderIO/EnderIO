@@ -32,9 +32,6 @@ public record LargeEnergyData(long energyStored, long maxEnergyStored) {
         );
     }
 
-    public static final NetworkDataSlot.CodecType<LargeEnergyData> DATA_SLOT_TYPE
-        = new NetworkDataSlot.CodecType<>(CODEC, STREAM_CODEC.cast());
-
     public LargeImmutableMachineEnergyStorage toImmutableStorage() {
         return new LargeImmutableMachineEnergyStorage(energyStored, maxEnergyStored);
     }

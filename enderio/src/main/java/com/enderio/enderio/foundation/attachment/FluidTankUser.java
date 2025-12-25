@@ -7,6 +7,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
@@ -18,12 +20,13 @@ public interface FluidTankUser {
 
     MachineFluidHandler createFluidHandler();
 
-    default void saveTank(HolderLookup.Provider lookupProvider, CompoundTag pTag) {
-        pTag.put(MachineNBTKeys.FLUIDS, getFluidHandler().serializeNBT(lookupProvider));
+    default void saveTank(ValueOutput output) {
+        output.putChild(MachineNBTKeys.FLUIDS, getFluidHandler());
     }
 
-    default void loadTank(HolderLookup.Provider lookupProvider, CompoundTag pTag) {
-        getFluidHandler().deserializeNBT(lookupProvider, pTag.getCompound(MachineNBTKeys.FLUIDS));
+    default void loadTank(ValueInput input) {
+        input.child(MachineNBTKeys.FLUIDS)
+            .ifPresent(f -> getFluidHandler().deserialize(f));
     }
 
     ICapabilityProvider<BlockEntity, Direction, IFluidHandler> FLUID_HANDLER_PROVIDER = (be, side) -> {

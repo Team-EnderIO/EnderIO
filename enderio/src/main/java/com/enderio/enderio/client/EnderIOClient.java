@@ -282,7 +282,7 @@ public class EnderIOClient {
 //    }
 
     @SubscribeEvent
-    public static void additionalModels(ModelEvent.RegisterAdditional event) {
+    public static void additionalModels(ModelEvent.RegisterStandalone event) {
         Set<ResourceLocation> gliderModels = Minecraft.getInstance()
                 .getResourceManager()
                 .listResources("models/enderio_glider", rl -> rl.getPath().endsWith(".json"))
@@ -325,7 +325,7 @@ public class EnderIOClient {
     public static void bakingCompleted(ModelEvent.BakingCompleted event) {
         GLIDER_MODELS.clear();
         HANG_GLIDER_MODEL_LOCATION.forEach((item, modelRL) -> {
-            BakedModel bakedModel = event.getModelManager().getStandaloneModel(modelRL);
+            var bakedModel = event.getModelManager().getStandaloneModel(modelRL);
             GLIDER_MODELS.put(item, bakedModel);
         });
         HANG_GLIDER_MODEL_LOCATION.clear();

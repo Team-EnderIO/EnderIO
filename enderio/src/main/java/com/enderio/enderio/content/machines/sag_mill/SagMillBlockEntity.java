@@ -20,6 +20,7 @@ import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIORecipes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
@@ -29,6 +30,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -182,32 +185,31 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
     private static final String KEY_GRINDING_BALL_DAMAGE = "GrindingBallDamage";
 
     @Override
-    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.saveAdditional(pTag, lookupProvider);
-        craftingTaskHost.save(lookupProvider, pTag);
+    public void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+
+        output.putChild("CraftingTaskHost", craftingTaskHost);
 
         if (!grindingBallData.isIdentity()) {
-            pTag.put(KEY_GRINDING_BALL, grindingBallData.save(lookupProvider));
-            pTag.putInt(KEY_GRINDING_BALL_DAMAGE, grindingBallDamage);
+            output.store(KEY_GRINDING_BALL, GrindingBallData.CODEC, grindingBallData);
+            output.putInt(KEY_GRINDING_BALL_DAMAGE, grindingBallDamage);
         }
     }
 
     @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.loadAdditional(pTag, lookupProvider);
-        craftingTaskHost.load(lookupProvider, pTag);
+    public void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
 
-        if (pTag.contains(KEY_GRINDING_BALL)) {
-            grindingBallData = GrindingBallData.parseOptional(lookupProvider, pTag.getCompound((KEY_GRINDING_BALL)));
-        }
+        input.child("CraftingTaskHost").ifPresent(craftingTaskHost::deserialize);
 
-        if (pTag.contains(KEY_GRINDING_BALL_DAMAGE)) {
-            grindingBallDamage = pTag.getInt(KEY_GRINDING_BALL_DAMAGE);
-        }
+        grindingBallData = input.read(KEY_GRINDING_BALL, GrindingBallData.CODEC)
+                .orElse(GrindingBallData.IDENTITY);
+
+        grindingBallDamage = input.getIntOr(KEY_GRINDING_BALL_DAMAGE, 0);
     }
 
     @Override
-    protected void applyImplicitComponents(DataComponentInput components) {
+    protected void applyImplicitComponents(DataComponentGetter components) {
         super.applyImplicitComponents(components);
 
         grindingBallData = components.getOrDefault(EIODataComponents.SAG_MILL_GRINDING_BALL,
@@ -226,10 +228,10 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
-    public void removeComponentsFromTag(CompoundTag tag) {
-        super.removeComponentsFromTag(tag);
-        tag.remove(KEY_GRINDING_BALL);
-        tag.remove(KEY_GRINDING_BALL_DAMAGE);
+    public void removeComponentsFromTag(ValueOutput output) {
+        super.removeComponentsFromTag(output);
+        output.discard(KEY_GRINDING_BALL);
+        output.discard(KEY_GRINDING_BALL_DAMAGE);
     }
 
     // endregion

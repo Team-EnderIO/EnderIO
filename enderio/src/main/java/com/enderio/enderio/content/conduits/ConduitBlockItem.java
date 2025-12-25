@@ -113,7 +113,7 @@ public class ConduitBlockItem extends BlockItem implements ICustomCreativeTabEnt
 
         Holder<Conduit<?, ?>> conduit = stack.get(EnderIODataComponents.CONDUIT);
         if (conduit != null) {
-            conduit.value().addToTooltip(context, tooltipAdder::accept, flag);
+            conduit.value().addToTooltip(context, tooltipAdder::accept, flag, stack);
 
             boolean showDetailTooltip = !flag.hasShiftDown()
                     && (conduit.value().hasAdvancedTooltip() || conduit.value().showDebugTooltip());

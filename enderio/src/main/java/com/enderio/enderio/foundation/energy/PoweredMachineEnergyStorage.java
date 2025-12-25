@@ -1,19 +1,20 @@
 package com.enderio.enderio.foundation.energy;
 
+import com.enderio.core.CoreNBTKeys;
 import com.enderio.enderio.api.io.IOConfigurable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.io.energy.IMachineEnergyStorage;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.IntTag;
 import net.minecraft.util.Mth;
-import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
-public class PoweredMachineEnergyStorage implements IEnergyStorage, INBTSerializable<IntTag>, IMachineEnergyStorage {
+public class PoweredMachineEnergyStorage implements IEnergyStorage, ValueIOSerializable, IMachineEnergyStorage {
 
     private final PoweredMachineBlockEntity machine;
 
@@ -153,13 +154,13 @@ public class PoweredMachineEnergyStorage implements IEnergyStorage, INBTSerializ
     }
 
     @Override
-    public IntTag serializeNBT(HolderLookup.Provider provider) {
-        return IntTag.valueOf(energyStored);
+    public void serialize(ValueOutput output) {
+        output.putInt(CoreNBTKeys.ENERGY_STORED, energyStored);
     }
 
     @Override
-    public void deserializeNBT(HolderLookup.Provider provider, IntTag intTag) {
-        energyStored = intTag.getAsInt();
+    public void deserialize(ValueInput input) {
+        energyStored = input.getIntOr(CoreNBTKeys.ENERGY_STORED, 0);
     }
 
     // endregion

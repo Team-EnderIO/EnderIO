@@ -25,6 +25,7 @@ import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
@@ -36,6 +37,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
@@ -244,41 +247,34 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements Range
     }
 
     @Override
-    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.saveAdditional(pTag, lookupProvider);
-        pTag.putInt(CONSUMED, consumed);
-        saveTank(lookupProvider, pTag);
+    public void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.putInt(CONSUMED, consumed);
+        saveTank(output);
     }
 
     @Override
-    protected void saveAdditionalSynced(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditionalSynced(tag, registries);
+    protected void saveAdditionalSynced(ValueOutput output) {
+        super.saveAdditionalSynced(output);
 
         if (!actionRange.equals(DEFAULT_RANGE)) {
-            tag.put(MachineNBTKeys.ACTION_RANGE, actionRange.save(registries));
+            output.store(MachineNBTKeys.ACTION_RANGE, ActionRange.CODEC, actionRange);
         }
     }
 
     @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.loadAdditional(pTag, lookupProvider);
-        consumed = pTag.getInt(CONSUMED);
-        loadTank(lookupProvider, pTag);
+    public void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
 
-        // TODO: Ender IO 8 - remove support for old attachment loading
-        if (hasData(EIOAttachments.ACTION_RANGE)) {
-            actionRange = getData(EIOAttachments.ACTION_RANGE);
-            removeData(EIOAttachments.ACTION_RANGE);
-        } else if (pTag.contains(MachineNBTKeys.ACTION_RANGE)) {
-            actionRange = ActionRange.parse(lookupProvider,
-                    Objects.requireNonNull(pTag.get(MachineNBTKeys.ACTION_RANGE)));
-        } else {
-            actionRange = DEFAULT_RANGE;
-        }
+        consumed = input.getIntOr(CONSUMED, 0);
+        loadTank(input);
+
+        actionRange = input.read(MachineNBTKeys.ACTION_RANGE, ActionRange.CODEC)
+            .orElse(DEFAULT_RANGE);
     }
 
     @Override
-    protected void applyImplicitComponents(DataComponentInput components) {
+    protected void applyImplicitComponents(DataComponentGetter components) {
         super.applyImplicitComponents(components);
 
         var actionRange = components.get(EIODataComponents.ACTION_RANGE);
@@ -309,9 +305,9 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements Range
     }
 
     @Override
-    public void removeComponentsFromTag(CompoundTag tag) {
-        super.removeComponentsFromTag(tag);
-        tag.remove(MachineNBTKeys.ACTION_RANGE);
-        tag.remove(CONSUMED);
+    public void removeComponentsFromTag(ValueOutput output) {
+        super.removeComponentsFromTag(output);
+        output.discard(MachineNBTKeys.ACTION_RANGE);
+        output.discard(CONSUMED);
     }
 }

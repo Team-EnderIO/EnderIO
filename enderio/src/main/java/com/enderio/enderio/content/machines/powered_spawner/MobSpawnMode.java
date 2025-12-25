@@ -45,12 +45,4 @@ public enum MobSpawnMode implements StringRepresentable {
     public String getSerializedName() {
         return name;
     }
-
-    public Tag save(HolderLookup.Provider lookupProvider) {
-        return CODEC.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), this).getOrThrow();
-    }
-
-    public static MobSpawnMode parse(HolderLookup.Provider lookupProvider, Tag tag) {
-        return CODEC.parse(lookupProvider.createSerializationContext(NbtOps.INSTANCE), tag).getOrThrow();
-    }
 }

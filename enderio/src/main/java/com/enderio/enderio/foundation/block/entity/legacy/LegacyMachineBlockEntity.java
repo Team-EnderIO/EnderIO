@@ -473,7 +473,7 @@ public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
     }
 
     @Override
-    protected void applyImplicitComponents(DataComponentInput components) {
+    protected void applyImplicitComponents(DataComponentGetter components) {
         super.applyImplicitComponents(components);
 
         if (this.inventory != null) {

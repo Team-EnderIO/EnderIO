@@ -16,53 +16,19 @@ import java.util.Optional;
 
 public record GrindingBallData(float outputMultiplier, float bonusMultiplier, float powerUse, int durability) {
 
-    public static final Codec<GrindingBallData> CODEC = RecordCodecBuilder.create(
-        instance -> instance.group(
-            Codec.FLOAT.fieldOf("OutputMultiplier").forGetter(GrindingBallData::outputMultiplier),
+    public static final Codec<GrindingBallData> CODEC = RecordCodecBuilder.create(instance -> instance
+        .group(Codec.FLOAT.fieldOf("OutputMultiplier").forGetter(GrindingBallData::outputMultiplier),
             Codec.FLOAT.fieldOf("BonusMultiplier").forGetter(GrindingBallData::bonusMultiplier),
-            Codec.FLOAT.fieldOf("PowerUse").forGetter(GrindingBallData::powerUse),
-            Codec.INT.fieldOf("Durability").forGetter(GrindingBallData::durability)
-        ).apply(instance, GrindingBallData::new)
-    );
+            Codec.FLOAT.fieldOf("PowerUse").forGetter(GrindingBallData::powerUse), Codec.INT.fieldOf("Durability").forGetter(GrindingBallData::durability))
+        .apply(instance, GrindingBallData::new));
 
-    public static final StreamCodec<ByteBuf, GrindingBallData> STREAM_CODEC = StreamCodec.composite(
-        ByteBufCodecs.FLOAT,
-        GrindingBallData::outputMultiplier,
-        ByteBufCodecs.FLOAT,
-        GrindingBallData::bonusMultiplier,
-        ByteBufCodecs.FLOAT,
-        GrindingBallData::powerUse,
-        ByteBufCodecs.INT,
-        GrindingBallData::durability,
-        GrindingBallData::new
-    );
+    public static final StreamCodec<ByteBuf, GrindingBallData> STREAM_CODEC = StreamCodec.composite(ByteBufCodecs.FLOAT, GrindingBallData::outputMultiplier,
+        ByteBufCodecs.FLOAT, GrindingBallData::bonusMultiplier, ByteBufCodecs.FLOAT, GrindingBallData::powerUse, ByteBufCodecs.INT,
+        GrindingBallData::durability, GrindingBallData::new);
 
     public static final GrindingBallData IDENTITY = new GrindingBallData(1.0f, 1.0f, 1.0f, 0);
 
     public boolean isIdentity() {
         return this.equals(IDENTITY);
-    }
-
-    private static final Logger LOGGER = LogUtils.getLogger();
-
-    public Tag save(HolderLookup.Provider lookupProvider) {
-        if (this.isIdentity()) {
-            throw new IllegalStateException("Cannot encode identity GrindingBallData");
-        } else {
-            return CODEC.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), this).getOrThrow();
-        }
-    }
-
-    public Tag saveOptional(HolderLookup.Provider lookupProvider) {
-        return this.isIdentity() ? save(lookupProvider) : new CompoundTag();
-    }
-
-    public static Optional<GrindingBallData> parse(HolderLookup.Provider lookupProvider, Tag tag) {
-        return CODEC.parse(lookupProvider.createSerializationContext(NbtOps.INSTANCE), tag)
-            .resultOrPartial(error -> LOGGER.error("Tried to load invalid GrindingBallData: '{}'", error));
-    }
-
-    public static GrindingBallData parseOptional(HolderLookup.Provider lookupProvider, CompoundTag tag) {
-        return tag.isEmpty() ? IDENTITY : parse(lookupProvider, tag).orElse(IDENTITY);
     }
 }

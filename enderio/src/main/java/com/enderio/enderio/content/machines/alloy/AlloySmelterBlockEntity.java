@@ -21,9 +21,8 @@ import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIORecipes;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -32,8 +31,9 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -182,7 +182,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         private final MultiSlotAccess inputs;
         private int inputsConsumed;
 
-        public AlloySmeltingMachineTask(@NotNull Level level, MachineInventory inventory,
+        public AlloySmeltingMachineTask(Level level, MachineInventory inventory,
                 IMachineEnergyStorage energyStorage, AlloySmeltingRecipe.Input recipeInput, MultiSlotAccess inputs,
                 SingleSlotAccess outputSlot, @Nullable RecipeHolder<AlloySmeltingRecipe> recipe) {
             super(level, inventory, energyStorage, recipeInput, outputSlot, recipe);
@@ -263,16 +263,16 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         }
 
         @Override
-        public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
-            super.deserializeNBT(lookupProvider, nbt);
-            inputsConsumed = nbt.getInt(MachineNBTKeys.PROCESSED_INPUTS);
+        public void serialize(ValueOutput output) {
+            super.serialize(output);
+            output.putInt(MachineNBTKeys.PROCESSED_INPUTS, inputsConsumed);
         }
 
         @Override
-        public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
-            var tag = super.serializeNBT(lookupProvider);
-            tag.putInt(MachineNBTKeys.PROCESSED_INPUTS, inputsConsumed);
-            return tag;
+        public void deserialize(ValueInput input) {
+            super.deserialize(input);
+            // TODO: 1.21.8: is 1 a better default.
+            inputsConsumed = input.getIntOr(MachineNBTKeys.PROCESSED_INPUTS, 0);
         }
     }
 
@@ -310,27 +310,24 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     // region Serialization
 
     @Override
-    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        craftingTaskHost.save(lookupProvider, pTag);
-        pTag.putInt(MachineNBTKeys.MACHINE_MODE, this.mode.ordinal());
-        super.saveAdditional(pTag, lookupProvider);
+    public void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.putChild("CraftingTaskHost", craftingTaskHost);
+        output.store(MachineNBTKeys.MACHINE_MODE, AlloySmelterMode.CODEC, mode);
     }
 
     @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        craftingTaskHost.load(lookupProvider, pTag);
+    public void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
 
-        // TODO: EnderIO 8 - swap to serializing the enum name.
-        try {
-            mode = AlloySmelterMode.values()[pTag.getInt(MachineNBTKeys.MACHINE_MODE)];
-        } catch (IndexOutOfBoundsException ex) { // In case something happens in the future.
-            LOGGER.error("Invalid alloy smelter mode loaded from NBT. Ignoring.");
-        }
-        super.loadAdditional(pTag, lookupProvider);
+        input.child("CraftingTaskHost").ifPresent(craftingTaskHost::deserialize);
+
+        mode = input.read(MachineNBTKeys.MACHINE_MODE, AlloySmelterMode.CODEC)
+            .orElse(AlloySmelterMode.ALL);
     }
 
     @Override
-    protected void applyImplicitComponents(DataComponentInput components) {
+    protected void applyImplicitComponents(DataComponentGetter components) {
         super.applyImplicitComponents(components);
 
         // TODO: 1.21: Write crafting host into the item components.
@@ -344,9 +341,9 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
-    public void removeComponentsFromTag(CompoundTag tag) {
-        super.removeComponentsFromTag(tag);
-        tag.remove(MachineNBTKeys.MACHINE_MODE);
+    public void removeComponentsFromTag(ValueOutput output) {
+        super.removeComponentsFromTag(output);
+        output.discard(MachineNBTKeys.MACHINE_MODE);
     }
 
     // endregion

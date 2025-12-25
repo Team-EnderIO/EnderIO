@@ -14,6 +14,7 @@ import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
@@ -21,6 +22,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.fml.LogicalSide;
 
@@ -152,31 +155,24 @@ public abstract class VacuumMachineBlockEntity<T extends Entity> extends Machine
     }
 
     @Override
-    protected void saveAdditionalSynced(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditionalSynced(tag, registries);
+    protected void saveAdditionalSynced(ValueOutput output) {
+        super.saveAdditionalSynced(output);
 
         if (!actionRange.equals(DEFAULT_RANGE)) {
-            tag.put(MachineNBTKeys.ACTION_RANGE, actionRange.save(registries));
+            output.store(MachineNBTKeys.ACTION_RANGE, ActionRange.CODEC, actionRange);
         }
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
 
-        // TODO: Ender IO 8 - remove support for old attachment loading
-        if (hasData(EIOAttachments.ACTION_RANGE)) {
-            actionRange = getData(EIOAttachments.ACTION_RANGE);
-            removeData(EIOAttachments.ACTION_RANGE);
-        } else if (tag.contains(MachineNBTKeys.ACTION_RANGE)) {
-            actionRange = ActionRange.parse(registries, Objects.requireNonNull(tag.get(MachineNBTKeys.ACTION_RANGE)));
-        } else {
-            actionRange = DEFAULT_RANGE;
-        }
+        actionRange = input.read(MachineNBTKeys.ACTION_RANGE, ActionRange.CODEC)
+            .orElse(DEFAULT_RANGE);
     }
 
     @Override
-    protected void applyImplicitComponents(DataComponentInput componentInput) {
+    protected void applyImplicitComponents(DataComponentGetter componentInput) {
         super.applyImplicitComponents(componentInput);
 
         var actionRange = componentInput.get(EIODataComponents.ACTION_RANGE);
@@ -196,8 +192,8 @@ public abstract class VacuumMachineBlockEntity<T extends Entity> extends Machine
     }
 
     @Override
-    public void removeComponentsFromTag(CompoundTag tag) {
-        super.removeComponentsFromTag(tag);
-        tag.remove(MachineNBTKeys.ACTION_RANGE);
+    public void removeComponentsFromTag(ValueOutput output) {
+        super.removeComponentsFromTag(output);
+        output.discard(MachineNBTKeys.ACTION_RANGE);
     }
 }

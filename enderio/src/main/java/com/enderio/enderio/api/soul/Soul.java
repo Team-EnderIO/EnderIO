@@ -89,7 +89,7 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) {
 
     // TODO: Can this be trusted? I feel like it needs better validation...
     public Soul(CompoundTag entityTag) {
-        this(BuiltInRegistries.ENTITY_TYPE.getValue(ResourceLocation.parse(entityTag.getString(Entity.ID_TAG))), entityTag);
+        this(BuiltInRegistries.ENTITY_TYPE.getValue(ResourceLocation.parse(entityTag.getString(Entity.TAG_ID))), entityTag);
     }
 
     public static final StreamCodec<RegistryFriendlyByteBuf, Soul> OPTIONAL_STREAM_CODEC = new StreamCodec<>() {

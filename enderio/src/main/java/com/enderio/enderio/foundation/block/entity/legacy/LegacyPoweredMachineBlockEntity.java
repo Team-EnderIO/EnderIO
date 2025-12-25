@@ -369,7 +369,7 @@ public abstract class LegacyPoweredMachineBlockEntity extends LegacyMachineBlock
     }
 
     @Override
-    protected void applyImplicitComponents(DataComponentInput components) {
+    protected void applyImplicitComponents(DataComponentGetter components) {
         super.applyImplicitComponents(components);
         energyStorage.setEnergyStored(components.getOrDefault(EIODataComponents.ENERGY, 0));
         setData(EIOAttachments.REDSTONE_CONTROL,

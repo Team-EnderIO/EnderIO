@@ -3,15 +3,16 @@ package com.enderio.enderio.foundation.task.host;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.enderio.api.UseOnly;
 import com.enderio.enderio.foundation.task.MachineTask;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.fml.LogicalSide;
+import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
-public abstract class MachineTaskHost {
+public abstract class MachineTaskHost implements ValueIOSerializable {
     @Nullable
     private MachineTask currentTask;
 
@@ -21,7 +22,7 @@ public abstract class MachineTaskHost {
      * A serialized task waiting for the level to load.
      */
     @Nullable
-    private CompoundTag pendingTask;
+    private ValueInput pendingTask;
     private boolean hasLoaded;
 
     @UseOnly(LogicalSide.CLIENT)
@@ -36,9 +37,6 @@ public abstract class MachineTaskHost {
     public MachineTaskHost(EnderBlockEntity blockEntity, Supplier<Boolean> canAcceptNewTask) {
         levelSupplier = blockEntity::getLevel;
         this.canAcceptNewTask = canAcceptNewTask;
-
-        // Add sync data slot for crafting progress
-        blockEntity.addDataSlot(NetworkDataSlot.FLOAT.create(this::getProgress, p -> clientTaskProgress = p));
     }
 
     @Nullable
@@ -58,7 +56,7 @@ public abstract class MachineTaskHost {
      * Load the task from NBT.
      */
     @Nullable
-    protected abstract MachineTask loadTask(HolderLookup.Provider lookupProvider, CompoundTag nbt);
+    protected abstract MachineTask loadTask(ValueInput input);
 
     // endregion
 
@@ -126,7 +124,7 @@ public abstract class MachineTaskHost {
 
         // Load any pending tasks.
         if (pendingTask != null) {
-            currentTask = loadTask(getLevel().registryAccess(), pendingTask);
+            currentTask = loadTask(pendingTask);
             pendingTask = null;
         }
 
@@ -142,25 +140,26 @@ public abstract class MachineTaskHost {
 
     private static final String KEY_TASK = "Task";
 
-    public void save(HolderLookup.Provider lookupProvider, CompoundTag tag) {
+    @Override
+    public void serialize(ValueOutput output) {
         if (hasTask()) {
-            tag.put(KEY_TASK, getCurrentTask().serializeNBT(lookupProvider));
+            output.putChild(KEY_TASK, getCurrentTask());
         }
     }
 
-    public void load(HolderLookup.Provider lookupProvider, CompoundTag tag) {
+    @Override
+    public void deserialize(ValueInput input) {
         hasLoaded = true;
 
+        var task = input.child(KEY_TASK);
+
+        // TODO: 1.21.8: Redesign so we don't need to know the level at load time.
         if (levelSupplier.get() == null) {
-            if (tag.contains(KEY_TASK)) {
-                pendingTask = tag.getCompound(KEY_TASK).copy();
-            }
+            // TODO: 1.21.8: Can we store a ValueInput here? is there a way to take a copy?
+            task.ifPresent(t -> pendingTask = t);
         } else {
-            if (tag.contains(KEY_TASK)) {
-                currentTask = loadTask(lookupProvider, tag.getCompound(KEY_TASK));
-            } else {
-                currentTask = getNewTask();
-            }
+            task.ifPresentOrElse(t -> currentTask = loadTask(t),
+                () -> currentTask = getNewTask());
         }
     }
 

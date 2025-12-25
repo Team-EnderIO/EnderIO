@@ -24,6 +24,8 @@ import com.enderio.enderio.foundation.EIONBTKeys;
 import com.enderio.enderio.foundation.block.entity.Wrenchable;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOConduitTypes;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
@@ -54,6 +56,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.capabilities.BlockCapability;
@@ -1284,13 +1288,10 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
 
-        var serializationContext = registries.createSerializationContext(NbtOps.INSTANCE);
-
-        // NEW: Save node data in case of need for recovery
-        ListTag nodeData = new ListTag();
+        var nodeList = output.list(NODE_DATA_KEY, ConduitAndNodeData.CODEC);
         for (Holder<Conduit<?, ?>> conduit : conduits) {
             if (!conduitNodes.containsKey(conduit)) {
                 continue;
@@ -1299,13 +1300,82 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             var data = conduitNodes.get(conduit).getNodeData();
 
             if (data != null && data.type().isPersistent()) {
-                CompoundTag nodeTag = new CompoundTag();
-                nodeTag.put("Conduit", Conduit.CODEC.encodeStart(serializationContext, conduit).getOrThrow());
-                nodeTag.put("Data", NodeData.GENERIC_CODEC.encodeStart(serializationContext, data).getOrThrow());
-                nodeData.add(nodeTag);
+                nodeList.add(new ConduitAndNodeData(conduit, data));
             }
         }
-        tag.put(NODE_DATA_KEY, nodeData);
+    }
+
+    @Override
+    protected void saveAdditionalSynced(ValueOutput output) {
+        super.saveAdditionalSynced(output);
+
+        if (!conduits.isEmpty()) {
+            var conduitList = output.list(CONDUITS_KEY, Conduit.CODEC);
+            for (var conduit : conduits) {
+                conduitList.add(conduit);
+            }
+
+            // TODO: 1.21.8: ROVER continue conversion.
+            // Save connections
+            ListTag conduitConnectionsList = new ListTag();
+            for (var conduit : conduits) {
+                ListTag connectionsList = new ListTag();
+                for (Direction side : Direction.values()) {
+                    CompoundTag connectionTag = new CompoundTag();
+                    connectionTag.putString("Side", side.getSerializedName());
+                    connectionTag.putString("Status", getConnectionStatus(conduit, side).getSerializedName());
+
+                    // Raw access to ensure we save the true data.
+                    var config = conduitConnections.get(conduit).configs.get(side);
+                    if (config != null && !config.equals(config.type().getDefault())) {
+                        connectionTag.put("Config",
+                            ConnectionConfig.GENERIC_CODEC
+                                .encodeStart(registries.createSerializationContext(NbtOps.INSTANCE), config)
+                                .getOrThrow());
+                    }
+
+                    var inventory = conduitConnections.get(conduit).inventories.get(side);
+                    if (inventory != null) {
+                        ListTag inventoryListTag = new ListTag();
+
+                        boolean shouldSave = false;
+                        for (int i = 0; i < inventory.getSlots(); i++) {
+                            ItemStack stack = inventory.getStackInSlot(i);
+                            shouldSave |= !stack.isEmpty();
+                            inventoryListTag.add(stack.saveOptional(registries));
+                        }
+
+                        if (shouldSave) {
+                            connectionTag.put("Inventory", inventoryListTag);
+                        }
+                    }
+
+                    connectionsList.add(connectionTag);
+                }
+
+                conduitConnectionsList.add(connectionsList);
+            }
+
+            tag.put(CONNECTIONS_KEY, conduitConnectionsList);
+        }
+
+        if (!facadeProvider.isEmpty()) {
+            tag.put(FACADE_PROVIDER_KEY, facadeProvider.save(registries));
+        }
+    }
+
+    @Override
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+    }
+
+    private record ConduitAndNodeData(Holder<Conduit<?, ?>> conduit, NodeData data) {
+        public static final Codec<ConduitAndNodeData> CODEC = RecordCodecBuilder.create(instance -> instance
+            .group(
+                Conduit.CODEC.fieldOf("Conduit").forGetter(ConduitAndNodeData::conduit),
+                NodeData.GENERIC_CODEC.fieldOf("Data").forGetter(ConduitAndNodeData::data)
+            )
+            .apply(instance, ConduitAndNodeData::new));
     }
 
     @Override

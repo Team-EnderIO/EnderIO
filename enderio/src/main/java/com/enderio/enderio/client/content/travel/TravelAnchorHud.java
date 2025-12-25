@@ -8,14 +8,14 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
+import net.neoforged.neoforge.client.gui.GuiLayer;
 
-public class TravelAnchorHud implements LayeredDraw.Layer {
+public class TravelAnchorHud implements GuiLayer {
     public static final TravelAnchorHud INSTANCE = new TravelAnchorHud();
 
     private TravelAnchorHud() {

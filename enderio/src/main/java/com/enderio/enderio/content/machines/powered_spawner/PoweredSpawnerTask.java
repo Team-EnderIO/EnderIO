@@ -8,6 +8,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 import java.util.Objects;
 
@@ -98,38 +100,29 @@ public abstract class PoweredSpawnerTask implements PoweredMachineTask {
     // Tread carefully :)
 
     @Override
-    public final CompoundTag serializeNBT(HolderLookup.Provider provider) {
-        var tag = new CompoundTag();
-        tag.putInt("EnergyCost", energyCost);
-        tag.putInt("EnergyConsumed", energyConsumed);
-
-        var entityTypeId = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
-        tag.putString("EntityType", entityTypeId.toString());
-
-        tag.put("SpawnMode", spawnMode.save(provider));
-
-        return tag;
+    public final void serialize(ValueOutput output) {
+        output.putInt("EnergyCost", energyCost);
+        output.putInt("EnergyConsumed", energyConsumed);
+        output.store("EntityType", BuiltInRegistries.ENTITY_TYPE.byNameCodec(), entityType);
+        output.store("SpawnMode", MobSpawnMode.CODEC, spawnMode);
     }
 
     @Override
-    public final void deserializeNBT(HolderLookup.Provider provider, CompoundTag compoundTag) {
+    public final void deserialize(ValueInput input) {
         isLoaded = true;
 
-        energyCost = compoundTag.getInt("EnergyCost");
-        energyConsumed = compoundTag.getInt("EnergyConsumed");
+        energyCost = input.getIntOr("EnergyCost", 0);
+        energyConsumed = input.getIntOr("EnergyConsumed", 0);
 
-        var entityTypeId = ResourceLocation.parse(compoundTag.getString("EntityType"));
-        var optEntityType = BuiltInRegistries.ENTITY_TYPE.getOptional(entityTypeId);
+        // If we can't load the entity type, this task has to be marked as complete.
+        input.read("EntityType", BuiltInRegistries.ENTITY_TYPE.byNameCodec())
+            .ifPresentOrElse(entityType -> this.entityType = entityType,
+                () -> isComplete = true);
 
-        if (optEntityType.isEmpty()) {
-            // Cannot proceed, mark as complete.
-            isComplete = true;
-            return;
-        }
-
-        entityType = optEntityType.get();
-
-        // TODO: Non crashing way to make sure this is right.
-        spawnMode = MobSpawnMode.parse(provider, Objects.requireNonNull(compoundTag.get("SpawnMode")));
+        // If we can't load the spawn mode, mark as complete to avoid making a fault assumption.
+        // Don't want to introduce any weird bugs where you can copy NBT on entities it is disabled for.
+        input.read("SpawnMode", MobSpawnMode.CODEC)
+            .ifPresentOrElse(spawnMode -> this.spawnMode = spawnMode,
+                () -> isComplete = true);
     }
 }

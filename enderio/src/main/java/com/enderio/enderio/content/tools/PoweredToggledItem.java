@@ -8,9 +8,11 @@ import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -20,6 +22,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.energy.ComponentEnergyStorage;
 import net.neoforged.neoforge.energy.IEnergyStorage;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -34,8 +37,7 @@ public abstract class PoweredToggledItem extends Item implements AdvancedTooltip
             .component(EIODataComponents.TOGGLED, false));
     }
 
-    protected abstract void onTickWhenActive(Player player, ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId,
-        boolean pIsSelected);
+    protected abstract void onTickWhenActive(Player player, ItemStack stack, Level level, @Nullable EquipmentSlot slot);
 
     protected abstract int getMaxEnergy();
 
@@ -95,14 +97,16 @@ public abstract class PoweredToggledItem extends Item implements AdvancedTooltip
     }
 
     @Override
-    public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected) {
-        if (pEntity instanceof Player player) {
-            if (isEnabled(pStack)) {
-                if (hasCharge(pStack)) {
-                    consumeCharge(pStack);
-                    onTickWhenActive(player, pStack, pLevel, pEntity, pSlotId, pIsSelected);
+    public void inventoryTick(ItemStack stack, ServerLevel level, Entity entity, @Nullable EquipmentSlot slot) {
+        super.inventoryTick(stack, level, entity, slot);
+
+        if (entity instanceof Player player) {
+            if (isEnabled(stack)) {
+                if (hasCharge(stack)) {
+                    consumeCharge(stack);
+                    onTickWhenActive(player, stack, level, slot);
                 } else {
-                    disable(pStack);
+                    disable(stack);
                 }
             }
         }

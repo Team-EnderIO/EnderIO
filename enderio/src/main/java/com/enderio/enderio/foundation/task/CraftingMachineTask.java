@@ -8,19 +8,17 @@ import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import com.enderio.enderio.foundation.io.fluid.MachineFluidHandler;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.mojang.logging.LogUtils;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -39,7 +37,10 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
     protected final T recipeInput;
 
     @Nullable
-    private RecipeHolder<R> recipe;
+    private ResourceKey<Recipe<?>> recipeId;
+
+    @Nullable
+    private RecipeHolder<R> recipeHolder;
 
     private int progressMade;
     private int progressRequired;
@@ -53,17 +54,17 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public CraftingMachineTask(@NotNull Level level, MachineInventory inventory, T recipeInput,
+    public CraftingMachineTask(Level level, MachineInventory inventory, T recipeInput,
             @Nullable MultiSlotAccess outputSlots, @Nullable RecipeHolder<R> recipe) {
         this(level, inventory, null, recipeInput, outputSlots, recipe);
     }
 
-    public CraftingMachineTask(@NotNull Level level, MachineInventory inventory,
+    public CraftingMachineTask(Level level, MachineInventory inventory,
             @Nullable MachineFluidHandler fluidHandler, T recipeInput, @Nullable RecipeHolder<R> recipe) {
         this(level, inventory, fluidHandler, recipeInput, null, recipe);
     }
 
-    public CraftingMachineTask(@NotNull Level level, MachineInventory inventory,
+    public CraftingMachineTask(Level level, MachineInventory inventory,
             @Nullable MachineFluidHandler fluidHandler, T recipeInput, @Nullable MultiSlotAccess outputSlots,
             @Nullable RecipeHolder<R> recipe) {
         this.level = level;
@@ -71,7 +72,8 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
         this.fluidHandler = fluidHandler;
         this.recipeInput = recipeInput;
         this.outputSlots = outputSlots;
-        this.recipe = recipe;
+        this.recipeId = recipe == null ? null : recipe.id();
+        this.recipeHolder = recipe;
         inventory.updateMachineState(MachineState.FULL_OUTPUT, false);
         inventory.updateMachineState(MachineState.EMPTY_INPUT, true);
     }
@@ -82,18 +84,17 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
 
     @Nullable
     public RecipeHolder<R> getRecipeHolder() {
-        return recipe;
+        return recipeHolder;
     }
 
     // TODO: NEO-PORT: Should this return the holder?
     @Nullable
     public R getRecipe() {
-        return recipe.value();
-    }
+        if (recipeHolder == null) {
+            return null;
+        }
 
-    @Nullable
-    public ResourceLocation getRecipeId() {
-        return recipe.id().location();
+        return recipeHolder.value();
     }
 
     // region Abstract Implementation
@@ -126,26 +127,37 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
             return;
         }
 
-        // If the recipe failed to load somehow, cancel
-        if (recipe == null) {
+        // Cancel if we somehow have no recipe.
+        if (recipeId == null) {
             isComplete = true;
             return;
+        }
+
+        if (recipeHolder == null) {
+            // TODO: Temp.
+            recipeHolder = loadRecipe(recipeId.location());
+
+            // If we can't find the recipe, abort.
+            if (recipeHolder == null) {
+                isComplete = true;
+                return;
+            }
         }
 
         // Get the outputs list.
         if (!hasDeterminedOutputs) {
             hasDeterminedOutputs = true;
-            T processedRecipeInput = prepareToDetermineOutputs(recipe.value(), recipeInput);
-            outputs = recipe.value().craft(processedRecipeInput, level.registryAccess());
+            T processedRecipeInput = prepareToDetermineOutputs(recipeHolder.value(), recipeInput);
+            outputs = recipeHolder.value().craft(processedRecipeInput, level.registryAccess());
 
             // TODO: Compact any items that are the same into singular stacks?
 
             // Store the recipe energy cost.
-            progressRequired = getProgressRequired(recipe.value());
+            progressRequired = getProgressRequired(recipeHolder.value());
         }
 
         // If we don't have a recipe match, complete the task and wait for a new one.
-        if (!recipe.value().matches(recipeInput, level)) {
+        if (!recipeHolder.value().matches(recipeInput, level)) {
             inventory.updateMachineState(MachineState.EMPTY_INPUT, true);
             isComplete = true;
             return;
@@ -164,7 +176,7 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
             inventory.updateMachineState(MachineState.FULL_OUTPUT, !placeOutputs);
             if (placeOutputs) {
                 // Take the inputs
-                consumeInputs(recipe.value());
+                consumeInputs(recipeHolder.value());
 
                 // The receiver was able to take the outputs, task complete.
                 isComplete = true;
@@ -174,7 +186,7 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
 
     @Override
     public float getProgress() {
-        if (recipe == null) {
+        if (recipeId == null) {
             return 0.0f;
         }
 
@@ -240,48 +252,40 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
     private static final String KEY_OUTPUTS = "Outputs";
 
     @Override
-    public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
-        CompoundTag tag = new CompoundTag();
-
-        // If the recipe is null, we aren't going to keep the task
-        if (recipe == null) {
-            return tag;
+    public void serialize(ValueOutput output) {
+        if (recipeId == null) {
+            return;
         }
 
-        tag.putString(KEY_RECIPE_ID, recipe.id().toString());
-        tag.putInt(KEY_PROGRESS_MADE, progressMade);
-        tag.putInt(KEY_PROGRESS_REQUIRED, progressRequired);
-        tag.putBoolean(KEY_HAS_COLLECTED_INPUTS, hasConsumedInputs);
-        tag.putBoolean(KEY_IS_COMPLETE, isComplete);
+        output.store(KEY_RECIPE_ID, Recipe.KEY_CODEC, recipeId);
+        output.putInt(KEY_PROGRESS_MADE, progressMade);
+        output.putInt(KEY_PROGRESS_REQUIRED, progressRequired);
+        output.putBoolean(KEY_HAS_COLLECTED_INPUTS, hasConsumedInputs);
+        output.putBoolean(KEY_IS_COMPLETE, isComplete);
 
-        tag.putBoolean(KEY_HAS_DETERMINED_OUTPUTS, hasDeterminedOutputs);
+        output.putBoolean(KEY_HAS_DETERMINED_OUTPUTS, hasDeterminedOutputs);
         if (hasDeterminedOutputs) {
-            ListTag outputsNbt = new ListTag();
+            var outputList = output.list(KEY_OUTPUTS, OutputStack.CODEC);
             for (OutputStack stack : outputs) {
-                outputsNbt.add(stack.serializeNBT(lookupProvider));
+                outputList.add(stack);
             }
-            tag.put(KEY_OUTPUTS, outputsNbt);
         }
-
-        return tag;
     }
 
-    // TODO: 20.6: Swap tasks to use Codecs.
     @Override
-    public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
-        // TODO: Exception handling
-        recipe = loadRecipe(ResourceLocation.parse(nbt.getString(KEY_RECIPE_ID)));
-        progressMade = nbt.getInt(KEY_PROGRESS_MADE);
-        progressRequired = nbt.getInt(KEY_PROGRESS_REQUIRED);
-        hasConsumedInputs = nbt.getBoolean(KEY_HAS_COLLECTED_INPUTS);
-        isComplete = nbt.getBoolean(KEY_IS_COMPLETE);
+    public void deserialize(ValueInput input) {
+        recipeId = input.read(KEY_RECIPE_ID, Recipe.KEY_CODEC).orElse(null);
+        progressMade = input.getIntOr(KEY_PROGRESS_MADE, 0);
+        progressRequired = input.getIntOr(KEY_PROGRESS_REQUIRED, 0);
+        hasConsumedInputs = input.getBooleanOr(KEY_HAS_COLLECTED_INPUTS, false);
+        isComplete = input.getBooleanOr(KEY_IS_COMPLETE, false);
 
-        hasDeterminedOutputs = nbt.getBoolean(KEY_HAS_DETERMINED_OUTPUTS);
+        hasDeterminedOutputs = input.getBooleanOr(KEY_HAS_DETERMINED_OUTPUTS, false);
         if (hasDeterminedOutputs) {
-            ListTag outputsNbt = nbt.getList(KEY_OUTPUTS, Tag.TAG_COMPOUND);
+            var outputList = input.listOrEmpty(KEY_OUTPUTS, OutputStack.CODEC);
             outputs = new ArrayList<>();
-            for (Tag tag : outputsNbt) {
-                outputs.add(OutputStack.fromNBT(lookupProvider, (CompoundTag) tag));
+            for (OutputStack stack : outputList) {
+                outputs.add(stack);
             }
         }
     }

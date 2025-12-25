@@ -56,12 +56,4 @@ public record ActionRange(int range, boolean isVisible) {
                     pos.getZ(), 0, 0, 0);
         }
     }
-
-    public Tag save(HolderLookup.Provider lookupProvider) {
-        return CODEC.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), this).getOrThrow();
-    }
-
-    public static ActionRange parse(HolderLookup.Provider lookupProvider, Tag tag) {
-        return CODEC.parse(lookupProvider.createSerializationContext(NbtOps.INSTANCE), tag).getOrThrow();
-    }
 }

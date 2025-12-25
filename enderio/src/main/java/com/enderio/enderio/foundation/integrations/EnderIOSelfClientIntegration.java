@@ -1,17 +1,6 @@
 package com.enderio.enderio.foundation.integrations;
 
 import com.enderio.enderio.api.integration.ClientIntegration;
-import com.enderio.enderio.client.EnderIOClient;
-import com.enderio.enderio.init.EIOItems;
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemDisplayContext;
-
-import java.util.Optional;
 
 public class EnderIOSelfClientIntegration implements ClientIntegration {
 
