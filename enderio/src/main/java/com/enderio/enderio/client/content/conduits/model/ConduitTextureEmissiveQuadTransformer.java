@@ -18,14 +18,14 @@ public record ConduitTextureEmissiveQuadTransformer(TextureAtlasSprite newSprite
         }
 
         for (int i = 0; i < 4; i++) {
-            float[] uv0 = RenderUtil.unpackVertices(quad.getVertices(), i, IQuadTransformer.UV0, 2);
-            uv0[0] = (uv0[0] - quad.getSprite().getU0()) * newSprite.contents().width() / quad.getSprite().contents().width() + newSprite.getU0();
-            uv0[1] = (uv0[1] - quad.getSprite().getV0()) * newSprite.contents().height() / quad.getSprite().contents().height() + newSprite.getV0();
+            float[] uv0 = RenderUtil.unpackVertices(quad.vertices(), i, IQuadTransformer.UV0, 2);
+            uv0[0] = (uv0[0] - quad.sprite().getU0()) * newSprite.contents().width() / quad.sprite().contents().width() + newSprite.getU0();
+            uv0[1] = (uv0[1] - quad.sprite().getV0()) * newSprite.contents().height() / quad.sprite().contents().height() + newSprite.getV0();
             int[] packedTextureData = RenderUtil.packUV(uv0[0], uv0[1]);
-            quad.getVertices()[IQuadTransformer.UV0 + i * IQuadTransformer.STRIDE] = packedTextureData[0];
-            quad.getVertices()[IQuadTransformer.UV0 + 1 + i * IQuadTransformer.STRIDE] = packedTextureData[1];
+            quad.vertices()[IQuadTransformer.UV0 + i * IQuadTransformer.STRIDE] = packedTextureData[0];
+            quad.vertices()[IQuadTransformer.UV0 + 1 + i * IQuadTransformer.STRIDE] = packedTextureData[1];
         }
-        quad.sprite = newSprite;
+        quad.sprite() = newSprite;
     }
 
     private static TextureAtlas blockAtlas() {

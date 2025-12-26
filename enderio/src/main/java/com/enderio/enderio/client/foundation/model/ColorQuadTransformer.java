@@ -9,10 +9,12 @@ public record ColorQuadTransformer(@Nullable DyeColor insert, @Nullable DyeColor
     @Override
     public void processInPlace(BakedQuad quad) {
         if (quad.isTinted()) {
-            if (quad.getTintIndex() == 0 && extract != null) {
-                quad.tintIndex = extract.ordinal();
-            } else if (quad.getTintIndex() == 1 && insert != null) {
-                quad.tintIndex = insert.ordinal();
+            if (quad.tintIndex() == 0 && extract != null) {
+                //quad.tintIndex = extract.ordinal();
+                quad = new BakedQuad(quad.vertices(), extract.ordinal(), quad.direction(), quad.sprite(), quad.shade(), quad.lightEmission(), quad.hasAmbientOcclusion());
+            } else if (quad.tintIndex() == 1 && insert != null) {
+                //quad.tintIndex = insert.ordinal();
+                quad = new BakedQuad(quad.vertices(), insert.ordinal(), quad.direction(), quad.sprite(), quad.shade(), quad.lightEmission(), quad.hasAmbientOcclusion());
             }
         }
     }

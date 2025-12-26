@@ -13,7 +13,7 @@ import com.enderio.enderio.client.content.conduits.gui.screen_type.EnergyConduit
 import com.enderio.enderio.client.content.conduits.gui.screen_type.FluidConduitScreenType;
 import com.enderio.enderio.client.content.conduits.gui.screen_type.ItemConduitScreenType;
 import com.enderio.enderio.client.content.conduits.gui.screen_type.RedstoneConduitScreenType;
-import com.enderio.enderio.client.content.conduits.model.bundle.UnbakedConduitBundleModelLoader;
+import com.enderio.enderio.client.content.conduits.model.bundle.port.ConduitBlockStateModel;
 import com.enderio.enderio.client.content.conduits.model.modifier.FluidConduitModelModifier;
 import com.enderio.enderio.client.content.conduits.model.modifier.RedstoneConduitModelModifier;
 import com.enderio.enderio.client.content.enderface.EnderfaceRenderer;
@@ -74,10 +74,8 @@ import com.enderio.enderio.init.EIOItems;
 import com.enderio.enderio.init.EIOMenus;
 import com.enderio.enderio.init.EIOParticles;
 import com.enderio.enderio.init.EIOTravelTargets;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -91,6 +89,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
+import net.neoforged.neoforge.client.event.RegisterBlockStateModels;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
@@ -105,14 +104,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 @Mod(value = EnderIO.MOD_ID, dist = Dist.CLIENT)
 public class EnderIOClient {
 
     private static final Map<Item, ResourceLocation> HANG_GLIDER_MODEL_LOCATION = new HashMap<>();
-    public static final Map<Item, BakedModel> GLIDER_MODELS = new HashMap<>();
+    //public static final Map<Item, BakedModel> GLIDER_MODELS = new HashMap<>();
 
     public EnderIOClient(ModContainer modContainer) {
         // TODO: Re-enable after config rework.
@@ -283,22 +281,23 @@ public class EnderIOClient {
 
     @SubscribeEvent
     public static void additionalModels(ModelEvent.RegisterStandalone event) {
-        Set<ResourceLocation> gliderModels = Minecraft.getInstance()
-                .getResourceManager()
-                .listResources("models/enderio_glider", rl -> rl.getPath().endsWith(".json"))
-                .keySet();
-
-        for (ResourceLocation gliderModelPath : gliderModels) {
-            Optional<Item> gliderItem = findGliderForModelRL(gliderModelPath);
-            if (gliderItem.isPresent()) {
-                ResourceLocation modelLookupLocation = ResourceLocation
-                        .fromNamespaceAndPath(gliderModelPath.getNamespace(), gliderModelPath.getPath()
-                                .substring("models/".length(), gliderModelPath.getPath().length() - 5));
-
-                event.register(modelLookupLocation);
-                HANG_GLIDER_MODEL_LOCATION.put(gliderItem.get(), modelLookupLocation);
-            }
-        }
+        //TODO glider
+//        Set<ResourceLocation> gliderModels = Minecraft.getInstance()
+//                .getResourceManager()
+//                .listResources("models/enderio_glider", rl -> rl.getPath().endsWith(".json"))
+//                .keySet();
+//
+//        for (ResourceLocation gliderModelPath : gliderModels) {
+//            Optional<Item> gliderItem = findGliderForModelRL(gliderModelPath);
+//            if (gliderItem.isPresent()) {
+//                ResourceLocation modelLookupLocation = ResourceLocation
+//                        .fromNamespaceAndPath(gliderModelPath.getNamespace(), gliderModelPath.getPath()
+//                                .substring("models/".length(), gliderModelPath.getPath().length() - 5));
+//
+//                event.register(modelLookupLocation);
+//                HANG_GLIDER_MODEL_LOCATION.put(gliderItem.get(), modelLookupLocation);
+//            }
+//        }
     }
 
     @SubscribeEvent
@@ -323,12 +322,12 @@ public class EnderIOClient {
 
     @SubscribeEvent
     public static void bakingCompleted(ModelEvent.BakingCompleted event) {
-        GLIDER_MODELS.clear();
-        HANG_GLIDER_MODEL_LOCATION.forEach((item, modelRL) -> {
-            var bakedModel = event.getModelManager().getStandaloneModel(modelRL);
-            GLIDER_MODELS.put(item, bakedModel);
-        });
-        HANG_GLIDER_MODEL_LOCATION.clear();
+//        GLIDER_MODELS.clear();
+//        HANG_GLIDER_MODEL_LOCATION.forEach((item, modelRL) -> {
+//            var bakedModel = event.getModelManager().getStandaloneModel(modelRL);
+//            GLIDER_MODELS.put(item, bakedModel);
+//        });
+//        HANG_GLIDER_MODEL_LOCATION.clear();
     }
 
     @SubscribeEvent
@@ -346,9 +345,13 @@ public class EnderIOClient {
     public static void registerGeometryLoaders(ModelEvent.RegisterLoaders event) {
 //        event.register(EnderIO.rl("painted_block"), new PaintedBlockGeometry.Loader());
 //        event.register(EnderIO.rl("io_overlay"), new IOOverlayBakedModel.Loader());
-        event.register(EnderIO.rl("conduit"), UnbakedConduitBundleModelLoader.INSTANCE);
 //        event.register(EnderIO.rl("conduit_item"), new ConduitItemModelLoader());
 //        event.register(EnderIO.rl("facades_item"), new FacadeItemGeometry.Loader());
+    }
+
+    @SubscribeEvent
+    public static void registerGeometryLoaders(RegisterBlockStateModels event) {
+        event.registerModel(EnderIO.rl("conduit"), ConduitBlockStateModel.Unbaked.CODEC);
     }
 
     @SubscribeEvent

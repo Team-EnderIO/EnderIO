@@ -14,7 +14,7 @@ public record BlockColorQuadDataTransformer(BlockPos pos, Level level, BlockStat
         int rgb = Minecraft.getInstance().getBlockColors().getColor(texture, level, pos);
         if (rgb != -1) {
             for (int i = 0; i < 4; i++) {
-                RenderUtil.multiplyColor(quad.getVertices(), i, rgb);
+                RenderUtil.multiplyColor(quad.vertices(), i, rgb);
             }
         }
     }

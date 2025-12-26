@@ -6,7 +6,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
@@ -20,6 +20,7 @@ import net.neoforged.neoforge.client.event.AddSectionGeometryEvent;
 import net.neoforged.neoforge.client.model.pipeline.VertexConsumerWrapper;
 
 import java.util.Map;
+import java.util.function.Function;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class ConduitFacadeRendering {
@@ -78,18 +79,14 @@ public class ConduitFacadeRendering {
                         .getBlockModelShaper()
                         .getBlockModel(entry.getValue());
 
-                var modelData = context.getRegion().getModelData(pos);
+                Function<ChunkSectionLayer, VertexConsumer> consumer = wrapper == null ? context::getOrCreateChunkBuffer : layer -> wrapper;
 
-                modelData = model.getModelData(context.getRegion(), pos, state, modelData);
+                Minecraft.getInstance()
+                    .getBlockRenderer()
+                    .getModelRenderer()
+                    .tesselateBlock(context.getRegion(), model.collectParts(context.getRegion(), pos, state, random), state, pos, context.getPoseStack(),
+                        consumer, true, OverlayTexture.NO_OVERLAY);
 
-                for (var renderType : model.getRenderTypes(entry.getValue(), random, modelData)) {
-                    VertexConsumer consumer = wrapper == null ? context.getOrCreateChunkBuffer(renderType) : wrapper;
-                    Minecraft.getInstance()
-                            .getBlockRenderer()
-                            .getModelRenderer()
-                            .tesselateBlock(context.getRegion(), model, state, pos, context.getPoseStack(), consumer,
-                                    true, random, 42L, OverlayTexture.NO_OVERLAY, modelData, renderType);
-                }
 
                 context.getPoseStack().popPose();
             }
@@ -97,7 +94,7 @@ public class ConduitFacadeRendering {
 
         private static class AlphaWrapper extends VertexConsumerWrapper {
             public AlphaWrapper(AddSectionGeometryEvent.SectionRenderingContext context) {
-                super(context.getOrCreateChunkBuffer(RenderType.translucent()));
+                super(context.getOrCreateChunkBuffer(ChunkSectionLayer.TRANSLUCENT));
             }
 
             @Override
