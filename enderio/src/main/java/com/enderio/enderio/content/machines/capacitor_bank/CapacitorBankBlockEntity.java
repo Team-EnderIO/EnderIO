@@ -57,12 +57,12 @@ public class CapacitorBankBlockEntity extends LegacyPoweredMachineBlockEntity im
         return map;
     });
 
-    public static final NetworkDataSlot.CodecType<Map<Direction, DisplayMode>> DISPLAY_MODE_MAP_DATA_SLOT_TYPE = NetworkDataSlot.CodecType
-            .createMap(Direction.CODEC, DisplayMode.CODEC, Direction.STREAM_CODEC.cast(),
-                    DisplayMode.STREAM_CODEC.cast());
+//    public static final NetworkDataSlot.CodecType<Map<Direction, DisplayMode>> DISPLAY_MODE_MAP_DATA_SLOT_TYPE = NetworkDataSlot.CodecType
+//            .createMap(Direction.CODEC, DisplayMode.CODEC, Direction.STREAM_CODEC.cast(),
+//                    DisplayMode.STREAM_CODEC.cast());
 
-    public static final NetworkDataSlot.CodecType<List<BlockPos>> POSITION_LIST_DATA_SLOT_TYPE = NetworkDataSlot.CodecType
-            .createList(BlockPos.CODEC, BlockPos.STREAM_CODEC.cast());
+//    public static final NetworkDataSlot.CodecType<List<BlockPos>> POSITION_LIST_DATA_SLOT_TYPE = NetworkDataSlot.CodecType
+//            .createList(BlockPos.CODEC, BlockPos.STREAM_CODEC.cast());
 
     public CapacitorBankBlockEntity(BlockPos worldPosition, BlockState blockState, CapacitorTier tier) {
         super(EnergyIOMode.Both, new FixedScalable(tier::getStorageCapacity),
@@ -72,18 +72,18 @@ public class CapacitorBankBlockEntity extends LegacyPoweredMachineBlockEntity im
         this.node = new MultiEnergyNode(() -> energyStorage,
                 () -> (MultiEnergyStorageWrapper) getExposedEnergyStorage(), worldPosition);
 
-        addDataSlot(NetworkDataSlot.LONG.create(() -> addedEnergy, data -> addedEnergy = data));
-        addDataSlot(NetworkDataSlot.LONG.create(() -> removedEnergy, data -> removedEnergy = data));
-        addDataSlot(POSITION_LIST_DATA_SLOT_TYPE.create(this::getPositions, this::setPositions));
-        addDataSlot(DISPLAY_MODE_MAP_DATA_SLOT_TYPE.create(() -> displayModes, displayModes::putAll));
+//        addDataSlot(NetworkDataSlot.LONG.create(() -> addedEnergy, data -> addedEnergy = data));
+//        addDataSlot(NetworkDataSlot.LONG.create(() -> removedEnergy, data -> removedEnergy = data));
+//        addDataSlot(POSITION_LIST_DATA_SLOT_TYPE.create(this::getPositions, this::setPositions));
+//        addDataSlot(DISPLAY_MODE_MAP_DATA_SLOT_TYPE.create(() -> displayModes, displayModes::putAll));
     }
 
-    @Override
-    public NetworkDataSlot<?> createEnergyDataSlot() {
-        return LargeEnergyData.DATA_SLOT_TYPE.create(
-                () -> LargeEnergyData.from((ILargeMachineEnergyStorage) getExposedEnergyStorage()),
-                energyData -> clientEnergyStorage = energyData.toImmutableStorage());
-    }
+//    @Override
+//    public NetworkDataSlot<?> createEnergyDataSlot() {
+//        return LargeEnergyData.DATA_SLOT_TYPE.create(
+//                () -> LargeEnergyData.from((ILargeMachineEnergyStorage) getExposedEnergyStorage()),
+//                energyData -> clientEnergyStorage = energyData.toImmutableStorage());
+//    }
 
     @Nullable
     @Override
@@ -166,11 +166,11 @@ public class CapacitorBankBlockEntity extends LegacyPoweredMachineBlockEntity im
         return true;
     }
 
-    @Override
-    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.saveAdditional(pTag, lookupProvider);
-        pTag.put(DISPLAY_MODES, saveDisplayModes());
-    }
+//    @Override
+//    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+//        super.saveAdditional(pTag, lookupProvider);
+//        pTag.put(DISPLAY_MODES, saveDisplayModes());
+//    }
 
     public CompoundTag saveDisplayModes() {
         CompoundTag nbt = new CompoundTag();
@@ -181,24 +181,24 @@ public class CapacitorBankBlockEntity extends LegacyPoweredMachineBlockEntity im
         return nbt;
     }
 
-    @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.loadAdditional(pTag, lookupProvider);
-        if (pTag.contains(DISPLAY_MODES, Tag.TAG_COMPOUND)) {
-            loadDisplayModes(pTag.getCompound(DISPLAY_MODES));
-        }
-    }
+//    @Override
+//    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+//        super.loadAdditional(pTag, lookupProvider);
+//        if (pTag.contains(DISPLAY_MODES, Tag.TAG_COMPOUND)) {
+//            loadDisplayModes(pTag.getCompound(DISPLAY_MODES));
+//        }
+//    }
 
-    public void loadDisplayModes(CompoundTag nbt) {
-        displayModes.clear();
-        for (String key : nbt.getAllKeys()) {
-            @Nullable
-            Direction dir = Direction.byName(key);
-            if (dir != null) {
-                displayModes.put(dir, DisplayMode.values()[nbt.getInt(key)]);
-            }
-        }
-    }
+//    public void loadDisplayModes(CompoundTag nbt) {
+//        displayModes.clear();
+//        for (String key : nbt.getAllKeys()) {
+//            @Nullable
+//            Direction dir = Direction.byName(key);
+//            if (dir != null) {
+//                displayModes.put(dir, DisplayMode.values()[nbt.getInt(key)]);
+//            }
+//        }
+//    }
 
     @Override
     protected boolean shouldPushEnergyTo(Direction direction) {

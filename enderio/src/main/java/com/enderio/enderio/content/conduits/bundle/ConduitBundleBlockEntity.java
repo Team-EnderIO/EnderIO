@@ -24,6 +24,7 @@ import com.enderio.enderio.foundation.EIONBTKeys;
 import com.enderio.enderio.foundation.block.entity.Wrenchable;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOConduitTypes;
+import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
@@ -45,8 +46,10 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemStackWithSlot;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
@@ -56,6 +59,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.fml.LogicalSide;
@@ -67,6 +71,7 @@ import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -84,6 +89,8 @@ import java.util.stream.Collectors;
 
 public final class ConduitBundleBlockEntity extends EnderBlockEntity
         implements ConduitBundle, Wrenchable, ConduitMenu.ConnectionAccessor, IConduitNodeAttachment {
+
+    private static final Logger LOGGER = LogUtils.getLogger();
 
     public static final int MAX_CONDUITS = 9;
 
@@ -103,7 +110,6 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
     // Data recovery mechanism
     private final Map<Holder<Conduit<?, ?>>, ConduitNodeImpl> lazyNodes = new HashMap<>();
-    private ListTag lazyNodeNBT = null;
     private Map<Holder<Conduit<?, ?>>, NodeData> lazyNodeData = null;
 
     // Client-side extra render data
@@ -1132,56 +1138,52 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
         CompoundTag updateTag = super.getUpdateTag(registries);
 
-        // TODO: Do not use saveAdditional, sync less data than it does...
+        try (ProblemReporter.ScopedCollector problemReporter = new ProblemReporter.ScopedCollector(this.problemPath(), LOGGER)) {
+            var output = TagValueOutput.createWithContext(problemReporter, registries);
 
-        // Send conduit sync data
-        ListTag nodeDataList = new ListTag();
+            // Write super's update tag
+            output.store(updateTag);
 
-        for (var conduit : conduits) {
-            var node = getConduitNode(conduit);
-            var clientDataTag = conduit.value().getExtraWorldData(this, node);
-            if (clientDataTag != null && !clientDataTag.isEmpty()) {
-                CompoundTag tag = new CompoundTag();
-                tag.put("Conduit",
-                        Conduit.CODEC.encodeStart(registries.createSerializationContext(NbtOps.INSTANCE), conduit)
-                                .getOrThrow());
-                tag.put("Data", clientDataTag);
-                nodeDataList.add(tag);
+            // Write client data.
+            var nodeDataList = output.list(CONDUIT_CLIENT_WORLD_DATA_KEY, ConduitClientData.CODEC);
+
+            for (var conduit : conduits) {
+                var node = getConduitNode(conduit);
+                var clientDataTag = conduit.value().getExtraWorldData(this, node);
+                if (clientDataTag != null && !clientDataTag.isEmpty()) {
+                    nodeDataList.add(new ConduitClientData(conduit, clientDataTag));
+                }
             }
-        }
 
-        updateTag.put(CONDUIT_CLIENT_WORLD_DATA_KEY, nodeDataList);
-        return updateTag;
+            return output.buildResult();
+        }
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag syncData, HolderLookup.Provider lookupProvider) {
-        super.handleUpdateTag(syncData, lookupProvider);
+    public void handleUpdateTag(ValueInput input) {
+        super.handleUpdateTag(input);
 
-        // Load synced node data
-        if (syncData.contains(CONDUIT_CLIENT_WORLD_DATA_KEY)) {
-            clientConduitExtraWorldData.clear();
+        var nodeDataList = input.listOrEmpty(CONDUIT_CLIENT_WORLD_DATA_KEY, ConduitClientData.CODEC);
 
-            ListTag nodeDataList = syncData.getList(CONDUIT_CLIENT_WORLD_DATA_KEY, Tag.TAG_COMPOUND);
-            var serializationContext = lookupProvider.createSerializationContext(NbtOps.INSTANCE);
-            for (int i = 0; i < nodeDataList.size(); i++) {
-                CompoundTag nodeTag = nodeDataList.getCompound(i);
-                var conduit = Conduit.CODEC.parse(serializationContext, nodeTag.get("Conduit")).getOrThrow();
-                clientConduitExtraWorldData.put(conduit, nodeTag.getCompound("Data"));
-            }
+        for (ConduitClientData clientData : nodeDataList) {
+            clientConduitExtraWorldData.put(clientData.conduit(), clientData.clientDataTag());
         }
 
         updateShape();
         ensureModelsAreCorrect();
     }
 
+    private record ConduitClientData(Holder<Conduit<?, ?>> conduit, CompoundTag clientDataTag) {
+        public static Codec<ConduitClientData> CODEC = RecordCodecBuilder.create(inst -> inst.group(
+            Conduit.CODEC.fieldOf("Conduit").forGetter(ConduitClientData::conduit),
+            CompoundTag.CODEC.fieldOf("Data").forGetter(ConduitClientData::clientDataTag)
+        ).apply(inst, ConduitClientData::new));
+    }
+
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt,
-            HolderLookup.Provider lookupProvider) {
-        CompoundTag compoundtag = pkt.getTag();
-        if (!compoundtag.isEmpty()) {
-            handleUpdateTag(compoundtag, lookupProvider);
-        }
+    public void onDataPacket(Connection net, ValueInput valueInput) {
+        super.onDataPacket(net, valueInput);
+        handleUpdateTag(valueInput);
     }
 
     // endregion
@@ -1213,7 +1215,6 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
 
         lazyNodeData = null;
-        lazyNodeNBT = null;
     }
 
     @EnsureSide(EnsureSide.Side.SERVER)
@@ -1268,6 +1269,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
     }
 
+    // TODO: 1.21.8: use preRemoveSideEffects?
     @Override
     public void setRemoved() {
         super.setRemoved();
@@ -1315,58 +1317,100 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
                 conduitList.add(conduit);
             }
 
-            // TODO: 1.21.8: ROVER continue conversion.
             // Save connections
-            ListTag conduitConnectionsList = new ListTag();
+            var conduitConnectionsList = output.childrenList(CONNECTIONS_KEY);
             for (var conduit : conduits) {
-                ListTag connectionsList = new ListTag();
+                var conduitConnectionsListEntry = conduitConnectionsList.addChild();
+
+                conduitConnectionsListEntry.store("Conduit", Conduit.CODEC, conduit);
+                var connectionsList = conduitConnectionsListEntry.childrenList("Connections");
+
                 for (Direction side : Direction.values()) {
-                    CompoundTag connectionTag = new CompoundTag();
-                    connectionTag.putString("Side", side.getSerializedName());
-                    connectionTag.putString("Status", getConnectionStatus(conduit, side).getSerializedName());
+                    var connection = connectionsList.addChild();
+                    connection.store("Side", Direction.CODEC, side);
+                    connection.store("Status", ConnectionStatus.CODEC, getConnectionStatus(conduit, side));
 
                     // Raw access to ensure we save the true data.
                     var config = conduitConnections.get(conduit).configs.get(side);
                     if (config != null && !config.equals(config.type().getDefault())) {
-                        connectionTag.put("Config",
-                            ConnectionConfig.GENERIC_CODEC
-                                .encodeStart(registries.createSerializationContext(NbtOps.INSTANCE), config)
-                                .getOrThrow());
+                        connection.store("Config", ConnectionConfig.GENERIC_CODEC, config);
                     }
 
                     var inventory = conduitConnections.get(conduit).inventories.get(side);
                     if (inventory != null) {
-                        ListTag inventoryListTag = new ListTag();
+                        var inventoryContents = connection.list("Inventory", ItemStackWithSlot.CODEC);
 
-                        boolean shouldSave = false;
                         for (int i = 0; i < inventory.getSlots(); i++) {
                             ItemStack stack = inventory.getStackInSlot(i);
-                            shouldSave |= !stack.isEmpty();
-                            inventoryListTag.add(stack.saveOptional(registries));
-                        }
-
-                        if (shouldSave) {
-                            connectionTag.put("Inventory", inventoryListTag);
+                            if (!stack.isEmpty()) {
+                                inventoryContents.add(new ItemStackWithSlot(i, stack));
+                            }
                         }
                     }
-
-                    connectionsList.add(connectionTag);
                 }
-
-                conduitConnectionsList.add(connectionsList);
             }
-
-            tag.put(CONNECTIONS_KEY, conduitConnectionsList);
         }
 
         if (!facadeProvider.isEmpty()) {
-            tag.put(FACADE_PROVIDER_KEY, facadeProvider.save(registries));
+            output.store(FACADE_PROVIDER_KEY, ItemStack.CODEC, facadeProvider);
         }
     }
 
     @Override
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
+
+        // Load conduits from input and sort them correctly.
+        conduits = input.listOrEmpty(CONDUITS_KEY, Conduit.CODEC)
+            .stream()
+            .sorted(Comparator.comparingInt(ConduitSorter::getSortIndex))
+            .toList();
+
+        // Load connections
+        conduitConnections.clear();
+
+        var conduitConnectionsList = input.childrenListOrEmpty(CONNECTIONS_KEY);
+        for (ValueInput conduitConnectionsListEntry : conduitConnectionsList) {
+            // TODO: We should probably avoid throwing exceptions here.
+            //       Consider using a codec for the connections record?
+            Holder<Conduit<?, ?>> conduit = conduitConnectionsListEntry.read("Conduit", Conduit.CODEC).orElseThrow();
+
+            ConnectionContainer connections = new ConnectionContainer(conduit);
+            conduitConnections.put(conduit, connections);
+
+            var connectionsList = conduitConnectionsListEntry.childrenListOrEmpty("Connections");
+            for (ValueInput connection : connectionsList) {
+                Direction side = connection.read("Side", Direction.CODEC).orElseThrow();
+                ConnectionStatus status = connection.read("Status", ConnectionStatus.CODEC).orElseThrow();
+
+                connections.setStatus(side, status);
+
+                connection.read("Config", ConnectionConfig.GENERIC_CODEC)
+                    .ifPresent(config -> connections.setConfig(side, config));
+
+                var inventoryContents = connection.listOrEmpty("Inventory", ItemStackWithSlot.CODEC);
+
+                var inventory = connections.getInventory(side);
+
+                for (ItemStackWithSlot itemWithSlot : inventoryContents) {
+                    if (itemWithSlot.isValidInContainer(inventory.getSlots())) {
+                        inventory.setStackInSlot(itemWithSlot.slot(), itemWithSlot.stack());
+                    }
+                }
+            }
+        }
+
+        facadeProvider = input.read(FACADE_PROVIDER_KEY, ItemStack.CODEC).orElse(ItemStack.EMPTY);
+
+        // Load node data used for recovery
+        var nodeDataList = input.listOrEmpty(NODE_DATA_KEY, ConduitAndNodeData.CODEC);
+        lazyNodeData = new HashMap<>();
+
+        for (ConduitAndNodeData nodeData : nodeDataList) {
+            lazyNodeData.put(nodeData.conduit(), nodeData.data());
+        }
+
+        ensureModelsAreCorrect();
     }
 
     private record ConduitAndNodeData(Holder<Conduit<?, ?>> conduit, NodeData data) {
@@ -1376,169 +1420,6 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
                 NodeData.GENERIC_CODEC.fieldOf("Data").forGetter(ConduitAndNodeData::data)
             )
             .apply(instance, ConduitAndNodeData::new));
-    }
-
-    @Override
-    protected void saveAdditionalSynced(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditionalSynced(tag, registries);
-
-        if (!conduits.isEmpty()) {
-            ListTag conduitList = new ListTag();
-            for (var conduit : conduits) {
-                conduitList
-                        .add(Conduit.CODEC.encodeStart(registries.createSerializationContext(NbtOps.INSTANCE), conduit)
-                                .getOrThrow());
-            }
-            tag.put(CONDUITS_KEY, conduitList);
-
-            // Save connections
-            ListTag conduitConnectionsList = new ListTag();
-            for (var conduit : conduits) {
-                ListTag connectionsList = new ListTag();
-                for (Direction side : Direction.values()) {
-                    CompoundTag connectionTag = new CompoundTag();
-                    connectionTag.putString("Side", side.getSerializedName());
-                    connectionTag.putString("Status", getConnectionStatus(conduit, side).getSerializedName());
-
-                    // Raw access to ensure we save the true data.
-                    var config = conduitConnections.get(conduit).configs.get(side);
-                    if (config != null && !config.equals(config.type().getDefault())) {
-                        connectionTag.put("Config",
-                                ConnectionConfig.GENERIC_CODEC
-                                        .encodeStart(registries.createSerializationContext(NbtOps.INSTANCE), config)
-                                        .getOrThrow());
-                    }
-
-                    var inventory = conduitConnections.get(conduit).inventories.get(side);
-                    if (inventory != null) {
-                        ListTag inventoryListTag = new ListTag();
-
-                        boolean shouldSave = false;
-                        for (int i = 0; i < inventory.getSlots(); i++) {
-                            ItemStack stack = inventory.getStackInSlot(i);
-                            shouldSave |= !stack.isEmpty();
-                            inventoryListTag.add(stack.saveOptional(registries));
-                        }
-
-                        if (shouldSave) {
-                            connectionTag.put("Inventory", inventoryListTag);
-                        }
-                    }
-
-                    connectionsList.add(connectionTag);
-                }
-
-                conduitConnectionsList.add(connectionsList);
-            }
-
-            tag.put(CONNECTIONS_KEY, conduitConnectionsList);
-        }
-
-        if (!facadeProvider.isEmpty()) {
-            tag.put(FACADE_PROVIDER_KEY, facadeProvider.save(registries));
-        }
-    }
-
-    @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
-
-        // New save format
-        conduits.clear();
-        if (tag.contains(CONDUITS_KEY, Tag.TAG_LIST)) {
-            // Get untyped list tag.
-            ListTag conduitList = (ListTag) tag.get(CONDUITS_KEY);
-            for (var conduitTag : conduitList) {
-                conduits.add(Conduit.CODEC.parse(registries.createSerializationContext(NbtOps.INSTANCE), conduitTag)
-                        .getOrThrow());
-            }
-        }
-
-        // Load connections
-        conduitConnections.clear();
-        if (tag.contains(CONNECTIONS_KEY)) {
-            ListTag conduitConnectionsList = tag.getList(CONNECTIONS_KEY, Tag.TAG_LIST);
-
-            for (int i = 0; i < conduitConnectionsList.size(); i++) {
-                ListTag connectionsList = conduitConnectionsList.getList(i);
-                Holder<Conduit<?, ?>> conduit = conduits.get(i);
-
-                ConnectionContainer connections = new ConnectionContainer(conduit);
-                for (int j = 0; j < connectionsList.size(); j++) {
-                    CompoundTag connectionTag = connectionsList.getCompound(j);
-                    Direction side = Direction.byName(connectionTag.getString("Side"));
-                    ConnectionStatus status = ConnectionStatus.byName(connectionTag.getString("Status"));
-
-                    if (status == null) {
-                        status = ConnectionStatus.DISCONNECTED;
-                    }
-
-                    if (side != null) {
-                        connections.setStatus(side, status);
-
-                        if (connectionTag.contains("Config")) {
-                            ConnectionConfig config = ConnectionConfig.GENERIC_CODEC
-                                    .parse(registries.createSerializationContext(NbtOps.INSTANCE),
-                                            connectionTag.get("Config"))
-                                    .getOrThrow();
-                            connections.setConfig(side, config);
-                        }
-
-                        if (connectionTag.contains("Inventory")) {
-                            ListTag inventoryListTag = connectionTag.getList("Inventory", Tag.TAG_COMPOUND);
-                            var inventory = connections.getInventory(side);
-
-                            if (inventory != null) {
-                                if (inventory.getSlots() < inventoryListTag.size()) {
-                                    // TODO: Log a warning
-                                }
-
-                                for (int k = 0; k < inventoryListTag.size() && k < inventory.getSlots(); k++) {
-                                    ItemStack stack = ItemStack.parseOptional(registries,
-                                            inventoryListTag.getCompound(k));
-                                    inventory.setStackInSlot(k, stack);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                conduitConnections.put(conduit, connections);
-            }
-        }
-
-        if (tag.contains(FACADE_PROVIDER_KEY)) {
-            facadeProvider = ItemStack.parseOptional(registries, tag.getCompound(FACADE_PROVIDER_KEY));
-        } else {
-            facadeProvider = ItemStack.EMPTY;
-        }
-
-        // Load node data used for recovery
-        if (tag.contains(EIONBTKeys.CONDUIT_EXTRA_DATA)) {
-            lazyNodeNBT = tag.getList(EIONBTKeys.CONDUIT_EXTRA_DATA, Tag.TAG_COMPOUND);
-        } else if (tag.contains(NODE_DATA_KEY)) {
-            var list = tag.getList(NODE_DATA_KEY, Tag.TAG_COMPOUND);
-            lazyNodeData = new HashMap<>();
-
-            var serializationContext = registries.createSerializationContext(NbtOps.INSTANCE);
-
-            for (int i = 0; i < list.size(); i++) {
-                var nodeTag = list.getCompound(i);
-                var conduitParseResult = Conduit.CODEC.parse(serializationContext, nodeTag.get("Conduit"));
-                if (conduitParseResult.isError()) {
-                    continue;
-                }
-
-                var dataParseResult = NodeData.GENERIC_CODEC.parse(serializationContext, nodeTag.get("Data"));
-                if (dataParseResult.isError()) {
-                    continue;
-                }
-
-                lazyNodeData.put(conduitParseResult.getOrThrow(), dataParseResult.getOrThrow());
-            }
-        }
-
-        ensureModelsAreCorrect();
     }
 
     // This method ensures that any missing client-side connections render properly after

@@ -52,6 +52,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+// TODO: 1.21.8: Kill.
 @Deprecated(forRemoval = true, since = "7.1")
 public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
         implements MenuProvider, Wrenchable, IOConfigurable, MachineInventoryHolder {
@@ -84,11 +85,11 @@ public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
 
     // region Common Dataslots
 
-    public static final NetworkDataSlot.CodecType<RedstoneControl> REDSTONE_CONTROL_DATA_SLOT_TYPE = new NetworkDataSlot.CodecType<>(
-            RedstoneControl.CODEC, RedstoneControl.STREAM_CODEC.cast());
+//    public static final NetworkDataSlot.CodecType<RedstoneControl> REDSTONE_CONTROL_DATA_SLOT_TYPE = new NetworkDataSlot.CodecType<>(
+//            RedstoneControl.CODEC, RedstoneControl.STREAM_CODEC.cast());
 
-    private final NetworkDataSlot<RedstoneControl> redstoneControlDataSlot;
-    private final @Nullable NetworkDataSlot<IOConfig> ioConfigDataSlot;
+//    private final NetworkDataSlot<RedstoneControl> redstoneControlDataSlot;
+//    private final @Nullable NetworkDataSlot<IOConfig> ioConfigDataSlot;
 
     // endregion
 
@@ -100,9 +101,9 @@ public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
         // Create IO Config.
         this.defaultIOConfig = getDefaultIOConfig();
 
-        if (!this.hasData(EIOAttachments.IO_CONFIG)) {
-            this.setData(EIOAttachments.IO_CONFIG, defaultIOConfig);
-        }
+//        if (!this.hasData(EIOAttachments.IO_CONFIG)) {
+//            this.setData(EIOAttachments.IO_CONFIG, defaultIOConfig);
+//        }
 
         // If the machine declares an inventory layout, use it to create a handler
         inventoryLayout = createInventoryLayout();
@@ -112,29 +113,29 @@ public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
             inventory = null;
         }
 
-        if (supportsRedstoneControl()) {
-            redstoneControlDataSlot = addDataSlot(
-                    REDSTONE_CONTROL_DATA_SLOT_TYPE.create(this::getRedstoneControl, this::internalSetRedstoneControl));
-        } else {
-            redstoneControlDataSlot = null;
-        }
-
-        // Register sync slot for ioConfig and setup model data.
-        if (isIOConfigMutable()) {
-            ioConfigDataSlot = addDataSlot(IOConfig.DATA_SLOT_TYPE.create(this::getIOConfig, v -> {
-                setIOConfig(v);
-
-                if (level != null && level.isClientSide()) {
-                    onIOConfigChanged();
-                }
-
-                level.invalidateCapabilities(getBlockPos());
-            }));
-        } else {
-            ioConfigDataSlot = null;
-        }
-
-        addDataSlot(MachineState.DATA_SLOT_TYPE.create(this::getMachineStates, l -> states = l));
+//        if (supportsRedstoneControl()) {
+//            redstoneControlDataSlot = addDataSlot(
+//                    REDSTONE_CONTROL_DATA_SLOT_TYPE.create(this::getRedstoneControl, this::internalSetRedstoneControl));
+//        } else {
+//            redstoneControlDataSlot = null;
+//        }
+//
+//        // Register sync slot for ioConfig and setup model data.
+//        if (isIOConfigMutable()) {
+//            ioConfigDataSlot = addDataSlot(IOConfig.DATA_SLOT_TYPE.create(this::getIOConfig, v -> {
+//                setIOConfig(v);
+//
+//                if (level != null && level.isClientSide()) {
+//                    onIOConfigChanged();
+//                }
+//
+//                level.invalidateCapabilities(getBlockPos());
+//            }));
+//        } else {
+//            ioConfigDataSlot = null;
+//        }
+//
+//        addDataSlot(MachineState.DATA_SLOT_TYPE.create(this::getMachineStates, l -> states = l));
     }
 
     // region New IO Config
@@ -145,7 +146,7 @@ public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
 
     private IOConfig getIOConfig() {
         if (isIOConfigMutable()) {
-            return getData(EIOAttachments.IO_CONFIG);
+//            return getData(EIOAttachments.IO_CONFIG);
         }
 
         return defaultIOConfig;
@@ -203,7 +204,7 @@ public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
             throw new IllegalStateException("Cannot set IO config when isIOConfigMutable is false.");
         }
 
-        setData(EIOAttachments.IO_CONFIG, config);
+//        setData(EIOAttachments.IO_CONFIG, config);
 
         if (level == null) {
             return;
@@ -221,7 +222,7 @@ public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
 
     protected void onIOConfigChanged(Direction side, IOMode oldMode, IOMode newMode) {
         if (level != null && level.isClientSide() && isIOConfigMutable()) {
-            clientUpdateSlot(ioConfigDataSlot, getIOConfig());
+//            clientUpdateSlot(ioConfigDataSlot, getIOConfig());
         }
     }
 
@@ -284,7 +285,8 @@ public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
             throw new IllegalStateException("This machine does not support redstone control.");
         }
 
-        return getData(EIOAttachments.REDSTONE_CONTROL);
+//        return getData(EIOAttachments.REDSTONE_CONTROL);
+        return RedstoneControl.ALWAYS_ACTIVE;
     }
 
     public void setRedstoneControl(RedstoneControl redstoneControl) {
@@ -293,14 +295,14 @@ public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
         }
 
         if (level != null && level.isClientSide()) {
-            clientUpdateSlot(redstoneControlDataSlot, redstoneControl);
+//            clientUpdateSlot(redstoneControlDataSlot, redstoneControl);
         } else {
             internalSetRedstoneControl(redstoneControl);
         }
     }
 
     private void internalSetRedstoneControl(RedstoneControl redstoneControl) {
-        setData(EIOAttachments.REDSTONE_CONTROL, redstoneControl);
+//        setData(EIOAttachments.REDSTONE_CONTROL, redstoneControl);
         setChanged();
         updateRedstone();
     }
@@ -449,42 +451,42 @@ public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
         updateRedstone();
     }
 
-    @Override
-    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.saveAdditional(pTag, lookupProvider);
-
-        if (this.inventory != null) {
-            pTag.put(MachineNBTKeys.ITEMS, inventory.serializeNBT(lookupProvider));
-        }
-    }
-
-    @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        if (this.inventory != null) {
-            inventory.deserializeNBT(lookupProvider, pTag.getCompound(MachineNBTKeys.ITEMS));
-        }
-
-        // For rendering io overlays after placed by an nbt filled block item
-        if (this.level != null) {
-            onIOConfigChanged();
-        }
-
-        super.loadAdditional(pTag, lookupProvider);
-    }
-
-    @Override
-    protected void applyImplicitComponents(DataComponentGetter components) {
-        super.applyImplicitComponents(components);
-
-        if (this.inventory != null) {
-            this.inventory.copyFromItem(components.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY));
-        }
-
-        if (isIOConfigMutable()) {
-            setData(EIOAttachments.IO_CONFIG,
-                    components.getOrDefault(EIODataComponents.IO_CONFIG, IOConfig.empty()));
-        }
-    }
+//    @Override
+//    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+//        super.saveAdditional(pTag, lookupProvider);
+//
+//        if (this.inventory != null) {
+//            pTag.put(MachineNBTKeys.ITEMS, inventory.serializeNBT(lookupProvider));
+//        }
+//    }
+//
+//    @Override
+//    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+//        if (this.inventory != null) {
+//            inventory.deserializeNBT(lookupProvider, pTag.getCompound(MachineNBTKeys.ITEMS));
+//        }
+//
+//        // For rendering io overlays after placed by an nbt filled block item
+//        if (this.level != null) {
+//            onIOConfigChanged();
+//        }
+//
+//        super.loadAdditional(pTag, lookupProvider);
+//    }
+//
+//    @Override
+//    protected void applyImplicitComponents(DataComponentGetter components) {
+//        super.applyImplicitComponents(components);
+//
+//        if (this.inventory != null) {
+//            this.inventory.copyFromItem(components.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY));
+//        }
+//
+//        if (isIOConfigMutable()) {
+//            setData(EIOAttachments.IO_CONFIG,
+//                    components.getOrDefault(EIODataComponents.IO_CONFIG, IOConfig.empty()));
+//        }
+//    }
 
     @Override
     protected void collectImplicitComponents(DataComponentMap.Builder components) {
@@ -495,17 +497,17 @@ public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
         }
 
         if (isIOConfigMutable()) {
-            components.set(EIODataComponents.IO_CONFIG, getData(EIOAttachments.IO_CONFIG));
+//            components.set(EIODataComponents.IO_CONFIG, getData(EIOAttachments.IO_CONFIG));
         }
     }
 
     @SuppressWarnings("deprecation")
-    @Override
-    public void removeComponentsFromTag(CompoundTag tag) {
-        super.removeComponentsFromTag(tag);
-        tag.remove(MachineNBTKeys.ITEMS);
-        removeData(EIOAttachments.IO_CONFIG);
-    }
+//    @Override
+//    public void removeComponentsFromTag(CompoundTag tag) {
+//        super.removeComponentsFromTag(tag);
+//        tag.remove(MachineNBTKeys.ITEMS);
+//        removeData(EIOAttachments.IO_CONFIG);
+//    }
 
     // endregion
 

@@ -4,25 +4,34 @@ import com.enderio.enderio.api.travel.TravelTarget;
 import com.enderio.enderio.foundation.network.packets.ClientboundSyncTravelDataPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundTravelTargetRemovedPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundTravelTargetUpdatedPacket;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.saveddata.SavedDataType;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -31,28 +40,43 @@ import java.util.stream.Stream;
 @EventBusSubscriber
 public class TravelTargetSavedData extends SavedData {
 
+    public static final Codec<TravelTargetSavedData> CODEC = RecordCodecBuilder.create(inst -> inst.group(
+        TravelTarget.CODEC.listOf().fieldOf("Targets").forGetter(i -> new ArrayList<>(i.travelTargets.values()))
+    ).apply(inst, TravelTargetSavedData::new));
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, TravelTargetSavedData> STREAM_CODEC = TravelTarget.STREAM_CODEC.apply(ByteBufCodecs.list())
+        .map(TravelTargetSavedData::new, i -> new ArrayList<>(i.travelTargets.values()));
+
+    public static final SavedDataType<TravelTargetSavedData> TYPE = new SavedDataType<>("enderio_traveldata", TravelTargetSavedData::new, CODEC);
+
+
     // Even though the client doesn't need to know the data in the old dimensions,
     // I am more comfortable with each dimension having its own data on the client.
     private static final Map<ResourceKey<Level>, TravelTargetSavedData> CLIENT_DATA = new ConcurrentHashMap<>();
 
-    public static final String TARGETS = "targets";
     private final Map<BlockPos, TravelTarget> travelTargets = new HashMap<>();
 
-    public TravelTargetSavedData() {
+    private TravelTargetSavedData() {
     }
 
-    public TravelTargetSavedData(CompoundTag nbt, HolderLookup.Provider lookupProvider) {
-        this.loadNBT(lookupProvider, nbt);
+    private TravelTargetSavedData(List<TravelTarget> travelTargets) {
+        for (TravelTarget target : travelTargets) {
+            this.travelTargets.put(target.pos(), target);
+        }
     }
 
     public static TravelTargetSavedData getTravelData(Level level) {
         if (level instanceof ServerLevel serverLevel) {
             return serverLevel.getDataStorage()
-                    .computeIfAbsent(new Factory<>(TravelTargetSavedData::new, TravelTargetSavedData::new),
-                            "enderio_traveldata");
+                    .computeIfAbsent(TYPE);
         } else {
             return CLIENT_DATA.computeIfAbsent(level.dimension(), l -> new TravelTargetSavedData());
         }
+    }
+
+    @EnsureSide(EnsureSide.Side.CLIENT)
+    public static void setTravelData(Level level, TravelTargetSavedData data) {
+        CLIENT_DATA.put(level.dimension(), data);
     }
 
     public Optional<TravelTarget> getTravelTarget(BlockPos pos) {
@@ -90,34 +114,6 @@ public class TravelTargetSavedData extends SavedData {
     }
 
     @Override
-    public CompoundTag save(CompoundTag nbt, HolderLookup.Provider lookupProvider) {
-        ListTag tag = new ListTag();
-        tag.addAll(travelTargets.values().stream().map(target -> saveTarget(lookupProvider, target)).toList());
-        nbt.put(TARGETS, tag);
-        return nbt;
-    }
-
-    private <T extends TravelTarget> Tag saveTarget(HolderLookup.Provider lookupProvider, T target) {
-        return TravelTarget.CODEC.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), target)
-                .getOrThrow();
-    }
-
-    public void loadNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
-        this.travelTargets.clear();
-        ListTag targets = nbt.getList(TARGETS, Tag.TAG_COMPOUND);
-        targets.stream()
-                .map(anchorData -> (CompoundTag) anchorData)
-                .map(tag -> loadTarget(lookupProvider, tag))
-                .forEach(target -> travelTargets.put(target.pos(), target));
-    }
-
-    private TravelTarget loadTarget(HolderLookup.Provider lookupProvider, Tag tag) {
-        return TravelTarget.CODEC.decode(lookupProvider.createSerializationContext(NbtOps.INSTANCE), tag)
-                .getOrThrow()
-                .getFirst();
-    }
-
-    @Override
     public boolean isDirty() {
         return true;
     }
@@ -127,8 +123,7 @@ public class TravelTargetSavedData extends SavedData {
         Player player = event.getEntity();
         if (player instanceof ServerPlayer serverPlayer) {
             var savedData = TravelTargetSavedData.getTravelData(serverPlayer.level());
-            var serializedData = savedData.save(new CompoundTag(), serverPlayer.level().registryAccess());
-            PacketDistributor.sendToPlayer(serverPlayer, new ClientboundSyncTravelDataPacket(serializedData));
+            PacketDistributor.sendToPlayer(serverPlayer, new ClientboundSyncTravelDataPacket(savedData));
         }
     }
 
@@ -137,8 +132,7 @@ public class TravelTargetSavedData extends SavedData {
         Player player = event.getEntity();
         if (player instanceof ServerPlayer serverPlayer) {
             var savedData = TravelTargetSavedData.getTravelData(serverPlayer.level());
-            var serializedData = savedData.save(new CompoundTag(), serverPlayer.level().registryAccess());
-            PacketDistributor.sendToPlayer(serverPlayer, new ClientboundSyncTravelDataPacket(serializedData));
+            PacketDistributor.sendToPlayer(serverPlayer, new ClientboundSyncTravelDataPacket(savedData));
         }
     }
 }

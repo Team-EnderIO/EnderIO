@@ -24,7 +24,7 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
 
     public static final SingleSlotAccess GHOST = new SingleSlotAccess();
 
-    private final NetworkDataSlot<AnchorTravelTarget> travelTargetDataSlot;
+//    private final NetworkDataSlot<AnchorTravelTarget> travelTargetDataSlot;
 
     public TravelAnchorBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
         this(EIOBlockEntities.TRAVEL_ANCHOR.get(), pWorldPosition, pBlockState);
@@ -33,8 +33,14 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
     public TravelAnchorBlockEntity(BlockEntityType<?> type, BlockPos pWorldPosition, BlockState pBlockState) {
         super(type, pWorldPosition, pBlockState, false);
 
-        travelTargetDataSlot = addDataSlot(
-                AnchorTravelTarget.DATA_SLOT_TYPE.create(this::getOrCreateTravelTarget, this::setTravelTarget));
+//        travelTargetDataSlot = addDataSlot(
+//                AnchorTravelTarget.DATA_SLOT_TYPE.create(this::getOrCreateTravelTarget, this::setTravelTarget));
+    }
+
+    @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state) {
+        super.preRemoveSideEffects(pos, state);
+        TravelTargetApi.INSTANCE.removeAt(level, pos);
     }
 
     @Override
@@ -68,7 +74,7 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
     public void setName(String name) {
         var newTravelTarget = getOrCreateTravelTarget().withName(name);
         if (level != null && level.isClientSide()) {
-            clientUpdateSlot(travelTargetDataSlot, newTravelTarget);
+//            clientUpdateSlot(travelTargetDataSlot, newTravelTarget);
         } else {
             setTravelTarget(newTravelTarget);
         }
@@ -81,7 +87,7 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
     public void setIcon(Item icon) {
         var newTravelTarget = getOrCreateTravelTarget().withIcon(icon);
         if (level != null && level.isClientSide()) {
-            clientUpdateSlot(travelTargetDataSlot, newTravelTarget);
+//            clientUpdateSlot(travelTargetDataSlot, newTravelTarget);
         } else {
             setTravelTarget(newTravelTarget);
         }
@@ -94,7 +100,7 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
     public void setIsVisible(boolean isVisible) {
         var newTravelTarget = getOrCreateTravelTarget().withVisible(isVisible);
         if (level != null && level.isClientSide()) {
-            clientUpdateSlot(travelTargetDataSlot, newTravelTarget);
+//            clientUpdateSlot(travelTargetDataSlot, newTravelTarget);
         } else {
             setTravelTarget(newTravelTarget);
         }

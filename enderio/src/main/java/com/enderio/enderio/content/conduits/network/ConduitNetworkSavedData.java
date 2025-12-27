@@ -13,13 +13,11 @@ import net.minecraft.CrashReport;
 import net.minecraft.ReportedException;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.saveddata.SavedDataType;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.level.ChunkEvent;
@@ -33,11 +31,13 @@ import java.util.Map;
 @EventBusSubscriber
 public class ConduitNetworkSavedData extends SavedData {
 
-    private static final Logger LOGGER = LogUtils.getLogger();
-
     public static final Codec<ConduitNetworkSavedData> CODEC = ConduitNetwork.CODEC
         .listOf()
         .xmap(ConduitNetworkSavedData::new, ConduitNetworkSavedData::getNetworks);
+
+    public static final SavedDataType<ConduitNetworkSavedData> TYPE = new SavedDataType<>("enderio_conduit_network", ConduitNetworkSavedData::new, CODEC);
+
+    private static final Logger LOGGER = LogUtils.getLogger();
 
     private final Multimap<Holder<Conduit<?, ?>>, ConduitNetwork> networks = HashMultimap.create();
 
@@ -48,13 +48,11 @@ public class ConduitNetworkSavedData extends SavedData {
 
     private final Map<Holder<Conduit<?, ?>>, Map<BlockPos, ConduitNodeImpl>> unloadedNodes = Maps.newHashMap();
 
-    private static final String KEY_NEW_DATA = "Networks";
-
     public static ConduitNetworkSavedData get(ServerLevel level) {
-        return level.getDataStorage().computeIfAbsent(new Factory<>(ConduitNetworkSavedData::new, ConduitNetworkSavedData::load), "enderio_conduit_network");
+        return level.getDataStorage().computeIfAbsent(TYPE);
     }
 
-    public ConduitNetworkSavedData() {
+    private ConduitNetworkSavedData() {
     }
 
     private ConduitNetworkSavedData(List<ConduitNetwork> networks) {
@@ -68,19 +66,8 @@ public class ConduitNetworkSavedData extends SavedData {
         }
     }
 
-    private static ConduitNetworkSavedData load(CompoundTag nbt, HolderLookup.Provider lookupProvider) {
-        // TODO: Are we handling partials fine here?
-        return CODEC.parse(lookupProvider.createSerializationContext(NbtOps.INSTANCE), nbt.get(KEY_NEW_DATA)).getPartialOrThrow();
-    }
-
     private List<ConduitNetwork> getNetworks() {
         return networks.values().stream().filter(n -> n.isValid() && !n.isEmpty()).toList();
-    }
-
-    @Override
-    public CompoundTag save(CompoundTag compoundTag, HolderLookup.Provider provider) {
-        compoundTag.put(KEY_NEW_DATA, CODEC.encodeStart(provider.createSerializationContext(NbtOps.INSTANCE), this).getOrThrow());
-        return compoundTag;
     }
 
     @Nullable

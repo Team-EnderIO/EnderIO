@@ -40,6 +40,7 @@ import java.util.function.Supplier;
 /**
  * A machine that stores energy.
  */
+// TODO: 1.21.8: Kill.
 @Deprecated(forRemoval = true, since = "7.1")
 public abstract class LegacyPoweredMachineBlockEntity extends LegacyMachineBlockEntity implements MachineInstallable {
 
@@ -82,15 +83,15 @@ public abstract class LegacyPoweredMachineBlockEntity extends LegacyMachineBlock
         capacitorCacheDirty = true;
 
         // new new new new way of syncing energy storage.
-        addDataSlot(createEnergyDataSlot());
+//        addDataSlot(createEnergyDataSlot());
 
         this.hasActiveState = blockState.hasProperty(LegacyProgressMachineBlock.POWERED);
     }
 
-    public NetworkDataSlot<?> createEnergyDataSlot() {
-        return EnergySyncData.DATA_SLOT_TYPE.create(() -> EnergySyncData.from(getExposedEnergyStorage()),
-                v -> clientEnergyStorage = v.toImmutableStorage());
-    }
+//    public NetworkDataSlot<?> createEnergyDataSlot() {
+//        return EnergySyncData.DATA_SLOT_TYPE.create(() -> EnergySyncData.from(getExposedEnergyStorage()),
+//                v -> clientEnergyStorage = v.toImmutableStorage());
+//    }
 
     @Override
     public void serverTick() {
@@ -343,52 +344,52 @@ public abstract class LegacyPoweredMachineBlockEntity extends LegacyMachineBlock
 
     // region Serialization
 
-    @Override
-    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.saveAdditional(pTag, lookupProvider);
+//    @Override
+//    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+//        super.saveAdditional(pTag, lookupProvider);
+//
+//        var energyStorage = getEnergyStorage();
+//        if (energyStorage instanceof MachineEnergyStorage storage) {
+//            pTag.put(MachineNBTKeys.ENERGY, storage.serializeNBT(lookupProvider));
+//        }
+//    }
 
-        var energyStorage = getEnergyStorage();
-        if (energyStorage instanceof MachineEnergyStorage storage) {
-            pTag.put(MachineNBTKeys.ENERGY, storage.serializeNBT(lookupProvider));
-        }
-    }
-
-    @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        var energyStorage = getEnergyStorage();
-        if (energyStorage instanceof MachineEnergyStorage storage && pTag.contains(MachineNBTKeys.ENERGY)) {
-            storage.deserializeNBT(lookupProvider, pTag.getCompound(MachineNBTKeys.ENERGY));
-        }
-
-        super.loadAdditional(pTag, lookupProvider);
-
-        cacheCapacitorData();
-
-        updateMachineState(MachineState.NO_CAPACITOR, requiresCapacitor() && getCapacitorItem().isEmpty());
-        updateMachineState(MachineState.NO_POWER, energyStorage.getEnergyStored() <= 0);
-    }
-
-    @Override
-    protected void applyImplicitComponents(DataComponentGetter components) {
-        super.applyImplicitComponents(components);
-        energyStorage.setEnergyStored(components.getOrDefault(EIODataComponents.ENERGY, 0));
-        setData(EIOAttachments.REDSTONE_CONTROL,
-                components.getOrDefault(EIODataComponents.REDSTONE_CONTROL, RedstoneControl.ALWAYS_ACTIVE));
-    }
-
-    @Override
-    protected void collectImplicitComponents(DataComponentMap.Builder components) {
-        super.collectImplicitComponents(components);
-        components.set(EIODataComponents.ENERGY, energyStorage.getEnergyStored());
-        components.set(EIODataComponents.REDSTONE_CONTROL, getData(EIOAttachments.REDSTONE_CONTROL));
-    }
-
-    @Override
-    public void removeComponentsFromTag(CompoundTag tag) {
-        super.removeComponentsFromTag(tag);
-        tag.remove(MachineNBTKeys.ENERGY);
-        removeData(EIOAttachments.REDSTONE_CONTROL);
-    }
+//    @Override
+//    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+//        var energyStorage = getEnergyStorage();
+//        if (energyStorage instanceof MachineEnergyStorage storage && pTag.contains(MachineNBTKeys.ENERGY)) {
+//            storage.deserializeNBT(lookupProvider, pTag.getCompound(MachineNBTKeys.ENERGY));
+//        }
+//
+//        super.loadAdditional(pTag, lookupProvider);
+//
+//        cacheCapacitorData();
+//
+//        updateMachineState(MachineState.NO_CAPACITOR, requiresCapacitor() && getCapacitorItem().isEmpty());
+//        updateMachineState(MachineState.NO_POWER, energyStorage.getEnergyStored() <= 0);
+//    }
+//
+//    @Override
+//    protected void applyImplicitComponents(DataComponentGetter components) {
+//        super.applyImplicitComponents(components);
+//        energyStorage.setEnergyStored(components.getOrDefault(EIODataComponents.ENERGY, 0));
+//        setData(EIOAttachments.REDSTONE_CONTROL,
+//                components.getOrDefault(EIODataComponents.REDSTONE_CONTROL, RedstoneControl.ALWAYS_ACTIVE));
+//    }
+//
+//    @Override
+//    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+//        super.collectImplicitComponents(components);
+//        components.set(EIODataComponents.ENERGY, energyStorage.getEnergyStored());
+//        components.set(EIODataComponents.REDSTONE_CONTROL, getData(EIOAttachments.REDSTONE_CONTROL));
+//    }
+//
+//    @Override
+//    public void removeComponentsFromTag(CompoundTag tag) {
+//        super.removeComponentsFromTag(tag);
+//        tag.remove(MachineNBTKeys.ENERGY);
+//        removeData(EIOAttachments.REDSTONE_CONTROL);
+//    }
 
     // endregion
 

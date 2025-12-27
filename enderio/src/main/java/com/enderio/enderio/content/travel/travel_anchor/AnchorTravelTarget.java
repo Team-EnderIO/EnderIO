@@ -17,10 +17,6 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.Item;
 
 public record AnchorTravelTarget(BlockPos pos, String name, Item icon, boolean isVisible) implements TravelTarget {
-
-    public static final NetworkDataSlot.CodecType<AnchorTravelTarget> DATA_SLOT_TYPE = new NetworkDataSlot.CodecType<>(
-            Serializer.CODEC.codec(), Serializer.STREAM_CODEC);
-
     public AnchorTravelTarget withName(String name) {
         return new AnchorTravelTarget(pos, name, icon, isVisible);
     }

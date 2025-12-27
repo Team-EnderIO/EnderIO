@@ -37,27 +37,28 @@ public class FusedQuartzBlock extends TransparentBlock {
         return "block.enderio." + baseName + lightingName + colorName;
     }
 
-    @Override
-    public void appendHoverText(ItemStack pStack, Item.TooltipContext pContext, List<Component> pTooltip, TooltipFlag pFlag) {
-        super.appendHoverText(pStack, pContext, pTooltip, pFlag);
-
-        if (glassIdentifier.explosionResistance()) {
-            pTooltip.add(EIOCommonLang.BLOCK_BLAST_RESISTANT);
-        }
-
-        if (glassIdentifier.lighting() == GlassLighting.EMITTING) {
-            pTooltip.add(GlassLang.EMITS_LIGHT);
-        }
-
-        if (glassIdentifier.lighting() == GlassLighting.BLOCKING) {
-            pTooltip.add(GlassLang.BLOCKS_LIGHT);
-        }
-
-        Component collisionTooltip = glassIdentifier.collisionPredicate().getComponent();
-        if (collisionTooltip != null) {
-            pTooltip.add(collisionTooltip);
-        }
-    }
+    // TODO: 1.21.8: what replaced appendHoverText?
+//    @Override
+//    public void appendHoverText(ItemStack pStack, Item.TooltipContext pContext, List<Component> pTooltip, TooltipFlag pFlag) {
+//        super.appendHoverText(pStack, pContext, pTooltip, pFlag);
+//
+//        if (glassIdentifier.explosionResistance()) {
+//            pTooltip.add(EIOCommonLang.BLOCK_BLAST_RESISTANT);
+//        }
+//
+//        if (glassIdentifier.lighting() == GlassLighting.EMITTING) {
+//            pTooltip.add(GlassLang.EMITS_LIGHT);
+//        }
+//
+//        if (glassIdentifier.lighting() == GlassLighting.BLOCKING) {
+//            pTooltip.add(GlassLang.BLOCKS_LIGHT);
+//        }
+//
+//        Component collisionTooltip = glassIdentifier.collisionPredicate().getComponent();
+//        if (collisionTooltip != null) {
+//            pTooltip.add(collisionTooltip);
+//        }
+//    }
 
     @Override
     public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {

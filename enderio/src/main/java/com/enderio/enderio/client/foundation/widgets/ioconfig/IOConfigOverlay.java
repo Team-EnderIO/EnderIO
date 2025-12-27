@@ -8,6 +8,7 @@ import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.foundation.block.entity.legacy.LegacyMachineBlockEntity;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.foundation.network.packets.ServerboundCycleIOConfigPacket;
+import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
@@ -25,7 +26,9 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -44,6 +47,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.client.RenderTypeHelper;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.model.data.ModelData;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
@@ -168,11 +172,11 @@ public class IOConfigOverlay extends BaseOverlay {
         SequencedMap<RenderType, ByteBufferBuilder> solidLayers = new Object2ObjectLinkedOpenHashMap<>();
 
         for (Map.Entry<RenderType, ByteBufferBuilder> e : layerBuffers.entrySet()) {
-            ghostLayers.put(GhostRenderLayer.remap(e.getKey()), e.getValue());
-            solidLayers.put(SolidRenderLayer.remap(e.getKey()), e.getValue());
+//            ghostLayers.put(GhostRenderLayer.remap(e.getKey()), e.getValue());
+//            solidLayers.put(SolidRenderLayer.remap(e.getKey()), e.getValue());
         }
-        ghostBuffers = new GhostBuffers(fallback, ghostLayers);
-        solidBuffers = new SolidBuffers(fallback, solidLayers);
+//        ghostBuffers = new GhostBuffers(fallback, ghostLayers);
+//        solidBuffers = new SolidBuffers(fallback, solidLayers);
     }
 
     private static Vec3 transform(Vec3 vec, Matrix4f transform) {
@@ -225,7 +229,7 @@ public class IOConfigOverlay extends BaseOverlay {
                         this.playDownSound(MINECRAFT.getSoundManager());
                         return true;
                     } else if (entity instanceof IOConfigurable) {
-                        PacketDistributor
+                        ClientPacketDistributor
                                 .sendToServer(new ServerboundCycleIOConfigPacket(selectedFace.blockPos, selectedFace.side));
                         this.playDownSound(MINECRAFT.getSoundManager());
                         return true;
@@ -265,9 +269,9 @@ public class IOConfigOverlay extends BaseOverlay {
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (visible) {
             guiGraphics.enableScissor(getX(), getY(), getX() + width, getY() + height);
-            RenderSystem.disableDepthTest();
+//            RenderSystem.disableDepthTest();
             guiGraphics.fill(getX(), getY(), getX() + width, getY() + height, 0xFF000000);
-            RenderSystem.enableDepthTest();
+//            RenderSystem.enableDepthTest();
 
             // Calculate widget center
             int centerX = getX() + (width / 2);
@@ -330,11 +334,11 @@ public class IOConfigOverlay extends BaseOverlay {
 
     private void renderWorld(GuiGraphics guiGraphics, int centerX, int centerY, Quaternionf transform,
             float partialTick) {
-        Lighting.setupForFlatItems();
-        guiGraphics.pose().pushPose();
-        guiGraphics.pose().translate(centerX, centerY, Z_OFFSET);
-        guiGraphics.pose().scale(scale, scale, -scale);
-        guiGraphics.pose().mulPose(transform);
+//        Lighting.setupForFlatItems();
+        guiGraphics.pose().pushMatrix();
+//        guiGraphics.pose().translate(centerX, centerY, Z_OFFSET);
+//        guiGraphics.pose().scale(scale, scale, -scale);
+//        guiGraphics.pose().mulPose(transform);
 
         // RenderNeighbours
         if (neighbourVisible) {
@@ -355,56 +359,56 @@ public class IOConfigOverlay extends BaseOverlay {
         }
         solidBuffers.endBatch();
 
-        guiGraphics.pose().popPose();
-        Lighting.setupFor3DItems();
+        guiGraphics.pose().popMatrix();
+//        Lighting.setupFor3DItems();
     }
 
     private void renderBlock(GuiGraphics guiGraphics, BlockPos blockPos, Vector3f renderPos,
             MultiBufferSource.BufferSource buffers, float partialTick) {
-        guiGraphics.pose().pushPose();
-        guiGraphics.pose().translate(renderPos.x(), renderPos.y(), renderPos.z());
+        guiGraphics.pose().pushMatrix();
+//        guiGraphics.pose().translate(renderPos.x(), renderPos.y(), renderPos.z());
 
         ModelData modelData = Optional.ofNullable(MINECRAFT.level.getModelDataManager().getAt(blockPos))
                 .orElse(ModelData.EMPTY);
 
-        BlockState blockState = MINECRAFT.level.getBlockState(blockPos);
-        RenderShape rendershape = blockState.getRenderShape();
-        if (rendershape != RenderShape.INVISIBLE) {
-            var renderer = MINECRAFT.getBlockRenderer();
-            BakedModel bakedmodel = renderer.getBlockModel(blockState);
-            modelData = bakedmodel.getModelData(MINECRAFT.level, blockPos, blockState, modelData);
-            int blockColor = MINECRAFT.getBlockColors().getColor(blockState, MINECRAFT.level, blockPos, 0);
-            float r = ARGB.red(blockColor) / 255F;
-            float g = ARGB.green(blockColor) / 255F;
-            float b = ARGB.blue(blockColor) / 255F;
-            for (RenderType renderType : bakedmodel.getRenderTypes(blockState, RandomSource.create(42), modelData)) {
-                renderer.getModelRenderer()
-                        .renderModel(guiGraphics.pose().last(),
-                                buffers.getBuffer(RenderTypeHelper.getEntityRenderType(renderType)), blockState,
-                                bakedmodel, r, g, b, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, modelData,
-                                renderType);
-            }
-            BlockEntity blockEntity = MINECRAFT.level.getBlockEntity(blockPos);
-            if (blockEntity != null) {
-                var beRenderer = MINECRAFT.getBlockEntityRenderDispatcher().getRenderer(blockEntity);
-                if (beRenderer != null) {
-                    beRenderer.render(blockEntity, partialTick, guiGraphics.pose(), buffers, LightTexture.FULL_BRIGHT,
-                            OverlayTexture.NO_OVERLAY);
-                }
-
-            }
-        }
-        guiGraphics.pose().popPose();
+//        BlockState blockState = MINECRAFT.level.getBlockState(blockPos);
+//        RenderShape rendershape = blockState.getRenderShape();
+//        if (rendershape != RenderShape.INVISIBLE) {
+//            var renderer = MINECRAFT.getBlockRenderer();
+//            BlockStateModel bakedmodel = renderer.getBlockModel(blockState);
+//            modelData = bakedmodel.getModelData(MINECRAFT.level, blockPos, blockState, modelData);
+//            int blockColor = MINECRAFT.getBlockColors().getColor(blockState, MINECRAFT.level, blockPos, 0);
+//            float r = ARGB.red(blockColor) / 255F;
+//            float g = ARGB.green(blockColor) / 255F;
+//            float b = ARGB.blue(blockColor) / 255F;
+//            for (RenderType renderType : bakedmodel.getRenderTypes(blockState, RandomSource.create(42), modelData)) {
+//                renderer.getModelRenderer()
+//                        .renderModel(guiGraphics.pose().last(),
+//                                buffers.getBuffer(RenderTypeHelper.getEntityRenderType(renderType)), blockState,
+//                                bakedmodel, r, g, b, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, modelData,
+//                                renderType);
+//            }
+//            BlockEntity blockEntity = MINECRAFT.level.getBlockEntity(blockPos);
+//            if (blockEntity != null) {
+//                var beRenderer = MINECRAFT.getBlockEntityRenderDispatcher().getRenderer(blockEntity);
+//                if (beRenderer != null) {
+//                    beRenderer.render(blockEntity, partialTick, guiGraphics.pose(), buffers, LightTexture.FULL_BRIGHT,
+//                            OverlayTexture.NO_OVERLAY);
+//                }
+//
+//            }
+//        }
+        guiGraphics.pose().popMatrix();
     }
 
     private void renderSelection(GuiGraphics guiGraphics, int centerX, int centerY, Quaternionf transform) {
         if (selection.isEmpty()) {
             return;
         }
-        guiGraphics.pose().pushPose();
-        guiGraphics.pose().translate(centerX, centerY, Z_OFFSET);
-        guiGraphics.pose().scale(scale, scale, -scale);
-        guiGraphics.pose().mulPose(transform);
+        guiGraphics.pose().pushMatrix();
+//        guiGraphics.pose().translate(centerX, centerY, Z_OFFSET);
+//        guiGraphics.pose().scale(scale, scale, -scale);
+//        guiGraphics.pose().mulPose(transform);
 
         BufferBuilder bufferbuilder = Tesselator.getInstance()
                 .begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
@@ -412,31 +416,31 @@ public class IOConfigOverlay extends BaseOverlay {
 //        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
 
         TextureAtlasSprite tex = MINECRAFT.getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(SELECTED_ICON);
-        RenderSystem.setShaderTexture(0, tex.atlasLocation());
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+//        RenderSystem.setShaderTexture(0, tex.atlasLocation());
+//        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
         var selectedFace = selection.get();
         BlockPos blockPos = selectedFace.blockPos;
-        guiGraphics.pose()
-                .translate(blockPos.getX() - worldOrigin.x(), blockPos.getY() - worldOrigin.y(),
-                        blockPos.getZ() - worldOrigin.z());
-        Vector3f[] vec = ModelRenderUtil.createQuadVerts(selectedFace.side, 0, 1, 1);
-        Matrix4f matrix4f = guiGraphics.pose().last().pose();
-        bufferbuilder.addVertex(matrix4f, vec[0].x(), vec[0].y(), vec[0].z())
-                .setColor(1F, 1F, 1F, 1F)
-                .setUv(tex.getU0(), tex.getV0());
-        bufferbuilder.addVertex(matrix4f, vec[1].x(), vec[1].y(), vec[1].z())
-                .setColor(1F, 1F, 1F, 1F)
-                .setUv(tex.getU0(), tex.getV1());
-        bufferbuilder.addVertex(matrix4f, vec[2].x(), vec[2].y(), vec[2].z())
-                .setColor(1F, 1F, 1F, 1F)
-                .setUv(tex.getU1(), tex.getV1());
-        bufferbuilder.addVertex(matrix4f, vec[3].x(), vec[3].y(), vec[3].z())
-                .setColor(1F, 1F, 1F, 1F)
-                .setUv(tex.getU1(), tex.getV0());
-        BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
+//        guiGraphics.pose()
+//                .translate(blockPos.getX() - worldOrigin.x(), blockPos.getY() - worldOrigin.y(),
+//                        blockPos.getZ() - worldOrigin.z());
+//        Vector3f[] vec = ModelRenderUtil.createQuadVerts(selectedFace.side, 0, 1, 1);
+//        Matrix4f matrix4f = guiGraphics.pose().last().pose();
+//        bufferbuilder.addVertex(matrix4f, vec[0].x(), vec[0].y(), vec[0].z())
+//                .setColor(1F, 1F, 1F, 1F)
+//                .setUv(tex.getU0(), tex.getV0());
+//        bufferbuilder.addVertex(matrix4f, vec[1].x(), vec[1].y(), vec[1].z())
+//                .setColor(1F, 1F, 1F, 1F)
+//                .setUv(tex.getU0(), tex.getV1());
+//        bufferbuilder.addVertex(matrix4f, vec[2].x(), vec[2].y(), vec[2].z())
+//                .setColor(1F, 1F, 1F, 1F)
+//                .setUv(tex.getU1(), tex.getV1());
+//        bufferbuilder.addVertex(matrix4f, vec[3].x(), vec[3].y(), vec[3].z())
+//                .setColor(1F, 1F, 1F, 1F)
+//                .setUv(tex.getU1(), tex.getV0());
+//        BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
 
-        guiGraphics.pose().popPose();
+        guiGraphics.pose().popMatrix();
     }
 
     private void renderOverlay(GuiGraphics guiGraphics) {
@@ -447,23 +451,23 @@ public class IOConfigOverlay extends BaseOverlay {
                 var ioMode = ioConfigurable.getIOMode(selectedFace.side);
                 IOModeMap map = IOModeMap.getMapFromMode(ioMode);
                 Rect2i iconBounds = map.getRect();
-                guiGraphics.blitSprite(RenderType::guiTextured, IO_CONFIG_OVERLAY, 48, 16, iconBounds.getX(), iconBounds.getY(), getX() + 4,
+                guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, IO_CONFIG_OVERLAY, 48, 16, iconBounds.getX(), iconBounds.getY(), getX() + 4,
                         getY() + height - 4 - MINECRAFT.font.lineHeight - iconBounds.getHeight(), iconBounds.getWidth(),
                         iconBounds.getHeight());
-                guiGraphics.pose().pushPose();
-                guiGraphics.pose().translate(0, 0, OVERLAY_Z_OFFSET); // to ensure that string is drawn on top
+                guiGraphics.pose().pushMatrix();
+//                guiGraphics.pose().translate(0, 0, OVERLAY_Z_OFFSET); // to ensure that string is drawn on top
                 guiGraphics.drawString(MINECRAFT.font, map.getComponent(), getX() + 4,
                         getY() + height - 2 - MINECRAFT.font.lineHeight, 0xFFFFFFFF);
-                guiGraphics.pose().popPose();
+                guiGraphics.pose().popMatrix();
             }
         }
     }
 
     private void renderNeighbourButton(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        guiGraphics.blitSprite(RenderType::guiTextured, NEIGHBOURS_BTN, neighBtnRect.getX(), neighBtnRect.getY(), 16, 16);
+        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, NEIGHBOURS_BTN, neighBtnRect.getX(), neighBtnRect.getY(), 16, 16);
         if (neighBtnRect.contains(mouseX, mouseY)) {
-            guiGraphics.renderTooltip(MINECRAFT.font, EIOCommonLang.TOGGLE_NEIGHBOUR.copy().withStyle(ChatFormatting.WHITE),
-                    mouseX, mouseY);
+//            guiGraphics.renderTooltip(MINECRAFT.font, EIOCommonLang.TOGGLE_NEIGHBOUR.copy().withStyle(ChatFormatting.WHITE),
+//                    mouseX, mouseY);
         }
     }
 
@@ -474,82 +478,82 @@ public class IOConfigOverlay extends BaseOverlay {
     private record SelectedFace(BlockPos blockPos, Direction side) {
     }
 
-    private static class GhostBuffers extends MultiBufferSource.BufferSource {
-        private GhostBuffers(ByteBufferBuilder fallback, SequencedMap<RenderType, ByteBufferBuilder> layerBuffers) {
-            super(fallback, layerBuffers);
-        }
-
-        @Override
-        public VertexConsumer getBuffer(RenderType type) {
-            return super.getBuffer(GhostRenderLayer.remap(type));
-        }
-    }
-
-    private static class SolidBuffers extends MultiBufferSource.BufferSource {
-        private SolidBuffers(ByteBufferBuilder fallback, SequencedMap<RenderType, ByteBufferBuilder> layerBuffers) {
-            super(fallback, layerBuffers);
-        }
-
-        @Override
-        public VertexConsumer getBuffer(RenderType type) {
-            return super.getBuffer(SolidRenderLayer.remap(type));
-        }
-    }
+//    private static class GhostBuffers extends MultiBufferSource.BufferSource {
+//        private GhostBuffers(ByteBufferBuilder fallback, SequencedMap<RenderType, ByteBufferBuilder> layerBuffers) {
+//            super(fallback, layerBuffers);
+//        }
+//
+//        @Override
+//        public VertexConsumer getBuffer(RenderType type) {
+//            return super.getBuffer(GhostRenderLayer.remap(type));
+//        }
+//    }
+//
+//    private static class SolidBuffers extends MultiBufferSource.BufferSource {
+//        private SolidBuffers(ByteBufferBuilder fallback, SequencedMap<RenderType, ByteBufferBuilder> layerBuffers) {
+//            super(fallback, layerBuffers);
+//        }
+//
+//        @Override
+//        public VertexConsumer getBuffer(RenderType type) {
+//            return super.getBuffer(SolidRenderLayer.remap(type));
+//        }
+//    }
 
     // Solid buffers, but without depth testing.
-    private static class SolidRenderLayer extends RenderType {
-        private static final Map<RenderType, RenderType> REMAPPED_TYPES = new IdentityHashMap<>();
+//    private static class SolidRenderLayer extends RenderType {
+//        private static final Map<RenderType, RenderType> REMAPPED_TYPES = new IdentityHashMap<>();
+//
+//        private SolidRenderLayer(RenderType original) {
+//            super(String.format("%s_%s_solid", original, EnderIO.MOD_ID), original.format(), original.mode(),
+//                    original.bufferSize(), original.affectsCrumbling(), true, () -> {
+//                        original.setupRenderState();
+//
+//                        RenderSystem.disableDepthTest();
+//                    }, () -> {
+//                        RenderSystem.enableDepthTest();
+//
+//                        original.clearRenderState();
+//                    });
+//        }
+//
+//        public static RenderType remap(RenderType in) {
+//            if (in instanceof SolidRenderLayer) {
+//                return in;
+//            } else {
+//                return REMAPPED_TYPES.computeIfAbsent(in, SolidRenderLayer::new);
+//            }
+//        }
+//    }
 
-        private SolidRenderLayer(RenderType original) {
-            super(String.format("%s_%s_solid", original, EnderIO.MOD_ID), original.format(), original.mode(),
-                    original.bufferSize(), original.affectsCrumbling(), true, () -> {
-                        original.setupRenderState();
-
-                        RenderSystem.disableDepthTest();
-                    }, () -> {
-                        RenderSystem.enableDepthTest();
-
-                        original.clearRenderState();
-                    });
-        }
-
-        public static RenderType remap(RenderType in) {
-            if (in instanceof SolidRenderLayer) {
-                return in;
-            } else {
-                return REMAPPED_TYPES.computeIfAbsent(in, SolidRenderLayer::new);
-            }
-        }
-    }
-
-    private static class GhostRenderLayer extends RenderType {
-        private static final Map<RenderType, RenderType> REMAPPED_TYPES = new IdentityHashMap<>();
-
-        private GhostRenderLayer(RenderType original) {
-            super(String.format("%s_%s_ghost", original, EnderIO.MOD_ID), original.format(), original.mode(),
-                    original.bufferSize(), original.affectsCrumbling(), true, () -> {
-                        original.setupRenderState();
-
-                        RenderSystem.disableDepthTest();
-                        RenderSystem.enableBlend();
-                        RenderSystem.setShaderColor(1, 1, 1,
-                                MachinesConfig.CLIENT.IO_CONFIG_NEIGHBOUR_TRANSPARENCY.get().floatValue());
-                    }, () -> {
-                        RenderSystem.setShaderColor(1, 1, 1, 1);
-                        RenderSystem.disableBlend();
-                        RenderSystem.enableDepthTest();
-
-                        original.clearRenderState();
-                    });
-        }
-
-        public static RenderType remap(RenderType in) {
-            if (in instanceof GhostRenderLayer) {
-                return in;
-            } else {
-                return REMAPPED_TYPES.computeIfAbsent(in, GhostRenderLayer::new);
-            }
-        }
-    }
+//    private static class GhostRenderLayer extends RenderType {
+//        private static final Map<RenderType, RenderType> REMAPPED_TYPES = new IdentityHashMap<>();
+//
+//        private GhostRenderLayer(RenderType original) {
+//            super(String.format("%s_%s_ghost", original, EnderIO.MOD_ID), original.format(), original.mode(),
+//                    original.bufferSize(), original.affectsCrumbling(), true, () -> {
+//                        original.setupRenderState();
+//
+//                        RenderSystem.disableDepthTest();
+//                        RenderSystem.enableBlend();
+//                        RenderSystem.setShaderColor(1, 1, 1,
+//                                MachinesConfig.CLIENT.IO_CONFIG_NEIGHBOUR_TRANSPARENCY.get().floatValue());
+//                    }, () -> {
+//                        RenderSystem.setShaderColor(1, 1, 1, 1);
+//                        RenderSystem.disableBlend();
+//                        RenderSystem.enableDepthTest();
+//
+//                        original.clearRenderState();
+//                    });
+//        }
+//
+//        public static RenderType remap(RenderType in) {
+//            if (in instanceof GhostRenderLayer) {
+//                return in;
+//            } else {
+//                return REMAPPED_TYPES.computeIfAbsent(in, GhostRenderLayer::new);
+//            }
+//        }
+//    }
 
 }

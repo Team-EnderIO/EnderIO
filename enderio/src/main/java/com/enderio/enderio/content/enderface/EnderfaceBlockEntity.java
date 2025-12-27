@@ -25,13 +25,20 @@ public class EnderfaceBlockEntity extends EIOBlockEntity {
     private float lastUiYaw = 45;
     private float lastUiDistance = 10;
 
-    private final NetworkDataSlot<EnderfaceTravelTarget> travelTargetDataSlot;
+//    private final NetworkDataSlot<EnderfaceTravelTarget> travelTargetDataSlot;
 
     public EnderfaceBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.ENDERFACE.get(), worldPosition, blockState);
 
-        travelTargetDataSlot = addDataSlot(
-                EnderfaceTravelTarget.DATA_SLOT_TYPE.create(this::getOrCreateTravelTarget, this::setTravelTarget));
+//        travelTargetDataSlot = addDataSlot(
+//                EnderfaceTravelTarget.DATA_SLOT_TYPE.create(this::getOrCreateTravelTarget, this::setTravelTarget));
+    }
+
+    @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state) {
+        super.preRemoveSideEffects(pos, state);
+
+        TravelTargetApi.INSTANCE.removeAt(level, pos);
     }
 
     @Override

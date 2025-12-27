@@ -16,8 +16,8 @@ public class ClientPayloadHandler {
 
     public void handleSyncTravelDataPacket(ClientboundSyncTravelDataPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
-            TravelTargetSavedData travelData = TravelTargetSavedData.getTravelData(context.player().level());
-            travelData.loadNBT(context.player().registryAccess(), packet.data());
+            // TODO: Should probably send the target dimension with the packet?
+            TravelTargetSavedData.setTravelData(context.player().level(), packet.data());
         });
     }
 

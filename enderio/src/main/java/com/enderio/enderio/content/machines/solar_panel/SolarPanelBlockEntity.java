@@ -58,8 +58,8 @@ public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
         this.tier = tier;
         this.node = new MultiEnergyNode(() -> energyStorage,
                 () -> (MultiEnergyStorageWrapper) getExposedEnergyStorage(), worldPosition);
-        addDataSlot(NetworkDataSlot.RESOURCE_LOCATION.create(() -> this.getEntityTypeId().orElse(NO_MOB),
-                this::setEntityType));
+//        addDataSlot(NetworkDataSlot.RESOURCE_LOCATION.create(() -> this.getEntityTypeId().orElse(NO_MOB),
+//                this::setEntityType));
     }
 
     @Nullable
@@ -272,19 +272,19 @@ public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
         return false;
     }
 
-    @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        boundSoul = Soul.parseOptional(lookupProvider, pTag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
-
-        super.loadAdditional(pTag, lookupProvider);
-    }
-
-    @Override
-    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        pTag.put(MachineNBTKeys.ENTITY_STORAGE, boundSoul.saveOptional(lookupProvider));
-
-        super.saveAdditional(pTag, lookupProvider);
-    }
+//    @Override
+//    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+//        boundSoul = Soul.parseOptional(lookupProvider, pTag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
+//
+//        super.loadAdditional(pTag, lookupProvider);
+//    }
+//
+//    @Override
+//    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+//        pTag.put(MachineNBTKeys.ENTITY_STORAGE, boundSoul.saveOptional(lookupProvider));
+//
+//        super.saveAdditional(pTag, lookupProvider);
+//    }
 
     @Override
     protected void applyImplicitComponents(DataComponentGetter components) {
@@ -292,14 +292,14 @@ public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
         boundSoul = components.getOrDefault(EIODataComponents.SOUL, Soul.EMPTY);
     }
 
-    @Override
-    protected void collectImplicitComponents(DataComponentMap.Builder components) {
-        super.collectImplicitComponents(components);
-
-        if (boundSoul.hasEntity()) {
-            components.set(EIODataComponents.SOUL, boundSoul);
-        }
-    }
+//    @Override
+//    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+//        super.collectImplicitComponents(components);
+//
+//        if (boundSoul.hasEntity()) {
+//            components.set(EIODataComponents.SOUL, boundSoul);
+//        }
+//    }
 
     @Nullable
     public Optional<ResourceLocation> getEntityTypeId() {

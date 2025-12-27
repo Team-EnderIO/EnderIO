@@ -11,8 +11,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShapeRenderer;
+import net.minecraft.client.renderer.block.ModelBlockRenderer;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -35,12 +36,11 @@ public class EnderfaceRenderer implements TravelRenderer<EnderfaceTravelTarget> 
         // Render Model
         BlockState blockState = minecraft.level.getBlockState(travelData.pos());
 
-        BakedModel blockModel = minecraft.getBlockRenderer().getBlockModel(blockState);
+        BlockStateModel blockModel = minecraft.getBlockRenderer().getBlockModel(blockState);
         VertexConsumer solid = buffer.getBuffer(RenderType.solid());
-        minecraft.getBlockRenderer()
-                .getModelRenderer()
-                .renderModel(poseStack.last(), solid, blockState, blockModel, 1, 1, 1, 0xF000F0,
-                        OverlayTexture.NO_OVERLAY);
+
+        ModelBlockRenderer.renderModel(poseStack.last(), type -> solid, blockModel, 1, 1, 1, 0xF000F0,
+            OverlayTexture.NO_OVERLAY, minecraft.level, travelData.pos(), blockState);
 
         // Render line
         RenderType lineType;

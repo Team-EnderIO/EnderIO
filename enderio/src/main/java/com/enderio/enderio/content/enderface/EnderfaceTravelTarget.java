@@ -13,9 +13,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
 public record EnderfaceTravelTarget(BlockPos pos) implements TravelTarget {
-    public static NetworkDataSlot.CodecType<EnderfaceTravelTarget> DATA_SLOT_TYPE = new NetworkDataSlot.CodecType<>(
-            EnderfaceTravelTarget.Serializer.CODEC.codec(), EnderfaceTravelTarget.Serializer.STREAM_CODEC);
-
     @Override
     public int item2BlockRange() {
         return Integer.MAX_VALUE;
