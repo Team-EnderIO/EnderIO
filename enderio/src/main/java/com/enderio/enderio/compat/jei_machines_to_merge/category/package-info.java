@@ -1,4 +1,4 @@
 @javax.annotation.ParametersAreNonnullByDefault
-@net.minecraft.MethodsReturnNonnullByDefault
+@com.mojang.logging.annotations.MethodsReturnNonnullByDefault
 
 package com.enderio.enderio.compat.jei_machines_to_merge.category;

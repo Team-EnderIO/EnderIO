@@ -1,4 +1,4 @@
 @javax.annotation.ParametersAreNonnullByDefault
-@net.minecraft.MethodsReturnNonnullByDefault
+@com.mojang.logging.annotations.MethodsReturnNonnullByDefault
 
 package com.enderio.enderio.foundation.network.menu_sync;

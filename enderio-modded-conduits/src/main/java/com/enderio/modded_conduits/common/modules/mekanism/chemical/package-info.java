@@ -1,4 +1,4 @@
 @javax.annotation.ParametersAreNonnullByDefault
-@net.minecraft.MethodsReturnNonnullByDefault
+@com.mojang.logging.annotations.MethodsReturnNonnullByDefault
 
 package com.enderio.modded_conduits.common.modules.mekanism.chemical;

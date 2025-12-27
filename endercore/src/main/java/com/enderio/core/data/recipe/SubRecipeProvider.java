@@ -2,10 +2,10 @@ package com.enderio.core.data.recipe;
 
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.EnterBlockTrigger;
-import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.advancements.criterion.EnterBlockTrigger;
+import net.minecraft.advancements.criterion.InventoryChangeTrigger;
+import net.minecraft.advancements.criterion.ItemPredicate;
+import net.minecraft.advancements.criterion.MinMaxBounds;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -28,15 +28,15 @@ public abstract class SubRecipeProvider {
     }
 
     protected static Criterion<InventoryChangeTrigger.TriggerInstance> has(HolderGetter<Item> itemsRegistry, MinMaxBounds.Ints count, ItemLike item) {
-        return inventoryTrigger(net.minecraft.advancements.critereon.ItemPredicate.Builder.item().of(itemsRegistry, item).withCount(count));
+        return inventoryTrigger(ItemPredicate.Builder.item().of(itemsRegistry, item).withCount(count));
     }
 
     protected static Criterion<InventoryChangeTrigger.TriggerInstance> has(HolderGetter<Item> itemsRegistry, ItemLike itemLike) {
-        return inventoryTrigger(net.minecraft.advancements.critereon.ItemPredicate.Builder.item().of(itemsRegistry, itemLike));
+        return inventoryTrigger(ItemPredicate.Builder.item().of(itemsRegistry, itemLike));
     }
 
     protected static Criterion<InventoryChangeTrigger.TriggerInstance> has(HolderGetter<Item> itemsRegistry, TagKey<Item> tag) {
-        return inventoryTrigger(net.minecraft.advancements.critereon.ItemPredicate.Builder.item().of(itemsRegistry, tag));
+        return inventoryTrigger(ItemPredicate.Builder.item().of(itemsRegistry, tag));
     }
 
     protected static Criterion<InventoryChangeTrigger.TriggerInstance> inventoryTrigger(ItemPredicate.Builder... items) {
