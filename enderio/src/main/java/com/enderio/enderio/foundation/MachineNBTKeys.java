@@ -19,4 +19,6 @@ public class MachineNBTKeys extends EIONBTKeys {
     public static final String BURN_DURATION = "BurnDuration";
 
     public static final String OWNER = "owner";
+
+    public static final String CRAFTING_TASK = "CraftingTaskHost";
 }

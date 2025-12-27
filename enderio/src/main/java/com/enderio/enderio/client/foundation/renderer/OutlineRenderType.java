@@ -1,9 +1,10 @@
 package com.enderio.enderio.client.foundation.renderer;
 
 import com.enderio.enderio.EnderIO;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.vertex.MeshData;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import org.jetbrains.annotations.NotNull;
@@ -19,8 +20,8 @@ public class OutlineRenderType extends RenderType {
     private final RenderType parent;
 
     private OutlineRenderType(RenderType parent) {
-        super("Outline" + parent.name, parent.format(), parent.mode(), parent.bufferSize(), parent.affectsCrumbling(),
-                parent.sortOnUpload, parent::setupRenderState, parent::clearRenderState);
+        super("Outline" + parent.name, parent.bufferSize, parent.affectsCrumbling(), parent.sortOnUpload, parent::setupRenderState,
+            parent::clearRenderState);
         this.parent = parent;
     }
 
@@ -46,29 +47,45 @@ public class OutlineRenderType extends RenderType {
     @Override
     public void setupRenderState() {
         this.parent.setupRenderState();
-        if (Minecraft.getInstance().levelRenderer.entityOutlineTarget() != null) {
-            // noinspection ConstantConditions
-            Minecraft.getInstance().levelRenderer.entityOutlineTarget().bindWrite(false);
-        }
+//        if (Minecraft.getInstance().levelRenderer.entityOutlineTarget() != null) {
+//            // noinspection ConstantConditions
+//            Minecraft.getInstance().levelRenderer.entityOutlineTarget().bindWrite(false);
+//        }
     }
 
     @Override
     public void clearRenderState() {
-        Minecraft.getInstance().getMainRenderTarget().bindWrite(false);
+//        Minecraft.getInstance().getMainRenderTarget().bindWrite(false);
         this.parent.clearRenderState();
     }
 
-    public static RenderType createLines(String name, int strength) {
-        return RenderType.create(EnderIO.MOD_ID + "_" + name, DefaultVertexFormat.POSITION_COLOR_NORMAL,
-                VertexFormat.Mode.LINES, 256, false, false,
-                CompositeState.builder()
-                        .setShaderState(RenderStateShard.RENDERTYPE_LINES_SHADER)
-                        .setLineState(new LineStateShard(OptionalDouble.of(strength)))
-                        .setLayeringState(RenderStateShard.VIEW_OFFSET_Z_LAYERING)
-                        .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
-                        .setOutputState(RenderStateShard.ITEM_ENTITY_TARGET)
-                        .setWriteMaskState(RenderStateShard.COLOR_DEPTH_WRITE)
-                        .setCullState(RenderStateShard.NO_CULL)
-                        .createCompositeState(false));
+    @Override
+    public void draw(MeshData meshData) {
+        parent.draw(meshData);
     }
+
+    @Override
+    public VertexFormat format() {
+        return parent.format();
+    }
+
+    @Override
+    public VertexFormat.Mode mode() {
+        return parent.mode();
+    }
+
+    //TODO this probably is wrong
+    public static RenderType createLines(String name, int strength) {
+        return RenderType.create(EnderIO.MOD_ID + "_" + name, 1536, false, false, LINES_NO_CULL,
+            CompositeState.builder()
+                .setLineState(new LineStateShard(OptionalDouble.of(strength)))
+                .setLayeringState(RenderStateShard.VIEW_OFFSET_Z_LAYERING)
+                .setOutputState(RenderStateShard.ITEM_ENTITY_TARGET)
+                .createCompositeState(false));
+    }
+
+    public static final RenderPipeline LINES_NO_CULL = RenderPipelines.LINES.toBuilder()
+        .withCull(false)
+        .build();
+
 }

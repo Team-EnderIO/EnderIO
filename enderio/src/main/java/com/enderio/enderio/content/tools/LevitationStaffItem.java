@@ -7,7 +7,7 @@ import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOFluids;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -16,6 +16,7 @@ import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+import org.jetbrains.annotations.Nullable;
 
 public class LevitationStaffItem extends PoweredToggledItem {
 
@@ -77,8 +78,7 @@ public class LevitationStaffItem extends PoweredToggledItem {
     }
 
     @Override
-    protected void onTickWhenActive(Player player, ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId,
-            boolean pIsSelected) {
+    protected void onTickWhenActive(Player player, ItemStack stack, Level level, @Nullable EquipmentSlot slot) {
         player.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 1));
     }
 

@@ -7,7 +7,6 @@ import com.enderio.enderio.api.conduits.connection.ConnectionStatus;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
-import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.content.conduits.ConduitLang;
 import com.enderio.enderio.init.EIOConduitTypes;
 import com.mojang.serialization.Codec;
@@ -15,10 +14,10 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -117,10 +116,10 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
     }
 
     @Override
-    public void addToTooltip(Item.TooltipContext pContext, Consumer<Component> pTooltipAdder,
-            TooltipFlag pTooltipFlag) {
+    public void addToTooltip(Item.TooltipContext tooltipContext, Consumer<Component> consumer, TooltipFlag tooltipFlag,
+        DataComponentGetter dataComponentGetter) {
         String transferLimitFormatted = String.format("%,d", transferRatePerTick());
-        pTooltipAdder.accept(TooltipUtil.styledWithArgs(ConduitLang.ENERGY_RATE_TOOLTIP, transferLimitFormatted));
+        consumer.accept(TooltipUtil.styledWithArgs(ConduitLang.ENERGY_RATE_TOOLTIP, transferLimitFormatted));
     }
 
     @Override

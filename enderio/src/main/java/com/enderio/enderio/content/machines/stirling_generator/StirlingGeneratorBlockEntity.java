@@ -16,8 +16,6 @@ import com.enderio.enderio.foundation.io.energy.MachineEnergyStorage;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.init.EIOBlockEntities;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -25,6 +23,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
@@ -155,30 +155,25 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.loadAdditional(pTag, lookupProvider);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
 
-        if (pTag.contains(MachineNBTKeys.BURN_TIME, CompoundTag.TAG_INT)) {
-            burnTime = pTag.getInt(MachineNBTKeys.BURN_TIME);
-        }
-
-        if (pTag.contains(MachineNBTKeys.BURN_DURATION, CompoundTag.TAG_INT)) {
-            burnDuration = pTag.getInt(MachineNBTKeys.BURN_DURATION);
-        }
+        this.burnTime = input.getIntOr(MachineNBTKeys.BURN_TIME, 0);
+        this.burnDuration = input.getIntOr(MachineNBTKeys.BURN_DURATION, 0);
 
         updateMachineState(MachineState.NO_POWER, false);
         updateMachineState(MachineState.FULL_POWER,
-                (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored())
-                        && isCapacitorInstalled());
+            (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored())
+                && isCapacitorInstalled());
         updateMachineState(MachineState.EMPTY_INPUT, FUEL.getItemStack(this).isEmpty());
     }
 
     @Override
-    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.saveAdditional(pTag, lookupProvider);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
 
-        pTag.putInt(MachineNBTKeys.BURN_TIME, burnTime);
-        pTag.putInt(MachineNBTKeys.BURN_DURATION, burnDuration);
+        output.putInt(MachineNBTKeys.BURN_TIME, burnTime);
+        output.putInt(MachineNBTKeys.BURN_DURATION, burnDuration);
     }
 
     @Override

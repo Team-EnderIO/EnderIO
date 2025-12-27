@@ -1,87 +1,87 @@
-package com.enderio.enderio.client.content.conduits.model.modifier;
-
-import com.enderio.core.client.RenderUtil;
-import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.api.conduits.Conduit;
-import com.enderio.enderio.api.conduits.model.ConduitModelModifier;
-import com.enderio.enderio.content.conduits.type.fluid.FluidConduit;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Holder;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.neoforged.neoforge.client.model.IQuadTransformer;
-import net.neoforged.neoforge.model.data.ModelData;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
-
-public class FluidConduitModelModifier implements ConduitModelModifier {
-
-    private static final ResourceLocation FLUID_MODEL = EnderIO.rl("block/extra/fluids");
-
-    @Override
-    public List<BakedQuad> createConnectionQuads(Holder<Conduit<?, ?>> conduit, @Nullable CompoundTag extraWorldData,
-            @Nullable Direction facing, Direction connectionDirection, RandomSource rand, @Nullable RenderType type) {
-        if (!(conduit.value() instanceof FluidConduit fluidConduit)) {
-            return List.of();
-        }
-
-        if (fluidConduit.isMultiFluid()) {
-            return List.of();
-        }
-
-        if (extraWorldData == null || !extraWorldData.contains("LockedFluid")) {
-            return List.of();
-        }
-
-        ResourceLocation lockedFluidId = ResourceLocation.parse(extraWorldData.getString("LockedFluid"));
-        Fluid lockedFluid = BuiltInRegistries.FLUID.getValue(lockedFluidId);
-
-        if (!lockedFluid.isSame(Fluids.EMPTY)) {
-            return new FluidPaintQuadTransformer(lockedFluid).process(Minecraft.getInstance()
-                    .getModelManager()
-                    .getStandaloneModel(FLUID_MODEL)
-                    .getQuads(Blocks.COBBLESTONE.defaultBlockState(), facing, rand, ModelData.EMPTY, type));
-        }
-
-        return List.of();
-    }
-
-    @Override
-    public List<ResourceLocation> getModelDependencies() {
-        return List.of(FLUID_MODEL);
-    }
-
-    private record FluidPaintQuadTransformer(Fluid fluid) implements IQuadTransformer {
-        @Override
-        public void processInPlace(BakedQuad quad) {
-            IClientFluidTypeExtensions clientExtension = IClientFluidTypeExtensions.of(fluid);
-            TextureAtlasSprite sprite = Minecraft.getInstance()
-                    .getTextureAtlas(TextureAtlas.LOCATION_BLOCKS)
-                    .apply(clientExtension.getStillTexture());
-            for (int i = 0; i < 4; i++) {
-                float[] uv0 = RenderUtil.unpackVertices(quad.getVertices(), i, IQuadTransformer.UV0, 2);
-                uv0[0] = (uv0[0] - quad.getSprite().getU0()) * sprite.contents().width()
-                        / quad.getSprite().contents().height() + sprite.getU0();
-                uv0[1] = (uv0[1] - quad.getSprite().getV0()) * sprite.contents().width()
-                        / quad.getSprite().contents().height() + sprite.getV0();
-                int[] packedTextureData = RenderUtil.packUV(uv0[0], uv0[1]);
-                quad.getVertices()[IQuadTransformer.UV0 + i * IQuadTransformer.STRIDE] = packedTextureData[0];
-                quad.getVertices()[IQuadTransformer.UV0 + 1 + i * IQuadTransformer.STRIDE] = packedTextureData[1];
-                RenderUtil.putColorARGB(quad.getVertices(), i, clientExtension.getTintColor());
-            }
-            quad.sprite = sprite;
-        }
-    }
-}
+//package com.enderio.enderio.client.content.conduits.model.modifier;
+//
+//import com.enderio.core.client.RenderUtil;
+//import com.enderio.enderio.EnderIO;
+//import com.enderio.enderio.api.conduits.Conduit;
+//import com.enderio.enderio.api.conduits.model.ConduitModelModifier;
+//import com.enderio.enderio.content.conduits.type.fluid.FluidConduit;
+//import net.minecraft.client.Minecraft;
+//import net.minecraft.client.renderer.RenderType;
+//import net.minecraft.client.renderer.block.model.BakedQuad;
+//import net.minecraft.client.renderer.texture.TextureAtlas;
+//import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+//import net.minecraft.core.Direction;
+//import net.minecraft.core.Holder;
+//import net.minecraft.core.registries.BuiltInRegistries;
+//import net.minecraft.nbt.CompoundTag;
+//import net.minecraft.resources.ResourceLocation;
+//import net.minecraft.util.RandomSource;
+//import net.minecraft.world.level.block.Blocks;
+//import net.minecraft.world.level.material.Fluid;
+//import net.minecraft.world.level.material.Fluids;
+//import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+//import net.neoforged.neoforge.client.model.IQuadTransformer;
+//import net.neoforged.neoforge.model.data.ModelData;
+//import org.jetbrains.annotations.Nullable;
+//
+//import java.util.List;
+//
+//public class FluidConduitModelModifier implements ConduitModelModifier {
+//
+//    private static final ResourceLocation FLUID_MODEL = EnderIO.rl("block/extra/fluids");
+//
+//    @Override
+//    public List<BakedQuad> createConnectionQuads(Holder<Conduit<?, ?>> conduit, @Nullable CompoundTag extraWorldData,
+//            @Nullable Direction facing, Direction connectionDirection, RandomSource rand, @Nullable RenderType type) {
+//        if (!(conduit.value() instanceof FluidConduit fluidConduit)) {
+//            return List.of();
+//        }
+//
+//        if (fluidConduit.isMultiFluid()) {
+//            return List.of();
+//        }
+//
+//        if (extraWorldData == null || !extraWorldData.contains("LockedFluid")) {
+//            return List.of();
+//        }
+//
+//        ResourceLocation lockedFluidId = ResourceLocation.parse(extraWorldData.getString("LockedFluid"));
+//        Fluid lockedFluid = BuiltInRegistries.FLUID.getValue(lockedFluidId);
+//
+//        if (!lockedFluid.isSame(Fluids.EMPTY)) {
+//            return new FluidPaintQuadTransformer(lockedFluid).process(Minecraft.getInstance()
+//                    .getModelManager()
+//                    .getStandaloneModel(FLUID_MODEL)
+//                    .getQuads(Blocks.COBBLESTONE.defaultBlockState(), facing, rand, ModelData.EMPTY, type));
+//        }
+//
+//        return List.of();
+//    }
+//
+//    @Override
+//    public List<ResourceLocation> getModelDependencies() {
+//        return List.of(FLUID_MODEL);
+//    }
+//
+//    private record FluidPaintQuadTransformer(Fluid fluid) implements IQuadTransformer {
+//        @Override
+//        public void processInPlace(BakedQuad quad) {
+//            IClientFluidTypeExtensions clientExtension = IClientFluidTypeExtensions.of(fluid);
+//            TextureAtlasSprite sprite = Minecraft.getInstance()
+//                    .getTextureAtlas(TextureAtlas.LOCATION_BLOCKS)
+//                    .apply(clientExtension.getStillTexture());
+//            for (int i = 0; i < 4; i++) {
+//                float[] uv0 = RenderUtil.unpackVertices(quad.getVertices(), i, IQuadTransformer.UV0, 2);
+//                uv0[0] = (uv0[0] - quad.getSprite().getU0()) * sprite.contents().width()
+//                        / quad.getSprite().contents().height() + sprite.getU0();
+//                uv0[1] = (uv0[1] - quad.getSprite().getV0()) * sprite.contents().width()
+//                        / quad.getSprite().contents().height() + sprite.getV0();
+//                int[] packedTextureData = RenderUtil.packUV(uv0[0], uv0[1]);
+//                quad.getVertices()[IQuadTransformer.UV0 + i * IQuadTransformer.STRIDE] = packedTextureData[0];
+//                quad.getVertices()[IQuadTransformer.UV0 + 1 + i * IQuadTransformer.STRIDE] = packedTextureData[1];
+//                RenderUtil.putColorARGB(quad.getVertices(), i, clientExtension.getTintColor());
+//            }
+//            quad.sprite = sprite;
+//        }
+//    }
+//}

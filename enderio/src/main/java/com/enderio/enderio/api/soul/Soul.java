@@ -2,6 +2,7 @@ package com.enderio.enderio.api.soul;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -10,12 +11,15 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Leashable;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Bee;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -28,7 +32,7 @@ import java.util.stream.Stream;
  * Represents a stored soul, derived from a {@link LivingEntity}.
  * @param entityTag the entity's NBT tag.
  */
-public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) {
+public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) { //TODO can ValueOutput be used instead of the tag? Couldn't find a codex for it
     public static final Soul EMPTY = new Soul(null, new CompoundTag());
 
     public static final Codec<Soul> CODEC = RecordCodecBuilder.create(
@@ -89,7 +93,7 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) {
 
     // TODO: Can this be trusted? I feel like it needs better validation...
     public Soul(CompoundTag entityTag) {
-        this(BuiltInRegistries.ENTITY_TYPE.getValue(ResourceLocation.parse(entityTag.getString(Entity.TAG_ID))), entityTag);
+        this(BuiltInRegistries.ENTITY_TYPE.getValue(ResourceLocation.parse(entityTag.getStringOr(Entity.TAG_ID, "pig"))), entityTag); //TODO better default
     }
 
     public static final StreamCodec<RegistryFriendlyByteBuf, Soul> OPTIONAL_STREAM_CODEC = new StreamCodec<>() {
@@ -113,9 +117,9 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) {
     };
 
     public static Soul of(LivingEntity entity) {
-        var entityTag = new CompoundTag();
+        var entityTag = TagValueOutput.createWithContext(new ProblemReporter.Collector(), entity.level().registryAccess());
         entity.saveWithoutId(entityTag);
-        return new Soul(entity.getType(), entityTag);
+        return new Soul(entity.getType(), entityTag.buildResult());
     }
 
     public static Soul of(ResourceLocation entityType) {
@@ -151,9 +155,9 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) {
             return false;
         }
 
-        var entityTagToCompare = new CompoundTag();
+        var entityTagToCompare = TagValueOutput.createWithoutContext(new ProblemReporter.Collector());
         livingEntity.saveWithoutId(entityTagToCompare);
-        return isSameTag(soul.entityTag(), entityTagToCompare);
+        return isSameTag(soul.entityTag(), entityTagToCompare.buildResult());
     }
 
     private static boolean isSameTag(CompoundTag tag1, CompoundTag tag2) {
@@ -212,5 +216,9 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) {
         }
 
         return of(entityType());
+    }
+
+    public ValueInput asInput(HolderLookup.Provider lookup) {
+        return TagValueInput.create(new ProblemReporter.Collector(), lookup, entityTag);
     }
 }

@@ -15,6 +15,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -175,20 +176,20 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
     }
 
     @Override
-    public void addToTooltip(Item.TooltipContext pContext, Consumer<Component> pTooltipAdder,
-            TooltipFlag pTooltipFlag) {
+    public void addToTooltip(Item.TooltipContext tooltipContext, Consumer<Component> consumer, TooltipFlag tooltipFlag,
+        DataComponentGetter dataComponentGetter) {
         String transferLimitFormatted = String.format("%,d", transferRatePerTick());
-        pTooltipAdder
-                .accept(TooltipUtil.styledWithArgs(ConduitLang.FLUID_EFFECTIVE_RATE_TOOLTIP, transferLimitFormatted));
+        consumer
+            .accept(TooltipUtil.styledWithArgs(ConduitLang.FLUID_EFFECTIVE_RATE_TOOLTIP, transferLimitFormatted));
 
         if (isMultiFluid()) {
-            pTooltipAdder.accept(ConduitLang.MULTI_FLUID_TOOLTIP);
+            consumer.accept(ConduitLang.MULTI_FLUID_TOOLTIP);
         }
 
-        if (pTooltipFlag.hasShiftDown()) {
+        if (tooltipFlag.hasShiftDown()) {
             String rawRateFormatted = String.format("%,d",
-                    (int) Math.ceil(transferRatePerTick() * (20.0 / networkTickRate())));
-            pTooltipAdder.accept(TooltipUtil.styledWithArgs(ConduitLang.FLUID_RAW_RATE_TOOLTIP, rawRateFormatted));
+                (int) Math.ceil(transferRatePerTick() * (20.0 / networkTickRate())));
+            consumer.accept(TooltipUtil.styledWithArgs(ConduitLang.FLUID_RAW_RATE_TOOLTIP, rawRateFormatted));
         }
     }
 

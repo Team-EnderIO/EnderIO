@@ -11,8 +11,6 @@ import com.enderio.enderio.foundation.inventory.MultiSlotAccess;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import com.enderio.enderio.init.EIOBlockEntities;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -24,6 +22,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.display.SlotDisplayContext;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayDeque;
@@ -110,8 +109,8 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.loadAdditional(pTag, lookupProvider);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
         if (level != null && !level.isClientSide()) {
             updateRecipe();
         }

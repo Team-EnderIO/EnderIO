@@ -4,9 +4,6 @@ import com.enderio.core.common.lang.EnumLangMap;
 import com.enderio.enderio.EnderIO;
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -39,14 +36,6 @@ public enum PoweredSpawnerMode implements StringRepresentable {
     @Override
     public String getSerializedName() {
         return name;
-    }
-
-    public Tag save(HolderLookup.Provider lookupProvider) {
-        return CODEC.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), this).getOrThrow();
-    }
-
-    public static PoweredSpawnerMode parse(HolderLookup.Provider lookupProvider, Tag tag) {
-        return CODEC.parse(lookupProvider.createSerializationContext(NbtOps.INSTANCE), tag).getOrThrow();
     }
 
     public MutableComponent getComponent() {

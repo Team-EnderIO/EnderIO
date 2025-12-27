@@ -16,9 +16,9 @@ import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShapeRenderer;
+import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -68,12 +68,11 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             }
         }
 
-        BakedModel blockModel = minecraft.getBlockRenderer().getBlockModel(blockState);
-        VertexConsumer solid = buffer.getBuffer(RenderType.solid());
-        minecraft.getBlockRenderer()
-                .getModelRenderer()
-                .renderModel(poseStack.last(), solid, blockState, blockModel, 1, 1, 1, 0xF000F0,
-                        OverlayTexture.NO_OVERLAY);
+        var blockModel = minecraft.getBlockRenderer().getBlockModel(blockState);
+        VertexConsumer solid = buffer.getBuffer(RenderType.solid()); //TODO rendertype?
+        ModelBlockRenderer
+                .renderModel(poseStack.last(), buffer, blockModel, 1, 1, 1, 0xF000F0,
+                        OverlayTexture.NO_OVERLAY,  minecraft.level, travelData.pos(), blockState);
 
         // Render line
         RenderType lineType;
@@ -157,7 +156,7 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             // TODO: 1.21.4: Check this.
             minecraft
                 .getItemModelResolver()
-                .updateForTopItem(this.scratchItemStackRenderState, stack, ItemDisplayContext.GUI, false, minecraft.level, null, 0);
+                .updateForTopItem(this.scratchItemStackRenderState, stack, ItemDisplayContext.GUI, minecraft.level, null, 0);
             this.scratchItemStackRenderState.render(poseStack, OutlineBuffer.INSTANCE, 15728880, OverlayTexture.NO_OVERLAY);
 
             poseStack.popPose();

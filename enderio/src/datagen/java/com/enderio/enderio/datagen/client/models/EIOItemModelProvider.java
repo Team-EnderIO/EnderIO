@@ -1,11 +1,8 @@
 package com.enderio.enderio.datagen.client.models;
 
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
 import com.enderio.enderio.content.fun.EnderiosItem;
 import com.enderio.enderio.content.tools.vials.SoulVialItem;
-import com.enderio.enderio.datagen.client.models.item.FacadeItemModelBuilder;
-import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOFluids;
 import com.enderio.enderio.init.EIOItems;
 import net.minecraft.client.data.models.BlockModelGenerators;
@@ -14,18 +11,18 @@ import net.minecraft.client.data.models.ModelProvider;
 import net.minecraft.client.data.models.model.ItemModelUtils;
 import net.minecraft.client.data.models.model.ModelLocationUtils;
 import net.minecraft.client.data.models.model.ModelTemplates;
+import net.minecraft.client.data.models.model.TextureMapping;
+import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Fluid;
+import net.neoforged.neoforge.client.model.item.DynamicFluidContainerModel;
 import net.neoforged.neoforge.internal.versions.neoforge.NeoForgeVersion;
 
-import java.util.Locale;
-import java.util.Objects;
+import java.util.Optional;
 
 public class EIOItemModelProvider extends ModelProvider {
     public EIOItemModelProvider(PackOutput output) {
@@ -80,336 +77,181 @@ public class EIOItemModelProvider extends ModelProvider {
 
         itemModels.generateFlatItem(EIOItems.ZOMBIE_ELECTRODE.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(EIOItems.Z_LOGIC_CONTROLLER.get(), ModelTemplates.FLAT_ITEM);
-    }
+        itemModels.generateFlatItem(EIOItems.ENDER_RESONATOR.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.FRANK_N_ZOMBIE.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.SENTIENT_ENDER.get(), ModelTemplates.FLAT_ITEM);
 
-    public void withParent(ItemModelGenerators itemModelGenerators, Item item, Item model) {
-        itemModelGenerators.itemModelOutput.accept(item, ItemModelUtils.plainModel(ModelLocationUtils.getModelLocation(model)));
-    }
-
-    @Override
-    protected void registerModels() {
-
-        withExistingParent(EIOItems.FRANK_N_ZOMBIE.getId().toString(), EIOItems.Z_LOGIC_CONTROLLER.getId());
-        basicItem(EIOItems.ENDER_RESONATOR.get());
-        withExistingParent(EIOItems.SENTIENT_ENDER.getId().toString(), EIOItems.ENDER_RESONATOR.getId());
-        basicItem(EIOItems.SKELETAL_CONTRACTOR.get());
-        basicItem(EIOItems.GUARDIAN_DIODE.get());
-        basicItem(EIOItems.SUSPICIOUS_SEED.get());
+        itemModels.generateFlatItem(EIOItems.SKELETAL_CONTRACTOR.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.GUARDIAN_DIODE.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.SUSPICIOUS_SEED.get(), ModelTemplates.FLAT_ITEM);
 
         // Capacitors
-        basicItem(EIOItems.BASIC_CAPACITOR.get());
-        basicItem(EIOItems.DOUBLE_LAYER_CAPACITOR.get());
-        basicItem(EIOItems.OCTADIC_CAPACITOR.get());
-        basicItem(EIOItems.LOOT_CAPACITOR.get()); // TODO: Multiple variants of loot capacitor.
+        itemModels.generateFlatItem(EIOItems.BASIC_CAPACITOR.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.DOUBLE_LAYER_CAPACITOR.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.OCTADIC_CAPACITOR.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.LOOT_CAPACITOR.get(), ModelTemplates.FLAT_ITEM); // TODO: Multiple variants of loot capacitor.
 
         // Crystals
-        basicItem(EIOItems.PULSATING_CRYSTAL.get());
-        basicItem(EIOItems.VIBRANT_CRYSTAL.get());
-        basicItem(EIOItems.ENDER_CRYSTAL.get());
-        basicItem(EIOItems.ENTICING_CRYSTAL.get());
-        basicItem(EIOItems.WEATHER_CRYSTAL.get());
-        basicItem(EIOItems.PRESCIENT_CRYSTAL.get());
+        itemModels.generateFlatItem(EIOItems.PULSATING_CRYSTAL.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.VIBRANT_CRYSTAL.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.ENDER_CRYSTAL.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.ENTICING_CRYSTAL.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.WEATHER_CRYSTAL.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.PRESCIENT_CRYSTAL.get(), ModelTemplates.FLAT_ITEM);
 
         // Powders and Fragments
-        basicItem(EIOItems.FLOUR.get());
-        basicItem(EIOItems.POWDERED_COAL.get());
-        basicItem(EIOItems.POWDERED_IRON.get());
-        basicItem(EIOItems.POWDERED_GOLD.get());
-        basicItem(EIOItems.POWDERED_COPPER.get());
-        basicItem(EIOItems.POWDERED_TIN.get());
-        basicItem(EIOItems.POWDERED_ENDER_PEARL.get());
-        basicItem(EIOItems.POWDERED_OBSIDIAN.get());
-        basicItem(EIOItems.POWDERED_COBALT.get());
-        basicItem(EIOItems.POWDERED_LAPIS_LAZULI.get());
-        basicItem(EIOItems.POWDERED_QUARTZ.get());
-        basicItem(EIOItems.PRESCIENT_POWDER.get());
-        basicItem(EIOItems.VIBRANT_POWDER.get());
-        basicItem(EIOItems.PULSATING_POWDER.get());
-        basicItem(EIOItems.ENDER_CRYSTAL_POWDER.get());
-        basicItem(EIOItems.PHOTOVOLTAIC_COMPOSITE.get());
-        basicItem(EIOItems.SOUL_POWDER.get());
-        basicItem(EIOItems.CONFUSION_POWDER.get());
-        basicItem(EIOItems.WITHERING_POWDER.get());
+        itemModels.generateFlatItem(EIOItems.FLOUR.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.POWDERED_COAL.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.POWDERED_IRON.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.POWDERED_GOLD.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.POWDERED_COPPER.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.POWDERED_TIN.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.POWDERED_ENDER_PEARL.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.POWDERED_OBSIDIAN.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.POWDERED_COBALT.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.POWDERED_LAPIS_LAZULI.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.POWDERED_QUARTZ.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.PRESCIENT_POWDER.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.VIBRANT_POWDER.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.PULSATING_POWDER.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.ENDER_CRYSTAL_POWDER.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.PHOTOVOLTAIC_COMPOSITE.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.SOUL_POWDER.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.CONFUSION_POWDER.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.WITHERING_POWDER.get(), ModelTemplates.FLAT_ITEM);
 
         // Dyes
-        basicItem(EIOItems.DYE_GREEN.get());
-        basicItem(EIOItems.DYE_BROWN.get());
-        basicItem(EIOItems.DYE_BLACK.get());
+        itemModels.generateFlatItem(EIOItems.DYE_GREEN.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.DYE_BROWN.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.DYE_BLACK.get(), ModelTemplates.FLAT_ITEM);
 
         // Misc Materials
-        basicItem(EIOItems.PHOTOVOLTAIC_PLATE.get());
-        basicItem(EIOItems.NUTRITIOUS_STICK.get());
-        basicItem(EIOItems.PLANT_MATTER_GREEN.get());
-        basicItem(EIOItems.PLANT_MATTER_BROWN.get());
-        basicItem(EIOItems.GLIDER_WING.get());
-        basicItem(EIOItems.ANIMAL_TOKEN.get());
-        basicItem(EIOItems.MONSTER_TOKEN.get());
-        basicItem(EIOItems.PLAYER_TOKEN.get());
-        basicItem(EIOItems.CAKE_BASE.get());
-        basicItem(EIOItems.BLACK_PAPER.get());
-        basicItem(EIOItems.CLAYED_GLOWSTONE.get());
-        basicItem(EIOItems.NETHERCOTTA.get());
-        fakeBlock(EIOItems.BROKEN_SPAWNER.get());
+        itemModels.generateFlatItem(EIOItems.PHOTOVOLTAIC_PLATE.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.NUTRITIOUS_STICK.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.PLANT_MATTER_GREEN.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.PLANT_MATTER_BROWN.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.GLIDER_WING.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.ANIMAL_TOKEN.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.MONSTER_TOKEN.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.PLAYER_TOKEN.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.CAKE_BASE.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.BLACK_PAPER.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.CLAYED_GLOWSTONE.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.NETHERCOTTA.get(), ModelTemplates.FLAT_ITEM);
+        createFakeBlock(blockModels, EIOItems.BROKEN_SPAWNER.get());
 
         // Gliders
-        basicItem(EIOItems.GLIDER.get());
+        itemModels.generateFlatItem(EIOItems.GLIDER.get(), ModelTemplates.FLAT_ITEM);
 
-        // Fun
-        // TODO: Should we generate enderios model?
-        basicItem(EIOItems.ENDERIOS.get())
-            .override()
-            .predicate(EnderiosItem.INVERTED_PROPERTY, 1)
-            .model(basicItem(EnderIO.rl("soiredne")))
-            .end();
+        generateEnderios(itemModels, EIOItems.ENDERIOS.get());
 
-        // Tools
-        basicItem(EIOItems.SOUL_VIAL.get())
-            .override()
-            .predicate(SoulVialItem.FILLED_MODEL_PROPERTY, 1)
-            .model(basicItem(EnderIO.rl("soul_vial_filled")))
-            .end();
+        generateSoulVial(itemModels, EIOItems.SOUL_VIAL.get());
 
-        basicItem(EIOItems.VOID_VIAL.get());
-        basicItem(EIOItems.YETA_WRENCH.get());
-        basicItem(EIOItems.COORDINATE_SELECTOR.get());
-        basicItem(EIOItems.LOCATION_PRINTOUT.get());
-        basicItem(EIOItems.LEVITATION_STAFF.get());
-        basicItem(EIOItems.TRAVEL_STAFF.get());
-        basicItem(EIOItems.ELECTROMAGNET.get());
-        basicItem(EIOItems.COLD_FIRE_IGNITER.get());
+        itemModels.generateFlatItem(EIOItems.VOID_VIAL.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.YETA_WRENCH.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.COORDINATE_SELECTOR.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.LOCATION_PRINTOUT.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.LEVITATION_STAFF.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.TRAVEL_STAFF.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.ELECTROMAGNET.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.COLD_FIRE_IGNITER.get(), ModelTemplates.FLAT_ITEM);
 
-        getBuilder(EIOItems.CONDUIT_PROBE.getId().toString())
-            .parent(new ModelFile.UncheckedModelFile("item/generated"))
-            .texture("layer0", EnderIO.rl("item/conduit_probe_probe"))
-                .override()
-                .predicate(ConduitProbeItem.PROBE_STATE_PREDICATE, 1)
-                .model(basicItem(EnderIO.rl("conduit_probe_copy")));
-
-        handheldItem(EIOItems.DARK_STEEL_SWORD.get());
+        itemModels.generateFlatItem(EIOItems.DARK_STEEL_SWORD.get(), ModelTemplates.FLAT_HANDHELD_ITEM);
 
         // Filters
-        basicItem(EIOItems.BASIC_ITEM_FILTER.get());
-        basicItem(EIOItems.BIG_ITEM_FILTER.get());
-        basicItem(EIOItems.ADVANCED_ITEM_FILTER.get());
-        basicItem(EIOItems.BIG_ADVANCED_ITEM_FILTER.get());
+        itemModels.generateFlatItem(EIOItems.BASIC_ITEM_FILTER.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.BIG_ITEM_FILTER.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.ADVANCED_ITEM_FILTER.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.BIG_ADVANCED_ITEM_FILTER.get(), ModelTemplates.FLAT_ITEM);
 
-        basicItem(EIOItems.BASIC_FLUID_FILTER.get());
+        itemModels.generateFlatItem(EIOItems.BASIC_FLUID_FILTER.get(), ModelTemplates.FLAT_ITEM);
 
-        basicItem(EIOItems.BASIC_SOUL_FILTER.get());
+        itemModels.generateFlatItem(EIOItems.BASIC_SOUL_FILTER.get(), ModelTemplates.FLAT_ITEM);
 
-        basicItem(EIOItems.REDSTONE_FILTER_BASE.get());
-        basicItem(EIOItems.NOT_FILTER.get());
-        basicItem(EIOItems.OR_FILTER.get());
-        basicItem(EIOItems.AND_FILTER.get());
-        basicItem(EIOItems.NOR_FILTER.get());
-        basicItem(EIOItems.NAND_FILTER.get());
-        basicItem(EIOItems.XOR_FILTER.get());
-        basicItem(EIOItems.XNOR_FILTER.get());
-        basicItem(EIOItems.TLATCH_FILTER.get());
-        basicItem(EIOItems.COUNT_FILTER.get());
-        basicItem(EIOItems.SENSOR_FILTER.get());
-        basicItem(EIOItems.TIMER_FILTER.get());
-
-        // Conduit facades
-        getBuilder(EIOItems.CONDUIT_FACADE.getId().toString())
-            .customLoader(FacadeItemModelBuilder::begin)
-            .model(EIOItems.CONDUIT_FACADE.getId().getPath());
-
-        getBuilder(EIOItems.TRANSPARENT_CONDUIT_FACADE.getId().toString())
-            .customLoader(FacadeItemModelBuilder::begin)
-            .model(EIOItems.TRANSPARENT_CONDUIT_FACADE.getId().getPath());
-
-        getBuilder(EIOItems.HARDENED_CONDUIT_FACADE.getId().toString())
-            .customLoader(FacadeItemModelBuilder::begin)
-            .model(EIOItems.HARDENED_CONDUIT_FACADE.getId().getPath());
-
-        getBuilder(EIOItems.TRANSPARENT_HARDENED_CONDUIT_FACADE.getId().toString())
-            .customLoader(FacadeItemModelBuilder::begin)
-            .model(EIOItems.TRANSPARENT_HARDENED_CONDUIT_FACADE.getId().getPath());
+        itemModels.generateFlatItem(EIOItems.REDSTONE_FILTER_BASE.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.NOT_FILTER.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.OR_FILTER.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.AND_FILTER.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.NOR_FILTER.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.NAND_FILTER.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.XOR_FILTER.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.XNOR_FILTER.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.TLATCH_FILTER.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.COUNT_FILTER.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.SENSOR_FILTER.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.TIMER_FILTER.get(), ModelTemplates.FLAT_ITEM);
 
         // Creative Tab Icon
-        basicItem(EIOItems.CREATIVE_ICON.get());
+        itemModels.generateFlatItem(EIOItems.CREATIVE_ICON.get(),  ModelTemplates.FLAT_ITEM);
 
         // Buckets
         for (var item : EIOFluids.FLUIDS.itemsRegister().getEntries()) {
             // They should all be bucket items.
             if (item.get() instanceof BucketItem bucketItem) {
-                bucketItem(bucketItem);
+                var type = bucketItem.content.getFluidType();
+                bucketItem(itemModels, bucketItem, bucketItem.content, type.isLighterThanAir(), type.getLightLevel() > 0);
             }
         }
 
-        // region Blocks
+    }
 
-        // Alloys
-        simpleBlockItem(EIOBlocks.COPPER_ALLOY_BLOCK.get());
-        simpleBlockItem(EIOBlocks.ENERGETIC_ALLOY_BLOCK.get());
-        simpleBlockItem(EIOBlocks.VIBRANT_ALLOY_BLOCK.get());
-        simpleBlockItem(EIOBlocks.REDSTONE_ALLOY_BLOCK.get());
-        simpleBlockItem(EIOBlocks.CONDUCTIVE_ALLOY_BLOCK.get());
-        simpleBlockItem(EIOBlocks.PULSATING_ALLOY_BLOCK.get());
-        simpleBlockItem(EIOBlocks.DARK_STEEL_BLOCK.get());
-        simpleBlockItem(EIOBlocks.SOULARIUM_BLOCK.get());
-        simpleBlockItem(EIOBlocks.END_STEEL_BLOCK.get());
+    public static ResourceLocation getModelLocation(Fluid fluid) {
+        ResourceLocation resourcelocation = BuiltInRegistries.FLUID.getKey(fluid);
+        return resourcelocation.withPrefix("item/");
+    }
 
-        // Chassis
-        simpleBlockItem(EIOBlocks.VOID_CHASSIS.get());
-        simpleBlockItem(EIOBlocks.ENSOULED_CHASSIS.get());
+    protected void registerModels() {
+//TODO
 
-        // Dark Steel Building Blocks
-        flatBlockItem(EIOBlocks.DARK_STEEL_LADDER.get());
-        flatBlockItem(EIOBlocks.DARK_STEEL_BARS.get());
-        basicItem(EIOBlocks.DARK_STEEL_DOOR.asItem());
-        simpleBlockItem(EIOBlocks.DARK_STEEL_TRAPDOOR.get());
-        withExistingParent(EIOBlocks.DARK_STEEL_TRAPDOOR.getId().toString(), modLoc("block/dark_steel_trapdoor_bottom"));
-        flatBlockItem(EIOBlocks.END_STEEL_BARS.get());
-        simpleBlockItem(EIOBlocks.REINFORCED_OBSIDIAN.get());
+//        getBuilder(EIOItems.CONDUIT_PROBE.getId().toString())
+//            .parent(new ModelFile.UncheckedModelFile("item/generated"))
+//            .texture("layer0", EnderIO.rl("item/conduit_probe_probe"))
+//                .override()
+//                .predicate(ConduitProbeItem.PROBE_STATE_PREDICATE, 1)
+//                .model(basicItem(EnderIO.rl("conduit_probe_copy")));
 
-        // Painted Blocks
-        for (var pair : EIOBlocks.PAINTED_BLOCKS) {
-            simpleBlockItem(pair.left().get());
-        }
-
-        // Resetting Levers
-        for (var lever : EIOBlocks.RESETTING_LEVERS) {
-            withExistingParent(lever.getId().toString(), mcLoc("item/lever"));
-        }
-
-        // Glass Blocks
-        var fusedQuartzModel = modLoc("block/fused_quartz");
-        var clearGlassModel = modLoc("block/clear_glass");
-
-        for (var glassBlocks : EIOBlocks.GLASS_BLOCKS.values()) {
-            for (var block : glassBlocks.getAllBlocks().toList()) {
-                withExistingParent(block.getId().toString(), block.get().glassIdentifier().explosionResistance() ? fusedQuartzModel : clearGlassModel);
-            }
-        }
-
-        // Miscellaneous
-        basicItem(EIOBlocks.SOUL_CHAIN.asItem());
-        withExistingParent(EIOBlocks.ENDERMAN_HEAD.getId().toString(), mcLoc("item/template_skull"));
-        simpleBlockItem(EIOBlocks.INDUSTRIAL_INSULATION.get());
-
-        // Pressure Plates
-        simpleBlockItem(EIOBlocks.DARK_STEEL_PRESSURE_PLATE.get());
-        simpleBlockItem(EIOBlocks.SILENT_DARK_STEEL_PRESSURE_PLATE.get());
-        simpleBlockItem(EIOBlocks.SOULARIUM_PRESSURE_PLATE.get());
-        simpleBlockItem(EIOBlocks.SILENT_SOULARIUM_PRESSURE_PLATE.get());
-
-        // Silent variants that wrap vanilla blocks — point items at the vanilla block models
-        withExistingParent(EIOBlocks.SILENT_OAK_PRESSURE_PLATE.getId().toString(), mcLoc("item/oak_pressure_plate"));
-        withExistingParent(EIOBlocks.SILENT_ACACIA_PRESSURE_PLATE.getId().toString(), mcLoc("item/acacia_pressure_plate"));
-        withExistingParent(EIOBlocks.SILENT_DARK_OAK_PRESSURE_PLATE.getId().toString(), mcLoc("item/dark_oak_pressure_plate"));
-        withExistingParent(EIOBlocks.SILENT_SPRUCE_PRESSURE_PLATE.getId().toString(), mcLoc("item/spruce_pressure_plate"));
-        withExistingParent(EIOBlocks.SILENT_BIRCH_PRESSURE_PLATE.getId().toString(), mcLoc("item/birch_pressure_plate"));
-        withExistingParent(EIOBlocks.SILENT_JUNGLE_PRESSURE_PLATE.getId().toString(), mcLoc("item/jungle_pressure_plate"));
-        withExistingParent(EIOBlocks.SILENT_CRIMSON_PRESSURE_PLATE.getId().toString(), mcLoc("item/crimson_pressure_plate"));
-        withExistingParent(EIOBlocks.SILENT_WARPED_PRESSURE_PLATE.getId().toString(), mcLoc("item/warped_pressure_plate"));
-        withExistingParent(EIOBlocks.SILENT_STONE_PRESSURE_PLATE.getId().toString(), mcLoc("item/stone_pressure_plate"));
-        withExistingParent(EIOBlocks.SILENT_POLISHED_BLACKSTONE_PRESSURE_PLATE.getId().toString(), mcLoc("item/polished_blackstone_pressure_plate"));
-        withExistingParent(EIOBlocks.SILENT_HEAVY_WEIGHTED_PRESSURE_PLATE.getId().toString(), mcLoc("item/heavy_weighted_pressure_plate"));
-        withExistingParent(EIOBlocks.SILENT_LIGHT_WEIGHTED_PRESSURE_PLATE.getId().toString(), mcLoc("item/light_weighted_pressure_plate"));
-
-        // Machine Blocks
-        addMachineItemModels();
+        // Conduit facades
+//        getBuilder(EIOItems.CONDUIT_FACADE.getId().toString())
+//            .customLoader(FacadeItemModelBuilder::begin)
+//            .model(EIOItems.CONDUIT_FACADE.getId().getPath());
+//
+//        getBuilder(EIOItems.TRANSPARENT_CONDUIT_FACADE.getId().toString())
+//            .customLoader(FacadeItemModelBuilder::begin)
+//            .model(EIOItems.TRANSPARENT_CONDUIT_FACADE.getId().getPath());
+//
+//        getBuilder(EIOItems.HARDENED_CONDUIT_FACADE.getId().toString())
+//            .customLoader(FacadeItemModelBuilder::begin)
+//            .model(EIOItems.HARDENED_CONDUIT_FACADE.getId().getPath());
+//
+//        getBuilder(EIOItems.TRANSPARENT_HARDENED_CONDUIT_FACADE.getId().toString())
+//            .customLoader(FacadeItemModelBuilder::begin)
+//            .model(EIOItems.TRANSPARENT_HARDENED_CONDUIT_FACADE.getId().getPath());
 
         // endregion
     }
 
-    private void addMachineItemModels() {
-        // Fluid Tanks - no item model needed (empty)
-
-        // Enchanter
-        simpleBlockItem(EIOBlocks.ENCHANTER.get());
-
-        // Enderface
-        simpleBlockItem(EIOBlocks.ENDERFACE.get());
-
-        // Progress Machines
-        simpleBlockItem(EIOBlocks.ALLOY_SMELTER.get());
-        simpleBlockItem(EIOBlocks.PAINTING_MACHINE.get());
-        simpleBlockItem(EIOBlocks.WIRELESS_CHARGER.get());
-        simpleBlockItem(EIOBlocks.STIRLING_GENERATOR.get());
-        simpleBlockItem(EIOBlocks.SAG_MILL.get());
-        simpleBlockItem(EIOBlocks.SLICE_AND_SPLICE.get());
-        simpleBlockItem(EIOBlocks.IMPULSE_HOPPER.get());
-        simpleBlockItem(EIOBlocks.SOUL_BINDER.get());
-        simpleBlockItem(EIOBlocks.CRAFTER.get());
-        simpleBlockItem(EIOBlocks.DRAIN.get());
-        simpleBlockItem(EIOBlocks.POWERED_SPAWNER.get());
-        simpleBlockItem(EIOBlocks.SOUL_ENGINE.get());
-
-        // Machines
-        simpleBlockItem(EIOBlocks.WIRED_CHARGER.get());
-
-        // Wireless Antennas
-        simpleBlockItem(EIOBlocks.WIRELESS_CHARGER_ANTENNA.get());
-        simpleBlockItem(EIOBlocks.WIRELESS_CHARGER_ANTENNA_ADVANCED.get());
-
-        // Creative Power
-        simpleBlockItem(EIOBlocks.CREATIVE_POWER.get());
-
-        // Mind Killer
-        simpleBlockItem(EIOBlocks.MIND_KILLER.get());
-
-        // Vacuum Machines
-        simpleBlockItem(EIOBlocks.VACUUM_CHEST.get());
-        simpleBlockItem(EIOBlocks.XP_VACUUM.get());
-
-        // Travel Anchors
-        simpleBlockItem(EIOBlocks.TRAVEL_ANCHOR.get());
-        simpleBlockItem(EIOBlocks.PAINTED_TRAVEL_ANCHOR.get());
-
-        // Solar Panels
-        for (var entry : EIOBlocks.SOLAR_PANELS.entrySet()) {
-            String tierName = entry.getKey().name().toLowerCase(Locale.ROOT);
-            withExistingParent(entry.getValue().getId().toString(), EnderIO.rl("item/photovoltaic_cell"))
-                .texture("side", "block/" + tierName + "_side")
-                .texture("panel", "block/" + tierName + "_top");
-        }
-
-        // Capacitor Banks - no item model needed (empty)
-
-        // Niard
-        simpleBlockItem(EIOBlocks.NIARD.get());
-
-        // VAT
-        simpleBlockItem(EIOBlocks.VAT.get());
-
-        // Block Detector
-        simpleBlockItem(EIOBlocks.BLOCK_DETECTOR.get());
-
-        // Obelisks
-        simpleBlockItem(EIOBlocks.XP_OBELISK.get());
-        simpleBlockItem(EIOBlocks.FARMING_STATION.get());
-        simpleBlockItem(EIOBlocks.INHIBITOR_OBELISK.get());
-        simpleBlockItem(EIOBlocks.AVERSION_OBELISK.get());
-        simpleBlockItem(EIOBlocks.RELOCATOR_OBELISK.get());
-        simpleBlockItem(EIOBlocks.ATTRACTOR_OBELISK.get());
-        simpleBlockItem(EIOBlocks.WEATHER_OBELISK.get());
+    private void createFakeBlock(BlockModelGenerators blockModelGenerators, Item item) {
+        ResourceLocation resourcelocation = ModelTemplates.CUBE_ALL.create(item, TextureMapping.cube(ModelLocationUtils.getModelLocation(item)), blockModelGenerators.modelOutput);
+        blockModelGenerators.registerSimpleItemModel(item, resourcelocation);
     }
 
-    private ItemModelBuilder fakeBlock(ItemLike item) {
-        return fakeBlock(BuiltInRegistries.ITEM.getKey(item.asItem()));
+    public void bucketItem(ItemModelGenerators itemModelGenerators, BucketItem item, Fluid fluid, boolean flipGas, boolean applyFluidLuminosity) {
+        ResourceLocation drip = ResourceLocation.fromNamespaceAndPath(NeoForgeVersion.MOD_ID, "item/mask/bucket_fluid_drip");
+        ResourceLocation bucket = ResourceLocation.withDefaultNamespace("item/bucket");
+        DynamicFluidContainerModel.Textures textures = new DynamicFluidContainerModel.Textures(Optional.empty(), Optional.of(bucket), Optional.of(drip), Optional.empty());
+        itemModelGenerators.itemModelOutput.accept(item, new DynamicFluidContainerModel.Unbaked(textures, fluid, flipGas, false, applyFluidLuminosity));
     }
 
-    private ItemModelBuilder fakeBlock(ResourceLocation item) {
-        return withExistingParent(item.toString(), mcLoc("block/cube_all"))
-            .texture("all", ResourceLocation.fromNamespaceAndPath(item.getNamespace(), "item/" + item.getPath()));
+
+    public void generateEnderios(ItemModelGenerators itemModelGenerators, Item item) {
+        ItemModel.Unbaked plain = ItemModelUtils.plainModel(ModelLocationUtils.getModelLocation(item));
+        ItemModel.Unbaked soiredne = ItemModelUtils.plainModel(EnderIO.rl("item/soiredne"));
+        itemModelGenerators.itemModelOutput.accept(item, ItemModelUtils.conditional(new EnderiosItem.Soiredne(), soiredne, plain));
     }
 
-    public ItemModelBuilder flatBlockItem(Block item) {
-        return flatBlockItem(Objects.requireNonNull(BuiltInRegistries.BLOCK.getKey(item)));
-    }
-
-    public ItemModelBuilder flatBlockItem(ResourceLocation block) {
-        return this.getBuilder(block.toString()).parent(new ModelFile.UncheckedModelFile("item/generated"))
-            .texture("layer0", ResourceLocation.fromNamespaceAndPath(block.getNamespace(), "block/" + block.getPath()));
-    }
-
-    public ItemModelBuilder bucketItem(BucketItem item) {
-        return withExistingParent(BuiltInRegistries.ITEM.getKey(item).toString(), ResourceLocation.fromNamespaceAndPath(NeoForgeVersion.MOD_ID, "item/bucket"))
-            .customLoader(DynamicFluidContainerModelBuilder::begin)
-            .fluid(item.content)
-            .end();
+    public void generateSoulVial(ItemModelGenerators itemModelGenerators, Item item) {
+        ItemModel.Unbaked plain = ItemModelUtils.plainModel(ModelLocationUtils.getModelLocation(item));
+        ItemModel.Unbaked filled = ItemModelUtils.plainModel(EnderIO.rl("item/soul_vial_filled"));
+        itemModelGenerators.itemModelOutput.accept(item, ItemModelUtils.conditional(new SoulVialItem.Filled(), filled, plain));
     }
 }

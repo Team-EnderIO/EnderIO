@@ -40,7 +40,7 @@ public class EIOItemTagsProvider extends IntrinsicHolderTagsProvider<Item> {
             .addTag(EIOTags.Items.BLOCKS_SOULARIUM)
             .addTag(EIOTags.Items.BLOCKS_VIBRANT_ALLOY);
 
-        //tag(ItemTags.SWORDS).add(EIOItems.DARK_STEEL_SWORD.get());
+        tag(ItemTags.SWORDS).add(EIOItems.DARK_STEEL_SWORD.get());
         tag(Tags.Items.CHAINS).add(EIOBlocks.SOUL_CHAIN.asItem());
 
         addCrystalTags();

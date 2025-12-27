@@ -5,11 +5,9 @@ import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
-import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
-import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.content.conduits.ConduitLang;
 import com.enderio.enderio.init.EIOConduitTypes;
 import com.mojang.serialization.Codec;
@@ -17,11 +15,11 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -32,7 +30,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public record ItemConduit(ResourceLocation texture, Component description, int transferRatePerCycle,
@@ -79,16 +76,16 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
     }
 
     @Override
-    public void addToTooltip(Item.TooltipContext pContext, Consumer<Component> pTooltipAdder,
-            TooltipFlag pTooltipFlag) {
+    public void addToTooltip(Item.TooltipContext tooltipContext, Consumer<Component> consumer, TooltipFlag tooltipFlag,
+        DataComponentGetter dataComponentGetter) {
         String calculatedTransferLimitFormatted = String.format("%,d",
-                (int) Math.floor(transferRatePerCycle() * (20.0 / networkTickRate())));
-        pTooltipAdder.accept(
-                TooltipUtil.styledWithArgs(ConduitLang.ITEM_EFFECTIVE_RATE_TOOLTIP, calculatedTransferLimitFormatted));
+            (int) Math.floor(transferRatePerCycle() * (20.0 / networkTickRate())));
+        consumer.accept(
+            TooltipUtil.styledWithArgs(ConduitLang.ITEM_EFFECTIVE_RATE_TOOLTIP, calculatedTransferLimitFormatted));
 
-        if (pTooltipFlag.hasShiftDown()) {
+        if (tooltipFlag.hasShiftDown()) {
             String transferLimitFormatted = String.format("%,d", transferRatePerCycle());
-            pTooltipAdder.accept(TooltipUtil.styledWithArgs(ConduitLang.ITEM_RAW_RATE_TOOLTIP, transferLimitFormatted));
+            consumer.accept(TooltipUtil.styledWithArgs(ConduitLang.ITEM_RAW_RATE_TOOLTIP, transferLimitFormatted));
         }
     }
 

@@ -11,8 +11,11 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,13 +55,11 @@ public class PaintedTravelAnchorBlockEntity extends TravelAnchorBlockEntity impl
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt,
-            HolderLookup.Provider lookupProvider) {
-        super.onDataPacket(net, pkt, lookupProvider);
+    public void onDataPacket(Connection net, ValueInput valueInput) {
+        super.onDataPacket(net, valueInput);
         Block oldPaint = paint;
-        CompoundTag tag = pkt.getTag();
 
-        handleUpdateTag(tag, lookupProvider);
+        handleUpdateTag(valueInput);
         if (oldPaint != paint) {
             requestModelDataUpdate();
             if (level != null) {
@@ -68,15 +69,9 @@ public class PaintedTravelAnchorBlockEntity extends TravelAnchorBlockEntity impl
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        super.loadAdditional(tag, lookupProvider);
-        readPaint(tag);
-    }
-
-    @Override
-    public void handleUpdateTag(CompoundTag syncData, HolderLookup.Provider lookupProvider) {
-        super.handleUpdateTag(syncData, lookupProvider);
-        readPaint(syncData);
+    public void handleUpdateTag(ValueInput input) {
+        super.handleUpdateTag(input);
+        readPaint(input);
     }
 
     @Override
@@ -86,26 +81,37 @@ public class PaintedTravelAnchorBlockEntity extends TravelAnchorBlockEntity impl
         return nbt;
     }
 
+    @Override
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        readPaint(input);
+    }
+
     // TODO: HOUSEKEEPING?: This should probably be converted to a capability.
-    protected void readPaint(CompoundTag tag) {
-        if (tag.contains(EIONBTKeys.PAINT)) {
-            paint = PaintUtils.getBlockFromRL(tag.getString(EIONBTKeys.PAINT));
-            if (level != null) {
-                if (level.isClientSide) {
-                    requestModelDataUpdate();
-                    level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(),
-                            Block.UPDATE_NEIGHBORS + Block.UPDATE_CLIENTS);
-                }
+    protected void readPaint(ValueInput input) {
+        input.read(EIONBTKeys.PAINT, ResourceLocation.CODEC).ifPresent(rl -> {
+            paint = PaintUtils.getBlockFromRL(rl);
+            if (level != null && level.isClientSide()) {
+                requestModelDataUpdate();
+                level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(),
+                    Block.UPDATE_NEIGHBORS + Block.UPDATE_CLIENTS);
             }
-        }
+        });
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        super.saveAdditional(tag, lookupProvider);
-        writePaint(tag);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        writePaint(output);
     }
 
+    protected void writePaint(ValueOutput output) {
+        if (paint != null) {
+            output.store(EIONBTKeys.PAINT, ResourceLocation.CODEC, BuiltInRegistries.BLOCK.getKey(this.paint));
+        }
+    }
+
+    //TODO why is tag still a thing?
     protected void writePaint(CompoundTag tag) {
         if (paint != null) {
             tag.putString(EIONBTKeys.PAINT, Objects.requireNonNull(BuiltInRegistries.BLOCK.getKey(paint)).toString());

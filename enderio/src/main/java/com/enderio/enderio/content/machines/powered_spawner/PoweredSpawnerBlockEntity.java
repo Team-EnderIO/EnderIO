@@ -23,16 +23,13 @@ import com.enderio.enderio.foundation.state.MachineStateType;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.foundation.task.MachineTask;
 import com.enderio.enderio.foundation.task.host.MachineTaskHost;
-import com.enderio.enderio.init.EIOAttachments;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOItems;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -51,7 +48,7 @@ import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.common.extensions.IOwnedSpawner;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
+import java.util.Optional;
 
 public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity implements IOwnedSpawner, SoulBindable {
     public static final SingleSlotAccess INPUT = new SingleSlotAccess();
@@ -87,14 +84,13 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
             }
 
             @Override
-            protected @Nullable MachineTask loadTask(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
+            protected @Nullable MachineTask loadTask(ValueInput input) {
                 var task = switch (mode) {
-                case SPAWN -> new MobSpawnTask(PoweredSpawnerBlockEntity.this);
-                case CAPTURE -> new MobCaptureTask(PoweredSpawnerBlockEntity.this);
+                    case SPAWN -> new MobSpawnTask(PoweredSpawnerBlockEntity.this);
+                    case CAPTURE -> new MobCaptureTask(PoweredSpawnerBlockEntity.this);
                 };
 
-                task.deserializeNBT(lookupProvider, nbt);
-
+                task.deserialize(input);
                 return task;
             }
         };
@@ -338,7 +334,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
         output.store(MachineNBTKeys.ENTITY_STORAGE, Soul.OPTIONAL_CODEC, boundSoul);
 
         if (mode != DEFAULT_MODE) {
-            tag.put(MachineNBTKeys.MACHINE_MODE, mode.save(registries));
+            output.store(MachineNBTKeys.MACHINE_MODE, PoweredSpawnerMode.CODEC, this.mode);
         }
 
         output.putBoolean(MachineNBTKeys.IS_RANGE_VISIBLE, isRangeVisible);
@@ -351,15 +347,13 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
         input.read(MachineNBTKeys.ENTITY_STORAGE, Soul.OPTIONAL_CODEC)
             .ifPresent(soul -> boundSoul = soul);
 
-        if (pTag.contains(MachineNBTKeys.MACHINE_MODE)) {
-            this.mode = PoweredSpawnerMode.parse(lookupProvider,
-                    Objects.requireNonNull(pTag.get(MachineNBTKeys.MACHINE_MODE)));
-        }
+        Optional<PoweredSpawnerMode> spawnerMode = input.read(MachineNBTKeys.MACHINE_MODE, PoweredSpawnerMode.CODEC);
+        spawnerMode.ifPresent(spawner -> this.mode = spawner);
 
         isRangeVisible = input.getBooleanOr(MachineNBTKeys.IS_RANGE_VISIBLE, false);
 
         // Load task host last
-        taskHost.load(lookupProvider, pTag);
+        taskHost.deserialize(input);
     }
 
     @Override

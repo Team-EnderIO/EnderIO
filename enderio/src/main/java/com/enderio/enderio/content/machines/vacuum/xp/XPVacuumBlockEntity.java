@@ -11,10 +11,8 @@ import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOFluids;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -55,7 +53,7 @@ public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb>
         if (filled == xpe.getValue() * EXP_TO_FLUID) {
             xpe.discard();
         } else {
-            xpe.value -= Math.round(filled / ((float) EXP_TO_FLUID));
+            xpe.setValue(xpe.getValue() - Math.round(filled / ((float) EXP_TO_FLUID)));
         }
     }
 

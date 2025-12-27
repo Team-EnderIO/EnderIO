@@ -2,7 +2,6 @@ package com.enderio.enderio.conduits.tests.fluid;
 
 import com.enderio.enderio.conduits.tests.ConduitGameTestHelper;
 import net.minecraft.core.BlockPos;
-import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestInfo;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -18,13 +17,13 @@ public class FluidConduitGameTestHelper extends ConduitGameTestHelper {
         var fluidHandler = getLevel().getCapability(Capabilities.FluidHandler.BLOCK, absolutePos(new BlockPos(x, y, z)),
             null);
         if (fluidHandler == null) {
-            throw new GameTestAssertException("No fluid handler at " + x + "," + y + "," + z);
+            throw helper.assertionException("No fluid handler at " + x + "," + y + "," + z);
         }
 
         int filled = fluidHandler.fill(new FluidStack(fluid, amount), IFluidHandler.FluidAction.EXECUTE);
 
         if (filled < amount) {
-            throw new GameTestAssertException(
+            throw helper.assertionException(
                     "Could not fill tank with all " + amount + " of the fluid into container at " + x + "," + y + "," + z);
         }
     }
@@ -33,13 +32,13 @@ public class FluidConduitGameTestHelper extends ConduitGameTestHelper {
         var fluidHandler = getLevel().getCapability(Capabilities.FluidHandler.BLOCK, absolutePos(new BlockPos(x, y, z)),
                 null);
         if (fluidHandler == null) {
-            throw new GameTestAssertException("No fluid handler at " + x + "," + y + "," + z);
+            throw helper.assertionException("No fluid handler at " + x + "," + y + "," + z);
         }
 
         int foundAmount = fluidHandler.drain(new FluidStack(fluid, Integer.MAX_VALUE), IFluidHandler.FluidAction.SIMULATE).getAmount();
 
         if (foundAmount != amount) {
-            throw new GameTestAssertException("Expected " + amount + " of " + fluid + " in tank at " + x + "," + y
+            throw helper.assertionException("Expected " + amount + " of " + fluid + " in tank at " + x + "," + y
                     + "," + z + " but found " + foundAmount);
         }
     }

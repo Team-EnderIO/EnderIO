@@ -4,11 +4,11 @@ import com.enderio.enderio.api.io.IOConfigurable;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.world.ItemStackWithSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemContainerContents;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
@@ -136,26 +136,49 @@ public class MachineInventory extends ItemStackHandler {
         return machineInventory;
     }
 
+
+    @Override
+    public void deserialize(ValueInput input) {
+        input.listOrEmpty("Items", ItemStackWithSlot.CODEC).forEach(slot -> {
+            if (slot.isValidInContainer(layout().getSlotCount())) {
+                stacks.set(slot.slot(), slot.stack());
+            } else {
+                LOGGER.warn("Skipping item from slot {}, as it is outside the bounds of the inventory.", slot);
+            }
+        });
+    }
+
+    @Override
+    public void serialize(ValueOutput output) {
+        ValueOutput.TypedOutputList<ItemStackWithSlot> itemList = output.list("Items", ItemStackWithSlot.CODEC);
+        for (int i = 0; i < stacks.size(); i++) {
+            var stack = stacks.get(i);
+            if (!stack.isEmpty()) {
+                itemList.add(new ItemStackWithSlot(i, stack));
+            }
+        }
+    }
+
     // Custom deserialize method that ignores the Size value in the tag.
     // This is because if we changed the size of the inventory, it'd load it with
     // the old size.
     // For backward compatibility, we use the original serialize method that writes
     // the Size.
     // TODO: Ender IO 8 - Look at this again.
-    @Override
-    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag tag) {
-        ListTag slotTags = tag.getList("Items", ListTag.TAG_COMPOUND);
-
-        for (int i = 0; i < slotTags.size(); i++) {
-            CompoundTag itemTags = slotTags.getCompound(i);
-            int slot = itemTags.getInt("Slot");
-            if (slot >= 0 && slot < layout.getSlotCount()) {
-                ItemStack.parse(provider, itemTags).ifPresent((stack) -> this.stacks.set(slot, stack));
-            } else {
-                LOGGER.warn("Skipping item from slot {}, as it is outside the bounds of the inventory.", slot);
-            }
-        }
-    }
+//    @Override
+//    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag tag) {
+//        ListTag slotTags = tag.getList("Items", ListTag.TAG_COMPOUND);
+//
+//        for (int i = 0; i < slotTags.size(); i++) {
+//            CompoundTag itemTags = slotTags.getCompound(i);
+//            int slot = itemTags.getInt("Slot");
+//            if (slot >= 0 && slot < layout.getSlotCount()) {
+//                ItemStack.parse(provider, itemTags).ifPresent((stack) -> this.stacks.set(slot, stack));
+//            } else {
+//                LOGGER.warn("Skipping item from slot {}, as it is outside the bounds of the inventory.", slot);
+//            }
+//        }
+//    }
 
     private record Wrapped(MachineInventory master, @Nullable Direction side) implements IItemHandler {
 

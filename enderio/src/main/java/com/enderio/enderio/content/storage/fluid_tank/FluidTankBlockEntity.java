@@ -14,11 +14,9 @@ import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIORecipes;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -29,6 +27,8 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -312,15 +312,15 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
     }
 
     @Override
-    protected void saveAdditionalSynced(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditionalSynced(tag, registries);
-        saveTank(registries, tag);
+    protected void saveAdditionalSynced(ValueOutput output) {
+        super.saveAdditionalSynced(output);
+        saveTank(output);
     }
 
     @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.loadAdditional(pTag, lookupProvider);
-        loadTank(lookupProvider, pTag);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        loadTank(input);
     }
 
     // endregion

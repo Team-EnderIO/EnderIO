@@ -19,7 +19,11 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class PaintUtils {
-    public static Block getBlockFromRL(String rl) {
+    public static Block getBlockFromRL(ResourceLocation rl) {
+        return BuiltInRegistries.BLOCK.getValue(rl);
+    }
+
+    public static Block getBlockFromString(String rl) {
         return BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(rl));
     }
 

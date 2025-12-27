@@ -2,7 +2,6 @@ package com.enderio.enderio.conduits.tests.item;
 
 import com.enderio.enderio.conduits.tests.ConduitGameTestHelper;
 import net.minecraft.core.BlockPos;
-import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestInfo;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -17,7 +16,7 @@ public class ItemConduitGameTestHelper extends ConduitGameTestHelper {
         var itemHandler = getLevel().getCapability(Capabilities.ItemHandler.BLOCK, absolutePos(new BlockPos(x, y, z)),
                 null);
         if (itemHandler == null) {
-            throw new GameTestAssertException("No item handler at " + x + "," + y + "," + z);
+            throw helper.assertionException("No item handler at " + x + "," + y + "," + z);
         }
 
         for (int i = 0; i < itemHandler.getSlots(); i++) {
@@ -30,7 +29,7 @@ public class ItemConduitGameTestHelper extends ConduitGameTestHelper {
         }
 
         if (count > 0) {
-            throw new GameTestAssertException(
+            throw helper.assertionException(
                     "Could not insert " + count + " items into container at " + x + "," + y + "," + z);
         }
     }
@@ -39,7 +38,7 @@ public class ItemConduitGameTestHelper extends ConduitGameTestHelper {
         var itemHandler = getLevel().getCapability(Capabilities.ItemHandler.BLOCK, absolutePos(new BlockPos(x, y, z)),
                 null);
         if (itemHandler == null) {
-            throw new GameTestAssertException("No item handler at " + x + "," + y + "," + z);
+            throw helper.assertionException("No item handler at " + x + "," + y + "," + z);
         }
 
         int foundCount = 0;
@@ -49,7 +48,7 @@ public class ItemConduitGameTestHelper extends ConduitGameTestHelper {
         }
 
         if (foundCount != count) {
-            throw new GameTestAssertException("Expected " + count + " of " + item + " in container at " + x + "," + y
+            throw helper.assertionException("Expected " + count + " of " + item + " in container at " + x + "," + y
                     + "," + z + " but found " + foundCount);
         }
     }

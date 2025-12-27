@@ -39,7 +39,7 @@ public class PaintedSandEntity extends FallingBlockEntity implements IEntityWith
     @Nullable
     public Block getPaint() {
         if (blockData != null) {
-            return PaintUtils.getBlockFromRL(blockData.getString(EIONBTKeys.PAINT));
+            return PaintUtils.getBlockFromString(blockData.getStringOr(EIONBTKeys.PAINT, "sand")); //TODO default?
         }
         return null;
     }

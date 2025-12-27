@@ -23,11 +23,9 @@ import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -39,6 +37,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
@@ -227,29 +227,31 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     }
 
     @Override
-    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.saveAdditional(pTag, lookupProvider);
-        pTag.putInt(BURNED_TICKS, burnedTicks);
-        saveTank(lookupProvider, pTag);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.putInt(BURNED_TICKS, burnedTicks);
+        saveTank(output);
     }
 
     @Override
-    protected void saveAdditionalSynced(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditionalSynced(tag, registries);
-        tag.put(MachineNBTKeys.ENTITY_STORAGE, boundSoul.saveOptional(registries));
+    protected void saveAdditionalSynced(ValueOutput output) {
+        super.saveAdditionalSynced(output);
+        output.store(MachineNBTKeys.ENTITY_STORAGE, Soul.CODEC, boundSoul);
     }
 
     @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.loadAdditional(pTag, lookupProvider);
-        burnedTicks = pTag.getIntOr(BURNED_TICKS, 0);
-        boundSoul = pTag.read(MachineNBTKeys.ENTITY_STORAGE, Soul.CODEC).orElse(Soul.EMPTY);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        burnedTicks = input.getIntOr(BURNED_TICKS, 0);
+        var bound = input.read(MachineNBTKeys.ENTITY_STORAGE, Soul.CODEC);
+        bound.ifPresent(s -> this.boundSoul = s);
 
         updateMachineState(MachineState.NO_POWER, false);
         updateMachineState(MachineState.FULL_POWER,
-                (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored())
-                        && isCapacitorInstalled());
-        loadTank(lookupProvider, pTag);
+            (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored())
+                && isCapacitorInstalled());
+
+        loadTank(input);
     }
 
     @Override

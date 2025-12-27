@@ -4,13 +4,14 @@ import com.enderio.enderio.content.paint.PaintUtils;
 import com.enderio.enderio.foundation.EIONBTKeys;
 import com.enderio.enderio.init.EIOBlockEntities;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.model.data.ModelData;
 import net.neoforged.neoforge.model.data.ModelProperty;
 import org.jetbrains.annotations.Nullable;
@@ -54,9 +55,9 @@ public class DoublePaintedBlockEntity extends SinglePaintedBlockEntity {
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
+    public void onDataPacket(Connection net, ValueInput valueInput) {
         Block oldPaint = getSecondaryPaint().orElse(null);
-        super.onDataPacket(net, pkt, lookupProvider);
+        super.onDataPacket(net, valueInput);
 
         if (oldPaint != paint2) {
             requestModelDataUpdate();
@@ -67,18 +68,27 @@ public class DoublePaintedBlockEntity extends SinglePaintedBlockEntity {
     }
 
     @Override
-    protected void readPaint(CompoundTag tag) {
-        super.readPaint(tag);
+    protected void readPaint(ValueInput input) {
+        super.readPaint(input);
 
-        if (tag.contains(EIONBTKeys.PAINT_2)) {
-            paint2 = PaintUtils.getBlockFromRL(tag.getString(EIONBTKeys.PAINT_2));
-            if (level != null) {
-                if (level.isClientSide) {
-                    requestModelDataUpdate();
-                    level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(),
-                        Block.UPDATE_NEIGHBORS + Block.UPDATE_CLIENTS);
-                }
+        input.read(EIONBTKeys.PAINT_2, ResourceLocation.CODEC).ifPresent(rl -> {
+            paint2 = PaintUtils.getBlockFromRL(rl);
+            if (level != null && level.isClientSide()) {
+                requestModelDataUpdate();
+                level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(),
+                    Block.UPDATE_NEIGHBORS + Block.UPDATE_CLIENTS);
             }
+        });
+
+
+    }
+
+    @Override
+    protected void writePaint(ValueOutput output) {
+        super.writePaint(output);
+
+        if (paint2 != null) {
+            output.store(EIONBTKeys.PAINT_2, ResourceLocation.CODEC, BuiltInRegistries.BLOCK.getKey(this.paint2));
         }
     }
 

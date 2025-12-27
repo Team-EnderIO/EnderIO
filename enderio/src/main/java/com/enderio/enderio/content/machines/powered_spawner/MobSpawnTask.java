@@ -94,7 +94,7 @@ public class MobSpawnTask extends PoweredSpawnerTask {
                     // TODO: Stop using BE to get entity tag data...
                     entity = EntityType.loadEntityRecursive(blockEntity.getBoundSoul().getEntityTagWithId(), level, EntitySpawnReason.SPAWNER,
                             entity1 -> {
-                                entity1.moveTo(x, y, z, entity1.getYRot(), entity1.getXRot());
+                                entity1.snapTo(new Vec3(x, y, z), entity1.getYRot(), entity1.getXRot());
                                 entity1.setUUID(UUID.randomUUID());
                                 return entity1;
                             });
@@ -103,7 +103,7 @@ public class MobSpawnTask extends PoweredSpawnerTask {
                     // TODO: should we be using the ctor that accepts a position and spawn type etc.
                     entity = entityType().create(level, EntitySpawnReason.SPAWNER);
                     if (entity != null) {
-                        entity.moveTo(x, y, z);
+                        entity.snapTo(new Vec3(x, y, z));
                     }
                 }
                 default -> throw new IllegalStateException("Unexpected value: " + spawnMode());
@@ -152,7 +152,7 @@ public class MobSpawnTask extends PoweredSpawnerTask {
     @SubscribeEvent
     public static void tickNoAIMobs(EntityTickEvent.Pre e) {
         if (e.getEntity() instanceof Mob mob) {
-            if (!mob.level().isClientSide() && mob.isNoAi() && mob.getPersistentData().getBoolean("enderio:movable")) {
+            if (!mob.level().isClientSide() && mob.isNoAi() && mob.getPersistentData().getBooleanOr("enderio:movable", false)) {
                 mob.setNoAi(false);
                 mob.travel(new Vec3(mob.xxa, mob.yya, mob.zza));
                 mob.setNoAi(true);

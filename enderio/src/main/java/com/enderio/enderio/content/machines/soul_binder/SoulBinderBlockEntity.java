@@ -6,6 +6,7 @@ import com.enderio.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.enderio.api.soul.SoulBoundUtils;
 import com.enderio.enderio.config.machines.MachinesConfig;
+import com.enderio.enderio.foundation.MachineNBTKeys;
 import com.enderio.enderio.foundation.attachment.FluidTankUser;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
@@ -28,10 +29,8 @@ import com.enderio.enderio.init.EIOItems;
 import com.enderio.enderio.init.EIORecipes;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -273,26 +272,14 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
     @Override
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
-        output.putChild("CraftingTaskHost", craftingTaskHost);
+        output.putChild(MachineNBTKeys.CRAFTING_TASK, craftingTaskHost);
     }
 
     @Override
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
-    }
-
-    @Override
-    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.saveAdditional(pTag, lookupProvider);
-        craftingTaskHost.save(lookupProvider, pTag);
-        saveTank(lookupProvider, pTag);
-    }
-
-    @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.loadAdditional(pTag, lookupProvider);
-        craftingTaskHost.load(lookupProvider, pTag);
-        loadTank(lookupProvider, pTag);
+        var task = input.child(MachineNBTKeys.CRAFTING_TASK);
+        task.ifPresent(craftingTaskHost::deserialize);
     }
 
     // endregion

@@ -9,11 +9,13 @@ import com.enderio.enderio.content.tools.ToolsLang;
 import com.enderio.enderio.foundation.util.EntityCaptureUtils;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOItems;
+import com.mojang.serialization.MapCodec;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.item.properties.conditional.ConditionalItemModelProperty;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -30,6 +32,7 @@ import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -39,6 +42,7 @@ import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.client.event.RegisterConditionalItemModelPropertyEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -219,7 +223,7 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
 
             // Try to get the entity NBT from the item.
             // TODO: 1.21.4: Do we need our own spawn reason? or is this fine?
-            Optional<Entity> entity = EntityType.create(storedSoul.getEntityTagWithId(), level, EntitySpawnReason.SPAWN_ITEM_USE);
+            Optional<Entity> entity = EntityType.create(storedSoul.asInput(level.registryAccess()), level, EntitySpawnReason.SPAWN_ITEM_USE);
 
             // Position the entity and add it.
             entity.ifPresent(ent -> {
@@ -331,4 +335,24 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
     }
 
     // endregion
+
+    //TODO Move?
+    @SubscribeEvent
+    public static void itemOverrides(RegisterConditionalItemModelPropertyEvent event) {
+        event.register(FILLED_MODEL_PROPERTY, Filled.MAP_CODEC);
+    }
+
+    public static class Filled implements ConditionalItemModelProperty {
+        public static final MapCodec<Filled> MAP_CODEC = MapCodec.unit(new Filled());
+
+        @Override
+        public MapCodec<? extends ConditionalItemModelProperty> type() {
+            return MAP_CODEC;
+        }
+
+        @Override
+        public boolean get(ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int seed, ItemDisplayContext displayContext) {
+            return stack.has(EIODataComponents.SOUL) && stack.get(EIODataComponents.SOUL).hasEntity();
+        }
+    }
 }

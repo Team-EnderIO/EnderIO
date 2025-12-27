@@ -7,6 +7,7 @@ import com.enderio.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.content.paint.BlockPaintData;
 import com.enderio.enderio.content.paint.block.PaintedBlock;
+import com.enderio.enderio.foundation.MachineNBTKeys;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
@@ -19,8 +20,6 @@ import com.enderio.enderio.init.EIOCriterions;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIORecipes;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -31,6 +30,8 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.Shapes;
 import org.jetbrains.annotations.Nullable;
@@ -176,15 +177,16 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
     // region Serialization
 
     @Override
-    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.saveAdditional(pTag, lookupProvider);
-        craftingTaskHost.save(lookupProvider, pTag);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.putChild(MachineNBTKeys.CRAFTING_TASK, craftingTaskHost);
     }
 
     @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.loadAdditional(pTag, lookupProvider);
-        craftingTaskHost.load(lookupProvider, pTag);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        var task = input.child(MachineNBTKeys.CRAFTING_TASK);
+        task.ifPresent(craftingTaskHost::deserialize);
     }
 
     // endregion

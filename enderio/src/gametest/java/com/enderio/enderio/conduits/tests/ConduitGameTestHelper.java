@@ -9,7 +9,7 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
-import net.minecraft.gametest.framework.GameTestAssertException;
+import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.gametest.framework.GameTestInfo;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.InteractionHand;
@@ -29,10 +29,12 @@ import java.util.function.Predicate;
 public class ConduitGameTestHelper extends ExtendedGameTestHelper {
     private static final UUID DEFAULT_FAKE_PLAYER_UUID = UUID.fromString("dc8dcc7b-033e-4157-a547-26cae4971aba");
     private final Player fakePlayer;
+    public final GameTestHelper helper;
 
     public ConduitGameTestHelper(GameTestInfo info) {
         super(info);
         fakePlayer = FakePlayerFactory.get(info.getLevel(), new GameProfile(DEFAULT_FAKE_PLAYER_UUID, "[EnderIO]"));
+        this.helper = new GameTestHelper(testInfo);
     }
 
     public Holder<Conduit<?, ?>> getConduit(ResourceKey<Conduit<?, ?>> conduitType) {
@@ -87,7 +89,7 @@ public class ConduitGameTestHelper extends ExtendedGameTestHelper {
         }
 
         if (!allowMissing) {
-            throw new GameTestAssertException("No conduit bundle at " + x + ", " + y + ", " + z);
+            throw helper.assertionException("No conduit bundle at " + x + ", " + y + ", " + z);
         }
         return null;
     }
@@ -99,7 +101,7 @@ public class ConduitGameTestHelper extends ExtendedGameTestHelper {
                 for (int z = startZ; z <= endZ; z++) {
                     var bundle = getConduitBundle(x, y, z, allowMissingBundles);
                     if (bundle != null && !predicate.test(bundle)) {
-                        throw new GameTestAssertException(errorMessage + " at " + x + ", " + y + ", " + z);
+                        throw helper.assertionException(errorMessage + " at " + x + ", " + y + ", " + z);
                     }
                 }
             }
@@ -126,7 +128,7 @@ public class ConduitGameTestHelper extends ExtendedGameTestHelper {
                     }
 
                     if (network != bundle.getConduitNode(conduit).getNetwork()) {
-                        throw new GameTestAssertException("Conduit node networks differ at " + x + ", " + y + ", " + z);
+                        throw helper.assertionException("Conduit node networks differ at " + x + ", " + y + ", " + z);
                     }
                 }
             }
@@ -160,7 +162,7 @@ public class ConduitGameTestHelper extends ExtendedGameTestHelper {
                                 var nodeB = bundleB.getConduitNode(conduit);
 
                                 if (nodeA.getNetwork() == nodeB.getNetwork()) {
-                                    throw new GameTestAssertException("Conduit nodes have same network at " + x1 + ", "
+                                    throw helper.assertionException("Conduit nodes have same network at " + x1 + ", "
                                             + y1 + ", " + z1 + " and " + x2 + ", " + y2 + ", " + z2);
                                 }
                             }
@@ -180,7 +182,7 @@ public class ConduitGameTestHelper extends ExtendedGameTestHelper {
         var secondNode = secondBundle.getConduitNode(conduit);
 
         if (firstNode.getNetwork() != secondNode.getNetwork()) {
-            throw new GameTestAssertException("Conduit nodes have different networks at " + x1 + ", " + y1 + ", " + z1
+            throw helper.assertionException("Conduit nodes have different networks at " + x1 + ", " + y1 + ", " + z1
                     + " and " + x2 + ", " + y2 + ", " + z2);
         }
     }
@@ -194,7 +196,7 @@ public class ConduitGameTestHelper extends ExtendedGameTestHelper {
         var secondNode = secondBundle.getConduitNode(conduit);
 
         if (firstNode.getNetwork() == secondNode.getNetwork()) {
-            throw new GameTestAssertException("Conduit nodes have same network at " + x1 + ", " + y1 + ", " + z1
+            throw helper.assertionException("Conduit nodes have same network at " + x1 + ", " + y1 + ", " + z1
                     + " and " + x2 + ", " + y2 + ", " + z2);
         }
     }

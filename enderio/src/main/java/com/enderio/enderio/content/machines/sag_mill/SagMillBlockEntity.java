@@ -6,6 +6,7 @@ import com.enderio.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.enderio.api.components.GrindingBallData;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.enderio.config.machines.MachinesConfig;
+import com.enderio.enderio.foundation.MachineNBTKeys;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
 import com.enderio.enderio.foundation.inventory.MachineInventory;
@@ -19,10 +20,8 @@ import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIORecipes;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -188,7 +187,7 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
     public void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
 
-        output.putChild("CraftingTaskHost", craftingTaskHost);
+        output.putChild(MachineNBTKeys.CRAFTING_TASK, craftingTaskHost);
 
         if (!grindingBallData.isIdentity()) {
             output.store(KEY_GRINDING_BALL, GrindingBallData.CODEC, grindingBallData);
@@ -200,7 +199,7 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
     public void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
 
-        input.child("CraftingTaskHost").ifPresent(craftingTaskHost::deserialize);
+        input.child(MachineNBTKeys.CRAFTING_TASK).ifPresent(craftingTaskHost::deserialize);
 
         grindingBallData = input.read(KEY_GRINDING_BALL, GrindingBallData.CODEC)
                 .orElse(GrindingBallData.IDENTITY);

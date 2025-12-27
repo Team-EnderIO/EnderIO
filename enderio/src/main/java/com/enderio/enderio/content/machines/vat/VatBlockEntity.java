@@ -4,6 +4,7 @@ import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.core.common.util.NamedFluidContents;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.UseOnly;
+import com.enderio.enderio.foundation.MachineNBTKeys;
 import com.enderio.enderio.foundation.attachment.FluidTankUser;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.inventory.MachineInventory;
@@ -21,10 +22,8 @@ import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIORecipes;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -33,6 +32,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
@@ -230,16 +231,17 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
     }
 
     @Override
-    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.saveAdditional(pTag, lookupProvider);
-        saveTank(lookupProvider, pTag);
-        craftingTaskHost.save(lookupProvider, pTag);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        saveTank(output);
+        output.putChild(MachineNBTKeys.CRAFTING_TASK, craftingTaskHost);
     }
 
     @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.loadAdditional(pTag, lookupProvider);
-        loadTank(lookupProvider, pTag);
-        craftingTaskHost.load(lookupProvider, pTag);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        loadTank(input);
+        var task = input.child(MachineNBTKeys.CRAFTING_TASK);
+        task.ifPresent(craftingTaskHost::deserialize);
     }
 }

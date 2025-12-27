@@ -27,11 +27,9 @@ import com.mojang.authlib.GameProfile;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EntityType;
@@ -45,6 +43,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.common.SpecialPlantable;
@@ -57,7 +57,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -451,35 +450,32 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        super.saveAdditional(tag, lookupProvider);
-        tag.putInt(CONSUMED, consumed);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.putInt(CONSUMED, consumed);
     }
 
     @Override
-    protected void saveAdditionalSynced(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditionalSynced(tag, registries);
+    protected void saveAdditionalSynced(ValueOutput output) {
+        super.saveAdditionalSynced(output);
 
         if (!actionRange.equals(DEFAULT_RANGE)) {
-            tag.put(MachineNBTKeys.ACTION_RANGE, actionRange.save(registries));
+            output.store(MachineNBTKeys.ACTION_RANGE, ActionRange.CODEC, this.actionRange);
         }
 
-        tag.put(MachineNBTKeys.ENTITY_STORAGE, boundSoul.saveOptional(registries));
+        output.store(MachineNBTKeys.ENTITY_STORAGE, Soul.CODEC, boundSoul);
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        super.loadAdditional(tag, lookupProvider);
-        consumed = tag.getInt(CONSUMED);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        this.consumed = input.getIntOr(CONSUMED, 0);
 
-        if (tag.contains(MachineNBTKeys.ACTION_RANGE)) {
-            actionRange = ActionRange.parse(lookupProvider,
-                    Objects.requireNonNull(tag.get(MachineNBTKeys.ACTION_RANGE)));
-        } else {
-            actionRange = DEFAULT_RANGE;
-        }
+        var range = input.read(MachineNBTKeys.ACTION_RANGE, ActionRange.CODEC);
+        range.ifPresent(r -> this.actionRange = r);
 
-        boundSoul = Soul.parseOptional(lookupProvider, tag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
+        var bound = input.read(MachineNBTKeys.ENTITY_STORAGE, Soul.CODEC);
+        bound.ifPresent(b -> this.boundSoul = b);
     }
 
     @Override

@@ -3,13 +3,13 @@ package com.enderio.enderio.foundation.task.host;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.enderio.foundation.MachineRecipe;
 import com.enderio.enderio.foundation.task.CraftingMachineTask;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
+import com.enderio.enderio.foundation.task.MachineTask;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -55,13 +55,13 @@ public class CraftingMachineTaskHost<R extends MachineRecipe<T>, T extends Recip
     }
 
     @Override
-    protected @Nullable CraftingMachineTask<R, T> loadTask(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
+    protected @Nullable MachineTask loadTask(ValueInput input) {
         if (getLevel() == null) {
             return null;
         }
 
         CraftingMachineTask<R, T> task = taskFactory.createTask(getLevel(), recipeInputSupplier.get(), null);
-        task.deserializeNBT(lookupProvider, nbt);
+        task.deserialize(input);
         return task;
     }
 

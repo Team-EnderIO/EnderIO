@@ -9,30 +9,29 @@ import net.minecraft.world.Containers;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.component.ResolvableProfile;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
 
-public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProvider, IDarkSteelItem {
+public class DarkSteelSwordItem extends Item implements AdvancedTooltipProvider, IDarkSteelItem {
     public DarkSteelSwordItem(Properties properties) {
-        super(DarkSteelTiers.DARK_STEEL_TIER, 3, -2.4F, properties);
+        super(properties.sword(DarkSteelTiers.DARK_STEEL_TIER, 3, -2.4F));
     }
 
     @Override
-    public boolean hurtEnemy(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) {
+    public void postHurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         // Temporary head drop logic
-        if (pTarget.isDeadOrDying() && pTarget.level().random.nextFloat() < 0.07) {
-            Optional<ItemStack> skull = getSkull(pTarget);
-            skull.ifPresent(itemStack -> Containers.dropItemStack(pAttacker.level(), pAttacker.position().x,
-                pAttacker.position().y, pAttacker.position().z, itemStack));
+        if (target.isDeadOrDying() && target.level().random.nextFloat() < 0.07) {
+            Optional<ItemStack> skull = getSkull(target);
+            skull.ifPresent(itemStack -> Containers.dropItemStack(attacker.level(), attacker.position().x,
+                attacker.position().y, attacker.position().z, itemStack));
         }
-
-        return super.hurtEnemy(pStack, pTarget, pAttacker);
+        super.postHurtEnemy(stack, target, attacker);
     }
 
     @Override
