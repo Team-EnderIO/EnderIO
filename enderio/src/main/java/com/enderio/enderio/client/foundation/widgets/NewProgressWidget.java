@@ -9,7 +9,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.function.Supplier;
@@ -21,13 +21,13 @@ public class NewProgressWidget extends AbstractWidget {
         BOTTOM_UP, TOP_DOWN, LEFT_RIGHT,
     }
 
-    private final ResourceLocation sprite;
+    private final Identifier sprite;
     private final FlowDirection flowDirection;
     private final Supplier<Float> progressSupplier;
 
     private final boolean showTooltip;
 
-    private NewProgressWidget(int x, int y, int width, int height, ResourceLocation sprite, FlowDirection flowDirection,
+    private NewProgressWidget(int x, int y, int width, int height, Identifier sprite, FlowDirection flowDirection,
             Supplier<Float> progressSupplier, boolean showTooltip) {
         super(x, y, width, height, Component.empty());
         this.flowDirection = flowDirection;
@@ -36,19 +36,19 @@ public class NewProgressWidget extends AbstractWidget {
         this.showTooltip = showTooltip;
     }
 
-    public static NewProgressWidget bottomUp(int x, int y, int width, int height, ResourceLocation sprite,
+    public static NewProgressWidget bottomUp(int x, int y, int width, int height, Identifier sprite,
             Supplier<Float> progressSupplier, boolean showTooltip) {
         return new NewProgressWidget(x, y, width, height, sprite, FlowDirection.BOTTOM_UP, progressSupplier,
                 showTooltip);
     }
 
-    public static NewProgressWidget topDown(int x, int y, int width, int height, ResourceLocation sprite,
+    public static NewProgressWidget topDown(int x, int y, int width, int height, Identifier sprite,
             Supplier<Float> progressSupplier, boolean showTooltip) {
         return new NewProgressWidget(x, y, width, height, sprite, FlowDirection.TOP_DOWN, progressSupplier,
                 showTooltip);
     }
 
-    public static NewProgressWidget leftRight(int x, int y, int width, int height, ResourceLocation sprite,
+    public static NewProgressWidget leftRight(int x, int y, int width, int height, Identifier sprite,
             Supplier<Float> progressSupplier, boolean showTooltip) {
         return new NewProgressWidget(x, y, width, height, sprite, FlowDirection.LEFT_RIGHT, progressSupplier,
                 showTooltip);

@@ -8,7 +8,7 @@ import com.enderio.enderio.content.capacitors.CapacitorItem;
 import com.enderio.enderio.content.capacitors.CapacitorLang;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -54,7 +54,7 @@ public class TotemicCapacitorItem extends CapacitorItem implements ICapacitorExt
 
         for (Map.Entry<CapacitorModifier, Float> modifier : capacitorData.modifiers().entrySet()) {
             tooltipComponents.add(TooltipUtil.styledWithArgs(
-                ResourceLocation.fromNamespaceAndPath("tooltip", modifier.getKey().modifierId.toLanguageKey()),
+                Identifier.fromNamespaceAndPath("tooltip", modifier.getKey().modifierId.toLanguageKey()),
                 fmt.format(modifier.getValue())));
         }
     }

@@ -14,21 +14,21 @@ import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import org.apache.commons.lang3.NotImplementedException;
 
 public class AlloySmelterScreen extends MachineScreen<AlloySmelterMenu> {
 
-    public static final ResourceLocation BG_TEXTURE_AUTO = EnderIO.rl("textures/gui/screen/alloy_smelter_auto.png");
-    private static final ResourceLocation BG_TEXTURE_ALLOY = EnderIO.rl("textures/gui/screen/alloy_smelter_alloy.png");
-    private static final ResourceLocation BG_TEXTURE_FURNACE = EnderIOAPI
+    public static final Identifier BG_TEXTURE_AUTO = EnderIO.rl("textures/gui/screen/alloy_smelter_auto.png");
+    private static final Identifier BG_TEXTURE_ALLOY = EnderIO.rl("textures/gui/screen/alloy_smelter_alloy.png");
+    private static final Identifier BG_TEXTURE_FURNACE = EnderIOAPI
             .rl("textures/gui/screen/alloy_smelter_furnace.png");
 
     private static final int WIDTH = 176;
     private static final int HEIGHT = 208;
 
-    private static final ResourceLocation PROGRESS_SPRITE = EnderIO.rl("screen/alloy_smelter/lit_progress");
+    private static final Identifier PROGRESS_SPRITE = EnderIO.rl("screen/alloy_smelter/lit_progress");
 
     public AlloySmelterScreen(AlloySmelterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);

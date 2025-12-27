@@ -4,7 +4,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.contents.TranslatableContents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class TooltipUtil {
 
@@ -39,7 +39,7 @@ public class TooltipUtil {
     /**
      * Translate, style and fill args
      */
-    public static Component styledWithArgs(ResourceLocation key, Object... args) {
+    public static Component styledWithArgs(Identifier key, Object... args) {
         return style(Component.translatable(key.toLanguageKey(), args));
     }
 }

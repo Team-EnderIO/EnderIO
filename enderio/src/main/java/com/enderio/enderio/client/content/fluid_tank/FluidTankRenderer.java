@@ -10,7 +10,7 @@ import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -38,7 +38,7 @@ public class FluidTankRenderer implements SpecialModelRenderer<IFluidHandlerItem
         // Get the model for the fluid tank block
 //        BakedModel model = Minecraft.getInstance()
 //            .getModelManager()
-//            .getModel(new ModelResourceLocation(BuiltInRegistries.ITEM.getKey(stack.getItem()), "facing=north"));
+//            .getModel(new ModelIdentifier(BuiltInRegistries.ITEM.getKey(stack.getItem()), "facing=north"));
 //        poseStack.pushPose();
 //
 //        // Render the main model
@@ -82,7 +82,7 @@ public class FluidTankRenderer implements SpecialModelRenderer<IFluidHandlerItem
 
     public static final class Unbaked implements SpecialModelRenderer.Unbaked {
 
-        public static final ResourceLocation ID = EnderIO.rl("fluid_tank");
+        public static final Identifier ID = EnderIO.rl("fluid_tank");
         public static final FluidTankRenderer.Unbaked INSTANCE = new FluidTankRenderer.Unbaked();
         public static final MapCodec<FluidTankRenderer.Unbaked> CODEC = MapCodec.unit(INSTANCE);
 

@@ -2,7 +2,7 @@ package com.enderio.core.common.registries;
 
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -22,7 +22,7 @@ public abstract class EnderDeferredRegister<T, U extends DeferredHolder<T, ? ext
     }
 
     @Override
-    public <I extends T> DeferredHolder<T, I> register(String name, Function<ResourceLocation, ? extends I> func) {
+    public <I extends T> DeferredHolder<T, I> register(String name, Function<Identifier, ? extends I> func) {
         return super.register(name, func);
     }
 }

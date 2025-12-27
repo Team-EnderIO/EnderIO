@@ -10,7 +10,7 @@ import com.enderio.enderio.foundation.state.MachineState;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
@@ -291,7 +291,7 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
     }
 
     @Nullable
-    protected RecipeHolder<R> loadRecipe(ResourceLocation id) {
+    protected RecipeHolder<R> loadRecipe(Identifier id) {
         try {
             // noinspection unchecked
             if (level instanceof ServerLevel serverLevel) {

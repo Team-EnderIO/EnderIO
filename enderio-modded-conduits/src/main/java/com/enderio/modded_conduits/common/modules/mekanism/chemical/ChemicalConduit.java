@@ -20,7 +20,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -34,7 +34,7 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public record ChemicalConduit(ResourceLocation texture, Component description, long transferRatePerTick,
+public record ChemicalConduit(Identifier texture, Component description, long transferRatePerTick,
         boolean isMultiChemical) implements Conduit<ChemicalConduit, ChemicalConduitConnectionConfig> {
 
     public static final int EXTRACT_FILTER_SLOT = 0;
@@ -43,7 +43,7 @@ public record ChemicalConduit(ResourceLocation texture, Component description, l
     public static final MapCodec<ChemicalConduit> CODEC = RecordCodecBuilder
             .mapCodec(
                     builder -> builder
-                            .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(ChemicalConduit::texture),
+                            .group(Identifier.CODEC.fieldOf("texture").forGetter(ChemicalConduit::texture),
                                     ComponentSerialization.CODEC.fieldOf("description")
                                             .forGetter(ChemicalConduit::description),
                                     Codec.LONG.fieldOf("transfer_rate").forGetter(ChemicalConduit::transferRatePerTick),

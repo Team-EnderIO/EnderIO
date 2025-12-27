@@ -9,7 +9,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 
 import java.util.HashSet;
@@ -41,13 +41,13 @@ public interface ConduitType<T extends Conduit<T, ?>> {
         return new Builder<>(codec);
     }
 
-    static <T extends Conduit<T, ?>> ConduitType<T> of(BiFunction<ResourceLocation, Component, T> factory) {
+    static <T extends Conduit<T, ?>> ConduitType<T> of(BiFunction<Identifier, Component, T> factory) {
         return builder(factory).build();
     }
 
-    static <T extends Conduit<T, ?>> Builder<T> builder(BiFunction<ResourceLocation, Component, T> factory) {
+    static <T extends Conduit<T, ?>> Builder<T> builder(BiFunction<Identifier, Component, T> factory) {
         return new Builder<T>(RecordCodecBuilder.mapCodec(builder -> builder
-                .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(Conduit::texture),
+                .group(Identifier.CODEC.fieldOf("texture").forGetter(Conduit::texture),
                         ComponentSerialization.CODEC.fieldOf("description").forGetter(Conduit::description))
                 .apply(builder, factory)));
     }

@@ -23,7 +23,7 @@
 //import net.minecraft.client.Minecraft;
 //import net.minecraft.client.multiplayer.ClientLevel;
 //import net.minecraft.core.RegistryAccess;
-//import net.minecraft.resources.ResourceLocation;
+//import net.minecraft.resources.Identifier;
 //import net.minecraft.world.item.ItemStack;
 //import net.minecraft.world.item.crafting.Recipe;
 //
@@ -34,7 +34,7 @@
 //public class EnderIOJEI implements IModPlugin {
 //
 //    @Override
-//    public ResourceLocation getPluginUid() {
+//    public Identifier getPluginUid() {
 //        return EnderIO.rl("base");
 //    }
 //

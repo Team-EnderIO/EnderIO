@@ -17,7 +17,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.ByIdMap;
 import net.minecraft.util.StringRepresentable;
@@ -265,7 +265,7 @@ public final class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.In
                 .apply(instance, SizedTagOutput::new));
 
             private static final StreamCodec<RegistryFriendlyByteBuf, SizedTagOutput> STREAM_CODEC = StreamCodec.composite(
-                ResourceLocation.STREAM_CODEC.map(loc -> TagKey.create(Registries.ITEM, loc), TagKey::location), SizedTagOutput::itemTag, ByteBufCodecs.INT,
+                Identifier.STREAM_CODEC.map(loc -> TagKey.create(Registries.ITEM, loc), TagKey::location), SizedTagOutput::itemTag, ByteBufCodecs.INT,
                 SizedTagOutput::count, SizedTagOutput::new);
 
             public ItemStack getItemStack() {

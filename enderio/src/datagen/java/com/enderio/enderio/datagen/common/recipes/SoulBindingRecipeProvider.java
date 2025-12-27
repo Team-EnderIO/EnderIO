@@ -15,7 +15,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -109,7 +109,7 @@ public class SoulBindingRecipeProvider extends SubRecipeProvider {
                 recipeOutput);
     }
 
-    protected void build(ItemLike output, Ingredient input, int energy, int exp, Optional<ResourceLocation> entityType,
+    protected void build(ItemLike output, Ingredient input, int energy, int exp, Optional<Identifier> entityType,
             Optional<MobCategory> mobCategory, Optional<String> souldata, boolean copyInputData,
             RecipeOutput recipeOutput) {
         recipeOutput.accept(ResourceKey.create(Registries.RECIPE, EnderIO.rl("soulbinding/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath())),

@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.block.model.TextureSlots;
 import net.minecraft.client.resources.model.UnbakedGeometry;
 import net.minecraft.client.resources.model.UnbakedModel;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.context.ContextMap;
 import net.neoforged.fml.ModList;
@@ -56,7 +56,7 @@ public class EitherModelLoader implements UnbakedModelLoader<EitherModelLoader.U
         }
 
         @Override
-        public @Nullable ResourceLocation parent() {
+        public @Nullable Identifier parent() {
             return model.parent();
         }
 

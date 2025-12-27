@@ -23,7 +23,7 @@ import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
@@ -73,7 +73,7 @@ public class RefinedStorageCommonModule implements ConduitCommonModule {
     private static final Component LANG_RS_CONDUIT = addTranslation("item", EnderIO.rl("rs"),
             "Refined Storage Conduit");
 
-    private static MutableComponent addTranslation(String prefix, ResourceLocation id, String translation) {
+    private static MutableComponent addTranslation(String prefix, Identifier id, String translation) {
         return ModdedConduits.REGILITE.addTranslation(prefix, id, translation);
     }
 

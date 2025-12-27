@@ -17,7 +17,7 @@
 //import net.minecraft.client.player.LocalPlayer;
 //import net.minecraft.client.resources.language.I18n;
 //import net.minecraft.network.chat.Component;
-//import net.minecraft.resources.ResourceLocation;
+//import net.minecraft.resources.Identifier;
 //import net.minecraft.world.item.ItemStack;
 //import net.minecraft.world.item.Items;
 //import net.minecraft.world.item.enchantment.Enchantment;
@@ -40,7 +40,7 @@
 //    }
 //
 //    @Override
-//    public @Nullable ResourceLocation getRegistryName(WrappedEnchanterRecipe recipe) {
+//    public @Nullable Identifier getRegistryName(WrappedEnchanterRecipe recipe) {
 //        return recipe.id();
 //    }
 //

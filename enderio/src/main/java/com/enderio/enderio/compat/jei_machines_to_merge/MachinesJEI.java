@@ -40,13 +40,13 @@
 //import mezz.jei.api.registration.IRecipeRegistration;
 //import mezz.jei.api.registration.IRecipeTransferRegistration;
 //import mezz.jei.api.registration.ISubtypeRegistration;
-//import net.minecraft.resources.ResourceLocation;
+//import net.minecraft.resources.Identifier;
 //import net.minecraft.world.item.ItemStack;
 //
 //@JeiPlugin
 //public class MachinesJEI implements IModPlugin {
 //    @Override
-//    public ResourceLocation getPluginUid() {
+//    public Identifier getPluginUid() {
 //        return EnderIO.rl("machines");
 //    }
 //

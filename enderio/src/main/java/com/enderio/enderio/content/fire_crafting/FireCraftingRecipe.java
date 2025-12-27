@@ -14,7 +14,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.PlacementInfo;
@@ -118,7 +118,7 @@ public record FireCraftingRecipe(List<Result> results, List<Block> bases, List<T
         public static final StreamCodec<RegistryFriendlyByteBuf, FireCraftingRecipe> STREAM_CODEC = StreamCodec
                 .composite(Result.STREAM_CODEC.apply(ByteBufCodecs.list()), FireCraftingRecipe::results,
                         ByteBufCodecs.registry(Registries.BLOCK).apply(ByteBufCodecs.list()), FireCraftingRecipe::bases,
-                        ResourceLocation.STREAM_CODEC.map(loc -> TagKey.create(Registries.BLOCK, loc), TagKey::location)
+                        Identifier.STREAM_CODEC.map(loc -> TagKey.create(Registries.BLOCK, loc), TagKey::location)
                                 .apply(ByteBufCodecs.list()),
                         FireCraftingRecipe::baseTags,
                         ResourceKey.streamCodec(Registries.DIMENSION).apply(ByteBufCodecs.list()),

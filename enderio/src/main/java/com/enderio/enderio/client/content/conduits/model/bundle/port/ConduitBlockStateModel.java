@@ -24,7 +24,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
@@ -115,7 +115,7 @@ public class ConduitBlockStateModel implements DynamicBlockStateModel {
 //                            IQuadTransformer color = rotationTranslation.andThen(new ColorQuadTransformer( //TODO fix color
 //                                connectionState.inputChannel(), connectionState.outputChannel()));
 
-                            ResourceLocation model = null;
+                            Identifier model = null;
                             if (connectionState.canInput() && connectionState.canOutput()) {
                                 model = ConduitAdditionalModels.CONDUIT_IO_IN_OUT;
                             } else if (connectionState.canInput()) {
@@ -297,7 +297,7 @@ public class ConduitBlockStateModel implements DynamicBlockStateModel {
         return new Vector3f(vector.getX() * scaler, vector.getY() * scaler, vector.getZ() * scaler);
     }
 
-    private static TextureAtlasSprite sprite(ResourceLocation location) {
+    private static TextureAtlasSprite sprite(Identifier location) {
         return Minecraft.getInstance().getModelManager().getAtlas(TextureAtlas.LOCATION_BLOCKS).getSprite(location);
     }
 

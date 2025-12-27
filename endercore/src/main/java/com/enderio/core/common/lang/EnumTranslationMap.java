@@ -1,7 +1,7 @@
 package com.enderio.core.common.lang;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
@@ -25,7 +25,7 @@ public class EnumTranslationMap<T extends Enum<T>> {
 
         @FunctionalInterface
         public interface TranslationRegistrar {
-            Component createTranslation(String prefix, ResourceLocation key, String english);
+            Component createTranslation(String prefix, Identifier key, String english);
         }
 
         private final String modId;
@@ -43,7 +43,7 @@ public class EnumTranslationMap<T extends Enum<T>> {
         }
 
         public Builder<T> addTranslation(T value, String english) {
-            ResourceLocation key = ResourceLocation.fromNamespaceAndPath(modId,
+            Identifier key = Identifier.fromNamespaceAndPath(modId,
                     translationPrefix + "." + value.name().toLowerCase(Locale.ROOT));
             translations.put(value, translationRegistrar.createTranslation("gui", key, english));
 

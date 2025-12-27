@@ -7,7 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
@@ -71,7 +71,7 @@ public class DoublePaintedBlockEntity extends SinglePaintedBlockEntity {
     protected void readPaint(ValueInput input) {
         super.readPaint(input);
 
-        input.read(EIONBTKeys.PAINT_2, ResourceLocation.CODEC).ifPresent(rl -> {
+        input.read(EIONBTKeys.PAINT_2, Identifier.CODEC).ifPresent(rl -> {
             paint2 = PaintUtils.getBlockFromRL(rl);
             if (level != null && level.isClientSide()) {
                 requestModelDataUpdate();
@@ -88,7 +88,7 @@ public class DoublePaintedBlockEntity extends SinglePaintedBlockEntity {
         super.writePaint(output);
 
         if (paint2 != null) {
-            output.store(EIONBTKeys.PAINT_2, ResourceLocation.CODEC, BuiltInRegistries.BLOCK.getKey(this.paint2));
+            output.store(EIONBTKeys.PAINT_2, Identifier.CODEC, BuiltInRegistries.BLOCK.getKey(this.paint2));
         }
     }
 

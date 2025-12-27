@@ -14,14 +14,14 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 import java.text.DecimalFormat;
 
 public class StirlingGeneratorScreen extends MachineScreen<StirlingGeneratorMenu> {
     private static final DecimalFormat FORMAT = new DecimalFormat("0.00");
-    public static final ResourceLocation BG_TEXTURE = EnderIO.rl("textures/gui/screen/stirling_generator.png");
+    public static final Identifier BG_TEXTURE = EnderIO.rl("textures/gui/screen/stirling_generator.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
 

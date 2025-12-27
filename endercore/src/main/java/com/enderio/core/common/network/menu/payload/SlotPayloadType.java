@@ -18,7 +18,7 @@ public enum SlotPayloadType {
     // MC data types
     BLOCK_POS(() -> BlockPosSlotPayload.STREAM_CODEC), ITEM_STACK(() -> ItemStackSlotPayload.STREAM_CODEC),
     FLUID_STACK(() -> FluidStackSlotPayload.STREAM_CODEC),
-    RESOURCE_LOCATION(() -> ResourceLocationSlotPayload.STREAM_CODEC),
+    RESOURCE_LOCATION(() -> IdentifierSlotPayload.STREAM_CODEC),
 
     // Tools for combining payloads.
     LIST(() -> ListSlotPayload.STREAM_CODEC), PAIR(() -> PairSlotPayload.STREAM_CODEC),;

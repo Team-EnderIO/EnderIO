@@ -24,7 +24,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -89,8 +89,8 @@ public class EIOBlockStateProvider extends ModelProvider {
         }
 
         // Glass Blocks
-        ResourceLocation fusedQuartzModel = EnderIO.rl("block/fused_quartz");
-        ResourceLocation clearGlassModel = EnderIO.rl("block/clear_glass");
+        Identifier fusedQuartzModel = EnderIO.rl("block/fused_quartz");
+        Identifier clearGlassModel = EnderIO.rl("block/clear_glass");
 
         for (var glassBlocks : EIOBlocks.GLASS_BLOCKS.values()) {
             for (var block : glassBlocks.getAllBlocks().toList()) {
@@ -102,8 +102,8 @@ public class EIOBlockStateProvider extends ModelProvider {
         blockModels.createAxisAlignedPillarBlockCustomModel(EIOBlocks.SOUL_CHAIN.get(),  plainVariant(ModelLocationUtils.getModelLocation(EIOBlocks.SOUL_CHAIN.get())));
         blockModels.registerSimpleFlatItemModel(EIOBlocks.SOUL_CHAIN.get());
 
-        ResourceLocation resourcelocation = ModelLocationUtils.decorateItemModelLocation("template_skull");
-        blockModels.createHead(EIOBlocks.ENDERMAN_HEAD.get(), EIOBlocks.WALL_ENDERMAN_HEAD.get(), EnderSkullBlock.EIOSkulls.ENDERMAN, resourcelocation);
+        Identifier Identifier = ModelLocationUtils.decorateItemModelLocation("template_skull");
+        blockModels.createHead(EIOBlocks.ENDERMAN_HEAD.get(), EIOBlocks.WALL_ENDERMAN_HEAD.get(), EnderSkullBlock.EIOSkulls.ENDERMAN, Identifier);
         blockModels.createTrivialCube(EIOBlocks.INDUSTRIAL_INSULATION.get());
 
         // Pressure Plates
@@ -130,8 +130,8 @@ public class EIOBlockStateProvider extends ModelProvider {
         registerFluidBlocks(blockModels);
     }
 
-    private void simpleBlockWithModel(BlockModelGenerators blockModels, Block block, ResourceLocation resourcelocation) {
-        blockModels.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(block, plainVariant(resourcelocation)));
+    private void simpleBlockWithModel(BlockModelGenerators blockModels, Block block, Identifier Identifier) {
+        blockModels.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(block, plainVariant(Identifier)));
     }
 
     private void simpleTranslucentBlock(BlockModelGenerators blockModels, Block block) {
@@ -227,22 +227,22 @@ public class EIOBlockStateProvider extends ModelProvider {
 
     public void pressurePlate(BlockModelGenerators blockModelGenerators, Block block) {
         String name = name(block);
-        ResourceLocation texture;
+        Identifier texture;
         if (name.startsWith("silent_")) {
             texture = EnderIO.rl("block/" + name.substring(7));
         } else {
             texture = ModelLocationUtils.getModelLocation(block);
         }
-        ResourceLocation resourcelocation = ModelTemplates.PRESSURE_PLATE_UP.create(block, TextureMapping.cube(texture), blockModelGenerators.modelOutput);
-        ResourceLocation resourcelocation1 = ModelTemplates.PRESSURE_PLATE_DOWN.create(block, TextureMapping.cube(texture), blockModelGenerators.modelOutput);
-        blockModelGenerators.blockStateOutput.accept(BlockModelGenerators.createPressurePlate(block, plainVariant(resourcelocation), plainVariant(resourcelocation1)));
+        Identifier Identifier = ModelTemplates.PRESSURE_PLATE_UP.create(block, TextureMapping.cube(texture), blockModelGenerators.modelOutput);
+        Identifier Identifier1 = ModelTemplates.PRESSURE_PLATE_DOWN.create(block, TextureMapping.cube(texture), blockModelGenerators.modelOutput);
+        blockModelGenerators.blockStateOutput.accept(BlockModelGenerators.createPressurePlate(block, plainVariant(Identifier), plainVariant(Identifier1)));
     }
 
     public void silentPressurePlate(BlockModelGenerators blockModelGenerators, Block block, Block vanilla) {
-        ResourceLocation texture = ModelLocationUtils.getModelLocation(vanilla);
-        ResourceLocation resourcelocation = ModelTemplates.PRESSURE_PLATE_UP.create(block, TextureMapping.cube(texture), blockModelGenerators.modelOutput);
-        ResourceLocation resourcelocation1 = ModelTemplates.PRESSURE_PLATE_DOWN.create(block, TextureMapping.cube(texture), blockModelGenerators.modelOutput);
-        blockModelGenerators.blockStateOutput.accept(BlockModelGenerators.createPressurePlate(block, plainVariant(resourcelocation), plainVariant(resourcelocation1)));
+        Identifier texture = ModelLocationUtils.getModelLocation(vanilla);
+        Identifier Identifier = ModelTemplates.PRESSURE_PLATE_UP.create(block, TextureMapping.cube(texture), blockModelGenerators.modelOutput);
+        Identifier Identifier1 = ModelTemplates.PRESSURE_PLATE_DOWN.create(block, TextureMapping.cube(texture), blockModelGenerators.modelOutput);
+        blockModelGenerators.blockStateOutput.accept(BlockModelGenerators.createPressurePlate(block, plainVariant(Identifier), plainVariant(Identifier1)));
     }
 
 //    @Override
@@ -362,8 +362,8 @@ public class EIOBlockStateProvider extends ModelProvider {
 
     private void fluidTankBlock(BlockModelGenerators blockModelGenerators, Block block) {
         String name = name(block);
-        ResourceLocation tank =  EnderIO.rl(String.format("block/%s_body", name));
-        ResourceLocation overlay =  EnderIO.rl("block/io_overlay");
+        Identifier tank =  EnderIO.rl(String.format("block/%s_body", name));
+        Identifier overlay =  EnderIO.rl("block/io_overlay");
 
         blockModelGenerators.blockStateOutput.accept(
             MultiPartGenerator.multiPart(block)
@@ -372,7 +372,7 @@ public class EIOBlockStateProvider extends ModelProvider {
     }
 
     private void machineBlock(BlockModelGenerators blockModelGenerators, Block block) {
-        ResourceLocation model = wrapMachineModel(blockModelGenerators, block, ModelLocationUtils.getModelLocation(block));
+        Identifier model = wrapMachineModel(blockModelGenerators, block, ModelLocationUtils.getModelLocation(block));
         MultiVariantGenerator.dispatch(block, plainVariant(model))
             .with(BlockModelGenerators.ROTATION_HORIZONTAL_FACING);
     }
@@ -380,7 +380,7 @@ public class EIOBlockStateProvider extends ModelProvider {
     private void progressMachineBlock(BlockModelGenerators blockModelGenerators, Block block) {
         String ns = key(block).getNamespace();
         String path = key(block).getPath();
-        var powered = ResourceLocation.fromNamespaceAndPath(ns, "block/" + path + "_active");
+        var powered = Identifier.fromNamespaceAndPath(ns, "block/" + path + "_active");
 
         var unpoweredModel = wrapMachineModel(blockModelGenerators, block, ModelLocationUtils.getModelLocation(block));
         var poweredModel = wrapMachineModel(blockModelGenerators, block, powered);
@@ -418,7 +418,7 @@ public class EIOBlockStateProvider extends ModelProvider {
 
     private static final ModelTemplate COMBINED_MACHINE = ModelTemplates.create(TextureSlot.PARTICLE);
 
-    private ResourceLocation wrapMachineModel(BlockModelGenerators blockModelGenerators, Block block, ResourceLocation model) {
+    private Identifier wrapMachineModel(BlockModelGenerators blockModelGenerators, Block block, Identifier model) {
         return COMBINED_MACHINE.extend()
             .customLoader(CompositeModelBuilder::new, builder -> {
                 builder.child("machine", model);
@@ -427,7 +427,7 @@ public class EIOBlockStateProvider extends ModelProvider {
             .create(EnderIO.rl("block/" + model.getPath() + "_combined"), TextureMapping.cube(block), blockModelGenerators.modelOutput);
     }
 
-    private ResourceLocation key(Block block) {
+    private Identifier key(Block block) {
         return BuiltInRegistries.BLOCK.getKey(block);
     }
 

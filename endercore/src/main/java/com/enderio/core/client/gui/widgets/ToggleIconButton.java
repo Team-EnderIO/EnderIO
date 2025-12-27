@@ -6,7 +6,7 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
@@ -15,14 +15,14 @@ import java.util.function.Supplier;
 
 public class ToggleIconButton extends EnderButton {
 
-    private final Function<Boolean, ResourceLocation> spriteFunction;
+    private final Function<Boolean, Identifier> spriteFunction;
     private final Supplier<Boolean> getter;
     private final Consumer<Boolean> setter;
 
     @Nullable
     private final Function<Boolean, Component> tooltipFunction;
 
-    public ToggleIconButton(int x, int y, int width, int height, Function<Boolean, ResourceLocation> spriteFunction,
+    public ToggleIconButton(int x, int y, int width, int height, Function<Boolean, Identifier> spriteFunction,
             @Nullable Function<Boolean, Component> tooltipFunction, Supplier<Boolean> getter,
             Consumer<Boolean> setter) {
         super(x, y, width, height, Component.empty());
@@ -38,15 +38,15 @@ public class ToggleIconButton extends EnderButton {
 
     // region Presets and helpers
 
-    private static final ResourceLocation CHECKMARK = ResourceLocation.fromNamespaceAndPath(EnderCore.MOD_ID,
+    private static final Identifier CHECKMARK = Identifier.fromNamespaceAndPath(EnderCore.MOD_ID,
             "icon/checkmark");
 
     public static ToggleIconButton createCheckbox(int x, int y, Supplier<Boolean> getter, Consumer<Boolean> setter) {
         return new ToggleIconButton(x, y, 16, 16, isChecked -> isChecked ? CHECKMARK : null, null, getter, setter);
     }
 
-    public static ToggleIconButton of(int x, int y, int width, int height, ResourceLocation checked,
-            ResourceLocation unchecked, Component checkedTooltip, Component uncheckedTooltip, Supplier<Boolean> getter,
+    public static ToggleIconButton of(int x, int y, int width, int height, Identifier checked,
+            Identifier unchecked, Component checkedTooltip, Component uncheckedTooltip, Supplier<Boolean> getter,
             Consumer<Boolean> setter) {
         return new ToggleIconButton(x, y, width, height, isChecked -> isChecked ? checked : unchecked,
                 isChecked -> isChecked ? checkedTooltip : uncheckedTooltip, getter, setter);
@@ -68,7 +68,7 @@ public class ToggleIconButton extends EnderButton {
     @Override
     public void renderButtonFace(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         boolean value = getter.get();
-        ResourceLocation sprite = spriteFunction.apply(getter.get());
+        Identifier sprite = spriteFunction.apply(getter.get());
         if (sprite != null) {
             guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, getX(), getY(), width, height);
         }

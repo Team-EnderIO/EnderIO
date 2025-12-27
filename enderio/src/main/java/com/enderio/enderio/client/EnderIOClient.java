@@ -78,7 +78,7 @@ import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.neoforged.api.distmarker.Dist;
@@ -110,7 +110,7 @@ import java.util.Optional;
 @Mod(value = EnderIO.MOD_ID, dist = Dist.CLIENT)
 public class EnderIOClient {
 
-    private static final Map<Item, ResourceLocation> HANG_GLIDER_MODEL_LOCATION = new HashMap<>();
+    private static final Map<Item, Identifier> HANG_GLIDER_MODEL_LOCATION = new HashMap<>();
     //public static final Map<Item, BakedModel> GLIDER_MODELS = new HashMap<>();
 
     public EnderIOClient(ModContainer modContainer) {
@@ -288,15 +288,15 @@ public class EnderIOClient {
     @SubscribeEvent
     public static void additionalModels(ModelEvent.RegisterStandalone event) {
         //TODO glider
-//        Set<ResourceLocation> gliderModels = Minecraft.getInstance()
+//        Set<Identifier> gliderModels = Minecraft.getInstance()
 //                .getResourceManager()
 //                .listResources("models/enderio_glider", rl -> rl.getPath().endsWith(".json"))
 //                .keySet();
 //
-//        for (ResourceLocation gliderModelPath : gliderModels) {
+//        for (Identifier gliderModelPath : gliderModels) {
 //            Optional<Item> gliderItem = findGliderForModelRL(gliderModelPath);
 //            if (gliderItem.isPresent()) {
-//                ResourceLocation modelLookupLocation = ResourceLocation
+//                Identifier modelLookupLocation = Identifier
 //                        .fromNamespaceAndPath(gliderModelPath.getNamespace(), gliderModelPath.getPath()
 //                                .substring("models/".length(), gliderModelPath.getPath().length() - 5));
 //
@@ -341,10 +341,10 @@ public class EnderIOClient {
         event.registerSpriteSet(EIOParticles.RANGE_PARTICLE.get(), RangeParticle.Provider::new);
     }
 
-    private static Optional<Item> findGliderForModelRL(ResourceLocation rl) {
+    private static Optional<Item> findGliderForModelRL(Identifier rl) {
         String namespace = rl.getNamespace();
         String path = rl.getPath().substring("models/enderio_glider/".length(), rl.getPath().length() - 5);
-        return Optional.of(BuiltInRegistries.ITEM.getValue(ResourceLocation.fromNamespaceAndPath(namespace, path)));
+        return Optional.of(BuiltInRegistries.ITEM.getValue(Identifier.fromNamespaceAndPath(namespace, path)));
     }
 
     @SubscribeEvent
@@ -371,7 +371,7 @@ public class EnderIOClient {
         event.registerSkullModel(EnderSkullBlock.EIOSkulls.ENDERMAN, entityModelSet -> new EnderSkullRenderer.EnderSkullModel(
                 entityModelSet.bakeLayer(EnderSkullRenderer.ENDER_SKULL)));
         SkullBlockRenderer.SKIN_BY_TYPE.put(EnderSkullBlock.EIOSkulls.ENDERMAN,
-                ResourceLocation.withDefaultNamespace("textures/entity/enderman/enderman.png"));
+                Identifier.withDefaultNamespace("textures/entity/enderman/enderman.png"));
     }
 
     @SubscribeEvent
@@ -399,12 +399,12 @@ public class EnderIOClient {
 
             event.registerFluidType(new IClientFluidTypeExtensions() {
                 @Override
-                public ResourceLocation getStillTexture() {
+                public Identifier getStillTexture() {
                     return EnderIO.rl("block/" + name + "_still");
                 }
 
                 @Override
-                public ResourceLocation getFlowingTexture() {
+                public Identifier getFlowingTexture() {
                     return EnderIO.rl("block/" + name + "_flowing");
                 }
             }, fluidType);

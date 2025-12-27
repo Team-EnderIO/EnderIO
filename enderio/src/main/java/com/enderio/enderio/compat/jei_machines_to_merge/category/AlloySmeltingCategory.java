@@ -20,7 +20,7 @@
 //import net.minecraft.client.Minecraft;
 //import net.minecraft.client.gui.GuiGraphics;
 //import net.minecraft.network.chat.Component;
-//import net.minecraft.resources.ResourceLocation;
+//import net.minecraft.resources.Identifier;
 //import net.minecraft.world.item.ItemStack;
 //import net.minecraft.world.item.crafting.RecipeHolder;
 //import net.neoforged.neoforge.common.crafting.SizedIngredient;
@@ -32,7 +32,7 @@
 //
 //public class AlloySmeltingCategory extends MachineRecipeCategory<RecipeHolder<AlloySmeltingRecipe>> {
 //
-//    public static final ResourceLocation BG_TEXTURE = EnderIO.rl("textures/gui/viewer/alloy_smelter.png");
+//    public static final Identifier BG_TEXTURE = EnderIO.rl("textures/gui/viewer/alloy_smelter.png");
 //    private static final int WIDTH = 67 + 40; // + 40 text space
 //    private static final int HEIGHT = 73;
 //

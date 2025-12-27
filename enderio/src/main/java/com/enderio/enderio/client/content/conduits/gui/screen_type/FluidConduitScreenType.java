@@ -26,7 +26,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
@@ -38,13 +38,13 @@ import java.util.function.Supplier;
 
 public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConnectionConfig> {
 
-    private static final ResourceLocation ICON_ROUND_ROBIN_ENABLED = EnderIO.rl("icon/round_robin_enabled");
-    private static final ResourceLocation ICON_ROUND_ROBIN_DISABLED = EnderIO.rl("icon/round_robin_disabled");
-    private static final ResourceLocation ICON_SELF_FEED_ENABLED = EnderIO.rl("icon/self_feed_enabled");
-    private static final ResourceLocation ICON_SELF_FEED_DISABLED = EnderIO.rl("icon/self_feed_disabled");
+    private static final Identifier ICON_ROUND_ROBIN_ENABLED = EnderIO.rl("icon/round_robin_enabled");
+    private static final Identifier ICON_ROUND_ROBIN_DISABLED = EnderIO.rl("icon/round_robin_disabled");
+    private static final Identifier ICON_SELF_FEED_ENABLED = EnderIO.rl("icon/self_feed_enabled");
+    private static final Identifier ICON_SELF_FEED_DISABLED = EnderIO.rl("icon/self_feed_disabled");
 
-    private static final ResourceLocation ICON_INCREASE = EnderIO.rl("icon/increase");
-    private static final ResourceLocation ICON_DECREASE = EnderIO.rl("icon/decrease");
+    private static final Identifier ICON_INCREASE = EnderIO.rl("icon/increase");
+    private static final Identifier ICON_DECREASE = EnderIO.rl("icon/decrease");
 
     @Override
     public void renderLabels(ConduitMenuDataAccess<FluidConduitConnectionConfig> dataAccess, GuiGraphics guiGraphics, int startX, int startY, Font font,
@@ -160,12 +160,12 @@ public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConn
         }
 
         return tag.getString("LockedFluid")
-            .map(rl -> BuiltInRegistries.FLUID.getValue(ResourceLocation.parse(rl)))
+            .map(rl -> BuiltInRegistries.FLUID.getValue(Identifier.parse(rl)))
             .orElse(Fluids.EMPTY);
     }
 
     private static class FluidWidget extends AbstractWidget {
-        private static final ResourceLocation WIDGET_TEXTURE = EnderIO.rl("textures/gui/fluidbackground.png");
+        private static final Identifier WIDGET_TEXTURE = EnderIO.rl("textures/gui/fluidbackground.png");
 
         private final Runnable onPress;
         private final Supplier<Fluid> currentFluid;
@@ -204,7 +204,7 @@ public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConn
             }
 
             IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(currentFluid.get());
-            ResourceLocation still = props.getStillTexture();
+            Identifier still = props.getStillTexture();
             AbstractTexture texture = Minecraft.getInstance()
                     .getTextureManager()
                     .getTexture(TextureAtlas.LOCATION_BLOCKS);

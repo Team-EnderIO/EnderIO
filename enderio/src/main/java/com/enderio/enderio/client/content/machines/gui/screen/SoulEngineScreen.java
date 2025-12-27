@@ -12,7 +12,7 @@ import com.enderio.enderio.foundation.souldata.EngineSoul;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -20,7 +20,7 @@ import java.text.DecimalFormat;
 
 public class SoulEngineScreen extends MachineScreen<SoulEngineMenu> {
     private static final DecimalFormat FORMAT = new DecimalFormat("0.00");
-    public static final ResourceLocation BG_TEXTURE = EnderIO.rl("textures/gui/screen/soul_engine.png");
+    public static final Identifier BG_TEXTURE = EnderIO.rl("textures/gui/screen/soul_engine.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
 

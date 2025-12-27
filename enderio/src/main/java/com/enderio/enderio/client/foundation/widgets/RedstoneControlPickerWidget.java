@@ -4,7 +4,7 @@ import com.enderio.core.client.gui.widgets.BaseEnumPickerWidget;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.client.foundation.icon.EIOEnumIcons;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
@@ -23,7 +23,7 @@ public class RedstoneControlPickerWidget extends BaseEnumPickerWidget<RedstoneCo
     }
 
     @Override
-    public ResourceLocation getValueIcon(RedstoneControl value) {
+    public Identifier getValueIcon(RedstoneControl value) {
         return EIOEnumIcons.REDSTONE_CONTROL.get(value);
     }
 }

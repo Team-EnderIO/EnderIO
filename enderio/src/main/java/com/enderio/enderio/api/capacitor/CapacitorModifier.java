@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ByIdMap;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
@@ -33,7 +33,7 @@ public enum CapacitorModifier implements StringRepresentable {
     public static final StreamCodec<ByteBuf, CapacitorModifier> STREAM_CODEC = ByteBufCodecs.idMapper(BY_ID, v -> v.id);
 
     private final int id;
-    public final ResourceLocation modifierId;
+    public final Identifier modifierId;
 
     public static final List<CapacitorModifier> SELECTABLE_MODIFIERS = List.of(
         ENERGY_CAPACITY,
@@ -48,7 +48,7 @@ public enum CapacitorModifier implements StringRepresentable {
 
     CapacitorModifier(int id) {
         this.id = id;
-        this.modifierId = ResourceLocation.fromNamespaceAndPath("enderio", "capacitor." + name().toLowerCase(Locale.ROOT));
+        this.modifierId = Identifier.fromNamespaceAndPath("enderio", "capacitor." + name().toLowerCase(Locale.ROOT));
     }
 
     @Override

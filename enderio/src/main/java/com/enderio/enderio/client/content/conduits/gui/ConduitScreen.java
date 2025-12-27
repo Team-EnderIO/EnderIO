@@ -26,7 +26,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.DyeColor;
 import org.jetbrains.annotations.Nullable;
@@ -37,7 +37,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
-    public static final ResourceLocation TEXTURE = EnderIO.rl("textures/gui/conduit.png");
+    public static final Identifier TEXTURE = EnderIO.rl("textures/gui/conduit.png");
     private static final int WIDTH = 206;
     private static final int HEIGHT = 195;
 
@@ -167,7 +167,7 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
 
     private class ScreenHelper implements ConduitScreenHelper {
 
-        private static final ResourceLocation ICON_CONFIGURE = EnderIO.rl("icon/configure");
+        private static final Identifier ICON_CONFIGURE = EnderIO.rl("icon/configure");
 
         @Override
         public AbstractWidget addCheckbox(int x, int y, Supplier<Boolean> getter, Consumer<Boolean> setter) {
@@ -194,7 +194,7 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
 
         @Override
         public AbstractWidget addIconButton(int x, int y, int width, int height, Component title,
-                ResourceLocation sprite, Runnable onPress) {
+                Identifier sprite, Runnable onPress) {
             var widget = new IconButton(x, y, width, height, sprite, title, onPress);
             addRenderableWidget(widget);
             return widget;
@@ -202,7 +202,7 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
 
         @Override
         public AbstractWidget addToggleButton(int x, int y, int width, int height, Component enabledTitle,
-                Component disabledTitle, ResourceLocation enabledSprite, ResourceLocation disabledSprite,
+                Component disabledTitle, Identifier enabledSprite, Identifier disabledSprite,
                 Supplier<Boolean> getter, Consumer<Boolean> setter) {
 
             var widget = ToggleIconButton.of(x, y, width, height, enabledSprite, disabledSprite, enabledTitle,

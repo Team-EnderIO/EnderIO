@@ -2,7 +2,7 @@ package com.enderio.core.common.registries;
 
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.neoforge.capabilities.BlockCapability;
@@ -15,7 +15,7 @@ import java.util.Set;
 public class BlockEntityTypeDeferredHolder<T extends BlockEntity> extends DeferredHolder<BlockEntityType<?>, BlockEntityType<T>> {
     Set<AttachedCapability<T, ?, ?>> attachedCapabilities = Set.of();
 
-    public BlockEntityTypeDeferredHolder(ResourceKey<? extends Registry<BlockEntityType<?>>> registryKey, ResourceLocation valueName) {
+    public BlockEntityTypeDeferredHolder(ResourceKey<? extends Registry<BlockEntityType<?>>> registryKey, Identifier valueName) {
         this(ResourceKey.create(registryKey, valueName));
     }
 

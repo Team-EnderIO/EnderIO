@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
 
@@ -42,7 +42,7 @@ public class FluidStackWidget extends EIOWidget {
         if (!fluidTank.contents().isEmpty()) {
             FluidStack fluidStack = fluidTank.contents();
             IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluidStack.getFluid());
-            ResourceLocation still = props.getStillTexture(fluidStack);
+            Identifier still = props.getStillTexture(fluidStack);
             if (still != null) {
                 AbstractTexture texture = minecraft.getTextureManager().getTexture(TextureAtlas.LOCATION_BLOCKS);
                 if (texture instanceof TextureAtlas atlas) {

@@ -8,7 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.joml.Matrix3x2fStack;
 
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class NewCapacitorEnergyWidget extends NewEnergyWidget {
-    private static final ResourceLocation ENERGY_BAR_ERROR_SPRITE = EnderIO.rl("widget/energy_bar_error");
+    private static final Identifier ENERGY_BAR_ERROR_SPRITE = EnderIO.rl("widget/energy_bar_error");
 
     private final Supplier<Boolean> cap;
 

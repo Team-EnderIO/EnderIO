@@ -20,7 +20,7 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
@@ -29,12 +29,12 @@ import org.joml.Vector2i;
 
 public class CapacitorBankBER implements BlockEntityRenderer<CapacitorBankBlockEntity> {
 
-    private static final ResourceLocation FULL_BAR = EnderIO.rl("block/capacitor_additionals/capacitor_bank_bar_full");
-    private static final ResourceLocation END_BAR = EnderIO.rl("block/capacitor_additionals/capacitor_bank_bar_end");
-    private static final ResourceLocation ENERGY_BAR = EnderIO.rl("block/capacitor_additionals/capacitor_bank_bar_energy");
+    private static final Identifier FULL_BAR = EnderIO.rl("block/capacitor_additionals/capacitor_bank_bar_full");
+    private static final Identifier END_BAR = EnderIO.rl("block/capacitor_additionals/capacitor_bank_bar_end");
+    private static final Identifier ENERGY_BAR = EnderIO.rl("block/capacitor_additionals/capacitor_bank_bar_energy");
 
-    private static final ResourceLocation IO_1X1 = EnderIO.rl("block/capacitor_additionals/1x1_full");
-    private static final ResourceLocation IO_FULL = EnderIO.rl("block/capacitor_additionals/full");
+    private static final Identifier IO_1X1 = EnderIO.rl("block/capacitor_additionals/1x1_full");
+    private static final Identifier IO_FULL = EnderIO.rl("block/capacitor_additionals/full");
 
     private static final Direction[] HORIZONTAL_DIRECTIONS = new Direction[] {Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
     public CapacitorBankBER(BlockEntityRendererProvider.Context context) {
@@ -208,7 +208,7 @@ public class CapacitorBankBER implements BlockEntityRenderer<CapacitorBankBlockE
         RenderUtil.renderFace(facing, pose, consumer, texture, 0, isBottomEnd ? 3/16f : 0, inset, 1, Math.min(pixels, isBottomEnd ? 13 : 16)/16f, 0xFFFFFFFF);
     }
 
-    public static void renderTexture(PoseStack.Pose pose, VertexConsumer consumer, Direction facing, ResourceLocation rl, int light) {
+    public static void renderTexture(PoseStack.Pose pose, VertexConsumer consumer, Direction facing, Identifier rl, int light) {
         TextureAtlasSprite texture = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(rl);
         float inset = -0.001F;
         RenderUtil.renderFace(facing, pose, consumer, texture, 0, 0, inset, 1, 1, 0xFFFFFFFF, light);
@@ -312,7 +312,7 @@ public class CapacitorBankBER implements BlockEntityRenderer<CapacitorBankBlockE
     }
 
     private record Size(int x0, int y0, int x1, int y1) {
-        ResourceLocation getTexture() {
+        Identifier getTexture() {
             boolean isLeft = x0 == 0;
             boolean isRight = x1 == 0;
             boolean isSmallX = isLeft && isRight;

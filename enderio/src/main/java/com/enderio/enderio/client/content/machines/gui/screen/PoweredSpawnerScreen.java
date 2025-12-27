@@ -15,22 +15,22 @@ import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 import java.util.Objects;
 
 public class PoweredSpawnerScreen extends MachineScreen<PoweredSpawnerMenu> {
 
-    public static final ResourceLocation BG_TEXTURE_SPAWN = EnderIOAPI
+    public static final Identifier BG_TEXTURE_SPAWN = EnderIOAPI
             .rl("textures/gui/screen/powered_spawner_spawn.png");
-    public static final ResourceLocation BG_TEXTURE_CAPTURE = EnderIOAPI
+    public static final Identifier BG_TEXTURE_CAPTURE = EnderIOAPI
             .rl("textures/gui/screen/powered_spawner_capture.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 187;
 
-    private static final ResourceLocation SPAWN_PROGRESS_SPRITE = EnderIO.rl("screen/powered_spawner/spawn_progress");
-    private static final ResourceLocation CAPTURE_PROGRESS_SPRITE = EnderIOAPI
+    private static final Identifier SPAWN_PROGRESS_SPRITE = EnderIO.rl("screen/powered_spawner/spawn_progress");
+    private static final Identifier CAPTURE_PROGRESS_SPRITE = EnderIOAPI
             .rl("screen/powered_spawner/capture_progress");
 
     private NewProgressWidget spawnProgress;
@@ -99,7 +99,7 @@ public class PoweredSpawnerScreen extends MachineScreen<PoweredSpawnerMenu> {
         pGuiGraphics.blit(RenderPipelines.GUI_TEXTURED, getBackgroundTexture(), leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
-    private ResourceLocation getBackgroundTexture() {
+    private Identifier getBackgroundTexture() {
         return switch (menu.getMode()) {
         case SPAWN -> BG_TEXTURE_SPAWN;
         case CAPTURE -> BG_TEXTURE_CAPTURE;

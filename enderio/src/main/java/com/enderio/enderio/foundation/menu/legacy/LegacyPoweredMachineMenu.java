@@ -3,14 +3,14 @@ package com.enderio.enderio.foundation.menu.legacy;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.foundation.block.entity.legacy.LegacyPoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.io.energy.IMachineEnergyStorage;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import org.jetbrains.annotations.Nullable;
 
 @Deprecated(forRemoval = true, since = "7.1")
 public class LegacyPoweredMachineMenu<T extends LegacyPoweredMachineBlockEntity> extends LegacyMachineMenu<T> {
-    protected static final ResourceLocation EMPTY_CAPACITOR_SLOT = EnderIO.rl("item/empty_capacitor_slot");
+    protected static final Identifier EMPTY_CAPACITOR_SLOT = EnderIO.rl("item/empty_capacitor_slot");
 
     protected LegacyPoweredMachineMenu(@Nullable MenuType<?> menuType, int containerId, @Nullable T blockEntity,
             Inventory playerInventory) {

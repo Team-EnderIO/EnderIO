@@ -10,7 +10,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.joml.Vector2i;
 
 import javax.annotation.Nullable;
@@ -88,7 +88,7 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
     @Nullable
     public abstract Component getValueTooltip(T value);
 
-    public abstract ResourceLocation getValueIcon(T value);
+    public abstract Identifier getValueIcon(T value);
 
     public T[] getValues() {
         return clazz.getEnumConstants();

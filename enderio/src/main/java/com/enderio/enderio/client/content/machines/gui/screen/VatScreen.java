@@ -18,7 +18,7 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -26,13 +26,13 @@ import org.jetbrains.annotations.NotNull;
 
 public class VatScreen extends MachineScreen<VatMenu> {
 
-    public static final ResourceLocation VAT_BG = EnderIO.rl("textures/gui/screen/vat.png");
+    public static final Identifier VAT_BG = EnderIO.rl("textures/gui/screen/vat.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
 
-    private static final ResourceLocation VAT_COVER = EnderIO.rl("vat_cover");
-    public static final ResourceLocation MOVE_FLUID = EnderIO.rl("buttons/move_fluid");
-    public static final ResourceLocation VOID_FLUID = EnderIO.rl("buttons/void_fluid");
+    private static final Identifier VAT_COVER = EnderIO.rl("vat_cover");
+    public static final Identifier MOVE_FLUID = EnderIO.rl("buttons/move_fluid");
+    public static final Identifier VOID_FLUID = EnderIO.rl("buttons/void_fluid");
 
     private static final WidgetSprites MOVE_SPRITES = new WidgetSprites(MOVE_FLUID, MOVE_FLUID);
     private static final WidgetSprites VOID_SPRITES = new WidgetSprites(VOID_FLUID, VOID_FLUID);

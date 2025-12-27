@@ -16,7 +16,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -26,15 +26,15 @@ import org.joml.Vector2i;
 
 import java.util.Set;
 
-public record RedstoneConduit(ResourceLocation texture, ResourceLocation activeTexture, Component description)
+public record RedstoneConduit(Identifier texture, Identifier activeTexture, Component description)
         implements Conduit<RedstoneConduit, RedstoneConduitConnectionConfig> {
 
     public static final int EXTRACT_FILTER_SLOT = 0;
     public static final int INSERT_FILTER_SLOT = 1;
 
     public static final MapCodec<RedstoneConduit> CODEC = RecordCodecBuilder.mapCodec(builder -> builder
-            .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(RedstoneConduit::texture),
-                    ResourceLocation.CODEC.fieldOf("active_texture").forGetter(RedstoneConduit::activeTexture),
+            .group(Identifier.CODEC.fieldOf("texture").forGetter(RedstoneConduit::texture),
+                    Identifier.CODEC.fieldOf("active_texture").forGetter(RedstoneConduit::activeTexture),
                     ComponentSerialization.CODEC.fieldOf("description").forGetter(RedstoneConduit::description))
             .apply(builder, RedstoneConduit::new));
 

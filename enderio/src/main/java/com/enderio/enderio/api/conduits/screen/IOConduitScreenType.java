@@ -7,7 +7,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 
 /**
@@ -22,7 +22,7 @@ public abstract class IOConduitScreenType<U extends IOConnectionConfig> extends 
 
     private static final Component DEFAULT_LEFT_TITLE = ConduitLang.INSERT;
     private static final Component DEFAULT_RIGHT_TITLE = ConduitLang.EXTRACT;
-    private static final ResourceLocation BG_TEXTURE = EnderIOAPI.rl("textures/gui/conduit.png");
+    private static final Identifier BG_TEXTURE = EnderIOAPI.rl("textures/gui/conduit.png");
 
     // Rows of 9, counts slot width and it's outline edge.
     // TODO: Better name.

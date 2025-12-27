@@ -1,24 +1,24 @@
 package com.enderio.core.common.menu;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.Slot;
 import org.jetbrains.annotations.Nullable;
 
 public class EnderSlot extends Slot implements SlotWithOverlay {
     @Nullable
-    private ResourceLocation foregroundSprite;
+    private Identifier foregroundSprite;
 
     public EnderSlot(Container pContainer, int pSlot, int pX, int pY) {
         super(pContainer, pSlot, pX, pY);
     }
 
     @Nullable
-    public ResourceLocation getForegroundSprite() {
+    public Identifier getForegroundSprite() {
         return foregroundSprite;
     }
 
-    public Slot setForeground(ResourceLocation sprite) {
+    public Slot setForeground(Identifier sprite) {
         foregroundSprite = sprite;
         return this;
     }

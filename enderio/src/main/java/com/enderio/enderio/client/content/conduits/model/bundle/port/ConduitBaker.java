@@ -7,7 +7,7 @@ import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ModelDebugName;
 import net.minecraft.client.resources.model.ResolvedModel;
 import net.minecraft.client.resources.model.SpriteGetter;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 public class ConduitBaker implements ModelBaker {
@@ -21,7 +21,7 @@ public class ConduitBaker implements ModelBaker {
     }
 
     @Override
-    public ResolvedModel getModel(ResourceLocation modelLocation) {
+    public ResolvedModel getModel(Identifier modelLocation) {
         return baker.getModel(modelLocation);
     }
 

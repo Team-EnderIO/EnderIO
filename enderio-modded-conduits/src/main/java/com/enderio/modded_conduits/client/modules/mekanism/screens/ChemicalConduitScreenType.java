@@ -24,16 +24,16 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.function.Supplier;
 
 public class ChemicalConduitScreenType extends IOConduitScreenType<ChemicalConduitConnectionConfig> {
-    private static final ResourceLocation ICON_ROUND_ROBIN_ENABLED = EnderIO.rl("icon/round_robin_enabled");
-    private static final ResourceLocation ICON_ROUND_ROBIN_DISABLED = EnderIO.rl("icon/round_robin_disabled");
-    private static final ResourceLocation ICON_SELF_FEED_ENABLED = EnderIO.rl("icon/self_feed_enabled");
-    private static final ResourceLocation ICON_SELF_FEED_DISABLED = EnderIO.rl("icon/self_feed_disabled");
+    private static final Identifier ICON_ROUND_ROBIN_ENABLED = EnderIO.rl("icon/round_robin_enabled");
+    private static final Identifier ICON_ROUND_ROBIN_DISABLED = EnderIO.rl("icon/round_robin_disabled");
+    private static final Identifier ICON_SELF_FEED_ENABLED = EnderIO.rl("icon/self_feed_enabled");
+    private static final Identifier ICON_SELF_FEED_DISABLED = EnderIO.rl("icon/self_feed_disabled");
 
     @Override
     public void createLeftWidgets(ConduitScreenHelper screen, int startX, int startY,
@@ -122,11 +122,11 @@ public class ChemicalConduitScreenType extends IOConduitScreenType<ChemicalCondu
             return MekanismAPI.EMPTY_CHEMICAL;
         }
 
-        return MekanismAPI.CHEMICAL_REGISTRY.get(ResourceLocation.parse(tag.getString("LockedChemical")));
+        return MekanismAPI.CHEMICAL_REGISTRY.get(Identifier.parse(tag.getString("LockedChemical")));
     }
 
     private static class ChemicalWidget extends AbstractWidget {
-        private static final ResourceLocation WIDGET_TEXTURE = EnderIO.rl("textures/gui/chemicalbackground.png");
+        private static final Identifier WIDGET_TEXTURE = EnderIO.rl("textures/gui/chemicalbackground.png");
 
         private final Runnable onPress;
         private final Supplier<Chemical> currentChemical;
@@ -162,7 +162,7 @@ public class ChemicalConduitScreenType extends IOConduitScreenType<ChemicalCondu
                 return;
             }
 
-            ResourceLocation still = currentChemical.get().getIcon();
+            Identifier still = currentChemical.get().getIcon();
             AbstractTexture texture = Minecraft.getInstance()
                     .getTextureManager()
                     .getTexture(TextureAtlas.LOCATION_BLOCKS);

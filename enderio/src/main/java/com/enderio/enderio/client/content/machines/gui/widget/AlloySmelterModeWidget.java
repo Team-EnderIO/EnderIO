@@ -4,7 +4,7 @@ import com.enderio.core.client.gui.widgets.BaseEnumPickerWidget;
 import com.enderio.enderio.client.foundation.icon.MachineEnumIcons;
 import com.enderio.enderio.content.machines.alloy.AlloySmelterMode;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -22,7 +22,7 @@ public class AlloySmelterModeWidget extends BaseEnumPickerWidget<AlloySmelterMod
     }
 
     @Override
-    public ResourceLocation getValueIcon(AlloySmelterMode value) {
+    public Identifier getValueIcon(AlloySmelterMode value) {
         return Objects.requireNonNull(MachineEnumIcons.ALLOY_SMELTER_MODE.get(value));
     }
 }

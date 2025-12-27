@@ -6,14 +6,14 @@ import com.enderio.enderio.client.foundation.widgets.DyeColorPickerWidget;
 import com.enderio.enderio.content.conduits.ConduitLang;
 import com.enderio.enderio.content.filters.redstone.RedstoneDoubleChannelFilterMenu;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import org.joml.Vector2i;
 
 public class RedstoneDoubleChannelFilterScreen extends EIOScreen<RedstoneDoubleChannelFilterMenu> {
 
     private static final Vector2i BG_SIZE = new Vector2i(183, 201);
-    private static final ResourceLocation BG_TEXTURE = EnderIO.rl("textures/gui/40/item_filter.png");
+    private static final Identifier BG_TEXTURE = EnderIO.rl("textures/gui/40/item_filter.png");
 
     public RedstoneDoubleChannelFilterScreen(RedstoneDoubleChannelFilterMenu pMenu, Inventory pPlayerInventory,
             Component pTitle) {
@@ -30,7 +30,7 @@ public class RedstoneDoubleChannelFilterScreen extends EIOScreen<RedstoneDoubleC
     }
 
     @Override
-    public ResourceLocation getBackgroundImage() {
+    public Identifier getBackgroundImage() {
         return BG_TEXTURE;
     }
 

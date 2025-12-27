@@ -5,7 +5,7 @@ import com.enderio.enderio.foundation.tag.EIOTags;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 public class EntityCaptureUtils {
     // The id of the ender dragon for manual filtering.
-    private static final ResourceLocation DRAGON = ResourceLocation.withDefaultNamespace("ender_dragon");
+    private static final Identifier DRAGON = Identifier.withDefaultNamespace("ender_dragon");
 
     @Nullable
     private static List<EntityType<?>> capturableEntityTypes = null;

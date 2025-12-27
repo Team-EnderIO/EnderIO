@@ -17,7 +17,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -230,7 +230,7 @@ public class AlloyRecipeProvider extends SubRecipeProvider {
                 inputs, output, energy, experience, recipeOutput);
     }
 
-    protected void build(ResourceLocation id, List<SizedIngredient> inputs, ItemStack output, int energy,
+    protected void build(Identifier id, List<SizedIngredient> inputs, ItemStack output, int energy,
             float experience, RecipeOutput recipeOutput) {
         recipeOutput.accept(ResourceKey.create(Registries.RECIPE, id), new AlloySmeltingRecipe(inputs, output, energy, experience), null);
     }

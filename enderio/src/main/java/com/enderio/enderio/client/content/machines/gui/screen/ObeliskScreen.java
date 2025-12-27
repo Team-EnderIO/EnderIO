@@ -14,7 +14,7 @@ import com.enderio.enderio.init.EIOItems;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -23,9 +23,9 @@ import org.jetbrains.annotations.Nullable;
 public abstract class ObeliskScreen<J extends ObeliskBlockEntity<J>, T extends ObeliskMenu<J>>
         extends MachineScreen<T> {
 
-    private final ResourceLocation background;
+    private final Identifier background;
 
-    public ObeliskScreen(T pMenu, Inventory pPlayerInventory, Component pTitle, ResourceLocation background,
+    public ObeliskScreen(T pMenu, Inventory pPlayerInventory, Component pTitle, Identifier background,
             int imageWidth, int imageHeight) {
         super(pMenu, pPlayerInventory, pTitle);
         this.background = background;

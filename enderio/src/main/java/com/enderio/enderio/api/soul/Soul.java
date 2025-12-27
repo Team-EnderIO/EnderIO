@@ -9,7 +9,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.Entity;
@@ -94,7 +94,7 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) { 
 
     // TODO: Can this be trusted? I feel like it needs better validation...
     public Soul(CompoundTag entityTag) {
-        this(BuiltInRegistries.ENTITY_TYPE.getValue(ResourceLocation.parse(entityTag.getStringOr(Entity.TAG_ID, "pig"))), entityTag); //TODO better default
+        this(BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.parse(entityTag.getStringOr(Entity.TAG_ID, "pig"))), entityTag); //TODO better default
     }
 
     public static final StreamCodec<RegistryFriendlyByteBuf, Soul> OPTIONAL_STREAM_CODEC = new StreamCodec<>() {
@@ -123,7 +123,7 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) { 
         return new Soul(entity.getType(), entityTag.buildResult());
     }
 
-    public static Soul of(ResourceLocation entityType) {
+    public static Soul of(Identifier entityType) {
         return of(BuiltInRegistries.ENTITY_TYPE.getValue(entityType));
     }
 
@@ -189,7 +189,7 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) { 
      * @throws IllegalStateException if the soul is empty.
      * @return
      */
-    public ResourceLocation entityTypeId() {
+    public Identifier entityTypeId() {
         if (isEmpty()) {
             throw new IllegalStateException("Cannot get Entity Type ID from empty StoredEntityData");
         }

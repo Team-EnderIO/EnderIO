@@ -3,7 +3,7 @@
 //import com.enderio.enderio.content.enchanter.EnchanterRecipe;
 //import net.minecraft.core.Holder;
 //import net.minecraft.core.HolderLookup;
-//import net.minecraft.resources.ResourceLocation;
+//import net.minecraft.resources.Identifier;
 //import net.minecraft.world.item.ItemStack;
 //import net.minecraft.world.item.crafting.Ingredient;
 //import net.minecraft.world.item.crafting.Recipe;
@@ -26,8 +26,8 @@
 //        this.level = level;
 //    }
 //
-//    public ResourceLocation id() {
-//        return ResourceLocation.fromNamespaceAndPath(recipe.id().getNamespace(), recipe.id().getPath() + "_" + level);
+//    public Identifier id() {
+//        return Identifier.fromNamespaceAndPath(recipe.id().getNamespace(), recipe.id().getPath() + "_" + level);
 //    }
 //
 //    public List<ItemStack> getInputs() {

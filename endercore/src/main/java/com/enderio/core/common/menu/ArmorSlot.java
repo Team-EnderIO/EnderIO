@@ -1,6 +1,6 @@
 package com.enderio.core.common.menu;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
@@ -13,7 +13,7 @@ import static net.minecraft.world.inventory.InventoryMenu.*;
 
 public class ArmorSlot extends Slot {
 
-    private static final ResourceLocation[] ARMOR_SLOT_TEXTURES = new ResourceLocation[] { EMPTY_ARMOR_SLOT_BOOTS,
+    private static final Identifier[] ARMOR_SLOT_TEXTURES = new Identifier[] { EMPTY_ARMOR_SLOT_BOOTS,
             EMPTY_ARMOR_SLOT_LEGGINGS, EMPTY_ARMOR_SLOT_CHESTPLATE, EMPTY_ARMOR_SLOT_HELMET };
 
     public ArmorSlot(Container pContainer, int pSlot, int pX, int pY, EquipmentSlot equipmentSlot) {

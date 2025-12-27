@@ -19,7 +19,7 @@ import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -32,7 +32,7 @@ import org.joml.Vector2i;
 
 import java.util.function.Consumer;
 
-public record ItemConduit(ResourceLocation texture, Component description, int transferRatePerCycle,
+public record ItemConduit(Identifier texture, Component description, int transferRatePerCycle,
         int networkTickRate) implements Conduit<ItemConduit, ItemConduitConnectionConfig> {
 
     public static final int EXTRACT_FILTER_SLOT = 0;
@@ -40,7 +40,7 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
 
     public static final MapCodec<ItemConduit> CODEC = RecordCodecBuilder.mapCodec(
             builder -> builder
-                    .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(ItemConduit::texture),
+                    .group(Identifier.CODEC.fieldOf("texture").forGetter(ItemConduit::texture),
                             ComponentSerialization.CODEC.fieldOf("description").forGetter(ItemConduit::description),
                             // Using optionals in order to support the old conduit format.
                             Codec.INT.optionalFieldOf("transfer_rate", 4).forGetter(ItemConduit::transferRatePerCycle),

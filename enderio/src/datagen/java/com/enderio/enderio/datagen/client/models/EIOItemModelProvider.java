@@ -16,7 +16,7 @@ import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -214,9 +214,9 @@ public class EIOItemModelProvider extends ModelProvider {
 
     }
 
-    public static ResourceLocation getModelLocation(Fluid fluid) {
-        ResourceLocation resourcelocation = BuiltInRegistries.FLUID.getKey(fluid);
-        return resourcelocation.withPrefix("item/");
+    public static Identifier getModelLocation(Fluid fluid) {
+        Identifier Identifier = BuiltInRegistries.FLUID.getKey(fluid);
+        return Identifier.withPrefix("item/");
     }
 
     protected void registerModels() {
@@ -250,13 +250,13 @@ public class EIOItemModelProvider extends ModelProvider {
     }
 
     private void createFakeBlock(BlockModelGenerators blockModelGenerators, Item item) {
-        ResourceLocation resourcelocation = ModelTemplates.CUBE_ALL.create(item, TextureMapping.cube(ModelLocationUtils.getModelLocation(item)), blockModelGenerators.modelOutput);
-        blockModelGenerators.registerSimpleItemModel(item, resourcelocation);
+        Identifier Identifier = ModelTemplates.CUBE_ALL.create(item, TextureMapping.cube(ModelLocationUtils.getModelLocation(item)), blockModelGenerators.modelOutput);
+        blockModelGenerators.registerSimpleItemModel(item, Identifier);
     }
 
     public void bucketItem(ItemModelGenerators itemModelGenerators, BucketItem item, Fluid fluid, boolean flipGas, boolean applyFluidLuminosity) {
-        ResourceLocation drip = ResourceLocation.fromNamespaceAndPath(NeoForgeVersion.MOD_ID, "item/mask/bucket_fluid_drip");
-        ResourceLocation bucket = ResourceLocation.withDefaultNamespace("item/bucket");
+        Identifier drip = Identifier.fromNamespaceAndPath(NeoForgeVersion.MOD_ID, "item/mask/bucket_fluid_drip");
+        Identifier bucket = Identifier.withDefaultNamespace("item/bucket");
         DynamicFluidContainerModel.Textures textures = new DynamicFluidContainerModel.Textures(Optional.empty(), Optional.of(bucket), Optional.of(drip), Optional.empty());
         itemModelGenerators.itemModelOutput.accept(item, new DynamicFluidContainerModel.Unbaked(textures, fluid, flipGas, false, applyFluidLuminosity));
     }

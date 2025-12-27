@@ -6,7 +6,7 @@ import com.enderio.enderio.init.EIOEntities;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.FallingBlockEntity;
@@ -56,12 +56,12 @@ public class PaintedSandEntity extends FallingBlockEntity implements IEntityWith
     public void writeSpawnData(RegistryFriendlyByteBuf buffer) {
         Block block = getPaint();
         // TODO: 1.21: Check this RL creation
-        buffer.writeResourceLocation(block != null ? Objects.requireNonNull(BuiltInRegistries.BLOCK.getKey(block)) : ResourceLocation.fromNamespaceAndPath("", ""));
+        buffer.writeIdentifier(block != null ? Objects.requireNonNull(BuiltInRegistries.BLOCK.getKey(block)) : Identifier.fromNamespaceAndPath("", ""));
     }
 
     @Override
     public void readSpawnData(RegistryFriendlyByteBuf additionalData) {
-        ResourceLocation rl = additionalData.readResourceLocation();
+        Identifier rl = additionalData.readIdentifier();
         Block block = BuiltInRegistries.BLOCK.getValue(rl);
         if (block != Blocks.AIR) {
             setPaint(block);

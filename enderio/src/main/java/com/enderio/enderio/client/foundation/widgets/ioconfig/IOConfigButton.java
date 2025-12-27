@@ -8,13 +8,13 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
 
 public class IOConfigButton extends EnderButton {
-    public static final ResourceLocation IO_CONFIG = EnderIO.rl("buttons/io_config");
+    public static final Identifier IO_CONFIG = EnderIO.rl("buttons/io_config");
     private final IOConfigOverlay configRenderer;
     @Nullable private final Consumer<Boolean> callback;
 

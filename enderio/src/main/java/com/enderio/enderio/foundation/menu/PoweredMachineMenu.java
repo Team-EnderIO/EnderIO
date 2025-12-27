@@ -6,7 +6,7 @@ import com.enderio.enderio.foundation.energy.EnergyStorageInfo;
 import com.enderio.enderio.foundation.network.menu_sync.EnergyStorageSyncSlot;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.MenuType;
@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.jetbrains.annotations.Nullable;
 
 public class PoweredMachineMenu<T extends PoweredMachineBlockEntity> extends MachineMenu<T> {
-    protected static final ResourceLocation EMPTY_CAPACITOR_SLOT = EnderIO.rl("item/empty_capacitor_slot");
+    protected static final Identifier EMPTY_CAPACITOR_SLOT = EnderIO.rl("item/empty_capacitor_slot");
 
     private final EnergyStorageSyncSlot energySyncSlot;
 

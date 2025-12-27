@@ -24,7 +24,7 @@ import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -302,11 +302,11 @@ public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
 //    }
 
     @Nullable
-    public Optional<ResourceLocation> getEntityTypeId() {
+    public Optional<Identifier> getEntityTypeId() {
         return boundSoul.isEmpty() ? Optional.empty() : Optional.of(boundSoul.entityTypeId());
     }
 
-    public void setEntityType(ResourceLocation entityType) {
+    public void setEntityType(Identifier entityType) {
         boundSoul = Soul.of(entityType);
     }
 

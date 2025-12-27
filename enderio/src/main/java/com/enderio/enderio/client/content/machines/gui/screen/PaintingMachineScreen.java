@@ -11,16 +11,16 @@ import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 public class PaintingMachineScreen extends MachineScreen<PaintingMachineMenu> {
 
-    private static final ResourceLocation PAINTING_MACHINE_BG = EnderIO.rl("textures/gui/screen/painting_machine.png");
+    private static final Identifier PAINTING_MACHINE_BG = EnderIO.rl("textures/gui/screen/painting_machine.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
 
-    private static final ResourceLocation PROGRESS_SPRITE = EnderIO.rl("screen/painting_machine/progress");
+    private static final Identifier PROGRESS_SPRITE = EnderIO.rl("screen/painting_machine/progress");
 
     public PaintingMachineScreen(PaintingMachineMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);

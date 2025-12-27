@@ -4,7 +4,7 @@ import com.enderio.core.client.gui.widgets.BaseEnumPickerWidget;
 import com.enderio.core.common.util.VanillaLangUtil;
 import com.enderio.enderio.client.foundation.icon.EIOEnumIcons;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.DyeColor;
 
 import java.util.function.Consumer;
@@ -29,7 +29,7 @@ public class DyeColorPickerWidget extends BaseEnumPickerWidget<DyeColor> {
     }
 
     @Override
-    public ResourceLocation getValueIcon(DyeColor value) {
+    public Identifier getValueIcon(DyeColor value) {
         return EIOEnumIcons.DYE_COLOR.get(value);
     }
 

@@ -1,9 +1,9 @@
 package com.enderio.enderio.api.travel;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public interface TravelTargetType<T extends TravelTarget> {
-    static <T extends TravelTarget> TravelTargetType<T> simple(final ResourceLocation name) {
+    static <T extends TravelTarget> TravelTargetType<T> simple(final Identifier name) {
         final String toString = name.toString();
         return new TravelTargetType<>() {
             @Override

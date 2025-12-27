@@ -12,7 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.BlockCapability;
@@ -21,10 +21,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
-public record RSConduit(ResourceLocation texture, Component description)
+public record RSConduit(Identifier texture, Component description)
         implements Conduit<RSConduit, RSConduitConnectionConfig> {
     public static final MapCodec<RSConduit> CODEC = RecordCodecBuilder.mapCodec(builder -> builder
-            .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(RSConduit::texture),
+            .group(Identifier.CODEC.fieldOf("texture").forGetter(RSConduit::texture),
                     ComponentSerialization.CODEC.fieldOf("description").forGetter(RSConduit::description))
             .apply(builder, RSConduit::new));
 

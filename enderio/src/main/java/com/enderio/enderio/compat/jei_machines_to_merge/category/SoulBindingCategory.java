@@ -28,7 +28,7 @@
 //import net.minecraft.client.resources.language.I18n;
 //import net.minecraft.core.registries.BuiltInRegistries;
 //import net.minecraft.network.chat.Component;
-//import net.minecraft.resources.ResourceLocation;
+//import net.minecraft.resources.Identifier;
 //import net.minecraft.world.item.ItemStack;
 //import net.minecraft.world.item.crafting.RecipeHolder;
 //
@@ -90,7 +90,7 @@
 //                    .map(BuiltInRegistries.ENTITY_TYPE::getKey)
 //                    .toList();
 //
-//            for (ResourceLocation entity : allEntitiesOfCategory) {
+//            for (Identifier entity : allEntitiesOfCategory) {
 //                vials.add(SoulVialItem.forSoul(Soul.of(entity)));
 //            }
 //
@@ -111,7 +111,7 @@
 //                        .filter(r -> soulDataReloadListener.map.containsKey(r))
 //                        .toList();
 //
-//                for (ResourceLocation entity : allEntitiesOfSoulData) {
+//                for (Identifier entity : allEntitiesOfSoulData) {
 //                    vials.add(SoulVialItem.forSoul(Soul.of(entity)));
 //                }
 //            }

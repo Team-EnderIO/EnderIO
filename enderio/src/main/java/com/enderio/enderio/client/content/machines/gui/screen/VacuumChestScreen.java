@@ -12,12 +12,12 @@ import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 public class VacuumChestScreen extends MachineScreen<VacuumChestMenu> {
 
-    private static final ResourceLocation VACUUM_CHEST_BG = EnderIO.rl("textures/gui/screen/vacuum_chest.png");
+    private static final Identifier VACUUM_CHEST_BG = EnderIO.rl("textures/gui/screen/vacuum_chest.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 206;
 

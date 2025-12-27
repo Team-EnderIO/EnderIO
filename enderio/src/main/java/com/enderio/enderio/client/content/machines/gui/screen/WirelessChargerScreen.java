@@ -13,12 +13,12 @@ import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 public class WirelessChargerScreen extends MachineScreen<WirelessChargerMenu> {
 
-    private static final ResourceLocation BG_TEXTURE = EnderIO.rl("textures/gui/screen/wireless_charger.png");
+    private static final Identifier BG_TEXTURE = EnderIO.rl("textures/gui/screen/wireless_charger.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
 

@@ -9,7 +9,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -90,7 +90,7 @@ public class SinglePaintedBlockEntity extends BlockEntity implements PaintedBloc
 
     // TODO: HOUSEKEEPING?: This should probably be converted to a capability.
     protected void readPaint(ValueInput input) {
-        input.read(EIONBTKeys.PAINT, ResourceLocation.CODEC).ifPresent(rl -> {
+        input.read(EIONBTKeys.PAINT, Identifier.CODEC).ifPresent(rl -> {
             paint = PaintUtils.getBlockFromRL(rl);
             if (level != null && level.isClientSide()) {
                 requestModelDataUpdate();
@@ -108,7 +108,7 @@ public class SinglePaintedBlockEntity extends BlockEntity implements PaintedBloc
 
     protected void writePaint(ValueOutput output) {
         if (paint != null) {
-            output.store(EIONBTKeys.PAINT, ResourceLocation.CODEC, BuiltInRegistries.BLOCK.getKey(this.paint));
+            output.store(EIONBTKeys.PAINT, Identifier.CODEC, BuiltInRegistries.BLOCK.getKey(this.paint));
         }
     }
 

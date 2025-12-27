@@ -27,7 +27,7 @@ import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
@@ -206,11 +206,11 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
             }
             String fluid = soulData.fluid();
             if (fluid.startsWith("#")) { // We have a fluid tag instead
-                TagKey<Fluid> tag = TagKey.create(Registries.FLUID, ResourceLocation.parse(fluid.substring(1)));
+                TagKey<Fluid> tag = TagKey.create(Registries.FLUID, Identifier.parse(fluid.substring(1)));
                 return fluidStack.is(tag);
             } else {
                 Optional<Holder.Reference<Fluid>> delegate = level.registryAccess().lookupOrThrow(Registries.FLUID)
-                        .get(ResourceKey.create(Registries.FLUID, ResourceLocation.parse(fluid)));
+                        .get(ResourceKey.create(Registries.FLUID, Identifier.parse(fluid)));
                 if (delegate.isPresent()) {
                     return fluidStack.getFluid().isSame(delegate.get().value());
                 }

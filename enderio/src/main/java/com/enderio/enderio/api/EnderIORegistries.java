@@ -9,7 +9,7 @@ import com.enderio.enderio.api.travel.TravelTargetSerializer;
 import com.enderio.enderio.api.travel.TravelTargetType;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 
 public class EnderIORegistries {
@@ -53,7 +53,7 @@ public class EnderIORegistries {
         public static final ResourceKey<Registry<Conduit<?, ?>>> CONDUIT = createKey("conduit");
 
         private static <T> ResourceKey<Registry<T>> createKey(String name) {
-            return ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath("enderio", name));
+            return ResourceKey.createRegistryKey(Identifier.fromNamespaceAndPath("enderio", name));
         }
     }
 }

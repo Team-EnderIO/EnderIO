@@ -19,7 +19,7 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.flag.FeatureFlagSet;
@@ -45,7 +45,7 @@ public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.
     private final Ingredient input;
     private final int energy;
     private final int experience;
-    private final Optional<ResourceLocation> entityType;
+    private final Optional<Identifier> entityType;
     private final Optional<MobCategory> mobCategory;
     private final Optional<String> soulData;
     private final boolean copyInputComponents;
@@ -53,7 +53,7 @@ public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.
     @Nullable
     private PlacementInfo placementInfo;
 
-    public SoulBindingRecipe(ItemStack output, Ingredient input, int energy, int experience, Optional<ResourceLocation> entityType, Optional<MobCategory> mobCategory, Optional<String> soulData,
+    public SoulBindingRecipe(ItemStack output, Ingredient input, int energy, int experience, Optional<Identifier> entityType, Optional<MobCategory> mobCategory, Optional<String> soulData,
         boolean copyInputComponents) {
         this.output = output;
         this.input = input;
@@ -81,7 +81,7 @@ public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.
         return experience;
     }
 
-    public Optional<ResourceLocation> entityType() {
+    public Optional<Identifier> entityType() {
         return entityType;
     }
 
@@ -258,7 +258,7 @@ public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.
         private static final MapCodec<SoulBindingRecipe> CODEC = RecordCodecBuilder.<SoulBindingRecipe>mapCodec(instance -> instance
                 .group(ItemStack.CODEC.fieldOf("output").forGetter(SoulBindingRecipe::output), Ingredient.CODEC.fieldOf("input").forGetter(SoulBindingRecipe::input),
                     Codec.INT.fieldOf("energy").forGetter(SoulBindingRecipe::energy), Codec.INT.fieldOf("experience").forGetter(SoulBindingRecipe::experience),
-                    ResourceLocation.CODEC.optionalFieldOf("entity_type").forGetter(SoulBindingRecipe::entityType),
+                    Identifier.CODEC.optionalFieldOf("entity_type").forGetter(SoulBindingRecipe::entityType),
                     MobCategory.CODEC.optionalFieldOf("mob_category").forGetter(SoulBindingRecipe::mobCategory),
                     Codec.STRING.optionalFieldOf("soul_data").forGetter(SoulBindingRecipe::soulData),
                     Codec.BOOL.optionalFieldOf("copyInputComponents", false).forGetter(SoulBindingRecipe::copyInputComponents))
@@ -274,7 +274,7 @@ public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.
 
         public static final StreamCodec<RegistryFriendlyByteBuf, SoulBindingRecipe> STREAM_CODEC = MassiveStreamCodec.composite(ItemStack.STREAM_CODEC,
             SoulBindingRecipe::output, Ingredient.CONTENTS_STREAM_CODEC, SoulBindingRecipe::input, ByteBufCodecs.INT, SoulBindingRecipe::energy, ByteBufCodecs.INT,
-            SoulBindingRecipe::experience, ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs::optional), SoulBindingRecipe::entityType,
+            SoulBindingRecipe::experience, Identifier.STREAM_CODEC.apply(ByteBufCodecs::optional), SoulBindingRecipe::entityType,
             // TODO: 1.21: This is a very gross, could do better.
             ByteBufCodecs.STRING_UTF8.map(name -> ((StringRepresentable.EnumCodec<MobCategory>) MobCategory.CODEC).byName(name), MobCategory::getName).apply(ByteBufCodecs::optional),
             SoulBindingRecipe::mobCategory, ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs::optional), SoulBindingRecipe::soulData, ByteBufCodecs.BOOL, SoulBindingRecipe::copyInputComponents,

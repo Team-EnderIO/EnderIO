@@ -1,6 +1,6 @@
 package com.enderio.core;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.fml.common.Mod;
 
 // This is because core has no access to base.
@@ -11,7 +11,7 @@ public class EnderCore {
     // This definition is used *everywhere* else.
     public static final String MOD_ID = "endercore";
 
-    public static ResourceLocation loc(String name) {
-        return ResourceLocation.fromNamespaceAndPath(MOD_ID, name);
+    public static Identifier loc(String name) {
+        return Identifier.fromNamespaceAndPath(MOD_ID, name);
     }
 }

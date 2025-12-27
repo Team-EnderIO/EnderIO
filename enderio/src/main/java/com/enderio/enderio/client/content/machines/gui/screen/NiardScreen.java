@@ -17,7 +17,7 @@ import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -26,7 +26,7 @@ import org.joml.Matrix3x2fStack;
 public class NiardScreen extends MachineScreen<NiardMenu> {
 
 
-    public static final ResourceLocation BG_TEXTURE = EnderIO.rl("textures/gui/screen/niard.png");
+    public static final Identifier BG_TEXTURE = EnderIO.rl("textures/gui/screen/niard.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
 
@@ -76,7 +76,7 @@ public class NiardScreen extends MachineScreen<NiardMenu> {
         Minecraft minecraft = Minecraft.getInstance();
 
         IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluidStack.getFluid());
-        ResourceLocation still = props.getStillTexture(fluidStack);
+        Identifier still = props.getStillTexture(fluidStack);
 
         if (still != null) {
             AbstractTexture texture = minecraft.getTextureManager().getTexture(TextureAtlas.LOCATION_BLOCKS);

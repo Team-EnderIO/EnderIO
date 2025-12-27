@@ -3,7 +3,7 @@ package com.enderio.enderio.conduits.tests;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -22,7 +22,7 @@ public class EnderIOConduitsTests {
 
     public EnderIOConduitsTests(IEventBus eventBus, ModContainer container) {
         final MutableTestFramework framework = FrameworkConfiguration
-                .builder(ResourceLocation.fromNamespaceAndPath(MOD_ID, "tests"))
+                .builder(Identifier.fromNamespaceAndPath(MOD_ID, "tests"))
                 .clientConfiguration(() -> ClientConfiguration.builder()
                         .toggleOverlayKey(GLFW.GLFW_KEY_O)
                         .openManagerKey(GLFW.GLFW_KEY_M)

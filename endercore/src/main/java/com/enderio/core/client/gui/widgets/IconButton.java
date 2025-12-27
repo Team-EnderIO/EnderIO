@@ -6,15 +6,15 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 public class IconButton extends EnderButton {
 
-    private final ResourceLocation sprite;
+    private final Identifier sprite;
     private final Runnable onPress;
 
-    public IconButton(int x, int y, int width, int height, ResourceLocation sprite, @Nullable Component tooltip,
+    public IconButton(int x, int y, int width, int height, Identifier sprite, @Nullable Component tooltip,
             Runnable onPress) {
         super(x, y, width, height, Component.empty());
         this.sprite = sprite;

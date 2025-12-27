@@ -13,7 +13,7 @@ import com.enderio.enderio.content.tools.vials.SoulVialItem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
@@ -27,20 +27,20 @@ public class EnderSoulFilterScreen extends EnderContainerScreen<EnderSoulFilterM
     private static final int WIDTH = 183;
     private static final int HEIGHT = 199;
 
-    private static final ResourceLocation BG_2x9 = EnderIO.rl("textures/gui/screens/filter_2x9.png");
-    private static final ResourceLocation BG_1x9 = EnderIO.rl("textures/gui/screens/filter_1x9.png");
-    private static final ResourceLocation BG_3x9 = EnderIO.rl("textures/gui/screens/filter_3x9.png");
-    private static final ResourceLocation BG_4x9 = EnderIO.rl("textures/gui/screens/filter_4x9.png");
+    private static final Identifier BG_2x9 = EnderIO.rl("textures/gui/screens/filter_2x9.png");
+    private static final Identifier BG_1x9 = EnderIO.rl("textures/gui/screens/filter_1x9.png");
+    private static final Identifier BG_3x9 = EnderIO.rl("textures/gui/screens/filter_3x9.png");
+    private static final Identifier BG_4x9 = EnderIO.rl("textures/gui/screens/filter_4x9.png");
 
-    private static final ResourceLocation BACK_SPRITE = EnderIO.rl("icon/back");
+    private static final Identifier BACK_SPRITE = EnderIO.rl("icon/back");
 
-    private static final ResourceLocation ICON_MATCH_COMPONENTS = EnderIO.rl("icon/match_components");
-    private static final ResourceLocation ICON_IGNORE_COMPONENTS = EnderIO.rl("icon/ignore_components");
+    private static final Identifier ICON_MATCH_COMPONENTS = EnderIO.rl("icon/match_components");
+    private static final Identifier ICON_IGNORE_COMPONENTS = EnderIO.rl("icon/ignore_components");
 
-    private static final ResourceLocation ICON_ALLOW_LIST = EnderIO.rl("icon/allow_list");
-    private static final ResourceLocation ICON_DENY_LIST = EnderIO.rl("icon/deny_list");
+    private static final Identifier ICON_ALLOW_LIST = EnderIO.rl("icon/allow_list");
+    private static final Identifier ICON_DENY_LIST = EnderIO.rl("icon/deny_list");
 
-    private final ResourceLocation backgroundTexture;
+    private final Identifier backgroundTexture;
 
     public EnderSoulFilterScreen(EnderSoulFilterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);

@@ -11,7 +11,7 @@ import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -60,7 +60,7 @@ public class TooltipHandler {
 
             for (Map.Entry<CapacitorModifier, Float> modifier : capacitorData.modifiers().entrySet()) {
                 components.add(TooltipUtil.styledWithArgs(
-                        ResourceLocation.fromNamespaceAndPath("tooltip", modifier.getKey().modifierId.toLanguageKey()),
+                        Identifier.fromNamespaceAndPath("tooltip", modifier.getKey().modifierId.toLanguageKey()),
                         fmt.format(modifier.getValue())));
             }
         }

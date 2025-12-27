@@ -8,12 +8,12 @@ import com.enderio.enderio.content.machines.obelisks.weather.WeatherObeliskMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 public class WeatherObeliskScreen extends MachineScreen<WeatherObeliskMenu> {
 
-    public static final ResourceLocation WEATHER_BG = EnderIO.rl("textures/gui/screen/weather_obelisk.png");
+    public static final Identifier WEATHER_BG = EnderIO.rl("textures/gui/screen/weather_obelisk.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
 

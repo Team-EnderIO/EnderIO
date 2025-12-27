@@ -13,7 +13,7 @@
 //import mezz.jei.api.recipe.IFocusGroup;
 //import mezz.jei.api.recipe.RecipeType;
 //import net.minecraft.network.chat.Component;
-//import net.minecraft.resources.ResourceLocation;
+//import net.minecraft.resources.Identifier;
 //import net.minecraft.tags.ItemTags;
 //import net.minecraft.world.item.ItemStack;
 //import net.minecraft.world.item.crafting.Ingredient;
@@ -29,7 +29,7 @@
 //    public static final RecipeType<RecipeHolder<SlicingRecipe>> TYPE = JEIUtils.createRecipeType(EnderIO.MOD_ID,
 //            "slicing", SlicingRecipe.class);
 //
-//    public static final ResourceLocation BG_TEXTURE = EnderIO.rl("textures/gui/viewer/slice_and_splice.png");
+//    public static final Identifier BG_TEXTURE = EnderIO.rl("textures/gui/viewer/slice_and_splice.png");
 //    private static final int WIDTH = 108;
 //    private static final int HEIGHT = 60;
 //

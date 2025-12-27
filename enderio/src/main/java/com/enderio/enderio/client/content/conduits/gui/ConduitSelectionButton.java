@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -72,10 +72,10 @@ public class ConduitSelectionButton extends AbstractButton {
         }
 
         // TODO: This shouldn't be a hard-coded path.
-        ResourceLocation iconLocation = MissingTextureAtlasSprite.getLocation();
-        ResourceLocation conduitKey = conduit.unwrapKey().map(ResourceKey::location).orElse(null);
+        Identifier iconLocation = MissingTextureAtlasSprite.getLocation();
+        Identifier conduitKey = conduit.unwrapKey().map(ResourceKey::location).orElse(null);
         if (conduitKey != null) {
-            iconLocation = ResourceLocation.fromNamespaceAndPath(conduitKey.getNamespace(),
+            iconLocation = Identifier.fromNamespaceAndPath(conduitKey.getNamespace(),
                     "conduit_icon/" + conduitKey.getPath());
         }
 

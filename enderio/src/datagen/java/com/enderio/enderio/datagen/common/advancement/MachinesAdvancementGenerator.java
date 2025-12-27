@@ -14,7 +14,7 @@ import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.advancements.AdvancementSubProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
@@ -30,7 +30,7 @@ public class MachinesAdvancementGenerator implements AdvancementSubProvider {
 
         Advancement.Builder builder = Advancement.Builder
             .advancement()
-            .parent(ResourceLocation.withDefaultNamespace("adventure/root"))
+            .parent(Identifier.withDefaultNamespace("adventure/root"))
             .display(EIOBlocks.CAPACITOR_BANKS.get(CapacitorTier.BASIC), AdvancementsLang.PLACE_CAPACITOR_BANK_ADVANCEMENT_TITLE, AdvancementsLang.PLACE_CAPACITOR_BANK_ADVANCEMENT_DESCRIPTION, null, AdvancementType.TASK, true,
                 true, false)
             .addCriterion("place_capacitor_bank", placedBlock(EIOBlocks.CAPACITOR_BANKS.values().stream().map(DeferredHolder::get)

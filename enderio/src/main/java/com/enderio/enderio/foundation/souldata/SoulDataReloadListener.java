@@ -26,7 +26,7 @@ import com.mojang.serialization.Codec;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.FileToIdConverter;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
@@ -53,7 +53,7 @@ import java.util.function.Function;
 // TODO: 1.21.4: Might make sense for soul datum to be in their own registry(ies). Then the codecs can be registry sensitive.
 public class SoulDataReloadListener<T extends SoulData> extends SimpleJsonResourceReloadListener<T> {
     private static final Gson GSON = new Gson();
-    public Map<ResourceLocation, T> map = new HashMap<>();
+    public Map<Identifier, T> map = new HashMap<>();
     private final String folderName;
     private static final Map<String, SoulDataReloadListener<? extends SoulData>> LOADED_SOUL_DATA = new HashMap<>();
     private static final Logger LOGGER = LogUtils.getLogger();
@@ -66,7 +66,7 @@ public class SoulDataReloadListener<T extends SoulData> extends SimpleJsonResour
     }
 
     @Override
-    protected void apply(Map<ResourceLocation, T> soulData, ResourceManager resourceManager, ProfilerFiller profiler) {
+    protected void apply(Map<Identifier, T> soulData, ResourceManager resourceManager, ProfilerFiller profiler) {
         this.map = new HashMap<>(soulData);
         LOGGER.info("Data loader for {} loaded {} jsons", this.folderName, this.map.size());
     }
@@ -79,14 +79,14 @@ public class SoulDataReloadListener<T extends SoulData> extends SimpleJsonResour
      * @return this manager object
      */
     public <P extends CustomPacketPayload> SoulDataReloadListener<T> subscribeAsSyncable(
-            final Function<Map<ResourceLocation, T>, P> packetFactory) {
+            final Function<Map<Identifier, T>, P> packetFactory) {
         NeoForge.EVENT_BUS.addListener(this.getDatapackSyncListener(packetFactory));
         return this;
     }
 
     /** Generate an event listener function for the on-datapack-sync event **/
     private <P extends CustomPacketPayload> Consumer<OnDatapackSyncEvent> getDatapackSyncListener(
-            final Function<Map<ResourceLocation, T>, P> packetFactory) {
+            final Function<Map<Identifier, T>, P> packetFactory) {
         return event -> {
             ServerPlayer player = event.getPlayer();
             P packet = packetFactory.apply(this.map);
@@ -102,7 +102,7 @@ public class SoulDataReloadListener<T extends SoulData> extends SimpleJsonResour
     /**
      * Returns an optional ISoulData implementation.
      */
-    public Optional<T> matches(ResourceLocation entitytype) {
+    public Optional<T> matches(Identifier entitytype) {
         if (map.containsKey(entitytype)) {
             return Optional.of(map.get(entitytype));
         }

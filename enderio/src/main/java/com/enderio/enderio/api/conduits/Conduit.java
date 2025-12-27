@@ -19,7 +19,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryFixedCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -49,7 +49,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
     /**
      * Gets the default conduit texture.
      */
-    ResourceLocation texture();
+    Identifier texture();
 
     /**
      * Gets the conduit description, used for the conduit item.

@@ -7,11 +7,11 @@ import com.enderio.modded_conduits.common.modules.mekanism.MekanismModule;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-public record HeatConduit(ResourceLocation texture, Component description)
+public record HeatConduit(Identifier texture, Component description)
         implements Conduit<HeatConduit, HeatConduitConnectionConfig> {
 
     private static final HeatTicker TICKER = new HeatTicker();

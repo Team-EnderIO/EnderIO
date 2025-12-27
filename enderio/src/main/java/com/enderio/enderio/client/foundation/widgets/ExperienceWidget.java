@@ -6,15 +6,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.function.Supplier;
 
 public class ExperienceWidget extends EIOWidget {
-    protected static final ResourceLocation EXPERIENCE_BAR_BACKGROUND_SPRITE = ResourceLocation
+    protected static final Identifier EXPERIENCE_BAR_BACKGROUND_SPRITE = Identifier
             .withDefaultNamespace("hud/experience_bar_background");
-    protected static final ResourceLocation EXPERIENCE_BAR_PROGRESS_SPRITE = ResourceLocation
+    protected static final Identifier EXPERIENCE_BAR_PROGRESS_SPRITE = Identifier
             .withDefaultNamespace("hud/experience_bar_progress");
 
     private final Supplier<FluidStack> getFluid;

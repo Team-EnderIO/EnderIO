@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
 
@@ -50,7 +50,7 @@ public class FermentationWidget extends EIOWidget {
         }
         Minecraft minecraft = Minecraft.getInstance();
         IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluid.getFluid());
-        ResourceLocation loc = props.getStillTexture();
+        Identifier loc = props.getStillTexture();
 
         AbstractTexture texture = minecraft.getTextureManager().getTexture(TextureAtlas.LOCATION_BLOCKS);
         if (texture instanceof TextureAtlas atlas) {

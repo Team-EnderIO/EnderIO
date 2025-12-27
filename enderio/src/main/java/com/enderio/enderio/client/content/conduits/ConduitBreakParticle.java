@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.state.BlockState;
@@ -26,7 +26,7 @@ public class ConduitBreakParticle extends TextureSheetParticle {
     private final float vo;
 
     public ConduitBreakParticle(ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed,
-            double zSpeed, BlockPos pos, ResourceLocation texture) {
+            double zSpeed, BlockPos pos, Identifier texture) {
         super(level, x, y, z, xSpeed, ySpeed, zSpeed);
         this.pos = pos;
         this.setSprite(

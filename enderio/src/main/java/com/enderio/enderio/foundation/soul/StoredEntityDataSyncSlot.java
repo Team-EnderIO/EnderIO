@@ -2,10 +2,10 @@ package com.enderio.enderio.foundation.soul;
 
 import com.enderio.core.common.network.menu.SyncSlot;
 import com.enderio.core.common.network.menu.payload.ListSlotPayload;
-import com.enderio.core.common.network.menu.payload.ResourceLocationSlotPayload;
+import com.enderio.core.common.network.menu.payload.IdentifierSlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayload;
 import com.enderio.enderio.api.soul.Soul;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 
 import java.util.List;
@@ -86,7 +86,7 @@ public abstract class StoredEntityDataSyncSlot implements SyncSlot {
         // TODO: Need to be able to send the entity tag.
         // Honestly feels like a minor rework is required to add custom payloads instead of combining them.
         return new ListSlotPayload(List.of(
-            new ResourceLocationSlotPayload(currentValue.entityTypeId())
+            new IdentifierSlotPayload(currentValue.entityTypeId())
         ));
     }
 
@@ -96,7 +96,7 @@ public abstract class StoredEntityDataSyncSlot implements SyncSlot {
             if (contents.isEmpty()) {
                 set(Soul.EMPTY);
             } else {
-                if (contents.getFirst() instanceof ResourceLocationSlotPayload(ResourceLocation value)) {
+                if (contents.getFirst() instanceof IdentifierSlotPayload(Identifier value)) {
                     set(Soul.of(value));
                 }
             }

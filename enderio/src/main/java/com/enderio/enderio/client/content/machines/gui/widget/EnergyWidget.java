@@ -10,7 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -18,7 +18,7 @@ import java.util.function.Supplier;
 
 public class EnergyWidget extends EIOWidget {
 
-    protected static final ResourceLocation WIDGETS = EnderIO.rl("textures/gui/widgets.png");
+    protected static final Identifier WIDGETS = EnderIO.rl("textures/gui/widgets.png");
 
     private final Supplier<IMachineEnergyStorage> storageSupplier;
 

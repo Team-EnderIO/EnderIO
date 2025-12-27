@@ -19,7 +19,7 @@ import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
@@ -135,7 +135,7 @@ public class SoulDataProvider implements DataProvider {
 
     @Override
     public CompletableFuture<?> run(CachedOutput cachedOutput) {
-        Set<ResourceLocation> set = Sets.newHashSet();
+        Set<Identifier> set = Sets.newHashSet();
         List<CompletableFuture<?>> list = new ArrayList<>();
         this.buildSoulData(finshedSoulData -> {
             if (!set.add(finshedSoulData.getId())) {
@@ -156,7 +156,7 @@ public class SoulDataProvider implements DataProvider {
 
     private void addSpawnerData(EntityType<?> entityType, int power, MobSpawnMode type,
             Consumer<FinshedSoulData<?>> finshedSoulDataConsumer) {
-        ResourceLocation key = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
+        Identifier key = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
         SpawnerSoul.SoulData data = new SpawnerSoul.SoulData(key, power, type);
         finshedSoulDataConsumer.accept(new FinshedSoulData<>(SpawnerSoul.CODEC, data,
                 SpawnerSoul.NAME + "/" + key.getNamespace() + "_" + key.getPath()));
@@ -164,8 +164,8 @@ public class SoulDataProvider implements DataProvider {
 
     private void addEngineData(EntityType<?> entityType, Fluid fluid, int powerpermb, int tickpermb,
             Consumer<FinshedSoulData<?>> finshedSoulDataConsumer) {
-        ResourceLocation entityRL = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
-        ResourceLocation fluidRL = BuiltInRegistries.FLUID.getKey(fluid);
+        Identifier entityRL = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
+        Identifier fluidRL = BuiltInRegistries.FLUID.getKey(fluid);
         EngineSoul.SoulData data = new EngineSoul.SoulData(entityRL, fluidRL.toString(), powerpermb, tickpermb);
         finshedSoulDataConsumer.accept(new FinshedSoulData<>(EngineSoul.CODEC, data,
                 EngineSoul.NAME + "/" + entityRL.getNamespace() + "_" + entityRL.getPath()));
@@ -173,7 +173,7 @@ public class SoulDataProvider implements DataProvider {
 
     private void addEngineData(EntityType<?> entityType, TagKey<Fluid> fluid, int powerpermb, int tickpermb,
             Consumer<FinshedSoulData<?>> finshedSoulDataConsumer) {
-        ResourceLocation entityRL = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
+        Identifier entityRL = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
         String fluidRL = "#" + fluid.location();
         EngineSoul.SoulData data = new EngineSoul.SoulData(entityRL, fluidRL, powerpermb, tickpermb);
         finshedSoulDataConsumer.accept(new FinshedSoulData<>(EngineSoul.CODEC, data,
@@ -182,7 +182,7 @@ public class SoulDataProvider implements DataProvider {
 
     private void addFarmData(EntityType<?> entityType, float bonemeal, int seeds, float power,
             Consumer<FinshedSoulData<?>> finshedSoulDataConsumer) {
-        ResourceLocation entityRL = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
+        Identifier entityRL = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
         FarmSoul.SoulData data = new FarmSoul.SoulData(entityRL, bonemeal, seeds, power);
         finshedSoulDataConsumer.accept(new FinshedSoulData<>(FarmSoul.CODEC, data,
                 FarmSoul.NAME + "/" + entityRL.getNamespace() + "_" + entityRL.getPath()));
@@ -190,7 +190,7 @@ public class SoulDataProvider implements DataProvider {
 
     private void addSolarData(EntityType<?> entityType, boolean daytime, boolean nighttime,
             @Nullable ResourceKey<Level> level, Consumer<FinshedSoulData<?>> finshedSoulDataConsumer) {
-        ResourceLocation entityRL = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
+        Identifier entityRL = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
         SolarSoul.SoulData data = new SolarSoul.SoulData(entityRL, daytime, nighttime, Optional.ofNullable(level));
         finshedSoulDataConsumer.accept(new FinshedSoulData<>(SolarSoul.CODEC, data,
                 SolarSoul.NAME + "/" + entityRL.getNamespace() + "_" + entityRL.getPath()));
@@ -200,7 +200,7 @@ public class SoulDataProvider implements DataProvider {
 
         private final Codec<T> codec;
         private final T data;
-        private final ResourceLocation id;
+        private final Identifier id;
 
         private FinshedSoulData(Codec<T> codec, T data, String id) {
             this.codec = codec;
@@ -208,7 +208,7 @@ public class SoulDataProvider implements DataProvider {
             this.id = EnderIO.rl(id);
         }
 
-        private FinshedSoulData(Codec<T> codec, T data, ResourceLocation id) {
+        private FinshedSoulData(Codec<T> codec, T data, Identifier id) {
             this.codec = codec;
             this.data = data;
             this.id = id;
@@ -219,7 +219,7 @@ public class SoulDataProvider implements DataProvider {
             return element.getOrThrow().getAsJsonObject();
         }
 
-        public ResourceLocation getId() {
+        public Identifier getId() {
             return this.id;
         }
 

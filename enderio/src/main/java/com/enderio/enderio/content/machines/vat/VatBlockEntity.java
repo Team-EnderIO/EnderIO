@@ -24,7 +24,7 @@ import com.enderio.enderio.init.EIORecipes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -51,7 +51,7 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
     public static final TankAccess OUTPUT_TANK = new TankAccess();
     public static final MultiSlotAccess REAGENTS = new MultiSlotAccess();
 
-    private static final ResourceLocation EMPTY = EnderIO.rl("");
+    private static final Identifier EMPTY = EnderIO.rl("");
 
     private final MachineFluidHandler fluidHandler;
     private final CraftingMachineTaskHost<FermentingRecipe, FermentingRecipe.Input> craftingTaskHost;

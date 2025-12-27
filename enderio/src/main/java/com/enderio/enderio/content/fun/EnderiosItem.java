@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.item.properties.conditional.ConditionalItem
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.PlainTextContents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Calendar;
 
 public class EnderiosItem extends Item {
-    public static final ResourceLocation INVERTED_PROPERTY = EnderIO.rl("enderios_inverted");
+    public static final Identifier INVERTED_PROPERTY = EnderIO.rl("enderios_inverted");
 
     // TODO: 1.21.4: Does this still have a cooldown?
     private static final FoodProperties PROPERTIES = new FoodProperties.Builder()

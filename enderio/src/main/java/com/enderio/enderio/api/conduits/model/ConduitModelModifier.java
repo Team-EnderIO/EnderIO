@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,11 +28,11 @@ public interface ConduitModelModifier {
      * Gets the conduit texture to display, given the data.
      * @param extraWorldData client data from {@link Conduit#getExtraWorldData(ConduitBundle, ConduitNode)}.
      */
-    default ResourceLocation getTexture(Holder<Conduit<?, ?>> conduit, @Nullable CompoundTag extraWorldData) {
+    default Identifier getTexture(Holder<Conduit<?, ?>> conduit, @Nullable CompoundTag extraWorldData) {
         return conduit.value().texture();
     }
 
-    default List<ResourceLocation> getModelDependencies() {
+    default List<Identifier> getModelDependencies() {
         return List.of();
     }
 }

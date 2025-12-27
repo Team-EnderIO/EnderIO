@@ -18,7 +18,7 @@
 //import net.minecraft.client.resources.model.ModelBaker;
 //import net.minecraft.client.resources.model.ModelState;
 //import net.minecraft.core.Direction;
-//import net.minecraft.resources.ResourceLocation;
+//import net.minecraft.resources.Identifier;
 //import net.minecraft.util.RandomSource;
 //import net.minecraft.world.inventory.InventoryMenu;
 //import net.minecraft.world.level.block.state.BlockState;
@@ -38,10 +38,10 @@
 //import java.util.function.Function;
 //
 //public class IOOverlayBakedModel implements IDynamicBakedModel {
-//    public static final ResourceLocation TEX_DISABLED = EnderIO.rl("block/overlay/disabled");
-//    public static final ResourceLocation TEX_PULL = EnderIO.rl("block/overlay/pull");
-//    public static final ResourceLocation TEX_PUSH = EnderIO.rl("block/overlay/push");
-//    public static final ResourceLocation TEX_PUSH_PULL = EnderIO.rl("block/overlay/push_pull");
+//    public static final Identifier TEX_DISABLED = EnderIO.rl("block/overlay/disabled");
+//    public static final Identifier TEX_PULL = EnderIO.rl("block/overlay/pull");
+//    public static final Identifier TEX_PUSH = EnderIO.rl("block/overlay/push");
+//    public static final Identifier TEX_PUSH_PULL = EnderIO.rl("block/overlay/push_pull");
 //
 //    private static final EnumMap<Direction, Vector3f[]> QUADS = new EnumMap<>(Direction.class);
 //    private static final ChunkRenderTypeSet CUTOUT_SET = ChunkRenderTypeSet.of(RenderType.cutout());
@@ -53,7 +53,7 @@
 //    }
 //
 //    private TextureAtlasSprite getTexture(IOMode state) {
-//        ResourceLocation tex = switch (state) {
+//        Identifier tex = switch (state) {
 //        case NONE -> MissingTextureAtlasSprite.getLocation();
 //        case PUSH -> TEX_PUSH;
 //        case PULL -> TEX_PULL;

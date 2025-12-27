@@ -1,6 +1,6 @@
 package com.enderio.core.client.icon;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.Nullable;
 
@@ -11,25 +11,25 @@ import java.util.stream.Collectors;
 
 // TODO: Use StringRepresentable instead of enum names.
 public class EnumIconMap<T extends Enum<T>> {
-    private final EnumMap<T, ResourceLocation> icons;
+    private final EnumMap<T, Identifier> icons;
 
     public EnumIconMap(String modId, Class<T> enumClass, String iconFolder) {
         // noinspection Convert2Diamond
-        icons = new EnumMap<T, ResourceLocation>(Arrays.stream(enumClass.getEnumConstants())
+        icons = new EnumMap<T, Identifier>(Arrays.stream(enumClass.getEnumConstants())
                 .collect(Collectors.toMap(e -> e, e -> createFor(modId, iconFolder, e))));
     }
 
-    private EnumIconMap(EnumMap<T, ResourceLocation> icons) {
+    private EnumIconMap(EnumMap<T, Identifier> icons) {
         this.icons = icons;
     }
 
     @Nullable
-    public ResourceLocation get(T value) {
+    public Identifier get(T value) {
         return icons.get(value);
     }
 
-    private static <T extends Enum<T>> ResourceLocation createFor(String modId, String iconFolder, T value) {
-        return ResourceLocation.fromNamespaceAndPath(modId,
+    private static <T extends Enum<T>> Identifier createFor(String modId, String iconFolder, T value) {
+        return Identifier.fromNamespaceAndPath(modId,
                 "icon/" + iconFolder + "/" + value.name().toLowerCase(Locale.ROOT));
     }
 
@@ -38,7 +38,7 @@ public class EnumIconMap<T extends Enum<T>> {
         private final Class<T> enumClass;
         private final String iconFolder;
 
-        private final EnumMap<T, ResourceLocation> icons;
+        private final EnumMap<T, Identifier> icons;
 
         public Builder(String modId, Class<T> enumClass, String iconFolder) {
             this.modId = modId;
@@ -52,7 +52,7 @@ public class EnumIconMap<T extends Enum<T>> {
             return this;
         }
 
-        public Builder<T> add(T value, ResourceLocation icon) {
+        public Builder<T> add(T value, Identifier icon) {
             icons.put(value, icon);
             return this;
         }

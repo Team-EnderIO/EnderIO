@@ -4,7 +4,7 @@ import com.enderio.enderio.content.paint.block.PaintedBlock;
 import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -19,12 +19,12 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class PaintUtils {
-    public static Block getBlockFromRL(ResourceLocation rl) {
+    public static Block getBlockFromRL(Identifier rl) {
         return BuiltInRegistries.BLOCK.getValue(rl);
     }
 
     public static Block getBlockFromString(String rl) {
-        return BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(rl));
+        return BuiltInRegistries.BLOCK.getValue(Identifier.parse(rl));
     }
 
     public static Optional<SoundEvent> getPlaceSound(BlockState state, Level level, BlockPos pos, Player player, Class<? extends BlockItem> blockItemClass) {

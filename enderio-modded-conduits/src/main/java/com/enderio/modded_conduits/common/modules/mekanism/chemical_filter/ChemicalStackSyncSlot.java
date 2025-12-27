@@ -3,11 +3,11 @@ package com.enderio.modded_conduits.common.modules.mekanism.chemical_filter;
 import com.enderio.core.common.network.menu.SyncSlot;
 import com.enderio.core.common.network.menu.payload.LongSlotPayload;
 import com.enderio.core.common.network.menu.payload.PairSlotPayload;
-import com.enderio.core.common.network.menu.payload.ResourceLocationSlotPayload;
+import com.enderio.core.common.network.menu.payload.IdentifierSlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayload;
 import mekanism.api.MekanismAPI;
 import mekanism.api.chemical.ChemicalStack;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 
 import java.util.Objects;
@@ -86,7 +86,7 @@ public abstract class ChemicalStackSyncSlot implements SyncSlot {
             return new LongSlotPayload(get().getAmount());
         }
 
-        return new PairSlotPayload(new ResourceLocationSlotPayload(get().getChemical().getRegistryName()), new LongSlotPayload(get().getAmount()));
+        return new PairSlotPayload(new IdentifierSlotPayload(get().getChemical().getRegistryName()), new LongSlotPayload(get().getAmount()));
     }
 
     @Override
@@ -94,7 +94,7 @@ public abstract class ChemicalStackSyncSlot implements SyncSlot {
         if (payload instanceof LongSlotPayload(long amount)) {
             set(get().copyWithAmount(amount));
         } else if (payload instanceof PairSlotPayload(SlotPayload left, SlotPayload right)) {
-            if (left instanceof ResourceLocationSlotPayload(ResourceLocation chemicalId)
+            if (left instanceof IdentifierSlotPayload(Identifier chemicalId)
                 && right instanceof LongSlotPayload(long amount)) {
                 var stack = new ChemicalStack(MekanismAPI.CHEMICAL_REGISTRY.get(chemicalId), amount);
                 set(stack);

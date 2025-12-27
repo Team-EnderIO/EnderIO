@@ -9,7 +9,7 @@ import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.Block;
 
@@ -17,8 +17,8 @@ import java.util.Optional;
 
 public class PaintingTrigger extends SimpleCriterionTrigger<PaintingTrigger.TriggerInstance> {
 
-    static final ResourceLocation ID = EnderIO.rl("create_painted_block");
-    public ResourceLocation getId() {
+    static final Identifier ID = EnderIO.rl("create_painted_block");
+    public Identifier getId() {
         return ID;
     }
 

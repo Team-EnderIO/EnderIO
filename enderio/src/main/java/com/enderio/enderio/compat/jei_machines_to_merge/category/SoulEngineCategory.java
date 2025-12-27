@@ -25,7 +25,7 @@
 //import net.minecraft.core.registries.Registries;
 //import net.minecraft.network.chat.Component;
 //import net.minecraft.resources.ResourceKey;
-//import net.minecraft.resources.ResourceLocation;
+//import net.minecraft.resources.Identifier;
 //import net.minecraft.tags.TagKey;
 //import net.minecraft.world.entity.EntityType;
 //import net.minecraft.world.item.ItemStack;
@@ -74,12 +74,12 @@
 //        List<FluidStack> list = new ArrayList<>();
 //        String fluid = recipe.fluid();
 //        if (fluid.startsWith("#")) { // We have a fluid tag instead
-//            TagKey<Fluid> tag = TagKey.create(Registries.FLUID, ResourceLocation.parse(fluid.substring(1)));
+//            TagKey<Fluid> tag = TagKey.create(Registries.FLUID, Identifier.parse(fluid.substring(1)));
 //            BuiltInRegistries.FLUID.getTag(tag)
 //                    .ifPresent(s -> s.forEach(f -> list.add(new FluidStack(f, SoulEngineBlockEntity.FLUID_CAPACITY))));
 //        } else {
 //            Optional<Holder.Reference<Fluid>> delegate = BuiltInRegistries.FLUID
-//                    .getHolder(ResourceKey.create(Registries.FLUID, ResourceLocation.parse(fluid)));
+//                    .getHolder(ResourceKey.create(Registries.FLUID, Identifier.parse(fluid)));
 //            delegate.ifPresent(fluidReference -> list
 //                    .add(new FluidStack(fluidReference.value(), SoulEngineBlockEntity.FLUID_CAPACITY)));
 //        }

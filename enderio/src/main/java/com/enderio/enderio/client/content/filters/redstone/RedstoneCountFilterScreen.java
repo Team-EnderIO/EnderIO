@@ -9,13 +9,13 @@ import com.enderio.enderio.content.filters.redstone.RedstoneCountFilterMenu;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import org.joml.Vector2i;
 
 public class RedstoneCountFilterScreen extends EIOScreen<RedstoneCountFilterMenu> {
     private static final Vector2i BG_SIZE = new Vector2i(183, 201);
-    private static final ResourceLocation BG_TEXTURE = EnderIO.rl("textures/gui/40/item_filter.png");
+    private static final Identifier BG_TEXTURE = EnderIO.rl("textures/gui/40/item_filter.png");
 
     public RedstoneCountFilterScreen(RedstoneCountFilterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -44,7 +44,7 @@ public class RedstoneCountFilterScreen extends EIOScreen<RedstoneCountFilterMenu
     }
 
     @Override
-    public ResourceLocation getBackgroundImage() {
+    public Identifier getBackgroundImage() {
         return BG_TEXTURE;
     }
 

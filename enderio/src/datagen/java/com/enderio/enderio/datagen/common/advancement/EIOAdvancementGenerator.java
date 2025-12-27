@@ -8,7 +8,7 @@ import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementType;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.advancements.AdvancementSubProvider;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 
@@ -19,14 +19,14 @@ public class EIOAdvancementGenerator implements AdvancementSubProvider{
     public void generate(HolderLookup.Provider provider, Consumer<AdvancementHolder> consumer) {
 //        Advancement.Builder builder = Advancement.Builder
 //            .advancement()
-//            .parent(new ResourceLocation("adventure/root"))
+//            .parent(new Identifier("adventure/root"))
 //            .display(EIOItems.GLIDER.get(), EIOLang.USE_GLIDER_ADVANCEMENT_TITLE, EIOLang.USE_GLIDER_ADVANCEMENT_DESCRIPTION, null, FrameType.TASK, true,
 //                true, false)
 //            .addCriterion("use_glider", new UseGliderTrigger.TriggerInstance());
 //        builder.save(saver, UseGliderAdvancementBenefit.USE_GLIDER_ADVANCEMENT.toString());
 
         AdvancementHolder rich = Advancement.Builder.advancement()
-            .parent(ResourceLocation.withDefaultNamespace("adventure/root"))
+            .parent(Identifier.withDefaultNamespace("adventure/root"))
             .display(Items.DIAMOND_BLOCK, AdvancementsLang.RICH_ADVANCEMENT_TITLE, AdvancementsLang.RICH_ADVANCEMENT_DESCRIPTION, null, AdvancementType.TASK, true,
                 true, false)
             .addCriterion("paint", PaintingTrigger.TriggerInstance.painted(Blocks.DIAMOND_BLOCK))

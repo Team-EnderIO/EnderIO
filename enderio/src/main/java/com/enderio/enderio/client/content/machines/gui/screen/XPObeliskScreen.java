@@ -13,7 +13,7 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import org.joml.Vector2i;
 
@@ -21,16 +21,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XPObeliskScreen extends MachineScreen<XPObeliskMenu> {
-    private static final ResourceLocation BG = EnderIO.rl("textures/gui/screen/xp_obelisk.png");
+    private static final Identifier BG = EnderIO.rl("textures/gui/screen/xp_obelisk.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 116;
 
-    private static final ResourceLocation XP_ADD_ONE = EnderIO.rl("buttons/xp_add_one");
-    private static final ResourceLocation XP_ADD_ALL = EnderIO.rl("buttons/xp_add_all");
-    private static final ResourceLocation XP_ADD_MULTI = EnderIO.rl("buttons/xp_add_multi");
-    private static final ResourceLocation XP_REMOVE_ONE = EnderIO.rl("buttons/xp_remove_one");
-    private static final ResourceLocation XP_REMOVE_MULTI = EnderIO.rl("buttons/xp_remove_multi");
-    private static final ResourceLocation XP_REMOVE_ALL = EnderIO.rl("buttons/xp_remove_all");
+    private static final Identifier XP_ADD_ONE = EnderIO.rl("buttons/xp_add_one");
+    private static final Identifier XP_ADD_ALL = EnderIO.rl("buttons/xp_add_all");
+    private static final Identifier XP_ADD_MULTI = EnderIO.rl("buttons/xp_add_multi");
+    private static final Identifier XP_REMOVE_ONE = EnderIO.rl("buttons/xp_remove_one");
+    private static final Identifier XP_REMOVE_MULTI = EnderIO.rl("buttons/xp_remove_multi");
+    private static final Identifier XP_REMOVE_ALL = EnderIO.rl("buttons/xp_remove_all");
 
     private final List<ImageButton> xpButtons = new ArrayList<>();
 
@@ -76,7 +76,7 @@ public class XPObeliskScreen extends MachineScreen<XPObeliskMenu> {
         pGuiGraphics.blit(RenderPipelines.GUI_TEXTURED, BG, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
-    private ImageButton makeButton(int x, int y, int size, int id, ResourceLocation SPRITE, Component tooltip) {
+    private ImageButton makeButton(int x, int y, int size, int id, Identifier SPRITE, Component tooltip) {
         ImageButton button = new ImageButton(x, y, size, size, new WidgetSprites(SPRITE, SPRITE),
                 (press) -> handleButtonPress(id));
         button.setTooltip(Tooltip.create(tooltip));

@@ -11,12 +11,12 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class EnergyConduitScreenType extends IOConduitScreenType<EnergyConduitConnectionConfig> {
 
-    private static final ResourceLocation ICON_INCREASE = EnderIO.rl("icon/increase");
-    private static final ResourceLocation ICON_DECREASE = EnderIO.rl("icon/decrease");
+    private static final Identifier ICON_INCREASE = EnderIO.rl("icon/increase");
+    private static final Identifier ICON_DECREASE = EnderIO.rl("icon/decrease");
 
     @Override
     public void renderLabels(ConduitMenuDataAccess<EnergyConduitConnectionConfig> dataAccess, GuiGraphics guiGraphics,

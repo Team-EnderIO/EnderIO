@@ -24,7 +24,7 @@
 //import net.minecraft.client.Minecraft;
 //import net.minecraft.client.gui.GuiGraphics;
 //import net.minecraft.network.chat.Component;
-//import net.minecraft.resources.ResourceLocation;
+//import net.minecraft.resources.Identifier;
 //import net.minecraft.world.item.ItemStack;
 //import net.minecraft.world.item.Items;
 //import net.minecraft.world.item.crafting.Ingredient;
@@ -41,7 +41,7 @@
 //    public static final RecipeType<RecipeHolder<SagMillingRecipe>> TYPE = JEIUtils.createRecipeType(EnderIO.MOD_ID,
 //            "sagmilling", SagMillingRecipe.class);
 //
-//    private static final ResourceLocation BG_TEXTURE = EnderIO.rl("textures/gui/viewer/sag_mill.png");
+//    private static final Identifier BG_TEXTURE = EnderIO.rl("textures/gui/viewer/sag_mill.png");
 //    private static final int WIDTH = 123;
 //    private static final int HEIGHT = 65;
 //

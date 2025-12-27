@@ -11,7 +11,7 @@ import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -39,7 +39,7 @@ public class CapacitorBankBlock extends LegacyMachineBlock implements AdvancedTo
 
     public final CapacityTier tier;
 
-    public static final ResourceLocation PLACE_ADVANCEMENT_ID = EnderIO.rl("place_capacitor_bank");
+    public static final Identifier PLACE_ADVANCEMENT_ID = EnderIO.rl("place_capacitor_bank");
 
     public CapacitorBankBlock(Properties properties,
             Supplier<BlockEntityType<? extends LegacyMachineBlockEntity>> blockEntityType, CapacityTier tier) {

@@ -11,9 +11,9 @@ public abstract class RecipeManagerMixin {
 
     //TODO See if we still need this for kubejs
 //    @Inject(method = "lambda$apply$0", at = @At("TAIL"))
-//    private static void collectRecipe(ResourceLocation recipeId,
+//    private static void collectRecipe(Identifier recipeId,
 //            ImmutableMultimap.Builder<RecipeType<?>, RecipeHolder<?>> byType,
-//            ImmutableMap.Builder<ResourceLocation, RecipeHolder<?>> byName,
+//            ImmutableMap.Builder<Identifier, RecipeHolder<?>> byName,
 //            WithConditions<Recipe<?>> recipeWithConditions, CallbackInfo ci) {
 //        if (recipeWithConditions.carrier() instanceof SmeltingRecipe smeltingRecipe) {
 //
@@ -26,7 +26,7 @@ public abstract class RecipeManagerMixin {
 //
 //    @Unique
 //    private static Optional<RecipeHolder<AlloySmeltingRecipe>> enderio$convertSmeltingRecipe(
-//            ResourceLocation originalId, SmeltingRecipe smeltingRecipe) {
+//            Identifier originalId, SmeltingRecipe smeltingRecipe) {
 //        AbstractCookingRecipeAccessor accessor = (AbstractCookingRecipeAccessor) smeltingRecipe;
 //
 //        if (accessor.getResult().isEmpty()) {
@@ -41,7 +41,7 @@ public abstract class RecipeManagerMixin {
 //                accessor.getExperience(), true);
 //
 //        String path = "smelting/" + originalId.getNamespace() + "/" + originalId.getPath();
-//        ResourceLocation id = EnderIO.rl(path);
+//        Identifier id = EnderIO.rl(path);
 //        return Optional.of(new RecipeHolder<>(id, recipe));
 //    }
 }

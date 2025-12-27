@@ -3,7 +3,7 @@ package com.enderio.core.common.registries;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -53,7 +53,7 @@ public class BlockEntityTypeDeferredRegister extends DeferredRegister<BlockEntit
 
     @Override
     protected <I extends BlockEntityType<?>> DeferredHolder<BlockEntityType<?>, I> createHolder(ResourceKey<? extends Registry<BlockEntityType<?>>> registryKey,
-        ResourceLocation key) {
+        Identifier key) {
         //noinspection unchecked,rawtypes
         return (DeferredHolder<BlockEntityType<?>, I>) new BlockEntityTypeDeferredHolder(registryKey, key);
     }

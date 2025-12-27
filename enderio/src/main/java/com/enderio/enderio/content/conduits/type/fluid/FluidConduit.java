@@ -20,7 +20,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -34,7 +34,7 @@ import org.joml.Vector2i;
 
 import java.util.function.Consumer;
 
-public record FluidConduit(ResourceLocation texture, Component description, int transferRatePerTick,
+public record FluidConduit(Identifier texture, Component description, int transferRatePerTick,
         boolean isMultiFluid, boolean doesSupportPriority) implements Conduit<FluidConduit, FluidConduitConnectionConfig> {
 
     public static final int EXTRACT_FILTER_SLOT = 0;
@@ -43,7 +43,7 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
     public static final MapCodec<FluidConduit> CODEC = RecordCodecBuilder
             .mapCodec(
                     builder -> builder
-                            .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(FluidConduit::texture),
+                            .group(Identifier.CODEC.fieldOf("texture").forGetter(FluidConduit::texture),
                                     ComponentSerialization.CODEC.fieldOf("description")
                                             .forGetter(FluidConduit::description),
                                     Codec.INT.fieldOf("transfer_rate").forGetter(FluidConduit::transferRatePerTick),

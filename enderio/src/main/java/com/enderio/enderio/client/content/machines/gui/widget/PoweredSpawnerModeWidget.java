@@ -4,7 +4,7 @@ import com.enderio.core.client.gui.widgets.BaseEnumPickerWidget;
 import com.enderio.enderio.client.foundation.icon.MachineEnumIcons;
 import com.enderio.enderio.content.machines.powered_spawner.PoweredSpawnerMode;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -22,7 +22,7 @@ public class PoweredSpawnerModeWidget extends BaseEnumPickerWidget<PoweredSpawne
     }
 
     @Override
-    public ResourceLocation getValueIcon(PoweredSpawnerMode value) {
+    public Identifier getValueIcon(PoweredSpawnerMode value) {
         return Objects.requireNonNull(MachineEnumIcons.POWERED_SPAWNER_MODE.get(value));
     }
 }

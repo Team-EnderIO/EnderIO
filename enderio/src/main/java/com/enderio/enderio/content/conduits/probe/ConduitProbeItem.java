@@ -19,7 +19,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryOps;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -41,7 +41,7 @@ import java.util.function.Consumer;
 
 public class ConduitProbeItem extends Item {
 
-    public static final ResourceLocation PROBE_STATE_PREDICATE = EnderIO.rl("probe_state");
+    public static final Identifier PROBE_STATE_PREDICATE = EnderIO.rl("probe_state");
 
     public ConduitProbeItem(Properties pProperties) {
         super(pProperties.stacksTo(1));
@@ -91,7 +91,7 @@ public class ConduitProbeItem extends Item {
         conduits.forEach(conduit -> {
             ConnectionConfig connectionConfig = conduitBlock.getConnectionConfig(conduit, face);
             if (connectionConfig != null) {
-                ResourceLocation conduitKey = ResourceLocation.parse(conduit.getRegisteredName());
+                Identifier conduitKey = Identifier.parse(conduit.getRegisteredName());
                 RegistryOps<Tag> ops = net.minecraft.resources.RegistryOps.create(
                     net.minecraft.nbt.NbtOps.INSTANCE,
                     conduitBlock.getLevel().registryAccess()
@@ -132,7 +132,7 @@ public class ConduitProbeItem extends Item {
         List<String> pastedConduits = new ArrayList<String>();
         var conduits = conduitBlock.getConduits();
         conduits.forEach(conduit -> {
-            ResourceLocation conduitKey = ResourceLocation.parse(conduit.getRegisteredName());
+            Identifier conduitKey = Identifier.parse(conduit.getRegisteredName());
             ConnectionConfig storedConfig = configData.conduitData().get(conduitKey);
             if (storedConfig != null) {
                 conduitBlock.setConnectionConfig(conduit, face, storedConfig);
@@ -191,7 +191,7 @@ public class ConduitProbeItem extends Item {
         player.displayClientMessage(TooltipUtil.withArgs(ConduitLang.CONDUIT_PROBE_MESSAGE_SWITCHED_MODE, newState.getStateText()), true);
     }
 
-    private String conduitKeyToDisplayName(ResourceLocation conduitKey) {
+    private String conduitKeyToDisplayName(Identifier conduitKey) {
         String translationKey = "item." + conduitKey.getNamespace() + ".conduit." + conduitKey.getPath();
         return Component.translatable(translationKey).getString();
     }
@@ -231,17 +231,17 @@ public class ConduitProbeItem extends Item {
             .cast();
     }
 
-    public record ProbeConfigData(Map<ResourceLocation, ConnectionConfig> conduitData) {
+    public record ProbeConfigData(Map<Identifier, ConnectionConfig> conduitData) {
         public static final Codec<ProbeConfigData> CODEC = RecordCodecBuilder.create(
             componentInstance -> componentInstance
                 .group(
-                    Codec.unboundedMap(ResourceLocation.CODEC, ConnectionConfig.GENERIC_CODEC)
+                    Codec.unboundedMap(Identifier.CODEC, ConnectionConfig.GENERIC_CODEC)
                         .fieldOf("conduit_data")
                         .forGetter(ProbeConfigData::conduitData))
                 .apply(componentInstance, ProbeConfigData::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, ProbeConfigData> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.map(HashMap::new, ResourceLocation.STREAM_CODEC, ConnectionConfig.STREAM_CODEC),
+            ByteBufCodecs.map(HashMap::new, Identifier.STREAM_CODEC, ConnectionConfig.STREAM_CODEC),
             ProbeConfigData::conduitData,
             ProbeConfigData::new);
     }

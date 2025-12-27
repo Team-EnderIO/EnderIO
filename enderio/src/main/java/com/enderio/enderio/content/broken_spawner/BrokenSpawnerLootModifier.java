@@ -7,7 +7,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BaseSpawner;
@@ -42,7 +42,7 @@ public class BrokenSpawnerLootModifier extends LootModifier {
 
                     // TODO: should we be copying the entire entity tag?
                     if (entityTag.contains(Entity.TAG_ID)) {
-                        ResourceLocation type = ResourceLocation.parse(entityTag.getStringOr(Entity.TAG_ID, "pig")); //TODO proper default
+                        Identifier type = Identifier.parse(entityTag.getStringOr(Entity.TAG_ID, "pig")); //TODO proper default
                         ItemStack brokenSpawner = BrokenSpawnerItem.forSoul(Soul.of(type));
                         generatedLoot.add(brokenSpawner);
                     }

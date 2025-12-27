@@ -17,7 +17,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -55,7 +55,7 @@ import java.util.function.Consumer;
 @EventBusSubscriber
 public class SoulVialItem extends Item implements AdvancedTooltipProvider {
 
-    public static final ResourceLocation FILLED_MODEL_PROPERTY = EnderIO.rl("soul_vial_filled");
+    public static final Identifier FILLED_MODEL_PROPERTY = EnderIO.rl("soul_vial_filled");
 
     /**
      * Should match key from {@link LivingEntity#addAdditionalSaveData(ValueOutput)} )}

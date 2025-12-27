@@ -8,11 +8,11 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 public class EnchanterScreen extends EnderContainerScreen<EnchanterMenu> {
-    public static final ResourceLocation BG_TEXTURE = EnderIO.rl("textures/gui/screen/enchanter.png");
+    public static final Identifier BG_TEXTURE = EnderIO.rl("textures/gui/screen/enchanter.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
 

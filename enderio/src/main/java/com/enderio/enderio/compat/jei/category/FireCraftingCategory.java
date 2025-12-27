@@ -28,7 +28,7 @@
 //import net.minecraft.client.renderer.texture.OverlayTexture;
 //import net.minecraft.network.chat.Component;
 //import net.minecraft.resources.ResourceKey;
-//import net.minecraft.resources.ResourceLocation;
+//import net.minecraft.resources.Identifier;
 //import net.minecraft.world.item.Items;
 //import net.minecraft.world.item.crafting.Ingredient;
 //import net.minecraft.world.item.crafting.RecipeHolder;
@@ -53,12 +53,12 @@
 //    public static final RecipeType<RecipeHolder<FireCraftingRecipe>> TYPE = JEIUtils.createRecipeType(EnderIO.MOD_ID,
 //            "fire_crafting", FireCraftingRecipe.class);
 //
-//    private static final ResourceLocation BG_LOCATION = EnderIO.rl("textures/gui/jei_infinity.png");
+//    private static final Identifier BG_LOCATION = EnderIO.rl("textures/gui/jei_infinity.png");
 //
 //    private final IDrawable background;
 //    private final IDrawable icon;
 //    private final ITickTimer timer;
-//    private final Map<ResourceLocation, Integer> blockIdx = new HashMap<>();
+//    private final Map<Identifier, Integer> blockIdx = new HashMap<>();
 //    private int changed = 0;
 //    private boolean alternateFire = false;
 //

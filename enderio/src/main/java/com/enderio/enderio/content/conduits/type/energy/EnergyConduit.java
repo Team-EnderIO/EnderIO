@@ -17,7 +17,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -30,11 +30,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Comparator;
 import java.util.function.Consumer;
 
-public record EnergyConduit(ResourceLocation texture, Component description, int transferRatePerTick)
+public record EnergyConduit(Identifier texture, Component description, int transferRatePerTick)
         implements Conduit<EnergyConduit, EnergyConduitConnectionConfig> {
 
     public static final MapCodec<EnergyConduit> CODEC = RecordCodecBuilder.mapCodec(builder -> builder
-            .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(Conduit::texture),
+            .group(Identifier.CODEC.fieldOf("texture").forGetter(Conduit::texture),
                     ComponentSerialization.CODEC.fieldOf("description").forGetter(Conduit::description),
                     Codec.INT.fieldOf("transfer_rate").forGetter(EnergyConduit::transferRatePerTick))
             .apply(builder, EnergyConduit::new));

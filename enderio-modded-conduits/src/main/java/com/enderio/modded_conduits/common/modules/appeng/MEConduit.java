@@ -21,7 +21,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
@@ -31,12 +31,12 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
-public record MEConduit(ResourceLocation texture, Component description, AEColor color, boolean isDense)
+public record MEConduit(Identifier texture, Component description, AEColor color, boolean isDense)
         implements Conduit<MEConduit, MEConduitConnectionConfig> {
 
     public static final MapCodec<MEConduit> CODEC = RecordCodecBuilder
             .mapCodec(builder -> builder
-                    .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(MEConduit::texture),
+                    .group(Identifier.CODEC.fieldOf("texture").forGetter(MEConduit::texture),
                             ComponentSerialization.CODEC.fieldOf("description").forGetter(MEConduit::description),
                             AEColor.CODEC.optionalFieldOf("color", AEColor.TRANSPARENT).forGetter(MEConduit::color),
                             Codec.BOOL.fieldOf("is_dense").forGetter(MEConduit::isDense))

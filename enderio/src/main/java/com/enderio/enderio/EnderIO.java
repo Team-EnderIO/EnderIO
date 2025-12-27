@@ -30,7 +30,7 @@ import com.enderio.enderio.init.EIORecipeBookCategories;
 import com.enderio.enderio.init.EIORecipes;
 import com.enderio.enderio.init.EIOTravelTargets;
 import com.mojang.logging.LogUtils;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
@@ -61,7 +61,7 @@ public class EnderIO {
     public static IEventBus modEventBus;
     public static ModContainer modContainer;
 
-    public static ResourceLocation rl(String path) {
+    public static Identifier rl(String path) {
         return EnderIOAPI.rl(path);
     }
 
@@ -142,16 +142,16 @@ public class EnderIO {
 
     private void addBuiltInPacks(final AddPackFindersEvent event) {
         event.addPackFinders(
-            ResourceLocation.fromNamespaceAndPath(EnderIO.MOD_ID, "data/enderio/datapacks/farming_station"),
+            Identifier.fromNamespaceAndPath(EnderIO.MOD_ID, "data/enderio/datapacks/farming_station"),
             PackType.SERVER_DATA, MachinesLang.FARMING_STATION_EXPERIMENT, PackSource.FEATURE, false,
             Pack.Position.TOP);
 
         event.addPackFinders(
-            ResourceLocation.fromNamespaceAndPath(EnderIO.MOD_ID, "data/enderio/datapacks/enderface"),
+            Identifier.fromNamespaceAndPath(EnderIO.MOD_ID, "data/enderio/datapacks/enderface"),
             PackType.SERVER_DATA, MachinesLang.ENDERFACE_EXPERIMENT, PackSource.FEATURE, false, Pack.Position.TOP);
 
         event.addPackFinders(
-            ResourceLocation.fromNamespaceAndPath(EnderIO.MOD_ID, "data/enderio/datapacks/niard"),
+            Identifier.fromNamespaceAndPath(EnderIO.MOD_ID, "data/enderio/datapacks/niard"),
             PackType.SERVER_DATA, MachinesLang.NIARD_EXPERIMENT, PackSource.FEATURE, false, Pack.Position.TOP);
     }
 

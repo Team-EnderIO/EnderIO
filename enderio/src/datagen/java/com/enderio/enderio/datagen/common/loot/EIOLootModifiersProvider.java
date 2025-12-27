@@ -6,7 +6,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.storage.loot.predicates.AnyOfCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
@@ -54,7 +54,7 @@ public class EIOLootModifiersProvider extends GlobalLootModifierProvider {
     }
 
     private void modifyChestLoot(String modifierName, Stream<String> targets) {
-        var mappedTargetConditions = targets.map(r -> LootTableIdCondition.builder(ResourceLocation.parse(r)))
+        var mappedTargetConditions = targets.map(r -> LootTableIdCondition.builder(Identifier.parse(r)))
                 .toArray(LootTableIdCondition.Builder[]::new);
         add(modifierName,
                 new AddTableLootModifier(

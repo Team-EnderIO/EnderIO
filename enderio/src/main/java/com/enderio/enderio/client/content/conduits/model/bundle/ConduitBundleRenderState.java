@@ -8,7 +8,7 @@ import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.model.data.ModelProperty;
@@ -102,7 +102,7 @@ public class ConduitBundleRenderState {
         return mainAxis;
     }
 
-    public ResourceLocation getTexture(Holder<Conduit<?, ?>> conduit) {
+    public Identifier getTexture(Holder<Conduit<?, ?>> conduit) {
         var modifier = ConduitModelModifiers.getModifier(conduit.value().type());
         if (modifier != null) {
             return modifier.getTexture(conduit, getExtraWorldData(conduit));

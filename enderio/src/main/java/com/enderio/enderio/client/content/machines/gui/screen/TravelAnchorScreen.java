@@ -10,22 +10,22 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 public class TravelAnchorScreen extends MachineScreen<TravelAnchorMenu> {
 
-    private static final ResourceLocation TRAVEL_ANCHOR_BG = EnderIO.rl("textures/gui/screen/travel_anchor.png");
+    private static final Identifier TRAVEL_ANCHOR_BG = EnderIO.rl("textures/gui/screen/travel_anchor.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 184;
 
     private EditBox nameInput;
 
-    private static final ResourceLocation VISIBILITY_BTNS = EnderIOAPI
+    private static final Identifier VISIBILITY_BTNS = EnderIOAPI
             .rl("textures/gui/icons/visibility_buttons.png");
 
-    private static final ResourceLocation VISIBLE_BUTTON = EnderIO.rl("screen/travel_anchor/visible");
-    private static final ResourceLocation NOT_VISIBLE_BUTTON = EnderIO.rl("screen/travel_anchor/not_visible");
+    private static final Identifier VISIBLE_BUTTON = EnderIO.rl("screen/travel_anchor/visible");
+    private static final Identifier NOT_VISIBLE_BUTTON = EnderIO.rl("screen/travel_anchor/not_visible");
 
     public TravelAnchorScreen(TravelAnchorMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);

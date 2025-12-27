@@ -1,9 +1,9 @@
 package com.enderio.core.common.menu;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 public interface SlotWithOverlay {
     @Nullable
-    ResourceLocation getForegroundSprite();
+    Identifier getForegroundSprite();
 }

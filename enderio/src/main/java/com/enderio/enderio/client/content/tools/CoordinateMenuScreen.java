@@ -11,13 +11,13 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 public class CoordinateMenuScreen extends EnderContainerScreen<CoordinateMenu> {
 
-    private static final ResourceLocation BG_TEXTURE = EnderIO.rl("textures/gui/40/location_printout.png");
+    private static final Identifier BG_TEXTURE = EnderIO.rl("textures/gui/40/location_printout.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 116;
 

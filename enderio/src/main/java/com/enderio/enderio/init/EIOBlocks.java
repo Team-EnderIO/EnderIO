@@ -67,7 +67,7 @@ import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -279,12 +279,12 @@ public class EIOBlocks {
         (WeightedPressurePlateBlock) Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE);
 
     private static DeferredBlock<SilentPressurePlateBlock> silentPressurePlateBlock(final PressurePlateBlock block) {
-        ResourceLocation upModelLoc = Objects.requireNonNull(BuiltInRegistries.BLOCK.getKey(block));
+        Identifier upModelLoc = Objects.requireNonNull(BuiltInRegistries.BLOCK.getKey(block));
         return registerWithItem("silent_" + upModelLoc.getPath(), SilentPressurePlateBlock::new, BlockBehaviour.Properties.ofFullCopy(block));
     }
 
     private static DeferredBlock<SilentWeightedPressurePlateBlock> silentWeightedPressurePlateBlock(WeightedPressurePlateBlock block) {
-        ResourceLocation upModelLoc = Objects.requireNonNull(BuiltInRegistries.BLOCK.getKey(block));
+        Identifier upModelLoc = Objects.requireNonNull(BuiltInRegistries.BLOCK.getKey(block));
         return registerWithItem("silent_" + upModelLoc.getPath(), props -> new SilentWeightedPressurePlateBlock(block.maxWeight, props),
             BlockBehaviour.Properties.ofFullCopy(block));
     }

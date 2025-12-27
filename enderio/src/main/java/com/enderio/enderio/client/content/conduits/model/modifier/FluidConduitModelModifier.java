@@ -14,7 +14,7 @@
 //import net.minecraft.core.Holder;
 //import net.minecraft.core.registries.BuiltInRegistries;
 //import net.minecraft.nbt.CompoundTag;
-//import net.minecraft.resources.ResourceLocation;
+//import net.minecraft.resources.Identifier;
 //import net.minecraft.util.RandomSource;
 //import net.minecraft.world.level.block.Blocks;
 //import net.minecraft.world.level.material.Fluid;
@@ -28,7 +28,7 @@
 //
 //public class FluidConduitModelModifier implements ConduitModelModifier {
 //
-//    private static final ResourceLocation FLUID_MODEL = EnderIO.rl("block/extra/fluids");
+//    private static final Identifier FLUID_MODEL = EnderIO.rl("block/extra/fluids");
 //
 //    @Override
 //    public List<BakedQuad> createConnectionQuads(Holder<Conduit<?, ?>> conduit, @Nullable CompoundTag extraWorldData,
@@ -45,7 +45,7 @@
 //            return List.of();
 //        }
 //
-//        ResourceLocation lockedFluidId = ResourceLocation.parse(extraWorldData.getString("LockedFluid"));
+//        Identifier lockedFluidId = Identifier.parse(extraWorldData.getString("LockedFluid"));
 //        Fluid lockedFluid = BuiltInRegistries.FLUID.getValue(lockedFluidId);
 //
 //        if (!lockedFluid.isSame(Fluids.EMPTY)) {
@@ -59,7 +59,7 @@
 //    }
 //
 //    @Override
-//    public List<ResourceLocation> getModelDependencies() {
+//    public List<Identifier> getModelDependencies() {
 //        return List.of(FLUID_MODEL);
 //    }
 //

@@ -12,17 +12,17 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class ItemConduitScreenType extends IOConduitScreenType<ItemConduitConnectionConfig> {
 
-    private static final ResourceLocation ICON_ROUND_ROBIN_ENABLED = EnderIO.rl("icon/round_robin_enabled");
-    private static final ResourceLocation ICON_ROUND_ROBIN_DISABLED = EnderIO.rl("icon/round_robin_disabled");
-    private static final ResourceLocation ICON_SELF_FEED_ENABLED = EnderIO.rl("icon/self_feed_enabled");
-    private static final ResourceLocation ICON_SELF_FEED_DISABLED = EnderIO.rl("icon/self_feed_disabled");
+    private static final Identifier ICON_ROUND_ROBIN_ENABLED = EnderIO.rl("icon/round_robin_enabled");
+    private static final Identifier ICON_ROUND_ROBIN_DISABLED = EnderIO.rl("icon/round_robin_disabled");
+    private static final Identifier ICON_SELF_FEED_ENABLED = EnderIO.rl("icon/self_feed_enabled");
+    private static final Identifier ICON_SELF_FEED_DISABLED = EnderIO.rl("icon/self_feed_disabled");
 
-    private static final ResourceLocation ICON_INCREASE = EnderIO.rl("icon/increase");
-    private static final ResourceLocation ICON_DECREASE = EnderIO.rl("icon/decrease");
+    private static final Identifier ICON_INCREASE = EnderIO.rl("icon/increase");
+    private static final Identifier ICON_DECREASE = EnderIO.rl("icon/decrease");
 
     @Override
     public void renderLabels(ConduitMenuDataAccess<ItemConduitConnectionConfig> dataAccess, GuiGraphics guiGraphics,

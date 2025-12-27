@@ -7,14 +7,14 @@ import com.enderio.enderio.content.filters.redstone.RedstoneTimerFilterMenu;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import org.joml.Vector2i;
 
 public class RedstoneTimerFilterScreen extends EIOScreen<RedstoneTimerFilterMenu> {
 
     private static final Vector2i BG_SIZE = new Vector2i(183, 201);
-    private static final ResourceLocation BG_TEXTURE = EnderIO.rl("textures/gui/40/item_filter.png");
+    private static final Identifier BG_TEXTURE = EnderIO.rl("textures/gui/40/item_filter.png");
 
     public RedstoneTimerFilterScreen(RedstoneTimerFilterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -39,7 +39,7 @@ public class RedstoneTimerFilterScreen extends EIOScreen<RedstoneTimerFilterMenu
     }
 
     @Override
-    public ResourceLocation getBackgroundImage() {
+    public Identifier getBackgroundImage() {
         return BG_TEXTURE;
     }
 

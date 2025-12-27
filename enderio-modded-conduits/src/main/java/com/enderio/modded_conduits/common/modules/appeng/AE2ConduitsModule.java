@@ -25,7 +25,7 @@ import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -77,7 +77,7 @@ public class AE2ConduitsModule implements ConduitCommonModule {
     private static final Component LANG_DENSE_ME_CONDUIT = addTranslation("item", EnderIO.rl("conduit.dense_me"),
             "Dense ME Conduit");
 
-    private static MutableComponent addTranslation(String prefix, ResourceLocation id, String translation) {
+    private static MutableComponent addTranslation(String prefix, Identifier id, String translation) {
         return ModdedConduits.REGILITE.addTranslation(prefix, id, translation);
     }
 
@@ -87,11 +87,11 @@ public class AE2ConduitsModule implements ConduitCommonModule {
             EnderIO.rl("dense_me"));
 
     private static final TagKey<Item> COVERED_DENSE_CABLE = ItemTags
-            .create(ResourceLocation.fromNamespaceAndPath("ae2", "covered_dense_cable"));
+            .create(Identifier.fromNamespaceAndPath("ae2", "covered_dense_cable"));
     private static final TagKey<Item> COVERED_CABLE = ItemTags
-            .create(ResourceLocation.fromNamespaceAndPath("ae2", "covered_cable"));
+            .create(Identifier.fromNamespaceAndPath("ae2", "covered_cable"));
     private static final TagKey<Item> GLASS_CABLE = ItemTags
-            .create(ResourceLocation.fromNamespaceAndPath("ae2", "glass_cable"));
+            .create(Identifier.fromNamespaceAndPath("ae2", "glass_cable"));
 
     static {
         // TODO: 1.22 - remove backward compatibility.

@@ -32,7 +32,7 @@ import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
@@ -58,7 +58,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
             MachinesConfig.COMMON.ENERGY.POWERED_SPAWNER_CAPACITY);
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE,
             MachinesConfig.COMMON.ENERGY.POWERED_SPAWNER_USAGE);
-    public static final ResourceLocation NO_MOB = EnderIO.rl("no_mob");
+    public static final Identifier NO_MOB = EnderIO.rl("no_mob");
 
     private static final PoweredSpawnerMode DEFAULT_MODE = PoweredSpawnerMode.SPAWN;
     private PoweredSpawnerMode mode = DEFAULT_MODE;
