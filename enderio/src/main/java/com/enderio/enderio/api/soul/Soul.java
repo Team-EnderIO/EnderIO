@@ -33,24 +33,6 @@ import java.util.stream.Stream;
  * @param entityTag the entity's NBT tag.
  */
 public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) { //TODO can ValueOutput be used instead of the tag? Couldn't find a codex for it
-    public static final Soul EMPTY = new Soul(null, new CompoundTag());
-
-    public static final Codec<Soul> CODEC = RecordCodecBuilder.create(
-        instance -> instance.group(
-            BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("entity_type").forGetter(Soul::entityType),
-            CompoundTag.CODEC.fieldOf("entity_tag").forGetter(Soul::entityTag)
-        ).apply(instance, Soul::new));
-
-    public static final Codec<Soul> OPTIONAL_CODEC = ExtraCodecs
-        .optionalEmptyMap(CODEC).xmap((optionalSoul) -> optionalSoul.orElse(EMPTY), (soul) -> soul.isEmpty() ? Optional.empty() : Optional.of(soul));
-
-    public static final StreamCodec<RegistryFriendlyByteBuf, Soul> STREAM_CODEC = StreamCodec.composite(
-        ByteBufCodecs.registry(Registries.ENTITY_TYPE),
-        Soul::entityType,
-        ByteBufCodecs.COMPOUND_TAG,
-        Soul::entityTag,
-        Soul::new
-    );
 
     // Keys that should not be compared or saved
     // Note be careful adding new things to this list - it will affect saves.
@@ -73,6 +55,25 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) { 
         "SleepingZ",
         Leashable.LEASH_TAG,
         Entity.TAG_UUID
+    );
+
+    public static final Soul EMPTY = new Soul(null, new CompoundTag());
+
+    public static final Codec<Soul> CODEC = RecordCodecBuilder.create(
+        instance -> instance.group(
+            BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("EntityType").forGetter(Soul::entityType),
+            CompoundTag.CODEC.fieldOf("EntityTag").forGetter(Soul::entityTag)
+        ).apply(instance, Soul::new));
+
+    public static final Codec<Soul> OPTIONAL_CODEC = ExtraCodecs
+        .optionalEmptyMap(CODEC).xmap((optionalSoul) -> optionalSoul.orElse(EMPTY), (soul) -> soul.isEmpty() ? Optional.empty() : Optional.of(soul));
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, Soul> STREAM_CODEC = StreamCodec.composite(
+        ByteBufCodecs.registry(Registries.ENTITY_TYPE),
+        Soul::entityType,
+        ByteBufCodecs.COMPOUND_TAG,
+        Soul::entityTag,
+        Soul::new
     );
 
     // Do not compare obviously unreasonable NBT Keys

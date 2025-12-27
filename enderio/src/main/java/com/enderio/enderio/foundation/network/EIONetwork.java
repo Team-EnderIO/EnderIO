@@ -90,7 +90,7 @@ public class EIONetwork {
         registrar.playToClient(ClientboundConduitListPacket.TYPE, ClientboundConduitListPacket.STREAM_CODEC, ConduitClientPayloadHandler.getInstance()::handle);
 
         registrar.playBidirectional(SetConduitConnectionConfigPacket.TYPE, SetConduitConnectionConfigPacket.STREAM_CODEC,
-            ConduitCommonPayloadHandler.getInstance()::handle);
+            ConduitCommonPayloadHandler.getInstance()::handle, ConduitCommonPayloadHandler.getInstance()::handle);
 
         registrar.playToServer(ServerboundOpenConduitFilterMenu.TYPE, ServerboundOpenConduitFilterMenu.STREAM_CODEC,
             ConduitServerPayloadHandler.getInstance()::handle);

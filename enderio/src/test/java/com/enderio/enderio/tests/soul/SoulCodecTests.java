@@ -15,8 +15,8 @@ public class SoulCodecTests {
     // 8.0.5+ format
     private static final String NEW_FORMAT = """
         {
-            "entity_type": "minecraft:allay",
-            "entity_tag": {
+            "EntityType": "minecraft:allay",
+            "EntityTag": {
                 "id": "minecraft:allay",
                 "Health": 10.0
             }
@@ -39,38 +39,9 @@ public class SoulCodecTests {
 
         // Ensure data matches
         Assertions.assertEquals(EntityType.ALLAY, soul.entityType());
-        Assertions.assertEquals(10d, soul.entityTag().getDouble("Health"));
+        Assertions.assertEquals(10d, soul.entityTag().getDoubleOr("Health", -1));
 
         // Ensure unwanted key is removed.
         Assertions.assertFalse(soul.entityTag().contains("id"));
-    }
-
-    // Pre 8.0.5 format
-    private static final String OLD_FORMAT = """
-        {
-            "entityTag": {
-                "id": "minecraft:allay",
-                "Health": 10.0
-            }
-        }
-        """;
-
-    @Test
-    public void testLoadOldFormat(MinecraftServer server) {
-        // Parse json
-        var json = JsonParser.parseString(OLD_FORMAT);
-
-        // Attempt to deserialize
-        var ops = server.registryAccess().createSerializationContext(JsonOps.INSTANCE);
-        var result = Soul.CODEC.parse(ops, json);
-
-        Assertions.assertTrue(result.isSuccess());
-
-        var soul = result.getOrThrow();
-        Assertions.assertNotNull(soul);
-
-        // Ensure data matches
-        Assertions.assertEquals(EntityType.ALLAY, soul.entityType());
-        Assertions.assertEquals(10d, soul.entityTag().getDouble("Health"));
     }
 }

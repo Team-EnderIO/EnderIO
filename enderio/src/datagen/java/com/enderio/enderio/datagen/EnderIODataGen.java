@@ -41,14 +41,21 @@ public class EnderIODataGen {
 
     public EnderIODataGen(IEventBus eventBus) {
         // Temp: Runs after Regilite.
-        eventBus.addListener(EventPriority.LOWEST, this::onGatherData);
+        eventBus.addListener(EventPriority.LOWEST, this::onGatherClientData);
+        eventBus.addListener(EventPriority.LOWEST, this::onGatherServerData);
     }
 
-    public void onGatherData(GatherDataEvent event) {
-        //TODO not this
-        boolean server = event instanceof GatherDataEvent.Server;
-        boolean client = event instanceof GatherDataEvent.Client;
+    public void onGatherClientData(GatherDataEvent.Client event) {
+        DataGenerator generator = event.getGenerator();
+        PackOutput packOutput = event.getGenerator().getPackOutput();
+        CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 
+        //generator.addProvider(true, new EIOItemModelProvider(packOutput));
+        generator.addProvider(true, new EIOBlockStateProvider(packOutput));
+        generator.addProvider(true, new EIOLanguageProvider(packOutput));
+    }
+
+    public void onGatherServerData(GatherDataEvent.Server event) {
         // Create datapack registry objects
         event.createDatapackRegistryObjects(createDatapackEntriesBuilder(), Set.of(EnderIO.MOD_ID));
 
@@ -57,36 +64,32 @@ public class EnderIODataGen {
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 
         var b = new EIOBlockTagsProvider(packOutput, lookupProvider);
-        generator.addProvider(server, b);
-        generator.addProvider(server,
+        generator.addProvider(true, b);
+        generator.addProvider(true,
             new EIOItemTagsProvider(packOutput, lookupProvider));
-        generator.addProvider(server,
+        generator.addProvider(true,
             new EIOFluidTagsProvider(packOutput, lookupProvider));
-        generator.addProvider(server,
+        generator.addProvider(true,
             new EIOEntityTagsProvider(packOutput, lookupProvider));
 
-        generator.addProvider(server, new AdvancementProvider(packOutput, lookupProvider,
+        generator.addProvider(true, new AdvancementProvider(packOutput, lookupProvider,
             List.of(new EIOAdvancementGenerator(), new MachinesAdvancementGenerator())));
 
-        //generator.addProvider(event.includeServer(), new EnderIORecipeProvider(lookupProvider.get(), packOutput));
+        //generator.addProvider(true, new EnderIORecipeProvider(lookupProvider.get(), packOutput));
         event.createProvider(EnderIORecipeProvider.Runner::new);
 
-        generator.addProvider(server, new ReagentDataMapProvider(packOutput, lookupProvider));
-        generator.addProvider(server, new RangeExtenderDataMapProvider(packOutput, lookupProvider));
+        generator.addProvider(true, new ReagentDataMapProvider(packOutput, lookupProvider));
+        generator.addProvider(true, new RangeExtenderDataMapProvider(packOutput, lookupProvider));
 
-        generator.addProvider(server, new SoulDataProvider(packOutput));
+        generator.addProvider(true, new SoulDataProvider(packOutput));
 
-        generator.addProvider(server, new EIOLootModifiersProvider(packOutput, lookupProvider));
+        generator.addProvider(true, new EIOLootModifiersProvider(packOutput, lookupProvider));
 
-        generator.addProvider(server,
+        generator.addProvider(true,
             new LootTableProvider(packOutput, Collections.emptySet(), List.of(
                 new LootTableProvider.SubProviderEntry(EIOBlockLootProvider::new, LootContextParamSets.BLOCK),
                 new LootTableProvider.SubProviderEntry(ChestLootProvider::new, LootContextParamSets.CHEST)
             ), lookupProvider));
-
-        //generator.addProvider(event.includeClient(), new EIOItemModelProvider(packOutput));
-        generator.addProvider(client, new EIOBlockStateProvider(packOutput));
-        generator.addProvider(client, new EIOLanguageProvider(packOutput));
     }
 
     private static RegistrySetBuilder createDatapackEntriesBuilder() {
