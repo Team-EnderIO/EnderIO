@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "minecraft:redstone_torch"
-    },
-    {
-      "item": "enderio:redstone_or_filter"
-    }
+    "minecraft:redstone_torch",
+    "enderio:redstone_or_filter"
   ],
   "result": {
     "count": 1,

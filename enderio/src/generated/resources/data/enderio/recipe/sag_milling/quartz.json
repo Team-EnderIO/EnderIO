@@ -2,9 +2,7 @@
   "type": "enderio:sag_milling",
   "bonus": "chance_only",
   "energy": 2400,
-  "input": {
-    "tag": "c:gems/quartz"
-  },
+  "input": "#c:gems/quartz",
   "outputs": [
     {
       "item": {

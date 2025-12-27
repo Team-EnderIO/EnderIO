@@ -5,11 +5,11 @@
   "inputs": [
     {
       "count": 1,
-      "tag": "c:dusts/coal"
+      "ingredient": "#c:dusts/coal"
     },
     {
       "count": 1,
-      "item": "minecraft:egg"
+      "ingredient": "minecraft:egg"
     }
   ],
   "output": {

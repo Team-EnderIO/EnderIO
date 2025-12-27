@@ -13,20 +13,39 @@ import net.minecraft.client.data.models.model.ModelLocationUtils;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.renderer.item.ItemModel;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.client.model.item.DynamicFluidContainerModel;
 import net.neoforged.neoforge.internal.versions.neoforge.NeoForgeVersion;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public class EIOItemModelProvider extends ModelProvider {
     public EIOItemModelProvider(PackOutput output) {
         super(output, EnderIO.MOD_ID);
+    }
+
+    @Override
+    public String getName() {
+        return "Ender IO Item Model Definitions";
+    }
+
+    // TODO: 1.21.8: Needed to avoid missing block definitions (for block items too)
+    @Override
+    protected Stream<? extends Holder<Block>> getKnownBlocks() {
+        return Stream.empty();
+    }
+
+    @Override
+    protected Stream<? extends Holder<Item>> getKnownItems() {
+        return Stream.empty();
     }
 
     @Override

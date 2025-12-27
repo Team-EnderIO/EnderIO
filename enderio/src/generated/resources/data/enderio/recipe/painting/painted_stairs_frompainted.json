@@ -1,8 +1,6 @@
 {
   "type": "enderio:painting",
-  "input": {
-    "item": "enderio:painted_stairs"
-  },
+  "input": "enderio:painted_stairs",
   "output": {
     "count": 1,
     "id": "enderio:painted_stairs"

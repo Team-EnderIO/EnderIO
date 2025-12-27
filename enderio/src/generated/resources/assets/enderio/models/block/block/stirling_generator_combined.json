@@ -1,0 +1,14 @@
+{
+  "children": {
+    "machine": "enderio:block/stirling_generator",
+    "overlay": "enderio:block/io_overlay"
+  },
+  "item_render_order": [
+    "machine",
+    "overlay"
+  ],
+  "loader": "neoforge:composite",
+  "textures": {
+    "particle": "enderio:block/stirling_generator"
+  }
+}

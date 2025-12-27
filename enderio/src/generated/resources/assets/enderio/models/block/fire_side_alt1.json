@@ -1,4 +1,0 @@
-{
-  "parent": "minecraft:block/fire_side_alt1",
-  "render_type": "minecraft:cutout"
-}

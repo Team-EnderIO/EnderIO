@@ -337,10 +337,7 @@ public class MachineRecipeProvider extends SubRecipeProvider {
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance
                                 .hasItems(EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.ENERGETIC)))
-                .save(recipeOutput,
-                        EnderIO.rl(RecipeBuilder
-                                .getDefaultRecipeId(EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.PULSATING))
-                                .getPath()).toString());
+                .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.VIBRANT))
                 .define('I', EIOTags.Items.INGOTS_VIBRANT_ALLOY)
@@ -355,10 +352,7 @@ public class MachineRecipeProvider extends SubRecipeProvider {
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance
                                 .hasItems(EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.PULSATING)))
-                .save(recipeOutput,
-                        EnderIO.rl(
-                                RecipeBuilder.getDefaultRecipeId(EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.VIBRANT))
-                                        .getPath()).toString());
+                .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, EIOBlocks.PAINTING_MACHINE.get())
                 .pattern("RGB")

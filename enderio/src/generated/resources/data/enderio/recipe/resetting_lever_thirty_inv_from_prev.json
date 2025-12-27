@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "redstone",
   "ingredients": [
-    {
-      "item": "enderio:resetting_lever_ten_inv"
-    },
-    {
-      "tag": "c:dusts/redstone"
-    }
+    "enderio:resetting_lever_ten_inv",
+    "#c:dusts/redstone"
   ],
   "result": {
     "count": 1,

@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "C": {
-      "tag": "c:chests"
-    },
-    "I": {
-      "tag": "c:ingots/iron"
-    },
-    "P": {
-      "tag": "c:gems/pulsating_crystal"
-    }
+    "C": "#c:chests",
+    "I": "#c:ingots/iron",
+    "P": "#c:gems/pulsating_crystal"
   },
   "pattern": [
     "III",

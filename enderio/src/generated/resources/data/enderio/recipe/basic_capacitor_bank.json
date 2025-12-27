@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "C": {
-      "item": "enderio:basic_capacitor"
-    },
-    "I": {
-      "tag": "c:ingots/iron"
-    },
-    "R": {
-      "tag": "c:storage_blocks/redstone"
-    }
+    "C": "enderio:basic_capacitor",
+    "I": "#c:ingots/iron",
+    "R": "#c:storage_blocks/redstone"
   },
   "pattern": [
     "ICI",

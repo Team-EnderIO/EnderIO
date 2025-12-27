@@ -4,6 +4,6 @@
   "enchantment": "minecraft:quick_charge",
   "input": {
     "count": 16,
-    "item": "minecraft:sugar"
+    "ingredient": "minecraft:sugar"
   }
 }

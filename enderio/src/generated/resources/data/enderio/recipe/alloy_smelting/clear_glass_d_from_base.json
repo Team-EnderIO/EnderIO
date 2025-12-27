@@ -5,11 +5,11 @@
   "inputs": [
     {
       "count": 1,
-      "item": "enderio:clear_glass"
+      "ingredient": "enderio:clear_glass"
     },
     {
       "count": 4,
-      "tag": "c:gems/amethyst"
+      "ingredient": "#c:gems/amethyst"
     }
   ],
   "output": {

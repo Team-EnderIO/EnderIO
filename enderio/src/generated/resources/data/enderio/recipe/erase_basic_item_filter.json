@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "enderio:basic_item_filter"
-    }
+    "enderio:basic_item_filter"
   ],
   "result": {
     "count": 1,

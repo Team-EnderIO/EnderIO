@@ -1,9 +1,7 @@
 {
   "type": "enderio:sag_milling",
   "energy": 2400,
-  "input": {
-    "tag": "minecraft:leaves"
-  },
+  "input": "#minecraft:leaves",
   "outputs": [
     {
       "chance": 0.3,

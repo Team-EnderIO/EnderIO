@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "A": {
-      "tag": "c:ingots/copper_alloy"
-    },
-    "C": {
-      "item": "enderio:double_layer_capacitor"
-    },
-    "R": {
-      "tag": "c:storage_blocks/redstone"
-    }
+    "A": "#c:ingots/copper_alloy",
+    "C": "enderio:double_layer_capacitor",
+    "R": "#c:storage_blocks/redstone"
   },
   "pattern": [
     "ACA",

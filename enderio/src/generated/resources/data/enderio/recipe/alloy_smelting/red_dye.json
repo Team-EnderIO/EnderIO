@@ -5,15 +5,15 @@
   "inputs": [
     {
       "count": 1,
-      "item": "minecraft:beetroot"
+      "ingredient": "minecraft:beetroot"
     },
     {
       "count": 3,
-      "item": "minecraft:clay_ball"
+      "ingredient": "minecraft:clay_ball"
     },
     {
       "count": 6,
-      "item": "minecraft:egg"
+      "ingredient": "minecraft:egg"
     }
   ],
   "output": {

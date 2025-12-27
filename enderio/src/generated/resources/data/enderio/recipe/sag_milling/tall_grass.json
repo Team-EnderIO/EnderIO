@@ -1,9 +1,7 @@
 {
   "type": "enderio:sag_milling",
   "energy": 2400,
-  "input": {
-    "item": "minecraft:tall_grass"
-  },
+  "input": "minecraft:tall_grass",
   "outputs": [
     {
       "chance": 0.6,

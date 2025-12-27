@@ -4,6 +4,6 @@
   "enchantment": "minecraft:knockback",
   "input": {
     "count": 1,
-    "item": "minecraft:piston"
+    "ingredient": "minecraft:piston"
   }
 }

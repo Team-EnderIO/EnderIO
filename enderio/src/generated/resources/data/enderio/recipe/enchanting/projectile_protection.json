@@ -4,6 +4,6 @@
   "enchantment": "minecraft:projectile_protection",
   "input": {
     "count": 16,
-    "tag": "c:leathers"
+    "ingredient": "#c:leathers"
   }
 }

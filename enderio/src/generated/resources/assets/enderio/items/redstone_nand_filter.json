@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "enderio:item/redstone_nand_filter"
+  }
+}

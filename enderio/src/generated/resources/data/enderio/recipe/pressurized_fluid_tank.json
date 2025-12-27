@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": {
-      "item": "enderio:dark_steel_bars"
-    },
-    "G": {
-      "tag": "c:glass_blocks/fused_quartz"
-    },
-    "I": {
-      "tag": "c:ingots/dark_steel"
-    }
+    "B": "enderio:dark_steel_bars",
+    "G": "#c:glass_blocks/fused_quartz",
+    "I": "#c:ingots/dark_steel"
   },
   "pattern": [
     "IBI",

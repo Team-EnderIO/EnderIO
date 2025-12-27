@@ -1,5 +1,0 @@
-{
-  "parent": "neoforge:item/bucket",
-  "fluid": "enderio:fluid_dew_of_the_void_still",
-  "loader": "neoforge:fluid_container"
-}

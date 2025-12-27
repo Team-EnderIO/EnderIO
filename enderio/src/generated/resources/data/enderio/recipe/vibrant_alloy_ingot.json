@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "enderio:vibrant_alloy_block"
-    }
+    "enderio:vibrant_alloy_block"
   ],
   "result": {
     "count": 9,

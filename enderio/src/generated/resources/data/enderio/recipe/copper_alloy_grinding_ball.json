@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "I": {
-      "tag": "c:ingots/copper_alloy"
-    }
+    "I": "#c:ingots/copper_alloy"
   },
   "pattern": [
     " I ",

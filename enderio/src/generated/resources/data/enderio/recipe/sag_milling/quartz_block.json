@@ -2,9 +2,7 @@
   "type": "enderio:sag_milling",
   "bonus": "chance_only",
   "energy": 2400,
-  "input": {
-    "tag": "c:storage_blocks/quartz"
-  },
+  "input": "#c:storage_blocks/quartz",
   "outputs": [
     {
       "item": {

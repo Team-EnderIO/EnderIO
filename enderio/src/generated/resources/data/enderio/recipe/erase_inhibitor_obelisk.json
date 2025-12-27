@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "enderio:inhibitor_obelisk"
-    }
+    "enderio:inhibitor_obelisk"
   ],
   "result": {
     "count": 1,

@@ -4,6 +4,6 @@
   "enchantment": "minecraft:bane_of_arthropods",
   "input": {
     "count": 12,
-    "item": "minecraft:spider_eye"
+    "ingredient": "minecraft:spider_eye"
   }
 }

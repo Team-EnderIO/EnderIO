@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "B": {
-      "item": "enderio:conduit_binder"
-    },
-    "I": {
-      "tag": "c:ingots/redstone_alloy"
-    }
+    "B": "enderio:conduit_binder",
+    "I": "#c:ingots/redstone_alloy"
   },
   "pattern": [
     "BBB",

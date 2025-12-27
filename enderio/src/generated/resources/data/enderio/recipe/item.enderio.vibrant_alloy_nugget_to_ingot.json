@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "N": {
-      "item": "enderio:vibrant_alloy_nugget"
-    }
+    "N": "enderio:vibrant_alloy_nugget"
   },
   "pattern": [
     "NNN",

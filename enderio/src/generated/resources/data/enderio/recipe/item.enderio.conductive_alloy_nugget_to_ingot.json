@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "N": {
-      "item": "enderio:conductive_alloy_nugget"
-    }
+    "N": "enderio:conductive_alloy_nugget"
   },
   "pattern": [
     "NNN",

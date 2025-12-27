@@ -1,9 +1,7 @@
 {
   "type": "enderio:sag_milling",
   "energy": 2400,
-  "input": {
-    "tag": "c:cobblestones/normal"
-  },
+  "input": "#c:cobblestones/normal",
   "outputs": [
     {
       "chance": 0.7,

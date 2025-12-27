@@ -1,0 +1,13 @@
+{
+  "model": {
+    "type": "neoforge:fluid_container",
+    "apply_fluid_luminosity": false,
+    "cover_is_mask": false,
+    "flip_gas": true,
+    "fluid": "enderio:fluid_vapor_of_levity_still",
+    "textures": {
+      "base": "minecraft:item/bucket",
+      "fluid": "neoforge:item/mask/bucket_fluid_drip"
+    }
+  }
+}

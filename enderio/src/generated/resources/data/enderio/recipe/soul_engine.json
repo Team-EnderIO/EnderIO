@@ -2,21 +2,11 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": {
-      "item": "minecraft:bucket"
-    },
-    "C": {
-      "item": "enderio:ensouled_chassis"
-    },
-    "G": {
-      "tag": "c:glass_blocks/fused_quartz"
-    },
-    "I": {
-      "tag": "c:ingots/soularium"
-    },
-    "Z": {
-      "item": "enderio:zombie_electrode"
-    }
+    "B": "minecraft:bucket",
+    "C": "enderio:ensouled_chassis",
+    "G": "#c:glass_blocks/fused_quartz",
+    "I": "#c:ingots/soularium",
+    "Z": "enderio:zombie_electrode"
   },
   "pattern": [
     "IGI",

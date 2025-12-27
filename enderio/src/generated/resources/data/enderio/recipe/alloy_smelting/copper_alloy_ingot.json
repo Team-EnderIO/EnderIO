@@ -5,11 +5,11 @@
   "inputs": [
     {
       "count": 1,
-      "tag": "c:ingots/copper"
+      "ingredient": "#c:ingots/copper"
     },
     {
       "count": 1,
-      "tag": "c:silicon"
+      "ingredient": "#c:silicon"
     }
   ],
   "output": {

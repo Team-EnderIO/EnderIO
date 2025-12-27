@@ -4,6 +4,6 @@
   "enchantment": "minecraft:sweeping_edge",
   "input": {
     "count": 8,
-    "tag": "c:ingots/iron"
+    "ingredient": "#c:ingots/iron"
   }
 }

@@ -4,6 +4,6 @@
   "enchantment": "minecraft:luck_of_the_sea",
   "input": {
     "count": 1,
-    "tag": "c:gems/lapis"
+    "ingredient": "#c:gems/lapis"
   }
 }

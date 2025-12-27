@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "I": {
-      "item": "enderio:redstone_alloy_ingot"
-    }
+    "I": "enderio:redstone_alloy_ingot"
   },
   "pattern": [
     "III",

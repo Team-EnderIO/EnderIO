@@ -63,6 +63,7 @@ import com.enderio.enderio.client.content.travel.TravelAnchorHud;
 import com.enderio.enderio.client.content.travel.TravelAnchorRenderer;
 import com.enderio.enderio.client.content.travel.TravelTargetRendering;
 import com.enderio.enderio.client.foundation.particle.RangeParticle;
+import com.enderio.enderio.content.fun.EnderiosItem;
 import com.enderio.enderio.content.misc_blocks.skull.EnderSkullBlock;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOBlocks;
@@ -90,6 +91,7 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterBlockStateModels;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
+import net.neoforged.neoforge.client.event.RegisterConditionalItemModelPropertyEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
@@ -148,6 +150,11 @@ public class EnderIOClient {
 //                ItemBlockRenderTypes.setRenderLayer(fluid.get(), RenderType.translucent());
 //            }
 //        });
+    }
+
+    @SubscribeEvent
+    public static void registerConditionalItemProperties(RegisterConditionalItemModelPropertyEvent event) {
+        event.register(EnderiosItem.INVERTED_PROPERTY, EnderiosItem.Soiredne.MAP_CODEC);
     }
 
     @SubscribeEvent

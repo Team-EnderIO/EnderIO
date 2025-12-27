@@ -1,0 +1,11 @@
+{
+  "model": {
+    "type": "neoforge:fluid_container",
+    "cover_is_mask": false,
+    "fluid": "enderio:fluid_fire_water_still",
+    "textures": {
+      "base": "minecraft:item/bucket",
+      "fluid": "neoforge:item/mask/bucket_fluid_drip"
+    }
+  }
+}

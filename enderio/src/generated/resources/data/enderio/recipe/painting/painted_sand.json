@@ -1,8 +1,6 @@
 {
   "type": "enderio:painting",
-  "input": {
-    "tag": "minecraft:sand"
-  },
+  "input": "#minecraft:sand",
   "output": {
     "count": 1,
     "id": "enderio:painted_sand"

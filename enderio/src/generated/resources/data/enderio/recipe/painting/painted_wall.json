@@ -1,8 +1,6 @@
 {
   "type": "enderio:painting",
-  "input": {
-    "tag": "minecraft:walls"
-  },
+  "input": "#minecraft:walls",
   "output": {
     "count": 1,
     "id": "enderio:painted_wall"

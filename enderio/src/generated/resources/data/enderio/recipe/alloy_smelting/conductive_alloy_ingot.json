@@ -5,15 +5,15 @@
   "inputs": [
     {
       "count": 1,
-      "tag": "c:ingots/copper_alloy"
+      "ingredient": "#c:ingots/copper_alloy"
     },
     {
       "count": 1,
-      "tag": "c:ingots/iron"
+      "ingredient": "#c:ingots/iron"
     },
     {
       "count": 1,
-      "tag": "c:dusts/redstone"
+      "ingredient": "#c:dusts/redstone"
     }
   ],
   "output": {

@@ -5,15 +5,15 @@
   "inputs": [
     {
       "count": 1,
-      "tag": "c:end_stones"
+      "ingredient": "#c:end_stones"
     },
     {
       "count": 1,
-      "tag": "c:ingots/dark_steel"
+      "ingredient": "#c:ingots/dark_steel"
     },
     {
       "count": 1,
-      "tag": "c:obsidians"
+      "ingredient": "#c:obsidians"
     }
   ],
   "output": {

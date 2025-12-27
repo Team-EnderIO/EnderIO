@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "tag": "c:dusts/lapis"
-    },
-    {
-      "tag": "c:dusts/coal"
-    },
-    {
-      "tag": "c:silicon"
-    }
+    "#c:dusts/lapis",
+    "#c:dusts/coal",
+    "#c:silicon"
   ],
   "result": {
     "count": 1,

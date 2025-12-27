@@ -4,6 +4,6 @@
   "enchantment": "minecraft:impaling",
   "input": {
     "count": 1,
-    "tag": "c:storage_blocks/iron"
+    "ingredient": "#c:storage_blocks/iron"
   }
 }

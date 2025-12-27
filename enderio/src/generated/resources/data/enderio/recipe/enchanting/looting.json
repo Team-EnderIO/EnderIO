@@ -4,6 +4,6 @@
   "enchantment": "minecraft:looting",
   "input": {
     "count": 1,
-    "item": "minecraft:skeleton_skull"
+    "ingredient": "minecraft:skeleton_skull"
   }
 }

@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "enderio:xp_vacuum"
-    }
+    "enderio:xp_vacuum"
   ],
   "result": {
     "count": 1,

@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "P": {
-      "item": "minecraft:acacia_pressure_plate"
-    },
-    "W": {
-      "tag": "minecraft:wool"
-    }
+    "P": "minecraft:acacia_pressure_plate",
+    "W": "#minecraft:wool"
   },
   "pattern": [
     "W",

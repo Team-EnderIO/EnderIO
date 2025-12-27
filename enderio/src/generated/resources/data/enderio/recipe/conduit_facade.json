@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": {
-      "item": "enderio:conduit_binder"
-    }
+    "B": "enderio:conduit_binder"
   },
   "pattern": [
     "BBB",

@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "D": {
-      "item": "enderio:dark_steel_ingot"
-    },
-    "W": {
-      "item": "enderio:glider_wing"
-    }
+    "D": "enderio:dark_steel_ingot",
+    "W": "enderio:glider_wing"
   },
   "pattern": [
     " D ",

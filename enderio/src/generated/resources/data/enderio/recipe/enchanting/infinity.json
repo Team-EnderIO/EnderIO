@@ -4,6 +4,6 @@
   "enchantment": "minecraft:infinity",
   "input": {
     "count": 1,
-    "tag": "c:dusts/grains_of_infinity"
+    "ingredient": "#c:dusts/grains_of_infinity"
   }
 }

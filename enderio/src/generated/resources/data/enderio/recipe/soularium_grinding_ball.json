@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "I": {
-      "tag": "c:ingots/soularium"
-    }
+    "I": "#c:ingots/soularium"
   },
   "pattern": [
     " I ",

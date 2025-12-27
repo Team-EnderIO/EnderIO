@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "I": {
-      "tag": "c:ingots/soularium"
-    },
-    "N": {
-      "tag": "c:nuggets/soularium"
-    },
-    "Q": {
-      "tag": "c:dusts/quartz"
-    }
+    "I": "#c:ingots/soularium",
+    "N": "#c:nuggets/soularium",
+    "Q": "#c:dusts/quartz"
   },
   "pattern": [
     " N ",

@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "C": {
-      "tag": "c:gems/prescient_crystal"
-    },
-    "R": {
-      "item": "enderio:infinity_rod"
-    }
+    "C": "#c:gems/prescient_crystal",
+    "R": "enderio:infinity_rod"
   },
   "pattern": [
     "  C",

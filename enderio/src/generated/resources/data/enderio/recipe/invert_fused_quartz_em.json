@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "G": {
-      "item": "enderio:fused_quartz_enm"
-    },
-    "T": {
-      "item": "minecraft:redstone_torch"
-    }
+    "G": "enderio:fused_quartz_enm",
+    "T": "minecraft:redstone_torch"
   },
   "pattern": [
     "GGG",

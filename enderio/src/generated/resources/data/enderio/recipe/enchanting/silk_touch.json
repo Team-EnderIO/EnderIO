@@ -4,6 +4,6 @@
   "enchantment": "minecraft:silk_touch",
   "input": {
     "count": 1,
-    "tag": "c:slimeballs"
+    "ingredient": "#c:slime_balls"
   }
 }

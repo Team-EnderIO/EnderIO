@@ -4,9 +4,7 @@
     "amount": 250,
     "id": "enderio:fluid_xp_juice_still"
   },
-  "input": {
-    "item": "minecraft:experience_bottle"
-  },
+  "input": "minecraft:experience_bottle",
   "mode": "empty",
   "output": {
     "count": 1,

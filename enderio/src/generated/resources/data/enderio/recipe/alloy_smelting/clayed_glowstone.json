@@ -5,11 +5,11 @@
   "inputs": [
     {
       "count": 1,
-      "tag": "c:dusts/glowstone"
+      "ingredient": "#c:dusts/glowstone"
     },
     {
       "count": 1,
-      "item": "minecraft:clay_ball"
+      "ingredient": "minecraft:clay_ball"
     }
   ],
   "output": {

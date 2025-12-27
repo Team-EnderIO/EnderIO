@@ -4,6 +4,6 @@
   "enchantment": "minecraft:aqua_affinity",
   "input": {
     "count": 1,
-    "item": "minecraft:lily_pad"
+    "ingredient": "minecraft:lily_pad"
   }
 }

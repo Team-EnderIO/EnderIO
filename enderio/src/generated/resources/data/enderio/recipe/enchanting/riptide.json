@@ -4,6 +4,6 @@
   "enchantment": "minecraft:riptide",
   "input": {
     "count": 8,
-    "item": "minecraft:firework_rocket"
+    "ingredient": "minecraft:firework_rocket"
   }
 }

@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "G": {
-      "tag": "c:gears/energized"
-    },
-    "I": {
-      "item": "enderio:vibrant_alloy_ingot"
-    },
-    "N": {
-      "item": "enderio:vibrant_alloy_nugget"
-    }
+    "G": "#c:gears/energized",
+    "I": "enderio:vibrant_alloy_ingot",
+    "N": "enderio:vibrant_alloy_nugget"
   },
   "pattern": [
     "NIN",

@@ -4,6 +4,6 @@
   "enchantment": "minecraft:soul_speed",
   "input": {
     "count": 16,
-    "item": "minecraft:soul_soil"
+    "ingredient": "minecraft:soul_soil"
   }
 }

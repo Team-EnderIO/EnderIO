@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "F": {
-      "item": "enderio:conduit_facade"
-    },
-    "O": {
-      "tag": "c:dusts/obsidian"
-    }
+    "F": "enderio:conduit_facade",
+    "O": "#c:dusts/obsidian"
   },
   "pattern": [
     " O ",

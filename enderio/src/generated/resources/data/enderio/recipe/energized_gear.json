@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "G": {
-      "tag": "c:gears/iron"
-    },
-    "I": {
-      "item": "enderio:energetic_alloy_ingot"
-    },
-    "N": {
-      "item": "enderio:energetic_alloy_nugget"
-    }
+    "G": "#c:gears/iron",
+    "I": "enderio:energetic_alloy_ingot",
+    "N": "enderio:energetic_alloy_nugget"
   },
   "pattern": [
     "NIN",

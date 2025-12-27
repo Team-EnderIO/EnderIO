@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": {
-      "item": "minecraft:iron_bars"
-    },
-    "G": {
-      "tag": "c:glass_blocks"
-    },
-    "I": {
-      "tag": "c:ingots/iron"
-    }
+    "B": "minecraft:iron_bars",
+    "G": "#c:glass_blocks",
+    "I": "#c:ingots/iron"
   },
   "pattern": [
     "IBI",

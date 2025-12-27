@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "enderio:soul_engine"
-    }
+    "enderio:soul_engine"
   ],
   "result": {
     "count": 1,

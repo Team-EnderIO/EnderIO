@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "enderio:soularium_ingot"
-    }
+    "enderio:soularium_ingot"
   ],
   "result": {
     "count": 9,

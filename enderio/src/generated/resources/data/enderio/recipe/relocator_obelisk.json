@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "A": {
-      "item": "enderio:aversion_obelisk"
-    },
-    "P": {
-      "item": "minecraft:prismarine"
-    }
+    "A": "enderio:aversion_obelisk",
+    "P": "minecraft:prismarine"
   },
   "pattern": [
     "P",

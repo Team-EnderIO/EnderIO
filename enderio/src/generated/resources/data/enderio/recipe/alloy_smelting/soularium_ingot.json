@@ -4,20 +4,15 @@
   "experience": 0.3,
   "inputs": [
     {
-      "type": "neoforge:compound",
-      "children": [
-        {
-          "item": "minecraft:soul_sand"
-        },
-        {
-          "item": "minecraft:soul_soil"
-        }
-      ],
-      "count": 1
+      "count": 1,
+      "ingredient": [
+        "minecraft:soul_sand",
+        "minecraft:soul_soil"
+      ]
     },
     {
       "count": 1,
-      "tag": "c:ingots/gold"
+      "ingredient": "#c:ingots/gold"
     }
   ],
   "output": {

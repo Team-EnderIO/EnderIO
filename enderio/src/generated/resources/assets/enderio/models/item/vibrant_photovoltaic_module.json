@@ -1,7 +1,0 @@
-{
-  "parent": "enderio:item/photovoltaic_cell",
-  "textures": {
-    "panel": "enderio:block/vibrant_top",
-    "side": "enderio:block/vibrant_side"
-  }
-}

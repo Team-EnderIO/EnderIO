@@ -3,16 +3,10 @@
   "category": "misc",
   "key": {
     "P": [
-      {
-        "item": "minecraft:paper"
-      },
-      {
-        "item": "enderio:black_paper"
-      }
+      "minecraft:paper",
+      "enderio:black_paper"
     ],
-    "S": {
-      "item": "enderio:soul_vial"
-    }
+    "S": "enderio:soul_vial"
   },
   "pattern": [
     " P ",

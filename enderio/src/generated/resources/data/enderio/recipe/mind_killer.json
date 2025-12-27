@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "E": {
-      "tag": "c:ingots/energetic_alloy"
-    },
-    "S": {
-      "tag": "c:ingots/soularium"
-    },
-    "Z": {
-      "item": "enderio:zombie_electrode"
-    }
+    "E": "#c:ingots/energetic_alloy",
+    "S": "#c:ingots/soularium",
+    "Z": "enderio:zombie_electrode"
   },
   "pattern": [
     " Z ",

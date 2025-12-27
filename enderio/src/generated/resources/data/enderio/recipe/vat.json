@@ -2,24 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "A": {
-      "tag": "c:ingots/copper_alloy"
-    },
-    "B": {
-      "item": "minecraft:barrel"
-    },
-    "C": {
-      "item": "enderio:void_chassis"
-    },
-    "M": {
-      "tag": "c:gears/iron"
-    },
-    "R": {
-      "tag": "c:ingots/redstone_alloy"
-    },
-    "S": {
-      "tag": "c:ingots/dark_steel"
-    }
+    "A": "#c:ingots/copper_alloy",
+    "B": "minecraft:barrel",
+    "C": "enderio:void_chassis",
+    "M": "#c:gears/iron",
+    "R": "#c:ingots/redstone_alloy",
+    "S": "#c:ingots/dark_steel"
   },
   "pattern": [
     "SBS",

@@ -4,6 +4,6 @@
   "enchantment": "minecraft:frost_walker",
   "input": {
     "count": 16,
-    "item": "minecraft:ice"
+    "ingredient": "minecraft:ice"
   }
 }

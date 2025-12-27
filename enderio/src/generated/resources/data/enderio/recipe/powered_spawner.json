@@ -2,21 +2,11 @@
   "type": "enderio:shaped_entity_storage",
   "category": "misc",
   "key": {
-    "B": {
-      "item": "enderio:broken_spawner"
-    },
-    "C": {
-      "item": "enderio:ensouled_chassis"
-    },
-    "I": {
-      "tag": "c:ingots/soularium"
-    },
-    "V": {
-      "tag": "c:gems/vibrant_crystal"
-    },
-    "Z": {
-      "item": "enderio:z_logic_controller"
-    }
+    "B": "enderio:broken_spawner",
+    "C": "enderio:ensouled_chassis",
+    "I": "#c:ingots/soularium",
+    "V": "#c:gems/vibrant_crystal",
+    "Z": "enderio:z_logic_controller"
   },
   "pattern": [
     "IBI",

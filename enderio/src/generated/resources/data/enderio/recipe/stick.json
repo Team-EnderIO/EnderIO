@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "W": {
-      "tag": "minecraft:logs"
-    }
+    "W": "#minecraft:logs"
   },
   "pattern": [
     "W",

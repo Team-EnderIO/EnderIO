@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "G": {
-      "item": "enderio:fused_quartz_e"
-    },
-    "T": {
-      "item": "enderio:monster_token"
-    }
+    "G": "enderio:fused_quartz_e",
+    "T": "enderio:monster_token"
   },
   "pattern": [
     "GGG",

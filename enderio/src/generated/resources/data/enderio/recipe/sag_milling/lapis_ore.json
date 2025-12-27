@@ -1,9 +1,7 @@
 {
   "type": "enderio:sag_milling",
   "energy": 2400,
-  "input": {
-    "tag": "c:ores/lapis"
-  },
+  "input": "#c:ores/lapis",
   "outputs": [
     {
       "item": {

@@ -1,9 +1,7 @@
 {
   "type": "enderio:sag_milling",
   "energy": 2400,
-  "input": {
-    "item": "minecraft:wither_rose"
-  },
+  "input": "minecraft:wither_rose",
   "outputs": [
     {
       "chance": 0.4,

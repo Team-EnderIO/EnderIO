@@ -2,21 +2,11 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "F": {
-      "item": "minecraft:flint"
-    },
-    "G": {
-      "tag": "c:gears/iron"
-    },
-    "I": {
-      "tag": "c:ingots/dark_steel"
-    },
-    "P": {
-      "item": "minecraft:piston"
-    },
-    "V": {
-      "item": "enderio:void_chassis"
-    }
+    "F": "minecraft:flint",
+    "G": "#c:gears/iron",
+    "I": "#c:ingots/dark_steel",
+    "P": "minecraft:piston",
+    "V": "enderio:void_chassis"
   },
   "pattern": [
     "FFF",

@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "C": {
-      "item": "minecraft:clay_ball"
-    },
-    "G": {
-      "tag": "c:gravels"
-    },
-    "S": {
-      "tag": "c:sands"
-    }
+    "C": "minecraft:clay_ball",
+    "G": "#c:gravels",
+    "S": "#c:sands"
   },
   "pattern": [
     "GCG",

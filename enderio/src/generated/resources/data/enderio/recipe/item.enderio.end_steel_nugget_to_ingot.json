@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "N": {
-      "item": "enderio:end_steel_nugget"
-    }
+    "N": "enderio:end_steel_nugget"
   },
   "pattern": [
     "NNN",

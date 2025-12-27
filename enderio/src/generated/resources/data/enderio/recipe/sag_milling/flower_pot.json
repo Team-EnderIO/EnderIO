@@ -1,9 +1,7 @@
 {
   "type": "enderio:sag_milling",
   "energy": 2400,
-  "input": {
-    "item": "minecraft:flower_pot"
-  },
+  "input": "minecraft:flower_pot",
   "outputs": [
     {
       "chance": 0.9,

@@ -6,9 +6,7 @@
     }
   ],
   "type": "enderio:painting",
-  "input": {
-    "item": "enderio:conduit_facade"
-  },
+  "input": "enderio:conduit_facade",
   "output": {
     "count": 1,
     "id": "enderio:conduit_facade"

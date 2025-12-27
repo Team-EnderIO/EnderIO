@@ -5,11 +5,11 @@
   "inputs": [
     {
       "count": 6,
-      "item": "enderio:plant_matter_brown"
+      "ingredient": "enderio:plant_matter_brown"
     },
     {
       "count": 1,
-      "item": "minecraft:egg"
+      "ingredient": "minecraft:egg"
     }
   ],
   "output": {

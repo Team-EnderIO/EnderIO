@@ -2,33 +2,15 @@
   "type": "minecraft:crafting_shapeless",
   "category": "building",
   "ingredients": [
-    {
-      "tag": "enderio:fused_quartz_dna"
-    },
-    {
-      "tag": "enderio:fused_quartz_dna"
-    },
-    {
-      "tag": "enderio:fused_quartz_dna"
-    },
-    {
-      "tag": "enderio:fused_quartz_dna"
-    },
-    {
-      "tag": "enderio:fused_quartz_dna"
-    },
-    {
-      "tag": "enderio:fused_quartz_dna"
-    },
-    {
-      "tag": "enderio:fused_quartz_dna"
-    },
-    {
-      "tag": "enderio:fused_quartz_dna"
-    },
-    {
-      "tag": "c:dyes/orange"
-    }
+    "#enderio:fused_quartz_dna",
+    "#enderio:fused_quartz_dna",
+    "#enderio:fused_quartz_dna",
+    "#enderio:fused_quartz_dna",
+    "#enderio:fused_quartz_dna",
+    "#enderio:fused_quartz_dna",
+    "#enderio:fused_quartz_dna",
+    "#enderio:fused_quartz_dna",
+    "#c:dyes/orange"
   ],
   "result": {
     "count": 8,

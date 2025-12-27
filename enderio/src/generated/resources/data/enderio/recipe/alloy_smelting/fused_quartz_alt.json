@@ -5,7 +5,7 @@
   "inputs": [
     {
       "count": 1,
-      "tag": "c:storage_blocks/quartz"
+      "ingredient": "#c:storage_blocks/quartz"
     }
   ],
   "output": {

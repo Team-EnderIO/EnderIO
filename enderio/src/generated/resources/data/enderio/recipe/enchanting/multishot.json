@@ -4,6 +4,6 @@
   "enchantment": "minecraft:multishot",
   "input": {
     "count": 16,
-    "tag": "minecraft:arrows"
+    "ingredient": "#minecraft:arrows"
   }
 }

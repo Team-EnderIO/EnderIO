@@ -4,6 +4,6 @@
   "enchantment": "minecraft:sharpness",
   "input": {
     "count": 12,
-    "tag": "c:gems/quartz"
+    "ingredient": "#c:gems/quartz"
   }
 }

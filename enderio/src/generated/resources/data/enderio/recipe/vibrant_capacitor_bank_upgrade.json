@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "A": {
-      "tag": "c:ingots/copper_alloy"
-    },
-    "C": {
-      "tag": "c:gems/vibrant_crystal"
-    },
-    "O": {
-      "item": "enderio:octadic_capacitor"
-    }
+    "A": "#c:ingots/copper_alloy",
+    "C": "#c:gems/vibrant_crystal",
+    "O": "enderio:octadic_capacitor"
   },
   "pattern": [
     "AOA",

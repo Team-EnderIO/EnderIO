@@ -4,6 +4,6 @@
   "enchantment": "minecraft:blast_protection",
   "input": {
     "count": 16,
-    "item": "minecraft:gunpowder"
+    "ingredient": "minecraft:gunpowder"
   }
 }

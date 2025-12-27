@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "C": {
-      "tag": "c:gems/ender_crystal"
-    },
-    "I": {
-      "tag": "c:ingots/dark_steel"
-    }
+    "C": "#c:gems/ender_crystal",
+    "I": "#c:ingots/dark_steel"
   },
   "pattern": [
     "  C",

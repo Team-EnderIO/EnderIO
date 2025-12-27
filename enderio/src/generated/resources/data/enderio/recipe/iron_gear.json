@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "G": {
-      "item": "enderio:grains_of_infinity"
-    },
-    "I": {
-      "tag": "c:ingots/iron"
-    },
-    "N": {
-      "tag": "c:nuggets/iron"
-    }
+    "G": "enderio:grains_of_infinity",
+    "I": "#c:ingots/iron",
+    "N": "#c:nuggets/iron"
   },
   "pattern": [
     "NIN",

@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": {
-      "item": "enderio:conduit_binder"
-    },
-    "G": {
-      "tag": "c:glass_blocks/clear"
-    }
+    "B": "enderio:conduit_binder",
+    "G": "#c:glass_blocks/clear"
   },
   "pattern": [
     "BBB",

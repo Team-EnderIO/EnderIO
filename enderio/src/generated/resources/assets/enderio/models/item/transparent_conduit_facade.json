@@ -1,6 +1,0 @@
-{
-  "loader": "enderio:facades_item",
-  "model": {
-    "parent": "enderio:block/transparent_conduit_facade"
-  }
-}

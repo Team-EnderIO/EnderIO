@@ -5,11 +5,11 @@
   "inputs": [
     {
       "count": 1,
-      "tag": "c:glass_blocks/colorless"
+      "ingredient": "#c:glass_blocks/colorless"
     },
     {
       "count": 4,
-      "tag": "c:gems/amethyst"
+      "ingredient": "#c:gems/amethyst"
     }
   ],
   "output": {

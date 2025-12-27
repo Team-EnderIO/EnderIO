@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "I": {
-      "tag": "c:ingots/iron"
-    },
-    "P": {
-      "tag": "c:gems/pulsating_crystal"
-    },
-    "R": {
-      "item": "enderio:void_vial"
-    }
+    "I": "#c:ingots/iron",
+    "P": "#c:gems/pulsating_crystal",
+    "R": "enderio:void_vial"
   },
   "pattern": [
     "III",

@@ -27,14 +27,30 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.display.RecipeDisplay;
 import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-public record PaintingRecipe(Ingredient input, ItemStack output, PlacementInfo placementInfo) implements MachineRecipe<PaintingRecipe.Input> {
+public final class PaintingRecipe implements MachineRecipe<PaintingRecipe.Input> {
+    private final Ingredient input;
+    private final ItemStack output;
+
+    @Nullable
+    private PlacementInfo placementInfo;
 
     public PaintingRecipe(Ingredient input, ItemStack output) {
-        this(input, output, PlacementInfo.create(input));
+        this.input = input;
+        this.output = output;
+    }
+
+    public Ingredient input() {
+        return input;
+    }
+
+    public ItemStack output() {
+        return output;
     }
 
     @Override
@@ -76,10 +92,8 @@ public record PaintingRecipe(Ingredient input, ItemStack output, PlacementInfo p
 
     @Override
     public List<RecipeDisplay> display() {
-        return List.of(new PaintingDisplay(input.display(),
-            new SlotDisplay.ItemStackSlotDisplay(output.copy()),
-            new SlotDisplay.ItemSlotDisplay(EIOBlocks.PAINTING_MACHINE.asItem())
-        ));
+        return List.of(new PaintingDisplay(input.display(), new SlotDisplay.ItemStackSlotDisplay(output.copy()),
+            new SlotDisplay.ItemSlotDisplay(EIOBlocks.PAINTING_MACHINE.asItem())));
     }
 
     @Override
@@ -97,14 +111,23 @@ public record PaintingRecipe(Ingredient input, ItemStack output, PlacementInfo p
         return EIORecipeBookCategories.PAINTING.get();
     }
 
+    @Override
+    public PlacementInfo placementInfo() {
+        if (placementInfo == null) {
+            placementInfo = PlacementInfo.create(input);
+        }
+
+        return placementInfo;
+    }
+
     public record Input(ItemStack template, ItemStack paint) implements RecipeInput {
 
         @Override
         public ItemStack getItem(int slotIndex) {
             return switch (slotIndex) {
-            case 0 -> template;
-            case 1 -> paint;
-            default -> throw new IllegalArgumentException("No item for index " + slotIndex);
+                case 0 -> template;
+                case 1 -> paint;
+                default -> throw new IllegalArgumentException("No item for index " + slotIndex);
             };
         }
 
@@ -116,24 +139,15 @@ public record PaintingRecipe(Ingredient input, ItemStack output, PlacementInfo p
 
     public record PaintingDisplay(SlotDisplay ingredient, SlotDisplay result, SlotDisplay craftingStation) implements RecipeDisplay {
 
-        public static final MapCodec<PaintingDisplay> MAP_CODEC = RecordCodecBuilder.mapCodec(
-            p_379634_ -> p_379634_.group(
-                    SlotDisplay.CODEC.fieldOf("ingredients").forGetter(PaintingDisplay::ingredient),
-                    SlotDisplay.CODEC.fieldOf("result").forGetter(PaintingDisplay::result),
-                    SlotDisplay.CODEC.fieldOf("crafting_station").forGetter(PaintingDisplay::craftingStation)
-                )
-                .apply(p_379634_, PaintingDisplay::new)
-        );
-        public static final StreamCodec<RegistryFriendlyByteBuf, PaintingDisplay> STREAM_CODEC = StreamCodec.composite(
-            SlotDisplay.STREAM_CODEC,
-            PaintingDisplay::ingredient,
-            SlotDisplay.STREAM_CODEC,
-            PaintingDisplay::result,
-            SlotDisplay.STREAM_CODEC,
-            PaintingDisplay::craftingStation,
-            PaintingDisplay::new
-        );
-        public static final RecipeDisplay.Type<PaintingDisplay> TYPE = new RecipeDisplay.Type<>(MAP_CODEC, STREAM_CODEC);
+        public static final MapCodec<PaintingDisplay> MAP_CODEC = RecordCodecBuilder.mapCodec(p_379634_ -> p_379634_
+            .group(SlotDisplay.CODEC.fieldOf("ingredients").forGetter(PaintingDisplay::ingredient),
+                SlotDisplay.CODEC.fieldOf("result").forGetter(PaintingDisplay::result),
+                SlotDisplay.CODEC.fieldOf("crafting_station").forGetter(PaintingDisplay::craftingStation))
+            .apply(p_379634_, PaintingDisplay::new));
+        public static final StreamCodec<RegistryFriendlyByteBuf, PaintingDisplay> STREAM_CODEC = StreamCodec.composite(SlotDisplay.STREAM_CODEC,
+            PaintingDisplay::ingredient, SlotDisplay.STREAM_CODEC, PaintingDisplay::result, SlotDisplay.STREAM_CODEC, PaintingDisplay::craftingStation,
+            PaintingDisplay::new);
+        public static final Type<PaintingDisplay> TYPE = new Type<>(MAP_CODEC, STREAM_CODEC);
 
         @Override
         public Type<? extends RecipeDisplay> type() {
@@ -149,13 +163,11 @@ public record PaintingRecipe(Ingredient input, ItemStack output, PlacementInfo p
     public static class Serializer implements RecipeSerializer<PaintingRecipe> {
 
         public static final MapCodec<PaintingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
-                .group(Ingredient.CODEC.fieldOf("input").forGetter(PaintingRecipe::input),
-                        ItemStack.CODEC.fieldOf("output").forGetter(PaintingRecipe::output))
-                .apply(instance, PaintingRecipe::new));
+            .group(Ingredient.CODEC.fieldOf("input").forGetter(PaintingRecipe::input), ItemStack.CODEC.fieldOf("output").forGetter(PaintingRecipe::output))
+            .apply(instance, PaintingRecipe::new));
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, PaintingRecipe> STREAM_CODEC = StreamCodec.composite(
-                Ingredient.CONTENTS_STREAM_CODEC, PaintingRecipe::input, ItemStack.STREAM_CODEC, PaintingRecipe::output,
-                PaintingRecipe::new);
+        public static final StreamCodec<RegistryFriendlyByteBuf, PaintingRecipe> STREAM_CODEC = StreamCodec.composite(Ingredient.CONTENTS_STREAM_CODEC,
+            PaintingRecipe::input, ItemStack.STREAM_CODEC, PaintingRecipe::output, PaintingRecipe::new);
 
         @Override
         public MapCodec<PaintingRecipe> codec() {

@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "G": {
-      "item": "enderio:clear_glass_na"
-    },
-    "T": {
-      "item": "minecraft:redstone_torch"
-    }
+    "G": "enderio:clear_glass_na",
+    "T": "minecraft:redstone_torch"
   },
   "pattern": [
     "GGG",

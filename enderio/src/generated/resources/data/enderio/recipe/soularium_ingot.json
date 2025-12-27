@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "enderio:soularium_block"
-    }
+    "enderio:soularium_block"
   ],
   "result": {
     "count": 9,

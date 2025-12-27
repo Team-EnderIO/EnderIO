@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/chain",
-  "render_type": "minecraft:cutout_mipped",
-  "textures": {
-    "all": "enderio:block/soul_chain",
-    "particle": "enderio:block/soul_chain"
-  }
-}

@@ -5,11 +5,11 @@
   "inputs": [
     {
       "count": 3,
-      "item": "enderio:flour"
+      "ingredient": "enderio:flour"
     },
     {
       "count": 1,
-      "item": "minecraft:egg"
+      "ingredient": "minecraft:egg"
     }
   ],
   "output": {

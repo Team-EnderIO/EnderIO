@@ -1,5 +1,0 @@
-{
-  "parent": "neoforge:item/bucket",
-  "fluid": "enderio:fluid_cloud_seed_still",
-  "loader": "neoforge:fluid_container"
-}

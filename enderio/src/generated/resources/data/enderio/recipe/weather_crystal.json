@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "E": {
-      "tag": "c:gems/ender_crystal"
-    },
-    "P": {
-      "tag": "c:gems/pulsating_crystal"
-    },
-    "V": {
-      "tag": "c:gems/vibrant_crystal"
-    }
+    "E": "#c:gems/ender_crystal",
+    "P": "#c:gems/pulsating_crystal",
+    "V": "#c:gems/vibrant_crystal"
   },
   "pattern": [
     " P ",

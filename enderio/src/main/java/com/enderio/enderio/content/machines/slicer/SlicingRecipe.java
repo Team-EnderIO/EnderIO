@@ -25,14 +25,35 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.display.RecipeDisplay;
 import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 
-public record SlicingRecipe(ItemStack output, List<Ingredient> inputs, int energy, PlacementInfo placementInfo)
-        implements MachineRecipe<SlicingRecipe.Input> {
+public final class SlicingRecipe implements MachineRecipe<SlicingRecipe.Input> {
+    private final ItemStack output;
+    private final List<Ingredient> inputs;
+    private final int energy;
+
+    @Nullable
+    private PlacementInfo placementInfo;
 
     public SlicingRecipe(ItemStack output, List<Ingredient> inputs, int energy) {
-        this(output, inputs, energy, PlacementInfo.create(inputs));
+        this.output = output;
+        this.inputs = inputs;
+        this.energy = energy;
+    }
+
+    public ItemStack output() {
+        return output;
+    }
+
+    public List<Ingredient> inputs() {
+        return inputs;
+    }
+
+    public int energy() {
+        return energy;
     }
 
     @Override
@@ -52,8 +73,7 @@ public record SlicingRecipe(ItemStack output, List<Ingredient> inputs, int energ
 
     @Override
     public List<RecipeDisplay> display() {
-        return List.of(new SlicingDisplay(inputs.stream().map(Ingredient::display).toList(),
-            new SlotDisplay.ItemStackSlotDisplay(output.copy()),
+        return List.of(new SlicingDisplay(inputs.stream().map(Ingredient::display).toList(), new SlotDisplay.ItemStackSlotDisplay(output.copy()),
             new SlotDisplay.ItemSlotDisplay(EIOBlocks.SLICE_AND_SPLICE.asItem())));
     }
 
@@ -82,6 +102,15 @@ public record SlicingRecipe(ItemStack output, List<Ingredient> inputs, int energ
         return EIORecipes.SLICING.type().get();
     }
 
+    @Override
+    public PlacementInfo placementInfo() {
+        if (placementInfo == null) {
+            placementInfo = PlacementInfo.create(inputs);
+        }
+
+        return placementInfo;
+    }
+
     public record Input(List<ItemStack> inputs) implements RecipeInput {
 
         @Override
@@ -101,24 +130,14 @@ public record SlicingRecipe(ItemStack output, List<Ingredient> inputs, int energ
 
     public record SlicingDisplay(List<SlotDisplay> ingredients, SlotDisplay result, SlotDisplay craftingStation) implements RecipeDisplay {
 
-        public static final MapCodec<SlicingDisplay> MAP_CODEC = RecordCodecBuilder.mapCodec(
-            p_379634_ -> p_379634_.group(
-                    SlotDisplay.CODEC.listOf().fieldOf("ingredients").forGetter(SlicingDisplay::ingredients),
-                    SlotDisplay.CODEC.fieldOf("result").forGetter(SlicingDisplay::result),
-                    SlotDisplay.CODEC.fieldOf("crafting_station").forGetter(SlicingDisplay::craftingStation)
-                )
-                .apply(p_379634_, SlicingDisplay::new)
-        );
+        public static final MapCodec<SlicingDisplay> MAP_CODEC = RecordCodecBuilder.mapCodec(p_379634_ -> p_379634_
+            .group(SlotDisplay.CODEC.listOf().fieldOf("ingredients").forGetter(SlicingDisplay::ingredients),
+                SlotDisplay.CODEC.fieldOf("result").forGetter(SlicingDisplay::result), SlotDisplay.CODEC.fieldOf("crafting_station").forGetter(SlicingDisplay::craftingStation))
+            .apply(p_379634_, SlicingDisplay::new));
         public static final StreamCodec<RegistryFriendlyByteBuf, SlicingDisplay> STREAM_CODEC = StreamCodec.composite(
-            SlotDisplay.STREAM_CODEC.apply(ByteBufCodecs.list()),
-            SlicingDisplay::ingredients,
-            SlotDisplay.STREAM_CODEC,
-            SlicingDisplay::result,
-            SlotDisplay.STREAM_CODEC,
-            SlicingDisplay::craftingStation,
-            SlicingDisplay::new
-        );
-        public static final RecipeDisplay.Type<SlicingDisplay> TYPE = new RecipeDisplay.Type<>(MAP_CODEC, STREAM_CODEC);
+            SlotDisplay.STREAM_CODEC.apply(ByteBufCodecs.list()), SlicingDisplay::ingredients, SlotDisplay.STREAM_CODEC, SlicingDisplay::result,
+            SlotDisplay.STREAM_CODEC, SlicingDisplay::craftingStation, SlicingDisplay::new);
+        public static final Type<SlicingDisplay> TYPE = new Type<>(MAP_CODEC, STREAM_CODEC);
 
         @Override
         public Type<? extends RecipeDisplay> type() {
@@ -133,16 +152,13 @@ public record SlicingRecipe(ItemStack output, List<Ingredient> inputs, int energ
 
     public static class Serializer implements RecipeSerializer<SlicingRecipe> {
         public static final MapCodec<SlicingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
-                .group(ItemStack.CODEC.fieldOf("output").forGetter(SlicingRecipe::output),
-                        new ValidatingListCodec<>(Ingredient.CODEC.listOf(), 6).fieldOf("inputs")
-                                .forGetter(SlicingRecipe::inputs),
-                        Codec.INT.fieldOf("energy").forGetter(SlicingRecipe::energy))
-                .apply(instance, SlicingRecipe::new));
+            .group(ItemStack.CODEC.fieldOf("output").forGetter(SlicingRecipe::output),
+                new ValidatingListCodec<>(Ingredient.CODEC.listOf(), 6).fieldOf("inputs").forGetter(SlicingRecipe::inputs),
+                Codec.INT.fieldOf("energy").forGetter(SlicingRecipe::energy))
+            .apply(instance, SlicingRecipe::new));
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, SlicingRecipe> STREAM_CODEC = StreamCodec.composite(
-                ItemStack.STREAM_CODEC, SlicingRecipe::output,
-                Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()), SlicingRecipe::inputs, ByteBufCodecs.INT,
-                SlicingRecipe::energy, SlicingRecipe::new);
+        public static final StreamCodec<RegistryFriendlyByteBuf, SlicingRecipe> STREAM_CODEC = StreamCodec.composite(ItemStack.STREAM_CODEC, SlicingRecipe::output,
+            Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()), SlicingRecipe::inputs, ByteBufCodecs.INT, SlicingRecipe::energy, SlicingRecipe::new);
 
         @Override
         public MapCodec<SlicingRecipe> codec() {

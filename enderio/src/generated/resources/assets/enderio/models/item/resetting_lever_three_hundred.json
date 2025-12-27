@@ -1,3 +1,6 @@
 {
-  "parent": "minecraft:item/lever"
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "enderio:block/resetting_lever_three_hundred"
+  }
 }

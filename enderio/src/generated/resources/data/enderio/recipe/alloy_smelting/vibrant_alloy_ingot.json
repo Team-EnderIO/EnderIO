@@ -5,11 +5,11 @@
   "inputs": [
     {
       "count": 1,
-      "tag": "c:ingots/energetic_alloy"
+      "ingredient": "#c:ingots/energetic_alloy"
     },
     {
       "count": 1,
-      "tag": "c:ender_pearls"
+      "ingredient": "#c:ender_pearls"
     }
   ],
   "output": {

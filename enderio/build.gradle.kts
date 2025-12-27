@@ -206,9 +206,7 @@ neoForge {
 
             programArguments.addAll(
                     "--mod", "enderio",
-                    // TODO: Fix missing models...
-                    //"--all",
-                    "--server", "--client",
+                    "--all",
                     "--output", file("src/generated/resources").absolutePath,
                     "--existing", file("src/main/resources").absolutePath,
             )

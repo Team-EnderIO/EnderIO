@@ -5,6 +5,7 @@ import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.datagen.client.EIOLanguageProvider;
 import com.enderio.enderio.datagen.client.models.EIOBlockStateProvider;
+import com.enderio.enderio.datagen.client.models.EIOItemModelProvider;
 import com.enderio.enderio.datagen.common.advancement.EIOAdvancementGenerator;
 import com.enderio.enderio.datagen.common.advancement.MachinesAdvancementGenerator;
 import com.enderio.enderio.datagen.common.data_maps.RangeExtenderDataMapProvider;
@@ -40,22 +41,11 @@ import java.util.concurrent.CompletableFuture;
 public class EnderIODataGen {
 
     public EnderIODataGen(IEventBus eventBus) {
-        // Temp: Runs after Regilite.
-        eventBus.addListener(EventPriority.LOWEST, this::onGatherClientData);
-        eventBus.addListener(EventPriority.LOWEST, this::onGatherServerData);
+        eventBus.addListener(this::onGatherData);
     }
 
-    public void onGatherClientData(GatherDataEvent.Client event) {
-        DataGenerator generator = event.getGenerator();
-        PackOutput packOutput = event.getGenerator().getPackOutput();
-        CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
-
-        //generator.addProvider(true, new EIOItemModelProvider(packOutput));
-        generator.addProvider(true, new EIOBlockStateProvider(packOutput));
-        generator.addProvider(true, new EIOLanguageProvider(packOutput));
-    }
-
-    public void onGatherServerData(GatherDataEvent.Server event) {
+    // TODO: 1.21.8: investigate split between Client and Server properly https://docs.neoforged.net/docs/1.21.8/resources/#data-generation
+    public void onGatherData(GatherDataEvent.Client event) {
         // Create datapack registry objects
         event.createDatapackRegistryObjects(createDatapackEntriesBuilder(), Set.of(EnderIO.MOD_ID));
 
@@ -90,6 +80,10 @@ public class EnderIODataGen {
                 new LootTableProvider.SubProviderEntry(EIOBlockLootProvider::new, LootContextParamSets.BLOCK),
                 new LootTableProvider.SubProviderEntry(ChestLootProvider::new, LootContextParamSets.CHEST)
             ), lookupProvider));
+
+        generator.addProvider(true, new EIOItemModelProvider(packOutput));
+        generator.addProvider(true, new EIOBlockStateProvider(packOutput));
+        generator.addProvider(true, new EIOLanguageProvider(packOutput));
     }
 
     private static RegistrySetBuilder createDatapackEntriesBuilder() {

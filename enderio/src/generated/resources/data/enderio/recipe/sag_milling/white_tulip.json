@@ -1,9 +1,7 @@
 {
   "type": "enderio:sag_milling",
   "energy": 2400,
-  "input": {
-    "item": "minecraft:white_tulip"
-  },
+  "input": "minecraft:white_tulip",
   "outputs": [
     {
       "chance": 0.8,

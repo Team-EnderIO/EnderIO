@@ -4,6 +4,6 @@
   "enchantment": "minecraft:fortune",
   "input": {
     "count": 1,
-    "tag": "c:gems/emerald"
+    "ingredient": "#c:gems/emerald"
   }
 }

@@ -4,6 +4,6 @@
   "enchantment": "minecraft:power",
   "input": {
     "count": 12,
-    "item": "minecraft:flint"
+    "ingredient": "minecraft:flint"
   }
 }

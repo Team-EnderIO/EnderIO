@@ -4,6 +4,6 @@
   "enchantment": "minecraft:respiration",
   "input": {
     "count": 1,
-    "item": "minecraft:glass_bottle"
+    "ingredient": "minecraft:glass_bottle"
   }
 }

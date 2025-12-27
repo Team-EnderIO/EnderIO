@@ -1,9 +1,7 @@
 {
   "type": "enderio:sag_milling",
   "energy": 2400,
-  "input": {
-    "item": "minecraft:vine"
-  },
+  "input": "minecraft:vine",
   "outputs": [
     {
       "chance": 0.15,

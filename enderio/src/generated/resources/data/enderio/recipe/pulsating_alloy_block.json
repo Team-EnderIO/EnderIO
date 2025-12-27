@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "I": {
-      "item": "enderio:pulsating_alloy_ingot"
-    }
+    "I": "enderio:pulsating_alloy_ingot"
   },
   "pattern": [
     "III",

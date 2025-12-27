@@ -2,22 +2,14 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "C": {
-      "item": "enderio:ensouled_chassis"
-    },
-    "G": {
-      "tag": "c:gears/energized"
-    },
-    "I": {
-      "tag": "c:ingots/soularium"
-    },
+    "C": "enderio:ensouled_chassis",
+    "G": "#c:gears/energized",
+    "I": "#c:ingots/soularium",
     "V": {
-      "type": "enderio:empty_soul_storage",
+      "neoforge:ingredient_type": "enderio:empty_soul_storage",
       "item": "enderio:soul_vial"
     },
-    "Z": {
-      "item": "enderio:z_logic_controller"
-    }
+    "Z": "enderio:z_logic_controller"
   },
   "pattern": [
     "IVI",

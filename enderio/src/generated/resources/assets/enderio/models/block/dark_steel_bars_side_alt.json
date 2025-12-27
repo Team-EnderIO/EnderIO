@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/template_glass_pane_side_alt",
-  "render_type": "minecraft:cutout_mipped",
-  "textures": {
-    "edge": "enderio:block/dark_steel_bars",
-    "pane": "enderio:block/dark_steel_bars"
-  }
-}

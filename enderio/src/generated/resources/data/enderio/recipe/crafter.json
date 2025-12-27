@@ -2,21 +2,11 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "C": {
-      "item": "enderio:void_chassis"
-    },
-    "G": {
-      "tag": "c:gears/iron"
-    },
-    "I": {
-      "tag": "c:ingots/iron"
-    },
-    "S": {
-      "tag": "c:silicon"
-    },
-    "T": {
-      "item": "minecraft:crafting_table"
-    }
+    "C": "enderio:void_chassis",
+    "G": "#c:gears/iron",
+    "I": "#c:ingots/iron",
+    "S": "#c:silicon",
+    "T": "minecraft:crafting_table"
   },
   "pattern": [
     "SSS",

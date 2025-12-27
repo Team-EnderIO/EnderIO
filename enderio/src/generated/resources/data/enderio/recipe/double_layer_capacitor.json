@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "C": {
-      "item": "enderio:basic_capacitor"
-    },
-    "D": {
-      "tag": "c:dusts/coal"
-    },
-    "I": {
-      "tag": "c:ingots/energetic_alloy"
-    }
+    "C": "enderio:basic_capacitor",
+    "D": "#c:dusts/coal",
+    "I": "#c:ingots/energetic_alloy"
   },
   "pattern": [
     " I ",

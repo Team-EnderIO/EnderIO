@@ -3,9 +3,7 @@
   "category": "misc",
   "cookingtime": 200,
   "experience": 0.0,
-  "ingredient": {
-    "item": "enderio:powdered_iron"
-  },
+  "ingredient": "enderio:powdered_iron",
   "result": {
     "count": 1,
     "id": "minecraft:iron_ingot"

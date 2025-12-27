@@ -34,21 +34,48 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.display.RecipeDisplay;
 import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Random;
 import java.util.function.IntFunction;
 
-public record SagMillingRecipe(Ingredient input, List<OutputItem> outputs, int energy, BonusType bonusType, PlacementInfo placementInfo)
-        implements MachineRecipe<SagMillingRecipe.Input> {
-
-    public SagMillingRecipe(Ingredient input, List<OutputItem> outputs, int energy, BonusType bonusType) {
-        this(input, outputs, energy, bonusType, PlacementInfo.create(input));
-    }
+public final class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Input> {
 
     private static final Random RANDOM = new Random();
+    private final Ingredient input;
+    private final List<OutputItem> outputs;
+    private final int energy;
+    private final BonusType bonusType;
+
+    @Nullable
+    private PlacementInfo placementInfo;
+
+    public SagMillingRecipe(Ingredient input, List<OutputItem> outputs, int energy, BonusType bonusType) {
+        this.input = input;
+        this.outputs = outputs;
+        this.energy = energy;
+        this.bonusType = bonusType;
+    }
+
+    public Ingredient input() {
+        return input;
+    }
+
+    public List<OutputItem> outputs() {
+        return outputs;
+    }
+
+    public int energy() {
+        return energy;
+    }
+
+    public BonusType bonusType() {
+        return bonusType;
+    }
 
     /**
      * JEI for sag mill will not use this, it'll use a capacitor data.
@@ -129,9 +156,7 @@ public record SagMillingRecipe(Ingredient input, List<OutputItem> outputs, int e
         List<RecipeDisplay> displays = new ArrayList<>();
         for (OutputItem item : outputs) {
             if (item.chance >= 1.0f && item.isPresent()) {
-                displays.add(new SagMillingDisplay(input.display(),
-                        new SlotDisplay.ItemStackSlotDisplay(item.getItemStack().copy()),
-                        new SlotDisplay.ItemSlotDisplay(EIOBlocks.SAG_MILL.asItem())));
+                displays.add(new SagMillingDisplay(input.display(), new SlotDisplay.ItemStackSlotDisplay(item.getItemStack().copy()), new SlotDisplay.ItemSlotDisplay(EIOBlocks.SAG_MILL.asItem())));
             }
         }
         return displays;
@@ -157,12 +182,20 @@ public record SagMillingRecipe(Ingredient input, List<OutputItem> outputs, int e
         return EIORecipeBookCategories.SAG_MILL.get();
     }
 
+    @Override
+    public PlacementInfo placementInfo() {
+        if (placementInfo == null) {
+            placementInfo = PlacementInfo.create(input);
+        }
+
+        return placementInfo;
+    }
+
     public enum BonusType implements StringRepresentable {
         NONE(0, false, false), MULTIPLY_OUTPUT(1, true, true), CHANCE_ONLY(2, false, true);
 
         public static final Codec<BonusType> CODEC = StringRepresentable.fromEnum(BonusType::values);
-        public static final IntFunction<BonusType> BY_ID = ByIdMap.continuous(key -> key.id, values(),
-                ByIdMap.OutOfBoundsStrategy.ZERO);
+        public static final IntFunction<BonusType> BY_ID = ByIdMap.continuous(key -> key.id, values(), ByIdMap.OutOfBoundsStrategy.ZERO);
         public static final StreamCodec<ByteBuf, BonusType> STREAM_CODEC = ByteBufCodecs.idMapper(BY_ID, v -> v.id);
 
         private final int id;
@@ -195,15 +228,15 @@ public record SagMillingRecipe(Ingredient input, List<OutputItem> outputs, int e
 
     public record OutputItem(Either<ItemStack, SizedTagOutput> output, float chance, boolean isOptional) {
 
-        public static final Codec<OutputItem> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                Codec.either(ItemStack.CODEC, SizedTagOutput.CODEC).fieldOf("item").forGetter(OutputItem::output),
+        public static final Codec<OutputItem> CODEC = RecordCodecBuilder.create(instance -> instance
+            .group(Codec.either(ItemStack.CODEC, SizedTagOutput.CODEC).fieldOf("item").forGetter(OutputItem::output),
                 Codec.FLOAT.optionalFieldOf("chance", 1f).forGetter(OutputItem::chance),
                 Codec.BOOL.optionalFieldOf("optional", false).forGetter(OutputItem::isOptional))
-                .apply(instance, OutputItem::new));
+            .apply(instance, OutputItem::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, OutputItem> STREAM_CODEC = StreamCodec.composite(
-                ByteBufCodecs.either(ItemStack.STREAM_CODEC, SizedTagOutput.STREAM_CODEC), OutputItem::output,
-                ByteBufCodecs.FLOAT, OutputItem::chance, ByteBufCodecs.BOOL, OutputItem::isOptional, OutputItem::new);
+            ByteBufCodecs.either(ItemStack.STREAM_CODEC, SizedTagOutput.STREAM_CODEC), OutputItem::output, ByteBufCodecs.FLOAT, OutputItem::chance,
+            ByteBufCodecs.BOOL, OutputItem::isOptional, OutputItem::new);
 
         public static OutputItem of(Item item, int count, float chance, boolean optional) {
             return of(new ItemStack(item, count), chance, optional);
@@ -227,15 +260,13 @@ public record SagMillingRecipe(Ingredient input, List<OutputItem> outputs, int e
 
         public record SizedTagOutput(TagKey<Item> itemTag, int count) {
             private static final Codec<SizedTagOutput> CODEC = RecordCodecBuilder.create(instance -> instance
-                    .group(TagKey.codec(Registries.ITEM).fieldOf("tag").forGetter(SizedTagOutput::itemTag),
-                            Codec.intRange(0, Integer.MAX_VALUE).fieldOf("count").forGetter(SizedTagOutput::count))
-                    .apply(instance, SizedTagOutput::new));
+                .group(TagKey.codec(Registries.ITEM).fieldOf("tag").forGetter(SizedTagOutput::itemTag),
+                    Codec.intRange(0, Integer.MAX_VALUE).fieldOf("count").forGetter(SizedTagOutput::count))
+                .apply(instance, SizedTagOutput::new));
 
-            private static final StreamCodec<RegistryFriendlyByteBuf, SizedTagOutput> STREAM_CODEC = StreamCodec
-                    .composite(
-                            ResourceLocation.STREAM_CODEC.map(loc -> TagKey.create(Registries.ITEM, loc),
-                                    TagKey::location),
-                            SizedTagOutput::itemTag, ByteBufCodecs.INT, SizedTagOutput::count, SizedTagOutput::new);
+            private static final StreamCodec<RegistryFriendlyByteBuf, SizedTagOutput> STREAM_CODEC = StreamCodec.composite(
+                ResourceLocation.STREAM_CODEC.map(loc -> TagKey.create(Registries.ITEM, loc), TagKey::location), SizedTagOutput::itemTag, ByteBufCodecs.INT,
+                SizedTagOutput::count, SizedTagOutput::new);
 
             public ItemStack getItemStack() {
                 return OptionalItemUtility.getOptionalItem(itemTag).map(item -> new ItemStack(item, count)).orElse(ItemStack.EMPTY);
@@ -262,24 +293,15 @@ public record SagMillingRecipe(Ingredient input, List<OutputItem> outputs, int e
 
     public record SagMillingDisplay(SlotDisplay ingredient, SlotDisplay result, SlotDisplay craftingStation) implements RecipeDisplay {
 
-        public static final MapCodec<SagMillingDisplay> MAP_CODEC = RecordCodecBuilder.mapCodec(
-            p_379634_ -> p_379634_.group(
-                    SlotDisplay.CODEC.fieldOf("ingredients").forGetter(SagMillingDisplay::ingredient),
-                    SlotDisplay.CODEC.fieldOf("result").forGetter(SagMillingDisplay::result),
-                    SlotDisplay.CODEC.fieldOf("crafting_station").forGetter(SagMillingDisplay::craftingStation)
-                )
-                .apply(p_379634_, SagMillingDisplay::new)
-        );
-        public static final StreamCodec<RegistryFriendlyByteBuf, SagMillingDisplay> STREAM_CODEC = StreamCodec.composite(
-            SlotDisplay.STREAM_CODEC,
-            SagMillingDisplay::ingredient,
-            SlotDisplay.STREAM_CODEC,
-            SagMillingDisplay::result,
-            SlotDisplay.STREAM_CODEC,
-            SagMillingDisplay::craftingStation,
-            SagMillingDisplay::new
-        );
-        public static final RecipeDisplay.Type<SagMillingDisplay> TYPE = new RecipeDisplay.Type<>(MAP_CODEC, STREAM_CODEC);
+        public static final MapCodec<SagMillingDisplay> MAP_CODEC = RecordCodecBuilder.mapCodec(p_379634_ -> p_379634_
+            .group(SlotDisplay.CODEC.fieldOf("ingredients").forGetter(SagMillingDisplay::ingredient),
+                SlotDisplay.CODEC.fieldOf("result").forGetter(SagMillingDisplay::result),
+                SlotDisplay.CODEC.fieldOf("crafting_station").forGetter(SagMillingDisplay::craftingStation))
+            .apply(p_379634_, SagMillingDisplay::new));
+        public static final StreamCodec<RegistryFriendlyByteBuf, SagMillingDisplay> STREAM_CODEC = StreamCodec.composite(SlotDisplay.STREAM_CODEC,
+            SagMillingDisplay::ingredient, SlotDisplay.STREAM_CODEC, SagMillingDisplay::result, SlotDisplay.STREAM_CODEC, SagMillingDisplay::craftingStation,
+            SagMillingDisplay::new);
+        public static final Type<SagMillingDisplay> TYPE = new Type<>(MAP_CODEC, STREAM_CODEC);
 
         @Override
         public Type<? extends RecipeDisplay> type() {
@@ -294,19 +316,14 @@ public record SagMillingRecipe(Ingredient input, List<OutputItem> outputs, int e
 
     public static class Serializer implements RecipeSerializer<SagMillingRecipe> {
 
-        public static final MapCodec<SagMillingRecipe> CODEC = RecordCodecBuilder
-                .mapCodec(instance -> instance
-                        .group(Ingredient.CODEC.fieldOf("input").forGetter(SagMillingRecipe::input),
-                                OutputItem.CODEC.listOf().fieldOf("outputs").forGetter(SagMillingRecipe::outputs),
-                                Codec.INT.fieldOf("energy").forGetter(SagMillingRecipe::energy),
-                                BonusType.CODEC.optionalFieldOf("bonus", BonusType.MULTIPLY_OUTPUT)
-                                        .forGetter(SagMillingRecipe::bonusType))
-                        .apply(instance, SagMillingRecipe::new));
+        public static final MapCodec<SagMillingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
+            .group(Ingredient.CODEC.fieldOf("input").forGetter(SagMillingRecipe::input),
+                OutputItem.CODEC.listOf().fieldOf("outputs").forGetter(SagMillingRecipe::outputs), Codec.INT.fieldOf("energy").forGetter(SagMillingRecipe::energy),
+                BonusType.CODEC.optionalFieldOf("bonus", BonusType.MULTIPLY_OUTPUT).forGetter(SagMillingRecipe::bonusType))
+            .apply(instance, SagMillingRecipe::new));
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, SagMillingRecipe> STREAM_CODEC = StreamCodec.composite(
-                Ingredient.CONTENTS_STREAM_CODEC, SagMillingRecipe::input,
-                OutputItem.STREAM_CODEC.apply(ByteBufCodecs.list()), SagMillingRecipe::outputs, ByteBufCodecs.INT,
-                SagMillingRecipe::energy, BonusType.STREAM_CODEC, SagMillingRecipe::bonusType, SagMillingRecipe::new);
+        public static final StreamCodec<RegistryFriendlyByteBuf, SagMillingRecipe> STREAM_CODEC = StreamCodec.composite(Ingredient.CONTENTS_STREAM_CODEC,
+            SagMillingRecipe::input, OutputItem.STREAM_CODEC.apply(ByteBufCodecs.list()), SagMillingRecipe::outputs, ByteBufCodecs.INT, SagMillingRecipe::energy, BonusType.STREAM_CODEC, SagMillingRecipe::bonusType, SagMillingRecipe::new);
 
         @Override
         public MapCodec<SagMillingRecipe> codec() {

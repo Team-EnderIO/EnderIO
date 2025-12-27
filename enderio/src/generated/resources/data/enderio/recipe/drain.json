@@ -2,21 +2,11 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": {
-      "item": "minecraft:bucket"
-    },
-    "C": {
-      "tag": "c:glass_blocks/clear"
-    },
-    "G": {
-      "tag": "c:gears/iron"
-    },
-    "I": {
-      "tag": "c:ingots/copper_alloy"
-    },
-    "V": {
-      "item": "enderio:void_chassis"
-    }
+    "B": "minecraft:bucket",
+    "C": "#c:glass_blocks/clear",
+    "G": "#c:gears/iron",
+    "I": "#c:ingots/copper_alloy",
+    "V": "enderio:void_chassis"
   },
   "pattern": [
     "ICI",

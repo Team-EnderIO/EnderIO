@@ -4,6 +4,6 @@
   "enchantment": "minecraft:lure",
   "input": {
     "count": 1,
-    "tag": "minecraft:fishes"
+    "ingredient": "#minecraft:fishes"
   }
 }

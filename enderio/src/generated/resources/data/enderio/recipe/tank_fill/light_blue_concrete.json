@@ -4,9 +4,7 @@
     "amount": 1000,
     "id": "minecraft:water"
   },
-  "input": {
-    "item": "minecraft:light_blue_concrete_powder"
-  },
+  "input": "minecraft:light_blue_concrete_powder",
   "mode": "fill",
   "output": {
     "count": 1,

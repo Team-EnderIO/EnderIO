@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "redstone",
   "ingredients": [
-    {
-      "item": "minecraft:lever"
-    },
-    {
-      "tag": "c:dusts/redstone"
-    }
+    "minecraft:lever",
+    "#c:dusts/redstone"
   ],
   "result": {
     "count": 1,

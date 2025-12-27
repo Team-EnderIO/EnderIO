@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "Q": {
-      "tag": "c:glass_blocks/fused_quartz"
-    },
-    "S": {
-      "tag": "c:ingots/soularium"
-    }
+    "Q": "#c:glass_blocks/fused_quartz",
+    "S": "#c:ingots/soularium"
   },
   "pattern": [
     " S ",

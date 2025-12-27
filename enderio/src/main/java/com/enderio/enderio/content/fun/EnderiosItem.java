@@ -8,6 +8,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.properties.conditional.ConditionalItemModelProperty;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.contents.PlainTextContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -19,6 +20,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.UseRemainder;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RegisterConditionalItemModelPropertyEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -61,13 +63,6 @@ public class EnderiosItem extends Item {
         return Calendar.getInstance().get(Calendar.DAY_OF_MONTH) == 1;
     }
 
-
-    //TODO Move?
-    @SubscribeEvent
-    public static void itemOverrides(RegisterConditionalItemModelPropertyEvent event) {
-        event.register(INVERTED_PROPERTY, Soiredne.MAP_CODEC);
-    }
-
     public static class Soiredne implements ConditionalItemModelProperty {
         public static final MapCodec<Soiredne> MAP_CODEC = MapCodec.unit(new Soiredne());
 
@@ -78,7 +73,8 @@ public class EnderiosItem extends Item {
 
         @Override
         public boolean get(ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int seed, ItemDisplayContext displayContext) {
-            return stack.get(DataComponents.CUSTOM_NAME).getString().equals("SOIREDNE");
+            Component name = stack.get(DataComponents.CUSTOM_NAME);
+            return name != null && name.getContents() instanceof PlainTextContents literal && literal.text().equalsIgnoreCase("soiredne");
         }
     }
 }

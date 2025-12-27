@@ -4,6 +4,6 @@
   "enchantment": "minecraft:punch",
   "input": {
     "count": 1,
-    "tag": "c:strings"
+    "ingredient": "#c:strings"
   }
 }

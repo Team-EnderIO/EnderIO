@@ -5,7 +5,7 @@
   "inputs": [
     {
       "count": 3,
-      "item": "enderio:photovoltaic_composite"
+      "ingredient": "enderio:photovoltaic_composite"
     }
   ],
   "output": {

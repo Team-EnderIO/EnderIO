@@ -4,6 +4,6 @@
   "enchantment": "minecraft:unbreaking",
   "input": {
     "count": 1,
-    "tag": "c:obsidians"
+    "ingredient": "#c:obsidians"
   }
 }

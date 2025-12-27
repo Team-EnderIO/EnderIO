@@ -5,7 +5,7 @@
   "inputs": [
     {
       "count": 9,
-      "tag": "c:dusts/ender_pearl"
+      "ingredient": "#c:dusts/ender_pearl"
     }
   ],
   "output": {

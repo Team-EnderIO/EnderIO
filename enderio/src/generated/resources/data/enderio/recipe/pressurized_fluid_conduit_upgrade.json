@@ -2,16 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "B": {
-      "item": "enderio:conduit_binder"
-    },
+    "B": "enderio:conduit_binder",
     "C": {
-      "type": "enderio:conduit",
+      "neoforge:ingredient_type": "enderio:conduit",
       "conduit_type": "enderio:fluid"
     },
-    "G": {
-      "tag": "c:glass_blocks/fused_quartz"
-    }
+    "G": "#c:glass_blocks/fused_quartz"
   },
   "pattern": [
     "BBB",

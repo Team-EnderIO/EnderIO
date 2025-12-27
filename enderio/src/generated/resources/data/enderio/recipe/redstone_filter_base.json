@@ -2,20 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "I": {
-      "tag": "c:ingots/iron"
-    },
+    "I": "#c:ingots/iron",
     "P": [
-      {
-        "item": "minecraft:paper"
-      },
-      {
-        "item": "enderio:black_paper"
-      }
+      "minecraft:paper",
+      "enderio:black_paper"
     ],
-    "R": {
-      "tag": "c:ingots/redstone_alloy"
-    }
+    "R": "#c:ingots/redstone_alloy"
   },
   "pattern": [
     "RPR",

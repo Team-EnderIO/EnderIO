@@ -3,9 +3,7 @@
   "energy": 51200,
   "entity_type": "minecraft:witch",
   "experience": 4,
-  "input": {
-    "item": "enderio:ender_resonator"
-  },
+  "input": "enderio:ender_resonator",
   "output": {
     "count": 1,
     "id": "enderio:sentient_ender"

@@ -4,6 +4,6 @@
   "enchantment": "minecraft:feather_falling",
   "input": {
     "count": 1,
-    "tag": "c:feathers"
+    "ingredient": "#c:feathers"
   }
 }

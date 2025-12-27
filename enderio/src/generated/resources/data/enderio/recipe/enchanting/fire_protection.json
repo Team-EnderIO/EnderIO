@@ -4,6 +4,6 @@
   "enchantment": "minecraft:fire_protection",
   "input": {
     "count": 16,
-    "item": "minecraft:magma_cream"
+    "ingredient": "minecraft:magma_cream"
   }
 }

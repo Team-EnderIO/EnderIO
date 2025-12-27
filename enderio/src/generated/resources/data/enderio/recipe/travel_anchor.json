@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": {
-      "item": "enderio:conduit_binder"
-    },
-    "C": {
-      "tag": "c:gems/pulsating_crystal"
-    },
-    "I": {
-      "tag": "c:ingots/iron"
-    }
+    "B": "enderio:conduit_binder",
+    "C": "#c:gems/pulsating_crystal",
+    "I": "#c:ingots/iron"
   },
   "pattern": [
     "IBI",

@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "enderio:niard"
-    }
+    "enderio:niard"
   ],
   "result": {
     "count": 1,

@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "C": {
-      "item": "enderio:soul_chain"
-    },
-    "I": {
-      "tag": "c:ingots/soularium"
-    },
-    "Q": {
-      "tag": "c:gems/quartz"
-    }
+    "C": "enderio:soul_chain",
+    "I": "#c:ingots/soularium",
+    "Q": "#c:gems/quartz"
   },
   "pattern": [
     "CIC",

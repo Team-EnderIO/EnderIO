@@ -1,8 +1,6 @@
 {
   "type": "enderio:painting",
-  "input": {
-    "item": "enderio:painted_glowstone"
-  },
+  "input": "enderio:painted_glowstone",
   "output": {
     "count": 1,
     "id": "enderio:painted_glowstone"

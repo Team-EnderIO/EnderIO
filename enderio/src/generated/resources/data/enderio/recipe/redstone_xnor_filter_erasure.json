@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "enderio:redstone_xnor_filter"
-    }
+    "enderio:redstone_xnor_filter"
   ],
   "result": {
     "count": 1,

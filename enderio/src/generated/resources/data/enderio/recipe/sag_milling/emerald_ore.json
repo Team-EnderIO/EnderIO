@@ -1,9 +1,7 @@
 {
   "type": "enderio:sag_milling",
   "energy": 2400,
-  "input": {
-    "tag": "c:ores/emerald"
-  },
+  "input": "#c:ores/emerald",
   "outputs": [
     {
       "item": {

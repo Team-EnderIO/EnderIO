@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "C": {
-      "item": "minecraft:compass"
-    },
-    "E": {
-      "tag": "c:ender_pearls"
-    },
-    "I": {
-      "tag": "c:ingots/copper_alloy"
-    }
+    "C": "minecraft:compass",
+    "E": "#c:ender_pearls",
+    "I": "#c:ingots/copper_alloy"
   },
   "pattern": [
     "IEI",

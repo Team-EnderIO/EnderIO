@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "I": {
-      "tag": "c:ingots/pulsating_alloy"
-    }
+    "I": "#c:ingots/pulsating_alloy"
   },
   "pattern": [
     " I ",

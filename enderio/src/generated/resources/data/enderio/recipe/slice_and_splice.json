@@ -2,21 +2,11 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": {
-      "item": "minecraft:iron_bars"
-    },
-    "C": {
-      "item": "enderio:ensouled_chassis"
-    },
-    "G": {
-      "tag": "c:gears/energized"
-    },
-    "H": {
-      "tag": "minecraft:skulls"
-    },
-    "I": {
-      "tag": "c:ingots/soularium"
-    }
+    "B": "minecraft:iron_bars",
+    "C": "enderio:ensouled_chassis",
+    "G": "#c:gears/energized",
+    "H": "#minecraft:skulls",
+    "I": "#c:ingots/soularium"
   },
   "pattern": [
     "IHI",

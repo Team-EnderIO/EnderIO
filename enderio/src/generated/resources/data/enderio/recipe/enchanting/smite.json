@@ -4,6 +4,6 @@
   "enchantment": "minecraft:smite",
   "input": {
     "count": 12,
-    "item": "minecraft:rotten_flesh"
+    "ingredient": "minecraft:rotten_flesh"
   }
 }

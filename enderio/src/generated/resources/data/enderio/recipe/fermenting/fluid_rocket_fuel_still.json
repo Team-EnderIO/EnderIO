@@ -2,7 +2,7 @@
   "type": "enderio:vat_fermenting",
   "input": {
     "amount": 1000,
-    "fluid": "enderio:fluid_hootch_still"
+    "ingredient": "enderio:fluid_hootch_still"
   },
   "left_reagent": "enderio:explosives",
   "output": {

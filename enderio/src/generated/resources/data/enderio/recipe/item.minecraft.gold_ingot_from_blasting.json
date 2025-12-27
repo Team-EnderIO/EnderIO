@@ -3,9 +3,7 @@
   "category": "misc",
   "cookingtime": 100,
   "experience": 0.0,
-  "ingredient": {
-    "item": "enderio:powdered_gold"
-  },
+  "ingredient": "enderio:powdered_gold",
   "result": {
     "count": 1,
     "id": "minecraft:gold_ingot"

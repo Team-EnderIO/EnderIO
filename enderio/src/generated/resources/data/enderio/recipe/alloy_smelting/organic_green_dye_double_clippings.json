@@ -5,11 +5,11 @@
   "inputs": [
     {
       "count": 12,
-      "item": "enderio:plant_matter_green"
+      "ingredient": "enderio:plant_matter_green"
     },
     {
       "count": 1,
-      "tag": "c:slimeballs"
+      "ingredient": "#c:slime_balls"
     }
   ],
   "output": {

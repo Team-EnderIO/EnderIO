@@ -4,6 +4,6 @@
   "enchantment": "minecraft:piercing",
   "input": {
     "count": 8,
-    "tag": "c:gems/prismarine"
+    "ingredient": "#c:gems/prismarine"
   }
 }

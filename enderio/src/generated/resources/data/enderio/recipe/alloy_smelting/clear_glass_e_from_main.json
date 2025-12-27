@@ -5,11 +5,11 @@
   "inputs": [
     {
       "count": 1,
-      "tag": "c:glass_blocks/colorless"
+      "ingredient": "#c:glass_blocks/colorless"
     },
     {
       "count": 4,
-      "tag": "c:dusts/glowstone"
+      "ingredient": "#c:dusts/glowstone"
     }
   ],
   "output": {

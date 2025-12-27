@@ -2,24 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": {
-      "item": "minecraft:bucket"
-    },
-    "I": {
-      "tag": "c:ingots/dark_steel"
-    },
-    "P": {
-      "item": "minecraft:piston"
-    },
-    "R": {
-      "item": "enderio:dark_steel_bars"
-    },
-    "T": {
-      "item": "enderio:fluid_tank"
-    },
-    "V": {
-      "item": "enderio:void_chassis"
-    }
+    "B": "minecraft:bucket",
+    "I": "#c:ingots/dark_steel",
+    "P": "minecraft:piston",
+    "R": "enderio:dark_steel_bars",
+    "T": "enderio:fluid_tank",
+    "V": "enderio:void_chassis"
   },
   "pattern": [
     "BTB",

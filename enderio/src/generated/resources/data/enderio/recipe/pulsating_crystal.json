@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "D": {
-      "tag": "c:gems/diamond"
-    },
-    "P": {
-      "tag": "c:nuggets/pulsating_alloy"
-    }
+    "D": "#c:gems/diamond",
+    "P": "#c:nuggets/pulsating_alloy"
   },
   "pattern": [
     "PPP",

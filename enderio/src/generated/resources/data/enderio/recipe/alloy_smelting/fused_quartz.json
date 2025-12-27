@@ -5,7 +5,7 @@
   "inputs": [
     {
       "count": 4,
-      "tag": "c:gems/quartz"
+      "ingredient": "#c:gems/quartz"
     }
   ],
   "output": {

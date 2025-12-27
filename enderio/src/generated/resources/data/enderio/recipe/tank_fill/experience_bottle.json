@@ -4,9 +4,7 @@
     "amount": 250,
     "id": "enderio:fluid_xp_juice_still"
   },
-  "input": {
-    "item": "minecraft:glass_bottle"
-  },
+  "input": "minecraft:glass_bottle",
   "mode": "fill",
   "output": {
     "count": 1,

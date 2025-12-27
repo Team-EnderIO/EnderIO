@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "C": {
-      "item": "enderio:ensouled_chassis"
-    },
-    "I": {
-      "tag": "c:ingots/soularium"
-    },
-    "R": {
-      "item": "enderio:void_vial"
-    }
+    "C": "enderio:ensouled_chassis",
+    "I": "#c:ingots/soularium",
+    "R": "enderio:void_vial"
   },
   "pattern": [
     " R ",

@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "C": {
-      "tag": "c:ingots/conductive_alloy"
-    },
-    "E": {
-      "tag": "c:ingots/copper_alloy"
-    },
-    "V": {
-      "tag": "c:gems/vibrant_crystal"
-    }
+    "C": "#c:ingots/conductive_alloy",
+    "E": "#c:ingots/copper_alloy",
+    "V": "#c:gems/vibrant_crystal"
   },
   "pattern": [
     "CVC",

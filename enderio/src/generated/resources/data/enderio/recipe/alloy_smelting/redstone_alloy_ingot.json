@@ -5,11 +5,11 @@
   "inputs": [
     {
       "count": 1,
-      "tag": "c:dusts/redstone"
+      "ingredient": "#c:dusts/redstone"
     },
     {
       "count": 1,
-      "tag": "c:silicon"
+      "ingredient": "#c:silicon"
     }
   ],
   "output": {

@@ -15,24 +15,46 @@ import net.minecraft.client.data.models.blockstates.MultiPartGenerator;
 import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.blockstates.PropertyDispatch;
 import net.minecraft.client.data.models.model.ModelLocationUtils;
+import net.minecraft.client.data.models.model.ModelTemplate;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureMapping;
+import net.minecraft.client.data.models.model.TextureSlot;
 import net.minecraft.client.data.models.model.TexturedModel;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.client.model.generators.loaders.CompositeModelBuilder;
 
+import java.util.stream.Stream;
+
 import static net.minecraft.client.data.models.BlockModelGenerators.*;
 
 public class EIOBlockStateProvider extends ModelProvider {
     public EIOBlockStateProvider(PackOutput output) {
         super(output, EnderIO.MOD_ID);
+    }
+
+    @Override
+    public String getName() {
+        return "Ender IO Block Model Definitions";
+    }
+
+    // TODO: 1.21.8: Lift these overrides so the validation that all models are present exist.
+    @Override
+    protected Stream<? extends Holder<Block>> getKnownBlocks() {
+        return Stream.empty();
+    }
+
+    @Override
+    protected Stream<? extends Holder<Item>> getKnownItems() {
+        return Stream.empty();
     }
 
     @Override
@@ -119,15 +141,15 @@ public class EIOBlockStateProvider extends ModelProvider {
 
     public void createBars(BlockModelGenerators blockModels, Block block) {
         //TODO rendertype
-        MultiVariant multivariant = plainVariant(ModelLocationUtils.getModelLocation(Blocks.IRON_BARS, "_post_ends"));
-        MultiVariant multivariant1 = plainVariant(ModelLocationUtils.getModelLocation(Blocks.IRON_BARS, "_post"));
-        MultiVariant multivariant2 = plainVariant(ModelLocationUtils.getModelLocation(Blocks.IRON_BARS, "_cap"));
-        MultiVariant multivariant3 = plainVariant(ModelLocationUtils.getModelLocation(Blocks.IRON_BARS, "_cap_alt"));
-        MultiVariant multivariant4 = plainVariant(ModelLocationUtils.getModelLocation(Blocks.IRON_BARS, "_side"));
-        MultiVariant multivariant5 = plainVariant(ModelLocationUtils.getModelLocation(Blocks.IRON_BARS, "_side_alt"));
+        MultiVariant multivariant = plainVariant(ModelLocationUtils.getModelLocation(block, "_post_ends"));
+        MultiVariant multivariant1 = plainVariant(ModelLocationUtils.getModelLocation(block, "_post"));
+        MultiVariant multivariant2 = plainVariant(ModelLocationUtils.getModelLocation(block, "_cap"));
+        MultiVariant multivariant3 = plainVariant(ModelLocationUtils.getModelLocation(block, "_cap_alt"));
+        MultiVariant multivariant4 = plainVariant(ModelLocationUtils.getModelLocation(block, "_side"));
+        MultiVariant multivariant5 = plainVariant(ModelLocationUtils.getModelLocation(block, "_side_alt"));
         blockModels.blockStateOutput
             .accept(
-                MultiPartGenerator.multiPart(Blocks.IRON_BARS)
+                MultiPartGenerator.multiPart(block)
                     .with(multivariant)
                     .with(
                         condition()
@@ -174,7 +196,7 @@ public class EIOBlockStateProvider extends ModelProvider {
                     .with(condition().term(BlockStateProperties.SOUTH, true), multivariant5)
                     .with(condition().term(BlockStateProperties.WEST, true), multivariant5.with(Y_ROT_90))
             );
-        blockModels.registerSimpleFlatItemModel(Blocks.IRON_BARS);
+        blockModels.registerSimpleFlatItemModel(block);
     }
 
     public void createLever(BlockModelGenerators blockModels, Block block) {
@@ -394,14 +416,15 @@ public class EIOBlockStateProvider extends ModelProvider {
 //        builder.part().modelFile(cornerModel).rotationY(270).addModel().condition(SolarPanelBlock.NORTH_WEST, true);
     }
 
+    private static final ModelTemplate COMBINED_MACHINE = ModelTemplates.create(TextureSlot.PARTICLE);
+
     private ResourceLocation wrapMachineModel(BlockModelGenerators blockModelGenerators, Block block, ResourceLocation model) {
-        return ModelTemplates.CUBE_DIRECTIONAL.extend()
-            .parent(EnderIO.rl("block/" + model.getPath() + "_combined"))
+        return COMBINED_MACHINE.extend()
             .customLoader(CompositeModelBuilder::new, builder -> {
-            builder.child("machine", model);
-            builder.child("overlay", EnderIO.rl("block/io_overlay"));
+                builder.child("machine", model);
+                builder.child("overlay", EnderIO.rl("block/io_overlay"));
             }).build()
-            .create(block, TextureMapping.cube(block), blockModelGenerators.modelOutput);
+            .create(EnderIO.rl("block/" + model.getPath() + "_combined"), TextureMapping.cube(block), blockModelGenerators.modelOutput);
     }
 
     private ResourceLocation key(Block block) {

@@ -2,21 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "A": {
-      "tag": "c:ingots/conductive_alloy"
-    },
-    "C": {
-      "item": "minecraft:comparator"
-    },
+    "A": "#c:ingots/conductive_alloy",
+    "C": "minecraft:comparator",
     "I": {
-      "type": "enderio:conduit",
+      "neoforge:ingredient_type": "enderio:conduit",
       "conduit_type": "enderio:item"
     },
-    "P": {
-      "tag": "c:glass_blocks"
-    },
+    "P": "#c:glass_blocks",
     "R": {
-      "type": "enderio:conduit",
+      "neoforge:ingredient_type": "enderio:conduit",
       "conduit_type": "enderio:redstone"
     }
   },

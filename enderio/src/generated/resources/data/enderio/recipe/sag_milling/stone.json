@@ -2,9 +2,7 @@
   "type": "enderio:sag_milling",
   "bonus": "none",
   "energy": 2400,
-  "input": {
-    "tag": "c:stones"
-  },
+  "input": "#c:stones",
   "outputs": [
     {
       "item": {

@@ -5,11 +5,11 @@
   "inputs": [
     {
       "count": 1,
-      "tag": "c:storage_blocks/quartz"
+      "ingredient": "#c:storage_blocks/quartz"
     },
     {
       "count": 4,
-      "tag": "c:gems/amethyst"
+      "ingredient": "#c:gems/amethyst"
     }
   ],
   "output": {

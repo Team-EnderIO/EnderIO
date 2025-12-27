@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "I": {
-      "tag": "c:ingots/dark_steel"
-    }
+    "I": "#c:ingots/dark_steel"
   },
   "pattern": [
     " I ",

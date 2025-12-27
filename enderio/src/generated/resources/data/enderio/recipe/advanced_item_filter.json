@@ -3,19 +3,11 @@
   "category": "misc",
   "key": {
     "P": [
-      {
-        "item": "minecraft:paper"
-      },
-      {
-        "item": "enderio:black_paper"
-      }
+      "minecraft:paper",
+      "enderio:black_paper"
     ],
-    "R": {
-      "tag": "c:dusts/redstone"
-    },
-    "Z": {
-      "item": "enderio:z_logic_controller"
-    }
+    "R": "#c:dusts/redstone",
+    "Z": "enderio:z_logic_controller"
   },
   "pattern": [
     "RPR",

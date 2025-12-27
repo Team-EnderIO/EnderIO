@@ -2,24 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "C": {
-      "item": "enderio:octadic_capacitor"
-    },
-    "F": {
-      "tag": "c:glass_blocks/dark_fused_quartz"
-    },
-    "G": {
-      "item": "minecraft:glowstone"
-    },
-    "I": {
-      "tag": "c:ingots/vibrant_alloy"
-    },
-    "P": {
-      "item": "enderio:photovoltaic_plate"
-    },
-    "S": {
-      "item": "enderio:pulsating_photovoltaic_module"
-    }
+    "C": "enderio:octadic_capacitor",
+    "F": "#c:glass_blocks/dark_fused_quartz",
+    "G": "minecraft:glowstone",
+    "I": "#c:ingots/vibrant_alloy",
+    "P": "enderio:photovoltaic_plate",
+    "S": "enderio:pulsating_photovoltaic_module"
   },
   "pattern": [
     "IFI",

@@ -5,15 +5,15 @@
   "inputs": [
     {
       "count": 1,
-      "tag": "c:dusts/redstone"
+      "ingredient": "#c:dusts/redstone"
     },
     {
       "count": 1,
-      "tag": "c:ingots/gold"
+      "ingredient": "#c:ingots/gold"
     },
     {
       "count": 1,
-      "tag": "c:dusts/glowstone"
+      "ingredient": "#c:dusts/glowstone"
     }
   ],
   "output": {

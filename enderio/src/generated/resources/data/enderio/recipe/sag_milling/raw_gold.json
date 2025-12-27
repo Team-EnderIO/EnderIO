@@ -1,9 +1,7 @@
 {
   "type": "enderio:sag_milling",
   "energy": 2400,
-  "input": {
-    "tag": "c:raw_materials/gold"
-  },
+  "input": "#c:raw_materials/gold",
   "outputs": [
     {
       "item": {

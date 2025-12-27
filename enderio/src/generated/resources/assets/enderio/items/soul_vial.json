@@ -1,0 +1,14 @@
+{
+  "model": {
+    "type": "minecraft:condition",
+    "on_false": {
+      "type": "minecraft:model",
+      "model": "enderio:item/soul_vial"
+    },
+    "on_true": {
+      "type": "minecraft:model",
+      "model": "enderio:item/soul_vial_filled"
+    },
+    "property": "enderio:soul_vial_filled"
+  }
+}

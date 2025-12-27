@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "enderio:impulse_hopper"
-    }
+    "enderio:impulse_hopper"
   ],
   "result": {
     "count": 1,

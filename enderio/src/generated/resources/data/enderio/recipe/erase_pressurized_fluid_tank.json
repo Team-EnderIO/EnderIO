@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "enderio:pressurized_fluid_tank"
-    }
+    "enderio:pressurized_fluid_tank"
   ],
   "result": {
     "count": 1,

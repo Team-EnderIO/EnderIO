@@ -1,0 +1,14 @@
+{
+  "model": {
+    "type": "minecraft:condition",
+    "on_false": {
+      "type": "minecraft:model",
+      "model": "enderio:item/enderios"
+    },
+    "on_true": {
+      "type": "minecraft:model",
+      "model": "enderio:item/soiredne"
+    },
+    "property": "enderio:enderios_inverted"
+  }
+}

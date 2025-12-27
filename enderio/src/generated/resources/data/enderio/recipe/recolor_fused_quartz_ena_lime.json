@@ -2,33 +2,15 @@
   "type": "minecraft:crafting_shapeless",
   "category": "building",
   "ingredients": [
-    {
-      "tag": "enderio:fused_quartz_ena"
-    },
-    {
-      "tag": "enderio:fused_quartz_ena"
-    },
-    {
-      "tag": "enderio:fused_quartz_ena"
-    },
-    {
-      "tag": "enderio:fused_quartz_ena"
-    },
-    {
-      "tag": "enderio:fused_quartz_ena"
-    },
-    {
-      "tag": "enderio:fused_quartz_ena"
-    },
-    {
-      "tag": "enderio:fused_quartz_ena"
-    },
-    {
-      "tag": "enderio:fused_quartz_ena"
-    },
-    {
-      "tag": "c:dyes/lime"
-    }
+    "#enderio:fused_quartz_ena",
+    "#enderio:fused_quartz_ena",
+    "#enderio:fused_quartz_ena",
+    "#enderio:fused_quartz_ena",
+    "#enderio:fused_quartz_ena",
+    "#enderio:fused_quartz_ena",
+    "#enderio:fused_quartz_ena",
+    "#enderio:fused_quartz_ena",
+    "#c:dyes/lime"
   ],
   "result": {
     "count": 8,

@@ -2,7 +2,7 @@
   "type": "enderio:vat_fermenting",
   "input": {
     "amount": 1000,
-    "tag": "minecraft:water"
+    "ingredient": "#minecraft:water"
   },
   "left_reagent": "enderio:seeds",
   "output": {

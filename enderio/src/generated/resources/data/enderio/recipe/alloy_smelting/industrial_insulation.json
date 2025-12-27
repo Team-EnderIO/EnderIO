@@ -5,15 +5,15 @@
   "inputs": [
     {
       "count": 1,
-      "tag": "c:dusts/lapis"
+      "ingredient": "#c:dusts/lapis"
     },
     {
       "count": 1,
-      "tag": "minecraft:wool"
+      "ingredient": "#minecraft:wool"
     },
     {
       "count": 1,
-      "tag": "enderio:insulation_metals"
+      "ingredient": "#enderio:insulation_metals"
     }
   ],
   "output": {

@@ -4,6 +4,6 @@
   "enchantment": "minecraft:mending",
   "input": {
     "count": 1,
-    "item": "enderio:void_vial"
+    "ingredient": "enderio:void_vial"
   }
 }

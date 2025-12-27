@@ -5,15 +5,15 @@
   "inputs": [
     {
       "count": 1,
-      "tag": "c:bricks/nether"
+      "ingredient": "#c:bricks/nether"
     },
     {
       "count": 4,
-      "item": "minecraft:nether_wart"
+      "ingredient": "minecraft:nether_wart"
     },
     {
       "count": 6,
-      "item": "minecraft:clay_ball"
+      "ingredient": "minecraft:clay_ball"
     }
   ],
   "output": {

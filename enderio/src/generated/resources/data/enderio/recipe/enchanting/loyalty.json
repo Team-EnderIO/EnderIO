@@ -4,6 +4,6 @@
   "enchantment": "minecraft:loyalty",
   "input": {
     "count": 1,
-    "item": "minecraft:lead"
+    "ingredient": "minecraft:lead"
   }
 }

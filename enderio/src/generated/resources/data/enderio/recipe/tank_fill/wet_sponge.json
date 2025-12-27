@@ -4,9 +4,7 @@
     "amount": 1000,
     "id": "minecraft:water"
   },
-  "input": {
-    "item": "minecraft:sponge"
-  },
+  "input": "minecraft:sponge",
   "mode": "fill",
   "output": {
     "count": 1,

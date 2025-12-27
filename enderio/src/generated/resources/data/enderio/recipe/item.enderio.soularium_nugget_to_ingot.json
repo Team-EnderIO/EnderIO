@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "N": {
-      "item": "enderio:soularium_nugget"
-    }
+    "N": "enderio:soularium_nugget"
   },
   "pattern": [
     "NNN",

@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "enderio:vibrant_capacitor_bank"
-    }
+    "enderio:vibrant_capacitor_bank"
   ],
   "result": {
     "count": 1,

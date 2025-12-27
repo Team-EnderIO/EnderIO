@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "B": {
-      "item": "enderio:basic_capacitor_bank"
-    },
-    "C": {
-      "item": "enderio:double_layer_capacitor"
-    },
-    "E": {
-      "tag": "c:ingots/energetic_alloy"
-    }
+    "B": "enderio:basic_capacitor_bank",
+    "C": "enderio:double_layer_capacitor",
+    "E": "#c:ingots/energetic_alloy"
   },
   "pattern": [
     "EEE",

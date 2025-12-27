@@ -4,6 +4,6 @@
   "enchantment": "minecraft:channeling",
   "input": {
     "count": 1,
-    "item": "minecraft:lightning_rod"
+    "ingredient": "minecraft:lightning_rod"
   }
 }

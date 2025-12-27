@@ -5,7 +5,7 @@
   "inputs": [
     {
       "count": 1,
-      "tag": "minecraft:saplings"
+      "ingredient": "#minecraft:saplings"
     }
   ],
   "output": {

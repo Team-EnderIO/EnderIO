@@ -2,33 +2,15 @@
   "type": "minecraft:crafting_shapeless",
   "category": "building",
   "ingredients": [
-    {
-      "tag": "enderio:clear_glass_d"
-    },
-    {
-      "tag": "enderio:clear_glass_d"
-    },
-    {
-      "tag": "enderio:clear_glass_d"
-    },
-    {
-      "tag": "enderio:clear_glass_d"
-    },
-    {
-      "tag": "enderio:clear_glass_d"
-    },
-    {
-      "tag": "enderio:clear_glass_d"
-    },
-    {
-      "tag": "enderio:clear_glass_d"
-    },
-    {
-      "tag": "enderio:clear_glass_d"
-    },
-    {
-      "tag": "c:dyes/yellow"
-    }
+    "#enderio:clear_glass_d",
+    "#enderio:clear_glass_d",
+    "#enderio:clear_glass_d",
+    "#enderio:clear_glass_d",
+    "#enderio:clear_glass_d",
+    "#enderio:clear_glass_d",
+    "#enderio:clear_glass_d",
+    "#enderio:clear_glass_d",
+    "#c:dyes/yellow"
   ],
   "result": {
     "count": 8,

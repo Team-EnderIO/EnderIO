@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "I": {
-      "item": "enderio:dark_steel_ingot"
-    }
+    "I": "enderio:dark_steel_ingot"
   },
   "pattern": [
     "III",

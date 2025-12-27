@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "equipment",
   "ingredients": [
-    {
-      "tag": "c:ingots/dark_steel"
-    },
-    {
-      "item": "minecraft:flint"
-    }
+    "#c:ingots/dark_steel",
+    "minecraft:flint"
   ],
   "result": {
     "count": 1,

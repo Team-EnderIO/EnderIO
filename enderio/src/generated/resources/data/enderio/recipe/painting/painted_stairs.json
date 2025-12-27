@@ -1,8 +1,6 @@
 {
   "type": "enderio:painting",
-  "input": {
-    "tag": "minecraft:wooden_stairs"
-  },
+  "input": "#minecraft:wooden_stairs",
   "output": {
     "count": 1,
     "id": "enderio:painted_stairs"
