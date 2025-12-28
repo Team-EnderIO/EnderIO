@@ -1,0 +1,9 @@
+{
+  "children": {
+    "machine": "enderio:block/wireless_charger_active"
+  },
+  "item_render_order": [
+    "machine"
+  ],
+  "loader": "neoforge:composite"
+}

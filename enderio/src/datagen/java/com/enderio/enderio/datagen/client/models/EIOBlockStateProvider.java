@@ -1,6 +1,7 @@
 package com.enderio.enderio.datagen.client.models;
 
 import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.client.content.conduits.model.bundle.port.ConduitBlockStateModel;
 import com.enderio.enderio.content.machines.solar_panel.SolarPanelBlock;
 import com.enderio.enderio.content.machines.solar_panel.SolarPanelTier;
 import com.enderio.enderio.content.misc_blocks.skull.EnderSkullBlock;
@@ -15,10 +16,8 @@ import net.minecraft.client.data.models.blockstates.MultiPartGenerator;
 import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.blockstates.PropertyDispatch;
 import net.minecraft.client.data.models.model.ModelLocationUtils;
-import net.minecraft.client.data.models.model.ModelTemplate;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureMapping;
-import net.minecraft.client.data.models.model.TextureSlot;
 import net.minecraft.client.data.models.model.TexturedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -30,7 +29,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.neoforged.neoforge.client.model.generators.blockstate.CustomBlockStateModelBuilder;
 import net.neoforged.neoforge.client.model.generators.loaders.CompositeModelBuilder;
+import net.neoforged.neoforge.client.model.generators.template.ExtendedModelTemplateBuilder;
 
 import java.util.stream.Stream;
 
@@ -42,12 +43,6 @@ public class EIOBlockStateProvider extends ModelProvider {
     }
 
     @Override
-    public String getName() {
-        return "Ender IO Block Model Definitions";
-    }
-
-    // TODO: 1.21.8: Lift these overrides so the validation that all models are present exist.
-    @Override
     protected Stream<? extends Holder<Block>> getKnownBlocks() {
         return Stream.empty();
     }
@@ -55,6 +50,11 @@ public class EIOBlockStateProvider extends ModelProvider {
     @Override
     protected Stream<? extends Holder<Item>> getKnownItems() {
         return Stream.empty();
+    }
+
+    @Override
+    public String getName() {
+        return "Ender IO Block Model Definitions";
     }
 
     @Override
@@ -128,6 +128,10 @@ public class EIOBlockStateProvider extends ModelProvider {
 
         registerMachineBlocks(blockModels);
         registerFluidBlocks(blockModels);
+
+        blockModels.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(EIOBlocks.CONDUIT_BUNDLE.get(),
+            MultiVariant.of(new CustomBlockStateModelBuilder.Simple(ConduitBlockStateModel.Unbaked.INSTANCE))));
+
     }
 
     private void simpleBlockWithModel(BlockModelGenerators blockModels, Block block, ResourceLocation resourcelocation) {
@@ -416,15 +420,13 @@ public class EIOBlockStateProvider extends ModelProvider {
 //        builder.part().modelFile(cornerModel).rotationY(270).addModel().condition(SolarPanelBlock.NORTH_WEST, true);
     }
 
-    private static final ModelTemplate COMBINED_MACHINE = ModelTemplates.create(TextureSlot.PARTICLE);
-
     private ResourceLocation wrapMachineModel(BlockModelGenerators blockModelGenerators, Block block, ResourceLocation model) {
-        return COMBINED_MACHINE.extend()
+        return ExtendedModelTemplateBuilder.builder()
             .customLoader(CompositeModelBuilder::new, builder -> {
                 builder.child("machine", model);
-                builder.child("overlay", EnderIO.rl("block/io_overlay"));
+                //builder.child("overlay", EnderIO.rl("block/io_overlay"));
             }).build()
-            .create(EnderIO.rl("block/" + model.getPath() + "_combined"), TextureMapping.cube(block), blockModelGenerators.modelOutput);
+            .create(EnderIO.rl(model.getPath() + "_combined"), TextureMapping.cube(block), blockModelGenerators.modelOutput);
     }
 
     private ResourceLocation key(Block block) {

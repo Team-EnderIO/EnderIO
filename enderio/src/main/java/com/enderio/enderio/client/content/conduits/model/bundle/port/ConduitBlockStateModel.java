@@ -5,18 +5,16 @@ import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.client.content.conduits.model.ConduitAdditionalModels;
 import com.enderio.enderio.client.content.conduits.model.bundle.ConduitBundleRenderState;
 import com.enderio.enderio.client.content.conduits.model.facades.ClientFacadeVisibility;
-import com.enderio.enderio.client.foundation.model.BoxTextureQuadTransformer;
 import com.enderio.enderio.content.conduits.OffsetHelper;
-import com.mojang.math.Axis;
 import com.mojang.math.Transformation;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockModelPart;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.block.model.SimpleModelWrapper;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.BlockModelRotation;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.core.BlockPos;
@@ -31,7 +29,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.model.DynamicBlockStateModel;
 import net.neoforged.neoforge.client.model.block.CustomUnbakedBlockStateModel;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Quaternionf;
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
@@ -57,7 +55,6 @@ public class ConduitBlockStateModel implements DynamicBlockStateModel {
     @Override
     public void collectParts(BlockAndTintGetter level, BlockPos pos, BlockState state, RandomSource random, List<BlockModelPart> parts) {
         ConduitBundleRenderState bundleState = level.getModelData(pos).get(ConduitBundleRenderState.PROPERTY);
-
         if (bundleState != null) {
             // If the facade should hide the conduits, escape early.
             if (ClientFacadeVisibility.areFacadesVisible() && bundleState.hasFacade() && bundleState.doesFacadeHideConduits()) {
@@ -69,12 +66,7 @@ public class ConduitBlockStateModel implements DynamicBlockStateModel {
 
             for (Direction direction : Direction.values()) {
                 boolean isEnd = bundleState.isConnectionEndpoint(direction);
-                ModelState rotation = new ModelState() {
-                    @Override
-                    public Transformation transformation() {
-                        return rotateTransformation(direction);
-                    }
-                };
+                ModelState rotation = rotate(direction);
 
                 if (isEnd) {
                     parts.add(SimpleModelWrapper.bake(this.baker, ConduitAdditionalModels.CONDUIT_CONNECTOR, rotation));
@@ -92,7 +84,9 @@ public class ConduitBlockStateModel implements DynamicBlockStateModel {
                     ModelState rotationTranslation = new ModelState() {
                         @Override
                         public Transformation transformation() {
-                            return rotateTransformation(direction).compose(translateTransformation(offset));
+                            var mat = new Matrix4f();
+                            translateTransformation(offset).getMatrix().mul(rotate(direction).transformation().getMatrix(), mat);
+                            return new Transformation(mat);
                         }
                     };
 
@@ -227,33 +221,41 @@ public class ConduitBlockStateModel implements DynamicBlockStateModel {
                     }
                 }
                 Vec3i min = box.getMin();
-                ModelState boxTranslate = new ModelState() {
+                var size = box.size();
+                ModelState boxTranslate = new ModelState() { //TODO something is wrong
                     @Override
                     public Transformation transformation() {
-                        return translateTransformation(min);
+                        var scaling = new Transformation(null, null, new Vector3f(size.getX(), size.getY(), size.getZ()), null).getMatrix();
+                        var moveToCenter = new Transformation(new Vector3f(6.5f / 16, 6.5f / 16, 6.5f / 16), null, null, null).getMatrix();
+                        var translate = translateTransformation(min).getMatrix();
+                        var temp = new Matrix4f();
+                        var temp2 = new Matrix4f();
+                        scaling.mul(moveToCenter, temp);
+                        temp.mul(translate, temp2);//TODO I feel like this one is wrong, maybe the box needs an offset?
+                        return new Transformation(temp2);
                     }
                 };
 
                 final var model = SimpleModelWrapper.bake(this.baker, ConduitAdditionalModels.BOX, boxTranslate);
-                var size = box.size();
+                parts.add(model);
 
-                //TODO improve
-                parts.add(new BlockModelPart() {
-                    @Override
-                    public List<BakedQuad> getQuads(@Nullable Direction direction) {
-                        return new BoxTextureQuadTransformer(size).process(model.getQuads(direction));
-                    }
-
-                    @Override
-                    public boolean useAmbientOcclusion() {
-                        return model.useAmbientOcclusion();
-                    }
-
-                    @Override
-                    public TextureAtlasSprite particleIcon() {
-                        return model.particleIcon();
-                    }
-                });
+//                //TODO improve
+//                parts.add(new BlockModelPart() {
+//                    @Override
+//                    public List<BakedQuad> getQuads(@Nullable Direction direction) {
+//                        return new BoxTextureQuadTransformer(size).process(model.getQuads(direction));
+//                    }
+//
+//                    @Override
+//                    public boolean useAmbientOcclusion() {
+//                        return model.useAmbientOcclusion();
+//                    }
+//
+//                    @Override
+//                    public TextureAtlasSprite particleIcon() {
+//                        return model.particleIcon();
+//                    }
+//                });
 
 
             } else {
@@ -274,19 +276,25 @@ public class ConduitBlockStateModel implements DynamicBlockStateModel {
         }
     }
 
-    public static Transformation rotateTransformation(Direction toDirection) {
-        Quaternionf quaternion = new Quaternionf();
-        switch (toDirection) {
-        case UP -> quaternion.mul(Axis.ZP.rotationDegrees(180));
-        case NORTH -> quaternion.mul(Axis.XP.rotationDegrees(90));
-        case SOUTH -> quaternion.mul(Axis.XN.rotationDegrees(90));
-        case WEST -> quaternion.mul(Axis.ZN.rotationDegrees(90));
-        case EAST -> quaternion.mul(Axis.ZP.rotationDegrees(90));
-        default -> {
-        }
-        }
-        Transformation transformation = new Transformation(null, quaternion, null, null);
-        return transformation.applyOrigin(new Vector3f(.5f, .5f, .5f));
+    public static ModelState rotate(Direction toDirection) {
+        return switch (toDirection) {
+            case UP -> BlockModelRotation.X180_Y180;
+            case NORTH -> BlockModelRotation.X270_Y0;
+            case SOUTH -> BlockModelRotation.X90_Y0;
+            case WEST -> new ModelState() {
+                @Override
+                public Transformation transformation() {
+                    return new Transformation(new Matrix4f(0, -1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1));
+                }
+            };
+            case EAST -> new ModelState() {
+                @Override
+                public Transformation transformation() {
+                    return new Transformation(new Matrix4f(0, 1, 0, 0, -1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1));
+                }
+            };
+            default -> BlockModelRotation.X0_Y0;
+        };
     }
 
     private static Transformation translateTransformation(Vec3i offset) {
@@ -307,7 +315,7 @@ public class ConduitBlockStateModel implements DynamicBlockStateModel {
 
         @Override
         public MapCodec<? extends CustomUnbakedBlockStateModel> codec() {
-            return null;
+            return CODEC;
         }
 
         @Override
@@ -326,6 +334,7 @@ public class ConduitBlockStateModel implements DynamicBlockStateModel {
             resolver.markDependency(ConduitAdditionalModels.CONDUIT_IO_IN_OUT);
             resolver.markDependency(ConduitAdditionalModels.CONDUIT_IO_OUT);
             resolver.markDependency(ConduitAdditionalModels.CONDUIT_IO_REDSTONE);
+            resolver.markDependency(ConduitAdditionalModels.CONDUIT_CONNECTION_BOX);
         }
     }
 }

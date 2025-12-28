@@ -1,0 +1,9 @@
+{
+  "children": {
+    "machine": "enderio:block/soul_engine_active"
+  },
+  "item_render_order": [
+    "machine"
+  ],
+  "loader": "neoforge:composite"
+}

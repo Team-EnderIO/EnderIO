@@ -20,7 +20,6 @@ import com.enderio.enderio.content.conduits.menu.ConduitMenu;
 import com.enderio.enderio.content.conduits.network.ConduitNetworkSavedData;
 import com.enderio.enderio.content.conduits.network.ConduitNodeImpl;
 import com.enderio.enderio.content.conduits.network.IConduitNodeAttachment;
-import com.enderio.enderio.foundation.EIONBTKeys;
 import com.enderio.enderio.foundation.block.entity.Wrenchable;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOConduitTypes;
@@ -38,9 +37,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -1361,10 +1357,11 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         super.loadAdditional(input);
 
         // Load conduits from input and sort them correctly.
-        conduits = input.listOrEmpty(CONDUITS_KEY, Conduit.CODEC)
+        conduits = new ArrayList<>();
+        conduits.addAll(input.listOrEmpty(CONDUITS_KEY, Conduit.CODEC)
             .stream()
             .sorted(Comparator.comparingInt(ConduitSorter::getSortIndex))
-            .toList();
+            .toList());
 
         // Load connections
         conduitConnections.clear();

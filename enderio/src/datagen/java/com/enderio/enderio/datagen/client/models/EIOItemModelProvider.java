@@ -37,7 +37,6 @@ public class EIOItemModelProvider extends ModelProvider {
         return "Ender IO Item Model Definitions";
     }
 
-    // TODO: 1.21.8: Needed to avoid missing block definitions (for block items too)
     @Override
     protected Stream<? extends Holder<Block>> getKnownBlocks() {
         return Stream.empty();
