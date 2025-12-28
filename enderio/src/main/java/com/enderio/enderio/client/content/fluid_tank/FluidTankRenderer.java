@@ -62,7 +62,7 @@ public class FluidTankRenderer implements SpecialModelRenderer<IFluidHandlerItem
 
                 PoseStack.Pose pose = poseStack.last();
                 IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluid.getFluid());
-                FluidRendererUtil.renderFluid(pose, fluidBuffer, fluid.getFluid(), fluid.getAmount() / (float) capacity,
+                FluidRendererUtil.submitFluid(pose, fluidBuffer, fluid.getFluid(), fluid.getAmount() / (float) capacity,
                     props.getTintColor(), packedLight);
             }
         }

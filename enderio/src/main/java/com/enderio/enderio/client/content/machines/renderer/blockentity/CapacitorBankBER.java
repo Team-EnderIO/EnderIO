@@ -193,25 +193,25 @@ public class CapacitorBankBER implements BlockEntityRenderer<CapacitorBankBlockE
     public static void renderBottomHalf(PoseStack.Pose pose, VertexConsumer consumer, Direction facing, boolean isEnd) {
         TextureAtlasSprite texture = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(isEnd ? END_BAR : FULL_BAR);
         float inset = -0.001F;
-        RenderUtil.renderFace(facing, pose, consumer, texture, 0, 0, inset, 1, 0.5f, 0xFFFFFFFF);
+        RenderUtil.submitFace(facing, pose, consumer, texture, 0, 0, inset, 1, 0.5f, 0xFFFFFFFF);
     }
 
     public static void renderTopHalf(PoseStack.Pose pose, VertexConsumer consumer, Direction facing, boolean isEnd) {
         TextureAtlasSprite texture = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(isEnd ? END_BAR : FULL_BAR);
         float inset = -0.001F;
-        RenderUtil.renderFace(facing, pose, consumer, texture, 0, 0.5f, inset, 1, 0.5f, 0xFFFFFFFF);
+        RenderUtil.submitFace(facing, pose, consumer, texture, 0, 0.5f, inset, 1, 0.5f, 0xFFFFFFFF);
     }
 
     public static void renderEnergy(PoseStack.Pose pose, VertexConsumer consumer, Direction facing, int pixels, boolean isBottomEnd) {
         TextureAtlasSprite texture = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(ENERGY_BAR);
         float inset = -0.002F;
-        RenderUtil.renderFace(facing, pose, consumer, texture, 0, isBottomEnd ? 3/16f : 0, inset, 1, Math.min(pixels, isBottomEnd ? 13 : 16)/16f, 0xFFFFFFFF);
+        RenderUtil.submitFace(facing, pose, consumer, texture, 0, isBottomEnd ? 3/16f : 0, inset, 1, Math.min(pixels, isBottomEnd ? 13 : 16)/16f, 0xFFFFFFFF);
     }
 
     public static void renderTexture(PoseStack.Pose pose, VertexConsumer consumer, Direction facing, Identifier rl, int light) {
         TextureAtlasSprite texture = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(rl);
         float inset = -0.001F;
-        RenderUtil.renderFace(facing, pose, consumer, texture, 0, 0, inset, 1, 1, 0xFFFFFFFF, light);
+        RenderUtil.submitFace(facing, pose, consumer, texture, 0, 0, inset, 1, 1, 0xFFFFFFFF, light);
     }
 
     @Override

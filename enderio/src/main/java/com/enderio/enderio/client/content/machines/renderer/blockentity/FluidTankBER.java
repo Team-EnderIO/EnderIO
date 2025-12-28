@@ -2,40 +2,40 @@ package com.enderio.enderio.client.content.machines.renderer.blockentity;
 
 import com.enderio.core.client.FluidRendererUtil;
 import com.enderio.enderio.content.storage.fluid_tank.FluidTankBlockEntity;
-import com.enderio.enderio.foundation.io.fluid.MachineFluidTank;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.fluids.FluidStack;
+import org.jspecify.annotations.Nullable;
 
-public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
+public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity, FluidTankRenderState> {
     public FluidTankBER(BlockEntityRendererProvider.Context context) {
-
     }
 
+    @Override
+    public FluidTankRenderState createRenderState() {
+        return new FluidTankRenderState();
+    }
 
     @Override
-    public void render(FluidTankBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight,
-        int packedOverlay, Vec3 cameraPos) {
+    public void extractRenderState(FluidTankBlockEntity blockEntity, FluidTankRenderState renderState, float partialTick, Vec3 cameraPosition,
+        ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
+        BlockEntityRenderer.super.extractRenderState(blockEntity, renderState, partialTick, cameraPosition, breakProgress);
 
-        MachineFluidTank tank = blockEntity.getFluidTank();
+        var tank = blockEntity.getFluidTank();
+        renderState.fluidStack = tank.getFluid().copy();
+        renderState.tankCapacity = tank.getCapacity();
+    }
 
-        // Don't waste time if there's no fluid.
-        if (!tank.getFluid().isEmpty()) {
-            FluidStack fluidStack = tank.getFluid();
+    @Override
+    public void submit(FluidTankRenderState fluidTankRenderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector,
+        CameraRenderState cameraRenderState) {
 
-            //TODO entity sheet is now gone, does it work in Fabulous? Use entity translucent cull sheet so fluid renders in Fabulous
-            VertexConsumer buffer = bufferSource.getBuffer(Sheets.translucentItemSheet());
-
-            // Render the fluid
-            PoseStack.Pose last = poseStack.last();
-            float fillRatio = tank.getFluidAmount() / (float) tank.getCapacity();
-
-            FluidRendererUtil.renderFluid(last, buffer, fluidStack, fillRatio, packedLight);
-        }
+        float fillRatio = fluidTankRenderState.fluidStack.getAmount() / (float) fluidTankRenderState.tankCapacity;
+        FluidRendererUtil.submitFluid(poseStack, Sheets.translucentItemSheet(), submitNodeCollector, fluidTankRenderState.fluidStack, fillRatio, fluidTankRenderState.lightCoords);
     }
 }

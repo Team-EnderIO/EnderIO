@@ -7,36 +7,38 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.fluids.FluidStack;
+import org.jspecify.annotations.Nullable;
 
-public class NiardBER implements BlockEntityRenderer<NiardBlockEntity> {
+public class NiardBER implements BlockEntityRenderer<NiardBlockEntity, NiardRenderState> {
     public NiardBER(BlockEntityRendererProvider.Context context) {
 
     }
 
+    @Override
+    public NiardRenderState createRenderState() {
+        return new NiardRenderState();
+    }
 
     @Override
-    public void render(NiardBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay,
-        Vec3 cameraPos) {
+    public void extractRenderState(NiardBlockEntity blockEntity, NiardRenderState renderState, float partialTick, Vec3 cameraPosition,
+        ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
+        BlockEntityRenderer.super.extractRenderState(blockEntity, renderState, partialTick, cameraPosition, breakProgress);
 
+        var tank = blockEntity.getFluidTank();
+        renderState.fluidStack = tank.getFluid().copy();
+        renderState.tankCapacity = tank.getCapacity();
+    }
 
-        MachineFluidTank tank = blockEntity.getFluidTank();
-
-        // Don't waste time if there's no fluid.
-        if (!tank.getFluid().isEmpty()) {
-            FluidStack fluidStack = tank.getFluid();
-
-            // Use entity translucent cull sheet so fluid renders in Fabulous
-            VertexConsumer buffer = bufferSource.getBuffer(Sheets.translucentItemSheet());
-
-            // Render the fluid
-            PoseStack.Pose last = poseStack.last();
-            float fillRatio = tank.getFluidAmount() / (float) tank.getCapacity();
-
-            FluidRendererUtil.renderFluid(last, buffer, fluidStack, fillRatio, packedLight);
-        }
+    @Override
+    public void submit(NiardRenderState niardRenderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState) {
+        float fillRatio = niardRenderState.fluidStack.getAmount() / (float) niardRenderState.tankCapacity;
+        FluidRendererUtil.submitFluid(poseStack, Sheets.translucentItemSheet(), submitNodeCollector, niardRenderState.fluidStack, fillRatio, niardRenderState.lightCoords);
     }
 }
