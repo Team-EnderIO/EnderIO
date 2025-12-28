@@ -14,6 +14,6 @@ public class RedstoneSensorFilter implements RedstoneInputFilter {
 
     @Override
     public int getInputSignal(Level level, BlockPos pos, Direction direction) {
-        return level.getBlockState(pos).getAnalogOutputSignal(level, pos);
+        return level.getBlockState(pos).getAnalogOutputSignal(level, pos, direction);
     }
 }

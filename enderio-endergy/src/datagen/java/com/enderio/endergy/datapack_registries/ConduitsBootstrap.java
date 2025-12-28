@@ -5,7 +5,7 @@ import com.enderio.endergy.common.EndergyConduits;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.content.conduits.type.energy.EnergyConduit;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;

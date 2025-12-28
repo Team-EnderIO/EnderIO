@@ -43,6 +43,7 @@ import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
@@ -130,7 +131,7 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
 
     @Override
     public void clientTick() {
-        if (level.isClientSide && level instanceof ClientLevel clientLevel) {
+        if (level.isClientSide() && level instanceof ClientLevel clientLevel) {
             getActionRange().addClientParticle(clientLevel, getParticleLocation(),
                 MachinesConfig.CLIENT.BLOCKS.NIARD_RANGE_COLOR.get());
         }
@@ -234,7 +235,7 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
     }
 
     public boolean acceptItemDrain(ItemStack item) {
-        IFluidHandlerItem fluidHandlerCap = item.getCapability(Capabilities.FluidHandler.ITEM);
+        var fluidHandlerCap = item.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(item));
         return fluidHandlerCap != null;
     }
 

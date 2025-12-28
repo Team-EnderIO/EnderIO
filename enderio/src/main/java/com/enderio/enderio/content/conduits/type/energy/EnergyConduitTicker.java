@@ -52,7 +52,7 @@ public class EnergyConduitTicker implements ConduitTicker<EnergyConduit> {
                 currentPriority = priority;
             }
 
-            IEnergyStorage insertHandler = insertConnection.getSidedCapability(Capabilities.EnergyStorage.BLOCK);
+            IEnergyStorage insertHandler = insertConnection.getSidedCapability(Capabilities.Energy.BLOCK);
             if (insertHandler != null && insertHandler.canReceive()) {
                 int receivableEnergy = insertHandler.receiveEnergy(Integer.MAX_VALUE, true);
                 if (receivableEnergy > 0) {

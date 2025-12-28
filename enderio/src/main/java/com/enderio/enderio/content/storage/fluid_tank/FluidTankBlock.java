@@ -26,7 +26,7 @@ public class FluidTankBlock extends MachineBlock<FluidTankBlockEntity> {
 
         if (!stack.isEmpty()) {
             if (level.getBlockEntity(pos) instanceof FluidTankBlockEntity tank) {
-                if (level.isClientSide) {
+                if (level.isClientSide()) {
                     return InteractionResult.SUCCESS;
                 }
 

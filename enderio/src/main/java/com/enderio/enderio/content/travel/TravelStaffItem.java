@@ -21,6 +21,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.energy.ComponentEnergyStorage;
 import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 
 import java.util.List;
 
@@ -121,9 +122,9 @@ public class TravelStaffItem extends Item implements AdvancedTooltipProvider, IC
 
     @Override
     public int getBarWidth(ItemStack stack) {
-        var energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
+        var energyStorage = stack.getCapability(Capabilities.Energy.ITEM, ItemAccess.forStack(stack));
         if (energyStorage != null) {
-            return Math.round(energyStorage.getEnergyStored() * 13.0F / energyStorage.getMaxEnergyStored());
+            return Math.round(energyStorage.getAmountAsInt() * 13.0F / energyStorage.getCapacityAsInt());
         }
 
         return 0;

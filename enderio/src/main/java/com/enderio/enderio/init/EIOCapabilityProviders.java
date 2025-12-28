@@ -40,18 +40,18 @@ public class EIOCapabilityProviders {
         registerConduitCapabilities(event);
 
         // Register item energy handlers
-        event.registerItem(Capabilities.EnergyStorage.ITEM, PoweredToggledItem.ENERGY_STORAGE_PROVIDER,
+        event.registerItem(Capabilities.Energy.ITEM, PoweredToggledItem.ENERGY_STORAGE_PROVIDER,
             EIOItems.LEVITATION_STAFF, EIOItems.ELECTROMAGNET);
-        event.registerItem(Capabilities.EnergyStorage.ITEM, TravelStaffItem.ENERGY_STORAGE_PROVIDER, EIOItems.TRAVEL_STAFF);
+        event.registerItem(Capabilities.Energy.ITEM, TravelStaffItem.ENERGY_STORAGE_PROVIDER, EIOItems.TRAVEL_STAFF);
         // Capacitor Banks
         for (var capacitorBankItem : EIOBlocks.CAPACITOR_BANK_ITEMS.values()) {
-            event.registerItem(Capabilities.EnergyStorage.ITEM, CapacitorBankItem.ENERGY_STORAGE_PROVIDER, capacitorBankItem);
+            event.registerItem(Capabilities.Energy.ITEM, CapacitorBankItem.ENERGY_STORAGE_PROVIDER, capacitorBankItem);
         }
 
         // Register item fluid handlers
-        event.registerItem(Capabilities.FluidHandler.ITEM, LevitationStaffItem.FLUID_HANDLER_PROVIDER, EIOItems.LEVITATION_STAFF);
-        event.registerItem(Capabilities.FluidHandler.ITEM, ColdFireIgniter.FLUID_HANDLER_PROVIDER, EIOItems.COLD_FIRE_IGNITER);
-        event.registerItem(Capabilities.FluidHandler.ITEM, FluidTankBlockItem.FLUID_HANDLER_PROVIDER,
+        event.registerItem(Capabilities.Fluid.ITEM, LevitationStaffItem.FLUID_HANDLER_PROVIDER, EIOItems.LEVITATION_STAFF);
+        event.registerItem(Capabilities.Fluid.ITEM, ColdFireIgniter.FLUID_HANDLER_PROVIDER, EIOItems.COLD_FIRE_IGNITER);
+        event.registerItem(Capabilities.Fluid.ITEM, FluidTankBlockItem.FLUID_HANDLER_PROVIDER,
             EIOBlocks.FLUID_TANK_ITEM, EIOBlocks.PRESSURIZED_FLUID_TANK_ITEM);
 
         // region Filters

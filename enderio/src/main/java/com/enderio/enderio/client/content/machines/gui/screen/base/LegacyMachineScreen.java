@@ -40,8 +40,8 @@ public abstract class LegacyMachineScreen<T extends LegacyMachineMenu<?>> extend
     }
 
     @Override
-    public void renderSlot(GuiGraphics guiGraphics, Slot slot) {
-        super.renderSlot(guiGraphics, slot);
+    protected void renderSlot(GuiGraphics guiGraphics, Slot slot, int mouseX, int mouseY) {
+        super.renderSlot(guiGraphics, slot, mouseX, mouseY);
 
         if (slot instanceof GhostMachineSlot || slot instanceof PreviewMachineSlot) {
             if (slot.hasItem()) {

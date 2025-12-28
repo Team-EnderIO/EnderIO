@@ -116,7 +116,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
     public boolean acceptItemFill(ItemStack item) {
         // bucket types
-        IFluidHandlerItem fluidHandlerCap = item.getCapability(Capabilities.FluidHandler.ITEM);
+        IFluidHandlerItem fluidHandlerCap = item.getCapability(Capabilities.Fluid.ITEM);
         if (fluidHandlerCap != null) {
             return true;
         }
@@ -136,7 +136,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
     public boolean acceptItemDrain(ItemStack item) {
         // bucket types
-        IFluidHandlerItem fluidHandlerCap = item.getCapability(Capabilities.FluidHandler.ITEM);
+        IFluidHandlerItem fluidHandlerCap = item.getCapability(Capabilities.Fluid.ITEM);
         if (fluidHandlerCap != null) {
             return true;
         }

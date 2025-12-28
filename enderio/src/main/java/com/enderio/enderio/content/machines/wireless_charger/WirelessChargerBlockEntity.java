@@ -20,10 +20,8 @@ import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -38,12 +36,11 @@ import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.energy.IEnergyStorage;
-import org.checkerframework.checker.units.qual.A;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class WirelessChargerBlockEntity extends PoweredMachineBlockEntity implements RangedActor {
 
@@ -88,7 +85,7 @@ public class WirelessChargerBlockEntity extends PoweredMachineBlockEntity implem
             for (int i = 0; i < inventory.getContainerSize(); i++) {
                 ItemStack stack = inventory.getItem(i);
                 @Nullable
-                IEnergyStorage cap = stack.getCapability(Capabilities.EnergyStorage.ITEM);
+                IEnergyStorage cap = stack.getCapability(Capabilities.Energy.ITEM, ItemAccess.forStack(stack));
                 if (cap != null && cap.canReceive()) {
                     int received = cap.receiveEnergy(toDistribute, false);
                     energyStorage.consumeEnergy(received);

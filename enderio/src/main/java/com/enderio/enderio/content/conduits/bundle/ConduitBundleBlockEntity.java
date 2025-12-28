@@ -63,6 +63,7 @@ import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.fml.LogicalSide;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
@@ -308,7 +309,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
             if (isEmpty()) {
                 level.setBlock(getBlockPos(), getBlockState().getFluidState().createLegacyBlock(),
-                        level.isClientSide ? Block.UPDATE_ALL_IMMEDIATE : Block.UPDATE_ALL);
+                        level.isClientSide() ? Block.UPDATE_ALL_IMMEDIATE : Block.UPDATE_ALL);
             }
 
             return InteractionResult.SUCCESS;
@@ -612,7 +613,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
 
         if (!hasConduitStrict(conduit)) {
-            if (!FMLLoader.isProduction()) {
+            if (!FMLEnvironment.isProduction()) {
                 throw new IllegalArgumentException(
                         "Conduit: " + conduit.getRegisteredName() + " is not present in conduit bundle "
                                 + Arrays.toString(conduits.stream().map(Holder::getRegisteredName).toArray()));
@@ -910,7 +911,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     }
 
     public void onConnectionsUpdated(Holder<Conduit<?, ?>> conduit) {
-        if (level != null && !level.isClientSide) {
+        if (level != null && !level.isClientSide()) {
             var node = getConduitNode(conduit);
 
             Set<Direction> connectedSides = Arrays.stream(Direction.values())

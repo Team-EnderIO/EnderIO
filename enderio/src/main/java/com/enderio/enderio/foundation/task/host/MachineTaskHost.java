@@ -82,7 +82,7 @@ public abstract class MachineTaskHost implements ValueIOSerializable {
         }
 
         // Client has no knowledge of task, so we use a synced field.
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             return clientTaskProgress;
         }
 

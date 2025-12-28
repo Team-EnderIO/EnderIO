@@ -135,7 +135,7 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
 
         if (recipeHolder == null) {
             // TODO: Temp.
-            recipeHolder = loadRecipe(recipeId.location());
+            recipeHolder = loadRecipe(recipeId.identifier());
 
             // If we can't find the recipe, abort.
             if (recipeHolder == null) {

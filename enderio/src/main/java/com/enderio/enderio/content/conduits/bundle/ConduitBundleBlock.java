@@ -61,6 +61,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import org.jetbrains.annotations.Nullable;
@@ -88,7 +89,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
         // EIOBlockEntity::tick);
         return (level1, pos, state1, blockEntity) -> {
             if (blockEntity instanceof ConduitBundleBlockEntity conduitBundleBlockEntity) {
-                if (level.isClientSide) {
+                if (level.isClientSide()) {
                     conduitBundleBlockEntity.clientTick();
                 } else {
                     conduitBundleBlockEntity.serverTick();
@@ -269,7 +270,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
     }
 
     @Override
-    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
+    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, ItemStack toolItem, boolean willHarvest, FluidState fluid) {
         if (!(level.getBlockEntity(pos) instanceof ConduitBundleBlockEntity conduitBundle)) {
             // TODO: Should we allow it to break?
             return false;
@@ -296,7 +297,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
 
             // Ask the server to remove the bundle
             ClientPacketDistributor.sendToServer(new ServerboundDestroyEntireConduitBundlePacket(pos));
-            return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
+            return super.onDestroyedByPlayer(state, level, pos, player, toolItem, willHarvest, fluid);
         }
 
         // Remove facade, if visible
@@ -390,7 +391,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
                 stack.shrink(1);
             }
         } else {
-            if (!FMLLoader.isProduction()) {
+            if (!FMLEnvironment.isProduction()) {
                 throw new IllegalStateException(
                         "ConduitBundleAccessor#canAddConduit returned true, but addConduit returned BLOCKED");
             }

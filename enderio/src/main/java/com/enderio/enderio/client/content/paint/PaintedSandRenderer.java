@@ -20,7 +20,7 @@ public class PaintedSandRenderer extends FallingBlockRenderer {
         if (entity instanceof PaintedSandEntity paintedSandEntity) {
             Block paintBlock = paintedSandEntity.getPaint();
             if (paintBlock != null) {
-                renderState.blockState = paintBlock.defaultBlockState();
+                renderState.movingBlockRenderState.blockState = paintBlock.defaultBlockState();
             }
         }
     }

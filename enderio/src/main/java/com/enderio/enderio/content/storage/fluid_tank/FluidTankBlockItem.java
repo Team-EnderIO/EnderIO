@@ -43,7 +43,7 @@ public class FluidTankBlockItem extends BlockItem implements AdvancedTooltipProv
 
     @Override
     public void addCommonTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
-        var fluidHandler = itemStack.getCapability(Capabilities.FluidHandler.ITEM);
+        var fluidHandler = itemStack.getCapability(Capabilities.Fluid.ITEM);
         if (fluidHandler != null) {
             if (fluidHandler instanceof FluidHandlerItemStack itemFluidHandler) {
                 if (itemFluidHandler.getFluid().isEmpty()) {

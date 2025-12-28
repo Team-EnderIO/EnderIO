@@ -86,7 +86,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     public void setMode(AlloySmelterMode mode) {
         this.mode = mode;
 
-        if (level != null && !level.isClientSide) {
+        if (level != null && !level.isClientSide()) {
             craftingTaskHost.newTaskAvailable();
         }
     }

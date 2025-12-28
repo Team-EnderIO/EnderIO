@@ -3,53 +3,38 @@ package com.enderio.enderio.client.foundation.widgets.ioconfig;
 import com.enderio.core.client.gui.screen.BaseOverlay;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.io.IOConfigurable;
-import com.enderio.enderio.client.foundation.model.ModelRenderUtil;
-import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.foundation.block.entity.legacy.LegacyMachineBlockEntity;
-import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.foundation.network.packets.ServerboundCycleIOConfigPacket;
-import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Axis;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
-import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.ARGB;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.EmptyBlockGetter;
-import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.client.RenderTypeHelper;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.model.data.ModelData;
-import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
@@ -59,7 +44,6 @@ import org.joml.Vector4f;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -211,16 +195,16 @@ public class IOConfigOverlay extends BaseOverlay {
     }
 
     @Override
-    public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (this.active && this.visible) {
-            if (pButton == 0) {
-                if (neighBtnRect.contains((int) pMouseX, (int) pMouseY)) {
+            if (event.button() == 0) {
+                if (neighBtnRect.contains((int) event.x(), (int) event.y())) {
                     toggleNeighbourVisibility();
                     this.playDownSound(MINECRAFT.getSoundManager());
                     return true;
                 }
             }
-            if (pButton == 1) {
+            if (event.button() == 1) {
                 if (selection.isPresent()) {
                     var selectedFace = selection.get();
                     BlockEntity entity = MINECRAFT.level.getBlockEntity(selectedFace.blockPos);
@@ -241,11 +225,11 @@ public class IOConfigOverlay extends BaseOverlay {
     }
 
     @Override
-    public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
-        if (visible && isValidClickButton(pButton) && isMouseOver(pMouseX, pMouseY)
-                && !neighBtnRect.contains((int) pMouseX, (int) pMouseY)) {
-            double dx = pDragX / (double) MINECRAFT.getWindow().getGuiScaledWidth();
-            double dy = pDragY / (double) MINECRAFT.getWindow().getGuiScaledHeight();
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
+        if (visible && isValidClickButton(event.buttonInfo()) && isMouseOver(event.x(), event.y())
+                && !neighBtnRect.contains((int) event.x(), (int) event.y())) {
+            double dx = dragX / (double) MINECRAFT.getWindow().getGuiScaledWidth();
+            double dy = dragY / (double) MINECRAFT.getWindow().getGuiScaledHeight();
             yaw += 4 * (float) dx * 180;
             pitch += 2 * (float) dy * 180;
 
@@ -415,7 +399,7 @@ public class IOConfigOverlay extends BaseOverlay {
         // TODO: 1.21.4: Was this needed?
 //        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
 
-        TextureAtlasSprite tex = MINECRAFT.getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(SELECTED_ICON);
+        TextureAtlasSprite tex = MINECRAFT.getAtlasManager().getAtlasOrThrow(TextureAtlas.LOCATION_BLOCKS).getSprite(SELECTED_ICON);
 //        RenderSystem.setShaderTexture(0, tex.atlasLocation());
 //        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 

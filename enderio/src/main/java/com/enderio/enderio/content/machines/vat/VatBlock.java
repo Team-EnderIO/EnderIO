@@ -22,7 +22,7 @@ public final class VatBlock extends ProgressMachineBlock<VatBlockEntity> {
 
         if (!stack.isEmpty()) {
             if (level.getBlockEntity(pos) instanceof VatBlockEntity vat) {
-                if (level.isClientSide) {
+                if (level.isClientSide()) {
                     return InteractionResult.SUCCESS;
                 }
 

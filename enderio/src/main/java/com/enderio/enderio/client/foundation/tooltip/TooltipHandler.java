@@ -36,7 +36,7 @@ public class TooltipHandler {
     @SubscribeEvent
     public static void addAdvancedTooltips(ItemTooltipEvent evt) {
         ItemStack forItem = evt.getItemStack();
-        boolean advanced = Screen.hasShiftDown();
+        boolean advanced = evt.getFlags().hasShiftDown();
 
         // Misc tooltips.
         addCapacitorTooltips(forItem, evt.getToolTip(), advanced);

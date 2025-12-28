@@ -191,13 +191,13 @@ public abstract class LegacyPoweredMachineBlockEntity extends LegacyMachineBlock
                 continue;
             }
 
-            var selfHandler = getSelfCapability(Capabilities.EnergyStorage.BLOCK, side);
+            var selfHandler = getSelfCapability(Capabilities.Energy.BLOCK, side);
             if (selfHandler == null) {
                 continue;
             }
 
             // Get the other energy handler
-            IEnergyStorage otherHandler = getNeighbouringCapability(Capabilities.EnergyStorage.BLOCK, side);
+            IEnergyStorage otherHandler = getNeighbouringCapability(Capabilities.Energy.BLOCK, side);
             if (otherHandler != null) {
                 // If the other handler can receive power transmit ours
                 if (otherHandler.canReceive()) {
@@ -280,7 +280,7 @@ public abstract class LegacyPoweredMachineBlockEntity extends LegacyMachineBlock
      * Whether the machine has a capacitor installed.
      */
     public boolean isCapacitorInstalled() {
-        if (level != null && level.isClientSide) {
+        if (level != null && level.isClientSide()) {
             return !getCapacitorItem().isEmpty();
         }
 

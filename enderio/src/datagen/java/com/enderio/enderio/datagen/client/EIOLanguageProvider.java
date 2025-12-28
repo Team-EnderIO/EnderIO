@@ -26,7 +26,7 @@ import com.enderio.enderio.init.EIOConduits;
 import com.enderio.enderio.init.EIOEntities;
 import com.enderio.enderio.init.EIOFluids;
 import com.enderio.enderio.init.EIOItems;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.data.PackOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;

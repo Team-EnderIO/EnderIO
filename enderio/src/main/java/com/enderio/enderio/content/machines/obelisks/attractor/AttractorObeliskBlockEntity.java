@@ -181,7 +181,7 @@ public class AttractorObeliskBlockEntity extends ObeliskBlockEntity<AttractorObe
     public void setRemoved() {
         super.setRemoved();
 
-        if (level != null && !level.isClientSide) {
+        if (level != null && !level.isClientSide()) {
             if (fakePlayer != null) {
                 fakePlayer.discard();
                 fakePlayer = null;

@@ -76,7 +76,7 @@ public abstract class VacuumMachineBlockEntity<T extends Entity> extends Machine
             this.attractEntities(this.getLevel(), this.getBlockPos(), this.getRange());
         }
 
-        if (level.isClientSide && level instanceof ClientLevel clientLevel) {
+        if (level.isClientSide() && level instanceof ClientLevel clientLevel) {
             getActionRange().addClientParticle(clientLevel, getBlockPos(), getColor());
         }
 

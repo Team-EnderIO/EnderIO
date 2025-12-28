@@ -3,9 +3,11 @@ package com.enderio.enderio.compat.vanilla;
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.api.soul.storage.SoulHandler;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.component.TypedEntityData;
 
 public class SpawnEggSoulHandler implements SoulHandler {
     private final ItemStack spawnEgg;
@@ -30,12 +32,12 @@ public class SpawnEggSoulHandler implements SoulHandler {
         }
 
         // Get custom entity data
-        var customEntityData = spawnEgg.getOrDefault(DataComponents.ENTITY_DATA, CustomData.EMPTY);
-        if (!customEntityData.isEmpty()) {
-            return new Soul(customEntityData.copyTag());
+        TypedEntityData<EntityType<?>> customEntityData = spawnEgg.get(DataComponents.ENTITY_DATA);
+        if (customEntityData != null) {
+            return new Soul(customEntityData.type(), customEntityData.copyTagWithoutId());
         }
 
-        return Soul.of(spawnEggItem.defaultType);
+        return Soul.EMPTY;
     }
 
     @Override

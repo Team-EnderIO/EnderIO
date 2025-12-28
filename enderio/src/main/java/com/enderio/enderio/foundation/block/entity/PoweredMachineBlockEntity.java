@@ -149,7 +149,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
 
     private void distributeEnergy(Direction side) {
         // Get the other energy handler
-        IEnergyStorage otherHandler = getNeighbouringCapability(Capabilities.EnergyStorage.BLOCK, side);
+        IEnergyStorage otherHandler = getNeighbouringCapability(Capabilities.Energy.BLOCK, side);
         if (otherHandler == null) {
             return;
         }

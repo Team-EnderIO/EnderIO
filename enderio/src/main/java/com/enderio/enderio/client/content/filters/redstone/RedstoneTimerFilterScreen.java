@@ -6,6 +6,7 @@ import com.enderio.enderio.content.filters.FiltersLang;
 import com.enderio.enderio.content.filters.redstone.RedstoneTimerFilterMenu;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
@@ -25,9 +26,10 @@ public class RedstoneTimerFilterScreen extends EIOScreen<RedstoneTimerFilterMenu
         super.init();
         EditBox pWidget = new EditBox(this.font, this.leftPos + 60, this.topPos + 20, 60, 20,
                 Component.literal("" + getMenu().getFilter().getMaxTicks())) {
+
             @Override
-            public boolean charTyped(char pCodePoint, int pModifiers) {
-                return Character.isDigit(pCodePoint) && super.charTyped(pCodePoint, pModifiers);
+            public boolean charTyped(CharacterEvent event) {
+                return Character.isDigit(event.codepoint()) && super.charTyped(event);
             }
         };
         pWidget.setValue("" + getMenu().getFilter().getMaxTicks());

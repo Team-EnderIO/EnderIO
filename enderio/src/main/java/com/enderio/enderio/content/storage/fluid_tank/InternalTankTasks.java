@@ -47,7 +47,7 @@ public class InternalTankTasks {
                     }
                 }
             } else {
-                IFluidHandlerItem fluidHandlerItem = inputItem.getCapability(Capabilities.FluidHandler.ITEM);
+                IFluidHandlerItem fluidHandlerItem = inputItem.getCapability(Capabilities.Fluid.ITEM);
                 if (fluidHandlerItem != null && outputItem.isEmpty()) {
                     int filled = FluidUtil.tryFluidTransfer(
                         blockEntity.getFluidHandler(),
@@ -94,7 +94,7 @@ public class InternalTankTasks {
                     }
                 }
             } else {
-                IFluidHandlerItem fluidHandlerItem = inputItem.getCapability(Capabilities.FluidHandler.ITEM);
+                IFluidHandlerItem fluidHandlerItem = inputItem.getCapability(Capabilities.Fluid.ITEM);
                 if (fluidHandlerItem != null && outputItem.isEmpty()) {
                     int filled = FluidUtil.tryFluidTransfer(
                         fluidHandlerItem,

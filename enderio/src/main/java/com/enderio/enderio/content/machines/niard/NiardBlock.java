@@ -23,7 +23,7 @@ public final class NiardBlock extends ProgressMachineBlock<NiardBlockEntity> {
 
         if (!stack.isEmpty()) {
             if (level.getBlockEntity(pos) instanceof NiardBlockEntity tank) {
-                if (level.isClientSide) {
+                if (level.isClientSide()) {
                     return InteractionResult.SUCCESS;
                 }
 

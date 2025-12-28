@@ -2,7 +2,7 @@ package com.enderio.enderio.content.filters;
 
 import com.enderio.enderio.EnderIO;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 

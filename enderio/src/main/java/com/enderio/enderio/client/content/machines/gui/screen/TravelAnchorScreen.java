@@ -8,6 +8,7 @@ import com.enderio.enderio.content.travel.travel_anchor.TravelAnchorMenu;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -59,13 +60,13 @@ public class TravelAnchorScreen extends MachineScreen<TravelAnchorMenu> {
     }
 
     @Override
-    public boolean onKeyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean onKeyPressed(KeyEvent event) {
         if (nameInput.isFocused()) {
-            if (nameInput.keyPressed(keyCode, scanCode, modifiers) || nameInput.canConsumeInput()) {
+            if (nameInput.keyPressed(event) || nameInput.canConsumeInput()) {
                 return true;
             }
         }
 
-        return super.onKeyPressed(keyCode, scanCode, modifiers);
+        return super.onKeyPressed(event);
     }
 }

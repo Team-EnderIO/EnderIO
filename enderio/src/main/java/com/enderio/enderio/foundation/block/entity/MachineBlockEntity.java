@@ -363,8 +363,8 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
     }
 
     private void distributeItems(Direction side) {
-        IItemHandler selfHandler = getSelfCapability(Capabilities.ItemHandler.BLOCK, side);
-        IItemHandler otherHandler = getNeighbouringCapability(Capabilities.ItemHandler.BLOCK, side);
+        IItemHandler selfHandler = getSelfCapability(Capabilities.Item.BLOCK, side);
+        IItemHandler otherHandler = getNeighbouringCapability(Capabilities.Item.BLOCK, side);
         if (selfHandler == null || otherHandler == null) {
             return;
         }
@@ -373,8 +373,8 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
     }
 
     private void distributeFluids(Direction side) {
-        IFluidHandler selfHandler = getSelfCapability(Capabilities.FluidHandler.BLOCK, side);
-        IFluidHandler otherHandler = getNeighbouringCapability(Capabilities.FluidHandler.BLOCK, side);
+        IFluidHandler selfHandler = getSelfCapability(Capabilities.Fluid.BLOCK, side);
+        IFluidHandler otherHandler = getNeighbouringCapability(Capabilities.Fluid.BLOCK, side);
         if (selfHandler == null || otherHandler == null) {
             return;
         }
@@ -584,7 +584,7 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
         input.read(MachineNBTKeys.IO_CONFIG, IOConfig.CODEC)
             .ifPresent(ioConfig -> {
                 this.ioConfig = ioConfig;
-                if (level != null && level.isClientSide) {
+                if (level != null && level.isClientSide()) {
                     clientIOConfigChanged();
                 }
             });

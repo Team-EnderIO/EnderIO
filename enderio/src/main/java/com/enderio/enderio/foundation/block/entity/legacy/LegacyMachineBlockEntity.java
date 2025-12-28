@@ -419,8 +419,8 @@ public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
      * Move items to and from via the given side.
      */
     private void moveItems(Direction side) {
-        IItemHandler selfHandler = getSelfCapability(Capabilities.ItemHandler.BLOCK, side);
-        IItemHandler otherHandler = getNeighbouringCapability(Capabilities.ItemHandler.BLOCK, side);
+        IItemHandler selfHandler = getSelfCapability(Capabilities.Item.BLOCK, side);
+        IItemHandler otherHandler = getNeighbouringCapability(Capabilities.Item.BLOCK, side);
         if (selfHandler == null || otherHandler == null) {
             return;
         }
@@ -432,8 +432,8 @@ public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
      * Move fluids to and from via the given side.
      */
     private void moveFluids(Direction side) {
-        IFluidHandler selfHandler = getSelfCapability(Capabilities.FluidHandler.BLOCK, side);
-        IFluidHandler otherHandler = getNeighbouringCapability(Capabilities.FluidHandler.BLOCK, side);
+        IFluidHandler selfHandler = getSelfCapability(Capabilities.Fluid.BLOCK, side);
+        IFluidHandler otherHandler = getNeighbouringCapability(Capabilities.Fluid.BLOCK, side);
         if (selfHandler == null || otherHandler == null) {
             return;
         }
@@ -587,7 +587,7 @@ public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
     }
 
     public void updateMachineState(MachineState state, boolean add) {
-        if (level != null && level.isClientSide) {
+        if (level != null && level.isClientSide()) {
             return;
         }
         if (add) {

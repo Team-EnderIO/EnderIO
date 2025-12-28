@@ -101,7 +101,7 @@ public record ItemConduit(Identifier texture, Component description, int transfe
 
     @Override
     public boolean canConnectToBlock(Level level, BlockPos conduitPos, Direction direction) {
-        IItemHandler capability = level.getCapability(Capabilities.ItemHandler.BLOCK, conduitPos.relative(direction),
+        IItemHandler capability = level.getCapability(Capabilities.Item.BLOCK, conduitPos.relative(direction),
                 direction.getOpposite());
         return capability != null;
     }

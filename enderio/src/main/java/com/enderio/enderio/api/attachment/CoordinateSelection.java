@@ -46,6 +46,6 @@ public record CoordinateSelection(ResourceKey<Level> level, BlockPos pos) {
      * Get the name of the level this points to.
      */
     public String getLevelName() {
-        return getLevelName(level.location());
+        return getLevelName(level.identifier());
     }
 }

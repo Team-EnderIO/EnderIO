@@ -48,7 +48,7 @@ import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.legacy.LegacyMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.legacy.LegacyPoweredMachineBlockEntity;
 import com.google.common.collect.ImmutableMap;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -243,24 +243,24 @@ public class EIOBlockEntities {
 
     private static void machineBlockEntityCapabilities(BlockEntityTypeDeferredRegister.Builder<? extends MachineBlockEntity> builder) {
         builder.capability(EnderIOCapabilities.SIDE_CONFIG, MachineBlockEntity.SIDE_CONFIG_PROVIDER);
-        builder.capability(Capabilities.ItemHandler.BLOCK, MachineBlockEntity.ITEM_HANDLER_PROVIDER);
+        builder.capability(Capabilities.Item.BLOCK, MachineBlockEntity.ITEM_HANDLER_PROVIDER);
     }
 
     private static void poweredMachineBlockEntityCapabilities(
         BlockEntityTypeDeferredRegister.Builder<? extends PoweredMachineBlockEntity> builder) {
         machineBlockEntityCapabilities(builder);
-        builder.capability(Capabilities.EnergyStorage.BLOCK, PoweredMachineBlockEntity.ENERGY_STORAGE_PROVIDER);
+        builder.capability(Capabilities.Energy.BLOCK, PoweredMachineBlockEntity.ENERGY_STORAGE_PROVIDER);
     }
 
     private static void legacyPoweredMachineBlockEntityCapabilities(BlockEntityTypeDeferredRegister.Builder<? extends LegacyPoweredMachineBlockEntity> builder) {
         legacyMachineBlockEntityCapabilities(builder);
-        builder.capability(Capabilities.EnergyStorage.BLOCK,
+        builder.capability(Capabilities.Energy.BLOCK,
             LegacyPoweredMachineBlockEntity.ENERGY_STORAGE_PROVIDER);
     }
 
     private static void legacyMachineBlockEntityCapabilities(BlockEntityTypeDeferredRegister.Builder<? extends LegacyMachineBlockEntity> builder) {
         builder.capability(EnderIOCapabilities.SIDE_CONFIG, LegacyMachineBlockEntity.SIDE_CONFIG_PROVIDER);
-        builder.capability(Capabilities.ItemHandler.BLOCK, LegacyMachineBlockEntity.ITEM_HANDLER_PROVIDER);
+        builder.capability(Capabilities.Item.BLOCK, LegacyMachineBlockEntity.ITEM_HANDLER_PROVIDER);
     }
 
     private static void soulBoundCapability(BlockEntityTypeDeferredRegister.Builder<? extends MachineBlockEntity> blockEntity) {
@@ -328,6 +328,6 @@ public class EIOBlockEntities {
     }
 
     private static void fluidHandlerCapability(BlockEntityTypeDeferredRegister.Builder<? extends MachineBlockEntity> blockEntity) {
-        blockEntity.capability(Capabilities.FluidHandler.BLOCK, FluidTankUser.FLUID_HANDLER_PROVIDER);
+        blockEntity.capability(Capabilities.Fluid.BLOCK, FluidTankUser.FLUID_HANDLER_PROVIDER);
     }
 }

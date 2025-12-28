@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -68,14 +69,14 @@ public class CoordinateMenuScreen extends EnderContainerScreen<CoordinateMenu> {
     }
 
     @Override
-    public boolean onKeyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean onKeyPressed(KeyEvent event) {
         if (nameInput.isFocused()) {
-            if (nameInput.keyPressed(keyCode, scanCode, modifiers) || nameInput.canConsumeInput()) {
+            if (nameInput.keyPressed(event) || nameInput.canConsumeInput()) {
                 return true;
             }
         }
 
-        return super.onKeyPressed(keyCode, scanCode, modifiers);
+        return super.onKeyPressed(event);
     }
 
     private void onNameChanged(String name) {

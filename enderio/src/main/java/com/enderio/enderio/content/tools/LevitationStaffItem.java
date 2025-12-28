@@ -44,7 +44,7 @@ public class LevitationStaffItem extends PoweredToggledItem {
             return false;
         }
 
-        var fluidHandler = pStack.getCapability(Capabilities.FluidHandler.ITEM);
+        var fluidHandler = pStack.getCapability(Capabilities.Fluid.ITEM);
         if (fluidHandler != null) {
             // TODO: Config for consumption amount
             return !fluidHandler.drain(1, IFluidHandler.FluidAction.SIMULATE).isEmpty();
@@ -57,7 +57,7 @@ public class LevitationStaffItem extends PoweredToggledItem {
     protected void consumeCharge(ItemStack pStack) {
         super.consumeCharge(pStack);
 
-        var fluidHandler = pStack.getCapability(Capabilities.FluidHandler.ITEM);
+        var fluidHandler = pStack.getCapability(Capabilities.Fluid.ITEM);
         if (fluidHandler != null) {
             // TODO: Config for consumption amount
             fluidHandler.drain(1, IFluidHandler.FluidAction.EXECUTE);
@@ -68,7 +68,7 @@ public class LevitationStaffItem extends PoweredToggledItem {
     protected void setFullCharge(ItemStack pStack) {
         super.setFullCharge(pStack);
 
-        var fluidHandler = pStack.getCapability(Capabilities.FluidHandler.ITEM);
+        var fluidHandler = pStack.getCapability(Capabilities.Fluid.ITEM);
         if (fluidHandler != null) {
             if (fluidHandler instanceof StrictFluidHandlerItemStack strictFluidHandlerItemStack) {
                 strictFluidHandlerItemStack.setFluid(

@@ -70,7 +70,7 @@ public class DarkSteelSwordItem extends Item implements AdvancedTooltipProvider,
         }
         if (pTarget instanceof Player player) {
             ItemStack stack = new ItemStack(Items.PLAYER_HEAD);
-            stack.set(DataComponents.PROFILE, new ResolvableProfile(player.getGameProfile()));
+            stack.set(DataComponents.PROFILE, ResolvableProfile.createResolved(player.getGameProfile()));
             return Optional.of(stack);
         }
         return Optional.empty();

@@ -36,6 +36,6 @@ public class EnderSkullBlock extends SkullBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return level.isClientSide ? createTickerHelper(blockEntityType, EIOBlockEntities.ENDER_SKULL.get(), EnderSkullBlockEntity::animation) : null;
+        return level.isClientSide() ? createTickerHelper(blockEntityType, EIOBlockEntities.ENDER_SKULL.get(), EnderSkullBlockEntity::animation) : null;
     }
 }

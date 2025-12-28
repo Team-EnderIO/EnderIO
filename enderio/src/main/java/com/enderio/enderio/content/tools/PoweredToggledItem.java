@@ -127,7 +127,7 @@ public abstract class PoweredToggledItem extends Item implements AdvancedTooltip
 
     @Override
     public int getBarWidth(ItemStack pStack) {
-        var energyStorage = pStack.getCapability(Capabilities.EnergyStorage.ITEM);
+        var energyStorage = pStack.getCapability(Capabilities.Energy.ITEM);
         if (energyStorage != null) {
             return Math.round(energyStorage.getEnergyStored() * 13.0F / energyStorage.getMaxEnergyStored());
         }

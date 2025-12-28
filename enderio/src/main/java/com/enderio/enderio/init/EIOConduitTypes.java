@@ -29,7 +29,7 @@ public class EIOConduitTypes {
             .create(EnderIORegistries.CONDUIT_TYPE, EnderIO.MOD_ID);
 
     public static final Supplier<ConduitType<EnergyConduit>> ENERGY = CONDUIT_TYPES.register("energy",
-            () -> ConduitType.builder(EnergyConduit.CODEC).exposeCapability(Capabilities.EnergyStorage.BLOCK).build());
+            () -> ConduitType.builder(EnergyConduit.CODEC).exposeCapability(Capabilities.Energy.BLOCK).build());
 
     public static final Supplier<ConduitType<RedstoneConduit>> REDSTONE = CONDUIT_TYPES.register("redstone",
             () -> ConduitType.of(RedstoneConduit.CODEC));

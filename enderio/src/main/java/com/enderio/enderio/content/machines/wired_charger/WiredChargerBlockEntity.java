@@ -69,7 +69,7 @@ public class WiredChargerBlockEntity extends PoweredMachineBlockEntity {
     }
 
     public boolean acceptItem(ItemStack item) {
-        return item.getCapability(Capabilities.EnergyStorage.ITEM) != null;
+        return item.getCapability(Capabilities.Energy.ITEM) != null;
     }
 
     @Override
@@ -81,7 +81,7 @@ public class WiredChargerBlockEntity extends PoweredMachineBlockEntity {
 
     public void chargeItem() {
         ItemStack chargeable = ITEM_TO_CHARGE.getItemStack(this);
-        IEnergyStorage itemEnergyHandler = chargeable.getCapability(Capabilities.EnergyStorage.ITEM);
+        IEnergyStorage itemEnergyHandler = chargeable.getCapability(Capabilities.Energy.ITEM);
 
         if (itemEnergyHandler != null) {
             if (itemEnergyHandler.getEnergyStored() == itemEnergyHandler.getMaxEnergyStored()) {

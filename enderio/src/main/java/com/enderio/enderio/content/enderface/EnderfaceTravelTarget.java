@@ -55,7 +55,7 @@ public record EnderfaceTravelTarget(BlockPos pos) implements TravelTarget {
 
     @Override
     public boolean interact(Level level, Player player) {
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             // TODO: Causes classload errors on dedicated servers.
 //            Minecraft.getInstance().setScreen(new EnderfaceScreen(pos.immutable(), Minecraft.getInstance().level));
         }

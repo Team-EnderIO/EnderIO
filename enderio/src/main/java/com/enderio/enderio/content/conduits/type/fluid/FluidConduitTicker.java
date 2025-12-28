@@ -32,7 +32,7 @@ public class FluidConduitTicker implements ConduitTicker<FluidConduit> {
                     continue;
                 }
 
-                IFluidHandler extractHandler = extractConnection.getSidedCapability(Capabilities.FluidHandler.BLOCK);
+                IFluidHandler extractHandler = extractConnection.getSidedCapability(Capabilities.Fluid.BLOCK);
                 if (extractHandler == null) {
                     continue;
                 }
@@ -77,7 +77,7 @@ public class FluidConduitTicker implements ConduitTicker<FluidConduit> {
     private int doFluidTransfer(Fluid fluid, int maxTransfer, ConduitBlockConnection extractConnection,
             List<ConduitBlockConnection> insertConnections) {
         var extractHandler = Objects
-                .requireNonNull(extractConnection.getSidedCapability(Capabilities.FluidHandler.BLOCK));
+                .requireNonNull(extractConnection.getSidedCapability(Capabilities.Fluid.BLOCK));
 
         // Attempt to drain fluid from the target.
         FluidStack extractedFluid = extractHandler.drain(new FluidStack(fluid, maxTransfer),
@@ -100,7 +100,7 @@ public class FluidConduitTicker implements ConduitTicker<FluidConduit> {
 
         // Insert into any available blocks
         for (var insertConnection : insertConnections) {
-            IFluidHandler insertHandler = insertConnection.getSidedCapability(Capabilities.FluidHandler.BLOCK);
+            IFluidHandler insertHandler = insertConnection.getSidedCapability(Capabilities.Fluid.BLOCK);
             if (insertHandler == null) {
                 continue;
             }

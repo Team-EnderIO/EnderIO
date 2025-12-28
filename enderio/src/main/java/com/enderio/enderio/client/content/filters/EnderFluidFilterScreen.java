@@ -101,8 +101,8 @@ public class EnderFluidFilterScreen extends EnderContainerScreen<EnderFluidFilte
     }
 
     @Override
-    public void renderSlot(GuiGraphics guiGraphics, Slot slot) {
-        super.renderSlot(guiGraphics, slot);
+    protected void renderSlot(GuiGraphics guiGraphics, Slot slot, int mouseX, int mouseY) {
+        super.renderSlot(guiGraphics, slot, mouseX, mouseY);
 
         if (!(slot instanceof FluidFilterSlot fluidFilterSlot)) {
             return;

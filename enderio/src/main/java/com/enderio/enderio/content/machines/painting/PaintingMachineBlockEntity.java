@@ -149,7 +149,7 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
 
             @Override
             protected boolean placeOutputs(List<OutputStack> outputs, boolean simulate) {
-                if (getLevel() == null || getLevel().isClientSide) {
+                if (getLevel() == null || getLevel().isClientSide()) {
                     return super.placeOutputs(outputs, simulate);
                 }
 

@@ -9,7 +9,7 @@ import com.enderio.enderio.foundation.soul.ShapedEntityStorageRecipeBuilder;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOItems;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.core.HolderLookup;

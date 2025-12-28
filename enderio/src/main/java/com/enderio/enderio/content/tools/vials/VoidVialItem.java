@@ -63,7 +63,7 @@ public class VoidVialItem extends Item {
 
     private static boolean transferFromBlockToPlayer(Player player, Level level, BlockPos pos) {
         try {
-            var fluidHandler = level.getCapability(Capabilities.FluidHandler.BLOCK, pos, null);
+            var fluidHandler = level.getCapability(Capabilities.Fluid.BLOCK, pos, null);
             if (fluidHandler != null) {
                 FluidStack availableFluid = fluidHandler.getFluidInTank(0);
                 if (availableFluid.is(Tags.Fluids.EXPERIENCE) && availableFluid.getAmount() > 0) {
@@ -93,7 +93,7 @@ public class VoidVialItem extends Item {
                 return false;
             }
 
-            var fluidHandler = level.getCapability(Capabilities.FluidHandler.BLOCK, pos, null);
+            var fluidHandler = level.getCapability(Capabilities.Fluid.BLOCK, pos, null);
             if (fluidHandler != null) {
                 long fluidVolume = ExperienceUtil.getPlayerTotalXp(player) * ExperienceUtil.EXP_TO_FLUID;
                 int cappedVolume = (int) Math.min(Integer.MAX_VALUE, fluidVolume);

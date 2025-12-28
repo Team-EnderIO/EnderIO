@@ -47,8 +47,9 @@ public class ColdFireBlock extends FireBlock {
     }
 
     @Override
-    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier) {
-        //Don't deal fire damage
+    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier insideBlockEffectApplier,
+        boolean intersects) {
+        // No op: Don't deal fire damage
     }
 
     @Override

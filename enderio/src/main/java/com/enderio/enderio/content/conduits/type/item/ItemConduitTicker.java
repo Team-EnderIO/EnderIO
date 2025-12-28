@@ -24,7 +24,7 @@ public class ItemConduitTicker implements ConduitTicker<ItemConduit> {
                 }
 
                 // Get extract handler from the connection.
-                IItemHandler extractHandler = extractConnection.getSidedCapability(Capabilities.ItemHandler.BLOCK);
+                IItemHandler extractHandler = extractConnection.getSidedCapability(Capabilities.Item.BLOCK);
                 if (extractHandler == null) {
                     continue;
                 }
@@ -66,7 +66,7 @@ public class ItemConduitTicker implements ConduitTicker<ItemConduit> {
                         int senderIndex = j % insertConnections.size();
                         var insertConnection = insertConnections.get(senderIndex);
 
-                        var insertHandler = insertConnection.getSidedCapability(Capabilities.ItemHandler.BLOCK);
+                        var insertHandler = insertConnection.getSidedCapability(Capabilities.Item.BLOCK);
                         if (insertHandler == null) {
                             continue;
                         }
@@ -85,7 +85,7 @@ public class ItemConduitTicker implements ConduitTicker<ItemConduit> {
                         ItemStack itemToInsert = extractedItem.copy();
                         if (insertFilter != null) {
                             itemToInsert = insertFilter.test(
-                                    insertConnection.getSidedCapability(Capabilities.ItemHandler.BLOCK), itemToInsert);
+                                    insertConnection.getSidedCapability(Capabilities.Item.BLOCK), itemToInsert);
                             if (itemToInsert.isEmpty()) {
                                 continue;
                             }

@@ -80,7 +80,7 @@ public class CapacitorBankBlock extends LegacyMachineBlock implements AdvancedTo
 
     @SubscribeEvent
     public static void rightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-        if (!event.getLevel().isClientSide && event.getEntity().isShiftKeyDown() && event.getLevel()
+        if (!event.getLevel().isClientSide() && event.getEntity().isShiftKeyDown() && event.getLevel()
                 .getBlockEntity(event.getHitVec().getBlockPos()) instanceof CapacitorBankBlockEntity capacitorBank) {
             if (capacitorBank.onShiftRightClick(event.getHitVec().getDirection(), event.getEntity())) {
                 event.setCanceled(true);

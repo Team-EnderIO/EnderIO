@@ -4,7 +4,6 @@ import com.enderio.enderio.foundation.block.entity.EnderSkullBlockEntity;
 import com.enderio.enderio.init.EIOBlocks;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.SkullModelBase;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -13,12 +12,13 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.model.object.skull.SkullModelBase;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
@@ -38,7 +38,7 @@ public class EnderSkullRenderer implements BlockEntityRenderer<EnderSkullBlockEn
     private final EnderSkullModel skullmodelbase;
 
     public EnderSkullRenderer(BlockEntityRendererProvider.Context context) {
-        skullmodelbase = new EnderSkullModel(context.getModelSet().bakeLayer(ENDER_SKULL));
+        skullmodelbase = new EnderSkullModel(context.entityModelSet().bakeLayer(ENDER_SKULL));
     }
 
     @Override
@@ -67,7 +67,7 @@ public class EnderSkullRenderer implements BlockEntityRenderer<EnderSkullBlockEn
                 player.level().setBlock(blockEntity.getBlockPos(), blockstate.setValue(SkullBlock.ROTATION, rotation), 3);
             }
         }
-        SkullBlockRenderer.renderSkull(direction, f1, f, poseStack, bufferSource, packedLight, skullmodelbase, RENDERTYPE);
+        SkullBlockRenderer.submitSkull(direction, f1, f, poseStack, bufferSource, packedLight, skullmodelbase, RENDERTYPE);
     }
 
     public static class EnderSkullModel extends SkullModelBase {
@@ -95,9 +95,9 @@ public class EnderSkullRenderer implements BlockEntityRenderer<EnderSkullBlockEn
         }
 
         @Override
-        public void setupAnim(float p_103811_, float p_103812_, float p_103813_) {
-            this.head.yRot = p_103812_ * ((float)Math.PI / 180F);
-            this.head.xRot = p_103813_ * ((float)Math.PI / 180F);
+        public void setupAnim(State renderState) {
+            this.head.yRot = renderState.xRot * ((float)Math.PI / 180F);
+            this.head.xRot = renderState.yRot * ((float)Math.PI / 180F);
             this.hat.yRot = head.yRot;
             this.hat.xRot = head.xRot;
             this.head.y = 0;

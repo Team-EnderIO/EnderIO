@@ -45,7 +45,7 @@ public class ResettingLeverBlock extends LeverBlock {
     public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource randomSource) {
         super.tick(state, level, pos, randomSource);
 
-        if (state.getValue(POWERED) && !level.isClientSide) {
+        if (state.getValue(POWERED) && !level.isClientSide()) {
             this.pull(state, level, pos, null);
         }
     }

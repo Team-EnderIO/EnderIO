@@ -67,7 +67,7 @@ public record EnergyConduit(Identifier texture, Component description, int trans
 
     @Override
     public boolean canConnectToBlock(Level level, BlockPos conduitPos, Direction direction) {
-        IEnergyStorage capability = level.getCapability(Capabilities.EnergyStorage.BLOCK,
+        IEnergyStorage capability = level.getCapability(Capabilities.Energy.BLOCK,
                 conduitPos.relative(direction), direction.getOpposite());
         return capability != null;
     }
@@ -83,7 +83,7 @@ public record EnergyConduit(Identifier texture, Component description, int trans
     public <TCap, TContext> @Nullable TCap proxyCapability(Level level, @Nullable ConduitNode node,
             BlockCapability<TCap, TContext> capability, @Nullable TContext context) {
 
-        if (Capabilities.EnergyStorage.BLOCK == capability && (context == null || context instanceof Direction)) {
+        if (Capabilities.Energy.BLOCK == capability && (context == null || context instanceof Direction)) {
             Direction side = (Direction) context;
 
             if (node != null && context != null) {

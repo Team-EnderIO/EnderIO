@@ -1,9 +1,9 @@
 package com.enderio.enderio.compat.jei;
 
 import com.enderio.enderio.EnderIO;
-import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.util.Util;
 
 public class JEILang {
 

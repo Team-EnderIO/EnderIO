@@ -1,12 +1,12 @@
 package com.enderio.enderio.client.content.conduits.gui;
 
 import com.enderio.enderio.api.conduits.Conduit;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
@@ -45,18 +45,17 @@ public class ConduitSelectionButton extends AbstractButton {
     }
 
     @Override
-    protected boolean isValidClickButton(int pButton) {
-        var conduit = getConduit();
-        return super.isValidClickButton(pButton) && conduit != null && conduit != currentConduit.get();
+    protected boolean isValidClickButton(MouseButtonInfo buttonInfo) {
+        return super.isValidClickButton(buttonInfo) && getConduit() != currentConduit.get();
     }
 
     @Override
-    public void onPress() {
+    public void onPress(InputWithModifiers inputWithModifiers) {
         onPressed.accept(conduitButtonIndex);
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+    public void renderContents(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         var conduit = getConduit();
         if (conduit == null) {
             return;
@@ -73,7 +72,7 @@ public class ConduitSelectionButton extends AbstractButton {
 
         // TODO: This shouldn't be a hard-coded path.
         Identifier iconLocation = MissingTextureAtlasSprite.getLocation();
-        Identifier conduitKey = conduit.unwrapKey().map(ResourceKey::location).orElse(null);
+        Identifier conduitKey = conduit.unwrapKey().map(ResourceKey::identifier).orElse(null);
         if (conduitKey != null) {
             iconLocation = Identifier.fromNamespaceAndPath(conduitKey.getNamespace(),
                     "conduit_icon/" + conduitKey.getPath());

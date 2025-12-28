@@ -75,7 +75,6 @@ import com.enderio.enderio.init.EIOMenus;
 import com.enderio.enderio.init.EIOParticles;
 import com.enderio.enderio.init.EIOTravelTargets;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
-import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
@@ -320,9 +319,9 @@ public class EnderIOClient {
     @SubscribeEvent
     public static void addLayers(EntityRenderersEvent.AddLayers event) {
         for (var skin : event.getSkins()) {
-            if (event.getSkin(skin) instanceof PlayerRenderer playerRenderer) {
+//            if (event.getSkin(skin) instanceof PlayerRenderer playerRenderer) {
 //                playerRenderer.addLayer(new ActiveGliderRenderLayer(playerRenderer));
-            }
+//            }
         }
     }
 
@@ -369,9 +368,7 @@ public class EnderIOClient {
     @SubscribeEvent
     public static void registerEnderSkulls(EntityRenderersEvent.CreateSkullModels event) {
         event.registerSkullModel(EnderSkullBlock.EIOSkulls.ENDERMAN, entityModelSet -> new EnderSkullRenderer.EnderSkullModel(
-                entityModelSet.bakeLayer(EnderSkullRenderer.ENDER_SKULL)));
-        SkullBlockRenderer.SKIN_BY_TYPE.put(EnderSkullBlock.EIOSkulls.ENDERMAN,
-                Identifier.withDefaultNamespace("textures/entity/enderman/enderman.png"));
+                entityModelSet.bakeLayer(EnderSkullRenderer.ENDER_SKULL)), Identifier.withDefaultNamespace("textures/entity/enderman/enderman.png"));
     }
 
     @SubscribeEvent
