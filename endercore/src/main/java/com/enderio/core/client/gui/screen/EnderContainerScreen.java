@@ -13,6 +13,9 @@ import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.input.CharacterEvent;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -180,13 +183,13 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
     }
 
     @Override
-    public void resize(Minecraft pMinecraft, int pWidth, int pHeight) {
+    public void resize(int width, int height) {
         // Gather state to persist
         Map<String, Object> valuesBeforeResize = stateRestoringWidgets.entrySet()
                 .stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getValueForRestore()));
 
-        super.resize(pMinecraft, pWidth, pHeight);
+        super.resize(width, height);
 
         // Restore state
         for (String key : valuesBeforeResize.keySet()) {
@@ -210,54 +213,55 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
     }
 
     @Override
-    public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         for (var layer : overlayWidgets.keySet()) {
             for (var overlay : overlayWidgets.get(layer)) {
                 if (!(overlay instanceof AbstractWidget widget) || widget.isActive()) {
-                    if (overlay.isMouseOver(pMouseX, pMouseY)) {
+                    if (overlay.isMouseOver(event.x(), event.y())) {
                         setFocused(overlay);
-                        return overlay.mouseClicked(pMouseX, pMouseY, pButton);
+                        return overlay.mouseClicked(event, isDoubleClick);
                     }
                 }
             }
         }
 
-        return super.mouseClicked(pMouseX, pMouseY, pButton);
+        return super.mouseClicked(event, isDoubleClick);
     }
 
     @Override
-    public boolean mouseReleased(double pMouseX, double pMouseY, int pButton) {
+    public boolean mouseReleased(MouseButtonEvent event) {
         for (var layer : overlayWidgets.keySet()) {
             for (var overlay : overlayWidgets.get(layer)) {
                 if (!(overlay instanceof AbstractWidget widget) || widget.isActive()) {
-                    if (overlay.isMouseOver(pMouseX, pMouseY)) {
-                        return overlay.mouseReleased(pMouseX, pMouseY, pButton);
+                    if (overlay.isMouseOver(event.x(), event.y())) {
+                        return overlay.mouseReleased(event);
                     }
                 }
             }
         }
 
-        return super.mouseReleased(pMouseX, pMouseY, pButton);
+        return super.mouseReleased(event);
     }
 
     // Always pass mouse drag event through widgets first.
+
     @Override
-    public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
         for (var layer : overlayWidgets.keySet()) {
             for (var overlay : overlayWidgets.get(layer)) {
                 if (!(overlay instanceof AbstractWidget widget) || widget.isActive()) {
-                    if (overlay.isMouseOver(pMouseX, pMouseY)) {
-                        return overlay.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
+                    if (overlay.isMouseOver(event.x(), event.y())) {
+                        return overlay.mouseDragged(event, dragX, dragY);
                     }
                 }
             }
         }
 
         if (getFocused() instanceof AbstractWidget abstractWidget && abstractWidget.isActive()) {
-            return abstractWidget.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
+            return abstractWidget.mouseDragged(event, dragX, dragY);
         }
 
-        return super.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
+        return super.mouseDragged(event, dragX, dragY);
     }
 
     @Override
@@ -275,13 +279,10 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
         return super.mouseScrolled(pMouseX, pMouseY, pScrollX, pScrollY);
     }
 
-    /**
-     * @deprecated Use {@link #onKeyPressed(int, int, int)} instead.
-     */
-    @Deprecated
+    // Final to preserve order, use onKeyPressed for screen-level event handling.
     @Override
-    public final boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
+    public final boolean keyPressed(KeyEvent event) {
+        if (event.key() == GLFW.GLFW_KEY_ESCAPE) {
             this.minecraft.player.closeContainer();
             return true;
         }
@@ -289,52 +290,52 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
         for (var layer : overlayWidgets.keySet()) {
             for (var overlay : overlayWidgets.get(layer)) {
                 if (!(overlay instanceof AbstractWidget widget) || widget.isActive()) {
-                    if (overlay.keyPressed(keyCode, scanCode, modifiers)) {
+                    if (overlay.keyPressed(event)) {
                         return true;
                     }
                 }
             }
         }
 
-        if (onKeyPressed(keyCode, scanCode, modifiers)) {
+        if (onKeyPressed(event)) {
             return true;
         }
 
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(event);
     }
 
-    public boolean onKeyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean onKeyPressed(KeyEvent event) {
         return false;
     }
 
     @Override
-    public boolean keyReleased(int pKeyCode, int pScanCode, int pModifiers) {
+    public boolean keyReleased(KeyEvent event) {
         for (var layer : overlayWidgets.keySet()) {
             for (var overlay : overlayWidgets.get(layer)) {
                 if (!(overlay instanceof AbstractWidget widget) || widget.isActive()) {
-                    if (overlay.keyReleased(pKeyCode, pScanCode, pModifiers)) {
+                    if (overlay.keyReleased(event)) {
                         return true;
                     }
                 }
             }
         }
 
-        return super.keyReleased(pKeyCode, pScanCode, pModifiers);
+        return super.keyReleased(event);
     }
 
     @Override
-    public boolean charTyped(char pCodePoint, int pModifiers) {
+    public boolean charTyped(CharacterEvent event) {
         for (var layer : overlayWidgets.keySet()) {
             for (var overlay : overlayWidgets.get(layer)) {
                 if (!(overlay instanceof AbstractWidget widget) || widget.isActive()) {
-                    if (overlay.charTyped(pCodePoint, pModifiers)) {
+                    if (overlay.charTyped(event)) {
                         return true;
                     }
                 }
             }
         }
 
-        return super.charTyped(pCodePoint, pModifiers);
+        return super.charTyped(event);
     }
 
     @Nullable

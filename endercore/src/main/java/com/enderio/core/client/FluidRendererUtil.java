@@ -29,8 +29,9 @@ public class FluidRendererUtil {
         // Get fluid texture
         IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluid);
         TextureAtlasSprite texture = Minecraft.getInstance()
-            .getTextureAtlas(TextureAtlas.LOCATION_BLOCKS)
-            .apply(props.getStillTexture());
+            .getAtlasManager()
+            .getAtlasOrThrow(TextureAtlas.LOCATION_BLOCKS)
+            .getSprite(props.getStillTexture());
 
         // Get sizes
         float fluidHeight = (14 * fillAmount) / 16.0f;

@@ -8,6 +8,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -121,14 +123,15 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
     }
 
     @Override
-    public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
-        mouseButton = pButton;
-        return super.mouseClicked(pMouseX, pMouseY, pButton);
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        mouseButton = event.button();
+        return super.mouseClicked(event, isDoubleClick);
     }
 
     @Override
-    protected boolean isValidClickButton(int pButton) {
-        return pButton == InputConstants.MOUSE_BUTTON_LEFT || pButton == InputConstants.MOUSE_BUTTON_RIGHT;
+    protected boolean isValidClickButton(MouseButtonInfo buttonInfo) {
+        return buttonInfo.button() == InputConstants.MOUSE_BUTTON_LEFT ||
+            buttonInfo.button() == InputConstants.MOUSE_BUTTON_RIGHT;
     }
 
     @Override
@@ -242,14 +245,14 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
         }
 
         @Override
-        public boolean mouseClicked(double mouseX, double mouseY, int button) {
-            if (!(parentWidget.expandTopLeft.x() <= mouseX && parentWidget.expandBottomRight.x() >= mouseX
-                    && parentWidget.expandTopLeft.y() <= mouseY && parentWidget.expandBottomRight.y() >= mouseY
-                    || parentWidget.isMouseOver(mouseX, mouseY))) {
+        public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+            if (!(parentWidget.expandTopLeft.x() <= event.x() && parentWidget.expandBottomRight.x() >= event.x()
+                    && parentWidget.expandTopLeft.y() <= event.y() && parentWidget.expandBottomRight.y() >= event.y()
+                    || parentWidget.isMouseOver(event.x(), event.y()))) {
                 Minecraft.getInstance().popGuiLayer();
             }
 
-            return super.mouseClicked(mouseX, mouseY, button);
+            return super.mouseClicked(event, isDoubleClick);
         }
 
         @Override
@@ -265,9 +268,9 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
         }
 
         @Override
-        public void resize(Minecraft minecraft, int width, int height) {
+        public void resize(int width, int height) {
             minecraft.popGuiLayer();
-            minecraft.screen.resize(minecraft, width, height);
+            minecraft.screen.resize(width, height);
         }
     }
 

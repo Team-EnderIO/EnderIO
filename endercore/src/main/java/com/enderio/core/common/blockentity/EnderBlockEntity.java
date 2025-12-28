@@ -45,7 +45,7 @@ public class EnderBlockEntity extends BlockEntity {
 
     @SuppressWarnings("unused")
     public static void tick(Level level, BlockPos pos, BlockState state, EnderBlockEntity blockEntity) {
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             blockEntity.clientTick();
         } else {
             blockEntity.serverTick();

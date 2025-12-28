@@ -6,11 +6,6 @@ import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
-import net.neoforged.neoforge.client.model.IQuadTransformer;
-import org.joml.Vector3f;
-
-import static net.neoforged.neoforge.client.model.IQuadTransformer.COLOR;
-import static net.neoforged.neoforge.client.model.IQuadTransformer.STRIDE;
 
 public class RenderUtil {
     /**
@@ -78,26 +73,26 @@ public class RenderUtil {
                 .setNormal(pose, normalX, normalY, normalZ);
     }
 
-    public static float[] unpackVertices(int[] vertices, int vertexIndex, int position, int count) {
-        float[] floats = new float[count];
-        int startIndex = vertexIndex * IQuadTransformer.STRIDE + position;
-        for (int i = 0; i < count; i++) {
-            floats[i] = Float.intBitsToFloat(vertices[startIndex + i]);
-        }
-        return floats;
-    }
+//    public static float[] unpackVertices(int[] vertices, int vertexIndex, int position, int count) {
+//        float[] floats = new float[count];
+//        int startIndex = vertexIndex * IQuadTransformer.STRIDE + position;
+//        for (int i = 0; i < count; i++) {
+//            floats[i] = Float.intBitsToFloat(vertices[startIndex + i]);
+//        }
+//        return floats;
+//    }
 
-    public static Vector3f getNormalData(int[] vertices, int vertexIndex) {
-        float x;
-        float y;
-        float z;
-
-        int vertexData = vertices[vertexIndex * STRIDE + IQuadTransformer.NORMAL];
-        x = (vertexData & 0x000000FF) / 127f;
-        y = ((vertexData & 0x0000FF00) >> 8) / 127f;
-        z = ((vertexData & 0x00FF0000) >> 16) / 127f;
-        return new Vector3f(x, y, z);
-    }
+//    public static Vector3f getNormalData(int[] vertices, int vertexIndex) {
+//        float x;
+//        float y;
+//        float z;
+//
+//        int vertexData = vertices[vertexIndex * STRIDE + IQuadTransformer.NORMAL];
+//        x = (vertexData & 0x000000FF) / 127f;
+//        y = ((vertexData & 0x0000FF00) >> 8) / 127f;
+//        z = ((vertexData & 0x00FF0000) >> 16) / 127f;
+//        return new Vector3f(x, y, z);
+//    }
 
     /**
      * {@see net.neoforged.neoforge.client.model.pipeline.QuadBakingVertexConsumer}
@@ -110,46 +105,34 @@ public class RenderUtil {
         return quadData;
     }
 
-    private static int[] getColorABGR(int[] vertices, int vertexIndex) {
-        int color = vertices[STRIDE * vertexIndex + COLOR];
-        int[] abgr = new int[4];
-        abgr[0] = color >> 24 & 0xFF;
-        abgr[1] = color >> 16 & 0xFF;
-        abgr[2] = color >> 8 & 0xFF;
-        abgr[3] = color & 0xFF;
-        return abgr;
-    }
+//    private static int[] getColorABGR(int[] vertices, int vertexIndex) {
+//        int color = vertices[STRIDE * vertexIndex + COLOR];
+//        int[] abgr = new int[4];
+//        abgr[0] = color >> 24 & 0xFF;
+//        abgr[1] = color >> 16 & 0xFF;
+//        abgr[2] = color >> 8 & 0xFF;
+//        abgr[3] = color & 0xFF;
+//        return abgr;
+//    }
 
     private static int[] multiplyColor(int[] abgr1, int[] abgr2) {
         return new int[] { abgr1[0] * abgr2[0] / 255, abgr1[1] * abgr2[1] / 255, abgr1[2] * abgr2[2] / 255,
                 abgr1[3] * abgr2[3] / 255 };
     }
 
-    public static void multiplyColor(int[] vertices, int vertexIndex, int rgbBlockColor) {
-        int[] colorABGR = RenderUtil.getColorABGR(vertices, vertexIndex);
-        int[] blockColorABGR = new int[4];
-        blockColorABGR[0] = 0xFF | (rgbBlockColor >> 24 & 0xFF);
-        blockColorABGR[3] = rgbBlockColor >> 16 & 0xFF;
-        blockColorABGR[2] = rgbBlockColor >> 8 & 0xFF;
-        blockColorABGR[1] = rgbBlockColor & 0xFF;
-        int[] multipliedColor = RenderUtil.multiplyColor(colorABGR, blockColorABGR);
-        RenderUtil.putColorABGR(vertices, vertexIndex, multipliedColor);
-    }
+//    public static void multiplyColor(int[] vertices, int vertexIndex, int rgbBlockColor) {
+//        int[] colorABGR = RenderUtil.getColorABGR(vertices, vertexIndex);
+//        int[] blockColorABGR = new int[4];
+//        blockColorABGR[0] = 0xFF | (rgbBlockColor >> 24 & 0xFF);
+//        blockColorABGR[3] = rgbBlockColor >> 16 & 0xFF;
+//        blockColorABGR[2] = rgbBlockColor >> 8 & 0xFF;
+//        blockColorABGR[1] = rgbBlockColor & 0xFF;
+//        int[] multipliedColor = RenderUtil.multiplyColor(colorABGR, blockColorABGR);
+//        RenderUtil.putColorABGR(vertices, vertexIndex, multipliedColor);
+//    }
 
-    public static void putColorABGR(int[] vertices, int vertexIndex, int[] abgr) {
-        int offset = vertexIndex * STRIDE + COLOR;
-        vertices[offset] = (abgr[0] << 24) | (abgr[1] << 16) | (abgr[2] << 8) | abgr[3];
-    }
-
-    public static void putColorARGB(int[] vertices, int vertexIndex, int argb) {
-        int[] blockColorABGR = new int[4];
-        blockColorABGR[0] = 0xFF | (argb >> 24 & 0xFF);
-        blockColorABGR[3] = argb >> 16 & 0xFF;
-        blockColorABGR[2] = argb >> 8 & 0xFF;
-        blockColorABGR[1] = argb & 0xFF;
-
-        int offset = vertexIndex * STRIDE + COLOR;
-        vertices[offset] = (blockColorABGR[0] << 24) | (blockColorABGR[1] << 16) | (blockColorABGR[2] << 8)
-                | blockColorABGR[3];
-    }
+//    public static void putColorABGR(int[] vertices, int vertexIndex, int[] abgr) {
+//        int offset = vertexIndex * STRIDE + COLOR;
+//        vertices[offset] = (abgr[0] << 24) | (abgr[1] << 16) | (abgr[2] << 8) | abgr[3];
+//    }
 }

@@ -7,6 +7,8 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -38,14 +40,14 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
     }
 
     @Override
-    public void resize(Minecraft pMinecraft, int pWidth, int pHeight) {
+    public void resize(int width, int height) {
         Map<String, String> oldEditBoxValues = new HashMap<>();
         for (EditBox editBox : editBoxList) {
             oldEditBoxValues.put(editBox.getMessage().getString(), editBox.getValue());
         }
         editBoxList.clear();
 
-        super.resize(pMinecraft, pWidth, pHeight);
+        super.resize(width, height);
         for (EditBox editBox : editBoxList) {
             editBox.setValue(oldEditBoxValues.getOrDefault(editBox.getMessage().getString(), ""));
         }
@@ -69,27 +71,27 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
     }
 
     @Override
-    public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
-        if (pKeyCode == 256) { // ESC has priority
+    public boolean keyPressed(KeyEvent event) {
+        if (event.key() == 256) { // ESC has priority
             Minecraft.getInstance().player.closeContainer();
         }
 
         for (EditBox editBox : editBoxList) {
-            if (editBox.keyPressed(pKeyCode, pScanCode, pModifiers) || editBox.canConsumeInput()) {
+            if (editBox.keyPressed(event) || editBox.canConsumeInput()) {
                 return true;
             }
         }
 
-        return super.keyPressed(pKeyCode, pScanCode, pModifiers);
+        return super.keyPressed(event);
     }
 
     @Override
-    public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
         if (getFocused() instanceof AbstractWidget abstractWidget && abstractWidget.isActive()) {
-            return abstractWidget.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
+            return abstractWidget.mouseDragged(event, dragX, dragY);
         }
 
-        return super.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
+        return super.mouseDragged(event, dragX, dragY);
     }
 
     @Override

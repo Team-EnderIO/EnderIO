@@ -1,11 +1,10 @@
 package com.enderio.core.client.gui.widgets;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.WidgetSprites;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 
@@ -32,7 +31,7 @@ public abstract class EnderButton extends AbstractWidget {
     public abstract void renderButtonFace(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks);
 
     @Override
-    public void onClick(double pMouseX, double pMouseY) {
+    public void onClick(MouseButtonEvent event, boolean isDoubleClick) {
         this.onPress();
     }
 }
