@@ -87,6 +87,16 @@ public class PoweredMachineEnergyStorage implements EnergyHandler, ValueIOSerial
     }
 
     @Override
+    public boolean canConsumeAtLeast(int energyRequired) {
+        TransferPreconditions.checkNonNegative(energyRequired);
+        if (energyRequired > getMaxConsumption()) {
+            return false;
+        }
+
+        return energyStored >= energyRequired;
+    }
+
+    @Override
     public int consume(int maxEnergyToConsume, @Nullable TransactionContext transactionContext) {
         TransferPreconditions.checkNonNegative(maxEnergyToConsume);
 

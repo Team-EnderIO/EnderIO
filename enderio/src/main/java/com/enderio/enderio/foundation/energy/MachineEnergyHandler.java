@@ -10,6 +10,9 @@ public interface MachineEnergyHandler {
 
     int subtract(int energyToTake);
 
+    // Allows checking without a transaction.
+    boolean canConsumeAtLeast(int energyRequired);
+
     // Purposefully allows use without a transaction.
     int consume(int maxEnergyToConsume, @Nullable TransactionContext transactionContext);
 

@@ -6,17 +6,17 @@ import com.google.common.base.Suppliers;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.TextureSlots;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BlockModelRotation;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ItemOwner;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -34,8 +34,8 @@ public class ConduitItemModel implements ItemModel {
     }
 
     @Override
-    public void update(ItemStackRenderState renderState, ItemStack stack, ItemModelResolver itemModelResolver, ItemDisplayContext displayContext,
-        @Nullable ClientLevel level, @Nullable LivingEntity entity, int seed) {
+    public void update(ItemStackRenderState renderState, ItemStack stack, ItemModelResolver itemModelResolver,
+        ItemDisplayContext displayContext, @Nullable ClientLevel level, @Nullable ItemOwner itemOwner, int seed) {
 
         if (!stack.has(EnderIODataComponents.CONDUIT)) {
             return;
@@ -43,7 +43,7 @@ public class ConduitItemModel implements ItemModel {
 
         var conduit = stack.get(EnderIODataComponents.CONDUIT);
 
-        TextureAtlasSprite texture = Minecraft.getInstance().getModelManager().getAtlas(TextureAtlas.LOCATION_BLOCKS).getSprite(conduit.value().texture());
+        TextureAtlasSprite texture = Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(TextureAtlas.LOCATION_BLOCKS).getSprite(conduit.value().texture());
 
         var resolvedmodel = context.blockModelBaker().getModel(ConduitAdditionalModels.CONDUIT_ITEM);
         TextureSlots textureslots = resolvedmodel.getTopTextureSlots();
@@ -58,9 +58,8 @@ public class ConduitItemModel implements ItemModel {
         var state = renderState.newLayer();
         state.setExtents(extents);
         modelrenderproperties.applyToLayer(state, displayContext);
-        state.setRenderType(RenderType.SOLID);
+        state.setRenderType(RenderTypes.solidMovingBlock());
         state.prepareQuadList().addAll(list);
-
     }
 
     public record Unbaked() implements ItemModel.Unbaked {

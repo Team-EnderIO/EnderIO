@@ -85,8 +85,9 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             lineType = VERY_BOLD_LINES;
         }
         VertexConsumer lines = buffer.getBuffer(lineType);
-        ShapeRenderer.renderLineBox(poseStack, lines, 0, 0, 0, 1, 1, 1, ARGB.red(color) / 255F,
-                ARGB.green(color) / 255F, ARGB.blue(color) / 255F, 1);
+        // TODO: 1.21.11: Are Gizmos the correct replacement?
+//        ShapeRenderer.renderLineBox(poseStack, lines, 0, 0, 0, 1, 1, 1, ARGB.red(color) / 255F,
+//                ARGB.green(color) / 255F, ARGB.blue(color) / 255F, 1);
 
         LocalPlayer player = Minecraft.getInstance().player;
 

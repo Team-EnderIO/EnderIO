@@ -148,8 +148,7 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
     }
 
     private boolean hasPowerToCraft() {
-        return getEnergyStorage().consumeEnergy(MachinesConfig.COMMON.ENERGY.CRAFTING_RECIPE_COST.get(),
-                true) >= MachinesConfig.COMMON.ENERGY.CRAFTING_RECIPE_COST.get();
+        return getEnergyStorage().canConsumeAtLeast(MachinesConfig.COMMON.ENERGY.CRAFTING_RECIPE_COST.get());
     }
 
     private void processOutputBuffer() {
@@ -198,7 +197,7 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
         // clean buffer
         outputBuffer.removeIf(ItemStack::isEmpty);
         // consume power
-        getEnergyStorage().consumeEnergy(MachinesConfig.COMMON.ENERGY.CRAFTING_RECIPE_COST.get(), false);
+        getEnergyStorage().consume(MachinesConfig.COMMON.ENERGY.CRAFTING_RECIPE_COST.get(), null);
         // check resource reload
         if (level instanceof ServerLevel serverLevel && serverLevel.recipeAccess().byKey(recipe.id()).orElse(null) != recipe) {
             recipe = null;

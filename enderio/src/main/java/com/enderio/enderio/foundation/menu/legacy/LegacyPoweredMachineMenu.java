@@ -39,6 +39,6 @@ public class LegacyPoweredMachineMenu<T extends LegacyPoweredMachineBlockEntity>
             throw new IllegalStateException("BlockEntity is null");
         }
 
-        return EnergyStorageInfo.of(getBlockEntity().getEnergyStorage());
+        return new EnergyStorageInfo(getBlockEntity().getEnergyStorage().getEnergyStored(), getBlockEntity().getEnergyStorage().getMaxEnergyStored());
     }
 }
