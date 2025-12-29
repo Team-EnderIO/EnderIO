@@ -14,7 +14,6 @@ import com.enderio.enderio.content.filters.redstone.RedstoneTimerFilterMenu;
 import com.enderio.enderio.content.filters.soul.EnderSoulFilterItem;
 import com.enderio.enderio.content.filters.soul.EnderSoulFilterMenu;
 import com.enderio.enderio.content.machines.alloy.AlloySmelterMenu;
-import com.enderio.enderio.content.machines.capacitor_bank.CapacitorBankMenu;
 import com.enderio.enderio.content.machines.drain.DrainMenu;
 import com.enderio.enderio.content.machines.farming_station.FarmingStationMenu;
 import com.enderio.enderio.content.machines.impulse_hopper.ImpulseHopperMenu;
@@ -142,7 +141,7 @@ public class EIOMenus {
 
     // region Storage
 
-    public static final DeferredHolder<MenuType<?>, MenuType<CapacitorBankMenu>> CAPACITOR_BANK = MENUS.register("capacitor_bank", CapacitorBankMenu::factory);
+//    public static final DeferredHolder<MenuType<?>, MenuType<CapacitorBankMenu>> CAPACITOR_BANK = MENUS.register("capacitor_bank", CapacitorBankMenu::factory);
 
     public static final DeferredHolder<MenuType<?>, MenuType<FluidTankMenu>> FLUID_TANK = MENUS.register("fluid_tank", FluidTankMenu::new);
 

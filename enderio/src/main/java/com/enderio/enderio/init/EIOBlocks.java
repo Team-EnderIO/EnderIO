@@ -11,8 +11,6 @@ import com.enderio.enderio.content.glass.GlassCollisionPredicate;
 import com.enderio.enderio.content.glass.GlassIdentifier;
 import com.enderio.enderio.content.glass.GlassLighting;
 import com.enderio.enderio.content.machines.block_detector.BlockDetectorBlock;
-import com.enderio.enderio.content.machines.capacitor_bank.CapacitorBankBlock;
-import com.enderio.enderio.content.machines.capacitor_bank.CapacitorBankBlockEntity;
 import com.enderio.enderio.content.machines.capacitor_bank.CapacitorBankItem;
 import com.enderio.enderio.content.machines.capacitor_bank.CapacitorTier;
 import com.enderio.enderio.content.machines.niard.NiardBlock;
@@ -24,8 +22,6 @@ import com.enderio.enderio.content.machines.obelisks.weather.WeatherObeliskBlock
 import com.enderio.enderio.content.machines.obelisks.xp.XPObeliskBlockEntity;
 import com.enderio.enderio.content.machines.powered_spawner.MindKillerBlock;
 import com.enderio.enderio.content.machines.powered_spawner.PoweredSpawnerBlockEntity;
-import com.enderio.enderio.content.machines.solar_panel.SolarPanelBlock;
-import com.enderio.enderio.content.machines.solar_panel.SolarPanelBlockEntity;
 import com.enderio.enderio.content.machines.solar_panel.SolarPanelTier;
 import com.enderio.enderio.content.machines.soul_engine.SoulEngineBlockEntity;
 import com.enderio.enderio.content.machines.vacuum.chest.VacuumChestBlockEntity;
@@ -60,7 +56,6 @@ import com.enderio.enderio.content.travel.travel_anchor.TravelAnchorBlockEntity;
 import com.enderio.enderio.foundation.block.MachineBlock;
 import com.enderio.enderio.foundation.block.ProgressMachineBlock;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
-import com.enderio.enderio.foundation.block.legacy.LegacyMachineBlock;
 import com.google.common.collect.ImmutableMap;
 import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -408,9 +403,9 @@ public class EIOBlocks {
             .noOcclusion());
 
     // Creative Power
-    public static final DeferredBlock<LegacyMachineBlock> CREATIVE_POWER = registerWithItem("creative_power",
-        props -> new LegacyMachineBlock(EIOBlockEntities.CREATIVE_POWER::get, props),
-        BlockBehaviour.Properties.of());
+//    public static final DeferredBlock<LegacyMachineBlock> CREATIVE_POWER = registerWithItem("creative_power",
+//        props -> new LegacyMachineBlock(EIOBlockEntities.CREATIVE_POWER::get, props),
+//        BlockBehaviour.Properties.of());
 
     // Powered Spawner
     public static final DeferredBlock<ProgressMachineBlock<PoweredSpawnerBlockEntity>> POWERED_SPAWNER = BLOCKS.registerBlock("powered_spawner",
@@ -444,24 +439,24 @@ public class EIOBlocks {
         (p, block) -> new PaintedBlockItem(block.get(), p));
 
     // Solar Panels
-    public static final Map<SolarPanelTier, DeferredBlock<SolarPanelBlock>> SOLAR_PANELS = Util.make(() -> {
-        Map<SolarPanelTier, DeferredBlock<SolarPanelBlock>> panels = new HashMap<>();
-        for (SolarPanelTier tier : SolarPanelTier.values()) {
-            panels.put(tier, solarPanel(tier.name().toLowerCase(Locale.ROOT) + "_photovoltaic_module",
-                () -> EIOBlockEntities.SOLAR_PANELS.get(tier)::get, tier));
-        }
-        return ImmutableMap.copyOf(panels);
-    });
+//    public static final Map<SolarPanelTier, DeferredBlock<SolarPanelBlock>> SOLAR_PANELS = Util.make(() -> {
+//        Map<SolarPanelTier, DeferredBlock<SolarPanelBlock>> panels = new HashMap<>();
+//        for (SolarPanelTier tier : SolarPanelTier.values()) {
+//            panels.put(tier, solarPanel(tier.name().toLowerCase(Locale.ROOT) + "_photovoltaic_module",
+//                () -> EIOBlockEntities.SOLAR_PANELS.get(tier)::get, tier));
+//        }
+//        return ImmutableMap.copyOf(panels);
+//    });
 
     // Capacitor Banks
-    public static final Map<CapacitorTier, DeferredBlock<CapacitorBankBlock>> CAPACITOR_BANKS = Util.make(() -> {
-        Map<CapacitorTier, DeferredBlock<CapacitorBankBlock>> banks = new HashMap<>();
-        for (CapacitorTier tier : CapacitorTier.values()) {
-            banks.put(tier, capacitorBank(tier.name().toLowerCase(Locale.ROOT) + "_capacitor_bank",
-                () -> EIOBlockEntities.CAPACITOR_BANKS.get(tier)::get, tier));
-        }
-        return ImmutableMap.copyOf(banks);
-    });
+//    public static final Map<CapacitorTier, DeferredBlock<CapacitorBankBlock>> CAPACITOR_BANKS = Util.make(() -> {
+//        Map<CapacitorTier, DeferredBlock<CapacitorBankBlock>> banks = new HashMap<>();
+//        for (CapacitorTier tier : CapacitorTier.values()) {
+//            banks.put(tier, capacitorBank(tier.name().toLowerCase(Locale.ROOT) + "_capacitor_bank",
+//                () -> EIOBlockEntities.CAPACITOR_BANKS.get(tier)::get, tier));
+//        }
+//        return ImmutableMap.copyOf(banks);
+//    });
 
     // Soul Engine
     public static final DeferredBlock<ProgressMachineBlock<SoulEngineBlockEntity>> SOUL_ENGINE = BLOCKS.registerBlock("soul_engine",
@@ -521,23 +516,23 @@ public class EIOBlocks {
     public static final DeferredItem<BlockItem> SOUL_ENGINE_ITEM = ITEMS.registerItem("soul_engine",
         p -> new BlockItem(SOUL_ENGINE.get(), p), new Item.Properties().component(EIODataComponents.SOUL, Soul.EMPTY));
 
-    public static final Map<SolarPanelTier, DeferredItem<BlockItem>> SOLAR_PANEL_ITEMS = Util.make(() -> {
-        Map<SolarPanelTier, DeferredItem<BlockItem>> items = new HashMap<>();
-        for (var entry : SOLAR_PANELS.entrySet()) {
-            items.put(entry.getKey(), ITEMS.registerItem(entry.getValue().getId().getPath(),
-                p -> new BlockItem(entry.getValue().get(), p), new Item.Properties().component(EIODataComponents.SOUL, Soul.EMPTY)));
-        }
-        return ImmutableMap.copyOf(items);
-    });
+//    public static final Map<SolarPanelTier, DeferredItem<BlockItem>> SOLAR_PANEL_ITEMS = Util.make(() -> {
+//        Map<SolarPanelTier, DeferredItem<BlockItem>> items = new HashMap<>();
+//        for (var entry : SOLAR_PANELS.entrySet()) {
+//            items.put(entry.getKey(), ITEMS.registerItem(entry.getValue().getId().getPath(),
+//                p -> new BlockItem(entry.getValue().get(), p), new Item.Properties().component(EIODataComponents.SOUL, Soul.EMPTY)));
+//        }
+//        return ImmutableMap.copyOf(items);
+//    });
 
-    public static final Map<CapacitorTier, DeferredItem<CapacitorBankItem>> CAPACITOR_BANK_ITEMS = Util.make(() -> {
-        Map<CapacitorTier, DeferredItem<CapacitorBankItem>> items = new HashMap<>();
-        for (var entry : CAPACITOR_BANKS.entrySet()) {
-            items.put(entry.getKey(), ITEMS.registerItem(entry.getValue().getId().getPath(),
-                p -> new CapacitorBankItem(entry.getValue().get(), p)));
-        }
-        return ImmutableMap.copyOf(items);
-    });
+//    public static final Map<CapacitorTier, DeferredItem<CapacitorBankItem>> CAPACITOR_BANK_ITEMS = Util.make(() -> {
+//        Map<CapacitorTier, DeferredItem<CapacitorBankItem>> items = new HashMap<>();
+//        for (var entry : CAPACITOR_BANKS.entrySet()) {
+//            items.put(entry.getKey(), ITEMS.registerItem(entry.getValue().getId().getPath(),
+//                p -> new CapacitorBankItem(entry.getValue().get(), p)));
+//        }
+//        return ImmutableMap.copyOf(items);
+//    });
 
     // Helper methods
     private static DeferredBlock<MachineBlock<?>> machine(String name,
@@ -564,19 +559,19 @@ public class EIOBlocks {
                 .noOcclusion());
     }
 
-    private static DeferredBlock<SolarPanelBlock> solarPanel(String name,
-        Supplier<Supplier<BlockEntityType<? extends SolarPanelBlockEntity>>> regiliteBlockEntity, SolarPanelTier tier) {
-        return BLOCKS.registerBlock(name,
-            props -> new SolarPanelBlock(regiliteBlockEntity.get()::get, props, tier),
-            BlockBehaviour.Properties.of().strength(2.5f, 8));
-    }
-
-    private static DeferredBlock<CapacitorBankBlock> capacitorBank(String name,
-        Supplier<Supplier<BlockEntityType<? extends CapacitorBankBlockEntity>>> regiliteBlockEntity, CapacitorTier tier) {
-        return BLOCKS.registerBlock(name,
-            props -> new CapacitorBankBlock(props, regiliteBlockEntity.get()::get, tier),
-            BlockBehaviour.Properties.of().strength(2.5f, 8));
-    }
+//    private static DeferredBlock<SolarPanelBlock> solarPanel(String name,
+//        Supplier<Supplier<BlockEntityType<? extends SolarPanelBlockEntity>>> regiliteBlockEntity, SolarPanelTier tier) {
+//        return BLOCKS.registerBlock(name,
+//            props -> new SolarPanelBlock(regiliteBlockEntity.get()::get, props, tier),
+//            BlockBehaviour.Properties.of().strength(2.5f, 8));
+//    }
+//
+//    private static DeferredBlock<CapacitorBankBlock> capacitorBank(String name,
+//        Supplier<Supplier<BlockEntityType<? extends CapacitorBankBlockEntity>>> regiliteBlockEntity, CapacitorTier tier) {
+//        return BLOCKS.registerBlock(name,
+//            props -> new CapacitorBankBlock(props, regiliteBlockEntity.get()::get, tier),
+//            BlockBehaviour.Properties.of().strength(2.5f, 8));
+//    }
 
     // endregion
 

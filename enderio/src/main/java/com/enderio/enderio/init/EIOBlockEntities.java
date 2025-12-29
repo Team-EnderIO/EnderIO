@@ -4,12 +4,9 @@ import com.enderio.core.common.registries.BlockEntityTypeDeferredRegister;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
-import com.enderio.enderio.content.dev_tools.CreativePowerBlockEntity;
 import com.enderio.enderio.content.enchanter.EnchanterBlockEntity;
 import com.enderio.enderio.content.enderface.EnderfaceBlockEntity;
 import com.enderio.enderio.content.machines.alloy.AlloySmelterBlockEntity;
-import com.enderio.enderio.content.machines.capacitor_bank.CapacitorBankBlockEntity;
-import com.enderio.enderio.content.machines.capacitor_bank.CapacitorTier;
 import com.enderio.enderio.content.machines.drain.DrainBlockEntity;
 import com.enderio.enderio.content.machines.farming_station.FarmingStationBlockEntity;
 import com.enderio.enderio.content.machines.impulse_hopper.ImpulseHopperBlockEntity;
@@ -25,8 +22,6 @@ import com.enderio.enderio.content.machines.powered_spawner.MindKillerBlockEntit
 import com.enderio.enderio.content.machines.powered_spawner.PoweredSpawnerBlockEntity;
 import com.enderio.enderio.content.machines.sag_mill.SagMillBlockEntity;
 import com.enderio.enderio.content.machines.slicer.SlicerBlockEntity;
-import com.enderio.enderio.content.machines.solar_panel.SolarPanelBlockEntity;
-import com.enderio.enderio.content.machines.solar_panel.SolarPanelTier;
 import com.enderio.enderio.content.machines.soul_binder.SoulBinderBlockEntity;
 import com.enderio.enderio.content.machines.soul_engine.SoulEngineBlockEntity;
 import com.enderio.enderio.content.machines.stirling_generator.StirlingGeneratorBlockEntity;
@@ -45,44 +40,36 @@ import com.enderio.enderio.foundation.attachment.FluidTankUser;
 import com.enderio.enderio.foundation.block.entity.EnderSkullBlockEntity;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
-import com.enderio.enderio.foundation.block.entity.legacy.LegacyMachineBlockEntity;
-import com.enderio.enderio.foundation.block.entity.legacy.LegacyPoweredMachineBlockEntity;
-import com.google.common.collect.ImmutableMap;
-import net.minecraft.util.Util;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-
 public class EIOBlockEntities {
     public static final BlockEntityTypeDeferredRegister BLOCK_ENTITY_TYPES = BlockEntityTypeDeferredRegister.create(EnderIO.MOD_ID);
 
-    public static final Map<CapacitorTier, DeferredHolder<BlockEntityType<?>, BlockEntityType<CapacitorBankBlockEntity>>> CAPACITOR_BANKS = Util
-        .make(() -> {
-            Map<CapacitorTier, DeferredHolder<BlockEntityType<?>, BlockEntityType<CapacitorBankBlockEntity>>> map = new HashMap<>();
-            for (CapacitorTier tier : CapacitorTier.values()) {
-                map.put(tier, BLOCK_ENTITY_TYPES
-                    .builder(tier.name().toLowerCase(Locale.ROOT) + "_capacitor_bank",
-                        (worldPosition, blockState) -> new CapacitorBankBlockEntity(worldPosition, blockState, tier),
-                        () -> EIOBlocks.CAPACITOR_BANKS.get(tier).get())
-                    .apply(EIOBlockEntities::legacyPoweredMachineBlockEntityCapabilities)
-                    .build()
-                );
-            }
-            return ImmutableMap.copyOf(map);
-        });
+//    public static final Map<CapacitorTier, DeferredHolder<BlockEntityType<?>, BlockEntityType<CapacitorBankBlockEntity>>> CAPACITOR_BANKS = Util
+//        .make(() -> {
+//            Map<CapacitorTier, DeferredHolder<BlockEntityType<?>, BlockEntityType<CapacitorBankBlockEntity>>> map = new HashMap<>();
+//            for (CapacitorTier tier : CapacitorTier.values()) {
+//                map.put(tier, BLOCK_ENTITY_TYPES
+//                    .builder(tier.name().toLowerCase(Locale.ROOT) + "_capacitor_bank",
+//                        (worldPosition, blockState) -> new CapacitorBankBlockEntity(worldPosition, blockState, tier),
+//                        () -> EIOBlocks.CAPACITOR_BANKS.get(tier).get())
+//                    .apply(EIOBlockEntities::legacyPoweredMachineBlockEntityCapabilities)
+//                    .build()
+//                );
+//            }
+//            return ImmutableMap.copyOf(map);
+//        });
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ConduitBundleBlockEntity>> CONDUIT = BLOCK_ENTITY_TYPES.register("conduit",
         ConduitBundleBlockEntity::new, EIOBlocks.CONDUIT_BUNDLE::get);
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CreativePowerBlockEntity>> CREATIVE_POWER = BLOCK_ENTITY_TYPES
-        .builder("creative_power", CreativePowerBlockEntity::new, EIOBlocks.CREATIVE_POWER::get)
-        .apply(EIOBlockEntities::legacyPoweredMachineBlockEntityCapabilities)
-        .build();
+//    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CreativePowerBlockEntity>> CREATIVE_POWER = BLOCK_ENTITY_TYPES
+//        .builder("creative_power", CreativePowerBlockEntity::new, EIOBlocks.CREATIVE_POWER::get)
+//        .apply(EIOBlockEntities::legacyPoweredMachineBlockEntityCapabilities)
+//        .build();
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<EnchanterBlockEntity>> ENCHANTER = BLOCK_ENTITY_TYPES.register("enchanter",
         EnchanterBlockEntity::new, EIOBlocks.ENCHANTER::get);
@@ -224,19 +211,19 @@ public class EIOBlockEntities {
         .apply(EIOBlockEntities::soulBoundCapability)
         .build();
 
-    public static final Map<SolarPanelTier, DeferredHolder<BlockEntityType<?>, BlockEntityType<SolarPanelBlockEntity>>> SOLAR_PANELS = Util.make(() -> {
-        Map<SolarPanelTier, DeferredHolder<BlockEntityType<?>, BlockEntityType<SolarPanelBlockEntity>>> map = new HashMap<>();
-        for (SolarPanelTier tier : SolarPanelTier.values()) {
-            map.put(tier, BLOCK_ENTITY_TYPES
-                .builder(tier.name().toLowerCase(Locale.ROOT) + "_photovoltaic_cell",
-                    (worldPosition, blockState) -> new SolarPanelBlockEntity(worldPosition, blockState, tier),
-                    () -> EIOBlocks.SOLAR_PANELS.get(tier).get())
-                .apply(EIOBlockEntities::legacyPoweredMachineBlockEntityCapabilities)
-                .build())
-            ;
-        }
-        return ImmutableMap.copyOf(map);
-    });
+//    public static final Map<SolarPanelTier, DeferredHolder<BlockEntityType<?>, BlockEntityType<SolarPanelBlockEntity>>> SOLAR_PANELS = Util.make(() -> {
+//        Map<SolarPanelTier, DeferredHolder<BlockEntityType<?>, BlockEntityType<SolarPanelBlockEntity>>> map = new HashMap<>();
+//        for (SolarPanelTier tier : SolarPanelTier.values()) {
+//            map.put(tier, BLOCK_ENTITY_TYPES
+//                .builder(tier.name().toLowerCase(Locale.ROOT) + "_photovoltaic_cell",
+//                    (worldPosition, blockState) -> new SolarPanelBlockEntity(worldPosition, blockState, tier),
+//                    () -> EIOBlocks.SOLAR_PANELS.get(tier).get())
+//                .apply(EIOBlockEntities::legacyPoweredMachineBlockEntityCapabilities)
+//                .build())
+//            ;
+//        }
+//        return ImmutableMap.copyOf(map);
+//    });
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MindKillerBlockEntity>> MIND_KILLER = BLOCK_ENTITY_TYPES
         .register("mind_killer", MindKillerBlockEntity::new, EIOBlocks.MIND_KILLER::get);
@@ -250,17 +237,6 @@ public class EIOBlockEntities {
         BlockEntityTypeDeferredRegister.Builder<? extends PoweredMachineBlockEntity> builder) {
         machineBlockEntityCapabilities(builder);
         builder.capability(Capabilities.Energy.BLOCK, PoweredMachineBlockEntity.ENERGY_STORAGE_PROVIDER);
-    }
-
-    private static void legacyPoweredMachineBlockEntityCapabilities(BlockEntityTypeDeferredRegister.Builder<? extends LegacyPoweredMachineBlockEntity> builder) {
-        legacyMachineBlockEntityCapabilities(builder);
-        builder.capability(Capabilities.Energy.BLOCK,
-            LegacyPoweredMachineBlockEntity.ENERGY_STORAGE_PROVIDER);
-    }
-
-    private static void legacyMachineBlockEntityCapabilities(BlockEntityTypeDeferredRegister.Builder<? extends LegacyMachineBlockEntity> builder) {
-        builder.capability(EnderIOCapabilities.SIDE_CONFIG, LegacyMachineBlockEntity.SIDE_CONFIG_PROVIDER);
-        builder.capability(Capabilities.Item.BLOCK, LegacyMachineBlockEntity.ITEM_HANDLER_PROVIDER);
     }
 
     private static void soulBoundCapability(BlockEntityTypeDeferredRegister.Builder<? extends MachineBlockEntity> blockEntity) {

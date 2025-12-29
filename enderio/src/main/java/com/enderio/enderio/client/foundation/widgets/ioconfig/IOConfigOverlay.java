@@ -3,7 +3,6 @@ package com.enderio.enderio.client.foundation.widgets.ioconfig;
 import com.enderio.core.client.gui.screen.BaseOverlay;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.io.IOConfigurable;
-import com.enderio.enderio.foundation.block.entity.legacy.LegacyMachineBlockEntity;
 import com.enderio.enderio.foundation.network.packets.ServerboundCycleIOConfigPacket;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
@@ -208,11 +207,7 @@ public class IOConfigOverlay extends BaseOverlay {
                 if (selection.isPresent()) {
                     var selectedFace = selection.get();
                     BlockEntity entity = MINECRAFT.level.getBlockEntity(selectedFace.blockPos);
-                    if (entity instanceof LegacyMachineBlockEntity machine) {
-                        machine.cycleIOMode(selectedFace.side);
-                        this.playDownSound(MINECRAFT.getSoundManager());
-                        return true;
-                    } else if (entity instanceof IOConfigurable) {
+                    if (entity instanceof IOConfigurable) {
                         ClientPacketDistributor
                                 .sendToServer(new ServerboundCycleIOConfigPacket(selectedFace.blockPos, selectedFace.side));
                         this.playDownSound(MINECRAFT.getSoundManager());

@@ -9,7 +9,6 @@ import com.enderio.enderio.api.soul.binding.SoulBindable;
 import com.enderio.enderio.foundation.MachineNBTKeys;
 import com.enderio.enderio.foundation.block.EIOBlockEntity;
 import com.enderio.enderio.foundation.block.ProgressMachineBlock;
-import com.enderio.enderio.foundation.block.legacy.LegacyMachineBlock;
 import com.enderio.enderio.foundation.inventory.MachineInventory;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.foundation.io.IOConfig;
@@ -38,6 +37,8 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.fml.LogicalSide;
@@ -76,6 +77,8 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
         -> be instanceof SoulBindable bindable ? bindable : null;
 
     public static final ModelProperty<IOConfigurable> IO_CONFIG_PROPERTY = new ModelProperty<>();
+
+    public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     @Nullable
     private final MachineInventory inventory;
@@ -149,8 +152,8 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
      */
     protected final Direction getBlockFacing() {
         BlockState state = getBlockState();
-        if (state.hasProperty(LegacyMachineBlock.FACING)) {
-            return getBlockState().getValue(LegacyMachineBlock.FACING);
+        if (state.hasProperty(FACING)) {
+            return getBlockState().getValue(FACING);
         }
 
         return Direction.SOUTH;
