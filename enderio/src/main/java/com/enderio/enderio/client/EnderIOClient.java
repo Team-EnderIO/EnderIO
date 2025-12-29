@@ -23,6 +23,7 @@ import com.enderio.enderio.client.content.filters.redstone.RedstoneCountFilterSc
 import com.enderio.enderio.client.content.filters.redstone.RedstoneDoubleChannelFilterScreen;
 import com.enderio.enderio.client.content.filters.redstone.RedstoneTimerFilterScreen;
 import com.enderio.enderio.client.content.glass.GlassIconDecorator;
+import com.enderio.enderio.client.content.machines.IOOverlayBlockStateModel;
 import com.enderio.enderio.client.content.machines.gui.screen.AlloySmelterScreen;
 import com.enderio.enderio.client.content.machines.gui.screen.AttractorObeliskScreen;
 import com.enderio.enderio.client.content.machines.gui.screen.AversionObeliskScreen;
@@ -357,6 +358,8 @@ public class EnderIOClient {
     @SubscribeEvent
     public static void registerGeometryLoaders(RegisterBlockStateModels event) {
         event.registerModel(EnderIO.rl("conduit"), ConduitBlockStateModel.Unbaked.CODEC);
+        event.registerModel(EnderIO.rl("io_overlay"), IOOverlayBlockStateModel.Unbaked.MAP_CODEC);
+
     }
 
     @SubscribeEvent

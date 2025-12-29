@@ -51,42 +51,43 @@ public class TravelTargetRendering {
 
     @SubscribeEvent
     public static void renderLevel(RenderLevelStageEvent.AfterTripwireBlocks event) {
-        ClientLevel level = Minecraft.getInstance().level;
-        LocalPlayer player = Minecraft.getInstance().player;
-        if (level == null || player == null) {
-            return;
-        }
-
-        if (!TravelHandler.canTeleport(player)) {
-            return;
-        }
-
-        boolean itemTeleport = TravelHandler.canItemTeleport(player);
-
-        @Nullable
-        TravelTarget activeTarget = TravelHandler.getTeleportAnchorTarget(player).orElse(null);
-        for (TravelTarget target : TravelTargetApi.INSTANCE.getAll(level)) {
-            double range = itemTeleport ? target.item2BlockRange() : target.block2BlockRange();
-            double distanceSquared = target.pos().distToCenterSqr(player.position());
-            if (range * range < distanceSquared || distanceSquared < TravelHandler.MIN_TELEPORTATION_DISTANCE_SQUARED
-                    || TravelHandler.isTeleportPositionClear(level, target.pos()).isEmpty()) {
-                continue;
-            }
-
-            PoseStack poseStack = event.getPoseStack();
-            poseStack.pushPose();
-            Camera mainCamera = Minecraft.getInstance().gameRenderer.getMainCamera();
-            Vec3 projectedView = mainCamera.position();
-            poseStack.translate(-projectedView.x, -projectedView.y, -projectedView.z);
-
-            boolean active = activeTarget == target;
-
-            // needed for smooth rendering
-            // the boolean value controls whether it's still smooth while the game world is
-            // paused (e.g. /tick freeze)
-            float partialTick = event.getPartialTick().getGameTimeDeltaPartialTick(true);
-            render(target, event.getLevelRenderer(), poseStack, distanceSquared, active, partialTick);
-            poseStack.popPose();
-        }
+        // TODO: 1.21.11: Work out how we're supposed to add to the level render state.
+//        ClientLevel level = Minecraft.getInstance().level;
+//        LocalPlayer player = Minecraft.getInstance().player;
+//        if (level == null || player == null) {
+//            return;
+//        }
+//
+//        if (!TravelHandler.canTeleport(player)) {
+//            return;
+//        }
+//
+//        boolean itemTeleport = TravelHandler.canItemTeleport(player);
+//
+//        @Nullable
+//        TravelTarget activeTarget = TravelHandler.getTeleportAnchorTarget(player).orElse(null);
+//        for (TravelTarget target : TravelTargetApi.INSTANCE.getAll(level)) {
+//            double range = itemTeleport ? target.item2BlockRange() : target.block2BlockRange();
+//            double distanceSquared = target.pos().distToCenterSqr(player.position());
+//            if (range * range < distanceSquared || distanceSquared < TravelHandler.MIN_TELEPORTATION_DISTANCE_SQUARED
+//                    || TravelHandler.isTeleportPositionClear(level, target.pos()).isEmpty()) {
+//                continue;
+//            }
+//
+//            PoseStack poseStack = event.getPoseStack();
+//            poseStack.pushPose();
+//            Camera mainCamera = Minecraft.getInstance().gameRenderer.getMainCamera();
+//            Vec3 projectedView = mainCamera.position();
+//            poseStack.translate(-projectedView.x, -projectedView.y, -projectedView.z);
+//
+//            boolean active = activeTarget == target;
+//
+//            // needed for smooth rendering
+//            // the boolean value controls whether it's still smooth while the game world is
+//            // paused (e.g. /tick freeze)
+//            float partialTick = event.getPartialTick().getGameTimeDeltaPartialTick(true);
+//            render(target, event.getLevelRenderer(), poseStack, distanceSquared, active, partialTick);
+//            poseStack.popPose();
+//        }
     }
 }

@@ -1,6 +1,8 @@
 package com.enderio.enderio.datagen.client.models;
 
 import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.client.content.conduits.model.bundle.port.ConduitBlockStateModel;
+import com.enderio.enderio.client.content.machines.IOOverlayBlockStateModel;
 import com.enderio.enderio.content.machines.solar_panel.SolarPanelBlock;
 import com.enderio.enderio.content.machines.solar_panel.SolarPanelTier;
 import com.enderio.enderio.content.misc_blocks.skull.EnderSkullBlock;
@@ -15,11 +17,10 @@ import net.minecraft.client.data.models.blockstates.MultiPartGenerator;
 import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.blockstates.PropertyDispatch;
 import net.minecraft.client.data.models.model.ModelLocationUtils;
-import net.minecraft.client.data.models.model.ModelTemplate;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureMapping;
-import net.minecraft.client.data.models.model.TextureSlot;
 import net.minecraft.client.data.models.model.TexturedModel;
+import net.minecraft.client.renderer.block.model.VariantMutator;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -30,7 +31,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.neoforged.neoforge.client.model.generators.loaders.CompositeModelBuilder;
+import net.neoforged.neoforge.client.model.block.CustomUnbakedBlockStateModel;
+import net.neoforged.neoforge.client.model.generators.blockstate.CustomBlockStateModelBuilder;
+import net.neoforged.neoforge.client.model.generators.blockstate.UnbakedMutator;
 
 import java.util.stream.Stream;
 
@@ -42,12 +45,6 @@ public class EIOBlockStateProvider extends ModelProvider {
     }
 
     @Override
-    public String getName() {
-        return "Ender IO Block Model Definitions";
-    }
-
-    // TODO: 1.21.8: Lift these overrides so the validation that all models are present exist.
-    @Override
     protected Stream<? extends Holder<Block>> getKnownBlocks() {
         return Stream.empty();
     }
@@ -55,6 +52,11 @@ public class EIOBlockStateProvider extends ModelProvider {
     @Override
     protected Stream<? extends Holder<Item>> getKnownItems() {
         return Stream.empty();
+    }
+
+    @Override
+    public String getName() {
+        return "Ender IO Block Model Definitions";
     }
 
     @Override
@@ -128,6 +130,10 @@ public class EIOBlockStateProvider extends ModelProvider {
 
         registerMachineBlocks(blockModels);
         registerFluidBlocks(blockModels);
+
+        blockModels.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(EIOBlocks.CONDUIT_BUNDLE.get(),
+            MultiVariant.of(new CustomBlockStateModelBuilder.Simple(ConduitBlockStateModel.Unbaked.INSTANCE))));
+
     }
 
     private void simpleBlockWithModel(BlockModelGenerators blockModels, Block block, Identifier Identifier) {
@@ -372,8 +378,8 @@ public class EIOBlockStateProvider extends ModelProvider {
     }
 
     private void machineBlock(BlockModelGenerators blockModelGenerators, Block block) {
-        Identifier model = wrapMachineModel(blockModelGenerators, block, ModelLocationUtils.getModelLocation(block));
-        MultiVariantGenerator.dispatch(block, plainVariant(model))
+        var model = wrapMachineModel(blockModelGenerators, block, ModelLocationUtils.getModelLocation(block));
+        MultiVariantGenerator.dispatch(block, model)
             .with(BlockModelGenerators.ROTATION_HORIZONTAL_FACING);
     }
 
@@ -382,10 +388,10 @@ public class EIOBlockStateProvider extends ModelProvider {
         String path = key(block).getPath();
         var powered = Identifier.fromNamespaceAndPath(ns, "block/" + path + "_active");
 
-        var unpoweredModel = wrapMachineModel(blockModelGenerators, block, ModelLocationUtils.getModelLocation(block));
-        var poweredModel = wrapMachineModel(blockModelGenerators, block, powered);
+        MultiVariant unpoweredModel = wrapMachineModel(blockModelGenerators, block, ModelLocationUtils.getModelLocation(block));
+        MultiVariant poweredModel = wrapMachineModel(blockModelGenerators, block, powered);
         blockModelGenerators.blockStateOutput.accept(MultiVariantGenerator.dispatch(block)
-                .with(createBooleanModelDispatch(ProgressMachineBlock.POWERED, plainVariant(poweredModel), plainVariant(unpoweredModel)))
+                .with(createBooleanModelDispatch(ProgressMachineBlock.POWERED, poweredModel, unpoweredModel))
                 .with(BlockModelGenerators.ROTATION_HORIZONTAL_FACING));
     }
 
@@ -416,15 +422,32 @@ public class EIOBlockStateProvider extends ModelProvider {
 //        builder.part().modelFile(cornerModel).rotationY(270).addModel().condition(SolarPanelBlock.NORTH_WEST, true);
     }
 
-    private static final ModelTemplate COMBINED_MACHINE = ModelTemplates.create(TextureSlot.PARTICLE);
+    private MultiVariant wrapMachineModel(BlockModelGenerators blockModelGenerators, Block block, ResourceLocation model) {
+        return MultiVariant.of(new IOModelBuilder(new IOOverlayBlockStateModel.Unbaked(plainModel(model))));
+    }
 
-    private Identifier wrapMachineModel(BlockModelGenerators blockModelGenerators, Block block, Identifier model) {
-        return COMBINED_MACHINE.extend()
-            .customLoader(CompositeModelBuilder::new, builder -> {
-                builder.child("machine", model);
-                builder.child("overlay", EnderIO.rl("block/io_overlay"));
-            }).build()
-            .create(EnderIO.rl("block/" + model.getPath() + "_combined"), TextureMapping.cube(block), blockModelGenerators.modelOutput);
+    public static class IOModelBuilder extends CustomBlockStateModelBuilder {
+
+        private final IOOverlayBlockStateModel.Unbaked model;
+
+        public IOModelBuilder(IOOverlayBlockStateModel.Unbaked model) {
+            this.model = model;
+        }
+
+        @Override
+        public CustomBlockStateModelBuilder with(VariantMutator variantMutator) {
+            return new IOModelBuilder(new IOOverlayBlockStateModel.Unbaked(model.variant().with(variantMutator)));
+        }
+
+        @Override
+        public CustomBlockStateModelBuilder with(UnbakedMutator variantMutator) {
+            return new IOModelBuilder(variantMutator.apply(model));
+        }
+
+        @Override
+        public CustomUnbakedBlockStateModel toUnbaked() {
+            return this.model;
+        }
     }
 
     private Identifier key(Block block) {
