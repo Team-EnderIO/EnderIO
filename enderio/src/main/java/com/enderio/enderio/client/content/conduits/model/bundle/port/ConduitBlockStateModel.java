@@ -1,6 +1,7 @@
 package com.enderio.enderio.client.content.conduits.model.bundle.port;
 
 import com.enderio.core.common.util.Area;
+import com.enderio.core.data.model.ModelHelper;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.client.content.conduits.model.ConduitAdditionalModels;
 import com.enderio.enderio.client.content.conduits.model.bundle.ConduitBundleRenderState;
@@ -49,7 +50,31 @@ public class ConduitBlockStateModel implements DynamicBlockStateModel {
 
     @Override
     public TextureAtlasSprite particleIcon() {
-        return null;
+        return ModelHelper.getMissingTexture();
+    }
+
+    @Override
+    public TextureAtlasSprite particleIcon(BlockAndTintGetter level, BlockPos pos, BlockState state) {
+         //This is only used for facades.
+        ConduitBundleRenderState bundleState = level.getModelData(pos).get(ConduitBundleRenderState.PROPERTY);
+
+        if (bundleState == null) {
+            return ModelHelper.getMissingTexture();
+        }
+
+        if (bundleState.hasFacade() && ClientFacadeVisibility.areFacadesVisible()) {
+            return Minecraft.getInstance()
+                .getBlockRenderer()
+                .getBlockModel(bundleState.facade())
+                .particleIcon(level, pos, state);
+        }
+
+        // Shouldn't be called anymore, but sensible fallback to have:
+        if (bundleState.conduits().isEmpty()) {
+            return ModelHelper.getMissingTexture();
+        }
+
+        return sprite(bundleState.getTexture(bundleState.conduits().getFirst()));
     }
 
     @Override
@@ -222,40 +247,19 @@ public class ConduitBlockStateModel implements DynamicBlockStateModel {
                 }
                 Vec3i min = box.getMin();
                 var size = box.size();
-                ModelState boxTranslate = new ModelState() { //TODO something is wrong
+                ModelState boxTranslate = new ModelState() {
                     @Override
                     public Transformation transformation() {
-                        var scaling = new Transformation(null, null, new Vector3f(size.getX(), size.getY(), size.getZ()), null).getMatrix();
-                        var moveToCenter = new Transformation(new Vector3f(6.5f / 16, 6.5f / 16, 6.5f / 16), null, null, null).getMatrix();
+                        var scaling = new Transformation(null, null, new Vector3f(size.getX(), size.getY(), size.getZ()), null)
+                            .applyOrigin(new Vector3f(-0.5f)).getMatrix();
+                        var center = new Transformation(new Vector3f(6.5f / 16, 6.5f /16, 6.5f /16), null, null, null).getMatrix();
                         var translate = translateTransformation(min).getMatrix();
-                        var temp = new Matrix4f();
-                        var temp2 = new Matrix4f();
-                        scaling.mul(moveToCenter, temp);
-                        temp.mul(translate, temp2);//TODO I feel like this one is wrong, maybe the box needs an offset?
-                        return new Transformation(temp2);
+                        return new Transformation(translate.mul(center.mul(scaling, new Matrix4f()), new Matrix4f()));
                     }
                 };
 
                 final var model = SimpleModelWrapper.bake(this.baker, ConduitAdditionalModels.BOX, boxTranslate);
                 parts.add(model);
-
-//                //TODO improve
-//                parts.add(new BlockModelPart() {
-//                    @Override
-//                    public List<BakedQuad> getQuads(@Nullable Direction direction) {
-//                        return new BoxTextureQuadTransformer(size).process(model.getQuads(direction));
-//                    }
-//
-//                    @Override
-//                    public boolean useAmbientOcclusion() {
-//                        return model.useAmbientOcclusion();
-//                    }
-//
-//                    @Override
-//                    public TextureAtlasSprite particleIcon() {
-//                        return model.particleIcon();
-//                    }
-//                });
 
 
             } else {

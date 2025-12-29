@@ -1,33 +1,41 @@
 {
   "variants": {
     "facing=east,powered=false": {
-      "model": "enderio:block/wireless_charger_combined",
+      "type": "enderio:io_overlay",
+      "model": "enderio:block/wireless_charger",
       "y": 90
     },
     "facing=east,powered=true": {
-      "model": "enderio:block/wireless_charger_active_combined",
+      "type": "enderio:io_overlay",
+      "model": "enderio:block/wireless_charger_active",
       "y": 90
     },
     "facing=north,powered=false": {
-      "model": "enderio:block/wireless_charger_combined"
+      "type": "enderio:io_overlay",
+      "model": "enderio:block/wireless_charger"
     },
     "facing=north,powered=true": {
-      "model": "enderio:block/wireless_charger_active_combined"
+      "type": "enderio:io_overlay",
+      "model": "enderio:block/wireless_charger_active"
     },
     "facing=south,powered=false": {
-      "model": "enderio:block/wireless_charger_combined",
+      "type": "enderio:io_overlay",
+      "model": "enderio:block/wireless_charger",
       "y": 180
     },
     "facing=south,powered=true": {
-      "model": "enderio:block/wireless_charger_active_combined",
+      "type": "enderio:io_overlay",
+      "model": "enderio:block/wireless_charger_active",
       "y": 180
     },
     "facing=west,powered=false": {
-      "model": "enderio:block/wireless_charger_combined",
+      "type": "enderio:io_overlay",
+      "model": "enderio:block/wireless_charger",
       "y": 270
     },
     "facing=west,powered=true": {
-      "model": "enderio:block/wireless_charger_active_combined",
+      "type": "enderio:io_overlay",
+      "model": "enderio:block/wireless_charger_active",
       "y": 270
     }
   }

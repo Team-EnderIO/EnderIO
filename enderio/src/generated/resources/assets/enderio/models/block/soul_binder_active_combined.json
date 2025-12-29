@@ -1,9 +1,0 @@
-{
-  "children": {
-    "machine": "enderio:block/soul_binder_active"
-  },
-  "item_render_order": [
-    "machine"
-  ],
-  "loader": "neoforge:composite"
-}

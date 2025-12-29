@@ -1,9 +1,0 @@
-{
-  "children": {
-    "machine": "enderio:block/sag_mill"
-  },
-  "item_render_order": [
-    "machine"
-  ],
-  "loader": "neoforge:composite"
-}

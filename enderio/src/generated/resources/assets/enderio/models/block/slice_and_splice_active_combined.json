@@ -1,9 +1,0 @@
-{
-  "children": {
-    "machine": "enderio:block/slice_and_splice_active"
-  },
-  "item_render_order": [
-    "machine"
-  ],
-  "loader": "neoforge:composite"
-}

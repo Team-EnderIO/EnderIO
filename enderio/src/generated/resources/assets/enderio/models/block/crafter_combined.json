@@ -1,9 +1,0 @@
-{
-  "children": {
-    "machine": "enderio:block/crafter"
-  },
-  "item_render_order": [
-    "machine"
-  ],
-  "loader": "neoforge:composite"
-}
