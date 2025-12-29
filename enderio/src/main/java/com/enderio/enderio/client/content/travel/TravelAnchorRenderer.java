@@ -21,7 +21,6 @@ import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.ARGB;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -29,6 +28,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.Shapes;
 import org.joml.Math;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
@@ -88,6 +88,8 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
         // TODO: 1.21.11: Are Gizmos the correct replacement?
 //        ShapeRenderer.renderLineBox(poseStack, lines, 0, 0, 0, 1, 1, 1, ARGB.red(color) / 255F,
 //                ARGB.green(color) / 255F, ARGB.blue(color) / 255F, 1);
+
+        ShapeRenderer.renderShape(poseStack, lines, Shapes.block(), 0, 0, 0, color, 1);
 
         LocalPlayer player = Minecraft.getInstance().player;
 
@@ -156,11 +158,11 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             ItemStack stack = new ItemStack(travelData.icon());
 
             // TODO: 1.21.4: Check this.
+            // TODO 1.21.11: OutlineBuffer.INSTANCE ?
             minecraft
                 .getItemModelResolver()
                 .updateForTopItem(this.scratchItemStackRenderState, stack, ItemDisplayContext.GUI, minecraft.level, null, 0);
-            this.scratchItemStackRenderState.submit(poseStack, OutlineBuffer.INSTANCE, 15728880, OverlayTexture.NO_OVERLAY);
-
+            this.scratchItemStackRenderState.submit(poseStack, minecraft.gameRenderer.getSubmitNodeStorage(), 15728880, OverlayTexture.NO_OVERLAY, 0);
             poseStack.popPose();
         }
 

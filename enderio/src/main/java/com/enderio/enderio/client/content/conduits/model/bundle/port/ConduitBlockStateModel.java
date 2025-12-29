@@ -7,13 +7,13 @@ import com.enderio.enderio.client.content.conduits.model.ConduitAdditionalModels
 import com.enderio.enderio.client.content.conduits.model.bundle.ConduitBundleRenderState;
 import com.enderio.enderio.client.content.conduits.model.facades.ClientFacadeVisibility;
 import com.enderio.enderio.content.conduits.OffsetHelper;
+import com.mojang.math.OctahedralGroup;
 import com.mojang.math.Transformation;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BlockModelPart;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.block.model.SimpleModelWrapper;
-import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BlockModelRotation;
@@ -283,22 +283,12 @@ public class ConduitBlockStateModel implements DynamicBlockStateModel {
 
     public static ModelState rotate(Direction toDirection) {
         return switch (toDirection) {
-            case UP -> BlockModelRotation.X180_Y180;
-            case NORTH -> BlockModelRotation.X270_Y0;
-            case SOUTH -> BlockModelRotation.X90_Y0;
-            case WEST -> new ModelState() {
-                @Override
-                public Transformation transformation() {
-                    return new Transformation(new Matrix4f(0, -1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1));
-                }
-            };
-            case EAST -> new ModelState() {
-                @Override
-                public Transformation transformation() {
-                    return new Transformation(new Matrix4f(0, 1, 0, 0, -1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1));
-                }
-            };
-            default -> BlockModelRotation.X0_Y0;
+            case UP -> BlockModelRotation.get(OctahedralGroup.BLOCK_ROT_Z_180);
+            case NORTH -> BlockModelRotation.get(OctahedralGroup.BLOCK_ROT_X_270);
+            case SOUTH -> BlockModelRotation.get(OctahedralGroup.BLOCK_ROT_X_90);
+            case WEST -> BlockModelRotation.get(OctahedralGroup.BLOCK_ROT_Z_270);
+            case EAST -> BlockModelRotation.get(OctahedralGroup.BLOCK_ROT_Z_90);
+            default -> BlockModelRotation.get(OctahedralGroup.IDENTITY);
         };
     }
 
@@ -311,7 +301,7 @@ public class ConduitBlockStateModel implements DynamicBlockStateModel {
     }
 
     private static TextureAtlasSprite sprite(Identifier location) {
-        return Minecraft.getInstance().getModelManager().getAtlas(TextureAtlas.LOCATION_BLOCKS).getSprite(location);
+        return Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(TextureAtlas.LOCATION_BLOCKS).getSprite(location);
     }
 
     public record Unbaked() implements CustomUnbakedBlockStateModel {

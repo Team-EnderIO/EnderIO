@@ -1,5 +1,6 @@
 package com.enderio.enderio.client.content.misc_blocks;
 
+import com.enderio.enderio.content.misc_blocks.skull.EnderSkullBlock;
 import com.enderio.enderio.foundation.block.entity.EnderSkullBlockEntity;
 import com.enderio.enderio.init.EIOBlocks;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -14,12 +15,15 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.client.model.object.skull.SkullModelBase;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
@@ -30,8 +34,9 @@ import net.minecraft.world.level.block.state.properties.RotationSegment;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.Nullable;
 
-public class EnderSkullRenderer implements BlockEntityRenderer<EnderSkullBlockEntity> {
+public class EnderSkullRenderer implements BlockEntityRenderer<EnderSkullBlockEntity, EnderSkullRenderer.EnderSkullBlockRenderState> {
 
     public static final RenderType RENDERTYPE = RenderTypes.entityCutoutNoCullZOffset(Identifier.withDefaultNamespace("textures/entity/enderman/enderman.png"));
     public static final ModelLayerLocation ENDER_SKULL = new ModelLayerLocation(Identifier.withDefaultNamespace("enderman_head"), "main");
@@ -43,10 +48,29 @@ public class EnderSkullRenderer implements BlockEntityRenderer<EnderSkullBlockEn
     }
 
     @Override
-    public void render(EnderSkullBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight,
-        int packedOverlay, Vec3 cameraPos) {
-        float f = blockEntity.getAnimation(partialTick);
+    public EnderSkullBlockRenderState createRenderState() {
+        return new EnderSkullBlockRenderState();
+    }
+
+    @Override
+    public void extractRenderState(EnderSkullBlockEntity blockEntity, EnderSkullBlockRenderState renderState, float partialTick, Vec3 cameraPosition,
+        ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
+        BlockEntityRenderer.super.extractRenderState(blockEntity, renderState, partialTick, cameraPosition, breakProgress);
+        renderState.animationProgress = blockEntity.getAnimation(partialTick);
         BlockState blockstate = blockEntity.getBlockState();
+        boolean flag = blockstate.getBlock() instanceof WallSkullBlock;
+        renderState.direction = flag ? blockstate.getValue(WallSkullBlock.FACING) : null;
+        int i = flag ? RotationSegment.convertToSegment(renderState.direction.getOpposite()) : blockstate.getValue(SkullBlock.ROTATION);
+        renderState.rotationDegrees = RotationSegment.convertToDegrees(i);
+        renderState.skullType = EnderSkullBlock.EIOSkulls.ENDERMAN;
+        renderState.renderType = RENDERTYPE;
+        renderState.blockEntity = blockEntity;
+    }
+
+    @Override
+    public void submit(EnderSkullBlockRenderState renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector, CameraRenderState cameraRenderState) {
+        float f = renderState.animationProgress;
+        BlockState blockstate = renderState.blockState;
         boolean flag = blockstate.getBlock() instanceof WallSkullBlock;
         Direction direction = flag ? blockstate.getValue(WallSkullBlock.FACING) : null;
         int i = flag ? RotationSegment.convertToSegment(direction.getOpposite()) : blockstate.getValue(SkullBlock.ROTATION);
@@ -55,20 +79,22 @@ public class EnderSkullRenderer implements BlockEntityRenderer<EnderSkullBlockEn
         Vec3 position = player.position();
         HitResult hitResult = player.pick(10D, 0.0f, false); //I would rather not do this every tick, but I don't see how.
         skullmodelbase.active = false;
-        if (hitResult instanceof BlockHitResult blockHitResult && player.level().getBlockEntity(blockHitResult.getBlockPos()) == blockEntity) {
-            blockEntity.setAnimation(30.0f);
+        if (hitResult instanceof BlockHitResult blockHitResult && player.level().getBlockEntity(blockHitResult.getBlockPos()) == renderState.blockEntity) {
+            renderState.blockEntity.setAnimation(30.0f);
             f = 30.0f;
         }
         if (f > 0) {
             skullmodelbase.active = true;
-            f1 = (float) (Mth.atan2(position.z - blockEntity.getBlockPos().getZ() - 0.5D, position.x - blockEntity.getBlockPos().getX() - 0.5D) * 180.0f / Math.PI + 90);
+            f1 = (float) (Mth.atan2(position.z - renderState.blockEntity.getBlockPos().getZ() - 0.5D, position.x - renderState.blockEntity.getBlockPos().getX() - 0.5D) * 180.0f / Math.PI + 90);
             f1 += (float) (player.getRandom().nextGaussian() * 2);
             int rotation = RotationSegment.convertToSegment(f1);
-            if (player.level().getBlockEntity(blockEntity.getBlockPos()) == blockEntity && blockstate.is(EIOBlocks.ENDERMAN_HEAD.get())) {
-                player.level().setBlock(blockEntity.getBlockPos(), blockstate.setValue(SkullBlock.ROTATION, rotation), 3);
+            if (player.level().getBlockEntity(renderState.blockEntity.getBlockPos()) == renderState.blockEntity && blockstate.is(EIOBlocks.ENDERMAN_HEAD.get())) {
+                player.level().setBlock(renderState.blockEntity.getBlockPos(), blockstate.setValue(SkullBlock.ROTATION, rotation), 3);
             }
         }
-        SkullBlockRenderer.submitSkull(direction, f1, f, poseStack, bufferSource, packedLight, skullmodelbase, RENDERTYPE);
+        SkullBlockRenderer.submitSkull(renderState.direction, f1, renderState.animationProgress, poseStack, nodeCollector,
+            renderState.lightCoords, skullmodelbase, renderState.renderType, 0, renderState.breakProgress
+        );
     }
 
     public static class EnderSkullModel extends SkullModelBase {
@@ -106,5 +132,14 @@ public class EnderSkullRenderer implements BlockEntityRenderer<EnderSkullBlockEn
                 this.head.y =- 5f;
             }
         }
+    }
+
+    public static class EnderSkullBlockRenderState extends BlockEntityRenderState {
+        public float animationProgress;
+        public Direction direction = Direction.NORTH;
+        public EnderSkullBlockEntity blockEntity;
+        public float rotationDegrees;
+        public SkullBlock.Type skullType = SkullBlock.Types.ZOMBIE;
+        public RenderType renderType;
     }
 }

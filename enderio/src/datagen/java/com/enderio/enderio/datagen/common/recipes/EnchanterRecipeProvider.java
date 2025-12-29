@@ -102,7 +102,7 @@ public class EnchanterRecipeProvider extends SubRecipeProvider {
 
     protected void build(Holder<Enchantment> enchantment, SizedIngredient input, int levelModifier,
             RecipeOutput recipeOutput) {
-        recipeOutput.accept(ResourceKey.create(Registries.RECIPE, EnderIO.rl("enchanting/" + enchantment.getKey().location().getPath())),
+        recipeOutput.accept(ResourceKey.create(Registries.RECIPE, EnderIO.rl("enchanting/" + enchantment.getKey().identifier().getPath())),
                 new EnchanterRecipe(enchantment, levelModifier, input), null);
     }
 

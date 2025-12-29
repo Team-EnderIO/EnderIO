@@ -2,29 +2,31 @@ package com.enderio.enderio.client.foundation.particle;
 
 import com.enderio.enderio.foundation.particle.RangeParticleData;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.client.renderer.state.QuadParticleRenderState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
-import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import org.jspecify.annotations.Nullable;
 
-public class RangeParticle extends TextureSheetParticle {
+public class RangeParticle extends SingleQuadParticle {
 
     private final int range;
     private final float offset = 0.01f;
+    private final int color;
 
-    public RangeParticle(ClientLevel level, Vec3 pos, int range, String color) {
-        super(level, pos.x, pos.y, pos.z);
+    public RangeParticle(ClientLevel level, Vec3 pos, int range, String color, TextureAtlasSprite sprite) {
+        super(level, pos.x, pos.y, pos.z, sprite);
         this.range = range;
         this.lifetime = 5;
+        this.color = Integer.parseInt(color);
         this.rCol = (float)Integer.parseInt(color.substring(0,2), 16) / 255;
         this.gCol = (float)Integer.parseInt(color.substring(2,4), 16) / 255;
         this.bCol = (float)Integer.parseInt(color.substring(4,6), 16) / 255;
@@ -37,33 +39,40 @@ public class RangeParticle extends TextureSheetParticle {
                 pos.z + range + bb_offset));
     }
 
+    //TODO remap to the correct size
     @Override
-    public void render(@NotNull VertexConsumer consumer, Camera renderInfo, float partialTicks) {
-        Vec3 position = renderInfo.getPosition();
-        float mappedX = (float) (Mth.lerp(partialTicks, this.xo, this.x) - position.x());
-        float mappedY = (float) (Mth.lerp(partialTicks, this.yo, this.y) - position.y());
-        float mappedZ = (float) (Mth.lerp(partialTicks, this.zo, this.z) - position.z());
+    protected void extractRotatedQuad(QuadParticleRenderState reusedState, Quaternionf orientation, float x, float y, float z, float partialTick) {
 
-        // Top face requires different z for some reason
-        Vector3f vec = new Vector3f(-range - offset, -range - offset, range + 1 + offset);
-        renderFace(consumer, remapPosition(calcPoints(Direction.UP, vec), mappedX, mappedY, mappedZ));
-        vec = new Vector3f(-range - offset, -range - offset, -range - offset);
-        renderFace(consumer, remapPosition(calcPoints(Direction.SOUTH, vec), mappedX, mappedY, mappedZ));
-        renderFace(consumer, remapPosition(calcPoints(Direction.EAST, vec), mappedX, mappedY, mappedZ));
-        renderFace(consumer, remapPosition(calcPoints(Direction.UP, vec), mappedX, mappedY, mappedZ));
-        renderFace(consumer, remapPosition(calcPoints(Direction.NORTH, vec), mappedX, mappedY, mappedZ));
-        renderFace(consumer, remapPosition(calcPoints(Direction.WEST, vec), mappedX, mappedY, mappedZ));
+        reusedState.add(this.getLayer(), x, y, z, orientation.x, orientation.y, orientation.z, orientation.w, this.getQuadSize(partialTick),
+            this.getU0(), this.getU1(), this.getV0(), this.getV1(), color, this.getLightColor(partialTick));
     }
 
     @Override
-    @NotNull
-    public ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+    public int getLifetime() {
+        return age + 10;
     }
 
+    //    @Override
+//    public void render(@NotNull VertexConsumer consumer, Camera renderInfo, float partialTicks) {
+//        Vec3 position = renderInfo.getPosition();
+//        float mappedX = (float) (Mth.lerp(partialTicks, this.xo, this.x) - position.x());
+//        float mappedY = (float) (Mth.lerp(partialTicks, this.yo, this.y) - position.y());
+//        float mappedZ = (float) (Mth.lerp(partialTicks, this.zo, this.z) - position.z());
+//
+//        // Top face requires different z for some reason
+//        Vector3f vec = new Vector3f(-range - offset, -range - offset, range + 1 + offset);
+//        renderFace(consumer, remapPosition(calcPoints(Direction.UP, vec), mappedX, mappedY, mappedZ));
+//        vec = new Vector3f(-range - offset, -range - offset, -range - offset);
+//        renderFace(consumer, remapPosition(calcPoints(Direction.SOUTH, vec), mappedX, mappedY, mappedZ));
+//        renderFace(consumer, remapPosition(calcPoints(Direction.EAST, vec), mappedX, mappedY, mappedZ));
+//        renderFace(consumer, remapPosition(calcPoints(Direction.UP, vec), mappedX, mappedY, mappedZ));
+//        renderFace(consumer, remapPosition(calcPoints(Direction.NORTH, vec), mappedX, mappedY, mappedZ));
+//        renderFace(consumer, remapPosition(calcPoints(Direction.WEST, vec), mappedX, mappedY, mappedZ));
+//    }
+
     @Override
-    public AABB getRenderBoundingBox(float partialTicks) {
-        return AABB.INFINITE;
+    protected Layer getLayer() {
+        return Layer.TRANSLUCENT;
     }
 
     public Vector3f[] calcPoints(Direction face, Vector3f vec) {
@@ -112,7 +121,7 @@ public class RangeParticle extends TextureSheetParticle {
         consumer.addVertex(pos.x(), pos.y(), pos.z()).setUv(u, v).setColor(rCol, gCol, bCol, alpha).setUv2(240, 240);
     }
 
-    public static class Provider implements ParticleProvider<RangeParticleData> {
+    public static class Provider implements ParticleProvider.Sprite<RangeParticleData> {
 
         private final SpriteSet spriteSet;
 
@@ -120,14 +129,13 @@ public class RangeParticle extends TextureSheetParticle {
             this.spriteSet = spriteSet;
         }
 
-        @Nullable
         @Override
-        public Particle createParticle(RangeParticleData data, @NotNull ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed,
-            double zSpeed) {
+        public @Nullable SingleQuadParticle createParticle(RangeParticleData data, ClientLevel level, double x, double y, double z,
+            double xSpeed, double ySpeed, double zSpeed, RandomSource random) {
             Vec3 pos = new Vec3(x, y, z);
-            RangeParticle particle = new RangeParticle(level, pos, data.range(), data.color());
-            particle.pickSprite(this.spriteSet);
+            RangeParticle particle = new RangeParticle(level, pos, data.range(), data.color(), this.spriteSet.get(random));
             return particle;
         }
+
     }
 }

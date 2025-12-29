@@ -15,8 +15,8 @@ import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.util.ARGB;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.Shapes;
 
 public class EnderfaceRenderer implements TravelRenderer<EnderfaceTravelTarget> {
     public static final RenderType BOLD_LINES = OutlineRenderType.createLines("bold_lines", 3);
@@ -56,6 +56,7 @@ public class EnderfaceRenderer implements TravelRenderer<EnderfaceTravelTarget> 
         // TODO: 1.21.11: Are Gizmos the correct replacement?
 //        ShapeRenderer.renderLineBox(poseStack, lines, 0, 0, 0, 1, 1, 1, ARGB.red(color) / 255F,
 //            ARGB.green(color) / 255F, ARGB.blue(color) / 255F, 1);
+        ShapeRenderer.renderShape(poseStack, lines, Shapes.block(), 0, 0, 0, color, 1);
 
         poseStack.popPose();
         minecraft.renderBuffers().bufferSource().endBatch();

@@ -3,6 +3,7 @@ package com.enderio.enderio.client.content.travel;
 import com.enderio.enderio.content.travel.TravelHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.TotemParticle;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
@@ -35,13 +36,13 @@ public class TravelParticleHandler {
         int time = tick/3%20;
         float x = Mth.sin((float)(time*Math.PI)/10f);
         float z = Mth.cos((float)(time*Math.PI)/10f);
-        @Nullable Particle particle = Minecraft.getInstance().levelRenderer.addParticleInternal(
-            ParticleTypes.TOTEM_OF_UNDYING, false, true, pos.x() + x, pos.y() + 0.4, pos.z() + z, 0, 0, 0);
-        if (particle != null) {
+        @Nullable Particle particle = Minecraft.getInstance().particleEngine.createParticle(
+            ParticleTypes.TOTEM_OF_UNDYING, pos.x() + x, pos.y() + 0.4, pos.z() + z, 0, 0, 0);
+        if (particle instanceof TotemParticle totemParticle) {
             particle.setLifetime(30);
             var color = getTravelParticleColor();
             particle.gravity = 0;
-            particle.setColor(color.getLeft(), color.getMiddle(), color.getRight());
+            totemParticle.setColor(color.getLeft(), color.getMiddle(), color.getRight());
         }
     }
 

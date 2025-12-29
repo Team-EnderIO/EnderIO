@@ -48,7 +48,7 @@ public class ConduitItemModel implements ItemModel {
         var resolvedmodel = context.blockModelBaker().getModel(ConduitAdditionalModels.CONDUIT_ITEM);
         TextureSlots textureslots = resolvedmodel.getTopTextureSlots();
         var baker = new ConduitBaker(context.blockModelBaker(), texture);
-        List<BakedQuad> list = resolvedmodel.getTopGeometry().bake(textureslots, baker, BlockModelRotation.X0_Y0, () -> "conduit_item").getAll();
+        List<BakedQuad> list = resolvedmodel.getTopGeometry().bake(textureslots, baker, BlockModelRotation.IDENTITY, () -> "conduit_item").getAll();
         ModelRenderProperties modelrenderproperties = ModelRenderProperties.fromResolvedModel(baker, resolvedmodel, textureslots);
 
         var extents = Suppliers.memoize(() -> computeExtents(list));

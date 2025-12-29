@@ -1,5 +1,6 @@
 package com.enderio.enderio.client.content.conduits.model.bundle.port;
 
+import net.minecraft.client.renderer.block.model.BlockModelPart;
 import net.minecraft.client.renderer.block.model.TextureSlots;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
@@ -26,8 +27,18 @@ public class ConduitBaker implements ModelBaker {
     }
 
     @Override
+    public BlockModelPart missingBlockModelPart() {
+        return baker.missingBlockModelPart();
+    }
+
+    @Override
     public SpriteGetter sprites() {
         return this.sprites;
+    }
+
+    @Override
+    public PartCache parts() {
+        return baker.parts();
     }
 
     @Override
