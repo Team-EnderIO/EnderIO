@@ -23,6 +23,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.display.SlotDisplayContext;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayDeque;
@@ -98,8 +99,8 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
                 .build();
     }
 
-    private boolean acceptSlotInput(int slot, ItemStack stack) {
-        return ItemStack.isSameItem(this.getInventory().getStackInSlot(slot + 10), stack);
+    private boolean acceptSlotInput(int slot, ItemResource resource) {
+        return this.getInventory().getResource(slot + 10).is(resource.getItem());
     }
 
     @Override

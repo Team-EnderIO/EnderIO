@@ -13,7 +13,7 @@ public class FluidBarDecorator implements IItemDecorator {
 
     @Override
     public boolean render(GuiGraphics guiGraphics, Font font, ItemStack stack, int xOffset, int yOffset) {
-        var fluidHandler = stack.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(stack));
+        var fluidHandler = ItemAccess.forStack(stack).getCapability(Capabilities.Fluid.ITEM);
 
         if (fluidHandler == null) {
             return false;

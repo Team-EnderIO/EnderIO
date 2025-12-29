@@ -22,6 +22,8 @@ import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.energy.ComponentEnergyStorage;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.energy.ItemAccessEnergyHandler;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
@@ -29,8 +31,8 @@ import java.util.List;
 
 public class TravelStaffItem extends Item implements AdvancedTooltipProvider, ICustomCreativeTabEntries {
 
-    public static final ICapabilityProvider<ItemStack, Void, IEnergyStorage> ENERGY_STORAGE_PROVIDER = (stack,
-            v) -> new ComponentEnergyStorage(stack, EIODataComponents.ENERGY, TravelStaffItem.getMaxEnergy());
+    public static final ICapabilityProvider<ItemStack, ItemAccess, EnergyHandler> ENERGY_STORAGE_PROVIDER = (stack,
+            itemAccess) -> new ItemAccessEnergyHandler(itemAccess, EIODataComponents.ENERGY, TravelStaffItem.getMaxEnergy());
 
     public TravelStaffItem(Properties properties) {
         super(properties.component(EIODataComponents.TRAVEL_ITEM, true).stacksTo(1));

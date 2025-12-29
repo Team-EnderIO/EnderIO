@@ -34,6 +34,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -125,9 +126,9 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
                 .build();
     }
 
-    protected boolean acceptSlotInput(int slot, ItemStack stack) {
+    protected boolean acceptSlotInput(int slot, ItemResource resource) {
         if (getMode().canAlloy()) {
-            if (MachineRecipeCaches.ALLOY_SMELTING_ONLY_ALLOY.hasValidRecipeIf(getInventory(), INPUTS, slot, stack)) {
+            if (MachineRecipeCaches.ALLOY_SMELTING_ONLY_ALLOY.hasValidRecipeIf(getInventory(), INPUTS, slot, resource.toStack())) {
                 return true;
             }
         }
@@ -136,12 +137,12 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
             // Check all items are the same, or will be
             var currentStacks = INPUTS.getAccesses()
                     .stream()
-                    .map(i -> i.isSlot(slot) ? stack : i.getItemStack(getInventory()))
+                    .map(i -> i.isSlot(slot) ? resource : i.getResource(getInventory()))
                     .filter(i -> !i.isEmpty())
                     .toList();
 
-            if (currentStacks.stream().allMatch(i -> i.is(stack.getItem())) || currentStacks.size() == 1) {
-                return MachineRecipeCaches.ALLOY_SMELTING_ONLY_SMELTING.hasRecipe(List.of(stack));
+            if (currentStacks.stream().allMatch(i -> i.is(resource.getItem())) || currentStacks.size() == 1) {
+                return MachineRecipeCaches.ALLOY_SMELTING_ONLY_SMELTING.hasRecipe(List.of(resource.toStack()));
             }
         }
 

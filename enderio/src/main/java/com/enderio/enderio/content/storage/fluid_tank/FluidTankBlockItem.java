@@ -10,17 +10,18 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
-import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
-import net.neoforged.neoforge.fluids.capability.templates.FluidHandlerItemStack;
+import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.fluid.ItemAccessFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class FluidTankBlockItem extends BlockItem implements AdvancedTooltipProvider {
 
-    public static final ICapabilityProvider<ItemStack, Void, IFluidHandlerItem> FLUID_HANDLER_PROVIDER = (stack,
-            v) -> new FluidHandlerItemStack(() -> EIODataComponents.ITEM_FLUID_CONTENT, stack,
+    public static final ICapabilityProvider<ItemStack, ItemAccess, ResourceHandler<FluidResource>> FLUID_HANDLER_PROVIDER = (stack,
+            itemAccess) -> new ItemAccessFluidHandler(itemAccess, EIODataComponents.ITEM_FLUID_CONTENT,
                     ((FluidTankBlockItem) stack.getItem()).capacity);
 
     protected final int capacity;

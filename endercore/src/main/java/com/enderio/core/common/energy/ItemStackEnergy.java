@@ -9,22 +9,22 @@ import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 public class ItemStackEnergy {
 
     public static int getMaxEnergyStored(ItemStack stack) {
-        var energyStorage = stack.getCapability(Capabilities.Energy.ITEM, ItemAccess.forStack(stack));
+        var energyStorage = ItemAccess.forStack(stack).getCapability(Capabilities.Energy.ITEM);
         return energyStorage != null ? energyStorage.getCapacityAsInt() : 0;
     }
 
     public static int getEnergyStored(ItemStack stack) {
-        var energyStorage = stack.getCapability(Capabilities.Energy.ITEM, ItemAccess.forStack(stack));
+        var energyStorage = ItemAccess.forStack(stack).getCapability(Capabilities.Energy.ITEM);
         return energyStorage != null ? energyStorage.getAmountAsInt() : 0;
     }
 
     public static boolean hasEnergy(ItemStack stack, int amount) {
-        var energyStorage = stack.getCapability(Capabilities.Energy.ITEM, ItemAccess.forStack(stack));
+        var energyStorage = ItemAccess.forStack(stack).getCapability(Capabilities.Energy.ITEM);
         return energyStorage != null && energyStorage.getAmountAsInt() >= amount;
     }
 
     public static void setFull(ItemStack stack) {
-        var energyStorage = stack.getCapability(Capabilities.Energy.ITEM, ItemAccess.forStack(stack));
+        var energyStorage = ItemAccess.forStack(stack).getCapability(Capabilities.Energy.ITEM);
 
         if (energyStorage != null) {
             try (Transaction transaction = Transaction.openRoot()) {
@@ -35,7 +35,7 @@ public class ItemStackEnergy {
     }
 
     public static void setEmpty(ItemStack stack) {
-        var energyStorage = stack.getCapability(Capabilities.Energy.ITEM, ItemAccess.forStack(stack));
+        var energyStorage = ItemAccess.forStack(stack).getCapability(Capabilities.Energy.ITEM);
 
         if (energyStorage != null) {
             try (Transaction transaction = Transaction.openRoot()) {
@@ -46,7 +46,7 @@ public class ItemStackEnergy {
     }
 
     public static void set(ItemStack stack, int energy) {
-        var energyStorage = stack.getCapability(Capabilities.Energy.ITEM, ItemAccess.forStack(stack));
+        var energyStorage = ItemAccess.forStack(stack).getCapability(Capabilities.Energy.ITEM);
 
         if (energyStorage != null) {
 
@@ -72,7 +72,7 @@ public class ItemStackEnergy {
      * @return Amount of energy that was (or would have been, if simulated) accepted by the storage.
      */
     public static int insertEnergy(ItemStack stack, int maxReceive, TransactionContext transaction) {
-        var energyStorage = stack.getCapability(Capabilities.Energy.ITEM, ItemAccess.forStack(stack));
+        var energyStorage = ItemAccess.forStack(stack).getCapability(Capabilities.Energy.ITEM);
         return energyStorage != null ? energyStorage.insert(maxReceive, transaction) : 0;
     }
 
@@ -84,7 +84,7 @@ public class ItemStackEnergy {
      * @return Amount of energy that was (or would have been, if simulated) extracted from the storage.
      */
     public static int extractEnergy(ItemStack stack, int maxExtract, TransactionContext transaction) {
-        var energyStorage = stack.getCapability(Capabilities.Energy.ITEM, ItemAccess.forStack(stack));
+        var energyStorage = ItemAccess.forStack(stack).getCapability(Capabilities.Energy.ITEM);
         return energyStorage != null ? energyStorage.extract(maxExtract, transaction) : 0;
     }
 }

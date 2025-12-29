@@ -20,13 +20,11 @@ import com.enderio.enderio.content.filters.redstone.RedstoneTimerFilter;
 import com.enderio.enderio.content.filters.redstone.RedstoneXNORFilter;
 import com.enderio.enderio.content.filters.redstone.RedstoneXORFilter;
 import com.enderio.enderio.content.filters.soul.EnderSoulFilterItem;
-import com.enderio.enderio.content.machines.capacitor_bank.CapacitorBankItem;
 import com.enderio.enderio.content.storage.fluid_tank.FluidTankBlockItem;
 import com.enderio.enderio.content.tools.LevitationStaffItem;
 import com.enderio.enderio.content.tools.PoweredToggledItem;
 import com.enderio.enderio.content.travel.TravelStaffItem;
 import com.enderio.enderio.foundation.soul.SoulCapabilityProviders;
-import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.BlockCapability;
@@ -43,10 +41,11 @@ public class EIOCapabilityProviders {
         event.registerItem(Capabilities.Energy.ITEM, PoweredToggledItem.ENERGY_STORAGE_PROVIDER,
             EIOItems.LEVITATION_STAFF, EIOItems.ELECTROMAGNET);
         event.registerItem(Capabilities.Energy.ITEM, TravelStaffItem.ENERGY_STORAGE_PROVIDER, EIOItems.TRAVEL_STAFF);
+
         // Capacitor Banks
-        for (var capacitorBankItem : EIOBlocks.CAPACITOR_BANK_ITEMS.values()) {
-            event.registerItem(Capabilities.Energy.ITEM, CapacitorBankItem.ENERGY_STORAGE_PROVIDER, capacitorBankItem);
-        }
+//        for (var capacitorBankItem : EIOBlocks.CAPACITOR_BANK_ITEMS.values()) {
+//            event.registerItem(Capabilities.Energy.ITEM, CapacitorBankItem.ENERGY_STORAGE_PROVIDER, capacitorBankItem);
+//        }
 
         // Register item fluid handlers
         event.registerItem(Capabilities.Fluid.ITEM, LevitationStaffItem.FLUID_HANDLER_PROVIDER, EIOItems.LEVITATION_STAFF);

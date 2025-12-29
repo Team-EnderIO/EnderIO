@@ -2,6 +2,7 @@ package com.enderio.enderio.foundation.inventory;
 
 import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,7 +96,7 @@ public class MachineInventoryLayout {
     /**
      * Test if an item originalStack is valid for the given slot.
      */
-    public boolean isItemValid(int slot, ItemStack stack) {
+    public boolean isItemValid(int slot, ItemResource stack) {
         return slots.get(slot).filter.test(slot, stack);
     }
 
@@ -154,7 +155,7 @@ public class MachineInventoryLayout {
          *
          * @param filter The filter predicate for the slot
          */
-        public Builder inputSlot(BiPredicate<Integer, ItemStack> filter) {
+        public Builder inputSlot(BiPredicate<Integer, ItemResource> filter) {
             return inputSlot(1, filter);
         }
 
@@ -165,7 +166,7 @@ public class MachineInventoryLayout {
          * @param count The number of slots to add.
          * @param filter The filter predicate for the slot
          */
-        public Builder inputSlot(int count, BiPredicate<Integer, ItemStack> filter) {
+        public Builder inputSlot(int count, BiPredicate<Integer, ItemResource> filter) {
             SlotAdditionInfo info = new SlotAdditionInfo(slots.size(), count);
             for (int i = 0; i < count; i++) {
                 slot(slot -> slot.guiInsert().guiExtract().insert().filter(filter).stackLimit(currentStackLimit));
@@ -198,7 +199,7 @@ public class MachineInventoryLayout {
          *
          * @param filter The filter predicate for the slot
          */
-        public Builder outputSlot(BiPredicate<Integer, ItemStack> filter) {
+        public Builder outputSlot(BiPredicate<Integer, ItemResource> filter) {
             return outputSlot(1, filter);
         }
 
@@ -209,7 +210,7 @@ public class MachineInventoryLayout {
          * @param count The number of slots to add.
          * @param filter The filter predicate for the slot
          */
-        public Builder outputSlot(int count, BiPredicate<Integer, ItemStack> filter) {
+        public Builder outputSlot(int count, BiPredicate<Integer, ItemResource> filter) {
             SlotAdditionInfo info = new SlotAdditionInfo(slots.size(), count);
             for (int i = 0; i < count; i++) {
                 slot(slot -> slot.guiExtract().extract().filter(filter).stackLimit(currentStackLimit));
@@ -242,7 +243,7 @@ public class MachineInventoryLayout {
          *
          * @param filter The filter predicate for the slot
          */
-        public Builder storageSlot(BiPredicate<Integer, ItemStack> filter) {
+        public Builder storageSlot(BiPredicate<Integer, ItemResource> filter) {
             return storageSlot(1, filter);
         }
 
@@ -253,7 +254,7 @@ public class MachineInventoryLayout {
          * @param count  The number of slots to add.
          * @param filter The filter predicate for the slot
          */
-        public Builder storageSlot(int count, BiPredicate<Integer, ItemStack> filter) {
+        public Builder storageSlot(int count, BiPredicate<Integer, ItemResource> filter) {
             SlotAdditionInfo info = new SlotAdditionInfo(slots.size(), count);
             for (int i = 0; i < count; i++) {
                 slot(slot -> slot.guiInsert()
@@ -291,7 +292,7 @@ public class MachineInventoryLayout {
          *
          * @param filter The filter predicate for the slot
          */
-        public Builder ghostSlot(BiPredicate<Integer, ItemStack> filter) {
+        public Builder ghostSlot(BiPredicate<Integer, ItemResource> filter) {
             return ghostSlot(1, filter);
         }
 
@@ -302,7 +303,7 @@ public class MachineInventoryLayout {
          * @param count The number of slots to add.
          * @param filter The filter predicate for the slot
          */
-        public Builder ghostSlot(int count, BiPredicate<Integer, ItemStack> filter) {
+        public Builder ghostSlot(int count, BiPredicate<Integer, ItemResource> filter) {
             SlotAdditionInfo info = new SlotAdditionInfo(slots.size(), count);
             for (int i = 0; i < count; i++) {
                 slot(slot -> slot.guiInsert().filter(filter).stackLimit(currentStackLimit));
@@ -382,7 +383,7 @@ public class MachineInventoryLayout {
             private boolean guiExtract;
             private int stackLimit = 64;
 
-            private BiPredicate<Integer, ItemStack> filter = (i, s) -> true;
+            private BiPredicate<Integer, ItemResource> filter = (i, s) -> true;
 
             private SlotBuilder() {
             }
@@ -422,7 +423,7 @@ public class MachineInventoryLayout {
             /**
              * Set the slot filter.
              */
-            public SlotBuilder filter(BiPredicate<Integer, ItemStack> filter) {
+            public SlotBuilder filter(BiPredicate<Integer, ItemResource> filter) {
                 this.filter = filter;
                 return this;
             }
@@ -445,6 +446,6 @@ public class MachineInventoryLayout {
     }
 
     private record SlotConfig(boolean insert, boolean extract, boolean guiInsert, boolean guiExtract, int stackLimit,
-            BiPredicate<Integer, ItemStack> filter) {
+            BiPredicate<Integer, ItemResource> filter) {
     }
 }

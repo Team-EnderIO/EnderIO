@@ -83,7 +83,7 @@ public class AttractorObeliskBlockEntity extends ObeliskBlockEntity<AttractorObe
     @Override
     public @Nullable MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
-                .inputSlot((integer, itemStack) -> itemStack.getCapability(EnderIOCapabilities.SOUL_FILTER) != null)
+                .inputSlot((index, itemStack) -> itemStack.toStack().getCapability(EnderIOCapabilities.SOUL_FILTER) != null)
                 .slotAccess(FILTER)
                 .capacitor()
                 .build();

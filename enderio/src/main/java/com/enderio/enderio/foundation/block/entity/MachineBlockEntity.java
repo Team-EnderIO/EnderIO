@@ -45,8 +45,6 @@ import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.model.data.ModelData;
 import net.neoforged.neoforge.model.data.ModelProperty;
 import net.neoforged.neoforge.transfer.ResourceHandler;
@@ -70,7 +68,7 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
     public static final ICapabilityProvider<MachineBlockEntity, Direction, SideConfig> SIDE_CONFIG_PROVIDER = (be,
                                                                                                                 side) -> side != null && be.isIOConfigMutable() ? new SidedIOConfigurable(be, side) : null;
 
-    public static final ICapabilityProvider<MachineBlockEntity, Direction, IItemHandler> ITEM_HANDLER_PROVIDER = (be,
+    public static final ICapabilityProvider<MachineBlockEntity, Direction, ResourceHandler<ItemResource>> ITEM_HANDLER_PROVIDER = (be,
             side) -> be.inventory != null ? be.inventory.getForSide(side) : null;
 
     public static final ICapabilityProvider<MachineBlockEntity, Void, SoulBindable> SOUL_BINDABLE = (be, ctx)
@@ -192,8 +190,9 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
     protected MachineInventory createMachineInventory(MachineInventoryLayout layout) {
         return new MachineInventory(this, layout) {
             @Override
-            protected void onContentsChanged(int slot) {
-                onInventoryContentsChanged(slot);
+            protected void onContentsChanged(int index, ItemStack previousContents) {
+                super.onContentsChanged(index, previousContents);
+                onInventoryContentsChanged(index);
                 setChanged();
             }
 

@@ -3,6 +3,7 @@ package com.enderio.enderio.foundation.inventory;
 import com.enderio.enderio.foundation.block.entity.MachineInventoryHolder;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 public class SingleSlotAccess {
     private int index = Integer.MIN_VALUE;
@@ -15,8 +16,12 @@ public class SingleSlotAccess {
         return getItemStack(blockEntity.getInventory());
     }
 
+    public ItemResource getResource(MachineInventory inventory) {
+        return inventory.getResource(index);
+    }
+
     public ItemStack getItemStack(MachineInventory inventory) {
-        return inventory.getStackInSlot(index);
+        return inventory.getStack(index);
     }
 
     public ItemStack getItemStack(Container container) {

@@ -65,6 +65,7 @@ import com.enderio.enderio.client.content.travel.TravelTargetRendering;
 import com.enderio.enderio.client.foundation.particle.RangeParticle;
 import com.enderio.enderio.content.fun.EnderiosItem;
 import com.enderio.enderio.content.misc_blocks.skull.EnderSkullBlock;
+import com.enderio.enderio.foundation.particle.RangeParticleData;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOConduitTypes;
@@ -209,9 +210,9 @@ public class EnderIOClient {
 
     @SubscribeEvent
     public static void modelRenderer(EntityRenderersEvent.RegisterRenderers event) {
-        for (var capBank : EIOBlockEntities.CAPACITOR_BANKS.values()) {
+//        for (var capBank : EIOBlockEntities.CAPACITOR_BANKS.values()) {
 //            event.registerBlockEntityRenderer(capBank.get(), CapacitorBankBER::new);
-        }
+//        }
 
         event.registerBlockEntityRenderer(EIOBlockEntities.NIARD.get(), NiardBER::new);
         event.registerBlockEntityRenderer(EIOBlockEntities.XP_OBELISK.get(), c -> new ObeliskBER(EIOItems.VOID_VIAL::get));
@@ -338,7 +339,7 @@ public class EnderIOClient {
 
     @SubscribeEvent
     public static void registerParticleProviders(RegisterParticleProvidersEvent event) {
-        event.registerSpriteSet(EIOParticles.RANGE_PARTICLE.get(), RangeParticle.Provider::new);
+        event.<RangeParticleData>registerSpriteSet(EIOParticles.RANGE_PARTICLE.get(), RangeParticle.Provider::new);
     }
 
     private static Optional<Item> findGliderForModelRL(Identifier rl) {

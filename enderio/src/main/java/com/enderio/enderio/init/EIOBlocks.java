@@ -11,8 +11,6 @@ import com.enderio.enderio.content.glass.GlassCollisionPredicate;
 import com.enderio.enderio.content.glass.GlassIdentifier;
 import com.enderio.enderio.content.glass.GlassLighting;
 import com.enderio.enderio.content.machines.block_detector.BlockDetectorBlock;
-import com.enderio.enderio.content.machines.capacitor_bank.CapacitorBankItem;
-import com.enderio.enderio.content.machines.capacitor_bank.CapacitorTier;
 import com.enderio.enderio.content.machines.niard.NiardBlock;
 import com.enderio.enderio.content.machines.obelisks.attractor.AttractorObeliskBlockEntity;
 import com.enderio.enderio.content.machines.obelisks.aversion.AversionObeliskBlockEntity;
@@ -22,7 +20,6 @@ import com.enderio.enderio.content.machines.obelisks.weather.WeatherObeliskBlock
 import com.enderio.enderio.content.machines.obelisks.xp.XPObeliskBlockEntity;
 import com.enderio.enderio.content.machines.powered_spawner.MindKillerBlock;
 import com.enderio.enderio.content.machines.powered_spawner.PoweredSpawnerBlockEntity;
-import com.enderio.enderio.content.machines.solar_panel.SolarPanelTier;
 import com.enderio.enderio.content.machines.soul_engine.SoulEngineBlockEntity;
 import com.enderio.enderio.content.machines.vacuum.chest.VacuumChestBlockEntity;
 import com.enderio.enderio.content.machines.vacuum.xp.XPVacuumBlockEntity;

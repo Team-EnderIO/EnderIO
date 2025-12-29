@@ -14,12 +14,8 @@ import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.IntTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
@@ -32,7 +28,6 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
-import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 import net.neoforged.neoforge.transfer.energy.EnergyHandlerUtil;
 
@@ -209,12 +204,12 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
     }
 
     public final ItemStack getCapacitorItem() {
-        MachineInventory inventory = getInventory();
-        if (inventory == null) {
+        if (!hasInventory()) {
             return ItemStack.EMPTY;
         }
 
-        return inventory.getStackInSlot(inventory.layout().getCapacitorSlot());
+        MachineInventory inventory = getInventory();
+        return inventory.getStack(inventory.layout().getCapacitorSlot());
     }
 
     public final int getCapacitorSlotIndex() {
@@ -276,7 +271,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
     public InteractionResult tryItemInstall(ItemStack stack, UseOnContext context) {
         if (stack.getItem() instanceof CapacitorItem && supportsCapacitor() && !isCapacitorInstalled()) {
             MachineInventory inventory = getInventory();
-            inventory.setStackInSlot(inventory.layout().getCapacitorSlot(), stack.copyWithCount(1));
+            inventory.setStack(inventory.layout().getCapacitorSlot(), stack.copyWithCount(1));
             stack.shrink(1);
             return InteractionResult.SUCCESS;
         }

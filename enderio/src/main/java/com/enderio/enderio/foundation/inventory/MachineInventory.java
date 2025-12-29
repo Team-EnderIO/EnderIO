@@ -9,25 +9,23 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
-
-import java.util.function.IntConsumer;
 
 /**
  * A machine inventory.
  * Configured and controlled by a machine's {@link IOConfigurable} and a {@link MachineInventoryLayout}.
  */
-public class MachineInventory extends ItemStackHandler {
+public class MachineInventory extends ItemStacksResourceHandler {
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
     private final IOConfigurable ioConfigurable;
     private final MachineInventoryLayout layout;
-    private IntConsumer changeListener = i -> {
-    };
 
     /**
      * Create a new machine inventory.
@@ -36,11 +34,6 @@ public class MachineInventory extends ItemStackHandler {
         super(layout.getSlotCount());
         this.ioConfigurable = ioConfigurable;
         this.layout = layout;
-    }
-
-    // TODO: Why are we not calling changeListener in onContentsChanged?
-    public void addSlotChangedCallback(IntConsumer callback) {
-        changeListener = changeListener.andThen(callback);
     }
 
     /**
@@ -54,18 +47,26 @@ public class MachineInventory extends ItemStackHandler {
         return layout;
     }
 
-    @Override
-    public boolean isItemValid(int slot, ItemStack stack) {
-        return layout.isItemValid(slot, stack);
+    public ItemStack getStack(int index) {
+        return getResource(index).toStack(getAmountAsInt(index));
+    }
+
+    public void setStack(int index, ItemStack stack) {
+        set(index, ItemResource.of(stack), stack.getCount());
     }
 
     @Override
-    public int getSlotLimit(int slot) {
-        return layout.getStackLimit(slot);
+    public boolean isValid(int index, ItemResource resource) {
+        return layout.isItemValid(index, resource);
+    }
+
+    @Override
+    protected int getCapacity(int index, ItemResource resource) {
+        return layout.getStackLimit(index);
     }
 
     @Nullable
-    public IItemHandler getForSide(@Nullable Direction side) {
+    public ResourceHandler<ItemResource> getForSide(@Nullable Direction side) {
         if (side == null) {
             return new Wrapped(this, null);
         }
@@ -77,42 +78,8 @@ public class MachineInventory extends ItemStackHandler {
         return null;
     }
 
-    @Override
-    public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-        boolean wasEmpty = !simulate && getStackInSlot(slot).isEmpty();
-        ItemStack itemStack = super.insertItem(slot, stack, simulate);
-        if (wasEmpty && itemStack.getCount() != stack.getCount()) {
-            changeListener.accept(slot);
-        }
-
-        return itemStack;
-    }
-
-    @Override
-    public ItemStack extractItem(int slot, int amount, boolean simulate) {
-        ItemStack itemStack = super.extractItem(slot, amount, simulate);
-        if (!itemStack.isEmpty() && !simulate && getStackInSlot(slot).isEmpty()) {
-            changeListener.accept(slot);
-        }
-
-        return itemStack;
-    }
-
-    @Override
-    public void setStackInSlot(int slot, ItemStack stack) {
-        boolean changed = stack.getItem() != getStackInSlot(slot).getItem();
-        super.setStackInSlot(slot, stack);
-        if (changed) {
-            this.changeListener.accept(slot);
-        }
-    }
-
     public void copyFromItem(ItemContainerContents contents) {
         contents.copyInto(this.stacks);
-        for (int i = 0; i < getSlots(); i++) {
-            onContentsChanged(i);
-            this.changeListener.accept(i);
-        }
     }
 
     public ItemContainerContents toItemContents() {
@@ -159,77 +126,81 @@ public class MachineInventory extends ItemStackHandler {
         }
     }
 
-    // Custom deserialize method that ignores the Size value in the tag.
-    // This is because if we changed the size of the inventory, it'd load it with
-    // the old size.
-    // For backward compatibility, we use the original serialize method that writes
-    // the Size.
-    // TODO: Ender IO 8 - Look at this again.
-//    @Override
-//    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag tag) {
-//        ListTag slotTags = tag.getList("Items", ListTag.TAG_COMPOUND);
-//
-//        for (int i = 0; i < slotTags.size(); i++) {
-//            CompoundTag itemTags = slotTags.getCompound(i);
-//            int slot = itemTags.getInt("Slot");
-//            if (slot >= 0 && slot < layout.getSlotCount()) {
-//                ItemStack.parse(provider, itemTags).ifPresent((stack) -> this.stacks.set(slot, stack));
-//            } else {
-//                LOGGER.warn("Skipping item from slot {}, as it is outside the bounds of the inventory.", slot);
-//            }
-//        }
-//    }
-
-    private record Wrapped(MachineInventory master, @Nullable Direction side) implements IItemHandler {
+    private record Wrapped(MachineInventory machineInventory, @Nullable Direction side) implements ResourceHandler<ItemResource> {
 
         @Override
-        public int getSlots() {
-            return master.getSlots();
+        public int getAmountAsInt(int index) {
+            return machineInventory.getAmountAsInt(index);
         }
 
         @Override
-        public ItemStack getStackInSlot(int slot) {
-            return master.getStackInSlot(slot);
+        public int getCapacityAsInt(int index, ItemResource resource) {
+            return machineInventory.getCapacityAsInt(index, resource);
         }
 
         @Override
-        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+        public int insert(ItemResource resource, int amount, TransactionContext transaction) {
+            return machineInventory.insert(resource, amount, transaction);
+        }
+
+        @Override
+        public int extract(ItemResource resource, int amount, TransactionContext transaction) {
+            return machineInventory.extract(resource, amount, transaction);
+        }
+
+        @Override
+        public int size() {
+            return machineInventory.size();
+        }
+
+        @Override
+        public ItemResource getResource(int index) {
+            return machineInventory.getResource(index);
+        }
+
+        @Override
+        public long getAmountAsLong(int index) {
+            return machineInventory.getAmountAsLong(index);
+        }
+
+        @Override
+        public long getCapacityAsLong(int index, ItemResource resource) {
+            return machineInventory.getCapacityAsLong(index, resource);
+        }
+
+        @Override
+        public boolean isValid(int index, ItemResource resource) {
+            return machineInventory.isValid(index, resource);
+        }
+
+        @Override
+        public int insert(int index, ItemResource resource, int amount, TransactionContext transaction) {
             // Check we allow insertion on the slot
-            if (!master.getLayout().canInsert(slot)) {
-                return stack;
+            if (!machineInventory.getLayout().canInsert(index)) {
+                return 0;
             }
 
             // Check we allow input to the block on this side
-            if (side != null && !master.ioConfigurable.getIOMode(side).canInput()) {
-                return stack;
+            if (side != null && !machineInventory.ioConfigurable.getIOMode(side).canInput()) {
+                return 0;
             }
 
-            return master.insertItem(slot, stack, simulate);
+            return machineInventory.insert(resource, amount, transaction);
         }
 
         @Override
-        public ItemStack extractItem(int slot, int amount, boolean simulate) {
+        public int extract(int index, ItemResource resource, int amount, TransactionContext transaction) {
             // Check we allow extraction on the slot
-            if (!master.getLayout().canExtract(slot)) {
-                return ItemStack.EMPTY;
+            if (!machineInventory.getLayout().canExtract(index)) {
+                return 0;
             }
 
             // Check we allow output from the block on this side
-            if (side != null && !master.ioConfigurable.getIOMode(side).canOutput()) {
-                return ItemStack.EMPTY;
+            if (side != null && !machineInventory.ioConfigurable.getIOMode(side).canOutput()) {
+                return 0;
             }
 
-            return master.extractItem(slot, amount, simulate);
-        }
-
-        @Override
-        public int getSlotLimit(int slot) {
-            return master.getSlotLimit(slot);
-        }
-
-        @Override
-        public boolean isItemValid(int slot, ItemStack stack) {
-            return master.isItemValid(slot, stack);
+            return machineInventory.extract(index, resource, amount, transaction);
         }
     }
 }
