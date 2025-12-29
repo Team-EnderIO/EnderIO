@@ -15,6 +15,7 @@ public class ConduitAdditionalModels {
     public static final Identifier CONDUIT_FACADE_OVERLAY = EnderIO.rl("block/conduit_facade_overlay");
     public static final Identifier CONDUIT_CONNECTION = EnderIO.rl("block/conduit_connection");
     public static final Identifier CONDUIT_CORE = EnderIO.rl("block/conduit_core");
+    public static final Identifier CONDUIT_ITEM = EnderIO.rl("block/conduit_item");
     public static final Identifier BOX = EnderIO.rl("block/box/1x1x1");
     public static final Identifier CONDUIT_CONNECTION_BOX = EnderIO.rl("block/conduit_connection_box");
     public static final Identifier CONDUIT_IO_IN = EnderIO.rl("block/io/input");

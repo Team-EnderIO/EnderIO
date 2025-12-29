@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "enderio:block/resetting_lever_five_inv"
-  }
-}

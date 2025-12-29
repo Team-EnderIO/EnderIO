@@ -1,0 +1,23 @@
+{
+  "variants": {
+    "facing=east": {
+      "type": "enderio:io_overlay",
+      "model": "enderio:block/wired_charger",
+      "y": 90
+    },
+    "facing=north": {
+      "type": "enderio:io_overlay",
+      "model": "enderio:block/wired_charger"
+    },
+    "facing=south": {
+      "type": "enderio:io_overlay",
+      "model": "enderio:block/wired_charger",
+      "y": 180
+    },
+    "facing=west": {
+      "type": "enderio:io_overlay",
+      "model": "enderio:block/wired_charger",
+      "y": 270
+    }
+  }
+}

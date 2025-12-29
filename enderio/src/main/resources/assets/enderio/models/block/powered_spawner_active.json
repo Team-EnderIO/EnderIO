@@ -9,14 +9,10 @@
       "textures": {
         "front": "enderio:block/powered_spawner_front_active"
       }
-    },
-    "overlay": {
-      "parent": "enderio:block/io_overlay"
     }
   },
   "item_render_order": [
     "frame",
-    "overlay",
     "front"
   ],
   "loader": "neoforge:composite",

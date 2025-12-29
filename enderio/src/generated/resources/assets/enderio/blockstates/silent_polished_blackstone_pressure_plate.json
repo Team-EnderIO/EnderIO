@@ -1,10 +1,10 @@
 {
   "variants": {
     "powered=false": {
-      "model": "enderio:block/silent_polished_blackstone_pressure_plate"
+      "model": "minecraft:block/polished_blackstone_pressure_plate"
     },
     "powered=true": {
-      "model": "enderio:block/silent_polished_blackstone_pressure_plate_down"
+      "model": "minecraft:block/polished_blackstone_pressure_plate_down"
     }
   }
 }

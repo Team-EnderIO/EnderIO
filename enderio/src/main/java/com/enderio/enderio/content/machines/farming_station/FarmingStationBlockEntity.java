@@ -472,7 +472,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
             output.store(MachineNBTKeys.ACTION_RANGE, ActionRange.CODEC, this.actionRange);
         }
 
-        output.store(MachineNBTKeys.ENTITY_STORAGE, Soul.CODEC, boundSoul);
+        output.store(MachineNBTKeys.ENTITY_STORAGE, Soul.OPTIONAL_CODEC, boundSoul);
     }
 
     @Override
@@ -483,7 +483,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
         var range = input.read(MachineNBTKeys.ACTION_RANGE, ActionRange.CODEC);
         range.ifPresent(r -> this.actionRange = r);
 
-        var bound = input.read(MachineNBTKeys.ENTITY_STORAGE, Soul.CODEC);
+        var bound = input.read(MachineNBTKeys.ENTITY_STORAGE, Soul.OPTIONAL_CODEC);
         bound.ifPresent(b -> this.boundSoul = b);
     }
 

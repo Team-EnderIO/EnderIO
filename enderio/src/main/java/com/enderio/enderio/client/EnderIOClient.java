@@ -14,6 +14,7 @@ import com.enderio.enderio.client.content.conduits.gui.screen_type.FluidConduitS
 import com.enderio.enderio.client.content.conduits.gui.screen_type.ItemConduitScreenType;
 import com.enderio.enderio.client.content.conduits.gui.screen_type.RedstoneConduitScreenType;
 import com.enderio.enderio.client.content.conduits.model.bundle.port.ConduitBlockStateModel;
+import com.enderio.enderio.client.content.conduits.model.bundle.port.ConduitItemModel;
 import com.enderio.enderio.client.content.conduits.model.modifier.RedstoneConduitModelModifier;
 import com.enderio.enderio.client.content.enderface.EnderfaceRenderer;
 import com.enderio.enderio.client.content.filters.EnderFluidFilterScreen;
@@ -94,6 +95,7 @@ import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterConditionalItemModelPropertyEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
+import net.neoforged.neoforge.client.event.RegisterItemModelsEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
@@ -360,6 +362,11 @@ public class EnderIOClient {
         event.registerModel(EnderIO.rl("conduit"), ConduitBlockStateModel.Unbaked.CODEC);
         event.registerModel(EnderIO.rl("io_overlay"), IOOverlayBlockStateModel.Unbaked.MAP_CODEC);
 
+    }
+
+    @SubscribeEvent
+    public static void registerItemModels(RegisterItemModelsEvent event) {
+        event.register(EnderIO.rl("conduit"), ConduitItemModel.Unbaked.CODEC);
     }
 
     @SubscribeEvent
