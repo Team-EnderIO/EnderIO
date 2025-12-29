@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "enderio:block/silent_light_weighted_pressure_plate"
+  }
+}

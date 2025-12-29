@@ -4,8 +4,7 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.datagen.client.EIOLanguageProvider;
-import com.enderio.enderio.datagen.client.models.EIOBlockStateProvider;
-import com.enderio.enderio.datagen.client.models.EIOItemModelProvider;
+import com.enderio.enderio.datagen.client.models.EIOModelProvider;
 import com.enderio.enderio.datagen.common.advancement.EIOAdvancementGenerator;
 import com.enderio.enderio.datagen.common.advancement.MachinesAdvancementGenerator;
 import com.enderio.enderio.datagen.common.data_maps.RangeExtenderDataMapProvider;
@@ -80,8 +79,9 @@ public class EnderIODataGen {
                 new LootTableProvider.SubProviderEntry(ChestLootProvider::new, LootContextParamSets.CHEST)
             ), lookupProvider));
 
-        generator.addProvider(true, new EIOItemModelProvider(packOutput));
-        generator.addProvider(true, new EIOBlockStateProvider(packOutput));
+        generator.addProvider(true, new EIOModelProvider(packOutput));
+        //generator.addProvider(true, new EIOItemModelProvider(packOutput));
+        //generator.addProvider(true, new EIOBlockStateProvider(packOutput));
         generator.addProvider(true, new EIOLanguageProvider(packOutput));
     }
 

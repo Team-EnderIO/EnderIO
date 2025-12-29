@@ -1,0 +1,23 @@
+{
+  "variants": {
+    "facing=east": {
+      "type": "enderio:io_overlay",
+      "model": "enderio:block/niard",
+      "y": 90
+    },
+    "facing=north": {
+      "type": "enderio:io_overlay",
+      "model": "enderio:block/niard"
+    },
+    "facing=south": {
+      "type": "enderio:io_overlay",
+      "model": "enderio:block/niard",
+      "y": 180
+    },
+    "facing=west": {
+      "type": "enderio:io_overlay",
+      "model": "enderio:block/niard",
+      "y": 270
+    }
+  }
+}

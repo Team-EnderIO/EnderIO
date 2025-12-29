@@ -236,14 +236,14 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     @Override
     protected void saveAdditionalSynced(ValueOutput output) {
         super.saveAdditionalSynced(output);
-        output.store(MachineNBTKeys.ENTITY_STORAGE, Soul.CODEC, boundSoul);
+        output.store(MachineNBTKeys.ENTITY_STORAGE, Soul.OPTIONAL_CODEC, boundSoul);
     }
 
     @Override
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
         burnedTicks = input.getIntOr(BURNED_TICKS, 0);
-        var bound = input.read(MachineNBTKeys.ENTITY_STORAGE, Soul.CODEC);
+        var bound = input.read(MachineNBTKeys.ENTITY_STORAGE, Soul.OPTIONAL_CODEC);
         bound.ifPresent(s -> this.boundSoul = s);
 
         updateMachineState(MachineState.NO_POWER, false);

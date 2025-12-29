@@ -2,12 +2,8 @@
   "multipart": [
     {
       "apply": {
+        "type": "enderio:io_overlay",
         "model": "enderio:block/fluid_tank_body"
-      }
-    },
-    {
-      "apply": {
-        "model": "enderio:block/io_overlay"
       }
     }
   ]

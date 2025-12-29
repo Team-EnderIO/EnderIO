@@ -1,6 +1,7 @@
 package com.enderio.enderio.datagen.client.models;
 
 import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.client.content.conduits.model.bundle.port.ConduitItemModel;
 import com.enderio.enderio.content.fun.EnderiosItem;
 import com.enderio.enderio.content.tools.vials.SoulVialItem;
 import com.enderio.enderio.init.EIOFluids;
@@ -210,6 +211,10 @@ public class EIOItemModelProvider extends ModelProvider {
                 bucketItem(itemModels, bucketItem, bucketItem.content, type.isLighterThanAir(), type.getLightLevel() > 0);
             }
         }
+
+        itemModels.itemModelOutput.accept(EIOItems.CONDUIT.get(), new ConduitItemModel.Unbaked());
+
+        itemModels.generateFlatItem(EIOItems.CONDUIT_PROBE.get(), ModelTemplates.FLAT_ITEM);
 
     }
 

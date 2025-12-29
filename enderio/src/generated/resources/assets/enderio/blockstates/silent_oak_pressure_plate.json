@@ -1,10 +1,10 @@
 {
   "variants": {
     "powered=false": {
-      "model": "enderio:block/silent_oak_pressure_plate"
+      "model": "minecraft:block/oak_pressure_plate"
     },
     "powered=true": {
-      "model": "enderio:block/silent_oak_pressure_plate_down"
+      "model": "minecraft:block/oak_pressure_plate_down"
     }
   }
 }

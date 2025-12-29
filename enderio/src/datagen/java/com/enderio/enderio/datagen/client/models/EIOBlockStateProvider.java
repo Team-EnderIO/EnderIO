@@ -6,6 +6,7 @@ import com.enderio.enderio.client.content.machines.IOOverlayBlockStateModel;
 import com.enderio.enderio.content.machines.solar_panel.SolarPanelBlock;
 import com.enderio.enderio.content.machines.solar_panel.SolarPanelTier;
 import com.enderio.enderio.content.misc_blocks.skull.EnderSkullBlock;
+import com.enderio.enderio.content.paint.block.PaintedStairBlock;
 import com.enderio.enderio.foundation.block.ProgressMachineBlock;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOFluids;
@@ -13,6 +14,7 @@ import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.ModelProvider;
 import net.minecraft.client.data.models.MultiVariant;
+import net.minecraft.client.data.models.blockstates.ConditionBuilder;
 import net.minecraft.client.data.models.blockstates.MultiPartGenerator;
 import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.blockstates.PropertyDispatch;
@@ -22,11 +24,9 @@ import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.data.models.model.TexturedModel;
 import net.minecraft.client.renderer.block.model.VariantMutator;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.AttachFace;
@@ -35,23 +35,12 @@ import net.neoforged.neoforge.client.model.block.CustomUnbakedBlockStateModel;
 import net.neoforged.neoforge.client.model.generators.blockstate.CustomBlockStateModelBuilder;
 import net.neoforged.neoforge.client.model.generators.blockstate.UnbakedMutator;
 
-import java.util.stream.Stream;
-
 import static net.minecraft.client.data.models.BlockModelGenerators.*;
 
 public class EIOBlockStateProvider extends ModelProvider {
+
     public EIOBlockStateProvider(PackOutput output) {
         super(output, EnderIO.MOD_ID);
-    }
-
-    @Override
-    protected Stream<? extends Holder<Block>> getKnownBlocks() {
-        return Stream.empty();
-    }
-
-    @Override
-    protected Stream<? extends Holder<Item>> getKnownItems() {
-        return Stream.empty();
     }
 
     @Override
@@ -134,6 +123,22 @@ public class EIOBlockStateProvider extends ModelProvider {
         blockModels.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(EIOBlocks.CONDUIT_BUNDLE.get(),
             MultiVariant.of(new CustomBlockStateModelBuilder.Simple(ConduitBlockStateModel.Unbaked.INSTANCE))));
 
+        //TODO
+        // Painted Blocks
+        for (var pair : EIOBlocks.PAINTED_BLOCKS) {
+            Block block = pair.left().get();
+            Direction itemTextureDirection = Direction.NORTH;
+
+            if (block instanceof PaintedStairBlock) {
+                itemTextureDirection = Direction.WEST;
+            }
+
+            blockModels.createTrivialCube(block);
+        }
+
+        blockModels.createTrivialCube(EIOBlocks.PAINTED_TRAVEL_ANCHOR.get());
+        blockModels.createNonTemplateModelBlock(EIOBlocks.ENDERFACE.get());
+        this.createFire(blockModels, EIOBlocks.COLD_FIRE.get());
     }
 
     private void simpleBlockWithModel(BlockModelGenerators blockModels, Block block, ResourceLocation resourcelocation) {
@@ -208,7 +213,7 @@ public class EIOBlockStateProvider extends ModelProvider {
     public void createLever(BlockModelGenerators blockModels, Block block) {
         MultiVariant multivariant = plainVariant(ModelLocationUtils.getModelLocation(Blocks.LEVER));
         MultiVariant multivariant1 = plainVariant(ModelLocationUtils.getModelLocation(Blocks.LEVER, "_on"));
-        blockModels.registerSimpleFlatItemModel(block);
+        blockModels.registerSimpleItemModel(block, ModelLocationUtils.getModelLocation(Blocks.LEVER.asItem()));
         blockModels.blockStateOutput
             .accept(
                 MultiVariantGenerator.dispatch(block)
@@ -245,10 +250,10 @@ public class EIOBlockStateProvider extends ModelProvider {
     }
 
     public void silentPressurePlate(BlockModelGenerators blockModelGenerators, Block block, Block vanilla) {
-        ResourceLocation texture = ModelLocationUtils.getModelLocation(vanilla);
-        ResourceLocation resourcelocation = ModelTemplates.PRESSURE_PLATE_UP.create(block, TextureMapping.cube(texture), blockModelGenerators.modelOutput);
-        ResourceLocation resourcelocation1 = ModelTemplates.PRESSURE_PLATE_DOWN.create(block, TextureMapping.cube(texture), blockModelGenerators.modelOutput);
-        blockModelGenerators.blockStateOutput.accept(BlockModelGenerators.createPressurePlate(block, plainVariant(resourcelocation), plainVariant(resourcelocation1)));
+        MultiVariant multivariant = BlockModelGenerators.plainVariant(ModelLocationUtils.getModelLocation(vanilla));
+        MultiVariant multivariant1 = BlockModelGenerators.plainVariant(ModelLocationUtils.getModelLocation(vanilla, "_down"));
+        blockModelGenerators.blockStateOutput.accept(BlockModelGenerators.createPressurePlate(block, multivariant, multivariant1));
+        blockModelGenerators.registerSimpleItemModel(block, ModelLocationUtils.getModelLocation(vanilla));
     }
 
 //    @Override
@@ -270,17 +275,7 @@ public class EIOBlockStateProvider extends ModelProvider {
 //                .end());
 //        }
 //
-//        // Miscellaneous
-//        simpleBlock(EIOBlocks.CONDUIT_BUNDLE.get(), models().getBuilder(EIOBlocks.CONDUIT_BUNDLE.getId().toString()).customLoader(ConduitModelBuilder::begin).end());
 //
-//        // This generates the models used for the cold fire blockstat ein our resources.
-//        // TODO: Generate the blockstate file :P
-//        String[] toCopy = { "fire_floor0", "fire_floor1", "fire_side0", "fire_side1", "fire_side_alt0", "fire_side_alt1", "fire_up0", "fire_up1",
-//            "fire_up_alt0", "fire_up_alt1" };
-//
-//        for (String name : toCopy) {
-//            models().withExistingParent(name, mcLoc(name)).renderType("cutout");
-//        }
 //    }
 
     private void registerMachineBlocks(BlockModelGenerators blockModels) {
@@ -334,6 +329,7 @@ public class EIOBlockStateProvider extends ModelProvider {
         // Solar Panels
         for (var entry : EIOBlocks.SOLAR_PANELS.entrySet()) {
             solarPanelBlock(entry.getValue().get(), entry.getKey());
+            blockModels.createTrivialCube(entry.getValue().get()); //TODO TEMP
         }
 
         // Capacitor Banks
@@ -360,6 +356,28 @@ public class EIOBlockStateProvider extends ModelProvider {
         blockModels.createNonTemplateModelBlock(EIOBlocks.WEATHER_OBELISK.get());
     }
 
+    public void createFire(BlockModelGenerators blockModels, Block block) {
+        ConditionBuilder conditionbuilder = condition()
+            .term(BlockStateProperties.NORTH, false)
+            .term(BlockStateProperties.EAST, false)
+            .term(BlockStateProperties.SOUTH, false)
+            .term(BlockStateProperties.WEST, false)
+            .term(BlockStateProperties.UP, false);
+        MultiVariant multivariant = blockModels.createFloorFireModels(block);
+        MultiVariant multivariant1 = blockModels.createSideFireModels(block);
+        MultiVariant multivariant2 = blockModels.createTopFireModels(block);
+        blockModels.blockStateOutput
+            .accept(
+                MultiPartGenerator.multiPart(block)
+                    .with(conditionbuilder, multivariant)
+                    .with(or(condition().term(BlockStateProperties.NORTH, true), conditionbuilder), multivariant1)
+                    .with(or(condition().term(BlockStateProperties.EAST, true), conditionbuilder), multivariant1.with(Y_ROT_90))
+                    .with(or(condition().term(BlockStateProperties.SOUTH, true), conditionbuilder), multivariant1.with(Y_ROT_180))
+                    .with(or(condition().term(BlockStateProperties.WEST, true), conditionbuilder), multivariant1.with(Y_ROT_270))
+                    .with(condition().term(BlockStateProperties.UP, true), multivariant2)
+            );
+    }
+
     private void registerFluidBlocks(BlockModelGenerators blockModels) {
         for (var fluidBlock : EIOFluids.FLUIDS.blocksRegister().getEntries()) {
             blockModels.createNonTemplateModelBlock(fluidBlock.get(), Blocks.WATER);
@@ -369,18 +387,17 @@ public class EIOBlockStateProvider extends ModelProvider {
     private void fluidTankBlock(BlockModelGenerators blockModelGenerators, Block block) {
         String name = name(block);
         ResourceLocation tank =  EnderIO.rl(String.format("block/%s_body", name));
-        ResourceLocation overlay =  EnderIO.rl("block/io_overlay");
+        var body = wrapMachineModel(tank);
 
         blockModelGenerators.blockStateOutput.accept(
             MultiPartGenerator.multiPart(block)
-                .with(plainVariant(tank))
-                .with(plainVariant(overlay)));
+                .with(body));
     }
 
     private void machineBlock(BlockModelGenerators blockModelGenerators, Block block) {
-        var model = wrapMachineModel(blockModelGenerators, block, ModelLocationUtils.getModelLocation(block));
-        MultiVariantGenerator.dispatch(block, model)
-            .with(BlockModelGenerators.ROTATION_HORIZONTAL_FACING);
+        var model = wrapMachineModel(ModelLocationUtils.getModelLocation(block));
+        blockModelGenerators.blockStateOutput.accept(MultiVariantGenerator.dispatch(block, model)
+            .with(BlockModelGenerators.ROTATION_HORIZONTAL_FACING));
     }
 
     private void progressMachineBlock(BlockModelGenerators blockModelGenerators, Block block) {
@@ -388,8 +405,8 @@ public class EIOBlockStateProvider extends ModelProvider {
         String path = key(block).getPath();
         var powered = ResourceLocation.fromNamespaceAndPath(ns, "block/" + path + "_active");
 
-        MultiVariant unpoweredModel = wrapMachineModel(blockModelGenerators, block, ModelLocationUtils.getModelLocation(block));
-        MultiVariant poweredModel = wrapMachineModel(blockModelGenerators, block, powered);
+        MultiVariant unpoweredModel = wrapMachineModel(ModelLocationUtils.getModelLocation(block));
+        MultiVariant poweredModel = wrapMachineModel(powered);
         blockModelGenerators.blockStateOutput.accept(MultiVariantGenerator.dispatch(block)
                 .with(createBooleanModelDispatch(ProgressMachineBlock.POWERED, poweredModel, unpoweredModel))
                 .with(BlockModelGenerators.ROTATION_HORIZONTAL_FACING));
@@ -422,7 +439,7 @@ public class EIOBlockStateProvider extends ModelProvider {
 //        builder.part().modelFile(cornerModel).rotationY(270).addModel().condition(SolarPanelBlock.NORTH_WEST, true);
     }
 
-    private MultiVariant wrapMachineModel(BlockModelGenerators blockModelGenerators, Block block, ResourceLocation model) {
+    private MultiVariant wrapMachineModel(ResourceLocation model) {
         return MultiVariant.of(new IOModelBuilder(new IOOverlayBlockStateModel.Unbaked(plainModel(model))));
     }
 

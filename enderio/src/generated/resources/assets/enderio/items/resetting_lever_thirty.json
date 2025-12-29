@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "enderio:item/resetting_lever_thirty"
+    "model": "minecraft:item/lever"
   }
 }
