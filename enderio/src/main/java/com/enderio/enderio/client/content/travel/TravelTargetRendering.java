@@ -85,7 +85,6 @@ public class TravelTargetRendering {
             // the boolean value controls whether it's still smooth while the game world is
             // paused (e.g. /tick freeze)
             float partialTick = event.getPartialTick().getGameTimeDeltaPartialTick(true);
-
             render(target, event.getLevelRenderer(), poseStack, distanceSquared, active, partialTick);
             poseStack.popPose();
         }

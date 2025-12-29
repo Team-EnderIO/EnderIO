@@ -1,4 +1,4 @@
-package com.enderio.enderio.foundation.io.energy;
+package com.enderio.enderio.foundation.energy;
 
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jetbrains.annotations.Nullable;

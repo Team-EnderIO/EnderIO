@@ -14,6 +14,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FireBlock;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
@@ -152,7 +153,9 @@ public class FireCraftingHandler {
             return;
         }
 
-        if (!FIRE_TRACKER.isEmpty() && !serverLevel.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK)) {
+        // We consider fire tick disabled if fire never spreads around players.
+        // TODO: 1.21.11: Review this change.
+        if (!FIRE_TRACKER.isEmpty() && serverLevel.getGameRules().get(GameRules.FIRE_SPREAD_RADIUS_AROUND_PLAYER) <= 0) {
             // Create a list of positions that need to be turned to air. Fixes issues with
             // the fire tracker being modified while we iterate
             List<BlockPos> blocksToClear = new ArrayList<>();

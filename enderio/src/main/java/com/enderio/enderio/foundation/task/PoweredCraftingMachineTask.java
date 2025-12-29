@@ -4,12 +4,10 @@ import com.enderio.enderio.foundation.MachineRecipe;
 import com.enderio.enderio.foundation.inventory.MachineInventory;
 import com.enderio.enderio.foundation.inventory.MultiSlotAccess;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
-import com.enderio.enderio.foundation.io.energy.IMachineEnergyStorage;
-import com.enderio.enderio.foundation.io.energy.MachineEnergyHandler;
+import com.enderio.enderio.foundation.energy.MachineEnergyHandler;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

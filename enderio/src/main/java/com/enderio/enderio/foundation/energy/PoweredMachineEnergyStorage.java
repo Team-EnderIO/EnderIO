@@ -3,7 +3,6 @@ package com.enderio.enderio.foundation.energy;
 import com.enderio.core.CoreNBTKeys;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
-import com.enderio.enderio.foundation.io.energy.MachineEnergyHandler;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;

@@ -5,7 +5,6 @@ import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.client.content.conduits.model.ConduitAdditionalModels;
 import com.enderio.enderio.client.content.conduits.model.bundle.ConduitBundleRenderState;
 import com.enderio.enderio.client.content.conduits.model.facades.ClientFacadeVisibility;
-import com.enderio.enderio.client.foundation.model.BoxTextureQuadTransformer;
 import com.enderio.enderio.content.conduits.OffsetHelper;
 import com.mojang.math.Axis;
 import com.mojang.math.Transformation;

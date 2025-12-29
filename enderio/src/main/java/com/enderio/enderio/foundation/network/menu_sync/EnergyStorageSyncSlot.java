@@ -2,6 +2,7 @@ package com.enderio.enderio.foundation.network.menu_sync;
 
 import com.enderio.core.common.network.menu.SyncSlot;
 import com.enderio.core.common.network.menu.payload.IntSlotPayload;
+import com.enderio.core.common.network.menu.payload.LongSlotPayload;
 import com.enderio.core.common.network.menu.payload.PairSlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayloadType;
@@ -73,7 +74,7 @@ public abstract class EnergyStorageSyncSlot implements SyncSlot {
             return ChangeType.NONE;
         }
 
-        var changeType = lastValue == null || currentValue.maxEnergyStored() != lastValue.maxEnergyStored()
+        var changeType = lastValue == null || currentValue.capacity() != lastValue.capacity()
                 ? ChangeType.FULL
                 : ChangeType.PARTIAL;
         lastValue = currentValue;
@@ -85,25 +86,25 @@ public abstract class EnergyStorageSyncSlot implements SyncSlot {
         var value = get();
 
         if (changeType == ChangeType.PARTIAL) {
-            return new IntSlotPayload(value.energyStored());
+            return new LongSlotPayload(value.energy());
         }
 
-        return new PairSlotPayload(new IntSlotPayload(value.energyStored()),
-                new IntSlotPayload(value.maxEnergyStored()));
+        return new PairSlotPayload(new LongSlotPayload(value.energy()),
+                new LongSlotPayload(value.capacity()));
     }
 
     @Override
     public void unpackPayload(Level level, SlotPayload payload) {
-        if (payload instanceof IntSlotPayload intSlotPayload) {
-            set(get().withEnergyStored(intSlotPayload.value()));
+        if (payload instanceof LongSlotPayload longSlotPayload) {
+            set(get().withEnergy(longSlotPayload.value()));
         } else if (payload instanceof PairSlotPayload pairSlotPayload) {
-            if (pairSlotPayload.left().type() != SlotPayloadType.INT
-                    || pairSlotPayload.right().type() != SlotPayloadType.INT) {
+            if (pairSlotPayload.left().type() != SlotPayloadType.LONG
+                    || pairSlotPayload.right().type() != SlotPayloadType.LONG) {
                 return;
             }
 
-            set(new EnergyStorageInfo(((IntSlotPayload) pairSlotPayload.left()).value(),
-                    ((IntSlotPayload) pairSlotPayload.right()).value()));
+            set(new EnergyStorageInfo(((LongSlotPayload) pairSlotPayload.left()).value(),
+                    ((LongSlotPayload) pairSlotPayload.right()).value()));
         }
     }
 }

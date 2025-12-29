@@ -2,6 +2,7 @@ package com.enderio.enderio.client.content.machines.gui.widget;
 
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.content.machines.MachinesLang;
+import com.enderio.enderio.foundation.energy.EnergyStorageInfo;
 import com.enderio.enderio.foundation.io.energy.IMachineEnergyStorage;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -20,7 +21,7 @@ public class NewCapacitorEnergyWidget extends NewEnergyWidget {
 
     private final Supplier<Boolean> cap;
 
-    public NewCapacitorEnergyWidget(int x, int y, Supplier<IMachineEnergyStorage> storageSupplier,
+    public NewCapacitorEnergyWidget(int x, int y, Supplier<EnergyStorageInfo> storageSupplier,
             Supplier<Boolean> cap) {
         super(x, y, storageSupplier);
         this.cap = cap;

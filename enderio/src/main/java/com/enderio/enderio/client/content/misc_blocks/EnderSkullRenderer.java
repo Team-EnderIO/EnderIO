@@ -19,6 +19,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
 import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
@@ -32,7 +33,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class EnderSkullRenderer implements BlockEntityRenderer<EnderSkullBlockEntity> {
 
-    public static final RenderType RENDERTYPE = RenderType.entityCutoutNoCullZOffset(Identifier.withDefaultNamespace("textures/entity/enderman/enderman.png"));
+    public static final RenderType RENDERTYPE = RenderTypes.entityCutoutNoCullZOffset(Identifier.withDefaultNamespace("textures/entity/enderman/enderman.png"));
     public static final ModelLayerLocation ENDER_SKULL = new ModelLayerLocation(Identifier.withDefaultNamespace("enderman_head"), "main");
 
     private final EnderSkullModel skullmodelbase;

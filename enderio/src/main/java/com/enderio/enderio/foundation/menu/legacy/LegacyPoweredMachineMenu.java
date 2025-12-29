@@ -2,6 +2,7 @@ package com.enderio.enderio.foundation.menu.legacy;
 
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.foundation.block.entity.legacy.LegacyPoweredMachineBlockEntity;
+import com.enderio.enderio.foundation.energy.EnergyStorageInfo;
 import com.enderio.enderio.foundation.io.energy.IMachineEnergyStorage;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
@@ -33,11 +34,11 @@ public class LegacyPoweredMachineMenu<T extends LegacyPoweredMachineBlockEntity>
         return getBlockEntity().getCapacitorSlot();
     }
 
-    public IMachineEnergyStorage getEnergyStorage() {
+    public EnergyStorageInfo getEnergyStorage() {
         if (getBlockEntity() == null) {
             throw new IllegalStateException("BlockEntity is null");
         }
 
-        return getBlockEntity().getEnergyStorage();
+        return EnergyStorageInfo.of(getBlockEntity().getEnergyStorage());
     }
 }

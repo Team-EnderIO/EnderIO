@@ -1,17 +1,12 @@
 package com.enderio.enderio.content.machines.powered_spawner;
 
-import com.enderio.enderio.foundation.io.energy.IMachineEnergyStorage;
+import com.enderio.enderio.foundation.energy.MachineEnergyHandler;
 import com.enderio.enderio.foundation.task.PoweredMachineTask;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-
-import java.util.Objects;
 
 public abstract class PoweredSpawnerTask implements PoweredMachineTask {
     // Used to determine if task should cancel
@@ -77,7 +72,7 @@ public abstract class PoweredSpawnerTask implements PoweredMachineTask {
         }
 
         if (energyConsumed < energyCost) {
-            energyConsumed += getEnergyStorage().consumeEnergy(energyCost - energyConsumed, false);
+            energyConsumed += getEnergyStorage().consume(energyCost - energyConsumed, null);
         } else {
             onTaskCompleted();
         }
@@ -86,7 +81,7 @@ public abstract class PoweredSpawnerTask implements PoweredMachineTask {
     protected abstract void onTaskCompleted();
 
     @Override
-    public IMachineEnergyStorage getEnergyStorage() {
+    public MachineEnergyHandler getEnergyStorage() {
         return blockEntity.getEnergyStorage();
     }
 

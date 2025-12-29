@@ -126,7 +126,7 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
 
     private void consumeResources() {
         TANK.drain(this, FluidType.BUCKET_VOLUME, IFluidHandler.FluidAction.EXECUTE);
-        getEnergyStorage().consumeEnergy(ENERGY_PER_BUCKET);
+        getEnergyStorage().consume(ENERGY_PER_BUCKET, null);
     }
 
     @Override

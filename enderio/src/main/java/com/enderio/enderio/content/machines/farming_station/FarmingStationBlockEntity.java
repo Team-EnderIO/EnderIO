@@ -53,6 +53,7 @@ import net.neoforged.neoforge.common.ticket.AABBTicket;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -400,7 +401,15 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
 
     @Override
     public int consumeEnergy(int energy, boolean simulate) {
-        return getEnergyStorage().consumeEnergy(energy, simulate);
+        // TODO: 1.21.11: Adopt transactions properly.
+        try (Transaction transaction = Transaction.openRoot()) {
+            int energyConsumed = getEnergyStorage().consume(energy, transaction);
+            if (!simulate) {
+                transaction.commit();
+            }
+
+            return energyConsumed;
+        }
     }
 
     @Override

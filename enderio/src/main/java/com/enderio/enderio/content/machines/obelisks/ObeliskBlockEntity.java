@@ -95,7 +95,7 @@ public abstract class ObeliskBlockEntity<T extends ObeliskBlockEntity<T>> extend
 
     @Override
     public boolean isActive() {
-        return canAct() && getEnergyStorage().getEnergyStored() >= getPerTickEnergyCost()
+        return canAct() && getEnergyStorage().getAmountAsInt() >= getPerTickEnergyCost()
                 && (!requiresFilter() || getSoulFilter() != null);
     }
 
@@ -167,7 +167,7 @@ public abstract class ObeliskBlockEntity<T extends ObeliskBlockEntity<T>> extend
         super.serverTick();
         if (isActive()) {
             int amount = getPerTickEnergyCost();
-            getEnergyStorage().consumeEnergy(amount);
+            getEnergyStorage().consume(amount, null);
         }
     }
 

@@ -203,7 +203,7 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements Range
                     consumed -= ENERGY_PER_BUCKET;
                     currentIndex++;
                 } else {
-                    consumed += getEnergyStorage().consumeEnergy(ENERGY_PER_BUCKET - consumed, false);
+                    consumed += getEnergyStorage().consume(ENERGY_PER_BUCKET - consumed, null);
                 }
                 return;
             }

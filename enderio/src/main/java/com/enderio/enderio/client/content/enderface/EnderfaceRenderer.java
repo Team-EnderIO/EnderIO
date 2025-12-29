@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.ShapeRenderer;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.level.block.state.BlockState;
@@ -37,7 +38,7 @@ public class EnderfaceRenderer implements TravelRenderer<EnderfaceTravelTarget> 
         BlockState blockState = minecraft.level.getBlockState(travelData.pos());
 
         BlockStateModel blockModel = minecraft.getBlockRenderer().getBlockModel(blockState);
-        VertexConsumer solid = buffer.getBuffer(RenderType.solid());
+        VertexConsumer solid = buffer.getBuffer(RenderTypes.solidMovingBlock());
 
         ModelBlockRenderer.renderModel(poseStack.last(), type -> solid, blockModel, 1, 1, 1, 0xF000F0,
             OverlayTexture.NO_OVERLAY, minecraft.level, travelData.pos(), blockState);
@@ -45,7 +46,7 @@ public class EnderfaceRenderer implements TravelRenderer<EnderfaceTravelTarget> 
         // Render line
         RenderType lineType;
         if (distanceSquared > 85 * 85) {
-            lineType = RenderType.lines();
+            lineType = RenderTypes.lines();
         } else if (distanceSquared > 38 * 38) {
             lineType = BOLD_LINES;
         } else {

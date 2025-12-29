@@ -14,10 +14,11 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShapeRenderer;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ARGB;
@@ -69,7 +70,7 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
         }
 
         var blockModel = minecraft.getBlockRenderer().getBlockModel(blockState);
-        VertexConsumer solid = buffer.getBuffer(RenderType.solid()); //TODO rendertype?
+        VertexConsumer solid = buffer.getBuffer(RenderTypes.solidMovingBlock()); //TODO rendertype?
         ModelBlockRenderer
                 .renderModel(poseStack.last(), buffer, blockModel, 1, 1, 1, 0xF000F0,
                         OverlayTexture.NO_OVERLAY,  minecraft.level, travelData.pos(), blockState);
@@ -77,7 +78,7 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
         // Render line
         RenderType lineType;
         if (distanceSquared > 85 * 85) {
-            lineType = RenderType.lines();
+            lineType = RenderTypes.lines();
         } else if (distanceSquared > 38 * 38) {
             lineType = BOLD_LINES;
         } else {
@@ -157,7 +158,7 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             minecraft
                 .getItemModelResolver()
                 .updateForTopItem(this.scratchItemStackRenderState, stack, ItemDisplayContext.GUI, minecraft.level, null, 0);
-            this.scratchItemStackRenderState.render(poseStack, OutlineBuffer.INSTANCE, 15728880, OverlayTexture.NO_OVERLAY);
+            this.scratchItemStackRenderState.submit(poseStack, OutlineBuffer.INSTANCE, 15728880, OverlayTexture.NO_OVERLAY);
 
             poseStack.popPose();
         }
