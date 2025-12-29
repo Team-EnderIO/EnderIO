@@ -36,6 +36,7 @@ import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.Nullable;
 
@@ -116,7 +117,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
     public boolean acceptItemFill(ItemStack item) {
         // bucket types
-        IFluidHandlerItem fluidHandlerCap = item.getCapability(Capabilities.Fluid.ITEM);
+        var fluidHandlerCap = item.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(item));
         if (fluidHandlerCap != null) {
             return true;
         }
@@ -136,7 +137,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
     public boolean acceptItemDrain(ItemStack item) {
         // bucket types
-        IFluidHandlerItem fluidHandlerCap = item.getCapability(Capabilities.Fluid.ITEM);
+        var fluidHandlerCap = item.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(item));
         if (fluidHandlerCap != null) {
             return true;
         }

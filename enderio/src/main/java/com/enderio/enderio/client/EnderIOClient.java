@@ -392,7 +392,7 @@ public class EnderIOClient {
 //        }, EIOBlocks.FLUID_TANK.asItem(), EIOBlocks.PRESSURIZED_FLUID_TANK.asItem());
 
         for (Holder<FluidType> fluidType : EIOFluids.FLUIDS.fluidTypesRegister().getEntries()) {
-            String name = Objects.requireNonNull(fluidType.getKey()).location().getPath();
+            String name = Objects.requireNonNull(fluidType.getKey()).identifier().getPath();
 
             event.registerFluidType(new IClientFluidTypeExtensions() {
                 @Override

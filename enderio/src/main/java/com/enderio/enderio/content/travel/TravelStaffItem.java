@@ -22,6 +22,8 @@ import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.energy.ComponentEnergyStorage;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 import java.util.List;
 
@@ -71,8 +73,6 @@ public class TravelStaffItem extends Item implements AdvancedTooltipProvider, IC
 
                 return true;
             }
-
-            return false;
         }
 
         return false;
@@ -97,6 +97,7 @@ public class TravelStaffItem extends Item implements AdvancedTooltipProvider, IC
                 return true;
             }
         }
+
         return false;
     }
 

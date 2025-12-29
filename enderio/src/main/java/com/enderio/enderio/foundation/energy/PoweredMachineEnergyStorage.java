@@ -1,78 +1,105 @@
 package com.enderio.enderio.foundation.energy;
 
 import com.enderio.core.CoreNBTKeys;
-import com.enderio.enderio.api.io.IOConfigurable;
-import com.enderio.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
-import com.enderio.enderio.foundation.io.energy.IMachineEnergyStorage;
+import com.enderio.enderio.foundation.io.energy.MachineEnergyHandler;
 import net.minecraft.core.Direction;
-import net.minecraft.util.Mth;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.common.util.ValueIOSerializable;
-import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.transfer.TransferPreconditions;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jetbrains.annotations.Nullable;
 
-public class PoweredMachineEnergyStorage implements IEnergyStorage, ValueIOSerializable, IMachineEnergyStorage {
+public class PoweredMachineEnergyStorage implements EnergyHandler, ValueIOSerializable, MachineEnergyHandler {
 
     private final PoweredMachineBlockEntity machine;
 
     private int energyStored;
+    private final EnergyJournal energyJournal;
 
     public PoweredMachineEnergyStorage(PoweredMachineBlockEntity machine) {
         this.machine = machine;
+        energyJournal = new EnergyJournal();
     }
 
     @Override
-    public int getEnergyStored() {
+    public long getAmountAsLong() {
         return energyStored;
     }
 
-    public void setEnergyStored(int energyStored) {
-        this.energyStored = energyStored;
+    @Override
+    public long getCapacityAsLong() {
+        return machine.getMaxEnergyStored();
+    }
+
+    @Override
+    public int getMaxConsumption() {
+        return machine.getMaxEnergyUse();
+    }
+
+    @Override
+    public void set(int energyStored) {
+        TransferPreconditions.checkNonNegative(energyStored);
+        if (energyStored != this.energyStored) {
+            int previousAmount = this.energyStored;
+            this.energyStored = energyStored;
+            onEnergyChanged(previousAmount);
+        }
+    }
+
+    protected void onEnergyChanged(int previousAmount) {
         machine.setChanged();
     }
 
     @Override
-    public int getMaxEnergyStored() {
-        return machine.getMaxEnergyStored();
+    public final int add(int energyToAdd, @Nullable TransactionContext transactionContext) {
+        TransferPreconditions.checkNonNegative(energyToAdd);
+
+        try (Transaction subTransaction = Transaction.open(transactionContext)) {
+            int inserted = Math.min(getCapacityAsInt() - this.energyStored, Math.min(energyToAdd, this.getMaxConsumption()));
+
+            if (inserted > 0) {
+                energyJournal.updateSnapshots(subTransaction);
+                energyStored += inserted;
+            }
+
+            subTransaction.commit();
+            return inserted;
+        }
     }
 
-    public final int addEnergy(int energyToAdd) {
-        return addEnergy(energyToAdd, false);
-    }
+    @Override
+    public int subtract(int energyToTake) {
+        TransferPreconditions.checkNonNegative(energyToTake);
+        int extracted = Math.min(energyStored, energyToTake);
 
-    public final int addEnergy(int energyToAdd, boolean simulate) {
-        int energyBefore = energyStored;
-        int energyAfter = Math.min(energyBefore + energyToAdd, getMaxEnergyStored());
-
-        if (!simulate) {
-            setEnergyStored(energyAfter);
+        if (extracted > 0) {
+            int energyBefore = this.energyStored;
+            energyStored -= extracted;
+            onEnergyChanged(energyBefore);
         }
 
-        return energyAfter - energyBefore;
+        return extracted;
     }
 
-    public final int consumeEnergy(int energyToConsume) {
-        return consumeEnergy(energyToConsume, false);
-    }
+    @Override
+    public int consume(int maxEnergyToConsume, @Nullable TransactionContext transactionContext) {
+        TransferPreconditions.checkNonNegative(maxEnergyToConsume);
 
-    public final int consumeEnergy(int energyToConsume, boolean simulate) {
-        // Capped consumption rate
-        energyToConsume = Math.min(energyToConsume, machine.getMaxEnergyUse());
-
-        int energyExtracted = Math.min(energyStored, energyToConsume);
-
-        if (!simulate) {
-            setEnergyStored(energyStored - energyExtracted);
+        try (Transaction subTransaction = Transaction.open(transactionContext)) {
+            int consumed = extract(Math.min(maxEnergyToConsume, getMaxConsumption()), subTransaction);
+            subTransaction.commit();
+            return consumed;
         }
-
-        return energyExtracted;
     }
 
     @Nullable
-    public IEnergyStorage getSided(Direction side) {
+    public EnergyHandler getSided(Direction side) {
         if (!machine.energyIOMode().canInput() && !machine.energyIOMode().canOutput()) {
             return null;
         }
@@ -84,73 +111,45 @@ public class PoweredMachineEnergyStorage implements IEnergyStorage, ValueIOSeria
         return new SidedAccess(this, side);
     }
 
-    // region IMachineEnergyStorage Implementation (Legacy Interop)
-
-    @Override
-    public int takeEnergy(int energy) {
-        return extractEnergy(energy, false);
-    }
-
-    @Override
-    public int getMaxEnergyUse() {
-        return machine.getMaxEnergyUse();
-    }
-
-    @Override
-    public IOConfigurable getConfig() {
-        return machine;
-    }
-
-    @Override
-    public EnergyIOMode getIOMode() {
-        return machine.energyIOMode();
-    }
-
-    // endregion
-
     // region Directionless Access
 
     @Override
-    public int receiveEnergy(int maxReceive, boolean simulate) {
-        if (!canReceive() || maxReceive <= 0) {
+    public int insert(int amount, TransactionContext transactionContext) {
+        TransferPreconditions.checkNonNegative(amount);
+
+        if (!machine.energyIOMode().canInput()) {
             return 0;
         }
+
+        int inserted = Math.min(getCapacityAsInt() - this.energyStored, amount);
 
         if (MachinesConfig.COMMON.ENERGY.THROTTLE_ENERGY_INPUT.get()) {
-            maxReceive = Math.min(machine.getMaxEnergyUse() * 2, maxReceive);
+            inserted = Math.min(machine.getMaxEnergyUse() * 2, inserted);
         }
 
-        int energyReceived = Mth.clamp(getMaxEnergyStored() - energyStored, 0, maxReceive);
-        if (!simulate) {
-            setEnergyStored(energyStored + energyReceived);
+        if (inserted > 0) {
+            energyJournal.updateSnapshots(transactionContext);
+            energyStored += inserted;
         }
 
-        return energyReceived;
+        return inserted;
     }
 
     @Override
-    public int extractEnergy(int maxExtract, boolean simulate) {
-        if (!canExtract() || maxExtract <= 0) {
+    public int extract(int amount, TransactionContext transactionContext) {
+        TransferPreconditions.checkNonNegative(amount);
+
+        if (!machine.energyIOMode().canOutput()) {
             return 0;
         }
 
-        int energyExtracted = Math.min(energyStored, maxExtract);
-
-        if (!simulate) {
-            setEnergyStored(energyStored - energyExtracted);
+        int extracted = Math.min(energyStored, amount);
+        if (extracted > 0) {
+            energyJournal.updateSnapshots(transactionContext);
+            energyStored -= extracted;
         }
 
-        return energyExtracted;
-    }
-
-    @Override
-    public boolean canExtract() {
-        return machine.energyIOMode().canOutput();
-    }
-
-    @Override
-    public boolean canReceive() {
-        return machine.energyIOMode().canInput();
+        return extracted;
     }
 
     @Override
@@ -165,61 +164,65 @@ public class PoweredMachineEnergyStorage implements IEnergyStorage, ValueIOSeria
 
     // endregion
 
-    public record SidedAccess(PoweredMachineEnergyStorage wrapped, Direction side) implements IEnergyStorage {
-        @Override
-        public int receiveEnergy(int maxReceive, boolean simulate) {
-            if (!canReceive() || maxReceive <= 0) {
-                return 0;
-            }
+    public record SidedAccess(PoweredMachineEnergyStorage wrapped, Direction side) implements EnergyHandler {
 
-            return wrapped.receiveEnergy(maxReceive, simulate);
+        @Override
+        public long getAmountAsLong() {
+            return wrapped.getAmountAsLong();
         }
 
         @Override
-        public int extractEnergy(int maxExtract, boolean simulate) {
-            if (!canExtract() || maxExtract <= 0) {
-                return 0;
-            }
-
-            return wrapped.extractEnergy(maxExtract, simulate);
+        public long getCapacityAsLong() {
+            return wrapped.getCapacityAsLong();
         }
 
         @Override
-        public int getEnergyStored() {
-            return wrapped.getEnergyStored();
-        }
+        public int insert(int amount, TransactionContext transactionContext) {
+            TransferPreconditions.checkNonNegative(amount);
 
-        @Override
-        public int getMaxEnergyStored() {
-            return wrapped.getMaxEnergyStored();
-        }
-
-        @Override
-        public boolean canExtract() {
             if (!wrapped.machine.energyIOMode().canOutput()) {
-                return false;
+                return 0;
             }
 
             if (side != null && wrapped.machine.energyIOMode().respectIOConfig()
-                    && !wrapped.machine.getIOMode(side).canOutput()) {
-                return false;
+                && !wrapped.machine.getIOMode(side).canOutput()) {
+                return 0;
             }
 
-            return wrapped.canExtract();
+            return wrapped.insert(amount, transactionContext);
         }
 
         @Override
-        public boolean canReceive() {
+        public int extract(int amount, TransactionContext transactionContext) {
+            TransferPreconditions.checkNonNegative(amount);
+
             if (!wrapped.machine.energyIOMode().canInput()) {
-                return false;
+                return 0;
             }
 
             if (side != null && wrapped.machine.energyIOMode().respectIOConfig()
-                    && !wrapped.machine.getIOMode(side).canInput()) {
-                return false;
+                && !wrapped.machine.getIOMode(side).canInput()) {
+                return 0;
             }
 
-            return wrapped.canReceive();
+            return wrapped.extract(amount, transactionContext);
+        }
+    }
+
+    private class EnergyJournal extends SnapshotJournal<Integer> {
+        protected Integer createSnapshot() {
+            return PoweredMachineEnergyStorage.this.energyStored;
+        }
+
+        protected void revertToSnapshot(Integer snapshot) {
+            PoweredMachineEnergyStorage.this.energyStored = snapshot;
+        }
+
+        protected void onRootCommit(Integer originalState) {
+            int previousAmount = originalState;
+            if (PoweredMachineEnergyStorage.this.energyStored != previousAmount) {
+                PoweredMachineEnergyStorage.this.onEnergyChanged(previousAmount);
+            }
         }
     }
 }

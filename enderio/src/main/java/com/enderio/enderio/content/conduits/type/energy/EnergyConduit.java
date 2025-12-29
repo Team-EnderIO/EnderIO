@@ -67,7 +67,7 @@ public record EnergyConduit(Identifier texture, Component description, int trans
 
     @Override
     public boolean canConnectToBlock(Level level, BlockPos conduitPos, Direction direction) {
-        IEnergyStorage capability = level.getCapability(Capabilities.Energy.BLOCK,
+        var capability = level.getCapability(Capabilities.Energy.BLOCK,
                 conduitPos.relative(direction), direction.getOpposite());
         return capability != null;
     }

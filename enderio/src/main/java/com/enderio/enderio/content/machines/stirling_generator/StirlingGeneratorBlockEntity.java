@@ -25,6 +25,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.transfer.energy.EnergyHandlerUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
@@ -76,13 +77,13 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
             burnTime--;
 
             if (!requiresCapacitor() || isCapacitorInstalled()) {
-                getEnergyStorage().addEnergy(getGenerationRate());
+                getEnergyStorage().add(getGenerationRate());
             }
         }
 
         // Taking more fuel is locked behind redstone control.
         if (canAct()) {
-            if (!isGenerating() && getEnergyStorage().getEnergyStored() < getEnergyStorage().getMaxEnergyStored()) {
+            if (!isGenerating() && !EnergyHandlerUtil.isFull(getEnergyStorage())) {
                 // Get the fuel
                 ItemStack fuel = FUEL.getItemStack(this);
                 if (!fuel.isEmpty()) {
@@ -148,7 +149,7 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
             protected void onContentsChanged() {
                 setChanged();
                 updateMachineState(MachineState.FULL_POWER,
-                        (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored())
+                        (getEnergyStorage().getAmountAsInt() >= getEnergyStorage().getCapacityAsInt())
                                 && isCapacitorInstalled());
             }
         };
@@ -162,9 +163,7 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
         this.burnDuration = input.getIntOr(MachineNBTKeys.BURN_DURATION, 0);
 
         updateMachineState(MachineState.NO_POWER, false);
-        updateMachineState(MachineState.FULL_POWER,
-            (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored())
-                && isCapacitorInstalled());
+        updateMachineState(MachineState.FULL_POWER, EnergyHandlerUtil.isFull(getEnergyStorage()) && isCapacitorInstalled());
         updateMachineState(MachineState.EMPTY_INPUT, FUEL.getItemStack(this).isEmpty());
     }
 
@@ -182,8 +181,7 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
 
         updateMachineState(MachineState.NO_POWER, false);
         updateMachineState(MachineState.FULL_POWER,
-                (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored())
-                        && isCapacitorInstalled());
+                EnergyHandlerUtil.isFull(getEnergyStorage()) && isCapacitorInstalled());
         updateMachineState(MachineState.EMPTY_INPUT, FUEL.getItemStack(this).isEmpty());
     }
 }

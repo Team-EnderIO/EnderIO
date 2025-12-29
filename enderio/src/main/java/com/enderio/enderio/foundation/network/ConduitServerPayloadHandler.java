@@ -120,7 +120,7 @@ public class ConduitServerPayloadHandler {
             var pos = packet.pos();
 
             // Ensure player can break this block
-            if (!player.canInteractWithBlock(pos, 1.0)) {
+            if (!player.isWithinBlockInteractionRange(pos, 1.0)) {
                 return;
             }
 
@@ -163,7 +163,7 @@ public class ConduitServerPayloadHandler {
             var pos = packet.pos();
 
             // Ensure player can break this block
-            if (!player.canInteractWithBlock(pos, 1.0)) {
+            if (!player.isWithinBlockInteractionRange(pos, 1.0)) {
                 return;
             }
 
@@ -205,7 +205,7 @@ public class ConduitServerPayloadHandler {
             var pos = packet.pos();
 
             // Ensure player can break this block
-            if (!player.canInteractWithBlock(pos, 1.0)) {
+            if (!player.isWithinBlockInteractionRange(pos, 1.0)) {
                 return;
             }
 

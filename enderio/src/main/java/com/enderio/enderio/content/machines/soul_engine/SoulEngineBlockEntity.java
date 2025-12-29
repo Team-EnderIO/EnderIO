@@ -46,6 +46,8 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.transfer.energy.EnergyHandlerUtil;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -96,9 +98,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
         }
 
         if (canAct(20)) {
-            updateMachineState(MachineState.FULL_POWER,
-                    (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored())
-                            && isCapacitorInstalled());
+            updateMachineState(MachineState.FULL_POWER, EnergyHandlerUtil.isFull(getEnergyStorage()) && isCapacitorInstalled());
         }
 
         updateMachineState(MachineState.NOT_SOULBOUND, soulData == null || boundSoul.entityType() != null);
@@ -139,9 +139,20 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     public void producePower() {
         if (burnedTicks >= soulData.tickpermb()) {
             int energy = (int) (soulData.powerpermb() * getGenerationRate());
-            if (!TANK.getFluid(this).isEmpty() && getEnergyStorage().addEnergy(energy, true) == energy) {
+
+            try (Transaction transaction = Transaction.openRoot()) {
+                if (TANK.getFluid(this).isEmpty()) {
+                    return;
+                }
+
+                if (getEnergyStorage().add(energy, transaction) != energy) {
+                    return;
+                }
+
+                // TODO: Tank transactions.
                 TANK.drain(this, 1, IFluidHandler.FluidAction.EXECUTE);
-                getEnergyStorage().addEnergy(energy);
+
+                transaction.commit();
                 burnedTicks -= soulData.tickpermb();
             }
         } else {
@@ -247,9 +258,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
         bound.ifPresent(s -> this.boundSoul = s);
 
         updateMachineState(MachineState.NO_POWER, false);
-        updateMachineState(MachineState.FULL_POWER,
-            (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored())
-                && isCapacitorInstalled());
+        updateMachineState(MachineState.FULL_POWER,EnergyHandlerUtil.isFull(getEnergyStorage()) && isCapacitorInstalled());
 
         loadTank(input);
     }
@@ -285,9 +294,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
         super.setLevel(level);
 
         updateMachineState(MachineState.NO_POWER, false);
-        updateMachineState(MachineState.FULL_POWER,
-                (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored())
-                        && isCapacitorInstalled());
+        updateMachineState(MachineState.FULL_POWER,EnergyHandlerUtil.isFull(getEnergyStorage()) && isCapacitorInstalled());
     }
 
     @SubscribeEvent

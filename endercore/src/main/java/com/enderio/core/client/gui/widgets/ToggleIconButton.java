@@ -4,6 +4,7 @@ import com.enderio.core.EnderCore;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -55,7 +56,7 @@ public class ToggleIconButton extends EnderButton {
     // endregion
 
     @Override
-    public void onPress() {
+    public void onPress(InputWithModifiers input) {
         boolean newValue = !getter.get();
         setter.accept(newValue);
         if (tooltipFunction != null) {

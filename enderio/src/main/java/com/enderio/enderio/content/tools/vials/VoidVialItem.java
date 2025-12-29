@@ -19,9 +19,9 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 // TODO: Change behaviour to add xp tank.
 public class VoidVialItem extends Item {
@@ -65,16 +65,19 @@ public class VoidVialItem extends Item {
         try {
             var fluidHandler = level.getCapability(Capabilities.Fluid.BLOCK, pos, null);
             if (fluidHandler != null) {
-                FluidStack availableFluid = fluidHandler.getFluidInTank(0);
-                if (availableFluid.is(Tags.Fluids.EXPERIENCE) && availableFluid.getAmount() > 0) {
-                    int requiredXp = player.getXpNeededForNextLevel();
-                    int fluidVolume = requiredXp * ExperienceUtil.EXP_TO_FLUID;
+                FluidResource availableFluid = fluidHandler.getResource(0);
+                if (availableFluid.is(Tags.Fluids.EXPERIENCE) && fluidHandler.getAmountAsInt(0) > 0) {
+                    try (Transaction transaction = Transaction.openRoot()) {
+                        int requiredXp = player.getXpNeededForNextLevel();
+                        int fluidVolume = requiredXp * ExperienceUtil.EXP_TO_FLUID;
 
-                    FluidStack drained = fluidHandler.drain(fluidVolume, IFluidHandler.FluidAction.EXECUTE);
+                        int drained = fluidHandler.extract(availableFluid, fluidVolume, transaction);
 
-                    if (!drained.isEmpty()) {
-                        player.giveExperiencePoints(drained.getAmount() / ExperienceUtil.EXP_TO_FLUID);
-                        return true;
+                        if (drained > 0) {
+                            player.giveExperiencePoints(drained / ExperienceUtil.EXP_TO_FLUID);
+                            transaction.commit();
+                            return true;
+                        }
                     }
                 }
 
@@ -95,16 +98,18 @@ public class VoidVialItem extends Item {
 
             var fluidHandler = level.getCapability(Capabilities.Fluid.BLOCK, pos, null);
             if (fluidHandler != null) {
-                long fluidVolume = ExperienceUtil.getPlayerTotalXp(player) * ExperienceUtil.EXP_TO_FLUID;
-                int cappedVolume = (int) Math.min(Integer.MAX_VALUE, fluidVolume);
-                FluidStack fs = new FluidStack(EIOFluids.XP_JUICE.source(), cappedVolume);
-                int takenVolume = fluidHandler.fill(fs, IFluidHandler.FluidAction.EXECUTE);
-                if (takenVolume > 0) {
-                    player.giveExperiencePoints(-takenVolume / ExperienceUtil.EXP_TO_FLUID);
-                    return true;
-                }
+                try (Transaction transaction = Transaction.openRoot()) {
+                    long fluidVolume = ExperienceUtil.getPlayerTotalXp(player) * ExperienceUtil.EXP_TO_FLUID;
+                    int cappedVolume = (int) Math.min(Integer.MAX_VALUE, fluidVolume);
+                    int takenVolume = fluidHandler.insert(FluidResource.of(EIOFluids.XP_JUICE.source()), cappedVolume, transaction);
+                    if (takenVolume > 0) {
+                        transaction.commit();
+                        player.giveExperiencePoints(-takenVolume / ExperienceUtil.EXP_TO_FLUID);
+                        return true;
+                    }
 
-                return false;
+                    return false;
+                }
             }
         } catch (ArithmeticException ex) {
             player.displayClientMessage(EIOCommonLang.TOO_MANY_LEVELS, true);

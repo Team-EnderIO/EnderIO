@@ -72,7 +72,7 @@ public class EnderFluidFilterScreen extends EnderContainerScreen<EnderFluidFilte
         super.init();
 
         addRenderableWidget(new IconButton(getGuiLeft() + 3, getGuiTop() + 3, 16, 16, BACK_SPRITE, null,
-                () -> handleButtonPress(AbstractFilterMenu.BACK_BUTTON_ID)));
+                input -> handleButtonPress(AbstractFilterMenu.BACK_BUTTON_ID)));
 
         int xPos = getGuiLeft() + WIDTH - 25;
         int yPos = getGuiTop() + 27 + menu.type.rowCount() * 18;

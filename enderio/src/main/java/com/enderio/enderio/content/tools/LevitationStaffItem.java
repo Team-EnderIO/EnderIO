@@ -1,6 +1,6 @@
 package com.enderio.enderio.content.tools;
 
-import com.enderio.core.common.capability.StrictFluidHandlerItemStack;
+import com.enderio.core.common.capability.StrictItemAccessFluidHandler;
 import com.enderio.enderio.config.base.BaseConfig;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIODataComponents;
@@ -14,14 +14,17 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.fluids.SimpleFluidContent;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.Nullable;
 
 public class LevitationStaffItem extends PoweredToggledItem {
 
-    public static final ICapabilityProvider<ItemStack, Void, IFluidHandlerItem> FLUID_HANDLER_PROVIDER = (stack,
-            v) -> new StrictFluidHandlerItemStack(() -> EIODataComponents.ITEM_FLUID_CONTENT, stack, 1000,
+    public static final ICapabilityProvider<ItemStack, ItemAccess, ResourceHandler<FluidResource>> FLUID_HANDLER_PROVIDER = (stack,
+            itemAccess) -> new StrictItemAccessFluidHandler(itemAccess, EIODataComponents.ITEM_FLUID_CONTENT, 1000,
                     EIOTags.Fluids.STAFF_OF_LEVITY_FUEL);
 
     public LevitationStaffItem(Properties pProperties) {
@@ -39,15 +42,15 @@ public class LevitationStaffItem extends PoweredToggledItem {
     }
 
     @Override
-    protected boolean hasCharge(ItemStack pStack) {
-        if (!super.hasCharge(pStack)) {
+    protected boolean hasCharge(ItemStack stack) {
+        if (!super.hasCharge(stack)) {
             return false;
         }
 
-        var fluidHandler = pStack.getCapability(Capabilities.Fluid.ITEM);
+        var fluidHandler = stack.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(stack));
         if (fluidHandler != null) {
             // TODO: Config for consumption amount
-            return !fluidHandler.drain(1, IFluidHandler.FluidAction.SIMULATE).isEmpty();
+            return fluidHandler.getAmountAsInt(0) > 1;
         }
 
         return false;
@@ -57,10 +60,13 @@ public class LevitationStaffItem extends PoweredToggledItem {
     protected void consumeCharge(ItemStack pStack) {
         super.consumeCharge(pStack);
 
-        var fluidHandler = pStack.getCapability(Capabilities.Fluid.ITEM);
+        var fluidHandler = pStack.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(pStack));
         if (fluidHandler != null) {
-            // TODO: Config for consumption amount
-            fluidHandler.drain(1, IFluidHandler.FluidAction.EXECUTE);
+            try (Transaction transaction = Transaction.openRoot()) {
+                // TODO: Config for consumption amount
+                fluidHandler.extract(fluidHandler.getResource(0), 1, transaction);
+                transaction.commit();
+            }
         }
     }
 
@@ -68,12 +74,13 @@ public class LevitationStaffItem extends PoweredToggledItem {
     protected void setFullCharge(ItemStack pStack) {
         super.setFullCharge(pStack);
 
-        var fluidHandler = pStack.getCapability(Capabilities.Fluid.ITEM);
+        var fluidHandler = pStack.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(pStack));
         if (fluidHandler != null) {
-            if (fluidHandler instanceof StrictFluidHandlerItemStack strictFluidHandlerItemStack) {
-                strictFluidHandlerItemStack.setFluid(
-                        new FluidStack(EIOFluids.VAPOR_OF_LEVITY.source(), fluidHandler.getTankCapacity(0)));
-            }
+            int capacity = fluidHandler.getCapacityAsInt(0, FluidResource.of(EIOFluids.VAPOR_OF_LEVITY.source()));
+
+            // Just set the component itself.
+            pStack.set(EIODataComponents.ITEM_FLUID_CONTENT, SimpleFluidContent.copyOf(
+                new FluidStack(EIOFluids.VAPOR_OF_LEVITY.source(), capacity)));
         }
     }
 

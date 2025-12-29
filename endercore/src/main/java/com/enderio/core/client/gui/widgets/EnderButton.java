@@ -3,6 +3,7 @@ package com.enderio.core.client.gui.widgets;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.WidgetSprites;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
@@ -19,7 +20,7 @@ public abstract class EnderButton extends AbstractWidget {
         super(pX, pY, pWidth, pHeight, pMessage);
     }
 
-    public abstract void onPress();
+    public abstract void onPress(InputWithModifiers input);
 
     @Override
     protected void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
@@ -32,6 +33,6 @@ public abstract class EnderButton extends AbstractWidget {
 
     @Override
     public void onClick(MouseButtonEvent event, boolean isDoubleClick) {
-        this.onPress();
+        this.onPress(event);
     }
 }

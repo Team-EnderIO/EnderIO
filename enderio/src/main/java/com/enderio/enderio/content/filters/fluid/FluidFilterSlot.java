@@ -5,6 +5,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -23,11 +24,10 @@ public class FluidFilterSlot extends FilterSlot<FluidStack> {
 
     @Override
     public Optional<FluidStack> getResourceFrom(ItemStack itemStack) {
-        IFluidHandlerItem capability = itemStack.getCapability(Capabilities.Fluid.ITEM);
-        if (capability != null) {
-            var fluid = capability.getFluidInTank(0).copy();
-            if (!fluid.isEmpty()) {
-                return Optional.of(fluid);
+        var fluidHandler = itemStack.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(itemStack));
+        if (fluidHandler != null) {
+            if (fluidHandler.getAmountAsInt(0) > 0) {
+                return Optional.of(fluidHandler.getResource(0).toStack(fluidHandler.getAmountAsInt(0)));
             }
         }
 

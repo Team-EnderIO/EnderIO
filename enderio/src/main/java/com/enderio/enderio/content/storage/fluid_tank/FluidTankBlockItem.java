@@ -12,6 +12,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import net.neoforged.neoforge.fluids.capability.templates.FluidHandlerItemStack;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -43,16 +44,14 @@ public class FluidTankBlockItem extends BlockItem implements AdvancedTooltipProv
 
     @Override
     public void addCommonTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
-        var fluidHandler = itemStack.getCapability(Capabilities.Fluid.ITEM);
+        var fluidHandler = itemStack.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(itemStack));
         if (fluidHandler != null) {
-            if (fluidHandler instanceof FluidHandlerItemStack itemFluidHandler) {
-                if (itemFluidHandler.getFluid().isEmpty()) {
-                    tooltips.add(TooltipUtil.style(EIOCommonLang.TANK_EMPTY_STRING));
-                } else {
-                    tooltips.add(TooltipUtil.styledWithArgs(EIOCommonLang.FLUID_TANK_TOOLTIP,
-                            itemFluidHandler.getFluid().getAmount(), capacity,
-                            itemFluidHandler.getFluid().getFluid().getFluidType().getDescription().getString()));
-                }
+            if (fluidHandler.getAmountAsInt(0) <= 0) {
+                tooltips.add(TooltipUtil.style(EIOCommonLang.TANK_EMPTY_STRING));
+            } else {
+                tooltips.add(TooltipUtil.styledWithArgs(EIOCommonLang.FLUID_TANK_TOOLTIP,
+                    fluidHandler.getAmountAsInt(0), capacity,
+                    fluidHandler.getResource(0).getFluid().getFluidType().getDescription().getString()));
             }
         }
     }

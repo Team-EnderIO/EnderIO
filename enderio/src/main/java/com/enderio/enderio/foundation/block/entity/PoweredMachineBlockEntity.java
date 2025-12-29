@@ -33,10 +33,12 @@ import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.energy.EnergyHandlerUtil;
 
 public abstract class PoweredMachineBlockEntity extends MachineBlockEntity implements MachineInstallable {
 
-    public static final ICapabilityProvider<PoweredMachineBlockEntity, Direction, IEnergyStorage> ENERGY_STORAGE_PROVIDER = (
+    public static final ICapabilityProvider<PoweredMachineBlockEntity, Direction, EnergyHandler> ENERGY_STORAGE_PROVIDER = (
             be, side) -> side == null ? be.energyStorage : be.energyStorage.getSided(side);
 
     private final CapacitorSupport capacitorSupport;
@@ -102,7 +104,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
 
     @UseOnly(LogicalSide.CLIENT)
     public final void clientSetEnergyStored(int energyStored) {
-        energyStorage.setEnergyStored(energyStored);
+        energyStorage.set(energyStored);
     }
 
     public final boolean hasEnergy() {
@@ -111,7 +113,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
             return false;
         }
 
-        return energyStorage.getEnergyStored() > 0;
+        return energyStorage.getAmountAsInt() > 0;
     }
 
     public final int getMaxEnergyStored() {
@@ -128,7 +130,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
     }
 
     private void updatePowerState() {
-        updateMachineState(MachineState.NO_POWER, energyStorage.getEnergyStored() <= 0);
+        updateMachineState(MachineState.NO_POWER, energyStorage.getAmountAsInt() <= 0);
     }
 
     // region Distribution
@@ -149,17 +151,13 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
 
     private void distributeEnergy(Direction side) {
         // Get the other energy handler
-        IEnergyStorage otherHandler = getNeighbouringCapability(Capabilities.Energy.BLOCK, side);
+        EnergyHandler otherHandler = getNeighbouringCapability(Capabilities.Energy.BLOCK, side);
         if (otherHandler == null) {
             return;
         }
 
-        // If the other handler can receive power transmit ours
-        if (otherHandler.canReceive()) {
-            int energyToReceive = energyStorage.extractEnergy(Integer.MAX_VALUE, true);
-            int received = otherHandler.receiveEnergy(energyToReceive, false);
-            energyStorage.extractEnergy(received, false);
-        }
+        // Attempt to transmit energy to neighbour
+        EnergyHandlerUtil.move(energyStorage, otherHandler, Integer.MAX_VALUE, null);
     }
 
     // endregion
@@ -311,13 +309,13 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
     @Override
     protected void applyImplicitComponents(DataComponentGetter componentInput) {
         super.applyImplicitComponents(componentInput);
-        energyStorage.setEnergyStored(componentInput.getOrDefault(EIODataComponents.ENERGY, 0));
+        energyStorage.set(componentInput.getOrDefault(EIODataComponents.ENERGY, 0));
     }
 
     @Override
     protected void collectImplicitComponents(DataComponentMap.Builder components) {
         super.collectImplicitComponents(components);
-        components.set(EIODataComponents.ENERGY, energyStorage.getEnergyStored());
+        components.set(EIODataComponents.ENERGY, energyStorage.getAmountAsInt());
     }
 
     @Override

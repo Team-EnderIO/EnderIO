@@ -20,16 +20,18 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
-import net.neoforged.neoforge.energy.ComponentEnergyStorage;
-import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.energy.ItemAccessEnergyHandler;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public abstract class PoweredToggledItem extends Item implements AdvancedTooltipProvider, ICustomCreativeTabEntries {
 
-    public static final ICapabilityProvider<ItemStack, Void, IEnergyStorage> ENERGY_STORAGE_PROVIDER =
-        (stack, v) -> new ComponentEnergyStorage(stack, EIODataComponents.ENERGY, ((PoweredToggledItem)stack.getItem()).getMaxEnergy());
+    public static final ICapabilityProvider<ItemStack, ItemAccess, EnergyHandler> ENERGY_STORAGE_PROVIDER =
+        (stack, itemAccess) -> new ItemAccessEnergyHandler(itemAccess, EIODataComponents.ENERGY, ((PoweredToggledItem)stack.getItem()).getMaxEnergy());
 
     public PoweredToggledItem(Properties pProperties) {
         super(pProperties
@@ -56,11 +58,14 @@ public abstract class PoweredToggledItem extends Item implements AdvancedTooltip
     }
 
     protected boolean hasCharge(ItemStack pStack) {
-        return ItemStackEnergy.extractEnergy(pStack, getEnergyUse(), true) > 0;
+        return ItemStackEnergy.hasEnergy(pStack, getEnergyUse());
     }
 
     protected void consumeCharge(ItemStack pStack) {
-        ItemStackEnergy.extractEnergy(pStack, getEnergyUse(), false);
+        try (Transaction transaction = Transaction.openRoot()) {
+            ItemStackEnergy.extractEnergy(pStack, getEnergyUse(), transaction);
+            transaction.commit();
+        }
     }
 
     protected void setFullCharge(ItemStack pStack) {
@@ -126,10 +131,10 @@ public abstract class PoweredToggledItem extends Item implements AdvancedTooltip
     }
 
     @Override
-    public int getBarWidth(ItemStack pStack) {
-        var energyStorage = pStack.getCapability(Capabilities.Energy.ITEM);
+    public int getBarWidth(ItemStack stack) {
+        var energyStorage = stack.getCapability(Capabilities.Energy.ITEM, ItemAccess.forStack(stack));
         if (energyStorage != null) {
-            return Math.round(energyStorage.getEnergyStored() * 13.0F / energyStorage.getMaxEnergyStored());
+            return Math.round(energyStorage.getAmountAsInt() * 13.0F / energyStorage.getCapacityAsInt());
         }
 
         return 0;

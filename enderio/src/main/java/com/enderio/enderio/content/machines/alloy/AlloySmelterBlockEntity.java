@@ -13,6 +13,7 @@ import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.foundation.inventory.MultiSlotAccess;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import com.enderio.enderio.foundation.io.energy.IMachineEnergyStorage;
+import com.enderio.enderio.foundation.io.energy.MachineEnergyHandler;
 import com.enderio.enderio.foundation.recipe.MachineRecipeCaches;
 import com.enderio.enderio.foundation.task.PoweredCraftingMachineTask;
 import com.enderio.enderio.foundation.task.host.CraftingMachineTaskHost;
@@ -183,7 +184,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         private int inputsConsumed;
 
         public AlloySmeltingMachineTask(Level level, MachineInventory inventory,
-                IMachineEnergyStorage energyStorage, AlloySmeltingRecipe.Input recipeInput, MultiSlotAccess inputs,
+                MachineEnergyHandler energyStorage, AlloySmeltingRecipe.Input recipeInput, MultiSlotAccess inputs,
                 SingleSlotAccess outputSlot, @Nullable RecipeHolder<AlloySmeltingRecipe> recipe) {
             super(level, inventory, energyStorage, recipeInput, outputSlot, recipe);
             this.inputs = inputs;

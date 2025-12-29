@@ -10,6 +10,7 @@ import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 
@@ -35,18 +36,18 @@ public class EnergyConduitScreenType extends IOConduitScreenType<EnergyConduitCo
         super.createLeftWidgets(screen, startX, startY, dataAccess);
 
         // Priority up/down
-        screen.addIconButton(startX + 70, startY + 38, 9, 9, Component.empty(), ICON_INCREASE, () -> dataAccess
-            .updateConnectionConfig(config -> config.withPriority(config.priority() + getIncrement())));
-        screen.addIconButton(startX + 70, startY + 38 + 9, 9, 9, Component.empty(), ICON_DECREASE, () -> dataAccess
-            .updateConnectionConfig(config -> config.withPriority(config.priority() - getIncrement())));
+        screen.addIconButton(startX + 70, startY + 38, 9, 9, Component.empty(), ICON_INCREASE, input -> dataAccess
+            .updateConnectionConfig(config -> config.withPriority(config.priority() + getIncrement(input))));
+        screen.addIconButton(startX + 70, startY + 38 + 9, 9, 9, Component.empty(), ICON_DECREASE, input -> dataAccess
+            .updateConnectionConfig(config -> config.withPriority(config.priority() - getIncrement(input))));
     }
 
-    private int getIncrement() {
-        if (Screen.hasControlDown()) {
+    private int getIncrement(InputWithModifiers input) {
+        if (input.hasControlDown()) {
             return 100;
         }
 
-        if (Screen.hasShiftDown()) {
+        if (input.hasShiftDown()) {
             return 10;
         }
 

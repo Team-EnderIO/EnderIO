@@ -5,6 +5,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.DyeColor;
@@ -25,7 +26,7 @@ public interface ConduitScreenHelper {
             Consumer<RedstoneControl> setter);
 
     AbstractWidget addIconButton(int x, int y, int width, int height, Component title, Identifier sprite,
-            Runnable onPress);
+            Consumer<InputWithModifiers> onPress);
 
     AbstractWidget addToggleButton(int x, int y, int width, int height, Component enabledTitle, Component disabledTitle,
             Identifier enabledSprite, Identifier disabledSprite, Supplier<Boolean> getter,

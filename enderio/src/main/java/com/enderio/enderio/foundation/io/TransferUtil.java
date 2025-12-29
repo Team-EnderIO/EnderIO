@@ -1,48 +1,30 @@
 package com.enderio.enderio.foundation.io;
 
 import com.enderio.enderio.api.io.IOMode;
-import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
+// TODO: This should probably have unit tests.
 public class TransferUtil {
+
+    // TODO: This should possibly allow transactions to be passed in.
 
     // region Items
 
-    public static void distributeItems(IOMode mode, IItemHandler selfItemHandler, IItemHandler otherItemHandler) {
+    public static void distributeItems(IOMode mode, ResourceHandler<ItemResource> selfItemHandler, ResourceHandler<ItemResource> otherItemHandler) {
         distributeItems(mode.canPush(), mode.canPull(), selfItemHandler, otherItemHandler);
     }
 
-    public static void distributeItems(boolean canPush, boolean canPull, IItemHandler selfItemHandler, IItemHandler otherItemHandler) {
+    public static void distributeItems(boolean canPush, boolean canPull, ResourceHandler<ItemResource> selfItemHandler, ResourceHandler<ItemResource> otherItemHandler) {
+        // TODO: Check that this is correct.
         if (canPush) {
-            moveItems(selfItemHandler, otherItemHandler);
+            ResourceHandlerUtil.move(selfItemHandler, otherItemHandler, ir -> true, Integer.MAX_VALUE, null);
         }
 
         if (canPull) {
-            moveItems(otherItemHandler, selfItemHandler);
-        }
-    }
-
-    private static void moveItems(IItemHandler from, IItemHandler to) {
-        for (int i = 0; i < from.getSlots(); i++) {
-            ItemStack extracted = from.extractItem(i, from.getSlotLimit(i), true);
-            if (!extracted.isEmpty()) {
-                for (int j = 0; j < to.getSlots(); j++) {
-                    ItemStack remainder = to.insertItem(j, extracted, false);
-
-                    int successfullyMoved = extracted.getCount() - remainder.getCount();
-                    if (successfullyMoved > 0) {
-                        from.extractItem(i, extracted.getCount() - remainder.getCount(), false);
-                    }
-
-                    // If there is no remainder, take from the next "from" slot.
-                    if (remainder.getCount() <= 0) {
-                        break;
-                    }
-                }
-            }
+            ResourceHandlerUtil.move(otherItemHandler, selfItemHandler, ir -> true, Integer.MAX_VALUE, null);
         }
     }
 
@@ -53,39 +35,28 @@ public class TransferUtil {
     // TODO: Possibly raise this too?
     public static final int DEFAULT_FLUID_DRAIN = 100;
 
-    public static void distributeFluids(IOMode mode, IFluidHandler selfItemHandler, IFluidHandler otherItemHandler) {
+    public static void distributeFluids(IOMode mode, ResourceHandler<FluidResource> selfItemHandler, ResourceHandler<FluidResource> otherItemHandler) {
         distributeFluids(mode.canPush(), mode.canPull(), selfItemHandler, otherItemHandler, DEFAULT_FLUID_DRAIN);
     }
 
-    public static void distributeFluids(IOMode mode, IFluidHandler selfItemHandler, IFluidHandler otherItemHandler, int maxDrain) {
+    public static void distributeFluids(IOMode mode, ResourceHandler<FluidResource> selfItemHandler, ResourceHandler<FluidResource> otherItemHandler, int maxDrain) {
         distributeFluids(mode.canPush(), mode.canPull(), selfItemHandler, otherItemHandler, maxDrain);
     }
 
-    public static void distributeFluids(boolean canPush, boolean canPull, IFluidHandler selfItemHandler, IFluidHandler otherItemHandler) {
+    public static void distributeFluids(boolean canPush, boolean canPull, ResourceHandler<FluidResource> selfItemHandler, ResourceHandler<FluidResource> otherItemHandler) {
         distributeFluids(canPush, canPull, selfItemHandler, otherItemHandler, DEFAULT_FLUID_DRAIN);
     }
 
-    public static void distributeFluids(boolean canPush, boolean canPull, IFluidHandler selfItemHandler, IFluidHandler otherItemHandler, int maxDrain) {
+    public static void distributeFluids(boolean canPush, boolean canPull, ResourceHandler<FluidResource> selfItemHandler, ResourceHandler<FluidResource> otherItemHandler, int maxDrain) {
         // TODO: Do we want to imitate old behaviour where if we have no fluid, we pull by default?
 
+        // TODO: 1.21.11: Check this is right.
         if (canPush) {
-            int filled = 0;
-            for (int i = 0; i < selfItemHandler.getTanks(); i++) {
-                filled += FluidUtil.tryFluidTransfer(otherItemHandler, selfItemHandler, new FluidStack(selfItemHandler.getFluidInTank(i).getFluid(), maxDrain), true).getAmount();
-            }
-            if (filled > 0) {
-                return;
-            }
+            ResourceHandlerUtil.move(selfItemHandler, otherItemHandler, fr -> true, maxDrain, null);
         }
 
         if (canPull) {
-            for (int i = 0; i < selfItemHandler.getTanks(); i++) {
-                if (selfItemHandler.getFluidInTank(i).isEmpty()) {
-                    FluidUtil.tryFluidTransfer(selfItemHandler, otherItemHandler, maxDrain, true);
-                } else {
-                    FluidUtil.tryFluidTransfer(selfItemHandler, otherItemHandler, new FluidStack(selfItemHandler.getFluidInTank(i).getFluid(), maxDrain), true);
-                }
-            }
+            ResourceHandlerUtil.move(otherItemHandler, selfItemHandler, fr -> true, maxDrain, null);
         }
     }
 

@@ -35,8 +35,9 @@ import net.minecraft.world.phys.AABB;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.ModConfigSpec;
-import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -74,24 +75,37 @@ public class WirelessChargerBlockEntity extends PoweredMachineBlockEntity implem
             return;
         }
         PoweredMachineEnergyStorage energyStorage = getEnergyStorage();
-        if (energyStorage.getEnergyStored() <= 0) {
+        int toDistribute = Math.min(energyStorage.getAmountAsInt(), getMaxEnergyUse());
+
+        if (toDistribute <= 0) {
             return;
         }
-        int toDistribute = Math.min(energyStorage.getEnergyStored(), getMaxEnergyUse());
 
+        // TODO: It would be ideal if we split the amount of energy we have to distribute evenly across nearby players.
         List<Player> players = level.getEntitiesOfClass(Player.class, bounds);
         for (Player player : players) {
             Inventory inventory = player.getInventory();
             for (int i = 0; i < inventory.getContainerSize(); i++) {
                 ItemStack stack = inventory.getItem(i);
-                @Nullable
-                IEnergyStorage cap = stack.getCapability(Capabilities.Energy.ITEM, ItemAccess.forStack(stack));
-                if (cap != null && cap.canReceive()) {
-                    int received = cap.receiveEnergy(toDistribute, false);
-                    energyStorage.consumeEnergy(received);
-                    toDistribute -= received;
-                    if (toDistribute <= 0) {
-                        return;
+                @Nullable EnergyHandler cap = stack.getCapability(Capabilities.Energy.ITEM, ItemAccess.forStack(stack));
+                if (cap != null) {
+                    try (Transaction transaction = Transaction.openRoot()) {
+                        int maxConsumed;
+                        try (Transaction simulatedConsume = Transaction.open(transaction)) {
+                            maxConsumed = energyStorage.consume(toDistribute, simulatedConsume);
+                        }
+
+                        int inserted = cap.insert(maxConsumed, transaction);
+                        if (inserted != energyStorage.consume(inserted, transaction)) {
+                            continue;
+                        }
+
+                        toDistribute -= inserted;
+                        transaction.commit();
+
+                        if (toDistribute <= 0) {
+                            return;
+                        }
                     }
                 }
             }
@@ -114,7 +128,7 @@ public class WirelessChargerBlockEntity extends PoweredMachineBlockEntity implem
     public void serverTick() {
         super.serverTick();
         if (isActive()) {
-            getEnergyStorage().consumeEnergy(energyUpkeep.get());
+            getEnergyStorage().consume(energyUpkeep.get(), null);
             chargeItem();
         }
     }

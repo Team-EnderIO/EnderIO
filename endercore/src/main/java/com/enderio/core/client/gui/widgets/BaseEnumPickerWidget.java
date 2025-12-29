@@ -8,6 +8,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -135,7 +136,7 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
     }
 
     @Override
-    public void onPress() {
+    public void onPress(InputWithModifiers input) {
         if (isExpanded()) {
             selectNext(mouseButton != InputConstants.MOUSE_BUTTON_RIGHT);
         } else {
@@ -288,7 +289,7 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
         }
 
         @Override
-        public void onPress() {
+        public void onPress(InputWithModifiers input) {
             setValue(value);
         }
 

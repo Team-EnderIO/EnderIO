@@ -21,6 +21,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -193,7 +194,7 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
 
         @Override
         public AbstractWidget addIconButton(int x, int y, int width, int height, Component title,
-                Identifier sprite, Runnable onPress) {
+                Identifier sprite, Consumer<InputWithModifiers> onPress) {
             var widget = new IconButton(x, y, width, height, sprite, title, onPress);
             addRenderableWidget(widget);
             return widget;
@@ -213,7 +214,7 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
         @Override
         public AbstractWidget addFilterConfigureButton(int x, int y, int slot) {
             var widget = addIconButton(x, y, 16, 16, Component.empty(), ICON_CONFIGURE,
-                    () -> menu.tryOpenFilterMenu(slot));
+                    input -> menu.tryOpenFilterMenu(slot));
             addPreRenderAction(() -> {
                 var inventory = menu.getConduitInventory();
                 widget.visible = inventory != null

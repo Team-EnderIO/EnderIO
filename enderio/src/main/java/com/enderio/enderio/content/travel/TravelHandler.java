@@ -13,6 +13,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -27,6 +28,8 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
+import net.neoforged.neoforge.transfer.energy.EnergyHandlerUtil;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
@@ -59,12 +62,16 @@ public class TravelHandler {
         return !player.level().getBlockState(player.blockPosition().below()).is(EIOTags.Blocks.BLOCKS_TELEPORTATION);
     }
 
+    // TODO: I don't like how we're handling energy here.
     public static boolean hasResources(ItemStack stack) {
         return ItemStackEnergy.hasEnergy(stack, BaseConfig.COMMON.ITEMS.TRAVELLING_STAFF_ENERGY_USE.get());
     }
 
     public static void consumeResources(ItemStack stack) {
-        ItemStackEnergy.extractEnergy(stack, BaseConfig.COMMON.ITEMS.TRAVELLING_STAFF_ENERGY_USE.get(), false);
+        try(Transaction transaction = Transaction.openRoot()) {
+            ItemStackEnergy.extractEnergy(stack, BaseConfig.COMMON.ITEMS.TRAVELLING_STAFF_ENERGY_USE.get(), transaction);
+            transaction.commit();
+        }
     }
 
     public static boolean shortTeleport(Level level, Player player) {
@@ -82,9 +89,15 @@ public class TravelHandler {
                         player.setPose(Pose.SWIMMING);
                     }
 
-                    player.playNotifySound(SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
+                    if (!level.isClientSide()) {
+                        level.playSound(null, player.position().x(), player.position().y(), player.position().z(), SoundEvents.ENDERMAN_TELEPORT,
+                            SoundSource.PLAYERS, 1.0F, 1.0F);
+                    }
                 } else {
-                    player.playNotifySound(SoundEvents.DISPENSER_FAIL, SoundSource.PLAYERS, 1F, 1F);
+                    if (!level.isClientSide()) {
+                        level.playSound(null, player.position().x(), player.position().y(), player.position().z(), SoundEvents.DISPENSER_FAIL,
+                            SoundSource.PLAYERS, 1.0F, 1.0F);
+                    }
                 }
             }
             return true;
@@ -131,7 +144,11 @@ public class TravelHandler {
                 player.teleportTo(teleportPosition.x(), teleportPosition.y(), teleportPosition.z());
                 // Stop "moved too quickly" warnings
                 serverPlayer.connection.resetPosition();
-                player.playNotifySound(SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 0.75F, 1F);
+
+                if (!level.isClientSide()) {
+                    level.playSound(null, player.position().x(), player.position().y(), player.position().z(), SoundEvents.ENDERMAN_TELEPORT,
+                        SoundSource.PLAYERS, 1.0F, 1.0F);
+                }
             } else if (sendToServer) {
                 ClientPacketDistributor.sendToServer(new ServerboundRequestTravelPacket(target.pos()));
             }

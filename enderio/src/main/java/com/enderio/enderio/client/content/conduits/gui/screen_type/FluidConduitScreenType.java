@@ -10,16 +10,15 @@ import com.enderio.enderio.content.conduits.type.fluid.FluidConduit;
 import com.enderio.enderio.content.conduits.type.fluid.FluidConduitConnectionConfig;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.foundation.network.packets.ServerboundClearLockedFluidPacket;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.InputWithModifiers;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -27,12 +26,10 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.ARGB;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.function.Supplier;
 
@@ -58,12 +55,12 @@ public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConn
         }
     }
 
-    private int getIncrement() {
-        if (Screen.hasControlDown()) {
+    private int getIncrement(InputWithModifiers input) {
+        if (input.hasControlDown()) {
             return 100;
         }
 
-        if (Screen.hasShiftDown()) {
+        if (input.hasShiftDown()) {
             return 10;
         }
 
@@ -91,9 +88,9 @@ public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConn
         // Priority up/down
         if (dataAccess.conduit() instanceof FluidConduit fluidConduit && fluidConduit.doesSupportPriority()) {
             screen.addIconButton(startX + 70, startY + 38, 9, 9, Component.empty(), ICON_INCREASE,
-                () -> dataAccess.updateConnectionConfig(config -> config.withPriority(config.insertPriority() + getIncrement())));
+                input -> dataAccess.updateConnectionConfig(config -> config.withPriority(config.insertPriority() + getIncrement(input))));
             screen.addIconButton(startX + 70, startY + 38 + 9, 9, 9, Component.empty(), ICON_DECREASE,
-                () -> dataAccess.updateConnectionConfig(config -> config.withPriority(config.insertPriority() - getIncrement())));
+                input -> dataAccess.updateConnectionConfig(config -> config.withPriority(config.insertPriority() - getIncrement(input))));
         }
     }
 
@@ -232,7 +229,7 @@ public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConn
         }
 
         @Override
-        public void onClick(double pMouseX, double pMouseY) {
+        public void onClick(MouseButtonEvent event, boolean isDoubleClick) {
             onPress.run();
         }
     }

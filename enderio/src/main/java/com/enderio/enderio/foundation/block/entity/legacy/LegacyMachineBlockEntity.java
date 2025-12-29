@@ -45,6 +45,9 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.model.data.ModelData;
 import net.neoforged.neoforge.model.data.ModelProperty;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
@@ -419,8 +422,8 @@ public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
      * Move items to and from via the given side.
      */
     private void moveItems(Direction side) {
-        IItemHandler selfHandler = getSelfCapability(Capabilities.Item.BLOCK, side);
-        IItemHandler otherHandler = getNeighbouringCapability(Capabilities.Item.BLOCK, side);
+        ResourceHandler<ItemResource> selfHandler = getSelfCapability(Capabilities.Item.BLOCK, side);
+        ResourceHandler<ItemResource> otherHandler = getNeighbouringCapability(Capabilities.Item.BLOCK, side);
         if (selfHandler == null || otherHandler == null) {
             return;
         }
@@ -432,8 +435,8 @@ public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
      * Move fluids to and from via the given side.
      */
     private void moveFluids(Direction side) {
-        IFluidHandler selfHandler = getSelfCapability(Capabilities.Fluid.BLOCK, side);
-        IFluidHandler otherHandler = getNeighbouringCapability(Capabilities.Fluid.BLOCK, side);
+        ResourceHandler<FluidResource> selfHandler = getSelfCapability(Capabilities.Fluid.BLOCK, side);
+        ResourceHandler<FluidResource> otherHandler = getNeighbouringCapability(Capabilities.Fluid.BLOCK, side);
         if (selfHandler == null || otherHandler == null) {
             return;
         }
@@ -532,7 +535,7 @@ public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
             return false;
         }
 
-        return pPlayer.canInteractWithBlock(this.worldPosition, 1.5);
+        return pPlayer.isWithinBlockInteractionRange(this.worldPosition, 1.5);
     }
 
     // TODO: should be enabled once the client side call in WrenchableBlockHandler

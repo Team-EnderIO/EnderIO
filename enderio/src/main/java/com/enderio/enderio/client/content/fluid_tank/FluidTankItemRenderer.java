@@ -24,11 +24,11 @@ import java.util.Set;
 
 // TODO: No longer lights in the inventory/hand like other machines...
 // TODO: PORT: Hook back up
-public class FluidTankRenderer implements SpecialModelRenderer<IFluidHandlerItem> {
+public class FluidTankItemRenderer implements SpecialModelRenderer<IFluidHandlerItem> {
 
-    public static final FluidTankRenderer INSTANCE = new FluidTankRenderer();
+    public static final FluidTankItemRenderer INSTANCE = new FluidTankItemRenderer();
 
-    public FluidTankRenderer() {
+    public FluidTankItemRenderer() {
     }
 
     @Override
@@ -83,12 +83,12 @@ public class FluidTankRenderer implements SpecialModelRenderer<IFluidHandlerItem
     public static final class Unbaked implements SpecialModelRenderer.Unbaked {
 
         public static final Identifier ID = EnderIO.rl("fluid_tank");
-        public static final FluidTankRenderer.Unbaked INSTANCE = new FluidTankRenderer.Unbaked();
-        public static final MapCodec<FluidTankRenderer.Unbaked> CODEC = MapCodec.unit(INSTANCE);
+        public static final FluidTankItemRenderer.Unbaked INSTANCE = new FluidTankItemRenderer.Unbaked();
+        public static final MapCodec<FluidTankItemRenderer.Unbaked> CODEC = MapCodec.unit(INSTANCE);
 
         @Override
         public @Nullable SpecialModelRenderer<?> bake(EntityModelSet modelSet) {
-            return FluidTankRenderer.INSTANCE;
+            return FluidTankItemRenderer.INSTANCE;
         }
 
         @Override

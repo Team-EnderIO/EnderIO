@@ -1,7 +1,7 @@
 package com.enderio.enderio.foundation.task;
 
-import com.enderio.enderio.foundation.io.energy.IMachineEnergyStorage;
+import com.enderio.enderio.foundation.io.energy.MachineEnergyHandler;
 
 public interface PoweredMachineTask extends MachineTask {
-    IMachineEnergyStorage getEnergyStorage();
+    MachineEnergyHandler getEnergyStorage();
 }

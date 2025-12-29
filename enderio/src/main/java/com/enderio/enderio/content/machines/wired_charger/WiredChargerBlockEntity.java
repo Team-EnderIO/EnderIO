@@ -16,7 +16,9 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.Nullable;
 
 public class WiredChargerBlockEntity extends PoweredMachineBlockEntity {
@@ -69,7 +71,7 @@ public class WiredChargerBlockEntity extends PoweredMachineBlockEntity {
     }
 
     public boolean acceptItem(ItemStack item) {
-        return item.getCapability(Capabilities.Energy.ITEM) != null;
+        return item.getCapability(Capabilities.Energy.ITEM, ItemAccess.forStack(item)) != null;
     }
 
     @Override
@@ -81,24 +83,33 @@ public class WiredChargerBlockEntity extends PoweredMachineBlockEntity {
 
     public void chargeItem() {
         ItemStack chargeable = ITEM_TO_CHARGE.getItemStack(this);
-        IEnergyStorage itemEnergyHandler = chargeable.getCapability(Capabilities.Energy.ITEM);
+        EnergyHandler itemEnergyHandler = chargeable.getCapability(Capabilities.Energy.ITEM, ItemAccess.forStack(chargeable));
 
         if (itemEnergyHandler != null) {
-            if (itemEnergyHandler.getEnergyStored() == itemEnergyHandler.getMaxEnergyStored()) {
+            if (itemEnergyHandler.getAmountAsInt() == itemEnergyHandler.getCapacityAsInt()) {
                 ITEM_CHARGED.setStackInSlot(this, chargeable);
                 ITEM_TO_CHARGE.setStackInSlot(this, ItemStack.EMPTY);
             } else {
                 int energyToInsert = Math.min(
-                        itemEnergyHandler.getMaxEnergyStored() - itemEnergyHandler.getEnergyStored(),
-                        Math.max(getEnergyStorage().getEnergyStored(), getEnergyStorage().getMaxEnergyUse()));
+                        itemEnergyHandler.getCapacityAsInt() - itemEnergyHandler.getAmountAsInt(),
+                        Math.max(getEnergyStorage().getCapacityAsInt(), getEnergyStorage().getMaxConsumption()));
 
                 if (energyToInsert > 0) {
-                    int taken = getEnergyStorage().consumeEnergy(energyToInsert, true);
-                    int accepted = itemEnergyHandler.receiveEnergy(taken, true);
-                    itemEnergyHandler.receiveEnergy(accepted, false);
-                    getEnergyStorage().consumeEnergy(accepted, false);
-                    this.progress = (float) itemEnergyHandler.getEnergyStored()
-                            / itemEnergyHandler.getMaxEnergyStored();
+                    try (Transaction transaction = Transaction.openRoot()) {
+                        int maxConsumed;
+                        try (Transaction simulatedExtract = Transaction.open(transaction)) {
+                            maxConsumed = getEnergyStorage().consume(energyToInsert, simulatedExtract);
+                        }
+
+                        int inserted = itemEnergyHandler.insert(maxConsumed, transaction);
+                        if (inserted == getEnergyStorage().consume(inserted, transaction)) {
+                            transaction.commit();
+                        }
+                    }
+
+                    // Update progress
+                    this.progress = (float) itemEnergyHandler.getAmountAsInt()
+                        / itemEnergyHandler.getCapacityAsInt();
                 }
             }
         }

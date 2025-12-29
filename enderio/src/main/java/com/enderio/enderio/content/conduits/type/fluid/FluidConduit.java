@@ -120,7 +120,7 @@ public record FluidConduit(Identifier texture, Component description, int transf
 
     @Override
     public boolean canConnectToBlock(Level level, BlockPos conduitPos, Direction direction) {
-        IFluidHandler capability = level.getCapability(Capabilities.Fluid.BLOCK, conduitPos.relative(direction),
+        var capability = level.getCapability(Capabilities.Fluid.BLOCK, conduitPos.relative(direction),
                 direction.getOpposite());
         return capability != null;
     }

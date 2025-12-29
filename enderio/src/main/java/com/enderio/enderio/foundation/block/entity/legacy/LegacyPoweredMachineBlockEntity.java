@@ -32,6 +32,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.energy.EnergyHandlerUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -197,14 +199,10 @@ public abstract class LegacyPoweredMachineBlockEntity extends LegacyMachineBlock
             }
 
             // Get the other energy handler
-            IEnergyStorage otherHandler = getNeighbouringCapability(Capabilities.Energy.BLOCK, side);
+            EnergyHandler otherHandler = getNeighbouringCapability(Capabilities.Energy.BLOCK, side);
             if (otherHandler != null) {
                 // If the other handler can receive power transmit ours
-                if (otherHandler.canReceive()) {
-                    int energyToReceive = selfHandler.extractEnergy(selfHandler.getEnergyStored(), true);
-                    int received = otherHandler.receiveEnergy(energyToReceive, false);
-                    selfHandler.extractEnergy(received, false);
-                }
+                EnergyHandlerUtil.move(selfHandler, otherHandler, Integer.MAX_VALUE, null);
             }
         }
     }

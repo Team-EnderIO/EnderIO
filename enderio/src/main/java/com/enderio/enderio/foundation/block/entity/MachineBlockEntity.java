@@ -48,6 +48,9 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.model.data.ModelData;
 import net.neoforged.neoforge.model.data.ModelProperty;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
@@ -363,8 +366,8 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
     }
 
     private void distributeItems(Direction side) {
-        IItemHandler selfHandler = getSelfCapability(Capabilities.Item.BLOCK, side);
-        IItemHandler otherHandler = getNeighbouringCapability(Capabilities.Item.BLOCK, side);
+        ResourceHandler<ItemResource> selfHandler = getSelfCapability(Capabilities.Item.BLOCK, side);
+        ResourceHandler<ItemResource> otherHandler = getNeighbouringCapability(Capabilities.Item.BLOCK, side);
         if (selfHandler == null || otherHandler == null) {
             return;
         }
@@ -373,8 +376,8 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
     }
 
     private void distributeFluids(Direction side) {
-        IFluidHandler selfHandler = getSelfCapability(Capabilities.Fluid.BLOCK, side);
-        IFluidHandler otherHandler = getNeighbouringCapability(Capabilities.Fluid.BLOCK, side);
+        ResourceHandler<FluidResource> selfHandler = getSelfCapability(Capabilities.Fluid.BLOCK, side);
+        ResourceHandler<FluidResource> otherHandler = getNeighbouringCapability(Capabilities.Fluid.BLOCK, side);
         if (selfHandler == null || otherHandler == null) {
             return;
         }
