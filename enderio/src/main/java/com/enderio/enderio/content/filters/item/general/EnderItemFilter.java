@@ -12,6 +12,8 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -59,7 +61,7 @@ public record EnderItemFilter(NonNullList<ItemStack> matches, boolean isDenyList
     }
 
     @Override
-    public ItemStack test(@Nullable IItemHandler target, ItemStack itemStack) {
+    public ItemStack test(@Nullable ResourceHandler<ItemResource> target, ItemStack itemStack) {
         if (!damageFilterMode.test(itemStack)) {
             return ItemStack.EMPTY;
         }

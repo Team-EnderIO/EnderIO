@@ -62,7 +62,7 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
     @Override
     protected void onInventoryContentsChanged(int slot) {
         super.onInventoryContentsChanged(slot);
-        ItemStack stack = GHOST.getItemStack(getInventory());
+        ItemStack stack = GHOST.getStack(getInventory());
         setIcon(stack.getItem());
     }
 

@@ -13,6 +13,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 import java.util.function.Predicate;
 
@@ -39,26 +42,27 @@ public class VacuumChestBlockEntity extends VacuumMachineBlockEntity<ItemEntity>
 
     @Override
     public void handleEntity(ItemEntity entity) {
-        for (int i = 0; i < this.getInventory().getSlots(); i++) {
-            ItemStack itemToReceive = entity.getItem().copy();
+        ItemStack itemToReceive = entity.getItem().copy();
 
-            // Enable the filter to adjust the amount to accept (limited item filter)
-            var filter = FILTER.getItemStack(this).getCapability(EnderIOCapabilities.ITEM_FILTER);
-            if (filter != null) {
-                itemToReceive = filter.test(getInventory(), itemToReceive);
-            }
+        // Enable the filter to adjust the amount to accept (limited item filter)
+        var filter = FILTER.getItemStack(this).getCapability(EnderIOCapabilities.ITEM_FILTER);
+        if (filter != null) {
+            itemToReceive = filter.test(getInventory(), itemToReceive);
+        }
 
-            // Abort if we can't accept the item.
-            if (itemToReceive.isEmpty()) {
-                return;
-            }
+        // Abort if we can't accept the item.
+        if (itemToReceive.isEmpty()) {
+            return;
+        }
 
-            ItemStack remainder = this.getInventory().insertItem(i, itemToReceive, false);
-            if (remainder.isEmpty()) {
+        try (Transaction transaction = Transaction.openRoot()) {
+            int inserted = ResourceHandlerUtil.insertStacking(getInventory(), ItemResource.of(itemToReceive), itemToReceive.getCount(), transaction);
+            transaction.commit();
+
+            if (inserted == itemToReceive.getCount()) {
                 entity.discard();
-                return;
             } else {
-                entity.getItem().setCount(remainder.getCount());
+                entity.getItem().setCount(itemToReceive.getCount() - inserted);
             }
         }
     }

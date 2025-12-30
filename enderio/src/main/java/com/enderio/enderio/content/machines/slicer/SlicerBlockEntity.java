@@ -145,13 +145,13 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
                 // Deduct ingredients
                 MachineInventory inv = getInventory();
                 for (SingleSlotAccess access : INPUTS.getAccesses()) {
-                    access.getItemStack(inv).shrink(1);
+                    access.getStack(inv).shrink(1);
                 }
 
                 if (level instanceof ServerLevel serverLevel) {
-                    AXE.getItemStack(inv).hurtAndBreak(1, serverLevel, null, item -> {
+                    AXE.getStack(inv).hurtAndBreak(1, serverLevel, null, item -> {
                     });
-                    SHEARS.getItemStack(inv).hurtAndBreak(1, serverLevel, null, item -> {
+                    SHEARS.getStack(inv).hurtAndBreak(1, serverLevel, null, item -> {
                     });
                 }
             }

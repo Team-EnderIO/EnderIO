@@ -122,7 +122,7 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
     }
 
     private PaintingRecipe.Input createRecipeInput() {
-        return new PaintingRecipe.Input(INPUT.getItemStack(getInventory()), PAINT.getItemStack(getInventory()));
+        return new PaintingRecipe.Input(INPUT.getStack(getInventory()), PAINT.getStack(getInventory()));
     }
 
     // endregion
@@ -144,7 +144,7 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
                 recipe) {
             @Override
             protected void consumeInputs(PaintingRecipe recipe) {
-                INPUT.getItemStack(getInventory()).shrink(1);
+                INPUT.getStack(getInventory()).shrink(1);
             }
 
             @Override

@@ -91,19 +91,6 @@ public class MachineInventory extends ItemStacksResourceHandler {
 
     }
 
-    /**
-     * Creates a snapshot of the inventory with only the MultiSlotAccess slots set. Only used when doing chained simulations.
-     * @return An inventory with copied itemstacks in the MultiSlotAccess slots.
-     */
-    public MachineInventory snapshot(MultiSlotAccess slots) {
-        MachineInventory machineInventory = new MachineInventory(ioConfigurable, layout);
-        for (SingleSlotAccess outputAccess : slots.getAccesses()) {
-            outputAccess.setStackInSlot(machineInventory, outputAccess.getItemStack(this).copy());
-        }
-        return machineInventory;
-    }
-
-
     @Override
     public void deserialize(ValueInput input) {
         input.listOrEmpty("Items", ItemStackWithSlot.CODEC).forEach(slot -> {

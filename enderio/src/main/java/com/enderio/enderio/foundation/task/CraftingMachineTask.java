@@ -19,6 +19,8 @@ import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -211,32 +213,30 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
         }
 
         // See that we can add all the outputs
-        MachineInventory snapshot = getInventory().snapshot(outputSlots); // Snapshot for chained simulations.
-        for (OutputStack output : outputs) {
-            ItemStack item = output.getItem();
-
-            for (SingleSlotAccess outputAccess : outputSlots.getAccesses()) {
-                item = outputAccess.insertItem(snapshot, item, false); // Don't simulate, we are using a snapshot copy
-            }
-
-            // If we fail, say we can't accept these outputs
-            if (!item.isEmpty()) {
-                return false;
-            }
-        }
-
-        // If we're not simulating, go for it
-        if (!simulate) {
+        try (Transaction transaction = Transaction.openRoot()) {
             for (OutputStack output : outputs) {
-                ItemStack item = output.getItem();
+                ItemResource item = ItemResource.of(output.getItem());
 
+                int toInsert = output.getItem().getCount();
                 for (SingleSlotAccess outputAccess : outputSlots.getAccesses()) {
-                    item = outputAccess.insertItem(inventory, item, false);
+                    int inserted = outputAccess.insert(getInventory(), item, toInsert, transaction);
+                    toInsert -= inserted;
+
+                    if (toInsert == 0) {
+                        break;
+                    }
+                }
+
+                // If we fail, say we can't accept these outputs
+                if (toInsert > 0) {
+                    return false;
                 }
             }
-        }
 
-        return true;
+            // If we've reached this point, we have placed all outputs - commit.
+            transaction.commit();
+            return true;
+        }
     }
 
     // endregion

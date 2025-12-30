@@ -199,7 +199,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
                 int inputCount = 0;
                 for (int i = inputs.size() - 1; i >= 0; i--) {
-                    ItemStack itemStack = inputs.get(i).getItemStack(getInventory());
+                    ItemStack itemStack = inputs.get(i).getStack(getInventory());
                     if (input.test(itemStack)) {
                         inputCount += Math.min(3 - inputCount, itemStack.getCount());
                     }
@@ -222,7 +222,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
                 int consumed = 0;
                 for (int i = inputs.size() - 1; i >= 0; i--) {
-                    ItemStack itemStack = inputs.get(i).getItemStack(getInventory());
+                    ItemStack itemStack = inputs.get(i).getStack(getInventory());
                     if (input.test(itemStack)) {
                         int consumedNow = Math.min(inputsConsumed - consumed, itemStack.getCount());
                         itemStack.shrink(consumedNow);
@@ -236,7 +236,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
                 // Iterate over the slots
                 for (SingleSlotAccess slot : this.inputs.getAccesses()) {
-                    ItemStack stack = slot.getItemStack(inv);
+                    ItemStack stack = slot.getStack(inv);
 
                     // Iterate over the inputs
                     for (int i = 0; i < 3; i++) {

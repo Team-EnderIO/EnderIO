@@ -35,8 +35,8 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.Nullable;
 
@@ -97,8 +97,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
     }
 
     private TankRecipe.Input createRecipeInput() {
-        return new TankRecipe.Input(FLUID_DRAIN_INPUT.getItemStack(getInventory()),
-                FLUID_FILL_INPUT.getItemStack(getInventory()), TANK.getTank(this));
+        return new TankRecipe.Input(FLUID_DRAIN_INPUT.getStack(getInventory()),
+                FLUID_FILL_INPUT.getStack(getInventory()), TANK.getTank(this));
     }
 
     @Override
@@ -115,9 +115,11 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
     // region Inventory
 
-    public boolean acceptItemFill(ItemStack item) {
+    public boolean acceptItemFill(ItemResource item) {
+        var stack = item.toStack();
+
         // bucket types
-        var fluidHandlerCap = item.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(item));
+        var fluidHandlerCap = ItemAccess.forStack(stack).getCapability(Capabilities.Fluid.ITEM);
         if (fluidHandlerCap != null) {
             return true;
         }
@@ -129,15 +131,17 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
                     .recipeMap().byType(EIORecipes.TANK.type().get()).stream().toList();
             return allRecipes.stream()
                     .anyMatch((recipe) -> recipe.value().mode() == TankRecipe.Mode.EMPTY
-                            && recipe.value().input().test(item));
+                            && recipe.value().input().test(stack));
         }
 
         return false;
     }
 
-    public boolean acceptItemDrain(ItemStack item) {
+    public boolean acceptItemDrain(ItemResource item) {
+        var stack = item.toStack();
+
         // bucket types
-        var fluidHandlerCap = item.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(item));
+        var fluidHandlerCap = ItemAccess.forStack(stack).getCapability(Capabilities.Fluid.ITEM);
         if (fluidHandlerCap != null) {
             return true;
         }
@@ -169,11 +173,11 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
     @Override
     public MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
-                .inputSlot((slot, stack) -> acceptItemFill(stack))
+                .inputSlot((slot, itemResource) -> acceptItemFill(itemResource))
                 .slotAccess(FLUID_FILL_INPUT)
                 .outputSlot()
                 .slotAccess(FLUID_FILL_OUTPUT)
-                .inputSlot((slot, stack) -> acceptItemDrain(stack))
+                .inputSlot((slot, itemResource) -> acceptItemDrain(itemResource))
                 .slotAccess(FLUID_DRAIN_INPUT)
                 .outputSlot()
                 .slotAccess(FLUID_DRAIN_OUTPUT)

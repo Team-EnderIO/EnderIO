@@ -181,8 +181,8 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
 
         @Override
         protected void consumeInputs(FermentingRecipe recipe) {
-            REAGENTS.get(0).getItemStack(inventory).shrink(1);
-            REAGENTS.get(1).getItemStack(inventory).shrink(1);
+            REAGENTS.get(0).getStack(inventory).shrink(1);
+            REAGENTS.get(1).getStack(inventory).shrink(1);
 
             INPUT_TANK.getTank(fluidHandler).drain(recipe.input().amount(), IFluidHandler.FluidAction.EXECUTE);
         }

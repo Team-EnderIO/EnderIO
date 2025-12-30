@@ -9,6 +9,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
  * An output stack for a recipe.
  * This can be either an item or fluid stack.
  */
+// TODO: Consider reworking to store a resource and a count.
 public record OutputStack(Either<ItemStack, FluidStack> stack) {
 
     public static final Codec<OutputStack> CODEC = Codec.either(ItemStack.OPTIONAL_CODEC, FluidStack.OPTIONAL_CODEC)

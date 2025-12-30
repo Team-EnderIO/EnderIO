@@ -121,7 +121,7 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
     }
 
     private SagMillingRecipe.Input createRecipeInput() {
-        return new SagMillingRecipe.Input(INPUT.getItemStack(getInventory()), getGrindingBallData());
+        return new SagMillingRecipe.Input(INPUT.getStack(getInventory()), getGrindingBallData());
     }
 
     // region Crafting Task
@@ -141,11 +141,11 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
             @Override
             protected void consumeInputs(SagMillingRecipe recipe) {
                 MachineInventory inv = getInventory();
-                INPUT.getItemStack(inv).shrink(1);
+                INPUT.getStack(inv).shrink(1);
 
                 // Claim any available grinding balls.
                 if (recipe.bonusType().useGrindingBall() && grindingBallData.isIdentity()) {
-                    ItemStack ball = GRINDING_BALL.getItemStack(inv);
+                    ItemStack ball = GRINDING_BALL.getStack(inv);
                     if (!ball.isEmpty()) {
                         var data = ball.getOrDefault(EnderIODataComponents.GRINDING_BALL, GrindingBallData.IDENTITY);
                         setGrindingBallData(data);

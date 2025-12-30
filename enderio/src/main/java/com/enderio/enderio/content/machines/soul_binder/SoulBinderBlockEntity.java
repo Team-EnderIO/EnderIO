@@ -137,14 +137,14 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
     }
 
     private SoulBindingRecipe.Input createRecipeInput() {
-        return new SoulBindingRecipe.Input(INPUT_SOUL.getItemStack(getInventory()),
-                INPUT_OTHER.getItemStack(getInventory()), TANK.getFluid(getFluidHandler()));
+        return new SoulBindingRecipe.Input(INPUT_SOUL.getStack(getInventory()),
+                INPUT_OTHER.getStack(getInventory()), TANK.getFluid(getFluidHandler()));
     }
 
     @EnsureSide(EnsureSide.Side.CLIENT)
     private SoulBindingRecipe.Input createFakeRecipeInput() {
-        return new SoulBindingRecipe.Input(INPUT_SOUL.getItemStack(getInventory()),
-                INPUT_OTHER.getItemStack(getInventory()),
+        return new SoulBindingRecipe.Input(INPUT_SOUL.getStack(getInventory()),
+                INPUT_OTHER.getStack(getInventory()),
                 new FluidStack(EIOFluids.XP_JUICE.source(), Integer.MAX_VALUE));
     }
 
@@ -165,7 +165,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
 
     private boolean hasValidRecipe() {
         return MachineRecipeCaches.SOUL_BINDING
-                .hasRecipe(List.of(INPUT_SOUL.getItemStack(getInventory()), INPUT_OTHER.getItemStack(getInventory())));
+                .hasRecipe(List.of(INPUT_SOUL.getStack(getInventory()), INPUT_OTHER.getStack(getInventory())));
     }
 
     // region Fluid Storage
@@ -230,8 +230,8 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
 
             @Override
             protected void consumeInputs(SoulBindingRecipe recipe) {
-                INPUT_SOUL.getItemStack(getInventory()).shrink(1);
-                INPUT_OTHER.getItemStack(getInventory()).shrink(1);
+                INPUT_SOUL.getStack(getInventory()).shrink(1);
+                INPUT_OTHER.getStack(getInventory()).shrink(1);
 
                 MachineFluidHandler handler = getFluidHandler();
                 int leftover = ExperienceUtil

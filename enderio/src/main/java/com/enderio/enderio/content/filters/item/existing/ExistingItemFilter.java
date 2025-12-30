@@ -9,7 +9,8 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -45,7 +46,7 @@ public record ExistingItemFilter(boolean hasSnapshot, NonNullList<ItemStack> sna
     }
 
     @Override
-    public ItemStack test(@Nullable IItemHandler target, ItemStack stack) {
+    public ItemStack test(@Nullable ResourceHandler<ItemResource> target, ItemStack stack) {
         if (hasSnapshot) {
             for (var match : snapshot) {
                 if (match.isEmpty()) {
@@ -60,14 +61,15 @@ public record ExistingItemFilter(boolean hasSnapshot, NonNullList<ItemStack> sna
                 }
             }
         } else if (target != null) {
-            for (int i = 0; i < target.getSlots(); i++) {
-                ItemStack match = target.getStackInSlot(i);
+            for (int i = 0; i < target.size(); i++) {
+                ItemResource match = target.getResource(i);
                 if (match.isEmpty()) {
                     continue;
                 }
 
-                boolean matches = shouldCompareComponents ? ItemStack.isSameItemSameComponents(match, stack)
-                        : ItemStack.isSameItem(match, stack);
+                boolean matches = shouldCompareComponents
+                    ? match.matches(stack)
+                    : match.is(stack.getItem());
 
                 if (matches) {
                     return isInverted ? ItemStack.EMPTY : stack;

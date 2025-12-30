@@ -10,13 +10,11 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraft.world.item.crafting.RecipeMap;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.fml.util.thread.EffectiveSide;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -54,7 +52,7 @@ public class RecipeInputCache<T extends RecipeInput, R extends Recipe<T>> {
         // Build the new inventory state after the addition
         for (int i = 0; i < inputs.size(); i++) {
             var input = inputs.get(i);
-            var invStack = input.getItemStack(inventory);
+            var invStack = input.getStack(inventory);
             if (input.getIndex() == slot) {
                 currentItems.add(toAdd);
             } else if (!invStack.isEmpty()) {

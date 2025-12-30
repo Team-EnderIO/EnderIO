@@ -36,7 +36,7 @@ public class MultiSlotAccess {
     }
 
     public List<ItemStack> getItemStacks(MachineInventory inventory) {
-        return accesses.stream().map(access -> access.getItemStack(inventory)).collect(Collectors.toList());
+        return accesses.stream().map(access -> access.getStack(inventory)).collect(Collectors.toList());
     }
 
     public static MultiSlotAccess wrap(SingleSlotAccess access) {

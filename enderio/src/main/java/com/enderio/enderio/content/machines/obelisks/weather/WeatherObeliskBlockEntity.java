@@ -60,7 +60,7 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity implements Flu
 
             @Override
             protected boolean shouldStartNewTask() {
-                if (ROCKET.getItemStack(getInventory()).isEmpty()) {
+                if (ROCKET.getStack(getInventory()).isEmpty()) {
                     return true;
                 }
                 return super.shouldStartNewTask();
@@ -81,12 +81,12 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity implements Flu
             protected void consumeInputs(WeatherChangeRecipe recipe) {
                 MachineFluidHandler handler = getFluidHandler();
                 TANK.drain(handler, recipe.fluid(), IFluidHandler.FluidAction.EXECUTE);
-                ROCKET.getItemStack(getInventory()).shrink(1);
+                ROCKET.getStack(getInventory()).shrink(1);
             }
 
             @Override
             protected int makeProgress(int remainingProgress) {
-                boolean hasRocket = !ROCKET.getItemStack(getInventory()).isEmpty();
+                boolean hasRocket = !ROCKET.getStack(getInventory()).isEmpty();
                 boolean weatherDifferent = switch (getRecipe().mode()) {
                 case RAIN -> !level.isRaining();
                 case CLEAR -> level.isRaining() || level.isThundering();

@@ -12,6 +12,8 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
 
 import java.util.List;
 import java.util.Objects;
@@ -32,7 +34,7 @@ public class FluidConduitTicker implements ConduitTicker<FluidConduit> {
                     continue;
                 }
 
-                IFluidHandler extractHandler = extractConnection.getSidedCapability(Capabilities.Fluid.BLOCK);
+                ResourceHandler<FluidResource> extractHandler = extractConnection.getSidedCapability(Capabilities.Fluid.BLOCK);
                 if (extractHandler == null) {
                     continue;
                 }

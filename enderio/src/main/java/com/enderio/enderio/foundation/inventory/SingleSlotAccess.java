@@ -4,6 +4,7 @@ import com.enderio.enderio.foundation.block.entity.MachineInventoryHolder;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 public class SingleSlotAccess {
     private int index = Integer.MIN_VALUE;
@@ -13,35 +14,31 @@ public class SingleSlotAccess {
             throw new IllegalArgumentException("BlockEntity does not have an inventory");
         }
 
-        return getItemStack(blockEntity.getInventory());
+        return getStack(blockEntity.getInventory());
     }
 
     public ItemResource getResource(MachineInventory inventory) {
         return inventory.getResource(index);
     }
 
-    public ItemStack getItemStack(MachineInventory inventory) {
+    public ItemStack getStack(MachineInventory inventory) {
         return inventory.getStack(index);
     }
 
-    public ItemStack getItemStack(Container container) {
-        return container.getItem(index);
+    public int insert(MachineInventory inventory, ItemResource resource, int count, TransactionContext transaction) {
+        return inventory.insert(index, resource, count, transaction);
     }
 
-    public ItemStack insertItem(MachineInventory inventory, ItemStack itemStack, boolean simulate) {
-        return inventory.insertItem(index, itemStack, simulate);
-    }
+    public int insert(MachineInventoryHolder machine, ItemResource resource, int count, TransactionContext transaction) {
 
-    public ItemStack insertItem(MachineInventoryHolder machine, ItemStack itemStack, boolean simulate) {
         if (!machine.hasInventory()) {
             throw new IllegalArgumentException("BlockEntity does not have an inventory");
         }
-
-        return insertItem(machine.getInventory(), itemStack, simulate);
+        return insert(machine.getInventory(), resource, count, transaction);
     }
 
     public void setStackInSlot(MachineInventory inventory, ItemStack itemStack) {
-        inventory.setStackInSlot(index, itemStack);
+        inventory.set(index, ItemResource.of(itemStack), itemStack.getCount());
     }
 
     public void setStackInSlot(MachineInventoryHolder machine, ItemStack itemStack) {

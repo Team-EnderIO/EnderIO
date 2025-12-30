@@ -11,6 +11,8 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -36,7 +38,7 @@ public record ModIdItemFilter(NonNullList<ItemStack> examples, boolean isDenyLis
     }
 
     @Override
-    public ItemStack test(@Nullable IItemHandler target, ItemStack stack) {
+    public ItemStack test(@Nullable ResourceHandler<ItemResource> target, ItemStack stack) {
         var testKey = BuiltInRegistries.ITEM.getKey(stack.getItem());
 
         for (var example : examples) {
