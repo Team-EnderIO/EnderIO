@@ -34,7 +34,6 @@ import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -46,6 +45,7 @@ import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -108,7 +108,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
         // TODO: Support for non-soul vial storages.
         return MachineInventoryLayout.builder()
                 .setStackLimit(1)
-                .inputSlot((slot, stack) -> stack.is(EIOItems.SOUL_VIAL.get()) && SoulBoundUtils.isBound(stack))
+                .inputSlot((slot, resource) -> resource.is(EIOItems.SOUL_VIAL.get()) && SoulBoundUtils.isBound(resource.toStack()))
                 .slotAccess(INPUT_SOUL)
                 .inputSlot(this::isValidInput)
                 .slotAccess(INPUT_OTHER)
@@ -119,8 +119,8 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
                 .build();
     }
 
-    private boolean isValidInput(int index, ItemStack stack) {
-        return MachineRecipeCaches.SOUL_BINDING.hasRecipe(List.of(stack));
+    private boolean isValidInput(int index, ItemResource stack) {
+        return MachineRecipeCaches.SOUL_BINDING.hasRecipe(List.of(stack.toStack()));
     }
 
     @Override

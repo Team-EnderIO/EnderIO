@@ -31,6 +31,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -109,8 +110,8 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
                 .build();
     }
 
-    private boolean isValidInput(int index, ItemStack stack) {
-        return MachineRecipeCaches.SAG_MILLING.hasRecipe(List.of(stack));
+    private boolean isValidInput(int index, ItemResource stack) {
+        return MachineRecipeCaches.SAG_MILLING.hasRecipe(List.of(stack.toStack()));
     }
 
     @Override

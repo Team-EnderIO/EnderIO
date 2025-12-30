@@ -3,9 +3,11 @@ package com.enderio.enderio.client.content.conduits.model.bundle.port;
 import com.enderio.core.common.util.Area;
 import com.enderio.core.data.model.ModelHelper;
 import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.model.ConduitModelModifier;
 import com.enderio.enderio.client.content.conduits.model.ConduitAdditionalModels;
 import com.enderio.enderio.client.content.conduits.model.bundle.ConduitBundleRenderState;
 import com.enderio.enderio.client.content.conduits.model.facades.ClientFacadeVisibility;
+import com.enderio.enderio.client.content.conduits.model.modifier.ConduitModelModifiers;
 import com.enderio.enderio.content.conduits.OffsetHelper;
 import com.mojang.math.OctahedralGroup;
 import com.mojang.math.Transformation;
@@ -119,12 +121,11 @@ public class ConduitBlockStateModel implements DynamicBlockStateModel {
                     parts.add(SimpleModelWrapper.bake(new ConduitBaker(this.baker, sprite(bundleState.getTexture(conduit))),
                         ConduitAdditionalModels.CONDUIT_CONNECTION, rotationTranslation)); //TODO emission?
 
-//                    ConduitModelModifier conduitModelModifier = ConduitModelModifiers  //TODO for fluids
-//                        .getModifier(conduit.value().type());
-//                    if (conduitModelModifier != null) {
-//                        quads.addAll(rotationTranslation.process(conduitModelModifier.createConnectionQuads(conduit,
-//                            extraWorldData, side, direction, rand, renderType)));
-//                    }
+                    ConduitModelModifier conduitModelModifier = ConduitModelModifiers
+                        .getModifier(conduit.value().type());
+                    if (conduitModelModifier != null) {
+                        parts.addAll(conduitModelModifier.createConnectionQuads(baker, rotationTranslation, conduit, extraWorldData));
+                    }
 
                     if (isEnd) {
                         parts.add(SimpleModelWrapper.bake(this.baker, ConduitAdditionalModels.CONDUIT_CONNECTION_BOX, rotationTranslation));

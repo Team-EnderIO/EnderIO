@@ -42,7 +42,7 @@ public class WiredChargerBlockEntity extends PoweredMachineBlockEntity {
     public MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
                 .capacitor()
-                .inputSlot((slot, stack) -> acceptItem(stack))
+                .inputSlot((slot, resource) -> acceptItem(resource.toStack()))
                 .slotAccess(ITEM_TO_CHARGE)
                 .outputSlot()
                 .slotAccess(ITEM_CHARGED)
@@ -70,8 +70,8 @@ public class WiredChargerBlockEntity extends PoweredMachineBlockEntity {
         return hasEnergy() && canAct();
     }
 
-    public boolean acceptItem(ItemStack item) {
-        return item.getCapability(Capabilities.Energy.ITEM, ItemAccess.forStack(item)) != null;
+    public boolean acceptItem(ItemStack stack) {
+        return stack.getCapability(Capabilities.Energy.ITEM, ItemAccess.forStack(stack)) != null;
     }
 
     @Override

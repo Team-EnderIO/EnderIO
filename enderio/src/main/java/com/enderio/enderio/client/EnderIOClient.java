@@ -15,6 +15,7 @@ import com.enderio.enderio.client.content.conduits.gui.screen_type.ItemConduitSc
 import com.enderio.enderio.client.content.conduits.gui.screen_type.RedstoneConduitScreenType;
 import com.enderio.enderio.client.content.conduits.model.bundle.port.ConduitBlockStateModel;
 import com.enderio.enderio.client.content.conduits.model.bundle.port.ConduitItemModel;
+import com.enderio.enderio.client.content.conduits.model.modifier.FluidConduitModelModifier;
 import com.enderio.enderio.client.content.conduits.model.modifier.RedstoneConduitModelModifier;
 import com.enderio.enderio.client.content.enderface.EnderfaceRenderer;
 import com.enderio.enderio.client.content.filters.EnderFluidFilterScreen;
@@ -65,7 +66,6 @@ import com.enderio.enderio.client.content.travel.TravelTargetRendering;
 import com.enderio.enderio.client.foundation.particle.RangeParticle;
 import com.enderio.enderio.content.fun.EnderiosItem;
 import com.enderio.enderio.content.misc_blocks.skull.EnderSkullBlock;
-import com.enderio.enderio.foundation.particle.RangeParticleData;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOConduitTypes;
@@ -75,7 +75,6 @@ import com.enderio.enderio.init.EIOItems;
 import com.enderio.enderio.init.EIOMenus;
 import com.enderio.enderio.init.EIOParticles;
 import com.enderio.enderio.init.EIOTravelTargets;
-import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
@@ -339,7 +338,7 @@ public class EnderIOClient {
 
     @SubscribeEvent
     public static void registerParticleProviders(RegisterParticleProvidersEvent event) {
-        event.<RangeParticleData>registerSpriteSet(EIOParticles.RANGE_PARTICLE.get(), RangeParticle.Provider::new);
+        event.registerSpriteSet(EIOParticles.RANGE_PARTICLE.get(), RangeParticle.Provider::new);
     }
 
     private static Optional<Item> findGliderForModelRL(Identifier rl) {
@@ -428,7 +427,7 @@ public class EnderIOClient {
     @SubscribeEvent
     public static void registerConduitCoreModelModifiers(RegisterConduitModelModifiersEvent event) {
         event.register(EIOConduitTypes.REDSTONE.get(), RedstoneConduitModelModifier::new);
-        //event.register(EIOConduitTypes.FLUID.get(), FluidConduitModelModifier::new);
+        event.register(EIOConduitTypes.FLUID.get(), FluidConduitModelModifier::new);
     }
 
     @SubscribeEvent

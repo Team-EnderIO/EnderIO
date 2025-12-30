@@ -9,6 +9,7 @@ import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.renderer.state.QuadParticleRenderState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -20,13 +21,11 @@ public class RangeParticle extends SingleQuadParticle {
 
     private final int range;
     private final float offset = 0.01f;
-    private final int color;
 
     public RangeParticle(ClientLevel level, Vec3 pos, int range, String color, TextureAtlasSprite sprite) {
         super(level, pos.x, pos.y, pos.z, sprite);
         this.range = range;
         this.lifetime = 5;
-        this.color = Integer.parseInt(color);
         this.rCol = (float)Integer.parseInt(color.substring(0,2), 16) / 255;
         this.gCol = (float)Integer.parseInt(color.substring(2,4), 16) / 255;
         this.bCol = (float)Integer.parseInt(color.substring(4,6), 16) / 255;
@@ -43,13 +42,41 @@ public class RangeParticle extends SingleQuadParticle {
     @Override
     protected void extractRotatedQuad(QuadParticleRenderState reusedState, Quaternionf orientation, float x, float y, float z, float partialTick) {
 
-        reusedState.add(this.getLayer(), x, y, z, orientation.x, orientation.y, orientation.z, orientation.w, this.getQuadSize(partialTick),
-            this.getU0(), this.getU1(), this.getV0(), this.getV1(), color, this.getLightColor(partialTick));
+        for (Direction direction : Direction.values()) {
+            var quad = new Quaternionf().fromAxisAngleDeg(direction.getUnitVec3f(), 0);
+            var offsetPos = getOffset(direction).add(x, y, z);
+            reusedState.add(this.getLayer(), offsetPos.x, offsetPos.y, offsetPos.z, quad.x, quad.y, quad.z, quad.w, this.getQuadSize(partialTick),
+                this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightColor(partialTick));
+
+            //Back
+            quad = new Quaternionf().fromAxisAngleDeg(direction.getOpposite().getUnitVec3f(), 0);
+            reusedState.add(this.getLayer(), offsetPos.x, offsetPos.y, offsetPos.z, quad.x, quad.y, quad.z, quad.w, this.getQuadSize(partialTick),
+                this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightColor(partialTick));
+
+        }
+
+
+    }
+
+    public Vector3f getOffset(Direction direction) {
+        return switch (direction) {
+            case NORTH -> new Vector3f(offset + range, 0, 0);
+            case SOUTH -> new Vector3f(-offset - range, 0, 0);
+            case WEST -> new Vector3f(0, 0, offset + range);
+            case EAST -> new Vector3f(0, 0, - offset - range);
+            case UP -> new Vector3f(0, offset + range, 0);
+            case DOWN -> new Vector3f(0, -offset - range, 0);
+        };
     }
 
     @Override
     public int getLifetime() {
         return age + 10;
+    }
+
+    @Override
+    public float getQuadSize(float scaleFactor) {
+        return 2*range+1;
     }
 
     //    @Override
@@ -121,7 +148,7 @@ public class RangeParticle extends SingleQuadParticle {
         consumer.addVertex(pos.x(), pos.y(), pos.z()).setUv(u, v).setColor(rCol, gCol, bCol, alpha).setUv2(240, 240);
     }
 
-    public static class Provider implements ParticleProvider.Sprite<RangeParticleData> {
+    public static class Provider implements ParticleProvider<RangeParticleData> {
 
         private final SpriteSet spriteSet;
 
@@ -133,8 +160,7 @@ public class RangeParticle extends SingleQuadParticle {
         public @Nullable SingleQuadParticle createParticle(RangeParticleData data, ClientLevel level, double x, double y, double z,
             double xSpeed, double ySpeed, double zSpeed, RandomSource random) {
             Vec3 pos = new Vec3(x, y, z);
-            RangeParticle particle = new RangeParticle(level, pos, data.range(), data.color(), this.spriteSet.get(random));
-            return particle;
+            return new RangeParticle(level, pos, data.range(), data.color(), this.spriteSet.get(random));
         }
 
     }

@@ -23,10 +23,8 @@ import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -42,12 +40,10 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
-import java.util.Objects;
 
 public class NiardBlockEntity extends PoweredMachineBlockEntity implements RangedActor, FluidItemInteractive, FluidTankUser {
 
@@ -153,7 +149,7 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
     public MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
             .capacitor()
-            .inputSlot((slot, stack) -> acceptItemDrain(stack))
+            .inputSlot((slot, stack) -> acceptItemDrain(stack.toStack()))
             .slotAccess(FLUID_FILL_INPUT)
             .outputSlot()
             .slotAccess(FLUID_FILL_OUTPUT)

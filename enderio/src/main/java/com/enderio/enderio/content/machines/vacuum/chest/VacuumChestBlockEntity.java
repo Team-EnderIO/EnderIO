@@ -32,7 +32,7 @@ public class VacuumChestBlockEntity extends VacuumMachineBlockEntity<ItemEntity>
         return extractableGUISlot(MachineInventoryLayout.builder(), 27)
                 .slot(slot -> slot.guiInsert()
                         .guiExtract()
-                        .filter((i, s) -> s.getCapability(EnderIOCapabilities.ITEM_FILTER) != null))
+                        .filter((i, resource) -> resource.toStack().getCapability(EnderIOCapabilities.ITEM_FILTER) != null))
                 .slotAccess(FILTER)
                 .build();
     }

@@ -9,11 +9,9 @@ import com.enderio.enderio.foundation.io.DumbIOConfigurable;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIORecipes;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.MenuProvider;
@@ -28,6 +26,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jetbrains.annotations.Nullable;
 
 public class EnchanterBlockEntity extends EnderBlockEntity implements MenuProvider {
@@ -89,7 +89,8 @@ public class EnchanterBlockEntity extends EnderBlockEntity implements MenuProvid
         // Custom behaviour as this works more like a crafting table than a machine.
         return new MachineInventory(DumbIOConfigurable.DISABLED, getInventoryLayout()) {
 
-            protected void onContentsChanged(int slot) {
+            @Override
+            protected void onContentsChanged(int slot, ItemStack previousContents) {
                 if (level == null) {
                     return;
                 }
@@ -113,15 +114,16 @@ public class EnchanterBlockEntity extends EnderBlockEntity implements MenuProvid
                 setChanged();
             }
 
-            public ItemStack extractItem(int slot, int amount, boolean simulate) {
+            @Override
+            public int extract(int index, ItemResource resource, int amount, TransactionContext transaction) {
                 if (level == null) {
-                    return ItemStack.EMPTY;
+                    return 0;
                 }
 
-                if (OUTPUT.isSlot(slot) && level.isClientSide()) {
-                    return ItemStack.EMPTY;
+                if (OUTPUT.isSlot(index) && level.isClientSide()) {
+                    return 0;
                 }
-                return super.extractItem(slot, amount, simulate);
+                return super.extract(index, resource, amount, transaction);
             }
         };
     }

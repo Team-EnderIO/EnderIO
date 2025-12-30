@@ -46,7 +46,7 @@ public class RelocatorObeliskBlockEntity extends ObeliskBlockEntity<RelocatorObe
     @Override
     public @Nullable MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
-                .inputSlot((integer, itemStack) -> itemStack.getCapability(EnderIOCapabilities.SOUL_FILTER) != null)
+                .inputSlot((integer, resource) -> resource.toStack().getCapability(EnderIOCapabilities.SOUL_FILTER) != null)
                 .slotAccess(FILTER)
                 .capacitor()
                 .build();

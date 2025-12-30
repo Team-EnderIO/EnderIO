@@ -25,7 +25,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -34,6 +33,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.Shapes;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -99,11 +99,11 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
                 .build();
     }
 
-    private boolean isValidInput(int index, ItemStack stack) {
-        return MachineRecipeCaches.PAINTING.hasRecipe(List.of(stack));
+    private boolean isValidInput(int index, ItemResource stack) {
+        return MachineRecipeCaches.PAINTING.hasRecipe(List.of(stack.toStack()));
     }
 
-    private boolean isValidPaint(int index, ItemStack stack) {
+    private boolean isValidPaint(int index, ItemResource stack) {
         if (stack.getItem() instanceof BlockItem blockItem) {
             Block block = blockItem.getBlock();
             if (block instanceof PaintedBlock) {

@@ -22,7 +22,6 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ShearsItem;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -30,6 +29,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jetbrains.annotations.Nullable;
 
 public class SlicerBlockEntity extends PoweredMachineBlockEntity {
@@ -104,11 +104,11 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
                 .build();
     }
 
-    private boolean isValidInput(int index, ItemStack stack) {
-        return SlicerRecipeManager.isSlicerValid(stack, index);
+    private boolean isValidInput(int index, ItemResource stack) {
+        return SlicerRecipeManager.isSlicerValid(stack.toStack(), index);
     }
 
-    private boolean validAxe(int slot, ItemStack stack) {
+    private boolean validAxe(int slot, ItemResource stack) {
         // TODO: 1.21.4: Need an EIO tag for axes that can't be used to slice.
         return stack.is(ItemTags.AXES) && !stack.is(Items.WOODEN_AXE);
     }

@@ -43,6 +43,7 @@ public class GhostMachineSlot extends MachineSlot {
         return stack;
     }
 
+    //TODO this is final now...
     @Override
     public ItemStack remove(int amount) {
         set(ItemStack.EMPTY);
