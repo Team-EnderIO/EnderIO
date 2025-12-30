@@ -93,11 +93,11 @@ public class EIOCapabilityProviders {
             EIOBlocks.SOUL_ENGINE_ITEM);
         
         // Solar Panels (soul bindable)
-        for (var solarPanelItem : EIOBlocks.SOLAR_PANEL_ITEMS.values()) {
-            event.registerItem(EnderIOCapabilities.SOUL_BINDABLE_ITEM,
-                SoulCapabilityProviders.COMPONENT_SOUL_BINDABLE_PROVIDER,
-                solarPanelItem);
-        }
+//        for (var solarPanelItem : EIOBlocks.SOLAR_PANEL_ITEMS.values()) {
+//            event.registerItem(EnderIOCapabilities.SOUL_BINDABLE_ITEM,
+//                SoulCapabilityProviders.COMPONENT_SOUL_BINDABLE_PROVIDER,
+//                solarPanelItem);
+//        }
 
         // Register read-only soul bindable items
         // Soul vial uses a read-only ISoulBindable because the soul vial is a storage which can be used for binding, but is not directly bound to.

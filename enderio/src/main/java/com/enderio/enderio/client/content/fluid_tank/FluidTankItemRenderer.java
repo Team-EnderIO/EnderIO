@@ -4,27 +4,26 @@ import com.enderio.core.client.FluidRendererUtil;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.content.storage.fluid_tank.FluidTankBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.serialization.MapCodec;
-import net.minecraft.client.model.geom.EntityModelSet;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
-import java.util.Set;
+import java.util.function.Consumer;
 
 // TODO: No longer lights in the inventory/hand like other machines...
 // TODO: PORT: Hook back up
-public class FluidTankItemRenderer implements SpecialModelRenderer<IFluidHandlerItem> {
+public class FluidTankItemRenderer implements SpecialModelRenderer<ResourceHandler<FluidResource>> {
 
     public static final FluidTankItemRenderer INSTANCE = new FluidTankItemRenderer();
 
@@ -32,8 +31,8 @@ public class FluidTankItemRenderer implements SpecialModelRenderer<IFluidHandler
     }
 
     @Override
-    public void render(@Nullable IFluidHandlerItem fluidHandler, ItemDisplayContext displayContext, PoseStack poseStack, MultiBufferSource bufferSource,
-        int packedLight, int packedOverlay, boolean hasFoilType) {
+    public void submit(@Nullable ResourceHandler<FluidResource> fluidHandler, ItemDisplayContext displayContext, PoseStack poseStack,
+        SubmitNodeCollector nodeCollector, int packedLight, int packedOverlay, boolean hasFoil, int outlineColor) {
         //TODO render this model statically
         // Get the model for the fluid tank block
 //        BakedModel model = Minecraft.getInstance()
@@ -49,21 +48,18 @@ public class FluidTankItemRenderer implements SpecialModelRenderer<IFluidHandler
 
         // Read the fluid from the NBT, if it has fluid, then we render it.
         if (fluidHandler != null) {
-            FluidStack fluid = fluidHandler.getFluidInTank(0); // Only one tank present
+            var fluid = fluidHandler.getResource(0); // Only one tank present
             if (!fluid.isEmpty()) {
-                VertexConsumer fluidBuffer = bufferSource.getBuffer(Sheets.translucentItemSheet()); //TODO cullsheet is gone
-
                 int capacity = FluidTankBlockEntity.Standard.CAPACITY;
-                capacity = fluidHandler.getTankCapacity(0);
+                capacity = fluidHandler.getCapacityAsInt(0, fluid);
                 //TODO why did we use this?
 //                if (stack.getItem() instanceof FluidTankBlockItem tank) {
 //                    capacity = tank.getCapacity();
 //                }
 
-                PoseStack.Pose pose = poseStack.last();
                 IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluid.getFluid());
-                FluidRendererUtil.submitFluid(pose, fluidBuffer, fluid.getFluid(), fluid.getAmount() / (float) capacity,
-                    props.getTintColor(), packedLight);
+                FluidRendererUtil.submitFluid(poseStack, Sheets.translucentItemSheet(), nodeCollector, fluid.getFluid(),
+                    fluidHandler.getAmountAsInt(0) / (float) capacity, props.getTintColor(), packedLight);
             }
         }
 
@@ -71,13 +67,13 @@ public class FluidTankItemRenderer implements SpecialModelRenderer<IFluidHandler
     }
 
     @Override
-    public void getExtents(Set<Vector3f> output) {
+    public void getExtents(Consumer<Vector3fc> p_470829_) {
 
     }
 
     @Override
-    public @Nullable IFluidHandlerItem extractArgument(ItemStack stack) {
-        return stack.getCapability(Capabilities.FluidHandler.ITEM);
+    public @Nullable ResourceHandler<FluidResource> extractArgument(ItemStack stack) {
+        return stack.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(stack));
     }
 
     public static final class Unbaked implements SpecialModelRenderer.Unbaked {
@@ -87,7 +83,7 @@ public class FluidTankItemRenderer implements SpecialModelRenderer<IFluidHandler
         public static final MapCodec<FluidTankItemRenderer.Unbaked> CODEC = MapCodec.unit(INSTANCE);
 
         @Override
-        public @Nullable SpecialModelRenderer<?> bake(EntityModelSet modelSet) {
+        public @Nullable SpecialModelRenderer<?> bake(BakingContext context) {
             return FluidTankItemRenderer.INSTANCE;
         }
 

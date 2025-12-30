@@ -20,6 +20,7 @@ import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.InvertedLootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
@@ -147,14 +148,14 @@ public class EIOBlockLootProvider extends BlockLootSubProvider {
         add(EIOBlocks.PAINTED_TRAVEL_ANCHOR.get(), createPaintedTable(EIOBlocks.PAINTED_TRAVEL_ANCHOR.get()));
 
         // Solar Panels
-        for (var solarPanel : EIOBlocks.SOLAR_PANELS.values()) {
-            copyComponents(solarPanel.get());
-        }
+//        for (var solarPanel : EIOBlocks.SOLAR_PANELS.values()) {
+//            copyComponents(solarPanel.get());
+//        }
 
         // Capacitor Banks
-        for (var capacitorBank : EIOBlocks.CAPACITOR_BANKS.values()) {
-            copyComponents(capacitorBank.get());
-        }
+//        for (var capacitorBank : EIOBlocks.CAPACITOR_BANKS.values()) {
+//            copyComponents(capacitorBank.get());
+//        }
 
         // Niard
         copyComponents(EIOBlocks.NIARD.get());
@@ -176,21 +177,22 @@ public class EIOBlockLootProvider extends BlockLootSubProvider {
         dropSelf(EIOBlocks.BLOCK_DETECTOR.get());
         dropSelf(EIOBlocks.WIRELESS_CHARGER_ANTENNA.get());
         dropSelf(EIOBlocks.WIRELESS_CHARGER_ANTENNA_ADVANCED.get());
-        dropSelf(EIOBlocks.CREATIVE_POWER.get());
+//        dropSelf(EIOBlocks.CREATIVE_POWER.get());
     }
 
     private void copyComponents(Block block) {
         add(block, LootTable
             .lootTable()
             .withPool(new LootPool.Builder().add(
-                LootItem.lootTableItem(block).apply(CopyComponentsFunction.copyComponents(CopyComponentsFunction.Source.BLOCK_ENTITY)))));
+                LootItem.lootTableItem(block).apply(
+                    CopyComponentsFunction.copyComponentsFromBlockEntity(LootContextParams.BLOCK_ENTITY))))); //TODO 1.21.11 does it copy all?
     }
 
     private void copyStandardComponentsWith(Block block, net.minecraft.core.component.DataComponentType<?> componentType) {
         add(block, LootTable
             .lootTable()
             .withPool(new LootPool.Builder().add(
-                LootItem.lootTableItem(block).apply(CopyComponentsFunction.copyComponents(CopyComponentsFunction.Source.BLOCK_ENTITY)
+                LootItem.lootTableItem(block).apply(CopyComponentsFunction.copyComponentsFromBlockEntity(LootContextParams.BLOCK_ENTITY)
                     .include(componentType)
                     .include(EIODataComponents.ENERGY)
                     .include(EIODataComponents.IO_CONFIG)

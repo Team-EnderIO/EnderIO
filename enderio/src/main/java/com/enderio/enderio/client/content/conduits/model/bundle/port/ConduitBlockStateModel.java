@@ -13,9 +13,11 @@ import com.mojang.math.OctahedralGroup;
 import com.mojang.math.Transformation;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockModelPart;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.block.model.SimpleModelWrapper;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BlockModelRotation;
@@ -146,7 +148,28 @@ public class ConduitBlockStateModel implements DynamicBlockStateModel {
                             }
 
                             if (model != null) {
-                                parts.add(SimpleModelWrapper.bake(this.baker, model, color));
+                                final var io = SimpleModelWrapper.bake(this.baker, model, color);
+                                parts.add(new BlockModelPart() {
+                                    @Override
+                                    public List<BakedQuad> getQuads(@Nullable Direction direction) {
+                                        return io.getQuads(direction);
+                                    }
+
+                                    @Override
+                                    public boolean useAmbientOcclusion() {
+                                        return io.useAmbientOcclusion();
+                                    }
+
+                                    @Override
+                                    public TextureAtlasSprite particleIcon() {
+                                        return io.particleIcon();
+                                    }
+
+                                    @Override
+                                    public ChunkSectionLayer getRenderType(BlockState state) {
+                                        return ChunkSectionLayer.CUTOUT;
+                                    }
+                                });
                             }
 
                             // TODO: Need support for dual-color redstone control.

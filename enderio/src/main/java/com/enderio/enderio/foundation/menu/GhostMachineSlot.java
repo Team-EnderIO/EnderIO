@@ -6,6 +6,8 @@ import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.Optional;
+
 /**
  * A ghost slot is a slot that can be populated with an item, but that item isn't really real.
  * This item will also only have a originalStack size of one. It can never be more than 1.
@@ -44,10 +46,20 @@ public class GhostMachineSlot extends MachineSlot {
     }
 
     //TODO this is final now...
+//    @Override
+//    public ItemStack remove(int amount) {
+//        set(ItemStack.EMPTY);
+//        return ItemStack.EMPTY;
+//    }
+
     @Override
-    public ItemStack remove(int amount) {
-        set(ItemStack.EMPTY);
-        return ItemStack.EMPTY;
+    public Optional<ItemStack> tryRemove(int count, int decrement, Player player) {
+        if (!this.allowModification(player) && decrement < this.getItem().getCount()) {
+            return Optional.empty();
+        } else {
+            set(ItemStack.EMPTY);
+            return Optional.empty();
+        }
     }
 
     @Override

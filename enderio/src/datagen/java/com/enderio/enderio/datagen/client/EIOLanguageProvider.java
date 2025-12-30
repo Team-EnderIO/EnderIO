@@ -667,27 +667,27 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOBlocks.ATTRACTOR_OBELISK.get(), "Attractor Obelisk");
         add(EIOBlocks.WEATHER_OBELISK.get(), "Weather Obelisk");
         add(EIOBlocks.BLOCK_DETECTOR.get(), "Block Detector");
-        add(EIOBlocks.CREATIVE_POWER.get(), "Creative Power");
+//        add(EIOBlocks.CREATIVE_POWER.get(), "Creative Power");
 
         // Solar Panels
-        for (var entry : EIOBlocks.SOLAR_PANELS.entrySet()) {
-            String displayName = switch (entry.getKey()) {
-                case ENERGETIC -> "Energetic Photovoltaic Module";
-                case PULSATING -> "Pulsating Photovoltaic Module";
-                case VIBRANT -> "Vibrant Photovoltaic Module";
-            };
-            add(entry.getValue().get(), displayName);
-        }
+//        for (var entry : EIOBlocks.SOLAR_PANELS.entrySet()) {
+//            String displayName = switch (entry.getKey()) {
+//                case ENERGETIC -> "Energetic Photovoltaic Module";
+//                case PULSATING -> "Pulsating Photovoltaic Module";
+//                case VIBRANT -> "Vibrant Photovoltaic Module";
+//            };
+//            add(entry.getValue().get(), displayName);
+//        }
 
         // Capacitor Banks
-        for (var entry : EIOBlocks.CAPACITOR_BANKS.entrySet()) {
-            String displayName = switch (entry.getKey()) {
-                case BASIC -> "Basic Capacitor Bank";
-                case ADVANCED -> "Advanced Capacitor Bank";
-                case VIBRANT -> "Vibrant Capacitor Bank";
-            };
-            add(entry.getValue().get(), displayName);
-        }
+//        for (var entry : EIOBlocks.CAPACITOR_BANKS.entrySet()) {
+//            String displayName = switch (entry.getKey()) {
+//                case BASIC -> "Basic Capacitor Bank";
+//                case ADVANCED -> "Advanced Capacitor Bank";
+//                case VIBRANT -> "Vibrant Capacitor Bank";
+//            };
+//            add(entry.getValue().get(), displayName);
+//        }
     }
 
     private void addFluids() {
@@ -758,7 +758,7 @@ public class EIOLanguageProvider extends LanguageProvider {
     }
 
     private void add(ResourceKey<Conduit<?, ?>> key, String translation) {
-        add(Component.translatable(Util.makeDescriptionId(EnderIORegistries.Keys.CONDUIT.location().getPath(), key.location())), translation);
+        add(Component.translatable(Util.makeDescriptionId(EnderIORegistries.Keys.CONDUIT.identifier().getPath(), key.identifier())), translation);
     }
 
     private void add(Component component, String translation) {

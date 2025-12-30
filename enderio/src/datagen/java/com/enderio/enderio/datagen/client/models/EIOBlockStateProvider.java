@@ -3,8 +3,6 @@ package com.enderio.enderio.datagen.client.models;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.client.content.conduits.model.bundle.port.ConduitBlockStateModel;
 import com.enderio.enderio.client.content.machines.IOOverlayBlockStateModel;
-import com.enderio.enderio.content.machines.solar_panel.SolarPanelBlock;
-import com.enderio.enderio.content.machines.solar_panel.SolarPanelTier;
 import com.enderio.enderio.content.misc_blocks.skull.EnderSkullBlock;
 import com.enderio.enderio.content.paint.block.PaintedStairBlock;
 import com.enderio.enderio.foundation.block.ProgressMachineBlock;
@@ -312,7 +310,7 @@ public class EIOBlockStateProvider extends ModelProvider {
         blockModels.createNonTemplateModelBlock(EIOBlocks.WIRELESS_CHARGER_ANTENNA_ADVANCED.get());
 
         // Creative Power
-        blockModels.createTrivialCube(EIOBlocks.CREATIVE_POWER.get());
+//        blockModels.createTrivialCube(EIOBlocks.CREATIVE_POWER.get());
 
         // Mind Killer
         blockModels.createNonTemplateModelBlock(EIOBlocks.MIND_KILLER.get());
@@ -327,15 +325,15 @@ public class EIOBlockStateProvider extends ModelProvider {
 //            Blocks.DIRT, null);
 
         // Solar Panels
-        for (var entry : EIOBlocks.SOLAR_PANELS.entrySet()) {
-            solarPanelBlock(entry.getValue().get(), entry.getKey());
-            blockModels.createTrivialCube(entry.getValue().get()); //TODO TEMP
-        }
+//        for (var entry : EIOBlocks.SOLAR_PANELS.entrySet()) {
+//            solarPanelBlock(entry.getValue().get(), entry.getKey());
+//            blockModels.createTrivialCube(entry.getValue().get()); //TODO TEMP
+//        }
 
         // Capacitor Banks
-        for (var capacitorBank : EIOBlocks.CAPACITOR_BANKS.values()) {
-            blockModels.createNonTemplateModelBlock(capacitorBank.get());
-        }
+//        for (var capacitorBank : EIOBlocks.CAPACITOR_BANKS.values()) {
+//            blockModels.createNonTemplateModelBlock(capacitorBank.get());
+//        }
 
         // Niard
         machineBlock(blockModels, EIOBlocks.NIARD.get());
@@ -412,7 +410,7 @@ public class EIOBlockStateProvider extends ModelProvider {
                 .with(BlockModelGenerators.ROTATION_HORIZONTAL_FACING));
     }
 
-    private void solarPanelBlock(SolarPanelBlock block, SolarPanelTier tier) {
+//    private void solarPanelBlock(SolarPanelBlock block, SolarPanelTier tier) {
 //        String name = name(block);
 //        String tierName = tier.name().toLowerCase(Locale.ROOT);
 //
@@ -437,7 +435,7 @@ public class EIOBlockStateProvider extends ModelProvider {
 //        builder.part().modelFile(cornerModel).rotationY(90).addModel().condition(SolarPanelBlock.SOUTH_EAST, true);
 //        builder.part().modelFile(cornerModel).rotationY(180).addModel().condition(SolarPanelBlock.SOUTH_WEST, true);
 //        builder.part().modelFile(cornerModel).rotationY(270).addModel().condition(SolarPanelBlock.NORTH_WEST, true);
-    }
+//    }
 
     private MultiVariant wrapMachineModel(Identifier model) {
         return MultiVariant.of(new IOModelBuilder(new IOOverlayBlockStateModel.Unbaked(plainModel(model))));
