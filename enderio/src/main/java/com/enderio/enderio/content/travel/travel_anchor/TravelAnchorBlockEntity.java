@@ -13,6 +13,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -24,17 +25,12 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
 
     public static final SingleSlotAccess GHOST = new SingleSlotAccess();
 
-//    private final NetworkDataSlot<AnchorTravelTarget> travelTargetDataSlot;
-
     public TravelAnchorBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
         this(EIOBlockEntities.TRAVEL_ANCHOR.get(), pWorldPosition, pBlockState);
     }
 
     public TravelAnchorBlockEntity(BlockEntityType<?> type, BlockPos pWorldPosition, BlockState pBlockState) {
         super(type, pWorldPosition, pBlockState, false);
-
-//        travelTargetDataSlot = addDataSlot(
-//                AnchorTravelTarget.DATA_SLOT_TYPE.create(this::getOrCreateTravelTarget, this::setTravelTarget));
     }
 
     @Override
@@ -66,39 +62,9 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
         setIcon(stack.getItem());
     }
 
-    @Nullable
-    public String getName() {
-        return getOrCreateTravelTarget().name();
-    }
-
-    public void setName(String name) {
-        var newTravelTarget = getOrCreateTravelTarget().withName(name);
-        if (level != null && level.isClientSide()) {
-//            clientUpdateSlot(travelTargetDataSlot, newTravelTarget);
-        } else {
-            setTravelTarget(newTravelTarget);
-        }
-    }
-
-    public Item getIcon() {
-        return getOrCreateTravelTarget().icon();
-    }
-
+    //TODO items should be synced by default?
     public void setIcon(Item icon) {
         var newTravelTarget = getOrCreateTravelTarget().withIcon(icon);
-        if (level != null && level.isClientSide()) {
-//            clientUpdateSlot(travelTargetDataSlot, newTravelTarget);
-        } else {
-            setTravelTarget(newTravelTarget);
-        }
-    }
-
-    public boolean isVisible() {
-        return getOrCreateTravelTarget().isVisible();
-    }
-
-    public void setIsVisible(boolean isVisible) {
-        var newTravelTarget = getOrCreateTravelTarget().withVisible(isVisible);
         if (level != null && level.isClientSide()) {
 //            clientUpdateSlot(travelTargetDataSlot, newTravelTarget);
         } else {
@@ -121,4 +87,9 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
         TravelTargetApi.INSTANCE.set(level, target);
     }
 
+    @Override
+    public void setLevel(Level level) {
+        super.setLevel(level);
+        getOrCreateTravelTarget(); //Make or load the target when the level is present
+    }
 }
