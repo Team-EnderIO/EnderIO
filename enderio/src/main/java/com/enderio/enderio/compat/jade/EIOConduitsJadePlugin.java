@@ -2,6 +2,7 @@ package com.enderio.enderio.compat.jade;
 
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.client.content.conduits.model.facades.FacadeUtil;
+import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlock;
 import com.enderio.enderio.init.EIOBlocks;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IWailaClientRegistration;
@@ -29,10 +30,23 @@ public class EIOConduitsJadePlugin implements IWailaPlugin {
             }
             return accessor;
         });
+
+        // TODO: Jade doesn't call player-sensitive version of getCloneItemStack...
+        registration.addRayTraceCallback((hitResult, accessor, originalAccessor) -> {
+            if (accessor instanceof BlockAccessor blockAccessor) {
+                if (blockAccessor.getBlock() instanceof ConduitBundleBlock block) {
+                    return registration.blockAccessor()
+                        .from(blockAccessor)
+                        .serversideRep(block.getCloneItemStack(blockAccessor.getLevel(), blockAccessor.getPosition(), blockAccessor.getBlockState(), true, blockAccessor.getPlayer()))
+                        .build();
+                }
+            }
+            return accessor;
+        });
     }
 
-    @Override
-    public void register(IWailaCommonRegistration registration) {
-        registration.blockOperations().pick(EIOBlocks.CONDUIT_BUNDLE.getKey());
-    }
+//    @Override
+//    public void register(IWailaCommonRegistration registration) {
+//        registration.blockOperations().pick(EIOBlocks.CONDUIT_BUNDLE.getKey());
+//    }
 }
