@@ -27,7 +27,7 @@ public class ItemConduitGameTestHelper extends ConduitGameTestHelper {
                 int inserted = itemHandler.insert(i, itemResource, toInsert, transaction);
                 count -= inserted;
                 if (count <= 0) {
-                    return;
+                    break;
                 }
             }
 

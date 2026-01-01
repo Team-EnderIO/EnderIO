@@ -51,31 +51,31 @@ public class FluidConduitTests {
 
             helper.startSequence()
                 // Destroy any previous conduit
-                .thenExecute(() -> helper.setBlock(0, 1, 1, Blocks.AIR))
+                .thenExecute(() -> helper.setBlock(0, 0, 1, Blocks.AIR))
                 // Place conduits between the tanks
-                .thenExecute(() -> helper.placeConduit(fluidConduit, 0, 1, 1))
+                .thenExecute(() -> helper.placeConduit(fluidConduit, 0, 0, 1))
                 // Configure the extract end
                 .thenExecute(() -> helper
-                    .getConduitBundle(0, 1, 1, false)
+                    .getConduitBundle(0, 0, 1, false)
                     .setConnectionConfig(fluidConduit, Direction.NORTH,
                         FluidConduitConnectionConfig.DEFAULT.withIsExtract(true).withIsInsert(false).withExtractRedstoneControl(RedstoneControl.NEVER_ACTIVE)))
                 // Configure the insert end
                 .thenExecute(() -> helper
-                    .getConduitBundle(0, 1, 1, false)
+                    .getConduitBundle(0, 0, 1, false)
                     .setConnectionConfig(fluidConduit, Direction.SOUTH, FluidConduitConnectionConfig.DEFAULT.withIsExtract(false).withIsInsert(true)))
                 // Put some water in the tank we'll extract from
-                .thenExecute(() -> helper.fillContainer(0, 1, 0, Fluids.WATER, 1))
+                .thenExecute(() -> helper.fillContainer(0, 0, 0, Fluids.WATER, 1))
                 // Ensure the fluid is still there
-                .thenExecuteAfter(tickRate, () -> helper.assertContainerHasExactly(0, 1, 0, Fluids.WATER, 1))
+                .thenExecuteAfter(tickRate, () -> helper.assertContainerHasExactly(0, 0, 0, Fluids.WATER, 1))
                 // Now enable movement with redstone control
                 .thenExecute(() -> helper
-                    .getConduitBundle(0, 1, 1, false)
+                    .getConduitBundle(0, 0, 1, false)
                     .setConnectionConfig(fluidConduit, Direction.NORTH,
                         FluidConduitConnectionConfig.DEFAULT.withIsExtract(true).withIsInsert(false).withExtractRedstoneControl(RedstoneControl.ALWAYS_ACTIVE)))
                 // Ensure the fluid moves
-                .thenExecuteAfter(tickRate, () -> helper.assertContainerHasExactly(0, 1, 2, Fluids.WATER, 1))
+                .thenExecuteAfter(tickRate, () -> helper.assertContainerHasExactly(0, 0, 2, Fluids.WATER, 1))
                 // Ensure no duplication
-                .thenExecute(() -> helper.assertContainerHasExactly(0, 1, 0, Fluids.WATER, 0))
+                .thenExecute(() -> helper.assertContainerHasExactly(0, 0, 0, Fluids.WATER, 0))
                 .thenSucceed();
         });
     }
@@ -88,26 +88,26 @@ public class FluidConduitTests {
 
         helper.startSequence()
             // Destroy all previous conduits
-            .thenExecute(() -> helper.fillAir(1, 1, 0, 1, 1, 2))
+            .thenExecute(() -> helper.fillAir(1, 0, 0, 1, 0, 2))
             // Place conduits between the tanks
-            .thenExecute(() -> helper.fillConduits(fluidConduit, 1, 1, 0, 1, 1, 2))
+            .thenExecute(() -> helper.fillConduits(fluidConduit, 1, 0, 0, 1, 0, 2))
             // Configure the insert ends
             .thenExecute(() -> helper
-                .getConduitBundle(1, 1, 2, false)
+                .getConduitBundle(1, 0, 2, false)
                 .setConnectionConfig(fluidConduit, Direction.EAST, FluidConduitConnectionConfig.DEFAULT.withIsExtract(false).withIsInsert(true)))
             .thenExecute(() -> helper
-                .getConduitBundle(1, 1, 2, false)
+                .getConduitBundle(1, 0, 2, false)
                 .setConnectionConfig(fluidConduit, Direction.WEST, FluidConduitConnectionConfig.DEFAULT.withIsExtract(false).withIsInsert(true)))
             // Configure the extract end
             .thenExecute(() -> helper
-                .getConduitBundle(1, 1, 0, false)
+                .getConduitBundle(1, 0, 0, false)
                 .setConnectionConfig(fluidConduit, Direction.EAST,
                     FluidConduitConnectionConfig.DEFAULT.withIsExtract(true).withIsInsert(false).withExtractRedstoneControl(RedstoneControl.ALWAYS_ACTIVE)))
             // Put some water in the tank we'll extract from
-            .thenExecute(() -> helper.fillContainer(2, 1, 0, Fluids.WATER, 1))
+            .thenExecute(() -> helper.fillContainer(2, 0, 0, Fluids.WATER, 1))
             // Ensure the fluid moves to the closer tank
-            .thenExecuteAfter(tickRate, () -> helper.assertContainerHasExactly(2, 1, 2, Fluids.WATER, 1))
-            .thenExecute(() -> helper.assertContainerHasExactly(0, 1, 2, Fluids.WATER, 0))
+            .thenExecuteAfter(tickRate, () -> helper.assertContainerHasExactly(2, 0, 2, Fluids.WATER, 1))
+            .thenExecute(() -> helper.assertContainerHasExactly(0, 0, 2, Fluids.WATER, 0))
             .thenSucceed();
     }
 
@@ -123,26 +123,26 @@ public class FluidConduitTests {
 
         helper.startSequence()
             // Destroy all previous conduits
-            .thenExecute(() -> helper.fillAir(1, 1, 0, 1, 1, 2))
+            .thenExecute(() -> helper.fillAir(1, 0, 0, 1, 0, 2))
             // Place conduits between the tanks
-            .thenExecute(() -> helper.fillConduits(fluidConduit, 1, 1, 0, 1, 1, 2))
+            .thenExecute(() -> helper.fillConduits(fluidConduit, 1, 0, 0, 1, 0, 2))
             // Configure the insert ends
             .thenExecute(() -> helper
-                .getConduitBundle(1, 1, 2, false)
+                .getConduitBundle(1, 0, 2, false)
                 .setConnectionConfig(fluidConduit, Direction.EAST, FluidConduitConnectionConfig.DEFAULT.withIsExtract(false).withIsInsert(true)))
             .thenExecute(() -> helper
-                .getConduitBundle(1, 1, 2, false)
+                .getConduitBundle(1, 0, 2, false)
                 .setConnectionConfig(fluidConduit, Direction.WEST, FluidConduitConnectionConfig.DEFAULT.withIsExtract(false).withIsInsert(true).withPriority(2)))
             // Configure the extract end
             .thenExecute(() -> helper
-                .getConduitBundle(1, 1, 0, false)
+                .getConduitBundle(1, 0, 0, false)
                 .setConnectionConfig(fluidConduit, Direction.EAST,
                     FluidConduitConnectionConfig.DEFAULT.withIsExtract(true).withIsInsert(false).withExtractRedstoneControl(RedstoneControl.ALWAYS_ACTIVE)))
             // Put some fluid in the tank we'll extract from
-            .thenExecute(() -> helper.fillContainer(2, 1, 0, Fluids.WATER, 1))
+            .thenExecute(() -> helper.fillContainer(2, 0, 0, Fluids.WATER, 1))
             // Ensure the fluid moves to the closer tank
-            .thenExecuteAfter(tickRate, () -> helper.assertContainerHasExactly(0, 1, 2, Fluids.WATER, 1))
-            .thenExecute(() -> helper.assertContainerHasExactly(2, 1, 2, Fluids.WATER, 0))
+            .thenExecuteAfter(tickRate, () -> helper.assertContainerHasExactly(0, 0, 2, Fluids.WATER, 1))
+            .thenExecute(() -> helper.assertContainerHasExactly(2, 0, 2, Fluids.WATER, 0))
             .thenSucceed();
     }
 
