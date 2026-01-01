@@ -45,6 +45,10 @@ public class ItemConduitTicker implements ConduitTicker<ItemConduit> {
                 nextItem: for (int i = 0; i < extractHandler.size(); i++) {
                     try (Transaction transaction = Transaction.openRoot()) {
                         ItemResource itemResource = extractHandler.getResource(i);
+                        if (itemResource.isEmpty()) {
+                            continue;
+                        }
+
                         int extracted = extractHandler.extract(i, itemResource, speed - totalExtracted, transaction);
                         if (extracted <= 0) {
                             continue;
@@ -106,6 +110,8 @@ public class ItemConduitTicker implements ConduitTicker<ItemConduit> {
                                     if (connectionConfig.isRoundRobin()) {
                                         nodeData.setIndex(extractConnection.connectionSide(), senderIndex + 1);
                                     }
+
+                                    transaction.commit();
                                     continue toNextExtract;
                                 } else {
                                     continue nextItem;
