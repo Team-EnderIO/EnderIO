@@ -52,7 +52,6 @@ public class PoweredMachineEnergyStorage implements EnergyHandler, ValueIOSerial
     }
 
     protected void onEnergyChanged(int previousAmount) {
-        machine.setChanged();
     }
 
     @Override

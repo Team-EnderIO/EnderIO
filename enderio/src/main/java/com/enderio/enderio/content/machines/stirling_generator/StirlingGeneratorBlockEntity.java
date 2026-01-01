@@ -12,7 +12,6 @@ import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
-import com.enderio.enderio.foundation.io.energy.MachineEnergyStorage;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.init.EIOBlockEntities;
 import net.minecraft.core.BlockPos;
@@ -68,6 +67,15 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
                 .slotAccess(FUEL)
                 .capacitor()
                 .build();
+    }
+
+    @Override
+    protected void onEnergyChanged(int previousAmount) {
+        super.onEnergyChanged(previousAmount);
+
+        updateMachineState(MachineState.FULL_POWER,
+            (getEnergyStorage().getAmountAsInt() >= getEnergyStorage().getCapacityAsInt())
+                && isCapacitorInstalled());
     }
 
     @Override
@@ -140,19 +148,6 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
         if (FUEL.isSlot(slot)) {
             updateMachineState(MachineState.EMPTY_INPUT, FUEL.getItemStack(this).isEmpty());
         }
-    }
-
-    protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, Supplier<Integer> capacity,
-            Supplier<Integer> usageRate) {
-        return new MachineEnergyStorage(this, energyIOMode, capacity, usageRate) {
-            @Override
-            protected void onContentsChanged() {
-                setChanged();
-                updateMachineState(MachineState.FULL_POWER,
-                        (getEnergyStorage().getAmountAsInt() >= getEnergyStorage().getCapacityAsInt())
-                                && isCapacitorInstalled());
-            }
-        };
     }
 
     @Override

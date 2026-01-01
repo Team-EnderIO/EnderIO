@@ -62,7 +62,13 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
                     "A machine which accepts a capacitor must have an inventory with a capacitor slot!");
         }
 
-        energyStorage = new PoweredMachineEnergyStorage(this);
+        energyStorage = new PoweredMachineEnergyStorage(this) {
+            @Override
+            protected void onEnergyChanged(int previousAmount) {
+                super.onEnergyChanged(previousAmount);
+                PoweredMachineBlockEntity.this.onEnergyChanged(previousAmount);
+            }
+        };
     }
 
     @Override
@@ -97,11 +103,6 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
         return energyStorage;
     }
 
-    @UseOnly(LogicalSide.CLIENT)
-    public final void clientSetEnergyStored(int energyStored) {
-        energyStorage.set(energyStored);
-    }
-
     public final boolean hasEnergy() {
         // If the machine has no capacitor, you cannot interact with it's energy storage
         if (requiresCapacitor() && !isCapacitorInstalled()) {
@@ -126,6 +127,10 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
 
     private void updatePowerState() {
         updateMachineState(MachineState.NO_POWER, energyStorage.getAmountAsInt() <= 0);
+    }
+
+    protected void onEnergyChanged(int previousAmount) {
+        setChanged();
     }
 
     // region Distribution
