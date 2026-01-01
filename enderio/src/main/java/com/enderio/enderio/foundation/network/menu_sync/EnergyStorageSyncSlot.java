@@ -1,7 +1,6 @@
 package com.enderio.enderio.foundation.network.menu_sync;
 
 import com.enderio.core.common.network.menu.SyncSlot;
-import com.enderio.core.common.network.menu.payload.IntSlotPayload;
 import com.enderio.core.common.network.menu.payload.LongSlotPayload;
 import com.enderio.core.common.network.menu.payload.PairSlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayload;

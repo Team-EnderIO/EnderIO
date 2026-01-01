@@ -3,7 +3,6 @@ package com.enderio.enderio.client.content.machines.gui.widget;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.foundation.energy.EnergyStorageInfo;
-import com.enderio.enderio.foundation.io.energy.IMachineEnergyStorage;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;

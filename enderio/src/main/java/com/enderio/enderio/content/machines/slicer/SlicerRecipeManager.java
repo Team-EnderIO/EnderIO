@@ -1,8 +1,8 @@
 package com.enderio.enderio.content.machines.slicer;
 
 import com.enderio.enderio.init.EIORecipes;
-import net.minecraft.util.Util;
 import net.minecraft.core.Holder;
+import net.minecraft.util.Util;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;

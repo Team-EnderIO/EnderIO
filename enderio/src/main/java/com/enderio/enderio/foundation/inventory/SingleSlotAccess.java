@@ -1,7 +1,6 @@
 package com.enderio.enderio.foundation.inventory;
 
 import com.enderio.enderio.foundation.block.entity.MachineInventoryHolder;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;

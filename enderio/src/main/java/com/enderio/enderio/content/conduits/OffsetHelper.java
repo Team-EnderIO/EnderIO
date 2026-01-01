@@ -3,9 +3,9 @@ package com.enderio.enderio.content.conduits;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.foundation.util.ThrowableUtil;
 import com.mojang.logging.LogUtils;
-import net.minecraft.util.Util;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
+import net.minecraft.util.Util;
 import org.joml.Vector2i;
 import org.slf4j.Logger;
 

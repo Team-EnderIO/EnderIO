@@ -1,9 +1,9 @@
 package com.enderio.enderio.content.advancements;
 
 import com.enderio.enderio.EnderIO;
-import net.minecraft.util.Util;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.util.Util;
 
 public class AdvancementsLang {
     public static final MutableComponent PLACE_CAPACITOR_BANK_ADVANCEMENT_TITLE = advancements("place_capacitor_bank/title");

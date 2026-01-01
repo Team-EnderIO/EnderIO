@@ -28,7 +28,6 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Objects;
 
 public final class SlicingRecipe implements MachineRecipe<SlicingRecipe.Input> {
     private final ItemStack output;

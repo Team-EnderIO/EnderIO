@@ -4,8 +4,6 @@ import com.enderio.core.client.gui.widgets.EIOWidget;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.foundation.energy.EnergyStorageInfo;
-import com.enderio.enderio.foundation.io.energy.ILargeMachineEnergyStorage;
-import com.enderio.enderio.foundation.io.energy.IMachineEnergyStorage;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;

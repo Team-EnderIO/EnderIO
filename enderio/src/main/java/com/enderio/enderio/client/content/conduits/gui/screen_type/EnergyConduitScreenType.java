@@ -9,7 +9,6 @@ import com.enderio.enderio.content.conduits.type.energy.EnergyConduitConnectionC
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;

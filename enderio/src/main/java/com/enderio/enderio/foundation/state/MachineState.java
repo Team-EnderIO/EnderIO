@@ -10,8 +10,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
-import java.util.Set;
-
 public record MachineState(MachineStateType type, MutableComponent component) {
 
     public static final MachineState ACTIVE = new MachineState(MachineStateType.ACTIVE, MachinesLang.STATUS_ACTIVE);

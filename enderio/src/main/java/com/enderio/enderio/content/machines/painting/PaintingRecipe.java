@@ -31,7 +31,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public final class PaintingRecipe implements MachineRecipe<PaintingRecipe.Input> {
     private final Ingredient input;

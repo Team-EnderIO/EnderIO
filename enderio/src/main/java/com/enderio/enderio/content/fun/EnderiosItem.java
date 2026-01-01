@@ -19,9 +19,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.UseRemainder;
 import net.minecraft.world.level.Level;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.RegisterConditionalItemModelPropertyEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Calendar;

@@ -1,7 +1,6 @@
 package com.enderio.enderio.foundation.inventory;
 
 import com.enderio.enderio.init.EIODataComponents;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 
 import java.util.ArrayList;

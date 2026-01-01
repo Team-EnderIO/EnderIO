@@ -1,9 +1,9 @@
 package com.enderio.enderio.content.glass;
 
 import com.enderio.enderio.EnderIO;
-import net.minecraft.util.Util;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.util.Util;
 
 public class GlassLang {
     public static final MutableComponent EMITS_LIGHT = tooltip("emits_light");

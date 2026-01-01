@@ -1,10 +1,10 @@
 package com.enderio.enderio.foundation.task;
 
 import com.enderio.enderio.foundation.MachineRecipe;
+import com.enderio.enderio.foundation.energy.MachineEnergyHandler;
 import com.enderio.enderio.foundation.inventory.MachineInventory;
 import com.enderio.enderio.foundation.inventory.MultiSlotAccess;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
-import com.enderio.enderio.foundation.energy.MachineEnergyHandler;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;

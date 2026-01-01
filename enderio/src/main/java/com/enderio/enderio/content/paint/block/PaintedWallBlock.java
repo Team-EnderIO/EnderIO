@@ -9,7 +9,6 @@ import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 
 public class PaintedWallBlock extends WallBlock implements EntityBlock, PaintedBlock {

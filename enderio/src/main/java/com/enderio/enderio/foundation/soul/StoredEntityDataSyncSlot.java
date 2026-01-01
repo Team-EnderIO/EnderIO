@@ -1,8 +1,8 @@
 package com.enderio.enderio.foundation.soul;
 
 import com.enderio.core.common.network.menu.SyncSlot;
-import com.enderio.core.common.network.menu.payload.ListSlotPayload;
 import com.enderio.core.common.network.menu.payload.IdentifierSlotPayload;
+import com.enderio.core.common.network.menu.payload.ListSlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayload;
 import com.enderio.enderio.api.soul.Soul;
 import net.minecraft.resources.Identifier;

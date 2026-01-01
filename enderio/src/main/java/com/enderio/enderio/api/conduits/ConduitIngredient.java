@@ -1,7 +1,6 @@
 package com.enderio.enderio.api.conduits;
 
 import com.enderio.enderio.api.EnderIODataComponents;
-import com.enderio.enderio.content.conduits.ConduitBlockItem;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOItems;
 import com.mojang.serialization.MapCodec;

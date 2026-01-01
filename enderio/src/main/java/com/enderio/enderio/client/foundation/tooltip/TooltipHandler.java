@@ -9,7 +9,6 @@ import com.enderio.enderio.api.components.GrindingBallData;
 import com.enderio.enderio.content.capacitors.CapacitorLang;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.init.EIODataComponents;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;

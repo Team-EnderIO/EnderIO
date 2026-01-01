@@ -1,18 +1,10 @@
 package com.enderio.enderio.api.components;
 
-import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import org.slf4j.Logger;
-
-import java.util.Optional;
 
 public record GrindingBallData(float outputMultiplier, float bonusMultiplier, float powerUse, int durability) {
 

@@ -1,11 +1,7 @@
 package com.enderio.core.common.network;
 
-import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.core.common.menu.BaseEnderMenu;
 import com.enderio.core.common.network.menu.ServerboundSetSyncSlotDataPacket;
-import io.netty.buffer.Unpooled;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class ServerPayloadHandler {
