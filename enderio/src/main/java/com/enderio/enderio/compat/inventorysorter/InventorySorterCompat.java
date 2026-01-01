@@ -1,5 +1,6 @@
 package com.enderio.enderio.compat.inventorysorter;
 
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.content.enchanter.EnchanterMenu;
 import com.enderio.enderio.content.filters.fluid.FluidFilterSlot;
 import com.enderio.enderio.content.filters.item.ItemFilterSlot;
@@ -8,8 +9,10 @@ import com.enderio.enderio.foundation.menu.MachineSlot;
 import com.enderio.enderio.foundation.menu.PreviewMachineSlot;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.InterModComms;
+import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
 
+@Mod(value = EnderIO.MOD_ID, depends = "inventorysorter")
 public class InventorySorterCompat {
     public static void init(IEventBus eventBus) {
         eventBus.addListener(InventorySorterCompat::sendIMC);

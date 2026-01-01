@@ -64,14 +64,6 @@ public class EnderIO {
     public static Identifier id(String path) {
         return EnderIOAPI.rl(path);
     }
-
-    private static final Map<String, Consumer<IEventBus>> MOD_INTEGRATIONS = Map.ofEntries(
-//        Map.entry("computercraft", eventBus -> ComputerCraftCompat.init()),
-//        Map.entry("ftbultimine", eventBus -> FTBUltimineCompat.init()),
-//        Map.entry("laserio", LaserIOCompat::init),
-        Map.entry("inventorysorter", InventorySorterCompat::init)
-    );
-
     private final Logger logger = LogUtils.getLogger();
 
     public EnderIO(IEventBus modEventBus, ModContainer modContainer) {
@@ -91,8 +83,6 @@ public class EnderIO {
         modContainer.registerConfig(ModConfig.Type.COMMON, MachinesConfig.COMMON_SPEC, "enderio/machines-common.toml");
         modContainer.registerConfig(ModConfig.Type.CLIENT, MachinesConfig.CLIENT_SPEC, "enderio/machines-client.toml");
 
-        // Perform initialization and registration for everything so things are
-        // registered.
         EIODataComponents.register(modEventBus);
         EIOCreativeTabs.register(modEventBus);
         EIOItems.register(modEventBus);
@@ -111,15 +101,6 @@ public class EnderIO {
         EIOTravelTargets.register(modEventBus);
         EIORecipeBookCategories.register(modEventBus);
 
-        // Handle mod compat
-        for (Map.Entry<String, Consumer<IEventBus>> entry : MOD_INTEGRATIONS.entrySet()) {
-            logger.debug("Activating mod integration for {}", entry.getKey());
-            if (ModList.get().isLoaded(entry.getKey())) {
-                entry.getValue().accept(modEventBus);
-            }
-        }
-
-        // Run datagen after registrate is finished.
         modEventBus.addListener(this::registerRegistries);
         modEventBus.addListener(this::registerDatapackRegistries);
         modEventBus.addListener(this::addBuiltInPacks);
