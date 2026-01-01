@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BlockModelRotation;
+import net.minecraft.data.AtlasIds;
 import net.minecraft.world.entity.ItemOwner;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -43,7 +44,7 @@ public class ConduitItemModel implements ItemModel {
 
         var conduit = stack.get(EnderIODataComponents.CONDUIT);
 
-        TextureAtlasSprite texture = Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(TextureAtlas.LOCATION_BLOCKS).getSprite(conduit.value().texture());
+        TextureAtlasSprite texture = Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.BLOCKS).getSprite(conduit.value().texture());
 
         var resolvedmodel = context.blockModelBaker().getModel(ConduitAdditionalModels.CONDUIT_ITEM);
         TextureSlots textureslots = resolvedmodel.getTopTextureSlots();

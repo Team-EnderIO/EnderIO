@@ -14,6 +14,7 @@ import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.data.AtlasIds;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.material.Fluid;
@@ -46,7 +47,7 @@ public class FluidConduitModelModifier implements ConduitModelModifier {
             var clientExtension = IClientFluidTypeExtensions.of(lockedFluid);
             TextureAtlasSprite sprite = Minecraft.getInstance()
                 .getAtlasManager()
-                .getAtlasOrThrow(TextureAtlas.LOCATION_BLOCKS)
+                .getAtlasOrThrow(AtlasIds.BLOCKS)
                 .getSprite(clientExtension.getStillTexture());
             return List.of(SimpleModelWrapper.bake(new ConduitBaker(baker, sprite), FLUID_MODEL, modelState));
         }

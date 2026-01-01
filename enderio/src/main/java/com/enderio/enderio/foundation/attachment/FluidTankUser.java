@@ -29,9 +29,10 @@ public interface FluidTankUser {
     }
 
     ICapabilityProvider<BlockEntity, Direction, ResourceHandler<FluidResource>> FLUID_HANDLER_PROVIDER = (be, side) -> {
-        if (be instanceof FluidTankUser user) {
-            return user.getFluidHandler().getForSide(side);
-        }
+        // TODO: Need to adopt ResourceHandler<FluidResource>...
+//        if (be instanceof FluidTankUser user) {
+//            return user.getFluidHandler().getForSide(side);
+//        }
         return null;
     };
 }

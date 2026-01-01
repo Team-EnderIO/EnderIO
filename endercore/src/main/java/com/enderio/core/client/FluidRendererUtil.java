@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
+import net.minecraft.data.AtlasIds;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -31,7 +32,7 @@ public class FluidRendererUtil {
         IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluid);
         TextureAtlasSprite texture = Minecraft.getInstance()
             .getAtlasManager()
-            .getAtlasOrThrow(TextureAtlas.LOCATION_BLOCKS)
+            .getAtlasOrThrow(AtlasIds.BLOCKS)
             .getSprite(props.getStillTexture());
 
         // Get sizes

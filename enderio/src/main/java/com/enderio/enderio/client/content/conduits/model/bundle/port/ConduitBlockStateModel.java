@@ -27,6 +27,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Vec3i;
+import net.minecraft.data.AtlasIds;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
@@ -325,7 +326,7 @@ public class ConduitBlockStateModel implements DynamicBlockStateModel {
     }
 
     private static TextureAtlasSprite sprite(Identifier location) {
-        return Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(TextureAtlas.LOCATION_BLOCKS).getSprite(location);
+        return Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.BLOCKS).getSprite(location);
     }
 
     public record Unbaked() implements CustomUnbakedBlockStateModel {

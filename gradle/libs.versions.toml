@@ -4,7 +4,7 @@ neoforge = "21.11.15-beta"
 almostUnified = "1.21.1-1.0.0"
 jeiVersion = "27.3.0.12"
 ccTweaked = "1.113.1"
-jade = "19.3.1+neoforge"
+jade = "21.0.1+neoforge"
 #athena = "4.2.1"
 ae2 = { strictly = "[19.0.23-beta,)", prefer = "19.0.23-beta" }
 mekanism = { strictly = "[1.21.1-10.7.0,)", prefer = "1.21.1-10.7.16.82" }

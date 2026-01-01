@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.data.AtlasIds;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
@@ -24,7 +25,7 @@ public class ConduitBreakParticle extends SingleQuadParticle {
     private final float vo;
 
     public ConduitBreakParticle(ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, BlockPos pos, Identifier sprite) {
-        super(level, x, y, z, xSpeed, ySpeed, zSpeed, Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(TextureAtlas.LOCATION_BLOCKS).getSprite(sprite));
+        super(level, x, y, z, xSpeed, ySpeed, zSpeed, Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.BLOCKS).getSprite(sprite));
 
         this.pos = pos;
         this.quadSize /= 2.0F;

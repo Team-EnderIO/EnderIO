@@ -23,6 +23,7 @@ import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.data.AtlasIds;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
@@ -204,7 +205,7 @@ public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConn
             Identifier still = props.getStillTexture();
             AbstractTexture texture = Minecraft.getInstance()
                     .getTextureManager()
-                    .getTexture(TextureAtlas.LOCATION_BLOCKS);
+                    .getTexture(AtlasIds.BLOCKS);
             if (texture instanceof TextureAtlas atlas) {
                 TextureAtlasSprite sprite = atlas.getSprite(still);
 

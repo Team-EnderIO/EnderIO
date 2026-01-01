@@ -6,6 +6,8 @@ import net.minecraft.gametest.framework.GameTestInfo;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 public class ItemConduitGameTestHelper extends ConduitGameTestHelper {
     public ItemConduitGameTestHelper(GameTestInfo info) {
@@ -13,38 +15,43 @@ public class ItemConduitGameTestHelper extends ConduitGameTestHelper {
     }
 
     public void insertIntoContainer(int x, int y, int z, Item item, int count) {
-        var itemHandler = getLevel().getCapability(Capabilities.ItemHandler.BLOCK, absolutePos(new BlockPos(x, y, z)),
+        var itemHandler = getLevel().getCapability(Capabilities.Item.BLOCK, absolutePos(new BlockPos(x, y, z)),
                 null);
         if (itemHandler == null) {
             throw helper.assertionException("No item handler at " + x + "," + y + "," + z);
         }
 
-        for (int i = 0; i < itemHandler.getSlots(); i++) {
-            int toInsert = Math.min(count, itemHandler.getSlotLimit(i));
-            var remainder = itemHandler.insertItem(i, new ItemStack(item, toInsert), false);
-            count -= toInsert - remainder.getCount();
-            if (count <= 0) {
-                return;
+        try (Transaction transaction = Transaction.openRoot()) {
+            var itemResource = ItemResource.of(item);
+            for (int i = 0; i < itemHandler.size(); i++) {
+                int toInsert = Math.min(count, itemHandler.getCapacityAsInt(i, itemResource));
+                int inserted = itemHandler.insert(i, itemResource, toInsert, transaction);
+                count -= inserted;
+                if (count <= 0) {
+                    return;
+                }
             }
-        }
 
-        if (count > 0) {
-            throw helper.assertionException(
-                    "Could not insert " + count + " items into container at " + x + "," + y + "," + z);
+            if (count > 0) {
+                throw helper.assertionException("Could not insert " + count + " items into container at " + x + "," + y + "," + z);
+            }
+
+            transaction.commit();
         }
     }
 
     public void assertContainerHasExactly(int x, int y, int z, Item item, int count) {
-        var itemHandler = getLevel().getCapability(Capabilities.ItemHandler.BLOCK, absolutePos(new BlockPos(x, y, z)),
+        var itemHandler = getLevel().getCapability(Capabilities.Item.BLOCK, absolutePos(new BlockPos(x, y, z)),
                 null);
         if (itemHandler == null) {
             throw helper.assertionException("No item handler at " + x + "," + y + "," + z);
         }
 
-        int foundCount = 0;
-        for (int i = 0; i < itemHandler.getSlots(); i++) {
-            var available = itemHandler.extractItem(i, Math.min(count, itemHandler.getSlotLimit(i)), true);
-            foundCount += available.getCount();
+        long foundCount = 0;
+        for (int i = 0; i < itemHandler.size(); i++) {
+            if (itemHandler.getResource(i).is(item)) {
+                foundCount += itemHandler.getAmountAsLong(i);
+            }
         }
 
         if (foundCount != count) {

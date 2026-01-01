@@ -17,6 +17,10 @@ import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 public class InternalTankTasks {
 
@@ -43,21 +47,25 @@ public class InternalTankTasks {
                             IFluidHandler.FluidAction.EXECUTE);
 
                         inputItem.shrink(1);
-                        fluidFillOutput.insertItem(blockEntity, Items.BUCKET.getDefaultInstance(), false);
+
+                        try (Transaction transaction = Transaction.openRoot()) {
+                            fluidFillOutput.insert(blockEntity, ItemResource.of(Items.BUCKET), 1, transaction);
+                            transaction.commit();
+                        }
                     }
                 }
             } else {
-                IFluidHandlerItem fluidHandlerItem = inputItem.getCapability(Capabilities.Fluid.ITEM);
+                var fluidHandlerItem = ItemAccess.forStack(inputItem).getCapability(Capabilities.Fluid.ITEM);
                 if (fluidHandlerItem != null && outputItem.isEmpty()) {
                     int filled = FluidUtil.tryFluidTransfer(
                         blockEntity.getFluidHandler(),
-                        fluidHandlerItem,
+                        IFluidHandler.of(fluidHandlerItem),
                         tank.getFluidAmount(blockEntity),
                         true
                     ).getAmount();
 
                     if (filled > 0) {
-                        fluidFillOutput.setStackInSlot(blockEntity, fluidHandlerItem.getContainer());
+                        fluidFillOutput.setStackInSlot(blockEntity, inputItem);
                         fluidFillInput.setStackInSlot(blockEntity, ItemStack.EMPTY);
                     }
                 }
@@ -94,17 +102,17 @@ public class InternalTankTasks {
                     }
                 }
             } else {
-                IFluidHandlerItem fluidHandlerItem = inputItem.getCapability(Capabilities.Fluid.ITEM);
+                var fluidHandlerItem = ItemAccess.forStack(inputItem).getCapability(Capabilities.Fluid.ITEM);
                 if (fluidHandlerItem != null && outputItem.isEmpty()) {
                     int filled = FluidUtil.tryFluidTransfer(
-                        fluidHandlerItem,
+                        IFluidHandler.of(fluidHandlerItem),
                         blockEntity.getFluidHandler(), // méthode à définir dans ton interface
                         tank.getFluidAmount(blockEntity),
                         true
                     ).getAmount();
 
                     if (filled > 0) {
-                        fluidDrainOutput.setStackInSlot(blockEntity, fluidHandlerItem.getContainer());
+                        fluidDrainOutput.setStackInSlot(blockEntity, inputItem);
                         fluidDrainInput.setStackInSlot(blockEntity, ItemStack.EMPTY);
                     }
                 }

@@ -23,6 +23,7 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.data.AtlasIds;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.EmptyBlockGetter;
@@ -394,7 +395,7 @@ public class IOConfigOverlay extends BaseOverlay {
         // TODO: 1.21.4: Was this needed?
 //        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
 
-        TextureAtlasSprite tex = MINECRAFT.getAtlasManager().getAtlasOrThrow(TextureAtlas.LOCATION_BLOCKS).getSprite(SELECTED_ICON);
+        TextureAtlasSprite tex = MINECRAFT.getAtlasManager().getAtlasOrThrow(AtlasIds.BLOCKS).getSprite(SELECTED_ICON);
 //        RenderSystem.setShaderTexture(0, tex.atlasLocation());
 //        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 

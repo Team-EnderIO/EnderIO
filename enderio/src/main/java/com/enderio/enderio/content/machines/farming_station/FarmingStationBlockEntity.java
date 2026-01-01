@@ -53,6 +53,7 @@ import net.neoforged.neoforge.common.ticket.AABBTicket;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.Nullable;
 
@@ -279,6 +280,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
 
     // TODO handle inv full
     public boolean collectDrops(List<ItemStack> drops, @Nullable BlockPos soil) {
+        // TODO: 1.21.11: Properly adopt transactions.
         ArrayList<ItemStack> list = new ArrayList<>();
         for (ItemStack drop : drops) {
             if (soil != null) {
@@ -306,26 +308,34 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
             ItemStack temp = drop.copy();
             list.add(temp);
             for (int i = 0; i < 6; i++) {
-                ItemStack leftOver = OUTPUT.get(i).insertItem(this, temp, true);
-                if (leftOver.isEmpty()) {
-                    temp.setCount(0);
+                int inserted;
+                try (Transaction transaction = Transaction.openRoot()) {
+                     inserted = OUTPUT.get(i).insert(this, ItemResource.of(temp), temp.getCount(), transaction);
+                }
+
+                if (inserted == drop.getCount()) {
+                    drop.setCount(0);
                     break;
                 } else {
-                    temp.setCount(leftOver.getCount());
+                    drop.setCount(drop.getCount() - inserted);
                 }
             }
         }
         boolean empty = list.stream().filter(d -> !d.isEmpty()).findAny().isEmpty();
         if (empty) {
             for (ItemStack drop : drops) {
-                for (int i = 0; i < 6; i++) {
-                    ItemStack leftOver = OUTPUT.get(i).insertItem(this, drop.copy(), false);
-                    if (leftOver.isEmpty()) {
-                        drop.setCount(0);
-                        break;
-                    } else {
-                        drop.setCount(leftOver.getCount());
+                try (Transaction transaction = Transaction.openRoot()) {
+                    for (int i = 0; i < 6; i++) {
+                        int inserted = OUTPUT.get(i).insert(this, ItemResource.of(drop), drop.getCount(), transaction);
+                        if (inserted == drop.getCount()) {
+                            drop.setCount(0);
+                            break;
+                        } else {
+                            drop.setCount(drop.getCount() - inserted);
+                        }
                     }
+
+                    transaction.commit();
                 }
             }
         }

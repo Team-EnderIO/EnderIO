@@ -149,11 +149,11 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
         // Mending
         FluidStack fluid = TANK.getFluid(this);
 
-        if (item.isDamageableItem() && !fluid.isEmpty() && fluid.is(Tags.Fluids.EXPERIENCE)) {
+        if (stack.isDamageableItem() && !fluid.isEmpty() && fluid.is(Tags.Fluids.EXPERIENCE)) {
             var enchantmentsRecipe = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
             var mendingEnchantment = enchantmentsRecipe.getOrThrow(Enchantments.MENDING);
 
-            if (item.getEnchantmentLevel(mendingEnchantment) > 0) {
+            if (stack.getEnchantmentLevel(mendingEnchantment) > 0) {
                 return true;
             }
         }
@@ -164,7 +164,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
                     .recipeMap().byType(EIORecipes.TANK.type().get()).stream().toList();
             return allRecipes.stream()
                     .anyMatch((recipe) -> recipe.value().mode() == TankRecipe.Mode.FILL
-                            && recipe.value().input().test(item));
+                            && recipe.value().input().test(stack));
         }
 
         return false;

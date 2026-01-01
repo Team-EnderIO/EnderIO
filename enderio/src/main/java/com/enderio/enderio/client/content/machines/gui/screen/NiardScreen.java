@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.data.AtlasIds;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
@@ -79,7 +80,7 @@ public class NiardScreen extends MachineScreen<NiardMenu> {
         Identifier still = props.getStillTexture(fluidStack);
 
         if (still != null) {
-            AbstractTexture texture = minecraft.getTextureManager().getTexture(TextureAtlas.LOCATION_BLOCKS);
+            AbstractTexture texture = minecraft.getTextureManager().getTexture(AtlasIds.BLOCKS);
             if (texture instanceof TextureAtlas atlas) {
                 TextureAtlasSprite sprite = atlas.getSprite(still);
 

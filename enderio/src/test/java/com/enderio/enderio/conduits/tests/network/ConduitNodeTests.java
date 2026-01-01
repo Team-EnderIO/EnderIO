@@ -167,7 +167,7 @@ public class ConduitNodeTests {
 
         var conduitNode = new ConduitNodeImpl(itemConduit, BlockPos.ZERO);
 
-        Assertions.assertThrows(IllegalStateException.class, () -> conduitNode.getNeighborSidedCapability(Capabilities.EnergyStorage.BLOCK, Direction.UP));
+        Assertions.assertThrows(IllegalStateException.class, () -> conduitNode.getNeighborSidedCapability(Capabilities.Energy.BLOCK, Direction.UP));
         Assertions.assertThrows(IllegalStateException.class, () -> conduitNode.getNeighborVoidCapability(EnderIOCapabilities.SOUL_BINDABLE_BLOCK, Direction.UP));
         Assertions.assertThrows(IllegalStateException.class, () -> conduitNode.hasRedstoneSignal(null));
         Assertions.assertThrows(IllegalStateException.class, () -> conduitNode.isConnectedToBlock(Direction.UP));
