@@ -82,7 +82,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
     public void setLevel(Level level) {
         super.setLevel(level);
         updatePowerState();
-        updateCapacitorState();
+        updateCapacitorData();
     }
 
     @Override
