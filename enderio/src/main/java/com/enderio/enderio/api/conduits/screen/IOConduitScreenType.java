@@ -86,7 +86,7 @@ public abstract class IOConduitScreenType<U extends IOConnectionConfig> extends 
         // TODO: 1.21.4: Hardcoded 256x256
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE, startX + (WIDTH / 2), startY, 255, 0, 1, 97, 256, 256);
 
-        guiGraphics.drawString(font, leftTitle, startX + leftTitleX, startY + leftTitleY, 4210752, false);
-        guiGraphics.drawString(font, rightTitle, startX + rightTitleX, startY + rightTitleY, 4210752, false);
+        guiGraphics.drawString(font, leftTitle, startX + leftTitleX, startY + leftTitleY, 0xff404040, false);
+        guiGraphics.drawString(font, rightTitle, startX + rightTitleX, startY + rightTitleY, 0xff404040, false);
     }
 }

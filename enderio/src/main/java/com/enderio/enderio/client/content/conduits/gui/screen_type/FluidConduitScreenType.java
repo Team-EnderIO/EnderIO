@@ -51,8 +51,8 @@ public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConn
 
         if (dataAccess.conduit() instanceof FluidConduit fluidConduit && fluidConduit.doesSupportPriority()) {
             String priority = String.valueOf(dataAccess.getConnectionConfig().insertPriority());
-            guiGraphics.drawString(font, ConduitLang.PRIORITY, 22, 7 + 4 + 4 + 8 + 16 + 12, 0x000000, false);
-            guiGraphics.drawString(font, priority, 90 - font.width(priority), 7 + 4 + 4 + 8 + 16 + 12, 0x000000, false);
+            guiGraphics.drawString(font, ConduitLang.PRIORITY, 22, 7 + 4 + 4 + 8 + 16 + 12, 0xff000000, false);
+            guiGraphics.drawString(font, priority, 90 - font.width(priority), 7 + 4 + 4 + 8 + 16 + 12, 0xff000000, false);
         }
     }
 
