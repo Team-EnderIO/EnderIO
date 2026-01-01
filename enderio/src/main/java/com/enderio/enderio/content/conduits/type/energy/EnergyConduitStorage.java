@@ -1,35 +1,18 @@
 package com.enderio.enderio.content.conduits.type.energy;
 
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
+import com.google.common.primitives.Ints;
 import net.minecraft.core.Direction;
-import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jetbrains.annotations.Nullable;
 
-public record EnergyConduitStorage(@Nullable Direction side, int transferRate, @Nullable ConduitNode node) implements IEnergyStorage {
+public record EnergyConduitStorage(@Nullable Direction side, int transferRate, @Nullable ConduitNode node) implements EnergyHandler {
 
     private static final long ENERGY_BUFFER_SCALER = 4;
 
-    public long getLongMaxEnergyStored() {
-        if (node == null || !node.isLoaded()) {
-            return 0;
-        }
-
-        // Capacity is transfer rate + nodeCount * transferRatePerTick / 2 (expanded).
-        // This ensures at least the transfer rate of the cable is available, but
-        // capacity doesn't grow outrageously.
-        int nodeCount = node.getNetwork().nodeCount();
-
-        // The maximum number of nodes before the network capacity is INT_MAX.
-        long maxNodesBeforeLimit = Long.MAX_VALUE / (transferRate() / ENERGY_BUFFER_SCALER) - ENERGY_BUFFER_SCALER;
-        if (nodeCount >= maxNodesBeforeLimit) {
-            return Long.MAX_VALUE;
-        }
-
-        // Always full transfer rate plus the extra buffer.
-        return transferRate() + nodeCount * (transferRate() / ENERGY_BUFFER_SCALER);
-    }
-
-    public long getLongEnergyStored() {
+    @Override
+    public long getAmountAsLong() {
         if (node == null || !node.isLoaded()) {
             return 0;
         }
@@ -39,51 +22,53 @@ public record EnergyConduitStorage(@Nullable Direction side, int transferRate, @
             return 0;
         }
 
-        return Math.max(Math.min(getLongMaxEnergyStored(), context.energyStored()), 0);
+        return Math.max(Math.min(getCapacityAsLong(), context.energyStored()), 0);
     }
 
     @Override
-    public int receiveEnergy(int toReceive, boolean simulate) {
-        if (node == null || !node.isLoaded() || !canReceive()) {
+    public long getCapacityAsLong() {
+        if (node == null || !node.isLoaded()) {
+            return 0;
+        }
+
+        // Capacity is transfer rate + nodeCount * transferRatePerTick / 2 (expanded).
+        // This ensures at least the transfer rate of the cable is available, but
+        // capacity doesn't grow outrageously.
+        int nodeCount = node.getNetwork().nodeCount();
+
+        // The maximum number of nodes before the network capacity is max size.
+        long maxNodesBeforeLimit = Long.MAX_VALUE / (transferRate() / ENERGY_BUFFER_SCALER) - ENERGY_BUFFER_SCALER;
+        if (nodeCount >= maxNodesBeforeLimit) {
+            return Long.MAX_VALUE;
+        }
+
+        // Always full transfer rate plus the extra buffer.
+        return transferRate() + nodeCount * (transferRate() / ENERGY_BUFFER_SCALER);
+    }
+
+    @Override
+    public int insert(int amount, TransactionContext transaction) {
+        if (node == null || !node.isLoaded() || !canInsert()) {
             return 0;
         }
 
         var context = node.getNetwork().getOrCreateContext(EnergyConduitNetworkContext.TYPE);
 
         // Cap to transfer rate.
-        toReceive = Math.min(transferRate(), toReceive);
+        int toReceive = Math.min(transferRate(), amount);
 
-        int energyReceived = (int)Math.min(Math.min(getLongMaxEnergyStored() - getLongEnergyStored(), toReceive), Integer.MAX_VALUE);
-        if (!simulate) {
-            context.setEnergyStored(getLongEnergyStored() + energyReceived);
-        }
+        int energyReceived = Ints.saturatedCast(Math.min(getCapacityAsLong() - getAmountAsLong(), toReceive));
+        context.setEnergyStored(getAmountAsLong() + energyReceived, transaction);
 
         return energyReceived;
     }
 
     @Override
-    public int extractEnergy(int toExtract, boolean simulate) {
-        // Pulling from energy conduits is forbidden.
+    public int extract(int amount, TransactionContext transaction) {
         return 0;
     }
 
-    @Override
-    public int getEnergyStored() {
-        return (int)Math.min(getLongEnergyStored(), Integer.MAX_VALUE);
-    }
-
-    @Override
-    public int getMaxEnergyStored() {
-        return (int)Math.min(getLongMaxEnergyStored(), Integer.MAX_VALUE);
-    }
-
-    @Override
-    public boolean canExtract() {
-        return false;
-    }
-
-    @Override
-    public boolean canReceive() {
+    public boolean canInsert() {
         if (side == null || node == null) {
             return false;
         }

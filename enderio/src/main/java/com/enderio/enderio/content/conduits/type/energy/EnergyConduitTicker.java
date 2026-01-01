@@ -43,7 +43,8 @@ public class EnergyConduitTicker implements ConduitTicker<EnergyConduit> {
             if (priority != currentPriority) {
                 // Distribute energy to everything in the previous priority group.
                 long energyInserted = distributeTo(insertHandlers, context.energyStored());
-                context.setEnergyStored(context.energyStored() - energyInserted);
+                // TODO: 1.21.11: Need to review energy transactions - for now we just blindly set the context's energy storage.
+                context.setEnergyStored(context.energyStored() - energyInserted, null);
 
                 if (context.energyStored() <= 0) {
                     return;
@@ -70,7 +71,9 @@ public class EnergyConduitTicker implements ConduitTicker<EnergyConduit> {
         if (!insertHandlers.isEmpty() && context.energyStored() > 0) {
             // Distribute energy to everything in the previous priority group.
             long energyInserted = distributeTo(insertHandlers, context.energyStored());
-            context.setEnergyStored(context.energyStored() - energyInserted);
+
+            // TODO: 1.21.11: Need to review energy transactions - for now we just blindly set the context's energy storage.
+            context.setEnergyStored(context.energyStored() - energyInserted, null);
         }
     }
 

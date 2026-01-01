@@ -3,9 +3,13 @@ package com.enderio.enderio.content.conduits.type.energy;
 import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContext;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContextType;
+import com.enderio.enderio.foundation.energy.PoweredMachineEnergyStorage;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
@@ -19,6 +23,7 @@ public class EnergyConduitNetworkContext implements ConduitNetworkContext<Energy
             EnergyConduitNetworkContext::new);
 
     private long energyStored = 0;
+    private final ConduitEnergyJournal energyJournal = new ConduitEnergyJournal();
 
     public EnergyConduitNetworkContext() {
     }
@@ -34,7 +39,11 @@ public class EnergyConduitNetworkContext implements ConduitNetworkContext<Energy
         return energyStored;
     }
 
-    public void setEnergyStored(long energyStored) {
+    public void setEnergyStored(long energyStored, @Nullable TransactionContext transaction) {
+        if (transaction != null) {
+            energyJournal.updateSnapshots(transaction);
+        }
+
         this.energyStored = energyStored;
     }
 
@@ -60,5 +69,15 @@ public class EnergyConduitNetworkContext implements ConduitNetworkContext<Energy
     @Override
     public ConduitNetworkContextType<EnergyConduitNetworkContext> type() {
         return TYPE;
+    }
+
+    private class ConduitEnergyJournal extends SnapshotJournal<Long> {
+        protected Long createSnapshot() {
+            return EnergyConduitNetworkContext.this.energyStored;
+        }
+
+        protected void revertToSnapshot(Long snapshot) {
+            EnergyConduitNetworkContext.this.energyStored = snapshot;
+        }
     }
 }
