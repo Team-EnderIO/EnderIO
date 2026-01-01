@@ -14,22 +14,21 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.status.ChunkStatus;
+import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
 import java.util.Optional;
 
 public class EnderfaceBlockEntity extends EIOBlockEntity {
+    static String PITCH = "pitch";
+    static String YAW = "yaw";
+    static String DISTANCE = "distance";
     private float lastUiPitch = -45;
     private float lastUiYaw = 45;
     private float lastUiDistance = 10;
 
-//    private final NetworkDataSlot<EnderfaceTravelTarget> travelTargetDataSlot;
-
     public EnderfaceBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.ENDERFACE.get(), worldPosition, blockState);
-
-//        travelTargetDataSlot = addDataSlot(
-//                EnderfaceTravelTarget.DATA_SLOT_TYPE.create(this::getOrCreateTravelTarget, this::setTravelTarget));
     }
 
     @Override
@@ -40,9 +39,26 @@ public class EnderfaceBlockEntity extends EIOBlockEntity {
     }
 
     @Override
+    public void setLevel(Level level) {
+        super.setLevel(level);
+
+        getOrCreateTravelTarget();
+    }
+
+    @Override
     protected void saveAdditionalSynced(ValueOutput output) {
         super.saveAdditionalSynced(output);
-        // TODO save ui pitch, etc
+        output.putFloat(PITCH, lastUiPitch);
+        output.putFloat(YAW, lastUiYaw);
+        output.putFloat(DISTANCE, lastUiDistance);
+    }
+
+    @Override
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        lastUiPitch = input.getFloatOr(PITCH, -45);
+        lastUiYaw = input.getFloatOr(YAW, 45);
+        lastUiDistance = input.getFloatOr(DISTANCE, 10);
     }
 
     public float getLastUiPitch() {

@@ -41,9 +41,7 @@ public class ConduitHighlightEvent {
             if (conduit.isEmpty()) {
                 return;
             }
-
-            event.setCanceled(true);
-
+            
             BlockHitResult result = event.getHitResult();
             BlockPos pos = result.getBlockPos();
             Vec3 camPos = event.getCamera().position();

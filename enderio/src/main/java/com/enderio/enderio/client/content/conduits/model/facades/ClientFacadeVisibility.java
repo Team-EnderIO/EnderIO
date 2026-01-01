@@ -1,7 +1,6 @@
 package com.enderio.enderio.client.content.conduits.model.facades;
 
 import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
-import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.SectionPos;
 import net.neoforged.api.distmarker.Dist;
@@ -15,7 +14,7 @@ public class ClientFacadeVisibility {
 
     private static boolean FACADES_VISIBLE = true;
 
-    @EnsureSide(EnsureSide.Side.CLIENT)
+    //@EnsureSide(EnsureSide.Side.CLIENT) //TODO why does this crash?
     public static boolean areFacadesVisible() {
         return FACADES_VISIBLE;
     }

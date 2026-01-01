@@ -30,6 +30,7 @@ import net.minecraft.data.AtlasIds;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.model.DynamicBlockStateModel;
@@ -134,10 +135,6 @@ public class ConduitBlockStateModel implements DynamicBlockStateModel {
 
                         var connectionState = bundleState.getConnectionState(direction, conduit);
                         if (connectionState != null) {
-                            ModelState color = rotationTranslation;
-//                            IQuadTransformer color = rotationTranslation.andThen(new ColorQuadTransformer( //TODO fix color
-//                                connectionState.inputChannel(), connectionState.outputChannel()));
-
                             Identifier model = null;
                             if (connectionState.canInput() && connectionState.canOutput()) {
                                 model = ConduitAdditionalModels.CONDUIT_IO_IN_OUT;
@@ -148,11 +145,11 @@ public class ConduitBlockStateModel implements DynamicBlockStateModel {
                             }
 
                             if (model != null) {
-                                final var io = SimpleModelWrapper.bake(this.baker, model, color);
+                                final var io = SimpleModelWrapper.bake(this.baker, model, rotationTranslation);
                                 parts.add(new BlockModelPart() {
                                     @Override
                                     public List<BakedQuad> getQuads(@Nullable Direction direction) {
-                                        return io.getQuads(direction);
+                                        return withColor(io.getQuads(direction), connectionState.inputChannel(), connectionState.outputChannel());
                                     }
 
                                     @Override
@@ -174,8 +171,29 @@ public class ConduitBlockStateModel implements DynamicBlockStateModel {
 
                             // TODO: Need support for dual-color redstone control.
                             if (connectionState.isRedstoneSensitive()) {
-                                    //.andThen(new ColorQuadTransformer(null, connectionState.redstoneChannel())) //TODO redstone color
-                                parts.add(SimpleModelWrapper.bake(this.baker, ConduitAdditionalModels.CONDUIT_IO_REDSTONE, rotationTranslation));
+                                final BlockModelPart redstone = SimpleModelWrapper.bake(this.baker, ConduitAdditionalModels.CONDUIT_IO_REDSTONE, rotationTranslation);
+                                parts.add(new BlockModelPart() {
+
+                                    @Override
+                                    public List<BakedQuad> getQuads(@Nullable Direction direction) {
+                                        return withColor(redstone.getQuads(direction), null, connectionState.redstoneChannel());
+                                    }
+
+                                    @Override
+                                    public boolean useAmbientOcclusion() {
+                                        return redstone.useAmbientOcclusion();
+                                    }
+
+                                    @Override
+                                    public TextureAtlasSprite particleIcon() {
+                                        return redstone.particleIcon();
+                                    }
+
+                                    @Override
+                                    public ChunkSectionLayer getRenderType(BlockState state) {
+                                        return ChunkSectionLayer.CUTOUT;
+                                    }
+                                });
 
                                 // TODO: Use this to render two redstone signal colours?
                                 //                                // Shrink the size
@@ -305,13 +323,33 @@ public class ConduitBlockStateModel implements DynamicBlockStateModel {
         }
     }
 
+    public List<BakedQuad> withColor(List<BakedQuad> quads, @Nullable DyeColor insert, @Nullable DyeColor extract) {
+        List<BakedQuad> newQuads = new ArrayList<>(quads);
+        for (BakedQuad quad : quads) {
+            if (!quad.isTinted()) {
+                newQuads.add(quad);
+            } else if (insert != null && quad.tintIndex() == 1) {
+                var mutableQuad = new MutableQuad(quad);
+                mutableQuad.withColor(insert.getTextureDiffuseColor());
+                newQuads.add(mutableQuad.toBakedQuad());
+            } else if (extract != null && quad.tintIndex() == 0) {
+                var mutableQuad = new MutableQuad(quad);
+                mutableQuad.withColor(extract.getTextureDiffuseColor());
+                newQuads.add(mutableQuad.toBakedQuad());
+            } else {
+                newQuads.add(quad);
+            }
+        }
+        return newQuads;
+    }
+
     public static ModelState rotate(Direction toDirection) {
         return switch (toDirection) {
             case UP -> BlockModelRotation.get(OctahedralGroup.BLOCK_ROT_Z_180);
             case NORTH -> BlockModelRotation.get(OctahedralGroup.BLOCK_ROT_X_270);
             case SOUTH -> BlockModelRotation.get(OctahedralGroup.BLOCK_ROT_X_90);
-            case WEST -> BlockModelRotation.get(OctahedralGroup.BLOCK_ROT_Z_270);
-            case EAST -> BlockModelRotation.get(OctahedralGroup.BLOCK_ROT_Z_90);
+            case WEST -> BlockModelRotation.get(OctahedralGroup.BLOCK_ROT_Z_90);
+            case EAST -> BlockModelRotation.get(OctahedralGroup.BLOCK_ROT_Z_270);
             default -> BlockModelRotation.get(OctahedralGroup.IDENTITY);
         };
     }
