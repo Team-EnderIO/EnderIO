@@ -59,7 +59,7 @@ public class PoweredMachineEnergyStorage implements EnergyHandler, ValueIOSerial
         TransferPreconditions.checkNonNegative(energyToAdd);
 
         try (Transaction subTransaction = Transaction.open(transactionContext)) {
-            int inserted = Math.min(getCapacityAsInt() - this.energyStored, Math.min(energyToAdd, this.getMaxConsumption()));
+            int inserted = Math.min(getCapacityAsInt() - this.energyStored, energyToAdd);
 
             if (inserted > 0) {
                 energyJournal.updateSnapshots(subTransaction);
