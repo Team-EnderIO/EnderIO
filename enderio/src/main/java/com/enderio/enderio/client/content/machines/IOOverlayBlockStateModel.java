@@ -34,10 +34,10 @@ import java.util.List;
 
 public class IOOverlayBlockStateModel implements DynamicBlockStateModel {
 
-    public static final Identifier TEX_DISABLED = EnderIO.rl("block/overlay/disabled");
-    public static final Identifier TEX_PULL = EnderIO.rl("block/overlay/pull");
-    public static final Identifier TEX_PUSH = EnderIO.rl("block/overlay/push");
-    public static final Identifier TEX_PUSH_PULL = EnderIO.rl("block/overlay/push_pull");
+    public static final Identifier TEX_DISABLED = EnderIO.id("block/overlay/disabled");
+    public static final Identifier TEX_PULL = EnderIO.id("block/overlay/pull");
+    public static final Identifier TEX_PUSH = EnderIO.id("block/overlay/push");
+    public static final Identifier TEX_PUSH_PULL = EnderIO.id("block/overlay/push_pull");
 
     private static final EnumMap<Direction, Vector3f[]> QUADS = new EnumMap<>(Direction.class);
 

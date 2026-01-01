@@ -13,7 +13,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class WeatherObeliskScreen extends MachineScreen<WeatherObeliskMenu> {
 
-    public static final Identifier WEATHER_BG = EnderIO.rl("textures/gui/screen/weather_obelisk.png");
+    public static final Identifier WEATHER_BG = EnderIO.id("textures/gui/screen/weather_obelisk.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
 

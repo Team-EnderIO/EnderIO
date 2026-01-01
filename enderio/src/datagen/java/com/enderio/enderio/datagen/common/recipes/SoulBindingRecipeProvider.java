@@ -111,7 +111,7 @@ public class SoulBindingRecipeProvider extends SubRecipeProvider {
     protected void build(ItemLike output, Ingredient input, int energy, int exp, Optional<Identifier> entityType,
             Optional<MobCategory> mobCategory, Optional<String> souldata, boolean copyInputData,
             RecipeOutput recipeOutput) {
-        recipeOutput.accept(ResourceKey.create(Registries.RECIPE, EnderIO.rl("soulbinding/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath())),
+        recipeOutput.accept(ResourceKey.create(Registries.RECIPE, EnderIO.id("soulbinding/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath())),
                 new SoulBindingRecipe(new ItemStack(output), input, energy, exp, entityType, mobCategory, souldata,
                         copyInputData),
                 null);

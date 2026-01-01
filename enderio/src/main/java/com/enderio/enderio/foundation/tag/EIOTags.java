@@ -139,7 +139,7 @@ public class EIOTags {
         }
 
         private static TagKey<Item> tag(String name) {
-            return ItemTags.create(EnderIO.rl(name));
+            return ItemTags.create(EnderIO.id(name));
         }
     }
 
@@ -174,7 +174,7 @@ public class EIOTags {
         }
 
         private static TagKey<Block> tag(String name) {
-            return BlockTags.create(EnderIO.rl(name));
+            return BlockTags.create(EnderIO.id(name));
         }
     }
 
@@ -189,7 +189,7 @@ public class EIOTags {
         }
 
         private static TagKey<Fluid> tag(String name) {
-            return FluidTags.create(EnderIO.rl(name));
+            return FluidTags.create(EnderIO.id(name));
         }
     }
 
@@ -200,7 +200,7 @@ public class EIOTags {
         public static final TagKey<EntityType<?>> SOUL_VIAL_BLACKLIST = tag("soul_vial_blacklist");
 
         private static TagKey<EntityType<?>> tag(String pName) {
-            return TagKey.create(Registries.ENTITY_TYPE, EnderIO.rl(pName));
+            return TagKey.create(Registries.ENTITY_TYPE, EnderIO.id(pName));
         }
 
     }

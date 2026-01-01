@@ -302,15 +302,15 @@ public class EIOLanguageProvider extends LanguageProvider {
             String lightingName = lighting != GlassLighting.NONE ? lighting.englishName() + " " : "";
             String lightingKeyName = lighting != GlassLighting.NONE ? "_" + lighting.shortName() : "";
 
-            add(Util.makeDescriptionId("block", EnderIO.rl("clear_glass" + lightingKeyName)), lightingName + "Clear Glass");
-            add(Util.makeDescriptionId("block", EnderIO.rl("fused_quartz" + lightingKeyName)), lightingName + "Fused Quartz");
+            add(Util.makeDescriptionId("block", EnderIO.id("clear_glass" + lightingKeyName)), lightingName + "Clear Glass");
+            add(Util.makeDescriptionId("block", EnderIO.id("fused_quartz" + lightingKeyName)), lightingName + "Fused Quartz");
 
             for (var color : DyeColor.values()) {
                 String colorName = createEnglishPrefix(color);
 
-                add(Util.makeDescriptionId("block", EnderIO.rl("clear_glass" + lightingKeyName + "_" + color.getName().toLowerCase(Locale.ROOT))),
+                add(Util.makeDescriptionId("block", EnderIO.id("clear_glass" + lightingKeyName + "_" + color.getName().toLowerCase(Locale.ROOT))),
                     colorName + lightingName + "Clear Glass");
-                add(Util.makeDescriptionId("block", EnderIO.rl("fused_quartz" + lightingKeyName + "_" + color.getName().toLowerCase(Locale.ROOT))),
+                add(Util.makeDescriptionId("block", EnderIO.id("fused_quartz" + lightingKeyName + "_" + color.getName().toLowerCase(Locale.ROOT))),
                     colorName + lightingName + "Fused Quartz");
             }
         }

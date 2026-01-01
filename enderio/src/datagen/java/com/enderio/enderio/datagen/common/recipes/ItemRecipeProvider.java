@@ -131,16 +131,16 @@ public class ItemRecipeProvider extends SubRecipeProvider {
         ShapelessRecipeBuilder.shapeless(items, RecipeCategory.MISC, EIOItems.BASIC_ITEM_FILTER)
                 .requires(EIOItems.BASIC_ITEM_FILTER)
                 .unlockedBy("has_ingredient", has(items, EIOItems.BASIC_ITEM_FILTER))
-                .save(recipeOutput, EnderIO.rl("erase_basic_item_filter").toString());
+                .save(recipeOutput, EnderIO.id("erase_basic_item_filter").toString());
 
         ShapelessRecipeBuilder.shapeless(items, RecipeCategory.MISC, EIOItems.ADVANCED_ITEM_FILTER)
                 .requires(EIOItems.ADVANCED_ITEM_FILTER)
                 .unlockedBy("has_ingredient", has(items, EIOItems.ADVANCED_ITEM_FILTER))
-                .save(recipeOutput, EnderIO.rl("erase_advanced_item_filter").toString());
+                .save(recipeOutput, EnderIO.id("erase_advanced_item_filter").toString());
 
         ShapelessRecipeBuilder.shapeless(items, RecipeCategory.MISC, EIOItems.BASIC_FLUID_FILTER)
                 .requires(EIOItems.BASIC_FLUID_FILTER)
                 .unlockedBy("has_ingredient", has(items, EIOItems.BASIC_FLUID_FILTER))
-                .save(recipeOutput, EnderIO.rl("erase_basic_fluid_filter").toString());
+                .save(recipeOutput, EnderIO.id("erase_basic_fluid_filter").toString());
     }
 }

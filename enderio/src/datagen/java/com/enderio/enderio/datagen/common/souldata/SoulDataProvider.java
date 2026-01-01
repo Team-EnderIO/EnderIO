@@ -205,7 +205,7 @@ public class SoulDataProvider implements DataProvider {
         private FinshedSoulData(Codec<T> codec, T data, String id) {
             this.codec = codec;
             this.data = data;
-            this.id = EnderIO.rl(id);
+            this.id = EnderIO.id(id);
         }
 
         private FinshedSoulData(Codec<T> codec, T data, Identifier id) {

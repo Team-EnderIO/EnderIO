@@ -12,7 +12,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 public record ServerboundBreakConduitPacket(BlockPos pos, Holder<Conduit<? ,?>> conduit) implements CustomPacketPayload {
 
-    public static final Type<ServerboundBreakConduitPacket> TYPE = new Type<>(EnderIO.rl("break_conduit"));
+    public static final Type<ServerboundBreakConduitPacket> TYPE = new Type<>(EnderIO.id("break_conduit"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundBreakConduitPacket> STREAM_CODEC = StreamCodec.composite(
         BlockPos.STREAM_CODEC,

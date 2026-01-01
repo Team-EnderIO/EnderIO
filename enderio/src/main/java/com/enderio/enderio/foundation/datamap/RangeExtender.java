@@ -16,7 +16,7 @@ public class RangeExtender {
             .strictUnboundedMap(TagKey.hashedCodec(Registries.BLOCK), Codec.INT);
 
     public static final AdvancedDataMapType<Block, Map<TagKey<Block>, Integer>, DataMapValueRemover.Default<Map<TagKey<Block>, Integer>, Block>> DATA_MAP = AdvancedDataMapType
-            .builder(EnderIO.rl("range_extender"), Registries.BLOCK, CODEC)
+            .builder(EnderIO.id("range_extender"), Registries.BLOCK, CODEC)
             .synced(CODEC, true)
             .build();
 }

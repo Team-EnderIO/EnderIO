@@ -14,7 +14,7 @@ import java.util.List;
 // TODO: Not a big fan of this..
 public record EmitParticlesPacket(List<EmitParticlePacket> particles) implements CustomPacketPayload {
 
-    public static final Type<EmitParticlesPacket> TYPE = new Type<>(EnderCore.loc("emit_particles"));
+    public static final Type<EmitParticlesPacket> TYPE = new Type<>(EnderCore.id("emit_particles"));
 
     // @formatter:off
     public static final StreamCodec<RegistryFriendlyByteBuf, EmitParticlesPacket> STREAM_CODEC =

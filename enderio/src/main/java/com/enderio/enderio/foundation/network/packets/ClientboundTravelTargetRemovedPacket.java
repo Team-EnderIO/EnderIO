@@ -9,7 +9,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 public record ClientboundTravelTargetRemovedPacket(BlockPos pos) implements CustomPacketPayload {
 
-    public static final Type<ClientboundTravelTargetRemovedPacket> TYPE = new Type<>(EnderIO.rl("remove_travel_target"));
+    public static final Type<ClientboundTravelTargetRemovedPacket> TYPE = new Type<>(EnderIO.id("remove_travel_target"));
 
     public static final StreamCodec<ByteBuf, ClientboundTravelTargetRemovedPacket> STREAM_CODEC =
         BlockPos.STREAM_CODEC.map(ClientboundTravelTargetRemovedPacket::new, ClientboundTravelTargetRemovedPacket::pos);

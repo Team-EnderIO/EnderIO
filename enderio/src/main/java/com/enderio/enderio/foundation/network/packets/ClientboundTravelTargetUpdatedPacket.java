@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 public record ClientboundTravelTargetUpdatedPacket(@Nullable TravelTarget target) implements CustomPacketPayload {
 
-    public static final Type<ClientboundTravelTargetUpdatedPacket> TYPE = new Type<>(EnderIO.rl("add_travel_target"));
+    public static final Type<ClientboundTravelTargetUpdatedPacket> TYPE = new Type<>(EnderIO.id("add_travel_target"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundTravelTargetUpdatedPacket> STREAM_CODEC = TravelTarget.STREAM_CODEC
         .map(ClientboundTravelTargetUpdatedPacket::new, ClientboundTravelTargetUpdatedPacket::target);

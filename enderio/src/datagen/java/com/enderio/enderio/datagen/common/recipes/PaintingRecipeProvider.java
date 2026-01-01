@@ -66,7 +66,7 @@ public class PaintingRecipeProvider extends SubRecipeProvider {
 
     protected void build(ItemLike output, Ingredient input, String suffix, RecipeOutput recipeOutput) {
         recipeOutput.accept(ResourceKey.create(Registries.RECIPE,
-                EnderIO.rl("painting/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath() + suffix)),
+                EnderIO.id("painting/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath() + suffix)),
                 new PaintingRecipe(input, new ItemStack(output)), null);
     }
 

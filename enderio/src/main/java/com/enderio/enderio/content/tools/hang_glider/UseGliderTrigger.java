@@ -12,7 +12,7 @@ import net.minecraft.server.level.ServerPlayer;
 import java.util.Optional;
 
 public class UseGliderTrigger extends SimpleCriterionTrigger<UseGliderTrigger.TriggerInstance> {
-    static final Identifier ID = EnderIO.rl("use_glider");
+    static final Identifier ID = EnderIO.id("use_glider");
     public Identifier getId() {
         return ID;
     }

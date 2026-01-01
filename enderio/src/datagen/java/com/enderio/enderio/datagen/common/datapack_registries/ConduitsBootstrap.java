@@ -19,21 +19,21 @@ public class ConduitsBootstrap {
     public static void bootstrap(BootstrapContext<Conduit<?, ?>> context) {
         // TODO: These rates are still up for change, but will refine through testing.
 
-        register(context, EIOConduits.ENERGY, (desc) -> new EnergyConduit(EnderIO.rl("block/conduit/energy"), desc, 6000));
-        register(context, EIOConduits.ENHANCED_ENERGY, (desc) -> new EnergyConduit(EnderIO.rl("block/conduit/enhanced_energy"), desc, 48_000));
-        register(context, EIOConduits.ENDER_ENERGY, (desc) -> new EnergyConduit(EnderIO.rl("block/conduit/ender_energy"), desc, 384_000));
+        register(context, EIOConduits.ENERGY, (desc) -> new EnergyConduit(EnderIO.id("block/conduit/energy"), desc, 6000));
+        register(context, EIOConduits.ENHANCED_ENERGY, (desc) -> new EnergyConduit(EnderIO.id("block/conduit/enhanced_energy"), desc, 48_000));
+        register(context, EIOConduits.ENDER_ENERGY, (desc) -> new EnergyConduit(EnderIO.id("block/conduit/ender_energy"), desc, 384_000));
 
         register(context, EIOConduits.REDSTONE,
-            (desc) -> new RedstoneConduit(EnderIO.rl("block/conduit/redstone"), EnderIO.rl("block/conduit/redstone_active"), desc));
+            (desc) -> new RedstoneConduit(EnderIO.id("block/conduit/redstone"), EnderIO.id("block/conduit/redstone_active"), desc));
 
         // Fluid conduits tick every 5 ticks, so remember the transfer rate per tick will be *5 for each operation.
-        register(context, EIOConduits.FLUID, (desc) -> new FluidConduit(EnderIO.rl("block/conduit/fluid"), desc, 200, false, false));
-        register(context, EIOConduits.PRESSURIZED_FLUID, (desc) -> new FluidConduit(EnderIO.rl("block/conduit/pressurized_fluid"), desc, 1_000, false, true));
-        register(context, EIOConduits.ENDER_FLUID, (desc) -> new FluidConduit(EnderIO.rl("block/conduit/ender_fluid"), desc, 8_000, true, true));
+        register(context, EIOConduits.FLUID, (desc) -> new FluidConduit(EnderIO.id("block/conduit/fluid"), desc, 200, false, false));
+        register(context, EIOConduits.PRESSURIZED_FLUID, (desc) -> new FluidConduit(EnderIO.id("block/conduit/pressurized_fluid"), desc, 1_000, false, true));
+        register(context, EIOConduits.ENDER_FLUID, (desc) -> new FluidConduit(EnderIO.id("block/conduit/ender_fluid"), desc, 8_000, true, true));
 
-        register(context, EIOConduits.ITEM, (desc) -> new ItemConduit(EnderIO.rl("block/conduit/item"), desc, 32, 20));
-        register(context, EIOConduits.ENHANCED_ITEM, (desc) -> new ItemConduit(EnderIO.rl("block/conduit/item"), desc, 64, 20));
-        register(context, EIOConduits.ENDER_ITEM, (desc) -> new ItemConduit(EnderIO.rl("block/conduit/item"), desc, 64, 10));
+        register(context, EIOConduits.ITEM, (desc) -> new ItemConduit(EnderIO.id("block/conduit/item"), desc, 32, 20));
+        register(context, EIOConduits.ENHANCED_ITEM, (desc) -> new ItemConduit(EnderIO.id("block/conduit/item"), desc, 64, 20));
+        register(context, EIOConduits.ENDER_ITEM, (desc) -> new ItemConduit(EnderIO.id("block/conduit/item"), desc, 64, 10));
     }
 
     private static void register(BootstrapContext<Conduit<?, ?>> context, ResourceKey<Conduit<?, ?>> key, Function<Component, Conduit<?, ?>> factory) {

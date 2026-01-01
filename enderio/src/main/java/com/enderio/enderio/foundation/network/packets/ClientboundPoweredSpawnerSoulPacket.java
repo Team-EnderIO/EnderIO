@@ -15,7 +15,7 @@ import java.util.Map;
 
 public record ClientboundPoweredSpawnerSoulPacket(Map<Identifier, SpawnerSoul.SoulData> map) implements CustomPacketPayload {
 
-    public static final Type<ClientboundPoweredSpawnerSoulPacket> TYPE = new Type<>(EnderIO.rl("powered_spawner_soul"));
+    public static final Type<ClientboundPoweredSpawnerSoulPacket> TYPE = new Type<>(EnderIO.id("powered_spawner_soul"));
 
     public static final StreamCodec<ByteBuf, ClientboundPoweredSpawnerSoulPacket> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.map(HashMap::new, Identifier.STREAM_CODEC, SpawnerSoul.STREAM_CODEC),

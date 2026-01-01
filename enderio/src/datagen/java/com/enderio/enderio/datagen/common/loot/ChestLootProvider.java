@@ -65,7 +65,7 @@ public class ChestLootProvider implements LootTableSubProvider {
             .withPool(lootPool)
             .setParamSet(LootContextParamSets.EMPTY);
 
-        writer.accept(ResourceKey.create(Registries.LOOT_TABLE, EnderIO.rl(COMMON_LOOT_TABLE_NAME)), lootTable);
+        writer.accept(ResourceKey.create(Registries.LOOT_TABLE, EnderIO.id(COMMON_LOOT_TABLE_NAME)), lootTable);
     }
 
     private void generateAlloyLoot(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> writer) {
@@ -107,6 +107,6 @@ public class ChestLootProvider implements LootTableSubProvider {
             .withPool(lootPool)
             .setParamSet(LootContextParamSets.EMPTY);
 
-        writer.accept(ResourceKey.create(Registries.LOOT_TABLE, EnderIO.rl(ALLOY_LOOT_TABLE_NAME)), lootTable);
+        writer.accept(ResourceKey.create(Registries.LOOT_TABLE, EnderIO.id(ALLOY_LOOT_TABLE_NAME)), lootTable);
     }
 }

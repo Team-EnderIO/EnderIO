@@ -21,18 +21,18 @@ public class EnderItemFilterScreen extends EnderContainerScreen<EnderItemFilterM
     private static final int WIDTH = 183;
     private static final int HEIGHT = 199;
 
-    private static final Identifier BG_2x9 = EnderIO.rl("textures/gui/screens/filter_2x9.png");
-    private static final Identifier BG_1x9 = EnderIO.rl("textures/gui/screens/filter_1x9.png");
-    private static final Identifier BG_3x9 = EnderIO.rl("textures/gui/screens/filter_3x9.png");
-    private static final Identifier BG_4x9 = EnderIO.rl("textures/gui/screens/filter_4x9.png");
+    private static final Identifier BG_2x9 = EnderIO.id("textures/gui/screens/filter_2x9.png");
+    private static final Identifier BG_1x9 = EnderIO.id("textures/gui/screens/filter_1x9.png");
+    private static final Identifier BG_3x9 = EnderIO.id("textures/gui/screens/filter_3x9.png");
+    private static final Identifier BG_4x9 = EnderIO.id("textures/gui/screens/filter_4x9.png");
 
-    private static final Identifier BACK_SPRITE = EnderIO.rl("icon/back");
+    private static final Identifier BACK_SPRITE = EnderIO.id("icon/back");
 
-    private static final Identifier ICON_MATCH_COMPONENTS = EnderIO.rl("icon/match_components");
-    private static final Identifier ICON_IGNORE_COMPONENTS = EnderIO.rl("icon/ignore_components");
+    private static final Identifier ICON_MATCH_COMPONENTS = EnderIO.id("icon/match_components");
+    private static final Identifier ICON_IGNORE_COMPONENTS = EnderIO.id("icon/ignore_components");
 
-    private static final Identifier ICON_ALLOW_LIST = EnderIO.rl("icon/allow_list");
-    private static final Identifier ICON_DENY_LIST = EnderIO.rl("icon/deny_list");
+    private static final Identifier ICON_ALLOW_LIST = EnderIO.id("icon/allow_list");
+    private static final Identifier ICON_DENY_LIST = EnderIO.id("icon/deny_list");
 
     private final Identifier backgroundTexture;
 

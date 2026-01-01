@@ -78,8 +78,8 @@ public class EIOBlockStateProvider extends ModelProvider {
         }
 
         // Glass Blocks
-        Identifier fusedQuartzModel = EnderIO.rl("block/fused_quartz");
-        Identifier clearGlassModel = EnderIO.rl("block/clear_glass");
+        Identifier fusedQuartzModel = EnderIO.id("block/fused_quartz");
+        Identifier clearGlassModel = EnderIO.id("block/clear_glass");
 
         for (var glassBlocks : EIOBlocks.GLASS_BLOCKS.values()) {
             for (var block : glassBlocks.getAllBlocks().toList()) {
@@ -238,7 +238,7 @@ public class EIOBlockStateProvider extends ModelProvider {
         String name = name(block);
         Identifier texture;
         if (name.startsWith("silent_")) {
-            texture = EnderIO.rl("block/" + name.substring(7));
+            texture = EnderIO.id("block/" + name.substring(7));
         } else {
             texture = ModelLocationUtils.getModelLocation(block);
         }
@@ -384,7 +384,7 @@ public class EIOBlockStateProvider extends ModelProvider {
 
     private void fluidTankBlock(BlockModelGenerators blockModelGenerators, Block block) {
         String name = name(block);
-        Identifier tank =  EnderIO.rl(String.format("block/%s_body", name));
+        Identifier tank =  EnderIO.id(String.format("block/%s_body", name));
         var body = wrapMachineModel(tank);
 
         blockModelGenerators.blockStateOutput.accept(

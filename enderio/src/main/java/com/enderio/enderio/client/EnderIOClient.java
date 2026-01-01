@@ -357,14 +357,14 @@ public class EnderIOClient {
 
     @SubscribeEvent
     public static void registerGeometryLoaders(RegisterBlockStateModels event) {
-        event.registerModel(EnderIO.rl("conduit"), ConduitBlockStateModel.Unbaked.CODEC);
-        event.registerModel(EnderIO.rl("io_overlay"), IOOverlayBlockStateModel.Unbaked.MAP_CODEC);
+        event.registerModel(EnderIO.id("conduit"), ConduitBlockStateModel.Unbaked.CODEC);
+        event.registerModel(EnderIO.id("io_overlay"), IOOverlayBlockStateModel.Unbaked.MAP_CODEC);
 
     }
 
     @SubscribeEvent
     public static void registerItemModels(RegisterItemModelsEvent event) {
-        event.register(EnderIO.rl("conduit"), ConduitItemModel.Unbaked.CODEC);
+        event.register(EnderIO.id("conduit"), ConduitItemModel.Unbaked.CODEC);
     }
 
     @SubscribeEvent
@@ -381,7 +381,7 @@ public class EnderIOClient {
 
     @SubscribeEvent
     public static void registerOverlays(RegisterGuiLayersEvent event) {
-        event.registerAbove(VanillaGuiLayers.CROSSHAIR, EnderIO.rl("anchor_hud"), TravelAnchorHud.INSTANCE);
+        event.registerAbove(VanillaGuiLayers.CROSSHAIR, EnderIO.id("anchor_hud"), TravelAnchorHud.INSTANCE);
     }
 
     @SubscribeEvent
@@ -405,12 +405,12 @@ public class EnderIOClient {
             event.registerFluidType(new IClientFluidTypeExtensions() {
                 @Override
                 public Identifier getStillTexture() {
-                    return EnderIO.rl("block/" + name + "_still");
+                    return EnderIO.id("block/" + name + "_still");
                 }
 
                 @Override
                 public Identifier getFlowingTexture() {
-                    return EnderIO.rl("block/" + name + "_flowing");
+                    return EnderIO.id("block/" + name + "_flowing");
                 }
             }, fluidType);
         }

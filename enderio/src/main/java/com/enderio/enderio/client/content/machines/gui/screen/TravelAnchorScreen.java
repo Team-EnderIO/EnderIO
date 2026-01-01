@@ -16,7 +16,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class TravelAnchorScreen extends MachineScreen<TravelAnchorMenu> {
 
-    private static final Identifier TRAVEL_ANCHOR_BG = EnderIO.rl("textures/gui/screen/travel_anchor.png");
+    private static final Identifier TRAVEL_ANCHOR_BG = EnderIO.id("textures/gui/screen/travel_anchor.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 184;
 
@@ -25,8 +25,8 @@ public class TravelAnchorScreen extends MachineScreen<TravelAnchorMenu> {
     private static final Identifier VISIBILITY_BTNS = EnderIOAPI
             .rl("textures/gui/icons/visibility_buttons.png");
 
-    private static final Identifier VISIBLE_BUTTON = EnderIO.rl("screen/travel_anchor/visible");
-    private static final Identifier NOT_VISIBLE_BUTTON = EnderIO.rl("screen/travel_anchor/not_visible");
+    private static final Identifier VISIBLE_BUTTON = EnderIO.id("screen/travel_anchor/visible");
+    private static final Identifier NOT_VISIBLE_BUTTON = EnderIO.id("screen/travel_anchor/not_visible");
 
     public TravelAnchorScreen(TravelAnchorMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);

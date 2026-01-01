@@ -24,6 +24,6 @@ public class JEILang {
     public static final MutableComponent WEATHER_CHANGE_TITLE = create("weather_change/title");
 
     private static MutableComponent create(String path) {
-        return Component.translatable(Util.makeDescriptionId("jei", EnderIO.rl(path)));
+        return Component.translatable(Util.makeDescriptionId("jei", EnderIO.id(path)));
     }
 }

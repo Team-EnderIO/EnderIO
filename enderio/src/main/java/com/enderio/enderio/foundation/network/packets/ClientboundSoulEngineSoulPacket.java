@@ -15,7 +15,7 @@ import java.util.Map;
 public record ClientboundSoulEngineSoulPacket(Map<Identifier, EngineSoul.SoulData> map)
     implements CustomPacketPayload {
 
-    public static final Type<ClientboundSoulEngineSoulPacket> TYPE = new Type<>(EnderIO.rl("soul_engine_soul"));
+    public static final Type<ClientboundSoulEngineSoulPacket> TYPE = new Type<>(EnderIO.id("soul_engine_soul"));
 
     public static final StreamCodec<ByteBuf, ClientboundSoulEngineSoulPacket> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.map(HashMap::new, Identifier.STREAM_CODEC, EngineSoul.STREAM_CODEC),

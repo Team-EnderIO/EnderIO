@@ -31,6 +31,6 @@ public class FiltersLang {
     }
 
     private static MutableComponent create(String type, String path) {
-        return Component.translatable(Util.makeDescriptionId(type, EnderIO.rl("filter/" + path)));
+        return Component.translatable(Util.makeDescriptionId(type, EnderIO.id("filter/" + path)));
     }
 }

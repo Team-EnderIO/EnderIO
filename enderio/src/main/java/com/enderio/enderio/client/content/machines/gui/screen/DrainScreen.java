@@ -18,7 +18,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class DrainScreen extends MachineScreen<DrainMenu> {
 
-    public static final Identifier BG_TEXTURE = EnderIO.rl("textures/gui/screen/drain.png");
+    public static final Identifier BG_TEXTURE = EnderIO.id("textures/gui/screen/drain.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
 

@@ -12,7 +12,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 public record EmitParticlePacket(ParticleOptions particleOptions, double x, double y, double z, double xSpeed,
         double ySpeed, double zSpeed) implements CustomPacketPayload {
 
-    public static final Type<EmitParticlePacket> TYPE = new Type<>(EnderCore.loc("emit_particle"));
+    public static final Type<EmitParticlePacket> TYPE = new Type<>(EnderCore.id("emit_particle"));
 
     // @formatter:off
     public static final StreamCodec<RegistryFriendlyByteBuf, EmitParticlePacket> STREAM_CODEC = StreamCodec.composite(

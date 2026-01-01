@@ -12,7 +12,7 @@ import java.util.List;
 public record ClientboundSyncSlotDataPacket(int containerId, List<PayloadPair> payloads)
         implements CustomPacketPayload {
 
-    public static final Type<ClientboundSyncSlotDataPacket> TYPE = new Type<>(EnderCore.loc("sync_slot_data"));
+    public static final Type<ClientboundSyncSlotDataPacket> TYPE = new Type<>(EnderCore.id("sync_slot_data"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundSyncSlotDataPacket> STREAM_CODEC = StreamCodec
             .composite(ByteBufCodecs.INT, ClientboundSyncSlotDataPacket::containerId,

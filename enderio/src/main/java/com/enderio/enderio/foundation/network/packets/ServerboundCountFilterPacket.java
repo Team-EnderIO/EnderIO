@@ -9,7 +9,7 @@ import net.minecraft.world.item.DyeColor;
 
 public record ServerboundCountFilterPacket(DyeColor channel1, int maxCount, int count, boolean active) implements CustomPacketPayload {
 
-    public static final Type<ServerboundCountFilterPacket> TYPE = new Type<>(EnderIO.rl("count_filter_packet"));
+    public static final Type<ServerboundCountFilterPacket> TYPE = new Type<>(EnderIO.id("count_filter_packet"));
 
     public static final StreamCodec<ByteBuf, ServerboundCountFilterPacket> STREAM_CODEC = StreamCodec.composite(
         DyeColor.STREAM_CODEC,

@@ -78,7 +78,7 @@ public class FluidTankItemRenderer implements SpecialModelRenderer<ResourceHandl
 
     public static final class Unbaked implements SpecialModelRenderer.Unbaked {
 
-        public static final Identifier ID = EnderIO.rl("fluid_tank");
+        public static final Identifier ID = EnderIO.id("fluid_tank");
         public static final FluidTankItemRenderer.Unbaked INSTANCE = new FluidTankItemRenderer.Unbaked();
         public static final MapCodec<FluidTankItemRenderer.Unbaked> CODEC = MapCodec.unit(INSTANCE);
 

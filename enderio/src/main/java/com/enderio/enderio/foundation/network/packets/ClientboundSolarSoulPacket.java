@@ -13,7 +13,7 @@ import java.util.Map;
 
 public record ClientboundSolarSoulPacket(Map<Identifier, SolarSoul.SoulData> map) implements CustomPacketPayload {
 
-    public static final Type<ClientboundSolarSoulPacket> TYPE = new Type<>(EnderIO.rl("solar_soul"));
+    public static final Type<ClientboundSolarSoulPacket> TYPE = new Type<>(EnderIO.id("solar_soul"));
 
     public static final StreamCodec<ByteBuf, ClientboundSolarSoulPacket> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.map(HashMap::new, Identifier.STREAM_CODEC, SolarSoul.STREAM_CODEC),

@@ -8,7 +8,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 public record ServerboundDestroyEntireConduitBundlePacket(BlockPos pos) implements CustomPacketPayload {
 
-    public static final Type<ServerboundDestroyEntireConduitBundlePacket> TYPE = new Type<>(EnderIO.rl("destroy_bundle"));
+    public static final Type<ServerboundDestroyEntireConduitBundlePacket> TYPE = new Type<>(EnderIO.id("destroy_bundle"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundDestroyEntireConduitBundlePacket> STREAM_CODEC = StreamCodec.composite(
         BlockPos.STREAM_CODEC,

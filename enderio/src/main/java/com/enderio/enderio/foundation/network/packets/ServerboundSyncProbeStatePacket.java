@@ -8,7 +8,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 public record ServerboundSyncProbeStatePacket(ConduitProbeItem.State state) implements CustomPacketPayload {
 
-    public static final Type<ServerboundSyncProbeStatePacket> TYPE = new Type<>(EnderIO.rl("sync_probe_state"));
+    public static final Type<ServerboundSyncProbeStatePacket> TYPE = new Type<>(EnderIO.id("sync_probe_state"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundSyncProbeStatePacket> STREAM_CODEC = StreamCodec.composite(
         ConduitProbeItem.State.STREAM_CODEC,

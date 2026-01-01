@@ -8,7 +8,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 public record ServerboundClearLockedFluidPacket(BlockPos pos) implements CustomPacketPayload {
 
-    public static final Type<ServerboundClearLockedFluidPacket> TYPE = new Type<>(EnderIO.rl("clear_locked_fluid"));
+    public static final Type<ServerboundClearLockedFluidPacket> TYPE = new Type<>(EnderIO.id("clear_locked_fluid"));
 
     public static final StreamCodec<ByteBuf, ServerboundClearLockedFluidPacket> STREAM_CODEC = BlockPos.STREAM_CODEC
             .map(ServerboundClearLockedFluidPacket::new, ServerboundClearLockedFluidPacket::pos);

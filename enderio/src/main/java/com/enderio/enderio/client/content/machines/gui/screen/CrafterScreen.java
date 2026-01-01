@@ -15,7 +15,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class CrafterScreen extends MachineScreen<CrafterMenu> {
 
-    private static final Identifier BG_TEXTURE = EnderIO.rl("textures/gui/screen/crafter.png");
+    private static final Identifier BG_TEXTURE = EnderIO.id("textures/gui/screen/crafter.png");
     private static final int WIDTH = 220;
     private static final int HEIGHT = 166;
 

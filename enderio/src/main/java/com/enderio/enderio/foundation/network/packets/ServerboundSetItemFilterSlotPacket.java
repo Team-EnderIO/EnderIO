@@ -10,7 +10,7 @@ import net.minecraft.world.item.ItemStack;
 public record ServerboundSetItemFilterSlotPacket(int containerId, int slotIndex, ItemStack itemStack) implements CustomPacketPayload {
 
     public static final CustomPacketPayload.Type<ServerboundSetItemFilterSlotPacket> TYPE = new CustomPacketPayload.Type<>(
-        EnderIO.rl("set_item_filter_slot"));
+        EnderIO.id("set_item_filter_slot"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundSetItemFilterSlotPacket> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT, ServerboundSetItemFilterSlotPacket::containerId, ByteBufCodecs.INT, ServerboundSetItemFilterSlotPacket::slotIndex,

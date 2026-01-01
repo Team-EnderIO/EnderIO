@@ -17,7 +17,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class VacuumChestScreen extends MachineScreen<VacuumChestMenu> {
 
-    private static final Identifier VACUUM_CHEST_BG = EnderIO.rl("textures/gui/screen/vacuum_chest.png");
+    private static final Identifier VACUUM_CHEST_BG = EnderIO.id("textures/gui/screen/vacuum_chest.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 206;
 

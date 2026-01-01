@@ -55,7 +55,7 @@ import java.util.function.Consumer;
 @EventBusSubscriber
 public class SoulVialItem extends Item implements AdvancedTooltipProvider {
 
-    public static final Identifier FILLED_MODEL_PROPERTY = EnderIO.rl("soul_vial_filled");
+    public static final Identifier FILLED_MODEL_PROPERTY = EnderIO.id("soul_vial_filled");
 
     /**
      * Should match key from {@link LivingEntity#addAdditionalSaveData(ValueOutput)} )}

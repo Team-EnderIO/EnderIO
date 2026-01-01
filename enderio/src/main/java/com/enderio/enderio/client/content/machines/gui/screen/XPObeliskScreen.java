@@ -21,16 +21,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class XPObeliskScreen extends MachineScreen<XPObeliskMenu> {
-    private static final Identifier BG = EnderIO.rl("textures/gui/screen/xp_obelisk.png");
+    private static final Identifier BG = EnderIO.id("textures/gui/screen/xp_obelisk.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 116;
 
-    private static final Identifier XP_ADD_ONE = EnderIO.rl("buttons/xp_add_one");
-    private static final Identifier XP_ADD_ALL = EnderIO.rl("buttons/xp_add_all");
-    private static final Identifier XP_ADD_MULTI = EnderIO.rl("buttons/xp_add_multi");
-    private static final Identifier XP_REMOVE_ONE = EnderIO.rl("buttons/xp_remove_one");
-    private static final Identifier XP_REMOVE_MULTI = EnderIO.rl("buttons/xp_remove_multi");
-    private static final Identifier XP_REMOVE_ALL = EnderIO.rl("buttons/xp_remove_all");
+    private static final Identifier XP_ADD_ONE = EnderIO.id("buttons/xp_add_one");
+    private static final Identifier XP_ADD_ALL = EnderIO.id("buttons/xp_add_all");
+    private static final Identifier XP_ADD_MULTI = EnderIO.id("buttons/xp_add_multi");
+    private static final Identifier XP_REMOVE_ONE = EnderIO.id("buttons/xp_remove_one");
+    private static final Identifier XP_REMOVE_MULTI = EnderIO.id("buttons/xp_remove_multi");
+    private static final Identifier XP_REMOVE_ALL = EnderIO.id("buttons/xp_remove_all");
 
     private final List<ImageButton> xpButtons = new ArrayList<>();
 

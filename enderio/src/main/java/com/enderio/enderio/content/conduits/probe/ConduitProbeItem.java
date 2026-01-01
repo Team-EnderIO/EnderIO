@@ -41,7 +41,7 @@ import java.util.function.Consumer;
 
 public class ConduitProbeItem extends Item {
 
-    public static final Identifier PROBE_STATE_PREDICATE = EnderIO.rl("probe_state");
+    public static final Identifier PROBE_STATE_PREDICATE = EnderIO.id("probe_state");
 
     public ConduitProbeItem(Properties pProperties) {
         super(pProperties.stacksTo(1));

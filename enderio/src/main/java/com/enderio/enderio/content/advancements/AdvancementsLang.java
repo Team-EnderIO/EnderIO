@@ -28,6 +28,6 @@ public class AdvancementsLang {
     }
 
     private static MutableComponent create(String type, String path) {
-        return Component.translatable(Util.makeDescriptionId(type, EnderIO.rl(path)));
+        return Component.translatable(Util.makeDescriptionId(type, EnderIO.id(path)));
     }
 }

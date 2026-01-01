@@ -45,7 +45,7 @@ public class GlassRecipeProvider extends SubRecipeProvider {
             }
             builder.requires(color.getTag())
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(blocks.CLEAR.get()))
-                .save(recipeOutput, ResourceKey.create(Registries.RECIPE, EnderIO.rl("recolor_" + BuiltInRegistries.BLOCK.getKey(blocks.COLORS.get(color).get()).getPath())));
+                .save(recipeOutput, ResourceKey.create(Registries.RECIPE, EnderIO.id("recolor_" + BuiltInRegistries.BLOCK.getKey(blocks.COLORS.get(color).get()).getPath())));
         }
     }
 
@@ -64,7 +64,7 @@ public class GlassRecipeProvider extends SubRecipeProvider {
             .pattern("GTG")
             .pattern("GGG")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(token))
-            .save(recipeOutput, ResourceKey.create(Registries.RECIPE, EnderIO.rl("collision_token_" + BuiltInRegistries.BLOCK.getKey(output).getPath())));
+            .save(recipeOutput, ResourceKey.create(Registries.RECIPE, EnderIO.id("collision_token_" + BuiltInRegistries.BLOCK.getKey(output).getPath())));
 
     }
     private static void invert(HolderLookup.RegistryLookup<Item> items, GlassBlocks blocks, RecipeOutput recipeOutput) {
@@ -82,6 +82,6 @@ public class GlassRecipeProvider extends SubRecipeProvider {
             .pattern("GTG")
             .pattern("GGG")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(blocks.CLEAR.get()))
-            .save(recipeOutput, ResourceKey.create(Registries.RECIPE, EnderIO.rl("invert_" + BuiltInRegistries.BLOCK.getKey(output).getPath())));
+            .save(recipeOutput, ResourceKey.create(Registries.RECIPE, EnderIO.id("invert_" + BuiltInRegistries.BLOCK.getKey(output).getPath())));
     }
 }

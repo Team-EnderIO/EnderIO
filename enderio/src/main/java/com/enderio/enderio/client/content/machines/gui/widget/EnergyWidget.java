@@ -17,7 +17,7 @@ import java.util.function.Supplier;
 
 public class EnergyWidget extends EIOWidget {
 
-    protected static final Identifier WIDGETS = EnderIO.rl("textures/gui/widgets.png");
+    protected static final Identifier WIDGETS = EnderIO.id("textures/gui/widgets.png");
 
     private final Supplier<EnergyStorageInfo> storageSupplier;
 

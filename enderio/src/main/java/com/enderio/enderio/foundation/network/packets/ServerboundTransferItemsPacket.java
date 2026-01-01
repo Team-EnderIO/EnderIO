@@ -11,7 +11,7 @@ import java.util.List;
 
 public record ServerboundTransferItemsPacket(List<Ingredient> stacks, int startslot, int endslot, boolean maxTransfer) implements CustomPacketPayload {
 
-    public static final Type<ServerboundTransferItemsPacket> TYPE = new Type<>(EnderIO.rl("transfer_items"));
+    public static final Type<ServerboundTransferItemsPacket> TYPE = new Type<>(EnderIO.id("transfer_items"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundTransferItemsPacket> STREAM_CODEC = StreamCodec.composite(
         Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()),

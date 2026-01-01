@@ -11,7 +11,7 @@ public record SetConduitConnectionConfigPacket(int containerId, ConnectionConfig
         implements CustomPacketPayload {
 
     public static final Type<SetConduitConnectionConfigPacket> TYPE = new Type<>(
-            EnderIO.rl("client_set_conduit_connection_config"));
+            EnderIO.id("client_set_conduit_connection_config"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, SetConduitConnectionConfigPacket> STREAM_CODEC = StreamCodec
             .composite(ByteBufCodecs.INT, SetConduitConnectionConfigPacket::containerId, ConnectionConfig.STREAM_CODEC,

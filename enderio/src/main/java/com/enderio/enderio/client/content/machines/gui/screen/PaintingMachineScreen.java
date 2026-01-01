@@ -16,11 +16,11 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class PaintingMachineScreen extends MachineScreen<PaintingMachineMenu> {
 
-    private static final Identifier PAINTING_MACHINE_BG = EnderIO.rl("textures/gui/screen/painting_machine.png");
+    private static final Identifier PAINTING_MACHINE_BG = EnderIO.id("textures/gui/screen/painting_machine.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
 
-    private static final Identifier PROGRESS_SPRITE = EnderIO.rl("screen/painting_machine/progress");
+    private static final Identifier PROGRESS_SPRITE = EnderIO.id("screen/painting_machine/progress");
 
     public PaintingMachineScreen(PaintingMachineMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);

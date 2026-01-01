@@ -119,6 +119,6 @@ public class MachinesLang {
     }
 
     private static MutableComponent create(String type, String path) {
-        return Component.translatable(Util.makeDescriptionId(type, EnderIO.rl("machine/" + path)));
+        return Component.translatable(Util.makeDescriptionId(type, EnderIO.id("machine/" + path)));
     }
 }

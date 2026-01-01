@@ -27,8 +27,6 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.transfer.energy.EnergyHandlerUtil;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Supplier;
-
 public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
 
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,

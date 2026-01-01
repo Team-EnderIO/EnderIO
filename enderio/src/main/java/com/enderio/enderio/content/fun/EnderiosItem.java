@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Calendar;
 
 public class EnderiosItem extends Item {
-    public static final Identifier INVERTED_PROPERTY = EnderIO.rl("enderios_inverted");
+    public static final Identifier INVERTED_PROPERTY = EnderIO.id("enderios_inverted");
 
     // TODO: 1.21.4: Does this still have a cooldown?
     private static final FoodProperties PROPERTIES = new FoodProperties.Builder()

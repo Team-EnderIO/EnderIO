@@ -16,8 +16,8 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 public class FarmingStationScreen extends MachineScreen<FarmingStationMenu> {
-    public static final Identifier BG_TEXTURE = EnderIO.rl("textures/gui/screen/farm_station.png");
-    private static final Identifier RANGE_BUTTON_TEXTURE = EnderIO.rl("textures/gui/icons/range_buttons.png");
+    public static final Identifier BG_TEXTURE = EnderIO.id("textures/gui/screen/farm_station.png");
+    private static final Identifier RANGE_BUTTON_TEXTURE = EnderIO.id("textures/gui/icons/range_buttons.png");
 
     private static final int WIDTH = 176;
     private static final int HEIGHT = 169;

@@ -13,7 +13,7 @@ import java.util.Optional;
 public record ClientboundConduitExtraGuiDataPacket(int containerId, @Nullable CompoundTag extraGuiData)
         implements CustomPacketPayload {
 
-    public static final Type<ClientboundConduitExtraGuiDataPacket> TYPE = new Type<>(EnderIO.rl("conduit_extra_gui_data"));
+    public static final Type<ClientboundConduitExtraGuiDataPacket> TYPE = new Type<>(EnderIO.id("conduit_extra_gui_data"));
 
     public static final StreamCodec<ByteBuf, ClientboundConduitExtraGuiDataPacket> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT, ClientboundConduitExtraGuiDataPacket::containerId,

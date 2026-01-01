@@ -59,7 +59,7 @@ public class EIORecipes {
 
     private static <R extends Recipe<?>, S extends RecipeSerializer<? extends R>> RecipeTypeSerializerPair<R, S> register(
             String name, Supplier<S> serializerFactory) {
-        var type = RECIPE_TYPES.<RecipeType<R>>register(name, () -> RecipeType.simple(EnderIO.rl(name)));
+        var type = RECIPE_TYPES.<RecipeType<R>>register(name, () -> RecipeType.simple(EnderIO.id(name)));
         var serializer = RECIPE_SERIALIZERS.register(name, serializerFactory);
         return new RecipeTypeSerializerPair<>(type, serializer);
     }

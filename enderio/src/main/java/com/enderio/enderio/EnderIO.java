@@ -61,7 +61,7 @@ public class EnderIO {
     public static IEventBus modEventBus;
     public static ModContainer modContainer;
 
-    public static Identifier rl(String path) {
+    public static Identifier id(String path) {
         return EnderIOAPI.rl(path);
     }
 
@@ -157,9 +157,9 @@ public class EnderIO {
 
     @SubscribeEvent
     public static void addReloadListeners(AddServerReloadListenersEvent event) {
-        event.addListener(EnderIO.rl("engine_soul_data"), EngineSoul.RELOAD_LISTENER);
-        event.addListener(EnderIO.rl("farm_soul_data"), FarmSoul.RELOAD_LISTENER);
-        event.addListener(EnderIO.rl("solar_soul_data"), SolarSoul.RELOAD_LISTENER);
-        event.addListener(EnderIO.rl("spawner_soul_data"), SpawnerSoul.RELOAD_LISTENER);
+        event.addListener(EnderIO.id("engine_soul_data"), EngineSoul.RELOAD_LISTENER);
+        event.addListener(EnderIO.id("farm_soul_data"), FarmSoul.RELOAD_LISTENER);
+        event.addListener(EnderIO.id("solar_soul_data"), SolarSoul.RELOAD_LISTENER);
+        event.addListener(EnderIO.id("spawner_soul_data"), SpawnerSoul.RELOAD_LISTENER);
     }
 }

@@ -9,7 +9,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class AversionObeliskScreen extends ObeliskScreen<AversionObeliskBlockEntity, AversionObeliskMenu> {
 
-    public static final Identifier BG_TEXTURE = EnderIO.rl("textures/gui/screen/aversion.png");
+    public static final Identifier BG_TEXTURE = EnderIO.id("textures/gui/screen/aversion.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
 

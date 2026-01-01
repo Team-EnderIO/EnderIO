@@ -283,12 +283,12 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
 
     protected void build(String name, Ingredient input, List<SagMillingRecipe.OutputItem> outputs, int energy,
             RecipeOutput recipeOutput) {
-        build(EnderIO.rl("sag_milling/" + name), input, outputs, energy, BonusType.MULTIPLY_OUTPUT, recipeOutput);
+        build(EnderIO.id("sag_milling/" + name), input, outputs, energy, BonusType.MULTIPLY_OUTPUT, recipeOutput);
     }
 
     protected void build(String name, Ingredient input, List<SagMillingRecipe.OutputItem> outputs, int energy,
             BonusType bonusType, RecipeOutput recipeOutput) {
-        build(EnderIO.rl("sag_milling/" + name), input, outputs, energy, bonusType, recipeOutput);
+        build(EnderIO.id("sag_milling/" + name), input, outputs, energy, bonusType, recipeOutput);
     }
 
     protected void build(Identifier id, Ingredient input, List<SagMillingRecipe.OutputItem> outputs, int energy,

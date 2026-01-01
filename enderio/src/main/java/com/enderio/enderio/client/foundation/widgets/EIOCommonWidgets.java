@@ -12,11 +12,11 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class EIOCommonWidgets {
-    private static final Identifier ICON_RANGE_ENABLE = EnderIO.rl("icon/range_enable");
-    private static final Identifier ICON_RANGE_DISABLE = EnderIO.rl("icon/range_disable");
+    private static final Identifier ICON_RANGE_ENABLE = EnderIO.id("icon/range_enable");
+    private static final Identifier ICON_RANGE_DISABLE = EnderIO.id("icon/range_disable");
 
-    private static final Identifier PLUS = EnderIO.rl("buttons/plus_small");
-    private static final Identifier MINUS = EnderIO.rl("buttons/minus_small");
+    private static final Identifier PLUS = EnderIO.id("buttons/plus_small");
+    private static final Identifier MINUS = EnderIO.id("buttons/minus_small");
     private static final WidgetSprites RANGE_PLUS_SPRITES = new WidgetSprites(PLUS, PLUS);
     private static final WidgetSprites RANGE_MINUS_SPRITES = new WidgetSprites(MINUS, MINUS);
 

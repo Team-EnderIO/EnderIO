@@ -14,7 +14,7 @@ import java.util.Map;
 
 public record ClientboundFarmStationSoulPacket(Map<Identifier, FarmSoul.SoulData> map) implements CustomPacketPayload {
 
-    public static final Type<ClientboundFarmStationSoulPacket> TYPE = new Type<>(EnderIO.rl("farm_soul"));
+    public static final Type<ClientboundFarmStationSoulPacket> TYPE = new Type<>(EnderIO.id("farm_soul"));
 
     public static final StreamCodec<ByteBuf, ClientboundFarmStationSoulPacket> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.map(HashMap::new, Identifier.STREAM_CODEC, FarmSoul.STREAM_CODEC),

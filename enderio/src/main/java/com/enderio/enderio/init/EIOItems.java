@@ -328,17 +328,17 @@ public class EIOItems {
 
     public static void register(IEventBus bus) {
         // XP rod rename
-        ITEMS.addAlias(EnderIO.rl("experience_rod"), VOID_VIAL.getId());
+        ITEMS.addAlias(EnderIO.id("experience_rod"), VOID_VIAL.getId());
 
         // Unified soul vials
-        ITEMS.addAlias(EnderIO.rl("empty_soul_vial"), SOUL_VIAL.getId());
-        ITEMS.addAlias(EnderIO.rl("filled_soul_vial"), SOUL_VIAL.getId());
+        ITEMS.addAlias(EnderIO.id("empty_soul_vial"), SOUL_VIAL.getId());
+        ITEMS.addAlias(EnderIO.id("filled_soul_vial"), SOUL_VIAL.getId());
 
 		// Filter renames
-        ITEMS.addAlias(EnderIO.rl("basic_filter"), BASIC_ITEM_FILTER.getId());
-        ITEMS.addAlias(EnderIO.rl("advanced_filter"), ADVANCED_ITEM_FILTER.getId());
-        ITEMS.addAlias(EnderIO.rl("fluid_filter"), BASIC_FLUID_FILTER.getId());
-        ITEMS.addAlias(EnderIO.rl("entity_filter"), BASIC_SOUL_FILTER.getId());
+        ITEMS.addAlias(EnderIO.id("basic_filter"), BASIC_ITEM_FILTER.getId());
+        ITEMS.addAlias(EnderIO.id("advanced_filter"), ADVANCED_ITEM_FILTER.getId());
+        ITEMS.addAlias(EnderIO.id("fluid_filter"), BASIC_FLUID_FILTER.getId());
+        ITEMS.addAlias(EnderIO.id("entity_filter"), BASIC_SOUL_FILTER.getId());
 
         ITEMS.register(bus);
     }

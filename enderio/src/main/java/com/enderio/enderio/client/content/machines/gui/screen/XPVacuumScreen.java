@@ -16,7 +16,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class XPVacuumScreen extends MachineScreen<XPVacuumMenu> {
 
-    private static final Identifier XP_VACUUM_BG = EnderIO.rl("textures/gui/screen/xp_vacuum.png");
+    private static final Identifier XP_VACUUM_BG = EnderIO.id("textures/gui/screen/xp_vacuum.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
 

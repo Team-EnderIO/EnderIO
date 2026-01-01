@@ -43,6 +43,6 @@ public class ToolsLang {
     }
 
     private static MutableComponent create(String type, String path) {
-        return Component.translatable(Util.makeDescriptionId(type, EnderIO.rl("tool/" + path)));
+        return Component.translatable(Util.makeDescriptionId(type, EnderIO.id("tool/" + path)));
     }
 }

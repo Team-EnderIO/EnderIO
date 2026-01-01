@@ -27,7 +27,7 @@ import org.joml.Matrix3x2fStack;
 public class NiardScreen extends MachineScreen<NiardMenu> {
 
 
-    public static final Identifier BG_TEXTURE = EnderIO.rl("textures/gui/screen/niard.png");
+    public static final Identifier BG_TEXTURE = EnderIO.id("textures/gui/screen/niard.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
 

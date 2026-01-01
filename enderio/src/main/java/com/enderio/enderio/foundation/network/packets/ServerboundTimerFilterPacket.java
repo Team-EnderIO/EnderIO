@@ -8,7 +8,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 public record ServerboundTimerFilterPacket(int ticks, int maxTicks) implements CustomPacketPayload {
 
-    public static final Type<ServerboundTimerFilterPacket> TYPE = new Type<>(EnderIO.rl("timer_filter_packet"));
+    public static final Type<ServerboundTimerFilterPacket> TYPE = new Type<>(EnderIO.id("timer_filter_packet"));
 
     public static final StreamCodec<ByteBuf, ServerboundTimerFilterPacket> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.VAR_INT,

@@ -37,7 +37,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
-    public static final Identifier TEXTURE = EnderIO.rl("textures/gui/conduit.png");
+    public static final Identifier TEXTURE = EnderIO.id("textures/gui/conduit.png");
     private static final int WIDTH = 206;
     private static final int HEIGHT = 195;
 
@@ -167,7 +167,7 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
 
     private class ScreenHelper implements ConduitScreenHelper {
 
-        private static final Identifier ICON_CONFIGURE = EnderIO.rl("icon/configure");
+        private static final Identifier ICON_CONFIGURE = EnderIO.id("icon/configure");
 
         @Override
         public AbstractWidget addCheckbox(int x, int y, Supplier<Boolean> getter, Consumer<Boolean> setter) {

@@ -8,23 +8,23 @@ import net.minecraft.resources.ResourceKey;
 public class EIOConduits {
 
     public static final ResourceKey<Conduit<?, ?>> ENERGY = ResourceKey.create(EnderIORegistries.Keys.CONDUIT,
-            EnderIO.rl("energy"));
+            EnderIO.id("energy"));
     public static final ResourceKey<Conduit<?, ?>> ENHANCED_ENERGY = ResourceKey
-            .create(EnderIORegistries.Keys.CONDUIT, EnderIO.rl("enhanced_energy"));
+            .create(EnderIORegistries.Keys.CONDUIT, EnderIO.id("enhanced_energy"));
     public static final ResourceKey<Conduit<?, ?>> ENDER_ENERGY = ResourceKey.create(EnderIORegistries.Keys.CONDUIT,
-            EnderIO.rl("ender_energy"));
+            EnderIO.id("ender_energy"));
     public static final ResourceKey<Conduit<?, ?>> REDSTONE = ResourceKey.create(EnderIORegistries.Keys.CONDUIT,
-            EnderIO.rl("redstone"));
+            EnderIO.id("redstone"));
     public static final ResourceKey<Conduit<?, ?>> FLUID = ResourceKey.create(EnderIORegistries.Keys.CONDUIT,
-            EnderIO.rl("fluid"));
+            EnderIO.id("fluid"));
     public static final ResourceKey<Conduit<?, ?>> PRESSURIZED_FLUID = ResourceKey
-            .create(EnderIORegistries.Keys.CONDUIT, EnderIO.rl("pressurized_fluid"));
+            .create(EnderIORegistries.Keys.CONDUIT, EnderIO.id("pressurized_fluid"));
     public static final ResourceKey<Conduit<?, ?>> ENDER_FLUID = ResourceKey.create(EnderIORegistries.Keys.CONDUIT,
-            EnderIO.rl("ender_fluid"));
+            EnderIO.id("ender_fluid"));
     public static final ResourceKey<Conduit<?, ?>> ITEM = ResourceKey.create(EnderIORegistries.Keys.CONDUIT,
-            EnderIO.rl("item"));
+            EnderIO.id("item"));
     public static final ResourceKey<Conduit<?, ?>> ENHANCED_ITEM = ResourceKey.create(EnderIORegistries.Keys.CONDUIT,
-            EnderIO.rl("enhanced_item"));
+            EnderIO.id("enhanced_item"));
     public static final ResourceKey<Conduit<?, ?>> ENDER_ITEM = ResourceKey.create(EnderIORegistries.Keys.CONDUIT,
-            EnderIO.rl("ender_item"));
+            EnderIO.id("ender_item"));
 }

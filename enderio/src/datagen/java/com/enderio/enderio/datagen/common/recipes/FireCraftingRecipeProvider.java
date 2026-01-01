@@ -17,7 +17,7 @@ import java.util.Optional;
 public class FireCraftingRecipeProvider extends SubRecipeProvider {
     @Override
     public void buildRecipes(HolderLookup.Provider registries, RecipeOutput recipeOutput) {
-        recipeOutput.accept(ResourceKey.create(Registries.RECIPE, EnderIO.rl("fire_crafting/bedrock_infinity")),
+        recipeOutput.accept(ResourceKey.create(Registries.RECIPE, EnderIO.id("fire_crafting/bedrock_infinity")),
                 new FireCraftingRecipe(List.of(
                         new FireCraftingRecipe.Result(EIOItems.GRAINS_OF_INFINITY.get().getDefaultInstance(), 1, 3,
                                 0.8f),
@@ -25,7 +25,7 @@ public class FireCraftingRecipeProvider extends SubRecipeProvider {
                         List.of(Blocks.BEDROCK), List.of(), List.of(Level.OVERWORLD), Optional.empty()),
                 null);
 
-        recipeOutput.accept(ResourceKey.create(Registries.RECIPE, EnderIO.rl("fire_crafting/deepslate_infinity")),
+        recipeOutput.accept(ResourceKey.create(Registries.RECIPE, EnderIO.id("fire_crafting/deepslate_infinity")),
                 new FireCraftingRecipe(
                         List.of(new FireCraftingRecipe.Result(EIOItems.GRAINS_OF_INFINITY.get().getDefaultInstance(), 1,
                                 1, 0.4f)),

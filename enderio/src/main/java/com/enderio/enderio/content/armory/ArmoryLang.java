@@ -15,6 +15,6 @@ public class ArmoryLang {
     }
 
     private static MutableComponent create(String type, String path) {
-        return Component.translatable(Util.makeDescriptionId(type, EnderIO.rl("armory/" + path)));
+        return Component.translatable(Util.makeDescriptionId(type, EnderIO.id("armory/" + path)));
     }
 }

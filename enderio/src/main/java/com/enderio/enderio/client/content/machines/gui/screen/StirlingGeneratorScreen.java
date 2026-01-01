@@ -21,7 +21,7 @@ import java.text.DecimalFormat;
 
 public class StirlingGeneratorScreen extends MachineScreen<StirlingGeneratorMenu> {
     private static final DecimalFormat FORMAT = new DecimalFormat("0.00");
-    public static final Identifier BG_TEXTURE = EnderIO.rl("textures/gui/screen/stirling_generator.png");
+    public static final Identifier BG_TEXTURE = EnderIO.id("textures/gui/screen/stirling_generator.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
 

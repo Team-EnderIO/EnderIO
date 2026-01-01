@@ -13,7 +13,7 @@ import org.joml.Vector2i;
 public class RedstoneDoubleChannelFilterScreen extends EIOScreen<RedstoneDoubleChannelFilterMenu> {
 
     private static final Vector2i BG_SIZE = new Vector2i(183, 201);
-    private static final Identifier BG_TEXTURE = EnderIO.rl("textures/gui/40/item_filter.png");
+    private static final Identifier BG_TEXTURE = EnderIO.id("textures/gui/40/item_filter.png");
 
     public RedstoneDoubleChannelFilterScreen(RedstoneDoubleChannelFilterMenu pMenu, Inventory pPlayerInventory,
             Component pTitle) {

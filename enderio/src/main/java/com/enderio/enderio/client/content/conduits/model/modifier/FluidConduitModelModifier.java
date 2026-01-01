@@ -25,7 +25,7 @@ import java.util.List;
 
 public class FluidConduitModelModifier implements ConduitModelModifier {
 
-    private static final Identifier FLUID_MODEL = EnderIO.rl("block/extra/fluids");
+    private static final Identifier FLUID_MODEL = EnderIO.id("block/extra/fluids");
 
     public List<BlockModelPart> createConnectionQuads(ModelBaker baker, ModelState modelState, Holder<Conduit<?, ?>> conduit, @Nullable CompoundTag extraWorldData) {
         if (!(conduit.value() instanceof FluidConduit fluidConduit)) {

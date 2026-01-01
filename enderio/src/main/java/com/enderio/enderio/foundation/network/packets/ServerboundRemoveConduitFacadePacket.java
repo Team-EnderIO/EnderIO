@@ -8,7 +8,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 public record ServerboundRemoveConduitFacadePacket(BlockPos pos) implements CustomPacketPayload {
 
-    public static final Type<ServerboundRemoveConduitFacadePacket> TYPE = new Type<>(EnderIO.rl("remove_facade"));
+    public static final Type<ServerboundRemoveConduitFacadePacket> TYPE = new Type<>(EnderIO.id("remove_facade"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundRemoveConduitFacadePacket> STREAM_CODEC = StreamCodec.composite(
         BlockPos.STREAM_CODEC,

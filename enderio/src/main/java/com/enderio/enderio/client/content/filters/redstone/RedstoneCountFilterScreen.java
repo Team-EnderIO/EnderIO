@@ -16,7 +16,7 @@ import org.joml.Vector2i;
 
 public class RedstoneCountFilterScreen extends EIOScreen<RedstoneCountFilterMenu> {
     private static final Vector2i BG_SIZE = new Vector2i(183, 201);
-    private static final Identifier BG_TEXTURE = EnderIO.rl("textures/gui/40/item_filter.png");
+    private static final Identifier BG_TEXTURE = EnderIO.id("textures/gui/40/item_filter.png");
 
     public RedstoneCountFilterScreen(RedstoneCountFilterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);

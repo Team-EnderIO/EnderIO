@@ -16,7 +16,7 @@ public class VatReagent {
         Codec.DOUBLE);
 
     public static final AdvancedDataMapType<Item, Map<TagKey<Item>, Double>, DataMapValueRemover.Default<Map<TagKey<Item>, Double>, Item>> DATA_MAP = AdvancedDataMapType
-        .builder(EnderIO.rl("vat_reagent"), Registries.ITEM, CODEC)
+        .builder(EnderIO.id("vat_reagent"), Registries.ITEM, CODEC)
         .synced(CODEC, true)
         .build();
 

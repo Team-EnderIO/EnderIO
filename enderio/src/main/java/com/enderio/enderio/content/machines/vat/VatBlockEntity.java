@@ -51,7 +51,7 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
     public static final TankAccess OUTPUT_TANK = new TankAccess();
     public static final MultiSlotAccess REAGENTS = new MultiSlotAccess();
 
-    private static final Identifier EMPTY = EnderIO.rl("");
+    private static final Identifier EMPTY = EnderIO.id("");
 
     private final MachineFluidHandler fluidHandler;
     private final CraftingMachineTaskHost<FermentingRecipe, FermentingRecipe.Input> craftingTaskHost;

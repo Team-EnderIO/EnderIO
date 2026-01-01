@@ -15,8 +15,8 @@ import net.minecraft.resources.Identifier;
 
 public class EnergyConduitScreenType extends IOConduitScreenType<EnergyConduitConnectionConfig> {
 
-    private static final Identifier ICON_INCREASE = EnderIO.rl("icon/increase");
-    private static final Identifier ICON_DECREASE = EnderIO.rl("icon/decrease");
+    private static final Identifier ICON_INCREASE = EnderIO.id("icon/increase");
+    private static final Identifier ICON_DECREASE = EnderIO.id("icon/decrease");
 
     @Override
     public void renderLabels(ConduitMenuDataAccess<EnergyConduitConnectionConfig> dataAccess, GuiGraphics guiGraphics,

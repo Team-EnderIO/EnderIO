@@ -14,6 +14,6 @@ public class GlassLang {
     }
 
     private static MutableComponent create(String type, String path) {
-        return Component.translatable(Util.makeDescriptionId(type, EnderIO.rl("glass/" + path)));
+        return Component.translatable(Util.makeDescriptionId(type, EnderIO.id("glass/" + path)));
     }
 }

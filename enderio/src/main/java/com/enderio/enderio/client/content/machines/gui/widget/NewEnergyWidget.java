@@ -17,7 +17,7 @@ import java.util.function.Supplier;
 
 public class NewEnergyWidget extends EIOWidget {
 
-    protected static final Identifier ENERGY_BAR_FILL_SPRITE = EnderIO.rl("widget/energy_bar_fill");
+    protected static final Identifier ENERGY_BAR_FILL_SPRITE = EnderIO.id("widget/energy_bar_fill");
 
     private final Supplier<EnergyStorageInfo> storageSupplier;
 

@@ -12,7 +12,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 public class EnchanterScreen extends EnderContainerScreen<EnchanterMenu> {
-    public static final Identifier BG_TEXTURE = EnderIO.rl("textures/gui/screen/enchanter.png");
+    public static final Identifier BG_TEXTURE = EnderIO.id("textures/gui/screen/enchanter.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
 

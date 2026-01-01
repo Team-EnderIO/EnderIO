@@ -14,7 +14,7 @@ import java.util.List;
 public record ClientboundConduitListPacket(int containerId, List<Holder<Conduit<?, ?>>> conduits)
         implements CustomPacketPayload {
 
-    public static final Type<ClientboundConduitListPacket> TYPE = new Type<>(EnderIO.rl("conduit_list"));
+    public static final Type<ClientboundConduitListPacket> TYPE = new Type<>(EnderIO.id("conduit_list"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundConduitListPacket> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT, ClientboundConduitListPacket::containerId,

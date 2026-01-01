@@ -13,7 +13,7 @@ import java.util.Map;
 @EventBusSubscriber
 public class UseGliderAdvancementBenefit {
 
-    public static final Identifier USE_GLIDER_ADVANCEMENT = EnderIO.rl("adventure/use_glider");
+    public static final Identifier USE_GLIDER_ADVANCEMENT = EnderIO.id("adventure/use_glider");
 
     public static final Map<Integer, Item> PLAYER_BOUND_GLIDERS = new HashMap<>();
 

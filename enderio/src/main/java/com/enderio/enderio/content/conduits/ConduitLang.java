@@ -86,6 +86,6 @@ public class ConduitLang {
     }
 
     private static MutableComponent create(String type, String path) {
-        return Component.translatable(Util.makeDescriptionId(type, EnderIO.rl("conduit/" + path)));
+        return Component.translatable(Util.makeDescriptionId(type, EnderIO.id("conduit/" + path)));
     }
 }

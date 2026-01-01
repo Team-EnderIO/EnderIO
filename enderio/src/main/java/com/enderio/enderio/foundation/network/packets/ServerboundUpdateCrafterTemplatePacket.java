@@ -11,7 +11,7 @@ import java.util.List;
 
 public record ServerboundUpdateCrafterTemplatePacket(List<ItemStack> recipeInputs) implements CustomPacketPayload {
 
-    public static final Type<ServerboundUpdateCrafterTemplatePacket> TYPE = new Type<>(EnderIO.rl("update_crafter_template"));
+    public static final Type<ServerboundUpdateCrafterTemplatePacket> TYPE = new Type<>(EnderIO.id("update_crafter_template"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundUpdateCrafterTemplatePacket> STREAM_CODEC =
         ItemStack.OPTIONAL_STREAM_CODEC.apply(ByteBufCodecs.list())

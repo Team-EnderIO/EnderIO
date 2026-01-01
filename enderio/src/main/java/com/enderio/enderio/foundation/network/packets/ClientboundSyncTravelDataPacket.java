@@ -7,7 +7,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 public record ClientboundSyncTravelDataPacket(TravelTargetSavedData data) implements CustomPacketPayload {
-    public static final Type<ClientboundSyncTravelDataPacket> TYPE = new Type<>(EnderIO.rl("sync_travel_data"));
+    public static final Type<ClientboundSyncTravelDataPacket> TYPE = new Type<>(EnderIO.id("sync_travel_data"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundSyncTravelDataPacket> STREAM_CODEC =
         TravelTargetSavedData.STREAM_CODEC.map(ClientboundSyncTravelDataPacket::new, ClientboundSyncTravelDataPacket::data);

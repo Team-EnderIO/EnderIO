@@ -17,7 +17,7 @@ import java.util.Optional;
 
 public class PaintingTrigger extends SimpleCriterionTrigger<PaintingTrigger.TriggerInstance> {
 
-    static final Identifier ID = EnderIO.rl("create_painted_block");
+    static final Identifier ID = EnderIO.id("create_painted_block");
     public Identifier getId() {
         return ID;
     }

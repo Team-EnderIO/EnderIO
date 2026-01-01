@@ -18,7 +18,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class WirelessChargerScreen extends MachineScreen<WirelessChargerMenu> {
 
-    private static final Identifier BG_TEXTURE = EnderIO.rl("textures/gui/screen/wireless_charger.png");
+    private static final Identifier BG_TEXTURE = EnderIO.id("textures/gui/screen/wireless_charger.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
 

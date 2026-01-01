@@ -27,11 +27,11 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class SagMillScreen extends MachineScreen<SagMillMenu> {
-    public static final Identifier BG_TEXTURE = EnderIO.rl("textures/gui/screen/sag_mill.png");
+    public static final Identifier BG_TEXTURE = EnderIO.id("textures/gui/screen/sag_mill.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 208;
 
-    private static final Identifier PROGRESS_SPRITE = EnderIO.rl("screen/sag_mill/progress");
+    private static final Identifier PROGRESS_SPRITE = EnderIO.id("screen/sag_mill/progress");
     private static final Identifier BALL_DURABILITY_SPRITE = EnderIOAPI.rl("screen/sag_mill/grinding_ball_durability");
 
     public SagMillScreen(SagMillMenu pMenu, Inventory pPlayerInventory, Component pTitle) {

@@ -15,7 +15,7 @@ import org.joml.Vector2i;
 public class RedstoneTimerFilterScreen extends EIOScreen<RedstoneTimerFilterMenu> {
 
     private static final Vector2i BG_SIZE = new Vector2i(183, 201);
-    private static final Identifier BG_TEXTURE = EnderIO.rl("textures/gui/40/item_filter.png");
+    private static final Identifier BG_TEXTURE = EnderIO.id("textures/gui/40/item_filter.png");
 
     public RedstoneTimerFilterScreen(RedstoneTimerFilterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);

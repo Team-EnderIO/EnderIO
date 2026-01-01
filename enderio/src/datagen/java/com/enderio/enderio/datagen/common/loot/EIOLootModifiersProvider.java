@@ -59,6 +59,6 @@ public class EIOLootModifiersProvider extends GlobalLootModifierProvider {
         add(modifierName,
                 new AddTableLootModifier(
                         new LootItemCondition[] { AnyOfCondition.anyOf(mappedTargetConditions).build() },
-                        ResourceKey.create(Registries.LOOT_TABLE, EnderIO.rl("chests/" + modifierName))));
+                        ResourceKey.create(Registries.LOOT_TABLE, EnderIO.id("chests/" + modifierName))));
     }
 }

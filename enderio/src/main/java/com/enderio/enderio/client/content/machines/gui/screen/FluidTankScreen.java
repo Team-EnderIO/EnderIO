@@ -14,7 +14,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 public class FluidTankScreen extends MachineScreen<FluidTankMenu> {
-    public static final Identifier BG_TEXTURE = EnderIO.rl("textures/gui/screen/tank.png");
+    public static final Identifier BG_TEXTURE = EnderIO.id("textures/gui/screen/tank.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
 

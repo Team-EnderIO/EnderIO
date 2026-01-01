@@ -18,7 +18,7 @@ import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 public class CoordinateMenuScreen extends EnderContainerScreen<CoordinateMenu> {
 
-    private static final Identifier BG_TEXTURE = EnderIO.rl("textures/gui/40/location_printout.png");
+    private static final Identifier BG_TEXTURE = EnderIO.id("textures/gui/40/location_printout.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 116;
 

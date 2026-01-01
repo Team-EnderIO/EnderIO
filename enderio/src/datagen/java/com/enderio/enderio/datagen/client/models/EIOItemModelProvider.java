@@ -268,13 +268,13 @@ public class EIOItemModelProvider extends ModelProvider {
 
     public void generateEnderios(ItemModelGenerators itemModelGenerators, Item item) {
         ItemModel.Unbaked plain = ItemModelUtils.plainModel(ModelLocationUtils.getModelLocation(item));
-        ItemModel.Unbaked soiredne = ItemModelUtils.plainModel(EnderIO.rl("item/soiredne"));
+        ItemModel.Unbaked soiredne = ItemModelUtils.plainModel(EnderIO.id("item/soiredne"));
         itemModelGenerators.itemModelOutput.accept(item, ItemModelUtils.conditional(new EnderiosItem.Soiredne(), soiredne, plain));
     }
 
     public void generateSoulVial(ItemModelGenerators itemModelGenerators, Item item) {
         ItemModel.Unbaked plain = ItemModelUtils.plainModel(ModelLocationUtils.getModelLocation(item));
-        ItemModel.Unbaked filled = ItemModelUtils.plainModel(EnderIO.rl("item/soul_vial_filled"));
+        ItemModel.Unbaked filled = ItemModelUtils.plainModel(EnderIO.id("item/soul_vial_filled"));
         itemModelGenerators.itemModelOutput.accept(item, ItemModelUtils.conditional(new SoulVialItem.Filled(), filled, plain));
     }
 }

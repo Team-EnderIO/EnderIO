@@ -15,11 +15,11 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 public class SlicerScreen extends MachineScreen<SlicerMenu> {
-    public static final Identifier BG_TEXTURE = EnderIO.rl("textures/gui/screen/slice_and_splice.png");
+    public static final Identifier BG_TEXTURE = EnderIO.id("textures/gui/screen/slice_and_splice.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 208;
 
-    private static final Identifier PROGRESS_SPRITE = EnderIO.rl("screen/slice_and_splice/progress");
+    private static final Identifier PROGRESS_SPRITE = EnderIO.id("screen/slice_and_splice/progress");
 
     public SlicerScreen(SlicerMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);

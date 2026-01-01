@@ -29,7 +29,7 @@ public class PoweredSpawnerScreen extends MachineScreen<PoweredSpawnerMenu> {
     private static final int WIDTH = 176;
     private static final int HEIGHT = 187;
 
-    private static final Identifier SPAWN_PROGRESS_SPRITE = EnderIO.rl("screen/powered_spawner/spawn_progress");
+    private static final Identifier SPAWN_PROGRESS_SPRITE = EnderIO.id("screen/powered_spawner/spawn_progress");
     private static final Identifier CAPTURE_PROGRESS_SPRITE = EnderIOAPI
             .rl("screen/powered_spawner/capture_progress");
 

@@ -16,11 +16,11 @@ public class WeatherChangeRecipeProvider extends SubRecipeProvider {
 
     @Override
     public void buildRecipes(HolderLookup.Provider registries, RecipeOutput recipeOutput) {
-        build(EnderIO.rl("clear"), EIOFluids.LIQUID_SUNSHINE.source().get(), 1000, WeatherChangeRecipe.WeatherMode.CLEAR,
+        build(EnderIO.id("clear"), EIOFluids.LIQUID_SUNSHINE.source().get(), 1000, WeatherChangeRecipe.WeatherMode.CLEAR,
                 recipeOutput);
-        build(EnderIO.rl("rain"), EIOFluids.CLOUD_SEED.source().get(), 1000, WeatherChangeRecipe.WeatherMode.RAIN,
+        build(EnderIO.id("rain"), EIOFluids.CLOUD_SEED.source().get(), 1000, WeatherChangeRecipe.WeatherMode.RAIN,
                 recipeOutput);
-        build(EnderIO.rl("lightning"), EIOFluids.CLOUD_SEED_CONCENTRATED.source().get(), 1000,
+        build(EnderIO.id("lightning"), EIOFluids.CLOUD_SEED_CONCENTRATED.source().get(), 1000,
                 WeatherChangeRecipe.WeatherMode.LIGHTNING, recipeOutput);
 
     }

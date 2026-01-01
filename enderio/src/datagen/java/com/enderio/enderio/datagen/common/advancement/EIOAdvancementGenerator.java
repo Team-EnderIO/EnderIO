@@ -30,13 +30,13 @@ public class EIOAdvancementGenerator implements AdvancementSubProvider{
             .display(Items.DIAMOND_BLOCK, AdvancementsLang.RICH_ADVANCEMENT_TITLE, AdvancementsLang.RICH_ADVANCEMENT_DESCRIPTION, null, AdvancementType.TASK, true,
                 true, false)
             .addCriterion("paint", PaintingTrigger.TriggerInstance.painted(Blocks.DIAMOND_BLOCK))
-            .save(consumer, EnderIO.rl("adventure/rich").toString());
+            .save(consumer, EnderIO.id("adventure/rich").toString());
 
         Advancement.Builder.advancement()
             .parent(rich)
             .display(Items.NETHERITE_BLOCK, AdvancementsLang.RICHER_ADVANCEMENT_TITLE, AdvancementsLang.RICHER_ADVANCEMENT_DESCRIPTION, null, AdvancementType.TASK, true,
                 true, false)
             .addCriterion("paint", PaintingTrigger.TriggerInstance.painted(Blocks.NETHERITE_BLOCK))
-            .save(consumer, EnderIO.rl("adventure/richer").toString());
+            .save(consumer, EnderIO.id("adventure/richer").toString());
     }
 }

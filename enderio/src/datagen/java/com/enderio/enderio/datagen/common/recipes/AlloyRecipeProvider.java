@@ -72,7 +72,7 @@ public class AlloyRecipeProvider extends SubRecipeProvider {
         build(new ItemStack(EIOItems.PULSATING_ALLOY_INGOT.get()),
                 List.of(sizedFromTag(Tags.Items.INGOTS_IRON, 1), sizedFromTag(Tags.Items.ENDER_PEARLS, 1)),
                 4800, 0.3f, recipeOutput);
-        build(EnderIO.rl("dark_steel_ingot_with_coal"),
+        build(EnderIO.id("dark_steel_ingot_with_coal"),
                 List.of(sizedFromTag(Tags.Items.INGOTS_IRON, 1), SizedIngredient.of(Items.COAL, 2),
                     sizedFromTag(Tags.Items.OBSIDIANS, 1)),
                 new ItemStack(EIOItems.DARK_STEEL_INGOT.get()), 3200, 0.3f, recipeOutput);
@@ -219,7 +219,7 @@ public class AlloyRecipeProvider extends SubRecipeProvider {
 
     protected void build(ItemStack output, List<SizedIngredient> inputs, int energy, float experience,
             RecipeOutput recipeOutput) {
-        build(EnderIO.rl("alloy_smelting/" + BuiltInRegistries.ITEM.getKey(output.getItem()).getPath()), inputs,
+        build(EnderIO.id("alloy_smelting/" + BuiltInRegistries.ITEM.getKey(output.getItem()).getPath()), inputs,
                 output, energy, experience, recipeOutput);
     }
 

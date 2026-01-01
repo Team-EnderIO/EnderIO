@@ -9,7 +9,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class RelocatorObeliskScreen extends ObeliskScreen<RelocatorObeliskBlockEntity, RelocatorObeliskMenu> {
 
-    public static final Identifier BG_TEXTURE = EnderIO.rl("textures/gui/screen/relocator.png");
+    public static final Identifier BG_TEXTURE = EnderIO.id("textures/gui/screen/relocator.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
 

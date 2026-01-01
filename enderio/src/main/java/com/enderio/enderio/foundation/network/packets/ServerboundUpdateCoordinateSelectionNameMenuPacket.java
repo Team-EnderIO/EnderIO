@@ -11,7 +11,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 public record ServerboundUpdateCoordinateSelectionNameMenuPacket(int containerId, String name)
     implements CustomMenuPacketPayload<CoordinateMenu> {
 
-    public static final Type<ServerboundUpdateCoordinateSelectionNameMenuPacket> TYPE = new Type<>(EnderIO.rl("update_coordinate_selection_name"));
+    public static final Type<ServerboundUpdateCoordinateSelectionNameMenuPacket> TYPE = new Type<>(EnderIO.id("update_coordinate_selection_name"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundUpdateCoordinateSelectionNameMenuPacket> STREAM_CODEC
         = StreamCodec.composite(

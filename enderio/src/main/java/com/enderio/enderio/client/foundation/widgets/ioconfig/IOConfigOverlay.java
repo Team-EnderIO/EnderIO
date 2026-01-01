@@ -63,8 +63,8 @@ public class IOConfigOverlay extends BaseOverlay {
     private static final BlockPos POS = new BlockPos(1, 1, 1);
     private static final int Z_OFFSET = 100;
     private static final int OVERLAY_Z_OFFSET = 500;
-    private static final Identifier IO_CONFIG_OVERLAY = EnderIO.rl("buttons/io_config_overlay");
-    private static final Identifier SELECTED_ICON = EnderIO.rl("block/overlay/selected_face");
+    private static final Identifier IO_CONFIG_OVERLAY = EnderIO.id("buttons/io_config_overlay");
+    private static final Identifier SELECTED_ICON = EnderIO.id("block/overlay/selected_face");
     private static final Minecraft MINECRAFT = Minecraft.getInstance();
     private static MultiBufferSource.BufferSource ghostBuffers;
     private static MultiBufferSource.BufferSource solidBuffers;
@@ -79,7 +79,7 @@ public class IOConfigOverlay extends BaseOverlay {
     private Optional<SelectedFace> selection = Optional.empty();
 
     // Neighbour Button
-    public static final Identifier NEIGHBOURS_BTN = EnderIO.rl("buttons/neighbour");
+    public static final Identifier NEIGHBOURS_BTN = EnderIO.id("buttons/neighbour");
     private final Rect2i neighBtnRect;
 
     public IOConfigOverlay(int x, int y, int width, int height, List<BlockPos> _configurable) {

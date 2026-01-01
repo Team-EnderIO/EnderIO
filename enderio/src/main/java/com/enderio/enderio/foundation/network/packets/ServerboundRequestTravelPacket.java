@@ -9,7 +9,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 public record ServerboundRequestTravelPacket(BlockPos pos) implements CustomPacketPayload {
 
-    public static final Type<ServerboundRequestTravelPacket> TYPE = new Type<>(EnderIO.rl("request_travel"));
+    public static final Type<ServerboundRequestTravelPacket> TYPE = new Type<>(EnderIO.id("request_travel"));
 
     public static final StreamCodec<ByteBuf, ServerboundRequestTravelPacket> STREAM_CODEC =
         BlockPos.STREAM_CODEC.map(ServerboundRequestTravelPacket::new, ServerboundRequestTravelPacket::pos);

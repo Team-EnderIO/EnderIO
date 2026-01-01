@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class NewCapacitorEnergyWidget extends NewEnergyWidget {
-    private static final Identifier ENERGY_BAR_ERROR_SPRITE = EnderIO.rl("widget/energy_bar_error");
+    private static final Identifier ENERGY_BAR_ERROR_SPRITE = EnderIO.id("widget/energy_bar_error");
 
     private final Supplier<Boolean> cap;
 

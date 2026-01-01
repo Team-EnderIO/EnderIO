@@ -560,7 +560,7 @@ public class MachineRecipeProvider extends SubRecipeProvider {
             ShapelessRecipeBuilder.shapeless(items, RecipeCategory.MISC, block)
                     .requires(block)
                     .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(block))
-                    .save(recipeOutput, EnderIO.rl("erase_" + block.getId().getPath()).toString());
+                    .save(recipeOutput, EnderIO.id("erase_" + block.getId().getPath()).toString());
         }
     }
 }

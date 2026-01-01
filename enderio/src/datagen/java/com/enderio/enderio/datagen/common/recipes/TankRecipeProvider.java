@@ -67,12 +67,12 @@ public class TankRecipeProvider extends SubRecipeProvider {
     }
 
     protected void buildEmptying(Ingredient input, ItemLike output, FluidStack fluid, RecipeOutput recipeOutput) {
-        recipeOutput.accept(ResourceKey.create(Registries.RECIPE, EnderIO.rl("tank_empty/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath())),
+        recipeOutput.accept(ResourceKey.create(Registries.RECIPE, EnderIO.id("tank_empty/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath())),
                 new TankRecipe(input, new ItemStack(output), fluid, TankRecipe.Mode.EMPTY), null);
     }
 
     protected void buildFilling(Ingredient input, ItemLike output, FluidStack fluid, RecipeOutput recipeOutput) {
-        recipeOutput.accept(ResourceKey.create(Registries.RECIPE, EnderIO.rl("tank_fill/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath())),
+        recipeOutput.accept(ResourceKey.create(Registries.RECIPE, EnderIO.id("tank_fill/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath())),
                 new TankRecipe(input, new ItemStack(output), fluid, TankRecipe.Mode.FILL), null);
     }
 

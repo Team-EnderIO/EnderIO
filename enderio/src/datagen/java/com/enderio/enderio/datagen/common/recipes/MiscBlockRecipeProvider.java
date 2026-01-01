@@ -230,7 +230,7 @@ public class MiscBlockRecipeProvider extends SubRecipeProvider {
                 .requires(inverted.get())
                 .requires(Blocks.REDSTONE_TORCH)
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Blocks.LEVER))
-                .save(recipeOutput, EnderIO.rl(baseName + "_from_inv").toString());
+                .save(recipeOutput, EnderIO.id(baseName + "_from_inv").toString());
 
         // Previous upgrade recipe
         if (previous != null) {
@@ -238,7 +238,7 @@ public class MiscBlockRecipeProvider extends SubRecipeProvider {
                     .requires(previous.get())
                     .requires(Tags.Items.DUSTS_REDSTONE)
                     .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Blocks.LEVER))
-                    .save(recipeOutput, EnderIO.rl(baseName + "_from_prev").toString());
+                    .save(recipeOutput, EnderIO.id(baseName + "_from_prev").toString());
         }
 
         // Main inverted recipe.
@@ -254,7 +254,7 @@ public class MiscBlockRecipeProvider extends SubRecipeProvider {
                 .requires(base.get())
                 .requires(Blocks.REDSTONE_TORCH)
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Blocks.LEVER))
-                .save(recipeOutput, EnderIO.rl(invertedName + "_from_base").toString());
+                .save(recipeOutput, EnderIO.id(invertedName + "_from_base").toString());
 
         // Previous upgrade recipe
         if (previousInverted != null) {
@@ -262,7 +262,7 @@ public class MiscBlockRecipeProvider extends SubRecipeProvider {
                     .requires(previousInverted.get())
                     .requires(Ingredient.of(items.getOrThrow(Tags.Items.DUSTS_REDSTONE)))
                     .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Blocks.LEVER))
-                    .save(recipeOutput, EnderIO.rl(invertedName + "_from_prev").toString());
+                    .save(recipeOutput, EnderIO.id(invertedName + "_from_prev").toString());
         }
     }
 }

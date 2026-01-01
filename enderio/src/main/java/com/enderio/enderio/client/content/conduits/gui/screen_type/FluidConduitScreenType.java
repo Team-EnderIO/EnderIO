@@ -36,13 +36,13 @@ import java.util.function.Supplier;
 
 public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConnectionConfig> {
 
-    private static final Identifier ICON_ROUND_ROBIN_ENABLED = EnderIO.rl("icon/round_robin_enabled");
-    private static final Identifier ICON_ROUND_ROBIN_DISABLED = EnderIO.rl("icon/round_robin_disabled");
-    private static final Identifier ICON_SELF_FEED_ENABLED = EnderIO.rl("icon/self_feed_enabled");
-    private static final Identifier ICON_SELF_FEED_DISABLED = EnderIO.rl("icon/self_feed_disabled");
+    private static final Identifier ICON_ROUND_ROBIN_ENABLED = EnderIO.id("icon/round_robin_enabled");
+    private static final Identifier ICON_ROUND_ROBIN_DISABLED = EnderIO.id("icon/round_robin_disabled");
+    private static final Identifier ICON_SELF_FEED_ENABLED = EnderIO.id("icon/self_feed_enabled");
+    private static final Identifier ICON_SELF_FEED_DISABLED = EnderIO.id("icon/self_feed_disabled");
 
-    private static final Identifier ICON_INCREASE = EnderIO.rl("icon/increase");
-    private static final Identifier ICON_DECREASE = EnderIO.rl("icon/decrease");
+    private static final Identifier ICON_INCREASE = EnderIO.id("icon/increase");
+    private static final Identifier ICON_DECREASE = EnderIO.id("icon/decrease");
 
     @Override
     public void renderLabels(ConduitMenuDataAccess<FluidConduitConnectionConfig> dataAccess, GuiGraphics guiGraphics, int startX, int startY, Font font,
@@ -163,7 +163,7 @@ public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConn
     }
 
     private static class FluidWidget extends AbstractWidget {
-        private static final Identifier WIDGET_TEXTURE = EnderIO.rl("textures/gui/fluidbackground.png");
+        private static final Identifier WIDGET_TEXTURE = EnderIO.id("textures/gui/fluidbackground.png");
 
         private final Runnable onPress;
         private final Supplier<Fluid> currentFluid;
