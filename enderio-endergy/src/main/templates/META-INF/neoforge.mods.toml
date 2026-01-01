@@ -1,5 +1,3 @@
-modLoader="javafml"
-loaderVersion="${loader_version_range}"
 issueTrackerURL="https://github.com/Team-EnderIO/EnderIO/issues"
 license="CC0"
 

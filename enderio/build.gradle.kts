@@ -231,7 +231,6 @@ var generateModMetadata = tasks.register<ProcessResources>("generateModMetadata"
             "mod_version" to project.version,
             "minecraft_version_range" to libs.versions.minecraft.get(),
             "neoforge_version" to libs.versions.neoforge.get(),
-            "loader_version_range" to "[4,)", // TODO
             "mekanism_version_range" to libs.versions.mekanismMod.get(),
             "ae2_version_range" to libs.versions.ae2.get(),
             "refinedstorage_version_range" to libs.versions.refinedStorage.get(),
