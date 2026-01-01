@@ -1,6 +1,9 @@
 package com.enderio.enderio.content.machines.alloy;
 
 import com.enderio.core.common.blockentity.EnderBlockEntity;
+import com.enderio.core.common.storage.MultiResourceSlot;
+import com.enderio.core.common.storage.ResourceStorageLayout;
+import com.enderio.core.common.storage.SingleResourceSlot;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
@@ -14,10 +17,12 @@ import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.foundation.inventory.MultiSlotAccess;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import com.enderio.enderio.foundation.recipe.MachineRecipeCaches;
+import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.foundation.task.PoweredCraftingMachineTask;
 import com.enderio.enderio.foundation.task.host.CraftingMachineTaskHost;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
+import com.enderio.enderio.init.EIOItems;
 import com.enderio.enderio.init.EIORecipes;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.BlockPos;
@@ -63,6 +68,57 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     protected final AlloySmeltingMachineTaskHost craftingTaskHost;
 
     private static final Logger LOGGER = LogUtils.getLogger();
+
+    // TEST
+
+    private static final MultiResourceSlot<ItemResource> INPUT_SLOTS;
+    private static final SingleResourceSlot<ItemResource> OUTPUT_SLOT;
+    private static final SingleResourceSlot<ItemResource> CAPACITOR_SLOT;
+    private static final ResourceStorageLayout<ItemResource, AlloySmelterBlockEntity> INVENTORY_LAYOUT;
+
+    static {
+        var builder = new ResourceStorageLayout.Builder<ItemResource, AlloySmelterBlockEntity>();
+
+        INPUT_SLOTS = builder.inputSlots(3, slot -> slot.filter(AlloySmelterBlockEntity::canInsertTemp));
+        OUTPUT_SLOT = builder.outputSlot();
+        CAPACITOR_SLOT = builder.inputSlot(); // TODO: Would have a machine utility for capacitor filtering.
+
+        INVENTORY_LAYOUT = builder.build();
+
+        // How to use;
+
+        INVENTORY_LAYOUT.get(2).isValid(ItemResource.of(EIOItems.ADVANCED_ITEM_FILTER.get()), this);
+
+        INPUT_SLOTS.get(0).getAmountAsInt(getInventory());
+        // or shorter...
+        INPUT_SLOTS.getAmountAsInt(getInventory(), 0);
+
+        // and setting
+        OUTPUT_SLOT.set(getInventory(), ItemResource.of(EIOItems.CONDUCTIVE_ALLOY_BALL.get()), 12);
+    }
+
+    protected static boolean canInsertTemp(int slot, ItemResource resource, AlloySmelterBlockEntity blockEntity) {
+        if (blockEntity.getMode().canAlloy()) {
+            if (MachineRecipeCaches.ALLOY_SMELTING_ONLY_ALLOY.hasValidRecipeIf(blockEntity.getInventory(), INPUTS, slot, resource.toStack())) {
+                return true;
+            }
+        }
+
+        if (blockEntity.getMode().canSmelt()) {
+            // Check all items are the same, or will be
+            var currentStacks = INPUTS.getAccesses()
+                .stream()
+                .map(i -> i.isSlot(slot) ? resource : i.getResource(blockEntity.getInventory()))
+                .filter(i -> !i.isEmpty())
+                .toList();
+
+            if (currentStacks.stream().allMatch(i -> i.is(resource.getItem())) || currentStacks.size() == 1) {
+                return MachineRecipeCaches.ALLOY_SMELTING_ONLY_SMELTING.hasRecipe(List.of(resource.toStack()));
+            }
+        }
+
+        return false;
+    }
 
     public AlloySmelterBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
         super(EIOBlockEntities.ALLOY_SMELTER.get(), pWorldPosition, pBlockState, true, CapacitorSupport.REQUIRED,
