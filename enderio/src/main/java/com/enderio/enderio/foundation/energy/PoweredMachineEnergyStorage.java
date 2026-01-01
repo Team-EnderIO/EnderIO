@@ -188,12 +188,12 @@ public class PoweredMachineEnergyStorage implements EnergyHandler, ValueIOSerial
         public int insert(int amount, TransactionContext transactionContext) {
             TransferPreconditions.checkNonNegative(amount);
 
-            if (!wrapped.machine.energyIOMode().canOutput()) {
+            if (!wrapped.machine.energyIOMode().canInput()) {
                 return 0;
             }
 
             if (side != null && wrapped.machine.energyIOMode().respectIOConfig()
-                && !wrapped.machine.getIOMode(side).canOutput()) {
+                && !wrapped.machine.getIOMode(side).canInput()) {
                 return 0;
             }
 
@@ -204,12 +204,12 @@ public class PoweredMachineEnergyStorage implements EnergyHandler, ValueIOSerial
         public int extract(int amount, TransactionContext transactionContext) {
             TransferPreconditions.checkNonNegative(amount);
 
-            if (!wrapped.machine.energyIOMode().canInput()) {
+            if (!wrapped.machine.energyIOMode().canOutput()) {
                 return 0;
             }
 
             if (side != null && wrapped.machine.energyIOMode().respectIOConfig()
-                && !wrapped.machine.getIOMode(side).canInput()) {
+                && !wrapped.machine.getIOMode(side).canOutput()) {
                 return 0;
             }
 
