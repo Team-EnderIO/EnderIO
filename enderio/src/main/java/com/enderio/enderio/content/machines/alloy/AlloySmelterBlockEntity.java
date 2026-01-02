@@ -71,41 +71,6 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    // TEST
-
-    private static final MultiResourceSlotKey<ItemResource> INPUT_SLOTS = new MultiResourceSlotKey<>(3);
-    private static final SingleResourceSlotKey<ItemResource> OUTPUT_SLOT = new SingleResourceSlotKey<>();
-    private static final SingleResourceSlotKey<ItemResource> CAPACITOR_SLOT = new SingleResourceSlotKey<>();
-    private static final ItemStorageLayout<AlloySmelterBlockEntity> INVENTORY_LAYOUT =
-        ItemStorageLayout.<AlloySmelterBlockEntity>builder()
-            .inputSlots(INPUT_SLOTS, slot -> slot.filter(AlloySmelterBlockEntity::canInsertTemp))
-            .outputSlot(OUTPUT_SLOT)
-            .inputSlot(CAPACITOR_SLOT)
-            .build();
-
-    protected static boolean canInsertTemp(int slot, ItemResource resource, AlloySmelterBlockEntity blockEntity) {
-        if (blockEntity.getMode().canAlloy()) {
-            if (MachineRecipeCaches.ALLOY_SMELTING_ONLY_ALLOY.hasValidRecipeIf(blockEntity.getInventory(), INPUTS, slot, resource.toStack())) {
-                return true;
-            }
-        }
-
-        if (blockEntity.getMode().canSmelt()) {
-            // Check all items are the same, or will be
-            var currentStacks = INPUTS.getAccesses()
-                .stream()
-                .map(i -> i.isSlot(slot) ? resource : i.getResource(blockEntity.getInventory()))
-                .filter(i -> !i.isEmpty())
-                .toList();
-
-            if (currentStacks.stream().allMatch(i -> i.is(resource.getItem())) || currentStacks.size() == 1) {
-                return MachineRecipeCaches.ALLOY_SMELTING_ONLY_SMELTING.hasRecipe(List.of(resource.toStack()));
-            }
-        }
-
-        return false;
-    }
-
     public AlloySmelterBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
         super(EIOBlockEntities.ALLOY_SMELTER.get(), pWorldPosition, pBlockState, true, CapacitorSupport.REQUIRED,
                 EnergyIOMode.Input, CAPACITY, USAGE);

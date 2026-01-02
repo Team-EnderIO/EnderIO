@@ -9,12 +9,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
+import java.util.stream.IntStream;
 
 public abstract class ResourceStorageLayout<TResource extends Resource, TContext> {
 
@@ -38,38 +40,38 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
     // region Single Slot Access
 
     public TResource getResource(ResourceHandler<TResource> handler, SingleResourceSlotKey<TResource> key) {
-        return handler.getResource(getSingleIndex(key));
+        return handler.getResource(indexOf(key));
     }
 
     public int getAmountAsInt(ResourceHandler<TResource> handler, SingleResourceSlotKey<TResource> key) {
-        return handler.getAmountAsInt(getSingleIndex(key));
+        return handler.getAmountAsInt(indexOf(key));
     }
 
     public long getAmountAsLong(ResourceHandler<TResource> handler, SingleResourceSlotKey<TResource> key) {
-        return handler.getAmountAsLong(getSingleIndex(key));
+        return handler.getAmountAsLong(indexOf(key));
     }
 
     public int getCapacityAsInt(ResourceHandler<TResource> handler, SingleResourceSlotKey<TResource> key, TResource resource) {
-        return handler.getCapacityAsInt(getSingleIndex(key), resource);
+        return handler.getCapacityAsInt(indexOf(key), resource);
     }
 
     public long getCapacityAsLong(ResourceHandler<TResource> handler, SingleResourceSlotKey<TResource> key, TResource resource) {
-        return handler.getCapacityAsLong(getSingleIndex(key), resource);
+        return handler.getCapacityAsLong(indexOf(key), resource);
     }
 
     public void set(ResourceStorage<TResource> storage, SingleResourceSlotKey<TResource> key, TResource resource, int amount) {
-        storage.set(getSingleIndex(key), resource, amount);
+        storage.set(indexOf(key), resource, amount);
     }
 
     public int insert(ResourceHandler<TResource> handler, SingleResourceSlotKey<TResource> key, TResource resource, int amount, TransactionContext transaction) {
-        return handler.insert(getSingleIndex(key), resource, amount, transaction);
+        return handler.insert(indexOf(key), resource, amount, transaction);
     }
 
     public int extract(ResourceHandler<TResource> handler, SingleResourceSlotKey<TResource> key, TResource resource, int amount, TransactionContext transaction) {
-        return handler.extract(getSingleIndex(key), resource, amount, transaction);
+        return handler.extract(indexOf(key), resource, amount, transaction);
     }
 
-    private int getSingleIndex(SingleResourceSlotKey<TResource> key) {
+    public int indexOf(SingleResourceSlotKey<TResource> key) {
         List<Integer> indices = keyMap.get(key);
         if (indices == null || indices.size() != 1) {
             // This should never happen
@@ -84,30 +86,48 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
     // region Multi-Slot Access
 
     public TResource getResource(ResourceHandler<TResource> handler, MultiResourceSlotKey<TResource> key, int index) {
-        return handler.getResource(getMultiIndex(key, index));
+        return handler.getResource(indexOf(key, index));
     }
 
     public int getAmountAsInt(ResourceHandler<TResource> handler, MultiResourceSlotKey<TResource> key, int index) {
-        return handler.getAmountAsInt(getMultiIndex(key, index));
+        return handler.getAmountAsInt(indexOf(key, index));
     }
 
     public long getAmountAsLong(ResourceHandler<TResource> handler, MultiResourceSlotKey<TResource> key, int index) {
-        return handler.getAmountAsLong(getMultiIndex(key, index));
+        return handler.getAmountAsLong(indexOf(key, index));
     }
 
     public int getCapacityAsInt(ResourceHandler<TResource> handler, MultiResourceSlotKey<TResource> key, int index, TResource resource) {
-        return handler.getCapacityAsInt(getMultiIndex(key, index), resource);
+        return handler.getCapacityAsInt(indexOf(key, index), resource);
     }
 
     public long getCapacityAsLong(ResourceHandler<TResource> handler, MultiResourceSlotKey<TResource> key, int index, TResource resource) {
-        return handler.getCapacityAsLong(getMultiIndex(key, index), resource);
+        return handler.getCapacityAsLong(indexOf(key, index), resource);
     }
 
     public void set(ResourceStorage<TResource> storage, MultiResourceSlotKey<TResource> key, int index, TResource resource, int amount) {
-        storage.set(getMultiIndex(key, index), resource, amount);
+        storage.set(indexOf(key, index), resource, amount);
     }
 
-    private int getMultiIndex(MultiResourceSlotKey<TResource> key, int index) {
+    public Iterator<Integer> relativeIndicesOf(MultiResourceSlotKey<TResource> key) {
+        List<Integer> indices = keyMap.get(key);
+        if (indices == null) {
+            throw new IllegalArgumentException("Key does not map to any slots: " + key);
+        }
+
+        return IntStream.range(0, indices.size()).iterator();
+    }
+
+    public Iterator<Integer> absoluteIndicesOf(MultiResourceSlotKey<TResource> key) {
+        List<Integer> indices = keyMap.get(key);
+        if (indices == null) {
+            throw new IllegalArgumentException("Key does not map to any slots: " + key);
+        }
+
+        return indices.iterator();
+    }
+
+    public int indexOf(MultiResourceSlotKey<TResource> key, int index) {
         List<Integer> indices = keyMap.get(key);
         if (indices == null) {
             throw new IllegalArgumentException("Key does not map to any slots: " + key);
@@ -157,7 +177,7 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
         }
 
         public TBuilder slots(MultiResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T, TContext>> slotBuilder) {
-            return slots(key, () -> slots.add(slotBuilder.apply(new SlotBuilder<>()).build()));
+            return slots(key, () -> slots.add(slotBuilder.apply(createSlotBuilder()).build()));
         }
         
         // region Quick Slot Presets
