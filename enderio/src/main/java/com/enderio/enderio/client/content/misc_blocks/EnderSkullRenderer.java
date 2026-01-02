@@ -71,10 +71,6 @@ public class EnderSkullRenderer implements BlockEntityRenderer<EnderSkullBlockEn
     public void submit(EnderSkullBlockRenderState renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector, CameraRenderState cameraRenderState) {
         float f = renderState.animationProgress;
         BlockState blockstate = renderState.blockState;
-        boolean flag = blockstate.getBlock() instanceof WallSkullBlock;
-        Direction direction = flag ? blockstate.getValue(WallSkullBlock.FACING) : null;
-        int i = flag ? RotationSegment.convertToSegment(direction.getOpposite()) : blockstate.getValue(SkullBlock.ROTATION);
-        float f1 = RotationSegment.convertToDegrees(i);
         LocalPlayer player = Minecraft.getInstance().player;
         Vec3 position = player.position();
         HitResult hitResult = player.pick(10D, 0.0f, false); //I would rather not do this every tick, but I don't see how.
@@ -85,16 +81,26 @@ public class EnderSkullRenderer implements BlockEntityRenderer<EnderSkullBlockEn
         }
         if (f > 0) {
             skullmodelbase.active = true;
-            f1 = (float) (Mth.atan2(position.z - renderState.blockEntity.getBlockPos().getZ() - 0.5D, position.x - renderState.blockEntity.getBlockPos().getX() - 0.5D) * 180.0f / Math.PI + 90);
-            f1 += (float) (player.getRandom().nextGaussian() * 2);
-            int rotation = RotationSegment.convertToSegment(f1);
+            renderState.rotationDegrees = (float) (
+                Mth.atan2(position.z - renderState.blockEntity.getBlockPos().getZ() - 0.5D, position.x - renderState.blockEntity.getBlockPos().getX() - 0.5D) * 180.0f / Math.PI + 90);
+            renderState.rotationDegrees += (float) (player.getRandom().nextGaussian() * 2);
+            int rotation = RotationSegment.convertToSegment(renderState.rotationDegrees);
             if (player.level().getBlockEntity(renderState.blockEntity.getBlockPos()) == renderState.blockEntity && blockstate.is(EIOBlocks.ENDERMAN_HEAD.get())) {
                 player.level().setBlock(renderState.blockEntity.getBlockPos(), blockstate.setValue(SkullBlock.ROTATION, rotation), 3);
             }
         }
-        SkullBlockRenderer.submitSkull(renderState.direction, f1, renderState.animationProgress, poseStack, nodeCollector,
+        SkullBlockRenderer.submitSkull(renderState.direction, renderState.rotationDegrees, renderState.animationProgress, poseStack, nodeCollector,
             renderState.lightCoords, skullmodelbase, renderState.renderType, 0, renderState.breakProgress
         );
+    }
+
+    public static class EnderSkullBlockRenderState extends BlockEntityRenderState {
+        public float animationProgress;
+        public Direction direction = Direction.NORTH;
+        public EnderSkullBlockEntity blockEntity;
+        public float rotationDegrees;
+        public SkullBlock.Type skullType = SkullBlock.Types.ZOMBIE;
+        public RenderType renderType;
     }
 
     public static class EnderSkullModel extends SkullModelBase {
@@ -123,8 +129,8 @@ public class EnderSkullRenderer implements BlockEntityRenderer<EnderSkullBlockEn
 
         @Override
         public void setupAnim(State renderState) {
-            this.head.yRot = renderState.xRot * ((float)Math.PI / 180F);
-            this.head.xRot = renderState.yRot * ((float)Math.PI / 180F);
+            this.head.yRot = renderState.yRot * (float) (Math.PI / 180.0);
+            this.head.xRot = renderState.xRot * (float) (Math.PI / 180.0);
             this.hat.yRot = head.yRot;
             this.hat.xRot = head.xRot;
             this.head.y = 0;
@@ -132,14 +138,5 @@ public class EnderSkullRenderer implements BlockEntityRenderer<EnderSkullBlockEn
                 this.head.y =- 5f;
             }
         }
-    }
-
-    public static class EnderSkullBlockRenderState extends BlockEntityRenderState {
-        public float animationProgress;
-        public Direction direction = Direction.NORTH;
-        public EnderSkullBlockEntity blockEntity;
-        public float rotationDegrees;
-        public SkullBlock.Type skullType = SkullBlock.Types.ZOMBIE;
-        public RenderType renderType;
     }
 }

@@ -5,7 +5,6 @@ import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -21,9 +20,6 @@ public class ConduitFacadeColor implements BlockColor/*, ItemColor*/ {
 
     @Override
     public int getColor(BlockState state, @Nullable BlockAndTintGetter level, @Nullable BlockPos pos, int tintIndex) {
-        if (tintIndex >= 0) {
-            return DyeColor.values()[tintIndex].getTextureDiffuseColor();
-        }
         tintIndex = unmoveTintIndex(tintIndex);
         if (level != null && pos != null) {
             BlockEntity entity = level.getBlockEntity(pos);
