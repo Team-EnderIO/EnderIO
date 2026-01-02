@@ -14,22 +14,22 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.UnaryOperator;
 
-public class ResourceStorageLayout<TResource extends Resource, TContext> {
+public abstract class ResourceStorageLayout<TResource extends Resource, TContext> {
 
     private final List<SlotConfig<TResource, TContext>> slots;
     private final Map<ResourceSlotKey, List<Integer>> keyMap;
 
-    private ResourceStorageLayout(List<SlotConfig<TResource, TContext>> slots, Map<ResourceSlotKey, List<Integer>> keyMap) {
+    protected ResourceStorageLayout(List<SlotConfig<TResource, TContext>> slots, Map<ResourceSlotKey, List<Integer>> keyMap) {
         this.slots = slots;
         this.keyMap = keyMap;
     }
 
-    public static <T extends Resource, TContext> Builder<T, TContext> builder() {
-        return new Builder<>();
-    }
-
     public int size() {
         return slots.size();
+    }
+
+    public SlotConfig<TResource, TContext> get(int index) {
+        return slots.get(index);
     }
 
     // region Single Slot Access
@@ -127,25 +127,25 @@ public class ResourceStorageLayout<TResource extends Resource, TContext> {
 
     // endregion
 
-    public SlotConfig<TResource, TContext> get(int index) {
-        return slots.get(index);
-    }
-
-    public static class Builder<T extends Resource, TContext> {
+    public static abstract class Builder<TBuilder extends Builder<? extends TBuilder, T, TContext>, T extends Resource, TContext> {
         
-        private final ArrayList<SlotConfig<T, TContext>> slots = new ArrayList<>();
-        private final Map<ResourceSlotKey, List<Integer>> keyMap = new HashMap<>();
+        protected final ArrayList<SlotConfig<T, TContext>> slots = new ArrayList<>();
+        protected final Map<ResourceSlotKey, List<Integer>> keyMap = new HashMap<>();
 
-        private Builder() {
+        protected Builder() {
         }
 
-        public Builder<T, TContext> slot(SingleResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T, TContext>> slotBuilder) {
+        protected TBuilder self() {
+            return (TBuilder) this;
+        }
+
+        public TBuilder slot(SingleResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T, TContext>> slotBuilder) {
             slots.add(slotBuilder.apply(new SlotBuilder<>()).build());
             keyMap.put(key, List.of(slots.size() - 1));
-            return this;
+            return self();
         }
 
-        private Builder<T, TContext> slots(MultiResourceSlotKey<T> key, Runnable slotCreator) {
+        private TBuilder slots(MultiResourceSlotKey<T> key, Runnable slotCreator) {
             List<Integer> indices = new ArrayList<>(key.count());
             for (int i = 0; i < key.count(); i++) {
                 slotCreator.run();
@@ -154,28 +154,28 @@ public class ResourceStorageLayout<TResource extends Resource, TContext> {
 
             keyMap.put(key, indices);
 
-            return this;
+            return self();
         }
 
-        public Builder<T, TContext> slots(MultiResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T, TContext>> slotBuilder) {
+        public TBuilder slots(MultiResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T, TContext>> slotBuilder) {
             return slots(key, () -> slots.add(slotBuilder.apply(new SlotBuilder<>()).build()));
         }
         
         // region Quick Slot Presets
 
-        public Builder<T, TContext> inputSlot(SingleResourceSlotKey<T> key) {
+        public TBuilder inputSlot(SingleResourceSlotKey<T> key) {
             return inputSlot(key, slot -> slot);
         }
 
-        public Builder<T, TContext> inputSlot(SingleResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T, TContext>> slotBuilder) {
+        public TBuilder inputSlot(SingleResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T, TContext>> slotBuilder) {
             return slot(key, this::setupInputSlot);
         }
 
-        public Builder<T, TContext> inputSlots(MultiResourceSlotKey<T> key) {
+        public TBuilder inputSlots(MultiResourceSlotKey<T> key) {
             return inputSlots(key, slot -> slot);
         }
 
-        public Builder<T, TContext> inputSlots(MultiResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T, TContext>> slotBuilder) {
+        public TBuilder inputSlots(MultiResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T, TContext>> slotBuilder) {
             return slots(key, slot -> slotBuilder.apply(setupInputSlot(slot)));
         }
 
@@ -183,19 +183,19 @@ public class ResourceStorageLayout<TResource extends Resource, TContext> {
             return slotBuilder.canInsert().canManualInsert().canManualExtract();
         }
 
-        public Builder<T, TContext> outputSlot(SingleResourceSlotKey<T> key) {
+        public TBuilder outputSlot(SingleResourceSlotKey<T> key) {
             return outputSlot(key, slot -> slot);
         }
 
-        public Builder<T, TContext> outputSlot(SingleResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T, TContext>> slotBuilder) {
+        public TBuilder outputSlot(SingleResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T, TContext>> slotBuilder) {
             return slot(key, slot -> slotBuilder.apply(setupOutputSlot(slot)));
         }
 
-        public Builder<T, TContext> outputSlots(MultiResourceSlotKey<T> key) {
+        public TBuilder outputSlots(MultiResourceSlotKey<T> key) {
             return outputSlots(key, slot -> slot);
         }
 
-        public Builder<T, TContext> outputSlots(MultiResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T, TContext>> slotBuilder) {
+        public TBuilder outputSlots(MultiResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T, TContext>> slotBuilder) {
             return slots(key, slot -> slotBuilder.apply(setupOutputSlot(slot)));
         }
 
@@ -204,10 +204,6 @@ public class ResourceStorageLayout<TResource extends Resource, TContext> {
         }
         
         // endregion
-
-        public ResourceStorageLayout<T, TContext> build() {
-            return new ResourceStorageLayout<>(slots, keyMap);
-        }
 
         public static class SlotBuilder<T extends Resource, TContext> {
             private boolean canInsert;

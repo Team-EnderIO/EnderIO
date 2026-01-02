@@ -1,6 +1,8 @@
 package com.enderio.enderio.content.machines.alloy;
 
 import com.enderio.core.common.blockentity.EnderBlockEntity;
+import com.enderio.core.common.storage.FluidStorageLayout;
+import com.enderio.core.common.storage.ItemStorageLayout;
 import com.enderio.core.common.storage.MultiResourceSlotKey;
 import com.enderio.core.common.storage.ResourceStorageLayout;
 import com.enderio.core.common.storage.SingleResourceSlotKey;
@@ -38,6 +40,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -73,11 +76,18 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     private static final MultiResourceSlotKey<ItemResource> INPUT_SLOTS = new MultiResourceSlotKey<>(3);
     private static final SingleResourceSlotKey<ItemResource> OUTPUT_SLOT = new SingleResourceSlotKey<>();
     private static final SingleResourceSlotKey<ItemResource> CAPACITOR_SLOT = new SingleResourceSlotKey<>();
-    private static final ResourceStorageLayout<ItemResource, AlloySmelterBlockEntity> INVENTORY_LAYOUT =
-        ResourceStorageLayout.<ItemResource, AlloySmelterBlockEntity>builder()
+    private static final ItemStorageLayout<AlloySmelterBlockEntity> INVENTORY_LAYOUT =
+        ItemStorageLayout.<AlloySmelterBlockEntity>builder()
             .inputSlots(INPUT_SLOTS, slot -> slot.filter(AlloySmelterBlockEntity::canInsertTemp))
             .outputSlot(OUTPUT_SLOT)
             .inputSlot(CAPACITOR_SLOT)
+            .build();
+
+    private static final SingleResourceSlotKey<FluidResource> FLUID_SLOT = new SingleResourceSlotKey<>();
+
+    private static final FluidStorageLayout<AlloySmelterBlockEntity> FLUID_STORAGE_LAYOUT =
+        FluidStorageLayout.<AlloySmelterBlockEntity>builder()
+            .inputSlot(FLUID_SLOT)
             .build();
 
     static {
