@@ -26,11 +26,12 @@ public final class VatBlock extends ProgressMachineBlock<VatBlockEntity> {
                     return InteractionResult.SUCCESS;
                 }
 
-                if (vat.handleFluidItemInteraction(player, hand, stack, vat, VatBlockEntity.INPUT_TANK)
-                        || vat.handleFluidItemInteraction(player, hand, stack, vat, VatBlockEntity.OUTPUT_TANK)) {
-                    player.getInventory().setChanged();
-                    return InteractionResult.CONSUME;
-                }
+                // TODO: Convert fluid interactions
+//                if (vat.handleFluidItemInteraction(player, hand, stack, vat, VatBlockEntity.INPUT_TANK)
+//                        || vat.handleFluidItemInteraction(player, hand, stack, vat, VatBlockEntity.OUTPUT_TANK)) {
+//                    player.getInventory().setChanged();
+//                    return InteractionResult.CONSUME;
+//                }
             }
         }
 

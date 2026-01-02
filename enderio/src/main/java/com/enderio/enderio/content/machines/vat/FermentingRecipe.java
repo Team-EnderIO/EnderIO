@@ -76,8 +76,8 @@ public final class FermentingRecipe implements MachineRecipe<FermentingRecipe.In
 
     @Override
     public boolean matches(Input input, Level level) {
-        FluidStack inputTank = input.getInputTank().getFluid();
-        if (!this.input.test(inputTank) || inputTank.getAmount() < this.input.amount()) {
+        FluidStack inputFluid = input.getInputFluid();
+        if (!this.input.test(inputFluid) || inputFluid.getAmount() < this.input.amount()) {
             return false;
         }
 
@@ -170,7 +170,7 @@ public final class FermentingRecipe implements MachineRecipe<FermentingRecipe.In
             + ", " + "ticks=" + ticks + ']';
     }
 
-    public record Input(ItemStack leftReagent, ItemStack rightStack, MachineFluidTank inputTank) implements RecipeInput {
+    public record Input(ItemStack leftReagent, ItemStack rightStack, FluidStack inputFluid) implements RecipeInput {
 
         @Override
         public ItemStack getItem(int slotIndex) {
@@ -186,8 +186,14 @@ public final class FermentingRecipe implements MachineRecipe<FermentingRecipe.In
             return 2;
         }
 
+        public FluidStack getInputFluid() {
+            return inputFluid;
+        }
+
+        // Legacy support - will be removed once all code is migrated
+        @Deprecated(forRemoval = true)
         public MachineFluidTank getInputTank() {
-            return inputTank;
+            throw new UnsupportedOperationException("Use getInputFluid() instead");
         }
 
     }

@@ -1,64 +1,84 @@
 package com.enderio.enderio.content.machines.vat;
 
 import com.enderio.core.common.recipes.OutputStack;
+import com.enderio.core.common.storage.FluidStorage;
+import com.enderio.core.common.storage.layout.FluidStorageLayout;
+import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.core.common.util.NamedFluidContents;
-import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.UseOnly;
 import com.enderio.enderio.foundation.MachineNBTKeys;
-import com.enderio.enderio.foundation.attachment.FluidTankUser;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.inventory.MachineInventory;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.foundation.inventory.MultiSlotAccess;
 import com.enderio.enderio.foundation.io.fluid.FluidItemInteractive;
-import com.enderio.enderio.foundation.io.fluid.MachineFluidHandler;
-import com.enderio.enderio.foundation.io.fluid.MachineFluidTank;
-import com.enderio.enderio.foundation.io.fluid.MachineTankLayout;
-import com.enderio.enderio.foundation.io.fluid.TankAccess;
 import com.enderio.enderio.foundation.state.MachineState;
+import com.enderio.enderio.foundation.storage.SidedResourceHandler;
 import com.enderio.enderio.foundation.task.CraftingMachineTask;
 import com.enderio.enderio.foundation.task.host.CraftingMachineTaskHost;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIORecipes;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.fml.LogicalSide;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
 
-public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser, FluidItemInteractive {
+public class VatBlockEntity extends MachineBlockEntity implements FluidItemInteractive {
+
+    public static final ICapabilityProvider<VatBlockEntity, Direction, ResourceHandler<FluidResource>> FLUID_HANDLER_PROVIDER = (be,
+        side) -> be.fluidStorage != null ? SidedResourceHandler.of(be.fluidStorage, side, be) : null;
 
     public static final int TANK_CAPACITY = 8 * FluidType.BUCKET_VOLUME;
-    public static final TankAccess INPUT_TANK = new TankAccess();
-    public static final TankAccess OUTPUT_TANK = new TankAccess();
+    public static final SingleResourceSlotKey<FluidResource> INPUT_TANK = new SingleResourceSlotKey<>();
+    public static final SingleResourceSlotKey<FluidResource> OUTPUT_TANK = new SingleResourceSlotKey<>();
     public static final MultiSlotAccess REAGENTS = new MultiSlotAccess();
 
-    private static final Identifier EMPTY = EnderIO.id("");
+    public static final FluidStorageLayout<VatBlockEntity> FLUID_STORAGE_LAYOUT =
+        FluidStorageLayout.<VatBlockEntity>builder()
+            .storageSlot(INPUT_TANK, slot -> slot.capacity(TANK_CAPACITY))
+            .storageSlot(OUTPUT_TANK, slot -> slot.capacity(TANK_CAPACITY))
+            .build();
 
-    private final MachineFluidHandler fluidHandler;
+    private final FluidStorage<VatBlockEntity> fluidStorage;
     private final CraftingMachineTaskHost<FermentingRecipe, FermentingRecipe.Input> craftingTaskHost;
 
     public VatBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.VAT.get(), worldPosition, blockState, true);
-        fluidHandler = createFluidHandler();
+
+        fluidStorage = new FluidStorage<>(FLUID_STORAGE_LAYOUT, this) {
+            @Override
+            protected void onContentsChanged(int index, FluidStack previousContents) {
+                super.onContentsChanged(index, previousContents);
+                craftingTaskHost.newTaskAvailable();
+                setChanged();
+                if (level != null) {
+                    level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+                }
+            }
+        };
 
         craftingTaskHost = new CraftingMachineTaskHost<>(this, () -> true, EIORecipes.VAT_FERMENTING.type().get(),
                 this::createTask, this::createRecipeInput);
@@ -92,7 +112,7 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
 
     protected VatCraftingMachineTask createTask(Level level, FermentingRecipe.Input input,
             @Nullable RecipeHolder<FermentingRecipe> recipe) {
-        return new VatCraftingMachineTask(level, getInventory(), getFluidHandler(), input, recipe);
+        return new VatCraftingMachineTask(level, getInventory(), fluidStorage, input, recipe);
     }
 
     @Override
@@ -108,40 +128,15 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
 
     private FermentingRecipe.Input createRecipeInput() {
         List<ItemStack> reagents = REAGENTS.getItemStacks(getInventory());
-        return new FermentingRecipe.Input(reagents.get(0), reagents.get(1), getInputTank());
+        return new FermentingRecipe.Input(reagents.get(0), reagents.get(1), fluidStorage.getStack(INPUT_TANK));
     }
 
-    @Override
-    public MachineTankLayout getTankLayout() {
-        return MachineTankLayout.builder()
-                .tank(INPUT_TANK, TANK_CAPACITY, true, false, (stack) -> true)
-                .tank(OUTPUT_TANK, TANK_CAPACITY, false, true, (stack) -> true)
-                .build();
+    public FluidStack getInputFluid() {
+        return fluidStorage.getStack(INPUT_TANK);
     }
 
-    @Override
-    public MachineFluidHandler getFluidHandler() {
-        return fluidHandler;
-    }
-
-    @Override
-    public MachineFluidHandler createFluidHandler() {
-        return new MachineFluidHandler(this, getTankLayout()) {
-            @Override
-            protected void onContentsChanged(int slot) {
-                super.onContentsChanged(slot);
-                craftingTaskHost.newTaskAvailable();
-                setChanged();
-            }
-        };
-    }
-
-    public MachineFluidTank getInputTank() {
-        return INPUT_TANK.getTank(this);
-    }
-
-    public MachineFluidTank getOutputTank() {
-        return OUTPUT_TANK.getTank(this);
+    public FluidStack getOutputFluid() {
+        return fluidStorage.getStack(OUTPUT_TANK);
     }
 
     public float getCraftingProgress() {
@@ -159,24 +154,36 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
 
     @UseOnly(LogicalSide.SERVER)
     public void moveFluidToOutputTank() {
-        if (OUTPUT_TANK.isEmpty(this) && !INPUT_TANK.isEmpty(this)) {
-            OUTPUT_TANK.setFluid(this, INPUT_TANK.getFluid(this));
-            INPUT_TANK.setFluid(this, FluidStack.EMPTY);
+        FluidStack inputFluid = fluidStorage.getStack(INPUT_TANK);
+        FluidStack outputFluid = fluidStorage.getStack(OUTPUT_TANK);
+
+        if (outputFluid.isEmpty() && !inputFluid.isEmpty()) {
+            try (Transaction transaction = Transaction.openRoot()) {
+                fluidStorage.setStack(OUTPUT_TANK, inputFluid.copy());
+                fluidStorage.setStack(INPUT_TANK, FluidStack.EMPTY);
+                transaction.commit();
+            }
         }
     }
 
     @UseOnly(LogicalSide.SERVER)
     public void dumpOutputTank() {
-        OUTPUT_TANK.setFluid(this, FluidStack.EMPTY);
+        try (Transaction transaction = Transaction.openRoot()) {
+            fluidStorage.setStack(OUTPUT_TANK, FluidStack.EMPTY);
+            transaction.commit();
+        }
     }
 
     protected static class VatCraftingMachineTask
             extends CraftingMachineTask<FermentingRecipe, FermentingRecipe.Input> {
 
+        private final FluidStorage<VatBlockEntity> fluidStorage;
+
         public VatCraftingMachineTask(@NotNull Level level, MachineInventory inventory,
-                MachineFluidHandler fluidHandler, FermentingRecipe.Input input,
+                FluidStorage<VatBlockEntity> fluidStorage, FermentingRecipe.Input input,
                 @Nullable RecipeHolder<FermentingRecipe> recipe) {
-            super(level, inventory, fluidHandler, input, recipe);
+            super(level, inventory, null, input, recipe);
+            this.fluidStorage = fluidStorage;
         }
 
         @Override
@@ -184,15 +191,29 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
             REAGENTS.get(0).getStack(inventory).shrink(1);
             REAGENTS.get(1).getStack(inventory).shrink(1);
 
-            INPUT_TANK.getTank(fluidHandler).drain(recipe.input().amount(), IFluidHandler.FluidAction.EXECUTE);
+            FluidStack inputFluid = fluidStorage.getStack(INPUT_TANK);
+            try (Transaction transaction = Transaction.openRoot()) {
+                int inputIndex = fluidStorage.layout().indexOf(INPUT_TANK);
+                fluidStorage.internalExtract(inputIndex, FluidResource.of(inputFluid), recipe.input().amount(), transaction);
+                transaction.commit();
+            }
         }
 
         @Override
         protected boolean placeOutputs(List<OutputStack> outputs, boolean simulate) {
-            var action = simulate ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE;
             FluidStack output = outputs.getFirst().getFluid();
-            int filled = OUTPUT_TANK.getTank(fluidHandler).fill(output, action);
-            return filled == output.getAmount();
+
+            try (Transaction transaction = Transaction.openRoot()) {
+                int outputIndex = fluidStorage.layout().indexOf(OUTPUT_TANK);
+                int inserted = fluidStorage.insert(outputIndex, FluidResource.of(output), output.getAmount(), transaction);
+                if (inserted == output.getAmount()) {
+                    if (!simulate) {
+                        transaction.commit();
+                    }
+                    return true;
+                }
+                return false;
+            }
         }
 
         @Override
@@ -213,8 +234,15 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
 
         NamedFluidContents fluidContents = components.get(EIODataComponents.NAMED_FLUID_CONTENTS);
         if (fluidContents != null) {
-            INPUT_TANK.setFluid(this, fluidContents.copy("input_tank"));
-            OUTPUT_TANK.setFluid(this, fluidContents.copy("output_tank"));
+            FluidStack inputFluid = fluidContents.copy("input_tank");
+            FluidStack outputFluid = fluidContents.copy("output_tank");
+
+            if (!inputFluid.isEmpty()) {
+                fluidStorage.setStack(INPUT_TANK, inputFluid);
+            }
+            if (!outputFluid.isEmpty()) {
+                fluidStorage.setStack(OUTPUT_TANK, outputFluid);
+            }
         }
     }
 
@@ -222,25 +250,26 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
     protected void collectImplicitComponents(DataComponentMap.Builder components) {
         super.collectImplicitComponents(components);
 
-        var inputTank = INPUT_TANK.getTank(this);
-        var outputTank = OUTPUT_TANK.getTank(this);
-        if (!inputTank.isEmpty() || !outputTank.isEmpty()) {
+        FluidStack inputFluid = fluidStorage.getStack(INPUT_TANK);
+        FluidStack outputFluid = fluidStorage.getStack(OUTPUT_TANK);
+        if (!inputFluid.isEmpty() || !outputFluid.isEmpty()) {
             components.set(EIODataComponents.NAMED_FLUID_CONTENTS, NamedFluidContents
-                    .copyOf(Map.of("input_tank", inputTank.getFluid(), "output_tank", outputTank.getFluid())));
+                    .copyOf(Map.of("input_tank", inputFluid, "output_tank", outputFluid)));
         }
     }
 
     @Override
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
-        saveTank(output);
+        output.putChild("fluids", fluidStorage);
         output.putChild(MachineNBTKeys.CRAFTING_TASK, craftingTaskHost);
     }
 
     @Override
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
-        loadTank(input);
+        var fluids = input.child("fluids");
+        fluids.ifPresent(fluidStorage::deserialize);
         var task = input.child(MachineNBTKeys.CRAFTING_TASK);
         task.ifPresent(craftingTaskHost::deserialize);
     }

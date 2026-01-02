@@ -27,10 +27,11 @@ public final class NiardBlock extends ProgressMachineBlock<NiardBlockEntity> {
                     return InteractionResult.SUCCESS;
                 }
 
-                if (tank.handleFluidItemInteraction(player, hand, stack, tank, NiardBlockEntity.TANK)) {
-                    player.getInventory().setChanged();
-                    return InteractionResult.CONSUME;
-                }
+                // TODO: Convert fluid interactions
+//                if (tank.handleFluidItemInteraction(player, hand, stack, tank, NiardBlockEntity.TANK)) {
+//                    player.getInventory().setChanged();
+//                    return InteractionResult.CONSUME;
+//                }
             }
         }
 

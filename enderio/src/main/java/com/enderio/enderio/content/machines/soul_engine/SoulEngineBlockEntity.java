@@ -1,5 +1,8 @@
 package com.enderio.enderio.content.machines.soul_engine;
 
+import com.enderio.core.common.storage.FluidStorage;
+import com.enderio.core.common.storage.layout.FluidStorageLayout;
+import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.FixedScalable;
 import com.enderio.enderio.api.capacitor.LinearScalable;
@@ -9,19 +12,16 @@ import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.api.soul.binding.SoulBindable;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.foundation.MachineNBTKeys;
-import com.enderio.enderio.foundation.attachment.FluidTankUser;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
-import com.enderio.enderio.foundation.io.fluid.MachineFluidHandler;
-import com.enderio.enderio.foundation.io.fluid.MachineFluidTank;
-import com.enderio.enderio.foundation.io.fluid.MachineTankLayout;
-import com.enderio.enderio.foundation.io.fluid.TankAccess;
 import com.enderio.enderio.foundation.souldata.EngineSoul;
 import com.enderio.enderio.foundation.state.MachineState;
+import com.enderio.enderio.foundation.storage.SidedResourceHandler;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
@@ -41,20 +41,24 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.energy.EnergyHandlerUtil;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
-import java.util.function.Predicate;
 
 @EventBusSubscriber
-public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements FluidTankUser, SoulBindable {
+public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements SoulBindable {
+
+    public static final ICapabilityProvider<SoulEngineBlockEntity, Direction, ResourceHandler<FluidResource>> FLUID_HANDLER_PROVIDER = (be,
+        side) -> be.fluidStorage != null ? SidedResourceHandler.of(be.fluidStorage, side, be) : null;
 
     private static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
             MachinesConfig.COMMON.ENERGY.SOUL_ENGINE_CAPACITY);
@@ -66,8 +70,18 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     private static final String BURNED_TICKS = "BurnedTicks";
     private Soul boundSoul = Soul.EMPTY;
     public static final int FLUID_CAPACITY = 2 * FluidType.BUCKET_VOLUME;
-    private final MachineFluidHandler fluidHandler;
-    private static final TankAccess TANK = new TankAccess();
+
+    public static final SingleResourceSlotKey<FluidResource> TANK = new SingleResourceSlotKey<>();
+
+    public static final FluidStorageLayout<SoulEngineBlockEntity> FLUID_STORAGE_LAYOUT =
+        FluidStorageLayout.<SoulEngineBlockEntity>builder()
+            .storageSlot(TANK, slot -> slot
+                .capacity(FLUID_CAPACITY)
+                .filter((index, resource, engine) -> engine.isFluidValid(resource.toStack(1))))
+            .build();
+
+    private final FluidStorage<SoulEngineBlockEntity> fluidStorage;
+
     @Nullable
     private EngineSoul.SoulData soulData;
     private int burnedTicks = 0;
@@ -77,7 +91,32 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     public SoulEngineBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.SOUL_ENGINE.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
                 EnergyIOMode.Output, CAPACITY, FixedScalable.ZERO);
-        fluidHandler = createFluidHandler();
+
+        fluidStorage = new FluidStorage<>(FLUID_STORAGE_LAYOUT, this) {
+            @Override
+            protected void onContentsChanged(int index, FluidStack previousContents) {
+                super.onContentsChanged(index, previousContents);
+                updateMachineState(MachineState.EMPTY_TANK, fluidStorage.getAmountAsInt(TANK) <= 0);
+                setChanged();
+            }
+
+            @Override
+            public int insert(int index, FluidResource resource, int amount, net.neoforged.neoforge.transfer.transaction.TransactionContext transaction) {
+                // Convert into tagged fluid - allow any valid fluid type to be inserted but normalize to the current fluid
+                if (isValid(index, resource)) {
+                    var currentFluid = getResource(index);
+                    if (currentFluid.getFluid() == Fluids.EMPTY || resource.getFluid().isSame(currentFluid.getFluid())) {
+                        return super.insert(index, resource, amount, transaction);
+                    } else {
+                        // Insert the same amount but as the current fluid type
+                        return super.insert(index, currentFluid, amount, transaction);
+                    }
+                }
+
+                // Non-tagged fluid.
+                return 0;
+            }
+        };
     }
 
     @Override
@@ -133,7 +172,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
 
     @Override
     public boolean isActive() {
-        return canAct() && TANK.getFluidAmount(this) > 0;
+        return canAct() && fluidStorage.getAmountAsInt(TANK) > 0;
     }
 
     public void producePower() {
@@ -141,7 +180,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
             int energy = (int) (soulData.powerpermb() * getGenerationRate());
 
             try (Transaction transaction = Transaction.openRoot()) {
-                if (TANK.getFluid(this).isEmpty()) {
+                if (fluidStorage.getStack(TANK).isEmpty()) {
                     return;
                 }
 
@@ -149,8 +188,10 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
                     return;
                 }
 
-                // TODO: Tank transactions.
-                TANK.drain(this, 1, IFluidHandler.FluidAction.EXECUTE);
+                // Drain 1mb of fluid
+                int tankIndex = fluidStorage.layout().indexOf(TANK);
+                FluidStack currentFluid = fluidStorage.getStack(TANK);
+                fluidStorage.internalExtract(tankIndex, FluidResource.of(currentFluid), 1, transaction);
 
                 transaction.commit();
                 burnedTicks -= soulData.tickpermb();
@@ -169,66 +210,26 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
         return MachinesConfig.COMMON.ENERGY.SOUL_ENGINE_BURN_SPEED.get();
     }
 
-    @Override
-    public MachineTankLayout getTankLayout() {
-        return MachineTankLayout.builder().tank(TANK, FLUID_CAPACITY, isFluidValid()).build();
+    public FluidStack getStoredFluid() {
+        return fluidStorage.getStack(TANK);
     }
 
-    public MachineFluidHandler createFluidHandler() {
-        return new MachineFluidHandler(this, getTankLayout()) {
-            @Override
-            protected void onContentsChanged(int slot) {
-                super.onContentsChanged(slot);
-                updateMachineState(MachineState.EMPTY_TANK, TANK.getFluidAmount(this) <= 0);
-                setChanged();
-            }
-
-            @Override
-            public int fill(FluidStack resource, FluidAction action) {
-                // Convert into tagged fluid
-                if (TANK.isFluidValid(this, resource)) {
-                    var currentFluid = TANK.getFluid(this).getFluid();
-                    if (currentFluid == Fluids.EMPTY || resource.getFluid().isSame(currentFluid)) {
-                        return super.fill(resource, action);
-                    } else {
-                        return super.fill(new FluidStack(currentFluid, resource.getAmount()), action);
-                    }
-                }
-
-                // Non-tagged fluid.
-                return 0;
-            }
-        };
-    }
-
-    public MachineFluidTank getFluidTank() {
-        return TANK.getTank(this);
-    }
-
-    @Override
-    public MachineFluidHandler getFluidHandler() {
-        return fluidHandler;
-    }
-
-    private Predicate<FluidStack> isFluidValid() {
-        return fluidStack -> {
-            if (soulData == null) {
-                return false;
-            }
-            String fluid = soulData.fluid();
-            if (fluid.startsWith("#")) { // We have a fluid tag instead
-                TagKey<Fluid> tag = TagKey.create(Registries.FLUID, Identifier.parse(fluid.substring(1)));
-                return fluidStack.is(tag);
-            } else {
-                Optional<Holder.Reference<Fluid>> delegate = level.registryAccess().lookupOrThrow(Registries.FLUID)
-                        .get(ResourceKey.create(Registries.FLUID, Identifier.parse(fluid)));
-                if (delegate.isPresent()) {
-                    return fluidStack.getFluid().isSame(delegate.get().value());
-                }
-            }
+    private boolean isFluidValid(FluidStack fluidStack) {
+        if (soulData == null) {
             return false;
-        };
-
+        }
+        String fluid = soulData.fluid();
+        if (fluid.startsWith("#")) { // We have a fluid tag instead
+            TagKey<Fluid> tag = TagKey.create(Registries.FLUID, Identifier.parse(fluid.substring(1)));
+            return fluidStack.is(tag);
+        } else {
+            Optional<Holder.Reference<Fluid>> delegate = level.registryAccess().lookupOrThrow(Registries.FLUID)
+                    .get(ResourceKey.create(Registries.FLUID, Identifier.parse(fluid)));
+            if (delegate.isPresent()) {
+                return fluidStack.getFluid().isSame(delegate.get().value());
+            }
+        }
+        return false;
     }
 
     @Nullable
@@ -241,7 +242,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
         output.putInt(BURNED_TICKS, burnedTicks);
-        saveTank(output);
+        output.putChild("Fluid", fluidStorage);
     }
 
     @Override
@@ -260,7 +261,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
         updateMachineState(MachineState.NO_POWER, false);
         updateMachineState(MachineState.FULL_POWER,EnergyHandlerUtil.isFull(getEnergyStorage()) && isCapacitorInstalled());
 
-        loadTank(input);
+        input.child("Fluid").ifPresent(fluidStorage::deserialize);
     }
 
     @Override
@@ -270,8 +271,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
 
         SimpleFluidContent storedFluid = components.get(EIODataComponents.ITEM_FLUID_CONTENT);
         if (storedFluid != null) {
-            var tank = TANK.getTank(this);
-            tank.setFluid(storedFluid.copy());
+            fluidStorage.setStack(TANK, storedFluid.copy());
         }
     }
 
@@ -283,9 +283,9 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
             components.set(EIODataComponents.SOUL, boundSoul);
         }
 
-        var tank = TANK.getTank(this);
+        var tank = fluidStorage.getStack(TANK);
         if (!tank.isEmpty()) {
-            components.set(EIODataComponents.ITEM_FLUID_CONTENT, SimpleFluidContent.copyOf(tank.getFluid()));
+            components.set(EIODataComponents.ITEM_FLUID_CONTENT, SimpleFluidContent.copyOf(tank));
         }
     }
 

@@ -34,9 +34,9 @@ public class VatMenu extends MachineMenu<VatBlockEntity> {
 
         craftingProgressSlot = addSyncSlot(FloatSyncSlot.readOnly(blockEntity::getCraftingProgress));
         inputTankSlot = addSyncSlot(
-                FluidStorageSyncSlot.readOnly(() -> FluidStorageInfo.of(blockEntity.getInputTank())));
+                FluidStorageSyncSlot.readOnly(() -> new FluidStorageInfo(blockEntity.getInputFluid(), VatBlockEntity.TANK_CAPACITY)));
         outputTankSlot = addSyncSlot(
-                FluidStorageSyncSlot.readOnly(() -> FluidStorageInfo.of(blockEntity.getOutputTank())));
+                FluidStorageSyncSlot.readOnly(() -> new FluidStorageInfo(blockEntity.getOutputFluid(), VatBlockEntity.TANK_CAPACITY)));
 //        recipeSlot = addSyncSlot(
 //                RecipeSyncSlot.readOnly(EIORecipes.VAT_FERMENTING.type().get(), blockEntity::getRecipe));
     }
