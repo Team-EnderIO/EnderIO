@@ -1,9 +1,9 @@
 package com.enderio.enderio.content.machines.alloy;
 
 import com.enderio.core.common.blockentity.EnderBlockEntity;
-import com.enderio.core.common.storage.MultiResourceSlot;
+import com.enderio.core.common.storage.MultiResourceSlotKey;
 import com.enderio.core.common.storage.ResourceStorageLayout;
-import com.enderio.core.common.storage.SingleResourceSlot;
+import com.enderio.core.common.storage.SingleResourceSlotKey;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
@@ -17,7 +17,6 @@ import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.foundation.inventory.MultiSlotAccess;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import com.enderio.enderio.foundation.recipe.MachineRecipeCaches;
-import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.foundation.task.PoweredCraftingMachineTask;
 import com.enderio.enderio.foundation.task.host.CraftingMachineTaskHost;
 import com.enderio.enderio.init.EIOBlockEntities;
@@ -71,30 +70,30 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
     // TEST
 
-    private static final MultiResourceSlot<ItemResource> INPUT_SLOTS;
-    private static final SingleResourceSlot<ItemResource> OUTPUT_SLOT;
-    private static final SingleResourceSlot<ItemResource> CAPACITOR_SLOT;
-    private static final ResourceStorageLayout<ItemResource, AlloySmelterBlockEntity> INVENTORY_LAYOUT;
+    private static final MultiResourceSlotKey<ItemResource> INPUT_SLOTS = new MultiResourceSlotKey<>(3);
+    private static final SingleResourceSlotKey<ItemResource> OUTPUT_SLOT = new SingleResourceSlotKey<>();
+    private static final SingleResourceSlotKey<ItemResource> CAPACITOR_SLOT = new SingleResourceSlotKey<>();
+    private static final ResourceStorageLayout<ItemResource, AlloySmelterBlockEntity> INVENTORY_LAYOUT =
+        ResourceStorageLayout.<ItemResource, AlloySmelterBlockEntity>builder()
+            .inputSlots(INPUT_SLOTS, slot -> slot.filter(AlloySmelterBlockEntity::canInsertTemp))
+            .outputSlot(OUTPUT_SLOT)
+            .inputSlot(CAPACITOR_SLOT)
+            .build();
 
     static {
-        var builder = new ResourceStorageLayout.Builder<ItemResource, AlloySmelterBlockEntity>();
-
-        INPUT_SLOTS = builder.inputSlots(3, slot -> slot.filter(AlloySmelterBlockEntity::canInsertTemp));
-        OUTPUT_SLOT = builder.outputSlot();
-        CAPACITOR_SLOT = builder.inputSlot(); // TODO: Would have a machine utility for capacitor filtering.
-
-        INVENTORY_LAYOUT = builder.build();
-
         // How to use;
 
         INVENTORY_LAYOUT.get(2).isValid(ItemResource.of(EIOItems.ADVANCED_ITEM_FILTER.get()), this);
 
-        INPUT_SLOTS.get(0).getAmountAsInt(getInventory());
-        // or shorter...
-        INPUT_SLOTS.getAmountAsInt(getInventory(), 0);
+        // Single-slot access
+        INVENTORY_LAYOUT.getAmountAsInt(getInventory(), OUTPUT_SLOT);
+        INVENTORY_LAYOUT.setWithInt(getInventory(), OUTPUT_SLOT, ItemResource.of(EIOItems.SOUL_VIAL.get()), 12);
 
-        // and setting
-        OUTPUT_SLOT.set(getInventory(), ItemResource.of(EIOItems.CONDUCTIVE_ALLOY_BALL.get()), 12);
+        // Multi-slot access
+        for (int inputSlotIndex = 0; inputSlotIndex < INPUT_SLOTS.count(); inputSlotIndex++) {
+            var resource = INVENTORY_LAYOUT.getResource(getInventory(), INPUT_SLOTS, inputSlotIndex);
+            INVENTORY_LAYOUT.setWithInt(getInventory(), INPUT_SLOTS, inputSlotIndex, ItemResource.of(EIOItems.SOUL_VIAL.get()), 12);
+        }
     }
 
     protected static boolean canInsertTemp(int slot, ItemResource resource, AlloySmelterBlockEntity blockEntity) {
