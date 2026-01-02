@@ -1,6 +1,18 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "enderio:block/pressurized_fluid_tank"
+    "type": "minecraft:composite",
+    "models": [
+      {
+        "type": "minecraft:model",
+        "model": "enderio:block/pressurized_fluid_tank_body"
+      },
+      {
+        "type": "minecraft:special",
+        "base": "enderio:block/pressurized_fluid_tank_body",
+        "model": {
+          "type": "enderio:fluid_tank"
+        }
+      }
+    ]
   }
 }

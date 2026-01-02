@@ -16,7 +16,7 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.jspecify.annotations.Nullable;
 
-//TODO get a neo patch to always render the particle
+//TODO get a neo patch to always render the particle, or go custom particle
 public class RangeParticle extends SingleQuadParticle {
 
     private final int range;

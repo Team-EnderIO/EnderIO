@@ -20,7 +20,7 @@ public class FluidRendererUtil {
         Fluid fluid = fluidStack.getFluid();
         int color = IClientFluidTypeExtensions.of(fluid)
             .getTintColor(fluidStack);
-        // if (color == -1) color = 0xffffff;
+        if (color == -1) color = 0xFFFFFFFF;
         submitFluid(poseStack, renderType, nodeCollector, fluid, fillAmount, color, packedLight);
     }
 

@@ -12,6 +12,7 @@ import net.neoforged.neoforge.client.event.ModelEvent;
 public class ConduitAdditionalModels {
 
     public static final Identifier CONDUIT_CONNECTOR = EnderIO.id("block/conduit_connector");
+    public static final Identifier CONDUIT_FACADE = EnderIO.id("block/conduit_facade_overlay");
     public static final Identifier CONDUIT_FACADE_OVERLAY = EnderIO.id("block/conduit_facade_overlay");
     public static final Identifier CONDUIT_CONNECTION = EnderIO.id("block/conduit_connection");
     public static final Identifier CONDUIT_CORE = EnderIO.id("block/conduit_core");
@@ -24,7 +25,7 @@ public class ConduitAdditionalModels {
     public static final Identifier CONDUIT_IO_REDSTONE = EnderIO.id("block/io/redstone");
 
     @SubscribeEvent
-    public static void registerModels(ModelEvent.BakingCompleted event) {
+    public static void registerModels(ModelEvent.RegisterLoaders event) {
 
         ConduitModelModifiers.init();
         //ConduitModelModifiers.getAllModelDependencies().forEach(event::register); //TODO this needs to be different

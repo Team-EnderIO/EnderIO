@@ -56,7 +56,7 @@ public class ObeliskBER implements BlockEntityRenderer<BlockEntity, BlockEntityR
         ItemStackRenderState renderState = new ItemStackRenderState();
         minecraft.getItemModelResolver().updateForTopItem(renderState, stack, ItemDisplayContext.GUI, null, null, 0);
         if (stack.getItem() instanceof BlockItem) { //Blocks are in iso, let's correct that
-            poseStack.mulPose(Axis.YP.rotationDegrees(45));
+            poseStack.mulPose(Axis.YP.rotationDegrees(-45));
             poseStack.mulPose(Axis.XP.rotationDegrees(-30));
             poseStack.scale(1.2f, 1.2f, 1.2f);
         }

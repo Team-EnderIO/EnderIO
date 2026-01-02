@@ -1,5 +1,6 @@
 {
 	"credit": "Made with Blockbench by Rover656",
+    "parent": "minecraft:block/block",
 	"textures": {
 		"particle": "enderio:block/fluid_tank",
 		"tank": "enderio:block/fluid_tank",

@@ -2,7 +2,9 @@ package com.enderio.enderio.datagen.client.models;
 
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.client.content.conduits.model.bundle.port.ConduitBlockStateModel;
+import com.enderio.enderio.client.content.glass.GlassItemColor;
 import com.enderio.enderio.client.content.machines.IOOverlayBlockStateModel;
+import com.enderio.enderio.content.glass.FusedQuartzBlock;
 import com.enderio.enderio.content.misc_blocks.skull.EnderSkullBlock;
 import com.enderio.enderio.content.paint.block.PaintedStairBlock;
 import com.enderio.enderio.foundation.block.ProgressMachineBlock;
@@ -139,8 +141,9 @@ public class EIOBlockStateProvider extends ModelProvider {
         this.createFire(blockModels, EIOBlocks.COLD_FIRE.get());
     }
 
-    private void simpleBlockWithModel(BlockModelGenerators blockModels, Block block, Identifier Identifier) {
+    private void simpleBlockWithModel(BlockModelGenerators blockModels, FusedQuartzBlock block, Identifier Identifier) {
         blockModels.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(block, plainVariant(Identifier)));
+        blockModels.registerSimpleTintedItemModel(block, Identifier, new GlassItemColor());
     }
 
     private void simpleTranslucentBlock(BlockModelGenerators blockModels, Block block) {

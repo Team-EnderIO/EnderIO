@@ -1,6 +1,22 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "enderio:block/conduit"
+    "type": "minecraft:composite",
+    "models": [
+      {
+        "type": "enderio:facade"
+      },
+      {
+        "type": "minecraft:condition",
+        "on_false": {
+          "type": "minecraft:model",
+          "model": "enderio:item/transparent_conduit_facade"
+        },
+        "on_true": {
+          "type": "minecraft:model",
+          "model": "enderio:item/conduit_facade_overlay"
+        },
+        "property": "enderio:facade"
+      }
+    ]
   }
 }

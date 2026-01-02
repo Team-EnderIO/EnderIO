@@ -7,7 +7,7 @@
     },
     "on_true": {
       "type": "minecraft:model",
-      "model": "enderio:item/soiredne"
+      "model": "enderio:item/enderios_inverted"
     },
     "property": "enderio:enderios_inverted"
   }

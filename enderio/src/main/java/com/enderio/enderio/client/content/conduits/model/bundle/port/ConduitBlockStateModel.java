@@ -383,7 +383,6 @@ public class ConduitBlockStateModel implements DynamicBlockStateModel {
         @Override
         public void resolveDependencies(Resolver resolver) {
             resolver.markDependency(ConduitAdditionalModels.CONDUIT_CONNECTION);
-            resolver.markDependency(ConduitAdditionalModels.CONDUIT_FACADE_OVERLAY);
             resolver.markDependency(ConduitAdditionalModels.CONDUIT_CONNECTOR);
             resolver.markDependency(ConduitAdditionalModels.CONDUIT_CORE);
             resolver.markDependency(ConduitAdditionalModels.BOX);
@@ -392,6 +391,9 @@ public class ConduitBlockStateModel implements DynamicBlockStateModel {
             resolver.markDependency(ConduitAdditionalModels.CONDUIT_IO_OUT);
             resolver.markDependency(ConduitAdditionalModels.CONDUIT_IO_REDSTONE);
             resolver.markDependency(ConduitAdditionalModels.CONDUIT_CONNECTION_BOX);
+            for (var id : ConduitModelModifiers.getAllModelDependencies()) {
+                resolver.markDependency(id);
+            }
         }
     }
 }

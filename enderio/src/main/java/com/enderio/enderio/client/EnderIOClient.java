@@ -15,6 +15,7 @@ import com.enderio.enderio.client.content.conduits.gui.screen_type.ItemConduitSc
 import com.enderio.enderio.client.content.conduits.gui.screen_type.RedstoneConduitScreenType;
 import com.enderio.enderio.client.content.conduits.model.bundle.port.ConduitBlockStateModel;
 import com.enderio.enderio.client.content.conduits.model.bundle.port.ConduitItemModel;
+import com.enderio.enderio.client.content.conduits.model.facades.port.FacadeItemModel;
 import com.enderio.enderio.client.content.conduits.model.modifier.FluidConduitModelModifier;
 import com.enderio.enderio.client.content.conduits.model.modifier.RedstoneConduitModelModifier;
 import com.enderio.enderio.client.content.enderface.EnderfaceRenderer;
@@ -24,7 +25,9 @@ import com.enderio.enderio.client.content.filters.EnderSoulFilterScreen;
 import com.enderio.enderio.client.content.filters.redstone.RedstoneCountFilterScreen;
 import com.enderio.enderio.client.content.filters.redstone.RedstoneDoubleChannelFilterScreen;
 import com.enderio.enderio.client.content.filters.redstone.RedstoneTimerFilterScreen;
+import com.enderio.enderio.client.content.fluid_tank.FluidTankItemRenderer;
 import com.enderio.enderio.client.content.glass.GlassIconDecorator;
+import com.enderio.enderio.client.content.glass.GlassItemColor;
 import com.enderio.enderio.client.content.machines.IOOverlayBlockStateModel;
 import com.enderio.enderio.client.content.machines.gui.screen.AlloySmelterScreen;
 import com.enderio.enderio.client.content.machines.gui.screen.AttractorObeliskScreen;
@@ -96,6 +99,7 @@ import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
 import net.neoforged.neoforge.client.event.RegisterItemModelsEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
+import net.neoforged.neoforge.client.event.RegisterSpecialModelRendererEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
@@ -233,6 +237,11 @@ public class EnderIOClient {
     }
 
     @SubscribeEvent
+    public static void registerSpecialModels(RegisterSpecialModelRendererEvent event) {
+        event.register(EnderIO.id("fluid_tank"), FluidTankItemRenderer.Unbaked.CODEC);
+    }
+
+    @SubscribeEvent
     public static void registerBlockColorHandlers(RegisterColorHandlersEvent.Block event) {
         event.register(ConduitFacadeColor.INSTANCE, EIOBlocks.CONDUIT_BUNDLE.get());
 
@@ -254,6 +263,11 @@ public class EnderIOClient {
                 event.register((state, level, pos, tintIndex) -> entry.getKey().getMapColor().col, entry.getValue().get());
             }
         }
+    }
+
+    @SubscribeEvent
+    public static void registerItemTintSources(RegisterColorHandlersEvent.ItemTintSources event) {
+        event.register(EnderIO.id("glass"), GlassItemColor.CODEC);
     }
 
     // TODO: 1.21.4: Deal with the new item tint system
@@ -365,6 +379,7 @@ public class EnderIOClient {
     @SubscribeEvent
     public static void registerItemModels(RegisterItemModelsEvent event) {
         event.register(EnderIO.id("conduit"), ConduitItemModel.Unbaked.CODEC);
+        event.register(EnderIO.id("facade"), FacadeItemModel.Unbaked.CODEC);
     }
 
     @SubscribeEvent

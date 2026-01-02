@@ -28,8 +28,8 @@ public class TravelAnchorMenu extends MachineMenu<TravelAnchorBlockEntity> {
         super(EIOMenus.TRAVEL_ANCHOR.get(), containerId, playerInventory, buf,
                 EIOBlockEntities.TRAVEL_ANCHOR.get(), EIOBlockEntities.PAINTED_TRAVEL_ANCHOR.get());
         addSlots();
-        visibility = addSyncSlot(BoolSyncSlot.standalone());
-        name = addSyncSlot(StringSyncSlot.standalone());
+        visibility = addUpdatableSyncSlot(BoolSyncSlot.standalone());
+        name = addUpdatableSyncSlot(StringSyncSlot.standalone());
     }
 
     private void addSlots() {
@@ -43,6 +43,7 @@ public class TravelAnchorMenu extends MachineMenu<TravelAnchorBlockEntity> {
 
     public void setVisible(Boolean visible) {
         visibility.set(visible);
+        updateSlot(visibility);
     }
 
     public String getName() {
@@ -51,6 +52,7 @@ public class TravelAnchorMenu extends MachineMenu<TravelAnchorBlockEntity> {
 
     public void setName(String newName) {
         name.set(newName);
+        updateSlot(name);
     }
 
     //TODO we don't create the target if it's missing, but that should be fine?

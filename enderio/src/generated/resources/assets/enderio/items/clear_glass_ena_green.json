@@ -1,6 +1,11 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "enderio:block/clear_glass_ena_green"
+    "model": "enderio:block/clear_glass",
+    "tints": [
+      {
+        "type": "enderio:glass"
+      }
+    ]
   }
 }

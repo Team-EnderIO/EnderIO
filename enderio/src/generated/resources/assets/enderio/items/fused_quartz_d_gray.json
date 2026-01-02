@@ -1,6 +1,11 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "enderio:block/fused_quartz_d_gray"
+    "model": "enderio:block/fused_quartz",
+    "tints": [
+      {
+        "type": "enderio:glass"
+      }
+    ]
   }
 }

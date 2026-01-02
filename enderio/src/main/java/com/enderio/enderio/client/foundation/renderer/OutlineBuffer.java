@@ -15,7 +15,7 @@ public class OutlineBuffer implements MultiBufferSource {
     @NotNull
     @Override
     public VertexConsumer getBuffer(@NotNull RenderType type) {
-        return Minecraft.getInstance().renderBuffers().bufferSource().getBuffer(OutlineRenderType.get(type));
+        return Minecraft.getInstance().renderBuffers().bufferSource().getBuffer(OutlineRenderType.CUTOUT_NO_DEPTH);
     }
 }
 

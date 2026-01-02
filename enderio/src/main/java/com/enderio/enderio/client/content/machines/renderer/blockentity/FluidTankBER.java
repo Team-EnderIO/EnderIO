@@ -36,6 +36,6 @@ public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity, F
         CameraRenderState cameraRenderState) {
 
         float fillRatio = fluidTankRenderState.fluidStack.getAmount() / (float) fluidTankRenderState.tankCapacity;
-        FluidRendererUtil.submitFluid(poseStack, Sheets.translucentItemSheet(), submitNodeCollector, fluidTankRenderState.fluidStack, fillRatio, fluidTankRenderState.lightCoords);
+        FluidRendererUtil.submitFluid(poseStack, Sheets.translucentBlockItemSheet(), submitNodeCollector, fluidTankRenderState.fluidStack, fillRatio, fluidTankRenderState.lightCoords);
     }
 }

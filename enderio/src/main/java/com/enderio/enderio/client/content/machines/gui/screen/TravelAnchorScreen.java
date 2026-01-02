@@ -56,6 +56,8 @@ public class TravelAnchorScreen extends MachineScreen<TravelAnchorMenu> {
 
     @Override
     protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
+        nameInput.setValue(menu.getName()); //TODO stupid but it works
+        menu.setVisible(menu.isVisible()); //TODO stupid but it works
         pGuiGraphics.blit(RenderPipelines.GUI_TEXTURED, TRAVEL_ANCHOR_BG, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
     }
 

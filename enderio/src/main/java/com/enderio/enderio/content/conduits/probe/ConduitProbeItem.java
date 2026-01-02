@@ -9,8 +9,11 @@ import com.enderio.enderio.foundation.network.packets.ServerboundSyncProbeStateP
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOItems;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.item.properties.conditional.ConditionalItemModelProperty;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -21,14 +24,21 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.RegisterConditionalItemModelPropertyEvent;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -39,6 +49,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 
+@EventBusSubscriber(Dist.CLIENT)
 public class ConduitProbeItem extends Item {
 
     public static final Identifier PROBE_STATE_PREDICATE = EnderIO.id("probe_state");
@@ -244,5 +255,25 @@ public class ConduitProbeItem extends Item {
             ByteBufCodecs.map(HashMap::new, Identifier.STREAM_CODEC, ConnectionConfig.STREAM_CODEC),
             ProbeConfigData::conduitData,
             ProbeConfigData::new);
+    }
+
+    //TODO Move?
+    @SubscribeEvent
+    public static void itemOverrides(RegisterConditionalItemModelPropertyEvent event) {
+        event.register(PROBE_STATE_PREDICATE, Probe.MAP_CODEC);
+    }
+
+    public static class Probe implements ConditionalItemModelProperty {
+        public static final MapCodec<Probe> MAP_CODEC = MapCodec.unit(new Probe());
+
+        @Override
+        public MapCodec<? extends ConditionalItemModelProperty> type() {
+            return MAP_CODEC;
+        }
+
+        @Override
+        public boolean get(ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int seed, ItemDisplayContext displayContext) {
+            return getState(stack) == State.PROBE;
+        }
     }
 }

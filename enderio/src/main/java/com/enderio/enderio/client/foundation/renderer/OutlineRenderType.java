@@ -2,14 +2,23 @@ package com.enderio.enderio.client.foundation.renderer;
 
 import com.enderio.enderio.EnderIO;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.platform.DepthTestFunction;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.rendertype.LayeringTransform;
+import net.minecraft.client.renderer.rendertype.OutputTarget;
 import net.minecraft.client.renderer.rendertype.RenderSetup;
 import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.RegisterRenderPipelinesEvent;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@EventBusSubscriber(Dist.CLIENT)
 public class OutlineRenderType {
 
     private static final Map<RenderType, RenderType> TYPES = new HashMap<>();
@@ -27,26 +36,35 @@ public class OutlineRenderType {
         }
     }
 
-    //TODO this probably is wrong
-//    public static RenderType createLines(String name, int strength) {
-//        return RenderType.create(EnderIO.MOD_ID + "_" + name, 1536, false, false, LINES_NO_CULL,
-//            CompositeState.builder()
-//                .setLineState(new LineStateShard(OptionalDouble.of(strength)))
-//                .setLayeringState(RenderStateShard.VIEW_OFFSET_Z_LAYERING)
-//                .setOutputState(RenderStateShard.ITEM_ENTITY_TARGET)
-//                .createCompositeState(false));
-//    }
-
-    public static RenderType createLines(String name, int strength) {
-        return RenderType.create(EnderIO.MOD_ID + "_" + name, RenderSetup
-            .builder(RenderPipelines.LINES)
-            .setLayeringTransform(LayeringTransform.VIEW_OFFSET_Z_LAYERING)
-            //.setLineState(new LineStateShard(OptionalDouble.of(strength)))
-            .createRenderSetup());
-    }
-
-    public static final RenderPipeline LINES_NO_CULL = RenderPipelines.LINES.toBuilder()
-        .withCull(false)
+    public static final RenderPipeline LINES_NO_DEPTH_SNIPPET = RenderPipeline.builder(RenderPipelines.LINES_SNIPPET)
+        .withLocation(EnderIO.id("pipeline/lines_no_depth"))
+        .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
         .build();
+
+    public static final RenderType LINES_NO_DEPTH = RenderType.create("lines_no_depth", RenderSetup.builder(LINES_NO_DEPTH_SNIPPET)
+        .setLayeringTransform(LayeringTransform.VIEW_OFFSET_Z_LAYERING)
+        .setOutputTarget(OutputTarget.ITEM_ENTITY_TARGET)
+        .createRenderSetup());
+
+    public static final RenderPipeline CUTOUT_NO_DEPTH_SNIPPET = RenderPipeline.builder(RenderPipelines.BLOCK_SNIPPET)
+        .withLocation(EnderIO.id("pipeline/cutout_no_depth"))
+        .withShaderDefine("ALPHA_CUTOUT", 0.5F)
+        .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
+        .build();
+
+    public static final RenderType CUTOUT_NO_DEPTH = RenderType.create(
+        "cutout_no_depth",
+        RenderSetup.builder(CUTOUT_NO_DEPTH_SNIPPET)
+            .useLightmap()
+            .withTexture("Sampler0", TextureAtlas.LOCATION_BLOCKS, RenderTypes.MOVING_BLOCK_SAMPLER)
+            .affectsCrumbling()
+            .setOutline(RenderSetup.OutlineProperty.AFFECTS_OUTLINE)
+            .createRenderSetup());
+
+    @SubscribeEvent
+    public static void onRegisterRenderPipelines(RegisterRenderPipelinesEvent event) {
+        event.registerPipeline(LINES_NO_DEPTH_SNIPPET);
+        event.registerPipeline(CUTOUT_NO_DEPTH_SNIPPET);
+    }
 
 }

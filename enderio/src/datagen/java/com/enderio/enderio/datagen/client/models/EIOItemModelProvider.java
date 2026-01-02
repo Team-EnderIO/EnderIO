@@ -2,8 +2,13 @@ package com.enderio.enderio.datagen.client.models;
 
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.client.content.conduits.model.bundle.port.ConduitItemModel;
+import com.enderio.enderio.client.content.conduits.model.facades.port.FacadeItemModel;
+import com.enderio.enderio.client.content.fluid_tank.FluidTankItemRenderer;
+import com.enderio.enderio.content.conduits.facades.ConduitFacadeItem;
+import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
 import com.enderio.enderio.content.fun.EnderiosItem;
 import com.enderio.enderio.content.tools.vials.SoulVialItem;
+import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOFluids;
 import com.enderio.enderio.init.EIOItems;
 import net.minecraft.client.data.models.BlockModelGenerators;
@@ -97,8 +102,8 @@ public class EIOItemModelProvider extends ModelProvider {
         itemModels.generateFlatItem(EIOItems.ZOMBIE_ELECTRODE.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(EIOItems.Z_LOGIC_CONTROLLER.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(EIOItems.ENDER_RESONATOR.get(), ModelTemplates.FLAT_ITEM);
-        itemModels.generateFlatItem(EIOItems.FRANK_N_ZOMBIE.get(), ModelTemplates.FLAT_ITEM);
-        itemModels.generateFlatItem(EIOItems.SENTIENT_ENDER.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.FRANK_N_ZOMBIE.get(), EIOItems.Z_LOGIC_CONTROLLER.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.SENTIENT_ENDER.get(), EIOItems.ENDER_RESONATOR.get(), ModelTemplates.FLAT_ITEM);
 
         itemModels.generateFlatItem(EIOItems.SKELETAL_CONTRACTOR.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(EIOItems.GUARDIAN_DIODE.get(), ModelTemplates.FLAT_ITEM);
@@ -213,26 +218,36 @@ public class EIOItemModelProvider extends ModelProvider {
         }
 
         itemModels.itemModelOutput.accept(EIOItems.CONDUIT.get(), new ConduitItemModel.Unbaked());
+        createFacade(itemModels, EIOItems.CONDUIT_FACADE.get());
+        createFacade(itemModels, EIOItems.TRANSPARENT_CONDUIT_FACADE.get());
+        createFacade(itemModels, EIOItems.HARDENED_CONDUIT_FACADE.get());
+        createFacade(itemModels, EIOItems.TRANSPARENT_HARDENED_CONDUIT_FACADE.get());
 
-        itemModels.generateFlatItem(EIOItems.CONDUIT_PROBE.get(), ModelTemplates.FLAT_ITEM);
+        generateProbe(itemModels, EIOItems.CONDUIT_PROBE.get());
 
+        fluidTank(itemModels, EIOBlocks.FLUID_TANK.get());
+        fluidTank(itemModels, EIOBlocks.PRESSURIZED_FLUID_TANK.get());
     }
 
-    public static Identifier getModelLocation(Fluid fluid) {
-        Identifier Identifier = BuiltInRegistries.FLUID.getKey(fluid);
-        return Identifier.withPrefix("item/");
+    private static void createFacade(ItemModelGenerators itemModels, Item item) {
+        itemModels.itemModelOutput.accept(item,
+            ItemModelUtils.composite(new FacadeItemModel.Unbaked(),
+                ItemModelUtils.conditional(new ConduitFacadeItem.Painted(),
+                    ItemModelUtils.plainModel(ModelLocationUtils.getModelLocation(EIOItems.CONDUIT_FACADE.get(),"_overlay")),
+                    ItemModelUtils.plainModel(ModelLocationUtils.getModelLocation(item)))));
+    }
+
+    public void fluidTank(ItemModelGenerators itemModelGenerators, Block block) {
+        String name = name(block);
+        Identifier tank =  EnderIO.id(String.format("block/%s_body", name));
+
+        itemModelGenerators.itemModelOutput.accept(block.asItem(),
+            ItemModelUtils.composite(ItemModelUtils.plainModel(tank),
+                ItemModelUtils.specialModel(tank, new FluidTankItemRenderer.Unbaked())));
     }
 
     protected void registerModels() {
 //TODO
-
-//        getBuilder(EIOItems.CONDUIT_PROBE.getId().toString())
-//            .parent(new ModelFile.UncheckedModelFile("item/generated"))
-//            .texture("layer0", EnderIO.rl("item/conduit_probe_probe"))
-//                .override()
-//                .predicate(ConduitProbeItem.PROBE_STATE_PREDICATE, 1)
-//                .model(basicItem(EnderIO.rl("conduit_probe_copy")));
-
         // Conduit facades
 //        getBuilder(EIOItems.CONDUIT_FACADE.getId().toString())
 //            .customLoader(FacadeItemModelBuilder::begin)
@@ -258,6 +273,11 @@ public class EIOItemModelProvider extends ModelProvider {
         blockModelGenerators.registerSimpleItemModel(item, Identifier);
     }
 
+    private void createFakeBlock(BlockModelGenerators blockModelGenerators, Item item, Identifier identifier) {
+        Identifier Identifier = ModelTemplates.CUBE_ALL.create(item, TextureMapping.cube(identifier), blockModelGenerators.modelOutput);
+        blockModelGenerators.registerSimpleItemModel(item, Identifier);
+    }
+
     public void bucketItem(ItemModelGenerators itemModelGenerators, BucketItem item, Fluid fluid, boolean flipGas, boolean applyFluidLuminosity) {
         Identifier drip = Identifier.fromNamespaceAndPath(NeoForgeMod.MOD_ID, "item/mask/bucket_fluid_drip");
         Identifier bucket = Identifier.withDefaultNamespace("item/bucket");
@@ -267,14 +287,28 @@ public class EIOItemModelProvider extends ModelProvider {
 
 
     public void generateEnderios(ItemModelGenerators itemModelGenerators, Item item) {
-        ItemModel.Unbaked plain = ItemModelUtils.plainModel(ModelLocationUtils.getModelLocation(item));
-        ItemModel.Unbaked soiredne = ItemModelUtils.plainModel(EnderIO.id("item/soiredne"));
+        ItemModel.Unbaked plain = ItemModelUtils.plainModel(itemModelGenerators.createFlatItemModel(item, ModelTemplates.FLAT_ITEM));
+        ItemModel.Unbaked soiredne = ItemModelUtils.plainModel(itemModelGenerators.createFlatItemModel(item, "_inverted",ModelTemplates.FLAT_ITEM));
         itemModelGenerators.itemModelOutput.accept(item, ItemModelUtils.conditional(new EnderiosItem.Soiredne(), soiredne, plain));
     }
 
     public void generateSoulVial(ItemModelGenerators itemModelGenerators, Item item) {
-        ItemModel.Unbaked plain = ItemModelUtils.plainModel(ModelLocationUtils.getModelLocation(item));
-        ItemModel.Unbaked filled = ItemModelUtils.plainModel(EnderIO.id("item/soul_vial_filled"));
+        ItemModel.Unbaked plain = ItemModelUtils.plainModel(itemModelGenerators.createFlatItemModel(item, ModelTemplates.FLAT_ITEM));
+        ItemModel.Unbaked filled = ItemModelUtils.plainModel(itemModelGenerators.createFlatItemModel(item, "_filled", ModelTemplates.FLAT_ITEM));
         itemModelGenerators.itemModelOutput.accept(item, ItemModelUtils.conditional(new SoulVialItem.Filled(), filled, plain));
+    }
+
+    public void generateProbe(ItemModelGenerators itemModelGenerators, Item item) {
+        ItemModel.Unbaked probe = ItemModelUtils.plainModel(itemModelGenerators.createFlatItemModel(item, "_probe", ModelTemplates.FLAT_ITEM));
+        ItemModel.Unbaked copy = ItemModelUtils.plainModel(itemModelGenerators.createFlatItemModel(item, "_copy", ModelTemplates.FLAT_ITEM));
+        itemModelGenerators.itemModelOutput.accept(item, ItemModelUtils.conditional(new ConduitProbeItem.Probe(), probe, copy));
+    }
+
+    private Identifier key(Block block) {
+        return BuiltInRegistries.BLOCK.getKey(block);
+    }
+
+    private String name(Block block) {
+        return this.key(block).getPath();
     }
 }

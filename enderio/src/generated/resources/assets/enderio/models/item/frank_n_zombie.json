@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "enderio:item/frank_n_zombie"
+    "layer0": "enderio:item/z_logic_controller"
   }
 }
