@@ -169,7 +169,7 @@ public class EIOBlockEntities {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<XPObeliskBlockEntity>> XP_OBELISK = BLOCK_ENTITY_TYPES
         .builder("xp_obelisk", XPObeliskBlockEntity::new, EIOBlocks.XP_OBELISK::get)
         .apply(EIOBlockEntities::machineBlockEntityCapabilities)
-        .apply(EIOBlockEntities::fluidHandlerCapability)
+        .capability(Capabilities.Fluid.BLOCK, XPObeliskBlockEntity.FLUID_HANDLER_PROVIDER)
         .build();
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<VatBlockEntity>> VAT = BLOCK_ENTITY_TYPES
