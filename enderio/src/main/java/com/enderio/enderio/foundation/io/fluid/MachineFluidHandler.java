@@ -20,6 +20,7 @@ import java.util.function.IntConsumer;
 /**
  * MachineFluidStorage takes a list of fluid tanks and handles IO for them all.
  */
+@Deprecated(forRemoval = true, since = "9.0")
 public class MachineFluidHandler implements IFluidHandler, ValueIOSerializable {
 
     public static final String TANK_INDEX = "Index";

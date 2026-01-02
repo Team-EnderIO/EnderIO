@@ -4,6 +4,7 @@ import com.enderio.enderio.foundation.attachment.FluidTankUser;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
+@Deprecated(forRemoval = true, since = "9.0")
 public class TankAccess {
 
     private int index = Integer.MIN_VALUE;

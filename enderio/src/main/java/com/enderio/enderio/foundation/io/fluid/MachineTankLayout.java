@@ -9,6 +9,7 @@ import java.util.function.Predicate;
 /**
  * Describes the tank layout of a machine
  */
+@Deprecated(forRemoval = true, since = "9.0")
 public class MachineTankLayout {
 
     /**

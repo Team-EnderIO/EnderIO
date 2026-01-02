@@ -5,6 +5,7 @@ import net.neoforged.neoforge.fluids.IFluidTank;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 
+@Deprecated(forRemoval = true, since = "9.0")
 public class MachineFluidTank implements IFluidTank {
     private final int index;
     private final MachineFluidHandler handler;
