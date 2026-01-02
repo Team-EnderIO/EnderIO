@@ -2,12 +2,95 @@ package com.enderio.core.common.storage;
 
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.resource.Resource;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jetbrains.annotations.ApiStatus;
 
+/**
+ * A resource handler which provides write-access to its slots and helpers for EnderCore's layout system.
+ * @param <T> The type of resource being stored.
+ */
 public interface ResourceStorage<T extends Resource> extends ResourceHandler<T> {
+
+    ResourceStorageLayout<T, ?> layout();
+
     void set(int index, T resource, int amount);
 
-    // TODO: Should we add NonExtendable methods that make using the inventory layout easier?
-    //       Potentially even instead of having them in the layout, we have them on here and have a layout() method expected for a ResourceStorage?
+    // region Single-Slot Access
+
+    @ApiStatus.NonExtendable
+    default T getResource(SingleResourceSlotKey<T> key) {
+        return this.getResource(layout().indexOf(key));
+    }
+
+    @ApiStatus.NonExtendable
+    default int getAmountAsInt(SingleResourceSlotKey<T> key) {
+        return this.getAmountAsInt(layout().indexOf(key));
+    }
+
+    @ApiStatus.NonExtendable
+    default long getAmountAsLong(SingleResourceSlotKey<T> key) {
+        return this.getAmountAsLong(layout().indexOf(key));
+    }
+
+    @ApiStatus.NonExtendable
+    default int getCapacityAsInt(SingleResourceSlotKey<T> key, T resource) {
+        return this.getCapacityAsInt(layout().indexOf(key), resource);
+    }
+
+    @ApiStatus.NonExtendable
+    default long getCapacityAsLong(SingleResourceSlotKey<T> key, T resource) {
+        return this.getCapacityAsLong(layout().indexOf(key), resource);
+    }
+
+    @ApiStatus.NonExtendable
+    default void set(SingleResourceSlotKey<T> key, T resource, int amount) {
+        this.set(layout().indexOf(key), resource, amount);
+    }
+
+    @ApiStatus.NonExtendable
+    default int insert(SingleResourceSlotKey<T> key, T resource, int amount, TransactionContext transaction) {
+        return this.insert(layout().indexOf(key), resource, amount, transaction);
+    }
+
+    @ApiStatus.NonExtendable
+    default int extract(SingleResourceSlotKey<T> key, T resource, int amount, TransactionContext transaction) {
+        return this.extract(layout().indexOf(key), resource, amount, transaction);
+    }
+
+    // endregion
+    
+    // region Multi-Slot Access
+
+    @ApiStatus.NonExtendable
+    default T getResource(MultiResourceSlotKey<T> key, int index) {
+        return this.getResource(layout().indexOf(key, index));
+    }
+
+    @ApiStatus.NonExtendable
+    default int getAmountAsInt(MultiResourceSlotKey<T> key, int index) {
+        return this.getAmountAsInt(layout().indexOf(key, index));
+    }
+
+    @ApiStatus.NonExtendable
+    default long getAmountAsLong(MultiResourceSlotKey<T> key, int index) {
+        return this.getAmountAsLong(layout().indexOf(key, index));
+    }
+
+    @ApiStatus.NonExtendable
+    default int getCapacityAsInt(MultiResourceSlotKey<T> key, int index, T resource) {
+        return this.getCapacityAsInt(layout().indexOf(key, index), resource);
+    }
+
+    @ApiStatus.NonExtendable
+    default long getCapacityAsLong(MultiResourceSlotKey<T> key, int index, T resource) {
+        return this.getCapacityAsLong(layout().indexOf(key, index), resource);
+    }
+
+    @ApiStatus.NonExtendable
+    default void set(ResourceStorage<T> storage, MultiResourceSlotKey<T> key, int index, T resource, int amount) {
+        storage.set(layout().indexOf(key, index), resource, amount);
+    }
+    
+    // endregion
 }
 

@@ -13,30 +13,6 @@ public class FluidStorageLayout<TContext> extends ResourceStorageLayout<FluidRes
         super(slots, keyMap);
     }
 
-    // region Single Slot Access Stack Helpers
-
-    public FluidStack getStack(ResourceHandler<FluidResource> handler, SingleResourceSlotKey<FluidResource> key) {
-        return getResource(handler, key).toStack(getAmountAsInt(handler, key));
-    }
-
-    public void setStack(ResourceStorage<FluidResource> storage, SingleResourceSlotKey<FluidResource> key, FluidStack stack) {
-        set(storage, key, FluidResource.of(stack), stack.getAmount());
-    }
-
-    // endregion
-
-    // region Multi Slot Access Stack Helpers
-
-    public FluidStack getStack(ResourceHandler<FluidResource> handler, MultiResourceSlotKey<FluidResource> key, int index) {
-        return getResource(handler, key, index).toStack(getAmountAsInt(handler, key, index));
-    }
-
-    public void setStack(ResourceStorage<FluidResource> storage, MultiResourceSlotKey<FluidResource> key, int index, FluidStack stack) {
-        set(storage, key, index, FluidResource.of(stack), stack.getAmount());
-    }
-
-    // endregion
-
     public static <TContext> Builder<TContext> builder() {
         return new Builder<>();
     }

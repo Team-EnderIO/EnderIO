@@ -2,9 +2,7 @@ package com.enderio.core.common.storage;
 
 import com.google.common.primitives.Ints;
 import net.neoforged.neoforge.common.util.TriPredicate;
-import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.resource.Resource;
-import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -19,7 +17,6 @@ import java.util.function.UnaryOperator;
 import java.util.stream.IntStream;
 
 public abstract class ResourceStorageLayout<TResource extends Resource, TContext> {
-
     private final List<SlotConfig<TResource, TContext>> slots;
     private final Map<ResourceSlotKey, List<Integer>> keyMap;
 
@@ -28,50 +25,16 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
         this.keyMap = keyMap;
     }
 
-    public int size() {
+    public final int size() {
         return slots.size();
     }
 
-    public SlotConfig<TResource, TContext> get(int index) {
+    public final SlotConfig<TResource, TContext> get(int index) {
         Objects.checkIndex(index, size());
         return slots.get(index);
     }
 
-    // region Single Slot Access
-
-    public TResource getResource(ResourceHandler<TResource> handler, SingleResourceSlotKey<TResource> key) {
-        return handler.getResource(indexOf(key));
-    }
-
-    public int getAmountAsInt(ResourceHandler<TResource> handler, SingleResourceSlotKey<TResource> key) {
-        return handler.getAmountAsInt(indexOf(key));
-    }
-
-    public long getAmountAsLong(ResourceHandler<TResource> handler, SingleResourceSlotKey<TResource> key) {
-        return handler.getAmountAsLong(indexOf(key));
-    }
-
-    public int getCapacityAsInt(ResourceHandler<TResource> handler, SingleResourceSlotKey<TResource> key, TResource resource) {
-        return handler.getCapacityAsInt(indexOf(key), resource);
-    }
-
-    public long getCapacityAsLong(ResourceHandler<TResource> handler, SingleResourceSlotKey<TResource> key, TResource resource) {
-        return handler.getCapacityAsLong(indexOf(key), resource);
-    }
-
-    public void set(ResourceStorage<TResource> storage, SingleResourceSlotKey<TResource> key, TResource resource, int amount) {
-        storage.set(indexOf(key), resource, amount);
-    }
-
-    public int insert(ResourceHandler<TResource> handler, SingleResourceSlotKey<TResource> key, TResource resource, int amount, TransactionContext transaction) {
-        return handler.insert(indexOf(key), resource, amount, transaction);
-    }
-
-    public int extract(ResourceHandler<TResource> handler, SingleResourceSlotKey<TResource> key, TResource resource, int amount, TransactionContext transaction) {
-        return handler.extract(indexOf(key), resource, amount, transaction);
-    }
-
-    public int indexOf(SingleResourceSlotKey<TResource> key) {
+    public final int indexOf(SingleResourceSlotKey<TResource> key) {
         List<Integer> indices = keyMap.get(key);
         if (indices == null || indices.size() != 1) {
             // This should never happen
@@ -81,53 +44,7 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
         return indices.getFirst();
     }
 
-    // endregion
-
-    // region Multi-Slot Access
-
-    public TResource getResource(ResourceHandler<TResource> handler, MultiResourceSlotKey<TResource> key, int index) {
-        return handler.getResource(indexOf(key, index));
-    }
-
-    public int getAmountAsInt(ResourceHandler<TResource> handler, MultiResourceSlotKey<TResource> key, int index) {
-        return handler.getAmountAsInt(indexOf(key, index));
-    }
-
-    public long getAmountAsLong(ResourceHandler<TResource> handler, MultiResourceSlotKey<TResource> key, int index) {
-        return handler.getAmountAsLong(indexOf(key, index));
-    }
-
-    public int getCapacityAsInt(ResourceHandler<TResource> handler, MultiResourceSlotKey<TResource> key, int index, TResource resource) {
-        return handler.getCapacityAsInt(indexOf(key, index), resource);
-    }
-
-    public long getCapacityAsLong(ResourceHandler<TResource> handler, MultiResourceSlotKey<TResource> key, int index, TResource resource) {
-        return handler.getCapacityAsLong(indexOf(key, index), resource);
-    }
-
-    public void set(ResourceStorage<TResource> storage, MultiResourceSlotKey<TResource> key, int index, TResource resource, int amount) {
-        storage.set(indexOf(key, index), resource, amount);
-    }
-
-    public Iterator<Integer> relativeIndicesOf(MultiResourceSlotKey<TResource> key) {
-        List<Integer> indices = keyMap.get(key);
-        if (indices == null) {
-            throw new IllegalArgumentException("Key does not map to any slots: " + key);
-        }
-
-        return IntStream.range(0, indices.size()).iterator();
-    }
-
-    public Iterator<Integer> absoluteIndicesOf(MultiResourceSlotKey<TResource> key) {
-        List<Integer> indices = keyMap.get(key);
-        if (indices == null) {
-            throw new IllegalArgumentException("Key does not map to any slots: " + key);
-        }
-
-        return indices.iterator();
-    }
-
-    public int indexOf(MultiResourceSlotKey<TResource> key, int index) {
+    public final int indexOf(MultiResourceSlotKey<TResource> key, int index) {
         List<Integer> indices = keyMap.get(key);
         if (indices == null) {
             throw new IllegalArgumentException("Key does not map to any slots: " + key);
@@ -140,7 +57,23 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
         return indices.get(index);
     }
 
-    // endregion
+    public final Iterator<Integer> relativeIndicesOf(MultiResourceSlotKey<TResource> key) {
+        List<Integer> indices = keyMap.get(key);
+        if (indices == null) {
+            throw new IllegalArgumentException("Key does not map to any slots: " + key);
+        }
+
+        return IntStream.range(0, indices.size()).iterator();
+    }
+
+    public final Iterator<Integer> absoluteIndicesOf(MultiResourceSlotKey<TResource> key) {
+        List<Integer> indices = keyMap.get(key);
+        if (indices == null) {
+            throw new IllegalArgumentException("Key does not map to any slots: " + key);
+        }
+
+        return indices.iterator();
+    }
 
     public static abstract class Builder<TBuilder extends Builder<? extends TBuilder, T, TContext>, T extends Resource, TContext> {
         
@@ -158,13 +91,13 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
             return new SlotBuilder<>();
         }
 
-        public TBuilder slot(SingleResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T, TContext>> slotBuilder) {
+        public final TBuilder slot(SingleResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T, TContext>> slotBuilder) {
             slots.add(slotBuilder.apply(createSlotBuilder()).build());
             keyMap.put(key, List.of(slots.size() - 1));
             return self();
         }
 
-        private TBuilder slots(MultiResourceSlotKey<T> key, Runnable slotCreator) {
+        protected final TBuilder slots(MultiResourceSlotKey<T> key, Runnable slotCreator) {
             List<Integer> indices = new ArrayList<>(key.count());
             for (int i = 0; i < key.count(); i++) {
                 slotCreator.run();
@@ -176,7 +109,7 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
             return self();
         }
 
-        public TBuilder slots(MultiResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T, TContext>> slotBuilder) {
+        public final TBuilder slots(MultiResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T, TContext>> slotBuilder) {
             return slots(key, () -> slots.add(slotBuilder.apply(createSlotBuilder()).build()));
         }
         
@@ -244,7 +177,7 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
         
         // endregion
 
-        public static class SlotBuilder<T extends Resource, TContext> {
+        public static final class SlotBuilder<T extends Resource, TContext> {
             private boolean canInsert;
             private boolean canExtract;
             private boolean canManualInsert;

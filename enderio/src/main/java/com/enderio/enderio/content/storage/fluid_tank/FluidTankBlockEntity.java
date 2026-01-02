@@ -105,7 +105,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
                 onTankContentsChanged();
                 setChanged();
                 super.onContentsChanged(index, previousContents);
-                updateMachineState(MachineState.EMPTY_TANK, FLUID_STORAGE_LAYOUT.getAmountAsInt(fluidStorage, TANK_SLOT) <= 0);
+                updateMachineState(MachineState.EMPTY_TANK, fluidStorage.getAmountAsInt(TANK_SLOT) <= 0);
                 level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
             }
         };
@@ -121,7 +121,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
     private TankRecipe.Input createRecipeInput() {
         return new TankRecipe.Input(FLUID_DRAIN_INPUT.getStack(getInventory()),
-                FLUID_FILL_INPUT.getStack(getInventory()), FLUID_STORAGE_LAYOUT.getStack(fluidStorage, TANK_SLOT), getCapacity());
+                FLUID_FILL_INPUT.getStack(getInventory()), fluidStorage.getStack(TANK_SLOT), getCapacity());
     }
 
     @Override
@@ -170,7 +170,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
         }
 
         // Mending
-        FluidStack fluid = FLUID_STORAGE_LAYOUT.getStack(fluidStorage, TANK_SLOT);
+        FluidStack fluid = fluidStorage.getStack(TANK_SLOT);
 
         if (stack.isDamageableItem() && !fluid.isEmpty() && fluid.is(Tags.Fluids.EXPERIENCE)) {
             var enchantmentsRecipe = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
@@ -222,7 +222,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
     // endregion
 
     public FluidStack getStoredFluid() {
-        return FLUID_STORAGE_LAYOUT.getStack(fluidStorage, TANK_SLOT);
+        return fluidStorage.getStack(TANK_SLOT);
     }
 
 
@@ -255,7 +255,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
                         && outputStack.getCount() < outputStack.getMaxStackSize())) {
 
                     try (Transaction transaction = Transaction.openRoot()) {
-                        int filled = FLUID_STORAGE_LAYOUT.insert(fluidStorage, TANK_SLOT, FluidResource.of(recipe.value().fluid()),
+                        int filled = fluidStorage.insert(TANK_SLOT, FluidResource.of(recipe.value().fluid()),
                             recipe.value().fluid().getAmount(), transaction);
 
                         if (filled != recipe.value().fluid().getAmount()) {
@@ -280,7 +280,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
                         && outputStack.getCount() < outputStack.getMaxStackSize())) {
 
                     try (Transaction transaction = Transaction.openRoot()) {
-                        int extracted = FLUID_STORAGE_LAYOUT.extract(fluidStorage, TANK_SLOT, FluidResource.of(recipe.value().fluid()),
+                        int extracted = fluidStorage.extract(TANK_SLOT, FluidResource.of(recipe.value().fluid()),
                             recipe.value().fluid().getAmount(), transaction);
 
                         if (extracted != recipe.value().fluid().getAmount()) {
@@ -326,7 +326,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
         super.applyImplicitComponents(components);
         SimpleFluidContent storedFluid = components.get(EIODataComponents.ITEM_FLUID_CONTENT);
         if (storedFluid != null) {
-            FLUID_STORAGE_LAYOUT.setStack(fluidStorage, TANK_SLOT, storedFluid.copy());
+            fluidStorage.setStack(TANK_SLOT, storedFluid.copy());
         }
     }
 

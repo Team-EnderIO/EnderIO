@@ -2,8 +2,10 @@ package com.enderio.enderio.foundation.storage;
 
 import com.enderio.core.CoreNBTKeys;
 import com.enderio.core.common.fluid.FluidStackWithTank;
+import com.enderio.core.common.storage.MultiResourceSlotKey;
 import com.enderio.core.common.storage.ResourceStorage;
 import com.enderio.core.common.storage.ResourceStorageLayout;
+import com.enderio.core.common.storage.SingleResourceSlotKey;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -31,6 +33,25 @@ public class FluidStorage<TOwner> implements ResourceStorage<FluidResource>, Val
         updateStacksSize();
     }
 
+    // Helpers for dealing with stacks
+    public FluidStack getStack(SingleResourceSlotKey<FluidResource> key) {
+        int index = layout.indexOf(key);
+        return getResource(index).toStack(getAmountAsInt(index));
+    }
+
+    public void setStack(SingleResourceSlotKey<FluidResource> key, FluidStack stack) {
+        set(layout.indexOf(key), FluidResource.of(stack), stack.getAmount());
+    }
+
+    public FluidStack getStack(MultiResourceSlotKey<FluidResource> key, int index) {
+        int absoluteIndex = layout.indexOf(key, index);
+        return getResource(absoluteIndex).toStack(getAmountAsInt(absoluteIndex));
+    }
+
+    public void setStack(MultiResourceSlotKey<FluidResource> key, int index, FluidStack stack) {
+        set(layout.indexOf(key, index), FluidResource.of(stack), stack.getAmount());
+    }
+
     private void updateStacksSize() {
         this.snapshotJournals.ensureCapacity(this.stacks.size());
 
@@ -41,7 +62,6 @@ public class FluidStorage<TOwner> implements ResourceStorage<FluidResource>, Val
         if (this.snapshotJournals.size() > this.stacks.size()) {
             this.snapshotJournals.subList(this.stacks.size(), this.snapshotJournals.size()).clear();
         }
-
     }
 
     protected void onContentsChanged(int index, FluidStack previousContents) {
