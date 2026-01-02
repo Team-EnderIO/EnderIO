@@ -27,42 +27,46 @@ import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.apache.commons.lang3.NotImplementedException;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.IntFunction;
 
-public record TankRecipe(Ingredient input, ItemStack output, FluidStack fluid, Mode mode, PlacementInfo placementInfo)
-        implements Recipe<TankRecipe.Input> {
+public final class TankRecipe implements Recipe<TankRecipe.Input> {
+    private final Ingredient input;
+    private final ItemStack output;
+    private final FluidStack fluid;
+    private final Mode mode;
+
+    @Nullable
+    private PlacementInfo placementInfo;
 
     public TankRecipe(Ingredient input, ItemStack output, FluidStack fluid, Mode mode) {
-        this(input, output, fluid, mode, PlacementInfo.create(input));
+        this.input = input;
+        this.output = output;
+        this.fluid = fluid;
+        this.mode = mode;
     }
 
-    public enum Mode implements StringRepresentable {
-        FILL(0, "fill"), EMPTY(1, "empty");
+    public Ingredient input() {
+        return input;
+    }
 
-        public static final Codec<Mode> CODEC = StringRepresentable.fromEnum(Mode::values);
-        public static final IntFunction<Mode> BY_ID = ByIdMap.continuous(key -> key.id, values(),
-                ByIdMap.OutOfBoundsStrategy.ZERO);
-        public static final StreamCodec<ByteBuf, Mode> STREAM_CODEC = ByteBufCodecs.idMapper(BY_ID, v -> v.id);
+    public ItemStack output() {
+        return output;
+    }
 
-        private final int id;
-        private final String name;
+    public FluidStack fluid() {
+        return fluid;
+    }
 
-        Mode(int id, String name) {
-            this.id = id;
-            this.name = name;
-        }
-
-        @Override
-        public String getSerializedName() {
-            return name;
-        }
+    public Mode mode() {
+        return mode;
     }
 
     @Override
     public boolean matches(Input recipeInput, Level pLevel) {
-        // TODO: 1.21.11: Check this still works.
         switch (mode) {
         case FILL -> {
             if (!FluidStack.matches(recipeInput.fluidContents, fluid) || recipeInput.fluidContents.getAmount() < fluid.getAmount()) {
@@ -93,9 +97,7 @@ public record TankRecipe(Ingredient input, ItemStack output, FluidStack fluid, M
 
     @Override
     public List<RecipeDisplay> display() {
-        return List.of( new TankDisplay(input.display(),
-            new SlotDisplay.ItemStackSlotDisplay(output.copy()),
-            new SlotDisplay.ItemSlotDisplay(EIOBlocks.FLUID_TANK_ITEM)));
+        return List.of(new TankDisplay(input.display(), new SlotDisplay.ItemStackSlotDisplay(output.copy()), new SlotDisplay.ItemSlotDisplay(EIOBlocks.FLUID_TANK_ITEM)));
     }
 
     @Override
@@ -118,14 +120,44 @@ public record TankRecipe(Ingredient input, ItemStack output, FluidStack fluid, M
         return EIORecipes.TANK.type().get();
     }
 
+    @Override
+    public PlacementInfo placementInfo() {
+        if (placementInfo == null) {
+            placementInfo = PlacementInfo.create(input);
+        }
+
+        return placementInfo;
+    }
+
+    public enum Mode implements StringRepresentable {
+        FILL(0, "fill"), EMPTY(1, "empty");
+
+        public static final Codec<Mode> CODEC = StringRepresentable.fromEnum(Mode::values);
+        public static final IntFunction<Mode> BY_ID = ByIdMap.continuous(key -> key.id, values(), ByIdMap.OutOfBoundsStrategy.ZERO);
+        public static final StreamCodec<ByteBuf, Mode> STREAM_CODEC = ByteBufCodecs.idMapper(BY_ID, v -> v.id);
+
+        private final int id;
+        private final String name;
+
+        Mode(int id, String name) {
+            this.id = id;
+            this.name = name;
+        }
+
+        @Override
+        public String getSerializedName() {
+            return name;
+        }
+    }
+
     public record Input(ItemStack fillItem, ItemStack emptyItem, FluidStack fluidContents, int tankCapacity) implements RecipeInput {
 
         @Override
         public ItemStack getItem(int slotIndex) {
             return switch (slotIndex) {
-            case 0 -> fillItem;
-            case 1 -> emptyItem;
-            default -> throw new IllegalArgumentException("No item for index " + slotIndex);
+                case 0 -> fillItem;
+                case 1 -> emptyItem;
+                default -> throw new IllegalArgumentException("No item for index " + slotIndex);
             };
         }
 
@@ -137,24 +169,13 @@ public record TankRecipe(Ingredient input, ItemStack output, FluidStack fluid, M
 
     public record TankDisplay(SlotDisplay ingredient, SlotDisplay result, SlotDisplay craftingStation) implements RecipeDisplay {
 
-        public static final MapCodec<TankDisplay> MAP_CODEC = RecordCodecBuilder.mapCodec(
-            p_379634_ -> p_379634_.group(
-                    SlotDisplay.CODEC.fieldOf("ingredients").forGetter(TankDisplay::ingredient),
-                    SlotDisplay.CODEC.fieldOf("result").forGetter(TankDisplay::result),
-                    SlotDisplay.CODEC.fieldOf("crafting_station").forGetter(TankDisplay::craftingStation)
-                )
-                .apply(p_379634_, TankDisplay::new)
-        );
-        public static final StreamCodec<RegistryFriendlyByteBuf, TankDisplay> STREAM_CODEC = StreamCodec.composite(
-            SlotDisplay.STREAM_CODEC,
-            TankDisplay::ingredient,
-            SlotDisplay.STREAM_CODEC,
-            TankDisplay::result,
-            SlotDisplay.STREAM_CODEC,
-            TankDisplay::craftingStation,
-            TankDisplay::new
-        );
-        public static final RecipeDisplay.Type<TankDisplay> TYPE = new RecipeDisplay.Type<>(MAP_CODEC, STREAM_CODEC);
+        public static final MapCodec<TankDisplay> MAP_CODEC = RecordCodecBuilder.mapCodec(p_379634_ -> p_379634_
+            .group(SlotDisplay.CODEC.fieldOf("ingredients").forGetter(TankDisplay::ingredient), SlotDisplay.CODEC.fieldOf("result").forGetter(TankDisplay::result),
+                SlotDisplay.CODEC.fieldOf("crafting_station").forGetter(TankDisplay::craftingStation))
+            .apply(p_379634_, TankDisplay::new));
+        public static final StreamCodec<RegistryFriendlyByteBuf, TankDisplay> STREAM_CODEC = StreamCodec.composite(SlotDisplay.STREAM_CODEC,
+            TankDisplay::ingredient, SlotDisplay.STREAM_CODEC, TankDisplay::result, SlotDisplay.STREAM_CODEC, TankDisplay::craftingStation, TankDisplay::new);
+        public static final Type<TankDisplay> TYPE = new Type<>(MAP_CODEC, STREAM_CODEC);
 
         @Override
         public Type<? extends RecipeDisplay> type() {
@@ -169,17 +190,13 @@ public record TankRecipe(Ingredient input, ItemStack output, FluidStack fluid, M
 
     public static class Serializer implements RecipeSerializer<TankRecipe> {
 
-        private static final MapCodec<TankRecipe> CODEC = RecordCodecBuilder
-                .mapCodec(instance -> instance
-                        .group(Ingredient.CODEC.fieldOf("input").forGetter(TankRecipe::input),
-                                ItemStack.CODEC.fieldOf("output").forGetter(TankRecipe::output),
-                                FluidStack.CODEC.fieldOf("fluid").forGetter(TankRecipe::fluid),
-                                Mode.CODEC.fieldOf("mode").forGetter(TankRecipe::mode))
-                        .apply(instance, TankRecipe::new));
+        private static final MapCodec<TankRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
+            .group(Ingredient.CODEC.fieldOf("input").forGetter(TankRecipe::input), ItemStack.CODEC.fieldOf("output").forGetter(TankRecipe::output),
+                FluidStack.CODEC.fieldOf("fluid").forGetter(TankRecipe::fluid), Mode.CODEC.fieldOf("mode").forGetter(TankRecipe::mode))
+            .apply(instance, TankRecipe::new));
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, TankRecipe> STREAM_CODEC = StreamCodec.composite(
-                Ingredient.CONTENTS_STREAM_CODEC, TankRecipe::input, ItemStack.STREAM_CODEC, TankRecipe::output,
-                FluidStack.STREAM_CODEC, TankRecipe::fluid, Mode.STREAM_CODEC, TankRecipe::mode, TankRecipe::new);
+        public static final StreamCodec<RegistryFriendlyByteBuf, TankRecipe> STREAM_CODEC = StreamCodec.composite(Ingredient.CONTENTS_STREAM_CODEC, TankRecipe::input, ItemStack.STREAM_CODEC, TankRecipe::output,
+            FluidStack.STREAM_CODEC, TankRecipe::fluid, Mode.STREAM_CODEC, TankRecipe::mode, TankRecipe::new);
 
         @Override
         public MapCodec<TankRecipe> codec() {
