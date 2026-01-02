@@ -255,7 +255,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
                         && outputStack.getCount() < outputStack.getMaxStackSize())) {
 
                     try (Transaction transaction = Transaction.openRoot()) {
-                        int filled = fluidStorage.insert(TANK_SLOT, FluidResource.of(recipe.value().fluid()),
+                        int filled = fluidStorage.internalInsert(TANK_SLOT, FluidResource.of(recipe.value().fluid()),
                             recipe.value().fluid().getAmount(), transaction);
 
                         if (filled != recipe.value().fluid().getAmount()) {
@@ -280,7 +280,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
                         && outputStack.getCount() < outputStack.getMaxStackSize())) {
 
                     try (Transaction transaction = Transaction.openRoot()) {
-                        int extracted = fluidStorage.extract(TANK_SLOT, FluidResource.of(recipe.value().fluid()),
+                        int extracted = fluidStorage.internalExtract(TANK_SLOT, FluidResource.of(recipe.value().fluid()),
                             recipe.value().fluid().getAmount(), transaction);
 
                         if (extracted != recipe.value().fluid().getAmount()) {

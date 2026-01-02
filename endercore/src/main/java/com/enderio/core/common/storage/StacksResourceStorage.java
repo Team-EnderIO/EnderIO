@@ -15,6 +15,7 @@ import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import java.util.Objects;
 
 // Mostly the same as StacksResourceHandler, but we save differently and support variable fluid capacity.
+// TODO: Might be better just not using the base class?
 public abstract class StacksResourceStorage<T extends Resource, S, C> extends StacksResourceHandler<S, T>
     implements ResourceStorage<T>, ValueIOSerializable {
 
@@ -65,6 +66,11 @@ public abstract class StacksResourceStorage<T extends Resource, S, C> extends St
     }
 
     @Override
+    public int internalInsert(int index, T resource, int amount, TransactionContext transaction) {
+        return super.insert(index, resource, amount, transaction);
+    }
+
+    @Override
     public int insert(int index, T resource, int amount, TransactionContext transaction) {
         Objects.checkIndex(index, size());
         TransferPreconditions.checkNonNegative(amount);
@@ -74,6 +80,11 @@ public abstract class StacksResourceStorage<T extends Resource, S, C> extends St
         }
 
         return super.insert(index, resource, amount, transaction);
+    }
+
+    @Override
+    public int internalExtract(int index, T resource, int amount, TransactionContext transaction) {
+        return super.extract(index, resource, amount, transaction);
     }
 
     @Override

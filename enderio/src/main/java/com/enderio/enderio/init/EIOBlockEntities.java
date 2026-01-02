@@ -123,7 +123,7 @@ public class EIOBlockEntities {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<DrainBlockEntity>> DRAIN = BLOCK_ENTITY_TYPES
         .builder("drain", DrainBlockEntity::new, EIOBlocks.DRAIN::get)
         .apply(EIOBlockEntities::poweredMachineBlockEntityCapabilities)
-        .apply(EIOBlockEntities::fluidHandlerCapability)
+        .capability(Capabilities.Fluid.BLOCK, DrainBlockEntity.FLUID_HANDLER_PROVIDER)
         .build();
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<NiardBlockEntity>> NIARD = BLOCK_ENTITY_TYPES
