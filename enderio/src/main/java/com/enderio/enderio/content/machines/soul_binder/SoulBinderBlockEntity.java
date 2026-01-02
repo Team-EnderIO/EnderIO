@@ -1,5 +1,8 @@
 package com.enderio.enderio.content.machines.soul_binder;
 
+import com.enderio.core.common.storage.FluidStorage;
+import com.enderio.core.common.storage.layout.FluidStorageLayout;
+import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.UseOnly;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;
@@ -7,18 +10,14 @@ import com.enderio.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.enderio.api.soul.SoulBoundUtils;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.foundation.MachineNBTKeys;
-import com.enderio.enderio.foundation.attachment.FluidTankUser;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.foundation.inventory.MultiSlotAccess;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
-import com.enderio.enderio.foundation.io.fluid.MachineFluidHandler;
-import com.enderio.enderio.foundation.io.fluid.MachineFluidTank;
-import com.enderio.enderio.foundation.io.fluid.MachineTankLayout;
-import com.enderio.enderio.foundation.io.fluid.TankAccess;
 import com.enderio.enderio.foundation.recipe.MachineRecipeCaches;
 import com.enderio.enderio.foundation.state.MachineState;
+import com.enderio.enderio.foundation.storage.SidedResourceHandler;
 import com.enderio.enderio.foundation.task.PoweredCraftingMachineTask;
 import com.enderio.enderio.foundation.task.host.CraftingMachineTaskHost;
 import com.enderio.enderio.foundation.util.ExperienceUtil;
@@ -29,6 +28,7 @@ import com.enderio.enderio.init.EIOItems;
 import com.enderio.enderio.init.EIORecipes;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.world.entity.player.Inventory;
@@ -41,29 +41,46 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.fml.LogicalSide;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 import static com.enderio.enderio.foundation.util.ExperienceUtil.EXP_TO_FLUID;
 
-public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements FluidTankUser {
+public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
 
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
             MachinesConfig.COMMON.ENERGY.SOUL_BINDER_CAPACITY);
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE,
             MachinesConfig.COMMON.ENERGY.SOUL_BINDER_USAGE);
 
+    public static final ICapabilityProvider<SoulBinderBlockEntity, Direction, ResourceHandler<FluidResource>> FLUID_HANDLER_PROVIDER = (be,
+        side) -> be.fluidStorage != null ? SidedResourceHandler.of(be.fluidStorage, side, be) : null;
+
+    public static final int TANK_CAPACITY = 10000;
+
+    public static final SingleResourceSlotKey<FluidResource> TANK_SLOT = new SingleResourceSlotKey<>();
+
+    public static final FluidStorageLayout<SoulBinderBlockEntity> FLUID_STORAGE_LAYOUT =
+        FluidStorageLayout.<SoulBinderBlockEntity>builder()
+            .storageSlot(TANK_SLOT, slot -> slot
+                .capacity(TANK_CAPACITY)
+                .filter((index, resource, binder) -> resource.is(Tags.Fluids.EXPERIENCE)))
+            .build();
+
+    private final FluidStorage<SoulBinderBlockEntity> fluidStorage;
+
     public static final SingleSlotAccess INPUT_SOUL = new SingleSlotAccess();
     public static final SingleSlotAccess INPUT_OTHER = new SingleSlotAccess();
     public static final MultiSlotAccess OUTPUT = new MultiSlotAccess();
-    private final MachineFluidHandler fluidHandler;
-    private static final TankAccess TANK = new TankAccess();
 
     @UseOnly(LogicalSide.CLIENT)
     @Nullable
@@ -74,7 +91,33 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
     public SoulBinderBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.SOUL_BINDER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
                 EnergyIOMode.Input, CAPACITY, USAGE);
-        fluidHandler = createFluidHandler();
+
+        fluidStorage = new FluidStorage<>(FLUID_STORAGE_LAYOUT, this) {
+            @Override
+            protected void onContentsChanged(int index, FluidStack previousContents) {
+                super.onContentsChanged(index, previousContents);
+                craftingTaskHost.newTaskAvailable();
+                updateMachineState(MachineState.EMPTY_TANK, fluidStorage.getAmountAsInt(TANK_SLOT) <= 0);
+                setChanged();
+            }
+
+            @Override
+            public int insert(int index, FluidResource resource, int amount, net.neoforged.neoforge.transfer.transaction.TransactionContext transaction) {
+                // Convert into XP Juice - allow any XP fluid type to be inserted but normalize to the current fluid
+                if (isValid(index, resource)) {
+                    var currentFluid = getResource(index);
+                    if (currentFluid.getFluid() == Fluids.EMPTY || resource.getFluid().isSame(currentFluid.getFluid())) {
+                        return super.insert(index, resource, amount, transaction);
+                    } else {
+                        // Insert the same amount but as the current fluid type
+                        return super.insert(index, currentFluid, amount, transaction);
+                    }
+                }
+
+                // Non-XP is not allowed.
+                return 0;
+            }
+        };
 
         // Create the crafting task host
         craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy,
@@ -138,7 +181,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
 
     private SoulBindingRecipe.Input createRecipeInput() {
         return new SoulBindingRecipe.Input(INPUT_SOUL.getStack(getInventory()),
-                INPUT_OTHER.getStack(getInventory()), TANK.getFluid(getFluidHandler()));
+                INPUT_OTHER.getStack(getInventory()), fluidStorage.getStack(TANK_SLOT));
     }
 
     @EnsureSide(EnsureSide.Side.CLIENT)
@@ -169,46 +212,9 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
     }
 
     // region Fluid Storage
-    @Override
-    public @Nullable MachineTankLayout getTankLayout() {
-        return MachineTankLayout.builder().tank(TANK, 10000, f -> f.is(Tags.Fluids.EXPERIENCE)).build();
-    }
 
-    @Override
-    public MachineFluidHandler createFluidHandler() {
-        return new MachineFluidHandler(this, getTankLayout()) {
-            @Override
-            protected void onContentsChanged(int slot) {
-                craftingTaskHost.newTaskAvailable();
-                updateMachineState(MachineState.EMPTY_TANK, TANK.getFluidAmount(this) <= 0);
-                setChanged();
-            }
-
-            @Override
-            public int fill(FluidStack resource, FluidAction action) {
-                // Convert into XP Juice
-                if (TANK.isFluidValid(this, resource)) {
-                    var currentFluid = TANK.getFluid(this).getFluid();
-                    if (currentFluid == Fluids.EMPTY || resource.getFluid().isSame(currentFluid)) {
-                        return super.fill(resource, action);
-                    } else {
-                        return super.fill(new FluidStack(currentFluid, resource.getAmount()), action);
-                    }
-                }
-
-                // Non-XP is not allowed.
-                return 0;
-            }
-        };
-    }
-
-    @Override
-    public MachineFluidHandler getFluidHandler() {
-        return fluidHandler;
-    }
-
-    public MachineFluidTank getFluidTank() {
-        return TANK.getTank(this);
+    public FluidStack getStoredFluid() {
+        return fluidStorage.getStack(TANK_SLOT);
     }
 
     // endregion
@@ -233,12 +239,19 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
                 INPUT_SOUL.getStack(getInventory()).shrink(1);
                 INPUT_OTHER.getStack(getInventory()).shrink(1);
 
-                MachineFluidHandler handler = getFluidHandler();
+                int currentFluidAmount = fluidStorage.getAmountAsInt(TANK_SLOT);
                 int leftover = ExperienceUtil
-                        .getLevelFromFluidWithLeftover(TANK.getFluidAmount(handler), 0, recipe.experience())
+                        .getLevelFromFluidWithLeftover(currentFluidAmount, 0, recipe.experience())
                         .experience();
-                TANK.drain(handler, TANK.getFluidAmount(handler) - leftover * EXP_TO_FLUID,
-                        IFluidHandler.FluidAction.EXECUTE);
+                int toExtract = currentFluidAmount - leftover * EXP_TO_FLUID;
+
+                FluidStack currentFluid = getStoredFluid();
+                if (!currentFluid.isEmpty() && toExtract > 0) {
+                    try (Transaction transaction = Transaction.openRoot()) {
+                        fluidStorage.internalExtract(TANK_SLOT, FluidResource.of(currentFluid.getFluid()), toExtract, transaction);
+                        transaction.commit();
+                    }
+                }
             }
 
         };
@@ -254,8 +267,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
 
         SimpleFluidContent storedFluid = components.get(EIODataComponents.ITEM_FLUID_CONTENT);
         if (storedFluid != null) {
-            var tank = TANK.getTank(this);
-            tank.setFluid(storedFluid.copy());
+            fluidStorage.setStack(TANK_SLOT, storedFluid.copy());
         }
     }
 
@@ -263,21 +275,24 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
     protected void collectImplicitComponents(DataComponentMap.Builder components) {
         super.collectImplicitComponents(components);
 
-        var tank = TANK.getTank(this);
-        if (!tank.isEmpty()) {
-            components.set(EIODataComponents.ITEM_FLUID_CONTENT, SimpleFluidContent.copyOf(tank.getFluid()));
+        var fluidStored = getStoredFluid();
+        if (!fluidStored.isEmpty()) {
+            components.set(EIODataComponents.ITEM_FLUID_CONTENT, SimpleFluidContent.copyOf(fluidStored));
         }
     }
 
     @Override
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
+        output.putChild("Fluid", fluidStorage);
         output.putChild(MachineNBTKeys.CRAFTING_TASK, craftingTaskHost);
     }
 
     @Override
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
+        input.child("Fluid")
+            .ifPresent(fluidStorage::deserialize);
         var task = input.child(MachineNBTKeys.CRAFTING_TASK);
         task.ifPresent(craftingTaskHost::deserialize);
     }

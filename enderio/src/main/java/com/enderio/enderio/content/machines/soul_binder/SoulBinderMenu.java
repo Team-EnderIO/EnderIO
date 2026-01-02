@@ -24,7 +24,7 @@ public class SoulBinderMenu extends PoweredMachineMenu<SoulBinderBlockEntity> {
 
         craftingProgressSlot = addSyncSlot(FloatSyncSlot.readOnly(blockEntity::getCraftingProgress));
         tankSyncSlot = addSyncSlot(
-                FluidStorageSyncSlot.readOnly(() -> FluidStorageInfo.of(blockEntity.getFluidTank())));
+                FluidStorageSyncSlot.readOnly(() -> new FluidStorageInfo(blockEntity.getStoredFluid(), SoulBinderBlockEntity.TANK_CAPACITY)));
     }
 
     public SoulBinderMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {

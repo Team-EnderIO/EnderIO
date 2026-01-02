@@ -95,10 +95,6 @@ public class XPObeliskBlockEntity extends MachineBlockEntity {
         return fluidStorage.getStack(TANK_SLOT);
     }
 
-    public int getFluidAmount() {
-        return fluidStorage.getAmountAsInt(TANK_SLOT);
-    }
-
     public void addLevelsToPlayer(Player player, int levelsToAdd) {
         long playerExperience = ExperienceUtil.getPlayerTotalXp(player);
         long targetExperience = ExperienceUtil.getTotalXpFromLevel(player.experienceLevel + levelsToAdd);
@@ -113,7 +109,7 @@ public class XPObeliskBlockEntity extends MachineBlockEntity {
     }
 
     public void addAllXpToPlayer(Player player) {
-        long experienceToGive = getFluidAmount() / ExperienceUtil.EXP_TO_FLUID;
+        long experienceToGive = fluidStorage.getAmountAsInt(TANK_SLOT) / ExperienceUtil.EXP_TO_FLUID;
         addPlayerXp(player, experienceToGive);
     }
 

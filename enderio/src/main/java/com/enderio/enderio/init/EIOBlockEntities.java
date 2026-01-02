@@ -135,7 +135,7 @@ public class EIOBlockEntities {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SoulBinderBlockEntity>> SOUL_BINDER = BLOCK_ENTITY_TYPES
         .builder("soul_binder", SoulBinderBlockEntity::new, EIOBlocks.SOUL_BINDER::get)
         .apply(EIOBlockEntities::poweredMachineBlockEntityCapabilities)
-        .apply(EIOBlockEntities::fluidHandlerCapability)
+        .capability(Capabilities.Fluid.BLOCK, SoulBinderBlockEntity.FLUID_HANDLER_PROVIDER)
         .build();
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WiredChargerBlockEntity>> WIRED_CHARGER = BLOCK_ENTITY_TYPES
