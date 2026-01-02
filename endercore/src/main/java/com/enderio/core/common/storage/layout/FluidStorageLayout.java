@@ -1,9 +1,7 @@
-package com.enderio.core.common.storage;
+package com.enderio.core.common.storage.layout;
 
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.transfer.ResourceHandler;
+import com.enderio.core.common.storage.slot.ResourceSlotKey;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
-import net.neoforged.neoforge.transfer.item.ItemResource;
 
 import java.util.List;
 import java.util.Map;

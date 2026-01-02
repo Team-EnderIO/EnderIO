@@ -1,5 +1,8 @@
-package com.enderio.core.common.storage;
+package com.enderio.core.common.storage.layout;
 
+import com.enderio.core.common.storage.slot.MultiResourceSlotKey;
+import com.enderio.core.common.storage.slot.ResourceSlotKey;
+import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import net.neoforged.neoforge.common.util.TriPredicate;
 import net.neoforged.neoforge.transfer.resource.Resource;
 import org.jetbrains.annotations.Nullable;

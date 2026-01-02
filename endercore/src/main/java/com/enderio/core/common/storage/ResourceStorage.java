@@ -1,5 +1,8 @@
 package com.enderio.core.common.storage;
 
+import com.enderio.core.common.storage.layout.ResourceStorageLayout;
+import com.enderio.core.common.storage.slot.MultiResourceSlotKey;
+import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.resource.Resource;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;

@@ -1,6 +1,5 @@
 package com.enderio.enderio.foundation.fluid;
 
-import com.enderio.core.common.storage.SingleResourceSlotKey;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.IFluidTank;
 import net.neoforged.neoforge.transfer.ResourceHandler;

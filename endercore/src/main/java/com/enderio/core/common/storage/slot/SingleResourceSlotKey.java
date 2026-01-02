@@ -1,4 +1,4 @@
-package com.enderio.core.common.storage;
+package com.enderio.core.common.storage.slot;
 
 import net.neoforged.neoforge.transfer.resource.Resource;
 

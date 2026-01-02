@@ -1,5 +1,6 @@
-package com.enderio.core.common.storage;
+package com.enderio.core.common.storage.layout;
 
+import com.enderio.core.common.storage.slot.ResourceSlotKey;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 
 import java.util.List;

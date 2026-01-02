@@ -1,10 +1,9 @@
 package com.enderio.core.storage;
 
-import com.enderio.core.common.storage.FluidStorageLayout;
-import com.enderio.core.common.storage.MultiResourceSlotKey;
-import com.enderio.core.common.storage.SingleResourceSlotKey;
+import com.enderio.core.common.storage.layout.FluidStorageLayout;
+import com.enderio.core.common.storage.slot.MultiResourceSlotKey;
+import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
-import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

@@ -1,13 +1,13 @@
 package com.enderio.enderio.content.storage.fluid_tank;
 
-import com.enderio.core.common.storage.FluidStorageLayout;
-import com.enderio.core.common.storage.SingleResourceSlotKey;
+import com.enderio.core.common.storage.layout.FluidStorageLayout;
+import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import com.enderio.enderio.foundation.io.fluid.FluidItemInteractive;
 import com.enderio.enderio.foundation.state.MachineState;
-import com.enderio.enderio.foundation.storage.FluidStorage;
+import com.enderio.core.common.storage.FluidStorage;
 import com.enderio.enderio.foundation.storage.SidedResourceHandler;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;

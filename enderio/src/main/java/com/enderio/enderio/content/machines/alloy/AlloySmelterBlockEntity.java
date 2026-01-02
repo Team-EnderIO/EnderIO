@@ -1,11 +1,6 @@
 package com.enderio.enderio.content.machines.alloy;
 
 import com.enderio.core.common.blockentity.EnderBlockEntity;
-import com.enderio.core.common.storage.FluidStorageLayout;
-import com.enderio.core.common.storage.ItemStorageLayout;
-import com.enderio.core.common.storage.MultiResourceSlotKey;
-import com.enderio.core.common.storage.ResourceStorageLayout;
-import com.enderio.core.common.storage.SingleResourceSlotKey;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
@@ -23,7 +18,6 @@ import com.enderio.enderio.foundation.task.PoweredCraftingMachineTask;
 import com.enderio.enderio.foundation.task.host.CraftingMachineTaskHost;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
-import com.enderio.enderio.init.EIOItems;
 import com.enderio.enderio.init.EIORecipes;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.BlockPos;
@@ -40,7 +34,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
-import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
