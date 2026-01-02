@@ -201,7 +201,7 @@ public class EIOBlockEntities {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WeatherObeliskBlockEntity>> WEATHER_OBELISK = BLOCK_ENTITY_TYPES
         .builder("weather_obelisk", WeatherObeliskBlockEntity::new, EIOBlocks.WEATHER_OBELISK::get)
         .apply(EIOBlockEntities::machineBlockEntityCapabilities)
-        .apply(EIOBlockEntities::fluidHandlerCapability)
+        .capability(Capabilities.Fluid.BLOCK, WeatherObeliskBlockEntity.FLUID_HANDLER_PROVIDER)
         .build();
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FarmingStationBlockEntity>> FARMING_STATION = BLOCK_ENTITY_TYPES
