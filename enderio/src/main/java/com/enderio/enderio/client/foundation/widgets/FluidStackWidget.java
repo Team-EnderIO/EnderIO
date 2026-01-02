@@ -3,7 +3,6 @@ package com.enderio.enderio.client.foundation.widgets;
 import com.enderio.core.client.gui.widgets.EIOWidget;
 import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.foundation.fluid.FluidStorageInfo;
-import com.enderio.enderio.foundation.io.fluid.MachineFluidTank;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -23,11 +22,6 @@ import java.util.function.Supplier;
 public class FluidStackWidget extends EIOWidget {
 
     private final Supplier<FluidStorageInfo> fluidStorageSupplier;
-
-    public static FluidStackWidget legacy(int x, int y, int width, int height,
-            Supplier<MachineFluidTank> fluidTankSupplier) {
-        return new FluidStackWidget(x, y, width, height, () -> FluidStorageInfo.of(fluidTankSupplier.get()));
-    }
 
     public FluidStackWidget(int x, int y, int width, int height, Supplier<FluidStorageInfo> fluidStorageSupplier) {
         super(x, y, width, height);

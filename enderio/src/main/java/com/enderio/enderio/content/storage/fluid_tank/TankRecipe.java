@@ -1,6 +1,5 @@
 package com.enderio.enderio.content.storage.fluid_tank;
 
-import com.enderio.enderio.foundation.io.fluid.MachineFluidTank;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIORecipeBookCategories;
 import com.enderio.enderio.init.EIORecipes;
@@ -27,7 +26,6 @@ import net.minecraft.world.item.crafting.display.RecipeDisplay;
 import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.List;

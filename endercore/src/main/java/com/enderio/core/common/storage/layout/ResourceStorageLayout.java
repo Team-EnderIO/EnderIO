@@ -31,9 +31,17 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
         return slots.size();
     }
 
-    public final SlotConfig<TResource, TContext> get(int index) {
+    public final SlotConfig<TResource, TContext> slotConfig(int index) {
         Objects.checkIndex(index, size());
         return slots.get(index);
+    }
+
+    public final SlotConfig<TResource, TContext> slotConfig(SingleResourceSlotKey<TResource> key) {
+        return slotConfig(indexOf(key));
+    }
+
+    public final SlotConfig<TResource, TContext> slotConfig(MultiResourceSlotKey<TResource> key, int index) {
+        return slotConfig(indexOf(key, index));
     }
 
     public final int indexOf(SingleResourceSlotKey<TResource> key) {

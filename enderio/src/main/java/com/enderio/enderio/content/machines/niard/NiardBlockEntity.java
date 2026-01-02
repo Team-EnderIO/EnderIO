@@ -99,6 +99,10 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
         iterator = new NiardRangeIterator(worldPosition, actionRange);
     }
 
+    public FluidStorage<NiardBlockEntity> getFluidStorage() {
+        return fluidStorage;
+    }
+
     @Override
     public void serverTick() {
         if (isActive()) {

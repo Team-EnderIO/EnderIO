@@ -60,8 +60,18 @@ public interface ResourceStorage<T extends Resource> extends ResourceHandler<T> 
     }
 
     @ApiStatus.NonExtendable
+    default int insert(SingleResourceSlotKey<T> key, T resource, int amount, TransactionContext transaction) {
+        return this.insert(layout().indexOf(key), resource, amount, transaction);
+    }
+
+    @ApiStatus.NonExtendable
     default int internalInsert(SingleResourceSlotKey<T> key, T resource, int amount, TransactionContext transaction) {
         return this.internalInsert(layout().indexOf(key), resource, amount, transaction);
+    }
+
+    @ApiStatus.NonExtendable
+    default int extract(SingleResourceSlotKey<T> key, T resource, int amount, TransactionContext transaction) {
+        return this.extract(layout().indexOf(key), resource, amount, transaction);
     }
 
     @ApiStatus.NonExtendable
@@ -109,8 +119,18 @@ public interface ResourceStorage<T extends Resource> extends ResourceHandler<T> 
     }
 
     @ApiStatus.NonExtendable
+    default int insert(MultiResourceSlotKey<T> key, int index, T resource, int amount, TransactionContext transaction) {
+        return this.insert(layout().indexOf(key, index), resource, amount, transaction);
+    }
+
+    @ApiStatus.NonExtendable
     default int internalInsert(MultiResourceSlotKey<T> key, int index, T resource, int amount, TransactionContext transaction) {
         return this.internalInsert(layout().indexOf(key, index), resource, amount, transaction);
+    }
+
+    @ApiStatus.NonExtendable
+    default int extract(MultiResourceSlotKey<T> key, int index, T resource, int amount, TransactionContext transaction) {
+        return this.extract(layout().indexOf(key, index), resource, amount, transaction);
     }
 
     @ApiStatus.NonExtendable

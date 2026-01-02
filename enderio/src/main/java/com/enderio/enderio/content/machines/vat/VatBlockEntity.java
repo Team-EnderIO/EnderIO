@@ -84,6 +84,10 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
                 this::createTask, this::createRecipeInput);
     }
 
+    public FluidStorage<VatBlockEntity> getFluidStorage() {
+        return fluidStorage;
+    }
+
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
@@ -177,13 +181,10 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
     protected static class VatCraftingMachineTask
             extends CraftingMachineTask<FermentingRecipe, FermentingRecipe.Input> {
 
-        private final FluidStorage<VatBlockEntity> fluidStorage;
-
         public VatCraftingMachineTask(@NotNull Level level, MachineInventory inventory,
                 FluidStorage<VatBlockEntity> fluidStorage, FermentingRecipe.Input input,
                 @Nullable RecipeHolder<FermentingRecipe> recipe) {
-            super(level, inventory, null, input, recipe);
-            this.fluidStorage = fluidStorage;
+            super(level, inventory, fluidStorage, input, recipe);
         }
 
         @Override
@@ -191,7 +192,8 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
             REAGENTS.get(0).getStack(inventory).shrink(1);
             REAGENTS.get(1).getStack(inventory).shrink(1);
 
-            FluidStack inputFluid = fluidStorage.getStack(INPUT_TANK);
+            // TODO: getStack is not available on ResourceStorage<>, but letting it be any ResourceStorage<> impl is good hygiene.
+            FluidStack inputFluid = fluidStorage.getResource(INPUT_TANK).toStack(fluidStorage.getAmountAsInt(INPUT_TANK));
             try (Transaction transaction = Transaction.openRoot()) {
                 int inputIndex = fluidStorage.layout().indexOf(INPUT_TANK);
                 fluidStorage.internalExtract(inputIndex, FluidResource.of(inputFluid), recipe.input().amount(), transaction);

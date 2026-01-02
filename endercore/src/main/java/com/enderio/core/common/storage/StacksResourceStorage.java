@@ -56,13 +56,13 @@ public abstract class StacksResourceStorage<T extends Resource, S, C> extends St
     @Override
     protected int getCapacity(int index, T resource) {
         Objects.checkIndex(index, size());
-        return layout.get(index).getCapacityAsInt(resource, context);
+        return layout.slotConfig(index).getCapacityAsInt(resource, context);
     }
 
     @Override
     public boolean isValid(int index, T resource) {
         Objects.checkIndex(index, size());
-        return layout.get(index).isValid(index, resource, context);
+        return layout.slotConfig(index).isValid(index, resource, context);
     }
 
     @Override
@@ -75,7 +75,7 @@ public abstract class StacksResourceStorage<T extends Resource, S, C> extends St
         Objects.checkIndex(index, size());
         TransferPreconditions.checkNonNegative(amount);
 
-        if (!layout.get(index).canInsert()) {
+        if (!layout.slotConfig(index).canInsert()) {
             return 0;
         }
 
@@ -92,7 +92,7 @@ public abstract class StacksResourceStorage<T extends Resource, S, C> extends St
         Objects.checkIndex(index, size());
         TransferPreconditions.checkNonNegative(amount);
 
-        if (!layout.get(index).canExtract()) {
+        if (!layout.slotConfig(index).canExtract()) {
             return 0;
         }
 

@@ -30,11 +30,10 @@ public class FluidTankBlock extends MachineBlock<FluidTankBlockEntity> {
                     return InteractionResult.SUCCESS;
                 }
 
-                // TODO: 1.21.11: Finish fluid API changes
-//                if (tank.handleFluidItemInteraction(player, hand, stack, tank, FluidTankBlockEntity.TANK)) {
-//                    player.getInventory().setChanged();
-//                    return InteractionResult.CONSUME;
-//                }
+                if (tank.handleFluidItemInteraction(player, hand, stack, tank.getFluidStorage(), FluidTankBlockEntity.TANK_SLOT)) {
+                    player.getInventory().setChanged();
+                    return InteractionResult.CONSUME;
+                }
             }
         }
 

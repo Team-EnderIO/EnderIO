@@ -113,6 +113,10 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
     public abstract int getCapacity();
 
+    public FluidStorage<FluidTankBlockEntity> getFluidStorage() {
+        return fluidStorage;
+    }
+
     @Override
     public boolean isActive() {
         // No active state on tanks
@@ -227,18 +231,15 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
 
     private void fillInternal() {
-        // TODO: re-enable once it uses the new transfer API
-//        InternalTankTasks.fillInternal(this, TANK, FLUID_FILL_INPUT, FLUID_FILL_OUTPUT);
+        InternalTankTasks.fillInternal(this, fluidStorage, TANK_SLOT, FLUID_FILL_INPUT, FLUID_FILL_OUTPUT);
     }
 
     private void drainInternal() {
-        // TODO: re-enable once it uses the new transfer API
-//        InternalTankTasks.drainInternal(this, TANK, FLUID_DRAIN_INPUT, FLUID_DRAIN_OUTPUT);
+        InternalTankTasks.drainInternal(this, fluidStorage, TANK_SLOT, FLUID_DRAIN_INPUT, FLUID_DRAIN_OUTPUT);
     }
 
     private void tryMendTool() {
-        // TODO: re-enable once it uses the new transfer API
-//        InternalTankTasks.tryMendTool(this, TANK, FLUID_DRAIN_INPUT, FLUID_DRAIN_OUTPUT);
+        InternalTankTasks.tryMendTool(this, fluidStorage, TANK_SLOT, FLUID_DRAIN_INPUT, FLUID_DRAIN_OUTPUT);
     }
 
     // endregion

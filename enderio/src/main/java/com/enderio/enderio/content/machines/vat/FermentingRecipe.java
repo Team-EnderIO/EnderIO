@@ -3,7 +3,6 @@ package com.enderio.enderio.content.machines.vat;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.enderio.foundation.MachineRecipe;
 import com.enderio.enderio.foundation.datamap.VatReagent;
-import com.enderio.enderio.foundation.io.fluid.MachineFluidTank;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIORecipeBookCategories;
 import com.enderio.enderio.init.EIORecipes;
@@ -189,13 +188,6 @@ public final class FermentingRecipe implements MachineRecipe<FermentingRecipe.In
         public FluidStack getInputFluid() {
             return inputFluid;
         }
-
-        // Legacy support - will be removed once all code is migrated
-        @Deprecated(forRemoval = true)
-        public MachineFluidTank getInputTank() {
-            throw new UnsupportedOperationException("Use getInputFluid() instead");
-        }
-
     }
 
     public record FermentingDisplay(SlotDisplay fluid, SlotDisplay left, SlotDisplay right, SlotDisplay result, SlotDisplay craftingStation) implements RecipeDisplay {
