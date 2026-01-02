@@ -29,4 +29,9 @@ public class FluidStorage<TOwner> extends StacksResourceStorage<FluidResource, F
     protected FluidStack copyOf(FluidStack fluidStack) {
         return fluidStack.copy();
     }
+
+    @Override
+    protected boolean matches(FluidStack stack, FluidResource resource) {
+        return resource.matches(stack);
+    }
 }

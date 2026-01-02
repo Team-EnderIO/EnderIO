@@ -16,6 +16,7 @@ public interface ResourceStorage<T extends Resource> extends ResourceHandler<T> 
     ResourceStorageLayout<T, ?> layout();
 
     void set(int index, T resource, int amount);
+    void setTransactional(int index, T resource, int amount, TransactionContext transaction);
 
     // For use in block implementations - bypasses layout slot settings
     int internalInsert(int index, T resource, int amount, TransactionContext transaction);
