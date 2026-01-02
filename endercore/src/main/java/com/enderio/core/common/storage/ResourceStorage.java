@@ -1,8 +1,7 @@
 package com.enderio.core.common.storage;
 
 import com.enderio.core.common.storage.layout.ResourceStorageLayout;
-import com.enderio.core.common.storage.slot.MultiResourceSlotKey;
-import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
+import com.enderio.core.common.storage.slot.ResourceSlotId;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.resource.Resource;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
@@ -22,122 +21,59 @@ public interface ResourceStorage<T extends Resource> extends ResourceHandler<T> 
     int internalInsert(int index, T resource, int amount, TransactionContext transaction);
     int internalExtract(int index, T resource, int amount, TransactionContext transaction);
 
-    // region Single-Slot Access
-
     @ApiStatus.NonExtendable
-    default T getResource(SingleResourceSlotKey<T> key) {
-        return this.getResource(layout().indexOf(key));
+    default T getResource(ResourceSlotId<T> slotId) {
+        return this.getResource(slotId.index(layout()));
     }
 
     @ApiStatus.NonExtendable
-    default int getAmountAsInt(SingleResourceSlotKey<T> key) {
-        return this.getAmountAsInt(layout().indexOf(key));
+    default int getAmountAsInt(ResourceSlotId<T> slotId) {
+        return this.getAmountAsInt(slotId.index(layout()));
     }
 
     @ApiStatus.NonExtendable
-    default long getAmountAsLong(SingleResourceSlotKey<T> key) {
-        return this.getAmountAsLong(layout().indexOf(key));
+    default long getAmountAsLong(ResourceSlotId<T> slotId) {
+        return this.getAmountAsLong(slotId.index(layout()));
     }
 
     @ApiStatus.NonExtendable
-    default int getCapacityAsInt(SingleResourceSlotKey<T> key, T resource) {
-        return this.getCapacityAsInt(layout().indexOf(key), resource);
+    default int getCapacityAsInt(ResourceSlotId<T> slotId, T resource) {
+        return this.getCapacityAsInt(slotId.index(layout()), resource);
     }
 
     @ApiStatus.NonExtendable
-    default long getCapacityAsLong(SingleResourceSlotKey<T> key, T resource) {
-        return this.getCapacityAsLong(layout().indexOf(key), resource);
+    default long getCapacityAsLong(ResourceSlotId<T> slotId, T resource) {
+        return this.getCapacityAsLong(slotId.index(layout()), resource);
     }
 
     @ApiStatus.NonExtendable
-    default boolean isValid(SingleResourceSlotKey<T> key, T resource) {
-        return this.isValid(layout().indexOf(key), resource);
+    default boolean isValid(ResourceSlotId<T> slotId, T resource) {
+        return this.isValid(slotId.index(layout()), resource);
     }
 
     @ApiStatus.NonExtendable
-    default void set(SingleResourceSlotKey<T> key, T resource, int amount) {
-        this.set(layout().indexOf(key), resource, amount);
+    default void set(ResourceSlotId<T> slotId, T resource, int amount) {
+        this.set(slotId.index(layout()), resource, amount);
     }
 
     @ApiStatus.NonExtendable
-    default int insert(SingleResourceSlotKey<T> key, T resource, int amount, TransactionContext transaction) {
-        return this.insert(layout().indexOf(key), resource, amount, transaction);
+    default int insert(ResourceSlotId<T> slotId, T resource, int amount, TransactionContext transaction) {
+        return this.insert(slotId.index(layout()), resource, amount, transaction);
     }
 
     @ApiStatus.NonExtendable
-    default int internalInsert(SingleResourceSlotKey<T> key, T resource, int amount, TransactionContext transaction) {
-        return this.internalInsert(layout().indexOf(key), resource, amount, transaction);
+    default int internalInsert(ResourceSlotId<T> slotId, T resource, int amount, TransactionContext transaction) {
+        return this.internalInsert(slotId.index(layout()), resource, amount, transaction);
     }
 
     @ApiStatus.NonExtendable
-    default int extract(SingleResourceSlotKey<T> key, T resource, int amount, TransactionContext transaction) {
-        return this.extract(layout().indexOf(key), resource, amount, transaction);
+    default int extract(ResourceSlotId<T> slotId, T resource, int amount, TransactionContext transaction) {
+        return this.extract(slotId.index(layout()), resource, amount, transaction);
     }
 
     @ApiStatus.NonExtendable
-    default int internalExtract(SingleResourceSlotKey<T> key, T resource, int amount, TransactionContext transaction) {
-        return this.internalExtract(layout().indexOf(key), resource, amount, transaction);
+    default int internalExtract(ResourceSlotId<T> slotId, T resource, int amount, TransactionContext transaction) {
+        return this.internalExtract(slotId.index(layout()), resource, amount, transaction);
     }
-
-    // endregion
-    
-    // region Multi-Slot Access
-
-    @ApiStatus.NonExtendable
-    default T getResource(MultiResourceSlotKey<T> key, int index) {
-        return this.getResource(layout().indexOf(key, index));
-    }
-
-    @ApiStatus.NonExtendable
-    default int getAmountAsInt(MultiResourceSlotKey<T> key, int index) {
-        return this.getAmountAsInt(layout().indexOf(key, index));
-    }
-
-    @ApiStatus.NonExtendable
-    default long getAmountAsLong(MultiResourceSlotKey<T> key, int index) {
-        return this.getAmountAsLong(layout().indexOf(key, index));
-    }
-
-    @ApiStatus.NonExtendable
-    default int getCapacityAsInt(MultiResourceSlotKey<T> key, int index, T resource) {
-        return this.getCapacityAsInt(layout().indexOf(key, index), resource);
-    }
-
-    @ApiStatus.NonExtendable
-    default long getCapacityAsLong(MultiResourceSlotKey<T> key, int index, T resource) {
-        return this.getCapacityAsLong(layout().indexOf(key, index), resource);
-    }
-
-    @ApiStatus.NonExtendable
-    default boolean isValid(MultiResourceSlotKey<T> key, int index, T resource) {
-        return this.isValid(layout().indexOf(key, index), resource);
-    }
-
-    @ApiStatus.NonExtendable
-    default void set(ResourceStorage<T> storage, MultiResourceSlotKey<T> key, int index, T resource, int amount) {
-        storage.set(layout().indexOf(key, index), resource, amount);
-    }
-
-    @ApiStatus.NonExtendable
-    default int insert(MultiResourceSlotKey<T> key, int index, T resource, int amount, TransactionContext transaction) {
-        return this.insert(layout().indexOf(key, index), resource, amount, transaction);
-    }
-
-    @ApiStatus.NonExtendable
-    default int internalInsert(MultiResourceSlotKey<T> key, int index, T resource, int amount, TransactionContext transaction) {
-        return this.internalInsert(layout().indexOf(key, index), resource, amount, transaction);
-    }
-
-    @ApiStatus.NonExtendable
-    default int extract(MultiResourceSlotKey<T> key, int index, T resource, int amount, TransactionContext transaction) {
-        return this.extract(layout().indexOf(key, index), resource, amount, transaction);
-    }
-
-    @ApiStatus.NonExtendable
-    default int internalExtract(MultiResourceSlotKey<T> key, int index, T resource, int amount, TransactionContext transaction) {
-        return this.internalExtract(layout().indexOf(key, index), resource, amount, transaction);
-    }
-    
-    // endregion
 }
 

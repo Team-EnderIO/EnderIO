@@ -1,7 +1,7 @@
 package com.enderio.enderio.content.storage.fluid_tank;
 
 import com.enderio.core.common.storage.ResourceStorage;
-import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
+import com.enderio.core.common.storage.slot.ResourceSlotId;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import com.enderio.enderio.foundation.util.ExperienceUtil;
@@ -25,7 +25,7 @@ public class InternalTankTasks {
     public static <T extends MachineBlockEntity> void fillInternal(
         T blockEntity,
         ResourceStorage<FluidResource> fluidStorage,
-        SingleResourceSlotKey<FluidResource> tankSlot,
+        ResourceSlotId<FluidResource> tankSlot,
         SingleSlotAccess fluidFillInput,
         SingleSlotAccess fluidFillOutput
     ) {
@@ -74,7 +74,7 @@ public class InternalTankTasks {
     public static <T extends MachineBlockEntity> void drainInternal(
         T blockEntity,
         ResourceStorage<FluidResource> fluidStorage,
-        SingleResourceSlotKey<FluidResource> tankSlot,
+        ResourceSlotId<FluidResource> tankSlot,
         SingleSlotAccess fluidDrainInput,
         SingleSlotAccess fluidDrainOutput
     ) {
@@ -125,7 +125,7 @@ public class InternalTankTasks {
     public static <T extends MachineBlockEntity> void tryMendTool(
         T blockEntity,
         ResourceStorage<FluidResource> fluidStorage,
-        SingleResourceSlotKey<FluidResource> tankSlot,
+        ResourceSlotId<FluidResource> tankSlot,
         SingleSlotAccess fluidDrainInput,
         SingleSlotAccess fluidDrainOutput
     ) {

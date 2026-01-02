@@ -2,6 +2,7 @@ package com.enderio.core.common.storage;
 
 import com.enderio.core.common.storage.layout.ResourceStorageLayout;
 import com.enderio.core.common.storage.slot.MultiResourceSlotKey;
+import com.enderio.core.common.storage.slot.ResourceSlotId;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.mojang.serialization.Codec;
 import net.minecraft.world.level.storage.ValueInput;
@@ -31,22 +32,13 @@ public abstract class StacksResourceStorage<T extends Resource, S, C> extends St
     }
 
     // Helpers for dealing with stacks
-    public S getStack(SingleResourceSlotKey<T> key) {
-        int index = layout.indexOf(key);
+    public S getStack(ResourceSlotId<T> slotId) {
+        int index = slotId.index(layout);
         return getStackFrom(getResource(index), getAmountAsInt(index));
     }
 
-    public void setStack(SingleResourceSlotKey<T> key, S stack) {
-        set(layout.indexOf(key), getResourceFrom(stack), getAmountFrom(stack));
-    }
-
-    public S getStack(MultiResourceSlotKey<T> key, int index) {
-        int absoluteIndex = layout.indexOf(key, index);
-        return getStackFrom(getResource(absoluteIndex), getAmountAsInt(absoluteIndex));
-    }
-
-    public void setStack(MultiResourceSlotKey<T> key, int index, S stack) {
-        set(layout.indexOf(key, index), getResourceFrom(stack), getAmountFrom(stack));
+    public void setStack(ResourceSlotId<T> slotId, S stack) {
+        set(slotId.index(layout), getResourceFrom(stack), getAmountFrom(stack));
     }
 
     public ResourceStorageLayout<T, C> layout() {

@@ -1,6 +1,7 @@
 package com.enderio.core.common.storage.layout;
 
 import com.enderio.core.common.storage.slot.MultiResourceSlotKey;
+import com.enderio.core.common.storage.slot.ResourceSlotId;
 import com.enderio.core.common.storage.slot.ResourceSlotKey;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import net.neoforged.neoforge.common.util.TriPredicate;
@@ -36,12 +37,8 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
         return slots.get(index);
     }
 
-    public final SlotConfig<TResource, TContext> slotConfig(SingleResourceSlotKey<TResource> key) {
-        return slotConfig(indexOf(key));
-    }
-
-    public final SlotConfig<TResource, TContext> slotConfig(MultiResourceSlotKey<TResource> key, int index) {
-        return slotConfig(indexOf(key, index));
+    public final SlotConfig<TResource, TContext> slotConfig(ResourceSlotId<TResource> slotId) {
+        return slotConfig(slotId.index(this));
     }
 
     public final int indexOf(SingleResourceSlotKey<TResource> key) {
@@ -67,24 +64,6 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
         return indices.get(index);
     }
 
-    public final Iterator<Integer> relativeIndicesOf(MultiResourceSlotKey<TResource> key) {
-        List<Integer> indices = keyMap.get(key);
-        if (indices == null) {
-            throw new IllegalArgumentException("Key does not map to any slots: " + key);
-        }
-
-        return IntStream.range(0, indices.size()).iterator();
-    }
-
-    public final Iterator<Integer> absoluteIndicesOf(MultiResourceSlotKey<TResource> key) {
-        List<Integer> indices = keyMap.get(key);
-        if (indices == null) {
-            throw new IllegalArgumentException("Key does not map to any slots: " + key);
-        }
-
-        return indices.iterator();
-    }
-
     public static abstract class Builder<TBuilder extends Builder<? extends TBuilder, T, TContext>, T extends Resource, TContext> {
         
         protected final ArrayList<SlotConfig<T, TContext>> slots = new ArrayList<>();
@@ -94,6 +73,7 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
         }
 
         protected TBuilder self() {
+            //noinspection unchecked
             return (TBuilder) this;
         }
 
