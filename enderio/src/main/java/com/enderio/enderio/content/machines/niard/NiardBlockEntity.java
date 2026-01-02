@@ -7,6 +7,7 @@ import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.enderio.config.machines.MachinesConfig;
+import com.enderio.enderio.content.storage.fluid_tank.InternalTankTasks;
 import com.enderio.enderio.foundation.MachineNBTKeys;
 import com.enderio.enderio.foundation.attachment.ActionRange;
 import com.enderio.enderio.foundation.attachment.RangedActor;
@@ -119,50 +120,7 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
     }
 
     private void fillTank() {
-        ItemStack inputItem = FLUID_FILL_INPUT.getItemStack(this);
-        ItemStack outputItem = FLUID_FILL_OUTPUT.getItemStack(this);
-
-        if (!inputItem.isEmpty()) {
-            var fluidHandlerCap = inputItem.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(inputItem));
-            if (fluidHandlerCap != null) {
-                try (Transaction transaction = Transaction.openRoot()) {
-                    // Get the fluid resource from the item (index 0 is the first tank)
-                    var resource = fluidHandlerCap.getResource(0);
-                    int availableInItem = fluidHandlerCap.getAmountAsInt(0);
-
-                    if (availableInItem > 0) {
-                        // Try to extract from item
-                        int tankIndex = fluidStorage.layout().indexOf(TANK);
-                        int amountToTransfer = Math.min(FluidType.BUCKET_VOLUME, availableInItem);
-
-                        int extracted = fluidHandlerCap.extract(0, resource, amountToTransfer, transaction);
-                        if (extracted > 0) {
-                            // Try to insert into our tank
-                            int inserted = fluidStorage.insert(tankIndex, resource, extracted, transaction);
-
-                            if (inserted == extracted) {
-                                // Check if there's room for the empty container
-                                ItemStack containerItem = inputItem.getCraftingRemainder();
-                                if (!containerItem.isEmpty()) {
-                                    if (outputItem.isEmpty() || (ItemStack.isSameItemSameComponents(outputItem, containerItem)
-                                            && outputItem.getCount() < outputItem.getMaxStackSize())) {
-                                        inputItem.shrink(1);
-                                        if (outputItem.isEmpty()) {
-                                            FLUID_FILL_OUTPUT.setStackInSlot(this, containerItem.copy());
-                                        } else {
-                                            outputItem.grow(1);
-                                        }
-                                        transaction.commit();
-                                    }
-                                } else {
-                                    transaction.commit();
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        InternalTankTasks.fillInternal(this, fluidStorage, TANK, FLUID_FILL_INPUT, FLUID_FILL_OUTPUT);
     }
 
     private void tryPlaceFluid() {

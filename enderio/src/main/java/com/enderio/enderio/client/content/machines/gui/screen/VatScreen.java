@@ -103,6 +103,7 @@ public class VatScreen extends MachineScreen<VatMenu> {
     }
 
     private FluidStorageInfo getFakedInputTankContents() {
+        // Remove the amount of fluid in client screen to fake the effect of consumption of fluid.
         var currentContents = menu.getInputTank();
 
         int reduced = 0;
