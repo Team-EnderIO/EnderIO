@@ -27,4 +27,16 @@ public class GeneralStorageLayoutTests {
         Assertions.assertThrows(IllegalArgumentException.class, () -> layout.absoluteIndicesOf(unknownKey));
         Assertions.assertThrows(IllegalArgumentException.class, () -> layout.relativeIndicesOf(unknownKey));
     }
+
+    // Due to the way slot keys are used as map keys, we need to ensure that different instances are not considered equal
+    @Test
+    public void ensureReferenceEqualityForSlotKeys() {
+        var singleKey1 = new SingleResourceSlotKey<ItemResource>();
+        var singleKey2 = new SingleResourceSlotKey<ItemResource>();
+        Assertions.assertNotEquals(singleKey1, singleKey2);
+
+        var multiKey1 = new MultiResourceSlotKey<ItemResource>(3);
+        var multiKey2 = new MultiResourceSlotKey<ItemResource>(3);
+        Assertions.assertNotEquals(multiKey1, multiKey2);
+    }
 }
