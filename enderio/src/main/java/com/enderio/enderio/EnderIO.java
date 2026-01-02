@@ -3,10 +3,10 @@ package com.enderio.enderio;
 import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
-import com.enderio.enderio.compat.inventorysorter.InventorySorterCompat;
 import com.enderio.enderio.config.base.BaseConfig;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.content.machines.MachinesLang;
+import com.enderio.enderio.content.misc_blocks.skull.EnderSkullBlock;
 import com.enderio.enderio.foundation.integrations.Integrations;
 import com.enderio.enderio.foundation.souldata.EngineSoul;
 import com.enderio.enderio.foundation.souldata.FarmSoul;
@@ -34,13 +34,14 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
+import net.minecraft.world.level.block.SkullBlock;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
 import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
@@ -50,8 +51,6 @@ import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Map;
-import java.util.function.Consumer;
 
 @Mod(EnderIO.MOD_ID)
 @EventBusSubscriber(modid = EnderIO.MOD_ID)
@@ -142,5 +141,10 @@ public class EnderIO {
         event.addListener(EnderIO.id("farm_soul_data"), FarmSoul.RELOAD_LISTENER);
         event.addListener(EnderIO.id("solar_soul_data"), SolarSoul.RELOAD_LISTENER);
         event.addListener(EnderIO.id("spawner_soul_data"), SpawnerSoul.RELOAD_LISTENER);
+    }
+
+    @SubscribeEvent
+    public static void commonSetup(FMLCommonSetupEvent event) {
+        SkullBlock.Types.TYPES.put("enderman", EnderSkullBlock.EIOSkulls.ENDERMAN);
     }
 }
