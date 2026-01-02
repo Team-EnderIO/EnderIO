@@ -1,6 +1,5 @@
 package com.enderio.core.common.storage;
 
-import com.google.common.primitives.Ints;
 import net.neoforged.neoforge.common.util.TriPredicate;
 import net.neoforged.neoforge.transfer.resource.Resource;
 import org.jetbrains.annotations.Nullable;
@@ -183,7 +182,7 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
             private boolean canManualInsert;
             private boolean canManualExtract;
             @Nullable
-            private BiFunction<T, TContext, Long> capacityFunc;
+            private BiFunction<T, TContext, Integer> capacityFunc;
             @Nullable
             private TriPredicate<Integer, T, TContext> filter;
             
@@ -224,35 +223,20 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
             }
 
             public SlotBuilder<T, TContext> capacity(int capacity) {
-                this.capacityFunc = (resource, context) -> (long) capacity;
+                this.capacityFunc = (resource, context) -> capacity;
                 return this;
             }
             
             public SlotBuilder<T, TContext> capacity(Function<T, Integer> capacityFunc) {
-                this.capacityFunc = (resource, context) -> (long) capacityFunc.apply(resource);
-                return this;
-            }
-
-            public SlotBuilder<T, TContext> capacity(BiFunction<T, TContext, Integer> capacityFunc) {
-                this.capacityFunc = (resource, context) -> (long) capacityFunc.apply(resource, context);
-                return this;
-            }
-
-            public SlotBuilder<T, TContext> capacityAsLong(long capacity) {
-                this.capacityFunc = (resource, context) -> capacity;
-                return this;
-            }
-
-            public SlotBuilder<T, TContext> capacityAsLong(Function<T, Long> capacityFunc) {
                 this.capacityFunc = (resource, context) -> capacityFunc.apply(resource);
                 return this;
             }
 
-            public SlotBuilder<T, TContext> capacityAsLong(BiFunction<T, TContext, Long> capacityFunc) {
+            public SlotBuilder<T, TContext> capacity(BiFunction<T, TContext, Integer> capacityFunc) {
                 this.capacityFunc = capacityFunc;
                 return this;
             }
-            
+
             public SlotBuilder<T, TContext> filter(TriPredicate<Integer, T, TContext> filter) {
                 this.filter = filter;
                 return this;
@@ -274,17 +258,12 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
         boolean canExtract,
         boolean canManualInsert,
         boolean canManualExtract,
-        BiFunction<T, TContext, Long> capacityFunc,
+        BiFunction<T, TContext, Integer> capacityFunc,
         @Nullable
         TriPredicate<Integer, T, TContext> filter) {
 
-        public long getCapacityAsLong(T resource, TContext context) {
-            return capacityFunc.apply(resource, context);
-        }
-
         public int getCapacityAsInt(T resource, TContext context) {
-            long capacity = getCapacityAsLong(resource, context);
-            return Ints.saturatedCast(capacity);
+            return capacityFunc.apply(resource, context);
         }
 
         public boolean isValid(int index, T resource, TContext context) {

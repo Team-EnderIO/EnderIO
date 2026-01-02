@@ -98,7 +98,7 @@ public class FluidStorage<TOwner> implements ResourceStorage<FluidResource>, Val
     @Override
     public long getCapacityAsLong(int index, FluidResource resource) {
         Objects.checkIndex(index, size());
-        return layout.get(index).getCapacityAsLong(resource, owner);
+        return layout.get(index).getCapacityAsInt(resource, owner);
     }
 
     @Override
