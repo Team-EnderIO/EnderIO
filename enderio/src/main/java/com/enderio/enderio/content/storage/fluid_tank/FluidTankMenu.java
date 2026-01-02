@@ -18,7 +18,7 @@ public class FluidTankMenu extends MachineMenu<FluidTankBlockEntity> {
         addSlots();
 
         fluidTankSlot = addSyncSlot(
-                FluidStorageSyncSlot.readOnly(() -> FluidStorageInfo.of(blockEntity.getFluidTank())));
+                FluidStorageSyncSlot.readOnly(() -> new FluidStorageInfo(blockEntity.getStoredFluid(), blockEntity.getCapacity())));
     }
 
     public FluidTankMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {

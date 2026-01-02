@@ -271,13 +271,15 @@ public class EIOBlockEntities {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FluidTankBlockEntity.Standard>> FLUID_TANK = BLOCK_ENTITY_TYPES
         .builder("fluid_tank", FluidTankBlockEntity.Standard::new, EIOBlocks.FLUID_TANK::get)
         .apply(EIOBlockEntities::machineBlockEntityCapabilities)
-        .apply(EIOBlockEntities::fluidHandlerCapability)
+//        .apply(EIOBlockEntities::fluidHandlerCapability)
+        .capability(Capabilities.Fluid.BLOCK, FluidTankBlockEntity.FLUID_HANDLER_PROVIDER)
         .build();
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FluidTankBlockEntity.Enhanced>> PRESSURIZED_FLUID_TANK = BLOCK_ENTITY_TYPES
         .builder("pressurized_fluid_tank", FluidTankBlockEntity.Enhanced::new, EIOBlocks.PRESSURIZED_FLUID_TANK::get)
         .apply(EIOBlockEntities::machineBlockEntityCapabilities)
-        .apply(EIOBlockEntities::fluidHandlerCapability)
+//        .apply(EIOBlockEntities::fluidHandlerCapability)
+        .capability(Capabilities.Fluid.BLOCK, FluidTankBlockEntity.FLUID_HANDLER_PROVIDER)
         .build();
 
     // endregion

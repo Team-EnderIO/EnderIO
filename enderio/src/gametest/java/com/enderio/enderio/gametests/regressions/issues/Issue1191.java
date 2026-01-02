@@ -30,14 +30,14 @@ public class Issue1191 {
         test.onGameTest(EnderGameTestHelper.class, helper -> {
             helper.startSequence()
                 // Setup fluid tank as described by the issue
-                .thenExecute(() -> helper.changeIoConfig(0, 1, 1, ioConfigurable -> {
+                .thenExecute(() -> helper.changeIoConfig(0, 0, 1, ioConfigurable -> {
                     ioConfigurable.setIOMode(Direction.NORTH, IOMode.BOTH);
                     ioConfigurable.setIOMode(Direction.SOUTH, IOMode.PUSH);
                 }))
                 // Insert 2 Bottles o' Enchanting into the tank
-                .thenExecute(() -> helper.insertIntoContainer(0, 1, 1, Items.EXPERIENCE_BOTTLE, 2))
+                .thenExecute(() -> helper.insertIntoContainer(0, 0, 1, Items.EXPERIENCE_BOTTLE, 2))
                 // Make sure we have exactly 2 Bottles o' Enchanting worth of xp juice in the tank after 5 seconds
-                .thenExecuteAfter(20 * 5, () -> helper.assertContainerHasExactly(0, 1, 2, EIOFluids.XP_JUICE.source().get(), 500))
+                .thenExecuteAfter(20 * 5, () -> helper.assertContainerHasExactly(0, 0, 2, EIOFluids.XP_JUICE.source().get(), 500))
                 .thenSucceed();
         });
     }

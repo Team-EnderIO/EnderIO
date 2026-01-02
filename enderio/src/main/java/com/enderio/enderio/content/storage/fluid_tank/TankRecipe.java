@@ -64,16 +64,21 @@ public record TankRecipe(Ingredient input, ItemStack output, FluidStack fluid, M
 
     @Override
     public boolean matches(Input recipeInput, Level pLevel) {
+        // TODO: 1.21.11: Check this still works.
         switch (mode) {
         case FILL -> {
-            if (recipeInput.fluidTank().drain(fluid, IFluidHandler.FluidAction.SIMULATE).isEmpty()) {
+            if (!FluidStack.matches(recipeInput.fluidContents, fluid) || recipeInput.fluidContents.getAmount() < fluid.getAmount()) {
                 return false;
             }
 
             return input.test(recipeInput.fillItem);
         }
         case EMPTY -> {
-            if (recipeInput.fluidTank().fill(fluid, IFluidHandler.FluidAction.SIMULATE) <= 0) {
+            if (!recipeInput.fluidContents.isEmpty() && !FluidStack.matches(recipeInput.fluidContents, fluid)) {
+                return false;
+            }
+
+            if (recipeInput.fluidContents.getAmount() + fluid.getAmount() > recipeInput.tankCapacity) {
                 return false;
             }
 
@@ -115,7 +120,7 @@ public record TankRecipe(Ingredient input, ItemStack output, FluidStack fluid, M
         return EIORecipes.TANK.type().get();
     }
 
-    public record Input(ItemStack fillItem, ItemStack emptyItem, MachineFluidTank fluidTank) implements RecipeInput {
+    public record Input(ItemStack fillItem, ItemStack emptyItem, FluidStack fluidContents, int tankCapacity) implements RecipeInput {
 
         @Override
         public ItemStack getItem(int slotIndex) {

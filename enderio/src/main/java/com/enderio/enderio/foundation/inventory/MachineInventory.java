@@ -36,13 +36,6 @@ public class MachineInventory extends ItemStacksResourceHandler {
         this.layout = layout;
     }
 
-    /**
-     * Get the inventory layout.
-     */
-    public final MachineInventoryLayout getLayout() {
-        return layout;
-    }
-
     public final MachineInventoryLayout layout() {
         return layout;
     }
@@ -163,7 +156,7 @@ public class MachineInventory extends ItemStacksResourceHandler {
         @Override
         public int insert(int index, ItemResource resource, int amount, TransactionContext transaction) {
             // Check we allow insertion on the slot
-            if (!machineInventory.getLayout().canInsert(index)) {
+            if (!machineInventory.layout().canInsert(index)) {
                 return 0;
             }
 
@@ -178,7 +171,7 @@ public class MachineInventory extends ItemStacksResourceHandler {
         @Override
         public int extract(int index, ItemResource resource, int amount, TransactionContext transaction) {
             // Check we allow extraction on the slot
-            if (!machineInventory.getLayout().canExtract(index)) {
+            if (!machineInventory.layout().canExtract(index)) {
                 return 0;
             }
 

@@ -11,7 +11,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
 public abstract class ResourceStorageLayout<TResource extends Resource, TContext> {
@@ -29,6 +31,7 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
     }
 
     public SlotConfig<TResource, TContext> get(int index) {
+        Objects.checkIndex(index, size());
         return slots.get(index);
     }
 
@@ -54,11 +57,7 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
         return handler.getCapacityAsLong(getSingleIndex(key), resource);
     }
 
-    public void setWithInt(ResourceStorage<TResource> storage, SingleResourceSlotKey<TResource> key, TResource resource, int amount) {
-        storage.set(getSingleIndex(key), resource, amount);
-    }
-
-    public void setWithLong(ResourceStorage<TResource> storage, SingleResourceSlotKey<TResource> key, TResource resource, long amount) {
+    public void set(ResourceStorage<TResource> storage, SingleResourceSlotKey<TResource> key, TResource resource, int amount) {
         storage.set(getSingleIndex(key), resource, amount);
     }
 
@@ -104,11 +103,7 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
         return handler.getCapacityAsLong(getMultiIndex(key, index), resource);
     }
 
-    public void setWithInt(ResourceStorage<TResource> storage, MultiResourceSlotKey<TResource> key, int index, TResource resource, int amount) {
-        storage.set(getMultiIndex(key, index), resource, amount);
-    }
-
-    public void setWithLong(ResourceStorage<TResource> storage, MultiResourceSlotKey<TResource> key, int index, TResource resource, long amount) {
+    public void set(ResourceStorage<TResource> storage, MultiResourceSlotKey<TResource> key, int index, TResource resource, int amount) {
         storage.set(getMultiIndex(key, index), resource, amount);
     }
 
@@ -139,8 +134,12 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
             return (TBuilder) this;
         }
 
+        protected SlotBuilder<T, TContext> createSlotBuilder() {
+            return new SlotBuilder<>();
+        }
+
         public TBuilder slot(SingleResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T, TContext>> slotBuilder) {
-            slots.add(slotBuilder.apply(new SlotBuilder<>()).build());
+            slots.add(slotBuilder.apply(createSlotBuilder()).build());
             keyMap.put(key, List.of(slots.size() - 1));
             return self();
         }
@@ -163,12 +162,32 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
         
         // region Quick Slot Presets
 
+        public TBuilder storageSlot(SingleResourceSlotKey<T> key) {
+            return inputSlot(key, slot -> slot);
+        }
+
+        public TBuilder storageSlot(SingleResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T, TContext>> slotBuilder) {
+            return slot(key, slot -> slotBuilder.apply(setupStorageSlot(slot)));
+        }
+
+        public TBuilder storageSlots(MultiResourceSlotKey<T> key) {
+            return inputSlots(key, slot -> slot);
+        }
+
+        public TBuilder storageSlots(MultiResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T, TContext>> slotBuilder) {
+            return slots(key, slot -> slotBuilder.apply(setupStorageSlot(slot)));
+        }
+
+        private SlotBuilder<T, TContext> setupStorageSlot(SlotBuilder<T, TContext> slotBuilder) {
+            return slotBuilder.canInsert().canExtract().canManualInsert().canManualExtract();
+        }
+
         public TBuilder inputSlot(SingleResourceSlotKey<T> key) {
             return inputSlot(key, slot -> slot);
         }
 
         public TBuilder inputSlot(SingleResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T, TContext>> slotBuilder) {
-            return slot(key, this::setupInputSlot);
+            return slot(key, slot -> slotBuilder.apply(setupInputSlot(slot)));
         }
 
         public TBuilder inputSlots(MultiResourceSlotKey<T> key) {
@@ -250,8 +269,33 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
                 this.canManualExtract = canManualExtract;
                 return this;
             }
+
+            public SlotBuilder<T, TContext> capacity(int capacity) {
+                this.capacityFunc = (resource, context) -> (long) capacity;
+                return this;
+            }
             
-            public SlotBuilder<T, TContext> capacity(BiFunction<T, TContext, Long> capacityFunc) {
+            public SlotBuilder<T, TContext> capacity(Function<T, Integer> capacityFunc) {
+                this.capacityFunc = (resource, context) -> (long) capacityFunc.apply(resource);
+                return this;
+            }
+
+            public SlotBuilder<T, TContext> capacity(BiFunction<T, TContext, Integer> capacityFunc) {
+                this.capacityFunc = (resource, context) -> (long) capacityFunc.apply(resource, context);
+                return this;
+            }
+
+            public SlotBuilder<T, TContext> capacityAsLong(long capacity) {
+                this.capacityFunc = (resource, context) -> capacity;
+                return this;
+            }
+
+            public SlotBuilder<T, TContext> capacityAsLong(Function<T, Long> capacityFunc) {
+                this.capacityFunc = (resource, context) -> capacityFunc.apply(resource);
+                return this;
+            }
+
+            public SlotBuilder<T, TContext> capacityAsLong(BiFunction<T, TContext, Long> capacityFunc) {
                 this.capacityFunc = capacityFunc;
                 return this;
             }
@@ -262,6 +306,11 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
             }
 
             public SlotConfig<T, TContext> build() {
+                // We can easily default this on items, but fluid must be explicitly set.
+                if (capacityFunc == null) {
+                    throw new IllegalStateException("Capacity must be set!");
+                }
+
                 return new SlotConfig<>(canInsert, canExtract, canManualInsert, canManualExtract, capacityFunc, filter);
             }
         }
@@ -272,27 +321,16 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
         boolean canExtract,
         boolean canManualInsert,
         boolean canManualExtract,
-        @Nullable
         BiFunction<T, TContext, Long> capacityFunc,
         @Nullable
         TriPredicate<Integer, T, TContext> filter) {
 
-        @Nullable
-        public Long getCapacityAsLong(T resource, TContext context) {
-            if (capacityFunc == null) {
-                return null;
-            }
-
+        public long getCapacityAsLong(T resource, TContext context) {
             return capacityFunc.apply(resource, context);
         }
 
-        @Nullable
-        public Integer getCapacityAsInt(T resource, TContext context) {
-            Long capacity = getCapacityAsLong(resource, context);
-            if (capacity == null) {
-                return null;
-            }
-
+        public int getCapacityAsInt(T resource, TContext context) {
+            long capacity = getCapacityAsLong(resource, context);
             return Ints.saturatedCast(capacity);
         }
 

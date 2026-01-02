@@ -30,10 +30,11 @@ public class FluidTankBlock extends MachineBlock<FluidTankBlockEntity> {
                     return InteractionResult.SUCCESS;
                 }
 
-                if (tank.handleFluidItemInteraction(player, hand, stack, tank, FluidTankBlockEntity.TANK)) {
-                    player.getInventory().setChanged();
-                    return InteractionResult.CONSUME;
-                }
+                // TODO: 1.21.11: Finish fluid API changes
+//                if (tank.handleFluidItemInteraction(player, hand, stack, tank, FluidTankBlockEntity.TANK)) {
+//                    player.getInventory().setChanged();
+//                    return InteractionResult.CONSUME;
+//                }
             }
         }
 
@@ -43,7 +44,7 @@ public class FluidTankBlock extends MachineBlock<FluidTankBlockEntity> {
     @Override
     public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
         if (level.getBlockEntity(pos) instanceof FluidTankBlockEntity tank) {
-            return FluidTankBlockEntity.TANK.getFluid(tank).getFluid().getFluidType().getLightLevel();
+            return tank.getStoredFluid().getFluid().getFluidType().getLightLevel();
         }
 
         return super.getLightEmission(state, level, pos);

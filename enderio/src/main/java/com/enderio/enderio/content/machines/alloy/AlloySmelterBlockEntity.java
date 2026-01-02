@@ -83,29 +83,6 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
             .inputSlot(CAPACITOR_SLOT)
             .build();
 
-    private static final SingleResourceSlotKey<FluidResource> FLUID_SLOT = new SingleResourceSlotKey<>();
-
-    private static final FluidStorageLayout<AlloySmelterBlockEntity> FLUID_STORAGE_LAYOUT =
-        FluidStorageLayout.<AlloySmelterBlockEntity>builder()
-            .inputSlot(FLUID_SLOT)
-            .build();
-
-    static {
-        // How to use;
-
-        INVENTORY_LAYOUT.get(2).isValid(ItemResource.of(EIOItems.ADVANCED_ITEM_FILTER.get()), this);
-
-        // Single-slot access
-        INVENTORY_LAYOUT.getAmountAsInt(getInventory(), OUTPUT_SLOT);
-        INVENTORY_LAYOUT.setWithInt(getInventory(), OUTPUT_SLOT, ItemResource.of(EIOItems.SOUL_VIAL.get()), 12);
-
-        // Multi-slot access
-        for (int inputSlotIndex = 0; inputSlotIndex < INPUT_SLOTS.count(); inputSlotIndex++) {
-            var resource = INVENTORY_LAYOUT.getResource(getInventory(), INPUT_SLOTS, inputSlotIndex);
-            INVENTORY_LAYOUT.setWithInt(getInventory(), INPUT_SLOTS, inputSlotIndex, ItemResource.of(EIOItems.SOUL_VIAL.get()), 12);
-        }
-    }
-
     protected static boolean canInsertTemp(int slot, ItemResource resource, AlloySmelterBlockEntity blockEntity) {
         if (blockEntity.getMode().canAlloy()) {
             if (MachineRecipeCaches.ALLOY_SMELTING_ONLY_ALLOY.hasValidRecipeIf(blockEntity.getInventory(), INPUTS, slot, resource.toStack())) {

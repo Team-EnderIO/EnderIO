@@ -5,5 +5,4 @@ import net.neoforged.neoforge.transfer.resource.Resource;
 
 public interface ResourceStorage<T extends Resource> extends ResourceHandler<T> {
     void set(int index, T resource, int amount);
-    void set(int index, T resource, long amount);
 }
