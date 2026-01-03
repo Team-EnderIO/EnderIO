@@ -16,6 +16,8 @@ import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
+import java.util.Objects;
+
 /**
  * A machine inventory.
  * Configured and controlled by a machine's {@link IOConfigurable} and a {@link MachineInventoryLayout}.
@@ -41,7 +43,8 @@ public class MachineInventory extends ItemStacksResourceHandler {
     }
 
     public ItemStack getStack(int index) {
-        return getResource(index).toStack(getAmountAsInt(index));
+        Objects.checkIndex(index, size());
+        return stacks.get(index);
     }
 
     public void setStack(int index, ItemStack stack) {
