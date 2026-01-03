@@ -26,13 +26,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.level.EmptyBlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jetbrains.annotations.Nullable;
 
@@ -110,7 +110,7 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
                 return false;
             }
 
-            return block.defaultBlockState().getOcclusionShape() == Shapes.block();
+            return block.defaultBlockState().isCollisionShapeFullBlock(EmptyBlockAndTintGetter.INSTANCE, BlockPos.ZERO);
         }
         return false;
     }

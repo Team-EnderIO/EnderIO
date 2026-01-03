@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
@@ -100,6 +101,12 @@ public class ConduitFacadeRendering {
             @Override
             public VertexConsumer setColor(int r, int g, int b, int a) {
                 super.setColor(r, g, b, 85);
+                return this;
+            }
+
+            @Override
+            public VertexConsumer setColor(int packedColor) {
+                super.setColor(ARGB.color(85, packedColor));
                 return this;
             }
         }

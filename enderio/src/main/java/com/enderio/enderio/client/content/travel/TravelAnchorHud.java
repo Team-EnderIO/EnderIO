@@ -86,7 +86,7 @@ public class TravelAnchorHud implements GuiLayer {
         guiGraphics.fill(bgFromX, bgFromY, bgToX, bgToY, 0x87000000);
 
         // Text
-        guiGraphics.drawString(font, txt, textX, textY, CommonColors.DARK_GRAY, false);
+        guiGraphics.drawString(font, txt, textX, textY, CommonColors.WHITE, false);
     }
 
     private static int getOffset(int offsetAmount, int size, int direction) {
