@@ -26,9 +26,8 @@ public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity, F
         ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
         BlockEntityRenderer.super.extractRenderState(blockEntity, renderState, partialTick, cameraPosition, breakProgress);
 
-        var tank = blockEntity.getFluidTank();
-        renderState.fluidStack = tank.getFluid().copy();
-        renderState.tankCapacity = tank.getCapacity();
+        renderState.fluidStack = blockEntity.getStoredFluid().copy();
+        renderState.tankCapacity = blockEntity.getCapacity();
     }
 
     @Override

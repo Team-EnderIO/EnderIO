@@ -10,7 +10,7 @@ import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget
 import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.machines.vat.FermentingRecipe;
 import com.enderio.enderio.content.machines.vat.VatMenu;
-import com.enderio.enderio.foundation.io.fluid.MachineFluidTank;
+import com.enderio.enderio.foundation.fluid.FluidStorageInfo;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
@@ -48,7 +48,7 @@ public class VatScreen extends MachineScreen<VatMenu> {
     @Override
     protected void init() {
         super.init();
-        addRenderableOnly(FluidStackWidget.legacy(30 + leftPos, 12 + topPos, 15, 47, this::wrappedInputTank));
+        addRenderableOnly(new FluidStackWidget(30 + leftPos, 12 + topPos, 15, 47, this::getFakedInputTankContents));
         addRenderableOnly(new FluidStackWidget(132 + leftPos, 12 + topPos, 15, 47, menu::getOutputTank));
 
         addRenderableOnly(new FermentationWidget(this::isCrafting, this::inputFluidStack, this::outputFluidStack,
@@ -102,32 +102,18 @@ public class VatScreen extends MachineScreen<VatMenu> {
         return menu.getRecipe().value().output();
     }
 
-    /**
-     * Wraps the essential parts of the input tank. Remove the amount of fluid in client screen to fake the effect of consumption of fluid.
-     */
-    private MachineFluidTank wrappedInputTank() {
-        return new MachineFluidTank(0, null) {
-            @Override
-            public @NotNull FluidStack getFluid() {
-                return menu.getInputTank().contents();
-            }
+    private FluidStorageInfo getFakedInputTankContents() {
+        // Remove the amount of fluid in client screen to fake the effect of consumption of fluid.
+        var currentContents = menu.getInputTank();
 
-            @Override
-            public int getFluidAmount() {
-                int reduced = 0;
-                var recipe = menu.getRecipe();
-                if (isCrafting() && recipe != null) {
-                    reduced = recipe.value().input().amount();
-                }
+        int reduced = 0;
+        var recipe = menu.getRecipe();
+        if (isCrafting() && recipe != null) {
+            reduced = recipe.value().input().amount();
+        }
 
-                return Math.max(menu.getInputTank().contents().getAmount() - reduced, 0);
-            }
-
-            @Override
-            public int getCapacity() {
-                return menu.getInputTank().capacity();
-            }
-        };
+        int adjustedAmount = Math.max(menu.getInputTank().contents().getAmount() - reduced, 0);
+        return new FluidStorageInfo(currentContents.contents().copyWithAmount(adjustedAmount), currentContents.capacity());
     }
 
     private void drawModifierStrings(GuiGraphics guiGraphics) {

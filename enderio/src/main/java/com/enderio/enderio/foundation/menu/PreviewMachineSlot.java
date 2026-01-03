@@ -15,7 +15,7 @@ public class PreviewMachineSlot extends MachineSlot {
         super(itemHandler, index, xPosition, yPosition);
 
         // Check config, we need to get this right or bad stuff will happen.
-        MachineInventoryLayout layout = itemHandler.getLayout();
+        MachineInventoryLayout layout = itemHandler.layout();
         if (layout.canInsert(index) || layout.canExtract(index)) {
             throw new RuntimeException("Preview slot can be externally modified!!");
         }

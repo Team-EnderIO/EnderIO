@@ -1,11 +1,11 @@
 package com.enderio.enderio.foundation.task;
 
 import com.enderio.core.common.recipes.OutputStack;
+import com.enderio.core.common.storage.ResourceStorage;
 import com.enderio.enderio.foundation.MachineRecipe;
 import com.enderio.enderio.foundation.inventory.MachineInventory;
 import com.enderio.enderio.foundation.inventory.MultiSlotAccess;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
-import com.enderio.enderio.foundation.io.fluid.MachineFluidHandler;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.registries.Registries;
@@ -18,6 +18,7 @@ import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.Nullable;
@@ -32,7 +33,7 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
     protected final Level level;
     protected final MachineInventory inventory;
     @Nullable
-    protected final MachineFluidHandler fluidHandler;
+    protected final ResourceStorage<FluidResource> fluidStorage;
     @Nullable
     protected final MultiSlotAccess outputSlots;
     protected final T recipeInput;
@@ -61,16 +62,16 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
     }
 
     public CraftingMachineTask(Level level, MachineInventory inventory,
-            @Nullable MachineFluidHandler fluidHandler, T recipeInput, @Nullable RecipeHolder<R> recipe) {
-        this(level, inventory, fluidHandler, recipeInput, null, recipe);
+            @Nullable ResourceStorage<FluidResource> fluidStorage, T recipeInput, @Nullable RecipeHolder<R> recipe) {
+        this(level, inventory, fluidStorage, recipeInput, null, recipe);
     }
 
     public CraftingMachineTask(Level level, MachineInventory inventory,
-            @Nullable MachineFluidHandler fluidHandler, T recipeInput, @Nullable MultiSlotAccess outputSlots,
+            @Nullable ResourceStorage<FluidResource> fluidStorage, T recipeInput, @Nullable MultiSlotAccess outputSlots,
             @Nullable RecipeHolder<R> recipe) {
         this.level = level;
         this.inventory = inventory;
-        this.fluidHandler = fluidHandler;
+        this.fluidStorage = fluidStorage;
         this.recipeInput = recipeInput;
         this.outputSlots = outputSlots;
         this.recipeId = recipe == null ? null : recipe.id();

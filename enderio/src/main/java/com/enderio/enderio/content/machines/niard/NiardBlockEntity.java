@@ -1,5 +1,8 @@
 package com.enderio.enderio.content.machines.niard;
 
+import com.enderio.core.common.storage.FluidStorage;
+import com.enderio.core.common.storage.layout.FluidStorageLayout;
+import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
@@ -7,22 +10,19 @@ import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.content.storage.fluid_tank.InternalTankTasks;
 import com.enderio.enderio.foundation.MachineNBTKeys;
 import com.enderio.enderio.foundation.attachment.ActionRange;
-import com.enderio.enderio.foundation.attachment.FluidTankUser;
 import com.enderio.enderio.foundation.attachment.RangedActor;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import com.enderio.enderio.foundation.io.fluid.FluidItemInteractive;
-import com.enderio.enderio.foundation.io.fluid.MachineFluidHandler;
-import com.enderio.enderio.foundation.io.fluid.MachineFluidTank;
-import com.enderio.enderio.foundation.io.fluid.MachineTankLayout;
-import com.enderio.enderio.foundation.io.fluid.TankAccess;
 import com.enderio.enderio.foundation.state.MachineState;
+import com.enderio.enderio.foundation.storage.SidedResourceHandler;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.world.entity.player.Inventory;
@@ -37,15 +37,22 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 
-public class NiardBlockEntity extends PoweredMachineBlockEntity implements RangedActor, FluidItemInteractive, FluidTankUser {
+public class NiardBlockEntity extends PoweredMachineBlockEntity implements RangedActor, FluidItemInteractive {
+
+    public static final ICapabilityProvider<NiardBlockEntity, Direction, ResourceHandler<FluidResource>> FLUID_HANDLER_PROVIDER = (be,
+        side) -> be.fluidStorage != null ? SidedResourceHandler.of(be.fluidStorage, side, be) : null;
 
     private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
         MachinesConfig.COMMON.ENERGY.NIARD_CAPACITY);
@@ -57,9 +64,15 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
 
     private NiardRangeIterator iterator;
 
-    public static final  TankAccess TANK = new TankAccess();
-    private final MachineFluidHandler fluidHandler;
-    private static final int TANK_CAPACITY = 4 * FluidType.BUCKET_VOLUME;
+    public static final SingleResourceSlotKey<FluidResource> TANK = new SingleResourceSlotKey<>();
+    public static final int CAPACITY = 4 * FluidType.BUCKET_VOLUME;
+
+    public static final FluidStorageLayout<NiardBlockEntity> FLUID_STORAGE_LAYOUT =
+        FluidStorageLayout.<NiardBlockEntity>builder()
+            .storageSlot(TANK, slot -> slot.capacity(CAPACITY))
+            .build();
+
+    private final FluidStorage<NiardBlockEntity> fluidStorage;
 
     private static final int ENERGY_PER_BUCKET = 1_500;
     private static final int BASE_IDLE_TICKS = 40;
@@ -72,8 +85,23 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
         super(EIOBlockEntities.NIARD.get(), worldPosition, blockState, false, CapacitorSupport.REQUIRED,
             EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE);
 
-        fluidHandler = createFluidHandler();
+        fluidStorage = new FluidStorage<>(FLUID_STORAGE_LAYOUT, this) {
+            @Override
+            protected void onContentsChanged(int index, FluidStack previousContents) {
+                super.onContentsChanged(index, previousContents);
+                setChanged();
+                updateMachineState(MachineState.EMPTY_TANK, fluidStorage.getAmountAsInt(TANK) <= 0);
+                if (level != null) {
+                    level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+                }
+            }
+        };
+
         iterator = new NiardRangeIterator(worldPosition, actionRange);
+    }
+
+    public FluidStorage<NiardBlockEntity> getFluidStorage() {
+        return fluidStorage;
     }
 
     @Override
@@ -92,7 +120,7 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
     }
 
     private void fillTank() {
-        InternalTankTasks.fillInternal(this, TANK, FLUID_FILL_INPUT, FLUID_FILL_OUTPUT);
+        InternalTankTasks.fillInternal(this, fluidStorage, TANK, FLUID_FILL_INPUT, FLUID_FILL_OUTPUT);
     }
 
     private void tryPlaceFluid() {
@@ -102,7 +130,7 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
         do {
             BlockPos pos = iterator.current();
             if ((isSameLiquid(pos) ? isFlowingBlock(pos) : canPlace(pos))) {
-                if (getFluidTank().getFluidAmount() >= FluidType.BUCKET_VOLUME) {
+                if (fluidStorage.getAmountAsInt(TANK) >= FluidType.BUCKET_VOLUME) {
                     placeFluid(pos);
                     consumeResources();
                 }
@@ -113,7 +141,7 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
     }
 
     private void placeFluid(BlockPos pos) {
-        Fluid fluid = TANK.getFluid(this).getFluid();
+        Fluid fluid = fluidStorage.getStack(TANK).getFluid();
         if (fluid == Fluids.EMPTY) return;
 
         BlockState fluidBlockState = fluid.defaultFluidState().createLegacyBlock();
@@ -121,8 +149,13 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
     }
 
     private void consumeResources() {
-        TANK.drain(this, FluidType.BUCKET_VOLUME, IFluidHandler.FluidAction.EXECUTE);
-        getEnergyStorage().consume(ENERGY_PER_BUCKET, null);
+        try (Transaction transaction = Transaction.openRoot()) {
+            int tankIndex = fluidStorage.layout().indexOf(TANK);
+            FluidStack currentFluid = fluidStorage.getStack(TANK);
+            fluidStorage.internalExtract(tankIndex, FluidResource.of(currentFluid), FluidType.BUCKET_VOLUME, transaction);
+            getEnergyStorage().consume(ENERGY_PER_BUCKET, transaction);
+            transaction.commit();
+        }
     }
 
     @Override
@@ -141,11 +174,6 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
     }
 
     @Override
-    public MachineTankLayout getTankLayout() {
-        return new MachineTankLayout.Builder().tank(TANK, TANK_CAPACITY).build();
-    }
-
-    @Override
     public MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
             .capacitor()
@@ -154,24 +182,6 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
             .outputSlot()
             .slotAccess(FLUID_FILL_OUTPUT)
             .build();
-    }
-
-    @Override
-    public MachineFluidHandler getFluidHandler() {
-        return fluidHandler;
-    }
-
-    @Override
-    public MachineFluidHandler createFluidHandler() {
-        return new MachineFluidHandler(this, getTankLayout()) {
-            @Override
-            protected void onContentsChanged(int slot) {
-                setChanged();
-                super.onContentsChanged(slot);
-                updateMachineState(MachineState.EMPTY_TANK, TANK.getFluidAmount(this) <= 0);
-                level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
-            }
-        };
     }
 
     @Override
@@ -199,8 +209,8 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
         return new NiardMenu(containerId, playerInventory, this);
     }
 
-    public MachineFluidTank getFluidTank() {
-        return TANK.getTank(this);
+    public FluidStack getStoredFluid() {
+        return fluidStorage.getStack(TANK);
     }
 
     private BlockPos getParticleLocation() {
@@ -218,7 +228,7 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
 
     private boolean isSameLiquid(@Nonnull BlockPos pos) {
         Fluid fluidAtPos = level.getBlockState(pos).getFluidState().getType();
-        Fluid fluidInTank = TANK.getFluid(this).getFluid();
+        Fluid fluidInTank = fluidStorage.getStack(TANK).getFluid();
 
         return (fluidInTank == Fluids.WATER && (fluidAtPos == Fluids.WATER || fluidAtPos == Fluids.FLOWING_WATER))
             || (fluidInTank == Fluids.LAVA && (fluidAtPos == Fluids.LAVA  || fluidAtPos == Fluids.FLOWING_LAVA))
@@ -243,8 +253,7 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
 
         SimpleFluidContent storedFluid = components.get(EIODataComponents.ITEM_FLUID_CONTENT);
         if (storedFluid != null) {
-            var tank = TANK.getTank(this);
-            tank.setFluid(storedFluid.copy());
+            fluidStorage.setStack(TANK, storedFluid.copy());
         }
 
         var actionRange = components.get(EIODataComponents.ACTION_RANGE);
@@ -257,9 +266,9 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
     protected void collectImplicitComponents(DataComponentMap.Builder components) {
         super.collectImplicitComponents(components);
 
-        var tank = TANK.getTank(this);
+        FluidStack tank = fluidStorage.getStack(TANK);
         if (!tank.isEmpty()) {
-            components.set(EIODataComponents.ITEM_FLUID_CONTENT, SimpleFluidContent.copyOf(tank.getFluid()));
+            components.set(EIODataComponents.ITEM_FLUID_CONTENT, SimpleFluidContent.copyOf(tank));
         }
 
         components.set(EIODataComponents.ACTION_RANGE, actionRange);
@@ -268,7 +277,7 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
     @Override
     protected void saveAdditionalSynced(ValueOutput output) {
         super.saveAdditionalSynced(output);
-        saveTank(output);
+        output.putChild("Fluid", fluidStorage);
 
         if (!actionRange.equals(DEFAULT_RANGE)) {
             output.store(MachineNBTKeys.ACTION_RANGE, ActionRange.CODEC, actionRange);
@@ -278,7 +287,7 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
     @Override
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
-        loadTank(input);
+        input.child("Fluid").ifPresent(fluidStorage::deserialize);
 
         actionRange = input.read(MachineNBTKeys.ACTION_RANGE, ActionRange.CODEC)
             .orElse(DEFAULT_RANGE);

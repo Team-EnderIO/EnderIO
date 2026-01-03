@@ -29,16 +29,16 @@ public class MachineSlot extends ResourceHandlerSlot implements SlotWithOverlay 
 
     @Override
     public boolean mayPlace(ItemStack stack) {
-        return getResourceHandler().getLayout().guiCanInsert(this.getSlotIndex()) && super.mayPlace(stack);
+        return getResourceHandler().layout().guiCanInsert(this.getSlotIndex()) && super.mayPlace(stack);
     }
 
     @Override
     public boolean mayPickup(Player playerIn) {
-        return getResourceHandler().getLayout().guiCanExtract(this.getSlotIndex()) && super.mayPickup(playerIn);
+        return getResourceHandler().layout().guiCanExtract(this.getSlotIndex()) && super.mayPickup(playerIn);
     }
 
     public boolean canQuickInsertStack() {
-        return isActive() && getResourceHandler().getLayout().guiCanInsert(getSlotIndex());
+        return isActive() && getResourceHandler().layout().guiCanInsert(getSlotIndex());
     }
 
     @Override

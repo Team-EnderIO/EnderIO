@@ -16,6 +16,8 @@ import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
+import java.util.Objects;
+
 /**
  * A machine inventory.
  * Configured and controlled by a machine's {@link IOConfigurable} and a {@link MachineInventoryLayout}.
@@ -36,19 +38,13 @@ public class MachineInventory extends ItemStacksResourceHandler {
         this.layout = layout;
     }
 
-    /**
-     * Get the inventory layout.
-     */
-    public final MachineInventoryLayout getLayout() {
-        return layout;
-    }
-
     public final MachineInventoryLayout layout() {
         return layout;
     }
 
     public ItemStack getStack(int index) {
-        return getResource(index).toStack(getAmountAsInt(index));
+        Objects.checkIndex(index, size());
+        return stacks.get(index);
     }
 
     public void setStack(int index, ItemStack stack) {
@@ -163,7 +159,7 @@ public class MachineInventory extends ItemStacksResourceHandler {
         @Override
         public int insert(int index, ItemResource resource, int amount, TransactionContext transaction) {
             // Check we allow insertion on the slot
-            if (!machineInventory.getLayout().canInsert(index)) {
+            if (!machineInventory.layout().canInsert(index)) {
                 return 0;
             }
 
@@ -172,13 +168,13 @@ public class MachineInventory extends ItemStacksResourceHandler {
                 return 0;
             }
 
-            return machineInventory.insert(resource, amount, transaction);
+            return machineInventory.insert(index, resource, amount, transaction);
         }
 
         @Override
         public int extract(int index, ItemResource resource, int amount, TransactionContext transaction) {
             // Check we allow extraction on the slot
-            if (!machineInventory.getLayout().canExtract(index)) {
+            if (!machineInventory.layout().canExtract(index)) {
                 return 0;
             }
 

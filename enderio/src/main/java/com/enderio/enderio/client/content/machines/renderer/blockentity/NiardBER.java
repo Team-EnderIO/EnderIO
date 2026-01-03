@@ -27,9 +27,8 @@ public class NiardBER implements BlockEntityRenderer<NiardBlockEntity, NiardRend
         ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
         BlockEntityRenderer.super.extractRenderState(blockEntity, renderState, partialTick, cameraPosition, breakProgress);
 
-        var tank = blockEntity.getFluidTank();
-        renderState.fluidStack = tank.getFluid().copy();
-        renderState.tankCapacity = tank.getCapacity();
+        renderState.fluidStack = blockEntity.getStoredFluid().copy();
+        renderState.tankCapacity = NiardBlockEntity.CAPACITY;
     }
 
     @Override

@@ -1,24 +1,24 @@
 package com.enderio.enderio.content.machines.obelisks.weather;
 
 import com.enderio.core.common.recipes.OutputStack;
+import com.enderio.core.common.storage.FluidStorage;
+import com.enderio.core.common.storage.layout.FluidStorageLayout;
+import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.io.IOMode;
 import com.enderio.enderio.foundation.MachineNBTKeys;
-import com.enderio.enderio.foundation.attachment.FluidTankUser;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import com.enderio.enderio.foundation.io.IOConfig;
-import com.enderio.enderio.foundation.io.fluid.MachineFluidHandler;
-import com.enderio.enderio.foundation.io.fluid.MachineFluidTank;
-import com.enderio.enderio.foundation.io.fluid.MachineTankLayout;
-import com.enderio.enderio.foundation.io.fluid.TankAccess;
 import com.enderio.enderio.foundation.state.MachineState;
+import com.enderio.enderio.foundation.storage.SidedResourceHandler;
 import com.enderio.enderio.foundation.task.CraftingMachineTask;
 import com.enderio.enderio.foundation.task.host.CraftingMachineTaskHost;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIORecipes;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
@@ -35,25 +35,52 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Calendar;
 import java.util.List;
 
-public class WeatherObeliskBlockEntity extends MachineBlockEntity implements FluidTankUser {
+public class WeatherObeliskBlockEntity extends MachineBlockEntity {
 
     public static final ItemStack FIREWORK = new ItemStack(Items.FIREWORK_ROCKET, 1);
-    private final MachineFluidHandler fluidHandler;
-    private static final TankAccess TANK = new TankAccess();
+
+    public static final ICapabilityProvider<WeatherObeliskBlockEntity, Direction, ResourceHandler<FluidResource>> FLUID_HANDLER_PROVIDER = (be,
+        side) -> be.fluidStorage != null ? SidedResourceHandler.of(be.fluidStorage, side, be) : null;
+
     public static final SingleSlotAccess ROCKET = new SingleSlotAccess();
     public static final int TANK_CAPACITY = 3000;
+
+    public static final SingleResourceSlotKey<FluidResource> TANK_SLOT = new SingleResourceSlotKey<>();
+
+    public static final FluidStorageLayout<WeatherObeliskBlockEntity> FLUID_STORAGE_LAYOUT =
+        FluidStorageLayout.<WeatherObeliskBlockEntity>builder()
+            .storageSlot(TANK_SLOT, slot -> slot.capacity(TANK_CAPACITY))
+            .build();
+
+    private final FluidStorage<WeatherObeliskBlockEntity> fluidStorage;
     private final CraftingMachineTaskHost<WeatherChangeRecipe, WeatherChangeRecipe.Input> craftingTaskHost;
 
     public WeatherObeliskBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.WEATHER_OBELISK.get(), worldPosition, blockState, false);
-        fluidHandler = createFluidHandler();
+
+        fluidStorage = new FluidStorage<>(FLUID_STORAGE_LAYOUT, this) {
+            @Override
+            protected void onContentsChanged(int index, FluidStack previousContents) {
+                super.onContentsChanged(index, previousContents);
+                setChanged();
+                updateMachineState(MachineState.EMPTY_TANK, fluidStorage.getAmountAsInt(TANK_SLOT) <= 0);
+                craftingTaskHost.newTaskAvailable();
+                if (level != null) {
+                    level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+                }
+            }
+        };
 
         craftingTaskHost = new CraftingMachineTaskHost<>(this, this::canAcceptTask,
                 EIORecipes.WEATHER_CHANGE.type().get(), this::createTask, this::createRecipeInput) {
@@ -69,7 +96,7 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity implements Flu
     }
 
     private WeatherChangeRecipe.Input createRecipeInput() {
-        return new WeatherChangeRecipe.Input(TANK.getFluid(getFluidHandler()));
+        return new WeatherChangeRecipe.Input(fluidStorage.getStack(TANK_SLOT));
     }
 
     private CraftingMachineTask<WeatherChangeRecipe, WeatherChangeRecipe.Input> createTask(Level level,
@@ -79,8 +106,10 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity implements Flu
 
             @Override
             protected void consumeInputs(WeatherChangeRecipe recipe) {
-                MachineFluidHandler handler = getFluidHandler();
-                TANK.drain(handler, recipe.fluid(), IFluidHandler.FluidAction.EXECUTE);
+                try (Transaction transaction = Transaction.openRoot()) {
+                    fluidStorage.internalExtract(TANK_SLOT, FluidResource.of(recipe.fluid()), recipe.fluid().getAmount(), transaction);
+                    transaction.commit();
+                }
                 ROCKET.getStack(getInventory()).shrink(1);
             }
 
@@ -148,32 +177,8 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity implements Flu
         return canAct() && craftingTaskHost.hasTask();
     }
 
-    @Override
-    public MachineTankLayout getTankLayout() {
-        return MachineTankLayout.builder().tank(TANK, TANK_CAPACITY).build();
-    }
-
-    @Override
-    public MachineFluidHandler getFluidHandler() {
-        return fluidHandler;
-    }
-
-    public MachineFluidTank getTank() {
-        return TANK.getTank(getFluidHandler());
-    }
-
-    @Override
-    public MachineFluidHandler createFluidHandler() {
-        return new MachineFluidHandler(this, getTankLayout()) {
-            @Override
-            protected void onContentsChanged(int slot) {
-                setChanged();
-                super.onContentsChanged(slot);
-                updateMachineState(MachineState.EMPTY_TANK, TANK.getFluidAmount(this) <= 0);
-                craftingTaskHost.newTaskAvailable();
-                level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
-            }
-        };
+    public FluidStack getStoredFluid() {
+        return fluidStorage.getStack(TANK_SLOT);
     }
 
     @Override
@@ -213,14 +218,15 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity implements Flu
     @Override
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
-        saveTank(output);
+        output.putChild("Fluid", fluidStorage);
         output.putChild(MachineNBTKeys.CRAFTING_TASK, craftingTaskHost);
     }
 
     @Override
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
-        loadTank(input);
+        input.child("Fluid")
+            .ifPresent(fluidStorage::deserialize);
         var task = input.child(MachineNBTKeys.CRAFTING_TASK);
         task.ifPresent(craftingTaskHost::deserialize);
     }
@@ -231,8 +237,7 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity implements Flu
 
         SimpleFluidContent storedFluid = components.get(EIODataComponents.ITEM_FLUID_CONTENT);
         if (storedFluid != null) {
-            var tank = TANK.getTank(this);
-            tank.setFluid(storedFluid.copy());
+            fluidStorage.setStack(TANK_SLOT, storedFluid.copy());
         }
     }
 
@@ -240,9 +245,9 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity implements Flu
     protected void collectImplicitComponents(DataComponentMap.Builder components) {
         super.collectImplicitComponents(components);
 
-        var tank = TANK.getTank(this);
-        if (!tank.isEmpty()) {
-            components.set(EIODataComponents.ITEM_FLUID_CONTENT, SimpleFluidContent.copyOf(tank.getFluid()));
+        var fluidStored = getStoredFluid();
+        if (!fluidStored.isEmpty()) {
+            components.set(EIODataComponents.ITEM_FLUID_CONTENT, SimpleFluidContent.copyOf(fluidStored));
         }
     }
 }

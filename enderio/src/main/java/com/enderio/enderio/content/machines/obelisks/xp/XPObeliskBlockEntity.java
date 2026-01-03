@@ -1,17 +1,17 @@
 package com.enderio.enderio.content.machines.obelisks.xp;
 
-import com.enderio.enderio.foundation.attachment.FluidTankUser;
+import com.enderio.core.common.storage.FluidStorage;
+import com.enderio.core.common.storage.layout.FluidStorageLayout;
+import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
-import com.enderio.enderio.foundation.io.fluid.MachineFluidHandler;
-import com.enderio.enderio.foundation.io.fluid.MachineFluidTank;
-import com.enderio.enderio.foundation.io.fluid.MachineTankLayout;
-import com.enderio.enderio.foundation.io.fluid.TankAccess;
+import com.enderio.enderio.foundation.storage.SidedResourceHandler;
 import com.enderio.enderio.foundation.util.ExperienceUtil;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOFluids;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.util.Mth;
@@ -23,23 +23,61 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
-public class XPObeliskBlockEntity extends MachineBlockEntity implements FluidTankUser {
+public class XPObeliskBlockEntity extends MachineBlockEntity {
 
-    private final MachineFluidHandler fluidHandler;
-    private static final TankAccess TANK = new TankAccess();
+    public static final ICapabilityProvider<XPObeliskBlockEntity, Direction, ResourceHandler<FluidResource>> FLUID_HANDLER_PROVIDER = (be,
+        side) -> be.fluidStorage != null ? SidedResourceHandler.of(be.fluidStorage, side, be) : null;
+
+    public static final SingleResourceSlotKey<FluidResource> TANK_SLOT = new SingleResourceSlotKey<>();
+
+    public static final FluidStorageLayout<XPObeliskBlockEntity> FLUID_STORAGE_LAYOUT =
+        FluidStorageLayout.<XPObeliskBlockEntity>builder()
+            .storageSlot(TANK_SLOT, slot -> slot
+                .capacity(Integer.MAX_VALUE)
+                .filter((index, resource, obelisk) -> resource.getFluid().is(Tags.Fluids.EXPERIENCE)))
+            .build();
+
+    private final FluidStorage<XPObeliskBlockEntity> fluidStorage;
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public XPObeliskBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.XP_OBELISK.get(), worldPosition, blockState, true);
-        fluidHandler = createFluidHandler();
+
+        fluidStorage = new FluidStorage<>(FLUID_STORAGE_LAYOUT, this) {
+            @Override
+            protected void onContentsChanged(int index, FluidStack previousContents) {
+                super.onContentsChanged(index, previousContents);
+                setChanged();
+            }
+
+            @Override
+            public int insert(int index, FluidResource resource, int amount, net.neoforged.neoforge.transfer.transaction.TransactionContext transaction) {
+                // Convert into XP Juice - allow any XP fluid type to be inserted but normalize to the current fluid
+                if (isValid(index, resource)) {
+                    var currentFluid = getResource(index);
+                    if (currentFluid.getFluid() == Fluids.EMPTY || resource.getFluid().isSame(currentFluid.getFluid())) {
+                        return super.insert(index, resource, amount, transaction);
+                    } else {
+                        // Insert the same amount but as the current fluid type
+                        return super.insert(index, currentFluid, amount, transaction);
+                    }
+                }
+
+                // Non-XP is not allowed.
+                return 0;
+            }
+        };
     }
 
     @Override
@@ -53,50 +91,8 @@ public class XPObeliskBlockEntity extends MachineBlockEntity implements FluidTan
         return new XPObeliskMenu(containerId, playerInventory, this);
     }
 
-    @Override
-    public MachineTankLayout getTankLayout() {
-        return new MachineTankLayout.Builder()
-                .tank(TANK, Integer.MAX_VALUE, fluidStack -> fluidStack.is(Tags.Fluids.EXPERIENCE))
-                .build();
-    }
-
-    @Override
-    public MachineFluidHandler createFluidHandler() {
-        return new MachineFluidHandler(this, getTankLayout()) {
-            @Override
-            protected void onContentsChanged(int slot) {
-                super.onContentsChanged(slot);
-                setChanged();
-            }
-
-            @Override
-            public int fill(FluidStack resource, FluidAction action) {
-                // TODO: Avoid filling beyond 2,147,483,640 (INT_MAX - 7) to avoid having 7mb
-                // that cannot be extracted?
-
-                // Convert into XP Juice
-                if (TANK.isFluidValid(this, resource)) {
-                    var currentFluid = TANK.getFluid(this).getFluid();
-                    if (currentFluid == Fluids.EMPTY || resource.getFluid().isSame(currentFluid)) {
-                        return super.fill(resource, action);
-                    } else {
-                        return super.fill(new FluidStack(currentFluid, resource.getAmount()), action);
-                    }
-                }
-
-                // Non-XP is not allowed.
-                return 0;
-            }
-        };
-    }
-
-    public MachineFluidTank getFluidTank() {
-        return TANK.getTank(this);
-    }
-
-    @Override
-    public MachineFluidHandler getFluidHandler() {
-        return fluidHandler;
+    public FluidStack getStoredFluid() {
+        return fluidStorage.getStack(TANK_SLOT);
     }
 
     public void addLevelsToPlayer(Player player, int levelsToAdd) {
@@ -113,7 +109,7 @@ public class XPObeliskBlockEntity extends MachineBlockEntity implements FluidTan
     }
 
     public void addAllXpToPlayer(Player player) {
-        long experienceToGive = TANK.getFluidAmount(this) / ExperienceUtil.EXP_TO_FLUID;
+        long experienceToGive = fluidStorage.getAmountAsInt(TANK_SLOT) / ExperienceUtil.EXP_TO_FLUID;
         addPlayerXp(player, experienceToGive);
     }
 
@@ -134,14 +130,24 @@ public class XPObeliskBlockEntity extends MachineBlockEntity implements FluidTan
         int cappedVolume = (int) Math.min(Integer.MAX_VALUE, volume);
         cappedVolume = cappedVolume - cappedVolume % ExperienceUtil.EXP_TO_FLUID;
 
+        // Get current fluid type
+        FluidStack currentFluid = getStoredFluid();
+        if (currentFluid.isEmpty()) {
+            return;
+        }
+
         // Drain the fluid
-        FluidStack drained = TANK.drain(this, cappedVolume, IFluidHandler.FluidAction.EXECUTE);
+        int drained;
+        try (Transaction transaction = Transaction.openRoot()) {
+            drained = fluidStorage.internalExtract(TANK_SLOT, FluidResource.of(currentFluid.getFluid()), cappedVolume, transaction);
+            transaction.commit();
+        }
 
         // Add the XP to the player
         // Workaround some floating point problems when adding all the exp at once.
         // If we add it all at once, the experienceProgress gets messed up and then the
         // next extract is wonky.
-        int xpToAdd = drained.getAmount() / ExperienceUtil.EXP_TO_FLUID;
+        int xpToAdd = drained / ExperienceUtil.EXP_TO_FLUID;
         while (xpToAdd > 0) {
             int xp = Mth.clamp((int) Math.floor(
                     (1 - player.experienceProgress) * ExperienceUtil.getXpNeededForNextLevel(player.experienceLevel)),
@@ -177,15 +183,18 @@ public class XPObeliskBlockEntity extends MachineBlockEntity implements FluidTan
 
         // Determine the fluid to fill with
         Fluid fillFluid = EIOFluids.XP_JUICE.source().get();
-        var currentFluid = TANK.getFluid(this);
+        FluidStack currentFluid = getStoredFluid();
 
         if (!currentFluid.isEmpty() && !currentFluid.getFluid().isSame(fillFluid)) {
             fillFluid = currentFluid.getFluid();
         }
 
         // Add the fluid
-        int filled = TANK.fill(this, new FluidStack(fillFluid, cappedVolume),
-                IFluidHandler.FluidAction.EXECUTE);
+        int filled;
+        try (Transaction transaction = Transaction.openRoot()) {
+            filled = fluidStorage.internalInsert(TANK_SLOT, FluidResource.of(fillFluid), cappedVolume, transaction);
+            transaction.commit();
+        }
 
         // Remove the XP from the player
         // Workaround some floating point problems when adding all the exp at once.
@@ -223,8 +232,7 @@ public class XPObeliskBlockEntity extends MachineBlockEntity implements FluidTan
 
         SimpleFluidContent storedFluid = components.get(EIODataComponents.ITEM_FLUID_CONTENT);
         if (storedFluid != null) {
-            var tank = TANK.getTank(this);
-            tank.setFluid(storedFluid.copy());
+            fluidStorage.setStack(TANK_SLOT, storedFluid.copy());
         }
     }
 
@@ -232,22 +240,23 @@ public class XPObeliskBlockEntity extends MachineBlockEntity implements FluidTan
     protected void collectImplicitComponents(DataComponentMap.Builder components) {
         super.collectImplicitComponents(components);
 
-        var tank = TANK.getTank(this);
-        if (!tank.isEmpty()) {
-            components.set(EIODataComponents.ITEM_FLUID_CONTENT, SimpleFluidContent.copyOf(tank.getFluid()));
+        var fluidStored = getStoredFluid();
+        if (!fluidStored.isEmpty()) {
+            components.set(EIODataComponents.ITEM_FLUID_CONTENT, SimpleFluidContent.copyOf(fluidStored));
         }
     }
 
     @Override
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
-        saveTank(output);
+        output.putChild("Fluid", fluidStorage);
     }
 
     @Override
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
-        loadTank(input);
+        input.child("Fluid")
+            .ifPresent(fluidStorage::deserialize);
     }
 
     // endregion

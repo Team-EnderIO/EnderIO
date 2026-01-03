@@ -36,7 +36,6 @@ import com.enderio.enderio.content.storage.crafter.CrafterBlockEntity;
 import com.enderio.enderio.content.storage.fluid_tank.FluidTankBlockEntity;
 import com.enderio.enderio.content.travel.travel_anchor.PaintedTravelAnchorBlockEntity;
 import com.enderio.enderio.content.travel.travel_anchor.TravelAnchorBlockEntity;
-import com.enderio.enderio.foundation.attachment.FluidTankUser;
 import com.enderio.enderio.foundation.block.entity.EnderSkullBlockEntity;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
@@ -112,7 +111,7 @@ public class EIOBlockEntities {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<XPVacuumBlockEntity>> XP_VACUUM = BLOCK_ENTITY_TYPES
         .builder("xp_vacuum", XPVacuumBlockEntity::new, EIOBlocks.XP_VACUUM::get)
         .apply(EIOBlockEntities::machineBlockEntityCapabilities)
-        .apply(EIOBlockEntities::fluidHandlerCapability)
+        .capability(Capabilities.Fluid.BLOCK, XPVacuumBlockEntity.FLUID_HANDLER_PROVIDER)
         .build();
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CrafterBlockEntity>> CRAFTER = BLOCK_ENTITY_TYPES
@@ -123,19 +122,19 @@ public class EIOBlockEntities {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<DrainBlockEntity>> DRAIN = BLOCK_ENTITY_TYPES
         .builder("drain", DrainBlockEntity::new, EIOBlocks.DRAIN::get)
         .apply(EIOBlockEntities::poweredMachineBlockEntityCapabilities)
-        .apply(EIOBlockEntities::fluidHandlerCapability)
+        .capability(Capabilities.Fluid.BLOCK, DrainBlockEntity.FLUID_HANDLER_PROVIDER)
         .build();
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<NiardBlockEntity>> NIARD = BLOCK_ENTITY_TYPES
         .builder("niard", NiardBlockEntity::new, EIOBlocks.NIARD::get)
         .apply(EIOBlockEntities::poweredMachineBlockEntityCapabilities)
-        .apply(EIOBlockEntities::fluidHandlerCapability)
+        .capability(Capabilities.Fluid.BLOCK, NiardBlockEntity.FLUID_HANDLER_PROVIDER)
         .build();
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SoulBinderBlockEntity>> SOUL_BINDER = BLOCK_ENTITY_TYPES
         .builder("soul_binder", SoulBinderBlockEntity::new, EIOBlocks.SOUL_BINDER::get)
         .apply(EIOBlockEntities::poweredMachineBlockEntityCapabilities)
-        .apply(EIOBlockEntities::fluidHandlerCapability)
+        .capability(Capabilities.Fluid.BLOCK, SoulBinderBlockEntity.FLUID_HANDLER_PROVIDER)
         .build();
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WiredChargerBlockEntity>> WIRED_CHARGER = BLOCK_ENTITY_TYPES
@@ -162,20 +161,20 @@ public class EIOBlockEntities {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SoulEngineBlockEntity>> SOUL_ENGINE = BLOCK_ENTITY_TYPES
         .builder("soul_engine", SoulEngineBlockEntity::new, EIOBlocks.SOUL_ENGINE::get)
         .apply(EIOBlockEntities::poweredMachineBlockEntityCapabilities)
-        .apply(EIOBlockEntities::fluidHandlerCapability)
+        .capability(Capabilities.Fluid.BLOCK, SoulEngineBlockEntity.FLUID_HANDLER_PROVIDER)
         .apply(EIOBlockEntities::soulBoundCapability)
         .build();
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<XPObeliskBlockEntity>> XP_OBELISK = BLOCK_ENTITY_TYPES
         .builder("xp_obelisk", XPObeliskBlockEntity::new, EIOBlocks.XP_OBELISK::get)
         .apply(EIOBlockEntities::machineBlockEntityCapabilities)
-        .apply(EIOBlockEntities::fluidHandlerCapability)
+        .capability(Capabilities.Fluid.BLOCK, XPObeliskBlockEntity.FLUID_HANDLER_PROVIDER)
         .build();
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<VatBlockEntity>> VAT = BLOCK_ENTITY_TYPES
         .builder("vat", VatBlockEntity::new, EIOBlocks.VAT::get)
         .apply(EIOBlockEntities::machineBlockEntityCapabilities)
-        .apply(EIOBlockEntities::fluidHandlerCapability)
+        .capability(Capabilities.Fluid.BLOCK, VatBlockEntity.FLUID_HANDLER_PROVIDER)
         .build();
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<InhibitorObeliskBlockEntity>> INHIBITOR_OBELISK = BLOCK_ENTITY_TYPES
@@ -201,13 +200,12 @@ public class EIOBlockEntities {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WeatherObeliskBlockEntity>> WEATHER_OBELISK = BLOCK_ENTITY_TYPES
         .builder("weather_obelisk", WeatherObeliskBlockEntity::new, EIOBlocks.WEATHER_OBELISK::get)
         .apply(EIOBlockEntities::machineBlockEntityCapabilities)
-        .apply(EIOBlockEntities::fluidHandlerCapability)
+        .capability(Capabilities.Fluid.BLOCK, WeatherObeliskBlockEntity.FLUID_HANDLER_PROVIDER)
         .build();
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FarmingStationBlockEntity>> FARMING_STATION = BLOCK_ENTITY_TYPES
         .builder("farming_station", FarmingStationBlockEntity::new, EIOBlocks.FARMING_STATION::get)
         .apply(EIOBlockEntities::poweredMachineBlockEntityCapabilities)
-        .apply(EIOBlockEntities::fluidHandlerCapability)
         .apply(EIOBlockEntities::soulBoundCapability)
         .build();
 
@@ -271,13 +269,13 @@ public class EIOBlockEntities {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FluidTankBlockEntity.Standard>> FLUID_TANK = BLOCK_ENTITY_TYPES
         .builder("fluid_tank", FluidTankBlockEntity.Standard::new, EIOBlocks.FLUID_TANK::get)
         .apply(EIOBlockEntities::machineBlockEntityCapabilities)
-        .apply(EIOBlockEntities::fluidHandlerCapability)
+        .capability(Capabilities.Fluid.BLOCK, FluidTankBlockEntity.FLUID_HANDLER_PROVIDER)
         .build();
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FluidTankBlockEntity.Enhanced>> PRESSURIZED_FLUID_TANK = BLOCK_ENTITY_TYPES
         .builder("pressurized_fluid_tank", FluidTankBlockEntity.Enhanced::new, EIOBlocks.PRESSURIZED_FLUID_TANK::get)
         .apply(EIOBlockEntities::machineBlockEntityCapabilities)
-        .apply(EIOBlockEntities::fluidHandlerCapability)
+        .capability(Capabilities.Fluid.BLOCK, FluidTankBlockEntity.FLUID_HANDLER_PROVIDER)
         .build();
 
     // endregion
@@ -301,9 +299,5 @@ public class EIOBlockEntities {
 
     public static void register(IEventBus eventBus) {
         BLOCK_ENTITY_TYPES.register(eventBus);
-    }
-
-    private static void fluidHandlerCapability(BlockEntityTypeDeferredRegister.Builder<? extends MachineBlockEntity> blockEntity) {
-        blockEntity.capability(Capabilities.Fluid.BLOCK, FluidTankUser.FLUID_HANDLER_PROVIDER);
     }
 }

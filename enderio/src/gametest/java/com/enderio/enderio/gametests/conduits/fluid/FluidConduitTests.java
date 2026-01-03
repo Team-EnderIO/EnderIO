@@ -1,0 +1,153 @@
+package com.enderio.enderio.gametests.conduits.fluid;
+
+import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.api.io.RedstoneControl;
+import com.enderio.enderio.gametests.conduits.ConduitGameTestHelper;
+import com.enderio.enderio.content.conduits.type.fluid.FluidConduit;
+import com.enderio.enderio.content.conduits.type.fluid.FluidConduitConnectionConfig;
+import com.enderio.enderio.init.EIOBlocks;
+import com.enderio.enderio.init.EIOConduits;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
+import net.minecraft.world.level.material.Fluids;
+import net.neoforged.testframework.DynamicTest;
+import net.neoforged.testframework.annotation.ForEachTest;
+import net.neoforged.testframework.annotation.RegisterStructureTemplate;
+import net.neoforged.testframework.annotation.TestHolder;
+import net.neoforged.testframework.gametest.GameTest;
+import net.neoforged.testframework.gametest.StructureTemplateBuilder;
+
+import java.util.function.Supplier;
+
+@ForEachTest(groups = "conduit.item")
+public class FluidConduitTests {
+
+    private static final String THREE_TANKS = EnderIO.MOD_ID + ":fluid_conduit_three_tanks";
+
+    // @formatter:off
+    @RegisterStructureTemplate(THREE_TANKS)
+    public static final Supplier<StructureTemplate> THREE_TANKS_TEMPLATE = StructureTemplateBuilder.lazy(3, 1, 3,
+        builder -> builder
+            // Sender
+            .set(2, 0, 0, EIOBlocks.FLUID_TANK.get().defaultBlockState())
+
+            // Receivers
+            .set(0, 0, 2, EIOBlocks.FLUID_TANK.get().defaultBlockState())
+            .set(2, 0, 2, EIOBlocks.FLUID_TANK.get().defaultBlockState())
+    );
+    // @formatter:on
+
+    @GameTest
+    @TestHolder(description = "Tests basic fluid conduit functionality.")
+    public static void fluidConduitBasicTransfer(final DynamicTest test) {
+        test.registerGameTestTemplate(() -> StructureTemplateBuilder
+            .withSize(1, 1, 3)
+            .set(0, 0, 0, EIOBlocks.FLUID_TANK.get().defaultBlockState())
+            .set(0, 0, 2, EIOBlocks.FLUID_TANK.get().defaultBlockState()));
+
+        test.onGameTest(ConduitGameTestHelper.class, helper -> {
+            var fluidConduit = helper.getConduit(EIOConduits.FLUID);
+            final int tickRate = fluidConduit.value().networkTickRate();
+
+            helper.startSequence()
+                // Destroy any previous conduit
+                .thenExecute(() -> helper.setBlock(0, 0, 1, Blocks.AIR))
+                // Place conduits between the tanks
+                .thenExecute(() -> helper.placeConduit(fluidConduit, 0, 0, 1))
+                // Configure the extract end
+                .thenExecute(() -> helper
+                    .getConduitBundle(0, 0, 1, false)
+                    .setConnectionConfig(fluidConduit, Direction.NORTH,
+                        FluidConduitConnectionConfig.DEFAULT.withIsExtract(true).withIsInsert(false).withExtractRedstoneControl(RedstoneControl.NEVER_ACTIVE)))
+                // Configure the insert end
+                .thenExecute(() -> helper
+                    .getConduitBundle(0, 0, 1, false)
+                    .setConnectionConfig(fluidConduit, Direction.SOUTH, FluidConduitConnectionConfig.DEFAULT.withIsExtract(false).withIsInsert(true)))
+                // Put some water in the tank we'll extract from
+                .thenExecute(() -> helper.fillContainer(0, 0, 0, Fluids.WATER, 1))
+                // Ensure the fluid is still there
+                .thenExecuteAfter(tickRate, () -> helper.assertContainerHasExactly(0, 0, 0, Fluids.WATER, 1))
+                // Now enable movement with redstone control
+                .thenExecute(() -> helper
+                    .getConduitBundle(0, 0, 1, false)
+                    .setConnectionConfig(fluidConduit, Direction.NORTH,
+                        FluidConduitConnectionConfig.DEFAULT.withIsExtract(true).withIsInsert(false).withExtractRedstoneControl(RedstoneControl.ALWAYS_ACTIVE)))
+                // Ensure the fluid moves
+                .thenExecuteAfter(tickRate, () -> helper.assertContainerHasExactly(0, 0, 2, Fluids.WATER, 1))
+                // Ensure no duplication
+                .thenExecute(() -> helper.assertContainerHasExactly(0, 0, 0, Fluids.WATER, 0))
+                .thenSucceed();
+        });
+    }
+
+    @GameTest(template = THREE_TANKS)
+    @TestHolder(description = "Ensures fluid conduits prioritise closest container first.")
+    public static void fluidConduitDistancePriority(final ConduitGameTestHelper helper) {
+        var fluidConduit = helper.getConduit(EIOConduits.FLUID);
+        final int tickRate = fluidConduit.value().networkTickRate();
+
+        helper.startSequence()
+            // Destroy all previous conduits
+            .thenExecute(() -> helper.fillAir(1, 0, 0, 1, 0, 2))
+            // Place conduits between the tanks
+            .thenExecute(() -> helper.fillConduits(fluidConduit, 1, 0, 0, 1, 0, 2))
+            // Configure the insert ends
+            .thenExecute(() -> helper
+                .getConduitBundle(1, 0, 2, false)
+                .setConnectionConfig(fluidConduit, Direction.EAST, FluidConduitConnectionConfig.DEFAULT.withIsExtract(false).withIsInsert(true)))
+            .thenExecute(() -> helper
+                .getConduitBundle(1, 0, 2, false)
+                .setConnectionConfig(fluidConduit, Direction.WEST, FluidConduitConnectionConfig.DEFAULT.withIsExtract(false).withIsInsert(true)))
+            // Configure the extract end
+            .thenExecute(() -> helper
+                .getConduitBundle(1, 0, 0, false)
+                .setConnectionConfig(fluidConduit, Direction.EAST,
+                    FluidConduitConnectionConfig.DEFAULT.withIsExtract(true).withIsInsert(false).withExtractRedstoneControl(RedstoneControl.ALWAYS_ACTIVE)))
+            // Put some water in the tank we'll extract from
+            .thenExecute(() -> helper.fillContainer(2, 0, 0, Fluids.WATER, 1))
+            // Ensure the fluid moves to the closer tank
+            .thenExecuteAfter(tickRate, () -> helper.assertContainerHasExactly(2, 0, 2, Fluids.WATER, 1))
+            .thenExecute(() -> helper.assertContainerHasExactly(0, 0, 2, Fluids.WATER, 0))
+            .thenSucceed();
+    }
+
+    @GameTest(template = THREE_TANKS)
+    @TestHolder(description = "Ensures fluid conduits prioritise highest priority container first, before closest.")
+    public static void fluidConduitManualPriority(final ConduitGameTestHelper helper) {
+        var fluidConduit = helper.getConduit(EIOConduits.PRESSURIZED_FLUID);
+        final int tickRate = fluidConduit.value().networkTickRate();
+
+        if (!((FluidConduit)fluidConduit.value()).doesSupportPriority()) {
+            throw new IllegalStateException("Fluid conduit does not support priority, fix the test to use a conduit that does.");
+        }
+
+        helper.startSequence()
+            // Destroy all previous conduits
+            .thenExecute(() -> helper.fillAir(1, 0, 0, 1, 0, 2))
+            // Place conduits between the tanks
+            .thenExecute(() -> helper.fillConduits(fluidConduit, 1, 0, 0, 1, 0, 2))
+            // Configure the insert ends
+            .thenExecute(() -> helper
+                .getConduitBundle(1, 0, 2, false)
+                .setConnectionConfig(fluidConduit, Direction.EAST, FluidConduitConnectionConfig.DEFAULT.withIsExtract(false).withIsInsert(true)))
+            .thenExecute(() -> helper
+                .getConduitBundle(1, 0, 2, false)
+                .setConnectionConfig(fluidConduit, Direction.WEST, FluidConduitConnectionConfig.DEFAULT.withIsExtract(false).withIsInsert(true).withPriority(2)))
+            // Configure the extract end
+            .thenExecute(() -> helper
+                .getConduitBundle(1, 0, 0, false)
+                .setConnectionConfig(fluidConduit, Direction.EAST,
+                    FluidConduitConnectionConfig.DEFAULT.withIsExtract(true).withIsInsert(false).withExtractRedstoneControl(RedstoneControl.ALWAYS_ACTIVE)))
+            // Put some fluid in the tank we'll extract from
+            .thenExecute(() -> helper.fillContainer(2, 0, 0, Fluids.WATER, 1))
+            // Ensure the fluid moves to the closer tank
+            .thenExecuteAfter(tickRate, () -> helper.assertContainerHasExactly(0, 0, 2, Fluids.WATER, 1))
+            .thenExecute(() -> helper.assertContainerHasExactly(2, 0, 2, Fluids.WATER, 0))
+            .thenSucceed();
+    }
+
+    // TODO: Test round robin when we add it
+
+    // TODO: Test fluid filters?
+}

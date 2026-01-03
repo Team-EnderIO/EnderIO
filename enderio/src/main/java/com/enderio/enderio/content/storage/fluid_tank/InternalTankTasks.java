@@ -1,9 +1,10 @@
 package com.enderio.enderio.content.storage.fluid_tank;
 
-import com.enderio.enderio.foundation.attachment.FluidTankUser;
+import com.enderio.core.common.storage.ResourceStorage;
+import com.enderio.core.common.storage.slot.ResourceSlotId;
+import com.enderio.core.common.util.EnderResourceUtil;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
-import com.enderio.enderio.foundation.io.fluid.TankAccess;
 import com.enderio.enderio.foundation.util.ExperienceUtil;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.BucketItem;
@@ -12,20 +13,20 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
-import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 public class InternalTankTasks {
 
     // TODO: enable fluid tanks to receive stackable fluid containers
-    public static <T extends MachineBlockEntity & FluidTankUser> void fillInternal(
+    public static <T extends MachineBlockEntity> void fillInternal(
         T blockEntity,
-        TankAccess tank,
+        ResourceStorage<FluidResource> fluidStorage,
+        ResourceSlotId<FluidResource> tankSlot,
         SingleSlotAccess fluidFillInput,
         SingleSlotAccess fluidFillOutput
     ) {
@@ -37,45 +38,44 @@ public class InternalTankTasks {
                 if (outputItem.isEmpty() || (outputItem.getItem() == Items.BUCKET
                     && outputItem.getCount() < outputItem.getMaxStackSize())) {
 
-                    int filled = tank.fill(blockEntity, new FluidStack(filledBucket.content, FluidType.BUCKET_VOLUME),
-                        IFluidHandler.FluidAction.SIMULATE);
+                    try (Transaction transaction = Transaction.openRoot()) {
+                        int filled = fluidStorage.internalInsert(tankSlot, FluidResource.of(filledBucket.content), FluidType.BUCKET_VOLUME, transaction);
+                        if (filled != FluidType.BUCKET_VOLUME) {
+                            return;
+                        }
 
-                    if (filled == FluidType.BUCKET_VOLUME) {
-                        tank.fill(blockEntity, new FluidStack(filledBucket.content, FluidType.BUCKET_VOLUME),
-                            IFluidHandler.FluidAction.EXECUTE);
+                        int bucketsReturned = fluidFillOutput.insert(blockEntity, ItemResource.of(Items.BUCKET), 1, transaction);
+                        if (bucketsReturned != 1) {
+                            return;
+                        }
 
                         inputItem.shrink(1);
-
-                        try (Transaction transaction = Transaction.openRoot()) {
-                            fluidFillOutput.insert(blockEntity, ItemResource.of(Items.BUCKET), 1, transaction);
-                            transaction.commit();
-                        }
+                        transaction.commit();
                     }
                 }
             } else {
                 var fluidHandlerItem = ItemAccess.forStack(inputItem).getCapability(Capabilities.Fluid.ITEM);
                 if (fluidHandlerItem != null && outputItem.isEmpty()) {
-                    int filled = FluidUtil.tryFluidTransfer(
-                        blockEntity.getFluidHandler(),
-                        IFluidHandler.of(fluidHandlerItem),
-                        tank.getFluidAmount(blockEntity),
-                        true
-                    ).getAmount();
 
-                    if (filled > 0) {
-                        fluidFillOutput.setStackInSlot(blockEntity, inputItem);
-                        fluidFillInput.setStackInSlot(blockEntity, ItemStack.EMPTY);
+                    try (Transaction transaction = Transaction.openRoot()) {
+                        int moved = EnderResourceUtil.moveInto(fluidHandlerItem, fluidStorage, tankSlot, fr -> true, Integer.MAX_VALUE, transaction);
+                        if (moved > 0) {
+                            // TODO: Should we wait until either internal buffer is full or item is empty?
+                            transaction.commit();
+                            fluidFillOutput.setStackInSlot(blockEntity, inputItem);
+                            fluidFillInput.setStackInSlot(blockEntity, ItemStack.EMPTY);
+                        }
                     }
                 }
             }
         }
     }
 
-
     // TODO: enable fluid tanks to receive stackable fluid containers
-    public static <T extends MachineBlockEntity & FluidTankUser> void drainInternal(
+    public static <T extends MachineBlockEntity> void drainInternal(
         T blockEntity,
-        TankAccess tank,
+        ResourceStorage<FluidResource> fluidStorage,
+        ResourceSlotId<FluidResource> tankSlot,
         SingleSlotAccess fluidDrainInput,
         SingleSlotAccess fluidDrainOutput
     ) {
@@ -84,16 +84,23 @@ public class InternalTankTasks {
 
         if (!inputItem.isEmpty()) {
             if (inputItem.getItem() == Items.BUCKET) {
-                if (!tank.getFluid(blockEntity).isEmpty()) {
-                    FluidStack stack = tank.drain(blockEntity, FluidType.BUCKET_VOLUME, IFluidHandler.FluidAction.SIMULATE);
-                    if (stack.getAmount() == FluidType.BUCKET_VOLUME &&
-                        (outputItem.isEmpty() || (outputItem.getItem() == stack.getFluid().getBucket()
-                            && outputItem.getCount() < outputItem.getMaxStackSize()))) {
+                if (fluidStorage.getAmountAsInt(tankSlot) > 0) {
 
-                        tank.drain(blockEntity, FluidType.BUCKET_VOLUME, IFluidHandler.FluidAction.EXECUTE);
+                    try (Transaction transaction = Transaction.openRoot()) {
+                        var resource = fluidStorage.getResource(tankSlot);
+                        if (resource.isEmpty()) {
+                            return;
+                        }
+
+                        int extracted = fluidStorage.internalExtract(tankSlot, resource, FluidType.BUCKET_VOLUME, transaction);
+                        if (extracted != FluidType.BUCKET_VOLUME) {
+                            return;
+                        }
+
+                        transaction.commit();
                         inputItem.shrink(1);
                         if (outputItem.isEmpty()) {
-                            fluidDrainOutput.setStackInSlot(blockEntity, stack.getFluid().getBucket().getDefaultInstance());
+                            fluidDrainOutput.setStackInSlot(blockEntity, resource.getFluid().getBucket().getDefaultInstance());
                         } else {
                             outputItem.grow(1);
                         }
@@ -102,31 +109,30 @@ public class InternalTankTasks {
             } else {
                 var fluidHandlerItem = ItemAccess.forStack(inputItem).getCapability(Capabilities.Fluid.ITEM);
                 if (fluidHandlerItem != null && outputItem.isEmpty()) {
-                    int filled = FluidUtil.tryFluidTransfer(
-                        IFluidHandler.of(fluidHandlerItem),
-                        blockEntity.getFluidHandler(), // méthode à définir dans ton interface
-                        tank.getFluidAmount(blockEntity),
-                        true
-                    ).getAmount();
 
-                    if (filled > 0) {
-                        fluidDrainOutput.setStackInSlot(blockEntity, inputItem);
-                        fluidDrainInput.setStackInSlot(blockEntity, ItemStack.EMPTY);
+                    try (Transaction transaction = Transaction.openRoot()) {
+                        int moved = ResourceHandlerUtil.move(fluidStorage, fluidHandlerItem, fr -> true, Integer.MAX_VALUE, transaction);
+                        if (moved > 0) {
+                            transaction.commit();
+                            fluidDrainOutput.setStackInSlot(blockEntity, inputItem);
+                            fluidDrainInput.setStackInSlot(blockEntity, ItemStack.EMPTY);
+                        }
                     }
                 }
             }
         }
     }
 
-    public static <T extends MachineBlockEntity & FluidTankUser> void tryMendTool(
+    public static <T extends MachineBlockEntity> void tryMendTool(
         T blockEntity,
-        TankAccess tank,
+        ResourceStorage<FluidResource> fluidStorage,
+        ResourceSlotId<FluidResource> tankSlot,
         SingleSlotAccess fluidDrainInput,
         SingleSlotAccess fluidDrainOutput
     ) {
-        FluidStack fluid = tank.getFluid(blockEntity);
+        FluidResource resource = fluidStorage.getResource(tankSlot);
 
-        if (!fluid.isEmpty() && fluid.is(Tags.Fluids.EXPERIENCE)
+        if (!resource.isEmpty() && resource.is(Tags.Fluids.EXPERIENCE)
             && fluidDrainOutput.getItemStack(blockEntity).isEmpty()) {
 
             ItemStack tool = fluidDrainInput.getItemStack(blockEntity);
@@ -135,19 +141,25 @@ public class InternalTankTasks {
             var mendingEnchantment = enchantmentsRecipe.getOrThrow(Enchantments.MENDING);
 
             if (tool.isDamageableItem() && tool.getEnchantmentLevel(mendingEnchantment) > 0) {
-
                 ItemStack repairedTool = tool.copy();
 
                 int damage = tool.getDamageValue();
                 int xpAmount = (int) Math.floor(damage / tool.getXpRepairRatio());
                 int fluidAmount = xpAmount * ExperienceUtil.EXP_TO_FLUID;
 
-                FluidStack drainedXp = tank.drain(blockEntity, fluidAmount, IFluidHandler.FluidAction.EXECUTE);
-                int repairAmount = (int) Math.floor(drainedXp.getAmount() * tool.getXpRepairRatio() / ExperienceUtil.EXP_TO_FLUID);
-                repairedTool.setDamageValue(Math.max(0, damage - repairAmount));
+                try (Transaction transaction = Transaction.openRoot()) {
+                    int extracted = fluidStorage.internalExtract(tankSlot, resource, fluidAmount, transaction);
+                    if (extracted <= 0) {
+                        return;
+                    }
 
-                fluidDrainInput.setStackInSlot(blockEntity, ItemStack.EMPTY);
-                fluidDrainOutput.setStackInSlot(blockEntity, repairedTool);
+                    transaction.commit();
+                    int repairAmount = (int) Math.floor(extracted * tool.getXpRepairRatio() / ExperienceUtil.EXP_TO_FLUID);
+                    repairedTool.setDamageValue(Math.max(0, damage - repairAmount));
+
+                    fluidDrainInput.setStackInSlot(blockEntity, ItemStack.EMPTY);
+                    fluidDrainOutput.setStackInSlot(blockEntity, repairedTool);
+                }
             }
         }
     }

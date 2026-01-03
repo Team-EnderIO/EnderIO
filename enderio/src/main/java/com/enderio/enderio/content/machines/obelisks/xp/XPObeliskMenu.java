@@ -23,7 +23,7 @@ public class XPObeliskMenu extends MachineMenu<XPObeliskBlockEntity> {
     public XPObeliskMenu(int pContainerId, Inventory inventory, XPObeliskBlockEntity blockEntity) {
         super(EIOMenus.XP_OBELISK.get(), pContainerId, inventory, blockEntity);
 
-        tankSyncSlot = addSyncSlot(FluidStackSyncSlot.readOnly(() -> blockEntity.getFluidTank().getFluid()));
+        tankSyncSlot = addSyncSlot(FluidStackSyncSlot.readOnly(blockEntity::getStoredFluid));
     }
 
     public XPObeliskMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
