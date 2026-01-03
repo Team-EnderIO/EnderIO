@@ -246,9 +246,14 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
                 if (outputStack.isEmpty() || (outputStack.is(recipeResultStack.getItem())
                         && outputStack.getCount() < outputStack.getMaxStackSize())) {
-                    FLUID_FILL_INPUT.getItemStack(this).shrink(1);
+
+                    int filled = TANK.fill(this, recipe.value().fluid(), IFluidHandler.FluidAction.SIMULATE);
+                    if (filled != recipe.value().fluid().getAmount()) {
+                        return;
+                    }
 
                     TANK.fill(this, recipe.value().fluid(), IFluidHandler.FluidAction.EXECUTE);
+                    FLUID_FILL_INPUT.getItemStack(this).shrink(1);
 
                     if (outputStack.isEmpty()) {
                         FLUID_FILL_OUTPUT.setStackInSlot(this, recipeResultStack.copy());
@@ -262,9 +267,14 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
                 if (outputStack.isEmpty() || (outputStack.is(recipeResultStack.getItem())
                         && outputStack.getCount() < outputStack.getMaxStackSize())) {
-                    FLUID_DRAIN_INPUT.getItemStack(this).shrink(1);
+
+                    var drained = TANK.drain(this, recipe.value().fluid(), IFluidHandler.FluidAction.SIMULATE);
+                    if (drained.getAmount() != recipe.value().fluid().getAmount()) {
+                        return;
+                    }
 
                     TANK.drain(this, recipe.value().fluid(), IFluidHandler.FluidAction.EXECUTE);
+                    FLUID_DRAIN_INPUT.getItemStack(this).shrink(1);
 
                     if (outputStack.isEmpty()) {
                         FLUID_DRAIN_OUTPUT.setStackInSlot(this, recipeResultStack.copy());

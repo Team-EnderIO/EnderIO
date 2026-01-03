@@ -5,6 +5,7 @@ import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.enderio.enderio.content.conduits.ConduitBlockItem;
 import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
+import com.enderio.enderio.gametests.util.EnderGameTestHelper;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -26,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 import java.util.function.Predicate;
 
-public class ConduitGameTestHelper extends ExtendedGameTestHelper {
+public class ConduitGameTestHelper extends EnderGameTestHelper {
     private static final UUID DEFAULT_FAKE_PLAYER_UUID = UUID.fromString("dc8dcc7b-033e-4157-a547-26cae4971aba");
     private final Player fakePlayer;
     public final GameTestHelper helper;
