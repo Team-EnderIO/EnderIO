@@ -1,6 +1,7 @@
 package com.enderio.enderio.gametests.util;
 
 import com.enderio.enderio.api.io.IOConfigurable;
+import com.enderio.enderio.foundation.io.energy.IMachineEnergyStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestInfo;
@@ -113,6 +114,43 @@ public class EnderGameTestHelper extends ExtendedGameTestHelper {
         if (foundAmount != amount) {
             throw new GameTestAssertException("Expected " + amount + " of " + fluid + " in tank at " + x + "," + y
                 + "," + z + " but found " + foundAmount);
+        }
+    }
+
+    /**
+     * Provide energy to a block entity by directly accessing its energy capability.
+     */
+    public void provideEnergy(int x, int y, int z, int amount) {
+        var energyHandler = getLevel().getCapability(Capabilities.EnergyStorage.BLOCK, absolutePos(new BlockPos(x, y, z)), null);
+        if (energyHandler == null) {
+            throw new GameTestAssertException("No energy handler at " + x + "," + y + "," + z);
+        }
+
+        // Short path for MachineEnergyHandler to avoid insertion limits.
+        if (energyHandler instanceof IMachineEnergyStorage machineEnergyStorage) {
+            int inserted = machineEnergyStorage.addEnergy(amount);
+            if (inserted != amount) {
+                throw new GameTestAssertException("Could not insert all " + amount + " energy into block at " + x + "," + y + "," + z + ", only inserted " + inserted);
+            }
+
+            return;
+        }
+
+        int inserted = energyHandler.receiveEnergy(amount, true);
+        if (inserted != amount) {
+            throw new GameTestAssertException("Could not insert all " + amount + " energy into block at " + x + "," + y + "," + z + ", only inserted " + inserted);
+        }
+    }
+
+    public void assertEnergyStored(int x, int y, int z, int expectedAmount) {
+        var energyHandler = getLevel().getCapability(Capabilities.EnergyStorage.BLOCK, absolutePos(new BlockPos(x, y, z)), null);
+        if (energyHandler == null) {
+            throw new GameTestAssertException("No energy handler at " + x + "," + y + "," + z);
+        }
+
+        int stored = energyHandler.getEnergyStored();
+        if (stored != expectedAmount) {
+            throw new GameTestAssertException("Expected " + expectedAmount + " energy in block at " + x + "," + y + "," + z + ", but found " + stored);
         }
     }
 }
