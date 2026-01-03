@@ -193,7 +193,8 @@ public class EnderResourceUtilTests {
             .build();
         FluidStorage<Void> destStorage = new FluidStorage<>(destLayout, null);
 
-        // Move only water (filter out lava) from source to destination tank 0
+        // Move only water from source to destination tank 0
+        // Lava won't move despite the filter, because water is in the first slot of the source.
         int amountMoved = EnderResourceUtil.moveInto(
             sourceStorage,
             destStorage,

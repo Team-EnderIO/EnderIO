@@ -215,9 +215,11 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     }
 
     private boolean isFluidValid(FluidStack fluidStack) {
-        if (soulData == null) {
+        if (soulData == null || level == null) {
             return false;
         }
+
+        // TODO: Soul Data should be able to store holders.
         String fluid = soulData.fluid();
         if (fluid.startsWith("#")) { // We have a fluid tag instead
             TagKey<Fluid> tag = TagKey.create(Registries.FLUID, Identifier.parse(fluid.substring(1)));
