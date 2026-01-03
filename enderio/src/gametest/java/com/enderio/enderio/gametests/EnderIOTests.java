@@ -1,4 +1,4 @@
-package com.enderio.enderio.conduits.tests;
+package com.enderio.enderio.gametests;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.commands.CommandSourceStack;
@@ -15,12 +15,12 @@ import net.neoforged.testframework.conf.FrameworkConfiguration;
 import net.neoforged.testframework.impl.MutableTestFramework;
 import org.lwjgl.glfw.GLFW;
 
-@Mod(EnderIOConduitsTests.MOD_ID)
-public class EnderIOConduitsTests {
+@Mod(EnderIOTests.MOD_ID)
+public class EnderIOTests {
 
     public static final String MOD_ID = "enderio_tests";
 
-    public EnderIOConduitsTests(IEventBus eventBus, ModContainer container) {
+    public EnderIOTests(IEventBus eventBus, ModContainer container) {
         final MutableTestFramework framework = FrameworkConfiguration
                 .builder(ResourceLocation.fromNamespaceAndPath(MOD_ID, "tests"))
                 .clientConfiguration(() -> ClientConfiguration.builder()

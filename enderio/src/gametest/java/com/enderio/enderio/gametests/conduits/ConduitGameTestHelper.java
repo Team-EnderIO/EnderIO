@@ -1,4 +1,4 @@
-package com.enderio.enderio.conduits.tests;
+package com.enderio.enderio.gametests.conduits;
 
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
@@ -21,7 +21,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
-import net.neoforged.testframework.gametest.ExtendedGameTestHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
