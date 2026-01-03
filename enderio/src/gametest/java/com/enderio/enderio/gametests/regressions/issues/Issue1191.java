@@ -20,7 +20,7 @@ import net.neoforged.testframework.gametest.StructureTemplateBuilder;
 @ForEachTest(groups = "regression.issue1191")
 public class Issue1191 {
     @GameTest
-    @TestHolder(description = "Ensures that placing conduits forms a network and breaking the middle splits the network.")
+    @TestHolder(description = "Ensures that experience cannot be duped using the fluid tank.")
     public static void testIssue1191(final DynamicTest test) {
         test.registerGameTestTemplate(() -> StructureTemplateBuilder.withSize(1, 1, 3)
             .set(0, 0, 0, Blocks.CHEST.defaultBlockState())

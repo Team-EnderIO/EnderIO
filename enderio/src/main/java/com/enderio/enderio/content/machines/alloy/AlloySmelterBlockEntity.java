@@ -186,7 +186,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         public AlloySmeltingMachineTask(Level level, MachineInventory inventory,
                 MachineEnergyHandler energyStorage, AlloySmeltingRecipe.Input recipeInput, MultiSlotAccess inputs,
                 SingleSlotAccess outputSlot, @Nullable RecipeHolder<AlloySmeltingRecipe> recipe) {
-            super(level, inventory, energyStorage, recipeInput, outputSlot, recipe);
+            super(level, inventory, null, energyStorage, recipeInput, outputSlot.wrapToMulti(), recipe);
             this.inputs = inputs;
         }
 

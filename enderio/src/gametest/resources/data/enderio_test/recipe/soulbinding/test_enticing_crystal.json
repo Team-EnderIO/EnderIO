@@ -1,0 +1,12 @@
+{
+  "type": "enderio:soul_binding",
+  "energy": 10,
+  "entity_type": "minecraft:villager",
+  "experience": 1,
+  "input": "minecraft:cobblestone",
+  "output": {
+    "count": 1,
+    "id": "enderio:enticing_crystal"
+  }
+}
+

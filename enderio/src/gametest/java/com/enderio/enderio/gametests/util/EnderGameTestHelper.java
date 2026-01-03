@@ -1,9 +1,11 @@
 package com.enderio.enderio.gametests.util;
 
 import com.enderio.enderio.api.io.IOConfigurable;
+import com.enderio.enderio.foundation.energy.MachineEnergyHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestInfo;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
@@ -28,6 +30,14 @@ public class EnderGameTestHelper extends ExtendedGameTestHelper {
     }
 
     public void insertIntoContainer(int x, int y, int z, Item item, int count) {
+        insertIntoContainer(x, y, z, ItemResource.of(item), count);
+    }
+
+    public void insertIntoContainer(int x, int y, int z, ItemStack itemStack) {
+        insertIntoContainer(x, y, z, ItemResource.of(itemStack), itemStack.getCount());
+    }
+
+    public void insertIntoContainer(int x, int y, int z, ItemResource item, int count) {
         var itemHandler = getLevel().getCapability(Capabilities.Item.BLOCK, absolutePos(new BlockPos(x, y, z)),
             null);
         if (itemHandler == null) {
@@ -35,10 +45,9 @@ public class EnderGameTestHelper extends ExtendedGameTestHelper {
         }
 
         try (Transaction transaction = Transaction.openRoot()) {
-            var itemResource = ItemResource.of(item);
             for (int i = 0; i < itemHandler.size(); i++) {
-                int toInsert = Math.min(count, itemHandler.getCapacityAsInt(i, itemResource));
-                int inserted = itemHandler.insert(i, itemResource, toInsert, transaction);
+                int toInsert = Math.min(count, itemHandler.getCapacityAsInt(i, item));
+                int inserted = itemHandler.insert(i, item, toInsert, transaction);
                 count -= inserted;
                 if (count <= 0) {
                     break;
@@ -125,6 +134,47 @@ public class EnderGameTestHelper extends ExtendedGameTestHelper {
         if (totalAmount != amount) {
             throw assertionException("Expected " + amount + " of " + fluid + " in tank at " + x + "," + y
                 + "," + z + " but found " + totalAmount);
+        }
+    }
+
+    /**
+     * Provide energy to a block entity by directly accessing its energy capability.
+     */
+    public void provideEnergy(int x, int y, int z, int amount) {
+        var energyHandler = getLevel().getCapability(Capabilities.Energy.BLOCK, absolutePos(new BlockPos(x, y, z)), null);
+        if (energyHandler == null) {
+            throw assertionException("No energy handler at " + x + "," + y + "," + z);
+        }
+
+        // Short path for MachineEnergyHandler to avoid insertion limits.
+        if (energyHandler instanceof MachineEnergyHandler machineEnergyHandler) {
+            int inserted = machineEnergyHandler.add(amount, null);
+            if (inserted != amount) {
+                throw assertionException("Could not insert all " + amount + " energy into block at " + x + "," + y + "," + z + ", only inserted " + inserted);
+            }
+
+            return;
+        }
+
+        try (Transaction transaction = Transaction.openRoot()) {
+            int inserted = energyHandler.insert(amount, transaction);
+            if (inserted != amount) {
+                throw assertionException("Could not insert all " + amount + " energy into block at " + x + "," + y + "," + z + ", only inserted " + inserted);
+            }
+
+            transaction.commit();
+        }
+    }
+
+    public void assertEnergyStored(int x, int y, int z, int expectedAmount) {
+        var energyHandler = getLevel().getCapability(Capabilities.Energy.BLOCK, absolutePos(new BlockPos(x, y, z)), null);
+        if (energyHandler == null) {
+            throw assertionException("No energy handler at " + x + "," + y + "," + z);
+        }
+
+        int stored = energyHandler.getAmountAsInt();
+        if (stored != expectedAmount) {
+            throw assertionException("Expected " + expectedAmount + " energy in block at " + x + "," + y + "," + z + ", but found " + stored);
         }
     }
 }

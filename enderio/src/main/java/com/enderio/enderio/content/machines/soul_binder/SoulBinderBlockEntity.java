@@ -232,7 +232,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
 
     protected PoweredCraftingMachineTask<SoulBindingRecipe, SoulBindingRecipe.Input> createTask(Level level,
             SoulBindingRecipe.Input container, @Nullable RecipeHolder<SoulBindingRecipe> recipe) {
-        return new PoweredCraftingMachineTask<>(level, getInventory(), getEnergyStorage(), container, OUTPUT, recipe) {
+        return new PoweredCraftingMachineTask<>(level, getInventory(), fluidStorage, getEnergyStorage(), container, OUTPUT, recipe) {
 
             @Override
             protected void consumeInputs(SoulBindingRecipe recipe) {
