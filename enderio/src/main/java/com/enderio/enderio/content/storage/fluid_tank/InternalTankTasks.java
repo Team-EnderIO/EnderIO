@@ -2,6 +2,7 @@ package com.enderio.enderio.content.storage.fluid_tank;
 
 import com.enderio.core.common.storage.ResourceStorage;
 import com.enderio.core.common.storage.slot.ResourceSlotId;
+import com.enderio.core.common.util.EnderResourceUtil;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import com.enderio.enderio.foundation.util.ExperienceUtil;
@@ -57,7 +58,7 @@ public class InternalTankTasks {
                 if (fluidHandlerItem != null && outputItem.isEmpty()) {
 
                     try (Transaction transaction = Transaction.openRoot()) {
-                        int moved = ResourceHandlerUtil.move(fluidStorage, fluidHandlerItem, fr -> true, Integer.MAX_VALUE, transaction);
+                        int moved = EnderResourceUtil.moveInto(fluidHandlerItem, fluidStorage, tankSlot, fr -> true, Integer.MAX_VALUE, transaction);
                         if (moved > 0) {
                             // TODO: Should we wait until either internal buffer is full or item is empty?
                             transaction.commit();
@@ -110,7 +111,7 @@ public class InternalTankTasks {
                 if (fluidHandlerItem != null && outputItem.isEmpty()) {
 
                     try (Transaction transaction = Transaction.openRoot()) {
-                        int moved = ResourceHandlerUtil.move(fluidHandlerItem, fluidStorage, fr -> true, Integer.MAX_VALUE, transaction);
+                        int moved = ResourceHandlerUtil.move(fluidStorage, fluidHandlerItem, fr -> true, Integer.MAX_VALUE, transaction);
                         if (moved > 0) {
                             transaction.commit();
                             fluidDrainOutput.setStackInSlot(blockEntity, inputItem);

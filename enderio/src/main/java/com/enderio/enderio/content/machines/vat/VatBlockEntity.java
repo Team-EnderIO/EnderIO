@@ -4,6 +4,7 @@ import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.core.common.storage.FluidStorage;
 import com.enderio.core.common.storage.layout.FluidStorageLayout;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
+import com.enderio.core.common.util.EnderResourceUtil;
 import com.enderio.core.common.util.NamedFluidContents;
 import com.enderio.enderio.api.UseOnly;
 import com.enderio.enderio.foundation.MachineNBTKeys;
@@ -162,20 +163,14 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
         FluidStack outputFluid = fluidStorage.getStack(OUTPUT_TANK);
 
         if (outputFluid.isEmpty() && !inputFluid.isEmpty()) {
-            try (Transaction transaction = Transaction.openRoot()) {
-                fluidStorage.setStack(OUTPUT_TANK, inputFluid.copy());
-                fluidStorage.setStack(INPUT_TANK, FluidStack.EMPTY);
-                transaction.commit();
-            }
+            fluidStorage.setStack(OUTPUT_TANK, inputFluid.copy());
+            fluidStorage.setStack(INPUT_TANK, FluidStack.EMPTY);
         }
     }
 
     @UseOnly(LogicalSide.SERVER)
     public void dumpOutputTank() {
-        try (Transaction transaction = Transaction.openRoot()) {
-            fluidStorage.setStack(OUTPUT_TANK, FluidStack.EMPTY);
-            transaction.commit();
-        }
+        fluidStorage.setStack(OUTPUT_TANK, FluidStack.EMPTY);
     }
 
     protected static class VatCraftingMachineTask
@@ -192,8 +187,7 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
             REAGENTS.get(0).getStack(inventory).shrink(1);
             REAGENTS.get(1).getStack(inventory).shrink(1);
 
-            // TODO: getStack is not available on ResourceStorage<>, but letting it be any ResourceStorage<> impl is good hygiene.
-            FluidStack inputFluid = fluidStorage.getResource(INPUT_TANK).toStack(fluidStorage.getAmountAsInt(INPUT_TANK));
+            FluidStack inputFluid = EnderResourceUtil.getFluidStack(fluidStorage, INPUT_TANK);
             try (Transaction transaction = Transaction.openRoot()) {
                 int inputIndex = fluidStorage.layout().indexOf(INPUT_TANK);
                 fluidStorage.internalExtract(inputIndex, FluidResource.of(inputFluid), recipe.input().amount(), transaction);

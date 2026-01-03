@@ -106,7 +106,7 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
         // region Quick Slot Presets
 
         public TBuilder storageSlot(SingleResourceSlotKey<T> key) {
-            return inputSlot(key, slot -> slot);
+            return storageSlot(key, slot -> slot);
         }
 
         public TBuilder storageSlot(SingleResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T, TContext>> slotBuilder) {
@@ -114,7 +114,7 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
         }
 
         public TBuilder storageSlots(MultiResourceSlotKey<T> key) {
-            return inputSlots(key, slot -> slot);
+            return storageSlots(key, slot -> slot);
         }
 
         public TBuilder storageSlots(MultiResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T, TContext>> slotBuilder) {

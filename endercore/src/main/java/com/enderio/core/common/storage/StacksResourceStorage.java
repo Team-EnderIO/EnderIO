@@ -22,13 +22,16 @@ public abstract class StacksResourceStorage<T extends Resource, S, C> implements
 
     private final ResourceStorageLayout<T, C> layout;
     protected final C context;
-    protected NonNullList<S> stacks;
+    private final S emptyStack;
     private final Codec<S> stackCodec;
     private final ArrayList<StackJournal> snapshotJournals;
+
+    protected NonNullList<S> stacks;
 
     protected StacksResourceStorage(ResourceStorageLayout<T, C> layout, C context, S emptyStack, Codec<S> stackCodec) {
         this.layout = layout;
         this.context = context;
+        this.emptyStack = emptyStack;
         this.stackCodec = stackCodec;
         this.stacks = NonNullList.withSize(layout.size(), emptyStack);
         this.snapshotJournals = new ArrayList<>(this.stacks.size());
@@ -222,15 +225,13 @@ public abstract class StacksResourceStorage<T extends Resource, S, C> implements
 
     @Override
     public void deserialize(ValueInput input) {
-        // Flush to empty stacks then re-fill with saved contents
-        stacks.clear();
-
         var slotList = input.childrenListOrEmpty("Contents");
         for (var slotAndStack : slotList) {
             int index = slotAndStack.getIntOr("Index", -1);
             if (index >= 0 && index < size()) {
                 slotAndStack.read("Stack", stackCodec)
-                    .ifPresent(stack -> stacks.set(index, stack));
+                    .ifPresentOrElse(stack -> stacks.set(index, stack),
+                        () -> stacks.set(index, emptyStack));
             }
         }
     }

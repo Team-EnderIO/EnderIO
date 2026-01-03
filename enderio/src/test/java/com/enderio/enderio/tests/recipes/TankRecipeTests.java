@@ -46,7 +46,7 @@ public class TankRecipeTests {
         var inputIncorrectItem = new TankRecipe.Input(ItemStack.EMPTY, new ItemStack(Items.COAL, 2), new FluidStack(Fluids.WATER, 1000), 5000);
         Assertions.assertFalse(recipe.matches(inputIncorrectItem, server.overworld()));
 
-        var inputIncompatibleFluidContents = new TankRecipe.Input(ItemStack.EMPTY, new ItemStack(Items.COAL, 2), new FluidStack(Fluids.LAVA, 1000), 5000);
+        var inputIncompatibleFluidContents = new TankRecipe.Input(ItemStack.EMPTY, new ItemStack(Items.SAND, 2), new FluidStack(Fluids.LAVA, 1000), 5000);
         Assertions.assertFalse(recipe.matches(inputIncompatibleFluidContents, server.overworld()));
     }
 }

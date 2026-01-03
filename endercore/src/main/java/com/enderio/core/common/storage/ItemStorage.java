@@ -26,8 +26,8 @@ public class ItemStorage<TOwner> extends StacksResourceStorage<ItemResource, Ite
     }
 
     @Override
-    protected ItemStack copyOf(ItemStack ItemStack) {
-        return ItemStack.copy();
+    protected ItemStack copyOf(ItemStack stack) {
+        return stack.copy();
     }
 
     @Override

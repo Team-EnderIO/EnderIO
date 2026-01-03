@@ -3,8 +3,10 @@ package com.enderio.core.common.storage.slot;
 import com.enderio.core.common.storage.layout.ResourceStorageLayout;
 import net.neoforged.neoforge.transfer.resource.Resource;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.IntStream;
@@ -21,9 +23,9 @@ public final class MultiResourceSlotKey<T extends Resource> implements ResourceS
         this.count = count;
 
         // Create a cache of slot IDs for quick access
-        var slotIdCacheMutable = new HashMap<Integer, ResourceSlotId<T>>();
+        var slotIdCacheMutable = new LinkedHashMap<Integer, ResourceSlotId<T>>();
         IntStream.range(0, count).forEach(i -> slotIdCacheMutable.put(i, layout -> layout.indexOf(this, i)));
-        this.slotIdCache = Map.copyOf(slotIdCacheMutable);
+        this.slotIdCache = Collections.unmodifiableMap(slotIdCacheMutable);
     }
 
     public int count() {

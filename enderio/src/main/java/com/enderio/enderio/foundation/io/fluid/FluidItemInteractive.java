@@ -60,7 +60,7 @@ public interface FluidItemInteractive {
 
                 int maxExtract;
                 try (Transaction subTransaction = Transaction.open(transaction)) {
-                    maxExtract = fluidStorage.extract(resourceFromItem, Integer.MAX_VALUE, subTransaction);
+                    maxExtract = fluidStorage.extract(resourceInMachine, Integer.MAX_VALUE, subTransaction);
                 }
 
                 if (maxExtract <= 0) {
@@ -118,7 +118,7 @@ public interface FluidItemInteractive {
 
                 // Extract from the item if not in creative.
                 if (!player.isCreative()) {
-                    if (filled != itemFluidHandler.extract(resourceFromItem, amountAvailable, transaction)) {
+                    if (filled != itemFluidHandler.extract(resourceFromItem, filled, transaction)) {
                         return false;
                     }
                 }

@@ -100,8 +100,7 @@ public class PoweredMachineEnergyStorage implements EnergyHandler, ValueIOSerial
         TransferPreconditions.checkNonNegative(maxEnergyToConsume);
 
         try (Transaction subTransaction = Transaction.open(transactionContext)) {
-
-            int consumed = Math.min(maxEnergyToConsume, getMaxConsumption());
+            int consumed = Math.min(energyStored, Math.min(maxEnergyToConsume, getMaxConsumption()));
             if (consumed > 0) {
                 energyJournal.updateSnapshots(subTransaction);
                 energyStored -= consumed;
