@@ -30,15 +30,21 @@ public class EnderGameTestHelper extends ExtendedGameTestHelper {
     }
 
     public void insertIntoContainer(int x, int y, int z, Item item, int count) {
+        insertIntoContainer(x, y, z, new ItemStack(item, count));
+    }
+
+    public void insertIntoContainer(int x, int y, int z, ItemStack itemStack) {
         var itemHandler = getLevel().getCapability(Capabilities.ItemHandler.BLOCK, absolutePos(new BlockPos(x, y, z)),
             null);
         if (itemHandler == null) {
             throw new GameTestAssertException("No item handler at " + x + "," + y + "," + z);
         }
 
+        int count = itemStack.getCount();
         for (int i = 0; i < itemHandler.getSlots(); i++) {
             int toInsert = Math.min(count, itemHandler.getSlotLimit(i));
-            var remainder = itemHandler.insertItem(i, new ItemStack(item, toInsert), false);
+            var stackToInsert = itemStack.copyWithCount(toInsert);
+            var remainder = itemHandler.insertItem(i, stackToInsert, false);
             count -= toInsert - remainder.getCount();
             if (count <= 0) {
                 return;
@@ -47,7 +53,7 @@ public class EnderGameTestHelper extends ExtendedGameTestHelper {
 
         if (count > 0) {
             throw new GameTestAssertException(
-                "Could not insert " + count + " items into container at " + x + "," + y + "," + z);
+                "Could not insert " + itemStack.getCount() + " " + itemStack.getItem() + " into container at " + x + "," + y + "," + z);
         }
     }
 
@@ -60,8 +66,10 @@ public class EnderGameTestHelper extends ExtendedGameTestHelper {
 
         int foundCount = 0;
         for (int i = 0; i < itemHandler.getSlots(); i++) {
-            var available = itemHandler.extractItem(i, Math.min(count, itemHandler.getSlotLimit(i)), true);
-            foundCount += available.getCount();
+            var stack = itemHandler.getStackInSlot(i);
+            if (stack.is(item)) {
+                foundCount += stack.getCount();
+            }
         }
 
         if (foundCount != count) {
