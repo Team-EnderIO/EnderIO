@@ -34,6 +34,7 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import net.neoforged.neoforge.fluids.crafting.display.FluidStackSlotDisplay;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -44,6 +45,8 @@ public final class FermentingRecipe implements MachineRecipe<FermentingRecipe.In
     private final TagKey<Item> rightReagent;
     private final FluidStack output;
     private final int ticks;
+
+    @Nullable
     private PlacementInfo placementInfo;
 
     public FermentingRecipe(SizedFluidIngredient input, TagKey<Item> leftReagent, TagKey<Item> rightReagent, FluidStack output, int ticks) {
@@ -147,28 +150,6 @@ public final class FermentingRecipe implements MachineRecipe<FermentingRecipe.In
             ));
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this)
-            return true;
-        if (obj == null || obj.getClass() != this.getClass())
-            return false;
-        var that = (FermentingRecipe) obj;
-        return Objects.equals(this.input, that.input) && Objects.equals(this.leftReagent, that.leftReagent) && Objects.equals(this.rightReagent, that.rightReagent) && Objects.equals(this.output,
-            that.output) && this.ticks == that.ticks;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(input, leftReagent, rightReagent, output, ticks);
-    }
-
-    @Override
-    public String toString() {
-        return "FermentingRecipe[" + "input=" + input + ", " + "leftReagent=" + leftReagent + ", " + "rightReagent=" + rightReagent + ", " + "output=" + output
-            + ", " + "ticks=" + ticks + ']';
-    }
-
     public record Input(ItemStack leftReagent, ItemStack rightStack, FluidStack inputFluid) implements RecipeInput {
 
         @Override
@@ -195,8 +176,8 @@ public final class FermentingRecipe implements MachineRecipe<FermentingRecipe.In
         public static final MapCodec<FermentingDisplay> MAP_CODEC = RecordCodecBuilder.mapCodec(
             p_379634_ -> p_379634_.group(
                     SlotDisplay.CODEC.fieldOf("ingredients").forGetter(FermentingDisplay::fluid),
-                    SlotDisplay.CODEC.fieldOf("left").forGetter(FermentingDisplay::result),
-                    SlotDisplay.CODEC.fieldOf("right").forGetter(FermentingDisplay::result),
+                    SlotDisplay.CODEC.fieldOf("left").forGetter(FermentingDisplay::left),
+                    SlotDisplay.CODEC.fieldOf("right").forGetter(FermentingDisplay::right),
                     SlotDisplay.CODEC.fieldOf("result").forGetter(FermentingDisplay::result),
                     SlotDisplay.CODEC.fieldOf("crafting_station").forGetter(FermentingDisplay::craftingStation)
                 )

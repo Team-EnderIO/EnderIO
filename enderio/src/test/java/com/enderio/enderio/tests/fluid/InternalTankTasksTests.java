@@ -244,7 +244,7 @@ public class InternalTankTasksTests {
         Assertions.assertEquals(1, itemStorage.getAmountAsInt(INPUT_SLOT),
             "Input bucket should remain");
         Assertions.assertEquals(1, itemStorage.getAmountAsInt(OUTPUT_SLOT),
-            "Output should still contain cobblestone");
+            "Output should still contain a glass bottle");
     }
 
     // ========== Tests for fluid handler capability path (non-bucket items) ==========
@@ -404,10 +404,10 @@ public class InternalTankTasksTests {
         Assertions.assertEquals(0, itemStorage.getAmountAsInt(OUTPUT_SLOT),
             "No output should be generated");
 
-        // The lava should remain in the output container
+        // The lava should remain in the input slot
         ItemStack outputStack = EnderResourceUtil.getItemStack(itemStorage, INPUT_SLOT);
         var fluidContent = outputStack.get(EIODataComponents.ITEM_FLUID_CONTENT);
-        Assertions.assertNotNull(fluidContent, "Output container should have fluid content");
+        Assertions.assertNotNull(fluidContent, "Input container should have fluid content");
         FluidStack fluidStack = fluidContent.copy();
         Assertions.assertEquals(Fluids.LAVA, fluidStack.getFluid(), "Container should still have lava");
         Assertions.assertEquals(FluidType.BUCKET_VOLUME, fluidStack.getAmount(),

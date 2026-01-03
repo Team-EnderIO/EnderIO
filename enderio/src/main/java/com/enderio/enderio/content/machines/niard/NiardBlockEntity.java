@@ -153,9 +153,9 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
             int tankIndex = fluidStorage.layout().indexOf(TANK);
             FluidStack currentFluid = fluidStorage.getStack(TANK);
             fluidStorage.internalExtract(tankIndex, FluidResource.of(currentFluid), FluidType.BUCKET_VOLUME, transaction);
+            getEnergyStorage().consume(ENERGY_PER_BUCKET, transaction);
             transaction.commit();
         }
-        getEnergyStorage().consume(ENERGY_PER_BUCKET, null);
     }
 
     @Override

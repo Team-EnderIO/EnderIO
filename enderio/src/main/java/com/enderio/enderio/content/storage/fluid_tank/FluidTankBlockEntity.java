@@ -106,7 +106,10 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
                 setChanged();
                 super.onContentsChanged(index, previousContents);
                 updateMachineState(MachineState.EMPTY_TANK, fluidStorage.getAmountAsInt(TANK_SLOT) <= 0);
-                level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+
+                if (level != null) {
+                    level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+                }
             }
         };
     }

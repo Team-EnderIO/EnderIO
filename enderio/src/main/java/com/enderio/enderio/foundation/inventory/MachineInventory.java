@@ -165,7 +165,7 @@ public class MachineInventory extends ItemStacksResourceHandler {
                 return 0;
             }
 
-            return machineInventory.insert(resource, amount, transaction);
+            return machineInventory.insert(index, resource, amount, transaction);
         }
 
         @Override
