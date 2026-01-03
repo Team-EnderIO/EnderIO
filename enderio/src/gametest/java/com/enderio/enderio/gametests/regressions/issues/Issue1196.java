@@ -20,7 +20,7 @@ import net.neoforged.testframework.annotation.TestHolder;
 import net.neoforged.testframework.gametest.StructureTemplateBuilder;
 
 /**
- * Test for Issue #1196 - Infinite Fluids form the VAT
+ * Test for Issue #1196 - Infinite Fluids from the VAT
  * https://github.com/Team-EnderIO/EnderIO/issues/1196
  */
 @ForEachTest(groups = "regression.issue1196")
@@ -34,7 +34,7 @@ public class Issue1196 {
 
         test.onGameTest(EnderGameTestHelper.class, helper -> {
             helper.startSequence()
-                // Setup VAT to push outputs to the fluid tank
+                // Setup Fluid Tank to pull the VAT output
                 .thenExecute(() -> helper.changeIoConfig(0, 1, 1, ioConfigurable -> {
                     ioConfigurable.setIOMode(Direction.NORTH, IOMode.PULL);
                 }))
