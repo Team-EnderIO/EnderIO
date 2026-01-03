@@ -205,7 +205,7 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
 
         @Override
         protected int makeProgress(int remainingProgress) {
-            return 20; // do nothing. VAT doesn't consume power
+            return 1; // VAT doesn't consume power
         }
 
         @Override

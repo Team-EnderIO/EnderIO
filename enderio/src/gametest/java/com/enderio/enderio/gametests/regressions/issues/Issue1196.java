@@ -38,15 +38,15 @@ public class Issue1196 {
                 .thenExecute(() -> helper.changeIoConfig(0, 1, 1, ioConfigurable -> {
                     ioConfigurable.setIOMode(Direction.NORTH, IOMode.PULL);
                 }))
-                // Insert recipe for Cloud Seed.
+                // Insert recipe for Cloud Seed (using test recipe with dirt and cobblestone).
                 .thenExecute(() -> {
                     // Set VAT output tank to full
                     var vat = helper.getBlockEntity(0, 1, 0, VatBlockEntity.class);
                     VatBlockEntity.OUTPUT_TANK.setFluid(vat, new FluidStack(EIOFluids.CLOUD_SEED.source().get(), VatBlockEntity.TANK_CAPACITY));
 
                     helper.fillContainer(0, 1, 0, Fluids.WATER, VatBlockEntity.TANK_CAPACITY);
-                    helper.insertIntoContainer(0, 1, 0, Items.PRISMARINE_SHARD, 1);
-                    helper.insertIntoContainer(0, 1, 0, Items.SNOW_BLOCK, 1);
+                    helper.insertIntoContainer(0, 1, 0, Items.DIRT, 1);
+                    helper.insertIntoContainer(0, 1, 0, Items.COBBLESTONE, 1);
                 })
                 // Make sure that after 5 seconds we have exactly 1 bucket of cloud seed, and no more.
                 .thenExecuteAfter(20 * 5, () -> {
@@ -54,13 +54,12 @@ public class Issue1196 {
                     long storedInTank = helper.getAmountInHandler(0, 1, 1, EIOFluids.CLOUD_SEED.source().get());
 
                     // Determine how much Cloud Seed is created per craft
-                    var recipeInput = new FermentingRecipe.Input(new ItemStack(Items.PRISMARINE_SHARD, 1), new ItemStack(Items.SNOW_BLOCK, 1), new FluidStack(Fluids.WATER, 1000));
+                    var recipeInput = new FermentingRecipe.Input(new ItemStack(Items.DIRT, 1), new ItemStack(Items.COBBLESTONE, 1), new FluidStack(Fluids.WATER, 1000));
                     var recipe = helper.getLevel().getRecipeManager().getRecipeFor(EIORecipes.VAT_FERMENTING.type().get(), recipeInput, helper.getLevel()).orElseThrow();
                     var outputs = recipe.value().craft(recipeInput, helper.getLevel().registryAccess());
                     int amountCreated = outputs.getFirst().getFluid().getAmount();
 
                     // Ensure no more fluid appeared out of thin air.
-                    // TODO: It appears the amount varies between 10000 and 9900 - it is unclear why.
                     if (storedInVat + storedInTank > VatBlockEntity.TANK_CAPACITY + amountCreated) {
                         throw new GameTestAssertException("Too much fluid output by Vat! Total: " + (storedInVat + storedInTank));
                     }
