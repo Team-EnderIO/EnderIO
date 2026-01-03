@@ -3,6 +3,7 @@ package com.enderio.enderio.content.glass;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.SoundType;
@@ -10,6 +11,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -60,7 +62,8 @@ public class GlassBlocks {
         var block = blockRegistry
             .registerBlock(name,
                 p -> new FusedQuartzBlock(p, glassIdentifier, null),
-                BlockBehaviour.Properties.of()
+                () -> BlockBehaviour.Properties.of()
+                    .overrideDescription(getDescriptionId(glassIdentifier, null))
                     .noOcclusion()
                     .strength(0.3F)
                     .sound(SoundType.GLASS)
@@ -70,7 +73,7 @@ public class GlassBlocks {
                     .isSuffocating(GlassBlocks::never)
                     .isViewBlocking(GlassBlocks::never));
 
-        itemRegistry.registerSimpleBlockItem(block);
+        itemRegistry.registerItem(name, p -> new FusedQuartzBlockItem(block.get(), p), p -> p.overrideDescription(getDescriptionId(glassIdentifier, null)));
         return block;
     }
 
@@ -81,7 +84,8 @@ public class GlassBlocks {
         var block = blockRegistry
             .registerBlock(name,
                 p -> new FusedQuartzBlock(p, glassIdentifier, color),
-                BlockBehaviour.Properties.of()
+                () -> BlockBehaviour.Properties.of()
+                    .overrideDescription(getDescriptionId(glassIdentifier, color))
                     .noOcclusion()
                     .strength(0.3F)
                     .sound(SoundType.GLASS)
@@ -92,11 +96,18 @@ public class GlassBlocks {
                     .isViewBlocking(GlassBlocks::never)
                     .mapColor(color));
 
-        itemRegistry.registerSimpleBlockItem(block);
+        itemRegistry.registerItem(name, p -> new FusedQuartzBlockItem(block.get(), p), p -> p.overrideDescription(getDescriptionId(glassIdentifier, color)));
         return block;
     }
 
     public GlassIdentifier getGlassIdentifier() {
         return glassIdentifier;
+    }
+
+    private static String getDescriptionId(GlassIdentifier glassIdentifier, @Nullable DyeColor color) {
+        String baseName = glassIdentifier.explosionResistance() ? "fused_quartz" : "clear_glass";
+        String lightingName = glassIdentifier.lighting() != GlassLighting.NONE ? "_" + glassIdentifier.lighting().shortName() : "";
+        String colorName = color != null ? "_" + color.getName() : "";
+        return "block.enderio." + baseName + lightingName + colorName;
     }
 }
