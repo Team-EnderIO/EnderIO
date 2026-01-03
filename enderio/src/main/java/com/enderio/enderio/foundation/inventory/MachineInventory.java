@@ -122,16 +122,6 @@ public class MachineInventory extends ItemStacksResourceHandler {
         }
 
         @Override
-        public int insert(ItemResource resource, int amount, TransactionContext transaction) {
-            return machineInventory.insert(resource, amount, transaction);
-        }
-
-        @Override
-        public int extract(ItemResource resource, int amount, TransactionContext transaction) {
-            return machineInventory.extract(resource, amount, transaction);
-        }
-
-        @Override
         public int size() {
             return machineInventory.size();
         }
