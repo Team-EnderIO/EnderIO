@@ -6,6 +6,7 @@ import com.enderio.core.common.storage.layout.FluidStorageLayout;
 import com.enderio.core.common.storage.layout.ItemStorageLayout;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.core.common.util.EnderResourceUtil;
+import com.enderio.enderio.content.storage.fluid_tank.FluidTankBlockEntity;
 import com.enderio.enderio.content.storage.fluid_tank.NewInternalTankTasks;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIODataComponents;
@@ -51,6 +52,8 @@ public class InternalTankTasksTests {
         stack.set(EIODataComponents.ITEM_FLUID_CONTENT, SimpleFluidContent.copyOf(new FluidStack(fluid, amount)));
         return stack;
     }
+
+    // region fillInternal tests
 
     @Test
     public void testFillInternalWithWaterBucket() {
@@ -410,4 +413,120 @@ public class InternalTankTasksTests {
         Assertions.assertEquals(FluidType.BUCKET_VOLUME, fluidStack.getAmount(),
             "Container should still have full bucket of lava");
     }
+
+    // endregion
+    
+    // region drainInternal tests
+
+    @Test
+    public void testDrainInternalWithEmptyBucket() {
+        // Arrange
+        FluidStorage<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
+        ItemStorage<Void> itemStorage = createItemStorage();
+
+        // Tank has water
+        fluidStorage.set(TANK_SLOT, FluidResource.of(Fluids.WATER), FluidType.BUCKET_VOLUME);
+
+        // Set up input: empty bucket
+        itemStorage.set(INPUT_SLOT, ItemResource.of(Items.BUCKET), 1);
+
+        // Act
+        NewInternalTankTasks.drainInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
+
+        // Assert
+        Assertions.assertEquals(0, fluidStorage.getAmountAsInt(TANK_SLOT),
+            "Fluid tank should be empty");
+        Assertions.assertEquals(0, itemStorage.getAmountAsInt(INPUT_SLOT),
+            "Input slot should be empty");
+        Assertions.assertEquals(1, itemStorage.getAmountAsInt(OUTPUT_SLOT),
+            "Output slot should contain one water bucket");
+        Assertions.assertEquals(Items.WATER_BUCKET, itemStorage.getResource(OUTPUT_SLOT).getItem(),
+            "Output slot should contain one water bucket");
+    }
+
+    @Test
+    public void testDrainInternalWithWaterBucketItem() {
+        // Arrange
+        FluidStorage<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
+        ItemStorage<Void> itemStorage = createItemStorage();
+
+        // Tank has water
+        fluidStorage.set(TANK_SLOT, FluidResource.of(Fluids.WATER), FluidType.BUCKET_VOLUME);
+
+        // Set up input: already full water bucket
+        itemStorage.set(INPUT_SLOT, ItemResource.of(Items.WATER_BUCKET), 1);
+
+        // Act
+        NewInternalTankTasks.drainInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
+
+        // Assert
+        Assertions.assertEquals(FluidType.BUCKET_VOLUME, fluidStorage.getAmountAsInt(TANK_SLOT),
+            "Fluid tank should still have water");
+        Assertions.assertEquals(0, itemStorage.getAmountAsInt(INPUT_SLOT),
+            "Input slot should be empty");
+        Assertions.assertEquals(1, itemStorage.getAmountAsInt(OUTPUT_SLOT),
+            "Output slot should contain the water bucket");
+    }
+
+    @Test
+    public void testDrainInternalWithEmptyFluidTank() {
+        // Arrange
+        FluidStorage<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
+        ItemStorage<Void> itemStorage = createItemStorage();
+
+        // Tank has water
+        fluidStorage.set(TANK_SLOT, FluidResource.of(Fluids.WATER), FluidType.BUCKET_VOLUME);
+
+        // Set up input: empty fluid tank
+        itemStorage.setStack(INPUT_SLOT, getFilledFluidTank(Fluids.WATER, 0));
+
+        // Act
+        NewInternalTankTasks.drainInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
+
+        // Assert
+        Assertions.assertEquals(0, fluidStorage.getAmountAsInt(TANK_SLOT),
+            "Fluid tank should be empty");
+        Assertions.assertEquals(0, itemStorage.getAmountAsInt(INPUT_SLOT),
+            "Input slot should be empty");
+        Assertions.assertEquals(1, itemStorage.getAmountAsInt(OUTPUT_SLOT),
+            "Output slot should contain a fluid tank");
+        Assertions.assertEquals(EIOBlocks.FLUID_TANK_ITEM.get(), itemStorage.getResource(OUTPUT_SLOT).getItem(),
+            "Output slot should contain a fluid tank");
+
+        // The output container should contain water
+        ItemStack outputStack = EnderResourceUtil.getItemStack(itemStorage, OUTPUT_SLOT);
+        var fluidContent = outputStack.get(EIODataComponents.ITEM_FLUID_CONTENT);
+        Assertions.assertNotNull(fluidContent, "Output container should have fluid content");
+        FluidStack fluidStack = fluidContent.copy();
+        Assertions.assertEquals(Fluids.WATER, fluidStack.getFluid(), "Container should have water");
+        Assertions.assertEquals(FluidType.BUCKET_VOLUME, fluidStack.getAmount(),
+            "Container should have a buckets worth of water");
+    }
+
+    @Test
+    public void testDrainInternalWithFullFluidTank() {
+        // Arrange
+        FluidStorage<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
+        ItemStorage<Void> itemStorage = createItemStorage();
+
+        // Tank has water
+        fluidStorage.set(TANK_SLOT, FluidResource.of(Fluids.WATER), FluidType.BUCKET_VOLUME);
+
+        // Set up input: empty fluid tank
+        itemStorage.setStack(INPUT_SLOT, getFilledFluidTank(Fluids.WATER, FluidTankBlockEntity.Standard.CAPACITY));
+
+        // Act
+        NewInternalTankTasks.drainInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
+
+        // Assert
+        Assertions.assertEquals(FluidType.BUCKET_VOLUME, fluidStorage.getAmountAsInt(TANK_SLOT),
+            "Fluid tank should still have water");
+        Assertions.assertEquals(0, itemStorage.getAmountAsInt(INPUT_SLOT),
+            "Input slot should be empty");
+        Assertions.assertEquals(EIOBlocks.FLUID_TANK_ITEM.get(), itemStorage.getResource(OUTPUT_SLOT).getItem(),
+            "Output slot should contain a fluid tank");
+    }
+
+    // endregion
+
 }

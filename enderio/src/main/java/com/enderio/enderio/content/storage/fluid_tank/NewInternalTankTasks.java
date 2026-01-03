@@ -14,6 +14,8 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.transfer.RangedResourceHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
@@ -30,23 +32,24 @@ public class NewInternalTankTasks {
         ResourceSlotId<ItemResource> fluidFillOutputSlot
     ) {
         ItemAccess input = EnderResourceUtil.getItemAccessStrict(itemStorage, fluidFillInputSlot);
+        if (input.getResource().isEmpty()) {
+            return;
+        }
 
-        if (!input.getResource().isEmpty()) {
-            var fluidHandlerItem = input.getCapability(Capabilities.Fluid.ITEM);
-            if (fluidHandlerItem != null) {
-                if (ResourceHandlerUtil.isEmpty(fluidHandlerItem)) {
-                    // Move empty item straight to the output
-                    EnderResourceUtil.tryMoveItem(itemStorage, fluidFillInputSlot, fluidFillOutputSlot, null);
-                    return;
-                }
+        var fluidHandlerItem = input.getCapability(Capabilities.Fluid.ITEM);
+        if (fluidHandlerItem != null) {
+            if (ResourceHandlerUtil.isEmpty(fluidHandlerItem)) {
+                // Move empty item straight to the output
+                EnderResourceUtil.tryMoveItem(itemStorage, fluidFillInputSlot, fluidFillOutputSlot, null);
+                return;
+            }
 
-                try (Transaction transaction = Transaction.openRoot()) {
-                    int moved = EnderResourceUtil.moveInto(fluidHandlerItem, fluidStorage, tankSlot, fr -> true, Integer.MAX_VALUE, transaction);
-                    if (moved > 0) {
-                        // Only commit if we managed to move the input to the output
-                        if (EnderResourceUtil.tryMoveItem(itemStorage, fluidFillInputSlot, fluidFillOutputSlot, transaction)) {
-                            transaction.commit();
-                        }
+            try (Transaction transaction = Transaction.openRoot()) {
+                int moved = EnderResourceUtil.moveInto(fluidHandlerItem, fluidStorage, tankSlot, fr -> true, Integer.MAX_VALUE, transaction);
+                if (moved > 0) {
+                    // Only commit if we managed to move the input to the output
+                    if (EnderResourceUtil.tryMoveItem(itemStorage, fluidFillInputSlot, fluidFillOutputSlot, transaction)) {
+                        transaction.commit();
                     }
                 }
             }
@@ -54,52 +57,50 @@ public class NewInternalTankTasks {
     }
 
     // TODO: enable fluid tanks to receive stackable fluid containers
-    public static <T extends MachineBlockEntity> void drainInternal(
-        T blockEntity,
+    public static void drainInternal(
         ResourceStorage<FluidResource> fluidStorage,
-        SingleResourceSlotKey<FluidResource> tankSlot,
-        SingleSlotAccess fluidDrainInput,
-        SingleSlotAccess fluidDrainOutput
+        ResourceSlotId<FluidResource> tankSlot,
+        ResourceStorage<ItemResource> itemStorage,
+        ResourceSlotId<ItemResource> fluidDrainInputSlot,
+        ResourceSlotId<ItemResource> fluidDrainOutputSlot
     ) {
-        ItemStack inputItem = fluidDrainInput.getItemStack(blockEntity);
-        ItemStack outputItem = fluidDrainOutput.getItemStack(blockEntity);
+        ItemAccess input = EnderResourceUtil.getItemAccessStrict(itemStorage, fluidDrainInputSlot);
+        if (input.getResource().isEmpty()) {
+            return;
+        }
 
-        if (!inputItem.isEmpty()) {
-            if (inputItem.getItem() == Items.BUCKET) {
-                if (fluidStorage.getAmountAsInt(tankSlot) > 0) {
+        var fluidHandlerItem = input.getCapability(Capabilities.Fluid.ITEM);
+        if (fluidHandlerItem == null) {
+            return;
+        }
 
-                    try (Transaction transaction = Transaction.openRoot()) {
-                        var resource = fluidStorage.getResource(tankSlot);
-                        if (resource.isEmpty()) {
-                            return;
-                        }
+        // If the item is already full, move it to the output
+        boolean isFull = true;
+        for (int i = 0; i < fluidHandlerItem.size(); i++) {
+            if (fluidHandlerItem.getAmountAsLong(i) < fluidHandlerItem.getCapacityAsLong(i, fluidHandlerItem.getResource(i))) {
+                isFull = false;
+                break;
+            }
+        }
 
-                        int extracted = fluidStorage.internalExtract(tankSlot, resource, FluidType.BUCKET_VOLUME, transaction);
-                        if (extracted != FluidType.BUCKET_VOLUME) {
-                            return;
-                        }
+        if (isFull) {
+            EnderResourceUtil.tryMoveItem(itemStorage, fluidDrainInputSlot, fluidDrainOutputSlot, null);
+            return;
+        }
 
-                        transaction.commit();
-                        inputItem.shrink(1);
-                        if (outputItem.isEmpty()) {
-                            fluidDrainOutput.setStackInSlot(blockEntity, resource.getFluid().getBucket().getDefaultInstance());
-                        } else {
-                            outputItem.grow(1);
-                        }
-                    }
-                }
-            } else {
-                var fluidHandlerItem = ItemAccess.forStack(inputItem).getCapability(Capabilities.Fluid.ITEM);
-                if (fluidHandlerItem != null && outputItem.isEmpty()) {
+        try (Transaction transaction = Transaction.openRoot()) {
+            int moved = ResourceHandlerUtil.move(
+                RangedResourceHandler.ofSingleIndex(fluidStorage, tankSlot.index(fluidStorage.layout())),
+                fluidHandlerItem,
+                fr -> true,
+                Integer.MAX_VALUE,
+                transaction
+            );
 
-                    try (Transaction transaction = Transaction.openRoot()) {
-                        int moved = ResourceHandlerUtil.move(fluidHandlerItem, fluidStorage, fr -> true, Integer.MAX_VALUE, transaction);
-                        if (moved > 0) {
-                            transaction.commit();
-                            fluidDrainOutput.setStackInSlot(blockEntity, inputItem);
-                            fluidDrainInput.setStackInSlot(blockEntity, ItemStack.EMPTY);
-                        }
-                    }
+            if (moved > 0) {
+                // Only commit if we managed to move the input to the output
+                if (EnderResourceUtil.tryMoveItem(itemStorage, fluidDrainInputSlot, fluidDrainOutputSlot, transaction)) {
+                    transaction.commit();
                 }
             }
         }
