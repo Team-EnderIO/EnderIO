@@ -1,8 +1,8 @@
-package com.enderio.enderio.conduits.tests.item;
+package com.enderio.enderio.gametests.conduits.item;
 
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.io.RedstoneControl;
-import com.enderio.enderio.conduits.tests.ConduitGameTestHelper;
+import com.enderio.enderio.gametests.conduits.ConduitGameTestHelper;
 import com.enderio.enderio.content.conduits.type.item.ItemConduit;
 import com.enderio.enderio.content.conduits.type.item.ItemConduitConnectionConfig;
 import com.enderio.enderio.init.EIOConduits;

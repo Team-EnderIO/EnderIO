@@ -1,4 +1,4 @@
-package com.enderio.enderio.conduits.tests;
+package com.enderio.enderio.gametests.conduits;
 
 import com.enderio.enderio.init.EIOConduits;
 import net.minecraft.world.level.block.Blocks;

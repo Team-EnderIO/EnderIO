@@ -1,4 +1,4 @@
-package com.enderio.enderio.conduits.tests;
+package com.enderio.enderio.gametests.conduits;
 
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
@@ -21,7 +21,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
-import net.neoforged.testframework.gametest.ExtendedGameTestHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -30,12 +29,10 @@ import java.util.function.Predicate;
 public class ConduitGameTestHelper extends EnderGameTestHelper {
     private static final UUID DEFAULT_FAKE_PLAYER_UUID = UUID.fromString("dc8dcc7b-033e-4157-a547-26cae4971aba");
     private final Player fakePlayer;
-    public final GameTestHelper helper;
 
     public ConduitGameTestHelper(GameTestInfo info) {
         super(info);
         fakePlayer = FakePlayerFactory.get(info.getLevel(), new GameProfile(DEFAULT_FAKE_PLAYER_UUID, "[EnderIO]"));
-        this.helper = new GameTestHelper(testInfo);
     }
 
     public Holder<Conduit<?, ?>> getConduit(ResourceKey<Conduit<?, ?>> conduitType) {
@@ -90,7 +87,7 @@ public class ConduitGameTestHelper extends EnderGameTestHelper {
         }
 
         if (!allowMissing) {
-            throw helper.assertionException("No conduit bundle at " + x + ", " + y + ", " + z);
+            throw assertionException("No conduit bundle at " + x + ", " + y + ", " + z);
         }
         return null;
     }
@@ -102,7 +99,7 @@ public class ConduitGameTestHelper extends EnderGameTestHelper {
                 for (int z = startZ; z <= endZ; z++) {
                     var bundle = getConduitBundle(x, y, z, allowMissingBundles);
                     if (bundle != null && !predicate.test(bundle)) {
-                        throw helper.assertionException(errorMessage + " at " + x + ", " + y + ", " + z);
+                        throw assertionException(errorMessage + " at " + x + ", " + y + ", " + z);
                     }
                 }
             }
@@ -129,7 +126,7 @@ public class ConduitGameTestHelper extends EnderGameTestHelper {
                     }
 
                     if (network != bundle.getConduitNode(conduit).getNetwork()) {
-                        throw helper.assertionException("Conduit node networks differ at " + x + ", " + y + ", " + z);
+                        throw assertionException("Conduit node networks differ at " + x + ", " + y + ", " + z);
                     }
                 }
             }
@@ -163,7 +160,7 @@ public class ConduitGameTestHelper extends EnderGameTestHelper {
                                 var nodeB = bundleB.getConduitNode(conduit);
 
                                 if (nodeA.getNetwork() == nodeB.getNetwork()) {
-                                    throw helper.assertionException("Conduit nodes have same network at " + x1 + ", "
+                                    throw assertionException("Conduit nodes have same network at " + x1 + ", "
                                             + y1 + ", " + z1 + " and " + x2 + ", " + y2 + ", " + z2);
                                 }
                             }
@@ -183,7 +180,7 @@ public class ConduitGameTestHelper extends EnderGameTestHelper {
         var secondNode = secondBundle.getConduitNode(conduit);
 
         if (firstNode.getNetwork() != secondNode.getNetwork()) {
-            throw helper.assertionException("Conduit nodes have different networks at " + x1 + ", " + y1 + ", " + z1
+            throw assertionException("Conduit nodes have different networks at " + x1 + ", " + y1 + ", " + z1
                     + " and " + x2 + ", " + y2 + ", " + z2);
         }
     }
@@ -197,7 +194,7 @@ public class ConduitGameTestHelper extends EnderGameTestHelper {
         var secondNode = secondBundle.getConduitNode(conduit);
 
         if (firstNode.getNetwork() == secondNode.getNetwork()) {
-            throw helper.assertionException("Conduit nodes have same network at " + x1 + ", " + y1 + ", " + z1
+            throw assertionException("Conduit nodes have same network at " + x1 + ", " + y1 + ", " + z1
                     + " and " + x2 + ", " + y2 + ", " + z2);
         }
     }
