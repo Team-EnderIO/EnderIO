@@ -1,0 +1,29 @@
+{
+  "type": "enderio:slicing",
+  "energy": 10,
+  "inputs": [
+    {
+      "tag": "c:ingots/energetic_alloy"
+    },
+    {
+      "item": "minecraft:zombie_head"
+    },
+    {
+      "tag": "c:ingots/energetic_alloy"
+    },
+    {
+      "tag": "c:silicon"
+    },
+    {
+      "item": "minecraft:cobblestone"
+    },
+    {
+      "tag": "c:silicon"
+    }
+  ],
+  "output": {
+    "count": 1,
+    "id": "enderio:zombie_electrode"
+  }
+}
+

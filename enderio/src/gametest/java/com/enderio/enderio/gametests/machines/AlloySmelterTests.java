@@ -16,7 +16,7 @@ import net.neoforged.testframework.gametest.StructureTemplateBuilder;
 import java.util.List;
 
 @ForEachTest(groups = "machines.alloy_smelter")
-public class AlloySmelterTest {
+public class AlloySmelterTests {
 
     @GameTest
     @TestHolder(description = "Tests that the Alloy Smelter can process a basic alloy recipe.")
