@@ -3,7 +3,6 @@ package com.enderio.enderio.content.machines.vat;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.enderio.foundation.MachineRecipe;
 import com.enderio.enderio.foundation.datamap.VatReagent;
-import com.enderio.enderio.foundation.io.fluid.MachineFluidTank;
 import com.enderio.enderio.init.EIORecipes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -51,7 +50,7 @@ public record FermentingRecipe(SizedFluidIngredient input, TagKey<Item> leftReag
 
     @Override
     public boolean matches(Input input, Level level) {
-        FluidStack inputTank = input.getInputTank().getFluid();
+        FluidStack inputTank = input.inputFluid();
         if (!this.input.test(inputTank) || inputTank.getAmount() < this.input.amount()) {
             return false;
         }
@@ -77,7 +76,7 @@ public record FermentingRecipe(SizedFluidIngredient input, TagKey<Item> leftReag
         return EIORecipes.VAT_FERMENTING.type().get();
     }
 
-    public record Input(ItemStack leftReagent, ItemStack rightStack, MachineFluidTank inputTank)
+    public record Input(ItemStack leftReagent, ItemStack rightStack, FluidStack inputFluid)
             implements RecipeInput {
 
         @Override
@@ -93,11 +92,6 @@ public record FermentingRecipe(SizedFluidIngredient input, TagKey<Item> leftReag
         public int size() {
             return 2;
         }
-
-        public MachineFluidTank getInputTank() {
-            return inputTank;
-        }
-
     }
 
     public static class Serializer implements RecipeSerializer<FermentingRecipe> {

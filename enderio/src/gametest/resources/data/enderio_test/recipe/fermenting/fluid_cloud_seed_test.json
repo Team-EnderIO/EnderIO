@@ -1,0 +1,14 @@
+{
+  "type": "enderio:vat_fermenting",
+  "input": {
+    "amount": 1000,
+    "tag": "minecraft:water"
+  },
+  "left_reagent": "enderio_test:test_reagent_left",
+  "output": {
+    "amount": 1000,
+    "id": "enderio:fluid_cloud_seed_still"
+  },
+  "right_reagent": "enderio_test:test_reagent_right",
+  "ticks": 20
+}

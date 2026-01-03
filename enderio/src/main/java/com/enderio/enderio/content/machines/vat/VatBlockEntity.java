@@ -106,7 +106,7 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
 
     private FermentingRecipe.Input createRecipeInput() {
         List<ItemStack> reagents = REAGENTS.getItemStacks(getInventory());
-        return new FermentingRecipe.Input(reagents.get(0), reagents.get(1), getInputTank());
+        return new FermentingRecipe.Input(reagents.get(0), reagents.get(1), INPUT_TANK.getFluid(this));
     }
 
     @Override
@@ -187,15 +187,25 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
 
         @Override
         protected boolean placeOutputs(List<OutputStack> outputs, boolean simulate) {
-            var action = simulate ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE;
             FluidStack output = outputs.getFirst().getFluid();
-            int filled = OUTPUT_TANK.getTank(fluidHandler).fill(output, action);
-            return filled == output.getAmount();
+
+            // Always simulate first to check if we can place the full amount
+            int simulatedFill = OUTPUT_TANK.getTank(fluidHandler).fill(output, IFluidHandler.FluidAction.SIMULATE);
+            if (simulatedFill != output.getAmount()) {
+                return false;
+            }
+
+            // Only execute if we're not simulating and the simulation succeeded
+            if (!simulate) {
+                OUTPUT_TANK.getTank(fluidHandler).fill(output, IFluidHandler.FluidAction.EXECUTE);
+            }
+
+            return true;
         }
 
         @Override
         protected int makeProgress(int remainingProgress) {
-            return 1; // do nothing. VAT doesn't consume power
+            return 1; // VAT doesn't consume power
         }
 
         @Override
