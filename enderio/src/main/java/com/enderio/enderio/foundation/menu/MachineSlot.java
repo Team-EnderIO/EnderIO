@@ -11,15 +11,18 @@ import org.jetbrains.annotations.Nullable;
 
 public class MachineSlot extends ResourceHandlerSlot implements SlotWithOverlay {
 
+    private final int index;
     @Nullable
     private Identifier foregroundSprite;
 
     public MachineSlot(MachineInventory handler, int index, int xPosition, int yPosition) {
         super(handler, handler::set, index, xPosition, yPosition);
+        this.index = index;
     }
 
     public MachineSlot(MachineInventory handler, SingleSlotAccess access, int xPosition, int yPosition) {
         super(handler, handler::set, access.getIndex(), xPosition, yPosition);
+        this.index = access.getIndex();
     }
 
     @Override
@@ -29,12 +32,12 @@ public class MachineSlot extends ResourceHandlerSlot implements SlotWithOverlay 
 
     @Override
     public boolean mayPlace(ItemStack stack) {
-        return getResourceHandler().layout().guiCanInsert(this.getSlotIndex()) && super.mayPlace(stack);
+        return getResourceHandler().layout().guiCanInsert(this.index) && super.mayPlace(stack);
     }
 
     @Override
     public boolean mayPickup(Player playerIn) {
-        return getResourceHandler().layout().guiCanExtract(this.getSlotIndex()) && super.mayPickup(playerIn);
+        return getResourceHandler().layout().guiCanExtract(this.index) && super.mayPickup(playerIn);
     }
 
     public boolean canQuickInsertStack() {
