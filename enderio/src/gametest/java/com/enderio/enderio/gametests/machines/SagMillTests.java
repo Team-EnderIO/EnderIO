@@ -19,7 +19,7 @@ public class SagMillTests {
 
     @GameTest
     @TestHolder(description = "Tests that the SAG Mill can process stone to cobblestone.")
-    public static void testStoneGrinding(final DynamicTest test) {
+    public static void testSagMillStoneGrinding(final DynamicTest test) {
         test.registerGameTestTemplate(() -> StructureTemplateBuilder.withSize(1, 1, 1)
             .set(0, 0, 0, EIOBlocks.SAG_MILL.get().defaultBlockState()));
 

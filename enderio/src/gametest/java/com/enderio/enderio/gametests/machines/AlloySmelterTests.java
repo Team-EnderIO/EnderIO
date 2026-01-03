@@ -20,7 +20,7 @@ public class AlloySmelterTests {
 
     @GameTest
     @TestHolder(description = "Tests that the Alloy Smelter can process a basic alloy recipe.")
-    public static void testBasicAlloyRecipe(final DynamicTest test) {
+    public static void testAlloySmelterAlloyingRecipe(final DynamicTest test) {
         test.registerGameTestTemplate(() -> StructureTemplateBuilder.withSize(1, 1, 1)
             .set(0, 0, 0, EIOBlocks.ALLOY_SMELTER.get().defaultBlockState()));
 
@@ -66,7 +66,7 @@ public class AlloySmelterTests {
 
     @GameTest
     @TestHolder(description = "Tests that the Alloy Smelter can process vanilla smelting recipes (Iron Ingot from ore).")
-    public static void testVanillaSmeltingRecipe(final DynamicTest test) {
+    public static void testAlloySmelterVanillaSmeltingRecipe(final DynamicTest test) {
         test.registerGameTestTemplate(() -> StructureTemplateBuilder.withSize(1, 1, 1)
             .set(0, 0, 0, EIOBlocks.ALLOY_SMELTER.get().defaultBlockState()));
 

@@ -20,7 +20,7 @@ public class SlicerTests {
 
     @GameTest
     @TestHolder(description = "Tests that the Slice'N'Splice can process a zombie electrode recipe.")
-    public static void testZombieElectrodeRecipe(final DynamicTest test) {
+    public static void testSlicerRecipe(final DynamicTest test) {
         test.registerGameTestTemplate(() -> StructureTemplateBuilder.withSize(1, 1, 1)
             .set(0, 0, 0, EIOBlocks.SLICE_AND_SPLICE.get().defaultBlockState()));
 

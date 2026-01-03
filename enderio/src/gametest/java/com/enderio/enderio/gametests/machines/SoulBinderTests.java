@@ -23,7 +23,7 @@ public class SoulBinderTests {
 
     @GameTest
     @TestHolder(description = "Tests that the Soul Binder can process a basic soul binding recipe (Enticing Crystal).")
-    public static void testEnticingCrystalRecipe(final DynamicTest test) {
+    public static void testSoulBinderRecipe(final DynamicTest test) {
         test.registerGameTestTemplate(() -> StructureTemplateBuilder.withSize(1, 1, 1)
             .set(0, 0, 0, EIOBlocks.SOUL_BINDER.get().defaultBlockState()));
 
