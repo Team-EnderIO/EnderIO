@@ -106,7 +106,7 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
 
     private FermentingRecipe.Input createRecipeInput() {
         List<ItemStack> reagents = REAGENTS.getItemStacks(getInventory());
-        return new FermentingRecipe.Input(reagents.get(0), reagents.get(1), getInputTank());
+        return new FermentingRecipe.Input(reagents.get(0), reagents.get(1), INPUT_TANK.getFluid(this));
     }
 
     @Override
@@ -195,7 +195,7 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
 
         @Override
         protected int makeProgress(int remainingProgress) {
-            return 1; // do nothing. VAT doesn't consume power
+            return 20; // do nothing. VAT doesn't consume power
         }
 
         @Override

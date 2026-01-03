@@ -1,0 +1,71 @@
+package com.enderio.enderio.gametests.regressions.issues;
+
+import com.enderio.enderio.api.io.IOMode;
+import com.enderio.enderio.content.machines.vat.FermentingRecipe;
+import com.enderio.enderio.content.machines.vat.VatBlockEntity;
+import com.enderio.enderio.gametests.util.EnderGameTestHelper;
+import com.enderio.enderio.init.EIOBlocks;
+import com.enderio.enderio.init.EIOFluids;
+import com.enderio.enderio.init.EIORecipes;
+import net.minecraft.core.Direction;
+import net.minecraft.gametest.framework.GameTest;
+import net.minecraft.gametest.framework.GameTestAssertException;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.material.Fluids;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.testframework.DynamicTest;
+import net.neoforged.testframework.annotation.ForEachTest;
+import net.neoforged.testframework.annotation.TestHolder;
+import net.neoforged.testframework.gametest.StructureTemplateBuilder;
+
+/**
+ * Test for Issue #1196 - Infinite Fluids form the VAT
+ * https://github.com/Team-EnderIO/EnderIO/issues/1196
+ */
+@ForEachTest(groups = "regression.issue1196")
+public class Issue1196 {
+    @GameTest
+    @TestHolder(description = "Ensures that the VAT doesn't produce infinite outputs.")
+    public static void testIssue1196(final DynamicTest test) {
+        test.registerGameTestTemplate(() -> StructureTemplateBuilder.withSize(1, 1, 2)
+            .set(0, 0, 0, EIOBlocks.VAT.get().defaultBlockState())
+            .set(0, 0, 1, EIOBlocks.FLUID_TANK.get().defaultBlockState()));
+
+        test.onGameTest(EnderGameTestHelper.class, helper -> {
+            helper.startSequence()
+                // Setup VAT to push outputs to the fluid tank
+                .thenExecute(() -> helper.changeIoConfig(0, 1, 1, ioConfigurable -> {
+                    ioConfigurable.setIOMode(Direction.NORTH, IOMode.PULL);
+                }))
+                // Insert recipe for Cloud Seed.
+                .thenExecute(() -> {
+                    // Set VAT output tank to full
+                    var vat = helper.getBlockEntity(0, 1, 0, VatBlockEntity.class);
+                    VatBlockEntity.OUTPUT_TANK.setFluid(vat, new FluidStack(EIOFluids.CLOUD_SEED.source().get(), VatBlockEntity.TANK_CAPACITY));
+
+                    helper.fillContainer(0, 1, 0, Fluids.WATER, VatBlockEntity.TANK_CAPACITY);
+                    helper.insertIntoContainer(0, 1, 0, Items.PRISMARINE_SHARD, 1);
+                    helper.insertIntoContainer(0, 1, 0, Items.SNOW_BLOCK, 1);
+                })
+                // Make sure that after 5 seconds we have exactly 1 bucket of cloud seed, and no more.
+                .thenExecuteAfter(20 * 5, () -> {
+                    long storedInVat = helper.getAmountInHandler(0, 1, 0, EIOFluids.CLOUD_SEED.source().get());
+                    long storedInTank = helper.getAmountInHandler(0, 1, 1, EIOFluids.CLOUD_SEED.source().get());
+
+                    // Determine how much Cloud Seed is created per craft
+                    var recipeInput = new FermentingRecipe.Input(new ItemStack(Items.PRISMARINE_SHARD, 1), new ItemStack(Items.SNOW_BLOCK, 1), new FluidStack(Fluids.WATER, 1000));
+                    var recipe = helper.getLevel().getRecipeManager().getRecipeFor(EIORecipes.VAT_FERMENTING.type().get(), recipeInput, helper.getLevel()).orElseThrow();
+                    var outputs = recipe.value().craft(recipeInput, helper.getLevel().registryAccess());
+                    int amountCreated = outputs.getFirst().getFluid().getAmount();
+
+                    // Ensure no more fluid appeared out of thin air.
+                    // TODO: It appears the amount varies between 10000 and 9900 - it is unclear why.
+                    if (storedInVat + storedInTank > VatBlockEntity.TANK_CAPACITY + amountCreated) {
+                        throw new GameTestAssertException("Too much fluid output by Vat! Total: " + (storedInVat + storedInTank));
+                    }
+                })
+                .thenSucceed();
+        });
+    }
+}

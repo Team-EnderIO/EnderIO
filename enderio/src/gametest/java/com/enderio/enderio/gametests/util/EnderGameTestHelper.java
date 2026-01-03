@@ -84,6 +84,23 @@ public class EnderGameTestHelper extends ExtendedGameTestHelper {
         }
     }
 
+    public long getAmountInHandler(int x, int y, int z, Fluid fluid) {
+        var fluidHandler = getLevel().getCapability(Capabilities.FluidHandler.BLOCK, absolutePos(new BlockPos(x, y, z)),
+            null);
+        if (fluidHandler == null) {
+            throw new GameTestAssertException("No fluid handler at " + x + "," + y + "," + z);
+        }
+
+        long totalAmount = 0;
+        for (int i = 0; i < fluidHandler.getTanks(); i++) {
+            if (fluidHandler.getFluidInTank(i).is(fluid)) {
+                totalAmount += fluidHandler.getFluidInTank(i).getAmount();
+            }
+        }
+
+        return totalAmount;
+    }
+
     public void assertContainerHasExactly(int x, int y, int z, Fluid fluid, int amount) {
         var fluidHandler = getLevel().getCapability(Capabilities.FluidHandler.BLOCK, absolutePos(new BlockPos(x, y, z)),
             null);
