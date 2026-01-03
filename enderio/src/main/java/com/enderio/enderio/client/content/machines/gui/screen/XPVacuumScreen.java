@@ -12,6 +12,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.CommonColors;
 import net.minecraft.world.entity.player.Inventory;
 
 public class XPVacuumScreen extends MachineScreen<XPVacuumMenu> {
@@ -54,9 +55,9 @@ public class XPVacuumScreen extends MachineScreen<XPVacuumMenu> {
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
-        guiGraphics.drawString(font, MachinesLang.RANGE, this.imageWidth - 6 - this.font.width(MachinesLang.RANGE), 24, 4210752,
+        guiGraphics.drawString(font, MachinesLang.RANGE, this.imageWidth - 6 - this.font.width(MachinesLang.RANGE), 24, CommonColors.DARK_GRAY,
                 false);
-        guiGraphics.drawString(font, menu.getRange() + "", leftPos + imageWidth - 6 - 16 - 2 - 8 - 10, topPos + 38, 0,
+        guiGraphics.drawString(font, menu.getRange() + "", imageWidth - 6 - 16 - 2 - 8 - 10, 38, CommonColors.DARK_GRAY,
                 false);
         super.renderLabels(guiGraphics, pMouseX, pMouseY);
     }

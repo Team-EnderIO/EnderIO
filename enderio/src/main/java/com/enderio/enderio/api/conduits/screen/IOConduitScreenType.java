@@ -8,6 +8,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.CommonColors;
 import org.jetbrains.annotations.ApiStatus;
 
 /**
@@ -86,7 +87,7 @@ public abstract class IOConduitScreenType<U extends IOConnectionConfig> extends 
         // TODO: 1.21.4: Hardcoded 256x256
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE, startX + (WIDTH / 2), startY, 255, 0, 1, 97, 256, 256);
 
-        guiGraphics.drawString(font, leftTitle, startX + leftTitleX, startY + leftTitleY, 0xff404040, false);
-        guiGraphics.drawString(font, rightTitle, startX + rightTitleX, startY + rightTitleY, 0xff404040, false);
+        guiGraphics.drawString(font, leftTitle, startX + leftTitleX, startY + leftTitleY, CommonColors.DARK_GRAY, false);
+        guiGraphics.drawString(font, rightTitle, startX + rightTitleX, startY + rightTitleY, CommonColors.DARK_GRAY, false);
     }
 }

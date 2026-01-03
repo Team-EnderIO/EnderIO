@@ -9,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.Direction;
+import net.minecraft.util.CommonColors;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -85,7 +86,7 @@ public class TravelAnchorHud implements GuiLayer {
         guiGraphics.fill(bgFromX, bgFromY, bgToX, bgToY, 0x87000000);
 
         // Text
-        guiGraphics.drawString(font, txt, textX, textY, 16777215, false);
+        guiGraphics.drawString(font, txt, textX, textY, CommonColors.DARK_GRAY, false);
     }
 
     private static int getOffset(int offsetAmount, int size, int direction) {

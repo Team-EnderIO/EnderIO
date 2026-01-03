@@ -9,6 +9,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.CommonColors;
 
 import java.util.function.Supplier;
 
@@ -45,11 +46,11 @@ public class ExperienceCraftingWidget extends EIOWidget {
 
         var font = Minecraft.getInstance().font;
         String s = "" + maxXP.get();
-        guiGraphics.drawString(font, s, (int) (this.x + this.width / 2f + 1), this.y - this.height - 3, 0, false);
-        guiGraphics.drawString(font, s, (int) (this.x + this.width / 2f - 1), (int) this.y - this.height - 3, 0, false);
-        guiGraphics.drawString(font, s, (int) (this.x + this.width / 2f), (this.y - this.height - 3 + 1), 0, false);
-        guiGraphics.drawString(font, s, (int) (this.x + this.width / 2f), (this.y - this.height - 3 - 1), 0, false);
-        guiGraphics.drawString(font, s, (int) (this.x + this.width / 2f),  this.y - this.height - 3, 8453920, false);
+        guiGraphics.drawString(font, s, (int) (this.x + this.width / 2f + 1), this.y - this.height - 3, CommonColors.BLACK, false);
+        guiGraphics.drawString(font, s, (int) (this.x + this.width / 2f - 1), (int) this.y - this.height - 3, CommonColors.BLACK, false);
+        guiGraphics.drawString(font, s, (int) (this.x + this.width / 2f), (this.y - this.height - 3 + 1), CommonColors.BLACK, false);
+        guiGraphics.drawString(font, s, (int) (this.x + this.width / 2f), (this.y - this.height - 3 - 1), CommonColors.BLACK, false);
+        guiGraphics.drawString(font, s, (int) (this.x + this.width / 2f),  this.y - this.height - 3, 0xFF80FF20, false);
 
         if (isHovered(pMouseX, pMouseY)) {
             Minecraft minecraft = Minecraft.getInstance();

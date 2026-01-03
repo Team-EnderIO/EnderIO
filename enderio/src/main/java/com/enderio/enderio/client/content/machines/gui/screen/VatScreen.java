@@ -19,6 +19,7 @@ import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.CommonColors;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -140,14 +141,14 @@ public class VatScreen extends MachineScreen<VatMenu> {
         double modifier = FermentingRecipe.getModifier(item, recipe.value().leftReagent());
         String text = "x" + modifier;
         int x = getGuiLeft() + 63 - minecraft.font.width(text) / 2;
-        guiGraphics.drawString(minecraft.font, text, x, getGuiTop() + 32, 4210752, false);
+        guiGraphics.drawString(minecraft.font, text, x, getGuiTop() + 32, CommonColors.DARK_GRAY, false);
 
         // right modifier
         item = getMenu().getSlot(1).getItem();
         modifier = FermentingRecipe.getModifier(item, recipe.value().rightReagent());
         text = "x" + modifier;
         x = getGuiLeft() + 113 - minecraft.font.width(text) / 2;
-        guiGraphics.drawString(minecraft.font, text, x, getGuiTop() + 32, 4210752, false);
+        guiGraphics.drawString(minecraft.font, text, x, getGuiTop() + 32, CommonColors.DARK_GRAY, false);
 
     }
 }

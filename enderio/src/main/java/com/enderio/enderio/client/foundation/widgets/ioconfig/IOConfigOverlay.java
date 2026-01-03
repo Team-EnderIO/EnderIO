@@ -25,6 +25,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.data.AtlasIds;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.CommonColors;
 import net.minecraft.world.level.EmptyBlockGetter;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -436,7 +437,7 @@ public class IOConfigOverlay extends BaseOverlay {
                 guiGraphics.pose().pushMatrix();
 //                guiGraphics.pose().translate(0, 0, OVERLAY_Z_OFFSET); // to ensure that string is drawn on top
                 guiGraphics.drawString(MINECRAFT.font, map.getComponent(), getX() + 4,
-                        getY() + height - 2 - MINECRAFT.font.lineHeight, 0xFFFFFFFF);
+                        getY() + height - 2 - MINECRAFT.font.lineHeight, CommonColors.DARK_GRAY);
                 guiGraphics.pose().popMatrix();
             }
         }

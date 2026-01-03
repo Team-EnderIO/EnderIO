@@ -7,6 +7,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.CommonColors;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.function.Supplier;
@@ -40,15 +41,15 @@ public class ExperienceWidget extends EIOWidget {
         String text = "" + expLevel.level();
         int xOffset = font.width(text) / 2;
         guiGraphics.drawString(font, text, (int) ((this.x + this.width / 2f + 1) - xOffset), this.y - this.height - 3,
-                0, false);
+            CommonColors.BLACK, false);
         guiGraphics.drawString(font, text, (int) ((this.x + this.width / 2f - 1) - xOffset), this.y - this.height - 3,
-                0, false);
+            CommonColors.BLACK, false);
         guiGraphics.drawString(font, text, (int) (this.x + this.width / 2f - xOffset), (this.y - this.height - 3 + 1),
-                0, false);
+            CommonColors.BLACK, false);
         guiGraphics.drawString(font, text, (int) (this.x + this.width / 2f - xOffset), (this.y - this.height - 3 - 1),
-                0, false);
+            CommonColors.BLACK, false);
         guiGraphics.drawString(font, text, (int) (this.x + this.width / 2f - xOffset), this.y - this.height - 3,
-                8453920, false);
+            0xFF80FF20, false);
     }
 
     @Override

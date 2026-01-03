@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.CommonColors;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
@@ -61,11 +62,11 @@ public class CoordinateMenuScreen extends EnderContainerScreen<CoordinateMenu> {
         int y = topPos + 48;
         String txt = getMenu().getSelection().pos().toShortString();
         int x = midX - font.width(txt) / 2;
-        guiGraphics.drawString(this.font, txt, x, y, 0xFFFFFF, true);
+        guiGraphics.drawString(this.font, txt, x, y, CommonColors.DARK_GRAY, true);
         txt = getMenu().getSelection().getLevelName();
         y += font.lineHeight + 4;
         x = midX - font.width(txt) / 2;
-        guiGraphics.drawString(this.font, txt, x, y, 0xFFFFFF, true);
+        guiGraphics.drawString(this.font, txt, x, y, CommonColors.DARK_GRAY, true);
     }
 
     @Override

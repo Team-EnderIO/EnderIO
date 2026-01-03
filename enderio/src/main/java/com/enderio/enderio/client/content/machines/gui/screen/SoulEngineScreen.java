@@ -13,6 +13,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.CommonColors;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -58,17 +59,17 @@ public class SoulEngineScreen extends MachineScreen<SoulEngineMenu> {
         EntityType<?> entityType = getMenu().getBlockEntity().getEntityType();
         if (entityType != null) {
             String name = entityType.getDescription().getString();
-            guiGraphics.drawString(font, name, (int) (imageWidth / 2f - font.width(name) / 2f), 10, 4210752, false);
+            guiGraphics.drawString(font, name, (int) (imageWidth / 2f - font.width(name) / 2f), 10, CommonColors.DARK_GRAY, false);
 
             EngineSoul.RELOAD_LISTENER.matches(entityType).ifPresent(data -> {
                 double burnRate = menu.getBlockEntity().getBurnRate();
                 float genRate = menu.getBlockEntity().getGenerationRate();
                 guiGraphics.drawString(font, FORMAT.format((int) (data.powerpermb() * genRate) * burnRate / data.tickpermb()) + " µI/t", (int) (imageWidth / 2f + 12), 40, 4210752,
                     false);
-                guiGraphics.drawString(font, FORMAT.format(data.tickpermb() / burnRate) + " t/mb", (int) (imageWidth / 2f + 12), 50, 4210752,
+                guiGraphics.drawString(font, FORMAT.format(data.tickpermb() / burnRate) + " t/mb", (int) (imageWidth / 2f + 12), 50, CommonColors.DARK_GRAY,
                         false);
                 guiGraphics.drawString(font, (int) (data.powerpermb() * genRate) + " µI/mb", (int) (imageWidth / 2f + 12), 60,
-                        4210752, false);
+                    CommonColors.DARK_GRAY, false);
             });
         }
 

@@ -16,6 +16,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.CommonColors;
 import net.minecraft.world.entity.player.Inventory;
 
 import java.util.Objects;
@@ -109,12 +110,12 @@ public class PoweredSpawnerScreen extends MachineScreen<PoweredSpawnerMenu> {
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
         String modeLabel = Objects.requireNonNull(menu.getMode().getComponent()).getString();
-        guiGraphics.drawString(font, modeLabel, (int) (imageWidth / 2f - font.width(modeLabel) / 2f), 25, 0xFFFFFFFF, true);
+        guiGraphics.drawString(font, modeLabel, (int) (imageWidth / 2f - font.width(modeLabel) / 2f), 25, CommonColors.DARK_GRAY, true);
 
         var entityType = getMenu().getBlockEntity().getEntityType();
         if (entityType != null) {
             String name = entityType.getDescription().getString();
-            guiGraphics.drawString(font, name, (int) (imageWidth / 2f - font.width(name) / 2f), 65, 0xFFFFFFFF, true);
+            guiGraphics.drawString(font, name, (int) (imageWidth / 2f - font.width(name) / 2f), 65, CommonColors.DARK_GRAY, true);
         }
 
         super.renderLabels(guiGraphics, pMouseX, pMouseY);

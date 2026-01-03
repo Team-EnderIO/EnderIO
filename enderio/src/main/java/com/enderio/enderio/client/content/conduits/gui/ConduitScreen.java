@@ -27,6 +27,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.CommonColors;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.DyeColor;
 import org.jetbrains.annotations.Nullable;
@@ -98,7 +99,7 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
         if (screenTypeContainer.hasScreenType()) {
             screenTypeContainer.renderLabels(guiGraphics, mouseX, mouseY);
         } else {
-            guiGraphics.drawString(this.font, ConduitLang.ERROR_NO_SCREEN_TYPE, 22, 7 + 4, 0xffff5733, false);
+            guiGraphics.drawString(this.font, ConduitLang.ERROR_NO_SCREEN_TYPE, 22, 7 + 4, CommonColors.DARK_GRAY, false);
         }
     }
 

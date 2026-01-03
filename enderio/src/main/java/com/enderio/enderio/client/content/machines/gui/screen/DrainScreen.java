@@ -14,6 +14,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.CommonColors;
 import net.minecraft.world.entity.player.Inventory;
 
 public class DrainScreen extends MachineScreen<DrainMenu> {
@@ -59,10 +60,10 @@ public class DrainScreen extends MachineScreen<DrainMenu> {
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
-        guiGraphics.drawString(font, MachinesLang.RANGE, imageWidth - 6 - font.width(MachinesLang.RANGE), 16 + 8, 4210752, false);
+        guiGraphics.drawString(font, MachinesLang.RANGE, imageWidth - 6 - font.width(MachinesLang.RANGE), 16 + 8, CommonColors.DARK_GRAY, false);
         guiGraphics.drawString(font, getMenu().getBlockEntity().getRange() + "",
-                leftPos + imageWidth - 8 - 16 - font.width(getMenu().getBlockEntity().getRange() + "") - 10,
-                topPos + 16 * 2 + 6, 0, false);
+                imageWidth - 8 - 16 - font.width(getMenu().getBlockEntity().getRange() + "") - 10,
+                16 * 2 + 6, CommonColors.DARK_GRAY, false);
         super.renderLabels(guiGraphics, pMouseX, pMouseY);
     }
 }

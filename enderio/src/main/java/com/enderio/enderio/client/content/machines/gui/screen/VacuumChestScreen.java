@@ -13,6 +13,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.CommonColors;
 import net.minecraft.world.entity.player.Inventory;
 
 public class VacuumChestScreen extends MachineScreen<VacuumChestMenu> {
@@ -56,9 +57,9 @@ public class VacuumChestScreen extends MachineScreen<VacuumChestMenu> {
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
-        guiGraphics.drawString(font, FiltersLang.GUI_FILTER, 8, 74, 4210752, false);
-        guiGraphics.drawString(font, MachinesLang.RANGE, imageWidth - 8 - font.width(MachinesLang.RANGE), 74, 4210752, false);
-        guiGraphics.drawString(font, menu.getRange() + "", leftPos + imageWidth - 8 - 8 - 10, topPos + 90, 0, false);
+        guiGraphics.drawString(font, FiltersLang.GUI_FILTER, 8, 74, CommonColors.DARK_GRAY, false);
+        guiGraphics.drawString(font, MachinesLang.RANGE, imageWidth - 8 - font.width(MachinesLang.RANGE), 74, CommonColors.DARK_GRAY, false);
+        guiGraphics.drawString(font, menu.getRange() + "", imageWidth - 8 - 8 - 10, 90, CommonColors.DARK_GRAY, false);
         super.renderLabels(guiGraphics, pMouseX, pMouseY);
     }
 }

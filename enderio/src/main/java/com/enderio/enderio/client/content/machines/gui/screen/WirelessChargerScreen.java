@@ -14,6 +14,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.CommonColors;
 import net.minecraft.world.entity.player.Inventory;
 
 public class WirelessChargerScreen extends MachineScreen<WirelessChargerMenu> {
@@ -75,11 +76,11 @@ public class WirelessChargerScreen extends MachineScreen<WirelessChargerMenu> {
     protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
         int rangeOffset = 50;
         guiGraphics.drawString(font, MachinesLang.RANGE, imageWidth - 9 - font.width(MachinesLang.RANGE), rangeOffset - 10,
-                4210752, false);
-        guiGraphics.drawString(font, MachinesLang.MAX_RANGE, imageWidth / 2 - font.width(MachinesLang.MAX_RANGE) / 2, 20, 0,
+            CommonColors.DARK_GRAY, false);
+        guiGraphics.drawString(font, MachinesLang.MAX_RANGE, imageWidth / 2 - font.width(MachinesLang.MAX_RANGE) / 2, 20, CommonColors.DARK_GRAY,
                 false);
         String maxRange = getMenu().getMaxRange() + "";
-        guiGraphics.drawString(font, maxRange, imageWidth / 2 - font.width(maxRange) / 2, 20 + font.lineHeight + 3, 0,
+        guiGraphics.drawString(font, maxRange, imageWidth / 2 - font.width(maxRange) / 2, 20 + font.lineHeight + 3, CommonColors.DARK_GRAY,
                 false);
         super.renderLabels(guiGraphics, pMouseX, pMouseY);
     }

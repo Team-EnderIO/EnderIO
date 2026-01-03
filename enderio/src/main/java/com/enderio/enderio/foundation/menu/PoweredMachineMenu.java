@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.jetbrains.annotations.Nullable;
 
 public class PoweredMachineMenu<T extends PoweredMachineBlockEntity> extends MachineMenu<T> {
-    protected static final Identifier EMPTY_CAPACITOR_SLOT = EnderIO.id("item/empty_capacitor_slot");
+    protected static final Identifier EMPTY_CAPACITOR_SLOT = EnderIO.id("widget/empty_capacitor_slot");
 
     private final EnergyStorageSyncSlot energySyncSlot;
 

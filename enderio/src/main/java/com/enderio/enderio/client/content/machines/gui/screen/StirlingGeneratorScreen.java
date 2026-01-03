@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.CommonColors;
 import net.minecraft.world.entity.player.Inventory;
 
 import java.text.DecimalFormat;
@@ -62,10 +63,10 @@ public class StirlingGeneratorScreen extends MachineScreen<StirlingGeneratorMenu
         float efficiency = menu.getBlockEntity().getFuelEfficiency();
         MutableComponent gen = TooltipUtil.withArgs(MachinesLang.GENERATING, FORMAT.format(genRate));
         MutableComponent eff = TooltipUtil.withArgs(MachinesLang.FUEL_EFFICIENCY, (int) efficiency);
-        guiGraphics.drawString(font, gen, imageWidth / 2 - font.width(gen.getString()) / 2, 9, 0, false);
+        guiGraphics.drawString(font, gen, imageWidth / 2 - font.width(gen.getString()) / 2, 9, CommonColors.DARK_GRAY, false);
         if (menu.getBlockEntity().isCapacitorInstalled()) {
             guiGraphics.drawString(font, eff, imageWidth / 2 - font.width(eff.getString()) / 2, 9 + font.lineHeight + 2,
-                    0, false);
+                CommonColors.DARK_GRAY, false);
         }
     }
 }

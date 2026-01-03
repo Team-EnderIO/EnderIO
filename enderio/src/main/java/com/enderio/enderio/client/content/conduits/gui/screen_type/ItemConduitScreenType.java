@@ -13,6 +13,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.CommonColors;
 
 public class ItemConduitScreenType extends IOConduitScreenType<ItemConduitConnectionConfig> {
 
@@ -30,8 +31,8 @@ public class ItemConduitScreenType extends IOConduitScreenType<ItemConduitConnec
         super.renderLabels(dataAccess, guiGraphics, startX, startY, font, mouseX, mouseY);
 
         String priority = String.valueOf(dataAccess.getConnectionConfig().priority());
-        guiGraphics.drawString(font, ConduitLang.PRIORITY, 22, 7 + 4 + 4 + 8 + 16 + 12, 0xff000000, false);
-        guiGraphics.drawString(font, priority, 90 - font.width(priority), 7 + 4 + 4 + 8 + 16 + 12, 0xff000000, false);
+        guiGraphics.drawString(font, ConduitLang.PRIORITY, 22, 7 + 4 + 4 + 8 + 16 + 12, CommonColors.DARK_GRAY, false);
+        guiGraphics.drawString(font, priority, 90 - font.width(priority), 7 + 4 + 4 + 8 + 16 + 12, CommonColors.DARK_GRAY, false);
 
         // TODO: Show redstone signal indicators using the extra NBT payload.
     }
