@@ -11,7 +11,7 @@ import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import com.enderio.enderio.foundation.io.IOConfig;
 import com.enderio.enderio.foundation.state.MachineState;
-import com.enderio.enderio.foundation.storage.SidedResourceHandler;
+import com.enderio.enderio.foundation.storage.IOConfigurableExternalDelegatingResourceStorage;
 import com.enderio.enderio.foundation.task.CraftingMachineTask;
 import com.enderio.enderio.foundation.task.host.CraftingMachineTaskHost;
 import com.enderio.enderio.init.EIOBlockEntities;
@@ -51,7 +51,7 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity {
     public static final ItemStack FIREWORK = new ItemStack(Items.FIREWORK_ROCKET, 1);
 
     public static final ICapabilityProvider<WeatherObeliskBlockEntity, Direction, ResourceHandler<FluidResource>> FLUID_HANDLER_PROVIDER = (be,
-        side) -> be.fluidStorage != null ? SidedResourceHandler.of(be.fluidStorage, side, be) : null;
+        side) -> be.fluidStorage != null ? IOConfigurableExternalDelegatingResourceStorage.of(be.fluidStorage, side, be) : null;
 
     public static final SingleSlotAccess ROCKET = new SingleSlotAccess();
     public static final int TANK_CAPACITY = 3000;

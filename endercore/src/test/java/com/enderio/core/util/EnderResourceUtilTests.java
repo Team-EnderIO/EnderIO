@@ -8,6 +8,7 @@ import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.core.common.util.EnderResourceUtil;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluids;
+import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.junit.jupiter.api.Assertions;
@@ -15,10 +16,10 @@ import org.junit.jupiter.api.Test;
 
 public class EnderResourceUtilTests {
 
-    // region tryMoveResource tests
+    // region exchange tests
 
     @Test
-    public void testTryMoveItem_Success() {
+    public void testExchange_Item_Success() {
         // Create layout with 2 storage slots
         var slot1 = new SingleResourceSlotKey<ItemResource>();
         var slot2 = new SingleResourceSlotKey<ItemResource>();
@@ -32,7 +33,7 @@ public class EnderResourceUtilTests {
         storage.set(0, ItemResource.of(Items.DIAMOND), 10);
 
         // Move item from slot 0 to slot 1
-        boolean result = EnderResourceUtil.tryMoveItem(storage, 0, 1, null);
+        boolean result = EnderResourceUtil.exchange(storage, 0, 1, null);
 
         // Assert move was successful
         Assertions.assertTrue(result, "Move should succeed");
@@ -43,7 +44,7 @@ public class EnderResourceUtilTests {
     }
 
     @Test
-    public void testTryMoveItem_FailsWhenDestinationFull() {
+    public void testExchange_Item_FailsWhenDestinationFull() {
         // Create layout with 2 storage slots
         var slot1 = new SingleResourceSlotKey<ItemResource>();
         var slot2 = new SingleResourceSlotKey<ItemResource>();
@@ -58,7 +59,7 @@ public class EnderResourceUtilTests {
         storage.set(1, ItemResource.of(Items.EMERALD), 64); // Full slot with different item
 
         // Try to move item from slot 0 to slot 1
-        boolean result = EnderResourceUtil.tryMoveItem(storage, 0, 1, null);
+        boolean result = EnderResourceUtil.exchange(storage, 0, 1, null);
 
         // Assert move failed
         Assertions.assertFalse(result, "Move should fail when destination is full with different item");
@@ -69,7 +70,7 @@ public class EnderResourceUtilTests {
     }
 
     @Test
-    public void testTryMoveFluid_Success() {
+    public void testExchange_Fluid_Success() {
         // Create layout with 2 fluid tanks, each with 10000 capacity
         var tank1 = new SingleResourceSlotKey<FluidResource>();
         var tank2 = new SingleResourceSlotKey<FluidResource>();
@@ -83,7 +84,7 @@ public class EnderResourceUtilTests {
         storage.set(0, FluidResource.of(Fluids.WATER), 5000);
 
         // Move fluid from tank 0 to tank 1
-        boolean result = EnderResourceUtil.tryMoveFluid(storage, 0, 1, null);
+        boolean result = EnderResourceUtil.exchange(storage, 0, 1, null);
 
         // Assert move was successful
         Assertions.assertTrue(result, "Move should succeed");
@@ -94,7 +95,7 @@ public class EnderResourceUtilTests {
     }
 
     @Test
-    public void testTryMoveFluid_FailsWhenDestinationFull() {
+    public void testExchange_Fluid_FailsWhenDestinationFull() {
         // Create layout with 2 fluid tanks
         var tank1 = new SingleResourceSlotKey<FluidResource>();
         var tank2 = new SingleResourceSlotKey<FluidResource>();
@@ -109,7 +110,7 @@ public class EnderResourceUtilTests {
         storage.set(1, FluidResource.of(Fluids.LAVA), 10000); // Full tank with different fluid
 
         // Try to move fluid from tank 0 to tank 1
-        boolean result = EnderResourceUtil.tryMoveFluid(storage, 0, 1, null);
+        boolean result = EnderResourceUtil.exchange(storage, 0, 1, null);
 
         // Assert move failed
         Assertions.assertFalse(result, "Move should fail when destination is full with different fluid");

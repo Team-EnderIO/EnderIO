@@ -17,7 +17,7 @@ import com.enderio.enderio.foundation.inventory.MultiSlotAccess;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import com.enderio.enderio.foundation.recipe.MachineRecipeCaches;
 import com.enderio.enderio.foundation.state.MachineState;
-import com.enderio.enderio.foundation.storage.SidedResourceHandler;
+import com.enderio.enderio.foundation.storage.IOConfigurableExternalDelegatingResourceStorage;
 import com.enderio.enderio.foundation.task.PoweredCraftingMachineTask;
 import com.enderio.enderio.foundation.task.host.CraftingMachineTaskHost;
 import com.enderio.enderio.foundation.util.ExperienceUtil;
@@ -63,7 +63,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
             MachinesConfig.COMMON.ENERGY.SOUL_BINDER_USAGE);
 
     public static final ICapabilityProvider<SoulBinderBlockEntity, Direction, ResourceHandler<FluidResource>> FLUID_HANDLER_PROVIDER = (be,
-        side) -> be.fluidStorage != null ? SidedResourceHandler.of(be.fluidStorage, side, be) : null;
+        side) -> be.fluidStorage != null ? IOConfigurableExternalDelegatingResourceStorage.of(be.fluidStorage, side, be) : null;
 
     public static final int TANK_CAPACITY = 10000;
 

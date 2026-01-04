@@ -17,7 +17,7 @@ import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.foundation.io.IOConfig;
 import com.enderio.enderio.foundation.state.MachineState;
-import com.enderio.enderio.foundation.storage.SidedResourceHandler;
+import com.enderio.enderio.foundation.storage.IOConfigurableExternalDelegatingResourceStorage;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -52,7 +52,7 @@ import java.util.List;
 public class DrainBlockEntity extends PoweredMachineBlockEntity implements RangedActor {
 
     public static final ICapabilityProvider<DrainBlockEntity, Direction, ResourceHandler<FluidResource>> FLUID_HANDLER_PROVIDER = (be,
-        side) -> be.fluidStorage != null ? SidedResourceHandler.of(be.fluidStorage, side, be) : null;
+        side) -> be.fluidStorage != null ? IOConfigurableExternalDelegatingResourceStorage.of(be.fluidStorage, side, be) : null;
     public static final String CONSUMED = "Consumed";
     private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
             MachinesConfig.COMMON.ENERGY.DRAIN_CAPACITY);

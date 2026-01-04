@@ -6,17 +6,11 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.resource.ResourceStack;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
-
-import java.util.Optional;
 
 /**
  * An interface that block entities may implement in order to interact with items support IFluidHandlerItem
@@ -110,7 +104,7 @@ public interface FluidItemInteractive {
                     transaction.commit();
                     return true;
                 }
-            } else if (fluidStorage.layout().slotConfig(tankSlot).canInsert()) {
+            } else if (fluidStorage.layout().slotConfig(tankSlot).canInsertExternal()) {
                 int filled = fluidStorage.insert(tankSlot, resourceFromItem, amountAvailable, transaction);
                 if (filled <= 0) {
                     return false;

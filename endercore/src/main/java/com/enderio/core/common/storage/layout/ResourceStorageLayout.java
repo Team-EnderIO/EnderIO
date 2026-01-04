@@ -10,14 +10,12 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
-import java.util.stream.IntStream;
 
 public abstract class ResourceStorageLayout<TResource extends Resource, TContext> {
     private final List<SlotConfig<TResource, TContext>> slots;
@@ -122,7 +120,7 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
         }
 
         private SlotBuilder<T, TContext> setupStorageSlot(SlotBuilder<T, TContext> slotBuilder) {
-            return slotBuilder.canInsert().canExtract().canManualInsert().canManualExtract();
+            return slotBuilder.canInsertExternal().canExtractExternal().canPlayerInsert().canPlayerExtract();
         }
 
         public TBuilder inputSlot(SingleResourceSlotKey<T> key) {
@@ -142,7 +140,7 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
         }
 
         private SlotBuilder<T, TContext> setupInputSlot(SlotBuilder<T, TContext> slotBuilder) {
-            return slotBuilder.canInsert().canManualInsert().canManualExtract();
+            return slotBuilder.canInsertExternal().canPlayerInsert().canPlayerExtract();
         }
 
         public TBuilder outputSlot(SingleResourceSlotKey<T> key) {
@@ -162,54 +160,54 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
         }
 
         private SlotBuilder<T, TContext> setupOutputSlot(SlotBuilder<T, TContext> slotBuilder) {
-            return slotBuilder.canExtract().canManualExtract();
+            return slotBuilder.canExtractExternal().canPlayerExtract();
         }
         
         // endregion
 
         public static final class SlotBuilder<T extends Resource, TContext> {
-            private boolean canInsert;
-            private boolean canExtract;
-            private boolean canManualInsert;
-            private boolean canManualExtract;
+            private boolean canInsertExternal;
+            private boolean canExtractExternal;
+            private boolean canPlayerInsert;
+            private boolean canPlayerExtract;
             @Nullable
             private BiFunction<T, TContext, Integer> capacityFunc;
             @Nullable
             private TriPredicate<Integer, T, TContext> filter;
             
-            public SlotBuilder<T, TContext> canInsert() {
-                return canInsert(true);
+            public SlotBuilder<T, TContext> canInsertExternal() {
+                return canInsertExternal(true);
             }
             
-            public SlotBuilder<T, TContext> canInsert(boolean canInsert) {
-                this.canInsert = canInsert;
+            public SlotBuilder<T, TContext> canInsertExternal(boolean canInsertExternal) {
+                this.canInsertExternal = canInsertExternal;
                 return this;
             }
             
-            public SlotBuilder<T, TContext> canExtract() {
-                return canExtract(true);
+            public SlotBuilder<T, TContext> canExtractExternal() {
+                return canExtractExternal(true);
             }
             
-            public SlotBuilder<T, TContext> canExtract(boolean canExtract) {
-                this.canExtract = canExtract;
+            public SlotBuilder<T, TContext> canExtractExternal(boolean canExtractExternal) {
+                this.canExtractExternal = canExtractExternal;
                 return this;
             }
 
-            public SlotBuilder<T, TContext> canManualInsert() {
-                return canManualInsert(true);
+            public SlotBuilder<T, TContext> canPlayerInsert() {
+                return canPlayerInsert(true);
             }
 
-            public SlotBuilder<T, TContext> canManualInsert(boolean canManualInsert) {
-                this.canManualInsert = canManualInsert;
+            public SlotBuilder<T, TContext> canPlayerInsert(boolean canPlayerInsert) {
+                this.canPlayerInsert = canPlayerInsert;
                 return this;
             }
 
-            public SlotBuilder<T, TContext> canManualExtract() {
-                return canManualExtract(true);
+            public SlotBuilder<T, TContext> canPlayerExtract() {
+                return canPlayerExtract(true);
             }
 
-            public SlotBuilder<T, TContext> canManualExtract(boolean canManualExtract) {
-                this.canManualExtract = canManualExtract;
+            public SlotBuilder<T, TContext> canPlayerExtract(boolean canPlayerExtract) {
+                this.canPlayerExtract = canPlayerExtract;
                 return this;
             }
 
@@ -239,16 +237,16 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
                     throw new IllegalStateException("Capacity must be set!");
                 }
 
-                return new SlotConfig<>(canInsert, canExtract, canManualInsert, canManualExtract, capacityFunc, filter);
+                return new SlotConfig<>(canInsertExternal, canExtractExternal, canPlayerInsert, canPlayerExtract, capacityFunc, filter);
             }
         }
     }
-
+    
     public record SlotConfig<T extends Resource, TContext>(
-        boolean canInsert,
-        boolean canExtract,
-        boolean canManualInsert,
-        boolean canManualExtract,
+        boolean canInsertExternal,
+        boolean canExtractExternal,
+        boolean canPlayerInsert,
+        boolean canPlayerExtract,
         BiFunction<T, TContext, Integer> capacityFunc,
         @Nullable
         TriPredicate<Integer, T, TContext> filter) {

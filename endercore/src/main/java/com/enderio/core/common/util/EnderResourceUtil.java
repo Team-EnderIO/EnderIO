@@ -2,8 +2,6 @@ package com.enderio.core.common.util;
 
 import com.enderio.core.common.storage.ResourceStorage;
 import com.enderio.core.common.storage.slot.ResourceSlotId;
-import net.minecraft.CrashReport;
-import net.minecraft.ReportedException;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.transfer.RangedResourceHandler;
@@ -69,22 +67,6 @@ public class EnderResourceUtil {
 
     // region Move resources between slots.
 
-    public static boolean tryMoveItem(ResourceStorage<ItemResource> storage, int from, int to, @Nullable TransactionContext transaction) {
-        return tryMoveResource(storage, from, to, ItemResource.EMPTY, transaction);
-    }
-
-    public static boolean tryMoveItem(ResourceStorage<ItemResource> storage, ResourceSlotId<ItemResource> from, ResourceSlotId<ItemResource> to, @Nullable TransactionContext transaction) {
-        return tryMoveResource(storage, from, to, ItemResource.EMPTY, transaction);
-    }
-
-    public static boolean tryMoveFluid(ResourceStorage<FluidResource> storage, int from, int to, @Nullable TransactionContext transaction) {
-        return tryMoveResource(storage, from, to, FluidResource.EMPTY, transaction);
-    }
-
-    public static boolean tryMoveFluid(ResourceStorage<FluidResource> storage, ResourceSlotId<FluidResource> from, ResourceSlotId<FluidResource> to, @Nullable TransactionContext transaction) {
-        return tryMoveResource(storage, from, to, FluidResource.EMPTY, transaction);
-    }
-
     /**
      * Helper to move all the resources in one slot to another.
      * @param storage
@@ -92,24 +74,28 @@ public class EnderResourceUtil {
      * @param to
      * @param <T>
      */
-    public static <T extends Resource> boolean tryMoveResource(ResourceStorage<T> storage, int from, int to, T emptyResource, @Nullable TransactionContext transaction) {
+    public static <T extends Resource> boolean exchange(ResourceHandler<T> storage, int from, int to, @Nullable TransactionContext transaction) {
         T resourceToMove = storage.getResource(from);
         int amountToMove = storage.getAmountAsInt(from);
 
         try (Transaction subTransaction = Transaction.open(transaction)) {
-            int amountMoved = storage.internalInsert(to, resourceToMove, amountToMove, subTransaction);
-            if (amountMoved != amountToMove) {
+            int amountExtracted = storage.extract(from, resourceToMove, amountToMove, subTransaction);
+            if (amountExtracted != amountToMove) {
                 return false;
             }
 
-            storage.setTransactional(from, emptyResource, 0, subTransaction);
+            int amountInserted = storage.insert(to, resourceToMove, amountToMove, subTransaction);
+            if (amountInserted != amountExtracted) {
+                return false;
+            }
+
             subTransaction.commit();
             return true;
         }
     }
 
-    public static <T extends Resource> boolean tryMoveResource(ResourceStorage<T> storage, ResourceSlotId<T> from, ResourceSlotId<T> to, T emptyResource, @Nullable TransactionContext transaction) {
-        return tryMoveResource(storage, from.index(storage.layout()), to.index(storage.layout()), emptyResource, transaction);
+    public static <T extends Resource> boolean exchange(ResourceStorage<T> storage, ResourceSlotId<T> from, ResourceSlotId<T> to, T emptyResource, @Nullable TransactionContext transaction) {
+        return exchange(storage, from.index(storage.layout()), to.index(storage.layout()), transaction);
     }
 
     // endregion

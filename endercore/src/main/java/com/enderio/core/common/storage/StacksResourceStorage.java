@@ -7,7 +7,6 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.common.util.ValueIOSerializable;
-import net.neoforged.neoforge.transfer.StacksResourceHandler;
 import net.neoforged.neoforge.transfer.TransferPreconditions;
 import net.neoforged.neoforge.transfer.resource.Resource;
 import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
@@ -15,9 +14,16 @@ import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.function.Function;
 
-// Mostly the same as StacksResourceHandler, but we save differently and support variable fluid capacity.
+/**
+ * A resource storage implementation based on stacks stored in a list.
+ *
+ * @param <T>
+ * @param <S>
+ * @param <C>
+ * @apiNote Not designed for exposure as a capability directly, a delegate should be used instead.
+ * {@link com.enderio.core.common.storage.delegates.ExternalDelegatingResourceStorage} is provided for this purpose, it will respect the canInsertExternal and canExtractExternal slot config flags.
+ */
 public abstract class StacksResourceStorage<T extends Resource, S, C> implements ResourceStorage<T>, ValueIOSerializable {
 
     private final ResourceStorageLayout<T, C> layout;
@@ -84,16 +90,16 @@ public abstract class StacksResourceStorage<T extends Resource, S, C> implements
         return getStackFrom(getResource(index), getAmountAsInt(index));
     }
 
-    public void setStack(ResourceSlotId<T> slotId, S stack) {
-        set(slotId.index(layout), getResourceFrom(stack), getAmountFrom(stack));
-    }
+    //    public void setStack(ResourceSlotId<T> slotId, S stack) {
+    //        set(slotId.index(layout), getResourceFrom(stack), getAmountFrom(stack));
+    //    }
 
     @Override
     public ResourceStorageLayout<T, C> layout() {
         return layout;
     }
 
-    @Override
+    //    @Override
     public void set(int index, T resource, int amount) {
         TransferPreconditions.checkNonNegative(amount);
         if (resource.isEmpty() && amount > 0) {
@@ -105,48 +111,45 @@ public abstract class StacksResourceStorage<T extends Resource, S, C> implements
     }
 
     @Override
-    public void setTransactional(int index, T resource, int amount, TransactionContext transaction) {
-        TransferPreconditions.checkNonNegative(amount);
-        if (resource.isEmpty() && amount > 0) {
-            throw new IllegalArgumentException("Resource is empty but the amount is positive: " + amount);
-        } else {
-            this.snapshotJournals.get(index).updateSnapshots(transaction);
-            this.stacks.set(index, this.getStackFrom(resource, amount));
-        }
-    }
-
-    @Override
-    public int internalInsert(int index, T resource, int amount, TransactionContext transaction) {
-        return insertImpl(index, resource, amount, transaction);
-    }
-
-    @Override
     public int insert(int index, T resource, int amount, TransactionContext transaction) {
         Objects.checkIndex(index, size());
-        TransferPreconditions.checkNonNegative(amount);
+        TransferPreconditions.checkNonEmptyNonNegative(resource, amount);
 
-        if (!layout.slotConfig(index).canInsert()) {
-            return 0;
+        S currentStack = stacks.get(index);
+        int currentAmount = getAmountFrom(currentStack);
+
+        if ((currentAmount == 0 || matches(currentStack, resource)) && isValid(index, resource)) {
+            int inserted = Math.min(amount, getCapacity(index, resource) - currentAmount);
+
+            if (inserted > 0) {
+                snapshotJournals.get(index).updateSnapshots(transaction);
+                stacks.set(index, getStackFrom(resource, currentAmount + inserted));
+                return inserted;
+            }
         }
 
-        return insertImpl(index, resource, amount, transaction);
-    }
-
-    @Override
-    public int internalExtract(int index, T resource, int amount, TransactionContext transaction) {
-        return extractImpl(index, resource, amount, transaction);
+        return 0;
     }
 
     @Override
     public int extract(int index, T resource, int amount, TransactionContext transaction) {
         Objects.checkIndex(index, size());
-        TransferPreconditions.checkNonNegative(amount);
+        TransferPreconditions.checkNonEmptyNonNegative(resource, amount);
 
-        if (!layout.slotConfig(index).canExtract()) {
-            return 0;
+        S currentStack = stacks.get(index);
+
+        if (matches(currentStack, resource)) {
+            int currentAmount = getAmountFrom(currentStack);
+            int extracted = Math.min(amount, currentAmount);
+
+            if (extracted > 0) {
+                snapshotJournals.get(index).updateSnapshots(transaction);
+                stacks.set(index, getStackFrom(resource, currentAmount - extracted));
+                return extracted;
+            }
         }
 
-        return extractImpl(index, resource, amount, transaction);
+        return 0;
     }
 
     @Override
@@ -172,46 +175,6 @@ public abstract class StacksResourceStorage<T extends Resource, S, C> implements
         return resource.isEmpty() || isValid(index, resource) ? getCapacity(index, resource) : 0;
     }
 
-    private int insertImpl(int index, T resource, int amount, TransactionContext transaction) {
-        Objects.checkIndex(index, size());
-        TransferPreconditions.checkNonEmptyNonNegative(resource, amount);
-
-        S currentStack = stacks.get(index);
-        int currentAmount = getAmountFrom(currentStack);
-
-        if ((currentAmount == 0 || matches(currentStack, resource)) && isValid(index, resource)) {
-            int inserted = Math.min(amount, getCapacity(index, resource) - currentAmount);
-
-            if (inserted > 0) {
-                snapshotJournals.get(index).updateSnapshots(transaction);
-                stacks.set(index, getStackFrom(resource, currentAmount + inserted));
-                return inserted;
-            }
-        }
-
-        return 0;
-    }
-
-    private int extractImpl(int index, T resource, int amount, TransactionContext transaction) {
-        Objects.checkIndex(index, size());
-        TransferPreconditions.checkNonEmptyNonNegative(resource, amount);
-
-        S currentStack = stacks.get(index);
-
-        if (matches(currentStack, resource)) {
-            int currentAmount = getAmountFrom(currentStack);
-            int extracted = Math.min(amount, currentAmount);
-
-            if (extracted > 0) {
-                snapshotJournals.get(index).updateSnapshots(transaction);
-                stacks.set(index, getStackFrom(resource, currentAmount - extracted));
-                return extracted;
-            }
-        }
-
-        return 0;
-    }
-
     @Override
     public void serialize(ValueOutput output) {
         // We serialize slot + item together to ensure order and avoid resizing the inventory.
@@ -229,9 +192,7 @@ public abstract class StacksResourceStorage<T extends Resource, S, C> implements
         for (var slotAndStack : slotList) {
             int index = slotAndStack.getIntOr("Index", -1);
             if (index >= 0 && index < size()) {
-                slotAndStack.read("Stack", stackCodec)
-                    .ifPresentOrElse(stack -> stacks.set(index, stack),
-                        () -> stacks.set(index, emptyStack));
+                slotAndStack.read("Stack", stackCodec).ifPresentOrElse(stack -> stacks.set(index, stack), () -> stacks.set(index, emptyStack));
             }
         }
     }
@@ -244,7 +205,7 @@ public abstract class StacksResourceStorage<T extends Resource, S, C> implements
         }
 
         protected S createSnapshot() {
-            return (S)StacksResourceStorage.this.copyOf(StacksResourceStorage.this.stacks.get(this.index));
+            return (S) StacksResourceStorage.this.copyOf(StacksResourceStorage.this.stacks.get(this.index));
         }
 
         protected void revertToSnapshot(S snapshot) {

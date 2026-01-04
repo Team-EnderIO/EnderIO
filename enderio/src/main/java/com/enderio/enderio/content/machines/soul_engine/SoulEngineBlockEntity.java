@@ -17,7 +17,7 @@ import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.foundation.souldata.EngineSoul;
 import com.enderio.enderio.foundation.state.MachineState;
-import com.enderio.enderio.foundation.storage.SidedResourceHandler;
+import com.enderio.enderio.foundation.storage.IOConfigurableExternalDelegatingResourceStorage;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.core.BlockPos;
@@ -58,7 +58,7 @@ import java.util.Optional;
 public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements SoulBindable {
 
     public static final ICapabilityProvider<SoulEngineBlockEntity, Direction, ResourceHandler<FluidResource>> FLUID_HANDLER_PROVIDER = (be,
-        side) -> be.fluidStorage != null ? SidedResourceHandler.of(be.fluidStorage, side, be) : null;
+        side) -> be.fluidStorage != null ? IOConfigurableExternalDelegatingResourceStorage.of(be.fluidStorage, side, be) : null;
 
     private static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
             MachinesConfig.COMMON.ENERGY.SOUL_ENGINE_CAPACITY);

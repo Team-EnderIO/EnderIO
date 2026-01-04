@@ -17,7 +17,7 @@ import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import com.enderio.enderio.foundation.io.fluid.FluidItemInteractive;
 import com.enderio.enderio.foundation.state.MachineState;
-import com.enderio.enderio.foundation.storage.SidedResourceHandler;
+import com.enderio.enderio.foundation.storage.IOConfigurableExternalDelegatingResourceStorage;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -52,7 +52,7 @@ import javax.annotation.Nonnull;
 public class NiardBlockEntity extends PoweredMachineBlockEntity implements RangedActor, FluidItemInteractive {
 
     public static final ICapabilityProvider<NiardBlockEntity, Direction, ResourceHandler<FluidResource>> FLUID_HANDLER_PROVIDER = (be,
-        side) -> be.fluidStorage != null ? SidedResourceHandler.of(be.fluidStorage, side, be) : null;
+        side) -> be.fluidStorage != null ? IOConfigurableExternalDelegatingResourceStorage.of(be.fluidStorage, side, be) : null;
 
     private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
         MachinesConfig.COMMON.ENERGY.NIARD_CAPACITY);

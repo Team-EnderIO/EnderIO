@@ -8,7 +8,7 @@ import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import com.enderio.enderio.foundation.io.fluid.FluidItemInteractive;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.core.common.storage.FluidStorage;
-import com.enderio.enderio.foundation.storage.SidedResourceHandler;
+import com.enderio.enderio.foundation.storage.IOConfigurableExternalDelegatingResourceStorage;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIORecipes;
@@ -51,7 +51,7 @@ import java.util.Optional;
 public abstract class FluidTankBlockEntity extends MachineBlockEntity implements FluidItemInteractive {
 
     public static final ICapabilityProvider<FluidTankBlockEntity, Direction, ResourceHandler<FluidResource>> FLUID_HANDLER_PROVIDER = (be,
-        side) -> be.fluidStorage != null ? SidedResourceHandler.of(be.fluidStorage, side, be) : null;
+        side) -> be.fluidStorage != null ? IOConfigurableExternalDelegatingResourceStorage.of(be.fluidStorage, side, be) : null;
 
     public static class Standard extends FluidTankBlockEntity {
         public static final int CAPACITY = 16 * FluidType.BUCKET_VOLUME;

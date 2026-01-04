@@ -31,7 +31,7 @@
 //            }
 //
 //            var config = conduit.getConnectionConfig(redstoneConduit, side, RedstoneConduitConnectionConfig.TYPE);
-//            if (!config.canInsert(ConduitRedstoneSignalAware.NONE)) {
+//            if (!config.canInsertExternal(ConduitRedstoneSignalAware.NONE)) {
 //                return -1;
 //            }
 //
