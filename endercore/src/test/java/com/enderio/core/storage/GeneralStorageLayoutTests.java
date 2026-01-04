@@ -1,6 +1,6 @@
 package com.enderio.core.storage;
 
-import com.enderio.core.common.storage.ItemStorage;
+import com.enderio.core.common.storage.EnderItemHandler;
 import com.enderio.core.common.storage.layout.ItemStorageLayout;
 import com.enderio.core.common.storage.slot.MultiResourceSlotKey;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
@@ -14,7 +14,7 @@ public class GeneralStorageLayoutTests {
         var key = new SingleResourceSlotKey<ItemResource>();
 
         var layout = ItemStorageLayout.<Void>builder().inputSlot(key).build();
-        var storage = new ItemStorage<>(layout, null);
+        var storage = new EnderItemHandler<>(layout, null);
 
         Assertions.assertDoesNotThrow(() -> storage.getAmountAsInt(key));
     }
@@ -24,7 +24,7 @@ public class GeneralStorageLayoutTests {
         var key = new MultiResourceSlotKey<ItemResource>(2);
 
         var layout = ItemStorageLayout.<Void>builder().inputSlots(key).build();
-        var storage = new ItemStorage<>(layout, null);
+        var storage = new EnderItemHandler<>(layout, null);
 
         Assertions.assertDoesNotThrow(() -> storage.getAmountAsInt(key.slot(1)));
     }
@@ -34,7 +34,7 @@ public class GeneralStorageLayoutTests {
         var key = new MultiResourceSlotKey<ItemResource>(4);
 
         var layout = ItemStorageLayout.<Void>builder().inputSlots(key).build();
-        var storage = new ItemStorage<>(layout, null);
+        var storage = new EnderItemHandler<>(layout, null);
 
         Assertions.assertDoesNotThrow(() -> {
             for (var slotId : key) {

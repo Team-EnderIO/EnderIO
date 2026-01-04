@@ -1,6 +1,6 @@
 package com.enderio.enderio.content.machines.soul_engine;
 
-import com.enderio.core.common.storage.FluidStorage;
+import com.enderio.core.common.storage.EnderFluidHandler;
 import com.enderio.core.common.storage.layout.FluidStorageLayout;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
@@ -80,7 +80,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
                 .filter((index, resource, engine) -> engine.isFluidValid(resource.toStack(1))))
             .build();
 
-    private final FluidStorage<SoulEngineBlockEntity> fluidStorage;
+    private final EnderFluidHandler<SoulEngineBlockEntity> fluidStorage;
 
     @Nullable
     private EngineSoul.SoulData soulData;
@@ -92,7 +92,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
         super(EIOBlockEntities.SOUL_ENGINE.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
                 EnergyIOMode.Output, CAPACITY, FixedScalable.ZERO);
 
-        fluidStorage = new FluidStorage<>(FLUID_STORAGE_LAYOUT, this) {
+        fluidStorage = new EnderFluidHandler<>(FLUID_STORAGE_LAYOUT, this) {
             @Override
             protected void onContentsChanged(int index, FluidStack previousContents) {
                 super.onContentsChanged(index, previousContents);

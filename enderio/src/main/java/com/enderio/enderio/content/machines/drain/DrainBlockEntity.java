@@ -1,6 +1,6 @@
 package com.enderio.enderio.content.machines.drain;
 
-import com.enderio.core.common.storage.FluidStorage;
+import com.enderio.core.common.storage.EnderFluidHandler;
 import com.enderio.core.common.storage.layout.FluidStorageLayout;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.UseOnly;
@@ -74,7 +74,7 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements Range
                 .filter((index, resource, drain) -> drain.type.isSame(resource.getFluid())))
             .build();
 
-    private final FluidStorage<DrainBlockEntity> fluidStorage;
+    private final EnderFluidHandler<DrainBlockEntity> fluidStorage;
     private List<BlockPos> positions;
     private int currentIndex = 0;
     private boolean fluidFound = false;
@@ -87,7 +87,7 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements Range
         super(EIOBlockEntities.DRAIN.get(), worldPosition, blockState, false, CapacitorSupport.REQUIRED,
                 EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE);
 
-        fluidStorage = new FluidStorage<>(FLUID_STORAGE_LAYOUT, this) {
+        fluidStorage = new EnderFluidHandler<>(FLUID_STORAGE_LAYOUT, this) {
             @Override
             protected void onContentsChanged(int index, FluidStack previousContents) {
                 super.onContentsChanged(index, previousContents);

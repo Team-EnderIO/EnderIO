@@ -1,7 +1,7 @@
 package com.enderio.enderio.tests.fluid;
 
-import com.enderio.core.common.storage.FluidStorage;
-import com.enderio.core.common.storage.ItemStorage;
+import com.enderio.core.common.storage.EnderFluidHandler;
+import com.enderio.core.common.storage.EnderItemHandler;
 import com.enderio.core.common.storage.layout.FluidStorageLayout;
 import com.enderio.core.common.storage.layout.ItemStorageLayout;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
@@ -30,20 +30,20 @@ public class InternalTankTasksTests {
     private static final SingleResourceSlotKey<ItemResource> OUTPUT_SLOT = new SingleResourceSlotKey<>();
 
     // Helper method to create a test fluid storage
-    private FluidStorage<Void> createFluidStorage(int capacity) {
+    private EnderFluidHandler<Void> createFluidStorage(int capacity) {
         FluidStorageLayout<Void> layout = FluidStorageLayout.<Void>builder()
             .storageSlot(TANK_SLOT, slot -> slot.capacity((fr, ctx) -> capacity))
             .build();
-        return new FluidStorage<>(layout, null);
+        return new EnderFluidHandler<>(layout, null);
     }
 
     // Helper method to create a test item storage
-    private ItemStorage<Void> createItemStorage() {
+    private EnderItemHandler<Void> createItemStorage() {
         ItemStorageLayout<Void> layout = ItemStorageLayout.<Void>builder()
             .storageSlot(INPUT_SLOT, slot -> slot.capacity((ir, ctx) -> 64))
             .storageSlot(OUTPUT_SLOT, slot -> slot.capacity((ir, ctx) -> 64))
             .build();
-        return new ItemStorage<>(layout, null);
+        return new EnderItemHandler<>(layout, null);
     }
 
     // Helper method to get a fluid tank item filled with a fluid
@@ -58,8 +58,8 @@ public class InternalTankTasksTests {
     @Test
     public void testFillInternalWithWaterBucket() {
         // Arrange
-        FluidStorage<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
-        ItemStorage<Void> itemStorage = createItemStorage();
+        EnderFluidHandler<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
+        EnderItemHandler<Void> itemStorage = createItemStorage();
 
         // Set up input: water bucket
         itemStorage.set(INPUT_SLOT, ItemResource.of(Items.WATER_BUCKET), 1);
@@ -83,8 +83,8 @@ public class InternalTankTasksTests {
     @Test
     public void testFillInternalWithMultipleBuckets() {
         // Arrange
-        FluidStorage<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
-        ItemStorage<Void> itemStorage = createItemStorage();
+        EnderFluidHandler<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
+        EnderItemHandler<Void> itemStorage = createItemStorage();
 
         // Set up input
         itemStorage.set(INPUT_SLOT, ItemResource.of(Items.WATER_BUCKET), 1);
@@ -114,8 +114,8 @@ public class InternalTankTasksTests {
     @Test
     public void testFillInternalWithFullTank() {
         // Arrange
-        FluidStorage<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME);
-        ItemStorage<Void> itemStorage = createItemStorage();
+        EnderFluidHandler<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME);
+        EnderItemHandler<Void> itemStorage = createItemStorage();
 
         // Fill tank completely
         fluidStorage.set(TANK_SLOT, FluidResource.of(Fluids.WATER), FluidType.BUCKET_VOLUME);
@@ -138,8 +138,8 @@ public class InternalTankTasksTests {
     @Test
     public void testFillInternalWithOutputSlotFull() {
         // Arrange
-        FluidStorage<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
-        ItemStorage<Void> itemStorage = createItemStorage();
+        EnderFluidHandler<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
+        EnderItemHandler<Void> itemStorage = createItemStorage();
 
         // Set up input: water bucket
         itemStorage.set(INPUT_SLOT, ItemResource.of(Items.WATER_BUCKET), 1);
@@ -161,8 +161,8 @@ public class InternalTankTasksTests {
     @Test
     public void testFillInternalWithEmptyInput() {
         // Arrange
-        FluidStorage<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
-        ItemStorage<Void> itemStorage = createItemStorage();
+        EnderFluidHandler<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
+        EnderItemHandler<Void> itemStorage = createItemStorage();
 
         // Input is empty
         itemStorage.set(INPUT_SLOT, ItemResource.of(ItemStack.EMPTY), 0);
@@ -180,8 +180,8 @@ public class InternalTankTasksTests {
     @Test
     public void testFillInternalWithInvalidInput() {
         // Arrange
-        FluidStorage<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
-        ItemStorage<Void> itemStorage = createItemStorage();
+        EnderFluidHandler<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
+        EnderItemHandler<Void> itemStorage = createItemStorage();
 
         // Set up input: cobblestone (not a bucket)
         itemStorage.set(INPUT_SLOT, ItemResource.of(Items.COBBLESTONE), 1);
@@ -201,8 +201,8 @@ public class InternalTankTasksTests {
     @Test
     public void testFillInternalWithDifferentFluidType() {
         // Arrange
-        FluidStorage<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
-        ItemStorage<Void> itemStorage = createItemStorage();
+        EnderFluidHandler<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
+        EnderItemHandler<Void> itemStorage = createItemStorage();
 
         // Tank already has water
         fluidStorage.set(TANK_SLOT, FluidResource.of(Fluids.WATER), FluidType.BUCKET_VOLUME);
@@ -227,8 +227,8 @@ public class InternalTankTasksTests {
     @Test
     public void testFillInternalWithOutputSlotBlocked() {
         // Arrange
-        FluidStorage<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
-        ItemStorage<Void> itemStorage = createItemStorage();
+        EnderFluidHandler<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
+        EnderItemHandler<Void> itemStorage = createItemStorage();
 
         // Set up input: water bucket
         itemStorage.set(INPUT_SLOT, ItemResource.of(Items.WATER_BUCKET), 1);
@@ -255,8 +255,8 @@ public class InternalTankTasksTests {
     @Test
     public void testFillInternalWithFluidContainer() {
         // Arrange
-        FluidStorage<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
-        ItemStorage<Void> itemStorage = createItemStorage();
+        EnderFluidHandler<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
+        EnderItemHandler<Void> itemStorage = createItemStorage();
 
         // Create a fluid container with 500mb of water (half a bucket)
         ItemStack fluidContainer = getFilledFluidTank(Fluids.WATER, 500);
@@ -279,8 +279,8 @@ public class InternalTankTasksTests {
     @Test
     public void testFillInternalWithFluidContainerToPartiallyFilledTank() {
         // Arrange
-        FluidStorage<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
-        ItemStorage<Void> itemStorage = createItemStorage();
+        EnderFluidHandler<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
+        EnderItemHandler<Void> itemStorage = createItemStorage();
 
         // Pre-fill tank with 1 bucket
         fluidStorage.set(TANK_SLOT, FluidResource.of(Fluids.WATER), FluidType.BUCKET_VOLUME);
@@ -304,8 +304,8 @@ public class InternalTankTasksTests {
     @Test
     public void testFillInternalWithFluidContainerExceedingCapacity() {
         // Arrange - tank can only hold 2 buckets
-        FluidStorage<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 2);
-        ItemStorage<Void> itemStorage = createItemStorage();
+        EnderFluidHandler<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 2);
+        EnderItemHandler<Void> itemStorage = createItemStorage();
 
         // Create a fluid container with 3 buckets of water (more than tank capacity)
         ItemStack fluidContainer = getFilledFluidTank(Fluids.WATER, FluidType.BUCKET_VOLUME * 3);
@@ -334,8 +334,8 @@ public class InternalTankTasksTests {
     @Test
     public void testFillInternalWithEmptyFluidContainer() {
         // Arrange
-        FluidStorage<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
-        ItemStorage<Void> itemStorage = createItemStorage();
+        EnderFluidHandler<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
+        EnderItemHandler<Void> itemStorage = createItemStorage();
 
         // Create an empty fluid container
         ItemStack emptyContainer = getFilledFluidTank(Fluids.WATER, 0);
@@ -356,8 +356,8 @@ public class InternalTankTasksTests {
     @Test
     public void testFillInternalWithFluidContainerWhenOutputNotEmpty() {
         // Arrange
-        FluidStorage<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
-        ItemStorage<Void> itemStorage = createItemStorage();
+        EnderFluidHandler<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
+        EnderItemHandler<Void> itemStorage = createItemStorage();
 
         // Create a fluid container with water
         ItemStack fluidContainer = getFilledFluidTank(Fluids.WATER, FluidType.BUCKET_VOLUME);
@@ -381,8 +381,8 @@ public class InternalTankTasksTests {
     @Test
     public void testFillInternalWithFluidContainerDifferentFluidTypes() {
         // Arrange
-        FluidStorage<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
-        ItemStorage<Void> itemStorage = createItemStorage();
+        EnderFluidHandler<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
+        EnderItemHandler<Void> itemStorage = createItemStorage();
 
         // Pre-fill tank with water
         fluidStorage.set(TANK_SLOT, FluidResource.of(Fluids.WATER), FluidType.BUCKET_VOLUME);
@@ -421,8 +421,8 @@ public class InternalTankTasksTests {
     @Test
     public void testDrainInternalWithEmptyBucket() {
         // Arrange
-        FluidStorage<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
-        ItemStorage<Void> itemStorage = createItemStorage();
+        EnderFluidHandler<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
+        EnderItemHandler<Void> itemStorage = createItemStorage();
 
         // Tank has water
         fluidStorage.set(TANK_SLOT, FluidResource.of(Fluids.WATER), FluidType.BUCKET_VOLUME);
@@ -447,8 +447,8 @@ public class InternalTankTasksTests {
     @Test
     public void testDrainInternalWithWaterBucketItem() {
         // Arrange
-        FluidStorage<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
-        ItemStorage<Void> itemStorage = createItemStorage();
+        EnderFluidHandler<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
+        EnderItemHandler<Void> itemStorage = createItemStorage();
 
         // Tank has water
         fluidStorage.set(TANK_SLOT, FluidResource.of(Fluids.WATER), FluidType.BUCKET_VOLUME);
@@ -471,8 +471,8 @@ public class InternalTankTasksTests {
     @Test
     public void testDrainInternalWithEmptyFluidTank() {
         // Arrange
-        FluidStorage<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
-        ItemStorage<Void> itemStorage = createItemStorage();
+        EnderFluidHandler<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
+        EnderItemHandler<Void> itemStorage = createItemStorage();
 
         // Tank has water
         fluidStorage.set(TANK_SLOT, FluidResource.of(Fluids.WATER), FluidType.BUCKET_VOLUME);
@@ -506,8 +506,8 @@ public class InternalTankTasksTests {
     @Test
     public void testDrainInternalWithFullFluidTank() {
         // Arrange
-        FluidStorage<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
-        ItemStorage<Void> itemStorage = createItemStorage();
+        EnderFluidHandler<Void> fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
+        EnderItemHandler<Void> itemStorage = createItemStorage();
 
         // Tank has water
         fluidStorage.set(TANK_SLOT, FluidResource.of(Fluids.WATER), FluidType.BUCKET_VOLUME);

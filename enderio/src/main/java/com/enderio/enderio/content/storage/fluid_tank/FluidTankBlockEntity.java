@@ -1,5 +1,6 @@
 package com.enderio.enderio.content.storage.fluid_tank;
 
+import com.enderio.core.common.storage.EnderFluidHandler;
 import com.enderio.core.common.storage.layout.FluidStorageLayout;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
@@ -7,7 +8,6 @@ import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import com.enderio.enderio.foundation.io.fluid.FluidItemInteractive;
 import com.enderio.enderio.foundation.state.MachineState;
-import com.enderio.core.common.storage.FluidStorage;
 import com.enderio.enderio.foundation.storage.IOConfigurableExternalDelegatingResourceStorage;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
@@ -86,7 +86,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
             .storageSlot(TANK_SLOT, slot -> slot.capacity((fr, tank) -> tank.getCapacity()))
             .build();
 
-    private final FluidStorage<FluidTankBlockEntity> fluidStorage;
+    private final EnderFluidHandler<FluidTankBlockEntity> fluidStorage;
 
     // TODO: Swap from optional to nullable?
     private Optional<RecipeHolder<TankRecipe>> currentRecipe = Optional.empty();
@@ -99,7 +99,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
     public FluidTankBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState, true);
 
-        fluidStorage = new FluidStorage<>(FLUID_STORAGE_LAYOUT, this) {
+        fluidStorage = new EnderFluidHandler<>(FLUID_STORAGE_LAYOUT, this) {
             @Override
             protected void onContentsChanged(int index, FluidStack previousContents) {
                 onTankContentsChanged();
@@ -116,7 +116,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
     public abstract int getCapacity();
 
-    public FluidStorage<FluidTankBlockEntity> getFluidStorage() {
+    public EnderFluidHandler<FluidTankBlockEntity> getFluidStorage() {
         return fluidStorage;
     }
 

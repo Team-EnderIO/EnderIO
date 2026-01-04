@@ -1,6 +1,6 @@
 package com.enderio.core.common.util;
 
-import com.enderio.core.common.storage.ResourceStorage;
+import com.enderio.core.common.storage.EnderResourceHandler;
 import com.enderio.core.common.storage.slot.ResourceSlotId;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -29,7 +29,7 @@ public class EnderResourceUtil {
         return resource.toStack(amount);
     }
 
-    public static ItemStack getItemStack(ResourceStorage<ItemResource> storage, ResourceSlotId<ItemResource> slotId) {
+    public static ItemStack getItemStack(EnderResourceHandler<ItemResource> storage, ResourceSlotId<ItemResource> slotId) {
         return getItemStack(storage, slotId.index(storage.layout()));
     }
 
@@ -41,11 +41,11 @@ public class EnderResourceUtil {
         return ItemAccess.forHandlerIndexStrict(handler, index);
     }
 
-    public static ItemAccess getItemAccess(ResourceStorage<ItemResource> storage, ResourceSlotId<ItemResource> slotId) {
+    public static ItemAccess getItemAccess(EnderResourceHandler<ItemResource> storage, ResourceSlotId<ItemResource> slotId) {
         return getItemAccess(storage, slotId.index(storage.layout()));
     }
 
-    public static ItemAccess getItemAccessStrict(ResourceStorage<ItemResource> storage, ResourceSlotId<ItemResource> slotId) {
+    public static ItemAccess getItemAccessStrict(EnderResourceHandler<ItemResource> storage, ResourceSlotId<ItemResource> slotId) {
         return getItemAccessStrict(storage, slotId.index(storage.layout()));
     }
 
@@ -59,7 +59,7 @@ public class EnderResourceUtil {
         return resource.toStack(amount);
     }
 
-    public static FluidStack getFluidStack(ResourceStorage<FluidResource> storage, ResourceSlotId<FluidResource> slotId) {
+    public static FluidStack getFluidStack(EnderResourceHandler<FluidResource> storage, ResourceSlotId<FluidResource> slotId) {
         return getFluidStack(storage, slotId.index(storage.layout()));
     }
 
@@ -94,7 +94,7 @@ public class EnderResourceUtil {
         }
     }
 
-    public static <T extends Resource> boolean exchange(ResourceStorage<T> storage, ResourceSlotId<T> from, ResourceSlotId<T> to, T emptyResource, @Nullable TransactionContext transaction) {
+    public static <T extends Resource> boolean exchange(EnderResourceHandler<T> storage, ResourceSlotId<T> from, ResourceSlotId<T> to, T emptyResource, @Nullable TransactionContext transaction) {
         return exchange(storage, from.index(storage.layout()), to.index(storage.layout()), transaction);
     }
 
@@ -119,7 +119,7 @@ public class EnderResourceUtil {
 
     public static <T extends Resource> int moveInto(
         @Nullable ResourceHandler<T> from,
-        @Nullable ResourceStorage<T> to,
+        @Nullable EnderResourceHandler<T> to,
         ResourceSlotId<T> toId,
         Predicate<T> filter,
         int amount,

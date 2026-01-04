@@ -1,7 +1,7 @@
 package com.enderio.enderio.content.machines.vat;
 
 import com.enderio.core.common.recipes.OutputStack;
-import com.enderio.core.common.storage.FluidStorage;
+import com.enderio.core.common.storage.EnderFluidHandler;
 import com.enderio.core.common.storage.layout.FluidStorageLayout;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.core.common.util.EnderResourceUtil;
@@ -63,13 +63,13 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
             .storageSlot(OUTPUT_TANK, slot -> slot.capacity(TANK_CAPACITY))
             .build();
 
-    private final FluidStorage<VatBlockEntity> fluidStorage;
+    private final EnderFluidHandler<VatBlockEntity> fluidStorage;
     private final CraftingMachineTaskHost<FermentingRecipe, FermentingRecipe.Input> craftingTaskHost;
 
     public VatBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.VAT.get(), worldPosition, blockState, true);
 
-        fluidStorage = new FluidStorage<>(FLUID_STORAGE_LAYOUT, this) {
+        fluidStorage = new EnderFluidHandler<>(FLUID_STORAGE_LAYOUT, this) {
             @Override
             protected void onContentsChanged(int index, FluidStack previousContents) {
                 super.onContentsChanged(index, previousContents);
@@ -85,7 +85,7 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
                 this::createTask, this::createRecipeInput);
     }
 
-    public FluidStorage<VatBlockEntity> getFluidStorage() {
+    public EnderFluidHandler<VatBlockEntity> getFluidStorage() {
         return fluidStorage;
     }
 
@@ -177,7 +177,7 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
             extends CraftingMachineTask<FermentingRecipe, FermentingRecipe.Input> {
 
         public VatCraftingMachineTask(@NotNull Level level, MachineInventory inventory,
-                FluidStorage<VatBlockEntity> fluidStorage, FermentingRecipe.Input input,
+                EnderFluidHandler<VatBlockEntity> fluidStorage, FermentingRecipe.Input input,
                 @Nullable RecipeHolder<FermentingRecipe> recipe) {
             super(level, inventory, fluidStorage, input, recipe);
         }

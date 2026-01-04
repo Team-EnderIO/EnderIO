@@ -1,7 +1,7 @@
 package com.enderio.enderio.content.machines.obelisks.weather;
 
 import com.enderio.core.common.recipes.OutputStack;
-import com.enderio.core.common.storage.FluidStorage;
+import com.enderio.core.common.storage.EnderFluidHandler;
 import com.enderio.core.common.storage.layout.FluidStorageLayout;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.io.IOMode;
@@ -63,13 +63,13 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity {
             .storageSlot(TANK_SLOT, slot -> slot.capacity(TANK_CAPACITY))
             .build();
 
-    private final FluidStorage<WeatherObeliskBlockEntity> fluidStorage;
+    private final EnderFluidHandler<WeatherObeliskBlockEntity> fluidStorage;
     private final CraftingMachineTaskHost<WeatherChangeRecipe, WeatherChangeRecipe.Input> craftingTaskHost;
 
     public WeatherObeliskBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.WEATHER_OBELISK.get(), worldPosition, blockState, false);
 
-        fluidStorage = new FluidStorage<>(FLUID_STORAGE_LAYOUT, this) {
+        fluidStorage = new EnderFluidHandler<>(FLUID_STORAGE_LAYOUT, this) {
             @Override
             protected void onContentsChanged(int index, FluidStack previousContents) {
                 super.onContentsChanged(index, previousContents);

@@ -1,6 +1,6 @@
 package com.enderio.enderio.content.machines.soul_binder;
 
-import com.enderio.core.common.storage.FluidStorage;
+import com.enderio.core.common.storage.EnderFluidHandler;
 import com.enderio.core.common.storage.layout.FluidStorageLayout;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.UseOnly;
@@ -76,7 +76,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
                 .filter((index, resource, binder) -> resource.is(Tags.Fluids.EXPERIENCE)))
             .build();
 
-    private final FluidStorage<SoulBinderBlockEntity> fluidStorage;
+    private final EnderFluidHandler<SoulBinderBlockEntity> fluidStorage;
 
     public static final SingleSlotAccess INPUT_SOUL = new SingleSlotAccess();
     public static final SingleSlotAccess INPUT_OTHER = new SingleSlotAccess();
@@ -92,7 +92,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
         super(EIOBlockEntities.SOUL_BINDER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
                 EnergyIOMode.Input, CAPACITY, USAGE);
 
-        fluidStorage = new FluidStorage<>(FLUID_STORAGE_LAYOUT, this) {
+        fluidStorage = new EnderFluidHandler<>(FLUID_STORAGE_LAYOUT, this) {
             @Override
             protected void onContentsChanged(int index, FluidStack previousContents) {
                 super.onContentsChanged(index, previousContents);

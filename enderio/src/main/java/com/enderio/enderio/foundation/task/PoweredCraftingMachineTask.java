@@ -1,7 +1,6 @@
 package com.enderio.enderio.foundation.task;
 
-import com.enderio.core.common.storage.FluidStorage;
-import com.enderio.core.common.storage.ResourceStorage;
+import com.enderio.core.common.storage.EnderResourceHandler;
 import com.enderio.enderio.foundation.MachineRecipe;
 import com.enderio.enderio.foundation.energy.MachineEnergyHandler;
 import com.enderio.enderio.foundation.inventory.MachineInventory;
@@ -21,8 +20,8 @@ public abstract class PoweredCraftingMachineTask<R extends MachineRecipe<C>, C e
     private final MachineEnergyHandler energyStorage;
 
     public PoweredCraftingMachineTask(@NotNull Level level, MachineInventory inventory,
-        @Nullable ResourceStorage<FluidResource> fluidStorage, MachineEnergyHandler energyStorage, C container, MultiSlotAccess outputSlots,
-        @Nullable RecipeHolder<R> recipe) {
+                                      @Nullable EnderResourceHandler<FluidResource> fluidStorage, MachineEnergyHandler energyStorage, C container, MultiSlotAccess outputSlots,
+                                      @Nullable RecipeHolder<R> recipe) {
         super(level, inventory, fluidStorage, container, outputSlots, recipe);
         this.energyStorage = energyStorage;
     }

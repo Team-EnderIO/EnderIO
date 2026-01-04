@@ -1,8 +1,7 @@
 package com.enderio.enderio.foundation.storage;
 
-import com.enderio.core.common.storage.ResourceStorage;
+import com.enderio.core.common.storage.EnderResourceHandler;
 import com.enderio.core.common.storage.delegates.ExternalDelegatingResourceStorage;
-import com.enderio.core.common.storage.delegates.ExternalResourceHandlerSlotConfig;
 import com.enderio.enderio.api.io.IOConfigurable;
 import net.minecraft.core.Direction;
 import net.neoforged.neoforge.transfer.ResourceHandler;
@@ -18,7 +17,7 @@ public final class IOConfigurableExternalDelegatingResourceStorage<T extends Res
 
     // TODO: Move this to a handler utility class?
     @Nullable
-    public static <T extends Resource> ResourceHandler<T> of(ResourceStorage<T> handler, @Nullable Direction face, IOConfigurable config) {
+    public static <T extends Resource> ResourceHandler<T> of(EnderResourceHandler<T> handler, @Nullable Direction face, IOConfigurable config) {
         if (face == null) {
             return handler;
         }
@@ -31,7 +30,7 @@ public final class IOConfigurableExternalDelegatingResourceStorage<T extends Res
     }
 
     private IOConfigurableExternalDelegatingResourceStorage(
-        ResourceStorage<T> delegate,
+        EnderResourceHandler<T> delegate,
         @Nullable Direction face,
         IOConfigurable config) {
         super(delegate);
@@ -40,7 +39,7 @@ public final class IOConfigurableExternalDelegatingResourceStorage<T extends Res
     }
 
     private IOConfigurableExternalDelegatingResourceStorage(
-        Supplier<ResourceStorage<T>> delegate,
+        Supplier<EnderResourceHandler<T>> delegate,
         @Nullable Direction face,
         IOConfigurable config) {
         super(delegate);

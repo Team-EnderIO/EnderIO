@@ -1,7 +1,7 @@
 package com.enderio.enderio.foundation.task;
 
 import com.enderio.core.common.recipes.OutputStack;
-import com.enderio.core.common.storage.ResourceStorage;
+import com.enderio.core.common.storage.EnderResourceHandler;
 import com.enderio.enderio.foundation.MachineRecipe;
 import com.enderio.enderio.foundation.inventory.MachineInventory;
 import com.enderio.enderio.foundation.inventory.MultiSlotAccess;
@@ -33,7 +33,7 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
     protected final Level level;
     protected final MachineInventory inventory;
     @Nullable
-    protected final ResourceStorage<FluidResource> fluidStorage;
+    protected final EnderResourceHandler<FluidResource> fluidStorage;
     @Nullable
     protected final MultiSlotAccess outputSlots;
     protected final T recipeInput;
@@ -62,13 +62,13 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
     }
 
     public CraftingMachineTask(Level level, MachineInventory inventory,
-            @Nullable ResourceStorage<FluidResource> fluidStorage, T recipeInput, @Nullable RecipeHolder<R> recipe) {
+                               @Nullable EnderResourceHandler<FluidResource> fluidStorage, T recipeInput, @Nullable RecipeHolder<R> recipe) {
         this(level, inventory, fluidStorage, recipeInput, null, recipe);
     }
 
     public CraftingMachineTask(Level level, MachineInventory inventory,
-            @Nullable ResourceStorage<FluidResource> fluidStorage, T recipeInput, @Nullable MultiSlotAccess outputSlots,
-            @Nullable RecipeHolder<R> recipe) {
+                               @Nullable EnderResourceHandler<FluidResource> fluidStorage, T recipeInput, @Nullable MultiSlotAccess outputSlots,
+                               @Nullable RecipeHolder<R> recipe) {
         this.level = level;
         this.inventory = inventory;
         this.fluidStorage = fluidStorage;

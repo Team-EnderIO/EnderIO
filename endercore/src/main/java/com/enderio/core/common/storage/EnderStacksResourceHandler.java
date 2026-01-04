@@ -24,7 +24,7 @@ import java.util.Objects;
  * @apiNote Not designed for exposure as a capability directly, a delegate should be used instead.
  * {@link com.enderio.core.common.storage.delegates.ExternalDelegatingResourceStorage} is provided for this purpose, it will respect the canInsertExternal and canExtractExternal slot config flags.
  */
-public abstract class StacksResourceStorage<T extends Resource, S, C> implements ResourceStorage<T>, ValueIOSerializable {
+public abstract class EnderStacksResourceHandler<T extends Resource, S, C> implements EnderResourceHandler<T>, ValueIOSerializable {
 
     private final ResourceStorageLayout<T, C> layout;
     protected final C context;
@@ -34,7 +34,7 @@ public abstract class StacksResourceStorage<T extends Resource, S, C> implements
 
     protected NonNullList<S> stacks;
 
-    protected StacksResourceStorage(ResourceStorageLayout<T, C> layout, C context, S emptyStack, Codec<S> stackCodec) {
+    protected EnderStacksResourceHandler(ResourceStorageLayout<T, C> layout, C context, S emptyStack, Codec<S> stackCodec) {
         this.layout = layout;
         this.context = context;
         this.emptyStack = emptyStack;
@@ -205,15 +205,15 @@ public abstract class StacksResourceStorage<T extends Resource, S, C> implements
         }
 
         protected S createSnapshot() {
-            return (S) StacksResourceStorage.this.copyOf(StacksResourceStorage.this.stacks.get(this.index));
+            return (S) EnderStacksResourceHandler.this.copyOf(EnderStacksResourceHandler.this.stacks.get(this.index));
         }
 
         protected void revertToSnapshot(S snapshot) {
-            StacksResourceStorage.this.stacks.set(this.index, snapshot);
+            EnderStacksResourceHandler.this.stacks.set(this.index, snapshot);
         }
 
         protected void onRootCommit(S originalState) {
-            StacksResourceStorage.this.onContentsChanged(this.index, originalState);
+            EnderStacksResourceHandler.this.onContentsChanged(this.index, originalState);
         }
     }
 }

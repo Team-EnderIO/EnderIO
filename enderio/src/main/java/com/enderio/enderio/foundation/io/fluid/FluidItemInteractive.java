@@ -1,6 +1,6 @@
 package com.enderio.enderio.foundation.io.fluid;
 
-import com.enderio.core.common.storage.ResourceStorage;
+import com.enderio.core.common.storage.EnderResourceHandler;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -20,7 +20,7 @@ public interface FluidItemInteractive {
 
     // TODO: 1.21.11: Check this still works as expected - I'd like to see gametests or unit tests too.
     // Requires direct tank access which is undesirable. MachineFluidHandler would be better to for multi-tank block.
-    default boolean handleFluidItemInteraction(Player player, InteractionHand hand, ItemStack itemStack, ResourceStorage<FluidResource> fluidStorage,
+    default boolean handleFluidItemInteraction(Player player, InteractionHand hand, ItemStack itemStack, EnderResourceHandler<FluidResource> fluidStorage,
         SingleResourceSlotKey<FluidResource> tankSlot) {
         ItemStack copyStack = itemStack.copyWithCount(1);
         var itemFluidHandler = ItemAccess.forStack(copyStack).getCapability(Capabilities.Fluid.ITEM);

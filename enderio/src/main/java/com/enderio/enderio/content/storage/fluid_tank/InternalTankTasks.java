@@ -1,6 +1,6 @@
 package com.enderio.enderio.content.storage.fluid_tank;
 
-import com.enderio.core.common.storage.ResourceStorage;
+import com.enderio.core.common.storage.EnderResourceHandler;
 import com.enderio.core.common.storage.slot.ResourceSlotId;
 import com.enderio.core.common.util.EnderResourceUtil;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
@@ -25,7 +25,7 @@ public class InternalTankTasks {
     // TODO: enable fluid tanks to receive stackable fluid containers
     public static <T extends MachineBlockEntity> void fillInternal(
         T blockEntity,
-        ResourceStorage<FluidResource> fluidStorage,
+        EnderResourceHandler<FluidResource> fluidStorage,
         ResourceSlotId<FluidResource> tankSlot,
         SingleSlotAccess fluidFillInput,
         SingleSlotAccess fluidFillOutput
@@ -74,7 +74,7 @@ public class InternalTankTasks {
     // TODO: enable fluid tanks to receive stackable fluid containers
     public static <T extends MachineBlockEntity> void drainInternal(
         T blockEntity,
-        ResourceStorage<FluidResource> fluidStorage,
+        EnderResourceHandler<FluidResource> fluidStorage,
         ResourceSlotId<FluidResource> tankSlot,
         SingleSlotAccess fluidDrainInput,
         SingleSlotAccess fluidDrainOutput
@@ -125,7 +125,7 @@ public class InternalTankTasks {
 
     public static <T extends MachineBlockEntity> void tryMendTool(
         T blockEntity,
-        ResourceStorage<FluidResource> fluidStorage,
+        EnderResourceHandler<FluidResource> fluidStorage,
         ResourceSlotId<FluidResource> tankSlot,
         SingleSlotAccess fluidDrainInput,
         SingleSlotAccess fluidDrainOutput

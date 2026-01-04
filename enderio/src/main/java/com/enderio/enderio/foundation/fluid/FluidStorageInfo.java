@@ -1,6 +1,6 @@
 package com.enderio.enderio.foundation.fluid;
 
-import com.enderio.core.common.storage.ResourceStorage;
+import com.enderio.core.common.storage.EnderResourceHandler;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.transfer.ResourceHandler;
@@ -14,7 +14,7 @@ public record FluidStorageInfo(FluidStack contents, int capacity) {
         return new FluidStorageInfo(resource.toStack(handler.getAmountAsInt(index)), handler.getCapacityAsInt(index, resource));
     }
 
-    public static FluidStorageInfo of(ResourceStorage<FluidResource> storage, SingleResourceSlotKey<FluidResource> slot) {
+    public static FluidStorageInfo of(EnderResourceHandler<FluidResource> storage, SingleResourceSlotKey<FluidResource> slot) {
         var resource = storage.getResource(slot);
         return new FluidStorageInfo(resource.toStack(storage.getAmountAsInt(slot)), storage.getCapacityAsInt(slot, resource));
     }
