@@ -70,13 +70,6 @@ public class RefinedStorageCommonModule implements ConduitCommonModule {
     public static final Supplier<ConduitDataType<RSNetworkHost>> LEGACY_DATA_TYPE = CONDUIT_DATA_TYPES.register("rs",
             () -> new ConduitDataType<>(RSNetworkHost.CODEC, RSNetworkHost.STREAM_CODEC, RSNetworkHost::new));
 
-    private static final Component LANG_RS_CONDUIT = addTranslation("item", EnderIO.rl("rs"),
-            "Refined Storage Conduit");
-
-    private static MutableComponent addTranslation(String prefix, ResourceLocation id, String translation) {
-        return ModdedConduits.REGILITE.addTranslation(prefix, id, translation);
-    }
-
     @Override
     public void initialize(IEventBus modEventBus) {
         CONDUIT_TYPES.register(modEventBus);
@@ -87,7 +80,7 @@ public class RefinedStorageCommonModule implements ConduitCommonModule {
 
     @Override
     public void bootstrapConduits(BootstrapContext<Conduit<?, ?>> context) {
-        context.register(ConduitKeys.RS, new RSConduit(EnderIO.rl("block/conduit/rs"), LANG_RS_CONDUIT));
+        context.register(ConduitKeys.RS, new RSConduit(EnderIO.rl("block/conduit/rs"), Component.translatable(ConduitApi.INSTANCE.makeDescriptionId(ConduitKeys.RS))));
     }
 
     @Override

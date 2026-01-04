@@ -7,7 +7,6 @@ import com.enderio.modded_conduits.common.modules.appeng.AE2ConduitsModule;
 import com.enderio.modded_conduits.common.modules.mekanism.MekanismModule;
 import com.enderio.modded_conduits.common.modules.refinedstorage.RefinedStorageCommonModule;
 import com.enderio.modded_conduits.data.ModConduitRecipeProvider;
-import com.enderio.regilite.Regilite;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceKey;
@@ -33,7 +32,6 @@ public class ModdedConduits {
     public static final String MOD_ID = EnderIO.MOD_ID + "_modded_conduits";
 
     // TODO: 1.22 - our own mod id.
-    public static final Regilite REGILITE = new Regilite(EnderIO.MOD_ID);
 
     private static final Map<String, Supplier<ConduitCommonModule>> CONDUIT_MODULES = Map.ofEntries(
             entry(ModuleModIds.APPLIED_ENERGISTICS, () -> AE2ConduitsModule.INSTANCE),
@@ -45,7 +43,6 @@ public class ModdedConduits {
     public ModdedConduits(IEventBus modEventBus) {
         ModdedConduits.modEventBus = modEventBus;
         executeOnLoadedModules(module -> module.initialize(modEventBus));
-        REGILITE.register(modEventBus);
     }
 
     public static void buildConduitConditions(BiConsumer<ResourceKey<?>, ICondition> conditions) {
