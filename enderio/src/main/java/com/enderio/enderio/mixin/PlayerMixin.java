@@ -16,8 +16,8 @@ public abstract class PlayerMixin extends LivingEntity {
         super(entityType, level);
     }
 
-    @ModifyReturnValue(method = "canInteractWithBlock", at = @At("RETURN"))
-    private boolean allowIfValidEnderface(boolean original, BlockPos pos, double distanceBoost) {
+    @ModifyReturnValue(method = "isWithinBlockInteractionRange", at = @At("RETURN"))
+    private boolean enderio$isWithinBlockInteractionRangeEnderface(boolean original, BlockPos pos, double distanceBoost) {
         return original || EnderfaceBlockEntity.canPlayerInteractWithBlock((Player) (Object) this, this.level(), pos);
     }
 }

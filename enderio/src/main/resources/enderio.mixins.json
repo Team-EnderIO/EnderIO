@@ -3,12 +3,12 @@
     "package" : "com.enderio.enderio.mixin",
     "compatibilityLevel" : "JAVA_17",
     "mixins" : [
-//        "PlayerMixin",
+        "PlayerMixin",
         "RecipeManagerMixin"
     ],
     "client" : [
 //        "GliderRotationMixin",
-//        "BlockRenderDispatcherMixin"
+        "BlockRenderDispatcherMixin"
     ],
     "minVersion" : "0.8"
 }

@@ -7,7 +7,6 @@ import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.model.data.ModelData;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -17,8 +16,8 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
  */
 @Mixin(BlockRenderDispatcher.class)
 public class BlockRenderDispatcherMixin {
-    @ModifyVariable(method = "renderBreakingTexture(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/BlockAndTintGetter;Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;Lnet/neoforged/neoforge/client/model/data/ModelData;)V", at = @At("HEAD"), ordinal = 0, argsOnly = true)
-    private BlockState enderio$getFacade(BlockState state, BlockState argState, BlockPos argPos, BlockAndTintGetter argLevel, PoseStack argPoseStack, VertexConsumer argConsumer, ModelData argModelData) {
+    @ModifyVariable(method = "renderBreakingTexture", at = @At("HEAD"), ordinal = 0, argsOnly = true)
+    private BlockState enderio$getFacade(BlockState state, BlockState argState, BlockPos argPos, BlockAndTintGetter argLevel, PoseStack argPoseStack, VertexConsumer argConsumer) {
         BlockState facadeState = ConduitBundleBlockEntity.FACADES.getOrDefault(argPos.asLong(), null);
         return facadeState == null ? state : facadeState;
     }
