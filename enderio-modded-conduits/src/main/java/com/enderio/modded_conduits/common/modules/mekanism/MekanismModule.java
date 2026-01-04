@@ -60,6 +60,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.ItemCapability;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -181,10 +182,25 @@ public class MekanismModule implements ConduitCommonModule {
         CONDUIT_NETWORK_CONTEXT_TYPES.register(modEventBus);
         DATA_COMPONENT_TYPES.register(modEventBus);
         modEventBus.addListener(this::registerPayloadHandlers);
+        modEventBus.addListener(this::registerCapabilities);
 
         if (ModList.get().isLoaded("laserio")) {
             MekanismLaserIOCompat.init(modEventBus);
         }
+    }
+
+    private void registerCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerItem(
+            Capabilities.CHEMICAL_FILTER,
+            EnderChemicalFilterItem.CHEMICAL_FILTER_PROVIDER,
+            BASIC_CHEMICAL_FILTER.get()
+        );
+
+        event.registerItem(
+            EnderIOCapabilities.FILTER_MENU_PROVIDER,
+            AbstractFilterItem.FILTER_MENU_PROVIDER,
+            BASIC_CHEMICAL_FILTER.get()
+        );
     }
 
     @Override
