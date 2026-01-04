@@ -94,9 +94,9 @@ public class RedstoneFilterItem extends Item {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
         
         // Create a filter instance to check if it's configured
-        RedstoneFilter filter = stack.getCapability(EnderIOCapabilities.REDSTONE_EXTRACT_FILTER, null);
+        RedstoneFilter filter = stack.getCapability(EnderIOCapabilities.REDSTONE_INSERT_FILTER, null);
         if (filter == null) {
-            filter = stack.getCapability(EnderIOCapabilities.REDSTONE_INSERT_FILTER, null);
+            filter = stack.getCapability(EnderIOCapabilities.REDSTONE_EXTRACT_FILTER, null);
         }
 
         if (filter != null) {
