@@ -4,6 +4,7 @@ import com.enderio.core.common.registries.FluidDeferredHolders;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.ConduitApi;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.compat.jei.JEILang;
 import com.enderio.enderio.content.advancements.AdvancementsLang;
@@ -264,6 +265,7 @@ public class EIOLanguageProvider extends LanguageProvider {
 
     private void addFiltersLang() {
         add(FiltersLang.CONFIGURED, "Configured");
+        add(FiltersLang.UNCONFIGURED_HINT, "Use while crouching to configure");
         add(FiltersLang.FILTER_CONFIG_NOT_ALLOWED_COMPONENT_MATCH, "This filter uses component matching which is no longer available to this item. Clear this filter using the crafting grid to remove this warning.");
 
         add(FiltersLang.FILTER_ALLOW_LIST, "Allow List");
@@ -758,7 +760,7 @@ public class EIOLanguageProvider extends LanguageProvider {
     }
 
     private void add(ResourceKey<Conduit<?, ?>> key, String translation) {
-        add(Component.translatable(Util.makeDescriptionId(EnderIORegistries.Keys.CONDUIT.identifier().getPath(), key.identifier())), translation);
+        add(ConduitApi.INSTANCE.makeDescriptionId(key), translation);
     }
 
     private void add(Component component, String translation) {

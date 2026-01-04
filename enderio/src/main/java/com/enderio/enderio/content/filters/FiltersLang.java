@@ -9,6 +9,7 @@ import net.minecraft.util.Util;
 public class FiltersLang {
 
     public static final MutableComponent CONFIGURED = tooltip("configured");
+    public static final MutableComponent UNCONFIGURED_HINT = tooltip("unconfigured_hint").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC);
     public static final MutableComponent FILTER_CONFIG_NOT_ALLOWED_COMPONENT_MATCH = tooltip("not_allowed_component_match").withStyle(ChatFormatting.RED);
 
     public static final Component FILTER_ALLOW_LIST = gui("allow_list");

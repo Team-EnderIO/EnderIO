@@ -13,7 +13,6 @@ import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.node.NodeDataType;
 import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataType;
 import com.enderio.enderio.init.EIOItems;
-import com.enderio.modded_conduits.common.ModdedConduits;
 import com.enderio.modded_conduits.common.modules.ConduitCommonModule;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
@@ -23,9 +22,8 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -73,25 +71,17 @@ public class AE2ConduitsModule implements ConduitCommonModule {
     public static final Supplier<NodeDataType<MEConduitNodeData>> ME_NODE_DATA = CONDUIT_NODE_DATA_TYPES.register("me",
             () -> MEConduitNodeData.TYPE);
 
-    private static final Component LANG_ME_CONDUIT = addTranslation("item", EnderIO.rl("conduit.me"), "ME Conduit");
-    private static final Component LANG_DENSE_ME_CONDUIT = addTranslation("item", EnderIO.rl("conduit.dense_me"),
-            "Dense ME Conduit");
-
-    private static MutableComponent addTranslation(String prefix, Identifier id, String translation) {
-        return ModdedConduits.REGILITE.addTranslation(prefix, id, translation);
-    }
-
     public static final ResourceKey<Conduit<?, ?>> NORMAL = ResourceKey.create(EnderIORegistries.Keys.CONDUIT,
             EnderIO.rl("me"));
     public static final ResourceKey<Conduit<?, ?>> DENSE = ResourceKey.create(EnderIORegistries.Keys.CONDUIT,
             EnderIO.rl("dense_me"));
 
     private static final TagKey<Item> COVERED_DENSE_CABLE = ItemTags
-            .create(Identifier.fromNamespaceAndPath("ae2", "covered_dense_cable"));
+            .create(ResourceLocation.fromNamespaceAndPath("ae2", "covered_dense_cable"));
     private static final TagKey<Item> COVERED_CABLE = ItemTags
-            .create(Identifier.fromNamespaceAndPath("ae2", "covered_cable"));
+            .create(ResourceLocation.fromNamespaceAndPath("ae2", "covered_cable"));
     private static final TagKey<Item> GLASS_CABLE = ItemTags
-            .create(Identifier.fromNamespaceAndPath("ae2", "glass_cable"));
+            .create(ResourceLocation.fromNamespaceAndPath("ae2", "glass_cable"));
 
     static {
         // TODO: 1.22 - remove backward compatibility.
@@ -116,9 +106,11 @@ public class AE2ConduitsModule implements ConduitCommonModule {
     @Override
     public void bootstrapConduits(BootstrapContext<Conduit<?, ?>> context) {
         context.register(NORMAL,
-                new MEConduit(EnderIO.rl("block/conduit/me"), LANG_ME_CONDUIT, AEColor.TRANSPARENT, false));
+                new MEConduit(EnderIO.rl("block/conduit/me"), Component.translatable(ConduitApi.INSTANCE.makeDescriptionId(NORMAL)),
+                    AEColor.TRANSPARENT, false));
         context.register(DENSE,
-                new MEConduit(EnderIO.rl("block/conduit/dense_me"), LANG_DENSE_ME_CONDUIT, AEColor.TRANSPARENT, true));
+                new MEConduit(EnderIO.rl("block/conduit/dense_me"), Component.translatable(ConduitApi.INSTANCE.makeDescriptionId(DENSE)),
+                    AEColor.TRANSPARENT, true));
 
         // TODO: Colored ME conduit.
     }

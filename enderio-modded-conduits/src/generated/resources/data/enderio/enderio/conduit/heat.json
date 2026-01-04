@@ -7,7 +7,7 @@
   ],
   "type": "enderio:heat",
   "description": {
-    "translate": "item.enderio.conduit.heat"
+    "translate": "conduit.enderio.heat"
   },
   "texture": "enderio:block/conduit/heat"
 }

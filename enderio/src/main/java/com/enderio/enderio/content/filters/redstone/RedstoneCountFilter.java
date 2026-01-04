@@ -88,6 +88,12 @@ public class RedstoneCountFilter implements RedstoneOutputFilter {
                 new Component(channel, component.maxCount, component.count, component.deactivated));
     }
 
+    @Override
+    public boolean isConfigured() {
+        Component current = stack.get(EIODataComponents.REDSTONE_COUNT_FILTER);
+        return current != null && !current.equals(INSTANCE);
+    }
+
     public record Component(DyeColor channel1, int maxCount, int count, boolean deactivated) {
         public static final Codec<Component> CODEC = RecordCodecBuilder.create(instance -> instance
                 .group(DyeColor.CODEC.fieldOf("channel1").forGetter(Component::channel1),

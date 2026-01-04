@@ -90,6 +90,9 @@ public abstract class AbstractFilterItem<T> extends Item implements FilterMenuPr
         var filter = stack.getOrDefault(dataComponentType(), defaultFilter());
         if (!filter.equals(defaultFilter())) {
             tooltipAdder.accept(FiltersLang.CONFIGURED);
+        } else {
+            // Add helpful hint for unconfigured filters
+            tooltipAdder.accept(FiltersLang.UNCONFIGURED_HINT);
         }
     }
 }

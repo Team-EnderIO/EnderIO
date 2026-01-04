@@ -47,6 +47,12 @@ public class RedstoneTLatchFilter implements RedstoneOutputFilter {
         stack.set(EIODataComponents.REDSTONE_TLATCH_FILTER, new Component(active, deactivated));
     }
 
+    @Override
+    public boolean isConfigured() {
+        // TLATCH filter has no user configuration - it maintains internal state
+        return false;
+    }
+
     public record Component(boolean active, boolean deactivated) {
         public static final Codec<Component> CODEC = RecordCodecBuilder.create(instance -> instance
                 .group(Codec.BOOL.fieldOf("deactivated").forGetter(Component::active),
