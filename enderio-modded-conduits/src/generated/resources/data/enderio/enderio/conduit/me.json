@@ -7,7 +7,7 @@
   ],
   "type": "enderio:me",
   "description": {
-    "translate": "item.enderio.conduit.me"
+    "translate": "conduit.enderio.me"
   },
   "is_dense": false,
   "texture": "enderio:block/conduit/me"

@@ -7,7 +7,7 @@
   ],
   "type": "enderio:rs",
   "description": {
-    "translate": "item.enderio.rs"
+    "translate": "conduit.enderio.rs"
   },
   "texture": "enderio:block/conduit/rs"
 }

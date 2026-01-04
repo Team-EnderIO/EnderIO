@@ -4,6 +4,7 @@ import com.enderio.core.common.registries.FluidDeferredHolders;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.ConduitApi;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.compat.jei.JEILang;
 import com.enderio.enderio.content.advancements.AdvancementsLang;
@@ -758,7 +759,7 @@ public class EIOLanguageProvider extends LanguageProvider {
     }
 
     private void add(ResourceKey<Conduit<?, ?>> key, String translation) {
-        add(Component.translatable(Util.makeDescriptionId(EnderIORegistries.Keys.CONDUIT.location().getPath(), key.location())), translation);
+        add(ConduitApi.INSTANCE.makeDescriptionId(key), translation);
     }
 
     private void add(Component component, String translation) {

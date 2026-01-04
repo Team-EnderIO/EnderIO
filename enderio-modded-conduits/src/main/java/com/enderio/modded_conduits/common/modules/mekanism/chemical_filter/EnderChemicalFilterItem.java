@@ -3,14 +3,15 @@ package com.enderio.modded_conduits.common.modules.mekanism.chemical_filter;
 import com.enderio.enderio.content.filters.AbstractFilterItem;
 import com.enderio.enderio.content.filters.AbstractFilterMenu;
 import com.enderio.modded_conduits.common.modules.mekanism.MekanismModule;
-import com.enderio.regilite.holder.RegiliteMenu;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.function.Supplier;
 
@@ -44,10 +45,10 @@ public class EnderChemicalFilterItem extends AbstractFilterItem<EnderChemicalFil
     public enum Type {
         BASIC(() -> MekanismModule.CHEMICAL_FILTER_MENU, 1);
 
-        private final Supplier<RegiliteMenu<EnderChemicalFilterMenu>> menuType;
+        private final Supplier<DeferredHolder<MenuType<?>, MenuType<EnderChemicalFilterMenu>>> menuType;
         private final int rowCount;
 
-        Type(Supplier<RegiliteMenu<EnderChemicalFilterMenu>> menuType, int rowCount) {
+        Type(Supplier<DeferredHolder<MenuType<?>, MenuType<EnderChemicalFilterMenu>>> menuType, int rowCount) {
             this.menuType = menuType;
             this.rowCount = rowCount;
         }

@@ -7,7 +7,6 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.content.filters.AbstractFilterMenu;
 import com.enderio.enderio.content.filters.FiltersLang;
 import com.enderio.enderio.content.filters.item.general.EnderItemFilterMenu;
-import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.modded_conduits.common.modules.mekanism.chemical_filter.ChemicalFilterSlot;
 import com.enderio.modded_conduits.common.modules.mekanism.chemical_filter.EnderChemicalFilterMenu;
 import com.mojang.blaze3d.systems.RenderSystem;

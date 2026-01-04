@@ -5,9 +5,11 @@ import com.enderio.enderio.api.conduits.screen.RegisterConduitScreenTypesEvent;
 import com.enderio.modded_conduits.client.ConduitClientModule;
 import com.enderio.modded_conduits.client.modules.mekanism.models.ChemicalConduitModelModifier;
 import com.enderio.modded_conduits.client.modules.mekanism.screens.ChemicalConduitScreenType;
+import com.enderio.modded_conduits.client.modules.mekanism.screens.EnderChemicalFilterScreen;
 import com.enderio.modded_conduits.client.modules.mekanism.screens.HeatConduitScreenType;
 import com.enderio.modded_conduits.common.modules.mekanism.MekanismModule;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 
 public class MekanismClientModule implements ConduitClientModule {
 
@@ -20,6 +22,7 @@ public class MekanismClientModule implements ConduitClientModule {
     public void initialize(IEventBus modEventBus) {
         modEventBus.addListener(this::registerConduitScreenTypes);
         modEventBus.addListener(this::registerConduitCoreModelModifiers);
+        modEventBus.addListener(this::registerMenuScreens);
     }
 
     private void registerConduitScreenTypes(RegisterConduitScreenTypesEvent event) {
@@ -29,5 +32,9 @@ public class MekanismClientModule implements ConduitClientModule {
 
     private void registerConduitCoreModelModifiers(RegisterConduitModelModifiersEvent event) {
         event.register(MekanismModule.TYPE_CHEMICAL.get(), ChemicalConduitModelModifier::new);
+    }
+    
+    private void registerMenuScreens(RegisterMenuScreensEvent event) {
+        event.register(MekanismModule.CHEMICAL_FILTER_MENU.get(), EnderChemicalFilterScreen::new);
     }
 }
