@@ -570,6 +570,7 @@
   "tooltip.enderio.energy_equivalence": "A unit of energy, equivalent to FE.",
   "tooltip.enderio.filter.configured": "Configured",
   "tooltip.enderio.filter.not_allowed_component_match": "This filter uses component matching which is no longer available to this item. Clear this filter using the crafting grid to remove this warning.",
+  "tooltip.enderio.filter.unconfigured_hint": "Use while crouching to configure",
   "tooltip.enderio.fluid_tank.contents_tooltip": "%d/%d mb of %s",
   "tooltip.enderio.fluid_tank.empty_tooltip": "Empty tank",
   "tooltip.enderio.glass.blocks_light": "Blocks Light",

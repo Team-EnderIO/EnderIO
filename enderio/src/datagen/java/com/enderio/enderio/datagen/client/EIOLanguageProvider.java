@@ -265,6 +265,7 @@ public class EIOLanguageProvider extends LanguageProvider {
 
     private void addFiltersLang() {
         add(FiltersLang.CONFIGURED, "Configured");
+        add(FiltersLang.UNCONFIGURED_HINT, "Use while crouching to configure");
         add(FiltersLang.FILTER_CONFIG_NOT_ALLOWED_COMPONENT_MATCH, "This filter uses component matching which is no longer available to this item. Clear this filter using the crafting grid to remove this warning.");
 
         add(FiltersLang.FILTER_ALLOW_LIST, "Allow List");

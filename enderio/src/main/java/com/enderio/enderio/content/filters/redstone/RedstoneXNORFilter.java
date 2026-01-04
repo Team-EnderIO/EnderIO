@@ -17,5 +17,4 @@ public class RedstoneXNORFilter extends DoubleRedstoneChannel implements Redston
         boolean b = context.isActive(getFirstChannel()) ^ context.isActive(getSecondChannel());
         return b ? 0 : 15;
     }
-
 }
