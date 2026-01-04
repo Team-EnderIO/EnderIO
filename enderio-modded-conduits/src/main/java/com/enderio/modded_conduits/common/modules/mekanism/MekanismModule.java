@@ -52,6 +52,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -63,6 +64,7 @@ import net.neoforged.neoforge.capabilities.ItemCapability;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -183,6 +185,7 @@ public class MekanismModule implements ConduitCommonModule {
         DATA_COMPONENT_TYPES.register(modEventBus);
         modEventBus.addListener(this::registerPayloadHandlers);
         modEventBus.addListener(this::registerCapabilities);
+        modEventBus.addListener(this::addToCreativeTabs);
 
         if (ModList.get().isLoaded("laserio")) {
             MekanismLaserIOCompat.init(modEventBus);
@@ -201,6 +204,13 @@ public class MekanismModule implements ConduitCommonModule {
             AbstractFilterItem.FILTER_MENU_PROVIDER,
             BASIC_CHEMICAL_FILTER.get()
         );
+    }
+
+    private void addToCreativeTabs(BuildCreativeModeTabContentsEvent event) {
+        if (event.getTabKey() == EIOCreativeTabs.MAIN) {
+            event.insertAfter(EIOItems.BASIC_SOUL_FILTER.get().getDefaultInstance(),
+                BASIC_CHEMICAL_FILTER.get().getDefaultInstance(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+        }
     }
 
     @Override
