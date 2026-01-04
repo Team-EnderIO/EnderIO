@@ -1,19 +1,15 @@
 package com.enderio.modded_conduits.datagen.client;
 
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitApi;
 import com.enderio.modded_conduits.common.modules.appeng.AE2ConduitsModule;
 import com.enderio.modded_conduits.common.modules.mekanism.MekanismModule;
 import com.enderio.modded_conduits.common.modules.refinedstorage.RefinedStorageCommonModule;
-import net.minecraft.Util;
 import net.minecraft.data.PackOutput;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceKey;
-import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
 public class ModdedConduitsLanguageProvider extends LanguageProvider {
