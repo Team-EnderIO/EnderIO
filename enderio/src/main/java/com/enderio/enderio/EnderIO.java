@@ -45,6 +45,7 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
 import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
+import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import org.slf4j.Logger;
@@ -146,5 +147,12 @@ public class EnderIO {
     @SubscribeEvent
     public static void commonSetup(FMLCommonSetupEvent event) {
         SkullBlock.Types.TYPES.put("enderman", EnderSkullBlock.EIOSkulls.ENDERMAN);
+    }
+
+    @SubscribeEvent
+    public static void syncRecipes(OnDatapackSyncEvent event) {
+        event.sendRecipes(EIORecipes.FIRE_CRAFTING.type().get(), EIORecipes.ALLOY_SMELTING.type().get(), EIORecipes.ENCHANTING.type().get(),
+            EIORecipes.PAINTING.type().get(), EIORecipes.SAG_MILLING.type().get(), EIORecipes.SLICING.type().get(), EIORecipes.SOUL_BINDING.type().get(),
+            EIORecipes.TANK.type().get(), EIORecipes.VAT_FERMENTING.type().get(), EIORecipes.WEATHER_CHANGE.type().get());
     }
 }
