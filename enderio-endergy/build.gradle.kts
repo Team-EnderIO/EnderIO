@@ -64,11 +64,7 @@ configurations {
 
 
 dependencies {
-    // Include and bundle regilite
-    api(libs.regilite)
-    jarJar(libs.regilite)
-
-    // EnderIO will bundle Regilite and EnderCore in production.
+    // EnderIO will bundle EnderCore in production.
     api(project(":enderio"))
 }
 
@@ -90,14 +86,13 @@ neoForge {
             logLevel = org.slf4j.event.Level.INFO
         }
 
-        val data by creating {
-            data()
+        val clientData by creating {
+            clientData()
+            loadedMods = listOf(modEndergy)
 
             programArguments.addAll(
                     "--mod", "enderio_endergy",
-                    // TODO: Fix missing models...
-                    //"--all",
-                    "--server", "--client",
+                    "--all",
                     "--output", file("src/generated/resources").absolutePath,
                     "--existing", file("src/main/resources").absolutePath,
             )

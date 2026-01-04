@@ -93,7 +93,7 @@ dependencies {
 //    localRuntime(project(":enderio-modded-conduits"))
 
     // Bring all other "addons" into the dev env for testing - but do not bundle them in the jar
-//    localRuntime(project(":enderio-endergy"))
+    localRuntime(project(":enderio-endergy"))
 
     // Almost Unified
 //    compileOnly(variantOf(libs.almostUnified) {

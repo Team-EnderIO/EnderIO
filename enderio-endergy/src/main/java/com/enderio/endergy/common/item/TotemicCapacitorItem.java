@@ -12,6 +12,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -21,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class TotemicCapacitorItem extends CapacitorItem implements ICapacitorExtension {
     private static final Map<Integer, CapacitorData> DATA_CACHE = new HashMap<>();
@@ -36,24 +38,23 @@ public class TotemicCapacitorItem extends CapacitorItem implements ICapacitorExt
 
     @Override
     public @Nullable CapacitorData getCapacitorData(ItemStack capacitorStack, Level level) {
-        var enchantmentRegistry = level.registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+        var enchantmentRegistry = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
 
-        var efficiencyLevel = capacitorStack.getEnchantmentLevel(enchantmentRegistry.getHolderOrThrow(Enchantments.EFFICIENCY));
+        var efficiencyLevel = capacitorStack.getEnchantmentLevel(enchantmentRegistry.getOrThrow(Enchantments.EFFICIENCY));
         return DATA_CACHE.computeIfAbsent(efficiencyLevel, l -> new CapacitorData(3.5f + l * 0.5f, Map.of()));
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag flag) {
+        super.appendHoverText(stack, context, tooltipDisplay, tooltipAdder, flag);
 
         var capacitorData = getCapacitorData(stack, context.level());
 
         NumberFormat fmt = NumberFormat.getInstance(Locale.ENGLISH);
-        tooltipComponents
-            .add(TooltipUtil.styledWithArgs(CapacitorLang.CAPACITOR_TOOLTIP_BASE, fmt.format(capacitorData.base())));
+        tooltipAdder.accept(TooltipUtil.styledWithArgs(CapacitorLang.CAPACITOR_TOOLTIP_BASE, fmt.format(capacitorData.base())));
 
         for (Map.Entry<CapacitorModifier, Float> modifier : capacitorData.modifiers().entrySet()) {
-            tooltipComponents.add(TooltipUtil.styledWithArgs(
+            tooltipAdder.accept(TooltipUtil.styledWithArgs(
                 Identifier.fromNamespaceAndPath("tooltip", modifier.getKey().modifierId.toLanguageKey()),
                 fmt.format(modifier.getValue())));
         }
