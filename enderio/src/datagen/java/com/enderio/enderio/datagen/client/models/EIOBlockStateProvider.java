@@ -137,7 +137,7 @@ public class EIOBlockStateProvider extends ModelProvider {
         }
 
         blockModels.createTrivialCube(EIOBlocks.PAINTED_TRAVEL_ANCHOR.get());
-        blockModels.createNonTemplateModelBlock(EIOBlocks.ENDERFACE.get());
+        simpleTranslucentBlock(blockModels, EIOBlocks.ENDERFACE.get());
         this.createFire(blockModels, EIOBlocks.COLD_FIRE.get());
     }
 
