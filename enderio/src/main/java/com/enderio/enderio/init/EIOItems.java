@@ -100,7 +100,7 @@ public class EIOItems {
         new GrindingBallData(1.4F, 2.4F, 0.7F, 75000));
 
     private static DeferredItem<Item> grindingBall(String name, GrindingBallData data) {
-        return ITEMS.registerItem(name, Item::new, new Item.Properties()
+        return ITEMS.registerItem(name, Item::new, p -> p
             .component(EnderIODataComponents.GRINDING_BALL, data));
     }
 
@@ -133,16 +133,16 @@ public class EIOItems {
     // region Capacitors
 
     public static final DeferredItem<CapacitorItem> BASIC_CAPACITOR = ITEMS.registerItem("basic_capacitor",
-        CapacitorItem::new, new Item.Properties().component(EIODataComponents.CAPACITOR_DATA, CapacitorData.simple(1)));
+        CapacitorItem::new, p -> p.component(EIODataComponents.CAPACITOR_DATA, CapacitorData.simple(1)));
 
     public static final DeferredItem<CapacitorItem> DOUBLE_LAYER_CAPACITOR = ITEMS.registerItem("double_layer_capacitor",
-        CapacitorItem::new, new Item.Properties().component(EIODataComponents.CAPACITOR_DATA, CapacitorData.simple(2)));
+        CapacitorItem::new, p -> p.component(EIODataComponents.CAPACITOR_DATA, CapacitorData.simple(2)));
 
     public static final DeferredItem<CapacitorItem> OCTADIC_CAPACITOR = ITEMS.registerItem("octadic_capacitor",
-        CapacitorItem::new, new Item.Properties().component(EIODataComponents.CAPACITOR_DATA, CapacitorData.simple(3)));
+        CapacitorItem::new, p -> p.component(EIODataComponents.CAPACITOR_DATA, CapacitorData.simple(3)));
 
     public static final DeferredItem<LootCapacitorItem> LOOT_CAPACITOR = ITEMS.registerItem("loot_capacitor",
-        LootCapacitorItem::new, new Item.Properties().stacksTo(1));
+        LootCapacitorItem::new, p -> p.stacksTo(1));
 
     // endregion
 
@@ -233,7 +233,7 @@ public class EIOItems {
     // region Fun
 
     public static final DeferredItem<EnderiosItem> ENDERIOS = ITEMS.registerItem("enderios", EnderiosItem::new,
-        new Item.Properties().stacksTo(1));
+        p -> p.stacksTo(1));
 
     // endregion
 
@@ -251,7 +251,7 @@ public class EIOItems {
     public static final DeferredItem<ConduitProbeItem> CONDUIT_PROBE = ITEMS.registerItem("conduit_probe", ConduitProbeItem::new);
 
     public static final DeferredItem<DarkSteelSwordItem> DARK_STEEL_SWORD = ITEMS.registerItem("dark_steel_sword", DarkSteelSwordItem::new,
-        new Item.Properties().durability(2000));
+        p -> p.durability(2000));
 
     // endregion
 
@@ -263,16 +263,16 @@ public class EIOItems {
 
     // TODO: Why is facade type being stored as a component... it could just be part of the block item
     public static final DeferredItem<ConduitFacadeItem> CONDUIT_FACADE = ITEMS.registerItem("conduit_facade", ConduitFacadeItem::new,
-        new Item.Properties().component(EIODataComponents.FACADE_TYPE, FacadeType.BASIC));
+        p -> p.component(EIODataComponents.FACADE_TYPE, FacadeType.BASIC));
 
     public static final DeferredItem<ConduitFacadeItem> TRANSPARENT_CONDUIT_FACADE = ITEMS.registerItem("transparent_conduit_facade", ConduitFacadeItem::new,
-        new Item.Properties().component(EIODataComponents.FACADE_TYPE, FacadeType.TRANSPARENT));
+        p -> p.component(EIODataComponents.FACADE_TYPE, FacadeType.TRANSPARENT));
 
     public static final DeferredItem<ConduitFacadeItem> HARDENED_CONDUIT_FACADE = ITEMS.registerItem("hardened_conduit_facade", ConduitFacadeItem::new,
-        new Item.Properties().component(EIODataComponents.FACADE_TYPE, FacadeType.HARDENED));
+        p -> p.component(EIODataComponents.FACADE_TYPE, FacadeType.HARDENED));
 
     public static final DeferredItem<ConduitFacadeItem> TRANSPARENT_HARDENED_CONDUIT_FACADE = ITEMS.registerItem("transparent_hardened_conduit_facade",
-        ConduitFacadeItem::new, new Item.Properties().component(EIODataComponents.FACADE_TYPE, FacadeType.TRANSPARENT_HARDENED));
+        ConduitFacadeItem::new, p -> p.component(EIODataComponents.FACADE_TYPE, FacadeType.TRANSPARENT_HARDENED));
 
     // endregion
 
@@ -307,7 +307,7 @@ public class EIOItems {
     // region Creative Tab Icon
 
     public static final DeferredItem<CreativeTabIconItem> CREATIVE_ICON = ITEMS.registerItem("creative_tab_icon",
-        CreativeTabIconItem::new, new Item.Properties().component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true));
+        CreativeTabIconItem::new, p -> p.component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true));
 
     // endregion
 
@@ -316,11 +316,11 @@ public class EIOItems {
     }
 
     private static DeferredItem<Item> basicGlinted(String name) {
-        return ITEMS.registerItem(name, Item::new, new Item.Properties().component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true));
+        return ITEMS.registerItem(name, Item::new, p -> p.component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true));
     }
 
     private static DeferredItem<Item> lore(String name, Component lore) {
-        return ITEMS.registerItem(name, Item::new, new Item.Properties()
+        return ITEMS.registerItem(name, Item::new, p -> p
             .rarity(Rarity.RARE)
             .component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true)
             .component(DataComponents.LORE, new ItemLore(List.of(lore))));

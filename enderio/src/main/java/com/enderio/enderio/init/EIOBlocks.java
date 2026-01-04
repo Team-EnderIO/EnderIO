@@ -284,7 +284,7 @@ public class EIOBlocks {
 
     // Note: Due to the unique nature of the conduit bundle, all block items are registered in EIOItems instead.
     public static final DeferredBlock<ConduitBundleBlock> CONDUIT_BUNDLE = BLOCKS.registerBlock("conduit",
-        ConduitBundleBlock::new, BlockBehaviour.Properties.of()
+        ConduitBundleBlock::new, b -> b
             .strength(1.5f, 10)
             .noLootTable()
             .noOcclusion()
@@ -300,7 +300,7 @@ public class EIOBlocks {
             .mapColor(MapColor.NONE));
 
     public static final DeferredBlock<ColdFireBlock> COLD_FIRE = BLOCKS
-        .registerBlock("cold_fire", ColdFireBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.FIRE).noLootTable());
+        .registerBlock("cold_fire", ColdFireBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(Blocks.FIRE).noLootTable());
 
     public static final DeferredBlock<EnderSkullBlock> ENDERMAN_HEAD = registerWithItem("enderman_head", EnderSkullBlock::new,
             BlockBehaviour.Properties.ofFullCopy(Blocks.SKELETON_SKULL).instrument(NoteBlockInstrument.SKELETON).strength(1.0F).pushReaction(PushReaction.DESTROY));
@@ -319,14 +319,14 @@ public class EIOBlocks {
     // Fluid Tanks
     public static final DeferredBlock<FluidTankBlock> FLUID_TANK = BLOCKS.registerBlock("fluid_tank",
         props -> new FluidTankBlock(EIOBlockEntities.FLUID_TANK::get, props),
-        BlockBehaviour.Properties.of()
+        b -> b
             .strength(2.5f, 8)
             .isViewBlocking((pState, pLevel, pPos) -> false)
             .noOcclusion());
 
     public static final DeferredBlock<FluidTankBlock> PRESSURIZED_FLUID_TANK = BLOCKS.registerBlock("pressurized_fluid_tank",
         props -> new FluidTankBlock(EIOBlockEntities.PRESSURIZED_FLUID_TANK::get, props),
-        BlockBehaviour.Properties.of()
+        b -> b
             .strength(2.5f, 8)
             .isViewBlocking((pState, pLevel, pPos) -> false)
             .noOcclusion());
@@ -404,7 +404,7 @@ public class EIOBlocks {
     // Powered Spawner
     public static final DeferredBlock<ProgressMachineBlock<PoweredSpawnerBlockEntity>> POWERED_SPAWNER = BLOCKS.registerBlock("powered_spawner",
         properties -> new ProgressMachineBlock<>(EIOBlockEntities.POWERED_SPAWNER::get, properties),
-        BlockBehaviour.Properties.of().strength(2.5f, 8));
+        b -> b.strength(2.5f, 8));
 
     // Mind Killer
     public static final DeferredBlock<MindKillerBlock> MIND_KILLER = registerWithItem("mind_killer", MindKillerBlock::new,
@@ -455,7 +455,7 @@ public class EIOBlocks {
     // Soul Engine
     public static final DeferredBlock<ProgressMachineBlock<SoulEngineBlockEntity>> SOUL_ENGINE = BLOCKS.registerBlock("soul_engine",
         p -> new ProgressMachineBlock<>(EIOBlockEntities.SOUL_ENGINE::get, p),
-        BlockBehaviour.Properties.of().strength(2.5f, 8).noOcclusion());
+        b -> b.strength(2.5f, 8).noOcclusion());
 
     // Niard
     public static final DeferredBlock<NiardBlock> NIARD = registerWithItem("niard", NiardBlock::new,
@@ -505,10 +505,10 @@ public class EIOBlocks {
         p -> new FluidTankBlockItem(PRESSURIZED_FLUID_TANK.get(), p, 32000));
 
     public static final DeferredItem<BlockItem> POWERED_SPAWNER_ITEM = ITEMS.registerItem("powered_spawner",
-        p -> new BlockItem(POWERED_SPAWNER.get(), p), new Item.Properties().component(EIODataComponents.SOUL, Soul.EMPTY));
+        p -> new BlockItem(POWERED_SPAWNER.get(), p), p -> p.component(EIODataComponents.SOUL, Soul.EMPTY));
 
     public static final DeferredItem<BlockItem> SOUL_ENGINE_ITEM = ITEMS.registerItem("soul_engine",
-        p -> new BlockItem(SOUL_ENGINE.get(), p), new Item.Properties().component(EIODataComponents.SOUL, Soul.EMPTY));
+        p -> new BlockItem(SOUL_ENGINE.get(), p), p -> p.component(EIODataComponents.SOUL, Soul.EMPTY));
 
 //    public static final Map<SolarPanelTier, DeferredItem<BlockItem>> SOLAR_PANEL_ITEMS = Util.make(() -> {
 //        Map<SolarPanelTier, DeferredItem<BlockItem>> items = new HashMap<>();
@@ -589,7 +589,7 @@ public class EIOBlocks {
     // endregion
 
     private static <B extends Block> DeferredBlock<B> registerWithItem(String name, Function<BlockBehaviour.Properties, ? extends B> func, BlockBehaviour.Properties blockProperties) {
-        var blockHolder = BLOCKS.<B>registerBlock(name, func, blockProperties);
+        var blockHolder = BLOCKS.<B>registerBlock(name, func, () -> blockProperties);
         ITEMS.registerSimpleBlockItem(blockHolder);
         return blockHolder;
     }
@@ -601,8 +601,8 @@ public class EIOBlocks {
 
     private static <B extends Block> DeferredBlock<B> registerWithItem(String name, Function<BlockBehaviour.Properties, ? extends B> func, BlockBehaviour.Properties blockProperties,
         BiFunction<Item.Properties, Supplier<B>, Item> itemFactory, Item.Properties itemProperties) {
-        var blockHolder = BLOCKS.<B>registerBlock(name, func, blockProperties);
-        ITEMS.registerItem(name, p -> itemFactory.apply(p, blockHolder), itemProperties);
+        var blockHolder = BLOCKS.<B>registerBlock(name, func, () -> blockProperties);
+        ITEMS.registerItem(name, p -> itemFactory.apply(p, blockHolder), () -> itemProperties);
         return blockHolder;
     }
 
