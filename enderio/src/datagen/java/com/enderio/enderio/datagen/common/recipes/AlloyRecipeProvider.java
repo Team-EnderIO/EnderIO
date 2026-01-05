@@ -129,7 +129,6 @@ public class AlloyRecipeProvider extends SubRecipeProvider {
                 FusedQuartzBlock clear = glassGroup.getValue().CLEAR.get();
                 var mainIngredient = identifier.explosionResistance() ? sizedFromTag(Tags.Items.GEMS_QUARTZ, 4)
                         : sizedFromTag(Tags.Items.GLASS_BLOCKS_COLORLESS, 1);
-                @Nullable
                 var altIngredient = identifier.explosionResistance()
                         ? sizedFromTag(EIOTags.Items.STORAGE_BLOCKS_QUARTZ, 1)
                         : null;

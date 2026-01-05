@@ -82,7 +82,6 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
 
     private final FluidStorage<SoulEngineBlockEntity> fluidStorage;
 
-    @Nullable
     private EngineSoul.SoulData soulData;
     private int burnedTicks = 0;
     private static boolean reload = false;

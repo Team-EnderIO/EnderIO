@@ -90,7 +90,6 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     private AABBTicket ticket;
 
     private Soul boundSoul = Soul.EMPTY;
-    @Nullable
     private FarmSoul.SoulData soulData;
     private static boolean reload = false;
     private boolean reloadCache = !reload;
