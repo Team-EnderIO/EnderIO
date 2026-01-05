@@ -6,7 +6,7 @@ import com.enderio.enderio.api.conduits.model.RegisterConduitModelModifiersEvent
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.resources.Identifier;
 import net.neoforged.fml.ModLoader;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;

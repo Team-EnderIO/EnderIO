@@ -41,8 +41,8 @@ import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -176,7 +176,7 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
     protected static class VatCraftingMachineTask
             extends CraftingMachineTask<FermentingRecipe, FermentingRecipe.Input> {
 
-        public VatCraftingMachineTask(@NotNull Level level, MachineInventory inventory,
+        public VatCraftingMachineTask(@NonNull Level level, MachineInventory inventory,
                 FluidStorage<VatBlockEntity> fluidStorage, FermentingRecipe.Input input,
                 @Nullable RecipeHolder<FermentingRecipe> recipe) {
             super(level, inventory, fluidStorage, input, recipe);

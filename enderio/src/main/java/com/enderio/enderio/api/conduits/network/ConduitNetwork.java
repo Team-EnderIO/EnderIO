@@ -6,7 +6,7 @@ import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.conduits.ticker.ConduitTicker;
 import net.minecraft.world.item.DyeColor;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;

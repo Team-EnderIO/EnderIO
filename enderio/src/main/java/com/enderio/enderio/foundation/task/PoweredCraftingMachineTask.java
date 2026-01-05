@@ -11,8 +11,8 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public abstract class PoweredCraftingMachineTask<R extends MachineRecipe<C>, C extends RecipeInput>
         extends CraftingMachineTask<R, C>
@@ -20,20 +20,20 @@ public abstract class PoweredCraftingMachineTask<R extends MachineRecipe<C>, C e
 
     private final MachineEnergyHandler energyStorage;
 
-    public PoweredCraftingMachineTask(@NotNull Level level, MachineInventory inventory,
+    public PoweredCraftingMachineTask(@NonNull Level level, MachineInventory inventory,
         @Nullable ResourceStorage<FluidResource> fluidStorage, MachineEnergyHandler energyStorage, C container, MultiSlotAccess outputSlots,
         @Nullable RecipeHolder<R> recipe) {
         super(level, inventory, fluidStorage, container, outputSlots, recipe);
         this.energyStorage = energyStorage;
     }
 
-    public PoweredCraftingMachineTask(@NotNull Level level, MachineInventory inventory,
+    public PoweredCraftingMachineTask(@NonNull Level level, MachineInventory inventory,
         MachineEnergyHandler energyStorage, C container, MultiSlotAccess outputSlots,
         @Nullable RecipeHolder<R> recipe) {
         this(level, inventory, null, energyStorage, container, outputSlots, recipe);
     }
 
-    public PoweredCraftingMachineTask(@NotNull Level level, MachineInventory inventory,
+    public PoweredCraftingMachineTask(@NonNull Level level, MachineInventory inventory,
         MachineEnergyHandler energyStorage, C container, SingleSlotAccess outputSlot,
         @Nullable RecipeHolder<R> recipe) {
         this(level, inventory, energyStorage, container, outputSlot.wrapToMulti(), recipe);

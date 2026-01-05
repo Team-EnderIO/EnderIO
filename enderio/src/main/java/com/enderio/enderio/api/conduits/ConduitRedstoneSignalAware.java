@@ -1,7 +1,7 @@
 package com.enderio.enderio.api.conduits;
 
 import net.minecraft.world.item.DyeColor;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 @FunctionalInterface
 public interface ConduitRedstoneSignalAware {

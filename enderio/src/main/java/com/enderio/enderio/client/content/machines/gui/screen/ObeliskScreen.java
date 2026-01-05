@@ -19,7 +19,7 @@ import net.minecraft.util.CommonColors;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public abstract class ObeliskScreen<J extends ObeliskBlockEntity<J>, T extends ObeliskMenu<J>>
         extends MachineScreen<T> {

@@ -5,7 +5,7 @@ import com.enderio.enderio.api.travel.TravelTarget;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public record ClientboundTravelTargetUpdatedPacket(@Nullable TravelTarget target) implements CustomPacketPayload {
 

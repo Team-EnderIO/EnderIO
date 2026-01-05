@@ -19,7 +19,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import org.joml.Vector2i;
 
 import java.util.Set;
@@ -123,7 +123,7 @@ public record RedstoneConduit(Identifier texture, Identifier activeTexture, Comp
     }
 
     @Override
-    public int compareTo(@NotNull RedstoneConduit o) {
+    public int compareTo(@NonNull RedstoneConduit o) {
         return 0;
     }
 }

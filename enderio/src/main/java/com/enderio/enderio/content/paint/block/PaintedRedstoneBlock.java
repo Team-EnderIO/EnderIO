@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.PoweredBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
 

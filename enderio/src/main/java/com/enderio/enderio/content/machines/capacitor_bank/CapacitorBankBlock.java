@@ -25,7 +25,7 @@
 //import net.neoforged.fml.common.EventBusSubscriber;
 //import net.neoforged.neoforge.event.entity.player.AdvancementEvent;
 //import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-//import org.jetbrains.annotations.Nullable;
+//import org.jspecify.annotations.Nullable;
 //
 //import java.util.List;
 //import java.util.function.Supplier;

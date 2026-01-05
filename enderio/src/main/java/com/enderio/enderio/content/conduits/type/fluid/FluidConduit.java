@@ -27,8 +27,8 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.joml.Vector2i;
 
 import java.util.function.Consumer;
@@ -203,7 +203,7 @@ public record FluidConduit(Identifier texture, Component description, int transf
     }
 
     @Override
-    public int compareTo(@NotNull FluidConduit o) {
+    public int compareTo(@NonNull FluidConduit o) {
         if (isMultiFluid() && !o.isMultiFluid()) {
             return 1;
         }

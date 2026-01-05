@@ -28,7 +28,7 @@ import net.minecraft.world.item.component.TooltipProvider;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import org.apache.commons.lang3.NotImplementedException;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.joml.Vector2i;
 
 import java.util.Comparator;

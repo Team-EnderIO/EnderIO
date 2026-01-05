@@ -9,7 +9,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class PoweredMachineMenu<T extends PoweredMachineBlockEntity> extends MachineMenu<T> {
     protected static final Identifier EMPTY_CAPACITOR_SLOT = EnderIO.id("widget/empty_capacitor_slot");

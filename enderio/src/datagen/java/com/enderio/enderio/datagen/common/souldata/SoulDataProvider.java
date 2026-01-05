@@ -25,8 +25,8 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -148,7 +148,7 @@ public class SoulDataProvider implements DataProvider {
         return CompletableFuture.allOf(list.toArray((p_253414_) -> new CompletableFuture[p_253414_]));
     }
 
-    @NotNull
+    @NonNull
     @Override
     public String getName() {
         return "Souldata";

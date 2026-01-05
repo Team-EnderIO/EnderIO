@@ -23,6 +23,7 @@ idea {
 }
 
 dependencies {
+    compileOnly(libs.findLibrary("jspecify").get())
     compileOnly(libs.findLibrary("jetbrainsAnnotations").get())
 
     // Depend on ensure compiler plugin

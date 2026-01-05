@@ -23,8 +23,8 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.function.Consumer;
@@ -122,7 +122,7 @@ public record EnergyConduit(Identifier texture, Component description, int trans
     }
 
     @Override
-    public int compareTo(@NotNull EnergyConduit o) {
+    public int compareTo(@NonNull EnergyConduit o) {
         if (transferRatePerTick() < o.transferRatePerTick()) {
             return -1;
         } else if (transferRatePerTick() > o.transferRatePerTick()) {

@@ -4,7 +4,7 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public class RangeParticleType extends ParticleType<RangeParticleData> {
 
@@ -12,7 +12,7 @@ public class RangeParticleType extends ParticleType<RangeParticleData> {
         super(false);
     }
 
-    @NotNull
+    @NonNull
     @Override
     public MapCodec<RangeParticleData> codec() {
         return RangeParticleData.CODEC;

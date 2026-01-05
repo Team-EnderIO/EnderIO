@@ -1,7 +1,7 @@
 package com.enderio.core.client.icon;
 
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.EnumMap;

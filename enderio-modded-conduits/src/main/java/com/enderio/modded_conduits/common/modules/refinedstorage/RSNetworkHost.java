@@ -10,7 +10,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.refinedmods.refinedstorage.common.support.network.NetworkNodeContainerProviderImpl;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class RSNetworkHost extends NetworkNodeContainerProviderImpl implements ConduitData<RSNetworkHost> {
     public static final MapCodec<RSNetworkHost> CODEC = RecordCodecBuilder

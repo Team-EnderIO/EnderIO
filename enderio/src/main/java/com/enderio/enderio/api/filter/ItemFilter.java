@@ -4,7 +4,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 // TODO: Should this deal in resources instead of stacks?
 @ApiStatus.AvailableSince("8.0")

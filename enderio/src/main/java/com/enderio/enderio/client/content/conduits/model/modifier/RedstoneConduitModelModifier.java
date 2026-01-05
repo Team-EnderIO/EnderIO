@@ -6,7 +6,7 @@ import com.enderio.enderio.content.conduits.type.redstone.RedstoneConduit;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class RedstoneConduitModelModifier implements ConduitModelModifier {
     @Override

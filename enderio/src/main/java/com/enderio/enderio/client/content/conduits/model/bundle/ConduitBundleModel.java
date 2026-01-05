@@ -31,8 +31,8 @@
 //import net.neoforged.neoforge.client.model.QuadTransformers;
 //import net.neoforged.neoforge.model.data.ModelData;
 //import net.neoforged.neoforge.model.data.ModelProperty;
-//import org.jetbrains.annotations.NotNull;
-//import org.jetbrains.annotations.Nullable;
+//import org.jspecify.annotations.NonNull;
+//import org.jspecify.annotations.Nullable;
 //import org.joml.Quaternionf;
 //import org.joml.Vector3f;
 //
@@ -330,8 +330,8 @@
 //    }
 //
 //    @Override
-//    public ChunkRenderTypeSet getRenderTypes(@NotNull BlockState state, @NotNull RandomSource rand,
-//            @NotNull ModelData data) {
+//    public ChunkRenderTypeSet getRenderTypes(@NonNull BlockState state, @NonNull RandomSource rand,
+//            @NonNull ModelData data) {
 //        return CUTOUT_SET;
 //    }
 //

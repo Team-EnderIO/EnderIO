@@ -9,7 +9,7 @@ import net.minecraft.client.resources.model.ModelDebugName;
 import net.minecraft.client.resources.model.ResolvedModel;
 import net.minecraft.client.resources.model.SpriteGetter;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class ConduitBaker implements ModelBaker {
 

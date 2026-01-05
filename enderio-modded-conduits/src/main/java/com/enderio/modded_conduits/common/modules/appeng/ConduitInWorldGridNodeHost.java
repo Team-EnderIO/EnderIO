@@ -14,7 +14,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class ConduitInWorldGridNodeHost implements IInWorldGridNodeHost, ConduitData<ConduitInWorldGridNodeHost> {
 

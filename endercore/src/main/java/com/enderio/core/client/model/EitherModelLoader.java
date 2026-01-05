@@ -14,7 +14,7 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.util.context.ContextMap;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.client.model.UnbakedModelLoader;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A geometry loader to change the backed model depending on the mods loaded. Thanks to ThatGravyBoat from the Athena dev team for this idea and the code. It's really appreciated

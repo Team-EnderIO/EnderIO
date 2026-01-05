@@ -3,7 +3,7 @@ package com.enderio.enderio.content.machines.obelisks;
 import com.enderio.core.common.util.ChunkBoundLookup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.ChunkPos;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 

@@ -24,7 +24,7 @@ import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 import net.neoforged.neoforge.transfer.energy.ItemAccessEnergyHandler;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -146,7 +146,7 @@ public abstract class PoweredToggledItem extends Item implements AdvancedTooltip
     }
 
     @Override
-    public void addCommonTooltips(ItemStack itemStack, @org.jetbrains.annotations.Nullable Player player, List<Component> tooltips) {
+    public void addCommonTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
         String energy = String.format("%,d", ItemStackEnergy.getEnergyStored(itemStack)) + "/" +  String.format("%,d", ItemStackEnergy.getMaxEnergyStored(itemStack));
         tooltips.add(TooltipUtil.styledWithArgs(EIOCommonLang.ENERGY_AMOUNT, energy));
     }

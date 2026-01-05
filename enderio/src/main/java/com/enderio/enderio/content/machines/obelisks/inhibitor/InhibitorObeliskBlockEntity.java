@@ -18,7 +18,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class InhibitorObeliskBlockEntity extends ObeliskBlockEntity<InhibitorObeliskBlockEntity> {
 

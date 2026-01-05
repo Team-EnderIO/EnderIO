@@ -6,7 +6,7 @@
 //import net.minecraft.world.entity.player.Inventory;
 //import net.minecraft.world.level.block.entity.BlockEntity;
 //import org.apache.logging.log4j.LogManager;
-//import org.jetbrains.annotations.Nullable;
+//import org.jspecify.annotations.Nullable;
 //
 //public class CapacitorBankMenu extends LegacyPoweredMachineMenu<CapacitorBankBlockEntity> {
 //    public CapacitorBankMenu(int pContainerId, @Nullable CapacitorBankBlockEntity blockEntity, Inventory inventory) {

@@ -1,6 +1,6 @@
 package com.enderio.core.common.graph;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface INetworkNode<TNet extends Network<TNet, TNode>, TNode extends INetworkNode<TNet, TNode>> {
 

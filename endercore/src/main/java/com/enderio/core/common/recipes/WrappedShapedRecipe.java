@@ -15,7 +15,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.item.crafting.display.RecipeDisplay;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -105,7 +105,7 @@ public abstract class WrappedShapedRecipe extends ShapedRecipe implements Crafti
             this.wrapper = wrapper;
         }
 
-        @NotNull
+        @NonNull
         @Override
         public MapCodec<T> codec() {
             if (codec == null) {

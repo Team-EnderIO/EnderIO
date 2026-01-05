@@ -15,7 +15,7 @@
 //import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 //import net.minecraft.util.Mth;
 //import net.minecraft.world.entity.player.Player;
-//import org.jetbrains.annotations.NotNull;
+//import org.jspecify.annotations.NonNull;
 //
 //import java.util.List;
 //
@@ -41,7 +41,7 @@
 //        }
 //    }
 //
-//    private static @NotNull List<ClientIntegration> getActiveGliders(Player player) {
+//    private static @NonNull List<ClientIntegration> getActiveGliders(Player player) {
 //        return IntegrationManager.getIf(integration -> integration.getGliderMovementInfo(player).isPresent(),
 //                Integration::getClientIntegration);
 //    }

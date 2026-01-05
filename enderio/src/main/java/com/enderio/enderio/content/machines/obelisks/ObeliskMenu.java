@@ -7,7 +7,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class ObeliskMenu<T extends ObeliskBlockEntity<T>> extends PoweredMachineMenu<T> {
     public static final int INCREASE_BUTTON_ID = 0;

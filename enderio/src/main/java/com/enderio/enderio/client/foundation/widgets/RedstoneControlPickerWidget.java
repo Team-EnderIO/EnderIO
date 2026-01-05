@@ -5,7 +5,7 @@ import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.client.foundation.icon.EIOEnumIcons;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;

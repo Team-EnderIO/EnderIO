@@ -5,7 +5,7 @@ import com.google.common.primitives.Ints;
 import net.minecraft.core.Direction;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public record EnergyConduitStorage(@Nullable Direction side, int transferRate, @Nullable ConduitNode node) implements EnergyHandler {
 

@@ -2,7 +2,7 @@ package com.enderio.modded_conduits.common.modules.mekanism.chemical_filter;
 
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalHandler;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public interface ChemicalFilter {
     /**

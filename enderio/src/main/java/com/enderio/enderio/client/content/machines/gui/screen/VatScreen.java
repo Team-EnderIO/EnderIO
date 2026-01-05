@@ -23,7 +23,7 @@ import net.minecraft.util.CommonColors;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.FluidStack;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public class VatScreen extends MachineScreen<VatMenu> {
 

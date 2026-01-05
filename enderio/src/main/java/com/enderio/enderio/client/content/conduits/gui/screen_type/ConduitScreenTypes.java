@@ -7,7 +7,7 @@ import com.enderio.enderio.api.conduits.screen.ConduitScreenType;
 import com.enderio.enderio.api.conduits.screen.RegisterConduitScreenTypesEvent;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.neoforged.fml.ModLoader;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 

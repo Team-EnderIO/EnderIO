@@ -14,7 +14,7 @@ import com.enderio.enderio.api.soul.storage.SoulHandler;
 import net.minecraft.core.Direction;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.ItemCapability;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class EnderIOCapabilities {
     public static final BlockCapability<SideConfig, Direction> SIDE_CONFIG = BlockCapability

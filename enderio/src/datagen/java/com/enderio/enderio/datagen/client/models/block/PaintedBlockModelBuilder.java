@@ -8,7 +8,7 @@
 //import net.neoforged.neoforge.client.model.generators.CustomLoaderBuilder;
 //import net.neoforged.neoforge.client.model.generators.ModelBuilder;
 //import net.neoforged.neoforge.common.data.ExistingFileHelper;
-//import org.jetbrains.annotations.Nullable;
+//import org.jspecify.annotations.Nullable;
 //
 //import java.util.Objects;
 //

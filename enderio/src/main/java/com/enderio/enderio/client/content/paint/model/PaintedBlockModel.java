@@ -33,7 +33,7 @@
 //import net.neoforged.neoforge.client.model.IDynamicBakedModel;
 //import net.neoforged.neoforge.client.model.IQuadTransformer;
 //import net.neoforged.neoforge.client.model.data.ModelData;
-//import org.jetbrains.annotations.Nullable;
+//import org.jspecify.annotations.Nullable;
 //
 //import java.util.ArrayList;
 //import java.util.Arrays;

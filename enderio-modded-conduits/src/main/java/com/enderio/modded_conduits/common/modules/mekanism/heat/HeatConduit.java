@@ -9,7 +9,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 public record HeatConduit(Identifier texture, Component description)
         implements Conduit<HeatConduit, HeatConduitConnectionConfig> {
@@ -43,7 +43,7 @@ public record HeatConduit(Identifier texture, Component description)
     }
 
     @Override
-    public int compareTo(@NotNull HeatConduit o) {
+    public int compareTo(@NonNull HeatConduit o) {
         return 0;
     }
 }

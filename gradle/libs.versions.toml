@@ -15,6 +15,7 @@ graphlib = { strictly = "[3.0.4, 3.1)", prefer = "3.0.5" }
 ftbUltimine = { strictly = "[2101.1.7,2102)", prefer = "2101.1.7" }
 
 [libraries]
+jspecify = { group = "org.jspecify", name = "jspecify", version = "1.0.0"}
 jetbrainsAnnotations = { group = "org.jetbrains", name = "annotations", version = "23.0.0"}
 neoforgeTestFramework = { group = "net.neoforged", name = "testframework", version.ref = "neoforge"}
 

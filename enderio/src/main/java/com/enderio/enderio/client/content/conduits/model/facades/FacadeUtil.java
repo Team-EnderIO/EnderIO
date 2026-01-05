@@ -3,7 +3,7 @@ package com.enderio.enderio.client.content.conduits.model.facades;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class FacadeUtil {
     public static boolean areFacadesVisible(@Nullable Player player) {

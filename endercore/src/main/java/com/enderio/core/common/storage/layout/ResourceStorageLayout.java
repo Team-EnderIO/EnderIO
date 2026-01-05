@@ -6,7 +6,7 @@ import com.enderio.core.common.storage.slot.ResourceSlotKey;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import net.neoforged.neoforge.common.util.TriPredicate;
 import net.neoforged.neoforge.transfer.resource.Resource;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;

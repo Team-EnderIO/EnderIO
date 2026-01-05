@@ -3,7 +3,7 @@ package com.enderio.core.common.menu;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.Slot;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class EnderSlot extends Slot implements SlotWithOverlay {
     @Nullable

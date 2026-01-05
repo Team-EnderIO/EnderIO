@@ -7,7 +7,7 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.text.NumberFormat;
 import java.util.Locale;

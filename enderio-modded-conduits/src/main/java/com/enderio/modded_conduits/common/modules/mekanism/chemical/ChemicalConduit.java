@@ -26,8 +26,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.joml.Vector2i;
 
 import java.util.Objects;
@@ -224,7 +224,7 @@ public record ChemicalConduit(Identifier texture, Component description, long tr
     }
 
     @Override
-    public int compareTo(@NotNull ChemicalConduit o) {
+    public int compareTo(@NonNull ChemicalConduit o) {
         if (isMultiChemical() && !o.isMultiChemical()) {
             return 1;
         }

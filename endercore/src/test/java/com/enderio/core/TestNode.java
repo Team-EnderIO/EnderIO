@@ -2,7 +2,7 @@ package com.enderio.core;
 
 import com.enderio.core.common.graph.BasicNetwork;
 import com.enderio.core.common.graph.INetworkNode;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 

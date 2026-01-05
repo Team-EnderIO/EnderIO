@@ -8,7 +8,7 @@ import com.enderio.modded_conduits.common.modules.mekanism.chemical_filter.Chemi
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalHandler;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class LaserChemicalFilter implements ChemicalFilter {
 

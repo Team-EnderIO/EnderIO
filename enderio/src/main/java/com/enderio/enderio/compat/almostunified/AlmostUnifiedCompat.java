@@ -4,7 +4,7 @@
 //import net.minecraft.tags.TagKey;
 //import net.minecraft.world.item.Item;
 //import net.neoforged.fml.ModList;
-//import org.jetbrains.annotations.Nullable;
+//import org.jspecify.annotations.Nullable;
 //
 //public class AlmostUnifiedCompat {
 //    public static boolean isLoaded() {

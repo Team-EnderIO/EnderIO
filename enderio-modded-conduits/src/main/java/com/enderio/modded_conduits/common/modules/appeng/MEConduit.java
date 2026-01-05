@@ -26,8 +26,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.BlockCapability;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Set;
 
@@ -166,7 +166,7 @@ public record MEConduit(Identifier texture, Component description, AEColor color
     }
 
     @Override
-    public int compareTo(@NotNull MEConduit o) {
+    public int compareTo(@NonNull MEConduit o) {
         if (isDense() && !o.isDense()) {
             return 1;
         } else if (!isDense() && o.isDense()) {
