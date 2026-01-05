@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "enderio:cake_base"
+            "items": "enderio:conduit_binder"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:cake"
+        "recipe": "enderio:vibrant_item_conduit_upgrade"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "enderio:cake"
+      "enderio:vibrant_item_conduit_upgrade"
     ]
   }
 }

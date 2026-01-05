@@ -107,11 +107,10 @@ public class EIOBlocks {
 
     // region Alloy Blocks
 
-    public static final DeferredBlock<Block> COPPER_ALLOY_BLOCK = registerMetalBlock("copper_alloy_block");
+    public static final DeferredBlock<Block> CONDUCTIVE_ALLOY_BLOCK = registerMetalBlock("conductive_alloy_block");
     public static final DeferredBlock<Block> ENERGETIC_ALLOY_BLOCK = registerMetalBlock("energetic_alloy_block");
     public static final DeferredBlock<Block> VIBRANT_ALLOY_BLOCK = registerMetalBlock("vibrant_alloy_block");
     public static final DeferredBlock<Block> REDSTONE_ALLOY_BLOCK = registerMetalBlock("redstone_alloy_block");
-    public static final DeferredBlock<Block> CONDUCTIVE_ALLOY_BLOCK = registerMetalBlock("conductive_alloy_block");
     public static final DeferredBlock<Block> PULSATING_ALLOY_BLOCK = registerMetalBlock("pulsating_alloy_block");
     public static final DeferredBlock<Block> DARK_STEEL_BLOCK = registerMetalBlock("dark_steel_block");
     public static final DeferredBlock<Block> SOULARIUM_BLOCK = registerMetalBlock("soularium_block");
@@ -609,6 +608,8 @@ public class EIOBlocks {
     public static void register(IEventBus bus) {
         BLOCKS.addAlias(EnderIO.rl("industrial_insulation_block"), EnderIO.rl("industrial_insulation"));
         ITEMS.addAlias(EnderIO.rl("industrial_insulation_block"), EnderIO.rl("industrial_insulation"));
+        BLOCKS.addAlias(EnderIO.rl("copper_alloy_block"), EnderIO.rl("conductive_alloy_block"));
+        ITEMS.addAlias(EnderIO.rl("copper_alloy_block"), EnderIO.rl("conductive_alloy_block"));
 
         BLOCKS.register(bus);
         ITEMS.register(bus);

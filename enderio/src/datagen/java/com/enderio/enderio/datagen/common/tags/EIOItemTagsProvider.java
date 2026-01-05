@@ -41,7 +41,6 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
             .addTag(EIOTags.Items.STORAGE_BLOCKS_AMETHYST)
             .addTag(EIOTags.Items.STORAGE_BLOCKS_QUARTZ)
             .addTag(EIOTags.Items.BLOCKS_CONDUCTIVE_ALLOY)
-            .addTag(EIOTags.Items.BLOCKS_COPPER_ALLOY)
             .addTag(EIOTags.Items.BLOCKS_DARK_STEEL)
             .addTag(EIOTags.Items.BLOCKS_END_STEEL)
             .addTag(EIOTags.Items.BLOCKS_ENERGETIC_ALLOY)
@@ -68,7 +67,6 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
     }
 
     private void addIngotTags() {
-        tag(EIOTags.Items.INGOTS_COPPER_ALLOY).add(EIOItems.COPPER_ALLOY_INGOT.get());
         tag(EIOTags.Items.INGOTS_ENERGETIC_ALLOY).add(EIOItems.ENERGETIC_ALLOY_INGOT.get());
         tag(EIOTags.Items.INGOTS_VIBRANT_ALLOY).add(EIOItems.VIBRANT_ALLOY_INGOT.get());
         tag(EIOTags.Items.INGOTS_REDSTONE_ALLOY).add(EIOItems.REDSTONE_ALLOY_INGOT.get());
@@ -80,7 +78,6 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
 
         tag(Tags.Items.INGOTS)
             .addTag(EIOTags.Items.INGOTS_CONDUCTIVE_ALLOY)
-            .addTag(EIOTags.Items.INGOTS_COPPER_ALLOY)
             .addTag(EIOTags.Items.INGOTS_DARK_STEEL)
             .addTag(EIOTags.Items.INGOTS_END_STEEL)
             .addTag(EIOTags.Items.INGOTS_ENERGETIC_ALLOY)
@@ -91,7 +88,6 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
     }
 
     private void addNuggetTags() {
-        tag(EIOTags.Items.NUGGETS_COPPER_ALLOY).add(EIOItems.COPPER_ALLOY_NUGGET.get());
         tag(EIOTags.Items.NUGGETS_ENERGETIC_ALLOY).add(EIOItems.ENERGETIC_ALLOY_NUGGET.get());
         tag(EIOTags.Items.NUGGETS_VIBRANT_ALLOY).add(EIOItems.VIBRANT_ALLOY_NUGGET.get());
         tag(EIOTags.Items.NUGGETS_REDSTONE_ALLOY).add(EIOItems.REDSTONE_ALLOY_NUGGET.get());
@@ -103,7 +99,6 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
 
         tag(Tags.Items.NUGGETS)
             .addTag(EIOTags.Items.NUGGETS_CONDUCTIVE_ALLOY)
-            .addTag(EIOTags.Items.NUGGETS_COPPER_ALLOY)
             .addTag(EIOTags.Items.NUGGETS_DARK_STEEL)
             .addTag(EIOTags.Items.NUGGETS_END_STEEL)
             .addTag(EIOTags.Items.NUGGETS_ENERGETIC_ALLOY)
@@ -138,7 +133,6 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
         tag(EIOTags.Items.DUSTS_TIN).add(EIOItems.POWDERED_TIN.get());
         tag(EIOTags.Items.DUSTS_ENDER).add(EIOItems.POWDERED_ENDER_PEARL.get());
         tag(EIOTags.Items.DUSTS_OBSIDIAN).add(EIOItems.POWDERED_OBSIDIAN.get());
-        tag(EIOTags.Items.DUSTS_COBALT).add(EIOItems.POWDERED_COBALT.get());
         tag(EIOTags.Items.DUSTS_LAPIS).add(EIOItems.POWDERED_LAPIS_LAZULI.get());
         tag(EIOTags.Items.DUSTS_QUARTZ).add(EIOItems.POWDERED_QUARTZ.get());
         tag(EIOTags.Items.DUSTS_GRAINS_OF_INFINITY).add(EIOItems.GRAINS_OF_INFINITY.get());
@@ -157,7 +151,6 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
             .addTag(EIOTags.Items.DUSTS_TIN)
             .addTag(EIOTags.Items.DUSTS_ENDER)
             .addTag(EIOTags.Items.DUSTS_OBSIDIAN)
-            .addTag(EIOTags.Items.DUSTS_COBALT)
             .addTag(EIOTags.Items.DUSTS_PRISMARINE)
             .addTag(EIOTags.Items.DUSTS_GRAINS_OF_INFINITY)
             .addTag(EIOTags.Items.DUSTS_GRAINS_OF_PRESCIENCE)
@@ -188,7 +181,6 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
             .add(EIOItems.REDSTONE_ALLOY_BALL.get())
             .add(EIOItems.ENERGETIC_ALLOY_BALL.get())
             .add(EIOItems.VIBRANT_ALLOY_BALL.get())
-            .add(EIOItems.COPPER_ALLOY_BALL.get())
             .add(EIOItems.DARK_STEEL_BALL.get())
             .add(EIOItems.END_STEEL_BALL.get());
     }
@@ -201,9 +193,6 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
         tag(EIOTags.Items.STORAGE_BLOCKS_QUARTZ).add(Items.QUARTZ_BLOCK);
         tag(EIOTags.Items.STORAGE_BLOCKS_AMETHYST).add(Items.AMETHYST_BLOCK);
 
-        tag(Tags.Items.DYES_GREEN).add(EIOItems.DYE_GREEN.get());
-        tag(Tags.Items.DYES_BROWN).add(EIOItems.DYE_BROWN.get());
-        tag(Tags.Items.DYES_BLACK).add(EIOItems.DYE_BLACK.get());
         tag(EIOTags.Items.SILICON).add(EIOItems.SILICON.get());
         tag(EIOTags.Items.WRENCH).add(EIOItems.YETA_WRENCH.get());
     }
@@ -236,11 +225,10 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
     }
 
     private void addBlockItemTags() {
-        copy(EIOTags.Blocks.BLOCKS_COPPER_ALLOY, EIOTags.Items.BLOCKS_COPPER_ALLOY);
+        copy(EIOTags.Blocks.BLOCKS_CONDUCTIVE_ALLOY, EIOTags.Items.BLOCKS_CONDUCTIVE_ALLOY);
         copy(EIOTags.Blocks.BLOCKS_ENERGETIC_ALLOY, EIOTags.Items.BLOCKS_ENERGETIC_ALLOY);
         copy(EIOTags.Blocks.BLOCKS_VIBRANT_ALLOY, EIOTags.Items.BLOCKS_VIBRANT_ALLOY);
         copy(EIOTags.Blocks.BLOCKS_REDSTONE_ALLOY, EIOTags.Items.BLOCKS_REDSTONE_ALLOY);
-        copy(EIOTags.Blocks.BLOCKS_CONDUCTIVE_ALLOY, EIOTags.Items.BLOCKS_CONDUCTIVE_ALLOY);
         copy(EIOTags.Blocks.BLOCKS_PULSATING_ALLOY, EIOTags.Items.BLOCKS_PULSATING_ALLOY);
         copy(EIOTags.Blocks.BLOCKS_DARK_STEEL, EIOTags.Items.BLOCKS_DARK_STEEL);
         copy(EIOTags.Blocks.BLOCKS_SOULARIUM, EIOTags.Items.BLOCKS_SOULARIUM);

@@ -1,19 +1,19 @@
 {
   "type": "enderio:alloy_smelting",
-  "energy": 1600,
+  "energy": 1000,
   "experience": 0.3,
   "inputs": [
     {
-      "count": 12,
+      "count": 6,
       "item": "enderio:plant_matter_brown"
     },
     {
       "count": 1,
-      "tag": "c:slimeballs"
+      "item": "minecraft:egg"
     }
   ],
   "output": {
-    "count": 2,
-    "id": "enderio:organic_brown_dye"
+    "count": 1,
+    "id": "minecraft:brown_dye"
   }
 }

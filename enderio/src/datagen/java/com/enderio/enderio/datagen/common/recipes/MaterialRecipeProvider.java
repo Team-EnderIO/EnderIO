@@ -65,18 +65,12 @@ public class MaterialRecipeProvider extends SubRecipeProvider {
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.SOULARIUM_INGOT.get()))
                 .save(recipeOutput);
 
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, EIOItems.BLACK_PAPER)
-                .requires(Items.PAPER)
-                .requires(Tags.Items.DYES_BLACK)
-                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Items.PAPER))
-                .save(recipeOutput);
-
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.REDSTONE_FILTER_BASE)
                 .pattern("RPR")
                 .pattern("PIP")
                 .pattern("RPR")
                 .define('R', EIOTags.Items.INGOTS_REDSTONE_ALLOY)
-                .define('P', Ingredient.of(Items.PAPER, EIOItems.BLACK_PAPER))
+                .define('P',Items.PAPER)
                 .define('I', Tags.Items.INGOTS_IRON)
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.REDSTONE_ALLOY_INGOT))
@@ -94,15 +88,6 @@ public class MaterialRecipeProvider extends SubRecipeProvider {
     }
 
     private void addVanilla(RecipeOutput recipeOutput) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.FOOD, Items.CAKE)
-                .pattern("MMM")
-                .pattern("SCS")
-                .define('M', Items.MILK_BUCKET)
-                .define('S', Items.SUGAR)
-                .define('C', EIOItems.CAKE_BASE.get())
-                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CAKE_BASE.get()))
-                .save(recipeOutput, EnderIO.rl("cake"));
-
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.STICK, 16)
                 .pattern("W")
                 .pattern("W")
@@ -114,8 +99,6 @@ public class MaterialRecipeProvider extends SubRecipeProvider {
     }
 
     private void addAlloys(RecipeOutput recipeOutput) {
-        makeMaterialRecipes(recipeOutput, EIOItems.COPPER_ALLOY_INGOT.get(), EIOItems.COPPER_ALLOY_NUGGET.get(),
-                EIOBlocks.COPPER_ALLOY_BLOCK.get());
         makeMaterialRecipes(recipeOutput, EIOItems.ENERGETIC_ALLOY_INGOT.get(), EIOItems.ENERGETIC_ALLOY_NUGGET.get(),
                 EIOBlocks.ENERGETIC_ALLOY_BLOCK.get());
         makeMaterialRecipes(recipeOutput, EIOItems.VIBRANT_ALLOY_INGOT.get(), EIOItems.VIBRANT_ALLOY_NUGGET.get(),
@@ -296,8 +279,6 @@ public class MaterialRecipeProvider extends SubRecipeProvider {
                 EIOItems.ENERGETIC_ALLOY_INGOT.get());
         grindingBall(recipeOutput, EIOItems.VIBRANT_ALLOY_BALL.get(), EIOTags.Items.INGOTS_VIBRANT_ALLOY,
                 EIOItems.VIBRANT_ALLOY_INGOT.get());
-        grindingBall(recipeOutput, EIOItems.COPPER_ALLOY_BALL.get(), EIOTags.Items.INGOTS_COPPER_ALLOY,
-                EIOItems.COPPER_ALLOY_INGOT.get());
         grindingBall(recipeOutput, EIOItems.END_STEEL_BALL.get(), EIOTags.Items.INGOTS_END_STEEL,
                 EIOItems.END_STEEL_INGOT.get());
     }

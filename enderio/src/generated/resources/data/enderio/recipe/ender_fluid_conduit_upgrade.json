@@ -10,7 +10,7 @@
       "conduit_type": "enderio:pressurized_fluid"
     },
     "I": {
-      "item": "enderio:vibrant_alloy_ingot"
+      "tag": "c:ingots/vibrant_alloy"
     }
   },
   "pattern": [

@@ -6,16 +6,16 @@
       "tag": "c:ingots/conductive_alloy"
     },
     "E": {
-      "tag": "c:ingots/copper_alloy"
+      "tag": "c:ingots/energetic_alloy"
     },
     "V": {
       "tag": "c:gems/vibrant_crystal"
     }
   },
   "pattern": [
-    "CVC",
-    "C C",
-    "E E"
+    "EVE",
+    "E E",
+    "C C"
   ],
   "result": {
     "count": 1,

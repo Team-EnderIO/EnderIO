@@ -5,13 +5,16 @@
     "B": {
       "item": "enderio:conduit_binder"
     },
-    "P": {
-      "tag": "c:nuggets/pulsating_alloy"
+    "C": {
+      "tag": "c:ingots/conductive_alloy"
+    },
+    "I": {
+      "tag": "c:ingots/pulsating_alloy"
     }
   },
   "pattern": [
     "BBB",
-    "PPP",
+    "CIC",
     "BBB"
   ],
   "result": {
