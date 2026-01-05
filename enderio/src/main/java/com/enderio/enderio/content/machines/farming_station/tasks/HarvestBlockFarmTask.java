@@ -7,6 +7,7 @@ import net.minecraft.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.BambooStalkBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CactusBlock;
 import net.minecraft.world.level.block.SugarCaneBlock;
@@ -27,7 +28,7 @@ public class HarvestBlockFarmTask implements FarmTask {
         BlockPos pos = soil.above();
         BlockState plant = farmBlockEntity.getLevel().getBlockState(pos);
         BlockEntity blockEntity = farmBlockEntity.getLevel().getBlockEntity(pos);
-        if (plant.getBlock() instanceof CactusBlock || plant.getBlock() instanceof SugarCaneBlock) {
+        if (plant.getBlock() instanceof CactusBlock || plant.getBlock() instanceof SugarCaneBlock || plant.getBlock() instanceof BambooStalkBlock) {
             Optional<BlockPos> top = BlockUtil.getTopConnectedBlock(farmBlockEntity.getLevel(), pos, plant.getBlock(),
                 Direction.UP, Blocks.AIR);
             if (top.isPresent() && !top.get().below().equals(pos)) {

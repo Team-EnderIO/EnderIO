@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.BambooStalkBlock;
 import net.minecraft.world.level.block.CactusBlock;
 import net.minecraft.world.level.block.SugarCaneBlock;
 
@@ -24,7 +25,7 @@ public class PlantBlockFarmTask implements FarmTask {
             return FarmInteraction.BLOCKED;
         }
         if (seeds.getItem() instanceof BlockItem blockItem
-            && (blockItem.getBlock() instanceof CactusBlock || blockItem.getBlock() instanceof SugarCaneBlock)) {
+            && (blockItem.getBlock() instanceof CactusBlock || blockItem.getBlock() instanceof SugarCaneBlock || blockItem.getBlock() instanceof BambooStalkBlock)) {
             InteractionResult result = farmBlockEntity.useStack(soil, seeds);
             if (result == InteractionResult.SUCCESS || result == InteractionResult.CONSUME) {
                 if (farmBlockEntity.getConsumedPower() >= 40) {
