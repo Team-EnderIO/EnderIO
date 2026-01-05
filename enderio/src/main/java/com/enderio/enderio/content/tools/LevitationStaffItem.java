@@ -27,8 +27,8 @@ public class LevitationStaffItem extends PoweredToggledItem {
             itemAccess) -> new StrictItemAccessFluidHandler(itemAccess, EIODataComponents.ITEM_FLUID_CONTENT, 1000,
                     EIOTags.Fluids.STAFF_OF_LEVITY_FUEL);
 
-    public LevitationStaffItem(Properties pProperties) {
-        super(pProperties);
+    public LevitationStaffItem(Properties properties) {
+        super(properties);
     }
 
     @Override
@@ -57,10 +57,10 @@ public class LevitationStaffItem extends PoweredToggledItem {
     }
 
     @Override
-    protected void consumeCharge(ItemStack pStack) {
-        super.consumeCharge(pStack);
+    protected void consumeCharge(ItemStack stack) {
+        super.consumeCharge(stack);
 
-        var fluidHandler = pStack.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(pStack));
+        var fluidHandler = ItemAccess.forStack(stack).getCapability(Capabilities.Fluid.ITEM);
         if (fluidHandler != null) {
             try (Transaction transaction = Transaction.openRoot()) {
                 // TODO: Config for consumption amount
@@ -71,15 +71,15 @@ public class LevitationStaffItem extends PoweredToggledItem {
     }
 
     @Override
-    protected void setFullCharge(ItemStack pStack) {
-        super.setFullCharge(pStack);
+    protected void setFullCharge(ItemStack stack) {
+        super.setFullCharge(stack);
 
-        var fluidHandler = pStack.getCapability(Capabilities.Fluid.ITEM, ItemAccess.forStack(pStack));
+        var fluidHandler = ItemAccess.forStack(stack).getCapability(Capabilities.Fluid.ITEM);
         if (fluidHandler != null) {
             int capacity = fluidHandler.getCapacityAsInt(0, FluidResource.of(EIOFluids.VAPOR_OF_LEVITY.source()));
 
             // Just set the component itself.
-            pStack.set(EIODataComponents.ITEM_FLUID_CONTENT, SimpleFluidContent.copyOf(
+            stack.set(EIODataComponents.ITEM_FLUID_CONTENT, SimpleFluidContent.copyOf(
                 new FluidStack(EIOFluids.VAPOR_OF_LEVITY.source(), capacity)));
         }
     }

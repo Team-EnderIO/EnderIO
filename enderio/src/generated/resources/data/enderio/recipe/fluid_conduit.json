@@ -3,11 +3,12 @@
   "category": "building",
   "key": {
     "B": "enderio:conduit_binder",
+    "C": "#c:ingots/conductive_alloy",
     "G": "#c:glass_blocks/clear"
   },
   "pattern": [
     "BBB",
-    "GGG",
+    "CGC",
     "BBB"
   ],
   "result": {

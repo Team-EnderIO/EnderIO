@@ -26,9 +26,9 @@ public abstract class ObeliskScreen<J extends ObeliskBlockEntity<J>, T extends O
 
     private final Identifier background;
 
-    public ObeliskScreen(T pMenu, Inventory pPlayerInventory, Component pTitle, Identifier background,
+    public ObeliskScreen(T menu, Inventory playerInventory, Component title, Identifier background,
             int imageWidth, int imageHeight) {
-        super(pMenu, pPlayerInventory, pTitle);
+        super(menu, playerInventory, title);
         this.background = background;
         this.imageWidth = imageWidth;
         this.imageHeight = imageHeight;
@@ -57,20 +57,20 @@ public abstract class ObeliskScreen<J extends ObeliskBlockEntity<J>, T extends O
     }
 
     @Override
-    protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
-        pGuiGraphics.blit(RenderPipelines.GUI_TEXTURED, background, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, background, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
-        super.render(guiGraphics, pMouseX, pMouseY, pPartialTicks);
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        super.render(guiGraphics, mouseX, mouseY, partialTicks);
         guiGraphics.drawString(font, getMenu().getBlockEntity().getRange() + "",
                 leftPos + imageWidth - 8 - 16 - font.width(getMenu().getBlockEntity().getRange() + "") - 10,
                 topPos + 16 * 2 + 6, 0, false);
     }
 
     @Override
-    protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
+    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         guiGraphics.drawString(font, MachinesLang.RANGE, imageWidth - 6 - font.width(MachinesLang.RANGE), 16 + 8, CommonColors.DARK_GRAY, false);
 
         guiGraphics.drawString(font, MachinesLang.MAX_RANGE, imageWidth / 2 - font.width(MachinesLang.MAX_RANGE) / 2, 5, CommonColors.DARK_GRAY,
@@ -83,7 +83,7 @@ public abstract class ObeliskScreen<J extends ObeliskBlockEntity<J>, T extends O
                 TooltipUtil.withArgs(MachinesLang.OBELISK_UPKEEP, getMenu().getBlockEntity().getPerTickEnergyCost()),
                 imageWidth / 2 - font.width(MachinesLang.MAX_RANGE) / 2, 62, 0, false);
 
-        super.renderLabels(guiGraphics, pMouseX, pMouseY);
+        super.renderLabels(guiGraphics, mouseX, mouseY);
     }
 
     @Override

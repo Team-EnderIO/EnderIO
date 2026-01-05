@@ -16,8 +16,8 @@ import org.jspecify.annotations.Nullable;
 
 public class PaintedBlockItem extends BlockItem {
 
-    public PaintedBlockItem(Block pBlock, Properties pProperties) {
-        super(pBlock, pProperties);
+    public PaintedBlockItem(Block block, Properties properties) {
+        super(block, properties);
     }
 
     @Override
@@ -27,17 +27,17 @@ public class PaintedBlockItem extends BlockItem {
     }
 
     @Override
-    protected boolean updateCustomBlockEntityTag(BlockPos pPos, Level pLevel, @Nullable Player pPlayer, ItemStack pStack, BlockState pState) {
-        boolean result = super.updateCustomBlockEntityTag(pPos, pLevel, pPlayer, pStack, pState);
+    protected boolean updateCustomBlockEntityTag(BlockPos pos, Level level, @Nullable Player player, ItemStack stack, BlockState state) {
+        boolean result = super.updateCustomBlockEntityTag(pos, level, player, stack, state);
 
-        var paintData = pStack.get(EIODataComponents.BLOCK_PAINT);
+        var paintData = stack.get(EIODataComponents.BLOCK_PAINT);
 
         if (paintData == null) {
             // TODO: Log error?
             return true;
         }
 
-        BlockEntity blockentity = pLevel.getBlockEntity(pPos);
+        BlockEntity blockentity = level.getBlockEntity(pos);
         if (blockentity instanceof PaintedBlockEntity singlePaintedBlockEntity) {
             singlePaintedBlockEntity.setPrimaryPaint(paintData.paint());
         }

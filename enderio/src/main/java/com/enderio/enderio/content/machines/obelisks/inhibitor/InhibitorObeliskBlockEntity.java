@@ -51,7 +51,7 @@ public class InhibitorObeliskBlockEntity extends ObeliskBlockEntity<InhibitorObe
 
     @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player pPlayer) {
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
         return new InhibitorObeliskMenu(containerId, playerInventory, this);
     }
 

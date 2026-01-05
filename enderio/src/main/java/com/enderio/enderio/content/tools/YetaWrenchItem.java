@@ -19,17 +19,17 @@ import java.util.Optional;
 
 public class YetaWrenchItem extends Item {
 
-    public YetaWrenchItem(Properties pProperties) {
-        super(pProperties.stacksTo(1));
+    public YetaWrenchItem(Properties properties) {
+        super(properties.stacksTo(1));
     }
 
     @Override
-    public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext pContext) {
-        Level level = pContext.getLevel();
-        BlockPos pos = pContext.getClickedPos();
+    public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
+        Level level = context.getLevel();
+        BlockPos pos = context.getClickedPos();
 
         // Check for side config capability
-        SideConfig sideConfig = level.getCapability(EnderIOCapabilities.SIDE_CONFIG, pos, pContext.getClickedFace());
+        SideConfig sideConfig = level.getCapability(EnderIOCapabilities.SIDE_CONFIG, pos, context.getClickedFace());
         if (sideConfig != null) {
             sideConfig.cycleMode();
             return InteractionResult.SUCCESS;
@@ -40,15 +40,15 @@ public class YetaWrenchItem extends Item {
         }
 
         // Look for rotation property
-        BlockState state = level.getBlockState(pContext.getClickedPos());
+        BlockState state = level.getBlockState(context.getClickedPos());
         Optional<Either<EnumProperty<Direction>, EnumProperty<Direction.Axis>>> property = getRotationProperty(state);
         if (property.isPresent()) {
-            BlockState newState = getNextState(pContext, state, property.get());
-            pContext.getLevel()
-                    .setBlock(pContext.getClickedPos(), newState, Block.UPDATE_NEIGHBORS + Block.UPDATE_CLIENTS);
+            BlockState newState = getNextState(context, state, property.get());
+            context.getLevel()
+                    .setBlock(context.getClickedPos(), newState, Block.UPDATE_NEIGHBORS + Block.UPDATE_CLIENTS);
             return InteractionResult.SUCCESS;
         }
-        return super.onItemUseFirst(stack, pContext);
+        return super.onItemUseFirst(stack, context);
     }
 
     @SuppressWarnings("unchecked")
@@ -69,26 +69,26 @@ public class YetaWrenchItem extends Item {
         return Optional.empty();
     }
 
-    private static BlockState getNextState(UseOnContext pContext, BlockState state,
+    private static BlockState getNextState(UseOnContext context, BlockState state,
             Either<EnumProperty<Direction>, EnumProperty<Direction.Axis>> property) {
 
         if (property.left().isPresent()) {
-            return handleProperty(pContext, state, property.left().get());
+            return handleProperty(context, state, property.left().get());
         } else if (property.right().isPresent()) {
-            return handleProperty(pContext, state, property.right().get());
+            return handleProperty(context, state, property.right().get());
         } else {
             throw new IllegalArgumentException("property must either be a Direction or Axis property.");
         }
     }
 
-    private static <T extends Comparable<T>> BlockState handleProperty(UseOnContext pContext, BlockState state,
+    private static <T extends Comparable<T>> BlockState handleProperty(UseOnContext context, BlockState state,
             Property<T> property) {
         int noValidStateIndex = 0;
         do {
             state = getNextBlockState(state, property);
             noValidStateIndex++;
         } while (noValidStateIndex != property.getPossibleValues().size()
-                && !state.canSurvive(pContext.getLevel(), pContext.getClickedPos()));
+                && !state.canSurvive(context.getLevel(), context.getClickedPos()));
 
         return state;
     }

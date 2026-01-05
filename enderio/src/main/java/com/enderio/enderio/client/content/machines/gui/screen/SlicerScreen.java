@@ -21,8 +21,8 @@ public class SlicerScreen extends MachineScreen<SlicerMenu> {
 
     private static final Identifier PROGRESS_SPRITE = EnderIO.id("screen/slice_and_splice/progress");
 
-    public SlicerScreen(SlicerMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
-        super(pMenu, pPlayerInventory, pTitle);
+    public SlicerScreen(SlicerMenu menu, Inventory playerInventory, Component title) {
+        super(menu, playerInventory, title);
         imageWidth = WIDTH;
         imageHeight = HEIGHT;
         shouldRenderLabels = true;
@@ -52,8 +52,8 @@ public class SlicerScreen extends MachineScreen<SlicerMenu> {
     }
 
     @Override
-    protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
-        pGuiGraphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
 }

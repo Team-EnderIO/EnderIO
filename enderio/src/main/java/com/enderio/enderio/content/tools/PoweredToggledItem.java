@@ -33,8 +33,8 @@ public abstract class PoweredToggledItem extends Item implements AdvancedTooltip
     public static final ICapabilityProvider<ItemStack, ItemAccess, EnergyHandler> ENERGY_STORAGE_PROVIDER =
         (stack, itemAccess) -> new ItemAccessEnergyHandler(itemAccess, EIODataComponents.ENERGY, ((PoweredToggledItem)stack.getItem()).getMaxEnergy());
 
-    public PoweredToggledItem(Properties pProperties) {
-        super(pProperties
+    public PoweredToggledItem(Properties properties) {
+        super(properties
             .stacksTo(1)
             .component(EIODataComponents.TOGGLED, false));
     }
@@ -57,24 +57,24 @@ public abstract class PoweredToggledItem extends Item implements AdvancedTooltip
         stack.set(EIODataComponents.TOGGLED, false);
     }
 
-    protected boolean hasCharge(ItemStack pStack) {
-        return ItemStackEnergy.hasEnergy(pStack, getEnergyUse());
+    protected boolean hasCharge(ItemStack stack) {
+        return ItemStackEnergy.hasEnergy(stack, getEnergyUse());
     }
 
-    protected void consumeCharge(ItemStack pStack) {
+    protected void consumeCharge(ItemStack stack) {
         try (Transaction transaction = Transaction.openRoot()) {
-            ItemStackEnergy.extractEnergy(pStack, getEnergyUse(), transaction);
+            ItemStackEnergy.extractEnergy(stack, getEnergyUse(), transaction);
             transaction.commit();
         }
     }
 
-    protected void setFullCharge(ItemStack pStack) {
-        ItemStackEnergy.setFull(pStack);
+    protected void setFullCharge(ItemStack stack) {
+        ItemStackEnergy.setFull(stack);
     }
 
     @Override
-    public boolean isFoil(ItemStack pStack) {
-        return isEnabled(pStack);
+    public boolean isFoil(ItemStack stack) {
+        return isEnabled(stack);
     }
 
     public static ItemStack getCharged(PoweredToggledItem item) {
@@ -89,16 +89,16 @@ public abstract class PoweredToggledItem extends Item implements AdvancedTooltip
     }
 
     @Override
-    public InteractionResult use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
-        if (pPlayer.isCrouching()) {
-            ItemStack stack = pPlayer.getItemInHand(pUsedHand);
+    public InteractionResult use(Level level, Player player, InteractionHand usedHand) {
+        if (player.isCrouching()) {
+            ItemStack stack = player.getItemInHand(usedHand);
             if (isEnabled(stack)) {
                 disable(stack);
             } else if (hasCharge(stack)) {
                 enable(stack);
             }
         }
-        return super.use(pLevel, pPlayer, pUsedHand);
+        return super.use(level, player, usedHand);
     }
 
     @Override
@@ -126,7 +126,7 @@ public abstract class PoweredToggledItem extends Item implements AdvancedTooltip
     }
 
     @Override
-    public boolean isBarVisible(ItemStack pStack) {
+    public boolean isBarVisible(ItemStack stack) {
         return true;
     }
 
@@ -141,7 +141,7 @@ public abstract class PoweredToggledItem extends Item implements AdvancedTooltip
     }
 
     @Override
-    public int getBarColor(ItemStack pStack) {
+    public int getBarColor(ItemStack stack) {
         return EnergyBarDecorator.BAR_COLOR;
     }
 

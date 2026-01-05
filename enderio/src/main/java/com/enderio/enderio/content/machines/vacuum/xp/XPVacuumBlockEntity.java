@@ -45,8 +45,8 @@ public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb>
 
     private final FluidStorage<XPVacuumBlockEntity> fluidStorage;
 
-    public XPVacuumBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
-        super(EIOBlockEntities.XP_VACUUM.get(), pWorldPosition, pBlockState, ExperienceOrb.class);
+    public XPVacuumBlockEntity(BlockPos worldPosition, BlockState blockState) {
+        super(EIOBlockEntities.XP_VACUUM.get(), worldPosition, blockState, ExperienceOrb.class);
 
         fluidStorage = new FluidStorage<>(FLUID_STORAGE_LAYOUT, this) {
             @Override

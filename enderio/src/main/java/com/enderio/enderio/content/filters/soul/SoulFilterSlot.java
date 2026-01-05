@@ -11,8 +11,8 @@ import java.util.function.Supplier;
 
 public class SoulFilterSlot extends FilterSlot<Soul> {
 
-    public SoulFilterSlot(Supplier<Soul> getter, Consumer<Soul> setter, int pSlot, int pX, int pY) {
-        super(getter, setter, pSlot, pX, pY);
+    public SoulFilterSlot(Supplier<Soul> getter, Consumer<Soul> setter, int slot, int x, int y) {
+        super(getter, setter, slot, x, y);
     }
 
     @Override

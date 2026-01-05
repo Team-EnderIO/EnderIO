@@ -18,8 +18,8 @@ public class RedstoneCountFilterScreen extends EIOScreen<RedstoneCountFilterMenu
     private static final Vector2i BG_SIZE = new Vector2i(183, 201);
     private static final Identifier BG_TEXTURE = EnderIO.id("textures/gui/40/item_filter.png");
 
-    public RedstoneCountFilterScreen(RedstoneCountFilterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
-        super(pMenu, pPlayerInventory, pTitle);
+    public RedstoneCountFilterScreen(RedstoneCountFilterMenu menu, Inventory playerInventory, Component title) {
+        super(menu, playerInventory, title);
     }
 
     @Override
@@ -28,7 +28,7 @@ public class RedstoneCountFilterScreen extends EIOScreen<RedstoneCountFilterMenu
         addRenderableWidget(new DyeColorPickerWidget(this.leftPos + 15, this.topPos + 30,
                 getMenu().getFilter()::getChannel, getMenu()::setChannel, ConduitLang.REDSTONE_CHANNEL));
 
-        EditBox pWidget = new EditBox(this.font, this.leftPos + 60, this.topPos + 20, 60, 20,
+        EditBox widget = new EditBox(this.font, this.leftPos + 60, this.topPos + 20, 60, 20,
                 Component.literal("" + getMenu().getFilter().getMaxCount())) {
 
             @Override
@@ -36,9 +36,9 @@ public class RedstoneCountFilterScreen extends EIOScreen<RedstoneCountFilterMenu
                 return Character.isDigit(event.codepoint()) && super.charTyped(event);
             }
         };
-        pWidget.setValue("" + getMenu().getFilter().getMaxCount());
-        addRenderableWidget(pWidget);
-        addRenderableWidget(Button.builder(FiltersLang.GUI_CONFIRM, pButton -> getMenu().setCount(pWidget.getValue()))
+        widget.setValue("" + getMenu().getFilter().getMaxCount());
+        addRenderableWidget(widget);
+        addRenderableWidget(Button.builder(FiltersLang.GUI_CONFIRM, button -> getMenu().setCount(widget.getValue()))
                 .pos(this.leftPos + 60, this.topPos + 41)
                 .size(60, 20)
                 .build());

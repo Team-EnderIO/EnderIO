@@ -36,9 +36,9 @@ public class ShapedEntityStorageRecipe extends WrappedShapedRecipe {
     }
 
     @Override
-    public boolean matches(CraftingInput pInv, Level pLevel) {
+    public boolean matches(CraftingInput inv, Level level) {
         // Only let this match if there is an entity storage to pull from
-        return getItemStoringEntity(pInv).isPresent() && super.matches(pInv, pLevel);
+        return getItemStoringEntity(inv).isPresent() && super.matches(inv, level);
     }
 
     private Optional<ItemStack> getItemStoringEntity(CraftingInput container) {

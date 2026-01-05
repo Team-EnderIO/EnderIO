@@ -17,14 +17,14 @@ public class RedstoneTimerFilterScreen extends EIOScreen<RedstoneTimerFilterMenu
     private static final Vector2i BG_SIZE = new Vector2i(183, 201);
     private static final Identifier BG_TEXTURE = EnderIO.id("textures/gui/40/item_filter.png");
 
-    public RedstoneTimerFilterScreen(RedstoneTimerFilterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
-        super(pMenu, pPlayerInventory, pTitle);
+    public RedstoneTimerFilterScreen(RedstoneTimerFilterMenu menu, Inventory playerInventory, Component title) {
+        super(menu, playerInventory, title);
     }
 
     @Override
     protected void init() {
         super.init();
-        EditBox pWidget = new EditBox(this.font, this.leftPos + 60, this.topPos + 20, 60, 20,
+        EditBox widget = new EditBox(this.font, this.leftPos + 60, this.topPos + 20, 60, 20,
                 Component.literal("" + getMenu().getFilter().getMaxTicks())) {
 
             @Override
@@ -32,9 +32,9 @@ public class RedstoneTimerFilterScreen extends EIOScreen<RedstoneTimerFilterMenu
                 return Character.isDigit(event.codepoint()) && super.charTyped(event);
             }
         };
-        pWidget.setValue("" + getMenu().getFilter().getMaxTicks());
-        addRenderableWidget(pWidget);
-        addRenderableWidget(Button.builder(FiltersLang.GUI_CONFIRM, pButton -> getMenu().setTimer(pWidget.getValue()))
+        widget.setValue("" + getMenu().getFilter().getMaxTicks());
+        addRenderableWidget(widget);
+        addRenderableWidget(Button.builder(FiltersLang.GUI_CONFIRM, button -> getMenu().setTimer(widget.getValue()))
                 .pos(this.leftPos + 60, this.topPos + 41)
                 .size(60, 20)
                 .build());

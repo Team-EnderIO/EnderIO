@@ -245,7 +245,7 @@ public class WirelessChargerBlockEntity extends PoweredMachineBlockEntity implem
 
     @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player pPlayer) {
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
         return new WirelessChargerMenu(containerId, playerInventory, this);
     }
 }

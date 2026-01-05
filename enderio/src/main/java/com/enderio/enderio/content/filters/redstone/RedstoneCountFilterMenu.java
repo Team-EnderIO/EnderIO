@@ -20,10 +20,10 @@ public class RedstoneCountFilterMenu extends AbstractContainerMenu {
     private final ItemStack stack;
     private final RedstoneCountFilter filter;
 
-    public RedstoneCountFilterMenu(@Nullable MenuType<?> pMenuType, int pContainerId, Inventory inventory, ItemStack pStack) {
-        super(pMenuType, pContainerId);
-        this.stack = pStack;
-        var resourceFilter = pStack.getCapability(EnderIOCapabilities.REDSTONE_INSERT_FILTER);
+    public RedstoneCountFilterMenu(@Nullable MenuType<?> menuType, int containerId, Inventory inventory, ItemStack stack) {
+        super(menuType, containerId);
+        this.stack = stack;
+        var resourceFilter = stack.getCapability(EnderIOCapabilities.REDSTONE_INSERT_FILTER);
         if (!(resourceFilter instanceof RedstoneCountFilter filter)) {
             throw new IllegalArgumentException();
         }
@@ -31,8 +31,8 @@ public class RedstoneCountFilterMenu extends AbstractContainerMenu {
         addInventorySlots(14,119, inventory);
     }
 
-    public RedstoneCountFilterMenu(int pContainerId, Inventory inventory, ItemStack pStack) {
-        this(EIOMenus.REDSTONE_COUNT_FILTER.get(), pContainerId, inventory, pStack);
+    public RedstoneCountFilterMenu(int containerId, Inventory inventory, ItemStack stack) {
+        this(EIOMenus.REDSTONE_COUNT_FILTER.get(), containerId, inventory, stack);
     }
 
     public static RedstoneCountFilterMenu factory(int i, Inventory inventory, RegistryFriendlyByteBuf registryFriendlyByteBuf) {
@@ -41,13 +41,13 @@ public class RedstoneCountFilterMenu extends AbstractContainerMenu {
 
 
     @Override
-    public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
+    public ItemStack quickMoveStack(Player player, int index) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public boolean stillValid(Player pPlayer) {
-        return pPlayer.getItemInHand(InteractionHand.MAIN_HAND).equals(stack);
+    public boolean stillValid(Player player) {
+        return player.getItemInHand(InteractionHand.MAIN_HAND).equals(stack);
     }
 
     public RedstoneCountFilter getFilter() {

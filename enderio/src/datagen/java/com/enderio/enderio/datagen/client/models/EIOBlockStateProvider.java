@@ -51,11 +51,10 @@ public class EIOBlockStateProvider extends ModelProvider {
     @Override
     protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
         // Alloys
-        blockModels.createTrivialCube(EIOBlocks.COPPER_ALLOY_BLOCK.get());
+        blockModels.createTrivialCube(EIOBlocks.CONDUCTIVE_ALLOY_BLOCK.get());
         blockModels.createTrivialCube(EIOBlocks.ENERGETIC_ALLOY_BLOCK.get());
         blockModels.createTrivialCube(EIOBlocks.VIBRANT_ALLOY_BLOCK.get());
         blockModels.createTrivialCube(EIOBlocks.REDSTONE_ALLOY_BLOCK.get());
-        blockModels.createTrivialCube(EIOBlocks.CONDUCTIVE_ALLOY_BLOCK.get());
         blockModels.createTrivialCube(EIOBlocks.PULSATING_ALLOY_BLOCK.get());
         blockModels.createTrivialCube(EIOBlocks.DARK_STEEL_BLOCK.get());
         blockModels.createTrivialCube(EIOBlocks.SOULARIUM_BLOCK.get());

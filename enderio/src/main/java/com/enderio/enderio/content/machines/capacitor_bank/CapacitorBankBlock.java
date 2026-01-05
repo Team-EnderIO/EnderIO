@@ -11,7 +11,7 @@
 //import net.minecraft.core.BlockPos;
 //import net.minecraft.core.Direction;
 //import net.minecraft.network.chat.Component;
-//import net.minecraft.resources.Identifier;
+//import net.minecraft.resources.ResourceLocation;
 //import net.minecraft.world.entity.LivingEntity;
 //import net.minecraft.world.entity.player.Player;
 //import net.minecraft.world.item.ItemStack;
@@ -25,7 +25,7 @@
 //import net.neoforged.fml.common.EventBusSubscriber;
 //import net.neoforged.neoforge.event.entity.player.AdvancementEvent;
 //import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-//import org.jspecify.annotations.Nullable;
+//import org.jetbrains.annotations.Nullable;
 //
 //import java.util.List;
 //import java.util.function.Supplier;
@@ -39,7 +39,7 @@
 //
 //    public final CapacityTier tier;
 //
-//    public static final Identifier PLACE_ADVANCEMENT_ID = EnderIO.rl("place_capacitor_bank");
+//    public static final ResourceLocation PLACE_ADVANCEMENT_ID = EnderIO.rl("place_capacitor_bank");
 //
 //    public CapacitorBankBlock(Properties properties,
 //            Supplier<BlockEntityType<? extends LegacyMachineBlockEntity>> blockEntityType, CapacityTier tier) {
@@ -52,17 +52,17 @@
 //    }
 //
 //    @Override
-//    public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer,
-//            ItemStack pStack) {
-//        super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
-//        if (pPlacer != null && pLevel.getBlockEntity(pPos) instanceof CapacitorBankBlockEntity capacitorBankBlock) {
+//    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer,
+//            ItemStack stack) {
+//        super.setPlacedBy(level, pos, state, placer, stack);
+//        if (placer != null && level.getBlockEntity(pos) instanceof CapacitorBankBlockEntity capacitorBankBlock) {
 //            for (Direction direction : Direction.values()) {
-//                if (pLevel.getBlockEntity(pPos.relative(direction)) instanceof CapacitorBankBlockEntity other
+//                if (level.getBlockEntity(pos.relative(direction)) instanceof CapacitorBankBlockEntity other
 //                        && other.tier == tier) {
 //                    return;
 //                }
 //            }
-//            capacitorBankBlock.setDisplayMode(pPlacer.getDirection().getOpposite(), DisplayMode.BAR);
+//            capacitorBankBlock.setDisplayMode(placer.getDirection().getOpposite(), DisplayMode.BAR);
 //        }
 //    }
 //
@@ -80,7 +80,7 @@
 //
 //    @SubscribeEvent
 //    public static void rightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-//        if (!event.getLevel().isClientSide() && event.getEntity().isShiftKeyDown() && event.getLevel()
+//        if (!event.getLevel().isClientSide && event.getEntity().isShiftKeyDown() && event.getLevel()
 //                .getBlockEntity(event.getHitVec().getBlockPos()) instanceof CapacitorBankBlockEntity capacitorBank) {
 //            if (capacitorBank.onShiftRightClick(event.getHitVec().getDirection(), event.getEntity())) {
 //                event.setCanceled(true);
@@ -97,5 +97,16 @@
 ////                serverPlayer.sendSystemMessage(MachineLang.MULTIBLOCK_CONNECTED_TEXTURES);
 ////            }
 ////        }
-//    }
-//}
+////    }
+////
+////    @SubscribeEvent
+////    public static void onAdvancement(AdvancementEvent.AdvancementEarnEvent event) {
+//////        if (event.getAdvancement().id().equals(PLACE_ADVANCEMENT_ID) && event.getEntity() instanceof ServerPlayer serverPlayer) {
+//////            @Nullable
+//////            ConnectionData connectionData = NetworkHooks.getConnectionData(serverPlayer.connection.connection);
+//////            if (connectionData != null && !connectionData.getModList().contains("athena")) {
+//////                serverPlayer.sendSystemMessage(MachineLang.MULTIBLOCK_CONNECTED_TEXTURES);
+//////            }
+//////        }
+////    }
+////}

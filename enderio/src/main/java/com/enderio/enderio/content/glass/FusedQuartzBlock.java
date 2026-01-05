@@ -38,13 +38,13 @@ public class FusedQuartzBlock extends TransparentBlock {
     }
 
     @Override
-    public VoxelShape getCollisionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
-        if (pContext instanceof EntityCollisionContext entityCollisionContext && entityCollisionContext != CollisionContext.empty()) {
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        if (context instanceof EntityCollisionContext entityCollisionContext && entityCollisionContext != CollisionContext.empty()) {
             if (glassIdentifier.collisionPredicate().canPass(entityCollisionContext)) {
                 return Shapes.empty();
             }
         }
-        return super.getCollisionShape(pState, pLevel, pPos, pContext);
+        return super.getCollisionShape(state, level, pos, context);
     }
 
     public GlassIdentifier glassIdentifier() {

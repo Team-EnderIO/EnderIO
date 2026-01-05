@@ -5,7 +5,7 @@
     "B": "minecraft:bucket",
     "C": "#c:glass_blocks/clear",
     "G": "#c:gears/iron",
-    "I": "#c:ingots/copper_alloy",
+    "I": "#c:ingots/conductive_alloy",
     "V": "enderio:void_chassis"
   },
   "pattern": [

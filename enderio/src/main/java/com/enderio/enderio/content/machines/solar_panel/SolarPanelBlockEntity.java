@@ -1,5 +1,6 @@
 //package com.enderio.enderio.content.machines.solar_panel;
 //
+//import com.enderio.core.common.network.NetworkDataSlot;
 //import com.enderio.enderio.api.capacitor.FixedScalable;
 //import com.enderio.enderio.api.io.IOMode;
 //import com.enderio.enderio.api.io.energy.EnergyIOMode;
@@ -20,19 +21,17 @@
 //import net.minecraft.core.BlockPos;
 //import net.minecraft.core.Direction;
 //import net.minecraft.core.HolderLookup;
-//import net.minecraft.core.component.DataComponentGetter;
 //import net.minecraft.core.component.DataComponentMap;
-//import net.minecraft.core.component.DataComponents;
 //import net.minecraft.nbt.CompoundTag;
-//import net.minecraft.resources.Identifier;
+//import net.minecraft.resources.ResourceLocation;
 //import net.minecraft.world.entity.player.Inventory;
 //import net.minecraft.world.entity.player.Player;
 //import net.minecraft.world.inventory.AbstractContainerMenu;
 //import net.minecraft.world.level.Level;
 //import net.minecraft.world.level.block.state.BlockState;
 //import net.neoforged.bus.api.SubscribeEvent;
-//import net.neoforged.neoforge.event.OnDatapackSyncEvent;
-//import org.jspecify.annotations.Nullable;
+//import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
+//import org.jetbrains.annotations.Nullable;
 //
 //import java.util.List;
 //import java.util.Optional;
@@ -58,13 +57,13 @@
 //        this.tier = tier;
 //        this.node = new MultiEnergyNode(() -> energyStorage,
 //                () -> (MultiEnergyStorageWrapper) getExposedEnergyStorage(), worldPosition);
-////        addDataSlot(NetworkDataSlot.RESOURCE_LOCATION.create(() -> this.getEntityTypeId().orElse(NO_MOB),
-////                this::setEntityType));
+//        addDataSlot(NetworkDataSlot.RESOURCE_LOCATION.create(() -> this.getEntityTypeId().orElse(NO_MOB),
+//                this::setEntityType));
 //    }
 //
 //    @Nullable
 //    @Override
-//    public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
+//    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
 //        return null;
 //    }
 //
@@ -79,7 +78,7 @@
 //            getEnergyStorage().addEnergy(getGenerationRate());
 //        }
 //        if (reloadCache != reload && boundSoul.hasEntity()) {
-//            Optional<SolarSoul.SoulData> op = SolarSoul.RELOAD_LISTENER.matches(boundSoul.entityType());
+//            Optional<SolarSoul.SoulData> op = SolarSoul.SOLAR.matches(boundSoul.entityType());
 //            op.ifPresent(data -> soulData = data);
 //            reloadCache = reload;
 //        }
@@ -272,46 +271,46 @@
 //        return false;
 //    }
 //
-////    @Override
-////    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-////        boundSoul = Soul.parseOptional(lookupProvider, pTag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
-////
-////        super.loadAdditional(pTag, lookupProvider);
-////    }
-////
-////    @Override
-////    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-////        pTag.put(MachineNBTKeys.ENTITY_STORAGE, boundSoul.saveOptional(lookupProvider));
-////
-////        super.saveAdditional(pTag, lookupProvider);
-////    }
+//    @Override
+//    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+//        boundSoul = Soul.parseOptional(lookupProvider, tag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
+//
+//        super.loadAdditional(tag, lookupProvider);
+//    }
 //
 //    @Override
-//    protected void applyImplicitComponents(DataComponentGetter components) {
+//    public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+//        tag.put(MachineNBTKeys.ENTITY_STORAGE, boundSoul.saveOptional(lookupProvider));
+//
+//        super.saveAdditional(tag, lookupProvider);
+//    }
+//
+//    @Override
+//    protected void applyImplicitComponents(DataComponentInput components) {
 //        super.applyImplicitComponents(components);
 //        boundSoul = components.getOrDefault(EIODataComponents.SOUL, Soul.EMPTY);
 //    }
 //
-////    @Override
-////    protected void collectImplicitComponents(DataComponentMap.Builder components) {
-////        super.collectImplicitComponents(components);
-////
-////        if (boundSoul.hasEntity()) {
-////            components.set(EIODataComponents.SOUL, boundSoul);
-////        }
-////    }
+//    @Override
+//    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+//        super.collectImplicitComponents(components);
+//
+//        if (boundSoul.hasEntity()) {
+//            components.set(EIODataComponents.SOUL, boundSoul);
+//        }
+//    }
 //
 //    @Nullable
-//    public Optional<Identifier> getEntityTypeId() {
+//    public Optional<ResourceLocation> getEntityTypeId() {
 //        return boundSoul.isEmpty() ? Optional.empty() : Optional.of(boundSoul.entityTypeId());
 //    }
 //
-//    public void setEntityType(Identifier entityType) {
+//    public void setEntityType(ResourceLocation entityType) {
 //        boundSoul = Soul.of(entityType);
 //    }
 //
 //    @SubscribeEvent
-//    static void onReload(OnDatapackSyncEvent event) {
+//    static void onReload(RecipesUpdatedEvent event) {
 //        reload = !reload;
 //    }
 //

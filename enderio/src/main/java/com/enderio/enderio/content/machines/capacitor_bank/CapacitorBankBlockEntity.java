@@ -1,29 +1,34 @@
 //package com.enderio.enderio.content.machines.capacitor_bank;
 //
+//import com.enderio.core.common.network.NetworkDataSlot;
 //import com.enderio.enderio.api.capacitor.FixedScalable;
 //import com.enderio.enderio.api.io.energy.EnergyIOMode;
 //import com.enderio.enderio.foundation.block.entity.MultiConfigurable;
 //import com.enderio.enderio.foundation.block.entity.legacy.LegacyPoweredMachineBlockEntity;
+//import com.enderio.enderio.foundation.block.entity.legacy.sync.LargeEnergyData;
 //import com.enderio.enderio.foundation.block.entity.multienergy.CapacityTier;
 //import com.enderio.enderio.foundation.block.entity.multienergy.MultiEnergyNode;
 //import com.enderio.enderio.foundation.block.entity.multienergy.MultiEnergyStorageWrapper;
+//import com.enderio.enderio.foundation.io.energy.ILargeMachineEnergyStorage;
 //import com.enderio.enderio.foundation.io.energy.MachineEnergyStorage;
 //import com.enderio.enderio.foundation.tag.EIOTags;
 //import com.enderio.enderio.init.EIOBlockEntities;
 //import dev.gigaherz.graph3.Graph;
 //import dev.gigaherz.graph3.GraphObject;
 //import dev.gigaherz.graph3.Mergeable;
+//import net.minecraft.Util;
 //import net.minecraft.core.BlockPos;
 //import net.minecraft.core.Direction;
+//import net.minecraft.core.HolderLookup;
 //import net.minecraft.nbt.CompoundTag;
-//import net.minecraft.util.Util;
+//import net.minecraft.nbt.Tag;
 //import net.minecraft.world.entity.player.Inventory;
 //import net.minecraft.world.entity.player.Player;
 //import net.minecraft.world.inventory.AbstractContainerMenu;
 //import net.minecraft.world.item.BlockItem;
 //import net.minecraft.world.level.block.Block;
 //import net.minecraft.world.level.block.state.BlockState;
-//import org.jspecify.annotations.Nullable;
+//import org.jetbrains.annotations.Nullable;
 //
 //import java.util.ArrayList;
 //import java.util.EnumMap;
@@ -53,12 +58,12 @@
 //        return map;
 //    });
 //
-////    public static final NetworkDataSlot.CodecType<Map<Direction, DisplayMode>> DISPLAY_MODE_MAP_DATA_SLOT_TYPE = NetworkDataSlot.CodecType
-////            .createMap(Direction.CODEC, DisplayMode.CODEC, Direction.STREAM_CODEC.cast(),
-////                    DisplayMode.STREAM_CODEC.cast());
+//    public static final NetworkDataSlot.CodecType<Map<Direction, DisplayMode>> DISPLAY_MODE_MAP_DATA_SLOT_TYPE = NetworkDataSlot.CodecType
+//            .createMap(Direction.CODEC, DisplayMode.CODEC, Direction.STREAM_CODEC.cast(),
+//                    DisplayMode.STREAM_CODEC.cast());
 //
-////    public static final NetworkDataSlot.CodecType<List<BlockPos>> POSITION_LIST_DATA_SLOT_TYPE = NetworkDataSlot.CodecType
-////            .createList(BlockPos.CODEC, BlockPos.STREAM_CODEC.cast());
+//    public static final NetworkDataSlot.CodecType<List<BlockPos>> POSITION_LIST_DATA_SLOT_TYPE = NetworkDataSlot.CodecType
+//            .createList(BlockPos.CODEC, BlockPos.STREAM_CODEC.cast());
 //
 //    public CapacitorBankBlockEntity(BlockPos worldPosition, BlockState blockState, CapacitorTier tier) {
 //        super(EnergyIOMode.Both, new FixedScalable(tier::getStorageCapacity),
@@ -68,23 +73,23 @@
 //        this.node = new MultiEnergyNode(() -> energyStorage,
 //                () -> (MultiEnergyStorageWrapper) getExposedEnergyStorage(), worldPosition);
 //
-////        addDataSlot(NetworkDataSlot.LONG.create(() -> addedEnergy, data -> addedEnergy = data));
-////        addDataSlot(NetworkDataSlot.LONG.create(() -> removedEnergy, data -> removedEnergy = data));
-////        addDataSlot(POSITION_LIST_DATA_SLOT_TYPE.create(this::getPositions, this::setPositions));
-////        addDataSlot(DISPLAY_MODE_MAP_DATA_SLOT_TYPE.create(() -> displayModes, displayModes::putAll));
+//        addDataSlot(NetworkDataSlot.LONG.create(() -> addedEnergy, data -> addedEnergy = data));
+//        addDataSlot(NetworkDataSlot.LONG.create(() -> removedEnergy, data -> removedEnergy = data));
+//        addDataSlot(POSITION_LIST_DATA_SLOT_TYPE.create(this::getPositions, this::setPositions));
+//        addDataSlot(DISPLAY_MODE_MAP_DATA_SLOT_TYPE.create(() -> displayModes, displayModes::putAll));
 //    }
 //
-////    @Override
-////    public NetworkDataSlot<?> createEnergyDataSlot() {
-////        return LargeEnergyData.DATA_SLOT_TYPE.create(
-////                () -> LargeEnergyData.from((ILargeMachineEnergyStorage) getExposedEnergyStorage()),
-////                energyData -> clientEnergyStorage = energyData.toImmutableStorage());
-////    }
+//    @Override
+//    public NetworkDataSlot<?> createEnergyDataSlot() {
+//        return LargeEnergyData.DATA_SLOT_TYPE.create(
+//                () -> LargeEnergyData.from((ILargeMachineEnergyStorage) getExposedEnergyStorage()),
+//                energyData -> clientEnergyStorage = energyData.toImmutableStorage());
+//    }
 //
 //    @Nullable
 //    @Override
-//    public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
-//        return new CapacitorBankMenu(pContainerId, this, pPlayerInventory);
+//    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
+//        return new CapacitorBankMenu(containerId, this, playerInventory);
 //    }
 //
 //    @Override
@@ -162,11 +167,11 @@
 //        return true;
 //    }
 //
-////    @Override
-////    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-////        super.saveAdditional(pTag, lookupProvider);
-////        pTag.put(DISPLAY_MODES, saveDisplayModes());
-////    }
+//    @Override
+//    public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+//        super.saveAdditional(tag, lookupProvider);
+//        tag.put(DISPLAY_MODES, saveDisplayModes());
+//    }
 //
 //    public CompoundTag saveDisplayModes() {
 //        CompoundTag nbt = new CompoundTag();
@@ -177,24 +182,24 @@
 //        return nbt;
 //    }
 //
-////    @Override
-////    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-////        super.loadAdditional(pTag, lookupProvider);
-////        if (pTag.contains(DISPLAY_MODES, Tag.TAG_COMPOUND)) {
-////            loadDisplayModes(pTag.getCompound(DISPLAY_MODES));
-////        }
-////    }
+//    @Override
+//    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+//        super.loadAdditional(tag, lookupProvider);
+//        if (tag.contains(DISPLAY_MODES, Tag.TAG_COMPOUND)) {
+//            loadDisplayModes(tag.getCompound(DISPLAY_MODES));
+//        }
+//    }
 //
-////    public void loadDisplayModes(CompoundTag nbt) {
-////        displayModes.clear();
-////        for (String key : nbt.getAllKeys()) {
-////            @Nullable
-////            Direction dir = Direction.byName(key);
-////            if (dir != null) {
-////                displayModes.put(dir, DisplayMode.values()[nbt.getInt(key)]);
-////            }
-////        }
-////    }
+//    public void loadDisplayModes(CompoundTag nbt) {
+//        displayModes.clear();
+//        for (String key : nbt.getAllKeys()) {
+//            @Nullable
+//            Direction dir = Direction.byName(key);
+//            if (dir != null) {
+//                displayModes.put(dir, DisplayMode.values()[nbt.getInt(key)]);
+//            }
+//        }
+//    }
 //
 //    @Override
 //    protected boolean shouldPushEnergyTo(Direction direction) {
@@ -284,13 +289,13 @@
 //        return removedEnergy / AVERAGE_IO_OVER_X_TICKS;
 //    }
 //
-//    public DisplayMode getDisplayMode(Direction face) {
-//        if (getLevel() == null || !Block.shouldRenderFace(level, worldPosition, getBlockState(),
-//            level.getBlockState(getBlockPos().relative(face)), face)) {
+//    public DisplayMode getDisplayMode(Direction direction) {
+//        if (getLevel() == null || !Block.shouldRenderFace(getBlockState(), getLevel(), worldPosition, direction,
+//                worldPosition.relative(direction))) {
 //            return DisplayMode.NONE;
 //        }
 //
-//        return displayModes.get(face);
+//        return displayModes.get(direction);
 //    }
 //
 //    public void setDisplayMode(Direction direction, DisplayMode mode) {

@@ -12,8 +12,8 @@ import java.util.function.Supplier;
 
 public class ChemicalFilterSlot extends FilterSlot<ChemicalStack> {
 
-    public ChemicalFilterSlot(Supplier<ChemicalStack> getter, Consumer<ChemicalStack> setter, int pSlot, int pX, int pY) {
-        super(getter, setter, pSlot, pX, pY);
+    public ChemicalFilterSlot(Supplier<ChemicalStack> getter, Consumer<ChemicalStack> setter, int slot, int x, int y) {
+        super(getter, setter, slot, x, y);
     }
 
     @Override

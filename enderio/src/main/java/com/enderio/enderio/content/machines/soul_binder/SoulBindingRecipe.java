@@ -136,7 +136,7 @@ public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.
     }
 
     @Override
-    public boolean matches(Input recipeInput, Level pLevel) {
+    public boolean matches(Input recipeInput, Level level) {
         if (!recipeInput.getItem(0).is(EIOItems.SOUL_VIAL.get())) {
             return false;
         }

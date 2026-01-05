@@ -5,7 +5,7 @@
     "C": "enderio:void_chassis",
     "G": "#c:gears/iron",
     "H": "minecraft:hopper",
-    "I": "#c:ingots/copper_alloy",
+    "I": "#c:ingots/conductive_alloy",
     "R": "#c:ingots/redstone_alloy"
   },
   "pattern": [

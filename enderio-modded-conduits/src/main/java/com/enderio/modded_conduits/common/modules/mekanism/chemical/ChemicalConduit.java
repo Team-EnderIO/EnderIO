@@ -196,20 +196,20 @@ public record ChemicalConduit(Identifier texture, Component description, long tr
     }
 
     @Override
-    public void addToTooltip(Item.TooltipContext pContext, Consumer<Component> pTooltipAdder,
-            TooltipFlag pTooltipFlag) {
+    public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder,
+            TooltipFlag tooltipFlag) {
         String transferLimitFormatted = String.format("%,d", transferRatePerTick());
-        pTooltipAdder
+        tooltipAdder
                 .accept(TooltipUtil.styledWithArgs(ConduitLang.FLUID_EFFECTIVE_RATE_TOOLTIP, transferLimitFormatted));
 
         if (isMultiChemical()) {
-            pTooltipAdder.accept(MekanismModule.LANG_MULTI_CHEMICAL_TOOLTIP);
+            tooltipAdder.accept(MekanismModule.LANG_MULTI_CHEMICAL_TOOLTIP);
         }
 
-        if (pTooltipFlag.hasShiftDown()) {
+        if (tooltipFlag.hasShiftDown()) {
             String rawRateFormatted = String.format("%,d",
                     (int) Math.ceil(transferRatePerTick() * (20.0 / networkTickRate())));
-            pTooltipAdder.accept(TooltipUtil.styledWithArgs(ConduitLang.FLUID_RAW_RATE_TOOLTIP, rawRateFormatted));
+            tooltipAdder.accept(TooltipUtil.styledWithArgs(ConduitLang.FLUID_RAW_RATE_TOOLTIP, rawRateFormatted));
         }
     }
 

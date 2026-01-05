@@ -25,35 +25,35 @@ import java.util.function.Consumer;
 
 public class LocationPrintoutItem extends Item {
 
-    public LocationPrintoutItem(Properties pProperties) {
-        super(pProperties.stacksTo(1));
+    public LocationPrintoutItem(Properties properties) {
+        super(properties.stacksTo(1));
     }
 
     @Override
-    public InteractionResult useOn(UseOnContext pContext) {
-        Optional<CoordinateSelection> optionalSelection = getSelection(pContext.getItemInHand());
-        if (optionalSelection.isPresent() && pContext.getPlayer() != null && pContext.getPlayer().isCrouching()) {
-            if (pContext.getPlayer() instanceof ServerPlayer serverPlayer) {
-                handleRightClick(serverPlayer, optionalSelection.get(), pContext.getItemInHand());
+    public InteractionResult useOn(UseOnContext context) {
+        Optional<CoordinateSelection> optionalSelection = getSelection(context.getItemInHand());
+        if (optionalSelection.isPresent() && context.getPlayer() != null && context.getPlayer().isCrouching()) {
+            if (context.getPlayer() instanceof ServerPlayer serverPlayer) {
+                handleRightClick(serverPlayer, optionalSelection.get(), context.getItemInHand());
             }
             return InteractionResult.SUCCESS;
         }
-        return super.useOn(pContext);
+        return super.useOn(context);
     }
 
     @Override
-    public InteractionResult use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
-        ItemStack itemInHand = pPlayer.getItemInHand(pUsedHand);
+    public InteractionResult use(Level level, Player player, InteractionHand usedHand) {
+        ItemStack itemInHand = player.getItemInHand(usedHand);
         Optional<CoordinateSelection> optionalSelection = getSelection(itemInHand);
-        if (optionalSelection.isPresent() && pPlayer.isCrouching()) {
-            if (pPlayer instanceof ServerPlayer serverPlayer) {
+        if (optionalSelection.isPresent() && player.isCrouching()) {
+            if (player instanceof ServerPlayer serverPlayer) {
                 CoordinateSelection selection = optionalSelection.get();
                 handleRightClick(serverPlayer, selection, itemInHand);
             }
 
             return InteractionResult.SUCCESS;
         }
-        return super.use(pLevel, pPlayer, pUsedHand);
+        return super.use(level, player, usedHand);
     }
 
     private static void handleRightClick(ServerPlayer serverPlayer, @Nullable CoordinateSelection selection, ItemStack printout) {
@@ -72,8 +72,8 @@ public class LocationPrintoutItem extends Item {
 
             @Nullable
             @Override
-            public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
-                return new CoordinateMenu(pContainerId, selection, name);
+            public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
+                return new CoordinateMenu(containerId, selection, name);
             }
         }, buf -> CoordinateMenu.writeAdditionalData(buf, selection, name));
     }

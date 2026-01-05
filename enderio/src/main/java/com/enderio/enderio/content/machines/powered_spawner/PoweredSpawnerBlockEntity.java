@@ -160,8 +160,8 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
 
     @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
-        return new PoweredSpawnerMenu(pContainerId, pPlayerInventory, this);
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
+        return new PoweredSpawnerMenu(containerId, playerInventory, this);
     }
 
     public int getRange() {

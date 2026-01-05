@@ -19,10 +19,10 @@ public class RedstoneTimerFilterMenu extends AbstractContainerMenu {
     private final ItemStack stack;
     private final RedstoneTimerFilter filter;
 
-    protected RedstoneTimerFilterMenu(@Nullable MenuType<?> pMenuType, int pContainerId, Inventory inventory, ItemStack pStack) {
-        super(pMenuType, pContainerId);
-        this.stack = pStack;
-        var resourceFilter = pStack.getCapability(EnderIOCapabilities.REDSTONE_EXTRACT_FILTER);
+    protected RedstoneTimerFilterMenu(@Nullable MenuType<?> menuType, int containerId, Inventory inventory, ItemStack stack) {
+        super(menuType, containerId);
+        this.stack = stack;
+        var resourceFilter = stack.getCapability(EnderIOCapabilities.REDSTONE_EXTRACT_FILTER);
         if (!(resourceFilter instanceof RedstoneTimerFilter filter)) {
             throw new IllegalArgumentException();
         }
@@ -30,8 +30,8 @@ public class RedstoneTimerFilterMenu extends AbstractContainerMenu {
         addInventorySlots(14,119, inventory);
     }
 
-    protected RedstoneTimerFilterMenu(int pContainerId, Inventory inventory, ItemStack pStack) {
-        this(EIOMenus.REDSTONE_TIMER_FILTER.get(), pContainerId, inventory, pStack);
+    protected RedstoneTimerFilterMenu(int containerId, Inventory inventory, ItemStack stack) {
+        this(EIOMenus.REDSTONE_TIMER_FILTER.get(), containerId, inventory, stack);
     }
 
 
@@ -53,13 +53,13 @@ public class RedstoneTimerFilterMenu extends AbstractContainerMenu {
     }
 
     @Override
-    public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
+    public ItemStack quickMoveStack(Player player, int index) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public boolean stillValid(Player pPlayer) {
-        return pPlayer.getItemInHand(InteractionHand.MAIN_HAND).equals(stack);
+    public boolean stillValid(Player player) {
+        return player.getItemInHand(InteractionHand.MAIN_HAND).equals(stack);
     }
 
     public void addInventorySlots(int xPos, int yPos, Inventory inventory) {

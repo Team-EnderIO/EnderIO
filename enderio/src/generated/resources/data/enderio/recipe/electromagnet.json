@@ -3,13 +3,13 @@
   "category": "equipment",
   "key": {
     "C": "#c:ingots/conductive_alloy",
-    "E": "#c:ingots/copper_alloy",
+    "E": "#c:ingots/energetic_alloy",
     "V": "#c:gems/vibrant_crystal"
   },
   "pattern": [
-    "CVC",
-    "C C",
-    "E E"
+    "EVE",
+    "E E",
+    "C C"
   ],
   "result": {
     "count": 1,

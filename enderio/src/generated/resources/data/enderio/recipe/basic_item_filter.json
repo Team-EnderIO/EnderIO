@@ -3,10 +3,7 @@
   "category": "misc",
   "key": {
     "H": "minecraft:hopper",
-    "P": [
-      "minecraft:paper",
-      "enderio:black_paper"
-    ]
+    "P": "minecraft:paper"
   },
   "pattern": [
     " P ",

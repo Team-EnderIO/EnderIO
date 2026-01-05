@@ -9,7 +9,7 @@ public class EnderIOSelfClientIntegration implements ClientIntegration {
     // TODO: 1.21.4: Hang gliders lol
 //    @Override
 //    public void renderHangGlider(PoseStack posestack, MultiBufferSource buffer, int light, int overlay,
-//            AbstractClientPlayer player, float pPartialTick) {
+//            AbstractClientPlayer player, float partialTick) {
 //        Optional<Item> activeGliderItem = EnderIOSelfIntegration.INSTANCE.getActiveGliderItem(player);
 //        if (activeGliderItem.isEmpty()) {
 //            return;

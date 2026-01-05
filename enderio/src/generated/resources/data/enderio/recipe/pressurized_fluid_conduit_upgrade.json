@@ -7,16 +7,16 @@
       "neoforge:ingredient_type": "enderio:conduit",
       "conduit_type": "enderio:fluid"
     },
-    "G": "#c:glass_blocks/fused_quartz"
+    "I": "#c:ingots/energetic_alloy"
   },
   "pattern": [
     "BBB",
-    "GCG",
+    "ICI",
     "BBB"
   ],
   "result": {
     "components": {
-      "enderio:conduit": "enderio:pressurized_fluid"
+      "enderio:conduit": "enderio:energetic_fluid"
     },
     "count": 8,
     "id": "enderio:conduit"

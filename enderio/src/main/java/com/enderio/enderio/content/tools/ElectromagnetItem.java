@@ -21,8 +21,8 @@ public class ElectromagnetItem extends PoweredToggledItem {
     private static final double SPEED = 0.035;
     private static final double SPEED_4 = SPEED * 4;
 
-    public ElectromagnetItem(Properties pProperties) {
-        super(pProperties);
+    public ElectromagnetItem(Properties properties) {
+        super(properties);
     }
 
     @Override

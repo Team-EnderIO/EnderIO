@@ -32,20 +32,8 @@ public class MachineRecipeProvider extends SubRecipeProvider {
     public void buildRecipes(HolderLookup.Provider registries, RecipeOutput recipeOutput) {
         var items = registries.lookupOrThrow(Registries.ITEM);
 
-//        ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, EIOBlocks.CAPACITOR_BANKS.get(CapacitorTier.BASIC).get())
-//                .define('I', Tags.Items.INGOTS_IRON)
-//                .define('C', EIOItems.BASIC_CAPACITOR.get())
-//                .define('R', Tags.Items.STORAGE_BLOCKS_REDSTONE)
-//                .pattern("ICI")
-//                .pattern("CRC")
-//                .pattern("ICI")
-//                .unlockedBy("has_ingredient",
-//                        InventoryChangeTrigger.TriggerInstance
-//                                .hasItems(ItemPredicate.Builder.item().of(items, EIOItems.BASIC_CAPACITOR).build()))
-//                .save(recipeOutput);
-//
 //        ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, EIOBlocks.CAPACITOR_BANKS.get(CapacitorTier.ADVANCED).get())
-//                .define('A', EIOTags.Items.INGOTS_COPPER_ALLOY)
+//                .define('A', EIOTags.Items.INGOTS_CONDUCTIVE_ALLOY)
 //                .define('C', EIOItems.DOUBLE_LAYER_CAPACITOR.get())
 //                .define('R', Tags.Items.STORAGE_BLOCKS_REDSTONE)
 //                .pattern("ACA")
@@ -53,7 +41,7 @@ public class MachineRecipeProvider extends SubRecipeProvider {
 //                .pattern("ACA")
 //                .unlockedBy("has_ingredient",
 //                        InventoryChangeTrigger.TriggerInstance
-//                                .hasItems(ItemPredicate.Builder.item().of(items, EIOItems.BASIC_CAPACITOR).build()))
+//                                .hasItems(ItemPredicate.Builder.item().of(EIOItems.BASIC_CAPACITOR).build()))
 //                .save(recipeOutput);
 //
 //        ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, EIOBlocks.CAPACITOR_BANKS.get(CapacitorTier.ADVANCED).get())
@@ -65,8 +53,8 @@ public class MachineRecipeProvider extends SubRecipeProvider {
 //                .pattern("EEE")
 //                .unlockedBy("has_ingredient",
 //                        InventoryChangeTrigger.TriggerInstance
-//                                .hasItems(ItemPredicate.Builder.item().of(items, EIOItems.DOUBLE_LAYER_CAPACITOR).build()))
-//                .save(recipeOutput, EnderIO.rl("advanced_capacitor_bank_upgrade").toString());
+//                                .hasItems(ItemPredicate.Builder.item().of(EIOItems.DOUBLE_LAYER_CAPACITOR).build()))
+//                .save(recipeOutput, EnderIO.id("advanced_capacitor_bank_upgrade"));
 //
 //        ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, EIOBlocks.CAPACITOR_BANKS.get(CapacitorTier.VIBRANT).get())
 //                .define('V', EIOTags.Items.INGOTS_VIBRANT_ALLOY)
@@ -78,11 +66,11 @@ public class MachineRecipeProvider extends SubRecipeProvider {
 //                .pattern("VOV")
 //                .unlockedBy("has_ingredient",
 //                        InventoryChangeTrigger.TriggerInstance
-//                                .hasItems(ItemPredicate.Builder.item().of(items, EIOItems.OCTADIC_CAPACITOR).build()))
+//                                .hasItems(ItemPredicate.Builder.item().of(EIOItems.OCTADIC_CAPACITOR).build()))
 //                .save(recipeOutput);
 //
 //        ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, EIOBlocks.CAPACITOR_BANKS.get(CapacitorTier.VIBRANT).get())
-//                .define('A', EIOTags.Items.INGOTS_COPPER_ALLOY)
+//                .define('A', EIOTags.Items.INGOTS_CONDUCTIVE_ALLOY)
 //                .define('O', EIOItems.OCTADIC_CAPACITOR.get())
 //                .define('C', EIOTags.Items.GEMS_VIBRANT_CRYSTAL)
 //                .pattern("AOA")
@@ -90,8 +78,8 @@ public class MachineRecipeProvider extends SubRecipeProvider {
 //                .pattern("AOA")
 //                .unlockedBy("has_ingredient",
 //                        InventoryChangeTrigger.TriggerInstance
-//                                .hasItems(ItemPredicate.Builder.item().of(items, EIOItems.BASIC_CAPACITOR).build()))
-//                .save(recipeOutput, EnderIO.rl("vibrant_capacitor_bank_upgrade").toString());
+//                                .hasItems(ItemPredicate.Builder.item().of(EIOItems.BASIC_CAPACITOR).build()))
+//                .save(recipeOutput, EnderIO.id("vibrant_capacitor_bank_upgrade"));
 
         ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, EIOBlocks.FLUID_TANK.get())
                 .define('I', Tags.Items.INGOTS_IRON)
@@ -157,13 +145,14 @@ public class MachineRecipeProvider extends SubRecipeProvider {
 
         ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, EIOBlocks.SAG_MILL.get())
                 .define('F', Items.FLINT)
-                .define('I', EIOTags.Items.INGOTS_DARK_STEEL)
+                .define('I', Tags.Items.INGOTS_IRON)
                 .define('G', EIOTags.Items.GEARS_IRON)
                 .define('V', EIOBlocks.VOID_CHASSIS.get())
+                .define('O', Tags.Items.OBSIDIANS)
                 .define('P', Items.PISTON)
-                .pattern("FFF")
+                .pattern("GFG")
                 .pattern("IVI")
-                .pattern("GPG")
+                .pattern("OPO")
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.VOID_CHASSIS.get()))
                 .save(recipeOutput);
@@ -182,7 +171,7 @@ public class MachineRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, EIOBlocks.IMPULSE_HOPPER.get())
-                .define('I', EIOTags.Items.INGOTS_COPPER_ALLOY)
+                .define('I', EIOTags.Items.INGOTS_CONDUCTIVE_ALLOY)
                 .define('R', EIOTags.Items.INGOTS_REDSTONE_ALLOY)
                 .define('G', EIOTags.Items.GEARS_IRON)
                 .define('C', EIOBlocks.VOID_CHASSIS.get())
@@ -209,7 +198,7 @@ public class MachineRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, EIOBlocks.WIRED_CHARGER.get())
-                .define('C', EIOTags.Items.INGOTS_COPPER_ALLOY)
+                .define('C', EIOTags.Items.INGOTS_CONDUCTIVE_ALLOY)
                 .define('V', EIOBlocks.VOID_CHASSIS.get())
                 .pattern("CCC")
                 .pattern("CVC")
@@ -256,7 +245,7 @@ public class MachineRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, EIOBlocks.DRAIN.get())
-                .define('I', EIOTags.Items.INGOTS_COPPER_ALLOY)
+                .define('I', EIOTags.Items.INGOTS_CONDUCTIVE_ALLOY)
                 .define('V', EIOBlocks.VOID_CHASSIS)
                 .define('C', EIOTags.Items.CLEAR_GLASS)
                 .define('G', EIOTags.Items.GEARS_IRON)
@@ -358,7 +347,7 @@ public class MachineRecipeProvider extends SubRecipeProvider {
                 .define('R', Tags.Items.DYES_RED)
                 .define('G', Tags.Items.DYES_GREEN)
                 .define('B', Tags.Items.DYES_BLUE)
-                .define('I', EIOTags.Items.INGOTS_COPPER_ALLOY)
+                .define('I', EIOTags.Items.INGOTS_CONDUCTIVE_ALLOY)
                 .define('C', EIOBlocks.VOID_CHASSIS)
                 .define('M', EIOTags.Items.GEARS_IRON)
                 .define('A', EIOTags.Items.INGOTS_REDSTONE_ALLOY)
@@ -457,7 +446,7 @@ public class MachineRecipeProvider extends SubRecipeProvider {
                 .define('B', Blocks.BARREL)
                 .define('C', EIOBlocks.VOID_CHASSIS)
                 .define('M', EIOTags.Items.GEARS_IRON)
-                .define('A', EIOTags.Items.INGOTS_COPPER_ALLOY)
+                .define('A', EIOTags.Items.INGOTS_CONDUCTIVE_ALLOY)
                 .define('R', EIOTags.Items.INGOTS_REDSTONE_ALLOY)
                 .define('S', EIOTags.Items.INGOTS_DARK_STEEL)
                 .pattern("SBS")
@@ -469,7 +458,7 @@ public class MachineRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, EIOBlocks.WIRELESS_CHARGER.get())
-                .define('C', EIOTags.Items.INGOTS_COPPER_ALLOY)
+                .define('C', EIOTags.Items.INGOTS_CONDUCTIVE_ALLOY)
                 .define('V', EIOBlocks.VOID_CHASSIS.get())
                 .define('E', EIOItems.ENDER_RESONATOR.get())
                 .pattern("CCC")
@@ -480,7 +469,7 @@ public class MachineRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, EIOBlocks.WIRELESS_CHARGER_ANTENNA.get())
-                .define('C', EIOTags.Items.INGOTS_COPPER_ALLOY)
+                .define('C', EIOTags.Items.INGOTS_CONDUCTIVE_ALLOY)
                 .define('S', EIOTags.Items.INGOTS_PULSATING_ALLOY)
                 .define('E', EIOItems.ENDER_RESONATOR.get())
                 .pattern(" S ")
@@ -491,7 +480,7 @@ public class MachineRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, EIOBlocks.WIRELESS_CHARGER_ANTENNA_ADVANCED.get())
-                .define('C', EIOTags.Items.INGOTS_COPPER_ALLOY)
+                .define('C', EIOTags.Items.INGOTS_CONDUCTIVE_ALLOY)
                 .define('S', EIOTags.Items.INGOTS_VIBRANT_ALLOY)
                 .define('E', EIOItems.SENTIENT_ENDER.get())
                 .pattern(" S ")

@@ -13,7 +13,7 @@ public class AversionObeliskScreen extends ObeliskScreen<AversionObeliskBlockEnt
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
 
-    public AversionObeliskScreen(AversionObeliskMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
-        super(pMenu, pPlayerInventory, pTitle, BG_TEXTURE, WIDTH, HEIGHT);
+    public AversionObeliskScreen(AversionObeliskMenu menu, Inventory playerInventory, Component title) {
+        super(menu, playerInventory, title, BG_TEXTURE, WIDTH, HEIGHT);
     }
 }

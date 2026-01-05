@@ -16,8 +16,8 @@ public class ArmorSlot extends Slot {
     private static final Identifier[] ARMOR_SLOT_TEXTURES = new Identifier[] { EMPTY_ARMOR_SLOT_BOOTS,
             EMPTY_ARMOR_SLOT_LEGGINGS, EMPTY_ARMOR_SLOT_CHESTPLATE, EMPTY_ARMOR_SLOT_HELMET };
 
-    public ArmorSlot(Container pContainer, int pSlot, int pX, int pY, EquipmentSlot equipmentSlot) {
-        super(pContainer, pSlot, pX, pY);
+    public ArmorSlot(Container container, int slot, int x, int y, EquipmentSlot equipmentSlot) {
+        super(container, slot, x, y);
 
         setBackground(ARMOR_SLOT_TEXTURES[equipmentSlot.getIndex()]);
     }

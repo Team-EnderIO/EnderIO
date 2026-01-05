@@ -28,12 +28,12 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
     private final boolean renderLabels;
     private final List<EditBox> editBoxList = new ArrayList<>();
 
-    protected EIOScreen(T pMenu, Inventory pPlayerInventory, Component pTitle) {
-        this(pMenu, pPlayerInventory, pTitle, false);
+    protected EIOScreen(T menu, Inventory playerInventory, Component title) {
+        this(menu, playerInventory, title, false);
     }
 
-    protected EIOScreen(T pMenu, Inventory pPlayerInventory, Component pTitle, boolean renderLabels) {
-        super(pMenu, pPlayerInventory, pTitle);
+    protected EIOScreen(T menu, Inventory playerInventory, Component title, boolean renderLabels) {
+        super(menu, playerInventory, title);
         this.renderLabels = renderLabels;
         this.imageWidth = getBackgroundImageSize().x();
         this.imageHeight = getBackgroundImageSize().y();
@@ -54,18 +54,18 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         /*
          * if (menu instanceof SyncedMenu<?> syncedMenu && syncedMenu.getBlockEntity()
          * == null) { return; }
          */
 
-        super.render(guiGraphics, pMouseX, pMouseY, pPartialTicks);
-        this.renderTooltip(guiGraphics, pMouseX, pMouseY);
+        super.render(guiGraphics, mouseX, mouseY, partialTicks);
+        this.renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
+    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         // TODO: 1.21.4: Do not assume 256x256 texture?
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, getBackgroundImage(), getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight, 256, 256);
     }
@@ -95,9 +95,9 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
     }
 
     @Override
-    protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
+    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (renderLabels) {
-            super.renderLabels(guiGraphics, pMouseX, pMouseY);
+            super.renderLabels(guiGraphics, mouseX, mouseY);
         }
     }
 

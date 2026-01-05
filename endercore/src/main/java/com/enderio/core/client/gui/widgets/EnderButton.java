@@ -16,17 +16,17 @@ public abstract class EnderButton extends AbstractWidget {
             Identifier.withDefaultNamespace("widget/button_disabled"),
             Identifier.withDefaultNamespace("widget/button_highlighted"));
 
-    public EnderButton(int pX, int pY, int pWidth, int pHeight, Component pMessage) {
-        super(pX, pY, pWidth, pHeight, pMessage);
+    public EnderButton(int x, int y, int width, int height, Component message) {
+        super(x, y, width, height, message);
     }
 
     public abstract void onPress(InputWithModifiers input);
 
     @Override
-    protected void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-        pGuiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, SPRITES.get(this.active, this.isHovered()), this.getX(), this.getY(), this.getWidth(),
+    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, SPRITES.get(this.active, this.isHovered()), this.getX(), this.getY(), this.getWidth(),
                 this.getHeight());
-        renderButtonFace(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+        renderButtonFace(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     public abstract void renderButtonFace(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks);

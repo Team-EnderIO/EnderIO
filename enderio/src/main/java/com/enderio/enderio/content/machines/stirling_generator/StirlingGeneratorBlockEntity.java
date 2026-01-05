@@ -136,8 +136,8 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
 
     @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
-        return new StirlingGeneratorMenu(pContainerId, pInventory, this);
+    public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
+        return new StirlingGeneratorMenu(containerId, inventory, this);
     }
 
     @Override

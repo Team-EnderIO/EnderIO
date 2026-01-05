@@ -64,8 +64,8 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public AlloySmelterBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
-        super(EIOBlockEntities.ALLOY_SMELTER.get(), pWorldPosition, pBlockState, true, CapacitorSupport.REQUIRED,
+    public AlloySmelterBlockEntity(BlockPos worldPosition, BlockState blockState) {
+        super(EIOBlockEntities.ALLOY_SMELTER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
                 EnergyIOMode.Input, CAPACITY, USAGE);
 
         // Crafting task host

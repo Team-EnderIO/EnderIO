@@ -3,16 +3,17 @@
   "category": "building",
   "key": {
     "B": "enderio:conduit_binder",
-    "G": "#c:glass_blocks/fused_quartz"
+    "G": "#c:glass_blocks/fused_quartz",
+    "I": "#c:ingots/energetic_alloy"
   },
   "pattern": [
     "BBB",
-    "GGG",
+    "IGI",
     "BBB"
   ],
   "result": {
     "components": {
-      "enderio:conduit": "enderio:pressurized_fluid"
+      "enderio:conduit": "enderio:energetic_fluid"
     },
     "count": 8,
     "id": "enderio:conduit"

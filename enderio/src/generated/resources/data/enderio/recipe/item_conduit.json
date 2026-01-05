@@ -3,11 +3,12 @@
   "category": "building",
   "key": {
     "B": "enderio:conduit_binder",
-    "P": "#c:nuggets/pulsating_alloy"
+    "C": "#c:ingots/conductive_alloy",
+    "I": "#c:ingots/pulsating_alloy"
   },
   "pattern": [
     "BBB",
-    "PPP",
+    "CIC",
     "BBB"
   ],
   "result": {

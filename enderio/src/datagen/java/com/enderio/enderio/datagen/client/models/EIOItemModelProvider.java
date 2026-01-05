@@ -56,7 +56,6 @@ public class EIOItemModelProvider extends ModelProvider {
     @Override
     protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
         // Alloys
-        itemModels.generateFlatItem(EIOItems.COPPER_ALLOY_INGOT.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(EIOItems.ENERGETIC_ALLOY_INGOT.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(EIOItems.VIBRANT_ALLOY_INGOT.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(EIOItems.REDSTONE_ALLOY_INGOT.get(), ModelTemplates.FLAT_ITEM);
@@ -66,7 +65,6 @@ public class EIOItemModelProvider extends ModelProvider {
         itemModels.generateFlatItem(EIOItems.SOULARIUM_INGOT.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(EIOItems.END_STEEL_INGOT.get(), ModelTemplates.FLAT_ITEM);
 
-        itemModels.generateFlatItem(EIOItems.COPPER_ALLOY_NUGGET.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(EIOItems.ENERGETIC_ALLOY_NUGGET.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(EIOItems.VIBRANT_ALLOY_NUGGET.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(EIOItems.REDSTONE_ALLOY_NUGGET.get(), ModelTemplates.FLAT_ITEM);
@@ -77,7 +75,6 @@ public class EIOItemModelProvider extends ModelProvider {
         itemModels.generateFlatItem(EIOItems.END_STEEL_NUGGET.get(), ModelTemplates.FLAT_ITEM);
 
         // Grinding Balls
-        itemModels.generateFlatItem(EIOItems.COPPER_ALLOY_BALL.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(EIOItems.ENERGETIC_ALLOY_BALL.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(EIOItems.VIBRANT_ALLOY_BALL.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(EIOItems.REDSTONE_ALLOY_BALL.get(), ModelTemplates.FLAT_ITEM);
@@ -124,7 +121,6 @@ public class EIOItemModelProvider extends ModelProvider {
         itemModels.generateFlatItem(EIOItems.PRESCIENT_CRYSTAL.get(), ModelTemplates.FLAT_ITEM);
 
         // Powders and Fragments
-        itemModels.generateFlatItem(EIOItems.FLOUR.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(EIOItems.POWDERED_COAL.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(EIOItems.POWDERED_IRON.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(EIOItems.POWDERED_GOLD.get(), ModelTemplates.FLAT_ITEM);
@@ -132,7 +128,6 @@ public class EIOItemModelProvider extends ModelProvider {
         itemModels.generateFlatItem(EIOItems.POWDERED_TIN.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(EIOItems.POWDERED_ENDER_PEARL.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(EIOItems.POWDERED_OBSIDIAN.get(), ModelTemplates.FLAT_ITEM);
-        itemModels.generateFlatItem(EIOItems.POWDERED_COBALT.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(EIOItems.POWDERED_LAPIS_LAZULI.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(EIOItems.POWDERED_QUARTZ.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(EIOItems.PRESCIENT_POWDER.get(), ModelTemplates.FLAT_ITEM);
@@ -144,11 +139,6 @@ public class EIOItemModelProvider extends ModelProvider {
         itemModels.generateFlatItem(EIOItems.CONFUSION_POWDER.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(EIOItems.WITHERING_POWDER.get(), ModelTemplates.FLAT_ITEM);
 
-        // Dyes
-        itemModels.generateFlatItem(EIOItems.DYE_GREEN.get(), ModelTemplates.FLAT_ITEM);
-        itemModels.generateFlatItem(EIOItems.DYE_BROWN.get(), ModelTemplates.FLAT_ITEM);
-        itemModels.generateFlatItem(EIOItems.DYE_BLACK.get(), ModelTemplates.FLAT_ITEM);
-
         // Misc Materials
         itemModels.generateFlatItem(EIOItems.PHOTOVOLTAIC_PLATE.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(EIOItems.NUTRITIOUS_STICK.get(), ModelTemplates.FLAT_ITEM);
@@ -158,10 +148,6 @@ public class EIOItemModelProvider extends ModelProvider {
         itemModels.generateFlatItem(EIOItems.ANIMAL_TOKEN.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(EIOItems.MONSTER_TOKEN.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(EIOItems.PLAYER_TOKEN.get(), ModelTemplates.FLAT_ITEM);
-        itemModels.generateFlatItem(EIOItems.CAKE_BASE.get(), ModelTemplates.FLAT_ITEM);
-        itemModels.generateFlatItem(EIOItems.BLACK_PAPER.get(), ModelTemplates.FLAT_ITEM);
-        itemModels.generateFlatItem(EIOItems.CLAYED_GLOWSTONE.get(), ModelTemplates.FLAT_ITEM);
-        itemModels.generateFlatItem(EIOItems.NETHERCOTTA.get(), ModelTemplates.FLAT_ITEM);
         createFakeBlock(blockModels, EIOItems.BROKEN_SPAWNER.get());
 
         // Gliders

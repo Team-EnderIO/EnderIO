@@ -43,10 +43,10 @@ public class ConduitBlockItem extends BlockItem implements ICustomCreativeTabEnt
     }
 
     @Override
-    public Component getName(ItemStack pStack) {
-        Holder<Conduit<?, ?>> conduit = pStack.get(EnderIODataComponents.CONDUIT);
+    public Component getName(ItemStack stack) {
+        Holder<Conduit<?, ?>> conduit = stack.get(EnderIODataComponents.CONDUIT);
         if (conduit == null) {
-            return super.getName(pStack);
+            return super.getName(stack);
         }
 
         return conduit.value().description();

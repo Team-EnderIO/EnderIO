@@ -18,8 +18,8 @@ public class AlloySmelterMenu extends PoweredMachineMenu<AlloySmelterBlockEntity
     private final EnumSyncSlot<AlloySmelterMode> modeSlot;
 
     // Server constructor
-    public AlloySmelterMenu(int pContainerId, Inventory inventory, AlloySmelterBlockEntity blockEntity) {
-        super(EIOMenus.ALLOY_SMELTER.get(), pContainerId, inventory, blockEntity);
+    public AlloySmelterMenu(int containerId, Inventory inventory, AlloySmelterBlockEntity blockEntity) {
+        super(EIOMenus.ALLOY_SMELTER.get(), containerId, inventory, blockEntity);
         addSlots();
 
         progressSlot = addSyncSlot(FloatSyncSlot.readOnly(blockEntity::getCraftingProgress));

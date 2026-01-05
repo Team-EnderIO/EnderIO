@@ -13,8 +13,8 @@ public class AttractorObeliskScreen extends ObeliskScreen<AttractorObeliskBlockE
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
 
-    public AttractorObeliskScreen(AttractorObeliskMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
-        super(pMenu, pPlayerInventory, pTitle, BG_TEXTURE, WIDTH, HEIGHT);
+    public AttractorObeliskScreen(AttractorObeliskMenu menu, Inventory playerInventory, Component title) {
+        super(menu, playerInventory, title, BG_TEXTURE, WIDTH, HEIGHT);
     }
 
 }

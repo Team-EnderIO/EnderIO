@@ -45,9 +45,9 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
 
     private final Component optionName;
 
-    public BaseEnumPickerWidget(int pX, int pY, int width, int height, Class<T> clazz, Supplier<T> getter,
+    public BaseEnumPickerWidget(int x, int y, int width, int height, Class<T> clazz, Supplier<T> getter,
             Consumer<T> setter, boolean shouldAdvanceOnPress, Component optionName) {
-        super(pX, pY, width, height, Component.empty());
+        super(x, y, width, height, Component.empty());
 
         this.clazz = clazz;
         this.getter = getter;
@@ -60,8 +60,8 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
         Vector2i elementDistance = new Vector2i(width, height).add(SPACE_BETWEEN_ELEMENTS, SPACE_BETWEEN_ELEMENTS);
         for (int i = 0; i < values.length; i++) {
             T value = values[i];
-            Vector2i subWidgetPos = new Vector2i(pos.x() + getColumn(i) * elementDistance.x() + pX,
-                    pos.y() + getRow(i) * elementDistance.y() + pY);
+            Vector2i subWidgetPos = new Vector2i(pos.x() + getColumn(i) * elementDistance.x() + x,
+                    pos.y() + getRow(i) * elementDistance.y() + y);
             SelectionWidget widget = new SelectionWidget(subWidgetPos, width + 2, height + 2, value);
 
             Component tooltip = getValueTooltip(value);
@@ -205,7 +205,7 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
     }
 
     @Override
-    public void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
     }
 
     public boolean isExpanded() {
@@ -228,20 +228,20 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
         }
 
         @Override
-        public void render(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
+        public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
             // TODO: 1.21.8: is the depth test disable required?
 //            RenderSystem.disableDepthTest();
-            super.render(guiGraphics, pMouseX, pMouseY, pPartialTicks);
+            super.render(guiGraphics, mouseX, mouseY, partialTicks);
 //            RenderSystem.enableDepthTest();
         }
 
         @Override
-        public void renderBackground(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+        public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
             renderSimpleArea(guiGraphics, parentWidget.expandTopLeft, parentWidget.expandBottomRight);
         }
 
         @Override
-        public void renderTransparentBackground(GuiGraphics pGuiGraphics) {
+        public void renderTransparentBackground(GuiGraphics guiGraphics) {
             // Don't make background dark
         }
 
@@ -294,7 +294,7 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
         }
 
         @Override
-        public void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
+        public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
         }
 
         @Override

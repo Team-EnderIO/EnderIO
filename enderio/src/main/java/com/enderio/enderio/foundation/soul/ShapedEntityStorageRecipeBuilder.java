@@ -20,12 +20,12 @@ public class ShapedEntityStorageRecipeBuilder extends ShapedRecipeBuilder {
         super(items, category, result, count);
     }
 
-    public static ShapedEntityStorageRecipeBuilder shaped(HolderGetter<Item> items, RecipeCategory pCategory, ItemLike pResult) {
-        return shaped(items, pCategory, pResult, 1);
+    public static ShapedEntityStorageRecipeBuilder shaped(HolderGetter<Item> items, RecipeCategory category, ItemLike result) {
+        return shaped(items, category, result, 1);
     }
 
-    public static ShapedEntityStorageRecipeBuilder shaped(HolderGetter<Item> items, RecipeCategory pCategory, ItemLike pResult, int pCount) {
-        return new ShapedEntityStorageRecipeBuilder(items, pCategory, pResult, pCount);
+    public static ShapedEntityStorageRecipeBuilder shaped(HolderGetter<Item> items, RecipeCategory category, ItemLike result, int count) {
+        return new ShapedEntityStorageRecipeBuilder(items, category, result, count);
     }
 
     @Override

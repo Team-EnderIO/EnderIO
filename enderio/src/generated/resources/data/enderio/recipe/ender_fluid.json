@@ -13,7 +13,7 @@
   ],
   "result": {
     "components": {
-      "enderio:conduit": "enderio:ender_fluid"
+      "enderio:conduit": "enderio:vibrant_fluid"
     },
     "count": 8,
     "id": "enderio:conduit"

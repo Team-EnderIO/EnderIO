@@ -26,8 +26,8 @@ public class StirlingGeneratorScreen extends MachineScreen<StirlingGeneratorMenu
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
 
-    public StirlingGeneratorScreen(StirlingGeneratorMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
-        super(pMenu, pPlayerInventory, pTitle);
+    public StirlingGeneratorScreen(StirlingGeneratorMenu menu, Inventory playerInventory, Component title) {
+        super(menu, playerInventory, title);
         imageWidth = WIDTH;
         imageHeight = HEIGHT;
     }
@@ -52,13 +52,13 @@ public class StirlingGeneratorScreen extends MachineScreen<StirlingGeneratorMenu
     }
 
     @Override
-    protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
-        pGuiGraphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
     @Override
-    protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
-        super.renderLabels(guiGraphics, pMouseX, pMouseY);
+    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        super.renderLabels(guiGraphics, mouseX, mouseY);
         float genRate = menu.getBlockEntity().getGenerationRate();
         float efficiency = menu.getBlockEntity().getFuelEfficiency();
         MutableComponent gen = TooltipUtil.withArgs(MachinesLang.GENERATING, FORMAT.format(genRate));

@@ -24,10 +24,10 @@ public class ConduitSelectionButton extends AbstractButton {
     private final Supplier<List<Holder<Conduit<?, ?>>>> conduitListGetter;
     private final Consumer<Integer> onPressed;
 
-    public ConduitSelectionButton(int pX, int pY, int conduitButtonIndex,
+    public ConduitSelectionButton(int x, int y, int conduitButtonIndex,
             Supplier<Holder<Conduit<?, ?>>> currentConduit, Supplier<List<Holder<Conduit<?, ?>>>> conduitListGetter,
             Consumer<Integer> onPressed) {
-        super(pX, pY, 21, 24, Component.empty());
+        super(x, y, 21, 24, Component.empty());
         this.conduitButtonIndex = conduitButtonIndex;
         this.currentConduit = currentConduit;
         this.conduitListGetter = conduitListGetter;
@@ -55,7 +55,7 @@ public class ConduitSelectionButton extends AbstractButton {
     }
 
     @Override
-    public void renderContents(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         var conduit = getConduit();
         if (conduit == null) {
             return;

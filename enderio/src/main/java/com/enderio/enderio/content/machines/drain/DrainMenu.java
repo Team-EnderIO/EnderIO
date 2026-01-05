@@ -17,8 +17,8 @@ public class DrainMenu extends PoweredMachineMenu<DrainBlockEntity> {
 
     private final FluidStorageSyncSlot fluidSlot;
 
-    public DrainMenu(int pContainerId, Inventory inventory, DrainBlockEntity blockEntity) {
-        super(EIOMenus.DRAIN.get(), pContainerId, inventory, blockEntity);
+    public DrainMenu(int containerId, Inventory inventory, DrainBlockEntity blockEntity) {
+        super(EIOMenus.DRAIN.get(), containerId, inventory, blockEntity);
         addSlots();
 
         fluidSlot = addSyncSlot(FluidStorageSyncSlot.readOnly(() -> new FluidStorageInfo(blockEntity.getStoredFluid(), DrainBlockEntity.CAPACITY)));

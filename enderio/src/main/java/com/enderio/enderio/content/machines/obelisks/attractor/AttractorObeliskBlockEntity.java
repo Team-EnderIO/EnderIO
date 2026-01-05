@@ -91,8 +91,8 @@ public class AttractorObeliskBlockEntity extends ObeliskBlockEntity<AttractorObe
 
     @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int containerId, Inventory pPlayerInventory, Player pPlayer) {
-        return new AttractorObeliskMenu(containerId, pPlayerInventory, this);
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
+        return new AttractorObeliskMenu(containerId, playerInventory, this);
     }
 
     @Override

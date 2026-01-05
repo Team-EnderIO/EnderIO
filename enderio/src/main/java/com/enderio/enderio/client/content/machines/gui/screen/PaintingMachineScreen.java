@@ -22,8 +22,8 @@ public class PaintingMachineScreen extends MachineScreen<PaintingMachineMenu> {
 
     private static final Identifier PROGRESS_SPRITE = EnderIO.id("screen/painting_machine/progress");
 
-    public PaintingMachineScreen(PaintingMachineMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
-        super(pMenu, pPlayerInventory, pTitle);
+    public PaintingMachineScreen(PaintingMachineMenu menu, Inventory playerInventory, Component title) {
+        super(menu, playerInventory, title);
         imageWidth = WIDTH;
         imageHeight = HEIGHT;
         this.inventoryLabelY = this.imageHeight - 106;
@@ -48,8 +48,8 @@ public class PaintingMachineScreen extends MachineScreen<PaintingMachineMenu> {
     }
 
     @Override
-    protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
-        pGuiGraphics.blit(RenderPipelines.GUI_TEXTURED, PAINTING_MACHINE_BG, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, PAINTING_MACHINE_BG, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
 }

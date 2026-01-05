@@ -11,9 +11,9 @@ import java.util.function.Supplier;
 
 public class DamageFilterModePickerWidget extends BaseEnumPickerWidget<DamageFilterMode> {
 
-    public DamageFilterModePickerWidget(int pX, int pY, Supplier<DamageFilterMode> getter,
+    public DamageFilterModePickerWidget(int x, int y, Supplier<DamageFilterMode> getter,
             Consumer<DamageFilterMode> setter, Component optionName) {
-        super(pX, pY, 16, 16, DamageFilterMode.class, getter, setter, false, optionName);
+        super(x, y, 16, 16, DamageFilterMode.class, getter, setter, false, optionName);
     }
 
     @Override

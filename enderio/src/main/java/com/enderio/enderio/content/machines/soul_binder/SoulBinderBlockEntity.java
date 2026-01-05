@@ -125,8 +125,8 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
-    public AbstractContainerMenu createMenu(int containerId, Inventory pPlayerInventory, Player pPlayer) {
-        return new SoulBinderMenu(containerId, pPlayerInventory, this);
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
+        return new SoulBinderMenu(containerId, playerInventory, this);
     }
 
     @Override

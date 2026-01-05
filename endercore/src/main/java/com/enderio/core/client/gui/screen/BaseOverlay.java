@@ -5,8 +5,8 @@ import net.minecraft.network.chat.Component;
 
 public abstract class BaseOverlay extends AbstractWidget implements StateRestoringWidget {
 
-    public BaseOverlay(int pX, int pY, int pWidth, int pHeight, Component pMessage) {
-        super(pX, pY, pWidth, pHeight, pMessage);
+    public BaseOverlay(int x, int y, int width, int height, Component message) {
+        super(x, y, width, height, message);
     }
 
     public void setVisible(boolean isVisible) {

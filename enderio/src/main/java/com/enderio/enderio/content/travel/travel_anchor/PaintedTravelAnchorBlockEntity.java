@@ -27,8 +27,8 @@ public class PaintedTravelAnchorBlockEntity extends TravelAnchorBlockEntity impl
     @Nullable
     private Block paint;
 
-    public PaintedTravelAnchorBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
-        super(EIOBlockEntities.PAINTED_TRAVEL_ANCHOR.get(), pWorldPosition, pBlockState);
+    public PaintedTravelAnchorBlockEntity(BlockPos worldPosition, BlockState blockState) {
+        super(EIOBlockEntities.PAINTED_TRAVEL_ANCHOR.get(), worldPosition, blockState);
     }
 
     @Override

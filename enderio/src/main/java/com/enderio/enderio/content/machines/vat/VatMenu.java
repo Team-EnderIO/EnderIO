@@ -28,8 +28,8 @@ public class VatMenu extends MachineMenu<VatBlockEntity> {
     // TODO: 1.21.4: Deal with client not knowing recipes.
 //    private final RecipeSyncSlot<FermentingRecipe> recipeSlot;
 
-    public VatMenu(int pContainerId, Inventory inventory, VatBlockEntity blockEntity) {
-        super(EIOMenus.VAT.get(), pContainerId, inventory, blockEntity);
+    public VatMenu(int containerId, Inventory inventory, VatBlockEntity blockEntity) {
+        super(EIOMenus.VAT.get(), containerId, inventory, blockEntity);
         addSlots();
 
         craftingProgressSlot = addSyncSlot(FloatSyncSlot.readOnly(blockEntity::getCraftingProgress));

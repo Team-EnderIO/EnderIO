@@ -28,8 +28,8 @@ public class TravelAnchorScreen extends MachineScreen<TravelAnchorMenu> {
     private static final Identifier VISIBLE_BUTTON = EnderIO.id("screen/travel_anchor/visible");
     private static final Identifier NOT_VISIBLE_BUTTON = EnderIO.id("screen/travel_anchor/not_visible");
 
-    public TravelAnchorScreen(TravelAnchorMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
-        super(pMenu, pPlayerInventory, pTitle);
+    public TravelAnchorScreen(TravelAnchorMenu menu, Inventory playerInventory, Component title) {
+        super(menu, playerInventory, title);
         imageWidth = WIDTH;
         imageHeight = HEIGHT;
     }
@@ -55,10 +55,10 @@ public class TravelAnchorScreen extends MachineScreen<TravelAnchorMenu> {
     }
 
     @Override
-    protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
+    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         nameInput.setValue(menu.getName()); //TODO stupid but it works
         menu.setVisible(menu.isVisible()); //TODO stupid but it works
-        pGuiGraphics.blit(RenderPipelines.GUI_TEXTURED, TRAVEL_ANCHOR_BG, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, TRAVEL_ANCHOR_BG, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
     @Override

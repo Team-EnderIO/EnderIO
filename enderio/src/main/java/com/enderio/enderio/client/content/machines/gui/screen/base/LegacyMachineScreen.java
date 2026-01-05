@@ -19,8 +19,8 @@
 //public abstract class LegacyMachineScreen<T extends LegacyMachineMenu<?>> extends EnderContainerScreen<T> {
 //    public static final int SLOT_COLOR = -2130706433;
 //
-//    protected LegacyMachineScreen(T pMenu, Inventory pPlayerInventory, Component pTitle) {
-//        super(pMenu, pPlayerInventory, pTitle);
+//    protected LegacyMachineScreen(T menu, Inventory playerInventory, Component title) {
+//        super(menu, playerInventory, title);
 //    }
 //
 //    protected IOConfigOverlay addIOConfigOverlay(int layer, int x, int y, int width, int height) {
@@ -40,15 +40,15 @@
 //    }
 //
 //    @Override
-//    protected void renderSlot(GuiGraphics guiGraphics, Slot slot, int mouseX, int mouseY) {
-//        super.renderSlot(guiGraphics, slot, mouseX, mouseY);
+//    public void renderSlot(GuiGraphics guiGraphics, Slot slot) {
+//        super.renderSlot(guiGraphics, slot);
 //
 //        if (slot instanceof GhostMachineSlot || slot instanceof PreviewMachineSlot) {
 //            if (slot.hasItem()) {
-//                guiGraphics.pose().pushMatrix();
-//                guiGraphics.pose().translate(0.0F, 0.0F); //TODO can't push Z 300F
+//                guiGraphics.pose().pushPose();
+//                guiGraphics.pose().translate(0.0F, 0.0F, 300F);
 //                guiGraphics.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, SLOT_COLOR);
-//                guiGraphics.pose().popMatrix();
+//                guiGraphics.pose().popPose();
 //            }
 //        }
 //    }

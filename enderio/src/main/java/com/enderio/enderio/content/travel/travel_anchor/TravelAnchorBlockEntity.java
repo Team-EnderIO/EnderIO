@@ -25,12 +25,12 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
 
     public static final SingleSlotAccess GHOST = new SingleSlotAccess();
 
-    public TravelAnchorBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
-        this(EIOBlockEntities.TRAVEL_ANCHOR.get(), pWorldPosition, pBlockState);
+    public TravelAnchorBlockEntity(BlockPos worldPosition, BlockState blockState) {
+        this(EIOBlockEntities.TRAVEL_ANCHOR.get(), worldPosition, blockState);
     }
 
-    public TravelAnchorBlockEntity(BlockEntityType<?> type, BlockPos pWorldPosition, BlockState pBlockState) {
-        super(type, pWorldPosition, pBlockState, false);
+    public TravelAnchorBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
+        super(type, worldPosition, blockState, false);
     }
 
     @Override

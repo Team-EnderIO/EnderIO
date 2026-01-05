@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "A": "#c:ingots/copper_alloy",
+    "A": "#c:ingots/conductive_alloy",
     "B": "minecraft:barrel",
     "C": "enderio:void_chassis",
     "M": "#c:gears/iron",

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "A": "#c:ingots/pulsating_alloy",
+    "B": "enderio:conduit_binder",
+    "I": "#c:ingots/vibrant_alloy"
+  },
+  "pattern": [
+    "BBB",
+    "IAI",
+    "BBB"
+  ],
+  "result": {
+    "components": {
+      "enderio:conduit": "enderio:vibrant_item"
+    },
+    "count": 8,
+    "id": "enderio:conduit"
+  }
+}

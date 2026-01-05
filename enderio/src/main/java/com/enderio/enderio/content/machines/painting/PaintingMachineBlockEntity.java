@@ -65,8 +65,8 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
 
     @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
-        return new PaintingMachineMenu(pInventory, pContainerId, this);
+    public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
+        return new PaintingMachineMenu(inventory, containerId, this);
     }
 
     @Override

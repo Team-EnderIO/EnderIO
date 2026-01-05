@@ -1,0 +1,10 @@
+{
+  "type": "enderio:fluid",
+  "description": {
+    "translate": "conduit.enderio.energetic_fluid"
+  },
+  "does_support_priority": true,
+  "is_multi_fluid": false,
+  "texture": "enderio:block/conduit/pressurized_fluid",
+  "transfer_rate": 1000
+}

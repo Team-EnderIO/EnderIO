@@ -55,8 +55,8 @@ public class NiardScreen extends MachineScreen<NiardMenu> {
         addRenderableWidget(new ActivityWidget(leftPos + imageWidth - 6 - 16, topPos + 16 * 4, menu::getMachineStates));
     }
 
-    public NiardScreen(NiardMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
-        super(pMenu, pPlayerInventory, pTitle);
+    public NiardScreen(NiardMenu menu, Inventory playerInventory, Component title) {
+        super(menu, playerInventory, title);
         imageWidth = WIDTH;
         imageHeight = HEIGHT;
     }

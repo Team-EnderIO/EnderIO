@@ -21,8 +21,8 @@ public class XPVacuumScreen extends MachineScreen<XPVacuumMenu> {
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
 
-    public XPVacuumScreen(XPVacuumMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
-        super(pMenu, pPlayerInventory, pTitle);
+    public XPVacuumScreen(XPVacuumMenu menu, Inventory playerInventory, Component title) {
+        super(menu, playerInventory, title);
         imageWidth = WIDTH;
         imageHeight = HEIGHT;
         shouldRenderLabels = true;
@@ -49,17 +49,17 @@ public class XPVacuumScreen extends MachineScreen<XPVacuumMenu> {
     }
 
     @Override
-    protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
-        pGuiGraphics.blit(RenderPipelines.GUI_TEXTURED, XP_VACUUM_BG, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, XP_VACUUM_BG, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
     @Override
-    protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
+    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         guiGraphics.drawString(font, MachinesLang.RANGE, this.imageWidth - 6 - this.font.width(MachinesLang.RANGE), 24, CommonColors.DARK_GRAY,
                 false);
         guiGraphics.drawString(font, menu.getRange() + "", imageWidth - 6 - 16 - 2 - 8 - 10, 38, CommonColors.DARK_GRAY,
                 false);
-        super.renderLabels(guiGraphics, pMouseX, pMouseY);
+        super.renderLabels(guiGraphics, mouseX, mouseY);
     }
 
 }

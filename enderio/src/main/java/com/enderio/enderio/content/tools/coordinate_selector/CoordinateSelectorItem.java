@@ -23,52 +23,52 @@ import net.minecraft.world.phys.HitResult;
 
 public class CoordinateSelectorItem extends Item {
 
-    public CoordinateSelectorItem(Properties pProperties) {
-        super(pProperties.stacksTo(1));
+    public CoordinateSelectorItem(Properties properties) {
+        super(properties.stacksTo(1));
     }
 
     @Override
-    public InteractionResult use(Level pLevel, Player pPlayer, InteractionHand pHand) {
-        ItemStack itemstack = pPlayer.getItemInHand(pHand);
-        if (!checkPaper(pPlayer)) {
-            return super.use(pLevel, pPlayer, pHand);
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+        ItemStack itemstack = player.getItemInHand(hand);
+        if (!checkPaper(player)) {
+            return super.use(level, player, hand);
         }
 
-        BlockHitResult hitResult = pLevel.clip(
+        BlockHitResult hitResult = level.clip(
             new ClipContext(
-                pPlayer.getEyePosition(),
-                pPlayer.getLookAngle().scale(64).add(pPlayer.getEyePosition()), //Make range configurable(?)
+                player.getEyePosition(),
+                player.getLookAngle().scale(64).add(player.getEyePosition()), //Make range configurable(?)
                 ClipContext.Block.COLLIDER,
                 ClipContext.Fluid.ANY,
-                pPlayer)
+                player)
         );
 
         if (hitResult.getType() == HitResult.Type.MISS) {
-            if (pPlayer instanceof LocalPlayer) {
-                pPlayer.displayClientMessage(ToolsLang.COORDINATE_SELECTOR_NO_BLOCK, true);
+            if (player instanceof LocalPlayer) {
+                player.displayClientMessage(ToolsLang.COORDINATE_SELECTOR_NO_BLOCK, true);
             }
 
-            return super.use(pLevel, pPlayer, pHand);
+            return super.use(level, player, hand);
         }
 
-        if (pPlayer instanceof ServerPlayer serverPlayer) {
-            openMenu(serverPlayer, pLevel, hitResult.getBlockPos());
+        if (player instanceof ServerPlayer serverPlayer) {
+            openMenu(serverPlayer, level, hitResult.getBlockPos());
         }
 
         return InteractionResult.SUCCESS;
     }
 
     @Override
-    public InteractionResult useOn(UseOnContext pContext) {
-        if (pContext.getPlayer() != null && checkPaper(pContext.getPlayer())) {
-            if (pContext.getPlayer() instanceof ServerPlayer serverPlayer) {
-                openMenu(serverPlayer, pContext.getLevel(), pContext.getClickedPos());
+    public InteractionResult useOn(UseOnContext context) {
+        if (context.getPlayer() != null && checkPaper(context.getPlayer())) {
+            if (context.getPlayer() instanceof ServerPlayer serverPlayer) {
+                openMenu(serverPlayer, context.getLevel(), context.getClickedPos());
             }
 
             return InteractionResult.SUCCESS;
         }
 
-        return super.useOn(pContext);
+        return super.useOn(context);
     }
 
     private static void openMenu(ServerPlayer player, Level level, BlockPos pos) {
@@ -81,8 +81,8 @@ public class CoordinateSelectorItem extends Item {
             }
 
             @Override
-            public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
-                return new CoordinateMenu(pContainerId, selection, null);
+            public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
+                return new CoordinateMenu(containerId, selection, null);
             }
         }, buf -> CoordinateMenu.writeAdditionalData(buf, selection, ""));
     }

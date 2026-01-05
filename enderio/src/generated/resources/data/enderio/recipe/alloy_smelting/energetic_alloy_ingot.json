@@ -9,11 +9,11 @@
     },
     {
       "count": 1,
-      "ingredient": "#c:ingots/gold"
+      "ingredient": "#c:ingots/conductive_alloy"
     },
     {
       "count": 1,
-      "ingredient": "#c:dusts/glowstone"
+      "ingredient": "#c:ingots/gold"
     }
   ],
   "output": {

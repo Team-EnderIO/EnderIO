@@ -15,8 +15,8 @@ public class SlicerMenu extends PoweredMachineMenu<SlicerBlockEntity> {
 
     private final FloatSyncSlot craftingProgressSlot;
 
-    public SlicerMenu(int pContainerId, Inventory inventory, SlicerBlockEntity blockEntity) {
-        super(EIOMenus.SLICE_N_SPLICE.get(), pContainerId, inventory, blockEntity);
+    public SlicerMenu(int containerId, Inventory inventory, SlicerBlockEntity blockEntity) {
+        super(EIOMenus.SLICE_N_SPLICE.get(), containerId, inventory, blockEntity);
         addSlots();
 
         craftingProgressSlot = addSyncSlot(FloatSyncSlot.readOnly(blockEntity::getCraftingProgress));

@@ -30,12 +30,12 @@ public class SinglePaintedBlockEntity extends BlockEntity implements PaintedBloc
 
     public static final ModelProperty<Block> PAINT = PaintedBlockEntity.createAndRegisterModelProperty();
 
-    public SinglePaintedBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
-        super(EIOBlockEntities.SINGLE_PAINTED.get(), pWorldPosition, pBlockState);
+    public SinglePaintedBlockEntity(BlockPos worldPosition, BlockState blockState) {
+        super(EIOBlockEntities.SINGLE_PAINTED.get(), worldPosition, blockState);
     }
 
-    protected SinglePaintedBlockEntity(BlockEntityType<?> blockEntityType, BlockPos pWorldPosition, BlockState pBlockState) {
-        super(blockEntityType, pWorldPosition, pBlockState);
+    protected SinglePaintedBlockEntity(BlockEntityType<?> blockEntityType, BlockPos worldPosition, BlockState blockState) {
+        super(blockEntityType, worldPosition, blockState);
     }
 
     public void setPrimaryPaint(@Nullable Block paint) {

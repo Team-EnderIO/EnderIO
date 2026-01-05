@@ -1,0 +1,9 @@
+{
+  "type": "enderio:item",
+  "description": {
+    "translate": "conduit.enderio.vibrant_item"
+  },
+  "texture": "enderio:block/conduit/item",
+  "ticks_per_cycle": 10,
+  "transfer_rate": 64
+}

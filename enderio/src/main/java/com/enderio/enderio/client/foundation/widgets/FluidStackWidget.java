@@ -72,7 +72,7 @@ public class FluidStackWidget extends EIOWidget {
     }
 
     @Override
-    protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
+    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
 
     }
 

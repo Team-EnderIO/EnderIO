@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "C": "#c:ingots/copper_alloy",
+    "C": "#c:ingots/conductive_alloy",
     "V": "enderio:void_chassis"
   },
   "pattern": [

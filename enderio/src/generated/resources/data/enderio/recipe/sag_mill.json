@@ -4,14 +4,15 @@
   "key": {
     "F": "minecraft:flint",
     "G": "#c:gears/iron",
-    "I": "#c:ingots/dark_steel",
+    "I": "#c:ingots/iron",
+    "O": "#c:obsidians",
     "P": "minecraft:piston",
     "V": "enderio:void_chassis"
   },
   "pattern": [
-    "FFF",
+    "GFG",
     "IVI",
-    "GPG"
+    "OPO"
   ],
   "result": {
     "count": 1,

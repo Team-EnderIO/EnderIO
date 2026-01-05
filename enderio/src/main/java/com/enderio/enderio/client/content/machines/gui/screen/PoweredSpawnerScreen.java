@@ -37,8 +37,8 @@ public class PoweredSpawnerScreen extends MachineScreen<PoweredSpawnerMenu> {
     private NewProgressWidget spawnProgress;
     private NewProgressWidget captureProgress;
 
-    public PoweredSpawnerScreen(PoweredSpawnerMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
-        super(pMenu, pPlayerInventory, pTitle);
+    public PoweredSpawnerScreen(PoweredSpawnerMenu menu, Inventory playerInventory, Component title) {
+        super(menu, playerInventory, title);
 
         imageWidth = WIDTH;
         imageHeight = HEIGHT;
@@ -80,7 +80,7 @@ public class PoweredSpawnerScreen extends MachineScreen<PoweredSpawnerMenu> {
     }
 
     @Override
-    public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         switch (menu.getMode()) {
         case SPAWN -> {
             spawnProgress.visible = true;
@@ -92,12 +92,12 @@ public class PoweredSpawnerScreen extends MachineScreen<PoweredSpawnerMenu> {
         }
         }
 
-        super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override
-    protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
-        pGuiGraphics.blit(RenderPipelines.GUI_TEXTURED, getBackgroundTexture(), leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, getBackgroundTexture(), leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
     private Identifier getBackgroundTexture() {
@@ -108,7 +108,7 @@ public class PoweredSpawnerScreen extends MachineScreen<PoweredSpawnerMenu> {
     }
 
     @Override
-    protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
+    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         String modeLabel = Objects.requireNonNull(menu.getMode().getComponent()).getString();
         guiGraphics.drawString(font, modeLabel, (int) (imageWidth / 2f - font.width(modeLabel) / 2f), 25, CommonColors.DARK_GRAY, true);
 
@@ -118,6 +118,6 @@ public class PoweredSpawnerScreen extends MachineScreen<PoweredSpawnerMenu> {
             guiGraphics.drawString(font, name, (int) (imageWidth / 2f - font.width(name) / 2f), 65, CommonColors.DARK_GRAY, true);
         }
 
-        super.renderLabels(guiGraphics, pMouseX, pMouseY);
+        super.renderLabels(guiGraphics, mouseX, mouseY);
     }
 }

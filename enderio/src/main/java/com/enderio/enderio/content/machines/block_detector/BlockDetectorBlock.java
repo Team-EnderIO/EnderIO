@@ -35,24 +35,24 @@ public class BlockDetectorBlock extends DirectionalBlock {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
-        pBuilder.add(FACING, POWERED);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(FACING, POWERED);
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext pContext) {
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
         return this.defaultBlockState()
-                .setValue(FACING, pContext.getNearestLookingDirection().getOpposite().getOpposite());
+                .setValue(FACING, context.getNearestLookingDirection().getOpposite().getOpposite());
     }
 
     @Override
-    protected BlockState rotate(BlockState pState, Rotation pRot) {
-        return pState.setValue(FACING, pRot.rotate(pState.getValue(FACING)));
+    protected BlockState rotate(BlockState state, Rotation rot) {
+        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
     @Override
-    protected BlockState mirror(BlockState pState, Mirror pMirror) {
-        return pState.rotate(pMirror.getRotation(pState.getValue(FACING)));
+    protected BlockState mirror(BlockState state, Mirror mirror) {
+        return state.rotate(mirror.getRotation(state.getValue(FACING)));
     }
 
     @Override
@@ -62,27 +62,27 @@ public class BlockDetectorBlock extends DirectionalBlock {
     }
 
     @Override
-    protected boolean isSignalSource(BlockState pState) {
+    protected boolean isSignalSource(BlockState state) {
         return true;
     }
 
     @Override
-    protected int getSignal(BlockState pState, BlockGetter pLevel, BlockPos pPos, Direction pDirection) {
-        if (!canConnectRedstone(pState, pLevel, pPos, pDirection)) {
-            pState.setValue(POWERED, false);
+    protected int getSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
+        if (!canConnectRedstone(state, level, pos, direction)) {
+            state.setValue(POWERED, false);
             return 0;
         }
-        if (pLevel.getBlockState(pPos.relative(pState.getValue(FACING))).isAir()) {
-            pState.setValue(POWERED, false);
+        if (level.getBlockState(pos.relative(state.getValue(FACING))).isAir()) {
+            state.setValue(POWERED, false);
             return 0;
         }
-        pState.setValue(POWERED, true);
+        state.setValue(POWERED, true);
         return 15;
     }
 
     @Override
-    protected int getDirectSignal(BlockState pState, BlockGetter pLevel, BlockPos pPos, Direction pDirection) {
-        return getSignal(pState, pLevel, pPos, pDirection);
+    protected int getDirectSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
+        return getSignal(state, level, pos, direction);
     }
 
     // TODO: 1.21.4: Check this change.

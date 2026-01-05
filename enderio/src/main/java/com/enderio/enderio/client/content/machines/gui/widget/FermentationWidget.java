@@ -31,7 +31,7 @@ public class FermentationWidget extends EIOWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         //TODO depth pipeline
 
         if (shouldShow.get() && !first.get().isEmpty()) {
@@ -42,7 +42,7 @@ public class FermentationWidget extends EIOWidget {
     }
 
     @Override
-    protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {}
+    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     public void renderFluid(GuiGraphics guiGraphics, FluidStack fluid, float opacity) {
         if (fluid.isEmpty()) {

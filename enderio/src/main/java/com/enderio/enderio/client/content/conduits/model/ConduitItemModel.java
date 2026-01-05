@@ -12,7 +12,7 @@
 //import net.minecraft.client.resources.model.BakedModel;
 //import net.minecraft.core.Direction;
 //import net.minecraft.core.Holder;
-//import net.minecraft.resources.Identifier;
+//import net.minecraft.resources.ResourceLocation;
 //import net.minecraft.world.entity.LivingEntity;
 //import net.minecraft.world.inventory.InventoryMenu;
 //import net.minecraft.world.item.ItemStack;
@@ -22,7 +22,7 @@
 //import net.neoforged.neoforge.client.model.IModelBuilder;
 //import net.neoforged.neoforge.client.model.IQuadTransformer;
 //import net.neoforged.neoforge.client.model.data.ModelData;
-//import org.jspecify.annotations.Nullable;
+//import org.jetbrains.annotations.Nullable;
 //
 //import java.util.Arrays;
 //import java.util.HashMap;
@@ -47,14 +47,14 @@
 //
 //        @Nullable
 //        @Override
-//        public BakedModel resolve(BakedModel pModel, ItemStack pStack, @Nullable ClientLevel pLevel,
-//                @Nullable LivingEntity pEntity, int pSeed) {
-//            Holder<Conduit<?, ?>> conduit = pStack.get(EnderIODataComponents.CONDUIT);
-//            return CACHE.computeIfAbsent(conduit, t -> createBakedModel(t, pModel));
+//        public BakedModel resolve(BakedModel model, ItemStack stack, @Nullable ClientLevel level,
+//                @Nullable LivingEntity entity, int seed) {
+//            Holder<Conduit<?, ?>> conduit = stack.get(EnderIODataComponents.CONDUIT);
+//            return CACHE.computeIfAbsent(conduit, t -> createBakedModel(t, model));
 //        }
 //
 //        private BakedModel createBakedModel(@Nullable Holder<Conduit<?, ?>> conduit, BakedModel model) {
-//            Identifier conduitTexture = MissingTextureAtlasSprite.getLocation();
+//            ResourceLocation conduitTexture = MissingTextureAtlasSprite.getLocation();
 //            if (conduit != null) {
 //                conduitTexture = conduit.value().texture();
 //            }

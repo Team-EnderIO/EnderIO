@@ -12,12 +12,12 @@ import java.util.concurrent.CompletableFuture;
 
 public class EIOFluidTagsProvider extends FluidTagsProvider {
 
-    public EIOFluidTagsProvider(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pProvider) {
-        super(pOutput, pProvider, EnderIOAPI.MOD_ID);
+    public EIOFluidTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider) {
+        super(output, provider, EnderIOAPI.MOD_ID);
     }
 
     @Override
-    protected void addTags(HolderLookup.Provider pProvider) {
+    protected void addTags(HolderLookup.Provider provider) {
         tag(Tags.Fluids.EXPERIENCE).add(EIOFluids.XP_JUICE.source().get());
         tag(EIOTags.Fluids.SOLAR_PANEL_LIGHT).add(EIOFluids.LIQUID_SUNSHINE.source().get());
         tag(EIOTags.Fluids.SOLAR_PANEL_DARK).add(EIOFluids.LIQUID_DARKNESS.source().get());

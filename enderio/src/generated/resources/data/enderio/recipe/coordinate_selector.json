@@ -4,7 +4,7 @@
   "key": {
     "C": "minecraft:compass",
     "E": "#c:ender_pearls",
-    "I": "#c:ingots/copper_alloy"
+    "I": "#c:ingots/conductive_alloy"
   },
   "pattern": [
     "IEI",

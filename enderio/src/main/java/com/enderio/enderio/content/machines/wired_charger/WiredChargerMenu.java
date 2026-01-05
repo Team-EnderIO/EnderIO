@@ -14,8 +14,8 @@ public class WiredChargerMenu extends PoweredMachineMenu<WiredChargerBlockEntity
 
     private final FloatSyncSlot chargeProgressSlot;
 
-    public WiredChargerMenu(int pContainerId, Inventory inventory, WiredChargerBlockEntity blockEntity) {
-        super(EIOMenus.WIRED_CHARGER.get(), pContainerId, inventory, blockEntity);
+    public WiredChargerMenu(int containerId, Inventory inventory, WiredChargerBlockEntity blockEntity) {
+        super(EIOMenus.WIRED_CHARGER.get(), containerId, inventory, blockEntity);
         addSlots();
 
         chargeProgressSlot = addSyncSlot(FloatSyncSlot.readOnly(blockEntity::getChargeProgress));

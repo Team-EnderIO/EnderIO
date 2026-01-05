@@ -2,10 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "P": [
-      "minecraft:paper",
-      "enderio:black_paper"
-    ],
+    "P": "minecraft:paper",
     "R": "#c:dusts/redstone",
     "Z": "enderio:z_logic_controller"
   },

@@ -21,9 +21,9 @@ public class FluidStackStaticWidget extends EIOWidget {
 
     private final Supplier<FluidStorageInfo> fluidStorageSupplier;
 
-    public FluidStackStaticWidget(int pX, int pY, int pWidth, int pHeight,
+    public FluidStackStaticWidget(int x, int y, int width, int height,
             Supplier<FluidStorageInfo> fluidStorageSupplier) {
-        super(pX, pY, pWidth, pHeight);
+        super(x, y, width, height);
         this.fluidStorageSupplier = fluidStorageSupplier;
     }
 
@@ -58,7 +58,7 @@ public class FluidStackStaticWidget extends EIOWidget {
     }
 
     @Override
-    protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
+    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
 
     }
 

@@ -34,8 +34,8 @@ public class XPObeliskScreen extends MachineScreen<XPObeliskMenu> {
 
     private final List<ImageButton> xpButtons = new ArrayList<>();
 
-    public XPObeliskScreen(XPObeliskMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
-        super(pMenu, pPlayerInventory, pTitle);
+    public XPObeliskScreen(XPObeliskMenu menu, Inventory playerInventory, Component title) {
+        super(menu, playerInventory, title);
         imageWidth = WIDTH;
         imageHeight = HEIGHT;
     }
@@ -72,8 +72,8 @@ public class XPObeliskScreen extends MachineScreen<XPObeliskMenu> {
     }
 
     @Override
-    protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
-        pGuiGraphics.blit(RenderPipelines.GUI_TEXTURED, BG, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BG, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
     private ImageButton makeButton(int x, int y, int size, int id, Identifier SPRITE, Component tooltip) {

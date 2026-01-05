@@ -26,7 +26,7 @@ public class ExperienceWidget extends EIOWidget {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         //TODO depth pipeline
 
         ExperienceUtil.ExperienceLevel expLevel = ExperienceUtil
@@ -53,6 +53,6 @@ public class ExperienceWidget extends EIOWidget {
     }
 
     @Override
-    protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
+    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
     }
 }

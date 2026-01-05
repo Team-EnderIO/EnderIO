@@ -22,8 +22,8 @@ public class VacuumChestScreen extends MachineScreen<VacuumChestMenu> {
     private static final int WIDTH = 176;
     private static final int HEIGHT = 206;
 
-    public VacuumChestScreen(VacuumChestMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
-        super(pMenu, pPlayerInventory, pTitle);
+    public VacuumChestScreen(VacuumChestMenu menu, Inventory playerInventory, Component title) {
+        super(menu, playerInventory, title);
         imageWidth = WIDTH;
         imageHeight = HEIGHT;
         shouldRenderLabels = true;
@@ -51,15 +51,15 @@ public class VacuumChestScreen extends MachineScreen<VacuumChestMenu> {
     }
 
     @Override
-    protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
-        pGuiGraphics.blit(RenderPipelines.GUI_TEXTURED, VACUUM_CHEST_BG, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, VACUUM_CHEST_BG, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
     @Override
-    protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
+    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         guiGraphics.drawString(font, FiltersLang.GUI_FILTER, 8, 74, CommonColors.DARK_GRAY, false);
         guiGraphics.drawString(font, MachinesLang.RANGE, imageWidth - 8 - font.width(MachinesLang.RANGE), 74, CommonColors.DARK_GRAY, false);
         guiGraphics.drawString(font, menu.getRange() + "", imageWidth - 8 - 8 - 10, 90, CommonColors.DARK_GRAY, false);
-        super.renderLabels(guiGraphics, pMouseX, pMouseY);
+        super.renderLabels(guiGraphics, mouseX, mouseY);
     }
 }

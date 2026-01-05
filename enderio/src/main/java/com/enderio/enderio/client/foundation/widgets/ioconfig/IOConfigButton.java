@@ -45,6 +45,6 @@ public class IOConfigButton extends EnderButton {
     }
 
     @Override
-    public void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
 }

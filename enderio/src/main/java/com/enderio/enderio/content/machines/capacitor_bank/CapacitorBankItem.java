@@ -27,8 +27,8 @@
 //
 //    private final CapacityTier tier;
 //
-//    public CapacitorBankItem(CapacitorBankBlock pBlock, Properties pProperties) {
-//        super(pBlock, pProperties);
-//        this.tier = pBlock.tier;
+//    public CapacitorBankItem(CapacitorBankBlock block, Properties properties) {
+//        super(block, properties);
+//        this.tier = block.tier;
 //    }
 //}

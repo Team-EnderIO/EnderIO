@@ -46,21 +46,19 @@ public class EIOItems {
 
     // region Alloys
 
-    public static final DeferredItem<Item> COPPER_ALLOY_INGOT = basic("copper_alloy_ingot");
+    public static final DeferredItem<Item> CONDUCTIVE_ALLOY_INGOT = basic("conductive_alloy_ingot");
     public static final DeferredItem<Item> ENERGETIC_ALLOY_INGOT = basic("energetic_alloy_ingot");
     public static final DeferredItem<Item> VIBRANT_ALLOY_INGOT = basic("vibrant_alloy_ingot");
     public static final DeferredItem<Item> REDSTONE_ALLOY_INGOT = basic("redstone_alloy_ingot");
-    public static final DeferredItem<Item> CONDUCTIVE_ALLOY_INGOT = basic("conductive_alloy_ingot");
     public static final DeferredItem<Item> PULSATING_ALLOY_INGOT = basic("pulsating_alloy_ingot");
     public static final DeferredItem<Item> DARK_STEEL_INGOT = basic("dark_steel_ingot");
     public static final DeferredItem<Item> SOULARIUM_INGOT = basic("soularium_ingot");
     public static final DeferredItem<Item> END_STEEL_INGOT = basic("end_steel_ingot");
 
-    public static final DeferredItem<Item> COPPER_ALLOY_NUGGET = basic("copper_alloy_nugget");
+    public static final DeferredItem<Item> CONDUCTIVE_ALLOY_NUGGET = basic("conductive_alloy_nugget");
     public static final DeferredItem<Item> ENERGETIC_ALLOY_NUGGET = basic("energetic_alloy_nugget");
     public static final DeferredItem<Item> VIBRANT_ALLOY_NUGGET = basic("vibrant_alloy_nugget");
     public static final DeferredItem<Item> REDSTONE_ALLOY_NUGGET = basic("redstone_alloy_nugget");
-    public static final DeferredItem<Item> CONDUCTIVE_ALLOY_NUGGET = basic("conductive_alloy_nugget");
     public static final DeferredItem<Item> PULSATING_ALLOY_NUGGET = basic("pulsating_alloy_nugget");
     public static final DeferredItem<Item> DARK_STEEL_NUGGET = basic("dark_steel_nugget");
     public static final DeferredItem<Item> SOULARIUM_NUGGET = basic("soularium_nugget");
@@ -71,9 +69,6 @@ public class EIOItems {
     // region Grinding Balls
 
     // TODO: Can we power the default values with configs?
-
-    public static final DeferredItem<Item> COPPER_ALLOY_BALL = grindingBall("copper_alloy_grinding_ball",
-        new GrindingBallData(1.2F, 1.65F, 0.8F, 40000));
 
     public static final DeferredItem<Item> ENERGETIC_ALLOY_BALL = grindingBall("energetic_alloy_grinding_ball",
         new GrindingBallData(1.6F, 1.1F, 1.1F, 80000));
@@ -159,7 +154,6 @@ public class EIOItems {
 
     // region Powders and Fragments
 
-    public static final DeferredItem<Item> FLOUR = basic("flour");
     public static final DeferredItem<Item> POWDERED_COAL = basic("powdered_coal");
     public static final DeferredItem<Item> POWDERED_IRON = basic("powdered_iron");
     public static final DeferredItem<Item> POWDERED_GOLD = basic("powdered_gold");
@@ -167,7 +161,6 @@ public class EIOItems {
     public static final DeferredItem<Item> POWDERED_TIN = basic("powdered_tin");
     public static final DeferredItem<Item> POWDERED_ENDER_PEARL = basic("powdered_ender_pearl");
     public static final DeferredItem<Item> POWDERED_OBSIDIAN = basic("powdered_obsidian");
-    public static final DeferredItem<Item> POWDERED_COBALT = basic("powdered_cobalt");
     public static final DeferredItem<Item> POWDERED_LAPIS_LAZULI = basic("powdered_lapis_lazuli");
     public static final DeferredItem<Item> POWDERED_QUARTZ = basic("powdered_quartz");
     public static final DeferredItem<Item> PRESCIENT_POWDER = basic("prescient_powder");
@@ -181,14 +174,6 @@ public class EIOItems {
 
     // endregion
 
-    // region Dyes
-
-    public static final DeferredItem<Item> DYE_GREEN = basic("organic_green_dye");
-    public static final DeferredItem<Item> DYE_BROWN = basic("organic_brown_dye");
-    public static final DeferredItem<Item> DYE_BLACK = basic("organic_black_dye");
-
-    // endregion
-
     // region Misc Materials
 
     public static final DeferredItem<Item> PHOTOVOLTAIC_PLATE = basic("photovoltaic_plate");
@@ -199,10 +184,6 @@ public class EIOItems {
     public static final DeferredItem<Item> ANIMAL_TOKEN = basicGlinted("animal_token");
     public static final DeferredItem<Item> MONSTER_TOKEN = basicGlinted("monster_token");
     public static final DeferredItem<Item> PLAYER_TOKEN = basicGlinted("player_token");
-    public static final DeferredItem<Item> CAKE_BASE = basic("cake_base");
-    public static final DeferredItem<Item> BLACK_PAPER = basic("black_paper");
-    public static final DeferredItem<Item> CLAYED_GLOWSTONE = basic("clayed_glowstone");
-    public static final DeferredItem<Item> NETHERCOTTA = basic("nethercotta");
 
     public static final DeferredItem<BrokenSpawnerItem> BROKEN_SPAWNER = ITEMS.registerItem("broken_spawner", BrokenSpawnerItem::new);
 
@@ -339,6 +320,11 @@ public class EIOItems {
         ITEMS.addAlias(EnderIO.id("advanced_filter"), ADVANCED_ITEM_FILTER.getId());
         ITEMS.addAlias(EnderIO.id("fluid_filter"), BASIC_FLUID_FILTER.getId());
         ITEMS.addAlias(EnderIO.id("entity_filter"), BASIC_SOUL_FILTER.getId());
+
+        // Copper Alloy
+        ITEMS.addAlias(EnderIO.id("copper_alloy_ingot"), CONDUCTIVE_ALLOY_INGOT.getId());
+        ITEMS.addAlias(EnderIO.id("copper_alloy_nugget"), CONDUCTIVE_ALLOY_NUGGET.getId());
+        ITEMS.addAlias(EnderIO.id("copper_alloy_grinding_ball"), CONDUCTIVE_ALLOY_BALL.getId());
 
         ITEMS.register(bus);
     }

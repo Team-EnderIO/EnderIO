@@ -12,8 +12,8 @@ import java.util.function.Supplier;
 
 public class FluidFilterSlot extends FilterSlot<FluidStack> {
 
-    public FluidFilterSlot(Supplier<FluidStack> getter, Consumer<FluidStack> setter, int pSlot, int pX, int pY) {
-        super(getter, setter, pSlot, pX, pY);
+    public FluidFilterSlot(Supplier<FluidStack> getter, Consumer<FluidStack> setter, int slot, int x, int y) {
+        super(getter, setter, slot, x, y);
     }
 
     @Override

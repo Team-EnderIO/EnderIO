@@ -54,25 +54,25 @@ public class ConduitProbeItem extends Item {
 
     public static final Identifier PROBE_STATE_PREDICATE = EnderIO.id("probe_state");
 
-    public ConduitProbeItem(Properties pProperties) {
-        super(pProperties.stacksTo(1));
+    public ConduitProbeItem(Properties properties) {
+        super(properties.stacksTo(1));
     }
 
     @Override
-    public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext pContext) {
-        BlockEntity block = pContext.getLevel().getBlockEntity(pContext.getClickedPos());
-        Player player = pContext.getPlayer();
+    public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
+        BlockEntity block = context.getLevel().getBlockEntity(context.getClickedPos());
+        Player player = context.getPlayer();
         if (player == null) {
-            return super.onItemUseFirst(stack, pContext);
+            return super.onItemUseFirst(stack, context);
         }
-        if (pContext.getLevel().isClientSide()) {
+        if (context.getLevel().isClientSide()) {
             return InteractionResult.SUCCESS;
         }
         if (!(block instanceof ConduitBundleBlockEntity conduit)) {
-            return super.onItemUseFirst(stack, pContext);
+            return super.onItemUseFirst(stack, context);
         }
 
-        var conduitConnection = conduit.getShape().getConnectionFromHit(pContext.getClickedPos(), pContext.getHitResult());
+        var conduitConnection = conduit.getShape().getConnectionFromHit(context.getClickedPos(), context.getHitResult());
         if (conduitConnection == null) {
             return InteractionResult.FAIL;
         }
@@ -80,7 +80,7 @@ public class ConduitProbeItem extends Item {
         Direction face = conduitConnection.getFirst();
         switch (getState(stack)) {
             case COPY_PASTE -> {
-                if (pContext.isSecondaryUseActive()) {
+                if (context.isSecondaryUseActive()) {
                     handleCopy(conduit, face, stack, player);
                 } else {
                     handlePaste(conduit, face, stack, player);

@@ -7,17 +7,16 @@
 //import com.enderio.enderio.content.machines.capacitor_bank.CapacitorBankMenu;
 //import com.enderio.enderio.foundation.lang.EIOCommonLang;
 //import net.minecraft.client.gui.GuiGraphics;
-//import net.minecraft.client.renderer.RenderPipelines;
 //import net.minecraft.network.chat.Component;
-//import net.minecraft.resources.Identifier;
+//import net.minecraft.resources.ResourceLocation;
 //import net.minecraft.world.entity.player.Inventory;
 //
 //public class CapacitorBankScreen extends LegacyMachineScreen<CapacitorBankMenu> {
 //
-//    public static final Identifier BG_TEXTURE = EnderIO.rl("textures/gui/screen/capacitor_bank.png");
+//    public static final ResourceLocation BG_TEXTURE = EnderIO.rl("textures/gui/screen/capacitor_bank.png");
 //
-//    public CapacitorBankScreen(CapacitorBankMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
-//        super(pMenu, pPlayerInventory, pTitle);
+//    public CapacitorBankScreen(CapacitorBankMenu menu, Inventory playerInventory, Component title) {
+//        super(menu, playerInventory, title);
 //    }
 //
 //    @Override
@@ -33,7 +32,7 @@
 //    }
 //
 //    @Override
-//    protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
-//        pGuiGraphics.blit(RenderPipelines.GUI_TEXTURED,BG_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+//    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
+//        guiGraphics.blit(BG_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
 //    }
 //}

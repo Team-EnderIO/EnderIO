@@ -73,23 +73,23 @@ public class ItemRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(items, RecipeCategory.TOOLS, EIOItems.COORDINATE_SELECTOR.get())
-                .define('I', EIOTags.Items.INGOTS_COPPER_ALLOY)
+                .define('I', EIOTags.Items.INGOTS_CONDUCTIVE_ALLOY)
                 .define('C', Items.COMPASS)
                 .define('E', Tags.Items.ENDER_PEARLS)
                 .pattern("IEI")
                 .pattern(" CI")
                 .pattern("  I")
                 .unlockedBy("has_ingredient",
-                        InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.COPPER_ALLOY_INGOT.get()))
+                        InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUCTIVE_ALLOY_INGOT.get()))
                 .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(items, RecipeCategory.TOOLS, EIOItems.ELECTROMAGNET.get())
                 .define('V', EIOTags.Items.GEMS_VIBRANT_CRYSTAL)
+                .define('E', EIOTags.Items.INGOTS_ENERGETIC_ALLOY)
                 .define('C', EIOTags.Items.INGOTS_CONDUCTIVE_ALLOY)
-                .define('E', EIOTags.Items.INGOTS_COPPER_ALLOY)
-                .pattern("CVC")
-                .pattern("C C")
+                .pattern("EVE")
                 .pattern("E E")
+                .pattern("C C")
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.VIBRANT_CRYSTAL.get()))
                 .save(recipeOutput);

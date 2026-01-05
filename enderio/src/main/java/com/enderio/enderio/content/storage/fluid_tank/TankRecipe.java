@@ -66,7 +66,7 @@ public final class TankRecipe implements Recipe<TankRecipe.Input> {
     }
 
     @Override
-    public boolean matches(Input recipeInput, Level pLevel) {
+    public boolean matches(Input recipeInput, Level level) {
         switch (mode) {
         case FILL -> {
             if (!FluidStack.matches(recipeInput.fluidContents, fluid) || recipeInput.fluidContents.getAmount() < fluid.getAmount()) {

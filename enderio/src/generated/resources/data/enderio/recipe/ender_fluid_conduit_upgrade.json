@@ -5,9 +5,9 @@
     "B": "enderio:conduit_binder",
     "C": {
       "neoforge:ingredient_type": "enderio:conduit",
-      "conduit_type": "enderio:pressurized_fluid"
+      "conduit_type": "enderio:energetic_fluid"
     },
-    "I": "enderio:vibrant_alloy_ingot"
+    "I": "#c:ingots/vibrant_alloy"
   },
   "pattern": [
     "BBB",
@@ -16,7 +16,7 @@
   ],
   "result": {
     "components": {
-      "enderio:conduit": "enderio:ender_fluid"
+      "enderio:conduit": "enderio:vibrant_fluid"
     },
     "count": 8,
     "id": "enderio:conduit"

@@ -9,7 +9,7 @@
     },
     {
       "count": 1,
-      "ingredient": "#c:silicon"
+      "ingredient": "#c:ingots/copper"
     }
   ],
   "output": {

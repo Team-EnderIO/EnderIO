@@ -452,7 +452,7 @@ public class IOConfigOverlay extends BaseOverlay {
     }
 
     @Override
-    protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
+    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
     }
 
     private record SelectedFace(BlockPos blockPos, Direction side) {

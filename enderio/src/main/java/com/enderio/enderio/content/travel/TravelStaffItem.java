@@ -131,7 +131,7 @@ public class TravelStaffItem extends Item implements AdvancedTooltipProvider, IC
     }
 
     @Override
-    public int getBarColor(ItemStack pStack) {
+    public int getBarColor(ItemStack stack) {
         return EnergyBarDecorator.BAR_COLOR;
     }
 

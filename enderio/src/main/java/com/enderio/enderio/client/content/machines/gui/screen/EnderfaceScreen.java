@@ -9,6 +9,7 @@
 //import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 //import com.mojang.blaze3d.vertex.MeshData;
 //import com.mojang.blaze3d.vertex.PoseStack;
+//import com.mojang.blaze3d.vertex.VertexBuffer;
 //import com.mojang.blaze3d.vertex.VertexConsumer;
 //import com.mojang.blaze3d.vertex.VertexSorting;
 //import com.mojang.math.Axis;
@@ -36,7 +37,7 @@
 //import net.minecraft.world.phys.shapes.VoxelShape;
 //import net.neoforged.neoforge.client.model.pipeline.VertexConsumerWrapper;
 //import net.neoforged.neoforge.network.PacketDistributor;
-//import org.jspecify.annotations.Nullable;
+//import org.jetbrains.annotations.Nullable;
 //import org.joml.Matrix4f;
 //import org.joml.Quaternionf;
 //import org.joml.Vector3f;
@@ -156,11 +157,11 @@
 //    }
 //
 //    @Override
-//    public boolean mouseDragged(double mouseX, double mouseY, int button, double pDragX, double pDragY) {
+//    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
 //        long window = Minecraft.getInstance().getWindow().getWindow();
 //
-//        double dx = pDragX / (double) Minecraft.getInstance().getWindow().getGuiScaledWidth();
-//        double dy = pDragY / (double) Minecraft.getInstance().getWindow().getGuiScaledHeight();
+//        double dx = dragX / (double) Minecraft.getInstance().getWindow().getGuiScaledWidth();
+//        double dy = dragY / (double) Minecraft.getInstance().getWindow().getGuiScaledHeight();
 //
 //        if (InputConstants.isKeyDown(window, InputConstants.KEY_LCONTROL)
 //                || InputConstants.isKeyDown(window, InputConstants.KEY_LSHIFT)) {
@@ -204,13 +205,12 @@
 //        MeshData meshdata = builder != null ? builder.build() : null;
 //        if (meshdata != null) {
 //            if (type.sortOnUpload()) {
-//                var sortState = meshdata.sortQuads(ENDERFACE_BUFFERS.get(type), RenderSystem.getProjectionType().vertexSorting());
+//                var sortState = meshdata.sortQuads(ENDERFACE_BUFFERS.get(type), RenderSystem.getVertexSorting());
 //
 //                worldSortStates.put(type, sortState);
 //            }
 //
-//            // TODO: 1.21.4: is this right?
-//            VertexBuffer buffer = new VertexBuffer(BufferUsage.STATIC_WRITE);
+//            VertexBuffer buffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
 //            buffer.bind();
 //            buffer.upload(meshdata);
 //
@@ -236,8 +236,8 @@
 //            }
 //
 //            type.setupRenderState();
-//            var modelOffset = RenderSystem.getShader().MODEL_OFFSET;
-//            modelOffset.set((float) 0, (float) 0, (float) 0);
+//            var chunkOffset = RenderSystem.getShader().CHUNK_OFFSET;
+//            chunkOffset.set((float) 0, (float) 0, (float) 0);
 //            var modelView = new Matrix4f(RenderSystem.getModelViewMatrix());
 //            modelView.mul(pose.pose());
 //            vertexBuffer.drawWithShader(modelView, RenderSystem.getProjectionMatrix(), RenderSystem.getShader());
@@ -348,19 +348,19 @@
 //
 //        VertexBuffer.unbind();
 //
-//        // TODO: 1.21.4: Check this is right?
-//        graphics.drawSpecial(bufferSource -> {
-//            for (var blockEntity : worldBlockEntities) {
-//                var renderer = blockEntityDispatcher.getRenderer(blockEntity);
-//                if (renderer != null) {
-//                    var pos = blockEntity.getBlockPos();
-//                    graphics.pose().pushPose();
-//                    graphics.pose().translate(pos.getX() - origin.x, pos.getY() - origin.y, pos.getZ() - origin.z);
-//                    blockEntityDispatcher.render(blockEntity, partialTick, graphics.pose(), bufferSource);
-//                    graphics.pose().popPose();
-//                }
+//        for (var blockEntity : worldBlockEntities) {
+//            var renderer = blockEntityDispatcher.getRenderer(blockEntity);
+//            if (renderer != null) {
+//                var pos = blockEntity.getBlockPos();
+//                graphics.pose().pushPose();
+//                graphics.pose().translate(pos.getX() - origin.x, pos.getY() - origin.y, pos.getZ() - origin.z);
+//                blockEntityDispatcher.render(blockEntity, partialTick, graphics.pose(), graphics.bufferSource());
+//                graphics.pose().popPose();
 //            }
-//        });
+//        }
+//
+//        // Force block entities to be flushed
+//        graphics.bufferSource().endBatch();
 //
 //        for (var layer : LAYERS_AFTER_BLOCK_ENTITIES) {
 //            this.renderCompiledLayer(graphics.pose().last(), layer);
@@ -373,11 +373,9 @@
 //                            selectedLocation.z - origin.z);
 //            graphics.pose().scale(0.3f, 0.3f, 0.3f);
 //            graphics.pose().translate(-0.5, -0.5, -0.5);
-//
-//            // TODO: 1.21.4: Check this is right?
-//            graphics.drawSpecial(bufferSource -> dispatcher.renderSingleBlock(Blocks.OAK_PLANKS.defaultBlockState(), graphics.pose(),
-//                bufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY));
-//
+//            dispatcher.renderSingleBlock(Blocks.OAK_PLANKS.defaultBlockState(), graphics.pose(),
+//                    graphics.bufferSource(), LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+//            graphics.bufferSource().endBatch();
 //            graphics.pose().popPose();
 //        }
 //

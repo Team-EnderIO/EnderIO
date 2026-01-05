@@ -16,7 +16,7 @@ public class EIOEntityTagsProvider extends EntityTypeTagsProvider {
     }
 
     @Override
-    protected void addTags(HolderLookup.Provider pProvider) {
+    protected void addTags(HolderLookup.Provider provider) {
         this.tag(EIOTags.EntityTypes.SOUL_VIAL_BLACKLIST)
                 .add(EntityType.WARDEN)
                 .addTag(Tags.EntityTypes.CAPTURING_NOT_SUPPORTED);

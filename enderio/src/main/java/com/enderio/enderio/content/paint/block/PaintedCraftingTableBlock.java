@@ -39,12 +39,12 @@ public class PaintedCraftingTableBlock extends CraftingTableBlock implements Ent
     }
 
     @Override
-    public MenuProvider getMenuProvider(BlockState pState, Level pLevel, BlockPos pPos) {
-        return new SimpleMenuProvider((containerId, inventory, player) -> new CraftingMenu(containerId, inventory, ContainerLevelAccess.create(pLevel, pPos)) {
+    public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
+        return new SimpleMenuProvider((containerId, inventory, player) -> new CraftingMenu(containerId, inventory, ContainerLevelAccess.create(level, pos)) {
             @Override
-            public boolean stillValid(Player pPlayer) {
+            public boolean stillValid(Player player) {
                 try {
-                    return stillValid(access, pPlayer, EIOBlocks.PAINTED_CRAFTING_TABLE.get());
+                    return stillValid(access, player, EIOBlocks.PAINTED_CRAFTING_TABLE.get());
                 } catch (Exception e) {
                     return false;
                 }

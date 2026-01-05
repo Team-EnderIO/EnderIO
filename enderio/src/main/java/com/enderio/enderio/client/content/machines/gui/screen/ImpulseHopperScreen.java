@@ -18,8 +18,8 @@ public class ImpulseHopperScreen extends MachineScreen<ImpulseHopperMenu> {
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
 
-    public ImpulseHopperScreen(ImpulseHopperMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
-        super(pMenu, pPlayerInventory, pTitle);
+    public ImpulseHopperScreen(ImpulseHopperMenu menu, Inventory playerInventory, Component title) {
+        super(menu, playerInventory, title);
         imageWidth = WIDTH;
         imageHeight = HEIGHT;
     }
@@ -40,7 +40,7 @@ public class ImpulseHopperScreen extends MachineScreen<ImpulseHopperMenu> {
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
+    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight, 256, 256);
 
         // for all ghost slots

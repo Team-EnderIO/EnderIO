@@ -3,10 +3,7 @@
   "category": "misc",
   "key": {
     "I": "#c:ingots/iron",
-    "P": [
-      "minecraft:paper",
-      "enderio:black_paper"
-    ],
+    "P": "minecraft:paper",
     "R": "#c:ingots/redstone_alloy"
   },
   "pattern": [

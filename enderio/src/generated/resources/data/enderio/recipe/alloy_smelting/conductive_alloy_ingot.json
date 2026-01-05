@@ -1,19 +1,15 @@
 {
   "type": "enderio:alloy_smelting",
-  "energy": 4800,
+  "energy": 3200,
   "experience": 0.3,
   "inputs": [
-    {
-      "count": 1,
-      "ingredient": "#c:ingots/copper_alloy"
-    },
     {
       "count": 1,
       "ingredient": "#c:ingots/iron"
     },
     {
       "count": 1,
-      "ingredient": "#c:dusts/redstone"
+      "ingredient": "#c:ingots/copper"
     }
   ],
   "output": {

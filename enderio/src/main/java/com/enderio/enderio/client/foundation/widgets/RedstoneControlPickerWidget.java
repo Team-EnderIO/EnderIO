@@ -12,8 +12,8 @@ import java.util.function.Supplier;
 
 public class RedstoneControlPickerWidget extends BaseEnumPickerWidget<RedstoneControl> {
 
-    public RedstoneControlPickerWidget(int pX, int pY, Supplier<RedstoneControl> getter, Consumer<RedstoneControl> setter, Component optionName) {
-        super(pX, pY, 16, 16, RedstoneControl.class, getter, setter, true, optionName);
+    public RedstoneControlPickerWidget(int x, int y, Supplier<RedstoneControl> getter, Consumer<RedstoneControl> setter, Component optionName) {
+        super(x, y, 16, 16, RedstoneControl.class, getter, setter, true, optionName);
     }
 
     @Override
