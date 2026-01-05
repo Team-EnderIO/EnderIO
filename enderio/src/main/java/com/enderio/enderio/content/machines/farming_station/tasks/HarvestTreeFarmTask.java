@@ -23,7 +23,10 @@ public class HarvestTreeFarmTask implements FarmTask {
     public FarmInteraction farm(BlockPos soil, FarmingStation farmBlockEntity) {
         BlockPos bottom = soil.above();
         BlockState bottomState = farmBlockEntity.getLevel().getBlockState(bottom);
-        AABB range = new AABB(farmBlockEntity.getPosition()).inflate(farmBlockEntity.getFarmingRange());
+        AABB range = new AABB(farmBlockEntity.getPosition())
+            .inflate(farmBlockEntity.getFarmingRange())
+            .inflate(4, 8, 4) // increase range to accommodate for extra leaves
+            .move(0, 8, 0);
         if (bottomState.is(BlockTags.LOGS)) {
             Set<BlockPos> tree = TreeHelper.getTree(farmBlockEntity.getLevel(), bottom,
                 pos -> range.contains(pos.getX(), pos.getY(), pos.getZ()));
