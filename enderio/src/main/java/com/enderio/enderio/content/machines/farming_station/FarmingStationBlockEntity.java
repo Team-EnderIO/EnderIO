@@ -104,17 +104,6 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     }
 
     @Override
-    public void setLevel(Level level) {
-        super.setLevel(level);
-        if (level instanceof ServerLevel serverLevel) {
-            if (this.getMachineOwner() == null) {
-                this.setMachineOwner(UUID.randomUUID()); // Fallback
-            }
-            farmPlayer = FakePlayerFactory.get(serverLevel, new GameProfile(getMachineOwner(), "enderio:farm"));
-        }
-    }
-
-    @Override
     public ActionRange getActionRange() {
         return actionRange;
     }
@@ -283,9 +272,8 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
             if (soil != null) {
                 ItemStack seeds = getSeedForPos(soil).getItemStack(this);
                 if (seeds.isEmpty()) {
-                    if (drop.getItem() instanceof BlockItem || drop.getItem() instanceof SpecialPlantable) { // Collect
-                                                                                                             // potential
-                                                                                                             // seeds
+                    if (drop.getItem() instanceof BlockItem || drop.getItem() instanceof SpecialPlantable) {
+                        // Collect potential seeds
                         getSeedForPos(soil).setStackInSlot(this, drop);
                         continue;
                     }
@@ -385,6 +373,15 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     @EnsureSide(EnsureSide.Side.SERVER)
     @Override
     public FakePlayer getPlayer() {
+        if (!(level instanceof ServerLevel serverLevel)) {
+            throw new IllegalStateException("Level is null");
+        }
+
+        if (farmPlayer == null) {
+            farmPlayer = new FakePlayer(serverLevel, new GameProfile(getMachineOwnerOrRandom(), "enderio:farm:" + worldPosition));
+            farmPlayer.setPos(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ());
+        }
+
         return farmPlayer;
     }
 

@@ -106,11 +106,6 @@ public class AttractorObeliskBlockEntity extends ObeliskBlockEntity<AttractorObe
     }
 
     @Override
-    public void setLevel(Level level) {
-        super.setLevel(level);
-    }
-
-    @Override
     public void serverTick() {
         super.serverTick();
         if (isActive()) {

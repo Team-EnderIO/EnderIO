@@ -487,7 +487,7 @@ public class EIOBlocks {
 
     public static final DeferredBlock<ProgressMachineBlock> FARMING_STATION = registerWithItem("farming_station",
         properties -> new ProgressMachineBlock(EIOBlockEntities.FARMING_STATION, properties),
-        BlockBehaviour.Properties.of().strength(2.5f, 8).requiredFeatures(EIOFeatureFlags.FARMING_STATION));
+        BlockBehaviour.Properties.of().strength(2.5f, 8));
 
     public static final DeferredBlock<MachineBlock<InhibitorObeliskBlockEntity>> INHIBITOR_OBELISK =
         obelisk("inhibitor_obelisk", () -> EIOBlockEntities.INHIBITOR_OBELISK::get);
