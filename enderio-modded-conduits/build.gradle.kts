@@ -5,32 +5,15 @@ plugins {
     id("mod-common-conventions")
 }
 
-configurations {
-    val localRuntime by creating
-
-    runtimeClasspath {
-        extendsFrom(localRuntime)
-    }
-
-    create("gametestAnnotationProcessor") {
-        extendsFrom(annotationProcessor.get())
-    }
-    create("gametestCompileOnly") {
-        extendsFrom(compileOnly.get())
-    }
-    create("gametestImplementation") {
-        extendsFrom(implementation.get())
-    }
-    create("gametestRuntimeOnly") {
-        extendsFrom(runtimeOnly.get())
-    }
-}
-
 sourceSets {
     main {
         resources {
             srcDir("src/generated/resources")
         }
+    }
+
+    create("datagen") {
+        compileClasspath += sourceSets.main.get().output
     }
 
     test {
@@ -41,10 +24,46 @@ sourceSets {
     }
 }
 
+configurations {
+    val localRuntime by creating
+
+    runtimeClasspath {
+        extendsFrom(localRuntime)
+    }
+
+    val gametestAnnotationProcessor by getting {
+        extendsFrom(annotationProcessor.get())
+    }
+    val gametestCompileOnly by getting {
+        extendsFrom(compileOnly.get())
+    }
+    val gametestImplementation by getting {
+        extendsFrom(implementation.get())
+    }
+    val gametestRuntimeOnly by getting {
+        extendsFrom(runtimeOnly.get())
+    }
+
+    val datagenImplementation by getting {
+        extendsFrom(implementation.get())
+    }
+
+    val datagenCompileOnly by getting {
+        extendsFrom(compileOnly.get())
+    }
+
+    val datagenRuntimeOnly by getting {
+        extendsFrom(runtimeOnly.get())
+    }
+
+    val datagenAnnotationProcessor by getting {
+        extendsFrom(annotationProcessor.get())
+    }
+}
+
 
 
 dependencies {
-    api(libs.regilite)
     api(project(":enderio"))
     accessTransformers(project(":enderio"))
 
@@ -88,10 +107,12 @@ neoForge {
         isDisableRecompilation = System.getenv("CI") == "true"
     }
 
+    addModdingDependenciesTo(sourceSets.getByName("datagen"))
     addModdingDependenciesTo(sourceSets.getByName("gametest"))
 
     mods {
         create("enderio_modded_conduits") {
+            sourceSet(sourceSets.getByName("datagen"))
             sourceSet(sourceSets.getByName("main"))
         }
 
@@ -105,7 +126,7 @@ neoForge {
             logLevel = org.slf4j.event.Level.INFO
         }
 
-        create("data") {
+        val data by creating {
             data()
 
             programArguments.addAll(

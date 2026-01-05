@@ -1,8 +1,11 @@
 package com.enderio.enderio.content.conduits;
 
+import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitApi;
+import net.minecraft.Util;
 import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.ItemStack;
 
 public class ConduitApiImpl implements ConduitApi {
@@ -15,5 +18,10 @@ public class ConduitApiImpl implements ConduitApi {
     @Override
     public int getConduitSortIndex(Holder<Conduit<?, ?>> conduit) {
         return ConduitSorter.getSortIndex(conduit);
+    }
+
+    @Override
+    public String makeDescriptionId(ResourceKey<Conduit<?, ?>> key) {
+        return Util.makeDescriptionId(EnderIORegistries.Keys.CONDUIT.location().getPath(), key.location());
     }
 }

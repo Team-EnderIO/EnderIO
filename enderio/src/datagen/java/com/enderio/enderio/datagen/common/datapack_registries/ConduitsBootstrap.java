@@ -3,6 +3,7 @@ package com.enderio.enderio.datagen.common.datapack_registries;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.ConduitApi;
 import com.enderio.enderio.content.conduits.type.energy.EnergyConduit;
 import com.enderio.enderio.content.conduits.type.fluid.FluidConduit;
 import com.enderio.enderio.content.conduits.type.item.ItemConduit;
@@ -39,6 +40,6 @@ public class ConduitsBootstrap {
 
     private static void register(BootstrapContext<Conduit<?, ?>> context, ResourceKey<Conduit<?, ?>> key, Function<Component, Conduit<?, ?>> factory) {
         context.register(key,
-            factory.apply(Component.translatable(Util.makeDescriptionId(EnderIORegistries.Keys.CONDUIT.location().getPath(), key.location()))));
+            factory.apply(Component.translatable(ConduitApi.INSTANCE.makeDescriptionId(key))));
     }
 }

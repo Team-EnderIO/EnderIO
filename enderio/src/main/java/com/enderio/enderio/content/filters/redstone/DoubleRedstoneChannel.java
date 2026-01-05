@@ -1,5 +1,6 @@
 package com.enderio.enderio.content.filters.redstone;
 
+import com.enderio.enderio.api.filter.RedstoneFilter;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
@@ -8,7 +9,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 
-public class DoubleRedstoneChannel {
+public class DoubleRedstoneChannel implements RedstoneFilter {
 
     public static final Component INSTANCE = new Component(DyeColor.GREEN, DyeColor.BROWN);
 
@@ -38,6 +39,12 @@ public class DoubleRedstoneChannel {
 
     public void setChannels(DyeColor channel1, DyeColor channel2) {
         stack.set(componentType, new Component(channel1, channel2));
+    }
+
+    @Override
+    public boolean isConfigured() {
+        Component current = stack.get(componentType);
+        return current != null && !current.equals(INSTANCE);
     }
 
     public record Component(DyeColor channel1, DyeColor channel2) {

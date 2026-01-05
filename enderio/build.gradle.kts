@@ -157,6 +157,11 @@ dependencies {
     gametestImplementation(libs.neoforgeTestFramework) {
         isTransitive = false
     }
+
+    // Also allow running gametests in client+server but don't declare as a dependency
+    localRuntime(libs.neoforgeTestFramework) {
+        isTransitive = false
+    }
 }
 
 neoForge {
@@ -190,12 +195,12 @@ neoForge {
         // Data + Game Test focus purely on the core mod.
         val client by creating {
             client()
-            loadedMods = listOf(modEnderio)
+            loadedMods = listOf(modEnderio, modEnderioGametests)
         }
 
         val server by creating {
             server()
-            loadedMods = listOf(modEnderio)
+            loadedMods = listOf(modEnderio, modEnderioGametests)
 
             gameDirectory = project.file("run/server")
         }

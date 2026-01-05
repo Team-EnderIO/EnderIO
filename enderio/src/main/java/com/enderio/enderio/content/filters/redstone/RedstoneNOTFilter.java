@@ -24,4 +24,10 @@ public class RedstoneNOTFilter implements RedstoneOutputFilter, RedstoneInputFil
     public int getInputSignal(Level level, BlockPos pos, Direction direction) {
         return level.getSignal(pos, direction) == 0 ? 15 : 0;
     }
+
+    @Override
+    public boolean isConfigured() {
+        // NOT filter has no configuration
+        return false;
+    }
 }
