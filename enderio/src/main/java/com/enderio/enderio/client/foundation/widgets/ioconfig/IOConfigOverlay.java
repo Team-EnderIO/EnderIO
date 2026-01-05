@@ -210,16 +210,16 @@ public class IOConfigOverlay extends BaseOverlay {
     }
 
     @Override
-    public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (this.active && this.visible) {
-            if (pButton == 0) {
-                if (neighBtnRect.contains((int) pMouseX, (int) pMouseY)) {
+            if (button == 0) {
+                if (neighBtnRect.contains((int) mouseX, (int) mouseY)) {
                     toggleNeighbourVisibility();
                     this.playDownSound(MINECRAFT.getSoundManager());
                     return true;
                 }
             }
-            if (pButton == 1) {
+            if (button == 1) {
                 if (selection.isPresent()) {
                     var selectedFace = selection.get();
                     BlockEntity entity = MINECRAFT.level.getBlockEntity(selectedFace.blockPos);
@@ -240,11 +240,11 @@ public class IOConfigOverlay extends BaseOverlay {
     }
 
     @Override
-    public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
-        if (visible && isValidClickButton(pButton) && isMouseOver(pMouseX, pMouseY)
-                && !neighBtnRect.contains((int) pMouseX, (int) pMouseY)) {
-            double dx = pDragX / (double) MINECRAFT.getWindow().getGuiScaledWidth();
-            double dy = pDragY / (double) MINECRAFT.getWindow().getGuiScaledHeight();
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        if (visible && isValidClickButton(button) && isMouseOver(mouseX, mouseY)
+                && !neighBtnRect.contains((int) mouseX, (int) mouseY)) {
+            double dx = dragX / (double) MINECRAFT.getWindow().getGuiScaledWidth();
+            double dy = dragY / (double) MINECRAFT.getWindow().getGuiScaledHeight();
             yaw += 4 * (float) dx * 180;
             pitch += 2 * (float) dy * 180;
 
@@ -470,7 +470,7 @@ public class IOConfigOverlay extends BaseOverlay {
     }
 
     @Override
-    protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
+    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
     }
 
     private record SelectedFace(BlockPos blockPos, Direction side) {

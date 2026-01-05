@@ -32,7 +32,7 @@ public class FermentationWidget extends EIOWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
 
@@ -45,7 +45,7 @@ public class FermentationWidget extends EIOWidget {
     }
 
     @Override
-    protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {}
+    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     public void renderFluid(GuiGraphics guiGraphics, FluidStack fluid, float opacity) {
         if (fluid.isEmpty()) {

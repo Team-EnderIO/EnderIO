@@ -161,7 +161,7 @@ public class EnderItemFilterMenu extends AbstractFilterMenu<EnderItemFilter> {
     }
 
     @Override
-    public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
+    public ItemStack quickMoveStack(Player player, int index) {
         return ItemStack.EMPTY;
     }
 }

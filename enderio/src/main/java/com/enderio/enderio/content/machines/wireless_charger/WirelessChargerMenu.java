@@ -16,8 +16,8 @@ public class WirelessChargerMenu extends PoweredMachineMenu<WirelessChargerBlock
 
     private final IntSyncSlot maxRange;
 
-    public WirelessChargerMenu(int pContainerId, Inventory inventory, WirelessChargerBlockEntity blockEntity) {
-        super(EIOMenus.WIRELESS_CHARGER.get(), pContainerId, inventory, blockEntity);
+    public WirelessChargerMenu(int containerId, Inventory inventory, WirelessChargerBlockEntity blockEntity) {
+        super(EIOMenus.WIRELESS_CHARGER.get(), containerId, inventory, blockEntity);
         addSlots();
 
         maxRange = addSyncSlot(IntSyncSlot.readOnly(blockEntity::getMaxRange));

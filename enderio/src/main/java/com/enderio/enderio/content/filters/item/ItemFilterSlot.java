@@ -9,8 +9,8 @@ import java.util.function.Supplier;
 
 public class ItemFilterSlot extends FilterSlot<ItemStack> {
 
-    public ItemFilterSlot(Supplier<ItemStack> getter, Consumer<ItemStack> setter, int pSlot, int pX, int pY) {
-        super(getter, setter, pSlot, pX, pY);
+    public ItemFilterSlot(Supplier<ItemStack> getter, Consumer<ItemStack> setter, int slot, int x, int y) {
+        super(getter, setter, slot, x, y);
     }
 
     @Override

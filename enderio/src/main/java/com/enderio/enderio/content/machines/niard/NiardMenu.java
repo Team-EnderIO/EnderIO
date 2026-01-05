@@ -18,8 +18,8 @@ public class NiardMenu extends PoweredMachineMenu<NiardBlockEntity> {
 
     private final FluidStorageSyncSlot fluidSlot;
 
-    public NiardMenu(int pContainerId, Inventory inventory, NiardBlockEntity blockEntity) {
-        super(EIOMenus.NIARD.get(), pContainerId, inventory, blockEntity);
+    public NiardMenu(int containerId, Inventory inventory, NiardBlockEntity blockEntity) {
+        super(EIOMenus.NIARD.get(), containerId, inventory, blockEntity);
         addSlots();
 
         fluidSlot = addSyncSlot(FluidStorageSyncSlot.readOnly(() -> FluidStorageInfo.of(blockEntity.getFluidTank())));

@@ -17,8 +17,8 @@ public class UseGliderTrigger extends SimpleCriterionTrigger<UseGliderTrigger.Tr
         return ID;
     }
 
-    public void trigger(ServerPlayer pPlayer) {
-        super.trigger(pPlayer, triggerInstance -> true);
+    public void trigger(ServerPlayer player) {
+        super.trigger(player, triggerInstance -> true);
     }
 
     @Override

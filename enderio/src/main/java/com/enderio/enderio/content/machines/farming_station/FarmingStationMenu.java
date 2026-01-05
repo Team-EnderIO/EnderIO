@@ -12,14 +12,14 @@ public class FarmingStationMenu extends PoweredMachineMenu<FarmingStationBlockEn
 
     public static final int VISIBILITY_BUTTON_ID = 0;
 
-    public FarmingStationMenu(int pContainerId, Inventory inventory, FarmingStationBlockEntity blockEntity) {
-        super(EIOMenus.FARMING_STATION.get(), pContainerId, inventory, blockEntity);
+    public FarmingStationMenu(int containerId, Inventory inventory, FarmingStationBlockEntity blockEntity) {
+        super(EIOMenus.FARMING_STATION.get(), containerId, inventory, blockEntity);
         addSlots();
 
     }
 
-    public FarmingStationMenu(int pContainerId, Inventory inventory, RegistryFriendlyByteBuf buf) {
-        super(EIOMenus.FARMING_STATION.get(), pContainerId, inventory, buf,
+    public FarmingStationMenu(int containerId, Inventory inventory, RegistryFriendlyByteBuf buf) {
+        super(EIOMenus.FARMING_STATION.get(), containerId, inventory, buf,
             EIOBlockEntities.FARMING_STATION.get());
         addSlots();
 

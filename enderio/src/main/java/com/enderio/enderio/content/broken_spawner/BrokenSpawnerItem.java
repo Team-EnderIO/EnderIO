@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BrokenSpawnerItem extends Item implements ICustomCreativeTabEntries {
-    public BrokenSpawnerItem(Properties pProperties) {
-        super(pProperties);
+    public BrokenSpawnerItem(Properties properties) {
+        super(properties);
     }
 
     public static ItemStack forSoul(Soul soul) {

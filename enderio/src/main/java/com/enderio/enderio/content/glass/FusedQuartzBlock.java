@@ -24,8 +24,8 @@ public class FusedQuartzBlock extends TransparentBlock {
     private final GlassIdentifier glassIdentifier;
     private final String descriptionId;
 
-    public FusedQuartzBlock(Properties pProps, GlassIdentifier glassIdentifier, @Nullable DyeColor color) {
-        super(pProps);
+    public FusedQuartzBlock(Properties props, GlassIdentifier glassIdentifier, @Nullable DyeColor color) {
+        super(props);
         this.glassIdentifier = glassIdentifier;
 
         String baseName = glassIdentifier.explosionResistance() ? "fused_quartz" : "clear_glass";
@@ -40,24 +40,24 @@ public class FusedQuartzBlock extends TransparentBlock {
     }
 
     @Override
-    public void appendHoverText(ItemStack pStack, Item.TooltipContext pContext, List<Component> pTooltip, TooltipFlag pFlag) {
-        super.appendHoverText(pStack, pContext, pTooltip, pFlag);
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
+        super.appendHoverText(stack, context, tooltip, flag);
 
         if (glassIdentifier.explosionResistance()) {
-            pTooltip.add(EIOCommonLang.BLOCK_BLAST_RESISTANT);
+            tooltip.add(EIOCommonLang.BLOCK_BLAST_RESISTANT);
         }
 
         if (glassIdentifier.lighting() == GlassLighting.EMITTING) {
-            pTooltip.add(GlassLang.EMITS_LIGHT);
+            tooltip.add(GlassLang.EMITS_LIGHT);
         }
 
         if (glassIdentifier.lighting() == GlassLighting.BLOCKING) {
-            pTooltip.add(GlassLang.BLOCKS_LIGHT);
+            tooltip.add(GlassLang.BLOCKS_LIGHT);
         }
 
         Component collisionTooltip = glassIdentifier.collisionPredicate().getComponent();
         if (collisionTooltip != null) {
-            pTooltip.add(collisionTooltip);
+            tooltip.add(collisionTooltip);
         }
     }
 
@@ -67,8 +67,8 @@ public class FusedQuartzBlock extends TransparentBlock {
     }
 
     @Override
-    public int getLightBlock(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
-        return glassIdentifier.lighting() == GlassLighting.BLOCKING ? pLevel.getMaxLightLevel() : 0;
+    public int getLightBlock(BlockState state, BlockGetter level, BlockPos pos) {
+        return glassIdentifier.lighting() == GlassLighting.BLOCKING ? level.getMaxLightLevel() : 0;
     }
 
     @Override
@@ -77,13 +77,13 @@ public class FusedQuartzBlock extends TransparentBlock {
     }
 
     @Override
-    public VoxelShape getCollisionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
-        if (pContext instanceof EntityCollisionContext entityCollisionContext && entityCollisionContext != CollisionContext.empty()) {
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        if (context instanceof EntityCollisionContext entityCollisionContext && entityCollisionContext != CollisionContext.empty()) {
             if (glassIdentifier.collisionPredicate().canPass(entityCollisionContext)) {
                 return Shapes.empty();
             }
         }
-        return super.getCollisionShape(pState, pLevel, pPos, pContext);
+        return super.getCollisionShape(state, level, pos, context);
     }
 
     public GlassIdentifier glassIdentifier() {

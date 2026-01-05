@@ -63,8 +63,8 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public AlloySmelterBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
-        super(EIOBlockEntities.ALLOY_SMELTER.get(), pWorldPosition, pBlockState, true, CapacitorSupport.REQUIRED,
+    public AlloySmelterBlockEntity(BlockPos worldPosition, BlockState blockState) {
+        super(EIOBlockEntities.ALLOY_SMELTER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
                 EnergyIOMode.Input, CAPACITY, USAGE);
 
         // Crafting task host
@@ -310,23 +310,23 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     // region Serialization
 
     @Override
-    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        craftingTaskHost.save(lookupProvider, pTag);
-        pTag.putInt(MachineNBTKeys.MACHINE_MODE, this.mode.ordinal());
-        super.saveAdditional(pTag, lookupProvider);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        craftingTaskHost.save(lookupProvider, tag);
+        tag.putInt(MachineNBTKeys.MACHINE_MODE, this.mode.ordinal());
+        super.saveAdditional(tag, lookupProvider);
     }
 
     @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        craftingTaskHost.load(lookupProvider, pTag);
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        craftingTaskHost.load(lookupProvider, tag);
 
         // TODO: EnderIO 8 - swap to serializing the enum name.
         try {
-            mode = AlloySmelterMode.values()[pTag.getInt(MachineNBTKeys.MACHINE_MODE)];
+            mode = AlloySmelterMode.values()[tag.getInt(MachineNBTKeys.MACHINE_MODE)];
         } catch (IndexOutOfBoundsException ex) { // In case something happens in the future.
             LOGGER.error("Invalid alloy smelter mode loaded from NBT. Ignoring.");
         }
-        super.loadAdditional(pTag, lookupProvider);
+        super.loadAdditional(tag, lookupProvider);
     }
 
     @Override

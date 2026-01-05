@@ -27,7 +27,7 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
     }
 
     @Override
-    protected void addTags(HolderLookup.Provider pProvider) {
+    protected void addTags(HolderLookup.Provider provider) {
         tag(BlockTags.CLIMBABLE).add(EIOBlocks.DARK_STEEL_LADDER.get());
         tag(BlockTags.DOORS).add(EIOBlocks.DARK_STEEL_DOOR.get());
         tag(BlockTags.TRAPDOORS).add(EIOBlocks.DARK_STEEL_TRAPDOOR.get());

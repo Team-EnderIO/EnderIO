@@ -80,8 +80,8 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
     }
 
     @Override
-    public AbstractContainerMenu createMenu(int containerId, Inventory pPlayerInventory, Player pPlayer) {
-        return new SoulBinderMenu(containerId, pPlayerInventory, this);
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
+        return new SoulBinderMenu(containerId, playerInventory, this);
     }
 
     @Override
@@ -266,17 +266,17 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
     }
 
     @Override
-    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.saveAdditional(pTag, lookupProvider);
-        craftingTaskHost.save(lookupProvider, pTag);
-        saveTank(lookupProvider, pTag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(tag, lookupProvider);
+        craftingTaskHost.save(lookupProvider, tag);
+        saveTank(lookupProvider, tag);
     }
 
     @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.loadAdditional(pTag, lookupProvider);
-        craftingTaskHost.load(lookupProvider, pTag);
-        loadTank(lookupProvider, pTag);
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(tag, lookupProvider);
+        craftingTaskHost.load(lookupProvider, tag);
+        loadTank(lookupProvider, tag);
     }
 
     // endregion

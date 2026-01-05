@@ -28,8 +28,8 @@ public class CoordinateMenu extends AbstractContainerMenu {
     private final boolean isPrintout;
     private String name;
 
-    protected CoordinateMenu(@Nullable MenuType<CoordinateMenu> pMenuType, int pContainerId, FriendlyByteBuf buf) {
-        super(pMenuType, pContainerId);
+    protected CoordinateMenu(@Nullable MenuType<CoordinateMenu> menuType, int containerId, FriendlyByteBuf buf) {
+        super(menuType, containerId);
         selection = CoordinateSelection.STREAM_CODEC.decode(buf);
         isPrintout = buf.readBoolean();
         name = buf.readUtf(50);
@@ -45,8 +45,8 @@ public class CoordinateMenu extends AbstractContainerMenu {
         this.name = name != null ? name : "";
     }
 
-    public static CoordinateMenu factory(int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
-        return new CoordinateMenu(EIOMenus.COORDINATE.get(), pContainerId, buf);
+    public static CoordinateMenu factory(int containerId, Inventory inventory, FriendlyByteBuf buf) {
+        return new CoordinateMenu(EIOMenus.COORDINATE.get(), containerId, buf);
     }
 
     /**
@@ -59,24 +59,24 @@ public class CoordinateMenu extends AbstractContainerMenu {
     }
 
     @Override
-    public boolean stillValid(Player pPlayer) {
-        return findInHand(pPlayer, isPrintout ? EIOItems.LOCATION_PRINTOUT.get() : EIOItems.COORDINATE_SELECTOR.get());
+    public boolean stillValid(Player player) {
+        return findInHand(player, isPrintout ? EIOItems.LOCATION_PRINTOUT.get() : EIOItems.COORDINATE_SELECTOR.get());
     }
 
-    private static boolean findInHand(Player pPlayer, Item toFind) {
-        return pPlayer.getMainHandItem().getItem() == toFind || pPlayer.getOffhandItem().getItem() == toFind;
+    private static boolean findInHand(Player player, Item toFind) {
+        return player.getMainHandItem().getItem() == toFind || player.getOffhandItem().getItem() == toFind;
     }
 
     @Override
-    public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
+    public ItemStack quickMoveStack(Player player, int index) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public void removed(Player pPlayer) {
-        super.removed(pPlayer);
-        Optional<ItemStack> paper = findPaper(pPlayer);
-        if (paper.isPresent() && !isPrintout && pPlayer instanceof ServerPlayer severPlayer) {
+    public void removed(Player player) {
+        super.removed(player);
+        Optional<ItemStack> paper = findPaper(player);
+        if (paper.isPresent() && !isPrintout && player instanceof ServerPlayer severPlayer) {
             paper.get().shrink(1);
             ItemStack itemstack = EIOItems.LOCATION_PRINTOUT.get().getDefaultInstance();
             LocationPrintoutItem.setSelection(itemstack, selection);

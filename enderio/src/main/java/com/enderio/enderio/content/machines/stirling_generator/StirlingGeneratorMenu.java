@@ -12,8 +12,8 @@ public class StirlingGeneratorMenu extends PoweredMachineMenu<StirlingGeneratorB
 
     private final FloatSyncSlot burnProgressSlot;
 
-    public StirlingGeneratorMenu(int pContainerId, Inventory inventory, StirlingGeneratorBlockEntity blockEntity) {
-        super(EIOMenus.STIRLING_GENERATOR.get(), pContainerId, inventory, blockEntity);
+    public StirlingGeneratorMenu(int containerId, Inventory inventory, StirlingGeneratorBlockEntity blockEntity) {
+        super(EIOMenus.STIRLING_GENERATOR.get(), containerId, inventory, blockEntity);
         addSlots();
 
         burnProgressSlot = addSyncSlot(FloatSyncSlot.readOnly(blockEntity::getBurnProgress));

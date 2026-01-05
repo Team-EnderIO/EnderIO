@@ -99,7 +99,7 @@ public abstract class ProgressWidget extends AbstractWidget {
 
     // Stop the click sound
     @Override
-    public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
         return false;
     }
 

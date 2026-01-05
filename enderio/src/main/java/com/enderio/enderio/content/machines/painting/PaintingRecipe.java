@@ -32,7 +32,7 @@ public record PaintingRecipe(Ingredient input, ItemStack output) implements Mach
     }
 
     @Override
-    public boolean matches(Input recipeInput, Level pLevel) {
+    public boolean matches(Input recipeInput, Level level) {
         return input.test(recipeInput.getItem(0)) && !recipeInput.getItem(1).isEmpty();
     }
 

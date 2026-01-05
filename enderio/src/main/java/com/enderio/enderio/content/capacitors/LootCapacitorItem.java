@@ -20,8 +20,8 @@ public class LootCapacitorItem extends CapacitorItem implements ICustomCreativeT
     }
 
     @Override
-    public Component getName(ItemStack pStack) {
-        var capacitorData = pStack.getOrDefault(EIODataComponents.CAPACITOR_DATA, CapacitorData.NONE);
+    public Component getName(ItemStack stack) {
+        var capacitorData = stack.getOrDefault(EIODataComponents.CAPACITOR_DATA, CapacitorData.NONE);
 
         if (capacitorData.modifiers().isEmpty()) {
             return getBaseName(capacitorData);

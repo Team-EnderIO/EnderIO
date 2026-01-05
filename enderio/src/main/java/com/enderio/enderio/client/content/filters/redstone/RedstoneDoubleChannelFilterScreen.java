@@ -15,9 +15,9 @@ public class RedstoneDoubleChannelFilterScreen extends EIOScreen<RedstoneDoubleC
     private static final Vector2i BG_SIZE = new Vector2i(183, 201);
     private static final ResourceLocation BG_TEXTURE = EnderIO.rl("textures/gui/40/item_filter.png");
 
-    public RedstoneDoubleChannelFilterScreen(RedstoneDoubleChannelFilterMenu pMenu, Inventory pPlayerInventory,
-            Component pTitle) {
-        super(pMenu, pPlayerInventory, pTitle);
+    public RedstoneDoubleChannelFilterScreen(RedstoneDoubleChannelFilterMenu menu, Inventory playerInventory,
+            Component title) {
+        super(menu, playerInventory, title);
     }
 
     @Override

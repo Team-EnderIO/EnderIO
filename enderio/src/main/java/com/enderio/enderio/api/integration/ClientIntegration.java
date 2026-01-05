@@ -13,6 +13,6 @@ public interface ClientIntegration {
     /**
      * render your hangglider. Only called if {@linkplain Integration#getGliderMovementInfo(Player)} returns a non empty optional
      */
-    default void renderHangGlider(PoseStack posestack, MultiBufferSource buffer, int light, int overlay, AbstractClientPlayer player, float pPartialTick) {
+    default void renderHangGlider(PoseStack posestack, MultiBufferSource buffer, int light, int overlay, AbstractClientPlayer player, float partialTick) {
     }
 }

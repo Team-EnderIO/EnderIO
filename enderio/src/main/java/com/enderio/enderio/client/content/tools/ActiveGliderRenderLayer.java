@@ -20,22 +20,22 @@ import java.util.List;
 
 public class ActiveGliderRenderLayer extends RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
 
-    public ActiveGliderRenderLayer(PlayerRenderer pRenderer) {
-        super(pRenderer);
+    public ActiveGliderRenderLayer(PlayerRenderer renderer) {
+        super(renderer);
     }
 
     @Override
-    public void render(PoseStack posestack, MultiBufferSource pBuffer, int pPackedLight, AbstractClientPlayer player,
-            float pLimbSwing, float pLimbSwingAmount, float pPartialTick, float pAgeInTicks, float pNetHeadYaw,
-            float pHeadPitch) {
+    public void render(PoseStack posestack, MultiBufferSource buffer, int packedLight, AbstractClientPlayer player,
+            float limbSwing, float limbSwingAmount, float partialTick, float ageInTicks, float netHeadYaw,
+            float headPitch) {
         List<ClientIntegration> workingGliders = getActiveGliders(player);
         if (!workingGliders.isEmpty()) { // && PlayerMovementHandler.isGliding(player)) {
             posestack.pushPose();
             posestack.mulPose(Axis.ZP.rotationDegrees(180));
             posestack.translate(0, 0.5, -0.2);
             int overlay = LivingEntityRenderer.getOverlayCoords(player, 0.0F);
-            workingGliders.forEach(workingGlider -> workingGlider.renderHangGlider(posestack, pBuffer, pPackedLight,
-                    overlay, player, pPartialTick));
+            workingGliders.forEach(workingGlider -> workingGlider.renderHangGlider(posestack, buffer, packedLight,
+                    overlay, player, partialTick));
             posestack.popPose();
         }
     }

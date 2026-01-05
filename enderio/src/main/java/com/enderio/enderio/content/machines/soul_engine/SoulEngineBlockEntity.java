@@ -227,10 +227,10 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     }
 
     @Override
-    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.saveAdditional(pTag, lookupProvider);
-        pTag.putInt(BURNED_TICKS, burnedTicks);
-        saveTank(lookupProvider, pTag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(tag, lookupProvider);
+        tag.putInt(BURNED_TICKS, burnedTicks);
+        saveTank(lookupProvider, tag);
     }
 
     @Override
@@ -240,16 +240,16 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     }
 
     @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.loadAdditional(pTag, lookupProvider);
-        burnedTicks = pTag.getInt(BURNED_TICKS);
-        boundSoul = Soul.parseOptional(lookupProvider, pTag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(tag, lookupProvider);
+        burnedTicks = tag.getInt(BURNED_TICKS);
+        boundSoul = Soul.parseOptional(lookupProvider, tag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
 
         updateMachineState(MachineState.NO_POWER, false);
         updateMachineState(MachineState.FULL_POWER,
                 (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored())
                         && isCapacitorInstalled());
-        loadTank(lookupProvider, pTag);
+        loadTank(lookupProvider, tag);
     }
 
     @Override

@@ -12,8 +12,8 @@ public class PaintingMachineMenu extends PoweredMachineMenu<PaintingMachineBlock
 
     private final FloatSyncSlot craftingProgressSlot;
 
-    public PaintingMachineMenu(Inventory inventory, int pContainerId, PaintingMachineBlockEntity blockEntity) {
-        super(EIOMenus.PAINTING_MACHINE.get(), pContainerId, inventory, blockEntity);
+    public PaintingMachineMenu(Inventory inventory, int containerId, PaintingMachineBlockEntity blockEntity) {
+        super(EIOMenus.PAINTING_MACHINE.get(), containerId, inventory, blockEntity);
         addSlots();
 
         craftingProgressSlot = addSyncSlot(FloatSyncSlot.readOnly(blockEntity::getCraftingProgress));

@@ -161,8 +161,8 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
 
     @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
-        return new PoweredSpawnerMenu(pContainerId, pPlayerInventory, this);
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
+        return new PoweredSpawnerMenu(containerId, playerInventory, this);
     }
 
     public int getRange() {
@@ -321,9 +321,9 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     // region Serialization
 
     @Override
-    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.saveAdditional(pTag, lookupProvider);
-        taskHost.save(lookupProvider, pTag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(tag, lookupProvider);
+        taskHost.save(lookupProvider, tag);
     }
 
     @Override
@@ -344,13 +344,13 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     }
 
     @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.loadAdditional(pTag, lookupProvider);
-        boundSoul = Soul.parseOptional(lookupProvider, pTag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(tag, lookupProvider);
+        boundSoul = Soul.parseOptional(lookupProvider, tag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
 
-        if (pTag.contains(MachineNBTKeys.MACHINE_MODE)) {
+        if (tag.contains(MachineNBTKeys.MACHINE_MODE)) {
             this.mode = PoweredSpawnerMode.parse(lookupProvider,
-                    Objects.requireNonNull(pTag.get(MachineNBTKeys.MACHINE_MODE)));
+                    Objects.requireNonNull(tag.get(MachineNBTKeys.MACHINE_MODE)));
         }
 
         // TODO: Ender IO 8 - remove support for old attachment loading
@@ -360,11 +360,11 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
             removeData(EIOAttachments.ACTION_RANGE);
         }
 
-        isRangeVisible = pTag.contains(MachineNBTKeys.IS_RANGE_VISIBLE)
-                && pTag.getBoolean(MachineNBTKeys.IS_RANGE_VISIBLE);
+        isRangeVisible = tag.contains(MachineNBTKeys.IS_RANGE_VISIBLE)
+                && tag.getBoolean(MachineNBTKeys.IS_RANGE_VISIBLE);
 
         // Load task host last
-        taskHost.load(lookupProvider, pTag);
+        taskHost.load(lookupProvider, tag);
     }
 
     @Override

@@ -244,10 +244,10 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements Range
     }
 
     @Override
-    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.saveAdditional(pTag, lookupProvider);
-        pTag.putInt(CONSUMED, consumed);
-        saveTank(lookupProvider, pTag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(tag, lookupProvider);
+        tag.putInt(CONSUMED, consumed);
+        saveTank(lookupProvider, tag);
     }
 
     @Override
@@ -260,18 +260,18 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements Range
     }
 
     @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.loadAdditional(pTag, lookupProvider);
-        consumed = pTag.getInt(CONSUMED);
-        loadTank(lookupProvider, pTag);
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(tag, lookupProvider);
+        consumed = tag.getInt(CONSUMED);
+        loadTank(lookupProvider, tag);
 
         // TODO: Ender IO 8 - remove support for old attachment loading
         if (hasData(EIOAttachments.ACTION_RANGE)) {
             actionRange = getData(EIOAttachments.ACTION_RANGE);
             removeData(EIOAttachments.ACTION_RANGE);
-        } else if (pTag.contains(MachineNBTKeys.ACTION_RANGE)) {
+        } else if (tag.contains(MachineNBTKeys.ACTION_RANGE)) {
             actionRange = ActionRange.parse(lookupProvider,
-                    Objects.requireNonNull(pTag.get(MachineNBTKeys.ACTION_RANGE)));
+                    Objects.requireNonNull(tag.get(MachineNBTKeys.ACTION_RANGE)));
         } else {
             actionRange = DEFAULT_RANGE;
         }

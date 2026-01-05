@@ -45,8 +45,8 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
 
     private final List<Runnable> preRenderActions = new ArrayList<>();
 
-    public ConduitScreen(ConduitMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
-        super(pMenu, pPlayerInventory, pTitle);
+    public ConduitScreen(ConduitMenu menu, Inventory playerInventory, Component title) {
+        super(menu, playerInventory, title);
 
 //        this.shouldRenderLabels = true;
         this.imageWidth = WIDTH;

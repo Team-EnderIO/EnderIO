@@ -45,7 +45,7 @@ public interface MachineRecipe<T extends RecipeInput> extends Recipe<T> {
     }
 
     @Override
-    default boolean canCraftInDimensions(int pWidth, int pHeight) {
+    default boolean canCraftInDimensions(int width, int height) {
         return true;
     }
 

@@ -50,7 +50,7 @@ public class NewEnergyWidget extends EIOWidget {
     }
 
     @Override
-    protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
+    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
     }
 
     public void renderToolTip(GuiGraphics guiGraphics, int mouseX, int mouseY) {

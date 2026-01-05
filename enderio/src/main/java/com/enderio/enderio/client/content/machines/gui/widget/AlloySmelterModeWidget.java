@@ -11,9 +11,9 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class AlloySmelterModeWidget extends BaseEnumPickerWidget<AlloySmelterMode> {
-    public AlloySmelterModeWidget(int pX, int pY, Supplier<AlloySmelterMode> getter, Consumer<AlloySmelterMode> setter,
+    public AlloySmelterModeWidget(int x, int y, Supplier<AlloySmelterMode> getter, Consumer<AlloySmelterMode> setter,
             Component optionName) {
-        super(pX, pY, 16, 16, AlloySmelterMode.class, getter, setter, true, optionName);
+        super(x, y, 16, 16, AlloySmelterMode.class, getter, setter, true, optionName);
     }
 
     @Override

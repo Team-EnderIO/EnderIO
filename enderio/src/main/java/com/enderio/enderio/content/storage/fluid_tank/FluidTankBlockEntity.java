@@ -292,7 +292,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
     }
 
     @Nullable
-    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player pPlayer) {
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
         return new FluidTankMenu(containerId, playerInventory, this);
     }
 
@@ -325,9 +325,9 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
     }
 
     @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.loadAdditional(pTag, lookupProvider);
-        loadTank(lookupProvider, pTag);
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(tag, lookupProvider);
+        loadTank(lookupProvider, tag);
     }
 
     // endregion

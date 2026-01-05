@@ -51,7 +51,7 @@ public record TankRecipe(Ingredient input, ItemStack output, FluidStack fluid, M
     }
 
     @Override
-    public boolean matches(Input recipeInput, Level pLevel) {
+    public boolean matches(Input recipeInput, Level level) {
         switch (mode) {
         case FILL -> {
             if (recipeInput.fluidTank().drain(fluid, IFluidHandler.FluidAction.SIMULATE).isEmpty()) {
@@ -77,7 +77,7 @@ public record TankRecipe(Ingredient input, ItemStack output, FluidStack fluid, M
     }
 
     @Override
-    public boolean canCraftInDimensions(int pWidth, int pHeight) {
+    public boolean canCraftInDimensions(int width, int height) {
         return true;
     }
 

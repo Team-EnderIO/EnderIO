@@ -25,75 +25,75 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
     private final boolean renderLabels;
     private final List<EditBox> editBoxList = new ArrayList<>();
 
-    protected EIOScreen(T pMenu, Inventory pPlayerInventory, Component pTitle) {
-        this(pMenu, pPlayerInventory, pTitle, false);
+    protected EIOScreen(T menu, Inventory playerInventory, Component title) {
+        this(menu, playerInventory, title, false);
     }
 
-    protected EIOScreen(T pMenu, Inventory pPlayerInventory, Component pTitle, boolean renderLabels) {
-        super(pMenu, pPlayerInventory, pTitle);
+    protected EIOScreen(T menu, Inventory playerInventory, Component title, boolean renderLabels) {
+        super(menu, playerInventory, title);
         this.renderLabels = renderLabels;
         this.imageWidth = getBackgroundImageSize().x();
         this.imageHeight = getBackgroundImageSize().y();
     }
 
     @Override
-    public void resize(Minecraft pMinecraft, int pWidth, int pHeight) {
+    public void resize(Minecraft minecraft, int width, int height) {
         Map<String, String> oldEditBoxValues = new HashMap<>();
         for (EditBox editBox : editBoxList) {
             oldEditBoxValues.put(editBox.getMessage().getString(), editBox.getValue());
         }
         editBoxList.clear();
 
-        super.resize(pMinecraft, pWidth, pHeight);
+        super.resize(minecraft, width, height);
         for (EditBox editBox : editBoxList) {
             editBox.setValue(oldEditBoxValues.getOrDefault(editBox.getMessage().getString(), ""));
         }
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         /*
          * if (menu instanceof SyncedMenu<?> syncedMenu && syncedMenu.getBlockEntity()
          * == null) { return; }
          */
 
-        super.render(guiGraphics, pMouseX, pMouseY, pPartialTicks);
-        this.renderTooltip(guiGraphics, pMouseX, pMouseY);
+        super.render(guiGraphics, mouseX, mouseY, partialTicks);
+        this.renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
+    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         guiGraphics.blit(getBackgroundImage(), getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight);
     }
 
     @Override
-    public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
-        if (pKeyCode == 256) { // ESC has priority
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (keyCode == 256) { // ESC has priority
             Minecraft.getInstance().player.closeContainer();
         }
 
         for (EditBox editBox : editBoxList) {
-            if (editBox.keyPressed(pKeyCode, pScanCode, pModifiers) || editBox.canConsumeInput()) {
+            if (editBox.keyPressed(keyCode, scanCode, modifiers) || editBox.canConsumeInput()) {
                 return true;
             }
         }
 
-        return super.keyPressed(pKeyCode, pScanCode, pModifiers);
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     @Override
-    public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
         if (getFocused() instanceof AbstractWidget abstractWidget && abstractWidget.isActive()) {
-            return abstractWidget.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
+            return abstractWidget.mouseDragged(mouseX, mouseY, button, dragX, dragY);
         }
 
-        return super.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
+        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
     }
 
     @Override
-    protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
+    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (renderLabels) {
-            super.renderLabels(guiGraphics, pMouseX, pMouseY);
+            super.renderLabels(guiGraphics, mouseX, mouseY);
         }
     }
 

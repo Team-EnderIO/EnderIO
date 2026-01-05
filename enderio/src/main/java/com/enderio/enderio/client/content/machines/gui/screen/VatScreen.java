@@ -36,8 +36,8 @@ public class VatScreen extends MachineScreen<VatMenu> {
     private static final WidgetSprites MOVE_SPRITES = new WidgetSprites(MOVE_FLUID, MOVE_FLUID);
     private static final WidgetSprites VOID_SPRITES = new WidgetSprites(VOID_FLUID, VOID_FLUID);
 
-    public VatScreen(VatMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
-        super(pMenu, pPlayerInventory, pTitle);
+    public VatScreen(VatMenu menu, Inventory playerInventory, Component title) {
+        super(menu, playerInventory, title);
 
         imageWidth = WIDTH;
         imageHeight = HEIGHT;
@@ -72,16 +72,16 @@ public class VatScreen extends MachineScreen<VatMenu> {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
-        super.render(guiGraphics, pMouseX, pMouseY, pPartialTicks);
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        super.render(guiGraphics, mouseX, mouseY, partialTicks);
 
         guiGraphics.blitSprite(VAT_COVER, 76 + leftPos, 34 + topPos, 26, 28);
         drawModifierStrings(guiGraphics);
     }
 
     @Override
-    protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
-        pGuiGraphics.blit(VAT_BG, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
+        guiGraphics.blit(VAT_BG, leftPos, topPos, 0, 0, imageWidth, imageHeight);
     }
 
     private boolean isCrafting() {

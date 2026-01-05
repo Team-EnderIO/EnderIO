@@ -44,9 +44,9 @@ public abstract class VacuumMachineBlockEntity<T extends Entity> extends Machine
 
     private ActionRange actionRange = DEFAULT_RANGE;
 
-    public VacuumMachineBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState,
+    public VacuumMachineBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState,
             Class<T> targetClass) {
-        super(pType, pWorldPosition, pBlockState, false);
+        super(type, worldPosition, blockState, false);
         this.targetClass = targetClass;
     }
 

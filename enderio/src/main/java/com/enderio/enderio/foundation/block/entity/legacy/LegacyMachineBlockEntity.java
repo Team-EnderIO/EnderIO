@@ -451,18 +451,18 @@ public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
     }
 
     @Override
-    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.saveAdditional(pTag, lookupProvider);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(tag, lookupProvider);
 
         if (this.inventory != null) {
-            pTag.put(MachineNBTKeys.ITEMS, inventory.serializeNBT(lookupProvider));
+            tag.put(MachineNBTKeys.ITEMS, inventory.serializeNBT(lookupProvider));
         }
     }
 
     @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
         if (this.inventory != null) {
-            inventory.deserializeNBT(lookupProvider, pTag.getCompound(MachineNBTKeys.ITEMS));
+            inventory.deserializeNBT(lookupProvider, tag.getCompound(MachineNBTKeys.ITEMS));
         }
 
         // For rendering io overlays after placed by an nbt filled block item
@@ -470,7 +470,7 @@ public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
             onIOConfigChanged();
         }
 
-        super.loadAdditional(pTag, lookupProvider);
+        super.loadAdditional(tag, lookupProvider);
     }
 
     @Override
@@ -522,7 +522,7 @@ public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
-    public boolean stillValid(Player pPlayer) {
+    public boolean stillValid(Player player) {
         if (this.level == null) {
             return false;
         }
@@ -531,7 +531,7 @@ public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
             return false;
         }
 
-        return pPlayer.canInteractWithBlock(this.worldPosition, 1.5);
+        return player.canInteractWithBlock(this.worldPosition, 1.5);
     }
 
     // TODO: should be enabled once the client side call in WrenchableBlockHandler

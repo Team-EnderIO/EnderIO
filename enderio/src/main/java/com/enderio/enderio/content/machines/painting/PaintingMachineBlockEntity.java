@@ -64,8 +64,8 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
 
     @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
-        return new PaintingMachineMenu(pInventory, pContainerId, this);
+    public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
+        return new PaintingMachineMenu(inventory, containerId, this);
     }
 
     @Override
@@ -176,15 +176,15 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
     // region Serialization
 
     @Override
-    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.saveAdditional(pTag, lookupProvider);
-        craftingTaskHost.save(lookupProvider, pTag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(tag, lookupProvider);
+        craftingTaskHost.save(lookupProvider, tag);
     }
 
     @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.loadAdditional(pTag, lookupProvider);
-        craftingTaskHost.load(lookupProvider, pTag);
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(tag, lookupProvider);
+        craftingTaskHost.load(lookupProvider, tag);
     }
 
     // endregion
