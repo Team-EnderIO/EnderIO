@@ -609,6 +609,7 @@ public class EIOBlocks {
         BLOCKS.addAlias(EnderIO.rl("industrial_insulation_block"), EnderIO.rl("industrial_insulation"));
         ITEMS.addAlias(EnderIO.rl("industrial_insulation_block"), EnderIO.rl("industrial_insulation"));
         BLOCKS.addAlias(EnderIO.rl("copper_alloy_block"), EnderIO.rl("conductive_alloy_block"));
+        ITEMS.addAlias(EnderIO.rl("copper_alloy_block"), EnderIO.rl("conductive_alloy_block"));
 
         BLOCKS.register(bus);
         ITEMS.register(bus);

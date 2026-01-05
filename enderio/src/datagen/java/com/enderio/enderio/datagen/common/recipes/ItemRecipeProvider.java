@@ -80,14 +80,13 @@ public class ItemRecipeProvider extends SubRecipeProvider {
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUCTIVE_ALLOY_INGOT.get()))
                 .save(recipeOutput);
 
-        //TODO: New Recipe after removing copper alloy
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, EIOItems.ELECTROMAGNET.get())
                 .define('V', EIOTags.Items.GEMS_VIBRANT_CRYSTAL)
+                .define('E', EIOTags.Items.INGOTS_ENERGETIC_ALLOY)
                 .define('C', EIOTags.Items.INGOTS_CONDUCTIVE_ALLOY)
-                .define('E', EIOTags.Items.INGOTS_CONDUCTIVE_ALLOY)
-                .pattern("CVC")
-                .pattern("C C")
+                .pattern("EVE")
                 .pattern("E E")
+                .pattern("C C")
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.VIBRANT_CRYSTAL.get()))
                 .save(recipeOutput);
