@@ -25,8 +25,8 @@ public class EnchanterBlock extends Block implements EntityBlock {
 
     private static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
-    public EnchanterBlock(Properties pProperties) {
-        super(pProperties);
+    public EnchanterBlock(Properties properties) {
+        super(properties);
         BlockState any = this.getStateDefinition().any();
         this.registerDefaultState(any.hasProperty(FACING) ? any.setValue(FACING, Direction.NORTH) : any);
     }

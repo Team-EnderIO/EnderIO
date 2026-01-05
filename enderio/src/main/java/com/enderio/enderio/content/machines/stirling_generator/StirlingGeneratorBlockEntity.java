@@ -129,8 +129,8 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
 
     @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
-        return new StirlingGeneratorMenu(pContainerId, pInventory, this);
+    public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
+        return new StirlingGeneratorMenu(containerId, inventory, this);
     }
 
     @Override
@@ -155,15 +155,15 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.loadAdditional(pTag, lookupProvider);
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(tag, lookupProvider);
 
-        if (pTag.contains(MachineNBTKeys.BURN_TIME, CompoundTag.TAG_INT)) {
-            burnTime = pTag.getInt(MachineNBTKeys.BURN_TIME);
+        if (tag.contains(MachineNBTKeys.BURN_TIME, CompoundTag.TAG_INT)) {
+            burnTime = tag.getInt(MachineNBTKeys.BURN_TIME);
         }
 
-        if (pTag.contains(MachineNBTKeys.BURN_DURATION, CompoundTag.TAG_INT)) {
-            burnDuration = pTag.getInt(MachineNBTKeys.BURN_DURATION);
+        if (tag.contains(MachineNBTKeys.BURN_DURATION, CompoundTag.TAG_INT)) {
+            burnDuration = tag.getInt(MachineNBTKeys.BURN_DURATION);
         }
 
         updateMachineState(MachineState.NO_POWER, false);
@@ -174,11 +174,11 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
-    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.saveAdditional(pTag, lookupProvider);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(tag, lookupProvider);
 
-        pTag.putInt(MachineNBTKeys.BURN_TIME, burnTime);
-        pTag.putInt(MachineNBTKeys.BURN_DURATION, burnDuration);
+        tag.putInt(MachineNBTKeys.BURN_TIME, burnTime);
+        tag.putInt(MachineNBTKeys.BURN_DURATION, burnDuration);
     }
 
     @Override

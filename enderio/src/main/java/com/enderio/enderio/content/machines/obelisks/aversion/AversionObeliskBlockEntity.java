@@ -51,8 +51,8 @@ public class AversionObeliskBlockEntity extends ObeliskBlockEntity<AversionObeli
 
     @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int containerId, Inventory pPlayerInventory, Player pPlayer) {
-        return new AversionObeliskMenu(containerId, pPlayerInventory, this);
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
+        return new AversionObeliskMenu(containerId, playerInventory, this);
     }
 
     @Override

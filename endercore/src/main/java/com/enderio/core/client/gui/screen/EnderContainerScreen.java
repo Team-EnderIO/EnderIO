@@ -39,8 +39,8 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
     // TODO: 1.21: Intention is that all screens will have labels in future.
     protected boolean shouldRenderLabels = false;
 
-    public EnderContainerScreen(T pMenu, Inventory pPlayerInventory, Component pTitle) {
-        super(pMenu, pPlayerInventory, pTitle);
+    public EnderContainerScreen(T menu, Inventory playerInventory, Component title) {
+        super(menu, playerInventory, title);
     }
 
     /**
@@ -109,20 +109,20 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
     }
 
     @Override
-    protected final void renderTooltip(GuiGraphics pGuiGraphics, int pX, int pY) {
+    protected final void renderTooltip(GuiGraphics guiGraphics, int x, int y) {
         // Do not render tooltips if the mouse is over an overlay.
         for (var layer : overlayWidgets.keySet()) {
             for (var overlay : overlayWidgets.get(layer)) {
                 if (!(overlay instanceof AbstractWidget widget) || widget.isActive()) {
-                    if (overlay.isMouseOver(pX, pY)) {
+                    if (overlay.isMouseOver(x, y)) {
                         return;
                     }
                 }
             }
         }
 
-        if (!renderCustomTooltip(pGuiGraphics, pX, pY)) {
-            super.renderTooltip(pGuiGraphics, pX, pY);
+        if (!renderCustomTooltip(guiGraphics, x, y)) {
+            super.renderTooltip(guiGraphics, x, y);
         }
     }
 
@@ -175,13 +175,13 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
     }
 
     @Override
-    public void resize(Minecraft pMinecraft, int pWidth, int pHeight) {
+    public void resize(Minecraft minecraft, int width, int height) {
         // Gather state to persist
         Map<String, Object> valuesBeforeResize = stateRestoringWidgets.entrySet()
                 .stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getValueForRestore()));
 
-        super.resize(pMinecraft, pWidth, pHeight);
+        super.resize(minecraft, width, height);
 
         // Restore state
         for (String key : valuesBeforeResize.keySet()) {
@@ -192,82 +192,82 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
     // region Gui event passthrough
 
     @Override
-    public void mouseMoved(double pMouseX, double pMouseY) {
+    public void mouseMoved(double mouseX, double mouseY) {
         for (var layer : overlayWidgets.keySet()) {
             for (var overlay : overlayWidgets.get(layer)) {
                 if (!(overlay instanceof AbstractWidget widget) || widget.isActive()) {
-                    overlay.mouseMoved(pMouseX, pMouseY);
+                    overlay.mouseMoved(mouseX, mouseY);
                 }
             }
         }
 
-        super.mouseMoved(pMouseX, pMouseY);
+        super.mouseMoved(mouseX, mouseY);
     }
 
     @Override
-    public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
         for (var layer : overlayWidgets.keySet()) {
             for (var overlay : overlayWidgets.get(layer)) {
                 if (!(overlay instanceof AbstractWidget widget) || widget.isActive()) {
-                    if (overlay.isMouseOver(pMouseX, pMouseY)) {
+                    if (overlay.isMouseOver(mouseX, mouseY)) {
                         setFocused(overlay);
-                        return overlay.mouseClicked(pMouseX, pMouseY, pButton);
+                        return overlay.mouseClicked(mouseX, mouseY, button);
                     }
                 }
             }
         }
 
-        return super.mouseClicked(pMouseX, pMouseY, pButton);
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
-    public boolean mouseReleased(double pMouseX, double pMouseY, int pButton) {
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
         for (var layer : overlayWidgets.keySet()) {
             for (var overlay : overlayWidgets.get(layer)) {
                 if (!(overlay instanceof AbstractWidget widget) || widget.isActive()) {
-                    if (overlay.isMouseOver(pMouseX, pMouseY)) {
-                        return overlay.mouseReleased(pMouseX, pMouseY, pButton);
+                    if (overlay.isMouseOver(mouseX, mouseY)) {
+                        return overlay.mouseReleased(mouseX, mouseY, button);
                     }
                 }
             }
         }
 
-        return super.mouseReleased(pMouseX, pMouseY, pButton);
+        return super.mouseReleased(mouseX, mouseY, button);
     }
 
     // Always pass mouse drag event through widgets first.
     @Override
-    public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
         for (var layer : overlayWidgets.keySet()) {
             for (var overlay : overlayWidgets.get(layer)) {
                 if (!(overlay instanceof AbstractWidget widget) || widget.isActive()) {
-                    if (overlay.isMouseOver(pMouseX, pMouseY)) {
-                        return overlay.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
+                    if (overlay.isMouseOver(mouseX, mouseY)) {
+                        return overlay.mouseDragged(mouseX, mouseY, button, dragX, dragY);
                     }
                 }
             }
         }
 
         if (getFocused() instanceof AbstractWidget abstractWidget && abstractWidget.isActive()) {
-            return abstractWidget.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
+            return abstractWidget.mouseDragged(mouseX, mouseY, button, dragX, dragY);
         }
 
-        return super.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
+        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
     }
 
     @Override
-    public boolean mouseScrolled(double pMouseX, double pMouseY, double pScrollX, double pScrollY) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         for (var layer : overlayWidgets.keySet()) {
             for (var overlay : overlayWidgets.get(layer)) {
                 if (!(overlay instanceof AbstractWidget widget) || widget.isActive()) {
-                    if (overlay.isMouseOver(pMouseX, pMouseY)) {
-                        return overlay.mouseScrolled(pMouseX, pMouseY, pScrollX, pScrollY);
+                    if (overlay.isMouseOver(mouseX, mouseY)) {
+                        return overlay.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
                     }
                 }
             }
         }
 
-        return super.mouseScrolled(pMouseX, pMouseY, pScrollX, pScrollY);
+        return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
     }
 
     /**
@@ -303,42 +303,42 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
     }
 
     @Override
-    public boolean keyReleased(int pKeyCode, int pScanCode, int pModifiers) {
+    public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
         for (var layer : overlayWidgets.keySet()) {
             for (var overlay : overlayWidgets.get(layer)) {
                 if (!(overlay instanceof AbstractWidget widget) || widget.isActive()) {
-                    if (overlay.keyReleased(pKeyCode, pScanCode, pModifiers)) {
+                    if (overlay.keyReleased(keyCode, scanCode, modifiers)) {
                         return true;
                     }
                 }
             }
         }
 
-        return super.keyReleased(pKeyCode, pScanCode, pModifiers);
+        return super.keyReleased(keyCode, scanCode, modifiers);
     }
 
     @Override
-    public boolean charTyped(char pCodePoint, int pModifiers) {
+    public boolean charTyped(char codePoint, int modifiers) {
         for (var layer : overlayWidgets.keySet()) {
             for (var overlay : overlayWidgets.get(layer)) {
                 if (!(overlay instanceof AbstractWidget widget) || widget.isActive()) {
-                    if (overlay.charTyped(pCodePoint, pModifiers)) {
+                    if (overlay.charTyped(codePoint, modifiers)) {
                         return true;
                     }
                 }
             }
         }
 
-        return super.charTyped(pCodePoint, pModifiers);
+        return super.charTyped(codePoint, modifiers);
     }
 
     @Nullable
     @Override
-    public ComponentPath nextFocusPath(FocusNavigationEvent pEvent) {
+    public ComponentPath nextFocusPath(FocusNavigationEvent event) {
         for (var layer : overlayWidgets.keySet()) {
             for (var overlay : overlayWidgets.get(layer)) {
                 if (!(overlay instanceof AbstractWidget widget) || widget.isActive()) {
-                    var path = overlay.nextFocusPath(pEvent);
+                    var path = overlay.nextFocusPath(event);
                     if (path != null) {
                         return path;
                     }
@@ -346,22 +346,22 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
             }
         }
 
-        return super.nextFocusPath(pEvent);
+        return super.nextFocusPath(event);
     }
 
     @Override
-    public boolean isMouseOver(double pMouseX, double pMouseY) {
+    public boolean isMouseOver(double mouseX, double mouseY) {
         for (var layer : overlayWidgets.keySet()) {
             for (var overlay : overlayWidgets.get(layer)) {
                 if (!(overlay instanceof AbstractWidget widget) || widget.isActive()) {
-                    if (overlay.isMouseOver(pMouseX, pMouseY)) {
+                    if (overlay.isMouseOver(mouseX, mouseY)) {
                         return true;
                     }
                 }
             }
         }
 
-        return super.isMouseOver(pMouseX, pMouseY);
+        return super.isMouseOver(mouseX, mouseY);
     }
 
     // endregion

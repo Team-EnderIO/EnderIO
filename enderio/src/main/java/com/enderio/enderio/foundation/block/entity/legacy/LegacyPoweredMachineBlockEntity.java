@@ -345,23 +345,23 @@ public abstract class LegacyPoweredMachineBlockEntity extends LegacyMachineBlock
     // region Serialization
 
     @Override
-    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.saveAdditional(pTag, lookupProvider);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(tag, lookupProvider);
 
         var energyStorage = getEnergyStorage();
         if (energyStorage instanceof MachineEnergyStorage storage) {
-            pTag.put(MachineNBTKeys.ENERGY, storage.serializeNBT(lookupProvider));
+            tag.put(MachineNBTKeys.ENERGY, storage.serializeNBT(lookupProvider));
         }
     }
 
     @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
         var energyStorage = getEnergyStorage();
-        if (energyStorage instanceof MachineEnergyStorage storage && pTag.contains(MachineNBTKeys.ENERGY)) {
-            storage.deserializeNBT(lookupProvider, pTag.getCompound(MachineNBTKeys.ENERGY));
+        if (energyStorage instanceof MachineEnergyStorage storage && tag.contains(MachineNBTKeys.ENERGY)) {
+            storage.deserializeNBT(lookupProvider, tag.getCompound(MachineNBTKeys.ENERGY));
         }
 
-        super.loadAdditional(pTag, lookupProvider);
+        super.loadAdditional(tag, lookupProvider);
 
         cacheCapacitorData();
 

@@ -123,7 +123,7 @@ public record EnchanterRecipe(Holder<Enchantment> enchantment, int costMultiplie
     }
 
     @Override
-    public boolean canCraftInDimensions(int pWidth, int pHeight) {
+    public boolean canCraftInDimensions(int width, int height) {
         return true;
     }
 

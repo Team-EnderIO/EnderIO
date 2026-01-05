@@ -56,8 +56,8 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
      */
     public static final String KEY_HEALTH = "Health";
 
-    public SoulVialItem(Properties pProperties) {
-        super(pProperties);
+    public SoulVialItem(Properties properties) {
+        super(properties);
     }
 
     public static ItemStack forSoul(Soul soul) {
@@ -69,8 +69,8 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
     // Item appearance and description
 
     @Override
-    public boolean isFoil(ItemStack pStack) {
-        return pStack.getOrDefault(EIODataComponents.SOUL, Soul.EMPTY).hasEntity();
+    public boolean isFoil(ItemStack stack) {
+        return stack.getOrDefault(EIODataComponents.SOUL, Soul.EMPTY).hasEntity();
     }
 
     @Override

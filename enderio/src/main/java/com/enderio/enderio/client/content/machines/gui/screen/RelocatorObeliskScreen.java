@@ -13,7 +13,7 @@ public class RelocatorObeliskScreen extends ObeliskScreen<RelocatorObeliskBlockE
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
 
-    public RelocatorObeliskScreen(RelocatorObeliskMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
-        super(pMenu, pPlayerInventory, pTitle, BG_TEXTURE, WIDTH, HEIGHT);
+    public RelocatorObeliskScreen(RelocatorObeliskMenu menu, Inventory playerInventory, Component title) {
+        super(menu, playerInventory, title, BG_TEXTURE, WIDTH, HEIGHT);
     }
 }

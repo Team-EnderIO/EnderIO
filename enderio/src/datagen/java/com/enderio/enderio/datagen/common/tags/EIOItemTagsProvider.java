@@ -22,13 +22,13 @@ import java.util.concurrent.CompletableFuture;
 
 public class EIOItemTagsProvider extends ItemTagsProvider {
 
-    public EIOItemTagsProvider(PackOutput pPackOutput, CompletableFuture<HolderLookup.Provider> pProvider,
-            CompletableFuture<TagLookup<Block>> pLookup, @Nullable ExistingFileHelper existingFileHelper) {
-        super(pPackOutput, pProvider, pLookup, EnderIOAPI.MOD_ID, existingFileHelper);
+    public EIOItemTagsProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> provider,
+            CompletableFuture<TagLookup<Block>> lookup, @Nullable ExistingFileHelper existingFileHelper) {
+        super(packOutput, provider, lookup, EnderIOAPI.MOD_ID, existingFileHelper);
     }
 
     @Override
-    protected void addTags(HolderLookup.Provider pProvider) {
+    protected void addTags(HolderLookup.Provider provider) {
         copy(EIOTags.Blocks.CLEAR_GLASS, EIOTags.Items.CLEAR_GLASS);
         copy(EIOTags.Blocks.FUSED_QUARTZ, EIOTags.Items.FUSED_QUARTZ);
 

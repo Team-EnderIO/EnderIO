@@ -88,8 +88,8 @@ public class CapacitorBankBlockEntity extends LegacyPoweredMachineBlockEntity im
 
     @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
-        return new CapacitorBankMenu(pContainerId, this, pPlayerInventory);
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
+        return new CapacitorBankMenu(containerId, this, playerInventory);
     }
 
     @Override
@@ -168,9 +168,9 @@ public class CapacitorBankBlockEntity extends LegacyPoweredMachineBlockEntity im
     }
 
     @Override
-    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.saveAdditional(pTag, lookupProvider);
-        pTag.put(DISPLAY_MODES, saveDisplayModes());
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(tag, lookupProvider);
+        tag.put(DISPLAY_MODES, saveDisplayModes());
     }
 
     public CompoundTag saveDisplayModes() {
@@ -183,10 +183,10 @@ public class CapacitorBankBlockEntity extends LegacyPoweredMachineBlockEntity im
     }
 
     @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.loadAdditional(pTag, lookupProvider);
-        if (pTag.contains(DISPLAY_MODES, Tag.TAG_COMPOUND)) {
-            loadDisplayModes(pTag.getCompound(DISPLAY_MODES));
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(tag, lookupProvider);
+        if (tag.contains(DISPLAY_MODES, Tag.TAG_COMPOUND)) {
+            loadDisplayModes(tag.getCompound(DISPLAY_MODES));
         }
     }
 

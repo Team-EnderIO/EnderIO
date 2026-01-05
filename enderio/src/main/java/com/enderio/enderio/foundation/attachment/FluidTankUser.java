@@ -18,12 +18,12 @@ public interface FluidTankUser {
 
     MachineFluidHandler createFluidHandler();
 
-    default void saveTank(HolderLookup.Provider lookupProvider, CompoundTag pTag) {
-        pTag.put(MachineNBTKeys.FLUIDS, getFluidHandler().serializeNBT(lookupProvider));
+    default void saveTank(HolderLookup.Provider lookupProvider, CompoundTag tag) {
+        tag.put(MachineNBTKeys.FLUIDS, getFluidHandler().serializeNBT(lookupProvider));
     }
 
-    default void loadTank(HolderLookup.Provider lookupProvider, CompoundTag pTag) {
-        getFluidHandler().deserializeNBT(lookupProvider, pTag.getCompound(MachineNBTKeys.FLUIDS));
+    default void loadTank(HolderLookup.Provider lookupProvider, CompoundTag tag) {
+        getFluidHandler().deserializeNBT(lookupProvider, tag.getCompound(MachineNBTKeys.FLUIDS));
     }
 
     ICapabilityProvider<BlockEntity, Direction, IFluidHandler> FLUID_HANDLER_PROVIDER = (be, side) -> {

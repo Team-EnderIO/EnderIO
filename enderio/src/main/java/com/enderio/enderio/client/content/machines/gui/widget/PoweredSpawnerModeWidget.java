@@ -11,9 +11,9 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class PoweredSpawnerModeWidget extends BaseEnumPickerWidget<PoweredSpawnerMode> {
-    public PoweredSpawnerModeWidget(int pX, int pY, Supplier<PoweredSpawnerMode> getter,
+    public PoweredSpawnerModeWidget(int x, int y, Supplier<PoweredSpawnerMode> getter,
             Consumer<PoweredSpawnerMode> setter, Component optionName) {
-        super(pX, pY, 16, 16, PoweredSpawnerMode.class, getter, setter, true, optionName);
+        super(x, y, 16, 16, PoweredSpawnerMode.class, getter, setter, true, optionName);
     }
 
     @Override

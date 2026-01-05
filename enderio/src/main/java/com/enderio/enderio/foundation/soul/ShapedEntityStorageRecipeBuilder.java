@@ -14,20 +14,20 @@ import org.jetbrains.annotations.Nullable;
 
 public class ShapedEntityStorageRecipeBuilder extends ShapedRecipeBuilder {
 
-    public ShapedEntityStorageRecipeBuilder(RecipeCategory pCategory, ItemLike pResult, int pCount) {
-        super(pCategory, pResult, pCount);
+    public ShapedEntityStorageRecipeBuilder(RecipeCategory category, ItemLike result, int count) {
+        super(category, result, count);
     }
 
-    public static ShapedEntityStorageRecipeBuilder shaped(RecipeCategory pCategory, ItemLike pResult) {
-        return shaped(pCategory, pResult, 1);
+    public static ShapedEntityStorageRecipeBuilder shaped(RecipeCategory category, ItemLike result) {
+        return shaped(category, result, 1);
     }
 
-    public static ShapedEntityStorageRecipeBuilder shaped(RecipeCategory pCategory, ItemLike pResult, int pCount) {
-        return new ShapedEntityStorageRecipeBuilder(pCategory, pResult, pCount);
+    public static ShapedEntityStorageRecipeBuilder shaped(RecipeCategory category, ItemLike result, int count) {
+        return new ShapedEntityStorageRecipeBuilder(category, result, count);
     }
 
     @Override
-    public void save(RecipeOutput recipeOutput, ResourceLocation pRecipeId) {
+    public void save(RecipeOutput recipeOutput, ResourceLocation recipeId) {
 
         super.save(new RecipeOutput() {
             @Override
@@ -41,6 +41,6 @@ public class ShapedEntityStorageRecipeBuilder extends ShapedRecipeBuilder {
             public Advancement.Builder advancement() {
                 return recipeOutput.advancement();
             }
-        }, pRecipeId);
+        }, recipeId);
     }
 }

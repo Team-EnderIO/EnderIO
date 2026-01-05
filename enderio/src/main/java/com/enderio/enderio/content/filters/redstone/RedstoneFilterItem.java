@@ -61,18 +61,18 @@ public class RedstoneFilterItem extends Item {
 
     private final Type type;
 
-    public RedstoneFilterItem(Properties pProperties, Type type) {
-        super(type.componentApplicator().apply(pProperties));
+    public RedstoneFilterItem(Properties properties, Type type) {
+        super(type.componentApplicator().apply(properties));
         this.type = type;
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         var menu = type.menu();
-        if (pPlayer instanceof ServerPlayer serverPlayer && menu != null && pPlayer.isSteppingCarefully()) {
+        if (player instanceof ServerPlayer serverPlayer && menu != null && player.isSteppingCarefully()) {
             openMenu(serverPlayer);
         }
-        return super.use(pLevel, pPlayer, pUsedHand);
+        return super.use(level, player, usedHand);
     }
 
     private void openMenu(ServerPlayer player) {
@@ -83,8 +83,8 @@ public class RedstoneFilterItem extends Item {
             }
 
             @Override
-            public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
-                return type.menu().create(pContainerId, pInventory);
+            public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
+                return type.menu().create(containerId, inventory);
             }
         });
     }

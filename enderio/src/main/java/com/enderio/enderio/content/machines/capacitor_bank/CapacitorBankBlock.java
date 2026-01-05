@@ -52,17 +52,17 @@ public class CapacitorBankBlock extends LegacyMachineBlock implements AdvancedTo
     }
 
     @Override
-    public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer,
-            ItemStack pStack) {
-        super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
-        if (pPlacer != null && pLevel.getBlockEntity(pPos) instanceof CapacitorBankBlockEntity capacitorBankBlock) {
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer,
+            ItemStack stack) {
+        super.setPlacedBy(level, pos, state, placer, stack);
+        if (placer != null && level.getBlockEntity(pos) instanceof CapacitorBankBlockEntity capacitorBankBlock) {
             for (Direction direction : Direction.values()) {
-                if (pLevel.getBlockEntity(pPos.relative(direction)) instanceof CapacitorBankBlockEntity other
+                if (level.getBlockEntity(pos.relative(direction)) instanceof CapacitorBankBlockEntity other
                         && other.tier == tier) {
                     return;
                 }
             }
-            capacitorBankBlock.setDisplayMode(pPlacer.getDirection().getOpposite(), DisplayMode.BAR);
+            capacitorBankBlock.setDisplayMode(placer.getDirection().getOpposite(), DisplayMode.BAR);
         }
     }
 

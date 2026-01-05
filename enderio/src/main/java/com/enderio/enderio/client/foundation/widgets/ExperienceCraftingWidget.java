@@ -20,15 +20,15 @@ public class ExperienceCraftingWidget extends EIOWidget {
     private final Supplier<FluidStorageInfo> fluidStorageSupplier;
     private final Supplier<Integer> maxXP;
 
-    public ExperienceCraftingWidget(int pX, int pY, int pWidth, int pHeight,
+    public ExperienceCraftingWidget(int x, int y, int width, int height,
             Supplier<FluidStorageInfo> fluidStorageSupplier, Supplier<Integer> maxXP) {
-        super(pX, pY, pWidth, pHeight);
+        super(x, y, width, height);
         this.fluidStorageSupplier = fluidStorageSupplier;
         this.maxXP = maxXP;
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
 
@@ -52,17 +52,17 @@ public class ExperienceCraftingWidget extends EIOWidget {
         guiGraphics.drawString(font, s, this.x + this.width / 2f, (float) (this.y - this.height - 3 - 1), 0, false);
         guiGraphics.drawString(font, s, this.x + this.width / 2f, (float) this.y - this.height - 3, 8453920, false);
 
-        if (isHovered(pMouseX, pMouseY)) {
+        if (isHovered(mouseX, mouseY)) {
             Minecraft minecraft = Minecraft.getInstance();
             guiGraphics
                     .renderTooltip(
                             minecraft.font, Component.literal(fluidStorageSupplier.get().contents().getAmount()
                                     + " mb / " + ExperienceUtil.getFluidFromLevel(maxXP.get()) + " mb"),
-                            pMouseX, pMouseY);
+                            mouseX, mouseY);
         }
     }
 
     @Override
-    protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
+    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
     }
 }

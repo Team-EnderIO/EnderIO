@@ -17,8 +17,8 @@ public class ArmorSlot extends Slot {
     private static final ResourceLocation[] ARMOR_SLOT_TEXTURES = new ResourceLocation[] { EMPTY_ARMOR_SLOT_BOOTS,
             EMPTY_ARMOR_SLOT_LEGGINGS, EMPTY_ARMOR_SLOT_CHESTPLATE, EMPTY_ARMOR_SLOT_HELMET };
 
-    public ArmorSlot(Container pContainer, int pSlot, int pX, int pY, EquipmentSlot equipmentSlot) {
-        super(pContainer, pSlot, pX, pY);
+    public ArmorSlot(Container container, int slot, int x, int y, EquipmentSlot equipmentSlot) {
+        super(container, slot, x, y);
 
         setBackground(InventoryMenu.BLOCK_ATLAS, ARMOR_SLOT_TEXTURES[equipmentSlot.getIndex()]);
     }

@@ -106,8 +106,8 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.loadAdditional(pTag, lookupProvider);
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(tag, lookupProvider);
         if (level != null && !level.isClientSide()) {
             updateRecipe();
         }

@@ -20,22 +20,22 @@ import java.util.List;
 import java.util.Optional;
 
 public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProvider, IDarkSteelItem {
-    public DarkSteelSwordItem(Properties pProperties) {
+    public DarkSteelSwordItem(Properties properties) {
         super(DarkSteelTiers.DARK_STEEL_TIER,
-                pProperties.attributes(createAttributes(DarkSteelTiers.DARK_STEEL_TIER, 3, -2.4F))
+                properties.attributes(createAttributes(DarkSteelTiers.DARK_STEEL_TIER, 3, -2.4F))
                         .component(EIODataComponents.TRAVEL_ITEM, false));
     }
 
     @Override
-    public boolean hurtEnemy(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) {
+    public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         // Temporary head drop logic
-        if (pTarget.isDeadOrDying() && pTarget.level().random.nextFloat() < 0.07) {
-            Optional<ItemStack> skull = getSkull(pTarget);
-            skull.ifPresent(itemStack -> Containers.dropItemStack(pAttacker.level(), pAttacker.position().x,
-                pAttacker.position().y, pAttacker.position().z, itemStack));
+        if (target.isDeadOrDying() && target.level().random.nextFloat() < 0.07) {
+            Optional<ItemStack> skull = getSkull(target);
+            skull.ifPresent(itemStack -> Containers.dropItemStack(attacker.level(), attacker.position().x,
+                attacker.position().y, attacker.position().z, itemStack));
         }
 
-        return super.hurtEnemy(pStack, pTarget, pAttacker);
+        return super.hurtEnemy(stack, target, attacker);
     }
 
     @Override
@@ -48,31 +48,31 @@ public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProv
         return oldStack.getItem() != newStack.getItem();
     }
 
-    private static Optional<ItemStack> getSkull(LivingEntity pTarget) {
-        if (pTarget.getType() == EntityType.SKELETON || pTarget.getType() == EntityType.STRAY) {
+    private static Optional<ItemStack> getSkull(LivingEntity target) {
+        if (target.getType() == EntityType.SKELETON || target.getType() == EntityType.STRAY) {
             return Optional.of(new ItemStack(Items.SKELETON_SKULL));
         }
-        if (pTarget.getType() == EntityType.ZOMBIE || pTarget.getType() == EntityType.DROWNED
-                || pTarget.getType() == EntityType.HUSK || pTarget.getType() == EntityType.ZOMBIE_VILLAGER) {
+        if (target.getType() == EntityType.ZOMBIE || target.getType() == EntityType.DROWNED
+                || target.getType() == EntityType.HUSK || target.getType() == EntityType.ZOMBIE_VILLAGER) {
             return Optional.of(new ItemStack(Items.ZOMBIE_HEAD));
         }
-        if (pTarget.getType() == EntityType.WITHER_SKELETON) {
+        if (target.getType() == EntityType.WITHER_SKELETON) {
             return Optional.of(new ItemStack(Items.WITHER_SKELETON_SKULL));
         }
-        if (pTarget.getType() == EntityType.CREEPER) {
+        if (target.getType() == EntityType.CREEPER) {
             return Optional.of(new ItemStack(Items.CREEPER_HEAD));
         }
-        if (pTarget.getType() == EntityType.ENDER_DRAGON) {
+        if (target.getType() == EntityType.ENDER_DRAGON) {
             return Optional.of(new ItemStack(Items.DRAGON_HEAD));
         }
-        if (pTarget.getType() == EntityType.ENDERMAN) {
+        if (target.getType() == EntityType.ENDERMAN) {
             return Optional.of(new ItemStack(EIOBlocks.ENDERMAN_HEAD));
         }
-        if (pTarget.getType() == EntityType.PIGLIN || pTarget.getType() == EntityType.PIGLIN_BRUTE
-                || pTarget.getType() == EntityType.ZOMBIFIED_PIGLIN) {
+        if (target.getType() == EntityType.PIGLIN || target.getType() == EntityType.PIGLIN_BRUTE
+                || target.getType() == EntityType.ZOMBIFIED_PIGLIN) {
             return Optional.of(new ItemStack(Items.PIGLIN_HEAD));
         }
-        if (pTarget instanceof Player player) {
+        if (target instanceof Player player) {
             ItemStack stack = new ItemStack(Items.PLAYER_HEAD);
             stack.set(DataComponents.PROFILE, new ResolvableProfile(player.getGameProfile()));
             return Optional.of(stack);

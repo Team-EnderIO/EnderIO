@@ -25,15 +25,15 @@ public class EnderiosItem extends Item {
         .usingConvertsTo(Items.BOWL)
         .build();
 
-    public EnderiosItem(Properties pProperties) {
-        super(pProperties.food(PROPERTIES));
+    public EnderiosItem(Properties properties) {
+        super(properties.food(PROPERTIES));
     }
 
     @Override
-    public ItemStack finishUsingItem(ItemStack pStack, Level pLevel, LivingEntity pEntityLiving) {
-        ItemStack itemStack = super.finishUsingItem(pStack, pLevel, pEntityLiving);
-        if (pEntityLiving.getRandom().nextFloat() < BaseConfig.COMMON.ITEMS.ENDERIOS_CHANCE.get()) {
-            TeleportUtils.randomTeleport(pEntityLiving, BaseConfig.COMMON.ITEMS.ENDERIOS_RANGE.get());
+    public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entityLiving) {
+        ItemStack itemStack = super.finishUsingItem(stack, level, entityLiving);
+        if (entityLiving.getRandom().nextFloat() < BaseConfig.COMMON.ITEMS.ENDERIOS_CHANCE.get()) {
+            TeleportUtils.randomTeleport(entityLiving, BaseConfig.COMMON.ITEMS.ENDERIOS_RANGE.get());
         }
         return itemStack;
     }

@@ -56,7 +56,7 @@ public class EnchanterBlockEntity extends EnderBlockEntity implements MenuProvid
     }
 
     @Override
-    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player pPlayer) {
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
         return new EnchanterMenu(containerId, playerInventory, this);
     }
 

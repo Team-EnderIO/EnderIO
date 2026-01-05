@@ -19,8 +19,8 @@ public class ElectromagnetItem extends PoweredToggledItem {
     private static final double SPEED = 0.035;
     private static final double SPEED_4 = SPEED * 4;
 
-    public ElectromagnetItem(Properties pProperties) {
-        super(pProperties);
+    public ElectromagnetItem(Properties properties) {
+        super(properties);
     }
 
     @Override
@@ -53,8 +53,8 @@ public class ElectromagnetItem extends PoweredToggledItem {
     }
 
     @Override
-    protected void onTickWhenActive(Player player, ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId,
-            boolean pIsSelected) {
+    protected void onTickWhenActive(Player player, ItemStack stack, Level level, Entity entity, int slotId,
+            boolean isSelected) {
         if (player.isSpectator()) {
             return;
         }
@@ -63,17 +63,17 @@ public class ElectromagnetItem extends PoweredToggledItem {
         AABB bounds = new AABB(player.getX() - range, player.getY() - range, player.getZ() - range,
                 player.getX() + range, player.getY() + range, player.getZ() + range);
 
-        List<Entity> toMove = pLevel.getEntities(player, bounds, this::isMagnetable);
+        List<Entity> toMove = level.getEntities(player, bounds, this::isMagnetable);
 
         int itemsRemaining = getMaxItems();
         if (itemsRemaining <= 0) {
             itemsRemaining = Integer.MAX_VALUE;
         }
 
-        for (Entity entity : toMove) {
-            if (AttractionUtil.moveToPos(pEntity, player.getX(), player.getY() + player.getEyeHeight() * .75f,
+        for (Entity entityToMove : toMove) {
+            if (AttractionUtil.moveToPos(entityToMove, player.getX(), player.getY() + player.getEyeHeight() * .75f,
                     player.getZ(), SPEED, SPEED_4, COLLISION_DISTANCE_SQ)) {
-                entity.playerTouch(player);
+                entityToMove.playerTouch(player);
 
             }
 

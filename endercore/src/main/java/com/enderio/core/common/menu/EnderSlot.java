@@ -9,8 +9,8 @@ public class EnderSlot extends Slot implements SlotWithOverlay {
     @Nullable
     private ResourceLocation foregroundSprite;
 
-    public EnderSlot(Container pContainer, int pSlot, int pX, int pY) {
-        super(pContainer, pSlot, pX, pY);
+    public EnderSlot(Container container, int slot, int x, int y) {
+        super(container, slot, x, y);
     }
 
     @Nullable

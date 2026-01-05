@@ -260,8 +260,8 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
     // region Tooltips
 
     @Override
-    default void addToTooltip(Item.TooltipContext pContext, Consumer<Component> pTooltipAdder,
-            TooltipFlag pTooltipFlag) {
+    default void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder,
+            TooltipFlag tooltipFlag) {
     }
 
     /**

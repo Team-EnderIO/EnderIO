@@ -23,8 +23,8 @@ public class LevitationStaffItem extends PoweredToggledItem {
             v) -> new StrictFluidHandlerItemStack(() -> EIODataComponents.ITEM_FLUID_CONTENT, stack, 1000,
                     EIOTags.Fluids.STAFF_OF_LEVITY_FUEL);
 
-    public LevitationStaffItem(Properties pProperties) {
-        super(pProperties);
+    public LevitationStaffItem(Properties properties) {
+        super(properties);
     }
 
     @Override
@@ -38,12 +38,12 @@ public class LevitationStaffItem extends PoweredToggledItem {
     }
 
     @Override
-    protected boolean hasCharge(ItemStack pStack) {
-        if (!super.hasCharge(pStack)) {
+    protected boolean hasCharge(ItemStack stack) {
+        if (!super.hasCharge(stack)) {
             return false;
         }
 
-        var fluidHandler = pStack.getCapability(Capabilities.FluidHandler.ITEM);
+        var fluidHandler = stack.getCapability(Capabilities.FluidHandler.ITEM);
         if (fluidHandler != null) {
             // TODO: Config for consumption amount
             return !fluidHandler.drain(1, IFluidHandler.FluidAction.SIMULATE).isEmpty();
@@ -53,10 +53,10 @@ public class LevitationStaffItem extends PoweredToggledItem {
     }
 
     @Override
-    protected void consumeCharge(ItemStack pStack) {
-        super.consumeCharge(pStack);
+    protected void consumeCharge(ItemStack stack) {
+        super.consumeCharge(stack);
 
-        var fluidHandler = pStack.getCapability(Capabilities.FluidHandler.ITEM);
+        var fluidHandler = stack.getCapability(Capabilities.FluidHandler.ITEM);
         if (fluidHandler != null) {
             // TODO: Config for consumption amount
             fluidHandler.drain(1, IFluidHandler.FluidAction.EXECUTE);
@@ -64,10 +64,10 @@ public class LevitationStaffItem extends PoweredToggledItem {
     }
 
     @Override
-    protected void setFullCharge(ItemStack pStack) {
-        super.setFullCharge(pStack);
+    protected void setFullCharge(ItemStack stack) {
+        super.setFullCharge(stack);
 
-        var fluidHandler = pStack.getCapability(Capabilities.FluidHandler.ITEM);
+        var fluidHandler = stack.getCapability(Capabilities.FluidHandler.ITEM);
         if (fluidHandler != null) {
             if (fluidHandler instanceof StrictFluidHandlerItemStack strictFluidHandlerItemStack) {
                 strictFluidHandlerItemStack.setFluid(
@@ -77,8 +77,8 @@ public class LevitationStaffItem extends PoweredToggledItem {
     }
 
     @Override
-    protected void onTickWhenActive(Player player, ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId,
-            boolean pIsSelected) {
+    protected void onTickWhenActive(Player player, ItemStack stack, Level level, Entity entity, int slotId,
+            boolean isSelected) {
         player.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 1));
     }
 

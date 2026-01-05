@@ -51,13 +51,13 @@ public class EnchanterMenu extends BaseBlockEntityMenu<EnchanterBlockEntity> {
 
     // TODO: need to find a way to factor this out somehow...
     @Override
-    public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
+    public ItemStack quickMoveStack(Player player, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = this.slots.get(pIndex);
+        Slot slot = this.slots.get(index);
         if (slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
-            if (pIndex < this.slots.size() - PLAYER_INVENTORY_SIZE) {
+            if (index < this.slots.size() - PLAYER_INVENTORY_SIZE) {
                 if (!this.moveItemStackTo(itemstack1, this.slots.size() - PLAYER_INVENTORY_SIZE, this.slots.size(),
                         true)) {
                     return ItemStack.EMPTY;
@@ -72,7 +72,7 @@ public class EnchanterMenu extends BaseBlockEntityMenu<EnchanterBlockEntity> {
                 slot.setChanged();
             }
 
-            slot.onTake(pPlayer, itemstack1);
+            slot.onTake(player, itemstack1);
         }
 
         return itemstack;
@@ -89,20 +89,20 @@ public class EnchanterMenu extends BaseBlockEntityMenu<EnchanterBlockEntity> {
         }
 
         @Override
-        public void onTake(Player pPlayer, ItemStack pStack) {
+        public void onTake(Player player, ItemStack stack) {
             var inventory = blockEntity.getInventory();
             EnchanterRecipe recipe = blockEntity.getCurrentRecipe();
             EnchanterRecipe.Input recipeInput = blockEntity.createRecipeInput();
 
-            if (recipe != null && (pPlayer.experienceLevel >= recipe.getXPCost(recipeInput) || pPlayer.isCreative())) {
+            if (recipe != null && (player.experienceLevel >= recipe.getXPCost(recipeInput) || player.isCreative())) {
                 int amount = recipe.getInputAmountConsumed(recipeInput);
                 int lapizForLevel = recipe.getLapisForLevel(
                         recipe.getEnchantmentLevel(EnchanterBlockEntity.CATALYST.getItemStack(inventory).getCount()));
-                pPlayer.giveExperienceLevels(-recipe.getXPCost(recipeInput));
+                player.giveExperienceLevels(-recipe.getXPCost(recipeInput));
                 EnchanterBlockEntity.BOOK.getItemStack(inventory).shrink(1);
                 EnchanterBlockEntity.CATALYST.getItemStack(inventory).shrink(amount);
                 EnchanterBlockEntity.LAPIS.getItemStack(inventory).shrink(lapizForLevel);
-                super.onTake(pPlayer, pStack);
+                super.onTake(player, stack);
             }
         }
 

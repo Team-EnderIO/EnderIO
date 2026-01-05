@@ -182,27 +182,27 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
     private static final String KEY_GRINDING_BALL_DAMAGE = "GrindingBallDamage";
 
     @Override
-    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.saveAdditional(pTag, lookupProvider);
-        craftingTaskHost.save(lookupProvider, pTag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(tag, lookupProvider);
+        craftingTaskHost.save(lookupProvider, tag);
 
         if (!grindingBallData.isIdentity()) {
-            pTag.put(KEY_GRINDING_BALL, grindingBallData.save(lookupProvider));
-            pTag.putInt(KEY_GRINDING_BALL_DAMAGE, grindingBallDamage);
+            tag.put(KEY_GRINDING_BALL, grindingBallData.save(lookupProvider));
+            tag.putInt(KEY_GRINDING_BALL_DAMAGE, grindingBallDamage);
         }
     }
 
     @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.loadAdditional(pTag, lookupProvider);
-        craftingTaskHost.load(lookupProvider, pTag);
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(tag, lookupProvider);
+        craftingTaskHost.load(lookupProvider, tag);
 
-        if (pTag.contains(KEY_GRINDING_BALL)) {
-            grindingBallData = GrindingBallData.parseOptional(lookupProvider, pTag.getCompound((KEY_GRINDING_BALL)));
+        if (tag.contains(KEY_GRINDING_BALL)) {
+            grindingBallData = GrindingBallData.parseOptional(lookupProvider, tag.getCompound((KEY_GRINDING_BALL)));
         }
 
-        if (pTag.contains(KEY_GRINDING_BALL_DAMAGE)) {
-            grindingBallDamage = pTag.getInt(KEY_GRINDING_BALL_DAMAGE);
+        if (tag.contains(KEY_GRINDING_BALL_DAMAGE)) {
+            grindingBallDamage = tag.getInt(KEY_GRINDING_BALL_DAMAGE);
         }
     }
 

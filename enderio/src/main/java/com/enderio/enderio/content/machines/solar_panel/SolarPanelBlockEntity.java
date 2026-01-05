@@ -63,7 +63,7 @@ public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
 
     @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
         return null;
     }
 
@@ -272,17 +272,17 @@ public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
     }
 
     @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        boundSoul = Soul.parseOptional(lookupProvider, pTag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        boundSoul = Soul.parseOptional(lookupProvider, tag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
 
-        super.loadAdditional(pTag, lookupProvider);
+        super.loadAdditional(tag, lookupProvider);
     }
 
     @Override
-    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        pTag.put(MachineNBTKeys.ENTITY_STORAGE, boundSoul.saveOptional(lookupProvider));
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        tag.put(MachineNBTKeys.ENTITY_STORAGE, boundSoul.saveOptional(lookupProvider));
 
-        super.saveAdditional(pTag, lookupProvider);
+        super.saveAdditional(tag, lookupProvider);
     }
 
     @Override
