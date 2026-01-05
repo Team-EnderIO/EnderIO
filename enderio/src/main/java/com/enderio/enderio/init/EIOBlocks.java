@@ -606,9 +606,6 @@ public class EIOBlocks {
     }
 
     public static void register(IEventBus bus) {
-        BLOCKS.addAlias(EnderIO.id("industrial_insulation_block"), EnderIO.id("industrial_insulation"));
-        ITEMS.addAlias(EnderIO.id("industrial_insulation_block"), EnderIO.id("industrial_insulation"));
-
         BLOCKS.register(bus);
         ITEMS.register(bus);
     }

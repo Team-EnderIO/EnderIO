@@ -82,12 +82,6 @@ public class AE2ConduitsModule implements ConduitCommonModule {
             .create(ResourceLocation.fromNamespaceAndPath("ae2", "covered_cable"));
     private static final TagKey<Item> GLASS_CABLE = ItemTags
             .create(ResourceLocation.fromNamespaceAndPath("ae2", "glass_cable"));
-
-    static {
-        // TODO: 1.22 - remove backward compatibility.
-        CONDUIT_TYPES.addAlias(EnderIO.rl("ae2"), AE2_CONDUIT.getId());
-    }
-
     @Override
     public void initialize(IEventBus modEventBus) {
         CONDUIT_TYPES.register(modEventBus);

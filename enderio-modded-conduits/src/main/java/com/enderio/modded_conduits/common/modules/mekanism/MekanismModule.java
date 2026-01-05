@@ -127,10 +127,6 @@ public class MekanismModule implements ConduitCommonModule {
         props -> new EnderChemicalFilterItem(props, EnderChemicalFilterItem.Type.BASIC)
     );
 
-    static {
-        ITEMS.addAlias(EnderIO.rl("chemical_filter"), BASIC_CHEMICAL_FILTER.getId());
-    }
-
     public static final DeferredHolder<MenuType<?>, MenuType<EnderChemicalFilterMenu>> CHEMICAL_FILTER_MENU = 
         MENUS.register("chemical_filter", EnderChemicalFilterItem.Type.BASIC::openMenu);
 

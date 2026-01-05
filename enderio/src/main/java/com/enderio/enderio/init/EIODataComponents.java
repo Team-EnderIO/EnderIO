@@ -148,21 +148,6 @@ public class EIODataComponents {
     // endregion
 
     public static void register(IEventBus bus) {
-        // Remap entity to soul
-        DATA_COMPONENT_TYPES.addAlias(EnderIO.id("stored_entity"), EnderIO.id("soul"));
-        DATA_COMPONENT_TYPES.addAlias(EnderIO.id("entity_filter"), EnderIO.id("soul_filter"));
-
-        DATA_COMPONENT_TYPES.register("conduit", () -> EnderIODataComponents.CONDUIT);
-        DATA_COMPONENT_TYPES.register("grinding_ball", () -> EnderIODataComponents.GRINDING_BALL);
-
-        // Flatten redstone filter component types
-        DATA_COMPONENT_TYPES.addAlias(EnderIO.id("redstone_and_filter"), EnderIO.id("redstone_filter_double_channel"));
-        DATA_COMPONENT_TYPES.addAlias(EnderIO.id("redstone_or_filter"), EnderIO.id("redstone_filter_double_channel"));
-        DATA_COMPONENT_TYPES.addAlias(EnderIO.id("redstone_nand_filter"), EnderIO.id("redstone_filter_double_channel"));
-        DATA_COMPONENT_TYPES.addAlias(EnderIO.id("redstone_nor_filter"), EnderIO.id("redstone_filter_double_channel"));
-        DATA_COMPONENT_TYPES.addAlias(EnderIO.id("redstone_xnor_filter"), EnderIO.id("redstone_filter_double_channel"));
-        DATA_COMPONENT_TYPES.addAlias(EnderIO.id("redstone_xor_filter"), EnderIO.id("redstone_filter_double_channel"));
-
         DATA_COMPONENT_TYPES.register(bus);
     }
 
