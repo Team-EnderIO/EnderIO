@@ -7,7 +7,7 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -120,10 +120,10 @@ public abstract class AbstractFilterMenu<T> extends BaseEnderMenu {
     }
 
     @Override
-    public void doClick(int slotId, int button, ClickType clickType, Player player) {
-        if (slotId >= 0 && slotId < slots.size() && getSlot(slotId) instanceof FilterSlot<?> filterSlot) {
+    public void clicked(int slotIndex, int buttonNum, ContainerInput containerInput, Player player) {
+        if (slotIndex >= 0 && slotIndex < slots.size() && getSlot(slotIndex) instanceof FilterSlot<?> filterSlot) {
             // Only allow PICKUP (click) or QUICK_MOVE (shift + click) events.
-            if (clickType != ClickType.PICKUP && clickType != ClickType.QUICK_MOVE) {
+            if (containerInput != ContainerInput.PICKUP && containerInput != ContainerInput.QUICK_MOVE) {
                 return;
             }
 
@@ -133,7 +133,7 @@ public abstract class AbstractFilterMenu<T> extends BaseEnderMenu {
             }
         }
 
-        super.doClick(slotId, button, clickType, player);
+        super.clicked(slotIndex, buttonNum, containerInput, player);
     }
 
     public sealed interface FilterAccess {

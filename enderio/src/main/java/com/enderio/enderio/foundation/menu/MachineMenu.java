@@ -10,7 +10,7 @@ import com.enderio.enderio.foundation.state.MachineState;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -26,16 +26,15 @@ import java.util.Set;
  */
 public abstract class MachineMenu<T extends MachineBlockEntity> extends BaseBlockEntityMenu<T> {
 
-    @Nullable
-    private final EnumSyncSlot<RedstoneControl> redstoneControlSlot;
+    @Nullable private final EnumSyncSlot<RedstoneControl> redstoneControlSlot;
     private final MachineStatesSyncSlot statesSyncSlot;
 
     protected MachineMenu(@Nullable MenuType<?> menuType, int containerId, Inventory playerInventory, T blockEntity) {
         super(menuType, containerId, playerInventory, blockEntity);
 
         if (blockEntity.supportsRedstoneControl()) {
-            redstoneControlSlot = addUpdatableSyncSlot(EnumSyncSlot.simple(RedstoneControl.class,
-                    blockEntity::getRedstoneControl, blockEntity::setRedstoneControl));
+            redstoneControlSlot = addUpdatableSyncSlot(
+                EnumSyncSlot.simple(RedstoneControl.class, blockEntity::getRedstoneControl, blockEntity::setRedstoneControl));
         } else {
             redstoneControlSlot = null;
         }
@@ -43,8 +42,8 @@ public abstract class MachineMenu<T extends MachineBlockEntity> extends BaseBloc
         statesSyncSlot = addSyncSlot(MachineStatesSyncSlot.readOnly(blockEntity::getMachineStates));
     }
 
-    protected MachineMenu(@Nullable MenuType<?> menuType, int containerId, Inventory playerInventory,
-            RegistryFriendlyByteBuf buf, BlockEntityType<? extends T>... blockEntityTypes) {
+    protected MachineMenu(@Nullable MenuType<?> menuType, int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf,
+        BlockEntityType<? extends T>... blockEntityTypes) {
         super(menuType, containerId, playerInventory, buf, blockEntityTypes);
 
         if (getBlockEntity().supportsRedstoneControl()) {
@@ -244,9 +243,9 @@ public abstract class MachineMenu<T extends MachineBlockEntity> extends BaseBloc
 
     // Overrides the swapping behaviour. Required for ghost slots to prevent duping
     @Override
-    public void doClick(int slotId, int button, ClickType clickType, Player player) {
-        if (slotId >= 0 && this.slots.get(slotId) instanceof GhostMachineSlot ghostSlot) {
-            if (clickType == ClickType.PICKUP) {
+    public void clicked(int slotIndex, int buttonNum, ContainerInput containerInput, Player player) {
+        if (slotIndex >= 0 && this.slots.get(slotIndex) instanceof GhostMachineSlot ghostSlot) {
+            if (containerInput == ContainerInput.PICKUP) {
                 ItemStack slotItem = ghostSlot.getItem();
                 ItemStack carriedItem = this.getCarried();
                 if (!slotItem.isEmpty() && !carriedItem.isEmpty() && ghostSlot.mayPlace(carriedItem)) {
@@ -257,10 +256,11 @@ public abstract class MachineMenu<T extends MachineBlockEntity> extends BaseBloc
                         return;
                     }
                 }
-            } else if (clickType == ClickType.SWAP) {
+            } else if (containerInput == ContainerInput.SWAP) {
                 return;
             }
         }
-        super.doClick(slotId, button, clickType, player);
+
+        super.clicked(slotIndex, buttonNum, containerInput, player);
     }
 }

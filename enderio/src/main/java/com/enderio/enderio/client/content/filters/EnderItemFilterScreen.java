@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
 import org.apache.commons.lang3.NotImplementedException;
 
@@ -37,7 +37,7 @@ public class EnderItemFilterScreen extends EnderContainerScreen<EnderItemFilterM
     private final Identifier backgroundTexture;
 
     public EnderItemFilterScreen(EnderItemFilterMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title);
+        super(menu, playerInventory, title, WIDTH, HEIGHT - (4 - menu.type.rowCount()) * 18);
 
         this.shouldRenderLabels = true;
 
@@ -46,9 +46,6 @@ public class EnderItemFilterScreen extends EnderContainerScreen<EnderItemFilterM
 
         this.inventoryLabelX += 6;
         this.inventoryLabelY = 34 + menu.type.rowCount() * 18;
-
-        this.imageWidth = WIDTH;
-        this.imageHeight = HEIGHT - (4 - menu.type.rowCount()) * 18;
 
         switch (menu.type.rowCount()) {
         case 1 -> backgroundTexture = BG_1x9;
@@ -100,14 +97,14 @@ public class EnderItemFilterScreen extends EnderContainerScreen<EnderItemFilterM
     }
 
     @Override
-    protected void slotClicked(Slot slot, int slotId, int mouseButton, ClickType type) {
+    protected void slotClicked(Slot slot, int slotId, int buttonNum, ContainerInput containerInput) {
 //        if (getMenu().getFilter() instanceof ItemFilterCapability itemFilterCapability) {
 //            if (slot != null && slot.index < itemFilterCapability.getEntries().size()) {
 //                if (!itemFilterCapability.getEntries().get(slot.index).isEmpty()) {
 //                    itemFilterCapability.setEntry(slotId, ItemStack.EMPTY);
 //                }
 //            }
-        super.slotClicked(slot, slotId, mouseButton, type);
+        super.slotClicked(slot, slotId, buttonNum, containerInput);
 //        }
     }
 }

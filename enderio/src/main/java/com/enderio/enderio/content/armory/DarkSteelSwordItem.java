@@ -26,7 +26,7 @@ public class DarkSteelSwordItem extends Item implements AdvancedTooltipProvider,
     @Override
     public void postHurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         // Temporary head drop logic
-        if (target.isDeadOrDying() && target.level().random.nextFloat() < 0.07) {
+        if (target.isDeadOrDying() && target.level().getRandom().nextFloat() < 0.07) {
             Optional<ItemStack> skull = getSkull(target);
             skull.ifPresent(itemStack -> Containers.dropItemStack(attacker.level(), attacker.position().x,
                 attacker.position().y, attacker.position().z, itemStack));

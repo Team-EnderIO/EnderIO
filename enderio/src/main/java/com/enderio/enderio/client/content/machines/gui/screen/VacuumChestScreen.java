@@ -23,9 +23,7 @@ public class VacuumChestScreen extends MachineScreen<VacuumChestMenu> {
     private static final int HEIGHT = 206;
 
     public VacuumChestScreen(VacuumChestMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title);
-        imageWidth = WIDTH;
-        imageHeight = HEIGHT;
+        super(menu, playerInventory, title, WIDTH, HEIGHT);
         shouldRenderLabels = true;
         inventoryLabelY = imageHeight - 94;
     }

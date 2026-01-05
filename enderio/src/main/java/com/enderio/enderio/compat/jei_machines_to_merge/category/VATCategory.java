@@ -87,7 +87,7 @@ public class VATCategory extends MachineRecipeCategory<RecipeHolder<FermentingRe
     }
 
     public static double getModifier(ItemStack stack, TagKey<Item> reagent) {
-        var map = stack.getItemHolder().getData(VatReagent.DATA_MAP);
+        var map = stack.typeHolder().getData(VatReagent.DATA_MAP);
         if (map != null) {
             return map.getOrDefault(reagent, 1D);
         }

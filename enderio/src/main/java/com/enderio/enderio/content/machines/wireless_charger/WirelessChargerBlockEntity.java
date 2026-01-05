@@ -213,7 +213,7 @@ public class WirelessChargerBlockEntity extends PoweredMachineBlockEntity implem
         if (level != null) {
             BlockState bs = level.getBlockState(getBlockPos().above());
             if (bs.is(EIOTags.Blocks.RANGE_EXTENDER)) {
-                Map<TagKey<Block>, Integer> map = bs.getBlockHolder().getData(RangeExtender.DATA_MAP);
+                Map<TagKey<Block>, Integer> map = bs.typeHolder().getData(RangeExtender.DATA_MAP);
                 if (map != null) {
                     rangeExtension = map.getOrDefault(EIOTags.Blocks.RANGE_EXTENDER, 0);
                 }

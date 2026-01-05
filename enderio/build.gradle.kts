@@ -110,17 +110,17 @@ dependencies {
 
     // Jade for conduit addon
     compileOnly(libs.jade)
-    localRuntime(libs.jade)
+//    localRuntime(libs.jade) // TODO: 26.1
 
     //Athena ctm
 //    localRuntime(libs.athena)
 
     // AE2
-//    compileOnly(variantOf(libs.ae2) {
-//        classifier("api")
-//    })
+    compileOnly(variantOf(libs.ae2) {
+        classifier("api")
+    })
 
-//    localRuntime(libs.ae2)
+    localRuntime(libs.ae2)
 
     // TODO: Re-add Enchantment descriptions if we add enchantments again
 

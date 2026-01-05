@@ -42,8 +42,8 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
     // TODO: 1.21: Intention is that all screens will have labels in future.
     protected boolean shouldRenderLabels = false;
 
-    public EnderContainerScreen(T menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title);
+    public EnderContainerScreen(T menu, Inventory playerInventory, Component title, int imageWidth, int imageHeight) {
+        super(menu, playerInventory, title, imageWidth, imageHeight);
     }
 
     /**

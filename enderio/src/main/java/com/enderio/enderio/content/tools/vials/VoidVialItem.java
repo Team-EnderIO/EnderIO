@@ -54,7 +54,7 @@ public class VoidVialItem extends Item {
                     new EmitParticlePacket(particle, pos, 0.2, 0.8, 0.2));
 
             level.playSound(null, pos, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 0.1f,
-                    0.5F * ((level.random.nextFloat() - level.random.nextFloat()) * 0.7F + 1.8F));
+                    0.5F * ((level.getRandom().nextFloat() - level.getRandom().nextFloat()) * 0.7F + 1.8F));
             return InteractionResult.SUCCESS;
         }
 

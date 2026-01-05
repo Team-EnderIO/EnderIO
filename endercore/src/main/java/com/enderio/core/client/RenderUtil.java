@@ -1,12 +1,12 @@
 package com.enderio.core.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
+import net.minecraft.util.LightCoordsUtil;
 
 public class RenderUtil {
     /**
@@ -16,7 +16,7 @@ public class RenderUtil {
      */
     public static void submitFace(Direction face, PoseStack poseStack, RenderType renderType, SubmitNodeCollector nodeCollector,
             TextureAtlasSprite texture, float x, float y, float z, float w, float h, int color) {
-        submitFace(face, poseStack, renderType, nodeCollector, texture, x, y, z, w, h, color, LightTexture.FULL_BRIGHT);
+        submitFace(face, poseStack, renderType, nodeCollector, texture, x, y, z, w, h, color, LightCoordsUtil.FULL_BRIGHT);
     }
 
     public static void submitFace(Direction face, PoseStack poseStack, RenderType renderType, SubmitNodeCollector nodeCollector,

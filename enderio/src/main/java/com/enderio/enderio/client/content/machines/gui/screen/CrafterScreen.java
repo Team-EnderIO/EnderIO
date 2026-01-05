@@ -20,9 +20,7 @@ public class CrafterScreen extends MachineScreen<CrafterMenu> {
     private static final int HEIGHT = 166;
 
     public CrafterScreen(CrafterMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title);
-        imageWidth = WIDTH;
-        imageHeight = HEIGHT;
+        super(menu, playerInventory, title, WIDTH, HEIGHT);
     }
 
     @Override

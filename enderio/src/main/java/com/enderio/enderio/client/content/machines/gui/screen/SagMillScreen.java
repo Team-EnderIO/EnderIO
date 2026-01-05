@@ -35,9 +35,7 @@ public class SagMillScreen extends MachineScreen<SagMillMenu> {
     private static final Identifier BALL_DURABILITY_SPRITE = EnderIOAPI.rl("screen/sag_mill/grinding_ball_durability");
 
     public SagMillScreen(SagMillMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title);
-        imageWidth = WIDTH;
-        imageHeight = HEIGHT;
+        super(menu, playerInventory, title, WIDTH, HEIGHT);
         shouldRenderLabels = true;
 
         titleLabelY = 6 + 2;

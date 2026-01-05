@@ -6,8 +6,8 @@ import com.enderio.enderio.content.capacitors.SetLootCapacitorFunction;
 import com.enderio.enderio.content.paint.CopyPaintFunction;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
-import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -19,9 +19,9 @@ public class EIOLootModifiers {
     private static final DeferredRegister<MapCodec<? extends IGlobalLootModifier>> SERIALIZERS = DeferredRegister
             .create(NeoForgeRegistries.GLOBAL_LOOT_MODIFIER_SERIALIZERS, EnderIO.MOD_ID);
 
-    private static final DeferredRegister<LootItemConditionType> CONDITIONS = DeferredRegister
+    private static final DeferredRegister<MapCodec<? extends LootItemCondition>> CONDITIONS = DeferredRegister
             .create(Registries.LOOT_CONDITION_TYPE, EnderIO.MOD_ID);
-    private static final DeferredRegister<LootItemFunctionType<?>> FUNCTIONS = DeferredRegister
+    private static final DeferredRegister<MapCodec<? extends LootItemFunction>> FUNCTIONS = DeferredRegister
             .create(Registries.LOOT_FUNCTION_TYPE, EnderIO.MOD_ID);
 
     // public static DeferredHolder<MapCodec<? extends IGlobalLootModifier>,
@@ -31,11 +31,11 @@ public class EIOLootModifiers {
     public static DeferredHolder<MapCodec<? extends IGlobalLootModifier>, MapCodec<BrokenSpawnerLootModifier>> BROKEN_SPAWNER_SERIALIZER = SERIALIZERS
             .register("broken_spawner", () -> BrokenSpawnerLootModifier.CODEC);
 
-    public static final DeferredHolder<LootItemFunctionType<?>, LootItemFunctionType<SetLootCapacitorFunction>> SET_LOOT_CAPACITOR = FUNCTIONS
-            .register("set_loot_capacitor", () -> new LootItemFunctionType<>(SetLootCapacitorFunction.CODEC));
+    public static final DeferredHolder<MapCodec<? extends LootItemFunction>, MapCodec<SetLootCapacitorFunction>> SET_LOOT_CAPACITOR = FUNCTIONS
+            .register("set_loot_capacitor", () -> SetLootCapacitorFunction.CODEC);
 
-    public static final DeferredHolder<LootItemFunctionType<?>, LootItemFunctionType<CopyPaintFunction>> COPY_PAINT = FUNCTIONS
-            .register("copy_paint", () -> new LootItemFunctionType<>(CopyPaintFunction.CODEC));
+    public static final DeferredHolder<MapCodec<? extends LootItemFunction>, MapCodec<CopyPaintFunction>> COPY_PAINT = FUNCTIONS
+            .register("copy_paint", () -> CopyPaintFunction.CODEC);
 
     public static void register(IEventBus bus) {
         SERIALIZERS.register(bus);

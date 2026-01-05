@@ -58,9 +58,9 @@ public class ConduitBreakParticle extends SingleQuadParticle {
     }
 
     @Override
-    public int getLightColor(float partialTick) {
-        int i = super.getLightColor(partialTick);
-        return i == 0 && this.level.hasChunkAt(this.pos) ? LevelRenderer.getLightColor(this.level, this.pos) : i;
+    public int getLightCoords(float partialTick) {
+        int i = super.getLightCoords(partialTick);
+        return i == 0 && this.level.hasChunkAt(this.pos) ? LevelRenderer.getLightCoords(this.level, this.pos) : i;
     }
 
     public static void addDestroyEffects(BlockPos pos, BlockState state, Conduit<?, ?> conduit) {

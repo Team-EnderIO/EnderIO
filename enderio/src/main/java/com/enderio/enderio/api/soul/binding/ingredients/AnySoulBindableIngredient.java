@@ -74,7 +74,7 @@ public class AnySoulBindableIngredient implements ICustomIngredient {
 
     @Override
     public Stream<Holder<Item>> items() {
-        return Stream.of(itemStacks).map(ItemStack::getItemHolder).distinct();
+        return Stream.of(itemStacks).map(ItemStack::typeHolder).distinct();
     }
 
     @Override

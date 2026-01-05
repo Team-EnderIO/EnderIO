@@ -26,9 +26,7 @@ public class CoordinateMenuScreen extends EnderContainerScreen<CoordinateMenu> {
     private EditBox nameInput;
 
     public CoordinateMenuScreen(CoordinateMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title);
-        this.imageWidth = WIDTH;
-        this.imageHeight = HEIGHT;
+        super(menu, playerInventory, title, WIDTH, HEIGHT);
     }
 
     @Override

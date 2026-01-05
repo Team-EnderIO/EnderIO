@@ -18,10 +18,7 @@ public class WeatherObeliskScreen extends MachineScreen<WeatherObeliskMenu> {
     private static final int HEIGHT = 166;
 
     public WeatherObeliskScreen(WeatherObeliskMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title);
-
-        imageWidth = WIDTH;
-        imageHeight = HEIGHT;
+        super(menu, playerInventory, title, WIDTH, HEIGHT);
     }
 
     @Override

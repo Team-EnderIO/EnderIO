@@ -133,7 +133,7 @@ public class AttractorObeliskBlockEntity extends ObeliskBlockEntity<AttractorObe
         List<Mob> filteredEntities = level.getEntities(EntityTypeTest.forClass(Mob.class), aabb,
                 mob -> filter.test(mob));
         for (Mob mob : filteredEntities) {
-            if (!MachinesConfig.COMMON.ATTRACTOR_PULL_BOSSES.get() && mob.getType().is(Tags.EntityTypes.BOSSES)) {
+            if (!MachinesConfig.COMMON.ATTRACTOR_PULL_BOSSES.get() && mob.is(Tags.EntityTypes.BOSSES)) {
                 // ignore
             } else if (mob instanceof WitherBoss) {
                 mob.goalSelector.disableControlFlag(Goal.Flag.TARGET);

@@ -38,10 +38,7 @@ public class PoweredSpawnerScreen extends MachineScreen<PoweredSpawnerMenu> {
     private NewProgressWidget captureProgress;
 
     public PoweredSpawnerScreen(PoweredSpawnerMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title);
-
-        imageWidth = WIDTH;
-        imageHeight = HEIGHT;
+        super(menu, playerInventory, title, WIDTH, HEIGHT);
 
         shouldRenderLabels = true;
 

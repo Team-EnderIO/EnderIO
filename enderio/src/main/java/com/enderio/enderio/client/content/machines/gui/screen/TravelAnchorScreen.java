@@ -29,9 +29,7 @@ public class TravelAnchorScreen extends MachineScreen<TravelAnchorMenu> {
     private static final Identifier NOT_VISIBLE_BUTTON = EnderIO.id("screen/travel_anchor/not_visible");
 
     public TravelAnchorScreen(TravelAnchorMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title);
-        imageWidth = WIDTH;
-        imageHeight = HEIGHT;
+        super(menu, playerInventory, title, WIDTH, HEIGHT);
     }
 
     @Override

@@ -49,11 +49,9 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
     private final List<Runnable> preRenderActions = new ArrayList<>();
 
     public ConduitScreen(ConduitMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title);
+        super(menu, playerInventory, title, WIDTH, HEIGHT);
 
 //        this.shouldRenderLabels = true;
-        this.imageWidth = WIDTH;
-        this.imageHeight = HEIGHT;
 
         // Get the screen type for this conduit, if available.
         this.screenTypeContainer = new ConduitScreenTypeContainer<>(menu.getConduit().value());

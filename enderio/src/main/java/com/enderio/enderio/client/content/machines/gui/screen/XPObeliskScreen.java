@@ -35,9 +35,7 @@ public class XPObeliskScreen extends MachineScreen<XPObeliskMenu> {
     private final List<ImageButton> xpButtons = new ArrayList<>();
 
     public XPObeliskScreen(XPObeliskMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title);
-        imageWidth = WIDTH;
-        imageHeight = HEIGHT;
+        super(menu, playerInventory, title, WIDTH, HEIGHT);
     }
 
     @Override

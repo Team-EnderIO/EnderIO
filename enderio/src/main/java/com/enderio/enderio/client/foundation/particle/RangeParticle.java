@@ -44,61 +44,61 @@ public class RangeParticle extends SingleQuadParticle {
         var quad = new Quaternionf(0,0,0,1);
         var offsetPos = getOffset(Direction.SOUTH).add(x, y, z);
         reusedState.add(this.getLayer(), offsetPos.x, offsetPos.y, offsetPos.z, quad.x, quad.y, quad.z, quad.w, this.getQuadSize(partialTick),
-            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightColor(partialTick));
+            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightCoords(partialTick));
 
         quad = new Quaternionf(0,1,0,0);
         reusedState.add(this.getLayer(), offsetPos.x, offsetPos.y, offsetPos.z, quad.x, quad.y, quad.z, quad.w, this.getQuadSize(partialTick),
-            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightColor(partialTick));
+            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightCoords(partialTick));
 
 
         quad = new Quaternionf(0,0,0,1);
         offsetPos = getOffset(Direction.NORTH).add(x, y, z);
         reusedState.add(this.getLayer(), offsetPos.x, offsetPos.y, offsetPos.z, quad.x, quad.y, quad.z, quad.w, this.getQuadSize(partialTick),
-            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightColor(partialTick));
+            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightCoords(partialTick));
 
         quad = new Quaternionf(0,1,0,0);
         reusedState.add(this.getLayer(), offsetPos.x, offsetPos.y, offsetPos.z, quad.x, quad.y, quad.z, quad.w, this.getQuadSize(partialTick),
-            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightColor(partialTick));
+            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightCoords(partialTick));
 
 
         quad = new Quaternionf(0,-0.7071,0.7071,0);
         offsetPos = getOffset(Direction.DOWN).add(x, y, z);
         reusedState.add(this.getLayer(), offsetPos.x, offsetPos.y, offsetPos.z, quad.x, quad.y, quad.z, quad.w, this.getQuadSize(partialTick),
-            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightColor(partialTick));
+            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightCoords(partialTick));
 
         quad = new Quaternionf(0,-0.7071,-0.7071,0);
         reusedState.add(this.getLayer(), offsetPos.x, offsetPos.y, offsetPos.z, quad.x, quad.y, quad.z, quad.w, this.getQuadSize(partialTick),
-            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightColor(partialTick));
+            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightCoords(partialTick));
 
 
         quad = new Quaternionf(0,-0.7071,0.7071,0);
         offsetPos = getOffset(Direction.UP).add(x, y, z);
         reusedState.add(this.getLayer(), offsetPos.x, offsetPos.y, offsetPos.z, quad.x, quad.y, quad.z, quad.w, this.getQuadSize(partialTick),
-            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightColor(partialTick));
+            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightCoords(partialTick));
 
         quad = new Quaternionf(0,-0.7071,-0.7071,0);
         reusedState.add(this.getLayer(), offsetPos.x, offsetPos.y, offsetPos.z, quad.x, quad.y, quad.z, quad.w, this.getQuadSize(partialTick),
-            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightColor(partialTick));
+            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightCoords(partialTick));
 
 
         quad = new Quaternionf( 0.7071,0,0.7071,0);
         offsetPos = getOffset(Direction.EAST).add(x, y, z);
         reusedState.add(this.getLayer(), offsetPos.x, offsetPos.y, offsetPos.z, quad.x, quad.y, quad.z, quad.w, this.getQuadSize(partialTick),
-            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightColor(partialTick));
+            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightCoords(partialTick));
 
         quad = new Quaternionf(0.7071,0,-0.7071, 0);
         reusedState.add(this.getLayer(), offsetPos.x, offsetPos.y, offsetPos.z, quad.x, quad.y, quad.z, quad.w, this.getQuadSize(partialTick),
-            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightColor(partialTick));
+            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightCoords(partialTick));
 
 
         quad = new Quaternionf( 0.7071,0,0.7071,0);
         offsetPos = getOffset(Direction.WEST).add(x, y, z);
         reusedState.add(this.getLayer(), offsetPos.x, offsetPos.y, offsetPos.z, quad.x, quad.y, quad.z, quad.w, this.getQuadSize(partialTick),
-            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightColor(partialTick));
+            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightCoords(partialTick));
 
         quad = new Quaternionf(0.7071,0,-0.7071, 0);
         reusedState.add(this.getLayer(), offsetPos.x, offsetPos.y, offsetPos.z, quad.x, quad.y, quad.z, quad.w, this.getQuadSize(partialTick),
-            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightColor(partialTick));
+            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightCoords(partialTick));
 
 
 

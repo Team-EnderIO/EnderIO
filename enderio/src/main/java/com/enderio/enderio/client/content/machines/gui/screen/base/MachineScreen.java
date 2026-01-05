@@ -18,8 +18,8 @@ import java.util.List;
 public abstract class MachineScreen<T extends MachineMenu<?>> extends EnderContainerScreen<T> {
     public static final int SLOT_COLOR = -2130706433;
 
-    protected MachineScreen(T menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title);
+    protected MachineScreen(T menu, Inventory playerInventory, Component title, int imageWidth, int imageHeight) {
+        super(menu, playerInventory, title, imageWidth, imageHeight);
     }
 
     protected IOConfigOverlay addIOConfigOverlay(int layer, int x, int y, int width, int height) {

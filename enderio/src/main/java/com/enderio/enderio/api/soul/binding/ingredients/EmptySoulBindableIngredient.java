@@ -64,7 +64,7 @@ public class EmptySoulBindableIngredient implements ICustomIngredient {
 
     @Override
     public Stream<Holder<Item>> items() {
-        return Stream.of(itemStack).map(ItemStack::getItemHolder);
+        return Stream.of(itemStack).map(ItemStack::typeHolder);
     }
 
     @Override

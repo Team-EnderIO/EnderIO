@@ -19,9 +19,7 @@ public class ImpulseHopperScreen extends MachineScreen<ImpulseHopperMenu> {
     private static final int HEIGHT = 166;
 
     public ImpulseHopperScreen(ImpulseHopperMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title);
-        imageWidth = WIDTH;
-        imageHeight = HEIGHT;
+        super(menu, playerInventory, title, WIDTH, HEIGHT);
     }
 
     @Override

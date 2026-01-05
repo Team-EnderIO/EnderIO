@@ -22,9 +22,7 @@ public class XPVacuumScreen extends MachineScreen<XPVacuumMenu> {
     private static final int HEIGHT = 166;
 
     public XPVacuumScreen(XPVacuumMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title);
-        imageWidth = WIDTH;
-        imageHeight = HEIGHT;
+        super(menu, playerInventory, title, WIDTH, HEIGHT);
         shouldRenderLabels = true;
         this.inventoryLabelY = this.imageHeight - 106;
     }

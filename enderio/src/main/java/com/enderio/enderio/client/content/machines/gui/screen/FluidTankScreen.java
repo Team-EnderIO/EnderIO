@@ -19,9 +19,7 @@ public class FluidTankScreen extends MachineScreen<FluidTankMenu> {
     private static final int HEIGHT = 166;
 
     public FluidTankScreen(FluidTankMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title);
-        imageWidth = WIDTH;
-        imageHeight = HEIGHT;
+        super(menu, playerInventory, title, WIDTH, HEIGHT);
     }
 
     @Override

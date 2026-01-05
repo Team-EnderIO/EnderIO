@@ -46,8 +46,8 @@ public class EntityCaptureUtilityTests {
     @Test
     public void testGetCapturableStatus_AllowWhitelisted(MinecraftServer server) {
         // Ensure the test datapack is working
-        Assertions.assertTrue(EntityType.ZOMBIE.is(EIOTags.EntityTypes.SOUL_VIAL_BLACKLIST));
-        Assertions.assertTrue(EntityType.ZOMBIE.is(EIOTags.EntityTypes.SOUL_VIAL_WHITELIST));
+        Assertions.assertTrue(EntityType.ZOMBIE.builtInRegistryHolder().is(EIOTags.EntityTypes.SOUL_VIAL_BLACKLIST));
+        Assertions.assertTrue(EntityType.ZOMBIE.builtInRegistryHolder().is(EIOTags.EntityTypes.SOUL_VIAL_WHITELIST));
 
         // Ensure whitelist has precedence
         Assertions.assertEquals(EntityCaptureUtils.CapturableStatus.CAPTURABLE, EntityCaptureUtils.getCapturableStatus(EntityType.ZOMBIE));

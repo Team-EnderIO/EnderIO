@@ -14,7 +14,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import org.joml.Vector2i;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,15 +27,13 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
     private final boolean renderLabels;
     private final List<EditBox> editBoxList = new ArrayList<>();
 
-    protected EIOScreen(T menu, Inventory playerInventory, Component title) {
-        this(menu, playerInventory, title, false);
+    protected EIOScreen(T menu, Inventory playerInventory, Component title, int imageWidth, int imageHeight) {
+        this(menu, playerInventory, title, imageWidth, imageHeight, false);
     }
 
-    protected EIOScreen(T menu, Inventory playerInventory, Component title, boolean renderLabels) {
-        super(menu, playerInventory, title);
+    protected EIOScreen(T menu, Inventory playerInventory, Component title, int imageWidth, int imageHeight, boolean renderLabels) {
+        super(menu, playerInventory, title, imageWidth, imageHeight);
         this.renderLabels = renderLabels;
-        this.imageWidth = getBackgroundImageSize().x();
-        this.imageHeight = getBackgroundImageSize().y();
     }
 
     @Override
@@ -102,8 +99,6 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
     }
 
     public abstract Identifier getBackgroundImage();
-
-    protected abstract Vector2i getBackgroundImageSize();
 
     @Override
     protected <U extends GuiEventListener & NarratableEntry> U addWidget(U guiEventListener) {

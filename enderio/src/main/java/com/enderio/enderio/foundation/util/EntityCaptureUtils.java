@@ -71,7 +71,8 @@ public class EntityCaptureUtils {
 
         // Whitelist takes precedence over blacklist
         // This allows easier allowing of restricted mobs than removing from tags.
-        if (type.is(EIOTags.EntityTypes.SOUL_VIAL_BLACKLIST) && !type.is(EIOTags.EntityTypes.SOUL_VIAL_WHITELIST)) {
+        if (type.builtInRegistryHolder().is(EIOTags.EntityTypes.SOUL_VIAL_BLACKLIST) &&
+            !type.builtInRegistryHolder().is(EIOTags.EntityTypes.SOUL_VIAL_WHITELIST)) {
             return CapturableStatus.BLACKLISTED;
         }
 
@@ -83,6 +84,6 @@ public class EntityCaptureUtils {
     }
 
     public static boolean isBlacklistedBoss(EntityType<?> entityType) {
-        return entityType.is(Tags.EntityTypes.BOSSES);
+        return entityType.builtInRegistryHolder().is(Tags.EntityTypes.BOSSES);
     }
 }

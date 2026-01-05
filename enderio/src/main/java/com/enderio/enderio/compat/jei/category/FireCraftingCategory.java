@@ -20,12 +20,12 @@ import mezz.jei.api.recipe.category.AbstractRecipeCategory;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -176,7 +176,7 @@ public class FireCraftingCategory extends AbstractRecipeCategory<RecipeHolder<Fi
 
         Minecraft.getInstance()
                 .getBlockRenderer()
-                .renderSingleBlock(state, new PoseStack(), buffers, LightTexture.FULL_BRIGHT,
+                .renderSingleBlock(state, new PoseStack(), buffers, LightCoordsUtil.FULL_BRIGHT,
                         OverlayTexture.NO_OVERLAY);
 
         guiGraphics.pose().popMatrix();
@@ -195,7 +195,7 @@ public class FireCraftingCategory extends AbstractRecipeCategory<RecipeHolder<Fi
 //        } else {
         Minecraft.getInstance()
                 .getBlockRenderer()
-                .renderSingleBlock(fireState, new PoseStack(), buffers, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+                .renderSingleBlock(fireState, new PoseStack(), buffers, LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
 //        }
 
         guiGraphics.pose().popMatrix();

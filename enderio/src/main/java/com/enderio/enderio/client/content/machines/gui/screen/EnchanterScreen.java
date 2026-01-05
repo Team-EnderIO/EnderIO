@@ -17,9 +17,7 @@ public class EnchanterScreen extends EnderContainerScreen<EnchanterMenu> {
     private static final int HEIGHT = 166;
 
     public EnchanterScreen(EnchanterMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title);
-        imageWidth = WIDTH;
-        imageHeight = HEIGHT;
+        super(menu, playerInventory, title, WIDTH, HEIGHT);
     }
 
     @Override

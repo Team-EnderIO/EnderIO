@@ -39,10 +39,7 @@ public class VatScreen extends MachineScreen<VatMenu> {
     private static final WidgetSprites VOID_SPRITES = new WidgetSprites(VOID_FLUID, VOID_FLUID);
 
     public VatScreen(VatMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title);
-
-        imageWidth = WIDTH;
-        imageHeight = HEIGHT;
+        super(menu, playerInventory, title, WIDTH, HEIGHT);
     }
 
     @Override

@@ -11,7 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.client.renderer.ShapeRenderer;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
@@ -119,9 +119,9 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             float halfWidth = (float) (-minecraft.font.width(tc) / 2);
 
             minecraft.font.drawInBatch(tc, halfWidth, 0, color, false, matrix4f, buffer, Font.DisplayMode.SEE_THROUGH,
-                    alpha, LightTexture.pack(15, 15));
+                    alpha, LightCoordsUtil.pack(15, 15));
             minecraft.font.drawInBatch(tc, halfWidth, 0, color, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0,
-                    LightTexture.pack(15, 15));
+                    LightCoordsUtil.pack(15, 15));
             poseStack.popPose();
         }
 

@@ -24,9 +24,7 @@ public class DrainScreen extends MachineScreen<DrainMenu> {
     private static final int HEIGHT = 166;
 
     public DrainScreen(DrainMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title);
-        imageWidth = WIDTH;
-        imageHeight = HEIGHT;
+        super(menu, playerInventory, title, WIDTH, HEIGHT);
     }
 
     @Override

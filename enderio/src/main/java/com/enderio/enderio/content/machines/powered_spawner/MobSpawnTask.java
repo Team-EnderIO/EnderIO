@@ -72,7 +72,7 @@ public class MobSpawnTask extends PoweredSpawnerTask {
             return;
         }
 
-        if (this.efficiency < level.random.nextFloat()) {
+        if (this.efficiency < level.getRandom().nextFloat()) {
             setBlockedReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.TOO_MANY_SPAWNER);
             return;
         }

@@ -8,16 +8,14 @@ import com.enderio.enderio.content.filters.redstone.RedstoneDoubleChannelFilterM
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
-import org.joml.Vector2i;
 
 public class RedstoneDoubleChannelFilterScreen extends EIOScreen<RedstoneDoubleChannelFilterMenu> {
 
-    private static final Vector2i BG_SIZE = new Vector2i(183, 201);
     private static final Identifier BG_TEXTURE = EnderIO.id("textures/gui/40/item_filter.png");
 
     public RedstoneDoubleChannelFilterScreen(RedstoneDoubleChannelFilterMenu menu, Inventory playerInventory,
             Component title) {
-        super(menu, playerInventory, title);
+        super(menu, playerInventory, title, 183, 201);
     }
 
     @Override
@@ -32,10 +30,5 @@ public class RedstoneDoubleChannelFilterScreen extends EIOScreen<RedstoneDoubleC
     @Override
     public Identifier getBackgroundImage() {
         return BG_TEXTURE;
-    }
-
-    @Override
-    protected Vector2i getBackgroundImageSize() {
-        return BG_SIZE;
     }
 }

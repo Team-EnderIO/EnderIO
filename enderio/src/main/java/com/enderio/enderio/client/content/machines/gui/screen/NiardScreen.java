@@ -56,9 +56,7 @@ public class NiardScreen extends MachineScreen<NiardMenu> {
     }
 
     public NiardScreen(NiardMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title);
-        imageWidth = WIDTH;
-        imageHeight = HEIGHT;
+        super(menu, playerInventory, title, WIDTH, HEIGHT);
     }
 
     @Override

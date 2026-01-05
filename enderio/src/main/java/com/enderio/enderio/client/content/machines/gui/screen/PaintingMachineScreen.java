@@ -23,10 +23,8 @@ public class PaintingMachineScreen extends MachineScreen<PaintingMachineMenu> {
     private static final Identifier PROGRESS_SPRITE = EnderIO.id("screen/painting_machine/progress");
 
     public PaintingMachineScreen(PaintingMachineMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title);
-        imageWidth = WIDTH;
-        imageHeight = HEIGHT;
-        this.inventoryLabelY = this.imageHeight - 106;
+        super(menu, playerInventory, title, WIDTH, HEIGHT);
+        this.inventoryLabelY = HEIGHT - 106;
     }
 
     @Override

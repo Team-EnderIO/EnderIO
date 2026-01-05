@@ -359,7 +359,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
         for (int i = 0; i < 2; i++) {
             ItemStack itemStack = BONEMEAL.get(i).getItemStack(this);
             if (!itemStack.isEmpty()) {
-                if (soulData == null || level.random.nextFloat() < soulData.bonemeal()) {
+                if (soulData == null || level.getRandom().nextFloat() < soulData.bonemeal()) {
                     itemStack.shrink(1);
                 }
                 consumed = true;

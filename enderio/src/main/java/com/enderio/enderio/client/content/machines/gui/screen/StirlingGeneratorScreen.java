@@ -27,9 +27,7 @@ public class StirlingGeneratorScreen extends MachineScreen<StirlingGeneratorMenu
     private static final int HEIGHT = 166;
 
     public StirlingGeneratorScreen(StirlingGeneratorMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title);
-        imageWidth = WIDTH;
-        imageHeight = HEIGHT;
+        super(menu, playerInventory, title, WIDTH, HEIGHT);
     }
 
     @Override

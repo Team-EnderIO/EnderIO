@@ -28,10 +28,8 @@ public abstract class ObeliskScreen<J extends ObeliskBlockEntity<J>, T extends O
 
     public ObeliskScreen(T menu, Inventory playerInventory, Component title, Identifier background,
             int imageWidth, int imageHeight) {
-        super(menu, playerInventory, title);
+        super(menu, playerInventory, title, imageWidth, imageHeight);
         this.background = background;
-        this.imageWidth = imageWidth;
-        this.imageHeight = imageHeight;
     }
 
     @Override

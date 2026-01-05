@@ -22,9 +22,7 @@ public class SlicerScreen extends MachineScreen<SlicerMenu> {
     private static final Identifier PROGRESS_SPRITE = EnderIO.id("screen/slice_and_splice/progress");
 
     public SlicerScreen(SlicerMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title);
-        imageWidth = WIDTH;
-        imageHeight = HEIGHT;
+        super(menu, playerInventory, title, WIDTH, HEIGHT);
         shouldRenderLabels = true;
 
         titleLabelY = 6 + 2;

@@ -31,9 +31,7 @@ public class AlloySmelterScreen extends MachineScreen<AlloySmelterMenu> {
     private static final Identifier PROGRESS_SPRITE = EnderIO.id("screen/alloy_smelter/lit_progress");
 
     public AlloySmelterScreen(AlloySmelterMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title);
-        imageWidth = WIDTH;
-        imageHeight = HEIGHT;
+        super(menu, playerInventory, title, WIDTH, HEIGHT);
         shouldRenderLabels = true;
 
         titleLabelY = 6 + 2;

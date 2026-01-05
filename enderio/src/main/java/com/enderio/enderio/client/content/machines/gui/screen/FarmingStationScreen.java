@@ -23,9 +23,7 @@ public class FarmingStationScreen extends MachineScreen<FarmingStationMenu> {
     private static final int HEIGHT = 169;
 
     public FarmingStationScreen(FarmingStationMenu menu, Inventory inventory, Component title) {
-        super(menu, inventory, title);
-        imageWidth = WIDTH;
-        imageHeight = HEIGHT;
+        super(menu, inventory, title, WIDTH, HEIGHT);
     }
 
     @Override

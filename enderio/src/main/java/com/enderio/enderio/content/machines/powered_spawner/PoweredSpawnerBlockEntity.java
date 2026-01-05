@@ -119,7 +119,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
             return null;
         }
 
-        if (entityType.is(EIOTags.EntityTypes.SPAWNER_BLACKLIST)) {
+        if (entityType.builtInRegistryHolder().is(EIOTags.EntityTypes.SPAWNER_BLACKLIST)) {
             setReason(SpawnerBlockedReason.DISABLED);
             return null;
         }

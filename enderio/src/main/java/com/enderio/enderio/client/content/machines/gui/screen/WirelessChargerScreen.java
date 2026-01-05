@@ -24,9 +24,7 @@ public class WirelessChargerScreen extends MachineScreen<WirelessChargerMenu> {
     private static final int HEIGHT = 166;
 
     public WirelessChargerScreen(WirelessChargerMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title);
-        imageWidth = WIDTH;
-        imageHeight = HEIGHT;
+        super(menu, playerInventory, title, WIDTH, HEIGHT);
     }
 
     @Override
