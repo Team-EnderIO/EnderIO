@@ -8,6 +8,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -17,6 +18,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -36,9 +38,18 @@ public record FermentingRecipe(SizedFluidIngredient input, TagKey<Item> leftReag
 
     @Override
     public List<OutputStack> craft(Input input, RegistryAccess registryAccess) {
+        ItemStack firstInput = input.getItem(0);
+        ItemStack secondInput = input.getItem(1);
 
-        double modifier = getModifier(input.getItem(0), leftReagent);
-        modifier *= getModifier(input.getItem(1), rightReagent);
+        // Build modifier, ensure we use the correct item for each reagent
+        double modifier;
+        if (firstInput.is(leftReagent) && secondInput.is(rightReagent)) {
+            modifier = getModifier(firstInput, leftReagent);
+            modifier *= getModifier(secondInput, rightReagent);
+        } else {
+            modifier = getModifier(secondInput, leftReagent);
+            modifier *= getModifier(firstInput, rightReagent);
+        }
 
         return List.of(OutputStack.of(new FluidStack(output.getFluid(), (int) (output.getAmount() * modifier))));
     }
@@ -55,7 +66,19 @@ public record FermentingRecipe(SizedFluidIngredient input, TagKey<Item> leftReag
             return false;
         }
 
-        return input.getItem(0).is(leftReagent) && input.getItem(1).is(rightReagent);
+        ItemStack firstInput = input.getItem(0);
+        ItemStack secondInput = input.getItem(1);
+
+        // Order independent check
+        return (firstInput.is(leftReagent) && secondInput.is(rightReagent)) ||
+            (firstInput.is(rightReagent) && secondInput.is(leftReagent));
+    }
+
+    @Override
+    public NonNullList<Ingredient> getIngredients() {
+        return NonNullList.of(Ingredient.EMPTY,
+            Ingredient.of(leftReagent),
+            Ingredient.of(rightReagent));
     }
 
     public static double getModifier(ItemStack stack, TagKey<Item> reagent) {
