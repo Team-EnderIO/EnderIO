@@ -53,10 +53,10 @@ public class VATTransferHelper implements IRecipeTransferHandler<VatMenu, Recipe
         boolean maxTransfer, boolean doTransfer) {
 
         boolean hasFluid = recipe.value().input().ingredient().test(new FluidStack(container.getInputTank().contents().getFluid(), container.getInputTank().contents().getAmount()));
-        boolean hasLeft = container.slots.get(VatMenu.INPUTS_INDEX).getItem().is(recipe.value().leftReagent());
-        boolean hasRight = container.slots.get(VatMenu.INPUTS_INDEX + 1).getItem().is(recipe.value().rightReagent());
-        Ingredient left = getIngredientItem(player, Ingredient.of(recipe.value().leftReagent()));
-        Ingredient right = getIngredientItem(player, Ingredient.of(recipe.value().rightReagent()));
+        boolean hasLeft = container.slots.get(VatMenu.INPUTS_INDEX).getItem().is(recipe.value().firstReagent());
+        boolean hasRight = container.slots.get(VatMenu.INPUTS_INDEX + 1).getItem().is(recipe.value().secondReagent());
+        Ingredient left = getIngredientItem(player, Ingredient.of(recipe.value().firstReagent()));
+        Ingredient right = getIngredientItem(player, Ingredient.of(recipe.value().secondReagent()));
 
         if (!hasLeft || !hasRight || !hasFluid) {
             Component message = Component.translatable("jei.tooltip.error.recipe.transfer.missing");

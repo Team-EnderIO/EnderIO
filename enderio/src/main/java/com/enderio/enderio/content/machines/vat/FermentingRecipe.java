@@ -28,7 +28,7 @@ import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
 import java.util.List;
 
-public record FermentingRecipe(SizedFluidIngredient input, TagKey<Item> leftReagent, TagKey<Item> rightReagent,
+public record FermentingRecipe(SizedFluidIngredient input, TagKey<Item> firstReagent, TagKey<Item> secondReagent,
         FluidStack output, int ticks) implements MachineRecipe<FermentingRecipe.Input> {
 
     @Override
@@ -43,12 +43,12 @@ public record FermentingRecipe(SizedFluidIngredient input, TagKey<Item> leftReag
 
         // Build modifier, ensure we use the correct item for each reagent
         double modifier;
-        if (firstInput.is(leftReagent) && secondInput.is(rightReagent)) {
-            modifier = getModifier(firstInput, leftReagent);
-            modifier *= getModifier(secondInput, rightReagent);
+        if (firstInput.is(firstReagent) && secondInput.is(secondReagent)) {
+            modifier = getModifier(firstInput, firstReagent);
+            modifier *= getModifier(secondInput, secondReagent);
         } else {
-            modifier = getModifier(secondInput, leftReagent);
-            modifier *= getModifier(firstInput, rightReagent);
+            modifier = getModifier(secondInput, firstReagent);
+            modifier *= getModifier(firstInput, secondReagent);
         }
 
         return List.of(OutputStack.of(new FluidStack(output.getFluid(), (int) (output.getAmount() * modifier))));
@@ -70,15 +70,15 @@ public record FermentingRecipe(SizedFluidIngredient input, TagKey<Item> leftReag
         ItemStack secondInput = input.getItem(1);
 
         // Order independent check
-        return (firstInput.is(leftReagent) && secondInput.is(rightReagent)) ||
-            (firstInput.is(rightReagent) && secondInput.is(leftReagent));
+        return (firstInput.is(firstReagent) && secondInput.is(secondReagent)) ||
+            (firstInput.is(secondReagent) && secondInput.is(firstReagent));
     }
 
     @Override
     public NonNullList<Ingredient> getIngredients() {
         return NonNullList.of(Ingredient.EMPTY,
-            Ingredient.of(leftReagent),
-            Ingredient.of(rightReagent));
+            Ingredient.of(firstReagent),
+            Ingredient.of(secondReagent));
     }
 
     public static double getModifier(ItemStack stack, TagKey<Item> reagent) {
@@ -99,14 +99,14 @@ public record FermentingRecipe(SizedFluidIngredient input, TagKey<Item> leftReag
         return EIORecipes.VAT_FERMENTING.type().get();
     }
 
-    public record Input(ItemStack leftReagent, ItemStack rightStack, FluidStack inputFluid)
+    public record Input(ItemStack firstReagent, ItemStack secondReagent, FluidStack inputFluid)
             implements RecipeInput {
 
         @Override
         public ItemStack getItem(int slotIndex) {
             return switch (slotIndex) {
-            case 0 -> leftReagent;
-            case 1 -> rightStack;
+            case 0 -> firstReagent;
+            case 1 -> secondReagent;
             default -> throw new IllegalArgumentException("No item for index " + slotIndex);
             };
         }
@@ -121,16 +121,17 @@ public record FermentingRecipe(SizedFluidIngredient input, TagKey<Item> leftReag
         private static final StreamCodec<ByteBuf, TagKey<Item>> ITEM_TAG_STREAM_CODEC = ResourceLocation.STREAM_CODEC
                 .map(loc -> TagKey.create(Registries.ITEM, loc), TagKey::location);
 
+        // TODO: 1.21.11: Rename left and right to first and second
         public static final MapCodec<FermentingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
                 SizedFluidIngredient.FLAT_CODEC.fieldOf("input").forGetter(FermentingRecipe::input),
-                TagKey.codec(Registries.ITEM).fieldOf("left_reagent").forGetter(FermentingRecipe::leftReagent),
-                TagKey.codec(Registries.ITEM).fieldOf("right_reagent").forGetter(FermentingRecipe::rightReagent),
+                TagKey.codec(Registries.ITEM).fieldOf("left_reagent").forGetter(FermentingRecipe::firstReagent),
+                TagKey.codec(Registries.ITEM).fieldOf("right_reagent").forGetter(FermentingRecipe::secondReagent),
                 FluidStack.CODEC.fieldOf("output").forGetter(FermentingRecipe::output),
                 Codec.INT.fieldOf("ticks").forGetter(FermentingRecipe::ticks)).apply(instance, FermentingRecipe::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, FermentingRecipe> STREAM_CODEC = StreamCodec.composite(
                 SizedFluidIngredient.STREAM_CODEC, FermentingRecipe::input, ITEM_TAG_STREAM_CODEC,
-                FermentingRecipe::leftReagent, ITEM_TAG_STREAM_CODEC, FermentingRecipe::rightReagent,
+                FermentingRecipe::firstReagent, ITEM_TAG_STREAM_CODEC, FermentingRecipe::secondReagent,
                 FluidStack.STREAM_CODEC, FermentingRecipe::output, ByteBufCodecs.INT, FermentingRecipe::ticks,
                 FermentingRecipe::new);
 
