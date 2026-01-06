@@ -189,7 +189,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
             worldPosition.getY() + 0.5,
             worldPosition.getZ() + 0.5,
             requiredRange,
-            false // Don't include spectators
+            true // allow creative mode players
         );
         
         return nearestPlayer != null;
