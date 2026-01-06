@@ -332,6 +332,7 @@
   "gui.enderio.machine.obelisk.upkeep_cost": "Upkeep %sµI/t",
   "gui.enderio.machine.powered_spawner.mode": "Spawner Mode",
   "gui.enderio.machine.powered_spawner.status.disabled": "Disabled by config",
+  "gui.enderio.machine.powered_spawner.status.no_player": "No nearby player",
   "gui.enderio.machine.powered_spawner.status.other_mod": "Blocked by another mod",
   "gui.enderio.machine.powered_spawner.status.overcrowded.mobs": "Too many mobs",
   "gui.enderio.machine.powered_spawner.status.overcrowded.spawners": "Too many spawners",

@@ -86,6 +86,7 @@ public class MachinesLang {
     public static final MutableComponent POWERED_SPAWNER_STATUS_OTHER_MOD = gui("powered_spawner/status/other_mod");
     public static final MutableComponent POWERED_SPAWNER_STATUS_DISABLED = gui("powered_spawner/status/disabled");
     public static final MutableComponent POWERED_SPAWNER_STATUS_UNKNOWN_MOB = gui("powered_spawner/status/unknown_mob");
+    public static final MutableComponent POWERED_SPAWNER_STATUS_NO_PLAYER = gui("powered_spawner/status/no_player");
 
     // endregion
 

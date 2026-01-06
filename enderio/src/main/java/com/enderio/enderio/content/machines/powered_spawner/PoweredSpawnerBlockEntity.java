@@ -125,8 +125,8 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
             return null;
         }
 
-        // Ensure output is free in capture mode
         if (mode == PoweredSpawnerMode.CAPTURE) {
+            // Ensure output is free in capture mode
             if (!INPUT.getItemStack(this).is(EIOItems.SOUL_VIAL)) {
                 setReason(SpawnerBlockedReason.INPUT_EMPTY);
                 return null;
@@ -139,6 +139,12 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
                     setReason(SpawnerBlockedReason.OUTPUT_FULL);
                     return null;
                 }
+            }
+        } else if (mode == PoweredSpawnerMode.SPAWN) {
+            // Ensure there are players nearby if we're in spawning mode.
+            if (!areAnyPlayersInRange()) {
+                setReason(SpawnerBlockedReason.NO_NEARBY_PLAYER);
+                return null;
             }
         }
 
@@ -167,6 +173,26 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
 
     public int getRange() {
         return ACTION_RANGE;
+    }
+
+    private boolean areAnyPlayersInRange() {
+        if (level == null) {
+            return false;
+        }
+
+        // Get the required player range from config
+        int requiredRange = MachinesConfig.COMMON.REQUIRED_PLAYER_RANGE.get();
+
+        // Check if any player is within the configured range
+        Player nearestPlayer = level.getNearestPlayer(
+            worldPosition.getX() + 0.5,
+            worldPosition.getY() + 0.5,
+            worldPosition.getZ() + 0.5,
+            requiredRange,
+            false // Don't include spectators
+        );
+        
+        return nearestPlayer != null;
     }
 
     public boolean isRangeVisible() {
@@ -425,7 +451,9 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
         UNKNOWN_MOB(MachinesLang.POWERED_SPAWNER_STATUS_UNKNOWN_MOB),
         OTHER_MOD(MachinesLang.POWERED_SPAWNER_STATUS_OTHER_MOD),
         DISABLED(MachinesLang.POWERED_SPAWNER_STATUS_DISABLED),
-        INPUT_EMPTY(MachinesLang.STATUS_INPUT_EMPTY), OUTPUT_FULL(MachinesLang.STATUS_OUTPUT_FULL),
+        INPUT_EMPTY(MachinesLang.STATUS_INPUT_EMPTY),
+        OUTPUT_FULL(MachinesLang.STATUS_OUTPUT_FULL),
+        NO_NEARBY_PLAYER(MachinesLang.POWERED_SPAWNER_STATUS_NO_PLAYER),
         NONE(Component.literal("NONE"));
 
         private final MutableComponent component;

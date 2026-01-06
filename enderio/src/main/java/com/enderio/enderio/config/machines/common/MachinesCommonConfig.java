@@ -13,6 +13,7 @@ public class MachinesCommonConfig {
     public final ModConfigSpec.ConfigValue<Integer> DEFAULT_SPAWN_ENERGY_COST;
     public final ModConfigSpec.ConfigValue<MobSpawnMode> SPAWN_TYPE;
     public final ModConfigSpec.IntValue SPAWN_AMOUNT;
+    public final ModConfigSpec.ConfigValue<Integer> REQUIRED_PLAYER_RANGE;
     public final ModConfigSpec.ConfigValue<Integer> ATTRACTOR_RANGE;
     public final ModConfigSpec.ConfigValue<Boolean> ATTRACTOR_PULL_BOSSES;
     public final ModConfigSpec.ConfigValue<Integer> INHIBITOR_RANGE;
@@ -48,6 +49,10 @@ public class MachinesCommonConfig {
         DEFAULT_SPAWN_ENERGY_COST = builder
                 .comment("The amount of energy used to spawn mobs that do not have custom spawner soul data.")
                 .defineInRange("defaultSpawnEnergyCost", 50000, 0, Integer.MAX_VALUE);
+        // Defaults to standard spawner range. Intended as a fix for GH-1213.
+        REQUIRED_PLAYER_RANGE = builder
+                .comment("The range in blocks a player must be within for the spawner to be active.")
+                .defineInRange("requiredPlayerRange", 16, 16, 512);
         builder.pop();
 
         builder.push("enderface");

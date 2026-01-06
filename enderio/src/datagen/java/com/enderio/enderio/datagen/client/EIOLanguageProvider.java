@@ -390,6 +390,7 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(MachinesLang.POWERED_SPAWNER_STATUS_OTHER_MOD, "Blocked by another mod");
         add(MachinesLang.POWERED_SPAWNER_STATUS_DISABLED, "Disabled by config");
         add(MachinesLang.POWERED_SPAWNER_STATUS_UNKNOWN_MOB, "Unknown mob");
+        add(MachinesLang.POWERED_SPAWNER_STATUS_NO_PLAYER, "No nearby player");
 
         add(MachinesLang.PHOTOVOLTAIC_CELL, "Solar Power!");
         add(MachinesLang.PHOTOVOLTAIC_CELL_ADVANCED, "Produces Power during daylight hours");
