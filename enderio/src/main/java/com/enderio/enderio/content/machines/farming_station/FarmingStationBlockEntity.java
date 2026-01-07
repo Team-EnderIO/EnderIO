@@ -58,7 +58,6 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class FarmingStationBlockEntity extends PoweredMachineBlockEntity implements RangedActor, FarmingMachine, SoulBindable {
-    public static final String CONSUMED = "Consumed";
     private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
             MachinesConfig.COMMON.ENERGY.FARM_CAPACITY);
     private static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE,
@@ -73,11 +72,9 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
 
     private List<BlockPos> positions;
     private int currentIndex = 0;
-    private int consumed = 0;
+
     @Nullable
     private FarmTask currentTask = null;
-    @Nullable
-    private AABBTicket ticket;
 
     private Soul boundSoul = Soul.EMPTY;
     @Nullable
@@ -367,15 +364,6 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
         return getRange();
     }
 
-    @Override
-    public void setRemoved() {
-        super.setRemoved();
-        if (ticket != null) {
-            ticket.invalidate();
-            ticket = null;
-        }
-    }
-
     @Nullable
     public EntityType<?> getEntityType() {
         return boundSoul.hasEntity() ? boundSoul.entityType() : null;
@@ -420,12 +408,6 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        super.saveAdditional(tag, lookupProvider);
-        tag.putInt(CONSUMED, consumed);
-    }
-
-    @Override
     protected void saveAdditionalSynced(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditionalSynced(tag, registries);
 
@@ -439,7 +421,6 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     @Override
     public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
         super.loadAdditional(tag, lookupProvider);
-        consumed = tag.getInt(CONSUMED);
 
         if (tag.contains(MachineNBTKeys.ACTION_RANGE)) {
             actionRange = ActionRange.parse(lookupProvider,
