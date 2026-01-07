@@ -13,7 +13,8 @@ pluginManagement {
         }
 
         maven {
-            url = uri("https://maven.firstdarkdev.xyz/releases")
+            name = "FirstDarkDev"
+            url = uri("https://maven.firstdark.dev/releases")
         }
 
         maven {

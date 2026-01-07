@@ -62,6 +62,8 @@ public class EnderBlockEntity extends BlockEntity {
         blockEntity.endTick();
     }
 
+    private int nextTick = 0;
+
     /**
      * Perform server-side ticking
      */
@@ -69,7 +71,10 @@ public class EnderBlockEntity extends BlockEntity {
     public void serverTick() {
         // Perform syncing.
         if (level != null) {
-            sync();
+            if(nextTick-- == 0) { // do we really need to update it once a tick?
+                sync();
+                nextTick = 4;
+            }
         }
     }
 
@@ -155,14 +160,18 @@ public class EnderBlockEntity extends BlockEntity {
 
         // Fine to use a normal byte buf here, we're not using codecs in here.
         RegistryFriendlyByteBuf buf = new RegistryFriendlyByteBuf(Unpooled.buffer(), level.registryAccess());
-        buf.writeInt(needsUpdate.size());
-        needsUpdate.forEach(i -> {
-            buf.writeInt(i);
-            dataSlots.get(i).write(buf);
-        });
-        byte[] arr = buf.array();
-        buf.release();
-        return arr;
+        try{
+            buf.writeInt(needsUpdate.size());
+            needsUpdate.forEach(i -> {
+                buf.writeInt(i);
+                dataSlots.get(i).write(buf);
+            });
+            byte[] data = new byte[buf.readableBytes()];
+            buf.readBytes(data);
+            return data;
+        }finally {
+            buf.release(); // release the buffer safely
+        }
     }
 
     @Deprecated(forRemoval = true, since = "7.1")
@@ -188,10 +197,15 @@ public class EnderBlockEntity extends BlockEntity {
 
         if (dataSlots.contains(slot)) {
             RegistryFriendlyByteBuf buf = new RegistryFriendlyByteBuf(Unpooled.buffer(), level.registryAccess());
-            buf.writeInt(dataSlots.indexOf(slot));
-            slot.write(buf, value);
-            PacketDistributor.sendToServer(new ClientboundDataSlotChange(getBlockPos(), buf.array()));
-            buf.release();
+            try{
+                buf.writeInt(dataSlots.indexOf(slot));
+                slot.write(buf, value);
+                byte[] data = new byte[buf.readableBytes()];
+                buf.readBytes(data);
+                PacketDistributor.sendToServer(new ClientboundDataSlotChange(getBlockPos(), data));
+            }finally {
+                buf.release(); // release the buffer safely
+            }
             level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_NEIGHBORS);
         }
     }

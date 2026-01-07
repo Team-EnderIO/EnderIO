@@ -40,8 +40,11 @@ public class ClientPayloadHandler {
             if (be instanceof EnderBlockEntity enderBlockEntity) {
                 var buf = new RegistryFriendlyByteBuf(Unpooled.wrappedBuffer(update.slotData()),
                         level.registryAccess());
-                enderBlockEntity.clientHandleBufferSync(buf);
-                buf.release();
+                try{
+                    enderBlockEntity.clientHandleBufferSync(buf);
+                } finally {
+                    buf.release(); // release the buffer safely
+                }
             }
         });
     }
