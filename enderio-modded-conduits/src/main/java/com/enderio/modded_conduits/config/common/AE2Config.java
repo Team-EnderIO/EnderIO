@@ -11,11 +11,11 @@ public class AE2Config {
 
         NORMAL_ME_POWER_USAGE_PER_TICK = builder
             .comment("Idle power usage per tick for normal (non dense) ME conduits (AE)")
-            .defineInRange("normalPowerUsagePerTick", 0.1d, 0.0d, Double.MAX_VALUE);
+            .defineInRange("normalPowerUsagePerTick", 0, 0, Double.MAX_VALUE);
 
         DENSE_ME_POWER_USAGE_PER_TICK = builder
             .comment("Idle power usage per tick for dense ME conduits (AE)")
-            .defineInRange("densePowerUsagePerTick", 0.4d, 0.0d, Double.MAX_VALUE);
+            .defineInRange("densePowerUsagePerTick", 0, 0, Double.MAX_VALUE);
 
         builder.pop();
     }
