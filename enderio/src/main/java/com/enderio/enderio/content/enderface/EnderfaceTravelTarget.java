@@ -32,7 +32,7 @@ public record EnderfaceTravelTarget(BlockPos pos) implements EnderPOI {
     }
 
     @Override
-    public boolean isActive() {
+    public boolean isActive(Player player) {
         return true;
     }
 

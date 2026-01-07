@@ -93,6 +93,7 @@ public class TravelStaffItem extends Item implements AdvancedTooltipProvider, IC
             Optional<EnderPOI> enderPOIs = TravelHandler.getEnderPOIs(player);
             if (enderPOIs.isPresent() && enderPOIs.get().onActivation(level, player)) {
                 player.getCooldowns().addCooldown(item, BaseConfig.COMMON.ITEMS.TRAVELLING_BLINK_DISABLED_TIME.get());
+                return true;
             }
         }
         return false;

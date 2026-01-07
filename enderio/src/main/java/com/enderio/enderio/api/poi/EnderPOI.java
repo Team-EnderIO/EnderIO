@@ -22,7 +22,7 @@ public interface EnderPOI {
 
     int block2BlockRange();
 
-    boolean isActive();
+    boolean isActive(Player player);
 
     boolean onActivation(Level level, Player player);
 

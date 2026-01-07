@@ -12,7 +12,7 @@ public interface EnderPOIApi {
     EnderPOIApi INSTANCE = ServiceLoader.load(EnderPOIApi.class).findFirst().orElseThrow();
 
     Optional<EnderPOI> get(Level level, BlockPos pos);
-    <T extends EnderPOI> void set(Level level, T travelTarget);
+    <T extends EnderPOI> void set(Level level, T enderpoi);
     void removeAt(Level level, BlockPos pos);
     Collection<EnderPOI> getAll(Level level);
     Stream<EnderPOI> getInItemRange(Level level, BlockPos center);

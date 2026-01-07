@@ -62,7 +62,7 @@ public record AnchorTravelTarget(BlockPos pos, String name, Item icon, boolean i
     }
 
     @Override
-    public boolean isActive() {
+    public boolean isActive(Player player) {
         return isVisible;
     }
 

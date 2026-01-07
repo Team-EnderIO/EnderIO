@@ -189,7 +189,7 @@ public class TravelHandler {
         Vec3 positionVec = player.position().add(0, player.getEyeHeight(), 0);
 
         return EnderPOIApi.INSTANCE.getInItemRange(player.level(), player.blockPosition())
-            .filter(EnderPOI::isActive)
+            .filter(enderPOI -> enderPOI.isActive(player))
             .filter(target -> target.pos().distToCenterSqr(player.position()) > MIN_TELEPORTATION_DISTANCE_SQUARED)
             .filter(target -> Math.abs(getAngleRadians(positionVec, target.pos(), player.getYRot(),
                 player.getXRot())) <= Math.toRadians(15))

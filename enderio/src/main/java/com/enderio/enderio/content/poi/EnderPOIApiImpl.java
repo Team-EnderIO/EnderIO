@@ -18,8 +18,8 @@ public class EnderPOIApiImpl implements EnderPOIApi {
     }
 
     @Override
-    public <T extends EnderPOI> void set(Level level, T travelTarget) {
-        TravelTargetSavedData.getTravelData(level).setTravelTarget(level, travelTarget);
+    public <T extends EnderPOI> void set(Level level, T enderpoi) {
+        TravelTargetSavedData.getTravelData(level).setTravelTarget(level, enderpoi);
     }
 
     @Override
