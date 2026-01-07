@@ -2,12 +2,13 @@ package com.enderio.enderio.content.machines.farming_station.tasks;
 
 import com.enderio.enderio.api.farm.FarmInteraction;
 import com.enderio.enderio.api.farm.FarmTask;
-import com.enderio.enderio.api.farm.FarmingStation;
+import com.enderio.enderio.api.farm.FarmingMachine;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.SaplingBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class PlantSaplingFarmTask implements FarmTask {
 
@@ -17,21 +18,15 @@ public class PlantSaplingFarmTask implements FarmTask {
     }
 
     @Override
-    public FarmInteraction farm(BlockPos soil, FarmingStation farmBlockEntity) {
-        ItemStack seeds = farmBlockEntity.getSeedsForPos(soil);
-        if (seeds.isEmpty() || farmBlockEntity.getLevel().getBlockState(soil).isAir()) {
+    public <T extends BlockEntity & FarmingMachine> FarmInteraction process(BlockPos targetBlock, T blockEntity) {
+        ItemStack seeds = blockEntity.getSeedsForPos(targetBlock);
+        if (seeds.isEmpty() || blockEntity.getLevel().getBlockState(targetBlock).isAir()) {
             return FarmInteraction.BLOCKED;
         }
         if (seeds.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof SaplingBlock) {
-            InteractionResult result = farmBlockEntity.useStack(soil, seeds);
+            InteractionResult result = blockEntity.useStack(targetBlock, seeds);
             if (result == InteractionResult.SUCCESS || result == InteractionResult.CONSUME) {
-                if (farmBlockEntity.getConsumedPower() >= 40) {
-                    farmBlockEntity.addConsumedPower(-40);
-                    return FarmInteraction.FINISHED;
-                }
-                farmBlockEntity.addConsumedPower(
-                    farmBlockEntity.consumeEnergy(40 - farmBlockEntity.getConsumedPower(), false));
-                return FarmInteraction.POWERED;
+                return FarmInteraction.FINISHED;
             }
         }
         return FarmInteraction.IGNORED;

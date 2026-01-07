@@ -6,7 +6,7 @@ import com.enderio.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.enderio.api.farm.FarmInteraction;
 import com.enderio.enderio.api.farm.FarmTask;
 import com.enderio.enderio.api.farm.FarmTaskManager;
-import com.enderio.enderio.api.farm.FarmingStation;
+import com.enderio.enderio.api.farm.FarmingMachine;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.api.soul.binding.SoulBindable;
@@ -40,7 +40,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -51,16 +50,14 @@ import net.neoforged.neoforge.common.SpecialPlantable;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.ticket.AABBTicket;
 import net.neoforged.neoforge.common.util.FakePlayer;
-import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 
-public class FarmingStationBlockEntity extends PoweredMachineBlockEntity implements RangedActor, FarmingStation, SoulBindable {
+public class FarmingStationBlockEntity extends PoweredMachineBlockEntity implements RangedActor, FarmingMachine, SoulBindable {
     public static final String CONSUMED = "Consumed";
     private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
             MachinesConfig.COMMON.ENERGY.FARM_CAPACITY);
@@ -156,8 +153,10 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
             op.ifPresent(data -> soulData = data);
             reloadCache = reload;
         }
-        if (canAct(5)) {
+        // TODO: this is quite icky. need abstractions between tick time and power consumption
+        if (canAct(10) &&  getEnergyStorage().getEnergyStored() >= getMaxEnergyUse() * 10) {
             doFarmTask();
+            getEnergyStorage().consumeEnergy(getMaxEnergyUse() * 10);
         }
 
         super.serverTick();
@@ -173,25 +172,23 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
         super.clientTick();
     }
 
+    // TODO: check if POWERED state is needed
+    // TODO: Check if this is optimized
     private void doFarmTask() {
         int stop = Math.min(currentIndex + getRange(), positions.size());
         while (currentIndex < stop) {
             BlockPos soil = positions.get(currentIndex);
             if (currentTask != null) {
-                if (currentTask.farm(soil, this) != FarmInteraction.POWERED) {
+                if (currentTask.process(soil, this) == FarmInteraction.IGNORED) {
                     currentTask = null; // Task is done or no longer valid
                 }
                 break;
             }
             // Look for a new task
             for (FarmTask task : FarmTaskManager.getTasks()) {
-                FarmInteraction interaction = task.farm(soil, this);
-                if (interaction == FarmInteraction.POWERED) { // new task found
+                FarmInteraction interaction = task.process(soil, this);
+                if (interaction == FarmInteraction.FINISHED) { // new task found
                     currentTask = task;
-                    break;
-                }
-                if (interaction == FarmInteraction.FINISHED) {// Task found and already done
-                    currentTask = null;
                     break;
                 }
             }
@@ -320,18 +317,6 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
         return empty;
     }
 
-    public int getConsumedPower() {
-        return consumed;
-    }
-
-    @Override
-    public void addConsumedPower(int power) {
-        if (power > 0) {
-            power = soulData == null ? power : (int) (power * soulData.power());
-        }
-        consumed += power;
-    }
-
     public boolean consumeBonemeal() {
         boolean consumed = false;
         for (int i = 0; i < 2; i++) {
@@ -393,11 +378,6 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     @Override
     public int getFarmingRange() {
         return getRange();
-    }
-
-    @Override
-    public int consumeEnergy(int energy, boolean simulate) {
-        return getEnergyStorage().consumeEnergy(energy, simulate);
     }
 
     @Override
