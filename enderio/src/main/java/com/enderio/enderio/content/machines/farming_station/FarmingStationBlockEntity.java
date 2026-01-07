@@ -66,13 +66,8 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
 
     private static final ActionRange DEFAULT_RANGE = new ActionRange(5, false);
 
-    public static final SingleSlotAccess AXE = new SingleSlotAccess();
-    public static final SingleSlotAccess HOE = new SingleSlotAccess();
-    public static final SingleSlotAccess SHEAR = new SingleSlotAccess();
-    public static final SingleSlotAccess NE = new SingleSlotAccess();
-    public static final SingleSlotAccess SE = new SingleSlotAccess();
-    public static final SingleSlotAccess SW = new SingleSlotAccess();
-    public static final SingleSlotAccess NW = new SingleSlotAccess();
+    public static final MultiSlotAccess TOOLS = new MultiSlotAccess(); // Order - Axe, Hoe, Shears
+    public static final MultiSlotAccess AREAS = new MultiSlotAccess(); // Order - NE, SE, SW, NW
     public static final MultiSlotAccess BONEMEAL = new MultiSlotAccess();
     public static final MultiSlotAccess OUTPUT = new MultiSlotAccess();
 
@@ -125,20 +120,10 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     protected @Nullable MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
                 .capacitor()
-                .inputSlot((i, s) -> s.is(ItemTags.AXES))
-                .slotAccess(AXE)
-                .inputSlot((i, s) -> s.is(ItemTags.HOES))
-                .slotAccess(HOE)
-                .inputSlot((i, s) -> s.is(Tags.Items.TOOLS_SHEAR))
-                .slotAccess(SHEAR)
-                .inputSlot()
-                .slotAccess(NE)
-                .inputSlot()
-                .slotAccess(SE)
-                .inputSlot()
-                .slotAccess(SW)
-                .inputSlot()
-                .slotAccess(NW)
+                .inputSlot(3, this::validToolForSlot)
+                .slotAccess(TOOLS)
+                .inputSlot(4)
+                .slotAccess(AREAS)
                 .inputSlot(2, (integer, stack) -> stack.is(Tags.Items.FERTILIZERS))
                 .slotAccess(BONEMEAL)
                 .outputSlot(6)
@@ -205,21 +190,30 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
         }
     }
 
-    // TODO check if the coords actually are these direction
+    // FIXME: mutlislot access filters take global slot index and not local
+    private boolean validToolForSlot(int index, ItemStack stack) {
+        return switch(index) { // Order - Axes, Hoes, Shears - Check TOOLS slot access
+            case 1 -> stack.is(ItemTags.AXES);
+            case 2 -> stack.is(ItemTags.HOES);
+            case 3 -> stack.is(Tags.Items.TOOLS_SHEAR);
+            default -> false;
+        };
+    }
+
     public SingleSlotAccess getSeedForPos(BlockPos soil) {
-        if (soil.getX() >= getBlockPos().getX() && soil.getZ() > getBlockPos().getZ()) {
-            return SW;
-        }
         if (soil.getX() > getBlockPos().getX() && soil.getZ() <= getBlockPos().getZ()) {
-            return NW;
+            return AREAS.get(0); //NE
         }
-        if (soil.getX() <= getBlockPos().getX() && soil.getZ() < getBlockPos().getZ()) {
-            return SE;
+        if (soil.getX() > getBlockPos().getX() && soil.getZ() > getBlockPos().getZ()) {
+            return AREAS.get(1); //SE
         }
-        if (soil.getX() < getBlockPos().getX() && soil.getZ() >= getBlockPos().getZ()) {
-            return NE;
+        if (soil.getX() < getBlockPos().getX() && soil.getZ() > getBlockPos().getZ()) {
+            return AREAS.get(2); //SW
         }
-        return NW;
+        if (soil.getX() < getBlockPos().getX() && soil.getZ() <= getBlockPos().getZ()) {
+            return AREAS.get(3); //NW
+        }
+        return AREAS.get(3);//NW
     }
 
     @Override
@@ -233,12 +227,6 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
 
     public BlockPos getParticleLocation() {
         return worldPosition.below();
-    }
-
-    @Override
-    public void onLoad() {
-        super.onLoad();
-        updateLocations();
     }
 
     private void updateLocations() {
@@ -274,8 +262,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
                         getSeedForPos(soil).setStackInSlot(this, drop);
                         continue;
                     }
-                }
-                if (ItemStack.isSameItem(drop, seeds)) {
+                } else if (ItemStack.isSameItem(drop, seeds)) {
                     int leftOver = seeds.getMaxStackSize() - seeds.getCount();
                     if (drop.getCount() > leftOver) {
                         seeds.setCount(seeds.getMaxStackSize());
@@ -342,17 +329,17 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
 
     @Override
     public ItemStack getAxe() {
-        return AXE.getItemStack(this);
+        return TOOLS.get(0).getItemStack(this);
     }
 
     @Override
     public ItemStack getHoe() {
-        return HOE.getItemStack(this);
+        return TOOLS.get(1).getItemStack(this);
     }
 
     @Override
     public ItemStack getShears() {
-        return SHEAR.getItemStack(this);
+        return TOOLS.get(2).getItemStack(this);
     }
 
     @EnsureSide(EnsureSide.Side.SERVER)
@@ -424,6 +411,12 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     @Override
     public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
         return new FarmingStationMenu(containerId, playerInventory, this);
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        updateLocations();
     }
 
     @Override
