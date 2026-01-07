@@ -13,6 +13,7 @@ import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.conduits.ticker.ConduitTicker;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.content.conduits.ConduitBlockItem;
+import com.enderio.modded_conduits.config.ModdedConduitsConfig;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -127,7 +128,9 @@ public record MEConduit(ResourceLocation texture, Component description, AEColor
                 .setTagName("conduit")
                 .setGridColor(color);
 
-        mainNode.setIdlePowerUsage(isDense() ? 0.4d : 0.1d);
+        mainNode.setIdlePowerUsage(isDense() 
+            ? ModdedConduitsConfig.COMMON.AE2.DENSE_ME_POWER_USAGE_PER_TICK.get()
+            : ModdedConduitsConfig.COMMON.AE2.NORMAL_ME_POWER_USAGE_PER_TICK.get());
 
         if (isDense()) {
             mainNode.setFlags(GridFlags.DENSE_CAPACITY);
