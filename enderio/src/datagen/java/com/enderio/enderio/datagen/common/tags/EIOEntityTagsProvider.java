@@ -27,5 +27,8 @@ public class EIOEntityTagsProvider extends EntityTypeTagsProvider {
         this.tag(EIOTags.EntityTypes.SOUL_VIAL_WHITELIST);
 
         this.tag(EIOTags.EntityTypes.SPAWNER_BLACKLIST).addTag(Tags.EntityTypes.BOSSES).add(EntityType.WARDEN);
+
+        this.tag(EIOTags.EntityTypes.SPAWNER_WHITELIST);
+
     }
 }

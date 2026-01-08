@@ -191,6 +191,7 @@ public class EIOTags {
     public static class EntityTypes {
         // TODO: 1.22: Rename allow/deny list.
         public static final TagKey<EntityType<?>> SPAWNER_BLACKLIST = tag("spawner_blacklist");
+        public static final TagKey<EntityType<?>> SPAWNER_WHITELIST = tag("spawner_whitelist");
         public static final TagKey<EntityType<?>> SOUL_VIAL_WHITELIST = tag("soul_vial_whitelist");
         public static final TagKey<EntityType<?>> SOUL_VIAL_BLACKLIST = tag("soul_vial_blacklist");
 

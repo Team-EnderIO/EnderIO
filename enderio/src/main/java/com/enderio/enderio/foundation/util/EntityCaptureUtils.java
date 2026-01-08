@@ -60,6 +60,12 @@ public class EntityCaptureUtils {
      * @return the status on how this entity should be handled for capture
      */
     public static CapturableStatus getCapturableStatus(EntityType<? extends LivingEntity> type) {
+        // Whitelist takes precedence over all
+        // This allows easier allowing of restricted mobs than removing from tags.
+        if (type.is(EIOTags.EntityTypes.SOUL_VIAL_WHITELIST)) {
+            return CapturableStatus.CAPTURABLE;
+        }
+
         //Do we keep this special case?
         if (isBlacklistedBoss(type)) {
             return CapturableStatus.BOSS;
@@ -69,9 +75,7 @@ public class EntityCaptureUtils {
             return CapturableStatus.INCOMPATIBLE;
         }
 
-        // Whitelist takes precedence over blacklist
-        // This allows easier allowing of restricted mobs than removing from tags.
-        if (type.is(EIOTags.EntityTypes.SOUL_VIAL_BLACKLIST) && !type.is(EIOTags.EntityTypes.SOUL_VIAL_WHITELIST)) {
+        if (type.is(EIOTags.EntityTypes.SOUL_VIAL_BLACKLIST)) {
             return CapturableStatus.BLACKLISTED;
         }
 

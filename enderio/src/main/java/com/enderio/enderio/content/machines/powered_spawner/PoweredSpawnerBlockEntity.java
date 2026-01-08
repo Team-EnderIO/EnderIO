@@ -120,7 +120,9 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
             return null;
         }
 
-        if (entityType.is(EIOTags.EntityTypes.SPAWNER_BLACKLIST)) {
+        // Whitelist takes precedence over all
+        // This allows easier allowing of restricted mobs than removing from tags.
+        if (entityType.is(EIOTags.EntityTypes.SPAWNER_BLACKLIST) && !entityType.is(EIOTags.EntityTypes.SPAWNER_WHITELIST)) {
             setReason(SpawnerBlockedReason.DISABLED);
             return null;
         }
