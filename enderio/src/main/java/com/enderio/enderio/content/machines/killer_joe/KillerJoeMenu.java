@@ -13,7 +13,6 @@ import net.minecraft.world.entity.player.Inventory;
 public class KillerJoeMenu extends MachineMenu<KillerJoeBlockEntity> {
 
     private final FluidStorageSyncSlot fluidTankSlot;
-    private final IntSyncSlot cooldownSlot;
     private static final int WEAPON_SLOT_INDEX = 0;
 
     // Server constructor
@@ -24,9 +23,6 @@ public class KillerJoeMenu extends MachineMenu<KillerJoeBlockEntity> {
         // Sync fluid tank
         fluidTankSlot = addSyncSlot(
             FluidStorageSyncSlot.readOnly(() -> FluidStorageInfo.of(blockEntity.getFluidHandler().getTank(0))));
-
-        // Sync attack cooldown for progress display
-        cooldownSlot = addSyncSlot(IntSyncSlot.readOnly(blockEntity::getCurrentCooldown));
     }
 
     // Client constructor (network)
@@ -37,7 +33,6 @@ public class KillerJoeMenu extends MachineMenu<KillerJoeBlockEntity> {
 
         // Standalone slots for client
         fluidTankSlot = addSyncSlot(FluidStorageSyncSlot.standalone());
-        cooldownSlot = addSyncSlot(IntSyncSlot.standalone());
     }
 
     private void addSlots() {
@@ -50,13 +45,5 @@ public class KillerJoeMenu extends MachineMenu<KillerJoeBlockEntity> {
 
     public FluidStorageInfo getFluidTank() {
         return fluidTankSlot.get();
-    }
-
-    public int getCurrentCooldown() {
-        return cooldownSlot.get();
-    }
-
-    public int getMaxCooldown() {
-        return getBlockEntity().getAttackCooldown();
     }
 }
