@@ -22,6 +22,9 @@ public class ItemsConfig {
     public final ModConfigSpec.IntValue TRAVELLING_TO_BLOCK_RANGE;
     public final ModConfigSpec.IntValue TRAVELLING_BLOCK_TO_BLOCK_RANGE;
 
+
+    public final ModConfigSpec.BooleanValue SOUL_VIAL_CAPTURE_BOSSES;
+
     public ItemsConfig(ModConfigSpec.Builder builder) {
         builder.push("items");
 
@@ -50,6 +53,11 @@ public class ItemsConfig {
         builder.comment("the following config values are only used if EIOMachines is loaded");
         TRAVELLING_TO_BLOCK_RANGE = builder.defineInRange("itemToBlockRange", 192, 4, 16 * 32);
         TRAVELLING_BLOCK_TO_BLOCK_RANGE = builder.defineInRange("blockToBlockRange", 96, 4, 16 * 32);
+        builder.pop();
+
+        builder.push("soulvial");
+        SOUL_VIAL_CAPTURE_BOSSES = builder.comment("Whether soul vials can capture boss mobs").define("captureBosses", false);
+        builder.comment("Spawners have a separate config option to allow boss spawning");
         builder.pop();
 
         builder.pop();

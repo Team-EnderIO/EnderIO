@@ -1,5 +1,7 @@
 package com.enderio.enderio.foundation.util;
 
+import com.enderio.enderio.config.base.BaseConfig;
+import com.enderio.enderio.config.base.common.ItemsConfig;
 import com.enderio.enderio.content.tools.ToolsLang;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.google.common.collect.ImmutableList;
@@ -61,7 +63,7 @@ public class EntityCaptureUtils {
      */
     public static CapturableStatus getCapturableStatus(EntityType<? extends LivingEntity> type) {
         //Do we keep this special case?
-        if (isBlacklistedBoss(type)) {
+        if (!BaseConfig.COMMON.ITEMS.SOUL_VIAL_CAPTURE_BOSSES.get() && isBlacklistedBoss(type)) {
             return CapturableStatus.BOSS;
         }
 

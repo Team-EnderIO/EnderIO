@@ -8,6 +8,7 @@ public class MachinesCommonConfig {
     public final ModConfigSpec.ConfigValue<Double> ENCHANTER_LAPIS_COST_FACTOR;
     public final ModConfigSpec.ConfigValue<Double> ENCHANTER_LEVEL_COST_FACTOR;
     public final ModConfigSpec.ConfigValue<Integer> ENCHANTER_BASE_LEVEL_COST;
+    public final ModConfigSpec.ConfigValue<Boolean> SPAWNER_BOSS_ALLOWED;
     public final ModConfigSpec.ConfigValue<Integer> MAX_SPAWNER_ENTITIES;
     public final ModConfigSpec.ConfigValue<Integer> MAX_SPAWNERS;
     public final ModConfigSpec.ConfigValue<Integer> DEFAULT_SPAWN_ENERGY_COST;
@@ -48,6 +49,8 @@ public class MachinesCommonConfig {
         DEFAULT_SPAWN_ENERGY_COST = builder
                 .comment("The amount of energy used to spawn mobs that do not have custom spawner soul data.")
                 .defineInRange("defaultSpawnEnergyCost", 50000, 0, Integer.MAX_VALUE);
+        SPAWNER_BOSS_ALLOWED = builder.comment("Whether powered spawners are allowed to spawn boss mobs.")
+                .define("spawnerBossAllowed", false);
         builder.pop();
 
         builder.push("enderface");
