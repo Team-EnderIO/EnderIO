@@ -161,6 +161,9 @@ public class EIOBlockLootProvider extends BlockLootSubProvider {
         // VAT
         copyComponents(EIOBlocks.VAT.get());
 
+        // Killer Joe
+        copyComponents(EIOBlocks.KILLER_JOE.get());
+
         // Obelisks
         copyComponents(EIOBlocks.XP_OBELISK.get());
         copyComponents(EIOBlocks.FARMING_STATION.get());

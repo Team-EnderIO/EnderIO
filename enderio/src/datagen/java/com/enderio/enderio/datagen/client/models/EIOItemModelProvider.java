@@ -345,8 +345,8 @@ public class EIOItemModelProvider extends ItemModelProvider {
         // Niard
         simpleBlockItem(EIOBlocks.NIARD.get());
 
-        // VAT
         simpleBlockItem(EIOBlocks.VAT.get());
+        simpleBlockItem(EIOBlocks.KILLER_JOE.get());
 
         // Block Detector
         simpleBlockItem(EIOBlocks.BLOCK_DETECTOR.get());

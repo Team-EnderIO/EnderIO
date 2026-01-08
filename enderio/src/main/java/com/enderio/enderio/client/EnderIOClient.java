@@ -40,6 +40,7 @@ import com.enderio.enderio.client.content.machines.gui.screen.FarmingStationScre
 import com.enderio.enderio.client.content.machines.gui.screen.FluidTankScreen;
 import com.enderio.enderio.client.content.machines.gui.screen.ImpulseHopperScreen;
 import com.enderio.enderio.client.content.machines.gui.screen.InhibitorObeliskScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.KillerJoeScreen;
 import com.enderio.enderio.client.content.machines.gui.screen.NiardScreen;
 import com.enderio.enderio.client.content.machines.gui.screen.PaintingMachineScreen;
 import com.enderio.enderio.client.content.machines.gui.screen.PoweredSpawnerScreen;
@@ -208,6 +209,7 @@ public class EnderIOClient {
         event.register(EIOMenus.ATTRACTOR_OBELISK.get(), AttractorObeliskScreen::new);
         event.register(EIOMenus.WEATHER_OBELISK.get(), WeatherObeliskScreen::new);
         event.register(EIOMenus.VAT.get(), VatScreen::new);
+        event.register(EIOMenus.KILLER_JOE.get(), KillerJoeScreen::new);
 
         // Storage
         event.register(EIOMenus.CAPACITOR_BANK.get(), CapacitorBankScreen::new);

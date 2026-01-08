@@ -23,6 +23,7 @@ public class MachinesLang {
     public static final MutableComponent STATUS_BLOCKED_REDSTONE = tooltip("status/blocked_by_redstone");
     public static final MutableComponent STATUS_OUTPUT_FULL = tooltip("status/output_full");
     public static final MutableComponent STATUS_INPUT_EMPTY = tooltip("status/input_empty");
+    public static final MutableComponent STATUS_NO_WEAPON = tooltip("status/no_weapon");
 
     // TODO: Might be better as a shared translation.
     public static final MutableComponent GUI_NO_FLUID = gui("no_fluid");
