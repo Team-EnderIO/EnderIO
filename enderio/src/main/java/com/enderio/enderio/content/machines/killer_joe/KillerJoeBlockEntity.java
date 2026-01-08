@@ -238,17 +238,6 @@ public class KillerJoeBlockEntity extends MachineBlockEntity implements FluidTan
     }
 
     @Override
-    public void setRemoved() {
-        super.setRemoved();
-
-        // Clean up fake player to prevent memory leaks
-        if (level != null && !level.isClientSide && fakePlayer != null) {
-            fakePlayer.discard();
-            fakePlayer = null;
-        }
-    }
-
-    @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
         super.saveAdditional(tag, lookupProvider);
         saveTank(lookupProvider, tag);
