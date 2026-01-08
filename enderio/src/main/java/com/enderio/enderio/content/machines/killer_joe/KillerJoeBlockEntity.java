@@ -4,7 +4,6 @@ import com.enderio.core.common.util.EnderFakePlayer;
 import com.enderio.core.common.util.EnderFakePlayerFactory;
 import com.enderio.enderio.api.UseOnly;
 import com.enderio.enderio.config.machines.MachinesConfig;
-import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.foundation.attachment.FluidTankUser;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.io.fluid.FluidItemInteractive;
@@ -14,7 +13,6 @@ import com.enderio.enderio.foundation.io.fluid.TankAccess;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import com.enderio.enderio.foundation.state.MachineState;
-import com.enderio.enderio.foundation.state.MachineStateType;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOFluids;
 import com.mojang.authlib.GameProfile;
@@ -23,7 +21,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionHand;
@@ -38,8 +35,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.common.util.FakePlayer;
-import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
@@ -168,10 +163,6 @@ public class KillerJoeBlockEntity extends MachineBlockEntity implements FluidTan
         // Give weapon to fake player
         attacker.setItemInHand(InteractionHand.MAIN_HAND, weapon.copy());
 
-        // Move player into position
-        attacker.setPos(getBlockPos().getX() + 0.5, getBlockPos().getY() + 0.5, getBlockPos().getZ() + 0.5);
-        attacker.setOnGround(true);
-
         // Ensure attacker has max strength so our cooldown is the only thing that applies
         attacker.setMaxAttackStrength();
 
@@ -200,10 +191,28 @@ public class KillerJoeBlockEntity extends MachineBlockEntity implements FluidTan
                 setMachineOwner(ownerId);
             }
 
-            fakePlayer = EnderFakePlayerFactory.get(serverLevel, new GameProfile(ownerId, "enderio:killer_joe"));
+            // One fake player per killer joe to ensure we don't mess with mob pathing too badly.
+            fakePlayer = new EnderFakePlayer(serverLevel, new GameProfile(ownerId, "enderio:killer_joe:" + worldPosition));
+
+            // Move player into position
+            fakePlayer.setPos(getBlockPos().getX() + 0.5, getBlockPos().getY() + 0.5, getBlockPos().getZ() + 0.5);
+            fakePlayer.setOnGround(true);
         }
 
         return fakePlayer;
+    }
+
+    @Override
+    public void setRemoved() {
+        super.setRemoved();
+
+        // Because we have fake players per block entity, we need to clean them up on removal.
+        if (level != null && !level.isClientSide) {
+            if (fakePlayer != null) {
+                fakePlayer.discard();
+                fakePlayer = null;
+            }
+        }
     }
 
     private AABB getKillArea() {
