@@ -1,14 +1,14 @@
 {
   "type": "enderio:vat_fermenting",
+  "first_reagent": "enderio:lightning_rod",
   "input": {
     "amount": 1000,
     "ingredient": "enderio:fluid_cloud_seed_concentrated_still"
   },
-  "left_reagent": "enderio:lightning_rod",
   "output": {
     "amount": 500,
     "id": "enderio:fluid_cloud_seed_concentrated_still"
   },
-  "right_reagent": "enderio:wind_charges",
+  "second_reagent": "enderio:wind_charges",
   "ticks": 600
 }

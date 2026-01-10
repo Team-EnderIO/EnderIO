@@ -66,14 +66,14 @@ public class VATCategory extends MachineRecipeCategory<RecipeHolder<FermentingRe
     public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<FermentingRecipe> recipe, IFocusGroup focuses) {
 
         builder.addSlot(RecipeIngredientRole.INPUT, 28, 2)
-                .add(Ingredient.of(BuiltInRegistries.ITEM.get(recipe.value().leftReagent()).orElseThrow()))
+                .add(Ingredient.of(BuiltInRegistries.ITEM.get(recipe.value().firstReagent()).orElseThrow()))
                 .addRichTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(Component.literal("x"
-                        + getModifier(recipeSlotView.getDisplayedItemStack().get(), recipe.value().leftReagent()))));
+                        + getModifier(recipeSlotView.getDisplayedItemStack().get(), recipe.value().firstReagent()))));
 
         builder.addSlot(RecipeIngredientRole.INPUT, 77, 2)
-                .add(Ingredient.of(BuiltInRegistries.ITEM.get(recipe.value().rightReagent()).orElseThrow()))
+                .add(Ingredient.of(BuiltInRegistries.ITEM.get(recipe.value().secondReagent()).orElseThrow()))
                 .addRichTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(Component.literal("x"
-                        + getModifier(recipeSlotView.getDisplayedItemStack().get(), recipe.value().rightReagent()))));
+                        + getModifier(recipeSlotView.getDisplayedItemStack().get(), recipe.value().secondReagent()))));
 
         for (var fluid : recipe.value().input().ingredient().fluids()) {
             builder.addSlot(RecipeIngredientRole.INPUT, 2, 2)
@@ -99,7 +99,7 @@ public class VATCategory extends MachineRecipeCategory<RecipeHolder<FermentingRe
             double mouseX, double mouseY) {
         // left modifier
         ItemStack item = recipeSlotsView.getSlotViews().get(0).getDisplayedItemStack().get();
-        double modifier = FermentingRecipe.getModifier(item, recipe.value().leftReagent());
+        double modifier = FermentingRecipe.getModifier(item, recipe.value().firstReagent());
         String text = "x" + modifier;
         Font font = Minecraft.getInstance().font;
         int x = 28 + 8 - font.width(text) / 2;
@@ -107,7 +107,7 @@ public class VATCategory extends MachineRecipeCategory<RecipeHolder<FermentingRe
 
         // right modifier
         item = recipeSlotsView.getSlotViews().get(1).getDisplayedItemStack().get();
-        modifier = FermentingRecipe.getModifier(item, recipe.value().rightReagent());
+        modifier = FermentingRecipe.getModifier(item, recipe.value().secondReagent());
         text = "x" + modifier;
         x = 77 + 8 - font.width(text) / 2;
         guiGraphics.drawString(font, text, x, 22, 4210752, false);

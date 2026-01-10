@@ -6,15 +6,18 @@ import com.enderio.modded_conduits.common.modules.ConduitCommonModule;
 import com.enderio.modded_conduits.common.modules.appeng.AE2ConduitsModule;
 import com.enderio.modded_conduits.common.modules.mekanism.MekanismModule;
 import com.enderio.modded_conduits.common.modules.refinedstorage.RefinedStorageCommonModule;
+import com.enderio.modded_conduits.config.ModdedConduitsConfig;
 import com.enderio.modded_conduits.data.ModConduitRecipeProvider;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceKey;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
@@ -40,8 +43,12 @@ public class ModdedConduits {
 
     public static IEventBus modEventBus;
 
-    public ModdedConduits(IEventBus modEventBus) {
+    public ModdedConduits(IEventBus modEventBus, ModContainer modContainer) {
         ModdedConduits.modEventBus = modEventBus;
+        
+        // Register config files
+        modContainer.registerConfig(ModConfig.Type.COMMON, ModdedConduitsConfig.COMMON_SPEC, "enderio/modded-conduits-common.toml");
+        
         executeOnLoadedModules(module -> module.initialize(modEventBus));
     }
 

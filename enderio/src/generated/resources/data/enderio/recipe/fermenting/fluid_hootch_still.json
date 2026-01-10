@@ -1,14 +1,14 @@
 {
   "type": "enderio:vat_fermenting",
+  "first_reagent": "enderio:seeds",
   "input": {
     "amount": 1000,
     "ingredient": "#minecraft:water"
   },
-  "left_reagent": "enderio:seeds",
   "output": {
     "amount": 250,
     "id": "enderio:fluid_hootch_still"
   },
-  "right_reagent": "enderio:crops",
+  "second_reagent": "enderio:crops",
   "ticks": 200
 }

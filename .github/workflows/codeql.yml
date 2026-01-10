@@ -13,9 +13,17 @@ name: "CodeQL Advanced"
 
 on:
   push:
-    branches: [ "dev/*" ]
+    branches: # These rules cover old and new version schemes. 26.1-snapshot-1, 1.21.1, etc.
+      - '[0-9]*.[0-9]*'
+      - '[0-9]*.[0-9]*-*'
+      - '[0-9]*.[0-9]*.[0-9]*'
+      - '[0-9]*.[0-9]*.[0-9]*-*'
   pull_request:
-    branches: [ "dev/*" ]
+    branches: # These rules cover old and new version schemes. 26.1-snapshot-1, 1.21.1, etc.
+      - '[0-9]*.[0-9]*'
+      - '[0-9]*.[0-9]*-*'
+      - '[0-9]*.[0-9]*.[0-9]*'
+      - '[0-9]*.[0-9]*.[0-9]*-*'
   schedule:
     - cron: '43 1 * * 1'
 

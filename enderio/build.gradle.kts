@@ -195,12 +195,12 @@ neoForge {
         // Data + Game Test focus purely on the core mod.
         val client by creating {
             client()
-            loadedMods = listOf(modEnderio, modEnderioGametests)
+            loadedMods = listOf(modEnderio)
         }
 
         val server by creating {
             server()
-            loadedMods = listOf(modEnderio, modEnderioGametests)
+            loadedMods = listOf(modEnderio)
 
             gameDirectory = project.file("run/server")
         }
@@ -221,6 +221,12 @@ neoForge {
             type = "gameTestServer"
             loadedMods = listOf(modEnderio, modEnderioGametests)
             sourceSet = sourceSets["gametest"]
+        }
+
+        // Useful for debugging tests, but will include the gametest datapack so I separated the run config.
+        val gameTestClient by creating {
+            client()
+            loadedMods = listOf(modEnderio, modEnderioGametests)
         }
     }
 

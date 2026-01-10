@@ -1,14 +1,14 @@
 {
   "type": "enderio:vat_fermenting",
+  "first_reagent": "enderio:blaze_powder",
   "input": {
     "amount": 1000,
     "ingredient": "enderio:fluid_hootch_still"
   },
-  "left_reagent": "enderio:blaze_powder",
   "output": {
     "amount": 1000,
     "id": "enderio:fluid_fire_water_still"
   },
-  "right_reagent": "c:dusts/redstone",
+  "second_reagent": "c:dusts/redstone",
   "ticks": 400
 }

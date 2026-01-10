@@ -10,6 +10,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -41,18 +42,18 @@ import java.util.Objects;
 
 public final class FermentingRecipe implements MachineRecipe<FermentingRecipe.Input> {
     private final SizedFluidIngredient input;
-    private final TagKey<Item> leftReagent;
-    private final TagKey<Item> rightReagent;
+    private final TagKey<Item> firstReagent;
+    private final TagKey<Item> secondReagent;
     private final FluidStack output;
     private final int ticks;
 
     @Nullable
     private PlacementInfo placementInfo;
 
-    public FermentingRecipe(SizedFluidIngredient input, TagKey<Item> leftReagent, TagKey<Item> rightReagent, FluidStack output, int ticks) {
+    public FermentingRecipe(SizedFluidIngredient input, TagKey<Item> firstReagent, TagKey<Item> secondReagent, FluidStack output, int ticks) {
         this.input = input;
-        this.leftReagent = leftReagent;
-        this.rightReagent = rightReagent;
+        this.firstReagent = firstReagent;
+        this.secondReagent = secondReagent;
         this.output = output;
         this.ticks = ticks;
     }
@@ -64,9 +65,18 @@ public final class FermentingRecipe implements MachineRecipe<FermentingRecipe.In
 
     @Override
     public List<OutputStack> craft(Input input, RegistryAccess registryAccess) {
+        ItemStack firstInput = input.getItem(0);
+        ItemStack secondInput = input.getItem(1);
 
-        double modifier = getModifier(input.getItem(0), leftReagent);
-        modifier *= getModifier(input.getItem(1), rightReagent);
+        // Build modifier, ensure we use the correct item for each reagent
+        double modifier;
+        if (firstInput.is(firstReagent) && secondInput.is(secondReagent)) {
+            modifier = getModifier(firstInput, firstReagent);
+            modifier *= getModifier(secondInput, secondReagent);
+        } else {
+            modifier = getModifier(secondInput, firstReagent);
+            modifier *= getModifier(firstInput, secondReagent);
+        }
 
         return List.of(OutputStack.of(new FluidStack(output.getFluid(), (int) (output.getAmount() * modifier))));
     }
@@ -83,7 +93,12 @@ public final class FermentingRecipe implements MachineRecipe<FermentingRecipe.In
             return false;
         }
 
-        return input.getItem(0).is(leftReagent) && input.getItem(1).is(rightReagent);
+        ItemStack firstInput = input.getItem(0);
+        ItemStack secondInput = input.getItem(1);
+
+        // Order independent check
+        return (firstInput.is(firstReagent) && secondInput.is(secondReagent)) ||
+            (firstInput.is(secondReagent) && secondInput.is(firstReagent));
     }
 
     public static double getModifier(ItemStack stack, TagKey<Item> reagent) {
@@ -113,12 +128,12 @@ public final class FermentingRecipe implements MachineRecipe<FermentingRecipe.In
         return input;
     }
 
-    public TagKey<Item> leftReagent() {
-        return leftReagent;
+    public TagKey<Item> firstReagent() {
+        return firstReagent;
     }
 
-    public TagKey<Item> rightReagent() {
-        return rightReagent;
+    public TagKey<Item> secondReagent() {
+        return secondReagent;
     }
 
     public FluidStack output() {
@@ -132,8 +147,8 @@ public final class FermentingRecipe implements MachineRecipe<FermentingRecipe.In
     @Override
     public PlacementInfo placementInfo() {
         if (placementInfo == null) { //TODO not great
-            var leftIngredient = Ingredient.of(BuiltInRegistries.ITEM.get(leftReagent).orElseThrow());
-            var rightIngredient = Ingredient.of(BuiltInRegistries.ITEM.get(rightReagent).orElseThrow());
+            var leftIngredient = Ingredient.of(BuiltInRegistries.ITEM.get(firstReagent).orElseThrow());
+            var rightIngredient = Ingredient.of(BuiltInRegistries.ITEM.get(secondReagent).orElseThrow());
             placementInfo = PlacementInfo.create(List.of(leftIngredient, rightIngredient));
         }
         return placementInfo;
@@ -143,20 +158,20 @@ public final class FermentingRecipe implements MachineRecipe<FermentingRecipe.In
     public List<RecipeDisplay> display() {
         return List.of(new FermentingDisplay(
             input.ingredient().display(),
-            new SlotDisplay.TagSlotDisplay(leftReagent),
-            new SlotDisplay.TagSlotDisplay(rightReagent),
+            new SlotDisplay.TagSlotDisplay(firstReagent),
+            new SlotDisplay.TagSlotDisplay(secondReagent),
             new FluidStackSlotDisplay(output),
             new SlotDisplay.ItemSlotDisplay(EIOBlocks.VAT.asItem())
             ));
     }
 
-    public record Input(ItemStack leftReagent, ItemStack rightStack, FluidStack inputFluid) implements RecipeInput {
+    public record Input(ItemStack firstReagent, ItemStack secondStack, FluidStack inputFluid) implements RecipeInput {
 
         @Override
         public ItemStack getItem(int slotIndex) {
             return switch (slotIndex) {
-                case 0 -> leftReagent;
-                case 1 -> rightStack;
+                case 0 -> firstReagent;
+                case 1 -> secondStack;
                 default -> throw new IllegalArgumentException("No item for index " + slotIndex);
             };
         }
@@ -171,13 +186,13 @@ public final class FermentingRecipe implements MachineRecipe<FermentingRecipe.In
         }
     }
 
-    public record FermentingDisplay(SlotDisplay fluid, SlotDisplay left, SlotDisplay right, SlotDisplay result, SlotDisplay craftingStation) implements RecipeDisplay {
+    public record FermentingDisplay(SlotDisplay fluid, SlotDisplay first, SlotDisplay second, SlotDisplay result, SlotDisplay craftingStation) implements RecipeDisplay {
 
         public static final MapCodec<FermentingDisplay> MAP_CODEC = RecordCodecBuilder.mapCodec(
             p_379634_ -> p_379634_.group(
                     SlotDisplay.CODEC.fieldOf("ingredients").forGetter(FermentingDisplay::fluid),
-                    SlotDisplay.CODEC.fieldOf("left").forGetter(FermentingDisplay::left),
-                    SlotDisplay.CODEC.fieldOf("right").forGetter(FermentingDisplay::right),
+                    SlotDisplay.CODEC.fieldOf("first").forGetter(FermentingDisplay::first),
+                    SlotDisplay.CODEC.fieldOf("second").forGetter(FermentingDisplay::second),
                     SlotDisplay.CODEC.fieldOf("result").forGetter(FermentingDisplay::result),
                     SlotDisplay.CODEC.fieldOf("crafting_station").forGetter(FermentingDisplay::craftingStation)
                 )
@@ -187,9 +202,9 @@ public final class FermentingRecipe implements MachineRecipe<FermentingRecipe.In
             SlotDisplay.STREAM_CODEC,
             FermentingDisplay::fluid,
             SlotDisplay.STREAM_CODEC,
-            FermentingDisplay::left,
+            FermentingDisplay::first,
             SlotDisplay.STREAM_CODEC,
-            FermentingDisplay::right,
+            FermentingDisplay::second,
             SlotDisplay.STREAM_CODEC,
             FermentingDisplay::result,
             SlotDisplay.STREAM_CODEC,
@@ -208,10 +223,10 @@ public final class FermentingRecipe implements MachineRecipe<FermentingRecipe.In
             if (!fluid().isEnabled(flagSet)) {
                 return false;
             }
-            if (!left().isEnabled(flagSet)) {
+            if (!first.isEnabled(flagSet)) {
                 return false;
             }
-            if (!right().isEnabled(flagSet)) {
+            if (!second().isEnabled(flagSet)) {
                 return false;
             }
             if (!result().isEnabled(flagSet)) {
@@ -228,13 +243,13 @@ public final class FermentingRecipe implements MachineRecipe<FermentingRecipe.In
         public static final MapCodec<FermentingRecipe> CODEC = RecordCodecBuilder.mapCodec(
             instance -> instance
                 .group(SizedFluidIngredient.CODEC.fieldOf("input").forGetter(FermentingRecipe::input), //TODO make sure this handles empty
-                    TagKey.codec(Registries.ITEM).fieldOf("left_reagent").forGetter(FermentingRecipe::leftReagent),
-                    TagKey.codec(Registries.ITEM).fieldOf("right_reagent").forGetter(FermentingRecipe::rightReagent),
+                    TagKey.codec(Registries.ITEM).fieldOf("first_reagent").forGetter(FermentingRecipe::firstReagent),
+                    TagKey.codec(Registries.ITEM).fieldOf("second_reagent").forGetter(FermentingRecipe::secondReagent),
                     FluidStack.CODEC.fieldOf("output").forGetter(FermentingRecipe::output), Codec.INT.fieldOf("ticks").forGetter(FermentingRecipe::ticks))
                 .apply(instance, FermentingRecipe::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, FermentingRecipe> STREAM_CODEC = StreamCodec.composite(SizedFluidIngredient.STREAM_CODEC,
-            FermentingRecipe::input, ITEM_TAG_STREAM_CODEC, FermentingRecipe::leftReagent, ITEM_TAG_STREAM_CODEC, FermentingRecipe::rightReagent, FluidStack.STREAM_CODEC, FermentingRecipe::output, ByteBufCodecs.INT, FermentingRecipe::ticks,
+            FermentingRecipe::input, ITEM_TAG_STREAM_CODEC, FermentingRecipe::firstReagent, ITEM_TAG_STREAM_CODEC, FermentingRecipe::secondReagent, FluidStack.STREAM_CODEC, FermentingRecipe::output, ByteBufCodecs.INT, FermentingRecipe::ticks,
             FermentingRecipe::new);
 
         @Override

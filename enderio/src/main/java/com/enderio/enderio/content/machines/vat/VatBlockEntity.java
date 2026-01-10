@@ -12,6 +12,7 @@ import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.inventory.MachineInventory;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.foundation.inventory.MultiSlotAccess;
+import com.enderio.enderio.foundation.recipe.MachineRecipeCaches;
 import com.enderio.enderio.foundation.io.fluid.FluidItemInteractive;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.foundation.storage.SidedResourceHandler;
@@ -40,6 +41,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -122,7 +124,14 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
 
     @Override
     public @Nullable MachineInventoryLayout createInventoryLayout() {
-        return MachineInventoryLayout.builder().inputSlot(2).slotAccess(REAGENTS).build();
+        return MachineInventoryLayout.builder()
+            .inputSlot(2, this::acceptSlotInput)
+            .slotAccess(REAGENTS)
+            .build();
+    }
+
+    protected boolean acceptSlotInput(int slot, ItemResource resource) {
+        return MachineRecipeCaches.FERMENTING.hasValidRecipeIf(getInventory(), REAGENTS, slot, resource.toStack());
     }
 
     @Override

@@ -55,9 +55,9 @@ public class FermentingRecipeProvider extends SubRecipeProvider {
             EIOTags.Items.LIGHTNING_ROD, EIOTags.Items.WIND_CHARGES, 600, recipeOutput);
     }
 
-    protected void build(FluidStack output, SizedFluidIngredient input, TagKey<Item> leftReagent,
-            TagKey<Item> rightReagent, int ticks, RecipeOutput recipeOutput) {
+    protected void build(FluidStack output, SizedFluidIngredient input, TagKey<Item> firstReagent,
+            TagKey<Item> secondReagent, int ticks, RecipeOutput recipeOutput) {
         recipeOutput.accept(ResourceKey.create(Registries.RECIPE, EnderIO.id("fermenting/" + BuiltInRegistries.FLUID.getKey(output.getFluid()).getPath())),
-                new FermentingRecipe(input, leftReagent, rightReagent, output, ticks), null);
+                new FermentingRecipe(input, firstReagent, secondReagent, output, ticks), null);
     }
 }

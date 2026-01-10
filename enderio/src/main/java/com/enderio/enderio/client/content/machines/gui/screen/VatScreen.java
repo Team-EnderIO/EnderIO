@@ -124,14 +124,14 @@ public class VatScreen extends MachineScreen<VatMenu> {
 
         // left modifier
         ItemStack item = getMenu().getSlot(0).getItem();
-        double modifier = FermentingRecipe.getModifier(item, recipe.value().leftReagent());
+        double modifier = FermentingRecipe.getModifier(item, recipe.value().firstReagent());
         String text = "x" + modifier;
         int x = getGuiLeft() + 63 - minecraft.font.width(text) / 2;
         guiGraphics.drawString(minecraft.font, text, x, getGuiTop() + 32, CommonColors.DARK_GRAY, false);
 
         // right modifier
         item = getMenu().getSlot(1).getItem();
-        modifier = FermentingRecipe.getModifier(item, recipe.value().rightReagent());
+        modifier = FermentingRecipe.getModifier(item, recipe.value().secondReagent());
         text = "x" + modifier;
         x = getGuiLeft() + 113 - minecraft.font.width(text) / 2;
         guiGraphics.drawString(minecraft.font, text, x, getGuiTop() + 32, CommonColors.DARK_GRAY, false);

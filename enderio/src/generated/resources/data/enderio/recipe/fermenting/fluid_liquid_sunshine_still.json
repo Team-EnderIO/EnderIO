@@ -1,14 +1,14 @@
 {
   "type": "enderio:vat_fermenting",
+  "first_reagent": "enderio:natural_lights",
   "input": {
     "amount": 1000,
     "ingredient": "#minecraft:water"
   },
-  "left_reagent": "enderio:natural_lights",
   "output": {
     "amount": 1000,
     "id": "enderio:fluid_liquid_sunshine_still"
   },
-  "right_reagent": "enderio:sunflower",
+  "second_reagent": "enderio:sunflower",
   "ticks": 200
 }

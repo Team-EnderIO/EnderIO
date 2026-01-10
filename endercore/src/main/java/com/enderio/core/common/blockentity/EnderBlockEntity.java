@@ -53,6 +53,8 @@ public class EnderBlockEntity extends BlockEntity {
         blockEntity.endTick();
     }
 
+    private int nextTick = 0;
+
     /**
      * Perform server-side ticking
      */
