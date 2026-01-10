@@ -148,6 +148,9 @@ public class EIODataComponents {
     // endregion
 
     public static void register(IEventBus bus) {
+        DATA_COMPONENT_TYPES.register("conduit", () -> EnderIODataComponents.CONDUIT);
+        DATA_COMPONENT_TYPES.register("grinding_ball", () -> EnderIODataComponents.GRINDING_BALL);
+
         DATA_COMPONENT_TYPES.register(bus);
     }
 
