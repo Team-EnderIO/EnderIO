@@ -65,9 +65,7 @@ public abstract class RecipeManagerMixin {
 
         String path = "smelting/" + originalId.getNamespace() + "/" + originalId.getPath();
         ResourceKey<Recipe<?>> id = ResourceKey.create(Registries.RECIPE, EnderIO.id(path));
-
-        LOGGER.error("Converted smelting recipe {} to alloy smelting recipe {}", originalId, id);
-
+        
         return Optional.of(new RecipeHolder<>(id, recipe));
     }
 }
