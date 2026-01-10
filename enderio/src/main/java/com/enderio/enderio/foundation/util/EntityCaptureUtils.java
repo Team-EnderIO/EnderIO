@@ -6,11 +6,9 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
-import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -66,11 +64,6 @@ public class EntityCaptureUtils {
             return CapturableStatus.CAPTURABLE;
         }
 
-        //Do we keep this special case?
-        if (isBlacklistedBoss(type)) {
-            return CapturableStatus.BOSS;
-        }
-
         if (!type.canSerialize()) {
             return CapturableStatus.INCOMPATIBLE;
         }
@@ -80,13 +73,5 @@ public class EntityCaptureUtils {
         }
 
         return CapturableStatus.CAPTURABLE;
-    }
-
-    public static boolean isBlacklistedBoss(Entity entity) {
-        return isBlacklistedBoss(entity.getType());
-    }
-
-    public static boolean isBlacklistedBoss(EntityType<?> entityType) {
-        return entityType.is(Tags.EntityTypes.BOSSES);
     }
 }

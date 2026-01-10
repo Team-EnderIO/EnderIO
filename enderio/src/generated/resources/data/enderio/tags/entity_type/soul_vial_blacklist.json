@@ -1,6 +1,7 @@
 {
   "values": [
     "minecraft:warden",
-    "#c:capturing_not_supported"
+    "#c:capturing_not_supported",
+    "#c:bosses"
   ]
 }
