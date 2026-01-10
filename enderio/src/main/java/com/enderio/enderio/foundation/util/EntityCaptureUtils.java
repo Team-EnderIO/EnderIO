@@ -58,14 +58,14 @@ public class EntityCaptureUtils {
      * @return the status on how this entity should be handled for capture
      */
     public static CapturableStatus getCapturableStatus(EntityType<? extends LivingEntity> type) {
+        if (!type.canSerialize()) {
+            return CapturableStatus.INCOMPATIBLE;
+        }
+
         // Whitelist takes precedence over all
         // This allows easier allowing of restricted mobs than removing from tags.
         if (type.is(EIOTags.EntityTypes.SOUL_VIAL_WHITELIST)) {
             return CapturableStatus.CAPTURABLE;
-        }
-
-        if (!type.canSerialize()) {
-            return CapturableStatus.INCOMPATIBLE;
         }
 
         if (type.is(EIOTags.EntityTypes.SOUL_VIAL_BLACKLIST)) {
