@@ -5,9 +5,11 @@ env:
 # Run on all develop pushes
 on:
   push:
-    branches:
-      - 'dev/*'
-      - 'lts/*'
+    branches: # These rules cover old and new version schemes. 26.1-snapshot-1, 1.21.1, etc.
+      - '[0-9]*.[0-9]*'
+      - '[0-9]*.[0-9]*-*'
+      - '[0-9]*.[0-9]*.[0-9]*'
+      - '[0-9]*.[0-9]*.[0-9]*-*'
 
 # Cancel if a new push is sent
 # https://stackoverflow.com/a/70972844
