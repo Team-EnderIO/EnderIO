@@ -45,17 +45,9 @@ public class EnderGameTestHelper extends ExtendedGameTestHelper {
         }
 
         try (Transaction transaction = Transaction.openRoot()) {
-            for (int i = 0; i < itemHandler.size(); i++) {
-                int toInsert = Math.min(count, itemHandler.getCapacityAsInt(i, item));
-                int inserted = itemHandler.insert(i, item, toInsert, transaction);
-                count -= inserted;
-                if (count <= 0) {
-                    break;
-                }
-            }
-
-            if (count > 0) {
-                throw assertionException("Could not insert " + count + " items into container at " + x + "," + y + "," + z);
+            int inserted = itemHandler.insert(item, count, transaction);
+            if (inserted != count) {
+                throw assertionException("Could not insert " + count + " " + item + " into container at " + x + "," + y + "," + z);
             }
 
             transaction.commit();
