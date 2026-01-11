@@ -494,7 +494,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
 
     private void addNodeToPositionMaps(ConduitNodeImpl node, boolean isRebuild) {
         // Put nodes into the position map.
-        long chunk = ChunkPos.asLong(node.pos());
+        long chunk = ChunkPos.pack(node.pos());
         boolean isNewChunk = !nodesByChunkPos.containsKey(chunk);
         nodesByChunkPos.put(chunk, node);
 
@@ -505,7 +505,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
 
     private void removeNodeFromPositionMaps(ConduitNodeImpl node) {
         // Put nodes into the position map.
-        long chunk = ChunkPos.asLong(node.pos());
+        long chunk = ChunkPos.pack(node.pos());
         nodesByChunkPos.remove(chunk, node);
 
         boolean isRemovedChunk = !nodesByChunkPos.containsKey(chunk);

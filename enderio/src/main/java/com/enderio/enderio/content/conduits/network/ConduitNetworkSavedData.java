@@ -208,7 +208,7 @@ public class ConduitNetworkSavedData extends SavedData {
     @SubscribeEvent
     public static void onChunkUnloaded(ChunkEvent.Unload event) {
         if (event.getLevel() instanceof ServerLevel serverLevel) {
-            get(serverLevel).tickingChunksMap.remove(event.getChunk().getPos().toLong());
+            get(serverLevel).tickingChunksMap.remove(event.getChunk().getPos().pack());
         }
     }
 }

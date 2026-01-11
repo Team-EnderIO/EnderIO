@@ -23,7 +23,7 @@ public class ChunkBoundLookup<T> {
 
     @Nullable
     public Set<T> getForChunk(ChunkPos pos) {
-        return chunkData.get(pos.toLong());
+        return chunkData.get(pos.pack());
     }
 
     // region Direct Chunk Manipulation
@@ -35,7 +35,7 @@ public class ChunkBoundLookup<T> {
      * @param value The value to add.
      */
     public void addToChunk(ChunkPos pos, T value) {
-        chunkData.computeIfAbsent(pos.toLong(), k -> new HashSet<>()).add(value);
+        chunkData.computeIfAbsent(pos.pack(), k -> new HashSet<>()).add(value);
         valueKeys.computeIfAbsent(value, k -> new HashSet<>()).add(pos);
     }
 
@@ -46,8 +46,8 @@ public class ChunkBoundLookup<T> {
      * @param value The value to remove.
      */
     public void removeFromChunk(ChunkPos pos, T value) {
-        if (chunkData.containsKey(pos.toLong())) {
-            chunkData.get(pos.toLong()).remove(value);
+        if (chunkData.containsKey(pos.pack())) {
+            chunkData.get(pos.pack()).remove(value);
         }
 
         if (valueKeys.containsKey(value)) {
@@ -127,8 +127,8 @@ public class ChunkBoundLookup<T> {
         BlockPos startBlockPos = new BlockPos(centerPos.getX() - blockRadius, 0, centerPos.getZ() - blockRadius);
         BlockPos endBlockPos = new BlockPos(centerPos.getX() + blockRadius, 0, centerPos.getZ() + blockRadius);
 
-        ChunkPos startChunkPos = new ChunkPos(startBlockPos);
-        ChunkPos endChunkPos = new ChunkPos(endBlockPos);
+        ChunkPos startChunkPos = ChunkPos.containing(startBlockPos);
+        ChunkPos endChunkPos = ChunkPos.containing(endBlockPos);
 
         return ChunkPos.rangeClosed(startChunkPos, endChunkPos);
     }
@@ -151,12 +151,12 @@ public class ChunkBoundLookup<T> {
     public void remove(T value) {
         Set<ChunkPos> chunks = valueKeys.get(value);
         for (ChunkPos chunkPos : chunks) {
-            Set<T> dataAtChunk = chunkData.get(chunkPos.toLong());
+            Set<T> dataAtChunk = chunkData.get(chunkPos.pack());
 
             if (dataAtChunk != null) {
                 dataAtChunk.remove(value);
                 if (dataAtChunk.isEmpty()) {
-                    chunkData.remove(chunkPos.toLong());
+                    chunkData.remove(chunkPos.pack());
                 }
             }
         }

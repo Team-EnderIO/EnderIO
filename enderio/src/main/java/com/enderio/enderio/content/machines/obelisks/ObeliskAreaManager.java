@@ -24,6 +24,6 @@ public abstract class ObeliskAreaManager<T extends ObeliskBlockEntity> {
 
     @Nullable
     public Set<T> getObelisksFor(BlockPos pos) {
-        return lookup.getForChunk(new ChunkPos(pos));
+        return lookup.getForChunk(ChunkPos.containing(pos));
     }
 }

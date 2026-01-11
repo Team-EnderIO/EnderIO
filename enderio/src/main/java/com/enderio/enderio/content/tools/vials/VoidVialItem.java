@@ -50,7 +50,7 @@ public class VoidVialItem extends Item {
             var particle = ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, 0.27450980f, 0.88627451f,
                     0.29411765f);
 
-            PacketDistributor.sendToPlayersTrackingChunk(serverLevel, new ChunkPos(pos),
+            PacketDistributor.sendToPlayersTrackingChunk(serverLevel, ChunkPos.containing(pos),
                     new EmitParticlePacket(particle, pos, 0.2, 0.8, 0.2));
 
             level.playSound(null, pos, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 0.1f,

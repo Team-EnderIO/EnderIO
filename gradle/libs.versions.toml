@@ -1,6 +1,6 @@
 [versions]
-minecraft = { strictly = "[26.1-snapshot-1]", prefer = "26.1-snapshot-1" }
-neoforge = "26.1.0.0-alpha.4+snapshot-1"
+minecraft = { strictly = "[26.1-snapshot-2]", prefer = "26.1-snapshot-2" }
+neoforge = "26.1.0.0-alpha.5+snapshot-2"
 almostUnified = "1.21.1-1.0.0"
 jeiVersion = "28.0.0.7"
 ccTweaked = "1.113.1"
