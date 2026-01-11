@@ -25,8 +25,8 @@ import net.neoforged.neoforge.network.PacketDistributor;
 
 // TODO: Change behaviour to add xp tank.
 public class VoidVialItem extends Item {
-    public VoidVialItem(Properties pProperties) {
-        super(pProperties.stacksTo(1));
+    public VoidVialItem(Properties properties) {
+        super(properties.stacksTo(1));
     }
 
     @Override

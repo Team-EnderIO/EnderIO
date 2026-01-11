@@ -59,7 +59,7 @@ public record HeatConduitConnectionConfig(boolean isInsert, boolean isExtract, R
 
     @Override
     public ConnectionConfig reconnected() {
-        return null;
+        return new HeatConduitConnectionConfig(DEFAULT.isInsert, DEFAULT.isExtract, extractRedstoneControl, extractRedstoneChannel);
     }
 
     @Override

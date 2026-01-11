@@ -11,14 +11,9 @@
     "O": {
       "tag": "c:ingots/osmium"
     },
-    "P": [
-      {
-        "item": "minecraft:paper"
-      },
-      {
-        "item": "enderio:black_paper"
-      }
-    ]
+    "P": {
+      "item": "minecraft:paper"
+    }
   },
   "pattern": [
     " P ",

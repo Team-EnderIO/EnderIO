@@ -7,7 +7,7 @@
   ],
   "type": "enderio:chemical",
   "description": {
-    "translate": "item.enderio.conduit.chemical"
+    "translate": "conduit.enderio.chemical"
   },
   "is_multi_chemical": false,
   "texture": "enderio:block/conduit/chemical",

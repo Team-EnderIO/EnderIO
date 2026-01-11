@@ -5,13 +5,16 @@
     "B": {
       "item": "enderio:conduit_binder"
     },
+    "C": {
+      "tag": "c:ingots/conductive_alloy"
+    },
     "G": {
       "tag": "c:glass_blocks/clear"
     }
   },
   "pattern": [
     "BBB",
-    "GGG",
+    "CGC",
     "BBB"
   ],
   "result": {

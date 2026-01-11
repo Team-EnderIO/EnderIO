@@ -9,11 +9,11 @@
     },
     {
       "count": 1,
-      "tag": "c:ingots/gold"
+      "tag": "c:ingots/conductive_alloy"
     },
     {
       "count": 1,
-      "tag": "c:dusts/glowstone"
+      "tag": "c:ingots/gold"
     }
   ],
   "output": {

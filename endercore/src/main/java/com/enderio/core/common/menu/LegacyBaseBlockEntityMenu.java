@@ -29,7 +29,7 @@ public abstract class LegacyBaseBlockEntityMenu<T extends BlockEntity> extends B
     }
 
     @Override
-    public boolean stillValid(Player pPlayer) {
-        return getBlockEntity() != null && Container.stillValidBlockEntity(getBlockEntity(), pPlayer);
+    public boolean stillValid(Player player) {
+        return getBlockEntity() != null && Container.stillValidBlockEntity(getBlockEntity(), player);
     }
 }

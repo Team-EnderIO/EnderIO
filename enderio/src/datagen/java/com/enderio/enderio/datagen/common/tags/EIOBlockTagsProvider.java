@@ -27,7 +27,7 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
     }
 
     @Override
-    protected void addTags(HolderLookup.Provider pProvider) {
+    protected void addTags(HolderLookup.Provider provider) {
         tag(BlockTags.CLIMBABLE).add(EIOBlocks.DARK_STEEL_LADDER.get());
         tag(BlockTags.DOORS).add(EIOBlocks.DARK_STEEL_DOOR.get());
         tag(BlockTags.TRAPDOORS).add(EIOBlocks.DARK_STEEL_TRAPDOOR.get());
@@ -38,11 +38,10 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
             .add(EIOBlocks.WALL_ENDERMAN_HEAD.get());
 
         tag(BlockTags.MINEABLE_WITH_PICKAXE)
-            .add(EIOBlocks.COPPER_ALLOY_BLOCK.get())
+            .add(EIOBlocks.CONDUCTIVE_ALLOY_BLOCK.get())
             .add(EIOBlocks.ENERGETIC_ALLOY_BLOCK.get())
             .add(EIOBlocks.VIBRANT_ALLOY_BLOCK.get())
             .add(EIOBlocks.REDSTONE_ALLOY_BLOCK.get())
-            .add(EIOBlocks.CONDUCTIVE_ALLOY_BLOCK.get())
             .add(EIOBlocks.PULSATING_ALLOY_BLOCK.get())
             .add(EIOBlocks.DARK_STEEL_BLOCK.get())
             .add(EIOBlocks.SOULARIUM_BLOCK.get())
@@ -114,11 +113,10 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
 
         // Blocks that need stone tools
         tag(BlockTags.NEEDS_STONE_TOOL)
-            .add(EIOBlocks.COPPER_ALLOY_BLOCK.get())
+            .add(EIOBlocks.CONDUCTIVE_ALLOY_BLOCK.get())
             .add(EIOBlocks.ENERGETIC_ALLOY_BLOCK.get())
             .add(EIOBlocks.VIBRANT_ALLOY_BLOCK.get())
             .add(EIOBlocks.REDSTONE_ALLOY_BLOCK.get())
-            .add(EIOBlocks.CONDUCTIVE_ALLOY_BLOCK.get())
             .add(EIOBlocks.PULSATING_ALLOY_BLOCK.get())
             .add(EIOBlocks.DARK_STEEL_BLOCK.get())
             .add(EIOBlocks.SOULARIUM_BLOCK.get())
@@ -172,15 +170,15 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
         tag(BlockTags.NEEDS_DIAMOND_TOOL)
             .add(EIOBlocks.REINFORCED_OBSIDIAN.get());
 
-        tag(Tags.Blocks.STORAGE_BLOCKS).addTag(EIOTags.Blocks.BLOCKS_CONDUCTIVE_ALLOY)
-                .addTag(EIOTags.Blocks.BLOCKS_COPPER_ALLOY)
-                .addTag(EIOTags.Blocks.BLOCKS_DARK_STEEL)
-                .addTag(EIOTags.Blocks.BLOCKS_END_STEEL)
-                .addTag(EIOTags.Blocks.BLOCKS_ENERGETIC_ALLOY)
-                .addTag(EIOTags.Blocks.BLOCKS_PULSATING_ALLOY)
-                .addTag(EIOTags.Blocks.BLOCKS_REDSTONE_ALLOY)
-                .addTag(EIOTags.Blocks.BLOCKS_SOULARIUM)
-                .addTag(EIOTags.Blocks.BLOCKS_VIBRANT_ALLOY);
+        tag(Tags.Blocks.STORAGE_BLOCKS)
+            .addTag(EIOTags.Blocks.BLOCKS_CONDUCTIVE_ALLOY)
+            .addTag(EIOTags.Blocks.BLOCKS_DARK_STEEL)
+            .addTag(EIOTags.Blocks.BLOCKS_END_STEEL)
+            .addTag(EIOTags.Blocks.BLOCKS_ENERGETIC_ALLOY)
+            .addTag(EIOTags.Blocks.BLOCKS_PULSATING_ALLOY)
+            .addTag(EIOTags.Blocks.BLOCKS_REDSTONE_ALLOY)
+            .addTag(EIOTags.Blocks.BLOCKS_SOULARIUM)
+            .addTag(EIOTags.Blocks.BLOCKS_VIBRANT_ALLOY);
 
         tag(EIOTags.Blocks.BLOCKS_TELEPORTATION)
             .add(EIOBlocks.TRAVEL_ANCHOR.get())
@@ -197,7 +195,6 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
         tag(Tags.Blocks.RELOCATION_NOT_SUPPORTED).add(EIOBlocks.CONDUIT_BUNDLE.get());
 
         // Alloys
-        tag(EIOTags.Blocks.BLOCKS_COPPER_ALLOY).add(EIOBlocks.COPPER_ALLOY_BLOCK.get());
         tag(EIOTags.Blocks.BLOCKS_ENERGETIC_ALLOY).add(EIOBlocks.ENERGETIC_ALLOY_BLOCK.get());
         tag(EIOTags.Blocks.BLOCKS_VIBRANT_ALLOY).add(EIOBlocks.VIBRANT_ALLOY_BLOCK.get());
         tag(EIOTags.Blocks.BLOCKS_REDSTONE_ALLOY).add(EIOBlocks.REDSTONE_ALLOY_BLOCK.get());

@@ -41,11 +41,10 @@ public class EIOBlockStateProvider extends BlockStateProvider {
     @Override
     protected void registerStatesAndModels() {
         // Alloys
-        simpleBlock(EIOBlocks.COPPER_ALLOY_BLOCK.get());
+        simpleBlock(EIOBlocks.CONDUCTIVE_ALLOY_BLOCK.get());
         simpleBlock(EIOBlocks.ENERGETIC_ALLOY_BLOCK.get());
         simpleBlock(EIOBlocks.VIBRANT_ALLOY_BLOCK.get());
         simpleBlock(EIOBlocks.REDSTONE_ALLOY_BLOCK.get());
-        simpleBlock(EIOBlocks.CONDUCTIVE_ALLOY_BLOCK.get());
         simpleBlock(EIOBlocks.PULSATING_ALLOY_BLOCK.get());
         simpleBlock(EIOBlocks.DARK_STEEL_BLOCK.get());
         simpleBlock(EIOBlocks.SOULARIUM_BLOCK.get());

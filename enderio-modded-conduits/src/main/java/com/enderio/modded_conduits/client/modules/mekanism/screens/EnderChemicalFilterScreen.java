@@ -7,7 +7,6 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.content.filters.AbstractFilterMenu;
 import com.enderio.enderio.content.filters.FiltersLang;
 import com.enderio.enderio.content.filters.item.general.EnderItemFilterMenu;
-import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.modded_conduits.common.modules.mekanism.chemical_filter.ChemicalFilterSlot;
 import com.enderio.modded_conduits.common.modules.mekanism.chemical_filter.EnderChemicalFilterMenu;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -44,8 +43,8 @@ public class EnderChemicalFilterScreen extends EnderContainerScreen<EnderChemica
 
     private final ResourceLocation backgroundTexture;
 
-    public EnderChemicalFilterScreen(EnderChemicalFilterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
-        super(pMenu, pPlayerInventory, pTitle);
+    public EnderChemicalFilterScreen(EnderChemicalFilterMenu menu, Inventory playerInventory, Component title) {
+        super(menu, playerInventory, title);
 
         this.shouldRenderLabels = true;
 
@@ -58,7 +57,7 @@ public class EnderChemicalFilterScreen extends EnderContainerScreen<EnderChemica
         this.imageWidth = WIDTH;
         this.imageHeight = HEIGHT - (4 - menu.type.rowCount()) * 18;
 
-        switch (pMenu.type.rowCount()) {
+        switch (menu.type.rowCount()) {
         case 1 -> backgroundTexture = BG_1x9;
         case 2 -> backgroundTexture = BG_2x9;
         case 3 -> backgroundTexture = BG_3x9;
@@ -135,14 +134,14 @@ public class EnderChemicalFilterScreen extends EnderContainerScreen<EnderChemica
     }
 
     @Override
-    protected void slotClicked(Slot pSlot, int pSlotId, int pMouseButton, ClickType pType) {
+    protected void slotClicked(Slot slot, int slotId, int mouseButton, ClickType type) {
 //        if (getMenu().getFilter() instanceof ItemFilterCapability itemFilterCapability) {
-//            if (pSlot != null && pSlot.index < itemFilterCapability.getEntries().size()) {
-//                if (!itemFilterCapability.getEntries().get(pSlot.index).isEmpty()) {
-//                    itemFilterCapability.setEntry(pSlotId, ItemStack.EMPTY);
+//            if (slot != null && slot.index < itemFilterCapability.getEntries().size()) {
+//                if (!itemFilterCapability.getEntries().get(slot.index).isEmpty()) {
+//                    itemFilterCapability.setEntry(slotId, ItemStack.EMPTY);
 //                }
 //            }
-        super.slotClicked(pSlot, pSlotId, pMouseButton, pType);
+        super.slotClicked(slot, slotId, mouseButton, type);
 //        }
     }
 }

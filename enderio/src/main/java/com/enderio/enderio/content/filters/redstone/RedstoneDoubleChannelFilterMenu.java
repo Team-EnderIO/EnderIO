@@ -22,14 +22,14 @@ public class RedstoneDoubleChannelFilterMenu extends AbstractContainerMenu {
     private final RedstoneOutputFilter filter;
     private final DoubleRedstoneChannel channels;
 
-    protected RedstoneDoubleChannelFilterMenu(@Nullable MenuType<?> pMenuType, int pContainerId, Inventory inventory, ItemStack pStack) {
-        super(pMenuType, pContainerId);
-        this.stack = pStack;
+    protected RedstoneDoubleChannelFilterMenu(@Nullable MenuType<?> menuType, int containerId, Inventory inventory, ItemStack stack) {
+        super(menuType, containerId);
+        this.stack = stack;
 
         // TODO: Gross workaround, I think these menus should be rewritten sometime.
-        Object resourceFilter = pStack.getCapability(EnderIOCapabilities.REDSTONE_INSERT_FILTER);
+        Object resourceFilter = stack.getCapability(EnderIOCapabilities.REDSTONE_INSERT_FILTER);
         if (resourceFilter == null) {
-            resourceFilter = pStack.getCapability(EnderIOCapabilities.REDSTONE_EXTRACT_FILTER);
+            resourceFilter = stack.getCapability(EnderIOCapabilities.REDSTONE_EXTRACT_FILTER);
         }
         if (!(resourceFilter instanceof RedstoneOutputFilter filter)) {
             throw new IllegalArgumentException();
@@ -42,8 +42,8 @@ public class RedstoneDoubleChannelFilterMenu extends AbstractContainerMenu {
         addInventorySlots(14,119, inventory);
     }
 
-    protected RedstoneDoubleChannelFilterMenu(int pContainerId, Inventory inventory, ItemStack pStack) {
-        this(EIOMenus.REDSTONE_DOUBLE_CHANNEL_FILTER.get(), pContainerId, inventory, pStack);
+    protected RedstoneDoubleChannelFilterMenu(int containerId, Inventory inventory, ItemStack stack) {
+        this(EIOMenus.REDSTONE_DOUBLE_CHANNEL_FILTER.get(), containerId, inventory, stack);
     }
 
 
@@ -60,13 +60,13 @@ public class RedstoneDoubleChannelFilterMenu extends AbstractContainerMenu {
     }
 
     @Override
-    public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
+    public ItemStack quickMoveStack(Player player, int index) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public boolean stillValid(Player pPlayer) {
-        return pPlayer.getItemInHand(InteractionHand.MAIN_HAND).equals(stack);
+    public boolean stillValid(Player player) {
+        return player.getItemInHand(InteractionHand.MAIN_HAND).equals(stack);
     }
 
     public void setFirstChannel(DyeColor colorControl) {

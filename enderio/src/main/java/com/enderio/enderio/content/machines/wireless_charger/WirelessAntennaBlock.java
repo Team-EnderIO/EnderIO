@@ -11,8 +11,8 @@ public class WirelessAntennaBlock extends Block {
 
     private static final VoxelShape SHAPE = Block.box(4.0, 0.0, 4.0, 12.0, 10.0, 12.0);
 
-    public WirelessAntennaBlock(Properties pProperties) {
-        super(pProperties);
+    public WirelessAntennaBlock(Properties properties) {
+        super(properties);
     }
 
     @Override

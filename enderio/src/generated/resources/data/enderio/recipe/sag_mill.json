@@ -9,7 +9,10 @@
       "tag": "c:gears/iron"
     },
     "I": {
-      "tag": "c:ingots/dark_steel"
+      "tag": "c:ingots/iron"
+    },
+    "O": {
+      "tag": "c:obsidians"
     },
     "P": {
       "item": "minecraft:piston"
@@ -19,9 +22,9 @@
     }
   },
   "pattern": [
-    "FFF",
+    "GFG",
     "IVI",
-    "GPG"
+    "OPO"
   ],
   "result": {
     "count": 1,

@@ -216,20 +216,20 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
     }
 
     @Override
-    public void addToTooltip(Item.TooltipContext pContext, Consumer<Component> pTooltipAdder,
-            TooltipFlag pTooltipFlag) {
+    public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder,
+            TooltipFlag tooltipFlag) {
         String transferLimitFormatted = String.format("%,d", transferRatePerTick());
-        pTooltipAdder
+        tooltipAdder
                 .accept(TooltipUtil.styledWithArgs(ConduitLang.FLUID_EFFECTIVE_RATE_TOOLTIP, transferLimitFormatted));
 
         if (isMultiFluid()) {
-            pTooltipAdder.accept(ConduitLang.MULTI_FLUID_TOOLTIP);
+            tooltipAdder.accept(ConduitLang.MULTI_FLUID_TOOLTIP);
         }
 
-        if (pTooltipFlag.hasShiftDown()) {
+        if (tooltipFlag.hasShiftDown()) {
             String rawRateFormatted = String.format("%,d",
                     (int) Math.ceil(transferRatePerTick() * (20.0 / networkTickRate())));
-            pTooltipAdder.accept(TooltipUtil.styledWithArgs(ConduitLang.FLUID_RAW_RATE_TOOLTIP, rawRateFormatted));
+            tooltipAdder.accept(TooltipUtil.styledWithArgs(ConduitLang.FLUID_RAW_RATE_TOOLTIP, rawRateFormatted));
         }
     }
 

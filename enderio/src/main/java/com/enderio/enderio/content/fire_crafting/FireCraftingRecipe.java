@@ -68,7 +68,7 @@ public record FireCraftingRecipe(List<Result> results, List<Block> bases, List<T
     }
 
     @Override
-    public boolean canCraftInDimensions(int pWidth, int pHeight) {
+    public boolean canCraftInDimensions(int width, int height) {
         return true;
     }
 

@@ -12,6 +12,7 @@ import com.enderio.enderio.foundation.block.entity.multienergy.MultiEnergyStorag
 import com.enderio.enderio.foundation.io.energy.ILargeMachineEnergyStorage;
 import com.enderio.enderio.foundation.io.energy.MachineEnergyStorage;
 import com.enderio.enderio.foundation.tag.EIOTags;
+import com.enderio.enderio.foundation.util.ReflectionUtil;
 import com.enderio.enderio.init.EIOBlockEntities;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
@@ -31,9 +32,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class CapacitorBankBlockEntity extends LegacyPoweredMachineBlockEntity implements MultiConfigurable {
 
@@ -79,6 +84,7 @@ public class CapacitorBankBlockEntity extends LegacyPoweredMachineBlockEntity im
         addDataSlot(DISPLAY_MODE_MAP_DATA_SLOT_TYPE.create(() -> displayModes, displayModes::putAll));
     }
 
+
     @Override
     public NetworkDataSlot<?> createEnergyDataSlot() {
         return LargeEnergyData.DATA_SLOT_TYPE.create(
@@ -88,8 +94,8 @@ public class CapacitorBankBlockEntity extends LegacyPoweredMachineBlockEntity im
 
     @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
-        return new CapacitorBankMenu(pContainerId, this, pPlayerInventory);
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
+        return new CapacitorBankMenu(containerId, this, playerInventory);
     }
 
     @Override
@@ -168,9 +174,9 @@ public class CapacitorBankBlockEntity extends LegacyPoweredMachineBlockEntity im
     }
 
     @Override
-    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.saveAdditional(pTag, lookupProvider);
-        pTag.put(DISPLAY_MODES, saveDisplayModes());
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(tag, lookupProvider);
+        tag.put(DISPLAY_MODES, saveDisplayModes());
     }
 
     public CompoundTag saveDisplayModes() {
@@ -183,10 +189,10 @@ public class CapacitorBankBlockEntity extends LegacyPoweredMachineBlockEntity im
     }
 
     @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.loadAdditional(pTag, lookupProvider);
-        if (pTag.contains(DISPLAY_MODES, Tag.TAG_COMPOUND)) {
-            loadDisplayModes(pTag.getCompound(DISPLAY_MODES));
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(tag, lookupProvider);
+        if (tag.contains(DISPLAY_MODES, Tag.TAG_COMPOUND)) {
+            loadDisplayModes(tag.getCompound(DISPLAY_MODES));
         }
     }
 
@@ -248,14 +254,32 @@ public class CapacitorBankBlockEntity extends LegacyPoweredMachineBlockEntity im
         clientConfigurables.addAll(list);
     }
 
+    private volatile Map<GraphObject<Mergeable.Dummy>, ?> cachedMap;
+    private volatile Graph<Mergeable.Dummy> cachedMapGraph;
+
+    private Map<GraphObject<Mergeable.Dummy>, ?> getMap() {
+        Graph<Mergeable.Dummy> graph = node.getGraph();
+        if(graph == null) return Collections.emptyMap();
+        if (cachedMap == null || cachedMapGraph != graph) {
+            cachedMap = ReflectionUtil.getRawMap(graph);
+            cachedMapGraph = graph;
+        }
+        if (cachedMap == null) cachedMap = Collections.emptyMap();
+        return cachedMap;
+    }
+
     private List<BlockPos> getPositions() {
         if (node.getGraph() == null) {
             return List.of();
         }
 
-        List<BlockPos> positions = new ArrayList<>();
-        for (GraphObject<Mergeable.Dummy> object : node.getGraph().getObjects()) {
-            if (object instanceof MultiEnergyNode otherNode) {
+        // Get raw objects once - this is the expensive reflection call
+        Map<GraphObject<Mergeable.Dummy>, ?> map = getMap();
+        Collection<GraphObject<Mergeable.Dummy>> objects = !map.isEmpty() ? map.keySet() : node.getGraph().getObjects();
+        List<BlockPos> positions = new ArrayList<>(objects.size());
+
+        for (GraphObject<Mergeable.Dummy> obj : objects) {
+            if (obj instanceof MultiEnergyNode otherNode) {
                 positions.add(otherNode.pos);
             }
         }

@@ -52,6 +52,12 @@ public class RedstoneTimerFilter implements RedstoneInputFilter {
         stack.set(EIODataComponents.REDSTONE_TIMER_FILTER, new Component(0, maxTicks));
     }
 
+    @Override
+    public boolean isConfigured() {
+        Component current = stack.get(EIODataComponents.REDSTONE_TIMER_FILTER);
+        return current != null && !current.equals(INSTANCE);
+    }
+
     public record Component(int ticks, int maxTicks) {
         public static final Codec<Component> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(ExtraCodecs.POSITIVE_INT.fieldOf("ticks").forGetter(r -> r.maxTicks),

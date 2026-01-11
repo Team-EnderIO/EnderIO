@@ -36,24 +36,24 @@ public class PaintedSandBlock extends ColoredFallingBlock implements EntityBlock
     }
 
     @Override
-    public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRand) {
-        if (isFree(pLevel.getBlockState(pPos.below())) && pPos.getY() >= pLevel.getMinBuildHeight()) {
-            PaintedSandEntity paintedSandEntity = new PaintedSandEntity(pLevel, pPos.getX() + 0.5D, pPos.getY(), pPos.getZ() + 0.5D,
-                pLevel.getBlockState(pPos));
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource rand) {
+        if (isFree(level.getBlockState(pos.below())) && pos.getY() >= level.getMinBuildHeight()) {
+            PaintedSandEntity paintedSandEntity = new PaintedSandEntity(level, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D,
+                level.getBlockState(pos));
             this.falling(paintedSandEntity);
-            BlockEntity be = pLevel.getBlockEntity(pPos);
+            BlockEntity be = level.getBlockEntity(pos);
             if (be != null) {
-                paintedSandEntity.blockData = be.saveWithoutMetadata(pLevel.registryAccess());
+                paintedSandEntity.blockData = be.saveWithoutMetadata(level.registryAccess());
             }
 
-            pLevel.setBlock(pPos, pLevel.getBlockState(pPos).getFluidState().createLegacyBlock(), 3);
-            pLevel.addFreshEntity(paintedSandEntity);
+            level.setBlock(pos, level.getBlockState(pos).getFluidState().createLegacyBlock(), 3);
+            level.addFreshEntity(paintedSandEntity);
         }
     }
 
     @Override
-    public int getDustColor(BlockState pState, BlockGetter pReader, BlockPos pPos) {
-        BlockEntity blockEntity = pReader.getBlockEntity(pPos);
+    public int getDustColor(BlockState state, BlockGetter reader, BlockPos pos) {
+        BlockEntity blockEntity = reader.getBlockEntity(pos);
         if (blockEntity instanceof PaintedBlockEntity paintedBlockEntity) {
             Optional<Block> block = paintedBlockEntity.getPrimaryPaint();
             if (block.isPresent()) {

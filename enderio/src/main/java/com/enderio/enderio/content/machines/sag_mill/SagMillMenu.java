@@ -18,8 +18,8 @@ public class SagMillMenu extends PoweredMachineMenu<SagMillBlockEntity> {
     private final FloatSyncSlot grindingBallDamageSlot;
     private final GrindingBallDataSyncSlot grindingBallDataSlot;
 
-    public SagMillMenu(int pContainerId, Inventory inventory, SagMillBlockEntity blockEntity) {
-        super(EIOMenus.SAG_MILL.get(), pContainerId, inventory, blockEntity);
+    public SagMillMenu(int containerId, Inventory inventory, SagMillBlockEntity blockEntity) {
+        super(EIOMenus.SAG_MILL.get(), containerId, inventory, blockEntity);
         addSlots();
 
         craftingProgressSlot = addSyncSlot(FloatSyncSlot.readOnly(blockEntity::getCraftingProgress));

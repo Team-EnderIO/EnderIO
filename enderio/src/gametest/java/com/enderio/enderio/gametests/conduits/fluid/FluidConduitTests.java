@@ -115,7 +115,7 @@ public class FluidConduitTests {
     @GameTest(template = THREE_TANKS)
     @TestHolder(description = "Ensures fluid conduits prioritise highest priority container first, before closest.")
     public static void fluidConduitManualPriority(final ConduitGameTestHelper helper) {
-        var fluidConduit = helper.getConduit(EIOConduits.PRESSURIZED_FLUID);
+        var fluidConduit = helper.getConduit(EIOConduits.ENERGETIC_FLUID);
         final int tickRate = fluidConduit.value().networkTickRate();
 
         if (!((FluidConduit)fluidConduit.value()).doesSupportPriority()) {

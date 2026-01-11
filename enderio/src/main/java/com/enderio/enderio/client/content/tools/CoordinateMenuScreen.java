@@ -22,8 +22,8 @@ public class CoordinateMenuScreen extends EnderContainerScreen<CoordinateMenu> {
 
     private EditBox nameInput;
 
-    public CoordinateMenuScreen(CoordinateMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
-        super(pMenu, pPlayerInventory, pTitle);
+    public CoordinateMenuScreen(CoordinateMenu menu, Inventory playerInventory, Component title) {
+        super(menu, playerInventory, title);
         this.imageWidth = WIDTH;
         this.imageHeight = HEIGHT;
     }
@@ -52,7 +52,7 @@ public class CoordinateMenuScreen extends EnderContainerScreen<CoordinateMenu> {
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float pPartialTicks, int pMouseX, int pMouseY) {
+    protected void renderBg(GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY) {
         guiGraphics.blit(BG_TEXTURE, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight);
 
         int midX = this.width / 2;

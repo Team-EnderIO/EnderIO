@@ -87,11 +87,11 @@ public class SoulDataReloadListener<T extends SoulData> extends SimpleJsonResour
     }
 
     @Override
-    protected void apply(Map<ResourceLocation, JsonElement> pObject, ResourceManager pResourceManager,
-            ProfilerFiller pProfiler) {
+    protected void apply(Map<ResourceLocation, JsonElement> object, ResourceManager resourceManager,
+            ProfilerFiller profiler) {
         Map<ResourceLocation, T> newMap = new HashMap<>();
 
-        for (Map.Entry<ResourceLocation, JsonElement> element : pObject.entrySet()) {
+        for (Map.Entry<ResourceLocation, JsonElement> element : object.entrySet()) {
             codec.decode(JsonOps.INSTANCE, element.getValue())
                     .ifSuccess(result -> newMap.put(result.getFirst().getKey(), result.getFirst())) // store the key
                                                                                                     // from the

@@ -157,11 +157,11 @@ public class EnderfaceScreen extends Screen {
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double pDragX, double pDragY) {
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
         long window = Minecraft.getInstance().getWindow().getWindow();
 
-        double dx = pDragX / (double) Minecraft.getInstance().getWindow().getGuiScaledWidth();
-        double dy = pDragY / (double) Minecraft.getInstance().getWindow().getGuiScaledHeight();
+        double dx = dragX / (double) Minecraft.getInstance().getWindow().getGuiScaledWidth();
+        double dy = dragY / (double) Minecraft.getInstance().getWindow().getGuiScaledHeight();
 
         if (InputConstants.isKeyDown(window, InputConstants.KEY_LCONTROL)
                 || InputConstants.isKeyDown(window, InputConstants.KEY_LSHIFT)) {

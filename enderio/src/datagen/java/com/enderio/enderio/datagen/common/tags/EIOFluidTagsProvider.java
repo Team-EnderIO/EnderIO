@@ -14,13 +14,13 @@ import java.util.concurrent.CompletableFuture;
 
 public class EIOFluidTagsProvider extends FluidTagsProvider {
 
-    public EIOFluidTagsProvider(PackOutput pOutput, CompletableFuture<HolderLookup.Provider> pProvider,
+    public EIOFluidTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider,
             @Nullable ExistingFileHelper existingFileHelper) {
-        super(pOutput, pProvider, EnderIOAPI.MOD_ID, existingFileHelper);
+        super(output, provider, EnderIOAPI.MOD_ID, existingFileHelper);
     }
 
     @Override
-    protected void addTags(HolderLookup.Provider pProvider) {
+    protected void addTags(HolderLookup.Provider provider) {
         tag(Tags.Fluids.EXPERIENCE).add(EIOFluids.XP_JUICE.source().get());
         tag(EIOTags.Fluids.SOLAR_PANEL_LIGHT).add(EIOFluids.LIQUID_SUNSHINE.source().get());
         tag(EIOTags.Fluids.SOLAR_PANEL_DARK).add(EIOFluids.LIQUID_DARKNESS.source().get());

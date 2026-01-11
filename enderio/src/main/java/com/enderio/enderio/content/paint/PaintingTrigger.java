@@ -22,8 +22,8 @@ public class PaintingTrigger extends SimpleCriterionTrigger<PaintingTrigger.Trig
         return ID;
     }
 
-    public void trigger(ServerPlayer pPlayer, Block paint) {
-        super.trigger(pPlayer, triggerInstance -> triggerInstance.matches(paint));
+    public void trigger(ServerPlayer player, Block paint) {
+        super.trigger(player, triggerInstance -> triggerInstance.matches(paint));
     }
 
     @Override

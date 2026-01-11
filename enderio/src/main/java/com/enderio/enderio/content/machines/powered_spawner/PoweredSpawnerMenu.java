@@ -19,8 +19,8 @@ public class PoweredSpawnerMenu extends PoweredMachineMenu<PoweredSpawnerBlockEn
     private final FloatSyncSlot spawnProgressSlot;
     private final EnumSyncSlot<PoweredSpawnerMode> modeSlot;
 
-    public PoweredSpawnerMenu(int pContainerId, Inventory inventory, PoweredSpawnerBlockEntity blockEntity) {
-        super(EIOMenus.POWERED_SPAWNER.get(), pContainerId, inventory, blockEntity);
+    public PoweredSpawnerMenu(int containerId, Inventory inventory, PoweredSpawnerBlockEntity blockEntity) {
+        super(EIOMenus.POWERED_SPAWNER.get(), containerId, inventory, blockEntity);
         addSlots();
 
         spawnProgressSlot = addSyncSlot(FloatSyncSlot.readOnly(blockEntity::getSpawnProgress));

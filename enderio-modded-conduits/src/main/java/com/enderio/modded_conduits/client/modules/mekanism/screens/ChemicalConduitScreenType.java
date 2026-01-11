@@ -138,11 +138,11 @@ public class ChemicalConduitScreenType extends IOConduitScreenType<ChemicalCondu
         }
 
         @Override
-        public void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
+        public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
         }
 
         @Override
-        public void renderWidget(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+        public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
             if (isHoveredOrFocused()) {
                 MutableComponent tooltip = MekanismModule.CHEMICAL_CONDUIT_CHANGE_FLUID1.copy();
                 tooltip.append("\n").append(MekanismModule.CHEMICAL_CONDUIT_CHANGE_FLUID2);
@@ -188,7 +188,7 @@ public class ChemicalConduitScreenType extends IOConduitScreenType<ChemicalCondu
         }
 
         @Override
-        public void onClick(double pMouseX, double pMouseY) {
+        public void onClick(double mouseX, double mouseY) {
             onPress.run();
         }
     }

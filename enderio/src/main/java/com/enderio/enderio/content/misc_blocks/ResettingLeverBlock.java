@@ -33,12 +33,12 @@ public class ResettingLeverBlock extends LeverBlock {
     }
 
     @Override
-    protected InteractionResult useWithoutItem(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, BlockHitResult pHit) {
-        if (!pState.getValue(POWERED)) {
-            pLevel.scheduleTick(pPos, this, delay);
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+        if (!state.getValue(POWERED)) {
+            level.scheduleTick(pos, this, delay);
         }
 
-        return super.useWithoutItem(pState, pLevel, pPos, pPlayer, pHit);
+        return super.useWithoutItem(state, level, pos, player, hit);
     }
 
     @Override
@@ -51,14 +51,14 @@ public class ResettingLeverBlock extends LeverBlock {
     }
 
     @Override
-    public int getSignal(BlockState pBlockState, BlockGetter pBlockAccess, BlockPos pPos, Direction pSide) {
-        int res = super.getSignal(pBlockState, pBlockAccess, pPos,pSide);
+    public int getSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
+        int res = super.getSignal(blockState, blockAccess, pos,side);
         return inverted ? 15 - res : res;
     }
 
     @Override
-    public int getDirectSignal(BlockState pBlockState, BlockGetter pBlockAccess, BlockPos pPos, Direction pSide) {
-        int res = super.getDirectSignal(pBlockState, pBlockAccess, pPos, pSide);
+    public int getDirectSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
+        int res = super.getDirectSignal(blockState, blockAccess, pos, side);
         return inverted ? 15 - res : res;
     }
 

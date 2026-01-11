@@ -71,8 +71,8 @@ public abstract class LegacyMachineMenu<T extends LegacyMachineBlockEntity> exte
     }
 
     @Override
-    public boolean stillValid(Player pPlayer) {
-        return getBlockEntity() != null && Container.stillValidBlockEntity(getBlockEntity(), pPlayer);
+    public boolean stillValid(Player player) {
+        return getBlockEntity() != null && Container.stillValidBlockEntity(getBlockEntity(), player);
     }
 
     // Stop clearing ghost slot when double clicking.
@@ -101,9 +101,9 @@ public abstract class LegacyMachineMenu<T extends LegacyMachineBlockEntity> exte
     // case where this might not be handled (in other words, no-op if no player
     // inv?)
     @Override
-    public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
+    public ItemStack quickMoveStack(Player player, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = this.slots.get(pIndex);
+        Slot slot = this.slots.get(index);
 
         // Clear the ghost slot but don't actually take the originalStack.
         if (slot instanceof GhostMachineSlot) {
@@ -114,7 +114,7 @@ public abstract class LegacyMachineMenu<T extends LegacyMachineBlockEntity> exte
         if (slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
-            if (pIndex < this.slots.size() - PLAYER_INVENTORY_SIZE) {
+            if (index < this.slots.size() - PLAYER_INVENTORY_SIZE) {
                 if (!this.moveItemStackTo(itemstack1, this.slots.size() - PLAYER_INVENTORY_SIZE, this.slots.size(),
                         true)) {
                     return ItemStack.EMPTY;
@@ -129,7 +129,7 @@ public abstract class LegacyMachineMenu<T extends LegacyMachineBlockEntity> exte
                 slot.setChanged();
             }
 
-            slot.onTake(pPlayer, itemstack1);
+            slot.onTake(player, itemstack1);
         }
 
         return itemstack;

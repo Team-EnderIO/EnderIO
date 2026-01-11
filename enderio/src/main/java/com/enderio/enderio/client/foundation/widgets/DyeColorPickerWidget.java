@@ -18,9 +18,9 @@ public class DyeColorPickerWidget extends BaseEnumPickerWidget<DyeColor> {
             DyeColor.YELLOW, DyeColor.LIGHT_BLUE, DyeColor.MAGENTA, DyeColor.ORANGE, DyeColor.WHITE, DyeColor.BLACK,
             DyeColor.RED, };
 
-    public DyeColorPickerWidget(int pX, int pY, Supplier<DyeColor> getter, Consumer<DyeColor> setter,
+    public DyeColorPickerWidget(int x, int y, Supplier<DyeColor> getter, Consumer<DyeColor> setter,
             Component optionName) {
-        super(pX, pY, 16, 16, DyeColor.class, getter, setter, true, optionName);
+        super(x, y, 16, 16, DyeColor.class, getter, setter, true, optionName);
     }
 
     @Override

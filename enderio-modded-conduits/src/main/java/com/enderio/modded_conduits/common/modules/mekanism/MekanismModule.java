@@ -1,9 +1,12 @@
 package com.enderio.modded_conduits.common.modules.mekanism;
 
+import com.enderio.core.common.registries.ItemDeferredRegister;
+import com.enderio.core.common.registries.MenuDeferredRegister;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.ConduitApi;
 import com.enderio.enderio.api.conduits.ConduitIngredient;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
@@ -14,8 +17,6 @@ import com.enderio.enderio.content.conduits.ConduitApiImpl;
 import com.enderio.enderio.content.filters.AbstractFilterItem;
 import com.enderio.enderio.init.EIOCreativeTabs;
 import com.enderio.enderio.init.EIOItems;
-import com.enderio.modded_conduits.client.modules.mekanism.screens.EnderChemicalFilterScreen;
-import com.enderio.modded_conduits.common.ModdedConduits;
 import com.enderio.modded_conduits.common.modules.ConduitCommonModule;
 import com.enderio.modded_conduits.common.modules.mekanism.chemical.C2SClearLockedChemicalPacket;
 import com.enderio.modded_conduits.common.modules.mekanism.chemical.ChemicalConduit;
@@ -29,13 +30,10 @@ import com.enderio.modded_conduits.common.modules.mekanism.chemical_filter.Ender
 import com.enderio.modded_conduits.common.modules.mekanism.heat.HeatConduit;
 import com.enderio.modded_conduits.common.modules.mekanism.heat.HeatConduitConnectionConfig;
 import com.enderio.modded_conduits.common.modules.mekanism.laserio.MekanismLaserIOCompat;
-import com.enderio.regilite.holder.RegiliteItem;
-import com.enderio.regilite.holder.RegiliteMenu;
-import com.enderio.regilite.registry.ItemRegistry;
-import com.enderio.regilite.registry.MenuRegistry;
 import mekanism.api.MekanismAPI;
 import mekanism.api.chemical.IChemicalHandler;
 import mekanism.api.heat.IHeatHandler;
+import net.minecraft.Util;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.core.Direction;
@@ -52,6 +50,8 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -59,10 +59,14 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.ItemCapability;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.BiConsumer;
@@ -76,8 +80,8 @@ public class MekanismModule implements ConduitCommonModule {
 
     // region Registries
 
-    private static final ItemRegistry ITEM_REGISTRY = ModdedConduits.REGILITE.itemRegistry();
-    private static final MenuRegistry MENU_REGISTRY = ModdedConduits.REGILITE.menuRegistry();
+    private static final ItemDeferredRegister ITEMS = ItemDeferredRegister.create(EnderIO.MOD_ID);
+    private static final MenuDeferredRegister MENUS = MenuDeferredRegister.create(EnderIO.MOD_ID);
 
     private static final DeferredRegister<ConduitType<?>> CONDUIT_TYPES = DeferredRegister
             .create(EnderIORegistries.CONDUIT_TYPE, EnderIO.MOD_ID);
@@ -118,18 +122,17 @@ public class MekanismModule implements ConduitCommonModule {
                     builder -> builder.persistent(EnderChemicalFilter.CODEC)
                             .networkSynchronized(EnderChemicalFilter.STREAM_CODEC));
 
-    public static final RegiliteItem<EnderChemicalFilterItem> BASIC_CHEMICAL_FILTER = ITEM_REGISTRY
-        .registerItem("basic_chemical_filter", props -> new EnderChemicalFilterItem(props, EnderChemicalFilterItem.Type.BASIC))
-        .setTab(EIOCreativeTabs.MAIN)
-        .addCapability(Capabilities.CHEMICAL_FILTER, EnderChemicalFilterItem.CHEMICAL_FILTER_PROVIDER)
-        .addCapability(EnderIOCapabilities.FILTER_MENU_PROVIDER, AbstractFilterItem.FILTER_MENU_PROVIDER);
+    public static final DeferredItem<EnderChemicalFilterItem> BASIC_CHEMICAL_FILTER = ITEMS.registerItem(
+        "basic_chemical_filter",
+        props -> new EnderChemicalFilterItem(props, EnderChemicalFilterItem.Type.BASIC)
+    );
 
     static {
-        ITEM_REGISTRY.addAlias(EnderIO.rl("chemical_filter"), BASIC_CHEMICAL_FILTER.getId());
+        ITEMS.addAlias(EnderIO.rl("chemical_filter"), BASIC_CHEMICAL_FILTER.getId());
     }
 
-    public static final RegiliteMenu<EnderChemicalFilterMenu> CHEMICAL_FILTER_MENU = MENU_REGISTRY
-            .registerMenu("chemical_filter", EnderChemicalFilterItem.Type.BASIC::openMenu, () -> EnderChemicalFilterScreen::new);
+    public static final DeferredHolder<MenuType<?>, MenuType<EnderChemicalFilterMenu>> CHEMICAL_FILTER_MENU = 
+        MENUS.register("chemical_filter", EnderChemicalFilterItem.Type.BASIC::openMenu);
 
     public static class Capabilities {
         public static final ItemCapability<ChemicalFilter, Void> CHEMICAL_FILTER = ItemCapability.createVoid(EnderIO.rl("chemical_filter"), ChemicalFilter.class);
@@ -147,30 +150,17 @@ public class MekanismModule implements ConduitCommonModule {
         }
     }
 
-    private static final Component LANG_HEAT_CONDUIT = addTranslation("item", EnderIO.rl("conduit.heat"),
-            "Heat Conduit");
-    private static final Component LANG_CHEMICAL_CONDUIT = addTranslation("item", EnderIO.rl("conduit.chemical"),
-            "Chemical Conduit");
-    private static final Component LANG_PRESSURIZED_CHEMICAL_CONDUIT = addTranslation("item",
-            EnderIO.rl("conduit.pressurized_chemical"), "Pressurized Chemical Conduit");
-    private static final Component LANG_ENDER_CHEMICAL_CONDUIT = addTranslation("item",
-            EnderIO.rl("conduit.ender_chemical"), "Ender Chemical Conduit");
+    public static final Component LANG_MULTI_CHEMICAL_TOOLTIP = tooltip("chemical/multi");
 
-    public static final Component LANG_MULTI_CHEMICAL_TOOLTIP = addTranslation("item",
-            EnderIO.rl("conduit.chemical.multi"), "Allows multiple chemical types to be transported on the same line");
-
-    public static final Component CHEMICAL_CONDUIT_CHANGE_FLUID1 = addTranslation("gui",
-            EnderIO.rl("chemical_conduit.change_fluid1"), "Locked Chemical:");
-    public static final Component CHEMICAL_CONDUIT_CHANGE_FLUID2 = addTranslation("gui",
-            EnderIO.rl("chemical_conduit.change_fluid2"), "Click to reset!");
-    public static final MutableComponent CHEMICAL_CONDUIT_CHANGE_FLUID3 = addTranslation("gui",
-            EnderIO.rl("chemical_conduit.change_fluid3"), "Chemical: %s");
+    public static final Component CHEMICAL_CONDUIT_CHANGE_FLUID1 = tooltip("chemical/change_fluid1");
+    public static final Component CHEMICAL_CONDUIT_CHANGE_FLUID2 = tooltip("chemical/change_fluid2");
+    public static final MutableComponent CHEMICAL_CONDUIT_CHANGE_FLUID3 = tooltip("chemical/change_fluid3");
 
     private static final TagKey<Item> OSMIUM = ItemTags
             .create(ResourceLocation.fromNamespaceAndPath("c", "ingots/osmium"));
 
-    private static MutableComponent addTranslation(String prefix, ResourceLocation id, String translation) {
-        return ModdedConduits.REGILITE.addTranslation(prefix, id, translation);
+    private static MutableComponent tooltip(String path) {
+        return Component.translatable(Util.makeDescriptionId("tooltip", EnderIO.rl("conduit/" + path)));
     }
 
     public static final ResourceKey<Conduit<?, ?>> CHEMICAL = ResourceKey.create(EnderIORegistries.Keys.CONDUIT,
@@ -184,29 +174,53 @@ public class MekanismModule implements ConduitCommonModule {
 
     @Override
     public void initialize(IEventBus modEventBus) {
+        ITEMS.register(modEventBus);
+        MENUS.register(modEventBus);
         CONDUIT_TYPES.register(modEventBus);
         CONDUIT_DATA_TYPES.register(modEventBus);
         CONDUIT_CONNECTION_CONFIG_TYPES.register(modEventBus);
         CONDUIT_NETWORK_CONTEXT_TYPES.register(modEventBus);
         DATA_COMPONENT_TYPES.register(modEventBus);
-        ITEM_REGISTRY.register(modEventBus);
-        MENU_REGISTRY.register(modEventBus);
         modEventBus.addListener(this::registerPayloadHandlers);
+        modEventBus.addListener(this::registerCapabilities);
+        modEventBus.addListener(this::addToCreativeTabs);
 
         if (ModList.get().isLoaded("laserio")) {
             MekanismLaserIOCompat.init(modEventBus);
         }
     }
 
+    private void registerCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerItem(
+            Capabilities.CHEMICAL_FILTER,
+            EnderChemicalFilterItem.CHEMICAL_FILTER_PROVIDER,
+            BASIC_CHEMICAL_FILTER.get()
+        );
+
+        event.registerItem(
+            EnderIOCapabilities.FILTER_MENU_PROVIDER,
+            AbstractFilterItem.FILTER_MENU_PROVIDER,
+            BASIC_CHEMICAL_FILTER.get()
+        );
+    }
+
+    private void addToCreativeTabs(BuildCreativeModeTabContentsEvent event) {
+        if (event.getTabKey() == EIOCreativeTabs.MAIN) {
+            event.insertAfter(EIOItems.BASIC_SOUL_FILTER.get().getDefaultInstance(),
+                BASIC_CHEMICAL_FILTER.get().getDefaultInstance(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+        }
+    }
+
     @Override
     public void bootstrapConduits(BootstrapContext<Conduit<?, ?>> context) {
-        context.register(HEAT, new HeatConduit(EnderIO.rl("block/conduit/heat"), LANG_HEAT_CONDUIT));
+        context.register(HEAT, new HeatConduit(EnderIO.rl("block/conduit/heat"), Component.translatable(ConduitApi.INSTANCE.makeDescriptionId(HEAT))));
         context.register(CHEMICAL,
-                new ChemicalConduit(EnderIO.rl("block/conduit/chemical"), LANG_CHEMICAL_CONDUIT, 750, false));
+            new ChemicalConduit(EnderIO.rl("block/conduit/chemical"), Component.translatable(ConduitApi.INSTANCE.makeDescriptionId(CHEMICAL)),
+            750, false));
         context.register(PRESSURIZED_CHEMICAL, new ChemicalConduit(EnderIO.rl("block/conduit/pressurized_chemical"),
-                LANG_PRESSURIZED_CHEMICAL_CONDUIT, 2_000, false));
+            Component.translatable(ConduitApi.INSTANCE.makeDescriptionId(PRESSURIZED_CHEMICAL)), 2_000, false));
         context.register(ENDER_CHEMICAL, new ChemicalConduit(EnderIO.rl("block/conduit/ender_chemical"),
-                LANG_ENDER_CHEMICAL_CONDUIT, 64_000, true));
+            Component.translatable(ConduitApi.INSTANCE.makeDescriptionId(ENDER_CHEMICAL)), 64_000, true));
     }
 
     @Override
@@ -300,11 +314,11 @@ public class MekanismModule implements ConduitCommonModule {
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 .save(mekRecipeOutput, EnderIO.rl("mek_advanced_thermodynamic_conductor"));
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BASIC_CHEMICAL_FILTER)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, BASIC_CHEMICAL_FILTER.get())
                 .pattern(" P ")
                 .pattern("POP")
                 .pattern(" P ")
-                .define('P', Ingredient.of(Items.PAPER, EIOItems.BLACK_PAPER)) // TODO: c:paper?
+                .define('P', Items.PAPER)
                 .define('O', OSMIUM)
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(OSMIUM)))

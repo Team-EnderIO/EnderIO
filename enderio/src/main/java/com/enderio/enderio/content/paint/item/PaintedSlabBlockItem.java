@@ -15,26 +15,26 @@ import org.jetbrains.annotations.Nullable;
 
 public class PaintedSlabBlockItem extends PaintedBlockItem {
 
-    public PaintedSlabBlockItem(Block pBlock, Properties pProperties) {
-        super(pBlock, pProperties);
+    public PaintedSlabBlockItem(Block block, Properties properties) {
+        super(block, properties);
     }
 
     @Override
-    protected boolean updateCustomBlockEntityTag(BlockPos pPos, Level pLevel, @Nullable Player pPlayer, ItemStack pStack, BlockState pState) {
-        boolean result = updateCustomBlockEntityTag(pLevel, pPlayer, pPos, pStack);
+    protected boolean updateCustomBlockEntityTag(BlockPos pos, Level level, @Nullable Player player, ItemStack stack, BlockState state) {
+        boolean result = updateCustomBlockEntityTag(level, player, pos, stack);
 
-        var paintData = pStack.get(EIODataComponents.BLOCK_PAINT);
+        var paintData = stack.get(EIODataComponents.BLOCK_PAINT);
 
         if (paintData == null) {
             // TODO: Log error
             return true;
         }
 
-        BlockEntity blockentity = pLevel.getBlockEntity(pPos);
+        BlockEntity blockentity = level.getBlockEntity(pos);
         if (blockentity instanceof PaintedBlockEntity paintedBlockEntity) {
-            if (pState.getValue(SlabBlock.TYPE) != SlabType.BOTTOM) {
+            if (state.getValue(SlabBlock.TYPE) != SlabType.BOTTOM) {
                 paintedBlockEntity.setSecondaryPaint(paintData.paint());
-            } else if (pState.getValue(SlabBlock.TYPE) != SlabType.TOP) {
+            } else if (state.getValue(SlabBlock.TYPE) != SlabType.TOP) {
                 paintedBlockEntity.setPrimaryPaint(paintData.paint());
             }
         }

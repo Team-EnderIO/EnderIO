@@ -7,7 +7,7 @@
   ],
   "type": "enderio:chemical",
   "description": {
-    "translate": "item.enderio.conduit.pressurized_chemical"
+    "translate": "conduit.enderio.pressurized_chemical"
   },
   "is_multi_chemical": false,
   "texture": "enderio:block/conduit/pressurized_chemical",

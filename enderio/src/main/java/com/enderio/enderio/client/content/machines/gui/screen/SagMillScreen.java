@@ -32,8 +32,8 @@ public class SagMillScreen extends MachineScreen<SagMillMenu> {
     private static final ResourceLocation PROGRESS_SPRITE = EnderIO.rl("screen/sag_mill/progress");
     private static final ResourceLocation BALL_DURABILITY_SPRITE = EnderIOAPI.rl("screen/sag_mill/grinding_ball_durability");
 
-    public SagMillScreen(SagMillMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
-        super(pMenu, pPlayerInventory, pTitle);
+    public SagMillScreen(SagMillMenu menu, Inventory playerInventory, Component title) {
+        super(menu, playerInventory, title);
         imageWidth = WIDTH;
         imageHeight = HEIGHT;
         shouldRenderLabels = true;
@@ -63,8 +63,8 @@ public class SagMillScreen extends MachineScreen<SagMillMenu> {
     }
 
     @Override
-    protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
-        pGuiGraphics.blit(BG_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
+        guiGraphics.blit(BG_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
     }
 
     private class GrindingBallWidget extends AbstractWidget {

@@ -13,8 +13,6 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Supplier;
-
 public class EnderChemicalFilterMenu extends AbstractFilterMenu<EnderChemicalFilter> {
 
     public static final int IS_INVERTED_BUTTON_ID = 1;
@@ -111,7 +109,7 @@ public class EnderChemicalFilterMenu extends AbstractFilterMenu<EnderChemicalFil
     }
 
     @Override
-    public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
+    public ItemStack quickMoveStack(Player player, int index) {
         return ItemStack.EMPTY;
     }
 }

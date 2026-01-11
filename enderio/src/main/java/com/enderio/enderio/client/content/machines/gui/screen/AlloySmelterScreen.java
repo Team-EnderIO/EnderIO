@@ -29,8 +29,8 @@ public class AlloySmelterScreen extends MachineScreen<AlloySmelterMenu> {
 
     private static final ResourceLocation PROGRESS_SPRITE = EnderIO.rl("screen/alloy_smelter/lit_progress");
 
-    public AlloySmelterScreen(AlloySmelterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
-        super(pMenu, pPlayerInventory, pTitle);
+    public AlloySmelterScreen(AlloySmelterMenu menu, Inventory playerInventory, Component title) {
+        super(menu, playerInventory, title);
         imageWidth = WIDTH;
         imageHeight = HEIGHT;
         shouldRenderLabels = true;
@@ -65,11 +65,11 @@ public class AlloySmelterScreen extends MachineScreen<AlloySmelterMenu> {
     }
 
     @Override
-    protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
+    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         switch (menu.getMode()) {
-        case ALL -> pGuiGraphics.blit(BG_TEXTURE_AUTO, leftPos, topPos, 0, 0, imageWidth, imageHeight);
-        case ALLOYS -> pGuiGraphics.blit(BG_TEXTURE_ALLOY, leftPos, topPos, 0, 0, imageWidth, imageHeight);
-        case FURNACE -> pGuiGraphics.blit(BG_TEXTURE_FURNACE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+        case ALL -> guiGraphics.blit(BG_TEXTURE_AUTO, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+        case ALLOYS -> guiGraphics.blit(BG_TEXTURE_ALLOY, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+        case FURNACE -> guiGraphics.blit(BG_TEXTURE_FURNACE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
         default -> throw new NotImplementedException();
         }
     }

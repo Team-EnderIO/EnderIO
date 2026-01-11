@@ -267,9 +267,9 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
     }
 
     @Override
-    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.saveAdditional(pTag, lookupProvider);
-        saveTank(lookupProvider, pTag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(tag, lookupProvider);
+        saveTank(lookupProvider, tag);
     }
 
     @Override

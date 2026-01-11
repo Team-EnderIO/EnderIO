@@ -16,13 +16,13 @@ public class EIOPressurePlateBlock extends PressurePlateBlock {
 
     @FunctionalInterface
     public interface Detector {
-        int getSignalStrength(Level pLevel, BlockPos pPos);
+        int getSignalStrength(Level level, BlockPos pos);
     }
 
-    public static final Detector PLAYER = (pLevel, pPos) -> {
-        net.minecraft.world.phys.AABB aabb = TOUCH_AABB.move(pPos);
+    public static final Detector PLAYER = (level, pos) -> {
+        net.minecraft.world.phys.AABB aabb = TOUCH_AABB.move(pos);
         List<? extends Entity> list;
-        list = pLevel.getEntitiesOfClass(Player.class, aabb);
+        list = level.getEntitiesOfClass(Player.class, aabb);
         for (Entity entity : list) {
             if (!entity.isIgnoringBlockTriggers()) {
                 return 15;
@@ -31,10 +31,10 @@ public class EIOPressurePlateBlock extends PressurePlateBlock {
         return 0;
     };
 
-    public static final Detector HOSTILE_MOB = (pLevel, pPos) -> {
-        net.minecraft.world.phys.AABB aabb = TOUCH_AABB.move(pPos);
+    public static final Detector HOSTILE_MOB = (level, pos) -> {
+        net.minecraft.world.phys.AABB aabb = TOUCH_AABB.move(pos);
         List<LivingEntity> list;
-        list = pLevel.getEntitiesOfClass(LivingEntity.class, aabb);
+        list = level.getEntitiesOfClass(LivingEntity.class, aabb);
         for (LivingEntity entity : list) {
             if (entity instanceof Enemy && !entity.isIgnoringBlockTriggers()) {
                 return 15;
@@ -54,7 +54,7 @@ public class EIOPressurePlateBlock extends PressurePlateBlock {
     }
 
     @Override
-    protected int getSignalStrength(Level pLevel, BlockPos pPos) {
-        return detector.getSignalStrength(pLevel, pPos);
+    protected int getSignalStrength(Level level, BlockPos pos) {
+        return detector.getSignalStrength(level, pos);
     }
 }

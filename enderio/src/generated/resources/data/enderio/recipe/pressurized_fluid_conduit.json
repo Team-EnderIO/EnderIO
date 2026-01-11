@@ -7,11 +7,14 @@
     },
     "G": {
       "tag": "c:glass_blocks/fused_quartz"
+    },
+    "I": {
+      "tag": "c:ingots/energetic_alloy"
     }
   },
   "pattern": [
     "BBB",
-    "GGG",
+    "IGI",
     "BBB"
   ],
   "result": {

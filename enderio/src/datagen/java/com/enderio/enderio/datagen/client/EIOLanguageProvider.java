@@ -4,6 +4,7 @@ import com.enderio.core.common.registries.FluidDeferredHolders;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.ConduitApi;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.compat.jei.JEILang;
 import com.enderio.enderio.content.advancements.AdvancementsLang;
@@ -184,15 +185,15 @@ public class EIOLanguageProvider extends LanguageProvider {
 
     private void addConduitDescriptions() {
         add(EIOConduits.ENERGY, "Energy Conduit");
-        add(EIOConduits.ENHANCED_ENERGY, "Enhanced Energy Conduit");
-        add(EIOConduits.ENDER_ENERGY, "Ender Energy Conduit");
+        add(EIOConduits.ENERGETIC_ENERGY, "Energetic Energy Conduit");
+        add(EIOConduits.VIBRANT_ENERGY, "Vibrant Energy Conduit");
         add(EIOConduits.REDSTONE, "Redstone Conduit");
         add(EIOConduits.FLUID, "Fluid Conduit");
-        add(EIOConduits.PRESSURIZED_FLUID, "Pressurized Fluid Conduit");
-        add(EIOConduits.ENDER_FLUID, "Ender Fluid Conduit");
+        add(EIOConduits.ENERGETIC_FLUID, "Energetic Fluid Conduit");
+        add(EIOConduits.VIBRANT_FLUID, "Vibrant Fluid Conduit");
         add(EIOConduits.ITEM, "Item Conduit");
-        add(EIOConduits.ENHANCED_ITEM, "Enhanced Item Conduit");
-        add(EIOConduits.ENDER_ITEM, "Ender Item Conduit");
+        add(EIOConduits.ENERGETIC_ITEM, "Energetic Item Conduit");
+        add(EIOConduits.VIBRANT_ITEM, "Vibrant Item Conduit");
     }
 
     private void addConduitLang() {
@@ -264,6 +265,7 @@ public class EIOLanguageProvider extends LanguageProvider {
 
     private void addFiltersLang() {
         add(FiltersLang.CONFIGURED, "Configured");
+        add(FiltersLang.UNCONFIGURED_HINT, "Use while crouching to configure");
         add(FiltersLang.FILTER_CONFIG_NOT_ALLOWED_COMPONENT_MATCH, "This filter uses component matching which is no longer available to this item. Clear this filter using the crafting grid to remove this warning.");
 
         add(FiltersLang.FILTER_ALLOW_LIST, "Allow List");
@@ -401,21 +403,19 @@ public class EIOLanguageProvider extends LanguageProvider {
 
     private void addItems() {
         // Alloys
-        add(EIOItems.COPPER_ALLOY_INGOT.get(), "Copper Alloy Ingot");
+        add(EIOItems.CONDUCTIVE_ALLOY_INGOT.get(), "Conductive Alloy Ingot");
         add(EIOItems.ENERGETIC_ALLOY_INGOT.get(), "Energetic Alloy Ingot");
         add(EIOItems.VIBRANT_ALLOY_INGOT.get(), "Vibrant Alloy Ingot");
         add(EIOItems.REDSTONE_ALLOY_INGOT.get(), "Redstone Alloy Ingot");
-        add(EIOItems.CONDUCTIVE_ALLOY_INGOT.get(), "Conductive Alloy Ingot");
         add(EIOItems.PULSATING_ALLOY_INGOT.get(), "Pulsating Alloy Ingot");
         add(EIOItems.DARK_STEEL_INGOT.get(), "Dark Steel Ingot");
         add(EIOItems.SOULARIUM_INGOT.get(), "Soularium Ingot");
         add(EIOItems.END_STEEL_INGOT.get(), "End Steel Ingot");
 
-        add(EIOItems.COPPER_ALLOY_NUGGET.get(), "Copper Alloy Nugget");
+        add(EIOItems.CONDUCTIVE_ALLOY_NUGGET.get(), "Conductive Alloy Nugget");
         add(EIOItems.ENERGETIC_ALLOY_NUGGET.get(), "Energetic Alloy Nugget");
         add(EIOItems.VIBRANT_ALLOY_NUGGET.get(), "Vibrant Alloy Nugget");
         add(EIOItems.REDSTONE_ALLOY_NUGGET.get(), "Redstone Alloy Nugget");
-        add(EIOItems.CONDUCTIVE_ALLOY_NUGGET.get(), "Conductive Alloy Nugget");
         add(EIOItems.PULSATING_ALLOY_NUGGET.get(), "Pulsating Alloy Nugget");
         add(EIOItems.DARK_STEEL_NUGGET.get(), "Dark Steel Nugget");
         add(EIOItems.SOULARIUM_NUGGET.get(), "Soularium Nugget");
@@ -428,7 +428,6 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOItems.REDSTONE_ALLOY_BALL.get(), "Redstone Alloy Grinding Ball");
         add(EIOItems.ENERGETIC_ALLOY_BALL.get(), "Energetic Alloy Grinding Ball");
         add(EIOItems.VIBRANT_ALLOY_BALL.get(), "Vibrant Alloy Grinding Ball");
-        add(EIOItems.COPPER_ALLOY_BALL.get(), "Copper Alloy Grinding Ball");
         add(EIOItems.DARK_STEEL_BALL.get(), "Dark Steel Grinding Ball");
         add(EIOItems.END_STEEL_BALL.get(), "End Steel Grinding Ball");
 
@@ -469,7 +468,6 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOItems.PRESCIENT_CRYSTAL.get(), "Prescient Crystal");
 
         // Powders and Fragments
-        add(EIOItems.FLOUR.get(), "Flour");
         add(EIOItems.POWDERED_COAL.get(), "Powdered Coal");
         add(EIOItems.POWDERED_IRON.get(), "Powdered Iron");
         add(EIOItems.POWDERED_GOLD.get(), "Powdered Gold");
@@ -477,7 +475,6 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOItems.POWDERED_TIN.get(), "Powdered Tin");
         add(EIOItems.POWDERED_ENDER_PEARL.get(), "Powdered Ender Pearl");
         add(EIOItems.POWDERED_OBSIDIAN.get(), "Powdered Obsidian");
-        add(EIOItems.POWDERED_COBALT.get(), "Powdered Cobalt");
         add(EIOItems.POWDERED_LAPIS_LAZULI.get(), "Powdered Lapis Lazuli");
         add(EIOItems.POWDERED_QUARTZ.get(), "Powdered Quartz");
         add(EIOItems.PRESCIENT_POWDER.get(), "Grains of Prescience");
@@ -489,11 +486,6 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOItems.CONFUSION_POWDER.get(), "Confusion Powder");
         add(EIOItems.WITHERING_POWDER.get(), "Withering Powder");
 
-        // Dyes
-        add(EIOItems.DYE_GREEN.get(), "Organic Green Dye");
-        add(EIOItems.DYE_BROWN.get(), "Organic Brown Dye");
-        add(EIOItems.DYE_BLACK.get(), "Organic Black Dye");
-
         // Misc Materials
         add(EIOItems.PHOTOVOLTAIC_PLATE.get(), "Photovoltaic Plate");
         add(EIOItems.NUTRITIOUS_STICK.get(), "Nutritious Stick");
@@ -503,10 +495,6 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOItems.ANIMAL_TOKEN.get(), "Animal Token");
         add(EIOItems.MONSTER_TOKEN.get(), "Monster Token");
         add(EIOItems.PLAYER_TOKEN.get(), "Player Token");
-        add(EIOItems.CAKE_BASE.get(), "Cake Base");
-        add(EIOItems.BLACK_PAPER.get(), "Black Paper");
-        add(EIOItems.CLAYED_GLOWSTONE.get(), "Clayed Glowstone");
-        add(EIOItems.NETHERCOTTA.get(), "Nethercotta");
         add(EIOItems.BROKEN_SPAWNER.get(), "Broken Spawner");
 
         // Gliders
@@ -565,11 +553,10 @@ public class EIOLanguageProvider extends LanguageProvider {
 
     private void addBlocks() {
         // Alloys
-        add(EIOBlocks.COPPER_ALLOY_BLOCK.get(), "Copper Alloy Block");
+        add(EIOBlocks.CONDUCTIVE_ALLOY_BLOCK.get(), "Conductive Alloy Block");
         add(EIOBlocks.ENERGETIC_ALLOY_BLOCK.get(), "Energetic Alloy Block");
         add(EIOBlocks.VIBRANT_ALLOY_BLOCK.get(), "Vibrant Alloy Block");
         add(EIOBlocks.REDSTONE_ALLOY_BLOCK.get(), "Redstone Alloy Block");
-        add(EIOBlocks.CONDUCTIVE_ALLOY_BLOCK.get(), "Conductive Alloy Block");
         add(EIOBlocks.PULSATING_ALLOY_BLOCK.get(), "Pulsating Alloy Block");
         add(EIOBlocks.DARK_STEEL_BLOCK.get(), "Dark Steel Block");
         add(EIOBlocks.SOULARIUM_BLOCK.get(), "Soularium Block");
@@ -758,7 +745,7 @@ public class EIOLanguageProvider extends LanguageProvider {
     }
 
     private void add(ResourceKey<Conduit<?, ?>> key, String translation) {
-        add(Component.translatable(Util.makeDescriptionId(EnderIORegistries.Keys.CONDUIT.location().getPath(), key.location())), translation);
+        add(ConduitApi.INSTANCE.makeDescriptionId(key), translation);
     }
 
     private void add(Component component, String translation) {

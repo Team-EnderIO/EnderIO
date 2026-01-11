@@ -8,8 +8,8 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class InhibitorObeliskMenu extends ObeliskMenu<InhibitorObeliskBlockEntity> {
 
-    public InhibitorObeliskMenu(int pContainerId, Inventory inventory, InhibitorObeliskBlockEntity blockEntity) {
-        super(EIOMenus.INHIBITOR_OBELISK.get(), pContainerId, inventory, blockEntity);
+    public InhibitorObeliskMenu(int containerId, Inventory inventory, InhibitorObeliskBlockEntity blockEntity) {
+        super(EIOMenus.INHIBITOR_OBELISK.get(), containerId, inventory, blockEntity);
         addSlots();
     }
 

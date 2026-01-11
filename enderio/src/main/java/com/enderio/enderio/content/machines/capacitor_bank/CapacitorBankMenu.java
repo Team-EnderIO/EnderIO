@@ -9,18 +9,18 @@ import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
 
 public class CapacitorBankMenu extends LegacyPoweredMachineMenu<CapacitorBankBlockEntity> {
-    public CapacitorBankMenu(int pContainerId, @Nullable CapacitorBankBlockEntity blockEntity, Inventory inventory) {
-        super(EIOMenus.CAPACITOR_BANK.get(), pContainerId, blockEntity, inventory);
+    public CapacitorBankMenu(int containerId, @Nullable CapacitorBankBlockEntity blockEntity, Inventory inventory) {
+        super(EIOMenus.CAPACITOR_BANK.get(), containerId, blockEntity, inventory);
         addPlayerInventorySlots(8, 84);
     }
 
-    public static CapacitorBankMenu factory(int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
+    public static CapacitorBankMenu factory(int containerId, Inventory inventory, FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
         if (entity instanceof CapacitorBankBlockEntity castBlockEntity) {
-            return new CapacitorBankMenu(pContainerId, castBlockEntity, inventory);
+            return new CapacitorBankMenu(containerId, castBlockEntity, inventory);
         }
 
         LogManager.getLogger().warn("couldn't find BlockEntity");
-        return new CapacitorBankMenu(pContainerId, null, inventory);
+        return new CapacitorBankMenu(containerId, null, inventory);
     }
 }

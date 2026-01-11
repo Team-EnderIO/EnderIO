@@ -5,14 +5,9 @@
     "I": {
       "tag": "c:ingots/iron"
     },
-    "P": [
-      {
-        "item": "minecraft:paper"
-      },
-      {
-        "item": "enderio:black_paper"
-      }
-    ],
+    "P": {
+      "item": "minecraft:paper"
+    },
     "R": {
       "tag": "c:ingots/redstone_alloy"
     }

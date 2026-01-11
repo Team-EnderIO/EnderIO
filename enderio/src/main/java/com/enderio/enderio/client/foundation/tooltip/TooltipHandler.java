@@ -68,17 +68,10 @@ public class TooltipHandler {
 
     private static void addGrindingBallTooltips(ItemStack itemStack, List<Component> components, boolean showAdvanced) {
         if (itemStack.has(EnderIODataComponents.GRINDING_BALL)) {
-            if (showAdvanced) {
-                GrindingBallData data = itemStack.get(EnderIODataComponents.GRINDING_BALL);
-                components.add(TooltipUtil.styledWithArgs(EIOCommonLang.GRINDINGBALL_MAIN_OUTPUT,
-                        (int) (data.outputMultiplier() * 100)));
-                components.add(TooltipUtil.styledWithArgs(EIOCommonLang.GRINDINGBALL_BONUS_OUTPUT,
-                        (int) (data.bonusMultiplier() * 100)));
-                components
-                        .add(TooltipUtil.styledWithArgs(EIOCommonLang.GRINDINGBALL_POWER_USE, (int) (data.powerUse() * 100)));
-            } else {
-                addShowDetailsTooltip(components);
-            }
+            GrindingBallData data = itemStack.get(EnderIODataComponents.GRINDING_BALL);
+            components.add(TooltipUtil.styledWithArgs(EIOCommonLang.GRINDINGBALL_MAIN_OUTPUT, (int) (data.outputMultiplier() * 100)));
+            components.add(TooltipUtil.styledWithArgs(EIOCommonLang.GRINDINGBALL_BONUS_OUTPUT, (int) (data.bonusMultiplier() * 100)));
+            components.add(TooltipUtil.styledWithArgs(EIOCommonLang.GRINDINGBALL_POWER_USE, (int) (data.powerUse() * 100)));
         }
     }
 

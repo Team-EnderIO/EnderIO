@@ -39,26 +39,24 @@ public class AlloyRecipeProvider extends SubRecipeProvider {
 
         // region Metal Alloys
 
-        build(new ItemStack(EIOItems.ENERGETIC_ALLOY_INGOT.get()),
-                List.of(SizedIngredient.of(Tags.Items.DUSTS_REDSTONE, 1), SizedIngredient.of(Tags.Items.INGOTS_GOLD, 1),
-                        SizedIngredient.of(Tags.Items.DUSTS_GLOWSTONE, 1)),
-                4800, 0.3f, recipeOutput);
-        build(new ItemStack(EIOItems.COPPER_ALLOY_INGOT.get()),
-                List.of(SizedIngredient.of(Tags.Items.INGOTS_COPPER, 1), SizedIngredient.of(EIOTags.Items.SILICON, 1)),
+        build(new ItemStack(EIOItems.CONDUCTIVE_ALLOY_INGOT.get()),
+                List.of(SizedIngredient.of(Tags.Items.INGOTS_IRON, 1),
+                    SizedIngredient.of(Tags.Items.INGOTS_COPPER, 1)),
                 3200, 0.3f, recipeOutput);
+        build(new ItemStack(EIOItems.ENERGETIC_ALLOY_INGOT.get()),
+                List.of(SizedIngredient.of(Tags.Items.DUSTS_REDSTONE, 1),
+                        SizedIngredient.of(EIOTags.Items.INGOTS_CONDUCTIVE_ALLOY, 1),
+                        SizedIngredient.of(Tags.Items.INGOTS_GOLD, 1)),
+                4800, 0.3f, recipeOutput);
         build(new ItemStack(EIOItems.VIBRANT_ALLOY_INGOT.get()),
                 List.of(SizedIngredient.of(EIOTags.Items.INGOTS_ENERGETIC_ALLOY, 1),
-                        SizedIngredient.of(Tags.Items.ENDER_PEARLS, 1)),
-                4800, 0.3f, recipeOutput);
+                        SizedIngredient.of(Tags.Items.ENDER_PEARLS, 1),
+                        SizedIngredient.of(Tags.Items.DUSTS_GLOWSTONE, 1)),
+                5600, 0.3f, recipeOutput);
         build(new ItemStack(EIOItems.REDSTONE_ALLOY_INGOT.get()),
-                List.of(SizedIngredient.of(Tags.Items.DUSTS_REDSTONE, 1), SizedIngredient.of(EIOTags.Items.SILICON, 1)),
+                List.of(SizedIngredient.of(Tags.Items.DUSTS_REDSTONE, 1), SizedIngredient.of(Tags.Items.INGOTS_COPPER, 1)),
                 3200, 0.3f, recipeOutput);
-        build(new ItemStack(EIOItems.CONDUCTIVE_ALLOY_INGOT.get()),
-                List.of(SizedIngredient.of(EIOTags.Items.INGOTS_COPPER_ALLOY, 1),
-                        SizedIngredient.of(Tags.Items.INGOTS_IRON, 1),
-                        SizedIngredient.of(Tags.Items.DUSTS_REDSTONE, 1)),
-                4800, 0.3f, recipeOutput);
-        build(new ItemStack(EIOItems.PULSATING_ALLOY_INGOT.get()),
+        build(new ItemStack(EIOItems.PULSATING_ALLOY_INGOT.get(), 2),
                 List.of(SizedIngredient.of(Tags.Items.INGOTS_IRON, 1), SizedIngredient.of(Tags.Items.ENDER_PEARLS, 1)),
                 4800, 0.3f, recipeOutput);
         build(EnderIO.rl("dark_steel_ingot_with_coal"),
@@ -82,26 +80,26 @@ public class AlloyRecipeProvider extends SubRecipeProvider {
 
         // region Dyes
 
-        build(new ItemStack(EIOItems.DYE_GREEN.get()), "clippings",
+        build(new ItemStack(Items.GREEN_DYE), "clippings",
                 List.of(SizedIngredient.of(EIOItems.PLANT_MATTER_GREEN.get(), 6), SizedIngredient.of(Items.EGG, 1)),
                 1000, 0.3f, recipeOutput);
-        build(new ItemStack(EIOItems.DYE_GREEN.get(), 2), "double_clippings",
+        build(new ItemStack(Items.GREEN_DYE, 2), "double_clippings",
                 List.of(SizedIngredient.of(EIOItems.PLANT_MATTER_GREEN.get(), 12),
                         SizedIngredient.of(Tags.Items.SLIMEBALLS, 1)),
                 1600, 0.3f, recipeOutput);
 
-        build(new ItemStack(EIOItems.DYE_BROWN.get()), "twigs",
+        build(new ItemStack(Items.BROWN_DYE), "twigs",
                 List.of(SizedIngredient.of(EIOItems.PLANT_MATTER_BROWN.get(), 6), SizedIngredient.of(Items.EGG, 1)),
                 1000, 0.3f, recipeOutput);
-        build(new ItemStack(EIOItems.DYE_BROWN.get(), 2), "twigs_double",
+        build(new ItemStack(Items.BROWN_DYE, 2), "twigs_double",
                 List.of(SizedIngredient.of(EIOItems.PLANT_MATTER_BROWN.get(), 12),
                         SizedIngredient.of(Tags.Items.SLIMEBALLS, 1)),
                 1600, 0.3f, recipeOutput);
 
-        build(new ItemStack(EIOItems.DYE_BLACK.get()),
+        build(new ItemStack(Items.BLACK_DYE),
                 List.of(SizedIngredient.of(EIOTags.Items.DUSTS_COAL, 1), SizedIngredient.of(Items.EGG, 1)), 1000, 0.3f,
                 recipeOutput);
-        build(new ItemStack(EIOItems.DYE_BLACK.get(), 2), "double",
+        build(new ItemStack(Items.BLACK_DYE, 2), "double",
                 List.of(SizedIngredient.of(EIOTags.Items.DUSTS_COAL, 2), SizedIngredient.of(Tags.Items.SLIMEBALLS, 1)),
                 1600, 0.3f, recipeOutput);
 
@@ -150,18 +148,6 @@ public class AlloyRecipeProvider extends SubRecipeProvider {
 
         // region Misc
 
-        build(new ItemStack(EIOItems.NETHERCOTTA.get()), List.of(SizedIngredient.of(Tags.Items.BRICKS_NETHER, 1),
-                SizedIngredient.of(Items.NETHER_WART, 4), SizedIngredient.of(Items.CLAY_BALL, 6)), 7600, 0.3f,
-                recipeOutput);
-
-        build(new ItemStack(EIOItems.CAKE_BASE.get(), 2),
-                List.of(SizedIngredient.of(EIOItems.FLOUR.get(), 3), SizedIngredient.of(Items.EGG, 1)), 2000, 0.3f,
-                recipeOutput);
-
-        build(new ItemStack(Items.COOKIE, 8),
-                List.of(SizedIngredient.of(EIOItems.FLOUR.get(), 1), SizedIngredient.of(Items.COCOA_BEANS, 1)), 2000,
-                0.3f, recipeOutput);
-
         build(new ItemStack(EIOItems.PHOTOVOLTAIC_PLATE.get()),
                 List.of(SizedIngredient.of(EIOItems.PHOTOVOLTAIC_COMPOSITE.get(), 3)), 5600, 0.3f, recipeOutput);
 
@@ -174,10 +160,6 @@ public class AlloyRecipeProvider extends SubRecipeProvider {
                 recipeOutput);
 
 //        build(new ItemStack(EIOItems.DARK_STEEL_UPGRADE_BLANK.get()), List.of(SizedIngredient.of(EIOBlocks.DARK_STEEL_BARS.get()), SizedIngredient.of(Items.CLAY_BALL), SizedIngredient.of(4, Tags.Items.STRING)), 30000, 0.3f, recipeOutput);
-
-        build(new ItemStack(EIOItems.CLAYED_GLOWSTONE.get(), 2),
-                List.of(SizedIngredient.of(Tags.Items.DUSTS_GLOWSTONE, 1), SizedIngredient.of(Items.CLAY_BALL, 1)),
-                3200, 0.3f, recipeOutput);
 
         build(new ItemStack(EIOBlocks.INDUSTRIAL_INSULATION.get()),
                 List.of(SizedIngredient.of(EIOTags.Items.DUSTS_LAPIS, 1), SizedIngredient.of(ItemTags.WOOL, 1),

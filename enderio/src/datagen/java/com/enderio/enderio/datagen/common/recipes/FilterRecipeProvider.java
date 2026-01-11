@@ -16,7 +16,7 @@ public class FilterRecipeProvider extends SubRecipeProvider {
     @Override
     public void buildRecipes(RecipeOutput recipeOutput, HolderLookup.Provider registries) {
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.BASIC_ITEM_FILTER.get())
-                .define('P', Ingredient.of(Items.PAPER, EIOItems.BLACK_PAPER)) // TODO: c:paper?
+                .define('P', Items.PAPER)
                 .define('H', Items.HOPPER)
                 .pattern(" P ")
                 .pattern("PHP")
@@ -25,7 +25,7 @@ public class FilterRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.ADVANCED_ITEM_FILTER.get())
-                .define('P', Ingredient.of(Items.PAPER, EIOItems.BLACK_PAPER)) // TODO: c:paper?
+                .define('P',Items.PAPER)
                 .define('Z', EIOItems.Z_LOGIC_CONTROLLER)
                 .define('R', Tags.Items.DUSTS_REDSTONE)
                 .pattern("RPR")
@@ -36,7 +36,7 @@ public class FilterRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.BASIC_FLUID_FILTER.get())
-                .define('P', Ingredient.of(Items.PAPER, EIOItems.BLACK_PAPER)) // TODO: c:paper?
+                .define('P',Items.PAPER)
                 .define('B', Items.BUCKET)
                 .pattern(" P ")
                 .pattern("PBP")
@@ -45,7 +45,7 @@ public class FilterRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.BASIC_SOUL_FILTER.get())
-            .define('P', Ingredient.of(Items.PAPER, EIOItems.BLACK_PAPER)) // TODO: c:paper?
+            .define('P',Items.PAPER)
             .define('S', EIOItems.SOUL_VIAL)
             .pattern(" P ")
             .pattern("PSP")

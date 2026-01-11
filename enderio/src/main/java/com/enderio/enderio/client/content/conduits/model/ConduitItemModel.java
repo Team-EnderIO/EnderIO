@@ -47,10 +47,10 @@ public class ConduitItemModel extends BakedModelWrapper<BakedModel> {
 
         @Nullable
         @Override
-        public BakedModel resolve(BakedModel pModel, ItemStack pStack, @Nullable ClientLevel pLevel,
-                @Nullable LivingEntity pEntity, int pSeed) {
-            Holder<Conduit<?, ?>> conduit = pStack.get(EnderIODataComponents.CONDUIT);
-            return CACHE.computeIfAbsent(conduit, t -> createBakedModel(t, pModel));
+        public BakedModel resolve(BakedModel model, ItemStack stack, @Nullable ClientLevel level,
+                @Nullable LivingEntity entity, int seed) {
+            Holder<Conduit<?, ?>> conduit = stack.get(EnderIODataComponents.CONDUIT);
+            return CACHE.computeIfAbsent(conduit, t -> createBakedModel(t, model));
         }
 
         private BakedModel createBakedModel(@Nullable Holder<Conduit<?, ?>> conduit, BakedModel model) {

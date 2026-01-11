@@ -9,6 +9,7 @@ import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.inventory.MachineInventory;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.foundation.inventory.MultiSlotAccess;
+import com.enderio.enderio.foundation.recipe.MachineRecipeCaches;
 import com.enderio.enderio.foundation.io.fluid.FluidItemInteractive;
 import com.enderio.enderio.foundation.io.fluid.MachineFluidHandler;
 import com.enderio.enderio.foundation.io.fluid.MachineFluidTank;
@@ -95,7 +96,14 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
 
     @Override
     public @Nullable MachineInventoryLayout createInventoryLayout() {
-        return MachineInventoryLayout.builder().inputSlot(2).slotAccess(REAGENTS).build();
+        return MachineInventoryLayout.builder()
+            .inputSlot(2, this::acceptSlotInput)
+            .slotAccess(REAGENTS)
+            .build();
+    }
+
+    protected boolean acceptSlotInput(int slot, ItemStack stack) {
+        return MachineRecipeCaches.FERMENTING.hasValidRecipeIf(getInventory(), REAGENTS, slot, stack);
     }
 
     @Override
@@ -239,16 +247,16 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
     }
 
     @Override
-    public void saveAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.saveAdditional(pTag, lookupProvider);
-        saveTank(lookupProvider, pTag);
-        craftingTaskHost.save(lookupProvider, pTag);
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.saveAdditional(tag, lookupProvider);
+        saveTank(lookupProvider, tag);
+        craftingTaskHost.save(lookupProvider, tag);
     }
 
     @Override
-    public void loadAdditional(CompoundTag pTag, HolderLookup.Provider lookupProvider) {
-        super.loadAdditional(pTag, lookupProvider);
-        loadTank(lookupProvider, pTag);
-        craftingTaskHost.load(lookupProvider, pTag);
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        super.loadAdditional(tag, lookupProvider);
+        loadTank(lookupProvider, tag);
+        craftingTaskHost.load(lookupProvider, tag);
     }
 }

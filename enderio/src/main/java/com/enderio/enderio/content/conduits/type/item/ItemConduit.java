@@ -81,16 +81,16 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
     }
 
     @Override
-    public void addToTooltip(Item.TooltipContext pContext, Consumer<Component> pTooltipAdder,
-            TooltipFlag pTooltipFlag) {
+    public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder,
+            TooltipFlag tooltipFlag) {
         String calculatedTransferLimitFormatted = String.format("%,d",
                 (int) Math.floor(transferRatePerCycle() * (20.0 / networkTickRate())));
-        pTooltipAdder.accept(
+        tooltipAdder.accept(
                 TooltipUtil.styledWithArgs(ConduitLang.ITEM_EFFECTIVE_RATE_TOOLTIP, calculatedTransferLimitFormatted));
 
-        if (pTooltipFlag.hasShiftDown()) {
+        if (tooltipFlag.hasShiftDown()) {
             String transferLimitFormatted = String.format("%,d", transferRatePerCycle());
-            pTooltipAdder.accept(TooltipUtil.styledWithArgs(ConduitLang.ITEM_RAW_RATE_TOOLTIP, transferLimitFormatted));
+            tooltipAdder.accept(TooltipUtil.styledWithArgs(ConduitLang.ITEM_RAW_RATE_TOOLTIP, transferLimitFormatted));
         }
     }
 
