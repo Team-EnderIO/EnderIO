@@ -153,7 +153,6 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
         super.clientTick();
     }
 
-    // TODO: Check if this is optimized
     private void processFarmTask() {
         int stop = Math.min(currentIndex + getRange(), positions.size());
         while (currentIndex < stop) {
@@ -193,10 +192,10 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     }
 
     public SingleSlotAccess getSeedForPos(BlockPos soil) {
-        if (soil.getX() > getBlockPos().getX() && soil.getZ() <= getBlockPos().getZ()) {
+        if (soil.getX() >= getBlockPos().getX() && soil.getZ() <= getBlockPos().getZ()) {
             return AREAS.get(0); //NE
         }
-        if (soil.getX() > getBlockPos().getX() && soil.getZ() > getBlockPos().getZ()) {
+        if (soil.getX() >= getBlockPos().getX() && soil.getZ() > getBlockPos().getZ()) {
             return AREAS.get(1); //SE
         }
         if (soil.getX() < getBlockPos().getX() && soil.getZ() > getBlockPos().getZ()) {
