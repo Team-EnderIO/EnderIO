@@ -38,7 +38,6 @@ public class EntityCaptureUtils {
 
     public enum CapturableStatus {
         CAPTURABLE(Component.empty()),
-        BOSS(ToolsLang.SOUL_VIAL_ERROR_BOSS),
         BLACKLISTED(ToolsLang.SOUL_VIAL_ERROR_BLACKLISTED),
         INCOMPATIBLE(ToolsLang.SOUL_VIAL_ERROR_FAILED);
 
