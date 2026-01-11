@@ -17,6 +17,7 @@ import com.enderio.conduits.common.init.EIOConduitTypes;
 import com.enderio.conduits.common.items.ConduitProbeItem;
 import com.enderio.conduits.common.network.ConduitSavedData;
 import com.enderio.conduits.common.redstone.RedstoneInsertFilter;
+import com.enderio.conduits.common.tag.ConduitTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -36,6 +37,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
@@ -55,6 +57,7 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -70,7 +73,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
 
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
-    private static final boolean ENABLE_FACADES = false;
+    private static final boolean ENABLE_FACADES = true;
 
     public ConduitBlock(Properties properties) {
         super(properties);
@@ -140,9 +143,48 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         BlockEntity be = level.getBlockEntity(pos);
         if (be instanceof ConduitBlockEntity conduit) {
+            // If there's a facade and facades are visible, return full block shape
+            if (conduit.getBundle().hasFacade()) {
+                // Check if player is holding item that should hide facades
+                boolean facadesVisible = true;
+                if (context instanceof EntityCollisionContext entityContext) {
+                    if (entityContext.getEntity() instanceof Player player) {
+                        facadesVisible = areFacadesVisible(player);
+                    }
+                }
+                
+                if (facadesVisible) {
+                    return Shapes.block();
+                }
+            }
+            
+            // Ensure if a bundle is bugged with 0 conduits that it can be broken
+            if (conduit.getBundle().getTypes().isEmpty()) {
+                return Shapes.block();
+            }
+            
             return conduit.getShape().getTotalShape();
         }
         return Shapes.block();
+    }
+    
+    /**
+     * Check if facades should be visible for the given player.
+     * Facades are hidden when holding items tagged with "enderio:hide_facades".
+     */
+    private boolean areFacadesVisible(Player player) {
+        ItemStack mainHand = player.getMainHandItem();
+        ItemStack offHand = player.getOffhandItem();
+        
+        return !shouldHideFacades(mainHand) && !shouldHideFacades(offHand);
+    }
+    
+    private boolean shouldHideFacades(ItemStack stack) {
+        if (stack.isEmpty()) {
+            return false;
+        }
+        
+        return stack.is(ConduitTags.Items.HIDE_FACADES);
     }
 
     // region Block Interaction
@@ -314,18 +356,51 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
     }
 
     private Optional<InteractionResult> handleFacade(ConduitBlockEntity conduit, Player player, ItemStack stack, BlockHitResult hit, boolean isClientSide) {
-        Optional<BlockState> facade = IntegrationManager.findFirst(integration -> integration.getFacadeOf(stack));
-        if (facade.isPresent() && ENABLE_FACADES) {
-            if (conduit.getBundle().hasFacade(hit.getDirection())) {
-                return Optional.of(InteractionResult.FAIL);
+        if (!ENABLE_FACADES) {
+            return Optional.empty();
+        }
+        
+        // Check if player is shift-clicking to remove facade
+        if (player.isShiftKeyDown() && stack.isEmpty()) {
+            if (conduit.getBundle().hasFacade()) {
+                if (!isClientSide) {
+                    // Drop the facade item
+                    ItemStack facadeItem = conduit.getBundle().getFacadeProvider().copy();
+                    if (!player.getAbilities().instabuild) {
+                        player.getInventory().placeItemBackInInventory(facadeItem);
+                    }
+                    conduit.getBundle().setFacadeProvider(ItemStack.EMPTY);
+                }
+                return Optional.of(InteractionResult.sidedSuccess(isClientSide));
             }
+            return Optional.empty();
+        }
+        
+        // Check if item has facade capability
+        var facadeOpt = stack.getCapability(EIOCapabilities.FACADE);
+        if (facadeOpt.isPresent()) {
+            var facade = facadeOpt.orElse(null);
+            if (facade != null && facade.isValid()) {
+                // Check if bundle already has a facade
+                if (conduit.getBundle().hasFacade()) {
+                    return Optional.of(InteractionResult.FAIL);
+                }
 
-            conduit.getBundle().setFacade(facade.get(), hit.getDirection());
-            if (!player.getAbilities().instabuild) {
-                stack.shrink(1);
+                // Set the facade
+                conduit.getBundle().setFacadeProvider(stack.copy());
+                if (!player.getAbilities().instabuild) {
+                    stack.shrink(1);
+                }
+
+                return Optional.of(InteractionResult.sidedSuccess(isClientSide));
             }
-
-            return Optional.of(InteractionResult.sidedSuccess(isClientSide));
+        }
+        
+        // Legacy integration check (for backwards compatibility)
+        Optional<BlockState> legacyFacade = IntegrationManager.findFirst(integration -> integration.getFacadeOf(stack));
+        if (legacyFacade.isPresent()) {
+            // Legacy system - not supported in new implementation
+            return Optional.of(InteractionResult.FAIL);
         }
 
         return Optional.empty();
@@ -451,13 +526,20 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
 
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        ConduitBlockItem item = (ConduitBlockItem) stack.getItem();
-        if (placer instanceof Player player) {
-            if (level.getBlockEntity(pos) instanceof ConduitBlockEntity conduit) {
-                conduit.addType(item.getType(), player);
-                if (!level.isClientSide()) {
-                    conduit.updateClient();
+        // Check if it's a conduit item or facade item
+        if (stack.getItem() instanceof ConduitBlockItem conduitItem) {
+            if (placer instanceof Player player) {
+                if (level.getBlockEntity(pos) instanceof ConduitBlockEntity conduit) {
+                    conduit.addType(conduitItem.getType(), player);
+                    if (!level.isClientSide()) {
+                        conduit.updateClient();
+                    }
                 }
+            }
+        } else {
+            // It's a facade item - just update the client
+            if (!level.isClientSide() && level.getBlockEntity(pos) instanceof ConduitBlockEntity conduit) {
+                conduit.updateClient();
             }
         }
     }
@@ -479,9 +561,34 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
         HitResult hit = player.pick(player.getBlockReach() + 5, 1, false);
         BlockEntity be = level.getBlockEntity(pos);
         if (be instanceof ConduitBlockEntity conduit) {
+            // If there's a facade and player is not hiding facades, remove just the facade
+            if (conduit.getBundle().hasFacade() && areFacadesVisible(player)) {
+                // Drop the facade
+                if (!player.getAbilities().instabuild) {
+                    ItemStack facadeItem = conduit.getBundle().getFacadeProvider().copy();
+                    Block.popResource(level, pos, facadeItem);
+                }
+                
+                // Remove the facade
+                conduit.getBundle().setFacadeProvider(ItemStack.EMPTY);
+                conduit.updateShape();
+                
+                // Play break sound
+                SoundType soundtype = state.getSoundType(level, pos, player);
+                level.playSound(player, pos, soundtype.getBreakSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+                level.gameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Context.of(player, state));
+                
+                // If bundle is now empty (no conduits and no facade), destroy the block
+                if (conduit.getBundle().isEmpty()) {
+                    return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
+                }
+                
+                return false;
+            }
+            
             @Nullable ConduitType<?> conduitType = conduit.getShape().getConduit(((BlockHitResult) hit).getBlockPos(), hit);
             if (conduitType == null) {
-                if (!conduit.getBundle().getTypes().isEmpty()) {
+                if (!conduit.getBundle().isEmpty()) {
                     level.playSound(player, pos, SoundEvents.GENERIC_SMALL_FALL, SoundSource.BLOCKS, 1F, 1F);
                     return false;
                 }
@@ -532,6 +639,57 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
             .filter(filter -> filter instanceof RedstoneInsertFilter)
             .map(filter -> ((RedstoneInsertFilter) filter).getOutputSignal(data, dyn.insertChannel()))
             .orElse(data.getSignal(dyn.insertChannel()));
+    }
+
+    // endregion
+    
+    // region Facade Behavior Overrides
+    
+    @Override
+    public SoundType getSoundType(BlockState state, LevelReader level, BlockPos pos, @Nullable net.minecraft.world.entity.Entity entity) {
+        if (level.getBlockEntity(pos) instanceof ConduitBlockEntity conduit) {
+            if (conduit.getBundle().hasFacade()) {
+                Block facadeBlock = conduit.getBundle().getFacadeBlock();
+                return facadeBlock.getSoundType(facadeBlock.defaultBlockState(), level, pos, entity);
+            }
+        }
+        return super.getSoundType(state, level, pos, entity);
+    }
+    
+    @Override
+    public float getFriction(BlockState state, LevelReader level, BlockPos pos, @Nullable net.minecraft.world.entity.Entity entity) {
+        if (level.getBlockEntity(pos) instanceof ConduitBlockEntity conduit) {
+            if (conduit.getBundle().hasFacade()) {
+                Block facadeBlock = conduit.getBundle().getFacadeBlock();
+                return facadeBlock.getFriction(facadeBlock.defaultBlockState(), level, pos, entity);
+            }
+        }
+        return super.getFriction(state, level, pos, entity);
+    }
+    
+    @Override
+    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
+        if (level.getBlockEntity(pos) instanceof ConduitBlockEntity conduit) {
+            if (conduit.getBundle().hasFacade()) {
+                Block facadeBlock = conduit.getBundle().getFacadeBlock();
+                return facadeBlock.getLightEmission(facadeBlock.defaultBlockState(), level, pos);
+            }
+        }
+        return super.getLightEmission(state, level, pos);
+    }
+    
+    @Override
+    public float getExplosionResistance(BlockState state, BlockGetter level, BlockPos pos, net.minecraft.world.level.Explosion explosion) {
+        if (level.getBlockEntity(pos) instanceof ConduitBlockEntity conduit) {
+            if (conduit.getBundle().hasFacade()) {
+                var facadeType = conduit.getBundle().getFacadeType();
+                if (facadeType.isBlastResistant()) {
+                    // Hardened facades have increased resistance
+                    return 2000.0f; // Same as obsidian
+                }
+            }
+        }
+        return super.getExplosionResistance(state, level, pos, explosion);
     }
 
     // endregion

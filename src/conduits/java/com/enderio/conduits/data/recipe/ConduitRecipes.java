@@ -236,6 +236,47 @@ public class ConduitRecipes extends RecipeProvider {
                     ::save)
                 .build(pWriter, EnderIO.loc("rs_cable"));
         }
+        
+        // Conduit facades
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ConduitItems.CONDUIT_FACADE, 4)
+            .pattern("BBB")
+            .pattern("BSB")
+            .pattern("BBB")
+            .define('B', EIOItems.CONDUIT_BINDER)
+            .define('S', Tags.Items.STONE)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
+            .save(pWriter);
+        
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ConduitItems.TRANSPARENT_CONDUIT_FACADE, 4)
+            .pattern("BBB")
+            .pattern("BGS")
+            .pattern("BBB")
+            .define('B', EIOItems.CONDUIT_BINDER)
+            .define('G', EIOTags.Items.CLEAR_GLASS)
+            .define('S', Tags.Items.STONE)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
+            .save(pWriter);
+        
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ConduitItems.HARDENED_CONDUIT_FACADE, 4)
+            .pattern("BBB")
+            .pattern("OSO")
+            .pattern("BBB")
+            .define('B', EIOItems.CONDUIT_BINDER)
+            .define('O', Tags.Items.OBSIDIAN)
+            .define('S', Tags.Items.STONE)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
+            .save(pWriter);
+        
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ConduitItems.TRANSPARENT_HARDENED_CONDUIT_FACADE, 4)
+            .pattern("BBB")
+            .pattern("OGS")
+            .pattern("BBB")
+            .define('B', EIOItems.CONDUIT_BINDER)
+            .define('O', Tags.Items.OBSIDIAN)
+            .define('G', EIOTags.Items.CLEAR_GLASS)
+            .define('S', Tags.Items.STONE)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
+            .save(pWriter);
     }
 
     private void buildUpgradeRecipes(Consumer<FinishedRecipe> pWriter) {

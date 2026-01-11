@@ -26,8 +26,13 @@ import com.enderio.core.common.blockentity.EnderBlockEntity;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
 import dev.gigaherz.graph3.Mergeable;
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
+import it.unimi.dsi.fastutil.longs.LongSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -67,6 +72,13 @@ import java.util.stream.Collectors;
 
 public class ConduitBlockEntity extends EnderBlockEntity {
 
+    // Facade rendering caches (client-side only)
+    @UseOnly(LogicalSide.CLIENT)
+    public static final Long2ObjectMap<BlockState> FACADES = new Long2ObjectOpenHashMap<>();
+
+    @UseOnly(LogicalSide.CLIENT)
+    public static final Long2ObjectMap<LongSet> CHUNK_FACADES = new Long2ObjectOpenHashMap<>();
+
     public static final ModelProperty<ConduitBundle> BUNDLE_MODEL_PROPERTY = new ModelProperty<>();
     public static final ModelProperty<BlockPos> POS = new ModelProperty<>();
 
@@ -92,8 +104,24 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     public void updateClient() {
         clientBundle = bundle.deepCopy();
         updateShape();
+        updateFacadeCache();
         requestModelDataUpdate();
         level.setBlocksDirty(getBlockPos(), Blocks.AIR.defaultBlockState(), getBlockState());
+    }
+    
+    @UseOnly(LogicalSide.CLIENT)
+    private void updateFacadeCache() {
+        if (clientBundle.hasFacade()) {
+            FACADES.put(worldPosition.asLong(), clientBundle.getFacadeBlock().defaultBlockState());
+            CHUNK_FACADES.computeIfAbsent(SectionPos.asLong(worldPosition), p -> new LongOpenHashSet())
+                    .add(worldPosition.asLong());
+        } else {
+            FACADES.remove(worldPosition.asLong());
+            LongSet chunkList = CHUNK_FACADES.getOrDefault(SectionPos.asLong(worldPosition), null);
+            if (chunkList != null) {
+                chunkList.remove(worldPosition.asLong());
+            }
+        }
     }
 
     // region Network Sync
@@ -163,6 +191,18 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         if (level instanceof ServerLevel serverLevel) {
             ConduitSavedData savedData = ConduitSavedData.get(serverLevel);
             bundle.getTypes().forEach(type -> onChunkUnloaded(savedData, type));
+        } else {
+            CHUNK_FACADES.remove(SectionPos.asLong(worldPosition));
+            FACADES.remove(worldPosition.asLong());
+        }
+    }
+
+    @Override
+    public void setRemoved() {
+        super.setRemoved();
+
+        if (level != null && level.isClientSide()) {
+            FACADES.remove(worldPosition.asLong());
         }
     }
 

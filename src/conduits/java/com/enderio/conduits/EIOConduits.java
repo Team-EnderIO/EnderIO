@@ -12,8 +12,10 @@ import com.enderio.conduits.common.init.EIOConduitTypes;
 import com.enderio.conduits.common.integrations.Integrations;
 import com.enderio.conduits.common.conduit.ConduitBlockItem;
 import com.enderio.conduits.common.network.ConduitNetwork;
+import com.enderio.conduits.data.ConduitItemTagProvider;
 import com.enderio.conduits.data.ConduitTagProvider;
 import com.enderio.conduits.data.recipe.ConduitRecipes;
+import com.enderio.conduits.data.recipe.FacadePaintingRecipeProvider;
 import com.enderio.conduits.data.recipe.RedstoneFilterRecipes;
 import net.minecraft.data.PackOutput;
 import net.minecraftforge.data.event.GatherDataEvent;
@@ -46,8 +48,11 @@ public class EIOConduits {
 
         EIODataProvider provider = new EIODataProvider("conduits");
 
-        provider.addSubProvider(event.includeServer(), new ConduitTagProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper()));
+        var blockTagsProvider = new ConduitTagProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper());
+        provider.addSubProvider(event.includeServer(), blockTagsProvider);
+        provider.addSubProvider(event.includeServer(), new ConduitItemTagProvider(packOutput, event.getLookupProvider(), blockTagsProvider.contentsGetter(), event.getExistingFileHelper()));
         provider.addSubProvider(event.includeServer(), new ConduitRecipes(packOutput));
+        provider.addSubProvider(event.includeServer(), new FacadePaintingRecipeProvider(packOutput));
         provider.addSubProvider(event.includeServer(), new RedstoneFilterRecipes(packOutput));
 
         event.getGenerator().addProvider(true, provider);

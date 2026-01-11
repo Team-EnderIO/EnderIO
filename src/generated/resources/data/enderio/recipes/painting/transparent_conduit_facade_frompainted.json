@@ -1,0 +1,9 @@
+{
+  "type": "enderio:painting",
+  "input": {
+    "item": "enderio:transparent_conduit_facade"
+  },
+  "output": {
+    "item": "enderio:transparent_conduit_facade"
+  }
+}

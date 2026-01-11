@@ -8,6 +8,7 @@ import com.enderio.api.capability.IOwner;
 import com.enderio.api.capability.ISideConfig;
 import com.enderio.api.capability.IToggled;
 import com.enderio.api.capacitor.ICapacitorData;
+import com.enderio.api.conduit.facade.ConduitFacadeProvider;
 import com.enderio.api.filter.FluidStackFilter;
 import com.enderio.api.filter.ItemStackFilter;
 import com.enderio.api.filter.ResourceFilter;
@@ -36,6 +37,8 @@ public class EIOCapabilities {
 
     public static final Capability<ResourceFilter> FILTER = CapabilityManager.get(new CapabilityToken<>() {});
 
+    public static final Capability<ConduitFacadeProvider> FACADE = CapabilityManager.get(new CapabilityToken<>() {});
+
     @SubscribeEvent
     public static void register(RegisterCapabilitiesEvent event) {
         event.register(IEntityStorage.class);
@@ -45,5 +48,6 @@ public class EIOCapabilities {
         event.register(IDarkSteelUpgradable.class);
         event.register(ICoordinateSelectionHolder.class);
         event.register(ISideConfig.class);
+        event.register(ConduitFacadeProvider.class);
     }
 }

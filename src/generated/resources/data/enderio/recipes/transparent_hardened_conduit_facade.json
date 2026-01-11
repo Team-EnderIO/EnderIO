@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "enderio:conduit_binder"
+    },
+    "G": {
+      "tag": "enderio:clear_glass"
+    },
+    "O": {
+      "tag": "forge:obsidian"
+    },
+    "S": {
+      "tag": "forge:stone"
+    }
+  },
+  "pattern": [
+    "BBB",
+    "OGS",
+    "BBB"
+  ],
+  "result": {
+    "count": 4,
+    "item": "enderio:transparent_hardened_conduit_facade"
+  },
+  "show_notification": true
+}

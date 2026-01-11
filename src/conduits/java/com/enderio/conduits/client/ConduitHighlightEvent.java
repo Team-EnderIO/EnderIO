@@ -1,5 +1,6 @@
 package com.enderio.conduits.client;
 
+import com.enderio.conduits.client.model.facades.ClientFacadeVisibility;
 import com.enderio.conduits.common.conduit.block.ConduitBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -22,6 +23,11 @@ public class ConduitHighlightEvent {
     public static void highlight(RenderHighlightEvent event) {
         if (event.getTarget() instanceof BlockHitResult blockHit) {
             if (Minecraft.getInstance().level.getBlockEntity(blockHit.getBlockPos()) instanceof ConduitBlockEntity conduit) {
+                // Use standard block highlights for facades.
+                if (conduit.getBundle().hasFacade() && ClientFacadeVisibility.areFacadesVisible()) {
+                    return;
+                }
+
                 event.setCanceled(true);
                 BlockPos pos = blockHit.getBlockPos();
                 Vec3 camPos = event.getCamera().getPosition();

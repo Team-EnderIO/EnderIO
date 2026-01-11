@@ -24,6 +24,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.LogicalSide;
@@ -56,7 +57,12 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
     private final Map<ConduitType<?>, ConduitGraphObject<?>> nodes = new HashMap<>();
     private final BlockPos pos;
 
+    // Legacy per-direction facade system (deprecated, ignored on load)
+    @Deprecated
     private final Map<Direction, BlockState> facadeTextures = new EnumMap<>(Direction.class);
+    
+    // New single-facade system
+    private ItemStack facadeProvider = ItemStack.EMPTY;
 
     @Nullable
     private Runnable onChangedRunnable;
@@ -257,19 +263,83 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
     public List<ConduitType<?>> getTypes() {
         return types;
     }
+    
+    /**
+     * @return Whether this bundle is empty (no conduit types and no facade).
+     */
+    public boolean isEmpty() {
+        return types.isEmpty() && !hasFacade();
+    }
 
+    // region Facade System
+    
+    /**
+     * @return Whether this bundle has a valid facade.
+     */
+    public boolean hasFacade() {
+        return !facadeProvider.isEmpty() && 
+            facadeProvider.getCapability(com.enderio.base.common.init.EIOCapabilities.FACADE).isPresent();
+    }
+    
+    /**
+     * @return The block this facade mimics.
+     */
+    public Block getFacadeBlock() {
+        if (facadeProvider.isEmpty()) {
+            return net.minecraft.world.level.block.Blocks.BEDROCK;
+        }
+        
+        return facadeProvider.getCapability(com.enderio.base.common.init.EIOCapabilities.FACADE)
+            .map(com.enderio.api.conduit.facade.ConduitFacadeProvider::block)
+            .orElse(net.minecraft.world.level.block.Blocks.BEDROCK);
+    }
+    
+    /**
+     * @return The type of facade with its properties.
+     */
+    public com.enderio.api.conduit.facade.FacadeType getFacadeType() {
+        if (facadeProvider.isEmpty()) {
+            return com.enderio.api.conduit.facade.FacadeType.BASIC;
+        }
+        
+        return facadeProvider.getCapability(com.enderio.base.common.init.EIOCapabilities.FACADE)
+            .map(com.enderio.api.conduit.facade.ConduitFacadeProvider::type)
+            .orElse(com.enderio.api.conduit.facade.FacadeType.BASIC);
+    }
+    
+    /**
+     * @return The facade provider item stack.
+     */
+    public ItemStack getFacadeProvider() {
+        return facadeProvider;
+    }
+    
+    /**
+     * Set the facade provider for this bundle.
+     */
+    public void setFacadeProvider(ItemStack facadeProvider) {
+        this.facadeProvider = facadeProvider.copyWithCount(1);
+        onChanged();
+    }
+
+    // Legacy per-direction facade methods (deprecated but kept for compatibility)
+    @Deprecated
     public boolean hasFacade(Direction direction) {
         return facadeTextures.containsKey(direction);
     }
 
+    @Deprecated
     public Optional<BlockState> getFacade(Direction direction) {
         return Optional.ofNullable(facadeTextures.get(direction));
     }
 
+    @Deprecated
     public void setFacade(BlockState facade, Direction direction) {
         facadeTextures.put(direction, facade);
         onChanged();
     }
+    
+    // endregion
 
     public void connectTo(Level level, BlockPos pos, Direction direction, ConduitType<?> type, boolean end) {
         connections.get(direction).connectTo(level, pos, getNodeFor(type), direction, type, getTypeIndex(type), end);
@@ -347,7 +417,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
 
     @Override
     public int hashCode() {
-        int hash = Objects.hash(connections, types, facadeTextures);
+        int hash = Objects.hash(connections, types, facadeProvider);
 
         // Manually hash the map, using hashContents instead of hashCode to avoid breaking the graph.
         for (var entry : nodes.entrySet()) {
@@ -363,7 +433,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         var bundle = new ConduitBundle(() -> {}, pos);
         bundle.types.addAll(types);
         connections.forEach((dir, connection) -> bundle.connections.put(dir, connection.deepCopy()));
-        bundle.facadeTextures.putAll(facadeTextures);
+        bundle.facadeProvider = facadeProvider.copy();
         nodes.forEach((type, node) -> bundle.setNodeFor(type, node.deepCopy()));
         return bundle;
     }
@@ -372,7 +442,8 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
 
     private static final String KEY_TYPES = "Types";
     private static final String KEY_CONNECTIONS = "Connections";
-    private static final String KEY_FACADES = "Facades";
+    private static final String KEY_FACADES = "Facades"; // Legacy, ignored on load
+    private static final String KEY_FACADE_PROVIDER = "FacadeProvider";
     private static final String KEY_NODE_TYPE = "NodeType";
     private static final String KEY_NODE_DATA = "NodeData";
     private static final String KEY_NODES = "Nodes";
@@ -391,12 +462,14 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
             connectionsTag.put(dir.getName(), connections.get(dir).serializeNBT());
         }
         tag.put(KEY_CONNECTIONS, connectionsTag);
-        CompoundTag facades = new CompoundTag();
-        for (Map.Entry<Direction, BlockState> entry : facadeTextures.entrySet()) {
-            Tag blockStateTag = BlockState.CODEC.encode(entry.getValue(), NbtOps.INSTANCE, new CompoundTag()).get().left().orElse(new CompoundTag());
-            facades.put(entry.getKey().getName(), blockStateTag);
+        
+        // Save new facade provider system
+        if (!facadeProvider.isEmpty()) {
+            tag.put(KEY_FACADE_PROVIDER, facadeProvider.save(new CompoundTag()));
         }
-        tag.put(KEY_FACADES, facades);
+        
+        // Legacy facade system (no longer saved, kept for backwards compat during load)
+        
         if (EffectiveSide.get().isServer()) {
             ListTag nodeTag = new ListTag();
             for (var entry : nodes.entrySet()) {
@@ -441,17 +514,17 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
                 connections.get(dir).removeType(invalidTypes.get(i));
             }
         }
+        
+        // Load new facade provider system
+        if (nbt.contains(KEY_FACADE_PROVIDER)) {
+            facadeProvider = ItemStack.of(nbt.getCompound(KEY_FACADE_PROVIDER));
+        } else {
+            facadeProvider = ItemStack.EMPTY;
+        }
+        
+        // Legacy facade system (ignored on load as per requirements)
         facadeTextures.clear();
-        CompoundTag facades = nbt.getCompound(KEY_FACADES);
-        for (Direction direction : Direction.values()) {
-            if (facades.contains(direction.getName())) {
-                facadeTextures.put(direction, BlockState.CODEC.decode(NbtOps.INSTANCE, facades.getCompound(direction.getName())).get().left().get().getFirst());
-            }
-        }
-        for (Map.Entry<Direction, BlockState> entry : facadeTextures.entrySet()) {
-            Tag blockStateTag = BlockState.CODEC.encode(entry.getValue(), NbtOps.INSTANCE, new CompoundTag()).get().left().orElse(new CompoundTag());
-            facades.put(entry.getKey().getName(), blockStateTag);
-        }
+        
         nodes.entrySet().removeIf(entry -> !types.contains(entry.getKey()));
         if (EffectiveSide.get().isServer()) {
             for (ConduitType<?> type : types) {

@@ -28,6 +28,15 @@ public class PaintUtils {
         return ForgeRegistries.BLOCKS.getValue(new ResourceLocation(rl));
     }
 
+    public static boolean hasPaint(ItemStack stack) {
+        CompoundTag tag = stack.getTag();
+        if (tag != null && tag.contains(BlockItem.BLOCK_ENTITY_TAG)) {
+            CompoundTag blockEntityTag = tag.getCompound(BlockItem.BLOCK_ENTITY_TAG);
+            return blockEntityTag.contains(EIONBTKeys.PAINT);
+        }
+        return false;
+    }
+
     @Nullable
     public static Block getPaint(ItemStack stack) {
         CompoundTag tag = stack.getTag();

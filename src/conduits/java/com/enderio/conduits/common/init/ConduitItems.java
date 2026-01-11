@@ -3,9 +3,11 @@ package com.enderio.conduits.common.init;
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitItemFactory;
 import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.conduit.facade.FacadeType;
 import com.enderio.api.filter.ResourceFilter;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.conduits.common.conduit.upgrade.SpeedUpgradeItem;
+import com.enderio.conduits.common.facades.ConduitFacadeItem;
 import com.enderio.conduits.common.items.ConduitProbeItem;
 import com.enderio.conduits.common.redstone.RedstoneANDFilter;
 import com.enderio.conduits.common.redstone.RedstoneCountFilter;
@@ -87,6 +89,31 @@ public class ConduitItems {
         stack -> RedstoneSensorFilter.INSTANCE, null);
     public static final ItemEntry<RedstoneFilterItem> TIMER_FILTER = createRedstoneFilter("redstone_timer_filter", "Redstone Timer Filter",
         RedstoneTimerFilter::new, ConduitMenus.REDSTONE_TIMER_FILTER::get);
+    
+    // Facade items
+    public static final ItemEntry<ConduitFacadeItem> CONDUIT_FACADE = REGISTRATE
+        .item("conduit_facade", props -> new ConduitFacadeItem(FacadeType.BASIC, props))
+        .lang("Conduit Facade")
+        .tab(EIOCreativeTabs.CONDUITS)
+        .register();
+    
+    public static final ItemEntry<ConduitFacadeItem> TRANSPARENT_CONDUIT_FACADE = REGISTRATE
+        .item("transparent_conduit_facade", props -> new ConduitFacadeItem(FacadeType.TRANSPARENT, props))
+        .lang("Transparent Conduit Facade")
+        .tab(EIOCreativeTabs.CONDUITS)
+        .register();
+    
+    public static final ItemEntry<ConduitFacadeItem> HARDENED_CONDUIT_FACADE = REGISTRATE
+        .item("hardened_conduit_facade", props -> new ConduitFacadeItem(FacadeType.HARDENED, props))
+        .lang("Hardened Conduit Facade")
+        .tab(EIOCreativeTabs.CONDUITS)
+        .register();
+    
+    public static final ItemEntry<ConduitFacadeItem> TRANSPARENT_HARDENED_CONDUIT_FACADE = REGISTRATE
+        .item("transparent_hardened_conduit_facade", props -> new ConduitFacadeItem(FacadeType.TRANSPARENT_HARDENED, props))
+        .lang("Transparent Hardened Conduit Facade")
+        .tab(EIOCreativeTabs.CONDUITS)
+        .register();
     
     public static final ItemEntry<ConduitProbeItem> CONDUIT_PROBE = REGISTRATE
         .item("conduit_probe", ConduitProbeItem::new)
