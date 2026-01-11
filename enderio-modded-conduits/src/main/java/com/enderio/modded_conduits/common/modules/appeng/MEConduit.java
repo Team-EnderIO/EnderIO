@@ -13,6 +13,7 @@ import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.conduits.ticker.ConduitTicker;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.content.conduits.ConduitBlockItem;
+import com.enderio.enderio.content.conduits.type.energy.EnergyConduit;
 import com.enderio.modded_conduits.config.ModdedConduitsConfig;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -61,6 +62,11 @@ public record MEConduit(ResourceLocation texture, Component description, AEColor
     @Override
     public boolean hasMenu() {
         return false;
+    }
+
+    @Override
+    public boolean canReplaceConduit(MEConduit otherConduit) {
+        return compareTo(otherConduit) > 0;
     }
 
     @Override
