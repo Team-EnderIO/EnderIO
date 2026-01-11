@@ -48,7 +48,6 @@ import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
 import net.neoforged.neoforge.common.SpecialPlantable;
 import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.common.ticket.AABBTicket;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import org.jetbrains.annotations.Nullable;
 
@@ -137,7 +136,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
         }
         // TODO: this is quite icky. need abstractions between tick time and power consumption
         if (canAct(10) &&  getEnergyStorage().getEnergyStored() >= getMaxEnergyUse() * 10) {
-            doFarmTask();
+            processFarmTask();
             getEnergyStorage().consumeEnergy(getMaxEnergyUse() * 10);
         }
 
@@ -154,29 +153,25 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
         super.clientTick();
     }
 
-    // TODO: check if POWERED state is needed
     // TODO: Check if this is optimized
-    private void doFarmTask() {
+    private void processFarmTask() {
         int stop = Math.min(currentIndex + getRange(), positions.size());
         while (currentIndex < stop) {
             BlockPos soil = positions.get(currentIndex);
             if (currentTask != null) {
+                // try process current task
                 if (currentTask.process(soil, this) == FarmInteraction.IGNORED) {
                     currentTask = null; // Task is done or no longer valid
                 }
-                break;
             }
             // Look for a new task
-            for (FarmTask task : FarmTaskManager.getTasks()) {
-                FarmInteraction interaction = task.process(soil, this);
-                if (interaction == FarmInteraction.FINISHED) { // new task found
-                    currentTask = task;
-                    break;
+            if(currentTask == null) {
+                for (FarmTask task : FarmTaskManager.getTasks()) {
+                    if (task.process(soil, this) != FarmInteraction.IGNORED) { // new task found
+                        currentTask = task;
+                        break;
+                    }
                 }
-            }
-            // task found
-            if (currentTask != null) {
-                break;
             }
             currentIndex++;
         }
@@ -187,7 +182,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
         }
     }
 
-    // FIXME: mutlislot access filters take global slot index and not local
+    // FIXME: multislot access filters take global slot index and not local
     private boolean validToolForSlot(int index, ItemStack stack) {
         return switch(index) { // Order - Axes, Hoes, Shears - Check TOOLS slot access
             case 1 -> stack.is(ItemTags.AXES);
