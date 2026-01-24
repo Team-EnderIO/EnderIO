@@ -50,6 +50,7 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.ItemInteractionResult;
@@ -92,10 +93,10 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     public static final int MAX_CONDUITS = 9;
 
     @UseOnly(LogicalSide.CLIENT)
-    public static final Long2ObjectMap<BlockState> FACADES = new Long2ObjectOpenHashMap<>();
+    public static final Map<ResourceKey<Level>, Long2ObjectMap<BlockState>> FACADES = new HashMap<>();
 
     @UseOnly(LogicalSide.CLIENT)
-    public static final Long2ObjectMap<LongSet> CHUNK_FACADES = new Long2ObjectOpenHashMap<>();
+    public static final Map<ResourceKey<Level>, Long2ObjectMap<LongSet>> CHUNK_FACADES = new HashMap<>();
 
     private ItemStack facadeProvider = ItemStack.EMPTY;
     private List<Holder<Conduit<?, ?>>> conduits = new ArrayList<>();
@@ -141,6 +142,20 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     public ConduitBundleBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.CONDUIT.get(), worldPosition, blockState);
     }
+
+    // region Static Facade Access
+
+    @UseOnly(LogicalSide.CLIENT)
+    private static Long2ObjectMap<BlockState> getFacadesForDimension(ResourceKey<Level> dimension) {
+        return FACADES.computeIfAbsent(dimension, k -> new Long2ObjectOpenHashMap<>());
+    }
+
+    @UseOnly(LogicalSide.CLIENT)
+    private static Long2ObjectMap<LongSet> getChunkFacadesForDimension(ResourceKey<Level> dimension) {
+        return CHUNK_FACADES.computeIfAbsent(dimension, k -> new Long2ObjectOpenHashMap<>());
+    }
+
+    // endregion
 
     @Override
     public void serverTick() {
@@ -229,12 +244,14 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
 
         if (hasFacade()) {
-            FACADES.put(worldPosition.asLong(), getFacadeBlock().defaultBlockState());
-            CHUNK_FACADES.computeIfAbsent(SectionPos.asLong(worldPosition), p -> new LongOpenHashSet())
+            ResourceKey<Level> dimension = level.dimension();
+            getFacadesForDimension(dimension).put(worldPosition.asLong(), getFacadeBlock().defaultBlockState());
+            getChunkFacadesForDimension(dimension).computeIfAbsent(SectionPos.asLong(worldPosition), p -> new LongOpenHashSet())
                     .add(worldPosition.asLong());
         } else {
-            FACADES.remove(worldPosition.asLong());
-            LongSet chunkList = CHUNK_FACADES.getOrDefault(SectionPos.asLong(worldPosition), null);
+            ResourceKey<Level> dimension = level.dimension();
+            getFacadesForDimension(dimension).remove(worldPosition.asLong());
+            LongSet chunkList = getChunkFacadesForDimension(dimension).getOrDefault(SectionPos.asLong(worldPosition), null);
             if (chunkList != null) {
                 chunkList.remove(worldPosition.asLong());
             }
@@ -1286,8 +1303,9 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
                 savedData.returnNode(conduit, this.worldPosition, node);
             }
         } else {
-            CHUNK_FACADES.remove(SectionPos.asLong(worldPosition));
-            FACADES.remove(worldPosition.asLong());
+            ResourceKey<Level> dimension = level.dimension();
+            getChunkFacadesForDimension(dimension).remove(SectionPos.asLong(worldPosition));
+            getFacadesForDimension(dimension).remove(worldPosition.asLong());
         }
     }
 
@@ -1306,7 +1324,9 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
 
         if (level != null && level.isClientSide()) {
-            FACADES.remove(worldPosition.asLong());
+            ResourceKey<Level> dimension = level.dimension();
+            getChunkFacadesForDimension(dimension).remove(SectionPos.asLong(worldPosition));
+            getFacadesForDimension(dimension).remove(worldPosition.asLong());
         }
     }
 
