@@ -3,7 +3,7 @@
   "first_reagent": "enderio:lightning_rod",
   "input": {
     "amount": 1000,
-    "ingredient": "enderio:fluid_cloud_seed_concentrated_still"
+    "ingredient": "enderio:fluid_cloud_seed_still"
   },
   "output": {
     "amount": 500,
