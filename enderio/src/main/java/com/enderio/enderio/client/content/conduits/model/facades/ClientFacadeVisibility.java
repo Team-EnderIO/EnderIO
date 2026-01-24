@@ -30,10 +30,18 @@ public class ClientFacadeVisibility {
     private static void setFacadesVisible(boolean visible) {
         if (visible != FACADES_VISIBLE) {
             RenderSystem.recordRenderCall(() -> {
-                ConduitBundleBlockEntity.CHUNK_FACADES.keySet().forEach((section) -> {
-                    Minecraft.getInstance().levelRenderer.setSectionDirty(SectionPos.x(section), SectionPos.y(section),
-                        SectionPos.z(section));
-                });
+                var level = Minecraft.getInstance().level;
+                if (level != null) {
+                    var chunkFacadesForDim = ConduitBundleBlockEntity.CHUNK_FACADES.get(level.dimension());
+                    if (chunkFacadesForDim != null) {
+                        chunkFacadesForDim.keySet().forEach((section) -> {
+                            Minecraft.getInstance().levelRenderer.setSectionDirty(
+                                SectionPos.x(section), 
+                                SectionPos.y(section),
+                                SectionPos.z(section));
+                        });
+                    }
+                }
             });
         }
 
