@@ -3,6 +3,7 @@ package com.enderio.enderio.content.machines.farming_station.tasks;
 import com.enderio.enderio.api.farm.FarmInteraction;
 import com.enderio.enderio.api.farm.FarmTask;
 import com.enderio.enderio.api.farm.FarmingMachine;
+import com.enderio.enderio.foundation.tag.EIOTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
@@ -20,7 +21,7 @@ public class HarvestStemCropsFarmTask implements FarmTask {
     public <T extends BlockEntity & FarmingMachine> FarmInteraction process(BlockPos targetBlock, T blockEntity) {
         BlockPos pos = targetBlock.above();
         BlockState plant = blockEntity.getLevel().getBlockState(pos);
-        if (plant.is(Blocks.PUMPKIN) || plant.is(Blocks.MELON)) {
+        if (plant.is(EIOTags.Blocks.CROPS_WITH_STEM)) {
             // TODO I think this is now harder, used to be a block class...
             if (plant.requiresCorrectToolForDrops()) {
                 if (blockEntity.getAxe().isEmpty()) {

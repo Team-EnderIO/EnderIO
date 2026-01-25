@@ -163,6 +163,11 @@ public class EIOTags {
         public static final TagKey<Block> MIND_KILLER = tag("mind_killer");
 
         public static final TagKey<Block> INCORRECT_FOR_DARK_STEEL_TOOL = tag("incorrect_for_dark_steel_tool");
+        
+        
+        // Harvestable crops that have a stem.
+        // TODO: remove in 26.1
+        public static final TagKey<Block> CROPS_WITH_STEM = tag("stem_crop");
 
         private static TagKey<Block> commonTag(String name) {
             return BlockTags.create(ResourceLocation.fromNamespaceAndPath(COMMON, name));

@@ -571,6 +571,7 @@ public class MachineRecipeProvider extends SubRecipeProvider {
         list.add(EIOBlocks.VACUUM_CHEST);
         list.add(EIOBlocks.TRAVEL_ANCHOR);
         list.add(EIOBlocks.WIRELESS_CHARGER);
+        list.add(EIOBlocks.FARMING_STATION);
         return list;
     });
 
