@@ -350,6 +350,7 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(MachinesLang.STATUS_BLOCKED_REDSTONE, "The machine is blocked by redstone");
         add(MachinesLang.STATUS_OUTPUT_FULL, "There is not enough room for the output");
         add(MachinesLang.STATUS_INPUT_EMPTY, "There is no item in the input");
+        add(MachinesLang.STATUS_NO_WEAPON, "No weapon");
 
         add(MachinesLang.GUI_NO_FLUID, "No Fluid");
 
@@ -646,6 +647,7 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOBlocks.SOUL_ENGINE.get(), "Soul Engine");
         add(EIOBlocks.NIARD.get(), "Niard");
         add(EIOBlocks.VAT.get(), "VAT");
+        add(EIOBlocks.KILLER_JOE.get(), "Killer Joe");
         add(EIOBlocks.XP_OBELISK.get(), "XP Obelisk");
         add(EIOBlocks.FARMING_STATION.get(), "Farming Station");
         add(EIOBlocks.INHIBITOR_OBELISK.get(), "Inhibitor Obelisk");

@@ -57,6 +57,9 @@ public class EnergyConfig {
     public final ModConfigSpec.ConfigValue<Integer> RELOCATOR_USAGE;
     public final ModConfigSpec.ConfigValue<Integer> ATTRACTOR_CAPACITY;
     public final ModConfigSpec.ConfigValue<Integer> ATTRACTOR_USAGE;
+    public final ModConfigSpec.ConfigValue<Integer> KILLER_JOE_FLUID_CAPACITY;
+    public final ModConfigSpec.ConfigValue<Integer> KILLER_JOE_FLUID_USE;
+    public final ModConfigSpec.ConfigValue<Integer> KILLER_JOE_ATTACK_COOLDOWN;
 
     public EnergyConfig(ModConfigSpec.Builder builder) {
         builder.push("energy");
@@ -234,6 +237,15 @@ public class EnergyConfig {
                 .defineInRange("capacity", 64_000, 1, Integer.MAX_VALUE);
         ATTRACTOR_USAGE = builder.comment("The base energy consumption in uI/t.")
                 .defineInRange("usage", 20, 1, Integer.MAX_VALUE);
+        builder.pop();
+
+        builder.push("killerJoe");
+        KILLER_JOE_FLUID_CAPACITY = builder.comment("Fluid capacity in mB.")
+                .defineInRange("fluidCapacity", 2000, 1, Integer.MAX_VALUE);
+        KILLER_JOE_FLUID_USE = builder.comment("Fluid used per attack in mB.")
+                .defineInRange("fluidUse", 5, 1, Integer.MAX_VALUE);
+        KILLER_JOE_ATTACK_COOLDOWN = builder.comment("Attack cooldown in ticks (20 ticks = 1 second).")
+                .defineInRange("attackCooldown", 20, 1, Integer.MAX_VALUE);
         builder.pop();
 
         builder.pop();

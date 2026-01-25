@@ -18,6 +18,7 @@ import com.enderio.enderio.content.machines.capacitor_bank.CapacitorBankMenu;
 import com.enderio.enderio.content.machines.drain.DrainMenu;
 import com.enderio.enderio.content.machines.farming_station.FarmingStationMenu;
 import com.enderio.enderio.content.machines.impulse_hopper.ImpulseHopperMenu;
+import com.enderio.enderio.content.machines.killer_joe.KillerJoeMenu;
 import com.enderio.enderio.content.machines.niard.NiardMenu;
 import com.enderio.enderio.content.machines.obelisks.attractor.AttractorObeliskMenu;
 import com.enderio.enderio.content.machines.obelisks.aversion.AversionObeliskMenu;
@@ -137,6 +138,8 @@ public class EIOMenus {
     public static final DeferredHolder<MenuType<?>, MenuType<WeatherObeliskMenu>> WEATHER_OBELISK = MENUS.register("weather_obelisk", WeatherObeliskMenu::new);
 
     public static final DeferredHolder<MenuType<?>, MenuType<VatMenu>> VAT = MENUS.register("vat", VatMenu::new);
+
+    public static final DeferredHolder<MenuType<?>, MenuType<KillerJoeMenu>> KILLER_JOE = MENUS.register("killer_joe", KillerJoeMenu::new);
 
     // endregion
 

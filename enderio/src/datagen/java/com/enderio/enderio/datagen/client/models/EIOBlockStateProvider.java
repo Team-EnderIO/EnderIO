@@ -213,8 +213,8 @@ public class EIOBlockStateProvider extends BlockStateProvider {
         // Niard
         machineBlock(EIOBlocks.NIARD.get());
 
-        // VAT
         machineBlock(EIOBlocks.VAT.get());
+        machineBlock(EIOBlocks.KILLER_JOE.get());
 
         // Block Detector
         simpleBlockWithExistingModel(EIOBlocks.BLOCK_DETECTOR.get());

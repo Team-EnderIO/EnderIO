@@ -36,6 +36,8 @@ public record MachineState(MachineStateType type, MutableComponent component) {
         MachinesLang.STATUS_OUTPUT_FULL);
     public static final MachineState REDSTONE = new MachineState(MachineStateType.DISABLED,
         MachinesLang.STATUS_BLOCKED_REDSTONE);
+    public static final MachineState NO_WEAPON = new MachineState(MachineStateType.ERROR,
+        MachinesLang.STATUS_NO_WEAPON);
 
     public static final Codec<MachineState> CODEC = RecordCodecBuilder
             .create(instance -> instance.group(MachineStateType.CODEC.fieldOf("Type").forGetter(MachineState::type),
