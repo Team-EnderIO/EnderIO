@@ -351,7 +351,7 @@
   "gui.enderio.not_visible": "Hidden",
   "gui.enderio.redstone_mode": "Redstone Mode",
   "gui.enderio.visible": "Visible",
-  "hint.enderio.connected_textures.text": "If you are looking for connected textures on the capacitor bank, you might want to install Athena on your client",
+  "hint.enderio.connected_textures.text": "If you are looking for connected textures on the capacitor bank, you might want to install Athena on your client.",
   "item.enderio.advanced_item_filter": "Advanced Item Filter",
   "item.enderio.animal_token": "Animal Token",
   "item.enderio.basic_capacitor": "Basic Capacitor",

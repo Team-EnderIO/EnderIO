@@ -50,6 +50,7 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.ItemInteractionResult;
@@ -92,10 +93,10 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     public static final int MAX_CONDUITS = 9;
 
     @UseOnly(LogicalSide.CLIENT)
-    public static final Long2ObjectMap<BlockState> FACADES = new Long2ObjectOpenHashMap<>();
+    public static final Map<ResourceKey<Level>, Long2ObjectMap<BlockState>> FACADES = new HashMap<>();
 
     @UseOnly(LogicalSide.CLIENT)
-    public static final Long2ObjectMap<LongSet> CHUNK_FACADES = new Long2ObjectOpenHashMap<>();
+    public static final Map<ResourceKey<Level>, Long2ObjectMap<LongSet>> CHUNK_FACADES = new HashMap<>();
 
     private ItemStack facadeProvider = ItemStack.EMPTY;
     private List<Holder<Conduit<?, ?>>> conduits = new ArrayList<>();
@@ -141,6 +142,20 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     public ConduitBundleBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.CONDUIT.get(), worldPosition, blockState);
     }
+
+    // region Static Facade Access
+
+    @UseOnly(LogicalSide.CLIENT)
+    private static Long2ObjectMap<BlockState> getFacadesForDimension(ResourceKey<Level> dimension) {
+        return FACADES.computeIfAbsent(dimension, k -> new Long2ObjectOpenHashMap<>());
+    }
+
+    @UseOnly(LogicalSide.CLIENT)
+    private static Long2ObjectMap<LongSet> getChunkFacadesForDimension(ResourceKey<Level> dimension) {
+        return CHUNK_FACADES.computeIfAbsent(dimension, k -> new Long2ObjectOpenHashMap<>());
+    }
+
+    // endregion
 
     @Override
     public void serverTick() {
@@ -229,12 +244,14 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
 
         if (hasFacade()) {
-            FACADES.put(worldPosition.asLong(), getFacadeBlock().defaultBlockState());
-            CHUNK_FACADES.computeIfAbsent(SectionPos.asLong(worldPosition), p -> new LongOpenHashSet())
+            ResourceKey<Level> dimension = level.dimension();
+            getFacadesForDimension(dimension).put(worldPosition.asLong(), getFacadeBlock().defaultBlockState());
+            getChunkFacadesForDimension(dimension).computeIfAbsent(SectionPos.asLong(worldPosition), p -> new LongOpenHashSet())
                     .add(worldPosition.asLong());
         } else {
-            FACADES.remove(worldPosition.asLong());
-            LongSet chunkList = CHUNK_FACADES.getOrDefault(SectionPos.asLong(worldPosition), null);
+            ResourceKey<Level> dimension = level.dimension();
+            getFacadesForDimension(dimension).remove(worldPosition.asLong());
+            LongSet chunkList = getChunkFacadesForDimension(dimension).getOrDefault(SectionPos.asLong(worldPosition), null);
             if (chunkList != null) {
                 chunkList.remove(worldPosition.asLong());
             }
@@ -777,13 +794,13 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
     @Override
     public ConnectionConfig getConnectionConfig(Holder<Conduit<?, ?>> conduit, Direction side) {
-        return conduitConnections.get(conduit).getConfig(side);
+        return conduitConnections.computeIfAbsent(conduit, ConnectionContainer::new).getConfig(side);
     }
 
     @Override
     public <T extends ConnectionConfig> T getConnectionConfig(Holder<Conduit<?, ?>> conduit, Direction side,
             ConnectionConfigType<T> type) {
-        var config = conduitConnections.get(conduit).getConfig(side);
+        var config = conduitConnections.computeIfAbsent(conduit, ConnectionContainer::new).getConfig(side);
         if (config.type() != type) {
             throw new IllegalStateException("Connection config type mismatch.");
         }
@@ -798,7 +815,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             throw new IllegalArgumentException("Connection config is not the right type for this conduit.");
         }
 
-        conduitConnections.get(conduit).setConfig(side, config);
+        conduitConnections.computeIfAbsent(conduit, ConnectionContainer::new).setConfig(side, config);
         if (config.isConnected() && getConnectionStatus(conduit, side) != ConnectionStatus.CONNECTED_BLOCK) {
             setConnectionStatus(conduit, side, ConnectionStatus.CONNECTED_BLOCK);
         } else if (!config.isConnected()) {
@@ -818,7 +835,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             throw new IllegalArgumentException("Conduit is not present in this bundle.");
         }
 
-        conduitConnections.get(conduit).setStatus(side, status);
+        conduitConnections.computeIfAbsent(conduit, ConnectionContainer::new).setStatus(side, status);
         onConnectionsUpdated(conduit);
 
         bundleChanged();
@@ -850,7 +867,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             }
         }
 
-        return isForcedConnection || conduitConnections.get(compatibleConduit).getStatus(side) != ConnectionStatus.DISABLED;
+        return isForcedConnection || getConnectionStatus(compatibleConduit, side) != ConnectionStatus.DISABLED;
     }
 
     public boolean tryConnectTo(Holder<Conduit<?, ?>> conduit, Direction side, boolean isForcedConnection) {
@@ -863,7 +880,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
 
         // Do not attempt to connect if we're not forcing a disabled connection
-        ConnectionStatus currentStatus = conduitConnections.get(conduit).getStatus(side);
+        ConnectionStatus currentStatus = getConnectionStatus(conduit, side);
         if ((!isForcedConnection && currentStatus == ConnectionStatus.DISABLED)) {
             return false;
         }
@@ -926,35 +943,19 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             return;
         }
 
-        conduitConnections.computeIfAbsent(compatibleConduit, ConnectionContainer::new)
-                .setStatus(side, ConnectionStatus.CONNECTED_CONDUIT);
-        onConnectionsUpdated(compatibleConduit);
-
-        bundleChanged();
+        setConnectionStatus(compatibleConduit, side, ConnectionStatus.CONNECTED_CONDUIT);
     }
 
     private void connectBlock(Holder<Conduit<?, ?>> conduit, Direction side) {
-        conduitConnections.computeIfAbsent(conduit, ConnectionContainer::new)
-                .setStatus(side, ConnectionStatus.CONNECTED_BLOCK);
-        onConnectionsUpdated(conduit);
-
-        bundleChanged();
+        setConnectionStatus(conduit, side, ConnectionStatus.CONNECTED_BLOCK);
     }
 
     // TODO: poorly named, we're disconnecting from another conduit on the given side.
     private void disconnect(Holder<Conduit<?, ?>> conduit, Direction side) {
-        boolean hasChanged = false;
         for (var c : conduits) {
             if (ConduitUtility.canConnectConduits(conduit, c)) {
-                conduitConnections.computeIfAbsent(c, ConnectionContainer::new)
-                        .setStatus(side, ConnectionStatus.DISCONNECTED);
-                onConnectionsUpdated(c);
-                hasChanged = true;
+                setConnectionStatus(conduit, side, ConnectionStatus.DISCONNECTED);
             }
-        }
-
-        if (hasChanged) {
-            bundleChanged();
         }
     }
 
@@ -1286,8 +1287,9 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
                 savedData.returnNode(conduit, this.worldPosition, node);
             }
         } else {
-            CHUNK_FACADES.remove(SectionPos.asLong(worldPosition));
-            FACADES.remove(worldPosition.asLong());
+            ResourceKey<Level> dimension = level.dimension();
+            getChunkFacadesForDimension(dimension).remove(SectionPos.asLong(worldPosition));
+            getFacadesForDimension(dimension).remove(worldPosition.asLong());
         }
     }
 
@@ -1306,7 +1308,9 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
 
         if (level != null && level.isClientSide()) {
-            FACADES.remove(worldPosition.asLong());
+            ResourceKey<Level> dimension = level.dimension();
+            getChunkFacadesForDimension(dimension).remove(SectionPos.asLong(worldPosition));
+            getFacadesForDimension(dimension).remove(worldPosition.asLong());
         }
     }
 

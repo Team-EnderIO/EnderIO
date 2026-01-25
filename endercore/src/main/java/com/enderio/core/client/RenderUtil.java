@@ -45,13 +45,8 @@ public class RenderUtil {
     }
 
     private static void renderFace(PoseStack.Pose pose, VertexConsumer consumer, TextureAtlasSprite texture, int color,
-            int light, float x0, float x1, float y0, float y1, float z0, float z1, float z2, float z3, float u0,
-            float u1, float v0, float v1, float normalX, float normalY, float normalZ) {
-        float minU = u0 * texture.contents().width() / 16f;
-        float maxU = u1 * texture.contents().width() / 16f;
-        float minV = v0 * texture.contents().height() / 16f;
-        float maxV = v1 * texture.contents().height() / 16f;
-
+            int light, float x0, float x1, float y0, float y1, float z0, float z1, float z2, float z3, float minU,
+            float maxU, float minV, float maxV, float normalX, float normalY, float normalZ) {
         consumer.addVertex(pose, x0, y0, z0)
                 .setColor(color)
                 .setUv(texture.getU(minU), texture.getV(minV))

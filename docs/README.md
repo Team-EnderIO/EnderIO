@@ -45,7 +45,8 @@
         <li><a href="#for-mod-developers">For Mod Developers</a></li>
       </ul>
     </li>
-    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#contributing-code-or-assets">Contributing Code or Assets</a></li>
+    <li><a href="#translations">Translations</a></li>
     <li><a href="#license">License</a></li>
   </ol>
 </details>
@@ -118,7 +119,7 @@ If you need any feature in the api, contact us.
 > To support this, check for EnderIO using the module mod id's instead, `enderio_<module>`.
 
 <!-- CONTRIBUTING -->
-## Contributing
+## Contributing Code or Assets
 
 > **Note**
 > Before selecting a task from the tracker to do, make sure to comment to say that you are working on it so other's don't do the same thing!
@@ -131,6 +132,16 @@ If you need any feature in the api, contact us.
 1. Work on your feature or fix, try to commit for each major thing you do.
 1. Create a draft pull request early for big changes to receive early feedback.
 
+<!-- TRANSLATING -->
+## Translations
+
+> **Note**
+> In the past we have accepted translations from both Crowdin -and- GitHub PRs.
+> After some unfortunate accidents when merging GitHub translations causing Crowdin to explode, we now only accept Crowdin translations.
+
+To contribute translations, you can log into Crowdin (at https://translate.enderio.com) and contribute translations.
+We also have a translation-updates channel in Discord where string changes are announced.
+We're also open to giving reviewer permissions to keen individuals, reach out to us in Discord to discuss this.
 
 <!-- LICENSE -->
 ## License
