@@ -38,7 +38,8 @@ public class EnergyWidget extends EIOWidget {
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
 
-        float filledVolume = (float)(getEnergyStored(storage) / (double) getMaxEnergyStored(storage));
+        // Avoid growing beyond 100%, see GH-1106.
+        float filledVolume = Math.min(1.0f, (float)(getEnergyStored(storage) / (double) getMaxEnergyStored(storage)));
         int renderableHeight = (int)(filledVolume * height);
 
         guiGraphics.pose().pushPose();
