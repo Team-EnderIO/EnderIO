@@ -13,6 +13,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluids;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
 public class TankRecipeProvider extends SubRecipeProvider {
@@ -20,9 +21,9 @@ public class TankRecipeProvider extends SubRecipeProvider {
     @Override
     public void buildRecipes(RecipeOutput recipeOutput, HolderLookup.Provider registries) {
         buildEmptying(Ingredient.of(Items.EXPERIENCE_BOTTLE), Items.GLASS_BOTTLE,
-                SizedFluidIngredient.of(EIOFluids.XP_JUICE.source().get(), 250), recipeOutput);
+                SizedFluidIngredient.of(Tags.Fluids.EXPERIENCE, 250), recipeOutput);
         buildFilling(Ingredient.of(Items.GLASS_BOTTLE), Items.EXPERIENCE_BOTTLE,
-                SizedFluidIngredient.of(EIOFluids.XP_JUICE.source().get(), 250), recipeOutput);
+                SizedFluidIngredient.of(Tags.Fluids.EXPERIENCE, 250), recipeOutput);
 
         buildEmptying(Ingredient.of(Items.WET_SPONGE), Items.SPONGE, SizedFluidIngredient.of(Fluids.WATER, 1000), recipeOutput);
         buildFilling(Ingredient.of(Items.SPONGE), Items.WET_SPONGE, SizedFluidIngredient.of(Fluids.WATER, 1000), recipeOutput);
