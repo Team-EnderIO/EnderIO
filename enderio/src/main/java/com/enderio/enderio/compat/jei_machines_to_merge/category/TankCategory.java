@@ -18,7 +18,9 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.neoforged.neoforge.fluids.FluidStack;
 
+import java.util.Arrays;
 import java.util.List;
 
 // TODO: 1.20.1+ Add a custom TankRecipe for JEI to show mending and maybe fill/empty too.
@@ -62,16 +64,24 @@ public class TankCategory implements IRecipeCategory<RecipeHolder<TankRecipe>> {
 
             builder.addSlot(RecipeIngredientRole.OUTPUT, 3, 34).addItemStack(recipe.value().output().copy());
 
+            // Convert SizedFluidIngredient to FluidStack list for JEI display
+            List<FluidStack> fluidStacks = Arrays.asList(recipe.value().fluid().getFluids());
             builder.addSlot(RecipeIngredientRole.OUTPUT, 39, 3)
-                    .addIngredients(NeoForgeTypes.FLUID_STACK, List.of(recipe.value().fluid()))
+                    .addIngredients(NeoForgeTypes.FLUID_STACK, fluidStacks)
                     .setFluidRenderer(FluidTankBlockEntity.Standard.CAPACITY, false, 16, 47);
         } else if (recipe.value().mode() == TankRecipe.Mode.FILL) {
             builder.addSlot(RecipeIngredientRole.INPUT, 75, 3).addIngredients(recipe.value().input());
 
             builder.addSlot(RecipeIngredientRole.OUTPUT, 75, 34).addItemStack(recipe.value().output().copy());
 
+            // Convert SizedFluidIngredient to FluidStack list for JEI display
+            FluidStack[] fluidStacks = recipe.value().fluid().getFluids();
+            List<FluidStack> fluidList = new java.util.ArrayList<>();
+            for (FluidStack stack : fluidStacks) {
+                fluidList.add(stack.copyWithAmount((int) recipe.value().fluid().amount()));
+            }
             builder.addSlot(RecipeIngredientRole.INPUT, 39, 3)
-                    .addIngredients(NeoForgeTypes.FLUID_STACK, List.of(recipe.value().fluid()))
+                    .addIngredients(NeoForgeTypes.FLUID_STACK, fluidList)
                     .setFluidRenderer(FluidTankBlockEntity.Standard.CAPACITY, false, 16, 47);
         }
     }
