@@ -10,6 +10,7 @@ import com.enderio.enderio.foundation.io.fluid.MachineFluidTank;
 import com.enderio.enderio.foundation.io.fluid.MachineTankLayout;
 import com.enderio.enderio.foundation.io.fluid.TankAccess;
 import com.enderio.enderio.foundation.state.MachineState;
+import com.enderio.enderio.foundation.util.SizedFluidIngredientHelper;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIORecipes;
@@ -239,12 +240,22 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
                 if (outputStack.isEmpty() || (outputStack.is(recipeResultStack.getItem())
                         && outputStack.getCount() < outputStack.getMaxStackSize())) {
 
-                    int filled = TANK.fill(this, recipe.value().fluid(), IFluidHandler.FluidAction.SIMULATE);
-                    if (filled != recipe.value().fluid().getAmount()) {
+                    // Get the first matching fluid from the ingredient (for EMPTY mode, we're adding fluid to tank)
+                    List<FluidStack> possibleFluids = SizedFluidIngredientHelper.getFluidStacksInPreferredOrder(recipe.value().fluid());
+                    FluidStack fluidToFill = FluidStack.EMPTY;
+                    for (FluidStack fluidToTry : possibleFluids) {
+                        int filled = TANK.fill(this, fluidToTry, IFluidHandler.FluidAction.SIMULATE);
+                        if (filled == recipe.value().fluid().amount()) {
+                            fluidToFill = fluidToTry;
+                            break;
+                        }
+                    }
+
+                    if (fluidToFill.isEmpty()) {
                         return;
                     }
 
-                    TANK.fill(this, recipe.value().fluid(), IFluidHandler.FluidAction.EXECUTE);
+                    TANK.fill(this, fluidToFill, IFluidHandler.FluidAction.EXECUTE);
                     FLUID_FILL_INPUT.getItemStack(this).shrink(1);
 
                     if (outputStack.isEmpty()) {
@@ -260,12 +271,13 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
                 if (outputStack.isEmpty() || (outputStack.is(recipeResultStack.getItem())
                         && outputStack.getCount() < outputStack.getMaxStackSize())) {
 
-                    var drained = TANK.drain(this, recipe.value().fluid(), IFluidHandler.FluidAction.SIMULATE);
-                    if (drained.getAmount() != recipe.value().fluid().getAmount()) {
+                    // For FILL mode, we drain from tank - need to check what's actually in the tank
+                    var drained = TANK.drain(this, (int) recipe.value().fluid().amount(), IFluidHandler.FluidAction.SIMULATE);
+                    if (!recipe.value().fluid().test(drained) || drained.getAmount() != recipe.value().fluid().amount()) {
                         return;
                     }
 
-                    TANK.drain(this, recipe.value().fluid(), IFluidHandler.FluidAction.EXECUTE);
+                    TANK.drain(this, (int) recipe.value().fluid().amount(), IFluidHandler.FluidAction.EXECUTE);
                     FLUID_DRAIN_INPUT.getItemStack(this).shrink(1);
 
                     if (outputStack.isEmpty()) {

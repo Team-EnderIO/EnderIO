@@ -53,7 +53,8 @@ public class FluidTankTransferHelper implements IRecipeTransferHandler<FluidTank
 
         boolean hasFluid = true;
         if (recipe.value().mode() == TankRecipe.Mode.FILL) {
-            hasFluid = recipe.value().fluid().getFluid().isSame(container.getFluidTank().contents().getFluid()) && recipe.value().fluid().getAmount() <= container.getFluidTank().contents().getAmount();
+            // Check if the tank contains a fluid that matches the ingredient
+            hasFluid = recipe.value().fluid().test(container.getFluidTank().contents());
         }
 
         boolean hasItem = recipe.value().input().test(container.slots.get(0).getItem());
