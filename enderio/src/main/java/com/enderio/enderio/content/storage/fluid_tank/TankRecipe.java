@@ -1,6 +1,7 @@
 package com.enderio.enderio.content.storage.fluid_tank;
 
 import com.enderio.enderio.foundation.io.fluid.MachineFluidTank;
+import com.enderio.enderio.foundation.util.SizedFluidIngredientHelper;
 import com.enderio.enderio.init.EIOConduitTypes;
 import com.enderio.enderio.init.EIORecipes;
 import com.mojang.serialization.Codec;
@@ -26,6 +27,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import org.apache.commons.lang3.NotImplementedException;
 
+import java.util.List;
 import java.util.function.IntFunction;
 
 public record TankRecipe(Ingredient input, ItemStack output, SizedFluidIngredient fluid, Mode mode)
@@ -56,8 +58,8 @@ public record TankRecipe(Ingredient input, ItemStack output, SizedFluidIngredien
     @Override
     public boolean matches(Input recipeInput, Level level) {
         // If we have no input -or- output fluid, no matches allowed.
-        FluidStack[] possibleFluids = fluid.getFluids();
-        if (possibleFluids.length == 0) {
+        List<FluidStack> possibleFluids = SizedFluidIngredientHelper.getFluidStacksInPreferredOrder(fluid);
+        if (possibleFluids.isEmpty()) {
             return false;
         }
 
