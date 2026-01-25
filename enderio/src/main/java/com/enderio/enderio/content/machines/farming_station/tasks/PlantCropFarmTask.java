@@ -2,13 +2,14 @@ package com.enderio.enderio.content.machines.farming_station.tasks;
 
 import com.enderio.enderio.api.farm.FarmInteraction;
 import com.enderio.enderio.api.farm.FarmTask;
-import com.enderio.enderio.api.farm.FarmingStation;
+import com.enderio.enderio.api.farm.FarmingMachine;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.StemBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class PlantCropFarmTask implements FarmTask {
 
@@ -18,47 +19,38 @@ public class PlantCropFarmTask implements FarmTask {
     }
 
     @Override
-    public FarmInteraction farm(BlockPos soil, FarmingStation farmBlockEntity) {
-        ItemStack seeds = farmBlockEntity.getSeedsForPos(soil);
-        if (seeds.isEmpty() || farmBlockEntity.getLevel().getBlockState(soil).isAir()) {
+    public <T extends BlockEntity & FarmingMachine> FarmInteraction process(BlockPos targetBlock, T blockEntity) {
+        ItemStack seeds = blockEntity.getSeedsForPos(targetBlock);
+        if (seeds.isEmpty() || blockEntity.getLevel().getBlockState(targetBlock).isAir()) {
             return FarmInteraction.BLOCKED;
         }
 
-        if (seeds.getItem() instanceof BlockItem blockItem && (blockItem.getBlock() instanceof CropBlock || blockItem.getBlock() instanceof StemBlock)) {
+        if (seeds.getItem() instanceof BlockItem blockItem) {
+            var block = blockItem.getBlock();
+            if (block instanceof CropBlock || block instanceof StemBlock) {
 
-            // Try plant
-            InteractionResult result = farmBlockEntity.useStack(soil, seeds);
-            if (result == InteractionResult.SUCCESS || result == InteractionResult.CONSUME) {
-                if (farmBlockEntity.getConsumedPower() >= 40) {
-                    farmBlockEntity.addConsumedPower(-40);
+                // Try plant
+                InteractionResult result = blockEntity.useStack(targetBlock, seeds);
+                if (result == InteractionResult.SUCCESS || result == InteractionResult.CONSUME) {
                     return FarmInteraction.FINISHED;
                 }
-                farmBlockEntity.addConsumedPower(farmBlockEntity.consumeEnergy(40 - farmBlockEntity.getConsumedPower(), false));
-                return FarmInteraction.POWERED;
-            }
 
-            // Try hoe
-            ItemStack itemStack = farmBlockEntity.getHoe();
-            if (itemStack.isEmpty()) {
-                return FarmInteraction.BLOCKED;
-            }
-
-            result = farmBlockEntity.useStack(soil, itemStack);
-            if (result == InteractionResult.SUCCESS || result == InteractionResult.CONSUME) {
-                if (farmBlockEntity.getConsumedPower() >= 40) {
-                    farmBlockEntity.addConsumedPower(-40);
+                // Try hoe
+                ItemStack itemStack = blockEntity.getHoe();
+                if (itemStack.isEmpty()) return FarmInteraction.BLOCKED;
+                result = blockEntity.useStack(targetBlock, itemStack);
+                if (result == InteractionResult.SUCCESS || result == InteractionResult.CONSUME) {
                     return FarmInteraction.FINISHED;
                 }
-                farmBlockEntity.addConsumedPower(farmBlockEntity.consumeEnergy(40 - farmBlockEntity.getConsumedPower(), false));
-                return FarmInteraction.POWERED;
+
+                // Try plant again
+                result = blockEntity.useStack(targetBlock, seeds);
+                if (result == InteractionResult.FAIL || result == InteractionResult.PASS) {
+                    return FarmInteraction.IGNORED;
+                }
+                return FarmInteraction.FINISHED;
             }
 
-            // Try plant again
-            result = farmBlockEntity.useStack(soil, seeds);
-            if (result == InteractionResult.FAIL || result == InteractionResult.PASS) {
-                return FarmInteraction.IGNORED;
-            }
-            return FarmInteraction.FINISHED;
         }
         return FarmInteraction.IGNORED;
     }

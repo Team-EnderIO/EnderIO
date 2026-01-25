@@ -28,7 +28,7 @@ import java.util.Set;
 
 public class EIOBlockLootProvider extends BlockLootSubProvider {
     public EIOBlockLootProvider(HolderLookup.Provider registries) {
-        super(Set.of(), FeatureFlagSet.of(FeatureFlags.VANILLA, EIOFeatureFlags.ENDERFACE, EIOFeatureFlags.NIARD, EIOFeatureFlags.FARMING_STATION), registries);
+        super(Set.of(), FeatureFlagSet.of(FeatureFlags.VANILLA, EIOFeatureFlags.ENDERFACE, EIOFeatureFlags.NIARD), registries);
     }
 
     @Override

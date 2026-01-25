@@ -517,6 +517,19 @@ public class MachineRecipeProvider extends SubRecipeProvider {
                 InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.ZOMBIE_ELECTRODE.get()))
             .save(recipeOutput);
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOBlocks.FARMING_STATION.get())
+            .define('E', EIOTags.Items.GEARS_ENERGIZED)
+            .define('G', EIOTags.Items.GEMS_PULSATING_CRYSTAL)
+            .define('S', EIOTags.Items.INGOTS_SOULARIUM)
+            .define('C', EIOBlocks.ENSOULED_CHASSIS.get())
+            .define('D', EIOTags.Items.INGOTS_DARK_STEEL)
+            .define('Z', EIOItems.Z_LOGIC_CONTROLLER.get())
+            .pattern("EGE")
+            .pattern("SCS")
+            .pattern("DZD")
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.SOULARIUM_INGOT))
+            .save(recipeOutput);
+
         // TODO: Enable once the block detector has a model.
         /*
          * ShapedRecipeBuilder .shaped(RecipeCategory.MISC,
@@ -558,6 +571,7 @@ public class MachineRecipeProvider extends SubRecipeProvider {
         list.add(EIOBlocks.VACUUM_CHEST);
         list.add(EIOBlocks.TRAVEL_ANCHOR);
         list.add(EIOBlocks.WIRELESS_CHARGER);
+        list.add(EIOBlocks.FARMING_STATION);
         return list;
     });
 

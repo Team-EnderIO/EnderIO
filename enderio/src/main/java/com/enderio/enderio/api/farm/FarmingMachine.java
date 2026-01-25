@@ -19,15 +19,9 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 @ApiStatus.Experimental
-public interface FarmingStation {
+public interface FarmingMachine {
 
     ItemStack getSeedsForPos(BlockPos pos);
-
-    int getConsumedPower();
-
-    void addConsumedPower(int i);
-
-    int consumeEnergy(int energy, boolean simulate);
 
     ItemStack getHoe();
 
@@ -44,6 +38,7 @@ public interface FarmingStation {
 
     boolean consumeBonemeal();
 
+    @Nullable
     Level getLevel();
 
     boolean handleDrops(BlockState plant, BlockPos pos, BlockPos soil, BlockEntity blockEntity, ItemStack stack);

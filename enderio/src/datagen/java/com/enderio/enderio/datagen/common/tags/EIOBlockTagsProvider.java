@@ -251,6 +251,10 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
             .add(EIOBlocks.SILENT_DARK_STEEL_PRESSURE_PLATE.get())
             .add(EIOBlocks.SOULARIUM_PRESSURE_PLATE.get())
             .add(EIOBlocks.SILENT_SOULARIUM_PRESSURE_PLATE.get());
+
+        tag(EIOTags.Blocks.CROPS_WITH_STEM)
+            .add(Blocks.MELON)
+            .add(Blocks.PUMPKIN);
     }
 
     private void addMachineBlockTags() {
