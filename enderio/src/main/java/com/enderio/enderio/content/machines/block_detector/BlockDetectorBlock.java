@@ -15,6 +15,8 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import org.jetbrains.annotations.Nullable;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
 
 public class BlockDetectorBlock extends DirectionalBlock {
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
@@ -89,5 +91,24 @@ public class BlockDetectorBlock extends DirectionalBlock {
             level.blockUpdated(pos, state.getBlock());
         }
         return super.updateShape(state, direction, neighborState, level, pos, neighborPos);
+    }
+
+    @Override
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
+        super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
+
+        if (level.isClientSide) {
+            return;
+        }
+
+        BlockPos targetPos = pos.relative(state.getValue(FACING));
+        boolean shouldBePowered = !level.getBlockState(targetPos).isAir();
+        if (state.getValue(POWERED) != shouldBePowered) {
+            level.setBlock(pos, state.cycle(POWERED), Block.UPDATE_CLIENTS);
+
+            for (Direction direction : Direction.values()) {
+                level.updateNeighborsAt(pos.relative(direction), this);
+            }
+        }
     }
 }
