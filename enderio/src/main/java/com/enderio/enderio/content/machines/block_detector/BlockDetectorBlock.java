@@ -101,7 +101,9 @@ public class BlockDetectorBlock extends DirectionalBlock {
             return;
         }
 
-        if (state.getValue(POWERED) != level.hasNeighborSignal(pos)) {
+        BlockPos targetPos = pos.relative(state.getValue(FACING));
+        boolean shouldBePowered = !level.getBlockState(targetPos).isAir();
+        if (state.getValue(POWERED) != shouldBePowered) {
             level.setBlock(pos, state.cycle(POWERED), Block.UPDATE_CLIENTS);
 
             for (Direction direction : Direction.values()) {
