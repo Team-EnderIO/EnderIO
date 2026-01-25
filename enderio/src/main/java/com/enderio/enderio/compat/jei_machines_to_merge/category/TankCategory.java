@@ -6,6 +6,7 @@ import com.enderio.enderio.compat.jei.JEILang;
 import com.enderio.enderio.compat.jei.JEIUtils;
 import com.enderio.enderio.content.storage.fluid_tank.FluidTankBlockEntity;
 import com.enderio.enderio.content.storage.fluid_tank.TankRecipe;
+import com.enderio.enderio.foundation.util.SizedFluidIngredientHelper;
 import com.enderio.enderio.init.EIOBlocks;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -58,6 +59,7 @@ public class TankCategory implements IRecipeCategory<RecipeHolder<TankRecipe>> {
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<TankRecipe> recipe, IFocusGroup focuses) {
+        List<FluidStack> fluidStacks = SizedFluidIngredientHelper.getFluidStacksInPreferredOrder(recipe.value().fluid());
 
         if (recipe.value().mode() == TankRecipe.Mode.EMPTY) {
             builder.addSlot(RecipeIngredientRole.INPUT, 3, 3).addIngredients(recipe.value().input());
@@ -65,7 +67,6 @@ public class TankCategory implements IRecipeCategory<RecipeHolder<TankRecipe>> {
             builder.addSlot(RecipeIngredientRole.OUTPUT, 3, 34).addItemStack(recipe.value().output().copy());
 
             // Convert SizedFluidIngredient to FluidStack list for JEI display
-            List<FluidStack> fluidStacks = Arrays.asList(recipe.value().fluid().getFluids());
             builder.addSlot(RecipeIngredientRole.OUTPUT, 39, 3)
                     .addIngredients(NeoForgeTypes.FLUID_STACK, fluidStacks)
                     .setFluidRenderer(FluidTankBlockEntity.Standard.CAPACITY, false, 16, 47);
@@ -75,13 +76,8 @@ public class TankCategory implements IRecipeCategory<RecipeHolder<TankRecipe>> {
             builder.addSlot(RecipeIngredientRole.OUTPUT, 75, 34).addItemStack(recipe.value().output().copy());
 
             // Convert SizedFluidIngredient to FluidStack list for JEI display
-            FluidStack[] fluidStacks = recipe.value().fluid().getFluids();
-            List<FluidStack> fluidList = new java.util.ArrayList<>();
-            for (FluidStack stack : fluidStacks) {
-                fluidList.add(stack.copyWithAmount((int) recipe.value().fluid().amount()));
-            }
             builder.addSlot(RecipeIngredientRole.INPUT, 39, 3)
-                    .addIngredients(NeoForgeTypes.FLUID_STACK, fluidList)
+                    .addIngredients(NeoForgeTypes.FLUID_STACK, fluidStacks)
                     .setFluidRenderer(FluidTankBlockEntity.Standard.CAPACITY, false, 16, 47);
         }
     }
