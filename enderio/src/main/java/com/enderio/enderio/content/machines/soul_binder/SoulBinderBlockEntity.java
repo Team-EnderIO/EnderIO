@@ -70,8 +70,8 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
     public static final SingleResourceSlotKey<FluidResource> TANK_SLOT = new SingleResourceSlotKey<>();
 
     public static final FluidStorageLayout<SoulBinderBlockEntity> FLUID_STORAGE_LAYOUT =
-        FluidStorageLayout.<SoulBinderBlockEntity>builder()
-            .storageSlot(TANK_SLOT, slot -> slot
+         FluidStorageLayout.<SoulBinderBlockEntity>builder()
+            .inputSlot(TANK_SLOT, slot -> slot
                 .capacity(TANK_CAPACITY)
                 .filter((index, resource, binder) -> resource.is(Tags.Fluids.EXPERIENCE)))
             .build();

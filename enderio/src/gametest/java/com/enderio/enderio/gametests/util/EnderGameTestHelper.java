@@ -29,6 +29,8 @@ public class EnderGameTestHelper extends ExtendedGameTestHelper {
         }
     }
 
+    // region Item Storage
+
     public void insertIntoContainer(int x, int y, int z, Item item, int count) {
         insertIntoContainer(x, y, z, ItemResource.of(item), count);
     }
@@ -73,6 +75,63 @@ public class EnderGameTestHelper extends ExtendedGameTestHelper {
                 + "," + z + " but found " + foundCount);
         }
     }
+
+    /**
+     * Insert an item into a specific slot of a container.
+     */
+    public void insertItemIntoSlot(int x, int y, int z, int slot, ItemStack itemStack) {
+        var itemHandler = getLevel().getCapability(Capabilities.Item.BLOCK, absolutePos(new BlockPos(x, y, z)), null);
+        if (itemHandler == null) {
+            throw assertionException("No item handler at " + x + "," + y + "," + z);
+        }
+
+        try (Transaction transaction = Transaction.openRoot()) {
+            int inserted = itemHandler.insert(ItemResource.of(itemStack), itemStack.getCount(), transaction);
+            if (inserted != itemStack.getCount()) {
+                throw assertionException("Could not insert " + itemStack + " into container at " + x + "," + y + "," + z);
+            }
+
+            transaction.commit();
+        }
+    }
+
+    /**
+     * Get the item stack in a specific slot of a container.
+     */
+    public ItemStack getItemInSlot(int x, int y, int z, int slot) {
+        var itemHandler = getLevel().getCapability(Capabilities.Item.BLOCK, absolutePos(new BlockPos(x, y, z)), null);
+        if (itemHandler == null) {
+            throw assertionException("No item handler at " + x + "," + y + "," + z);
+        }
+
+        return itemHandler.getResource(slot).toStack(itemHandler.getAmountAsInt(slot));
+    }
+
+    /**
+     * Assert that a specific slot contains a specific item.
+     */
+    public void assertSlotHasItem(int x, int y, int z, int slot, Item expectedItem) {
+        ItemStack stack = getItemInSlot(x, y, z, slot);
+        if (!stack.is(expectedItem)) {
+            throw assertionException(
+                "Expected " + expectedItem + " in slot " + slot + " at " + x + "," + y + "," + z +
+                    ", but found: " + (stack.isEmpty() ? "empty" : stack.getItem()));
+        }
+    }
+
+    /**
+     * Assert that a specific slot is empty.
+     */
+    public void assertSlotHasNoItem(int x, int y, int z, int slot) {
+        ItemStack stack = getItemInSlot(x, y, z, slot);
+        if (!stack.isEmpty()) {
+            throw assertionException(
+                "Expected empty slot " + slot + " at " + x + "," + y + "," + z +
+                    ", but found: " + stack.getItem());
+        }
+    }
+
+    // endregion
 
     public void fillContainer(int x, int y, int z, Fluid fluid, int amount) {
         var fluidHandler = getLevel().getCapability(Capabilities.Fluid.BLOCK, absolutePos(new BlockPos(x, y, z)),

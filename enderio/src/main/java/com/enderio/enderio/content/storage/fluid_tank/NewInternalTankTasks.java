@@ -98,6 +98,12 @@ public class NewInternalTankTasks {
             );
 
             if (moved > 0) {
+                // Ensure we've not generated 'air' (i.e. no bucket for fluid).
+                // If we have, do not commit to extracting the resource.
+                if (itemStorage.getResource(fluidDrainInputSlot).isEmpty()) {
+                    return;
+                }
+
                 // Only commit if we managed to move the input to the output
                 if (EnderResourceUtil.tryMoveItem(itemStorage, fluidDrainInputSlot, fluidDrainOutputSlot, transaction)) {
                     transaction.commit();
