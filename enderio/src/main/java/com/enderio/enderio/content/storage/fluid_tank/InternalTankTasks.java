@@ -80,6 +80,12 @@ public class InternalTankTasks {
             if (inputItem.getItem() == Items.BUCKET) {
                 if (!tank.getFluid(blockEntity).isEmpty()) {
                     FluidStack stack = tank.drain(blockEntity, FluidType.BUCKET_VOLUME, IFluidHandler.FluidAction.SIMULATE);
+
+                    // Ensure there's a bucket to be given to the player.
+                    if (stack.getFluid().getBucket() == Items.AIR) {
+                        return;
+                    }
+
                     if (stack.getAmount() == FluidType.BUCKET_VOLUME &&
                         (outputItem.isEmpty() || (outputItem.getItem() == stack.getFluid().getBucket()
                             && outputItem.getCount() < outputItem.getMaxStackSize()))) {
