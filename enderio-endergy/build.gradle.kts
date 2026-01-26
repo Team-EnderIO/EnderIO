@@ -64,11 +64,6 @@ configurations {
 
 
 dependencies {
-    // Include and bundle regilite
-    api(libs.regilite)
-    jarJar(libs.regilite)
-
-    // EnderIO will bundle Regilite and EnderCore in production.
     api(project(":enderio"))
 }
 

@@ -81,8 +81,6 @@ configurations {
 
 dependencies {
     val localRuntime by configurations.getting
-    // Include and bundle regilite
-    jarJar(libs.regilite)
 
     // EnderIO bundles EnderCore.
     api(project(":endercore"))
