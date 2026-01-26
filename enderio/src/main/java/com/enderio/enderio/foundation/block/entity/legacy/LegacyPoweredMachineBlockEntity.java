@@ -12,6 +12,7 @@ import com.enderio.enderio.foundation.block.entity.legacy.sync.EnergySyncData;
 import com.enderio.enderio.foundation.block.legacy.LegacyProgressMachineBlock;
 import com.enderio.enderio.foundation.inventory.MachineInventory;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
+import com.enderio.enderio.foundation.io.TransferUtil;
 import com.enderio.enderio.foundation.io.energy.IMachineEnergyStorage;
 import com.enderio.enderio.foundation.io.energy.ImmutableMachineEnergyStorage;
 import com.enderio.enderio.foundation.io.energy.MachineEnergyStorage;
@@ -185,28 +186,8 @@ public abstract class LegacyPoweredMachineBlockEntity extends LegacyMachineBlock
             return;
         }
 
-        // Transmit power out all sides.
-        for (Direction side : Direction.values()) {
-            if (!shouldPushEnergyTo(side)) {
-                continue;
-            }
-
-            var selfHandler = getSelfCapability(Capabilities.EnergyStorage.BLOCK, side);
-            if (selfHandler == null) {
-                continue;
-            }
-
-            // Get the other energy handler
-            IEnergyStorage otherHandler = getNeighbouringCapability(Capabilities.EnergyStorage.BLOCK, side);
-            if (otherHandler != null) {
-                // If the other handler can receive power transmit ours
-                if (otherHandler.canReceive()) {
-                    int energyToReceive = selfHandler.extractEnergy(selfHandler.getEnergyStored(), true);
-                    int received = otherHandler.receiveEnergy(energyToReceive, false);
-                    selfHandler.extractEnergy(received, false);
-                }
-            }
-        }
+        EnergyIOMode energyIOMode = getExposedEnergyStorage().getIOMode();
+        TransferUtil.distributeEnergyEvenly(level, worldPosition, dir -> energyIOMode.canPush(getIOMode(dir)));
     }
 
     /**

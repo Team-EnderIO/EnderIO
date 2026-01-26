@@ -1,6 +1,7 @@
 package com.enderio.enderio.api.io.energy;
 
 import com.enderio.enderio.api.io.IOConfigurable;
+import com.enderio.enderio.api.io.IOMode;
 
 /**
  * Energy IO Mode declares how Energy IO is determined using IO configs.
@@ -47,5 +48,29 @@ public enum EnergyIOMode {
     // TODO: Clarify - IOConfig canConnect has precedence over this.
     public boolean respectIOConfig() {
         return respectIOConfig;
+    }
+
+    public boolean canPush(IOMode ioMode) {
+        if (!canOutput()) {
+            return false;
+        }
+
+        if (respectIOConfig) {
+            return ioMode.canPush();
+        }
+
+        return true;
+    }
+
+    public boolean canPull(IOMode ioMode) {
+        if (!canInput()) {
+            return false;
+        }
+
+        if (respectIOConfig) {
+            return ioMode.canPull();
+        }
+
+        return true;
     }
 }
