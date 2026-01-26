@@ -5,6 +5,7 @@ import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.irisshaders.iris.api.v0.IrisApi;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -15,6 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.AddSectionGeometryEvent;
 import net.neoforged.neoforge.client.model.pipeline.VertexConsumerWrapper;
@@ -76,6 +78,14 @@ public class ConduitFacadeRendering {
 
         @Override
         public void render(AddSectionGeometryEvent.SectionRenderingContext context) {
+            // Render nothing if a shader pack is in use - transparent facades do not render well with shaders.
+            // See GH-1062 for more details.
+            if (!this.opaque && ModList.get().isLoaded("iris")) {
+                if (IrisApi.getInstance().isShaderPackInUse()) {
+                    return;
+                }
+            }
+
             VertexConsumerWrapper wrapper = opaque ? null : new AlphaWrapper(context);
 
             RandomSource random = RANDOM.get();

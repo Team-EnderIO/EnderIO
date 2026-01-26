@@ -145,6 +145,11 @@ dependencies {
     compileOnly(libs.ftbUltimine)
     localRuntime(libs.ftbUltimine)
 
+    // Sodium + Iris to test shader compatibility
+    compileOnly(libs.iris)
+    localRuntime(libs.sodium)
+    localRuntime(libs.iris)
+
     // Unit tests
     testImplementation(libs.junitJupiter)
     testRuntimeOnly(libs.junitPlatformLauncher)

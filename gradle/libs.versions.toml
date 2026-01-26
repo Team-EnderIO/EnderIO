@@ -13,6 +13,8 @@ refinedStorage = { strictly = "[2.0.0-beta.1,)", prefer = "2.0.0" }
 laserio = "5648871"
 graphlib = { strictly = "[3.0.4, 3.1)", prefer = "3.0.5" }
 ftbUltimine = { strictly = "[2101.1.7,2102)", prefer = "2101.1.7" }
+sodium = "mc1.21.1-0.6.13-neoforge"
+iris = "1.8.12+1.21.1-neoforge"
 
 [libraries]
 jetbrainsAnnotations = { group = "org.jetbrains", name = "annotations", version = "23.0.0"}
@@ -34,6 +36,8 @@ refinedStorage = { group = "com.refinedmods.refinedstorage", name = "refinedstor
 laserio = { group = "curse.maven", name = "laserio-626839", version.ref = "laserio" }
 graphlib = { group = "dev.gigaherz.graph", name = "GraphLib3", version.ref = "graphlib"}
 ftbUltimine = { group = "dev.ftb.mods", name = "ftb-ultimine-neoforge", version.ref = "ftbUltimine" }
+sodium = { group = "maven.modrinth", name = "sodium", version.ref = "sodium" }
+iris = { group = "maven.modrinth", name = "iris", version.ref = "iris" }
 
 junitJupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version = "5.7.1"}
 junitPlatformLauncher = { group = "org.junit.platform", name = "junit-platform-launcher" }
