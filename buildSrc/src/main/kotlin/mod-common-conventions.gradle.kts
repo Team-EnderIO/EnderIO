@@ -73,12 +73,15 @@ var details = versionDetails()
 
 // TODO: Palantir doesn't let us filter for v prefixes on tags, this could cause issues if we tag anything else.
 //       this plugin isn't perfect, but it'll do in the short term.
-val tagVersion = Regex("""\d+(\.\d+)+""").find(details.lastTag)?.value ?: "1.0.0"
+val tagVersion = Regex("""\d+(\.\d+)+(-\w+)?""").find(details.lastTag)?.value ?: "1.0.0"
+
+// Without - metadata for dev builds
+val strippedTagVersion = Regex("""\d+(\.\d+)+""").find(details.lastTag)?.value ?: "1.0.0"
 
 if (details.commitDistance == 0 && details.isCleanTag) {
     version = tagVersion
 } else if (details.branchName != null) {
-    version = "$tagVersion.${details.commitDistance}-${details.branchName.replace("/", "-")}+${details.gitHash}"
+    version = "$strippedTagVersion.${details.commitDistance}-${details.branchName.replace("/", "-")}+${details.gitHash}"
 } else {
-    version = "$tagVersion.${details.commitDistance}-dev+${details.gitHash}"
+    version = "$strippedTagVersion.${details.commitDistance}-dev+${details.gitHash}"
 }
