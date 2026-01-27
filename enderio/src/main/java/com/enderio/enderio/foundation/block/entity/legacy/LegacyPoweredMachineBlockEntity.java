@@ -187,7 +187,7 @@ public abstract class LegacyPoweredMachineBlockEntity extends LegacyMachineBlock
         }
 
         EnergyIOMode energyIOMode = getExposedEnergyStorage().getIOMode();
-        TransferUtil.distributeEnergyEvenly(level, worldPosition, dir -> energyIOMode.canPush(getIOMode(dir)));
+        TransferUtil.distributeEnergyEvenly(level, worldPosition, dir -> energyIOMode.canPush(getIOMode(dir)) && shouldPushEnergyTo(dir));
     }
 
     /**
