@@ -55,6 +55,10 @@ public enum EnergyIOMode {
             return false;
         }
 
+        if (!ioMode.canConnect()) {
+            return false;
+        }
+
         if (respectIOConfig) {
             return ioMode.canPush();
         }
@@ -64,6 +68,10 @@ public enum EnergyIOMode {
 
     public boolean canPull(IOMode ioMode) {
         if (!canInput()) {
+            return false;
+        }
+
+        if (!ioMode.canConnect()) {
             return false;
         }
 
