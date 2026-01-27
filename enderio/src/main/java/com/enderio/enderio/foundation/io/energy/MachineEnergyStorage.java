@@ -122,14 +122,7 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, INBTSerializ
             return 0;
         }
 
-        int maximumEnergyToReceive;
-        if (MachinesConfig.COMMON.ENERGY.THROTTLE_ENERGY_INPUT.get()) {
-            maximumEnergyToReceive = Math.min(getMaxEnergyUse() * 2, maxReceive);
-        } else {
-            maximumEnergyToReceive = maxReceive;
-        }
-
-        int energyReceived = Math.min(getMaxEnergyStored() - getEnergyStored(), maximumEnergyToReceive);
+        int energyReceived = Math.min(getMaxEnergyStored() - getEnergyStored(), maxReceive);
         if (!simulate) {
             addEnergy(energyReceived);
         }
