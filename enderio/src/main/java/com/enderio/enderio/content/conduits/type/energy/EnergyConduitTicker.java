@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class EnergyConduitTicker implements ConduitTicker<EnergyConduit> {
@@ -72,7 +73,7 @@ public class EnergyConduitTicker implements ConduitTicker<EnergyConduit> {
 
     private long distributeTo(List<Pair<IEnergyStorage, Integer>> insertHandlers, long availableEnergy) {
         // Try to fill smaller buffers first.
-        insertHandlers.sort((a, b) -> Integer.compare(b.right(), a.right()));
+        insertHandlers.sort(Comparator.comparingInt(Pair::right));
 
         long energyRemaining = availableEnergy;
         int toShareWith = insertHandlers.size();
