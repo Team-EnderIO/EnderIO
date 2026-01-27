@@ -3,6 +3,7 @@ package com.enderio.enderio.content.conduits.type.energy;
 import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.enderio.enderio.api.conduits.ticker.ConduitTicker;
 import com.google.common.collect.Lists;
+import com.google.common.primitives.Ints;
 import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.server.level.ServerLevel;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -77,14 +78,14 @@ public class EnergyConduitTicker implements ConduitTicker<EnergyConduit> {
         int toShareWith = insertHandlers.size();
         for (var handler : insertHandlers) {
             // If we have too little energy left, just give it to the first handler that will accept it all
-            int energyInserted;
+            int shareAmount;
             if (energyRemaining < toShareWith) {
-                // If we're smaller than an int, we can just cast.
-                energyInserted = handler.left().receiveEnergy((int)energyRemaining, false);
+                shareAmount = Ints.saturatedCast(energyRemaining);
             } else {
-                // Don't insert more than INT_MAX :)
-                energyInserted = handler.left().receiveEnergy((int)Math.min(energyRemaining / toShareWith, Integer.MAX_VALUE), false);
+                shareAmount = Ints.saturatedCast(energyRemaining / toShareWith);
             }
+
+            int energyInserted = handler.left().receiveEnergy(shareAmount, false);
 
             // One less to share with now.
             toShareWith--;

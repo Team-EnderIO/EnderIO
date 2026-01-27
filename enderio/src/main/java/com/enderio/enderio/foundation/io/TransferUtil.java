@@ -153,7 +153,14 @@ public class TransferUtil {
         int toShareWith = transfers.size();
         
         for (EnergyStoragePair transfer : transfers) {
-            int shareAmount = energyRemaining / toShareWith;
+            // If we have too little energy left, just give it to the first handler that will accept it all
+            int shareAmount;
+            if (energyRemaining <= toShareWith) {
+                shareAmount = energyRemaining;
+            } else {
+                shareAmount = energyRemaining / toShareWith;
+            }
+
             int inserted = transfer.receiver.receiveEnergy(shareAmount, false);
             if (inserted > 0) {
                 transfer.self.extractEnergy(inserted, false);
