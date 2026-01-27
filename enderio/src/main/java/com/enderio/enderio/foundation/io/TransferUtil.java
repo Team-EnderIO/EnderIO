@@ -131,7 +131,7 @@ public class TransferUtil {
 
             // Get neighbor capability
             IEnergyStorage otherHandler = level.getCapability(Capabilities.EnergyStorage.BLOCK, pos.relative(direction), direction.getOpposite());
-            if (otherHandler != null && otherHandler.canReceive()) {
+            if (otherHandler != null && otherHandler != selfHandler && otherHandler.canReceive()) {
                 transfers.add(new EnergyStoragePair(selfHandler, otherHandler));
             }
         }
