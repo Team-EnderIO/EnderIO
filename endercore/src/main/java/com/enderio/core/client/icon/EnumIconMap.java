@@ -1,6 +1,7 @@
 package com.enderio.core.client.icon;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -8,8 +9,7 @@ import java.util.EnumMap;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
-// TODO: Use StringRepresentable instead of enum names.
-public class EnumIconMap<T extends Enum<T>> {
+public class EnumIconMap<T extends Enum<T> & StringRepresentable> {
     private final EnumMap<T, ResourceLocation> icons;
 
     public EnumIconMap(String modId, Class<T> enumClass, String iconFolder) {
@@ -27,12 +27,12 @@ public class EnumIconMap<T extends Enum<T>> {
         return icons.get(value);
     }
 
-    private static <T extends Enum<T>> ResourceLocation createFor(String modId, String iconFolder, T value) {
+    private static <T extends Enum<T> & StringRepresentable> ResourceLocation createFor(String modId, String iconFolder, T value) {
         return ResourceLocation.fromNamespaceAndPath(modId,
-                "icon/" + iconFolder + "/" + value.name().toLowerCase(Locale.ROOT));
+                "icon/" + iconFolder + "/" + value.getSerializedName());
     }
 
-    public static class Builder<T extends Enum<T>> {
+    public static class Builder<T extends Enum<T> & StringRepresentable> {
         private final String modId;
         private final Class<T> enumClass;
         private final String iconFolder;

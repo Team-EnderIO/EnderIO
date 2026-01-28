@@ -1,6 +1,5 @@
 package com.enderio.modded_conduits.common.modules.mekanism;
 
-import com.enderio.core.common.registries.ItemDeferredRegister;
 import com.enderio.core.common.registries.MenuDeferredRegister;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIOCapabilities;
@@ -54,7 +53,6 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.capabilities.BlockCapability;
@@ -80,7 +78,7 @@ public class MekanismModule implements ConduitCommonModule {
 
     // region Registries
 
-    private static final ItemDeferredRegister ITEMS = ItemDeferredRegister.create(EnderIO.MOD_ID);
+    private static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(EnderIO.MOD_ID);
     private static final MenuDeferredRegister MENUS = MenuDeferredRegister.create(EnderIO.MOD_ID);
 
     private static final DeferredRegister<ConduitType<?>> CONDUIT_TYPES = DeferredRegister

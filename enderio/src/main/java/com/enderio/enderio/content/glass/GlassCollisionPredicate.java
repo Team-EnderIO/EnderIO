@@ -4,6 +4,7 @@ import com.enderio.core.common.lang.EnumLangMap;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.init.EIOItems;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
@@ -17,22 +18,24 @@ import java.util.function.Predicate;
  * Glass collision predicate wrapper.
  * Contains the predicate, the description id for the tooltip and the icon for the itemstack.
  */
-public enum GlassCollisionPredicate {
+public enum GlassCollisionPredicate implements StringRepresentable {
 
-    NONE(ctx -> false),
-    PLAYERS_PASS(ctx -> ctx.getEntity() instanceof Player),
-    PLAYERS_BLOCK(ctx -> !(ctx.getEntity() instanceof Player)),
-    MOBS_PASS(ctx -> ctx.getEntity() instanceof Mob),
-    MOBS_BLOCK(ctx -> !(ctx.getEntity() instanceof Mob)),
-    ANIMALS_PASS(ctx -> ctx.getEntity() instanceof Animal),
-    ANIMALS_BLOCK(ctx -> !(ctx.getEntity() instanceof Animal));
+    NONE("none", ctx -> false),
+    PLAYERS_PASS("players_pass", ctx -> ctx.getEntity() instanceof Player),
+    PLAYERS_BLOCK("players_block", ctx -> !(ctx.getEntity() instanceof Player)),
+    MOBS_PASS("mobs_pass", ctx -> ctx.getEntity() instanceof Mob),
+    MOBS_BLOCK("mobs_block", ctx -> !(ctx.getEntity() instanceof Mob)),
+    ANIMALS_PASS("animals_pass", ctx -> ctx.getEntity() instanceof Animal),
+    ANIMALS_BLOCK("animals_block", ctx -> !(ctx.getEntity() instanceof Animal));
 
     private static final EnumLangMap<GlassCollisionPredicate> LANG_MAP = new EnumLangMap<>(GlassCollisionPredicate.class, EnderIO.MOD_ID,
         "glass_collision", GlassCollisionPredicate.NONE);
 
+    private final String name;
     private final Predicate<EntityCollisionContext> predicate;
 
-    GlassCollisionPredicate(Predicate<EntityCollisionContext> predicate) {
+    GlassCollisionPredicate(String name, Predicate<EntityCollisionContext> predicate) {
+        this.name = name;
         this.predicate = predicate;
     }
 
@@ -91,5 +94,10 @@ public enum GlassCollisionPredicate {
     @Nullable
     public MutableComponent getComponent() {
         return LANG_MAP.get(this);
+    }
+
+    @Override
+    public String getSerializedName() {
+        return name;
     }
 }

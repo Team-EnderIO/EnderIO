@@ -1,6 +1,5 @@
 package com.enderio.endergy.common.init;
 
-import com.enderio.core.common.registries.ItemDeferredRegister;
 import com.enderio.endergy.common.EnderIOEndergy;
 import com.enderio.endergy.common.item.TotemicCapacitorItem;
 import com.enderio.enderio.api.capacitor.CapacitorData;
@@ -9,9 +8,10 @@ import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class EndergyItems {
-    public static final ItemDeferredRegister ITEMS = ItemDeferredRegister.create(EnderIOEndergy.MOD_ID);
+    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(EnderIOEndergy.MOD_ID);
 
     public static final DeferredItem<CapacitorItem> GRAINY_CAPACITOR = ITEMS.registerItem("grainy_capacitor",
         CapacitorItem::new, new Item.Properties().component(EIODataComponents.CAPACITOR_DATA, CapacitorData.simple(1)));

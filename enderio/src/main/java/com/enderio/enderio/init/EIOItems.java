@@ -1,6 +1,5 @@
 package com.enderio.enderio.init;
 
-import com.enderio.core.common.registries.ItemDeferredRegister;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIODataComponents;
 import com.enderio.enderio.api.capacitor.CapacitorData;
@@ -37,12 +36,13 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.component.ItemLore;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.List;
 
 @SuppressWarnings("unused")
 public class EIOItems {
-    public static final ItemDeferredRegister ITEMS = ItemDeferredRegister.create(EnderIO.MOD_ID);
+    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(EnderIO.MOD_ID);
 
     // region Alloys
 

@@ -1,9 +1,17 @@
 package com.enderio.enderio.content.glass;
 
-public enum GlassLighting {
-    NONE,
-    BLOCKING,
-    EMITTING;
+import net.minecraft.util.StringRepresentable;
+
+public enum GlassLighting implements StringRepresentable {
+    NONE("none"),
+    BLOCKING("blocking"),
+    EMITTING("emitting");
+
+    private final String name;
+
+    GlassLighting(String name) {
+        this.name = name;
+    }
 
     public String shortName() {
         return switch (this) {
@@ -19,5 +27,10 @@ public enum GlassLighting {
             case BLOCKING -> "Dark";
             case EMITTING -> "Enlightened";
         };
+    }
+
+    @Override
+    public String getSerializedName() {
+        return name;
     }
 }

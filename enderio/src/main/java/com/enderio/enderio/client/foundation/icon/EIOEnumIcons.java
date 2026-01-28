@@ -6,6 +6,7 @@ import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.content.filters.item.general.DamageFilterMode;
 import com.enderio.enderio.content.glass.GlassCollisionPredicate;
 import com.enderio.enderio.content.glass.GlassLighting;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.DyeColor;
 
 public class EIOEnumIcons {
@@ -26,11 +27,11 @@ public class EIOEnumIcons {
     public static final EnumIconMap<DamageFilterMode> DAMAGE_FILTER_MODE = createAll(DamageFilterMode.class,
             "damage_filter_mode");
 
-    private static <T extends Enum<T>> EnumIconMap<T> createAll(Class<T> enumClass, String iconFolder) {
+    private static <T extends Enum<T> & StringRepresentable> EnumIconMap<T> createAll(Class<T> enumClass, String iconFolder) {
         return new EnumIconMap<>(EnderIO.MOD_ID, enumClass, iconFolder);
     }
 
-    private static <T extends Enum<T>> EnumIconMap.Builder<T> builder(Class<T> enumClass, String iconFolder) {
+    private static <T extends Enum<T> & StringRepresentable> EnumIconMap.Builder<T> builder(Class<T> enumClass, String iconFolder) {
         return new EnumIconMap.Builder<>(EnderIO.MOD_ID, enumClass, iconFolder);
     }
 }
