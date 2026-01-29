@@ -61,6 +61,11 @@ public class EntityCaptureUtils {
             return CapturableStatus.INCOMPATIBLE;
         }
 
+        // Don't allow capturing of the ender dragon
+        if (type.equals(EntityType.ENDER_DRAGON)) {
+            return CapturableStatus.BLACKLISTED;
+        }
+
         // Whitelist takes precedence over all
         // This allows easier allowing of restricted mobs than removing from tags.
         if (type.is(EIOTags.EntityTypes.SOUL_VIAL_WHITELIST)) {
