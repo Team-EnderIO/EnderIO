@@ -2,6 +2,7 @@ package com.enderio.enderio.content.conduits.network;
 
 import com.enderio.core.common.graph.Network;
 import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.config.IOConnectionConfig;
 import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContext;
@@ -108,6 +109,11 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
 
     public Holder<Conduit<?, ?>> conduit() {
         return conduit;
+    }
+
+    @Override
+    public ConduitType<?> conduitType() {
+        return conduit.value().type();
     }
 
     // region Chunk Tracking

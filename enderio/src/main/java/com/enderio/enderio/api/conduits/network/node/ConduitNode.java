@@ -1,11 +1,15 @@
 package com.enderio.enderio.api.conduits.network.node;
 
+import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.ConnectionStatus;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.ConduitNetwork;
+import com.google.common.base.Preconditions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.world.item.DyeColor;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
@@ -18,6 +22,27 @@ import org.jetbrains.annotations.Nullable;
  */
 @ApiStatus.AvailableSince("8.0.0")
 public interface ConduitNode {
+    /**
+     * @return the conduit the node represents.
+     * @apiNote Currently the node must be valid (loaded, attached etc.) for this to not throw an exception.
+     */
+    @ApiStatus.Experimental
+    Holder<Conduit<?, ?>> conduit();
+
+    /**
+     * @param type the expected type of conduit
+     * @return the conduit the node represents.
+     * @param <T> the type of conduit
+     * @throws IllegalStateException if the node is not valid or the conduit is not of the expected type
+     */
+    @SuppressWarnings("unchecked")
+    @ApiStatus.NonExtendable
+    default <T extends Conduit<T, ?>> Holder<T> conduit(ConduitType<T> type) {
+        var conduitHolderUntyped = conduit();
+        Preconditions.checkState(conduitHolderUntyped.value().type() == type);
+        return (Holder<T>) conduitHolderUntyped;
+    }
+
     /**
      * @return the world position of the node.
      */

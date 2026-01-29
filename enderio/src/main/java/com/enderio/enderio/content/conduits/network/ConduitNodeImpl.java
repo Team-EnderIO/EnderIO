@@ -132,6 +132,12 @@ public final class ConduitNodeImpl implements INetworkNode<ConduitNetwork, Condu
     }
 
     @Override
+    public Holder<Conduit<?, ?>> conduit() {
+        ensureValid();
+        return conduit;
+    }
+
+    @Override
     public BlockPos pos() {
         return pos;
     }

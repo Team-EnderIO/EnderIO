@@ -1,6 +1,7 @@
 package com.enderio.enderio.api.conduits;
 
 import com.enderio.enderio.api.EnderIORegistries;
+import com.enderio.enderio.api.conduits.ticker.ConduitTickerBase;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -11,6 +12,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.capabilities.BlockCapability;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -32,6 +34,9 @@ public interface ConduitType<T extends Conduit<T, ?>> {
      * @return The list of block capabilities that should be exposed and passed to the conduit proxy.
      */
     Set<BlockCapability<?, ?>> exposedCapabilities();
+
+//    @Nullable
+//    ConduitTickerBase<T> ticker();
 
     static <T extends Conduit<T, ?>> ConduitType<T> of(MapCodec<T> codec) {
         return builder(codec).build();
