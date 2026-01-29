@@ -12,7 +12,7 @@ public abstract class ConduitTickerBase<T extends Conduit<T, ?>> {
 
     public final void tick(ServerLevel level, ConduitNetwork network, int tickOffset) {
         Preconditions.checkArgument(network.conduitType() == conduitType(), "Network is not of correct type");
-//        Preconditions.checkArgument(network.conduitType().ticker() == this, "Incorrect ticker for network's conduit type");
+        Preconditions.checkArgument(network.conduitType().ticker() == this, "Incorrect ticker for network's conduit type");
 
         // Only tick if we're supposed to.
         int tickRate = getTickRate(network);

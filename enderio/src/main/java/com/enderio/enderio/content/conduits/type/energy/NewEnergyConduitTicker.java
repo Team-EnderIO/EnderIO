@@ -15,6 +15,11 @@ import java.util.Comparator;
 import java.util.List;
 
 public class NewEnergyConduitTicker extends ConduitTickerBase<EnergyConduit> {
+
+    public static final NewEnergyConduitTicker INSTANCE = new NewEnergyConduitTicker();
+
+    private NewEnergyConduitTicker() {}
+
     @Override
     protected ConduitType<EnergyConduit> conduitType() {
         return EIOConduitTypes.ENERGY.get();

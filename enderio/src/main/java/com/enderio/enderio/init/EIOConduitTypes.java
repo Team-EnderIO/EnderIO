@@ -13,12 +13,14 @@ import com.enderio.enderio.content.conduits.legacy.LegacyRedstoneConduitData;
 import com.enderio.enderio.content.conduits.type.energy.EnergyConduit;
 import com.enderio.enderio.content.conduits.type.energy.EnergyConduitConnectionConfig;
 import com.enderio.enderio.content.conduits.type.energy.EnergyConduitNetworkContext;
+import com.enderio.enderio.content.conduits.type.energy.NewEnergyConduitTicker;
 import com.enderio.enderio.content.conduits.type.fluid.FluidConduit;
 import com.enderio.enderio.content.conduits.type.fluid.FluidConduitConnectionConfig;
 import com.enderio.enderio.content.conduits.type.fluid.FluidConduitNetworkContext;
 import com.enderio.enderio.content.conduits.type.item.ItemConduit;
 import com.enderio.enderio.content.conduits.type.item.ItemConduitConnectionConfig;
 import com.enderio.enderio.content.conduits.type.item.ItemConduitNodeData;
+import com.enderio.enderio.content.conduits.type.item.NewItemConduitTicker;
 import com.enderio.enderio.content.conduits.type.redstone.RedstoneConduit;
 import com.enderio.enderio.content.conduits.type.redstone.RedstoneConduitConnectionConfig;
 import com.enderio.enderio.content.conduits.type.redstone.RedstoneConduitNetworkContext;
@@ -33,7 +35,11 @@ public class EIOConduitTypes {
             .create(EnderIORegistries.CONDUIT_TYPE, EnderIO.MOD_ID);
 
     public static final Supplier<ConduitType<EnergyConduit>> ENERGY = CONDUIT_TYPES.register("energy",
-            () -> ConduitType.builder(EnergyConduit.CODEC).exposeCapability(Capabilities.EnergyStorage.BLOCK).build());
+            () -> ConduitType
+                .builder(EnergyConduit.CODEC)
+                .exposeCapability(Capabilities.EnergyStorage.BLOCK)
+                .ticker(NewEnergyConduitTicker.INSTANCE)
+                .build());
 
     public static final Supplier<ConduitType<RedstoneConduit>> REDSTONE = CONDUIT_TYPES.register("redstone",
             () -> ConduitType.of(RedstoneConduit.CODEC));
@@ -42,7 +48,7 @@ public class EIOConduitTypes {
             () -> ConduitType.of(FluidConduit.CODEC));
 
     public static final Supplier<ConduitType<ItemConduit>> ITEM = CONDUIT_TYPES.register("item",
-            () -> ConduitType.of(ItemConduit.CODEC));
+            () -> ConduitType.of(ItemConduit.CODEC, NewItemConduitTicker.INSTANCE));
 
     public static class Data {
         private static final DeferredRegister<ConduitDataType<?>> CONDUIT_DATA_TYPES = DeferredRegister

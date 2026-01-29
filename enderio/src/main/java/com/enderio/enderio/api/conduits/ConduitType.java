@@ -35,11 +35,15 @@ public interface ConduitType<T extends Conduit<T, ?>> {
      */
     Set<BlockCapability<?, ?>> exposedCapabilities();
 
-//    @Nullable
-//    ConduitTickerBase<T> ticker();
+    @Nullable
+    ConduitTickerBase<T> ticker();
 
     static <T extends Conduit<T, ?>> ConduitType<T> of(MapCodec<T> codec) {
         return builder(codec).build();
+    }
+
+    static <T extends Conduit<T, ?>> ConduitType<T> of(MapCodec<T> codec, ConduitTickerBase<T> ticker) {
+        return builder(codec).ticker(ticker).build();
     }
 
     static <T extends Conduit<T, ?>> Builder<T> builder(MapCodec<T> codec) {
@@ -61,6 +65,9 @@ public interface ConduitType<T extends Conduit<T, ?>> {
         private final MapCodec<T> codec;
         private final Set<BlockCapability<?, ?>> exposedCapabilities;
 
+        @Nullable
+        private ConduitTickerBase<T> ticker;
+
         private Builder(MapCodec<T> codec) {
             this.codec = codec;
             this.exposedCapabilities = new HashSet<>();
@@ -71,11 +78,16 @@ public interface ConduitType<T extends Conduit<T, ?>> {
             return this;
         }
 
-        public ConduitType<T> build() {
-            return new SimpleType<>(codec, exposedCapabilities);
+        public Builder<T> ticker(ConduitTickerBase<T> ticker) {
+            this.ticker = ticker;
+            return this;
         }
 
-        record SimpleType<T extends Conduit<T, ?>>(MapCodec<T> codec, Set<BlockCapability<?, ?>> exposedCapabilities)
+        public ConduitType<T> build() {
+            return new SimpleType<>(codec, exposedCapabilities, ticker);
+        }
+
+        record SimpleType<T extends Conduit<T, ?>>(MapCodec<T> codec, Set<BlockCapability<?, ?>> exposedCapabilities, @Nullable ConduitTickerBase<T> ticker)
                 implements ConduitType<T> {
         }
     }

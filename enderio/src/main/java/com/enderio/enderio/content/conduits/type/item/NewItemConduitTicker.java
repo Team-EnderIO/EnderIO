@@ -12,6 +12,11 @@ import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 public class NewItemConduitTicker extends ConduitTickerBase<ItemConduit> {
+
+    public static final NewItemConduitTicker INSTANCE = new NewItemConduitTicker();
+
+    private NewItemConduitTicker() {}
+
     @Override
     protected ConduitType<ItemConduit> conduitType() {
         return EIOConduitTypes.ITEM.get();
