@@ -55,14 +55,17 @@ public class TravelHandler {
         return comp != null && comp;
     }
 
+    // NOTE: This isn't as flexible as how Integration system used to work.
     public static boolean canBlockTeleport(Player player) {
-        return !player.level().getBlockState(player.blockPosition().below()).is(EIOTags.Blocks.BLOCKS_TELEPORTATION);
+        return player.level().getBlockState(player.blockPosition().below()).is(EIOTags.Blocks.BLOCKS_TELEPORTATION);
     }
 
+    // FIXME: This doesn't belong here. Should be move to TravelStaff specific class.
     public static boolean hasResources(ItemStack stack) {
         return ItemStackEnergy.hasEnergy(stack, BaseConfig.COMMON.ITEMS.TRAVELLING_STAFF_ENERGY_USE.get());
     }
 
+    // FIXME: Move this too.
     public static void consumeResources(ItemStack stack) {
         ItemStackEnergy.extractEnergy(stack, BaseConfig.COMMON.ITEMS.TRAVELLING_STAFF_ENERGY_USE.get(), false);
     }
