@@ -1,14 +1,14 @@
 {
-  "conduit.enderio.chemical": "Chemical Conduit",
-  "conduit.enderio.dense_me": "Dense ME Conduit",
-  "conduit.enderio.ender_chemical": "Ender Chemical Conduit",
-  "conduit.enderio.heat": "Heat Conduit",
-  "conduit.enderio.me": "ME Conduit",
-  "conduit.enderio.pressurized_chemical": "Pressurized Chemical Conduit",
-  "conduit.enderio.rs": "Refined Storage Conduit",
-  "item.enderio.basic_chemical_filter": "Basic Chemical Filter",
-  "tooltip.enderio.conduit.chemical.change_fluid1": "Locked Chemical:",
-  "tooltip.enderio.conduit.chemical.change_fluid2": "Click to reset!",
-  "tooltip.enderio.conduit.chemical.change_fluid3": "Chemical: %s",
-  "tooltip.enderio.conduit.chemical.multi": "Allows multiple chemical types to be transported on the same line"
+  "conduit.enderio.chemical": "Conduto Químico",
+  "conduit.enderio.dense_me": "Conduto Denso ME",
+  "conduit.enderio.ender_chemical": "Conduto Químico do Ender",
+  "conduit.enderio.heat": "Conduto de Calor",
+  "conduit.enderio.me": "Conduto ME",
+  "conduit.enderio.pressurized_chemical": "Conduto Químico Pressurizado",
+  "conduit.enderio.rs": "Conduto do Refined Storage",
+  "item.enderio.basic_chemical_filter": "Filtro Químico Básico",
+  "tooltip.enderio.conduit.chemical.change_fluid1": "Químico Bloqueado:",
+  "tooltip.enderio.conduit.chemical.change_fluid2": "Clique para redefinir!",
+  "tooltip.enderio.conduit.chemical.change_fluid3": "Químico: %s",
+  "tooltip.enderio.conduit.chemical.multi": "Permite que múltiplos tipos de produtos químicos sejam transportados na mesma linha"
 }
