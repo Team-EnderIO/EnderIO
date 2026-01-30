@@ -1,11 +1,15 @@
 package com.enderio.modded_conduits.common.modules.mekanism.heat;
 
+import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.enderio.enderio.api.conduits.ticker.ConduitTickerBase;
 import com.enderio.modded_conduits.common.modules.mekanism.MekanismModule;
 import mekanism.api.heat.IHeatHandler;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
+
+import java.util.List;
 
 public class HeatTicker extends ConduitTickerBase<HeatConduit> {
 
@@ -20,12 +24,7 @@ public class HeatTicker extends ConduitTickerBase<HeatConduit> {
     }
 
     @Override
-    public int tickRate() {
-        return 5;
-    }
-
-    @Override
-    protected void tickNetwork(ServerLevel level, ConduitNetwork network, int tickOffset) {
+    protected void tickNetwork(ServerLevel level, ConduitNetwork network, List<Holder<Conduit<?, ?>>> tickableConduits) {
         for (var extractConnection : network.extractConnections()) {
             var insertConnections = network.insertConnectionsFrom(extractConnection);
             if (insertConnections.isEmpty()) {

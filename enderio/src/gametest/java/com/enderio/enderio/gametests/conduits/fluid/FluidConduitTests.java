@@ -48,7 +48,7 @@ public class FluidConduitTests {
 
         test.onGameTest(ConduitGameTestHelper.class, helper -> {
             var fluidConduit = helper.getConduit(EIOConduits.FLUID);
-            final int tickRate = fluidConduit.value().type().ticker().tickRate();
+            final int tickRate = fluidConduit.value().networkTickRate();
 
             helper.startSequence()
                 // Destroy any previous conduit
@@ -85,7 +85,7 @@ public class FluidConduitTests {
     @TestHolder(description = "Ensures fluid conduits prioritise closest container first.")
     public static void fluidConduitDistancePriority(final ConduitGameTestHelper helper) {
         var fluidConduit = helper.getConduit(EIOConduits.FLUID);
-        final int tickRate = fluidConduit.value().type().ticker().tickRate();
+        final int tickRate = fluidConduit.value().networkTickRate();
 
         helper.startSequence()
             // Destroy all previous conduits
@@ -116,7 +116,7 @@ public class FluidConduitTests {
     @TestHolder(description = "Ensures fluid conduits prioritise highest priority container first, before closest.")
     public static void fluidConduitManualPriority(final ConduitGameTestHelper helper) {
         var fluidConduit = helper.getConduit(EIOConduits.ENERGETIC_FLUID);
-        final int tickRate = fluidConduit.value().type().ticker().tickRate();
+        final int tickRate = fluidConduit.value().networkTickRate();
 
         if (!((FluidConduit)fluidConduit.value()).doesSupportPriority()) {
             throw new IllegalStateException("Fluid conduit does not support priority, fix the test to use a conduit that does.");

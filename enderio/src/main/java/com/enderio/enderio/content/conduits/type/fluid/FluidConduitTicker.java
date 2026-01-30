@@ -1,11 +1,13 @@
 package com.enderio.enderio.content.conduits.type.fluid;
 
 import com.enderio.enderio.api.EnderIOCapabilities;
+import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
 import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.enderio.enderio.api.conduits.ticker.ConduitTickerBase;
 import com.enderio.enderio.init.EIOConduitTypes;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
@@ -30,12 +32,7 @@ public class FluidConduitTicker extends ConduitTickerBase<FluidConduit> {
     }
 
     @Override
-    public int tickRate() {
-        return 5;
-    }
-
-    @Override
-    protected void tickNetwork(ServerLevel level, ConduitNetwork network, int tickOffset) {
+    protected void tickNetwork(ServerLevel level, ConduitNetwork network, List<Holder<Conduit<?, ?>>> tickableConduits) {
         var context = network.getOrCreateContext(FluidConduitNetworkContext.TYPE);
 
         boolean hadMultiFluid = false;
@@ -52,7 +49,7 @@ public class FluidConduitTicker extends ConduitTickerBase<FluidConduit> {
                 }
 
                 final var extractConduit = extractConnection.node().conduit(conduitType());
-                final int fluidRate = extractConduit.value().transferRatePerTick() * tickRate();
+                final int fluidRate = extractConduit.value().transferRatePerTick() * extractConduit.value().networkTickRate();
 
                 hadMultiFluid |= extractConduit.value().isMultiFluid();
 
@@ -128,7 +125,7 @@ public class FluidConduitTicker extends ConduitTickerBase<FluidConduit> {
 
             var insertConduit = insertConnection.node().conduit(conduitType());
             // TODO: When we add path speeds, we'll restrict to the path speed instead.
-            int maxInsertSpeed = insertConduit.value().transferRatePerTick() * tickRate();
+            int maxInsertSpeed = insertConduit.value().transferRatePerTick() * insertConduit.value().networkTickRate();
             if (fluidToInsert.getAmount() > maxInsertSpeed) {
                 fluidToInsert.setAmount(maxInsertSpeed);
             }

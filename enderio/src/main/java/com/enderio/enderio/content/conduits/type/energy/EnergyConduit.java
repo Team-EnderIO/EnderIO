@@ -45,6 +45,12 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
         return EIOConduitTypes.ENERGY.get();
     }
 
+    // Not configurable - energy is instantaneous
+    @Override
+    public int networkTickRate() {
+        return 1;
+    }
+
     @Override
     public boolean hasMenu() {
         return true;

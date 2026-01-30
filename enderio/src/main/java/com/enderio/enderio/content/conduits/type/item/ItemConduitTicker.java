@@ -1,15 +1,19 @@
 package com.enderio.enderio.content.conduits.type.item;
 
 import com.enderio.enderio.api.EnderIOCapabilities;
+import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.enderio.enderio.api.conduits.ticker.ConduitTickerBase;
 import com.enderio.enderio.init.EIOConduitTypes;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
+
+import java.util.List;
 
 public class ItemConduitTicker extends ConduitTickerBase<ItemConduit> {
 
@@ -23,17 +27,18 @@ public class ItemConduitTicker extends ConduitTickerBase<ItemConduit> {
     }
 
     @Override
-    public int tickRate() {
-        // TODO: Need to figure out how we're going to support increased tick speeds.
-        return 20;
-    }
-
-    @Override
-    protected void tickNetwork(ServerLevel level, ConduitNetwork network, int tickOffset) {
+    protected void tickNetwork(ServerLevel level, ConduitNetwork network, List<Holder<Conduit<?, ?>>> tickableConduits) {
         for (var channel : network.allChannels()) {
             toNextExtract: for (var extractConnection : network.extractConnections(channel)) {
                 var insertConnections = network.insertConnectionsFrom(extractConnection);
                 if (insertConnections.isEmpty()) {
+                    continue;
+                }
+
+                var extractConduit = extractConnection.node().conduit(conduitType());
+
+                // If this conduit isn't allowed to tick, skip it.
+                if (!tickableConduits.contains(extractConduit)) {
                     continue;
                 }
 
@@ -51,8 +56,6 @@ public class ItemConduitTicker extends ConduitTickerBase<ItemConduit> {
                 var extractFilter = extractConnection.inventory()
                     .getStackInSlot(ItemConduit.EXTRACT_FILTER_SLOT)
                     .getCapability(EnderIOCapabilities.ITEM_FILTER);
-
-                var extractConduit = extractConnection.node().conduit(conduitType());
 
                 int extracted = 0;
                 int speed = extractConduit.value().transferRatePerCycle();

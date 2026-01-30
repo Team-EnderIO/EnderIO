@@ -4,6 +4,7 @@ import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.config.IOConnectionConfig;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
+import jdk.jfr.Experimental;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.DyeColor;
 import org.jetbrains.annotations.ApiStatus;
@@ -29,6 +30,15 @@ public interface ConduitNetwork {
     // TODO: is there a better way, or is preTick being exposed fine?
     @ApiStatus.Internal
     void beforeTicking();
+
+    /**
+     * @param gameTime the current game time.
+     * @param tickOffset the tick offset (for spreading out network ticks)
+     * @return all conduits that are capable of ticking currently.
+     * @implNote This list will be cached, so it's reasonably fast to query.
+     */
+    @ApiStatus.Experimental
+    List<Holder<Conduit<?, ?>>> getTickableConduits(long gameTime, int tickOffset);
 
     /**
      * @return the total number of nodes in this network.

@@ -1,12 +1,16 @@
 package com.enderio.enderio.content.conduits.type.redstone;
 
 import com.enderio.enderio.api.EnderIOCapabilities;
+import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.enderio.enderio.api.conduits.ticker.ConduitTickerBase;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOConduitTypes;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
+
+import java.util.List;
 
 public class RedstoneConduitTicker extends ConduitTickerBase<RedstoneConduit> {
 
@@ -20,12 +24,7 @@ public class RedstoneConduitTicker extends ConduitTickerBase<RedstoneConduit> {
     }
 
     @Override
-    public int tickRate() {
-        return 2;
-    }
-
-    @Override
-    protected void tickNetwork(ServerLevel level, ConduitNetwork network, int tickOffset) {
+    protected void tickNetwork(ServerLevel level, ConduitNetwork network, List<Holder<Conduit<?, ?>>> tickableConduits) {
         var context = network.getOrCreateContext(RedstoneConduitNetworkContext.TYPE);
         boolean isActiveBeforeTick = context.isActive();
         context.nextTick();

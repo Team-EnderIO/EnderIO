@@ -1,5 +1,6 @@
 package com.enderio.modded_conduits.common.modules.mekanism.chemical;
 
+import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
 import com.enderio.enderio.api.conduits.network.ConduitNetwork;
@@ -9,6 +10,7 @@ import mekanism.api.Action;
 import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalHandler;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 
 import java.util.List;
@@ -26,12 +28,7 @@ public class ChemicalTicker extends ConduitTickerBase<ChemicalConduit> {
     }
 
     @Override
-    public int tickRate() {
-        return 5;
-    }
-
-    @Override
-    protected void tickNetwork(ServerLevel level, ConduitNetwork network, int tickOffset) {
+    protected void tickNetwork(ServerLevel level, ConduitNetwork network, List<Holder<Conduit<?, ?>>> tickableConduits) {
         var context = network.getOrCreateContext(ChemicalConduitNetworkContext.TYPE);
 
         boolean hadMultiChemical = false;
@@ -43,7 +40,7 @@ public class ChemicalTicker extends ConduitTickerBase<ChemicalConduit> {
                 }
 
                 var extractConduit = extractConnection.node().conduit(conduitType());
-                final long transferRate = extractConduit.value().transferRatePerTick() * tickRate();
+                final long transferRate = extractConduit.value().transferRatePerTick() * extractConduit.value().networkTickRate();
 
                 IChemicalHandler extractHandler = extractConnection
                         .getSidedCapability(MekanismModule.Capabilities.CHEMICAL);
@@ -98,7 +95,7 @@ public class ChemicalTicker extends ConduitTickerBase<ChemicalConduit> {
 
         var insertConduit = extractConnection.node().conduit(conduitType());
         // TODO: When we add path speeds, we'll restrict to the path speed instead.'
-        final long maxInsertSpeed = insertConduit.value().transferRatePerTick() * tickRate();
+        final long maxInsertSpeed = insertConduit.value().transferRatePerTick() * insertConduit.value().networkTickRate();
         if (extractedChemical.getAmount() > maxInsertSpeed) {
             extractedChemical.setAmount(maxInsertSpeed);
         }
