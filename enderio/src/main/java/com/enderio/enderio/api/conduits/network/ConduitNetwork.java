@@ -26,6 +26,10 @@ public interface ConduitNetwork {
 
     ConduitType<?> conduitType();
 
+    // TODO: is there a better way, or is preTick being exposed fine?
+    @ApiStatus.Internal
+    void beforeTicking();
+
     /**
      * @return the total number of nodes in this network.
      */
