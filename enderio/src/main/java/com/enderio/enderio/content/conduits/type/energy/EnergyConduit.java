@@ -40,20 +40,9 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
                     Codec.INT.fieldOf("transfer_rate").forGetter(EnergyConduit::transferRatePerTick))
             .apply(builder, EnergyConduit::new));
 
-    // Not configurable - energy is instantaneous
-    @Override
-    public int networkTickRate() {
-        return 1;
-    }
-
     @Override
     public ConduitType<EnergyConduit> type() {
         return EIOConduitTypes.ENERGY.get();
-    }
-
-    @Override
-    public EnergyConduitTicker ticker() {
-        return EnergyConduitTicker.INSTANCE;
     }
 
     @Override

@@ -50,8 +50,6 @@ public record ChemicalConduit(ResourceLocation texture, Component description, l
                                     Codec.BOOL.fieldOf("is_multi_chemical").forGetter(ChemicalConduit::isMultiChemical))
                             .apply(builder, ChemicalConduit::new));
 
-    private static final ChemicalTicker TICKER = new ChemicalTicker();
-
     @Override
     public ConduitType<ChemicalConduit> type() {
         return MekanismModule.TYPE_CHEMICAL.get();
@@ -60,11 +58,6 @@ public record ChemicalConduit(ResourceLocation texture, Component description, l
     @Override
     public ConnectionConfigType<ChemicalConduitConnectionConfig> connectionConfigType() {
         return ChemicalConduitConnectionConfig.TYPE;
-    }
-
-    @Override
-    public ChemicalTicker ticker() {
-        return TICKER;
     }
 
     @Override
@@ -208,7 +201,7 @@ public record ChemicalConduit(ResourceLocation texture, Component description, l
 
         if (tooltipFlag.hasShiftDown()) {
             String rawRateFormatted = String.format("%,d",
-                    (int) Math.ceil(transferRatePerTick() * (20.0 / networkTickRate())));
+                    (int) Math.ceil(transferRatePerTick() * (20.0 / type().ticker().tickRate())));
             tooltipAdder.accept(TooltipUtil.styledWithArgs(ConduitLang.FLUID_RAW_RATE_TOOLTIP, rawRateFormatted));
         }
     }

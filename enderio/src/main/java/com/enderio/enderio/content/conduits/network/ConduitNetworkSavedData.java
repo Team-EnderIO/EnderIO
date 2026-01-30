@@ -5,7 +5,6 @@ import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContext;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContextType;
-import com.enderio.enderio.api.conduits.ticker.ConduitTicker;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Maps;
@@ -205,7 +204,7 @@ public class ConduitNetworkSavedData extends SavedData {
 
         for (var conduit : networks.keySet()) {
             // Skip non-ticking graphs.
-            var ticker = conduit.value().ticker();
+            var ticker = conduit.value().type().ticker();
             if (ticker == null) {
                 continue;
             }
@@ -213,7 +212,7 @@ public class ConduitNetworkSavedData extends SavedData {
             int conduitId = conduitRegistry.getId(conduit.value());
             for (var network : networks.get(conduit)) {
                 try {
-                    tickNetwork(serverLevel, conduit, conduitId, ticker, network);
+                    ticker.tick(serverLevel, network, conduitId);
                 } catch (Throwable t) {
                     var report = CrashReport.forThrowable(t, "Ticking conduit network");
                     var category = report.addCategory(conduit.getRegisteredName() + " network being ticked");
@@ -221,21 +220,6 @@ public class ConduitNetworkSavedData extends SavedData {
                     throw new ReportedException(report);
                 }
             }
-        }
-    }
-
-    private <T extends Conduit<T, ?>> void tickNetwork(ServerLevel serverLevel, Holder<Conduit<?, ?>> conduit,
-            int conduitId, ConduitTicker<T> ticker, ConduitNetwork network) {
-
-        int conduitTickRate = conduit.value().networkTickRate();
-
-        // TODO: Offsets for networks so they don't all tick on the same tick.
-        if ((serverLevel.getGameTime()) % conduitTickRate == conduitId % conduitTickRate) {
-            // Perform pre-tick network actions
-            network.beforeTicking();
-
-            // noinspection unchecked
-            ticker.tick(serverLevel, (T) conduit.value(), network);
         }
     }
 

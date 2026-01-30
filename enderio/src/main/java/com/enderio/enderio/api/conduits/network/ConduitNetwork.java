@@ -4,7 +4,6 @@ import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.config.IOConnectionConfig;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
-import com.enderio.enderio.api.conduits.ticker.ConduitTicker;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.DyeColor;
 import org.jetbrains.annotations.ApiStatus;

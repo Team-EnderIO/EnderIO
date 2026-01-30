@@ -31,7 +31,7 @@ public class Issue1237 {
 
         test.onGameTest(ConduitGameTestHelper.class, helper -> {
             var redstoneConduit = helper.getConduit(EIOConduits.REDSTONE);
-            final int tickRate = redstoneConduit.value().networkTickRate();
+            final int tickRate = redstoneConduit.value().type().ticker().tickRate();
 
             helper.startSequence()
                 // Place conduits to form a network

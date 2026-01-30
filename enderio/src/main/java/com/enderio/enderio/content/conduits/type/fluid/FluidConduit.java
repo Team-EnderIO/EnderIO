@@ -63,11 +63,6 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
     }
 
     @Override
-    public FluidConduitTicker ticker() {
-        return FluidConduitTicker.INSTANCE;
-    }
-
-    @Override
     public boolean hasMenu() {
         return true;
     }
@@ -227,9 +222,10 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
         }
 
         if (tooltipFlag.hasShiftDown()) {
-            String rawRateFormatted = String.format("%,d",
-                    (int) Math.ceil(transferRatePerTick() * (20.0 / networkTickRate())));
-            tooltipAdder.accept(TooltipUtil.styledWithArgs(ConduitLang.FLUID_RAW_RATE_TOOLTIP, rawRateFormatted));
+            // TODO: Fix this.
+//            String rawRateFormatted = String.format("%,d",
+//                    (int) Math.ceil(transferRatePerTick() * (20.0 / networkTickRate())));
+//            tooltipAdder.accept(TooltipUtil.styledWithArgs(ConduitLang.FLUID_RAW_RATE_TOOLTIP, rawRateFormatted));
         }
     }
 

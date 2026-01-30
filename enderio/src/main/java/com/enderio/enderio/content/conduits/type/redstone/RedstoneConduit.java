@@ -40,18 +40,8 @@ public record RedstoneConduit(ResourceLocation texture, ResourceLocation activeT
             .apply(builder, RedstoneConduit::new));
 
     @Override
-    public int networkTickRate() {
-        return 2;
-    }
-
-    @Override
     public ConduitType<RedstoneConduit> type() {
         return EIOConduitTypes.REDSTONE.get();
-    }
-
-    @Override
-    public RedstoneConduitTicker ticker() {
-        return RedstoneConduitTicker.INSTANCE;
     }
 
     @Override

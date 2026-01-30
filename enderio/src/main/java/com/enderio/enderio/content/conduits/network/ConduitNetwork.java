@@ -89,7 +89,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
     public ConduitNetwork(Holder<Conduit<?, ?>> conduit, ConduitNodeImpl initialNode) {
         super(initialNode);
         this.conduit = conduit;
-        this.supportsCaching = conduit.value().ticker() != null;
+        this.supportsCaching = conduit.value().type().ticker() != null;
     }
 
     // TODO: Only public for legacy deserialisation.
@@ -99,12 +99,12 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
         super(nodes, edges);
         this.conduit = conduit;
         this.context = context.orElse(null);
-        this.supportsCaching = conduit.value().ticker() != null;
+        this.supportsCaching = conduit.value().type().ticker() != null;
     }
 
     protected ConduitNetwork(Holder<Conduit<?, ?>> conduit) {
         this.conduit = conduit;
-        this.supportsCaching = conduit.value().ticker() != null;
+        this.supportsCaching = conduit.value().type().ticker() != null;
     }
 
     public Holder<Conduit<?, ?>> conduit() {

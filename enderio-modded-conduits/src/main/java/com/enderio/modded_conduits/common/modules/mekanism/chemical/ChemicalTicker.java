@@ -1,8 +1,9 @@
 package com.enderio.modded_conduits.common.modules.mekanism.chemical;
 
+import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
 import com.enderio.enderio.api.conduits.network.ConduitNetwork;
-import com.enderio.enderio.api.conduits.ticker.ConduitTicker;
+import com.enderio.enderio.api.conduits.ticker.ConduitTickerBase;
 import com.enderio.modded_conduits.common.modules.mekanism.MekanismModule;
 import mekanism.api.Action;
 import mekanism.api.chemical.Chemical;
@@ -13,19 +14,36 @@ import net.minecraft.server.level.ServerLevel;
 import java.util.List;
 import java.util.Objects;
 
-public class ChemicalTicker implements ConduitTicker<ChemicalConduit> {
+public class ChemicalTicker extends ConduitTickerBase<ChemicalConduit> {
+
+    public static final ChemicalTicker INSTANCE = new ChemicalTicker();
+
+    private ChemicalTicker() {}
 
     @Override
-    public void tick(ServerLevel level, ChemicalConduit conduit, ConduitNetwork network) {
-        final long transferRate = conduit.transferRatePerTick() * conduit.networkTickRate();
+    protected ConduitType<ChemicalConduit> conduitType() {
+        return MekanismModule.TYPE_CHEMICAL.get();
+    }
+
+    @Override
+    public int tickRate() {
+        return 5;
+    }
+
+    @Override
+    protected void tickNetwork(ServerLevel level, ConduitNetwork network, int tickOffset) {
         var context = network.getOrCreateContext(ChemicalConduitNetworkContext.TYPE);
 
+        boolean hadMultiChemical = false;
         for (var channel : network.allChannels()) {
             for (var extractConnection : network.extractConnections(channel)) {
                 var insertConnections = network.insertConnectionsFrom(extractConnection);
                 if (insertConnections.isEmpty()) {
                     continue;
                 }
+
+                var extractConduit = extractConnection.node().conduit(conduitType());
+                final long transferRate = extractConduit.value().transferRatePerTick() * tickRate();
 
                 IChemicalHandler extractHandler = extractConnection
                         .getSidedCapability(MekanismModule.Capabilities.CHEMICAL);
@@ -46,7 +64,7 @@ public class ChemicalTicker implements ConduitTicker<ChemicalConduit> {
                         Chemical chemical = extractHandler.getChemicalInTank(i).getChemical();
                         remaining = doChemicalTransfer(chemical, remaining, extractConnection, insertConnections);
 
-                        if (!conduit.isMultiChemical() && remaining < transferRate) {
+                        if (!extractConduit.value().isMultiChemical() && remaining < transferRate) {
                             context.setLockedChemical(chemical);
                             break;
                         }
@@ -56,7 +74,7 @@ public class ChemicalTicker implements ConduitTicker<ChemicalConduit> {
         }
 
         // Mark nodes as dirty if we've acquired a new locked fluid
-        if (!conduit.isMultiChemical()) {
+        if (hadMultiChemical) {
             if (context != null && !context.lockedChemical().equals(context.lastLockedChemical())) {
                 context.clearLastLockedChemical();
                 for (var node : network.tickingNodes()) {
@@ -76,6 +94,13 @@ public class ChemicalTicker implements ConduitTicker<ChemicalConduit> {
                 Action.SIMULATE);
         if (extractedChemical.isEmpty()) {
             return maxTransfer;
+        }
+
+        var insertConduit = extractConnection.node().conduit(conduitType());
+        // TODO: When we add path speeds, we'll restrict to the path speed instead.'
+        final long maxInsertSpeed = insertConduit.value().transferRatePerTick() * tickRate();
+        if (extractedChemical.getAmount() > maxInsertSpeed) {
+            extractedChemical.setAmount(maxInsertSpeed);
         }
 
         // Test the extracted fluid against the target

@@ -15,13 +15,14 @@ public abstract class ConduitTickerBase<T extends Conduit<T, ?>> {
         Preconditions.checkArgument(network.conduitType().ticker() == this, "Incorrect ticker for network's conduit type");
 
         // Only tick if we're supposed to.
-        int tickRate = getTickRate(network);
-        if ((level.getGameTime()) % tickRate == tickOffset % tickRate) {
+        if ((level.getGameTime()) % tickRate() == tickOffset % tickRate()) {
             tickNetwork(level, network, tickOffset);
         }
     }
 
     protected abstract ConduitType<T> conduitType();
+
+    public abstract int tickRate();
 
     /**
      * Tick the network.
@@ -30,6 +31,4 @@ public abstract class ConduitTickerBase<T extends Conduit<T, ?>> {
      * @param tickOffset an offset to apply to tick checks if implementing variable tick rates.
      */
     protected abstract void tickNetwork(ServerLevel level, ConduitNetwork network, int tickOffset);
-
-    protected abstract int getTickRate(ConduitNetwork network);
 }
