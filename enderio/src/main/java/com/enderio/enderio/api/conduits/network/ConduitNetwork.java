@@ -21,10 +21,6 @@ import java.util.Set;
  */
 @ApiStatus.AvailableSince("8.0.0")
 public interface ConduitNetwork {
-    // Temporary during work on conduit changes.
-    @Deprecated
-    Holder<Conduit<?, ?>> conduit();
-
     ConduitType<?> conduitType();
 
     // TODO: is there a better way, or is preTick being exposed fine?
