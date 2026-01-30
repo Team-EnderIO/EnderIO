@@ -1,6 +1,7 @@
 package com.enderio.enderio.datagen.common.recipes;
 
 import com.enderio.core.data.recipe.SubRecipeProvider;
+import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOItems;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
@@ -33,6 +34,27 @@ public class FilterRecipeProvider extends SubRecipeProvider {
                 .pattern("RPR")
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.Z_LOGIC_CONTROLLER))
+                .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.BIG_ITEM_FILTER.get())
+                .define('P', Items.PAPER)
+                .define('S', EIOItems.SKELETAL_CONTRACTOR)
+                .define('D', EIOTags.Items.DUSTS_OBSIDIAN)
+                .pattern("DPD")
+                .pattern("PSP")
+                .pattern("DPD")
+                .unlockedBy("has_ingredient",
+                        InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.SKELETAL_CONTRACTOR))
+                .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.BIG_ADVANCED_ITEM_FILTER.get())
+                .define('S', Items.SHULKER_SHELL)
+                .define('F', EIOItems.ADVANCED_ITEM_FILTER)
+                .pattern("S")
+                .pattern("F")
+                .pattern("S")
+                .unlockedBy("has_ingredient",
+                        InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.ADVANCED_ITEM_FILTER))
                 .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.BASIC_FLUID_FILTER.get())
