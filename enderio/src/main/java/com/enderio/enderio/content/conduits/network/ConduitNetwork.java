@@ -123,6 +123,8 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
     @Override
     public List<Holder<Conduit<?, ?>>> getTickableConduits(long gameTime, int tickOffset) {
         if (!areTickableConduitsValid) {
+            tickableConduits.clear();
+
             for (int i = 0; i < 20; i++) {
                 if (i % conduit.value().networkTickRate() == 0) {
                     tickableConduits.put(i, conduit);
@@ -477,7 +479,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
 
         // Clear all caches
         areTickableConduitsValid = false;
-        
+
         nodesByChunkPos.clear();
         tickingNodes.clear();
         endpointConnections.clear();
