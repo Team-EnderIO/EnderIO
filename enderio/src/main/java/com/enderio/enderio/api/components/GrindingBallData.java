@@ -1,15 +1,19 @@
 package com.enderio.enderio.api.components;
 
+import com.enderio.enderio.EnderIO;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.item.Item;
+import net.neoforged.neoforge.registries.datamaps.DataMapType;
 import org.slf4j.Logger;
 
 import java.util.Optional;
@@ -36,6 +40,12 @@ public record GrindingBallData(float outputMultiplier, float bonusMultiplier, fl
         GrindingBallData::durability,
         GrindingBallData::new
     );
+
+    public static final DataMapType<Item, GrindingBallData> DATA_MAP_TYPE = DataMapType.builder(
+        EnderIO.rl("grinding_ball"),
+        Registries.ITEM,
+        GrindingBallData.CODEC
+    ).synced(GrindingBallData.CODEC, true).build();
 
     public static final GrindingBallData IDENTITY = new GrindingBallData(1.0f, 1.0f, 1.0f, 0);
 

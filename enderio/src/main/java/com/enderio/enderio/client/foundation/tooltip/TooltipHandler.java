@@ -3,7 +3,6 @@ package com.enderio.enderio.client.foundation.tooltip;
 import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.api.EnderIOCapabilities;
-import com.enderio.enderio.api.EnderIODataComponents;
 import com.enderio.enderio.api.capacitor.CapacitorData;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.components.GrindingBallData;
@@ -76,8 +75,8 @@ public class TooltipHandler {
     }
 
     private static void addGrindingBallTooltips(ItemStack itemStack, List<Component> components, boolean showAdvanced) {
-        if (itemStack.has(EnderIODataComponents.GRINDING_BALL)) {
-            GrindingBallData data = itemStack.get(EnderIODataComponents.GRINDING_BALL);
+        GrindingBallData data = itemStack.getItemHolder().getData(GrindingBallData.DATA_MAP_TYPE);
+        if (data != null) {
             components.add(TooltipUtil.styledWithArgs(EIOCommonLang.GRINDINGBALL_MAIN_OUTPUT, (int) (data.outputMultiplier() * 100)));
             components.add(TooltipUtil.styledWithArgs(EIOCommonLang.GRINDINGBALL_BONUS_OUTPUT, (int) (data.bonusMultiplier() * 100)));
             components.add(TooltipUtil.styledWithArgs(EIOCommonLang.GRINDINGBALL_POWER_USE, (int) (data.powerUse() * 100)));
