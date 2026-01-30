@@ -515,6 +515,7 @@
   "tag.entity_type.enderio.soul_vial_blacklist": "Soul Vial Blacklist",
   "tag.entity_type.enderio.soul_vial_whitelist": "Soul Vial Whitelist",
   "tag.entity_type.enderio.spawner_blacklist": "Spawner Blacklist",
+  "tag.entity_type.enderio.spawner_whitelist": "Spawner Whitelist",
   "tag.fluid.enderio.fluid_fuel.cold_fire_igniter": "Cold Fire Igniter Fuel",
   "tag.fluid.enderio.fluid_fuel.staff_of_levity": "Staff of Levity Fuel",
   "tag.fluid.enderio.solar_panel_dark": "Solar Panel Dark",

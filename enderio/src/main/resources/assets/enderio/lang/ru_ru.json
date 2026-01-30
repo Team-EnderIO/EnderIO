@@ -515,6 +515,7 @@
   "tag.entity_type.enderio.soul_vial_blacklist": "Чёрный список флаконов душ",
   "tag.entity_type.enderio.soul_vial_whitelist": "Белый список флаконов душ",
   "tag.entity_type.enderio.spawner_blacklist": "Чёрный список спаунера",
+  "tag.entity_type.enderio.spawner_whitelist": "Spawner Whitelist",
   "tag.fluid.enderio.fluid_fuel.cold_fire_igniter": "Топливо для холодного огнива",
   "tag.fluid.enderio.fluid_fuel.staff_of_levity": "Топливо для посоха левитации",
   "tag.fluid.enderio.solar_panel_dark": "Солнечная панель (темнота)",
