@@ -222,10 +222,9 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
         }
 
         if (tooltipFlag.hasShiftDown()) {
-            // TODO: Fix this.
-//            String rawRateFormatted = String.format("%,d",
-//                    (int) Math.ceil(transferRatePerTick() * (20.0 / networkTickRate())));
-//            tooltipAdder.accept(TooltipUtil.styledWithArgs(ConduitLang.FLUID_RAW_RATE_TOOLTIP, rawRateFormatted));
+            String rawRateFormatted = String.format("%,d",
+                    (int) Math.ceil(transferRatePerTick() * (20.0 / type().ticker().tickRate())));
+            tooltipAdder.accept(TooltipUtil.styledWithArgs(ConduitLang.FLUID_RAW_RATE_TOOLTIP, rawRateFormatted));
         }
     }
 

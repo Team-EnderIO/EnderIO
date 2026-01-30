@@ -124,9 +124,8 @@ public class ConduitBlockItem extends BlockItem implements ICustomCreativeTabEnt
                     && (conduit.value().hasAdvancedTooltip() || conduit.value().showDebugTooltip());
 
             if (conduit.value().showDebugTooltip() && tooltipFlag.hasShiftDown()) {
-                // TODO: How do we tell the tick rate?
-//                tooltipComponents.add(TooltipUtil.styledWithArgs(ConduitLang.GRAPH_TICK_RATE_TOOLTIP,
-//                        20 / conduit.value().networkTickRate()));
+                tooltipComponents.add(TooltipUtil.styledWithArgs(ConduitLang.GRAPH_TICK_RATE_TOOLTIP,
+                        20 / conduit.value().type().ticker().tickRate()));
             }
 
             if (showDetailTooltip) {
