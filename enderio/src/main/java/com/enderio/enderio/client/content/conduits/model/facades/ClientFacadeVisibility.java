@@ -24,6 +24,15 @@ public class ClientFacadeVisibility {
     @SubscribeEvent
     public static void onTick(PlayerTickEvent.Pre event) {
         // Update every tick on the client.
+
+        if (Minecraft.getInstance() == null || Minecraft.getInstance().level == null) {
+            return;
+        }
+
+        if (event.getEntity() != Minecraft.getInstance().player) {
+            return;
+        }
+
         setFacadesVisible(FacadeUtil.areFacadesVisible(event.getEntity()));
     }
 
