@@ -68,19 +68,6 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
     }
 
     @Override
-    public int compareNodes(ConduitBlockConnection refConnection, ConduitBlockConnection connectionA, ConduitBlockConnection connectionB) {
-        if (doesSupportPriority()) {
-            int priorityA = connectionA.connectionConfig(FluidConduitConnectionConfig.TYPE).insertPriority();
-            int priorityB = connectionB.connectionConfig(FluidConduitConnectionConfig.TYPE).insertPriority();
-            if (priorityA != priorityB) {
-                return Integer.compare(priorityB, priorityA);
-            }
-        }
-
-        return Conduit.super.compareNodes(refConnection, connectionA, connectionB);
-    }
-
-    @Override
     public boolean canReplaceConduit(FluidConduit otherConduit) {
         return compareTo(otherConduit) > 0;
     }

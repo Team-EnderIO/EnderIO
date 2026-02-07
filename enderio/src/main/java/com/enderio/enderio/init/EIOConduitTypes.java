@@ -5,6 +5,7 @@ import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContextType;
+import com.enderio.enderio.api.conduits.network.PriorityConnectionComparerFromReference;
 import com.enderio.enderio.api.conduits.network.node.NodeDataType;
 import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataType;
 import com.enderio.enderio.content.conduits.legacy.LegacyFluidConduitData;
@@ -41,16 +42,38 @@ public class EIOConduitTypes {
             .builder(EnergyConduit.CODEC)
             .exposeCapability(Capabilities.EnergyStorage.BLOCK)
             .ticker(EnergyConduitTicker.INSTANCE)
+            .connectionComparator((a, b) -> Integer.compare(
+                b.connectionConfig(EnergyConduitConnectionConfig.TYPE).priority(),
+                a.connectionConfig(EnergyConduitConnectionConfig.TYPE).priority()))
+            // TODO: Likely unused by energy conduits - review.
+            .connectionComparerFromReference(new PriorityConnectionComparerFromReference(conn ->
+                conn.node().getConnectionConfig(conn.connectionSide(), EnergyConduitConnectionConfig.TYPE).priority()))
             .build());
 
     public static final Supplier<ConduitType<RedstoneConduit>> REDSTONE = CONDUIT_TYPES.register("redstone",
         () -> ConduitType.of(RedstoneConduit.CODEC, RedstoneConduitTicker.INSTANCE));
 
     public static final Supplier<ConduitType<FluidConduit>> FLUID = CONDUIT_TYPES.register("fluid",
-        () -> ConduitType.of(FluidConduit.CODEC, FluidConduitTicker.INSTANCE));
+        () -> ConduitType
+            .builder(FluidConduit.CODEC)
+            .ticker(FluidConduitTicker.INSTANCE)
+            .connectionComparerFromReference(new PriorityConnectionComparerFromReference(conn -> {
+                // TODO: Might just make all fluid conduits support priority for simplicity.
+                if (!conn.node().conduit(EIOConduitTypes.FLUID.get()).value().doesSupportPriority()) {
+                    return null;
+                }
+
+                return conn.node().getConnectionConfig(conn.connectionSide(), FluidConduitConnectionConfig.TYPE).insertPriority();
+            }))
+            .build());
 
     public static final Supplier<ConduitType<ItemConduit>> ITEM = CONDUIT_TYPES.register("item",
-        () -> ConduitType.of(ItemConduit.CODEC, ItemConduitTicker.INSTANCE));
+        () -> ConduitType
+            .builder(ItemConduit.CODEC)
+            .ticker(ItemConduitTicker.INSTANCE)
+            .connectionComparerFromReference(new PriorityConnectionComparerFromReference(conn ->
+                conn.node().getConnectionConfig(conn.connectionSide(), ItemConduitConnectionConfig.TYPE).priority()))
+            .build());
 
     public static class Data {
         private static final DeferredRegister<ConduitDataType<?>> CONDUIT_DATA_TYPES = DeferredRegister

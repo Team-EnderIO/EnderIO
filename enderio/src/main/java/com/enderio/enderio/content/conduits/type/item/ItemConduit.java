@@ -70,17 +70,6 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
     }
 
     @Override
-    public int compareNodes(ConduitBlockConnection refConnection, ConduitBlockConnection connectionA,
-            ConduitBlockConnection connectionB) {
-        int priorityA = connectionA.connectionConfig(ItemConduitConnectionConfig.TYPE).priority();
-        int priorityB = connectionB.connectionConfig(ItemConduitConnectionConfig.TYPE).priority();
-        if (priorityA != priorityB) {
-            return Integer.compare(priorityB, priorityA);
-        }
-        return Conduit.super.compareNodes(refConnection, connectionA, connectionB);
-    }
-
-    @Override
     public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder,
             TooltipFlag tooltipFlag) {
         String calculatedTransferLimitFormatted = String.format("%,d",

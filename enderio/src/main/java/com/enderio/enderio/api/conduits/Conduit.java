@@ -76,6 +76,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
     /**
      * @return the expected conduit connection config type.
      */
+    // TODO: Lift this to ConduitType for sanity.
     ConnectionConfigType<TConnectionConfig> connectionConfigType();
 
     /**
@@ -135,29 +136,6 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
      */
     default boolean canConnectConduits(ConduitNode selfNode, ConduitNode otherNode) {
         return true;
-    }
-
-    /**
-     * Compare {@code connectionA} and {@code connectionB} to determine their sorting order with respect to {@code refConnection}.
-     * By default, this will compare the distances between the two connection's blocks to the reference node's connected block.
-     * @param refConnection the reference node's connection to compare against.
-     * @param connectionA  the first connection to compare.
-     * @param connectionB  the second connection to compare.
-     * @return Returns a negative integer, zero, or a positive integer as the first argument is less than, equal to, or greater than the second.
-     */
-    default int compareNodes(ConduitBlockConnection refConnection, ConduitBlockConnection connectionA,
-            ConduitBlockConnection connectionB) {
-        return Integer.compare(refConnection.connectedBlockPos().distManhattan(connectionA.connectedBlockPos()),
-                refConnection.connectedBlockPos().distManhattan(connectionB.connectedBlockPos()));
-    }
-
-    /**
-     * Used to sort the general lists of connections that have no reference point.
-     * @return the comparator, or null for no sorting.
-     */
-    @Nullable
-    default Comparator<ConduitBlockConnection> getGeneralConnectionComparator() {
-        return null;
     }
 
     // endregion

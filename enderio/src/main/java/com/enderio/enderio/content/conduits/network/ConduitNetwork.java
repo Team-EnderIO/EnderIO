@@ -1,6 +1,7 @@
 package com.enderio.enderio.content.conduits.network;
 
 import com.enderio.core.common.graph.Network;
+import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.config.IOConnectionConfig;
@@ -41,21 +42,31 @@ import java.util.stream.Stream;
 
 public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> implements com.enderio.enderio.api.conduits.network.ConduitNetwork {
 
-    public static final Codec<ConduitNetwork> CODEC = RecordCodecBuilder.create(instance -> instance
-            .group(Conduit.CODEC.fieldOf("conduit").forGetter(i -> i.conduit),
+    public static final Codec<ConduitNetwork> LEGACY_CODEC = RecordCodecBuilder.create(instance -> instance
+            .group(Conduit.CODEC.fieldOf("conduit").forGetter(i -> null),
                     ConduitNetworkContext.GENERIC_CODEC.optionalFieldOf("context")
                             .forGetter(i -> i.context == null || !i.context.type().isPersistent() ? Optional.empty()
                                     : Optional.of(i.context)))
             .and(graphCodec(instance, ConduitNodeImpl.CODEC))
             .apply(instance, ConduitNetwork::new));
 
-    private final Holder<Conduit<?, ?>> conduit;
+    public static final Codec<ConduitNetwork> CODEC = RecordCodecBuilder.create(instance -> instance
+            .group(ConduitType.CODEC.fieldOf("conduit_type").forGetter(i -> i.conduitType),
+                    ConduitNetworkContext.GENERIC_CODEC.optionalFieldOf("context")
+                            .forGetter(i -> i.context == null || !i.context.type().isPersistent() ? Optional.empty()
+                                    : Optional.of(i.context)))
+            .and(graphCodec(instance, ConduitNodeImpl.CODEC))
+            .apply(instance, ConduitNetwork::new));
+
+    private final ConduitType<?> conduitType;
 
     @Nullable
     private ConduitNetworkContext<?> context;
     
     // TODO: SURELY SURELY SURELY 2bn conduits of each type is enough.
-    private final Map<Holder<Conduit<?, ?>>, Integer> nodeCountByConduit = Maps.newHashMap();
+    // TODO: Not final because onNodeAdded is called by super so we need to initialize on use
+    //       I might be able to make minor changes to the Network class to fix this.
+    private Map<Holder<Conduit<?, ?>>, Integer> nodeCountByConduit;
 
     // Caches
     private final boolean supportsCaching;
@@ -93,34 +104,38 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
     @Nullable
     private Consumer<ConduitNetwork> onChunkCoverageChanged = null;
 
-    public ConduitNetwork(Holder<Conduit<?, ?>> conduit, ConduitNodeImpl initialNode) {
+    public ConduitNetwork(ConduitType<?> conduitType, ConduitNodeImpl initialNode) {
         super(initialNode);
-        this.conduit = conduit;
-        this.supportsCaching = conduit.value().type().ticker() != null;
+        this.conduitType = conduitType;
+        this.supportsCaching = conduitType.ticker() != null;
     }
 
-    // TODO: Only public for legacy deserialisation.
+    // TODO: Public for legacy deserialization
+    public ConduitNetwork(ConduitType<?> conduitType, Optional<ConduitNetworkContext<?>> context,
+        List<ConduitNodeImpl> nodes, IndexedEdgeList edges) {
+        super(nodes, edges);
+        this.conduitType = conduitType;
+        this.context = context.orElse(null);
+        this.supportsCaching = conduitType.ticker() != null;
+    }
+
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    public ConduitNetwork(Holder<Conduit<?, ?>> conduit, Optional<ConduitNetworkContext<?>> context,
+    private ConduitNetwork(Holder<Conduit<?, ?>> conduit, Optional<ConduitNetworkContext<?>> context,
                           List<ConduitNodeImpl> nodes, IndexedEdgeList edges) {
         super(nodes, edges);
-        this.conduit = conduit;
+        this.conduitType = conduit.value().type();
         this.context = context.orElse(null);
-        this.supportsCaching = conduit.value().type().ticker() != null;
+        this.supportsCaching = conduitType.ticker() != null;
     }
 
-    protected ConduitNetwork(Holder<Conduit<?, ?>> conduit) {
-        this.conduit = conduit;
-        this.supportsCaching = conduit.value().type().ticker() != null;
-    }
-
-    public Holder<Conduit<?, ?>> conduit() {
-        return conduit;
+    protected ConduitNetwork(ConduitType<?> conduitType) {
+        this.conduitType = conduitType;
+        this.supportsCaching = conduitType.ticker() != null;
     }
 
     @Override
     public ConduitType<?> conduitType() {
-        return conduit.value().type();
+        return conduitType;
     }
 
     @Override
@@ -454,7 +469,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
     }
 
     private void sortConnectionLists() {
-        var basicConnectionComparator = conduit().value().getGeneralConnectionComparator();
+        var basicConnectionComparator = conduitType.connectionComparator();
         if (basicConnectionComparator != null) {
             insertConnections.sort(basicConnectionComparator);
             extractConnections.sort(basicConnectionComparator);
@@ -524,7 +539,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
     }
 
     private void sortConnections(ConduitBlockConnection ref, List<ConduitBlockConnection> connections) {
-        connections.sort((a, b) -> conduit.value().compareNodes(ref, a, b));
+        connections.sort((a, b) -> conduitType.connectionComparerFromReference().compare(ref, a, b));
     }
 
     private void addNodeToPositionMaps(ConduitNodeImpl node, boolean isRebuild) {
@@ -555,7 +570,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
 
     @Override
     protected ConduitNetwork createEmpty() {
-        return new ConduitNetwork(conduit);
+        return new ConduitNetwork(conduitType);
     }
 
     @Override
@@ -564,7 +579,11 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
         areTickableConduitsValid = false;
 
         // Increment node count
-        nodeCountByConduit.compute(conduit, (k, count) -> count == null ? 1 : count + 1);
+        if (nodeCountByConduit == null) {
+            nodeCountByConduit = Maps.newHashMap();
+        }
+
+        nodeCountByConduit.compute(node.conduit(), (k, count) -> count == null ? 1 : count + 1);
 
         // If called during super constructor
         // TODO: Review this behaviour...
@@ -629,7 +648,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
         for (var newNetwork : newNetworks) {
             newNetwork.context = context.split(newNetwork, allNetworks);
             if (newNetwork.context == context) {
-                throw new IllegalStateException("Splitting context for a network of '" + conduit.getRegisteredName()
+                throw new IllegalStateException("Splitting context for a network of '" + EnderIORegistries.CONDUIT_TYPE.getKey(conduitType)
                         + "' resulted in the same context for multiple networks.");
             }
 
@@ -638,7 +657,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
 
         var newContext = context.split(this, allNetworks);
         if (newContext == context) {
-            throw new IllegalStateException("Splitting context for a network of '" + conduit.getRegisteredName()
+            throw new IllegalStateException("Splitting context for a network of '" + EnderIORegistries.CONDUIT_TYPE.getKey(conduitType)
                     + "' resulted in the same context for multiple networks.");
         }
 

@@ -67,14 +67,14 @@ public final class ConduitNodeImpl implements INetworkNode<ConduitNetwork, Condu
         this.conduit = conduit;
         this.pos = pos;
         this.nodeData = nodeData;
-        this.network = new ConduitNetwork(conduit, this);
+        this.network = new ConduitNetwork(conduit.value().type(), this);
     }
 
     public ConduitNodeImpl(Holder<Conduit<?, ?>> conduit, BlockPos pos, Optional<NodeData> nodeData) {
         this.conduit = conduit;
         this.pos = pos;
         this.nodeData = nodeData.orElse(null);
-        this.network = new ConduitNetwork(conduit, this);
+        this.network = new ConduitNetwork(conduit.value().type(), this);
     }
 
     public ConduitNodeImpl(Holder<Conduit<?, ?>> conduit, BlockPos pos, ConduitDataContainer legacyDataContainer) {

@@ -69,13 +69,6 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
     }
 
     @Override
-    public Comparator<ConduitBlockConnection> getGeneralConnectionComparator() {
-        return (a, b) -> Integer.compare(
-            b.connectionConfig(EnergyConduitConnectionConfig.TYPE).priority(),
-            a.connectionConfig(EnergyConduitConnectionConfig.TYPE).priority());
-    }
-
-    @Override
     public <TCap, TContext> @Nullable TCap proxyCapability(Level level, @Nullable ConduitNode node,
             BlockCapability<TCap, TContext> capability, @Nullable TContext context) {
 
