@@ -60,11 +60,6 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
     }
 
     @Override
-    public ItemConduitTicker ticker() {
-        return ItemConduitTicker.INSTANCE;
-    }
-
-    @Override
     public boolean hasMenu() {
         return true;
     }

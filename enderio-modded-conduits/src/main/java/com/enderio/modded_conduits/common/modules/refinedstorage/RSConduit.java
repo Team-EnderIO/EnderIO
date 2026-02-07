@@ -4,7 +4,6 @@ import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
-import com.enderio.enderio.api.conduits.ticker.ConduitTicker;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.refinedmods.refinedstorage.neoforge.RefinedStorageNeoForgeApiImpl;
@@ -36,11 +35,6 @@ public record RSConduit(ResourceLocation texture, Component description)
     @Override
     public ConnectionConfigType<RSConduitConnectionConfig> connectionConfigType() {
         return RSConduitConnectionConfig.TYPE;
-    }
-
-    @Override
-    public @Nullable ConduitTicker<RSConduit> ticker() {
-        return null;
     }
 
     @Override

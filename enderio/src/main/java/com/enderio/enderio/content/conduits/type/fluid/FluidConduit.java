@@ -63,11 +63,6 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
     }
 
     @Override
-    public FluidConduitTicker ticker() {
-        return FluidConduitTicker.INSTANCE;
-    }
-
-    @Override
     public boolean hasMenu() {
         return true;
     }

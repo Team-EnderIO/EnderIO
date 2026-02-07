@@ -2,6 +2,7 @@ package com.enderio.enderio.content.conduits.network;
 
 import com.enderio.core.common.graph.Network;
 import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.config.IOConnectionConfig;
 import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContext;
@@ -16,6 +17,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
+import com.google.common.primitives.Ints;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.CrashReportCategory;
@@ -82,13 +84,16 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
     private final Map<ConduitBlockConnection, List<ConduitBlockConnection>> insertConnectionsByExtract = Maps
             .newHashMap();
 
+    private final ListMultimap<Integer, Holder<Conduit<?, ?>>> tickableConduits = ArrayListMultimap.create();
+    private boolean areTickableConduitsValid = false;
+
     @Nullable
     private Consumer<ConduitNetwork> onChunkCoverageChanged = null;
 
     public ConduitNetwork(Holder<Conduit<?, ?>> conduit, ConduitNodeImpl initialNode) {
         super(initialNode);
         this.conduit = conduit;
-        this.supportsCaching = conduit.value().ticker() != null;
+        this.supportsCaching = conduit.value().type().ticker() != null;
     }
 
     // TODO: Only public for legacy deserialisation.
@@ -98,16 +103,38 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
         super(nodes, edges);
         this.conduit = conduit;
         this.context = context.orElse(null);
-        this.supportsCaching = conduit.value().ticker() != null;
+        this.supportsCaching = conduit.value().type().ticker() != null;
     }
 
     protected ConduitNetwork(Holder<Conduit<?, ?>> conduit) {
         this.conduit = conduit;
-        this.supportsCaching = conduit.value().ticker() != null;
+        this.supportsCaching = conduit.value().type().ticker() != null;
     }
 
     public Holder<Conduit<?, ?>> conduit() {
         return conduit;
+    }
+
+    @Override
+    public ConduitType<?> conduitType() {
+        return conduit.value().type();
+    }
+
+    @Override
+    public List<Holder<Conduit<?, ?>>> getTickableConduits(long gameTime, int tickOffset) {
+        if (!areTickableConduitsValid) {
+            tickableConduits.clear();
+
+            for (int i = 0; i < 20; i++) {
+                if (i % conduit.value().networkTickRate() == 0) {
+                    tickableConduits.put(i, conduit);
+                }
+            }
+
+            areTickableConduitsValid = true;
+        }
+
+        return tickableConduits.get(Ints.saturatedCast((gameTime + tickOffset) % 20));
     }
 
     // region Chunk Tracking
@@ -451,6 +478,8 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
         dirtyNodes.clear();
 
         // Clear all caches
+        areTickableConduitsValid = false;
+
         nodesByChunkPos.clear();
         tickingNodes.clear();
         endpointConnections.clear();
@@ -525,6 +554,9 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
 
     @Override
     protected void onNodeAdded(ConduitNodeImpl node) {
+        // Always recompute what conduits can tick - it's cheap to do.
+        areTickableConduitsValid = false;
+
         // If called during super constructor
         // TODO: Review this behaviour...
         if (nodesByChunkPos == null) {
@@ -541,6 +573,9 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
 
     @Override
     protected void onNodeRemoved(ConduitNodeImpl node) {
+        // Always recompute what conduits can tick - it's cheap to do.
+        areTickableConduitsValid = false;
+
         if (shouldRebuildCache) {
             return;
         }

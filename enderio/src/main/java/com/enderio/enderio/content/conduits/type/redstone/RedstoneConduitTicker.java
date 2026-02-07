@@ -1,17 +1,30 @@
 package com.enderio.enderio.content.conduits.type.redstone;
 
 import com.enderio.enderio.api.EnderIOCapabilities;
+import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.network.ConduitNetwork;
-import com.enderio.enderio.api.conduits.ticker.ConduitTicker;
+import com.enderio.enderio.api.conduits.ticker.ConduitTickerBase;
 import com.enderio.enderio.init.EIOBlocks;
+import com.enderio.enderio.init.EIOConduitTypes;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 
-public class RedstoneConduitTicker implements ConduitTicker<RedstoneConduit> {
+import java.util.List;
+
+public class RedstoneConduitTicker extends ConduitTickerBase<RedstoneConduit> {
 
     public static final RedstoneConduitTicker INSTANCE = new RedstoneConduitTicker();
 
+    private RedstoneConduitTicker() {}
+
     @Override
-    public void tick(ServerLevel level, RedstoneConduit conduit, ConduitNetwork network) {
+    protected ConduitType<RedstoneConduit> conduitType() {
+        return EIOConduitTypes.REDSTONE.get();
+    }
+
+    @Override
+    protected void tickNetwork(ServerLevel level, ConduitNetwork network, List<Holder<Conduit<?, ?>>> tickableConduits) {
         var context = network.getOrCreateContext(RedstoneConduitNetworkContext.TYPE);
         boolean isActiveBeforeTick = context.isActive();
         context.nextTick();
@@ -23,12 +36,12 @@ public class RedstoneConduitTicker implements ConduitTicker<RedstoneConduit> {
                 int signal;
 
                 var redstoneExtractFilter = extractConnection.inventory()
-                        .getStackInSlot(RedstoneConduit.EXTRACT_FILTER_SLOT)
-                        .getCapability(EnderIOCapabilities.REDSTONE_EXTRACT_FILTER);
+                    .getStackInSlot(RedstoneConduit.EXTRACT_FILTER_SLOT)
+                    .getCapability(EnderIOCapabilities.REDSTONE_EXTRACT_FILTER);
 
                 if (redstoneExtractFilter != null) {
                     signal = redstoneExtractFilter.getInputSignal(level, extractConnection.connectedBlockPos(),
-                            extractConnection.connectionSide());
+                        extractConnection.connectionSide());
                 } else {
                     signal = level.getSignal(extractConnection.connectedBlockPos(), extractConnection.connectionSide());
                 }
@@ -63,5 +76,4 @@ public class RedstoneConduitTicker implements ConduitTicker<RedstoneConduit> {
             }
         }
     }
-
 }
