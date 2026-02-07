@@ -1,10 +1,14 @@
 package com.enderio.enderio.content.conduits.type.energy;
 
+import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.network.ConduitNetwork;
-import com.enderio.enderio.api.conduits.ticker.ConduitTicker;
+import com.enderio.enderio.api.conduits.ticker.ConduitTickerBase;
+import com.enderio.enderio.init.EIOConduitTypes;
 import com.google.common.collect.Lists;
 import com.google.common.primitives.Ints;
 import it.unimi.dsi.fastutil.Pair;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
@@ -12,15 +16,19 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 import java.util.Comparator;
 import java.util.List;
 
-public class EnergyConduitTicker implements ConduitTicker<EnergyConduit> {
+public class EnergyConduitTicker extends ConduitTickerBase<EnergyConduit> {
 
     public static final EnergyConduitTicker INSTANCE = new EnergyConduitTicker();
 
-    public EnergyConduitTicker() {
+    private EnergyConduitTicker() {}
+
+    @Override
+    protected ConduitType<EnergyConduit> conduitType() {
+        return EIOConduitTypes.ENERGY.get();
     }
 
     @Override
-    public void tick(ServerLevel level, EnergyConduit conduit, ConduitNetwork network) {
+    protected void tickNetwork(ServerLevel level, ConduitNetwork network, List<Holder<Conduit<?, ?>>> tickableConduits) {
         var insertConnections = network.insertConnections();
         if (insertConnections.isEmpty()) {
             return;

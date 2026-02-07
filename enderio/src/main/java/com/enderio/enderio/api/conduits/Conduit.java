@@ -9,7 +9,6 @@ import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataAccessor;
 import com.enderio.enderio.api.conduits.screen.ConduitScreenType;
-import com.enderio.enderio.api.conduits.ticker.ConduitTicker;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
@@ -73,12 +72,6 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
      * This is used to define serialization and exposing proxied capabilities.
      */
     ConduitType<TConduit> type();
-
-    /**
-     * Get the ticker for this conduit graph type.
-     * @apiNote The ticker should never change, it can use the options to determine behaviour in its implementation.
-     */
-    @Nullable ConduitTicker<TConduit> ticker();
 
     /**
      * @return the expected conduit connection config type.

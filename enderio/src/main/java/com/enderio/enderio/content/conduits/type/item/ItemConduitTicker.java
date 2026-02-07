@@ -1,25 +1,44 @@
 package com.enderio.enderio.content.conduits.type.item;
 
 import com.enderio.enderio.api.EnderIOCapabilities;
+import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.network.ConduitNetwork;
-import com.enderio.enderio.api.conduits.ticker.ConduitTicker;
+import com.enderio.enderio.api.conduits.ticker.ConduitTickerBase;
 import com.enderio.enderio.init.EIOConduitTypes;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 
-public class ItemConduitTicker implements ConduitTicker<ItemConduit> {
+import java.util.List;
+
+public class ItemConduitTicker extends ConduitTickerBase<ItemConduit> {
 
     public static final ItemConduitTicker INSTANCE = new ItemConduitTicker();
 
+    private ItemConduitTicker() {}
+
     @Override
-    public void tick(ServerLevel level, ItemConduit conduit, ConduitNetwork network) {
+    protected ConduitType<ItemConduit> conduitType() {
+        return EIOConduitTypes.ITEM.get();
+    }
+
+    @Override
+    protected void tickNetwork(ServerLevel level, ConduitNetwork network, List<Holder<Conduit<?, ?>>> tickableConduits) {
         for (var channel : network.allChannels()) {
             toNextExtract: for (var extractConnection : network.extractConnections(channel)) {
                 var insertConnections = network.insertConnectionsFrom(extractConnection);
                 if (insertConnections.isEmpty()) {
+                    continue;
+                }
+
+                var extractConduit = extractConnection.node().conduit(conduitType());
+
+                // If this conduit isn't allowed to tick, skip it.
+                if (!tickableConduits.contains(extractConduit)) {
                     continue;
                 }
 
@@ -35,11 +54,11 @@ public class ItemConduitTicker implements ConduitTicker<ItemConduit> {
 
                 // Get extraction filter
                 var extractFilter = extractConnection.inventory()
-                        .getStackInSlot(ItemConduit.EXTRACT_FILTER_SLOT)
-                        .getCapability(EnderIOCapabilities.ITEM_FILTER);
+                    .getStackInSlot(ItemConduit.EXTRACT_FILTER_SLOT)
+                    .getCapability(EnderIOCapabilities.ITEM_FILTER);
 
                 int extracted = 0;
-                int speed = conduit.transferRatePerCycle();
+                int speed = extractConduit.value().transferRatePerCycle();
 
                 nextItem: for (int i = 0; i < extractHandler.getSlots(); i++) {
                     ItemStack extractedItem = extractHandler.extractItem(i, speed - extracted, true);
@@ -73,19 +92,28 @@ public class ItemConduitTicker implements ConduitTicker<ItemConduit> {
 
                         // Prevent self-feeding
                         if (!connectionConfig.isSelfFeed()
-                                && extractConnection.connectionSide() == insertConnection.connectionSide()
-                                && extractConnection.node() == insertConnection.node()) {
+                            && extractConnection.connectionSide() == insertConnection.connectionSide()
+                            && extractConnection.node() == insertConnection.node()) {
                             continue;
                         }
 
-                        var insertFilter = insertConnection.inventory()
-                                .getStackInSlot(ItemConduit.INSERT_FILTER_SLOT)
-                                .getCapability(EnderIOCapabilities.ITEM_FILTER);
-
                         ItemStack itemToInsert = extractedItem.copy();
+
+                        // Restrict to the speed of the inserting conduit.
+                        // TODO: When we add path speeds, we'll restrict to the path speed instead.
+                        var insertConduit = insertConnection.node().conduit(conduitType());
+                        int maxSpeed = insertConduit.value().transferRatePerCycle();
+                        if (itemToInsert.getCount() > maxSpeed) {
+                            itemToInsert.setCount(maxSpeed);
+                        }
+
+                        var insertFilter = insertConnection.inventory()
+                            .getStackInSlot(ItemConduit.INSERT_FILTER_SLOT)
+                            .getCapability(EnderIOCapabilities.ITEM_FILTER);
+
                         if (insertFilter != null) {
                             itemToInsert = insertFilter.test(
-                                    insertConnection.getSidedCapability(Capabilities.ItemHandler.BLOCK), itemToInsert);
+                                insertConnection.getSidedCapability(Capabilities.ItemHandler.BLOCK), itemToInsert);
                             if (itemToInsert.isEmpty()) {
                                 continue;
                             }

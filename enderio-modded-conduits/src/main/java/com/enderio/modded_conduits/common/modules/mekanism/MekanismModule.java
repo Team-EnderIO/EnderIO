@@ -23,12 +23,14 @@ import com.enderio.modded_conduits.common.modules.mekanism.chemical.ChemicalCond
 import com.enderio.modded_conduits.common.modules.mekanism.chemical.ChemicalConduitConnectionConfig;
 import com.enderio.modded_conduits.common.modules.mekanism.chemical.ChemicalConduitData;
 import com.enderio.modded_conduits.common.modules.mekanism.chemical.ChemicalConduitNetworkContext;
+import com.enderio.modded_conduits.common.modules.mekanism.chemical.ChemicalTicker;
 import com.enderio.modded_conduits.common.modules.mekanism.chemical_filter.ChemicalFilter;
 import com.enderio.modded_conduits.common.modules.mekanism.chemical_filter.EnderChemicalFilter;
 import com.enderio.modded_conduits.common.modules.mekanism.chemical_filter.EnderChemicalFilterItem;
 import com.enderio.modded_conduits.common.modules.mekanism.chemical_filter.EnderChemicalFilterMenu;
 import com.enderio.modded_conduits.common.modules.mekanism.heat.HeatConduit;
 import com.enderio.modded_conduits.common.modules.mekanism.heat.HeatConduitConnectionConfig;
+import com.enderio.modded_conduits.common.modules.mekanism.heat.HeatTicker;
 import com.enderio.modded_conduits.common.modules.mekanism.laserio.MekanismLaserIOCompat;
 import mekanism.api.MekanismAPI;
 import mekanism.api.chemical.IChemicalHandler;
@@ -108,10 +110,10 @@ public class MekanismModule implements ConduitCommonModule {
     // endregion
 
     public static final Supplier<ConduitType<ChemicalConduit>> TYPE_CHEMICAL = CONDUIT_TYPES.register("chemical",
-            () -> ConduitType.of(ChemicalConduit.CODEC));
+            () -> ConduitType.of(ChemicalConduit.CODEC, ChemicalTicker.INSTANCE));
 
     public static final Supplier<ConduitType<HeatConduit>> TYPE_HEAT = CONDUIT_TYPES.register("heat",
-            () -> ConduitType.of(HeatConduit::new));
+            () -> ConduitType.builder(HeatConduit::new).ticker(HeatTicker.INSTANCE).build());
 
     public static final Supplier<ConduitDataType<ChemicalConduitData>> CHEMICAL_DATA_TYPE = CONDUIT_DATA_TYPES
             .register("chemical", () -> new ConduitDataType<>(ChemicalConduitData.CODEC,

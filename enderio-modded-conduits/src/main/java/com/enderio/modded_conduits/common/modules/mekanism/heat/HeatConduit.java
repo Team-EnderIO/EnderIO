@@ -14,16 +14,9 @@ import org.jetbrains.annotations.NotNull;
 public record HeatConduit(ResourceLocation texture, Component description)
         implements Conduit<HeatConduit, HeatConduitConnectionConfig> {
 
-    private static final HeatTicker TICKER = new HeatTicker();
-
     @Override
     public ConduitType<HeatConduit> type() {
         return MekanismModule.TYPE_HEAT.get();
-    }
-
-    @Override
-    public HeatTicker ticker() {
-        return TICKER;
     }
 
     @Override
