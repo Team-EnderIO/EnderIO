@@ -325,7 +325,7 @@
   "gui.enderio.machine.alloy_smelter.mode": "Smelting Mode",
   "gui.enderio.machine.generator.efficiency": "Efficiency %s%%",
   "gui.enderio.machine.generator.generating": "Generating %sµI/t",
-  "gui.enderio.machine.no_fluid": "No Fluid",
+  "gui.enderio.machine.no_fluid": "没有流体",
   "gui.enderio.machine.nocap.desc": "插入电容\n机器才能工作！",
   "gui.enderio.machine.nocap.title": "缺少电容",
   "gui.enderio.machine.obelisk.no_soul_filter": "未安装灵魂过滤器",
