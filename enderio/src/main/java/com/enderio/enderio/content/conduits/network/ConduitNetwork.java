@@ -53,6 +53,9 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
 
     @Nullable
     private ConduitNetworkContext<?> context;
+    
+    // TODO: SURELY SURELY SURELY 2bn conduits of each type is enough.
+    private final Map<Holder<Conduit<?, ?>>, Integer> nodeCountByConduit = Maps.newHashMap();
 
     // Caches
     private final boolean supportsCaching;
@@ -125,9 +128,12 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
         if (!areTickableConduitsValid) {
             tickableConduits.clear();
 
-            for (int i = 0; i < 20; i++) {
-                if (i % conduit.value().networkTickRate() == 0) {
-                    tickableConduits.put(i, conduit);
+            // Check all conduits to see if they can tick
+            for (var conduit : nodeCountByConduit.keySet()) {
+                for (int i = 0; i < 20; i++) {
+                    if (i % conduit.value().networkTickRate() == 0) {
+                        tickableConduits.put(i, conduit);
+                    }
                 }
             }
 
@@ -557,6 +563,9 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
         // Always recompute what conduits can tick - it's cheap to do.
         areTickableConduitsValid = false;
 
+        // Increment node count
+        nodeCountByConduit.compute(conduit, (k, count) -> count == null ? 1 : count + 1);
+
         // If called during super constructor
         // TODO: Review this behaviour...
         if (nodesByChunkPos == null) {
@@ -575,6 +584,9 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
     protected void onNodeRemoved(ConduitNodeImpl node) {
         // Always recompute what conduits can tick - it's cheap to do.
         areTickableConduitsValid = false;
+
+        // Remove from node count
+        nodeCountByConduit.compute(node.conduit(), (k, count) -> count == null || count == 1 ? null : count - 1);
 
         if (shouldRebuildCache) {
             return;
