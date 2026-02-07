@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 import java.util.Optional;
 
-public final class ConduitNodeImpl implements INetworkNode<ConduitNetwork, ConduitNodeImpl>, ConduitNode {
+public final class ConduitNodeImpl implements INetworkNode<ConduitNetworkImpl, ConduitNodeImpl>, ConduitNode {
 
     // TODO: 1.22 - Remove legacy codec.
     private static final Codec<ConduitNodeImpl> LEGACY_V7_CODEC = RecordCodecBuilder.create(instance -> instance
@@ -54,7 +54,7 @@ public final class ConduitNodeImpl implements INetworkNode<ConduitNetwork, Condu
     private ConduitDataContainer legacyDataContainer = null;
 
     @Nullable
-    private ConduitNetwork network;
+    private ConduitNetworkImpl network;
 
     @Nullable
     private IConduitNodeAttachment conduitBundle;
@@ -67,14 +67,14 @@ public final class ConduitNodeImpl implements INetworkNode<ConduitNetwork, Condu
         this.conduit = conduit;
         this.pos = pos;
         this.nodeData = nodeData;
-        this.network = new ConduitNetwork(conduit.value().type(), this);
+        this.network = new ConduitNetworkImpl(conduit.value().type(), this);
     }
 
     public ConduitNodeImpl(Holder<Conduit<?, ?>> conduit, BlockPos pos, Optional<NodeData> nodeData) {
         this.conduit = conduit;
         this.pos = pos;
         this.nodeData = nodeData.orElse(null);
-        this.network = new ConduitNetwork(conduit.value().type(), this);
+        this.network = new ConduitNetworkImpl(conduit.value().type(), this);
     }
 
     public ConduitNodeImpl(Holder<Conduit<?, ?>> conduit, BlockPos pos, ConduitDataContainer legacyDataContainer) {
@@ -316,12 +316,12 @@ public final class ConduitNodeImpl implements INetworkNode<ConduitNetwork, Condu
     }
 
     @Override
-    public ConduitNetwork getNetwork() {
+    public ConduitNetworkImpl getNetwork() {
         return Objects.requireNonNull(network, "Node is not valid!");
     }
 
     @Override
-    public void setNetwork(@Nullable ConduitNetwork network) {
+    public void setNetwork(@Nullable ConduitNetworkImpl network) {
         this.network = network;
         tryCopyLegacyData();
     }

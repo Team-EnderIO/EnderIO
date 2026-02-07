@@ -6,6 +6,7 @@ import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.config.IOConnectionConfig;
 import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
+import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContext;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContextType;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
@@ -40,25 +41,25 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> implements com.enderio.enderio.api.conduits.network.ConduitNetwork {
+public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeImpl> implements ConduitNetwork {
 
-    private static final Codec<ConduitNetwork> LEGACY_CODEC = RecordCodecBuilder.create(instance -> instance
+    private static final Codec<ConduitNetworkImpl> LEGACY_CODEC = RecordCodecBuilder.create(instance -> instance
             .group(Conduit.CODEC.fieldOf("conduit").forGetter(i -> null),
                     ConduitNetworkContext.GENERIC_CODEC.optionalFieldOf("context")
                             .forGetter(i -> i.context == null || !i.context.type().isPersistent() ? Optional.empty()
                                     : Optional.of(i.context)))
             .and(graphCodec(instance, ConduitNodeImpl.CODEC))
-            .apply(instance, ConduitNetwork::new));
+            .apply(instance, ConduitNetworkImpl::new));
 
-    private static final Codec<ConduitNetwork> NEW_CODEC = RecordCodecBuilder.create(instance -> instance
+    private static final Codec<ConduitNetworkImpl> NEW_CODEC = RecordCodecBuilder.create(instance -> instance
             .group(ConduitType.CODEC.fieldOf("conduit_type").forGetter(i -> i.conduitType),
                     ConduitNetworkContext.GENERIC_CODEC.optionalFieldOf("context")
                             .forGetter(i -> i.context == null || !i.context.type().isPersistent() ? Optional.empty()
                                     : Optional.of(i.context)))
             .and(graphCodec(instance, ConduitNodeImpl.CODEC))
-            .apply(instance, ConduitNetwork::new));
+            .apply(instance, ConduitNetworkImpl::new));
 
-    public static final Codec<ConduitNetwork> CODEC = Codec.withAlternative(NEW_CODEC, LEGACY_CODEC);
+    public static final Codec<ConduitNetworkImpl> CODEC = Codec.withAlternative(NEW_CODEC, LEGACY_CODEC);
 
     private final ConduitType<?, ?> conduitType;
 
@@ -104,17 +105,17 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
     private boolean areTickableConduitsValid = false;
 
     @Nullable
-    private Consumer<ConduitNetwork> onChunkCoverageChanged = null;
+    private Consumer<ConduitNetworkImpl> onChunkCoverageChanged = null;
 
-    public ConduitNetwork(ConduitType<?, ?> conduitType, ConduitNodeImpl initialNode) {
+    public ConduitNetworkImpl(ConduitType<?, ?> conduitType, ConduitNodeImpl initialNode) {
         super(initialNode);
         this.conduitType = conduitType;
         this.supportsCaching = conduitType.ticker() != null;
     }
 
     // TODO: Public for legacy deserialization
-    public ConduitNetwork(ConduitType<?, ?> conduitType, Optional<ConduitNetworkContext<?>> context,
-        List<ConduitNodeImpl> nodes, IndexedEdgeList edges) {
+    public ConduitNetworkImpl(ConduitType<?, ?> conduitType, Optional<ConduitNetworkContext<?>> context,
+                              List<ConduitNodeImpl> nodes, IndexedEdgeList edges) {
         super(nodes, edges);
         this.conduitType = conduitType;
         this.context = context.orElse(null);
@@ -122,15 +123,15 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
     }
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    private ConduitNetwork(Holder<Conduit<?, ?>> conduit, Optional<ConduitNetworkContext<?>> context,
-                          List<ConduitNodeImpl> nodes, IndexedEdgeList edges) {
+    private ConduitNetworkImpl(Holder<Conduit<?, ?>> conduit, Optional<ConduitNetworkContext<?>> context,
+                               List<ConduitNodeImpl> nodes, IndexedEdgeList edges) {
         super(nodes, edges);
         this.conduitType = conduit.value().type();
         this.context = context.orElse(null);
         this.supportsCaching = conduitType.ticker() != null;
     }
 
-    protected ConduitNetwork(ConduitType<?, ?> conduitType) {
+    protected ConduitNetworkImpl(ConduitType<?, ?> conduitType) {
         this.conduitType = conduitType;
         this.supportsCaching = conduitType.ticker() != null;
     }
@@ -166,7 +167,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
         return nodesByChunkPos.keySet();
     }
 
-    public void setOnChunkCoverageChanged(Consumer<ConduitNetwork> onChunkCoverageChanged) {
+    public void setOnChunkCoverageChanged(Consumer<ConduitNetworkImpl> onChunkCoverageChanged) {
         this.onChunkCoverageChanged = onChunkCoverageChanged;
     }
 
@@ -571,8 +572,8 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
     // region Network Impl
 
     @Override
-    protected ConduitNetwork createEmpty() {
-        return new ConduitNetwork(conduitType);
+    protected ConduitNetworkImpl createEmpty() {
+        return new ConduitNetworkImpl(conduitType);
     }
 
     @Override
@@ -620,7 +621,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
     }
 
     @Override
-    protected void onMerged(ConduitNetwork other) {
+    protected void onMerged(ConduitNetworkImpl other) {
         if (context != null && other.context != null) {
             context = context.mergeWith(other.castContext());
         } else if (context == null && other.context != null) {
@@ -637,7 +638,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
     }
 
     @Override
-    protected void onGraphSplit(Set<ConduitNetwork> newNetworks) {
+    protected void onGraphSplit(Set<ConduitNetworkImpl> newNetworks) {
         shouldRebuildCache = true;
         if (context == null) {
             return;

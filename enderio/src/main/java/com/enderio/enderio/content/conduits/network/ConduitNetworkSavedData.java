@@ -18,7 +18,6 @@ import net.minecraft.ReportedException;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
@@ -30,7 +29,6 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
 import net.neoforged.neoforge.event.level.ChunkEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import org.jetbrains.annotations.Nullable;
@@ -45,13 +43,13 @@ import java.util.Optional;
 @EventBusSubscriber
 public class ConduitNetworkSavedData extends SavedData {
 
-    public static final Codec<ConduitNetworkSavedData> CODEC = ConduitNetwork.CODEC.listOf()
+    public static final Codec<ConduitNetworkSavedData> CODEC = ConduitNetworkImpl.CODEC.listOf()
             .xmap(ConduitNetworkSavedData::new, ConduitNetworkSavedData::getNetworks);
 
-    private final Multimap<ConduitType<?, ?>, ConduitNetwork> networks = HashMultimap.create();
+    private final Multimap<ConduitType<?, ?>, ConduitNetworkImpl> networks = HashMultimap.create();
 
-    private final Multimap<Long, ConduitNetwork> networksByChunk = HashMultimap.create();
-    private final Multimap<ConduitNetwork, Long> chunksByNetwork = HashMultimap.create();
+    private final Multimap<Long, ConduitNetworkImpl> networksByChunk = HashMultimap.create();
+    private final Multimap<ConduitNetworkImpl, Long> chunksByNetwork = HashMultimap.create();
 
     private final Map<Long, Boolean> tickingChunksMap = Maps.newHashMap();
 
@@ -68,8 +66,8 @@ public class ConduitNetworkSavedData extends SavedData {
     public ConduitNetworkSavedData() {
     }
 
-    private ConduitNetworkSavedData(List<ConduitNetwork> networks) {
-        for (ConduitNetwork network : networks) {
+    private ConduitNetworkSavedData(List<ConduitNetworkImpl> networks) {
+        for (ConduitNetworkImpl network : networks) {
             network.setOnChunkCoverageChanged(this::onNetworkChunksChanged);
             this.networks.put(network.conduitType(), network);
 
@@ -90,7 +88,7 @@ public class ConduitNetworkSavedData extends SavedData {
                 .getPartialOrThrow();
     }
 
-    private List<ConduitNetwork> getNetworks() {
+    private List<ConduitNetworkImpl> getNetworks() {
         return networks.values().stream().filter(n -> n.isValid() && !n.isEmpty()).toList();
     }
 
@@ -127,23 +125,23 @@ public class ConduitNetworkSavedData extends SavedData {
         unloadedNodes.computeIfAbsent(conduit.value().type(), c -> Maps.newHashMap()).put(pos, node);
     }
 
-    public static void onNetworkCreated(ServerLevel level, ConduitNetwork network) {
+    public static void onNetworkCreated(ServerLevel level, ConduitNetworkImpl network) {
         get(level).onNetworkCreated(network);
     }
 
-    private void onNetworkCreated(ConduitNetwork network) {
+    private void onNetworkCreated(ConduitNetworkImpl network) {
         Preconditions.checkArgument(network.isValid(), "New network is not valid!");
         networks.put(network.conduitType(), network);
         onNetworkChunksChanged(network);
         network.setOnChunkCoverageChanged(this::onNetworkChunksChanged);
     }
 
-    public static void onNetworkDiscarded(ServerLevel level, ConduitNetwork network) {
+    public static void onNetworkDiscarded(ServerLevel level, ConduitNetworkImpl network) {
         Preconditions.checkArgument(network.isDiscarded(), "Network is not discarded!");
         get(level).onNetworkDiscarded(network);
     }
 
-    private void onNetworkDiscarded(ConduitNetwork network) {
+    private void onNetworkDiscarded(ConduitNetworkImpl network) {
         // Allow empty or discarded networks here
         networks.remove(network.conduitType(), network);
 
@@ -153,7 +151,7 @@ public class ConduitNetworkSavedData extends SavedData {
         }
     }
 
-    private void onNetworkChunksChanged(ConduitNetwork network) {
+    private void onNetworkChunksChanged(ConduitNetworkImpl network) {
         var knownChunks = chunksByNetwork.get(network);
         var currentChunks = network.allChunks();
 
@@ -316,7 +314,7 @@ public class ConduitNetworkSavedData extends SavedData {
             }
 
             // Create network
-            var network = new ConduitNetwork(conduit.value().type(), Optional.ofNullable(context), nodes,
+            var network = new ConduitNetworkImpl(conduit.value().type(), Optional.ofNullable(context), nodes,
                     new Network.IndexedEdgeList(connections));
 
             // Ensure the nodes are all valid
