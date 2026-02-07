@@ -292,6 +292,8 @@ public class ConduitNetworkSavedData extends SavedData {
                         .getOrThrow()
                         .getFirst();
 
+                node.setConduitIfNull(conduit);
+
                 nodes.add(node);
             }
 

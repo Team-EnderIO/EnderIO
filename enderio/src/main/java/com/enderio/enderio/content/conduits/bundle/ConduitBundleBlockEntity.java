@@ -760,7 +760,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         conduitNodes.put(conduit, loadedNode);
 
         // Attach to the node to provide connection data and inventory.
-        loadedNode.attach(this, conduit);
+        loadedNode.attach(this);
     }
 
     // endregion
