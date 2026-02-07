@@ -42,7 +42,7 @@ import java.util.stream.Stream;
 
 public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> implements com.enderio.enderio.api.conduits.network.ConduitNetwork {
 
-    public static final Codec<ConduitNetwork> LEGACY_CODEC = RecordCodecBuilder.create(instance -> instance
+    private static final Codec<ConduitNetwork> LEGACY_CODEC = RecordCodecBuilder.create(instance -> instance
             .group(Conduit.CODEC.fieldOf("conduit").forGetter(i -> null),
                     ConduitNetworkContext.GENERIC_CODEC.optionalFieldOf("context")
                             .forGetter(i -> i.context == null || !i.context.type().isPersistent() ? Optional.empty()
@@ -50,13 +50,15 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
             .and(graphCodec(instance, ConduitNodeImpl.CODEC))
             .apply(instance, ConduitNetwork::new));
 
-    public static final Codec<ConduitNetwork> CODEC = RecordCodecBuilder.create(instance -> instance
+    private static final Codec<ConduitNetwork> NEW_CODEC = RecordCodecBuilder.create(instance -> instance
             .group(ConduitType.CODEC.fieldOf("conduit_type").forGetter(i -> i.conduitType),
                     ConduitNetworkContext.GENERIC_CODEC.optionalFieldOf("context")
                             .forGetter(i -> i.context == null || !i.context.type().isPersistent() ? Optional.empty()
                                     : Optional.of(i.context)))
             .and(graphCodec(instance, ConduitNodeImpl.CODEC))
             .apply(instance, ConduitNetwork::new));
+
+    public static final Codec<ConduitNetwork> CODEC = Codec.withAlternative(NEW_CODEC, LEGACY_CODEC);
 
     private final ConduitType<?, ?> conduitType;
 
