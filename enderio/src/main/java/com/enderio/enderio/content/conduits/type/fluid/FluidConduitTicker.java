@@ -24,11 +24,8 @@ public class FluidConduitTicker extends ConduitTickerBase<FluidConduit> {
 
     public static final FluidConduitTicker INSTANCE = new FluidConduitTicker();
 
-    private FluidConduitTicker() {}
-
-    @Override
-    protected ConduitType<FluidConduit> conduitType() {
-        return EIOConduitTypes.FLUID.get();
+    private FluidConduitTicker() {
+        super(EIOConduitTypes.FLUID::get);
     }
 
     @Override

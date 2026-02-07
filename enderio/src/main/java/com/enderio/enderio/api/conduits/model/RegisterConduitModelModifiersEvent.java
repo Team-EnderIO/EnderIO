@@ -1,6 +1,5 @@
 package com.enderio.enderio.api.conduits.model;
 
-import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
 import net.neoforged.bus.api.Event;
 import net.neoforged.fml.event.IModBusEvent;
@@ -13,13 +12,13 @@ public class RegisterConduitModelModifiersEvent extends Event implements IModBus
         ConduitModelModifier createModifier();
     }
 
-    private final Map<ConduitType<?>, ConduitCoreModelModifierFactory> modifiers = new ConcurrentHashMap<>();
+    private final Map<ConduitType<?, ?>, ConduitCoreModelModifierFactory> modifiers = new ConcurrentHashMap<>();
 
-    public void register(ConduitType<? extends Conduit<?, ?>> type, ConduitCoreModelModifierFactory modifierFactory) {
+    public void register(ConduitType<?, ?> type, ConduitCoreModelModifierFactory modifierFactory) {
         modifiers.put(type, modifierFactory);
     }
 
-    public Map<ConduitType<?>, ConduitCoreModelModifierFactory> getModifiers() {
+    public Map<ConduitType<?, ?>, ConduitCoreModelModifierFactory> getModifiers() {
         return Map.copyOf(modifiers);
     }
 }

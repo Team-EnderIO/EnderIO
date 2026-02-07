@@ -9,9 +9,20 @@ import net.minecraft.server.level.ServerLevel;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 @ApiStatus.Experimental
 public abstract class ConduitTickerBase<T extends Conduit<T, ?>> {
+
+    private final Supplier<ConduitType<T, ?>> conduitTypeSupplier;
+
+    protected ConduitTickerBase(Supplier<ConduitType<T, ?>> conduitTypeSupplier) {
+        this.conduitTypeSupplier = conduitTypeSupplier;
+    }
+
+    protected final ConduitType<T, ?> conduitType() {
+        return conduitTypeSupplier.get();
+    }
 
     public final void tick(ServerLevel level, ConduitNetwork network, int tickOffset) {
         // See if we can tick any conduits in this network
@@ -32,8 +43,6 @@ public abstract class ConduitTickerBase<T extends Conduit<T, ?>> {
         // Now tick!
         tickNetwork(level, network, tickableConduits);
     }
-
-    protected abstract ConduitType<T> conduitType();
 
     /**
      * Tick the network.

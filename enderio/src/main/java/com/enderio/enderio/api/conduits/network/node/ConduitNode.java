@@ -37,7 +37,7 @@ public interface ConduitNode {
      */
     @SuppressWarnings("unchecked")
     @ApiStatus.NonExtendable
-    default <T extends Conduit<T, ?>> Holder<T> conduit(ConduitType<T> type) {
+    default <T extends Conduit<T, ?>> Holder<T> conduit(ConduitType<T, ?> type) {
         var conduitHolderUntyped = conduit();
         Preconditions.checkState(conduitHolderUntyped.value().type() == type);
         return (Holder<T>) conduitHolderUntyped;

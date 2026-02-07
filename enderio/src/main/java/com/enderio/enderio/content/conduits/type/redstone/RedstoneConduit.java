@@ -40,7 +40,7 @@ public record RedstoneConduit(ResourceLocation texture, ResourceLocation activeT
             .apply(builder, RedstoneConduit::new));
 
     @Override
-    public ConduitType<RedstoneConduit> type() {
+    public ConduitType<RedstoneConduit, RedstoneConduitConnectionConfig> type() {
         return EIOConduitTypes.REDSTONE.get();
     }
 
@@ -72,11 +72,6 @@ public record RedstoneConduit(ResourceLocation texture, ResourceLocation activeT
         BlockPos neighbor = conduitPos.relative(direction);
         BlockState blockState = level.getBlockState(neighbor);
         return !blockState.isAir();
-    }
-
-    @Override
-    public ConnectionConfigType<RedstoneConduitConnectionConfig> connectionConfigType() {
-        return RedstoneConduitConnectionConfig.TYPE;
     }
 
     @Override

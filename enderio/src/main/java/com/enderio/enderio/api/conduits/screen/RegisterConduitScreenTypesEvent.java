@@ -10,14 +10,14 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class RegisterConduitScreenTypesEvent extends Event implements IModBusEvent {
-    private final Map<ConduitType<?>, ConduitScreenType<?>> screenTypes = new ConcurrentHashMap<>();
+    private final Map<ConduitType<?, ?>, ConduitScreenType<?>> screenTypes = new ConcurrentHashMap<>();
 
-    public <T extends ConnectionConfig> void register(ConduitType<? extends Conduit<?, T>> conduitType,
+    public <T extends ConnectionConfig> void register(ConduitType<? extends Conduit<?, T>, ?> conduitType,
             ConduitScreenType<T> screenType) {
         screenTypes.put(conduitType, screenType);
     }
 
-    public Map<ConduitType<?>, ConduitScreenType<?>> getScreenTypes() {
+    public Map<ConduitType<?, ?>, ConduitScreenType<?>> getScreenTypes() {
         return Map.copyOf(screenTypes);
     }
 }

@@ -16,11 +16,8 @@ public class RedstoneConduitTicker extends ConduitTickerBase<RedstoneConduit> {
 
     public static final RedstoneConduitTicker INSTANCE = new RedstoneConduitTicker();
 
-    private RedstoneConduitTicker() {}
-
-    @Override
-    protected ConduitType<RedstoneConduit> conduitType() {
-        return EIOConduitTypes.REDSTONE.get();
+    private RedstoneConduitTicker() {
+        super(EIOConduitTypes.REDSTONE::get);
     }
 
     @Override

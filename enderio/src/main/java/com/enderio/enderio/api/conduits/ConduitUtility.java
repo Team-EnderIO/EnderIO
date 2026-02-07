@@ -18,7 +18,7 @@ public class ConduitUtility {
     }
 
     @SuppressWarnings("unchecked")
-    private static <TConduit extends Conduit<TConduit, ?>> boolean compare(ConduitType<TConduit> type, Holder<Conduit<?, ?>> a,  Holder<Conduit<?, ?>> b,
+    private static <TConduit extends Conduit<TConduit, ?>> boolean compare(ConduitType<TConduit, ?> type, Holder<Conduit<?, ?>> a,  Holder<Conduit<?, ?>> b,
         BiPredicate<TConduit, TConduit> predicate) {
         if (a.value().type() != b.value().type()) {
             return false;

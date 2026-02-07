@@ -58,7 +58,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
             .and(graphCodec(instance, ConduitNodeImpl.CODEC))
             .apply(instance, ConduitNetwork::new));
 
-    private final ConduitType<?> conduitType;
+    private final ConduitType<?, ?> conduitType;
 
     @Nullable
     private ConduitNetworkContext<?> context;
@@ -104,14 +104,14 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
     @Nullable
     private Consumer<ConduitNetwork> onChunkCoverageChanged = null;
 
-    public ConduitNetwork(ConduitType<?> conduitType, ConduitNodeImpl initialNode) {
+    public ConduitNetwork(ConduitType<?, ?> conduitType, ConduitNodeImpl initialNode) {
         super(initialNode);
         this.conduitType = conduitType;
         this.supportsCaching = conduitType.ticker() != null;
     }
 
     // TODO: Public for legacy deserialization
-    public ConduitNetwork(ConduitType<?> conduitType, Optional<ConduitNetworkContext<?>> context,
+    public ConduitNetwork(ConduitType<?, ?> conduitType, Optional<ConduitNetworkContext<?>> context,
         List<ConduitNodeImpl> nodes, IndexedEdgeList edges) {
         super(nodes, edges);
         this.conduitType = conduitType;
@@ -128,13 +128,13 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
         this.supportsCaching = conduitType.ticker() != null;
     }
 
-    protected ConduitNetwork(ConduitType<?> conduitType) {
+    protected ConduitNetwork(ConduitType<?, ?> conduitType) {
         this.conduitType = conduitType;
         this.supportsCaching = conduitType.ticker() != null;
     }
 
     @Override
-    public ConduitType<?> conduitType() {
+    public ConduitType<?, ?> conduitType() {
         return conduitType;
     }
 

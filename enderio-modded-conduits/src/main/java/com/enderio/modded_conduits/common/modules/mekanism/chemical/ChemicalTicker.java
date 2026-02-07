@@ -20,11 +20,8 @@ public class ChemicalTicker extends ConduitTickerBase<ChemicalConduit> {
 
     public static final ChemicalTicker INSTANCE = new ChemicalTicker();
 
-    private ChemicalTicker() {}
-
-    @Override
-    protected ConduitType<ChemicalConduit> conduitType() {
-        return MekanismModule.TYPE_CHEMICAL.get();
+    private ChemicalTicker() {
+        super(MekanismModule.TYPE_CHEMICAL::get);
     }
 
     @Override

@@ -43,7 +43,7 @@ public class AE2ConduitsModule implements ConduitCommonModule {
 
     private static final ModLoadedCondition CONDITION = new ModLoadedCondition("ae2");
 
-    public static final DeferredRegister<ConduitType<?>> CONDUIT_TYPES = DeferredRegister
+    public static final DeferredRegister<ConduitType<?, ?>> CONDUIT_TYPES = DeferredRegister
             .create(EnderIORegistries.CONDUIT_TYPE, EnderIO.MOD_ID);
 
     public static final DeferredRegister<ConnectionConfigType<?>> CONDUIT_CONNECTION_CONFIG_TYPES = DeferredRegister
@@ -55,14 +55,14 @@ public class AE2ConduitsModule implements ConduitCommonModule {
     public static final DeferredRegister<NodeDataType<?>> CONDUIT_NODE_DATA_TYPES = DeferredRegister
             .create(EnderIORegistries.CONDUIT_NODE_DATA_TYPE, EnderIO.MOD_ID);
 
-    public static final DeferredHolder<ConduitType<?>, ConduitType<MEConduit>> AE2_CONDUIT = CONDUIT_TYPES.register(
+    public static final DeferredHolder<ConduitType<?, ?>, ConduitType<MEConduit, MEConduitConnectionConfig>> AE2_CONDUIT = CONDUIT_TYPES.register(
             "me",
-            () -> ConduitType.builder(MEConduit.CODEC)
+            () -> ConduitType.builder(MEConduit.CODEC, MEConduitConnectionConfig.TYPE)
                     .exposeCapability(AECapabilities.IN_WORLD_GRID_NODE_HOST)
                     .build());
 
     public static Supplier<ConnectionConfigType<MEConduitConnectionConfig>> CONNECTION_CONFIG = CONDUIT_CONNECTION_CONFIG_TYPES
-            .register("me", () -> MEConduitConnectionConfig.TYPE);
+        .register("me", () -> MEConduitConnectionConfig.TYPE);
 
     public static final Supplier<ConduitDataType<ConduitInWorldGridNodeHost>> DATA = CONDUIT_DATA_TYPES.register("me",
             () -> new ConduitDataType<>(ConduitInWorldGridNodeHost.CODEC, ConduitInWorldGridNodeHost.STREAM_CODEC,

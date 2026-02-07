@@ -48,14 +48,14 @@ public class ConduitNetworkSavedData extends SavedData {
     public static final Codec<ConduitNetworkSavedData> CODEC = ConduitNetwork.CODEC.listOf()
             .xmap(ConduitNetworkSavedData::new, ConduitNetworkSavedData::getNetworks);
 
-    private final Multimap<ConduitType<?>, ConduitNetwork> networks = HashMultimap.create();
+    private final Multimap<ConduitType<?, ?>, ConduitNetwork> networks = HashMultimap.create();
 
     private final Multimap<Long, ConduitNetwork> networksByChunk = HashMultimap.create();
     private final Multimap<ConduitNetwork, Long> chunksByNetwork = HashMultimap.create();
 
     private final Map<Long, Boolean> tickingChunksMap = Maps.newHashMap();
 
-    private final Map<ConduitType<?>, Map<BlockPos, ConduitNodeImpl>> unloadedNodes = Maps.newHashMap();
+    private final Map<ConduitType<?, ?>, Map<BlockPos, ConduitNodeImpl>> unloadedNodes = Maps.newHashMap();
 
     private static final String KEY_NEW_DATA = "Networks";
 

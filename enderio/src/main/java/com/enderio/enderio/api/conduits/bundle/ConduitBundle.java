@@ -92,11 +92,11 @@ public interface ConduitBundle {
     boolean hasCompatibleConduit(Holder<Conduit<?, ?>> conduit);
 
     // TODO: Docs
-    boolean hasConduitOfType(ConduitType<?> conduitType);
+    boolean hasConduitOfType(ConduitType<?, ?> conduitType);
 
     // TODO: Docs
     @Nullable
-    Holder<Conduit<?, ?>> getConduitByType(ConduitType<?> conduitType);
+    Holder<Conduit<?, ?>> getConduitByType(ConduitType<?, ?> conduitType);
 
     /**
      * Get a conduit that is compatible with the given neighbouring conduit.

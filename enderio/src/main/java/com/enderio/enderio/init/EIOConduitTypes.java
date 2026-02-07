@@ -34,12 +34,12 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.function.Supplier;
 
 public class EIOConduitTypes {
-    private static final DeferredRegister<ConduitType<?>> CONDUIT_TYPES = DeferredRegister
+    private static final DeferredRegister<ConduitType<?, ?>> CONDUIT_TYPES = DeferredRegister
         .create(EnderIORegistries.CONDUIT_TYPE, EnderIO.MOD_ID);
 
-    public static final Supplier<ConduitType<EnergyConduit>> ENERGY = CONDUIT_TYPES.register("energy",
+    public static final Supplier<ConduitType<EnergyConduit, EnergyConduitConnectionConfig>> ENERGY = CONDUIT_TYPES.register("energy",
         () -> ConduitType
-            .builder(EnergyConduit.CODEC)
+            .builder(EnergyConduit.CODEC, EnergyConduitConnectionConfig.TYPE)
             .exposeCapability(Capabilities.EnergyStorage.BLOCK)
             .ticker(EnergyConduitTicker.INSTANCE)
             .connectionComparator((a, b) -> Integer.compare(
@@ -50,12 +50,12 @@ public class EIOConduitTypes {
                 conn.node().getConnectionConfig(conn.connectionSide(), EnergyConduitConnectionConfig.TYPE).priority()))
             .build());
 
-    public static final Supplier<ConduitType<RedstoneConduit>> REDSTONE = CONDUIT_TYPES.register("redstone",
-        () -> ConduitType.of(RedstoneConduit.CODEC, RedstoneConduitTicker.INSTANCE));
+    public static final Supplier<ConduitType<RedstoneConduit, RedstoneConduitConnectionConfig>> REDSTONE = CONDUIT_TYPES.register("redstone",
+        () -> new ConduitType(RedstoneConduit.CODEC, RedstoneConduitConnectionConfig.TYPE, RedstoneConduitTicker.INSTANCE));
 
-    public static final Supplier<ConduitType<FluidConduit>> FLUID = CONDUIT_TYPES.register("fluid",
+    public static final Supplier<ConduitType<FluidConduit, FluidConduitConnectionConfig>> FLUID = CONDUIT_TYPES.register("fluid",
         () -> ConduitType
-            .builder(FluidConduit.CODEC)
+            .builder(FluidConduit.CODEC, FluidConduitConnectionConfig.TYPE)
             .ticker(FluidConduitTicker.INSTANCE)
             .connectionComparerFromReference(new PriorityConnectionComparerFromReference(conn -> {
                 // TODO: Might just make all fluid conduits support priority for simplicity.
@@ -67,9 +67,9 @@ public class EIOConduitTypes {
             }))
             .build());
 
-    public static final Supplier<ConduitType<ItemConduit>> ITEM = CONDUIT_TYPES.register("item",
+    public static final Supplier<ConduitType<ItemConduit, ItemConduitConnectionConfig>> ITEM = CONDUIT_TYPES.register("item",
         () -> ConduitType
-            .builder(ItemConduit.CODEC)
+            .builder(ItemConduit.CODEC, ItemConduitConnectionConfig.TYPE)
             .ticker(ItemConduitTicker.INSTANCE)
             .connectionComparerFromReference(new PriorityConnectionComparerFromReference(conn ->
                 conn.node().getConnectionConfig(conn.connectionSide(), ItemConduitConnectionConfig.TYPE).priority()))

@@ -51,13 +51,8 @@ public record ChemicalConduit(ResourceLocation texture, Component description, l
                             .apply(builder, ChemicalConduit::new));
 
     @Override
-    public ConduitType<ChemicalConduit> type() {
+    public ConduitType<ChemicalConduit, ChemicalConduitConnectionConfig> type() {
         return MekanismModule.TYPE_CHEMICAL.get();
-    }
-
-    @Override
-    public ConnectionConfigType<ChemicalConduitConnectionConfig> connectionConfigType() {
-        return ChemicalConduitConnectionConfig.TYPE;
     }
 
     @Override

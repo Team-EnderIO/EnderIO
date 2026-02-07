@@ -58,7 +58,7 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
                             .apply(builder, FluidConduit::new));
 
     @Override
-    public ConduitType<FluidConduit> type() {
+    public ConduitType<FluidConduit, FluidConduitConnectionConfig> type() {
         return EIOConduitTypes.FLUID.get();
     }
 
@@ -111,11 +111,6 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
         IFluidHandler capability = level.getCapability(Capabilities.FluidHandler.BLOCK, conduitPos.relative(direction),
                 direction.getOpposite());
         return capability != null;
-    }
-
-    @Override
-    public ConnectionConfigType<FluidConduitConnectionConfig> connectionConfigType() {
-        return FluidConduitConnectionConfig.TYPE;
     }
 
     @Override

@@ -19,11 +19,8 @@ public class ItemConduitTicker extends ConduitTickerBase<ItemConduit> {
 
     public static final ItemConduitTicker INSTANCE = new ItemConduitTicker();
 
-    private ItemConduitTicker() {}
-
-    @Override
-    protected ConduitType<ItemConduit> conduitType() {
-        return EIOConduitTypes.ITEM.get();
+    private ItemConduitTicker() {
+        super(EIOConduitTypes.ITEM::get);
     }
 
     @Override

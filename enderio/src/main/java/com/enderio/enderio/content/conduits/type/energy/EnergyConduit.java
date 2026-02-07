@@ -41,7 +41,7 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
             .apply(builder, EnergyConduit::new));
 
     @Override
-    public ConduitType<EnergyConduit> type() {
+    public ConduitType<EnergyConduit, EnergyConduitConnectionConfig> type() {
         return EIOConduitTypes.ENERGY.get();
     }
 
@@ -97,11 +97,6 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
     @Override
     public void onRemoved(ConduitNode node, Level level, BlockPos pos) {
         level.invalidateCapabilities(pos);
-    }
-
-    @Override
-    public ConnectionConfigType<EnergyConduitConnectionConfig> connectionConfigType() {
-        return EIOConduitTypes.ConnectionTypes.ENERGY.get();
     }
 
     @Override

@@ -21,7 +21,7 @@ import java.util.Set;
  */
 @ApiStatus.AvailableSince("8.0.0")
 public interface ConduitNetwork {
-    ConduitType<?> conduitType();
+    ConduitType<?, ?> conduitType();
 
     // TODO: is there a better way, or is preTick being exposed fine?
     @ApiStatus.Internal

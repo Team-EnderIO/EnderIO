@@ -55,7 +55,7 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
                     .apply(builder, ItemConduit::new));
 
     @Override
-    public ConduitType<ItemConduit> type() {
+    public ConduitType<ItemConduit, ItemConduitConnectionConfig> type() {
         return EIOConduitTypes.ITEM.get();
     }
 
@@ -98,11 +98,6 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
         IItemHandler capability = level.getCapability(Capabilities.ItemHandler.BLOCK, conduitPos.relative(direction),
                 direction.getOpposite());
         return capability != null;
-    }
-
-    @Override
-    public ConnectionConfigType<ItemConduitConnectionConfig> connectionConfigType() {
-        return EIOConduitTypes.ConnectionTypes.ITEM.get();
     }
 
     @Override
@@ -169,7 +164,7 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
             return null;
         }
 
-        var config = node.getConnectionConfig(side, connectionConfigType());
+        var config = node.getConnectionConfig(side, type().connectionConfigType());
         if (!config.extractRedstoneControl().isRedstoneSensitive()) {
             return null;
         }

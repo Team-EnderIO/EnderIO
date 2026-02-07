@@ -71,13 +71,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
      * Gets the conduit type.
      * This is used to define serialization and exposing proxied capabilities.
      */
-    ConduitType<TConduit> type();
-
-    /**
-     * @return the expected conduit connection config type.
-     */
-    // TODO: Lift this to ConduitType for sanity.
-    ConnectionConfigType<TConnectionConfig> connectionConfigType();
+    ConduitType<TConduit, TConnectionConfig> type();
 
     /**
      * @implNote if a conduit has a menu, you must also register a {@link ConduitScreenType} for it.
@@ -262,7 +256,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
     @Deprecated(since = "8.0.0")
     default TConnectionConfig convertConnection(boolean isInsert, boolean isExtract, DyeColor inputChannel,
             DyeColor outputChannel, RedstoneControl redstoneControl, DyeColor redstoneChannel) {
-        return connectionConfigType().getDefault();
+        return type().connectionConfigType().getDefault();
     }
 
     /**

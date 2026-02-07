@@ -16,11 +16,7 @@ public class HeatTicker extends ConduitTickerBase<HeatConduit> {
     public static final HeatTicker INSTANCE = new HeatTicker();
 
     private HeatTicker() {
-    }
-
-    @Override
-    protected ConduitType<HeatConduit> conduitType() {
-        return MekanismModule.TYPE_HEAT.get();
+        super(MekanismModule.TYPE_HEAT::get);
     }
 
     @Override

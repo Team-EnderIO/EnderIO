@@ -43,13 +43,8 @@ public record MEConduit(ResourceLocation texture, Component description, AEColor
                     .apply(builder, MEConduit::new));
 
     @Override
-    public ConduitType<MEConduit> type() {
+    public ConduitType<MEConduit, MEConduitConnectionConfig> type() {
         return AE2ConduitsModule.AE2_CONDUIT.get();
-    }
-
-    @Override
-    public ConnectionConfigType<MEConduitConnectionConfig> connectionConfigType() {
-        return MEConduitConnectionConfig.TYPE;
     }
 
     @Override

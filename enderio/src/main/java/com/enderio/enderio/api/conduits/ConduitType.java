@@ -1,6 +1,8 @@
 package com.enderio.enderio.api.conduits;
 
 import com.enderio.enderio.api.EnderIORegistries;
+import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
+import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
 import com.enderio.enderio.api.conduits.network.DefaultConnectionComparerFromReference;
 import com.enderio.enderio.api.conduits.network.IConnectionComparerFromReference;
@@ -22,8 +24,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.BiFunction;
 
-public record ConduitType<T extends Conduit<T, ?>>(
+public record ConduitType<T extends Conduit<T, U>, U extends ConnectionConfig>(
     MapCodec<T> codec,
+    ConnectionConfigType<U> connectionConfigType,
     Set<BlockCapability<?, ?>> exposedCapabilities,
     @Nullable
     ConduitTickerBase<T> ticker,
@@ -31,35 +34,34 @@ public record ConduitType<T extends Conduit<T, ?>>(
     Comparator<ConduitBlockConnection> connectionComparator,
     IConnectionComparerFromReference connectionComparerFromReference
 ) {
-    public static Codec<ConduitType<?>> CODEC = Codec.lazyInitialized(EnderIORegistries.CONDUIT_TYPE::byNameCodec);
-    public static StreamCodec<RegistryFriendlyByteBuf, ConduitType<?>> STREAM_CODEC = StreamCodec
+    public static Codec<ConduitType<?, ?>> CODEC = Codec.lazyInitialized(EnderIORegistries.CONDUIT_TYPE::byNameCodec);
+    public static StreamCodec<RegistryFriendlyByteBuf, ConduitType<?, ?>> STREAM_CODEC = StreamCodec
         .recursive(streamCodec -> ByteBufCodecs.registry(EnderIORegistries.Keys.CONDUIT_TYPE));
 
-    public static <T extends Conduit<T, ?>> ConduitType<T> of(MapCodec<T> codec) {
-        return builder(codec).build();
+    public static <T extends Conduit<T, U>, U extends ConnectionConfig> Builder<T, U> builder(MapCodec<T> codec, ConnectionConfigType<U> connectionConfigType) {
+        return new Builder<T, U>(codec, connectionConfigType);
     }
 
-    public static <T extends Conduit<T, ?>> ConduitType<T> of(MapCodec<T> codec, ConduitTickerBase<T> ticker) {
-        return builder(codec).ticker(ticker).build();
-    }
-
-    public static <T extends Conduit<T, ?>> ConduitType<T> of(BiFunction<ResourceLocation, Component, T> factory) {
-        return builder(factory).build();
-    }
-
-    public static <T extends Conduit<T, ?>> Builder<T> builder(MapCodec<T> codec) {
-        return new Builder<>(codec);
-    }
-
-    public static <T extends Conduit<T, ?>> Builder<T> builder(BiFunction<ResourceLocation, Component, T> factory) {
-        return new Builder<T>(RecordCodecBuilder.mapCodec(builder -> builder
+    public static <T extends Conduit<T, U>, U extends ConnectionConfig> Builder<T, U> builder(
+        BiFunction<ResourceLocation, Component, T> factory,
+        ConnectionConfigType<U> connectionConfigType) {
+        return new Builder<T, U>(RecordCodecBuilder.mapCodec(builder -> builder
             .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(Conduit::texture),
                 ComponentSerialization.CODEC.fieldOf("description").forGetter(Conduit::description))
-            .apply(builder, factory)));
+            .apply(builder, factory)), connectionConfigType);
     }
 
-    public static class Builder<T extends Conduit<T, ?>> {
+    public ConduitType(MapCodec<T> codec, ConnectionConfigType<U> connectionConfigType) {
+        this(codec, connectionConfigType, Set.of(), null, null, DefaultConnectionComparerFromReference.INSTANCE);
+    }
+
+    public ConduitType(MapCodec<T> codec, ConnectionConfigType<U> connectionConfigType, ConduitTickerBase<T> ticker) {
+        this(codec, connectionConfigType, Set.of(), ticker, null, DefaultConnectionComparerFromReference.INSTANCE);
+    }
+
+    public static class Builder<T extends Conduit<T, U>, U extends ConnectionConfig> {
         private final MapCodec<T> codec;
+        private final ConnectionConfigType<U> connectionConfigType;
         private final Set<BlockCapability<?, ?>> exposedCapabilities;
         @Nullable
         private Comparator<ConduitBlockConnection> connectionComparator;
@@ -68,33 +70,34 @@ public record ConduitType<T extends Conduit<T, ?>>(
         @Nullable
         private ConduitTickerBase<T> ticker;
 
-        private Builder(MapCodec<T> codec) {
+        private Builder(MapCodec<T> codec, ConnectionConfigType<U> connectionConfigType) {
             this.codec = codec;
+            this.connectionConfigType = connectionConfigType;
             this.exposedCapabilities = new HashSet<>();
         }
 
-        public <U> Builder<T> exposeCapability(BlockCapability<U, ?> capability) {
+        public <V> Builder<T, U> exposeCapability(BlockCapability<V, ?> capability) {
             exposedCapabilities.add(capability);
             return this;
         }
 
-        public Builder<T> ticker(ConduitTickerBase<T> ticker) {
+        public Builder<T, U> ticker(ConduitTickerBase<T> ticker) {
             this.ticker = ticker;
             return this;
         }
 
-        public Builder<T> connectionComparator(Comparator<ConduitBlockConnection> connectionComparator) {
+        public Builder<T, U> connectionComparator(Comparator<ConduitBlockConnection> connectionComparator) {
             this.connectionComparator = connectionComparator;
             return this;
         }
 
-        public Builder<T> connectionComparerFromReference(IConnectionComparerFromReference connectionComparerFromReference) {
+        public Builder<T, U> connectionComparerFromReference(IConnectionComparerFromReference connectionComparerFromReference) {
             this.connectionComparerFromReference = connectionComparerFromReference;
             return this;
         }
 
-        public ConduitType<T> build() {
-            return new ConduitType<>(codec, exposedCapabilities, ticker, connectionComparator, connectionComparerFromReference);
+        public ConduitType<T, U> build() {
+            return new ConduitType<>(codec, connectionConfigType, exposedCapabilities, ticker, connectionComparator, connectionComparerFromReference);
         }
     }
 }
