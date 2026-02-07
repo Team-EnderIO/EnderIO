@@ -26,26 +26,30 @@ import java.util.Optional;
 public final class ConduitNodeImpl implements INetworkNode<ConduitNetwork, ConduitNodeImpl>, ConduitNode {
 
     // TODO: 1.22 - Remove legacy codec.
-    private static final Codec<ConduitNodeImpl> LEGACY_CODEC = RecordCodecBuilder.create(instance -> instance
+    private static final Codec<ConduitNodeImpl> LEGACY_V7_CODEC = RecordCodecBuilder.create(instance -> instance
             .group(BlockPos.CODEC.fieldOf("pos").forGetter(ConduitNodeImpl::pos),
                     ConduitDataContainer.CODEC.fieldOf("data").forGetter(i -> i.legacyDataContainer))
             .apply(instance, ConduitNodeImpl::new));
 
     private static final Codec<ConduitNodeImpl> NEW_CODEC = RecordCodecBuilder
-            .create(instance -> instance.group(BlockPos.CODEC.fieldOf("pos").forGetter(ConduitNodeImpl::pos),
+            .create(instance -> instance.group(
+                Conduit.CODEC.optionalFieldOf("conduit", null).forGetter(ConduitNodeImpl::conduit),
+                BlockPos.CODEC.fieldOf("pos").forGetter(ConduitNodeImpl::pos),
                     NodeData.GENERIC_CODEC.optionalFieldOf("data")
                             .forGetter(i -> i.nodeData == null || !i.nodeData.type().isPersistent() ? Optional.empty()
                                     : Optional.of(i.nodeData)))
                     .apply(instance, ConduitNodeImpl::new));
 
-    public static final Codec<ConduitNodeImpl> CODEC = Codec.withAlternative(NEW_CODEC, LEGACY_CODEC);
+    public static final Codec<ConduitNodeImpl> CODEC = Codec.withAlternative(NEW_CODEC, LEGACY_V7_CODEC);
 
+    // TODO: final in 21.11
+    private Holder<Conduit<?, ?>> conduit;
     private final BlockPos pos;
 
     @Nullable
     private NodeData nodeData;
 
-    // TODO: Remove in 1.22
+    // TODO: Remove in 21.11
     @Nullable
     private ConduitDataContainer legacyDataContainer = null;
 
@@ -55,15 +59,21 @@ public final class ConduitNodeImpl implements INetworkNode<ConduitNetwork, Condu
     @Nullable
     private IConduitNodeAttachment conduitBundle;
 
-    private Holder<Conduit<?, ?>> conduit;
-
     public ConduitNodeImpl(Holder<Conduit<?, ?>> conduit, BlockPos pos) {
         this(conduit, pos, (NodeData) null);
     }
 
     public ConduitNodeImpl(Holder<Conduit<?, ?>> conduit, BlockPos pos, @Nullable NodeData nodeData) {
+        this.conduit = conduit;
         this.pos = pos;
         this.nodeData = nodeData;
+        this.network = new ConduitNetwork(conduit, this);
+    }
+
+    public ConduitNodeImpl(Holder<Conduit<?, ?>> conduit, BlockPos pos, Optional<NodeData> nodeData) {
+        this.conduit = conduit;
+        this.pos = pos;
+        this.nodeData = nodeData.orElse(null);
         this.network = new ConduitNetwork(conduit, this);
     }
 
@@ -98,21 +108,27 @@ public final class ConduitNodeImpl implements INetworkNode<ConduitNetwork, Condu
         }
     }
 
-    public void attach(IConduitNodeAttachment conduitBundle, Holder<Conduit<?, ?>> conduit) {
+    // Intended for loading from the old network format.
+    @Deprecated
+    public void setConduitIfNull(Holder<Conduit<?, ?>> conduit) {
+        if (this.conduit == null) {
+            this.conduit = conduit;
+        }
+    }
+
+    public void attach(IConduitNodeAttachment conduitBundle) {
         Preconditions.checkState(network != null, "Conduit node is not connected to a network.");
         this.conduitBundle = conduitBundle;
-        this.conduit = conduit;
         network.onNodeUpdated(this);
         tryCopyLegacyData();
     }
 
     public void detach() {
-        if (conduitBundle == null || conduit == null) {
+        if (conduitBundle == null) {
             return;
         }
 
         this.conduitBundle = null;
-        this.conduit = null;
 
         if (network != null) {
             network.onNodeUpdated(this);
@@ -133,7 +149,6 @@ public final class ConduitNodeImpl implements INetworkNode<ConduitNetwork, Condu
 
     @Override
     public Holder<Conduit<?, ?>> conduit() {
-        ensureValid();
         return conduit;
     }
 
@@ -144,7 +159,7 @@ public final class ConduitNodeImpl implements INetworkNode<ConduitNetwork, Condu
 
     @Override
     public boolean isLoaded() {
-        if (!isValid() || conduitBundle == null || conduit == null) {
+        if (!isValid() || conduitBundle == null) {
             return false;
         }
 
@@ -322,10 +337,10 @@ public final class ConduitNodeImpl implements INetworkNode<ConduitNetwork, Condu
     }
 
     private void tryCopyLegacyData() {
-        if (network != null && legacyDataContainer != null && isLoaded()) {
+        if (this.conduit != null&& legacyDataContainer != null) {
             // We now know what type of conduit we are, so upgrade the connection data then
             // drop legacy data
-            network.conduit()
+            this.conduit
                     .value()
                     .copyLegacyData(this, legacyDataContainer,
                             (side, config) -> conduitBundle.setConnectionConfig(conduit, side, config));
