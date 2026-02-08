@@ -94,15 +94,14 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
         // Render Text
         if (!travelData.name().trim().isEmpty()) {
             // Scale for rendering
-            double dScale = Math.sqrt(0.0035 * Math.sqrt(distanceSquared));
-            if (dScale < 0.1f) {
-                dScale = 0.1f;
+            double scale = Math.sqrt(0.0035 * Math.sqrt(distanceSquared));
+            if (scale < 0.1f) {
+                scale = 0.1f;
             }
-            dScale = dScale * (Math.sin(Math.toRadians(Minecraft.getInstance().options.fov().get() / 4d)));
+            scale = scale * (Math.sin(Math.toRadians(Minecraft.getInstance().options.fov().get() / 4d)));
             if (active) {
-                dScale *= 1.3;
+                scale *= 1.3;
             }
-            float fScale = (float) dScale;
 
             Quaternionf textRotation = Axis.YN.rotationDegrees(playerLookRotation.y)
                 .mul(Axis.XP.rotationDegrees(playerLookRotation.x));
@@ -111,10 +110,11 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
 
             poseStack.pushPose();
             poseStack.translate(offset.x() + 0.5,
-                    offset.y() + (dScale * lineHeight), offset.z() + 0.5);
+                    offset.y() + (scale * lineHeight), offset.z() + 0.5);
             poseStack.mulPose(textRotation);
             poseStack.translate(0, 1.5, 0);
-            poseStack.scale(-fScale, -fScale, fScale);
+            float scaleF = (float) scale;
+            poseStack.scale(-scaleF, -scaleF, scaleF);
 
             Matrix4f matrix4f = poseStack.last().pose();
             Component tc = Component.literal(travelData.name().trim());
@@ -133,12 +133,11 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
         // Render Icon
         if (travelData.icon() != Items.AIR) {
             // Scale for rendering
-            double dScale = Math.sqrt(Math.sqrt(distanceSquared));
-            dScale = dScale * (Math.sin(Math.toRadians(Minecraft.getInstance().options.fov().get() / 4d)));
+            double scale = Math.sqrt(Math.sqrt(distanceSquared));
+            scale = scale * (Math.sin(Math.toRadians(Minecraft.getInstance().options.fov().get() / 4d)));
             if (active) {
-                dScale *= 1.3;
+                scale *= 1.3;
             }
-            float fScale = (float) dScale;
 
             Vector3f upDir = new Vec3(0, 1, 0)
                 .xRot(-playerLookRotation.x * ((float) Math.PI / 180F))
@@ -151,7 +150,8 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             poseStack.pushPose();
             poseStack.translate(offset.x() + 0.5, offset.y() + 0.5, offset.z() + 0.5);
             poseStack.mulPose(iconRotation.invert());
-            poseStack.scale(-fScale, fScale, -fScale);
+            float scaleF = (float) scale;
+            poseStack.scale(-scaleF, scaleF, -scaleF);
 
             ItemStack stack = new ItemStack(travelData.icon());
             BakedModel bakedmodel = minecraft.getItemRenderer().getModel(stack, minecraft.level, null, 0);
