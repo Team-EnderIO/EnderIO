@@ -9,6 +9,7 @@ import com.enderio.enderio.api.conduits.bundle.SlotType;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.enderio.enderio.api.conduits.connection.path.ConnectionPathProperty;
 import com.enderio.enderio.api.conduits.connection.path.ConnectionPathPropertyConsumer;
+import com.enderio.enderio.api.conduits.connection.path.VariableSpeedAndTickRate;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataAccessor;
 import com.enderio.enderio.api.io.RedstoneControl;
@@ -54,7 +55,7 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
                                     .forGetter(ItemConduit::networkTickRate))
                     .apply(builder, ItemConduit::new));
 
-    public static ConnectionPathProperty<Integer> PATH_MAX_TRANSFER_RATE = ConnectionPathProperty.minInt();
+    public static ConnectionPathProperty<VariableSpeedAndTickRate> PATH_SPEED_AND_TICK_RATE = VariableSpeedAndTickRate.minProperty();
 
     @Override
     public ConduitType<ItemConduit, ItemConduitConnectionConfig> type() {
@@ -78,7 +79,7 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
 
     @Override
     public void collectNodePathProperties(ConduitNode node, ConnectionPathPropertyConsumer consumer) {
-        consumer.accept(PATH_MAX_TRANSFER_RATE, transferRatePerCycle());
+        consumer.accept(PATH_SPEED_AND_TICK_RATE, new VariableSpeedAndTickRate(transferRatePerCycle(), networkTickRate()));
     }
 
     @Override

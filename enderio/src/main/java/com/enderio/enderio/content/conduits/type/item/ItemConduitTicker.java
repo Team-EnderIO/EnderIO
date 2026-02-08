@@ -90,7 +90,9 @@ public class ItemConduitTicker extends ConduitTickerBase<ItemConduit> {
                         var insertPath = insertPaths.get(senderIndex);
                         var insertConnection = insertPath.end();
 
-                        final int maxSpeed = insertPath.property(ItemConduit.PATH_MAX_TRANSFER_RATE);
+                        // Get the adjusted speed (as some conduits tick at differing speeds)
+                        var pathSpeedAndTickRate = insertPath.property(ItemConduit.PATH_SPEED_AND_TICK_RATE);
+                        final int maxSpeed = pathSpeedAndTickRate.getAdjustedSpeed(extractConduit.value().networkTickRate());
 
                         // Skip if we've already inserted enough for this path.
                         if (insertedPerPath.getOrDefault(insertPath, 0) >= maxSpeed) {
