@@ -140,9 +140,12 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             }
             float fScale = (float) dScale;
 
+            Vector3f upDir = new Vec3(0, 1, 0)
+                .xRot(-playerLookRotation.x * ((float) Math.PI / 180F))
+                .yRot(-playerLookRotation.y * ((float) Math.PI / 180F))
+                .toVector3f();
             Vector3f direction = playerOffsetNormalized.toVector3f();
-            Quaternionf iconRotation = new Quaternionf().lookAlong(direction.x(), direction.y(), direction.z(), 0F, 1F,
-                    0F);
+            Quaternionf iconRotation = new Quaternionf().lookAlong(direction.x(), direction.y(), direction.z(), upDir.x(), upDir.y(), upDir.z());
             Vec3 offset = playerOffsetNormalized.scale(0.9);
 
             poseStack.pushPose();
