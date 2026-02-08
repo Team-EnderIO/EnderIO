@@ -4,8 +4,8 @@ import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
-import com.enderio.enderio.api.conduits.network.DefaultConnectionComparerFromReference;
-import com.enderio.enderio.api.conduits.network.IConnectionComparerFromReference;
+import com.enderio.enderio.api.conduits.network.ConduitConnectionPath;
+import com.enderio.enderio.api.conduits.network.DefaultConnectionPathComparator;
 import com.enderio.enderio.api.conduits.ticker.ConduitTickerBase;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -32,7 +32,7 @@ public record ConduitType<T extends Conduit<T, U>, U extends ConnectionConfig>(
     ConduitTickerBase<T> ticker,
     @Nullable
     Comparator<ConduitBlockConnection> connectionComparator,
-    IConnectionComparerFromReference connectionComparerFromReference
+    Comparator<ConduitConnectionPath> connectionPathComparator
 ) {
     public static Codec<ConduitType<?, ?>> CODEC = Codec.lazyInitialized(EnderIORegistries.CONDUIT_TYPE::byNameCodec);
     public static StreamCodec<RegistryFriendlyByteBuf, ConduitType<?, ?>> STREAM_CODEC = StreamCodec
@@ -52,11 +52,11 @@ public record ConduitType<T extends Conduit<T, U>, U extends ConnectionConfig>(
     }
 
     public ConduitType(MapCodec<T> codec, ConnectionConfigType<U> connectionConfigType) {
-        this(codec, connectionConfigType, Set.of(), null, null, DefaultConnectionComparerFromReference.INSTANCE);
+        this(codec, connectionConfigType, Set.of(), null, null, DefaultConnectionPathComparator.INSTANCE);
     }
 
     public ConduitType(MapCodec<T> codec, ConnectionConfigType<U> connectionConfigType, ConduitTickerBase<T> ticker) {
-        this(codec, connectionConfigType, Set.of(), ticker, null, DefaultConnectionComparerFromReference.INSTANCE);
+        this(codec, connectionConfigType, Set.of(), ticker, null, DefaultConnectionPathComparator.INSTANCE);
     }
 
     public static class Builder<T extends Conduit<T, U>, U extends ConnectionConfig> {
@@ -65,7 +65,7 @@ public record ConduitType<T extends Conduit<T, U>, U extends ConnectionConfig>(
         private final Set<BlockCapability<?, ?>> exposedCapabilities;
         @Nullable
         private Comparator<ConduitBlockConnection> connectionComparator;
-        private IConnectionComparerFromReference connectionComparerFromReference = DefaultConnectionComparerFromReference.INSTANCE;
+        private Comparator<ConduitConnectionPath> conduitConnectionPath = DefaultConnectionPathComparator.INSTANCE;
 
         @Nullable
         private ConduitTickerBase<T> ticker;
@@ -91,13 +91,13 @@ public record ConduitType<T extends Conduit<T, U>, U extends ConnectionConfig>(
             return this;
         }
 
-        public Builder<T, U> connectionComparerFromReference(IConnectionComparerFromReference connectionComparerFromReference) {
-            this.connectionComparerFromReference = connectionComparerFromReference;
+        public Builder<T, U> connectionComparerFromReference(Comparator<ConduitConnectionPath> conduitConnectionPath) {
+            this.conduitConnectionPath = conduitConnectionPath;
             return this;
         }
 
         public ConduitType<T, U> build() {
-            return new ConduitType<>(codec, connectionConfigType, exposedCapabilities, ticker, connectionComparator, connectionComparerFromReference);
+            return new ConduitType<>(codec, connectionConfigType, exposedCapabilities, ticker, connectionComparator, conduitConnectionPath);
         }
     }
 }

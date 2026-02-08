@@ -6,6 +6,7 @@ import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.config.IOConnectionConfig;
 import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
+import com.enderio.enderio.api.conduits.network.ConduitConnectionPath;
 import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContext;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContextType;
@@ -32,10 +33,14 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Queue;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -84,7 +89,7 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
 
     // TODO: Separate this into a list and a multimap so we can sort all endpointConnections?
     private final SetMultimap<ConduitNodeImpl, ConduitBlockConnection> endpointConnections = HashMultimap.create();
-    private final Map<ConduitBlockConnection, List<ConduitBlockConnection>> accessibleBlockConnectionsMap = Maps
+    private final Map<ConduitBlockConnection, List<ConduitConnectionPath>> accessibleBlockConnectionsMap = Maps
             .newHashMap();
 
     private final List<ConduitBlockConnection> insertConnections = Lists.newArrayList();
@@ -96,9 +101,9 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
     private final ListMultimap<DyeColor, ConduitBlockConnection> extractConnectionsByChannel = ArrayListMultimap
             .create();
 
-    private final Map<ConduitBlockConnection, List<ConduitBlockConnection>> extractConnectionsByInsert = Maps
+    private final Map<ConduitBlockConnection, List<ConduitConnectionPath>> extractConnectionsByInsert = Maps
             .newHashMap();
-    private final Map<ConduitBlockConnection, List<ConduitBlockConnection>> insertConnectionsByExtract = Maps
+    private final Map<ConduitBlockConnection, List<ConduitConnectionPath>> insertConnectionsByExtract = Maps
             .newHashMap();
 
     private final ListMultimap<Integer, Holder<Conduit<?, ?>>> tickableConduits = ArrayListMultimap.create();
@@ -143,7 +148,7 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
 
     @Override
     public List<Holder<Conduit<?, ?>>> getTickableConduits(long gameTime, int tickOffset) {
-        if (!areTickableConduitsValid) {
+        if (!areTickableConduitsValid && nodeCountByConduit != null) {
             tickableConduits.clear();
 
             // Check all conduits to see if they can tick
@@ -213,7 +218,7 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
     }
 
     // This is sorted
-    public List<ConduitBlockConnection> blockConnectionsAccessibleFrom(ConduitBlockConnection connection) {
+    public List<ConduitConnectionPath> blockConnectionsAccessibleFrom(ConduitBlockConnection connection) {
         ensureNotDiscarded();
         Preconditions.checkState(supportsCaching, "This conduit does not support caching as it has no ticker!");
         return accessibleBlockConnectionsMap.getOrDefault(connection, List.of());
@@ -238,7 +243,7 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
     }
 
     // This is sorted
-    public List<ConduitBlockConnection> extractConnectionsFrom(ConduitBlockConnection insertConnection) {
+    public List<ConduitConnectionPath> extractConnectionsFrom(ConduitBlockConnection insertConnection) {
         ensureNotDiscarded();
         Preconditions.checkState(supportsCaching, "This conduit does not support caching as it has no ticker!");
         return extractConnectionsByInsert.getOrDefault(insertConnection, List.of());
@@ -257,7 +262,7 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
     }
 
     // This is sorted
-    public List<ConduitBlockConnection> insertConnectionsFrom(ConduitBlockConnection extractConnection) {
+    public List<ConduitConnectionPath> insertConnectionsFrom(ConduitBlockConnection extractConnection) {
         ensureNotDiscarded();
         Preconditions.checkState(supportsCaching, "This conduit does not support caching as it has no ticker!");
         return insertConnectionsByExtract.getOrDefault(extractConnection, List.of());
@@ -363,17 +368,17 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
             var connection = new ConduitBlockConnection(node, side);
             endpointConnections.put(node, connection);
 
-            // Add this connection to all other block connection's access maps
-            for (var connectionList : accessibleBlockConnectionsMap.values()) {
-                connectionList.add(connection);
-            }
-
             // Add own list of block connection accesses.
             accessibleBlockConnectionsMap.computeIfAbsent(connection,
                     k -> new ArrayList<>(endpointConnections.values().size()));
+
+            // Add all paths to both lists
             for (var accessibleConnection : endpointConnections.values()) {
                 if (accessibleConnection != connection) {
-                    accessibleBlockConnectionsMap.get(connection).add(accessibleConnection);
+                    findBestPathTo(connection, accessibleConnection).ifPresent(path -> {
+                        accessibleBlockConnectionsMap.get(connection).add(path);
+                        accessibleBlockConnectionsMap.get(accessibleConnection).add(path.reverse());
+                    });
                 }
             }
 
@@ -397,22 +402,20 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
                 // Now handle the mappings between them, do it after both are added in case we
                 // can self-feed.
                 if (canInsert) {
-                    extractConnectionsByInsert.computeIfAbsent(connection, k -> new ArrayList<>())
-                            .addAll(extractConnectionsByChannel.get(ioConnectionConfig.insertChannel()));
-
-                    for (var receiver : extractConnectionsByChannel.get(ioConnectionConfig.insertChannel())) {
-                        insertConnectionsByExtract.computeIfAbsent(receiver, k -> new ArrayList<>()).add(connection);
+                    for (var accessibleConnection : extractConnectionsByChannel.get(ioConnectionConfig.insertChannel())) {
+                        findBestPathTo(connection, accessibleConnection).ifPresent(path -> {
+                            extractConnectionsByInsert.computeIfAbsent(connection, k -> new ArrayList<>()).add(path);
+                            insertConnectionsByExtract.computeIfAbsent(accessibleConnection, k -> new ArrayList<>()).add(path.reverse());
+                        });
                     }
                 }
 
                 if (canExtract) {
-                    insertConnectionsByExtract.computeIfAbsent(connection, k -> new ArrayList<>())
-                            .addAll(insertConnectionsByChannel.get(ioConnectionConfig.extractChannel()));
-
-                    for (var sender : insertConnectionsByChannel.get(ioConnectionConfig.extractChannel())) {
-                        if (sender != connection) {
-                            extractConnectionsByInsert.computeIfAbsent(sender, k -> new ArrayList<>()).add(connection);
-                        }
+                    for (var accessibleConnection : insertConnectionsByChannel.get(ioConnectionConfig.extractChannel())) {
+                        findBestPathTo(connection, accessibleConnection).ifPresent(path -> {
+                            insertConnectionsByExtract.computeIfAbsent(connection, k -> new ArrayList<>()).add(path);
+                            extractConnectionsByInsert.computeIfAbsent(accessibleConnection, k -> new ArrayList<>()).add(path.reverse());
+                        });
                     }
                 }
             }
@@ -420,6 +423,47 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
             // All lists now require sorting
             haveConnectionsChanged = true;
         }
+    }
+
+    private Optional<ConduitConnectionPath> findBestPathTo(ConduitBlockConnection from, ConduitBlockConnection to) {
+        ConduitNode start = from.node();
+        ConduitNode goal = to.node();
+
+        // If start and goal are the same node, path length is 1 (include start only)
+        if (start.equals(goal)) {
+            return Optional.of(new ConduitConnectionPath(from, to, 1));
+        }
+
+        Queue<ConduitNode> queue = new LinkedList<>();
+        Set<ConduitNode> visited = new HashSet<>();
+        Map<ConduitNode, Integer> distance = new HashMap<>();
+
+        queue.add(start);
+        visited.add(start);
+        distance.put(start, 1);
+
+        while (!queue.isEmpty()) {
+            ConduitNode current = queue.poll();
+            int currentDist = distance.get(current);
+
+            // Traverse neighbors
+            for (ConduitNode neighbor : neighbors(current)) {
+                if (!visited.contains(neighbor)) {
+                    visited.add(neighbor);
+                    queue.add(neighbor);
+                    distance.put(neighbor, currentDist + 1);
+
+                    // If neighbor is goal, return result
+                    if (neighbor.equals(goal)) {
+                        return Optional.of(new ConduitConnectionPath(from, to, currentDist + 1));
+                    }
+                }
+            }
+        }
+
+        // No path found
+        // Shouldn't ever reach this point to be frank.
+        return Optional.empty();
     }
 
     private void removeTickingNode(ConduitNodeImpl node) {
@@ -541,8 +585,8 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
         haveConnectionsChanged = false;
     }
 
-    private void sortConnections(ConduitBlockConnection ref, List<ConduitBlockConnection> connections) {
-        connections.sort((a, b) -> conduitType.connectionComparerFromReference().compare(ref, a, b));
+    private void sortConnections(ConduitBlockConnection ref, List<ConduitConnectionPath> connections) {
+        connections.sort((a, b) -> conduitType.connectionPathComparator().compare(a, b));
     }
 
     private void addNodeToPositionMaps(ConduitNodeImpl node, boolean isRebuild) {

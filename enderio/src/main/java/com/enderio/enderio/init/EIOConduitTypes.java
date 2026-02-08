@@ -5,7 +5,7 @@ import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContextType;
-import com.enderio.enderio.api.conduits.network.PriorityConnectionComparerFromReference;
+import com.enderio.enderio.api.conduits.network.PriorityConnectionPathComparator;
 import com.enderio.enderio.api.conduits.network.node.NodeDataType;
 import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataType;
 import com.enderio.enderio.content.conduits.legacy.LegacyFluidConduitData;
@@ -46,7 +46,7 @@ public class EIOConduitTypes {
                 b.connectionConfig(EnergyConduitConnectionConfig.TYPE).priority(),
                 a.connectionConfig(EnergyConduitConnectionConfig.TYPE).priority()))
             // TODO: Likely unused by energy conduits - review.
-            .connectionComparerFromReference(new PriorityConnectionComparerFromReference(conn ->
+            .connectionComparerFromReference(new PriorityConnectionPathComparator(conn ->
                 conn.node().getConnectionConfig(conn.connectionSide(), EnergyConduitConnectionConfig.TYPE).priority()))
             .build());
 
@@ -57,7 +57,7 @@ public class EIOConduitTypes {
         () -> ConduitType
             .builder(FluidConduit.CODEC, FluidConduitConnectionConfig.TYPE)
             .ticker(FluidConduitTicker.INSTANCE)
-            .connectionComparerFromReference(new PriorityConnectionComparerFromReference(conn -> {
+            .connectionComparerFromReference(new PriorityConnectionPathComparator(conn -> {
                 // TODO: Might just make all fluid conduits support priority for simplicity.
                 if (!conn.node().conduit(EIOConduitTypes.FLUID.get()).value().doesSupportPriority()) {
                     return null;
@@ -71,7 +71,7 @@ public class EIOConduitTypes {
         () -> ConduitType
             .builder(ItemConduit.CODEC, ItemConduitConnectionConfig.TYPE)
             .ticker(ItemConduitTicker.INSTANCE)
-            .connectionComparerFromReference(new PriorityConnectionComparerFromReference(conn ->
+            .connectionComparerFromReference(new PriorityConnectionPathComparator(conn ->
                 conn.node().getConnectionConfig(conn.connectionSide(), ItemConduitConnectionConfig.TYPE).priority()))
             .build());
 

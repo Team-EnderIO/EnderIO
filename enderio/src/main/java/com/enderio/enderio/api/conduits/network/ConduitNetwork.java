@@ -89,7 +89,7 @@ public interface ConduitNetwork {
      * @return all nodes that are accessible from the given {@code connection}, this list will not include {@code connection}. This will be in the conduit's specified order.
      * @implNote The list is ordered by {@link Conduit#compareNodes(ConduitBlockConnection, ConduitBlockConnection, ConduitBlockConnection)}.
      */
-    List<ConduitBlockConnection> blockConnectionsAccessibleFrom(ConduitBlockConnection connection);
+    List<ConduitConnectionPath> blockConnectionsAccessibleFrom(ConduitBlockConnection connection);
 
     /**
      * For this query to yield results, the conduit's connection config must be derived from {@link IOConnectionConfig}.
@@ -122,7 +122,7 @@ public interface ConduitNetwork {
      * @return all the receiving connections that are accessible to the {@code insertConnection}, in the conduit's specified order.
      * @implNote The list is ordered by {@link Conduit#compareNodes(ConduitBlockConnection, ConduitBlockConnection, ConduitBlockConnection)}.
      */
-    List<ConduitBlockConnection> extractConnectionsFrom(ConduitBlockConnection insertConnection);
+    List<ConduitConnectionPath> extractConnectionsFrom(ConduitBlockConnection insertConnection);
 
     /**
      * For this query to yield results, the conduit's connection config must be derived from {@link IOConnectionConfig}.
@@ -148,7 +148,7 @@ public interface ConduitNetwork {
      * @return all the sending connections that are accessible to the {@code extractConnection}, in the conduit's specified order.
      * @implNote The list is ordered by {@link Conduit#compareNodes(ConduitBlockConnection, ConduitBlockConnection, ConduitBlockConnection)}.
      */
-    List<ConduitBlockConnection> insertConnectionsFrom(ConduitBlockConnection extractConnection);
+    List<ConduitConnectionPath> insertConnectionsFrom(ConduitBlockConnection extractConnection);
 
     /**
      * @param type the context type to check for.

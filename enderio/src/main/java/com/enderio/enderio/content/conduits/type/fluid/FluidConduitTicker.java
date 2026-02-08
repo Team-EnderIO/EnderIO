@@ -2,8 +2,8 @@ package com.enderio.enderio.content.conduits.type.fluid;
 
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.conduits.Conduit;
-import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
+import com.enderio.enderio.api.conduits.network.ConduitConnectionPath;
 import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.enderio.enderio.api.conduits.ticker.ConduitTickerBase;
 import com.enderio.enderio.init.EIOConduitTypes;
@@ -35,8 +35,8 @@ public class FluidConduitTicker extends ConduitTickerBase<FluidConduit> {
         boolean hadMultiFluid = false;
         for (var channel : network.allChannels()) {
             for (var extractConnection : network.extractConnections(channel)) {
-                var insertConnections = network.insertConnectionsFrom(extractConnection);
-                if (insertConnections.isEmpty()) {
+                var insertPaths = network.insertConnectionsFrom(extractConnection);
+                if (insertPaths.isEmpty()) {
                     continue;
                 }
 
@@ -51,7 +51,7 @@ public class FluidConduitTicker extends ConduitTickerBase<FluidConduit> {
                 hadMultiFluid |= extractConduit.value().isMultiFluid();
 
                 if (!context.lockedFluid().isSame(Fluids.EMPTY)) {
-                    doFluidTransfer(context.lockedFluid(), fluidRate, extractConnection, insertConnections);
+                    doFluidTransfer(context.lockedFluid(), fluidRate, extractConnection, insertPaths);
                 } else {
                     int remaining = fluidRate;
 
@@ -61,7 +61,7 @@ public class FluidConduitTicker extends ConduitTickerBase<FluidConduit> {
                         }
 
                         Fluid fluid = extractHandler.getFluidInTank(i).getFluid();
-                        remaining = doFluidTransfer(fluid, remaining, extractConnection, insertConnections);
+                        remaining = doFluidTransfer(fluid, remaining, extractConnection, insertPaths);
 
                         if (!extractConduit.value().isMultiFluid() && remaining < fluidRate) {
                             if (fluid instanceof FlowingFluid flowing) {
@@ -88,7 +88,7 @@ public class FluidConduitTicker extends ConduitTickerBase<FluidConduit> {
     }
 
     private int doFluidTransfer(Fluid fluid, int maxTransfer, ConduitBlockConnection extractConnection,
-        List<ConduitBlockConnection> insertConnections) {
+        List<ConduitConnectionPath> insertPaths) {
         var extractHandler = Objects
             .requireNonNull(extractConnection.getSidedCapability(Capabilities.FluidHandler.BLOCK));
 
@@ -112,7 +112,9 @@ public class FluidConduitTicker extends ConduitTickerBase<FluidConduit> {
         }
 
         // Insert into any available blocks
-        for (var insertConnection : insertConnections) {
+        for (var insertPath : insertPaths) {
+            var insertConnection = insertPath.end();
+
             IFluidHandler insertHandler = insertConnection.getSidedCapability(Capabilities.FluidHandler.BLOCK);
             if (insertHandler == null) {
                 continue;

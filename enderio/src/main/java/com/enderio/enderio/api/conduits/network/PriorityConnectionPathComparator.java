@@ -2,19 +2,22 @@ package com.enderio.enderio.api.conduits.network;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Comparator;
 import java.util.function.Function;
 
 /**
- * Attempts to compare by priority (if present), then falls back on {@link DefaultConnectionComparerFromReference}.
+ * Attempts to compare by priority (if present), then falls back on {@link DefaultConnectionPathComparator}.
  */
-public record PriorityConnectionComparerFromReference(
+public record PriorityConnectionPathComparator(
     Function<ConduitBlockConnection, @Nullable Integer> priorityGetter
-) implements IConnectionComparerFromReference {
+) implements Comparator<ConduitConnectionPath> {
 
     @Override
-    public int compare(ConduitBlockConnection refConnection, ConduitBlockConnection connectionA, ConduitBlockConnection connectionB) {
-        Integer priorityA = priorityGetter.apply(connectionA);
-        Integer priorityB = priorityGetter.apply(connectionB);
+    public int compare(ConduitConnectionPath pathA, ConduitConnectionPath pathB) {
+        // We use INPUT priority.
+        // TODO: Make this more clear.
+        Integer priorityA = priorityGetter.apply(pathA.end());
+        Integer priorityB = priorityGetter.apply(pathB.end());
 
         // If one priority is null and the other isn't, sort the non-null one above the null one.
         if (priorityA == null && priorityB != null) {
@@ -29,6 +32,6 @@ public record PriorityConnectionComparerFromReference(
             return Integer.compare(priorityB, priorityA);
         }
 
-        return DefaultConnectionComparerFromReference.INSTANCE.compare(refConnection, connectionA, connectionB);
+        return DefaultConnectionPathComparator.INSTANCE.compare(pathA, pathB);
     }
 }

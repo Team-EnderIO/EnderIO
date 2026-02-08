@@ -27,8 +27,8 @@ public class ItemConduitTicker extends ConduitTickerBase<ItemConduit> {
     protected void tickNetwork(ServerLevel level, ConduitNetwork network, List<Holder<Conduit<?, ?>>> tickableConduits) {
         for (var channel : network.allChannels()) {
             toNextExtract: for (var extractConnection : network.extractConnections(channel)) {
-                var insertConnections = network.insertConnectionsFrom(extractConnection);
-                if (insertConnections.isEmpty()) {
+                var insertPaths = network.insertConnectionsFrom(extractConnection);
+                if (insertPaths.isEmpty()) {
                     continue;
                 }
 
@@ -73,14 +73,15 @@ public class ItemConduitTicker extends ConduitTickerBase<ItemConduit> {
                     int startingIndex = 0;
                     if (connectionConfig.isRoundRobin()) {
                         startingIndex = nodeData.getIndex(extractConnection.connectionSide());
-                        if (insertConnections.size() <= startingIndex) {
+                        if (insertPaths.size() <= startingIndex) {
                             startingIndex = 0;
                         }
                     }
 
-                    for (int j = startingIndex; j < startingIndex + insertConnections.size(); j++) {
-                        int senderIndex = j % insertConnections.size();
-                        var insertConnection = insertConnections.get(senderIndex);
+                    for (int j = startingIndex; j < startingIndex + insertPaths.size(); j++) {
+                        int senderIndex = j % insertPaths.size();
+                        var insertPath = insertPaths.get(senderIndex);
+                        var insertConnection = insertPath.end();
 
                         var insertHandler = insertConnection.getSidedCapability(Capabilities.ItemHandler.BLOCK);
                         if (insertHandler == null) {
