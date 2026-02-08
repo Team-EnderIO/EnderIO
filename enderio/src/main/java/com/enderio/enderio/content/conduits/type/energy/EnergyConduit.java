@@ -4,6 +4,8 @@ import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.ConnectionStatus;
+import com.enderio.enderio.api.conduits.connection.path.ConnectionPathProperty;
+import com.enderio.enderio.api.conduits.connection.path.ConnectionPathPropertyConsumer;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.content.conduits.ConduitLang;
@@ -36,7 +38,7 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
                     ComponentSerialization.CODEC.fieldOf("description").forGetter(Conduit::description),
                     Codec.INT.fieldOf("transfer_rate").forGetter(EnergyConduit::transferRatePerTick))
             .apply(builder, EnergyConduit::new));
-
+    
     @Override
     public ConduitType<EnergyConduit, EnergyConduitConnectionConfig> type() {
         return EIOConduitTypes.ENERGY.get();
@@ -63,13 +65,6 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
         IEnergyStorage capability = level.getCapability(Capabilities.EnergyStorage.BLOCK,
                 conduitPos.relative(direction), direction.getOpposite());
         return capability != null;
-    }
-
-    @Override
-    public boolean canConnectToConduit(EnergyConduit other) {
-        // TODO: Temp - will be the default soon.
-        // Always allow energy conduits of different tiers to connect.
-        return true;
     }
 
     @Override
