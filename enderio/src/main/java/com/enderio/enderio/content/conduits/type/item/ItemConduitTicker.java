@@ -3,9 +3,11 @@ package com.enderio.enderio.content.conduits.type.item;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
+import com.enderio.enderio.api.conduits.connection.path.ConduitConnectionPath;
 import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.enderio.enderio.api.conduits.ticker.ConduitTickerBase;
 import com.enderio.enderio.init.EIOConduitTypes;
+import com.google.common.collect.Maps;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
@@ -14,6 +16,7 @@ import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 import java.util.List;
+import java.util.Map;
 
 public class ItemConduitTicker extends ConduitTickerBase<ItemConduit> {
 
@@ -26,6 +29,8 @@ public class ItemConduitTicker extends ConduitTickerBase<ItemConduit> {
     @Override
     protected void tickNetwork(ServerLevel level, ConduitNetwork network, List<Holder<Conduit<?, ?>>> tickableConduits) {
         for (var channel : network.allChannels()) {
+            Map<ConduitConnectionPath, Integer> insertedPerPath = Maps.newHashMap();
+
             toNextExtract: for (var extractConnection : network.extractConnections(channel)) {
                 var insertPaths = network.insertConnectionsFrom(extractConnection);
                 if (insertPaths.isEmpty()) {
@@ -83,6 +88,13 @@ public class ItemConduitTicker extends ConduitTickerBase<ItemConduit> {
                         var insertPath = insertPaths.get(senderIndex);
                         var insertConnection = insertPath.end();
 
+                        final int maxSpeed = insertPath.property(ItemConduit.PATH_MAX_TRANSFER_RATE);
+
+                        // Skip if we've already inserted enough for this path.
+                        if (insertedPerPath.getOrDefault(insertPath, 0) >= maxSpeed) {
+                            continue;
+                        }
+
                         var insertHandler = insertConnection.getSidedCapability(Capabilities.ItemHandler.BLOCK);
                         if (insertHandler == null) {
                             continue;
@@ -97,10 +109,7 @@ public class ItemConduitTicker extends ConduitTickerBase<ItemConduit> {
 
                         ItemStack itemToInsert = extractedItem.copy();
 
-                        // Restrict to the speed of the inserting conduit.
-                        // TODO: When we add path speeds, we'll restrict to the path speed instead.
-                        var insertConduit = insertConnection.node().conduit(conduitType());
-                        int maxSpeed = insertConduit.value().transferRatePerCycle();
+                        // Restrict to the speed of the path.
                         if (itemToInsert.getCount() > maxSpeed) {
                             itemToInsert.setCount(maxSpeed);
                         }
@@ -123,6 +132,10 @@ public class ItemConduitTicker extends ConduitTickerBase<ItemConduit> {
                         if (successfullyInserted > 0) {
                             extracted += successfullyInserted;
                             extractHandler.extractItem(i, successfullyInserted, false);
+
+                            // Track how much was inserted through this path.
+                            insertedPerPath.compute(insertPath, (k, v) -> v == null ? successfullyInserted : v + successfullyInserted);
+
                             if (extracted >= speed || isEmpty(extractHandler, i + 1)) {
                                 if (connectionConfig.isRoundRobin()) {
                                     nodeData.setIndex(extractConnection.connectionSide(), senderIndex + 1);

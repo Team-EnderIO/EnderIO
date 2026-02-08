@@ -40,6 +40,17 @@ public final class ConduitConnectionPath {
         return (T) properties.get(property);
     }
 
+    @SuppressWarnings("unchecked")
+    public <T> T propertyOrDefault(ConnectionPathProperty<T> property, T defaultValue) {
+        Objects.requireNonNull(property);
+
+        if (!properties.containsKey(property)) {
+            return defaultValue;
+        }
+
+        return (T) properties.get(property);
+    }
+
     public ConduitConnectionPath reverse() {
         return new ConduitConnectionPath(end, start, length, properties);
     }

@@ -7,6 +7,8 @@ import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.api.conduits.bundle.SlotType;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
+import com.enderio.enderio.api.conduits.connection.path.ConnectionPathProperty;
+import com.enderio.enderio.api.conduits.connection.path.ConnectionPathPropertyConsumer;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataAccessor;
 import com.enderio.enderio.api.io.RedstoneControl;
@@ -52,6 +54,8 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
                                     .forGetter(ItemConduit::networkTickRate))
                     .apply(builder, ItemConduit::new));
 
+    public static ConnectionPathProperty<Integer> PATH_MAX_TRANSFER_RATE = ConnectionPathProperty.minInt();
+
     @Override
     public ConduitType<ItemConduit, ItemConduitConnectionConfig> type() {
         return EIOConduitTypes.ITEM.get();
@@ -65,6 +69,16 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
     @Override
     public boolean canReplaceConduit(ItemConduit otherConduit) {
         return compareTo(otherConduit) > 0;
+    }
+
+    @Override
+    public boolean canConnectToConduit(ItemConduit other) {
+        return true;
+    }
+
+    @Override
+    public void collectNodePathProperties(ConduitNode node, ConnectionPathPropertyConsumer consumer) {
+        consumer.accept(PATH_MAX_TRANSFER_RATE, transferRatePerCycle());
     }
 
     @Override
