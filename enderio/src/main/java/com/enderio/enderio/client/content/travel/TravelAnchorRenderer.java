@@ -105,13 +105,15 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             float scale = (float) doubleScale;
 
             Quaternionf textRotation = Axis.YN.rotationDegrees(playerLookRotation.y)
-                    .mul(Axis.XP.rotationDegrees(playerLookRotation.x));
+                .mul(Axis.XP.rotationDegrees(playerLookRotation.x));
             Vec3 offset = playerOffsetNormalized.scale(1.25);
+            int lineHeight = Minecraft.getInstance().font.lineHeight;
 
             poseStack.pushPose();
             poseStack.translate(offset.x() + 0.5,
-                    offset.y() + 1.05 + (doubleScale * Minecraft.getInstance().font.lineHeight), offset.z() + 0.5);
+                    offset.y() + (doubleScale * lineHeight), offset.z() + 0.5);
             poseStack.mulPose(textRotation);
+            poseStack.translate(0, 1.5, 0);
             poseStack.scale(-scale, -scale, scale);
 
             Matrix4f matrix4f = poseStack.last().pose();
@@ -121,10 +123,10 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             int alpha = (int) (textOpacitySetting * 255) << 24;
             float halfWidth = (float) (-minecraft.font.width(tc) / 2);
 
-            minecraft.font.drawInBatch(tc, halfWidth, 0, color, false, matrix4f, buffer, Font.DisplayMode.SEE_THROUGH,
-                    alpha, LightTexture.pack(15, 15));
             minecraft.font.drawInBatch(tc, halfWidth, 0, color, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0,
                     LightTexture.pack(15, 15));
+            minecraft.font.drawInBatch(tc, halfWidth, 0, color, false, matrix4f, buffer, Font.DisplayMode.SEE_THROUGH,
+                    alpha, LightTexture.pack(15, 15));
             poseStack.popPose();
         }
 
