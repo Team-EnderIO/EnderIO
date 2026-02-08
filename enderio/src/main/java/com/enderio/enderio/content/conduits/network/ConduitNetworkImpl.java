@@ -723,9 +723,10 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
             context = other.context;
         }
 
-        // Merge node counts
-        for (var entry : other.nodeCountByConduit.entrySet()) {
-            nodeCountByConduit.merge(entry.getKey(), entry.getValue(), Integer::sum);
+        // Fully recompute node counts
+        nodeCountByConduit.clear();
+        for (var node : nodes()) {
+            nodeCountByConduit.compute(node.conduit(), (k, count) -> count == null ? 1 : count + 1);
         }
 
         // The cache will need to be rebuilt
