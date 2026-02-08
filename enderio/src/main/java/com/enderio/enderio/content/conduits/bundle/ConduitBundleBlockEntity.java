@@ -714,16 +714,6 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
 
         neighborBundle.disconnect(neighborConduit, side.getOpposite());
-
-        // TODO: Do we need an equivalent to this?
-//        if (level instanceof ServerLevel serverLevel) {
-//            if (neighborBundle.hasConduitByType(conduit)) {
-//                Optional.of(neighborBundle.getConduitNode(conduit))
-//                        .map(ConduitGraphObject::getGraph)
-//                        .filter(Objects::nonNull)
-//                        .ifPresent(graph -> ConduitSavedData.addPotentialGraph(conduit, graph, serverLevel));
-//            }
-//        }
     }
 
     private void dropItem(ItemStack stack) {

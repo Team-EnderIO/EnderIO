@@ -7,8 +7,6 @@ import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.api.conduits.bundle.SlotType;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
-import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
-import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataAccessor;
 import com.enderio.enderio.api.io.RedstoneControl;

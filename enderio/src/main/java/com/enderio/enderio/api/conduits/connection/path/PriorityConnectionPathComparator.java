@@ -1,5 +1,6 @@
-package com.enderio.enderio.api.conduits.network;
+package com.enderio.enderio.api.conduits.connection.path;
 
+import com.enderio.enderio.api.conduits.connection.ConduitBlockConnection;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;

@@ -5,8 +5,10 @@ import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.config.IOConnectionConfig;
-import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
-import com.enderio.enderio.api.conduits.network.ConduitConnectionPath;
+import com.enderio.enderio.api.conduits.connection.ConduitBlockConnection;
+import com.enderio.enderio.api.conduits.connection.path.ConduitConnectionPath;
+import com.enderio.enderio.api.conduits.connection.path.ConnectionPathProperty;
+import com.enderio.enderio.api.conduits.connection.path.ConnectionPathPropertyConsumer;
 import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContext;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContextType;
@@ -439,41 +441,80 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
         ConduitNode start = from.node();
         ConduitNode goal = to.node();
 
-        // If start and goal are the same node, path length is 1 (include start only)
+        Map<ConnectionPathProperty<?>, List<Object>> startAggregates = createAggregateMap(collectNodePathProperties(start));
         if (start.equals(goal)) {
-            return Optional.of(new ConduitConnectionPath(from, to, 1));
+            return Optional.of(new ConduitConnectionPath(from, to, 1, aggregatePropertyValues(startAggregates)));
         }
 
         Queue<ConduitNode> queue = new LinkedList<>();
         Set<ConduitNode> visited = new HashSet<>();
         Map<ConduitNode, Integer> distance = new HashMap<>();
+        Map<ConduitNode, Map<ConnectionPathProperty<?>, List<Object>>> aggregateProperties = new HashMap<>();
 
         queue.add(start);
         visited.add(start);
         distance.put(start, 1);
+        aggregateProperties.put(start, startAggregates);
 
         while (!queue.isEmpty()) {
             ConduitNode current = queue.poll();
             int currentDist = distance.get(current);
 
-            // Traverse neighbors
             for (ConduitNode neighbor : neighbors(current)) {
-                if (!visited.contains(neighbor)) {
-                    visited.add(neighbor);
-                    queue.add(neighbor);
-                    distance.put(neighbor, currentDist + 1);
+                if (visited.contains(neighbor)) {
+                    continue;
+                }
 
-                    // If neighbor is goal, return result
-                    if (neighbor.equals(goal)) {
-                        return Optional.of(new ConduitConnectionPath(from, to, currentDist + 1));
-                    }
+                visited.add(neighbor);
+                queue.add(neighbor);
+                distance.put(neighbor, currentDist + 1);
+
+                Map<ConnectionPathProperty<?>, List<Object>> neighborAggregate = duplicatePropertyMap(aggregateProperties.get(current));
+                mergePropertyMap(neighborAggregate, collectNodePathProperties(neighbor));
+                aggregateProperties.put(neighbor, neighborAggregate);
+
+                if (neighbor.equals(goal)) {
+                    return Optional.of(new ConduitConnectionPath(from, to, currentDist + 1, aggregatePropertyValues(neighborAggregate)));
                 }
             }
         }
 
-        // No path found
-        // Shouldn't ever reach this point to be frank.
         return Optional.empty();
+    }
+
+    private Map<ConnectionPathProperty<?>, Object> collectNodePathProperties(ConduitNode node) {
+        Map<ConnectionPathProperty<?>, Object> values = Maps.newHashMap();
+        node.conduit().value().collectNodePathProperties(node, values::put);
+        return values;
+    }
+
+    private Map<ConnectionPathProperty<?>, List<Object>> createAggregateMap(Map<ConnectionPathProperty<?>, Object> nodeProperties) {
+        Map<ConnectionPathProperty<?>, List<Object>> aggregateMap = Maps.newHashMap();
+        nodeProperties.forEach((property, value) -> aggregateMap.put(property, new ArrayList<>(List.of(value))));
+        return aggregateMap;
+    }
+
+    private Map<ConnectionPathProperty<?>, List<Object>> duplicatePropertyMap(Map<ConnectionPathProperty<?>, List<Object>> source) {
+        Map<ConnectionPathProperty<?>, List<Object>> copy = Maps.newHashMap();
+        if (source != null) {
+            source.forEach((property, list) -> copy.put(property, new ArrayList<>(list)));
+        }
+        return copy;
+    }
+
+    private void mergePropertyMap(Map<ConnectionPathProperty<?>, List<Object>> target, Map<ConnectionPathProperty<?>, Object> additions) {
+        additions.forEach((property, value) -> target.computeIfAbsent(property, k -> new ArrayList<>()).add(value));
+    }
+
+    private Map<ConnectionPathProperty<?>, Object> aggregatePropertyValues(Map<ConnectionPathProperty<?>, List<Object>> aggregatedLists) {
+        Map<ConnectionPathProperty<?>, Object> aggregatedValues = Maps.newHashMap();
+        aggregatedLists.forEach((property, values) -> aggregatedValues.put(property, aggregateProperty(property, values)));
+        return aggregatedValues;
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    private static Object aggregateProperty(ConnectionPathProperty property, List<Object> values) {
+        return property.aggregate(values);
     }
 
     private void removeTickingNode(ConduitNodeImpl node) {

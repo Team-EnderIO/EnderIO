@@ -1,4 +1,4 @@
-package com.enderio.enderio.api.conduits.network;
+package com.enderio.enderio.api.conduits.connection.path;
 
 import java.util.Comparator;
 

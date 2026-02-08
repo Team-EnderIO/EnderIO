@@ -4,8 +4,7 @@ import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.api.conduits.bundle.SlotType;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
-import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
-import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
+import com.enderio.enderio.api.conduits.connection.path.ConnectionPathPropertyConsumer;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataAccessor;
 import com.enderio.enderio.api.conduits.screen.ConduitScreenType;
@@ -33,7 +32,6 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 
-import java.util.Comparator;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -91,6 +89,9 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
     default <TCapability, TContext> TCapability proxyCapability(Level level, @Nullable ConduitNode node,
             BlockCapability<TCapability, TContext> capability, @Nullable TContext context) {
         return null;
+    }
+
+    default void collectNodePathProperties(ConduitNode node, ConnectionPathPropertyConsumer consumer) {
     }
 
     // region Conduit Checks

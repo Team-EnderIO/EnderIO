@@ -5,7 +5,7 @@ import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContextType;
-import com.enderio.enderio.api.conduits.network.PriorityConnectionPathComparator;
+import com.enderio.enderio.api.conduits.connection.path.PriorityConnectionPathComparator;
 import com.enderio.enderio.api.conduits.network.node.NodeDataType;
 import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataType;
 import com.enderio.enderio.content.conduits.legacy.LegacyFluidConduitData;

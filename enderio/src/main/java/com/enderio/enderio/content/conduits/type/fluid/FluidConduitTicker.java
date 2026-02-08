@@ -2,8 +2,8 @@ package com.enderio.enderio.content.conduits.type.fluid;
 
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.conduits.Conduit;
-import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
-import com.enderio.enderio.api.conduits.network.ConduitConnectionPath;
+import com.enderio.enderio.api.conduits.connection.ConduitBlockConnection;
+import com.enderio.enderio.api.conduits.connection.path.ConduitConnectionPath;
 import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.enderio.enderio.api.conduits.ticker.ConduitTickerBase;
 import com.enderio.enderio.init.EIOConduitTypes;

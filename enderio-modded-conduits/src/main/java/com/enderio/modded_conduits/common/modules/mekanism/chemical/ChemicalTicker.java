@@ -1,9 +1,8 @@
 package com.enderio.modded_conduits.common.modules.mekanism.chemical;
 
 import com.enderio.enderio.api.conduits.Conduit;
-import com.enderio.enderio.api.conduits.ConduitType;
-import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
-import com.enderio.enderio.api.conduits.network.ConduitConnectionPath;
+import com.enderio.enderio.api.conduits.connection.ConduitBlockConnection;
+import com.enderio.enderio.api.conduits.connection.path.ConduitConnectionPath;
 import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.enderio.enderio.api.conduits.ticker.ConduitTickerBase;
 import com.enderio.modded_conduits.common.modules.mekanism.MekanismModule;
