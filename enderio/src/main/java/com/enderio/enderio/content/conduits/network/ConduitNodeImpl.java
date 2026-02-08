@@ -70,13 +70,6 @@ public final class ConduitNodeImpl implements INetworkNode<ConduitNetworkImpl, C
         this.network = new ConduitNetworkImpl(conduit.value().type(), this);
     }
 
-    public ConduitNodeImpl(Holder<Conduit<?, ?>> conduit, BlockPos pos, Optional<NodeData> nodeData) {
-        this.conduit = conduit;
-        this.pos = pos;
-        this.nodeData = nodeData.orElse(null);
-        this.network = new ConduitNetworkImpl(conduit.value().type(), this);
-    }
-
     public ConduitNodeImpl(Holder<Conduit<?, ?>> conduit, BlockPos pos, ConduitDataContainer legacyDataContainer) {
         this(conduit, pos, (NodeData) null);
 
@@ -87,6 +80,12 @@ public final class ConduitNodeImpl implements INetworkNode<ConduitNetworkImpl, C
             this.legacyDataContainer = legacyDataContainer;
             this.nodeData = oldData.toNodeData();
         }
+    }
+
+    private ConduitNodeImpl(Holder<Conduit<?, ?>> conduit, BlockPos pos, Optional<NodeData> nodeData) {
+        this.conduit = conduit;
+        this.pos = pos;
+        this.nodeData = nodeData.orElse(null);
     }
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
