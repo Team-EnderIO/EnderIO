@@ -8,12 +8,14 @@ import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.enderio.enderio.api.conduits.ticker.ConduitTickerBase;
 import com.enderio.enderio.init.EIOConduitTypes;
 import com.google.common.collect.Maps;
+import com.mojang.logging.LogUtils;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
+import org.slf4j.Logger;
 
 import java.util.List;
 import java.util.Map;
@@ -136,10 +138,11 @@ public class ItemConduitTicker extends ConduitTickerBase<ItemConduit> {
                             // Track how much was inserted through this path.
                             insertedPerPath.compute(insertPath, (k, v) -> v == null ? successfullyInserted : v + successfullyInserted);
 
+                            if (connectionConfig.isRoundRobin()) {
+                                nodeData.setIndex(extractConnection.connectionSide(), senderIndex + 1);
+                            }
+
                             if (extracted >= speed || isEmpty(extractHandler, i + 1)) {
-                                if (connectionConfig.isRoundRobin()) {
-                                    nodeData.setIndex(extractConnection.connectionSide(), senderIndex + 1);
-                                }
                                 continue toNextExtract;
                             } else {
                                 continue nextItem;

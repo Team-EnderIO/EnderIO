@@ -8,7 +8,6 @@ import com.enderio.enderio.api.conduits.connection.config.IOConnectionConfig;
 import com.enderio.enderio.api.conduits.connection.ConduitBlockConnection;
 import com.enderio.enderio.api.conduits.connection.path.ConduitConnectionPath;
 import com.enderio.enderio.api.conduits.connection.path.ConnectionPathProperty;
-import com.enderio.enderio.api.conduits.connection.path.ConnectionPathPropertyConsumer;
 import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContext;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContextType;
@@ -553,15 +552,15 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
 
             // Remove this connection from other maps
             for (var list : accessibleBlockConnectionsMap.values()) {
-                list.remove(connection);
+                list.removeIf(p -> p.start() == connection || p.end() == connection);
             }
 
             for (var list : extractConnectionsByInsert.values()) {
-                list.remove(connection);
+                list.removeIf(p -> p.start() == connection || p.end() == connection);
             }
 
             for (var list : insertConnectionsByExtract.values()) {
-                list.remove(connection);
+                list.removeIf(p -> p.start() == connection || p.end() == connection);
             }
 
             haveConnectionsChanged = true;
@@ -584,16 +583,16 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
             extractConnections.sort(basicConnectionComparator);
         }
 
-        for (var entry : accessibleBlockConnectionsMap.entrySet()) {
-            sortConnections(entry.getKey(), entry.getValue());
+        for (var connectionsList : accessibleBlockConnectionsMap.values()) {
+            connectionsList.sort(conduitType.connectionPathComparator());
         }
 
-        for (var entry : extractConnectionsByInsert.entrySet()) {
-            sortConnections(entry.getKey(), entry.getValue());
+        for (var connectionsList : extractConnectionsByInsert.values()) {
+            connectionsList.sort(conduitType.connectionPathComparator());
         }
 
-        for (var entry : insertConnectionsByExtract.entrySet()) {
-            sortConnections(entry.getKey(), entry.getValue());
+        for (var connectionsList : insertConnectionsByExtract.values()) {
+            connectionsList.sort(conduitType.connectionPathComparator());
         }
 
         haveConnectionsChanged = false;
@@ -645,10 +644,6 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
         // Rebuild complete
         shouldRebuildCache = false;
         haveConnectionsChanged = false;
-    }
-
-    private void sortConnections(ConduitBlockConnection ref, List<ConduitConnectionPath> connections) {
-        connections.sort((a, b) -> conduitType.connectionPathComparator().compare(a, b));
     }
 
     private void addNodeToPositionMaps(ConduitNodeImpl node, boolean isRebuild) {

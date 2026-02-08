@@ -172,8 +172,14 @@ public class ItemConduitTests {
             .thenExecute(() -> helper.insertIntoContainer(2, 1, 0, Items.DIRT, transferRate * 2))
             // Ensure the max transfer amount reaches the closest chest first, then the
             // second chest
-            .thenExecuteAfter(tickRate, () -> helper.assertContainerHasExactly(2, 1, 2, Items.DIRT, transferRate))
-            .thenExecuteAfter(tickRate, () -> helper.assertContainerHasExactly(0, 1, 2, Items.DIRT, transferRate))
+            .thenExecuteAfter(tickRate, () -> {
+                helper.assertContainerHasExactly(2, 1, 2, Items.DIRT, transferRate);
+                helper.assertContainerEmpty(0, 1, 2);
+            })
+            .thenExecuteAfter(tickRate, () -> {
+                helper.assertContainerHasExactly(2, 1, 2, Items.DIRT, transferRate);
+                helper.assertContainerHasExactly(0, 1, 2, Items.DIRT, transferRate);
+            })
             // Place an item into the first chest
             .thenSucceed();
     }

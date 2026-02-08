@@ -1,8 +1,16 @@
 package com.enderio.enderio.api.conduits.connection.path;
 
+import org.jetbrains.annotations.ApiStatus;
+
 import java.util.List;
 import java.util.function.Function;
 
+/**
+ * Represents a connection path property, and explains how values from an entire path should be aggregated.
+ * Provides some helpers for creating integer properties.
+ * @param <T> the value type of the property
+ */
+@ApiStatus.AvailableSince("8.1.0")
 public class ConnectionPathProperty<T> {
     private final Function<List<T>, T> aggregator;
 

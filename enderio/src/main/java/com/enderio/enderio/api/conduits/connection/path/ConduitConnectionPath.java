@@ -1,10 +1,17 @@
 package com.enderio.enderio.api.conduits.connection.path;
 
 import com.enderio.enderio.api.conduits.connection.ConduitBlockConnection;
+import com.enderio.enderio.api.conduits.network.node.ConduitNode;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Provides information about the path between two {@link ConduitBlockConnection}s.
+ * Contains the length of the path and any properties gathered from {@link com.enderio.enderio.api.conduits.Conduit#collectNodePathProperties(ConduitNode, ConnectionPathPropertyConsumer)}
+ */
+@ApiStatus.AvailableSince("8.1.0")
 public final class ConduitConnectionPath {
     private final ConduitBlockConnection start;
     private final ConduitBlockConnection end;
@@ -54,6 +61,4 @@ public final class ConduitConnectionPath {
     public ConduitConnectionPath reverse() {
         return new ConduitConnectionPath(end, start, length, properties);
     }
-
-    // TODO: Metadata (max speed etc.)
 }

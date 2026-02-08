@@ -23,8 +23,15 @@ import java.util.Set;
  */
 @ApiStatus.AvailableSince("8.0.0")
 public interface ConduitNetwork {
+    /**
+     * @return the {@link ConduitType} that this network contains.
+     */
+    @ApiStatus.AvailableSince("8.1.0")
     ConduitType<?, ?> conduitType();
 
+    /**
+     * @return set of {@link Holder<Conduit>>}'s represented by the network.
+     */
     @ApiStatus.AvailableSince("8.1.0")
     Set<Holder<Conduit<?, ?>>> conduits();
 
@@ -44,6 +51,7 @@ public interface ConduitNetwork {
      * @implNote This list will be cached, so it's reasonably fast to query.
      */
     @ApiStatus.Experimental
+    @ApiStatus.AvailableSince("8.1.0")
     List<Holder<Conduit<?, ?>>> getTickableConduits(long gameTime, int tickOffset);
 
     /**
