@@ -7,6 +7,8 @@ import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.api.conduits.bundle.SlotType;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
+import com.enderio.enderio.api.conduits.connection.path.ConnectionPathProperty;
+import com.enderio.enderio.api.conduits.connection.path.ConnectionPathPropertyConsumer;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataAccessor;
 import com.enderio.enderio.api.io.RedstoneControl;
@@ -55,6 +57,8 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
                                 Codec.BOOL.optionalFieldOf("does_support_priority", false).forGetter(FluidConduit::doesSupportPriority))
                             .apply(builder, FluidConduit::new));
 
+    public static ConnectionPathProperty<Integer> PATH_MAX_TRANSFER_RATE = ConnectionPathProperty.minInt();
+
     @Override
     public ConduitType<FluidConduit, FluidConduitConnectionConfig> type() {
         return EIOConduitTypes.FLUID.get();
@@ -73,6 +77,16 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
     @Override
     public boolean hasServerConnectionChecks() {
         return !isMultiFluid();
+    }
+
+    @Override
+    public boolean canConnectToConduit(FluidConduit other) {
+        return other.isMultiFluid() == isMultiFluid();
+    }
+
+    @Override
+    public void collectNodePathProperties(ConduitNode node, ConnectionPathPropertyConsumer consumer) {
+        consumer.accept(PATH_MAX_TRANSFER_RATE, transferRatePerTick());
     }
 
     @Override

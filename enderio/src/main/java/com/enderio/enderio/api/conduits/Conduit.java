@@ -29,6 +29,7 @@ import net.minecraft.world.item.component.TooltipProvider;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import org.apache.commons.lang3.NotImplementedException;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 
@@ -91,6 +92,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
         return null;
     }
 
+    @ApiStatus.AvailableSince("8.1.0")
     default void collectNodePathProperties(ConduitNode node, ConnectionPathPropertyConsumer consumer) {
     }
 

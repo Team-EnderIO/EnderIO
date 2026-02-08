@@ -28,9 +28,9 @@ public class ItemConduitTicker extends ConduitTickerBase<ItemConduit> {
 
     @Override
     protected void tickNetwork(ServerLevel level, ConduitNetwork network, List<Holder<Conduit<?, ?>>> tickableConduits) {
-        for (var channel : network.allChannels()) {
-            Map<ConduitConnectionPath, Integer> insertedPerPath = Maps.newHashMap();
+        Map<ConduitConnectionPath, Integer> insertedPerPath = Maps.newHashMap();
 
+        for (var channel : network.allChannels()) {
             toNextExtract: for (var extractConnection : network.extractConnections(channel)) {
                 var insertPaths = network.insertConnectionsFrom(extractConnection);
                 if (insertPaths.isEmpty()) {
