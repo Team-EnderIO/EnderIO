@@ -214,18 +214,21 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
     public Collection<ConduitNodeImpl> tickingNodes() {
         ensureNotDiscarded();
         Preconditions.checkState(supportsCaching, "This conduit does not support caching as it has no ticker!");
+        ensureCachesReady();
         return Collections.unmodifiableCollection(tickingNodes);
     }
 
     public Collection<ConduitNodeImpl> blockEndpoints() {
         ensureNotDiscarded();
         Preconditions.checkState(supportsCaching, "This conduit does not support caching as it has no ticker!");
+        ensureCachesReady();
         return Collections.unmodifiableCollection(endpointConnections.keySet());
     }
 
     public Collection<ConduitBlockConnection> blockConnections() {
         ensureNotDiscarded();
         Preconditions.checkState(supportsCaching, "This conduit does not support caching as it has no ticker!");
+        ensureCachesReady();
         return Collections.unmodifiableCollection(endpointConnections.values());
     }
 
@@ -233,24 +236,28 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
     public List<ConduitConnectionPath> blockConnectionsAccessibleFrom(ConduitBlockConnection connection) {
         ensureNotDiscarded();
         Preconditions.checkState(supportsCaching, "This conduit does not support caching as it has no ticker!");
+        ensureCachesReady();
         return accessibleBlockConnectionsMap.getOrDefault(connection, List.of());
     }
 
     public Set<DyeColor> allChannels() {
         ensureNotDiscarded();
         Preconditions.checkState(supportsCaching, "This conduit does not support caching as it has no ticker!");
+        ensureCachesReady();
         return allChannels;
     }
 
     public List<ConduitBlockConnection> insertConnections() {
         ensureNotDiscarded();
         Preconditions.checkState(supportsCaching, "This conduit does not support caching as it has no ticker!");
+        ensureCachesReady();
         return Collections.unmodifiableList(insertConnections);
     }
 
     public List<ConduitBlockConnection> insertConnections(DyeColor color) {
         ensureNotDiscarded();
         Preconditions.checkState(supportsCaching, "This conduit does not support caching as it has no ticker!");
+        ensureCachesReady();
         return insertConnectionsByChannel.get(color);
     }
 
@@ -258,18 +265,21 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
     public List<ConduitConnectionPath> extractConnectionsFrom(ConduitBlockConnection insertConnection) {
         ensureNotDiscarded();
         Preconditions.checkState(supportsCaching, "This conduit does not support caching as it has no ticker!");
+        ensureCachesReady();
         return extractConnectionsByInsert.getOrDefault(insertConnection, List.of());
     }
 
     public List<ConduitBlockConnection> extractConnections() {
         ensureNotDiscarded();
         Preconditions.checkState(supportsCaching, "This conduit does not support caching as it has no ticker!");
+        ensureCachesReady();
         return Collections.unmodifiableList(extractConnections);
     }
 
     public List<ConduitBlockConnection> extractConnections(DyeColor color) {
         ensureNotDiscarded();
         Preconditions.checkState(supportsCaching, "This conduit does not support caching as it has no ticker!");
+        ensureCachesReady();
         return extractConnectionsByChannel.get(color);
     }
 
@@ -277,6 +287,7 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
     public List<ConduitConnectionPath> insertConnectionsFrom(ConduitBlockConnection extractConnection) {
         ensureNotDiscarded();
         Preconditions.checkState(supportsCaching, "This conduit does not support caching as it has no ticker!");
+        ensureCachesReady();
         return insertConnectionsByExtract.getOrDefault(extractConnection, List.of());
     }
 

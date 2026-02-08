@@ -30,8 +30,7 @@ public interface ConduitNetwork {
 
     /**
      * Ensure that all caches have been computed if they were dirty.
-     * This is called automatically by tickers, however if you are adding custom behaviour that needs network information.
-     * Ensure you call this before accessing the caches to ensure they're up-to-date.
+     * All cache methods call this for you, however this can be called early if you are timing your own code or want to make sure potential exceptions can be caught in-place.
      * @implNote Does nothing if {@link ConduitType#doesRequireNetworkCaches()} is false.
      * @implNote This can be an expensive method to call.
      */
