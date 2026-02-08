@@ -9,7 +9,7 @@ import java.util.List;
 public class VariableSpeedAndTickRateTests {
     @Test
     public void testAdjustedSpeed() {
-        VariableSpeedAndTickRate speedAndTickRate = new VariableSpeedAndTickRate(20, 32);
+        VariableSpeedAndTickRate speedAndTickRate = new VariableSpeedAndTickRate(32, 20);
         int adjustedSpeed = speedAndTickRate.getAdjustedSpeed(10);
         Assertions.assertEquals(16, adjustedSpeed);
     }
