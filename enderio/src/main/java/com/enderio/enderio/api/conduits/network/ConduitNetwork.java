@@ -28,9 +28,15 @@ public interface ConduitNetwork {
     @ApiStatus.AvailableSince("8.1.0")
     Set<Holder<Conduit<?, ?>>> conduits();
 
-    // TODO: is there a better way, or is preTick being exposed fine?
-    @ApiStatus.Internal
-    void beforeTicking();
+    /**
+     * Ensure that all caches have been computed if they were dirty.
+     * This is called automatically by tickers, however if you are adding custom behaviour that needs network information.
+     * Ensure you call this before accessing the caches to ensure they're up-to-date.
+     * @implNote Does nothing if {@link ConduitType#doesRequireNetworkCaches()} is false.
+     * @implNote This can be an expensive method to call.
+     */
+    @ApiStatus.AvailableSince("8.1.0")
+    void ensureCachesReady();
 
     /**
      * @param gameTime the current game time.

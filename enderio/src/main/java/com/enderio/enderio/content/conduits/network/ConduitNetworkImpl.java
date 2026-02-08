@@ -117,7 +117,7 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
     public ConduitNetworkImpl(ConduitType<?, ?> conduitType, ConduitNodeImpl initialNode) {
         super(initialNode);
         this.conduitType = conduitType;
-        this.supportsCaching = conduitType.ticker() != null;
+        this.supportsCaching = conduitType.doesRequireNetworkCaches();
     }
 
     // TODO: Public for legacy deserialization
@@ -126,7 +126,7 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
         super(nodes, edges);
         this.conduitType = conduitType;
         this.context = context.orElse(null);
-        this.supportsCaching = conduitType.ticker() != null;
+        this.supportsCaching = conduitType.doesRequireNetworkCaches();
     }
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
@@ -135,12 +135,12 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
         super(nodes, edges);
         this.conduitType = conduit.value().type();
         this.context = context.orElse(null);
-        this.supportsCaching = conduitType.ticker() != null;
+        this.supportsCaching = conduitType.doesRequireNetworkCaches();
     }
 
     protected ConduitNetworkImpl(ConduitType<?, ?> conduitType) {
         this.conduitType = conduitType;
-        this.supportsCaching = conduitType.ticker() != null;
+        this.supportsCaching = conduitType.doesRequireNetworkCaches();
     }
 
     @Override
@@ -318,7 +318,7 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
      * Call this before ticking the network to ensure caches are up-to-date.
      * We use this to defer cache rebuilds to the last possible moment to ensure network mutations are less expensive.
      */
-    public void beforeTicking() {
+    public void ensureCachesReady() {
         ensureNotDiscarded();
 
         // Shouldn't be called, but can't hurt to be safe.

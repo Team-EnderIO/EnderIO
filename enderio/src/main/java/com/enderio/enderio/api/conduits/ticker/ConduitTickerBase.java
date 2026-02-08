@@ -37,8 +37,8 @@ public abstract class ConduitTickerBase<T extends Conduit<T, ?>> {
         Preconditions.checkArgument(network.conduitType() == conduitType(), "Network is not of correct type");
         Preconditions.checkArgument(network.conduitType().ticker() == this, "Incorrect ticker for network's conduit type");
 
-        // Pre-tick logic (refresh network caches etc).
-        network.beforeTicking();
+        // Ensure caches are prepared before we tick
+        network.ensureCachesReady();
 
         // Now tick!
         tickNetwork(level, network, tickableConduits);

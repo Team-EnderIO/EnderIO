@@ -24,10 +24,23 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.BiFunction;
 
+/**
+ * Declares a type of Conduit.
+ * @param codec the codec for reading an instance of this conduit type.
+ * @param connectionConfigType the type of connection configuration for this conduit type.
+ * @param exposedCapabilities the capabilities that are exposed through the bundle.
+ * @param doesRequireNetworkCaches whether this conduit requires use of {@link com.enderio.enderio.api.conduits.network.ConduitNetwork}'s caching features
+ * @param ticker optional ticker for this conduit type.
+ * @param connectionComparator
+ * @param connectionPathComparator
+ * @param <T> the conduit type
+ * @param <U> the connection config type
+ */
 public record ConduitType<T extends Conduit<T, U>, U extends ConnectionConfig>(
     MapCodec<T> codec,
     ConnectionConfigType<U> connectionConfigType,
     Set<BlockCapability<?, ?>> exposedCapabilities,
+    boolean doesRequireNetworkCaches,
     @Nullable
     ConduitTickerBase<T> ticker,
     @Nullable
@@ -52,23 +65,29 @@ public record ConduitType<T extends Conduit<T, U>, U extends ConnectionConfig>(
     }
 
     public ConduitType(MapCodec<T> codec, ConnectionConfigType<U> connectionConfigType) {
-        this(codec, connectionConfigType, Set.of(), null, null, DefaultConnectionPathComparator.INSTANCE);
+        this(codec, connectionConfigType, Set.of(), false, null, null, DefaultConnectionPathComparator.INSTANCE);
     }
 
+    // TODO: 21.11 remove. Added to cover old assumption of ticker == network caches
+    @Deprecated(forRemoval = true)
     public ConduitType(MapCodec<T> codec, ConnectionConfigType<U> connectionConfigType, ConduitTickerBase<T> ticker) {
-        this(codec, connectionConfigType, Set.of(), ticker, null, DefaultConnectionPathComparator.INSTANCE);
+        this(codec, connectionConfigType, Set.of(), true, ticker, null, DefaultConnectionPathComparator.INSTANCE);
+    }
+
+    public ConduitType(MapCodec<T> codec, ConnectionConfigType<U> connectionConfigType, ConduitTickerBase<T> ticker, boolean doesRequireNetworkCaches) {
+        this(codec, connectionConfigType, Set.of(), doesRequireNetworkCaches, ticker, null, DefaultConnectionPathComparator.INSTANCE);
     }
 
     public static class Builder<T extends Conduit<T, U>, U extends ConnectionConfig> {
         private final MapCodec<T> codec;
         private final ConnectionConfigType<U> connectionConfigType;
         private final Set<BlockCapability<?, ?>> exposedCapabilities;
+        private boolean doesRequireNetworkCaches;
+        @Nullable
+        private ConduitTickerBase<T> ticker;
         @Nullable
         private Comparator<ConduitBlockConnection> connectionComparator;
         private Comparator<ConduitConnectionPath> conduitConnectionPath = DefaultConnectionPathComparator.INSTANCE;
-
-        @Nullable
-        private ConduitTickerBase<T> ticker;
 
         private Builder(MapCodec<T> codec, ConnectionConfigType<U> connectionConfigType) {
             this.codec = codec;
@@ -78,6 +97,11 @@ public record ConduitType<T extends Conduit<T, U>, U extends ConnectionConfig>(
 
         public <V> Builder<T, U> exposeCapability(BlockCapability<V, ?> capability) {
             exposedCapabilities.add(capability);
+            return this;
+        }
+
+        public Builder<T, U> doesRequireNetworkCaches() {
+            this.doesRequireNetworkCaches = true;
             return this;
         }
 
@@ -97,7 +121,7 @@ public record ConduitType<T extends Conduit<T, U>, U extends ConnectionConfig>(
         }
 
         public ConduitType<T, U> build() {
-            return new ConduitType<>(codec, connectionConfigType, exposedCapabilities, ticker, connectionComparator, conduitConnectionPath);
+            return new ConduitType<>(codec, connectionConfigType, exposedCapabilities, doesRequireNetworkCaches, ticker, connectionComparator, conduitConnectionPath);
         }
     }
 }

@@ -41,6 +41,7 @@ public class EIOConduitTypes {
         () -> ConduitType
             .builder(EnergyConduit.CODEC, EnergyConduitConnectionConfig.TYPE)
             .exposeCapability(Capabilities.EnergyStorage.BLOCK)
+            .doesRequireNetworkCaches()
             .ticker(EnergyConduitTicker.INSTANCE)
             .connectionComparator((a, b) -> Integer.compare(
                 b.connectionConfig(EnergyConduitConnectionConfig.TYPE).priority(),
@@ -56,6 +57,7 @@ public class EIOConduitTypes {
     public static final Supplier<ConduitType<FluidConduit, FluidConduitConnectionConfig>> FLUID = CONDUIT_TYPES.register("fluid",
         () -> ConduitType
             .builder(FluidConduit.CODEC, FluidConduitConnectionConfig.TYPE)
+            .doesRequireNetworkCaches()
             .ticker(FluidConduitTicker.INSTANCE)
             .connectionComparerFromReference(new PriorityConnectionPathComparator(conn -> {
                 // TODO: Might just make all fluid conduits support priority for simplicity.
@@ -70,6 +72,7 @@ public class EIOConduitTypes {
     public static final Supplier<ConduitType<ItemConduit, ItemConduitConnectionConfig>> ITEM = CONDUIT_TYPES.register("item",
         () -> ConduitType
             .builder(ItemConduit.CODEC, ItemConduitConnectionConfig.TYPE)
+            .doesRequireNetworkCaches()
             .ticker(ItemConduitTicker.INSTANCE)
             .connectionComparerFromReference(new PriorityConnectionPathComparator(conn ->
                 conn.node().getConnectionConfig(conn.connectionSide(), ItemConduitConnectionConfig.TYPE).priority()))
