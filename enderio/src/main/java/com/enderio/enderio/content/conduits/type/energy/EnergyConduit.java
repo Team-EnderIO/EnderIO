@@ -69,6 +69,13 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
     }
 
     @Override
+    public boolean canConnectToConduit(EnergyConduit other) {
+        // TODO: Temp - will be the default soon.
+        // Always allow energy conduits of different tiers to connect.
+        return true;
+    }
+
+    @Override
     public <TCap, TContext> @Nullable TCap proxyCapability(Level level, @Nullable ConduitNode node,
             BlockCapability<TCap, TContext> capability, @Nullable TContext context) {
 

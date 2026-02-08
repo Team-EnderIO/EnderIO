@@ -708,7 +708,12 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             return;
         }
 
-        neighborBundle.disconnect(conduit, side.getOpposite());
+        Holder<Conduit<?, ?>> neighborConduit = neighborBundle.getConduitByType(conduit.value().type());
+        if (neighborConduit == null) {
+            return;
+        }
+
+        neighborBundle.disconnect(neighborConduit, side.getOpposite());
 
         // TODO: Do we need an equivalent to this?
 //        if (level instanceof ServerLevel serverLevel) {

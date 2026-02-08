@@ -4,7 +4,7 @@ import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.config.IOConnectionConfig;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
-import jdk.jfr.Experimental;
+import com.enderio.enderio.api.conduits.ticker.ConduitTickerBase;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.DyeColor;
 import org.jetbrains.annotations.ApiStatus;
@@ -16,12 +16,15 @@ import java.util.Set;
 
 /**
  * Access to a network of conduits.
- * Provides a number of queries to help in the development of {@link ConduitTicker}'s.
+ * Provides a number of queries to help in the development of {@link ConduitTickerBase}'s.
  * All the queries are cached and are updated without the implementor having to worry about it.
  */
 @ApiStatus.AvailableSince("8.0.0")
 public interface ConduitNetwork {
     ConduitType<?, ?> conduitType();
+
+    @ApiStatus.AvailableSince("8.1.0")
+    Set<Holder<Conduit<?, ?>>> conduits();
 
     // TODO: is there a better way, or is preTick being exposed fine?
     @ApiStatus.Internal
@@ -40,6 +43,13 @@ public interface ConduitNetwork {
      * @return the total number of nodes in this network.
      */
     int nodeCount();
+
+    /**
+     * @param conduit conduit to count.
+     * @return the number of nodes representing the given conduit.
+     */
+    @ApiStatus.AvailableSince("8.1.0")
+    int nodeCount(Holder<Conduit<?, ?>> conduit);
 
     /**
      * @return whether the network has no nodes.
@@ -87,7 +97,7 @@ public interface ConduitNetwork {
     /**
      * @param connection the connection to query from.
      * @return all nodes that are accessible from the given {@code connection}, this list will not include {@code connection}. This will be in the conduit's specified order.
-     * @implNote The list is ordered by {@link Conduit#compareNodes(ConduitBlockConnection, ConduitBlockConnection, ConduitBlockConnection)}.
+     * @implNote The list is ordered using {@link ConduitType#connectionPathComparator()}.
      */
     List<ConduitConnectionPath> blockConnectionsAccessibleFrom(ConduitBlockConnection connection);
 
@@ -102,7 +112,7 @@ public interface ConduitNetwork {
      * For this query to yield results, the conduit's connection config must be derived from {@link IOConnectionConfig}.
      *
      * @return all the sending connections across all channels.
-     * @implNote The list can be sorted using {@link Conduit#getGeneralConnectionComparator()}, but is often unordered.
+     * @implNote The list can be sorted using {@link ConduitType#connectionComparator()}, but is often unordered.
      */
     List<ConduitBlockConnection> insertConnections();
 
@@ -111,7 +121,7 @@ public interface ConduitNetwork {
      *
      * @param channel the channel to query for.
      * @return all the sending connections in the given {@code channel}.
-     * @implNote The list can be sorted using {@link Conduit#getGeneralConnectionComparator()}, but is often unordered.
+     * @implNote The list can be sorted using {@link ConduitType#connectionComparator()}, but is often unordered.
      */
     List<ConduitBlockConnection> insertConnections(DyeColor channel);
 
@@ -120,7 +130,7 @@ public interface ConduitNetwork {
      *
      * @param insertConnection the insert connection to query from.
      * @return all the receiving connections that are accessible to the {@code insertConnection}, in the conduit's specified order.
-     * @implNote The list is ordered by {@link Conduit#compareNodes(ConduitBlockConnection, ConduitBlockConnection, ConduitBlockConnection)}.
+     * @implNote The list is ordered by {@link ConduitType#connectionPathComparator()}.
      */
     List<ConduitConnectionPath> extractConnectionsFrom(ConduitBlockConnection insertConnection);
 
@@ -146,7 +156,7 @@ public interface ConduitNetwork {
      *
      * @param extractConnection the extract connection to query from.
      * @return all the sending connections that are accessible to the {@code extractConnection}, in the conduit's specified order.
-     * @implNote The list is ordered by {@link Conduit#compareNodes(ConduitBlockConnection, ConduitBlockConnection, ConduitBlockConnection)}.
+     * @implNote The list is ordered by {@link ConduitType#connectionPathComparator()}.
      */
     List<ConduitConnectionPath> insertConnectionsFrom(ConduitBlockConnection extractConnection);
 

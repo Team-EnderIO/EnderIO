@@ -147,6 +147,11 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
     }
 
     @Override
+    public Set<Holder<Conduit<?, ?>>> conduits() {
+        return nodeCountByConduit.keySet();
+    }
+
+    @Override
     public List<Holder<Conduit<?, ?>>> getTickableConduits(long gameTime, int tickOffset) {
         if (!areTickableConduitsValid && nodeCountByConduit != null) {
             tickableConduits.clear();
@@ -179,6 +184,11 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
     // endregion
 
     // region Queries
+
+    @Override
+    public int nodeCount(Holder<Conduit<?, ?>> conduit) {
+        return nodeCountByConduit.getOrDefault(conduit, 0);
+    }
 
     // These are unfortunately necessary for the IConduitNetwork interface.
     @Override
@@ -672,6 +682,11 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
             context = other.context;
         }
 
+        // Merge node counts
+        for (var entry : other.nodeCountByConduit.entrySet()) {
+            nodeCountByConduit.merge(entry.getKey(), entry.getValue(), Integer::sum);
+        }
+
         // The cache will need to be rebuilt
         shouldRebuildCache = true;
     }
@@ -684,6 +699,13 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
     @Override
     protected void onGraphSplit(Set<ConduitNetworkImpl> newNetworks) {
         shouldRebuildCache = true;
+
+        // Fully recompute node counts
+        nodeCountByConduit.clear();
+        for (var node : nodes()) {
+            nodeCountByConduit.compute(node.conduit(), (k, count) -> count == null ? 1 : count + 1);
+        }
+
         if (context == null) {
             return;
         }
