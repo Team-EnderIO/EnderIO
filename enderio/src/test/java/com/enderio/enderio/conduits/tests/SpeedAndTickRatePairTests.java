@@ -46,7 +46,7 @@ public class SpeedAndTickRatePairTests {
             new SpeedAndTickRatePair(32, 20)
         );
 
-        var minProperty = SpeedAndTickRatePair.minProperty();
+        var minProperty = SpeedAndTickRatePair.minProperty(SpeedAndTickRatePair.ZERO);
 
         var outcome = minProperty.aggregate(allSpeeds);
 

@@ -13,15 +13,15 @@ public record SpeedAndTickRatePair(int speed, int tickRate) {
     /**
      * @return a connection path property that minimises the adjusted speed.
      */
-    public static ConnectionPathProperty<SpeedAndTickRatePair> minProperty() {
-        return new ConnectionPathProperty<>(allSpeeds -> allSpeeds.stream().min(SpeedAndTickRatePair::compare).orElse(ZERO));
+    public static ConnectionPathProperty<SpeedAndTickRatePair> minProperty(SpeedAndTickRatePair defaultValue) {
+        return new ConnectionPathProperty<>(allSpeeds -> allSpeeds.stream().min(SpeedAndTickRatePair::compare), defaultValue);
     }
 
     /**
      * @return a connection path property that maximises the adjusted speed.
      */
-    public static ConnectionPathProperty<SpeedAndTickRatePair> maxProperty() {
-        return new ConnectionPathProperty<>(allSpeeds -> allSpeeds.stream().max(SpeedAndTickRatePair::compare).orElse(ZERO));
+    public static ConnectionPathProperty<SpeedAndTickRatePair> maxProperty(SpeedAndTickRatePair defaultValue) {
+        return new ConnectionPathProperty<>(allSpeeds -> allSpeeds.stream().max(SpeedAndTickRatePair::compare), defaultValue);
     }
 
     public SpeedAndTickRatePair {

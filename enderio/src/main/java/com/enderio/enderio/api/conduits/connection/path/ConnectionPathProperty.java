@@ -1,8 +1,10 @@
 package com.enderio.enderio.api.conduits.connection.path;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 /**
@@ -12,29 +14,47 @@ import java.util.function.Function;
  */
 @ApiStatus.AvailableSince("8.1.0")
 public class ConnectionPathProperty<T> {
-    private final Function<List<T>, T> aggregator;
+    private final Function<List<T>, Optional<T>> aggregator;
+    private final T defaultValue;
 
-    public ConnectionPathProperty(Function<List<T>, T> aggregator) {
+    public static ConnectionPathProperty<Integer> minInt(int defaultValue) {
+        return new ConnectionPathProperty<>(values -> values.stream().min(Integer::compare), defaultValue);
+    }
+
+    public static ConnectionPathProperty<Integer> maxInt(int defaultValue) {
+        return new ConnectionPathProperty<>(values -> values.stream().max(Integer::compare), defaultValue);
+    }
+
+    public static ConnectionPathProperty<Integer> sumInt(int defaultValue) {
+        return new ConnectionPathProperty<>(values -> {
+            if (values.isEmpty()) {
+                return Optional.empty();
+            }
+
+            return Optional.of(values.stream().reduce(0, Integer::sum));
+        }, defaultValue);
+    }
+
+    public static ConnectionPathProperty<Integer> avgInt(int defaultValue) {
+        return new ConnectionPathProperty<>(values -> {
+            if (values.isEmpty()) {
+                return Optional.empty();
+            }
+
+            return Optional.of(values.stream().reduce(0, Integer::sum) / values.size());
+        }, defaultValue);
+    }
+
+    public ConnectionPathProperty(Function<List<T>, Optional<T>> aggregator, T defaultValue) {
         this.aggregator = aggregator;
+        this.defaultValue = defaultValue;
     }
 
-    public static ConnectionPathProperty<Integer> minInt() {
-        return new ConnectionPathProperty<>(values -> values.stream().min(Integer::compare).orElse(null));
-    }
-
-    public static ConnectionPathProperty<Integer> maxInt() {
-        return new ConnectionPathProperty<>(values -> values.stream().max(Integer::compare).orElse(null));
-    }
-
-    public static ConnectionPathProperty<Integer> sumInt() {
-        return new ConnectionPathProperty<>(values -> values.stream().reduce(0, Integer::sum));
-    }
-
-    public static ConnectionPathProperty<Integer> avgInt() {
-        return new ConnectionPathProperty<>(values -> values.stream().reduce(0, Integer::sum) / values.size());
+    public T defaultValue() {
+        return defaultValue;
     }
 
     public T aggregate(List<T> values) {
-        return aggregator.apply(values);
+        return aggregator.apply(values).orElse(defaultValue);
     }
 }
