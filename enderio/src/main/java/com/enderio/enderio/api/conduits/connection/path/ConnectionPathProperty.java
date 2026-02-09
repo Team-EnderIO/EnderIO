@@ -17,6 +17,21 @@ public class ConnectionPathProperty<T> {
     private final Function<List<T>, Optional<T>> aggregator;
     private final T defaultValue;
 
+    public ConnectionPathProperty(Function<List<T>, Optional<T>> aggregator, T defaultValue) {
+        this.aggregator = aggregator;
+        this.defaultValue = defaultValue;
+    }
+
+    public T defaultValue() {
+        return defaultValue;
+    }
+
+    public T aggregate(List<T> values) {
+        return aggregator.apply(values).orElse(defaultValue);
+    }
+
+    // region Integer Helpers
+
     public static ConnectionPathProperty<Integer> minInt(int defaultValue) {
         return new ConnectionPathProperty<>(values -> values.stream().min(Integer::compare), defaultValue);
     }
@@ -45,16 +60,37 @@ public class ConnectionPathProperty<T> {
         }, defaultValue);
     }
 
-    public ConnectionPathProperty(Function<List<T>, Optional<T>> aggregator, T defaultValue) {
-        this.aggregator = aggregator;
-        this.defaultValue = defaultValue;
+    // endregion
+
+    // region Long Helpers
+
+    public static ConnectionPathProperty<Long> minLong(long defaultValue) {
+        return new ConnectionPathProperty<>(values -> values.stream().min(Long::compare), defaultValue);
     }
 
-    public T defaultValue() {
-        return defaultValue;
+    public static ConnectionPathProperty<Long> maxLong(long defaultValue) {
+        return new ConnectionPathProperty<>(values -> values.stream().max(Long::compare), defaultValue);
     }
 
-    public T aggregate(List<T> values) {
-        return aggregator.apply(values).orElse(defaultValue);
+    public static ConnectionPathProperty<Long> sumLong(long defaultValue) {
+        return new ConnectionPathProperty<>(values -> {
+            if (values.isEmpty()) {
+                return Optional.empty();
+            }
+
+            return Optional.of(values.stream().reduce(0L, Long::sum));
+        }, defaultValue);
     }
+
+    public static ConnectionPathProperty<Long> avgLong(long defaultValue) {
+        return new ConnectionPathProperty<>(values -> {
+            if (values.isEmpty()) {
+                return Optional.empty();
+            }
+
+            return Optional.of(values.stream().reduce(0L, Long::sum) / values.size());
+        }, defaultValue);
+    }
+
+    // endregion
 }

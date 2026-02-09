@@ -6,6 +6,7 @@ import com.enderio.enderio.api.conduits.connection.path.ConduitConnectionPath;
 import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.enderio.enderio.api.conduits.ticker.ConduitTickerBase;
 import com.enderio.modded_conduits.common.modules.mekanism.MekanismModule;
+import com.google.common.collect.Maps;
 import mekanism.api.Action;
 import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalStack;
@@ -14,6 +15,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class ChemicalTicker extends ConduitTickerBase<ChemicalConduit> {
@@ -29,6 +31,8 @@ public class ChemicalTicker extends ConduitTickerBase<ChemicalConduit> {
         var context = network.getOrCreateContext(ChemicalConduitNetworkContext.TYPE);
 
         boolean hadMultiChemical = false;
+        Map<ConduitConnectionPath, Long> insertedPerPath = Maps.newHashMap();
+
         for (var channel : network.allChannels()) {
             for (var extractConnection : network.extractConnections(channel)) {
                 var insertPaths = network.insertConnectionsFrom(extractConnection);
@@ -48,7 +52,7 @@ public class ChemicalTicker extends ConduitTickerBase<ChemicalConduit> {
                 }
 
                 if (!context.lockedChemical().isEmptyType()) {
-                    doChemicalTransfer(context.lockedChemical(), transferRate, extractConnection, insertPaths);
+                    doChemicalTransfer(context.lockedChemical(), transferRate, extractConnection, insertPaths, insertedPerPath);
                 } else {
                     long remaining = transferRate;
 
@@ -58,7 +62,7 @@ public class ChemicalTicker extends ConduitTickerBase<ChemicalConduit> {
                         }
 
                         Chemical chemical = extractHandler.getChemicalInTank(i).getChemical();
-                        remaining = doChemicalTransfer(chemical, remaining, extractConnection, insertPaths);
+                        remaining = doChemicalTransfer(chemical, remaining, extractConnection, insertPaths, insertedPerPath);
 
                         if (!extractConduit.value().isMultiChemical() && remaining < transferRate) {
                             context.setLockedChemical(chemical);
@@ -81,7 +85,7 @@ public class ChemicalTicker extends ConduitTickerBase<ChemicalConduit> {
     }
 
     private long doChemicalTransfer(Chemical chemical, long maxTransfer, ConduitBlockConnection extractConnection,
-            List<ConduitConnectionPath> insertPaths) {
+            List<ConduitConnectionPath> insertPaths, Map<ConduitConnectionPath, Long> insertedPerPath) {
         var receiverHandler = Objects
                 .requireNonNull(extractConnection.getSidedCapability(MekanismModule.Capabilities.CHEMICAL));
 
@@ -90,13 +94,6 @@ public class ChemicalTicker extends ConduitTickerBase<ChemicalConduit> {
                 Action.SIMULATE);
         if (extractedChemical.isEmpty()) {
             return maxTransfer;
-        }
-
-        var insertConduit = extractConnection.node().conduit(conduitType());
-        // TODO: When we add path speeds, we'll restrict to the path speed instead.'
-        final long maxInsertSpeed = insertConduit.value().transferRatePerTick() * conduitType().getTickRate(insertConduit);
-        if (extractedChemical.getAmount() > maxInsertSpeed) {
-            extractedChemical.setAmount(maxInsertSpeed);
         }
 
         // Test the extracted fluid against the target
@@ -114,12 +111,23 @@ public class ChemicalTicker extends ConduitTickerBase<ChemicalConduit> {
         // Insert into any available blocks
         for (var insertPath : insertPaths) {
             var insertConnection = insertPath.end();
+            final long maxInsertSpeed = insertPath.property(ChemicalConduit.PATH_MAX_TRANSFER_RATE);
+
+            if (insertedPerPath.getOrDefault(insertPath, 0L) >= maxInsertSpeed) {
+                continue;
+            }
+
             IChemicalHandler insertHandler = insertConnection.getSidedCapability(MekanismModule.Capabilities.CHEMICAL);
             if (insertHandler == null) {
                 continue;
             }
 
             var chemicalToInsert = extractedChemical.copy();
+
+            // Limit to path's max speed
+            if (chemicalToInsert.getAmount() > maxInsertSpeed) {
+                chemicalToInsert.setAmount(maxInsertSpeed);
+            }
 
             // Test fluid against insert filter.
             var insertFilter = insertConnection.inventory()
@@ -138,6 +146,10 @@ public class ChemicalTicker extends ConduitTickerBase<ChemicalConduit> {
 
             // Deduct the transferred chemical from our maximum transfer.
             maxTransfer -= transferredChemical.getAmount();
+
+            // Store the amount transferred in this path
+            insertedPerPath.compute(insertPath, (k, v) -> v == null ? transferredChemical.getAmount() : v + transferredChemical.getAmount());
+
             if (maxTransfer <= 0) {
                 break;
             }
