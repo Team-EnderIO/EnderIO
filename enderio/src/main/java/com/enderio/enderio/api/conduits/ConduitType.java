@@ -69,18 +69,12 @@ public record ConduitType<T extends Conduit<T, U>, U extends ConnectionConfig>(
             .apply(builder, factory)), connectionConfigType);
     }
 
+    public ConduitType {
+        Preconditions.checkArgument((ticker != null) == (tickRateGetter != null), "Must provide both ticker and tick rate getter or neither");
+    }
+
     public ConduitType(MapCodec<T> codec, ConnectionConfigType<U> connectionConfigType) {
         this(codec, connectionConfigType, Set.of(), false, null, null, null, DefaultConnectionPathComparator.INSTANCE);
-    }
-
-    // TODO: 21.11 remove. Added to cover old assumption of ticker == network caches
-    @Deprecated(forRemoval = true)
-    public ConduitType(MapCodec<T> codec, ConnectionConfigType<U> connectionConfigType, ConduitTickerBase<T> ticker, int tickRate) {
-        this(codec, connectionConfigType, Set.of(), true, ticker, (c) -> tickRate, null, DefaultConnectionPathComparator.INSTANCE);
-    }
-
-    public ConduitType(MapCodec<T> codec, ConnectionConfigType<U> connectionConfigType, ConduitTickerBase<T> ticker, int tickRate, boolean doesRequireNetworkCaches) {
-        this(codec, connectionConfigType, Set.of(), doesRequireNetworkCaches, ticker, (c) -> tickRate, null, DefaultConnectionPathComparator.INSTANCE);
     }
 
     @SuppressWarnings("unchecked")

@@ -38,8 +38,8 @@ import org.joml.Vector2i;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public record ItemConduit(ResourceLocation texture, Component description, int transferRatePerCycle,
-        int networkTickRate) implements Conduit<ItemConduit, ItemConduitConnectionConfig> {
+public record ItemConduit(ResourceLocation texture, Component description, int transferRatePerCycle, int networkTickRate)
+    implements Conduit<ItemConduit, ItemConduitConnectionConfig> {
 
     public static final int EXTRACT_FILTER_SLOT = 0;
     public static final int INSERT_FILTER_SLOT = 1;

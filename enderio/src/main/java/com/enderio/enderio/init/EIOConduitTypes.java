@@ -52,7 +52,10 @@ public class EIOConduitTypes {
             .build());
 
     public static final Supplier<ConduitType<RedstoneConduit, RedstoneConduitConnectionConfig>> REDSTONE = CONDUIT_TYPES.register("redstone",
-        () -> new ConduitType(RedstoneConduit.CODEC, RedstoneConduitConnectionConfig.TYPE, RedstoneConduitTicker.INSTANCE, 2));
+        () -> ConduitType
+            .builder(RedstoneConduit.CODEC, RedstoneConduitConnectionConfig.TYPE)
+            .ticker(RedstoneConduitTicker.INSTANCE, 2)
+            .build());
 
     public static final Supplier<ConduitType<FluidConduit, FluidConduitConnectionConfig>> FLUID = CONDUIT_TYPES.register("fluid",
         () -> ConduitType
