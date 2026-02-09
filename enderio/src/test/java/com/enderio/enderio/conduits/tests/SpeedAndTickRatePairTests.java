@@ -20,8 +20,10 @@ public class SpeedAndTickRatePairTests {
         adjustedSpeed = speedAndTickRate.getAdjustedSpeed(5);
         Assertions.assertEquals(8, adjustedSpeed);
 
+        adjustedSpeed = speedAndTickRate.getAdjustedSpeed(0);
+        Assertions.assertEquals(0, adjustedSpeed);
+
         Assertions.assertThrows(IllegalArgumentException.class, () -> speedAndTickRate.getAdjustedSpeed(-10));
-        Assertions.assertThrows(IllegalArgumentException.class, () -> speedAndTickRate.getAdjustedSpeed(0));
         Assertions.assertThrows(IllegalArgumentException.class, () -> speedAndTickRate.getAdjustedSpeed(21));
         Assertions.assertThrows(IllegalArgumentException.class, () -> speedAndTickRate.getAdjustedSpeed(100));
     }
@@ -34,6 +36,7 @@ public class SpeedAndTickRatePairTests {
         Assertions.assertEquals(0, speedAndTickRate.getAdjustedSpeed(10));
         Assertions.assertEquals(0, speedAndTickRate.getAdjustedSpeed(5));
         Assertions.assertEquals(0, speedAndTickRate.getAdjustedSpeed(1));
+        Assertions.assertEquals(0, speedAndTickRate.getAdjustedSpeed(0));
     }
 
     @Test

@@ -37,7 +37,7 @@ public class ChemicalTicker extends ConduitTickerBase<ChemicalConduit> {
                 }
 
                 var extractConduit = extractConnection.node().conduit(conduitType());
-                final long transferRate = extractConduit.value().transferRatePerTick() * extractConduit.value().networkTickRate();
+                final long transferRate = extractConduit.value().transferRatePerTick() * conduitType().getTickRate(extractConduit);
 
                 IChemicalHandler extractHandler = extractConnection
                         .getSidedCapability(MekanismModule.Capabilities.CHEMICAL);
@@ -92,7 +92,7 @@ public class ChemicalTicker extends ConduitTickerBase<ChemicalConduit> {
 
         var insertConduit = extractConnection.node().conduit(conduitType());
         // TODO: When we add path speeds, we'll restrict to the path speed instead.'
-        final long maxInsertSpeed = insertConduit.value().transferRatePerTick() * insertConduit.value().networkTickRate();
+        final long maxInsertSpeed = insertConduit.value().transferRatePerTick() * conduitType().getTickRate(insertConduit);
         if (extractedChemical.getAmount() > maxInsertSpeed) {
             extractedChemical.setAmount(maxInsertSpeed);
         }

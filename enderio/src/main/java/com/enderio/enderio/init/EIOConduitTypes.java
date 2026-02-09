@@ -42,7 +42,7 @@ public class EIOConduitTypes {
             .builder(EnergyConduit.CODEC, EnergyConduitConnectionConfig.TYPE)
             .exposeCapability(Capabilities.EnergyStorage.BLOCK)
             .doesRequireNetworkCaches()
-            .ticker(EnergyConduitTicker.INSTANCE)
+            .ticker(EnergyConduitTicker.INSTANCE, 1)
             .connectionComparator((a, b) -> Integer.compare(
                 b.connectionConfig(EnergyConduitConnectionConfig.TYPE).priority(),
                 a.connectionConfig(EnergyConduitConnectionConfig.TYPE).priority()))
@@ -52,13 +52,13 @@ public class EIOConduitTypes {
             .build());
 
     public static final Supplier<ConduitType<RedstoneConduit, RedstoneConduitConnectionConfig>> REDSTONE = CONDUIT_TYPES.register("redstone",
-        () -> new ConduitType(RedstoneConduit.CODEC, RedstoneConduitConnectionConfig.TYPE, RedstoneConduitTicker.INSTANCE));
+        () -> new ConduitType(RedstoneConduit.CODEC, RedstoneConduitConnectionConfig.TYPE, RedstoneConduitTicker.INSTANCE, 2));
 
     public static final Supplier<ConduitType<FluidConduit, FluidConduitConnectionConfig>> FLUID = CONDUIT_TYPES.register("fluid",
         () -> ConduitType
             .builder(FluidConduit.CODEC, FluidConduitConnectionConfig.TYPE)
             .doesRequireNetworkCaches()
-            .ticker(FluidConduitTicker.INSTANCE)
+            .ticker(FluidConduitTicker.INSTANCE, 5)
             .connectionComparerFromReference(new PriorityConnectionPathComparator(conn -> {
                 // TODO: Might just make all fluid conduits support priority for simplicity.
                 if (!conn.node().conduit(EIOConduitTypes.FLUID.get()).value().doesSupportPriority()) {
@@ -73,7 +73,7 @@ public class EIOConduitTypes {
         () -> ConduitType
             .builder(ItemConduit.CODEC, ItemConduitConnectionConfig.TYPE)
             .doesRequireNetworkCaches()
-            .ticker(ItemConduitTicker.INSTANCE)
+            .ticker(ItemConduitTicker.INSTANCE, c -> c.networkTickRate())
             .connectionComparerFromReference(new PriorityConnectionPathComparator(conn ->
                 conn.node().getConnectionConfig(conn.connectionSide(), ItemConduitConnectionConfig.TYPE).priority()))
             .build());

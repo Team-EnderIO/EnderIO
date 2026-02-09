@@ -45,11 +45,6 @@ public record RedstoneConduit(ResourceLocation texture, ResourceLocation activeT
     }
 
     @Override
-    public int networkTickRate() {
-        return 2;
-    }
-
-    @Override
     public boolean hasMenu() {
         return true;
     }

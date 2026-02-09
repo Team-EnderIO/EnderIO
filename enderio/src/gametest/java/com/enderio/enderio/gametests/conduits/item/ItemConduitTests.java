@@ -45,7 +45,7 @@ public class ItemConduitTests {
 
         test.onGameTest(ConduitGameTestHelper.class, helper -> {
             var itemConduit = helper.getConduit(EIOConduits.ITEM);
-            final int tickRate = itemConduit.value().networkTickRate();
+            final int tickRate = itemConduit.value().type().getTickRate(itemConduit);
 
             helper.startSequence()
                 // Destroy any previous conduit
@@ -82,7 +82,7 @@ public class ItemConduitTests {
     @TestHolder(description = "Ensures item conduits prioritise closest container first.")
     public static void itemConduitDistancePriority(final ConduitGameTestHelper helper) {
         var itemConduit = helper.getConduit(EIOConduits.ITEM);
-        final int tickRate = itemConduit.value().networkTickRate();
+        final int tickRate = itemConduit.value().type().getTickRate(itemConduit);
 
         helper.startSequence()
             // Destroy all previous conduits
@@ -113,7 +113,7 @@ public class ItemConduitTests {
     @TestHolder(description = "Ensures item conduits prioritise highest priority container first, before closest.")
     public static void itemConduitManualPriority(final ConduitGameTestHelper helper) {
         var itemConduit = helper.getConduit(EIOConduits.ITEM);
-        final int tickRate = itemConduit.value().networkTickRate();
+        final int tickRate = itemConduit.value().type().getTickRate(itemConduit);
 
         helper.startSequence()
             // Destroy all previous conduits
@@ -144,7 +144,7 @@ public class ItemConduitTests {
     @TestHolder(description = "Ensures item conduit round robin works.")
     public static void itemConduitRoundRobin(final ConduitGameTestHelper helper) {
         var itemConduit = helper.getConduit(EIOConduits.ITEM);
-        final int tickRate = itemConduit.value().networkTickRate();
+        final int tickRate = itemConduit.value().type().getTickRate(itemConduit);
         final int transferRate = ((ItemConduit) itemConduit.value()).transferRatePerCycle();
 
         helper.startSequence()

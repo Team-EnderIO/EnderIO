@@ -59,14 +59,6 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
     Component description();
 
     /**
-     * @implNote Must be >= 1 and <= 20
-     * @return the number of ticks that should pass before the conduit graph ticks.
-     */
-    default int networkTickRate() {
-        return 5;
-    }
-
-    /**
      * Gets the conduit type.
      * This is used to define serialization and exposing proxied capabilities.
      */

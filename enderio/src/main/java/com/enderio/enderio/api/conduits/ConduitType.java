@@ -7,9 +7,11 @@ import com.enderio.enderio.api.conduits.connection.ConduitBlockConnection;
 import com.enderio.enderio.api.conduits.connection.path.ConduitConnectionPath;
 import com.enderio.enderio.api.conduits.connection.path.DefaultConnectionPathComparator;
 import com.enderio.enderio.api.conduits.ticker.ConduitTickerBase;
+import com.google.common.base.Preconditions;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
@@ -23,6 +25,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 /**
  * Declares a type of Conduit.
@@ -43,6 +46,8 @@ public record ConduitType<T extends Conduit<T, U>, U extends ConnectionConfig>(
     boolean doesRequireNetworkCaches,
     @Nullable
     ConduitTickerBase<T> ticker,
+    @Nullable
+    Function<T, Integer> tickRateGetter,
     @Nullable
     Comparator<ConduitBlockConnection> connectionComparator,
     Comparator<ConduitConnectionPath> connectionPathComparator
@@ -65,17 +70,34 @@ public record ConduitType<T extends Conduit<T, U>, U extends ConnectionConfig>(
     }
 
     public ConduitType(MapCodec<T> codec, ConnectionConfigType<U> connectionConfigType) {
-        this(codec, connectionConfigType, Set.of(), false, null, null, DefaultConnectionPathComparator.INSTANCE);
+        this(codec, connectionConfigType, Set.of(), false, null, null, null, DefaultConnectionPathComparator.INSTANCE);
     }
 
     // TODO: 21.11 remove. Added to cover old assumption of ticker == network caches
     @Deprecated(forRemoval = true)
-    public ConduitType(MapCodec<T> codec, ConnectionConfigType<U> connectionConfigType, ConduitTickerBase<T> ticker) {
-        this(codec, connectionConfigType, Set.of(), true, ticker, null, DefaultConnectionPathComparator.INSTANCE);
+    public ConduitType(MapCodec<T> codec, ConnectionConfigType<U> connectionConfigType, ConduitTickerBase<T> ticker, int tickRate) {
+        this(codec, connectionConfigType, Set.of(), true, ticker, (c) -> tickRate, null, DefaultConnectionPathComparator.INSTANCE);
     }
 
-    public ConduitType(MapCodec<T> codec, ConnectionConfigType<U> connectionConfigType, ConduitTickerBase<T> ticker, boolean doesRequireNetworkCaches) {
-        this(codec, connectionConfigType, Set.of(), doesRequireNetworkCaches, ticker, null, DefaultConnectionPathComparator.INSTANCE);
+    public ConduitType(MapCodec<T> codec, ConnectionConfigType<U> connectionConfigType, ConduitTickerBase<T> ticker, int tickRate, boolean doesRequireNetworkCaches) {
+        this(codec, connectionConfigType, Set.of(), doesRequireNetworkCaches, ticker, (c) -> tickRate, null, DefaultConnectionPathComparator.INSTANCE);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <V extends Conduit<?, ?>> int getTickRate(Holder<V> conduit) {
+        Preconditions.checkArgument(conduit.value().type() == this, "Conduit is not of this type");
+        return getTickRate((T)conduit.value());
+    }
+
+    /**
+     * Get the tick rate for the given conduit.
+     * @param conduit the conduit to get the tick rate for
+     * @return the tick rate
+     * @throws IllegalStateException if the conduit type does not have a tick rate getter
+     */
+    public int getTickRate(T conduit) {
+        Preconditions.checkState(tickRateGetter != null, "Conduit type does not have a tick rate getter");
+        return tickRateGetter.apply(conduit);
     }
 
     public static class Builder<T extends Conduit<T, U>, U extends ConnectionConfig> {
@@ -85,6 +107,8 @@ public record ConduitType<T extends Conduit<T, U>, U extends ConnectionConfig>(
         private boolean doesRequireNetworkCaches;
         @Nullable
         private ConduitTickerBase<T> ticker;
+        @Nullable
+        private Function<T, Integer> tickRateGetter;
         @Nullable
         private Comparator<ConduitBlockConnection> connectionComparator;
         private Comparator<ConduitConnectionPath> conduitConnectionPath = DefaultConnectionPathComparator.INSTANCE;
@@ -105,8 +129,13 @@ public record ConduitType<T extends Conduit<T, U>, U extends ConnectionConfig>(
             return this;
         }
 
-        public Builder<T, U> ticker(ConduitTickerBase<T> ticker) {
+        public Builder<T, U> ticker(ConduitTickerBase<T> ticker, int tickRate) {
+            return ticker(ticker, c -> tickRate);
+        }
+
+        public Builder<T, U> ticker(ConduitTickerBase<T> ticker, Function<T, Integer> tickRateGetter) {
             this.ticker = ticker;
+            this.tickRateGetter = tickRateGetter;
             return this;
         }
 
@@ -121,7 +150,8 @@ public record ConduitType<T extends Conduit<T, U>, U extends ConnectionConfig>(
         }
 
         public ConduitType<T, U> build() {
-            return new ConduitType<>(codec, connectionConfigType, exposedCapabilities, doesRequireNetworkCaches, ticker, connectionComparator, conduitConnectionPath);
+            return new ConduitType<>(codec, connectionConfigType, exposedCapabilities, doesRequireNetworkCaches, ticker, tickRateGetter, connectionComparator,
+                conduitConnectionPath);
         }
     }
 }

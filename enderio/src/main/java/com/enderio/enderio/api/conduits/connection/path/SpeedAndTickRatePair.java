@@ -24,13 +24,19 @@ public record SpeedAndTickRatePair(int speed, int tickRate) {
         return new ConnectionPathProperty<>(allSpeeds -> allSpeeds.stream().max(SpeedAndTickRatePair::compare).orElse(ZERO));
     }
 
+    public SpeedAndTickRatePair {
+        Preconditions.checkArgument(speed >= 0, "speed must be non-negative");
+        Preconditions.checkArgument(tickRate >= 0, "tickRate must be positive");
+        Preconditions.checkArgument(tickRate <= 20, "tickRate must be <= 20");
+    }
+
     /**
      * Get the speed adjusted for the given tick rate.
      * @param otherTickRate the tick rate to adjust for
      * @return the adjusted speed
      */
     public int getAdjustedSpeed(int otherTickRate) {
-        Preconditions.checkArgument(otherTickRate > 0, "otherTickRate must be positive");
+        Preconditions.checkArgument(otherTickRate >= 0, "otherTickRate must be positive");
         Preconditions.checkArgument(otherTickRate <= 20, "otherTickRate must be <= 20");
 
         // Short cut if we have no speed.

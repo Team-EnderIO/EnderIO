@@ -50,7 +50,7 @@ public class FluidConduitTicker extends ConduitTickerBase<FluidConduit> {
                 }
 
                 final var extractConduit = extractConnection.node().conduit(conduitType());
-                final int fluidRate = extractConduit.value().transferRatePerTick() * extractConduit.value().networkTickRate();
+                final int fluidRate = extractConduit.value().transferRatePerTick() * conduitType().getTickRate(extractConduit);
 
                 hadMultiFluid |= extractConduit.value().isMultiFluid();
 

@@ -160,7 +160,7 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
             // Check all conduits to see if they can tick
             for (var conduit : nodeCountByConduit.keySet()) {
                 for (int i = 0; i < 20; i++) {
-                    if (i % conduit.value().networkTickRate() == 0) {
+                    if (i % conduitType().getTickRate(conduit) == 0) {
                         tickableConduits.put(i, conduit);
                     }
                 }

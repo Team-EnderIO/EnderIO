@@ -110,13 +110,13 @@ public class MekanismModule implements ConduitCommonModule {
     // endregion
 
     public static final Supplier<ConduitType<ChemicalConduit, ChemicalConduitConnectionConfig>> TYPE_CHEMICAL = CONDUIT_TYPES.register("chemical",
-            () -> new ConduitType(ChemicalConduit.CODEC, ChemicalConduitConnectionConfig.TYPE, ChemicalTicker.INSTANCE));
+            () -> new ConduitType(ChemicalConduit.CODEC, ChemicalConduitConnectionConfig.TYPE, ChemicalTicker.INSTANCE, 5));
 
     public static final Supplier<ConduitType<HeatConduit, HeatConduitConnectionConfig>> TYPE_HEAT = CONDUIT_TYPES.register("heat",
             () -> ConduitType
                 .builder(HeatConduit::new, HeatConduitConnectionConfig.TYPE)
                 .doesRequireNetworkCaches()
-                .ticker(HeatTicker.INSTANCE)
+                .ticker(HeatTicker.INSTANCE, 5)
                 .build());
 
     public static final Supplier<ConduitDataType<ChemicalConduitData>> CHEMICAL_DATA_TYPE = CONDUIT_DATA_TYPES
