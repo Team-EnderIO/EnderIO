@@ -39,6 +39,8 @@ public class ChemicalTicker extends ConduitTickerBase<ChemicalConduit> {
                 var extractConduit = extractConnection.node().conduit(conduitType());
                 final long transferRate = extractConduit.value().transferRatePerTick() * conduitType().getTickRate(extractConduit);
 
+                hadMultiChemical |= extractConduit.value().isMultiChemical();
+
                 IChemicalHandler extractHandler = extractConnection
                         .getSidedCapability(MekanismModule.Capabilities.CHEMICAL);
                 if (extractHandler == null) {

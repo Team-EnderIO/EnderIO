@@ -324,6 +324,9 @@ public class ConduitNetworkSavedData extends SavedData {
                 throw new IllegalStateException("Graph was null after loading the conduit network");
             }
 
+            // Hook onto chunk coverage change event
+            network.setOnChunkCoverageChanged(savedData::onNetworkChunksChanged);
+
             savedData.networks.put(network.conduitType(), network);
 
             for (var node : network.nodes()) {
