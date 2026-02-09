@@ -219,7 +219,7 @@ public class ConduitNetworkSavedData extends SavedData {
                     ticker.tick(serverLevel, network, conduitId);
                 } catch (Throwable t) {
                     var report = CrashReport.forThrowable(t, "Ticking conduit network");
-                    var category = report.addCategory(EnderIORegistries.CONDUIT_TYPE.getId(conduitType) + " network being ticked");
+                    var category = report.addCategory(EnderIORegistries.CONDUIT_TYPE.getKey(conduitType) + " network being ticked");
                     network.addCrashInfo(category);
                     throw new ReportedException(report);
                 }

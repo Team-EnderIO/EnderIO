@@ -57,7 +57,7 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
                                 Codec.BOOL.optionalFieldOf("does_support_priority", false).forGetter(FluidConduit::doesSupportPriority))
                             .apply(builder, FluidConduit::new));
 
-    public static ConnectionPathProperty<Integer> PATH_MAX_TRANSFER_RATE = ConnectionPathProperty.minInt();
+    public static final ConnectionPathProperty<Integer> PATH_MAX_TRANSFER_RATE = ConnectionPathProperty.minInt();
 
     @Override
     public ConduitType<FluidConduit, FluidConduitConnectionConfig> type() {

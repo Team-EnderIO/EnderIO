@@ -52,8 +52,8 @@ public record ConduitType<T extends Conduit<T, U>, U extends ConnectionConfig>(
     Comparator<ConduitBlockConnection> connectionComparator,
     Comparator<ConduitConnectionPath> connectionPathComparator
 ) {
-    public static Codec<ConduitType<?, ?>> CODEC = Codec.lazyInitialized(EnderIORegistries.CONDUIT_TYPE::byNameCodec);
-    public static StreamCodec<RegistryFriendlyByteBuf, ConduitType<?, ?>> STREAM_CODEC = StreamCodec
+    public static final Codec<ConduitType<?, ?>> CODEC = Codec.lazyInitialized(EnderIORegistries.CONDUIT_TYPE::byNameCodec);
+    public static final StreamCodec<RegistryFriendlyByteBuf, ConduitType<?, ?>> STREAM_CODEC = StreamCodec
         .recursive(streamCodec -> ByteBufCodecs.registry(EnderIORegistries.Keys.CONDUIT_TYPE));
 
     public static <T extends Conduit<T, U>, U extends ConnectionConfig> Builder<T, U> builder(MapCodec<T> codec, ConnectionConfigType<U> connectionConfigType) {

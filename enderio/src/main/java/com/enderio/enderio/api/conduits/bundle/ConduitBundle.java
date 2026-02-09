@@ -91,10 +91,16 @@ public interface ConduitBundle {
      */
     boolean hasCompatibleConduit(Holder<Conduit<?, ?>> conduit);
 
-    // TODO: Docs
+    /**
+     * @param conduitType the conduit type to check for
+     * @return whether the bundle has any conduit which matches the provided type.
+     */
     boolean hasConduitOfType(ConduitType<?, ?> conduitType);
 
-    // TODO: Docs
+    /**
+     * @param conduitType the conduit type to check for
+     * @return a conduit that matches the provided type, or null if none is found.
+     */
     @Nullable
     Holder<Conduit<?, ?>> getConduitByType(ConduitType<?, ?> conduitType);
 

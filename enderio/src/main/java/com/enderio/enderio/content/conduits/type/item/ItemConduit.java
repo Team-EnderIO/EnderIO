@@ -55,7 +55,7 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
                                     .forGetter(ItemConduit::networkTickRate))
                     .apply(builder, ItemConduit::new));
 
-    public static ConnectionPathProperty<SpeedAndTickRatePair> PATH_SPEED_AND_TICK_RATE = SpeedAndTickRatePair.minProperty();
+    public static final ConnectionPathProperty<SpeedAndTickRatePair> PATH_SPEED_AND_TICK_RATE = SpeedAndTickRatePair.minProperty();
 
     @Override
     public ConduitType<ItemConduit, ItemConduitConnectionConfig> type() {

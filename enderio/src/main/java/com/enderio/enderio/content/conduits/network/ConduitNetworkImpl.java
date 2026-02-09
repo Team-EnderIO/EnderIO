@@ -149,7 +149,11 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
 
     @Override
     public Set<Holder<Conduit<?, ?>>> conduits() {
-        return nodeCountByConduit.keySet();
+        if (nodeCountByConduit == null) {
+            return Set.of();
+        }
+
+        return Collections.unmodifiableSet(nodeCountByConduit.keySet());
     }
 
     @Override
