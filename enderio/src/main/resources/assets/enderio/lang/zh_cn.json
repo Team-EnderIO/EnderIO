@@ -231,7 +231,7 @@
   "conduit.enderio.redstone": "红石导管",
   "enderio.alloy_smelter_mode.all": "合金和烧炼配方",
   "enderio.alloy_smelter_mode.alloys": "Alloying Only",
-  "enderio.alloy_smelter_mode.furnace": "Smelting Only",
+  "enderio.alloy_smelter_mode.furnace": "仅烧炼",
   "enderio.capacitor.loot.base.dud": "摆设电容",
   "enderio.capacitor.loot.base.enhanced": "强劲电容",
   "enderio.capacitor.loot.base.impossible": "至尊电容",
