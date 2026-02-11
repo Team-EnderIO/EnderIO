@@ -53,6 +53,7 @@ public class EIOConduitTypes {
     public static final Supplier<ConduitType<RedstoneConduit, RedstoneConduitConnectionConfig>> REDSTONE = CONDUIT_TYPES.register("redstone",
         () -> ConduitType
             .builder(RedstoneConduit.CODEC, RedstoneConduitConnectionConfig.TYPE)
+            .doesRequireNetworkCaches()
             .ticker(RedstoneConduitTicker.INSTANCE, 2)
             .build());
 

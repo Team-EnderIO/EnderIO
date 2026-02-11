@@ -112,6 +112,7 @@ public class MekanismModule implements ConduitCommonModule {
     public static final Supplier<ConduitType<ChemicalConduit, ChemicalConduitConnectionConfig>> TYPE_CHEMICAL = CONDUIT_TYPES.register("chemical",
         () -> ConduitType
             .builder(ChemicalConduit.CODEC, ChemicalConduitConnectionConfig.TYPE)
+            .doesRequireNetworkCaches()
             .ticker(ChemicalTicker.INSTANCE, 5)
             .build());
 
