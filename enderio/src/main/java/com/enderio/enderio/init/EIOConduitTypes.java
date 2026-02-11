@@ -46,7 +46,6 @@ public class EIOConduitTypes {
             .connectionComparator((a, b) -> Integer.compare(
                 b.connectionConfig(EnergyConduitConnectionConfig.TYPE).priority(),
                 a.connectionConfig(EnergyConduitConnectionConfig.TYPE).priority()))
-            // TODO: Likely unused by energy conduits - review.
             .connectionComparerFromReference(new PriorityConnectionPathComparator(conn ->
                 conn.node().getConnectionConfig(conn.connectionSide(), EnergyConduitConnectionConfig.TYPE).priority()))
             .build());

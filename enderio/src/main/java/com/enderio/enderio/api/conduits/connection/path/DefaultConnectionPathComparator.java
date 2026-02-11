@@ -5,7 +5,7 @@ import org.jetbrains.annotations.ApiStatus;
 import java.util.Comparator;
 
 /**
- * Sorts connection paths by block distance from the start to end connected block.
+ * Sorts connection paths by path length, then block distance from the start to end connected block.
  */
 @ApiStatus.AvailableSince("8.1.0")
 public enum DefaultConnectionPathComparator implements Comparator<ConduitConnectionPath> {

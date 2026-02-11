@@ -212,7 +212,7 @@ public class ConduitNetworkSavedData extends SavedData {
                 continue;
             }
 
-            // TODO: instead of offsetting by ID, we should probably compute some set 0-19 offets to try and balance load ourselves.
+            // TODO: GH-1269
             int conduitId = EnderIORegistries.CONDUIT_TYPE.getId(conduitType);
             for (var network : networks.get(conduitType)) {
                 try {

@@ -72,10 +72,9 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
     @Nullable
     private ConduitNetworkContext<?> context;
     
-    // TODO: SURELY SURELY SURELY 2bn conduits of each type is enough.
     // TODO: Not final because onNodeAdded is called by super so we need to initialize on use
     //       I might be able to make minor changes to the Network class to fix this.
-    private Map<Holder<Conduit<?, ?>>, Integer> nodeCountByConduit;
+    private final Map<Holder<Conduit<?, ?>>, Integer> nodeCountByConduit = Maps.newHashMap();
 
     // Caches
     private final boolean supportsCaching;
@@ -126,6 +125,7 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
         this.conduitType = conduitType;
         this.context = context.orElse(null);
         this.supportsCaching = conduitType.doesRequireNetworkCaches();
+        recomputeNodeCounts();
     }
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
@@ -135,6 +135,7 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
         this.conduitType = conduit.value().type();
         this.context = context.orElse(null);
         this.supportsCaching = conduitType.doesRequireNetworkCaches();
+        recomputeNodeCounts();
     }
 
     protected ConduitNetworkImpl(ConduitType<?, ?> conduitType) {
@@ -193,6 +194,13 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
     @Override
     public int nodeCount(Holder<Conduit<?, ?>> conduit) {
         return nodeCountByConduit.getOrDefault(conduit, 0);
+    }
+
+    private void recomputeNodeCounts() {
+        nodeCountByConduit.clear();
+        for (var node : nodes()) {
+            nodeCountByConduit.compute(node.conduit(), (k, count) -> count == null ? 1 : count + 1);
+        }
     }
 
     // These are unfortunately necessary for the IConduitNetwork interface.
@@ -686,12 +694,10 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
         // Always recompute what conduits can tick - it's cheap to do.
         areTickableConduitsValid = false;
 
-        // Increment node count
-        if (nodeCountByConduit == null) {
-            nodeCountByConduit = Maps.newHashMap();
+        // Increment node count if loaded (constructor will initialize the values)
+        if (nodeCountByConduit != null) {
+            nodeCountByConduit.compute(node.conduit(), (k, count) -> count == null ? 1 : count + 1);
         }
-
-        nodeCountByConduit.compute(node.conduit(), (k, count) -> count == null ? 1 : count + 1);
 
         // If called during super constructor
         // TODO: Review this behaviour...
@@ -734,10 +740,7 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
         }
 
         // Fully recompute node counts
-        nodeCountByConduit.clear();
-        for (var node : nodes()) {
-            nodeCountByConduit.compute(node.conduit(), (k, count) -> count == null ? 1 : count + 1);
-        }
+        recomputeNodeCounts();
 
         // The cache will need to be rebuilt
         shouldRebuildCache = true;
@@ -753,10 +756,7 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
         shouldRebuildCache = true;
 
         // Fully recompute node counts
-        nodeCountByConduit.clear();
-        for (var node : nodes()) {
-            nodeCountByConduit.compute(node.conduit(), (k, count) -> count == null ? 1 : count + 1);
-        }
+        recomputeNodeCounts();
 
         if (context == null) {
             return;
