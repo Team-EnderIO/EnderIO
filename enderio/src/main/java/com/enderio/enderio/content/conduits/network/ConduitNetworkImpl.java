@@ -12,6 +12,9 @@ import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContext;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContextType;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
+import com.enderio.enderio.content.conduits.network.pathing.ConduitPathingStrategy;
+import com.enderio.enderio.content.conduits.network.pathing.PathfindingContext;
+import com.enderio.enderio.content.conduits.network.pathing.BreadthFirstPathingStrategy;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.HashMultimap;
@@ -34,20 +37,16 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Queue;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeImpl> implements ConduitNetwork {
+public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeImpl> implements ConduitNetwork, PathfindingContext {
 
     private static final Codec<ConduitNetworkImpl> LEGACY_CODEC = RecordCodecBuilder.create(instance -> instance
             .group(Conduit.CODEC.fieldOf("conduit").forGetter(i -> null),
@@ -68,6 +67,8 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
     public static final Codec<ConduitNetworkImpl> CODEC = Codec.withAlternative(NEW_CODEC, LEGACY_CODEC);
 
     private final ConduitType<?, ?> conduitType;
+    
+    private final ConduitPathingStrategy pathfinder = new BreadthFirstPathingStrategy();
 
     @Nullable
     private ConduitNetworkContext<?> context;
@@ -460,84 +461,19 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
     }
 
     private Optional<ConduitConnectionPath> findBestPathTo(ConduitBlockConnection from, ConduitBlockConnection to) {
-        ConduitNode start = from.node();
-        ConduitNode goal = to.node();
-
-        Map<ConnectionPathProperty<?>, List<Object>> startAggregates = createAggregateMap(collectNodePathProperties(start));
-        if (start.equals(goal)) {
-            return Optional.of(new ConduitConnectionPath(from, to, 1, aggregatePropertyValues(startAggregates)));
-        }
-
-        Queue<ConduitNode> queue = new LinkedList<>();
-        Set<ConduitNode> visited = new HashSet<>();
-        Map<ConduitNode, Integer> distance = new HashMap<>();
-        Map<ConduitNode, Map<ConnectionPathProperty<?>, List<Object>>> aggregateProperties = new HashMap<>();
-
-        queue.add(start);
-        visited.add(start);
-        distance.put(start, 1);
-        aggregateProperties.put(start, startAggregates);
-
-        while (!queue.isEmpty()) {
-            ConduitNode current = queue.poll();
-            int currentDist = distance.get(current);
-
-            for (ConduitNode neighbor : neighbors(current)) {
-                if (visited.contains(neighbor)) {
-                    continue;
-                }
-
-                visited.add(neighbor);
-                queue.add(neighbor);
-                distance.put(neighbor, currentDist + 1);
-
-                Map<ConnectionPathProperty<?>, List<Object>> neighborAggregate = duplicatePropertyMap(aggregateProperties.get(current));
-                mergePropertyMap(neighborAggregate, collectNodePathProperties(neighbor));
-                aggregateProperties.put(neighbor, neighborAggregate);
-
-                if (neighbor.equals(goal)) {
-                    return Optional.of(new ConduitConnectionPath(from, to, currentDist + 1, aggregatePropertyValues(neighborAggregate)));
-                }
-            }
-        }
-
-        return Optional.empty();
+        return pathfinder.findPath(from, to, this);
     }
-
-    private Map<ConnectionPathProperty<?>, Object> collectNodePathProperties(ConduitNode node) {
+    
+    // region PathfindingContext Implementation
+    
+    @Override
+    public Map<ConnectionPathProperty<?>, Object> collectNodeProperties(ConduitNode node) {
         Map<ConnectionPathProperty<?>, Object> values = Maps.newHashMap();
         node.conduit().value().collectNodePathProperties(node, values::put);
         return values;
     }
 
-    private Map<ConnectionPathProperty<?>, List<Object>> createAggregateMap(Map<ConnectionPathProperty<?>, Object> nodeProperties) {
-        Map<ConnectionPathProperty<?>, List<Object>> aggregateMap = Maps.newHashMap();
-        nodeProperties.forEach((property, value) -> aggregateMap.put(property, new ArrayList<>(List.of(value))));
-        return aggregateMap;
-    }
-
-    private Map<ConnectionPathProperty<?>, List<Object>> duplicatePropertyMap(Map<ConnectionPathProperty<?>, List<Object>> source) {
-        Map<ConnectionPathProperty<?>, List<Object>> copy = Maps.newHashMap();
-        if (source != null) {
-            source.forEach((property, list) -> copy.put(property, new ArrayList<>(list)));
-        }
-        return copy;
-    }
-
-    private void mergePropertyMap(Map<ConnectionPathProperty<?>, List<Object>> target, Map<ConnectionPathProperty<?>, Object> additions) {
-        additions.forEach((property, value) -> target.computeIfAbsent(property, k -> new ArrayList<>()).add(value));
-    }
-
-    private Map<ConnectionPathProperty<?>, Object> aggregatePropertyValues(Map<ConnectionPathProperty<?>, List<Object>> aggregatedLists) {
-        Map<ConnectionPathProperty<?>, Object> aggregatedValues = Maps.newHashMap();
-        aggregatedLists.forEach((property, values) -> aggregatedValues.put(property, aggregateProperty(property, values)));
-        return aggregatedValues;
-    }
-
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    private static Object aggregateProperty(ConnectionPathProperty property, List<Object> values) {
-        return property.aggregate(values);
-    }
+    // endregion
 
     private void removeTickingNode(ConduitNodeImpl node) {
         if (!tickingNodes.contains(node)) {
