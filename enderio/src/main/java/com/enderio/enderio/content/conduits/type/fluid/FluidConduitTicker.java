@@ -120,7 +120,9 @@ public class FluidConduitTicker extends ConduitTickerBase<FluidConduit> {
             var insertConnection = insertPath.end();
             final int maxInsertSpeed = insertPath.property(FluidConduit.PATH_MAX_TRANSFER_RATE);
 
-            if (insertedPerPath.getOrDefault(insertPath, 0) >= maxInsertSpeed) {
+            // Calculate remaining 'speed' for this path
+            int remaining = maxInsertSpeed - insertedPerPath.getOrDefault(insertPath, 0);
+            if (remaining <= 0) {
                 continue;
             }
 
@@ -132,8 +134,8 @@ public class FluidConduitTicker extends ConduitTickerBase<FluidConduit> {
             var fluidToInsert = extractedFluid.copy();
 
             // Limit to path's max speed
-            if (fluidToInsert.getAmount() > maxInsertSpeed) {
-                fluidToInsert.setAmount(maxInsertSpeed);
+            if (fluidToInsert.getAmount() > remaining) {
+                fluidToInsert.setAmount(remaining);
             }
 
             // Test fluid against insert filter.

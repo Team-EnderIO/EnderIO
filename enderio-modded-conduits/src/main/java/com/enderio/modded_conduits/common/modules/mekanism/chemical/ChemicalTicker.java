@@ -113,7 +113,9 @@ public class ChemicalTicker extends ConduitTickerBase<ChemicalConduit> {
             var insertConnection = insertPath.end();
             final long maxInsertSpeed = insertPath.property(ChemicalConduit.PATH_MAX_TRANSFER_RATE);
 
-            if (insertedPerPath.getOrDefault(insertPath, 0L) >= maxInsertSpeed) {
+            // Calculate remaining 'speed' for this path
+            long remaining = maxInsertSpeed - insertedPerPath.getOrDefault(insertPath, 0L);
+            if (remaining <= 0) {
                 continue;
             }
 
@@ -125,8 +127,8 @@ public class ChemicalTicker extends ConduitTickerBase<ChemicalConduit> {
             var chemicalToInsert = extractedChemical.copy();
 
             // Limit to path's max speed
-            if (chemicalToInsert.getAmount() > maxInsertSpeed) {
-                chemicalToInsert.setAmount(maxInsertSpeed);
+            if (chemicalToInsert.getAmount() > remaining) {
+                chemicalToInsert.setAmount(remaining);
             }
 
             // Test fluid against insert filter.

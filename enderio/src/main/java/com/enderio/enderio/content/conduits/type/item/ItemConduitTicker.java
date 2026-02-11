@@ -94,8 +94,9 @@ public class ItemConduitTicker extends ConduitTickerBase<ItemConduit> {
                         var pathSpeedAndTickRate = insertPath.property(ItemConduit.PATH_SPEED_AND_TICK_RATE);
                         final int maxSpeed = pathSpeedAndTickRate.getAdjustedSpeed(extractConduit.value().networkTickRate());
 
-                        // Skip if we've already inserted enough for this path.
-                        if (insertedPerPath.getOrDefault(insertPath, 0) >= maxSpeed) {
+                        // Calculate remaining 'speed' for this path
+                        int remaining = maxSpeed - insertedPerPath.getOrDefault(insertPath, 0);
+                        if (remaining <= 0) {
                             continue;
                         }
 
@@ -113,9 +114,9 @@ public class ItemConduitTicker extends ConduitTickerBase<ItemConduit> {
 
                         ItemStack itemToInsert = extractedItem.copy();
 
-                        // Restrict to the speed of the path.
-                        if (itemToInsert.getCount() > maxSpeed) {
-                            itemToInsert.setCount(maxSpeed);
+                        // Limit to path's max speed
+                        if (itemToInsert.getCount() > remaining) {
+                            itemToInsert.setCount(remaining);
                         }
 
                         var insertFilter = insertConnection.inventory()
