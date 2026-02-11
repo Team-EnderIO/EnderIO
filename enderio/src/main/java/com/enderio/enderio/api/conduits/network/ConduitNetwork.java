@@ -30,7 +30,7 @@ public interface ConduitNetwork {
     ConduitType<?, ?> conduitType();
 
     /**
-     * @return set of {@link Holder<Conduit>>}'s represented by the network.
+     * @return {@link Set} of {@link Conduit} {@link Holder}'s represented by the network.
      */
     @ApiStatus.AvailableSince("8.1.0")
     Set<Holder<Conduit<?, ?>>> conduits();

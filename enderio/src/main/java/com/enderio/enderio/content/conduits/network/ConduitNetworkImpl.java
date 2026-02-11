@@ -793,7 +793,7 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
         category.setDetail("NodeCount", nodeCount());
         category.setDetail("TickingNodeCount", tickingNodes.size());
         category.setDetail("NodesByChunkPos", nodesByChunkPos.size());
-        category.setDetail("DirttNodes", dirtyNodes.size());
+        category.setDetail("DirtyNodes", dirtyNodes.size());
         category.setDetail("AllChannels", allChannels.size());
         category.setDetail("InsertConnections", insertConnections.size());
         category.setDetail("ExtractConnections", extractConnections.size());

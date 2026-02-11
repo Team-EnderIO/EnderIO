@@ -26,7 +26,7 @@ public record SpeedAndTickRatePair(int speed, int tickRate) {
 
     public SpeedAndTickRatePair {
         Preconditions.checkArgument(speed >= 0, "speed must be non-negative");
-        Preconditions.checkArgument(tickRate >= 0, "tickRate must be positive");
+        Preconditions.checkArgument(tickRate >= 0, "tickRate must non-negative");
         Preconditions.checkArgument(tickRate <= 20, "tickRate must be <= 20");
     }
 

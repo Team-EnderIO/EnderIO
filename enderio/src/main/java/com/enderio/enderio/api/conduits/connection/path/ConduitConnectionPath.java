@@ -55,4 +55,25 @@ public final class ConduitConnectionPath {
     public ConduitConnectionPath reverse() {
         return new ConduitConnectionPath(end, start, length, properties);
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+
+        if (!(other instanceof ConduitConnectionPath that)) {
+            return false;
+        }
+
+        return length == that.length
+            && Objects.equals(start, that.start)
+            && Objects.equals(end, that.end)
+            && Objects.equals(properties, that.properties);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(start, end, length, properties);
+    }
 }
