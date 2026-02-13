@@ -118,10 +118,6 @@ public class FluidConduitTests {
         var fluidConduit = helper.getConduit(EIOConduits.ENERGETIC_FLUID);
         final int tickRate = fluidConduit.value().type().getTickRate(fluidConduit);
 
-        if (!((FluidConduit)fluidConduit.value()).doesSupportPriority()) {
-            throw new IllegalStateException("Fluid conduit does not support priority, fix the test to use a conduit that does.");
-        }
-
         helper.startSequence()
             // Destroy all previous conduits
             .thenExecute(() -> helper.fillAir(1, 1, 0, 1, 1, 2))

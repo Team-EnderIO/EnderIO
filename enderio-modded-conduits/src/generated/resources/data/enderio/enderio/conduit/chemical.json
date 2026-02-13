@@ -9,7 +9,6 @@
   "description": {
     "translate": "conduit.enderio.chemical"
   },
-  "is_multi_chemical": false,
   "texture": "enderio:block/conduit/chemical",
   "transfer_rate": 750
 }

@@ -28,9 +28,6 @@ public class ChemicalTicker extends ConduitTickerBase<ChemicalConduit> {
 
     @Override
     protected void tickNetwork(ServerLevel level, ConduitNetwork network, List<Holder<Conduit<?, ?>>> tickableConduits) {
-        var context = network.getOrCreateContext(ChemicalConduitNetworkContext.TYPE);
-
-        boolean hadMultiChemical = false;
         Map<ConduitConnectionPath, Long> insertedPerPath = Maps.newHashMap();
 
         for (var channel : network.allChannels()) {
@@ -43,42 +40,21 @@ public class ChemicalTicker extends ConduitTickerBase<ChemicalConduit> {
                 var extractConduit = extractConnection.node().conduit(conduitType());
                 final long transferRate = extractConduit.value().transferRatePerTick() * conduitType().getTickRate(extractConduit);
 
-                hadMultiChemical |= extractConduit.value().isMultiChemical();
-
                 IChemicalHandler extractHandler = extractConnection
                         .getSidedCapability(MekanismModule.Capabilities.CHEMICAL);
                 if (extractHandler == null) {
                     continue;
                 }
 
-                if (!context.lockedChemical().isEmptyType()) {
-                    doChemicalTransfer(context.lockedChemical(), transferRate, extractConnection, insertPaths, insertedPerPath);
-                } else {
-                    long remaining = transferRate;
+                long remaining = transferRate;
 
-                    for (int i = 0; i < extractHandler.getChemicalTanks() && remaining > 0; i++) {
-                        if (extractHandler.getChemicalInTank(i).isEmpty()) {
-                            continue;
-                        }
-
-                        Chemical chemical = extractHandler.getChemicalInTank(i).getChemical();
-                        remaining = doChemicalTransfer(chemical, remaining, extractConnection, insertPaths, insertedPerPath);
-
-                        if (!extractConduit.value().isMultiChemical() && remaining < transferRate) {
-                            context.setLockedChemical(chemical);
-                            break;
-                        }
+                for (int i = 0; i < extractHandler.getChemicalTanks() && remaining > 0; i++) {
+                    if (extractHandler.getChemicalInTank(i).isEmpty()) {
+                        continue;
                     }
-                }
-            }
-        }
 
-        // Mark nodes as dirty if we've acquired a new locked fluid
-        if (hadMultiChemical) {
-            if (context != null && !context.lockedChemical().equals(context.lastLockedChemical())) {
-                context.clearLastLockedChemical();
-                for (var node : network.tickingNodes()) {
-                    node.markDirty();
+                    Chemical chemical = extractHandler.getChemicalInTank(i).getChemical();
+                    remaining = doChemicalTransfer(chemical, remaining, extractConnection, insertPaths, insertedPerPath);
                 }
             }
         }

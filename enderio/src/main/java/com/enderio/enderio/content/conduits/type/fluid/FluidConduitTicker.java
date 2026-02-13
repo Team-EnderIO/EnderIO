@@ -10,9 +10,7 @@ import com.enderio.enderio.init.EIOConduitTypes;
 import com.google.common.collect.Maps;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidUtil;
@@ -32,9 +30,6 @@ public class FluidConduitTicker extends ConduitTickerBase<FluidConduit> {
 
     @Override
     protected void tickNetwork(ServerLevel level, ConduitNetwork network, List<Holder<Conduit<?, ?>>> tickableConduits) {
-        var context = network.getOrCreateContext(FluidConduitNetworkContext.TYPE);
-
-        boolean hadMultiFluid = false;
         Map<ConduitConnectionPath, Integer> insertedPerPath = Maps.newHashMap();
         
         for (var channel : network.allChannels()) {
@@ -52,40 +47,15 @@ public class FluidConduitTicker extends ConduitTickerBase<FluidConduit> {
                 final var extractConduit = extractConnection.node().conduit(conduitType());
                 final int fluidRate = extractConduit.value().transferRatePerTick() * conduitType().getTickRate(extractConduit);
 
-                hadMultiFluid |= extractConduit.value().isMultiFluid();
+                int remaining = fluidRate;
 
-                if (!context.lockedFluid().isSame(Fluids.EMPTY)) {
-                    doFluidTransfer(context.lockedFluid(), fluidRate, extractConnection, insertPaths, insertedPerPath);
-                } else {
-                    int remaining = fluidRate;
-
-                    for (int i = 0; i < extractHandler.getTanks() && remaining > 0; i++) {
-                        if (extractHandler.getFluidInTank(i).isEmpty()) {
-                            continue;
-                        }
-
-                        Fluid fluid = extractHandler.getFluidInTank(i).getFluid();
-                        remaining = doFluidTransfer(fluid, remaining, extractConnection, insertPaths, insertedPerPath);
-
-                        if (!extractConduit.value().isMultiFluid() && remaining < fluidRate) {
-                            if (fluid instanceof FlowingFluid flowing) {
-                                fluid = flowing.getSource();
-                            }
-
-                            context.setLockedFluid(fluid);
-                            break;
-                        }
+                for (int i = 0; i < extractHandler.getTanks() && remaining > 0; i++) {
+                    if (extractHandler.getFluidInTank(i).isEmpty()) {
+                        continue;
                     }
-                }
-            }
-        }
 
-        // Mark nodes as dirty if we've acquired a new locked fluid
-        if (hadMultiFluid) {
-            if (context != null && !context.lockedFluid().equals(context.lastLockedFluid())) {
-                context.clearLastLockedFluid();
-                for (var node : network.tickingNodes()) {
-                    node.markDirty();
+                    Fluid fluid = extractHandler.getFluidInTank(i).getFluid();
+                    remaining = doFluidTransfer(fluid, remaining, extractConnection, insertPaths, insertedPerPath);
                 }
             }
         }
