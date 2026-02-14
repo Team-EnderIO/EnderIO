@@ -2,7 +2,6 @@ package com.enderio.enderio.client.content.travel;
 
 import com.enderio.enderio.api.travel.TravelRenderer;
 import com.enderio.enderio.client.foundation.renderer.OutlineBuffer;
-import com.enderio.enderio.client.foundation.renderer.OutlineRenderType;
 import com.enderio.enderio.content.travel.travel_anchor.AnchorTravelTarget;
 import com.enderio.enderio.content.travel.travel_anchor.PaintedTravelAnchorBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -18,11 +17,11 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.FastColor;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
@@ -31,18 +30,23 @@ import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
+import java.util.Objects;
 import java.util.Optional;
 
 public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> {
-    public static final RenderType BOLD_LINES = OutlineRenderType.createLines("bold_lines", 3);
-    public static final RenderType VERY_BOLD_LINES = OutlineRenderType.createLines("very_bold_lines", 5);
-
     @Override
     public void render(AnchorTravelTarget travelData, LevelRenderer levelRenderer, PoseStack poseStack,
             double distanceSquared, boolean active, float partialTick) {
         if (!travelData.isVisible()) {
             return;
         }
+
+        LocalPlayer player = Objects.requireNonNull(Minecraft.getInstance().player);
+
+        Vec2 playerLookRotation = player.getRotationVector();
+        Vec3 playerEyePosition = player.getEyePosition(partialTick);
+        Vec3 playerOffset = travelData.pos().getCenter().vectorTo(playerEyePosition);
+        Vec3 playerOffsetNormalized = playerOffset.normalize();
 
         poseStack.pushPose();
         poseStack.translate(travelData.pos().getX(), travelData.pos().getY(), travelData.pos().getZ());
@@ -71,25 +75,24 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
                 .renderModel(poseStack.last(), solid, blockState, blockModel, 1, 1, 1, 0xF000F0,
                         OverlayTexture.NO_OVERLAY);
 
-        // Render line
-        RenderType lineType;
-        if (distanceSquared > 85 * 85) {
-            lineType = RenderType.lines();
-        } else if (distanceSquared > 38 * 38) {
-            lineType = BOLD_LINES;
-        } else {
-            lineType = VERY_BOLD_LINES;
-        }
-        VertexConsumer lines = buffer.getBuffer(lineType);
-        LevelRenderer.renderLineBox(poseStack, lines, 0, 0, 0, 1, 1, 1, FastColor.ARGB32.red(color) / 255F,
-                FastColor.ARGB32.green(color) / 255F, FastColor.ARGB32.blue(color) / 255F, 1);
+        // Render background outline
+        Block backgroundBlock = active ? Blocks.YELLOW_CONCRETE : Blocks.WHITE_CONCRETE;
+        BlockState bgBlockState = backgroundBlock.defaultBlockState();
+        BakedModel bgBlockModel = minecraft.getBlockRenderer().getBlockModel(bgBlockState);
 
-        LocalPlayer player = Minecraft.getInstance().player;
+        float bgBorderSize = active ? 0.2F : 0.15F;
+        float ssf = 1F + 2 * bgBorderSize;
+        Vec3 po = playerOffsetNormalized.scale(-ssf).subtract(bgBorderSize, bgBorderSize, bgBorderSize);
+        poseStack.pushPose();
+        poseStack.translate(po.x, po.y, po.z);
+        poseStack.scale(ssf, ssf, ssf);
 
-        Vec2 playerLookRotation = player.getRotationVector();
-        Vec3 playerEyePosition = player.getEyePosition(partialTick);
-        Vec3 playerOffset = travelData.pos().getCenter().vectorTo(playerEyePosition);
-        Vec3 playerOffsetNormalized = playerOffset.normalize();
+        minecraft
+            .getBlockRenderer()
+            .getModelRenderer()
+            .renderModel(poseStack.last(), solid, bgBlockState, bgBlockModel, 1, 1, 1, 0xF000F0, OverlayTexture.NO_OVERLAY);
+
+        poseStack.popPose();
 
         // Render Text
         if (!travelData.name().trim().isEmpty()) {
