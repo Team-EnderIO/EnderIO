@@ -56,7 +56,7 @@ public class EIOCommonLang {
 
     public static final Component ELECTROMAGNET_ON = gui("electromagnet_on");
     public static final Component ELECTROMAGNET_OFF = gui("electromagnet_off");
-    public static final Component ERROR_TO_FAR = gui("error_to_far");
+    public static final Component ERROR_TOO_FAR = gui("error_too_far");
     public static final Component ERROR_CANNOT_TELEPORT = gui("error_cannot_teleport");
     public static final Component ERROR_INVALID_DESTINATION = gui("error_invalid_destination");
 

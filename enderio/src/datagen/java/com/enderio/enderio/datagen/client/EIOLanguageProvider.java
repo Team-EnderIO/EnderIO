@@ -729,7 +729,7 @@ public class EIOLanguageProvider extends LanguageProvider {
 
         add(EIOCommonLang.ELECTROMAGNET_ON, "Electromagnet On");
         add(EIOCommonLang.ELECTROMAGNET_OFF, "Electromagnet Off");
-        add(EIOCommonLang.ERROR_TO_FAR, "ERROR: Too far");
+        add(EIOCommonLang.ERROR_TOO_FAR, "ERROR: Too far");
         add(EIOCommonLang.ERROR_CANNOT_TELEPORT, "ERROR: Cannot teleport");
         add(EIOCommonLang.ERROR_INVALID_DESTINATION, "ERROR: Destination not a valid target");
 

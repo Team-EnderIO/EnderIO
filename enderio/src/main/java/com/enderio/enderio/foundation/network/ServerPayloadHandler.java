@@ -72,7 +72,7 @@ public class ServerPayloadHandler {
             // used so this range can be selected correctly
             int range = Math.max(target.get().block2BlockRange(), target.get().item2BlockRange());
             if (packet.pos().distSqr(player.getOnPos()) > range * range) {
-                player.displayClientMessage(EIOCommonLang.ERROR_TO_FAR, true);
+                player.displayClientMessage(EIOCommonLang.ERROR_TOO_FAR, true);
                 return;
             }
 
@@ -144,10 +144,10 @@ public class ServerPayloadHandler {
             if(magnetActive != null){
                 if(magnetActive){
                     stack.set(EIODataComponents.TOGGLED, false);
-                    player.displayClientMessage(EIOCommonLang.ELECTROMAGNET_ON, true);
+                    player.displayClientMessage(EIOCommonLang.ELECTROMAGNET_OFF, true);
                 }else{
                     stack.set(EIODataComponents.TOGGLED, true);
-                    player.displayClientMessage(EIOCommonLang.ELECTROMAGNET_OFF, true);
+                    player.displayClientMessage(EIOCommonLang.ELECTROMAGNET_ON, true);
                 }
                 return true;
             }
