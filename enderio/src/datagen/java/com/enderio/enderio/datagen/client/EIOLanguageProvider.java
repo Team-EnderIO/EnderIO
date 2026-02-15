@@ -5,7 +5,7 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitApi;
 import com.enderio.enderio.api.io.RedstoneControl;
-import com.enderio.enderio.client.KeybindHandler;
+import com.enderio.enderio.client.content.keybinds.KeybindHandler;
 import com.enderio.enderio.compat.jei.JEILang;
 import com.enderio.enderio.content.advancements.AdvancementsLang;
 import com.enderio.enderio.content.armory.ArmoryLang;

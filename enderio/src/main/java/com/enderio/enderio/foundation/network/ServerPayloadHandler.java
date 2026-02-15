@@ -86,36 +86,22 @@ public class ServerPayloadHandler {
     public void handleShortTravelRequest(ServerboundRequestShortTravelPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
             var player = context.player();
+            if(player == null)
+                return;
+
             // For keybind anchor teleports
             ItemStack travelItemStack = TravelHandler.findValidTravelItem(player);
-
-            Vec3 eventPos = packet.vec3();
 
             // These errors should only ever be triggered if there's some form of desync
             if (travelItemStack.isEmpty()) {
                 player.displayClientMessage(Component.nullToEmpty("ERROR: Cannot teleport"), true);
                 return;
             }
-            if (eventPos == null) {
-                player.displayClientMessage(Component.nullToEmpty("ERROR: Destination not a valid target"), true);
-                return;
-            }
 
             TravelHandler.consumeResources(travelItemStack);
 
-            player.teleportTo(eventPos.x(), eventPos.y(), eventPos.z());
-            ((ServerPlayer)player).connection.resetPosition();
-            player.fallDistance = 0;
-
-            if (player.isInWall()) {
-                // without this line the player takes 1 tick of damage before their pose changes
-                player.setPose(Pose.SWIMMING);
-            }
-
-            player.getCooldowns().addCooldown(travelItemStack.getItem(), BaseConfig.COMMON.ITEMS.TRAVELLING_BLINK_DISABLED_TIME.get());
-
-            player.playNotifySound(SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
-
+            if(TravelHandler.shortTeleport(player.level(), player, false))
+                player.getCooldowns().addCooldown(travelItemStack.getItem(), BaseConfig.COMMON.ITEMS.TRAVELLING_BLINK_DISABLED_TIME.get());
         });
     }
 

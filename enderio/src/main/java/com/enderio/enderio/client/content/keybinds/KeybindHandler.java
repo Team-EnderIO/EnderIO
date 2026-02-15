@@ -1,9 +1,8 @@
-package com.enderio.enderio.client;
+package com.enderio.enderio.client.content.keybinds;
 
 import com.enderio.enderio.client.content.travel.TravelTargetRendering;
 import com.enderio.enderio.config.base.BaseConfig;
 import com.enderio.enderio.content.travel.TravelHandler;
-import com.enderio.enderio.foundation.network.packets.ServerboundRequestShortTravelPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundToggleMagnetPacket;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
@@ -16,7 +15,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
-import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.Lazy;
 import net.neoforged.neoforge.network.PacketDistributor;
 
@@ -46,6 +44,8 @@ public class KeybindHandler {
         }
 
         Player player = Minecraft.getInstance().player;
+        if(player == null)
+            return;
 
         if(TRAVEL_STAFF_KEY.get().isDown() && Minecraft.getInstance().level != null && Minecraft.getInstance().screen == null) {
             travelKeyDelayTracker += 1;
