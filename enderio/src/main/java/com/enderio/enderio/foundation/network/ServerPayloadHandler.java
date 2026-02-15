@@ -99,10 +99,10 @@ public class ServerPayloadHandler {
                 return;
             }
 
-            TravelHandler.consumeResources(travelItemStack);
-
-            if(TravelHandler.shortTeleport(player.level(), player, false))
+            if(TravelHandler.shortTeleport(player.level(), player, false)){
+                TravelHandler.consumeResources(travelItemStack);
                 player.getCooldowns().addCooldown(travelItemStack.getItem(), BaseConfig.COMMON.ITEMS.TRAVELLING_BLINK_DISABLED_TIME.get());
+            }
         });
     }
 
