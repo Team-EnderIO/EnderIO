@@ -79,7 +79,7 @@ dependencyResolutionManagement {
                 includeGroup("com.almostreliable.mods")
             }
         }
-
+  
         maven {
             name = "Curse Maven"
             url = uri("https://cursemaven.com")
@@ -118,6 +118,14 @@ dependencyResolutionManagement {
                 includeGroup("com.refinedmods.refinedstorage")
             }
         }
+		
+		maven {
+			name = "Illusive Soulworks maven"
+			url = uri("https://maven.theillusivec4.top/")
+			content {
+                includeGroup("top.theillusivec4.curios")
+            }
+		}
 
         mavenLocal() {
             content {

@@ -589,5 +589,8 @@
   "tooltip.enderio.machine.status.output_full": "There is not enough room for the output",
   "tooltip.enderio.no_soul_bound": "This item can have a soul bound to it.",
   "tooltip.enderio.show_advanced_tooltip": "<Hold Shift>",
-  "tooltip.enderio.tool.soul_vial.health": "Health: %s/%s"
+  "tooltip.enderio.tool.soul_vial.health": "Health: %s/%s",
+    "key.enderio.travelstafftp": "Staff of Travelling",
+    "key.enderio.magnettoggle": "Toggle Electromagnet",
+    "enderio": "EnderIO"
 }

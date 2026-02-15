@@ -28,6 +28,9 @@ public class TravelTargetRendering {
 
     private static Map<TravelTargetType<?>, TravelRenderer<?>> RENDERERS;
 
+    // Controlled by Travel Staff keybind logic. An "override" to allow rendering due to keybind being held.
+    public static boolean TRAVEL_STAFF_KEYBIND_RENDER_TRAVEL_TARGETS = false;
+
     public static void init() {
         var event = new RegisterTravelRenderersEvent();
         ModLoader.postEvent(event);
@@ -57,11 +60,11 @@ public class TravelTargetRendering {
             return;
         }
 
-        if (!TravelHandler.canTeleport(player)) {
+        if (!TravelHandler.canTeleport(player) && !TRAVEL_STAFF_KEYBIND_RENDER_TRAVEL_TARGETS) {
             return;
         }
 
-        boolean itemTeleport = TravelHandler.canItemTeleport(player);
+        boolean itemTeleport = TravelHandler.canItemTeleport(player) || TRAVEL_STAFF_KEYBIND_RENDER_TRAVEL_TARGETS;
 
         @Nullable
         TravelTarget activeTarget = TravelHandler.getTeleportAnchorTarget(player).orElse(null);

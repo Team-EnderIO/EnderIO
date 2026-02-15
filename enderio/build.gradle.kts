@@ -143,6 +143,10 @@ dependencies {
     compileOnly(libs.ftbUltimine)
     localRuntime(libs.ftbUltimine)
 
+	// Curio compat
+    compileOnly(libs.curios)
+    localRuntime(libs.curios)
+
     // Sodium + Iris to test shader compatibility
     compileOnly(libs.iris)
     localRuntime(libs.sodium)
@@ -250,6 +254,7 @@ var generateModMetadata = tasks.register<ProcessResources>("generateModMetadata"
             "ae2_version_range" to libs.versions.ae2.get(),
             "refinedstorage_version_range" to libs.versions.refinedStorage.get(),
             "ftb_ultimine_version_range" to libs.versions.ftbUltimine.get(),
+			"curios_version_range" to libs.versions.curios.get()
     )
 
     inputs.properties(replaceProperties)

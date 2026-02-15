@@ -4,6 +4,7 @@ import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.enderio.api.travel.TravelTarget;
 import com.enderio.enderio.api.travel.TravelTargetApi;
 import com.enderio.enderio.config.base.BaseConfig;
+import com.enderio.enderio.foundation.network.packets.ServerboundRequestShortTravelPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundRequestTravelPacket;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIODataComponents;
@@ -24,13 +25,19 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
+import top.theillusivec4.curios.api.CuriosCapability;
+import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
+import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
+import top.theillusivec4.curios.api.type.inventory.IDynamicStackHandler;
 
 import java.util.Comparator;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Thanks to the developers of <a href="https://github.com/castcrafter/travel_anchors">https://github.com/castcrafter/travel_anchors</a> for allowing us to use their code with our license.
@@ -55,6 +62,15 @@ public class TravelHandler {
         return comp != null && comp;
     }
 
+    public static boolean isTravelItem(ItemStack stack){
+        if(stack != null && !stack.isEmpty()) {
+            Boolean comp = stack.get(EIODataComponents.TRAVEL_ITEM);
+            if (comp != null && comp) {
+                return true;
+            }
+        }
+        return false;
+    }
     // NOTE: This isn't as flexible as how Integration system used to work.
     public static boolean canBlockTeleport(Player player) {
         return player.level().getBlockState(player.blockPosition().below()).is(EIOTags.Blocks.BLOCKS_TELEPORTATION);
@@ -70,12 +86,52 @@ public class TravelHandler {
         ItemStackEnergy.extractEnergy(stack, BaseConfig.COMMON.ITEMS.TRAVELLING_STAFF_ENERGY_USE.get(), false);
     }
 
+
+    // FIXME: Move this too.
+    /**
+     * Includes hasResources()/charge level check
+     */
+    public static ItemStack findValidTravelItem(Player player) {
+        if(ModList.get().isLoaded("curios")) {
+            ICuriosItemHandler curiosItemHandler = player.getCapability(CuriosCapability.INVENTORY);
+            if(curiosItemHandler != null){
+                for(IDynamicStackHandler curiosStackHandler : curiosItemHandler.getCurios().values().stream().map(ICurioStacksHandler::getStacks).collect(
+                    Collectors.toSet())){
+                    for(int slot = 0; slot < curiosStackHandler.getSlots(); slot++){
+                        ItemStack stack = curiosStackHandler.getStackInSlot(slot);
+                        if(stack != null && !stack.isEmpty() && isTravelItem(stack)
+                            && !player.getCooldowns().isOnCooldown(stack.getItem())
+                            && (player.isCreative() || TravelHandler.hasResources(stack))){
+                            return stack;
+                        }
+                    }
+                }
+            }
+        }
+
+        for(int i = 0; i < player.getInventory().getContainerSize(); i++){
+            ItemStack stack = player.getInventory().getItem(i);
+            if(!stack.isEmpty() && isTravelItem(stack)
+                && !player.getCooldowns().isOnCooldown(stack.getItem())
+                && (player.isCreative() || TravelHandler.hasResources(stack))) {
+                return stack;
+            }
+        }
+
+        return ItemStack.EMPTY;
+    }
+
     public static boolean shortTeleport(Level level, Player player) {
+        return shortTeleport(level, player, false);
+    }
+
+    public static boolean shortTeleport(Level level, Player player, boolean sendToServer) {
         Optional<Vec3> pos = teleportPosition(level, player);
         if (pos.isPresent()) {
-            if (player instanceof ServerPlayer serverPlayer) {
-                Optional<Vec3> eventPos = teleportEvent(player, pos.get());
-                if (eventPos.isPresent()) {
+            Optional<Vec3> eventPos = teleportEvent(player, pos.get());
+            if (eventPos.isPresent()) {
+                if (player instanceof ServerPlayer serverPlayer) {
+
                     player.teleportTo(eventPos.get().x(), eventPos.get().y(), eventPos.get().z());
                     serverPlayer.connection.resetPosition();
                     player.fallDistance = 0;
@@ -86,9 +142,14 @@ public class TravelHandler {
                     }
 
                     player.playNotifySound(SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
-                } else {
-                    player.playNotifySound(SoundEvents.DISPENSER_FAIL, SoundSource.PLAYERS, 1F, 1F);
+
+                }else if(sendToServer){
+                    PacketDistributor.sendToServer(new ServerboundRequestShortTravelPacket(eventPos.get()));
+                }else{
+                    return false;
                 }
+            } else {
+                player.playNotifySound(SoundEvents.DISPENSER_FAIL, SoundSource.PLAYERS, 1F, 1F);
             }
             return true;
         } else {

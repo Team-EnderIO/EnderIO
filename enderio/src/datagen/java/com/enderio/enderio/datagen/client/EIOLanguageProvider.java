@@ -5,6 +5,7 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitApi;
 import com.enderio.enderio.api.io.RedstoneControl;
+import com.enderio.enderio.client.KeybindHandler;
 import com.enderio.enderio.compat.jei.JEILang;
 import com.enderio.enderio.content.advancements.AdvancementsLang;
 import com.enderio.enderio.content.armory.ArmoryLang;
@@ -61,6 +62,7 @@ public class EIOLanguageProvider extends LanguageProvider {
         addFluids();
         addAdvancementsLang();
         addCommonLang();
+        addKeybindsLang();
     }
 
     private void addTags() {
@@ -727,6 +729,12 @@ public class EIOLanguageProvider extends LanguageProvider {
 
         add(EIOCommonLang.DARK_STEEL_LADDER_FASTER, "Faster than regular ladders");
         add(EIOCommonLang.TOO_MANY_LEVELS, "You have more than 21862 levels, that's too much XP.");
+    }
+
+    private void addKeybindsLang(){
+        add(KeybindHandler.ENDERIO_KEYBIND_CATEGORY, "EnderIO");
+        add(KeybindHandler.TOGGLE_MAGNET_KEY.get().getName(), "Toggle Electromagnet");
+        add(KeybindHandler.TRAVEL_STAFF_KEY.get().getName(), "Staff of Travelling");
     }
 
     private void addAdvancementsLang() {
