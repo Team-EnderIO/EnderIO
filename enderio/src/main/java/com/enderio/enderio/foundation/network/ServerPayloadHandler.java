@@ -8,6 +8,7 @@ import com.enderio.enderio.content.filters.fluid.FluidFilterSlot;
 import com.enderio.enderio.content.tools.ElectromagnetItem;
 import com.enderio.enderio.content.tools.PoweredToggledItem;
 import com.enderio.enderio.content.travel.TravelHandler;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.foundation.network.packets.ServerboundRequestShortTravelPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundRequestTravelPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundSetFluidFilterSlotPacket;
@@ -60,18 +61,18 @@ public class ServerPayloadHandler {
 
             // These errors should only ever be triggered if there's some form of desync
             if (!canBlockTeleport && travelItemStack.isEmpty()) {
-                player.displayClientMessage(Component.nullToEmpty("ERROR: Cannot teleport"), true);
+                player.displayClientMessage(EIOCommonLang.ERROR_CANNOT_TELEPORT, true);
                 return;
             }
             if (target.isEmpty()) {
-                player.displayClientMessage(Component.nullToEmpty("ERROR: Destination not a valid target"), true);
+                player.displayClientMessage(EIOCommonLang.ERROR_INVALID_DESTINATION, true);
                 return;
             }
             // Eventually change the packet structure to include what teleport method was
             // used so this range can be selected correctly
             int range = Math.max(target.get().block2BlockRange(), target.get().item2BlockRange());
             if (packet.pos().distSqr(player.getOnPos()) > range * range) {
-                player.displayClientMessage(Component.nullToEmpty("ERROR: Too far"), true);
+                player.displayClientMessage(EIOCommonLang.ERROR_TO_FAR, true);
                 return;
             }
 
@@ -94,7 +95,7 @@ public class ServerPayloadHandler {
 
             // These errors should only ever be triggered if there's some form of desync
             if (travelItemStack.isEmpty()) {
-                player.displayClientMessage(Component.nullToEmpty("ERROR: Cannot teleport"), true);
+                player.displayClientMessage(EIOCommonLang.ERROR_CANNOT_TELEPORT, true);
                 return;
             }
 
@@ -143,10 +144,10 @@ public class ServerPayloadHandler {
             if(magnetActive != null){
                 if(magnetActive){
                     stack.set(EIODataComponents.TOGGLED, false);
-                    player.displayClientMessage(Component.nullToEmpty("Electromagnet Off"), true);
+                    player.displayClientMessage(EIOCommonLang.ELECTROMAGNET_ON, true);
                 }else{
                     stack.set(EIODataComponents.TOGGLED, true);
-                    player.displayClientMessage(Component.nullToEmpty("Electromagnet On"), true);
+                    player.displayClientMessage(EIOCommonLang.ELECTROMAGNET_OFF, true);
                 }
                 return true;
             }
