@@ -51,6 +51,11 @@ public enum CapacitorModifier implements StringRepresentable {
     public static CapacitorModifier getRandomModifier(RandomSource randomSource, Collection<CapacitorModifier> exclude) {
         var selectables = new ArrayList<>(CapacitorModifier.SELECTABLE_MODIFIERS);
         selectables.removeAll(exclude);
+
+        if (selectables.isEmpty()) {
+            throw new IllegalArgumentException("No selectable modifiers left after excluding " + exclude);
+        }
+
         return selectables.get(randomSource.nextInt(selectables.size()));
     }
 
