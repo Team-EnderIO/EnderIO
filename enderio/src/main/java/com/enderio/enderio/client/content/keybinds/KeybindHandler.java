@@ -1,6 +1,5 @@
 package com.enderio.enderio.client.content.keybinds;
 
-import com.enderio.enderio.client.content.travel.TravelTargetRendering;
 import com.enderio.enderio.config.base.BaseConfig;
 import com.enderio.enderio.content.travel.TravelHandler;
 import com.enderio.enderio.foundation.network.packets.ServerboundToggleMagnetPacket;
@@ -26,6 +25,8 @@ public class KeybindHandler {
     public static final Lazy<KeyMapping> TOGGLE_MAGNET_KEY = Lazy.of(() -> new KeyMapping("key.enderio.magnettoggle", InputConstants.KEY_M, ENDERIO_KEYBIND_CATEGORY));
 
     private static int travelKeyDelayTracker = 0;
+    // Used in TravelTargetRendering to enable rendering when travel keybind is held long enough.
+    private static boolean travelTargetRenderingEnabled = false;
 
     @SubscribeEvent
     public static void registerKeyBindings(RegisterKeyMappingsEvent e){
@@ -37,31 +38,30 @@ public class KeybindHandler {
     public static void travelStaffKeyHandler(ClientTickEvent.Post event){
 
         // Control rendering of anchors/travel points
-        if(travelKeyDelayTracker > BaseConfig.CLIENT.SOT_KEY_HOLD_DELAY.get()) {
-            TravelTargetRendering.TRAVEL_STAFF_KEYBIND_RENDER_TRAVEL_TARGETS = true;
+        if(travelKeyDelayTracker > BaseConfig.CLIENT.TRAVEL_KEY_HOLD_DELAY.get()){
+            travelTargetRenderingEnabled = true;
         }else{
-            TravelTargetRendering.TRAVEL_STAFF_KEYBIND_RENDER_TRAVEL_TARGETS = false;
+            travelTargetRenderingEnabled = false;
         }
 
         Player player = Minecraft.getInstance().player;
-        if(player == null)
+        if(player == null) {
             return;
+        }
 
-        if(TRAVEL_STAFF_KEY.get().isDown() && Minecraft.getInstance().level != null && Minecraft.getInstance().screen == null) {
+        if(TRAVEL_STAFF_KEY.get().isDown() && Minecraft.getInstance().level != null && Minecraft.getInstance().screen == null){
             travelKeyDelayTracker += 1;
-            if(travelKeyDelayTracker >= BaseConfig.CLIENT.SOT_KEY_HOLD_DELAY.get()) {
+            if(travelKeyDelayTracker >= BaseConfig.CLIENT.TRAVEL_KEY_HOLD_DELAY.get()) {
                 ItemStack travelStack = TravelHandler.findValidTravelItem(player);
                 if(travelStack.isEmpty()){
                     travelKeyDelayTracker = 0;
                 }
-            }else{
-
             }
         }else if(travelKeyDelayTracker != 0){
             // Now that key is released, (attempt to) do actual teleport logic.
             ItemStack travelStack = TravelHandler.findValidTravelItem(player);
             if(!travelStack.isEmpty()) {
-                if (travelKeyDelayTracker >= BaseConfig.CLIENT.SOT_KEY_HOLD_DELAY.get()) {
+                if (travelKeyDelayTracker >= BaseConfig.CLIENT.TRAVEL_KEY_HOLD_DELAY.get()) {
                     // Do anchor logic
                     TravelHandler.blockTeleport(Minecraft.getInstance().level, player, true);
                 } else {
@@ -78,5 +78,9 @@ public class KeybindHandler {
         if(TOGGLE_MAGNET_KEY.get() != null && TOGGLE_MAGNET_KEY.get().consumeClick() && Minecraft.getInstance().level != null){
             PacketDistributor.sendToServer(new ServerboundToggleMagnetPacket(true));
         }
+    }
+
+    public static boolean shouldRenderTravelTargetsDueToKeybind(){
+        return travelTargetRenderingEnabled;
     }
 }

@@ -2,6 +2,7 @@ package com.enderio.enderio.foundation.network;
 
 import com.enderio.enderio.api.travel.TravelTarget;
 import com.enderio.enderio.api.travel.TravelTargetApi;
+import com.enderio.enderio.compat.curios.CuriosCompat;
 import com.enderio.enderio.config.base.BaseConfig;
 import com.enderio.enderio.content.filters.FilterSlot;
 import com.enderio.enderio.content.filters.fluid.FluidFilterSlot;
@@ -31,6 +32,7 @@ import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 import top.theillusivec4.curios.api.type.inventory.IDynamicStackHandler;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -113,20 +115,15 @@ public class ServerPayloadHandler {
         context.enqueueWork(() -> {
             var player = context.player();
 
-            if(ModList.get().isLoaded("curios")) {
-                ICuriosItemHandler curiosItemHandler = player.getCapability(CuriosCapability.INVENTORY);
-                if(curiosItemHandler != null){
-                    for(IDynamicStackHandler curiosStackHandler : curiosItemHandler.getCurios().values().stream().map(ICurioStacksHandler::getStacks).collect(
-                        Collectors.toSet())){
-                        for(int slot = 0; slot < curiosStackHandler.getSlots(); slot++){
-                            ItemStack stack = curiosStackHandler.getStackInSlot(slot);
-                            if(toggleMagnetAndDisplayToPlayer(stack, player)) {
-                                return;
-                            }
-                        }
+            Optional<List<ItemStack>> optList = CuriosCompat.getAllCuriosOnPlayer(player);
+            if(optList.isPresent()){
+                for(ItemStack curioStack : optList.get()){
+                    if(toggleMagnetAndDisplayToPlayer(curioStack, player)) {
+                        return;
                     }
                 }
             }
+
 
             for(int i = 0; i < player.getInventory().getContainerSize(); i++){
                 ItemStack stack = player.getInventory().getItem(i);

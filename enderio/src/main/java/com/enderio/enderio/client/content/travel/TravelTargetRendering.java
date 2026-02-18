@@ -5,6 +5,7 @@ import com.enderio.enderio.api.travel.TravelRenderer;
 import com.enderio.enderio.api.travel.TravelTarget;
 import com.enderio.enderio.api.travel.TravelTargetApi;
 import com.enderio.enderio.api.travel.TravelTargetType;
+import com.enderio.enderio.client.content.keybinds.KeybindHandler;
 import com.enderio.enderio.content.travel.TravelHandler;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Camera;
@@ -27,9 +28,6 @@ import java.util.Map;
 public class TravelTargetRendering {
 
     private static Map<TravelTargetType<?>, TravelRenderer<?>> RENDERERS;
-
-    // Controlled by Travel Staff keybind logic. An "override" to allow rendering due to keybind being held.
-    public static boolean TRAVEL_STAFF_KEYBIND_RENDER_TRAVEL_TARGETS = false;
 
     public static void init() {
         var event = new RegisterTravelRenderersEvent();
@@ -60,11 +58,11 @@ public class TravelTargetRendering {
             return;
         }
 
-        if (!TravelHandler.canTeleport(player) && !TRAVEL_STAFF_KEYBIND_RENDER_TRAVEL_TARGETS) {
+        if (!TravelHandler.canTeleport(player) && !KeybindHandler.shouldRenderTravelTargetsDueToKeybind()) {
             return;
         }
 
-        boolean itemTeleport = TravelHandler.canItemTeleport(player) || TRAVEL_STAFF_KEYBIND_RENDER_TRAVEL_TARGETS;
+        boolean itemTeleport = TravelHandler.canItemTeleport(player) || KeybindHandler.shouldRenderTravelTargetsDueToKeybind();
 
         @Nullable
         TravelTarget activeTarget = TravelHandler.getTeleportAnchorTarget(player).orElse(null);

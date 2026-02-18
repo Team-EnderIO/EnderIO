@@ -3,6 +3,7 @@ package com.enderio.enderio.content.travel;
 import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.enderio.api.travel.TravelTarget;
 import com.enderio.enderio.api.travel.TravelTargetApi;
+import com.enderio.enderio.compat.curios.CuriosCompat;
 import com.enderio.enderio.config.base.BaseConfig;
 import com.enderio.enderio.foundation.network.packets.ServerboundRequestShortTravelPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundRequestTravelPacket;
@@ -36,6 +37,7 @@ import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 import top.theillusivec4.curios.api.type.inventory.IDynamicStackHandler;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -87,24 +89,19 @@ public class TravelHandler {
     }
 
 
-    // FIXME: Move this too.
+    // FIXME: Move this too (maybe).
     /**
      * Includes hasResources()/charge level check
      */
     public static ItemStack findValidTravelItem(Player player) {
-        if(ModList.get().isLoaded("curios")) {
-            ICuriosItemHandler curiosItemHandler = player.getCapability(CuriosCapability.INVENTORY);
-            if(curiosItemHandler != null){
-                for(IDynamicStackHandler curiosStackHandler : curiosItemHandler.getCurios().values().stream().map(ICurioStacksHandler::getStacks).collect(
-                    Collectors.toSet())){
-                    for(int slot = 0; slot < curiosStackHandler.getSlots(); slot++){
-                        ItemStack stack = curiosStackHandler.getStackInSlot(slot);
-                        if(stack != null && !stack.isEmpty() && isTravelItem(stack)
-                            && !player.getCooldowns().isOnCooldown(stack.getItem())
-                            && (player.isCreative() || TravelHandler.hasResources(stack))){
-                            return stack;
-                        }
-                    }
+
+        Optional<List<ItemStack>> optList = CuriosCompat.getAllCuriosOnPlayer(player);
+        if(optList.isPresent()){
+            for(ItemStack curioStack : optList.get()){
+                if(curioStack != null && !curioStack.isEmpty() && isTravelItem(curioStack)
+                    && !player.getCooldowns().isOnCooldown(curioStack.getItem())
+                    && (player.isCreative() || TravelHandler.hasResources(curioStack))){
+                    return curioStack;
                 }
             }
         }
