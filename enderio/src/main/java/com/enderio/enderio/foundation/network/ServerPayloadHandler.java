@@ -78,11 +78,12 @@ public class ServerPayloadHandler {
                 return;
             }
 
-            if(!canBlockTeleport && !travelItemStack.isEmpty()){
+            // Try to do teleport
+            boolean successfulTeleport = TravelHandler.blockTeleportTo(player.level(), player, target.get(), false);
+            if(successfulTeleport && !canBlockTeleport && !travelItemStack.isEmpty()){
                 TravelHandler.consumeResources(travelItemStack);
                 player.getCooldowns().addCooldown(travelItemStack.getItem(), BaseConfig.COMMON.ITEMS.TRAVELLING_BLINK_DISABLED_TIME.get());
             }
-            TravelHandler.blockTeleportTo(player.level(), player, target.get(), false);
         });
     }
 
