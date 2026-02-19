@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.function.IntFunction;
 
 /**
@@ -44,19 +45,19 @@ public enum CapacitorModifier implements StringRepresentable {
         BURNING_ENERGY_GENERATION
     );
 
-    public static CapacitorModifier getRandomModifier(RandomSource randomSource) {
+    public static Optional<CapacitorModifier> getRandomModifier(RandomSource randomSource) {
         return getRandomModifier(randomSource, List.of());
     }
 
-    public static CapacitorModifier getRandomModifier(RandomSource randomSource, Collection<CapacitorModifier> exclude) {
+    public static Optional<CapacitorModifier> getRandomModifier(RandomSource randomSource, Collection<CapacitorModifier> exclude) {
         var selectables = new ArrayList<>(CapacitorModifier.SELECTABLE_MODIFIERS);
         selectables.removeAll(exclude);
 
         if (selectables.isEmpty()) {
-            throw new IllegalArgumentException("No selectable modifiers left after excluding " + exclude);
+            return Optional.empty();
         }
 
-        return selectables.get(randomSource.nextInt(selectables.size()));
+        return Optional.of(selectables.get(randomSource.nextInt(selectables.size())));
     }
 
     CapacitorModifier(int id) {
