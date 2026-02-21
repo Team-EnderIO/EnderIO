@@ -9,8 +9,11 @@ import net.minecraft.util.ByIdMap;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.function.IntFunction;
 
 /**
@@ -42,8 +45,19 @@ public enum CapacitorModifier implements StringRepresentable {
         BURNING_ENERGY_GENERATION
     );
 
-    public static CapacitorModifier getRandomModifier(RandomSource randomSource) {
-        return CapacitorModifier.SELECTABLE_MODIFIERS.get(randomSource.nextInt(CapacitorModifier.SELECTABLE_MODIFIERS.size()));
+    public static Optional<CapacitorModifier> getRandomModifier(RandomSource randomSource) {
+        return getRandomModifier(randomSource, List.of());
+    }
+
+    public static Optional<CapacitorModifier> getRandomModifier(RandomSource randomSource, Collection<CapacitorModifier> exclude) {
+        var selectables = new ArrayList<>(CapacitorModifier.SELECTABLE_MODIFIERS);
+        selectables.removeAll(exclude);
+
+        if (selectables.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(selectables.get(randomSource.nextInt(selectables.size())));
     }
 
     CapacitorModifier(int id) {
