@@ -48,7 +48,7 @@ public enum CapacitorModifier implements StringRepresentable {
 
     CapacitorModifier(int id) {
         this.id = id;
-        this.modifierId = ResourceLocation.fromNamespaceAndPath("enderio", "capacitor." + name().toLowerCase(Locale.ROOT));
+        this.modifierId = ResourceLocation.fromNamespaceAndPath("enderio", "capacitor.modifier." + name().toLowerCase(Locale.ROOT));
     }
 
     @Override

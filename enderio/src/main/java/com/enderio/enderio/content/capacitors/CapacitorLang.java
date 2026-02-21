@@ -10,19 +10,19 @@ public class CapacitorLang {
     public static final MutableComponent CAPACITOR_TOOLTIP_BASE = create("modifier", "base", "tooltip");
 
     // Has 1 string arg.
-    public static final MutableComponent CAPACITOR_TOOLTIP_ENERGY_CAPACITY = create("modifier", "capacitor",
+    public static final MutableComponent CAPACITOR_TOOLTIP_ENERGY_CAPACITY = create("modifier",
         CapacitorModifier.ENERGY_CAPACITY.getSerializedName(), "tooltip");
 
     // Has 1 string arg.
-    public static final MutableComponent CAPACITOR_TOOLTIP_ENERGY_USE = create("modifier", "capacitor",
+    public static final MutableComponent CAPACITOR_TOOLTIP_ENERGY_USE = create("modifier",
         CapacitorModifier.ENERGY_USE.getSerializedName(), "tooltip");
 
     // Has 1 string arg.
-    public static final MutableComponent CAPACITOR_TOOLTIP_FUEL_EFFICIENCY = create("modifier", "capacitor",
+    public static final MutableComponent CAPACITOR_TOOLTIP_FUEL_EFFICIENCY = create("modifier",
         CapacitorModifier.FUEL_EFFICIENCY.getSerializedName(), "tooltip");
 
     // Has 1 string arg.
-    public static final MutableComponent CAPACITOR_TOOLTIP_BURNING_ENERGY_GENERATION = create("modifier", "capacitor",
+    public static final MutableComponent CAPACITOR_TOOLTIP_BURNING_ENERGY_GENERATION = create("modifier",
         CapacitorModifier.BURNING_ENERGY_GENERATION.getSerializedName(), "tooltip");
 
     // region Loot Capacitor Flavour Text
