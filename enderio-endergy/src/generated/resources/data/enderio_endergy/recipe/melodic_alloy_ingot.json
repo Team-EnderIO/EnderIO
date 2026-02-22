@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "enderio:melodic_alloy_block"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "id": "enderio_endergy:melodic_alloy_ingot"
+  }
+}

@@ -1,0 +1,95 @@
+package com.enderio.endergy.common.init;
+
+import com.enderio.core.common.item.CreativeTabVariants;
+import com.enderio.core.common.item.ICustomCreativeTabEntries;
+import com.enderio.endergy.common.EnderIOEndergy;
+import com.enderio.endergy.common.lang.EndergyCommonComponents;
+import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.content.broken_spawner.BrokenSpawnerItem;
+import com.enderio.enderio.content.paint.block.PaintedBlock;
+import com.enderio.enderio.content.tools.vials.SoulVialItem;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
+import com.enderio.enderio.init.EIOBlocks;
+import com.enderio.enderio.init.EIOCreativeTabs;
+import com.enderio.enderio.init.EIOFluids;
+import com.enderio.enderio.init.EIOItems;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
+
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
+
+public class EndergyCreativeTabs {
+    private static final List<Predicate<Item>> EXCLUSIONS_PREDICATE = List.of(
+        i -> i instanceof BlockItem blockItem && blockItem.getBlock() instanceof PaintedBlock);
+
+    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, EnderIOEndergy.MOD_ID);
+
+    public static final ResourceKey<CreativeModeTab> MAIN = ResourceKey.create(Registries.CREATIVE_MODE_TAB, EnderIOEndergy.rl("endergy"));
+
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TAB = CREATIVE_MODE_TABS.register("endergy", () -> CreativeModeTab
+        .builder()
+        .title(EndergyCommonComponents.CREATIVE_TAB_TITLE)
+        .icon(() -> new ItemStack(EndergyItems.TOTEMIC_CAPACITOR.get()))
+        .withTabsBefore(EIOCreativeTabs.MAIN)
+        .withSearchBar()
+        .displayItems((CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) -> {
+            addAll(EndergyItems.ITEMS, parameters, output);
+            addAll(EndergyBlocks.ITEMS, parameters, output);
+        })
+        .build());
+
+    public static void register(IEventBus bus) {
+        CREATIVE_MODE_TABS.register(bus);
+        bus.addListener(EndergyCreativeTabs::addToExistingTabs);
+    }
+
+    private static void addToExistingTabs(BuildCreativeModeTabContentsEvent event) {
+        if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
+            // TODO: Finish this list
+//            event.acceptAll(Stream
+//                .of(EIOItems.CONDUCTIVE_ALLOY_INGOT, EIOItems.ENERGETIC_ALLOY_INGOT, EIOItems.VIBRANT_ALLOY_INGOT, EIOItems.REDSTONE_ALLOY_INGOT,
+//                    EIOItems.PULSATING_ALLOY_INGOT, EIOItems.DARK_STEEL_INGOT, EIOItems.SOULARIUM_INGOT, EIOItems.END_STEEL_INGOT)
+//                .map(i -> i.get().getDefaultInstance())
+//                .toList());
+        }
+    }
+
+    private static void addAll(DeferredRegister<Item> items, CreativeModeTab.ItemDisplayParameters properties, CreativeModeTab.Output output) {
+        // TODO: Could we use an Ender IO-specific event to interject when adding items.
+        //       for example in the modded conduits addon, insert chemical filter after EIO's normal filters
+        //       or in endergy add ingots after EIO's normal ingots and so on...
+        for (var entry : items.getEntries()) {
+            var item = entry.get();
+
+            if (EXCLUSIONS_PREDICATE.stream().anyMatch(p -> p.test(item))) {
+                continue;
+            }
+
+            if (item instanceof ICustomCreativeTabEntries customCreativeTabEntries) {
+                if (customCreativeTabEntries.shouldAddDefaultItem()) {
+                    output.accept(item);
+                }
+
+                customCreativeTabEntries.addAdditionalCreativeTabEntries(properties, output);
+            } else {
+                output.accept(item);
+
+                // TODO: Remove this old interface
+                if (item instanceof CreativeTabVariants variants) {
+                    variants.addAllVariants(output);
+                }
+            }
+        }
+    }
+}

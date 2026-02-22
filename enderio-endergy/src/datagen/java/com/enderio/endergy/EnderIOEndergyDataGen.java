@@ -1,6 +1,10 @@
 package com.enderio.endergy;
 
+import com.enderio.endergy.client.EndergyBlockStateProvider;
+import com.enderio.endergy.client.EndergyItemModelProvider;
+import com.enderio.endergy.client.EndergyLanguageProvider;
 import com.enderio.endergy.common.EnderIOEndergy;
+import com.enderio.endergy.common.recipes.EndergyRecipeProvider;
 import com.enderio.endergy.datapack_registries.ConduitsBootstrap;
 import com.enderio.enderio.api.EnderIORegistries;
 import net.minecraft.core.HolderLookup;
@@ -33,6 +37,11 @@ public class EnderIOEndergyDataGen {
 
         // TODO: Remove this wrapper...
 //        provider.addSubProvider(event.includeServer(), new ConduitRecipes(packOutput, lookupProvider));
+        generator.addProvider(event.includeServer(), new EndergyRecipeProvider(packOutput, lookupProvider));
+
+        generator.addProvider(event.includeClient(), new EndergyLanguageProvider(packOutput));
+        generator.addProvider(event.includeClient(), new EndergyItemModelProvider(packOutput, existingFileHelper));
+        generator.addProvider(event.includeClient(), new EndergyBlockStateProvider(packOutput, existingFileHelper));
     }
 
     private static RegistrySetBuilder createDatapackEntriesBuilder() {

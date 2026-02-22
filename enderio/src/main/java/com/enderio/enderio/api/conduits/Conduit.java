@@ -19,8 +19,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryFixedCodec;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -32,7 +34,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
-
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -57,6 +59,14 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
      * Gets the conduit description, used for the conduit item.
      */
     Component description();
+
+    /**
+     * Returns a creative tab the conduit should be added to, in addition to the Ender IO tab.
+     * @return a creative tab to add to, if desired.
+     */
+    default Optional<ResourceKey<CreativeModeTab>> creativeTab() {
+        return Optional.empty();
+    }
 
     /**
      * Gets the conduit type.

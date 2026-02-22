@@ -3,7 +3,10 @@ package com.enderio.enderio.init;
 import com.enderio.core.common.item.CreativeTabVariants;
 import com.enderio.core.common.item.ICustomCreativeTabEntries;
 import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.api.EnderIORegistries;
+import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.content.broken_spawner.BrokenSpawnerItem;
+import com.enderio.enderio.content.conduits.ConduitBlockItem;
 import com.enderio.enderio.content.paint.block.PaintedBlock;
 import com.enderio.enderio.content.tools.vials.SoulVialItem;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
@@ -19,7 +22,9 @@ import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -66,6 +71,39 @@ public class EIOCreativeTabs {
                 .map(i -> i.get().getDefaultInstance())
                 .toList());
         }
+
+        addConduitsToOtherTabs(event);
+    }
+
+    private static void addConduitsToOtherTabs(BuildCreativeModeTabContentsEvent event) {
+        var parameters = event.getParameters();
+        var tabOpt = Optional.of(event.getTabKey());
+
+        var registry = parameters.holders().lookupOrThrow(EnderIORegistries.Keys.CONDUIT);
+        var conduitTypes = registry.listElements().toList();
+
+        var conduitClassTypes = conduitTypes.stream()
+            .map(e -> e.value().getClass())
+            .sorted(Comparator.comparing(Class::getName))
+            .distinct()
+            .toList();
+
+        for (var conduitClass : conduitClassTypes) {
+            var matchingConduitTypes = conduitTypes.stream()
+                .filter(e -> e.value().getClass() == conduitClass)
+                .filter(e -> e.value().creativeTab().equals(tabOpt))
+                // GRIM...
+                .sorted((o1, o2) -> compareConduitTo(o1.value(), o2.value()))
+                .toList();
+
+            for (var conduitType : matchingConduitTypes) {
+                event.accept(ConduitBlockItem.getStackFor(conduitType, 1), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+            }
+        }
+    }
+
+    private static <T extends Conduit<T, ?>> int compareConduitTo(Conduit<T, ?> o1, Conduit<?, ?> o2) {
+        return o1.compareTo((T) o2);
     }
 
     private static void addAll(DeferredRegister<Item> items, CreativeModeTab.ItemDisplayParameters properties, CreativeModeTab.Output output) {

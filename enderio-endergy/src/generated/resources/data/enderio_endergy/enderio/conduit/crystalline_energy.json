@@ -1,8 +1,9 @@
 {
   "type": "enderio:energy",
+  "creative_tab": "enderio_endergy:endergy",
   "description": {
     "translate": "conduit.enderio_endergy.crystalline_energy"
   },
   "texture": "enderio_endergy:block/conduit/crystalline_energy",
-  "transfer_rate": 40960
+  "transfer_rate": 384000
 }

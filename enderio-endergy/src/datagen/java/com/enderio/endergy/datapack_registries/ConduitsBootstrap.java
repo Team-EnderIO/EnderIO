@@ -2,6 +2,7 @@ package com.enderio.endergy.datapack_registries;
 
 import com.enderio.endergy.common.EnderIOEndergy;
 import com.enderio.endergy.common.EndergyConduits;
+import com.enderio.endergy.common.init.EndergyCreativeTabs;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.content.conduits.type.energy.EnergyConduit;
@@ -10,15 +11,26 @@ import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 
+import java.util.Optional;
 import java.util.function.Function;
 
 public class ConduitsBootstrap {
     public static void bootstrap(BootstrapContext<Conduit<?, ?>> context) {
         // TODO: Need to adapt rates to new balance, just getting them in
-        register(context, EndergyConduits.CRYSTALLINE_ENERGY, (desc) -> new EnergyConduit(EnderIOEndergy.rl("block/conduit/crystalline_energy"), desc, 40_960));
-        register(context, EndergyConduits.CRYSTALLINE_PINK_SLIME_ENERGY, (desc) -> new EnergyConduit(EnderIOEndergy.rl("block/conduit/crystalline_pink_slime_energy"), desc, 81_920));
-        register(context, EndergyConduits.MELODIC_ENERGY, (desc) -> new EnergyConduit(EnderIOEndergy.rl("block/conduit/melodic_energy"), desc, 327_680));
-        register(context, EndergyConduits.STELLAR_ENERGY, (desc) -> new EnergyConduit(EnderIOEndergy.rl("block/conduit/stellar_energy"), desc, Integer.MAX_VALUE));
+        register(context, EndergyConduits.CRUDE_ENERGY, (desc) -> new EnergyConduit(EnderIOEndergy.rl("block/conduit/crude_energy"), desc,
+            Optional.of(EndergyCreativeTabs.MAIN), 20));
+        register(context, EndergyConduits.COPPER_ENERGY, (desc) -> new EnergyConduit(EnderIOEndergy.rl("block/conduit/copper_energy"), desc,
+            Optional.of(EndergyCreativeTabs.MAIN), 40));
+        register(context, EndergyConduits.IRON_ENERGY, (desc) -> new EnergyConduit(EnderIOEndergy.rl("block/conduit/iron_energy"), desc,
+            Optional.of(EndergyCreativeTabs.MAIN),80));
+        register(context, EndergyConduits.GOLD_ENERGY, (desc) -> new EnergyConduit(EnderIOEndergy.rl("block/conduit/gold_energy"), desc,
+            Optional.of(EndergyCreativeTabs.MAIN), 160));
+        register(context, EndergyConduits.CRYSTALLINE_ENERGY, (desc) -> new EnergyConduit(EnderIOEndergy.rl("block/conduit/crystalline_energy"), desc,
+            Optional.of(EndergyCreativeTabs.MAIN), 384_000));
+        register(context, EndergyConduits.MELODIC_ENERGY, (desc) -> new EnergyConduit(EnderIOEndergy.rl("block/conduit/melodic_energy"), desc,
+            Optional.of(EndergyCreativeTabs.MAIN), 768_000));
+        register(context, EndergyConduits.STELLAR_ENERGY, (desc) -> new EnergyConduit(EnderIOEndergy.rl("block/conduit/stellar_energy"), desc,
+            Optional.of(EndergyCreativeTabs.MAIN), Integer.MAX_VALUE));
 
 //        context.register(Conduits.ENHANCED_ENERGY, new EnergyConduit(EnderIO.rl("block/conduit/enhanced_energy"),
 //            ConduitLang.ENHANCED_ENERGY_CONDUIT, 48_000));

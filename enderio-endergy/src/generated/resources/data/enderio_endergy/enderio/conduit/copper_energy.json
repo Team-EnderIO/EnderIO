@@ -1,0 +1,9 @@
+{
+  "type": "enderio:energy",
+  "creative_tab": "enderio_endergy:endergy",
+  "description": {
+    "translate": "conduit.enderio_endergy.copper_energy"
+  },
+  "texture": "enderio_endergy:block/conduit/copper_energy",
+  "transfer_rate": 40
+}

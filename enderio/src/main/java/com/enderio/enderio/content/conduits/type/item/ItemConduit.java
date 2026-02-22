@@ -21,10 +21,13 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -36,25 +39,24 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public record ItemConduit(ResourceLocation texture, Component description, int transferRatePerCycle, int networkTickRate)
+public record ItemConduit(ResourceLocation texture, Component description, Optional<ResourceKey<CreativeModeTab>> creativeTab, int transferRatePerCycle, int networkTickRate)
     implements Conduit<ItemConduit, ItemConduitConnectionConfig> {
 
     public static final int EXTRACT_FILTER_SLOT = 0;
     public static final int INSERT_FILTER_SLOT = 1;
 
-    public static final MapCodec<ItemConduit> CODEC = RecordCodecBuilder.mapCodec(
-            builder -> builder
-                    .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(ItemConduit::texture),
-                            ComponentSerialization.CODEC.fieldOf("description").forGetter(ItemConduit::description),
-                            // Using optionals in order to support the old conduit format.
-                            Codec.INT.optionalFieldOf("transfer_rate", 4).forGetter(ItemConduit::transferRatePerCycle),
-                            Codec.intRange(1, 20)
-                                    .optionalFieldOf("ticks_per_cycle", 20)
-                                    .forGetter(ItemConduit::networkTickRate))
-                    .apply(builder, ItemConduit::new));
+    public static final MapCodec<ItemConduit> CODEC = RecordCodecBuilder.mapCodec(builder -> builder
+        .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(Conduit::texture),
+            ComponentSerialization.CODEC.fieldOf("description").forGetter(Conduit::description),
+            ResourceKey.codec(Registries.CREATIVE_MODE_TAB).optionalFieldOf("creative_tab").forGetter(Conduit::creativeTab),
+            // Using optionals in order to support the old conduit format.
+            Codec.INT.optionalFieldOf("transfer_rate", 4).forGetter(ItemConduit::transferRatePerCycle),
+            Codec.intRange(1, 20).optionalFieldOf("ticks_per_cycle", 20).forGetter(ItemConduit::networkTickRate))
+        .apply(builder, ItemConduit::new));
 
     public static final ConnectionPathProperty<SpeedAndTickRatePair> PATH_SPEED_AND_TICK_RATE = SpeedAndTickRatePair.minProperty(SpeedAndTickRatePair.ZERO);
 

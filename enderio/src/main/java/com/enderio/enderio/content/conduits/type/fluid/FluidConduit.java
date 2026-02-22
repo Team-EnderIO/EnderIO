@@ -14,6 +14,7 @@ import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataAccessor;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.config.conduits.ConduitsConfig;
 import com.enderio.enderio.content.conduits.ConduitLang;
+import com.enderio.enderio.content.conduits.type.energy.EnergyConduit;
 import com.enderio.enderio.init.EIOConduitTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -21,10 +22,13 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -38,23 +42,22 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public record FluidConduit(ResourceLocation texture, Component description, int transferRatePerTick)
+public record FluidConduit(ResourceLocation texture, Component description, Optional<ResourceKey<CreativeModeTab>> creativeTab, int transferRatePerTick)
     implements Conduit<FluidConduit, FluidConduitConnectionConfig> {
 
     public static final int EXTRACT_FILTER_SLOT = 0;
     public static final int INSERT_FILTER_SLOT = 1;
 
-    public static final MapCodec<FluidConduit> CODEC = RecordCodecBuilder
-            .mapCodec(
-                    builder -> builder
-                            .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(FluidConduit::texture),
-                                    ComponentSerialization.CODEC.fieldOf("description")
-                                            .forGetter(FluidConduit::description),
-                                    Codec.INT.fieldOf("transfer_rate").forGetter(FluidConduit::transferRatePerTick))
-                            .apply(builder, FluidConduit::new));
+    public static final MapCodec<FluidConduit> CODEC = RecordCodecBuilder.mapCodec(builder -> builder
+        .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(Conduit::texture),
+            ComponentSerialization.CODEC.fieldOf("description").forGetter(Conduit::description),
+            ResourceKey.codec(Registries.CREATIVE_MODE_TAB).optionalFieldOf("creative_tab").forGetter(Conduit::creativeTab),
+            Codec.INT.fieldOf("transfer_rate").forGetter(FluidConduit::transferRatePerTick))
+        .apply(builder, FluidConduit::new));
 
     public static final ConnectionPathProperty<Integer> PATH_MAX_TRANSFER_RATE = ConnectionPathProperty.minInt(0);
 

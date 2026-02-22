@@ -1,5 +1,6 @@
 {
   "type": "enderio:energy",
+  "creative_tab": "enderio_endergy:endergy",
   "description": {
     "translate": "conduit.enderio_endergy.stellar_energy"
   },

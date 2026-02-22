@@ -13,16 +13,26 @@ import net.neoforged.neoforge.registries.DeferredItem;
 public class EndergyItems {
     public static final ItemDeferredRegister ITEMS = ItemDeferredRegister.create(EnderIOEndergy.MOD_ID);
 
+    // region Alloys
+
+    public static final DeferredItem<Item> CRUDE_STEEL_INGOT = basic("crude_steel_ingot");
+    public static final DeferredItem<Item> CRYSTALLINE_ALLOY_INGOT = basic("crystalline_alloy_ingot");
+    public static final DeferredItem<Item> MELODIC_ALLOY_INGOT = basic("melodic_alloy_ingot");
+    public static final DeferredItem<Item> STELLAR_ALLOY_INGOT = basic("stellar_alloy_ingot");
+    public static final DeferredItem<Item> VIVID_ALLOY_INGOT = basic("vivid_alloy_ingot");
+
+    public static final DeferredItem<Item> CRUDE_STEEL_NUGGET = basic("crude_steel_nugget");
+    public static final DeferredItem<Item> CRYSTALLINE_ALLOY_NUGGET = basic("crystalline_alloy_nugget");
+    public static final DeferredItem<Item> MELODIC_ALLOY_NUGGET = basic("melodic_alloy_nugget");
+    public static final DeferredItem<Item> STELLAR_ALLOY_NUGGET = basic("stellar_alloy_nugget");
+    public static final DeferredItem<Item> VIVID_ALLOY_NUGGET = basic("vivid_alloy_nugget");
+
+    // endregion
+
     public static final DeferredItem<CapacitorItem> GRAINY_CAPACITOR = ITEMS.registerItem("grainy_capacitor",
         CapacitorItem::new, new Item.Properties().component(EIODataComponents.CAPACITOR_DATA, CapacitorData.simple(1)));
 
-    public static final DeferredItem<CapacitorItem> SILVER_CAPACITOR = ITEMS.registerItem("silver_capacitor",
-        CapacitorItem::new, new Item.Properties().component(EIODataComponents.CAPACITOR_DATA, CapacitorData.simple(1)));
-
-    public static final DeferredItem<CapacitorItem> ENDERGETIC_SILVER_CAPACITOR = ITEMS.registerItem("endergetic_silver_capacitor",
-        CapacitorItem::new, new Item.Properties().component(EIODataComponents.CAPACITOR_DATA, CapacitorData.simple(2)));
-
-    public static final DeferredItem<CapacitorItem> ENERGISED_CAPACITOR = ITEMS.registerItem("energised_capacitor",
+    public static final DeferredItem<CapacitorItem> VIVID_CAPACITOR = ITEMS.registerItem("vivid_capacitor",
         CapacitorItem::new, new Item.Properties().component(EIODataComponents.CAPACITOR_DATA, CapacitorData.simple(3)));
 
     public static final DeferredItem<CapacitorItem> CRYSTALLINE_CAPACITOR = ITEMS.registerItem("crystalline_capacitor",
@@ -36,6 +46,10 @@ public class EndergyItems {
 
     public static final DeferredItem<CapacitorItem> TOTEMIC_CAPACITOR = ITEMS.registerItem("totemic_capacitor",
         TotemicCapacitorItem::new);
+
+    private static DeferredItem<Item> basic(String name) {
+        return ITEMS.registerItem(name, Item::new);
+    }
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);

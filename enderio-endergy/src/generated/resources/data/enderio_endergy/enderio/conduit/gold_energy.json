@@ -1,0 +1,9 @@
+{
+  "type": "enderio:energy",
+  "creative_tab": "enderio_endergy:endergy",
+  "description": {
+    "translate": "conduit.enderio_endergy.gold_energy"
+  },
+  "texture": "enderio_endergy:block/conduit/gold_energy",
+  "transfer_rate": 160
+}
