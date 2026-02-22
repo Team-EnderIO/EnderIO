@@ -3,14 +3,18 @@ package com.enderio.core.storage;
 import com.enderio.core.common.storage.layout.ItemStorageLayout;
 import com.enderio.core.common.storage.slot.MultiResourceSlotKey;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.testframework.junit.EphemeralTestServerProvider;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
+@ExtendWith(EphemeralTestServerProvider.class)
 public class ItemStorageLayoutTests {
     @Test
-    public void ensureUseDefaultItemCapacityOnSingleSlot() {
+    public void ensureUseDefaultItemCapacityOnSingleSlot(MinecraftServer server) {
         var key = new SingleResourceSlotKey<ItemResource>();
         var layout = Assertions.assertDoesNotThrow(() -> ItemStorageLayout.<Void>builder().inputSlot(key).build());
 
@@ -19,7 +23,7 @@ public class ItemStorageLayoutTests {
     }
 
     @Test
-    public void ensureUseDefaultItemCapacityOnMultipleSlots() {
+    public void ensureUseDefaultItemCapacityOnMultipleSlots(MinecraftServer server) {
         var key = new MultiResourceSlotKey<ItemResource>(3);
         var layout = Assertions.assertDoesNotThrow(() -> ItemStorageLayout.<Void>builder().inputSlots(key).build());
 
