@@ -2,7 +2,7 @@
 minecraft = { strictly = "[26.1-snapshot-2]", prefer = "26.1-snapshot-2" }
 neoforge = "26.1.0.0-alpha.5+snapshot-2"
 almostUnified = "1.21.1-1.0.0"
-jeiVersion = "28.0.0.7"
+jeiVersion = "28.3.0.11"
 ccTweaked = "1.113.1"
 jade = "21.0.1+neoforge"
 #athena = "4.2.1"
@@ -20,10 +20,10 @@ jetbrainsAnnotations = { group = "org.jetbrains", name = "annotations", version 
 neoforgeTestFramework = { group = "net.neoforged", name = "testframework", version.ref = "neoforge"}
 
 #almostUnified = { group = "com.almostreliable.mods", name = "almostunified-neoforge", version.ref = "almostUnified" }
-jeiCommonApi = { group = "mezz.jei", name = "jei-26.1-snapshot-1-common-api", version.ref = "jeiVersion" }
-jeiNeoforgeApi = { group = "mezz.jei", name = "jei-26.1-snapshot-1-neoforge-api", version.ref = "jeiVersion" }
-jeiCommon = { group = "mezz.jei", name = "jei-26.1-snapshot-1-common", version.ref = "jeiVersion" }
-jeiNeoforge = { group = "mezz.jei", name = "jei-26.1-snapshot-1-neoforge", version.ref = "jeiVersion" }
+jeiCommonApi = { group = "mezz.jei", name = "jei-26.1-snapshot-2-common-api", version.ref = "jeiVersion" }
+jeiNeoforgeApi = { group = "mezz.jei", name = "jei-26.1-snapshot-2-neoforge-api", version.ref = "jeiVersion" }
+jeiCommon = { group = "mezz.jei", name = "jei-26.1-snapshot-2-common", version.ref = "jeiVersion" }
+jeiNeoforge = { group = "mezz.jei", name = "jei-26.1-snapshot-2-neoforge", version.ref = "jeiVersion" }
 #ccTweakedCoreApi = { group = "cc.tweaked", name = "cc-tweaked-1.21.1-core-api", version.ref = "ccTweaked" }
 #ccTweakedForgeApi = { group = "cc.tweaked", name = "cc-tweaked-1.21.1-forge-api", version.ref = "ccTweaked" }
 #ccTweakedForge = { group = "cc.tweaked", name = "cc-tweaked-1.21.1-forge", version.ref = "ccTweaked" }

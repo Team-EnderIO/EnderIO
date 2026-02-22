@@ -116,11 +116,11 @@ dependencies {
 //    localRuntime(libs.athena)
 
     // AE2
-    compileOnly(variantOf(libs.ae2) {
-        classifier("api")
-    })
-
-    localRuntime(libs.ae2)
+//    compileOnly(variantOf(libs.ae2) {
+//        classifier("api")
+//    })
+//
+//    localRuntime(libs.ae2)
 
     // TODO: Re-add Enchantment descriptions if we add enchantments again
 
