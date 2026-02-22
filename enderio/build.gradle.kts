@@ -273,6 +273,9 @@ sourceSets.main.get().resources.srcDir(generateModMetadata)
 neoForge.ideSyncTask(generateModMetadata)
 
 tasks.withType<Jar> {
+    // FIXME: Temporary - shipping datagen classes with build again for Endergy.
+    from(sourceSets["datagen"].output)
+
     manifest {
         attributes(mapOf(
                 "Specification-Title" to "Ender IO",
