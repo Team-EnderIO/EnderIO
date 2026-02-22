@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "enderio:block/crude_steel_block"
+    "all": "enderio_endergy:block/crude_steel_block"
   }
 }

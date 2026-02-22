@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "enderio:vivid_alloy_block"
+            "items": "enderio_endergy:stellar_alloy_block"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:vivid_alloy_block"
+        "recipe": "enderio_endergy:stellar_alloy_block"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "enderio:vivid_alloy_block"
+      "enderio_endergy:stellar_alloy_block"
     ]
   }
 }

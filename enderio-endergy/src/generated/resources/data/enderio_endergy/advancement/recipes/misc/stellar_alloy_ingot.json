@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "enderio:stellar_alloy_block"
+            "items": "enderio_endergy:stellar_alloy_block"
           }
         ]
       },

@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "I": {
-      "item": "enderio_endergy:vivid_alloy_ingot"
+      "item": "enderio_endergy:stellar_alloy_ingot"
     }
   },
   "pattern": [
@@ -13,6 +13,6 @@
   ],
   "result": {
     "count": 1,
-    "id": "enderio:vivid_alloy_block"
+    "id": "enderio_endergy:stellar_alloy_block"
   }
 }

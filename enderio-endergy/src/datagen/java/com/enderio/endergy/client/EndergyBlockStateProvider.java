@@ -2,7 +2,6 @@ package com.enderio.endergy.client;
 
 import com.enderio.endergy.common.EnderIOEndergy;
 import com.enderio.endergy.common.init.EndergyBlocks;
-import com.enderio.enderio.EnderIO;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;

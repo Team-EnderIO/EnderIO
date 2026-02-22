@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "enderio:crystalline_alloy_block"
+            "items": "enderio_endergy:crystalline_alloy_block"
           }
         ]
       },

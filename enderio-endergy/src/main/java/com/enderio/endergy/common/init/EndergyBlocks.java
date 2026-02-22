@@ -1,5 +1,6 @@
 package com.enderio.endergy.common.init;
 
+import com.enderio.endergy.common.EnderIOEndergy;
 import com.enderio.enderio.EnderIO;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -14,8 +15,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class EndergyBlocks {
-    public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(EnderIO.MOD_ID);
-    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(EnderIO.MOD_ID);
+    public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(EnderIOEndergy.MOD_ID);
+    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(EnderIOEndergy.MOD_ID);
 
     // region Alloy Blocks
 

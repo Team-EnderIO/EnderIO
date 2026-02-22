@@ -3,7 +3,7 @@
   "category": "misc",
   "ingredients": [
     {
-      "item": "enderio:crystalline_alloy_block"
+      "item": "enderio_endergy:crystalline_alloy_block"
     }
   ],
   "result": {
