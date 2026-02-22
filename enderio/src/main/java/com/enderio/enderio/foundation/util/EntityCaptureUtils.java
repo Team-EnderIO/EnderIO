@@ -6,11 +6,9 @@ import com.google.common.collect.ImmutableList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
-import net.neoforged.neoforge.common.Tags;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
@@ -40,7 +38,6 @@ public class EntityCaptureUtils {
 
     public enum CapturableStatus {
         CAPTURABLE(Component.empty()),
-        BOSS(ToolsLang.SOUL_VIAL_ERROR_BOSS),
         BLACKLISTED(ToolsLang.SOUL_VIAL_ERROR_BLACKLISTED),
         INCOMPATIBLE(ToolsLang.SOUL_VIAL_ERROR_FAILED);
 
@@ -60,30 +57,25 @@ public class EntityCaptureUtils {
      * @return the status on how this entity should be handled for capture
      */
     public static CapturableStatus getCapturableStatus(EntityType<? extends LivingEntity> type) {
-        //Do we keep this special case?
-        if (isBlacklistedBoss(type)) {
-            return CapturableStatus.BOSS;
-        }
-
         if (!type.canSerialize()) {
             return CapturableStatus.INCOMPATIBLE;
         }
 
-        // Whitelist takes precedence over blacklist
+        // Don't allow capturing of the ender dragon
+        if (type.equals(EntityType.ENDER_DRAGON)) {
+            return CapturableStatus.BLACKLISTED;
+        }
+
+        // Whitelist takes precedence over all
         // This allows easier allowing of restricted mobs than removing from tags.
-        if (type.builtInRegistryHolder().is(EIOTags.EntityTypes.SOUL_VIAL_BLACKLIST) &&
-            !type.builtInRegistryHolder().is(EIOTags.EntityTypes.SOUL_VIAL_WHITELIST)) {
+        if (type.builtInRegistryHolder().is(EIOTags.EntityTypes.SOUL_VIAL_WHITELIST)) {
+            return CapturableStatus.CAPTURABLE;
+        }
+
+        if (type.builtInRegistryHolder().is(EIOTags.EntityTypes.SOUL_VIAL_BLACKLIST)) {
             return CapturableStatus.BLACKLISTED;
         }
 
         return CapturableStatus.CAPTURABLE;
-    }
-
-    public static boolean isBlacklistedBoss(Entity entity) {
-        return isBlacklistedBoss(entity.getType());
-    }
-
-    public static boolean isBlacklistedBoss(EntityType<?> entityType) {
-        return entityType.builtInRegistryHolder().is(Tags.EntityTypes.BOSSES);
     }
 }

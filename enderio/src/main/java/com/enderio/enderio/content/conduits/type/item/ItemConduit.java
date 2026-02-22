@@ -64,6 +64,11 @@ public record ItemConduit(Identifier texture, Component description, int transfe
     }
 
     @Override
+    public boolean canReplaceConduit(ItemConduit otherConduit) {
+        return compareTo(otherConduit) > 0;
+    }
+
+    @Override
     public int compareNodes(ConduitBlockConnection refConnection, ConduitBlockConnection connectionA,
             ConduitBlockConnection connectionB) {
         int priorityA = connectionA.connectionConfig(ItemConduitConnectionConfig.TYPE).priority();

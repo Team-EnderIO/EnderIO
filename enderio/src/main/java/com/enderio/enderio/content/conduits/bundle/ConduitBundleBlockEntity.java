@@ -792,13 +792,13 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
     @Override
     public ConnectionConfig getConnectionConfig(Holder<Conduit<?, ?>> conduit, Direction side) {
-        return conduitConnections.get(conduit).getConfig(side);
+        return conduitConnections.computeIfAbsent(conduit, ConnectionContainer::new).getConfig(side);
     }
 
     @Override
     public <T extends ConnectionConfig> T getConnectionConfig(Holder<Conduit<?, ?>> conduit, Direction side,
             ConnectionConfigType<T> type) {
-        var config = conduitConnections.get(conduit).getConfig(side);
+        var config = conduitConnections.computeIfAbsent(conduit, ConnectionContainer::new).getConfig(side);
         if (config.type() != type) {
             throw new IllegalStateException("Connection config type mismatch.");
         }
@@ -813,7 +813,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             throw new IllegalArgumentException("Connection config is not the right type for this conduit.");
         }
 
-        conduitConnections.get(conduit).setConfig(side, config);
+        conduitConnections.computeIfAbsent(conduit, ConnectionContainer::new).setConfig(side, config);
         if (config.isConnected() && getConnectionStatus(conduit, side) != ConnectionStatus.CONNECTED_BLOCK) {
             setConnectionStatus(conduit, side, ConnectionStatus.CONNECTED_BLOCK);
         } else if (!config.isConnected()) {
@@ -833,7 +833,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             throw new IllegalArgumentException("Conduit is not present in this bundle.");
         }
 
-        conduitConnections.get(conduit).setStatus(side, status);
+        conduitConnections.computeIfAbsent(conduit, ConnectionContainer::new).setStatus(side, status);
         onConnectionsUpdated(conduit);
 
         bundleChanged();
@@ -865,7 +865,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             }
         }
 
-        return isForcedConnection || conduitConnections.get(compatibleConduit).getStatus(side) != ConnectionStatus.DISABLED;
+        return isForcedConnection || getConnectionStatus(compatibleConduit, side) != ConnectionStatus.DISABLED;
     }
 
     public boolean tryConnectTo(Holder<Conduit<?, ?>> conduit, Direction side, boolean isForcedConnection) {
@@ -878,7 +878,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
 
         // Do not attempt to connect if we're not forcing a disabled connection
-        ConnectionStatus currentStatus = conduitConnections.get(conduit).getStatus(side);
+        ConnectionStatus currentStatus = getConnectionStatus(conduit, side);
         if ((!isForcedConnection && currentStatus == ConnectionStatus.DISABLED)) {
             return false;
         }
@@ -941,35 +941,19 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             return;
         }
 
-        conduitConnections.computeIfAbsent(compatibleConduit, ConnectionContainer::new)
-                .setStatus(side, ConnectionStatus.CONNECTED_CONDUIT);
-        onConnectionsUpdated(compatibleConduit);
-
-        bundleChanged();
+        setConnectionStatus(compatibleConduit, side, ConnectionStatus.CONNECTED_CONDUIT);
     }
 
     private void connectBlock(Holder<Conduit<?, ?>> conduit, Direction side) {
-        conduitConnections.computeIfAbsent(conduit, ConnectionContainer::new)
-                .setStatus(side, ConnectionStatus.CONNECTED_BLOCK);
-        onConnectionsUpdated(conduit);
-
-        bundleChanged();
+        setConnectionStatus(conduit, side, ConnectionStatus.CONNECTED_BLOCK);
     }
 
     // TODO: poorly named, we're disconnecting from another conduit on the given side.
     private void disconnect(Holder<Conduit<?, ?>> conduit, Direction side) {
-        boolean hasChanged = false;
         for (var c : conduits) {
             if (ConduitUtility.canConnectConduits(conduit, c)) {
-                conduitConnections.computeIfAbsent(c, ConnectionContainer::new)
-                        .setStatus(side, ConnectionStatus.DISCONNECTED);
-                onConnectionsUpdated(c);
-                hasChanged = true;
+                setConnectionStatus(conduit, side, ConnectionStatus.DISCONNECTED);
             }
-        }
-
-        if (hasChanged) {
-            bundleChanged();
         }
     }
 

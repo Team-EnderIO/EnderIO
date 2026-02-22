@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": "enderio:ensouled_chassis",
+    "D": "#c:ingots/dark_steel",
+    "E": "#c:gears/energized",
+    "G": "#c:gems/pulsating_crystal",
+    "S": "#c:ingots/soularium",
+    "Z": "enderio:z_logic_controller"
+  },
+  "pattern": [
+    "EGE",
+    "SCS",
+    "DZD"
+  ],
+  "result": {
+    "count": 1,
+    "id": "enderio:farming_station"
+  }
+}

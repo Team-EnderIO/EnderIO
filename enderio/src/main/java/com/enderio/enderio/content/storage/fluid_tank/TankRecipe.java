@@ -1,5 +1,6 @@
 package com.enderio.enderio.content.storage.fluid_tank;
 
+import com.enderio.enderio.foundation.util.SizedFluidIngredientHelper;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIORecipeBookCategories;
 import com.enderio.enderio.init.EIORecipes;
@@ -7,6 +8,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -25,24 +27,25 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.display.RecipeDisplay;
 import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.function.IntFunction;
 
 public final class TankRecipe implements Recipe<TankRecipe.Input> {
     private final Ingredient input;
     private final ItemStack output;
-    private final FluidStack fluid;
+    private final SizedFluidIngredient fluid;
     private final Mode mode;
 
     @Nullable
     private PlacementInfo placementInfo;
 
-    public TankRecipe(Ingredient input, ItemStack output, FluidStack fluid, Mode mode) {
+    public TankRecipe(Ingredient input, ItemStack output, SizedFluidIngredient fluid, Mode mode) {
         this.input = input;
         this.output = output;
         this.fluid = fluid;
@@ -57,7 +60,7 @@ public final class TankRecipe implements Recipe<TankRecipe.Input> {
         return output;
     }
 
-    public FluidStack fluid() {
+    public SizedFluidIngredient fluid() {
         return fluid;
     }
 
@@ -67,24 +70,38 @@ public final class TankRecipe implements Recipe<TankRecipe.Input> {
 
     @Override
     public boolean matches(Input recipeInput, Level level) {
+        // If we have no input -or- output fluid, no matches allowed.
+        List<Holder<Fluid>> possibleFluids = SizedFluidIngredientHelper.getFluidStacksInPreferredOrder(fluid);
+        if (possibleFluids.isEmpty()) {
+            return false;
+        }
+
         switch (mode) {
         case FILL -> {
-            if (!FluidStack.matches(recipeInput.fluidContents, fluid) || recipeInput.fluidContents.getAmount() < fluid.getAmount()) {
+            if (!fluid.test(recipeInput.fluidContents)) {
                 return false;
             }
 
             return input.test(recipeInput.fillItem);
         }
         case EMPTY -> {
-            if (!recipeInput.fluidContents.isEmpty() && !FluidStack.matches(recipeInput.fluidContents, fluid)) {
+            if (!input.test(recipeInput.emptyItem)) {
                 return false;
             }
 
-            if (recipeInput.fluidContents.getAmount() + fluid.getAmount() > recipeInput.tankCapacity) {
-                return false;
+            if (recipeInput.fluidContents.isEmpty()) {
+                return true;
             }
 
-            return input.test(recipeInput.emptyItem);
+            for (Holder<Fluid> testFluid : possibleFluids) {
+                if (recipeInput.fluidContents().getFluid() == testFluid.value() &&
+                    recipeInput.fluidContents().getAmount() + recipeInput.fluidContents().getAmount() <= recipeInput.tankCapacity) {
+                    // We can fill this fluid type into the tank.
+                    return true;
+                }
+            }
+
+            return false;
         }
         default -> throw new NotImplementedException();
         }
@@ -129,6 +146,23 @@ public final class TankRecipe implements Recipe<TankRecipe.Input> {
         return placementInfo;
     }
 
+    public record Input(ItemStack fillItem, ItemStack emptyItem, FluidStack fluidContents, int tankCapacity) implements RecipeInput {
+
+        @Override
+        public ItemStack getItem(int slotIndex) {
+            return switch (slotIndex) {
+                case 0 -> fillItem;
+                case 1 -> emptyItem;
+                default -> throw new IllegalArgumentException("No item for index " + slotIndex);
+            };
+        }
+
+        @Override
+        public int size() {
+            return 2;
+        }
+    }
+
     public enum Mode implements StringRepresentable {
         FILL(0, "fill"), EMPTY(1, "empty");
 
@@ -147,23 +181,6 @@ public final class TankRecipe implements Recipe<TankRecipe.Input> {
         @Override
         public String getSerializedName() {
             return name;
-        }
-    }
-
-    public record Input(ItemStack fillItem, ItemStack emptyItem, FluidStack fluidContents, int tankCapacity) implements RecipeInput {
-
-        @Override
-        public ItemStack getItem(int slotIndex) {
-            return switch (slotIndex) {
-                case 0 -> fillItem;
-                case 1 -> emptyItem;
-                default -> throw new IllegalArgumentException("No item for index " + slotIndex);
-            };
-        }
-
-        @Override
-        public int size() {
-            return 2;
         }
     }
 
@@ -191,12 +208,14 @@ public final class TankRecipe implements Recipe<TankRecipe.Input> {
     public static class Serializer implements RecipeSerializer<TankRecipe> {
 
         private static final MapCodec<TankRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
-            .group(Ingredient.CODEC.fieldOf("input").forGetter(TankRecipe::input), ItemStack.CODEC.fieldOf("output").forGetter(TankRecipe::output),
-                FluidStack.CODEC.fieldOf("fluid").forGetter(TankRecipe::fluid), Mode.CODEC.fieldOf("mode").forGetter(TankRecipe::mode))
+            .group(Ingredient.CODEC.fieldOf("input").forGetter(TankRecipe::input),
+                ItemStack.CODEC.fieldOf("output").forGetter(TankRecipe::output),
+                SizedFluidIngredient.CODEC.fieldOf("fluid").forGetter(TankRecipe::fluid),
+                Mode.CODEC.fieldOf("mode").forGetter(TankRecipe::mode))
             .apply(instance, TankRecipe::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, TankRecipe> STREAM_CODEC = StreamCodec.composite(Ingredient.CONTENTS_STREAM_CODEC, TankRecipe::input, ItemStack.STREAM_CODEC, TankRecipe::output,
-            FluidStack.STREAM_CODEC, TankRecipe::fluid, Mode.STREAM_CODEC, TankRecipe::mode, TankRecipe::new);
+            SizedFluidIngredient.STREAM_CODEC, TankRecipe::fluid, Mode.STREAM_CODEC, TankRecipe::mode, TankRecipe::new);
 
         @Override
         public MapCodec<TankRecipe> codec() {

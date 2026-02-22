@@ -2,7 +2,7 @@
   "type": "enderio:tank",
   "fluid": {
     "amount": 1000,
-    "id": "minecraft:water"
+    "ingredient": "minecraft:water"
   },
   "input": "minecraft:pink_concrete_powder",
   "mode": "fill",

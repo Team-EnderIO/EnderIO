@@ -3,7 +3,7 @@ import java.util.*
 
 plugins {
     id("mod-common-conventions")
-    alias(libs.plugins.modpublisher)
+//    alias(libs.plugins.modpublisher)
 }
 
 sourceSets {
@@ -64,7 +64,6 @@ configurations {
 
 
 dependencies {
-    // EnderIO will bundle EnderCore in production.
     api(project(":enderio"))
 }
 

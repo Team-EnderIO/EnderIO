@@ -135,11 +135,6 @@ public class PoweredMachineEnergyStorage implements EnergyHandler, ValueIOSerial
         }
 
         int inserted = Math.min(getCapacityAsInt() - this.energyStored, amount);
-
-        if (MachinesConfig.COMMON.ENERGY.THROTTLE_ENERGY_INPUT.get()) {
-            inserted = Math.min(machine.getMaxEnergyUse() * 2, inserted);
-        }
-
         if (inserted > 0) {
             energyJournal.updateSnapshots(transactionContext);
             energyStored += inserted;

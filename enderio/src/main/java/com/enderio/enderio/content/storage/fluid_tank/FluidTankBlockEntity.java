@@ -1,19 +1,22 @@
 package com.enderio.enderio.content.storage.fluid_tank;
 
+import com.enderio.core.common.storage.FluidStorage;
 import com.enderio.core.common.storage.layout.FluidStorageLayout;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
+import com.enderio.core.common.util.EnderResourceUtil;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import com.enderio.enderio.foundation.io.fluid.FluidItemInteractive;
 import com.enderio.enderio.foundation.state.MachineState;
-import com.enderio.core.common.storage.FluidStorage;
 import com.enderio.enderio.foundation.storage.SidedResourceHandler;
+import com.enderio.enderio.foundation.util.SizedFluidIngredientHelper;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIORecipes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.Registries;
@@ -27,6 +30,7 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -35,7 +39,9 @@ import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.item.ItemResource;
@@ -256,17 +262,33 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
                 ItemStack outputStack = FLUID_FILL_OUTPUT.getItemStack(this);
 
                 if (outputStack.isEmpty() || (outputStack.is(recipeResultStack.getItem())
-                        && outputStack.getCount() < outputStack.getMaxStackSize())) {
+                    && outputStack.getCount() < outputStack.getMaxStackSize())) {
 
                     try (Transaction transaction = Transaction.openRoot()) {
-                        int filled = fluidStorage.internalInsert(TANK_SLOT, FluidResource.of(recipe.value().fluid()),
-                            recipe.value().fluid().getAmount(), transaction);
+                        // Get the first matching fluid from the ingredient (for EMPTY mode, we're adding fluid to tank)
+                        List<Holder<Fluid>> possibleFluids = SizedFluidIngredientHelper.getFluidStacksInPreferredOrder(recipe.value().fluid());
+                        FluidResource fluidToFill = FluidResource.EMPTY;
+                        for (Holder<Fluid> fluidToTry : possibleFluids) {
+                            var fluidResource = FluidResource.of(fluidToTry);
+                            try (Transaction simulateTransaction = Transaction.open(transaction)) {
+                                int filled = fluidStorage.internalInsert(TANK_SLOT, fluidResource, recipe.value().fluid().amount(), simulateTransaction);
+                                if (filled == recipe.value().fluid().amount()) {
+                                    fluidToFill = fluidResource;
+                                    break;
+                                }
+                            }
+                        }
 
-                        if (filled != recipe.value().fluid().getAmount()) {
+                        if (fluidToFill.isEmpty()) {
                             return;
                         }
 
-                        transaction.commit();
+                        int inserted = fluidStorage.internalInsert(TANK_SLOT, fluidToFill,
+                            recipe.value().fluid().amount(), transaction);
+                        if (inserted != recipe.value().fluid().amount()) {
+                            return;
+                        }
+
                         FLUID_FILL_INPUT.getItemStack(this).shrink(1);
 
                         if (outputStack.isEmpty()) {
@@ -274,6 +296,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
                         } else {
                             FLUID_FILL_OUTPUT.getItemStack(this).grow(1);
                         }
+
+                        transaction.commit();
                     }
                 }
             }
@@ -281,17 +305,20 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
                 ItemStack outputStack = FLUID_DRAIN_OUTPUT.getItemStack(this);
 
                 if (outputStack.isEmpty() || (outputStack.is(recipeResultStack.getItem())
-                        && outputStack.getCount() < outputStack.getMaxStackSize())) {
+                    && outputStack.getCount() < outputStack.getMaxStackSize())) {
+
+                    // Ensure the fluid matches the recipe
+                    FluidStack storedFluid = fluidStorage.getStack(TANK_SLOT);
+                    if (!recipe.value().fluid().test(storedFluid)) {
+                        return;
+                    }
 
                     try (Transaction transaction = Transaction.openRoot()) {
-                        int extracted = fluidStorage.internalExtract(TANK_SLOT, FluidResource.of(recipe.value().fluid()),
-                            recipe.value().fluid().getAmount(), transaction);
-
-                        if (extracted != recipe.value().fluid().getAmount()) {
+                        int drained = fluidStorage.extract(TANK_SLOT, fluidStorage.getResource(TANK_SLOT), recipe.value().fluid().amount(), transaction);
+                        if (drained != recipe.value().fluid().amount()) {
                             return;
                         }
 
-                        transaction.commit();
                         FLUID_DRAIN_INPUT.getItemStack(this).shrink(1);
 
                         if (outputStack.isEmpty()) {
@@ -299,6 +326,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
                         } else {
                             FLUID_DRAIN_OUTPUT.getItemStack(this).grow(1);
                         }
+
+                        transaction.commit();
                     }
                 }
             }

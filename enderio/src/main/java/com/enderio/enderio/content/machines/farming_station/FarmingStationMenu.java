@@ -30,14 +30,14 @@ public class FarmingStationMenu extends PoweredMachineMenu<FarmingStationBlockEn
 
         var inventory = getMachineInventory();
         // Tool inputs TODO: Shadow slots to show compatible tools?
-        addSlot(new MachineSlot(inventory, FarmingStationBlockEntity.AXE, 44, 19));
-        addSlot(new MachineSlot(inventory, FarmingStationBlockEntity.HOE, 44 + 18, 19));
-        addSlot(new MachineSlot(inventory, FarmingStationBlockEntity.SHEAR, 44 + 18 * 2, 19));
+        addSlot(new MachineSlot(inventory, FarmingStationBlockEntity.TOOLS.get(0), 44, 19));
+        addSlot(new MachineSlot(inventory, FarmingStationBlockEntity.TOOLS.get(1), 44 + 18, 19));
+        addSlot(new MachineSlot(inventory, FarmingStationBlockEntity.TOOLS.get(2), 44 + 18 * 2, 19));
 
-        addSlot(new MachineSlot(inventory, FarmingStationBlockEntity.NE, 53, 44));
-        addSlot(new MachineSlot(inventory, FarmingStationBlockEntity.SE, 53 + 18, 44));
-        addSlot(new MachineSlot(inventory, FarmingStationBlockEntity.SW, 53, 44 + 18));
-        addSlot(new MachineSlot(inventory, FarmingStationBlockEntity.NW, 53 + 18, 44 + 18));
+        addSlot(new MachineSlot(inventory, FarmingStationBlockEntity.AREAS.get(0), 53, 44));
+        addSlot(new MachineSlot(inventory, FarmingStationBlockEntity.AREAS.get(1), 53 + 18, 44));
+        addSlot(new MachineSlot(inventory, FarmingStationBlockEntity.AREAS.get(2), 53, 44 + 18));
+        addSlot(new MachineSlot(inventory, FarmingStationBlockEntity.AREAS.get(3), 53 + 18, 44 + 18));
 
         addSlot(new MachineSlot(inventory, FarmingStationBlockEntity.BONEMEAL.get(0), 116, 19));
         addSlot(new MachineSlot(inventory, FarmingStationBlockEntity.BONEMEAL.get(1), 116 + 18, 19));

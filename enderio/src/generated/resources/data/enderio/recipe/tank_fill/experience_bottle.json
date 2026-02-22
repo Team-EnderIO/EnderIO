@@ -2,7 +2,7 @@
   "type": "enderio:tank",
   "fluid": {
     "amount": 250,
-    "id": "enderio:fluid_xp_juice_still"
+    "ingredient": "#c:experience"
   },
   "input": "minecraft:glass_bottle",
   "mode": "fill",

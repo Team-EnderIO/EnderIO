@@ -184,7 +184,7 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity {
     @Override
     protected @Nullable MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
-                .inputSlot((i, s) -> s.is(Items.FIREWORK_ROCKET))
+                .storageSlot((i, s) -> s.is(Items.FIREWORK_ROCKET))
                 .slotAccess(ROCKET)
                 .build();
     }
@@ -203,7 +203,7 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity {
 
     @Override
     public IOConfig getDefaultIOConfig() {
-        return IOConfig.of(IOMode.PULL);
+        return IOConfig.of(IOMode.BOTH);
     }
 
     @Override

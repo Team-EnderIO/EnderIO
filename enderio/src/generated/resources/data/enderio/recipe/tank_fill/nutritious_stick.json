@@ -2,7 +2,7 @@
   "type": "enderio:tank",
   "fluid": {
     "amount": 1000,
-    "id": "enderio:fluid_nutrient_distillation_still"
+    "ingredient": "enderio:fluid_nutrient_distillation_still"
   },
   "input": "minecraft:stick",
   "mode": "fill",

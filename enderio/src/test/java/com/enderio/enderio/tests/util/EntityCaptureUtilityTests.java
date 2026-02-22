@@ -2,40 +2,20 @@ package com.enderio.enderio.tests.util;
 
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.foundation.util.EntityCaptureUtils;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.EntityType;
-import net.neoforged.neoforge.common.Tags;
 import net.neoforged.testframework.junit.EphemeralTestServerProvider;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.function.Executable;
 
 @ExtendWith(EphemeralTestServerProvider.class)
 public class EntityCaptureUtilityTests {
     // It appears JUnit tests only load data from the test resources directory.
 
     @Test
-    public void testIsBlacklistedBoss(MinecraftServer server) {
-        // Get all bosses
-        var entityTypeRegistry = server.registryAccess().lookupOrThrow(Registries.ENTITY_TYPE);
-        var bossesTag = entityTypeRegistry.get(Tags.EntityTypes.BOSSES).orElseThrow();
-
-        Assertions.assertAll(bossesTag.stream()
-            .map((bossEntityType) ->
-                (Executable) () -> Assertions.assertTrue(EntityCaptureUtils.isBlacklistedBoss(bossEntityType.value())))
-            .toList());
-    }
-
-    @Test
     public void testGetCapturableStatus_RejectNonSerializable(MinecraftServer server) {
         Assertions.assertEquals(EntityCaptureUtils.CapturableStatus.INCOMPATIBLE, EntityCaptureUtils.getCapturableStatus(EntityType.PLAYER));
-    }
-
-    @Test
-    public void testGetCapturableStatus_RejectBoss(MinecraftServer server) {
-        Assertions.assertEquals(EntityCaptureUtils.CapturableStatus.BOSS, EntityCaptureUtils.getCapturableStatus(EntityType.ENDER_DRAGON));
     }
 
     @Test

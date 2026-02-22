@@ -11,6 +11,7 @@ import com.enderio.enderio.content.glass.GlassCollisionPredicate;
 import com.enderio.enderio.content.glass.GlassIdentifier;
 import com.enderio.enderio.content.glass.GlassLighting;
 import com.enderio.enderio.content.machines.block_detector.BlockDetectorBlock;
+import com.enderio.enderio.content.machines.farming_station.FarmingStationBlock;
 import com.enderio.enderio.content.machines.niard.NiardBlock;
 import com.enderio.enderio.content.machines.obelisks.attractor.AttractorObeliskBlockEntity;
 import com.enderio.enderio.content.machines.obelisks.aversion.AversionObeliskBlockEntity;
@@ -478,9 +479,9 @@ public class EIOBlocks {
     public static final DeferredBlock<MachineBlock<XPObeliskBlockEntity>> XP_OBELISK =
         obelisk("xp_obelisk", () -> EIOBlockEntities.XP_OBELISK::get);
 
-    public static final DeferredBlock<ProgressMachineBlock> FARMING_STATION = registerWithItem("farming_station",
-        properties -> new ProgressMachineBlock(EIOBlockEntities.FARMING_STATION, properties),
-        BlockBehaviour.Properties.of().strength(2.5f, 8).requiredFeatures(EIOFeatureFlags.FARMING_STATION));
+    public static final DeferredBlock<FarmingStationBlock> FARMING_STATION = registerWithItem("farming_station",
+        FarmingStationBlock::new,
+        BlockBehaviour.Properties.of().strength(2.5f, 8));
 
     public static final DeferredBlock<MachineBlock<InhibitorObeliskBlockEntity>> INHIBITOR_OBELISK =
         obelisk("inhibitor_obelisk", () -> EIOBlockEntities.INHIBITOR_OBELISK::get);

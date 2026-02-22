@@ -7,6 +7,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import net.neoforged.testframework.junit.EphemeralTestServerProvider;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -16,7 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 public class TankRecipeTests {
     @Test
     public void fillRecipeMatches(MinecraftServer server) {
-        var recipe = new TankRecipe(Ingredient.of(Items.SAND), new ItemStack(Items.SALMON, 1), new FluidStack(Fluids.WATER, 1000),
+        var recipe = new TankRecipe(Ingredient.of(Items.SAND), new ItemStack(Items.SALMON, 1), SizedFluidIngredient.of(Fluids.WATER, 1000),
             TankRecipe.Mode.FILL);
 
         var matchingInput = new TankRecipe.Input(new ItemStack(Items.SAND, 2), ItemStack.EMPTY, new FluidStack(Fluids.WATER, 1000), 5000);
@@ -34,7 +35,7 @@ public class TankRecipeTests {
 
     @Test
     public void emptyRecipeMatches(MinecraftServer server) {
-        var recipe = new TankRecipe(Ingredient.of(Items.SAND), new ItemStack(Items.SALMON, 1), new FluidStack(Fluids.WATER, 1000),
+        var recipe = new TankRecipe(Ingredient.of(Items.SAND), new ItemStack(Items.SALMON, 1), SizedFluidIngredient.of(Fluids.WATER, 1000),
             TankRecipe.Mode.EMPTY);
 
         var matchingInput = new TankRecipe.Input(ItemStack.EMPTY, new ItemStack(Items.SAND, 2), new FluidStack(Fluids.WATER, 1000), 5000);

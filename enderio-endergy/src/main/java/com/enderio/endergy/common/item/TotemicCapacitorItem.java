@@ -43,20 +43,4 @@ public class TotemicCapacitorItem extends CapacitorItem implements ICapacitorExt
         var efficiencyLevel = capacitorStack.getEnchantmentLevel(enchantmentRegistry.getOrThrow(Enchantments.EFFICIENCY));
         return DATA_CACHE.computeIfAbsent(efficiencyLevel, l -> new CapacitorData(3.5f + l * 0.5f, Map.of()));
     }
-
-    @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag flag) {
-        super.appendHoverText(stack, context, tooltipDisplay, tooltipAdder, flag);
-
-        var capacitorData = getCapacitorData(stack, context.level());
-
-        NumberFormat fmt = NumberFormat.getInstance(Locale.ENGLISH);
-        tooltipAdder.accept(TooltipUtil.styledWithArgs(CapacitorLang.CAPACITOR_TOOLTIP_BASE, fmt.format(capacitorData.base())));
-
-        for (Map.Entry<CapacitorModifier, Float> modifier : capacitorData.modifiers().entrySet()) {
-            tooltipAdder.accept(TooltipUtil.styledWithArgs(
-                Identifier.fromNamespaceAndPath("tooltip", modifier.getKey().modifierId.toLanguageKey()),
-                fmt.format(modifier.getValue())));
-        }
-    }
 }

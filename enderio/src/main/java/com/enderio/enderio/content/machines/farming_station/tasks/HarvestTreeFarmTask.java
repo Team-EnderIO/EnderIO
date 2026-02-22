@@ -2,7 +2,7 @@ package com.enderio.enderio.content.machines.farming_station.tasks;
 
 import com.enderio.enderio.api.farm.FarmInteraction;
 import com.enderio.enderio.api.farm.FarmTask;
-import com.enderio.enderio.api.farm.FarmingStation;
+import com.enderio.enderio.api.farm.FarmingMachine;
 import com.enderio.enderio.foundation.util.TreeHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
@@ -20,43 +20,37 @@ public class HarvestTreeFarmTask implements FarmTask {
     }
 
     @Override
-    public FarmInteraction farm(BlockPos soil, FarmingStation farmBlockEntity) {
-        BlockPos bottom = soil.above();
-        BlockState bottomState = farmBlockEntity.getLevel().getBlockState(bottom);
-        AABB range = new AABB(farmBlockEntity.getPosition()).inflate(farmBlockEntity.getFarmingRange());
+    public <T extends BlockEntity & FarmingMachine> FarmInteraction process(BlockPos targetBlock, T blockEntity) {
+        BlockPos bottom = targetBlock.above();
+        BlockState bottomState = blockEntity.getLevel().getBlockState(bottom);
+        AABB range = new AABB(blockEntity.getPosition())
+            .inflate(blockEntity.getFarmingRange())
+            .inflate(4, 8, 4) // increase range to accommodate for extra leaves
+            .move(0, 8, 0);
         if (bottomState.is(BlockTags.LOGS)) {
-            Set<BlockPos> tree = TreeHelper.getTree(farmBlockEntity.getLevel(), bottom,
-                pos -> range.contains(pos.getX(), pos.getY(), pos.getZ()));
-            if (farmBlockEntity.getConsumedPower() >= 40) {
-                for (BlockPos pos : tree) {
-                    BlockState state = farmBlockEntity.getLevel().getBlockState(pos);
-                    BlockEntity blockEntity = farmBlockEntity.getLevel().getBlockEntity(pos);
-                    if (state.is(BlockTags.LOGS)) {
-                        if (farmBlockEntity.getAxe().isEmpty()) {
-                            return FarmInteraction.BLOCKED;
-                        }
-
-                        if (!farmBlockEntity.handleDrops(state, pos, soil, blockEntity, farmBlockEntity.getAxe())) {
-                            return FarmInteraction.BLOCKED;
-                        }
-                        farmBlockEntity.getLevel().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
-                        farmBlockEntity.getAxe()
-                            .mineBlock(farmBlockEntity.getLevel(), state, pos, farmBlockEntity.getPlayer());
-                    } else if (state.is(BlockTags.LEAVES)) {
-                        if (!farmBlockEntity.handleDrops(state, pos, soil, blockEntity, farmBlockEntity.getShears())) {
-                            return FarmInteraction.BLOCKED;
-                        }
-                        farmBlockEntity.getLevel().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
-                        farmBlockEntity.getShears()
-                            .mineBlock(farmBlockEntity.getLevel(), state, pos, farmBlockEntity.getPlayer());
+            Set<BlockPos> tree = TreeHelper.getTree(blockEntity.getLevel(), bottom, pos -> range.contains(pos.getX(), pos.getY(), pos.getZ()));
+            for (BlockPos pos : tree) {
+                BlockState state = blockEntity.getLevel().getBlockState(pos);
+                if (state.is(BlockTags.LOGS)) {
+                    if (blockEntity.getAxe().isEmpty()) {
+                        return FarmInteraction.BLOCKED;
                     }
+
+                    if (!blockEntity.handleDrops(state, pos, targetBlock, blockEntity, blockEntity.getAxe())) {
+                        return FarmInteraction.BLOCKED;
+                    }
+                    blockEntity.getLevel().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+                    blockEntity.getAxe().mineBlock(blockEntity.getLevel(), state, pos, blockEntity.getPlayer());
+                } else if (state.is(BlockTags.LEAVES)) {
+                    if (!blockEntity.handleDrops(state, pos, targetBlock, blockEntity, blockEntity.getShears())) {
+                        return FarmInteraction.BLOCKED;
+                    }
+                    blockEntity.getLevel().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+                    blockEntity.getShears().mineBlock(blockEntity.getLevel(), state, pos, blockEntity.getPlayer());
                 }
-                farmBlockEntity.addConsumedPower(-40);
-                return FarmInteraction.FINISHED;
             }
-            farmBlockEntity
-                .addConsumedPower(farmBlockEntity.consumeEnergy(40 - farmBlockEntity.getConsumedPower(), false));
-            return FarmInteraction.POWERED;
+            return FarmInteraction.FINISHED;
+
         }
         return FarmInteraction.IGNORED;
     }

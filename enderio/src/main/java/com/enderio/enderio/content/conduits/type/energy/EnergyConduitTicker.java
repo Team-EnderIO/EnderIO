@@ -10,6 +10,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class EnergyConduitTicker implements ConduitTicker<EnergyConduit> {
@@ -91,7 +92,7 @@ public class EnergyConduitTicker implements ConduitTicker<EnergyConduit> {
                 int energyInserted;
                 if (energyRemaining < toShareWith) {
                     // If we're smaller than an int, we can just cast.
-                    energyInserted = handler.left().insert((int)energyRemaining, transaction);
+                    energyInserted = handler.left().insert(Ints.saturatedCast(energyRemaining), transaction);
                 } else {
                     // Don't insert more than INT_MAX :)
                     energyInserted = handler.left().insert(Ints.saturatedCast(energyRemaining / toShareWith), transaction);

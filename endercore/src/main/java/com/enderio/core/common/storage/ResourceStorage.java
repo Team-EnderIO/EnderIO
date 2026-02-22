@@ -3,6 +3,7 @@ package com.enderio.core.common.storage;
 import com.enderio.core.common.storage.layout.ResourceStorageLayout;
 import com.enderio.core.common.storage.slot.ResourceSlotId;
 import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.TransferPreconditions;
 import net.neoforged.neoforge.transfer.resource.Resource;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jetbrains.annotations.ApiStatus;
@@ -20,7 +21,32 @@ public interface ResourceStorage<T extends Resource> extends ResourceHandler<T> 
 
     // For use in block implementations - bypasses layout slot settings
     int internalInsert(int index, T resource, int amount, TransactionContext transaction);
+
+    default int internalInsert(T resource, int amount, TransactionContext transaction) {
+        TransferPreconditions.checkNonEmptyNonNegative(resource, amount);
+
+        int inserted = 0;
+        int size = size();
+        for (int index = 0; index < size; index++) {
+            inserted += internalInsert(index, resource, amount - inserted, transaction);
+            if (inserted == amount) break;
+        }
+        return inserted;
+    }
+
     int internalExtract(int index, T resource, int amount, TransactionContext transaction);
+
+    default int internalExtract(T resource, int amount, TransactionContext transaction) {
+        TransferPreconditions.checkNonEmptyNonNegative(resource, amount);
+
+        int extracted = 0;
+        int size = size();
+        for (int index = 0; index < size; index++) {
+            extracted += internalExtract(index, resource, amount - extracted, transaction);
+            if (extracted == amount) break;
+        }
+        return extracted;
+    }
 
     @ApiStatus.NonExtendable
     default T getResource(ResourceSlotId<T> slotId) {

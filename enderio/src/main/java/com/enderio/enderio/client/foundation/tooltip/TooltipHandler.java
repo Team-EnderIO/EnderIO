@@ -59,7 +59,7 @@ public class TooltipHandler {
 
             for (Map.Entry<CapacitorModifier, Float> modifier : capacitorData.modifiers().entrySet()) {
                 components.add(TooltipUtil.styledWithArgs(
-                        Identifier.fromNamespaceAndPath("tooltip", modifier.getKey().modifierId.toLanguageKey()),
+                        Component.translatable(modifier.getKey().modifierId.toLanguageKey() + ".tooltip"),
                         fmt.format(modifier.getValue())));
             }
         }

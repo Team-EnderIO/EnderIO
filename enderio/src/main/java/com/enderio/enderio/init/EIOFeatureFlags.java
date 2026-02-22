@@ -6,9 +6,6 @@ import net.minecraft.world.flag.FeatureFlag;
 import net.minecraft.world.flag.FeatureFlags;
 
 public class EIOFeatureFlags {
-    public static final FeatureFlag FARMING_STATION = FeatureFlags.REGISTRY
-        .getFlag(Identifier.fromNamespaceAndPath(EnderIO.MOD_ID, "farming_station"));
-
     public static final FeatureFlag ENDERFACE = FeatureFlags.REGISTRY
         .getFlag(Identifier.fromNamespaceAndPath(EnderIO.MOD_ID, "enderface"));
 

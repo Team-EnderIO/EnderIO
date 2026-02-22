@@ -4,5 +4,5 @@ import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Experimental
 public enum FarmInteraction {
-    FINISHED, POWERED, BLOCKED, IGNORED
+    FINISHED, BLOCKED, IGNORED
 }

@@ -163,6 +163,11 @@ public class EIOTags {
         public static final TagKey<Block> MIND_KILLER = tag("mind_killer");
 
         public static final TagKey<Block> INCORRECT_FOR_DARK_STEEL_TOOL = tag("incorrect_for_dark_steel_tool");
+        
+        
+        // Harvestable crops that have a stem.
+        // TODO: remove in 26.1
+        public static final TagKey<Block> CROPS_WITH_STEM = tag("stem_crop");
 
         private static TagKey<Block> commonTag(String name) {
             return BlockTags.create(Identifier.fromNamespaceAndPath(COMMON, name));
@@ -191,6 +196,7 @@ public class EIOTags {
     public static class EntityTypes {
         // TODO: 1.22: Rename allow/deny list.
         public static final TagKey<EntityType<?>> SPAWNER_BLACKLIST = tag("spawner_blacklist");
+        public static final TagKey<EntityType<?>> SPAWNER_WHITELIST = tag("spawner_whitelist");
         public static final TagKey<EntityType<?>> SOUL_VIAL_WHITELIST = tag("soul_vial_whitelist");
         public static final TagKey<EntityType<?>> SOUL_VIAL_BLACKLIST = tag("soul_vial_blacklist");
 

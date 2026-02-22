@@ -2,7 +2,7 @@ package com.enderio.enderio.content.machines.farming_station.tasks;
 
 import com.enderio.enderio.api.farm.FarmInteraction;
 import com.enderio.enderio.api.farm.FarmTask;
-import com.enderio.enderio.api.farm.FarmingStation;
+import com.enderio.enderio.api.farm.FarmingMachine;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
@@ -17,23 +17,16 @@ public class HarvestNetherWartFarmTask implements FarmTask {
     }
 
     @Override
-    public FarmInteraction farm(BlockPos soil, FarmingStation farmBlockEntity) {
-        BlockPos pos = soil.above();
-        BlockState plant = farmBlockEntity.getLevel().getBlockState(pos);
-        BlockEntity blockEntity = farmBlockEntity.getLevel().getBlockEntity(pos);
-        if (plant.getBlock() instanceof NetherWartBlock wart) {
+    public <T extends BlockEntity & FarmingMachine> FarmInteraction process(BlockPos targetBlock, T blockEntity) {
+        BlockPos pos = targetBlock.above();
+        BlockState plant = blockEntity.getLevel().getBlockState(pos);
+        if (plant.getBlock() instanceof NetherWartBlock) {
             if (plant.getValue(NetherWartBlock.AGE) >= 3) {
-                if (farmBlockEntity.getConsumedPower() >= 40) {
-                    if (farmBlockEntity.handleDrops(plant, pos, soil, blockEntity, ItemStack.EMPTY)) {
-                        farmBlockEntity.getLevel().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
-                        farmBlockEntity.addConsumedPower(-40);
-                        return FarmInteraction.FINISHED;
-                    }
-                    return FarmInteraction.BLOCKED;
+                if (blockEntity.handleDrops(plant, pos, targetBlock, blockEntity, ItemStack.EMPTY)) {
+                    blockEntity.getLevel().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+                    return FarmInteraction.FINISHED;
                 }
-                farmBlockEntity.addConsumedPower(
-                    farmBlockEntity.consumeEnergy(40 - farmBlockEntity.getConsumedPower(), false));
-                return FarmInteraction.POWERED;
+                return FarmInteraction.BLOCKED;
             }
         }
         return FarmInteraction.IGNORED;

@@ -60,8 +60,6 @@ public record EnderSoulFilter(NonNullList<Soul> matches, boolean isDenyList, boo
             if (match.hasEntity()) {
                 if (shouldCompareTags ? Soul.isSameEntitySameTag(match, entity) : Soul.isSameEntity(match, entity)) {
                     return !isDenyList;
-                } else {
-                    return isDenyList;
                 }
             }
         }
@@ -80,8 +78,6 @@ public record EnderSoulFilter(NonNullList<Soul> matches, boolean isDenyList, boo
             if (!match.isEmpty()) {
                 if (shouldCompareTags ? Soul.isSameEntitySameTag(match, soul) : Soul.isSameEntity(match, soul)) {
                     return !isDenyList;
-                } else {
-                    return isDenyList;
                 }
             }
         }
@@ -93,7 +89,9 @@ public record EnderSoulFilter(NonNullList<Soul> matches, boolean isDenyList, boo
     public boolean test(EntityType<?> entityType) {
         for (var match : matches) {
             if (!match.isEmpty()) {
-                return !isDenyList && Soul.isSameEntity(match, entityType);
+                if (Soul.isSameEntity(match, entityType)) {
+                   return !isDenyList;
+                }
             }
         }
 

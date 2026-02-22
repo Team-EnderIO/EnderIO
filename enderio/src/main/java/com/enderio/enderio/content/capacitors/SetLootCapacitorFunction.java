@@ -13,9 +13,10 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProviders;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class SetLootCapacitorFunction extends LootItemConditionalFunction {
 
@@ -39,18 +40,21 @@ public class SetLootCapacitorFunction extends LootItemConditionalFunction {
     @Override
     protected ItemStack run(ItemStack stack, LootContext context) {
         float base = range.getFloat(context);
-        Map<CapacitorModifier, Float> modifiers = new HashMap<>();
+        Map<CapacitorModifier, Float> modifiers = new EnumMap<>(CapacitorModifier.class);
 
-        modifiers.put(CapacitorModifier.getRandomModifier(context.getRandom()), range.getFloat(context));
+        var modifier = CapacitorModifier.getRandomModifier(context.getRandom());
+        modifier.ifPresent(m -> modifiers.put(m, range.getFloat(context)));
 
         // 15% chance of a secondary modifier
         if (context.getRandom().nextFloat() < 0.15f) {
-            modifiers.put(CapacitorModifier.getRandomModifier(context.getRandom()), range.getFloat(context));
+            modifier = CapacitorModifier.getRandomModifier(context.getRandom(), modifiers.keySet());
+            modifier.ifPresent(m -> modifiers.put(m, range.getFloat(context)));
         }
 
         // 2% change of a third
         if (context.getRandom().nextFloat() < 0.02f) {
-            modifiers.put(CapacitorModifier.getRandomModifier(context.getRandom()), range.getFloat(context));
+            modifier = CapacitorModifier.getRandomModifier(context.getRandom(), modifiers.keySet());
+            modifier.ifPresent(m -> modifiers.put(m, range.getFloat(context)));
         }
 
         stack.set(EIODataComponents.CAPACITOR_DATA, new CapacitorData(base, modifiers));

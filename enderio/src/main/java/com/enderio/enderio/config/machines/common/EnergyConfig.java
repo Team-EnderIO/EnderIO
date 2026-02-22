@@ -3,8 +3,6 @@ package com.enderio.enderio.config.machines.common;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class EnergyConfig {
-    public final ModConfigSpec.BooleanValue THROTTLE_ENERGY_INPUT;
-
     public final ModConfigSpec.ConfigValue<Integer> ALLOY_SMELTER_CAPACITY;
     public final ModConfigSpec.ConfigValue<Integer> ALLOY_SMELTER_USAGE;
     public final ModConfigSpec.ConfigValue<Integer> ALLOY_SMELTER_VANILLA_ITEM_ENERGY;
@@ -60,10 +58,6 @@ public class EnergyConfig {
 
     public EnergyConfig(ModConfigSpec.Builder builder) {
         builder.push("energy");
-
-        THROTTLE_ENERGY_INPUT = builder
-                .comment("Whether or not the machine should throttle energy input to 2x it's consumption rate")
-                .define("throttleEnergyUsage", true);
 
         builder.push("alloySmelter");
         ALLOY_SMELTER_CAPACITY = builder.comment("The base energy capacity in uI.")
@@ -201,11 +195,11 @@ public class EnergyConfig {
             .defineInRange("usage", 10, 1, Integer.MAX_VALUE);
         builder.pop();
 
-        builder.push("farm");
+        builder.push("farmingStation");
         FARM_CAPACITY = builder.comment("The base energy capacity in uI.")
                 .defineInRange("capacity", 64_000, 1, Integer.MAX_VALUE);
         FARM_USAGE = builder.comment("The base energy consumption in uI/t.")
-                .defineInRange("usage", 10, 1, Integer.MAX_VALUE);
+                .defineInRange("usage", 40, 1, Integer.MAX_VALUE);
         builder.pop();
 
         builder.push("inhibitor");

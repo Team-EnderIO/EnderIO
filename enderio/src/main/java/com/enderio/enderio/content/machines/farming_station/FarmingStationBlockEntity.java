@@ -6,7 +6,7 @@ import com.enderio.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.enderio.api.farm.FarmInteraction;
 import com.enderio.enderio.api.farm.FarmTask;
 import com.enderio.enderio.api.farm.FarmTaskManager;
-import com.enderio.enderio.api.farm.FarmingStation;
+import com.enderio.enderio.api.farm.FarmingMachine;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.api.soul.binding.SoulBindable;
@@ -39,7 +39,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -49,9 +48,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.common.SpecialPlantable;
 import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.common.ticket.AABBTicket;
 import net.neoforged.neoforge.common.util.FakePlayer;
-import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
@@ -60,10 +57,8 @@ import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
-public class FarmingStationBlockEntity extends PoweredMachineBlockEntity implements RangedActor, FarmingStation, SoulBindable {
-    public static final String CONSUMED = "Consumed";
+public class FarmingStationBlockEntity extends PoweredMachineBlockEntity implements RangedActor, FarmingMachine, SoulBindable {
     private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
             MachinesConfig.COMMON.ENERGY.FARM_CAPACITY);
     private static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE,
@@ -71,23 +66,16 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
 
     private static final ActionRange DEFAULT_RANGE = new ActionRange(5, false);
 
-    public static final SingleSlotAccess AXE = new SingleSlotAccess();
-    public static final SingleSlotAccess HOE = new SingleSlotAccess();
-    public static final SingleSlotAccess SHEAR = new SingleSlotAccess();
-    public static final SingleSlotAccess NE = new SingleSlotAccess();
-    public static final SingleSlotAccess SE = new SingleSlotAccess();
-    public static final SingleSlotAccess SW = new SingleSlotAccess();
-    public static final SingleSlotAccess NW = new SingleSlotAccess();
+    public static final MultiSlotAccess TOOLS = new MultiSlotAccess(); // Order - Axe, Hoe, Shears
+    public static final MultiSlotAccess AREAS = new MultiSlotAccess(); // Order - NE, SE, SW, NW
     public static final MultiSlotAccess BONEMEAL = new MultiSlotAccess();
     public static final MultiSlotAccess OUTPUT = new MultiSlotAccess();
 
     private List<BlockPos> positions;
     private int currentIndex = 0;
-    private int consumed = 0;
+
     @Nullable
     private FarmTask currentTask = null;
-    @Nullable
-    private AABBTicket ticket;
 
     private Soul boundSoul = Soul.EMPTY;
     private FarmSoul.SoulData soulData;
@@ -102,17 +90,6 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     public FarmingStationBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.FARMING_STATION.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
                 EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE);
-    }
-
-    @Override
-    public void setLevel(Level level) {
-        super.setLevel(level);
-        if (level instanceof ServerLevel serverLevel) {
-            if (this.getMachineOwner() == null) {
-                this.setMachineOwner(UUID.randomUUID()); // Fallback
-            }
-            farmPlayer = FakePlayerFactory.get(serverLevel, new GameProfile(getMachineOwner(), "enderio:farm"));
-        }
     }
 
     @Override
@@ -140,20 +117,10 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     protected @Nullable MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
                 .capacitor()
-                .inputSlot((i, s) -> s.is(ItemTags.AXES))
-                .slotAccess(AXE)
-                .inputSlot((i, s) -> s.is(ItemTags.HOES))
-                .slotAccess(HOE)
-                .inputSlot((i, s) -> s.is(Tags.Items.TOOLS_SHEAR))
-                .slotAccess(SHEAR)
-                .inputSlot()
-                .slotAccess(NE)
-                .inputSlot()
-                .slotAccess(SE)
-                .inputSlot()
-                .slotAccess(SW)
-                .inputSlot()
-                .slotAccess(NW)
+                .inputSlot(3, this::validToolForSlot)
+                .slotAccess(TOOLS)
+                .inputSlot(4)
+                .slotAccess(AREAS)
                 .inputSlot(2, (integer, stack) -> stack.is(Tags.Items.FERTILIZERS))
                 .slotAccess(BONEMEAL)
                 .outputSlot(6)
@@ -168,8 +135,10 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
             op.ifPresent(data -> soulData = data);
             reloadCache = reload;
         }
-        if (canAct(5)) {
-            doFarmTask();
+        // TODO: this is quite icky. need abstractions between tick time and power consumption
+        if (canAct(10) && getEnergyStorage().getAmountAsInt() >= getMaxEnergyUse() * 10) {
+            processFarmTask();
+            getEnergyStorage().consume(getMaxEnergyUse() * 10, null);
         }
 
         super.serverTick();
@@ -185,31 +154,24 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
         super.clientTick();
     }
 
-    private void doFarmTask() {
+    private void processFarmTask() {
         int stop = Math.min(currentIndex + getRange(), positions.size());
         while (currentIndex < stop) {
             BlockPos soil = positions.get(currentIndex);
             if (currentTask != null) {
-                if (currentTask.farm(soil, this) != FarmInteraction.POWERED) {
+                // try process current task
+                if (currentTask.process(soil, this) == FarmInteraction.IGNORED) {
                     currentTask = null; // Task is done or no longer valid
                 }
-                break;
             }
             // Look for a new task
-            for (FarmTask task : FarmTaskManager.getTasks()) {
-                FarmInteraction interaction = task.farm(soil, this);
-                if (interaction == FarmInteraction.POWERED) { // new task found
-                    currentTask = task;
-                    break;
+            if(currentTask == null) {
+                for (FarmTask task : FarmTaskManager.getTasks()) {
+                    if (task.process(soil, this) != FarmInteraction.IGNORED) { // new task found
+                        currentTask = task;
+                        break;
+                    }
                 }
-                if (interaction == FarmInteraction.FINISHED) {// Task found and already done
-                    currentTask = null;
-                    break;
-                }
-            }
-            // task found
-            if (currentTask != null) {
-                break;
             }
             currentIndex++;
         }
@@ -220,21 +182,30 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
         }
     }
 
-    // TODO check if the coords actually are these direction
+    // FIXME: multislot access filters take global slot index and not local
+    private boolean validToolForSlot(int index, ItemResource itemResource) {
+        return switch(index) { // Order - Axes, Hoes, Shears - Check TOOLS slot access
+            case 1 -> itemResource.is(ItemTags.AXES);
+            case 2 -> itemResource.is(ItemTags.HOES);
+            case 3 -> itemResource.is(Tags.Items.TOOLS_SHEAR);
+            default -> false;
+        };
+    }
+
     public SingleSlotAccess getSeedForPos(BlockPos soil) {
+        if (soil.getX() >= getBlockPos().getX() && soil.getZ() <= getBlockPos().getZ()) {
+            return AREAS.get(0); //NE
+        }
         if (soil.getX() >= getBlockPos().getX() && soil.getZ() > getBlockPos().getZ()) {
-            return SW;
+            return AREAS.get(1); //SE
         }
-        if (soil.getX() > getBlockPos().getX() && soil.getZ() <= getBlockPos().getZ()) {
-            return NW;
+        if (soil.getX() < getBlockPos().getX() && soil.getZ() > getBlockPos().getZ()) {
+            return AREAS.get(2); //SW
         }
-        if (soil.getX() <= getBlockPos().getX() && soil.getZ() < getBlockPos().getZ()) {
-            return SE;
+        if (soil.getX() < getBlockPos().getX() && soil.getZ() <= getBlockPos().getZ()) {
+            return AREAS.get(3); //NW
         }
-        if (soil.getX() < getBlockPos().getX() && soil.getZ() >= getBlockPos().getZ()) {
-            return NE;
-        }
-        return NW;
+        return AREAS.get(3);//NW
     }
 
     @Override
@@ -248,12 +219,6 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
 
     public BlockPos getParticleLocation() {
         return worldPosition.below();
-    }
-
-    @Override
-    public void onLoad() {
-        super.onLoad();
-        updateLocations();
     }
 
     private void updateLocations() {
@@ -285,14 +250,12 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
             if (soil != null) {
                 ItemStack seeds = getSeedForPos(soil).getItemStack(this);
                 if (seeds.isEmpty()) {
-                    if (drop.getItem() instanceof BlockItem || drop.getItem() instanceof SpecialPlantable) { // Collect
-                                                                                                             // potential
-                                                                                                             // seeds
+                    if (drop.getItem() instanceof BlockItem || drop.getItem() instanceof SpecialPlantable) {
+                        // Collect potential seeds
                         getSeedForPos(soil).setStackInSlot(this, drop);
                         continue;
                     }
-                }
-                if (ItemStack.isSameItem(drop, seeds)) {
+                } else if (ItemStack.isSameItem(drop, seeds)) {
                     int leftOver = seeds.getMaxStackSize() - seeds.getCount();
                     if (drop.getCount() > leftOver) {
                         seeds.setCount(seeds.getMaxStackSize());
@@ -342,18 +305,6 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
         return empty;
     }
 
-    public int getConsumedPower() {
-        return consumed;
-    }
-
-    @Override
-    public void addConsumedPower(int power) {
-        if (power > 0) {
-            power = soulData == null ? power : (int) (power * soulData.power());
-        }
-        consumed += power;
-    }
-
     public boolean consumeBonemeal() {
         boolean consumed = false;
         for (int i = 0; i < 2; i++) {
@@ -379,22 +330,31 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
 
     @Override
     public ItemStack getAxe() {
-        return AXE.getItemStack(this);
+        return TOOLS.get(0).getItemStack(this);
     }
 
     @Override
     public ItemStack getHoe() {
-        return HOE.getItemStack(this);
+        return TOOLS.get(1).getItemStack(this);
     }
 
     @Override
     public ItemStack getShears() {
-        return SHEAR.getItemStack(this);
+        return TOOLS.get(2).getItemStack(this);
     }
 
     @EnsureSide(EnsureSide.Side.SERVER)
     @Override
     public FakePlayer getPlayer() {
+        if (!(level instanceof ServerLevel serverLevel)) {
+            throw new IllegalStateException("Level is null");
+        }
+
+        if (farmPlayer == null) {
+            farmPlayer = new FakePlayer(serverLevel, new GameProfile(getMachineOwnerOrRandom(), "enderio:farm:" + worldPosition));
+            farmPlayer.setPos(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ());
+        }
+
         return farmPlayer;
     }
 
@@ -406,28 +366,6 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     @Override
     public int getFarmingRange() {
         return getRange();
-    }
-
-    @Override
-    public int consumeEnergy(int energy, boolean simulate) {
-        // TODO: 1.21.11: Adopt transactions properly.
-        try (Transaction transaction = Transaction.openRoot()) {
-            int energyConsumed = getEnergyStorage().consume(energy, transaction);
-            if (!simulate) {
-                transaction.commit();
-            }
-
-            return energyConsumed;
-        }
-    }
-
-    @Override
-    public void setRemoved() {
-        super.setRemoved();
-        if (ticket != null) {
-            ticket.invalidate();
-            ticket = null;
-        }
     }
 
     @Nullable
@@ -468,9 +406,9 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     }
 
     @Override
-    protected void saveAdditional(ValueOutput output) {
-        super.saveAdditional(output);
-        output.putInt(CONSUMED, consumed);
+    public void onLoad() {
+        super.onLoad();
+        updateLocations();
     }
 
     @Override
@@ -487,7 +425,6 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     @Override
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
-        this.consumed = input.getIntOr(CONSUMED, 0);
 
         var range = input.read(MachineNBTKeys.ACTION_RANGE, ActionRange.CODEC);
         range.ifPresent(r -> this.actionRange = r);

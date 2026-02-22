@@ -2,7 +2,6 @@ package com.enderio.enderio.datagen.client;
 
 import com.enderio.core.common.registries.FluidDeferredHolders;
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitApi;
 import com.enderio.enderio.api.io.RedstoneControl;
@@ -98,6 +97,7 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOTags.Fluids.SOLAR_PANEL_DARK, "Solar Panel Dark");
 
         add(EIOTags.EntityTypes.SPAWNER_BLACKLIST, "Spawner Blacklist");
+        add(EIOTags.EntityTypes.SPAWNER_WHITELIST, "Spawner Whitelist");
         add(EIOTags.EntityTypes.SOUL_VIAL_BLACKLIST, "Soul Vial Blacklist");
         add(EIOTags.EntityTypes.SOUL_VIAL_WHITELIST, "Soul Vial Whitelist");
     }

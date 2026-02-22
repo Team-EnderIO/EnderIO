@@ -17,7 +17,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.redstone.Orientation;
 import org.jspecify.annotations.Nullable;
+import net.minecraft.world.level.Level;
 
 public class BlockDetectorBlock extends DirectionalBlock {
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
@@ -104,6 +106,23 @@ public class BlockDetectorBlock extends DirectionalBlock {
     private void startSignal(LevelReader level, ScheduledTickAccess scheduledTickAccess, BlockPos pos) {
         if (!level.isClientSide() && !scheduledTickAccess.getBlockTicks().hasScheduledTick(pos, this)) {
             scheduledTickAccess.scheduleTick(pos, this, 2);
+        }
+    }
+
+    @Override
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, @Nullable Orientation orientation, boolean movedByPiston) {
+        if (level.isClientSide()) {
+            return;
+        }
+
+        BlockPos targetPos = pos.relative(state.getValue(FACING));
+        boolean shouldBePowered = !level.getBlockState(targetPos).isAir();
+        if (state.getValue(POWERED) != shouldBePowered) {
+            level.setBlock(pos, state.cycle(POWERED), Block.UPDATE_CLIENTS);
+
+            for (Direction direction : Direction.values()) {
+                level.updateNeighborsAt(pos.relative(direction), this);
+            }
         }
     }
 }
