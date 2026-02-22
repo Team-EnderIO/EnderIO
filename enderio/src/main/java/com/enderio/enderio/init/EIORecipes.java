@@ -36,7 +36,7 @@ public class EIORecipes {
 
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<ShapedEntityStorageRecipe>> SHAPED_ENTITY_STORAGE = RECIPE_SERIALIZERS
         .register("shaped_entity_storage",
-            () -> new WrappedShapedRecipe.Serializer<>(ShapedEntityStorageRecipe::new));
+            () -> ShapedEntityStorageRecipe.SERIALIZER);
 
     public static final RecipeTypeSerializerPair<EnchanterRecipe, EnchanterRecipe.Serializer> ENCHANTING = register(
             "enchanting", EnchanterRecipe.Serializer::new);
