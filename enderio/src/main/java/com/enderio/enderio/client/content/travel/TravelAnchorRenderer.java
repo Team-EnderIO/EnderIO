@@ -44,7 +44,7 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             return;
         }
 
-        Camera camera = Minecraft.getInstance().gameRenderer.getMainCamera();
+        Camera camera = minecraft.gameRenderer.getMainCamera();
         Vec3 cameraPos = camera.getPosition();
         Vec3 towardsCamera = travelData.pos()
             .getCenter()
@@ -60,6 +60,8 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
         VertexConsumer solidRenderType = buffer.getBuffer(RenderType.solid());
         ModelBlockRenderer blockModelRenderer = minecraft.getBlockRenderer().getModelRenderer();
 
+        int packedLight = LightTexture.pack(15, 15);
+
         // Render Model
         {
             BlockState blockState = minecraft.level.getBlockState(travelData.pos());
@@ -73,7 +75,7 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
 
             BakedModel blockModel = minecraft.getBlockRenderer().getBlockModel(blockState);
             blockModelRenderer.renderModel(poseStack.last(), solidRenderType, blockState, blockModel,
-                1, 1, 1, 0xF000F0, OverlayTexture.NO_OVERLAY);
+                1, 1, 1, packedLight, OverlayTexture.NO_OVERLAY);
         }
 
         // Render outline block
@@ -81,18 +83,18 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             poseStack.pushPose();
 
             float outlineSize = active ? 0.2F : 0.15F;
-            float scale2 = 1F + 2 * outlineSize;
-            Vec3 offset = towardsCamera.scale(-scale2).subtract(outlineSize, outlineSize, outlineSize);
+            float scale = 1F + 2 * outlineSize;
+            Vec3 offset = towardsCamera.scale(-scale).subtract(outlineSize, outlineSize, outlineSize);
 
             poseStack.translate(offset.x, offset.y, offset.z);
-            poseStack.scale(scale2, scale2, scale2);
+            poseStack.scale(scale, scale, scale);
 
             Block outlineBlock = active ? Blocks.YELLOW_CONCRETE : Blocks.WHITE_CONCRETE;
             BlockState outlineBlockState = outlineBlock.defaultBlockState();
             BakedModel outlineBlockModel = minecraft.getBlockRenderer().getBlockModel(outlineBlockState);
 
             blockModelRenderer.renderModel(poseStack.last(), solidRenderType, outlineBlockState, outlineBlockModel,
-                1, 1, 1, 0xF000F0, OverlayTexture.NO_OVERLAY);
+                1, 1, 1, packedLight, OverlayTexture.NO_OVERLAY);
 
             poseStack.popPose();
         }
@@ -105,13 +107,13 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
                 double distance = Math.sqrt(distanceSquared);
                 double baseScale = 0.1;
                 double scale = baseScale + distance * baseScale * baseScale;
-                scale = scale * (Math.sin(Math.toRadians(Minecraft.getInstance().options.fov().get() / 4d)));
+                scale = scale * (Math.sin(Math.toRadians(minecraft.options.fov().get() / 4d)));
                 if (active) {
                     scale *= 1.3;
                 }
 
                 Quaternionf textRotation = Axis.YN.rotationDegrees(camera.getYRot()).mul(Axis.XP.rotationDegrees(camera.getXRot()));
-                int lineHeight = Minecraft.getInstance().font.lineHeight;
+                int lineHeight = minecraft.font.lineHeight;
 
                 poseStack.translate(0.5, scale * lineHeight, 0.5);
                 poseStack.mulPose(textRotation);
@@ -126,11 +128,10 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             int textBg = (int) (textOpacitySetting * 255) << 24;
             float halfWidth = (float) (-minecraft.font.width(textComponent) / 2);
 
-            var packedLight = LightTexture.pack(15, 15);
             var mode1 = Font.DisplayMode.SEE_THROUGH;
             var mode2 = Font.DisplayMode.NORMAL;
-            var textBg1 = textBg;
-            var textBg2 = 0;
+            int textBg1 = textBg;
+            int textBg2 = 0;
 
             if (ModCompatHelper.hasIris()) {
                 // required for text to render correctly, possibly an Iris bug
@@ -139,7 +140,7 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
                 mode1 = mode2;
                 mode2 = _m;
 
-                var _t = textBg1;
+                int _t = textBg1;
                 textBg1 = textBg2;
                 textBg2 = _t;
             }
@@ -153,9 +154,10 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
 
         // Render Icon
         if (travelData.icon() != Items.AIR) {
-            // Scale for rendering
+            poseStack.pushPose();
+
             double scale = Math.sqrt(Math.sqrt(distanceSquared));
-            scale = scale * (Math.sin(Math.toRadians(Minecraft.getInstance().options.fov().get() / 4d)));
+            scale = scale * (Math.sin(Math.toRadians(minecraft.options.fov().get() / 4d)));
             if (active) {
                 scale *= 1.3;
             }
@@ -166,9 +168,9 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
                 .toVector3f();
             Vector3f direction = towardsCamera.toVector3f();
             Quaternionf iconRotation = new Quaternionf().lookAlong(direction.x(), direction.y(), direction.z(), upDir.x(), upDir.y(), upDir.z());
+
             Vec3 offset = towardsCamera.scale(0.9);
 
-            poseStack.pushPose();
             poseStack.translate(offset.x() + 0.5, offset.y() + 0.5, offset.z() + 0.5);
             poseStack.mulPose(iconRotation.invert());
             float scaleF = (float) scale;
@@ -176,9 +178,10 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
 
             ItemStack stack = new ItemStack(travelData.icon());
             BakedModel bakedmodel = minecraft.getItemRenderer().getModel(stack, minecraft.level, null, 0);
-            minecraft.getItemRenderer()
-                    .render(stack, ItemDisplayContext.GUI, true, poseStack, OutlineBuffer.INSTANCE, 15728880,
-                            OverlayTexture.NO_OVERLAY, bakedmodel);
+            minecraft
+                .getItemRenderer()
+                .render(stack, ItemDisplayContext.GUI, true, poseStack, OutlineBuffer.INSTANCE, packedLight, OverlayTexture.NO_OVERLAY, bakedmodel);
+
             poseStack.popPose();
         }
     }
