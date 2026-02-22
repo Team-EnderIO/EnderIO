@@ -1,4 +1,4 @@
-package com.enderio.endergy.datapack_registries;
+package com.enderio.endergy.datagen.common.datapack_registries;
 
 import com.enderio.endergy.common.EnderIOEndergy;
 import com.enderio.endergy.common.EndergyConduits;

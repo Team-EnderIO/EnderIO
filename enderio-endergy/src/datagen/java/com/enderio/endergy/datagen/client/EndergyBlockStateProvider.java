@@ -1,4 +1,4 @@
-package com.enderio.endergy.client;
+package com.enderio.endergy.datagen.client;
 
 import com.enderio.endergy.common.EnderIOEndergy;
 import com.enderio.endergy.common.init.EndergyBlocks;

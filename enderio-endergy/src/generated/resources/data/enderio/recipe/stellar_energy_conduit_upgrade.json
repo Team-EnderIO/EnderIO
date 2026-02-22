@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "B": {
+      "item": "enderio:conduit_binder"
+    },
+    "C": {
+      "type": "enderio:conduit",
+      "conduit_type": "enderio_endergy:melodic_energy"
+    },
+    "I": {
+      "item": "enderio_endergy:stellar_alloy_ingot"
+    }
+  },
+  "pattern": [
+    "BBB",
+    "ICI",
+    "BBB"
+  ],
+  "result": {
+    "components": {
+      "enderio:conduit": "enderio_endergy:stellar_energy"
+    },
+    "count": 8,
+    "id": "enderio:conduit"
+  }
+}

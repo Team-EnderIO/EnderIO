@@ -1,4 +1,4 @@
-package com.enderio.endergy.common.recipes;
+package com.enderio.endergy.datagen.common.recipes;
 
 import com.enderio.core.data.recipe.EnderRecipeProvider;
 import net.minecraft.core.HolderLookup;
@@ -11,6 +11,7 @@ public class EndergyRecipeProvider extends EnderRecipeProvider {
         super(output, registries);
 
         addProvider(new AlloyRecipeProvider());
+        addProvider(new ConduitRecipeProvider());
         addProvider(new MaterialRecipeProvider());
         addProvider(new SlicingRecipeProvider());
     }

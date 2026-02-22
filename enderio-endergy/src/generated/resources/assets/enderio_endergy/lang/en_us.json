@@ -27,5 +27,6 @@
   "item.enderio_endergy.vivid_alloy_ingot": "Vivid Alloy Ingot",
   "item.enderio_endergy.vivid_alloy_nugget": "Vivid Alloy Nugget",
   "item.enderio_endergy.vivid_capacitor": "Vivid Capacitor",
-  "itemGroup.enderio.endergy": "Endergy"
+  "itemGroup.enderio.endergy": "Endergy",
+  "tooltip.enderio.totemic_capacitor.hint": "Can be enchanted with Efficiency to increase the modifier."
 }

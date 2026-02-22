@@ -1,4 +1,4 @@
-package com.enderio.endergy.common.recipes;
+package com.enderio.endergy.datagen.common.recipes;
 
 import com.enderio.core.data.recipe.SubRecipeProvider;
 import com.enderio.endergy.common.init.EndergyItems;

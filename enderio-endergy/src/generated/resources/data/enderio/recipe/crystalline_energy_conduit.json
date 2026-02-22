@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "B": {
+      "item": "enderio:conduit_binder"
+    },
+    "I": {
+      "item": "enderio_endergy:crystalline_alloy_ingot"
+    }
+  },
+  "pattern": [
+    "BBB",
+    "III",
+    "BBB"
+  ],
+  "result": {
+    "components": {
+      "enderio:conduit": "enderio_endergy:crystalline_energy"
+    },
+    "count": 8,
+    "id": "enderio:conduit"
+  }
+}

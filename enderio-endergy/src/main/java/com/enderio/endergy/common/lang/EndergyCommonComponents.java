@@ -8,6 +8,8 @@ import net.minecraft.network.chat.MutableComponent;
 public class EndergyCommonComponents {
     public static final MutableComponent CREATIVE_TAB_TITLE = create("itemGroup", "endergy");
 
+    public static final MutableComponent TOTEMIC_CAPACITOR_TOOLTIP = create("tooltip", "totemic_capacitor/hint");
+
     private static MutableComponent gui(String path) {
         return create("gui", path);
     }

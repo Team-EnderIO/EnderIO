@@ -3,7 +3,6 @@ package com.enderio.endergy.common;
 import com.enderio.endergy.common.init.EndergyBlocks;
 import com.enderio.endergy.common.init.EndergyCreativeTabs;
 import com.enderio.endergy.common.init.EndergyItems;
-import com.enderio.endergy.common.item.TotemicCapacitorExtension;
 import com.enderio.endergy.common.item.TotemicCapacitorItem;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import net.minecraft.resources.ResourceLocation;

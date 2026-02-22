@@ -1,4 +1,4 @@
-package com.enderio.endergy.client;
+package com.enderio.endergy.datagen.client;
 
 import com.enderio.core.common.registries.FluidDeferredHolders;
 import com.enderio.endergy.common.EnderIOEndergy;
@@ -79,6 +79,7 @@ public class EndergyLanguageProvider extends LanguageProvider {
 
     private void addCommonLang() {
         add(EndergyCommonComponents.CREATIVE_TAB_TITLE, "Endergy");
+        add(EndergyCommonComponents.TOTEMIC_CAPACITOR_TOOLTIP, "Can be enchanted with Efficiency to increase the modifier.");
     }
 
     private void add(ResourceKey<Conduit<?, ?>> key, String translation) {

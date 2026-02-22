@@ -1,11 +1,11 @@
-package com.enderio.endergy;
+package com.enderio.endergy.datagen;
 
-import com.enderio.endergy.client.EndergyBlockStateProvider;
-import com.enderio.endergy.client.EndergyItemModelProvider;
-import com.enderio.endergy.client.EndergyLanguageProvider;
+import com.enderio.endergy.datagen.client.EndergyBlockStateProvider;
+import com.enderio.endergy.datagen.client.EndergyItemModelProvider;
+import com.enderio.endergy.datagen.client.EndergyLanguageProvider;
 import com.enderio.endergy.common.EnderIOEndergy;
-import com.enderio.endergy.common.recipes.EndergyRecipeProvider;
-import com.enderio.endergy.datapack_registries.ConduitsBootstrap;
+import com.enderio.endergy.datagen.common.recipes.EndergyRecipeProvider;
+import com.enderio.endergy.datagen.common.datapack_registries.ConduitsBootstrap;
 import com.enderio.enderio.api.EnderIORegistries;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistrySetBuilder;
