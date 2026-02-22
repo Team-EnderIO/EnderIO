@@ -92,6 +92,11 @@ public class InternalTankTasks {
                             return;
                         }
 
+                        // Ensure there's a bucket to be given to the player.
+                        if (resource.getFluid().getBucket() == Items.AIR) {
+                            return;
+                        }
+
                         int extracted = fluidStorage.internalExtract(tankSlot, resource, FluidType.BUCKET_VOLUME, transaction);
                         if (extracted != FluidType.BUCKET_VOLUME) {
                             return;

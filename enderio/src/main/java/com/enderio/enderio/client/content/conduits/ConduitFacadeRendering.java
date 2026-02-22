@@ -31,17 +31,34 @@ public class ConduitFacadeRendering {
 
     @SubscribeEvent
     static void renderFacade(AddSectionGeometryEvent event) {
-        LongSet blockList = ConduitBundleBlockEntity.CHUNK_FACADES
-                .getOrDefault(SectionPos.asLong(event.getSectionOrigin()), null);
+        var level = Minecraft.getInstance().level;
+        if (level == null) {
+            return;
+        }
 
+        var dimension = level.dimension();
+
+        var facadesForDimension = ConduitBundleBlockEntity.CHUNK_FACADES.get(dimension);
+        if (facadesForDimension == null) {
+            return;
+        }
+
+        LongSet blockList = facadesForDimension.getOrDefault(SectionPos.asLong(event.getSectionOrigin()), null);
         if (blockList == null) {
             return;
         }
 
-        Map<BlockPos, BlockState> facades = new Object2ObjectOpenHashMap<>();
+        var facadesForDim = ConduitBundleBlockEntity.FACADES.get(dimension);
+        if (facadesForDim == null) {
+            return;
+        }
 
+        Map<BlockPos, BlockState> facades = new Object2ObjectOpenHashMap<>();
         for (long entry : blockList) {
-            facades.put(BlockPos.of(entry), ConduitBundleBlockEntity.FACADES.get(entry));
+            BlockState state = facadesForDim.get(entry);
+            if (state != null) {
+                facades.put(BlockPos.of(entry), state);
+            }
         }
 
         if (facades.isEmpty())

@@ -35,7 +35,9 @@ public class NewEnergyWidget extends EIOWidget {
         }
 
         //TODO blend depth pipeline
-        float filledVolume = (float)(storage.energy() / (double) storage.capacity());
+
+        // Avoid growing beyond 100%, see GH-1106.
+        float filledVolume = Math.min(1.0f, (float)(storage.energy() / (double) storage.capacity()));
         int renderableHeight = (int)(filledVolume * height);
         int hiddenHeight = height - renderableHeight;
 

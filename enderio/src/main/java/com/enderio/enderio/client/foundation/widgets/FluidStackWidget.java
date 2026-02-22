@@ -46,7 +46,8 @@ public class FluidStackWidget extends EIOWidget {
 
                     int stored = fluidStack.getAmount();
                     float capacity = fluidTank.capacity();
-                    float filledVolume = stored / capacity;
+                    // Avoid growing beyond 100%, see GH-1106.
+                    float filledVolume = Math.min(1.0f, stored / capacity);
                     int renderableHeight = (int) (filledVolume * height);
 
                     int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));

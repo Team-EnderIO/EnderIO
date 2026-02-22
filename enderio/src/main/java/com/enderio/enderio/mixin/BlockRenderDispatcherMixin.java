@@ -3,6 +3,7 @@ package com.enderio.enderio.mixin;
 import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
@@ -18,7 +19,13 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 public class BlockRenderDispatcherMixin {
     @ModifyVariable(method = "renderBreakingTexture", at = @At("HEAD"), ordinal = 0, argsOnly = true)
     private BlockState enderio$getFacade(BlockState state, BlockState argState, BlockPos argPos, BlockAndTintGetter argLevel, PoseStack argPoseStack, VertexConsumer argConsumer) {
-        BlockState facadeState = ConduitBundleBlockEntity.FACADES.getOrDefault(argPos.asLong(), null);
+        BlockState facadeState = null;
+        if (argLevel instanceof ClientLevel clientLevel) {
+            var facadesForDim = ConduitBundleBlockEntity.FACADES.get(clientLevel.dimension());
+            if (facadesForDim != null) {
+                facadeState = facadesForDim.get(argPos.asLong());
+            }
+        }
         return facadeState == null ? state : facadeState;
     }
 }

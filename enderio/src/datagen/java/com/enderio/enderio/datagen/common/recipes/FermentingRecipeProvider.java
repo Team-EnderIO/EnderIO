@@ -51,7 +51,7 @@ public class FermentingRecipeProvider extends SubRecipeProvider {
         build(new FluidStack(EIOFluids.CLOUD_SEED.source().get(), 1000), sizedFromTag(FluidTags.WATER, 1000),
             EIOTags.Items.PRISMARINE, EIOTags.Items.CLOUD_COLD, 400, recipeOutput);
         build(new FluidStack(EIOFluids.CLOUD_SEED_CONCENTRATED.source().get(), 500),
-                SizedFluidIngredient.of(EIOFluids.CLOUD_SEED_CONCENTRATED.source().get(), 1000),
+                SizedFluidIngredient.of(EIOFluids.CLOUD_SEED.source().get(), 1000),
             EIOTags.Items.LIGHTNING_ROD, EIOTags.Items.WIND_CHARGES, 600, recipeOutput);
     }
 
