@@ -90,9 +90,6 @@ dependencies {
     jarJar(project(":enderio-modded-conduits"))
     localRuntime(project(":enderio-modded-conduits"))
 
-    // Bring all other "addons" into the dev env for testing - but do not bundle them in the jar
-    localRuntime(project(":enderio-endergy"))
-
     // Almost Unified
     compileOnly(variantOf(libs.almostUnified) {
         classifier("api")
@@ -307,8 +304,8 @@ tasks.build {
     dependsOn(tasks["sourcesJar"])
 }
 
-val enderio_curseforge_projectId: String by project
-val enderio_modrinth_projectId: String by project
+val curseforge_projectId: String by project
+val modrinth_projectId: String by project
 
 if (getReleaseType() != null) {
     if (System.getenv("CHANGELOG") != null) {
@@ -321,8 +318,8 @@ if (getReleaseType() != null) {
 
             debug.set(System.getenv("PUBLISH") != "true")
 
-            curseID.set(enderio_curseforge_projectId)
-            modrinthID.set(enderio_modrinth_projectId)
+            curseID.set(curseforge_projectId)
+            modrinthID.set(modrinth_projectId)
 
             versionType.set(getReleaseType())
             projectVersion.set("${project.version}")

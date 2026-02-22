@@ -1,9 +1,0 @@
-{
-  "type": "enderio:energy",
-  "creative_tab": "enderio_endergy:endergy",
-  "description": {
-    "translate": "conduit.enderio_endergy.crude_energy"
-  },
-  "texture": "enderio_endergy:block/conduit/crude_energy",
-  "transfer_rate": 20
-}

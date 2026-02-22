@@ -1,9 +1,0 @@
-{
-  "type": "enderio:energy",
-  "creative_tab": "enderio_endergy:endergy",
-  "description": {
-    "translate": "conduit.enderio_endergy.melodic_energy"
-  },
-  "texture": "enderio_endergy:block/conduit/melodic_energy",
-  "transfer_rate": 768000
-}
