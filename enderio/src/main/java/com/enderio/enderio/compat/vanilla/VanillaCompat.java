@@ -23,9 +23,10 @@ public class VanillaCompat {
 
     @SubscribeEvent
     public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-        for (var spawnEgg : BuiltInRegistries.ITEM.componentLookup().findAll(DataComponents.ENTITY_DATA)) {
-            event.registerItem(EnderIOCapabilities.SOUL_BINDABLE_ITEM, SPAWN_EGG_BINDABLE_PROVIDER, spawnEgg.value());
-            event.registerItem(EnderIOCapabilities.SOUL_HANDLER_ITEM, SPAWN_EGG_HANDLER_PROVIDER, spawnEgg.value());
-        }
+        // TODO: 26.1 - components are not bound at this stage.
+//        for (var spawnEgg : BuiltInRegistries.ITEM.componentLookup().findAll(DataComponents.ENTITY_DATA)) {
+//            event.registerItem(EnderIOCapabilities.SOUL_BINDABLE_ITEM, SPAWN_EGG_BINDABLE_PROVIDER, spawnEgg.value());
+//            event.registerItem(EnderIOCapabilities.SOUL_HANDLER_ITEM, SPAWN_EGG_HANDLER_PROVIDER, spawnEgg.value());
+//        }
     }
 }
