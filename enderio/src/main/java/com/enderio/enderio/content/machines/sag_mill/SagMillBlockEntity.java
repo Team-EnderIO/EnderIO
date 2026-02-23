@@ -55,7 +55,7 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
         super(EIOBlockEntities.SAG_MILL.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
                 EnergyIOMode.Input, CAPACITY, USAGE);
 
-        craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy, EIORecipes.SAG_MILLING.type().get(),
+        craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy, EIORecipes.SAG_MILLING.get(),
                 this::createTask, this::createRecipeInput);
     }
 

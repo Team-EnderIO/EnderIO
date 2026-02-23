@@ -149,10 +149,11 @@ public class EnderIO {
         SkullBlock.Types.TYPES.put("enderman", EnderSkullBlock.EIOSkulls.ENDERMAN);
     }
 
+    // TODO: 26.1 consider if we can stop syncing recipes
     @SubscribeEvent
     public static void syncRecipes(OnDatapackSyncEvent event) {
-        event.sendRecipes(EIORecipes.FIRE_CRAFTING.type().get(), EIORecipes.ALLOY_SMELTING.type().get(), EIORecipes.ENCHANTING.type().get(),
-            EIORecipes.PAINTING.type().get(), EIORecipes.SAG_MILLING.type().get(), EIORecipes.SLICING.type().get(), EIORecipes.SOUL_BINDING.type().get(),
-            EIORecipes.TANK.type().get(), EIORecipes.VAT_FERMENTING.type().get(), EIORecipes.WEATHER_CHANGE.type().get());
+        event.sendRecipes(EIORecipes.FIRE_CRAFTING.get(), EIORecipes.ALLOY_SMELTING.get(), EIORecipes.ENCHANTING.get(),
+            EIORecipes.PAINTING.get(), EIORecipes.SAG_MILLING.get(), EIORecipes.SLICING.get(), EIORecipes.SOUL_BINDING.get(),
+            EIORecipes.TANK.get(), EIORecipes.VAT_FERMENTING.get(), EIORecipes.WEATHER_CHANGE.get());
     }
 }

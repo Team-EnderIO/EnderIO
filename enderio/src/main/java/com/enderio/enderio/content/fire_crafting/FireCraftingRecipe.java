@@ -31,8 +31,40 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-public record FireCraftingRecipe(List<Result> results, List<Block> bases, List<TagKey<Block>> baseTags,
-                                 List<ResourceKey<Level>> dimensions, Optional<Block> blockAfterBurning, PlacementInfo placementInfo) implements Recipe<RecipeInput> {
+public record FireCraftingRecipe(List<Result> results, List<Block> bases, List<TagKey<Block>> baseTags, List<ResourceKey<Level>> dimensions,
+                                 Optional<Block> blockAfterBurning, PlacementInfo placementInfo) implements Recipe<RecipeInput> {
+
+    public static final MapCodec<FireCraftingRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(inst -> inst
+        .group(Codec.list(Result.CODEC).fieldOf("results").forGetter(FireCraftingRecipe::results),
+            BuiltInRegistries.BLOCK.byNameCodec()
+                .listOf()
+                .optionalFieldOf("base_blocks", List.of())
+                .forGetter(FireCraftingRecipe::bases),
+            TagKey.codec(Registries.BLOCK)
+                .listOf()
+                .optionalFieldOf("base_tags", List.of())
+                .forGetter(FireCraftingRecipe::baseTags),
+            ResourceKey.codec(Registries.DIMENSION)
+                .listOf()
+                .fieldOf("dimensions")
+                .forGetter(FireCraftingRecipe::dimensions),
+            BuiltInRegistries.BLOCK.byNameCodec()
+                .optionalFieldOf("block_after_burning")
+                .forGetter(FireCraftingRecipe::blockAfterBurning))
+        .apply(inst, FireCraftingRecipe::new));
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, FireCraftingRecipe> STREAM_CODEC = StreamCodec
+        .composite(Result.STREAM_CODEC.apply(ByteBufCodecs.list()), FireCraftingRecipe::results,
+            ByteBufCodecs.registry(Registries.BLOCK).apply(ByteBufCodecs.list()), FireCraftingRecipe::bases,
+            Identifier.STREAM_CODEC.map(loc -> TagKey.create(Registries.BLOCK, loc), TagKey::location)
+                .apply(ByteBufCodecs.list()),
+            FireCraftingRecipe::baseTags,
+            ResourceKey.streamCodec(Registries.DIMENSION).apply(ByteBufCodecs.list()),
+            FireCraftingRecipe::dimensions,
+            ByteBufCodecs.optional(ByteBufCodecs.registry(Registries.BLOCK)),
+            FireCraftingRecipe::blockAfterBurning, FireCraftingRecipe::new);
+
+    public static final RecipeSerializer<FireCraftingRecipe> SERIALIZER = new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC);
 
     public FireCraftingRecipe(List<Result> results, List<Block> bases, List<TagKey<Block>> baseTags,
         List<ResourceKey<Level>> dimensions, Optional<Block> blockAfterBurning) {
@@ -70,7 +102,7 @@ public record FireCraftingRecipe(List<Result> results, List<Block> bases, List<T
     }
 
     @Override
-    public ItemStack assemble(RecipeInput container, HolderLookup.Provider lookupProvider) {
+    public ItemStack assemble(RecipeInput container) {
         return ItemStack.EMPTY;
     }
 
@@ -81,12 +113,12 @@ public record FireCraftingRecipe(List<Result> results, List<Block> bases, List<T
 
     @Override
     public RecipeSerializer<FireCraftingRecipe> getSerializer() {
-        return EIORecipes.FIRE_CRAFTING.serializer().get();
+        return SERIALIZER;
     }
 
     @Override
     public RecipeType<? extends Recipe<RecipeInput>> getType() {
-        return EIORecipes.FIRE_CRAFTING.type().get();
+        return EIORecipes.FIRE_CRAFTING.get();
     }
 
     @Override
@@ -94,47 +126,14 @@ public record FireCraftingRecipe(List<Result> results, List<Block> bases, List<T
         return EIORecipeBookCategories.FIRE.get();
     }
 
-    public static class Serializer implements RecipeSerializer<FireCraftingRecipe> {
+    @Override
+    public boolean showNotification() {
+        return false;
+    }
 
-        public static final MapCodec<FireCraftingRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst
-                .group(Codec.list(Result.CODEC).fieldOf("results").forGetter(FireCraftingRecipe::results),
-                        BuiltInRegistries.BLOCK.byNameCodec()
-                                .listOf()
-                                .optionalFieldOf("base_blocks", List.of())
-                                .forGetter(FireCraftingRecipe::bases),
-                        TagKey.codec(Registries.BLOCK)
-                                .listOf()
-                                .optionalFieldOf("base_tags", List.of())
-                                .forGetter(FireCraftingRecipe::baseTags),
-                        ResourceKey.codec(Registries.DIMENSION)
-                                .listOf()
-                                .fieldOf("dimensions")
-                                .forGetter(FireCraftingRecipe::dimensions),
-                        BuiltInRegistries.BLOCK.byNameCodec()
-                                .optionalFieldOf("block_after_burning")
-                                .forGetter(FireCraftingRecipe::blockAfterBurning))
-                .apply(inst, FireCraftingRecipe::new));
-
-        public static final StreamCodec<RegistryFriendlyByteBuf, FireCraftingRecipe> STREAM_CODEC = StreamCodec
-                .composite(Result.STREAM_CODEC.apply(ByteBufCodecs.list()), FireCraftingRecipe::results,
-                        ByteBufCodecs.registry(Registries.BLOCK).apply(ByteBufCodecs.list()), FireCraftingRecipe::bases,
-                        Identifier.STREAM_CODEC.map(loc -> TagKey.create(Registries.BLOCK, loc), TagKey::location)
-                                .apply(ByteBufCodecs.list()),
-                        FireCraftingRecipe::baseTags,
-                        ResourceKey.streamCodec(Registries.DIMENSION).apply(ByteBufCodecs.list()),
-                        FireCraftingRecipe::dimensions,
-                        ByteBufCodecs.optional(ByteBufCodecs.registry(Registries.BLOCK)),
-                        FireCraftingRecipe::blockAfterBurning, FireCraftingRecipe::new);
-
-        @Override
-        public MapCodec<FireCraftingRecipe> codec() {
-            return CODEC;
-        }
-
-        @Override
-        public StreamCodec<RegistryFriendlyByteBuf, FireCraftingRecipe> streamCodec() {
-            return STREAM_CODEC;
-        }
+    @Override
+    public String group() {
+        return "";
     }
 
     public record Result(ItemStack result, int minCount, int maxCount, float chance) {

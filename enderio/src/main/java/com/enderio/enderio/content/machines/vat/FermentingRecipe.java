@@ -41,6 +41,24 @@ import java.util.List;
 import java.util.Objects;
 
 public final class FermentingRecipe implements MachineRecipe<FermentingRecipe.Input> {
+
+    private static final StreamCodec<ByteBuf, TagKey<Item>> ITEM_TAG_STREAM_CODEC = Identifier.STREAM_CODEC.map(loc -> TagKey.create(Registries.ITEM, loc),
+        TagKey::location);
+
+    public static final MapCodec<FermentingRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(
+        instance -> instance
+            .group(SizedFluidIngredient.CODEC.fieldOf("input").forGetter(FermentingRecipe::input), //TODO make sure this handles empty
+                TagKey.codec(Registries.ITEM).fieldOf("first_reagent").forGetter(FermentingRecipe::firstReagent),
+                TagKey.codec(Registries.ITEM).fieldOf("second_reagent").forGetter(FermentingRecipe::secondReagent),
+                FluidStack.CODEC.fieldOf("output").forGetter(FermentingRecipe::output), Codec.INT.fieldOf("ticks").forGetter(FermentingRecipe::ticks))
+            .apply(instance, FermentingRecipe::new));
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, FermentingRecipe> STREAM_CODEC = StreamCodec.composite(SizedFluidIngredient.STREAM_CODEC,
+        FermentingRecipe::input, ITEM_TAG_STREAM_CODEC, FermentingRecipe::firstReagent, ITEM_TAG_STREAM_CODEC, FermentingRecipe::secondReagent, FluidStack.STREAM_CODEC, FermentingRecipe::output, ByteBufCodecs.INT, FermentingRecipe::ticks,
+        FermentingRecipe::new);
+
+    public static final RecipeSerializer<FermentingRecipe> SERIALIZER = new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC);
+
     private final SizedFluidIngredient input;
     private final TagKey<Item> firstReagent;
     private final TagKey<Item> secondReagent;
@@ -111,12 +129,12 @@ public final class FermentingRecipe implements MachineRecipe<FermentingRecipe.In
 
     @Override
     public RecipeSerializer<? extends Recipe<Input>> getSerializer() {
-        return EIORecipes.VAT_FERMENTING.serializer().get();
+        return SERIALIZER;
     }
 
     @Override
     public RecipeType<? extends Recipe<Input>> getType() {
-        return EIORecipes.VAT_FERMENTING.type().get();
+        return EIORecipes.VAT_FERMENTING.get();
     }
 
     @Override
@@ -233,33 +251,6 @@ public final class FermentingRecipe implements MachineRecipe<FermentingRecipe.In
                 return false;
             }
             return RecipeDisplay.super.isEnabled(flagSet);
-        }
-    }
-
-    public static class Serializer implements RecipeSerializer<FermentingRecipe> {
-        private static final StreamCodec<ByteBuf, TagKey<Item>> ITEM_TAG_STREAM_CODEC = Identifier.STREAM_CODEC.map(loc -> TagKey.create(Registries.ITEM, loc),
-            TagKey::location);
-
-        public static final MapCodec<FermentingRecipe> CODEC = RecordCodecBuilder.mapCodec(
-            instance -> instance
-                .group(SizedFluidIngredient.CODEC.fieldOf("input").forGetter(FermentingRecipe::input), //TODO make sure this handles empty
-                    TagKey.codec(Registries.ITEM).fieldOf("first_reagent").forGetter(FermentingRecipe::firstReagent),
-                    TagKey.codec(Registries.ITEM).fieldOf("second_reagent").forGetter(FermentingRecipe::secondReagent),
-                    FluidStack.CODEC.fieldOf("output").forGetter(FermentingRecipe::output), Codec.INT.fieldOf("ticks").forGetter(FermentingRecipe::ticks))
-                .apply(instance, FermentingRecipe::new));
-
-        public static final StreamCodec<RegistryFriendlyByteBuf, FermentingRecipe> STREAM_CODEC = StreamCodec.composite(SizedFluidIngredient.STREAM_CODEC,
-            FermentingRecipe::input, ITEM_TAG_STREAM_CODEC, FermentingRecipe::firstReagent, ITEM_TAG_STREAM_CODEC, FermentingRecipe::secondReagent, FluidStack.STREAM_CODEC, FermentingRecipe::output, ByteBufCodecs.INT, FermentingRecipe::ticks,
-            FermentingRecipe::new);
-
-        @Override
-        public MapCodec<FermentingRecipe> codec() {
-            return CODEC;
-        }
-
-        @Override
-        public StreamCodec<RegistryFriendlyByteBuf, FermentingRecipe> streamCodec() {
-            return STREAM_CODEC;
         }
     }
 }

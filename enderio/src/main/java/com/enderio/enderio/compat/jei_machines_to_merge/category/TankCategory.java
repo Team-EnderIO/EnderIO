@@ -71,7 +71,7 @@ public class TankCategory implements IRecipeCategory<RecipeHolder<TankRecipe>> {
         if (recipe.value().mode() == TankRecipe.Mode.EMPTY) {
             builder.addSlot(RecipeIngredientRole.INPUT, 3, 3).add(recipe.value().input());
 
-            builder.addSlot(RecipeIngredientRole.OUTPUT, 3, 34).add(recipe.value().output().copy());
+            builder.addSlot(RecipeIngredientRole.OUTPUT, 3, 34).add(recipe.value().output().create());
 
             // Convert SizedFluidIngredient to FluidStack list for JEI display
             builder.addSlot(RecipeIngredientRole.OUTPUT, 39, 3)
@@ -80,7 +80,7 @@ public class TankCategory implements IRecipeCategory<RecipeHolder<TankRecipe>> {
         } else if (recipe.value().mode() == TankRecipe.Mode.FILL) {
             builder.addSlot(RecipeIngredientRole.INPUT, 75, 3).add(recipe.value().input());
 
-            builder.addSlot(RecipeIngredientRole.OUTPUT, 75, 34).add(recipe.value().output().copy());
+            builder.addSlot(RecipeIngredientRole.OUTPUT, 75, 34).add(recipe.value().output().create());
 
             // Convert SizedFluidIngredient to FluidStack list for JEI display
             builder.addSlot(RecipeIngredientRole.INPUT, 39, 3)

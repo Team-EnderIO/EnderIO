@@ -30,7 +30,7 @@ public class EnderIOJEIRecipes {
     }
 
     public List<RecipeHolder<FireCraftingRecipe>> getAllFireCraftingRecipes() {
-        return RECIPE_MAP.byType(EIORecipes.FIRE_CRAFTING.type().get()).stream().toList();
+        return RECIPE_MAP.byType(EIORecipes.FIRE_CRAFTING.get()).stream().toList();
     }
 
     public List<FakeGrindingRecipe> getAllGrindingRecipes() {

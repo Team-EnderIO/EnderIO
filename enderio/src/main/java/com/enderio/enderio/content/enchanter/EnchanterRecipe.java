@@ -38,6 +38,21 @@ import java.util.List;
 public record EnchanterRecipe(Holder<Enchantment> enchantment, int costMultiplier, SizedIngredient input)
         implements Recipe<EnchanterRecipe.Input> {
 
+    public static final MapCodec<EnchanterRecipe> MAP_CODEC = RecordCodecBuilder
+        .mapCodec(inst -> inst
+            .group(Enchantment.CODEC.fieldOf("enchantment").forGetter(EnchanterRecipe::enchantment),
+                ExtraCodecs.POSITIVE_INT.fieldOf("cost_multiplier")
+                    .forGetter(EnchanterRecipe::costMultiplier),
+                SizedIngredient.NESTED_CODEC.fieldOf("input").forGetter(EnchanterRecipe::input))
+            .apply(inst, EnchanterRecipe::new));
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, EnchanterRecipe> STREAM_CODEC = StreamCodec.composite(
+        Enchantment.STREAM_CODEC, EnchanterRecipe::enchantment, ByteBufCodecs.INT,
+        EnchanterRecipe::costMultiplier, SizedIngredient.STREAM_CODEC, EnchanterRecipe::input,
+        EnchanterRecipe::new);
+
+    public static final RecipeSerializer<EnchanterRecipe> SERIALIZER = new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC);
+
     // region Calculations
 
     /**
@@ -126,7 +141,7 @@ public record EnchanterRecipe(Holder<Enchantment> enchantment, int costMultiplie
     }
 
     @Override
-    public ItemStack assemble(Input recipeInput, HolderLookup.Provider lookupProvider) {
+    public ItemStack assemble(Input recipeInput) {
         return getBookForLevel(getEnchantmentLevel(recipeInput.getItem(1).getCount()));
     }
 
@@ -153,13 +168,23 @@ public record EnchanterRecipe(Holder<Enchantment> enchantment, int costMultiplie
     }
 
     @Override
+    public boolean showNotification() {
+        return false;
+    }
+
+    @Override
+    public String group() {
+        return "";
+    }
+
+    @Override
     public RecipeSerializer<? extends Recipe<Input>> getSerializer() {
-        return EIORecipes.ENCHANTING.serializer().get();
+        return SERIALIZER;
     }
 
     @Override
     public RecipeType<? extends Recipe<Input>> getType() {
-        return EIORecipes.ENCHANTING.type().get();
+        return EIORecipes.ENCHANTING.get();
     }
 
     public record Input(ItemStack bookItem, ItemStack catalyst, ItemStack lapis) implements RecipeInput {
@@ -209,31 +234,6 @@ public record EnchanterRecipe(Holder<Enchantment> enchantment, int costMultiplie
         @Override
         public boolean isEnabled(FeatureFlagSet flagSet) {
             return this.ingredient.isEnabled(flagSet) && RecipeDisplay.super.isEnabled(flagSet);
-        }
-    }
-
-    public static class Serializer implements RecipeSerializer<EnchanterRecipe> {
-        public static final MapCodec<EnchanterRecipe> CODEC = RecordCodecBuilder
-                .mapCodec(inst -> inst
-                        .group(Enchantment.CODEC.fieldOf("enchantment").forGetter(EnchanterRecipe::enchantment),
-                                ExtraCodecs.POSITIVE_INT.fieldOf("cost_multiplier")
-                                        .forGetter(EnchanterRecipe::costMultiplier),
-                                SizedIngredient.NESTED_CODEC.fieldOf("input").forGetter(EnchanterRecipe::input))
-                        .apply(inst, EnchanterRecipe::new));
-
-        public static final StreamCodec<RegistryFriendlyByteBuf, EnchanterRecipe> STREAM_CODEC = StreamCodec.composite(
-                Enchantment.STREAM_CODEC, EnchanterRecipe::enchantment, ByteBufCodecs.INT,
-                EnchanterRecipe::costMultiplier, SizedIngredient.STREAM_CODEC, EnchanterRecipe::input,
-                EnchanterRecipe::new);
-
-        @Override
-        public MapCodec<EnchanterRecipe> codec() {
-            return CODEC;
-        }
-
-        @Override
-        public StreamCodec<RegistryFriendlyByteBuf, EnchanterRecipe> streamCodec() {
-            return STREAM_CODEC;
         }
     }
 }

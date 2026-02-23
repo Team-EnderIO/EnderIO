@@ -70,7 +70,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
         // Crafting task host
         craftingTaskHost = new AlloySmeltingMachineTaskHost(this, this::canAcceptTask,
-                EIORecipes.ALLOY_SMELTING.type().get(), this::createTask, this::createRecipeInput);
+                EIORecipes.ALLOY_SMELTING.get(), this::createTask, this::createRecipeInput);
     }
 
     protected boolean canAcceptTask() {

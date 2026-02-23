@@ -64,8 +64,18 @@ public class WrappedEnchanterRecipe implements Recipe<EnchanterRecipe.Input> {
     }
 
     @Override
-    public ItemStack assemble(EnchanterRecipe.Input recipeInput, HolderLookup.Provider registryAccess) {
-        return recipe.value().assemble(recipeInput, registryAccess);
+    public ItemStack assemble(EnchanterRecipe.Input recipeInput) {
+        return recipe.value().assemble(recipeInput);
+    }
+
+    @Override
+    public boolean showNotification() {
+        return recipe.value().showNotification();
+    }
+
+    @Override
+    public String group() {
+        return recipe.value().group();
     }
 
     @Override

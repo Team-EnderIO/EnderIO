@@ -99,13 +99,13 @@ public class EnchanterBlockEntity extends EnderBlockEntity implements MenuProvid
 
                 if (level instanceof ServerLevel serverLevel) {
                     currentRecipe = serverLevel.recipeAccess()
-                        .getRecipeFor(EIORecipes.ENCHANTING.type().get(), recipeInput, level)
+                        .getRecipeFor(EIORecipes.ENCHANTING.get(), recipeInput, level)
                         .orElse(null);
                 }
                 if (!OUTPUT.isSlot(slot)) {
                     if (currentRecipe != null) {
                         OUTPUT.setStackInSlot(this,
-                                currentRecipe.value().assemble(recipeInput, level.registryAccess()));
+                                currentRecipe.value().assemble(recipeInput));
                     } else {
                         OUTPUT.setStackInSlot(this, ItemStack.EMPTY);
                     }

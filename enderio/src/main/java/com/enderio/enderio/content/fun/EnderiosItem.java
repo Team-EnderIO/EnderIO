@@ -16,6 +16,7 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.UseRemainder;
 import net.minecraft.world.level.Level;
@@ -34,7 +35,7 @@ public class EnderiosItem extends Item {
 
     public EnderiosItem(Properties properties) {
         super(properties.food(PROPERTIES)
-            .component(DataComponents.USE_REMAINDER, new UseRemainder(new ItemStack(Items.BOWL))));
+            .component(DataComponents.USE_REMAINDER, new UseRemainder(new ItemStackTemplate(Items.BOWL))));
     }
 
     @Override

@@ -121,7 +121,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
 
         // Create the crafting task host
         craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy,
-                EIORecipes.SOUL_BINDING.type().get(), this::createTask, this::createRecipeInput);
+                EIORecipes.SOUL_BINDING.get(), this::createTask, this::createRecipeInput);
     }
 
     @Override

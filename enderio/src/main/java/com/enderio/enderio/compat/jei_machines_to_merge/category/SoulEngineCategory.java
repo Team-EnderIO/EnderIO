@@ -91,10 +91,9 @@ public class SoulEngineCategory implements IRecipeCategory<EngineSoul.SoulData> 
 
         EntityType<?> value = BuiltInRegistries.ENTITY_TYPE.get(recipe.entitytype()).orElseThrow().value();
         if (recipe.getKey().equals(BuiltInRegistries.ENTITY_TYPE.getKey(value))) {
-            if (SpawnEggItem.byId(value) != null) {
-                builder.addInvisibleIngredients(RecipeIngredientRole.INPUT)
-                        .add(new ItemStack(SpawnEggItem.byId(value)));
-            }
+            SpawnEggItem.byId(value)
+                .ifPresent(spawnEggHolder -> builder.addInvisibleIngredients(RecipeIngredientRole.INPUT)
+                    .add(new ItemStack(spawnEggHolder)));
 
             ItemStack stack = SoulVialItem.forSoul(Soul.of(recipe.entitytype()));
             builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).add(stack);

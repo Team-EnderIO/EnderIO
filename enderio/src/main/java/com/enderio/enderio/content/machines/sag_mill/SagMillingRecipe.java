@@ -44,6 +44,17 @@ import java.util.function.IntFunction;
 
 public final class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Input> {
 
+    public static final MapCodec<SagMillingRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance
+        .group(Ingredient.CODEC.fieldOf("input").forGetter(SagMillingRecipe::input),
+            OutputItem.CODEC.listOf().fieldOf("outputs").forGetter(SagMillingRecipe::outputs), Codec.INT.fieldOf("energy").forGetter(SagMillingRecipe::energy),
+            BonusType.CODEC.optionalFieldOf("bonus", BonusType.MULTIPLY_OUTPUT).forGetter(SagMillingRecipe::bonusType))
+        .apply(instance, SagMillingRecipe::new));
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, SagMillingRecipe> STREAM_CODEC = StreamCodec.composite(Ingredient.CONTENTS_STREAM_CODEC,
+        SagMillingRecipe::input, OutputItem.STREAM_CODEC.apply(ByteBufCodecs.list()), SagMillingRecipe::outputs, ByteBufCodecs.INT, SagMillingRecipe::energy, BonusType.STREAM_CODEC, SagMillingRecipe::bonusType, SagMillingRecipe::new);
+
+    public static final RecipeSerializer<SagMillingRecipe> SERIALIZER = new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC);
+
     private static final Random RANDOM = new Random();
     private final Ingredient input;
     private final List<OutputItem> outputs;
@@ -310,28 +321,6 @@ public final class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.In
         @Override
         public boolean isEnabled(FeatureFlagSet flagSet) {
             return this.ingredient.isEnabled(flagSet) && RecipeDisplay.super.isEnabled(flagSet);
-        }
-    }
-
-    public static class Serializer implements RecipeSerializer<SagMillingRecipe> {
-
-        public static final MapCodec<SagMillingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
-            .group(Ingredient.CODEC.fieldOf("input").forGetter(SagMillingRecipe::input),
-                OutputItem.CODEC.listOf().fieldOf("outputs").forGetter(SagMillingRecipe::outputs), Codec.INT.fieldOf("energy").forGetter(SagMillingRecipe::energy),
-                BonusType.CODEC.optionalFieldOf("bonus", BonusType.MULTIPLY_OUTPUT).forGetter(SagMillingRecipe::bonusType))
-            .apply(instance, SagMillingRecipe::new));
-
-        public static final StreamCodec<RegistryFriendlyByteBuf, SagMillingRecipe> STREAM_CODEC = StreamCodec.composite(Ingredient.CONTENTS_STREAM_CODEC,
-            SagMillingRecipe::input, OutputItem.STREAM_CODEC.apply(ByteBufCodecs.list()), SagMillingRecipe::outputs, ByteBufCodecs.INT, SagMillingRecipe::energy, BonusType.STREAM_CODEC, SagMillingRecipe::bonusType, SagMillingRecipe::new);
-
-        @Override
-        public MapCodec<SagMillingRecipe> codec() {
-            return CODEC;
-        }
-
-        @Override
-        public StreamCodec<RegistryFriendlyByteBuf, SagMillingRecipe> streamCodec() {
-            return STREAM_CODEC;
         }
     }
 }

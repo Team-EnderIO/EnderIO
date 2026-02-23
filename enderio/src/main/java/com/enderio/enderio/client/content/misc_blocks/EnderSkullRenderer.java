@@ -38,7 +38,7 @@ import org.jspecify.annotations.Nullable;
 
 public class EnderSkullRenderer implements BlockEntityRenderer<EnderSkullBlockEntity, EnderSkullRenderer.EnderSkullBlockRenderState> {
 
-    public static final RenderType RENDERTYPE = RenderTypes.entityCutoutNoCullZOffset(Identifier.withDefaultNamespace("textures/entity/enderman/enderman.png"));
+    public static final RenderType RENDERTYPE = RenderTypes.entityCutoutZOffset(Identifier.withDefaultNamespace("textures/entity/enderman/enderman.png"));
     public static final ModelLayerLocation ENDER_SKULL = new ModelLayerLocation(Identifier.withDefaultNamespace("enderman_head"), "main");
 
     private final EnderSkullModel skullmodelbase;

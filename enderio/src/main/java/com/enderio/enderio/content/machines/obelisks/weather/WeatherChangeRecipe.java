@@ -34,6 +34,17 @@ import java.util.function.IntFunction;
 public record WeatherChangeRecipe(FluidStack fluid, WeatherMode mode, PlacementInfo placementInfo)
         implements MachineRecipe<WeatherChangeRecipe.Input> {
 
+    public static final MapCodec<WeatherChangeRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(inst -> inst
+        .group(FluidStack.CODEC.fieldOf("fluid").forGetter(WeatherChangeRecipe::fluid),
+            WeatherMode.CODEC.fieldOf("mode").forGetter(WeatherChangeRecipe::mode))
+        .apply(inst, WeatherChangeRecipe::new));
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, WeatherChangeRecipe> STREAM_CODEC = StreamCodec
+        .composite(FluidStack.STREAM_CODEC, WeatherChangeRecipe::fluid, WeatherMode.STREAM_CODEC,
+            WeatherChangeRecipe::mode, WeatherChangeRecipe::new);
+
+    public static final RecipeSerializer<WeatherChangeRecipe> SERIALIZER = new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC);
+
     public WeatherChangeRecipe(FluidStack fluid, WeatherMode mode) {
         this(fluid, mode, PlacementInfo.NOT_PLACEABLE);
     }
@@ -60,12 +71,12 @@ public record WeatherChangeRecipe(FluidStack fluid, WeatherMode mode, PlacementI
 
     @Override
     public RecipeSerializer<? extends Recipe<Input>> getSerializer() {
-        return EIORecipes.WEATHER_CHANGE.serializer().get();
+        return SERIALIZER;
     }
 
     @Override
     public RecipeType<? extends Recipe<Input>> getType() {
-        return EIORecipes.WEATHER_CHANGE.type().get();
+        return EIORecipes.WEATHER_CHANGE.get();
     }
 
     @Override
@@ -145,27 +156,6 @@ public record WeatherChangeRecipe(FluidStack fluid, WeatherMode mode, PlacementI
 
         public Fireworks getFireworks() {
             return fireworks;
-        }
-    }
-
-    public static class Serializer implements RecipeSerializer<WeatherChangeRecipe> {
-        public static final MapCodec<WeatherChangeRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst
-                .group(FluidStack.CODEC.fieldOf("fluid").forGetter(WeatherChangeRecipe::fluid),
-                        WeatherMode.CODEC.fieldOf("mode").forGetter(WeatherChangeRecipe::mode))
-                .apply(inst, WeatherChangeRecipe::new));
-
-        public static final StreamCodec<RegistryFriendlyByteBuf, WeatherChangeRecipe> STREAM_CODEC = StreamCodec
-                .composite(FluidStack.STREAM_CODEC, WeatherChangeRecipe::fluid, WeatherMode.STREAM_CODEC,
-                        WeatherChangeRecipe::mode, WeatherChangeRecipe::new);
-
-        @Override
-        public MapCodec<WeatherChangeRecipe> codec() {
-            return CODEC;
-        }
-
-        @Override
-        public StreamCodec<RegistryFriendlyByteBuf, WeatherChangeRecipe> streamCodec() {
-            return STREAM_CODEC;
         }
     }
 }

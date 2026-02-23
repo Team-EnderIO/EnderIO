@@ -1,5 +1,6 @@
 package com.enderio.enderio.content.conduits.network;
 
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ticker.ConduitTicker;
@@ -35,7 +36,7 @@ public class ConduitNetworkSavedData extends SavedData {
         .listOf()
         .xmap(ConduitNetworkSavedData::new, ConduitNetworkSavedData::getNetworks);
 
-    public static final SavedDataType<ConduitNetworkSavedData> TYPE = new SavedDataType<>("enderio_conduit_network", ConduitNetworkSavedData::new, CODEC);
+    public static final SavedDataType<ConduitNetworkSavedData> TYPE = new SavedDataType<>(EnderIO.id("conduit_network"), ConduitNetworkSavedData::new, CODEC);
 
     private static final Logger LOGGER = LogUtils.getLogger();
 

@@ -83,7 +83,7 @@ public class SlicerRecipeManager {
         }
 
         for (RecipeHolder<SlicingRecipe> slicingRecipe : manager
-                .recipeMap().byType(EIORecipes.SLICING.type().get())) {
+                .recipeMap().byType(EIORecipes.SLICING.get())) {
             for (int i = 0; i < 6; i++) {
                 Ingredient ingredient = slicingRecipe.value().inputs().get(i);
                 if (ingredient.isSimple()) {

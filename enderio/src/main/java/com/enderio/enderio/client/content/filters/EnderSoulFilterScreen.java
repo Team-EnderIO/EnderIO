@@ -131,16 +131,9 @@ public class EnderSoulFilterScreen extends EnderContainerScreen<EnderSoulFilterM
     }
 
     private ItemStack getRenderStack(Soul soul) {
-        // Show spawn egg if available - this is easier to identify visually.
-        ItemStack renderItem;
-        var spawnEgg = SpawnEggItem.byId(soul.entityType());
-        if (spawnEgg != null) {
-            renderItem = spawnEgg.getDefaultInstance();
-        } else {
-            renderItem = SoulVialItem.forSoul(soul);
-        }
-
-        return renderItem;
+        return SpawnEggItem.byId(soul.entityType())
+            .map(itemHolder -> itemHolder.value().getDefaultInstance())
+            .orElse(SoulVialItem.forSoul(soul));
     }
 
     @Override

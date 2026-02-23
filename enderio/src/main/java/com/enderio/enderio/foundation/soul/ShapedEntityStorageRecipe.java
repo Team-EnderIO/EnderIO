@@ -62,7 +62,7 @@ public class ShapedEntityStorageRecipe extends WrappedShapedRecipe {
     }
 
     @Override
-    public RecipeSerializer<? extends ShapedRecipe> getSerializer() {
-        return EIORecipes.SHAPED_ENTITY_STORAGE.get();
+    public RecipeSerializer<ShapedRecipe> getSerializer() {
+        return SERIALIZER;
     }
 }

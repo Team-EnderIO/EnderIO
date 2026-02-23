@@ -22,6 +22,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -83,7 +84,7 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity {
         };
 
         craftingTaskHost = new CraftingMachineTaskHost<>(this, this::canAcceptTask,
-                EIORecipes.WEATHER_CHANGE.type().get(), this::createTask, this::createRecipeInput) {
+                EIORecipes.WEATHER_CHANGE.get(), this::createTask, this::createRecipeInput) {
 
             @Override
             protected boolean shouldStartNewTask() {
@@ -132,14 +133,15 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity {
 
             @Override
             protected boolean placeOutputs(List<OutputStack> outputs, boolean simulate) {
-                if (!simulate && level instanceof ServerLevel server) {
+                if (!simulate && level instanceof ServerLevel serverLevel) {
+                    MinecraftServer server = serverLevel.getServer();
                     switch (getRecipe().mode()) {
-                    case RAIN -> server.setWeatherParameters(0, ServerLevel.RAIN_DURATION.sample(server.getRandom()),
+                    case RAIN -> server.setWeatherParameters(0, ServerLevel.RAIN_DURATION.sample(serverLevel.getRandom()),
                             true, false);
                     case CLEAR ->
-                        server.setWeatherParameters(ServerLevel.RAIN_DELAY.sample(server.getRandom()), 0, false, false);
+                        server.setWeatherParameters(ServerLevel.RAIN_DELAY.sample(serverLevel.getRandom()), 0, false, false);
                     case LIGHTNING -> server.setWeatherParameters(0,
-                            ServerLevel.THUNDER_DURATION.sample(server.getRandom()), true, true);
+                            ServerLevel.THUNDER_DURATION.sample(serverLevel.getRandom()), true, true);
                     }
                     Calendar calendar = Calendar.getInstance();
                     int month = calendar.get(Calendar.MONTH);
@@ -150,7 +152,7 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity {
                     } else {
                         FIREWORK.set(DataComponents.FIREWORKS, getRecipe().mode().getFireworks());
                     }
-                    server.addFreshEntity(new FireworkRocketEntity(server, null, getBlockPos().getX() + 0.5,
+                    serverLevel.addFreshEntity(new FireworkRocketEntity(serverLevel, null, getBlockPos().getX() + 0.5,
                             getBlockPos().getY() + 1.1, getBlockPos().getZ() + 0.5, FIREWORK));
                 }
                 return true;

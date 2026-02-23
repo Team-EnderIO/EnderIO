@@ -164,7 +164,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
         if (level instanceof ServerLevel serverLevel) {
             //TODO use the new methods to check instead of doing this ourselves
             List<RecipeHolder<TankRecipe>> allRecipes = serverLevel.recipeAccess()
-                    .recipeMap().byType(EIORecipes.TANK.type().get()).stream().toList();
+                    .recipeMap().byType(EIORecipes.TANK.get()).stream().toList();
             return allRecipes.stream()
                     .anyMatch((recipe) -> recipe.value().mode() == TankRecipe.Mode.EMPTY
                             && recipe.value().input().test(stack));
@@ -197,7 +197,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
         // drain recipes
         if (level instanceof ServerLevel serverLevel) {
             List<RecipeHolder<TankRecipe>> allRecipes = serverLevel.recipeAccess()
-                    .recipeMap().byType(EIORecipes.TANK.type().get()).stream().toList();
+                    .recipeMap().byType(EIORecipes.TANK.get()).stream().toList();
             return allRecipes.stream()
                     .anyMatch((recipe) -> recipe.value().mode() == TankRecipe.Mode.FILL
                             && recipe.value().input().test(stack));
@@ -227,7 +227,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
         if (level != null) {
             if (level instanceof ServerLevel serverLevel) {
                 currentRecipe = serverLevel.recipeAccess()
-                        .getRecipeFor(EIORecipes.TANK.type().get(), createRecipeInput(), level);
+                        .getRecipeFor(EIORecipes.TANK.get(), createRecipeInput(), level);
             }
         }
     }
@@ -255,7 +255,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
     private void tryTankRecipe() {
         currentRecipe.ifPresent(recipe -> {
-            ItemStack recipeResultStack = recipe.value().output().copy();
+            ItemStack recipeResultStack = recipe.value().output().create();
 
             switch (recipe.value().mode()) {
             case EMPTY -> {
@@ -340,7 +340,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
         if (level != null) {
             if (level instanceof ServerLevel serverLevel) {
                 currentRecipe = serverLevel.recipeAccess()
-                        .getRecipeFor(EIORecipes.TANK.type().get(), createRecipeInput(), level);
+                        .getRecipeFor(EIORecipes.TANK.get(), createRecipeInput(), level);
             }
 
             level.getLightEngine().checkBlock(worldPosition);

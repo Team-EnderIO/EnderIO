@@ -1,7 +1,5 @@
 package com.enderio.enderio.init;
 
-import com.enderio.core.common.recipes.RecipeTypeSerializerPair;
-import com.enderio.core.common.recipes.WrappedShapedRecipe;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.content.enchanter.EnchanterRecipe;
 import com.enderio.enderio.content.fire_crafting.FireCraftingRecipe;
@@ -26,42 +24,34 @@ import java.util.function.Supplier;
 
 public class EIORecipes {
 
-    private static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(Registries.RECIPE_TYPE,
-            EnderIO.MOD_ID);
-    private static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister
-            .create(Registries.RECIPE_SERIALIZER, EnderIO.MOD_ID);
+    private static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(Registries.RECIPE_TYPE, EnderIO.MOD_ID);
+    private static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(Registries.RECIPE_SERIALIZER, EnderIO.MOD_ID);
 
-    public static final RecipeTypeSerializerPair<FireCraftingRecipe, FireCraftingRecipe.Serializer> FIRE_CRAFTING = register(
-        "fire_crafting", FireCraftingRecipe.Serializer::new);
+    public static final DeferredHolder<RecipeType<?>, RecipeType<FireCraftingRecipe>> FIRE_CRAFTING = register("fire_crafting",
+        () -> FireCraftingRecipe.SERIALIZER);
 
-    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<ShapedEntityStorageRecipe>> SHAPED_ENTITY_STORAGE = RECIPE_SERIALIZERS
-        .register("shaped_entity_storage",
-            () -> ShapedEntityStorageRecipe.SERIALIZER);
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<ShapedEntityStorageRecipe>> SHAPED_ENTITY_STORAGE = RECIPE_SERIALIZERS.register(
+        "shaped_entity_storage", () -> ShapedEntityStorageRecipe.SERIALIZER);
 
-    public static final RecipeTypeSerializerPair<EnchanterRecipe, EnchanterRecipe.Serializer> ENCHANTING = register(
-            "enchanting", EnchanterRecipe.Serializer::new);
-    public static final RecipeTypeSerializerPair<AlloySmeltingRecipe, AlloySmeltingRecipe.Serializer> ALLOY_SMELTING = register(
-            "alloy_smelting", AlloySmeltingRecipe.Serializer::new);
-    public static final RecipeTypeSerializerPair<SagMillingRecipe, SagMillingRecipe.Serializer> SAG_MILLING = register(
-            "sag_milling", SagMillingRecipe.Serializer::new);
-    public static final RecipeTypeSerializerPair<SlicingRecipe, SlicingRecipe.Serializer> SLICING = register("slicing",
-            SlicingRecipe.Serializer::new);
-    public static final RecipeTypeSerializerPair<SoulBindingRecipe, SoulBindingRecipe.Serializer> SOUL_BINDING = register(
-            "soul_binding", SoulBindingRecipe.Serializer::new);
-    public static final RecipeTypeSerializerPair<TankRecipe, TankRecipe.Serializer> TANK = register("tank",
-            TankRecipe.Serializer::new);
-    public static final RecipeTypeSerializerPair<PaintingRecipe, PaintingRecipe.Serializer> PAINTING = register(
-            "painting", PaintingRecipe.Serializer::new);
-    public static final RecipeTypeSerializerPair<FermentingRecipe, FermentingRecipe.Serializer> VAT_FERMENTING = register(
-            "vat_fermenting", FermentingRecipe.Serializer::new);
-    public static final RecipeTypeSerializerPair<WeatherChangeRecipe, WeatherChangeRecipe.Serializer> WEATHER_CHANGE = register(
-            "weather_change", WeatherChangeRecipe.Serializer::new);
+    public static final DeferredHolder<RecipeType<?>, RecipeType<EnchanterRecipe>> ENCHANTING = register("enchanting", () -> EnchanterRecipe.SERIALIZER);
+    public static final DeferredHolder<RecipeType<?>, RecipeType<AlloySmeltingRecipe>> ALLOY_SMELTING = register("alloy_smelting",
+        () -> AlloySmeltingRecipe.SERIALIZER);
+    public static final DeferredHolder<RecipeType<?>, RecipeType<SagMillingRecipe>> SAG_MILLING = register("sag_milling", () -> SagMillingRecipe.SERIALIZER);
+    public static final DeferredHolder<RecipeType<?>, RecipeType<SlicingRecipe>> SLICING = register("slicing", () -> SlicingRecipe.SERIALIZER);
+    public static final DeferredHolder<RecipeType<?>, RecipeType<SoulBindingRecipe>> SOUL_BINDING = register("soul_binding",
+        () -> SoulBindingRecipe.SERIALIZER);
+    public static final DeferredHolder<RecipeType<?>, RecipeType<TankRecipe>> TANK = register("tank", () -> TankRecipe.SERIALIZER);
+    public static final DeferredHolder<RecipeType<?>, RecipeType<PaintingRecipe>> PAINTING = register("painting", () -> PaintingRecipe.SERIALIZER);
+    public static final DeferredHolder<RecipeType<?>, RecipeType<FermentingRecipe>> VAT_FERMENTING = register("vat_fermenting",
+        () -> FermentingRecipe.SERIALIZER);
 
-    private static <R extends Recipe<?>, S extends RecipeSerializer<? extends R>> RecipeTypeSerializerPair<R, S> register(
-            String name, Supplier<S> serializerFactory) {
+    public static final DeferredHolder<RecipeType<?>, RecipeType<WeatherChangeRecipe>> WEATHER_CHANGE = register("weather_change",
+        () -> WeatherChangeRecipe.SERIALIZER);
+
+    private static <R extends Recipe<?>> DeferredHolder<RecipeType<?>, RecipeType<R>> register(String name, Supplier<RecipeSerializer<R>> serializerSupplier) {
         var type = RECIPE_TYPES.<RecipeType<R>>register(name, () -> RecipeType.simple(EnderIO.id(name)));
-        var serializer = RECIPE_SERIALIZERS.register(name, serializerFactory);
-        return new RecipeTypeSerializerPair<>(type, serializer);
+        RECIPE_SERIALIZERS.register(name, serializerSupplier);
+        return type;
     }
 
     public static void register(IEventBus bus) {

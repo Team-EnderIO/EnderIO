@@ -83,7 +83,7 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
             }
         };
 
-        craftingTaskHost = new CraftingMachineTaskHost<>(this, () -> true, EIORecipes.VAT_FERMENTING.type().get(),
+        craftingTaskHost = new CraftingMachineTaskHost<>(this, () -> true, EIORecipes.VAT_FERMENTING.get(),
                 this::createTask, this::createRecipeInput);
     }
 

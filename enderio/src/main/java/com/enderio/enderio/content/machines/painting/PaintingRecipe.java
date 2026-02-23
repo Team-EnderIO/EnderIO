@@ -17,6 +17,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.Recipe;
@@ -33,13 +34,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class PaintingRecipe implements MachineRecipe<PaintingRecipe.Input> {
+    public static final MapCodec<PaintingRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance
+        .group(Ingredient.CODEC.fieldOf("input").forGetter(PaintingRecipe::input), ItemStackTemplate.CODEC.fieldOf("output").forGetter(PaintingRecipe::output))
+        .apply(instance, PaintingRecipe::new));
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, PaintingRecipe> STREAM_CODEC = StreamCodec.composite(Ingredient.CONTENTS_STREAM_CODEC,
+        PaintingRecipe::input, ItemStackTemplate.STREAM_CODEC, PaintingRecipe::output, PaintingRecipe::new);
+
+    public static final RecipeSerializer<PaintingRecipe> SERIALIZER = new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC);
+
     private final Ingredient input;
-    private final ItemStack output;
+    private final ItemStackTemplate output;
 
     @Nullable
     private PlacementInfo placementInfo;
 
-    public PaintingRecipe(Ingredient input, ItemStack output) {
+    public PaintingRecipe(Ingredient input, ItemStackTemplate output) {
         this.input = input;
         this.output = output;
     }
@@ -48,7 +58,7 @@ public final class PaintingRecipe implements MachineRecipe<PaintingRecipe.Input>
         return input;
     }
 
-    public ItemStack output() {
+    public ItemStackTemplate output() {
         return output;
     }
 
@@ -65,7 +75,7 @@ public final class PaintingRecipe implements MachineRecipe<PaintingRecipe.Input>
     @Override
     public List<OutputStack> craft(Input recipeInput, RegistryAccess registryAccess) {
         List<OutputStack> outputs = new ArrayList<>();
-        ItemStack outputStack = output.copy();
+        ItemStack outputStack = output.create();
 
         var paintItem = recipeInput.getItem(1);
         if (!(paintItem.getItem() instanceof BlockItem blockItem)) {
@@ -81,28 +91,28 @@ public final class PaintingRecipe implements MachineRecipe<PaintingRecipe.Input>
 
     @Override
     public List<OutputStack> getResultStacks(RegistryAccess registryAccess) {
-        return List.of(OutputStack.of(output.copy()));
+        return List.of(OutputStack.of(output.create()));
     }
 
     @Override
-    public ItemStack assemble(Input recipeInput, HolderLookup.Provider lookupProvider) {
-        return null;
+    public ItemStack assemble(Input recipeInput) {
+        return ItemStack.EMPTY;
     }
 
     @Override
     public List<RecipeDisplay> display() {
-        return List.of(new PaintingDisplay(input.display(), new SlotDisplay.ItemStackSlotDisplay(output.copy()),
+        return List.of(new PaintingDisplay(input.display(), new SlotDisplay.ItemStackSlotDisplay(output),
             new SlotDisplay.ItemSlotDisplay(EIOBlocks.PAINTING_MACHINE.asItem())));
     }
 
     @Override
     public RecipeSerializer<? extends Recipe<Input>> getSerializer() {
-        return EIORecipes.PAINTING.serializer().get();
+        return SERIALIZER;
     }
 
     @Override
     public RecipeType<? extends Recipe<Input>> getType() {
-        return EIORecipes.PAINTING.type().get();
+        return EIORecipes.PAINTING.get();
     }
 
     @Override
@@ -156,26 +166,6 @@ public final class PaintingRecipe implements MachineRecipe<PaintingRecipe.Input>
         @Override
         public boolean isEnabled(FeatureFlagSet flagSet) {
             return this.ingredient.isEnabled(flagSet) && RecipeDisplay.super.isEnabled(flagSet);
-        }
-    }
-
-    public static class Serializer implements RecipeSerializer<PaintingRecipe> {
-
-        public static final MapCodec<PaintingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
-            .group(Ingredient.CODEC.fieldOf("input").forGetter(PaintingRecipe::input), ItemStack.CODEC.fieldOf("output").forGetter(PaintingRecipe::output))
-            .apply(instance, PaintingRecipe::new));
-
-        public static final StreamCodec<RegistryFriendlyByteBuf, PaintingRecipe> STREAM_CODEC = StreamCodec.composite(Ingredient.CONTENTS_STREAM_CODEC,
-            PaintingRecipe::input, ItemStack.STREAM_CODEC, PaintingRecipe::output, PaintingRecipe::new);
-
-        @Override
-        public MapCodec<PaintingRecipe> codec() {
-            return CODEC;
-        }
-
-        @Override
-        public StreamCodec<RegistryFriendlyByteBuf, PaintingRecipe> streamCodec() {
-            return STREAM_CODEC;
         }
     }
 }

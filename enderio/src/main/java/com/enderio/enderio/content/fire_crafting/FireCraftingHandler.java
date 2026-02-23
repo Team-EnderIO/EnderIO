@@ -64,7 +64,7 @@ public class FireCraftingHandler {
 
             // Cache recipes
             if (!recipesCached) {
-                cachedRecipes = level.recipeAccess().recipeMap().byType(EIORecipes.FIRE_CRAFTING.type().get());
+                cachedRecipes = level.recipeAccess().recipeMap().byType(EIORecipes.FIRE_CRAFTING.get());
                 recipesCached = false;
             }
 

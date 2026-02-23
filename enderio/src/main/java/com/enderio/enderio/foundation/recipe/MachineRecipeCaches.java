@@ -14,22 +14,22 @@ import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 @EventBusSubscriber
 public class MachineRecipeCaches {
     public static final RecipeInputCache<AlloySmeltingRecipe.Input, AlloySmeltingRecipe> ALLOY_SMELTING_ONLY_ALLOY = new RecipeInputCache<>(
-            EIORecipes.ALLOY_SMELTING.type(), recipe -> !recipe.isSmelting());
+            EIORecipes.ALLOY_SMELTING, recipe -> !recipe.isSmelting());
 
     public static final RecipeInputCache<AlloySmeltingRecipe.Input, AlloySmeltingRecipe> ALLOY_SMELTING_ONLY_SMELTING = new RecipeInputCache<>(
-            EIORecipes.ALLOY_SMELTING.type(), AlloySmeltingRecipe::isSmelting);
+            EIORecipes.ALLOY_SMELTING, AlloySmeltingRecipe::isSmelting);
 
     public static final RecipeInputCache<PaintingRecipe.Input, PaintingRecipe> PAINTING = new RecipeInputCache<>(
-            EIORecipes.PAINTING.type());
+            EIORecipes.PAINTING);
 
     public static final RecipeInputCache<SagMillingRecipe.Input, SagMillingRecipe> SAG_MILLING = new RecipeInputCache<>(
-            EIORecipes.SAG_MILLING.type());
+            EIORecipes.SAG_MILLING);
 
     public static final RecipeInputCache<SoulBindingRecipe.Input, SoulBindingRecipe> SOUL_BINDING = new RecipeInputCache<>(
-            EIORecipes.SOUL_BINDING.type());
+            EIORecipes.SOUL_BINDING);
 
     public static final RecipeInputCache<FermentingRecipe.Input, FermentingRecipe> FERMENTING = new RecipeInputCache<>(
-            EIORecipes.VAT_FERMENTING.type());
+            EIORecipes.VAT_FERMENTING);
 
     @SubscribeEvent
     public static void registerReloadListener(AddServerReloadListenersEvent event) {

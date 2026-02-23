@@ -33,23 +33,23 @@ public class MachineJEIRecipes {
     }
 
     public List<RecipeHolder<AlloySmeltingRecipe>> getAlloySmeltingRecipes() {
-        return new ArrayList<>(RECIPE_MAP.byType(EIORecipes.ALLOY_SMELTING.type().get()));
+        return new ArrayList<>(RECIPE_MAP.byType(EIORecipes.ALLOY_SMELTING.get()));
     }
 
     public List<RecipeHolder<SlicingRecipe>> getSlicingRecipes() {
-        return new ArrayList<>(RECIPE_MAP.byType(EIORecipes.SLICING.type().get()));
+        return new ArrayList<>(RECIPE_MAP.byType(EIORecipes.SLICING.get()));
     }
 
     public List<RecipeHolder<SoulBindingRecipe>> getSoulBindingRecipes() {
-        return new ArrayList<>(RECIPE_MAP.byType(EIORecipes.SOUL_BINDING.type().get()));
+        return new ArrayList<>(RECIPE_MAP.byType(EIORecipes.SOUL_BINDING.get()));
     }
 
     public List<RecipeHolder<TankRecipe>> getTankRecipes() {
-        return new ArrayList<>(RECIPE_MAP.byType(EIORecipes.TANK.type().get()));
+        return new ArrayList<>(RECIPE_MAP.byType(EIORecipes.TANK.get()));
     }
 
     public List<WrappedEnchanterRecipe> getEnchanterRecipes() {
-        return RECIPE_MAP.byType(EIORecipes.ENCHANTING.type().get())
+        return RECIPE_MAP.byType(EIORecipes.ENCHANTING.get())
                 .stream()
                 .<WrappedEnchanterRecipe>mapMulti((recipe, consumer) -> {
                     for (int i = 1; i <= recipe.value().enchantment().value().getMaxLevel(); i++) {
@@ -60,7 +60,7 @@ public class MachineJEIRecipes {
     }
 
     public List<RecipeHolder<SagMillingRecipe>> getSagMillingRecipes() {
-        return new ArrayList<>(RECIPE_MAP.byType(EIORecipes.SAG_MILLING.type().get()));
+        return new ArrayList<>(RECIPE_MAP.byType(EIORecipes.SAG_MILLING.get()));
     }
 
     public List<EngineSoul.SoulData> getMobGeneratorRecipes() {
@@ -68,11 +68,11 @@ public class MachineJEIRecipes {
     }
 
     public List<RecipeHolder<FermentingRecipe>> getVATRecipes() {
-        return new ArrayList<>(RECIPE_MAP.byType(EIORecipes.VAT_FERMENTING.type().get()));
+        return new ArrayList<>(RECIPE_MAP.byType(EIORecipes.VAT_FERMENTING.get()));
     }
 
     public List<RecipeHolder<WeatherChangeRecipe>> getWeatherRecipes() {
-        return new ArrayList<>(RECIPE_MAP.byType(EIORecipes.WEATHER_CHANGE.type().get()));
+        return new ArrayList<>(RECIPE_MAP.byType(EIORecipes.WEATHER_CHANGE.get()));
     }
 
     @SubscribeEvent

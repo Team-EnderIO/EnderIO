@@ -24,6 +24,7 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.Recipe;
@@ -41,7 +42,34 @@ import java.util.Objects;
 import java.util.Optional;
 
 public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Input> {
-    private final ItemStack output;
+    private static final MapCodec<SoulBindingRecipe> MAP_CODEC = RecordCodecBuilder.<SoulBindingRecipe>mapCodec(instance -> instance
+        .group(ItemStackTemplate.CODEC.fieldOf("output").forGetter(SoulBindingRecipe::output), Ingredient.CODEC.fieldOf("input").forGetter(SoulBindingRecipe::input),
+            Codec.INT.fieldOf("energy").forGetter(SoulBindingRecipe::energy), Codec.INT.fieldOf("experience").forGetter(SoulBindingRecipe::experience),
+            Identifier.CODEC.optionalFieldOf("entity_type").forGetter(SoulBindingRecipe::entityType),
+            MobCategory.CODEC.optionalFieldOf("mob_category").forGetter(SoulBindingRecipe::mobCategory),
+            Codec.STRING.optionalFieldOf("soul_data").forGetter(SoulBindingRecipe::soulData),
+            Codec.BOOL.optionalFieldOf("copyInputComponents", false).forGetter(SoulBindingRecipe::copyInputComponents))
+        .apply(instance, SoulBindingRecipe::new)).validate(recipe -> {
+        int entityType = recipe.entityType().isPresent() ? 1 : 0;
+        int mobCategory = recipe.mobCategory().isPresent() ? 1 : 0;
+        int soulData = recipe.soulData().isPresent() ? 1 : 0;
+        if (entityType + mobCategory + soulData > 1) {
+            return DataResult.error(() -> "Soul Binding recipe properties entity_type, mob_category and soul_data are mutually exclusive.");
+        }
+        return DataResult.success(recipe);
+    });
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, SoulBindingRecipe> STREAM_CODEC = MassiveStreamCodec.composite(ItemStackTemplate.STREAM_CODEC,
+        SoulBindingRecipe::output, Ingredient.CONTENTS_STREAM_CODEC, SoulBindingRecipe::input, ByteBufCodecs.INT, SoulBindingRecipe::energy, ByteBufCodecs.INT,
+        SoulBindingRecipe::experience, Identifier.STREAM_CODEC.apply(ByteBufCodecs::optional), SoulBindingRecipe::entityType,
+        // TODO: 1.21: This is a very gross, could do better.
+        ByteBufCodecs.STRING_UTF8.map(name -> ((StringRepresentable.EnumCodec<MobCategory>) MobCategory.CODEC).byName(name), MobCategory::getName).apply(ByteBufCodecs::optional),
+        SoulBindingRecipe::mobCategory, ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs::optional), SoulBindingRecipe::soulData, ByteBufCodecs.BOOL, SoulBindingRecipe::copyInputComponents,
+        SoulBindingRecipe::new);
+
+    public static final RecipeSerializer<SoulBindingRecipe> SERIALIZER = new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC);
+
+    private final ItemStackTemplate output;
     private final Ingredient input;
     private final int energy;
     private final int experience;
@@ -53,7 +81,7 @@ public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.
     @Nullable
     private PlacementInfo placementInfo;
 
-    public SoulBindingRecipe(ItemStack output, Ingredient input, int energy, int experience, Optional<Identifier> entityType, Optional<MobCategory> mobCategory, Optional<String> soulData,
+    public SoulBindingRecipe(ItemStackTemplate output, Ingredient input, int energy, int experience, Optional<Identifier> entityType, Optional<MobCategory> mobCategory, Optional<String> soulData,
         boolean copyInputComponents) {
         this.output = output;
         this.input = input;
@@ -65,7 +93,7 @@ public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.
         this.copyInputComponents = copyInputComponents;
     }
 
-    public ItemStack output() {
+    public ItemStackTemplate output() {
         return output;
     }
 
@@ -121,12 +149,12 @@ public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.
 
     @Override
     public List<OutputStack> getResultStacks(RegistryAccess registryAccess) {
-        return List.of(OutputStack.of(output.copy()), OutputStack.of(EIOItems.SOUL_VIAL.get().getDefaultInstance()));
+        return List.of(OutputStack.of(output.create()), OutputStack.of(EIOItems.SOUL_VIAL.get().getDefaultInstance()));
     }
 
     @Override
     public List<RecipeDisplay> display() {
-        return List.of(new SoulBindingDisplay(input.display(), new SlotDisplay.ItemStackSlotDisplay(output.copy()),
+        return List.of(new SoulBindingDisplay(input.display(), new SlotDisplay.ItemStackSlotDisplay(output),
             new SlotDisplay.ItemSlotDisplay(EIOBlocks.SOUL_BINDER.asItem())));
     }
 
@@ -183,12 +211,12 @@ public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.
 
     @Override
     public RecipeSerializer<? extends Recipe<Input>> getSerializer() {
-        return EIORecipes.SOUL_BINDING.serializer().get();
+        return SERIALIZER;
     }
 
     @Override
     public RecipeType<? extends Recipe<Input>> getType() {
-        return EIORecipes.SOUL_BINDING.type().get();
+        return EIORecipes.SOUL_BINDING.get();
     }
 
     public boolean copyInputComponents() {
@@ -250,44 +278,6 @@ public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.
         @Override
         public boolean isEnabled(FeatureFlagSet flagSet) {
             return this.ingredient.isEnabled(flagSet) && RecipeDisplay.super.isEnabled(flagSet);
-        }
-    }
-
-    public static class Serializer implements RecipeSerializer<SoulBindingRecipe> {
-
-        private static final MapCodec<SoulBindingRecipe> CODEC = RecordCodecBuilder.<SoulBindingRecipe>mapCodec(instance -> instance
-                .group(ItemStack.CODEC.fieldOf("output").forGetter(SoulBindingRecipe::output), Ingredient.CODEC.fieldOf("input").forGetter(SoulBindingRecipe::input),
-                    Codec.INT.fieldOf("energy").forGetter(SoulBindingRecipe::energy), Codec.INT.fieldOf("experience").forGetter(SoulBindingRecipe::experience),
-                    Identifier.CODEC.optionalFieldOf("entity_type").forGetter(SoulBindingRecipe::entityType),
-                    MobCategory.CODEC.optionalFieldOf("mob_category").forGetter(SoulBindingRecipe::mobCategory),
-                    Codec.STRING.optionalFieldOf("soul_data").forGetter(SoulBindingRecipe::soulData),
-                    Codec.BOOL.optionalFieldOf("copyInputComponents", false).forGetter(SoulBindingRecipe::copyInputComponents))
-                .apply(instance, SoulBindingRecipe::new)).validate(recipe -> {
-            int entityType = recipe.entityType().isPresent() ? 1 : 0;
-            int mobCategory = recipe.mobCategory().isPresent() ? 1 : 0;
-            int soulData = recipe.soulData().isPresent() ? 1 : 0;
-            if (entityType + mobCategory + soulData > 1) {
-                return DataResult.error(() -> "Soul Binding recipe properties entity_type, mob_category and soul_data are mutually exclusive.");
-            }
-            return DataResult.success(recipe);
-        });
-
-        public static final StreamCodec<RegistryFriendlyByteBuf, SoulBindingRecipe> STREAM_CODEC = MassiveStreamCodec.composite(ItemStack.STREAM_CODEC,
-            SoulBindingRecipe::output, Ingredient.CONTENTS_STREAM_CODEC, SoulBindingRecipe::input, ByteBufCodecs.INT, SoulBindingRecipe::energy, ByteBufCodecs.INT,
-            SoulBindingRecipe::experience, Identifier.STREAM_CODEC.apply(ByteBufCodecs::optional), SoulBindingRecipe::entityType,
-            // TODO: 1.21: This is a very gross, could do better.
-            ByteBufCodecs.STRING_UTF8.map(name -> ((StringRepresentable.EnumCodec<MobCategory>) MobCategory.CODEC).byName(name), MobCategory::getName).apply(ByteBufCodecs::optional),
-            SoulBindingRecipe::mobCategory, ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs::optional), SoulBindingRecipe::soulData, ByteBufCodecs.BOOL, SoulBindingRecipe::copyInputComponents,
-            SoulBindingRecipe::new);
-
-        @Override
-        public MapCodec<SoulBindingRecipe> codec() {
-            return CODEC;
-        }
-
-        @Override
-        public StreamCodec<RegistryFriendlyByteBuf, SoulBindingRecipe> streamCodec() {
-            return STREAM_CODEC;
         }
     }
 }

@@ -40,12 +40,22 @@ public interface MachineRecipe<T extends RecipeInput> extends Recipe<T> {
      */
     @Deprecated
     @Override
-    default ItemStack assemble(T container, HolderLookup.Provider lookupProvider) {
+    default ItemStack assemble(T container) {
         return ItemStack.EMPTY;
     }
 
     @Override
     default boolean isSpecial() {
         return true;
+    }
+
+    @Override
+    default boolean showNotification() {
+        return false;
+    }
+
+    @Override
+    default String group() {
+        return "";
     }
 }

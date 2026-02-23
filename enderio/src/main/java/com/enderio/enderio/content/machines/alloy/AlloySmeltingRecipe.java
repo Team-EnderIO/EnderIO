@@ -14,6 +14,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeBookCategory;
@@ -29,15 +30,32 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Input> {
+    // Uses optional field for isSmelting to avoid polluting recipe generation.
+    public static final MapCodec<AlloySmeltingRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(inst -> inst
+        .group(SizedIngredient.NESTED_CODEC.listOf().fieldOf("inputs").forGetter(AlloySmeltingRecipe::inputs), //TODO is nested right?
+            ItemStackTemplate.CODEC.fieldOf("output").forGetter(AlloySmeltingRecipe::output),
+            Codec.INT.fieldOf("energy").forGetter(AlloySmeltingRecipe::energy),
+            Codec.FLOAT.fieldOf("experience").forGetter(AlloySmeltingRecipe::experience),
+            Codec.BOOL.optionalFieldOf("is_smelting", false).forGetter(AlloySmeltingRecipe::isSmelting))
+        .apply(inst, AlloySmeltingRecipe::new));
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, AlloySmeltingRecipe> STREAM_CODEC = StreamCodec
+        .composite(SizedIngredient.STREAM_CODEC.apply(ByteBufCodecs.list()), AlloySmeltingRecipe::inputs,
+            ItemStackTemplate.STREAM_CODEC, AlloySmeltingRecipe::output, ByteBufCodecs.INT,
+            AlloySmeltingRecipe::energy, ByteBufCodecs.FLOAT, AlloySmeltingRecipe::experience,
+            ByteBufCodecs.BOOL, AlloySmeltingRecipe::isSmelting, AlloySmeltingRecipe::new);
+
+    public static final RecipeSerializer<AlloySmeltingRecipe> SERIALIZER = new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC);
+
     private final List<SizedIngredient> inputs;
-    private final ItemStack output;
+    private final ItemStackTemplate output;
     private final int energy;
     private final float experience;
     private final boolean isSmelting;
     @Nullable
     private PlacementInfo placementInfo;
 
-    public AlloySmeltingRecipe(List<SizedIngredient> inputs, ItemStack output, int energy, float experience,
+    public AlloySmeltingRecipe(List<SizedIngredient> inputs, ItemStackTemplate output, int energy, float experience,
             boolean isSmelting) {
         if (isSmelting && inputs.size() > 1) {
             throw new IllegalArgumentException("More than one smelting ingredient given");
@@ -50,7 +68,7 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
         this.isSmelting = isSmelting;
     }
 
-    public AlloySmeltingRecipe(List<SizedIngredient> inputs, ItemStack output, int energy, float experience) {
+    public AlloySmeltingRecipe(List<SizedIngredient> inputs, ItemStackTemplate output, int energy, float experience) {
         this(inputs, output, energy, experience, false);
     }
 
@@ -58,7 +76,7 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
         return inputs;
     }
 
-    public ItemStack output() {
+    public ItemStackTemplate output() {
         return output;
     }
 
@@ -144,7 +162,7 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
 
     @Override
     public List<OutputStack> craft(Input container, RegistryAccess registryAccess) {
-        ItemStack outputStack = output.copy();
+        ItemStack outputStack = output.create();
         if (isSmelting) {
             outputStack.setCount(outputStack.getCount() * container.inputsConsumed);
         }
@@ -156,7 +174,7 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
         return List.of(
             new AlloySmelterDisplay(
                 this.inputs.stream().map(s -> s.ingredient().display()).toList(),
-                new SlotDisplay.ItemStackSlotDisplay(this.output.copy()),
+                new SlotDisplay.ItemStackSlotDisplay(this.output),
                 new SlotDisplay.ItemSlotDisplay(EIOBlocks.ALLOY_SMELTER.asItem())
             )
         );
@@ -164,17 +182,17 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
 
     @Override
     public List<OutputStack> getResultStacks(RegistryAccess registryAccess) {
-        return List.of(OutputStack.of(output.copy()));
+        return List.of(OutputStack.of(output.create()));
     }
 
     @Override
     public RecipeSerializer<? extends Recipe<Input>> getSerializer() {
-        return EIORecipes.ALLOY_SMELTING.serializer().get();
+        return SERIALIZER;
     }
 
     @Override
     public RecipeType<? extends Recipe<Input>> getType() {
-        return EIORecipes.ALLOY_SMELTING.type().get();
+        return EIORecipes.ALLOY_SMELTING.get();
     }
 
     @Override
@@ -249,33 +267,6 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
         @Override
         public boolean isEnabled(FeatureFlagSet flagSet) {
             return this.ingredients.stream().allMatch(i -> i.isEnabled(flagSet)) && RecipeDisplay.super.isEnabled(flagSet);
-        }
-    }
-
-    public static class Serializer implements RecipeSerializer<AlloySmeltingRecipe> {
-        // Uses optional field for isSmelting to avoid polluting recipe generation.
-        public static final MapCodec<AlloySmeltingRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst
-                .group(SizedIngredient.NESTED_CODEC.listOf().fieldOf("inputs").forGetter(AlloySmeltingRecipe::inputs), //TODO is nested right?
-                        ItemStack.CODEC.fieldOf("output").forGetter(AlloySmeltingRecipe::output),
-                        Codec.INT.fieldOf("energy").forGetter(AlloySmeltingRecipe::energy),
-                        Codec.FLOAT.fieldOf("experience").forGetter(AlloySmeltingRecipe::experience),
-                        Codec.BOOL.optionalFieldOf("is_smelting", false).forGetter(AlloySmeltingRecipe::isSmelting))
-                .apply(inst, AlloySmeltingRecipe::new));
-
-        public static final StreamCodec<RegistryFriendlyByteBuf, AlloySmeltingRecipe> STREAM_CODEC = StreamCodec
-                .composite(SizedIngredient.STREAM_CODEC.apply(ByteBufCodecs.list()), AlloySmeltingRecipe::inputs,
-                        ItemStack.STREAM_CODEC, AlloySmeltingRecipe::output, ByteBufCodecs.INT,
-                        AlloySmeltingRecipe::energy, ByteBufCodecs.FLOAT, AlloySmeltingRecipe::experience,
-                        ByteBufCodecs.BOOL, AlloySmeltingRecipe::isSmelting, AlloySmeltingRecipe::new);
-
-        @Override
-        public MapCodec<AlloySmeltingRecipe> codec() {
-            return CODEC;
-        }
-
-        @Override
-        public StreamCodec<RegistryFriendlyByteBuf, AlloySmeltingRecipe> streamCodec() {
-            return STREAM_CODEC;
         }
     }
 }

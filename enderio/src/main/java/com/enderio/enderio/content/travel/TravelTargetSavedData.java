@@ -1,5 +1,6 @@
 package com.enderio.enderio.content.travel;
 
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.travel.TravelTarget;
 import com.enderio.enderio.foundation.network.packets.ClientboundSyncTravelDataPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundTravelTargetRemovedPacket;
@@ -42,7 +43,7 @@ public class TravelTargetSavedData extends SavedData {
     public static final StreamCodec<RegistryFriendlyByteBuf, TravelTargetSavedData> STREAM_CODEC = TravelTarget.STREAM_CODEC.apply(ByteBufCodecs.list())
         .map(TravelTargetSavedData::new, i -> new ArrayList<>(i.travelTargets.values()));
 
-    public static final SavedDataType<TravelTargetSavedData> TYPE = new SavedDataType<>("enderio_traveldata", TravelTargetSavedData::new, CODEC);
+    public static final SavedDataType<TravelTargetSavedData> TYPE = new SavedDataType<>(EnderIO.id("travel_data"), TravelTargetSavedData::new, CODEC);
 
 
     // Even though the client doesn't need to know the data in the old dimensions,

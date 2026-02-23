@@ -9,7 +9,6 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -17,6 +16,7 @@ import net.minecraft.util.ByIdMap;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.Recipe;
@@ -37,15 +37,28 @@ import java.util.List;
 import java.util.function.IntFunction;
 
 public final class TankRecipe implements Recipe<TankRecipe.Input> {
+
+    public static final MapCodec<TankRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance
+        .group(Ingredient.CODEC.fieldOf("input").forGetter(TankRecipe::input),
+            ItemStackTemplate.CODEC.fieldOf("output").forGetter(TankRecipe::output),
+            SizedFluidIngredient.CODEC.fieldOf("fluid").forGetter(TankRecipe::fluid),
+            Mode.CODEC.fieldOf("mode").forGetter(TankRecipe::mode))
+        .apply(instance, TankRecipe::new));
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, TankRecipe> STREAM_CODEC = StreamCodec.composite(Ingredient.CONTENTS_STREAM_CODEC, TankRecipe::input,
+        ItemStackTemplate.STREAM_CODEC, TankRecipe::output, SizedFluidIngredient.STREAM_CODEC, TankRecipe::fluid, Mode.STREAM_CODEC, TankRecipe::mode, TankRecipe::new);
+
+    public static final RecipeSerializer<TankRecipe> SERIALIZER = new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC);
+
     private final Ingredient input;
-    private final ItemStack output;
+    private final ItemStackTemplate output;
     private final SizedFluidIngredient fluid;
     private final Mode mode;
 
     @Nullable
     private PlacementInfo placementInfo;
 
-    public TankRecipe(Ingredient input, ItemStack output, SizedFluidIngredient fluid, Mode mode) {
+    public TankRecipe(Ingredient input, ItemStackTemplate output, SizedFluidIngredient fluid, Mode mode) {
         this.input = input;
         this.output = output;
         this.fluid = fluid;
@@ -56,7 +69,7 @@ public final class TankRecipe implements Recipe<TankRecipe.Input> {
         return input;
     }
 
-    public ItemStack output() {
+    public ItemStackTemplate output() {
         return output;
     }
 
@@ -108,13 +121,13 @@ public final class TankRecipe implements Recipe<TankRecipe.Input> {
     }
 
     @Override
-    public ItemStack assemble(Input recipeInput, HolderLookup.Provider lookupProvider) {
+    public ItemStack assemble(Input recipeInput) {
         return ItemStack.EMPTY;
     }
 
     @Override
     public List<RecipeDisplay> display() {
-        return List.of(new TankDisplay(input.display(), new SlotDisplay.ItemStackSlotDisplay(output.copy()), new SlotDisplay.ItemSlotDisplay(EIOBlocks.FLUID_TANK_ITEM)));
+        return List.of(new TankDisplay(input.display(), new SlotDisplay.ItemStackSlotDisplay(output), new SlotDisplay.ItemSlotDisplay(EIOBlocks.FLUID_TANK_ITEM)));
     }
 
     @Override
@@ -128,13 +141,23 @@ public final class TankRecipe implements Recipe<TankRecipe.Input> {
     }
 
     @Override
+    public boolean showNotification() {
+        return false;
+    }
+
+    @Override
+    public String group() {
+        return "";
+    }
+
+    @Override
     public RecipeSerializer<? extends Recipe<Input>> getSerializer() {
-        return EIORecipes.TANK.serializer().get();
+        return SERIALIZER;
     }
 
     @Override
     public RecipeType<? extends Recipe<Input>> getType() {
-        return EIORecipes.TANK.type().get();
+        return EIORecipes.TANK.get();
     }
 
     @Override
@@ -202,29 +225,6 @@ public final class TankRecipe implements Recipe<TankRecipe.Input> {
         @Override
         public boolean isEnabled(FeatureFlagSet flagSet) {
             return this.ingredient.isEnabled(flagSet) && RecipeDisplay.super.isEnabled(flagSet);
-        }
-    }
-
-    public static class Serializer implements RecipeSerializer<TankRecipe> {
-
-        private static final MapCodec<TankRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance
-            .group(Ingredient.CODEC.fieldOf("input").forGetter(TankRecipe::input),
-                ItemStack.CODEC.fieldOf("output").forGetter(TankRecipe::output),
-                SizedFluidIngredient.CODEC.fieldOf("fluid").forGetter(TankRecipe::fluid),
-                Mode.CODEC.fieldOf("mode").forGetter(TankRecipe::mode))
-            .apply(instance, TankRecipe::new));
-
-        public static final StreamCodec<RegistryFriendlyByteBuf, TankRecipe> STREAM_CODEC = StreamCodec.composite(Ingredient.CONTENTS_STREAM_CODEC, TankRecipe::input, ItemStack.STREAM_CODEC, TankRecipe::output,
-            SizedFluidIngredient.STREAM_CODEC, TankRecipe::fluid, Mode.STREAM_CODEC, TankRecipe::mode, TankRecipe::new);
-
-        @Override
-        public MapCodec<TankRecipe> codec() {
-            return CODEC;
-        }
-
-        @Override
-        public StreamCodec<RegistryFriendlyByteBuf, TankRecipe> streamCodec() {
-            return STREAM_CODEC;
         }
     }
 }
