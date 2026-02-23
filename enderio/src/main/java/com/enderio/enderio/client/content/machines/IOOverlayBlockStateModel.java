@@ -6,13 +6,14 @@ import com.enderio.enderio.api.io.IOConfigurable;
 import com.enderio.enderio.api.io.IOMode;
 import com.enderio.enderio.client.foundation.model.ModelRenderUtil;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
+import com.mojang.blaze3d.platform.Transparency;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockModelPart;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.model.Material;
 import net.minecraft.client.renderer.block.model.Variant;
-import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.ModelBaker;
@@ -53,7 +54,7 @@ public class IOOverlayBlockStateModel implements DynamicBlockStateModel {
         this.model = model;
     }
 
-    private TextureAtlasSprite getSprite(IOMode state) {
+    private BakedQuad.SpriteInfo getSpriteInfo(IOMode state) {
         Identifier tex = switch (state) {
             case NONE -> MissingTextureAtlasSprite.getLocation();
             case PUSH -> TEX_PUSH;
@@ -62,13 +63,19 @@ public class IOOverlayBlockStateModel implements DynamicBlockStateModel {
             case DISABLED -> TEX_DISABLED;
         };
 
-        return Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.BLOCKS).getSprite(tex);
+        TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.BLOCKS).getSprite(tex);
+        return BakedQuad.SpriteInfo.of(new Material.Baked(sprite, false), Transparency.TRANSLUCENT);
     }
 
 
     @Override
-    public TextureAtlasSprite particleIcon() {
-        return model.particleIcon();
+    public Material.Baked particleMaterial() {
+        return model.particleMaterial();
+    }
+
+    @Override
+    public boolean hasTranslucency() {
+        return true;
     }
 
     @Override
@@ -86,7 +93,7 @@ public class IOOverlayBlockStateModel implements DynamicBlockStateModel {
                     IOMode mode = config.getIOMode(dir);
                     if (mode != IOMode.NONE) {
                         Vector3f[] verts = QUADS.get(dir);
-                        collection.addCulledFace(dir, ModelRenderUtil.createQuad(verts, getSprite(mode)));
+                        collection.addCulledFace(dir, ModelRenderUtil.createQuad(verts, getSpriteInfo(mode)));
                     }
                 }
 
@@ -104,13 +111,13 @@ public class IOOverlayBlockStateModel implements DynamicBlockStateModel {
                     }
 
                     @Override
-                    public TextureAtlasSprite particleIcon() {
-                        return ModelHelper.getMissingTexture();
+                    public Material.Baked particleMaterial() {
+                        return new Material.Baked(ModelHelper.getMissingTexture(), false);
                     }
 
                     @Override
-                    public ChunkSectionLayer getRenderType(BlockState state) {
-                        return ChunkSectionLayer.CUTOUT;
+                    public boolean hasTranslucency() {
+                        return true;
                     }
                 });
             }

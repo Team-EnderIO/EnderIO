@@ -7,6 +7,7 @@ import com.enderio.enderio.client.content.conduits.model.bundle.port.ConduitBake
 import com.enderio.enderio.content.conduits.type.fluid.FluidConduit;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.block.model.Material;
 import net.minecraft.client.renderer.block.model.SimpleModelWrapper;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.ModelBaker;
@@ -44,11 +45,7 @@ public class FluidConduitModelModifier implements ConduitModelModifier {
         Fluid lockedFluid = BuiltInRegistries.FLUID.getValue(Identifier.parse(fluid.get())); //TODO use value input?
         if (!lockedFluid.isSame(Fluids.EMPTY)) {
             var clientExtension = IClientFluidTypeExtensions.of(lockedFluid);
-            TextureAtlasSprite sprite = Minecraft.getInstance()
-                .getAtlasManager()
-                .getAtlasOrThrow(AtlasIds.BLOCKS)
-                .getSprite(clientExtension.getStillTexture());
-            return List.of(SimpleModelWrapper.bake(new ConduitBaker(baker, sprite), FLUID_MODEL, modelState));
+            return List.of(SimpleModelWrapper.bake(new ConduitBaker(baker, new Material(clientExtension.getStillTexture())), FLUID_MODEL, modelState));
         }
 
         return List.of();

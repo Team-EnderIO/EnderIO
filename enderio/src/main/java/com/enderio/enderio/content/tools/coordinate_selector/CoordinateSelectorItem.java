@@ -45,7 +45,7 @@ public class CoordinateSelectorItem extends Item {
 
         if (hitResult.getType() == HitResult.Type.MISS) {
             if (player instanceof LocalPlayer) {
-                player.displayClientMessage(ToolsLang.COORDINATE_SELECTOR_NO_BLOCK, true);
+                player.sendOverlayMessage(ToolsLang.COORDINATE_SELECTOR_NO_BLOCK);
             }
 
             return super.use(level, player, hand);
@@ -93,7 +93,7 @@ public class CoordinateSelectorItem extends Item {
         }
 
         if (player instanceof LocalPlayer) {
-            player.displayClientMessage(ToolsLang.COORDINATE_SELECTOR_NO_PAPER, true);
+            player.sendOverlayMessage(ToolsLang.COORDINATE_SELECTOR_NO_PAPER);
         }
 
         return false;

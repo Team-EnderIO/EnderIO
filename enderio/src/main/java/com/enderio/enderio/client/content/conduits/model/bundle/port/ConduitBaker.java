@@ -1,24 +1,22 @@
 package com.enderio.enderio.client.content.conduits.model.bundle.port;
 
 import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.block.model.Material;
 import net.minecraft.client.renderer.block.model.TextureSlots;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.resources.model.MaterialBaker;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ModelDebugName;
 import net.minecraft.client.resources.model.ResolvedModel;
-import net.minecraft.client.resources.model.SpriteGetter;
 import net.minecraft.resources.Identifier;
-import org.jspecify.annotations.Nullable;
 
 public class ConduitBaker implements ModelBaker {
 
     private final ModelBaker baker;
-    private final ConduitSpriteGetter sprites;
+    private final ConduitMaterialBaker materials;
 
-    public ConduitBaker(ModelBaker baker, TextureAtlasSprite sprite) {
+    public ConduitBaker(ModelBaker baker, Material material) {
         this.baker = baker;
-        this.sprites = new ConduitSpriteGetter(this.baker.sprites(), sprite);
+        this.materials = new ConduitMaterialBaker(this.baker.materials(), material);
     }
 
     @Override
@@ -32,13 +30,13 @@ public class ConduitBaker implements ModelBaker {
     }
 
     @Override
-    public SpriteGetter sprites() {
-        return this.sprites;
+    public MaterialBaker materials() {
+        return this.materials;
     }
 
     @Override
-    public PartCache parts() {
-        return baker.parts();
+    public Interner interner() {
+        return baker.interner();
     }
 
     @Override
@@ -46,32 +44,33 @@ public class ConduitBaker implements ModelBaker {
         return baker.compute(key);
     }
 
-    static class ConduitSpriteGetter implements SpriteGetter {
+    static class ConduitMaterialBaker implements MaterialBaker {
 
-        private final SpriteGetter spriteGetter;
-        private final TextureAtlasSprite sprite;
+        private final MaterialBaker materialBaker;
+        private final Material sprite;
 
-        public ConduitSpriteGetter(SpriteGetter spriteGetter, @Nullable TextureAtlasSprite sprite) {
-            this.spriteGetter = spriteGetter;
+        public ConduitMaterialBaker(MaterialBaker materialBaker, Material sprite) {
+            this.materialBaker = materialBaker;
             this.sprite = sprite;
         }
 
         @Override
-        public TextureAtlasSprite get(Material material, ModelDebugName debugName) {
-            return spriteGetter.get(material, debugName);
+        public Material.Baked get(Material material, ModelDebugName modelDebugName) {
+            return materialBaker.get(material, modelDebugName);
         }
 
         @Override
-        public TextureAtlasSprite reportMissingReference(String name, ModelDebugName debugName) {
-            return spriteGetter.reportMissingReference(name, debugName);
+        public Material.Baked reportMissingReference(String name, ModelDebugName debugName) {
+            return materialBaker.reportMissingReference(name, debugName);
         }
 
         @Override
-        public TextureAtlasSprite resolveSlot(TextureSlots textureSlots, String name, ModelDebugName modelDebugName) {
+        public Material.Baked resolveSlot(TextureSlots textureSlots, String name, ModelDebugName modelDebugName) {
             if (sprite != null) {
-                return sprite;
+                return materialBaker.get(sprite, modelDebugName);
             }
-            return spriteGetter.resolveSlot(textureSlots, name, modelDebugName);
+
+            return materialBaker.resolveSlot(textureSlots, name, modelDebugName);
         }
 
     }

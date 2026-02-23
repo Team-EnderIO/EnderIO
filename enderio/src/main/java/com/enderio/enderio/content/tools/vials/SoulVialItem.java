@@ -119,8 +119,7 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
             return InteractionResult.FAIL;
         }
 
-        Optional<ItemStack> itemStack = catchEntity(stack, interactionTarget,
-                component -> player.displayClientMessage(component, true));
+        Optional<ItemStack> itemStack = catchEntity(stack, interactionTarget, player::sendOverlayMessage);
         if (itemStack.isPresent()) {
             ItemStack filledVial = itemStack.get();
             ItemStack hand = player.getItemInHand(usedHand);

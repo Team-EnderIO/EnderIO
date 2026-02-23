@@ -38,18 +38,18 @@ public class ServerPayloadHandler {
 
             // These errors should only ever be triggered if there's some form of desync
             if (!TravelHandler.canBlockTeleport(player)) {
-                player.displayClientMessage(Component.nullToEmpty("ERROR: Cannot teleport"), true);
+                player.sendOverlayMessage(Component.nullToEmpty("ERROR: Cannot teleport"));
                 return;
             }
             if (target.isEmpty()) {
-                player.displayClientMessage(Component.nullToEmpty("ERROR: Destination not a valid target"), true);
+                player.sendOverlayMessage(Component.nullToEmpty("ERROR: Destination not a valid target"));
                 return;
             }
             // Eventually change the packet structure to include what teleport method was
             // used so this range can be selected correctly
             int range = Math.max(target.get().block2BlockRange(), target.get().item2BlockRange());
             if (packet.pos().distSqr(player.getOnPos()) > range * range) {
-                player.displayClientMessage(Component.nullToEmpty("ERROR: Too far"), true);
+                player.sendOverlayMessage(Component.nullToEmpty("ERROR: Too far"));
                 return;
             }
 

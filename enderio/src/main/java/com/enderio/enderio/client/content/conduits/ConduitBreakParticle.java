@@ -34,7 +34,8 @@ public class ConduitBreakParticle extends SingleQuadParticle {
 
     @Override
     protected Layer getLayer() {
-        return Layer.TERRAIN;
+        // TODO: 26.1 - should this be TRANSLUCENT_TERRAIN
+        return Layer.OPAQUE_TERRAIN;
     }
 
     @Override

@@ -53,24 +53,25 @@ public class ModelRenderUtil {
         };
     }
 
-    public static BakedQuad createQuad(Vector3f[] verts, TextureAtlasSprite sprite) {
-        return createQuad(verts[0], verts[1], verts[2], verts[3], sprite);
+    public static BakedQuad createQuad(Vector3f[] verts, BakedQuad.SpriteInfo spriteInfo) {
+        return createQuad(verts[0], verts[1], verts[2], verts[3], spriteInfo);
     }
 
-    public static BakedQuad createQuad(Vector3f v1, Vector3f v2, Vector3f v3, Vector3f v4, TextureAtlasSprite sprite) {
-        return createQuad(v1, v2, v3, v4, sprite, 0xFFFFFF, 1.0f);
+    public static BakedQuad createQuad(Vector3f v1, Vector3f v2, Vector3f v3, Vector3f v4, BakedQuad.SpriteInfo spriteInfo) {
+        return createQuad(v1, v2, v3, v4, spriteInfo, 0xFFFFFF, 1.0f);
     }
 
-    public static BakedQuad createQuad(Vector3f[] verts, TextureAtlasSprite sprite, int color) {
-        return createQuad(verts[0], verts[1], verts[2], verts[3], sprite, color, 1.0f);
+    public static BakedQuad createQuad(Vector3f[] verts, BakedQuad.SpriteInfo spriteInfo, int color) {
+        return createQuad(verts[0], verts[1], verts[2], verts[3], spriteInfo, color, 1.0f);
     }
 
-    public static BakedQuad createQuad(Vector3f[] verts, TextureAtlasSprite sprite, int color, float alpha) {
-        return createQuad(verts[0], verts[1], verts[2], verts[3], sprite, color, alpha);
+    public static BakedQuad createQuad(Vector3f[] verts, BakedQuad.SpriteInfo spriteInfo, int color, float alpha) {
+        return createQuad(verts[0], verts[1], verts[2], verts[3], spriteInfo, color, alpha);
     }
 
-    public static BakedQuad createQuad(Vector3f v1, Vector3f v2, Vector3f v3, Vector3f v4, TextureAtlasSprite sprite, int color, float alpha) {
+    public static BakedQuad createQuad(Vector3f v1, Vector3f v2, Vector3f v3, Vector3f v4, BakedQuad.SpriteInfo spriteInfo, int color, float alpha) {
         Vector3f normal = new Vector3f(v3).sub(v2).cross(new Vector3f(v1).sub(v2)).normalize();
+        TextureAtlasSprite sprite = spriteInfo.sprite();
 
         float nx = normal.x;
         float ny = normal.y;
@@ -84,7 +85,7 @@ public class ModelRenderUtil {
         float b = ARGB.blue(color) / 255.0f;
 
         QuadBakingVertexConsumer baker = new QuadBakingVertexConsumer();
-        baker.setSprite(sprite);
+        baker.setSpriteInfo(spriteInfo);
         baker.setDirection(Direction.getApproximateNearest(normal.x, normal.y, normal.z));
         baker.addVertex(v1.x, v1.y, v1.z).setNormal(nx, ny, nz).setUv(sprite.getU(0), sprite.getV(0)).setColor(r, g, b, alpha);
         baker.addVertex(v2.x, v2.y, v2.z).setNormal(nx, ny, nz).setUv(sprite.getU(0), sprite.getV(th)).setColor(r, g, b, alpha);

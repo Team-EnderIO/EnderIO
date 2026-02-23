@@ -8,6 +8,8 @@ import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.irisshaders.iris.api.v0.IrisApi;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.block.BakedQuadOutput;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
@@ -107,13 +109,16 @@ public class ConduitFacadeRendering {
                         .getBlockModelShaper()
                         .getBlockModel(entry.getValue());
 
-                Function<ChunkSectionLayer, VertexConsumer> consumer = wrapper == null ? context::getOrCreateChunkBuffer : layer -> wrapper;
+                BakedQuadOutput output = (pose, quad, brightness, color, lightmapCoord, overlayCoords) -> {
+                    VertexConsumer buffer = wrapper == null ? wrapper : context.getOrCreateChunkBuffer(quad.spriteInfo().layer());
+                    buffer.putBulkData(pose, quad, brightness, color, lightmapCoord, overlayCoords);
+                };
 
                 Minecraft.getInstance()
                     .getBlockRenderer()
                     .getModelRenderer()
                     .tesselateBlock(context.getRegion(), model.collectParts(context.getRegion(), pos, state, random), state, pos, context.getPoseStack(),
-                        consumer, true, OverlayTexture.NO_OVERLAY);
+                        output, true, OverlayTexture.NO_OVERLAY);
 
 
                 context.getPoseStack().popPose();

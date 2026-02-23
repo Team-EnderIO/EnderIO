@@ -9,7 +9,7 @@ public final class MutableQuad {
     final BakedQuad quad;
     final Vector3f[] vertexPositions = new Vector3f[4];
     long[] vertexUV = new long[4];
-    TextureAtlasSprite sprite;
+    BakedQuad.SpriteInfo spriteInfo;
     BakedColors colors;
 
     public MutableQuad(BakedQuad quad) {
@@ -19,7 +19,7 @@ public final class MutableQuad {
             this.vertexPositions[i] = new Vector3f(quad.position(i));
             this.vertexUV[i] = quad.packedUV(i);
         }
-        this.sprite = quad.sprite();
+        this.spriteInfo = quad.spriteInfo();
         this.colors = quad.bakedColors();
     }
 
@@ -36,8 +36,7 @@ public final class MutableQuad {
             vertexPositions[0], vertexPositions[1], vertexPositions[2], vertexPositions[3],
             vertexUV[0], vertexUV[1], vertexUV[2], vertexUV[3],
             quad.tintIndex(),
-            quad.direction(),
-            sprite,
+            quad.direction(), spriteInfo,
             quad.shade(),
             quad.lightEmission(),
             quad.bakedNormals(),

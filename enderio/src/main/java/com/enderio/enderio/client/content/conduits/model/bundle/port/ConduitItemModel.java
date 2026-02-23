@@ -7,6 +7,7 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.Material;
 import net.minecraft.client.renderer.block.model.TextureSlots;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.renderer.item.ItemModelResolver;
@@ -43,11 +44,9 @@ public class ConduitItemModel implements ItemModel {
 
         var conduit = stack.get(EnderIODataComponents.CONDUIT);
 
-        TextureAtlasSprite texture = Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.BLOCKS).getSprite(conduit.value().texture());
-
         var resolvedmodel = context.blockModelBaker().getModel(ConduitAdditionalModels.CONDUIT_ITEM);
         TextureSlots textureslots = resolvedmodel.getTopTextureSlots();
-        var baker = new ConduitBaker(context.blockModelBaker(), texture);
+        var baker = new ConduitBaker(context.blockModelBaker(), new Material(conduit.value().texture()));
         List<BakedQuad> list = resolvedmodel.getTopGeometry().bake(textureslots, baker, BlockModelRotation.IDENTITY, () -> "conduit_item").getAll();
         ModelRenderProperties modelrenderproperties = ModelRenderProperties.fromResolvedModel(baker, resolvedmodel, textureslots);
 
@@ -58,7 +57,6 @@ public class ConduitItemModel implements ItemModel {
         var state = renderState.newLayer();
         state.setExtents(extents);
         modelrenderproperties.applyToLayer(state, displayContext);
-        state.setRenderType(RenderTypes.solidMovingBlock());
         state.prepareQuadList().addAll(list);
     }
 

@@ -87,7 +87,7 @@ public class ConduitProbeItem extends Item {
                 }
             }
             case PROBE -> {
-                player.displayClientMessage(Component.literal("This feature isn't implemented yet.").withStyle(ChatFormatting.RED), false);
+                player.sendSystemMessage(Component.literal("This feature isn't implemented yet.").withStyle(ChatFormatting.RED));
             }
         }
         return InteractionResult.SUCCESS;
@@ -130,7 +130,7 @@ public class ConduitProbeItem extends Item {
                     message.append(createFieldTextComponent(field, connectionConfig));
                 }
             });
-            player.displayClientMessage(TooltipUtil.withArgs(ConduitLang.CONDUIT_PROBE_MESSAGE_COPIED, message), false);
+            player.sendSystemMessage(TooltipUtil.withArgs(ConduitLang.CONDUIT_PROBE_MESSAGE_COPIED, message));
         }
     }
 
@@ -153,7 +153,7 @@ public class ConduitProbeItem extends Item {
 
         if (!pastedConduits.isEmpty()) {
             String pastedConduitsString = String.join(", ", pastedConduits);
-            player.displayClientMessage(TooltipUtil.withArgs(ConduitLang.CONDUIT_PROBE_MESSAGE_PASTED, pastedConduitsString), false);
+            player.sendSystemMessage(TooltipUtil.withArgs(ConduitLang.CONDUIT_PROBE_MESSAGE_PASTED, pastedConduitsString));
         }
         conduitBlock.setChanged();
         conduitBlock.updateShape();
@@ -199,7 +199,7 @@ public class ConduitProbeItem extends Item {
         State newState = State.values()[(currentState.ordinal() + 1) % State.values().length];
 
         setState(player, stack, newState);
-        player.displayClientMessage(TooltipUtil.withArgs(ConduitLang.CONDUIT_PROBE_MESSAGE_SWITCHED_MODE, newState.getStateText()), true);
+        player.sendOverlayMessage(TooltipUtil.withArgs(ConduitLang.CONDUIT_PROBE_MESSAGE_SWITCHED_MODE, newState.getStateText()));
     }
 
     private String conduitKeyToDisplayName(Identifier conduitKey) {
