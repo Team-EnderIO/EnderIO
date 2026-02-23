@@ -43,7 +43,7 @@ public class WrappedEnchanterRecipe implements Recipe<EnchanterRecipe.Input> {
     }
 
     public ItemStack getBook() {
-        return recipe.value().getBookForLevel(level);
+        return recipe.value().getBookForLevel(level).create();
     }
 
     public int getLevel() {

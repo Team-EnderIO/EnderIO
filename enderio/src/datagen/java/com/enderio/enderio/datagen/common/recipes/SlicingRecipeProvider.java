@@ -14,6 +14,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.common.Tags;
@@ -69,7 +70,7 @@ public class SlicingRecipeProvider extends SubRecipeProvider {
 
     protected void build(Item output, List<Ingredient> inputs, int energy, RecipeOutput recipeOutput) {
         recipeOutput.accept(ResourceKey.create(Registries.RECIPE, EnderIO.id("slicing/" + BuiltInRegistries.ITEM.getKey(output).getPath())),
-                new SlicingRecipe(new ItemStack(output), inputs, energy), null);
+                new SlicingRecipe(new ItemStackTemplate(output), inputs, energy), null);
     }
 
 }

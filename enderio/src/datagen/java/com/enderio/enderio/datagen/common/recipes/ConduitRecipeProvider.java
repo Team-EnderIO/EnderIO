@@ -21,6 +21,7 @@ import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -57,7 +58,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
         buildFacadeCraftingRecipes(item, recipeOutput);
         buildFacadePaintingRecipes(item, recipeOutput);
 
-        ShapedRecipeBuilder.shaped(item, RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(itemConduit, 8))
+        ShapedRecipeBuilder.shaped(item, RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackTemplateFor(itemConduit, 8))
                 .pattern("BBB")
                 .pattern("CIC")
                 .pattern("BBB")
@@ -68,7 +69,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput, EnderIO.id("item_conduit").toString());
 
         ShapedRecipeBuilder
-                .shaped(item, RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(energeticItemConduit, 8))
+                .shaped(item, RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackTemplateFor(energeticItemConduit, 8))
                 .pattern("BBB")
                 .pattern("IAI")
                 .pattern("BBB")
@@ -79,7 +80,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput, EnderIO.id("energetic_item_conduit").toString());
 
         ShapedRecipeBuilder
-            .shaped(item, RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(energeticItemConduit, 8))
+            .shaped(item, RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackTemplateFor(energeticItemConduit, 8))
             .pattern("BBB")
             .pattern("ICI")
             .pattern("BBB")
@@ -89,7 +90,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
             .save(recipeOutput, EnderIO.id("energetic_item_conduit_upgrade").toString());
 
-        ShapedRecipeBuilder.shaped(item, RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(vibrantItemConduit, 8))
+        ShapedRecipeBuilder.shaped(item, RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackTemplateFor(vibrantItemConduit, 8))
             .pattern("BBB")
             .pattern("IAI")
             .pattern("BBB")
@@ -99,7 +100,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
             .save(recipeOutput, EnderIO.id("vibrant_item_conduit").toString());
 
-        ShapedRecipeBuilder.shaped(item, RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(vibrantItemConduit, 8))
+        ShapedRecipeBuilder.shaped(item, RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackTemplateFor(vibrantItemConduit, 8))
             .pattern("BBB")
             .pattern("ICI")
             .pattern("BBB")
@@ -109,7 +110,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
             .save(recipeOutput, EnderIO.id("vibrant_item_conduit_upgrade").toString());
 
-        ShapedRecipeBuilder.shaped(item, RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(fluidConduit, 8))
+        ShapedRecipeBuilder.shaped(item, RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackTemplateFor(fluidConduit, 8))
                 .pattern("BBB")
                 .pattern("CGC")
                 .pattern("BBB")
@@ -120,7 +121,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput, EnderIO.id("fluid_conduit").toString());
 
         ShapedRecipeBuilder
-                .shaped(item, RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(energeticFluidConduit, 8))
+                .shaped(item, RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackTemplateFor(energeticFluidConduit, 8))
                 .pattern("BBB")
                 .pattern("IGI")
                 .pattern("BBB")
@@ -131,7 +132,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput, EnderIO.id("pressurized_fluid_conduit").toString());
 
         ShapedRecipeBuilder
-                .shaped(item, RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(energeticFluidConduit, 8))
+                .shaped(item, RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackTemplateFor(energeticFluidConduit, 8))
                 .pattern("BBB")
                 .pattern("ICI")
                 .pattern("BBB")
@@ -141,7 +142,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 .save(recipeOutput, EnderIO.id("pressurized_fluid_conduit_upgrade").toString());
 
-        ShapedRecipeBuilder.shaped(item, RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(vibrantFluidConduit, 8))
+        ShapedRecipeBuilder.shaped(item, RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackTemplateFor(vibrantFluidConduit, 8))
                 .pattern("BBB")
                 .pattern("IGI")
                 .pattern("BBB")
@@ -151,7 +152,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 .save(recipeOutput, EnderIO.id("ender_fluid").toString());
 
-        ShapedRecipeBuilder.shaped(item, RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(vibrantFluidConduit, 8))
+        ShapedRecipeBuilder.shaped(item, RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackTemplateFor(vibrantFluidConduit, 8))
                 .pattern("BBB")
                 .pattern("ICI")
                 .pattern("BBB")
@@ -161,7 +162,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 .save(recipeOutput, EnderIO.id("ender_fluid_conduit_upgrade").toString());
 
-        ShapedRecipeBuilder.shaped(item, RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(energyConduit, 8))
+        ShapedRecipeBuilder.shaped(item, RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackTemplateFor(energyConduit, 8))
                 .pattern("BBB")
                 .pattern("III")
                 .pattern("BBB")
@@ -171,7 +172,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput, EnderIO.id("energy_conduit").toString());
 
         ShapedRecipeBuilder
-                .shaped(item, RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(energeticEnergyConduit, 8))
+                .shaped(item, RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackTemplateFor(energeticEnergyConduit, 8))
                 .pattern("BBB")
                 .pattern("III")
                 .pattern("BBB")
@@ -181,7 +182,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput, EnderIO.id("enhanced_energy_conduit").toString());
 
         ShapedRecipeBuilder
-                .shaped(item, RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(energeticEnergyConduit, 8))
+                .shaped(item, RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackTemplateFor(energeticEnergyConduit, 8))
                 .pattern("BBB")
                 .pattern("ICI")
                 .pattern("BBB")
@@ -191,7 +192,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 .save(recipeOutput, EnderIO.id("enhanced_energy_conduit_upgrade").toString());
 
-        ShapedRecipeBuilder.shaped(item, RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(vibrantEnergyConduit, 8))
+        ShapedRecipeBuilder.shaped(item, RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackTemplateFor(vibrantEnergyConduit, 8))
                 .pattern("BBB")
                 .pattern("III")
                 .pattern("BBB")
@@ -201,7 +202,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput, EnderIO.id("ender_energy_conduit").toString());
 
         ShapedRecipeBuilder
-                .shaped(item, RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(vibrantEnergyConduit, 8))
+                .shaped(item, RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackTemplateFor(vibrantEnergyConduit, 8))
                 .pattern("BBB")
                 .pattern("ICI")
                 .pattern("BBB")
@@ -211,7 +212,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 .save(recipeOutput, EnderIO.id("ender_energy_conduit_upgrade").toString());
 
-        ShapedRecipeBuilder.shaped(item, RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackFor(redstoneConduit, 8))
+        ShapedRecipeBuilder.shaped(item, RecipeCategory.BUILDING_BLOCKS, ConduitBlockItem.getStackTemplateFor(redstoneConduit, 8))
                 .pattern("BBB")
                 .pattern("III")
                 .pattern("BBB")
@@ -420,7 +421,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
     // TODO: I want to have a builder for all EIO recipes in the API.
     protected void paintingRecipe(ItemLike output, Ingredient input, RecipeOutput recipeOutput) {
         recipeOutput.accept(ResourceKey.create(Registries.RECIPE, EnderIO.id("painting/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath())),
-                new PaintingRecipe(input, output.asItem().getDefaultInstance()), null,
+                new PaintingRecipe(input, new ItemStackTemplate(output.asItem())), null,
                 new ModLoadedCondition(EnderIO.MOD_ID));
     }
 

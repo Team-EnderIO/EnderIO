@@ -11,7 +11,9 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -78,12 +80,12 @@ public class TankRecipeProvider extends SubRecipeProvider {
 
     protected void buildEmptying(Ingredient input, ItemLike output, SizedFluidIngredient fluid, RecipeOutput recipeOutput) {
         recipeOutput.accept(ResourceKey.create(Registries.RECIPE, EnderIO.id("tank_empty/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath())),
-                new TankRecipe(input, new ItemStack(output), fluid, TankRecipe.Mode.EMPTY), null);
+                new TankRecipe(input, new ItemStackTemplate(output.asItem()), fluid, TankRecipe.Mode.EMPTY), null);
     }
 
     protected void buildFilling(Ingredient input, ItemLike output, SizedFluidIngredient fluid, RecipeOutput recipeOutput) {
         recipeOutput.accept(ResourceKey.create(Registries.RECIPE, EnderIO.id("tank_fill/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath())),
-                new TankRecipe(input, new ItemStack(output), fluid, TankRecipe.Mode.FILL), null);
+                new TankRecipe(input, new ItemStackTemplate(output.asItem()), fluid, TankRecipe.Mode.FILL), null);
     }
 
 }

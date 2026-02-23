@@ -7,10 +7,9 @@ import com.enderio.enderio.foundation.MachineRecipe;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIORecipeBookCategories;
-import com.enderio.enderio.init.EIORecipes;
+import com.enderio.enderio.init.EIORecipeTypes;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -112,7 +111,7 @@ public final class PaintingRecipe implements MachineRecipe<PaintingRecipe.Input>
 
     @Override
     public RecipeType<? extends Recipe<Input>> getType() {
-        return EIORecipes.PAINTING.get();
+        return EIORecipeTypes.PAINTING.get();
     }
 
     @Override

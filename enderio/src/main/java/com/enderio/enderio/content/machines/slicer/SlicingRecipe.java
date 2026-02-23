@@ -5,7 +5,7 @@ import com.enderio.enderio.foundation.MachineRecipe;
 import com.enderio.enderio.foundation.util.ValidatingListCodec;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIORecipeBookCategories;
-import com.enderio.enderio.init.EIORecipes;
+import com.enderio.enderio.init.EIORecipeTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -110,7 +110,7 @@ public final class SlicingRecipe implements MachineRecipe<SlicingRecipe.Input> {
 
     @Override
     public RecipeType<? extends Recipe<Input>> getType() {
-        return EIORecipes.SLICING.get();
+        return EIORecipeTypes.SLICING.get();
     }
 
     @Override

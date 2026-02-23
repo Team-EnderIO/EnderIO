@@ -103,7 +103,7 @@ public class FireCraftingRecipeCodecTests {
 
         // Attempt to deserialize
         var ops = server.registryAccess().createSerializationContext(JsonOps.INSTANCE);
-        var result = FireCraftingRecipe.Serializer.CODEC.codec().parse(ops, json);
+        var result = FireCraftingRecipe.MAP_CODEC.codec().parse(ops, json);
         Assertions.assertTrue(result.isSuccess());
         return result.getOrThrow();
     }

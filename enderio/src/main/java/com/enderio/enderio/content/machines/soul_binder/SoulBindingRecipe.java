@@ -10,7 +10,7 @@ import com.enderio.enderio.foundation.util.ExperienceUtil;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOItems;
 import com.enderio.enderio.init.EIORecipeBookCategories;
-import com.enderio.enderio.init.EIORecipes;
+import com.enderio.enderio.init.EIORecipeTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
@@ -216,7 +216,7 @@ public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.
 
     @Override
     public RecipeType<? extends Recipe<Input>> getType() {
-        return EIORecipes.SOUL_BINDING.get();
+        return EIORecipeTypes.SOUL_BINDING.get();
     }
 
     public boolean copyInputComponents() {

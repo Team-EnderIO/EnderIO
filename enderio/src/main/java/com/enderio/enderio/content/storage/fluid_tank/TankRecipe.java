@@ -3,7 +3,7 @@ package com.enderio.enderio.content.storage.fluid_tank;
 import com.enderio.enderio.foundation.util.SizedFluidIngredientHelper;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIORecipeBookCategories;
-import com.enderio.enderio.init.EIORecipes;
+import com.enderio.enderio.init.EIORecipeTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -157,7 +157,7 @@ public final class TankRecipe implements Recipe<TankRecipe.Input> {
 
     @Override
     public RecipeType<? extends Recipe<Input>> getType() {
-        return EIORecipes.TANK.get();
+        return EIORecipeTypes.TANK.get();
     }
 
     @Override

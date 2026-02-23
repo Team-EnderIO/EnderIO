@@ -3,9 +3,7 @@ package com.enderio.enderio.foundation.soul;
 import com.enderio.core.common.recipes.WrappedShapedRecipe;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.soul.SoulBoundUtils;
-import com.enderio.enderio.init.EIORecipes;
 import com.mojang.serialization.MapCodec;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
@@ -63,6 +61,7 @@ public class ShapedEntityStorageRecipe extends WrappedShapedRecipe {
 
     @Override
     public RecipeSerializer<ShapedRecipe> getSerializer() {
-        return SERIALIZER;
+        // TODO: 26.1 - this will probably explode...
+        return (RecipeSerializer<ShapedRecipe>) (RecipeSerializer) SERIALIZER;
     }
 }

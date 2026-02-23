@@ -3,7 +3,7 @@ package com.enderio.enderio.compat.jei;
 import com.enderio.enderio.compat.jei.helper.FakeGrindingRecipe;
 import com.enderio.enderio.content.fire_crafting.FireCraftingRecipe;
 import com.enderio.enderio.init.EIOItems;
-import com.enderio.enderio.init.EIORecipes;
+import com.enderio.enderio.init.EIORecipeTypes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -30,7 +30,7 @@ public class EnderIOJEIRecipes {
     }
 
     public List<RecipeHolder<FireCraftingRecipe>> getAllFireCraftingRecipes() {
-        return RECIPE_MAP.byType(EIORecipes.FIRE_CRAFTING.get()).stream().toList();
+        return RECIPE_MAP.byType(EIORecipeTypes.FIRE_CRAFTING.get()).stream().toList();
     }
 
     public List<FakeGrindingRecipe> getAllGrindingRecipes() {

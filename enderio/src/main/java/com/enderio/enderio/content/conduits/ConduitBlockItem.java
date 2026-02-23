@@ -12,12 +12,14 @@ import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -34,6 +36,12 @@ public class ConduitBlockItem extends BlockItem implements ICustomCreativeTabEnt
         // Do not use block description, as that is Conduit Bundle.
         // This will ensure missing conduits use the missing conduit string.
         super(EIOBlocks.CONDUIT_BUNDLE.get(), properties.useItemDescriptionPrefix());
+    }
+
+    public static ItemStackTemplate getStackTemplateFor(Holder<Conduit<?, ?>> conduit, int count) {
+        return new ItemStackTemplate(EIOItems.CONDUIT.get(), count, DataComponentPatch.builder()
+            .set(EnderIODataComponents.CONDUIT, conduit)
+            .build());
     }
 
     public static ItemStack getStackFor(Holder<Conduit<?, ?>> conduit, int count) {

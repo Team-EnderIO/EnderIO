@@ -7,7 +7,7 @@ import com.enderio.enderio.gametests.util.EnderGameTestHelper;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOFluids;
 import com.enderio.enderio.init.EIOItems;
-import com.enderio.enderio.init.EIORecipes;
+import com.enderio.enderio.init.EIORecipeTypes;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -58,7 +58,7 @@ public class SoulBinderTests {
                     new FluidStack(EIOFluids.XP_JUICE.source(), 10000)
                 );
 
-                var recipe = helper.getLevel().recipeAccess().getRecipeFor(EIORecipes.SOUL_BINDING.type().get(), input, helper.getLevel()).orElseThrow();
+                var recipe = helper.getLevel().recipeAccess().getRecipeFor(EIORecipeTypes.SOUL_BINDING.get(), input, helper.getLevel()).orElseThrow();
                 int expectedEnergy = energyToAdd - recipe.value().energy();
                 helper.assertEnergyStored(0, 0, 0, expectedEnergy);
             })

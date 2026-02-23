@@ -1,12 +1,11 @@
 package com.enderio.enderio.content.fire_crafting;
 
 import com.enderio.enderio.init.EIORecipeBookCategories;
-import com.enderio.enderio.init.EIORecipes;
+import com.enderio.enderio.init.EIORecipeTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -118,7 +117,7 @@ public record FireCraftingRecipe(List<Result> results, List<Block> bases, List<T
 
     @Override
     public RecipeType<? extends Recipe<RecipeInput>> getType() {
-        return EIORecipes.FIRE_CRAFTING.get();
+        return EIORecipeTypes.FIRE_CRAFTING.get();
     }
 
     @Override

@@ -20,7 +20,7 @@ import com.enderio.enderio.foundation.task.CraftingMachineTask;
 import com.enderio.enderio.foundation.task.host.CraftingMachineTaskHost;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
-import com.enderio.enderio.init.EIORecipes;
+import com.enderio.enderio.init.EIORecipeTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentGetter;
@@ -83,7 +83,7 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
             }
         };
 
-        craftingTaskHost = new CraftingMachineTaskHost<>(this, () -> true, EIORecipes.VAT_FERMENTING.get(),
+        craftingTaskHost = new CraftingMachineTaskHost<>(this, () -> true, EIORecipeTypes.VAT_FERMENTING.get(),
                 this::createTask, this::createRecipeInput);
     }
 

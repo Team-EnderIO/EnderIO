@@ -9,7 +9,7 @@ import com.enderio.enderio.content.machines.soul_binder.SoulBindingRecipe;
 import com.enderio.enderio.content.machines.vat.FermentingRecipe;
 import com.enderio.enderio.content.storage.fluid_tank.TankRecipe;
 import com.enderio.enderio.foundation.souldata.EngineSoul;
-import com.enderio.enderio.init.EIORecipes;
+import com.enderio.enderio.init.EIORecipeTypes;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeMap;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -33,23 +33,23 @@ public class MachineJEIRecipes {
     }
 
     public List<RecipeHolder<AlloySmeltingRecipe>> getAlloySmeltingRecipes() {
-        return new ArrayList<>(RECIPE_MAP.byType(EIORecipes.ALLOY_SMELTING.get()));
+        return new ArrayList<>(RECIPE_MAP.byType(EIORecipeTypes.ALLOY_SMELTING.get()));
     }
 
     public List<RecipeHolder<SlicingRecipe>> getSlicingRecipes() {
-        return new ArrayList<>(RECIPE_MAP.byType(EIORecipes.SLICING.get()));
+        return new ArrayList<>(RECIPE_MAP.byType(EIORecipeTypes.SLICING.get()));
     }
 
     public List<RecipeHolder<SoulBindingRecipe>> getSoulBindingRecipes() {
-        return new ArrayList<>(RECIPE_MAP.byType(EIORecipes.SOUL_BINDING.get()));
+        return new ArrayList<>(RECIPE_MAP.byType(EIORecipeTypes.SOUL_BINDING.get()));
     }
 
     public List<RecipeHolder<TankRecipe>> getTankRecipes() {
-        return new ArrayList<>(RECIPE_MAP.byType(EIORecipes.TANK.get()));
+        return new ArrayList<>(RECIPE_MAP.byType(EIORecipeTypes.TANK.get()));
     }
 
     public List<WrappedEnchanterRecipe> getEnchanterRecipes() {
-        return RECIPE_MAP.byType(EIORecipes.ENCHANTING.get())
+        return RECIPE_MAP.byType(EIORecipeTypes.ENCHANTING.get())
                 .stream()
                 .<WrappedEnchanterRecipe>mapMulti((recipe, consumer) -> {
                     for (int i = 1; i <= recipe.value().enchantment().value().getMaxLevel(); i++) {
@@ -60,7 +60,7 @@ public class MachineJEIRecipes {
     }
 
     public List<RecipeHolder<SagMillingRecipe>> getSagMillingRecipes() {
-        return new ArrayList<>(RECIPE_MAP.byType(EIORecipes.SAG_MILLING.get()));
+        return new ArrayList<>(RECIPE_MAP.byType(EIORecipeTypes.SAG_MILLING.get()));
     }
 
     public List<EngineSoul.SoulData> getMobGeneratorRecipes() {
@@ -68,11 +68,11 @@ public class MachineJEIRecipes {
     }
 
     public List<RecipeHolder<FermentingRecipe>> getVATRecipes() {
-        return new ArrayList<>(RECIPE_MAP.byType(EIORecipes.VAT_FERMENTING.get()));
+        return new ArrayList<>(RECIPE_MAP.byType(EIORecipeTypes.VAT_FERMENTING.get()));
     }
 
     public List<RecipeHolder<WeatherChangeRecipe>> getWeatherRecipes() {
-        return new ArrayList<>(RECIPE_MAP.byType(EIORecipes.WEATHER_CHANGE.get()));
+        return new ArrayList<>(RECIPE_MAP.byType(EIORecipeTypes.WEATHER_CHANGE.get()));
     }
 
     @SubscribeEvent

@@ -5,12 +5,11 @@ import com.enderio.enderio.foundation.MachineRecipe;
 import com.enderio.enderio.foundation.datamap.VatReagent;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIORecipeBookCategories;
-import com.enderio.enderio.init.EIORecipes;
+import com.enderio.enderio.init.EIORecipeTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -38,7 +37,6 @@ import net.neoforged.neoforge.fluids.crafting.display.FluidStackSlotDisplay;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
-import java.util.Objects;
 
 public final class FermentingRecipe implements MachineRecipe<FermentingRecipe.Input> {
 
@@ -134,7 +132,7 @@ public final class FermentingRecipe implements MachineRecipe<FermentingRecipe.In
 
     @Override
     public RecipeType<? extends Recipe<Input>> getType() {
-        return EIORecipes.VAT_FERMENTING.get();
+        return EIORecipeTypes.VAT_FERMENTING.get();
     }
 
     @Override

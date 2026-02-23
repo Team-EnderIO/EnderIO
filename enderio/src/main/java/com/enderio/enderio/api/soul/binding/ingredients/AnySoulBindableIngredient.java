@@ -16,6 +16,7 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.crafting.ICustomIngredient;
 import net.neoforged.neoforge.common.crafting.IngredientType;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -28,7 +29,9 @@ public class AnySoulBindableIngredient implements ICustomIngredient {
     public static final IngredientType<AnySoulBindableIngredient> TYPE = new IngredientType<>(CODEC);
 
     private final Item item;
-    private final ItemStack[] itemStacks;
+
+    @Nullable
+    private ItemStack[] itemStacks;
 
     public static Ingredient of(ItemLike item) {
         return new AnySoulBindableIngredient(item.asItem()).toVanilla();
@@ -36,8 +39,34 @@ public class AnySoulBindableIngredient implements ICustomIngredient {
 
     public AnySoulBindableIngredient(Item item) {
         this.item = item;
+    }
 
-        // Pre-compute
+    @Override
+    public boolean test(ItemStack itemStack) {
+        return itemStack.is(item);
+    }
+
+    @Override
+    public Stream<Holder<Item>> items() {
+        ensureComputed();
+        return Stream.of(itemStacks).map(ItemStack::typeHolder).distinct();
+    }
+
+    @Override
+    public boolean isSimple() {
+        return true;
+    }
+
+    @Override
+    public IngredientType<?> getType() {
+        return TYPE;
+    }
+
+    private void ensureComputed() {
+        if (itemStacks != null) {
+            return;
+        }
+
         var unboundStack = item.getDefaultInstance();
         var unboundName = unboundStack.getHoverName();
 
@@ -65,25 +94,5 @@ public class AnySoulBindableIngredient implements ICustomIngredient {
                 return Optional.<ItemStack>empty();
             }).flatMap(Optional::stream)
         ).toArray(ItemStack[]::new);
-    }
-
-    @Override
-    public boolean test(ItemStack itemStack) {
-        return itemStack.is(item);
-    }
-
-    @Override
-    public Stream<Holder<Item>> items() {
-        return Stream.of(itemStacks).map(ItemStack::typeHolder).distinct();
-    }
-
-    @Override
-    public boolean isSimple() {
-        return true;
-    }
-
-    @Override
-    public IngredientType<?> getType() {
-        return TYPE;
     }
 }

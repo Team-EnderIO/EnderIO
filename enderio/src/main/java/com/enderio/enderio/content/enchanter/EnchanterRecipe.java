@@ -3,17 +3,19 @@ package com.enderio.enderio.content.enchanter;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIORecipeBookCategories;
-import com.enderio.enderio.init.EIORecipes;
+import com.enderio.enderio.init.EIORecipeTypes;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.Recipe;
@@ -24,7 +26,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.display.RecipeDisplay;
 import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentInstance;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
@@ -117,8 +119,15 @@ public record EnchanterRecipe(Holder<Enchantment> enchantment, int costMultiplie
     /**
      * Get the enchanted book with the correct enchantment of level.
      */
-    public ItemStack getBookForLevel(int level) {
-        return Items.BOOK.applyEnchantments(new ItemStack(Items.BOOK), List.of(new EnchantmentInstance(enchantment, level)));
+    public ItemStackTemplate getBookForLevel(int level) {
+        var enchantments = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
+        enchantments.set(enchantment, level);
+
+        var patch = DataComponentPatch.builder()
+            .set(DataComponents.STORED_ENCHANTMENTS, enchantments.toImmutable())
+            .build();
+
+        return new ItemStackTemplate(Items.ENCHANTED_BOOK, patch);
     }
 
     // endregion
@@ -142,7 +151,7 @@ public record EnchanterRecipe(Holder<Enchantment> enchantment, int costMultiplie
 
     @Override
     public ItemStack assemble(Input recipeInput) {
-        return getBookForLevel(getEnchantmentLevel(recipeInput.getItem(1).getCount()));
+        return getBookForLevel(getEnchantmentLevel(recipeInput.getItem(1).getCount())).create();
     }
 
     @Override
@@ -184,7 +193,7 @@ public record EnchanterRecipe(Holder<Enchantment> enchantment, int costMultiplie
 
     @Override
     public RecipeType<? extends Recipe<Input>> getType() {
-        return EIORecipes.ENCHANTING.get();
+        return EIORecipeTypes.ENCHANTING.get();
     }
 
     public record Input(ItemStack bookItem, ItemStack catalyst, ItemStack lapis) implements RecipeInput {

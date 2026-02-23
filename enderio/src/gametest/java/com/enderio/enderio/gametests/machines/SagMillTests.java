@@ -5,7 +5,7 @@ import com.enderio.enderio.content.machines.sag_mill.SagMillingRecipe;
 import com.enderio.enderio.gametests.util.EnderGameTestHelper;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOItems;
-import com.enderio.enderio.init.EIORecipes;
+import com.enderio.enderio.init.EIORecipeTypes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.testframework.DynamicTest;
@@ -43,7 +43,7 @@ public class SagMillTests {
 
                     // Ensure energy was consumed correctly
                     var input = new SagMillingRecipe.Input(new ItemStack(Items.STONE, 1), GrindingBallData.IDENTITY);
-                    var recipe = helper.getLevel().recipeAccess().getRecipeFor(EIORecipes.SAG_MILLING.type().get(), input, helper.getLevel()).orElseThrow();
+                    var recipe = helper.getLevel().recipeAccess().getRecipeFor(EIORecipeTypes.SAG_MILLING.get(), input, helper.getLevel()).orElseThrow();
                     int expectedEnergy = energyToAdd - recipe.value().getBaseEnergyCost() * 2;
                     helper.assertEnergyStored(0, 0, 0, expectedEnergy);
                 })

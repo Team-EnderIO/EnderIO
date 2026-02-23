@@ -18,7 +18,7 @@ import com.enderio.enderio.foundation.task.PoweredCraftingMachineTask;
 import com.enderio.enderio.foundation.task.host.CraftingMachineTaskHost;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
-import com.enderio.enderio.init.EIORecipes;
+import com.enderio.enderio.init.EIORecipeTypes;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentGetter;
@@ -70,7 +70,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
         // Crafting task host
         craftingTaskHost = new AlloySmeltingMachineTaskHost(this, this::canAcceptTask,
-                EIORecipes.ALLOY_SMELTING.get(), this::createTask, this::createRecipeInput);
+                EIORecipeTypes.ALLOY_SMELTING.get(), this::createTask, this::createRecipeInput);
     }
 
     protected boolean canAcceptTask() {

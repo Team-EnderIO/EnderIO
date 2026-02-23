@@ -27,7 +27,7 @@ import com.enderio.enderio.init.EIOLootModifiers;
 import com.enderio.enderio.init.EIOMenus;
 import com.enderio.enderio.init.EIOParticles;
 import com.enderio.enderio.init.EIORecipeBookCategories;
-import com.enderio.enderio.init.EIORecipes;
+import com.enderio.enderio.init.EIORecipeTypes;
 import com.enderio.enderio.init.EIOTravelTargets;
 import com.mojang.logging.LogUtils;
 import net.minecraft.resources.Identifier;
@@ -90,7 +90,7 @@ public class EnderIO {
         EIOBlockEntities.register(modEventBus);
         EIOFluids.register(modEventBus);
         EIOMenus.register(modEventBus);
-        EIORecipes.register(modEventBus);
+        EIORecipeTypes.register(modEventBus);
         EIOLootModifiers.register(modEventBus);
         EIOParticles.register(modEventBus);
         EIOEntities.register(modEventBus);
@@ -152,8 +152,8 @@ public class EnderIO {
     // TODO: 26.1 consider if we can stop syncing recipes
     @SubscribeEvent
     public static void syncRecipes(OnDatapackSyncEvent event) {
-        event.sendRecipes(EIORecipes.FIRE_CRAFTING.get(), EIORecipes.ALLOY_SMELTING.get(), EIORecipes.ENCHANTING.get(),
-            EIORecipes.PAINTING.get(), EIORecipes.SAG_MILLING.get(), EIORecipes.SLICING.get(), EIORecipes.SOUL_BINDING.get(),
-            EIORecipes.TANK.get(), EIORecipes.VAT_FERMENTING.get(), EIORecipes.WEATHER_CHANGE.get());
+        event.sendRecipes(EIORecipeTypes.FIRE_CRAFTING.get(), EIORecipeTypes.ALLOY_SMELTING.get(), EIORecipeTypes.ENCHANTING.get(),
+            EIORecipeTypes.PAINTING.get(), EIORecipeTypes.SAG_MILLING.get(), EIORecipeTypes.SLICING.get(), EIORecipeTypes.SOUL_BINDING.get(),
+            EIORecipeTypes.TANK.get(), EIORecipeTypes.VAT_FERMENTING.get(), EIORecipeTypes.WEATHER_CHANGE.get());
     }
 }

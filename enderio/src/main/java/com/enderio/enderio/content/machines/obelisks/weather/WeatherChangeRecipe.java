@@ -3,7 +3,7 @@ package com.enderio.enderio.content.machines.obelisks.weather;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.enderio.foundation.MachineRecipe;
 import com.enderio.enderio.init.EIORecipeBookCategories;
-import com.enderio.enderio.init.EIORecipes;
+import com.enderio.enderio.init.EIORecipeTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -76,7 +76,7 @@ public record WeatherChangeRecipe(FluidStack fluid, WeatherMode mode, PlacementI
 
     @Override
     public RecipeType<? extends Recipe<Input>> getType() {
-        return EIORecipes.WEATHER_CHANGE.get();
+        return EIORecipeTypes.WEATHER_CHANGE.get();
     }
 
     @Override
