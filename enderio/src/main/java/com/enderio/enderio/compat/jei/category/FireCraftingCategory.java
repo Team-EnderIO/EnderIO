@@ -115,7 +115,7 @@ public class FireCraftingCategory extends AbstractRecipeCategory<RecipeHolder<Fi
                 });
 
         for (var result : recipe.value().results()) {
-            output.add(result.result().copyWithCount(1));
+            output.add(result.result().create().copyWithCount(1));
         }
 
         IRecipeSlotBuilder catalyst = builder.addSlot(RecipeIngredientRole.CRAFTING_STATION, 88, 8).setSlotName("catalyst");

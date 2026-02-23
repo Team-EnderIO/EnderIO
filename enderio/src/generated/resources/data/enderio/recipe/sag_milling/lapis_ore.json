@@ -12,14 +12,12 @@
     {
       "chance": 0.2,
       "item": {
-        "count": 1,
         "id": "minecraft:lapis_lazuli"
       }
     },
     {
       "chance": 0.15,
       "item": {
-        "count": 1,
         "id": "minecraft:cobblestone"
       }
     }

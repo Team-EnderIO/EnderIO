@@ -7,7 +7,6 @@
   "input": "minecraft:pink_concrete_powder",
   "mode": "fill",
   "output": {
-    "count": 1,
     "id": "minecraft:pink_concrete"
   }
 }

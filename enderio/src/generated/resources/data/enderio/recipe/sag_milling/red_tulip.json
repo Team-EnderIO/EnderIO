@@ -6,28 +6,24 @@
     {
       "chance": 0.8,
       "item": {
-        "count": 1,
         "id": "minecraft:red_dye"
       }
     },
     {
       "chance": 0.6,
       "item": {
-        "count": 1,
         "id": "minecraft:red_dye"
       }
     },
     {
       "chance": 0.3,
       "item": {
-        "count": 1,
         "id": "minecraft:red_dye"
       }
     },
     {
       "chance": 0.1,
       "item": {
-        "count": 1,
         "id": "enderio:plant_matter_green"
       }
     }

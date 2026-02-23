@@ -74,7 +74,7 @@ public class WeatherChangeCategory extends MachineRecipeCategory<RecipeHolder<We
             .addItemStacks(List.of(new ItemStack(Items.FIREWORK_ROCKET)));
 
         builder.addSlot(RecipeIngredientRole.INPUT, 4, 7)
-            .add(recipe.value().fluid().getFluid(), recipe.value().fluid().getAmount())
+            .add(recipe.value().fluid().fluid().value(), recipe.value().fluid().amount())
             .setFluidRenderer(WeatherObeliskBlockEntity.TANK_CAPACITY, false, 16, 63);
     }
 

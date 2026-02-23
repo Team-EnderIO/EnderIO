@@ -96,7 +96,7 @@ public class VatScreen extends MachineScreen<VatMenu> {
             return FluidStack.EMPTY;
         }
 
-        return menu.getRecipe().value().output();
+        return menu.getRecipe().value().output().create();
     }
 
     private FluidStorageInfo getFakedInputTankContents() {

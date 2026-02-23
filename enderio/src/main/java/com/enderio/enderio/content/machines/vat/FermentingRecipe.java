@@ -32,6 +32,7 @@ import net.minecraft.world.item.crafting.display.RecipeDisplay;
 import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStackTemplate;
 import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 import net.neoforged.neoforge.fluids.crafting.display.FluidStackSlotDisplay;
 import org.jspecify.annotations.Nullable;
@@ -48,11 +49,12 @@ public final class FermentingRecipe implements MachineRecipe<FermentingRecipe.In
             .group(SizedFluidIngredient.CODEC.fieldOf("input").forGetter(FermentingRecipe::input), //TODO make sure this handles empty
                 TagKey.codec(Registries.ITEM).fieldOf("first_reagent").forGetter(FermentingRecipe::firstReagent),
                 TagKey.codec(Registries.ITEM).fieldOf("second_reagent").forGetter(FermentingRecipe::secondReagent),
-                FluidStack.CODEC.fieldOf("output").forGetter(FermentingRecipe::output), Codec.INT.fieldOf("ticks").forGetter(FermentingRecipe::ticks))
+                FluidStackTemplate.CODEC.fieldOf("output").forGetter(FermentingRecipe::output), Codec.INT.fieldOf("ticks").forGetter(FermentingRecipe::ticks))
             .apply(instance, FermentingRecipe::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, FermentingRecipe> STREAM_CODEC = StreamCodec.composite(SizedFluidIngredient.STREAM_CODEC,
-        FermentingRecipe::input, ITEM_TAG_STREAM_CODEC, FermentingRecipe::firstReagent, ITEM_TAG_STREAM_CODEC, FermentingRecipe::secondReagent, FluidStack.STREAM_CODEC, FermentingRecipe::output, ByteBufCodecs.INT, FermentingRecipe::ticks,
+        FermentingRecipe::input, ITEM_TAG_STREAM_CODEC, FermentingRecipe::firstReagent, ITEM_TAG_STREAM_CODEC, FermentingRecipe::secondReagent,
+        FluidStackTemplate.STREAM_CODEC, FermentingRecipe::output, ByteBufCodecs.INT, FermentingRecipe::ticks,
         FermentingRecipe::new);
 
     public static final RecipeSerializer<FermentingRecipe> SERIALIZER = new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC);
@@ -60,13 +62,13 @@ public final class FermentingRecipe implements MachineRecipe<FermentingRecipe.In
     private final SizedFluidIngredient input;
     private final TagKey<Item> firstReagent;
     private final TagKey<Item> secondReagent;
-    private final FluidStack output;
+    private final FluidStackTemplate output;
     private final int ticks;
 
     @Nullable
     private PlacementInfo placementInfo;
 
-    public FermentingRecipe(SizedFluidIngredient input, TagKey<Item> firstReagent, TagKey<Item> secondReagent, FluidStack output, int ticks) {
+    public FermentingRecipe(SizedFluidIngredient input, TagKey<Item> firstReagent, TagKey<Item> secondReagent, FluidStackTemplate output, int ticks) {
         this.input = input;
         this.firstReagent = firstReagent;
         this.secondReagent = secondReagent;
@@ -94,12 +96,12 @@ public final class FermentingRecipe implements MachineRecipe<FermentingRecipe.In
             modifier *= getModifier(firstInput, secondReagent);
         }
 
-        return List.of(OutputStack.of(new FluidStack(output.getFluid(), (int) (output.getAmount() * modifier))));
+        return List.of(OutputStack.of(new FluidStack(output.fluid(), (int) (output.amount() * modifier))));
     }
 
     @Override
     public List<OutputStack> getResultStacks(RegistryAccess registryAccess) {
-        return List.of(OutputStack.of(output().copy()));
+        return List.of(OutputStack.of(output().create()));
     }
 
     @Override
@@ -152,7 +154,7 @@ public final class FermentingRecipe implements MachineRecipe<FermentingRecipe.In
         return secondReagent;
     }
 
-    public FluidStack output() {
+    public FluidStackTemplate output() {
         return output;
     }
 
@@ -176,7 +178,7 @@ public final class FermentingRecipe implements MachineRecipe<FermentingRecipe.In
             input.ingredient().display(),
             new SlotDisplay.TagSlotDisplay(firstReagent),
             new SlotDisplay.TagSlotDisplay(secondReagent),
-            new FluidStackSlotDisplay(output),
+            new FluidStackSlotDisplay(output.create()),
             new SlotDisplay.ItemSlotDisplay(EIOBlocks.VAT.asItem())
             ));
     }

@@ -7,7 +7,6 @@
   "input": "minecraft:light_blue_concrete_powder",
   "mode": "fill",
   "output": {
-    "count": 1,
     "id": "minecraft:light_blue_concrete"
   }
 }

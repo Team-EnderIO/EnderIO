@@ -6,28 +6,24 @@
     {
       "chance": 0.7,
       "item": {
-        "count": 1,
         "id": "minecraft:gravel"
       }
     },
     {
       "chance": 0.3,
       "item": {
-        "count": 1,
         "id": "minecraft:gravel"
       }
     },
     {
       "chance": 0.1,
       "item": {
-        "count": 1,
         "id": "minecraft:sand"
       }
     },
     {
       "chance": 0.05,
       "item": {
-        "count": 1,
         "id": "minecraft:flint"
       }
     }

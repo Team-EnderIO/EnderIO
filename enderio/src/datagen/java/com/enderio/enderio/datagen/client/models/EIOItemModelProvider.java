@@ -18,6 +18,7 @@ import net.minecraft.client.data.models.model.ItemModelUtils;
 import net.minecraft.client.data.models.model.ModelLocationUtils;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureMapping;
+import net.minecraft.client.renderer.block.model.Material;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -255,18 +256,18 @@ public class EIOItemModelProvider extends ModelProvider {
     }
 
     private void createFakeBlock(BlockModelGenerators blockModelGenerators, Item item) {
-        Identifier Identifier = ModelTemplates.CUBE_ALL.create(item, TextureMapping.cube(ModelLocationUtils.getModelLocation(item)), blockModelGenerators.modelOutput);
+        Identifier Identifier = ModelTemplates.CUBE_ALL.create(item, TextureMapping.cube(TextureMapping.getItemTexture(item)), blockModelGenerators.modelOutput);
         blockModelGenerators.registerSimpleItemModel(item, Identifier);
     }
 
     private void createFakeBlock(BlockModelGenerators blockModelGenerators, Item item, Identifier identifier) {
-        Identifier Identifier = ModelTemplates.CUBE_ALL.create(item, TextureMapping.cube(identifier), blockModelGenerators.modelOutput);
+        Identifier Identifier = ModelTemplates.CUBE_ALL.create(item, TextureMapping.cube(new Material(identifier)), blockModelGenerators.modelOutput);
         blockModelGenerators.registerSimpleItemModel(item, Identifier);
     }
 
     public void bucketItem(ItemModelGenerators itemModelGenerators, BucketItem item, Fluid fluid, boolean flipGas, boolean applyFluidLuminosity) {
-        Identifier drip = Identifier.fromNamespaceAndPath(NeoForgeMod.MOD_ID, "item/mask/bucket_fluid_drip");
-        Identifier bucket = Identifier.withDefaultNamespace("item/bucket");
+        Material drip = new Material(Identifier.fromNamespaceAndPath(NeoForgeMod.MOD_ID, "item/mask/bucket_fluid_drip"));
+        Material bucket = new Material(Identifier.withDefaultNamespace("item/bucket"));
         DynamicFluidContainerModel.Textures textures = new DynamicFluidContainerModel.Textures(Optional.empty(), Optional.of(bucket), Optional.of(drip), Optional.empty());
         itemModelGenerators.itemModelOutput.accept(item, new DynamicFluidContainerModel.Unbaked(textures, fluid, flipGas, false, applyFluidLuminosity));
     }

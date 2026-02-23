@@ -27,25 +27,26 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStackTemplate;
 
 import java.util.List;
 import java.util.function.IntFunction;
 
-public record WeatherChangeRecipe(FluidStack fluid, WeatherMode mode, PlacementInfo placementInfo)
+public record WeatherChangeRecipe(FluidStackTemplate fluid, WeatherMode mode, PlacementInfo placementInfo)
         implements MachineRecipe<WeatherChangeRecipe.Input> {
 
     public static final MapCodec<WeatherChangeRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(inst -> inst
-        .group(FluidStack.CODEC.fieldOf("fluid").forGetter(WeatherChangeRecipe::fluid),
+        .group(FluidStackTemplate.CODEC.fieldOf("fluid").forGetter(WeatherChangeRecipe::fluid),
             WeatherMode.CODEC.fieldOf("mode").forGetter(WeatherChangeRecipe::mode))
         .apply(inst, WeatherChangeRecipe::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, WeatherChangeRecipe> STREAM_CODEC = StreamCodec
-        .composite(FluidStack.STREAM_CODEC, WeatherChangeRecipe::fluid, WeatherMode.STREAM_CODEC,
+        .composite(FluidStackTemplate.STREAM_CODEC, WeatherChangeRecipe::fluid, WeatherMode.STREAM_CODEC,
             WeatherChangeRecipe::mode, WeatherChangeRecipe::new);
 
     public static final RecipeSerializer<WeatherChangeRecipe> SERIALIZER = new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC);
 
-    public WeatherChangeRecipe(FluidStack fluid, WeatherMode mode) {
+    public WeatherChangeRecipe(FluidStackTemplate fluid, WeatherMode mode) {
         this(fluid, mode, PlacementInfo.NOT_PLACEABLE);
     }
 
@@ -66,7 +67,7 @@ public record WeatherChangeRecipe(FluidStack fluid, WeatherMode mode, PlacementI
 
     @Override
     public boolean matches(Input input, Level level) {
-        return FluidStack.isSameFluid(input.fluid(), fluid) && input.fluid.getAmount() >= fluid.getAmount();
+        return FluidStack.isSameFluid(input.fluid(), fluid) && input.fluid.getAmount() >= fluid.amount();
     }
 
     @Override

@@ -5,7 +5,6 @@
   "experience": 4,
   "input": "enderio:ender_resonator",
   "output": {
-    "count": 1,
     "id": "enderio:sentient_ender"
   }
 }

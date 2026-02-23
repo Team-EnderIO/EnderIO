@@ -82,7 +82,7 @@ public class VATCategory extends MachineRecipeCategory<RecipeHolder<FermentingRe
         }
 
         builder.addSlot(RecipeIngredientRole.OUTPUT, 104, 2)
-                .add(recipe.value().output().getFluid(), (long) (recipe.value().output().getAmount()))
+                .add(recipe.value().output().fluid().value(), (recipe.value().output().amount()))
                 .setFluidRenderer(VatBlockEntity.TANK_CAPACITY, false, 15, 47);
     }
 

@@ -6,14 +6,12 @@
   "outputs": [
     {
       "item": {
-        "count": 1,
         "id": "minecraft:prismarine_crystals"
       }
     },
     {
       "chance": 0.1,
       "item": {
-        "count": 1,
         "id": "minecraft:prismarine_crystals"
       }
     }

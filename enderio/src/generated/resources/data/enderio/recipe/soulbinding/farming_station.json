@@ -4,7 +4,6 @@
   "experience": 5,
   "input": "enderio:farming_station",
   "output": {
-    "count": 1,
     "id": "enderio:farming_station"
   },
   "soul_data": "farm"

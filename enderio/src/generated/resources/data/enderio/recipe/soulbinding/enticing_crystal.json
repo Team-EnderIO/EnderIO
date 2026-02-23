@@ -5,7 +5,6 @@
   "experience": 4,
   "input": "#c:gems/emerald",
   "output": {
-    "count": 1,
     "id": "enderio:enticing_crystal"
   }
 }

@@ -11,6 +11,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStackTemplate;
 
 public class WeatherChangeRecipeProvider extends SubRecipeProvider {
 
@@ -27,10 +28,10 @@ public class WeatherChangeRecipeProvider extends SubRecipeProvider {
 
     protected void build(Identifier id, Fluid fluid, int ammount, WeatherChangeRecipe.WeatherMode mode,
             RecipeOutput recipeOutput) {
-        build(id, new FluidStack(fluid, ammount), mode, recipeOutput);
+        build(id, new FluidStackTemplate(fluid, ammount), mode, recipeOutput);
     }
 
-    protected void build(Identifier id, FluidStack fluid, WeatherChangeRecipe.WeatherMode mode,
+    protected void build(Identifier id, FluidStackTemplate fluid, WeatherChangeRecipe.WeatherMode mode,
             RecipeOutput recipeOutput) {
         recipeOutput.accept(ResourceKey.create(Registries.RECIPE, id), new WeatherChangeRecipe(fluid, mode), null);
     }

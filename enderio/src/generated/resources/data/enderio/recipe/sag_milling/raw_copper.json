@@ -5,14 +5,12 @@
   "outputs": [
     {
       "item": {
-        "count": 1,
         "id": "enderio:powdered_copper"
       }
     },
     {
       "chance": 0.8,
       "item": {
-        "count": 1,
         "id": "enderio:powdered_copper"
       }
     },

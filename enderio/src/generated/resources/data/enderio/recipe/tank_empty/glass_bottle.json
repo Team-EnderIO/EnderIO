@@ -7,7 +7,6 @@
   "input": "minecraft:experience_bottle",
   "mode": "empty",
   "output": {
-    "count": 1,
     "id": "minecraft:glass_bottle"
   }
 }

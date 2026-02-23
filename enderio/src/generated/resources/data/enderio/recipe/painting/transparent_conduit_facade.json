@@ -8,7 +8,6 @@
   "type": "enderio:painting",
   "input": "enderio:transparent_conduit_facade",
   "output": {
-    "count": 1,
     "id": "enderio:transparent_conduit_facade"
   }
 }

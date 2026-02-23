@@ -113,7 +113,7 @@ public class FireCraftingHandler {
                 continue;
             }
 
-            ItemStack resultStack = result.result().copy();
+            ItemStack resultStack = result.result().create();
             resultStack.setCount(itemCount);
 
             // Get random offset

@@ -12,21 +12,18 @@
     {
       "chance": 0.25,
       "item": {
-        "count": 1,
         "id": "minecraft:diamond"
       }
     },
     {
       "chance": 0.1,
       "item": {
-        "count": 1,
         "id": "enderio:powdered_coal"
       }
     },
     {
       "chance": 0.15,
       "item": {
-        "count": 1,
         "id": "minecraft:cobblestone"
       }
     }

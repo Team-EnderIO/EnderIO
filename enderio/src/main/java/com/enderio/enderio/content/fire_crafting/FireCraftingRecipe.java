@@ -16,6 +16,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeBookCategory;
@@ -135,17 +136,13 @@ public record FireCraftingRecipe(List<Result> results, List<Block> bases, List<T
         return "";
     }
 
-    public record Result(ItemStack result, int minCount, int maxCount, float chance) {
-        public static final Codec<Result> CODEC = RecordCodecBuilder
-                .create(resultInstance -> resultInstance
-                        .group(ItemStack.CODEC.fieldOf("result").forGetter(Result::result),
-                                Codec.INT.fieldOf("min_count").forGetter(Result::minCount),
-                                Codec.INT.fieldOf("max_count").forGetter(Result::maxCount),
-                                Codec.FLOAT.fieldOf("chance").forGetter(Result::chance))
-                        .apply(resultInstance, Result::new));
+    public record Result(ItemStackTemplate result, int minCount, int maxCount, float chance) {
+        public static final Codec<Result> CODEC = RecordCodecBuilder.create(resultInstance -> resultInstance
+                .group(ItemStackTemplate.CODEC.fieldOf("result").forGetter(Result::result), Codec.INT.fieldOf("min_count").forGetter(Result::minCount),
+                        Codec.INT.fieldOf("max_count").forGetter(Result::maxCount), Codec.FLOAT.fieldOf("chance").forGetter(Result::chance))
+                .apply(resultInstance, Result::new));
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, Result> STREAM_CODEC = StreamCodec.composite(
-                ItemStack.STREAM_CODEC, Result::result, ByteBufCodecs.INT, Result::minCount, ByteBufCodecs.INT,
-                Result::maxCount, ByteBufCodecs.FLOAT, Result::chance, Result::new);
+        public static final StreamCodec<RegistryFriendlyByteBuf, Result> STREAM_CODEC = StreamCodec.composite(ItemStackTemplate.STREAM_CODEC, Result::result,
+                ByteBufCodecs.INT, Result::minCount, ByteBufCodecs.INT, Result::maxCount, ByteBufCodecs.FLOAT, Result::chance, Result::new);
     }
 }

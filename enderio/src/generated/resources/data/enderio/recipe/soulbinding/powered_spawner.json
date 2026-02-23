@@ -8,7 +8,6 @@
     "item": "enderio:powered_spawner"
   },
   "output": {
-    "count": 1,
     "id": "enderio:powered_spawner"
   }
 }

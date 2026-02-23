@@ -5,7 +5,6 @@
   "experience": 0,
   "input": "minecraft:deepslate",
   "output": {
-    "count": 1,
     "id": "minecraft:infested_deepslate"
   }
 }
