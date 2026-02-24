@@ -954,7 +954,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     private void disconnect(Holder<Conduit<?, ?>> conduit, Direction side) {
         for (var c : conduits) {
             if (ConduitUtility.canConnectConduits(conduit, c)) {
-                setConnectionStatus(conduit, side, ConnectionStatus.DISCONNECTED);
+                setConnectionStatus(c, side, ConnectionStatus.DISCONNECTED);
             }
         }
     }
