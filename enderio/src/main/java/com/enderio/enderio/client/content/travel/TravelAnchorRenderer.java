@@ -5,6 +5,7 @@ import com.enderio.enderio.client.foundation.renderer.OutlineBuffer;
 import com.enderio.enderio.compat.ModCompatHelper;
 import com.enderio.enderio.content.travel.travel_anchor.AnchorTravelTarget;
 import com.enderio.enderio.content.travel.travel_anchor.PaintedTravelAnchorBlockEntity;
+import com.enderio.enderio.init.EIOBlocks;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -16,26 +17,46 @@ import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
+import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.util.Lazy;
 import org.joml.Math;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Optional;
 
 public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> {
+    Lazy<ArrayList<BakedQuad>> outlineQuads = Lazy.of(() -> {
+        Minecraft minecraft = Minecraft.getInstance();
+
+        Block outlineBlock = EIOBlocks.OUTLINE_BLOCK.get();
+        BlockState outlineBlockState = outlineBlock.defaultBlockState();
+        BakedModel outlineBlockModel = minecraft.getBlockRenderer().getBlockModel(outlineBlockState);
+
+        RandomSource randomSource = RandomSource.create(42L);
+
+        ArrayList<BakedQuad> bakedQuads = new ArrayList<>();
+        for (Direction dir : Direction.values()) {
+            // Should be exactly 1 quad per direction
+            bakedQuads.addAll(outlineBlockModel.getQuads(outlineBlockState, dir, randomSource));
+        }
+        return bakedQuads;
+    });
+
     @Override
     public void render(AnchorTravelTarget travelData, LevelRenderer levelRenderer, PoseStack poseStack,
             double distanceSquared, boolean active, float partialTick) {
@@ -89,12 +110,13 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             poseStack.translate(offset.x, offset.y, offset.z);
             poseStack.scale(scale, scale, scale);
 
-            Block outlineBlock = active ? Blocks.YELLOW_CONCRETE : Blocks.WHITE_CONCRETE;
-            BlockState outlineBlockState = outlineBlock.defaultBlockState();
-            BakedModel outlineBlockModel = minecraft.getBlockRenderer().getBlockModel(outlineBlockState);
+            float r = ((color & (0xFF << 16)) >> 16) / 255F;
+            float g = ((color & (0xFF << 8)) >> 8) / 255F;
+            float b = (color & 0xFF) / 255F;
 
-            blockModelRenderer.renderModel(poseStack.last(), solidRenderType, outlineBlockState, outlineBlockModel,
-                1, 1, 1, packedLight, OverlayTexture.NO_OVERLAY);
+            for (var quad : outlineQuads.get()) {
+                solidRenderType.putBulkData(poseStack.last(), quad, r, g, b, 1, packedLight, OverlayTexture.NO_OVERLAY);
+            }
 
             poseStack.popPose();
         }

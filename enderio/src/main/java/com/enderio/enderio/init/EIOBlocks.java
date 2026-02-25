@@ -318,6 +318,8 @@ public class EIOBlocks {
     public static final DeferredBlock<IndustrialInsulationBlock> INDUSTRIAL_INSULATION = registerWithItem("industrial_insulation",
         IndustrialInsulationBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.SPONGE));
 
+    public static final DeferredBlock<Block> OUTLINE_BLOCK = BLOCKS.registerSimpleBlock("outline_block");
+
     // endregion
 
     // region Machine Blocks

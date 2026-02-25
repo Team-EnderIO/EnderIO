@@ -102,6 +102,7 @@ public class EIOBlockLootProvider extends BlockLootSubProvider {
         dropSelf(EIOBlocks.SOUL_CHAIN.get());
         dropSelf(EIOBlocks.ENDERMAN_HEAD.get());
         dropSelf(EIOBlocks.INDUSTRIAL_INSULATION.get());
+        add(EIOBlocks.OUTLINE_BLOCK.get(), noDrop()); // datagen crashes if OUTLINE_BLOCK has no loot table
 
         // Machine Blocks
         addMachineLoot();
