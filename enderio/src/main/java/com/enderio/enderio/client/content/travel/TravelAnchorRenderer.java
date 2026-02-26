@@ -67,10 +67,23 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
 
         Camera camera = minecraft.gameRenderer.getMainCamera();
         Vec3 cameraPos = camera.getPosition();
-        Vec3 towardsCamera = travelData.pos()
-            .getCenter()
-            .vectorTo(cameraPos)
-            .normalize();
+        Vec3 offsetToCamera = travelData.pos().getCenter().vectorTo(cameraPos);
+        Vec3 towardsCamera = offsetToCamera.normalize();
+        double distanceToCamera = offsetToCamera.length();
+
+        {
+            double anchorScale = (float) Math.sqrt(distanceToCamera);
+            if (active) {
+                anchorScale = anchorScale * 1.3;
+            }
+            anchorScale = anchorScale * (Math.sin(Math.toRadians(minecraft.options.fov().get() / 4d)));
+            anchorScale = Math.max(anchorScale, 1.0F);
+
+            poseStack.translate(0.5, 0.5, 0.5);
+            float s = (float) anchorScale;
+            poseStack.scale(s, s, s);
+            poseStack.translate(-0.5, -0.5, -0.5);
+        }
 
         OutlineBuffer buffer = OutlineBuffer.INSTANCE;
         int color = 0xFFFFFF;
@@ -114,7 +127,7 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             float g = ((color & (0xFF << 8)) >> 8) / 255F;
             float b = (color & 0xFF) / 255F;
 
-            for (var quad : outlineQuads.get()) {
+            for (BakedQuad quad : outlineQuads.get()) {
                 solidRenderType.putBulkData(poseStack.last(), quad, r, g, b, 1, packedLight, OverlayTexture.NO_OVERLAY);
             }
 
@@ -126,22 +139,15 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             poseStack.pushPose();
 
             {
-                double distance = Math.sqrt(distanceSquared);
-                double baseScale = 0.1;
-                double scale = baseScale + distance * baseScale * baseScale;
-                scale = scale * (Math.sin(Math.toRadians(minecraft.options.fov().get() / 4d)));
-                if (active) {
-                    scale *= 1.3;
-                }
-
                 Quaternionf textRotation = Axis.YN.rotationDegrees(camera.getYRot()).mul(Axis.XP.rotationDegrees(camera.getXRot()));
                 int lineHeight = minecraft.font.lineHeight;
+                double scale = 0.1;
 
                 poseStack.translate(0.5, scale * lineHeight, 0.5);
                 poseStack.mulPose(textRotation);
                 poseStack.translate(0, 1.5, 0);
-                float scaleF = (float) scale;
-                poseStack.scale(-scaleF, -scaleF, scaleF);
+                float s = (float) scale;
+                poseStack.scale(-s, -s, s);
             }
 
             Component textComponent = Component.literal(travelData.name().trim());
@@ -178,25 +184,21 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
         if (travelData.icon() != Items.AIR) {
             poseStack.pushPose();
 
-            double scale = Math.sqrt(Math.sqrt(distanceSquared));
-            scale = scale * (Math.sin(Math.toRadians(minecraft.options.fov().get() / 4d)));
-            if (active) {
-                scale *= 1.3;
+            {
+                Vector3f upDir = new Vec3(0, 1, 0)
+                    .xRot(-camera.getXRot() * ((float) Math.PI / 180F))
+                    .yRot(-camera.getYRot() * ((float) Math.PI / 180F))
+                    .toVector3f();
+                Vector3f direction = towardsCamera.toVector3f();
+                Quaternionf iconRotation = new Quaternionf().lookAlong(direction.x(), direction.y(), direction.z(), upDir.x(), upDir.y(), upDir.z());
+
+                Vec3 offset = towardsCamera.scale(0.9);
+
+                poseStack.translate(offset.x() + 0.5, offset.y() + 0.5, offset.z() + 0.5);
+                poseStack.mulPose(iconRotation.invert());
+                float s = active ? 1.3F : 1.0F;
+                poseStack.scale(-s, s, -s);
             }
-
-            Vector3f upDir = new Vec3(0, 1, 0)
-                .xRot(-camera.getXRot() * ((float) Math.PI / 180F))
-                .yRot(-camera.getYRot() * ((float) Math.PI / 180F))
-                .toVector3f();
-            Vector3f direction = towardsCamera.toVector3f();
-            Quaternionf iconRotation = new Quaternionf().lookAlong(direction.x(), direction.y(), direction.z(), upDir.x(), upDir.y(), upDir.z());
-
-            Vec3 offset = towardsCamera.scale(0.9);
-
-            poseStack.translate(offset.x() + 0.5, offset.y() + 0.5, offset.z() + 0.5);
-            poseStack.mulPose(iconRotation.invert());
-            float scaleF = (float) scale;
-            poseStack.scale(-scaleF, scaleF, -scaleF);
 
             ItemStack stack = new ItemStack(travelData.icon());
             BakedModel bakedmodel = minecraft.getItemRenderer().getModel(stack, minecraft.level, null, 0);
@@ -206,5 +208,8 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
 
             poseStack.popPose();
         }
+
+        // Seems to work fine without this line, but leaving it here in case there are future buffer problems
+        // minecraft.renderBuffers().bufferSource().endBatch();
     }
 }
