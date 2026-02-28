@@ -117,6 +117,7 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
         super(initialNode);
         this.conduitType = conduitType;
         this.supportsCaching = conduitType.doesRequireNetworkCaches();
+        recomputeNodeCounts();
     }
 
     // TODO: Public for legacy deserialization
