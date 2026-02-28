@@ -4,6 +4,8 @@ import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.ConnectionStatus;
+import com.enderio.enderio.api.conduits.connection.path.ConnectionPathProperty;
+import com.enderio.enderio.api.conduits.connection.path.ConnectionPathPropertyConsumer;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.content.conduits.ConduitLang;
@@ -36,6 +38,8 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
                     ComponentSerialization.CODEC.fieldOf("description").forGetter(Conduit::description),
                     Codec.INT.fieldOf("transfer_rate").forGetter(EnergyConduit::transferRatePerTick))
             .apply(builder, EnergyConduit::new));
+
+    public static final ConnectionPathProperty<Integer> PATH_MAX_TRANSFER_RATE = ConnectionPathProperty.minInt(0);
     
     @Override
     public ConduitType<EnergyConduit, EnergyConduitConnectionConfig> type() {
@@ -44,6 +48,11 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
 
     @Override
     public boolean hasMenu() {
+        return true;
+    }
+
+    @Override
+    public boolean canConnectToConduit(EnergyConduit other) {
         return true;
     }
 
@@ -60,13 +69,16 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
     }
 
     @Override
+    public void collectNodePathProperties(ConduitNode node, ConnectionPathPropertyConsumer consumer) {
+        consumer.accept(PATH_MAX_TRANSFER_RATE, transferRatePerTick());
+    }
+
+    @Override
     public <TCap, TContext> @Nullable TCap proxyCapability(Level level, @Nullable ConduitNode node,
             BlockCapability<TCap, TContext> capability, @Nullable TContext context) {
 
-        if (Capabilities.EnergyStorage.BLOCK == capability && (context == null || context instanceof Direction)) {
-            Direction side = (Direction) context;
-
-            if (node != null && context != null) {
+        if (Capabilities.EnergyStorage.BLOCK == capability && context instanceof Direction side) {
+            if (node != null) {
                 // Disabled, do not offer the capability (so if we're disconnected we allow auto connect).
                 // Note that this will introduce a minor quirk - if disabled, the cap will be invisible until re-enabled.
                 // in the case of Energizer rods in Powah, you will not be able to place one against the disabled conduit.
@@ -79,7 +91,7 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
             }
 
             // noinspection unchecked
-            return (TCap) new EnergyConduitStorage(side, transferRatePerTick(), node);
+            return (TCap) new EnergyConduitStorage(side, node);
         }
 
         return null;
