@@ -90,7 +90,7 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
 
     // TODO: Separate this into a list and a multimap so we can sort all endpointConnections?
     private final SetMultimap<ConduitNodeImpl, ConduitBlockConnection> endpointConnections = HashMultimap.create();
-    private final Map<ConduitBlockConnection, List<ConduitConnectionPath>> accessibleBlockConnectionsMap = Maps
+    private final Map<ConduitBlockConnection, List<ConduitConnectionPath>> accessiblePathsByConnection = Maps
             .newHashMap();
 
     private final List<ConduitBlockConnection> insertConnections = Lists.newArrayList();
@@ -250,7 +250,7 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
         ensureNotDiscarded();
         Preconditions.checkState(supportsCaching, "This conduit does not support caching");
         ensureCachesReady();
-        return accessibleBlockConnectionsMap.getOrDefault(connection, List.of());
+        return accessiblePathsByConnection.getOrDefault(connection, List.of());
     }
 
     public Set<DyeColor> allChannels() {
@@ -405,15 +405,22 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
             endpointConnections.put(node, connection);
 
             // Add own list of block connection accesses.
-            accessibleBlockConnectionsMap.computeIfAbsent(connection,
+            accessiblePathsByConnection.computeIfAbsent(connection,
                     k -> new ArrayList<>(endpointConnections.values().size()));
 
             // Add all paths to both lists
             for (var accessibleConnection : endpointConnections.values()) {
                 if (accessibleConnection != connection) {
                     findBestPathTo(connection, accessibleConnection).ifPresent(path -> {
-                        accessibleBlockConnectionsMap.get(connection).add(path);
-                        accessibleBlockConnectionsMap.get(accessibleConnection).add(path.reverse());
+                        var accessibleConnections = accessiblePathsByConnection.get(connection);
+                        if (!accessibleConnections.contains(path)) {
+                            accessibleConnections.add(path);
+                        }
+
+                        var reverseAccessibleConnections = accessiblePathsByConnection.get(accessibleConnection);
+                        if (!reverseAccessibleConnections.contains(path.reverse())) {
+                            reverseAccessibleConnections.add(path.reverse());
+                        }
                     });
                 }
             }
@@ -440,8 +447,15 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
                 if (canInsert) {
                     for (var accessibleConnection : extractConnectionsByChannel.get(ioConnectionConfig.insertChannel())) {
                         findBestPathTo(connection, accessibleConnection).ifPresent(path -> {
-                            extractConnectionsByInsert.computeIfAbsent(connection, k -> new ArrayList<>()).add(path);
-                            insertConnectionsByExtract.computeIfAbsent(accessibleConnection, k -> new ArrayList<>()).add(path.reverse());
+                            var extractPaths = extractConnectionsByInsert.computeIfAbsent(connection, k -> new ArrayList<>());
+                            if (!extractPaths.contains(path)) {
+                                extractPaths.add(path);
+                            }
+
+                            var insertPaths = insertConnectionsByExtract.computeIfAbsent(accessibleConnection, k -> new ArrayList<>());
+                            if (!insertPaths.contains(path.reverse())) {
+                                insertPaths.add(path.reverse());
+                            }
                         });
                     }
                 }
@@ -449,8 +463,15 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
                 if (canExtract) {
                     for (var accessibleConnection : insertConnectionsByChannel.get(ioConnectionConfig.extractChannel())) {
                         findBestPathTo(connection, accessibleConnection).ifPresent(path -> {
-                            insertConnectionsByExtract.computeIfAbsent(connection, k -> new ArrayList<>()).add(path);
-                            extractConnectionsByInsert.computeIfAbsent(accessibleConnection, k -> new ArrayList<>()).add(path.reverse());
+                            var insertPaths = insertConnectionsByExtract.computeIfAbsent(connection, k -> new ArrayList<>());
+                            if (!insertPaths.contains(path)) {
+                                insertPaths.add(path);
+                            }
+
+                            var extractPaths = extractConnectionsByInsert.computeIfAbsent(accessibleConnection, k -> new ArrayList<>());
+                            if (!extractPaths.contains(path.reverse())) {
+                                extractPaths.add(path.reverse());
+                            }
                         });
                     }
                 }
@@ -486,7 +507,7 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
         // Remove connections from any maps
         for (var connection : endpointConnections.get(node)) {
             // Remove this connection's maps
-            accessibleBlockConnectionsMap.remove(connection);
+            accessiblePathsByConnection.remove(connection);
 
             // Not a fan of having to iterate, but it's probably fine.
             for (var color : DyeColor.values()) {
@@ -500,7 +521,7 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
             insertConnectionsByExtract.remove(connection);
 
             // Remove this connection from other maps
-            for (var list : accessibleBlockConnectionsMap.values()) {
+            for (var list : accessiblePathsByConnection.values()) {
                 list.removeIf(p -> p.start() == connection || p.end() == connection);
             }
 
@@ -532,7 +553,7 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
             extractConnections.sort(basicConnectionComparator);
         }
 
-        for (var connectionsList : accessibleBlockConnectionsMap.values()) {
+        for (var connectionsList : accessiblePathsByConnection.values()) {
             connectionsList.sort(conduitType.connectionPathComparator());
         }
 
@@ -561,7 +582,7 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
         nodesByChunkPos.clear();
         tickingNodes.clear();
         endpointConnections.clear();
-        accessibleBlockConnectionsMap.clear();
+        accessiblePathsByConnection.clear();
         insertConnections.clear();
         extractConnections.clear();
         insertConnectionsByChannel.clear();
