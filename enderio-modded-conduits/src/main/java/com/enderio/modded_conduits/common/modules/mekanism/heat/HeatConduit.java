@@ -15,13 +15,8 @@ public record HeatConduit(ResourceLocation texture, Component description)
         implements Conduit<HeatConduit, HeatConduitConnectionConfig> {
 
     @Override
-    public ConduitType<HeatConduit> type() {
+    public ConduitType<HeatConduit, HeatConduitConnectionConfig> type() {
         return MekanismModule.TYPE_HEAT.get();
-    }
-
-    @Override
-    public ConnectionConfigType<HeatConduitConnectionConfig> connectionConfigType() {
-        return HeatConduitConnectionConfig.TYPE;
     }
 
     @Override

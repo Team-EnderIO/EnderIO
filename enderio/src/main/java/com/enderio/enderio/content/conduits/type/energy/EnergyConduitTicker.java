@@ -20,11 +20,8 @@ public class EnergyConduitTicker extends ConduitTickerBase<EnergyConduit> {
 
     public static final EnergyConduitTicker INSTANCE = new EnergyConduitTicker();
 
-    private EnergyConduitTicker() {}
-
-    @Override
-    protected ConduitType<EnergyConduit> conduitType() {
-        return EIOConduitTypes.ENERGY.get();
+    private EnergyConduitTicker() {
+        super(EIOConduitTypes.ENERGY::get);
     }
 
     @Override

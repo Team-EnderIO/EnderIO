@@ -6,7 +6,8 @@ import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.api.conduits.bundle.SlotType;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
-import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
+import com.enderio.enderio.api.conduits.connection.path.ConnectionPathProperty;
+import com.enderio.enderio.api.conduits.connection.path.ConnectionPathPropertyConsumer;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataAccessor;
 import com.enderio.enderio.api.io.RedstoneControl;
@@ -41,23 +42,20 @@ public record ChemicalConduit(ResourceLocation texture, Component description, l
     public static final int INSERT_FILTER_SLOT = 1;
 
     public static final MapCodec<ChemicalConduit> CODEC = RecordCodecBuilder
-            .mapCodec(
-                    builder -> builder
-                            .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(ChemicalConduit::texture),
-                                    ComponentSerialization.CODEC.fieldOf("description")
-                                            .forGetter(ChemicalConduit::description),
-                                    Codec.LONG.fieldOf("transfer_rate").forGetter(ChemicalConduit::transferRatePerTick),
-                                    Codec.BOOL.fieldOf("is_multi_chemical").forGetter(ChemicalConduit::isMultiChemical))
-                            .apply(builder, ChemicalConduit::new));
+        .mapCodec(
+            builder -> builder
+                .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(ChemicalConduit::texture),
+                    ComponentSerialization.CODEC.fieldOf("description")
+                        .forGetter(ChemicalConduit::description),
+                    Codec.LONG.fieldOf("transfer_rate").forGetter(ChemicalConduit::transferRatePerTick),
+                    Codec.BOOL.fieldOf("is_multi_chemical").forGetter(ChemicalConduit::isMultiChemical))
+                .apply(builder, ChemicalConduit::new));
+
+    public static final ConnectionPathProperty<Long> PATH_MAX_TRANSFER_RATE = ConnectionPathProperty.minLong(0);
 
     @Override
-    public ConduitType<ChemicalConduit> type() {
+    public ConduitType<ChemicalConduit, ChemicalConduitConnectionConfig> type() {
         return MekanismModule.TYPE_CHEMICAL.get();
-    }
-
-    @Override
-    public ConnectionConfigType<ChemicalConduitConnectionConfig> connectionConfigType() {
-        return ChemicalConduitConnectionConfig.TYPE;
     }
 
     @Override
@@ -102,6 +100,16 @@ public record ChemicalConduit(ResourceLocation texture, Component description, l
         }
 
         return selfContext.lockedChemical().equals(otherContext.lockedChemical());
+    }
+
+    @Override
+    public boolean canConnectToConduit(ChemicalConduit other) {
+        return other.isMultiChemical() == isMultiChemical();
+    }
+
+    @Override
+    public void collectNodePathProperties(ConduitNode node, ConnectionPathPropertyConsumer consumer) {
+        consumer.accept(PATH_MAX_TRANSFER_RATE, transferRatePerTick());
     }
 
     @Override
@@ -201,7 +209,7 @@ public record ChemicalConduit(ResourceLocation texture, Component description, l
 
         if (tooltipFlag.hasShiftDown()) {
             String rawRateFormatted = String.format("%,d",
-                    (int) Math.ceil(transferRatePerTick() * (20.0 / networkTickRate())));
+                    (int) Math.ceil(transferRatePerTick() * type().getTickRate(this)));
             tooltipAdder.accept(TooltipUtil.styledWithArgs(ConduitLang.FLUID_RAW_RATE_TOOLTIP, rawRateFormatted));
         }
     }

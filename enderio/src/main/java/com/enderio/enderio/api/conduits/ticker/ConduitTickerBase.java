@@ -9,9 +9,20 @@ import net.minecraft.server.level.ServerLevel;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 @ApiStatus.Experimental
 public abstract class ConduitTickerBase<T extends Conduit<T, ?>> {
+
+    private final Supplier<ConduitType<T, ?>> conduitTypeSupplier;
+
+    protected ConduitTickerBase(Supplier<ConduitType<T, ?>> conduitTypeSupplier) {
+        this.conduitTypeSupplier = conduitTypeSupplier;
+    }
+
+    protected final ConduitType<T, ?> conduitType() {
+        return conduitTypeSupplier.get();
+    }
 
     public final void tick(ServerLevel level, ConduitNetwork network, int tickOffset) {
         // See if we can tick any conduits in this network
@@ -26,14 +37,12 @@ public abstract class ConduitTickerBase<T extends Conduit<T, ?>> {
         Preconditions.checkArgument(network.conduitType() == conduitType(), "Network is not of correct type");
         Preconditions.checkArgument(network.conduitType().ticker() == this, "Incorrect ticker for network's conduit type");
 
-        // Pre-tick logic (refresh network caches etc).
-        network.beforeTicking();
+        // Ensure caches are prepared before we tick
+        network.ensureCachesReady();
 
         // Now tick!
         tickNetwork(level, network, tickableConduits);
     }
-
-    protected abstract ConduitType<T> conduitType();
 
     /**
      * Tick the network.

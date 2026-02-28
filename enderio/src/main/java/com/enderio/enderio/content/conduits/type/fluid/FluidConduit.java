@@ -7,8 +7,8 @@ import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.api.conduits.bundle.SlotType;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
-import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
-import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
+import com.enderio.enderio.api.conduits.connection.path.ConnectionPathProperty;
+import com.enderio.enderio.api.conduits.connection.path.ConnectionPathPropertyConsumer;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataAccessor;
 import com.enderio.enderio.api.io.RedstoneControl;
@@ -57,27 +57,16 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
                                 Codec.BOOL.optionalFieldOf("does_support_priority", false).forGetter(FluidConduit::doesSupportPriority))
                             .apply(builder, FluidConduit::new));
 
+    public static final ConnectionPathProperty<Integer> PATH_MAX_TRANSFER_RATE = ConnectionPathProperty.minInt(0);
+
     @Override
-    public ConduitType<FluidConduit> type() {
+    public ConduitType<FluidConduit, FluidConduitConnectionConfig> type() {
         return EIOConduitTypes.FLUID.get();
     }
 
     @Override
     public boolean hasMenu() {
         return true;
-    }
-
-    @Override
-    public int compareNodes(ConduitBlockConnection refConnection, ConduitBlockConnection connectionA, ConduitBlockConnection connectionB) {
-        if (doesSupportPriority()) {
-            int priorityA = connectionA.connectionConfig(FluidConduitConnectionConfig.TYPE).insertPriority();
-            int priorityB = connectionB.connectionConfig(FluidConduitConnectionConfig.TYPE).insertPriority();
-            if (priorityA != priorityB) {
-                return Integer.compare(priorityB, priorityA);
-            }
-        }
-
-        return Conduit.super.compareNodes(refConnection, connectionA, connectionB);
     }
 
     @Override
@@ -88,6 +77,16 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
     @Override
     public boolean hasServerConnectionChecks() {
         return !isMultiFluid();
+    }
+
+    @Override
+    public boolean canConnectToConduit(FluidConduit other) {
+        return other.isMultiFluid() == isMultiFluid();
+    }
+
+    @Override
+    public void collectNodePathProperties(ConduitNode node, ConnectionPathPropertyConsumer consumer) {
+        consumer.accept(PATH_MAX_TRANSFER_RATE, transferRatePerTick());
     }
 
     @Override
@@ -124,11 +123,6 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
         IFluidHandler capability = level.getCapability(Capabilities.FluidHandler.BLOCK, conduitPos.relative(direction),
                 direction.getOpposite());
         return capability != null;
-    }
-
-    @Override
-    public ConnectionConfigType<FluidConduitConnectionConfig> connectionConfigType() {
-        return FluidConduitConnectionConfig.TYPE;
     }
 
     @Override
@@ -223,7 +217,7 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
 
         if (tooltipFlag.hasShiftDown()) {
             String rawRateFormatted = String.format("%,d",
-                    (int) Math.ceil(transferRatePerTick() * (20.0 / networkTickRate())));
+                    (int) Math.ceil(transferRatePerTick() * type().getTickRate(this)));
             tooltipAdder.accept(TooltipUtil.styledWithArgs(ConduitLang.FLUID_RAW_RATE_TOOLTIP, rawRateFormatted));
         }
     }

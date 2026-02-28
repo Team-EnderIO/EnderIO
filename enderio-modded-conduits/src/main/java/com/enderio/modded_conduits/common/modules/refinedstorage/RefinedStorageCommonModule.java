@@ -39,7 +39,7 @@ public class RefinedStorageCommonModule implements ConduitCommonModule {
                 EnderIO.rl("rs"));
     }
 
-    public static final DeferredRegister<ConduitType<?>> CONDUIT_TYPES = DeferredRegister
+    public static final DeferredRegister<ConduitType<?, ?>> CONDUIT_TYPES = DeferredRegister
             .create(EnderIORegistries.CONDUIT_TYPE, EnderIO.MOD_ID);
     public static final DeferredRegister<ConnectionConfigType<?>> CONDUIT_CONNECTION_CONFIG_TYPES = DeferredRegister
             .create(EnderIORegistries.CONDUIT_CONNECTION_CONFIG_TYPE, EnderIO.MOD_ID);
@@ -49,8 +49,8 @@ public class RefinedStorageCommonModule implements ConduitCommonModule {
     public static final DeferredRegister<NodeDataType<?>> CONDUIT_NODE_DATA_TYPES = DeferredRegister
             .create(EnderIORegistries.CONDUIT_NODE_DATA_TYPE, EnderIO.MOD_ID);
 
-    public static final Supplier<ConduitType<RSConduit>> RS_CONDUIT = CONDUIT_TYPES.register("rs",
-            () -> ConduitType.builder(RSConduit.CODEC)
+    public static final Supplier<ConduitType<RSConduit, RSConduitConnectionConfig>> RS_CONDUIT = CONDUIT_TYPES.register("rs",
+            () -> ConduitType.builder(RSConduit.CODEC, RSConduitConnectionConfig.TYPE)
                     .exposeCapability(
                             RefinedStorageNeoForgeApiImpl.INSTANCE.getNetworkNodeContainerProviderCapability())
                     .build());

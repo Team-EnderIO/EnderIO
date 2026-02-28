@@ -1,4 +1,4 @@
-package com.enderio.enderio.api.conduits.network;
+package com.enderio.enderio.api.conduits.connection;
 
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;

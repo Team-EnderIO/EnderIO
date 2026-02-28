@@ -4,8 +4,7 @@ import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.api.conduits.bundle.SlotType;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
-import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
-import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
+import com.enderio.enderio.api.conduits.connection.path.ConnectionPathPropertyConsumer;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataAccessor;
 import com.enderio.enderio.api.conduits.screen.ConduitScreenType;
@@ -30,10 +29,10 @@ import net.minecraft.world.item.component.TooltipProvider;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import org.apache.commons.lang3.NotImplementedException;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 
-import java.util.Comparator;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -60,23 +59,10 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
     Component description();
 
     /**
-     * @implNote Must be >= 1 and <= 20
-     * @return the number of ticks that should pass before the conduit graph ticks.
-     */
-    default int networkTickRate() {
-        return 5;
-    }
-
-    /**
      * Gets the conduit type.
      * This is used to define serialization and exposing proxied capabilities.
      */
-    ConduitType<TConduit> type();
-
-    /**
-     * @return the expected conduit connection config type.
-     */
-    ConnectionConfigType<TConnectionConfig> connectionConfigType();
+    ConduitType<TConduit, TConnectionConfig> type();
 
     /**
      * @implNote if a conduit has a menu, you must also register a {@link ConduitScreenType} for it.
@@ -96,6 +82,10 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
     default <TCapability, TContext> TCapability proxyCapability(Level level, @Nullable ConduitNode node,
             BlockCapability<TCapability, TContext> capability, @Nullable TContext context) {
         return null;
+    }
+
+    @ApiStatus.AvailableSince("8.1.0")
+    default void collectNodePathProperties(ConduitNode node, ConnectionPathPropertyConsumer consumer) {
     }
 
     // region Conduit Checks
@@ -135,29 +125,6 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
      */
     default boolean canConnectConduits(ConduitNode selfNode, ConduitNode otherNode) {
         return true;
-    }
-
-    /**
-     * Compare {@code connectionA} and {@code connectionB} to determine their sorting order with respect to {@code refConnection}.
-     * By default, this will compare the distances between the two connection's blocks to the reference node's connected block.
-     * @param refConnection the reference node's connection to compare against.
-     * @param connectionA  the first connection to compare.
-     * @param connectionB  the second connection to compare.
-     * @return Returns a negative integer, zero, or a positive integer as the first argument is less than, equal to, or greater than the second.
-     */
-    default int compareNodes(ConduitBlockConnection refConnection, ConduitBlockConnection connectionA,
-            ConduitBlockConnection connectionB) {
-        return Integer.compare(refConnection.connectedBlockPos().distManhattan(connectionA.connectedBlockPos()),
-                refConnection.connectedBlockPos().distManhattan(connectionB.connectedBlockPos()));
-    }
-
-    /**
-     * Used to sort the general lists of connections that have no reference point.
-     * @return the comparator, or null for no sorting.
-     */
-    @Nullable
-    default Comparator<ConduitBlockConnection> getGeneralConnectionComparator() {
-        return null;
     }
 
     // endregion
@@ -284,7 +251,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
     @Deprecated(since = "8.0.0")
     default TConnectionConfig convertConnection(boolean isInsert, boolean isExtract, DyeColor inputChannel,
             DyeColor outputChannel, RedstoneControl redstoneControl, DyeColor redstoneChannel) {
-        return connectionConfigType().getDefault();
+        return type().connectionConfigType().getDefault();
     }
 
     /**

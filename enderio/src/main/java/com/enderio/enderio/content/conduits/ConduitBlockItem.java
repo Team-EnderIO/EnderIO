@@ -6,6 +6,7 @@ import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.EnderIODataComponents;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.init.EIOBlocks;
@@ -124,8 +125,10 @@ public class ConduitBlockItem extends BlockItem implements ICustomCreativeTabEnt
                     && (conduit.value().hasAdvancedTooltip() || conduit.value().showDebugTooltip());
 
             if (conduit.value().showDebugTooltip() && tooltipFlag.hasShiftDown()) {
-                tooltipComponents.add(TooltipUtil.styledWithArgs(ConduitLang.GRAPH_TICK_RATE_TOOLTIP,
-                        20 / conduit.value().networkTickRate()));
+                if (conduit.value().type().ticker() != null) {
+                    tooltipComponents.add(TooltipUtil.styledWithArgs(ConduitLang.GRAPH_TICK_RATE_TOOLTIP,
+                        20 / conduit.value().type().getTickRate(conduit)));
+                }
             }
 
             if (showDetailTooltip) {

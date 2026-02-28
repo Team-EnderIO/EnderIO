@@ -44,20 +44,20 @@ public class ConduitSorter {
         SORTED_CONDUITS.clear();
 
         // Group like types together.
-        List<ConduitType<?>> conduitTypes = EnderIORegistries.CONDUIT_TYPE.stream()
+        List<ConduitType<?, ?>> conduitTypes = EnderIORegistries.CONDUIT_TYPE.stream()
                 .sorted(Comparator.comparing(
                         i -> Objects.requireNonNull(EnderIORegistries.CONDUIT_TYPE.getKey(i)).toString()))
                 .toList();
 
         List<Holder<Conduit<?, ?>>> sortedConduits = new ArrayList<>();
-        for (ConduitType<?> conduitType : conduitTypes) {
+        for (ConduitType<?, ?> conduitType : conduitTypes) {
             sortedConduits.addAll(gatherConduitsForType(registry, conduitType));
         }
         SORTED_CONDUITS.addAll(sortedConduits);
     }
 
     private static <T extends Conduit<T, ?>> List<Holder<Conduit<?, ?>>> gatherConduitsForType(
-            Registry<Conduit<?, ?>> registry, ConduitType<T> conduitType) {
+            Registry<Conduit<?, ?>> registry, ConduitType<T, ?> conduitType) {
         return registry.holders()
                 .filter(i -> i.value().type() == conduitType)
                 // Group by tier, then by name

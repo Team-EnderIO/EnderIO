@@ -85,7 +85,7 @@ public class MekanismModule implements ConduitCommonModule {
     private static final ItemDeferredRegister ITEMS = ItemDeferredRegister.create(EnderIO.MOD_ID);
     private static final MenuDeferredRegister MENUS = MenuDeferredRegister.create(EnderIO.MOD_ID);
 
-    private static final DeferredRegister<ConduitType<?>> CONDUIT_TYPES = DeferredRegister
+    private static final DeferredRegister<ConduitType<?, ?>> CONDUIT_TYPES = DeferredRegister
             .create(EnderIORegistries.CONDUIT_TYPE, EnderIO.MOD_ID);
 
     public static final DeferredRegister<ConduitDataType<?>> CONDUIT_DATA_TYPES = DeferredRegister
@@ -109,11 +109,19 @@ public class MekanismModule implements ConduitCommonModule {
 
     // endregion
 
-    public static final Supplier<ConduitType<ChemicalConduit>> TYPE_CHEMICAL = CONDUIT_TYPES.register("chemical",
-            () -> ConduitType.of(ChemicalConduit.CODEC, ChemicalTicker.INSTANCE));
+    public static final Supplier<ConduitType<ChemicalConduit, ChemicalConduitConnectionConfig>> TYPE_CHEMICAL = CONDUIT_TYPES.register("chemical",
+        () -> ConduitType
+            .builder(ChemicalConduit.CODEC, ChemicalConduitConnectionConfig.TYPE)
+            .doesRequireNetworkCaches()
+            .ticker(ChemicalTicker.INSTANCE, 5)
+            .build());
 
-    public static final Supplier<ConduitType<HeatConduit>> TYPE_HEAT = CONDUIT_TYPES.register("heat",
-            () -> ConduitType.builder(HeatConduit::new).ticker(HeatTicker.INSTANCE).build());
+    public static final Supplier<ConduitType<HeatConduit, HeatConduitConnectionConfig>> TYPE_HEAT = CONDUIT_TYPES.register("heat",
+        () -> ConduitType
+            .builder(HeatConduit::new, HeatConduitConnectionConfig.TYPE)
+            .doesRequireNetworkCaches()
+            .ticker(HeatTicker.INSTANCE, 5)
+            .build());
 
     public static final Supplier<ConduitDataType<ChemicalConduitData>> CHEMICAL_DATA_TYPE = CONDUIT_DATA_TYPES
             .register("chemical", () -> new ConduitDataType<>(ChemicalConduitData.CODEC,

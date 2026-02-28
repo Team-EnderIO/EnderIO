@@ -1,13 +1,20 @@
 package com.enderio.enderio.content.conduits.network;
 
 import com.enderio.core.common.graph.Network;
+import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.config.IOConnectionConfig;
-import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
+import com.enderio.enderio.api.conduits.connection.ConduitBlockConnection;
+import com.enderio.enderio.api.conduits.connection.path.ConduitConnectionPath;
+import com.enderio.enderio.api.conduits.connection.path.ConnectionPathProperty;
+import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContext;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContextType;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
+import com.enderio.enderio.content.conduits.network.pathing.ConduitPathingStrategy;
+import com.enderio.enderio.content.conduits.network.pathing.PathfindingContext;
+import com.enderio.enderio.content.conduits.network.pathing.BreadthFirstPathingStrategy;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.HashMultimap;
@@ -39,22 +46,35 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> implements com.enderio.enderio.api.conduits.network.ConduitNetwork {
+public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeImpl> implements ConduitNetwork, PathfindingContext {
 
-    public static final Codec<ConduitNetwork> CODEC = RecordCodecBuilder.create(instance -> instance
-            .group(Conduit.CODEC.fieldOf("conduit").forGetter(i -> i.conduit),
+    private static final Codec<ConduitNetworkImpl> LEGACY_CODEC = RecordCodecBuilder.create(instance -> instance
+            .group(Conduit.CODEC.fieldOf("conduit").forGetter(i -> null),
                     ConduitNetworkContext.GENERIC_CODEC.optionalFieldOf("context")
                             .forGetter(i -> i.context == null || !i.context.type().isPersistent() ? Optional.empty()
                                     : Optional.of(i.context)))
             .and(graphCodec(instance, ConduitNodeImpl.CODEC))
-            .apply(instance, ConduitNetwork::new));
+            .apply(instance, ConduitNetworkImpl::new));
 
-    private final Holder<Conduit<?, ?>> conduit;
+    private static final Codec<ConduitNetworkImpl> NEW_CODEC = RecordCodecBuilder.create(instance -> instance
+            .group(ConduitType.CODEC.fieldOf("conduit_type").forGetter(i -> i.conduitType),
+                    ConduitNetworkContext.GENERIC_CODEC.optionalFieldOf("context")
+                            .forGetter(i -> i.context == null || !i.context.type().isPersistent() ? Optional.empty()
+                                    : Optional.of(i.context)))
+            .and(graphCodec(instance, ConduitNodeImpl.CODEC))
+            .apply(instance, ConduitNetworkImpl::new));
+
+    public static final Codec<ConduitNetworkImpl> CODEC = Codec.withAlternative(NEW_CODEC, LEGACY_CODEC);
+
+    private final ConduitType<?, ?> conduitType;
+    
+    private final ConduitPathingStrategy pathfinder = new BreadthFirstPathingStrategy();
 
     @Nullable
     private ConduitNetworkContext<?> context;
     
-    // TODO: SURELY SURELY SURELY 2bn conduits of each type is enough.
+    // TODO: Not final because onNodeAdded is called by super so we need to initialize on use
+    //       I might be able to make minor changes to the Network class to fix this.
     private final Map<Holder<Conduit<?, ?>>, Integer> nodeCountByConduit = Maps.newHashMap();
 
     // Caches
@@ -70,7 +90,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
 
     // TODO: Separate this into a list and a multimap so we can sort all endpointConnections?
     private final SetMultimap<ConduitNodeImpl, ConduitBlockConnection> endpointConnections = HashMultimap.create();
-    private final Map<ConduitBlockConnection, List<ConduitBlockConnection>> accessibleBlockConnectionsMap = Maps
+    private final Map<ConduitBlockConnection, List<ConduitConnectionPath>> accessiblePathsByConnection = Maps
             .newHashMap();
 
     private final List<ConduitBlockConnection> insertConnections = Lists.newArrayList();
@@ -82,56 +102,72 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
     private final ListMultimap<DyeColor, ConduitBlockConnection> extractConnectionsByChannel = ArrayListMultimap
             .create();
 
-    private final Map<ConduitBlockConnection, List<ConduitBlockConnection>> extractConnectionsByInsert = Maps
+    private final Map<ConduitBlockConnection, List<ConduitConnectionPath>> extractConnectionsByInsert = Maps
             .newHashMap();
-    private final Map<ConduitBlockConnection, List<ConduitBlockConnection>> insertConnectionsByExtract = Maps
+    private final Map<ConduitBlockConnection, List<ConduitConnectionPath>> insertConnectionsByExtract = Maps
             .newHashMap();
 
     private final ListMultimap<Integer, Holder<Conduit<?, ?>>> tickableConduits = ArrayListMultimap.create();
     private boolean areTickableConduitsValid = false;
 
     @Nullable
-    private Consumer<ConduitNetwork> onChunkCoverageChanged = null;
+    private Consumer<ConduitNetworkImpl> onChunkCoverageChanged = null;
 
-    public ConduitNetwork(Holder<Conduit<?, ?>> conduit, ConduitNodeImpl initialNode) {
+    public ConduitNetworkImpl(ConduitType<?, ?> conduitType, ConduitNodeImpl initialNode) {
         super(initialNode);
-        this.conduit = conduit;
-        this.supportsCaching = conduit.value().type().ticker() != null;
+        this.conduitType = conduitType;
+        this.supportsCaching = conduitType.doesRequireNetworkCaches();
+        recomputeNodeCounts();
     }
 
-    // TODO: Only public for legacy deserialisation.
-    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    public ConduitNetwork(Holder<Conduit<?, ?>> conduit, Optional<ConduitNetworkContext<?>> context,
-                          List<ConduitNodeImpl> nodes, IndexedEdgeList edges) {
+    // TODO: Public for legacy deserialization
+    public ConduitNetworkImpl(ConduitType<?, ?> conduitType, Optional<ConduitNetworkContext<?>> context,
+                              List<ConduitNodeImpl> nodes, IndexedEdgeList edges) {
         super(nodes, edges);
-        this.conduit = conduit;
+        this.conduitType = conduitType;
         this.context = context.orElse(null);
-        this.supportsCaching = conduit.value().type().ticker() != null;
+        this.supportsCaching = conduitType.doesRequireNetworkCaches();
+        recomputeNodeCounts();
     }
 
-    protected ConduitNetwork(Holder<Conduit<?, ?>> conduit) {
-        this.conduit = conduit;
-        this.supportsCaching = conduit.value().type().ticker() != null;
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    private ConduitNetworkImpl(Holder<Conduit<?, ?>> conduit, Optional<ConduitNetworkContext<?>> context,
+                               List<ConduitNodeImpl> nodes, IndexedEdgeList edges) {
+        super(nodes, edges);
+        this.conduitType = conduit.value().type();
+        this.context = context.orElse(null);
+        this.supportsCaching = conduitType.doesRequireNetworkCaches();
+        recomputeNodeCounts();
     }
 
-    public Holder<Conduit<?, ?>> conduit() {
-        return conduit;
+    protected ConduitNetworkImpl(ConduitType<?, ?> conduitType) {
+        this.conduitType = conduitType;
+        this.supportsCaching = conduitType.doesRequireNetworkCaches();
     }
 
     @Override
-    public ConduitType<?> conduitType() {
-        return conduit.value().type();
+    public ConduitType<?, ?> conduitType() {
+        return conduitType;
+    }
+
+    @Override
+    public Set<Holder<Conduit<?, ?>>> conduits() {
+        if (nodeCountByConduit == null) {
+            return Set.of();
+        }
+
+        return Collections.unmodifiableSet(nodeCountByConduit.keySet());
     }
 
     @Override
     public List<Holder<Conduit<?, ?>>> getTickableConduits(long gameTime, int tickOffset) {
-        if (!areTickableConduitsValid) {
+        if (!areTickableConduitsValid && nodeCountByConduit != null) {
             tickableConduits.clear();
 
             // Check all conduits to see if they can tick
             for (var conduit : nodeCountByConduit.keySet()) {
                 for (int i = 0; i < 20; i++) {
-                    if (i % conduit.value().networkTickRate() == 0) {
+                    if (i % conduitType().getTickRate(conduit) == 0) {
                         tickableConduits.put(i, conduit);
                     }
                 }
@@ -149,13 +185,25 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
         return nodesByChunkPos.keySet();
     }
 
-    public void setOnChunkCoverageChanged(Consumer<ConduitNetwork> onChunkCoverageChanged) {
+    public void setOnChunkCoverageChanged(Consumer<ConduitNetworkImpl> onChunkCoverageChanged) {
         this.onChunkCoverageChanged = onChunkCoverageChanged;
     }
 
     // endregion
 
     // region Queries
+
+    @Override
+    public int nodeCount(Holder<Conduit<?, ?>> conduit) {
+        return nodeCountByConduit.getOrDefault(conduit, 0);
+    }
+
+    private void recomputeNodeCounts() {
+        nodeCountByConduit.clear();
+        for (var node : nodes()) {
+            nodeCountByConduit.compute(node.conduit(), (k, count) -> count == null ? 1 : count + 1);
+        }
+    }
 
     // These are unfortunately necessary for the IConduitNetwork interface.
     @Override
@@ -178,70 +226,81 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
 
     public Collection<ConduitNodeImpl> tickingNodes() {
         ensureNotDiscarded();
-        Preconditions.checkState(supportsCaching, "This conduit does not support caching as it has no ticker!");
+        Preconditions.checkState(supportsCaching, "This conduit does not support caching");
+        ensureCachesReady();
         return Collections.unmodifiableCollection(tickingNodes);
     }
 
     public Collection<ConduitNodeImpl> blockEndpoints() {
         ensureNotDiscarded();
-        Preconditions.checkState(supportsCaching, "This conduit does not support caching as it has no ticker!");
+        Preconditions.checkState(supportsCaching, "This conduit does not support caching");
+        ensureCachesReady();
         return Collections.unmodifiableCollection(endpointConnections.keySet());
     }
 
     public Collection<ConduitBlockConnection> blockConnections() {
         ensureNotDiscarded();
-        Preconditions.checkState(supportsCaching, "This conduit does not support caching as it has no ticker!");
+        Preconditions.checkState(supportsCaching, "This conduit does not support caching");
+        ensureCachesReady();
         return Collections.unmodifiableCollection(endpointConnections.values());
     }
 
     // This is sorted
-    public List<ConduitBlockConnection> blockConnectionsAccessibleFrom(ConduitBlockConnection connection) {
+    public List<ConduitConnectionPath> blockConnectionsAccessibleFrom(ConduitBlockConnection connection) {
         ensureNotDiscarded();
-        Preconditions.checkState(supportsCaching, "This conduit does not support caching as it has no ticker!");
-        return accessibleBlockConnectionsMap.getOrDefault(connection, List.of());
+        Preconditions.checkState(supportsCaching, "This conduit does not support caching");
+        ensureCachesReady();
+        return accessiblePathsByConnection.getOrDefault(connection, List.of());
     }
 
     public Set<DyeColor> allChannels() {
         ensureNotDiscarded();
-        Preconditions.checkState(supportsCaching, "This conduit does not support caching as it has no ticker!");
+        Preconditions.checkState(supportsCaching, "This conduit does not support caching");
+        ensureCachesReady();
         return allChannels;
     }
 
     public List<ConduitBlockConnection> insertConnections() {
         ensureNotDiscarded();
-        Preconditions.checkState(supportsCaching, "This conduit does not support caching as it has no ticker!");
+        Preconditions.checkState(supportsCaching, "This conduit does not support caching");
+        ensureCachesReady();
         return Collections.unmodifiableList(insertConnections);
     }
 
     public List<ConduitBlockConnection> insertConnections(DyeColor color) {
         ensureNotDiscarded();
-        Preconditions.checkState(supportsCaching, "This conduit does not support caching as it has no ticker!");
+        Preconditions.checkState(supportsCaching, "This conduit does not support caching");
+        ensureCachesReady();
         return insertConnectionsByChannel.get(color);
     }
 
     // This is sorted
-    public List<ConduitBlockConnection> extractConnectionsFrom(ConduitBlockConnection insertConnection) {
+    public List<ConduitConnectionPath> extractConnectionsFrom(ConduitBlockConnection insertConnection) {
         ensureNotDiscarded();
-        Preconditions.checkState(supportsCaching, "This conduit does not support caching as it has no ticker!");
+        Preconditions.checkState(supportsCaching, "This conduit does not support caching");
+        ensureCachesReady();
         return extractConnectionsByInsert.getOrDefault(insertConnection, List.of());
     }
 
     public List<ConduitBlockConnection> extractConnections() {
         ensureNotDiscarded();
-        Preconditions.checkState(supportsCaching, "This conduit does not support caching as it has no ticker!");
+        Preconditions.checkState(supportsCaching, "This conduit does not support caching");
+        ensureCachesReady();
         return Collections.unmodifiableList(extractConnections);
     }
 
     public List<ConduitBlockConnection> extractConnections(DyeColor color) {
         ensureNotDiscarded();
-        Preconditions.checkState(supportsCaching, "This conduit does not support caching as it has no ticker!");
+        Preconditions.checkState(supportsCaching, "This conduit does not support caching");
+        ensureCachesReady();
         return extractConnectionsByChannel.get(color);
     }
 
     // This is sorted
-    public List<ConduitBlockConnection> insertConnectionsFrom(ConduitBlockConnection extractConnection) {
+    public List<ConduitConnectionPath> insertConnectionsFrom(ConduitBlockConnection extractConnection) {
         ensureNotDiscarded();
-        Preconditions.checkState(supportsCaching, "This conduit does not support caching as it has no ticker!");
+        Preconditions.checkState(supportsCaching, "This conduit does not support caching");
+        ensureCachesReady();
         return insertConnectionsByExtract.getOrDefault(extractConnection, List.of());
     }
 
@@ -283,7 +342,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
      * Call this before ticking the network to ensure caches are up-to-date.
      * We use this to defer cache rebuilds to the last possible moment to ensure network mutations are less expensive.
      */
-    public void beforeTicking() {
+    public void ensureCachesReady() {
         ensureNotDiscarded();
 
         // Shouldn't be called, but can't hurt to be safe.
@@ -345,17 +404,24 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
             var connection = new ConduitBlockConnection(node, side);
             endpointConnections.put(node, connection);
 
-            // Add this connection to all other block connection's access maps
-            for (var connectionList : accessibleBlockConnectionsMap.values()) {
-                connectionList.add(connection);
-            }
-
             // Add own list of block connection accesses.
-            accessibleBlockConnectionsMap.computeIfAbsent(connection,
+            accessiblePathsByConnection.computeIfAbsent(connection,
                     k -> new ArrayList<>(endpointConnections.values().size()));
+
+            // Add all paths to both lists
             for (var accessibleConnection : endpointConnections.values()) {
                 if (accessibleConnection != connection) {
-                    accessibleBlockConnectionsMap.get(connection).add(accessibleConnection);
+                    findBestPathTo(connection, accessibleConnection).ifPresent(path -> {
+                        var accessibleConnections = accessiblePathsByConnection.get(connection);
+                        if (!accessibleConnections.contains(path)) {
+                            accessibleConnections.add(path);
+                        }
+
+                        var reverseAccessibleConnections = accessiblePathsByConnection.get(accessibleConnection);
+                        if (!reverseAccessibleConnections.contains(path.reverse())) {
+                            reverseAccessibleConnections.add(path.reverse());
+                        }
+                    });
                 }
             }
 
@@ -379,22 +445,34 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
                 // Now handle the mappings between them, do it after both are added in case we
                 // can self-feed.
                 if (canInsert) {
-                    extractConnectionsByInsert.computeIfAbsent(connection, k -> new ArrayList<>())
-                            .addAll(extractConnectionsByChannel.get(ioConnectionConfig.insertChannel()));
+                    for (var accessibleConnection : extractConnectionsByChannel.get(ioConnectionConfig.insertChannel())) {
+                        findBestPathTo(connection, accessibleConnection).ifPresent(path -> {
+                            var extractPaths = extractConnectionsByInsert.computeIfAbsent(connection, k -> new ArrayList<>());
+                            if (!extractPaths.contains(path)) {
+                                extractPaths.add(path);
+                            }
 
-                    for (var receiver : extractConnectionsByChannel.get(ioConnectionConfig.insertChannel())) {
-                        insertConnectionsByExtract.computeIfAbsent(receiver, k -> new ArrayList<>()).add(connection);
+                            var insertPaths = insertConnectionsByExtract.computeIfAbsent(accessibleConnection, k -> new ArrayList<>());
+                            if (!insertPaths.contains(path.reverse())) {
+                                insertPaths.add(path.reverse());
+                            }
+                        });
                     }
                 }
 
                 if (canExtract) {
-                    insertConnectionsByExtract.computeIfAbsent(connection, k -> new ArrayList<>())
-                            .addAll(insertConnectionsByChannel.get(ioConnectionConfig.extractChannel()));
+                    for (var accessibleConnection : insertConnectionsByChannel.get(ioConnectionConfig.extractChannel())) {
+                        findBestPathTo(connection, accessibleConnection).ifPresent(path -> {
+                            var insertPaths = insertConnectionsByExtract.computeIfAbsent(connection, k -> new ArrayList<>());
+                            if (!insertPaths.contains(path)) {
+                                insertPaths.add(path);
+                            }
 
-                    for (var sender : insertConnectionsByChannel.get(ioConnectionConfig.extractChannel())) {
-                        if (sender != connection) {
-                            extractConnectionsByInsert.computeIfAbsent(sender, k -> new ArrayList<>()).add(connection);
-                        }
+                            var extractPaths = extractConnectionsByInsert.computeIfAbsent(accessibleConnection, k -> new ArrayList<>());
+                            if (!extractPaths.contains(path.reverse())) {
+                                extractPaths.add(path.reverse());
+                            }
+                        });
                     }
                 }
             }
@@ -403,6 +481,21 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
             haveConnectionsChanged = true;
         }
     }
+
+    private Optional<ConduitConnectionPath> findBestPathTo(ConduitBlockConnection from, ConduitBlockConnection to) {
+        return pathfinder.findPath(from, to, this);
+    }
+    
+    // region PathfindingContext Implementation
+    
+    @Override
+    public Map<ConnectionPathProperty<?>, Object> collectNodeProperties(ConduitNode node) {
+        Map<ConnectionPathProperty<?>, Object> values = Maps.newHashMap();
+        node.conduit().value().collectNodePathProperties(node, values::put);
+        return values;
+    }
+
+    // endregion
 
     private void removeTickingNode(ConduitNodeImpl node) {
         if (!tickingNodes.contains(node)) {
@@ -414,7 +507,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
         // Remove connections from any maps
         for (var connection : endpointConnections.get(node)) {
             // Remove this connection's maps
-            accessibleBlockConnectionsMap.remove(connection);
+            accessiblePathsByConnection.remove(connection);
 
             // Not a fan of having to iterate, but it's probably fine.
             for (var color : DyeColor.values()) {
@@ -428,16 +521,16 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
             insertConnectionsByExtract.remove(connection);
 
             // Remove this connection from other maps
-            for (var list : accessibleBlockConnectionsMap.values()) {
-                list.remove(connection);
+            for (var list : accessiblePathsByConnection.values()) {
+                list.removeIf(p -> p.start() == connection || p.end() == connection);
             }
 
             for (var list : extractConnectionsByInsert.values()) {
-                list.remove(connection);
+                list.removeIf(p -> p.start() == connection || p.end() == connection);
             }
 
             for (var list : insertConnectionsByExtract.values()) {
-                list.remove(connection);
+                list.removeIf(p -> p.start() == connection || p.end() == connection);
             }
 
             haveConnectionsChanged = true;
@@ -454,22 +547,22 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
     }
 
     private void sortConnectionLists() {
-        var basicConnectionComparator = conduit().value().getGeneralConnectionComparator();
+        var basicConnectionComparator = conduitType.connectionComparator();
         if (basicConnectionComparator != null) {
             insertConnections.sort(basicConnectionComparator);
             extractConnections.sort(basicConnectionComparator);
         }
 
-        for (var entry : accessibleBlockConnectionsMap.entrySet()) {
-            sortConnections(entry.getKey(), entry.getValue());
+        for (var connectionsList : accessiblePathsByConnection.values()) {
+            connectionsList.sort(conduitType.connectionPathComparator());
         }
 
-        for (var entry : extractConnectionsByInsert.entrySet()) {
-            sortConnections(entry.getKey(), entry.getValue());
+        for (var connectionsList : extractConnectionsByInsert.values()) {
+            connectionsList.sort(conduitType.connectionPathComparator());
         }
 
-        for (var entry : insertConnectionsByExtract.entrySet()) {
-            sortConnections(entry.getKey(), entry.getValue());
+        for (var connectionsList : insertConnectionsByExtract.values()) {
+            connectionsList.sort(conduitType.connectionPathComparator());
         }
 
         haveConnectionsChanged = false;
@@ -489,7 +582,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
         nodesByChunkPos.clear();
         tickingNodes.clear();
         endpointConnections.clear();
-        accessibleBlockConnectionsMap.clear();
+        accessiblePathsByConnection.clear();
         insertConnections.clear();
         extractConnections.clear();
         insertConnectionsByChannel.clear();
@@ -523,10 +616,6 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
         haveConnectionsChanged = false;
     }
 
-    private void sortConnections(ConduitBlockConnection ref, List<ConduitBlockConnection> connections) {
-        connections.sort((a, b) -> conduit.value().compareNodes(ref, a, b));
-    }
-
     private void addNodeToPositionMaps(ConduitNodeImpl node, boolean isRebuild) {
         // Put nodes into the position map.
         long chunk = ChunkPos.asLong(node.pos());
@@ -554,8 +643,8 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
     // region Network Impl
 
     @Override
-    protected ConduitNetwork createEmpty() {
-        return new ConduitNetwork(conduit);
+    protected ConduitNetworkImpl createEmpty() {
+        return new ConduitNetworkImpl(conduitType);
     }
 
     @Override
@@ -563,8 +652,10 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
         // Always recompute what conduits can tick - it's cheap to do.
         areTickableConduitsValid = false;
 
-        // Increment node count
-        nodeCountByConduit.compute(conduit, (k, count) -> count == null ? 1 : count + 1);
+        // Increment node count if loaded (constructor will initialize the values)
+        if (nodeCountByConduit != null) {
+            nodeCountByConduit.compute(node.conduit(), (k, count) -> count == null ? 1 : count + 1);
+        }
 
         // If called during super constructor
         // TODO: Review this behaviour...
@@ -599,12 +690,15 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
     }
 
     @Override
-    protected void onMerged(ConduitNetwork other) {
+    protected void onMerged(ConduitNetworkImpl other) {
         if (context != null && other.context != null) {
             context = context.mergeWith(other.castContext());
         } else if (context == null && other.context != null) {
             context = other.context;
         }
+
+        // Fully recompute node counts
+        recomputeNodeCounts();
 
         // The cache will need to be rebuilt
         shouldRebuildCache = true;
@@ -616,8 +710,12 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
     }
 
     @Override
-    protected void onGraphSplit(Set<ConduitNetwork> newNetworks) {
+    protected void onGraphSplit(Set<ConduitNetworkImpl> newNetworks) {
         shouldRebuildCache = true;
+
+        // Fully recompute node counts
+        recomputeNodeCounts();
+
         if (context == null) {
             return;
         }
@@ -629,7 +727,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
         for (var newNetwork : newNetworks) {
             newNetwork.context = context.split(newNetwork, allNetworks);
             if (newNetwork.context == context) {
-                throw new IllegalStateException("Splitting context for a network of '" + conduit.getRegisteredName()
+                throw new IllegalStateException("Splitting context for a network of '" + EnderIORegistries.CONDUIT_TYPE.getKey(conduitType)
                         + "' resulted in the same context for multiple networks.");
             }
 
@@ -638,7 +736,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
 
         var newContext = context.split(this, allNetworks);
         if (newContext == context) {
-            throw new IllegalStateException("Splitting context for a network of '" + conduit.getRegisteredName()
+            throw new IllegalStateException("Splitting context for a network of '" + EnderIORegistries.CONDUIT_TYPE.getKey(conduitType)
                     + "' resulted in the same context for multiple networks.");
         }
 
@@ -653,7 +751,7 @@ public class ConduitNetwork extends Network<ConduitNetwork, ConduitNodeImpl> imp
         category.setDetail("NodeCount", nodeCount());
         category.setDetail("TickingNodeCount", tickingNodes.size());
         category.setDetail("NodesByChunkPos", nodesByChunkPos.size());
-        category.setDetail("DirtNodes", dirtyNodes.size());
+        category.setDetail("DirtyNodes", dirtyNodes.size());
         category.setDetail("AllChannels", allChannels.size());
         category.setDetail("InsertConnections", insertConnections.size());
         category.setDetail("ExtractConnections", extractConnections.size());

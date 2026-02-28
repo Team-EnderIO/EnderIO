@@ -23,7 +23,7 @@ public class EnderIORegistries {
         .sync(true)
         .create();
 
-    public static final Registry<ConduitType<?>> CONDUIT_TYPE = new RegistryBuilder<>(Keys.CONDUIT_TYPE).sync(true)
+    public static final Registry<ConduitType<?, ?>> CONDUIT_TYPE = new RegistryBuilder<>(Keys.CONDUIT_TYPE).sync(true)
             .create();
 
     @Deprecated(since = "8.0.0")
@@ -55,7 +55,7 @@ public class EnderIORegistries {
         public static final ResourceKey<Registry<ConduitNetworkContextType<?>>> CONDUIT_NETWORK_CONTEXT_TYPE = createKey(
                 "conduit_network_context_type");
 
-        public static final ResourceKey<Registry<ConduitType<?>>> CONDUIT_TYPE = createKey("conduit_type");
+        public static final ResourceKey<Registry<ConduitType<?, ?>>> CONDUIT_TYPE = createKey("conduit_type");
 
         /**
          * Conduit types are now a datapack registry.

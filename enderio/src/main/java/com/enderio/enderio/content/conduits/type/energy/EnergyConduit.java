@@ -4,8 +4,6 @@ import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.ConnectionStatus;
-import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
-import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.content.conduits.ConduitLang;
@@ -28,7 +26,6 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Comparator;
 import java.util.function.Consumer;
 
 public record EnergyConduit(ResourceLocation texture, Component description, int transferRatePerTick)
@@ -39,16 +36,10 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
                     ComponentSerialization.CODEC.fieldOf("description").forGetter(Conduit::description),
                     Codec.INT.fieldOf("transfer_rate").forGetter(EnergyConduit::transferRatePerTick))
             .apply(builder, EnergyConduit::new));
-
+    
     @Override
-    public ConduitType<EnergyConduit> type() {
+    public ConduitType<EnergyConduit, EnergyConduitConnectionConfig> type() {
         return EIOConduitTypes.ENERGY.get();
-    }
-
-    // Not configurable - energy is instantaneous
-    @Override
-    public int networkTickRate() {
-        return 1;
     }
 
     @Override
@@ -66,13 +57,6 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
         IEnergyStorage capability = level.getCapability(Capabilities.EnergyStorage.BLOCK,
                 conduitPos.relative(direction), direction.getOpposite());
         return capability != null;
-    }
-
-    @Override
-    public Comparator<ConduitBlockConnection> getGeneralConnectionComparator() {
-        return (a, b) -> Integer.compare(
-            b.connectionConfig(EnergyConduitConnectionConfig.TYPE).priority(),
-            a.connectionConfig(EnergyConduitConnectionConfig.TYPE).priority());
     }
 
     @Override
@@ -104,11 +88,6 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
     @Override
     public void onRemoved(ConduitNode node, Level level, BlockPos pos) {
         level.invalidateCapabilities(pos);
-    }
-
-    @Override
-    public ConnectionConfigType<EnergyConduitConnectionConfig> connectionConfigType() {
-        return EIOConduitTypes.ConnectionTypes.ENERGY.get();
     }
 
     @Override

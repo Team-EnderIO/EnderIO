@@ -7,8 +7,9 @@ import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.api.conduits.bundle.SlotType;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
-import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
-import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
+import com.enderio.enderio.api.conduits.connection.path.ConnectionPathProperty;
+import com.enderio.enderio.api.conduits.connection.path.ConnectionPathPropertyConsumer;
+import com.enderio.enderio.api.conduits.connection.path.SpeedAndTickRatePair;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataAccessor;
 import com.enderio.enderio.api.io.RedstoneControl;
@@ -37,8 +38,8 @@ import org.joml.Vector2i;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public record ItemConduit(ResourceLocation texture, Component description, int transferRatePerCycle,
-        int networkTickRate) implements Conduit<ItemConduit, ItemConduitConnectionConfig> {
+public record ItemConduit(ResourceLocation texture, Component description, int transferRatePerCycle, int networkTickRate)
+    implements Conduit<ItemConduit, ItemConduitConnectionConfig> {
 
     public static final int EXTRACT_FILTER_SLOT = 0;
     public static final int INSERT_FILTER_SLOT = 1;
@@ -54,8 +55,10 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
                                     .forGetter(ItemConduit::networkTickRate))
                     .apply(builder, ItemConduit::new));
 
+    public static final ConnectionPathProperty<SpeedAndTickRatePair> PATH_SPEED_AND_TICK_RATE = SpeedAndTickRatePair.minProperty(SpeedAndTickRatePair.ZERO);
+
     @Override
-    public ConduitType<ItemConduit> type() {
+    public ConduitType<ItemConduit, ItemConduitConnectionConfig> type() {
         return EIOConduitTypes.ITEM.get();
     }
 
@@ -70,14 +73,13 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
     }
 
     @Override
-    public int compareNodes(ConduitBlockConnection refConnection, ConduitBlockConnection connectionA,
-            ConduitBlockConnection connectionB) {
-        int priorityA = connectionA.connectionConfig(ItemConduitConnectionConfig.TYPE).priority();
-        int priorityB = connectionB.connectionConfig(ItemConduitConnectionConfig.TYPE).priority();
-        if (priorityA != priorityB) {
-            return Integer.compare(priorityB, priorityA);
-        }
-        return Conduit.super.compareNodes(refConnection, connectionA, connectionB);
+    public boolean canConnectToConduit(ItemConduit other) {
+        return true;
+    }
+
+    @Override
+    public void collectNodePathProperties(ConduitNode node, ConnectionPathPropertyConsumer consumer) {
+        consumer.accept(PATH_SPEED_AND_TICK_RATE, new SpeedAndTickRatePair(transferRatePerCycle(), networkTickRate()));
     }
 
     @Override
@@ -109,11 +111,6 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
         IItemHandler capability = level.getCapability(Capabilities.ItemHandler.BLOCK, conduitPos.relative(direction),
                 direction.getOpposite());
         return capability != null;
-    }
-
-    @Override
-    public ConnectionConfigType<ItemConduitConnectionConfig> connectionConfigType() {
-        return EIOConduitTypes.ConnectionTypes.ITEM.get();
     }
 
     @Override
@@ -180,7 +177,7 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
             return null;
         }
 
-        var config = node.getConnectionConfig(side, connectionConfigType());
+        var config = node.getConnectionConfig(side, type().connectionConfigType());
         if (!config.extractRedstoneControl().isRedstoneSensitive()) {
             return null;
         }
