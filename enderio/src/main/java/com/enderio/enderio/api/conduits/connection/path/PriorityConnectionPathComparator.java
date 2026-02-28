@@ -10,13 +10,16 @@ import java.util.function.Function;
  * Attempts to compare by priority (if present), then falls back on {@link DefaultConnectionPathComparator}.
  */
 public record PriorityConnectionPathComparator(
-    Function<ConduitBlockConnection, @Nullable Integer> priorityGetter
+    Function<ConduitBlockConnection, @Nullable Integer> priorityGetter,
+    Comparator<ConduitConnectionPath> fallbackComparator
 ) implements Comparator<ConduitConnectionPath> {
+
+    public PriorityConnectionPathComparator(Function<ConduitBlockConnection, @Nullable Integer> priorityGetter) {
+        this(priorityGetter, DefaultConnectionPathComparator.INSTANCE);
+    }
 
     @Override
     public int compare(ConduitConnectionPath pathA, ConduitConnectionPath pathB) {
-        // We use INPUT priority.
-        // TODO: Make this more clear.
         Integer priorityA = priorityGetter.apply(pathA.end());
         Integer priorityB = priorityGetter.apply(pathB.end());
 
@@ -33,6 +36,6 @@ public record PriorityConnectionPathComparator(
             return Integer.compare(priorityB, priorityA);
         }
 
-        return DefaultConnectionPathComparator.INSTANCE.compare(pathA, pathB);
+        return fallbackComparator.compare(pathA, pathB);
     }
 }

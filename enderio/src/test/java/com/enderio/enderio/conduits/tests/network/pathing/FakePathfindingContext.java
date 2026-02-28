@@ -78,11 +78,6 @@ public class FakePathfindingContext implements PathfindingContext {
         return Map.of();
     }
     
-    @Override
-    public boolean contains(ConduitNode node) {
-        return allNodes.contains(node);
-    }
-    
     /**
      * Get the total number of nodes in this context.
      * 

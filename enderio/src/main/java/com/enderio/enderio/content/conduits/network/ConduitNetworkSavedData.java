@@ -114,8 +114,9 @@ public class ConduitNetworkSavedData extends SavedData {
 
         var node = conduitMap.remove(pos);
         if (node.conduit() != conduit) {
-            LOGGER.warn("Conduit mismatch at {}: {} (network) vs {} (block entity).", pos, node.conduit(), conduit);
-            // TODO: most likely the block entity needs to detect this instead and adjust its stored conduit.
+            // Trust block entity as source of truth *just* because it's easier to rebuild a node than it is to reconcile the block entity's data.
+            LOGGER.warn("Conduit mismatch at {}: {} (network) vs {} (block entity). Dumping data, node will be rebuilt.", pos, node.conduit(), conduit);
+            return null;
         }
 
         return node;
