@@ -5,7 +5,7 @@ import net.minecraft.core.Direction;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
-public record EnergyConduitStorage(@Nullable Direction side, int transferRate, @Nullable ConduitNode node) implements IEnergyStorage {
+public record EnergyConduitStorage(@Nullable Direction side, int transferRateAtPoint, @Nullable ConduitNode node) implements IEnergyStorage {
 
     private static final long ENERGY_BUFFER_SCALER = 4;
 
@@ -14,19 +14,20 @@ public record EnergyConduitStorage(@Nullable Direction side, int transferRate, @
             return 0;
         }
 
-        // Capacity is transfer rate + nodeCount * transferRatePerTick / 2 (expanded).
-        // This ensures at least the transfer rate of the cable is available, but
-        // capacity doesn't grow outrageously.
-        int nodeCount = node.getNetwork().nodeCount();
+        // TODO: Might be good to have contexts able to react to changes in the network
+        //       So that this can be cached.
+        long maxEnergyStored = 0;
+        for (var conduit : node.getNetwork().conduits()) {
+            var energyConduit = (EnergyConduit)conduit.value();
+            final int transferRate = energyConduit.transferRatePerTick();
 
-        // The maximum number of nodes before the network capacity is INT_MAX.
-        long maxNodesBeforeLimit = Long.MAX_VALUE / (transferRate() / ENERGY_BUFFER_SCALER) - ENERGY_BUFFER_SCALER;
-        if (nodeCount >= maxNodesBeforeLimit) {
-            return Long.MAX_VALUE;
+            final int nodeCount = node.getNetwork().nodeCount(conduit);
+
+            maxEnergyStored += transferRate + nodeCount * (transferRate / ENERGY_BUFFER_SCALER);
         }
 
         // Always full transfer rate plus the extra buffer.
-        return transferRate() + nodeCount * (transferRate() / ENERGY_BUFFER_SCALER);
+        return maxEnergyStored;
     }
 
     public long getLongEnergyStored() {
@@ -51,7 +52,7 @@ public record EnergyConduitStorage(@Nullable Direction side, int transferRate, @
         var context = node.getNetwork().getOrCreateContext(EnergyConduitNetworkContext.TYPE);
 
         // Cap to transfer rate.
-        toReceive = Math.min(transferRate(), toReceive);
+        toReceive = Math.min(transferRateAtPoint(), toReceive);
 
         int energyReceived = (int)Math.min(Math.min(getLongMaxEnergyStored() - getLongEnergyStored(), toReceive), Integer.MAX_VALUE);
         if (!simulate) {

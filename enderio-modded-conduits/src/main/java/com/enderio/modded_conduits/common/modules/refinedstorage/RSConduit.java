@@ -28,13 +28,8 @@ public record RSConduit(ResourceLocation texture, Component description)
             .apply(builder, RSConduit::new));
 
     @Override
-    public ConduitType<RSConduit> type() {
+    public ConduitType<RSConduit, RSConduitConnectionConfig> type() {
         return RefinedStorageCommonModule.RS_CONDUIT.get();
-    }
-
-    @Override
-    public ConnectionConfigType<RSConduitConnectionConfig> connectionConfigType() {
-        return RSConduitConnectionConfig.TYPE;
     }
 
     @Override

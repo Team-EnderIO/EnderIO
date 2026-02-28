@@ -43,7 +43,7 @@ public class Issue1190 {
 
         test.onGameTest(ConduitGameTestHelper.class, helper -> {
             var redstoneConduit = helper.getConduit(EIOConduits.REDSTONE);
-            final int tickRate = redstoneConduit.value().networkTickRate();
+            final int tickRate = redstoneConduit.value().type().getTickRate(redstoneConduit);
 
             helper.startSequence()
                 // Place conduits to form a network
@@ -123,7 +123,7 @@ public class Issue1190 {
 
         test.onGameTest(ConduitGameTestHelper.class, helper -> {
             var redstoneConduit = helper.getConduit(EIOConduits.REDSTONE);
-            final int tickRate = redstoneConduit.value().networkTickRate();
+            final int tickRate = redstoneConduit.value().type().getTickRate(redstoneConduit);
 
             helper.startSequence()
                 // Place conduits to form a network

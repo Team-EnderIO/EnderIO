@@ -45,7 +45,7 @@ public class ItemConduitTests {
 
         test.onGameTest(ConduitGameTestHelper.class, helper -> {
             var itemConduit = helper.getConduit(EIOConduits.ITEM);
-            final int tickRate = itemConduit.value().networkTickRate();
+            final int tickRate = itemConduit.value().type().getTickRate(itemConduit);
 
             helper.startSequence()
                 // Destroy any previous conduit
@@ -82,7 +82,7 @@ public class ItemConduitTests {
     @TestHolder(description = "Ensures item conduits prioritise closest container first.")
     public static void itemConduitDistancePriority(final ConduitGameTestHelper helper) {
         var itemConduit = helper.getConduit(EIOConduits.ITEM);
-        final int tickRate = itemConduit.value().networkTickRate();
+        final int tickRate = itemConduit.value().type().getTickRate(itemConduit);
 
         helper.startSequence()
             // Destroy all previous conduits
@@ -113,7 +113,7 @@ public class ItemConduitTests {
     @TestHolder(description = "Ensures item conduits prioritise highest priority container first, before closest.")
     public static void itemConduitManualPriority(final ConduitGameTestHelper helper) {
         var itemConduit = helper.getConduit(EIOConduits.ITEM);
-        final int tickRate = itemConduit.value().networkTickRate();
+        final int tickRate = itemConduit.value().type().getTickRate(itemConduit);
 
         helper.startSequence()
             // Destroy all previous conduits
@@ -144,7 +144,7 @@ public class ItemConduitTests {
     @TestHolder(description = "Ensures item conduit round robin works.")
     public static void itemConduitRoundRobin(final ConduitGameTestHelper helper) {
         var itemConduit = helper.getConduit(EIOConduits.ITEM);
-        final int tickRate = itemConduit.value().networkTickRate();
+        final int tickRate = itemConduit.value().type().getTickRate(itemConduit);
         final int transferRate = ((ItemConduit) itemConduit.value()).transferRatePerCycle();
 
         helper.startSequence()
@@ -172,8 +172,14 @@ public class ItemConduitTests {
             .thenExecute(() -> helper.insertIntoContainer(2, 1, 0, Items.DIRT, transferRate * 2))
             // Ensure the max transfer amount reaches the closest chest first, then the
             // second chest
-            .thenExecuteAfter(tickRate, () -> helper.assertContainerHasExactly(2, 1, 2, Items.DIRT, transferRate))
-            .thenExecuteAfter(tickRate, () -> helper.assertContainerHasExactly(0, 1, 2, Items.DIRT, transferRate))
+            .thenExecuteAfter(tickRate, () -> {
+                helper.assertContainerHasExactly(2, 1, 2, Items.DIRT, transferRate);
+                helper.assertContainerEmpty(0, 1, 2);
+            })
+            .thenExecuteAfter(tickRate, () -> {
+                helper.assertContainerHasExactly(2, 1, 2, Items.DIRT, transferRate);
+                helper.assertContainerHasExactly(0, 1, 2, Items.DIRT, transferRate);
+            })
             // Place an item into the first chest
             .thenSucceed();
     }

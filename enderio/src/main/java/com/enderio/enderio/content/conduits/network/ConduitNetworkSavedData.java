@@ -3,6 +3,7 @@ package com.enderio.enderio.content.conduits.network;
 import com.enderio.core.common.graph.Network;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContext;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContextType;
 import com.google.common.base.Preconditions;
@@ -17,7 +18,6 @@ import net.minecraft.ReportedException;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
@@ -29,7 +29,6 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
 import net.neoforged.neoforge.event.level.ChunkEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import org.jetbrains.annotations.Nullable;
@@ -44,17 +43,17 @@ import java.util.Optional;
 @EventBusSubscriber
 public class ConduitNetworkSavedData extends SavedData {
 
-    public static final Codec<ConduitNetworkSavedData> CODEC = ConduitNetwork.CODEC.listOf()
+    public static final Codec<ConduitNetworkSavedData> CODEC = ConduitNetworkImpl.CODEC.listOf()
             .xmap(ConduitNetworkSavedData::new, ConduitNetworkSavedData::getNetworks);
 
-    private final Multimap<Holder<Conduit<?, ?>>, ConduitNetwork> networks = HashMultimap.create();
+    private final Multimap<ConduitType<?, ?>, ConduitNetworkImpl> networks = HashMultimap.create();
 
-    private final Multimap<Long, ConduitNetwork> networksByChunk = HashMultimap.create();
-    private final Multimap<ConduitNetwork, Long> chunksByNetwork = HashMultimap.create();
+    private final Multimap<Long, ConduitNetworkImpl> networksByChunk = HashMultimap.create();
+    private final Multimap<ConduitNetworkImpl, Long> chunksByNetwork = HashMultimap.create();
 
     private final Map<Long, Boolean> tickingChunksMap = Maps.newHashMap();
 
-    private final Map<Holder<Conduit<?, ?>>, Map<BlockPos, ConduitNodeImpl>> unloadedNodes = Maps.newHashMap();
+    private final Map<ConduitType<?, ?>, Map<BlockPos, ConduitNodeImpl>> unloadedNodes = Maps.newHashMap();
 
     private static final String KEY_NEW_DATA = "Networks";
 
@@ -67,13 +66,13 @@ public class ConduitNetworkSavedData extends SavedData {
     public ConduitNetworkSavedData() {
     }
 
-    private ConduitNetworkSavedData(List<ConduitNetwork> networks) {
-        for (ConduitNetwork network : networks) {
+    private ConduitNetworkSavedData(List<ConduitNetworkImpl> networks) {
+        for (ConduitNetworkImpl network : networks) {
             network.setOnChunkCoverageChanged(this::onNetworkChunksChanged);
-            this.networks.put(network.conduit(), network);
+            this.networks.put(network.conduitType(), network);
 
             for (var node : network.nodes()) {
-                unloadedNodes.computeIfAbsent(network.conduit(), c -> Maps.newHashMap()).put(node.pos(), node);
+                unloadedNodes.computeIfAbsent(network.conduitType(), c -> Maps.newHashMap()).put(node.pos(), node);
             }
         }
     }
@@ -89,7 +88,7 @@ public class ConduitNetworkSavedData extends SavedData {
                 .getPartialOrThrow();
     }
 
-    private List<ConduitNetwork> getNetworks() {
+    private List<ConduitNetworkImpl> getNetworks() {
         return networks.values().stream().filter(n -> n.isValid() && !n.isEmpty()).toList();
     }
 
@@ -102,7 +101,7 @@ public class ConduitNetworkSavedData extends SavedData {
 
     @Nullable
     public ConduitNodeImpl claimNode(Holder<Conduit<?, ?>> conduit, BlockPos pos) {
-        var conduitMap = unloadedNodes.get(conduit);
+        var conduitMap = unloadedNodes.get(conduit.value().type());
         if (conduitMap == null) {
             LOGGER.warn("Conduit data is missing!");
             return null;
@@ -113,32 +112,39 @@ public class ConduitNetworkSavedData extends SavedData {
             return null;
         }
 
-        return conduitMap.remove(pos);
+        var node = conduitMap.remove(pos);
+        if (node.conduit() != conduit) {
+            // Trust block entity as source of truth *just* because it's easier to rebuild a node than it is to reconcile the block entity's data.
+            LOGGER.warn("Conduit mismatch at {}: {} (network) vs {} (block entity). Dumping data, node will be rebuilt.", pos, node.conduit(), conduit);
+            return null;
+        }
+
+        return node;
     }
 
     public void returnNode(Holder<Conduit<?, ?>> conduit, BlockPos pos, ConduitNodeImpl node) {
-        unloadedNodes.computeIfAbsent(conduit, c -> Maps.newHashMap()).put(pos, node);
+        unloadedNodes.computeIfAbsent(conduit.value().type(), c -> Maps.newHashMap()).put(pos, node);
     }
 
-    public static void onNetworkCreated(ServerLevel level, ConduitNetwork network) {
+    public static void onNetworkCreated(ServerLevel level, ConduitNetworkImpl network) {
         get(level).onNetworkCreated(network);
     }
 
-    private void onNetworkCreated(ConduitNetwork network) {
+    private void onNetworkCreated(ConduitNetworkImpl network) {
         Preconditions.checkArgument(network.isValid(), "New network is not valid!");
-        networks.put(network.conduit(), network);
+        networks.put(network.conduitType(), network);
         onNetworkChunksChanged(network);
         network.setOnChunkCoverageChanged(this::onNetworkChunksChanged);
     }
 
-    public static void onNetworkDiscarded(ServerLevel level, ConduitNetwork network) {
+    public static void onNetworkDiscarded(ServerLevel level, ConduitNetworkImpl network) {
         Preconditions.checkArgument(network.isDiscarded(), "Network is not discarded!");
         get(level).onNetworkDiscarded(network);
     }
 
-    private void onNetworkDiscarded(ConduitNetwork network) {
+    private void onNetworkDiscarded(ConduitNetworkImpl network) {
         // Allow empty or discarded networks here
-        networks.remove(network.conduit(), network);
+        networks.remove(network.conduitType(), network);
 
         for (var chunk : network.allChunks()) {
             networksByChunk.remove(chunk, network);
@@ -146,7 +152,7 @@ public class ConduitNetworkSavedData extends SavedData {
         }
     }
 
-    private void onNetworkChunksChanged(ConduitNetwork network) {
+    private void onNetworkChunksChanged(ConduitNetworkImpl network) {
         var knownChunks = chunksByNetwork.get(network);
         var currentChunks = network.allChunks();
 
@@ -200,23 +206,21 @@ public class ConduitNetworkSavedData extends SavedData {
             }
         }
 
-        Registry<Conduit<?, ?>> conduitRegistry = serverLevel.registryAccess()
-                .registryOrThrow(EnderIORegistries.Keys.CONDUIT);
-
-        for (var conduit : networks.keySet()) {
+        for (var conduitType : networks.keySet()) {
             // Skip non-ticking graphs.
-            var ticker = conduit.value().type().ticker();
+            var ticker = conduitType.ticker();
             if (ticker == null) {
                 continue;
             }
 
-            int conduitId = conduitRegistry.getId(conduit.value());
-            for (var network : networks.get(conduit)) {
+            // TODO: GH-1269
+            int conduitId = EnderIORegistries.CONDUIT_TYPE.getId(conduitType);
+            for (var network : networks.get(conduitType)) {
                 try {
                     ticker.tick(serverLevel, network, conduitId);
                 } catch (Throwable t) {
                     var report = CrashReport.forThrowable(t, "Ticking conduit network");
-                    var category = report.addCategory(conduit.getRegisteredName() + " network being ticked");
+                    var category = report.addCategory(EnderIORegistries.CONDUIT_TYPE.getKey(conduitType) + " network being ticked");
                     network.addCrashInfo(category);
                     throw new ReportedException(report);
                 }
@@ -311,7 +315,7 @@ public class ConduitNetworkSavedData extends SavedData {
             }
 
             // Create network
-            var network = new ConduitNetwork(conduit, Optional.ofNullable(context), nodes,
+            var network = new ConduitNetworkImpl(conduit.value().type(), Optional.ofNullable(context), nodes,
                     new Network.IndexedEdgeList(connections));
 
             // Ensure the nodes are all valid
@@ -321,10 +325,13 @@ public class ConduitNetworkSavedData extends SavedData {
                 throw new IllegalStateException("Graph was null after loading the conduit network");
             }
 
-            savedData.networks.put(conduit, network);
+            // Hook onto chunk coverage change event
+            network.setOnChunkCoverageChanged(savedData::onNetworkChunksChanged);
+
+            savedData.networks.put(network.conduitType(), network);
 
             for (var node : network.nodes()) {
-                savedData.unloadedNodes.computeIfAbsent(network.conduit(), c -> Maps.newHashMap())
+                savedData.unloadedNodes.computeIfAbsent(network.conduitType(), c -> Maps.newHashMap())
                         .put(node.pos(), node);
             }
         }

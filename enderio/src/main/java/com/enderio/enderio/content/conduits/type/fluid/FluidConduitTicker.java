@@ -2,11 +2,12 @@ package com.enderio.enderio.content.conduits.type.fluid;
 
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.conduits.Conduit;
-import com.enderio.enderio.api.conduits.ConduitType;
-import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
+import com.enderio.enderio.api.conduits.connection.ConduitBlockConnection;
+import com.enderio.enderio.api.conduits.connection.path.ConduitConnectionPath;
 import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.enderio.enderio.api.conduits.ticker.ConduitTickerBase;
 import com.enderio.enderio.init.EIOConduitTypes;
+import com.google.common.collect.Maps;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.material.FlowingFluid;
@@ -18,17 +19,15 @@ import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class FluidConduitTicker extends ConduitTickerBase<FluidConduit> {
 
     public static final FluidConduitTicker INSTANCE = new FluidConduitTicker();
 
-    private FluidConduitTicker() {}
-
-    @Override
-    protected ConduitType<FluidConduit> conduitType() {
-        return EIOConduitTypes.FLUID.get();
+    private FluidConduitTicker() {
+        super(EIOConduitTypes.FLUID::get);
     }
 
     @Override
@@ -36,10 +35,12 @@ public class FluidConduitTicker extends ConduitTickerBase<FluidConduit> {
         var context = network.getOrCreateContext(FluidConduitNetworkContext.TYPE);
 
         boolean hadMultiFluid = false;
+        Map<ConduitConnectionPath, Integer> insertedPerPath = Maps.newHashMap();
+        
         for (var channel : network.allChannels()) {
             for (var extractConnection : network.extractConnections(channel)) {
-                var insertConnections = network.insertConnectionsFrom(extractConnection);
-                if (insertConnections.isEmpty()) {
+                var insertPaths = network.insertConnectionsFrom(extractConnection);
+                if (insertPaths.isEmpty()) {
                     continue;
                 }
 
@@ -49,12 +50,12 @@ public class FluidConduitTicker extends ConduitTickerBase<FluidConduit> {
                 }
 
                 final var extractConduit = extractConnection.node().conduit(conduitType());
-                final int fluidRate = extractConduit.value().transferRatePerTick() * extractConduit.value().networkTickRate();
+                final int fluidRate = extractConduit.value().transferRatePerTick() * conduitType().getTickRate(extractConduit);
 
                 hadMultiFluid |= extractConduit.value().isMultiFluid();
 
                 if (!context.lockedFluid().isSame(Fluids.EMPTY)) {
-                    doFluidTransfer(context.lockedFluid(), fluidRate, extractConnection, insertConnections);
+                    doFluidTransfer(context.lockedFluid(), fluidRate, extractConnection, insertPaths, insertedPerPath);
                 } else {
                     int remaining = fluidRate;
 
@@ -64,7 +65,7 @@ public class FluidConduitTicker extends ConduitTickerBase<FluidConduit> {
                         }
 
                         Fluid fluid = extractHandler.getFluidInTank(i).getFluid();
-                        remaining = doFluidTransfer(fluid, remaining, extractConnection, insertConnections);
+                        remaining = doFluidTransfer(fluid, remaining, extractConnection, insertPaths, insertedPerPath);
 
                         if (!extractConduit.value().isMultiFluid() && remaining < fluidRate) {
                             if (fluid instanceof FlowingFluid flowing) {
@@ -91,7 +92,7 @@ public class FluidConduitTicker extends ConduitTickerBase<FluidConduit> {
     }
 
     private int doFluidTransfer(Fluid fluid, int maxTransfer, ConduitBlockConnection extractConnection,
-        List<ConduitBlockConnection> insertConnections) {
+        List<ConduitConnectionPath> insertPaths, Map<ConduitConnectionPath, Integer> insertedPerPath) {
         var extractHandler = Objects
             .requireNonNull(extractConnection.getSidedCapability(Capabilities.FluidHandler.BLOCK));
 
@@ -115,7 +116,16 @@ public class FluidConduitTicker extends ConduitTickerBase<FluidConduit> {
         }
 
         // Insert into any available blocks
-        for (var insertConnection : insertConnections) {
+        for (var insertPath : insertPaths) {
+            var insertConnection = insertPath.end();
+            final int maxInsertSpeed = insertPath.property(FluidConduit.PATH_MAX_TRANSFER_RATE);
+
+            // Calculate remaining 'speed' for this path
+            int remaining = maxInsertSpeed - insertedPerPath.getOrDefault(insertPath, 0);
+            if (remaining <= 0) {
+                continue;
+            }
+
             IFluidHandler insertHandler = insertConnection.getSidedCapability(Capabilities.FluidHandler.BLOCK);
             if (insertHandler == null) {
                 continue;
@@ -123,11 +133,9 @@ public class FluidConduitTicker extends ConduitTickerBase<FluidConduit> {
 
             var fluidToInsert = extractedFluid.copy();
 
-            var insertConduit = insertConnection.node().conduit(conduitType());
-            // TODO: When we add path speeds, we'll restrict to the path speed instead.
-            int maxInsertSpeed = insertConduit.value().transferRatePerTick() * insertConduit.value().networkTickRate();
-            if (fluidToInsert.getAmount() > maxInsertSpeed) {
-                fluidToInsert.setAmount(maxInsertSpeed);
+            // Limit to path's max speed
+            if (fluidToInsert.getAmount() > remaining) {
+                fluidToInsert.setAmount(remaining);
             }
 
             // Test fluid against insert filter.
@@ -148,6 +156,10 @@ public class FluidConduitTicker extends ConduitTickerBase<FluidConduit> {
 
             // Deduct the transferred fluid from our maximum transfer.
             maxTransfer -= transferredFluid.getAmount();
+
+            // Store the amount transferred in this path
+            insertedPerPath.compute(insertPath, (k, v) -> v == null ? transferredFluid.getAmount() : v + transferredFluid.getAmount());
+
             if (maxTransfer <= 0) {
                 break;
             }
