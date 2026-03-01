@@ -1,0 +1,58 @@
+{
+  "values": {
+    "enderio:conductive_alloy_grinding_ball": {
+      "BonusMultiplier": 1.0,
+      "Durability": 40000,
+      "OutputMultiplier": 1.35,
+      "PowerUse": 1.0
+    },
+    "enderio:dark_steel_grinding_ball": {
+      "BonusMultiplier": 2.0,
+      "Durability": 125000,
+      "OutputMultiplier": 1.35,
+      "PowerUse": 0.7
+    },
+    "enderio:end_steel_grinding_ball": {
+      "BonusMultiplier": 2.4,
+      "Durability": 75000,
+      "OutputMultiplier": 1.4,
+      "PowerUse": 0.7
+    },
+    "enderio:energetic_alloy_grinding_ball": {
+      "BonusMultiplier": 1.1,
+      "Durability": 80000,
+      "OutputMultiplier": 1.6,
+      "PowerUse": 1.1
+    },
+    "enderio:pulsating_alloy_grinding_ball": {
+      "BonusMultiplier": 1.85,
+      "Durability": 100000,
+      "OutputMultiplier": 1.0,
+      "PowerUse": 1.0
+    },
+    "enderio:redstone_alloy_grinding_ball": {
+      "BonusMultiplier": 1.0,
+      "Durability": 30000,
+      "OutputMultiplier": 1.0,
+      "PowerUse": 0.35
+    },
+    "enderio:soularium_grinding_ball": {
+      "BonusMultiplier": 2.15,
+      "Durability": 80000,
+      "OutputMultiplier": 1.2,
+      "PowerUse": 0.9
+    },
+    "enderio:vibrant_alloy_grinding_ball": {
+      "BonusMultiplier": 1.35,
+      "Durability": 80000,
+      "OutputMultiplier": 1.75,
+      "PowerUse": 1.13
+    },
+    "minecraft:flint": {
+      "BonusMultiplier": 1.25,
+      "Durability": 24000,
+      "OutputMultiplier": 1.2,
+      "PowerUse": 0.85
+    }
+  }
+}

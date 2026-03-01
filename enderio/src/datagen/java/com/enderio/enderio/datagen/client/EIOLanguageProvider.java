@@ -64,7 +64,6 @@ public class EIOLanguageProvider extends LanguageProvider {
     }
 
     private void addTags() {
-        add(EIOTags.Items.GRINDING_BALLS, "Grinding Balls");
         add(EIOTags.Items.HIDE_FACADES, "Hides Facades");
         add(EIOTags.Items.GLIDER, "Gliders");
         add(EIOTags.Items.INSULATION_METAL, "Insulation Metal");

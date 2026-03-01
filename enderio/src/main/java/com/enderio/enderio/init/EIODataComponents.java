@@ -157,7 +157,6 @@ public class EIODataComponents {
         DATA_COMPONENT_TYPES.addAlias(EnderIO.rl("entity_filter"), EnderIO.rl("soul_filter"));
 
         DATA_COMPONENT_TYPES.register("conduit", () -> EnderIODataComponents.CONDUIT);
-        DATA_COMPONENT_TYPES.register("grinding_ball", () -> EnderIODataComponents.GRINDING_BALL);
 
         // Flatten redstone filter component types
         DATA_COMPONENT_TYPES.addAlias(EnderIO.rl("redstone_and_filter"), EnderIO.rl("redstone_filter_double_channel"));
