@@ -1,11 +1,11 @@
 package com.enderio.enderio.client.content.travel;
 
 import com.enderio.enderio.api.travel.TravelRenderer;
+import com.enderio.enderio.client.EnderIOClient;
 import com.enderio.enderio.client.foundation.renderer.OutlineBuffer;
 import com.enderio.enderio.compat.ModCompatHelper;
 import com.enderio.enderio.content.travel.travel_anchor.AnchorTravelTarget;
 import com.enderio.enderio.content.travel.travel_anchor.PaintedTravelAnchorBlockEntity;
-import com.enderio.enderio.init.EIOBlocks;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -40,19 +40,18 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> {
-    Lazy<ArrayList<BakedQuad>> outlineQuads = Lazy.of(() -> {
+    private static final Lazy<ArrayList<BakedQuad>> BACKDROP_QUADS = Lazy.of(() -> {
         Minecraft minecraft = Minecraft.getInstance();
 
-        Block outlineBlock = EIOBlocks.OUTLINE_BLOCK.get();
-        BlockState outlineBlockState = outlineBlock.defaultBlockState();
-        BakedModel outlineBlockModel = minecraft.getBlockRenderer().getBlockModel(outlineBlockState);
+        BakedModel outlineBlockModel = minecraft.getModelManager()
+            .getModel(EnderIOClient.TRAVEL_ANCHOR_BACKDROP_MODEL_LOCATION);
 
         RandomSource randomSource = RandomSource.create(42L);
 
         ArrayList<BakedQuad> bakedQuads = new ArrayList<>();
         for (Direction dir : Direction.values()) {
             // Should be exactly 1 quad per direction
-            bakedQuads.addAll(outlineBlockModel.getQuads(outlineBlockState, dir, randomSource));
+            bakedQuads.addAll(outlineBlockModel.getQuads(null, dir, randomSource));
         }
         return bakedQuads;
     });
@@ -132,7 +131,7 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
                 poseStack.translate(offset.x, offset.y, offset.z);
                 poseStack.scale(scale, scale, scale);
 
-                for (BakedQuad quad : outlineQuads.get()) {
+                for (BakedQuad quad : BACKDROP_QUADS.get()) {
                     solidRenderBuffer.putBulkData(poseStack.last(), quad, outlineR, outlineG, outlineB, 1, packedLight, OverlayTexture.NO_OVERLAY);
                 }
 
@@ -169,7 +168,7 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             poseStack.translate(-0.5, -0.5, -2);
             poseStack.rotateAround(Axis.ZN.rotationDegrees(45), 0.5F, 0.5F, 0.5F);
 
-            for (BakedQuad quad : outlineQuads.get()) {
+            for (BakedQuad quad : BACKDROP_QUADS.get()) {
                 solidRenderBuffer.putBulkData(poseStack.last(), quad, outlineR, outlineG, outlineB, 1, packedLight, OverlayTexture.NO_OVERLAY);
             }
 

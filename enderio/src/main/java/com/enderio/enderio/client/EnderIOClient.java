@@ -2,6 +2,7 @@ package com.enderio.enderio.client;
 
 import com.enderio.core.client.item.FluidBarDecorator;
 import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.conduits.model.RegisterConduitModelModifiersEvent;
 import com.enderio.enderio.api.conduits.screen.RegisterConduitScreenTypesEvent;
 import com.enderio.enderio.api.soul.SoulBoundUtils;
@@ -130,6 +131,10 @@ public class EnderIOClient {
 
     private static final Map<Item, ModelResourceLocation> HANG_GLIDER_MODEL_LOCATION = new HashMap<>();
     public static final Map<Item, BakedModel> GLIDER_MODELS = new HashMap<>();
+
+    public static final ModelResourceLocation TRAVEL_ANCHOR_BACKDROP_MODEL_LOCATION = ModelResourceLocation.standalone(
+        ResourceLocation.fromNamespaceAndPath(EnderIOAPI.MOD_ID, "block/travel_anchor_backdrop")
+    );
 
     public EnderIOClient(ModContainer modContainer) {
         // TODO: Re-enable after config rework.
@@ -315,6 +320,8 @@ public class EnderIOClient {
                 HANG_GLIDER_MODEL_LOCATION.put(gliderItem.get(), modelLocation);
             }
         }
+
+        event.register(TRAVEL_ANCHOR_BACKDROP_MODEL_LOCATION);
     }
 
     @SubscribeEvent

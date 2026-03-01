@@ -127,7 +127,6 @@ public class EIOBlockStateProvider extends BlockStateProvider {
         simpleBlock(EIOBlocks.ENDERMAN_HEAD.get(), models().getExistingFile(mcLoc("block/skull")));
         simpleBlock(EIOBlocks.WALL_ENDERMAN_HEAD.get(), models().getExistingFile(mcLoc("block/skull")));
         simpleBlock(EIOBlocks.INDUSTRIAL_INSULATION.get());
-        simpleBlock(EIOBlocks.OUTLINE_BLOCK.get());
 
         // Pressure Plates
         eioPressurePlateBlock(EIOBlocks.DARK_STEEL_PRESSURE_PLATE.get());
