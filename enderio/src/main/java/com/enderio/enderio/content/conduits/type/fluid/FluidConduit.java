@@ -40,8 +40,8 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public record FluidConduit(ResourceLocation texture, Component description, int transferRatePerTick,
-        boolean isMultiFluid, boolean doesSupportPriority) implements Conduit<FluidConduit, FluidConduitConnectionConfig> {
+public record FluidConduit(ResourceLocation texture, Component description, int transferRatePerTick)
+    implements Conduit<FluidConduit, FluidConduitConnectionConfig> {
 
     public static final int EXTRACT_FILTER_SLOT = 0;
     public static final int INSERT_FILTER_SLOT = 1;
@@ -52,9 +52,7 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
                             .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(FluidConduit::texture),
                                     ComponentSerialization.CODEC.fieldOf("description")
                                             .forGetter(FluidConduit::description),
-                                    Codec.INT.fieldOf("transfer_rate").forGetter(FluidConduit::transferRatePerTick),
-                                    Codec.BOOL.fieldOf("is_multi_fluid").forGetter(FluidConduit::isMultiFluid),
-                                Codec.BOOL.optionalFieldOf("does_support_priority", false).forGetter(FluidConduit::doesSupportPriority))
+                                    Codec.INT.fieldOf("transfer_rate").forGetter(FluidConduit::transferRatePerTick))
                             .apply(builder, FluidConduit::new));
 
     public static final ConnectionPathProperty<Integer> PATH_MAX_TRANSFER_RATE = ConnectionPathProperty.minInt(0);
@@ -75,47 +73,13 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
     }
 
     @Override
-    public boolean hasServerConnectionChecks() {
-        return !isMultiFluid();
-    }
-
-    @Override
     public boolean canConnectToConduit(FluidConduit other) {
-        return other.isMultiFluid() == isMultiFluid();
+        return true;
     }
 
     @Override
     public void collectNodePathProperties(ConduitNode node, ConnectionPathPropertyConsumer consumer) {
         consumer.accept(PATH_MAX_TRANSFER_RATE, transferRatePerTick());
-    }
-
-    @Override
-    public boolean canConnectConduits(ConduitNode selfNode, ConduitNode otherNode) {
-        if (isMultiFluid()) {
-            return true;
-        }
-
-        // Ensure the networks are not locked to different fluids before connecting.
-        var selfNetwork = selfNode.getNetwork();
-        var otherNetwork = otherNode.getNetwork();
-
-        // If one network does not yet exist, then we're good to connect.
-        if (selfNetwork == null || otherNetwork == null) {
-            return true;
-        }
-
-        var selfContext = selfNetwork.getContext(FluidConduitNetworkContext.TYPE);
-        var otherContext = otherNetwork.getContext(FluidConduitNetworkContext.TYPE);
-
-        if (selfContext == null || otherContext == null) {
-            return true;
-        }
-
-        if (selfContext.lockedFluid().isSame(Fluids.EMPTY) || otherContext.lockedFluid().isSame(Fluids.EMPTY)) {
-            return true;
-        }
-
-        return selfContext.lockedFluid().isSame(otherContext.lockedFluid());
     }
 
     @Override
@@ -130,24 +94,6 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
             DyeColor outputChannel, RedstoneControl redstoneControl, DyeColor redstoneChannel) {
         return new FluidConduitConnectionConfig(isInsert, inputChannel, isExtract, outputChannel, redstoneControl,
                 redstoneChannel, 0);
-    }
-
-    @Override
-    public void copyLegacyData(ConduitNode node, ConduitDataAccessor legacyDataAccessor,
-            BiConsumer<Direction, ConnectionConfig> connectionConfigSetter) {
-        var legacyData = legacyDataAccessor.getData(EIOConduitTypes.Data.FLUID.get());
-        if (legacyData == null) {
-            return;
-        }
-
-        var context = Objects.requireNonNull(node.getNetwork()).getOrCreateContext(FluidConduitNetworkContext.TYPE);
-
-        if (!context.lockedFluid().isSame(Fluids.EMPTY)) {
-            return;
-        }
-
-        // Copy locked fluid from old data.
-        context.setLockedFluid(legacyData.lockedFluid());
     }
 
     @Override
@@ -179,41 +125,11 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
     }
 
     @Override
-    public @Nullable CompoundTag getExtraGuiData(ConduitBundle conduitBundle, ConduitNode node, Direction side) {
-        return getExtraWorldData(conduitBundle, node);
-    }
-
-    @Override
-    @Nullable
-    public CompoundTag getExtraWorldData(ConduitBundle conduitBundle, ConduitNode node) {
-        if (node.getNetwork() == null) {
-            return null;
-        }
-
-        var context = node.getNetwork().getContext(FluidConduitNetworkContext.TYPE);
-        if (context == null) {
-            return null;
-        }
-
-        if (context.lockedFluid().isSame(Fluids.EMPTY)) {
-            return null;
-        }
-
-        var tag = new CompoundTag();
-        tag.putString("LockedFluid", BuiltInRegistries.FLUID.getKey(context.lockedFluid()).toString());
-        return tag;
-    }
-
-    @Override
     public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder,
             TooltipFlag tooltipFlag) {
         String transferLimitFormatted = String.format("%,d", transferRatePerTick());
         tooltipAdder
                 .accept(TooltipUtil.styledWithArgs(ConduitLang.FLUID_EFFECTIVE_RATE_TOOLTIP, transferLimitFormatted));
-
-        if (isMultiFluid()) {
-            tooltipAdder.accept(ConduitLang.MULTI_FLUID_TOOLTIP);
-        }
 
         if (tooltipFlag.hasShiftDown()) {
             String rawRateFormatted = String.format("%,d",
@@ -234,10 +150,6 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
 
     @Override
     public int compareTo(@NotNull FluidConduit o) {
-        if (isMultiFluid() && !o.isMultiFluid()) {
-            return 1;
-        }
-
         if (transferRatePerTick() < o.transferRatePerTick()) {
             return -1;
         } else if (transferRatePerTick() > o.transferRatePerTick()) {

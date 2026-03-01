@@ -104,6 +104,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
      */
     default boolean canConnectToConduit(TConduit other) {
         // By default only allow a conduit to connect to an exact match.
+        // TODO: 26.1 - default to true.
         return this.equals(other);
     }
 

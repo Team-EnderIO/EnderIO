@@ -15,7 +15,6 @@ import com.enderio.enderio.content.conduits.type.energy.EnergyConduit;
 import com.enderio.enderio.content.conduits.type.energy.EnergyConduitConnectionConfig;
 import com.enderio.enderio.content.conduits.type.fluid.FluidConduit;
 import com.enderio.enderio.content.conduits.type.fluid.FluidConduitConnectionConfig;
-import com.enderio.enderio.content.conduits.type.fluid.FluidConduitNetworkContext;
 import com.enderio.enderio.content.conduits.type.fluid.FluidConduitTicker;
 import com.enderio.enderio.content.conduits.type.item.ItemConduit;
 import com.enderio.enderio.content.conduits.type.item.ItemConduitConnectionConfig;
@@ -59,14 +58,8 @@ public class EIOConduitTypes {
             .builder(FluidConduit.CODEC, FluidConduitConnectionConfig.TYPE)
             .doesRequireNetworkCaches()
             .ticker(FluidConduitTicker.INSTANCE, 5)
-            .connectionComparerFromReference(new PriorityConnectionPathComparator(conn -> {
-                // TODO: Might just make all fluid conduits support priority for simplicity.
-                if (!conn.node().conduit(EIOConduitTypes.FLUID.get()).value().doesSupportPriority()) {
-                    return null;
-                }
-
-                return conn.node().getConnectionConfig(conn.connectionSide(), FluidConduitConnectionConfig.TYPE).insertPriority();
-            }))
+            .connectionComparerFromReference(new PriorityConnectionPathComparator(conn ->
+                conn.node().getConnectionConfig(conn.connectionSide(), FluidConduitConnectionConfig.TYPE).insertPriority()))
             .build());
 
     public static final Supplier<ConduitType<ItemConduit, ItemConduitConnectionConfig>> ITEM = CONDUIT_TYPES.register("item",
@@ -126,9 +119,6 @@ public class EIOConduitTypes {
 
         public static final Supplier<ConduitNetworkContextType<RedstoneConduitNetworkContext>> REDSTONE = CONDUIT_NETWORK_CONTEXT_TYPES
                 .register("redstone", () -> RedstoneConduitNetworkContext.TYPE);
-
-        public static final Supplier<ConduitNetworkContextType<FluidConduitNetworkContext>> FLUID = CONDUIT_NETWORK_CONTEXT_TYPES
-                .register("fluid", () -> FluidConduitNetworkContext.TYPE);
     }
 
     public static void register(IEventBus bus) {

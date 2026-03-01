@@ -35,8 +35,8 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public record ChemicalConduit(ResourceLocation texture, Component description, long transferRatePerTick,
-        boolean isMultiChemical) implements Conduit<ChemicalConduit, ChemicalConduitConnectionConfig> {
+public record ChemicalConduit(ResourceLocation texture, Component description, long transferRatePerTick)
+    implements Conduit<ChemicalConduit, ChemicalConduitConnectionConfig> {
 
     public static final int EXTRACT_FILTER_SLOT = 0;
     public static final int INSERT_FILTER_SLOT = 1;
@@ -47,8 +47,7 @@ public record ChemicalConduit(ResourceLocation texture, Component description, l
                 .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(ChemicalConduit::texture),
                     ComponentSerialization.CODEC.fieldOf("description")
                         .forGetter(ChemicalConduit::description),
-                    Codec.LONG.fieldOf("transfer_rate").forGetter(ChemicalConduit::transferRatePerTick),
-                    Codec.BOOL.fieldOf("is_multi_chemical").forGetter(ChemicalConduit::isMultiChemical))
+                    Codec.LONG.fieldOf("transfer_rate").forGetter(ChemicalConduit::transferRatePerTick))
                 .apply(builder, ChemicalConduit::new));
 
     public static final ConnectionPathProperty<Long> PATH_MAX_TRANSFER_RATE = ConnectionPathProperty.minLong(0);
@@ -69,45 +68,6 @@ public record ChemicalConduit(ResourceLocation texture, Component description, l
     }
 
     @Override
-    public boolean hasServerConnectionChecks() {
-        return !isMultiChemical();
-    }
-
-    @Override
-    public boolean canConnectConduits(ConduitNode selfNode, ConduitNode otherNode) {
-        if (isMultiChemical()) {
-            return true;
-        }
-
-        // Ensure the networks are not locked to different fluids before connecting.
-        var selfNetwork = selfNode.getNetwork();
-        var otherNetwork = otherNode.getNetwork();
-
-        // If one network does not yet exist, then we're good to connect.
-        if (selfNetwork == null || otherNetwork == null) {
-            return true;
-        }
-
-        var selfContext = selfNetwork.getContext(ChemicalConduitNetworkContext.TYPE);
-        var otherContext = otherNetwork.getContext(ChemicalConduitNetworkContext.TYPE);
-
-        if (selfContext == null || otherContext == null) {
-            return true;
-        }
-
-        if (selfContext.lockedChemical().isEmptyType() || otherContext.lockedChemical().isEmptyType()) {
-            return true;
-        }
-
-        return selfContext.lockedChemical().equals(otherContext.lockedChemical());
-    }
-
-    @Override
-    public boolean canConnectToConduit(ChemicalConduit other) {
-        return other.isMultiChemical() == isMultiChemical();
-    }
-
-    @Override
     public void collectNodePathProperties(ConduitNode node, ConnectionPathPropertyConsumer consumer) {
         consumer.accept(PATH_MAX_TRANSFER_RATE, transferRatePerTick());
     }
@@ -123,24 +83,6 @@ public record ChemicalConduit(ResourceLocation texture, Component description, l
             DyeColor outputChannel, RedstoneControl redstoneControl, DyeColor redstoneChannel) {
         return new ChemicalConduitConnectionConfig(isInsert, inputChannel, isExtract, outputChannel, redstoneControl,
                 redstoneChannel);
-    }
-
-    @Override
-    public void copyLegacyData(ConduitNode node, ConduitDataAccessor legacyDataAccessor,
-            BiConsumer<Direction, ConnectionConfig> connectionConfigSetter) {
-        var legacyData = legacyDataAccessor.getData(MekanismModule.CHEMICAL_DATA_TYPE.get());
-        if (legacyData == null) {
-            return;
-        }
-
-        var context = Objects.requireNonNull(node.getNetwork()).getOrCreateContext(ChemicalConduitNetworkContext.TYPE);
-
-        if (!context.lockedChemical().isEmptyType()) {
-            return;
-        }
-
-        // Copy locked fluid from old data.
-        context.setLockedChemical(legacyData.lockedChemical().getChemical());
     }
 
     @Override
@@ -172,40 +114,11 @@ public record ChemicalConduit(ResourceLocation texture, Component description, l
     }
 
     @Override
-    public @Nullable CompoundTag getExtraGuiData(ConduitBundle conduitBundle, ConduitNode node, Direction side) {
-        return getExtraWorldData(conduitBundle, node);
-    }
-
-    @Override
-    public @Nullable CompoundTag getExtraWorldData(ConduitBundle conduitBundle, ConduitNode node) {
-        if (node.getNetwork() == null) {
-            return null;
-        }
-
-        var context = node.getNetwork().getContext(ChemicalConduitNetworkContext.TYPE);
-        if (context == null) {
-            return null;
-        }
-
-        if (context.lockedChemical().isEmptyType()) {
-            return null;
-        }
-
-        var tag = new CompoundTag();
-        tag.putString("LockedChemical", context.lockedChemical().getRegistryName().toString());
-        return tag;
-    }
-
-    @Override
     public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder,
             TooltipFlag tooltipFlag) {
         String transferLimitFormatted = String.format("%,d", transferRatePerTick());
         tooltipAdder
                 .accept(TooltipUtil.styledWithArgs(ConduitLang.FLUID_EFFECTIVE_RATE_TOOLTIP, transferLimitFormatted));
-
-        if (isMultiChemical()) {
-            tooltipAdder.accept(MekanismModule.LANG_MULTI_CHEMICAL_TOOLTIP);
-        }
 
         if (tooltipFlag.hasShiftDown()) {
             String rawRateFormatted = String.format("%,d",
@@ -226,10 +139,6 @@ public record ChemicalConduit(ResourceLocation texture, Component description, l
 
     @Override
     public int compareTo(@NotNull ChemicalConduit o) {
-        if (isMultiChemical() && !o.isMultiChemical()) {
-            return 1;
-        }
-
         if (transferRatePerTick() < o.transferRatePerTick()) {
             return -1;
         } else if (transferRatePerTick() > o.transferRatePerTick()) {
