@@ -13,8 +13,6 @@ import com.enderio.enderio.content.conduits.legacy.LegacyItemConduitData;
 import com.enderio.enderio.content.conduits.legacy.LegacyRedstoneConduitData;
 import com.enderio.enderio.content.conduits.type.energy.EnergyConduit;
 import com.enderio.enderio.content.conduits.type.energy.EnergyConduitConnectionConfig;
-import com.enderio.enderio.content.conduits.type.energy.EnergyConduitNetworkContext;
-import com.enderio.enderio.content.conduits.type.energy.EnergyConduitTicker;
 import com.enderio.enderio.content.conduits.type.fluid.FluidConduit;
 import com.enderio.enderio.content.conduits.type.fluid.FluidConduitConnectionConfig;
 import com.enderio.enderio.content.conduits.type.fluid.FluidConduitNetworkContext;
@@ -42,7 +40,6 @@ public class EIOConduitTypes {
             .builder(EnergyConduit.CODEC, EnergyConduitConnectionConfig.TYPE)
             .exposeCapability(Capabilities.EnergyStorage.BLOCK)
             .doesRequireNetworkCaches()
-            .ticker(EnergyConduitTicker.INSTANCE, 1)
             .connectionComparator((a, b) -> Integer.compare(
                 b.connectionConfig(EnergyConduitConnectionConfig.TYPE).priority(),
                 a.connectionConfig(EnergyConduitConnectionConfig.TYPE).priority()))
@@ -126,9 +123,6 @@ public class EIOConduitTypes {
     public static class ContextTypes {
         public static final DeferredRegister<ConduitNetworkContextType<?>> CONDUIT_NETWORK_CONTEXT_TYPES = DeferredRegister
                 .create(EnderIORegistries.CONDUIT_NETWORK_CONTEXT_TYPE, EnderIO.MOD_ID);
-
-        public static final Supplier<ConduitNetworkContextType<EnergyConduitNetworkContext>> ENERGY = CONDUIT_NETWORK_CONTEXT_TYPES
-                .register("energy", () -> EnergyConduitNetworkContext.TYPE);
 
         public static final Supplier<ConduitNetworkContextType<RedstoneConduitNetworkContext>> REDSTONE = CONDUIT_NETWORK_CONTEXT_TYPES
                 .register("redstone", () -> RedstoneConduitNetworkContext.TYPE);
