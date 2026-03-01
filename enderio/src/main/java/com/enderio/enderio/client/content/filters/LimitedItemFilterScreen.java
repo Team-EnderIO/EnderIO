@@ -66,9 +66,4 @@ public class LimitedItemFilterScreen extends EnderContainerScreen<LimitedItemFil
     protected void renderBg(GuiGraphics guiGraphics, float v, int i, int i1) {
         guiGraphics.blit(BG, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight);
     }
-
-    @Override
-    protected void slotClicked(Slot slot, int slotId, int mouseButton, net.minecraft.world.inventory.ClickType type) {
-        super.slotClicked(slot, slotId, mouseButton, type);
-    }
 }

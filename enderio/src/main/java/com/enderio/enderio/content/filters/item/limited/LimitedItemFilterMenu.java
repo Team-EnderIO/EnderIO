@@ -14,6 +14,7 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
 
 public class LimitedItemFilterMenu extends AbstractFilterMenu<LimitedItemFilter> {
 
@@ -46,7 +47,7 @@ public class LimitedItemFilterMenu extends AbstractFilterMenu<LimitedItemFilter>
         for (int i = 0; i < LimitedItemFilter.SLOT_COUNT; i++) {
             final int slotIndex = i;
             addSlot(new LimitedItemFilterSlot(() -> getItemInFilter(slotIndex),
-                    stack -> setItemInFilter(slotIndex, stack), i, 14 + (i % 5) * 18, 27 + 20 * (i / 5)));
+                    stack -> setItemInFilter(slotIndex, stack), i, 14 + (i % 9) * 18, 27 + 18 * (i / 9)));
         }
 
         addPlayerInventorySlots(14, 45 + 2 * 18);

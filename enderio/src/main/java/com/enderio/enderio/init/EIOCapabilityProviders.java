@@ -67,7 +67,7 @@ public class EIOCapabilityProviders {
 
         // Filter menu providers
         event.registerItem(EnderIOCapabilities.FILTER_MENU_PROVIDER, AbstractFilterItem.FILTER_MENU_PROVIDER, EIOItems.BASIC_ITEM_FILTER,
-            EIOItems.ADVANCED_ITEM_FILTER, EIOItems.BIG_ITEM_FILTER, EIOItems.BIG_ADVANCED_ITEM_FILTER, EIOItems.BASIC_ITEM_FILTER, EIOItems.BASIC_SOUL_FILTER,
+            EIOItems.ADVANCED_ITEM_FILTER, EIOItems.BIG_ITEM_FILTER, EIOItems.BIG_ADVANCED_ITEM_FILTER, EIOItems.BASIC_SOUL_FILTER,
             EIOItems.LIMITED_ITEM_FILTER);
 
         // Filter providers
