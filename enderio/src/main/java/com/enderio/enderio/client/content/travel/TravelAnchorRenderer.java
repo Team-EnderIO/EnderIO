@@ -65,6 +65,8 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             return;
         }
 
+        poseStack.pushPose();
+
         Camera camera = minecraft.gameRenderer.getMainCamera();
         Vec3 cameraPos = camera.getPosition();
         Vec3 offsetToCamera = travelData.pos().getCenter().vectorTo(cameraPos);
@@ -86,66 +88,110 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
         }
 
         OutlineBuffer buffer = OutlineBuffer.INSTANCE;
-        int color = 0xFFFFFF;
+        int outlineColor = 0xFF0B4D42;
+        int textColor = 0xFFFFFFFF;
         if (active) {
-            color = ChatFormatting.GOLD.getColor() == null ? 0xFFFFFF : ChatFormatting.GOLD.getColor();
+            textColor = ChatFormatting.AQUA.getColor() == null ? 0xFFFFFF : ChatFormatting.AQUA.getColor();
+            outlineColor = textColor;
         }
+        float outlineR = ((outlineColor & (0xFF << 16)) >> 16) / 255F;
+        float outlineG = ((outlineColor & (0xFF << 8)) >> 8) / 255F;
+        float outlineB = (outlineColor & 0xFF) / 255F;
 
-        VertexConsumer solidRenderType = buffer.getBuffer(RenderType.solid());
+        VertexConsumer solidRenderBuffer = buffer.getBuffer(RenderType.solid());
         ModelBlockRenderer blockModelRenderer = minecraft.getBlockRenderer().getModelRenderer();
 
         int packedLight = LightTexture.pack(15, 15);
 
-        // Render Model
-        {
-            BlockState blockState = minecraft.level.getBlockState(travelData.pos());
-            if (minecraft.level.getBlockEntity(travelData.pos()) instanceof PaintedTravelAnchorBlockEntity paintedTravelAnchorBlock) {
-                Optional<Block> paint = paintedTravelAnchorBlock.getPrimaryPaint();
+        boolean hasIcon = travelData.icon() != Items.AIR;
 
-                if (paint.isPresent()) {
-                    blockState = paint.get().defaultBlockState();
+        if (!hasIcon) {
+            // Render Model
+            {
+                BlockState blockState = minecraft.level.getBlockState(travelData.pos());
+                if (minecraft.level.getBlockEntity(travelData.pos()) instanceof PaintedTravelAnchorBlockEntity paintedTravelAnchorBlock) {
+                    Optional<Block> paint = paintedTravelAnchorBlock.getPrimaryPaint();
+
+                    if (paint.isPresent()) {
+                        blockState = paint.get().defaultBlockState();
+                    }
                 }
+
+                BakedModel blockModel = minecraft.getBlockRenderer().getBlockModel(blockState);
+                blockModelRenderer.renderModel(poseStack.last(), solidRenderBuffer, blockState, blockModel, 1, 1, 1, packedLight, OverlayTexture.NO_OVERLAY);
             }
 
-            BakedModel blockModel = minecraft.getBlockRenderer().getBlockModel(blockState);
-            blockModelRenderer.renderModel(poseStack.last(), solidRenderType, blockState, blockModel,
-                1, 1, 1, packedLight, OverlayTexture.NO_OVERLAY);
-        }
+            // Render outline block
+            {
+                poseStack.pushPose();
 
-        // Render outline block
-        {
+                float outlineSize = active ? 0.2F : 0.15F;
+                float scale = 1F + 2 * outlineSize;
+                Vec3 offset = towardsCamera.scale(-scale).subtract(outlineSize, outlineSize, outlineSize);
+
+                poseStack.translate(offset.x, offset.y, offset.z);
+                poseStack.scale(scale, scale, scale);
+
+                for (BakedQuad quad : outlineQuads.get()) {
+                    solidRenderBuffer.putBulkData(poseStack.last(), quad, outlineR, outlineG, outlineB, 1, packedLight, OverlayTexture.NO_OVERLAY);
+                }
+
+                poseStack.popPose();
+            }
+        } else {
+            // Render Icon
             poseStack.pushPose();
 
-            float outlineSize = active ? 0.2F : 0.15F;
-            float scale = 1F + 2 * outlineSize;
-            Vec3 offset = towardsCamera.scale(-scale).subtract(outlineSize, outlineSize, outlineSize);
+            {
+                Vector3f upDir = new Vec3(0, 1, 0)
+                    .xRot(-camera.getXRot() * ((float) Math.PI / 180F))
+                    .yRot(-camera.getYRot() * ((float) Math.PI / 180F))
+                    .toVector3f();
+                Vector3f direction = towardsCamera.toVector3f();
+                Quaternionf iconRotation = new Quaternionf().lookAlong(direction.x(), direction.y(), direction.z(), upDir.x(), upDir.y(), upDir.z());
 
-            poseStack.translate(offset.x, offset.y, offset.z);
-            poseStack.scale(scale, scale, scale);
+                Vec3 offset = towardsCamera.scale(0.9);
 
-            float r = ((color & (0xFF << 16)) >> 16) / 255F;
-            float g = ((color & (0xFF << 8)) >> 8) / 255F;
-            float b = (color & 0xFF) / 255F;
+                poseStack.translate(offset.x() + 0.5, offset.y() + 0.5, offset.z() + 0.5);
+                poseStack.mulPose(iconRotation.invert());
+                float s = active ? 1.3F : 1.0F;
+                poseStack.scale(-s, s, -s);
+            }
+
+            ItemStack stack = new ItemStack(travelData.icon());
+            BakedModel bakedmodel = minecraft.getItemRenderer().getModel(stack, minecraft.level, null, 0);
+            minecraft
+                .getItemRenderer()
+                .render(stack, ItemDisplayContext.GUI, false, poseStack, OutlineBuffer.INSTANCE, packedLight, OverlayTexture.NO_OVERLAY, bakedmodel);
+
+            float s = 1.5F;
+            poseStack.scale(s, s, s);
+            poseStack.translate(-0.5, -0.5, -2);
+            poseStack.rotateAround(Axis.ZN.rotationDegrees(45), 0.5F, 0.5F, 0.5F);
 
             for (BakedQuad quad : outlineQuads.get()) {
-                solidRenderType.putBulkData(poseStack.last(), quad, r, g, b, 1, packedLight, OverlayTexture.NO_OVERLAY);
+                solidRenderBuffer.putBulkData(poseStack.last(), quad, outlineR, outlineG, outlineB, 1, packedLight, OverlayTexture.NO_OVERLAY);
             }
 
             poseStack.popPose();
         }
 
-        // Render Text
         if (!travelData.name().trim().isEmpty()) {
+            // Render Text
             poseStack.pushPose();
 
             {
                 Quaternionf textRotation = Axis.YN.rotationDegrees(camera.getYRot()).mul(Axis.XP.rotationDegrees(camera.getXRot()));
                 int lineHeight = minecraft.font.lineHeight;
                 double scale = 0.1;
+                double textOffsetY = scale * lineHeight + 1.25;
+                if (hasIcon && active) {
+                    textOffsetY += 0.15;
+                }
 
-                poseStack.translate(0.5, scale * lineHeight, 0.5);
+                poseStack.translate(0.5, 0.5, 0.5);
                 poseStack.mulPose(textRotation);
-                poseStack.translate(0, 1.5, 0);
+                poseStack.translate(0, textOffsetY, 0);
                 float s = (float) scale;
                 poseStack.scale(-s, -s, s);
             }
@@ -174,41 +220,13 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             }
             Matrix4f matrix4f = poseStack.last().pose();
 
-            minecraft.font.drawInBatch(textComponent, halfWidth, 0, color, false, matrix4f, buffer, mode1, textBg1, packedLight);
-            minecraft.font.drawInBatch(textComponent, halfWidth, 0, color, false, matrix4f, buffer, mode2, textBg2, packedLight);
+            minecraft.font.drawInBatch(textComponent, halfWidth, 0, textColor, false, matrix4f, buffer, mode1, textBg1, packedLight);
+            minecraft.font.drawInBatch(textComponent, halfWidth, 0, textColor, false, matrix4f, buffer, mode2, textBg2, packedLight);
 
             poseStack.popPose();
         }
 
-        // Render Icon
-        if (travelData.icon() != Items.AIR) {
-            poseStack.pushPose();
-
-            {
-                Vector3f upDir = new Vec3(0, 1, 0)
-                    .xRot(-camera.getXRot() * ((float) Math.PI / 180F))
-                    .yRot(-camera.getYRot() * ((float) Math.PI / 180F))
-                    .toVector3f();
-                Vector3f direction = towardsCamera.toVector3f();
-                Quaternionf iconRotation = new Quaternionf().lookAlong(direction.x(), direction.y(), direction.z(), upDir.x(), upDir.y(), upDir.z());
-
-                Vec3 offset = towardsCamera.scale(0.9);
-
-                poseStack.translate(offset.x() + 0.5, offset.y() + 0.5, offset.z() + 0.5);
-                poseStack.mulPose(iconRotation.invert());
-                float s = active ? 1.3F : 1.0F;
-                poseStack.scale(-s, s, -s);
-            }
-
-            ItemStack stack = new ItemStack(travelData.icon());
-            BakedModel bakedmodel = minecraft.getItemRenderer().getModel(stack, minecraft.level, null, 0);
-            minecraft
-                .getItemRenderer()
-                .render(stack, ItemDisplayContext.GUI, true, poseStack, OutlineBuffer.INSTANCE, packedLight, OverlayTexture.NO_OVERLAY, bakedmodel);
-
-            poseStack.popPose();
-        }
-
+        poseStack.popPose();
         // Seems to work fine without this line, but leaving it here in case there are future buffer problems
         // minecraft.renderBuffers().bufferSource().endBatch();
     }
