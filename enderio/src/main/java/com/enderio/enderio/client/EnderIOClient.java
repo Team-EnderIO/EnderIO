@@ -21,6 +21,7 @@ import com.enderio.enderio.client.content.conduits.model.modifier.RedstoneCondui
 import com.enderio.enderio.client.content.enderface.EnderfaceRenderer;
 import com.enderio.enderio.client.content.filters.EnderFluidFilterScreen;
 import com.enderio.enderio.client.content.filters.EnderItemFilterScreen;
+import com.enderio.enderio.client.content.filters.LimitedItemFilterScreen;
 import com.enderio.enderio.client.content.filters.EnderSoulFilterScreen;
 import com.enderio.enderio.client.content.filters.redstone.RedstoneCountFilterScreen;
 import com.enderio.enderio.client.content.filters.redstone.RedstoneDoubleChannelFilterScreen;
@@ -175,6 +176,7 @@ public class EnderIOClient {
         event.register(EIOMenus.ADVANCED_ITEM_FILTER.get(), EnderItemFilterScreen::new);
         event.register(EIOMenus.BIG_ITEM_FILTER.get(), EnderItemFilterScreen::new);
         event.register(EIOMenus.BIG_ADVANCED_ITEM_FILTER.get(), EnderItemFilterScreen::new);
+        event.register(EIOMenus.LIMITED_ITEM_FILTER.get(), LimitedItemFilterScreen::new);
         event.register(EIOMenus.BASIC_FLUID_FILTER.get(), EnderFluidFilterScreen::new);
         event.register(EIOMenus.BASIC_SOUL_FILTER.get(), EnderSoulFilterScreen::new);
         event.register(EIOMenus.REDSTONE_DOUBLE_CHANNEL_FILTER.get(), RedstoneDoubleChannelFilterScreen::new);

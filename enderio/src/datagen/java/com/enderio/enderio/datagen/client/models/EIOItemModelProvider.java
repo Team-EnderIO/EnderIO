@@ -166,6 +166,7 @@ public class EIOItemModelProvider extends ItemModelProvider {
         basicItem(EIOItems.BIG_ITEM_FILTER.get());
         basicItem(EIOItems.ADVANCED_ITEM_FILTER.get());
         basicItem(EIOItems.BIG_ADVANCED_ITEM_FILTER.get());
+        basicItem(EIOItems.LIMITED_ITEM_FILTER.get());
 
         basicItem(EIOItems.BASIC_FLUID_FILTER.get());
 

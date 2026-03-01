@@ -521,6 +521,7 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOItems.BIG_ITEM_FILTER.get(), "Big Item Filter");
         add(EIOItems.ADVANCED_ITEM_FILTER.get(), "Advanced Item Filter");
         add(EIOItems.BIG_ADVANCED_ITEM_FILTER.get(), "Big Advanced Item Filter");
+        add(EIOItems.LIMITED_ITEM_FILTER.get(), "Limited Item Filter");
 
         add(EIOItems.BASIC_FLUID_FILTER.get(), "Basic Fluid Filter");
 

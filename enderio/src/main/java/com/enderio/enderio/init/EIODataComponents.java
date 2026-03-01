@@ -12,6 +12,7 @@ import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
 import com.enderio.enderio.content.filters.fluid.EnderFluidFilter;
 import com.enderio.enderio.content.filters.item.general.EnderItemFilter;
+import com.enderio.enderio.content.filters.item.limited.LimitedItemFilter;
 import com.enderio.enderio.content.filters.redstone.DoubleRedstoneChannel;
 import com.enderio.enderio.content.filters.redstone.RedstoneCountFilter;
 import com.enderio.enderio.content.filters.redstone.RedstoneTLatchFilter;
@@ -74,6 +75,9 @@ public class EIODataComponents {
 
     public static final DataComponentType<EnderItemFilter> ITEM_FILTER = register("item_filter",
         builder -> builder.persistent(EnderItemFilter.CODEC).networkSynchronized(EnderItemFilter.STREAM_CODEC));
+
+    public static final DataComponentType<LimitedItemFilter> LIMITED_ITEM_FILTER = register("limited_item_filter",
+        builder -> builder.persistent(LimitedItemFilter.CODEC).networkSynchronized(LimitedItemFilter.STREAM_CODEC));
 
     public static final DataComponentType<EnderFluidFilter> FLUID_FILTER = register("fluid_filter",
         builder -> builder.persistent(EnderFluidFilter.CODEC).networkSynchronized(EnderFluidFilter.STREAM_CODEC));

@@ -25,7 +25,6 @@ public class ItemFilterSlot extends FilterSlot<ItemStack> {
 
     @Override
     public ItemStack processResource(ItemStack resource) {
-        // TODO: when we add limited, we'll want to do something with this to allow increasing item stacks etc.
         return resource.copyWithCount(1);
     }
 

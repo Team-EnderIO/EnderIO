@@ -8,6 +8,8 @@ import com.enderio.enderio.content.filters.fluid.EnderFluidFilterItem;
 import com.enderio.enderio.content.filters.fluid.EnderFluidFilterMenu;
 import com.enderio.enderio.content.filters.item.general.EnderItemFilterItem;
 import com.enderio.enderio.content.filters.item.general.EnderItemFilterMenu;
+import com.enderio.enderio.content.filters.item.limited.LimitedItemFilterItem;
+import com.enderio.enderio.content.filters.item.limited.LimitedItemFilterMenu;
 import com.enderio.enderio.content.filters.redstone.RedstoneCountFilterMenu;
 import com.enderio.enderio.content.filters.redstone.RedstoneDoubleChannelFilterMenu;
 import com.enderio.enderio.content.filters.redstone.RedstoneTimerFilterMenu;
@@ -61,6 +63,9 @@ public class EIOMenus {
 
     public static final DeferredHolder<MenuType<?>, MenuType<EnderItemFilterMenu>> BIG_ADVANCED_ITEM_FILTER = MENUS.register("big_advanced_item_filter",
         EnderItemFilterItem.Type.BIG_ADVANCED::openMenu);
+
+    public static final DeferredHolder<MenuType<?>, MenuType<LimitedItemFilterMenu>> LIMITED_ITEM_FILTER = MENUS.register("limited_item_filter",
+        LimitedItemFilterItem::openMenuClient);
 
     public static final DeferredHolder<MenuType<?>, MenuType<EnderFluidFilterMenu>> BASIC_FLUID_FILTER = MENUS.register("basic_fluid_filter",
         EnderFluidFilterItem.Type.BASIC::openMenu);
