@@ -81,7 +81,9 @@ jobs:
         with:
           name: Ender IO - ${{ github.event.release.tag_name }}
           version: ${{ github.event.release.tag_name }}
-          files: build/libs/*.jar
+          files: |
+            build/libs/!(*-@(api|sources)).jar
+            build/libs/*-@(api|sources).jar
           changelog: ${{ github.event.release.body }}
           loaders: neoforge
           game-versions: 1.21.1
@@ -113,7 +115,9 @@ jobs:
         with:
           name: Ender IO - ${{ github.event.release.tag_name }}
           version: ${{ github.event.release.tag_name }}
-          files: build/libs/*.jar
+          files: |
+            build/libs/!(*-@(api|sources)).jar
+            build/libs/*-@(api|sources).jar
           changelog: ${{ github.event.release.body }}
           loaders: neoforge
           game-versions: 1.21.1
