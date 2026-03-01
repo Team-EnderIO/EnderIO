@@ -1,81 +1,59 @@
 package com.enderio.enderio.content.conduits.type.energy;
 
+import com.enderio.enderio.api.conduits.connection.ConduitBlockConnection;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
+import com.enderio.enderio.init.EIOConduitTypes;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
-public record EnergyConduitStorage(@Nullable Direction side, int transferRateAtPoint, @Nullable ConduitNode node) implements IEnergyStorage {
-
-    private static final long ENERGY_BUFFER_SCALER = 4;
-
-    public long getLongMaxEnergyStored() {
-        if (node == null || !node.isLoaded()) {
+public record EnergyConduitStorage(Direction side, @Nullable ConduitNode node) implements IEnergyStorage {
+    @Override
+    public int receiveEnergy(int amount, boolean simulate) {
+        if (node == null || !node.isLoaded() || amount <= 0) {
             return 0;
         }
 
-        // TODO: Might be good to have contexts able to react to changes in the network
-        //       So that this can be cached.
-        long maxEnergyStored = 0;
-        for (var conduit : node.getNetwork().conduits()) {
-            var energyConduit = (EnergyConduit)conduit.value();
-            final int transferRate = energyConduit.transferRatePerTick();
+        var network = node.getNetwork();
+        var inserts = network.insertConnectionsFrom(new ConduitBlockConnection(node, side));
 
-            final int nodeCount = node.getNetwork().nodeCount(conduit);
+        int energyToSend = Math.min(amount, getTransferRate());
+        int energyAccepted = 0;
+        for (var insert : inserts) {
+            var energyStorage = insert.end().getSidedCapability(Capabilities.EnergyStorage.BLOCK);
+            if (energyStorage == null || !energyStorage.canReceive()) {
+                continue;
+            }
 
-            maxEnergyStored += transferRate + nodeCount * (transferRate / ENERGY_BUFFER_SCALER);
+            // Cap to path speed.
+            int toSend = Math.min(energyToSend, insert.property(EnergyConduit.PATH_MAX_TRANSFER_RATE));
+
+            int sent = energyStorage.receiveEnergy(toSend, simulate);
+            energyAccepted += sent;
+            energyToSend -= sent;
+            if (energyToSend <= 0) {
+                return energyAccepted;
+            }
         }
 
-        // Always full transfer rate plus the extra buffer.
-        return maxEnergyStored;
-    }
-
-    public long getLongEnergyStored() {
-        if (node == null || !node.isLoaded()) {
-            return 0;
-        }
-
-        var context = node.getNetwork().getContext(EnergyConduitNetworkContext.TYPE);
-        if (context == null) {
-            return 0;
-        }
-
-        return Math.max(Math.min(getLongMaxEnergyStored(), context.energyStored()), 0);
+        return energyAccepted;
     }
 
     @Override
-    public int receiveEnergy(int toReceive, boolean simulate) {
-        if (node == null || !node.isLoaded() || !canReceive()) {
-            return 0;
-        }
-
-        var context = node.getNetwork().getOrCreateContext(EnergyConduitNetworkContext.TYPE);
-
-        // Cap to transfer rate.
-        toReceive = Math.min(transferRateAtPoint(), toReceive);
-
-        int energyReceived = (int)Math.min(Math.min(getLongMaxEnergyStored() - getLongEnergyStored(), toReceive), Integer.MAX_VALUE);
-        if (!simulate) {
-            context.setEnergyStored(getLongEnergyStored() + energyReceived);
-        }
-
-        return energyReceived;
-    }
-
-    @Override
-    public int extractEnergy(int toExtract, boolean simulate) {
-        // Pulling from energy conduits is forbidden.
+    public int extractEnergy(int amount, boolean simulate) {
         return 0;
     }
 
     @Override
     public int getEnergyStored() {
-        return (int)Math.min(getLongEnergyStored(), Integer.MAX_VALUE);
+        return 0;
     }
 
     @Override
     public int getMaxEnergyStored() {
-        return (int)Math.min(getLongMaxEnergyStored(), Integer.MAX_VALUE);
+        return 0;
     }
 
     @Override
@@ -85,21 +63,11 @@ public record EnergyConduitStorage(@Nullable Direction side, int transferRateAtP
 
     @Override
     public boolean canReceive() {
-        if (side == null || node == null) {
-            return false;
-        }
+        return true;
+    }
 
-        // Only allow extraction if we're configured to allow it.
-        if (!node.isConnectedToBlock(side)) {
-            return false;
-        }
-
-        var config = node.getConnectionConfig(side, EnergyConduitConnectionConfig.TYPE);
-        if (!config.isConnected()) {
-            return false;
-        }
-
-        boolean hasRedstoneSignal = node.hasRedstoneSignal(config.extractRedstoneChannel());
-        return config.isExtract() && config.extractRedstoneControl().isActive(hasRedstoneSignal);
+    private int getTransferRate() {
+        Holder<EnergyConduit> conduit = node().conduit(EIOConduitTypes.ENERGY.get());
+        return conduit.value().transferRatePerTick();
     }
 }
