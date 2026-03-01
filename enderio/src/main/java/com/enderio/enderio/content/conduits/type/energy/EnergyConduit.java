@@ -16,12 +16,9 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
@@ -31,16 +28,14 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import java.util.Optional;
 import java.util.function.Consumer;
 
-public record EnergyConduit(ResourceLocation texture, Component description, Optional<ResourceKey<CreativeModeTab>> creativeTab, int transferRatePerTick)
+public record EnergyConduit(ResourceLocation texture, Component description, int transferRatePerTick)
         implements Conduit<EnergyConduit, EnergyConduitConnectionConfig> {
 
     public static final MapCodec<EnergyConduit> CODEC = RecordCodecBuilder.mapCodec(builder -> builder
             .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(Conduit::texture),
                     ComponentSerialization.CODEC.fieldOf("description").forGetter(Conduit::description),
-                    ResourceKey.codec(Registries.CREATIVE_MODE_TAB).optionalFieldOf("creative_tab").forGetter(Conduit::creativeTab),
                     Codec.INT.fieldOf("transfer_rate").forGetter(EnergyConduit::transferRatePerTick))
             .apply(builder, EnergyConduit::new));
 

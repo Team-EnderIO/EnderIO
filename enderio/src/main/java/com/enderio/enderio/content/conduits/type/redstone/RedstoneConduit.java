@@ -14,13 +14,10 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -28,10 +25,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector2i;
 
-import java.util.Optional;
 import java.util.Set;
 
-public record RedstoneConduit(ResourceLocation texture, ResourceLocation activeTexture, Component description, Optional<ResourceKey<CreativeModeTab>> creativeTab)
+public record RedstoneConduit(ResourceLocation texture, ResourceLocation activeTexture, Component description)
         implements Conduit<RedstoneConduit, RedstoneConduitConnectionConfig> {
 
     public static final int EXTRACT_FILTER_SLOT = 0;
@@ -40,8 +36,7 @@ public record RedstoneConduit(ResourceLocation texture, ResourceLocation activeT
     public static final MapCodec<RedstoneConduit> CODEC = RecordCodecBuilder.mapCodec(builder -> builder
         .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(RedstoneConduit::texture),
             ResourceLocation.CODEC.fieldOf("active_texture").forGetter(RedstoneConduit::activeTexture),
-            ComponentSerialization.CODEC.fieldOf("description").forGetter(RedstoneConduit::description),
-            ResourceKey.codec(Registries.CREATIVE_MODE_TAB).optionalFieldOf("creative_tab").forGetter(Conduit::creativeTab))
+            ComponentSerialization.CODEC.fieldOf("description").forGetter(RedstoneConduit::description))
         .apply(builder, RedstoneConduit::new));
 
     @Override

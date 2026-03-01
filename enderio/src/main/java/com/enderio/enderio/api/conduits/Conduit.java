@@ -61,14 +61,6 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
     Component description();
 
     /**
-     * Returns a creative tab the conduit should be added to, in addition to the Ender IO tab.
-     * @return a creative tab to add to, if desired.
-     */
-    default Optional<ResourceKey<CreativeModeTab>> creativeTab() {
-        return Optional.empty();
-    }
-
-    /**
      * Gets the conduit type.
      * This is used to define serialization and exposing proxied capabilities.
      */

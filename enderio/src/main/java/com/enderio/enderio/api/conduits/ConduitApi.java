@@ -26,4 +26,14 @@ public interface ConduitApi {
      */
     @ApiStatus.AvailableSince("8.1.0")
     String makeDescriptionId(ResourceKey<Conduit<?, ?>> key);
+
+    @ApiStatus.AvailableSince("8.2.0")
+    @ApiStatus.Experimental
+    default int compareConduits(Holder<Conduit<?, ?>> a, Holder<Conduit<?, ?>> b) {
+        return compareConduits(a.value(), b.value());
+    }
+
+    @ApiStatus.AvailableSince("8.2.0")
+    @ApiStatus.Experimental
+    <T extends Conduit<T, ?>> int compareConduits(Conduit<T, ?> a, Conduit<?, ?> b);
 }
