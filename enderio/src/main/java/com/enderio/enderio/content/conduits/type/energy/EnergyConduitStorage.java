@@ -84,21 +84,8 @@ public record EnergyConduitStorage(@Nullable Direction side, int transferRate, @
 
     @Override
     public boolean canReceive() {
-        if (side == null || node == null) {
-            return false;
-        }
-
-        // Only allow extraction if we're configured to allow it.
-        if (!node.isConnectedToBlock(side)) {
-            return false;
-        }
-
-        var config = node.getConnectionConfig(side, EnergyConduitConnectionConfig.TYPE);
-        if (!config.isConnected()) {
-            return false;
-        }
-
-        boolean hasRedstoneSignal = node.hasRedstoneSignal(config.extractRedstoneChannel());
-        return config.isExtract() && config.extractRedstoneControl().isActive(hasRedstoneSignal);
+        // We can always receive energy, but depending on conditions we may not be able to.
+        // That is handled in receiveEnergy though, as this is a simple indicator that we can receive energy.
+        return true;
     }
 }
