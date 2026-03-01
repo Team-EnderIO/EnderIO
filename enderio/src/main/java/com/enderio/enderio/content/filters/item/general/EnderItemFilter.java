@@ -2,6 +2,7 @@ package com.enderio.enderio.content.filters.item.general;
 
 import com.enderio.core.common.serialization.OrderedListCodec;
 import com.enderio.enderio.api.filter.ItemFilter;
+import com.enderio.enderio.content.filters.item.ItemFilterUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
@@ -70,40 +71,12 @@ public record EnderItemFilter(NonNullList<ItemStack> matches, boolean isDenyList
             }
 
             if (ItemStack.isSameItem(match, itemStack)) {
-                if (!shouldCompareComponents || componentsMatch(match, itemStack)) {
+                if (!shouldCompareComponents || ItemFilterUtils.doComponentsMatch(match, itemStack)) {
                     return isDenyList ? ItemStack.EMPTY : itemStack;
                 }
             }
         }
 
         return isDenyList ? itemStack : ItemStack.EMPTY;
-    }
-
-    // Ignore damage as it is controlled with the damage filter.
-    private static final List<DataComponentType<?>> IGNORED_COMPONENT_TYPES = List.of(DataComponents.DAMAGE);
-
-    private boolean componentsMatch(ItemStack referenceStack, ItemStack stack) {
-        for (var component : referenceStack.getComponents()) {
-            if (IGNORED_COMPONENT_TYPES.contains(component.type())) {
-                continue;
-            }
-
-            if (!Objects.equals(stack.get(component.type()), component.value())) {
-                return false;
-            }
-        }
-
-        // Ensure no additional components are present
-        for (var component : stack.getComponents()) {
-            if (IGNORED_COMPONENT_TYPES.contains(component.type())) {
-                continue;
-            }
-
-            if (!Objects.equals(referenceStack.get(component.type()), component.value())) {
-                return false;
-            }
-        }
-
-        return true;
     }
 }

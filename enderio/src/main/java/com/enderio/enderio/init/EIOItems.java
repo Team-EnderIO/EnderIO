@@ -16,6 +16,7 @@ import com.enderio.enderio.content.conduits.facades.ConduitFacadeItem;
 import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
 import com.enderio.enderio.content.filters.fluid.EnderFluidFilterItem;
 import com.enderio.enderio.content.filters.item.general.EnderItemFilterItem;
+import com.enderio.enderio.content.filters.item.limited.LimitedItemFilterItem;
 import com.enderio.enderio.content.filters.redstone.RedstoneFilterItem;
 import com.enderio.enderio.content.filters.soul.EnderSoulFilterItem;
 import com.enderio.enderio.content.fun.EnderiosItem;
@@ -264,6 +265,8 @@ public class EIOItems {
     public static final DeferredItem<EnderItemFilterItem> ADVANCED_ITEM_FILTER = ITEMS.registerItem("advanced_item_filter", props -> new EnderItemFilterItem(props, EnderItemFilterItem.Type.ADVANCED));
 
     public static final DeferredItem<EnderItemFilterItem> BIG_ADVANCED_ITEM_FILTER = ITEMS.registerItem("big_advanced_item_filter", props -> new EnderItemFilterItem(props, EnderItemFilterItem.Type.BIG_ADVANCED));
+
+    public static final DeferredItem<LimitedItemFilterItem> LIMITED_ITEM_FILTER = ITEMS.registerItem("limited_item_filter", LimitedItemFilterItem::new);
 
     public static final DeferredItem<EnderFluidFilterItem> BASIC_FLUID_FILTER = ITEMS.registerItem("basic_fluid_filter", props -> new EnderFluidFilterItem(props, EnderFluidFilterItem.Type.BASIC));
 

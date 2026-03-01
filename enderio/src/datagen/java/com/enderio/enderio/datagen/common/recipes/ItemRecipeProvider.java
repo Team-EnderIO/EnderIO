@@ -135,6 +135,11 @@ public class ItemRecipeProvider extends SubRecipeProvider {
                 .unlockedBy("has_ingredient", has(EIOItems.ADVANCED_ITEM_FILTER))
                 .save(recipeOutput, EnderIO.rl("erase_advanced_item_filter"));
 
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, EIOItems.LIMITED_ITEM_FILTER)
+                .requires(EIOItems.LIMITED_ITEM_FILTER)
+                .unlockedBy("has_ingredient", has(EIOItems.LIMITED_ITEM_FILTER))
+                .save(recipeOutput, EnderIO.rl("erase_limited_item_filter"));
+
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, EIOItems.BASIC_FLUID_FILTER)
                 .requires(EIOItems.BASIC_FLUID_FILTER)
                 .unlockedBy("has_ingredient", has(EIOItems.BASIC_FLUID_FILTER))
