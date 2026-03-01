@@ -17,7 +17,6 @@ import com.enderio.enderio.client.content.conduits.gui.screen_type.RedstoneCondu
 import com.enderio.enderio.client.content.conduits.model.ConduitItemModelLoader;
 import com.enderio.enderio.client.content.conduits.model.bundle.ConduitBundleGeometry;
 import com.enderio.enderio.client.content.conduits.model.facades.FacadeItemGeometry;
-import com.enderio.enderio.client.content.conduits.model.modifier.FluidConduitModelModifier;
 import com.enderio.enderio.client.content.conduits.model.modifier.RedstoneConduitModelModifier;
 import com.enderio.enderio.client.content.enderface.EnderfaceRenderer;
 import com.enderio.enderio.client.content.filters.EnderFluidFilterScreen;
@@ -414,7 +413,6 @@ public class EnderIOClient {
     @SubscribeEvent
     public static void registerConduitCoreModelModifiers(RegisterConduitModelModifiersEvent event) {
         event.register(EIOConduitTypes.REDSTONE.get(), RedstoneConduitModelModifier::new);
-        event.register(EIOConduitTypes.FLUID.get(), FluidConduitModelModifier::new);
     }
 
     @SubscribeEvent

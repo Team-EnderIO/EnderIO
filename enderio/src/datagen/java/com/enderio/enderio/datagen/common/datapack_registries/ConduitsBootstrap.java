@@ -29,9 +29,9 @@ public class ConduitsBootstrap {
             (desc) -> new RedstoneConduit(EnderIO.rl("block/conduit/redstone"), EnderIO.rl("block/conduit/redstone_active"), desc));
 
         // Fluid conduits tick every 5 ticks, so remember the transfer rate per tick will be *5 for each operation.
-        register(context, EIOConduits.FLUID, (desc) -> new FluidConduit(EnderIO.rl("block/conduit/fluid"), desc, 200, false, false));
-        register(context, EIOConduits.ENERGETIC_FLUID, (desc) -> new FluidConduit(EnderIO.rl("block/conduit/pressurized_fluid"), desc, 1_000, false, true));
-        register(context, EIOConduits.VIBRANT_FLUID, (desc) -> new FluidConduit(EnderIO.rl("block/conduit/ender_fluid"), desc, 8_000, true, true));
+        register(context, EIOConduits.FLUID, (desc) -> new FluidConduit(EnderIO.rl("block/conduit/fluid"), desc, 200));
+        register(context, EIOConduits.ENERGETIC_FLUID, (desc) -> new FluidConduit(EnderIO.rl("block/conduit/pressurized_fluid"), desc, 1_000));
+        register(context, EIOConduits.VIBRANT_FLUID, (desc) -> new FluidConduit(EnderIO.rl("block/conduit/ender_fluid"), desc, 8_000));
 
         register(context, EIOConduits.ITEM, (desc) -> new ItemConduit(EnderIO.rl("block/conduit/item"), desc, 32, 20));
         register(context, EIOConduits.ENERGETIC_ITEM, (desc) -> new ItemConduit(EnderIO.rl("block/conduit/item"), desc, 64, 20));

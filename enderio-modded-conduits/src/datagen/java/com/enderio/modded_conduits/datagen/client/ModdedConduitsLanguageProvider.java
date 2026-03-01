@@ -36,7 +36,6 @@ public class ModdedConduitsLanguageProvider extends LanguageProvider {
         add(MekanismModule.ENDER_CHEMICAL, "Ender Chemical Conduit");
 
         // GUI
-        add(MekanismModule.LANG_MULTI_CHEMICAL_TOOLTIP, "Allows multiple chemical types to be transported on the same line");
         add(MekanismModule.CHEMICAL_CONDUIT_CHANGE_FLUID1, "Locked Chemical:");
         add(MekanismModule.CHEMICAL_CONDUIT_CHANGE_FLUID2, "Click to reset!");
         add(MekanismModule.CHEMICAL_CONDUIT_CHANGE_FLUID3, "Chemical: %s");

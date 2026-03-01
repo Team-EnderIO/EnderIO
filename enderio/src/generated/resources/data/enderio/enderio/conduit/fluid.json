@@ -3,7 +3,6 @@
   "description": {
     "translate": "conduit.enderio.fluid"
   },
-  "is_multi_fluid": false,
   "texture": "enderio:block/conduit/fluid",
   "transfer_rate": 200
 }

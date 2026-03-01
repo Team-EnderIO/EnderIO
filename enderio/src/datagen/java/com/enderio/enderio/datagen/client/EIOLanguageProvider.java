@@ -223,7 +223,6 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(ConduitLang.ENERGY_RATE_TOOLTIP, "Max Output %s \u00B5I/t");
         add(ConduitLang.FLUID_RAW_RATE_TOOLTIP, "Rate: %s mB/network tick");
         add(ConduitLang.FLUID_EFFECTIVE_RATE_TOOLTIP, "Effective Rate: %s mB/t");
-        add(ConduitLang.MULTI_FLUID_TOOLTIP, "Allows multiple fluids to be transported on the same line");
         add(ConduitLang.ITEM_RAW_RATE_TOOLTIP, "Rate: %s Items/network tick");
         add(ConduitLang.ITEM_EFFECTIVE_RATE_TOOLTIP, "Effective Rate: %s Items/sec");
 

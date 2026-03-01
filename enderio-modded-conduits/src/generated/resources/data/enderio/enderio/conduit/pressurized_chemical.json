@@ -9,7 +9,6 @@
   "description": {
     "translate": "conduit.enderio.pressurized_chemical"
   },
-  "is_multi_chemical": false,
   "texture": "enderio:block/conduit/pressurized_chemical",
   "transfer_rate": 2000
 }

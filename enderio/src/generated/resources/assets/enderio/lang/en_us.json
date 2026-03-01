@@ -545,7 +545,6 @@
   "tooltip.enderio.conduit.facade.blast_resist": "Hardened: Resists breaking and explosions",
   "tooltip.enderio.conduit.facade.transparent": "Transparent: Hides conduits when painted with a translucent block",
   "tooltip.enderio.conduit.fluid.effective_rate": "Effective Rate: %s mB/t",
-  "tooltip.enderio.conduit.fluid.multi": "Allows multiple fluids to be transported on the same line",
   "tooltip.enderio.conduit.fluid.raw_rate": "Rate: %s mB/network tick",
   "tooltip.enderio.conduit.graph_tick_rate": "Network Ticks: %s/sec",
   "tooltip.enderio.conduit.item.effective_rate": "Effective Rate: %s Items/sec",
