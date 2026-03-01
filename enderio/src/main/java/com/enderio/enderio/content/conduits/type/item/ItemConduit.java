@@ -45,16 +45,13 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
     public static final int EXTRACT_FILTER_SLOT = 0;
     public static final int INSERT_FILTER_SLOT = 1;
 
-    public static final MapCodec<ItemConduit> CODEC = RecordCodecBuilder.mapCodec(
-            builder -> builder
-                    .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(ItemConduit::texture),
-                            ComponentSerialization.CODEC.fieldOf("description").forGetter(ItemConduit::description),
-                            // Using optionals in order to support the old conduit format.
-                            Codec.INT.optionalFieldOf("transfer_rate", 4).forGetter(ItemConduit::transferRatePerCycle),
-                            Codec.intRange(1, 20)
-                                    .optionalFieldOf("ticks_per_cycle", 20)
-                                    .forGetter(ItemConduit::networkTickRate))
-                    .apply(builder, ItemConduit::new));
+    public static final MapCodec<ItemConduit> CODEC = RecordCodecBuilder.mapCodec(builder -> builder
+        .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(Conduit::texture),
+            ComponentSerialization.CODEC.fieldOf("description").forGetter(Conduit::description),
+            // Using optionals in order to support the old conduit format.
+            Codec.INT.optionalFieldOf("transfer_rate", 4).forGetter(ItemConduit::transferRatePerCycle),
+            Codec.intRange(1, 20).optionalFieldOf("ticks_per_cycle", 20).forGetter(ItemConduit::networkTickRate))
+        .apply(builder, ItemConduit::new));
 
     public static final ConnectionPathProperty<SpeedAndTickRatePair> PATH_SPEED_AND_TICK_RATE = SpeedAndTickRatePair.minProperty(SpeedAndTickRatePair.ZERO);
 

@@ -3,6 +3,7 @@ package com.enderio.modded_conduits.common.modules.mekanism;
 import com.enderio.core.common.registries.ItemDeferredRegister;
 import com.enderio.core.common.registries.MenuDeferredRegister;
 import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
@@ -204,7 +205,7 @@ public class MekanismModule implements ConduitCommonModule {
     }
 
     private void addToCreativeTabs(BuildCreativeModeTabContentsEvent event) {
-        if (event.getTabKey() == EIOCreativeTabs.MAIN) {
+        if (event.getTabKey() == EnderIOAPI.MAIN_CREATIVE_TAB) {
             event.insertAfter(EIOItems.BASIC_SOUL_FILTER.get().getDefaultInstance(),
                 BASIC_CHEMICAL_FILTER.get().getDefaultInstance(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
         }

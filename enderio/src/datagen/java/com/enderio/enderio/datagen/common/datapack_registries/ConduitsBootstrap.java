@@ -14,6 +14,7 @@ import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 
+import java.util.Optional;
 import java.util.function.Function;
 
 public class ConduitsBootstrap {
@@ -21,9 +22,9 @@ public class ConduitsBootstrap {
         // TODO: These rates are still up for change, but will refine through testing.
 
         // TODO(1.21.1+): change resource keys to match the names
-        register(context, EIOConduits.ENERGY, (desc) -> new EnergyConduit(EnderIO.rl("block/conduit/energy"), desc, 6000));
+        register(context, EIOConduits.ENERGY, (desc) -> new EnergyConduit(EnderIO.rl("block/conduit/energy"), desc, 8000));
         register(context, EIOConduits.ENERGETIC_ENERGY, (desc) -> new EnergyConduit(EnderIO.rl("block/conduit/enhanced_energy"), desc, 48_000));
-        register(context, EIOConduits.VIBRANT_ENERGY, (desc) -> new EnergyConduit(EnderIO.rl("block/conduit/ender_energy"), desc, 384_000));
+        register(context, EIOConduits.VIBRANT_ENERGY, (desc) -> new EnergyConduit(EnderIO.rl("block/conduit/ender_energy"), desc, 192_000));
 
         register(context, EIOConduits.REDSTONE,
             (desc) -> new RedstoneConduit(EnderIO.rl("block/conduit/redstone"), EnderIO.rl("block/conduit/redstone_active"), desc));

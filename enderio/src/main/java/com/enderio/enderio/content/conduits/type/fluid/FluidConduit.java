@@ -47,14 +47,11 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
     public static final int EXTRACT_FILTER_SLOT = 0;
     public static final int INSERT_FILTER_SLOT = 1;
 
-    public static final MapCodec<FluidConduit> CODEC = RecordCodecBuilder
-            .mapCodec(
-                    builder -> builder
-                            .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(FluidConduit::texture),
-                                    ComponentSerialization.CODEC.fieldOf("description")
-                                            .forGetter(FluidConduit::description),
-                                    Codec.INT.fieldOf("transfer_rate").forGetter(FluidConduit::transferRatePerTick))
-                            .apply(builder, FluidConduit::new));
+    public static final MapCodec<FluidConduit> CODEC = RecordCodecBuilder.mapCodec(builder -> builder
+        .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(Conduit::texture),
+            ComponentSerialization.CODEC.fieldOf("description").forGetter(Conduit::description),
+            Codec.INT.fieldOf("transfer_rate").forGetter(FluidConduit::transferRatePerTick))
+        .apply(builder, FluidConduit::new));
 
     public static final ConnectionPathProperty<Integer> PATH_MAX_TRANSFER_RATE = ConnectionPathProperty.minInt(0);
 

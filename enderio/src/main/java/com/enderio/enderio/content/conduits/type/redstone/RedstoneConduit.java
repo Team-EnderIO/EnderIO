@@ -34,10 +34,10 @@ public record RedstoneConduit(ResourceLocation texture, ResourceLocation activeT
     public static final int INSERT_FILTER_SLOT = 1;
 
     public static final MapCodec<RedstoneConduit> CODEC = RecordCodecBuilder.mapCodec(builder -> builder
-            .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(RedstoneConduit::texture),
-                    ResourceLocation.CODEC.fieldOf("active_texture").forGetter(RedstoneConduit::activeTexture),
-                    ComponentSerialization.CODEC.fieldOf("description").forGetter(RedstoneConduit::description))
-            .apply(builder, RedstoneConduit::new));
+        .group(ResourceLocation.CODEC.fieldOf("texture").forGetter(RedstoneConduit::texture),
+            ResourceLocation.CODEC.fieldOf("active_texture").forGetter(RedstoneConduit::activeTexture),
+            ComponentSerialization.CODEC.fieldOf("description").forGetter(RedstoneConduit::description))
+        .apply(builder, RedstoneConduit::new));
 
     @Override
     public ConduitType<RedstoneConduit, RedstoneConduitConnectionConfig> type() {

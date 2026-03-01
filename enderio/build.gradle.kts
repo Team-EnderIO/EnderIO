@@ -90,9 +90,6 @@ dependencies {
     jarJar(project(":enderio-modded-conduits"))
     localRuntime(project(":enderio-modded-conduits"))
 
-    // Bring all other "addons" into the dev env for testing - but do not bundle them in the jar
-    localRuntime(project(":enderio-endergy"))
-
     // Almost Unified
     compileOnly(variantOf(libs.almostUnified) {
         classifier("api")
@@ -271,6 +268,11 @@ var generateModMetadata = tasks.register<ProcessResources>("generateModMetadata"
 // Add results to source set and to IDE sync
 sourceSets.main.get().resources.srcDir(generateModMetadata)
 neoForge.ideSyncTask(generateModMetadata)
+
+tasks.named<Jar>("jar") {
+    // FIXME: Temporary - shipping datagen classes with build again for Endergy.
+    from(sourceSets["datagen"].output)
+}
 
 tasks.withType<Jar> {
     manifest {
