@@ -269,10 +269,12 @@ var generateModMetadata = tasks.register<ProcessResources>("generateModMetadata"
 sourceSets.main.get().resources.srcDir(generateModMetadata)
 neoForge.ideSyncTask(generateModMetadata)
 
-tasks.withType<Jar> {
+tasks.named<Jar>("jar") {
     // FIXME: Temporary - shipping datagen classes with build again for Endergy.
     from(sourceSets["datagen"].output)
+}
 
+tasks.withType<Jar> {
     manifest {
         attributes(mapOf(
                 "Specification-Title" to "Ender IO",
