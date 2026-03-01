@@ -10,6 +10,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -114,6 +115,27 @@ public class LimitedItemFilterMenu extends AbstractFilterMenu<LimitedItemFilter>
 
             return new LimitedItemFilter(matches, filter.shouldCompareComponents(), filter.damageFilterMode());
         });
+    }
+
+    @Override
+    public void doClick(int slotId, int button, ClickType clickType, Player player) {
+        if (slotId >= 0 && slotId < slots.size() && getSlot(slotId) instanceof LimitedItemFilterSlot limitedSlot) {
+            if (clickType != ClickType.PICKUP && clickType != ClickType.QUICK_MOVE) {
+                return;
+            }
+
+            if (!limitedSlot.isEmpty()) {
+                ItemStack cursor = getCarried();
+                ItemStack current = limitedSlot.getResource();
+                // If cursor holds the same item, increase the stored limit by the cursor count.
+                if (!cursor.isEmpty() && ItemStack.isSameItem(cursor, current)) {
+                    limitedSlot.setResource(current.copyWithCount(current.getCount() + cursor.getCount()));
+                    return;
+                }
+            }
+        }
+
+        super.doClick(slotId, button, clickType, player);
     }
 
     @Override
