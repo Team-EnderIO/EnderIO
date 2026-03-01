@@ -3,22 +3,19 @@ package com.enderio.modded_conduits.common.modules.mekanism.chemical;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
-import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.api.conduits.bundle.SlotType;
-import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.enderio.enderio.api.conduits.connection.path.ConnectionPathProperty;
 import com.enderio.enderio.api.conduits.connection.path.ConnectionPathPropertyConsumer;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
-import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataAccessor;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.content.conduits.ConduitLang;
 import com.enderio.modded_conduits.common.modules.mekanism.MekanismModule;
+import com.enderio.modded_conduits.config.ModdedConduitsConfig;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.ResourceLocation;
@@ -28,11 +25,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 
-import java.util.Objects;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public record ChemicalConduit(ResourceLocation texture, Component description, long transferRatePerTick)
@@ -76,6 +70,11 @@ public record ChemicalConduit(ResourceLocation texture, Component description, l
     public boolean canConnectToBlock(Level level, BlockPos conduitPos, Direction direction) {
         return level.getCapability(MekanismModule.Capabilities.CHEMICAL, conduitPos.relative(direction),
                 direction.getOpposite()) != null;
+    }
+
+    @Override
+    public boolean canConnectToConduit(ChemicalConduit other) {
+        return ModdedConduitsConfig.COMMON.MEKANISM.CAN_MIX_CHEMICAL_CONDUIT_TIERS.get();
     }
 
     @Override

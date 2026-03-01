@@ -8,6 +8,7 @@ import com.enderio.enderio.api.conduits.connection.path.ConnectionPathProperty;
 import com.enderio.enderio.api.conduits.connection.path.ConnectionPathPropertyConsumer;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.io.RedstoneControl;
+import com.enderio.enderio.config.conduits.ConduitsConfig;
 import com.enderio.enderio.content.conduits.ConduitLang;
 import com.enderio.enderio.init.EIOConduitTypes;
 import com.mojang.serialization.Codec;
@@ -53,7 +54,7 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
 
     @Override
     public boolean canConnectToConduit(EnergyConduit other) {
-        return true;
+        return ConduitsConfig.COMMON.CAN_MIX_ENERGY_CONDUIT_TIERS.get();
     }
 
     @Override
