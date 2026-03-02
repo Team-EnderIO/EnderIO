@@ -4,6 +4,7 @@ import com.enderio.enderio.api.travel.TravelRenderer;
 import com.enderio.enderio.client.EnderIOClient;
 import com.enderio.enderio.client.foundation.renderer.OutlineBuffer;
 import com.enderio.enderio.compat.ModCompatHelper;
+import com.enderio.enderio.config.base.BaseConfig;
 import com.enderio.enderio.content.travel.travel_anchor.AnchorTravelTarget;
 import com.enderio.enderio.content.travel.travel_anchor.PaintedTravelAnchorBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -27,8 +28,10 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.neoforged.neoforge.common.util.Lazy;
 import org.joml.Math;
 import org.joml.Matrix4f;
@@ -102,23 +105,32 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
 
         int packedLight = LightTexture.pack(15, 15);
 
-        boolean hasIcon = travelData.icon() != Items.AIR;
+        Block iconBlock = Block.byItem(travelData.icon());
+
+        BlockState blockState;
+        boolean iconIsFullBlock = false;
+
+        if (iconBlock != Blocks.AIR && BaseConfig.CLIENT.ANCHORS_USE_ICON_AS_BLOCK.get()) {
+            blockState = iconBlock.defaultBlockState();
+            iconIsFullBlock = blockState.getOcclusionShape(minecraft.level, travelData.pos()) == Shapes.block();
+        } else {
+            blockState = minecraft.level.getBlockState(travelData.pos());
+
+            if (minecraft.level.getBlockEntity(travelData.pos()) instanceof PaintedTravelAnchorBlockEntity paintedTravelAnchorBlock) {
+                Optional<Block> paint = paintedTravelAnchorBlock.getPrimaryPaint();
+
+                if (paint.isPresent()) {
+                    blockState = paint.get().defaultBlockState();
+                }
+            }
+        }
+
+        boolean hasIcon = !(travelData.icon() == Items.AIR || iconIsFullBlock);
 
         if (!hasIcon) {
             // Render Model
-            {
-                BlockState blockState = minecraft.level.getBlockState(travelData.pos());
-                if (minecraft.level.getBlockEntity(travelData.pos()) instanceof PaintedTravelAnchorBlockEntity paintedTravelAnchorBlock) {
-                    Optional<Block> paint = paintedTravelAnchorBlock.getPrimaryPaint();
-
-                    if (paint.isPresent()) {
-                        blockState = paint.get().defaultBlockState();
-                    }
-                }
-
-                BakedModel blockModel = minecraft.getBlockRenderer().getBlockModel(blockState);
-                blockModelRenderer.renderModel(poseStack.last(), solidRenderBuffer, blockState, blockModel, 1, 1, 1, packedLight, OverlayTexture.NO_OVERLAY);
-            }
+            BakedModel blockModel = minecraft.getBlockRenderer().getBlockModel(blockState);
+            blockModelRenderer.renderModel(poseStack.last(), solidRenderBuffer, blockState, blockModel, 1, 1, 1, packedLight, OverlayTexture.NO_OVERLAY);
 
             // Render outline block
             {
@@ -157,7 +169,7 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
                 poseStack.scale(-s, s, -s);
             }
 
-            ItemStack stack = new ItemStack(travelData.icon());
+            ItemStack stack = travelData.icon().getDefaultInstance();
             BakedModel bakedmodel = minecraft.getItemRenderer().getModel(stack, minecraft.level, null, 0);
             minecraft
                 .getItemRenderer()
