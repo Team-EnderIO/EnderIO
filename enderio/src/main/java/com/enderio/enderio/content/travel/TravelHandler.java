@@ -131,7 +131,7 @@ public class TravelHandler {
                     player.playNotifySound(SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
 
                 }else if(sendToServer){
-                    PacketDistributor.sendToServer(new ServerboundRequestShortTravelPacket(true));
+                    PacketDistributor.sendToServer(new ServerboundRequestShortTravelPacket());
                 }else{
                     return false;
                 }
