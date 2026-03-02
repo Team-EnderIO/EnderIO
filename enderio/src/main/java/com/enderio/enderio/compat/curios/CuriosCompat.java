@@ -30,8 +30,8 @@ public class CuriosCompat {
             }
             return Optional.of(curiosItemStackList);
 
-        }else {
-            return Optional.empty();
         }
+
+        return Optional.empty();
     }
 }

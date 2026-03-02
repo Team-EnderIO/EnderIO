@@ -7,7 +7,6 @@ import com.enderio.enderio.config.base.BaseConfig;
 import com.enderio.enderio.content.filters.FilterSlot;
 import com.enderio.enderio.content.filters.fluid.FluidFilterSlot;
 import com.enderio.enderio.content.tools.ElectromagnetItem;
-import com.enderio.enderio.content.tools.PoweredToggledItem;
 import com.enderio.enderio.content.travel.TravelHandler;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.foundation.network.packets.ServerboundRequestShortTravelPacket;
@@ -17,24 +16,13 @@ import com.enderio.enderio.foundation.network.packets.ServerboundSetItemFilterSl
 import com.enderio.enderio.foundation.network.packets.ServerboundToggleMagnetPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundUpdateCoordinateSelectionNameMenuPacket;
 import com.enderio.enderio.init.EIODataComponents;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.phys.Vec3;
-import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
-import top.theillusivec4.curios.api.CuriosCapability;
-import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
-import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
-import top.theillusivec4.curios.api.type.inventory.IDynamicStackHandler;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class ServerPayloadHandler {
     private static final ServerPayloadHandler INSTANCE = new ServerPayloadHandler();
@@ -119,7 +107,7 @@ public class ServerPayloadHandler {
             Optional<List<ItemStack>> optList = CuriosCompat.getAllCuriosOnPlayer(player);
             if(optList.isPresent()){
                 for(ItemStack curioStack : optList.get()){
-                    if(toggleMagnetAndDisplayToPlayer(curioStack, player)) {
+                    if(toggleMagnet(curioStack, player)) {
                         return;
                     }
                 }
@@ -128,7 +116,7 @@ public class ServerPayloadHandler {
 
             for(int i = 0; i < player.getInventory().getContainerSize(); i++){
                 ItemStack stack = player.getInventory().getItem(i);
-                if(toggleMagnetAndDisplayToPlayer(stack, player)) {
+                if(toggleMagnet(stack, player)) {
                     return;
                 }
             }
@@ -136,7 +124,7 @@ public class ServerPayloadHandler {
         });
     }
 
-    private boolean toggleMagnetAndDisplayToPlayer(ItemStack stack, Player player) {
+    private boolean toggleMagnet(ItemStack stack, Player player) {
         if(stack != null && !stack.isEmpty() && stack.getItem() instanceof ElectromagnetItem) {
             Boolean magnetActive = stack.getComponents().get(EIODataComponents.TOGGLED);
             if(magnetActive != null){

@@ -5,7 +5,7 @@ import com.enderio.enderio.api.travel.TravelRenderer;
 import com.enderio.enderio.api.travel.TravelTarget;
 import com.enderio.enderio.api.travel.TravelTargetApi;
 import com.enderio.enderio.api.travel.TravelTargetType;
-import com.enderio.enderio.client.content.keybinds.KeybindHandler;
+import com.enderio.enderio.client.content.keymaps.KeymapHandler;
 import com.enderio.enderio.content.travel.TravelHandler;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Camera;
@@ -58,11 +58,11 @@ public class TravelTargetRendering {
             return;
         }
 
-        if (!TravelHandler.canTeleport(player) && !KeybindHandler.shouldRenderTravelTargetsDueToKeybind()) {
+        if (!TravelHandler.canTeleport(player) && !KeymapHandler.showTravelTargets()) {
             return;
         }
 
-        boolean itemTeleport = TravelHandler.canItemTeleport(player) || KeybindHandler.shouldRenderTravelTargetsDueToKeybind();
+        boolean itemTeleport = TravelHandler.canItemTeleport(player) || KeymapHandler.showTravelTargets();
 
         @Nullable
         TravelTarget activeTarget = TravelHandler.getTeleportAnchorTarget(player).orElse(null);
