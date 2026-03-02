@@ -13,11 +13,11 @@ import com.mojang.math.Axis;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
@@ -31,7 +31,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.neoforged.neoforge.common.util.Lazy;
 import org.joml.Math;
 import org.joml.Matrix4f;
@@ -96,12 +95,11 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             textColor = ChatFormatting.AQUA.getColor() == null ? 0xFFFFFF : ChatFormatting.AQUA.getColor();
             outlineColor = textColor;
         }
-        float outlineR = ((outlineColor & (0xFF << 16)) >> 16) / 255F;
-        float outlineG = ((outlineColor & (0xFF << 8)) >> 8) / 255F;
+        float outlineR = ((outlineColor >> 16) & 0xFF) / 255F;
+        float outlineG = ((outlineColor >> 8) & 0xFF) / 255F;
         float outlineB = (outlineColor & 0xFF) / 255F;
 
-        VertexConsumer solidRenderBuffer = buffer.getBuffer(RenderType.solid());
-        ModelBlockRenderer blockModelRenderer = minecraft.getBlockRenderer().getModelRenderer();
+        VertexConsumer renderBuffer = buffer.getBuffer(RenderType.tripwire());
 
         int packedLight = LightTexture.pack(15, 15);
 
@@ -112,7 +110,7 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
 
         if (iconBlock != Blocks.AIR && BaseConfig.CLIENT.ANCHORS_USE_ICON_AS_BLOCK.get()) {
             blockState = iconBlock.defaultBlockState();
-            iconIsFullBlock = blockState.getOcclusionShape(minecraft.level, travelData.pos()) == Shapes.block();
+            iconIsFullBlock = Block.isShapeFullBlock(blockState.getOcclusionShape(minecraft.level, travelData.pos()));;
         } else {
             blockState = minecraft.level.getBlockState(travelData.pos());
 
@@ -129,8 +127,31 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
 
         if (!hasIcon) {
             // Render Model
-            BakedModel blockModel = minecraft.getBlockRenderer().getBlockModel(blockState);
-            blockModelRenderer.renderModel(poseStack.last(), solidRenderBuffer, blockState, blockModel, 1, 1, 1, packedLight, OverlayTexture.NO_OVERLAY);
+            {
+                BakedModel blockModel = minecraft.getBlockRenderer().getBlockModel(blockState);
+                BlockColors blockColors = minecraft.getBlockColors();
+
+                var randomSource = RandomSource.create(42L);
+                ArrayList<BakedQuad> quads = new ArrayList<>(blockModel.getQuads(blockState, null, randomSource));
+                for (Direction direction : Direction.values()) {
+                    randomSource.setSeed(42L);
+                    quads.addAll(blockModel.getQuads(blockState, direction, randomSource));
+                }
+
+                for (BakedQuad quad : quads) {
+                    int tintIndex = quad.getTintIndex();
+                    float r = 1F, g = 1F, b = 1F;
+
+                    if (tintIndex != -1) {
+                        int color = blockColors.getColor(blockState, minecraft.level, travelData.pos(), tintIndex);
+                        r = ((color >> 16) & 0xFF) / 255F;
+                        g = ((color >> 8) & 0xFF) / 255F;
+                        b = (color & 0xFF) / 255F;
+                    }
+
+                    renderBuffer.putBulkData(poseStack.last(), quad, r, g, b, 1.0F, packedLight, OverlayTexture.NO_OVERLAY);
+                }
+            }
 
             // Render outline block
             {
@@ -144,7 +165,7 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
                 poseStack.scale(scale, scale, scale);
 
                 for (BakedQuad quad : BACKDROP_QUADS.get()) {
-                    solidRenderBuffer.putBulkData(poseStack.last(), quad, outlineR, outlineG, outlineB, 1, packedLight, OverlayTexture.NO_OVERLAY);
+                    renderBuffer.putBulkData(poseStack.last(), quad, outlineR, outlineG, outlineB, 1, packedLight, OverlayTexture.NO_OVERLAY);
                 }
 
                 poseStack.popPose();
@@ -181,7 +202,7 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             poseStack.rotateAround(Axis.ZN.rotationDegrees(45), 0.5F, 0.5F, 0.5F);
 
             for (BakedQuad quad : BACKDROP_QUADS.get()) {
-                solidRenderBuffer.putBulkData(poseStack.last(), quad, outlineR, outlineG, outlineB, 1, packedLight, OverlayTexture.NO_OVERLAY);
+                renderBuffer.putBulkData(poseStack.last(), quad, outlineR, outlineG, outlineB, 1, packedLight, OverlayTexture.NO_OVERLAY);
             }
 
             poseStack.popPose();
