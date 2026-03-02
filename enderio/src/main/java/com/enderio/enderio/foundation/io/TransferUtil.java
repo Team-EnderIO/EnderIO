@@ -59,28 +59,17 @@ public class TransferUtil {
 
     // region Fluids
 
-    // TODO: Possibly raise this too?
-    public static final int DEFAULT_FLUID_DRAIN = 100;
-
     public static void distributeFluids(IOMode mode, IFluidHandler selfItemHandler, IFluidHandler otherItemHandler) {
-        distributeFluids(mode.canPush(), mode.canPull(), selfItemHandler, otherItemHandler, DEFAULT_FLUID_DRAIN);
-    }
-
-    public static void distributeFluids(IOMode mode, IFluidHandler selfItemHandler, IFluidHandler otherItemHandler, int maxDrain) {
-        distributeFluids(mode.canPush(), mode.canPull(), selfItemHandler, otherItemHandler, maxDrain);
+        distributeFluids(mode.canPush(), mode.canPull(), selfItemHandler, otherItemHandler);
     }
 
     public static void distributeFluids(boolean canPush, boolean canPull, IFluidHandler selfItemHandler, IFluidHandler otherItemHandler) {
-        distributeFluids(canPush, canPull, selfItemHandler, otherItemHandler, DEFAULT_FLUID_DRAIN);
-    }
-
-    public static void distributeFluids(boolean canPush, boolean canPull, IFluidHandler selfItemHandler, IFluidHandler otherItemHandler, int maxDrain) {
         // TODO: Do we want to imitate old behaviour where if we have no fluid, we pull by default?
 
         if (canPush) {
             int filled = 0;
             for (int i = 0; i < selfItemHandler.getTanks(); i++) {
-                filled += FluidUtil.tryFluidTransfer(otherItemHandler, selfItemHandler, new FluidStack(selfItemHandler.getFluidInTank(i).getFluid(), maxDrain), true).getAmount();
+                filled += FluidUtil.tryFluidTransfer(otherItemHandler, selfItemHandler, new FluidStack(selfItemHandler.getFluidInTank(i).getFluid(), Integer.MAX_VALUE), true).getAmount();
             }
             if (filled > 0) {
                 return;
@@ -90,9 +79,9 @@ public class TransferUtil {
         if (canPull) {
             for (int i = 0; i < selfItemHandler.getTanks(); i++) {
                 if (selfItemHandler.getFluidInTank(i).isEmpty()) {
-                    FluidUtil.tryFluidTransfer(selfItemHandler, otherItemHandler, maxDrain, true);
+                    FluidUtil.tryFluidTransfer(selfItemHandler, otherItemHandler, Integer.MAX_VALUE, true);
                 } else {
-                    FluidUtil.tryFluidTransfer(selfItemHandler, otherItemHandler, new FluidStack(selfItemHandler.getFluidInTank(i).getFluid(), maxDrain), true);
+                    FluidUtil.tryFluidTransfer(selfItemHandler, otherItemHandler, new FluidStack(selfItemHandler.getFluidInTank(i).getFluid(), Integer.MAX_VALUE), true);
                 }
             }
         }
