@@ -110,7 +110,7 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
 
         if (iconBlock != Blocks.AIR && BaseConfig.CLIENT.ANCHORS_USE_ICON_AS_BLOCK.get()) {
             blockState = iconBlock.defaultBlockState();
-            iconIsFullBlock = Block.isShapeFullBlock(blockState.getOcclusionShape(minecraft.level, travelData.pos()));;
+            iconIsFullBlock = Block.isShapeFullBlock(blockState.getOcclusionShape(minecraft.level, travelData.pos()));
         } else {
             blockState = minecraft.level.getBlockState(travelData.pos());
 
