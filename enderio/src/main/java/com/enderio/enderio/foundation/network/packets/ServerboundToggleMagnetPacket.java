@@ -9,12 +9,12 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.phys.Vec3;
 
-public record ServerboundToggleMagnetPacket(Boolean unused) implements CustomPacketPayload {
+public record ServerboundToggleMagnetPacket() implements CustomPacketPayload {
 
     public static final Type<ServerboundToggleMagnetPacket> TYPE = new Type<>(EnderIO.rl("toggle_magnet"));
 
     public static final StreamCodec<ByteBuf, ServerboundToggleMagnetPacket> STREAM_CODEC =
-        StreamCodec.composite(ByteBufCodecs.BOOL, ServerboundToggleMagnetPacket::unused, ServerboundToggleMagnetPacket::new);
+        StreamCodec.unit(new ServerboundToggleMagnetPacket());
 
     @Override
     public Type<? extends CustomPacketPayload> type() {

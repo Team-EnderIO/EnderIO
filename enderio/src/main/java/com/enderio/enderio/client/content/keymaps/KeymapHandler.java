@@ -34,19 +34,23 @@ public class KeymapHandler {
     public static void keyHandler(ClientTickEvent.Post event){
         var minecraft = Minecraft.getInstance();
 
-        // Control rendering of travel targets
-        travelTargetsVisible = travelKeyDelayCheck();
 
         if(minecraft.player == null || minecraft.level == null || minecraft.screen != null) {
             return;
         }
 
+
+        // Magnet
         if(TOGGLE_MAGNET_KEY.get().consumeClick()){
-            PacketDistributor.sendToServer(new ServerboundToggleMagnetPacket(true));
+            PacketDistributor.sendToServer(new ServerboundToggleMagnetPacket());
         }
 
-        var shouldTeleport = false;
 
+        // Travel
+        // Control rendering of travel targets
+        travelTargetsVisible = travelKeyDelayCheck();
+
+        var shouldTeleport = false;
         if(TRAVEL_STAFF_KEY.get().isDown()){
             travelKeyTicks++;
         } else {
@@ -55,7 +59,7 @@ public class KeymapHandler {
         }
 
         if(shouldTeleport){
-            var stack = TravelHandler.findValidTravelItem(minecraft.player);
+            var stack = TravelHandler.findTravelItem(minecraft.player);
             if(!stack.isEmpty()) {
                 if (travelTargetsVisible) {
                     TravelHandler.blockTeleport(minecraft.level, minecraft.player, true);

@@ -26,20 +26,13 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
-import top.theillusivec4.curios.api.CuriosCapability;
-import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
-import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
-import top.theillusivec4.curios.api.type.inventory.IDynamicStackHandler;
 
 import java.util.Comparator;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Thanks to the developers of <a href="https://github.com/castcrafter/travel_anchors">https://github.com/castcrafter/travel_anchors</a> for allowing us to use their code with our license.
@@ -93,23 +86,20 @@ public class TravelHandler {
     /**
      * Includes hasResources()/charge level check
      */
-    public static ItemStack findValidTravelItem(Player player) {
-
-        Optional<List<ItemStack>> optList = CuriosCompat.getAllCuriosOnPlayer(player);
-        if(optList.isPresent()){
-            for(ItemStack curioStack : optList.get()){
-                if(curioStack != null && !curioStack.isEmpty() && isTravelItem(curioStack)
-                    && !player.getCooldowns().isOnCooldown(curioStack.getItem())
-                    && (player.isCreative() || TravelHandler.hasResources(curioStack))){
-                    return curioStack;
+    public static ItemStack findTravelItem(Player player) {
+        var curios = CuriosCompat.getActiveCurios(player, TravelHandler::isTravelItem);
+        if(curios.isPresent()){
+            for(ItemStack stack : curios.get()){
+                if(!player.getCooldowns().isOnCooldown(stack.getItem())
+                    && (player.isCreative() || TravelHandler.hasResources(stack))){
+                    return stack;
                 }
             }
         }
 
         for(int i = 0; i < player.getInventory().getContainerSize(); i++){
             ItemStack stack = player.getInventory().getItem(i);
-            if(!stack.isEmpty() && isTravelItem(stack)
-                && !player.getCooldowns().isOnCooldown(stack.getItem())
+            if(isTravelItem(stack)&& !player.getCooldowns().isOnCooldown(stack.getItem())
                 && (player.isCreative() || TravelHandler.hasResources(stack))) {
                 return stack;
             }

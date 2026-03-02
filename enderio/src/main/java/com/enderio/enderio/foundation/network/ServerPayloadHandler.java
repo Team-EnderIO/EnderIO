@@ -21,7 +21,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-import java.util.List;
 import java.util.Optional;
 
 public class ServerPayloadHandler {
@@ -43,7 +42,7 @@ public class ServerPayloadHandler {
         context.enqueueWork(() -> {
             var player = context.player();
             // For keybind anchor teleports
-            ItemStack travelItemStack = TravelHandler.findValidTravelItem(player);
+            ItemStack travelItemStack = TravelHandler.findTravelItem(player);
 
             Optional<TravelTarget> target = TravelTargetApi.INSTANCE.get(player.level(), packet.pos());
 
@@ -82,7 +81,7 @@ public class ServerPayloadHandler {
                 return;
 
             // For keybind anchor teleports
-            ItemStack travelItemStack = TravelHandler.findValidTravelItem(player);
+            ItemStack travelItemStack = TravelHandler.findTravelItem(player);
 
             // These errors should only ever be triggered if there's some form of desync
             if (travelItemStack.isEmpty()) {
@@ -104,19 +103,18 @@ public class ServerPayloadHandler {
         context.enqueueWork(() -> {
             var player = context.player();
 
-            Optional<List<ItemStack>> optList = CuriosCompat.getAllCuriosOnPlayer(player);
-            if(optList.isPresent()){
-                for(ItemStack curioStack : optList.get()){
-                    if(toggleMagnet(curioStack, player)) {
-                        return;
-                    }
+            var curios = CuriosCompat.getActiveCurios(player, stack -> stack.getItem() instanceof ElectromagnetItem);
+            if(curios.isPresent()){
+                for(ItemStack curioStack : curios.get()){
+                    toggleMagnet(curioStack, player);
+                    return;
                 }
             }
 
-
             for(int i = 0; i < player.getInventory().getContainerSize(); i++){
                 ItemStack stack = player.getInventory().getItem(i);
-                if(toggleMagnet(stack, player)) {
+                if(stack.getItem() instanceof ElectromagnetItem){
+                    toggleMagnet(stack, player);
                     return;
                 }
             }
@@ -124,21 +122,15 @@ public class ServerPayloadHandler {
         });
     }
 
-    private boolean toggleMagnet(ItemStack stack, Player player) {
-        if(stack != null && !stack.isEmpty() && stack.getItem() instanceof ElectromagnetItem) {
-            Boolean magnetActive = stack.getComponents().get(EIODataComponents.TOGGLED);
-            if(magnetActive != null){
-                if(magnetActive){
-                    stack.set(EIODataComponents.TOGGLED, false);
-                    player.displayClientMessage(EIOCommonLang.ELECTROMAGNET_OFF, true);
-                }else{
-                    stack.set(EIODataComponents.TOGGLED, true);
-                    player.displayClientMessage(EIOCommonLang.ELECTROMAGNET_ON, true);
-                }
-                return true;
-            }
+    private void toggleMagnet(ItemStack stack, Player player) {
+        var magnetActive = stack.getComponents().get(EIODataComponents.TOGGLED);
+        if(magnetActive != null && magnetActive){
+            stack.set(EIODataComponents.TOGGLED, false);
+            player.displayClientMessage(EIOCommonLang.ELECTROMAGNET_OFF, true);
+        } else {
+            stack.set(EIODataComponents.TOGGLED, true);
+            player.displayClientMessage(EIOCommonLang.ELECTROMAGNET_ON, true);
         }
-        return false;
     }
 
     public void handleSetItemFilterSlot(ServerboundSetItemFilterSlotPacket packet, IPayloadContext context) {
