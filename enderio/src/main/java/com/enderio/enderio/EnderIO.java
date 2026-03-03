@@ -12,6 +12,7 @@ import com.enderio.enderio.config.conduits.ConduitsConfig;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.foundation.integrations.Integrations;
+import com.enderio.enderio.init.EIOArmorMaterials;
 import com.enderio.enderio.init.EIOAttachments;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOBlocks;
@@ -105,6 +106,7 @@ public class EnderIO {
         EIOIngredientTypes.register(modEventBus);
         EIOConduitTypes.register(modEventBus);
         EIOTravelTargets.register(modEventBus);
+        EIOArmorMaterials.register(modEventBus);
 
         // Handle mod compat
         for (Map.Entry<String, Consumer<IEventBus>> entry : MOD_INTEGRATIONS.entrySet()) {

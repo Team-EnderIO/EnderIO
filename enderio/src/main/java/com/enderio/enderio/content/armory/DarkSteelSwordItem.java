@@ -2,6 +2,7 @@ package com.enderio.enderio.content.armory;
 
 import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.common.util.TooltipUtil;
+import com.enderio.enderio.content.armory_new.DarkSteelTiers;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.core.component.DataComponents;

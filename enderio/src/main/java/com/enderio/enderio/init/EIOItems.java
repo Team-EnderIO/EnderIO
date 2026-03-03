@@ -31,6 +31,8 @@ import com.enderio.enderio.foundation.item.CreativeTabIconItem;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterials;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.component.ItemLore;
@@ -219,8 +221,52 @@ public class EIOItems {
     public static final DeferredItem<ColdFireIgniter> COLD_FIRE_IGNITER = ITEMS.registerItem("cold_fire_igniter", ColdFireIgniter::new);
     public static final DeferredItem<ConduitProbeItem> CONDUIT_PROBE = ITEMS.registerItem("conduit_probe", ConduitProbeItem::new);
 
+    // endregion
+
+    // region Armory
+
+    // region Dark Steel
+
     public static final DeferredItem<DarkSteelSwordItem> DARK_STEEL_SWORD = ITEMS.registerItem("dark_steel_sword", DarkSteelSwordItem::new,
         new Item.Properties().durability(2000));
+
+    public static final DeferredItem<ArmorItem> DARK_STEEL_HELMET = ITEMS.registerItem("dark_steel_helmet",
+        p -> new ArmorItem(EIOArmorMaterials.DARK_STEEL, ArmorItem.Type.HELMET, p),
+        new Item.Properties().durability(ArmorItem.Type.HELMET.getDurability(40)));
+
+    public static final DeferredItem<ArmorItem> DARK_STEEL_CHESTPLATE = ITEMS.registerItem("dark_steel_chestplate",
+        p -> new ArmorItem(EIOArmorMaterials.DARK_STEEL, ArmorItem.Type.CHESTPLATE, p),
+        new Item.Properties().durability(ArmorItem.Type.CHESTPLATE.getDurability(40)));
+
+    public static final DeferredItem<ArmorItem> DARK_STEEL_LEGGINGS = ITEMS.registerItem("dark_steel_leggings",
+        p -> new ArmorItem(EIOArmorMaterials.DARK_STEEL, ArmorItem.Type.LEGGINGS, p),
+        new Item.Properties().durability(ArmorItem.Type.LEGGINGS.getDurability(40)));
+
+    public static final DeferredItem<ArmorItem> DARK_STEEL_BOOTS = ITEMS.registerItem("dark_steel_boots",
+        p -> new ArmorItem(EIOArmorMaterials.DARK_STEEL, ArmorItem.Type.BOOTS, p),
+        new Item.Properties().durability(ArmorItem.Type.BOOTS.getDurability(40)));
+
+    // endregion
+
+    // region End Steel
+
+    public static final DeferredItem<ArmorItem> END_STEEL_HELMET = ITEMS.registerItem("end_steel_helmet",
+        p -> new ArmorItem(EIOArmorMaterials.END_STEEL, ArmorItem.Type.HELMET, p),
+        new Item.Properties().durability(ArmorItem.Type.HELMET.getDurability(50)));
+
+    public static final DeferredItem<ArmorItem> END_STEEL_CHESTPLATE = ITEMS.registerItem("end_steel_chestplate",
+        p -> new ArmorItem(EIOArmorMaterials.END_STEEL, ArmorItem.Type.CHESTPLATE, p),
+        new Item.Properties().durability(ArmorItem.Type.CHESTPLATE.getDurability(50)));
+
+    public static final DeferredItem<ArmorItem> END_STEEL_LEGGINGS = ITEMS.registerItem("end_steel_leggings",
+        p -> new ArmorItem(EIOArmorMaterials.END_STEEL, ArmorItem.Type.LEGGINGS, p),
+        new Item.Properties().durability(ArmorItem.Type.LEGGINGS.getDurability(50)));
+
+    public static final DeferredItem<ArmorItem> END_STEEL_BOOTS = ITEMS.registerItem("end_steel_boots",
+        p -> new ArmorItem(EIOArmorMaterials.END_STEEL, ArmorItem.Type.BOOTS, p),
+        new Item.Properties().durability(ArmorItem.Type.BOOTS.getDurability(50)));
+
+    // endregion
 
     // endregion
 

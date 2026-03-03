@@ -161,6 +161,16 @@ public class EIOItemModelProvider extends ItemModelProvider {
 
         handheldItem(EIOItems.DARK_STEEL_SWORD.get());
 
+        basicItem(EIOItems.DARK_STEEL_HELMET.get());
+        basicItem(EIOItems.DARK_STEEL_CHESTPLATE.get());
+        basicItem(EIOItems.DARK_STEEL_LEGGINGS.get());
+        basicItem(EIOItems.DARK_STEEL_BOOTS.get());
+
+        basicItem(EIOItems.END_STEEL_HELMET.get());
+        basicItem(EIOItems.END_STEEL_CHESTPLATE.get());
+        basicItem(EIOItems.END_STEEL_LEGGINGS.get());
+        basicItem(EIOItems.END_STEEL_BOOTS.get());
+
         // Filters
         basicItem(EIOItems.BASIC_ITEM_FILTER.get());
         basicItem(EIOItems.BIG_ITEM_FILTER.get());

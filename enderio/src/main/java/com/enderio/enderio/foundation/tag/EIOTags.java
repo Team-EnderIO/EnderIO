@@ -161,7 +161,8 @@ public class EIOTags {
         public static final TagKey<Block> MIND_KILLER = tag("mind_killer");
 
         public static final TagKey<Block> INCORRECT_FOR_DARK_STEEL_TOOL = tag("incorrect_for_dark_steel_tool");
-        
+        public static final TagKey<Block> INCORRECT_FOR_END_STEEL_TOOL = tag("incorrect_for_end_steel_tool");
+
         
         // Harvestable crops that have a stem.
         // TODO: remove in 26.1
