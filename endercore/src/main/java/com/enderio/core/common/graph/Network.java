@@ -367,6 +367,7 @@ public abstract class Network<TNet extends Network<TNet, TNode>, TNode extends I
                 newGraph.graph.addNode(node);
                 graph.incidentEdges(node).forEach(newGraph.graph::putEdge);
                 graph.removeNode(node);
+                newGraph.onNodeAdded(node);
                 node.setNetwork(newGraph);
             }
 
