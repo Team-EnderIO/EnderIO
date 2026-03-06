@@ -77,7 +77,10 @@ public class TravelTargetRendering {
             poseStack.pushPose();
             Camera mainCamera = Minecraft.getInstance().gameRenderer.getMainCamera();
             Vec3 projectedView = mainCamera.getPosition();
-            poseStack.translate(-projectedView.x, -projectedView.y, -projectedView.z);
+            poseStack.translate(
+                target.pos().getX() - projectedView.x,
+                target.pos().getY() - projectedView.y,
+                target.pos().getZ() - projectedView.z);
 
             boolean active = activeTarget == target;
 
