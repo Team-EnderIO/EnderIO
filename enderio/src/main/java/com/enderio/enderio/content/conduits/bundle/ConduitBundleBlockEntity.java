@@ -29,6 +29,7 @@ import com.enderio.enderio.foundation.EIONBTKeys;
 import com.enderio.enderio.foundation.block.entity.Wrenchable;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOConduitTypes;
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
@@ -332,36 +333,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         // Get connection
         var conduitConnection = shape.getConnectionFromHit(context.getClickedPos(), context.getHitResult());
         if (conduitConnection != null) {
-
-            // Disable the connection
-            setConnectionStatus(conduitConnection.getSecond(), conduitConnection.getFirst(), ConnectionStatus.DISABLED);
-
-            // If we were connected to another bundle, we need to sever the graph
-            if (level.getBlockEntity(getBlockPos()
-                    .relative(conduitConnection.getFirst())) instanceof ConduitBundleBlockEntity neighborBundle) {
-                neighborBundle.setConnectionStatus(conduitConnection.getSecond(),
-                        conduitConnection.getFirst().getOpposite(), ConnectionStatus.DISABLED);
-
-                if (level instanceof ServerLevel serverLevel) {
-                    ConduitNodeImpl thisNode = getConduitNode(conduitConnection.getSecond());
-                    ConduitNodeImpl otherNode = neighborBundle.getConduitNode(conduitConnection.getSecond());
-
-                    if (thisNode.isValid() && otherNode.isValid()) {
-                        var thisNetwork = thisNode.getNetwork();
-                        var otherNetwork = otherNode.getNetwork();
-
-                        if (thisNetwork == otherNetwork) {
-                            thisNetwork.disconnect(thisNode, otherNode,
-                                    n -> ConduitNetworkSavedData.onNetworkCreated(serverLevel, n));
-                        }
-
-                        bundleChanged();
-                    } else {
-                        // TODO: Warn, this is a bad place to be.
-                    }
-                }
-            }
-
+            disableNeighborConnection(conduitConnection);
             return ItemInteractionResult.sidedSuccess(level.isClientSide());
         }
 
@@ -373,6 +345,38 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
 
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+    }
+
+    // Exposed publicly for use in tests.
+    public void disableNeighborConnection(Pair<Direction, Holder<Conduit<?, ?>>> conduitConnection) {
+        // Disable the connection
+        setConnectionStatus(conduitConnection.getSecond(), conduitConnection.getFirst(), ConnectionStatus.DISABLED);
+
+        // If we were connected to another bundle, we need to sever the graph
+        if (level.getBlockEntity(getBlockPos()
+            .relative(conduitConnection.getFirst())) instanceof ConduitBundleBlockEntity neighborBundle) {
+            neighborBundle.setConnectionStatus(conduitConnection.getSecond(),
+                conduitConnection.getFirst().getOpposite(), ConnectionStatus.DISABLED);
+
+            if (level instanceof ServerLevel serverLevel) {
+                ConduitNodeImpl thisNode = getConduitNode(conduitConnection.getSecond());
+                ConduitNodeImpl otherNode = neighborBundle.getConduitNode(conduitConnection.getSecond());
+
+                if (thisNode.isValid() && otherNode.isValid()) {
+                    var thisNetwork = thisNode.getNetwork();
+                    var otherNetwork = otherNode.getNetwork();
+
+                    if (thisNetwork == otherNetwork) {
+                        thisNetwork.disconnect(thisNode, otherNode,
+                            n -> ConduitNetworkSavedData.onNetworkCreated(serverLevel, n));
+                    }
+
+                    bundleChanged();
+                } else {
+                    // TODO: Warn, this is a bad place to be.
+                }
+            }
+        }
     }
 
     // endregion
