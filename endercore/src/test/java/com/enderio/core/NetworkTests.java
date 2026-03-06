@@ -100,6 +100,10 @@ public class NetworkTests {
         Assertions.assertNotEquals(node1.getNetwork(), node3.getNetwork());
         Assertions.assertTrue(node1.getNetwork().contains(node1));
         Assertions.assertTrue(node3.getNetwork().contains(node3));
+
+        // When splitting, node 1's network will remain and node 3 gains a new one.
+        // This test ensures the onNodeCreated hook is called (GH-1309)
+        Assertions.assertSame(((TestNetwork) node3.getNetwork()).lastNodeAdded, node3);
     }
 
     @Test
