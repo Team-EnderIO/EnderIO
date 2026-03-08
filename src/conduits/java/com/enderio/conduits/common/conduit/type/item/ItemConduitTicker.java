@@ -49,6 +49,12 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemConduitD
                     continue;
                 }
 
+                // Ensure we cap the stack to its max size, even if the parent handler doesn't respect it.
+                int extractedItemMaxStack = extractedItem.getMaxStackSize();
+                if (extractedItem.getCount() > extractedItemMaxStack) {
+                    extractedItem.setCount(extractedItemMaxStack);
+                }
+
                 if (extract.extractFilter instanceof ItemStackFilter itemFilter) {
                     if (!itemFilter.test(extractedItem)) {
                         continue;
@@ -80,7 +86,8 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<ItemConduitD
                         }
                     }
 
-                    ItemStack notInserted = ItemHandlerHelper.insertItem(insert.capability, extractedItem, false);
+                    // Copy the stack to ensure extractedItem isn't modified by item handler implementations (Create Chute for example)
+                    ItemStack notInserted = ItemHandlerHelper.insertItem(insert.capability, extractedItem.copy(), false);
                     int successfullyInserted = extractedItem.getCount() - notInserted.getCount();
 
                     if (successfullyInserted > 0) {
