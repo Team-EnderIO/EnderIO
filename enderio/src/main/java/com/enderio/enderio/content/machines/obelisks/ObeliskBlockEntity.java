@@ -110,11 +110,20 @@ public abstract class ObeliskBlockEntity<T extends ObeliskBlockEntity<T>> extend
         return actionRange;
     }
 
+    /**
+     * Internal method that updates the action range without triggering setChanged() or block updates.
+     * This is safe to call during chunk loading (e.g. from setLevel/updateCapacitorData)
+     * where calling setChanged() would cause a deadlock by trying to load neighboring chunks.
+     */
+    private void setActionRangeInternal(ActionRange actionRange) {
+        this.actionRange = actionRange.clamp(0, getMaxRange());
+        updateLocations();
+    }
+
     @Override
     @UseOnly(LogicalSide.SERVER)
     public void setActionRange(ActionRange actionRange) {
-        this.actionRange = actionRange.clamp(0, getMaxRange());
-        updateLocations();
+        setActionRangeInternal(actionRange);
         setChanged();
 
         if (level != null) {
@@ -147,7 +156,10 @@ public abstract class ObeliskBlockEntity<T extends ObeliskBlockEntity<T>> extend
                 // Either reduced the max or had a custom range so just ensure it's in bounds
                 newRange = Math.min(getRange(), newMaxRange);
             }
-            setActionRange(new ActionRange(newRange, getActionRange().isVisible()));
+            // Use internal method to avoid setChanged() which would cause a deadlock
+            // during chunk loading by trying to load neighboring chunks via
+            // Level.updateNeighbourForOutputSignal().
+            setActionRangeInternal(new ActionRange(newRange, getActionRange().isVisible()));
         }
     }
 
