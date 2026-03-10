@@ -1,7 +1,7 @@
 package com.enderio.core.common.menu;
 
 import com.enderio.core.common.network.menu.BlockEntityMenuHelper;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -29,7 +29,7 @@ public abstract class BaseBlockEntityMenu<T extends BlockEntity> extends BaseEnd
      */
     @SafeVarargs
     protected BaseBlockEntityMenu(@Nullable MenuType<?> menuType, int containerId, Inventory playerInventory,
-            RegistryFriendlyByteBuf buf, BlockEntityType<? extends T>... blockEntityTypes) {
+            FriendlyByteBuf buf, BlockEntityType<? extends T>... blockEntityTypes) {
         super(menuType, containerId, playerInventory);
         this.blockEntity = BlockEntityMenuHelper.getBlockEntityFrom(buf, playerInventory.player.level(),
                 blockEntityTypes);

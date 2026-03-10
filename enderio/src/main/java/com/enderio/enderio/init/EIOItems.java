@@ -1,6 +1,5 @@
 package com.enderio.enderio.init;
 
-import com.enderio.core.common.registries.ItemDeferredRegister;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.capacitor.CapacitorData;
 import com.enderio.enderio.api.conduits.facade.FacadeType;

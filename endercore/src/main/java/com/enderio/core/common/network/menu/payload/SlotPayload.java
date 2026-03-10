@@ -1,13 +1,10 @@
 package com.enderio.core.common.network.menu.payload;
 
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
 
 public interface SlotPayload {
 
-    StreamCodec<RegistryFriendlyByteBuf, SlotPayload> STREAM_CODEC = SlotPayloadType.STREAM_CODEC
-            .<RegistryFriendlyByteBuf>cast()
-            .dispatch(SlotPayload::type, SlotPayloadType::streamCodec);
-
     SlotPayloadType type();
+
+    void write(FriendlyByteBuf buf);
 }

@@ -1,40 +1,40 @@
 package com.enderio.core.common.network.menu.payload;
 
-import io.netty.buffer.ByteBuf;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.ByIdMap;
 
+import java.util.function.Function;
 import java.util.function.IntFunction;
-import java.util.function.Supplier;
 
 public enum SlotPayloadType {
     // Basic data types
-    NULL(() -> NullSlotPayload.STREAM_CODEC), INT(() -> IntSlotPayload.STREAM_CODEC),
-    FLOAT(() -> FloatSlotPayload.STREAM_CODEC), LONG(() -> LongSlotPayload.STREAM_CODEC),
-    STRING(() -> StringSlotPayload.STREAM_CODEC), BOOL(() -> BoolSlotPayload.STREAM_CODEC),
+    NULL(NullSlotPayload::new), INT(IntSlotPayload::new),
+    FLOAT(FloatSlotPayload::new), LONG(LongSlotPayload::new),
+    STRING(StringSlotPayload::new), BOOL(BoolSlotPayload::new),
 
     // MC data types
-    BLOCK_POS(() -> BlockPosSlotPayload.STREAM_CODEC), ITEM_STACK(() -> ItemStackSlotPayload.STREAM_CODEC),
-    FLUID_STACK(() -> FluidStackSlotPayload.STREAM_CODEC),
-    RESOURCE_LOCATION(() -> ResourceLocationSlotPayload.STREAM_CODEC),
+    BLOCK_POS(BlockPosSlotPayload::new), ITEM_STACK(ItemStackSlotPayload::new),
+    FLUID_STACK(FluidStackSlotPayload::new),
+    RESOURCE_LOCATION(ResourceLocationSlotPayload::new),
 
     // Tools for combining payloads.
-    LIST(() -> ListSlotPayload.STREAM_CODEC), PAIR(() -> PairSlotPayload.STREAM_CODEC),;
+    LIST(ListSlotPayload::new), PAIR(PairSlotPayload::new),;
 
     public static final IntFunction<SlotPayloadType> BY_ID = ByIdMap.continuous(SlotPayloadType::ordinal, values(),
             ByIdMap.OutOfBoundsStrategy.WRAP);
-    public static final StreamCodec<ByteBuf, SlotPayloadType> STREAM_CODEC = ByteBufCodecs.idMapper(BY_ID,
-            SlotPayloadType::ordinal);
 
-    private final Supplier<StreamCodec<RegistryFriendlyByteBuf, ? extends SlotPayload>> streamCodecSupplier;
+    private final Function<FriendlyByteBuf, ? extends SlotPayload> bufferReaderSupplier;
 
-    SlotPayloadType(Supplier<StreamCodec<RegistryFriendlyByteBuf, ? extends SlotPayload>> streamCodecSupplier) {
-        this.streamCodecSupplier = streamCodecSupplier;
+    SlotPayloadType(Function<FriendlyByteBuf, ? extends SlotPayload> bufferReaderSupplier) {
+        this.bufferReaderSupplier = bufferReaderSupplier;
     }
 
-    public StreamCodec<RegistryFriendlyByteBuf, ? extends SlotPayload> streamCodec() {
-        return streamCodecSupplier.get();
+    public static SlotPayload read(FriendlyByteBuf buf) {
+        int ordinal = buf.readInt();
+        if (ordinal < 0 || ordinal >= values().length) {
+            throw new IllegalArgumentException("Invalid ordinal: " + ordinal);
+        }
+
+        return values()[ordinal].bufferReaderSupplier.apply(buf);
     }
 }

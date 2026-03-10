@@ -43,7 +43,7 @@ public class EnumTranslationMap<T extends Enum<T>> {
         }
 
         public Builder<T> addTranslation(T value, String english) {
-            ResourceLocation key = ResourceLocation.fromNamespaceAndPath(modId,
+            ResourceLocation key = new ResourceLocation(modId,
                     translationPrefix + "." + value.name().toLowerCase(Locale.ROOT));
             translations.put(value, translationRegistrar.createTranslation("gui", key, english));
 

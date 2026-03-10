@@ -19,7 +19,7 @@ public class EnsureSideTransformer implements Transformer {
 
     @Override
     public void transform(VariableTree unusedMethod, MethodTree methodTree, AnnotationTree ensuresAnnotation, String className) {
-        EnsureSide.Side side = getAnnotationArgument(ensuresAnnotation.getArguments().getFirst());
+        EnsureSide.Side side = getAnnotationArgument(ensuresAnnotation.getArguments().get(0));
         TransformerUtil.addCheck(methodTree, unusedMethod, createIfCondition(side), createErrorMessage(side));
     }
 

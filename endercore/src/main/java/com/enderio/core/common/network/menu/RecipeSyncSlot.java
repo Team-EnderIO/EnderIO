@@ -4,7 +4,6 @@ import com.enderio.core.common.network.menu.payload.NullSlotPayload;
 import com.enderio.core.common.network.menu.payload.ResourceLocationSlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayload;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -19,66 +18,66 @@ public abstract class RecipeSyncSlot<T extends Recipe<?>> implements SyncSlot {
     public static <T extends Recipe<?>> RecipeSyncSlot<T> standalone(RecipeType<T> recipeType) {
         return new RecipeSyncSlot<>(recipeType) {
             @Nullable
-            private RecipeHolder<T> value;
+            private T value;
 
             @Override
             @Nullable
-            public RecipeHolder<T> get() {
+            public T get() {
                 return value;
             }
 
             @Override
-            public void set(@Nullable RecipeHolder<T> value) {
+            public void set(@Nullable T value) {
                 this.value = value;
             }
         };
     }
 
     public static <T extends Recipe<?>> RecipeSyncSlot<T> simple(RecipeType<T> recipeType,
-            Supplier<RecipeHolder<T>> getter, Consumer<RecipeHolder<T>> setter) {
+            Supplier<T> getter, Consumer<T> setter) {
         return new RecipeSyncSlot<>(recipeType) {
 
             @Override
             @Nullable
-            public RecipeHolder<T> get() {
+            public T get() {
                 return getter.get();
             }
 
             @Override
-            public void set(@Nullable RecipeHolder<T> value) {
+            public void set(@Nullable T value) {
                 setter.accept(value);
             }
         };
     }
 
     public static <T extends Recipe<?>> RecipeSyncSlot<T> readOnly(RecipeType<T> recipeType,
-            Supplier<RecipeHolder<T>> getter) {
+            Supplier<T> getter) {
         return new RecipeSyncSlot<>(recipeType) {
 
             @Override
             @Nullable
-            public RecipeHolder<T> get() {
+            public T get() {
                 return getter.get();
             }
 
             @Override
-            public void set(@Nullable RecipeHolder<T> value) {
+            public void set(@Nullable T value) {
                 throw new UnsupportedOperationException("Attempt to set a read-only sync slot.");
             }
         };
     }
 
     private final RecipeType<T> recipeType;
-    private RecipeHolder<T> lastValue;
+    private T lastValue;
 
     public RecipeSyncSlot(RecipeType<T> recipeType) {
         this.recipeType = recipeType;
     }
 
     @Nullable
-    public abstract RecipeHolder<T> get();
+    public abstract T get();
 
-    public abstract void set(@Nullable RecipeHolder<T> value);
+    public abstract void set(@Nullable T value);
 
     @Override
     public ChangeType detectChanges() {
@@ -95,18 +94,18 @@ public abstract class RecipeSyncSlot<T extends Recipe<?>> implements SyncSlot {
             return new NullSlotPayload();
         }
 
-        return new ResourceLocationSlotPayload(value.id());
+        return new ResourceLocationSlotPayload(value.getId());
     }
 
     @Override
     public void unpackPayload(Level level, SlotPayload payload) {
         if (payload instanceof ResourceLocationSlotPayload resourceLocationSlotPayload) {
-            Optional<RecipeHolder<?>> recipe = level.getRecipeManager().byKey(resourceLocationSlotPayload.value());
+            Optional<? extends Recipe<?>> recipeOpt = level.getRecipeManager().byKey(resourceLocationSlotPayload.value());
 
-            set(recipe.map(holder -> {
-                if (holder.value().getType() == recipeType) {
+            set(recipeOpt.map(recipe -> {
+                if (recipe.getType() == recipeType) {
                     // noinspection unchecked
-                    return (RecipeHolder<T>) holder;
+                    return (T) recipe;
                 } else {
                     return null;
                 }

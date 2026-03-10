@@ -3,14 +3,21 @@ package com.enderio.core.common.network;
 import com.enderio.core.EnderCore;
 import com.enderio.core.common.network.menu.ClientboundSyncSlotDataPacket;
 import com.enderio.core.common.network.menu.ServerboundSetSyncSlotDataPacket;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.simple.SimpleChannel;
 
-@EventBusSubscriber(modid = EnderCore.MOD_ID)
+@Mod.EventBusSubscriber(modid = EnderCore.MOD_ID)
 public class CoreNetwork {
     private static final String PROTOCOL_VERSION = "1.0";
+
+    public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
+        EnderCore.loc("main"),
+        () -> PROTOCOL_VERSION,
+        PROTOCOL_VERSION::equals,
+        PROTOCOL_VERSION::equals
+    );
 
     @SubscribeEvent
     public static void register(final RegisterPayloadHandlersEvent event) {

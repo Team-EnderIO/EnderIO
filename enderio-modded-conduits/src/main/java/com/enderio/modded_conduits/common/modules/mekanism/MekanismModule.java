@@ -1,6 +1,5 @@
 package com.enderio.modded_conduits.common.modules.mekanism;
 
-import com.enderio.core.common.registries.ItemDeferredRegister;
 import com.enderio.core.common.registries.MenuDeferredRegister;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIOAPI;
@@ -15,7 +14,6 @@ import com.enderio.enderio.api.conduits.network.ConduitNetworkContextType;
 import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataType;
 import com.enderio.enderio.content.conduits.ConduitApiImpl;
 import com.enderio.enderio.content.filters.AbstractFilterItem;
-import com.enderio.enderio.init.EIOCreativeTabs;
 import com.enderio.enderio.init.EIOItems;
 import com.enderio.modded_conduits.common.modules.ConduitCommonModule;
 import com.enderio.modded_conduits.common.modules.mekanism.chemical.ChemicalConduit;

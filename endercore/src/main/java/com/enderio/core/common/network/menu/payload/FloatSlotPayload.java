@@ -1,27 +1,20 @@
 package com.enderio.core.common.network.menu.payload;
 
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
 
-public class FloatSlotPayload implements SlotPayload {
+public record FloatSlotPayload(float value) implements SlotPayload {
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, FloatSlotPayload> STREAM_CODEC = ByteBufCodecs.FLOAT
-            .map(FloatSlotPayload::new, FloatSlotPayload::value)
-            .cast();
-
-    private final float value;
-
-    public FloatSlotPayload(float value) {
-        this.value = value;
-    }
-
-    public float value() {
-        return value;
+    public FloatSlotPayload(FriendlyByteBuf buf) {
+        this(buf.readFloat());
     }
 
     @Override
     public SlotPayloadType type() {
         return SlotPayloadType.FLOAT;
+    }
+
+    @Override
+    public void write(FriendlyByteBuf buf) {
+        buf.writeFloat(value);
     }
 }

@@ -61,7 +61,7 @@ public abstract class Network<TNet extends Network<TNet, TNode>, TNode extends I
         // Special case for a single starting node
         if (nodes.size() == 1) {
             Preconditions.checkArgument(edges.isEmpty(), "A single node cannot have any edges.");
-            var node = nodes.getFirst();
+            var node = nodes.get(0);
             graph.addNode(node);
             node.setNetwork(self());
             onNodeAdded(node);

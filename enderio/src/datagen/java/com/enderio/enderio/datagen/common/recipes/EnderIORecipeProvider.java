@@ -8,7 +8,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class EnderIORecipeProvider extends EnderRecipeProvider {
     public EnderIORecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-        super(output, registries);
+        super(output);
 
         addProvider(new AlloyRecipeProvider());
         addProvider(new ArmoryRecipeProvider());

@@ -4,7 +4,7 @@ import com.enderio.core.common.energy.ItemStackEnergy;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.client.IItemDecorator;
+import net.minecraftforge.client.IItemDecorator;
 
 public class EnergyBarDecorator implements IItemDecorator {
     public static final EnergyBarDecorator INSTANCE = new EnergyBarDecorator();

@@ -85,7 +85,7 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
             for (var overlay : overlayRenderables.get(layer)) {
                 if (!(overlay instanceof AbstractWidget widget) || widget.isActive()) {
                     overlay.render(guiGraphics, mouseX, mouseY,
-                            Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(false));
+                            Minecraft.getInstance().getDeltaFrameTime());
 
                     if (overlay instanceof BaseOverlay baseOverlay) {
                         zOffset += baseOverlay.getAdditionalZOffset();
@@ -256,18 +256,18 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
         for (var layer : overlayWidgets.keySet()) {
             for (var overlay : overlayWidgets.get(layer)) {
                 if (!(overlay instanceof AbstractWidget widget) || widget.isActive()) {
                     if (overlay.isMouseOver(mouseX, mouseY)) {
-                        return overlay.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
+                        return overlay.mouseScrolled(mouseX, mouseY, delta);
                     }
                 }
             }
         }
 
-        return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
+        return super.mouseScrolled(mouseX, mouseY, delta);
     }
 
     /**

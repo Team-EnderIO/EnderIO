@@ -37,7 +37,7 @@ public class ToggleIconButton extends EnderButton {
 
     // region Presets and helpers
 
-    private static final ResourceLocation CHECKMARK = ResourceLocation.fromNamespaceAndPath(EnderCore.MOD_ID,
+    private static final ResourceLocation CHECKMARK = new ResourceLocation(EnderCore.MOD_ID,
             "icon/checkmark");
 
     public static ToggleIconButton createCheckbox(int x, int y, Supplier<Boolean> getter, Consumer<Boolean> setter) {

@@ -144,16 +144,16 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
-        if (scrollY > 0) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+        if (delta > 0) {
             selectNext(false);
             return true;
         }
-        if (scrollY < 0) {
+        if (delta < 0) {
             selectNext(true);
             return true;
         }
-        return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
+        return super.mouseScrolled(mouseX, mouseY, delta);
     }
 
     private void selectNext(boolean isForward) {
@@ -232,12 +232,12 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
         }
 
         @Override
-        public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        public void renderBackground(GuiGraphics guiGraphics) {
             renderSimpleArea(guiGraphics, parentWidget.expandTopLeft, parentWidget.expandBottomRight);
         }
 
         @Override
-        public void renderTransparentBackground(GuiGraphics guiGraphics) {
+        public void renderDirtBackground(GuiGraphics guiGraphics) {
             // Don't make background dark
         }
 

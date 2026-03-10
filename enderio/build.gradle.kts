@@ -62,20 +62,24 @@ configurations {
     val datagenAnnotationProcessor by getting {
         extendsFrom(annotationProcessor.get())
     }
-    val gametestImplementation by getting {
-        extendsFrom(implementation.get())
-    }
-    val gametestCompileOnly by getting {
-        extendsFrom(compileOnly.get())
-    }
-    val gametestRuntimeOnly by getting {
-        extendsFrom(runtimeOnly.get())
-    }
-    val gametestAnnotationProcessor by getting {
-        extendsFrom(annotationProcessor.get())
-    }
+//    val gametestImplementation by getting {
+//        extendsFrom(implementation.get())
+//    }
+//    val gametestCompileOnly by getting {
+//        extendsFrom(compileOnly.get())
+//    }
+//    val gametestRuntimeOnly by getting {
+//        extendsFrom(runtimeOnly.get())
+//    }
+//    val gametestAnnotationProcessor by getting {
+//        extendsFrom(annotationProcessor.get())
+//    }
 }
 
+obfuscation {
+    val localRuntime by configurations.getting
+    createRemappingConfiguration(localRuntime)
+}
 
 dependencies {
     val localRuntime by configurations.getting
@@ -89,9 +93,7 @@ dependencies {
     localRuntime(project(":enderio-modded-conduits"))
 
     // Almost Unified
-    compileOnly(variantOf(libs.almostUnified) {
-        classifier("api")
-    })
+    compileOnly(libs.almostUnified)
 
     // JEI
     compileOnly(libs.bundles.jeiApi)
@@ -124,10 +126,6 @@ dependencies {
 
     localRuntime(libs.mekanism)
 
-    // Refined Storage
-    compileOnly(libs.refinedStorage)
-    localRuntime(libs.refinedStorage)
-
     //Laserio
     compileOnly(libs.laserio)
     localRuntime(libs.laserio)
@@ -142,30 +140,35 @@ dependencies {
 
     // Sodium + Iris to test shader compatibility
     compileOnly(libs.iris)
-    localRuntime(libs.sodium)
+    localRuntime(libs.embeddium)
     localRuntime(libs.iris)
 
     // Unit tests
     testImplementation(libs.junitJupiter)
     testRuntimeOnly(libs.junitPlatformLauncher)
-    testImplementation(libs.neoforgeTestFramework)
+//    testImplementation(libs.neoforgeTestFramework)
 
     // Setup gametests
-    val gametestImplementation by configurations.getting
-    gametestImplementation(libs.neoforgeTestFramework) {
-        isTransitive = false
-    }
-
-    // Also allow running gametests in client+server but don't declare as a dependency
-    localRuntime(libs.neoforgeTestFramework) {
-        isTransitive = false
-    }
+//    val gametestImplementation by configurations.getting
+//    gametestImplementation(libs.neoforgeTestFramework) {
+//        isTransitive = false
+//    }
+//
+//    // Also allow running gametests in client+server but don't declare as a dependency
+//    localRuntime(libs.neoforgeTestFramework) {
+//        isTransitive = false
+//    }
 }
 
-neoForge {
-    enable {
-        version = libs.versions.neoforge.get()
-        isDisableRecompilation = System.getenv("CI") == "true"
+val parchment_minecraft_version: String by project
+val parchment_mappings_version: String by project
+
+legacyForge {
+    version = libs.versions.minecraft.get() + '-' + libs.versions.forge.get()
+
+    parchment {
+        mappingsVersion = parchment_mappings_version
+        minecraftVersion = parchment_minecraft_version
     }
 
     accessTransformers {
@@ -173,7 +176,7 @@ neoForge {
     }
 
     addModdingDependenciesTo(sourceSets.getByName("datagen"))
-    addModdingDependenciesTo(sourceSets.getByName("gametest"))
+//    addModdingDependenciesTo(sourceSets.getByName("gametest"))
 
     val modEnderio by mods.creating {
         sourceSet(sourceSets.getByName("datagen"))
@@ -230,10 +233,10 @@ neoForge {
         }
     }
 
-    unitTest {
-        enable()
-        testedMod = modEnderio
-    }
+//    unitTest {
+//        enable()
+//        testedMod = modEnderio
+//    }
 }
 
 // Expand variables in mods.toml
@@ -241,11 +244,10 @@ var generateModMetadata = tasks.register<ProcessResources>("generateModMetadata"
     val replaceProperties = mapOf(
             "mod_version" to project.version,
             "minecraft_version_range" to libs.versions.minecraft.get(),
-            "neoforge_version" to libs.versions.neoforge.get(),
-            "loader_version_range" to "[4,)", // TODO
+            "forge_version" to libs.versions.forge.get(),
+            "loader_version_range" to "[47,)", // TODO
             "mekanism_version_range" to libs.versions.mekanismMod.get(),
             "ae2_version_range" to libs.versions.ae2.get(),
-            "refinedstorage_version_range" to libs.versions.refinedStorage.get(),
             "ftb_ultimine_version_range" to libs.versions.ftbUltimine.get(),
     )
 
@@ -253,7 +255,7 @@ var generateModMetadata = tasks.register<ProcessResources>("generateModMetadata"
     into("build/generated/sources/modMetadata")
 
     from("src/main/templates") {
-        filesMatching("META-INF/neoforge.mods.toml") {
+        filesMatching("META-INF/mods.toml") {
             expand(replaceProperties)
         }
     }
@@ -265,7 +267,7 @@ var generateModMetadata = tasks.register<ProcessResources>("generateModMetadata"
 
 // Add results to source set and to IDE sync
 sourceSets.main.get().resources.srcDir(generateModMetadata)
-neoForge.ideSyncTask(generateModMetadata)
+legacyForge.ideSyncTask(generateModMetadata)
 
 tasks.named<Jar>("jar") {
     // FIXME: Temporary - shipping datagen classes with build again for Endergy.

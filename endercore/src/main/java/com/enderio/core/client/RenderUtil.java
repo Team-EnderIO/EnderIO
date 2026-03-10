@@ -6,11 +6,13 @@ import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
-import net.neoforged.neoforge.client.model.IQuadTransformer;
+import net.minecraftforge.client.model.IQuadTransformer;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
-import static net.neoforged.neoforge.client.model.IQuadTransformer.COLOR;
-import static net.neoforged.neoforge.client.model.IQuadTransformer.STRIDE;
+import static net.minecraftforge.client.model.IQuadTransformer.COLOR;
+import static net.minecraftforge.client.model.IQuadTransformer.STRIDE;
 
 public class RenderUtil {
     /**
@@ -47,30 +49,10 @@ public class RenderUtil {
     private static void renderFace(PoseStack.Pose pose, VertexConsumer consumer, TextureAtlasSprite texture, int color,
             int light, float x0, float x1, float y0, float y1, float z0, float z1, float z2, float z3, float minU,
             float maxU, float minV, float maxV, float normalX, float normalY, float normalZ) {
-        consumer.addVertex(pose, x0, y0, z0)
-                .setColor(color)
-                .setUv(texture.getU(minU), texture.getV(minV))
-                .setOverlay(OverlayTexture.NO_OVERLAY)
-                .setLight(light)
-                .setNormal(pose, normalX, normalY, normalZ);
-        consumer.addVertex(pose, x1, y0, z1)
-                .setColor(color)
-                .setUv(texture.getU(maxU), texture.getV(minV))
-                .setOverlay(OverlayTexture.NO_OVERLAY)
-                .setLight(light)
-                .setNormal(pose, normalX, normalY, normalZ);
-        consumer.addVertex(pose, x1, y1, z2)
-                .setColor(color)
-                .setUv(texture.getU(maxU), texture.getV(maxV))
-                .setOverlay(OverlayTexture.NO_OVERLAY)
-                .setLight(light)
-                .setNormal(pose, normalX, normalY, normalZ);
-        consumer.addVertex(pose, x0, y1, z3)
-                .setColor(color)
-                .setUv(texture.getU(minU), texture.getV(maxV))
-                .setOverlay(OverlayTexture.NO_OVERLAY)
-                .setLight(light)
-                .setNormal(pose, normalX, normalY, normalZ);
+        consumer.vertex(pose.pose(), x0, y0, z0).color(color).uv(texture.getU(minU), texture.getV(minV)).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(pose.normal(), normalX, normalY, normalZ).endVertex();
+        consumer.vertex(pose.pose(), x1, y0, z1).color(color).uv(texture.getU(maxU), texture.getV(minV)).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(pose.normal(), normalX, normalY, normalZ).endVertex();
+        consumer.vertex(pose.pose(), x1, y1, z2).color(color).uv(texture.getU(maxU), texture.getV(maxV)).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(pose.normal(), normalX, normalY, normalZ).endVertex();
+        consumer.vertex(pose.pose(), x0, y1, z3).color(color).uv(texture.getU(minU), texture.getV(maxV)).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(pose.normal(), normalX, normalY, normalZ).endVertex();
     }
 
     public static float[] unpackVertices(int[] vertices, int vertexIndex, int position, int count) {

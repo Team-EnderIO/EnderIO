@@ -278,7 +278,7 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
             ListTag outputsNbt = nbt.getList(KEY_OUTPUTS, Tag.TAG_COMPOUND);
             outputs = new ArrayList<>();
             for (Tag tag : outputsNbt) {
-                outputs.add(OutputStack.fromNBT(lookupProvider, (CompoundTag) tag));
+                outputs.add(OutputStack.fromNBT((CompoundTag) tag));
             }
         }
     }

@@ -1,7 +1,7 @@
 package com.enderio.core.common.network.menu;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 public class BlockEntityMenuHelper {
 
     @SafeVarargs
-    public static <T extends BlockEntity> T getBlockEntityFrom(RegistryFriendlyByteBuf buf, Level level,
+    public static <T extends BlockEntity> T getBlockEntityFrom(FriendlyByteBuf buf, Level level,
             BlockEntityType<? extends T>... types) {
         // noinspection ConstantValue
         if (buf == null) {

@@ -14,10 +14,10 @@ import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
-import net.neoforged.fml.ModList;
-import net.neoforged.neoforge.client.model.geometry.IGeometryBakingContext;
-import net.neoforged.neoforge.client.model.geometry.IGeometryLoader;
-import net.neoforged.neoforge.client.model.geometry.IUnbakedGeometry;
+import net.minecraftforge.client.model.geometry.IGeometryBakingContext;
+import net.minecraftforge.client.model.geometry.IGeometryLoader;
+import net.minecraftforge.client.model.geometry.IUnbakedGeometry;
+import net.minecraftforge.fml.ModList;
 
 import java.util.function.Function;
 
@@ -36,9 +36,9 @@ public class EitherModelLoader implements IGeometryLoader<EitherModelLoader.Unba
     public record Unbaked(BlockModel model) implements IUnbakedGeometry<Unbaked> {
 
         @Override
-        public BakedModel bake(IGeometryBakingContext context, ModelBaker baker,
-                Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState, ItemOverrides overrides) {
-            return model.bake(baker, model, spriteGetter, modelState, true);
+        public BakedModel bake(IGeometryBakingContext context, ModelBaker modelBaker, Function<Material, TextureAtlasSprite> spriteGetter,
+            ModelState modelState, ItemOverrides itemOverrides, ResourceLocation location) {
+            return model.bake(modelBaker, model, spriteGetter, modelState, location, true);
         }
 
         @Override

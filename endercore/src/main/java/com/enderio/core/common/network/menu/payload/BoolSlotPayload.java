@@ -1,17 +1,20 @@
 package com.enderio.core.common.network.menu.payload;
 
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
 
 public record BoolSlotPayload(boolean value) implements SlotPayload {
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, BoolSlotPayload> STREAM_CODEC = ByteBufCodecs.BOOL
-            .map(BoolSlotPayload::new, BoolSlotPayload::value)
-            .cast();
+    public BoolSlotPayload(FriendlyByteBuf buf) {
+        this(buf.readBoolean());
+    }
 
     @Override
     public SlotPayloadType type() {
         return SlotPayloadType.BOOL;
+    }
+
+    @Override
+    public void write(FriendlyByteBuf buf) {
+        buf.writeBoolean(value);
     }
 }

@@ -1,47 +1,40 @@
 package com.enderio.core.data.recipe;
 
-import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.advancements.Criterion;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.EnterBlockTrigger;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.function.Consumer;
 
 public abstract class SubRecipeProvider {
-    public abstract void buildRecipes(RecipeOutput recipeOutput, HolderLookup.Provider registries);
+    public abstract void buildRecipes(Consumer<FinishedRecipe> consumer);
 
     // Helpers copied from RecipeProvider.
-    protected static Criterion<EnterBlockTrigger.TriggerInstance> insideOf(Block block) {
-        return CriteriaTriggers.ENTER_BLOCK.createCriterion(new EnterBlockTrigger.TriggerInstance(Optional.empty(), Optional.of(block.builtInRegistryHolder()), Optional.empty()));
+    protected static EnterBlockTrigger.TriggerInstance insideOf(Block block) {
+        return new EnterBlockTrigger.TriggerInstance(ContextAwarePredicate.ANY, block, StatePropertiesPredicate.ANY);
     }
 
-    protected static Criterion<InventoryChangeTrigger.TriggerInstance> has(MinMaxBounds.Ints count, ItemLike item) {
-        return inventoryTrigger(net.minecraft.advancements.critereon.ItemPredicate.Builder.item().of(new ItemLike[]{item}).withCount(count));
+    protected static InventoryChangeTrigger.TriggerInstance has(MinMaxBounds.Ints count, ItemLike item) {
+        return inventoryTrigger(ItemPredicate.Builder.item().of(item).withCount(count).build());
     }
 
-    protected static Criterion<InventoryChangeTrigger.TriggerInstance> has(ItemLike itemLike) {
-        return inventoryTrigger(net.minecraft.advancements.critereon.ItemPredicate.Builder.item().of(new ItemLike[]{itemLike}));
+    protected static InventoryChangeTrigger.TriggerInstance has(ItemLike itemLike) {
+        return inventoryTrigger(ItemPredicate.Builder.item().of(new ItemLike[]{itemLike}).build());
     }
 
-    protected static Criterion<InventoryChangeTrigger.TriggerInstance> has(TagKey<Item> tag) {
-        return inventoryTrigger(net.minecraft.advancements.critereon.ItemPredicate.Builder.item().of(tag));
+    protected static InventoryChangeTrigger.TriggerInstance has(TagKey<Item> tag) {
+        return inventoryTrigger(ItemPredicate.Builder.item().of(tag).build());
     }
 
-    protected static Criterion<InventoryChangeTrigger.TriggerInstance> inventoryTrigger(ItemPredicate.Builder... items) {
-        return inventoryTrigger((ItemPredicate[]) Arrays.stream(items).map(ItemPredicate.Builder::build).toArray((x$0) -> new ItemPredicate[x$0]));
-    }
-
-    protected static Criterion<InventoryChangeTrigger.TriggerInstance> inventoryTrigger(ItemPredicate... predicates) {
-        return CriteriaTriggers.INVENTORY_CHANGED.createCriterion(new InventoryChangeTrigger.TriggerInstance(Optional.empty(), InventoryChangeTrigger.TriggerInstance.Slots.ANY, List.of(predicates)));
+    protected static InventoryChangeTrigger.TriggerInstance inventoryTrigger(ItemPredicate... predicates) {
+        return new InventoryChangeTrigger.TriggerInstance(ContextAwarePredicate.ANY, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, predicates);
     }
 }

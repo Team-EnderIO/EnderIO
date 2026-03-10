@@ -1,7 +1,7 @@
 package com.enderio.core;
 
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod;
 
 // This is because core has no access to base.
 //@EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD)
@@ -12,6 +12,6 @@ public class EnderCore {
     public static final String MOD_ID = "endercore";
 
     public static ResourceLocation loc(String name) {
-        return ResourceLocation.fromNamespaceAndPath(MOD_ID, name);
+        return new ResourceLocation(MOD_ID, name);
     }
 }

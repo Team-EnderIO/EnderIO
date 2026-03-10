@@ -1,5 +1,6 @@
 package com.enderio.core.common.menu;
 
+import com.enderio.core.common.network.CoreNetwork;
 import com.enderio.core.common.network.menu.ClientboundSyncSlotDataPacket;
 import com.enderio.core.common.network.menu.ClientboundSyncSlotDataPacket.PayloadPair;
 import com.enderio.core.common.network.menu.ContainerSyncData;
@@ -15,7 +16,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -124,7 +125,7 @@ public abstract class BaseEnderMenu extends AbstractContainerMenu {
 
             if (changeType != ChangeType.NONE) {
                 var payload = syncSlot.createPayload(playerInventory.player.level(), ChangeType.FULL);
-                PacketDistributor.sendToServer(new ServerboundSetSyncSlotDataPacket(containerId, slotIndex, payload));
+                CoreNetwork.INSTANCE.sendToServer(new ServerboundSetSyncSlotDataPacket(containerId, slotIndex, payload));
             }
         }
     }
@@ -175,7 +176,7 @@ public abstract class BaseEnderMenu extends AbstractContainerMenu {
             }
 
             if (!payloads.isEmpty()) {
-                PacketDistributor.sendToPlayer(player, new ClientboundSyncSlotDataPacket(containerId, payloads));
+                CoreNetwork.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientboundSyncSlotDataPacket(containerId, payloads));
             }
         }
     }
@@ -199,7 +200,7 @@ public abstract class BaseEnderMenu extends AbstractContainerMenu {
             }
 
             if (!payloads.isEmpty()) {
-                PacketDistributor.sendToPlayer(player, new ClientboundSyncSlotDataPacket(containerId, payloads));
+                CoreNetwork.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientboundSyncSlotDataPacket(containerId, payloads));
             }
         }
     }

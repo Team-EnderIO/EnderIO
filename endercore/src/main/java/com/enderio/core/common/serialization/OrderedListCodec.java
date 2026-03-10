@@ -20,7 +20,7 @@ public class OrderedListCodec {
     }
 
     public static <T> Codec<List<T>> create(int maxSize, Codec<T> itemCodec, T defaultValue) {
-        return createItemCodec(itemCodec, maxSize).sizeLimitedListOf(maxSize)
+        return createItemCodec(itemCodec, maxSize).listOf()
                 .xmap(list -> fromItems(list, defaultValue), OrderedListCodec::toItems);
     }
 

@@ -28,8 +28,7 @@ public class EnumIconMap<T extends Enum<T>> {
     }
 
     private static <T extends Enum<T>> ResourceLocation createFor(String modId, String iconFolder, T value) {
-        return ResourceLocation.fromNamespaceAndPath(modId,
-                "icon/" + iconFolder + "/" + value.name().toLowerCase(Locale.ROOT));
+        return new ResourceLocation(modId, "icon/" + iconFolder + "/" + value.name().toLowerCase(Locale.ROOT));
     }
 
     public static class Builder<T extends Enum<T>> {

@@ -4,58 +4,48 @@ issueTrackerURL="https://github.com/Team-EnderIO/EnderIO/issues"
 license="CC0"
 
 [[mods]]
-modId="enderio"
+modId="enderio_modded_conduits"
 version="${mod_version}"
-displayName="Ender IO"
+displayName="Ender IO - Modded Conduits"
 authors="CrazyPants, tterrag, HenryLoenwind, MatthiasM, CyanideX, EpicSquid, Rover656, HypherionSA, liliandev, Ferri_Arnus, dphaldes"
-description="Compact conduits, painted things and all sorts of stuff and bling. This is the monolithic jar, containing all core modules."
+description="Adds Mekanism, AE2 and RS2 Conduits."
 displayURL="https://enderio.com/"
 logoFile="logo.png"
-featureFlags="META-INF/feature_flags.json"
 
-[[mixins]]
-config="enderio.mixins.json"
-
-[[dependencies.enderio]]
+[[dependencies.enderio_modded_conduits]]
 modId="minecraft"
 type="required"
 versionRange="${minecraft_version_range}"
 side="BOTH"
 
 [[dependencies.enderio]]
-modId="neoforge"
-type="required"
-versionRange="${neoforge_version}"
+modId="forge"
+mandatory=true
+versionRange="${forge_version}"
 side="BOTH"
 
-[[dependencies.enderio]]
+[[dependencies.enderio_modded_conduits]]
 modId="endercore"
 type="required"
 versionRange="${mod_version}"
 side="BOTH"
 
-# FTB Ultimine Compat
-[[dependencies.enderio]]
-modId="ftbultimine"
-type="optional"
-versionRange="${ftb_ultimine_version_range}"
+[[dependencies.enderio_modded_conduits]]
+modId="enderio"
+type="required"
+versionRange="${mod_version}"
 side="BOTH"
 
 # Modded conduits
-[[dependencies.enderio]]
+[[dependencies.enderio_modded_conduits]]
 modId="mekanism"
 type="optional"
 versionRange="${mekanism_version_range}"
 side="BOTH"
 
-[[dependencies.enderio]]
+[[dependencies.enderio_modded_conduits]]
 modId="ae2"
 type="optional"
 versionRange="${ae2_version_range}"
 side="BOTH"
 
-[[dependencies.enderio]]
-modId="refinedstorage"
-type="optional"
-versionRange="${refinedstorage_version_range}"
-side="BOTH"

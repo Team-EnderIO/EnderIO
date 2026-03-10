@@ -1,17 +1,17 @@
 package com.enderio.core.common.blockentity;
 
 import com.enderio.core.common.network.ClientboundDataSlotChange;
+import com.enderio.core.common.network.CoreNetwork;
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.core.common.network.ServerboundCDataSlotUpdate;
 import io.netty.buffer.Unpooled;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
@@ -19,9 +19,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.capabilities.BlockCapability;
-import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
-import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -99,8 +96,8 @@ public class EnderBlockEntity extends BlockEntity {
      * This is the initial packet sent to a client loading the block (or when it is placed).
      */
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
-        CompoundTag data = super.getUpdateTag(registries);
+    public CompoundTag getUpdateTag() {
+        CompoundTag data = super.getUpdateTag();
 
         ListTag dataList = new ListTag();
         for (int i = 0; i < dataSlots.size(); i++) {
@@ -117,18 +114,18 @@ public class EnderBlockEntity extends BlockEntity {
         data.put(DATA, dataList);
 
         // NEW: Add synced data properties.
-        saveAdditionalSynced(data, registries);
+        saveAdditionalSynced(data);
 
         return data;
     }
 
     /**
      * This is the client handling the tag above.
-     * @param syncData The {@link CompoundTag} sent from {@link BlockEntity#getUpdateTag(HolderLookup.Provider)}
+     * @param syncData The {@link CompoundTag} sent from {@link BlockEntity#getUpdateTag()}
      */
     @Override
-    public void handleUpdateTag(CompoundTag syncData, HolderLookup.Provider lookupProvider) {
-        super.handleUpdateTag(syncData, lookupProvider);
+    public void handleUpdateTag(CompoundTag syncData) {
+        super.handleUpdateTag(syncData);
 
         if (syncData.contains(DATA, Tag.TAG_LIST)) {
             ListTag dataList = syncData.getList(DATA, Tag.TAG_COMPOUND);
@@ -159,7 +156,7 @@ public class EnderBlockEntity extends BlockEntity {
         }
 
         // Fine to use a normal byte buf here, we're not using codecs in here.
-        RegistryFriendlyByteBuf buf = new RegistryFriendlyByteBuf(Unpooled.buffer(), level.registryAccess());
+        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         try{
             buf.writeInt(needsUpdate.size());
             needsUpdate.forEach(i -> {
@@ -196,13 +193,13 @@ public class EnderBlockEntity extends BlockEntity {
         }
 
         if (dataSlots.contains(slot)) {
-            RegistryFriendlyByteBuf buf = new RegistryFriendlyByteBuf(Unpooled.buffer(), level.registryAccess());
+            FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
             try{
                 buf.writeInt(dataSlots.indexOf(slot));
                 slot.write(buf, value);
                 byte[] data = new byte[buf.readableBytes()];
                 buf.readBytes(data);
-                PacketDistributor.sendToServer(new ClientboundDataSlotChange(getBlockPos(), data));
+                CoreNetwork.INSTANCE.sendToServer(new ClientboundDataSlotChange(getBlockPos(), data));
             }finally {
                 buf.release(); // release the buffer safely
             }
@@ -226,7 +223,7 @@ public class EnderBlockEntity extends BlockEntity {
 
     @Deprecated(forRemoval = true, since = "7.1")
     @EnsureSide(EnsureSide.Side.CLIENT)
-    public void clientHandleBufferSync(RegistryFriendlyByteBuf buf) {
+    public void clientHandleBufferSync(FriendlyByteBuf buf) {
         for (int amount = buf.readInt(); amount > 0; amount--) {
             int index = buf.readInt();
             dataSlots.get(index).read(buf);
@@ -239,7 +236,7 @@ public class EnderBlockEntity extends BlockEntity {
 
     @Deprecated(forRemoval = true, since = "7.1")
     @EnsureSide(EnsureSide.Side.SERVER)
-    public void serverHandleBufferChange(RegistryFriendlyByteBuf buf) {
+    public void serverHandleBufferChange(FriendlyByteBuf buf) {
         int index;
         try {
             index = buf.readInt();
@@ -253,16 +250,16 @@ public class EnderBlockEntity extends BlockEntity {
     // New Sync
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        saveAdditionalSynced(tag, registries);
+    protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        saveAdditionalSynced(tag);
     }
 
     /**
      * Override this to write data which should be synced over the network.
      * Must be opted-in by overriding {@link BlockEntity#getUpdatePacket}.
      */
-    protected void saveAdditionalSynced(CompoundTag tag, HolderLookup.Provider registries) {
+    protected void saveAdditionalSynced(CompoundTag tag) {
     }
 
     // endregion

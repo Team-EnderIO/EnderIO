@@ -6,14 +6,12 @@ import com.mojang.serialization.Codec;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,15 +33,13 @@ public final class NetworkDataSlot<T> {
     private final Consumer<T> setter;
     private int lastHash;
 
-    public static final CodecType<String> STRING = new CodecType<>(Codec.STRING, ByteBufCodecs.STRING_UTF8.cast());
-    public static final CodecType<Boolean> BOOL = new CodecType<>(Codec.BOOL, ByteBufCodecs.BOOL.cast());
-    public static final CodecType<Integer> INT = new CodecType<>(Codec.INT, ByteBufCodecs.INT.cast());
-    public static final CodecType<Long> LONG = new CodecType<>(Codec.LONG, ByteBufCodecs.VAR_LONG.cast());
-    public static final CodecType<Float> FLOAT = new CodecType<>(Codec.FLOAT, ByteBufCodecs.FLOAT.cast());
-    public static final CodecType<ResourceLocation> RESOURCE_LOCATION = new CodecType<>(ResourceLocation.CODEC,
-            ResourceLocation.STREAM_CODEC.cast());
-    public static final CodecType<FluidStack> FLUID_STACK = new CodecType<>(FluidStack.OPTIONAL_CODEC,
-            FluidStack.OPTIONAL_STREAM_CODEC, stack -> stack.hashCode() * 31 + stack.getAmount());
+    public static final CodecType<String> STRING = new CodecType<>(Codec.STRING, FriendlyByteBuf::readUtf, FriendlyByteBuf::writeUtf);
+    public static final CodecType<Boolean> BOOL = new CodecType<>(Codec.BOOL, FriendlyByteBuf::readBoolean, FriendlyByteBuf::writeBoolean);
+    public static final CodecType<Integer> INT = new CodecType<>(Codec.INT, FriendlyByteBuf::readInt, FriendlyByteBuf::writeInt);
+    public static final CodecType<Long> LONG = new CodecType<>(Codec.LONG, FriendlyByteBuf::readVarLong, FriendlyByteBuf::writeVarLong);
+    public static final CodecType<Float> FLOAT = new CodecType<>(Codec.FLOAT, FriendlyByteBuf::readFloat, FriendlyByteBuf::writeFloat);
+    public static final CodecType<ResourceLocation> RESOURCE_LOCATION = new CodecType<>(ResourceLocation.CODEC, FriendlyByteBuf::readResourceLocation,
+        FriendlyByteBuf::writeResourceLocation);
 
     public NetworkDataSlot(Type<T> type, Supplier<T> getter, Consumer<T> setter) {
 
@@ -67,17 +63,17 @@ public final class NetworkDataSlot<T> {
         setter.accept(type.parse(lookupProvider, tag, getter));
     }
 
-    public void write(RegistryFriendlyByteBuf buf) {
+    public void write(FriendlyByteBuf buf) {
         T value = getter.get();
         lastHash = type.hash(value);
         type.write(buf, value);
     }
 
-    public void write(RegistryFriendlyByteBuf buf, T value) {
+    public void write(FriendlyByteBuf buf, T value) {
         type.write(buf, value);
     }
 
-    public void read(RegistryFriendlyByteBuf buf) {
+    public void read(FriendlyByteBuf buf) {
         setter.accept(type.read(buf, getter));
     }
 
@@ -115,49 +111,53 @@ public final class NetworkDataSlot<T> {
          * @param buf The buffer to write to.
          * @param value The value to write.
          */
-        void write(RegistryFriendlyByteBuf buf, T value);
+        void write(FriendlyByteBuf buf, T value);
 
         /***
          * @param buf The buffer to read from.
          * @return The value read from the buffer.
          */
-        T read(RegistryFriendlyByteBuf buf, Supplier<T> currentValueSupplier);
+        T read(FriendlyByteBuf buf, Supplier<T> currentValueSupplier);
     }
 
     /**
-     * A data slot that serializes using {@link Codec}'s and {@link StreamCodec}'s.
+     * A data slot that serializes using {@link Codec}'s and functions that serialize with {@link FriendlyByteBuf}.
      * @param codec The codec for NBT serialization.
-     * @param streamCodec The stream codec for network serialization.
+     * @param reader The function to read from a buffer.
+     * @param writer The function to write to a buffer.
      * @param hashFunction Optional custom hash function.
      * @param <T> The type to be serialized.
      */
-    public record CodecType<T>(Codec<T> codec, StreamCodec<RegistryFriendlyByteBuf, T> streamCodec,
+    public record CodecType<T>(Codec<T> codec, FriendlyByteBuf.Reader<T> reader, FriendlyByteBuf.Writer<T> writer,
             Function<T, Integer> hashFunction) implements Type<T> {
 
-        public CodecType(Codec<T> codec, StreamCodec<RegistryFriendlyByteBuf, T> streamCodec) {
-            this(codec, streamCodec, Object::hashCode);
+        public CodecType(Codec<T> codec, FriendlyByteBuf.Reader<T> reader, FriendlyByteBuf.Writer<T> writer) {
+            this(codec, reader, writer, Object::hashCode);
         }
 
         public NetworkDataSlot<T> create(Supplier<T> getter, Consumer<T> setter) {
             return new NetworkDataSlot<>(this, getter, setter);
         }
 
-        public static <T> CodecType<Set<T>> createSet(Codec<T> itemCodec,
-                StreamCodec<RegistryFriendlyByteBuf, T> itemStreamCodec) {
+        public static <T> CodecType<Set<T>> createSet(Codec<T> itemCodec, FriendlyByteBuf.Reader<T> itemReader, FriendlyByteBuf.Writer<T> itemWriter) {
             return new CodecType<>(itemCodec.listOf().xmap(ImmutableSet::copyOf, ImmutableList::copyOf),
-                    itemStreamCodec.apply(ByteBufCodecs.list()).map(ImmutableSet::copyOf, ImmutableList::copyOf));
+                buf -> buf.readCollection(HashSet::new, itemReader),
+                (buf, value) -> buf.writeCollection(value, itemWriter));
         }
 
-        public static <T> CodecType<List<T>> createList(Codec<T> itemCodec,
-                StreamCodec<RegistryFriendlyByteBuf, T> itemStreamCodec) {
-            return new CodecType<>(itemCodec.listOf(), itemStreamCodec.apply(ByteBufCodecs.list()));
+        public static <T> CodecType<List<T>> createList(Codec<T> itemCodec, FriendlyByteBuf.Reader<T> itemReader, FriendlyByteBuf.Writer<T> itemWriter) {
+            return new CodecType<>(itemCodec.listOf().xmap(ImmutableList::copyOf, ImmutableList::copyOf),
+                buf -> buf.readCollection(ArrayList::new, itemReader),
+                (buf, value) -> buf.writeCollection(value, itemWriter));
         }
 
         public static <T, U> CodecType<Map<T, U>> createMap(Codec<T> keyCodec, Codec<U> valueCodec,
-                StreamCodec<RegistryFriendlyByteBuf, T> keyStreamCodec,
-                StreamCodec<RegistryFriendlyByteBuf, U> valueStreamCodec) {
+            FriendlyByteBuf.Reader<T> keyReader, FriendlyByteBuf.Writer<T> keyWriter,
+            FriendlyByteBuf.Reader<U> itemReader, FriendlyByteBuf.Writer<U> itemWriter) {
+
             return new CodecType<>(Codec.unboundedMap(keyCodec, valueCodec),
-                    ByteBufCodecs.map(HashMap::new, keyStreamCodec, valueStreamCodec));
+                buf -> buf.readMap(keyReader, itemReader),
+                (buf, value) -> buf.writeMap(value, keyWriter, itemWriter));
         }
 
         public int hash(T value) {
@@ -165,19 +165,19 @@ public final class NetworkDataSlot<T> {
         }
 
         public Tag save(HolderLookup.Provider lookupProvider, T value) {
-            return codec.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), value).getOrThrow();
+            return codec.encodeStart(NbtOps.INSTANCE, value).getOrThrow(false, str -> {});
         }
 
         public T parse(HolderLookup.Provider lookupProvider, Tag tag, Supplier<T> currentValueSupplier) {
-            return codec.parse(lookupProvider.createSerializationContext(NbtOps.INSTANCE), tag).getOrThrow();
+            return codec.parse(NbtOps.INSTANCE, tag).getOrThrow(false, str -> {});
         }
 
-        public void write(RegistryFriendlyByteBuf buf, T value) {
-            streamCodec.encode(buf, value);
+        public void write(FriendlyByteBuf buf, T value) {
+            writer.accept(buf, value);
         }
 
-        public T read(RegistryFriendlyByteBuf buf, Supplier<T> currentValueSupplier) {
-            return streamCodec.decode(buf);
+        public T read(FriendlyByteBuf buf, Supplier<T> currentValueSupplier) {
+            return reader.apply(buf);
         }
     }
 }

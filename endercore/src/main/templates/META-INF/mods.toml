@@ -18,8 +18,8 @@ type="required"
 versionRange="${minecraft_version_range}"
 side="BOTH"
 
-[[dependencies.endercore]]
-modId="neoforge"
-type="required"
-versionRange="${neoforge_version}"
+[[dependencies.enderio]]
+modId="forge"
+mandatory=true
+versionRange="${forge_version}"
 side="BOTH"

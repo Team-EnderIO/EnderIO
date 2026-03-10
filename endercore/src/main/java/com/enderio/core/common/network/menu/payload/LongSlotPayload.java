@@ -1,17 +1,20 @@
 package com.enderio.core.common.network.menu.payload;
 
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
 
 public record LongSlotPayload(long value) implements SlotPayload {
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, LongSlotPayload> STREAM_CODEC = ByteBufCodecs.VAR_LONG
-            .map(LongSlotPayload::new, LongSlotPayload::value)
-            .cast();
+    public LongSlotPayload(FriendlyByteBuf buf) {
+        this(buf.readLong());
+    }
 
     @Override
     public SlotPayloadType type() {
         return SlotPayloadType.LONG;
+    }
+
+    @Override
+    public void write(FriendlyByteBuf buf) {
+        buf.writeLong(value);
     }
 }

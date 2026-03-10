@@ -1,6 +1,6 @@
 plugins {
     id("maven-publish")
-    id("net.neoforged.moddev")
+    id("net.neoforged.moddev.legacyforge")
     id("idea")
 }
 

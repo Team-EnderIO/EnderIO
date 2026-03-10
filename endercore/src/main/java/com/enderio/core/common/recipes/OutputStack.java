@@ -5,7 +5,7 @@ import com.mojang.datafixers.util.Either;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidStack;
 
 /**
  * An output stack for a recipe.
@@ -83,9 +83,9 @@ public record OutputStack(Either<ItemStack, FluidStack> stack) {
     public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
         CompoundTag tag = new CompoundTag();
         if (isItem()) {
-            tag.put(CoreNBTKeys.ITEM, stack.left().get().saveOptional(lookupProvider));
+            tag.put(CoreNBTKeys.ITEM, stack.left().get().save(new CompoundTag()));
         } else if (isFluid()) {
-            tag.put(CoreNBTKeys.FLUID, stack.right().get().saveOptional(lookupProvider));
+            tag.put(CoreNBTKeys.FLUID, stack.right().get().writeToNBT(new CompoundTag()));
         }
         return tag;
     }
@@ -93,11 +93,11 @@ public record OutputStack(Either<ItemStack, FluidStack> stack) {
     /**
      * Read from NBT.
      */
-    public static OutputStack fromNBT(HolderLookup.Provider lookupProvider, CompoundTag tag) {
+    public static OutputStack fromNBT(CompoundTag tag) {
         if (tag.contains(CoreNBTKeys.ITEM)) {
-            return OutputStack.of(ItemStack.parseOptional(lookupProvider, tag.getCompound(CoreNBTKeys.ITEM)));
+            return OutputStack.of(ItemStack.of(tag.getCompound(CoreNBTKeys.ITEM)));
         } else if (tag.contains(CoreNBTKeys.FLUID)) {
-            return OutputStack.of(FluidStack.parseOptional(lookupProvider, tag.getCompound(CoreNBTKeys.FLUID)));
+            return OutputStack.of(FluidStack.loadFluidStackFromNBT(tag.getCompound(CoreNBTKeys.FLUID)));
         }
         return OutputStack.EMPTY;
     }

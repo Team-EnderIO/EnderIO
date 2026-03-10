@@ -61,7 +61,10 @@ configurations {
     }
 }
 
-
+obfuscation {
+    val localRuntime by configurations.getting
+    createRemappingConfiguration(localRuntime)
+}
 
 dependencies {
     api(project(":enderio"))
@@ -81,10 +84,6 @@ dependencies {
 
     runtimeOnly(libs.mekanism)
 
-    // Refined Storage
-    compileOnly(libs.refinedStorage)
-    runtimeOnly(libs.refinedStorage)
-
     //Laserio
     compileOnly(libs.laserio)
     runtimeOnly(libs.laserio)
@@ -92,23 +91,28 @@ dependencies {
     // Unit tests
     testImplementation(libs.junitJupiter)
     testRuntimeOnly(libs.junitPlatformLauncher)
-    testImplementation(libs.neoforgeTestFramework)
+//    testImplementation(libs.neoforgeTestFramework)
 
     // Setup gametests
-    val gametestImplementation by configurations.getting
-    gametestImplementation(libs.neoforgeTestFramework) {
-        isTransitive = false
-    }
+//    val gametestImplementation by configurations.getting
+//    gametestImplementation(libs.neoforgeTestFramework) {
+//        isTransitive = false
+//    }
 }
 
-neoForge {
-    enable {
-        version = libs.versions.neoforge.get()
-        isDisableRecompilation = System.getenv("CI") == "true"
+val parchment_minecraft_version: String by project
+val parchment_mappings_version: String by project
+
+legacyForge {
+    version = libs.versions.minecraft.get() + '-' + libs.versions.forge.get()
+
+    parchment {
+        mappingsVersion = parchment_mappings_version
+        minecraftVersion = parchment_minecraft_version
     }
 
     addModdingDependenciesTo(sourceSets.getByName("datagen"))
-    addModdingDependenciesTo(sourceSets.getByName("gametest"))
+//    addModdingDependenciesTo(sourceSets.getByName("gametest"))
 
     mods {
         create("enderio_modded_conduits") {
@@ -116,9 +120,9 @@ neoForge {
             sourceSet(sourceSets.getByName("main"))
         }
 
-        create("enderio_modded_conduits_tests") {
-            sourceSet(sourceSets.getByName("gametest"))
-        }
+//        create("enderio_modded_conduits_tests") {
+//            sourceSet(sourceSets.getByName("gametest"))
+//        }
     }
 
     runs {
@@ -150,10 +154,10 @@ neoForge {
 //        }
     }
 
-    unitTest {
-        enable()
-        testedMod = mods["enderio_modded_conduits"]
-    }
+//    unitTest {
+//        enable()
+//        testedMod = mods["enderio_modded_conduits"]
+//    }
 }
 
 // Expand variables in mods.toml
@@ -161,18 +165,17 @@ var generateModMetadata = tasks.register<ProcessResources>("generateModMetadata"
     val replaceProperties = mapOf(
             "mod_version" to project.version,
             "minecraft_version_range" to libs.versions.minecraft.get(),
-            "neoforge_version" to libs.versions.neoforge.get(),
-            "loader_version_range" to "[4,)", // TODO
+            "forge_version" to libs.versions.forge.get(),
+            "loader_version_range" to "[47,)", // TODO
             "mekanism_version_range" to libs.versions.mekanismMod.get(),
             "ae2_version_range" to libs.versions.ae2.get(),
-            "refinedstorage_version_range" to libs.versions.refinedStorage.get(),
     )
 
     inputs.properties(replaceProperties)
     into("build/generated/sources/modMetadata")
 
     from("src/main/templates") {
-        filesMatching("META-INF/neoforge.mods.toml") {
+        filesMatching("META-INF/mods.toml") {
             expand(replaceProperties)
         }
     }
@@ -184,7 +187,7 @@ var generateModMetadata = tasks.register<ProcessResources>("generateModMetadata"
 
 // Add results to source set and to IDE sync
 sourceSets.main.get().resources.srcDir(generateModMetadata)
-neoForge.ideSyncTask(generateModMetadata)
+legacyForge.ideSyncTask(generateModMetadata)
 
 tasks.withType<Jar> {
     manifest {

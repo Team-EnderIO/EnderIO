@@ -47,7 +47,7 @@ public class TransformerUtil {
         JCTree.JCBlock body = (JCTree.JCBlock) method.getBody();
         boolean shouldDelayCheck1Statement = false;
         if (!body.stats.isEmpty()) {
-            JCTree.JCStatement firstStatement = body.stats.getFirst();
+            JCTree.JCStatement firstStatement = body.stats.get(0);
             if (firstStatement instanceof JCTree.JCExpressionStatement potentialConstructor) {
                 if (potentialConstructor.getExpression() instanceof JCTree.JCMethodInvocation methodInvocation) {
                     if (methodInvocation.meth instanceof JCTree.JCIdent methodIdentifier && methodIdentifier.name.contentEquals("super")) {
@@ -58,7 +58,7 @@ public class TransformerUtil {
         }
         if (shouldDelayCheck1Statement) {
             List<JCTree.JCStatement> existingStatements = body.stats;
-            body.stats = List.of(existingStatements.getFirst());
+            body.stats = List.of(existingStatements.get(0));
             body.stats = body.stats.append(check);
             for (int i = 1; i < existingStatements.size(); i++) {
                 body.stats = body.stats.append(existingStatements.get(i));

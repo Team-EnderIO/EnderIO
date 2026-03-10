@@ -4,7 +4,7 @@ import com.enderio.core.common.network.menu.payload.FluidStackSlotPayload;
 import com.enderio.core.common.network.menu.payload.IntSlotPayload;
 import com.enderio.core.common.network.menu.payload.SlotPayload;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidStack;
 
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -88,7 +88,9 @@ public abstract class FluidStackSyncSlot implements SyncSlot {
     @Override
     public void unpackPayload(Level level, SlotPayload payload) {
         if (payload instanceof IntSlotPayload intSlotPayload) {
-            set(get().copyWithAmount(intSlotPayload.value()));
+            var newStack = get().copy();
+            newStack.setAmount(intSlotPayload.value());
+            set(newStack);
         } else if (payload instanceof FluidStackSlotPayload fluidStackSlotPayload) {
             set(fluidStackSlotPayload.value());
         }

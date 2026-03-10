@@ -1,7 +1,7 @@
 pluginManagement {
     plugins {
-        id("net.neoforged.moddev") version "2.0.124"
-        id("net.neoforged.moddev.repositories") version "2.0.124"
+        id("net.neoforged.moddev.legacyforge") version "2.0.124"
+        id("net.neoforged.moddev.legacyforge.repositories") version "2.0.124"
     }
 
     repositories {
@@ -24,6 +24,14 @@ pluginManagement {
                 includeGroup("net.neoforged")
             }
         }
+
+        maven {
+            name = "Minecraft Forge"
+            url = uri("https://maven.minecraftforge.net/")
+            content {
+                includeGroup("net.minecraftforge")
+            }
+        }
     }
 }
 
@@ -31,12 +39,12 @@ rootProject.name = "EnderIO"
 
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.5.0"
-    id("net.neoforged.moddev.repositories")
+    id("net.neoforged.moddev.legacyforge.repositories")
 }
 
 dependencyResolutionManagement {
     repositoriesMode = RepositoriesMode.FAIL_ON_PROJECT_REPOS
-    rulesMode = RulesMode.FAIL_ON_PROJECT_RULES
+    rulesMode = RulesMode.PREFER_PROJECT
 
     repositories {
         maven {
@@ -116,6 +124,14 @@ dependencyResolutionManagement {
             url = uri("https://maven.creeperhost.net/release")
             content {
                 includeGroup("com.refinedmods.refinedstorage")
+            }
+        }
+
+        maven {
+            name = "Minecraft Forge"
+            url = uri("https://maven.minecraftforge.net/")
+            content {
+                includeGroup("net.minecraftforge")
             }
         }
 

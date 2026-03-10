@@ -1,15 +1,19 @@
 package com.enderio.core.common.network.menu.payload;
 
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.FriendlyByteBuf;
 
 public record NullSlotPayload() implements SlotPayload {
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, NullSlotPayload> STREAM_CODEC = StreamCodec.of((buf, val) -> {
-    }, (buf) -> new NullSlotPayload());
+    public NullSlotPayload(FriendlyByteBuf buf) {
+        this();
+    }
 
     @Override
     public SlotPayloadType type() {
         return SlotPayloadType.NULL;
+    }
+
+    @Override
+    public void write(FriendlyByteBuf buf) {
     }
 }
