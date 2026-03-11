@@ -174,8 +174,8 @@ public class CapacitorBankBlockEntity extends LegacyPoweredMachineBlockEntity im
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        super.saveAdditional(tag, lookupProvider);
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         tag.put(DISPLAY_MODES, saveDisplayModes());
     }
 
@@ -189,8 +189,8 @@ public class CapacitorBankBlockEntity extends LegacyPoweredMachineBlockEntity im
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        super.loadAdditional(tag, lookupProvider);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         if (tag.contains(DISPLAY_MODES, Tag.TAG_COMPOUND)) {
             loadDisplayModes(tag.getCompound(DISPLAY_MODES));
         }

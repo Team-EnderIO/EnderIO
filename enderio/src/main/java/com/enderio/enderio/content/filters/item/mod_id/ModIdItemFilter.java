@@ -6,11 +6,11 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -23,7 +23,7 @@ public record ModIdItemFilter(NonNullList<ItemStack> examples, boolean isDenyLis
                     Codec.BOOL.fieldOf("isDenyList").forGetter(ModIdItemFilter::isDenyList))
             .apply(componentInstance, ModIdItemFilter::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, ModIdItemFilter> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, ModIdItemFilter> STREAM_CODEC = StreamCodec.composite(
             ItemStack.OPTIONAL_STREAM_CODEC.apply(ByteBufCodecs.list(256)), ModIdItemFilter::examples,
             ByteBufCodecs.BOOL, ModIdItemFilter::isDenyList, ModIdItemFilter::new);
 

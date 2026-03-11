@@ -12,7 +12,6 @@ import com.enderio.enderio.foundation.souldata.EngineSoul;
 import com.enderio.enderio.init.EIORecipes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 
 import java.util.ArrayList;
@@ -28,21 +27,21 @@ public class MachineJEIRecipes {
         this.recipeManager = Objects.requireNonNull(level).getRecipeManager();
     }
 
-    public List<RecipeHolder<AlloySmeltingRecipe>> getAlloySmeltingRecipes() {
-        List<RecipeHolder<AlloySmeltingRecipe>> recipes = new ArrayList<>();
+    public List<AlloySmeltingRecipe> getAlloySmeltingRecipes() {
+        List<AlloySmeltingRecipe> recipes = new ArrayList<>();
         recipes.addAll(recipeManager.getAllRecipesFor(EIORecipes.ALLOY_SMELTING.type().get()));
         return recipes;
     }
 
-    public List<RecipeHolder<SlicingRecipe>> getSlicingRecipes() {
+    public List<SlicingRecipe> getSlicingRecipes() {
         return recipeManager.getAllRecipesFor(EIORecipes.SLICING.type().get());
     }
 
-    public List<RecipeHolder<SoulBindingRecipe>> getSoulBindingRecipes() {
+    public List<SoulBindingRecipe> getSoulBindingRecipes() {
         return recipeManager.getAllRecipesFor(EIORecipes.SOUL_BINDING.type().get());
     }
 
-    public List<RecipeHolder<TankRecipe>> getTankRecipes() {
+    public List<TankRecipe> getTankRecipes() {
         return recipeManager.getAllRecipesFor(EIORecipes.TANK.type().get());
     }
 
@@ -50,14 +49,14 @@ public class MachineJEIRecipes {
         return recipeManager.getAllRecipesFor(EIORecipes.ENCHANTING.type().get())
                 .stream()
                 .<WrappedEnchanterRecipe>mapMulti((recipe, consumer) -> {
-                    for (int i = 1; i <= recipe.value().enchantment().value().getMaxLevel(); i++) {
+                    for (int i = 1; i <= recipe.enchantment().getMaxLevel(); i++) {
                         consumer.accept(new WrappedEnchanterRecipe(recipe, i));
                     }
                 })
                 .toList();
     }
 
-    public List<RecipeHolder<SagMillingRecipe>> getSagMillingRecipes() {
+    public List<SagMillingRecipe> getSagMillingRecipes() {
         return recipeManager.getAllRecipesFor(EIORecipes.SAG_MILLING.type().get());
     }
 
@@ -65,11 +64,11 @@ public class MachineJEIRecipes {
         return EngineSoul.ENGINE.map.values().stream().toList();
     }
 
-    public List<RecipeHolder<FermentingRecipe>> getVATRecipes() {
+    public List<FermentingRecipe> getVATRecipes() {
         return recipeManager.getAllRecipesFor(EIORecipes.VAT_FERMENTING.type().get());
     }
 
-    public List<RecipeHolder<WeatherChangeRecipe>> getWeatherRecipes() {
+    public List<WeatherChangeRecipe> getWeatherRecipes() {
         return recipeManager.getAllRecipesFor(EIORecipes.WEATHER_CHANGE.type().get());
     }
 }

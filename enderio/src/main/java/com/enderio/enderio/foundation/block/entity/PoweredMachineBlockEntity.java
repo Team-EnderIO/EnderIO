@@ -28,14 +28,14 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.capabilities.ICapabilityProvider;
-import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.energy.IEnergyStorage;
 
 public abstract class PoweredMachineBlockEntity extends MachineBlockEntity implements MachineInstallable {
 
-    public static final ICapabilityProvider<PoweredMachineBlockEntity, Direction, IEnergyStorage> ENERGY_STORAGE_PROVIDER = (
+    public static final ICapabilityProvider ENERGY_STORAGE_PROVIDER = (
             be, side) -> side == null ? be.energyStorage : be.energyStorage.getSided(side);
 
     private final CapacitorSupport capacitorSupport;
@@ -279,17 +279,17 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
     // region Serialization
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        tag.put(MachineNBTKeys.ENERGY_STORED, energyStorage.serializeNBT(registries));
+    protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        tag.put(MachineNBTKeys.ENERGY_STORED, energyStorage.serializeNBT());
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
+    protected void load(CompoundTag tag) {
+        super.load(tag);
 
         if (tag.contains(MachineNBTKeys.ENERGY_STORED, Tag.TAG_INT)) {
-            energyStorage.deserializeNBT(registries, (IntTag) tag.get(MachineNBTKeys.ENERGY_STORED));
+            energyStorage.deserializeNBT((IntTag) tag.get(MachineNBTKeys.ENERGY_STORED));
         } else if (tag.contains(MachineNBTKeys.ENERGY, Tag.TAG_COMPOUND)) {
             // SUPPORT LEGACY STORAGE FORMAT
             CompoundTag energyTag = tag.getCompound(MachineNBTKeys.ENERGY);

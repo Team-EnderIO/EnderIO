@@ -2,8 +2,8 @@ package com.enderio.enderio.api.farm;
 
 import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.Pair;
-import net.neoforged.bus.api.Event;
-import net.neoforged.fml.event.IModBusEvent;
+import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.fml.event.IModBusEvent;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.List;

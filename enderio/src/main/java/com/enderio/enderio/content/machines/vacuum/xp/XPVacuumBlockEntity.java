@@ -19,9 +19,9 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.SimpleFluidContent;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.SimpleFluidContent;
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 import static com.enderio.enderio.foundation.util.ExperienceUtil.EXP_TO_FLUID;
 
@@ -109,15 +109,15 @@ public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb>
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        super.saveAdditional(tag, lookupProvider);
-        saveTank(lookupProvider, tag);
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        saveTank(tag);
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        super.loadAdditional(tag, lookupProvider);
-        loadTank(lookupProvider, tag);
+    public void load(CompoundTag tag) {
+        super.load(tag);
+        loadTank(tag);
     }
 
     // endregion

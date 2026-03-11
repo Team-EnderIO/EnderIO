@@ -61,11 +61,11 @@ public record ActionRange(int range, boolean isVisible) {
         }
     }
 
-    public Tag save(HolderLookup.Provider lookupProvider) {
-        return CODEC.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), this).getOrThrow();
+    public Tag save() {
+        return CODEC.encodeStart(NbtOps.INSTANCE, this).getOrThrow();
     }
 
-    public static ActionRange parse(HolderLookup.Provider lookupProvider, Tag tag) {
-        return CODEC.parse(lookupProvider.createSerializationContext(NbtOps.INSTANCE), tag).getOrThrow();
+    public static ActionRange parse(Tag tag) {
+        return CODEC.parse(NbtOps.INSTANCE, tag).getOrThrow();
     }
 }

@@ -12,7 +12,6 @@ import mezz.jei.api.recipe.IFocus;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.category.extensions.vanilla.crafting.ICraftingCategoryExtension;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeHolder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,13 +21,13 @@ import java.util.Optional;
 import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
 import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
 
-public class ShapedEntityStorageCategoryExtension implements ICraftingCategoryExtension<ShapedEntityStorageRecipe> {
+public class ShapedEntityStorageCategoryExtension implements ICraftingCategoryExtension {
 
     public ShapedEntityStorageCategoryExtension() {
     }
 
     @Override
-    public void setRecipe(RecipeHolder<ShapedEntityStorageRecipe> recipeHolder, IRecipeLayoutBuilder builder,
+    public void setRecipe(ShapedEntityStorageRecipe recipeHolder, IRecipeLayoutBuilder builder,
             ICraftingGridHelper craftingGridHelper, IFocusGroup focuses) {
 
         Optional<IFocus<ItemStack>> output = focuses.getItemStackFocuses(OUTPUT).findFirst();
@@ -123,12 +122,12 @@ public class ShapedEntityStorageCategoryExtension implements ICraftingCategoryEx
     }
 
     @Override
-    public int getWidth(RecipeHolder<ShapedEntityStorageRecipe> recipeHolder) {
-        return recipeHolder.value().getWidth();
+    public int getWidth(ShapedEntityStorageRecipe recipeHolder) {
+        return recipeHolder.getWidth();
     }
 
     @Override
-    public int getHeight(RecipeHolder<ShapedEntityStorageRecipe> recipeHolder) {
-        return recipeHolder.value().getHeight();
+    public int getHeight(ShapedEntityStorageRecipe recipeHolder) {
+        return recipeHolder.getHeight();
     }
 }

@@ -11,22 +11,21 @@ import com.enderio.enderio.init.EIOBlocks;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.neoforge.NeoForgeTypes;
+import mezz.jei.api.forge.NeoForgeTypes;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidStack;
 
 import java.util.Arrays;
 import java.util.List;
 
 // TODO: 1.20.1+ Add a custom TankRecipe for JEI to show mending and maybe fill/empty too.
-public class TankCategory implements IRecipeCategory<RecipeHolder<TankRecipe>> {
-    public static final RecipeType<RecipeHolder<TankRecipe>> TYPE = JEIUtils.createRecipeType(EnderIO.MOD_ID, "tank",
+public class TankCategory implements IRecipeCategory<TankRecipe> {
+    public static final RecipeType<TankRecipe> TYPE = JEIUtils.createRecipeType(EnderIO.MOD_ID, "tank",
             TankRecipe.class);
 
     private final IDrawable background;
@@ -38,7 +37,7 @@ public class TankCategory implements IRecipeCategory<RecipeHolder<TankRecipe>> {
     }
 
     @Override
-    public RecipeType<RecipeHolder<TankRecipe>> getRecipeType() {
+    public RecipeType<TankRecipe> getRecipeType() {
         return TYPE;
     }
 
@@ -58,22 +57,22 @@ public class TankCategory implements IRecipeCategory<RecipeHolder<TankRecipe>> {
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<TankRecipe> recipe, IFocusGroup focuses) {
-        List<FluidStack> fluidStacks = SizedFluidIngredientHelper.getFluidStacksInPreferredOrder(recipe.value().fluid());
+    public void setRecipe(IRecipeLayoutBuilder builder, TankRecipe recipe, IFocusGroup focuses) {
+        List<FluidStack> fluidStacks = SizedFluidIngredientHelper.getFluidStacksInPreferredOrder(recipe.fluid());
 
-        if (recipe.value().mode() == TankRecipe.Mode.EMPTY) {
-            builder.addSlot(RecipeIngredientRole.INPUT, 3, 3).addIngredients(recipe.value().input());
+        if (recipe.mode() == TankRecipe.Mode.EMPTY) {
+            builder.addSlot(RecipeIngredientRole.INPUT, 3, 3).addIngredients(recipe.input());
 
-            builder.addSlot(RecipeIngredientRole.OUTPUT, 3, 34).addItemStack(recipe.value().output().copy());
+            builder.addSlot(RecipeIngredientRole.OUTPUT, 3, 34).addItemStack(recipe.output().copy());
 
             // Convert SizedFluidIngredient to FluidStack list for JEI display
             builder.addSlot(RecipeIngredientRole.OUTPUT, 39, 3)
                     .addIngredients(NeoForgeTypes.FLUID_STACK, fluidStacks)
                     .setFluidRenderer(FluidTankBlockEntity.Standard.CAPACITY, false, 16, 47);
-        } else if (recipe.value().mode() == TankRecipe.Mode.FILL) {
-            builder.addSlot(RecipeIngredientRole.INPUT, 75, 3).addIngredients(recipe.value().input());
+        } else if (recipe.mode() == TankRecipe.Mode.FILL) {
+            builder.addSlot(RecipeIngredientRole.INPUT, 75, 3).addIngredients(recipe.input());
 
-            builder.addSlot(RecipeIngredientRole.OUTPUT, 75, 34).addItemStack(recipe.value().output().copy());
+            builder.addSlot(RecipeIngredientRole.OUTPUT, 75, 34).addItemStack(recipe.output().copy());
 
             // Convert SizedFluidIngredient to FluidStack list for JEI display
             builder.addSlot(RecipeIngredientRole.INPUT, 39, 3)

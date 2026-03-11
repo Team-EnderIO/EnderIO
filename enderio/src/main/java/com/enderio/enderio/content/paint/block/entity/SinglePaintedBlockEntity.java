@@ -13,8 +13,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.model.data.ModelData;
-import net.neoforged.neoforge.client.model.data.ModelProperty;
+import net.minecraftforge.client.model.data.ModelData;
+import net.minecraftforge.client.model.data.ModelProperty;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -60,11 +60,11 @@ public class SinglePaintedBlockEntity extends BlockEntity implements PaintedBloc
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         Block oldPaint = paint;
         CompoundTag tag = pkt.getTag();
 
-        handleUpdateTag(tag, lookupProvider);
+        handleUpdateTag(tag);
         if (oldPaint != paint) {
             requestModelDataUpdate();
             if (level != null) {
@@ -74,14 +74,14 @@ public class SinglePaintedBlockEntity extends BlockEntity implements PaintedBloc
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        super.loadAdditional(tag, lookupProvider);
+    protected void load(CompoundTag tag) {
+        super.load(tag);
         readPaint(tag);
     }
 
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider lookupProvider) {
-        CompoundTag nbt = super.getUpdateTag(lookupProvider);
+    public CompoundTag getUpdateTag() {
+        CompoundTag nbt = super.getUpdateTag();
         writePaint(nbt);
         return nbt;
     }
@@ -101,8 +101,8 @@ public class SinglePaintedBlockEntity extends BlockEntity implements PaintedBloc
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        super.saveAdditional(tag, lookupProvider);
+    protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         writePaint(tag);
     }
 

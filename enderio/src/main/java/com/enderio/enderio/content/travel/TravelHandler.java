@@ -24,9 +24,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.EntityTeleportEvent;
+import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
@@ -326,7 +326,7 @@ public class TravelHandler {
 
     private static Optional<Vec3> teleportEvent(Player player, Vec3 target) {
         EntityTeleportEvent event = new EntityTeleportEvent(player, target.x(), target.y(), target.z());
-        if (NeoForge.EVENT_BUS.post(event).isCanceled()) {
+        if (MinecraftForge.EVENT_BUS.post(event).isCanceled()) {
             return Optional.empty();
         }
 

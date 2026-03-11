@@ -3,7 +3,7 @@ package com.enderio.enderio.content.armory;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.neoforged.neoforge.common.SimpleTier;
+import net.minecraftforge.common.SimpleTier;
 
 public class DarkSteelTiers {
     public static final Tier DARK_STEEL_TIER = new SimpleTier(EIOTags.Blocks.INCORRECT_FOR_DARK_STEEL_TOOL, 2000,

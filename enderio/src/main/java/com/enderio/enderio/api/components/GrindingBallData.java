@@ -13,7 +13,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.Item;
-import net.neoforged.neoforge.registries.datamaps.DataMapType;
+import net.minecraftforge.registries.datamaps.DataMapType;
 import org.slf4j.Logger;
 
 import java.util.Optional;
@@ -55,24 +55,24 @@ public record GrindingBallData(float outputMultiplier, float bonusMultiplier, fl
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public Tag save(HolderLookup.Provider lookupProvider) {
+    public Tag save() {
         if (this.isIdentity()) {
             throw new IllegalStateException("Cannot encode identity GrindingBallData");
         } else {
-            return CODEC.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), this).getOrThrow();
+            return CODEC.encodeStart(NbtOps.INSTANCE, this).getOrThrow();
         }
     }
 
-    public Tag saveOptional(HolderLookup.Provider lookupProvider) {
-        return this.isIdentity() ? save(lookupProvider) : new CompoundTag();
+    public Tag saveOptional() {
+        return this.isIdentity() ? save() : new CompoundTag();
     }
 
-    public static Optional<GrindingBallData> parse(HolderLookup.Provider lookupProvider, Tag tag) {
-        return CODEC.parse(lookupProvider.createSerializationContext(NbtOps.INSTANCE), tag)
+    public static Optional<GrindingBallData> parse(Tag tag) {
+        return CODEC.parse(NbtOps.INSTANCE, tag)
             .resultOrPartial(error -> LOGGER.error("Tried to load invalid GrindingBallData: '{}'", error));
     }
 
-    public static GrindingBallData parseOptional(HolderLookup.Provider lookupProvider, CompoundTag tag) {
-        return tag.isEmpty() ? IDENTITY : parse(lookupProvider, tag).orElse(IDENTITY);
+    public static GrindingBallData parseOptional(CompoundTag tag) {
+        return tag.isEmpty() ? IDENTITY : parse(tag).orElse(IDENTITY);
     }
 }

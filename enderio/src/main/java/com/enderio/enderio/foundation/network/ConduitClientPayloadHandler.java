@@ -3,7 +3,7 @@ package com.enderio.enderio.foundation.network;
 import com.enderio.enderio.content.conduits.menu.ConduitMenu;
 import com.enderio.enderio.foundation.network.packets.ClientboundConduitExtraGuiDataPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundConduitListPacket;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.minecraftforge.network.NetworkEvent;
 
 public class ConduitClientPayloadHandler {
     private static final ConduitClientPayloadHandler INSTANCE = new ConduitClientPayloadHandler();

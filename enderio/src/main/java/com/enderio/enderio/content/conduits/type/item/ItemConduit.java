@@ -30,8 +30,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
@@ -88,7 +88,7 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
         tooltipAdder.accept(
                 TooltipUtil.styledWithArgs(ConduitLang.ITEM_EFFECTIVE_RATE_TOOLTIP, calculatedTransferLimitFormatted));
 
-        if (tooltipFlag.hasShiftDown()) {
+        if (Screen.hasShiftDown()) {
             String transferLimitFormatted = String.format("%,d", transferRatePerCycle());
             tooltipAdder.accept(TooltipUtil.styledWithArgs(ConduitLang.ITEM_RAW_RATE_TOOLTIP, transferLimitFormatted));
         }
@@ -106,7 +106,7 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
 
     @Override
     public boolean canConnectToBlock(Level level, BlockPos conduitPos, Direction direction) {
-        IItemHandler capability = level.getCapability(Capabilities.ItemHandler.BLOCK, conduitPos.relative(direction),
+        IItemHandler capability = level.getCapability(ForgeCapabilities.ITEM_HANDLER, conduitPos.relative(direction),
                 direction.getOpposite());
         return capability != null;
     }

@@ -9,13 +9,13 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.event.AddReloadListenerEvent;
 
 import java.util.Optional;
 
-@EventBusSubscriber
+@Mod.EventBusSubscriber
 public class SolarSoul {
 
     public record SoulData(ResourceLocation entitytype, boolean daytime, boolean nighttime, Optional<ResourceKey<Level>> level) implements com.enderio.enderio.foundation.souldata.SoulData {

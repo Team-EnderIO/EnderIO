@@ -3,7 +3,7 @@ package com.enderio.enderio.foundation.energy;
 import com.enderio.enderio.api.io.IOConfigurable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.enderio.foundation.io.energy.IMachineEnergyStorage;
-import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.minecraftforge.energy.IEnergyStorage;
 
 public record EnergyStorageInfo(int energyStored, int maxEnergyStored) implements IMachineEnergyStorage {
 

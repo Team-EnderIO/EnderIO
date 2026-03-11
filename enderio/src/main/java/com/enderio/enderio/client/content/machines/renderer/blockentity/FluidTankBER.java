@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidStack;
 
 public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
     public FluidTankBER(BlockEntityRendererProvider.Context context) {

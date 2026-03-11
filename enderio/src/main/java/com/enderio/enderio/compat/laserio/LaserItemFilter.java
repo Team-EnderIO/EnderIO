@@ -5,7 +5,7 @@ import com.direwolf20.laserio.common.containers.customhandler.FilterBasicHandler
 import com.direwolf20.laserio.setup.LaserIODataComponents;
 import com.enderio.enderio.api.filter.ItemFilter;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
 public class LaserItemFilter implements ItemFilter {
@@ -26,7 +26,7 @@ public class LaserItemFilter implements ItemFilter {
             ItemStack match = handler.getStackInSlot(i);
             if (!match.isEmpty()) {
                 if (shouldCompareComponents ? ItemStack.isSameItem(match, stack)
-                        : ItemStack.isSameItemSameComponents(match, stack)) {
+                        : ItemStack.isSameItemSameTags(match, stack)) {
                     return isAllowList ? stack : ItemStack.EMPTY;
                 }
             }

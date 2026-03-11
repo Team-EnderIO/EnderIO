@@ -5,8 +5,8 @@ import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.neoforged.neoforge.capabilities.BlockCapability;
-import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.minecraftforge.common.capabilities.BlockCapability;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 

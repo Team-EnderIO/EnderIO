@@ -5,10 +5,10 @@ import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
-import net.neoforged.neoforge.event.server.ServerStartedEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
+import net.minecraftforge.event.server.ServerStartedEvent;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -20,7 +20,7 @@ import java.util.Objects;
  * This is needed, so upgrading conduits doesn't require shifting of types, but just recalculating the current connection
  */
 @SuppressWarnings("unused")
-@EventBusSubscriber
+@Mod.EventBusSubscriber
 public class ConduitSorter {
     private static final List<Holder<Conduit<?, ?>>> SORTED_CONDUITS = new ArrayList<>();
 

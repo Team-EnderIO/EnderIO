@@ -31,8 +31,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluids;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
@@ -82,7 +82,7 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
 
     @Override
     public boolean canConnectToBlock(Level level, BlockPos conduitPos, Direction direction) {
-        IFluidHandler capability = level.getCapability(Capabilities.FluidHandler.BLOCK, conduitPos.relative(direction),
+        IFluidHandler capability = level.getCapability(ForgeCapabilities.FLUID_HANDLER, conduitPos.relative(direction),
                 direction.getOpposite());
         return capability != null;
     }
@@ -129,7 +129,7 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
         tooltipAdder
                 .accept(TooltipUtil.styledWithArgs(ConduitLang.FLUID_EFFECTIVE_RATE_TOOLTIP, transferLimitFormatted));
 
-        if (tooltipFlag.hasShiftDown()) {
+        if (Screen.hasShiftDown()) {
             String rawRateFormatted = String.format("%,d",
                     (int) Math.ceil(transferRatePerTick() * type().getTickRate(this)));
             tooltipAdder.accept(TooltipUtil.styledWithArgs(ConduitLang.FLUID_RAW_RATE_TOOLTIP, rawRateFormatted));

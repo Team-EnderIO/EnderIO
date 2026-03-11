@@ -6,9 +6,9 @@ import com.enderio.enderio.content.filters.item.ItemFilterSlot;
 import com.enderio.enderio.foundation.menu.GhostMachineSlot;
 import com.enderio.enderio.foundation.menu.MachineSlot;
 import com.enderio.enderio.foundation.menu.PreviewMachineSlot;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.InterModComms;
-import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.InterModComms;
+import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 
 public class InventorySorterCompat {
     public static void init(IEventBus eventBus) {

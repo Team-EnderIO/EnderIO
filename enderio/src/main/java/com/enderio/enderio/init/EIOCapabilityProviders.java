@@ -1,6 +1,7 @@
 package com.enderio.enderio.init;
 
 import com.enderio.enderio.api.EnderIOCapabilities;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.content.cold_fire.ColdFireIgniter;
 import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
@@ -39,18 +40,18 @@ public class EIOCapabilityProviders {
         registerConduitCapabilities(event);
 
         // Register item energy handlers
-        event.registerItem(Capabilities.EnergyStorage.ITEM, PoweredToggledItem.ENERGY_STORAGE_PROVIDER,
+        event.registerItem(ForgeCapabilities.ENERGY, PoweredToggledItem.ENERGY_STORAGE_PROVIDER,
             EIOItems.LEVITATION_STAFF, EIOItems.ELECTROMAGNET);
-        event.registerItem(Capabilities.EnergyStorage.ITEM, TravelStaffItem.ENERGY_STORAGE_PROVIDER, EIOItems.TRAVEL_STAFF);
+        event.registerItem(ForgeCapabilities.ENERGY, TravelStaffItem.ENERGY_STORAGE_PROVIDER, EIOItems.TRAVEL_STAFF);
         // Capacitor Banks
         for (var capacitorBankItem : EIOBlocks.CAPACITOR_BANK_ITEMS.values()) {
-            event.registerItem(Capabilities.EnergyStorage.ITEM, CapacitorBankItem.ENERGY_STORAGE_PROVIDER, capacitorBankItem);
+            event.registerItem(ForgeCapabilities.ENERGY, CapacitorBankItem.ENERGY_STORAGE_PROVIDER, capacitorBankItem);
         }
 
         // Register item fluid handlers
-        event.registerItem(Capabilities.FluidHandler.ITEM, LevitationStaffItem.FLUID_HANDLER_PROVIDER, EIOItems.LEVITATION_STAFF);
-        event.registerItem(Capabilities.FluidHandler.ITEM, ColdFireIgniter.FLUID_HANDLER_PROVIDER, EIOItems.COLD_FIRE_IGNITER);
-        event.registerItem(Capabilities.FluidHandler.ITEM, FluidTankBlockItem.FLUID_HANDLER_PROVIDER,
+        event.registerItem(ForgeCapabilities.FLUID_HANDLER_ITEM, LevitationStaffItem.FLUID_HANDLER_PROVIDER, EIOItems.LEVITATION_STAFF);
+        event.registerItem(ForgeCapabilities.FLUID_HANDLER_ITEM, ColdFireIgniter.FLUID_HANDLER_PROVIDER, EIOItems.COLD_FIRE_IGNITER);
+        event.registerItem(ForgeCapabilities.FLUID_HANDLER_ITEM, FluidTankBlockItem.FLUID_HANDLER_PROVIDER,
             EIOBlocks.FLUID_TANK_ITEM, EIOBlocks.PRESSURIZED_FLUID_TANK_ITEM);
 
         // region Filters

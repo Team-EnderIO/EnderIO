@@ -7,7 +7,7 @@ import com.enderio.enderio.foundation.task.MachineTask;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
-import net.neoforged.fml.LogicalSide;
+import net.minecraftforge.fml.LogicalSide;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
@@ -59,7 +59,7 @@ public abstract class MachineTaskHost {
      * Load the task from NBT.
      */
     @Nullable
-    protected abstract MachineTask loadTask(HolderLookup.Provider lookupProvider, CompoundTag nbt);
+    protected abstract MachineTask loadTask(CompoundTag nbt);
 
     // endregion
 
@@ -143,13 +143,13 @@ public abstract class MachineTaskHost {
 
     private static final String KEY_TASK = "Task";
 
-    public void save(HolderLookup.Provider lookupProvider, CompoundTag tag) {
+    public void save(CompoundTag tag) {
         if (hasTask()) {
-            tag.put(KEY_TASK, getCurrentTask().serializeNBT(lookupProvider));
+            tag.put(KEY_TASK, getCurrentTask().serializeNBT());
         }
     }
 
-    public void load(HolderLookup.Provider lookupProvider, CompoundTag tag) {
+    public void load(CompoundTag tag) {
         hasLoaded = true;
 
         if (levelSupplier.get() == null) {
@@ -158,7 +158,7 @@ public abstract class MachineTaskHost {
             }
         } else {
             if (tag.contains(KEY_TASK)) {
-                currentTask = loadTask(lookupProvider, tag.getCompound(KEY_TASK));
+                currentTask = loadTask(tag.getCompound(KEY_TASK));
             } else {
                 currentTask = getNewTask();
             }

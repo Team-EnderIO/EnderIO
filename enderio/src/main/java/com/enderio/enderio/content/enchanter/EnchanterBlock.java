@@ -48,15 +48,15 @@ public class EnchanterBlock extends Block implements EntityBlock {
     }
 
     @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player,
-            BlockHitResult hit) {
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player,
+            InteractionHand hand, BlockHitResult hit) {
         if (level.isClientSide()) {
             return InteractionResult.SUCCESS;
         }
 
         var blockEntity = level.getBlockEntity(pos);
         if (blockEntity instanceof MenuProvider menuProvider && player instanceof ServerPlayer serverPlayer) {
-            serverPlayer.openMenu(menuProvider, pos);
+            NetworkHooks.openScreen(serverPlayer, menuProvider, pos);
         }
 
         return InteractionResult.CONSUME;

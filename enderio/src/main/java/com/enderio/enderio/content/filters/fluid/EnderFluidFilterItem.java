@@ -8,14 +8,14 @@ import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOMenus;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.component.DataComponentType;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -94,7 +94,7 @@ public class EnderFluidFilterItem extends AbstractFilterItem<EnderFluidFilter> {
         }
 
         @EnsureSide(EnsureSide.Side.CLIENT)
-        public EnderFluidFilterMenu openMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
+        public EnderFluidFilterMenu openMenu(int containerId, Inventory playerInventory, FriendlyByteBuf buf) {
             return new EnderFluidFilterMenu(menuType.get().get(), this, containerId, playerInventory);
         }
     }

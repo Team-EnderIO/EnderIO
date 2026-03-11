@@ -5,12 +5,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.energy.IEnergyStorage;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.items.IItemHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -113,13 +113,13 @@ public class TransferUtil {
             }
 
             // Get self capability for this side
-            IEnergyStorage selfHandler = level.getCapability(Capabilities.EnergyStorage.BLOCK, pos, direction);
+            IEnergyStorage selfHandler = level.getCapability(ForgeCapabilities.ENERGY, pos, direction);
             if (selfHandler == null || !selfHandler.canExtract()) {
                 continue;
             }
 
             // Get neighbor capability
-            IEnergyStorage otherHandler = level.getCapability(Capabilities.EnergyStorage.BLOCK, pos.relative(direction), direction.getOpposite());
+            IEnergyStorage otherHandler = level.getCapability(ForgeCapabilities.ENERGY, pos.relative(direction), direction.getOpposite());
             if (otherHandler != null && otherHandler != selfHandler && otherHandler.canReceive()) {
                 transfers.add(new EnergyStoragePair(selfHandler, otherHandler));
             }

@@ -5,7 +5,7 @@ import com.enderio.enderio.api.conduits.facade.FacadeType;
 import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 import java.util.Objects;
 

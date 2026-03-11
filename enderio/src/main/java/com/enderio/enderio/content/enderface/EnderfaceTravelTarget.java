@@ -8,7 +8,7 @@ import com.enderio.enderio.init.EIOTravelTargets;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -72,7 +72,7 @@ public record EnderfaceTravelTarget(BlockPos pos) implements TravelTarget {
                 instance -> instance.group(BlockPos.CODEC.fieldOf("pos").forGetter(EnderfaceTravelTarget::pos))
                         .apply(instance, EnderfaceTravelTarget::new));
 
-        public static StreamCodec<RegistryFriendlyByteBuf, EnderfaceTravelTarget> STREAM_CODEC = StreamCodec
+        public static StreamCodec<FriendlyByteBuf, EnderfaceTravelTarget> STREAM_CODEC = StreamCodec
                 .composite(BlockPos.STREAM_CODEC, EnderfaceTravelTarget::pos, EnderfaceTravelTarget::new);
 
         @Override
@@ -81,7 +81,7 @@ public record EnderfaceTravelTarget(BlockPos pos) implements TravelTarget {
         }
 
         @Override
-        public StreamCodec<RegistryFriendlyByteBuf, EnderfaceTravelTarget> streamCodec() {
+        public StreamCodec<FriendlyByteBuf, EnderfaceTravelTarget> streamCodec() {
             return STREAM_CODEC;
         }
     }

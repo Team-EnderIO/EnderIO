@@ -7,7 +7,7 @@ import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.inventory.MachineInventory;
 import com.enderio.enderio.foundation.network.menu_sync.MachineStatesSyncSlot;
 import com.enderio.enderio.foundation.state.MachineState;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
@@ -44,7 +44,7 @@ public abstract class MachineMenu<T extends MachineBlockEntity> extends BaseBloc
     }
 
     protected MachineMenu(@Nullable MenuType<?> menuType, int containerId, Inventory playerInventory,
-            RegistryFriendlyByteBuf buf, BlockEntityType<? extends T>... blockEntityTypes) {
+            FriendlyByteBuf buf, BlockEntityType<? extends T>... blockEntityTypes) {
         super(menuType, containerId, playerInventory, buf, blockEntityTypes);
 
         if (getBlockEntity().supportsRedstoneControl()) {
@@ -169,7 +169,7 @@ public abstract class MachineMenu<T extends MachineBlockEntity> extends BaseBloc
                     if (!(slot instanceof MachineSlot machineSlot) || machineSlot.canQuickInsertStack()) {
 
                         ItemStack itemstack = slot.getItem();
-                        if (!itemstack.isEmpty() && ItemStack.isSameItemSameComponents(stack, itemstack)) {
+                        if (!itemstack.isEmpty() && ItemStack.isSameItemSameTags(stack, itemstack)) {
                             int j = itemstack.getCount() + stack.getCount();
                             int maxSize = Math.min(slot.getMaxStackSize(), stack.getMaxStackSize());
                             if (j <= maxSize) {
@@ -244,13 +244,13 @@ public abstract class MachineMenu<T extends MachineBlockEntity> extends BaseBloc
 
     // Overrides the swapping behaviour. Required for ghost slots to prevent duping
     @Override
-    public void doClick(int slotId, int button, ClickType clickType, Player player) {
+    public void clicked(int slotId, int button, ClickType clickType, Player player) {
         if (slotId >= 0 && this.slots.get(slotId) instanceof GhostMachineSlot ghostSlot) {
             if (clickType == ClickType.PICKUP) {
                 ItemStack slotItem = ghostSlot.getItem();
                 ItemStack carriedItem = this.getCarried();
                 if (!slotItem.isEmpty() && !carriedItem.isEmpty() && ghostSlot.mayPlace(carriedItem)) {
-                    if (!ItemStack.isSameItemSameComponents(slotItem, carriedItem)) {
+                    if (!ItemStack.isSameItemSameTags(slotItem, carriedItem)) {
                         int count = Math.min(carriedItem.getCount(), ghostSlot.getMaxStackSize(carriedItem));
                         ghostSlot.setByPlayer(carriedItem.copyWithCount(count));
                         ghostSlot.setChanged();
@@ -261,6 +261,6 @@ public abstract class MachineMenu<T extends MachineBlockEntity> extends BaseBloc
                 return;
             }
         }
-        super.doClick(slotId, button, clickType, player);
+        super.clicked(slotId, button, clickType, player);
     }
 }

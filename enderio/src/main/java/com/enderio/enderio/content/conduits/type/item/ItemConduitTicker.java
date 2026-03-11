@@ -12,9 +12,9 @@ import com.mojang.logging.LogUtils;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 import org.slf4j.Logger;
 
 import java.util.List;
@@ -47,7 +47,7 @@ public class ItemConduitTicker extends ConduitTickerBase<ItemConduit> {
                 }
 
                 // Get extract handler from the connection.
-                IItemHandler extractHandler = extractConnection.getSidedCapability(Capabilities.ItemHandler.BLOCK);
+                IItemHandler extractHandler = extractConnection.getSidedCapability(ForgeCapabilities.ITEM_HANDLER);
                 if (extractHandler == null) {
                     continue;
                 }
@@ -100,7 +100,7 @@ public class ItemConduitTicker extends ConduitTickerBase<ItemConduit> {
                             continue;
                         }
 
-                        var insertHandler = insertConnection.getSidedCapability(Capabilities.ItemHandler.BLOCK);
+                        var insertHandler = insertConnection.getSidedCapability(ForgeCapabilities.ITEM_HANDLER);
                         if (insertHandler == null) {
                             continue;
                         }
@@ -125,7 +125,7 @@ public class ItemConduitTicker extends ConduitTickerBase<ItemConduit> {
 
                         if (insertFilter != null) {
                             itemToInsert = insertFilter.test(
-                                insertConnection.getSidedCapability(Capabilities.ItemHandler.BLOCK), itemToInsert);
+                                insertConnection.getSidedCapability(ForgeCapabilities.ITEM_HANDLER), itemToInsert);
                             if (itemToInsert.isEmpty()) {
                                 continue;
                             }

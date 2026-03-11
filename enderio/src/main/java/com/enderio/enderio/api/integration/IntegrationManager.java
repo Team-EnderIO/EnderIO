@@ -1,6 +1,6 @@
 package com.enderio.enderio.api.integration;
 
-import net.neoforged.bus.api.IEventBus;
+import net.minecraftforge.eventbus.api.IEventBus;
 
 import java.util.ArrayList;
 import java.util.List;

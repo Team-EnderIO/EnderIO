@@ -15,7 +15,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
-import net.neoforged.neoforge.common.Tags;
+import net.minecraftforge.common.Tags;
 
 import java.util.List;
 

@@ -5,10 +5,10 @@ import com.direwolf20.laserio.common.containers.customhandler.FilterBasicHandler
 import com.direwolf20.laserio.setup.LaserIODataComponents;
 import com.enderio.enderio.api.filter.FluidFilter;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;

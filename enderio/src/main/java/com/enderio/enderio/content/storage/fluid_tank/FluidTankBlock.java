@@ -3,7 +3,7 @@ package com.enderio.enderio.content.storage.fluid_tank;
 import com.enderio.enderio.foundation.block.MachineBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -21,23 +21,24 @@ public class FluidTankBlock extends MachineBlock<FluidTankBlockEntity> {
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
+    public InteractionResult use(BlockState state, Level level, BlockPos pos,
             Player player, InteractionHand hand, BlockHitResult hitResult) {
 
+        ItemStack stack = player.getItemInHand(hand);
         if (!stack.isEmpty()) {
             if (level.getBlockEntity(pos) instanceof FluidTankBlockEntity tank) {
                 if (level.isClientSide) {
-                    return ItemInteractionResult.SUCCESS;
+                    return InteractionResult.SUCCESS;
                 }
 
                 if (tank.handleFluidItemInteraction(player, hand, stack, tank, FluidTankBlockEntity.TANK)) {
                     player.getInventory().setChanged();
-                    return ItemInteractionResult.CONSUME;
+                    return InteractionResult.CONSUME;
                 }
             }
         }
 
-        return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
+        return super.use(state, level, pos, player, hand, hitResult);
     }
 
     @Override

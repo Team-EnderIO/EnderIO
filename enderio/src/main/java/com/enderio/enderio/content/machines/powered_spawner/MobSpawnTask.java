@@ -12,16 +12,16 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.EventHooks;
-import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
-import net.neoforged.neoforge.event.tick.EntityTickEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.event.entity.living.MobSpawnEvent;
+import net.minecraftforge.event.EntityTickEvent;
 
 import java.util.List;
 import java.util.UUID;
 
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.GAME)
+@Mod.EventBusSubscriber(bus = EventBusSubscriber.Bus.GAME)
 public class MobSpawnTask extends PoweredSpawnerTask {
 
     private float efficiency = 1;
@@ -119,13 +119,13 @@ public class MobSpawnTask extends PoweredSpawnerTask {
                         mob.setNoAi(true);
                         mob.getPersistentData().putBoolean("enderio:movable", true);
                     }
-                    FinalizeSpawnEvent event = EventHooks.finalizeMobSpawnSpawner(mob, level,
+                    MobSpawnEvent.FinalizeSpawn event = ForgeEventFactory.finalizeMobSpawnSpawner(mob, level,
                             level.getCurrentDifficultyAt(pos), MobSpawnType.SPAWNER, null, blockEntity, false);
                     if (event.isSpawnCancelled()) {
                         setBlockedReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.OTHER_MOD);
                         continue;
                     } else if(spawnMode() != MobSpawnMode.COPY){
-                        EventHooks.finalizeMobSpawn(mob, level, event.getDifficulty(), event.getSpawnType(),
+                        ForgeEventFactory.finalizeMobSpawn(mob, level, event.getDifficulty(), event.getSpawnType(),
                                 event.getSpawnData());
                     }
                 }

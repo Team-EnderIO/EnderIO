@@ -9,11 +9,11 @@ import com.enderio.enderio.foundation.network.packets.ServerboundSetItemFilterSl
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.handlers.IGhostIngredientHandler;
 import mezz.jei.api.ingredients.ITypedIngredient;
-import mezz.jei.api.neoforge.NeoForgeTypes;
+import mezz.jei.api.forge.NeoForgeTypes;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.network.PacketDistributor;
 
 import java.util.ArrayList;
 import java.util.List;

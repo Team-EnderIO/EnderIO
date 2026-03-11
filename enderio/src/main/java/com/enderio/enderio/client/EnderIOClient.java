@@ -102,30 +102,30 @@ import net.minecraft.network.chat.contents.PlainTextContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import net.neoforged.neoforge.client.event.ModelEvent;
-import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
-import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
-import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
-import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
-import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
-import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
-import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
-import net.neoforged.neoforge.common.util.Lazy;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.ModelEvent;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
+import net.minecraftforge.client.event.RegisterGuiLayersEvent;
+import net.minecraftforge.client.event.RegisterItemDecorationsEvent;
+import net.minecraftforge.client.event.RegisterMenuScreensEvent;
+import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.minecraftforge.client.extensions.common.RegisterClientExtensionsEvent;
+import net.minecraftforge.client.gui.VanillaGuiLayers;
+import net.minecraftforge.common.util.Lazy;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-@EventBusSubscriber(value = Dist.CLIENT)
+@Mod.EventBusSubscriber(value = Dist.CLIENT)
 @Mod(value = EnderIO.MOD_ID, dist = Dist.CLIENT)
 public class EnderIOClient {
 
@@ -370,11 +370,11 @@ public class EnderIOClient {
 
     @SubscribeEvent
     public static void registerGeometryLoaders(ModelEvent.RegisterGeometryLoaders event) {
-        event.register(EnderIO.rl("painted_block"), new PaintedBlockGeometry.Loader());
-        event.register(EnderIO.rl("io_overlay"), new IOOverlayBakedModel.Loader());
-        event.register(EnderIO.rl("conduit"), new ConduitBundleGeometry.Loader());
-        event.register(EnderIO.rl("conduit_item"), new ConduitItemModelLoader());
-        event.register(EnderIO.rl("facades_item"), new FacadeItemGeometry.Loader());
+        event.register("painted_block", new PaintedBlockGeometry.Loader());
+        event.register("io_overlay", new IOOverlayBakedModel.Loader());
+        event.register("conduit", new ConduitBundleGeometry.Loader());
+        event.register("conduit_item", new ConduitItemModelLoader());
+        event.register("facades_item", new FacadeItemGeometry.Loader());
     }
 
     @SubscribeEvent

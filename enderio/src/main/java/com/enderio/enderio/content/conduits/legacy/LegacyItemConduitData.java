@@ -10,7 +10,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.Direction;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.Nullable;
@@ -27,7 +27,7 @@ public class LegacyItemConduitData implements ConduitData<LegacyItemConduitData>
                     .fieldOf("item_sided_data")
                     .forGetter(i -> i.itemSidedData)).apply(instance, LegacyItemConduitData::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, LegacyItemConduitData> STREAM_CODEC = ByteBufCodecs
+    public static final StreamCodec<FriendlyByteBuf, LegacyItemConduitData> STREAM_CODEC = ByteBufCodecs
             .map(i -> (Map<Direction, ItemSidedData>) new HashMap<Direction, ItemSidedData>(i), Direction.STREAM_CODEC,
                     ItemSidedData.STREAM_CODEC)
             .map(LegacyItemConduitData::new, i -> i.itemSidedData)

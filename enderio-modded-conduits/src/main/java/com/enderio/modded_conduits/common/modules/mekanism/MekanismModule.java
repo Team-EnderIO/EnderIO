@@ -52,17 +52,17 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModList;
-import net.neoforged.neoforge.capabilities.BlockCapability;
-import net.neoforged.neoforge.capabilities.ItemCapability;
-import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.common.conditions.ICondition;
-import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
-import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredItem;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.common.capabilities.BlockCapability;
+import net.minecraftforge.common.capabilities.ItemCapability;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
+import net.minecraftforge.common.crafting.conditions.ICondition;
+import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.registries.DeferredRegister;
 
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
@@ -123,7 +123,7 @@ public class MekanismModule implements ConduitCommonModule {
                     builder -> builder.persistent(EnderChemicalFilter.CODEC)
                             .networkSynchronized(EnderChemicalFilter.STREAM_CODEC));
 
-    public static final DeferredItem<EnderChemicalFilterItem> BASIC_CHEMICAL_FILTER = ITEMS.registerItem(
+    public static final RegistryObject<EnderChemicalFilterItem> BASIC_CHEMICAL_FILTER = ITEMS.registerItem(
         "basic_chemical_filter",
         props -> new EnderChemicalFilterItem(props, EnderChemicalFilterItem.Type.BASIC)
     );
@@ -132,7 +132,7 @@ public class MekanismModule implements ConduitCommonModule {
         ITEMS.addAlias(EnderIO.rl("chemical_filter"), BASIC_CHEMICAL_FILTER.getId());
     }
 
-    public static final DeferredHolder<MenuType<?>, MenuType<EnderChemicalFilterMenu>> CHEMICAL_FILTER_MENU = 
+    public static final RegistryObject<MenuType<EnderChemicalFilterMenu>> CHEMICAL_FILTER_MENU = 
         MENUS.register("chemical_filter", EnderChemicalFilterItem.Type.BASIC::openMenu);
 
     public static class Capabilities {

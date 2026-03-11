@@ -23,9 +23,9 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluids;
-import net.neoforged.neoforge.common.CommonHooks;
-import net.neoforged.neoforge.event.level.BlockEvent;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.minecraftforge.common.CommonHooks;
+import net.minecraftforge.event.level.BlockEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 public class ConduitServerPayloadHandler {
     private static final ConduitServerPayloadHandler INSTANCE = new ConduitServerPayloadHandler();

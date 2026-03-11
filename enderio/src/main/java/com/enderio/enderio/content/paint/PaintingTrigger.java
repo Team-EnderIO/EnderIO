@@ -44,7 +44,7 @@ public class PaintingTrigger extends SimpleCriterionTrigger<PaintingTrigger.Trig
             return this.paint == paint;
         }
 
-        public static Criterion<TriggerInstance> painted(Block paint) {
+        public static Criterion painted(Block paint) {
             return EIOCriterions.PAINTING_TRIGGER.get().createCriterion(new TriggerInstance(Optional.empty(), paint));
         }
     }

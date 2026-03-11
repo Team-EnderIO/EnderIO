@@ -4,13 +4,13 @@ import com.enderio.enderio.content.machines.obelisks.ObeliskAreaManager;
 import com.enderio.enderio.init.EIOAttachments;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.event.entity.EntityTeleportEvent;
 
 import java.util.Set;
 
-@EventBusSubscriber
+@Mod.EventBusSubscriber
 public class InhibitorObeliskManager extends ObeliskAreaManager<InhibitorObeliskBlockEntity> {
 
     public static InhibitorObeliskManager getManager(ServerLevel level) {

@@ -98,7 +98,7 @@ public abstract class PoweredSpawnerTask implements PoweredMachineTask {
     // Tread carefully :)
 
     @Override
-    public final CompoundTag serializeNBT(HolderLookup.Provider provider) {
+    public final CompoundTag serializeNBT() {
         var tag = new CompoundTag();
         tag.putInt("EnergyCost", energyCost);
         tag.putInt("EnergyConsumed", energyConsumed);
@@ -106,13 +106,13 @@ public abstract class PoweredSpawnerTask implements PoweredMachineTask {
         var entityTypeId = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
         tag.putString("EntityType", entityTypeId.toString());
 
-        tag.put("SpawnMode", spawnMode.save(provider));
+        tag.put("SpawnMode", spawnMode.save());
 
         return tag;
     }
 
     @Override
-    public final void deserializeNBT(HolderLookup.Provider provider, CompoundTag compoundTag) {
+    public final void deserializeNBT(CompoundTag compoundTag) {
         isLoaded = true;
 
         energyCost = compoundTag.getInt("EnergyCost");
@@ -130,6 +130,6 @@ public abstract class PoweredSpawnerTask implements PoweredMachineTask {
         entityType = optEntityType.get();
 
         // TODO: Non crashing way to make sure this is right.
-        spawnMode = MobSpawnMode.parse(provider, Objects.requireNonNull(compoundTag.get("SpawnMode")));
+        spawnMode = MobSpawnMode.parse(Objects.requireNonNull(compoundTag.get("SpawnMode")));
     }
 }

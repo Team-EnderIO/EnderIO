@@ -41,12 +41,12 @@ public enum PoweredSpawnerMode implements StringRepresentable {
         return name;
     }
 
-    public Tag save(HolderLookup.Provider lookupProvider) {
-        return CODEC.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), this).getOrThrow();
+    public Tag save() {
+        return CODEC.encodeStart(NbtOps.INSTANCE, this).getOrThrow();
     }
 
-    public static PoweredSpawnerMode parse(HolderLookup.Provider lookupProvider, Tag tag) {
-        return CODEC.parse(lookupProvider.createSerializationContext(NbtOps.INSTANCE), tag).getOrThrow();
+    public static PoweredSpawnerMode parse(Tag tag) {
+        return CODEC.parse(NbtOps.INSTANCE, tag).getOrThrow();
     }
 
     public MutableComponent getComponent() {

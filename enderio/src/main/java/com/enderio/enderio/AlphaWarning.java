@@ -2,12 +2,12 @@ package com.enderio.enderio;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 
-@EventBusSubscriber(value = Dist.CLIENT)
+@Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class AlphaWarning {
     @SubscribeEvent
     public static void playerJoin(PlayerEvent.PlayerLoggedInEvent event) {

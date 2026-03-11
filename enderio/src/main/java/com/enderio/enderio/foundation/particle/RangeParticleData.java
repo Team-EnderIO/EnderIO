@@ -6,7 +6,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
@@ -20,7 +20,7 @@ public record RangeParticleData(int range, String color) implements ParticleOpti
         .apply(instance, RangeParticleData::new)
     );
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, RangeParticleData> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, RangeParticleData> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.INT,
         RangeParticleData::range,
         ByteBufCodecs.STRING_UTF8,

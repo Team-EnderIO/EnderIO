@@ -17,15 +17,14 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class WeatherObeliskTransferHelper implements IRecipeTransferHandler<WeatherObeliskMenu, RecipeHolder<WeatherChangeRecipe>> {
+public class WeatherObeliskTransferHelper implements IRecipeTransferHandler<WeatherObeliskMenu, WeatherChangeRecipe> {
 
     private final IRecipeTransferHandlerHelper handlerHelper;
 
@@ -44,14 +43,14 @@ public class WeatherObeliskTransferHelper implements IRecipeTransferHandler<Weat
     }
 
     @Override
-    public RecipeType<RecipeHolder<WeatherChangeRecipe>> getRecipeType() {
+    public RecipeType<WeatherChangeRecipe> getRecipeType() {
         return WeatherChangeCategory.TYPE;
     }
 
     @Override
-    public @Nullable IRecipeTransferError transferRecipe(WeatherObeliskMenu container, RecipeHolder<WeatherChangeRecipe> recipe, IRecipeSlotsView recipeSlots,
+    public @Nullable IRecipeTransferError transferRecipe(WeatherObeliskMenu container, WeatherChangeRecipe recipe, IRecipeSlotsView recipeSlots,
         Player player, boolean maxTransfer, boolean doTransfer) {
-        boolean hasFluid = recipe.value().fluid().getFluid().isSame(container.getFluidTank().contents().getFluid()) && recipe.value().fluid().getAmount() <= container.getFluidTank().contents().getAmount();
+        boolean hasFluid = recipe.fluid().getFluid().isSame(container.getFluidTank().contents().getFluid()) && recipe.fluid().getAmount() <= container.getFluidTank().contents().getAmount();
         boolean hasFireWork = container.slots.get(WeatherObeliskMenu.INPUTS_INDEX).getItem().is(Items.FIREWORK_ROCKET);
 
         ItemStack fireWork = getIngredientItem(player);

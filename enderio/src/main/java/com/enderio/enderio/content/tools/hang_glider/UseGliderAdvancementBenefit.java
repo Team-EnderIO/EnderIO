@@ -3,14 +3,14 @@ package com.enderio.enderio.content.tools.hang_glider;
 import com.enderio.enderio.EnderIO;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.entity.player.AdvancementEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.event.entity.player.AdvancementEvent;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@EventBusSubscriber
+@Mod.EventBusSubscriber
 public class UseGliderAdvancementBenefit {
 
     public static final ResourceLocation USE_GLIDER_ADVANCEMENT = EnderIO.rl("adventure/use_glider");

@@ -31,7 +31,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
@@ -40,14 +40,14 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.capabilities.ICapabilityProvider;
-import net.neoforged.neoforge.client.model.data.ModelData;
-import net.neoforged.neoforge.client.model.data.ModelProperty;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.client.model.data.ModelData;
+import net.minecraftforge.client.model.data.ModelProperty;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
@@ -363,8 +363,8 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
     }
 
     private void distributeItems(Direction side) {
-        IItemHandler selfHandler = getSelfCapability(Capabilities.ItemHandler.BLOCK, side);
-        IItemHandler otherHandler = getNeighbouringCapability(Capabilities.ItemHandler.BLOCK, side);
+        IItemHandler selfHandler = getSelfCapability(ForgeCapabilities.ITEM_HANDLER, side);
+        IItemHandler otherHandler = getNeighbouringCapability(ForgeCapabilities.ITEM_HANDLER, side);
         if (selfHandler == null || otherHandler == null) {
             return;
         }
@@ -373,8 +373,8 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
     }
 
     private void distributeFluids(Direction side) {
-        IFluidHandler selfHandler = getSelfCapability(Capabilities.FluidHandler.BLOCK, side);
-        IFluidHandler otherHandler = getNeighbouringCapability(Capabilities.FluidHandler.BLOCK, side);
+        IFluidHandler selfHandler = getSelfCapability(ForgeCapabilities.FLUID_HANDLER, side);
+        IFluidHandler otherHandler = getNeighbouringCapability(ForgeCapabilities.FLUID_HANDLER, side);
         if (selfHandler == null || otherHandler == null) {
             return;
         }
@@ -487,10 +487,10 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
     // region Wrenchable Implementation
 
     @Override
-    public ItemInteractionResult onWrenched(UseOnContext context) {
+    public InteractionResult onWrenched(UseOnContext context) {
         var player = context.getPlayer();
         if (player == null || level == null) {
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
 
         // Holding shift
@@ -513,7 +513,7 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
 
             // TODO: custom sound when sound manager is up and running??
 
-            return ItemInteractionResult.sidedSuccess(level.isClientSide());
+            return InteractionResult.sidedSuccess(level.isClientSide());
         } else {
             if (level.isClientSide()) {
                 if (isIOConfigMutable()) {
@@ -521,7 +521,7 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
                 }
             }
 
-            return ItemInteractionResult.sidedSuccess(level.isClientSide());
+            return InteractionResult.sidedSuccess(level.isClientSide());
         }
     }
 
@@ -540,15 +540,15 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
     // region Serialization
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
+    protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
 
         if (supportsRedstoneControl()) {
-            tag.put(MachineNBTKeys.REDSTONE_CONTROL, redstoneControl.save(registries));
+            tag.put(MachineNBTKeys.REDSTONE_CONTROL, redstoneControl.save());
         }
 
         if (hasInventory()) {
-            tag.put(MachineNBTKeys.ITEMS, inventory.serializeNBT(registries));
+            tag.put(MachineNBTKeys.ITEMS, inventory.serializeNBT());
         }
     }
 
@@ -559,11 +559,11 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
     }
 
     @Override
-    protected void saveAdditionalSynced(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditionalSynced(tag, registries);
+    protected void saveAdditionalSynced(CompoundTag tag) {
+        super.saveAdditionalSynced(tag);
 
         if (isIoConfigMutable && ioConfig != null) {
-            tag.put(MachineNBTKeys.IO_CONFIG, ioConfig.save(registries));
+            tag.put(MachineNBTKeys.IO_CONFIG, ioConfig.save());
         }
 
         if (owner != null) {
@@ -573,11 +573,11 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
 
     @SuppressWarnings("removal")
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
+    protected void load(CompoundTag tag) {
+        super.load(tag);
 
         if (hasInventory() && tag.contains(MachineNBTKeys.ITEMS)) {
-            inventory.deserializeNBT(registries, tag.getCompound(MachineNBTKeys.ITEMS));
+            inventory.deserializeNBT(tag.getCompound(MachineNBTKeys.ITEMS));
         }
 
         // Supports old attachments.
@@ -591,7 +591,7 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
             ioConfig = getData(EIOAttachments.IO_CONFIG);
             removeData(EIOAttachments.IO_CONFIG);
         } else if (tag.contains(MachineNBTKeys.IO_CONFIG)) {
-            ioConfig = IOConfig.parseOptional(registries, tag.getCompound(MachineNBTKeys.IO_CONFIG));
+            ioConfig = IOConfig.parseOptional(tag.getCompound(MachineNBTKeys.IO_CONFIG));
 
             if (level != null && level.isClientSide) {
                 clientIOConfigChanged();
@@ -604,8 +604,7 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
                 redstoneControl = getData(EIOAttachments.REDSTONE_CONTROL);
                 removeData(EIOAttachments.REDSTONE_CONTROL);
             } else if (tag.contains(MachineNBTKeys.REDSTONE_CONTROL)) {
-                redstoneControl = RedstoneControl.parse(registries,
-                        Objects.requireNonNull(tag.get(MachineNBTKeys.REDSTONE_CONTROL)));
+                redstoneControl = RedstoneControl.parse(Objects.requireNonNull(tag.get(MachineNBTKeys.REDSTONE_CONTROL)));
             }
         }
 

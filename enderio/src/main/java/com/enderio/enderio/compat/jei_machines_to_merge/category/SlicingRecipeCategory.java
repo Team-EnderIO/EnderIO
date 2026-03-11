@@ -17,16 +17,15 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.neoforged.neoforge.common.Tags;
+import net.minecraftforge.common.Tags;
 
 import java.util.List;
 
 import static mezz.jei.api.recipe.RecipeIngredientRole.*;
 
-public class SlicingRecipeCategory extends MachineRecipeCategory<RecipeHolder<SlicingRecipe>> {
+public class SlicingRecipeCategory extends MachineRecipeCategory<SlicingRecipe> {
 
-    public static final RecipeType<RecipeHolder<SlicingRecipe>> TYPE = JEIUtils.createRecipeType(EnderIO.MOD_ID,
+    public static final RecipeType<SlicingRecipe> TYPE = JEIUtils.createRecipeType(EnderIO.MOD_ID,
             "slicing", SlicingRecipe.class);
 
     public static final ResourceLocation BG_TEXTURE = EnderIO.rl("textures/gui/viewer/slice_and_splice.png");
@@ -42,7 +41,7 @@ public class SlicingRecipeCategory extends MachineRecipeCategory<RecipeHolder<Sl
     }
 
     @Override
-    public RecipeType<RecipeHolder<SlicingRecipe>> getRecipeType() {
+    public RecipeType<SlicingRecipe> getRecipeType() {
         return TYPE;
     }
 
@@ -62,17 +61,17 @@ public class SlicingRecipeCategory extends MachineRecipeCategory<RecipeHolder<Sl
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<SlicingRecipe> recipe, IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, SlicingRecipe recipe, IFocusGroup focuses) {
         // Tool slots
         builder.addSlot(CATALYST, 11, 1).addIngredients(Ingredient.of(ItemTags.AXES));
         builder.addSlot(CATALYST, 29, 1).addIngredients(Ingredient.of(Tags.Items.TOOLS_SHEAR));
 
-        builder.addSlot(INPUT, 1, 25).addIngredients(recipe.value().inputs().get(0));
-        builder.addSlot(INPUT, 19, 25).addIngredients(recipe.value().inputs().get(1));
-        builder.addSlot(INPUT, 37, 25).addIngredients(recipe.value().inputs().get(2));
-        builder.addSlot(INPUT, 1, 43).addIngredients(recipe.value().inputs().get(3));
-        builder.addSlot(INPUT, 19, 43).addIngredients(recipe.value().inputs().get(4));
-        builder.addSlot(INPUT, 37, 43).addIngredients(recipe.value().inputs().get(5));
+        builder.addSlot(INPUT, 1, 25).addIngredients(recipe.inputs().get(0));
+        builder.addSlot(INPUT, 19, 25).addIngredients(recipe.inputs().get(1));
+        builder.addSlot(INPUT, 37, 25).addIngredients(recipe.inputs().get(2));
+        builder.addSlot(INPUT, 1, 43).addIngredients(recipe.inputs().get(3));
+        builder.addSlot(INPUT, 19, 43).addIngredients(recipe.inputs().get(4));
+        builder.addSlot(INPUT, 37, 43).addIngredients(recipe.inputs().get(5));
 
         // Output
         builder.addSlot(OUTPUT, 91, 34).addItemStacks(List.of(RecipeUtil.getResultStacks(recipe).get(0).getItem()));

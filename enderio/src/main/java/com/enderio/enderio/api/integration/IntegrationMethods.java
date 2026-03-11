@@ -1,7 +1,7 @@
 package com.enderio.enderio.api.integration;
 
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.data.event.GatherDataEvent;
+import net.minecraftforge.data.event.GatherDataEvent;
 
 /**
  * These are all the methods an Integration can override or call.

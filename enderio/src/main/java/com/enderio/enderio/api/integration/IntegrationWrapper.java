@@ -1,8 +1,8 @@
 package com.enderio.enderio.api.integration;
 
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModList;
-import net.neoforged.neoforge.common.NeoForge;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.common.MinecraftForge;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
@@ -21,7 +21,7 @@ public class IntegrationWrapper<T extends Integration> {
         value = ModList.get().isLoaded(modid) ? supplier.get().get() : null;
         ifPresent(integration -> {
             IntegrationManager.addIntegration(integration);
-            integration.addEventListener(modEventBus, NeoForge.EVENT_BUS);
+            integration.addEventListener(modEventBus, MinecraftForge.EVENT_BUS);
         });
     }
 

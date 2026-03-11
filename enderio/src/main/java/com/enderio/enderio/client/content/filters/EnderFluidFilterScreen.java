@@ -20,8 +20,8 @@ import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.minecraftforge.fluids.FluidStack;
 import org.apache.commons.lang3.NotImplementedException;
 
 public class EnderFluidFilterScreen extends EnderContainerScreen<EnderFluidFilterMenu> {

@@ -119,7 +119,7 @@ public record ChemicalConduit(ResourceLocation texture, Component description, l
         tooltipAdder
                 .accept(TooltipUtil.styledWithArgs(ConduitLang.FLUID_EFFECTIVE_RATE_TOOLTIP, transferLimitFormatted));
 
-        if (tooltipFlag.hasShiftDown()) {
+        if (Screen.hasShiftDown()) {
             String rawRateFormatted = String.format("%,d",
                     (int) Math.ceil(transferRatePerTick() * type().getTickRate(this)));
             tooltipAdder.accept(TooltipUtil.styledWithArgs(ConduitLang.FLUID_RAW_RATE_TOOLTIP, rawRateFormatted));

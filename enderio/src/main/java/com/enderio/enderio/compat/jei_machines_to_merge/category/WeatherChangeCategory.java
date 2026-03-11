@@ -21,14 +21,13 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class WeatherChangeCategory extends MachineRecipeCategory<RecipeHolder<WeatherChangeRecipe>> {
+public class WeatherChangeCategory extends MachineRecipeCategory<WeatherChangeRecipe> {
 
-    public static final RecipeType<RecipeHolder<WeatherChangeRecipe>> TYPE = JEIUtils.createRecipeType(EnderIO.MOD_ID, "weather_change",
+    public static final RecipeType<WeatherChangeRecipe> TYPE = JEIUtils.createRecipeType(EnderIO.MOD_ID, "weather_change",
         WeatherChangeRecipe.class);
 
     private final IDrawable background;
@@ -46,7 +45,7 @@ public class WeatherChangeCategory extends MachineRecipeCategory<RecipeHolder<We
     }
 
     @Override
-    public RecipeType<RecipeHolder<WeatherChangeRecipe>> getRecipeType() {
+    public RecipeType<WeatherChangeRecipe> getRecipeType() {
         return TYPE;
     }
 
@@ -66,17 +65,17 @@ public class WeatherChangeCategory extends MachineRecipeCategory<RecipeHolder<We
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<WeatherChangeRecipe> recipe, IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, WeatherChangeRecipe recipe, IFocusGroup focuses) {
         builder.addSlot(RecipeIngredientRole.INPUT, 62, 7)
             .addItemStacks(List.of(new ItemStack(Items.FIREWORK_ROCKET)));
 
         builder.addSlot(RecipeIngredientRole.INPUT, 4, 7)
-            .addFluidStack(recipe.value().fluid().getFluid(), recipe.value().fluid().getAmount())
+            .addFluidStack(recipe.fluid().getFluid(), recipe.fluid().getAmount())
             .setFluidRenderer(WeatherObeliskBlockEntity.TANK_CAPACITY, false, 16, 63);
     }
 
     @Override
-    public void draw(RecipeHolder<WeatherChangeRecipe> recipe, IRecipeSlotsView recipeSlotsView,
+    public void draw(WeatherChangeRecipe recipe, IRecipeSlotsView recipeSlotsView,
         GuiGraphics guiGraphics, double mouseX, double mouseY) {
         animatedFlame.draw(guiGraphics, 63, 24);
     }

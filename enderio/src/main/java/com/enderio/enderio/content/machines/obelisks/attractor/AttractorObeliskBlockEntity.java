@@ -33,9 +33,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.common.util.FakePlayer;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.util.FakePlayer;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;

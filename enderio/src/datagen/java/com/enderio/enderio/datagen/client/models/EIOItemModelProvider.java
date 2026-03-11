@@ -14,12 +14,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
-import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
-import net.neoforged.neoforge.client.model.generators.ModelFile;
-import net.neoforged.neoforge.client.model.generators.loaders.DynamicFluidContainerModelBuilder;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import net.neoforged.neoforge.internal.versions.neoforge.NeoForgeVersion;
+import net.minecraftforge.client.model.generators.ItemModelBuilder;
+import net.minecraftforge.client.model.generators.ItemModelProvider;
+import net.minecraftforge.client.model.generators.ModelFile;
+import net.minecraftforge.client.model.generators.loaders.DynamicFluidContainerModelBuilder;
+import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.internal.versions.neoforge.NeoForgeVersion;
 
 import java.util.Locale;
 import java.util.Objects;

@@ -1,7 +1,7 @@
 package com.enderio.enderio.content.machines.solar_panel;
 
 import com.enderio.enderio.config.machines.MachinesConfig;
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 public enum SolarPanelTier implements ISolarPanelTier {
 
@@ -9,9 +9,9 @@ public enum SolarPanelTier implements ISolarPanelTier {
     PULSATING(MachinesConfig.COMMON.ENERGY.PULSATING_SOLAR_PANEL_MAX_PRODUCTION),
     VIBRANT(MachinesConfig.COMMON.ENERGY.VIBRANT_SOLAR_PANEL_MAX_PRODUCTION);
 
-    private final ModConfigSpec.ConfigValue<Integer> productionRate;
+    private final ForgeConfigSpec.ConfigValue<Integer> productionRate;
 
-    SolarPanelTier(ModConfigSpec.ConfigValue<Integer> productionRate) {
+    SolarPanelTier(ForgeConfigSpec.ConfigValue<Integer> productionRate) {
         this.productionRate = productionRate;
     }
 

@@ -24,12 +24,12 @@ import net.minecraft.world.level.block.PressurePlateBlock;
 import net.minecraft.world.level.block.WeightedPressurePlateBlock;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
-import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
-import net.neoforged.neoforge.client.model.generators.ModelFile;
-import net.neoforged.neoforge.client.model.generators.VariantBlockStateBuilder;
-import net.neoforged.neoforge.client.model.generators.loaders.CompositeModelBuilder;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.minecraftforge.client.model.generators.BlockStateProvider;
+import net.minecraftforge.client.model.generators.ConfiguredModel;
+import net.minecraftforge.client.model.generators.ModelFile;
+import net.minecraftforge.client.model.generators.VariantBlockStateBuilder;
+import net.minecraftforge.client.model.generators.loaders.CompositeModelBuilder;
+import net.minecraftforge.common.data.ExistingFileHelper;
 
 import java.util.Locale;
 

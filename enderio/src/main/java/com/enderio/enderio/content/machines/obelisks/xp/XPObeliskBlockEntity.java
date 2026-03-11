@@ -22,10 +22,10 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.SimpleFluidContent;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.common.Tags;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.SimpleFluidContent;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -238,15 +238,15 @@ public class XPObeliskBlockEntity extends MachineBlockEntity implements FluidTan
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        super.saveAdditional(tag, lookupProvider);
-        saveTank(lookupProvider, tag);
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        saveTank(tag);
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        super.loadAdditional(tag, lookupProvider);
-        loadTank(lookupProvider, tag);
+    public void load(CompoundTag tag) {
+        super.load(tag);
+        loadTank(tag);
     }
 
     // endregion

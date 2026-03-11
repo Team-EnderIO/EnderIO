@@ -1,7 +1,7 @@
 package com.enderio.enderio.foundation.network.packets;
 
 import com.enderio.enderio.EnderIO;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -10,7 +10,7 @@ public record ServerboundOpenConduitFilterMenu(int containerId, int slot) implem
 
     public static final Type<ServerboundOpenConduitFilterMenu> TYPE = new Type<>(EnderIO.rl("client_open_conduit_filter_menu"));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundOpenConduitFilterMenu> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, ServerboundOpenConduitFilterMenu> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT, ServerboundOpenConduitFilterMenu::containerId, ByteBufCodecs.INT, ServerboundOpenConduitFilterMenu::slot,
             ServerboundOpenConduitFilterMenu::new);
 

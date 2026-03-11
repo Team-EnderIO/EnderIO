@@ -1,11 +1,11 @@
 package com.enderio.modded_conduits.config.common;
 
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 public class MekanismConfig {
-    public final ModConfigSpec.BooleanValue CAN_MIX_CHEMICAL_CONDUIT_TIERS;
+    public final ForgeConfigSpec.BooleanValue CAN_MIX_CHEMICAL_CONDUIT_TIERS;
 
-    public MekanismConfig(ModConfigSpec.Builder builder) {
+    public MekanismConfig(ForgeConfigSpec.Builder builder) {
         builder.push("mekanism");
 
         CAN_MIX_CHEMICAL_CONDUIT_TIERS = builder

@@ -1,7 +1,7 @@
 package com.enderio.enderio.foundation.network.packets;
 
 import com.enderio.enderio.EnderIO;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -13,7 +13,7 @@ public record ServerboundTransferItemsPacket(List<Ingredient> stacks, int starts
 
     public static final Type<ServerboundTransferItemsPacket> TYPE = new Type<>(EnderIO.rl("transfer_items"));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, ServerboundTransferItemsPacket> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, ServerboundTransferItemsPacket> STREAM_CODEC = StreamCodec.composite(
         Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()),
         ServerboundTransferItemsPacket::stacks,
         ByteBufCodecs.INT,

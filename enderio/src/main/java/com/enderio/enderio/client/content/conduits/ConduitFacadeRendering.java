@@ -15,15 +15,15 @@ import net.minecraft.core.SectionPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.AddSectionGeometryEvent;
-import net.neoforged.neoforge.client.model.pipeline.VertexConsumerWrapper;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.client.event.AddSectionGeometryEvent;
+import net.minecraftforge.client.model.pipeline.VertexConsumerWrapper;
 
 import java.util.Map;
 
-@EventBusSubscriber(value = Dist.CLIENT)
+@Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class ConduitFacadeRendering {
 
     private static final ThreadLocal<RandomSource> RANDOM = ThreadLocal

@@ -11,7 +11,7 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.world.item.Items;
-import net.neoforged.neoforge.common.Tags;
+import net.minecraftforge.common.Tags;
 
 public class ItemRecipeProvider extends SubRecipeProvider {
 

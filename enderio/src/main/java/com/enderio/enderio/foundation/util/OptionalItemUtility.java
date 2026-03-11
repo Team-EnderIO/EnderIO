@@ -36,7 +36,7 @@ public class OptionalItemUtility {
         // Search for an EnderIO item
         Optional<Item> enderItem = tag.get()
             .stream()
-            .filter(itemHolder -> BuiltInRegistries.ITEM.getKey(itemHolder.value())
+            .filter(itemHolder -> BuiltInRegistries.ITEM.getKey(itemHolder)
                 .getNamespace()
                 .equals(EnderIO.MOD_ID))
             .map(Holder::value)

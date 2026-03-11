@@ -17,11 +17,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.Tags;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.network.PacketDistributor;
 
 // TODO: Change behaviour to add xp tank.
 public class VoidVialItem extends Item {
@@ -63,7 +63,7 @@ public class VoidVialItem extends Item {
 
     private static boolean transferFromBlockToPlayer(Player player, Level level, BlockPos pos) {
         try {
-            var fluidHandler = level.getCapability(Capabilities.FluidHandler.BLOCK, pos, null);
+            var fluidHandler = level.getCapability(ForgeCapabilities.FLUID_HANDLER, pos, null);
             if (fluidHandler != null) {
                 FluidStack availableFluid = fluidHandler.getFluidInTank(0);
                 if (availableFluid.is(Tags.Fluids.EXPERIENCE) && availableFluid.getAmount() > 0) {
@@ -93,7 +93,7 @@ public class VoidVialItem extends Item {
                 return false;
             }
 
-            var fluidHandler = level.getCapability(Capabilities.FluidHandler.BLOCK, pos, null);
+            var fluidHandler = level.getCapability(ForgeCapabilities.FLUID_HANDLER, pos, null);
             if (fluidHandler != null) {
                 long fluidVolume = ExperienceUtil.getPlayerTotalXp(player) * ExperienceUtil.EXP_TO_FLUID;
                 int cappedVolume = (int) Math.min(Integer.MAX_VALUE, fluidVolume);

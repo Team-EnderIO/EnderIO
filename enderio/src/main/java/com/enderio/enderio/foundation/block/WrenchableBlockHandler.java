@@ -2,12 +2,12 @@ package com.enderio.enderio.foundation.block;
 
 import com.enderio.enderio.foundation.block.entity.Wrenchable;
 import com.enderio.enderio.foundation.tag.EIOTags;
-import net.minecraft.world.ItemInteractionResult;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.entity.player.UseItemOnBlockEvent;
+import net.minecraft.world.InteractionResult;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.event.entity.player.UseItemOnBlockEvent;
 
-@EventBusSubscriber
+@Mod.EventBusSubscriber
 public class WrenchableBlockHandler {
     @SubscribeEvent
     public static void onItemUse(UseItemOnBlockEvent event) {
@@ -19,7 +19,7 @@ public class WrenchableBlockHandler {
 
         if (level.getBlockEntity(event.getPos()) instanceof Wrenchable blockEntity) {
             var result = blockEntity.onWrenched(event.getUseOnContext());
-            if (result != ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION) {
+            if (result != InteractionResult.PASS) {
                 event.cancelWithResult(result);
             }
         }

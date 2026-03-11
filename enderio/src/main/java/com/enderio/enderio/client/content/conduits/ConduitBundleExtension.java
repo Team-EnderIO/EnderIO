@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.neoforged.neoforge.client.extensions.common.IClientBlockExtensions;
+import net.minecraftforge.client.extensions.common.IClientBlockExtensions;
 
 public class ConduitBundleExtension implements IClientBlockExtensions {
 

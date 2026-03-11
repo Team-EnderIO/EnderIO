@@ -31,9 +31,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.capabilities.ICapabilityProvider;
-import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -326,23 +326,23 @@ public abstract class LegacyPoweredMachineBlockEntity extends LegacyMachineBlock
     // region Serialization
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        super.saveAdditional(tag, lookupProvider);
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
 
         var energyStorage = getEnergyStorage();
         if (energyStorage instanceof MachineEnergyStorage storage) {
-            tag.put(MachineNBTKeys.ENERGY, storage.serializeNBT(lookupProvider));
+            tag.put(MachineNBTKeys.ENERGY, storage.serializeNBT());
         }
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+    public void load(CompoundTag tag) {
         var energyStorage = getEnergyStorage();
         if (energyStorage instanceof MachineEnergyStorage storage && tag.contains(MachineNBTKeys.ENERGY)) {
-            storage.deserializeNBT(lookupProvider, tag.getCompound(MachineNBTKeys.ENERGY));
+            storage.deserializeNBT(tag.getCompound(MachineNBTKeys.ENERGY));
         }
 
-        super.loadAdditional(tag, lookupProvider);
+        super.load(tag);
 
         cacheCapacitorData();
 

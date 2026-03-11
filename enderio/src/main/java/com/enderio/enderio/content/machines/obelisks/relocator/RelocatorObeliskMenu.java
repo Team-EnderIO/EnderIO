@@ -4,7 +4,7 @@ import com.enderio.enderio.content.machines.obelisks.ObeliskMenu;
 import com.enderio.enderio.foundation.menu.MachineSlot;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOMenus;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 
 public class RelocatorObeliskMenu extends ObeliskMenu<RelocatorObeliskBlockEntity> {
@@ -14,7 +14,7 @@ public class RelocatorObeliskMenu extends ObeliskMenu<RelocatorObeliskBlockEntit
         addSlots();
     }
 
-    public RelocatorObeliskMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
+    public RelocatorObeliskMenu(int containerId, Inventory playerInventory, FriendlyByteBuf buf) {
         super(EIOMenus.RELOCATOR_OBELISK.get(), containerId, playerInventory, buf,
             EIOBlockEntities.RELOCATOR_OBELISK.get());
         addSlots();

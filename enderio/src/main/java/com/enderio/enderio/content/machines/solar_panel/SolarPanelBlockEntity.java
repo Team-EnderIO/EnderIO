@@ -29,8 +29,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -272,17 +272,17 @@ public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        boundSoul = Soul.parseOptional(lookupProvider, tag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
+    public void load(CompoundTag tag) {
+        boundSoul = Soul.parseOptional(tag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
 
-        super.loadAdditional(tag, lookupProvider);
+        super.load(tag);
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        tag.put(MachineNBTKeys.ENTITY_STORAGE, boundSoul.saveOptional(lookupProvider));
+    public void saveAdditional(CompoundTag tag) {
+        tag.put(MachineNBTKeys.ENTITY_STORAGE, boundSoul.saveOptional());
 
-        super.saveAdditional(tag, lookupProvider);
+        super.saveAdditional(tag);
     }
 
     @Override

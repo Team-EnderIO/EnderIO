@@ -11,7 +11,7 @@ import com.enderio.enderio.foundation.network.packets.ServerboundSetItemFilterSl
 import com.enderio.enderio.foundation.network.packets.ServerboundUpdateCoordinateSelectionNameMenuPacket;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.Optional;
 

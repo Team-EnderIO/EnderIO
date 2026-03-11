@@ -5,14 +5,13 @@ import net.minecraft.Util;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.util.thread.EffectiveSide;
-import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
-import net.neoforged.neoforge.server.ServerLifecycleHooks;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.util.thread.EffectiveSide;
+import net.minecraftforge.client.event.RecipesUpdatedEvent;
+import net.minecraftforge.event.AddReloadListenerEvent;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,7 +19,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@EventBusSubscriber
+@Mod.EventBusSubscriber
 public class SlicerRecipeManager {
     private static final List<Set<Item>> ITEMS = Util.make(() -> {
         List<Set<Item>> tempList = new ArrayList<>();
@@ -82,10 +81,10 @@ public class SlicerRecipeManager {
             nonoptimizableingredient.clear();
         }
 
-        for (RecipeHolder<SlicingRecipe> slicingRecipe : manager
+        for (SlicingRecipe slicingRecipe : manager
                 .getAllRecipesFor(EIORecipes.SLICING.type().get())) {
             for (int i = 0; i < 6; i++) {
-                Ingredient ingredient = slicingRecipe.value().inputs().get(i);
+                Ingredient ingredient = slicingRecipe.inputs().get(i);
                 if (ingredient.isSimple()) {
                     Set<Item> itemset = ITEMS.get(i);
                     Arrays.stream(ingredient.getItems()).map(ItemStack::getItem).forEach(itemset::add);

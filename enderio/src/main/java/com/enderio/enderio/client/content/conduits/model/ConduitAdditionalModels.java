@@ -4,17 +4,17 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.client.content.conduits.model.modifier.ConduitModelModifiers;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.ModelEvent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.client.event.ModelEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@EventBusSubscriber(value = Dist.CLIENT)
+@Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class ConduitAdditionalModels {
     private static final List<ModelResourceLocation> MODEL_LOCATIONS = new ArrayList<>();
     private static final Map<ModelResourceLocation, BakedModel> MODELS = new HashMap<>();

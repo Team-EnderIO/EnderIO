@@ -50,9 +50,9 @@ import com.enderio.enderio.foundation.block.entity.legacy.LegacyPoweredMachineBl
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.Util;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -61,9 +61,9 @@ import java.util.Map;
 public class EIOBlockEntities {
     public static final BlockEntityTypeDeferredRegister BLOCK_ENTITY_TYPES = BlockEntityTypeDeferredRegister.create(EnderIO.MOD_ID);
 
-    public static final Map<CapacitorTier, DeferredHolder<BlockEntityType<?>, BlockEntityType<CapacitorBankBlockEntity>>> CAPACITOR_BANKS = Util
+    public static final Map<CapacitorTier, RegistryObject<BlockEntityType<CapacitorBankBlockEntity>>> CAPACITOR_BANKS = Util
         .make(() -> {
-            Map<CapacitorTier, DeferredHolder<BlockEntityType<?>, BlockEntityType<CapacitorBankBlockEntity>>> map = new HashMap<>();
+            Map<CapacitorTier, RegistryObject<BlockEntityType<CapacitorBankBlockEntity>>> map = new HashMap<>();
             for (CapacitorTier tier : CapacitorTier.values()) {
                 map.put(tier, BLOCK_ENTITY_TYPES
                     .builder(tier.name().toLowerCase(Locale.ROOT) + "_capacitor_bank",
@@ -76,156 +76,156 @@ public class EIOBlockEntities {
             return ImmutableMap.copyOf(map);
         });
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ConduitBundleBlockEntity>> CONDUIT = BLOCK_ENTITY_TYPES.register("conduit",
+    public static final RegistryObject<BlockEntityType<ConduitBundleBlockEntity>> CONDUIT = BLOCK_ENTITY_TYPES.register("conduit",
         ConduitBundleBlockEntity::new, EIOBlocks.CONDUIT_BUNDLE::get);
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CreativePowerBlockEntity>> CREATIVE_POWER = BLOCK_ENTITY_TYPES
+    public static final RegistryObject<BlockEntityType<CreativePowerBlockEntity>> CREATIVE_POWER = BLOCK_ENTITY_TYPES
         .builder("creative_power", CreativePowerBlockEntity::new, EIOBlocks.CREATIVE_POWER::get)
         .apply(EIOBlockEntities::legacyPoweredMachineBlockEntityCapabilities)
         .build();
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<EnchanterBlockEntity>> ENCHANTER = BLOCK_ENTITY_TYPES.register("enchanter",
+    public static final RegistryObject<BlockEntityType<EnchanterBlockEntity>> ENCHANTER = BLOCK_ENTITY_TYPES.register("enchanter",
         EnchanterBlockEntity::new, EIOBlocks.ENCHANTER::get);
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<EnderfaceBlockEntity>> ENDERFACE = BLOCK_ENTITY_TYPES.register("enderface",
+    public static final RegistryObject<BlockEntityType<EnderfaceBlockEntity>> ENDERFACE = BLOCK_ENTITY_TYPES.register("enderface",
         EnderfaceBlockEntity::new, EIOBlocks.ENDERFACE::get);
 
     // region Machines
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AlloySmelterBlockEntity>> ALLOY_SMELTER = BLOCK_ENTITY_TYPES
+    public static final RegistryObject<BlockEntityType<AlloySmelterBlockEntity>> ALLOY_SMELTER = BLOCK_ENTITY_TYPES
         .builder("alloy_smelter", AlloySmelterBlockEntity::new, EIOBlocks.ALLOY_SMELTER::get)
         .apply(EIOBlockEntities::poweredMachineBlockEntityCapabilities)
         .build();
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<StirlingGeneratorBlockEntity>> STIRLING_GENERATOR = BLOCK_ENTITY_TYPES
+    public static final RegistryObject<BlockEntityType<StirlingGeneratorBlockEntity>> STIRLING_GENERATOR = BLOCK_ENTITY_TYPES
         .builder("stirling_generator", StirlingGeneratorBlockEntity::new, EIOBlocks.STIRLING_GENERATOR::get)
         .apply(EIOBlockEntities::poweredMachineBlockEntityCapabilities)
         .build();
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SagMillBlockEntity>> SAG_MILL = BLOCK_ENTITY_TYPES
+    public static final RegistryObject<BlockEntityType<SagMillBlockEntity>> SAG_MILL = BLOCK_ENTITY_TYPES
         .builder("sag_mill", SagMillBlockEntity::new, EIOBlocks.SAG_MILL::get)
         .apply(EIOBlockEntities::poweredMachineBlockEntityCapabilities)
         .build();
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SlicerBlockEntity>> SLICE_AND_SPLICE = BLOCK_ENTITY_TYPES
+    public static final RegistryObject<BlockEntityType<SlicerBlockEntity>> SLICE_AND_SPLICE = BLOCK_ENTITY_TYPES
         .builder("slice_and_splice", SlicerBlockEntity::new, EIOBlocks.SLICE_AND_SPLICE::get)
         .apply(EIOBlockEntities::poweredMachineBlockEntityCapabilities)
         .build();
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ImpulseHopperBlockEntity>> IMPULSE_HOPPER = BLOCK_ENTITY_TYPES
+    public static final RegistryObject<BlockEntityType<ImpulseHopperBlockEntity>> IMPULSE_HOPPER = BLOCK_ENTITY_TYPES
         .builder("impulse_hopper", ImpulseHopperBlockEntity::new, EIOBlocks.IMPULSE_HOPPER::get)
         .apply(EIOBlockEntities::poweredMachineBlockEntityCapabilities)
         .build();
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<VacuumChestBlockEntity>> VACUUM_CHEST = BLOCK_ENTITY_TYPES
+    public static final RegistryObject<BlockEntityType<VacuumChestBlockEntity>> VACUUM_CHEST = BLOCK_ENTITY_TYPES
         .builder("vacuum_chest", VacuumChestBlockEntity::new, EIOBlocks.VACUUM_CHEST::get)
         .apply(EIOBlockEntities::machineBlockEntityCapabilities)
         .build();
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<XPVacuumBlockEntity>> XP_VACUUM = BLOCK_ENTITY_TYPES
+    public static final RegistryObject<BlockEntityType<XPVacuumBlockEntity>> XP_VACUUM = BLOCK_ENTITY_TYPES
         .builder("xp_vacuum", XPVacuumBlockEntity::new, EIOBlocks.XP_VACUUM::get)
         .apply(EIOBlockEntities::machineBlockEntityCapabilities)
         .apply(EIOBlockEntities::fluidHandlerCapability)
         .build();
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CrafterBlockEntity>> CRAFTER = BLOCK_ENTITY_TYPES
+    public static final RegistryObject<BlockEntityType<CrafterBlockEntity>> CRAFTER = BLOCK_ENTITY_TYPES
         .builder("crafter", CrafterBlockEntity::new, EIOBlocks.CRAFTER::get)
         .apply(EIOBlockEntities::poweredMachineBlockEntityCapabilities)
         .build();
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<DrainBlockEntity>> DRAIN = BLOCK_ENTITY_TYPES
+    public static final RegistryObject<BlockEntityType<DrainBlockEntity>> DRAIN = BLOCK_ENTITY_TYPES
         .builder("drain", DrainBlockEntity::new, EIOBlocks.DRAIN::get)
         .apply(EIOBlockEntities::poweredMachineBlockEntityCapabilities)
         .apply(EIOBlockEntities::fluidHandlerCapability)
         .build();
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<NiardBlockEntity>> NIARD = BLOCK_ENTITY_TYPES
+    public static final RegistryObject<BlockEntityType<NiardBlockEntity>> NIARD = BLOCK_ENTITY_TYPES
         .builder("niard", NiardBlockEntity::new, EIOBlocks.NIARD::get)
         .apply(EIOBlockEntities::poweredMachineBlockEntityCapabilities)
         .apply(EIOBlockEntities::fluidHandlerCapability)
         .build();
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SoulBinderBlockEntity>> SOUL_BINDER = BLOCK_ENTITY_TYPES
+    public static final RegistryObject<BlockEntityType<SoulBinderBlockEntity>> SOUL_BINDER = BLOCK_ENTITY_TYPES
         .builder("soul_binder", SoulBinderBlockEntity::new, EIOBlocks.SOUL_BINDER::get)
         .apply(EIOBlockEntities::poweredMachineBlockEntityCapabilities)
         .apply(EIOBlockEntities::fluidHandlerCapability)
         .build();
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WiredChargerBlockEntity>> WIRED_CHARGER = BLOCK_ENTITY_TYPES
+    public static final RegistryObject<BlockEntityType<WiredChargerBlockEntity>> WIRED_CHARGER = BLOCK_ENTITY_TYPES
         .builder("wired_charger", WiredChargerBlockEntity::new, EIOBlocks.WIRED_CHARGER::get)
         .apply(EIOBlockEntities::poweredMachineBlockEntityCapabilities)
         .build();
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WirelessChargerBlockEntity>> WIRELESS_CHARGER = BLOCK_ENTITY_TYPES
+    public static final RegistryObject<BlockEntityType<WirelessChargerBlockEntity>> WIRELESS_CHARGER = BLOCK_ENTITY_TYPES
         .builder("wireless_charger", WirelessChargerBlockEntity::new, EIOBlocks.WIRELESS_CHARGER::get)
         .apply(EIOBlockEntities::poweredMachineBlockEntityCapabilities)
         .build();
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PaintingMachineBlockEntity>> PAINTING_MACHINE = BLOCK_ENTITY_TYPES
+    public static final RegistryObject<BlockEntityType<PaintingMachineBlockEntity>> PAINTING_MACHINE = BLOCK_ENTITY_TYPES
         .builder("painting_machine", PaintingMachineBlockEntity::new, EIOBlocks.PAINTING_MACHINE::get)
         .apply(EIOBlockEntities::poweredMachineBlockEntityCapabilities)
         .build();
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PoweredSpawnerBlockEntity>> POWERED_SPAWNER = BLOCK_ENTITY_TYPES
+    public static final RegistryObject<BlockEntityType<PoweredSpawnerBlockEntity>> POWERED_SPAWNER = BLOCK_ENTITY_TYPES
         .builder("powered_spawner", PoweredSpawnerBlockEntity::new, EIOBlocks.POWERED_SPAWNER::get)
         .apply(EIOBlockEntities::poweredMachineBlockEntityCapabilities)
         .apply(EIOBlockEntities::soulBoundCapability)
         .build();
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SoulEngineBlockEntity>> SOUL_ENGINE = BLOCK_ENTITY_TYPES
+    public static final RegistryObject<BlockEntityType<SoulEngineBlockEntity>> SOUL_ENGINE = BLOCK_ENTITY_TYPES
         .builder("soul_engine", SoulEngineBlockEntity::new, EIOBlocks.SOUL_ENGINE::get)
         .apply(EIOBlockEntities::poweredMachineBlockEntityCapabilities)
         .apply(EIOBlockEntities::fluidHandlerCapability)
         .apply(EIOBlockEntities::soulBoundCapability)
         .build();
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<XPObeliskBlockEntity>> XP_OBELISK = BLOCK_ENTITY_TYPES
+    public static final RegistryObject<BlockEntityType<XPObeliskBlockEntity>> XP_OBELISK = BLOCK_ENTITY_TYPES
         .builder("xp_obelisk", XPObeliskBlockEntity::new, EIOBlocks.XP_OBELISK::get)
         .apply(EIOBlockEntities::machineBlockEntityCapabilities)
         .apply(EIOBlockEntities::fluidHandlerCapability)
         .build();
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<VatBlockEntity>> VAT = BLOCK_ENTITY_TYPES
+    public static final RegistryObject<BlockEntityType<VatBlockEntity>> VAT = BLOCK_ENTITY_TYPES
         .builder("vat", VatBlockEntity::new, EIOBlocks.VAT::get)
         .apply(EIOBlockEntities::machineBlockEntityCapabilities)
         .apply(EIOBlockEntities::fluidHandlerCapability)
         .build();
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<InhibitorObeliskBlockEntity>> INHIBITOR_OBELISK = BLOCK_ENTITY_TYPES
+    public static final RegistryObject<BlockEntityType<InhibitorObeliskBlockEntity>> INHIBITOR_OBELISK = BLOCK_ENTITY_TYPES
         .builder("inhibitor_obelisk", InhibitorObeliskBlockEntity::new, EIOBlocks.INHIBITOR_OBELISK::get)
         .apply(EIOBlockEntities::poweredMachineBlockEntityCapabilities)
         .build();
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AversionObeliskBlockEntity>> AVERSION_OBELISK = BLOCK_ENTITY_TYPES
+    public static final RegistryObject<BlockEntityType<AversionObeliskBlockEntity>> AVERSION_OBELISK = BLOCK_ENTITY_TYPES
         .builder("aversion_obelisk", AversionObeliskBlockEntity::new, EIOBlocks.AVERSION_OBELISK::get)
         .apply(EIOBlockEntities::poweredMachineBlockEntityCapabilities)
         .build();
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<RelocatorObeliskBlockEntity>> RELOCATOR_OBELISK = BLOCK_ENTITY_TYPES
+    public static final RegistryObject<BlockEntityType<RelocatorObeliskBlockEntity>> RELOCATOR_OBELISK = BLOCK_ENTITY_TYPES
         .builder("relocator_obelisk", RelocatorObeliskBlockEntity::new, EIOBlocks.RELOCATOR_OBELISK::get)
         .apply(EIOBlockEntities::poweredMachineBlockEntityCapabilities)
         .build();
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AttractorObeliskBlockEntity>> ATTRACTOR_OBELISK = BLOCK_ENTITY_TYPES
+    public static final RegistryObject<BlockEntityType<AttractorObeliskBlockEntity>> ATTRACTOR_OBELISK = BLOCK_ENTITY_TYPES
         .builder("attractor_obelisk", AttractorObeliskBlockEntity::new, EIOBlocks.ATTRACTOR_OBELISK::get)
         .apply(EIOBlockEntities::poweredMachineBlockEntityCapabilities)
         .build();
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WeatherObeliskBlockEntity>> WEATHER_OBELISK = BLOCK_ENTITY_TYPES
+    public static final RegistryObject<BlockEntityType<WeatherObeliskBlockEntity>> WEATHER_OBELISK = BLOCK_ENTITY_TYPES
         .builder("weather_obelisk", WeatherObeliskBlockEntity::new, EIOBlocks.WEATHER_OBELISK::get)
         .apply(EIOBlockEntities::machineBlockEntityCapabilities)
         .apply(EIOBlockEntities::fluidHandlerCapability)
         .build();
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FarmingStationBlockEntity>> FARMING_STATION = BLOCK_ENTITY_TYPES
+    public static final RegistryObject<BlockEntityType<FarmingStationBlockEntity>> FARMING_STATION = BLOCK_ENTITY_TYPES
         .builder("farming_station", FarmingStationBlockEntity::new, EIOBlocks.FARMING_STATION::get)
         .apply(EIOBlockEntities::poweredMachineBlockEntityCapabilities)
         .apply(EIOBlockEntities::fluidHandlerCapability)
         .apply(EIOBlockEntities::soulBoundCapability)
         .build();
 
-    public static final Map<SolarPanelTier, DeferredHolder<BlockEntityType<?>, BlockEntityType<SolarPanelBlockEntity>>> SOLAR_PANELS = Util.make(() -> {
-        Map<SolarPanelTier, DeferredHolder<BlockEntityType<?>, BlockEntityType<SolarPanelBlockEntity>>> map = new HashMap<>();
+    public static final Map<SolarPanelTier, RegistryObject<BlockEntityType<SolarPanelBlockEntity>>> SOLAR_PANELS = Util.make(() -> {
+        Map<SolarPanelTier, RegistryObject<BlockEntityType<SolarPanelBlockEntity>>> map = new HashMap<>();
         for (SolarPanelTier tier : SolarPanelTier.values()) {
             map.put(tier, BLOCK_ENTITY_TYPES
                 .builder(tier.name().toLowerCase(Locale.ROOT) + "_photovoltaic_cell",
@@ -238,29 +238,29 @@ public class EIOBlockEntities {
         return ImmutableMap.copyOf(map);
     });
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MindKillerBlockEntity>> MIND_KILLER = BLOCK_ENTITY_TYPES
+    public static final RegistryObject<BlockEntityType<MindKillerBlockEntity>> MIND_KILLER = BLOCK_ENTITY_TYPES
         .register("mind_killer", MindKillerBlockEntity::new, EIOBlocks.MIND_KILLER::get);
 
     private static void machineBlockEntityCapabilities(BlockEntityTypeDeferredRegister.Builder<? extends MachineBlockEntity> builder) {
         builder.capability(EnderIOCapabilities.SIDE_CONFIG, MachineBlockEntity.SIDE_CONFIG_PROVIDER);
-        builder.capability(Capabilities.ItemHandler.BLOCK, MachineBlockEntity.ITEM_HANDLER_PROVIDER);
+        builder.capability(ForgeCapabilities.ITEM_HANDLER, MachineBlockEntity.ITEM_HANDLER_PROVIDER);
     }
 
     private static void poweredMachineBlockEntityCapabilities(
         BlockEntityTypeDeferredRegister.Builder<? extends PoweredMachineBlockEntity> builder) {
         machineBlockEntityCapabilities(builder);
-        builder.capability(Capabilities.EnergyStorage.BLOCK, PoweredMachineBlockEntity.ENERGY_STORAGE_PROVIDER);
+        builder.capability(ForgeCapabilities.ENERGY, PoweredMachineBlockEntity.ENERGY_STORAGE_PROVIDER);
     }
 
     private static void legacyPoweredMachineBlockEntityCapabilities(BlockEntityTypeDeferredRegister.Builder<? extends LegacyPoweredMachineBlockEntity> builder) {
         legacyMachineBlockEntityCapabilities(builder);
-        builder.capability(Capabilities.EnergyStorage.BLOCK,
+        builder.capability(ForgeCapabilities.ENERGY,
             LegacyPoweredMachineBlockEntity.ENERGY_STORAGE_PROVIDER);
     }
 
     private static void legacyMachineBlockEntityCapabilities(BlockEntityTypeDeferredRegister.Builder<? extends LegacyMachineBlockEntity> builder) {
         builder.capability(EnderIOCapabilities.SIDE_CONFIG, LegacyMachineBlockEntity.SIDE_CONFIG_PROVIDER);
-        builder.capability(Capabilities.ItemHandler.BLOCK, LegacyMachineBlockEntity.ITEM_HANDLER_PROVIDER);
+        builder.capability(ForgeCapabilities.ITEM_HANDLER, LegacyMachineBlockEntity.ITEM_HANDLER_PROVIDER);
     }
 
     private static void soulBoundCapability(BlockEntityTypeDeferredRegister.Builder<? extends MachineBlockEntity> blockEntity) {
@@ -271,7 +271,7 @@ public class EIOBlockEntities {
 
     // region Painting
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SinglePaintedBlockEntity>> SINGLE_PAINTED = BLOCK_ENTITY_TYPES
+    public static final RegistryObject<BlockEntityType<SinglePaintedBlockEntity>> SINGLE_PAINTED = BLOCK_ENTITY_TYPES
         .builder("single_painted", SinglePaintedBlockEntity::new)
         .validBlock(EIOBlocks.PAINTED_FENCE::get)
         .validBlock(EIOBlocks.PAINTED_FENCE_GATE::get)
@@ -285,20 +285,20 @@ public class EIOBlockEntities {
         .validBlock(EIOBlocks.PAINTED_WALL::get)
         .build();
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<DoublePaintedBlockEntity>> DOUBLE_PAINTED = BLOCK_ENTITY_TYPES.register("double_painted",
+    public static final RegistryObject<BlockEntityType<DoublePaintedBlockEntity>> DOUBLE_PAINTED = BLOCK_ENTITY_TYPES.register("double_painted",
         DoublePaintedBlockEntity::new, EIOBlocks.PAINTED_SLAB::get);
 
     // endregion
 
     // region Storage
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FluidTankBlockEntity.Standard>> FLUID_TANK = BLOCK_ENTITY_TYPES
+    public static final RegistryObject<BlockEntityType<FluidTankBlockEntity.Standard>> FLUID_TANK = BLOCK_ENTITY_TYPES
         .builder("fluid_tank", FluidTankBlockEntity.Standard::new, EIOBlocks.FLUID_TANK::get)
         .apply(EIOBlockEntities::machineBlockEntityCapabilities)
         .apply(EIOBlockEntities::fluidHandlerCapability)
         .build();
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FluidTankBlockEntity.Enhanced>> PRESSURIZED_FLUID_TANK = BLOCK_ENTITY_TYPES
+    public static final RegistryObject<BlockEntityType<FluidTankBlockEntity.Enhanced>> PRESSURIZED_FLUID_TANK = BLOCK_ENTITY_TYPES
         .builder("pressurized_fluid_tank", FluidTankBlockEntity.Enhanced::new, EIOBlocks.PRESSURIZED_FLUID_TANK::get)
         .apply(EIOBlockEntities::machineBlockEntityCapabilities)
         .apply(EIOBlockEntities::fluidHandlerCapability)
@@ -308,19 +308,19 @@ public class EIOBlockEntities {
 
     // region Travel
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TravelAnchorBlockEntity>> TRAVEL_ANCHOR = BLOCK_ENTITY_TYPES
+    public static final RegistryObject<BlockEntityType<TravelAnchorBlockEntity>> TRAVEL_ANCHOR = BLOCK_ENTITY_TYPES
         .builder("travel_anchor", TravelAnchorBlockEntity::new, EIOBlocks.TRAVEL_ANCHOR::get)
         .apply(EIOBlockEntities::machineBlockEntityCapabilities)
         .build();
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PaintedTravelAnchorBlockEntity>> PAINTED_TRAVEL_ANCHOR = BLOCK_ENTITY_TYPES
+    public static final RegistryObject<BlockEntityType<PaintedTravelAnchorBlockEntity>> PAINTED_TRAVEL_ANCHOR = BLOCK_ENTITY_TYPES
         .builder("painted_travel_anchor", PaintedTravelAnchorBlockEntity::new, EIOBlocks.PAINTED_TRAVEL_ANCHOR::get)
         .apply(EIOBlockEntities::machineBlockEntityCapabilities)
         .build();
 
     // endregion
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<EnderSkullBlockEntity>> ENDER_SKULL = BLOCK_ENTITY_TYPES.register("ender_skull",
+    public static final RegistryObject<BlockEntityType<EnderSkullBlockEntity>> ENDER_SKULL = BLOCK_ENTITY_TYPES.register("ender_skull",
         EnderSkullBlockEntity::new, EIOBlocks.WALL_ENDERMAN_HEAD::get, EIOBlocks.ENDERMAN_HEAD::get);
 
     public static void register(IEventBus eventBus) {
@@ -328,6 +328,6 @@ public class EIOBlockEntities {
     }
 
     private static void fluidHandlerCapability(BlockEntityTypeDeferredRegister.Builder<? extends MachineBlockEntity> blockEntity) {
-        blockEntity.capability(Capabilities.FluidHandler.BLOCK, FluidTankUser.FLUID_HANDLER_PROVIDER);
+        blockEntity.capability(ForgeCapabilities.FLUID_HANDLER, FluidTankUser.FLUID_HANDLER_PROVIDER);
     }
 }

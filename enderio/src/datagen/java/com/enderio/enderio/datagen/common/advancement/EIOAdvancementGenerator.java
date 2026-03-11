@@ -10,8 +10,8 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
-import net.neoforged.neoforge.common.data.AdvancementProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.minecraftforge.common.data.AdvancementProvider;
+import net.minecraftforge.common.data.ExistingFileHelper;
 
 import java.util.function.Consumer;
 

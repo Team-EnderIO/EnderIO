@@ -5,11 +5,11 @@ import com.enderio.enderio.api.filter.ItemFilter;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -29,7 +29,7 @@ public record ExistingItemFilter(boolean hasSnapshot, NonNullList<ItemStack> sna
                             Codec.BOOL.fieldOf("isDenyList").forGetter(ExistingItemFilter::isInverted))
                     .apply(componentInstance, ExistingItemFilter::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, ExistingItemFilter> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, ExistingItemFilter> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.BOOL, ExistingItemFilter::hasSnapshot,
             ItemStack.OPTIONAL_STREAM_CODEC.apply(ByteBufCodecs.list(256)), ExistingItemFilter::snapshot,
             ByteBufCodecs.BOOL, ExistingItemFilter::shouldCompareComponents, ByteBufCodecs.BOOL,
@@ -52,7 +52,7 @@ public record ExistingItemFilter(boolean hasSnapshot, NonNullList<ItemStack> sna
                     continue;
                 }
 
-                boolean matches = shouldCompareComponents ? ItemStack.isSameItemSameComponents(match, stack)
+                boolean matches = shouldCompareComponents ? ItemStack.isSameItemSameTags(match, stack)
                         : ItemStack.isSameItem(match, stack);
 
                 if (matches) {
@@ -66,7 +66,7 @@ public record ExistingItemFilter(boolean hasSnapshot, NonNullList<ItemStack> sna
                     continue;
                 }
 
-                boolean matches = shouldCompareComponents ? ItemStack.isSameItemSameComponents(match, stack)
+                boolean matches = shouldCompareComponents ? ItemStack.isSameItemSameTags(match, stack)
                         : ItemStack.isSameItem(match, stack);
 
                 if (matches) {

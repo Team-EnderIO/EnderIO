@@ -7,16 +7,16 @@ import com.enderio.enderio.content.machines.obelisks.inhibitor.InhibitorObeliskM
 import com.enderio.enderio.content.machines.obelisks.relocator.RelocatorObeliskManager;
 import com.enderio.enderio.foundation.attachment.ActionRange;
 import com.enderio.enderio.foundation.io.IOConfig;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.attachment.AttachmentType;
-import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.attachment.AttachmentType;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.Supplier;
 
 public class EIOAttachments {
     private static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister
-            .create(NeoForgeRegistries.ATTACHMENT_TYPES, EnderIO.MOD_ID);
+            .create(ForgeRegistries.ATTACHMENT_TYPES, EnderIO.MOD_ID);
 
     @Deprecated(forRemoval = true, since = "7.1")
     public static final Supplier<AttachmentType<RedstoneControl>> REDSTONE_CONTROL = ATTACHMENT_TYPES.register(

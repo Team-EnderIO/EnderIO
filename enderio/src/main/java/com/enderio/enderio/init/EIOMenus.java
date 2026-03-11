@@ -44,120 +44,120 @@ import com.enderio.enderio.content.storage.fluid_tank.FluidTankMenu;
 import com.enderio.enderio.content.tools.coordinate_selector.CoordinateMenu;
 import com.enderio.enderio.content.travel.travel_anchor.TravelAnchorMenu;
 import net.minecraft.world.inventory.MenuType;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.registries.RegistryObject;
 
 public class EIOMenus {
     private static final MenuDeferredRegister MENUS = MenuDeferredRegister.create(EnderIO.MOD_ID);
 
     // region Filters
 
-    public static final DeferredHolder<MenuType<?>, MenuType<EnderItemFilterMenu>> BASIC_ITEM_FILTER = MENUS.register("basic_item_filter",
+    public static final RegistryObject<MenuType<EnderItemFilterMenu>> BASIC_ITEM_FILTER = MENUS.register("basic_item_filter",
         EnderItemFilterItem.Type.BASIC::openMenu);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<EnderItemFilterMenu>> ADVANCED_ITEM_FILTER = MENUS.register("advanced_item_filter",
+    public static final RegistryObject<MenuType<EnderItemFilterMenu>> ADVANCED_ITEM_FILTER = MENUS.register("advanced_item_filter",
         EnderItemFilterItem.Type.ADVANCED::openMenu);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<EnderItemFilterMenu>> BIG_ITEM_FILTER = MENUS.register("big_item_filter",
+    public static final RegistryObject<MenuType<EnderItemFilterMenu>> BIG_ITEM_FILTER = MENUS.register("big_item_filter",
         EnderItemFilterItem.Type.BIG::openMenu);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<EnderItemFilterMenu>> BIG_ADVANCED_ITEM_FILTER = MENUS.register("big_advanced_item_filter",
+    public static final RegistryObject<MenuType<EnderItemFilterMenu>> BIG_ADVANCED_ITEM_FILTER = MENUS.register("big_advanced_item_filter",
         EnderItemFilterItem.Type.BIG_ADVANCED::openMenu);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<LimitedItemFilterMenu>> LIMITED_ITEM_FILTER = MENUS.register("limited_item_filter",
+    public static final RegistryObject<MenuType<LimitedItemFilterMenu>> LIMITED_ITEM_FILTER = MENUS.register("limited_item_filter",
         LimitedItemFilterItem::openMenuClient);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<EnderFluidFilterMenu>> BASIC_FLUID_FILTER = MENUS.register("basic_fluid_filter",
+    public static final RegistryObject<MenuType<EnderFluidFilterMenu>> BASIC_FLUID_FILTER = MENUS.register("basic_fluid_filter",
         EnderFluidFilterItem.Type.BASIC::openMenu);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<EnderSoulFilterMenu>> BASIC_SOUL_FILTER = MENUS.register("basic_soul_filter",
+    public static final RegistryObject<MenuType<EnderSoulFilterMenu>> BASIC_SOUL_FILTER = MENUS.register("basic_soul_filter",
         EnderSoulFilterItem.Type.BASIC::openMenu);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<RedstoneDoubleChannelFilterMenu>> REDSTONE_DOUBLE_CHANNEL_FILTER = MENUS.register(
+    public static final RegistryObject<MenuType<RedstoneDoubleChannelFilterMenu>> REDSTONE_DOUBLE_CHANNEL_FILTER = MENUS.register(
         "redstone_and_filter", RedstoneDoubleChannelFilterMenu::factory);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<RedstoneTimerFilterMenu>> REDSTONE_TIMER_FILTER = MENUS.register("redstone_timer_filter",
+    public static final RegistryObject<MenuType<RedstoneTimerFilterMenu>> REDSTONE_TIMER_FILTER = MENUS.register("redstone_timer_filter",
         RedstoneTimerFilterMenu::factory);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<RedstoneCountFilterMenu>> REDSTONE_COUNT_FILTER = MENUS.register("redstone_count_filter",
+    public static final RegistryObject<MenuType<RedstoneCountFilterMenu>> REDSTONE_COUNT_FILTER = MENUS.register("redstone_count_filter",
         RedstoneCountFilterMenu::factory);
 
     // endregion
 
     // region Machines
 
-    public static final DeferredHolder<MenuType<?>, MenuType<AlloySmelterMenu>> ALLOY_SMELTER = MENUS.register("alloy_smelter", AlloySmelterMenu::new);
+    public static final RegistryObject<MenuType<AlloySmelterMenu>> ALLOY_SMELTER = MENUS.register("alloy_smelter", AlloySmelterMenu::new);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<SagMillMenu>> SAG_MILL = MENUS.register("sag_mill", SagMillMenu::new);
+    public static final RegistryObject<MenuType<SagMillMenu>> SAG_MILL = MENUS.register("sag_mill", SagMillMenu::new);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<StirlingGeneratorMenu>> STIRLING_GENERATOR = MENUS.register("stirling_generator",
+    public static final RegistryObject<MenuType<StirlingGeneratorMenu>> STIRLING_GENERATOR = MENUS.register("stirling_generator",
         StirlingGeneratorMenu::new);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<SlicerMenu>> SLICE_N_SPLICE = MENUS.register("slice_n_splice", SlicerMenu::new);
+    public static final RegistryObject<MenuType<SlicerMenu>> SLICE_N_SPLICE = MENUS.register("slice_n_splice", SlicerMenu::new);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<ImpulseHopperMenu>> IMPULSE_HOPPER = MENUS.register("impulse_hopper", ImpulseHopperMenu::new);
+    public static final RegistryObject<MenuType<ImpulseHopperMenu>> IMPULSE_HOPPER = MENUS.register("impulse_hopper", ImpulseHopperMenu::new);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<SoulBinderMenu>> SOUL_BINDER = MENUS.register("soul_binder", SoulBinderMenu::new);
+    public static final RegistryObject<MenuType<SoulBinderMenu>> SOUL_BINDER = MENUS.register("soul_binder", SoulBinderMenu::new);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<PoweredSpawnerMenu>> POWERED_SPAWNER = MENUS.register("powered_spawner", PoweredSpawnerMenu::new);
+    public static final RegistryObject<MenuType<PoweredSpawnerMenu>> POWERED_SPAWNER = MENUS.register("powered_spawner", PoweredSpawnerMenu::new);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<VacuumChestMenu>> VACUUM_CHEST = MENUS.register("vacuum_chest", VacuumChestMenu::new);
+    public static final RegistryObject<MenuType<VacuumChestMenu>> VACUUM_CHEST = MENUS.register("vacuum_chest", VacuumChestMenu::new);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<XPVacuumMenu>> XP_VACUUM = MENUS.register("xp_vacuum", XPVacuumMenu::new);
+    public static final RegistryObject<MenuType<XPVacuumMenu>> XP_VACUUM = MENUS.register("xp_vacuum", XPVacuumMenu::new);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<CrafterMenu>> CRAFTER = MENUS.register("crafter", CrafterMenu::new);
+    public static final RegistryObject<MenuType<CrafterMenu>> CRAFTER = MENUS.register("crafter", CrafterMenu::new);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<DrainMenu>> DRAIN = MENUS.register("drain", DrainMenu::new);
+    public static final RegistryObject<MenuType<DrainMenu>> DRAIN = MENUS.register("drain", DrainMenu::new);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<NiardMenu>> NIARD = MENUS.register("niard", NiardMenu::new);
+    public static final RegistryObject<MenuType<NiardMenu>> NIARD = MENUS.register("niard", NiardMenu::new);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<WiredChargerMenu>> WIRED_CHARGER = MENUS.register("wired_charger", WiredChargerMenu::new);
+    public static final RegistryObject<MenuType<WiredChargerMenu>> WIRED_CHARGER = MENUS.register("wired_charger", WiredChargerMenu::new);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<WirelessChargerMenu>> WIRELESS_CHARGER = MENUS.register("wireless_charger",
+    public static final RegistryObject<MenuType<WirelessChargerMenu>> WIRELESS_CHARGER = MENUS.register("wireless_charger",
         WirelessChargerMenu::new);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<PaintingMachineMenu>> PAINTING_MACHINE = MENUS.register("painting_machine",
+    public static final RegistryObject<MenuType<PaintingMachineMenu>> PAINTING_MACHINE = MENUS.register("painting_machine",
         PaintingMachineMenu::new);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<SoulEngineMenu>> SOUL_ENGINE = MENUS.register("soul_engine", SoulEngineMenu::new);
+    public static final RegistryObject<MenuType<SoulEngineMenu>> SOUL_ENGINE = MENUS.register("soul_engine", SoulEngineMenu::new);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<TravelAnchorMenu>> TRAVEL_ANCHOR = MENUS.register("travel_anchor", TravelAnchorMenu::new);
+    public static final RegistryObject<MenuType<TravelAnchorMenu>> TRAVEL_ANCHOR = MENUS.register("travel_anchor", TravelAnchorMenu::new);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<XPObeliskMenu>> XP_OBELISK = MENUS.register("xp_obelisk", XPObeliskMenu::new);
+    public static final RegistryObject<MenuType<XPObeliskMenu>> XP_OBELISK = MENUS.register("xp_obelisk", XPObeliskMenu::new);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<FarmingStationMenu>> FARMING_STATION = MENUS.register("farming_station", FarmingStationMenu::new);
+    public static final RegistryObject<MenuType<FarmingStationMenu>> FARMING_STATION = MENUS.register("farming_station", FarmingStationMenu::new);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<InhibitorObeliskMenu>> INHIBITOR_OBELISK = MENUS.register("inhibitor_obelisk",
+    public static final RegistryObject<MenuType<InhibitorObeliskMenu>> INHIBITOR_OBELISK = MENUS.register("inhibitor_obelisk",
         InhibitorObeliskMenu::new);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<AversionObeliskMenu>> AVERSION_OBELISK = MENUS.register("aversion_obelisk",
+    public static final RegistryObject<MenuType<AversionObeliskMenu>> AVERSION_OBELISK = MENUS.register("aversion_obelisk",
         AversionObeliskMenu::new);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<RelocatorObeliskMenu>> RELOCATOR_OBELISK = MENUS.register("relocator_obelisk",
+    public static final RegistryObject<MenuType<RelocatorObeliskMenu>> RELOCATOR_OBELISK = MENUS.register("relocator_obelisk",
         RelocatorObeliskMenu::new);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<AttractorObeliskMenu>> ATTRACTOR_OBELISK = MENUS.register("attractor_obelisk",
+    public static final RegistryObject<MenuType<AttractorObeliskMenu>> ATTRACTOR_OBELISK = MENUS.register("attractor_obelisk",
         AttractorObeliskMenu::new);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<WeatherObeliskMenu>> WEATHER_OBELISK = MENUS.register("weather_obelisk", WeatherObeliskMenu::new);
+    public static final RegistryObject<MenuType<WeatherObeliskMenu>> WEATHER_OBELISK = MENUS.register("weather_obelisk", WeatherObeliskMenu::new);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<VatMenu>> VAT = MENUS.register("vat", VatMenu::new);
+    public static final RegistryObject<MenuType<VatMenu>> VAT = MENUS.register("vat", VatMenu::new);
 
     // endregion
 
     // region Storage
 
-    public static final DeferredHolder<MenuType<?>, MenuType<CapacitorBankMenu>> CAPACITOR_BANK = MENUS.register("capacitor_bank", CapacitorBankMenu::factory);
+    public static final RegistryObject<MenuType<CapacitorBankMenu>> CAPACITOR_BANK = MENUS.register("capacitor_bank", CapacitorBankMenu::factory);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<FluidTankMenu>> FLUID_TANK = MENUS.register("fluid_tank", FluidTankMenu::new);
+    public static final RegistryObject<MenuType<FluidTankMenu>> FLUID_TANK = MENUS.register("fluid_tank", FluidTankMenu::new);
 
     // endregion
 
-    public static final DeferredHolder<MenuType<?>, MenuType<CoordinateMenu>> COORDINATE = MENUS.register("coordinate", CoordinateMenu::factory);
+    public static final RegistryObject<MenuType<CoordinateMenu>> COORDINATE = MENUS.register("coordinate", CoordinateMenu::factory);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<ConduitMenu>> CONDUIT_MENU = MENUS.register("conduit", ConduitMenu::new);
+    public static final RegistryObject<MenuType<ConduitMenu>> CONDUIT_MENU = MENUS.register("conduit", ConduitMenu::new);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<EnchanterMenu>> ENCHANTER = MENUS.register("enchanter", EnchanterMenu::new);
+    public static final RegistryObject<MenuType<EnchanterMenu>> ENCHANTER = MENUS.register("enchanter", EnchanterMenu::new);
 
     public static void register(IEventBus eventBus) {
         MENUS.register(eventBus);

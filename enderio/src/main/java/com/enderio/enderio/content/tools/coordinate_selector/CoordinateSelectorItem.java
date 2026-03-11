@@ -75,7 +75,7 @@ public class CoordinateSelectorItem extends Item {
     private static void openMenu(ServerPlayer player, Level level, BlockPos pos) {
         CoordinateSelection selection = new CoordinateSelection(level, pos);
 
-        player.openMenu(new MenuProvider() {
+        NetworkHooks.openScreen(player, new MenuProvider() {
             @Override
             public Component getDisplayName() {
                 return Component.literal("");

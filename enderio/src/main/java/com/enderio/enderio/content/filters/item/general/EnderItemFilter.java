@@ -8,11 +8,11 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -34,7 +34,7 @@ public record EnderItemFilter(NonNullList<ItemStack> matches, boolean isDenyList
                             .forGetter(EnderItemFilter::damageFilterMode))
             .apply(componentInstance, EnderItemFilter::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, EnderItemFilter> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, EnderItemFilter> STREAM_CODEC = StreamCodec.composite(
             ItemStack.OPTIONAL_STREAM_CODEC.apply(ByteBufCodecs.list(256)), EnderItemFilter::matches,
             ByteBufCodecs.BOOL, EnderItemFilter::isDenyList, ByteBufCodecs.BOOL,
             EnderItemFilter::shouldCompareComponents, DamageFilterMode.STREAM_CODEC, EnderItemFilter::damageFilterMode,

@@ -1,7 +1,7 @@
 package com.enderio.enderio.foundation.attachment;
 
 import com.enderio.enderio.api.UseOnly;
-import net.neoforged.fml.LogicalSide;
+import net.minecraftforge.fml.LogicalSide;
 
 public interface RangedActor {
 

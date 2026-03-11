@@ -163,7 +163,7 @@ public abstract class LegacyMachineMenu<T extends LegacyMachineBlockEntity> exte
                     if (!(slot instanceof MachineSlot machineSlot) || machineSlot.canQuickInsertStack()) {
 
                         ItemStack itemstack = slot.getItem();
-                        if (!itemstack.isEmpty() && ItemStack.isSameItemSameComponents(stack, itemstack)) {
+                        if (!itemstack.isEmpty() && ItemStack.isSameItemSameTags(stack, itemstack)) {
                             int j = itemstack.getCount() + stack.getCount();
                             int maxSize = Math.min(slot.getMaxStackSize(), stack.getMaxStackSize());
                             if (j <= maxSize) {
@@ -234,13 +234,13 @@ public abstract class LegacyMachineMenu<T extends LegacyMachineBlockEntity> exte
 
     // Overrides the swapping behaviour. Required for ghost slots to prevent duping
     @Override
-    public void doClick(int slotId, int button, ClickType clickType, Player player) {
+    public void clicked(int slotId, int button, ClickType clickType, Player player) {
         if (slotId >= 0 && this.slots.get(slotId) instanceof GhostMachineSlot ghostSlot) {
             if (clickType == ClickType.PICKUP) {
                 ItemStack slotItem = ghostSlot.getItem();
                 ItemStack carriedItem = this.getCarried();
                 if (!slotItem.isEmpty() && !carriedItem.isEmpty() && ghostSlot.mayPlace(carriedItem)) {
-                    if (!ItemStack.isSameItemSameComponents(slotItem, carriedItem)) {
+                    if (!ItemStack.isSameItemSameTags(slotItem, carriedItem)) {
                         int count = Math.min(carriedItem.getCount(), ghostSlot.getMaxStackSize(carriedItem));
                         ghostSlot.setByPlayer(carriedItem.copyWithCount(count));
                         ghostSlot.setChanged();
@@ -251,6 +251,6 @@ public abstract class LegacyMachineMenu<T extends LegacyMachineBlockEntity> exte
                 return;
             }
         }
-        super.doClick(slotId, button, clickType, player);
+        super.clicked(slotId, button, clickType, player);
     }
 }

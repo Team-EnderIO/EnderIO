@@ -29,7 +29,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.util.Lazy;
+import net.minecraftforge.common.util.Lazy;
 import org.joml.Math;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;

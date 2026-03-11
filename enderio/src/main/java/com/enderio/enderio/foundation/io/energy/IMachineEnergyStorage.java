@@ -2,7 +2,7 @@ package com.enderio.enderio.foundation.io.energy;
 
 import com.enderio.enderio.api.io.IOConfigurable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
-import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.minecraftforge.energy.IEnergyStorage;
 
 /**
  * Machine energy storage extensions.

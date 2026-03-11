@@ -3,10 +3,10 @@ package com.enderio.modded_conduits.client;
 import com.enderio.modded_conduits.client.modules.mekanism.MekanismClientModule;
 import com.enderio.modded_conduits.common.ModdedConduits;
 import com.enderio.modded_conduits.common.ModuleModIds;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModList;
-import net.neoforged.fml.common.Mod;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.common.Mod;
 
 import java.util.Map;
 import java.util.function.Supplier;

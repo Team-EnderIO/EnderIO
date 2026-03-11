@@ -9,7 +9,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.material.Fluid;
@@ -30,7 +30,7 @@ public class LegacyFluidConduitData implements ConduitData<LegacyFluidConduitDat
                                             .forGetter(i -> i.lockedFluid))
                             .apply(instance, LegacyFluidConduitData::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, LegacyFluidConduitData> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, LegacyFluidConduitData> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.BOOL, i -> i.shouldReset, ByteBufCodecs.registry(Registries.FLUID), i -> i.lockedFluid,
             LegacyFluidConduitData::new);
 

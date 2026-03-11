@@ -9,7 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.ItemLike;
-import net.neoforged.neoforge.common.conditions.ICondition;
+import net.minecraftforge.common.crafting.conditions.ICondition;
 import org.jetbrains.annotations.Nullable;
 
 public class ShapedEntityStorageRecipeBuilder extends ShapedRecipeBuilder {

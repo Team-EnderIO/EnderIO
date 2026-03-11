@@ -8,9 +8,9 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.neoforged.neoforge.common.util.INBTSerializable;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -258,12 +258,12 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
     }
 
     @Override
-    public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
+    public CompoundTag serializeNBT() {
         ListTag nbtTagList = new ListTag();
         for (int i = 0; i < getTanks(); i++) {
             CompoundTag tankTag = new CompoundTag();
             tankTag.putInt(TANK_INDEX, i);
-            tankTag.put(TANK_CONTENTS, stacks.get(i).saveOptional(lookupProvider));
+            tankTag.put(TANK_CONTENTS, stacks.get(i).saveOptional());
             nbtTagList.add(tankTag);
         }
         CompoundTag nbt = new CompoundTag();
@@ -272,12 +272,12 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
     }
 
     @Override
-    public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
+    public void deserializeNBT(CompoundTag nbt) {
         ListTag tagList = nbt.getList(CoreNBTKeys.TANKS, Tag.TAG_COMPOUND);
         for (int i = 0; i < tagList.size(); i++) {
             CompoundTag tankTag = tagList.getCompound(i);
             int index = tankTag.getInt(TANK_INDEX);
-            stacks.set(index, FluidStack.parseOptional(lookupProvider, tankTag.getCompound(TANK_CONTENTS)));
+            stacks.set(index, FluidStack.parseOptional(tankTag.getCompound(TANK_CONTENTS)));
         }
     }
 

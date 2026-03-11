@@ -24,9 +24,9 @@ import com.enderio.enderio.content.conduits.type.redstone.RedstoneConduitTicker;
 import com.enderio.enderio.content.conduits.type.redstone.RedstoneConduit;
 import com.enderio.enderio.content.conduits.type.redstone.RedstoneConduitConnectionConfig;
 import com.enderio.enderio.content.conduits.type.redstone.RedstoneConduitNetworkContext;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
 
@@ -37,7 +37,7 @@ public class EIOConduitTypes {
     public static final Supplier<ConduitType<EnergyConduit, EnergyConduitConnectionConfig>> ENERGY = CONDUIT_TYPES.register("energy",
         () -> ConduitType
             .builder(EnergyConduit.CODEC, EnergyConduitConnectionConfig.TYPE)
-            .exposeCapability(Capabilities.EnergyStorage.BLOCK)
+            .exposeCapability(ForgeCapabilities.ENERGY)
             .doesRequireNetworkCaches()
             .connectionComparator((a, b) -> Integer.compare(
                 b.connectionConfig(EnergyConduitConnectionConfig.TYPE).priority(),

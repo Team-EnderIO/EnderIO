@@ -6,7 +6,7 @@ import com.enderio.enderio.foundation.menu.MachineMenu;
 import com.enderio.enderio.foundation.menu.MachineSlot;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOMenus;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 
 public class FluidTankMenu extends MachineMenu<FluidTankBlockEntity> {
@@ -21,7 +21,7 @@ public class FluidTankMenu extends MachineMenu<FluidTankBlockEntity> {
                 FluidStorageSyncSlot.readOnly(() -> FluidStorageInfo.of(blockEntity.getFluidTank())));
     }
 
-    public FluidTankMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
+    public FluidTankMenu(int containerId, Inventory playerInventory, FriendlyByteBuf buf) {
         super(EIOMenus.FLUID_TANK.get(), containerId, playerInventory, buf, EIOBlockEntities.FLUID_TANK.get(),
                 EIOBlockEntities.PRESSURIZED_FLUID_TANK.get());
         addSlots();

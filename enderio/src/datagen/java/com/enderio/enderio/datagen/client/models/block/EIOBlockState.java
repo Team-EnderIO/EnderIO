@@ -2,7 +2,7 @@ package com.enderio.enderio.datagen.client.models.block;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
+import net.minecraftforge.client.model.generators.BlockStateProvider;
 import org.jetbrains.annotations.Nullable;
 
 public class EIOBlockState {

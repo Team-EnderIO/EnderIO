@@ -7,7 +7,7 @@ import com.enderio.enderio.init.EIOConduitTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.DyeColor;
@@ -30,7 +30,7 @@ public class LegacyRedstoneConduitData implements ConduitData<LegacyRedstoneCond
                                             .forGetter(i -> i.activeColors))
                             .apply(instance, LegacyRedstoneConduitData::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, LegacyRedstoneConduitData> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, LegacyRedstoneConduitData> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.BOOL, r -> r.isActive,
             ByteBufCodecs.map(HashMap::new, DyeColor.STREAM_CODEC, ByteBufCodecs.INT), r -> r.activeColors,
             LegacyRedstoneConduitData::new);

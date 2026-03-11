@@ -6,7 +6,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.material.Fluids;
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidStack;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

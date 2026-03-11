@@ -11,7 +11,7 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -120,7 +120,7 @@ public abstract class AbstractFilterMenu<T> extends BaseEnderMenu {
     }
 
     @Override
-    public void doClick(int slotId, int button, ClickType clickType, Player player) {
+    public void clicked(int slotId, int button, ClickType clickType, Player player) {
         if (slotId >= 0 && slotId < slots.size() && getSlot(slotId) instanceof FilterSlot<?> filterSlot) {
             // Only allow PICKUP (click) or QUICK_MOVE (shift + click) events.
             if (clickType != ClickType.PICKUP && clickType != ClickType.QUICK_MOVE) {
@@ -133,7 +133,7 @@ public abstract class AbstractFilterMenu<T> extends BaseEnderMenu {
             }
         }
 
-        super.doClick(slotId, button, clickType, player);
+        super.clicked(slotId, button, clickType, player);
     }
 
     public sealed interface FilterAccess {

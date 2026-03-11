@@ -119,7 +119,7 @@ public class LimitedItemFilterMenu extends AbstractFilterMenu<LimitedItemFilter>
     }
 
     @Override
-    public void doClick(int slotId, int button, ClickType clickType, Player player) {
+    public void clicked(int slotId, int button, ClickType clickType, Player player) {
         if (slotId >= 0 && slotId < slots.size() && getSlot(slotId) instanceof LimitedItemFilterSlot limitedSlot) {
             if (clickType != ClickType.PICKUP && clickType != ClickType.QUICK_MOVE) {
                 return;
@@ -136,7 +136,7 @@ public class LimitedItemFilterMenu extends AbstractFilterMenu<LimitedItemFilter>
             }
         }
 
-        super.doClick(slotId, button, clickType, player);
+        super.clicked(slotId, button, clickType, player);
     }
 
     @Override

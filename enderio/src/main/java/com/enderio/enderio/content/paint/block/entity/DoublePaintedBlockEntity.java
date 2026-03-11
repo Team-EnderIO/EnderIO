@@ -11,8 +11,8 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.model.data.ModelData;
-import net.neoforged.neoforge.client.model.data.ModelProperty;
+import net.minecraftforge.client.model.data.ModelData;
+import net.minecraftforge.client.model.data.ModelProperty;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -54,9 +54,9 @@ public class DoublePaintedBlockEntity extends SinglePaintedBlockEntity {
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookupProvider) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         Block oldPaint = getSecondaryPaint().orElse(null);
-        super.onDataPacket(net, pkt, lookupProvider);
+        super.onDataPacket(net, pkt);
 
         if (oldPaint != paint2) {
             requestModelDataUpdate();

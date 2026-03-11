@@ -78,25 +78,6 @@ public class MachineBlock<T extends MachineBlockEntity> extends EIOEntityBlock<T
     }
 
     @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player,
-            BlockHitResult hitResult) {
-
-        // Attempt to open machine menu.
-        if (canOpenMenu()) {
-//            var menuProvider = this.getMenuProvider(state, level, pos);
-            if (level.getBlockEntity(pos) instanceof MenuProvider menuProvider) {
-                if (player instanceof ServerPlayer serverPlayer) {
-                    serverPlayer.openMenu(menuProvider, pos);
-                }
-
-                return InteractionResult.sidedSuccess(level.isClientSide());
-            }
-        }
-
-        return super.useWithoutItem(state, level, pos, player, hitResult);
-    }
-
-    @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer,
             ItemStack stack) {
         super.setPlacedBy(level, pos, state, placer, stack);
@@ -106,25 +87,37 @@ public class MachineBlock<T extends MachineBlockEntity> extends EIOEntityBlock<T
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
         BlockHitResult hitResult) {
-        if (!player.getAbilities().instabuild) {
-            return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
-        }
-
-        SoulBindable soulBindable = level.getCapability(EnderIOCapabilities.SOUL_BINDABLE_BLOCK, pos);
-        if (soulBindable != null && soulBindable.canBind()) {
-            SoulHandler soulHandler = stack.getCapability(EnderIOCapabilities.SOUL_HANDLER_ITEM);
-            if (soulHandler != null) {
-                for (int i = 0; i < soulHandler.getSlots(); i++) {
-                    Soul soul = soulHandler.getSoulInSlot(i);
-                    if (soulBindable.isSoulValid(soul)) {
-                        soulBindable.bindSoul(soul.copy());
-                        return ItemInteractionResult.SUCCESS;
+        // Soul binding logic (creative mode only)
+        if (player.getAbilities().instabuild) {
+            ItemStack stack = player.getItemInHand(hand);
+            SoulBindable soulBindable = level.getCapability(EnderIOCapabilities.SOUL_BINDABLE_BLOCK, pos);
+            if (soulBindable != null && soulBindable.canBind()) {
+                SoulHandler soulHandler = stack.getCapability(EnderIOCapabilities.SOUL_HANDLER_ITEM);
+                if (soulHandler != null) {
+                    for (int i = 0; i < soulHandler.getSlots(); i++) {
+                        Soul soul = soulHandler.getSoulInSlot(i);
+                        if (soulBindable.isSoulValid(soul)) {
+                            soulBindable.bindSoul(soul.copy());
+                            return InteractionResult.SUCCESS;
+                        }
                     }
                 }
             }
         }
-        return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
+
+        // Attempt to open machine menu.
+        if (canOpenMenu()) {
+            if (level.getBlockEntity(pos) instanceof MenuProvider menuProvider) {
+                if (player instanceof ServerPlayer serverPlayer) {
+                    NetworkHooks.openScreen(serverPlayer, menuProvider, pos);
+                }
+
+                return InteractionResult.sidedSuccess(level.isClientSide());
+            }
+        }
+
+        return super.use(state, level, pos, player, hand, hitResult);
     }
 }

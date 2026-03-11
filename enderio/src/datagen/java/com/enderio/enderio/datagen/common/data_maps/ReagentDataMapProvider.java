@@ -6,7 +6,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.neoforged.neoforge.common.data.DataMapProvider;
+import net.minecraftforge.common.data.DataMapProvider;
 
 import java.util.HashMap;
 import java.util.Map;

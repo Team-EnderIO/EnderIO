@@ -9,9 +9,8 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
-import net.neoforged.neoforge.common.crafting.SizedIngredient;
+import net.minecraftforge.common.crafting.SizedIngredient;
 
 import java.util.List;
 import java.util.Objects;
@@ -25,7 +24,7 @@ public class EnderIOJEIRecipes {
         this.recipeManager = Objects.requireNonNull(level).getRecipeManager();
     }
 
-    public List<RecipeHolder<FireCraftingRecipe>> getAllFireCraftingRecipes() {
+    public List<FireCraftingRecipe> getAllFireCraftingRecipes() {
         return recipeManager.getAllRecipesFor(EIORecipes.FIRE_CRAFTING.type().get()).stream().toList();
     }
 

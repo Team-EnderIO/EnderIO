@@ -7,10 +7,10 @@ import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOMenus;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.component.DataComponentType;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraft.world.item.ItemStack;
 
 public class LimitedItemFilterItem extends AbstractFilterItem<LimitedItemFilter> {
@@ -41,7 +41,7 @@ public class LimitedItemFilterItem extends AbstractFilterItem<LimitedItemFilter>
 
     @EnsureSide(EnsureSide.Side.CLIENT)
     public static LimitedItemFilterMenu openMenuClient(int containerId, Inventory playerInventory,
-            RegistryFriendlyByteBuf buf) {
+            FriendlyByteBuf buf) {
         return new LimitedItemFilterMenu(EIOMenus.LIMITED_ITEM_FILTER.get(), containerId, playerInventory);
     }
 }

@@ -15,8 +15,8 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
-import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.common.crafting.SizedIngredient;
+import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.crafting.SizedIngredient;
 
 public class EnchanterRecipeProvider extends SubRecipeProvider {
 

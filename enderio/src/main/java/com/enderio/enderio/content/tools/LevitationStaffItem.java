@@ -11,15 +11,15 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.capabilities.ICapabilityProvider;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 public class LevitationStaffItem extends PoweredToggledItem {
 
-    public static final ICapabilityProvider<ItemStack, Void, IFluidHandlerItem> FLUID_HANDLER_PROVIDER = (stack,
+    public static final ICapabilityProvider FLUID_HANDLER_PROVIDER = (stack,
             v) -> new StrictFluidHandlerItemStack(() -> EIODataComponents.ITEM_FLUID_CONTENT, stack, 1000,
                     EIOTags.Fluids.STAFF_OF_LEVITY_FUEL);
 
@@ -43,7 +43,7 @@ public class LevitationStaffItem extends PoweredToggledItem {
             return false;
         }
 
-        var fluidHandler = stack.getCapability(Capabilities.FluidHandler.ITEM);
+        var fluidHandler = stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
         if (fluidHandler != null) {
             // TODO: Config for consumption amount
             return !fluidHandler.drain(1, IFluidHandler.FluidAction.SIMULATE).isEmpty();
@@ -56,7 +56,7 @@ public class LevitationStaffItem extends PoweredToggledItem {
     protected void consumeCharge(ItemStack stack) {
         super.consumeCharge(stack);
 
-        var fluidHandler = stack.getCapability(Capabilities.FluidHandler.ITEM);
+        var fluidHandler = stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
         if (fluidHandler != null) {
             // TODO: Config for consumption amount
             fluidHandler.drain(1, IFluidHandler.FluidAction.EXECUTE);
@@ -67,7 +67,7 @@ public class LevitationStaffItem extends PoweredToggledItem {
     protected void setFullCharge(ItemStack stack) {
         super.setFullCharge(stack);
 
-        var fluidHandler = stack.getCapability(Capabilities.FluidHandler.ITEM);
+        var fluidHandler = stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
         if (fluidHandler != null) {
             if (fluidHandler instanceof StrictFluidHandlerItemStack strictFluidHandlerItemStack) {
                 strictFluidHandlerItemStack.setFluid(

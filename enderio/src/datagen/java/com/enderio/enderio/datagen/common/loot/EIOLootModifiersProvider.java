@@ -11,9 +11,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.storage.loot.predicates.AnyOfCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
-import net.neoforged.neoforge.common.loot.AddTableLootModifier;
-import net.neoforged.neoforge.common.loot.LootTableIdCondition;
+import net.minecraftforge.common.data.GlobalLootModifierProvider;
+import net.minecraftforge.common.loot.AddTableLootModifier;
+import net.minecraftforge.common.loot.LootTableIdCondition;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;

@@ -5,11 +5,11 @@ import com.enderio.enderio.api.filter.FluidFilter;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -29,7 +29,7 @@ public record EnderFluidFilter(NonNullList<FluidStack> matches, boolean isDenyLi
             .apply(inst, EnderFluidFilter::new));
 
     // @formatter:off
-    public static final StreamCodec<RegistryFriendlyByteBuf, EnderFluidFilter> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, EnderFluidFilter> STREAM_CODEC = StreamCodec.composite(
         FluidStack.OPTIONAL_STREAM_CODEC.apply(ByteBufCodecs.list(256)),
         EnderFluidFilter::matches,
         ByteBufCodecs.BOOL,

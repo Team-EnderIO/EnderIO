@@ -101,16 +101,16 @@ public record IOConfig(Map<Direction, IOMode> modes) {
         return h;
     }
 
-    public Tag save(HolderLookup.Provider lookupProvider) {
-        return CODEC.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), this).getOrThrow();
+    public Tag save() {
+        return CODEC.encodeStart(NbtOps.INSTANCE, this).getOrThrow();
     }
 
-    public static Optional<IOConfig> parse(HolderLookup.Provider lookupProvider, Tag tag) {
-        return CODEC.parse(lookupProvider.createSerializationContext(NbtOps.INSTANCE), tag)
+    public static Optional<IOConfig> parse(Tag tag) {
+        return CODEC.parse(NbtOps.INSTANCE, tag)
                 .resultOrPartial(error -> LOGGER.error("Tried to load invalid IOConfig: '{}'", error));
     }
 
-    public static IOConfig parseOptional(HolderLookup.Provider lookupProvider, CompoundTag tag) {
-        return tag.isEmpty() ? empty() : parse(lookupProvider, tag).orElse(empty());
+    public static IOConfig parseOptional(CompoundTag tag) {
+        return tag.isEmpty() ? empty() : parse(tag).orElse(empty());
     }
 }

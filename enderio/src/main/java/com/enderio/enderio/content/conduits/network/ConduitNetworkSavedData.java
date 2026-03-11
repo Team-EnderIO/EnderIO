@@ -27,10 +27,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.saveddata.SavedData;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.level.ChunkEvent;
-import net.neoforged.neoforge.event.tick.LevelTickEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.event.level.ChunkEvent;
+import net.minecraftforge.event.TickEvent;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -40,7 +40,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-@EventBusSubscriber
+@Mod.EventBusSubscriber
 public class ConduitNetworkSavedData extends SavedData {
 
     public static final Codec<ConduitNetworkSavedData> CODEC = ConduitNetworkImpl.CODEC.listOf()
@@ -77,14 +77,14 @@ public class ConduitNetworkSavedData extends SavedData {
         }
     }
 
-    private static ConduitNetworkSavedData load(CompoundTag nbt, HolderLookup.Provider lookupProvider) {
+    private static ConduitNetworkSavedData load(CompoundTag nbt) {
         // TODO: 1.22 - remove support for the legacy graph format.
         if (nbt.contains(KEY_GRAPHS)) {
-            return loadLegacy(nbt, lookupProvider);
+            return loadLegacy(nbt);
         }
 
         // TODO: Are we handling partials fine here?
-        return CODEC.parse(lookupProvider.createSerializationContext(NbtOps.INSTANCE), nbt.get(KEY_NEW_DATA))
+        return CODEC.parse(NbtOps.INSTANCE, nbt.get(KEY_NEW_DATA))
                 .getPartialOrThrow();
     }
 
@@ -93,7 +93,7 @@ public class ConduitNetworkSavedData extends SavedData {
     }
 
     @Override
-    public CompoundTag save(CompoundTag compoundTag, HolderLookup.Provider provider) {
+    public CompoundTag save(CompoundTag compoundTag) {
         compoundTag.put(KEY_NEW_DATA,
                 CODEC.encodeStart(provider.createSerializationContext(NbtOps.INSTANCE), this).getOrThrow());
         return compoundTag;
@@ -101,7 +101,7 @@ public class ConduitNetworkSavedData extends SavedData {
 
     @Nullable
     public ConduitNodeImpl claimNode(Holder<Conduit<?, ?>> conduit, BlockPos pos) {
-        var conduitMap = unloadedNodes.get(conduit.value().type());
+        var conduitMap = unloadedNodes.get(conduit.type());
         if (conduitMap == null) {
             LOGGER.warn("Conduit data is missing!");
             return null;
@@ -123,7 +123,7 @@ public class ConduitNetworkSavedData extends SavedData {
     }
 
     public void returnNode(Holder<Conduit<?, ?>> conduit, BlockPos pos, ConduitNodeImpl node) {
-        unloadedNodes.computeIfAbsent(conduit.value().type(), c -> Maps.newHashMap()).put(pos, node);
+        unloadedNodes.computeIfAbsent(conduit.type(), c -> Maps.newHashMap()).put(pos, node);
     }
 
     public static void onNetworkCreated(ServerLevel level, ConduitNetworkImpl network) {
@@ -182,7 +182,7 @@ public class ConduitNetworkSavedData extends SavedData {
     }
 
     @SubscribeEvent
-    public static void onLevelTick(LevelTickEvent.Post event) {
+    public static void onLevelTick(TickEvent.LevelTickEvent event) {
         if (event.getLevel() instanceof ServerLevel serverLevel) {
             get(serverLevel).tick(serverLevel);
         }
@@ -249,7 +249,7 @@ public class ConduitNetworkSavedData extends SavedData {
 
     // TODO: Write it.
 
-    private static ConduitNetworkSavedData loadLegacy(CompoundTag nbt, HolderLookup.Provider lookupProvider) {
+    private static ConduitNetworkSavedData loadLegacy(CompoundTag nbt) {
         var savedData = new ConduitNetworkSavedData();
 
         ListTag graphsTag = nbt.getList(KEY_GRAPHS, Tag.TAG_COMPOUND);
@@ -264,7 +264,7 @@ public class ConduitNetworkSavedData extends SavedData {
 
             if (conduit.isPresent()) {
                 ListTag graphsForTypeTag = typedGraphTag.getList(KEY_GRAPHS, Tag.TAG_COMPOUND);
-                deserializeGraphs(lookupProvider, conduit.get(), graphsForTypeTag, savedData);
+                deserializeGraphs(conduit.get(), graphsForTypeTag, savedData);
             } else {
                 LOGGER.warn("Skipping graph for missing conduit: {}", conduitKey);
             }
@@ -273,7 +273,7 @@ public class ConduitNetworkSavedData extends SavedData {
         return savedData;
     }
 
-    private static void deserializeGraphs(HolderLookup.Provider lookupProvider, Holder<Conduit<?, ?>> conduit,
+    private static void deserializeGraphs(Holder<Conduit<?, ?>> conduit,
             ListTag graphs, ConduitNetworkSavedData savedData) {
         for (Tag tag1 : graphs) {
             CompoundTag graphTag = (CompoundTag) tag1;
@@ -292,7 +292,7 @@ public class ConduitNetworkSavedData extends SavedData {
             List<ConduitNodeImpl> nodes = new ArrayList<>();
             for (int i = 0; i < graphObjectsTag.size(); i++) {
                 CompoundTag nodeTag = graphObjectsTag.getCompound(i);
-                var node = ConduitNodeImpl.CODEC.decode(lookupProvider.createSerializationContext(NbtOps.INSTANCE), nodeTag)
+                var node = ConduitNodeImpl.CODEC.decode(NbtOps.INSTANCE, nodeTag)
                         .getOrThrow()
                         .getFirst();
 
@@ -311,11 +311,11 @@ public class ConduitNetworkSavedData extends SavedData {
             // Load network context
             ConduitNetworkContext<?> context = null;
             if (graphTag.contains(KEY_GRAPH_CONTEXT)) {
-                context = loadNetworkContext(lookupProvider, graphTag.getCompound(KEY_GRAPH_CONTEXT));
+                context = loadNetworkContext(graphTag.getCompound(KEY_GRAPH_CONTEXT));
             }
 
             // Create network
-            var network = new ConduitNetworkImpl(conduit.value().type(), Optional.ofNullable(context), nodes,
+            var network = new ConduitNetworkImpl(conduit.type(), Optional.ofNullable(context), nodes,
                     new Network.IndexedEdgeList(connections));
 
             // Ensure the nodes are all valid
@@ -338,8 +338,7 @@ public class ConduitNetworkSavedData extends SavedData {
     }
 
     @Nullable
-    private static ConduitNetworkContext<?> loadNetworkContext(HolderLookup.Provider lookupProvider,
-            CompoundTag contextTag) {
+    private static ConduitNetworkContext<?> loadNetworkContext(CompoundTag contextTag) {
         ResourceLocation serializerKey = new ResourceLocation(contextTag.getString("Type"));
         ConduitNetworkContextType<?> contextType = Objects.requireNonNull(
                 EnderIORegistries.CONDUIT_NETWORK_CONTEXT_TYPE.get(serializerKey),
@@ -352,7 +351,7 @@ public class ConduitNetworkSavedData extends SavedData {
         // TODO: We're using getOrThrow a lot for conduits. Should definitely make more
         // robust/flexible.
         CompoundTag data = contextTag.getCompound("Data");
-        var ops = lookupProvider.createSerializationContext(NbtOps.INSTANCE);
+        var ops = NbtOps.INSTANCE;
         return contextType.codec().decode(ops, ops.getMap(data).getOrThrow()).getOrThrow();
     }
 

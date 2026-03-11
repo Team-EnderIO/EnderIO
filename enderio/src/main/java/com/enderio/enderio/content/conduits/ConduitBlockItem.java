@@ -69,9 +69,8 @@ public class ConduitBlockItem extends BlockItem implements ICustomCreativeTabEnt
         if (!blockState.canBeReplaced()) {
             // noinspection DataFlowIssue
             return blockState
-                    .useItemOn(context.getItemInHand(), level, player, context.getHand(),
-                            context.getHitResult().withPosition(blockpos))
-                    .result();
+                    .use(level, blockpos, player, context.getHand(),
+                            context.getHitResult().withPosition(blockpos));
         }
 
         return super.place(context);

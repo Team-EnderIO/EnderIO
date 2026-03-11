@@ -5,13 +5,13 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.SectionPos;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.event.TickEvent;
 
 // TODO: In future, support hiding specific conduit types too.
-@EventBusSubscriber(value = Dist.CLIENT)
+@Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class ClientFacadeVisibility {
 
     private static boolean FACADES_VISIBLE = true;
@@ -22,7 +22,7 @@ public class ClientFacadeVisibility {
     }
 
     @SubscribeEvent
-    public static void onTick(PlayerTickEvent.Pre event) {
+    public static void onTick(TickEvent.PlayerTickEvent event) {
         // Update every tick on the client.
 
         if (Minecraft.getInstance() == null || Minecraft.getInstance().level == null) {

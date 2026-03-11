@@ -6,7 +6,7 @@ import com.enderio.enderio.foundation.menu.PoweredMachineMenu;
 import com.enderio.enderio.foundation.menu.PreviewMachineSlot;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOMenus;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 
 public class CrafterMenu extends PoweredMachineMenu<CrafterBlockEntity> {
@@ -20,7 +20,7 @@ public class CrafterMenu extends PoweredMachineMenu<CrafterBlockEntity> {
         addSlots();
     }
 
-    public CrafterMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
+    public CrafterMenu(int containerId, Inventory playerInventory, FriendlyByteBuf buf) {
         super(EIOMenus.CRAFTER.get(), containerId, playerInventory, buf, EIOBlockEntities.CRAFTER.get());
         addSlots();
     }

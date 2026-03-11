@@ -7,8 +7,8 @@ import com.enderio.modded_conduits.client.modules.mekanism.screens.ChemicalCondu
 import com.enderio.modded_conduits.client.modules.mekanism.screens.EnderChemicalFilterScreen;
 import com.enderio.modded_conduits.client.modules.mekanism.screens.HeatConduitScreenType;
 import com.enderio.modded_conduits.common.modules.mekanism.MekanismModule;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.client.event.RegisterMenuScreensEvent;
 
 public class MekanismClientModule implements ConduitClientModule {
 

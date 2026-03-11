@@ -32,8 +32,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.DyeColor;
-import net.neoforged.neoforge.common.data.LanguageProvider;
-import net.neoforged.neoforge.fluids.FluidType;
+import net.minecraftforge.common.data.LanguageProvider;
+import net.minecraftforge.fluids.FluidType;
 
 import java.util.Locale;
 

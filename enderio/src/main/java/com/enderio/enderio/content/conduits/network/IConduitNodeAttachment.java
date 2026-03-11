@@ -8,8 +8,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.capabilities.BlockCapability;
-import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.minecraftforge.common.capabilities.BlockCapability;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.Nullable;
 
 // Interface for attaching a node to the level.

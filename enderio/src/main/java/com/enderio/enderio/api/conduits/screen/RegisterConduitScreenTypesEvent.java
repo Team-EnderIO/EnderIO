@@ -3,8 +3,8 @@ package com.enderio.enderio.api.conduits.screen;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
-import net.neoforged.bus.api.Event;
-import net.neoforged.fml.event.IModBusEvent;
+import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.fml.event.IModBusEvent;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

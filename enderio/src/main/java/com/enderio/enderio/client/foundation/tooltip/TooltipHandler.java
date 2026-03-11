@@ -18,10 +18,10 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.text.NumberFormat;
@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-@EventBusSubscriber(value = Dist.CLIENT)
+@Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class TooltipHandler {
 
     @SubscribeEvent
@@ -52,11 +52,11 @@ public class TooltipHandler {
 
     // region Configurable items (datapackable or otherwise)
 
-    private static void addCapacitorTooltips(ItemStack itemStack, List<Component> components, HolderLookup.Provider registries) {
+    private static void addCapacitorTooltips(ItemStack itemStack, List<Component> components) {
         CapacitorData capacitorData;
         var capacitorExtension = itemStack.getCapability(EnderIOCapabilities.CAPACITOR_EXTENSION);
         if (capacitorExtension != null) {
-            capacitorData = capacitorExtension.getCapacitorData(itemStack, registries);
+            capacitorData = capacitorExtension.getCapacitorData(itemStack);
         } else {
             capacitorData = itemStack.get(EIODataComponents.CAPACITOR_DATA);
         }

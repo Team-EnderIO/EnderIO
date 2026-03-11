@@ -9,17 +9,16 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FireBlock;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
-import net.neoforged.neoforge.event.level.BlockEvent;
-import net.neoforged.neoforge.event.tick.LevelTickEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.client.event.RecipesUpdatedEvent;
+import net.minecraftforge.event.level.BlockEvent;
+import net.minecraftforge.event.TickEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,12 +28,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 @SuppressWarnings("unused")
-@EventBusSubscriber
+@Mod.EventBusSubscriber
 public class FireCraftingHandler {
     private static final Random RANDOM = new Random();
     private static final ConcurrentMap<FireIndex, Long> FIRE_TRACKER = new ConcurrentHashMap<>();
 
-    private static List<RecipeHolder<FireCraftingRecipe>> cachedRecipes;
+    private static List<FireCraftingRecipe> cachedRecipes;
     private static boolean recipesCached = false;
 
     private record FireIndex(BlockPos pos, ResourceKey<Level> dimension) {
@@ -147,7 +146,7 @@ public class FireCraftingHandler {
 
     // Support worlds where firetick is disabled:
     @SubscribeEvent
-    public static void onWorldTick(LevelTickEvent.Pre event) {
+    public static void onWorldTick(TickEvent.LevelTickEvent event) {
         var level = event.getLevel();
 
         if (!FIRE_TRACKER.isEmpty() && !level.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK)) {

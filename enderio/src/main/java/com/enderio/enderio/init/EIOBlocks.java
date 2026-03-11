@@ -85,10 +85,10 @@ import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.DeferredBlock;
-import net.neoforged.neoforge.registries.DeferredItem;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.registries.DeferredRegister;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -108,16 +108,16 @@ public class EIOBlocks {
 
     // region Alloy Blocks
 
-    public static final DeferredBlock<Block> CONDUCTIVE_ALLOY_BLOCK = registerMetalBlock("conductive_alloy_block");
-    public static final DeferredBlock<Block> ENERGETIC_ALLOY_BLOCK = registerMetalBlock("energetic_alloy_block");
-    public static final DeferredBlock<Block> VIBRANT_ALLOY_BLOCK = registerMetalBlock("vibrant_alloy_block");
-    public static final DeferredBlock<Block> REDSTONE_ALLOY_BLOCK = registerMetalBlock("redstone_alloy_block");
-    public static final DeferredBlock<Block> PULSATING_ALLOY_BLOCK = registerMetalBlock("pulsating_alloy_block");
-    public static final DeferredBlock<Block> DARK_STEEL_BLOCK = registerMetalBlock("dark_steel_block");
-    public static final DeferredBlock<Block> SOULARIUM_BLOCK = registerMetalBlock("soularium_block");
-    public static final DeferredBlock<Block> END_STEEL_BLOCK = registerMetalBlock("end_steel_block");
+    public static final RegistryObject<Block> CONDUCTIVE_ALLOY_BLOCK = registerMetalBlock("conductive_alloy_block");
+    public static final RegistryObject<Block> ENERGETIC_ALLOY_BLOCK = registerMetalBlock("energetic_alloy_block");
+    public static final RegistryObject<Block> VIBRANT_ALLOY_BLOCK = registerMetalBlock("vibrant_alloy_block");
+    public static final RegistryObject<Block> REDSTONE_ALLOY_BLOCK = registerMetalBlock("redstone_alloy_block");
+    public static final RegistryObject<Block> PULSATING_ALLOY_BLOCK = registerMetalBlock("pulsating_alloy_block");
+    public static final RegistryObject<Block> DARK_STEEL_BLOCK = registerMetalBlock("dark_steel_block");
+    public static final RegistryObject<Block> SOULARIUM_BLOCK = registerMetalBlock("soularium_block");
+    public static final RegistryObject<Block> END_STEEL_BLOCK = registerMetalBlock("end_steel_block");
 
-    private static DeferredBlock<Block> registerMetalBlock(String name) {
+    private static RegistryObject<Block> registerMetalBlock(String name) {
         return registerWithItem(name, Block::new,
             BlockBehaviour.Properties.of().sound(SoundType.METAL).mapColor(MapColor.METAL).strength(5, 6).requiresCorrectToolForDrops());
     }
@@ -127,13 +127,13 @@ public class EIOBlocks {
     // region Chassis
 
     // Iron tier
-    public static final DeferredBlock<Block> VOID_CHASSIS = registerChassisBlock("void_chassis");
+    public static final RegistryObject<Block> VOID_CHASSIS = registerChassisBlock("void_chassis");
 
     // Void chassis + some kind of dragons breath derrived process
     //    public static final RegiliteBlock<Block> REKINDLED_VOID_CHASSIS = registerChassisBlock("rekindled_void_chassis");
 
     // Soularium + soul/nether
-    public static final DeferredBlock<Block> ENSOULED_CHASSIS = registerChassisBlock("ensouled_chassis");
+    public static final RegistryObject<Block> ENSOULED_CHASSIS = registerChassisBlock("ensouled_chassis");
 
     // Ensnared + Some kind of other material
     // This is for machines that require a bound soul
@@ -142,7 +142,7 @@ public class EIOBlocks {
     // Dark steel + sculk
     //    public static final RegiliteBlock<Block> SCULK_CHASSIS = registerChassisBlock("sculk_chassis");
 
-    private static DeferredBlock<Block> registerChassisBlock(String name) {
+    private static RegistryObject<Block> registerChassisBlock(String name) {
         return registerWithItem(name, Block::new, BlockBehaviour.Properties.of().noOcclusion().sound(SoundType.METAL).mapColor(MapColor.METAL).strength(5, 6));
     }
 
@@ -150,21 +150,21 @@ public class EIOBlocks {
 
     // region Dark Steel Building Blocks
 
-    public static final DeferredBlock<LadderBlock> DARK_STEEL_LADDER = registerWithItem("dark_steel_ladder", LadderBlock::new, BlockBehaviour.Properties.of().strength(0.4f).requiresCorrectToolForDrops().sound(SoundType.METAL).mapColor(MapColor.METAL).noOcclusion());
+    public static final RegistryObject<LadderBlock> DARK_STEEL_LADDER = registerWithItem("dark_steel_ladder", LadderBlock::new, BlockBehaviour.Properties.of().strength(0.4f).requiresCorrectToolForDrops().sound(SoundType.METAL).mapColor(MapColor.METAL).noOcclusion());
 
-    public static final DeferredBlock<IronBarsBlock> DARK_STEEL_BARS = registerWithItem("dark_steel_bars", IronBarsBlock::new,
+    public static final RegistryObject<IronBarsBlock> DARK_STEEL_BARS = registerWithItem("dark_steel_bars", IronBarsBlock::new,
             BlockBehaviour.Properties.of().strength(5.0f, 1000.0f).requiresCorrectToolForDrops().sound(SoundType.METAL).noOcclusion());
 
-    public static final DeferredBlock<DoorBlock> DARK_STEEL_DOOR = registerWithItem("dark_steel_door", props -> new DoorBlock(BlockSetType.IRON, props),
+    public static final RegistryObject<DoorBlock> DARK_STEEL_DOOR = registerWithItem("dark_steel_door", props -> new DoorBlock(BlockSetType.IRON, props),
             BlockBehaviour.Properties.of().strength(5.0f, 2000.0f).sound(SoundType.METAL).mapColor(MapColor.METAL).noOcclusion());
 
-    public static final DeferredBlock<TrapDoorBlock> DARK_STEEL_TRAPDOOR = registerWithItem("dark_steel_trapdoor", props -> new TrapDoorBlock(BlockSetType.IRON, props),
+    public static final RegistryObject<TrapDoorBlock> DARK_STEEL_TRAPDOOR = registerWithItem("dark_steel_trapdoor", props -> new TrapDoorBlock(BlockSetType.IRON, props),
             BlockBehaviour.Properties.of().strength(5.0f, 2000.0f).sound(SoundType.METAL).mapColor(MapColor.METAL).noOcclusion());
 
-    public static final DeferredBlock<IronBarsBlock> END_STEEL_BARS = registerWithItem("end_steel_bars", IronBarsBlock::new,
+    public static final RegistryObject<IronBarsBlock> END_STEEL_BARS = registerWithItem("end_steel_bars", IronBarsBlock::new,
             BlockBehaviour.Properties.of().strength(5.0f, 1000.0f).requiresCorrectToolForDrops().sound(SoundType.METAL).noOcclusion());
 
-    public static final DeferredBlock<ReinforcedObsidianBlock> REINFORCED_OBSIDIAN = registerWithItem("reinforced_obsidian_block", ReinforcedObsidianBlock::new,
+    public static final RegistryObject<ReinforcedObsidianBlock> REINFORCED_OBSIDIAN = registerWithItem("reinforced_obsidian_block", ReinforcedObsidianBlock::new,
             BlockBehaviour.Properties.of()
                 .sound(SoundType.STONE)
                 .strength(50, 2000)
@@ -176,21 +176,21 @@ public class EIOBlocks {
 
     // region Painted Blocks
 
-    public static Set<Pair<DeferredBlock<? extends Block>, Block>> PAINTED_BLOCKS = new HashSet<>();
+    public static Set<Pair<RegistryObject<? extends Block>, Block>> PAINTED_BLOCKS = new HashSet<>();
 
-    public static final DeferredBlock<PaintedFenceBlock> PAINTED_FENCE = registerPainted("painted_fence", PaintedFenceBlock::new, Blocks.OAK_FENCE);
-    public static final DeferredBlock<PaintedFenceGateBlock> PAINTED_FENCE_GATE = registerPainted("painted_fence_gate", PaintedFenceGateBlock::new, Blocks.OAK_FENCE_GATE);
-    public static final DeferredBlock<PaintedSandBlock> PAINTED_SAND = registerPainted("painted_sand", PaintedSandBlock::new, Blocks.SAND);
-    public static final DeferredBlock<PaintedStairBlock> PAINTED_STAIRS = registerPainted("painted_stairs", PaintedStairBlock::new, Blocks.OAK_STAIRS);
-    public static final DeferredBlock<PaintedCraftingTableBlock> PAINTED_CRAFTING_TABLE = registerPainted("painted_crafting_table", PaintedCraftingTableBlock::new, Blocks.CRAFTING_TABLE);
-    public static final DeferredBlock<PaintedRedstoneBlock> PAINTED_REDSTONE_BLOCK = registerPainted("painted_redstone_block", PaintedRedstoneBlock::new, Blocks.REDSTONE_BLOCK);
-    public static final DeferredBlock<PaintedTrapDoorBlock> PAINTED_TRAPDOOR = registerPainted("painted_trapdoor", PaintedTrapDoorBlock::new, Blocks.OAK_TRAPDOOR);
-    public static final DeferredBlock<PaintedWoodenPressurePlateBlock> PAINTED_WOODEN_PRESSURE_PLATE = registerPainted("painted_wooden_pressure_plate", PaintedWoodenPressurePlateBlock::new, Blocks.OAK_PRESSURE_PLATE);
-    public static final DeferredBlock<PaintedSlabBlock> PAINTED_SLAB = registerPainted("painted_slab", PaintedSlabBlock::new, Blocks.OAK_SLAB);
-    public static final DeferredBlock<SinglePaintedBlock> PAINTED_GLOWSTONE = registerPainted("painted_glowstone", SinglePaintedBlock::new, Blocks.GLOWSTONE);
-    public static final DeferredBlock<PaintedWallBlock> PAINTED_WALL = registerPainted("painted_wall", PaintedWallBlock::new, Blocks.COBBLESTONE_WALL);
+    public static final RegistryObject<PaintedFenceBlock> PAINTED_FENCE = registerPainted("painted_fence", PaintedFenceBlock::new, Blocks.OAK_FENCE);
+    public static final RegistryObject<PaintedFenceGateBlock> PAINTED_FENCE_GATE = registerPainted("painted_fence_gate", PaintedFenceGateBlock::new, Blocks.OAK_FENCE_GATE);
+    public static final RegistryObject<PaintedSandBlock> PAINTED_SAND = registerPainted("painted_sand", PaintedSandBlock::new, Blocks.SAND);
+    public static final RegistryObject<PaintedStairBlock> PAINTED_STAIRS = registerPainted("painted_stairs", PaintedStairBlock::new, Blocks.OAK_STAIRS);
+    public static final RegistryObject<PaintedCraftingTableBlock> PAINTED_CRAFTING_TABLE = registerPainted("painted_crafting_table", PaintedCraftingTableBlock::new, Blocks.CRAFTING_TABLE);
+    public static final RegistryObject<PaintedRedstoneBlock> PAINTED_REDSTONE_BLOCK = registerPainted("painted_redstone_block", PaintedRedstoneBlock::new, Blocks.REDSTONE_BLOCK);
+    public static final RegistryObject<PaintedTrapDoorBlock> PAINTED_TRAPDOOR = registerPainted("painted_trapdoor", PaintedTrapDoorBlock::new, Blocks.OAK_TRAPDOOR);
+    public static final RegistryObject<PaintedWoodenPressurePlateBlock> PAINTED_WOODEN_PRESSURE_PLATE = registerPainted("painted_wooden_pressure_plate", PaintedWoodenPressurePlateBlock::new, Blocks.OAK_PRESSURE_PLATE);
+    public static final RegistryObject<PaintedSlabBlock> PAINTED_SLAB = registerPainted("painted_slab", PaintedSlabBlock::new, Blocks.OAK_SLAB);
+    public static final RegistryObject<SinglePaintedBlock> PAINTED_GLOWSTONE = registerPainted("painted_glowstone", SinglePaintedBlock::new, Blocks.GLOWSTONE);
+    public static final RegistryObject<PaintedWallBlock> PAINTED_WALL = registerPainted("painted_wall", PaintedWallBlock::new, Blocks.COBBLESTONE_WALL);
 
-    private static <B extends Block> DeferredBlock<B> registerPainted(String name, Function<BlockBehaviour.Properties, B> factory, Block reference) {
+    private static <B extends Block> RegistryObject<B> registerPainted(String name, Function<BlockBehaviour.Properties, B> factory, Block reference) {
         var blockHolder = registerWithItem(name, factory, BlockBehaviour.Properties.ofFullCopy(reference).noOcclusion());
         PAINTED_BLOCKS.add(Pair.of(blockHolder, reference));
         return blockHolder;
@@ -200,20 +200,20 @@ public class EIOBlocks {
 
     // region Resetting Levers
 
-    public static final Set<DeferredBlock<ResettingLeverBlock>> RESETTING_LEVERS = new HashSet<>();
+    public static final Set<RegistryObject<ResettingLeverBlock>> RESETTING_LEVERS = new HashSet<>();
 
-    public static final DeferredBlock<ResettingLeverBlock> RESETTING_LEVER_FIVE = registerResettingLever("resetting_lever_five", 5, false);
-    public static final DeferredBlock<ResettingLeverBlock> RESETTING_LEVER_FIVE_INV = registerResettingLever("resetting_lever_five_inv", 5, true);
-    public static final DeferredBlock<ResettingLeverBlock> RESETTING_LEVER_TEN = registerResettingLever("resetting_lever_ten", 10, false);
-    public static final DeferredBlock<ResettingLeverBlock> RESETTING_LEVER_TEN_INV = registerResettingLever("resetting_lever_ten_inv", 10, true);
-    public static final DeferredBlock<ResettingLeverBlock> RESETTING_LEVER_THIRTY = registerResettingLever("resetting_lever_thirty", 30, false);
-    public static final DeferredBlock<ResettingLeverBlock> RESETTING_LEVER_THIRTY_INV = registerResettingLever("resetting_lever_thirty_inv", 30, true);
-    public static final DeferredBlock<ResettingLeverBlock> RESETTING_LEVER_SIXTY = registerResettingLever("resetting_lever_sixty", 60, false);
-    public static final DeferredBlock<ResettingLeverBlock> RESETTING_LEVER_SIXTY_INV = registerResettingLever("resetting_lever_sixty_inv", 60, true);
-    public static final DeferredBlock<ResettingLeverBlock> RESETTING_LEVER_THREE_HUNDRED = registerResettingLever("resetting_lever_three_hundred", 300, false);
-    public static final DeferredBlock<ResettingLeverBlock> RESETTING_LEVER_THREE_HUNDRED_INV = registerResettingLever("resetting_lever_three_hundred_inv", 300, true);
+    public static final RegistryObject<ResettingLeverBlock> RESETTING_LEVER_FIVE = registerResettingLever("resetting_lever_five", 5, false);
+    public static final RegistryObject<ResettingLeverBlock> RESETTING_LEVER_FIVE_INV = registerResettingLever("resetting_lever_five_inv", 5, true);
+    public static final RegistryObject<ResettingLeverBlock> RESETTING_LEVER_TEN = registerResettingLever("resetting_lever_ten", 10, false);
+    public static final RegistryObject<ResettingLeverBlock> RESETTING_LEVER_TEN_INV = registerResettingLever("resetting_lever_ten_inv", 10, true);
+    public static final RegistryObject<ResettingLeverBlock> RESETTING_LEVER_THIRTY = registerResettingLever("resetting_lever_thirty", 30, false);
+    public static final RegistryObject<ResettingLeverBlock> RESETTING_LEVER_THIRTY_INV = registerResettingLever("resetting_lever_thirty_inv", 30, true);
+    public static final RegistryObject<ResettingLeverBlock> RESETTING_LEVER_SIXTY = registerResettingLever("resetting_lever_sixty", 60, false);
+    public static final RegistryObject<ResettingLeverBlock> RESETTING_LEVER_SIXTY_INV = registerResettingLever("resetting_lever_sixty_inv", 60, true);
+    public static final RegistryObject<ResettingLeverBlock> RESETTING_LEVER_THREE_HUNDRED = registerResettingLever("resetting_lever_three_hundred", 300, false);
+    public static final RegistryObject<ResettingLeverBlock> RESETTING_LEVER_THREE_HUNDRED_INV = registerResettingLever("resetting_lever_three_hundred_inv", 300, true);
 
-    private static DeferredBlock<ResettingLeverBlock> registerResettingLever(String name, int delay, boolean inverted) {
+    private static RegistryObject<ResettingLeverBlock> registerResettingLever(String name, int delay, boolean inverted) {
         var blockHolder = registerWithItem(name, p -> new ResettingLeverBlock(delay, inverted), BlockBehaviour.Properties.of());
         RESETTING_LEVERS.add(blockHolder);
         return blockHolder;
@@ -223,64 +223,64 @@ public class EIOBlocks {
 
     // region Pressure Plates
 
-    public static final DeferredBlock<EIOPressurePlateBlock> DARK_STEEL_PRESSURE_PLATE = registerWithItem("dark_steel_pressure_plate",
+    public static final RegistryObject<EIOPressurePlateBlock> DARK_STEEL_PRESSURE_PLATE = registerWithItem("dark_steel_pressure_plate",
         props -> new EIOPressurePlateBlock(props, EIOPressurePlateBlock.PLAYER, false),
         BlockBehaviour.Properties.of().strength(5, 6).mapColor(MapColor.METAL));
 
-    public static final DeferredBlock<EIOPressurePlateBlock> SILENT_DARK_STEEL_PRESSURE_PLATE = registerWithItem("silent_dark_steel_pressure_plate",
+    public static final RegistryObject<EIOPressurePlateBlock> SILENT_DARK_STEEL_PRESSURE_PLATE = registerWithItem("silent_dark_steel_pressure_plate",
         props -> new EIOPressurePlateBlock(props, EIOPressurePlateBlock.PLAYER, true),
         BlockBehaviour.Properties.of().strength(5, 6).mapColor(MapColor.METAL));
 
-    public static final DeferredBlock<EIOPressurePlateBlock> SOULARIUM_PRESSURE_PLATE = registerWithItem("soularium_pressure_plate",
+    public static final RegistryObject<EIOPressurePlateBlock> SOULARIUM_PRESSURE_PLATE = registerWithItem("soularium_pressure_plate",
         props -> new EIOPressurePlateBlock(props, EIOPressurePlateBlock.HOSTILE_MOB, false),
         BlockBehaviour.Properties.of().strength(5, 6).mapColor(MapColor.METAL));
 
-    public static final DeferredBlock<EIOPressurePlateBlock> SILENT_SOULARIUM_PRESSURE_PLATE = registerWithItem("silent_soularium_pressure_plate",
+    public static final RegistryObject<EIOPressurePlateBlock> SILENT_SOULARIUM_PRESSURE_PLATE = registerWithItem("silent_soularium_pressure_plate",
         props -> new EIOPressurePlateBlock(props, EIOPressurePlateBlock.HOSTILE_MOB, true),
         BlockBehaviour.Properties.of().strength(5, 6).mapColor(MapColor.METAL));
 
-    public static final DeferredBlock<SilentPressurePlateBlock> SILENT_OAK_PRESSURE_PLATE = silentPressurePlateBlock(
+    public static final RegistryObject<SilentPressurePlateBlock> SILENT_OAK_PRESSURE_PLATE = silentPressurePlateBlock(
         (PressurePlateBlock) Blocks.OAK_PRESSURE_PLATE);
 
-    public static final DeferredBlock<SilentPressurePlateBlock> SILENT_ACACIA_PRESSURE_PLATE = silentPressurePlateBlock(
+    public static final RegistryObject<SilentPressurePlateBlock> SILENT_ACACIA_PRESSURE_PLATE = silentPressurePlateBlock(
         (PressurePlateBlock) Blocks.ACACIA_PRESSURE_PLATE);
 
-    public static final DeferredBlock<SilentPressurePlateBlock> SILENT_DARK_OAK_PRESSURE_PLATE = silentPressurePlateBlock(
+    public static final RegistryObject<SilentPressurePlateBlock> SILENT_DARK_OAK_PRESSURE_PLATE = silentPressurePlateBlock(
         (PressurePlateBlock) Blocks.DARK_OAK_PRESSURE_PLATE);
 
-    public static final DeferredBlock<SilentPressurePlateBlock> SILENT_SPRUCE_PRESSURE_PLATE = silentPressurePlateBlock(
+    public static final RegistryObject<SilentPressurePlateBlock> SILENT_SPRUCE_PRESSURE_PLATE = silentPressurePlateBlock(
         (PressurePlateBlock) Blocks.SPRUCE_PRESSURE_PLATE);
 
-    public static final DeferredBlock<SilentPressurePlateBlock> SILENT_BIRCH_PRESSURE_PLATE = silentPressurePlateBlock(
+    public static final RegistryObject<SilentPressurePlateBlock> SILENT_BIRCH_PRESSURE_PLATE = silentPressurePlateBlock(
         (PressurePlateBlock) Blocks.BIRCH_PRESSURE_PLATE);
 
-    public static final DeferredBlock<SilentPressurePlateBlock> SILENT_JUNGLE_PRESSURE_PLATE = silentPressurePlateBlock(
+    public static final RegistryObject<SilentPressurePlateBlock> SILENT_JUNGLE_PRESSURE_PLATE = silentPressurePlateBlock(
         (PressurePlateBlock) Blocks.JUNGLE_PRESSURE_PLATE);
 
-    public static final DeferredBlock<SilentPressurePlateBlock> SILENT_CRIMSON_PRESSURE_PLATE = silentPressurePlateBlock(
+    public static final RegistryObject<SilentPressurePlateBlock> SILENT_CRIMSON_PRESSURE_PLATE = silentPressurePlateBlock(
         (PressurePlateBlock) Blocks.CRIMSON_PRESSURE_PLATE);
 
-    public static final DeferredBlock<SilentPressurePlateBlock> SILENT_WARPED_PRESSURE_PLATE = silentPressurePlateBlock(
+    public static final RegistryObject<SilentPressurePlateBlock> SILENT_WARPED_PRESSURE_PLATE = silentPressurePlateBlock(
         (PressurePlateBlock) Blocks.WARPED_PRESSURE_PLATE);
 
-    public static final DeferredBlock<SilentPressurePlateBlock> SILENT_STONE_PRESSURE_PLATE = silentPressurePlateBlock(
+    public static final RegistryObject<SilentPressurePlateBlock> SILENT_STONE_PRESSURE_PLATE = silentPressurePlateBlock(
         (PressurePlateBlock) Blocks.STONE_PRESSURE_PLATE);
 
-    public static final DeferredBlock<SilentPressurePlateBlock> SILENT_POLISHED_BLACKSTONE_PRESSURE_PLATE = silentPressurePlateBlock(
+    public static final RegistryObject<SilentPressurePlateBlock> SILENT_POLISHED_BLACKSTONE_PRESSURE_PLATE = silentPressurePlateBlock(
         (PressurePlateBlock) Blocks.POLISHED_BLACKSTONE_PRESSURE_PLATE);
 
-    public static final DeferredBlock<SilentWeightedPressurePlateBlock> SILENT_HEAVY_WEIGHTED_PRESSURE_PLATE = silentWeightedPressurePlateBlock(
+    public static final RegistryObject<SilentWeightedPressurePlateBlock> SILENT_HEAVY_WEIGHTED_PRESSURE_PLATE = silentWeightedPressurePlateBlock(
         (WeightedPressurePlateBlock) Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE);
 
-    public static final DeferredBlock<SilentWeightedPressurePlateBlock> SILENT_LIGHT_WEIGHTED_PRESSURE_PLATE = silentWeightedPressurePlateBlock(
+    public static final RegistryObject<SilentWeightedPressurePlateBlock> SILENT_LIGHT_WEIGHTED_PRESSURE_PLATE = silentWeightedPressurePlateBlock(
         (WeightedPressurePlateBlock) Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE);
 
-    private static DeferredBlock<SilentPressurePlateBlock> silentPressurePlateBlock(final PressurePlateBlock block) {
+    private static RegistryObject<SilentPressurePlateBlock> silentPressurePlateBlock(final PressurePlateBlock block) {
         ResourceLocation upModelLoc = Objects.requireNonNull(BuiltInRegistries.BLOCK.getKey(block));
         return registerWithItem("silent_" + upModelLoc.getPath(), props -> new SilentPressurePlateBlock(block), BlockBehaviour.Properties.of());
     }
 
-    private static DeferredBlock<SilentWeightedPressurePlateBlock> silentWeightedPressurePlateBlock(WeightedPressurePlateBlock block) {
+    private static RegistryObject<SilentWeightedPressurePlateBlock> silentWeightedPressurePlateBlock(WeightedPressurePlateBlock block) {
         ResourceLocation upModelLoc = Objects.requireNonNull(BuiltInRegistries.BLOCK.getKey(block));
         return registerWithItem("silent_" + upModelLoc.getPath(), props -> new SilentWeightedPressurePlateBlock(block), BlockBehaviour.Properties.of());
     }
@@ -290,7 +290,7 @@ public class EIOBlocks {
     // region Miscellaneous
 
     // Note: Due to the unique nature of the conduit bundle, all block items are registered in EIOItems instead.
-    public static final DeferredBlock<ConduitBundleBlock> CONDUIT_BUNDLE = BLOCKS.registerBlock("conduit",
+    public static final RegistryObject<ConduitBundleBlock> CONDUIT_BUNDLE = BLOCKS.registerBlock("conduit",
         ConduitBundleBlock::new, BlockBehaviour.Properties.of()
             .strength(1.5f, 10)
             .noLootTable()
@@ -298,7 +298,7 @@ public class EIOBlocks {
             .dynamicShape()
             .mapColor(MapColor.STONE));
 
-    public static final DeferredBlock<ChainBlock> SOUL_CHAIN = registerWithItem("soul_chain", ChainBlock::new,
+    public static final RegistryObject<ChainBlock> SOUL_CHAIN = registerWithItem("soul_chain", ChainBlock::new,
         BlockBehaviour.Properties.of()
             .requiresCorrectToolForDrops()
             .strength(5.0F, 6.0F)
@@ -306,16 +306,16 @@ public class EIOBlocks {
             .noOcclusion()
             .mapColor(MapColor.NONE));
 
-    public static final DeferredBlock<ColdFireBlock> COLD_FIRE = BLOCKS
+    public static final RegistryObject<ColdFireBlock> COLD_FIRE = BLOCKS
         .registerBlock("cold_fire", ColdFireBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.FIRE).noLootTable());
 
-    public static final DeferredBlock<EnderSkullBlock> ENDERMAN_HEAD = registerWithItem("enderman_head", EnderSkullBlock::new,
+    public static final RegistryObject<EnderSkullBlock> ENDERMAN_HEAD = registerWithItem("enderman_head", EnderSkullBlock::new,
             BlockBehaviour.Properties.ofFullCopy(Blocks.SKELETON_SKULL).instrument(NoteBlockInstrument.SKELETON).strength(1.0F).pushReaction(PushReaction.DESTROY));
 
-    public static final DeferredBlock<WallEnderSkullBlock> WALL_ENDERMAN_HEAD = BLOCKS.registerBlock("wall_enderman_head", WallEnderSkullBlock::new,
+    public static final RegistryObject<WallEnderSkullBlock> WALL_ENDERMAN_HEAD = BLOCKS.registerBlock("wall_enderman_head", WallEnderSkullBlock::new,
         BlockBehaviour.Properties.ofFullCopy(Blocks.SKELETON_SKULL).strength(1.0F).lootFrom(ENDERMAN_HEAD).pushReaction(PushReaction.DESTROY));
 
-    public static final DeferredBlock<IndustrialInsulationBlock> INDUSTRIAL_INSULATION = registerWithItem("industrial_insulation",
+    public static final RegistryObject<IndustrialInsulationBlock> INDUSTRIAL_INSULATION = registerWithItem("industrial_insulation",
         IndustrialInsulationBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.SPONGE));
 
     // endregion
@@ -323,14 +323,14 @@ public class EIOBlocks {
     // region Machine Blocks
 
     // Fluid Tanks
-    public static final DeferredBlock<FluidTankBlock> FLUID_TANK = BLOCKS.registerBlock("fluid_tank",
+    public static final RegistryObject<FluidTankBlock> FLUID_TANK = BLOCKS.registerBlock("fluid_tank",
         props -> new FluidTankBlock(EIOBlockEntities.FLUID_TANK::get, props),
         BlockBehaviour.Properties.of()
             .strength(2.5f, 8)
             .isViewBlocking((state, level, pos) -> false)
             .noOcclusion());
 
-    public static final DeferredBlock<FluidTankBlock> PRESSURIZED_FLUID_TANK = BLOCKS.registerBlock("pressurized_fluid_tank",
+    public static final RegistryObject<FluidTankBlock> PRESSURIZED_FLUID_TANK = BLOCKS.registerBlock("pressurized_fluid_tank",
         props -> new FluidTankBlock(EIOBlockEntities.PRESSURIZED_FLUID_TANK::get, props),
         BlockBehaviour.Properties.of()
             .strength(2.5f, 8)
@@ -338,14 +338,14 @@ public class EIOBlocks {
             .noOcclusion());
 
     // Enchanter
-    public static final DeferredBlock<EnchanterBlock> ENCHANTER = registerWithItem("enchanter", EnchanterBlock::new,
+    public static final RegistryObject<EnchanterBlock> ENCHANTER = registerWithItem("enchanter", EnchanterBlock::new,
         BlockBehaviour.Properties.of()
             .strength(2.5f, 8)
             .noOcclusion()
             .isViewBlocking((state, level, pos) -> false));
 
     // Enderface
-    public static final DeferredBlock<EnderfaceBlock> ENDERFACE = registerWithItem("enderface", EnderfaceBlock::new,
+    public static final RegistryObject<EnderfaceBlock> ENDERFACE = registerWithItem("enderface", EnderfaceBlock::new,
         BlockBehaviour.Properties.of()
             .strength(2.5f, 8)
             .noOcclusion()
@@ -353,49 +353,49 @@ public class EIOBlocks {
             .requiredFeatures(EIOFeatureFlags.ENDERFACE));
 
     // Progress Machines
-    public static final DeferredBlock<ProgressMachineBlock<?>> ALLOY_SMELTER = progressMachine("alloy_smelter",
+    public static final RegistryObject<ProgressMachineBlock<?>> ALLOY_SMELTER = progressMachine("alloy_smelter",
         () -> EIOBlockEntities.ALLOY_SMELTER::get);
 
-    public static final DeferredBlock<ProgressMachineBlock<?>> PAINTING_MACHINE = progressMachine("painting_machine",
+    public static final RegistryObject<ProgressMachineBlock<?>> PAINTING_MACHINE = progressMachine("painting_machine",
         () -> EIOBlockEntities.PAINTING_MACHINE::get);
 
-    public static final DeferredBlock<ProgressMachineBlock<?>> WIRELESS_CHARGER = progressMachine("wireless_charger",
+    public static final RegistryObject<ProgressMachineBlock<?>> WIRELESS_CHARGER = progressMachine("wireless_charger",
         () -> EIOBlockEntities.WIRELESS_CHARGER::get);
 
-    public static final DeferredBlock<ProgressMachineBlock<?>> STIRLING_GENERATOR = progressMachine("stirling_generator",
+    public static final RegistryObject<ProgressMachineBlock<?>> STIRLING_GENERATOR = progressMachine("stirling_generator",
         () -> EIOBlockEntities.STIRLING_GENERATOR::get);
 
-    public static final DeferredBlock<ProgressMachineBlock<?>> SAG_MILL = progressMachine("sag_mill",
+    public static final RegistryObject<ProgressMachineBlock<?>> SAG_MILL = progressMachine("sag_mill",
         () -> EIOBlockEntities.SAG_MILL::get);
 
-    public static final DeferredBlock<ProgressMachineBlock<?>> SLICE_AND_SPLICE = progressMachine("slice_and_splice",
+    public static final RegistryObject<ProgressMachineBlock<?>> SLICE_AND_SPLICE = progressMachine("slice_and_splice",
         () -> EIOBlockEntities.SLICE_AND_SPLICE::get);
 
-    public static final DeferredBlock<ProgressMachineBlock<?>> IMPULSE_HOPPER = progressMachine("impulse_hopper",
+    public static final RegistryObject<ProgressMachineBlock<?>> IMPULSE_HOPPER = progressMachine("impulse_hopper",
         () -> EIOBlockEntities.IMPULSE_HOPPER::get);
 
-    public static final DeferredBlock<ProgressMachineBlock<?>> SOUL_BINDER = progressMachine("soul_binder",
+    public static final RegistryObject<ProgressMachineBlock<?>> SOUL_BINDER = progressMachine("soul_binder",
         () -> EIOBlockEntities.SOUL_BINDER::get);
 
-    public static final DeferredBlock<ProgressMachineBlock<?>> CRAFTER = progressMachine("crafter",
+    public static final RegistryObject<ProgressMachineBlock<?>> CRAFTER = progressMachine("crafter",
         () -> EIOBlockEntities.CRAFTER::get);
 
-    public static final DeferredBlock<ProgressMachineBlock<?>> DRAIN = progressMachine("drain",
+    public static final RegistryObject<ProgressMachineBlock<?>> DRAIN = progressMachine("drain",
         () -> EIOBlockEntities.DRAIN::get);
 
     // Machines
-    public static final DeferredBlock<MachineBlock<?>> WIRED_CHARGER = machine("wired_charger",
+    public static final RegistryObject<MachineBlock<?>> WIRED_CHARGER = machine("wired_charger",
         () -> EIOBlockEntities.WIRED_CHARGER::get);
 
     // Wireless Antennas
-    public static final DeferredBlock<WirelessAntennaBlock> WIRELESS_CHARGER_ANTENNA = registerWithItem("wireless_charger_antenna",
+    public static final RegistryObject<WirelessAntennaBlock> WIRELESS_CHARGER_ANTENNA = registerWithItem("wireless_charger_antenna",
         WirelessAntennaBlock::new,
         BlockBehaviour.Properties.of()
             .strength(2.5f, 8)
             .isViewBlocking((state, level, pos) -> false)
             .noOcclusion());
 
-    public static final DeferredBlock<WirelessAntennaBlock> WIRELESS_CHARGER_ANTENNA_ADVANCED = registerWithItem("wireless_charger_antenna_advanced",
+    public static final RegistryObject<WirelessAntennaBlock> WIRELESS_CHARGER_ANTENNA_ADVANCED = registerWithItem("wireless_charger_antenna_advanced",
         WirelessAntennaBlock::new,
         BlockBehaviour.Properties.of()
             .strength(2.5f, 8)
@@ -403,44 +403,44 @@ public class EIOBlocks {
             .noOcclusion());
 
     // Creative Power
-    public static final DeferredBlock<LegacyMachineBlock> CREATIVE_POWER = registerWithItem("creative_power",
+    public static final RegistryObject<LegacyMachineBlock> CREATIVE_POWER = registerWithItem("creative_power",
         props -> new LegacyMachineBlock(EIOBlockEntities.CREATIVE_POWER::get, props),
         BlockBehaviour.Properties.of());
 
     // Powered Spawner
-    public static final DeferredBlock<ProgressMachineBlock<PoweredSpawnerBlockEntity>> POWERED_SPAWNER = BLOCKS.registerBlock("powered_spawner",
+    public static final RegistryObject<ProgressMachineBlock<PoweredSpawnerBlockEntity>> POWERED_SPAWNER = BLOCKS.registerBlock("powered_spawner",
         properties -> new ProgressMachineBlock<>(EIOBlockEntities.POWERED_SPAWNER::get, properties),
         BlockBehaviour.Properties.of().strength(2.5f, 8));
 
     // Mind Killer
-    public static final DeferredBlock<MindKillerBlock> MIND_KILLER = registerWithItem("mind_killer", MindKillerBlock::new,
+    public static final RegistryObject<MindKillerBlock> MIND_KILLER = registerWithItem("mind_killer", MindKillerBlock::new,
         BlockBehaviour.Properties.of()
             .strength(2.5f, 8)
             .isViewBlocking((state, level, pos) -> false)
             .noOcclusion());
 
     // Vacuum Machines
-    public static final DeferredBlock<MachineBlock<VacuumChestBlockEntity>> VACUUM_CHEST = registerWithItem("vacuum_chest",
+    public static final RegistryObject<MachineBlock<VacuumChestBlockEntity>> VACUUM_CHEST = registerWithItem("vacuum_chest",
         p -> new MachineBlock<>(EIOBlockEntities.VACUUM_CHEST::get, p),
         BlockBehaviour.Properties.of().strength(2.5f, 8).noOcclusion());
 
-    public static final DeferredBlock<MachineBlock<XPVacuumBlockEntity>> XP_VACUUM = registerWithItem("xp_vacuum",
+    public static final RegistryObject<MachineBlock<XPVacuumBlockEntity>> XP_VACUUM = registerWithItem("xp_vacuum",
         p -> new MachineBlock<>(EIOBlockEntities.XP_VACUUM::get, p),
         BlockBehaviour.Properties.of().strength(2.5f, 8).noOcclusion());
 
     // Travel Anchors
-    public static final DeferredBlock<TravelAnchorBlock<TravelAnchorBlockEntity>> TRAVEL_ANCHOR = registerWithItem("travel_anchor",
+    public static final RegistryObject<TravelAnchorBlock<TravelAnchorBlockEntity>> TRAVEL_ANCHOR = registerWithItem("travel_anchor",
         props -> new TravelAnchorBlock<>(EIOBlockEntities.TRAVEL_ANCHOR::get, props),
         BlockBehaviour.Properties.of().strength(2.5f, 8).noOcclusion());
 
-    public static final DeferredBlock<PaintedTravelAnchorBlock> PAINTED_TRAVEL_ANCHOR = registerWithItem("painted_travel_anchor",
+    public static final RegistryObject<PaintedTravelAnchorBlock> PAINTED_TRAVEL_ANCHOR = registerWithItem("painted_travel_anchor",
         PaintedTravelAnchorBlock::new,
         BlockBehaviour.Properties.of().strength(2.5f, 8).noOcclusion(),
         block -> new PaintedBlockItem(block.get(), new Item.Properties()));
 
     // Solar Panels
-    public static final Map<SolarPanelTier, DeferredBlock<SolarPanelBlock>> SOLAR_PANELS = Util.make(() -> {
-        Map<SolarPanelTier, DeferredBlock<SolarPanelBlock>> panels = new HashMap<>();
+    public static final Map<SolarPanelTier, RegistryObject<SolarPanelBlock>> SOLAR_PANELS = Util.make(() -> {
+        Map<SolarPanelTier, RegistryObject<SolarPanelBlock>> panels = new HashMap<>();
         for (SolarPanelTier tier : SolarPanelTier.values()) {
             panels.put(tier, solarPanel(tier.name().toLowerCase(Locale.ROOT) + "_photovoltaic_module",
                 () -> EIOBlockEntities.SOLAR_PANELS.get(tier)::get, tier));
@@ -449,8 +449,8 @@ public class EIOBlocks {
     });
 
     // Capacitor Banks
-    public static final Map<CapacitorTier, DeferredBlock<CapacitorBankBlock>> CAPACITOR_BANKS = Util.make(() -> {
-        Map<CapacitorTier, DeferredBlock<CapacitorBankBlock>> banks = new HashMap<>();
+    public static final Map<CapacitorTier, RegistryObject<CapacitorBankBlock>> CAPACITOR_BANKS = Util.make(() -> {
+        Map<CapacitorTier, RegistryObject<CapacitorBankBlock>> banks = new HashMap<>();
         for (CapacitorTier tier : CapacitorTier.values()) {
             banks.put(tier, capacitorBank(tier.name().toLowerCase(Locale.ROOT) + "_capacitor_bank",
                 () -> EIOBlockEntities.CAPACITOR_BANKS.get(tier)::get, tier));
@@ -459,12 +459,12 @@ public class EIOBlocks {
     });
 
     // Soul Engine
-    public static final DeferredBlock<ProgressMachineBlock<SoulEngineBlockEntity>> SOUL_ENGINE = BLOCKS.registerBlock("soul_engine",
+    public static final RegistryObject<ProgressMachineBlock<SoulEngineBlockEntity>> SOUL_ENGINE = BLOCKS.registerBlock("soul_engine",
         p -> new ProgressMachineBlock<>(EIOBlockEntities.SOUL_ENGINE::get, p),
         BlockBehaviour.Properties.of().strength(2.5f, 8).noOcclusion());
 
     // Niard
-    public static final DeferredBlock<NiardBlock> NIARD = registerWithItem("niard", NiardBlock::new,
+    public static final RegistryObject<NiardBlock> NIARD = registerWithItem("niard", NiardBlock::new,
         BlockBehaviour.Properties.of()
             .strength(2.5f, 8)
             .isViewBlocking((state, level, pos) -> false)
@@ -472,52 +472,52 @@ public class EIOBlocks {
             .requiredFeatures(EIOFeatureFlags.NIARD));
 
     // VAT
-    public static final DeferredBlock<VatBlock> VAT = registerWithItem("vat",
+    public static final RegistryObject<VatBlock> VAT = registerWithItem("vat",
         VatBlock::new,
         BlockBehaviour.Properties.of().strength(2.5f, 8));
 
     // Block Detector
-    public static final DeferredBlock<BlockDetectorBlock> BLOCK_DETECTOR = registerWithItem("block_detector",
+    public static final RegistryObject<BlockDetectorBlock> BLOCK_DETECTOR = registerWithItem("block_detector",
         BlockDetectorBlock::new,
         BlockBehaviour.Properties.ofFullCopy(Blocks.OBSERVER));
 
     // Obelisks
-    public static final DeferredBlock<MachineBlock<XPObeliskBlockEntity>> XP_OBELISK =
+    public static final RegistryObject<MachineBlock<XPObeliskBlockEntity>> XP_OBELISK =
         obelisk("xp_obelisk", () -> EIOBlockEntities.XP_OBELISK::get);
 
-    public static final DeferredBlock<FarmingStationBlock> FARMING_STATION = registerWithItem("farming_station",
+    public static final RegistryObject<FarmingStationBlock> FARMING_STATION = registerWithItem("farming_station",
         FarmingStationBlock::new,
         BlockBehaviour.Properties.of().strength(2.5f, 8));
 
-    public static final DeferredBlock<MachineBlock<InhibitorObeliskBlockEntity>> INHIBITOR_OBELISK =
+    public static final RegistryObject<MachineBlock<InhibitorObeliskBlockEntity>> INHIBITOR_OBELISK =
         obelisk("inhibitor_obelisk", () -> EIOBlockEntities.INHIBITOR_OBELISK::get);
 
-    public static final DeferredBlock<MachineBlock<AversionObeliskBlockEntity>> AVERSION_OBELISK =
+    public static final RegistryObject<MachineBlock<AversionObeliskBlockEntity>> AVERSION_OBELISK =
         obelisk("aversion_obelisk", () -> EIOBlockEntities.AVERSION_OBELISK::get);
 
-    public static final DeferredBlock<MachineBlock<RelocatorObeliskBlockEntity>> RELOCATOR_OBELISK =
+    public static final RegistryObject<MachineBlock<RelocatorObeliskBlockEntity>> RELOCATOR_OBELISK =
         obelisk("relocator_obelisk", () -> EIOBlockEntities.RELOCATOR_OBELISK::get);
 
-    public static final DeferredBlock<MachineBlock<AttractorObeliskBlockEntity>> ATTRACTOR_OBELISK =
+    public static final RegistryObject<MachineBlock<AttractorObeliskBlockEntity>> ATTRACTOR_OBELISK =
         obelisk("attractor_obelisk", () -> EIOBlockEntities.ATTRACTOR_OBELISK::get);
 
-    public static final DeferredBlock<MachineBlock<WeatherObeliskBlockEntity>> WEATHER_OBELISK =
+    public static final RegistryObject<MachineBlock<WeatherObeliskBlockEntity>> WEATHER_OBELISK =
         obelisk("weather_obelisk", () -> EIOBlockEntities.WEATHER_OBELISK::get);
 
     // Items that need capabilities (exposed as DeferredItems)
-    public static final DeferredItem<FluidTankBlockItem> FLUID_TANK_ITEM = ITEMS.register("fluid_tank",
+    public static final RegistryObject<FluidTankBlockItem> FLUID_TANK_ITEM = ITEMS.register("fluid_tank",
         () -> new FluidTankBlockItem(FLUID_TANK.get(), new Item.Properties(), 16000));
-    public static final DeferredItem<FluidTankBlockItem> PRESSURIZED_FLUID_TANK_ITEM = ITEMS.register("pressurized_fluid_tank",
+    public static final RegistryObject<FluidTankBlockItem> PRESSURIZED_FLUID_TANK_ITEM = ITEMS.register("pressurized_fluid_tank",
         () -> new FluidTankBlockItem(PRESSURIZED_FLUID_TANK.get(), new Item.Properties(), 32000));
 
-    public static final DeferredItem<BlockItem> POWERED_SPAWNER_ITEM = ITEMS.register("powered_spawner",
+    public static final RegistryObject<BlockItem> POWERED_SPAWNER_ITEM = ITEMS.register("powered_spawner",
         () -> new BlockItem(POWERED_SPAWNER.get(), new Item.Properties().component(EIODataComponents.SOUL, Soul.EMPTY)));
 
-    public static final DeferredItem<BlockItem> SOUL_ENGINE_ITEM = ITEMS.register("soul_engine",
+    public static final RegistryObject<BlockItem> SOUL_ENGINE_ITEM = ITEMS.register("soul_engine",
         () -> new BlockItem(SOUL_ENGINE.get(), new Item.Properties().component(EIODataComponents.SOUL, Soul.EMPTY)));
 
-    public static final Map<SolarPanelTier, DeferredItem<BlockItem>> SOLAR_PANEL_ITEMS = Util.make(() -> {
-        Map<SolarPanelTier, DeferredItem<BlockItem>> items = new HashMap<>();
+    public static final Map<SolarPanelTier, RegistryObject<BlockItem>> SOLAR_PANEL_ITEMS = Util.make(() -> {
+        Map<SolarPanelTier, RegistryObject<BlockItem>> items = new HashMap<>();
         for (var entry : SOLAR_PANELS.entrySet()) {
             items.put(entry.getKey(), ITEMS.register(entry.getValue().getId().getPath(),
                 () -> new BlockItem(entry.getValue().get(), new Item.Properties().component(EIODataComponents.SOUL, Soul.EMPTY))));
@@ -525,8 +525,8 @@ public class EIOBlocks {
         return ImmutableMap.copyOf(items);
     });
 
-    public static final Map<CapacitorTier, DeferredItem<CapacitorBankItem>> CAPACITOR_BANK_ITEMS = Util.make(() -> {
-        Map<CapacitorTier, DeferredItem<CapacitorBankItem>> items = new HashMap<>();
+    public static final Map<CapacitorTier, RegistryObject<CapacitorBankItem>> CAPACITOR_BANK_ITEMS = Util.make(() -> {
+        Map<CapacitorTier, RegistryObject<CapacitorBankItem>> items = new HashMap<>();
         for (var entry : CAPACITOR_BANKS.entrySet()) {
             items.put(entry.getKey(), ITEMS.register(entry.getValue().getId().getPath(),
                 () -> new CapacitorBankItem(entry.getValue().get(), new Item.Properties())));
@@ -535,21 +535,21 @@ public class EIOBlocks {
     });
 
     // Helper methods
-    private static DeferredBlock<MachineBlock<?>> machine(String name,
+    private static RegistryObject<MachineBlock<?>> machine(String name,
         Supplier<Supplier<BlockEntityType<? extends MachineBlockEntity>>> regiliteBlockEntity) {
         return registerWithItem(name,
             props -> new MachineBlock<>(regiliteBlockEntity.get(), props),
             BlockBehaviour.Properties.of().strength(2.5f, 8));
     }
 
-    private static DeferredBlock<ProgressMachineBlock<?>> progressMachine(String name,
+    private static RegistryObject<ProgressMachineBlock<?>> progressMachine(String name,
         Supplier<Supplier<BlockEntityType<? extends MachineBlockEntity>>> regiliteBlockEntity) {
         return registerWithItem(name,
             props -> new ProgressMachineBlock<>(regiliteBlockEntity.get(), props),
             BlockBehaviour.Properties.of().strength(2.5f, 8));
     }
 
-    private static <T extends MachineBlockEntity> DeferredBlock<MachineBlock<T>> obelisk(String name,
+    private static <T extends MachineBlockEntity> RegistryObject<MachineBlock<T>> obelisk(String name,
         Supplier<Supplier<BlockEntityType<T>>> blockEntityType) {
         return registerWithItem(name,
             props -> new MachineBlock<T>(blockEntityType.get()::get, props),
@@ -559,14 +559,14 @@ public class EIOBlocks {
                 .noOcclusion());
     }
 
-    private static DeferredBlock<SolarPanelBlock> solarPanel(String name,
+    private static RegistryObject<SolarPanelBlock> solarPanel(String name,
         Supplier<Supplier<BlockEntityType<? extends SolarPanelBlockEntity>>> regiliteBlockEntity, SolarPanelTier tier) {
         return BLOCKS.registerBlock(name,
             props -> new SolarPanelBlock(regiliteBlockEntity.get()::get, props, tier),
             BlockBehaviour.Properties.of().strength(2.5f, 8));
     }
 
-    private static DeferredBlock<CapacitorBankBlock> capacitorBank(String name,
+    private static RegistryObject<CapacitorBankBlock> capacitorBank(String name,
         Supplier<Supplier<BlockEntityType<? extends CapacitorBankBlockEntity>>> regiliteBlockEntity, CapacitorTier tier) {
         return BLOCKS.registerBlock(name,
             props -> new CapacitorBankBlock(props, regiliteBlockEntity.get()::get, tier),
@@ -594,13 +594,13 @@ public class EIOBlocks {
 
     // endregion
 
-    private static <B extends Block> DeferredBlock<B> registerWithItem(String name, Function<BlockBehaviour.Properties, ? extends B> func, BlockBehaviour.Properties props) {
+    private static <B extends Block> RegistryObject<B> registerWithItem(String name, Function<BlockBehaviour.Properties, ? extends B> func, BlockBehaviour.Properties props) {
         var blockHolder = BLOCKS.<B>registerBlock(name, func, props);
         ITEMS.registerSimpleBlockItem(blockHolder);
         return blockHolder;
     }
 
-    private static <B extends Block> DeferredBlock<B> registerWithItem(String name, Function<BlockBehaviour.Properties, ? extends B> func, BlockBehaviour.Properties props, Function<Supplier<B>, Item> itemFactory) {
+    private static <B extends Block> RegistryObject<B> registerWithItem(String name, Function<BlockBehaviour.Properties, ? extends B> func, BlockBehaviour.Properties props, Function<Supplier<B>, Item> itemFactory) {
         var blockHolder = BLOCKS.<B>registerBlock(name, func, props);
         ITEMS.register(name, () -> itemFactory.apply(blockHolder));
         return blockHolder;

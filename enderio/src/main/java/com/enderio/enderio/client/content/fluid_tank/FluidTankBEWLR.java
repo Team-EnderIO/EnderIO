@@ -17,10 +17,10 @@ import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 // TODO: No longer lights in the inventory/hand like other machines...
 public class FluidTankBEWLR extends BlockEntityWithoutLevelRenderer {
@@ -47,7 +47,7 @@ public class FluidTankBEWLR extends BlockEntityWithoutLevelRenderer {
                         buffer.getBuffer(RenderType.cutout()));
 
         // Read the fluid from the NBT, if it has fluid, then we render it.
-        IFluidHandlerItem fluidHandler = stack.getCapability(Capabilities.FluidHandler.ITEM);
+        IFluidHandlerItem fluidHandler = stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
         if (fluidHandler != null) {
             FluidStack fluid = fluidHandler.getFluidInTank(0); // Only one tank present
             if (!fluid.isEmpty()) {

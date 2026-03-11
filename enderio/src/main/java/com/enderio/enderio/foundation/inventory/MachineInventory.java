@@ -9,8 +9,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemContainerContents;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -143,14 +143,14 @@ public class MachineInventory extends ItemStackHandler {
     // the Size.
     // TODO: Ender IO 8 - Look at this again.
     @Override
-    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag tag) {
+    public void deserializeNBT(CompoundTag tag) {
         ListTag slotTags = tag.getList("Items", ListTag.TAG_COMPOUND);
 
         for (int i = 0; i < slotTags.size(); i++) {
             CompoundTag itemTags = slotTags.getCompound(i);
             int slot = itemTags.getInt("Slot");
             if (slot >= 0 && slot < layout.getSlotCount()) {
-                ItemStack.parse(provider, itemTags).ifPresent((stack) -> this.stacks.set(slot, stack));
+                ItemStack.parse(itemTags).ifPresent((stack) -> this.stacks.set(slot, stack));
             } else {
                 LOGGER.warn("Skipping item from slot {}, as it is outside the bounds of the inventory.", slot);
             }

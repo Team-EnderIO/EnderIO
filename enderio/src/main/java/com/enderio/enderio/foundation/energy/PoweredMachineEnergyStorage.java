@@ -9,8 +9,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.util.Mth;
-import net.neoforged.neoforge.common.util.INBTSerializable;
-import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
 public class PoweredMachineEnergyStorage implements IEnergyStorage, INBTSerializable<IntTag>, IMachineEnergyStorage {
@@ -149,12 +149,12 @@ public class PoweredMachineEnergyStorage implements IEnergyStorage, INBTSerializ
     }
 
     @Override
-    public IntTag serializeNBT(HolderLookup.Provider provider) {
+    public IntTag serializeNBT() {
         return IntTag.valueOf(energyStored);
     }
 
     @Override
-    public void deserializeNBT(HolderLookup.Provider provider, IntTag intTag) {
+    public void deserializeNBT(IntTag intTag) {
         energyStored = intTag.getAsInt();
     }
 

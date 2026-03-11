@@ -23,9 +23,9 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.capabilities.BlockCapability;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.minecraftforge.common.capabilities.BlockCapability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
@@ -63,7 +63,7 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
 
     @Override
     public boolean canConnectToBlock(Level level, BlockPos conduitPos, Direction direction) {
-        IEnergyStorage capability = level.getCapability(Capabilities.EnergyStorage.BLOCK,
+        IEnergyStorage capability = level.getCapability(ForgeCapabilities.ENERGY,
                 conduitPos.relative(direction), direction.getOpposite());
         return capability != null;
     }
@@ -77,7 +77,7 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
     public <TCap, TContext> @Nullable TCap proxyCapability(Level level, @Nullable ConduitNode node,
             BlockCapability<TCap, TContext> capability, @Nullable TContext context) {
 
-        if (Capabilities.EnergyStorage.BLOCK == capability && context instanceof Direction side) {
+        if (ForgeCapabilities.ENERGY == capability && context instanceof Direction side) {
             if (node != null) {
                 // Disabled, do not offer the capability (so if we're disconnected we allow auto connect).
                 // Note that this will introduce a minor quirk - if disabled, the cap will be invisible until re-enabled.

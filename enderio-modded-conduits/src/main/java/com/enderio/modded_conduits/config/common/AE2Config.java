@@ -1,12 +1,12 @@
 package com.enderio.modded_conduits.config.common;
 
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 public class AE2Config {
-    public final ModConfigSpec.DoubleValue NORMAL_ME_POWER_USAGE_PER_TICK;
-    public final ModConfigSpec.DoubleValue DENSE_ME_POWER_USAGE_PER_TICK;
+    public final ForgeConfigSpec.DoubleValue NORMAL_ME_POWER_USAGE_PER_TICK;
+    public final ForgeConfigSpec.DoubleValue DENSE_ME_POWER_USAGE_PER_TICK;
 
-    public AE2Config(ModConfigSpec.Builder builder) {
+    public AE2Config(ForgeConfigSpec.Builder builder) {
         builder.push("ae2");
 
         NORMAL_ME_POWER_USAGE_PER_TICK = builder

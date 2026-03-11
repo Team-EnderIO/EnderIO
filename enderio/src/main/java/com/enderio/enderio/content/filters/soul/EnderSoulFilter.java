@@ -6,7 +6,7 @@ import com.enderio.enderio.api.soul.Soul;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.EntityType;
@@ -32,7 +32,7 @@ public record EnderSoulFilter(NonNullList<Soul> matches, boolean isDenyList, boo
             .apply(componentInstance, EnderSoulFilter::new));
 
     // @formatter:off
-    public static final StreamCodec<RegistryFriendlyByteBuf, EnderSoulFilter> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, EnderSoulFilter> STREAM_CODEC = StreamCodec.composite(
         Soul.OPTIONAL_STREAM_CODEC.apply(ByteBufCodecs.list(256)),
         EnderSoulFilter::matches,
         ByteBufCodecs.BOOL,

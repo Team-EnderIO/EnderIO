@@ -5,11 +5,11 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.Container;
 
 import java.util.List;
 
-public interface MachineRecipe<T extends RecipeInput> extends Recipe<T> {
+public interface MachineRecipe<T extends Container> extends Recipe<T> {
     /**
      * Gets the basic energy cost, irrespective of machine configuration.
      */
@@ -40,7 +40,7 @@ public interface MachineRecipe<T extends RecipeInput> extends Recipe<T> {
      */
     @Deprecated
     @Override
-    default ItemStack assemble(T container, HolderLookup.Provider lookupProvider) {
+    default ItemStack assemble(T container, RegistryAccess lookupProvider) {
         return ItemStack.EMPTY;
     }
 
@@ -54,7 +54,7 @@ public interface MachineRecipe<T extends RecipeInput> extends Recipe<T> {
      */
     @Deprecated
     @Override
-    default ItemStack getResultItem(HolderLookup.Provider lookupProvider) {
+    default ItemStack getResultItem(RegistryAccess lookupProvider) {
         return ItemStack.EMPTY;
     }
 

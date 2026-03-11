@@ -41,7 +41,7 @@ public class ImpulseHopperBlockEntity extends PoweredMachineBlockEntity {
     public MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
                 .inputSlot(6,
-                        (integer, itemStack) -> ItemStack.isSameItemSameComponents(itemStack,
+                        (integer, itemStack) -> ItemStack.isSameItemSameTags(itemStack,
                                 GHOST.get(integer).getItemStack(this)))
                 .slotAccess(INPUT)
                 .outputSlot(6)
@@ -76,7 +76,7 @@ public class ImpulseHopperBlockEntity extends PoweredMachineBlockEntity {
     public boolean canPass(int slot) {
         ItemStack input = INPUT.get(slot).getItemStack(this);
         ItemStack ghost = GHOST.get(slot).getItemStack(this);
-        if (ItemStack.isSameItemSameComponents(input, ghost)) {
+        if (ItemStack.isSameItemSameTags(input, ghost)) {
             return input.getCount() >= ghost.getCount();
         }
         return false;
@@ -85,7 +85,7 @@ public class ImpulseHopperBlockEntity extends PoweredMachineBlockEntity {
     public boolean canHoldAndMerge(int slot) {
         boolean canHold = OUTPUT.get(slot).getItemStack(this).getCount()
                 + GHOST.get(slot).getItemStack(this).getCount() <= GHOST.get(slot).getItemStack(this).getMaxStackSize();
-        boolean canMerge = ItemStack.isSameItemSameComponents(INPUT.get(slot).getItemStack(this),
+        boolean canMerge = ItemStack.isSameItemSameTags(INPUT.get(slot).getItemStack(this),
                 GHOST.get(slot).getItemStack(this));
         return canHold && canMerge;
     }

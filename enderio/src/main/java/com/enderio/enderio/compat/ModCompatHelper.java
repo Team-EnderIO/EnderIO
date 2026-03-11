@@ -1,6 +1,6 @@
 package com.enderio.enderio.compat;
 
-import net.neoforged.fml.ModList;
+import net.minecraftforge.fml.ModList;
 
 public class ModCompatHelper {
 

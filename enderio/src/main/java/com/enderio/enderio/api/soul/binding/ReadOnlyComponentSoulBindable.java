@@ -2,7 +2,7 @@ package com.enderio.enderio.api.soul.binding;
 
 import com.enderio.enderio.api.soul.Soul;
 import net.minecraft.core.component.DataComponentType;
-import net.neoforged.neoforge.common.MutableDataComponentHolder;
+import net.minecraftforge.common.MutableDataComponentHolder;
 
 public class ReadOnlyComponentSoulBindable implements SoulBindable {
 

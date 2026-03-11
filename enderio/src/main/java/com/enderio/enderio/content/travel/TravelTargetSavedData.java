@@ -16,10 +16,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.network.PacketDistributor;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -28,7 +28,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
-@EventBusSubscriber
+@Mod.EventBusSubscriber
 public class TravelTargetSavedData extends SavedData {
 
     // Even though the client doesn't need to know the data in the old dimensions,
@@ -41,8 +41,8 @@ public class TravelTargetSavedData extends SavedData {
     public TravelTargetSavedData() {
     }
 
-    public TravelTargetSavedData(CompoundTag nbt, HolderLookup.Provider lookupProvider) {
-        this.loadNBT(lookupProvider, nbt);
+    public TravelTargetSavedData(CompoundTag nbt) {
+        this.loadNBT(nbt);
     }
 
     public static TravelTargetSavedData getTravelData(Level level) {
@@ -90,29 +90,29 @@ public class TravelTargetSavedData extends SavedData {
     }
 
     @Override
-    public CompoundTag save(CompoundTag nbt, HolderLookup.Provider lookupProvider) {
+    public CompoundTag save(CompoundTag nbt) {
         ListTag tag = new ListTag();
-        tag.addAll(travelTargets.values().stream().map(target -> saveTarget(lookupProvider, target)).toList());
+        tag.addAll(travelTargets.values().stream().map(target -> saveTarget(target)).toList());
         nbt.put(TARGETS, tag);
         return nbt;
     }
 
-    private <T extends TravelTarget> Tag saveTarget(HolderLookup.Provider lookupProvider, T target) {
-        return TravelTarget.CODEC.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), target)
+    private <T extends TravelTarget> Tag saveTarget(T target) {
+        return TravelTarget.CODEC.encodeStart(NbtOps.INSTANCE, target)
                 .getOrThrow();
     }
 
-    public void loadNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
+    public void loadNBT(CompoundTag nbt) {
         this.travelTargets.clear();
         ListTag targets = nbt.getList(TARGETS, Tag.TAG_COMPOUND);
         targets.stream()
                 .map(anchorData -> (CompoundTag) anchorData)
-                .map(tag -> loadTarget(lookupProvider, tag))
+                .map(tag -> loadTarget(tag))
                 .forEach(target -> travelTargets.put(target.pos(), target));
     }
 
-    private TravelTarget loadTarget(HolderLookup.Provider lookupProvider, Tag tag) {
-        return TravelTarget.CODEC.decode(lookupProvider.createSerializationContext(NbtOps.INSTANCE), tag)
+    private TravelTarget loadTarget(Tag tag) {
+        return TravelTarget.CODEC.decode(NbtOps.INSTANCE, tag)
                 .getOrThrow()
                 .getFirst();
     }

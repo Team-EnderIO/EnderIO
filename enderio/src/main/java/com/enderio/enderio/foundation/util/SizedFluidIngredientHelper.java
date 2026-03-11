@@ -1,8 +1,8 @@
 package com.enderio.enderio.foundation.util;
 
 import com.enderio.enderio.EnderIO;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.crafting.SizedFluidIngredient;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,9 +1,9 @@
 package com.enderio.enderio.datagen.client.models.block;
 
 import com.enderio.enderio.EnderIO;
-import net.neoforged.neoforge.client.model.generators.CustomLoaderBuilder;
-import net.neoforged.neoforge.client.model.generators.ModelBuilder;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.minecraftforge.client.model.generators.CustomLoaderBuilder;
+import net.minecraftforge.client.model.generators.ModelBuilder;
+import net.minecraftforge.common.data.ExistingFileHelper;
 
 public class ConduitModelBuilder<T extends ModelBuilder<T>> extends CustomLoaderBuilder<T> {
 

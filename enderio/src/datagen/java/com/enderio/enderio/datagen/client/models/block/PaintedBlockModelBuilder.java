@@ -5,9 +5,9 @@ import com.google.gson.JsonObject;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.client.model.generators.CustomLoaderBuilder;
-import net.neoforged.neoforge.client.model.generators.ModelBuilder;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.minecraftforge.client.model.generators.CustomLoaderBuilder;
+import net.minecraftforge.client.model.generators.ModelBuilder;
+import net.minecraftforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;

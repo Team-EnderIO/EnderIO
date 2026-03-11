@@ -18,10 +18,10 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.registries.DeferredRegister;
 
 import java.util.Comparator;
 import java.util.List;
@@ -36,7 +36,7 @@ public class EIOCreativeTabs {
 
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, EnderIO.MOD_ID);
 
-    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TAB = CREATIVE_MODE_TABS.register("enderio", () ->
+    public static final RegistryObject<CreativeModeTab> TAB = CREATIVE_MODE_TABS.register("enderio", () ->
         CreativeModeTab.builder()
             .title(EIOCommonLang.CREATIVE_TAB_TITLE)
             .icon(() -> new ItemStack(EIOItems.CREATIVE_ICON.get()))

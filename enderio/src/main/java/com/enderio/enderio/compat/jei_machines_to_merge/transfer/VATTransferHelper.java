@@ -16,16 +16,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class VATTransferHelper implements IRecipeTransferHandler<VatMenu, RecipeHolder<FermentingRecipe>> {
+public class VATTransferHelper implements IRecipeTransferHandler<VatMenu, FermentingRecipe> {
 
     private final IRecipeTransferHandlerHelper handlerHelper;
 
@@ -44,19 +43,19 @@ public class VATTransferHelper implements IRecipeTransferHandler<VatMenu, Recipe
     }
 
     @Override
-    public RecipeType<RecipeHolder<FermentingRecipe>> getRecipeType() {
+    public RecipeType<FermentingRecipe> getRecipeType() {
         return VATCategory.TYPE;
     }
 
     @Override
-    public @Nullable IRecipeTransferError transferRecipe(VatMenu container, RecipeHolder<FermentingRecipe> recipe, IRecipeSlotsView recipeSlots, Player player,
+    public @Nullable IRecipeTransferError transferRecipe(VatMenu container, FermentingRecipe recipe, IRecipeSlotsView recipeSlots, Player player,
         boolean maxTransfer, boolean doTransfer) {
 
-        boolean hasFluid = recipe.value().input().ingredient().test(new FluidStack(container.getInputTank().contents().getFluid(), container.getInputTank().contents().getAmount()));
-        boolean hasLeft = container.slots.get(VatMenu.INPUTS_INDEX).getItem().is(recipe.value().firstReagent());
-        boolean hasRight = container.slots.get(VatMenu.INPUTS_INDEX + 1).getItem().is(recipe.value().secondReagent());
-        Ingredient left = getIngredientItem(player, Ingredient.of(recipe.value().firstReagent()));
-        Ingredient right = getIngredientItem(player, Ingredient.of(recipe.value().secondReagent()));
+        boolean hasFluid = recipe.input().ingredient().test(new FluidStack(container.getInputTank().contents().getFluid(), container.getInputTank().contents().getAmount()));
+        boolean hasLeft = container.slots.get(VatMenu.INPUTS_INDEX).getItem().is(recipe.firstReagent());
+        boolean hasRight = container.slots.get(VatMenu.INPUTS_INDEX + 1).getItem().is(recipe.secondReagent());
+        Ingredient left = getIngredientItem(player, Ingredient.of(recipe.firstReagent()));
+        Ingredient right = getIngredientItem(player, Ingredient.of(recipe.secondReagent()));
 
         if (!hasLeft || !hasRight || !hasFluid) {
             Component message = Component.translatable("jei.tooltip.error.recipe.transfer.missing");

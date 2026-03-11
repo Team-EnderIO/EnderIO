@@ -14,7 +14,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -29,7 +29,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipProvider;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.minecraftforge.common.capabilities.BlockCapability;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
@@ -47,7 +47,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
 
     Codec<Holder<Conduit<?, ?>>> CODEC = RegistryFixedCodec.create(EnderIORegistries.Keys.CONDUIT);
 
-    StreamCodec<RegistryFriendlyByteBuf, Holder<Conduit<?, ?>>> STREAM_CODEC = ByteBufCodecs
+    StreamCodec<FriendlyByteBuf, Holder<Conduit<?, ?>>> STREAM_CODEC = ByteBufCodecs
             .holderRegistry(EnderIORegistries.Keys.CONDUIT);
 
     /**

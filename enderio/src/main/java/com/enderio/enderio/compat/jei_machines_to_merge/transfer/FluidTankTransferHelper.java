@@ -16,15 +16,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class FluidTankTransferHelper implements IRecipeTransferHandler<FluidTankMenu, RecipeHolder<TankRecipe>> {
+public class FluidTankTransferHelper implements IRecipeTransferHandler<FluidTankMenu, TankRecipe> {
 
     private final IRecipeTransferHandlerHelper handlerHelper;
 
@@ -43,22 +42,22 @@ public class FluidTankTransferHelper implements IRecipeTransferHandler<FluidTank
     }
 
     @Override
-    public RecipeType<RecipeHolder<TankRecipe>> getRecipeType() {
+    public RecipeType<TankRecipe> getRecipeType() {
         return TankCategory.TYPE;
     }
 
     @Override
-    public @Nullable IRecipeTransferError transferRecipe(FluidTankMenu container, RecipeHolder<TankRecipe> recipe, IRecipeSlotsView recipeSlots, Player player,
+    public @Nullable IRecipeTransferError transferRecipe(FluidTankMenu container, TankRecipe recipe, IRecipeSlotsView recipeSlots, Player player,
         boolean maxTransfer, boolean doTransfer) {
 
         boolean hasFluid = true;
-        if (recipe.value().mode() == TankRecipe.Mode.FILL) {
+        if (recipe.mode() == TankRecipe.Mode.FILL) {
             // Check if the tank contains a fluid that matches the ingredient
-            hasFluid = recipe.value().fluid().test(container.getFluidTank().contents());
+            hasFluid = recipe.fluid().test(container.getFluidTank().contents());
         }
 
-        boolean hasItem = recipe.value().input().test(container.slots.get(0).getItem());
-        Ingredient item = getIngredientItem(player, recipe.value().input());
+        boolean hasItem = recipe.input().test(container.slots.get(0).getItem());
+        Ingredient item = getIngredientItem(player, recipe.input());
 
         if (!hasItem || !hasFluid) {
             Component message = Component.translatable("jei.tooltip.error.recipe.transfer.missing");
@@ -76,7 +75,7 @@ public class FluidTankTransferHelper implements IRecipeTransferHandler<FluidTank
 
         if (doTransfer) {
             List<Ingredient> toSend = NonNullList.withSize(4, Ingredient.EMPTY);
-            if (recipe.value().mode() == TankRecipe.Mode.EMPTY) {
+            if (recipe.mode() == TankRecipe.Mode.EMPTY) {
                 toSend.set(0, item);
             } else {
                 toSend.set(2, item);

@@ -44,8 +44,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.common.extensions.IOwnedSpawner;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.common.extensions.IOwnedSpawner;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -84,13 +84,13 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
             }
 
             @Override
-            protected @Nullable MachineTask loadTask(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
+            protected @Nullable MachineTask loadTask(CompoundTag nbt) {
                 var task = switch (mode) {
                 case SPAWN -> new MobSpawnTask(PoweredSpawnerBlockEntity.this);
                 case CAPTURE -> new MobCaptureTask(PoweredSpawnerBlockEntity.this);
                 };
 
-                task.deserializeNBT(lookupProvider, nbt);
+                task.deserializeNBT(nbt);
 
                 return task;
             }
@@ -137,7 +137,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
             var outputSlotStack = OUTPUT.getItemStack(this);
             if (!outputSlotStack.isEmpty()) {
                 var potentialSoulVial = SoulVialItem.forSoul(getSoulForCapture());
-                if (!ItemStack.isSameItemSameComponents(potentialSoulVial, outputSlotStack)) {
+                if (!ItemStack.isSameItemSameTags(potentialSoulVial, outputSlotStack)) {
                     setReason(SpawnerBlockedReason.OUTPUT_FULL);
                     return null;
                 }
@@ -323,21 +323,21 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     // region Serialization
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        super.saveAdditional(tag, lookupProvider);
-        taskHost.save(lookupProvider, tag);
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        taskHost.save(tag);
     }
 
     @Override
-    protected void saveAdditionalSynced(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditionalSynced(tag, registries);
+    protected void saveAdditionalSynced(CompoundTag tag) {
+        super.saveAdditionalSynced(tag);
 
         // Sync entity storage in case we want to render the entity or something in
         // future :)
-        tag.put(MachineNBTKeys.ENTITY_STORAGE, boundSoul.saveOptional(registries));
+        tag.put(MachineNBTKeys.ENTITY_STORAGE, boundSoul.saveOptional());
 
         if (mode != DEFAULT_MODE) {
-            tag.put(MachineNBTKeys.MACHINE_MODE, mode.save(registries));
+            tag.put(MachineNBTKeys.MACHINE_MODE, mode.save());
         }
 
         if (isRangeVisible) {
@@ -346,13 +346,12 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        super.loadAdditional(tag, lookupProvider);
-        boundSoul = Soul.parseOptional(lookupProvider, tag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
+    public void load(CompoundTag tag) {
+        super.load(tag);
+        boundSoul = Soul.parseOptional(tag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
 
         if (tag.contains(MachineNBTKeys.MACHINE_MODE)) {
-            this.mode = PoweredSpawnerMode.parse(lookupProvider,
-                    Objects.requireNonNull(tag.get(MachineNBTKeys.MACHINE_MODE)));
+            this.mode = PoweredSpawnerMode.parse(Objects.requireNonNull(tag.get(MachineNBTKeys.MACHINE_MODE)));
         }
 
         // TODO: Ender IO 8 - remove support for old attachment loading
@@ -366,7 +365,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
                 && tag.getBoolean(MachineNBTKeys.IS_RANGE_VISIBLE);
 
         // Load task host last
-        taskHost.load(lookupProvider, tag);
+        taskHost.load(tag);
     }
 
     @Override

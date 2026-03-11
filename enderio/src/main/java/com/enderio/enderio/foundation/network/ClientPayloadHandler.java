@@ -5,7 +5,7 @@ import com.enderio.enderio.content.travel.TravelTargetSavedData;
 import com.enderio.enderio.foundation.network.packets.ClientboundSyncTravelDataPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundTravelTargetRemovedPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundTravelTargetUpdatedPacket;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.minecraftforge.network.NetworkEvent;
 
 public class ClientPayloadHandler {
     private static final ClientPayloadHandler INSTANCE = new ClientPayloadHandler();

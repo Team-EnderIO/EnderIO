@@ -12,8 +12,8 @@ import com.enderio.enderio.api.io.SideConfig;
 import com.enderio.enderio.api.soul.binding.SoulBindable;
 import com.enderio.enderio.api.soul.storage.SoulHandler;
 import net.minecraft.core.Direction;
-import net.neoforged.neoforge.capabilities.BlockCapability;
-import net.neoforged.neoforge.capabilities.ItemCapability;
+import net.minecraftforge.common.capabilities.BlockCapability;
+import net.minecraftforge.common.capabilities.ItemCapability;
 import org.jetbrains.annotations.Nullable;
 
 public class EnderIOCapabilities {

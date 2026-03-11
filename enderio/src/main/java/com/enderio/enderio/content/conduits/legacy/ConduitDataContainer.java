@@ -70,12 +70,12 @@ public class ConduitDataContainer implements ConduitDataAccessor {
         return (T) data;
     }
 
-    public Tag save(HolderLookup.Provider lookupProvider) {
-        return CODEC.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), this).getPartialOrThrow();
+    public Tag save() {
+        return CODEC.encodeStart(NbtOps.INSTANCE, this).getPartialOrThrow();
     }
 
-    public static ConduitDataContainer parse(HolderLookup.Provider lookupProvider, Tag tag) {
-        return CODEC.parse(lookupProvider.createSerializationContext(NbtOps.INSTANCE), tag).getPartialOrThrow();
+    public static ConduitDataContainer parse(Tag tag) {
+        return CODEC.parse(NbtOps.INSTANCE, tag).getPartialOrThrow();
     }
 
     public ConduitDataContainer deepCopy() {

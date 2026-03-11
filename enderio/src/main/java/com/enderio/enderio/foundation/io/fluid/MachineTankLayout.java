@@ -1,6 +1,6 @@
 package com.enderio.enderio.foundation.io.fluid;
 
-import net.neoforged.neoforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.List;

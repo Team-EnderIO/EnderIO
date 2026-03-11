@@ -25,7 +25,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.Nullable;
 
 import java.text.NumberFormat;
@@ -36,8 +35,8 @@ import java.util.stream.Collectors;
 
 import static mezz.jei.api.recipe.RecipeIngredientRole.*;
 
-public class SagMillCategory extends MachineRecipeCategory<RecipeHolder<SagMillingRecipe>> {
-    public static final RecipeType<RecipeHolder<SagMillingRecipe>> TYPE = JEIUtils.createRecipeType(EnderIO.MOD_ID,
+public class SagMillCategory extends MachineRecipeCategory<SagMillingRecipe> {
+    public static final RecipeType<SagMillingRecipe> TYPE = JEIUtils.createRecipeType(EnderIO.MOD_ID,
             "sagmilling", SagMillingRecipe.class);
 
     private static final ResourceLocation BG_TEXTURE = EnderIO.rl("textures/gui/viewer/sag_mill.png");
@@ -53,7 +52,7 @@ public class SagMillCategory extends MachineRecipeCategory<RecipeHolder<SagMilli
     }
 
     @Override
-    public RecipeType<RecipeHolder<SagMillingRecipe>> getRecipeType() {
+    public RecipeType<SagMillingRecipe> getRecipeType() {
         return TYPE;
     }
 
@@ -73,11 +72,11 @@ public class SagMillCategory extends MachineRecipeCategory<RecipeHolder<SagMilli
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<SagMillingRecipe> recipe, IFocusGroup focuses) {
-        builder.addSlot(INPUT, 32, 1).addItemStacks(List.of(recipe.value().input().getItems()));
+    public void setRecipe(IRecipeLayoutBuilder builder, SagMillingRecipe recipe, IFocusGroup focuses) {
+        builder.addSlot(INPUT, 32, 1).addItemStacks(List.of(recipe.input().getItems()));
 
         IRecipeSlotBuilder gridingBallSlot = builder.addSlot(CATALYST, 74, 12).addItemStack(new ItemStack(Items.AIR));
-        if (recipe.value().bonusType().useGrindingBall()) {
+        if (recipe.bonusType().useGrindingBall()) {
             List<ItemStack> grindingBalls = BuiltInRegistries.ITEM
                 .getDataMap(GrindingBallData.DATA_MAP_TYPE)
                 .keySet()
@@ -90,7 +89,7 @@ public class SagMillCategory extends MachineRecipeCategory<RecipeHolder<SagMilli
             gridingBallSlot.addItemStacks(grindingBalls);
         }
 
-        List<SagMillingRecipe.OutputItem> results = recipe.value().outputs();
+        List<SagMillingRecipe.OutputItem> results = recipe.outputs();
         if (!results.isEmpty()) {
             builder.addSlot(OUTPUT, 1, 48)
                     .addItemStack(results.get(0).getItemStack())
@@ -116,14 +115,14 @@ public class SagMillCategory extends MachineRecipeCategory<RecipeHolder<SagMilli
         }
     }
 
-    private IRecipeSlotTooltipCallback chanceTooltip(RecipeHolder<SagMillingRecipe> recipe,
+    private IRecipeSlotTooltipCallback chanceTooltip(SagMillingRecipe recipe,
             SagMillingRecipe.OutputItem item) {
         return (recipeSlotView, tooltip) -> {
             if (item.chance() < 1.0f) {
                 String chance = item.chance() > 0.01f
                         ? NumberFormat.getIntegerInstance(Locale.ENGLISH).format(item.chance() * 100)
                         : "<1";
-                if (recipe.value().bonusType().useGrindingBall()) {
+                if (recipe.bonusType().useGrindingBall()) {
                     tooltip.add(TooltipUtil.styledWithArgs(MachinesLang.SAG_MILL_CHANCE_GRINDING_BALL, chance));
                 } else {
                     tooltip.add(TooltipUtil.styledWithArgs(MachinesLang.SAG_MILL_CHANCE, chance));
@@ -133,14 +132,14 @@ public class SagMillCategory extends MachineRecipeCategory<RecipeHolder<SagMilli
     }
 
     @Override
-    public void draw(RecipeHolder<SagMillingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics,
+    public void draw(SagMillingRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics,
             double mouseX, double mouseY) {
         guiGraphics.drawString(Minecraft.getInstance().font, getEnergyString(recipe, recipeSlotsView), 83, 47,
                 0xff808080, false);
     }
 
     @Override
-    public List<Component> getTooltipStrings(RecipeHolder<SagMillingRecipe> recipe, IRecipeSlotsView recipeSlotsView,
+    public List<Component> getTooltipStrings(SagMillingRecipe recipe, IRecipeSlotsView recipeSlotsView,
             double mouseX, double mouseY) {
         Minecraft mc = Minecraft.getInstance();
         if (mouseX > 83 && mouseY > 47 && mouseX < 83 + mc.font.width(getEnergyString(recipe, recipeSlotsView))
@@ -151,7 +150,7 @@ public class SagMillCategory extends MachineRecipeCategory<RecipeHolder<SagMilli
         return List.of();
     }
 
-    private Component getEnergyString(RecipeHolder<SagMillingRecipe> recipe, IRecipeSlotsView recipeSlotsView) {
+    private Component getEnergyString(SagMillingRecipe recipe, IRecipeSlotsView recipeSlotsView) {
         @Nullable
         GrindingBallData data = recipeSlotsView.getSlotViews()
                 .get(1)
@@ -164,6 +163,6 @@ public class SagMillCategory extends MachineRecipeCategory<RecipeHolder<SagMilli
         }
 
         return TooltipUtil.withArgs(EIOCommonLang.ENERGY_AMOUNT, NumberFormat.getIntegerInstance(Locale.ENGLISH)
-                .format(recipe.value().getEnergyCost(data)));
+                .format(recipe.getEnergyCost(data)));
     }
 }

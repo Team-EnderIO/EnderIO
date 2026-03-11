@@ -2,7 +2,7 @@ package com.enderio.enderio.content.machines.obelisks;
 
 import com.enderio.core.common.network.menu.IntSyncSlot;
 import com.enderio.enderio.foundation.menu.PoweredMachineMenu;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
@@ -23,7 +23,7 @@ public class ObeliskMenu<T extends ObeliskBlockEntity<T>> extends PoweredMachine
     }
 
     protected ObeliskMenu(@Nullable MenuType<?> menuType, int containerId, Inventory playerInventory,
-            RegistryFriendlyByteBuf buf, BlockEntityType<? extends T>... blockEntityTypes) {
+            FriendlyByteBuf buf, BlockEntityType<? extends T>... blockEntityTypes) {
         super(menuType, containerId, playerInventory, buf, blockEntityTypes);
 
         maxRange = addSyncSlot(IntSyncSlot.standalone());

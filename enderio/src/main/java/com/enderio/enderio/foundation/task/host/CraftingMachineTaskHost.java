@@ -5,8 +5,7 @@ import com.enderio.enderio.foundation.MachineRecipe;
 import com.enderio.enderio.foundation.task.CraftingMachineTask;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -14,10 +13,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public class CraftingMachineTaskHost<R extends MachineRecipe<T>, T extends RecipeInput> extends MachineTaskHost {
+public class CraftingMachineTaskHost<R extends MachineRecipe<T>, T extends Container> extends MachineTaskHost {
 
-    public interface CraftingMachineTaskFactory<T extends CraftingMachineTask<R, C>, R extends MachineRecipe<C>, C extends RecipeInput> {
-        T createTask(Level level, C container, @Nullable RecipeHolder<R> recipe);
+    public interface CraftingMachineTaskFactory<T extends CraftingMachineTask<R, C>, R extends MachineRecipe<C>, C extends Container> {
+        T createTask(Level level, C container, @Nullable R recipe);
     }
 
     private final RecipeType<R> recipeType;
@@ -54,13 +53,13 @@ public class CraftingMachineTaskHost<R extends MachineRecipe<T>, T extends Recip
     }
 
     @Override
-    protected @Nullable CraftingMachineTask<R, T> loadTask(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
+    protected @Nullable CraftingMachineTask<R, T> loadTask(CompoundTag nbt) {
         if (getLevel() == null) {
             return null;
         }
 
         CraftingMachineTask<R, T> task = taskFactory.createTask(getLevel(), recipeInputSupplier.get(), null);
-        task.deserializeNBT(lookupProvider, nbt);
+        task.deserializeNBT(nbt);
         return task;
     }
 
@@ -72,16 +71,16 @@ public class CraftingMachineTaskHost<R extends MachineRecipe<T>, T extends Recip
 
         // If recipe has changed
         var currentRecipe = findRecipe();
-        return currentRecipe.map(r -> !r.value().equals(getCurrentTask().getRecipe())).orElse(true);
+        return currentRecipe.map(r -> !r.equals(getCurrentTask().getRecipe())).orElse(true);
     }
 
     // endregion
 
-    protected T createRecipeInput() {
+    protected T createContainer() {
         return recipeInputSupplier.get();
     }
 
-    protected Optional<RecipeHolder<R>> findRecipe() {
+    protected Optional<R> findRecipe() {
         Level level = getLevel();
         if (level == null) {
             return Optional.empty();

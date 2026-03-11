@@ -3,7 +3,7 @@ package com.enderio.enderio.api.travel;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
@@ -13,7 +13,7 @@ import org.jetbrains.annotations.ApiStatus;
 public interface TravelTarget {
     Codec<TravelTarget> CODEC = EnderIORegistries.TRAVEL_TARGET_SERIALIZERS.byNameCodec()
             .dispatch(TravelTarget::serializer, TravelTargetSerializer::codec);
-    StreamCodec<RegistryFriendlyByteBuf, TravelTarget> STREAM_CODEC = ByteBufCodecs
+    StreamCodec<FriendlyByteBuf, TravelTarget> STREAM_CODEC = ByteBufCodecs
             .registry(EnderIORegistries.Keys.TRAVEL_TARGET_SERIALIZERS)
             .dispatch(TravelTarget::serializer, TravelTargetSerializer::streamCodec);
 

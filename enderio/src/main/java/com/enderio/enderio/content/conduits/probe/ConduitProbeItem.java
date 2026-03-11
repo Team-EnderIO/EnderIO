@@ -13,7 +13,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -27,7 +27,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraftforge.network.PacketDistributor;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -224,7 +224,7 @@ public class ConduitProbeItem extends Item {
             State::name
         );
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, State> STREAM_CODEC = ByteBufCodecs.STRING_UTF8
+        public static final StreamCodec<FriendlyByteBuf, State> STREAM_CODEC = ByteBufCodecs.STRING_UTF8
             .map(State::valueOf, State::name)
             .cast();
     }
@@ -238,7 +238,7 @@ public class ConduitProbeItem extends Item {
                         .forGetter(ProbeConfigData::conduitData))
                 .apply(componentInstance, ProbeConfigData::new));
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, ProbeConfigData> STREAM_CODEC = StreamCodec.composite(
+        public static final StreamCodec<FriendlyByteBuf, ProbeConfigData> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.map(HashMap::new, ResourceLocation.STREAM_CODEC, ConnectionConfig.STREAM_CODEC),
             ProbeConfigData::conduitData,
             ProbeConfigData::new);

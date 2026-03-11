@@ -3,7 +3,7 @@ package com.enderio.enderio.content.machines.obelisks.inhibitor;
 import com.enderio.enderio.content.machines.obelisks.ObeliskMenu;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOMenus;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 
 public class InhibitorObeliskMenu extends ObeliskMenu<InhibitorObeliskBlockEntity> {
@@ -13,7 +13,7 @@ public class InhibitorObeliskMenu extends ObeliskMenu<InhibitorObeliskBlockEntit
         addSlots();
     }
 
-    public InhibitorObeliskMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
+    public InhibitorObeliskMenu(int containerId, Inventory playerInventory, FriendlyByteBuf buf) {
         super(EIOMenus.INHIBITOR_OBELISK.get(), containerId, playerInventory, buf,
             EIOBlockEntities.INHIBITOR_OBELISK.get());
         addSlots();

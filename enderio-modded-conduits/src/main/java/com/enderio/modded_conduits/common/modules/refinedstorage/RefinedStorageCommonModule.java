@@ -21,10 +21,10 @@ import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.common.conditions.ICondition;
-import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.common.crafting.conditions.ICondition;
+import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
+import net.minecraftforge.registries.DeferredRegister;
 
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;

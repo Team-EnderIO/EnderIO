@@ -6,8 +6,8 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.registries.datamaps.AdvancedDataMapType;
-import net.neoforged.neoforge.registries.datamaps.DataMapValueRemover;
+import net.minecraftforge.registries.datamaps.AdvancedDataMapType;
+import net.minecraftforge.registries.datamaps.DataMapValueRemover;
 
 import java.util.Map;
 

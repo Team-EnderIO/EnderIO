@@ -4,7 +4,7 @@ import com.enderio.enderio.content.machines.obelisks.ObeliskMenu;
 import com.enderio.enderio.foundation.menu.MachineSlot;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOMenus;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 
 public class AversionObeliskMenu extends ObeliskMenu<AversionObeliskBlockEntity> {
@@ -14,7 +14,7 @@ public class AversionObeliskMenu extends ObeliskMenu<AversionObeliskBlockEntity>
         addSlots();
     }
 
-    public AversionObeliskMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
+    public AversionObeliskMenu(int containerId, Inventory playerInventory, FriendlyByteBuf buf) {
         super(EIOMenus.AVERSION_OBELISK.get(), containerId, playerInventory, buf,
             EIOBlockEntities.AVERSION_OBELISK.get());
         addSlots();

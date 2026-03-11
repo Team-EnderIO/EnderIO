@@ -3,7 +3,7 @@ package com.enderio.enderio.content.filters.redstone;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.foundation.network.packets.ServerboundTimerFilterPacket;
 import com.enderio.enderio.init.EIOMenus;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -11,7 +11,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 public class RedstoneTimerFilterMenu extends AbstractContainerMenu {
@@ -35,7 +35,7 @@ public class RedstoneTimerFilterMenu extends AbstractContainerMenu {
     }
 
 
-    public static RedstoneTimerFilterMenu factory(int i, Inventory inventory, RegistryFriendlyByteBuf registryFriendlyByteBuf) {
+    public static RedstoneTimerFilterMenu factory(int i, Inventory inventory, FriendlyByteBuf registryFriendlyByteBuf) {
         return new RedstoneTimerFilterMenu(i, inventory, inventory.player.getMainHandItem());
     }
 

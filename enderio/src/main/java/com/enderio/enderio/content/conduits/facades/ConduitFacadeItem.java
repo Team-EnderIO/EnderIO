@@ -77,7 +77,7 @@ public class ConduitFacadeItem extends BlockItem {
                 && (facade.type().isBlastResistant() || facade.type().doesHideConduits());
 
         if (hasFacadeTooltip) {
-            if (tooltipFlag.hasShiftDown()) {
+            if (Screen.hasShiftDown()) {
                 if (facade.type().doesHideConduits()) {
                     tooltipComponents.add(ConduitLang.TRANSPARENT_FACADE_TOOLTIP);
                 }

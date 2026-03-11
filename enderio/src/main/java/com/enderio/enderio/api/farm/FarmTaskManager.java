@@ -1,7 +1,7 @@
 package com.enderio.enderio.api.farm;
 
 import it.unimi.dsi.fastutil.Pair;
-import net.neoforged.fml.ModLoader;
+import net.minecraftforge.fml.ModLoader;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Comparator;

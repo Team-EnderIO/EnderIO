@@ -25,12 +25,12 @@ import com.enderio.enderio.foundation.io.IOConfig;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.fluids.SimpleFluidContent;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fluids.SimpleFluidContent;
+import net.minecraftforge.registries.DeferredRegister;
 
 import java.util.function.UnaryOperator;
 
@@ -180,7 +180,7 @@ public class EIODataComponents {
         return register(name, builder -> builder.persistent(codec));
     }
 
-    private static <T> DataComponentType<T> savedAndSynced(String name, Codec<T> codec, StreamCodec<? super RegistryFriendlyByteBuf, T> streamCodec) {
+    private static <T> DataComponentType<T> savedAndSynced(String name, Codec<T> codec, StreamCodec<? super FriendlyByteBuf, T> streamCodec) {
         return register(name, builder -> builder.persistent(codec).networkSynchronized(streamCodec));
     }
 }

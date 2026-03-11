@@ -33,9 +33,9 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.EntityType;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.OnDatapackSyncEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.OnDatapackSyncEvent;
+import net.minecraftforge.network.PacketDistributor;
 import org.slf4j.Logger;
 
 import java.util.HashMap;
@@ -115,7 +115,7 @@ public class SoulDataReloadListener<T extends SoulData> extends SimpleJsonResour
      */
     public <P extends CustomPacketPayload> SoulDataReloadListener<T> subscribeAsSyncable(
             final Function<Map<ResourceLocation, T>, P> packetFactory) {
-        NeoForge.EVENT_BUS.addListener(this.getDatapackSyncListener(packetFactory));
+        MinecraftForge.EVENT_BUS.addListener(this.getDatapackSyncListener(packetFactory));
         return this;
     }
 

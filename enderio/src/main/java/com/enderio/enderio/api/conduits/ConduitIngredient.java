@@ -8,8 +8,8 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.neoforged.neoforge.common.crafting.ICustomIngredient;
-import net.neoforged.neoforge.common.crafting.IngredientType;
+import net.minecraftforge.common.crafting.ICustomIngredient;
+import net.minecraftforge.common.crafting.IngredientType;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.stream.Stream;

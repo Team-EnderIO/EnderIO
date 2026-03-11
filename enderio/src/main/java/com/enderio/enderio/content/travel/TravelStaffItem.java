@@ -18,10 +18,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.capabilities.ICapabilityProvider;
-import net.neoforged.neoforge.energy.ComponentEnergyStorage;
-import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.energy.ComponentEnergyStorage;
+import net.minecraftforge.energy.IEnergyStorage;
 
 import java.util.List;
 
@@ -121,7 +121,7 @@ public class TravelStaffItem extends Item implements AdvancedTooltipProvider, IC
 
     @Override
     public int getBarWidth(ItemStack stack) {
-        var energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
+        var energyStorage = stack.getCapability(ForgeCapabilities.ENERGY);
         if (energyStorage != null) {
             return Math.round(energyStorage.getEnergyStored() * 13.0F / energyStorage.getMaxEnergyStored());
         }

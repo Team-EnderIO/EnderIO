@@ -11,10 +11,10 @@ import com.google.common.collect.Maps;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.material.Fluid;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import java.util.List;
 import java.util.Map;
@@ -39,7 +39,7 @@ public class FluidConduitTicker extends ConduitTickerBase<FluidConduit> {
                     continue;
                 }
 
-                IFluidHandler extractHandler = extractConnection.getSidedCapability(Capabilities.FluidHandler.BLOCK);
+                IFluidHandler extractHandler = extractConnection.getSidedCapability(ForgeCapabilities.FLUID_HANDLER);
                 if (extractHandler == null) {
                     continue;
                 }
@@ -64,7 +64,7 @@ public class FluidConduitTicker extends ConduitTickerBase<FluidConduit> {
     private int doFluidTransfer(Fluid fluid, int maxTransfer, ConduitBlockConnection extractConnection,
         List<ConduitConnectionPath> insertPaths, Map<ConduitConnectionPath, Integer> insertedPerPath) {
         var extractHandler = Objects
-            .requireNonNull(extractConnection.getSidedCapability(Capabilities.FluidHandler.BLOCK));
+            .requireNonNull(extractConnection.getSidedCapability(ForgeCapabilities.FLUID_HANDLER));
 
         // Attempt to drain fluid from the target.
         FluidStack extractedFluid = extractHandler.drain(new FluidStack(fluid, maxTransfer),
@@ -96,7 +96,7 @@ public class FluidConduitTicker extends ConduitTickerBase<FluidConduit> {
                 continue;
             }
 
-            IFluidHandler insertHandler = insertConnection.getSidedCapability(Capabilities.FluidHandler.BLOCK);
+            IFluidHandler insertHandler = insertConnection.getSidedCapability(ForgeCapabilities.FLUID_HANDLER);
             if (insertHandler == null) {
                 continue;
             }

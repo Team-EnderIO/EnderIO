@@ -11,7 +11,7 @@ import com.enderio.enderio.init.EIOConduits;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.MinecraftServer;
-import net.neoforged.neoforge.capabilities.Capabilities;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.neoforged.testframework.junit.EphemeralTestServerProvider;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -167,7 +167,7 @@ public class ConduitNodeTests {
 
         var conduitNode = new ConduitNodeImpl(itemConduit, BlockPos.ZERO);
 
-        Assertions.assertThrows(IllegalStateException.class, () -> conduitNode.getNeighborSidedCapability(Capabilities.EnergyStorage.BLOCK, Direction.UP));
+        Assertions.assertThrows(IllegalStateException.class, () -> conduitNode.getNeighborSidedCapability(ForgeCapabilities.ENERGY, Direction.UP));
         Assertions.assertThrows(IllegalStateException.class, () -> conduitNode.getNeighborVoidCapability(EnderIOCapabilities.SOUL_BINDABLE_BLOCK, Direction.UP));
         Assertions.assertThrows(IllegalStateException.class, () -> conduitNode.hasRedstoneSignal(null));
         Assertions.assertThrows(IllegalStateException.class, () -> conduitNode.isConnectedToBlock(Direction.UP));

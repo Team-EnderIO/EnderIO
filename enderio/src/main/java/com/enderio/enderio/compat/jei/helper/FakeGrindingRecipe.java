@@ -1,7 +1,7 @@
 package com.enderio.enderio.compat.jei.helper;
 
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.crafting.SizedIngredient;
+import net.minecraftforge.common.crafting.SizedIngredient;
 import org.jetbrains.annotations.Nullable;
 
 public class FakeGrindingRecipe {

@@ -15,11 +15,12 @@ import com.enderio.enderio.foundation.souldata.EngineSoul;
 import com.enderio.enderio.foundation.souldata.FarmSoul;
 import com.enderio.enderio.foundation.souldata.SolarSoul;
 import com.enderio.enderio.foundation.souldata.SpawnerSoul;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.minecraftforge.network.NetworkEvent;
 
 public class MachinePayloadHandler {
     public static class Client {
@@ -80,7 +81,7 @@ public class MachinePayloadHandler {
                 var level = context.player().level();
                 if (EnderfaceBlockEntity.canPlayerInteractWithBlock(context.player(), level, pos)) {
                     var state = level.getBlockState(pos);
-                    state.useWithoutItem(level, context.player(), packet.getHitResult());
+                    state.use(level, pos, context.player(), InteractionHand.MAIN_HAND, packet.getHitResult());
                 }
             });
         }
@@ -99,7 +100,7 @@ public class MachinePayloadHandler {
                         }
 
                         if ((recipeSlot.getItem().isEmpty() && packet.stacks().get(relative).test(invSlot.getItem()))
-                                || ItemStack.isSameItemSameComponents(invSlot.getItem(), recipeSlot.getItem())) {
+                                || ItemStack.isSameItemSameTags(invSlot.getItem(), recipeSlot.getItem())) {
                             if (packet.maxTransfer()) {
                                 int toTransfer = invSlot.getItem().getMaxStackSize() - recipeSlot.getItem().getCount();
                                 int actual = Math.min(invSlot.getItem().getCount(), toTransfer);

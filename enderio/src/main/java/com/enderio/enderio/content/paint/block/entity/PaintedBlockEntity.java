@@ -1,7 +1,7 @@
 package com.enderio.enderio.content.paint.block.entity;
 
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.client.model.data.ModelProperty;
+import net.minecraftforge.client.model.data.ModelProperty;
 import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.HashSet;

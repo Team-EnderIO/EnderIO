@@ -1,11 +1,11 @@
 package com.enderio.enderio.config.base.client;
 
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 public class BaseClientConfig {
-    public final ModConfigSpec.ConfigValue<Boolean> MACHINE_PARTICLES;
+    public final ForgeConfigSpec.ConfigValue<Boolean> MACHINE_PARTICLES;
 
-    public BaseClientConfig(ModConfigSpec.Builder builder) {
+    public BaseClientConfig(ForgeConfigSpec.Builder builder) {
         builder.push("visual");
         MACHINE_PARTICLES = builder.comment("Enable machine particles").define("machineParticles", true);
         builder.pop();

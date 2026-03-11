@@ -6,7 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mekanism.api.chemical.ChemicalStack;
 import mekanism.api.chemical.IChemicalHandler;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.Nullable;
@@ -28,7 +28,7 @@ public record EnderChemicalFilter(NonNullList<ChemicalStack> matches, boolean is
             .apply(componentInstance, EnderChemicalFilter::new));
 
     // @formatter:off
-    public static final StreamCodec<RegistryFriendlyByteBuf, EnderChemicalFilter> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, EnderChemicalFilter> STREAM_CODEC = StreamCodec.composite(
         ChemicalStack.OPTIONAL_STREAM_CODEC.apply(ByteBufCodecs.list(256)),
         EnderChemicalFilter::matches,
         ByteBufCodecs.BOOL,

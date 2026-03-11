@@ -27,12 +27,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.common.conditions.ICondition;
-import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
+import net.minecraftforge.common.crafting.conditions.ICondition;
+import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
+import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.registries.DeferredRegister;
 
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
@@ -55,7 +55,7 @@ public class AE2ConduitsModule implements ConduitCommonModule {
     public static final DeferredRegister<NodeDataType<?>> CONDUIT_NODE_DATA_TYPES = DeferredRegister
             .create(EnderIORegistries.CONDUIT_NODE_DATA_TYPE, EnderIO.MOD_ID);
 
-    public static final DeferredHolder<ConduitType<?, ?>, ConduitType<MEConduit, MEConduitConnectionConfig>> AE2_CONDUIT = CONDUIT_TYPES.register(
+    public static final RegistryObject<ConduitType<MEConduit, MEConduitConnectionConfig>> AE2_CONDUIT = CONDUIT_TYPES.register(
             "me",
             () -> ConduitType.builder(MEConduit.CODEC, MEConduitConnectionConfig.TYPE)
                     .exposeCapability(AECapabilities.IN_WORLD_GRID_NODE_HOST)

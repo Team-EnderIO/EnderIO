@@ -4,7 +4,7 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.energy.EnergyStorageInfo;
 import com.enderio.enderio.foundation.network.menu_sync.EnergyStorageSyncSlot;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -26,7 +26,7 @@ public class PoweredMachineMenu<T extends PoweredMachineBlockEntity> extends Mac
     }
 
     protected PoweredMachineMenu(@Nullable MenuType<?> menuType, int containerId, Inventory playerInventory,
-            RegistryFriendlyByteBuf buf, BlockEntityType<? extends T>... blockEntityTypes) {
+            FriendlyByteBuf buf, BlockEntityType<? extends T>... blockEntityTypes) {
         super(menuType, containerId, playerInventory, buf, blockEntityTypes);
 
         energySyncSlot = addSyncSlot(EnergyStorageSyncSlot.standalone());

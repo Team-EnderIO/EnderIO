@@ -16,10 +16,10 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.LogicalSide;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.event.TickEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.WeakHashMap;
 
-@EventBusSubscriber
+@Mod.EventBusSubscriber
 public class PlayerMovementHandler {
 
     /**
@@ -43,7 +43,7 @@ public class PlayerMovementHandler {
     private static final Map<Player, Integer> TICKS_FALLING_SERVER = new WeakHashMap<>();
 
     @SubscribeEvent
-    public static void onPlayerTick(PlayerTickEvent.Pre playerTickEvent) {
+    public static void onPlayerTick(TickEvent.PlayerTickEvent playerTickEvent) {
         Player player = playerTickEvent.getEntity();
         Map<Player, Integer> ticksFallingMap = player instanceof ServerPlayer ? TICKS_FALLING_SERVER
                 : TICKS_FALLING_CLIENT;

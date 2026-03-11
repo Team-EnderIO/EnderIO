@@ -5,13 +5,13 @@ import com.enderio.enderio.content.filters.AbstractFilterMenu;
 import com.enderio.modded_conduits.common.modules.mekanism.MekanismModule;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.component.DataComponentType;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.capabilities.ICapabilityProvider;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.function.Supplier;
 
@@ -45,10 +45,10 @@ public class EnderChemicalFilterItem extends AbstractFilterItem<EnderChemicalFil
     public enum Type {
         BASIC(() -> MekanismModule.CHEMICAL_FILTER_MENU, 1);
 
-        private final Supplier<DeferredHolder<MenuType<?>, MenuType<EnderChemicalFilterMenu>>> menuType;
+        private final Supplier<RegistryObject<MenuType<EnderChemicalFilterMenu>>> menuType;
         private final int rowCount;
 
-        Type(Supplier<DeferredHolder<MenuType<?>, MenuType<EnderChemicalFilterMenu>>> menuType, int rowCount) {
+        Type(Supplier<RegistryObject<MenuType<EnderChemicalFilterMenu>>> menuType, int rowCount) {
             this.menuType = menuType;
             this.rowCount = rowCount;
         }
@@ -68,7 +68,7 @@ public class EnderChemicalFilterItem extends AbstractFilterItem<EnderChemicalFil
         }
 
         @EnsureSide(EnsureSide.Side.CLIENT)
-        public EnderChemicalFilterMenu openMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
+        public EnderChemicalFilterMenu openMenu(int containerId, Inventory playerInventory, FriendlyByteBuf buf) {
             return new EnderChemicalFilterMenu(menuType.get().get(), this, containerId, playerInventory);
         }
     }

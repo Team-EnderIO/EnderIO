@@ -30,7 +30,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +38,8 @@ import java.util.Optional;
 import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
 import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
 
-public class SoulBindingCategory extends MachineRecipeCategory<RecipeHolder<SoulBindingRecipe>> {
-    public static final RecipeType<RecipeHolder<SoulBindingRecipe>> TYPE = JEIUtils.createRecipeType(EnderIO.MOD_ID,
+public class SoulBindingCategory extends MachineRecipeCategory<SoulBindingRecipe> {
+    public static final RecipeType<SoulBindingRecipe> TYPE = JEIUtils.createRecipeType(EnderIO.MOD_ID,
             "soul_binding", SoulBindingRecipe.class);
 
     private final IDrawable background;
@@ -52,7 +51,7 @@ public class SoulBindingCategory extends MachineRecipeCategory<RecipeHolder<Soul
     }
 
     @Override
-    public RecipeType<RecipeHolder<SoulBindingRecipe>> getRecipeType() {
+    public RecipeType<SoulBindingRecipe> getRecipeType() {
         return TYPE;
     }
 
@@ -72,7 +71,7 @@ public class SoulBindingCategory extends MachineRecipeCategory<RecipeHolder<Soul
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<SoulBindingRecipe> recipe, IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, SoulBindingRecipe recipe, IFocusGroup focuses) {
         List<ItemStack> vials = new ArrayList<>();
         Optional<IFocus<ItemStack>> output = focuses.getItemStackFocuses(OUTPUT).findFirst();
         Optional<IFocus<ItemStack>> input = focuses.getItemStackFocuses(INPUT)
@@ -81,12 +80,12 @@ public class SoulBindingCategory extends MachineRecipeCategory<RecipeHolder<Soul
 
         if (input.isPresent()) {
             vials.add(input.get().getTypedValue().getIngredient());
-        } else if (recipe.value().entityType().isPresent()) {
-            vials.add(SoulVialItem.forSoul(Soul.of(recipe.value().entityType().get())));
-        } else if (recipe.value().mobCategory().isPresent()) {
+        } else if (recipe.entityType().isPresent()) {
+            vials.add(SoulVialItem.forSoul(Soul.of(recipe.entityType().get())));
+        } else if (recipe.mobCategory().isPresent()) {
 
             var allEntitiesOfCategory = BuiltInRegistries.ENTITY_TYPE.stream()
-                    .filter(e -> e.getCategory().equals(recipe.value().mobCategory().get()))
+                    .filter(e -> e.getCategory().equals(recipe.mobCategory().get()))
                     .map(BuiltInRegistries.ENTITY_TYPE::getKey)
                     .toList();
 
@@ -94,7 +93,7 @@ public class SoulBindingCategory extends MachineRecipeCategory<RecipeHolder<Soul
                 vials.add(SoulVialItem.forSoul(Soul.of(entity)));
             }
 
-        } else if (recipe.value().soulData().isPresent()) {
+        } else if (recipe.soulData().isPresent()) {
             if (output.isPresent()) {
                 var outputStack = output.get().getTypedValue().getIngredient();
                 var soul = SoulBoundUtils.getBoundSoul(outputStack);
@@ -104,7 +103,7 @@ public class SoulBindingCategory extends MachineRecipeCategory<RecipeHolder<Soul
                 }
             } else {
                 SoulDataReloadListener<? extends SoulData> soulDataReloadListener = SoulDataReloadListener
-                        .fromString(recipe.value().soulData().get());
+                        .fromString(recipe.soulData().get());
 
                 var allEntitiesOfSoulData = BuiltInRegistries.ENTITY_TYPE.keySet()
                         .stream()
@@ -130,7 +129,7 @@ public class SoulBindingCategory extends MachineRecipeCategory<RecipeHolder<Soul
 
         builder.addSlot(INPUT, 3, 4).addItemStacks(vials);
 
-        builder.addSlot(INPUT, 24, 4).addIngredients(recipe.value().getInput());
+        builder.addSlot(INPUT, 24, 4).addIngredients(recipe.getInput());
 
         var resultStack = RecipeUtil.getResultStacks(recipe).get(0).getItem();
         var results = new ArrayList<ItemStack>();
@@ -159,11 +158,11 @@ public class SoulBindingCategory extends MachineRecipeCategory<RecipeHolder<Soul
     }
 
     @Override
-    public void draw(RecipeHolder<SoulBindingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics,
+    public void draw(SoulBindingRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics,
             double mouseX, double mouseY) {
         Minecraft mc = Minecraft.getInstance();
 
-        int cost = recipe.value().experience();
+        int cost = recipe.experience();
         String costText = cost < 0 ? "err" : Integer.toString(cost);
         String text = I18n.get("container.repair.cost", costText);
 
@@ -178,7 +177,7 @@ public class SoulBindingCategory extends MachineRecipeCategory<RecipeHolder<Soul
     }
 
     @Override
-    public List<Component> getTooltipStrings(RecipeHolder<SoulBindingRecipe> recipe, IRecipeSlotsView recipeSlotsView,
+    public List<Component> getTooltipStrings(SoulBindingRecipe recipe, IRecipeSlotsView recipeSlotsView,
             double mouseX, double mouseY) {
         Minecraft mc = Minecraft.getInstance();
         if (mouseX > 5 && mouseY > 34 && mouseX < 5 + mc.font.width(getBasicEnergyString(recipe))

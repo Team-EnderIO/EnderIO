@@ -15,10 +15,9 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -26,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class CrafterRecipeTransferHandler implements IRecipeTransferHandler<CrafterMenu, RecipeHolder<CraftingRecipe>> {
+public class CrafterRecipeTransferHandler implements IRecipeTransferHandler<CrafterMenu, CraftingRecipe> {
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
@@ -47,16 +46,16 @@ public class CrafterRecipeTransferHandler implements IRecipeTransferHandler<Craf
     }
 
     @Override
-    public RecipeType<RecipeHolder<CraftingRecipe>> getRecipeType() {
+    public RecipeType<CraftingRecipe> getRecipeType() {
         return RecipeTypes.CRAFTING;
     }
 
     @Override
-    public @Nullable IRecipeTransferError transferRecipe(CrafterMenu container, RecipeHolder<CraftingRecipe> recipe,
+    public @Nullable IRecipeTransferError transferRecipe(CrafterMenu container, CraftingRecipe recipe,
             IRecipeSlotsView recipeSlots, Player player, boolean maxTransfer, boolean doTransfer) {
 
         List<ItemStack> placedStacks = new ArrayList<>();
-        var ingredients = recipe.value().getIngredients();
+        var ingredients = recipe.getIngredients();
         if (recipe.value() instanceof ShapedRecipe shapedRecipe) {
             // Order matters, this makes indices go in 1,2,3 order.
             for (int y = 0; y < 3; y++) {

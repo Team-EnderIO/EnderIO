@@ -8,8 +8,8 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.registries.DeferredBlock;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.registries.DeferredRegister;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,8 +19,8 @@ import java.util.stream.Stream;
  * Container helper for the fused glass/quartz blocks as theres a lot, and this will tidy stuff up.
  */
 public class GlassBlocks {
-    public final DeferredBlock<FusedQuartzBlock> CLEAR;
-    public final Map<DyeColor, DeferredBlock<FusedQuartzBlock>> COLORS;
+    public final RegistryObject<FusedQuartzBlock> CLEAR;
+    public final Map<DyeColor, RegistryObject<FusedQuartzBlock>> COLORS;
 
     private final GlassIdentifier glassIdentifier;
 
@@ -31,7 +31,7 @@ public class GlassBlocks {
         glassIdentifier = identifier;
         String name = identifier.glassName();
         CLEAR = register(blockRegistry, itemRegistry, name);
-        Map<DyeColor, DeferredBlock<FusedQuartzBlock>> tempMap = new HashMap<>();
+        Map<DyeColor, RegistryObject<FusedQuartzBlock>> tempMap = new HashMap<>();
         for (DyeColor color: DyeColor.values()) {
             tempMap.put(color,
                 register(blockRegistry, itemRegistry, name.concat("_").concat(color.getName()), color)
@@ -40,7 +40,7 @@ public class GlassBlocks {
         COLORS = ImmutableMap.copyOf(tempMap);
     }
 
-    public Stream<DeferredBlock<FusedQuartzBlock>> getAllBlocks() {
+    public Stream<RegistryObject<FusedQuartzBlock>> getAllBlocks() {
         return Stream.concat(Stream.of(CLEAR), COLORS.values().stream());
     }
 
@@ -56,7 +56,7 @@ public class GlassBlocks {
     /**
      * Register a non-colored glass
      */
-    private DeferredBlock<FusedQuartzBlock> register(DeferredRegister.Blocks blockRegistry, DeferredRegister.Items itemRegistry, String name) {
+    private RegistryObject<FusedQuartzBlock> register(DeferredRegister.Blocks blockRegistry, DeferredRegister.Items itemRegistry, String name) {
         var block = blockRegistry
             .registerBlock(name,
                 p -> new FusedQuartzBlock(p, glassIdentifier, null),
@@ -77,7 +77,7 @@ public class GlassBlocks {
     /**
      * Register a colored glass.
      */
-    private DeferredBlock<FusedQuartzBlock> register(DeferredRegister.Blocks blockRegistry, DeferredRegister.Items itemRegistry, String name, DyeColor color) {
+    private RegistryObject<FusedQuartzBlock> register(DeferredRegister.Blocks blockRegistry, DeferredRegister.Items itemRegistry, String name, DyeColor color) {
         var block = blockRegistry
             .registerBlock(name,
                 p -> new FusedQuartzBlock(p, glassIdentifier, color),

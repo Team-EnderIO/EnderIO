@@ -1,8 +1,8 @@
 package com.enderio.enderio.api.conduits.model;
 
 import com.enderio.enderio.api.conduits.ConduitType;
-import net.neoforged.bus.api.Event;
-import net.neoforged.fml.event.IModBusEvent;
+import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.fml.event.IModBusEvent;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

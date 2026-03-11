@@ -17,9 +17,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.neoforged.neoforge.common.data.AdvancementProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraftforge.common.data.AdvancementProvider;
+import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.Comparator;
 import java.util.Optional;
@@ -40,9 +40,9 @@ public class MachinesAdvancementGenerator implements AdvancementProvider.Advance
         builder.save(saver, CapacitorBankBlock.PLACE_ADVANCEMENT_ID.toString());
     }
 
-    public static Criterion<ItemUsedOnLocationTrigger.TriggerInstance> placedBlock(Block... block) {
+    public static Criterion placedBlock(Block... block) {
         var contextawarepredicate = ContextAwarePredicate.create(placedBlockCondition(block));
-        return new Criterion<>(
+        return new Criterion(
             CriteriaTriggers.PLACED_BLOCK,
             new ItemUsedOnLocationTrigger.TriggerInstance(
                 Optional.empty(),

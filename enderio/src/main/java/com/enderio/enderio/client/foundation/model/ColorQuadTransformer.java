@@ -2,7 +2,7 @@ package com.enderio.enderio.client.foundation.model;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.world.item.DyeColor;
-import net.neoforged.neoforge.client.model.IQuadTransformer;
+import net.minecraftforge.client.model.IQuadTransformer;
 import org.jetbrains.annotations.Nullable;
 
 public record ColorQuadTransformer(@Nullable DyeColor insert, @Nullable DyeColor extract) implements IQuadTransformer {

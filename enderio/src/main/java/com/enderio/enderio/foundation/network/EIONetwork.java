@@ -30,12 +30,12 @@ import com.enderio.enderio.foundation.souldata.EngineSoul;
 import com.enderio.enderio.foundation.souldata.FarmSoul;
 import com.enderio.enderio.foundation.souldata.SolarSoul;
 import com.enderio.enderio.foundation.souldata.SpawnerSoul;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.network.event.RegisterPayloadHandlersEvent;
+import net.minecraftforge.network.registration.PayloadRegistrar;
 
-@EventBusSubscriber
+@Mod.EventBusSubscriber
 public class EIONetwork {
     private static final String PROTOCOL_VERSION = "2";
 

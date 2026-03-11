@@ -12,9 +12,9 @@ import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.util.GsonHelper;
-import net.neoforged.neoforge.client.model.ElementsModel;
-import net.neoforged.neoforge.client.model.geometry.IGeometryBakingContext;
-import net.neoforged.neoforge.client.model.geometry.IGeometryLoader;
+import net.minecraftforge.client.model.ElementsModel;
+import net.minecraftforge.client.model.geometry.IGeometryBakingContext;
+import net.minecraftforge.client.model.geometry.IGeometryLoader;
 
 import java.util.ArrayList;
 import java.util.List;

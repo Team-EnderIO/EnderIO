@@ -11,9 +11,9 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
+import net.minecraftforge.common.Tags;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.crafting.SizedFluidIngredient;
 
 public class FermentingRecipeProvider extends SubRecipeProvider {
 

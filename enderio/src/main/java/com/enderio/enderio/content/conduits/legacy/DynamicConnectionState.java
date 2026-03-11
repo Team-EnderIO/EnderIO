@@ -10,13 +10,13 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.fml.LogicalSide;
+import net.minecraftforge.fml.LogicalSide;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,7 +40,7 @@ public record DynamicConnectionState(boolean isInsert, DyeColor insertChannel, b
                             .forGetter(DynamicConnectionState::upgradeExtract))
             .apply(instance, DynamicConnectionState::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, DynamicConnectionState> STREAM_CODEC = MassiveStreamCodec
+    public static final StreamCodec<FriendlyByteBuf, DynamicConnectionState> STREAM_CODEC = MassiveStreamCodec
             .composite(ByteBufCodecs.BOOL, DynamicConnectionState::isInsert, DyeColor.STREAM_CODEC,
                     DynamicConnectionState::insertChannel, ByteBufCodecs.BOOL, DynamicConnectionState::isExtract,
                     DyeColor.STREAM_CODEC, DynamicConnectionState::extractChannel, RedstoneControl.STREAM_CODEC,
@@ -53,7 +53,7 @@ public record DynamicConnectionState(boolean isInsert, DyeColor insertChannel, b
     public static DynamicConnectionState defaultConnection(Level level, BlockPos pos, Direction direction,
             Holder<Conduit<?, ?>> type) {
         // Conduit.ConduitConnectionData defaultConnection =
-        // type.value().getDefaultConnection(level, pos, direction);
+        // type.getDefaultConnection(level, pos, direction);
         // return new DynamicConnectionState(defaultConnection.isInsert(),
         // DyeColor.GREEN, defaultConnection.isExtract(), DyeColor.GREEN,
         // defaultConnection.control(), DyeColor.RED, ItemStack.EMPTY, ItemStack.EMPTY,

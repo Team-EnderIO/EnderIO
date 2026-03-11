@@ -30,7 +30,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.fml.LogicalSide;
+import net.minecraftforge.fml.LogicalSide;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -207,24 +207,24 @@ public abstract class ObeliskBlockEntity<T extends ObeliskBlockEntity<T>> extend
     }
 
     @Override
-    protected void saveAdditionalSynced(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditionalSynced(tag, registries);
+    protected void saveAdditionalSynced(CompoundTag tag) {
+        super.saveAdditionalSynced(tag);
 
         if (!actionRange.equals(DEFAULT_RANGE)) {
-            tag.put(MachineNBTKeys.ACTION_RANGE, actionRange.save(registries));
+            tag.put(MachineNBTKeys.ACTION_RANGE, actionRange.save());
         }
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
+    protected void load(CompoundTag tag) {
+        super.load(tag);
 
         // TODO: Ender IO 8 - remove support for old attachment loading
         if (hasData(EIOAttachments.ACTION_RANGE)) {
             actionRange = getData(EIOAttachments.ACTION_RANGE);
             removeData(EIOAttachments.ACTION_RANGE);
         } else if (tag.contains(MachineNBTKeys.ACTION_RANGE)) {
-            actionRange = ActionRange.parse(registries, Objects.requireNonNull(tag.get(MachineNBTKeys.ACTION_RANGE)));
+            actionRange = ActionRange.parse(Objects.requireNonNull(tag.get(MachineNBTKeys.ACTION_RANGE)));
         } else {
             actionRange = DEFAULT_RANGE;
         }

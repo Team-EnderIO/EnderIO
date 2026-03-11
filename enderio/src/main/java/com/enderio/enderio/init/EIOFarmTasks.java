@@ -14,10 +14,10 @@ import com.enderio.enderio.content.machines.farming_station.tasks.PlantBlockFarm
 import com.enderio.enderio.content.machines.farming_station.tasks.PlantCropFarmTask;
 import com.enderio.enderio.content.machines.farming_station.tasks.PlantNetherWartFarmTask;
 import com.enderio.enderio.content.machines.farming_station.tasks.PlantSaplingFarmTask;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
-@EventBusSubscriber
+@Mod.EventBusSubscriber
 public class EIOFarmTasks {
     @SubscribeEvent
     public static void register(RegisterFarmTasksEvent event) {

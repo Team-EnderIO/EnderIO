@@ -5,8 +5,8 @@ import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.init.EIOConduitTypes;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
 public record EnergyConduitStorage(Direction side, @Nullable ConduitNode node) implements IEnergyStorage {
@@ -22,7 +22,7 @@ public record EnergyConduitStorage(Direction side, @Nullable ConduitNode node) i
         int energyToSend = Math.min(amount, getTransferRate());
         int energyAccepted = 0;
         for (var insert : inserts) {
-            var energyStorage = insert.end().getSidedCapability(Capabilities.EnergyStorage.BLOCK);
+            var energyStorage = insert.end().getSidedCapability(ForgeCapabilities.ENERGY);
             if (energyStorage == null || !energyStorage.canReceive()) {
                 continue;
             }
@@ -68,6 +68,6 @@ public record EnergyConduitStorage(Direction side, @Nullable ConduitNode node) i
 
     private int getTransferRate() {
         Holder<EnergyConduit> conduit = node().conduit(EIOConduitTypes.ENERGY.get());
-        return conduit.value().transferRatePerTick();
+        return conduit.transferRatePerTick();
     }
 }

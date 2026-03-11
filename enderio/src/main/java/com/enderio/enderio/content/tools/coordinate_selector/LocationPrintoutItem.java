@@ -63,7 +63,7 @@ public class LocationPrintoutItem extends Item {
 
     private static void openMenu(ServerPlayer player, CoordinateSelection selection, String name) {
 
-        player.openMenu(new MenuProvider() {
+        NetworkHooks.openScreen(player, new MenuProvider() {
             @Override
             public Component getDisplayName() {
                 return Component.empty();

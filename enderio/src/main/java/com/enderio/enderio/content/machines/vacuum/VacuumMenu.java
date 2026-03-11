@@ -1,7 +1,7 @@
 package com.enderio.enderio.content.machines.vacuum;
 
 import com.enderio.enderio.foundation.menu.MachineMenu;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
@@ -18,7 +18,7 @@ public class VacuumMenu<T extends VacuumMachineBlockEntity<?>> extends MachineMe
     }
 
     protected VacuumMenu(@Nullable MenuType<?> menuType, int containerId, Inventory playerInventory,
-            RegistryFriendlyByteBuf buf, BlockEntityType<? extends T>... blockEntityTypes) {
+            FriendlyByteBuf buf, BlockEntityType<? extends T>... blockEntityTypes) {
         super(menuType, containerId, playerInventory, buf, blockEntityTypes);
     }
 

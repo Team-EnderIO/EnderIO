@@ -155,8 +155,8 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        super.loadAdditional(tag, lookupProvider);
+    public void load(CompoundTag tag) {
+        super.load(tag);
 
         if (tag.contains(MachineNBTKeys.BURN_TIME, CompoundTag.TAG_INT)) {
             burnTime = tag.getInt(MachineNBTKeys.BURN_TIME);
@@ -174,8 +174,8 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        super.saveAdditional(tag, lookupProvider);
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
 
         tag.putInt(MachineNBTKeys.BURN_TIME, burnTime);
         tag.putInt(MachineNBTKeys.BURN_DURATION, burnDuration);

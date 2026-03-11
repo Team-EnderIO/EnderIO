@@ -10,13 +10,13 @@ import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidType;
-import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.Tags;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidType;
+import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 public class InternalTankTasks {
 
@@ -47,7 +47,7 @@ public class InternalTankTasks {
                     }
                 }
             } else {
-                IFluidHandlerItem fluidHandlerItem = inputItem.getCapability(Capabilities.FluidHandler.ITEM);
+                IFluidHandlerItem fluidHandlerItem = inputItem.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
                 if (fluidHandlerItem != null && outputItem.isEmpty()) {
                     int filled = FluidUtil.tryFluidTransfer(
                         blockEntity.getFluidHandler(),
@@ -100,7 +100,7 @@ public class InternalTankTasks {
                     }
                 }
             } else {
-                IFluidHandlerItem fluidHandlerItem = inputItem.getCapability(Capabilities.FluidHandler.ITEM);
+                IFluidHandlerItem fluidHandlerItem = inputItem.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
                 if (fluidHandlerItem != null && outputItem.isEmpty()) {
                     int filled = FluidUtil.tryFluidTransfer(
                         fluidHandlerItem,

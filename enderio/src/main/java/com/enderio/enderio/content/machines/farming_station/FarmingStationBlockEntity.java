@@ -43,12 +43,12 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
-import net.neoforged.neoforge.common.SpecialPlantable;
-import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.common.util.FakePlayer;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.client.event.RecipesUpdatedEvent;
+import net.minecraftforge.common.SpecialPlantable;
+import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.util.FakePlayer;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -402,28 +402,27 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     }
 
     @Override
-    protected void saveAdditionalSynced(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditionalSynced(tag, registries);
+    protected void saveAdditionalSynced(CompoundTag tag) {
+        super.saveAdditionalSynced(tag);
 
         if (!actionRange.equals(DEFAULT_RANGE)) {
-            tag.put(MachineNBTKeys.ACTION_RANGE, actionRange.save(registries));
+            tag.put(MachineNBTKeys.ACTION_RANGE, actionRange.save());
         }
 
-        tag.put(MachineNBTKeys.ENTITY_STORAGE, boundSoul.saveOptional(registries));
+        tag.put(MachineNBTKeys.ENTITY_STORAGE, boundSoul.saveOptional());
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        super.loadAdditional(tag, lookupProvider);
+    public void load(CompoundTag tag) {
+        super.load(tag);
 
         if (tag.contains(MachineNBTKeys.ACTION_RANGE)) {
-            actionRange = ActionRange.parse(lookupProvider,
-                    Objects.requireNonNull(tag.get(MachineNBTKeys.ACTION_RANGE)));
+            actionRange = ActionRange.parse(Objects.requireNonNull(tag.get(MachineNBTKeys.ACTION_RANGE)));
         } else {
             actionRange = DEFAULT_RANGE;
         }
 
-        boundSoul = Soul.parseOptional(lookupProvider, tag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
+        boundSoul = Soul.parseOptional(tag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
     }
 
     @Override

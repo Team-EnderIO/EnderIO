@@ -2,9 +2,9 @@ package com.enderio.enderio.content.filters.fluid;
 
 import com.enderio.enderio.content.filters.FilterSlot;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -23,7 +23,7 @@ public class FluidFilterSlot extends FilterSlot<FluidStack> {
 
     @Override
     public Optional<FluidStack> getResourceFrom(ItemStack itemStack) {
-        IFluidHandlerItem capability = itemStack.getCapability(Capabilities.FluidHandler.ITEM);
+        IFluidHandlerItem capability = itemStack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
         if (capability != null) {
             var fluid = capability.getFluidInTank(0).copy();
             if (!fluid.isEmpty()) {

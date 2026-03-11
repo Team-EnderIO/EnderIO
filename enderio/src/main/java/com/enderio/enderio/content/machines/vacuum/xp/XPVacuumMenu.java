@@ -5,7 +5,7 @@ import com.enderio.enderio.foundation.fluid.FluidStorageInfo;
 import com.enderio.enderio.foundation.fluid.FluidStorageSyncSlot;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOMenus;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 
 public class XPVacuumMenu extends VacuumMenu<XPVacuumBlockEntity> {
@@ -20,7 +20,7 @@ public class XPVacuumMenu extends VacuumMenu<XPVacuumBlockEntity> {
                 FluidStorageSyncSlot.readOnly(() -> FluidStorageInfo.of(blockEntity.getFluidTank())));
     }
 
-    public XPVacuumMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
+    public XPVacuumMenu(int containerId, Inventory playerInventory, FriendlyByteBuf buf) {
         super(EIOMenus.XP_VACUUM.get(), containerId, playerInventory, buf, EIOBlockEntities.XP_VACUUM.get());
         addSlots();
 

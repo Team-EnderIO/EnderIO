@@ -18,7 +18,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
+import net.minecraftforge.event.entity.living.MobSpawnEvent;
 import org.jetbrains.annotations.Nullable;
 
 public class AversionObeliskBlockEntity extends ObeliskBlockEntity<AversionObeliskBlockEntity> {
@@ -65,7 +65,7 @@ public class AversionObeliskBlockEntity extends ObeliskBlockEntity<AversionObeli
         return MachinesConfig.CLIENT.BLOCKS.AVERSION_RANGE_COLOR.get();
     }
 
-    public boolean handleSpawnEvent(FinalizeSpawnEvent event) {
+    public boolean handleSpawnEvent(MobSpawnEvent.FinalizeSpawn event) {
         if (!isActive() || getAABB() == null) {
             return false;
         }

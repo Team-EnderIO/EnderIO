@@ -20,7 +20,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.neoforged.neoforge.common.util.FakePlayerFactory;
+import net.minecraftforge.common.util.FakePlayerFactory;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;

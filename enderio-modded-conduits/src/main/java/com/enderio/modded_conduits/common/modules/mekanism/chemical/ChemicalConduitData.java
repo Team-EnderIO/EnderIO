@@ -8,7 +8,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mekanism.api.chemical.ChemicalStack;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.Nullable;
@@ -25,7 +25,7 @@ public class ChemicalConduitData implements ConduitData<ChemicalConduitData> {
                                             .forGetter(i -> i.lockedChemical))
                             .apply(instance, ChemicalConduitData::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, ChemicalConduitData> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, ChemicalConduitData> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.BOOL, i -> i.shouldReset, ChemicalStack.OPTIONAL_STREAM_CODEC, i -> i.lockedChemical,
             ChemicalConduitData::new);
 

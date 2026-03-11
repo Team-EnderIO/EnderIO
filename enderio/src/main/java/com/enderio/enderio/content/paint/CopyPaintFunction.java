@@ -34,7 +34,7 @@ public class CopyPaintFunction extends LootItemConditionalFunction {
     }
 
     @Override
-    public LootItemFunctionType<? extends LootItemConditionalFunction> getType() {
+    public LootItemFunctionType getType() {
         return EIOLootModifiers.COPY_PAINT.get();
     }
 

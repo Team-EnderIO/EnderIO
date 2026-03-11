@@ -22,8 +22,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.common.crafting.SizedIngredient;
+import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.crafting.SizedIngredient;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;

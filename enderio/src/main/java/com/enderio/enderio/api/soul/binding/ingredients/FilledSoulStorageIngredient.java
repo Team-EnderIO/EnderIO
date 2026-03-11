@@ -13,8 +13,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
-import net.neoforged.neoforge.common.crafting.ICustomIngredient;
-import net.neoforged.neoforge.common.crafting.IngredientType;
+import net.minecraftforge.common.crafting.ICustomIngredient;
+import net.minecraftforge.common.crafting.IngredientType;
 
 import java.util.Optional;
 import java.util.stream.Stream;

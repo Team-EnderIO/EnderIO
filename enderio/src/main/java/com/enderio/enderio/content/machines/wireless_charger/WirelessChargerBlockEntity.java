@@ -31,10 +31,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.common.ModConfigSpec;
-import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -49,7 +49,7 @@ public class WirelessChargerBlockEntity extends PoweredMachineBlockEntity implem
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE,
             MachinesConfig.COMMON.ENERGY.WIRELESS_CHARGER_USAGE);
 
-    private final ModConfigSpec.ConfigValue<Integer> energyUpkeep;
+    private final ForgeConfigSpec.ConfigValue<Integer> energyUpkeep;
 
     private ActionRange actionRange;
     private int maxRange;
@@ -84,7 +84,7 @@ public class WirelessChargerBlockEntity extends PoweredMachineBlockEntity implem
             for (int i = 0; i < inventory.getContainerSize(); i++) {
                 ItemStack stack = inventory.getItem(i);
                 @Nullable
-                IEnergyStorage cap = stack.getCapability(Capabilities.EnergyStorage.ITEM);
+                IEnergyStorage cap = stack.getCapability(ForgeCapabilities.ENERGY);
                 if (cap != null && cap.canReceive()) {
                     int received = cap.receiveEnergy(toDistribute, false);
                     energyStorage.consumeEnergy(received);
@@ -138,16 +138,16 @@ public class WirelessChargerBlockEntity extends PoweredMachineBlockEntity implem
     }
 
     @Override
-    protected void saveAdditionalSynced(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditionalSynced(tag, registries);
-        tag.put(MachineNBTKeys.ACTION_RANGE, actionRange.save(registries));
+    protected void saveAdditionalSynced(CompoundTag tag) {
+        super.saveAdditionalSynced(tag);
+        tag.put(MachineNBTKeys.ACTION_RANGE, actionRange.save());
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
+    protected void load(CompoundTag tag) {
+        super.load(tag);
         if (tag.contains(MachineNBTKeys.ACTION_RANGE)) {
-            actionRange = ActionRange.parse(registries, Objects.requireNonNull(tag.get(MachineNBTKeys.ACTION_RANGE)));
+            actionRange = ActionRange.parse(Objects.requireNonNull(tag.get(MachineNBTKeys.ACTION_RANGE)));
         } else {
             actionRange = new ActionRange(maxRange, false);
         }

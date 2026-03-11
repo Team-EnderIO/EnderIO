@@ -34,7 +34,7 @@ public class SetLootCapacitorFunction extends LootItemConditionalFunction {
     }
 
     @Override
-    public LootItemFunctionType<SetLootCapacitorFunction> getType() {
+    public LootItemFunctionType getType() {
         return EIOLootModifiers.SET_LOOT_CAPACITOR.get();
     }
 

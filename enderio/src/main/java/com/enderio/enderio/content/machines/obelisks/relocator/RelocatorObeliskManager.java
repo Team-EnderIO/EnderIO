@@ -6,13 +6,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.event.entity.living.MobSpawnEvent;
 
 import java.util.Set;
 
-@EventBusSubscriber
+@Mod.EventBusSubscriber
 public class RelocatorObeliskManager extends ObeliskAreaManager<RelocatorObeliskBlockEntity> {
 
     public static RelocatorObeliskManager getManager(ServerLevel serverLevel) {
@@ -21,7 +21,7 @@ public class RelocatorObeliskManager extends ObeliskAreaManager<RelocatorObelisk
 
     @SuppressWarnings("unused")
     @SubscribeEvent
-    public static void onSpawnEvent(FinalizeSpawnEvent event) {
+    public static void onSpawnEvent(MobSpawnEvent.FinalizeSpawn event) {
         // Only affects natural spawns
         if (event.getSpawnType() != MobSpawnType.NATURAL) {
             return;
