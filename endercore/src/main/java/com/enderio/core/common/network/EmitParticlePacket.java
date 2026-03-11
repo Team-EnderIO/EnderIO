@@ -1,39 +1,13 @@
 package com.enderio.core.common.network;
 
-import com.enderio.core.EnderCore;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.FriendlyByteBuf;
 
 public record EmitParticlePacket(ParticleOptions particleOptions, double x, double y, double z, double xSpeed,
-        double ySpeed, double zSpeed) implements CustomPacketPayload {
-
-    public static final Type<EmitParticlePacket> TYPE = new Type<>(EnderCore.loc("emit_particle"));
-
-    // @formatter:off
-    public static final StreamCodec<RegistryFriendlyByteBuf, EmitParticlePacket> STREAM_CODEC = NeoForgeStreamCodecs.composite(
-        ParticleTypes.STREAM_CODEC,
-        EmitParticlePacket::particleOptions,
-        ByteBufCodecs.DOUBLE,
-        EmitParticlePacket::x,
-        ByteBufCodecs.DOUBLE,
-        EmitParticlePacket::y,
-        ByteBufCodecs.DOUBLE,
-        EmitParticlePacket::z,
-        ByteBufCodecs.DOUBLE,
-        EmitParticlePacket::xSpeed,
-        ByteBufCodecs.DOUBLE,
-        EmitParticlePacket::ySpeed,
-        ByteBufCodecs.DOUBLE,
-        EmitParticlePacket::zSpeed,
-        EmitParticlePacket::new
-    );
-    // @formatter:on
+        double ySpeed, double zSpeed) {
 
     public EmitParticlePacket(ParticleOptions type, BlockPos pos) {
         this(type, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0.0, 0.0, 0.0);
@@ -43,8 +17,22 @@ public record EmitParticlePacket(ParticleOptions particleOptions, double x, doub
         this(type, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, xSpeed, ySpeed, zSpeed);
     }
 
-    @Override
-    public Type<? extends CustomPacketPayload> type() {
-        return TYPE;
+    public EmitParticlePacket(FriendlyByteBuf buf) {
+        this(readParticle(buf, buf.readById(BuiltInRegistries.PARTICLE_TYPE)), buf.readDouble(), buf.readDouble(), buf.readDouble(), buf.readDouble(), buf.readDouble(), buf.readDouble());
+    }
+
+    public void encode(FriendlyByteBuf buf) {
+        buf.writeId(BuiltInRegistries.PARTICLE_TYPE, particleOptions.getType());
+        particleOptions.writeToNetwork(buf);
+        buf.writeDouble(x);
+        buf.writeDouble(y);
+        buf.writeDouble(z);
+        buf.writeDouble(xSpeed);
+        buf.writeDouble(ySpeed);
+        buf.writeDouble(zSpeed);
+    }
+
+    private static <T extends ParticleOptions> T readParticle(FriendlyByteBuf buffer, ParticleType<T> particleType) {
+        return particleType.getDeserializer().fromNetwork(particleType, buffer);
     }
 }

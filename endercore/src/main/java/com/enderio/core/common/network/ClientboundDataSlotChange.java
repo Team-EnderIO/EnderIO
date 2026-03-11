@@ -1,27 +1,16 @@
 package com.enderio.core.common.network;
 
-import com.enderio.core.EnderCore;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.network.FriendlyByteBuf;
 
-public record ClientboundDataSlotChange(BlockPos pos, byte[] updateData) implements CustomPacketPayload {
+public record ClientboundDataSlotChange(BlockPos pos, byte[] updateData) {
 
-    public static final Type<ClientboundDataSlotChange> TYPE = new Type<>(EnderCore.loc("c2s_data_slot_update"));
+    public ClientboundDataSlotChange(FriendlyByteBuf buf) {
+        this(buf.readBlockPos(), buf.readByteArray());
+    }
 
-    // @formatter:off
-    public static final StreamCodec<RegistryFriendlyByteBuf, ClientboundDataSlotChange> STREAM_CODEC = StreamCodec.composite(
-        BlockPos.STREAM_CODEC,
-        ClientboundDataSlotChange::pos,
-        ByteBufCodecs.BYTE_ARRAY,
-        ClientboundDataSlotChange::updateData,
-        ClientboundDataSlotChange::new);
-    // @formatter:on
-
-    @Override
-    public Type<? extends CustomPacketPayload> type() {
-        return TYPE;
+    public void encode(FriendlyByteBuf buf) {
+        buf.writeBlockPos(pos);
+        buf.writeByteArray(updateData);
     }
 }

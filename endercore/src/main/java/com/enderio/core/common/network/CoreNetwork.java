@@ -3,13 +3,15 @@ package com.enderio.core.common.network;
 import com.enderio.core.EnderCore;
 import com.enderio.core.common.network.menu.ClientboundSyncSlotDataPacket;
 import com.enderio.core.common.network.menu.ServerboundSetSyncSlotDataPacket;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
 
-@Mod.EventBusSubscriber(modid = EnderCore.MOD_ID)
+import java.util.Optional;
+
 public class CoreNetwork {
+    private static int nextId = 0;
+
     private static final String PROTOCOL_VERSION = "1.0";
 
     public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
@@ -19,26 +21,24 @@ public class CoreNetwork {
         PROTOCOL_VERSION::equals
     );
 
-    @SubscribeEvent
-    public static void register(final RegisterPayloadHandlersEvent event) {
-        final PayloadRegistrar registrar = event.registrar(PROTOCOL_VERSION);
+    static {
+        INSTANCE.registerMessage(nextId++, EmitParticlePacket.class, EmitParticlePacket::encode, EmitParticlePacket::new,
+            ClientPayloadHandler.getInstance()::handleEmitParticle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
 
-        registrar.playToClient(EmitParticlePacket.TYPE, EmitParticlePacket.STREAM_CODEC,
-                ClientPayloadHandler.getInstance()::handleEmitParticle);
+        INSTANCE.registerMessage(nextId++, EmitParticlesPacket.class, EmitParticlesPacket::encode, EmitParticlesPacket::new,
+            ClientPayloadHandler.getInstance()::handleEmitParticles, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
 
-        registrar.playToClient(EmitParticlesPacket.TYPE, EmitParticlesPacket.STREAM_CODEC,
-                ClientPayloadHandler.getInstance()::handleEmitParticles);
+        // TODO: These names are actually flipped lol
+        INSTANCE.registerMessage(nextId++, ServerboundCDataSlotUpdate.class, ServerboundCDataSlotUpdate::encode, ServerboundCDataSlotUpdate::new,
+            ClientPayloadHandler.getInstance()::handleDataSlotUpdate, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
 
-        registrar.playToClient(ServerboundCDataSlotUpdate.TYPE, ServerboundCDataSlotUpdate.STREAM_CODEC,
-                ClientPayloadHandler.getInstance()::handleDataSlotUpdate);
+        INSTANCE.registerMessage(nextId++, ClientboundDataSlotChange.class, ClientboundDataSlotChange::encode, ClientboundDataSlotChange::new,
+            ServerPayloadHandler.getInstance()::handleDataSlotChange, Optional.of(NetworkDirection.PLAY_TO_SERVER));
 
-        registrar.playToServer(ClientboundDataSlotChange.TYPE, ClientboundDataSlotChange.STREAM_CODEC,
-                ServerPayloadHandler.getInstance()::handleDataSlotChange);
+        INSTANCE.registerMessage(nextId++, ClientboundSyncSlotDataPacket.class, ClientboundSyncSlotDataPacket::encode, ClientboundSyncSlotDataPacket::new,
+            ClientPayloadHandler.getInstance()::handleSyncSlotDataPacket, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
 
-        registrar.playToClient(ClientboundSyncSlotDataPacket.TYPE, ClientboundSyncSlotDataPacket.STREAM_CODEC,
-                ClientPayloadHandler.getInstance()::handleSyncSlotDataPacket);
-
-        registrar.playToServer(ServerboundSetSyncSlotDataPacket.TYPE, ServerboundSetSyncSlotDataPacket.STREAM_CODEC,
-                ServerPayloadHandler.getInstance()::handleSetSyncSlotDataPacket);
+        INSTANCE.registerMessage(nextId++, ServerboundSetSyncSlotDataPacket.class, ServerboundSetSyncSlotDataPacket::encode, ServerboundSetSyncSlotDataPacket::new,
+            ServerPayloadHandler.getInstance()::handleSetSyncSlotDataPacket, Optional.of(NetworkDirection.PLAY_TO_SERVER));
     }
 }

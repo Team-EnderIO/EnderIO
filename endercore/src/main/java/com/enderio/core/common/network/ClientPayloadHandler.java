@@ -5,9 +5,11 @@ import com.enderio.core.common.menu.BaseEnderMenu;
 import com.enderio.core.common.network.menu.ClientboundSyncSlotDataPacket;
 import io.netty.buffer.Unpooled;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.minecraftforge.network.NetworkEvent;
+
+import java.util.function.Supplier;
 
 public class ClientPayloadHandler {
     private static final ClientPayloadHandler INSTANCE = new ClientPayloadHandler();
@@ -16,12 +18,12 @@ public class ClientPayloadHandler {
         return INSTANCE;
     }
 
-    public void handleEmitParticle(final EmitParticlePacket packet, final IPayloadContext context) {
-        context.enqueueWork(() -> clientAddParticle(packet));
+    public void handleEmitParticle(final EmitParticlePacket packet, final Supplier<NetworkEvent.Context> context) {
+        context.get().enqueueWork(() -> clientAddParticle(packet));
     }
 
-    public void handleEmitParticles(final EmitParticlesPacket packet, final IPayloadContext context) {
-        context.enqueueWork(() -> {
+    public void handleEmitParticles(final EmitParticlesPacket packet, final Supplier<NetworkEvent.Context> context) {
+        context.get().enqueueWork(() -> {
             for (var particle : packet.particles()) {
                 clientAddParticle(particle);
             }
@@ -33,13 +35,12 @@ public class ClientPayloadHandler {
                 packet.xSpeed(), packet.ySpeed(), packet.zSpeed());
     }
 
-    public void handleDataSlotUpdate(ServerboundCDataSlotUpdate update, IPayloadContext context) {
-        context.enqueueWork(() -> {
-            var level = context.player().level();
+    public void handleDataSlotUpdate(ServerboundCDataSlotUpdate update, Supplier<NetworkEvent.Context> context) {
+        context.get().enqueueWork(() -> {
+            var level = context.get().getSender().level();
             BlockEntity be = level.getBlockEntity(update.pos());
             if (be instanceof EnderBlockEntity enderBlockEntity) {
-                var buf = new RegistryFriendlyByteBuf(Unpooled.wrappedBuffer(update.slotData()),
-                        level.registryAccess());
+                var buf = new FriendlyByteBuf(Unpooled.wrappedBuffer(update.slotData()));
                 try{
                     enderBlockEntity.clientHandleBufferSync(buf);
                 } finally {
@@ -49,10 +50,10 @@ public class ClientPayloadHandler {
         });
     }
 
-    public void handleSyncSlotDataPacket(ClientboundSyncSlotDataPacket packet, IPayloadContext context) {
-        context.enqueueWork(() -> {
-            if (context.player().containerMenu.containerId == packet.containerId()) {
-                if (context.player().containerMenu instanceof BaseEnderMenu enderMenu) {
+    public void handleSyncSlotDataPacket(ClientboundSyncSlotDataPacket packet, Supplier<NetworkEvent.Context> context) {
+        context.get().enqueueWork(() -> {
+            if (context.get().getSender().containerMenu.containerId == packet.containerId()) {
+                if (context.get().getSender().containerMenu instanceof BaseEnderMenu enderMenu) {
                     for (var pair : packet.payloads()) {
                         enderMenu.clientHandleIncomingPayload(pair.index(), pair.payload());
                     }

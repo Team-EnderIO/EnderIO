@@ -4,9 +4,11 @@ import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.core.common.menu.BaseEnderMenu;
 import com.enderio.core.common.network.menu.ServerboundSetSyncSlotDataPacket;
 import io.netty.buffer.Unpooled;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.minecraftforge.network.NetworkEvent;
+
+import java.util.function.Supplier;
 
 public class ServerPayloadHandler {
 
@@ -16,13 +18,12 @@ public class ServerPayloadHandler {
         return INSTANCE;
     }
 
-    public void handleDataSlotChange(ClientboundDataSlotChange change, IPayloadContext context) {
-        context.enqueueWork(() -> {
-            var level = context.player().level();
+    public void handleDataSlotChange(ClientboundDataSlotChange change, Supplier<NetworkEvent.Context> context) {
+        context.get().enqueueWork(() -> {
+            var level = context.get().getSender().level();
             BlockEntity be = level.getBlockEntity(change.pos());
             if (be instanceof EnderBlockEntity enderBlockEntity) {
-                var buf = new RegistryFriendlyByteBuf(Unpooled.wrappedBuffer(change.updateData()),
-                        level.registryAccess());
+                var buf = new FriendlyByteBuf(Unpooled.wrappedBuffer(change.updateData()));
                 try{
                     enderBlockEntity.serverHandleBufferChange(buf);
                 }finally {
@@ -32,10 +33,10 @@ public class ServerPayloadHandler {
         });
     }
 
-    public void handleSetSyncSlotDataPacket(ServerboundSetSyncSlotDataPacket packet, IPayloadContext context) {
-        context.enqueueWork(() -> {
-            if (context.player().containerMenu.containerId == packet.containerId()) {
-                if (context.player().containerMenu instanceof BaseEnderMenu enderMenu) {
+    public void handleSetSyncSlotDataPacket(ServerboundSetSyncSlotDataPacket packet, Supplier<NetworkEvent.Context> context) {
+        context.get().enqueueWork(() -> {
+            if (context.get().getSender().containerMenu.containerId == packet.containerId()) {
+                if (context.get().getSender().containerMenu instanceof BaseEnderMenu enderMenu) {
                     enderMenu.serverHandleIncomingPayload(packet.index(), packet.payload());
                 }
             }
