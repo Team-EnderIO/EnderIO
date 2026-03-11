@@ -7,8 +7,8 @@ import net.minecraft.world.flag.FeatureFlags;
 
 public class EIOFeatureFlags {
     public static final FeatureFlag ENDERFACE = FeatureFlags.REGISTRY
-        .getFlag(ResourceLocation.fromNamespaceAndPath(EnderIO.MOD_ID, "enderface"));
+        .getFlag(new ResourceLocation(EnderIO.MOD_ID, "enderface"));
 
     public static final FeatureFlag NIARD = FeatureFlags.REGISTRY
-        .getFlag(ResourceLocation.fromNamespaceAndPath(EnderIO.MOD_ID, "niard"));
+        .getFlag(new ResourceLocation(EnderIO.MOD_ID, "niard"));
 }

@@ -1,13 +1,13 @@
 package com.enderio.enderio.config.conduits.common;
 
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 public class ConduitsCommonConfig {
-    public final ModConfigSpec.BooleanValue CAN_MIX_ENERGY_CONDUIT_TIERS;
-    public final ModConfigSpec.BooleanValue CAN_MIX_FLUID_CONDUIT_TIERS;
-    public final ModConfigSpec.BooleanValue CAN_MIX_ITEM_CONDUIT_TIERS;
+    public final ForgeConfigSpec.BooleanValue CAN_MIX_ENERGY_CONDUIT_TIERS;
+    public final ForgeConfigSpec.BooleanValue CAN_MIX_FLUID_CONDUIT_TIERS;
+    public final ForgeConfigSpec.BooleanValue CAN_MIX_ITEM_CONDUIT_TIERS;
 
-    public ConduitsCommonConfig(ModConfigSpec.Builder builder) {
+    public ConduitsCommonConfig(ForgeConfigSpec.Builder builder) {
         builder.push("conduits");
 
         CAN_MIX_ENERGY_CONDUIT_TIERS = builder

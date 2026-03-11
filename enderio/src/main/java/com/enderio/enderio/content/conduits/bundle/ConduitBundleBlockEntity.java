@@ -615,9 +615,9 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             ConduitNetworkSavedData.onNetworkCreated(serverLevel, getConduitNode(conduit).getNetwork());
         }
 
-        if (result instanceof AddConduitResult.Upgrade(Holder<Conduit<?, ?>> replacedConduit) &&
-            !ConduitUtility.canConnectConduits(conduit, replacedConduit)) {
-            removeNeighborConnections(replacedConduit);
+        if (result instanceof AddConduitResult.Upgrade upgradeResult &&
+            !ConduitUtility.canConnectConduits(conduit, upgradeResult.replacedConduit())) {
+            removeNeighborConnections(upgradeResult.replacedConduit());
         }
 
         bundleChanged();

@@ -55,7 +55,7 @@ public class PaintedSandEntity extends FallingBlockEntity implements IEntityWith
     public void writeSpawnData(RegistryFriendlyByteBuf buffer) {
         Block block = getPaint();
         // TODO: 1.21: Check this RL creation
-        buffer.writeResourceLocation(block != null ? Objects.requireNonNull(BuiltInRegistries.BLOCK.getKey(block)) : ResourceLocation.fromNamespaceAndPath("", ""));
+        buffer.writeResourceLocation(block != null ? Objects.requireNonNull(BuiltInRegistries.BLOCK.getKey(block)) : new ResourceLocation("", ""));
     }
 
     @Override

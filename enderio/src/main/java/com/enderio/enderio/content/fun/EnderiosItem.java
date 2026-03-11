@@ -3,12 +3,12 @@ package com.enderio.enderio.content.fun;
 import com.enderio.core.common.util.TeleportUtils;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.config.base.BaseConfig;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.BowlFoodItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -16,13 +16,12 @@ import net.minecraft.world.level.Level;
 
 import java.util.Calendar;
 
-public class EnderiosItem extends Item {
+public class EnderiosItem extends BowlFoodItem {
     public static final ResourceLocation INVERTED_PROPERTY = EnderIO.rl("enderios_inverted");
 
     private static final FoodProperties PROPERTIES = new FoodProperties.Builder()
         .nutrition(10)
-        .saturationModifier(0.8f)
-        .usingConvertsTo(Items.BOWL)
+        .saturationMod(0.8f)
         .build();
 
     public EnderiosItem(Properties properties) {

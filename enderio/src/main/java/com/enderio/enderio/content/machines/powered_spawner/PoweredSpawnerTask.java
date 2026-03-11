@@ -118,7 +118,7 @@ public abstract class PoweredSpawnerTask implements PoweredMachineTask {
         energyCost = compoundTag.getInt("EnergyCost");
         energyConsumed = compoundTag.getInt("EnergyConsumed");
 
-        var entityTypeId = ResourceLocation.parse(compoundTag.getString("EntityType"));
+        var entityTypeId = new ResourceLocation(compoundTag.getString("EntityType"));
         var optEntityType = BuiltInRegistries.ENTITY_TYPE.getOptional(entityTypeId);
 
         if (optEntityType.isEmpty()) {

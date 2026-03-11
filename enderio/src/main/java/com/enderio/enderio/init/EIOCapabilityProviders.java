@@ -27,23 +27,13 @@ import com.enderio.enderio.content.tools.LevitationStaffItem;
 import com.enderio.enderio.content.tools.PoweredToggledItem;
 import com.enderio.enderio.content.travel.TravelStaffItem;
 import com.enderio.enderio.foundation.soul.SoulCapabilityProviders;
-import net.neoforged.bus.api.EventPriority;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.capabilities.BlockCapability;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
-@EventBusSubscriber
+@Mod.EventBusSubscriber
 public class EIOCapabilityProviders {
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void markProxyableCapabilities(RegisterCapabilitiesEvent event) {
-        // TODO: Review these
-        event.setProxyable(EnderIOCapabilities.SIDE_CONFIG);
-        event.setProxyable(EnderIOCapabilities.SOUL_BINDABLE_BLOCK);
-        event.setProxyable(EnderIOCapabilities.SOUL_HANDLER_BLOCK);
-    }
-
     @SubscribeEvent
     public static void register(RegisterCapabilitiesEvent event) {
         registerConduitCapabilities(event);

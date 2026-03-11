@@ -2,22 +2,22 @@ package com.enderio.enderio.config.machines;
 
 import com.enderio.enderio.config.machines.client.MachinesClientConfig;
 import com.enderio.enderio.config.machines.common.MachinesCommonConfig;
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class MachinesConfig {
     public static final MachinesCommonConfig COMMON;
-    public static final ModConfigSpec COMMON_SPEC;
+    public static final ForgeConfigSpec COMMON_SPEC;
 
     public static final MachinesClientConfig CLIENT;
-    public static final ModConfigSpec CLIENT_SPEC;
+    public static final ForgeConfigSpec CLIENT_SPEC;
 
     static {
-        Pair<MachinesCommonConfig, ModConfigSpec> commonSpecPair = new ModConfigSpec.Builder().configure(MachinesCommonConfig::new);
+        Pair<MachinesCommonConfig, ForgeConfigSpec> commonSpecPair = new ForgeConfigSpec.Builder().configure(MachinesCommonConfig::new);
         COMMON = commonSpecPair.getLeft();
         COMMON_SPEC = commonSpecPair.getRight();
 
-        Pair<MachinesClientConfig, ModConfigSpec> clientSpecPair = new ModConfigSpec.Builder().configure(MachinesClientConfig::new);
+        Pair<MachinesClientConfig, ForgeConfigSpec> clientSpecPair = new ForgeConfigSpec.Builder().configure(MachinesClientConfig::new);
         CLIENT = clientSpecPair.getLeft();
         CLIENT_SPEC = clientSpecPair.getRight();
     }

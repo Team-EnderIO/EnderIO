@@ -1,15 +1,15 @@
 package com.enderio.enderio.config.base.common;
 
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 public class EnchantmentsConfig {
-    public final ModConfigSpec.DoubleValue REPELLENT_CHANCE_BASE;
-    public final ModConfigSpec.DoubleValue REPELLENT_CHANCE_MULT;
-    public final ModConfigSpec.DoubleValue REPELLENT_RANGE_BASE;
-    public final ModConfigSpec.DoubleValue REPELLENT_RANGE_MULT;
-    public final ModConfigSpec.DoubleValue REPELLENT_NON_PLAYER_CHANCE;
+    public final ForgeConfigSpec.DoubleValue REPELLENT_CHANCE_BASE;
+    public final ForgeConfigSpec.DoubleValue REPELLENT_CHANCE_MULT;
+    public final ForgeConfigSpec.DoubleValue REPELLENT_RANGE_BASE;
+    public final ForgeConfigSpec.DoubleValue REPELLENT_RANGE_MULT;
+    public final ForgeConfigSpec.DoubleValue REPELLENT_NON_PLAYER_CHANCE;
 
-    public EnchantmentsConfig(ModConfigSpec.Builder builder) {
+    public EnchantmentsConfig(ForgeConfigSpec.Builder builder) {
         builder.push("enchantments");
 
         builder.push("repellent");

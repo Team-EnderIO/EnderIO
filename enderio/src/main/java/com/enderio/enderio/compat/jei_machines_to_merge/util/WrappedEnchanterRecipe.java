@@ -27,7 +27,7 @@ public class WrappedEnchanterRecipe implements Recipe<EnchanterRecipe.Input> {
     }
 
     public ResourceLocation id() {
-        return ResourceLocation.fromNamespaceAndPath(recipe.id().getNamespace(), recipe.id().getPath() + "_" + level);
+        return new ResourceLocation(recipe.id().getNamespace(), recipe.id().getPath() + "_" + level);
     }
 
     public List<ItemStack> getInputs() {

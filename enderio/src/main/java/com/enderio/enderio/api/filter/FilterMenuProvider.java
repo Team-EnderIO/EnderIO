@@ -1,7 +1,7 @@
 package com.enderio.enderio.api.filter;
 
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 

@@ -129,7 +129,7 @@ public class EIOTags {
         }
 
         private static TagKey<Item> commonTag(String name) {
-            return ItemTags.create(ResourceLocation.fromNamespaceAndPath(COMMON, name));
+            return ItemTags.create(new ResourceLocation(COMMON, name));
         }
 
         private static TagKey<Item> tag(String name) {
@@ -168,7 +168,7 @@ public class EIOTags {
         public static final TagKey<Block> CROPS_WITH_STEM = tag("stem_crop");
 
         private static TagKey<Block> commonTag(String name) {
-            return BlockTags.create(ResourceLocation.fromNamespaceAndPath(COMMON, name));
+            return BlockTags.create(new ResourceLocation(COMMON, name));
         }
 
         private static TagKey<Block> tag(String name) {
@@ -183,7 +183,7 @@ public class EIOTags {
         public static final TagKey<Fluid> SOLAR_PANEL_DARK = tag("solar_panel_dark");
 
         private static TagKey<Fluid> commonTag(String name) {
-            return FluidTags.create(ResourceLocation.fromNamespaceAndPath(COMMON, name));
+            return FluidTags.create(new ResourceLocation(COMMON, name));
         }
 
         private static TagKey<Fluid> tag(String name) {

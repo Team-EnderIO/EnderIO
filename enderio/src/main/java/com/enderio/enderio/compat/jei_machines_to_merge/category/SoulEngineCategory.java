@@ -74,12 +74,12 @@ public class SoulEngineCategory implements IRecipeCategory<EngineSoul.SoulData> 
         List<FluidStack> list = new ArrayList<>();
         String fluid = recipe.fluid();
         if (fluid.startsWith("#")) { // We have a fluid tag instead
-            TagKey<Fluid> tag = TagKey.create(Registries.FLUID, ResourceLocation.parse(fluid.substring(1)));
+            TagKey<Fluid> tag = TagKey.create(Registries.FLUID, new ResourceLocation(fluid.substring(1)));
             BuiltInRegistries.FLUID.getTag(tag)
                     .ifPresent(s -> s.forEach(f -> list.add(new FluidStack(f, SoulEngineBlockEntity.FLUID_CAPACITY))));
         } else {
             Optional<Holder.Reference<Fluid>> delegate = BuiltInRegistries.FLUID
-                    .getHolder(ResourceKey.create(Registries.FLUID, ResourceLocation.parse(fluid)));
+                    .getHolder(ResourceKey.create(Registries.FLUID, new ResourceLocation(fluid)));
             delegate.ifPresent(fluidReference -> list
                     .add(new FluidStack(fluidReference.value(), SoulEngineBlockEntity.FLUID_CAPACITY)));
         }

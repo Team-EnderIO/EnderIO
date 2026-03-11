@@ -138,16 +138,16 @@ public class EnderIO {
 
     public void addBuiltInPacks(final AddPackFindersEvent event) {
         event.addPackFinders(
-            ResourceLocation.fromNamespaceAndPath(EnderIO.MOD_ID, "data/enderio/datapacks/farming_station"),
+            new ResourceLocation(EnderIO.MOD_ID, "data/enderio/datapacks/farming_station"),
             PackType.SERVER_DATA, MachinesLang.FARMING_STATION_EXPERIMENT, PackSource.FEATURE, false,
             Pack.Position.TOP);
 
         event.addPackFinders(
-            ResourceLocation.fromNamespaceAndPath(EnderIO.MOD_ID, "data/enderio/datapacks/enderface"),
+            new ResourceLocation(EnderIO.MOD_ID, "data/enderio/datapacks/enderface"),
             PackType.SERVER_DATA, MachinesLang.ENDERFACE_EXPERIMENT, PackSource.FEATURE, false, Pack.Position.TOP);
 
         event.addPackFinders(
-            ResourceLocation.fromNamespaceAndPath(EnderIO.MOD_ID, "data/enderio/datapacks/niard"),
+            new ResourceLocation(EnderIO.MOD_ID, "data/enderio/datapacks/niard"),
             PackType.SERVER_DATA, MachinesLang.NIARD_EXPERIMENT, PackSource.FEATURE, false, Pack.Position.TOP);
     }
 }

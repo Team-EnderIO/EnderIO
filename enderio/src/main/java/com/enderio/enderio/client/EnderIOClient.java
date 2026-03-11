@@ -133,7 +133,7 @@ public class EnderIOClient {
     public static final Map<Item, BakedModel> GLIDER_MODELS = new HashMap<>();
 
     public static final ModelResourceLocation TRAVEL_ANCHOR_BACKDROP_MODEL_LOCATION = ModelResourceLocation.standalone(
-        ResourceLocation.fromNamespaceAndPath(EnderIOAPI.MOD_ID, "block/travel_anchor_backdrop")
+        new ResourceLocation(EnderIOAPI.MOD_ID, "block/travel_anchor_backdrop")
     );
 
     public EnderIOClient(ModContainer modContainer) {
@@ -365,7 +365,7 @@ public class EnderIOClient {
     private static Optional<Item> findGliderForModelRL(ResourceLocation rl) {
         String namespace = rl.getNamespace();
         String path = rl.getPath().substring("models/enderio_glider/".length(), rl.getPath().length() - 5);
-        return Optional.of(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(namespace, path)));
+        return Optional.of(BuiltInRegistries.ITEM.get(new ResourceLocation(namespace, path)));
     }
 
     @SubscribeEvent

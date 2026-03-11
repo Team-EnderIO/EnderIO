@@ -9,15 +9,13 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Leashable;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.Bee;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -32,26 +30,8 @@ import java.util.stream.Stream;
  * @param entityTag the entity's NBT tag.
  */
 public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) {
-    private static final Codec<Soul> NEW_CODEC = RecordCodecBuilder.create(
-        instance -> instance.group(
-            BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("entity_type").forGetter(Soul::entityType),
-            CompoundTag.CODEC.fieldOf("entity_tag").forGetter(Soul::entityTag)
-        ).apply(instance, Soul::new));
 
-    private static final Codec<Soul> OLD_CODEC = RecordCodecBuilder.create(
-        instance -> instance.group(
-            CompoundTag.CODEC.fieldOf("entityTag").forGetter(Soul::entityTag)
-        ).apply(instance, Soul::new));
-
-    public static final Codec<Soul> CODEC = Codec.withAlternative(NEW_CODEC, OLD_CODEC);
-
-    public static final StreamCodec<RegistryFriendlyByteBuf, Soul> STREAM_CODEC = StreamCodec.composite(
-        ByteBufCodecs.registry(Registries.ENTITY_TYPE),
-        Soul::entityType,
-        ByteBufCodecs.COMPOUND_TAG,
-        Soul::entityTag,
-        Soul::new
-    );
+    public static final String KEY_ENTITY_TAG = "Entity";
 
     // Keys that should not be compared or saved
     // Note be careful adding new things to this list - it will affect saves.
@@ -72,7 +52,7 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) {
         "SleepingX",
         "SleepingY",
         "SleepingZ",
-        Leashable.LEASH_TAG,
+        Mob.LEASH_TAG,
         Entity.UUID_TAG
     );
 
@@ -96,28 +76,8 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) {
     private Soul(CompoundTag tag) {
         // Note: doesn't remove ID from the tag to ensure backwards compatibility.
         // TODO: 1.22 - remove this.
-        this(BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(tag.getString(Entity.ID_TAG))), tag);
+        this(BuiltInRegistries.ENTITY_TYPE.get(new ResourceLocation(tag.getString(Entity.ID_TAG))), tag);
     }
-
-    public static final StreamCodec<RegistryFriendlyByteBuf, Soul> OPTIONAL_STREAM_CODEC = new StreamCodec<>() {
-        @Override
-        public Soul decode(RegistryFriendlyByteBuf byteBuf) {
-            boolean hasEntity = byteBuf.readBoolean();
-            if (!hasEntity) {
-                return EMPTY;
-            }
-
-            return STREAM_CODEC.decode(byteBuf);
-        }
-
-        @Override
-        public void encode(RegistryFriendlyByteBuf o, Soul soul) {
-            o.writeBoolean(soul.hasEntity());
-            if (soul.hasEntity()) {
-                STREAM_CODEC.encode(o, soul);
-            }
-        }
-    };
 
     public static final Soul EMPTY = new Soul(null, new CompoundTag());
 
@@ -198,7 +158,7 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) {
             throw new IllegalStateException("Cannot get Entity Type ID from empty StoredEntityData");
         }
 
-        return BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
+        return ForgeRegistries.ENTITY_TYPES.getKey(entityType);
     }
 
     public CompoundTag getEntityTagWithId() {
@@ -225,24 +185,28 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) {
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public Tag save(HolderLookup.Provider lookupProvider) {
-        if (!this.hasEntity()) {
-            throw new IllegalStateException("Cannot encode empty StoredEntityData");
-        } else {
-            return CODEC.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), this).getOrThrow();
+    public CompoundTag writeToNbt(CompoundTag tag) {
+        if (isEmpty()) {
+            return tag;
         }
+
+        tag.putString(Entity.ID_TAG, entityTypeId().toString());
+        tag.put(KEY_ENTITY_TAG, entityTag);
+
+        return tag;
     }
 
-    public Tag saveOptional(HolderLookup.Provider lookupProvider) {
-        return this.hasEntity() ? save(lookupProvider) : new CompoundTag();
-    }
+    public static Soul loadFromNbt(CompoundTag tag) {
+        if (!tag.contains(Entity.ID_TAG, Tag.TAG_STRING)) {
+            // Support legacy 1.20.1 save format.
+            if (tag.contains(KEY_ENTITY_TAG, Tag.TAG_COMPOUND)) {
+                return new Soul(tag.getCompound(KEY_ENTITY_TAG));
+            }
+            return EMPTY;
+        }
 
-    public static Optional<Soul> parse(HolderLookup.Provider lookupProvider, Tag tag) {
-        return CODEC.parse(lookupProvider.createSerializationContext(NbtOps.INSTANCE), tag)
-            .resultOrPartial(error -> LOGGER.error("Tried to load invalid StoredEntityData: '{}'", error));
-    }
-
-    public static Soul parseOptional(HolderLookup.Provider lookupProvider, CompoundTag tag) {
-        return tag.isEmpty() ? EMPTY : parse(lookupProvider, tag).orElse(EMPTY);
+        ResourceLocation entityTypeId = new ResourceLocation(tag.getString(Entity.ID_TAG));
+        CompoundTag entityTag = tag.getCompound(KEY_ENTITY_TAG);
+        return new Soul(ForgeRegistries.ENTITY_TYPES.getValue(entityTypeId), entityTag);
     }
 }

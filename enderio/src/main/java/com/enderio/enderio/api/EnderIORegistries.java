@@ -63,7 +63,7 @@ public class EnderIORegistries {
         public static final ResourceKey<Registry<Conduit<?, ?>>> CONDUIT = createKey("conduit");
 
         private static <T> ResourceKey<Registry<T>> createKey(String name) {
-            return ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath("enderio", name));
+            return ResourceKey.createRegistryKey(new ResourceLocation("enderio", name));
         }
     }
 }

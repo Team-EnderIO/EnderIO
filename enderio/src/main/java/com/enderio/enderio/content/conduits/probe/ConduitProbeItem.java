@@ -89,7 +89,7 @@ public class ConduitProbeItem extends Item {
         conduits.forEach(conduit -> {
             ConnectionConfig connectionConfig = conduitBlock.getConnectionConfig(conduit, face);
             if (connectionConfig != null) {
-                ResourceLocation conduitKey = ResourceLocation.parse(conduit.getRegisteredName());
+                ResourceLocation conduitKey = new ResourceLocation(conduit.getRegisteredName());
                 RegistryOps<Tag> ops = net.minecraft.resources.RegistryOps.create(
                     net.minecraft.nbt.NbtOps.INSTANCE,
                     conduitBlock.getLevel().registryAccess()
@@ -130,7 +130,7 @@ public class ConduitProbeItem extends Item {
         List<String> pastedConduits = new ArrayList<String>();
         var conduits = conduitBlock.getConduits();
         conduits.forEach(conduit -> {
-            ResourceLocation conduitKey = ResourceLocation.parse(conduit.getRegisteredName());
+            ResourceLocation conduitKey = new ResourceLocation(conduit.getRegisteredName());
             ConnectionConfig storedConfig = configData.conduitData().get(conduitKey);
             if (storedConfig != null) {
                 conduitBlock.setConnectionConfig(conduit, face, storedConfig);

@@ -13,6 +13,6 @@ public class EnderIOAPI {
     public static final ResourceKey<CreativeModeTab> MAIN_CREATIVE_TAB = ResourceKey.create(Registries.CREATIVE_MODE_TAB, EnderIOAPI.rl("enderio"));
 
     public static ResourceLocation rl(String path) {
-        return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+        return new ResourceLocation(MOD_ID, path);
     }
 }

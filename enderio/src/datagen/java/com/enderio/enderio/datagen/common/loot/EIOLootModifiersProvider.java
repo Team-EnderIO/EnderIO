@@ -54,7 +54,7 @@ public class EIOLootModifiersProvider extends GlobalLootModifierProvider {
     }
 
     private void modifyChestLoot(String modifierName, Stream<String> targets) {
-        var mappedTargetConditions = targets.map(r -> LootTableIdCondition.builder(ResourceLocation.parse(r)))
+        var mappedTargetConditions = targets.map(r -> LootTableIdCondition.builder(new ResourceLocation(r)))
                 .toArray(LootTableIdCondition.Builder[]::new);
         add(modifierName,
                 new AddTableLootModifier(

@@ -72,7 +72,7 @@ public class ConduitSelectionButton extends AbstractButton {
         ResourceLocation iconLocation = MissingTextureAtlasSprite.getLocation();
         ResourceLocation conduitKey = conduit.unwrapKey().map(ResourceKey::location).orElse(null);
         if (conduitKey != null) {
-            iconLocation = ResourceLocation.fromNamespaceAndPath(conduitKey.getNamespace(),
+            iconLocation = new ResourceLocation(conduitKey.getNamespace(),
                     "conduit_icon/" + conduitKey.getPath());
         }
 

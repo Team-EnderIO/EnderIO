@@ -1,16 +1,18 @@
 package com.enderio.enderio.init;
 
-import com.enderio.core.common.registries.FluidDeferredHolders;
-import com.enderio.core.common.registries.FluidDeferredRegister;
 import com.enderio.enderio.EnderIO;
-import net.neoforged.bus.api.IEventBus;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.fluids.FluidType;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 
 // TODO: Fluid behaviours and some cleaning. https://github.com/SleepyTrousers/EnderIO-Rewrite/issues/34
 
 @SuppressWarnings("unused")
 public class EIOFluids {
 
-    public static final FluidDeferredRegister FLUIDS = FluidDeferredRegister.create(EnderIO.MOD_ID);
+    public static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(ForgeRegistries.FLUIDS, EnderIO.MOD_ID);
+    public static final DeferredRegister<FluidType> FLUID_TYPES = DeferredRegister.create(ForgeRegistries.FLUIDS, EnderIO.MOD_ID);
 
     public static final FluidDeferredHolders NUTRIENT_DISTILLATION = FLUIDS
         .builder("nutrient_distillation")

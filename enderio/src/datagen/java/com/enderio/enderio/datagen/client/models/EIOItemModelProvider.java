@@ -368,7 +368,7 @@ public class EIOItemModelProvider extends ItemModelProvider {
 
     private ItemModelBuilder fakeBlock(ResourceLocation item) {
         return withExistingParent(item.toString(), mcLoc("block/cube_all"))
-            .texture("all", ResourceLocation.fromNamespaceAndPath(item.getNamespace(), "item/" + item.getPath()));
+            .texture("all", new ResourceLocation(item.getNamespace(), "item/" + item.getPath()));
     }
 
     public ItemModelBuilder flatBlockItem(Block item) {
@@ -377,11 +377,11 @@ public class EIOItemModelProvider extends ItemModelProvider {
 
     public ItemModelBuilder flatBlockItem(ResourceLocation block) {
         return this.getBuilder(block.toString()).parent(new ModelFile.UncheckedModelFile("item/generated"))
-            .texture("layer0", ResourceLocation.fromNamespaceAndPath(block.getNamespace(), "block/" + block.getPath()));
+            .texture("layer0", new ResourceLocation(block.getNamespace(), "block/" + block.getPath()));
     }
 
     public ItemModelBuilder bucketItem(BucketItem item) {
-        return withExistingParent(BuiltInRegistries.ITEM.getKey(item).toString(), ResourceLocation.fromNamespaceAndPath(NeoForgeVersion.MOD_ID, "item/bucket"))
+        return withExistingParent(BuiltInRegistries.ITEM.getKey(item).toString(), new ResourceLocation(NeoForgeVersion.MOD_ID, "item/bucket"))
             .customLoader(DynamicFluidContainerModelBuilder::begin)
             .fluid(item.content)
             .end();

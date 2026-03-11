@@ -1,27 +1,27 @@
 package com.enderio.enderio.config.machines.common;
 
 import com.enderio.enderio.content.machines.powered_spawner.MobSpawnMode;
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 public class MachinesCommonConfig {
     public final EnergyConfig ENERGY;
-    public final ModConfigSpec.ConfigValue<Double> ENCHANTER_LAPIS_COST_FACTOR;
-    public final ModConfigSpec.ConfigValue<Double> ENCHANTER_LEVEL_COST_FACTOR;
-    public final ModConfigSpec.ConfigValue<Integer> ENCHANTER_BASE_LEVEL_COST;
-    public final ModConfigSpec.ConfigValue<Integer> MAX_SPAWNER_ENTITIES;
-    public final ModConfigSpec.ConfigValue<Integer> MAX_SPAWNERS;
-    public final ModConfigSpec.ConfigValue<Integer> DEFAULT_SPAWN_ENERGY_COST;
-    public final ModConfigSpec.ConfigValue<MobSpawnMode> SPAWN_TYPE;
-    public final ModConfigSpec.IntValue SPAWN_AMOUNT;
-    public final ModConfigSpec.ConfigValue<Integer> ATTRACTOR_RANGE;
-    public final ModConfigSpec.ConfigValue<Boolean> ATTRACTOR_PULL_BOSSES;
-    public final ModConfigSpec.ConfigValue<Integer> INHIBITOR_RANGE;
-    public final ModConfigSpec.ConfigValue<Integer> AVERSION_RANGE;
-    public final ModConfigSpec.ConfigValue<Integer> RELOCATOR_RANGE;
-    public final ModConfigSpec.IntValue ENDERFACE_RANGE;
-    public final ModConfigSpec.ConfigValue<Integer> WIRELESS_CHARGER_RANGE;
+    public final ForgeConfigSpec.ConfigValue<Double> ENCHANTER_LAPIS_COST_FACTOR;
+    public final ForgeConfigSpec.ConfigValue<Double> ENCHANTER_LEVEL_COST_FACTOR;
+    public final ForgeConfigSpec.ConfigValue<Integer> ENCHANTER_BASE_LEVEL_COST;
+    public final ForgeConfigSpec.ConfigValue<Integer> MAX_SPAWNER_ENTITIES;
+    public final ForgeConfigSpec.ConfigValue<Integer> MAX_SPAWNERS;
+    public final ForgeConfigSpec.ConfigValue<Integer> DEFAULT_SPAWN_ENERGY_COST;
+    public final ForgeConfigSpec.ConfigValue<MobSpawnMode> SPAWN_TYPE;
+    public final ForgeConfigSpec.IntValue SPAWN_AMOUNT;
+    public final ForgeConfigSpec.ConfigValue<Integer> ATTRACTOR_RANGE;
+    public final ForgeConfigSpec.ConfigValue<Boolean> ATTRACTOR_PULL_BOSSES;
+    public final ForgeConfigSpec.ConfigValue<Integer> INHIBITOR_RANGE;
+    public final ForgeConfigSpec.ConfigValue<Integer> AVERSION_RANGE;
+    public final ForgeConfigSpec.ConfigValue<Integer> RELOCATOR_RANGE;
+    public final ForgeConfigSpec.IntValue ENDERFACE_RANGE;
+    public final ForgeConfigSpec.ConfigValue<Integer> WIRELESS_CHARGER_RANGE;
 
-    public MachinesCommonConfig(ModConfigSpec.Builder builder) {
+    public MachinesCommonConfig(ForgeConfigSpec.Builder builder) {
         ENERGY = new EnergyConfig(builder);
 
         builder.push("enchanter");

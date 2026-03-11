@@ -1,28 +1,28 @@
 package com.enderio.enderio.config.base.common;
 
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 public class ItemsConfig {
-    public final ModConfigSpec.DoubleValue ENDERIOS_CHANCE;
-    public final ModConfigSpec.DoubleValue ENDERIOS_RANGE;
+    public final ForgeConfigSpec.DoubleValue ENDERIOS_CHANCE;
+    public final ForgeConfigSpec.DoubleValue ENDERIOS_RANGE;
 
-    public final ModConfigSpec.IntValue ELECTROMAGNET_ENERGY_USE;
-    public final ModConfigSpec.IntValue ELECTROMAGNET_MAX_ENERGY;
-    public final ModConfigSpec.IntValue ELECTROMAGNET_RANGE;
-    public final ModConfigSpec.IntValue ELECTROMAGNET_MAX_ITEMS;
+    public final ForgeConfigSpec.IntValue ELECTROMAGNET_ENERGY_USE;
+    public final ForgeConfigSpec.IntValue ELECTROMAGNET_MAX_ENERGY;
+    public final ForgeConfigSpec.IntValue ELECTROMAGNET_RANGE;
+    public final ForgeConfigSpec.IntValue ELECTROMAGNET_MAX_ITEMS;
 
-    public final ModConfigSpec.IntValue LEVITATION_STAFF_ENERGY_USE;
-    public final ModConfigSpec.IntValue LEVITATION_STAFF_MAX_ENERGY;
+    public final ForgeConfigSpec.IntValue LEVITATION_STAFF_ENERGY_USE;
+    public final ForgeConfigSpec.IntValue LEVITATION_STAFF_MAX_ENERGY;
 
-    public final ModConfigSpec.IntValue TRAVELLING_BLINK_RANGE;
-    public final ModConfigSpec.IntValue TRAVELLING_BLINK_DISABLED_TIME;
-    public final ModConfigSpec.IntValue TRAVELLING_STAFF_ENERGY_USE;
-    public final ModConfigSpec.IntValue TRAVELLING_STAFF_MAX_ENERGY;
+    public final ForgeConfigSpec.IntValue TRAVELLING_BLINK_RANGE;
+    public final ForgeConfigSpec.IntValue TRAVELLING_BLINK_DISABLED_TIME;
+    public final ForgeConfigSpec.IntValue TRAVELLING_STAFF_ENERGY_USE;
+    public final ForgeConfigSpec.IntValue TRAVELLING_STAFF_MAX_ENERGY;
 
-    public final ModConfigSpec.IntValue TRAVELLING_TO_BLOCK_RANGE;
-    public final ModConfigSpec.IntValue TRAVELLING_BLOCK_TO_BLOCK_RANGE;
+    public final ForgeConfigSpec.IntValue TRAVELLING_TO_BLOCK_RANGE;
+    public final ForgeConfigSpec.IntValue TRAVELLING_BLOCK_TO_BLOCK_RANGE;
 
-    public ItemsConfig(ModConfigSpec.Builder builder) {
+    public ItemsConfig(ForgeConfigSpec.Builder builder) {
         builder.push("items");
 
         builder.push("food");

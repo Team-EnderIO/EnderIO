@@ -22,7 +22,7 @@ public class EnderIOTests {
 
     public EnderIOTests(IEventBus eventBus, ModContainer container) {
         final MutableTestFramework framework = FrameworkConfiguration
-                .builder(ResourceLocation.fromNamespaceAndPath(MOD_ID, "tests"))
+                .builder(new ResourceLocation(MOD_ID, "tests"))
                 .clientConfiguration(() -> ClientConfiguration.builder()
                         .toggleOverlayKey(GLFW.GLFW_KEY_O)
                         .openManagerKey(GLFW.GLFW_KEY_M)

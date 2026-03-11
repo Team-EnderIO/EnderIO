@@ -77,11 +77,11 @@ public class AE2ConduitsModule implements ConduitCommonModule {
             EnderIO.rl("dense_me"));
 
     private static final TagKey<Item> COVERED_DENSE_CABLE = ItemTags
-            .create(ResourceLocation.fromNamespaceAndPath("ae2", "covered_dense_cable"));
+            .create(new ResourceLocation("ae2", "covered_dense_cable"));
     private static final TagKey<Item> COVERED_CABLE = ItemTags
-            .create(ResourceLocation.fromNamespaceAndPath("ae2", "covered_cable"));
+            .create(new ResourceLocation("ae2", "covered_cable"));
     private static final TagKey<Item> GLASS_CABLE = ItemTags
-            .create(ResourceLocation.fromNamespaceAndPath("ae2", "glass_cable"));
+            .create(new ResourceLocation("ae2", "glass_cable"));
 
     static {
         // TODO: 1.22 - remove backward compatibility.

@@ -256,7 +256,7 @@ public class ConduitNetworkSavedData extends SavedData {
         for (Tag tag : graphsTag) {
             CompoundTag typedGraphTag = (CompoundTag) tag;
             ResourceKey<Conduit<?, ?>> conduitKey = ResourceKey.create(EnderIORegistries.Keys.CONDUIT,
-                    ResourceLocation.parse(typedGraphTag.getString(KEY_TYPE)));
+                    new ResourceLocation(typedGraphTag.getString(KEY_TYPE)));
 
             var registry = lookupProvider.lookupOrThrow(EnderIORegistries.Keys.CONDUIT);
 
@@ -340,7 +340,7 @@ public class ConduitNetworkSavedData extends SavedData {
     @Nullable
     private static ConduitNetworkContext<?> loadNetworkContext(HolderLookup.Provider lookupProvider,
             CompoundTag contextTag) {
-        ResourceLocation serializerKey = ResourceLocation.parse(contextTag.getString("Type"));
+        ResourceLocation serializerKey = new ResourceLocation(contextTag.getString("Type"));
         ConduitNetworkContextType<?> contextType = Objects.requireNonNull(
                 EnderIORegistries.CONDUIT_NETWORK_CONTEXT_TYPE.get(serializerKey),
                 "Unable to find conduit network context type with key " + serializerKey);

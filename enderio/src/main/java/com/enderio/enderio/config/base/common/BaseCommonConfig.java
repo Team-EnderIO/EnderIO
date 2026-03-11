@@ -1,6 +1,6 @@
 package com.enderio.enderio.config.base.common;
 
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 public class BaseCommonConfig {
     public final BlocksConfig BLOCKS;
@@ -8,7 +8,7 @@ public class BaseCommonConfig {
     public final ItemsConfig ITEMS;
     public final InfinityConfig INFINITY;
 
-    public BaseCommonConfig(ModConfigSpec.Builder builder) {
+    public BaseCommonConfig(ForgeConfigSpec.Builder builder) {
         BLOCKS = new BlocksConfig(builder);
         ENCHANTMENTS = new EnchantmentsConfig(builder);
         ITEMS = new ItemsConfig(builder);

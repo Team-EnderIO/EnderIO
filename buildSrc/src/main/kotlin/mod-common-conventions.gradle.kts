@@ -45,7 +45,7 @@ java {
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
     options.compilerArgs.add("-Xplugin:ContextEnsure")
-    options.compilerArgs.addAll(arrayOf("-Xmaxerrs", "400"))
+    options.compilerArgs.addAll(arrayOf("-Xmaxerrs", "10000"))
 }
 
 tasks.test {

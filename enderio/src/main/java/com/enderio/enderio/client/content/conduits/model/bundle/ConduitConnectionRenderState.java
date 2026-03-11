@@ -34,7 +34,7 @@ public record ConduitConnectionRenderState(boolean canInput, DyeColor inputChann
             var channelColors = redstoneSensitiveConfig.getRedstoneSignalColors();
             if (!channelColors.isEmpty()) {
                 isRedstoneSensitive = true;
-                redstoneChannel = channelColors.getFirst();
+                redstoneChannel = channelColors.get(0);
             }
         }
 

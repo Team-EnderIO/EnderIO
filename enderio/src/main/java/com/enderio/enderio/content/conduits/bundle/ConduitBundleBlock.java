@@ -372,10 +372,10 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
 
         AddConduitResult addResult = conduitBundle.addConduit(conduit, primaryConnectionSide, player);
 
-        if (addResult instanceof AddConduitResult.Upgrade(Holder<Conduit<?, ?>> replacedConduit)) {
+        if (addResult instanceof AddConduitResult.Upgrade upgradeResult) {
             if (!player.getAbilities().instabuild) {
                 stack.shrink(1);
-                player.getInventory().placeItemBackInInventory(ConduitBlockItem.getStackFor(replacedConduit, 1));
+                player.getInventory().placeItemBackInInventory(ConduitBlockItem.getStackFor(upgradeResult.replacedConduit(), 1));
             }
         } else if (addResult instanceof AddConduitResult.Insert) {
             if (!player.getAbilities().instabuild) {

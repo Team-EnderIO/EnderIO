@@ -139,14 +139,14 @@ public class MekanismModule implements ConduitCommonModule {
         public static final ItemCapability<ChemicalFilter, Void> CHEMICAL_FILTER = ItemCapability.createVoid(EnderIO.rl("chemical_filter"), ChemicalFilter.class);
 
         public static final BlockCapability<IChemicalHandler, Direction> CHEMICAL = BlockCapability.createSided(
-                ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID, "chemical_handler"),
+                new ResourceLocation(MekanismAPI.MEKANISM_MODID, "chemical_handler"),
                 IChemicalHandler.class);
         public static final BlockCapability<IHeatHandler, Direction> HEAT = BlockCapability.createSided(
-                ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID, "heat_handler"), IHeatHandler.class);
+                new ResourceLocation(MekanismAPI.MEKANISM_MODID, "heat_handler"), IHeatHandler.class);
 
         public static class Item {
             public static final ItemCapability<IChemicalHandler, Void> CHEMICAL = ItemCapability.createVoid(
-                    ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID, "chemical_handler"),
+                    new ResourceLocation(MekanismAPI.MEKANISM_MODID, "chemical_handler"),
                     IChemicalHandler.class);
         }
     }
@@ -156,7 +156,7 @@ public class MekanismModule implements ConduitCommonModule {
     public static final MutableComponent CHEMICAL_CONDUIT_CHANGE_FLUID3 = tooltip("chemical/change_fluid3");
 
     private static final TagKey<Item> OSMIUM = ItemTags
-            .create(ResourceLocation.fromNamespaceAndPath("c", "ingots/osmium"));
+            .create(new ResourceLocation("c", "ingots/osmium"));
 
     private static MutableComponent tooltip(String path) {
         return Component.translatable(Util.makeDescriptionId("tooltip", EnderIO.rl("conduit/" + path)));
@@ -245,7 +245,7 @@ public class MekanismModule implements ConduitCommonModule {
                 .pattern("BBB")
                 .define('B', EIOItems.CONDUIT_BINDER)
                 .define('I',
-                        BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID,
+                        BuiltInRegistries.ITEM.get(new ResourceLocation(MekanismAPI.MEKANISM_MODID,
                                 "basic_pressurized_tube")))
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 .save(mekRecipeOutput, EnderIO.rl("mek_basic_pressurized_tube"));
@@ -258,7 +258,7 @@ public class MekanismModule implements ConduitCommonModule {
                 .pattern("BBB")
                 .define('B', EIOItems.CONDUIT_BINDER)
                 .define('I',
-                        BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID,
+                        BuiltInRegistries.ITEM.get(new ResourceLocation(MekanismAPI.MEKANISM_MODID,
                                 "advanced_pressurized_tube")))
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 .save(mekRecipeOutput, EnderIO.rl("mek_advanced_pressurized_tube"));
@@ -270,7 +270,7 @@ public class MekanismModule implements ConduitCommonModule {
                 .pattern("BBB")
                 .define('B', EIOItems.CONDUIT_BINDER)
                 .define('I',
-                        BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID,
+                        BuiltInRegistries.ITEM.get(new ResourceLocation(MekanismAPI.MEKANISM_MODID,
                                 "elite_pressurized_tube")))
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 .save(mekRecipeOutput, EnderIO.rl("mek_elite_pressurized_tube"));
@@ -284,7 +284,7 @@ public class MekanismModule implements ConduitCommonModule {
                 .define('C', ConduitIngredient.of(chemicalConduit))
                 .define('U',
                         BuiltInRegistries.ITEM.get(
-                                ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID, "alloy_infused")))
+                                new ResourceLocation(MekanismAPI.MEKANISM_MODID, "alloy_infused")))
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 .save(mekRecipeOutput, EnderIO.rl("mek_basic_pressurized_tube_upgrade"));
 
@@ -296,7 +296,7 @@ public class MekanismModule implements ConduitCommonModule {
                 .define('C', ConduitIngredient.of(pressurizedChemicalConduit))
                 .define('U',
                         BuiltInRegistries.ITEM.get(
-                                ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID, "alloy_reinforced")))
+                                new ResourceLocation(MekanismAPI.MEKANISM_MODID, "alloy_reinforced")))
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 .save(mekRecipeOutput, EnderIO.rl("mek_advanced_pressurized_tube_upgrade"));
 
@@ -307,7 +307,7 @@ public class MekanismModule implements ConduitCommonModule {
                 .pattern("BBB")
                 .define('B', EIOItems.CONDUIT_BINDER)
                 .define('I',
-                        BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(MekanismAPI.MEKANISM_MODID,
+                        BuiltInRegistries.ITEM.get(new ResourceLocation(MekanismAPI.MEKANISM_MODID,
                                 "advanced_thermodynamic_conductor")))
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 .save(mekRecipeOutput, EnderIO.rl("mek_advanced_thermodynamic_conductor"));

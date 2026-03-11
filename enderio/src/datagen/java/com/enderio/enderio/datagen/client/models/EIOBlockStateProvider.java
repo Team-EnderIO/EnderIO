@@ -292,7 +292,7 @@ public class EIOBlockStateProvider extends BlockStateProvider {
         String ns = key(block).getNamespace();
         String path = key(block).getPath();
         ModelFile model = wrapMachineModel(block,
-            ResourceLocation.fromNamespaceAndPath(ns, "block/" + path));
+            new ResourceLocation(ns, "block/" + path));
         getVariantBuilder(block)
             .forAllStates(state -> ConfiguredModel.builder()
                 .modelFile(model)
@@ -303,8 +303,8 @@ public class EIOBlockStateProvider extends BlockStateProvider {
     private void progressMachineBlock(Block block) {
         String ns = key(block).getNamespace();
         String path = key(block).getPath();
-        var unpowered = ResourceLocation.fromNamespaceAndPath(ns, "block/" + path);
-        var powered = ResourceLocation.fromNamespaceAndPath(ns, "block/" + path + "_active");
+        var unpowered = new ResourceLocation(ns, "block/" + path);
+        var powered = new ResourceLocation(ns, "block/" + path + "_active");
 
         var unpoweredModel = wrapMachineModel(block, unpowered);
         var poweredModel = wrapMachineModel(block, powered);
@@ -360,7 +360,7 @@ public class EIOBlockStateProvider extends BlockStateProvider {
 
     private void silentPressurePlateBlock(Block block, Block vanillaBlock) {
         ResourceLocation upModelLoc = BuiltInRegistries.BLOCK.getKey(vanillaBlock);
-        ResourceLocation downModelLoc = ResourceLocation.fromNamespaceAndPath(upModelLoc.getNamespace(), upModelLoc.getPath() + "_down");
+        ResourceLocation downModelLoc = new ResourceLocation(upModelLoc.getNamespace(), upModelLoc.getPath() + "_down");
         VariantBlockStateBuilder vb = getVariantBuilder(block);
         vb.partialState().with(PressurePlateBlock.POWERED, true).addModels(new ConfiguredModel(models().getExistingFile(downModelLoc)));
         vb.partialState().with(PressurePlateBlock.POWERED, false).addModels(new ConfiguredModel(models().getExistingFile(upModelLoc)));
@@ -368,7 +368,7 @@ public class EIOBlockStateProvider extends BlockStateProvider {
 
     private void silentWeightedPressurePlateBlock(Block block, WeightedPressurePlateBlock vanillaBlock) {
         ResourceLocation upModelLoc = BuiltInRegistries.BLOCK.getKey(vanillaBlock);
-        ResourceLocation downModelLoc = ResourceLocation.fromNamespaceAndPath(upModelLoc.getNamespace(), upModelLoc.getPath() + "_down");
+        ResourceLocation downModelLoc = new ResourceLocation(upModelLoc.getNamespace(), upModelLoc.getPath() + "_down");
         getVariantBuilder(block).forAllStates(blockState -> {
             if (blockState.getValue(net.minecraft.world.level.block.WeightedPressurePlateBlock.POWER) == 0) {
                 return new ConfiguredModel[] { new ConfiguredModel(models().getExistingFile(upModelLoc)) };
@@ -383,7 +383,7 @@ public class EIOBlockStateProvider extends BlockStateProvider {
             .withExistingParent(model.getPath() + "_combined", mcLoc("block/block"))
             .texture("particle",
                 blockName.equals("enchanter") ? EnderIO.rl("block/dark_steel_pressure_plate")
-                    : ResourceLocation.fromNamespaceAndPath(model.getNamespace(),
+                    : new ResourceLocation(model.getNamespace(),
                     "block/" + blockName + "_front"))
             .customLoader(CompositeModelBuilder::begin)
             .child("machine", ModelHelper.getExistingAsBuilder(models(), model))

@@ -267,7 +267,7 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
     @Override
     public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
         // TODO: Exception handling
-        recipe = loadRecipe(ResourceLocation.parse(nbt.getString(KEY_RECIPE_ID)));
+        recipe = loadRecipe(new ResourceLocation(nbt.getString(KEY_RECIPE_ID)));
         progressMade = nbt.getInt(KEY_PROGRESS_MADE);
         progressRequired = nbt.getInt(KEY_PROGRESS_REQUIRED);
         hasConsumedInputs = nbt.getBoolean(KEY_HAS_COLLECTED_INPUTS);
