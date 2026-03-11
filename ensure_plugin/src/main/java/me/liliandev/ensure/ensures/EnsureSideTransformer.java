@@ -33,10 +33,10 @@ public class EnsureSideTransformer implements Transformer {
         Names symbolsTable = Names.instance(context);
         JCTree.JCMethodInvocation getSide = factory.Apply(
                 List.nil(),
-                qualifiedName(factory, symbolsTable, "net", "neoforged", "fml", "util", "thread", "EffectiveSide", "get"),
+                qualifiedName(factory, symbolsTable, "net", "minecraftforge", "fml", "util", "thread", "EffectiveSide", "get"),
                 List.nil()
         );
-        JCTree.JCFieldAccess target = factory.Select(qualifiedName(factory, symbolsTable, "net", "neoforged", "fml", "LogicalSide"), symbolsTable.fromString(side.getOpposite()
+        JCTree.JCFieldAccess target = factory.Select(qualifiedName(factory, symbolsTable, "net", "minecraftforge", "fml", "LogicalSide"), symbolsTable.fromString(side.getOpposite()
                 .name()));
 
         return factory.Binary(JCTree.Tag.EQ,

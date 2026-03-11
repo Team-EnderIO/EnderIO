@@ -9,13 +9,23 @@ import org.jetbrains.annotations.Nullable;
 
 public class IconButton extends EnderButton {
 
-    private final ResourceLocation sprite;
+    private final ResourceLocation texture;
+    private final int texU;
+    private final int texV;
+    private final int texW;
+    private final int texH;
+
     private final Runnable onPress;
 
-    public IconButton(int x, int y, int width, int height, ResourceLocation sprite, @Nullable Component tooltip,
+    public IconButton(int x, int y, int width, int height, ResourceLocation texture, int texU, int texV, int texW, int texH, @Nullable Component tooltip,
             Runnable onPress) {
         super(x, y, width, height, Component.empty());
-        this.sprite = sprite;
+        this.texture = texture;
+        this.texU = texU;
+        this.texV = texV;
+        this.texW = texW;
+        this.texH = texH;
+
         this.onPress = onPress;
 
         if (tooltip != null) {
@@ -30,7 +40,7 @@ public class IconButton extends EnderButton {
 
     @Override
     public void renderButtonFace(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-        guiGraphics.blitSprite(sprite, getX(), getY(), width, height);
+        guiGraphics.blit(texture, getX(), getY(), texU, texV, this.width, this.height, texW, texH);
     }
 
     @Override

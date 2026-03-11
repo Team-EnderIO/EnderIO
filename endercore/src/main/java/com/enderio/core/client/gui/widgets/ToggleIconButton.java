@@ -1,6 +1,7 @@
 package com.enderio.core.client.gui.widgets;
 
 import com.enderio.core.EnderCore;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -14,18 +15,34 @@ import java.util.function.Supplier;
 
 public class ToggleIconButton extends EnderButton {
 
-    private final Function<Boolean, ResourceLocation> spriteFunction;
+    private final ResourceLocation texture;
+    private final int texU;
+    private final int texV;
+    private final int texW;
+    private final int texH;
+
+    private final int toggledTexUOffset;
+    private final int toggledTexVOffset;
+
     private final Supplier<Boolean> getter;
     private final Consumer<Boolean> setter;
 
     @Nullable
     private final Function<Boolean, Component> tooltipFunction;
 
-    public ToggleIconButton(int x, int y, int width, int height, Function<Boolean, ResourceLocation> spriteFunction,
-            @Nullable Function<Boolean, Component> tooltipFunction, Supplier<Boolean> getter,
+    public ToggleIconButton(int x, int y, int width, int height, ResourceLocation texture, int texU, int texV, int texW, int texH,
+            int toggledTexUOffset, int toggledTexVOffset, @Nullable Function<Boolean, Component> tooltipFunction, Supplier<Boolean> getter,
             Consumer<Boolean> setter) {
         super(x, y, width, height, Component.empty());
-        this.spriteFunction = spriteFunction;
+        this.texture = texture;
+        this.texU = texU;
+        this.texV = texV;
+        this.texW = texW;
+        this.texH = texH;
+
+        this.toggledTexUOffset = toggledTexUOffset;
+        this.toggledTexVOffset = toggledTexVOffset;
+
         this.tooltipFunction = tooltipFunction;
         this.getter = getter;
         this.setter = setter;
@@ -41,14 +58,14 @@ public class ToggleIconButton extends EnderButton {
             "icon/checkmark");
 
     public static ToggleIconButton createCheckbox(int x, int y, Supplier<Boolean> getter, Consumer<Boolean> setter) {
-        return new ToggleIconButton(x, y, 16, 16, isChecked -> isChecked ? CHECKMARK : null, null, getter, setter);
+        return new ToggleIconButton(x, y, 16, 16, CHECKMARK, 0, 0, 16, 16, 16, 0, null, getter, setter);
     }
 
-    public static ToggleIconButton of(int x, int y, int width, int height, ResourceLocation checked,
-            ResourceLocation unchecked, Component checkedTooltip, Component uncheckedTooltip, Supplier<Boolean> getter,
+    public static ToggleIconButton of(int x, int y, int width, int height, ResourceLocation texture,
+            int toggledTexUOffset, int toggledTexVOffset, Component checkedTooltip, Component uncheckedTooltip, Supplier<Boolean> getter,
             Consumer<Boolean> setter) {
-        return new ToggleIconButton(x, y, width, height, isChecked -> isChecked ? checked : unchecked,
-                isChecked -> isChecked ? checkedTooltip : uncheckedTooltip, getter, setter);
+        return new ToggleIconButton(x, y, width, height, texture, 0, 0, width, height, toggledTexUOffset, toggledTexVOffset,
+            isChecked -> isChecked ? checkedTooltip : uncheckedTooltip, getter, setter);
     }
 
     // endregion
@@ -67,10 +84,17 @@ public class ToggleIconButton extends EnderButton {
     @Override
     public void renderButtonFace(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         boolean value = getter.get();
-        ResourceLocation sprite = spriteFunction.apply(getter.get());
-        if (sprite != null) {
-            guiGraphics.blitSprite(sprite, getX(), getY(), width, height);
+
+        // Coordinates based on whether toggledOn or not
+        int xTex = texU;
+        int yTex = texV;
+
+        if (value) {
+            xTex += toggledTexUOffset;
+            yTex += toggledTexVOffset;
         }
+
+        guiGraphics.blit(texture, getX(), getY(), (float) xTex, (float) yTex, this.width, this.height, texW, texH);
 
         // TODO: Temp solution for the value changing externally (data sync)
         if (tooltipFunction != null && previousValue != value) {

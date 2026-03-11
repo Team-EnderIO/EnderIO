@@ -3,7 +3,6 @@ package com.enderio.core.common.blockentity;
 import com.enderio.core.common.network.ClientboundDataSlotChange;
 import com.enderio.core.common.network.CoreNetwork;
 import com.enderio.core.common.network.NetworkDataSlot;
-import com.enderio.core.common.network.ServerboundCDataSlotUpdate;
 import io.netty.buffer.Unpooled;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.BlockPos;
@@ -13,12 +12,14 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.WeakHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -40,8 +42,9 @@ public class EnderBlockEntity extends BlockEntity {
     private final List<NetworkDataSlot<?>> dataSlots = new CopyOnWriteArrayList<>();
     private final List<Runnable> afterDataSync = new CopyOnWriteArrayList<>();
 
-    private final Map<BlockCapability<?, ?>, EnumMap<Direction, BlockCapabilityCache<?, ?>>> selfCapabilities = new HashMap<>();
-    private final Map<BlockCapability<?, ?>, EnumMap<Direction, BlockCapabilityCache<?, ?>>> neighbourCapabilities = new HashMap<>();
+    private final List<Capability<?>> cachedCapabilityTypes = new ArrayList<>();
+    private final Map<Capability<?>, EnumMap<Direction, LazyOptional<?>>> cachedCapabilities = new HashMap<>();
+    private boolean isCapabilityCacheDirty = false;
 
     public EnderBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
@@ -102,7 +105,7 @@ public class EnderBlockEntity extends BlockEntity {
         ListTag dataList = new ListTag();
         for (int i = 0; i < dataSlots.size(); i++) {
             var slot = dataSlots.get(i);
-            var nbt = slot.save(registries, true);
+            var nbt = slot.save(true);
 
             CompoundTag slotTag = new CompoundTag();
             slotTag.putInt(INDEX, i);
@@ -133,7 +136,7 @@ public class EnderBlockEntity extends BlockEntity {
             for (Tag dataEntry : dataList) {
                 if (dataEntry instanceof CompoundTag slotData) {
                     int slotIdx = slotData.getInt(INDEX);
-                    dataSlots.get(slotIdx).parse(lookupProvider, Objects.requireNonNull(slotData.get(DATA)));
+                    dataSlots.get(slotIdx).parse(Objects.requireNonNull(slotData.get(DATA)));
                 }
             }
 
@@ -216,8 +219,8 @@ public class EnderBlockEntity extends BlockEntity {
         var syncData = createBufferSlotUpdate();
         if (syncData != null && level instanceof ServerLevel serverLevel) {
             setChanged();
-            PacketDistributor.sendToPlayersTrackingChunk(serverLevel, new ChunkPos(getBlockPos()),
-                    new ServerboundCDataSlotUpdate(getBlockPos(), syncData));
+            CoreNetwork.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> serverLevel.getChunkAt(getBlockPos())),
+                new ClientboundDataSlotChange(getBlockPos(), syncData));
         }
     }
 
@@ -270,49 +273,118 @@ public class EnderBlockEntity extends BlockEntity {
     // However cannot have two methods with same method name and different context
     // type params :(
 
-    @Nullable
-    protected <T> T getSelfCapability(BlockCapability<T, Direction> capability, Direction side) {
+    // TODO 1.20.1: How does this tie into 1.20.1 caps?
+//    @Nullable
+//    protected <T> T getSelfCapability(BlockCapability<T, Direction> capability, Direction side) {
+//        if (level == null) {
+//            return null;
+//        }
+//
+//        if (!selfCapabilities.containsKey(capability)) {
+//            // We've not seen this capability before, time to register it!
+//            selfCapabilities.put(capability, new EnumMap<>(Direction.class));
+//
+//            for (Direction direction : Direction.values()) {
+//                populateSelfCachesFor(direction, capability);
+//            }
+//        }
+//
+//        if (!selfCapabilities.get(capability).containsKey(side)) {
+//            return null;
+//        }
+//
+//        // noinspection unchecked
+//        return (T) selfCapabilities.get(capability).get(side).getCapability();
+//    }
+//
+//    private void populateSelfCachesFor(Direction direction, BlockCapability<?, Direction> capability) {
+//        if (level instanceof ServerLevel serverLevel) {
+//            selfCapabilities.get(capability)
+//                    .put(direction, BlockCapabilityCache.create(capability, serverLevel, getBlockPos(), direction));
+//        }
+//    }
+
+    protected <T> LazyOptional<T> getNeighbouringCapability(Capability<T> capability, Direction side) {
         if (level == null) {
-            return null;
+            return LazyOptional.empty();
         }
 
-        if (!selfCapabilities.containsKey(capability)) {
+        if (!cachedCapabilityTypes.contains(capability)) {
             // We've not seen this capability before, time to register it!
-            selfCapabilities.put(capability, new EnumMap<>(Direction.class));
+            cachedCapabilityTypes.add(capability);
+            cachedCapabilities.put(capability, new EnumMap<>(Direction.class));
 
             for (Direction direction : Direction.values()) {
-                populateSelfCachesFor(direction, capability);
+                BlockEntity neighbor = this.level.getBlockEntity(worldPosition.relative(direction));
+                populateCachesFor(direction, neighbor, capability);
             }
         }
 
-        if (!selfCapabilities.get(capability).containsKey(side)) {
-            return null;
+        if (!cachedCapabilities.get(capability).containsKey(side)) {
+            return LazyOptional.empty();
         }
 
-        // noinspection unchecked
-        return (T) selfCapabilities.get(capability).get(side).getCapability();
+        return cachedCapabilities.get(capability).get(side).cast();
     }
 
-    private void populateSelfCachesFor(Direction direction, BlockCapability<?, Direction> capability) {
-        if (level instanceof ServerLevel serverLevel) {
-            selfCapabilities.get(capability)
-                    .put(direction, BlockCapabilityCache.create(capability, serverLevel, getBlockPos(), direction));
+    /**
+     * Mark the capability cache as dirty. Will be updated next tick.
+     */
+    public void markCapabilityCacheDirty() {
+        isCapabilityCacheDirty = true;
+    }
+
+    /**
+     * Update capability cache
+     */
+    private void updateCapabilityCache() {
+        if (this.level != null) {
+            clearCaches();
+
+            for (Direction direction : Direction.values()) {
+                BlockEntity neighbor = this.level.getBlockEntity(worldPosition.relative(direction));
+                populateCaches(direction, neighbor);
+            }
+
+            isCapabilityCacheDirty = false;
         }
     }
 
-    // TODO: Ensure SERVER usage sometime.
-    @Nullable
-    protected <T> T getNeighbouringCapability(BlockCapability<T, Direction> capability, Direction side) {
-        if (level == null || !(level instanceof ServerLevel serverLevel)) {
-            return null;
+    private final WeakHashMap<LazyOptional<?>, Boolean> listenedCaps = new WeakHashMap<LazyOptional<?>, Boolean>();
+
+    /**
+     * Add invalidation handler to a capability to be notified if it is removed.
+     */
+    private <T> LazyOptional<T> addInvalidationListener(LazyOptional<T> capability) {
+        if (capability.isPresent() && !listenedCaps.containsKey(capability)) {
+            capability.addListener(c -> {
+                markCapabilityCacheDirty();
+                listenedCaps.remove(capability);
+            });
+            listenedCaps.put(capability, true);
         }
 
-        var sidedCaches = neighbourCapabilities.computeIfAbsent(capability, c -> new EnumMap<>(Direction.class));
-        var cache = sidedCaches.computeIfAbsent(side,
-                s -> BlockCapabilityCache.create(capability, serverLevel, getBlockPos().relative(s), s.getOpposite()));
+        return capability;
+    }
 
-        // noinspection unchecked
-        return (T) cache.getCapability();
+    private void clearCaches() {
+        for (Capability<?> capability : cachedCapabilityTypes) {
+            cachedCapabilities.get(capability).clear();
+        }
+    }
+
+    private void populateCaches(Direction direction, @Nullable BlockEntity neighbor) {
+        for (Capability<?> capability : cachedCapabilityTypes) {
+            populateCachesFor(direction, neighbor, capability);
+        }
+    }
+
+    private void populateCachesFor(Direction direction, @Nullable BlockEntity neighbor, Capability<?> capability) {
+        if (neighbor != null) {
+            cachedCapabilities.get(capability).put(direction, addInvalidationListener(neighbor.getCapability(capability, direction.getOpposite())));
+        } else {
+            cachedCapabilities.get(capability).put(direction, LazyOptional.empty());
+        }
     }
 
     // endregion

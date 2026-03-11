@@ -49,18 +49,18 @@ public final class NetworkDataSlot<T> {
     }
 
     @Nullable
-    public Tag save(HolderLookup.Provider lookupProvider, boolean fullUpdate) {
+    public Tag save(boolean fullUpdate) {
         if (doesNeedUpdate() && !fullUpdate) {
             return null;
         }
 
         T value = getter.get();
         lastHash = type.hash(value);
-        return type.save(lookupProvider, value);
+        return type.save(value);
     }
 
-    public void parse(HolderLookup.Provider lookupProvider, Tag tag) {
-        setter.accept(type.parse(lookupProvider, tag, getter));
+    public void parse(Tag tag) {
+        setter.accept(type.parse(tag, getter));
     }
 
     public void write(FriendlyByteBuf buf) {
@@ -98,14 +98,14 @@ public final class NetworkDataSlot<T> {
          * @param value The value to save.
          * @return The value saved to NBT.
          */
-        Tag save(HolderLookup.Provider lookupProvider, T value);
+        Tag save(T value);
 
         /***
          * @param lookupProvider Holder lookup provider.
          * @param tag The tag to parse.
          * @return The parsed value.
          */
-        T parse(HolderLookup.Provider lookupProvider, Tag tag, Supplier<T> currentValueSupplier);
+        T parse(Tag tag, Supplier<T> currentValueSupplier);
 
         /***
          * @param buf The buffer to write to.
@@ -164,11 +164,11 @@ public final class NetworkDataSlot<T> {
             return hashFunction.apply(value);
         }
 
-        public Tag save(HolderLookup.Provider lookupProvider, T value) {
+        public Tag save(T value) {
             return codec.encodeStart(NbtOps.INSTANCE, value).getOrThrow(false, str -> {});
         }
 
-        public T parse(HolderLookup.Provider lookupProvider, Tag tag, Supplier<T> currentValueSupplier) {
+        public T parse(Tag tag, Supplier<T> currentValueSupplier) {
             return codec.parse(NbtOps.INSTANCE, tag).getOrThrow(false, str -> {});
         }
 

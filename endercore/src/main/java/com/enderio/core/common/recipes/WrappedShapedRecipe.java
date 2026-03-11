@@ -1,19 +1,21 @@
 package com.enderio.core.common.recipes;
 
+import com.google.gson.JsonObject;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
-import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
@@ -23,7 +25,8 @@ public abstract class WrappedShapedRecipe extends ShapedRecipe implements Crafti
     private final ShapedRecipe wrapped;
 
     protected WrappedShapedRecipe(ShapedRecipe wrapped) {
-        super(wrapped.getGroup(), wrapped.category(), wrapped.pattern, ItemStack.EMPTY, wrapped.showNotification());
+        super(wrapped.getId(), wrapped.getGroup(), wrapped.category(), wrapped.getWidth(), wrapped.getHeight(), wrapped.getIngredients(), ItemStack.EMPTY,
+            wrapped.showNotification());
         this.wrapped = wrapped;
     }
 
@@ -37,14 +40,11 @@ public abstract class WrappedShapedRecipe extends ShapedRecipe implements Crafti
     }
 
     @Override
-    public abstract ItemStack assemble(CraftingInput inv, HolderLookup.Provider lookupProvider);
-
-    @Override
-    public boolean matches(CraftingInput inv, Level world) {
+    public boolean matches(CraftingContainer inv, Level level) {
         // Note: We do not override the matches method if it matches ignoring NBT,
         // to ensure that we return the proper value for if there is a match that gives
         // a proper output
-        return wrapped.matches(inv, world) && !assemble(inv, world.registryAccess()).isEmpty();
+        return wrapped.matches(inv, level) && !assemble(inv, level.registryAccess()).isEmpty();
     }
 
     @Override
@@ -53,13 +53,13 @@ public abstract class WrappedShapedRecipe extends ShapedRecipe implements Crafti
     }
 
     @Override
-    public ItemStack getResultItem(HolderLookup.Provider lookupProvider) {
-        return wrapped.getResultItem(lookupProvider);
+    public ItemStack getResultItem(RegistryAccess registryAccess) {
+        return wrapped.getResultItem(registryAccess);
     }
 
     @Override
-    public NonNullList<ItemStack> getRemainingItems(CraftingInput inv) {
-        return wrapped.getRemainingItems(inv);
+    public NonNullList<ItemStack> getRemainingItems(CraftingContainer container) {
+        return wrapped.getRemainingItems(container);
     }
 
     @Override
@@ -99,31 +99,24 @@ public abstract class WrappedShapedRecipe extends ShapedRecipe implements Crafti
 
     public static class Serializer<T extends WrappedShapedRecipe> implements RecipeSerializer<T> {
         private final Function<ShapedRecipe, T> wrapper;
-        private MapCodec<T> codec;
-        private StreamCodec<RegistryFriendlyByteBuf, T> streamCodec;
 
         public Serializer(Function<ShapedRecipe, T> wrapper) {
             this.wrapper = wrapper;
         }
 
-        @NotNull
         @Override
-        public MapCodec<T> codec() {
-            if (codec == null) {
-                codec = RecipeSerializer.SHAPED_RECIPE.codec().xmap(wrapper, WrappedShapedRecipe::getWrapped);
-            }
-
-            return codec;
+        public T fromJson(ResourceLocation resourceLocation, JsonObject jsonObject) {
+            return wrapper.apply(RecipeSerializer.SHAPED_RECIPE.fromJson(resourceLocation, jsonObject));
         }
 
         @Override
-        public StreamCodec<RegistryFriendlyByteBuf, T> streamCodec() {
-            if (streamCodec == null) {
-                streamCodec = RecipeSerializer.SHAPED_RECIPE.streamCodec()
-                        .map(wrapper, WrappedShapedRecipe::getWrapped);
-            }
+        public @Nullable T fromNetwork(ResourceLocation resourceLocation, FriendlyByteBuf friendlyByteBuf) {
+            return wrapper.apply(RecipeSerializer.SHAPED_RECIPE.fromNetwork(resourceLocation, friendlyByteBuf));
+        }
 
-            return streamCodec;
+        @Override
+        public void toNetwork(FriendlyByteBuf friendlyByteBuf, T t) {
+            RecipeSerializer.SHAPED_RECIPE.toNetwork(friendlyByteBuf, t.getWrapped());
         }
     }
 }

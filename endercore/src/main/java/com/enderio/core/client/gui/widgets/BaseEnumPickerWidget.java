@@ -42,8 +42,12 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
 
     private final Component optionName;
 
-    public BaseEnumPickerWidget(int x, int y, int width, int height, Class<T> clazz, Supplier<T> getter,
-            Consumer<T> setter, boolean shouldAdvanceOnPress, Component optionName) {
+    private final ResourceLocation texture;
+    private final int texW;
+    private final int texH;
+
+    protected BaseEnumPickerWidget(int x, int y, int width, int height, Class<T> clazz, Supplier<T> getter,
+            Consumer<T> setter, boolean shouldAdvanceOnPress, Component optionName, ResourceLocation texture, int texW, int texH) {
         super(x, y, width, height, Component.empty());
 
         this.clazz = clazz;
@@ -51,6 +55,10 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
         this.setter = setter;
         this.shouldAdvanceOnPress = shouldAdvanceOnPress;
         this.optionName = optionName;
+
+        this.texture = texture;
+        this.texW = texW;
+        this.texH = texH;
 
         T[] values = getValues();
         Vector2i pos = calculateFirstPosition(values[0], values.length);
@@ -87,8 +95,7 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
 
     @Nullable
     public abstract Component getValueTooltip(T value);
-
-    public abstract ResourceLocation getValueIcon(T value);
+    public abstract Vector2i getValueIconOffset(T value);
 
     public T[] getValues() {
         return clazz.getEnumConstants();
@@ -177,7 +184,9 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
     @Override
     public void renderButtonFace(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         T value = getValue();
-        guiGraphics.blitSprite(getValueIcon(value), getX(), getY(), getWidth(), getHeight());
+
+        var offset = getValueIconOffset(value);
+        guiGraphics.blit(texture, getX(), getY(), getWidth(), getHeight(), offset.x(), offset.y(), texW, texH);
 
         // TODO: Temp solution for the value changing externally (data sync)
         if (previousValue != value) {
@@ -295,7 +304,9 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
 
         @Override
         public void renderButtonFace(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-            guiGraphics.blitSprite(getValueIcon(value), getX(), getY(), iconWidth, iconHeight);
+            var offset = getValueIconOffset(value);
+            guiGraphics.blit(texture, getX(), getY(), getWidth(), getHeight(), offset.x(),
+                offset.y(), iconWidth, iconHeight, texW, texH);
         }
     }
 }

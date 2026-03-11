@@ -131,19 +131,20 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
         return false;
     }
 
-    @Override
-    protected void renderSlotContents(GuiGraphics guiGraphics, ItemStack itemstack, Slot slot,
-            @Nullable String countString) {
-        super.renderSlotContents(guiGraphics, itemstack, slot, countString);
-
-        if (slot instanceof SlotWithOverlay slotWithOverlay) {
-            if (slotWithOverlay.getForegroundSprite() != null) {
-                RenderSystem.disableDepthTest();
-                guiGraphics.blitSprite(slotWithOverlay.getForegroundSprite(), slot.x, slot.y, 16, 16);
-                RenderSystem.enableDepthTest();
-            }
-        }
-    }
+    // TODO: 1.20.1 - find an alternative strategy for foreground sprites
+//    @Override
+//    protected void renderSlotContents(GuiGraphics guiGraphics, ItemStack itemstack, Slot slot,
+//            @Nullable String countString) {
+//        super.renderSlotContents(guiGraphics, itemstack, slot, countString);
+//
+//        if (slot instanceof SlotWithOverlay slotWithOverlay) {
+//            if (slotWithOverlay.getForegroundSprite() != null) {
+//                RenderSystem.disableDepthTest();
+//                guiGraphics.blitSprite(slotWithOverlay.getForegroundSprite(), slot.x, slot.y, 16, 16);
+//                RenderSystem.enableDepthTest();
+//            }
+//        }
+//    }
 
     public <U extends StateRestoringWidget> U addRestorableState(String key, U widget) {
         stateRestoringWidgets.put(key, widget);

@@ -23,6 +23,8 @@ legacyForge {
         minecraftVersion = parchment_minecraft_version
     }
 
+    addModdingDependenciesTo(sourceSets["test"])
+
     mods {
         create("endercore") {
             sourceSet(sourceSets["main"])
