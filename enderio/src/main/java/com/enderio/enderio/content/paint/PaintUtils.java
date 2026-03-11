@@ -1,7 +1,6 @@
 package com.enderio.enderio.content.paint;
 
 import com.enderio.enderio.content.paint.block.PaintedBlock;
-import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;

@@ -4,7 +4,6 @@ import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.UseOnly;
 import com.enderio.enderio.api.capacitor.CapacitorData;
 import com.enderio.enderio.api.capacitor.CapacitorScalable;
-import com.enderio.enderio.api.io.IOMode;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.enderio.content.capacitors.CapacitorItem;
 import com.enderio.enderio.foundation.MachineNBTKeys;
@@ -13,10 +12,7 @@ import com.enderio.enderio.foundation.energy.PoweredMachineEnergyStorage;
 import com.enderio.enderio.foundation.inventory.MachineInventory;
 import com.enderio.enderio.foundation.io.TransferUtil;
 import com.enderio.enderio.foundation.state.MachineState;
-import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
@@ -29,9 +25,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.energy.IEnergyStorage;
 
 public abstract class PoweredMachineBlockEntity extends MachineBlockEntity implements MachineInstallable {
 

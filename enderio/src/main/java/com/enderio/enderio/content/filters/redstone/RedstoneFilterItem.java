@@ -5,7 +5,6 @@ import com.enderio.enderio.api.filter.RedstoneFilter;
 import com.enderio.enderio.api.filter.RedstoneInputFilter;
 import com.enderio.enderio.api.filter.RedstoneOutputFilter;
 import com.enderio.enderio.content.filters.FiltersLang;
-import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOMenus;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;

@@ -3,7 +3,6 @@ package com.enderio.enderio.content.filters.fluid;
 import com.enderio.core.common.network.menu.BoolSyncSlot;
 import com.enderio.core.common.network.menu.FluidStackSyncSlot;
 import com.enderio.enderio.content.filters.AbstractFilterMenu;
-import com.enderio.enderio.init.EIODataComponents;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponentType;

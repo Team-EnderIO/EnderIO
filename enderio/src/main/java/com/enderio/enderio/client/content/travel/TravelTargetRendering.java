@@ -30,7 +30,7 @@ public class TravelTargetRendering {
 
     public static void init() {
         var event = new RegisterTravelRenderersEvent();
-        ModLoader.postEvent(event);
+        ModLoader.get().postEvent(event);
         var factories = event.getRenderers();
 
         RENDERERS = new HashMap<>();

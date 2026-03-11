@@ -1,7 +1,6 @@
 package com.enderio.enderio.content.machines.capacitor_bank;
 
 import com.enderio.enderio.foundation.block.entity.multienergy.CapacityTier;
-import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;

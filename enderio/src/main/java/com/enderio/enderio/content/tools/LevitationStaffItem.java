@@ -3,7 +3,6 @@ package com.enderio.enderio.content.tools;
 import com.enderio.core.common.capability.StrictFluidHandlerItemStack;
 import com.enderio.enderio.config.base.BaseConfig;
 import com.enderio.enderio.foundation.tag.EIOTags;
-import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOFluids;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -15,7 +14,6 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 public class LevitationStaffItem extends PoweredToggledItem {
 

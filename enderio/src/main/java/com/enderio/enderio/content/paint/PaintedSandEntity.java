@@ -1,7 +1,6 @@
 package com.enderio.enderio.content.paint;
 
 import com.enderio.enderio.foundation.EIONBTKeys;
-import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOEntities;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;

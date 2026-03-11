@@ -11,6 +11,7 @@ import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOItems;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
@@ -114,28 +115,27 @@ public class ConduitBlockItem extends BlockItem implements ICustomCreativeTabEnt
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents,
-            TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
         Holder<Conduit<?, ?>> conduit = stack.get(EnderIODataComponents.CONDUIT);
         if (conduit != null) {
-            conduit.value().addToTooltip(context, tooltipComponents::add, tooltipFlag);
+            conduit.value().addToTooltip(context, tooltip::add, flag);
 
-            boolean showDetailTooltip = !tooltipFlag.hasShiftDown()
+            boolean showDetailTooltip = !Screen.hasShiftDown()
                     && (conduit.value().hasAdvancedTooltip() || conduit.value().showDebugTooltip());
 
-            if (conduit.value().showDebugTooltip() && tooltipFlag.hasShiftDown()) {
+            if (conduit.value().showDebugTooltip() && Screen.hasShiftDown()) {
                 if (conduit.value().type().ticker() != null) {
-                    tooltipComponents.add(TooltipUtil.styledWithArgs(ConduitLang.GRAPH_TICK_RATE_TOOLTIP,
+                    tooltip.add(TooltipUtil.styledWithArgs(ConduitLang.GRAPH_TICK_RATE_TOOLTIP,
                         20 / conduit.value().type().getTickRate(conduit)));
                 }
             }
 
             if (showDetailTooltip) {
-                tooltipComponents.add(EIOCommonLang.SHOW_DETAIL_TOOLTIP);
+                tooltip.add(EIOCommonLang.SHOW_DETAIL_TOOLTIP);
             }
         }
 
-        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+        super.appendHoverText(stack, level, tooltip, flag);
     }
 
     @Override

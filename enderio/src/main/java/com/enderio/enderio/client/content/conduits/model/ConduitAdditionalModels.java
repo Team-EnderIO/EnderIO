@@ -31,7 +31,7 @@ public class ConduitAdditionalModels {
     public static final ModelResourceLocation CONDUIT_IO_REDSTONE = loc("block/io/redstone");
 
     private static ModelResourceLocation loc(String modelName) {
-        ModelResourceLocation loc = ModelResourceLocation.standalone(EnderIO.rl(modelName));
+        ModelResourceLocation loc = new ModelResourceLocation(EnderIO.rl(modelName), "");
         MODEL_LOCATIONS.add(loc);
         return loc;
     }

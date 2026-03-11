@@ -4,7 +4,6 @@ import com.enderio.core.common.network.menu.BoolSyncSlot;
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.content.filters.AbstractFilterMenu;
 import com.enderio.enderio.foundation.soul.StoredEntityDataSyncSlot;
-import com.enderio.enderio.init.EIODataComponents;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponentType;

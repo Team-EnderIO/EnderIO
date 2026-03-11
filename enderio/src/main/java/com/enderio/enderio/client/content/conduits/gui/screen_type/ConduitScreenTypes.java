@@ -17,7 +17,7 @@ public class ConduitScreenTypes {
     @EnsureSide(EnsureSide.Side.CLIENT)
     public static void init() {
         var event = new RegisterConduitScreenTypesEvent();
-        ModLoader.postEvent(event);
+        ModLoader.get().postEvent(event);
         SCREEN_TYPES = Map.copyOf(event.getScreenTypes());
     }
 

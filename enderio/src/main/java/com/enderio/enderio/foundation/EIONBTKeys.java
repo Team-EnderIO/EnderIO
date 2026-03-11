@@ -14,6 +14,7 @@ public class EIONBTKeys extends CoreNBTKeys {
     // region Capability Serialized Names
 
     public static final String ENTITY_STORAGE = "EntityStorage";
+    public static final String ENTITY_MAX_HEALTH = "MaxHealth";
     public static final String PAINT = "Paint";
     public static final String PAINT_2 = "Paint2";
 

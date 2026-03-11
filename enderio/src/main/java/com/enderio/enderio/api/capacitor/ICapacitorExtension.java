@@ -1,10 +1,7 @@
 package com.enderio.enderio.api.capacitor;
 
-import com.enderio.enderio.init.EIODataComponents;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 

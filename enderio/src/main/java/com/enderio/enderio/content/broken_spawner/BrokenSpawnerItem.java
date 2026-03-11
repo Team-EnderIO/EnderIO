@@ -3,7 +3,6 @@ package com.enderio.enderio.content.broken_spawner;
 import com.enderio.core.common.item.ICustomCreativeTabEntries;
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.foundation.util.EntityCaptureUtils;
-import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOItems;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;

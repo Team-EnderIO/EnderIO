@@ -2,7 +2,6 @@ package com.enderio.enderio.client.content.conduits.model.facades;
 
 import com.enderio.core.data.model.ModelHelper;
 import com.enderio.enderio.client.content.conduits.model.ConduitAdditionalModels;
-import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;

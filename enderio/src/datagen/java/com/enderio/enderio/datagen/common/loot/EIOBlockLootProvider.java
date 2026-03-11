@@ -3,7 +3,6 @@ package com.enderio.enderio.datagen.common.loot;
 import com.enderio.enderio.content.paint.CopyPaintFunction;
 import com.enderio.enderio.content.paint.block.PaintedSlabBlock;
 import com.enderio.enderio.init.EIOBlocks;
-import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOFeatureFlags;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.core.HolderLookup;

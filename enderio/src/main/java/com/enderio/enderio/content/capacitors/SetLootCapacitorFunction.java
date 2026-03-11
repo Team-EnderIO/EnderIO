@@ -2,7 +2,6 @@ package com.enderio.enderio.content.capacitors;
 
 import com.enderio.enderio.api.capacitor.CapacitorData;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
-import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOLootModifiers;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -17,7 +16,6 @@ import net.minecraft.world.level.storage.loot.providers.number.NumberProviders;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 public class SetLootCapacitorFunction extends LootItemConditionalFunction {
 

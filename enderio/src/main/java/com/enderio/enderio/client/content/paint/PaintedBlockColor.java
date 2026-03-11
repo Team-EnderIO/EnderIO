@@ -3,7 +3,6 @@ package com.enderio.enderio.client.content.paint;
 import com.enderio.enderio.content.paint.block.PaintedBlock;
 import com.enderio.enderio.content.paint.block.PaintedSlabBlock;
 import com.enderio.enderio.content.paint.block.entity.PaintedBlockEntity;
-import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;

@@ -19,6 +19,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
@@ -47,8 +48,7 @@ public class FluidTankBEWLR extends BlockEntityWithoutLevelRenderer {
                         buffer.getBuffer(RenderType.cutout()));
 
         // Read the fluid from the NBT, if it has fluid, then we render it.
-        IFluidHandlerItem fluidHandler = stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
-        if (fluidHandler != null) {
+        stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).ifPresent(fluidHandler -> {
             FluidStack fluid = fluidHandler.getFluidInTank(0); // Only one tank present
             if (!fluid.isEmpty()) {
                 VertexConsumer fluidBuffer = buffer.getBuffer(Sheets.translucentCullBlockSheet());
@@ -61,9 +61,9 @@ public class FluidTankBEWLR extends BlockEntityWithoutLevelRenderer {
                 PoseStack.Pose pose = poseStack.last();
                 IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluid.getFluid());
                 FluidRendererUtil.renderFluid(pose, fluidBuffer, fluid.getFluid(), fluid.getAmount() / (float) capacity,
-                        props.getTintColor(), packedLight);
+                    props.getTintColor(), packedLight);
             }
-        }
+        });
 
         poseStack.popPose();
     }

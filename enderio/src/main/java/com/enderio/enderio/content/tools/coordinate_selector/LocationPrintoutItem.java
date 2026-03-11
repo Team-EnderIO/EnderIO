@@ -1,7 +1,6 @@
 package com.enderio.enderio.content.tools.coordinate_selector;
 
 import com.enderio.enderio.api.attachment.CoordinateSelection;
-import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;

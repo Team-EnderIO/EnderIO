@@ -134,8 +134,8 @@ public class IOOverlayBakedModel implements IDynamicBakedModel {
 
     public static class Geometry implements IUnbakedGeometry<Geometry> {
         @Override
-        public BakedModel bake(IGeometryBakingContext context, ModelBaker baker,
-                Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState, ItemOverrides overrides) {
+        public BakedModel bake(IGeometryBakingContext iGeometryBakingContext, ModelBaker modelBaker, Function<Material, TextureAtlasSprite> function,
+            ModelState modelState, ItemOverrides itemOverrides, ResourceLocation resourceLocation) {
             return new IOOverlayBakedModel(modelState);
         }
     }

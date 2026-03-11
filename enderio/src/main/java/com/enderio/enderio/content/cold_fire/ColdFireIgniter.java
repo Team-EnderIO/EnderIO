@@ -4,7 +4,6 @@ import com.enderio.core.common.capability.StrictFluidHandlerItemStack;
 import com.enderio.core.common.item.ICustomCreativeTabEntries;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOBlocks;
-import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOFluids;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;

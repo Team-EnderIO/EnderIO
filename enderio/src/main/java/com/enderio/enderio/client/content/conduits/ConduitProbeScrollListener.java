@@ -21,10 +21,9 @@ public class ConduitProbeScrollListener {
             return;
         }
 
-        // Supports vertical and horizontal scrolling
-        if ((event.getScrollDeltaX() != 0 || event.getScrollDeltaY() != 0) && player.isShiftKeyDown()) {
+        if (event.getScrollDelta() != 0 && player.isShiftKeyDown()) {
             ItemStack mainHandStack = player.getMainHandItem();
-            if (mainHandStack.is(EIOItems.CONDUIT_PROBE)) {
+            if (mainHandStack.is(EIOItems.CONDUIT_PROBE.get())) {
                 ConduitProbeItem.switchState(player, mainHandStack);
                 event.setCanceled(true);
             }

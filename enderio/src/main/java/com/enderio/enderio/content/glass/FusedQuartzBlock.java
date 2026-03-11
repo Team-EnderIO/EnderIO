@@ -5,11 +5,10 @@ import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.block.TransparentBlock;
+import net.minecraft.world.level.block.AbstractGlassBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
@@ -19,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class FusedQuartzBlock extends TransparentBlock {
+public class FusedQuartzBlock extends AbstractGlassBlock {
     // TODO: Connected textures
     private final GlassIdentifier glassIdentifier;
     private final String descriptionId;
@@ -40,8 +39,8 @@ public class FusedQuartzBlock extends TransparentBlock {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        super.appendHoverText(stack, context, tooltip, flag);
+    public void appendHoverText(ItemStack stack, @Nullable BlockGetter level, List<Component> tooltip, TooltipFlag flag) {
+        super.appendHoverText(stack, level, tooltip, flag);
 
         if (glassIdentifier.explosionResistance()) {
             tooltip.add(EIOCommonLang.BLOCK_BLAST_RESISTANT);

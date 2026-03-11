@@ -18,7 +18,6 @@ import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOConduitTypes;
 import com.enderio.enderio.init.EIOCreativeTabs;
 import com.enderio.enderio.init.EIOCriterions;
-import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOEntities;
 import com.enderio.enderio.init.EIOFluids;
 import com.enderio.enderio.init.EIOIngredientTypes;
@@ -36,6 +35,7 @@ import net.minecraft.server.packs.repository.PackSource;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.loading.FMLPaths;
@@ -81,15 +81,15 @@ public class EnderIO {
         }
 
         // Register config files
-        modContainer.registerConfig(ModConfig.Type.COMMON, BaseConfig.COMMON_SPEC, "enderio/base-common.toml");
-        modContainer.registerConfig(ModConfig.Type.CLIENT, BaseConfig.CLIENT_SPEC, "enderio/base-client.toml");
-        modContainer.registerConfig(ModConfig.Type.COMMON, MachinesConfig.COMMON_SPEC, "enderio/machines-common.toml");
-        modContainer.registerConfig(ModConfig.Type.CLIENT, MachinesConfig.CLIENT_SPEC, "enderio/machines-client.toml");
-        modContainer.registerConfig(ModConfig.Type.COMMON, ConduitsConfig.COMMON_SPEC, "enderio/conduits-common.toml");
+        var ctx = ModLoadingContext.get();
+        ctx.registerConfig(ModConfig.Type.COMMON, BaseConfig.COMMON_SPEC, "enderio/base-common.toml");
+        ctx.registerConfig(ModConfig.Type.CLIENT, BaseConfig.CLIENT_SPEC, "enderio/base-client.toml");
+        ctx.registerConfig(ModConfig.Type.COMMON, MachinesConfig.COMMON_SPEC, "enderio/machines-common.toml");
+        ctx.registerConfig(ModConfig.Type.CLIENT, MachinesConfig.CLIENT_SPEC, "enderio/machines-client.toml");
+        ctx.registerConfig(ModConfig.Type.COMMON, ConduitsConfig.COMMON_SPEC, "enderio/conduits-common.toml");
 
         // Perform initialization and registration for everything so things are
         // registered.
-        EIODataComponents.register(modEventBus);
         EIOCreativeTabs.register(modEventBus);
         EIOItems.register(modEventBus);
         EIOBlocks.register(modEventBus);
