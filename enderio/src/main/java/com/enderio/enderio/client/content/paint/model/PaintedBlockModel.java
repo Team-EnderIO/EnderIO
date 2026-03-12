@@ -6,6 +6,7 @@ import com.enderio.enderio.client.content.paint.PaintedBlockColor;
 import com.enderio.enderio.content.paint.block.entity.DoublePaintedBlockEntity;
 import com.enderio.enderio.content.paint.block.entity.PaintedBlockEntity;
 import com.enderio.enderio.content.paint.block.entity.SinglePaintedBlockEntity;
+import com.enderio.enderio.init.EIODataComponents;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.Minecraft;
@@ -187,21 +188,21 @@ public class PaintedBlockModel implements IDynamicBakedModel {
 
     @Override
     public List<RenderType> getRenderTypes(ItemStack itemStack, boolean fabulous) {
-        if (!itemStack.has(EIODataComponents.BLOCK_PAINT)) {
+        if (!EIODataComponents.BLOCK_PAINT.has(itemStack)) {
             return List.of(fabulous ? Sheets.translucentCullBlockSheet() : Sheets.translucentItemSheet());
         }
 
-        var paintData = itemStack.get(EIODataComponents.BLOCK_PAINT);
+        var paintData = EIODataComponents.BLOCK_PAINT.get(itemStack);
         return List.of(ItemBlockRenderTypes.getRenderType(paintData.paint().defaultBlockState(), fabulous));
     }
 
     @Override
     public List<BakedModel> getRenderPasses(ItemStack itemStack, boolean fabulous) {
-        if (!itemStack.has(EIODataComponents.BLOCK_PAINT)) {
+        if (!EIODataComponents.BLOCK_PAINT.has(itemStack)) {
             return List.of();
         }
 
-        var paintData = itemStack.get(EIODataComponents.BLOCK_PAINT);
+        var paintData = EIODataComponents.BLOCK_PAINT.get(itemStack);
         return itemRenderCache.computeIfAbsent(paintData.paint(),
                 paintKey -> List.of(new ItemModel(paintData.paint())));
     }

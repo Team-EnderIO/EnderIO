@@ -2,10 +2,12 @@ package com.enderio.enderio.client.content.conduits;
 
 import com.enderio.enderio.client.content.conduits.model.facades.ClientFacadeVisibility;
 import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
+import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
@@ -23,7 +25,8 @@ public class ConduitFacadeColor implements BlockColor, ItemColor {
     @Override
     public int getColor(BlockState state, @Nullable BlockAndTintGetter level, @Nullable BlockPos pos, int tintIndex) {
         if (tintIndex >= 0) {
-            return DyeColor.values()[tintIndex].getTextureDiffuseColor();
+            float[] color = DyeColor.values()[tintIndex].getTextureDiffuseColors();
+            return FastColor.ARGB32.color(255, (int)(color[0] * 255f), (int)(color[1] * 255f), (int)(color[2] * 255f));
         }
         tintIndex = unmoveTintIndex(tintIndex);
         if (level != null && pos != null) {
@@ -50,7 +53,7 @@ public class ConduitFacadeColor implements BlockColor, ItemColor {
 
     @Override
     public int getColor(ItemStack stack, int tintIndex) {
-        var facadeData = stack.get(EIODataComponents.BLOCK_PAINT);
+        var facadeData = EIODataComponents.BLOCK_PAINT.get(stack);
         if (facadeData != null) {
             var block = facadeData.paint();
             return Minecraft.getInstance().getItemColors().getColor(block.asItem().getDefaultInstance(), tintIndex);

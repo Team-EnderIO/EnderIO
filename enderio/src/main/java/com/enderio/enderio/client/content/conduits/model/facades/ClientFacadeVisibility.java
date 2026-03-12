@@ -29,11 +29,11 @@ public class ClientFacadeVisibility {
             return;
         }
 
-        if (event.getEntity() != Minecraft.getInstance().player) {
+        if (event.player != Minecraft.getInstance().player) {
             return;
         }
 
-        setFacadesVisible(FacadeUtil.areFacadesVisible(event.getEntity()));
+        setFacadesVisible(FacadeUtil.areFacadesVisible(event.player));
     }
 
     private static void setFacadesVisible(boolean visible) {

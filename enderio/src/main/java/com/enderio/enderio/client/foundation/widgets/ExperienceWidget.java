@@ -12,10 +12,8 @@ import net.minecraftforge.fluids.FluidStack;
 import java.util.function.Supplier;
 
 public class ExperienceWidget extends EIOWidget {
-    protected static final ResourceLocation EXPERIENCE_BAR_BACKGROUND_SPRITE = ResourceLocation
-            .withDefaultNamespace("hud/experience_bar_background");
-    protected static final ResourceLocation EXPERIENCE_BAR_PROGRESS_SPRITE = ResourceLocation
-            .withDefaultNamespace("hud/experience_bar_progress");
+    protected static final ResourceLocation EXPERIENCE_BAR_BACKGROUND_SPRITE = new ResourceLocation("hud/experience_bar_background");
+    protected static final ResourceLocation EXPERIENCE_BAR_PROGRESS_SPRITE = new ResourceLocation("hud/experience_bar_progress");
 
     private final Supplier<FluidStack> getFluid;
 

@@ -3,7 +3,7 @@ package com.enderio.enderio.content.armory;
 import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.init.EIOBlocks;
-import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.EntityType;
@@ -11,8 +11,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.PlayerHeadItem;
 import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.item.component.ResolvableProfile;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -20,9 +20,7 @@ import java.util.Optional;
 
 public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProvider, IDarkSteelItem {
     public DarkSteelSwordItem(Properties properties) {
-        super(DarkSteelTiers.DARK_STEEL_TIER,
-                properties.attributes(createAttributes(DarkSteelTiers.DARK_STEEL_TIER, 3, -2.4F))
-                        .component(EIODataComponents.TRAVEL_ITEM, false));
+        super(DarkSteelTiers.DARK_STEEL_TIER, 3, -2.4F, properties);
     }
 
     @Override
@@ -65,7 +63,7 @@ public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProv
             return Optional.of(new ItemStack(Items.DRAGON_HEAD));
         }
         if (target.getType() == EntityType.ENDERMAN) {
-            return Optional.of(new ItemStack(EIOBlocks.ENDERMAN_HEAD));
+            return Optional.of(new ItemStack(EIOBlocks.ENDERMAN_HEAD.get()));
         }
         if (target.getType() == EntityType.PIGLIN || target.getType() == EntityType.PIGLIN_BRUTE
                 || target.getType() == EntityType.ZOMBIFIED_PIGLIN) {
@@ -73,7 +71,8 @@ public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProv
         }
         if (target instanceof Player player) {
             ItemStack stack = new ItemStack(Items.PLAYER_HEAD);
-            stack.set(DataComponents.PROFILE, new ResolvableProfile(player.getGameProfile()));
+            CompoundTag compoundtag = stack.getOrCreateTag();
+            compoundtag.putString(PlayerHeadItem.TAG_SKULL_OWNER, player.getDisplayName().getString());
             return Optional.of(stack);
         }
         return Optional.empty();

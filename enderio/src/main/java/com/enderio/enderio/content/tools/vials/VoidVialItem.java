@@ -1,11 +1,11 @@
 package com.enderio.enderio.content.tools.vials;
 
+import com.enderio.core.common.network.CoreNetwork;
 import com.enderio.core.common.network.EmitParticlePacket;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.foundation.util.ExperienceUtil;
 import com.enderio.enderio.init.EIOFluids;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -47,11 +47,8 @@ public class VoidVialItem extends Item {
         }
 
         if (wasSuccess) {
-            var particle = ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, 0.27450980f, 0.88627451f,
-                    0.29411765f);
-
-            PacketDistributor.sendToPlayersTrackingChunk(serverLevel, new ChunkPos(pos),
-                    new EmitParticlePacket(particle, pos, 0.2, 0.8, 0.2));
+            CoreNetwork.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> serverLevel.getChunkAt(pos)),
+                    new EmitParticlePacket(ParticleTypes.ENTITY_EFFECT, pos, 0.2, 0.8, 0.2));
 
             level.playSound(null, pos, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 0.1f,
                     0.5F * ((level.random.nextFloat() - level.random.nextFloat()) * 0.7F + 1.8F));

@@ -18,7 +18,7 @@ public class FarmTaskManager {
     public static List<FarmTask> getTasks() {
         if (TASKS_IMMUTABLE == null) {
             var event = new RegisterFarmTasksEvent();
-            ModLoader.postEvent(event);
+            ModLoader.get().postEvent(event);
 
             TASKS_IMMUTABLE = event.getTasks().stream()
                 .sorted(Comparator.comparingInt(pair -> pair.first().priority()))

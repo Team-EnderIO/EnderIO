@@ -11,6 +11,7 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraftforge.client.model.ElementsModel;
 import net.minecraftforge.client.model.geometry.IGeometryBakingContext;
@@ -44,9 +45,9 @@ public class ConduitItemModelLoader implements IGeometryLoader<ElementsModel> {
         }
 
         @Override
-        public BakedModel bake(IGeometryBakingContext context, ModelBaker baker,
-                Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState, ItemOverrides overrides) {
-            return new ConduitItemModel(super.bake(context, baker, spriteGetter, modelState, overrides));
+        public BakedModel bake(IGeometryBakingContext context, ModelBaker baker, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState,
+            ItemOverrides overrides, ResourceLocation modelLocation) {
+            return new ConduitItemModel(super.bake(context, baker, spriteGetter, modelState, overrides, modelLocation));
         }
     }
 }

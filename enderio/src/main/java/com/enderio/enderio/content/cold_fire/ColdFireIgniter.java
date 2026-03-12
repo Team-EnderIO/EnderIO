@@ -23,11 +23,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.capabilities.ICapabilityProvider;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import org.apache.logging.log4j.LogManager;
 
 import java.util.List;
@@ -45,7 +41,7 @@ public class ColdFireIgniter extends Item implements ICustomCreativeTabEntries {
     public InteractionResult useOn(UseOnContext context) {
         ItemStack itemstack = context.getItemInHand();
 
-        var fluidHandler = itemstack.getCapability(Capabilities.FluidHandler.ITEM);
+        var fluidHandler = itemstack.getCapability(ForgeCapabilities.FluidHandler.ITEM);
         if (fluidHandler != null) {
             if (fluidHandler.drain(10, IFluidHandler.FluidAction.SIMULATE).getAmount() == 10) {
                 fluidHandler.drain(10, IFluidHandler.FluidAction.EXECUTE);
@@ -94,7 +90,7 @@ public class ColdFireIgniter extends Item implements ICustomCreativeTabEntries {
     public void appendHoverText(ItemStack stack, TooltipContext tooltipContext, List<Component> components, TooltipFlag flag) {
         super.appendHoverText(stack, tooltipContext, components, flag);
 
-        var tankCap = stack.getCapability(Capabilities.FluidHandler.ITEM);
+        var tankCap = stack.getCapability(ForgeCapabilities.FluidHandler.ITEM);
         if (tankCap != null) {
             boolean isOneTank = tankCap.getTanks() == 1;
             if (!isOneTank) {
@@ -112,7 +108,7 @@ public class ColdFireIgniter extends Item implements ICustomCreativeTabEntries {
     public void addAdditionalCreativeTabEntries(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
         ItemStack is = new ItemStack(this);
 
-        var fluidHandler = is.getCapability(Capabilities.FluidHandler.ITEM);
+        var fluidHandler = is.getCapability(ForgeCapabilities.FluidHandler.ITEM);
         if (fluidHandler != null) {
             if (fluidHandler instanceof StrictFluidHandlerItemStack strictFluidHandlerItemStack) {
                 strictFluidHandlerItemStack.setFluid(new FluidStack(EIOFluids.VAPOR_OF_LEVITY.source(), fluidHandler.getTankCapacity(0)));

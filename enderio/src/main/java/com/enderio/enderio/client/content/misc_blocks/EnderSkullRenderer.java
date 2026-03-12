@@ -33,8 +33,8 @@ import net.minecraft.world.phys.Vec3;
 
 public class EnderSkullRenderer implements BlockEntityRenderer<EnderSkullBlockEntity> {
 
-    public static final RenderType RENDERTYPE = RenderType.entityCutoutNoCullZOffset(ResourceLocation.withDefaultNamespace("textures/entity/enderman/enderman.png"));
-    public static final ModelLayerLocation ENDER_SKULL = new ModelLayerLocation(ResourceLocation.withDefaultNamespace("enderman_head"), "main");
+    public static final RenderType RENDERTYPE = RenderType.entityCutoutNoCullZOffset(new ResourceLocation("textures/entity/enderman/enderman.png"));
+    public static final ModelLayerLocation ENDER_SKULL = new ModelLayerLocation(new ResourceLocation("enderman_head"), "main");
 
     private final EnderSkullModel skullmodelbase;
 
@@ -108,8 +108,8 @@ public class EnderSkullRenderer implements BlockEntityRenderer<EnderSkullBlockEn
         }
 
         @Override
-        public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, int packedColor) {
-            this.root.render(poseStack, buffer, packedLight, packedOverlay, packedColor);
+        public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+            this.root.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
         }
     }
 }

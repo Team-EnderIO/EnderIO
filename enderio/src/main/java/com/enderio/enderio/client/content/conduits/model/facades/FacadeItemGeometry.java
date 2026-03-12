@@ -27,9 +27,9 @@ public class FacadeItemGeometry implements IUnbakedGeometry<FacadeItemGeometry> 
     }
 
     @Override
-    public BakedModel bake(IGeometryBakingContext context, ModelBaker baker,
-            Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState, ItemOverrides overrides) {
-        return new FacadeItemModel(facadeModel.bake(baker, spriteGetter, modelState));
+    public BakedModel bake(IGeometryBakingContext iGeometryBakingContext, ModelBaker modelBaker, Function<Material, TextureAtlasSprite> spriteGetter,
+        ModelState modelState, ItemOverrides itemOverrides, ResourceLocation resourceLocation) {
+        return new FacadeItemModel(facadeModel.bake(modelBaker, spriteGetter, modelState, resourceLocation));
     }
 
     @Override

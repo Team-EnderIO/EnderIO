@@ -3,7 +3,7 @@ package com.enderio.enderio.content.broken_spawner;
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.config.base.BaseConfig;
 import com.enderio.enderio.foundation.tag.EIOTags;
-import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.nbt.CompoundTag;
@@ -20,7 +20,7 @@ import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.common.loot.LootModifier;
 
 public class BrokenSpawnerLootModifier extends LootModifier {
-    public static final MapCodec<BrokenSpawnerLootModifier> CODEC = RecordCodecBuilder.mapCodec(inst -> codecStart(inst).apply(inst, BrokenSpawnerLootModifier::new));
+    public static final Codec<BrokenSpawnerLootModifier> CODEC = RecordCodecBuilder.create(inst -> codecStart(inst).apply(inst, BrokenSpawnerLootModifier::new));
 
     /**
      * Constructs a LootModifier.
@@ -57,7 +57,7 @@ public class BrokenSpawnerLootModifier extends LootModifier {
     }
 
     @Override
-    public MapCodec<? extends IGlobalLootModifier> codec() {
+    public Codec<? extends IGlobalLootModifier> codec() {
         return CODEC;
     }
 }

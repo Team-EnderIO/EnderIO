@@ -11,8 +11,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.DyeColor;
-import net.neoforged.neoforge.capabilities.BlockCapability;
-import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
@@ -112,19 +113,8 @@ public interface ConduitNode {
      * @throws IllegalStateException if this node is not loaded
      */
     @Nullable
-    <TCapability> TCapability getNeighborSidedCapability(BlockCapability<TCapability, Direction> capability,
+    <TCapability> LazyOptional<TCapability> getNeighborCapability(Capability<TCapability> capability,
             Direction side);
-
-    /**
-     * Get the desired capability from a neighboring block.
-     *
-     * @param capability the desired capability.
-     * @param side the side to query for a neighboring capability.
-     * @return the capability or null if it is not available.
-     * @throws IllegalStateException if this node is not loaded
-     */
-    @Nullable
-    <TCapability> TCapability getNeighborVoidCapability(BlockCapability<TCapability, Void> capability, Direction side);
 
     /**
      * @param signalColor the redstone conduit signal color to check for, or null for in-world signal only.

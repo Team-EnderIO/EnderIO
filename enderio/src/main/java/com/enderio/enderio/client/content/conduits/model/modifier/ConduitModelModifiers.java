@@ -19,7 +19,7 @@ public class ConduitModelModifiers {
     @EnsureSide(EnsureSide.Side.CLIENT)
     public static void init() {
         var event = new RegisterConduitModelModifiersEvent();
-        ModLoader.postEvent(event);
+        ModLoader.get().postEvent(event);
         var factories = event.getModifiers();
 
         MODIFIERS = new HashMap<>();

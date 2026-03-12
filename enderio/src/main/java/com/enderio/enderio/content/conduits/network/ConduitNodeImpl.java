@@ -16,7 +16,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.DyeColor;
-import net.minecraftforge.common.capabilities.BlockCapability;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.Nullable;
 
@@ -225,19 +226,11 @@ public final class ConduitNodeImpl implements INetworkNode<ConduitNetworkImpl, C
     // region World Interaction
 
     @Override
-    public <TCapability> TCapability getNeighborSidedCapability(BlockCapability<TCapability, Direction> capability,
+    public <TCapability> LazyOptional<TCapability> getNeighborCapability(Capability<TCapability> capability,
             Direction side) {
         ensureValid();
         // noinspection DataFlowIssue
-        return conduitBundle.getNeighborSidedCapability(conduit, capability, side);
-    }
-
-    @Override
-    public <TCapability> TCapability getNeighborVoidCapability(BlockCapability<TCapability, Void> capability,
-            Direction side) {
-        ensureValid();
-        // noinspection DataFlowIssue
-        return conduitBundle.getNeighborVoidCapability(conduit, capability, side);
+        return conduitBundle.getNeighborCapability(conduit, capability, side);
     }
 
     @Override

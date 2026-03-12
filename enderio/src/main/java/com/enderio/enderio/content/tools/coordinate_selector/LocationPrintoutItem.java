@@ -1,6 +1,7 @@
 package com.enderio.enderio.content.tools.coordinate_selector;
 
 import com.enderio.enderio.api.attachment.CoordinateSelection;
+import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -17,6 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -77,21 +79,21 @@ public class LocationPrintoutItem extends Item {
     }
 
     public static Optional<CoordinateSelection> getSelection(ItemStack stack) {
-        return Optional.ofNullable(stack.get(EIODataComponents.COORDINATE_SELECTION));
+        return Optional.ofNullable(EIODataComponents.COORDINATE_SELECTION.get(stack));
     }
 
     public static void setSelection(ItemStack stack, CoordinateSelection selection) {
-        stack.set(EIODataComponents.COORDINATE_SELECTION, selection);
+        EIODataComponents.COORDINATE_SELECTION.set(stack, selection);
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext tooltipContext, List<Component> toolTip, TooltipFlag isAdvanced) {
-        super.appendHoverText(stack, tooltipContext, toolTip, isAdvanced);
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltipComponents, TooltipFlag isAdvanced) {
+        super.appendHoverText(stack, level, tooltipComponents, isAdvanced);
         getSelection(stack).ifPresent(selection -> {
-                toolTip.add(writeCoordinate('x', selection.pos().getX())
+                tooltipComponents.add(writeCoordinate('x', selection.pos().getX())
                     .append(writeCoordinate('y', selection.pos().getY()))
                     .append(writeCoordinate('z', selection.pos().getZ())));
-                toolTip.add(Component.literal(selection.getLevelName()));
+                tooltipComponents.add(Component.literal(selection.getLevelName()));
         });
     }
 

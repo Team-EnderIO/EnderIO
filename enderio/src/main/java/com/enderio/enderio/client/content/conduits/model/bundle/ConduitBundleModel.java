@@ -186,7 +186,7 @@ public class ConduitBundleModel implements IDynamicBakedModel {
             // rendered have only one distinct pos, so I can safely assume get(0) is valid
             List<Vec3i> duplicatePositions = rendered.stream()
                     .map(offsets::get)
-                    .map(List::getFirst)
+                    .map(list -> list.get(0))
                     .filter(n -> !duplicateFinder.add(n))
                     .toList();
             for (Vec3i duplicatePosition : duplicatePositions) {
@@ -198,9 +198,9 @@ public class ConduitBundleModel implements IDynamicBakedModel {
             }
             for (Holder<Conduit<?, ?>> toRender : rendered) {
                 List<Vec3i> offsetsForType = offsets.get(toRender);
-                if (box == null || !box.contains(offsetsForType.getFirst())) {
+                if (box == null || !box.contains(offsetsForType.get(0))) {
                     quads.addAll(new ConduitTextureEmissiveQuadTransformer(sprite(bundleState.getTexture(toRender)), 0)
-                            .andThen(QuadTransformers.applying(translateTransformation(offsetsForType.getFirst())))
+                            .andThen(QuadTransformers.applying(translateTransformation(offsetsForType.get(0))))
                             .process(modelOf(CONDUIT_CORE).getQuads(state, side, rand, extraData, renderType)));
                 }
             }
@@ -329,7 +329,7 @@ public class ConduitBundleModel implements IDynamicBakedModel {
             return ModelHelper.getMissingTexture();
         }
 
-        return sprite(bundleState.getTexture(bundleState.conduits().getFirst()));
+        return sprite(bundleState.getTexture(bundleState.conduits().get(0)));
     }
 
     @Override

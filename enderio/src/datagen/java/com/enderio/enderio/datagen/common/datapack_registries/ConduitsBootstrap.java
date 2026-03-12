@@ -1,7 +1,6 @@
 package com.enderio.enderio.datagen.common.datapack_registries;
 
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitApi;
 import com.enderio.enderio.content.conduits.type.energy.EnergyConduit;
@@ -9,12 +8,9 @@ import com.enderio.enderio.content.conduits.type.fluid.FluidConduit;
 import com.enderio.enderio.content.conduits.type.item.ItemConduit;
 import com.enderio.enderio.content.conduits.type.redstone.RedstoneConduit;
 import com.enderio.enderio.init.EIOConduits;
-import net.minecraft.Util;
-import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 
-import java.util.Optional;
 import java.util.function.Function;
 
 public class ConduitsBootstrap {

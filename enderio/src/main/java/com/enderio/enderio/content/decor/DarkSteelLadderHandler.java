@@ -18,7 +18,7 @@ public class DarkSteelLadderHandler {
 
     @SubscribeEvent
     public static void onTick(TickEvent.PlayerTickEvent playerTickEvent) {
-        if (playerTickEvent.getEntity() == Minecraft.getInstance().player) {
+        if (playerTickEvent.player == Minecraft.getInstance().player) {
             LocalPlayer player = Minecraft.getInstance().player;
             if (player.onClimbable() && player.level().getBlockState(player.blockPosition()).is(EIOBlocks.DARK_STEEL_LADDER.get())) {
                 if (!Minecraft.getInstance().options.keyShift.isDown()) {
@@ -34,7 +34,7 @@ public class DarkSteelLadderHandler {
 
     @SubscribeEvent
     public static void onTooltip(ItemTooltipEvent event) {
-        if (event.getItemStack().is(EIOBlocks.DARK_STEEL_BLOCK.asItem())) {
+        if (event.getItemStack().is(EIOBlocks.DARK_STEEL_BLOCK.get().asItem())) {
             event.getToolTip().add(EIOCommonLang.DARK_STEEL_LADDER_FASTER);
         }
     }

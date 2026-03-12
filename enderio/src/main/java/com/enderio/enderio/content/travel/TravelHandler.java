@@ -6,6 +6,7 @@ import com.enderio.enderio.api.travel.TravelTargetApi;
 import com.enderio.enderio.config.base.BaseConfig;
 import com.enderio.enderio.foundation.network.packets.ServerboundRequestTravelPacket;
 import com.enderio.enderio.foundation.tag.EIOTags;
+import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;

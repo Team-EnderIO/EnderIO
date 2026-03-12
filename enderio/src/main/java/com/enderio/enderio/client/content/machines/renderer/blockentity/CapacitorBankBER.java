@@ -216,12 +216,6 @@ public class CapacitorBankBER implements BlockEntityRenderer<CapacitorBankBlockE
         return 92;
     }
 
-    @Override
-    public AABB getRenderBoundingBox(CapacitorBankBlockEntity blockEntity) {
-        var pos = blockEntity.getBlockPos();
-        return AABB.ofSize(new Vec3(pos.getX(), pos.getY(), pos.getZ()), 32, 32, 32);
-    }
-
     //TODO test performance, potentially try to cache
     private static Size findSize(CapacitorBankBlockEntity capacitorBank, Direction facing) {
         int x0 = 0;

@@ -8,7 +8,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.capabilities.BlockCapability;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,12 +24,8 @@ public interface IConduitNodeAttachment {
     void markNodesDirty();
 
     @Nullable
-    <TCapability> TCapability getNeighborSidedCapability(Holder<Conduit<?, ?>> conduit,
-        BlockCapability<TCapability, Direction> capability, Direction side);
-
-    @Nullable
-    <TCapability> TCapability getNeighborVoidCapability(Holder<Conduit<?, ?>> conduit,
-        BlockCapability<TCapability, Void> capability, Direction side);
+    <TCapability> LazyOptional<TCapability> getNeighborCapability(Holder<Conduit<?, ?>> conduit,
+        Capability<TCapability> capability, Direction side);
 
     boolean hasRedstoneSignal(@Nullable DyeColor signalColor);
 

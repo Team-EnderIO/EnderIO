@@ -32,4 +32,6 @@ public class EIONBTKeys extends CoreNBTKeys {
     public static final String CONDUIT_EXTRA_DATA = "ConduitExtraData";
 
     // endregion
+
+    public static final String COORDINATE_SELECTION = "CoordinateSelection";
 }

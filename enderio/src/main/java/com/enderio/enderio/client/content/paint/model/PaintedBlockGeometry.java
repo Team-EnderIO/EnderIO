@@ -11,6 +11,7 @@ import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.geometry.IGeometryBakingContext;
 import net.minecraftforge.client.model.geometry.IGeometryLoader;
@@ -32,8 +33,8 @@ public class PaintedBlockGeometry implements IUnbakedGeometry<PaintedBlockGeomet
     }
 
     @Override
-    public BakedModel bake(IGeometryBakingContext context, ModelBaker baker, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState,
-        ItemOverrides overrides) {
+    public BakedModel bake(IGeometryBakingContext iGeometryBakingContext, ModelBaker modelBaker, Function<Material, TextureAtlasSprite> spriteGetter,
+        ModelState modelState, ItemOverrides itemOverrides, ResourceLocation resourceLocation) {
         return new PaintedBlockModel(reference, rotateItemTo);
     }
 

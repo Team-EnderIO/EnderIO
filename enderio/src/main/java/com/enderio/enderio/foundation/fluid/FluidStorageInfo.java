@@ -29,6 +29,6 @@ public record FluidStorageInfo(FluidStack contents, int capacity) {
 
     @Override
     public int hashCode() {
-        return Objects.hash(FluidStack.hashFluidAndComponents(contents), capacity);
+        return Objects.hash(contents.hashCode(), capacity);
     }
 }

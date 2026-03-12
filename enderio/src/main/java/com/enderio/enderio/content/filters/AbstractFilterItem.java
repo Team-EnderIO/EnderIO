@@ -1,7 +1,7 @@
 package com.enderio.enderio.content.filters;
 
+import com.enderio.core.common.backports.DataComponentType;
 import com.enderio.enderio.api.filter.FilterMenuProvider;
-import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -33,7 +33,7 @@ public abstract class AbstractFilterItem<T> extends Item implements FilterMenuPr
     protected abstract AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, AbstractFilterMenu.FilterAccess filterAccess);
 
     protected T getFilter(ItemStack stack) {
-        return stack.getOrDefault(dataComponentType(), defaultFilter());
+        return dataComponentType().getOrDefault(stack, defaultFilter());
     }
 
     @Override
@@ -83,10 +83,10 @@ public abstract class AbstractFilterItem<T> extends Item implements FilterMenuPr
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltipComponents, TooltipFlag isAdvanced) {
+        super.appendHoverText(stack, level, tooltipComponents, isAdvanced);
 
-        var filter = stack.getOrDefault(dataComponentType(), defaultFilter());
+        var filter = dataComponentType().getOrDefault(stack, defaultFilter());
         if (!filter.equals(defaultFilter())) {
             tooltipComponents.add(FiltersLang.CONFIGURED);
         } else {

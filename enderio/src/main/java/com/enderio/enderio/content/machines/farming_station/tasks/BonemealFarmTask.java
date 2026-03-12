@@ -21,7 +21,7 @@ public class BonemealFarmTask implements FarmTask {
         BlockPos pos = targetBlock.above();
         BlockState plant = blockEntity.getLevel().getBlockState(pos);
         if (plant.getBlock() instanceof BonemealableBlock bonemealableBlock) {
-            if (bonemealableBlock.isValidBonemealTarget(blockEntity.getLevel(), pos, plant)
+            if (bonemealableBlock.isValidBonemealTarget(blockEntity.getLevel(), pos, plant, false)
                 && blockEntity.consumeBonemeal()) {
                 if (bonemealableBlock.isBonemealSuccess(blockEntity.getLevel(),
                     blockEntity.getLevel().getRandom(), pos, plant)) {

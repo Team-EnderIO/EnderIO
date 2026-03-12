@@ -47,9 +47,7 @@ public class TravelTargetSavedData extends SavedData {
 
     public static TravelTargetSavedData getTravelData(Level level) {
         if (level instanceof ServerLevel serverLevel) {
-            return serverLevel.getDataStorage()
-                    .computeIfAbsent(new Factory<>(TravelTargetSavedData::new, TravelTargetSavedData::new),
-                            "enderio_traveldata");
+            return serverLevel.getDataStorage().computeIfAbsent(TravelTargetSavedData::new, TravelTargetSavedData::new, "enderio_traveldata");
         } else {
             return CLIENT_DATA.computeIfAbsent(level.dimension(), l -> new TravelTargetSavedData());
         }
@@ -127,7 +125,7 @@ public class TravelTargetSavedData extends SavedData {
         Player player = event.getEntity();
         if (player instanceof ServerPlayer serverPlayer) {
             var savedData = TravelTargetSavedData.getTravelData(serverPlayer.level());
-            var serializedData = savedData.save(new CompoundTag(), serverPlayer.level().registryAccess());
+            var serializedData = savedData.save(new CompoundTag());
             PacketDistributor.sendToPlayer(serverPlayer, new ClientboundSyncTravelDataPacket(serializedData));
         }
     }
@@ -137,7 +135,7 @@ public class TravelTargetSavedData extends SavedData {
         Player player = event.getEntity();
         if (player instanceof ServerPlayer serverPlayer) {
             var savedData = TravelTargetSavedData.getTravelData(serverPlayer.level());
-            var serializedData = savedData.save(new CompoundTag(), serverPlayer.level().registryAccess());
+            var serializedData = savedData.save(new CompoundTag());
             PacketDistributor.sendToPlayer(serverPlayer, new ClientboundSyncTravelDataPacket(serializedData));
         }
     }

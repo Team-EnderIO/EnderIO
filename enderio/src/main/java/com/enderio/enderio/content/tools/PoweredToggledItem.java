@@ -6,6 +6,7 @@ import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.core.common.item.ICustomCreativeTabEntries;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
+import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -17,7 +18,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.energy.ComponentEnergyStorage;
 
 import java.util.List;
 
@@ -28,8 +28,7 @@ public abstract class PoweredToggledItem extends Item implements AdvancedTooltip
 
     public PoweredToggledItem(Properties properties) {
         super(properties
-            .stacksTo(1)
-            .component(EIODataComponents.TOGGLED, false));
+            .stacksTo(1));
     }
 
     protected abstract void onTickWhenActive(Player player, ItemStack stack, Level level, Entity entity, int slotId,
@@ -40,15 +39,15 @@ public abstract class PoweredToggledItem extends Item implements AdvancedTooltip
     protected abstract int getEnergyUse();
 
     protected boolean isEnabled(ItemStack stack) {
-        return Boolean.TRUE.equals(stack.get(EIODataComponents.TOGGLED));
+        return Boolean.TRUE.equals(EIODataComponents.TOGGLED.get(stack));
     }
 
     protected void enable(ItemStack stack) {
-        stack.set(EIODataComponents.TOGGLED, true);
+        EIODataComponents.TOGGLED.set(stack, true);
     }
 
     protected void disable(ItemStack stack) {
-        stack.set(EIODataComponents.TOGGLED, false);
+        EIODataComponents.TOGGLED.set(stack, false);
     }
 
     protected boolean hasCharge(ItemStack stack) {
@@ -121,12 +120,9 @@ public abstract class PoweredToggledItem extends Item implements AdvancedTooltip
 
     @Override
     public int getBarWidth(ItemStack stack) {
-        var energyStorage = stack.getCapability(ForgeCapabilities.ENERGY);
-        if (energyStorage != null) {
-            return Math.round(energyStorage.getEnergyStored() * 13.0F / energyStorage.getMaxEnergyStored());
-        }
-
-        return 0;
+        return stack.getCapability(ForgeCapabilities.ENERGY)
+            .map(energyStorage -> Math.round(energyStorage.getEnergyStored() * 13.0F / energyStorage.getMaxEnergyStored()))
+            .orElse(0);
     }
 
     @Override

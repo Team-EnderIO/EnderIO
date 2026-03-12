@@ -160,7 +160,7 @@ public class EIOTags {
         public static final TagKey<Block> RANGE_EXTENDER = tag("range_extender");
         public static final TagKey<Block> MIND_KILLER = tag("mind_killer");
 
-        public static final TagKey<Block> INCORRECT_FOR_DARK_STEEL_TOOL = tag("incorrect_for_dark_steel_tool");
+        public static final TagKey<Block> NEEDS_DARK_STEEL = BlockTags.create(EnderIO.rl("needs_dark_steel"));
         
         
         // Harvestable crops that have a stem.

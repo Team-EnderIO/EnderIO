@@ -120,12 +120,9 @@ public class TravelStaffItem extends Item implements AdvancedTooltipProvider, IC
 
     @Override
     public int getBarWidth(ItemStack stack) {
-        var energyStorage = stack.getCapability(ForgeCapabilities.ENERGY);
-        if (energyStorage != null) {
-            return Math.round(energyStorage.getEnergyStored() * 13.0F / energyStorage.getMaxEnergyStored());
-        }
-
-        return 0;
+        return stack.getCapability(ForgeCapabilities.ENERGY)
+            .map(energyStorage -> Math.round(energyStorage.getEnergyStored() * 13.0F / energyStorage.getMaxEnergyStored()))
+            .orElse(0);
     }
 
     @Override

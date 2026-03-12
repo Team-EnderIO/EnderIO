@@ -6,8 +6,8 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.api.soul.SoulBoundUtils;
 import com.enderio.enderio.content.tools.ToolsLang;
-import com.enderio.enderio.foundation.EIONBTKeys;
 import com.enderio.enderio.foundation.util.EntityCaptureUtils;
+import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
@@ -29,7 +29,6 @@ import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
@@ -65,7 +64,7 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
 
     public static ItemStack forSoul(Soul soul) {
         ItemStack soulVial = new ItemStack(EIOItems.SOUL_VIAL.get());
-        setSoul(soulVial, soul);
+        EIODataComponents.SOUL.set(soulVial, soul);
         return soulVial;
     }
 
@@ -73,13 +72,13 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
 
     @Override
     public boolean isFoil(ItemStack stack) {
-        return getSoul(stack).hasEntity();
+        return EIODataComponents.SOUL.get(stack).hasEntity();
     }
 
     @Override
     public void addCommonTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
         // Add entity name
-        var soul = getSoul(itemStack);
+        var soul = EIODataComponents.SOUL.get(itemStack);
         if (!soul.isEmpty()) {
             tooltips.add(TooltipUtil.style(Component.translatable(soul.entityType().getDescriptionId())));
         }
@@ -87,13 +86,13 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
 
     @Override
     public void addDetailedTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
-        var soul = getSoul(itemStack);
+        var soul = EIODataComponents.SOUL.get(itemStack);
         if (soul.isEmpty()) {
             return;
         }
 
         // Try add entity health
-        float maxHealth = getMaxHealth(itemStack);
+        float maxHealth = EIODataComponents.ENTITY_MAX_HEALTH.getOrDefault(itemStack, 0f);
         if (maxHealth <= 0) {
             return;
         }
@@ -164,7 +163,7 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
             Consumer<Component> displayCallback) {
 
         // Soul Vial is filled, so it can't capture
-        Soul soul = getSoul(soulVial);
+        Soul soul = EIODataComponents.SOUL.get(soulVial);
         if (soul.hasEntity()) {
             return Optional.empty();
         }
@@ -194,8 +193,8 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
 
         // Create the filled vial
         ItemStack filledVial = soulVial.copyWithCount(1);
-        setSoul(filledVial, Soul.of(entity));
-        setMaxHealth(filledVial, entity.getMaxHealth());
+        EIODataComponents.SOUL.set(filledVial, Soul.of(entity));
+        EIODataComponents.ENTITY_MAX_HEALTH.set(filledVial, entity.getMaxHealth());
 
         // Consume the stack
         soulVial.shrink(1);
@@ -207,7 +206,7 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
 
     private static InteractionResult releaseEntity(Level level, ItemStack filledVial, Direction face, BlockPos pos,
             Runnable vialConsumed) {
-        var storedSoul = getSoul(filledVial);
+        var storedSoul = EIODataComponents.SOUL.get(filledVial);
 
         if (storedSoul != null && storedSoul.hasEntity()) {
             // Get the spawn location for the mob.
@@ -352,30 +351,4 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
     }
 
     // endregion
-
-    private static Soul getSoul(ItemStack itemStack) {
-        var tag = itemStack.getOrCreateTag();
-
-        // Supports legacy 1.20.1 format
-        if (tag.contains(BlockItem.BLOCK_ENTITY_TAG)) {
-            var entityTag = tag.getCompound(BlockItem.BLOCK_ENTITY_TAG);
-            if (tag.contains(EIONBTKeys.ENTITY_STORAGE)) {
-                return Soul.loadFromNbt(entityTag.getCompound(EIONBTKeys.ENTITY_STORAGE));
-            }
-        }
-
-        return Soul.loadFromNbt(itemStack.getOrCreateTag().getCompound(EIONBTKeys.ENTITY_STORAGE));
-    }
-
-    private static void setSoul(ItemStack itemStack, Soul soul) {
-        itemStack.getOrCreateTag().put(EIONBTKeys.ENTITY_STORAGE, soul.writeToNbt(new CompoundTag()));
-    }
-
-    private static float getMaxHealth(ItemStack itemStack) {
-        return itemStack.getOrCreateTag().getFloat(EIONBTKeys.ENTITY_MAX_HEALTH);
-    }
-
-    private static void setMaxHealth(ItemStack itemStack, float maxHealth) {
-        itemStack.getOrCreateTag().putFloat(EIONBTKeys.ENTITY_MAX_HEALTH, maxHealth);
-    }
 }

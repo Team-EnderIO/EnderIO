@@ -132,7 +132,7 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
                 poseStack.scale(scale, scale, scale);
 
                 for (BakedQuad quad : BACKDROP_QUADS.get()) {
-                    solidRenderBuffer.putBulkData(poseStack.last(), quad, outlineR, outlineG, outlineB, 1, packedLight, OverlayTexture.NO_OVERLAY);
+                    solidRenderBuffer.putBulkData(poseStack.last(), quad, outlineR, outlineG, outlineB, packedLight, OverlayTexture.NO_OVERLAY);
                 }
 
                 poseStack.popPose();
@@ -169,7 +169,7 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             poseStack.rotateAround(Axis.ZN.rotationDegrees(45), 0.5F, 0.5F, 0.5F);
 
             for (BakedQuad quad : BACKDROP_QUADS.get()) {
-                solidRenderBuffer.putBulkData(poseStack.last(), quad, outlineR, outlineG, outlineB, 1, packedLight, OverlayTexture.NO_OVERLAY);
+                solidRenderBuffer.putBulkData(poseStack.last(), quad, outlineR, outlineG, outlineB, packedLight, OverlayTexture.NO_OVERLAY);
             }
 
             poseStack.popPose();

@@ -83,13 +83,14 @@ public class ModelRenderUtil {
         float g = FastColor.ARGB32.green(color) / 255.0f;
         float b = FastColor.ARGB32.blue(color) / 255.0f;
 
-        QuadBakingVertexConsumer baker = new QuadBakingVertexConsumer();
+        BakedQuad[] quad = new BakedQuad[1];
+        QuadBakingVertexConsumer baker = new QuadBakingVertexConsumer(q -> quad[0] = q);
         baker.setSprite(sprite);
         baker.setDirection(Direction.getNearest(normal.x, normal.y, normal.z));
-        baker.addVertex(v1.x, v1.y, v1.z).setNormal(nx, ny, nz).setUv(sprite.getU(0), sprite.getV(0)).setColor(r, g, b, alpha);
-        baker.addVertex(v2.x, v2.y, v2.z).setNormal(nx, ny, nz).setUv(sprite.getU(0), sprite.getV(th)).setColor(r, g, b, alpha);
-        baker.addVertex(v3.x, v3.y, v3.z).setNormal(nx, ny, nz).setUv(sprite.getU(tw), sprite.getV(th)).setColor(r, g, b, alpha);
-        baker.addVertex(v4.x, v4.y, v4.z).setNormal(nx, ny, nz).setUv(sprite.getU(tw), sprite.getV(0)).setColor(r, g, b, alpha);
-        return baker.bakeQuad();
+        baker.vertex(v1.x, v1.y, v1.z).normal(nx, ny, nz).uv(sprite.getU(0), sprite.getV(0)).color(r, g, b, alpha);
+        baker.vertex(v2.x, v2.y, v2.z).normal(nx, ny, nz).uv(sprite.getU(0), sprite.getV(th)).color(r, g, b, alpha);
+        baker.vertex(v3.x, v3.y, v3.z).normal(nx, ny, nz).uv(sprite.getU(tw), sprite.getV(th)).color(r, g, b, alpha);
+        baker.vertex(v4.x, v4.y, v4.z).normal(nx, ny, nz).uv(sprite.getU(tw), sprite.getV(0)).color(r, g, b, alpha);
+        return quad[0];
     }
 }

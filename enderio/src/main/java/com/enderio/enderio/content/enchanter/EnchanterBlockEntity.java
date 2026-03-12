@@ -9,9 +9,6 @@ import com.enderio.enderio.foundation.io.DumbIOConfigurable;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIORecipes;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
@@ -20,16 +17,14 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.component.ItemContainerContents;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.Tags;
+import net.minecraftforge.common.Tags;
 import org.jetbrains.annotations.Nullable;
 
 public class EnchanterBlockEntity extends EnderBlockEntity implements MenuProvider {
 
     @Nullable
-    private RecipeHolder<EnchanterRecipe> currentRecipe;
+    private EnchanterRecipe currentRecipe;
     public static final SingleSlotAccess BOOK = new SingleSlotAccess();
     public static final SingleSlotAccess CATALYST = new SingleSlotAccess();
     public static final SingleSlotAccess LAPIS = new SingleSlotAccess();
@@ -98,7 +93,7 @@ public class EnchanterBlockEntity extends EnderBlockEntity implements MenuProvid
                 if (!OUTPUT.isSlot(slot)) {
                     if (currentRecipe != null) {
                         OUTPUT.setStackInSlot(this,
-                                currentRecipe.value().assemble(recipeInput, level.registryAccess()));
+                                currentRecipe.assemble(recipeInput, level.registryAccess()));
                     } else {
                         OUTPUT.setStackInSlot(this, ItemStack.EMPTY);
                     }
@@ -126,7 +121,7 @@ public class EnchanterBlockEntity extends EnderBlockEntity implements MenuProvid
             return null;
         }
 
-        return currentRecipe.value();
+        return currentRecipe;
     }
 
     // endregion
@@ -134,34 +129,15 @@ public class EnchanterBlockEntity extends EnderBlockEntity implements MenuProvid
     // region Serialization
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        super.loadAdditional(tag, lookupProvider);
-        inventory.deserializeNBT(lookupProvider, tag.getCompound(MachineNBTKeys.ITEMS));
+    public void load(CompoundTag tag) {
+        super.load(tag);
+        inventory.deserializeNBT(tag.getCompound(MachineNBTKeys.ITEMS));
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        super.saveAdditional(tag, lookupProvider);
-        tag.put(MachineNBTKeys.ITEMS, inventory.serializeNBT(lookupProvider));
-    }
-
-    @Override
-    protected void applyImplicitComponents(DataComponentInput components) {
-        super.applyImplicitComponents(components);
-        inventory.copyFromItem(components.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY));
-    }
-
-    @Override
-    protected void collectImplicitComponents(DataComponentMap.Builder components) {
-        super.collectImplicitComponents(components);
-        components.set(DataComponents.CONTAINER, inventory.toItemContents());
-    }
-
-    @SuppressWarnings("deprecation")
-    @Override
-    public void removeComponentsFromTag(CompoundTag tag) {
-        super.removeComponentsFromTag(tag);
-        tag.remove(MachineNBTKeys.ITEMS);
+    protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        tag.put(MachineNBTKeys.ITEMS, inventory.serializeNBT());
     }
 
     // endregion

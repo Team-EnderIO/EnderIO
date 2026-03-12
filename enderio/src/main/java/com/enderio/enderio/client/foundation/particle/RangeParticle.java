@@ -62,11 +62,6 @@ public class RangeParticle extends TextureSheetParticle {
         return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
 
-    @Override
-    public AABB getRenderBoundingBox(float partialTicks) {
-        return AABB.INFINITE;
-    }
-
     public Vector3f[] calcPoints(Direction face, Vector3f vec) {
         return calcPoints(face, vec.x(), vec.y(), vec.z(), 2 * range + 1 + (offset * 2), 2 * range + 1 + (offset * 2));
     }
@@ -110,7 +105,7 @@ public class RangeParticle extends TextureSheetParticle {
     }
 
     private void addVertex(VertexConsumer consumer, Vector3f pos, float u, float v) {
-        consumer.addVertex(pos.x(), pos.y(), pos.z()).setUv(u, v).setColor(rCol, gCol, bCol, alpha).setUv2(240, 240);
+        consumer.vertex(pos.x(), pos.y(), pos.z()).uv(u, v).color(rCol, gCol, bCol, alpha).uv2(240, 240);
     }
 
     public static class Provider implements ParticleProvider<RangeParticleData> {

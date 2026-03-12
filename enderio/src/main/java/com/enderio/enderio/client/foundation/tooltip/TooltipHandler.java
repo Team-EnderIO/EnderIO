@@ -8,6 +8,7 @@ import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.components.GrindingBallData;
 import com.enderio.enderio.content.capacitors.CapacitorLang;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
+import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -36,7 +37,7 @@ public class TooltipHandler {
         boolean advanced = Screen.hasShiftDown();
 
         // Misc tooltips.
-        addCapacitorTooltips(forItem, evt.getToolTip(), evt.getContext().registries());
+        addCapacitorTooltips(forItem, evt.getToolTip());
         addGrindingBallTooltips(forItem, evt.getToolTip(), advanced);
         addSoulBindableTooltips(forItem, evt.getToolTip(), advanced);
 
@@ -53,7 +54,7 @@ public class TooltipHandler {
         if (capacitorExtension != null) {
             capacitorData = capacitorExtension.getCapacitorData(itemStack);
         } else {
-            capacitorData = itemStack.get(EIODataComponents.CAPACITOR_DATA);
+            capacitorData = EIODataComponents.CAPACITOR_DATA.get(itemStack);
         }
 
         if (capacitorData != null) {
@@ -83,16 +84,18 @@ public class TooltipHandler {
     // region Soul Storage
 
     private static void addSoulBindableTooltips(ItemStack itemStack, List<Component> components, boolean showAdvanced) {
-        var soulBindable = itemStack.getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
-        if (soulBindable != null && soulBindable.canBind()) {
-            var soul = soulBindable.getBoundSoul();
+        itemStack.getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM)
+            .ifPresent(soulBindable -> {
+                if (soulBindable.canBind()) {
+                    var soul = soulBindable.getBoundSoul();
 
-            if (soul.hasEntity()) {
-                components.add(TooltipUtil.style(Component.translatable(soul.entityType().getDescriptionId())));
-            } else {
-                components.add(TooltipUtil.style(EIOCommonLang.TOOLTIP_NO_SOULBOUND));
-            }
-        }
+                    if (soul.hasEntity()) {
+                        components.add(TooltipUtil.style(Component.translatable(soul.entityType().getDescriptionId())));
+                    } else {
+                        components.add(TooltipUtil.style(EIOCommonLang.TOOLTIP_NO_SOULBOUND));
+                    }
+                }
+            });
     }
 
     // endregion

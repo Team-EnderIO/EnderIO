@@ -34,8 +34,8 @@ public class ConduitSorter {
 
     @SubscribeEvent
     public static void clientSortTypes(ClientPlayerNetworkEvent.LoggingIn event) {
-        var conduitRegistry = event.getPlayer()
-                .registryAccess()
+        var conduitRegistry = event.getPlayer().getServer()
+            .registryAccess()
                 .registryOrThrow(EnderIORegistries.Keys.CONDUIT);
         sortTypes(conduitRegistry);
     }

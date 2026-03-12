@@ -1,5 +1,6 @@
 package com.enderio.enderio.api.capacitor;
 
+import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.ApiStatus;
@@ -27,6 +28,6 @@ public interface ICapacitorExtension {
      */
     @Nullable
     default CapacitorData getCapacitorData(ItemStack capacitorStack) {
-        return capacitorStack.get(EIODataComponents.CAPACITOR_DATA);
+        return EIODataComponents.CAPACITOR_DATA.get(capacitorStack);
     }
 }
