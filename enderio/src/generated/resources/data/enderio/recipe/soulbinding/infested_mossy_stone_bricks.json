@@ -5,7 +5,6 @@
   "experience": 0,
   "input": "minecraft:mossy_stone_bricks",
   "output": {
-    "count": 1,
     "id": "minecraft:infested_mossy_stone_bricks"
   }
 }

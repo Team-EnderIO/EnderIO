@@ -22,6 +22,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
@@ -50,38 +51,38 @@ public class AlloyRecipeProvider extends SubRecipeProvider {
 
         // region Metal Alloys
 
-        build(new ItemStack(EIOItems.CONDUCTIVE_ALLOY_INGOT.get()),
+        build(new ItemStackTemplate(EIOItems.CONDUCTIVE_ALLOY_INGOT.get()),
                 List.of(sizedFromTag(Tags.Items.INGOTS_IRON, 1),
                     sizedFromTag(Tags.Items.INGOTS_COPPER, 1)),
                 3200, 0.3f, recipeOutput);
-        build(new ItemStack(EIOItems.ENERGETIC_ALLOY_INGOT.get()),
+        build(new ItemStackTemplate(EIOItems.ENERGETIC_ALLOY_INGOT.get()),
                 List.of(sizedFromTag(Tags.Items.DUSTS_REDSTONE, 1),
                         sizedFromTag(EIOTags.Items.INGOTS_CONDUCTIVE_ALLOY, 1),
                         sizedFromTag(Tags.Items.INGOTS_GOLD, 1)),
                 4800, 0.3f, recipeOutput);
-        build(new ItemStack(EIOItems.VIBRANT_ALLOY_INGOT.get()),
+        build(new ItemStackTemplate(EIOItems.VIBRANT_ALLOY_INGOT.get()),
                 List.of(sizedFromTag(EIOTags.Items.INGOTS_ENERGETIC_ALLOY, 1),
                         sizedFromTag(Tags.Items.ENDER_PEARLS, 1),
                         sizedFromTag(Tags.Items.DUSTS_GLOWSTONE, 1)),
                 5600, 0.3f, recipeOutput);
-        build(new ItemStack(EIOItems.REDSTONE_ALLOY_INGOT.get()),
+        build(new ItemStackTemplate(EIOItems.REDSTONE_ALLOY_INGOT.get()),
                 List.of(sizedFromTag(Tags.Items.DUSTS_REDSTONE, 1), sizedFromTag(Tags.Items.INGOTS_COPPER, 1)),
                 3200, 0.3f, recipeOutput);
-        build(new ItemStack(EIOItems.PULSATING_ALLOY_INGOT.get(), 2),
+        build(new ItemStackTemplate(EIOItems.PULSATING_ALLOY_INGOT.get(), 2),
                 List.of(sizedFromTag(Tags.Items.INGOTS_IRON, 1), sizedFromTag(Tags.Items.ENDER_PEARLS, 1)),
                 4800, 0.3f, recipeOutput);
         build(EnderIO.id("dark_steel_ingot_with_coal"),
                 List.of(sizedFromTag(Tags.Items.INGOTS_IRON, 1), SizedIngredient.of(Items.COAL, 2),
                     sizedFromTag(Tags.Items.OBSIDIANS, 1)),
-                new ItemStack(EIOItems.DARK_STEEL_INGOT.get()), 3200, 0.3f, recipeOutput);
-        build(new ItemStack(EIOItems.DARK_STEEL_INGOT.get()), List.of(sizedFromTag(Tags.Items.INGOTS_IRON, 1),
+                new ItemStackTemplate(EIOItems.DARK_STEEL_INGOT.get()), 3200, 0.3f, recipeOutput);
+        build(new ItemStackTemplate(EIOItems.DARK_STEEL_INGOT.get()), List.of(sizedFromTag(Tags.Items.INGOTS_IRON, 1),
                 sizedFromTag(EIOTags.Items.DUSTS_COAL, 1), sizedFromTag(Tags.Items.OBSIDIANS, 1)), 3200,
                 0.3f, recipeOutput);
-        build(new ItemStack(EIOItems.SOULARIUM_INGOT.get()),
+        build(new ItemStackTemplate(EIOItems.SOULARIUM_INGOT.get()),
                 List.of(new SizedIngredient(Ingredient.of(Items.SOUL_SAND, Items.SOUL_SOIL), 1),
                     sizedFromTag(Tags.Items.INGOTS_GOLD, 1)),
                 5600, 0.3f, recipeOutput);
-        build(new ItemStack(EIOItems.END_STEEL_INGOT.get()), List.of(sizedFromTag(Tags.Items.END_STONES, 1),
+        build(new ItemStackTemplate(EIOItems.END_STEEL_INGOT.get()), List.of(sizedFromTag(Tags.Items.END_STONES, 1),
                 sizedFromTag(EIOTags.Items.INGOTS_DARK_STEEL, 1), sizedFromTag(Tags.Items.OBSIDIANS, 1)),
                 6400, 0.3f, recipeOutput);
 
@@ -91,30 +92,30 @@ public class AlloyRecipeProvider extends SubRecipeProvider {
 
         // region Dyes
 
-        build(new ItemStack(Items.GREEN_DYE), "clippings",
+        build(new ItemStackTemplate(Items.GREEN_DYE), "clippings",
                 List.of(SizedIngredient.of(EIOItems.PLANT_MATTER_GREEN.get(), 6), SizedIngredient.of(Items.EGG, 1)),
                 1000, 0.3f, recipeOutput);
-        build(new ItemStack(Items.GREEN_DYE, 2), "double_clippings",
+        build(new ItemStackTemplate(Items.GREEN_DYE, 2), "double_clippings",
                 List.of(SizedIngredient.of(EIOItems.PLANT_MATTER_GREEN.get(), 12),
                     sizedFromTag(Tags.Items.SLIME_BALLS, 1)),
                 1600, 0.3f, recipeOutput);
 
-        build(new ItemStack(Items.BROWN_DYE), "twigs",
+        build(new ItemStackTemplate(Items.BROWN_DYE), "twigs",
                 List.of(SizedIngredient.of(EIOItems.PLANT_MATTER_BROWN.get(), 6), SizedIngredient.of(Items.EGG, 1)),
                 1000, 0.3f, recipeOutput);
-        build(new ItemStack(Items.BROWN_DYE, 2), "twigs_double",
+        build(new ItemStackTemplate(Items.BROWN_DYE, 2), "twigs_double",
                 List.of(SizedIngredient.of(EIOItems.PLANT_MATTER_BROWN.get(), 12),
                         sizedFromTag(Tags.Items.SLIME_BALLS, 1)),
                 1600, 0.3f, recipeOutput);
 
-        build(new ItemStack(Items.BLACK_DYE),
+        build(new ItemStackTemplate(Items.BLACK_DYE),
                 List.of(sizedFromTag(EIOTags.Items.DUSTS_COAL, 1), SizedIngredient.of(Items.EGG, 1)), 1000, 0.3f,
                 recipeOutput);
-        build(new ItemStack(Items.BLACK_DYE, 2), "double",
+        build(new ItemStackTemplate(Items.BLACK_DYE, 2), "double",
                 List.of(sizedFromTag(EIOTags.Items.DUSTS_COAL, 2), sizedFromTag(Tags.Items.SLIME_BALLS, 1)),
                 1600, 0.3f, recipeOutput);
 
-        build(new ItemStack(Items.RED_DYE, 12), List.of(SizedIngredient.of(Items.BEETROOT, 1),
+        build(new ItemStackTemplate(Items.RED_DYE, 12), List.of(SizedIngredient.of(Items.BEETROOT, 1),
                 SizedIngredient.of(Items.CLAY_BALL, 3), SizedIngredient.of(Items.EGG, 6)), 1600, 0.3f, recipeOutput);
 
         // endregion
@@ -158,20 +159,20 @@ public class AlloyRecipeProvider extends SubRecipeProvider {
 
         // region Misc
 
-        build(new ItemStack(EIOItems.PHOTOVOLTAIC_PLATE.get()),
+        build(new ItemStackTemplate(EIOItems.PHOTOVOLTAIC_PLATE.get()),
                 List.of(SizedIngredient.of(EIOItems.PHOTOVOLTAIC_COMPOSITE.get(), 3)), 5600, 0.3f, recipeOutput);
 
-        build(new ItemStack(Items.ENDER_PEARL), List.of(sizedFromTag(EIOTags.Items.DUSTS_ENDER, 9)), 2000, 0.3f,
+        build(new ItemStackTemplate(Items.ENDER_PEARL), List.of(sizedFromTag(EIOTags.Items.DUSTS_ENDER, 9)), 2000, 0.3f,
                 recipeOutput);
 
-//        build(new ItemStack(), List.of(EnderIngredient.of(EIOItems.GRAINS_OF_INFINITY.get()), EnderIngredient.of(EIOTags.Items.DUSTS_COAL)), 5000, 0.3f, recipeOutput);
+//        build(new ItemStackTemplate(), List.of(EnderIngredient.of(EIOItems.GRAINS_OF_INFINITY.get()), EnderIngredient.of(EIOTags.Items.DUSTS_COAL)), 5000, 0.3f, recipeOutput);
 
-        build(new ItemStack(Items.DEAD_BUSH), List.of(sizedFromTag(ItemTags.SAPLINGS, 1)), 500, 0.3f,
+        build(new ItemStackTemplate(Items.DEAD_BUSH), List.of(sizedFromTag(ItemTags.SAPLINGS, 1)), 500, 0.3f,
                 recipeOutput);
 
-//        build(new ItemStack(EIOItems.DARK_STEEL_UPGRADE_BLANK.get()), List.of(SizedIngredient.of(EIOBlocks.DARK_STEEL_BARS.get()), SizedIngredient.of(Items.CLAY_BALL), SizedIngredient.of(4, Tags.Items.STRING)), 30000, 0.3f, recipeOutput);
+//        build(new ItemStackTemplate(EIOItems.DARK_STEEL_UPGRADE_BLANK.get()), List.of(SizedIngredient.of(EIOBlocks.DARK_STEEL_BARS.get()), SizedIngredient.of(Items.CLAY_BALL), SizedIngredient.of(4, Tags.Items.STRING)), 30000, 0.3f, recipeOutput);
 
-        build(new ItemStack(EIOBlocks.INDUSTRIAL_INSULATION.get()),
+        build(new ItemStackTemplate(EIOBlocks.INDUSTRIAL_INSULATION.asItem()),
                 List.of(sizedFromTag(EIOTags.Items.DUSTS_LAPIS, 1), sizedFromTag(ItemTags.WOOL, 1),
                     sizedFromTag(EIOTags.Items.INSULATION_METAL, 1)),
                 3200, 0.5f, recipeOutput);
@@ -181,37 +182,37 @@ public class AlloyRecipeProvider extends SubRecipeProvider {
 
     protected void glass(FusedQuartzBlock block, SizedIngredient input, int energy, float experience,
             RecipeOutput recipeOutput) {
-        build(new ItemStack(block), List.of(input), energy, experience, recipeOutput);
+        build(new ItemStackTemplate(block.asItem()), List.of(input), energy, experience, recipeOutput);
     }
 
     protected void glass(FusedQuartzBlock block, SizedIngredient input, @Nullable SizedIngredient inputAlt, int energy,
             float experience, RecipeOutput recipeOutput) {
-        build(new ItemStack(block), List.of(input), energy, experience, recipeOutput);
+        build(new ItemStackTemplate(block.asItem()), List.of(input), energy, experience, recipeOutput);
         if (inputAlt != null) {
-            build(new ItemStack(block), "alt", List.of(inputAlt), energy, experience, recipeOutput);
+            build(new ItemStackTemplate(block.asItem()), "alt", List.of(inputAlt), energy, experience, recipeOutput);
         }
     }
 
     protected void compositeGlass(FusedQuartzBlock block, String suffix, SizedIngredient inputA, SizedIngredient inputB,
             SizedIngredient inputBAlt, int energy, float experience, RecipeOutput recipeOutput) {
-        build(new ItemStack(block), suffix, List.of(inputA, inputB), energy, experience, recipeOutput);
-        build(new ItemStack(block), suffix + "_alt", List.of(inputA, inputBAlt), energy, experience, recipeOutput);
+        build(new ItemStackTemplate(block.asItem()), suffix, List.of(inputA, inputB), energy, experience, recipeOutput);
+        build(new ItemStackTemplate(block.asItem()), suffix + "_alt", List.of(inputA, inputBAlt), energy, experience, recipeOutput);
     }
 
-    protected void build(ItemStack output, List<SizedIngredient> inputs, int energy, float experience,
+    protected void build(ItemStackTemplate output, List<SizedIngredient> inputs, int energy, float experience,
             RecipeOutput recipeOutput) {
-        build(EnderIO.id("alloy_smelting/" + BuiltInRegistries.ITEM.getKey(output.getItem()).getPath()), inputs,
+        build(EnderIO.id("alloy_smelting/" + output.item().getKey().identifier().getPath()), inputs,
                 output, energy, experience, recipeOutput);
     }
 
-    protected void build(ItemStack output, String suffix, List<SizedIngredient> inputs, int energy, float experience,
+    protected void build(ItemStackTemplate output, String suffix, List<SizedIngredient> inputs, int energy, float experience,
             RecipeOutput recipeOutput) {
         build(EnderIOAPI
-                .rl("alloy_smelting/" + BuiltInRegistries.ITEM.getKey(output.getItem()).getPath() + "_" + suffix),
+                .rl("alloy_smelting/" + output.item().getKey().identifier().getPath() + "_" + suffix),
                 inputs, output, energy, experience, recipeOutput);
     }
 
-    protected void build(Identifier id, List<SizedIngredient> inputs, ItemStack output, int energy,
+    protected void build(Identifier id, List<SizedIngredient> inputs, ItemStackTemplate output, int energy,
             float experience, RecipeOutput recipeOutput) {
         recipeOutput.accept(ResourceKey.create(Registries.RECIPE, id), new AlloySmeltingRecipe(inputs, output, energy, experience), null);
     }

@@ -6,7 +6,7 @@ import com.enderio.enderio.content.machines.vat.VatBlockEntity;
 import com.enderio.enderio.gametests.util.EnderGameTestHelper;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOFluids;
-import com.enderio.enderio.init.EIORecipes;
+import com.enderio.enderio.init.EIORecipeTypes;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -55,7 +55,7 @@ public class Issue1196 {
 
                     // Determine how much Cloud Seed is created per craft
                     var recipeInput = new FermentingRecipe.Input(new ItemStack(Items.DIRT, 1), new ItemStack(Items.COBBLESTONE, 1), new FluidStack(Fluids.WATER, 1000));
-                    var recipe = helper.getLevel().recipeAccess().getRecipeFor(EIORecipes.VAT_FERMENTING.type().get(), recipeInput, helper.getLevel()).orElseThrow();
+                    var recipe = helper.getLevel().recipeAccess().getRecipeFor(EIORecipeTypes.VAT_FERMENTING.get(), recipeInput, helper.getLevel()).orElseThrow();
                     var outputs = recipe.value().craft(recipeInput, helper.getLevel().registryAccess());
                     int amountCreated = outputs.getFirst().getFluid().getAmount();
 

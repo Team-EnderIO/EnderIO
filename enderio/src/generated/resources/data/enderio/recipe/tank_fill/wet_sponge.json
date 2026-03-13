@@ -7,7 +7,6 @@
   "input": "minecraft:sponge",
   "mode": "fill",
   "output": {
-    "count": 1,
     "id": "minecraft:wet_sponge"
   }
 }

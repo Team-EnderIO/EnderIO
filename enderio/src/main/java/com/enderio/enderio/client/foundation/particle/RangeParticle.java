@@ -1,11 +1,12 @@
 package com.enderio.enderio.client.foundation.particle;
 
 import com.enderio.enderio.foundation.particle.RangeParticleData;
+import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.client.renderer.state.QuadParticleRenderState;
+import net.minecraft.client.renderer.state.level.QuadParticleRenderState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.util.ARGB;
@@ -39,69 +40,71 @@ public class RangeParticle extends SingleQuadParticle {
     }
 
     @Override
-    protected void extractRotatedQuad(QuadParticleRenderState reusedState, Quaternionf orientation, float x, float y, float z, float partialTick) {
-
+    protected void extractRotatedQuad(QuadParticleRenderState particleTypeRenderState, Camera camera, Quaternionf rotation, float partialTickTime) {
         var quad = new Quaternionf(0,0,0,1);
+
+        // TODO: 26.1 - tidy?
+        float x = (float)this.x;
+        float y = (float)this.y;
+        float z = (float)this.z;
+
         var offsetPos = getOffset(Direction.SOUTH).add(x, y, z);
-        reusedState.add(this.getLayer(), offsetPos.x, offsetPos.y, offsetPos.z, quad.x, quad.y, quad.z, quad.w, this.getQuadSize(partialTick),
-            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightCoords(partialTick));
+        particleTypeRenderState.add(this.getLayer(), offsetPos.x, offsetPos.y, offsetPos.z, quad.x, quad.y, quad.z, quad.w, this.getQuadSize(partialTickTime),
+            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightCoords(partialTickTime));
 
         quad = new Quaternionf(0,1,0,0);
-        reusedState.add(this.getLayer(), offsetPos.x, offsetPos.y, offsetPos.z, quad.x, quad.y, quad.z, quad.w, this.getQuadSize(partialTick),
-            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightCoords(partialTick));
+        particleTypeRenderState.add(this.getLayer(), offsetPos.x, offsetPos.y, offsetPos.z, quad.x, quad.y, quad.z, quad.w, this.getQuadSize(partialTickTime),
+            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightCoords(partialTickTime));
 
 
         quad = new Quaternionf(0,0,0,1);
         offsetPos = getOffset(Direction.NORTH).add(x, y, z);
-        reusedState.add(this.getLayer(), offsetPos.x, offsetPos.y, offsetPos.z, quad.x, quad.y, quad.z, quad.w, this.getQuadSize(partialTick),
-            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightCoords(partialTick));
+        particleTypeRenderState.add(this.getLayer(), offsetPos.x, offsetPos.y, offsetPos.z, quad.x, quad.y, quad.z, quad.w, this.getQuadSize(partialTickTime),
+            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightCoords(partialTickTime));
 
         quad = new Quaternionf(0,1,0,0);
-        reusedState.add(this.getLayer(), offsetPos.x, offsetPos.y, offsetPos.z, quad.x, quad.y, quad.z, quad.w, this.getQuadSize(partialTick),
-            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightCoords(partialTick));
+        particleTypeRenderState.add(this.getLayer(), offsetPos.x, offsetPos.y, offsetPos.z, quad.x, quad.y, quad.z, quad.w, this.getQuadSize(partialTickTime),
+            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightCoords(partialTickTime));
 
 
         quad = new Quaternionf(0,-0.7071,0.7071,0);
         offsetPos = getOffset(Direction.DOWN).add(x, y, z);
-        reusedState.add(this.getLayer(), offsetPos.x, offsetPos.y, offsetPos.z, quad.x, quad.y, quad.z, quad.w, this.getQuadSize(partialTick),
-            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightCoords(partialTick));
+        particleTypeRenderState.add(this.getLayer(), offsetPos.x, offsetPos.y, offsetPos.z, quad.x, quad.y, quad.z, quad.w, this.getQuadSize(partialTickTime),
+            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightCoords(partialTickTime));
 
         quad = new Quaternionf(0,-0.7071,-0.7071,0);
-        reusedState.add(this.getLayer(), offsetPos.x, offsetPos.y, offsetPos.z, quad.x, quad.y, quad.z, quad.w, this.getQuadSize(partialTick),
-            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightCoords(partialTick));
+        particleTypeRenderState.add(this.getLayer(), offsetPos.x, offsetPos.y, offsetPos.z, quad.x, quad.y, quad.z, quad.w, this.getQuadSize(partialTickTime),
+            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightCoords(partialTickTime));
 
 
         quad = new Quaternionf(0,-0.7071,0.7071,0);
         offsetPos = getOffset(Direction.UP).add(x, y, z);
-        reusedState.add(this.getLayer(), offsetPos.x, offsetPos.y, offsetPos.z, quad.x, quad.y, quad.z, quad.w, this.getQuadSize(partialTick),
-            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightCoords(partialTick));
+        particleTypeRenderState.add(this.getLayer(), offsetPos.x, offsetPos.y, offsetPos.z, quad.x, quad.y, quad.z, quad.w, this.getQuadSize(partialTickTime),
+            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightCoords(partialTickTime));
 
         quad = new Quaternionf(0,-0.7071,-0.7071,0);
-        reusedState.add(this.getLayer(), offsetPos.x, offsetPos.y, offsetPos.z, quad.x, quad.y, quad.z, quad.w, this.getQuadSize(partialTick),
-            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightCoords(partialTick));
+        particleTypeRenderState.add(this.getLayer(), offsetPos.x, offsetPos.y, offsetPos.z, quad.x, quad.y, quad.z, quad.w, this.getQuadSize(partialTickTime),
+            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightCoords(partialTickTime));
 
 
         quad = new Quaternionf( 0.7071,0,0.7071,0);
         offsetPos = getOffset(Direction.EAST).add(x, y, z);
-        reusedState.add(this.getLayer(), offsetPos.x, offsetPos.y, offsetPos.z, quad.x, quad.y, quad.z, quad.w, this.getQuadSize(partialTick),
-            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightCoords(partialTick));
+        particleTypeRenderState.add(this.getLayer(), offsetPos.x, offsetPos.y, offsetPos.z, quad.x, quad.y, quad.z, quad.w, this.getQuadSize(partialTickTime),
+            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightCoords(partialTickTime));
 
         quad = new Quaternionf(0.7071,0,-0.7071, 0);
-        reusedState.add(this.getLayer(), offsetPos.x, offsetPos.y, offsetPos.z, quad.x, quad.y, quad.z, quad.w, this.getQuadSize(partialTick),
-            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightCoords(partialTick));
+        particleTypeRenderState.add(this.getLayer(), offsetPos.x, offsetPos.y, offsetPos.z, quad.x, quad.y, quad.z, quad.w, this.getQuadSize(partialTickTime),
+            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightCoords(partialTickTime));
 
 
         quad = new Quaternionf( 0.7071,0,0.7071,0);
         offsetPos = getOffset(Direction.WEST).add(x, y, z);
-        reusedState.add(this.getLayer(), offsetPos.x, offsetPos.y, offsetPos.z, quad.x, quad.y, quad.z, quad.w, this.getQuadSize(partialTick),
-            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightCoords(partialTick));
+        particleTypeRenderState.add(this.getLayer(), offsetPos.x, offsetPos.y, offsetPos.z, quad.x, quad.y, quad.z, quad.w, this.getQuadSize(partialTickTime),
+            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightCoords(partialTickTime));
 
         quad = new Quaternionf(0.7071,0,-0.7071, 0);
-        reusedState.add(this.getLayer(), offsetPos.x, offsetPos.y, offsetPos.z, quad.x, quad.y, quad.z, quad.w, this.getQuadSize(partialTick),
-            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightCoords(partialTick));
-
-
-
+        particleTypeRenderState.add(this.getLayer(), offsetPos.x, offsetPos.y, offsetPos.z, quad.x, quad.y, quad.z, quad.w, this.getQuadSize(partialTickTime),
+            this.getU0(), this.getU1(), this.getV0(), this.getV1(), ARGB.colorFromFloat(alpha, rCol, gCol, bCol), this.getLightCoords(partialTickTime));
     }
 
     public Vector3f getOffset(Direction direction) {

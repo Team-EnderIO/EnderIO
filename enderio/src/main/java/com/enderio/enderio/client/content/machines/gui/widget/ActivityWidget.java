@@ -5,7 +5,7 @@ import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.foundation.state.MachineStateType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -33,7 +33,7 @@ public class ActivityWidget extends AbstractWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         //TODO blend depth pipeline
 
         MachineState prio = null;
@@ -48,17 +48,17 @@ public class ActivityWidget extends AbstractWidget {
         }
 
         if (useNewIcons) {
-            guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, Objects.requireNonNull(MachineEnumIcons.NEW_MACHINE_STATE_TYPE.get(prio.type())),
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, Objects.requireNonNull(MachineEnumIcons.NEW_MACHINE_STATE_TYPE.get(prio.type())),
                     getX(), getY(), 16, 16);
         } else {
-            guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, Objects.requireNonNull(MachineEnumIcons.MACHINE_STATE_TYPE.get(prio.type())), getX(),
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, Objects.requireNonNull(MachineEnumIcons.MACHINE_STATE_TYPE.get(prio.type())), getX(),
                     getY(), 16, 16);
         }
 
-        renderToolTip(guiGraphics, mouseX, mouseY);
+        renderToolTip(graphics, mouseX, mouseY);
     }
 
-    private void renderToolTip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    private void renderToolTip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         if (isHovered()) {
             Minecraft minecraft = Minecraft.getInstance();
 
@@ -72,7 +72,7 @@ public class ActivityWidget extends AbstractWidget {
             }
 
             //TODO which is what we need? widget has it's own tooltip stuff, but it's a bit different
-            guiGraphics.renderTooltip(minecraft.font, list.stream().map(c -> ClientTooltipComponent.create(c.getVisualOrderText())).toList(), mouseX, mouseY,
+            graphics.tooltip(minecraft.font, list.stream().map(c -> ClientTooltipComponent.create(c.getVisualOrderText())).toList(), mouseX, mouseY,
                 DefaultTooltipPositioner.INSTANCE, null);
 
         }

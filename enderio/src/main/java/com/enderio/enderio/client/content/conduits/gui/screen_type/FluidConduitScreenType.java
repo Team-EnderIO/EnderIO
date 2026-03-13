@@ -12,7 +12,7 @@ import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.foundation.network.packets.ServerboundClearLockedFluidPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -46,14 +46,14 @@ public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConn
     private static final Identifier ICON_DECREASE = EnderIO.id("icon/decrease");
 
     @Override
-    public void renderLabels(ConduitMenuDataAccess<FluidConduitConnectionConfig> dataAccess, GuiGraphics guiGraphics, int startX, int startY, Font font,
+    public void renderLabels(ConduitMenuDataAccess<FluidConduitConnectionConfig> dataAccess, GuiGraphicsExtractor graphics, int startX, int startY, Font font,
         int mouseX, int mouseY) {
-        super.renderLabels(dataAccess, guiGraphics, startX, startY, font, mouseX, mouseY);
+        super.renderLabels(dataAccess, graphics, startX, startY, font, mouseX, mouseY);
 
         if (dataAccess.conduit() instanceof FluidConduit fluidConduit && fluidConduit.doesSupportPriority()) {
             String priority = String.valueOf(dataAccess.getConnectionConfig().insertPriority());
-            guiGraphics.drawString(font, ConduitLang.PRIORITY, 22, 7 + 4 + 4 + 8 + 16 + 12, CommonColors.DARK_GRAY, false);
-            guiGraphics.drawString(font, priority, 90 - font.width(priority), 7 + 4 + 4 + 8 + 16 + 12, CommonColors.DARK_GRAY, false);
+            graphics.text(font, ConduitLang.PRIORITY, 22, 7 + 4 + 4 + 8 + 16 + 12, CommonColors.DARK_GRAY, false);
+            graphics.text(font, priority, 90 - font.width(priority), 7 + 4 + 4 + 8 + 16 + 12, CommonColors.DARK_GRAY, false);
         }
     }
 
@@ -180,7 +180,7 @@ public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConn
         }
 
         @Override
-        public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        public void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
             if (isHoveredOrFocused()) {
                 MutableComponent tooltip = ConduitLang.FLUID_CONDUIT_CHANGE_FLUID1.copy();
                 tooltip.append("\n").append(ConduitLang.FLUID_CONDUIT_CHANGE_FLUID2);
@@ -197,7 +197,7 @@ public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConn
 //            RenderSystem.defaultBlendFunc();
 //            RenderSystem.enableDepthTest();
             // TODO: 1.21.4: 256x256 hardcoded
-            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, WIDGET_TEXTURE, getX(), getY(), 0, 0, this.width, this.height, 256, 256);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, WIDGET_TEXTURE, getX(), getY(), 0, 0, this.width, this.height, 256, 256);
             if (currentFluid.get().isSame(Fluids.EMPTY)) {
                 return;
             }
@@ -216,11 +216,11 @@ public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConn
                 int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
                 int atlasHeight = (int) (sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
 
-//                guiGraphics.blit(RenderPipelines.GUI_TEXTURED, TextureAtlas.LOCATION_BLOCKS, getX() + 1, getY() + 1, sprite.getU0() * atlasWidth,
+//                graphics.blit(RenderPipelines.GUI_TEXTURED, TextureAtlas.LOCATION_BLOCKS, getX() + 1, getY() + 1, sprite.getU0() * atlasWidth,
 //                        sprite.getV0() * atlasHeight, 12, 12, atlasWidth, atlasHeight);
 
                 // TODO: 1.21.8: is this the right way to tint?
-                guiGraphics.blit(RenderPipelines.GUI_TEXTURED, TextureAtlas.LOCATION_BLOCKS, getX() + 1, getY() + 1, sprite.getU0() * atlasWidth,
+                graphics.blit(RenderPipelines.GUI_TEXTURED, TextureAtlas.LOCATION_BLOCKS, getX() + 1, getY() + 1, sprite.getU0() * atlasWidth,
                         sprite.getV0() * atlasHeight, 12, 12, 12, 12, atlasWidth, atlasHeight, color);
 
 //                RenderSystem.setShaderColor(1, 1, 1, 1);

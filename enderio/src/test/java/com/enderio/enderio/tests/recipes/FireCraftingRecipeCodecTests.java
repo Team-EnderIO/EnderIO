@@ -39,8 +39,8 @@ public class FireCraftingRecipeCodecTests {
 
         Assertions.assertAll(
             () -> Assertions.assertEquals(1, recipe.results().size()),
-            () -> Assertions.assertEquals(Items.COAL, recipe.results().getFirst().result().getItem()),
-            () -> Assertions.assertEquals(1, recipe.results().getFirst().result().getCount()),
+            () -> Assertions.assertEquals(Items.COAL, recipe.results().getFirst().result().item().value()),
+            () -> Assertions.assertEquals(1, recipe.results().getFirst().result().count()),
             () -> Assertions.assertEquals(1, recipe.results().getFirst().minCount()),
             () -> Assertions.assertEquals(2, recipe.results().getFirst().maxCount()),
             () -> Assertions.assertEquals(0.5, recipe.results().getFirst().chance(), 0.00001),
@@ -82,8 +82,8 @@ public class FireCraftingRecipeCodecTests {
 
         Assertions.assertAll(
             () -> Assertions.assertEquals(1, recipe.results().size()),
-            () -> Assertions.assertEquals(Items.COAL, recipe.results().getFirst().result().getItem()),
-            () -> Assertions.assertEquals(10, recipe.results().getFirst().result().getCount()),
+            () -> Assertions.assertEquals(Items.COAL, recipe.results().getFirst().result().item().value()),
+            () -> Assertions.assertEquals(10, recipe.results().getFirst().result().count()),
             () -> Assertions.assertEquals(1, recipe.results().getFirst().minCount()),
             () -> Assertions.assertEquals(2, recipe.results().getFirst().maxCount()),
             () -> Assertions.assertEquals(0.5, recipe.results().getFirst().chance(), 0.00001),
@@ -103,7 +103,7 @@ public class FireCraftingRecipeCodecTests {
 
         // Attempt to deserialize
         var ops = server.registryAccess().createSerializationContext(JsonOps.INSTANCE);
-        var result = FireCraftingRecipe.Serializer.CODEC.codec().parse(ops, json);
+        var result = FireCraftingRecipe.MAP_CODEC.codec().parse(ops, json);
         Assertions.assertTrue(result.isSuccess());
         return result.getOrThrow();
     }

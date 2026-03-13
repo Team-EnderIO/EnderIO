@@ -9,7 +9,7 @@ import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget
 import com.enderio.enderio.content.machines.soul_engine.SoulEngineMenu;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.foundation.souldata.EngineSoul;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -48,29 +48,29 @@ public class SoulEngineScreen extends MachineScreen<SoulEngineMenu> {
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
     @Override
-    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         EntityType<?> entityType = getMenu().getBlockEntity().getEntityType();
         if (entityType != null) {
             String name = entityType.getDescription().getString();
-            guiGraphics.drawString(font, name, (int) (imageWidth / 2f - font.width(name) / 2f), 10, CommonColors.DARK_GRAY, false);
+            graphics.text(font, name, (int) (imageWidth / 2f - font.width(name) / 2f), 10, CommonColors.DARK_GRAY, false);
 
             EngineSoul.RELOAD_LISTENER.matches(entityType).ifPresent(data -> {
                 double burnRate = menu.getBlockEntity().getBurnRate();
                 float genRate = menu.getBlockEntity().getGenerationRate();
-                guiGraphics.drawString(font, FORMAT.format((int) (data.powerpermb() * genRate) * burnRate / data.tickpermb()) + " µI/t", (int) (imageWidth / 2f + 12), 40, 4210752,
+                graphics.text(font, FORMAT.format((int) (data.powerpermb() * genRate) * burnRate / data.tickpermb()) + " µI/t", (int) (imageWidth / 2f + 12), 40, 4210752,
                     false);
-                guiGraphics.drawString(font, FORMAT.format(data.tickpermb() / burnRate) + " t/mb", (int) (imageWidth / 2f + 12), 50, CommonColors.DARK_GRAY,
+                graphics.text(font, FORMAT.format(data.tickpermb() / burnRate) + " t/mb", (int) (imageWidth / 2f + 12), 50, CommonColors.DARK_GRAY,
                         false);
-                guiGraphics.drawString(font, (int) (data.powerpermb() * genRate) + " µI/mb", (int) (imageWidth / 2f + 12), 60,
+                graphics.text(font, (int) (data.powerpermb() * genRate) + " µI/mb", (int) (imageWidth / 2f + 12), 60,
                     CommonColors.DARK_GRAY, false);
             });
         }
 
-        super.renderLabels(guiGraphics, mouseX, mouseY);
+        super.extractLabels(graphics, mouseX, mouseY);
     }
 }

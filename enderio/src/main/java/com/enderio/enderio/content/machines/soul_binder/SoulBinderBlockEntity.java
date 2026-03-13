@@ -25,7 +25,7 @@ import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOFluids;
 import com.enderio.enderio.init.EIOItems;
-import com.enderio.enderio.init.EIORecipes;
+import com.enderio.enderio.init.EIORecipeTypes;
 import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -121,7 +121,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
 
         // Create the crafting task host
         craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy,
-                EIORecipes.SOUL_BINDING.type().get(), this::createTask, this::createRecipeInput);
+                EIORecipeTypes.SOUL_BINDING.get(), this::createTask, this::createRecipeInput);
     }
 
     @Override

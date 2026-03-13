@@ -11,7 +11,7 @@ import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.machines.niard.NiardMenu;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -60,16 +60,16 @@ public class NiardScreen extends MachineScreen<NiardMenu> {
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float v, int i, int i1) {
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         // TODO: 1.21.4: Hardcoded 256x256
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
 
         FluidStack fluidStack = menu.getFluidTank().contents();
 
-        renderFluidBg(guiGraphics, fluidStack, leftPos + 112, topPos + 28, 39, 56);
+        renderFluidBg(graphics, fluidStack, leftPos + 112, topPos + 28, 39, 56);
     }
 
-    private void renderFluidBg(GuiGraphics guiGraphics, FluidStack fluidStack, int x, int y, int width, int height) {
+    private void renderFluidBg(GuiGraphicsExtractor graphics, FluidStack fluidStack, int x, int y, int width, int height) {
         if (fluidStack.isEmpty()) return;
 
         Minecraft minecraft = Minecraft.getInstance();
@@ -92,7 +92,7 @@ public class NiardScreen extends MachineScreen<NiardMenu> {
                 int spriteWidth = (int)((sprite.getU1() - sprite.getU0()) * atlasWidth);
                 int spriteHeight = (int)((sprite.getV1() - sprite.getV0()) * atlasHeight);
 
-                Matrix3x2fStack poseStack = guiGraphics.pose();
+                Matrix3x2fStack poseStack = graphics.pose();
                 poseStack.pushMatrix();
 
                 poseStack.translate(x, y);
@@ -101,7 +101,7 @@ public class NiardScreen extends MachineScreen<NiardMenu> {
                 float scaleY = (float) height / (float) spriteHeight;
                 poseStack.scale(scaleX, scaleY);
 
-                guiGraphics.blit(
+                graphics.blit(
                     RenderPipelines.GUI_TEXTURED,
                     TextureAtlas.LOCATION_BLOCKS,
                     0, 0,
@@ -114,7 +114,7 @@ public class NiardScreen extends MachineScreen<NiardMenu> {
                 poseStack.popMatrix();
 
                 // TODO: 1.21.4: Hardcoded 256x256
-                guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE, x, y, 200, 0, width, height, 256, 256);
+                graphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE, x, y, 200, 0, width, height, 256, 256);
             }
         }
     }

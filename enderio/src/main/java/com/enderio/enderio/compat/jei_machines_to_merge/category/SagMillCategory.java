@@ -22,11 +22,12 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -88,25 +89,25 @@ public class SagMillCategory extends MachineRecipeCategory<RecipeHolder<SagMilli
         List<SagMillingRecipe.OutputItem> results = recipe.value().outputs();
         if (!results.isEmpty()) {
             builder.addSlot(OUTPUT, 1, 48)
-                    .add(results.get(0).getItemStack())
+                    .add(results.get(0).getItemStackTemplate().map(ItemStackTemplate::create).orElse(ItemStack.EMPTY))
                     .addRichTooltipCallback(chanceTooltip(recipe, results.get(0)));
         }
 
         if (results.size() > 1) {
             builder.addSlot(OUTPUT, 22, 48)
-                    .add(results.get(1).getItemStack())
+                    .add(results.get(1).getItemStackTemplate().map(ItemStackTemplate::create).orElse(ItemStack.EMPTY))
                     .addRichTooltipCallback(chanceTooltip(recipe, results.get(1)));
         }
 
         if (results.size() > 2) {
             builder.addSlot(OUTPUT, 43, 48)
-                    .add(results.get(2).getItemStack())
+                    .add(results.get(2).getItemStackTemplate().map(ItemStackTemplate::create).orElse(ItemStack.EMPTY))
                     .addRichTooltipCallback(chanceTooltip(recipe, results.get(2)));
         }
 
         if (results.size() > 3) {
             builder.addSlot(OUTPUT, 64, 48)
-                    .add(results.get(3).getItemStack())
+                    .add(results.get(3).getItemStackTemplate().map(ItemStackTemplate::create).orElse(ItemStack.EMPTY))
                     .addRichTooltipCallback(chanceTooltip(recipe, results.get(3)));
         }
     }
@@ -127,12 +128,13 @@ public class SagMillCategory extends MachineRecipeCategory<RecipeHolder<SagMilli
         };
     }
 
-    @Override
-    public void draw(RecipeHolder<SagMillingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics,
-            double mouseX, double mouseY) {
-        guiGraphics.drawString(Minecraft.getInstance().font, getEnergyString(recipe, recipeSlotsView), 83, 47,
-                0xff808080, false);
-    }
+    // TODO: 26.1 - reenable
+//    @Override
+//    public void draw(RecipeHolder<SagMillingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics,
+//            double mouseX, double mouseY) {
+//        graphics.drawString(Minecraft.getInstance().font, getEnergyString(recipe, recipeSlotsView), 83, 47,
+//                0xff808080, false);
+//    }
 
     @Override
     public void getTooltip(ITooltipBuilder tooltip, RecipeHolder<SagMillingRecipe> recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {

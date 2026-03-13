@@ -19,7 +19,7 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.category.AbstractRecipeCategory;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
@@ -115,93 +115,94 @@ public class FireCraftingCategory extends AbstractRecipeCategory<RecipeHolder<Fi
                 });
 
         for (var result : recipe.value().results()) {
-            output.add(result.result().copyWithCount(1));
+            output.add(result.result().create().copyWithCount(1));
         }
 
         IRecipeSlotBuilder catalyst = builder.addSlot(RecipeIngredientRole.CRAFTING_STATION, 88, 8).setSlotName("catalyst");
         catalyst.add(Ingredient.of(Items.FLINT_AND_STEEL, EIOFluids.FIRE_WATER.bucket()));
     }
 
-    @Override
-    public void draw(RecipeHolder<FireCraftingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics,
-            double mouseX, double mouseY) {
-        if (timer.getValue() != changed) { //!Screen.hasShiftDown() &&
-//            EnderIO.LOGGER.debug("Block {} IDX: {}, ({} - {}) {}", recipe.getId(), blockIdx.get(recipe.getId()), timer.getValue(), changed, blockIdx);
-//            blockIdx.put(recipe.getId(), blockIdx.get(recipe.getId()) + 1);
-            alternateFire = !alternateFire;
-            changed = timer.getValue();
-        }
-
-        List<Block> blocks = recipe.value().getAllBaseBlocks();
-        Block block = blocks.get(0);
-
-        // Borrowed a bunch of rendering code from Patchouli$PageMultiblock
-
-        guiGraphics.pose().pushMatrix();
-        guiGraphics.pose().translate(31, 31);
-        guiGraphics.pose().scale(20F, 20F);
-
-        // Initial eye pos somewhere off in the distance in the -Z direction
-        Vector4f eye = new Vector4f(0, 0, -100, 1);
-        Matrix4f rotMat = new Matrix4f();
-        rotMat.identity();
-
-        // For each GL rotation done, track the opposite to keep the eye pos accurate
-//        guiGraphics.pose().mulPose(Axis.XP.rotationDegrees(-30F));
-//        rotMat.rotation(Axis.XP.rotationDegrees(30F));
-//        guiGraphics.pose().mulPose(Axis.YP.rotationDegrees(-45F));
-//        rotMat.rotation(Axis.YP.rotationDegrees(45F));
-
-        // Finally apply the rotations
-        eye.mul(rotMat);
-        eye.div(eye.w);
-
-        // Block Render
-        renderBlock(guiGraphics, block);
-
-        guiGraphics.pose().popMatrix();
-    }
-
-    private void renderBlock(GuiGraphics guiGraphics, Block block) {
-        guiGraphics.pose().pushMatrix();
-
-        guiGraphics.pose().translate(0, 0);
-
-        MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-
-        BlockState state = block.defaultBlockState();
-        guiGraphics.pose().pushMatrix();
-        guiGraphics.pose().translate(0f, 0.5f);
-        guiGraphics.pose().scale(1f, -1f);
-
-        Minecraft.getInstance()
-                .getBlockRenderer()
-                .renderSingleBlock(state, new PoseStack(), buffers, LightCoordsUtil.FULL_BRIGHT,
-                        OverlayTexture.NO_OVERLAY);
-
-        guiGraphics.pose().popMatrix();
-        // TODO: Fire Water has no block. I think this is a registrate bug?
-        BlockState fireState = !alternateFire ? Blocks.FIRE.defaultBlockState()
-                : EIOFluids.FIRE_WATER.block().get().defaultBlockState();
-//        BlockState fireState = Blocks.FIRE.defaultBlockState();
-        guiGraphics.pose().pushMatrix();
-        guiGraphics.pose().translate(0f, -0.5f);
-        guiGraphics.pose().scale(1f, -1f);
-
-//        if (alternateFire) {
-//            VertexConsumer vertex = buffers.getBuffer(RenderType.cutout());
-//            // TODO: Fixy this
-//            Minecraft.getInstance().getBlockRenderer().renderLiquid(BlockPos.ZERO, Minecraft.getInstance().level, vertex, fireState, EIOFluids.FIRE_WATER.get().defaultFluidState());
-//        } else {
-        Minecraft.getInstance()
-                .getBlockRenderer()
-                .renderSingleBlock(fireState, new PoseStack(), buffers, LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+    // TODO: 26.1 - reenable
+//    @Override
+//    public void draw(RecipeHolder<FireCraftingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics,
+//            double mouseX, double mouseY) {
+//        if (timer.getValue() != changed) { //!Screen.hasShiftDown() &&
+////            EnderIO.LOGGER.debug("Block {} IDX: {}, ({} - {}) {}", recipe.getId(), blockIdx.get(recipe.getId()), timer.getValue(), changed, blockIdx);
+////            blockIdx.put(recipe.getId(), blockIdx.get(recipe.getId()) + 1);
+//            alternateFire = !alternateFire;
+//            changed = timer.getValue();
 //        }
+//
+//        List<Block> blocks = recipe.value().getAllBaseBlocks();
+//        Block block = blocks.get(0);
+//
+//        // Borrowed a bunch of rendering code from Patchouli$PageMultiblock
+//
+//        graphics.pose().pushMatrix();
+//        graphics.pose().translate(31, 31);
+//        graphics.pose().scale(20F, 20F);
+//
+//        // Initial eye pos somewhere off in the distance in the -Z direction
+//        Vector4f eye = new Vector4f(0, 0, -100, 1);
+//        Matrix4f rotMat = new Matrix4f();
+//        rotMat.identity();
+//
+//        // For each GL rotation done, track the opposite to keep the eye pos accurate
+////        graphics.pose().mulPose(Axis.XP.rotationDegrees(-30F));
+////        rotMat.rotation(Axis.XP.rotationDegrees(30F));
+////        graphics.pose().mulPose(Axis.YP.rotationDegrees(-45F));
+////        rotMat.rotation(Axis.YP.rotationDegrees(45F));
+//
+//        // Finally apply the rotations
+//        eye.mul(rotMat);
+//        eye.div(eye.w);
+//
+//        // Block Render
+//        renderBlock(graphics, block);
+//
+//        graphics.pose().popMatrix();
+//    }
 
-        guiGraphics.pose().popMatrix();
-
-        buffers.endBatch();
-
-        guiGraphics.pose().popMatrix();
-    }
+//    private void renderBlock(GuiGraphicsExtractor graphics, Block block) {
+//        graphics.pose().pushMatrix();
+//
+//        graphics.pose().translate(0, 0);
+//
+//        MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
+//
+//        BlockState state = block.defaultBlockState();
+//        graphics.pose().pushMatrix();
+//        graphics.pose().translate(0f, 0.5f);
+//        graphics.pose().scale(1f, -1f);
+//
+//        Minecraft.getInstance()
+//                .getBlockRenderer()
+//                .renderSingleBlock(state, new PoseStack(), buffers, LightCoordsUtil.FULL_BRIGHT,
+//                        OverlayTexture.NO_OVERLAY);
+//
+//        graphics.pose().popMatrix();
+//        // TODO: Fire Water has no block. I think this is a registrate bug?
+//        BlockState fireState = !alternateFire ? Blocks.FIRE.defaultBlockState()
+//                : EIOFluids.FIRE_WATER.block().get().defaultBlockState();
+////        BlockState fireState = Blocks.FIRE.defaultBlockState();
+//        graphics.pose().pushMatrix();
+//        graphics.pose().translate(0f, -0.5f);
+//        graphics.pose().scale(1f, -1f);
+//
+////        if (alternateFire) {
+////            VertexConsumer vertex = buffers.getBuffer(RenderType.cutout());
+////            // TODO: Fixy this
+////            Minecraft.getInstance().getBlockRenderer().renderLiquid(BlockPos.ZERO, Minecraft.getInstance().level, vertex, fireState, EIOFluids.FIRE_WATER.get().defaultFluidState());
+////        } else {
+//        Minecraft.getInstance()
+//                .getBlockRenderer()
+//                .renderSingleBlock(fireState, new PoseStack(), buffers, LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+////        }
+//
+//        graphics.pose().popMatrix();
+//
+//        buffers.endBatch();
+//
+//        graphics.pose().popMatrix();
+//    }
 }

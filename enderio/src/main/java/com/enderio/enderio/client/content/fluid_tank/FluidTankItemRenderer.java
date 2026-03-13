@@ -27,11 +27,11 @@ public class FluidTankItemRenderer implements SpecialModelRenderer<FluidTankItem
     }
 
     @Override
-    public void submit(@Nullable FluidTankState state, ItemDisplayContext displayContext, PoseStack poseStack,
-        SubmitNodeCollector nodeCollector, int packedLight, int packedOverlay, boolean hasFoil, int outlineColor) {
+    public void submit(FluidTankItemRenderer.FluidTankState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int lightCoords,
+        int overlayCoords, boolean hasFoil, int outlineColor) {
         if (state != null) {
-            FluidRendererUtil.submitFluid(poseStack, Sheets.translucentBlockItemSheet(), nodeCollector, state.fluid,
-                state.amount / (float) state.capacity, state.color, packedLight);
+            FluidRendererUtil.submitFluid(poseStack, Sheets.translucentBlockItemSheet(), submitNodeCollector, state.fluid,
+                state.amount / (float) state.capacity, state.color, lightCoords);
         }
     }
 
@@ -59,17 +59,17 @@ public class FluidTankItemRenderer implements SpecialModelRenderer<FluidTankItem
 
     public record FluidTankState(Fluid fluid, int capacity, int amount, int color) {}
 
-    public record Unbaked() implements SpecialModelRenderer.Unbaked {
+    public record Unbaked() implements SpecialModelRenderer.Unbaked<FluidTankItemRenderer.FluidTankState> {
 
         public static final MapCodec<FluidTankItemRenderer.Unbaked> CODEC = MapCodec.unit(new Unbaked());
 
         @Override
-        public @Nullable SpecialModelRenderer<?> bake(BakingContext context) {
+        public @Nullable SpecialModelRenderer<FluidTankItemRenderer.FluidTankState> bake(BakingContext context) {
             return FluidTankItemRenderer.INSTANCE;
         }
 
         @Override
-        public MapCodec<? extends SpecialModelRenderer.Unbaked> type() {
+        public MapCodec<? extends SpecialModelRenderer.Unbaked<FluidTankItemRenderer.FluidTankState>> type() {
             return CODEC;
         }
     }

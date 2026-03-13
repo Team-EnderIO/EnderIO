@@ -12,14 +12,12 @@
     {
       "chance": 0.6,
       "item": {
-        "count": 1,
         "id": "minecraft:string"
       }
     },
     {
       "chance": 0.3,
       "item": {
-        "count": 1,
         "id": "minecraft:string"
       }
     }

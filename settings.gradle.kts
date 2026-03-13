@@ -1,7 +1,7 @@
 pluginManagement {
     plugins {
-        id("net.neoforged.moddev") version "2.0.134"
-        id("net.neoforged.moddev.repositories") version "2.0.134"
+        id("net.neoforged.moddev") version "2.0.140"
+        id("net.neoforged.moddev.repositories") version "2.0.140"
     }
 
     repositories {
@@ -116,6 +116,15 @@ dependencyResolutionManagement {
             url = uri("https://maven.creeperhost.net/release")
             content {
                 includeGroup("com.refinedmods.refinedstorage")
+            }
+        }
+
+        maven {
+            name = "Maven for PR #2993" // https://github.com/neoforged/NeoForge/pull/2993
+            url = uri("https://prmaven.neoforged.net/NeoForge/pr2993")
+            content {
+                includeModule("net.neoforged", "neoforge")
+                includeModule("net.neoforged", "testframework")
             }
         }
 

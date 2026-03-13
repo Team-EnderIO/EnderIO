@@ -2,7 +2,6 @@
   "type": "enderio:painting",
   "input": "enderio:painted_slab",
   "output": {
-    "count": 1,
     "id": "enderio:painted_slab"
   }
 }

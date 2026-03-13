@@ -84,7 +84,7 @@ public class VoidVialItem extends Item {
                 return false;
             }
         } catch (ArithmeticException ex) {
-            player.displayClientMessage(EIOCommonLang.TOO_MANY_LEVELS, true);
+            player.sendOverlayMessage(EIOCommonLang.TOO_MANY_LEVELS);
         }
 
         return false;
@@ -112,7 +112,7 @@ public class VoidVialItem extends Item {
                 }
             }
         } catch (ArithmeticException ex) {
-            player.displayClientMessage(EIOCommonLang.TOO_MANY_LEVELS, true);
+            player.sendOverlayMessage(EIOCommonLang.TOO_MANY_LEVELS);
         }
 
         return false;

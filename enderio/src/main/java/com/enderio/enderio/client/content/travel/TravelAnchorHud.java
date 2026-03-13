@@ -7,7 +7,7 @@ import com.enderio.enderio.init.EIOBlocks;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.Direction;
 import net.minecraft.util.CommonColors;
 import net.minecraft.world.entity.player.Player;
@@ -27,7 +27,7 @@ public class TravelAnchorHud implements GuiLayer {
     static final int ITEM_SIZE = 16;
 
     @Override
-    public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
+    public void render(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
         Minecraft minecraft = Minecraft.getInstance();
         Player player = minecraft.player;
 
@@ -36,13 +36,13 @@ public class TravelAnchorHud implements GuiLayer {
         }
 
         TravelHandler.getElevatorAnchorTarget(player, Direction.UP)
-                .ifPresent(target -> showElevatorTarget(guiGraphics, minecraft.font, target, Direction.UP));
+                .ifPresent(target -> showElevatorTarget(graphics, minecraft.font, target, Direction.UP));
 
         TravelHandler.getElevatorAnchorTarget(player, Direction.DOWN)
-                .ifPresent(target -> showElevatorTarget(guiGraphics, minecraft.font, target, Direction.DOWN));
+                .ifPresent(target -> showElevatorTarget(graphics, minecraft.font, target, Direction.DOWN));
     }
 
-    private static void showElevatorTarget(GuiGraphics guiGraphics, Font font, TravelTarget target,
+    private static void showElevatorTarget(GuiGraphicsExtractor graphics, Font font, TravelTarget target,
             Direction direction) {
         String txt = switch (direction) {
         case UP -> "↑";
@@ -52,8 +52,8 @@ public class TravelAnchorHud implements GuiLayer {
         default -> "";
         };
 
-        int centerX = guiGraphics.guiWidth() / 2;
-        int centerY = guiGraphics.guiHeight() / 2;
+        int centerX = graphics.guiWidth() / 2;
+        int centerY = graphics.guiHeight() / 2;
 
         if (target instanceof AnchorTravelTarget anchorTarget) {
             String anchorName = anchorTarget.name();
@@ -70,7 +70,7 @@ public class TravelAnchorHud implements GuiLayer {
             int x = centerX + getOffset(CURSOR_GAP, ITEM_SIZE, direction.getStepX());
             int y = centerY + getOffset(CURSOR_GAP, ITEM_SIZE, -direction.getStepY());
 
-            guiGraphics.renderItem(itemStack, x, y);
+            graphics.item(itemStack, x, y);
         }
 
         int textWidth = font.width(txt);
@@ -83,10 +83,10 @@ public class TravelAnchorHud implements GuiLayer {
         int bgFromY = textY - 2;
         int bgToX = bgFromX + textWidth + 3;
         int bgToY = bgFromY + font.lineHeight + 3;
-        guiGraphics.fill(bgFromX, bgFromY, bgToX, bgToY, 0x87000000);
+        graphics.fill(bgFromX, bgFromY, bgToX, bgToY, 0x87000000);
 
         // Text
-        guiGraphics.drawString(font, txt, textX, textY, CommonColors.WHITE, false);
+        graphics.text(font, txt, textX, textY, CommonColors.WHITE, false);
     }
 
     private static int getOffset(int offsetAmount, int size, int direction) {

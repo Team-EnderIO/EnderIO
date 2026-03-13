@@ -52,12 +52,6 @@ public abstract class RecipeManagerMixin {
     private static Optional<RecipeHolder<AlloySmeltingRecipe>> enderio$convertSmeltingRecipe(
             Identifier originalId, SmeltingRecipe smeltingRecipe) {
 
-        if (smeltingRecipe.result().isEmpty()) {
-            LOGGER.warn("[EnderIO] Unable to inherit the cooking recipe with ID: {}. Reason: The result item is empty.",
-                    originalId);
-            return Optional.empty();
-        }
-
         SizedIngredient input = new SizedIngredient(smeltingRecipe.input(), 1);
         int energy = MachinesConfig.COMMON.ENERGY.ALLOY_SMELTER_VANILLA_ITEM_ENERGY.get();
         AlloySmeltingRecipe recipe = new AlloySmeltingRecipe(List.of(input), smeltingRecipe.result(), energy,

@@ -2,7 +2,7 @@ package com.enderio.enderio.api.conduits.screen;
 
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Experimental
@@ -26,9 +26,9 @@ public abstract class ConduitScreenType<U extends ConnectionConfig> {
     }
 
     @ApiStatus.Internal
-    public void renderScreenLabels(ConduitMenuDataAccess<U> dataAccess, GuiGraphics guiGraphics, Font font, int mouseX,
+    public void renderScreenLabels(ConduitMenuDataAccess<U> dataAccess, GuiGraphicsExtractor graphics, Font font, int mouseX,
             int mouseY) {
-        renderLabels(dataAccess, guiGraphics, USABLE_START_X, USABLE_START_Y, font, mouseX, mouseY);
+        renderLabels(dataAccess, graphics, USABLE_START_X, USABLE_START_Y, font, mouseX, mouseY);
     }
 
     protected abstract void createWidgets(ConduitScreenHelper screen, int startX, int startY,
@@ -36,12 +36,12 @@ public abstract class ConduitScreenType<U extends ConnectionConfig> {
 
     /**
      * Already projected into gui space (guiLeft & guiRight in Screen), so only local transformations required.
-     * @param guiGraphics
+     * @param graphics
      * @param font
      * @param mouseX
      * @param mouseY
      */
-    protected void renderLabels(ConduitMenuDataAccess<U> dataAccess, GuiGraphics guiGraphics, int startX, int startY,
+    protected void renderLabels(ConduitMenuDataAccess<U> dataAccess, GuiGraphicsExtractor graphics, int startX, int startY,
             Font font, int mouseX, int mouseY) {
     }
 }

@@ -5,7 +5,7 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.content.tools.coordinate_selector.CoordinateMenu;
 import com.enderio.enderio.foundation.network.packets.ServerboundUpdateCoordinateSelectionNameMenuPacket;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.input.KeyEvent;
@@ -53,18 +53,18 @@ public class CoordinateMenuScreen extends EnderContainerScreen<CoordinateMenu> {
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY) {
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight, 256, 256);
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight, 256, 256);
 
         int midX = this.width / 2;
         int y = topPos + 48;
         String txt = getMenu().getSelection().pos().toShortString();
         int x = midX - font.width(txt) / 2;
-        guiGraphics.drawString(this.font, txt, x, y, CommonColors.DARK_GRAY, true);
+        graphics.text(this.font, txt, x, y, CommonColors.DARK_GRAY, true);
         txt = getMenu().getSelection().getLevelName();
         y += font.lineHeight + 4;
         x = midX - font.width(txt) / 2;
-        guiGraphics.drawString(this.font, txt, x, y, CommonColors.DARK_GRAY, true);
+        graphics.text(this.font, txt, x, y, CommonColors.DARK_GRAY, true);
     }
 
     @Override

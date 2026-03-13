@@ -7,7 +7,7 @@ import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget
 import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.machines.obelisks.xp.XPObeliskMenu;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.WidgetSprites;
@@ -70,8 +70,8 @@ public class XPObeliskScreen extends MachineScreen<XPObeliskMenu> {
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BG, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BG, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
     private ImageButton makeButton(int x, int y, int size, int id, Identifier SPRITE, Component tooltip) {

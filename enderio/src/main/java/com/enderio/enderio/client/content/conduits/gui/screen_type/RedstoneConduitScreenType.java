@@ -6,7 +6,7 @@ import com.enderio.enderio.api.conduits.screen.IOConduitScreenType;
 import com.enderio.enderio.content.conduits.ConduitLang;
 import com.enderio.enderio.content.conduits.type.redstone.RedstoneConduitConnectionConfig;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.util.CommonColors;
 
 public class RedstoneConduitScreenType extends IOConduitScreenType<RedstoneConduitConnectionConfig> {
@@ -66,16 +66,16 @@ public class RedstoneConduitScreenType extends IOConduitScreenType<RedstoneCondu
     }
 
     @Override
-    public void renderLabels(ConduitMenuDataAccess<RedstoneConduitConnectionConfig> dataAccess, GuiGraphics guiGraphics,
+    public void renderLabels(ConduitMenuDataAccess<RedstoneConduitConnectionConfig> dataAccess, GuiGraphicsExtractor graphics,
             int startX, int startY, Font font, int mouseX, int mouseY) {
-        super.renderLabels(dataAccess, guiGraphics, startX, startY, font, mouseX, mouseY);
+        super.renderLabels(dataAccess, graphics, startX, startY, font, mouseX, mouseY);
 
-        guiGraphics.drawString(font, ConduitLang.REDSTONE_CONDUIT_SIGNAL_COLOR, startX + PADDED_SLOT_SIZE,
+        graphics.text(font, ConduitLang.REDSTONE_CONDUIT_SIGNAL_COLOR, startX + PADDED_SLOT_SIZE,
                 startY + 20 + 4, 4210752, false);
-        guiGraphics.drawString(font, ConduitLang.REDSTONE_CONDUIT_SIGNAL_COLOR,
+        graphics.text(font, ConduitLang.REDSTONE_CONDUIT_SIGNAL_COLOR,
                 startX + RIGHT_START_X + PADDED_SLOT_SIZE, startY + 20 + 4, CommonColors.DARK_GRAY, false);
 
-        guiGraphics.drawString(font, ConduitLang.REDSTONE_CONDUIT_STRONG_SIGNAL,
+        graphics.text(font, ConduitLang.REDSTONE_CONDUIT_STRONG_SIGNAL,
                 startX + RIGHT_START_X + PADDED_SLOT_SIZE, startY + 40 + 4, CommonColors.DARK_GRAY, false);
     }
 }

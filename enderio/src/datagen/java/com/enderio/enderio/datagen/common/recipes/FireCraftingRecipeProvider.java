@@ -8,6 +8,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 
@@ -19,15 +20,15 @@ public class FireCraftingRecipeProvider extends SubRecipeProvider {
     public void buildRecipes(HolderLookup.Provider registries, RecipeOutput recipeOutput) {
         recipeOutput.accept(ResourceKey.create(Registries.RECIPE, EnderIO.id("fire_crafting/bedrock_infinity")),
                 new FireCraftingRecipe(List.of(
-                        new FireCraftingRecipe.Result(EIOItems.GRAINS_OF_INFINITY.get().getDefaultInstance(), 1, 3,
+                        new FireCraftingRecipe.Result(new ItemStackTemplate(EIOItems.GRAINS_OF_INFINITY), 1, 3,
                                 0.8f),
-                        new FireCraftingRecipe.Result(EIOItems.SUSPICIOUS_SEED.get().getDefaultInstance(), 1, 1, 0.3f)),
+                        new FireCraftingRecipe.Result(new ItemStackTemplate(EIOItems.SUSPICIOUS_SEED), 1, 1, 0.3f)),
                         List.of(Blocks.BEDROCK), List.of(), List.of(Level.OVERWORLD), Optional.empty()),
                 null);
 
         recipeOutput.accept(ResourceKey.create(Registries.RECIPE, EnderIO.id("fire_crafting/deepslate_infinity")),
                 new FireCraftingRecipe(
-                        List.of(new FireCraftingRecipe.Result(EIOItems.GRAINS_OF_INFINITY.get().getDefaultInstance(), 1,
+                        List.of(new FireCraftingRecipe.Result(new ItemStackTemplate(EIOItems.GRAINS_OF_INFINITY), 1,
                                 1, 0.4f)),
                         List.of(Blocks.DEEPSLATE), List.of(), List.of(Level.OVERWORLD),
                         Optional.of(Blocks.COBBLESTONE)),

@@ -12,7 +12,7 @@ import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget
 import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.machines.sag_mill.SagMillMenu;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -63,8 +63,8 @@ public class SagMillScreen extends MachineScreen<SagMillMenu> {
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
     private class GrindingBallWidget extends AbstractWidget {
@@ -91,13 +91,13 @@ public class SagMillScreen extends MachineScreen<SagMillMenu> {
         private float tooltipDuraCache;
 
         @Override
-        public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        public void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
             float durability = menu.getGrindingBallDamage();
             var data = menu.getGrindingBallData();
 
             int yOffset = (int) Math.ceil(this.height * (1.0f - durability));
 
-            guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, BALL_DURABILITY_SPRITE, WIDTH, HEIGHT, 0, yOffset, getX(), getY() + yOffset, WIDTH, HEIGHT - yOffset);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, BALL_DURABILITY_SPRITE, WIDTH, HEIGHT, 0, yOffset, getX(), getY() + yOffset, WIDTH, HEIGHT - yOffset);
 
             if (this.isHoveredOrFocused() && (tooltipDataCache != data || tooltipDuraCache != durability)) {
                 tooltipDataCache = data;

@@ -7,7 +7,7 @@ import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import com.enderio.enderio.foundation.io.DumbIOConfigurable;
 import com.enderio.enderio.init.EIOBlockEntities;
-import com.enderio.enderio.init.EIORecipes;
+import com.enderio.enderio.init.EIORecipeTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
@@ -99,13 +99,13 @@ public class EnchanterBlockEntity extends EnderBlockEntity implements MenuProvid
 
                 if (level instanceof ServerLevel serverLevel) {
                     currentRecipe = serverLevel.recipeAccess()
-                        .getRecipeFor(EIORecipes.ENCHANTING.type().get(), recipeInput, level)
+                        .getRecipeFor(EIORecipeTypes.ENCHANTING.get(), recipeInput, level)
                         .orElse(null);
                 }
                 if (!OUTPUT.isSlot(slot)) {
                     if (currentRecipe != null) {
                         OUTPUT.setStackInSlot(this,
-                                currentRecipe.value().assemble(recipeInput, level.registryAccess()));
+                                currentRecipe.value().assemble(recipeInput));
                     } else {
                         OUTPUT.setStackInSlot(this, ItemStack.EMPTY);
                     }

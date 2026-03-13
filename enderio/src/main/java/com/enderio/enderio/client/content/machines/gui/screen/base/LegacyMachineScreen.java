@@ -7,7 +7,7 @@
 //import com.enderio.enderio.foundation.menu.GhostMachineSlot;
 //import com.enderio.enderio.foundation.menu.PreviewMachineSlot;
 //import com.enderio.enderio.foundation.menu.legacy.LegacyMachineMenu;
-//import net.minecraft.client.gui.GuiGraphics;
+//import net.minecraft.client.gui.GuiGraphicsExtractor;
 //import net.minecraft.core.BlockPos;
 //import net.minecraft.network.chat.Component;
 //import net.minecraft.world.entity.player.Inventory;
@@ -40,15 +40,15 @@
 //    }
 //
 //    @Override
-//    public void renderSlot(GuiGraphics guiGraphics, Slot slot) {
-//        super.renderSlot(guiGraphics, slot);
+//    public void renderSlot(GuiGraphicsExtractor graphics, Slot slot) {
+//        super.renderSlot(graphics, slot);
 //
 //        if (slot instanceof GhostMachineSlot || slot instanceof PreviewMachineSlot) {
 //            if (slot.hasItem()) {
-//                guiGraphics.pose().pushPose();
-//                guiGraphics.pose().translate(0.0F, 0.0F, 300F);
-//                guiGraphics.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, SLOT_COLOR);
-//                guiGraphics.pose().popPose();
+//                graphics.pose().pushPose();
+//                graphics.pose().translate(0.0F, 0.0F, 300F);
+//                graphics.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, SLOT_COLOR);
+//                graphics.pose().popPose();
 //            }
 //        }
 //    }

@@ -5,7 +5,6 @@
   "experience": 6,
   "input": "#c:gems/vibrant_crystal",
   "output": {
-    "count": 1,
     "id": "enderio:ender_crystal"
   }
 }

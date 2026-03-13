@@ -11,7 +11,7 @@ import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget
 import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.machines.alloy.AlloySmelterMenu;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -64,11 +64,11 @@ public class AlloySmelterScreen extends MachineScreen<AlloySmelterMenu> {
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         switch (menu.getMode()) {
-        case ALL -> guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE_AUTO, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
-        case ALLOYS -> guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE_ALLOY, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
-        case FURNACE -> guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE_FURNACE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+        case ALL -> graphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE_AUTO, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+        case ALLOYS -> graphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE_ALLOY, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+        case FURNACE -> graphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE_FURNACE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
         default -> throw new NotImplementedException();
         }
     }

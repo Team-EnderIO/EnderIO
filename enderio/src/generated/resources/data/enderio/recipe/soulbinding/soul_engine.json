@@ -4,7 +4,6 @@
   "experience": 5,
   "input": "enderio:soul_engine",
   "output": {
-    "count": 1,
     "id": "enderio:soul_engine"
   },
   "soul_data": "engine"

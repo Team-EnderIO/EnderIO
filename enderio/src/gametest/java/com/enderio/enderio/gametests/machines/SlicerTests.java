@@ -4,7 +4,7 @@ import com.enderio.enderio.content.machines.slicer.SlicingRecipe;
 import com.enderio.enderio.gametests.util.EnderGameTestHelper;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOItems;
-import com.enderio.enderio.init.EIORecipes;
+import com.enderio.enderio.init.EIORecipeTypes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.testframework.DynamicTest;
@@ -60,7 +60,7 @@ public class SlicerTests {
                     new ItemStack(EIOItems.SILICON.get(), 1)
                 ));
 
-                var recipe = helper.getLevel().recipeAccess().getRecipeFor(EIORecipes.SLICING.type().get(), input, helper.getLevel()).orElseThrow();
+                var recipe = helper.getLevel().recipeAccess().getRecipeFor(EIORecipeTypes.SLICING.get(), input, helper.getLevel()).orElseThrow();
                 int expectedEnergy = energyToAdd - recipe.value().energy();
                 helper.assertEnergyStored(0, 0, 0, expectedEnergy);
             })

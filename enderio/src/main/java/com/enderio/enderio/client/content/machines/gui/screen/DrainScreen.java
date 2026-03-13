@@ -10,7 +10,7 @@ import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget
 import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.machines.drain.DrainMenu;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -52,16 +52,17 @@ public class DrainScreen extends MachineScreen<DrainMenu> {
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
     @Override
-    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        guiGraphics.drawString(font, MachinesLang.RANGE, imageWidth - 6 - font.width(MachinesLang.RANGE), 16 + 8, CommonColors.DARK_GRAY, false);
-        guiGraphics.drawString(font, getMenu().getBlockEntity().getRange() + "",
+    protected void extractLabels(GuiGraphicsExtractor graphics, int xm, int ym) {
+        graphics.text(font, MachinesLang.RANGE, imageWidth - 6 - font.width(MachinesLang.RANGE), 16 + 8, CommonColors.DARK_GRAY, false);
+        graphics.text(font, getMenu().getBlockEntity().getRange() + "",
                 imageWidth - 8 - 16 - font.width(getMenu().getBlockEntity().getRange() + "") - 10,
                 16 * 2 + 6, CommonColors.DARK_GRAY, false);
-        super.renderLabels(guiGraphics, mouseX, mouseY);
+
+        super.extractLabels(graphics, xm, ym);
     }
 }

@@ -13,7 +13,6 @@
     {
       "chance": 0.3,
       "item": {
-        "count": 1,
         "id": "enderio:plant_matter_green"
       }
     },
@@ -27,7 +26,6 @@
     {
       "chance": 0.15,
       "item": {
-        "count": 1,
         "id": "enderio:plant_matter_brown"
       }
     }

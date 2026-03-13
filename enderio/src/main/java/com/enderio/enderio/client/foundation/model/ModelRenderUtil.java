@@ -1,7 +1,7 @@
 package com.enderio.enderio.client.foundation.model;
 
-import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
 import net.minecraft.core.Direction;
 import net.minecraft.util.ARGB;
 import net.neoforged.neoforge.client.model.pipeline.QuadBakingVertexConsumer;
@@ -53,24 +53,25 @@ public class ModelRenderUtil {
         };
     }
 
-    public static BakedQuad createQuad(Vector3f[] verts, TextureAtlasSprite sprite) {
-        return createQuad(verts[0], verts[1], verts[2], verts[3], sprite);
+    public static BakedQuad createQuad(Vector3f[] verts, BakedQuad.MaterialInfo materialInfo) {
+        return createQuad(verts[0], verts[1], verts[2], verts[3], materialInfo);
     }
 
-    public static BakedQuad createQuad(Vector3f v1, Vector3f v2, Vector3f v3, Vector3f v4, TextureAtlasSprite sprite) {
-        return createQuad(v1, v2, v3, v4, sprite, 0xFFFFFF, 1.0f);
+    public static BakedQuad createQuad(Vector3f v1, Vector3f v2, Vector3f v3, Vector3f v4, BakedQuad.MaterialInfo materialInfo) {
+        return createQuad(v1, v2, v3, v4, materialInfo, 0xFFFFFF, 1.0f);
     }
 
-    public static BakedQuad createQuad(Vector3f[] verts, TextureAtlasSprite sprite, int color) {
-        return createQuad(verts[0], verts[1], verts[2], verts[3], sprite, color, 1.0f);
+    public static BakedQuad createQuad(Vector3f[] verts, BakedQuad.MaterialInfo materialInfo, int color) {
+        return createQuad(verts[0], verts[1], verts[2], verts[3], materialInfo, color, 1.0f);
     }
 
-    public static BakedQuad createQuad(Vector3f[] verts, TextureAtlasSprite sprite, int color, float alpha) {
-        return createQuad(verts[0], verts[1], verts[2], verts[3], sprite, color, alpha);
+    public static BakedQuad createQuad(Vector3f[] verts, BakedQuad.MaterialInfo materialInfo, int color, float alpha) {
+        return createQuad(verts[0], verts[1], verts[2], verts[3], materialInfo, color, alpha);
     }
 
-    public static BakedQuad createQuad(Vector3f v1, Vector3f v2, Vector3f v3, Vector3f v4, TextureAtlasSprite sprite, int color, float alpha) {
+    public static BakedQuad createQuad(Vector3f v1, Vector3f v2, Vector3f v3, Vector3f v4, BakedQuad.MaterialInfo materialInfo, int color, float alpha) {
         Vector3f normal = new Vector3f(v3).sub(v2).cross(new Vector3f(v1).sub(v2)).normalize();
+        TextureAtlasSprite sprite = materialInfo.sprite();
 
         float nx = normal.x;
         float ny = normal.y;
@@ -84,7 +85,7 @@ public class ModelRenderUtil {
         float b = ARGB.blue(color) / 255.0f;
 
         QuadBakingVertexConsumer baker = new QuadBakingVertexConsumer();
-        baker.setSprite(sprite);
+        baker.setSprite(materialInfo.sprite(), materialInfo.layer(), materialInfo.itemRenderType());
         baker.setDirection(Direction.getApproximateNearest(normal.x, normal.y, normal.z));
         baker.addVertex(v1.x, v1.y, v1.z).setNormal(nx, ny, nz).setUv(sprite.getU(0), sprite.getV(0)).setColor(r, g, b, alpha);
         baker.addVertex(v2.x, v2.y, v2.z).setNormal(nx, ny, nz).setUv(sprite.getU(0), sprite.getV(th)).setColor(r, g, b, alpha);

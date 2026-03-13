@@ -2,7 +2,7 @@ package com.enderio.enderio.client.content.machines.gui.widget;
 
 import com.enderio.core.client.gui.widgets.EIOWidget;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.texture.AbstractTexture;
@@ -31,12 +31,12 @@ public class FermentationWidget extends EIOWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         //TODO depth pipeline
 
         if (shouldShow.get() && !first.get().isEmpty()) {
-            renderFluid(guiGraphics, first.get(), 1 - progress.get());
-            renderFluid(guiGraphics, second.get(), progress.get());
+            renderFluid(graphics, first.get(), 1 - progress.get());
+            renderFluid(graphics, second.get(), progress.get());
         }
 
     }
@@ -44,7 +44,7 @@ public class FermentationWidget extends EIOWidget {
     @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
-    public void renderFluid(GuiGraphics guiGraphics, FluidStack fluid, float opacity) {
+    public void renderFluid(GuiGraphicsExtractor graphics, FluidStack fluid, float opacity) {
         if (fluid.isEmpty()) {
             return;
         }
@@ -60,7 +60,7 @@ public class FermentationWidget extends EIOWidget {
 
             int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
             int atlasHeight = (int) (sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
-            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, TextureAtlas.LOCATION_BLOCKS, x, y, sprite.getU0() * atlasWidth, sprite.getV0() * atlasHeight,
+            graphics.blit(RenderPipelines.GUI_TEXTURED, TextureAtlas.LOCATION_BLOCKS, x, y, sprite.getU0() * atlasWidth, sprite.getV0() * atlasHeight,
                 width, height, sprite.contents().width(), sprite.contents().height(), atlasWidth, atlasHeight, color);
         }
     }

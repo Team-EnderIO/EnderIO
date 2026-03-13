@@ -1,7 +1,7 @@
 package com.enderio.core.client.item;
 
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.client.IItemDecorator;
@@ -12,7 +12,7 @@ public class FluidBarDecorator implements IItemDecorator {
     public static final FluidBarDecorator INSTANCE = new FluidBarDecorator();
 
     @Override
-    public boolean render(GuiGraphics guiGraphics, Font font, ItemStack stack, int xOffset, int yOffset) {
+    public boolean render(GuiGraphicsExtractor graphics, Font font, ItemStack stack, int xOffset, int yOffset) {
         var fluidHandler = ItemAccess.forStack(stack).getCapability(Capabilities.Fluid.ITEM);
 
         if (fluidHandler == null) {
@@ -31,7 +31,7 @@ public class FluidBarDecorator implements IItemDecorator {
                 - (float) amount / (float) fluidHandler.getCapacityAsInt(0, fluidResource);
         IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluidResource.getFluid());
 
-        ItemBarRenderer.renderBar(guiGraphics, fillRatio, xOffset, yOffset, props.getTintColor());
+        ItemBarRenderer.renderBar(graphics, fillRatio, xOffset, yOffset, props.getTintColor());
         return false;
     }
 }

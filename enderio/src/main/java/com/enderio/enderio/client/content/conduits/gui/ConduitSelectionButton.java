@@ -1,7 +1,7 @@
 package com.enderio.enderio.client.content.conduits.gui;
 
 import com.enderio.enderio.api.conduits.Conduit;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.InputWithModifiers;
@@ -55,7 +55,7 @@ public class ConduitSelectionButton extends AbstractButton {
     }
 
     @Override
-    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         var conduit = getConduit();
         if (conduit == null) {
             return;
@@ -65,9 +65,9 @@ public class ConduitSelectionButton extends AbstractButton {
 //        RenderSystem.enableBlend();
 //        RenderSystem.defaultBlendFunc();
 //        RenderSystem.enableDepthTest();
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, ConduitScreen.TEXTURE, getX(), getY(), 227, 0, this.width, this.height, 256, 256);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, ConduitScreen.TEXTURE, getX(), getY(), 227, 0, this.width, this.height, 256, 256);
         if (currentConduit.get() == conduit) {
-            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, ConduitScreen.TEXTURE, getX() - 3, getY(), 224, 0, 3, this.height, 256, 256);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, ConduitScreen.TEXTURE, getX() - 3, getY(), 224, 0, 3, this.height, 256, 256);
         }
 
         // TODO: This shouldn't be a hard-coded path.
@@ -78,7 +78,7 @@ public class ConduitSelectionButton extends AbstractButton {
                     "conduit_icon/" + conduitKey.getPath());
         }
 
-        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, iconLocation, getX() + 3, getY() + 6, 12, 12);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, iconLocation, getX() + 3, getY() + 6, 12, 12);
 
 //        RenderSystem.disableDepthTest();
 //        RenderSystem.disableBlend();

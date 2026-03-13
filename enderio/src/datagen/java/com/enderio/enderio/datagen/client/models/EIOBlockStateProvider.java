@@ -22,7 +22,8 @@ import net.minecraft.client.data.models.model.ModelLocationUtils;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.data.models.model.TexturedModel;
-import net.minecraft.client.renderer.block.model.VariantMutator;
+import net.minecraft.client.renderer.block.dispatch.VariantMutator;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
@@ -146,7 +147,7 @@ public class EIOBlockStateProvider extends ModelProvider {
     }
 
     private void simpleTranslucentBlock(BlockModelGenerators blockModels, Block block) {
-        var CUBE_TRANS = TexturedModel.createDefault(TextureMapping::cube, ModelTemplates.CUBE_ALL.extend().renderType("translucent").build());
+        var CUBE_TRANS = TexturedModel.createDefault(TextureMapping::cube, ModelTemplates.CUBE_ALL/*.extend().renderType("translucent").build()*/);
         blockModels.createTrivialBlock(block, CUBE_TRANS);
     }
 
@@ -244,8 +245,8 @@ public class EIOBlockStateProvider extends ModelProvider {
         } else {
             texture = ModelLocationUtils.getModelLocation(block);
         }
-        Identifier Identifier = ModelTemplates.PRESSURE_PLATE_UP.create(block, TextureMapping.cube(texture), blockModelGenerators.modelOutput);
-        Identifier Identifier1 = ModelTemplates.PRESSURE_PLATE_DOWN.create(block, TextureMapping.cube(texture), blockModelGenerators.modelOutput);
+        Identifier Identifier = ModelTemplates.PRESSURE_PLATE_UP.create(block, TextureMapping.cube(new Material(texture)), blockModelGenerators.modelOutput);
+        Identifier Identifier1 = ModelTemplates.PRESSURE_PLATE_DOWN.create(block, TextureMapping.cube(new Material(texture)), blockModelGenerators.modelOutput);
         blockModelGenerators.blockStateOutput.accept(BlockModelGenerators.createPressurePlate(block, plainVariant(Identifier), plainVariant(Identifier1)));
     }
 

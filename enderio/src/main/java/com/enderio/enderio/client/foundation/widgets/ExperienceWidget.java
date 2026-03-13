@@ -3,7 +3,7 @@ package com.enderio.enderio.client.foundation.widgets;
 import com.enderio.core.client.gui.widgets.EIOWidget;
 import com.enderio.enderio.foundation.util.ExperienceUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
@@ -26,7 +26,7 @@ public class ExperienceWidget extends EIOWidget {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         //TODO depth pipeline
 
         ExperienceUtil.ExperienceLevel expLevel = ExperienceUtil
@@ -34,21 +34,21 @@ public class ExperienceWidget extends EIOWidget {
         int fill = (int) ((((float) expLevel.experience()) / ExperienceUtil.getXpNeededForNextLevel(expLevel.level()))
                 * this.width) - 1;
 
-        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, EXPERIENCE_BAR_BACKGROUND_SPRITE, this.x, this.y, this.width, this.height);
-        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, EXPERIENCE_BAR_PROGRESS_SPRITE, 182, 5, 0, 0, this.x, this.y, fill, 5);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, EXPERIENCE_BAR_BACKGROUND_SPRITE, this.x, this.y, this.width, this.height);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, EXPERIENCE_BAR_PROGRESS_SPRITE, 182, 5, 0, 0, this.x, this.y, fill, 5);
 
         var font = Minecraft.getInstance().font;
         String text = "" + expLevel.level();
         int xOffset = font.width(text) / 2;
-        guiGraphics.drawString(font, text, (int) ((this.x + this.width / 2f + 1) - xOffset), this.y - this.height - 3,
+        graphics.text(font, text, (int) ((this.x + this.width / 2f + 1) - xOffset), this.y - this.height - 3,
             CommonColors.BLACK, false);
-        guiGraphics.drawString(font, text, (int) ((this.x + this.width / 2f - 1) - xOffset), this.y - this.height - 3,
+        graphics.text(font, text, (int) ((this.x + this.width / 2f - 1) - xOffset), this.y - this.height - 3,
             CommonColors.BLACK, false);
-        guiGraphics.drawString(font, text, (int) (this.x + this.width / 2f - xOffset), (this.y - this.height - 3 + 1),
+        graphics.text(font, text, (int) (this.x + this.width / 2f - xOffset), (this.y - this.height - 3 + 1),
             CommonColors.BLACK, false);
-        guiGraphics.drawString(font, text, (int) (this.x + this.width / 2f - xOffset), (this.y - this.height - 3 - 1),
+        graphics.text(font, text, (int) (this.x + this.width / 2f - xOffset), (this.y - this.height - 3 - 1),
             CommonColors.BLACK, false);
-        guiGraphics.drawString(font, text, (int) (this.x + this.width / 2f - xOffset), this.y - this.height - 3,
+        graphics.text(font, text, (int) (this.x + this.width / 2f - xOffset), this.y - this.height - 3,
             0xFF80FF20, false);
     }
 

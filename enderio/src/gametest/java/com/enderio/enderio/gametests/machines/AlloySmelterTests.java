@@ -4,7 +4,7 @@ import com.enderio.enderio.content.machines.alloy.AlloySmeltingRecipe;
 import com.enderio.enderio.gametests.util.EnderGameTestHelper;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOItems;
-import com.enderio.enderio.init.EIORecipes;
+import com.enderio.enderio.init.EIORecipeTypes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.testframework.DynamicTest;
@@ -56,7 +56,7 @@ public class AlloySmelterTests {
                     ), 1);
 
                     // Ensure energy was consumed correctly
-                    var recipe = helper.getLevel().recipeAccess().getRecipeFor(EIORecipes.ALLOY_SMELTING.type().get(), input, helper.getLevel()).orElseThrow();
+                    var recipe = helper.getLevel().recipeAccess().getRecipeFor(EIORecipeTypes.ALLOY_SMELTING.get(), input, helper.getLevel()).orElseThrow();
                     int expectedEnergy = energyToAdd - recipe.value().energy();
                     helper.assertEnergyStored(0, 0, 0, expectedEnergy);
                 })
@@ -95,7 +95,7 @@ public class AlloySmelterTests {
                         ItemStack.EMPTY
                     ), 3);
 
-                    var recipe = helper.getLevel().recipeAccess().getRecipeFor(EIORecipes.ALLOY_SMELTING.type().get(), input, helper.getLevel()).orElseThrow();
+                    var recipe = helper.getLevel().recipeAccess().getRecipeFor(EIORecipeTypes.ALLOY_SMELTING.get(), input, helper.getLevel()).orElseThrow();
                     int expectedEnergy = energyToAdd - recipe.value().energy();
                     helper.assertEnergyStored(0, 0, 0, expectedEnergy);
                 })

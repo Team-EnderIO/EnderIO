@@ -13,15 +13,15 @@ import com.mojang.math.OctahedralGroup;
 import com.mojang.math.Transformation;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
-import net.minecraft.client.renderer.block.model.SimpleModelWrapper;
-import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BlockModelRotation;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
+import net.minecraft.client.renderer.block.dispatch.BlockModelRotation;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.resources.model.ModelBaker;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.SimpleModelWrapper;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -31,7 +31,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.BlockAndLightGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.model.DynamicBlockStateModel;
 import net.neoforged.neoforge.client.model.block.CustomUnbakedBlockStateModel;
@@ -55,36 +55,49 @@ public class ConduitBlockStateModel implements DynamicBlockStateModel {
     }
 
     @Override
-    public TextureAtlasSprite particleIcon() {
-        return ModelHelper.getMissingTexture();
+    public Material.Baked particleMaterial() {
+        return new Material.Baked(ModelHelper.getMissingTexture(), false);
     }
 
     @Override
-    public TextureAtlasSprite particleIcon(BlockAndTintGetter level, BlockPos pos, BlockState state) {
+    public Material.Baked particleMaterial(BlockAndTintGetter level, BlockPos pos, BlockState state) {
          //This is only used for facades.
         ConduitBundleRenderState bundleState = level.getModelData(pos).get(ConduitBundleRenderState.PROPERTY);
 
         if (bundleState == null) {
-            return ModelHelper.getMissingTexture();
+            return new Material.Baked(ModelHelper.getMissingTexture(), false);
         }
 
         if (bundleState.hasFacade() && ClientFacadeVisibility.areFacadesVisible()) {
-            return Minecraft.getInstance()
-                .getBlockRenderer()
-                .getBlockModel(bundleState.facade())
-                .particleIcon(level, pos, state);
+            var model = Minecraft.getInstance()
+                .getModelManager()
+                .getBlockModelSet()
+                .get(bundleState.facade());
+
+            if (model instanceof BlockStateModel blockStateModel) {
+                return blockStateModel.particleMaterial(level, pos, state);
+            }
         }
 
         // Shouldn't be called anymore, but sensible fallback to have:
         if (bundleState.conduits().isEmpty()) {
-            return ModelHelper.getMissingTexture();
+            return new Material.Baked(ModelHelper.getMissingTexture(), false);
         }
 
-        return sprite(bundleState.getTexture(bundleState.conduits().getFirst()));
+        return new Material.Baked(Minecraft.getInstance()
+            .getAtlasManager()
+            .getAtlasOrThrow(AtlasIds.BLOCKS)
+            .getSprite(bundleState.getTexture(bundleState.conduits().getFirst())), false);
     }
 
     @Override
-    public void collectParts(BlockAndTintGetter level, BlockPos pos, BlockState state, RandomSource random, List<BlockModelPart> parts) {
+    public @BakedQuad.MaterialFlags int materialFlags() {
+        // TODO: 26.1 can we refine this? for now we'll just return all flags lol
+        return 0xFFFFFFFF;
+    }
+
+    @Override
+    public void collectParts(BlockAndTintGetter level, BlockPos pos, BlockState state, RandomSource random, List<BlockStateModelPart> parts) {
         ConduitBundleRenderState bundleState = level.getModelData(pos).get(ConduitBundleRenderState.PROPERTY);
         if (bundleState != null) {
             // If the facade should hide the conduits, escape early.
@@ -121,7 +134,7 @@ public class ConduitBlockStateModel implements DynamicBlockStateModel {
                         }
                     };
 
-                    parts.add(SimpleModelWrapper.bake(new ConduitBaker(this.baker, sprite(bundleState.getTexture(conduit))),
+                    parts.add(SimpleModelWrapper.bake(new ConduitBaker(this.baker, new Material(bundleState.getTexture(conduit))),
                         ConduitAdditionalModels.CONDUIT_CONNECTION, rotationTranslation)); //TODO emission?
 
                     ConduitModelModifier conduitModelModifier = ConduitModelModifiers
@@ -146,7 +159,7 @@ public class ConduitBlockStateModel implements DynamicBlockStateModel {
 
                             if (model != null) {
                                 final var io = SimpleModelWrapper.bake(this.baker, model, rotationTranslation);
-                                parts.add(new BlockModelPart() {
+                                parts.add(new BlockStateModelPart() {
                                     @Override
                                     public List<BakedQuad> getQuads(@Nullable Direction direction) {
                                         return withColor(io.getQuads(direction), connectionState.inputChannel(), connectionState.outputChannel());
@@ -158,21 +171,21 @@ public class ConduitBlockStateModel implements DynamicBlockStateModel {
                                     }
 
                                     @Override
-                                    public TextureAtlasSprite particleIcon() {
-                                        return io.particleIcon();
+                                    public Material.Baked particleMaterial() {
+                                        return io.particleMaterial();
                                     }
 
                                     @Override
-                                    public ChunkSectionLayer getRenderType(BlockState state) {
-                                        return ChunkSectionLayer.CUTOUT;
+                                    public @BakedQuad.MaterialFlags int materialFlags() {
+                                        return io.materialFlags();
                                     }
                                 });
                             }
 
                             // TODO: Need support for dual-color redstone control.
                             if (connectionState.isRedstoneSensitive()) {
-                                final BlockModelPart redstone = SimpleModelWrapper.bake(this.baker, ConduitAdditionalModels.CONDUIT_IO_REDSTONE, rotationTranslation);
-                                parts.add(new BlockModelPart() {
+                                final BlockStateModelPart redstone = SimpleModelWrapper.bake(this.baker, ConduitAdditionalModels.CONDUIT_IO_REDSTONE, rotationTranslation);
+                                parts.add(new BlockStateModelPart() {
 
                                     @Override
                                     public List<BakedQuad> getQuads(@Nullable Direction direction) {
@@ -185,13 +198,13 @@ public class ConduitBlockStateModel implements DynamicBlockStateModel {
                                     }
 
                                     @Override
-                                    public TextureAtlasSprite particleIcon() {
-                                        return redstone.particleIcon();
+                                    public Material.Baked particleMaterial() {
+                                        return redstone.particleMaterial();
                                     }
 
                                     @Override
-                                    public ChunkSectionLayer getRenderType(BlockState state) {
-                                        return ChunkSectionLayer.CUTOUT;
+                                    public @BakedQuad.MaterialFlags int materialFlags() {
+                                        return redstone.materialFlags();
                                     }
                                 });
 
@@ -268,7 +281,7 @@ public class ConduitBlockStateModel implements DynamicBlockStateModel {
                             return translateTransformation(offsetsForType.getFirst());
                         }
                     };
-                    parts.add(SimpleModelWrapper.bake(new ConduitBaker(this.baker, sprite(bundleState.getTexture(toRender))),
+                    parts.add(SimpleModelWrapper.bake(new ConduitBaker(this.baker, new Material(bundleState.getTexture(toRender))),
                         ConduitAdditionalModels.CONDUIT_CORE, offsetType)); //TODO emissive?
                 }
             }
@@ -284,7 +297,7 @@ public class ConduitBlockStateModel implements DynamicBlockStateModel {
                                 return translateTransformation(offset);
                             }
                         };
-                        parts.add(SimpleModelWrapper.bake(new ConduitBaker(this.baker, sprite(bundleState.getTexture(notRenderedEntry.getKey()))),
+                        parts.add(SimpleModelWrapper.bake(new ConduitBaker(this.baker, new Material(bundleState.getTexture(notRenderedEntry.getKey()))),
                             ConduitAdditionalModels.CONDUIT_CORE, translate)); //TODO emissive?
                     }
                 }
@@ -315,7 +328,7 @@ public class ConduitBlockStateModel implements DynamicBlockStateModel {
                         }
                     };
 
-                    parts.add(SimpleModelWrapper.bake(new ConduitBaker(this.baker, sprite(bundleState.getTexture(notRenderedEntry.getKey()))),
+                    parts.add(SimpleModelWrapper.bake(new ConduitBaker(this.baker, new Material(bundleState.getTexture(notRenderedEntry.getKey()))),
                         ConduitAdditionalModels.CONDUIT_CORE, translate));
 
                 }
@@ -326,13 +339,13 @@ public class ConduitBlockStateModel implements DynamicBlockStateModel {
     public List<BakedQuad> withColor(List<BakedQuad> quads, @Nullable DyeColor insert, @Nullable DyeColor extract) {
         List<BakedQuad> newQuads = new ArrayList<>(quads);
         for (BakedQuad quad : quads) {
-            if (!quad.isTinted()) {
+            if (!quad.materialInfo().isTinted()) {
                 newQuads.add(quad);
-            } else if (insert != null && quad.tintIndex() == 1) {
+            } else if (insert != null && quad.materialInfo().tintIndex() == 1) {
                 var mutableQuad = new MutableQuad(quad);
                 mutableQuad.withColor(insert.getTextureDiffuseColor());
                 newQuads.add(mutableQuad.toBakedQuad());
-            } else if (extract != null && quad.tintIndex() == 0) {
+            } else if (extract != null && quad.materialInfo().tintIndex() == 0) {
                 var mutableQuad = new MutableQuad(quad);
                 mutableQuad.withColor(extract.getTextureDiffuseColor());
                 newQuads.add(mutableQuad.toBakedQuad());
@@ -360,10 +373,6 @@ public class ConduitBlockStateModel implements DynamicBlockStateModel {
 
     private static Vector3f scale(Vec3i vector, float scaler) {
         return new Vector3f(vector.getX() * scaler, vector.getY() * scaler, vector.getZ() * scaler);
-    }
-
-    private static TextureAtlasSprite sprite(Identifier location) {
-        return Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.BLOCKS).getSprite(location);
     }
 
     public record Unbaked() implements CustomUnbakedBlockStateModel {

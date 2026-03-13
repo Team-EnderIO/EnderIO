@@ -17,7 +17,7 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.types.IRecipeType;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -74,13 +74,14 @@ public class WeatherChangeCategory extends MachineRecipeCategory<RecipeHolder<We
             .addItemStacks(List.of(new ItemStack(Items.FIREWORK_ROCKET)));
 
         builder.addSlot(RecipeIngredientRole.INPUT, 4, 7)
-            .add(recipe.value().fluid().getFluid(), recipe.value().fluid().getAmount())
+            .add(recipe.value().fluid().fluid().value(), recipe.value().fluid().amount())
             .setFluidRenderer(WeatherObeliskBlockEntity.TANK_CAPACITY, false, 16, 63);
     }
 
-    @Override
-    public void draw(RecipeHolder<WeatherChangeRecipe> recipe, IRecipeSlotsView recipeSlotsView,
-        GuiGraphics guiGraphics, double mouseX, double mouseY) {
-        animatedFlame.draw(guiGraphics, 63, 24);
-    }
+    // TODO: 26.1 - reenable
+//    @Override
+//    public void draw(RecipeHolder<WeatherChangeRecipe> recipe, IRecipeSlotsView recipeSlotsView,
+//        GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
+//        animatedFlame.draw(graphics, 63, 24);
+//    }
 }

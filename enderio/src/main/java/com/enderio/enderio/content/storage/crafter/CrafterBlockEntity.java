@@ -172,7 +172,7 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
     private Optional<ItemStack> getRecipeResult() {
         var input = getCraftingInput(INPUT);
         if (recipe != null && recipe.value().matches(input, getLevel())) {
-            return Optional.of(recipe.value().assemble(input, getLevel().registryAccess()));
+            return Optional.of(recipe.value().assemble(input));
         }
         return Optional.empty();
     }
@@ -193,7 +193,7 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
         var input = getCraftingInput(INPUT);
         // craft
         clearInput();
-        outputBuffer.add(recipe.value().assemble(input, getLevel().registryAccess()));
+        outputBuffer.add(recipe.value().assemble(input));
         outputBuffer.addAll(recipe.value().getRemainingItems(input));
         // clean buffer
         outputBuffer.removeIf(ItemStack::isEmpty);

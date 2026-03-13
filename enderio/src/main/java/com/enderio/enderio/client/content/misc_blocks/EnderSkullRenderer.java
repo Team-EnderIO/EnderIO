@@ -23,7 +23,7 @@ import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
@@ -38,7 +38,7 @@ import org.jspecify.annotations.Nullable;
 
 public class EnderSkullRenderer implements BlockEntityRenderer<EnderSkullBlockEntity, EnderSkullRenderer.EnderSkullBlockRenderState> {
 
-    public static final RenderType RENDERTYPE = RenderTypes.entityCutoutNoCullZOffset(Identifier.withDefaultNamespace("textures/entity/enderman/enderman.png"));
+    public static final RenderType RENDERTYPE = RenderTypes.entityCutoutZOffset(Identifier.withDefaultNamespace("textures/entity/enderman/enderman.png"));
     public static final ModelLayerLocation ENDER_SKULL = new ModelLayerLocation(Identifier.withDefaultNamespace("enderman_head"), "main");
 
     private final EnderSkullModel skullmodelbase;
@@ -69,29 +69,30 @@ public class EnderSkullRenderer implements BlockEntityRenderer<EnderSkullBlockEn
 
     @Override
     public void submit(EnderSkullBlockRenderState renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector, CameraRenderState cameraRenderState) {
-        float f = renderState.animationProgress;
-        BlockState blockstate = renderState.blockState;
-        LocalPlayer player = Minecraft.getInstance().player;
-        Vec3 position = player.position();
-        HitResult hitResult = player.pick(10D, 0.0f, false); //I would rather not do this every tick, but I don't see how.
-        skullmodelbase.active = false;
-        if (hitResult instanceof BlockHitResult blockHitResult && player.level().getBlockEntity(blockHitResult.getBlockPos()) == renderState.blockEntity) {
-            renderState.blockEntity.setAnimation(30.0f);
-            f = 30.0f;
-        }
-        if (f > 0) {
-            skullmodelbase.active = true;
-            renderState.rotationDegrees = (float) (
-                Mth.atan2(position.z - renderState.blockEntity.getBlockPos().getZ() - 0.5D, position.x - renderState.blockEntity.getBlockPos().getX() - 0.5D) * 180.0f / Math.PI + 90);
-            renderState.rotationDegrees += (float) (player.getRandom().nextGaussian() * 2);
-            int rotation = RotationSegment.convertToSegment(renderState.rotationDegrees);
-            if (player.level().getBlockEntity(renderState.blockEntity.getBlockPos()) == renderState.blockEntity && blockstate.is(EIOBlocks.ENDERMAN_HEAD.get())) {
-                player.level().setBlock(renderState.blockEntity.getBlockPos(), blockstate.setValue(SkullBlock.ROTATION, rotation), 3);
-            }
-        }
-        SkullBlockRenderer.submitSkull(renderState.direction, renderState.rotationDegrees, renderState.animationProgress, poseStack, nodeCollector,
-            renderState.lightCoords, skullmodelbase, renderState.renderType, 0, renderState.breakProgress
-        );
+        // TODO: 26.1 - Not quite sure what's going on here...
+//        float f = renderState.animationProgress;
+//        BlockState blockstate = renderState.blockState;
+//        LocalPlayer player = Minecraft.getInstance().player;
+//        Vec3 position = player.position();
+//        HitResult hitResult = player.pick(10D, 0.0f, false); //I would rather not do this every tick, but I don't see how.
+//        skullmodelbase.active = false;
+//        if (hitResult instanceof BlockHitResult blockHitResult && player.level().getBlockEntity(blockHitResult.getBlockPos()) == renderState.blockEntity) {
+//            renderState.blockEntity.setAnimation(30.0f);
+//            f = 30.0f;
+//        }
+//        if (f > 0) {
+//            skullmodelbase.active = true;
+//            renderState.rotationDegrees = (float) (
+//                Mth.atan2(position.z - renderState.blockEntity.getBlockPos().getZ() - 0.5D, position.x - renderState.blockEntity.getBlockPos().getX() - 0.5D) * 180.0f / Math.PI + 90);
+//            renderState.rotationDegrees += (float) (player.getRandom().nextGaussian() * 2);
+//            int rotation = RotationSegment.convertToSegment(renderState.rotationDegrees);
+//            if (player.level().getBlockEntity(renderState.blockEntity.getBlockPos()) == renderState.blockEntity && blockstate.is(EIOBlocks.ENDERMAN_HEAD.get())) {
+//                player.level().setBlock(renderState.blockEntity.getBlockPos(), blockstate.setValue(SkullBlock.ROTATION, rotation), 3);
+//            }
+//        }
+//        SkullBlockRenderer.submitSkull(renderState.direction, renderState.rotationDegrees, renderState.animationProgress, poseStack, nodeCollector,
+//            renderState.lightCoords, skullmodelbase, renderState.renderType, 0, renderState.breakProgress
+//        );
     }
 
     public static class EnderSkullBlockRenderState extends BlockEntityRenderState {

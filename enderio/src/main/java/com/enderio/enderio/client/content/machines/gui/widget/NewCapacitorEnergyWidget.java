@@ -5,7 +5,7 @@ import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.foundation.energy.EnergyStorageInfo;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -27,21 +27,21 @@ public class NewCapacitorEnergyWidget extends NewEnergyWidget {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         if (!cap.get()) {
-            guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, ENERGY_BAR_ERROR_SPRITE, x, y, width, height);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ENERGY_BAR_ERROR_SPRITE, x, y, width, height);
 
             if (isHoveredOrFocused()) {
-                renderCapacitorTooltip(guiGraphics, mouseX, mouseY);
+                renderCapacitorTooltip(graphics, mouseX, mouseY);
             }
 
             return;
         }
 
-        super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
+        super.extractWidgetRenderState(graphics, mouseX, mouseY, partialTick);
     }
 
-    public void renderCapacitorTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    public void renderCapacitorTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         Minecraft minecraft = Minecraft.getInstance();
         List<Component> list = new ArrayList<>();
         list.add(MachinesLang.NOCAP_TITLE.withStyle(ChatFormatting.DARK_AQUA));
@@ -50,10 +50,10 @@ public class NewCapacitorEnergyWidget extends NewEnergyWidget {
             list.add(Component.literal(s.stripLeading().stripTrailing()));
         }
 
-        Matrix3x2fStack pose = guiGraphics.pose();
+        Matrix3x2fStack pose = graphics.pose();
         pose.pushMatrix();
         pose.translate(0, 0); //TODO can't push Z 1
-        guiGraphics.setComponentTooltipForNextFrame(minecraft.font, list, mouseX, mouseY);
+        graphics.setComponentTooltipForNextFrame(minecraft.font, list, mouseX, mouseY);
         pose.popMatrix();
     }
 }

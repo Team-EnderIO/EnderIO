@@ -2,7 +2,6 @@
   "type": "enderio:painting",
   "input": "minecraft:redstone_block",
   "output": {
-    "count": 1,
     "id": "enderio:painted_redstone_block"
   }
 }

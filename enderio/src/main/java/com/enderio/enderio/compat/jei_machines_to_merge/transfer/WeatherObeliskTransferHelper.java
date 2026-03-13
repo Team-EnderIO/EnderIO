@@ -51,7 +51,7 @@ public class WeatherObeliskTransferHelper implements IRecipeTransferHandler<Weat
     @Override
     public @Nullable IRecipeTransferError transferRecipe(WeatherObeliskMenu container, RecipeHolder<WeatherChangeRecipe> recipe, IRecipeSlotsView recipeSlots,
         Player player, boolean maxTransfer, boolean doTransfer) {
-        boolean hasFluid = recipe.value().fluid().getFluid().isSame(container.getFluidTank().contents().getFluid()) && recipe.value().fluid().getAmount() <= container.getFluidTank().contents().getAmount();
+        boolean hasFluid = recipe.value().fluid().fluid().value().isSame(container.getFluidTank().contents().getFluid()) && recipe.value().fluid().amount() <= container.getFluidTank().contents().getAmount();
         boolean hasFireWork = container.slots.get(WeatherObeliskMenu.INPUTS_INDEX).getItem().is(Items.FIREWORK_ROCKET);
 
         ItemStack fireWork = getIngredientItem(player);

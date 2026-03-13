@@ -5,7 +5,6 @@
   "experience": 1,
   "input": "enderio:dark_steel_grinding_ball",
   "output": {
-    "count": 1,
     "id": "enderio:player_token"
   }
 }

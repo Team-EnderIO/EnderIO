@@ -3,7 +3,7 @@ package com.enderio.enderio.content.machines.obelisks.weather;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.enderio.foundation.MachineRecipe;
 import com.enderio.enderio.init.EIORecipeBookCategories;
-import com.enderio.enderio.init.EIORecipes;
+import com.enderio.enderio.init.EIORecipeTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -27,14 +27,26 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStackTemplate;
 
 import java.util.List;
 import java.util.function.IntFunction;
 
-public record WeatherChangeRecipe(FluidStack fluid, WeatherMode mode, PlacementInfo placementInfo)
+public record WeatherChangeRecipe(FluidStackTemplate fluid, WeatherMode mode, PlacementInfo placementInfo)
         implements MachineRecipe<WeatherChangeRecipe.Input> {
 
-    public WeatherChangeRecipe(FluidStack fluid, WeatherMode mode) {
+    public static final MapCodec<WeatherChangeRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(inst -> inst
+        .group(FluidStackTemplate.CODEC.fieldOf("fluid").forGetter(WeatherChangeRecipe::fluid),
+            WeatherMode.CODEC.fieldOf("mode").forGetter(WeatherChangeRecipe::mode))
+        .apply(inst, WeatherChangeRecipe::new));
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, WeatherChangeRecipe> STREAM_CODEC = StreamCodec
+        .composite(FluidStackTemplate.STREAM_CODEC, WeatherChangeRecipe::fluid, WeatherMode.STREAM_CODEC,
+            WeatherChangeRecipe::mode, WeatherChangeRecipe::new);
+
+    public static final RecipeSerializer<WeatherChangeRecipe> SERIALIZER = new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC);
+
+    public WeatherChangeRecipe(FluidStackTemplate fluid, WeatherMode mode) {
         this(fluid, mode, PlacementInfo.NOT_PLACEABLE);
     }
 
@@ -55,17 +67,17 @@ public record WeatherChangeRecipe(FluidStack fluid, WeatherMode mode, PlacementI
 
     @Override
     public boolean matches(Input input, Level level) {
-        return FluidStack.isSameFluid(input.fluid(), fluid) && input.fluid.getAmount() >= fluid.getAmount();
+        return FluidStack.isSameFluid(input.fluid(), fluid) && input.fluid.getAmount() >= fluid.amount();
     }
 
     @Override
     public RecipeSerializer<? extends Recipe<Input>> getSerializer() {
-        return EIORecipes.WEATHER_CHANGE.serializer().get();
+        return SERIALIZER;
     }
 
     @Override
     public RecipeType<? extends Recipe<Input>> getType() {
-        return EIORecipes.WEATHER_CHANGE.type().get();
+        return EIORecipeTypes.WEATHER_CHANGE.get();
     }
 
     @Override
@@ -145,27 +157,6 @@ public record WeatherChangeRecipe(FluidStack fluid, WeatherMode mode, PlacementI
 
         public Fireworks getFireworks() {
             return fireworks;
-        }
-    }
-
-    public static class Serializer implements RecipeSerializer<WeatherChangeRecipe> {
-        public static final MapCodec<WeatherChangeRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst
-                .group(FluidStack.CODEC.fieldOf("fluid").forGetter(WeatherChangeRecipe::fluid),
-                        WeatherMode.CODEC.fieldOf("mode").forGetter(WeatherChangeRecipe::mode))
-                .apply(inst, WeatherChangeRecipe::new));
-
-        public static final StreamCodec<RegistryFriendlyByteBuf, WeatherChangeRecipe> STREAM_CODEC = StreamCodec
-                .composite(FluidStack.STREAM_CODEC, WeatherChangeRecipe::fluid, WeatherMode.STREAM_CODEC,
-                        WeatherChangeRecipe::mode, WeatherChangeRecipe::new);
-
-        @Override
-        public MapCodec<WeatherChangeRecipe> codec() {
-            return CODEC;
-        }
-
-        @Override
-        public StreamCodec<RegistryFriendlyByteBuf, WeatherChangeRecipe> streamCodec() {
-            return STREAM_CODEC;
         }
     }
 }

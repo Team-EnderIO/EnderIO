@@ -1,7 +1,7 @@
 package com.enderio.core.client.gui.screen;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -51,20 +51,20 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         /*
          * if (menu instanceof SyncedMenu<?> syncedMenu && syncedMenu.getBlockEntity()
          * == null) { return; }
          */
 
-        super.render(guiGraphics, mouseX, mouseY, partialTicks);
-        this.renderTooltip(guiGraphics, mouseX, mouseY);
+        super.extractRenderState(graphics, mouseX, mouseY, a);
+        this.extractTooltip(graphics, mouseX, mouseY);
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         // TODO: 1.21.4: Do not assume 256x256 texture?
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, getBackgroundImage(), getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight, 256, 256);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, getBackgroundImage(), getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
     @Override
@@ -92,9 +92,9 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
     }
 
     @Override
-    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    protected void extractLabels(GuiGraphicsExtractor graphics, int xm, int ym) {
         if (renderLabels) {
-            super.renderLabels(guiGraphics, mouseX, mouseY);
+            super.extractLabels(graphics, xm, ym);
         }
     }
 

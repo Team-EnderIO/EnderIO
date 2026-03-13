@@ -4,7 +4,7 @@ import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.compat.ModCompatHelper;
 import com.enderio.enderio.content.machines.MachinesLang;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -30,12 +30,12 @@ public abstract class ProgressWidget extends AbstractWidget {
         }
 
         @Override
-        public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        public void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
             float progress = progressSupplier.get();
             int yOffset = (int) (this.height * (1.0f - progress));
-            renderSprite(guiGraphics, getX(), getY() + yOffset, u, v + yOffset, width, (int) (this.height * progress));
+            renderSprite(graphics, getX(), getY() + yOffset, u, v + yOffset, width, (int) (this.height * progress));
 
-            super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
+            super.extractWidgetRenderState(graphics, mouseX, mouseY, partialTick);
         }
     }
 
@@ -51,10 +51,10 @@ public abstract class ProgressWidget extends AbstractWidget {
         }
 
         @Override
-        public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        public void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
             float progress = progressSupplier.get();
-            renderSprite(guiGraphics, getX(), getY(), u, v, width, (int) (this.height * progress));
-            super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
+            renderSprite(graphics, getX(), getY(), u, v, width, (int) (this.height * progress));
+            super.extractWidgetRenderState(graphics, mouseX, mouseY, partialTick);
         }
     }
 
@@ -70,10 +70,10 @@ public abstract class ProgressWidget extends AbstractWidget {
         }
 
         @Override
-        public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        public void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
             float progress = progressSupplier.get();
-            renderSprite(guiGraphics, getX(), getY(), u, v, (int) (this.width * progress), height);
-            super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
+            renderSprite(graphics, getX(), getY(), u, v, (int) (this.width * progress), height);
+            super.extractWidgetRenderState(graphics, mouseX, mouseY, partialTick);
         }
     }
 
@@ -110,21 +110,21 @@ public abstract class ProgressWidget extends AbstractWidget {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         // Update the contents of the tooltip whenever its hovered, don't waste any time
         // doing it when not hovered.
         // Should also mean when tooltip is false it never gets populated
         if (this.isHovered() && showTooltip && !ModCompatHelper.hasRecipeViewer()) {
             Minecraft minecraft = Minecraft.getInstance();
 
-            guiGraphics.setTooltipForNextFrame(minecraft.font,
+            graphics.setTooltipForNextFrame(minecraft.font,
                     TooltipUtil.withArgs(MachinesLang.TOOLTIP_PROGRESS, (int) (progressSupplier.get() * 100)), mouseX,
                     mouseY);
         }
 
     }
 
-    protected void renderSprite(GuiGraphics guiGraphics, int x, int y, int u, int v, int w, int h) {
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, backgroundImage, x, y, u, v, w, h, 256, 256);
+    protected void renderSprite(GuiGraphicsExtractor graphics, int x, int y, int u, int v, int w, int h) {
+        graphics.blit(RenderPipelines.GUI_TEXTURED, backgroundImage, x, y, u, v, w, h, 256, 256);
     }
 }

@@ -3,10 +3,11 @@ package com.enderio.enderio.content.paint.block;
 import com.enderio.enderio.content.paint.BlockPaintData;
 import com.enderio.enderio.content.paint.block.entity.PaintedBlockEntity;
 import com.enderio.enderio.init.EIODataComponents;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.BlockAndLightGetter;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.LevelReader;
@@ -36,7 +37,7 @@ public interface PaintedBlock extends IBlockExtension {
     }
 
     @Override
-    default boolean shouldDisplayFluidOverlay(BlockState state, BlockAndTintGetter level, BlockPos pos, FluidState fluidState) {
+    default boolean shouldDisplayFluidOverlay(BlockState state, BlockAndLightGetter level, BlockPos pos, FluidState fluidState) {
         return getPaintState(level, pos).shouldDisplayFluidOverlay(level, pos, fluidState);
     }
 

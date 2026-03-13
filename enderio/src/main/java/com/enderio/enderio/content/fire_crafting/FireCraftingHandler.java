@@ -1,7 +1,7 @@
 package com.enderio.enderio.content.fire_crafting;
 
 import com.enderio.enderio.config.base.BaseConfig;
-import com.enderio.enderio.init.EIORecipes;
+import com.enderio.enderio.init.EIORecipeTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
@@ -64,7 +64,7 @@ public class FireCraftingHandler {
 
             // Cache recipes
             if (!recipesCached) {
-                cachedRecipes = level.recipeAccess().recipeMap().byType(EIORecipes.FIRE_CRAFTING.type().get());
+                cachedRecipes = level.recipeAccess().recipeMap().byType(EIORecipeTypes.FIRE_CRAFTING.get());
                 recipesCached = false;
             }
 
@@ -113,7 +113,7 @@ public class FireCraftingHandler {
                 continue;
             }
 
-            ItemStack resultStack = result.result().copy();
+            ItemStack resultStack = result.result().create();
             resultStack.setCount(itemCount);
 
             // Get random offset

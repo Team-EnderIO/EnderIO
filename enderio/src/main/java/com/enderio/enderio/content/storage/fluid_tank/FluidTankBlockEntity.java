@@ -3,7 +3,6 @@ package com.enderio.enderio.content.storage.fluid_tank;
 import com.enderio.core.common.storage.FluidStorage;
 import com.enderio.core.common.storage.layout.FluidStorageLayout;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
-import com.enderio.core.common.util.EnderResourceUtil;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
@@ -13,7 +12,7 @@ import com.enderio.enderio.foundation.storage.SidedResourceHandler;
 import com.enderio.enderio.foundation.util.SizedFluidIngredientHelper;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
-import com.enderio.enderio.init.EIORecipes;
+import com.enderio.enderio.init.EIORecipeTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -39,9 +38,7 @@ import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.transfer.ResourceHandler;
-import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.item.ItemResource;
@@ -164,7 +161,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
         if (level instanceof ServerLevel serverLevel) {
             //TODO use the new methods to check instead of doing this ourselves
             List<RecipeHolder<TankRecipe>> allRecipes = serverLevel.recipeAccess()
-                    .recipeMap().byType(EIORecipes.TANK.type().get()).stream().toList();
+                    .recipeMap().byType(EIORecipeTypes.TANK.get()).stream().toList();
             return allRecipes.stream()
                     .anyMatch((recipe) -> recipe.value().mode() == TankRecipe.Mode.EMPTY
                             && recipe.value().input().test(stack));
@@ -197,7 +194,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
         // drain recipes
         if (level instanceof ServerLevel serverLevel) {
             List<RecipeHolder<TankRecipe>> allRecipes = serverLevel.recipeAccess()
-                    .recipeMap().byType(EIORecipes.TANK.type().get()).stream().toList();
+                    .recipeMap().byType(EIORecipeTypes.TANK.get()).stream().toList();
             return allRecipes.stream()
                     .anyMatch((recipe) -> recipe.value().mode() == TankRecipe.Mode.FILL
                             && recipe.value().input().test(stack));
@@ -227,7 +224,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
         if (level != null) {
             if (level instanceof ServerLevel serverLevel) {
                 currentRecipe = serverLevel.recipeAccess()
-                        .getRecipeFor(EIORecipes.TANK.type().get(), createRecipeInput(), level);
+                        .getRecipeFor(EIORecipeTypes.TANK.get(), createRecipeInput(), level);
             }
         }
     }
@@ -255,7 +252,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
     private void tryTankRecipe() {
         currentRecipe.ifPresent(recipe -> {
-            ItemStack recipeResultStack = recipe.value().output().copy();
+            ItemStack recipeResultStack = recipe.value().output().create();
 
             switch (recipe.value().mode()) {
             case EMPTY -> {
@@ -340,7 +337,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
         if (level != null) {
             if (level instanceof ServerLevel serverLevel) {
                 currentRecipe = serverLevel.recipeAccess()
-                        .getRecipeFor(EIORecipes.TANK.type().get(), createRecipeInput(), level);
+                        .getRecipeFor(EIORecipeTypes.TANK.get(), createRecipeInput(), level);
             }
 
             level.getLightEngine().checkBlock(worldPosition);

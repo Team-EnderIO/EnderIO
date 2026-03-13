@@ -10,7 +10,6 @@
     "#c:silicon"
   ],
   "output": {
-    "count": 1,
     "id": "enderio:z_logic_controller"
   }
 }

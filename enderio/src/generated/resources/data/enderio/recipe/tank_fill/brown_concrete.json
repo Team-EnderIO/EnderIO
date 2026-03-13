@@ -7,7 +7,6 @@
   "input": "minecraft:brown_concrete_powder",
   "mode": "fill",
   "output": {
-    "count": 1,
     "id": "minecraft:brown_concrete"
   }
 }

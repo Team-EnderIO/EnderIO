@@ -12,7 +12,7 @@ import com.enderio.modded_conduits.common.modules.mekanism.chemical_filter.Ender
 import com.mojang.blaze3d.systems.RenderSystem;
 import mekanism.api.chemical.ChemicalStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
@@ -85,13 +85,13 @@ public class EnderChemicalFilterScreen extends EnderContainerScreen<EnderChemica
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float v, int i, int i1) {
-        guiGraphics.blit(backgroundTexture, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight);
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        graphics.blit(backgroundTexture, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight);
     }
 
     @Override
-    public void renderSlot(GuiGraphics guiGraphics, Slot slot) {
-        super.renderSlot(guiGraphics, slot);
+    public void renderSlot(GuiGraphicsExtractor graphics, Slot slot) {
+        super.renderSlot(graphics, slot);
 
         if (!(slot instanceof ChemicalFilterSlot chemicalFilterSlot)) {
             return;
@@ -114,18 +114,18 @@ public class EnderChemicalFilterScreen extends EnderContainerScreen<EnderChemica
 
         int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
         int atlasHeight = (int) (sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
-        guiGraphics.blit(TextureAtlas.LOCATION_BLOCKS, slot.x, slot.y, 16, 16, sprite.getU0() * atlasWidth,
+        graphics.blit(TextureAtlas.LOCATION_BLOCKS, slot.x, slot.y, 16, 16, sprite.getU0() * atlasWidth,
             sprite.getV0() * atlasHeight, sprite.contents().width(), sprite.contents().height(), atlasWidth,
             atlasHeight);
         RenderSystem.setShaderColor(1, 1, 1, 1);
     }
 
     @Override
-    protected boolean renderCustomTooltip(GuiGraphics guiGraphics, int x, int y) {
+    protected boolean renderCustomTooltip(GuiGraphicsExtractor graphics, int x, int y) {
         if (this.menu.getCarried().isEmpty() && this.hoveredSlot instanceof ChemicalFilterSlot chemicalFilterSlot) {
             ChemicalStack value = chemicalFilterSlot.getResource();
             if (!value.isEmpty()) {
-                guiGraphics.renderTooltip(this.font, value.getTextComponent(), x, y);
+                graphics.renderTooltip(this.font, value.getTextComponent(), x, y);
                 return true;
             }
         }

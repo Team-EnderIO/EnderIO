@@ -109,7 +109,7 @@ public class PlayerMovementHandler {
                 }
             }
             if (displayDisabledMessage && disabledReason.isPresent()) {
-                player.displayClientMessage(ToolsLang.GLIDER_DISABLED.copy().append(disabledReason.get()), true);
+                player.sendOverlayMessage(ToolsLang.GLIDER_DISABLED.copy().append(disabledReason.get()));
             }
             return gliderMovementInfo;
         }

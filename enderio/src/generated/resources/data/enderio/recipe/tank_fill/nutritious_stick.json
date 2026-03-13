@@ -7,7 +7,6 @@
   "input": "minecraft:stick",
   "mode": "fill",
   "output": {
-    "count": 1,
     "id": "enderio:nutritious_stick"
   }
 }

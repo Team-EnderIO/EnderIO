@@ -12,21 +12,18 @@
     {
       "chance": 0.2,
       "item": {
-        "count": 1,
         "id": "minecraft:redstone"
       }
     },
     {
       "chance": 0.8,
       "item": {
-        "count": 1,
         "id": "enderio:silicon"
       }
     },
     {
       "chance": 0.15,
       "item": {
-        "count": 1,
         "id": "minecraft:cobblestone"
       }
     }

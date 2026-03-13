@@ -89,8 +89,9 @@ public class TravelTargetRendering {
         }
     }
 
+    // TODO: 26.1: Check this render stage is right.
     @SubscribeEvent
-    public static void renderLevel(RenderLevelStageEvent.AfterTripwireBlocks event) {
+    public static void renderLevel(RenderLevelStageEvent.AfterTranslucentBlocks event) {
         List<ExtractTravelTarget> renderStates = event.getLevelRenderState().getRenderData(DATA_KEY);
         if (renderStates == null) {
             return;

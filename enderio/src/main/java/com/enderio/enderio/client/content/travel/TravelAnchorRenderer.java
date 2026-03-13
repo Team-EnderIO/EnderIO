@@ -5,6 +5,7 @@ import com.enderio.enderio.client.foundation.renderer.OutlineRenderType;
 import com.enderio.enderio.content.travel.travel_anchor.AnchorTravelTarget;
 import com.enderio.enderio.content.travel.travel_anchor.PaintedTravelAnchorBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -47,10 +48,10 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
         poseStack.translate(travelData.pos().getX(), travelData.pos().getY(), travelData.pos().getZ());
         Minecraft minecraft = Minecraft.getInstance();
         //OutlineBuffer buffer = OutlineBuffer.INSTANCE;
-        var buffer = minecraft.renderBuffers().bufferSource();
-        int color = 0xFFFFFFFF;
+        var bufferSource = minecraft.renderBuffers().bufferSource();
+        int outlineColor = 0xFFFFFFFF;
         if (active) {
-            color = ChatFormatting.GOLD.getColor() == null ? 0xFFFFFFFF : ARGB.opaque(ChatFormatting.GOLD.getColor());
+            outlineColor = ChatFormatting.GOLD.getColor() == null ? 0xFFFFFFFF : ARGB.opaque(ChatFormatting.GOLD.getColor());
         }
 
         // Render Model
@@ -64,10 +65,16 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             }
         }
 
-        var blockModel = minecraft.getBlockRenderer().getBlockModel(blockState);
-        ModelBlockRenderer
-                .renderModel(poseStack.last(), buffer, blockModel, 1, 1, 1, 0xF000F0,
-                        OverlayTexture.NO_OVERLAY,  minecraft.level, travelData.pos(), blockState);
+        var blockModel = minecraft.getModelManager().getBlockModelSet().get(blockState);
+
+        // TODO: 26.1 - renderModel is gone
+//        BakedQuadOutput output = (pose, quad, brightness, color, lightmapCoord, overlayCoords) -> {
+//            VertexConsumer buffer = bufferSource.getBuffer(ItemBlockRenderTypes.getRenderType(quad.spriteInfo().layer()));
+//            buffer.putBulkData(pose, quad, brightness, color, lightmapCoord, overlayCoords);
+//        };
+//
+//        ModelBlockRenderer.renderModel(poseStack.last(), output, blockModel, -1, LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, minecraft.level,
+//            travelData.pos(), blockState);
 
         // Render line
         float linesize;
@@ -79,7 +86,7 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             linesize = 5;
         }
         ShapeRenderer.renderShape(poseStack, Minecraft.getInstance().renderBuffers().bufferSource().getBuffer(OutlineRenderType.LINES_NO_DEPTH), Shapes.block(),
-            0,0,0, color, linesize);
+            0,0,0, outlineColor, linesize);
 
         LocalPlayer player = Minecraft.getInstance().player;
 
@@ -118,9 +125,9 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             int alpha = (int) (textOpacitySetting * 255) << 24;
             float halfWidth = (float) (-minecraft.font.width(tc) / 2);
 
-            minecraft.font.drawInBatch(tc, halfWidth, 0, color, false, matrix4f, buffer, Font.DisplayMode.SEE_THROUGH,
+            minecraft.font.drawInBatch(tc, halfWidth, 0, outlineColor, false, matrix4f, bufferSource, Font.DisplayMode.SEE_THROUGH,
                     alpha, LightCoordsUtil.pack(15, 15));
-            minecraft.font.drawInBatch(tc, halfWidth, 0, color, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0,
+            minecraft.font.drawInBatch(tc, halfWidth, 0, outlineColor, false, matrix4f, bufferSource, Font.DisplayMode.NORMAL, 0,
                     LightCoordsUtil.pack(15, 15));
             poseStack.popPose();
         }

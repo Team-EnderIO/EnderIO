@@ -1,7 +1,6 @@
 package com.enderio.enderio.client.content.conduits.model.bundle.port;
 
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
 import net.neoforged.neoforge.client.model.quad.BakedColors;
 import org.joml.Vector3f;
 
@@ -9,7 +8,7 @@ public final class MutableQuad {
     final BakedQuad quad;
     final Vector3f[] vertexPositions = new Vector3f[4];
     long[] vertexUV = new long[4];
-    TextureAtlasSprite sprite;
+    BakedQuad.MaterialInfo materialInfo;
     BakedColors colors;
 
     public MutableQuad(BakedQuad quad) {
@@ -19,7 +18,7 @@ public final class MutableQuad {
             this.vertexPositions[i] = new Vector3f(quad.position(i));
             this.vertexUV[i] = quad.packedUV(i);
         }
-        this.sprite = quad.sprite();
+        this.materialInfo = quad.materialInfo();
         this.colors = quad.bakedColors();
     }
 
@@ -35,14 +34,10 @@ public final class MutableQuad {
         return new BakedQuad(
             vertexPositions[0], vertexPositions[1], vertexPositions[2], vertexPositions[3],
             vertexUV[0], vertexUV[1], vertexUV[2], vertexUV[3],
-            quad.tintIndex(),
             quad.direction(),
-            sprite,
-            quad.shade(),
-            quad.lightEmission(),
+            quad.materialInfo(),
             quad.bakedNormals(),
-            colors,
-            quad.hasAmbientOcclusion()
+            quad.bakedColors()
         );
     }
 }

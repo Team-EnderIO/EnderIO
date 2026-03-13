@@ -3,7 +3,7 @@ package com.enderio.enderio.client.foundation.widgets;
 import com.enderio.core.client.gui.widgets.EIOWidget;
 import com.enderio.enderio.foundation.fluid.FluidStorageInfo;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.texture.AbstractTexture;
@@ -28,7 +28,7 @@ public class FluidStackStaticWidget extends EIOWidget {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         Minecraft minecraft = Minecraft.getInstance();
         //TODO blend depth pipeline
         FluidStorageInfo fluidTank = fluidStorageSupplier.get();
@@ -46,13 +46,13 @@ public class FluidStackStaticWidget extends EIOWidget {
                     int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
                     int atlasHeight = (int) (sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
                     // TODO: 1.21.4: Check this
-                    guiGraphics.blit(RenderPipelines.GUI_TEXTURED, TextureAtlas.LOCATION_BLOCKS, x, y, sprite.getU0() * atlasWidth,
+                    graphics.blit(RenderPipelines.GUI_TEXTURED, TextureAtlas.LOCATION_BLOCKS, x, y, sprite.getU0() * atlasWidth,
                             sprite.getV0() * atlasHeight, width, height, sprite.contents().width(), sprite.contents().height(),
                             atlasWidth, atlasHeight, color);
 
                 }
             }
-            renderToolTip(guiGraphics, mouseX, mouseY);
+            renderToolTip(graphics, mouseX, mouseY);
         }
 
     }
@@ -62,10 +62,10 @@ public class FluidStackStaticWidget extends EIOWidget {
 
     }
 
-    public void renderToolTip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    public void renderToolTip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         if (isHovered(mouseX, mouseY)) {
             Minecraft minecraft = Minecraft.getInstance();
-            guiGraphics.setTooltipForNextFrame(minecraft.font, Arrays.asList(
+            graphics.setTooltipForNextFrame(minecraft.font, Arrays.asList(
                     fluidStorageSupplier.get().contents().getHoverName().getVisualOrderText(),
                     Component.literal(fluidStorageSupplier.get().contents().getAmount() + "mB").getVisualOrderText()),
                     mouseX, mouseY);

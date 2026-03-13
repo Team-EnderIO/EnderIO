@@ -5,7 +5,6 @@
   "experience": 0.0,
   "ingredient": "enderio:powdered_iron",
   "result": {
-    "count": 1,
     "id": "minecraft:iron_ingot"
   }
 }

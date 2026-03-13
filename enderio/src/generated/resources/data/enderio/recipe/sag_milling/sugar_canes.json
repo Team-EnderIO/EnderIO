@@ -5,14 +5,12 @@
   "outputs": [
     {
       "item": {
-        "count": 1,
         "id": "minecraft:sugar"
       }
     },
     {
       "chance": 0.5,
       "item": {
-        "count": 1,
         "id": "minecraft:sugar"
       }
     },
@@ -26,7 +24,6 @@
     {
       "chance": 0.2,
       "item": {
-        "count": 1,
         "id": "enderio:plant_matter_green"
       }
     }

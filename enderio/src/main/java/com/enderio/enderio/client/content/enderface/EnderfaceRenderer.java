@@ -10,10 +10,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.ShapeRenderer;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.model.BlockModel;
+import net.minecraft.client.renderer.block.model.BlockStateModelWrapper;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.ARGB;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.Shapes;
 
@@ -25,20 +27,24 @@ public class EnderfaceRenderer implements TravelRenderer<EnderfaceTravelTarget> 
         poseStack.pushPose();
         poseStack.translate(travelData.pos().getX(), travelData.pos().getY(), travelData.pos().getZ());
         Minecraft minecraft = Minecraft.getInstance();
-        OutlineBuffer buffer = OutlineBuffer.INSTANCE;
-        int color = 0xFFFFFFFF;
+        OutlineBuffer outlineBuffer = OutlineBuffer.INSTANCE;
+        int outlineColor = 0xFFFFFFFF;
         if (active) {
-            color = ChatFormatting.GOLD.getColor() == null ? 0xFFFFFFFF : ARGB.opaque(ChatFormatting.GOLD.getColor());
+            outlineColor = ChatFormatting.GOLD.getColor() == null ? 0xFFFFFFFF : ARGB.opaque(ChatFormatting.GOLD.getColor());
         }
 
         // Render Model
         BlockState blockState = minecraft.level.getBlockState(travelData.pos());
 
-        BlockStateModel blockModel = minecraft.getBlockRenderer().getBlockModel(blockState);
-        VertexConsumer solid = buffer.getBuffer(RenderTypes.solidMovingBlock());
-
-        ModelBlockRenderer.renderModel(poseStack.last(), type -> solid, blockModel, 1, 1, 1, 0xF000F0,
-            OverlayTexture.NO_OVERLAY, minecraft.level, travelData.pos(), blockState);
+        BlockModel blockModel = minecraft.getModelManager().getBlockModelSet().get(blockState);
+        // TODO: 26.1 - renderModel is gonezo
+//        BakedQuadOutput output = (pose, quad, brightness, color, lightmapCoord, overlayCoords) -> {
+//            VertexConsumer buffer = outlineBuffer.getBuffer(RenderTypes.solidMovingBlock());
+//            buffer.putBulkData(pose, quad, brightness, color, lightmapCoord, overlayCoords);
+//        };
+//
+//        ModelBlockRenderer.renderModel(poseStack.last(), output, blockModel, -1, LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY,
+//            minecraft.level, travelData.pos(), blockState);
 
         // Render line
         float linesize;
@@ -51,7 +57,7 @@ public class EnderfaceRenderer implements TravelRenderer<EnderfaceTravelTarget> 
         }
 
         ShapeRenderer.renderShape(poseStack, Minecraft.getInstance().renderBuffers().bufferSource().getBuffer(RenderTypes.lines()), Shapes.block(),
-            0,0,0, color, linesize);
+            0,0,0, outlineColor, linesize);
 
         poseStack.popPose();
         minecraft.renderBuffers().bufferSource().endBatch();

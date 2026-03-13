@@ -1,6 +1,6 @@
 package com.enderio.core.client.gui.widgets;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.input.InputWithModifiers;
@@ -23,13 +23,13 @@ public abstract class EnderButton extends AbstractWidget {
     public abstract void onPress(InputWithModifiers input);
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, SPRITES.get(this.active, this.isHovered()), this.getX(), this.getY(), this.getWidth(),
+    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SPRITES.get(this.active, this.isHovered()), this.getX(), this.getY(), this.getWidth(),
                 this.getHeight());
-        renderButtonFace(guiGraphics, mouseX, mouseY, partialTick);
+        renderButtonFace(graphics, mouseX, mouseY, a);
     }
 
-    public abstract void renderButtonFace(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks);
+    public abstract void renderButtonFace(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks);
 
     @Override
     public void onClick(MouseButtonEvent event, boolean isDoubleClick) {
