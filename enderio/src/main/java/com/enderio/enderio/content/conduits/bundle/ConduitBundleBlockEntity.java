@@ -353,28 +353,34 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         setConnectionStatus(conduitConnection.getSecond(), conduitConnection.getFirst(), ConnectionStatus.DISABLED);
 
         // If we were connected to another bundle, we need to sever the graph
-        if (level.getBlockEntity(getBlockPos()
-            .relative(conduitConnection.getFirst())) instanceof ConduitBundleBlockEntity neighborBundle) {
-            neighborBundle.setConnectionStatus(conduitConnection.getSecond(),
-                conduitConnection.getFirst().getOpposite(), ConnectionStatus.DISABLED);
+        if (!(level.getBlockEntity(getBlockPos().relative(conduitConnection.getFirst())) instanceof ConduitBundleBlockEntity neighborBundle)) {
+            return;
+        }
 
-            if (level instanceof ServerLevel serverLevel) {
-                ConduitNodeImpl thisNode = getConduitNode(conduitConnection.getSecond());
-                ConduitNodeImpl otherNode = neighborBundle.getConduitNode(conduitConnection.getSecond());
+        // Get the other conduit in the neighbor. May not be the exact same as the one we've just disconnected.
+        var otherConduit = neighborBundle.getCompatibleConduit(conduitConnection.getSecond());
+        if (otherConduit == null) {
+            return;
+        }
 
-                if (thisNode.isValid() && otherNode.isValid()) {
-                    var thisNetwork = thisNode.getNetwork();
-                    var otherNetwork = otherNode.getNetwork();
+        neighborBundle.setConnectionStatus(otherConduit, conduitConnection.getFirst().getOpposite(), ConnectionStatus.DISABLED);
 
-                    if (thisNetwork == otherNetwork) {
-                        thisNetwork.disconnect(thisNode, otherNode,
-                            n -> ConduitNetworkSavedData.onNetworkCreated(serverLevel, n));
-                    }
+        if (level instanceof ServerLevel serverLevel) {
+            ConduitNodeImpl thisNode = getConduitNode(conduitConnection.getSecond());
+            ConduitNodeImpl otherNode = neighborBundle.getConduitNode(otherConduit);
 
-                    bundleChanged();
-                } else {
-                    // TODO: Warn, this is a bad place to be.
+            if (thisNode.isValid() && otherNode.isValid()) {
+                var thisNetwork = thisNode.getNetwork();
+                var otherNetwork = otherNode.getNetwork();
+
+                if (thisNetwork == otherNetwork) {
+                    thisNetwork.disconnect(thisNode, otherNode,
+                        n -> ConduitNetworkSavedData.onNetworkCreated(serverLevel, n));
                 }
+
+                bundleChanged();
+            } else {
+                // TODO: Warn, this is a bad place to be.
             }
         }
     }
