@@ -9,21 +9,21 @@ import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.mojang.blaze3d.platform.Transparency;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
-import net.minecraft.client.renderer.block.model.Material;
-import net.minecraft.client.renderer.block.model.Variant;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
+import net.minecraft.client.renderer.block.dispatch.Variant;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.ModelBaker;
-import net.minecraft.client.resources.model.QuadCollection;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.resources.model.geometry.QuadCollection;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.data.AtlasIds;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.model.DynamicBlockStateModel;
 import net.neoforged.neoforge.client.model.block.CustomUnbakedBlockStateModel;
@@ -48,13 +48,13 @@ public class IOOverlayBlockStateModel implements DynamicBlockStateModel {
         }
     }
 
-    private final BlockModelPart model;
+    private final BlockStateModelPart model;
 
-    public IOOverlayBlockStateModel(BlockModelPart model) {
+    public IOOverlayBlockStateModel(BlockStateModelPart model) {
         this.model = model;
     }
 
-    private BakedQuad.SpriteInfo getSpriteInfo(IOMode state) {
+    private BakedQuad.MaterialInfo getMaterialInfo(IOMode state) {
         Identifier tex = switch (state) {
             case NONE -> MissingTextureAtlasSprite.getLocation();
             case PUSH -> TEX_PUSH;
@@ -64,7 +64,7 @@ public class IOOverlayBlockStateModel implements DynamicBlockStateModel {
         };
 
         TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.BLOCKS).getSprite(tex);
-        return BakedQuad.SpriteInfo.of(new Material.Baked(sprite, false), Transparency.TRANSLUCENT);
+        return BakedQuad.MaterialInfo.of(new Material.Baked(sprite, false), Transparency.TRANSLUCENT, -1, true, 0, true);
     }
 
 
@@ -74,12 +74,12 @@ public class IOOverlayBlockStateModel implements DynamicBlockStateModel {
     }
 
     @Override
-    public boolean hasTranslucency() {
-        return true;
+    public @BakedQuad.MaterialFlags int materialFlags() {
+        return model.materialFlags();
     }
 
     @Override
-    public void collectParts(BlockAndTintGetter level, BlockPos pos, BlockState state, RandomSource random, List<BlockModelPart> parts) {
+    public void collectParts(BlockAndTintGetter level, BlockPos pos, BlockState state, RandomSource random, List<BlockStateModelPart> parts) {
         if (level.getModelData(pos).has(MachineBlockEntity.IO_CONFIG_PROPERTY)) {
             // Get io config from the block entity.
             IOConfigurable config = level.getModelData(pos).get(MachineBlockEntity.IO_CONFIG_PROPERTY);
@@ -93,13 +93,13 @@ public class IOOverlayBlockStateModel implements DynamicBlockStateModel {
                     IOMode mode = config.getIOMode(dir);
                     if (mode != IOMode.NONE) {
                         Vector3f[] verts = QUADS.get(dir);
-                        collection.addCulledFace(dir, ModelRenderUtil.createQuad(verts, getSpriteInfo(mode)));
+                        collection.addCulledFace(dir, ModelRenderUtil.createQuad(verts, getMaterialInfo(mode)));
                     }
                 }
 
                 var quads = collection.build();
 
-                parts.add(new BlockModelPart() {
+                parts.add(new BlockStateModelPart() {
                     @Override
                     public List<BakedQuad> getQuads(@Nullable Direction direction) {
                         return quads.getQuads(direction);
@@ -116,8 +116,8 @@ public class IOOverlayBlockStateModel implements DynamicBlockStateModel {
                     }
 
                     @Override
-                    public boolean hasTranslucency() {
-                        return true;
+                    public @BakedQuad.MaterialFlags int materialFlags() {
+                        return quads.materialFlags();
                     }
                 });
             }

@@ -2,7 +2,7 @@ package com.enderio.core.client.item;
 
 import com.enderio.core.common.energy.ItemStackEnergy;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.IItemDecorator;
 
@@ -14,7 +14,7 @@ public class EnergyBarDecorator implements IItemDecorator {
     public static final int BAR_COLOR_ARGB = 0xFFB168E4;
 
     @Override
-    public boolean render(GuiGraphics guiGraphics, Font font, ItemStack stack, int xOffset, int yOffset) {
+    public boolean render(GuiGraphicsExtractor graphics, Font font, ItemStack stack, int xOffset, int yOffset) {
         // Hide bar if no energy to hold
         int maxEnergyStored = ItemStackEnergy.getMaxEnergyStored(stack);
         if (maxEnergyStored <= 0) {
@@ -27,7 +27,7 @@ public class EnergyBarDecorator implements IItemDecorator {
         float fillRatio = energyStored / (float) maxEnergyStored;
 
         // Render the bar overlay
-        ItemBarRenderer.renderBar(guiGraphics, fillRatio, xOffset, yOffset, BAR_COLOR);
+        ItemBarRenderer.renderBar(graphics, fillRatio, xOffset, yOffset, BAR_COLOR);
         return false;
     }
 }

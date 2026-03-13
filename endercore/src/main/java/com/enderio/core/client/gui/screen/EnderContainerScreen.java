@@ -6,7 +6,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ComponentPath;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Renderable;
@@ -59,37 +59,37 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         if (menu instanceof LegacyBaseBlockEntityMenu<?> baseBlockEntityMenu
-                && baseBlockEntityMenu.getBlockEntity() == null) {
+            && baseBlockEntityMenu.getBlockEntity() == null) {
             return;
         }
 
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
+        super.extractRenderState(graphics, mouseX, mouseY, a);
     }
 
     @Override
-    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    protected void extractLabels(GuiGraphicsExtractor graphics, int xm, int ym) {
         if (shouldRenderLabels) {
-            super.renderLabels(guiGraphics, mouseX, mouseY);
+            super.extractLabels(graphics, xm, ym);
         }
 
         // Move back to screen space rather than aligned to the background coordinates
-        guiGraphics.pose().pushMatrix();
-//        guiGraphics.pose().translate(-leftPos, -topPos, 0.0D);
-        guiGraphics.pose().translate(-leftPos, -topPos);
+        graphics.pose().pushMatrix();
+//        graphics.pose().translate(-leftPos, -topPos, 0.0D);
+        graphics.pose().translate(-leftPos, -topPos);
 
         // TODO: 1.21.8: Handle z offsets disappearing...
         int zOffset = 200;
         for (var layer : overlayRenderables.keySet()) {
             // Offset deeper for each layer.
-            guiGraphics.pose().pushMatrix();
+            graphics.pose().pushMatrix();
             zOffset += 150;
-//            guiGraphics.pose().translate(0, 0, zOffset);
+//            graphics.pose().translate(0, 0, zOffset);
 
             for (var overlay : overlayRenderables.get(layer)) {
                 if (!(overlay instanceof AbstractWidget widget) || widget.isActive()) {
-                    overlay.render(guiGraphics, mouseX, mouseY,
+                    overlay.extractRenderState(graphics, xm, ym,
                             Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(false));
 
                     if (overlay instanceof BaseOverlay baseOverlay) {
@@ -98,56 +98,56 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
                 }
             }
 
-            guiGraphics.pose().popMatrix();
+            graphics.pose().popMatrix();
         }
 
-        guiGraphics.pose().popMatrix();
+        graphics.pose().popMatrix();
 
-//        guiGraphics.pose().translate(0, 0, zOffset);
+//        graphics.pose().translate(0, 0, zOffset);
 
-        guiGraphics.pose().pushMatrix();
-//        guiGraphics.pose().translate(-leftPos, -topPos, 0.0D);
-        guiGraphics.pose().translate(-leftPos, -topPos);
+        graphics.pose().pushMatrix();
+//        graphics.pose().translate(-leftPos, -topPos, 0.0D);
+        graphics.pose().translate(-leftPos, -topPos);
 
-        renderTooltip(guiGraphics, mouseX, mouseY);
+        extractTooltip(graphics, xm, ym);
 
-        guiGraphics.pose().popMatrix();
+        graphics.pose().popMatrix();
     }
 
     @Override
-    protected final void renderTooltip(GuiGraphics guiGraphics, int x, int y) {
+    protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         // Do not render tooltips if the mouse is over an overlay.
         for (var layer : overlayWidgets.keySet()) {
             for (var overlay : overlayWidgets.get(layer)) {
                 if (!(overlay instanceof AbstractWidget widget) || widget.isActive()) {
-                    if (overlay.isMouseOver(x, y)) {
+                    if (overlay.isMouseOver(mouseX, mouseY)) {
                         return;
                     }
                 }
             }
         }
 
-        if (!renderCustomTooltip(guiGraphics, x, y)) {
-            super.renderTooltip(guiGraphics, x, y);
+        if (!renderCustomTooltip(graphics, mouseX, mouseY)) {
+            super.extractTooltip(graphics, mouseX, mouseY);
         }
     }
 
     // Return true to cancel normal tooltips
     //TODO this is no longer the case
-    protected boolean renderCustomTooltip(GuiGraphics guiGraphics, int x, int y) {
+    protected boolean renderCustomTooltip(GuiGraphicsExtractor graphics, int x, int y) {
         return false;
     }
 
     @Override
-    protected void renderSlotContents(GuiGraphics guiGraphics, ItemStack itemstack, Slot slot,
+    protected void renderSlotContents(GuiGraphicsExtractor graphics, ItemStack itemstack, Slot slot,
             @Nullable String countString) {
-        super.renderSlotContents(guiGraphics, itemstack, slot, countString);
+        super.renderSlotContents(graphics, itemstack, slot, countString);
 
         if (slot instanceof SlotWithOverlay slotWithOverlay) {
             if (slotWithOverlay.getForegroundSprite() != null) {
                 // TODO: 1.21.8: Check this?
 //                RenderSystem.disableDepthTest();
-                guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, slotWithOverlay.getForegroundSprite(), slot.x, slot.y, 16, 16);
+                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, slotWithOverlay.getForegroundSprite(), slot.x, slot.y, 16, 16);
 //                RenderSystem.enableDepthTest();
             }
         }

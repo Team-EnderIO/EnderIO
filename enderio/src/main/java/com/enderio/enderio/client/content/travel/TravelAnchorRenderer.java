@@ -11,10 +11,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.block.BakedQuadOutput;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.client.renderer.ShapeRenderer;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
@@ -68,15 +65,16 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             }
         }
 
-        var blockModel = minecraft.getBlockRenderer().getBlockModel(blockState);
+        var blockModel = minecraft.getModelManager().getBlockModelSet().get(blockState);
 
-        BakedQuadOutput output = (pose, quad, brightness, color, lightmapCoord, overlayCoords) -> {
-            VertexConsumer buffer = bufferSource.getBuffer(ItemBlockRenderTypes.getRenderType(quad.spriteInfo().layer()));
-            buffer.putBulkData(pose, quad, brightness, color, lightmapCoord, overlayCoords);
-        };
-
-        ModelBlockRenderer.renderModel(poseStack.last(), output, blockModel, -1, LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, minecraft.level,
-            travelData.pos(), blockState);
+        // TODO: 26.1 - renderModel is gone
+//        BakedQuadOutput output = (pose, quad, brightness, color, lightmapCoord, overlayCoords) -> {
+//            VertexConsumer buffer = bufferSource.getBuffer(ItemBlockRenderTypes.getRenderType(quad.spriteInfo().layer()));
+//            buffer.putBulkData(pose, quad, brightness, color, lightmapCoord, overlayCoords);
+//        };
+//
+//        ModelBlockRenderer.renderModel(poseStack.last(), output, blockModel, -1, LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, minecraft.level,
+//            travelData.pos(), blockState);
 
         // Render line
         float linesize;

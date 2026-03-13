@@ -4,7 +4,7 @@ import com.enderio.core.client.gui.widgets.EnderButton;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.InputWithModifiers;
@@ -31,8 +31,8 @@ public class IOConfigButton extends EnderButton {
     }
 
     @Override
-    public void renderButtonFace(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, IO_CONFIG, getX(), getY(), width, height);
+    public void renderButtonFace(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, IO_CONFIG, getX(), getY(), width, height);
     }
 
     @Override

@@ -4,7 +4,7 @@ import com.enderio.core.client.gui.screen.EnderScreen;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
@@ -179,9 +179,9 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
     private T tooltipDisplayCache;
 
     @Override
-    public void renderButtonFace(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+    public void renderButtonFace(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
         T value = getValue();
-        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, getValueIcon(value), getX(), getY(), getWidth(), getHeight());
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, getValueIcon(value), getX(), getY(), getWidth(), getHeight());
 
         // TODO: Temp solution for the value changing externally (data sync)
         if (previousValue != value) {
@@ -228,20 +228,20 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
         }
 
         @Override
-        public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
             // TODO: 1.21.8: is the depth test disable required?
 //            RenderSystem.disableDepthTest();
-            super.render(guiGraphics, mouseX, mouseY, partialTicks);
+            super.extractRenderState(graphics, mouseX, mouseY, a);
 //            RenderSystem.enableDepthTest();
         }
 
         @Override
-        public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-            renderSimpleArea(guiGraphics, parentWidget.expandTopLeft, parentWidget.expandBottomRight);
+        public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+            renderSimpleArea(graphics, parentWidget.expandTopLeft, parentWidget.expandBottomRight);
         }
 
         @Override
-        public void renderTransparentBackground(GuiGraphics guiGraphics) {
+        public void extractTransparentBackground(GuiGraphicsExtractor graphics) {
             // Don't make background dark
         }
 
@@ -298,8 +298,8 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
         }
 
         @Override
-        public void renderButtonFace(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-            guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, getValueIcon(value), getX(), getY(), iconWidth, iconHeight);
+        public void renderButtonFace(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, getValueIcon(value), getX(), getY(), iconWidth, iconHeight);
         }
     }
 }

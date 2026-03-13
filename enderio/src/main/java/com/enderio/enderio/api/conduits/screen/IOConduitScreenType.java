@@ -4,7 +4,7 @@ import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.conduits.connection.config.IOConnectionConfig;
 import com.enderio.enderio.content.conduits.ConduitLang;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -79,15 +79,15 @@ public abstract class IOConduitScreenType<U extends IOConnectionConfig> extends 
     protected abstract U setRightEnabled(U config, boolean isEnabled);
 
     @Override
-    public void renderLabels(ConduitMenuDataAccess<U> dataAccess, GuiGraphics guiGraphics, int startX, int startY,
+    public void renderLabels(ConduitMenuDataAccess<U> dataAccess, GuiGraphicsExtractor graphics, int startX, int startY,
             Font font, int mouseX, int mouseY) {
-        super.renderLabels(dataAccess, guiGraphics, startX, startY, font, mouseX, mouseY);
+        super.renderLabels(dataAccess, graphics, startX, startY, font, mouseX, mouseY);
 
         // TODO: This should be a sprite.
         // TODO: 1.21.4: Hardcoded 256x256
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE, startX + (WIDTH / 2), startY, 255, 0, 1, 97, 256, 256);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE, startX + (WIDTH / 2), startY, 255, 0, 1, 97, 256, 256);
 
-        guiGraphics.drawString(font, leftTitle, startX + leftTitleX, startY + leftTitleY, CommonColors.DARK_GRAY, false);
-        guiGraphics.drawString(font, rightTitle, startX + rightTitleX, startY + rightTitleY, CommonColors.DARK_GRAY, false);
+        graphics.text(font, leftTitle, startX + leftTitleX, startY + leftTitleY, CommonColors.DARK_GRAY, false);
+        graphics.text(font, rightTitle, startX + rightTitleX, startY + rightTitleY, CommonColors.DARK_GRAY, false);
     }
 }

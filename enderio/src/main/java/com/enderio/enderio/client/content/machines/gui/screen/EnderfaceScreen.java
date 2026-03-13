@@ -15,7 +15,7 @@
 //import com.mojang.math.Axis;
 //import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 //import net.minecraft.client.Minecraft;
-//import net.minecraft.client.gui.GuiGraphics;
+//import net.minecraft.client.gui.GuiGraphicsExtractor;
 //import net.minecraft.client.gui.screens.Screen;
 //import net.minecraft.client.multiplayer.ClientLevel;
 //import net.minecraft.client.renderer.ItemBlockRenderTypes;
@@ -264,7 +264,7 @@
 //        this.worldNeedsRebuild = true;
 //    }
 //
-//    private void renderWorld(GuiGraphics graphics, float partialTick) {
+//    private void renderWorld(GuiGraphicsExtractor graphics, float partialTick) {
 //        Quaternionf blockTransform = getGuiWorldTransform();
 //
 //        // Flush out all previously rendered GUI content
@@ -468,7 +468,7 @@
 //     * Draws the screen and all the components in it.
 //     */
 //    @Override
-//    public void render(GuiGraphics graphics, int par1, int par2, float partialTick) {
+//    public void render(GuiGraphicsExtractor graphics, int par1, int par2, float partialTick) {
 //        renderBackground(graphics, par1, par2, partialTick);
 //
 //        drawEnderfaceBackground(graphics);
@@ -504,7 +504,7 @@
 //
 //    private float portalFade = 1;
 //
-//    private void drawEnderfaceBackground(GuiGraphics graphics) {
+//    private void drawEnderfaceBackground(GuiGraphicsExtractor graphics) {
 //
 //        int w = gw;
 //        int h = gh;

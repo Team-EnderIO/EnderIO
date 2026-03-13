@@ -22,7 +22,7 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -128,12 +128,13 @@ public class SagMillCategory extends MachineRecipeCategory<RecipeHolder<SagMilli
         };
     }
 
-    @Override
-    public void draw(RecipeHolder<SagMillingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics,
-            double mouseX, double mouseY) {
-        guiGraphics.drawString(Minecraft.getInstance().font, getEnergyString(recipe, recipeSlotsView), 83, 47,
-                0xff808080, false);
-    }
+    // TODO: 26.1 - reenable
+//    @Override
+//    public void draw(RecipeHolder<SagMillingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics,
+//            double mouseX, double mouseY) {
+//        graphics.drawString(Minecraft.getInstance().font, getEnergyString(recipe, recipeSlotsView), 83, 47,
+//                0xff808080, false);
+//    }
 
     @Override
     public void getTooltip(ITooltipBuilder tooltip, RecipeHolder<SagMillingRecipe> recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {

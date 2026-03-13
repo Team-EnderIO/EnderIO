@@ -3,15 +3,18 @@ package com.enderio.enderio.client.content.conduits;
 import com.enderio.enderio.client.content.conduits.model.facades.ClientFacadeVisibility;
 import com.enderio.enderio.compat.ModCompatHelper;
 import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
+import com.mojang.blaze3d.vertex.QuadInstance;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.irisshaders.iris.api.v0.IrisApi;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.block.BakedQuadOutput;
+import net.minecraft.client.renderer.block.BlockQuadOutput;
+import net.minecraft.client.renderer.block.ModelBlockRenderer;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.util.ARGB;
@@ -25,7 +28,6 @@ import net.neoforged.neoforge.client.event.AddSectionGeometryEvent;
 import net.neoforged.neoforge.client.model.pipeline.VertexConsumerWrapper;
 
 import java.util.Map;
-import java.util.function.Function;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class ConduitFacadeRendering {
@@ -106,20 +108,23 @@ public class ConduitFacadeRendering {
 
                 var model = Minecraft.getInstance()
                         .getModelManager()
-                        .getBlockModelShaper()
-                        .getBlockModel(entry.getValue());
+                        .getBlockModelSet()
+                        .get(entry.getValue());
 
-                BakedQuadOutput output = (pose, quad, brightness, color, lightmapCoord, overlayCoords) -> {
-                    VertexConsumer buffer = wrapper == null ? wrapper : context.getOrCreateChunkBuffer(quad.spriteInfo().layer());
-                    buffer.putBulkData(pose, quad, brightness, color, lightmapCoord, overlayCoords);
-                };
+                if (!(model instanceof BlockStateModel blockStateModel)) {
+                    return;
+                }
 
-                Minecraft.getInstance()
-                    .getBlockRenderer()
-                    .getModelRenderer()
-                    .tesselateBlock(context.getRegion(), model.collectParts(context.getRegion(), pos, state, random), state, pos, context.getPoseStack(),
-                        output, true, OverlayTexture.NO_OVERLAY);
-
+                // TODO: 26.1 - work out new ModelBlockRenderer.
+//                BlockQuadOutput output = (float x, float y, float z, BakedQuad quad, QuadInstance instance) -> {
+//                    VertexConsumer buffer = wrapper == null ? wrapper : context.getOrCreateChunkBuffer(quad.spriteInfo().layer());
+//                    buffer.putBulkData(pose, quad, brightness, color, lightmapCoord, overlayCoords);
+//                };
+//
+//                ModelBlockRenderer blockRenderer = new ModelBlockRenderer(true, false, Minecraft.getInstance().getBlockColors());
+//                blockRenderer
+//                    .tesselateBlock(context.getRegion(), blockStateModel.collectParts(context.getRegion(), pos, state, random), state, pos, context.getPoseStack(),
+//                        output, true, OverlayTexture.NO_OVERLAY);
 
                 context.getPoseStack().popPose();
             }

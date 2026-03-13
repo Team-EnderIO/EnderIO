@@ -5,7 +5,7 @@ import com.enderio.enderio.foundation.energy.EnergyStorageInfo;
 import com.enderio.enderio.init.EIOItems;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -25,19 +25,19 @@ public class CapacitorEnergyWidget extends EnergyWidget {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         if (!cap.get()) {
-            renderCapacitor(guiGraphics);
+            renderCapacitor(graphics);
 
             if (isHoveredOrFocused()) {
-                renderCapacitorTooltip(guiGraphics, mouseX, mouseY);
+                renderCapacitorTooltip(graphics, mouseX, mouseY);
             }
             return;
         }
-        super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
+        super.extractWidgetRenderState(graphics, mouseX, mouseY, partialTick);
     }
 
-    public void renderCapacitorTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    public void renderCapacitorTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         Minecraft minecraft = Minecraft.getInstance();
         List<Component> list = new ArrayList<>();
         list.add(MachinesLang.NOCAP_TITLE.withStyle(ChatFormatting.DARK_AQUA));
@@ -46,14 +46,14 @@ public class CapacitorEnergyWidget extends EnergyWidget {
             list.add(Component.literal(s.stripLeading().stripTrailing()));
         }
 
-        Matrix3x2fStack pose = guiGraphics.pose();
+        Matrix3x2fStack pose = graphics.pose();
         pose.pushMatrix();
         pose.translate(0,0); //TODO Z push not possible
-        guiGraphics.setComponentTooltipForNextFrame(minecraft.font, list, mouseX, mouseY); //TODO does this render?
+        graphics.setComponentTooltipForNextFrame(minecraft.font, list, mouseX, mouseY); //TODO does this render?
         pose.popMatrix();
     }
 
-    public void renderCapacitor(GuiGraphics guiGraphics) {
+    public void renderCapacitor(GuiGraphicsExtractor graphics) {
         var level = Minecraft.getInstance().level;
         if (level == null) {
             return;
@@ -62,12 +62,12 @@ public class CapacitorEnergyWidget extends EnergyWidget {
         long tick = level.getGameTime() % 90;
 
         int heightModifier = (int) Math.round(Math.sin(level.getGameTime() * 0.05) * 12);
-        guiGraphics.renderFakeItem(CAPACITOR, x - 4, y + height/2 - 8 + heightModifier);
+        graphics.fakeItem(CAPACITOR, x - 4, y + height/2 - 8 + heightModifier);
 
         //TODO blend pipeline + ghost item
         //noinspection IntegerDivisionInFloatingPointContext
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, WIDGETS, x, y + height/2 + 6, 0, 160 + tick / 10 * 9, 128, width, height, 256, 256);
-        guiGraphics.renderFakeItem(CAPACITOR, x - 4, y + height/2 + 25);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, WIDGETS, x, y + height/2 + 6, 0, 160 + tick / 10 * 9, 128, width, height, 256, 256);
+        graphics.fakeItem(CAPACITOR, x - 4, y + height/2 + 25);
 
     }
 }

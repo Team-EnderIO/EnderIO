@@ -16,7 +16,7 @@ import com.enderio.enderio.client.foundation.widgets.DyeColorPickerWidget;
 import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget;
 import com.enderio.enderio.content.conduits.ConduitLang;
 import com.enderio.enderio.content.conduits.menu.ConduitMenu;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -74,30 +74,30 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         preRenderActions.forEach(Runnable::run);
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
+        super.extractRenderState(graphics, mouseX, mouseY, a);
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float v, int i, int i1) {
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight, 256, 256);
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight, 256, 256);
 
         var conduit = menu.getConduit();
         for (int slot = 0; slot < conduit.value().getInventorySize(); slot++) {
             var pos = conduit.value().getInventorySlotPosition(slot);
-            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, getGuiLeft() + pos.x() - 1, getGuiTop() + pos.y() - 1, 206, 0, 18, 18, 256, 256);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, getGuiLeft() + pos.x() - 1, getGuiTop() + pos.y() - 1, 206, 0, 18, 18, 256, 256);
         }
     }
 
     @Override
-    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        super.renderLabels(guiGraphics, mouseX, mouseY);
+    protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+        super.extractLabels(graphics, mouseX, mouseY);
 
         if (screenTypeContainer.hasScreenType()) {
-            screenTypeContainer.renderLabels(guiGraphics, mouseX, mouseY);
+            screenTypeContainer.renderLabels(graphics, mouseX, mouseY);
         } else {
-            guiGraphics.drawString(this.font, ConduitLang.ERROR_NO_SCREEN_TYPE, 22, 7 + 4, CommonColors.DARK_GRAY, false);
+            graphics.text(this.font, ConduitLang.ERROR_NO_SCREEN_TYPE, 22, 7 + 4, CommonColors.DARK_GRAY, false);
         }
     }
 
@@ -124,9 +124,9 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
             }
         }
 
-        public void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        public void renderLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
             if (screenType != null) {
-                screenType.renderScreenLabels(dataAccess, guiGraphics, font, mouseX, mouseY);
+                screenType.renderScreenLabels(dataAccess, graphics, font, mouseX, mouseY);
             }
         }
 

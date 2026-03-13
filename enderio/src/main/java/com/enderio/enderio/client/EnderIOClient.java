@@ -242,27 +242,27 @@ public class EnderIOClient {
     }
 
     @SubscribeEvent
-    public static void registerBlockColorHandlers(RegisterColorHandlersEvent.Block event) {
-        event.register(ConduitFacadeColor.INSTANCE, EIOBlocks.CONDUIT_BUNDLE.get());
-
-        event.register(PaintedBlockColor.INSTANCE,
-            EIOBlocks.PAINTED_FENCE.get(),
-            EIOBlocks.PAINTED_FENCE_GATE.get(),
-            EIOBlocks.PAINTED_SAND.get(),
-            EIOBlocks.PAINTED_STAIRS.get(),
-            EIOBlocks.PAINTED_CRAFTING_TABLE.get(),
-            EIOBlocks.PAINTED_REDSTONE_BLOCK.get(),
-            EIOBlocks.PAINTED_TRAPDOOR.get(),
-            EIOBlocks.PAINTED_WOODEN_PRESSURE_PLATE.get(),
-            EIOBlocks.PAINTED_SLAB.get(),
-            EIOBlocks.PAINTED_GLOWSTONE.get(),
-            EIOBlocks.PAINTED_WALL.get());
-
-        for (var glassBlocks : EIOBlocks.GLASS_BLOCKS.values()) {
-            for (var entry : glassBlocks.COLORS.entrySet()) {
-                event.register((state, level, pos, tintIndex) -> entry.getKey().getMapColor().col, entry.getValue().get());
-            }
-        }
+    public static void registerBlockColorHandlers(RegisterColorHandlersEvent.BlockTintSources event) {
+//        event.register(ConduitFacadeColor.INSTANCE, EIOBlocks.CONDUIT_BUNDLE.get());
+//
+//        event.register(PaintedBlockColor.INSTANCE,
+//            EIOBlocks.PAINTED_FENCE.get(),
+//            EIOBlocks.PAINTED_FENCE_GATE.get(),
+//            EIOBlocks.PAINTED_SAND.get(),
+//            EIOBlocks.PAINTED_STAIRS.get(),
+//            EIOBlocks.PAINTED_CRAFTING_TABLE.get(),
+//            EIOBlocks.PAINTED_REDSTONE_BLOCK.get(),
+//            EIOBlocks.PAINTED_TRAPDOOR.get(),
+//            EIOBlocks.PAINTED_WOODEN_PRESSURE_PLATE.get(),
+//            EIOBlocks.PAINTED_SLAB.get(),
+//            EIOBlocks.PAINTED_GLOWSTONE.get(),
+//            EIOBlocks.PAINTED_WALL.get());
+//
+//        for (var glassBlocks : EIOBlocks.GLASS_BLOCKS.values()) {
+//            for (var entry : glassBlocks.COLORS.entrySet()) {
+//                event.register((state, level, pos, tintIndex) -> entry.getKey().getMapColor().col, entry.getValue().get());
+//            }
+//        }
     }
 
     @SubscribeEvent

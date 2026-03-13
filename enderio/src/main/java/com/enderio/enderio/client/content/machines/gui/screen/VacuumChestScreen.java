@@ -9,7 +9,7 @@ import com.enderio.enderio.content.filters.FiltersLang;
 import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.machines.vacuum.chest.VacuumChestMenu;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -49,15 +49,15 @@ public class VacuumChestScreen extends MachineScreen<VacuumChestMenu> {
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, VACUUM_CHEST_BG, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        graphics.blit(RenderPipelines.GUI_TEXTURED, VACUUM_CHEST_BG, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
     @Override
-    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        guiGraphics.drawString(font, FiltersLang.GUI_FILTER, 8, 74, CommonColors.DARK_GRAY, false);
-        guiGraphics.drawString(font, MachinesLang.RANGE, imageWidth - 8 - font.width(MachinesLang.RANGE), 74, CommonColors.DARK_GRAY, false);
-        guiGraphics.drawString(font, menu.getRange() + "", imageWidth - 8 - 8 - 10, 90, CommonColors.DARK_GRAY, false);
-        super.renderLabels(guiGraphics, mouseX, mouseY);
+    protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+        graphics.text(font, FiltersLang.GUI_FILTER, 8, 74, CommonColors.DARK_GRAY, false);
+        graphics.text(font, MachinesLang.RANGE, imageWidth - 8 - font.width(MachinesLang.RANGE), 74, CommonColors.DARK_GRAY, false);
+        graphics.text(font, menu.getRange() + "", imageWidth - 8 - 8 - 10, 90, CommonColors.DARK_GRAY, false);
+        super.extractLabels(graphics, mouseX, mouseY);
     }
 }

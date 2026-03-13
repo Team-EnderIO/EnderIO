@@ -11,7 +11,7 @@ import com.enderio.enderio.content.machines.obelisks.ObeliskBlockEntity;
 import com.enderio.enderio.content.machines.obelisks.ObeliskMenu;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.init.EIOItems;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -55,44 +55,44 @@ public abstract class ObeliskScreen<J extends ObeliskBlockEntity<J>, T extends O
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, background, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        graphics.blit(RenderPipelines.GUI_TEXTURED, background, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-        super.render(guiGraphics, mouseX, mouseY, partialTicks);
-        guiGraphics.drawString(font, getMenu().getBlockEntity().getRange() + "",
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        super.extractRenderState(graphics, mouseX, mouseY, a);
+        graphics.text(font, getMenu().getBlockEntity().getRange() + "",
                 leftPos + imageWidth - 8 - 16 - font.width(getMenu().getBlockEntity().getRange() + "") - 10,
                 topPos + 16 * 2 + 6, 0, false);
     }
 
     @Override
-    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        guiGraphics.drawString(font, MachinesLang.RANGE, imageWidth - 6 - font.width(MachinesLang.RANGE), 16 + 8, CommonColors.DARK_GRAY, false);
+    protected void extractLabels(GuiGraphicsExtractor graphics, int xm, int ym) {
+        graphics.text(font, MachinesLang.RANGE, imageWidth - 6 - font.width(MachinesLang.RANGE), 16 + 8, CommonColors.DARK_GRAY, false);
 
-        guiGraphics.drawString(font, MachinesLang.MAX_RANGE, imageWidth / 2 - font.width(MachinesLang.MAX_RANGE) / 2, 5, CommonColors.DARK_GRAY,
+        graphics.text(font, MachinesLang.MAX_RANGE, imageWidth / 2 - font.width(MachinesLang.MAX_RANGE) / 2, 5, CommonColors.DARK_GRAY,
                 false);
         String maxRange = getMenu().getMaxRange() + "";
-        guiGraphics.drawString(font, maxRange, imageWidth / 2 - font.width(maxRange) / 2, 5 + font.lineHeight + 3, CommonColors.DARK_GRAY,
+        graphics.text(font, maxRange, imageWidth / 2 - font.width(maxRange) / 2, 5 + font.lineHeight + 3, CommonColors.DARK_GRAY,
                 false);
 
-        guiGraphics.drawString(font,
+        graphics.text(font,
                 TooltipUtil.withArgs(MachinesLang.OBELISK_UPKEEP, getMenu().getBlockEntity().getPerTickEnergyCost()),
                 imageWidth / 2 - font.width(MachinesLang.MAX_RANGE) / 2, 62, 0, false);
 
-        super.renderLabels(guiGraphics, mouseX, mouseY);
+        super.extractLabels(graphics, xm, ym);
     }
 
     @Override
-    protected void renderSlotContents(GuiGraphics guiGraphics, ItemStack itemstack, Slot slot,
+    protected void renderSlotContents(GuiGraphicsExtractor graphics, ItemStack itemstack, Slot slot,
             @Nullable String countString) {
         if (menu.getBlockEntity().requiresFilter() && slot.index == 1 && itemstack.isEmpty()) {
             ItemStack stack = new ItemStack(EIOItems.BASIC_SOUL_FILTER.get());
             //TODO ghost item rendering and blend pipeline
-            guiGraphics.renderFakeItem(stack, slot.x, slot.y);
+            graphics.fakeItem(stack, slot.x, slot.y);
         } else {
-            super.renderSlotContents(guiGraphics, itemstack, slot, countString);
+            super.renderSlotContents(graphics, itemstack, slot, countString);
         }
     }
 

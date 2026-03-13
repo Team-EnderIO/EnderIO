@@ -4,27 +4,24 @@ import com.enderio.enderio.api.EnderIODataComponents;
 import com.enderio.enderio.client.content.conduits.model.ConduitAdditionalModels;
 import com.google.common.base.Suppliers;
 import com.mojang.serialization.MapCodec;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.Material;
-import net.minecraft.client.renderer.block.model.TextureSlots;
+import net.minecraft.client.renderer.block.dispatch.BlockModelRotation;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BlockModelRotation;
-import net.minecraft.data.AtlasIds;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.resources.model.sprite.Material;
+import net.minecraft.client.resources.model.sprite.TextureSlots;
 import net.minecraft.world.entity.ItemOwner;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import org.joml.Matrix4fc;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
-import static net.minecraft.client.renderer.item.BlockModelWrapper.computeExtents;
+import static net.minecraft.client.renderer.item.CuboidItemModelWrapper.computeExtents;
 
 public class ConduitItemModel implements ItemModel {
 
@@ -69,8 +66,8 @@ public class ConduitItemModel implements ItemModel {
         }
 
         @Override
-        public ItemModel bake(BakingContext context) {
-            return new ConduitItemModel(context);
+        public ItemModel bake(BakingContext bakingContext, Matrix4fc matrix4fc) {
+            return new ConduitItemModel(bakingContext);
         }
 
         @Override

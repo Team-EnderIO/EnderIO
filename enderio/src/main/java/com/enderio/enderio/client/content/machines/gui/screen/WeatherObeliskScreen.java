@@ -5,7 +5,7 @@ import com.enderio.enderio.client.content.machines.gui.screen.base.MachineScreen
 import com.enderio.enderio.client.foundation.widgets.FluidStackWidget;
 import com.enderio.enderio.client.foundation.widgets.ProgressWidget;
 import com.enderio.enderio.content.machines.obelisks.weather.WeatherObeliskMenu;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -32,7 +32,7 @@ public class WeatherObeliskScreen extends MachineScreen<WeatherObeliskMenu> {
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, WEATHER_BG, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        graphics.blit(RenderPipelines.GUI_TEXTURED, WEATHER_BG, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
     }
 }

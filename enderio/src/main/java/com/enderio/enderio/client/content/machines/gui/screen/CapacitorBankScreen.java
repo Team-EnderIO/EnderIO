@@ -6,7 +6,7 @@
 //import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget;
 //import com.enderio.enderio.content.machines.capacitor_bank.CapacitorBankMenu;
 //import com.enderio.enderio.foundation.lang.EIOCommonLang;
-//import net.minecraft.client.gui.GuiGraphics;
+//import net.minecraft.client.gui.GuiGraphicsExtractor;
 //import net.minecraft.network.chat.Component;
 //import net.minecraft.resources.ResourceLocation;
 //import net.minecraft.world.entity.player.Inventory;
@@ -32,7 +32,7 @@
 //    }
 //
 //    @Override
-//    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-//        guiGraphics.blit(BG_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+//    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+//        graphics.blit(BG_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
 //    }
 //}

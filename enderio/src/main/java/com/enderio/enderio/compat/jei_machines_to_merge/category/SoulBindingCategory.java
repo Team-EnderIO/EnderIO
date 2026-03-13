@@ -23,7 +23,7 @@ import mezz.jei.api.recipe.IFocus;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -161,24 +161,25 @@ public class SoulBindingCategory extends MachineRecipeCategory<RecipeHolder<Soul
         builder.addSlot(OUTPUT, 99, 4).addItemStacks(results);
     }
 
-    @Override
-    public void draw(RecipeHolder<SoulBindingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics,
-            double mouseX, double mouseY) {
-        Minecraft mc = Minecraft.getInstance();
-
-        int cost = recipe.value().experience();
-        String costText = cost < 0 ? "err" : Integer.toString(cost);
-        String text = I18n.get("container.repair.cost", costText);
-
-        Minecraft minecraft = Minecraft.getInstance();
-        LocalPlayer player = minecraft.player;
-
-        // Show red if the player doesn't have enough levels
-        int mainColor = playerHasEnoughLevels(player, cost) ? 0xFF80FF20 : 0xFFFF6060;
-        guiGraphics.drawString(minecraft.font, text, 5, 24, mainColor);
-
-        guiGraphics.drawString(Minecraft.getInstance().font, getBasicEnergyString(recipe), 5, 34, 0xff808080, false);
-    }
+    // TODO: 26.1 - reenable
+//    @Override
+//    public void draw(RecipeHolder<SoulBindingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics,
+//            double mouseX, double mouseY) {
+//        Minecraft mc = Minecraft.getInstance();
+//
+//        int cost = recipe.value().experience();
+//        String costText = cost < 0 ? "err" : Integer.toString(cost);
+//        String text = I18n.get("container.repair.cost", costText);
+//
+//        Minecraft minecraft = Minecraft.getInstance();
+//        LocalPlayer player = minecraft.player;
+//
+//        // Show red if the player doesn't have enough levels
+//        int mainColor = playerHasEnoughLevels(player, cost) ? 0xFF80FF20 : 0xFFFF6060;
+//        graphics.drawString(minecraft.font, text, 5, 24, mainColor);
+//
+//        graphics.drawString(Minecraft.getInstance().font, getBasicEnergyString(recipe), 5, 34, 0xff808080, false);
+//    }
 
     @Override
     public void getTooltip(ITooltipBuilder tooltip, RecipeHolder<SoulBindingRecipe> recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {

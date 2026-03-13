@@ -4,7 +4,7 @@ import com.enderio.core.client.gui.widgets.EIOWidget;
 import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.foundation.fluid.FluidStorageInfo;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.texture.AbstractTexture;
@@ -29,7 +29,7 @@ public class FluidStackWidget extends EIOWidget {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         Minecraft minecraft = Minecraft.getInstance();
         //TODO Blend + depth pipeline?
         FluidStorageInfo fluidTank = fluidStorageSupplier.get();
@@ -53,23 +53,23 @@ public class FluidStackWidget extends EIOWidget {
                     int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
                     int atlasHeight = (int) (sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
 
-                    guiGraphics.pose().pushMatrix();
-                    guiGraphics.pose().translate(0, height - 16);
+                    graphics.pose().pushMatrix();
+                    graphics.pose().translate(0, height - 16);
                     for (int i = 0; i < Math.ceil(renderableHeight / 16f); i++) {
                         int drawingHeight = Math.min(16, renderableHeight - 16 * i);
                         int notDrawingHeight = 16 - drawingHeight;
-                        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, TextureAtlas.LOCATION_BLOCKS, x, y + notDrawingHeight,
+                        graphics.blit(RenderPipelines.GUI_TEXTURED, TextureAtlas.LOCATION_BLOCKS, x, y + notDrawingHeight,
                                 sprite.getU0() * atlasWidth, sprite.getV0() * atlasHeight + notDrawingHeight, width,
                                 drawingHeight, atlasWidth, atlasHeight, color);
-                        guiGraphics.pose().translate(0, -16);
+                        graphics.pose().translate(0, -16);
                     }
 
-                    guiGraphics.pose().popMatrix();
+                    graphics.pose().popMatrix();
                 }
             }
         }
 
-        renderToolTip(guiGraphics, mouseX, mouseY);
+        renderToolTip(graphics, mouseX, mouseY);
     }
 
     @Override
@@ -77,17 +77,17 @@ public class FluidStackWidget extends EIOWidget {
 
     }
 
-    public void renderToolTip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    public void renderToolTip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         if (isHovered(mouseX, mouseY)) {
             Minecraft minecraft = Minecraft.getInstance();
 
             var storage = fluidStorageSupplier.get();
 
             if (storage.contents().isEmpty()) {
-                guiGraphics.setComponentTooltipForNextFrame(minecraft.font, List.of(MachinesLang.GUI_NO_FLUID), mouseX,
+                graphics.setComponentTooltipForNextFrame(minecraft.font, List.of(MachinesLang.GUI_NO_FLUID), mouseX,
                         mouseY);
             } else {
-                guiGraphics.setTooltipForNextFrame(minecraft.font,
+                graphics.setTooltipForNextFrame(minecraft.font,
                         Arrays.asList(storage.contents().getHoverName().getVisualOrderText(),
                                 Component.literal(storage.contents().getAmount() + "mB").getVisualOrderText()),
                         mouseX, mouseY);

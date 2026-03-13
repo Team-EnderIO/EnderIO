@@ -5,10 +5,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import net.minecraft.client.renderer.block.model.BlockModel;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.renderer.block.model.TextureSlots;
-import net.minecraft.client.resources.model.UnbakedGeometry;
 import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.client.resources.model.cuboid.CuboidModel;
+import net.minecraft.client.resources.model.cuboid.ItemTransforms;
+import net.minecraft.client.resources.model.geometry.UnbakedGeometry;
+import net.minecraft.client.resources.model.sprite.TextureSlots;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.context.ContextMap;
@@ -26,10 +27,10 @@ public class EitherModelLoader implements UnbakedModelLoader<EitherModelLoader.U
     public Unbaked read(JsonObject json, JsonDeserializationContext context) throws JsonParseException {
         final String id = GsonHelper.getAsString(json, "mod");
         final JsonElement element = GsonHelper.getAsJsonObject(json, ModList.get().isLoaded(id) ? "if" : "else");
-        return new Unbaked(context.deserialize(element, BlockModel.class));
+        return new Unbaked(context.deserialize(element, CuboidModel.class));
     }
 
-    public record Unbaked(BlockModel model) implements UnbakedModel {
+    public record Unbaked(CuboidModel model) implements UnbakedModel {
         @Override
         public @Nullable Boolean ambientOcclusion() {
             return model.ambientOcclusion();

@@ -17,7 +17,7 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -101,17 +101,18 @@ public class SoulEngineCategory implements IRecipeCategory<EngineSoul.SoulData> 
 
     }
 
-    @Override
-    public void draw(EngineSoul.SoulData recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics,
-            double mouseX, double mouseY) {
-        EntityType<?> value = BuiltInRegistries.ENTITY_TYPE.get(recipe.entitytype()).orElseThrow().value();
-        if (recipe.getKey().equals(BuiltInRegistries.ENTITY_TYPE.getKey(value))) {
-            guiGraphics.drawString(Minecraft.getInstance().font, value.getDescription().getString(), 50, 5, 4210752,
-                    false);
-        }
-
-        guiGraphics.drawString(Minecraft.getInstance().font, recipe.tickpermb() + " t/mb", 50, 30, 4210752, false);
-        guiGraphics.drawString(Minecraft.getInstance().font, recipe.powerpermb() + " µI/mb", 50, 40, 4210752, false);
-
-    }
+    // TODO: 26.1 - reenable
+//    @Override
+//    public void draw(EngineSoul.SoulData recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics,
+//            double mouseX, double mouseY) {
+//        EntityType<?> value = BuiltInRegistries.ENTITY_TYPE.get(recipe.entitytype()).orElseThrow().value();
+//        if (recipe.getKey().equals(BuiltInRegistries.ENTITY_TYPE.getKey(value))) {
+//            graphics.drawString(Minecraft.getInstance().font, value.getDescription().getString(), 50, 5, 4210752,
+//                    false);
+//        }
+//
+//        graphics.drawString(Minecraft.getInstance().font, recipe.tickpermb() + " t/mb", 50, 30, 4210752, false);
+//        graphics.drawString(Minecraft.getInstance().font, recipe.powerpermb() + " µI/mb", 50, 40, 4210752, false);
+//
+//    }
 }

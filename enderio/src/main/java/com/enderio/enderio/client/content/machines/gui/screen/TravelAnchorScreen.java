@@ -6,7 +6,7 @@ import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.client.content.machines.gui.screen.base.MachineScreen;
 import com.enderio.enderio.content.travel.travel_anchor.TravelAnchorMenu;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -53,10 +53,10 @@ public class TravelAnchorScreen extends MachineScreen<TravelAnchorMenu> {
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         nameInput.setValue(menu.getName()); //TODO stupid but it works
         menu.setVisible(menu.isVisible()); //TODO stupid but it works
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, TRAVEL_ANCHOR_BG, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, TRAVEL_ANCHOR_BG, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
     @Override

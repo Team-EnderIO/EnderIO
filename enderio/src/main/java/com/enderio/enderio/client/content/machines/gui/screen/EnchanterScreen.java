@@ -4,7 +4,7 @@ import com.enderio.core.client.gui.screen.EnderContainerScreen;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.content.enchanter.EnchanterMenu;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -26,8 +26,8 @@ public class EnchanterScreen extends EnderContainerScreen<EnchanterMenu> {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-        super.render(guiGraphics, mouseX, mouseY, partialTicks);
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        super.extractRenderState(graphics, mouseX, mouseY, a);
 
         if (menu.getCurrentCost() < 0) {
             return;
@@ -40,12 +40,12 @@ public class EnchanterScreen extends EnderContainerScreen<EnchanterMenu> {
             colour = 16736352; // red
         }
 
-        guiGraphics.drawCenteredString(this.font, component, (width - getXSize()) / 2 + getXSize() / 2,
+        graphics.centeredText(this.font, component, (width - getXSize()) / 2 + getXSize() / 2,
                 (height - getYSize()) / 2 + 57, colour);
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
     }
 }

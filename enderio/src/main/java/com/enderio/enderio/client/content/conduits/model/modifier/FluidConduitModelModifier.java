@@ -5,16 +5,13 @@ import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.model.ConduitModelModifier;
 import com.enderio.enderio.client.content.conduits.model.bundle.port.ConduitBaker;
 import com.enderio.enderio.content.conduits.type.fluid.FluidConduit;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.BlockModelPart;
-import net.minecraft.client.renderer.block.model.Material;
-import net.minecraft.client.renderer.block.model.SimpleModelWrapper;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
+import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.resources.model.ModelBaker;
-import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.SimpleModelWrapper;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.AtlasIds;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.material.Fluid;
@@ -28,7 +25,7 @@ public class FluidConduitModelModifier implements ConduitModelModifier {
 
     private static final Identifier FLUID_MODEL = EnderIO.id("block/extra/fluids");
 
-    public List<BlockModelPart> createConnectionQuads(ModelBaker baker, ModelState modelState, Holder<Conduit<?, ?>> conduit, @Nullable CompoundTag extraWorldData) {
+    public List<BlockStateModelPart> createConnectionQuads(ModelBaker baker, ModelState modelState, Holder<Conduit<?, ?>> conduit, @Nullable CompoundTag extraWorldData) {
         if (!(conduit.value() instanceof FluidConduit fluidConduit)) {
             return List.of();
         }

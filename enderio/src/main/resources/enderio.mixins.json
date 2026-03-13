@@ -8,7 +8,7 @@
     ],
     "client" : [
 //        "GliderRotationMixin",
-        "BlockRenderDispatcherMixin"
+//        "BlockRenderDispatcherMixin"
     ],
     "minVersion" : "0.8"
 }

@@ -19,6 +19,7 @@ import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOCriterions;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIORecipeTypes;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
@@ -26,7 +27,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.level.EmptyBlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -110,7 +110,7 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
                 return false;
             }
 
-            return block.defaultBlockState().isCollisionShapeFullBlock(EmptyBlockAndTintGetter.INSTANCE, BlockPos.ZERO);
+            return block.defaultBlockState().isCollisionShapeFullBlock(BlockAndTintGetter.EMPTY, BlockPos.ZERO);
         }
         return false;
     }

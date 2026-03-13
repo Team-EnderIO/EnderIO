@@ -12,7 +12,7 @@ import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget
 import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.machines.powered_spawner.PoweredSpawnerMenu;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -77,7 +77,7 @@ public class PoweredSpawnerScreen extends MachineScreen<PoweredSpawnerMenu> {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         switch (menu.getMode()) {
         case SPAWN -> {
             spawnProgress.visible = true;
@@ -89,12 +89,12 @@ public class PoweredSpawnerScreen extends MachineScreen<PoweredSpawnerMenu> {
         }
         }
 
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
+        super.extractRenderState(graphics, mouseX, mouseY, a);
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, getBackgroundTexture(), leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        graphics.blit(RenderPipelines.GUI_TEXTURED, getBackgroundTexture(), leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
     private Identifier getBackgroundTexture() {
@@ -105,16 +105,16 @@ public class PoweredSpawnerScreen extends MachineScreen<PoweredSpawnerMenu> {
     }
 
     @Override
-    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         String modeLabel = Objects.requireNonNull(menu.getMode().getComponent()).getString();
-        guiGraphics.drawString(font, modeLabel, (int) (imageWidth / 2f - font.width(modeLabel) / 2f), 25, CommonColors.DARK_GRAY, true);
+        graphics.text(font, modeLabel, (int) (imageWidth / 2f - font.width(modeLabel) / 2f), 25, CommonColors.DARK_GRAY, true);
 
         var entityType = getMenu().getBlockEntity().getEntityType();
         if (entityType != null) {
             String name = entityType.getDescription().getString();
-            guiGraphics.drawString(font, name, (int) (imageWidth / 2f - font.width(name) / 2f), 65, CommonColors.DARK_GRAY, true);
+            graphics.text(font, name, (int) (imageWidth / 2f - font.width(name) / 2f), 65, CommonColors.DARK_GRAY, true);
         }
 
-        super.renderLabels(guiGraphics, mouseX, mouseY);
+        super.extractLabels(graphics, mouseX, mouseY);
     }
 }

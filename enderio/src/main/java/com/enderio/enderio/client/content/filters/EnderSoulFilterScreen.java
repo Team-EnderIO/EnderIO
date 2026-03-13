@@ -10,7 +10,7 @@ import com.enderio.enderio.content.filters.FiltersLang;
 import com.enderio.enderio.content.filters.soul.EnderSoulFilterMenu;
 import com.enderio.enderio.content.filters.soul.SoulFilterSlot;
 import com.enderio.enderio.content.tools.vials.SoulVialItem;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -92,13 +92,13 @@ public class EnderSoulFilterScreen extends EnderContainerScreen<EnderSoulFilterM
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float v, int i, int i1) {
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, backgroundTexture, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight, 256, 256);
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        graphics.blit(RenderPipelines.GUI_TEXTURED, backgroundTexture, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
     @Override
-    protected void renderSlotContents(GuiGraphics guiGraphics, ItemStack itemstack, Slot slot, @Nullable String countString) {
-        super.renderSlotContents(guiGraphics, itemstack, slot, countString);
+    protected void renderSlotContents(GuiGraphicsExtractor graphics, ItemStack itemstack, Slot slot, @Nullable String countString) {
+        super.renderSlotContents(graphics, itemstack, slot, countString);
 
         if (slot instanceof SoulFilterSlot soulFilterSlot) {
             var soul = soulFilterSlot.getResource();
@@ -107,14 +107,14 @@ public class EnderSoulFilterScreen extends EnderContainerScreen<EnderSoulFilterM
             }
 
             ItemStack renderStack = getRenderStack(soul);
-            super.renderSlotContents(guiGraphics, renderStack, slot, countString);
+            super.renderSlotContents(graphics, renderStack, slot, countString);
         }
 
-        super.renderSlotContents(guiGraphics, itemstack, slot, countString);
+        super.renderSlotContents(graphics, itemstack, slot, countString);
     }
 
     @Override
-    protected boolean renderCustomTooltip(GuiGraphics guiGraphics, int x, int y) {
+    protected boolean renderCustomTooltip(GuiGraphicsExtractor graphics, int x, int y) {
         if (this.menu.getCarried().isEmpty() && this.hoveredSlot instanceof SoulFilterSlot soulFilterSlot) {
             var soul = soulFilterSlot.getResource();
             if (!soul.hasEntity()) {
@@ -123,11 +123,11 @@ public class EnderSoulFilterScreen extends EnderContainerScreen<EnderSoulFilterM
 
             ItemStack renderStack = getRenderStack(soul);
             // TODO: Maybe add extra tooltip to show there is entity NBT?
-            guiGraphics.setTooltipForNextFrame(font, getTooltipFromContainerItem(renderStack), renderStack.getTooltipImage(), renderStack, x, y);
+            graphics.setTooltipForNextFrame(font, getTooltipFromContainerItem(renderStack), renderStack.getTooltipImage(), renderStack, x, y);
             return true;
         }
 
-        return super.renderCustomTooltip(guiGraphics, x, y);
+        return super.renderCustomTooltip(graphics, x, y);
     }
 
     private ItemStack getRenderStack(Soul soul) {

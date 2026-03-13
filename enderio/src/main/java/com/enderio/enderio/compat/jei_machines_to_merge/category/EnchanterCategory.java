@@ -12,7 +12,7 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -77,26 +77,27 @@ public class EnchanterCategory extends MachineRecipeCategory<WrappedEnchanterRec
         builder.addSlot(OUTPUT, 129, 11).add(recipe.getBook());
     }
 
-    @Override
-    public void draw(WrappedEnchanterRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics,
-            double mouseX, double mouseY) {
-        Minecraft mc = Minecraft.getInstance();
-
-        Component title = Enchantment.getFullname(recipe.getEnchantment(), recipe.getLevel());
-
-        guiGraphics.drawString(mc.font, title, 146 - mc.font.width(title), 0, 0xff8b8b8b, false);
-
-        int cost = recipe.getCost();
-        String costText = cost < 0 ? "err" : Integer.toString(cost);
-        String text = I18n.get("container.repair.cost", costText);
-
-        Minecraft minecraft = Minecraft.getInstance();
-        LocalPlayer player = minecraft.player;
-
-        // Show red if the player doesn't have enough levels
-        int mainColor = playerHasEnoughLevels(player, cost) ? 0xFF80FF20 : 0xFFFF6060;
-        int repairTextWidth = minecraft.font.width(text);
-        guiGraphics.drawString(minecraft.font, text, getWidth() - 2 - repairTextWidth,
-                getHeight() - 8, mainColor);
-    }
+    // TODO: 26.1 - reenable
+//    @Override
+//    public void draw(WrappedEnchanterRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics,
+//            double mouseX, double mouseY) {
+//        Minecraft mc = Minecraft.getInstance();
+//
+//        Component title = Enchantment.getFullname(recipe.getEnchantment(), recipe.getLevel());
+//
+//        graphics.drawString(mc.font, title, 146 - mc.font.width(title), 0, 0xff8b8b8b, false);
+//
+//        int cost = recipe.getCost();
+//        String costText = cost < 0 ? "err" : Integer.toString(cost);
+//        String text = I18n.get("container.repair.cost", costText);
+//
+//        Minecraft minecraft = Minecraft.getInstance();
+//        LocalPlayer player = minecraft.player;
+//
+//        // Show red if the player doesn't have enough levels
+//        int mainColor = playerHasEnoughLevels(player, cost) ? 0xFF80FF20 : 0xFFFF6060;
+//        int repairTextWidth = minecraft.font.width(text);
+//        graphics.drawString(minecraft.font, text, getWidth() - 2 - repairTextWidth,
+//                getHeight() - 8, mainColor);
+//    }
 }

@@ -6,7 +6,7 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.foundation.energy.EnergyStorageInfo;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
@@ -27,7 +27,7 @@ public class EnergyWidget extends EIOWidget {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         // Don't bother if we have no energy capacity, protects from divide by zero's when there's no capacitor.
         EnergyStorageInfo storage = storageSupplier.get();
         if (storage.capacity() <= 0) {
@@ -40,32 +40,32 @@ public class EnergyWidget extends EIOWidget {
         float filledVolume = Math.min(1.0f, (float)(storage.energy() / (double) storage.capacity()));
         int renderableHeight = (int)(filledVolume * height);
 
-        guiGraphics.pose().pushMatrix();
-        guiGraphics.pose().translate(0, height-16);
+        graphics.pose().pushMatrix();
+        graphics.pose().translate(0, height-16);
         for (int i = 0; i < Math.ceil(renderableHeight / 16f); i++) {
             int drawingHeight = Math.min(16, renderableHeight - 16*i);
             int notDrawingHeight = 16 - drawingHeight;
-            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, WIDGETS, x, y + notDrawingHeight, 0, 0, 128 + notDrawingHeight, width, drawingHeight, 256, 256);
-            guiGraphics.pose().translate(0,-16);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, WIDGETS, x, y + notDrawingHeight, 0, 0, 128 + notDrawingHeight, width, drawingHeight, 256, 256);
+            graphics.pose().translate(0,-16);
         }
 
-        guiGraphics.pose().popMatrix();
+        graphics.pose().popMatrix();
 
-        renderToolTip(guiGraphics, mouseX, mouseY);
+        renderToolTip(graphics, mouseX, mouseY);
     }
 
     @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
     }
 
-    public void renderToolTip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    public void renderToolTip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         if (isHovered(mouseX, mouseY)) {
             Minecraft minecraft = Minecraft.getInstance();
 
             EnergyStorageInfo storage = storageSupplier.get();
 
             NumberFormat fmt = NumberFormat.getInstance(Locale.ENGLISH);
-            guiGraphics.setTooltipForNextFrame(minecraft.font,
+            graphics.setTooltipForNextFrame(minecraft.font,
                 TooltipUtil.withArgs(EIOCommonLang.ENERGY_AMOUNT, fmt.format(storage.energy()) + "/" + fmt.format(
                storage.capacity())), mouseX, mouseY);
         }

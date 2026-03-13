@@ -9,7 +9,7 @@ import com.enderio.enderio.content.conduits.type.item.ItemConduit;
 import com.enderio.enderio.content.conduits.type.item.ItemConduitConnectionConfig;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -26,13 +26,13 @@ public class ItemConduitScreenType extends IOConduitScreenType<ItemConduitConnec
     private static final Identifier ICON_DECREASE = EnderIO.id("icon/decrease");
 
     @Override
-    public void renderLabels(ConduitMenuDataAccess<ItemConduitConnectionConfig> dataAccess, GuiGraphics guiGraphics,
+    public void renderLabels(ConduitMenuDataAccess<ItemConduitConnectionConfig> dataAccess, GuiGraphicsExtractor graphics,
             int startX, int startY, Font font, int mouseX, int mouseY) {
-        super.renderLabels(dataAccess, guiGraphics, startX, startY, font, mouseX, mouseY);
+        super.renderLabels(dataAccess, graphics, startX, startY, font, mouseX, mouseY);
 
         String priority = String.valueOf(dataAccess.getConnectionConfig().priority());
-        guiGraphics.drawString(font, ConduitLang.PRIORITY, 22, 7 + 4 + 4 + 8 + 16 + 12, CommonColors.DARK_GRAY, false);
-        guiGraphics.drawString(font, priority, 90 - font.width(priority), 7 + 4 + 4 + 8 + 16 + 12, CommonColors.DARK_GRAY, false);
+        graphics.text(font, ConduitLang.PRIORITY, 22, 7 + 4 + 4 + 8 + 16 + 12, CommonColors.DARK_GRAY, false);
+        graphics.text(font, priority, 90 - font.width(priority), 7 + 4 + 4 + 8 + 16 + 12, CommonColors.DARK_GRAY, false);
 
         // TODO: Show redstone signal indicators using the extra NBT payload.
     }

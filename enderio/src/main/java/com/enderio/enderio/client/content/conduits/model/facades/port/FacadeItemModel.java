@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.world.entity.ItemOwner;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import org.joml.Matrix4fc;
 import org.jspecify.annotations.Nullable;
 
 public class FacadeItemModel implements ItemModel {
@@ -42,8 +43,8 @@ public class FacadeItemModel implements ItemModel {
         }
 
         @Override
-        public ItemModel bake(BakingContext context) {
-            return new FacadeItemModel(context);
+        public ItemModel bake(BakingContext bakingContext, Matrix4fc matrix4fc) {
+            return new FacadeItemModel(bakingContext);
         }
 
         @Override

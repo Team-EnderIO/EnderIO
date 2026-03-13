@@ -12,7 +12,7 @@ import com.enderio.enderio.content.machines.vat.FermentingRecipe;
 import com.enderio.enderio.content.machines.vat.VatMenu;
 import com.enderio.enderio.foundation.fluid.FluidStorageInfo;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.WidgetSprites;
@@ -71,16 +71,16 @@ public class VatScreen extends MachineScreen<VatMenu> {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-        super.render(guiGraphics, mouseX, mouseY, partialTicks);
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        super.extractRenderState(graphics, mouseX, mouseY, a);
 
-        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, VAT_COVER, 76 + leftPos, 34 + topPos, 26, 28);
-        drawModifierStrings(guiGraphics);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, VAT_COVER, 76 + leftPos, 34 + topPos, 26, 28);
+        drawModifierStrings(graphics);
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, VAT_BG, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        graphics.blit(RenderPipelines.GUI_TEXTURED, VAT_BG, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
     private boolean isCrafting() {
@@ -113,7 +113,7 @@ public class VatScreen extends MachineScreen<VatMenu> {
         return new FluidStorageInfo(currentContents.contents().copyWithAmount(adjustedAmount), currentContents.capacity());
     }
 
-    private void drawModifierStrings(GuiGraphics guiGraphics) {
+    private void drawModifierStrings(GuiGraphicsExtractor graphics) {
         var recipe = menu.getRecipe();
         if (!isCrafting() || recipe == null) {
             return;
@@ -124,14 +124,14 @@ public class VatScreen extends MachineScreen<VatMenu> {
         double modifier = FermentingRecipe.getModifier(item, recipe.value().firstReagent());
         String text = "x" + modifier;
         int x = getGuiLeft() + 63 - minecraft.font.width(text) / 2;
-        guiGraphics.drawString(minecraft.font, text, x, getGuiTop() + 32, CommonColors.DARK_GRAY, false);
+        graphics.text(minecraft.font, text, x, getGuiTop() + 32, CommonColors.DARK_GRAY, false);
 
         // right modifier
         item = getMenu().getSlot(1).getItem();
         modifier = FermentingRecipe.getModifier(item, recipe.value().secondReagent());
         text = "x" + modifier;
         x = getGuiLeft() + 113 - minecraft.font.width(text) / 2;
-        guiGraphics.drawString(minecraft.font, text, x, getGuiTop() + 32, CommonColors.DARK_GRAY, false);
+        graphics.text(minecraft.font, text, x, getGuiTop() + 32, CommonColors.DARK_GRAY, false);
 
     }
 }

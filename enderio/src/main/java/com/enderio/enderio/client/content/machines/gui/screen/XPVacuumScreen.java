@@ -8,7 +8,7 @@ import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget
 import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.machines.vacuum.xp.XPVacuumMenu;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -47,17 +47,17 @@ public class XPVacuumScreen extends MachineScreen<XPVacuumMenu> {
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, XP_VACUUM_BG, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        graphics.blit(RenderPipelines.GUI_TEXTURED, XP_VACUUM_BG, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
     @Override
-    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        guiGraphics.drawString(font, MachinesLang.RANGE, this.imageWidth - 6 - this.font.width(MachinesLang.RANGE), 24, CommonColors.DARK_GRAY,
+    protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+        graphics.text(font, MachinesLang.RANGE, this.imageWidth - 6 - this.font.width(MachinesLang.RANGE), 24, CommonColors.DARK_GRAY,
                 false);
-        guiGraphics.drawString(font, menu.getRange() + "", imageWidth - 6 - 16 - 2 - 8 - 10, 38, CommonColors.DARK_GRAY,
+        graphics.text(font, menu.getRange() + "", imageWidth - 6 - 16 - 2 - 8 - 10, 38, CommonColors.DARK_GRAY,
                 false);
-        super.renderLabels(guiGraphics, mouseX, mouseY);
+        super.extractLabels(graphics, mouseX, mouseY);
     }
 
 }

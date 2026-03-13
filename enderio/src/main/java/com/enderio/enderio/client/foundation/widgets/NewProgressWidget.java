@@ -4,7 +4,7 @@ import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.compat.ModCompatHelper;
 import com.enderio.enderio.content.machines.MachinesLang;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -66,8 +66,7 @@ public class NewProgressWidget extends AbstractWidget {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-
+    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         float progress = progressSupplier.get();
 
         int u = 0;
@@ -100,7 +99,7 @@ public class NewProgressWidget extends AbstractWidget {
         default -> throw new NotImplementedException();
         }
 
-        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, width, height, u, v, x, y, uWidth, vHeight);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, width, height, u, v, x, y, uWidth, vHeight);
 
         // Update the contents of the tooltip whenever its hovered, don't waste any time
         // doing it when not hovered.
@@ -108,7 +107,7 @@ public class NewProgressWidget extends AbstractWidget {
         if (this.isHovered() && showTooltip && !ModCompatHelper.hasRecipeViewer()) {
             Minecraft minecraft = Minecraft.getInstance();
 
-            guiGraphics.setTooltipForNextFrame(minecraft.font,
+            graphics.setTooltipForNextFrame(minecraft.font,
                     TooltipUtil.withArgs(MachinesLang.TOOLTIP_PROGRESS, (int) (progressSupplier.get() * 100)), mouseX,
                     mouseY);
         }

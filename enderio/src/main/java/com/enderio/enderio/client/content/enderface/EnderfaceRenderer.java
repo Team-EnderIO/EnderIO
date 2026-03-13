@@ -9,9 +9,9 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.ShapeRenderer;
-import net.minecraft.client.renderer.block.BakedQuadOutput;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.model.BlockModel;
+import net.minecraft.client.renderer.block.model.BlockStateModelWrapper;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.ARGB;
@@ -36,14 +36,15 @@ public class EnderfaceRenderer implements TravelRenderer<EnderfaceTravelTarget> 
         // Render Model
         BlockState blockState = minecraft.level.getBlockState(travelData.pos());
 
-        BlockStateModel blockModel = minecraft.getBlockRenderer().getBlockModel(blockState);
-        BakedQuadOutput output = (pose, quad, brightness, color, lightmapCoord, overlayCoords) -> {
-            VertexConsumer buffer = outlineBuffer.getBuffer(RenderTypes.solidMovingBlock());
-            buffer.putBulkData(pose, quad, brightness, color, lightmapCoord, overlayCoords);
-        };
-
-        ModelBlockRenderer.renderModel(poseStack.last(), output, blockModel, -1, LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY,
-            minecraft.level, travelData.pos(), blockState);
+        BlockModel blockModel = minecraft.getModelManager().getBlockModelSet().get(blockState);
+        // TODO: 26.1 - renderModel is gonezo
+//        BakedQuadOutput output = (pose, quad, brightness, color, lightmapCoord, overlayCoords) -> {
+//            VertexConsumer buffer = outlineBuffer.getBuffer(RenderTypes.solidMovingBlock());
+//            buffer.putBulkData(pose, quad, brightness, color, lightmapCoord, overlayCoords);
+//        };
+//
+//        ModelBlockRenderer.renderModel(poseStack.last(), output, blockModel, -1, LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY,
+//            minecraft.level, travelData.pos(), blockState);
 
         // Render line
         float linesize;

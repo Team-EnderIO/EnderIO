@@ -7,7 +7,7 @@ import com.enderio.enderio.foundation.block.entity.MultiConfigurable;
 import com.enderio.enderio.foundation.menu.GhostMachineSlot;
 import com.enderio.enderio.foundation.menu.MachineMenu;
 import com.enderio.enderio.foundation.menu.PreviewMachineSlot;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -39,15 +39,15 @@ public abstract class MachineScreen<T extends MachineMenu<?>> extends EnderConta
     }
 
     @Override
-    protected void renderSlot(GuiGraphics guiGraphics, Slot slot, int mouseX, int mouseY) {
-        super.renderSlot(guiGraphics, slot, mouseX, mouseY);
+    protected void extractSlot(GuiGraphicsExtractor graphics, Slot slot, int mouseX, int mouseY) {
+        super.extractSlot(graphics, slot, mouseX, mouseY);
 
         if (slot instanceof GhostMachineSlot || slot instanceof PreviewMachineSlot) {
             if (slot.hasItem()) {
-                guiGraphics.pose().pushMatrix();
-                guiGraphics.pose().translate(0.0F, 0.0F); //TODO can't push Z 300f
-                guiGraphics.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, SLOT_COLOR);
-                guiGraphics.pose().popMatrix();
+                graphics.pose().pushMatrix();
+                graphics.pose().translate(0.0F, 0.0F); //TODO can't push Z 300f
+                graphics.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, SLOT_COLOR);
+                graphics.pose().popMatrix();
             }
         }
     }

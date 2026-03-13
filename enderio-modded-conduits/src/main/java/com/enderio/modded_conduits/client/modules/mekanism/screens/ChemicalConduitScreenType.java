@@ -15,7 +15,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import mekanism.api.MekanismAPI;
 import mekanism.api.chemical.Chemical;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -142,7 +142,7 @@ public class ChemicalConduitScreenType extends IOConduitScreenType<ChemicalCondu
         }
 
         @Override
-        public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        public void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
             if (isHoveredOrFocused()) {
                 MutableComponent tooltip = MekanismModule.CHEMICAL_CONDUIT_CHANGE_FLUID1.copy();
                 tooltip.append("\n").append(MekanismModule.CHEMICAL_CONDUIT_CHANGE_FLUID2);
@@ -157,7 +157,7 @@ public class ChemicalConduitScreenType extends IOConduitScreenType<ChemicalCondu
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
             RenderSystem.enableDepthTest();
-            guiGraphics.blit(WIDGET_TEXTURE, getX(), getY(), 0, 0, this.width, this.height);
+            graphics.blit(WIDGET_TEXTURE, getX(), getY(), 0, 0, this.width, this.height);
             if (currentChemical.get().isEmptyType()) {
                 return;
             }
@@ -177,7 +177,7 @@ public class ChemicalConduitScreenType extends IOConduitScreenType<ChemicalCondu
                 int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
                 int atlasHeight = (int) (sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
 
-                guiGraphics.blit(TextureAtlas.LOCATION_BLOCKS, getX() + 1, getY() + 1, 0, sprite.getU0() * atlasWidth,
+                graphics.blit(TextureAtlas.LOCATION_BLOCKS, getX() + 1, getY() + 1, 0, sprite.getU0() * atlasWidth,
                         sprite.getV0() * atlasHeight, 12, 12, atlasWidth, atlasHeight);
 
                 RenderSystem.setShaderColor(1, 1, 1, 1);

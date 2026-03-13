@@ -12,7 +12,7 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Axis;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -246,11 +246,11 @@ public class IOConfigOverlay extends BaseOverlay {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         if (visible) {
-            guiGraphics.enableScissor(getX(), getY(), getX() + width, getY() + height);
+            graphics.enableScissor(getX(), getY(), getX() + width, getY() + height);
 //            RenderSystem.disableDepthTest();
-            guiGraphics.fill(getX(), getY(), getX() + width, getY() + height, 0xFF000000);
+            graphics.fill(getX(), getY(), getX() + width, getY() + height, 0xFF000000);
 //            RenderSystem.enableDepthTest();
 
             // Calculate widget center
@@ -272,7 +272,7 @@ public class IOConfigOverlay extends BaseOverlay {
             blockTransform.mul(rotYaw);
 
             // Draw block
-            renderWorld(guiGraphics, centerX, centerY, blockTransform, partialTick);
+            renderWorld(graphics, centerX, centerY, blockTransform, a);
 
             // Build ray transformation matrix
             // Rotate 180 around Z, otherwise the block is upside down
@@ -302,30 +302,30 @@ public class IOConfigOverlay extends BaseOverlay {
                                                                                                              // to eye
                     .map(closest -> new SelectedFace(closest.getValue(), closest.getKey().getDirection()));
 
-            renderSelection(guiGraphics, centerX, centerY, blockTransform);
-            renderOverlay(guiGraphics);
+            renderSelection(graphics, centerX, centerY, blockTransform);
+            renderOverlay(graphics);
 
-            guiGraphics.disableScissor();
+            graphics.disableScissor();
 
             // after scissor to prevent clipping the tooltip
-            renderNeighbourButton(guiGraphics, mouseX, mouseY);
+            renderNeighbourButton(graphics, mouseX, mouseY);
         }
     }
 
-    private void renderWorld(GuiGraphics guiGraphics, int centerX, int centerY, Quaternionf transform,
+    private void renderWorld(GuiGraphicsExtractor graphics, int centerX, int centerY, Quaternionf transform,
             float partialTick) {
 //        Lighting.setupForFlatItems();
-        guiGraphics.pose().pushMatrix();
-//        guiGraphics.pose().translate(centerX, centerY, Z_OFFSET);
-//        guiGraphics.pose().scale(scale, scale, -scale);
-//        guiGraphics.pose().mulPose(transform);
+        graphics.pose().pushMatrix();
+//        graphics.pose().translate(centerX, centerY, Z_OFFSET);
+//        graphics.pose().scale(scale, scale, -scale);
+//        graphics.pose().mulPose(transform);
 
         // RenderNeighbours
         if (neighbourVisible) {
             for (var neighbour : neighbours) {
                 Vector3f pos = new Vector3f(neighbour.getX() - worldOrigin.x(), neighbour.getY() - worldOrigin.y(),
                         neighbour.getZ() - worldOrigin.z());
-                renderBlock(guiGraphics, neighbour, pos, ghostBuffers, partialTick);
+                renderBlock(graphics, neighbour, pos, ghostBuffers, partialTick);
             }
 
         }
@@ -335,18 +335,18 @@ public class IOConfigOverlay extends BaseOverlay {
         for (var configurable : configurable) {
             Vector3f pos = new Vector3f(configurable.getX() - worldOrigin.x(), configurable.getY() - worldOrigin.y(),
                     configurable.getZ() - worldOrigin.z());
-            renderBlock(guiGraphics, configurable, pos, solidBuffers, partialTick);
+            renderBlock(graphics, configurable, pos, solidBuffers, partialTick);
         }
         solidBuffers.endBatch();
 
-        guiGraphics.pose().popMatrix();
+        graphics.pose().popMatrix();
 //        Lighting.setupFor3DItems();
     }
 
-    private void renderBlock(GuiGraphics guiGraphics, BlockPos blockPos, Vector3f renderPos,
+    private void renderBlock(GuiGraphicsExtractor graphics, BlockPos blockPos, Vector3f renderPos,
             MultiBufferSource.BufferSource buffers, float partialTick) {
-        guiGraphics.pose().pushMatrix();
-//        guiGraphics.pose().translate(renderPos.x(), renderPos.y(), renderPos.z());
+        graphics.pose().pushMatrix();
+//        graphics.pose().translate(renderPos.x(), renderPos.y(), renderPos.z());
 
         ModelData modelData = Optional.ofNullable(MINECRAFT.level.getModelDataManager().getAt(blockPos))
                 .orElse(ModelData.EMPTY);
@@ -363,7 +363,7 @@ public class IOConfigOverlay extends BaseOverlay {
 //            float b = ARGB.blue(blockColor) / 255F;
 //            for (RenderType renderType : bakedmodel.getRenderTypes(blockState, RandomSource.create(42), modelData)) {
 //                renderer.getModelRenderer()
-//                        .renderModel(guiGraphics.pose().last(),
+//                        .renderModel(graphics.pose().last(),
 //                                buffers.getBuffer(RenderTypeHelper.getEntityRenderType(renderType)), blockState,
 //                                bakedmodel, r, g, b, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, modelData,
 //                                renderType);
@@ -372,23 +372,23 @@ public class IOConfigOverlay extends BaseOverlay {
 //            if (blockEntity != null) {
 //                var beRenderer = MINECRAFT.getBlockEntityRenderDispatcher().getRenderer(blockEntity);
 //                if (beRenderer != null) {
-//                    beRenderer.render(blockEntity, partialTick, guiGraphics.pose(), buffers, LightTexture.FULL_BRIGHT,
+//                    beRenderer.render(blockEntity, partialTick, graphics.pose(), buffers, LightTexture.FULL_BRIGHT,
 //                            OverlayTexture.NO_OVERLAY);
 //                }
 //
 //            }
 //        }
-        guiGraphics.pose().popMatrix();
+        graphics.pose().popMatrix();
     }
 
-    private void renderSelection(GuiGraphics guiGraphics, int centerX, int centerY, Quaternionf transform) {
+    private void renderSelection(GuiGraphicsExtractor graphics, int centerX, int centerY, Quaternionf transform) {
         if (selection.isEmpty()) {
             return;
         }
-        guiGraphics.pose().pushMatrix();
-//        guiGraphics.pose().translate(centerX, centerY, Z_OFFSET);
-//        guiGraphics.pose().scale(scale, scale, -scale);
-//        guiGraphics.pose().mulPose(transform);
+        graphics.pose().pushMatrix();
+//        graphics.pose().translate(centerX, centerY, Z_OFFSET);
+//        graphics.pose().scale(scale, scale, -scale);
+//        graphics.pose().mulPose(transform);
 
         BufferBuilder bufferbuilder = Tesselator.getInstance()
                 .begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
@@ -401,11 +401,11 @@ public class IOConfigOverlay extends BaseOverlay {
 
         var selectedFace = selection.get();
         BlockPos blockPos = selectedFace.blockPos;
-//        guiGraphics.pose()
+//        graphics.pose()
 //                .translate(blockPos.getX() - worldOrigin.x(), blockPos.getY() - worldOrigin.y(),
 //                        blockPos.getZ() - worldOrigin.z());
 //        Vector3f[] vec = ModelRenderUtil.createQuadVerts(selectedFace.side, 0, 1, 1);
-//        Matrix4f matrix4f = guiGraphics.pose().last().pose();
+//        Matrix4f matrix4f = graphics.pose().last().pose();
 //        bufferbuilder.addVertex(matrix4f, vec[0].x(), vec[0].y(), vec[0].z())
 //                .setColor(1F, 1F, 1F, 1F)
 //                .setUv(tex.getU0(), tex.getV0());
@@ -420,10 +420,10 @@ public class IOConfigOverlay extends BaseOverlay {
 //                .setUv(tex.getU1(), tex.getV0());
 //        BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
 
-        guiGraphics.pose().popMatrix();
+        graphics.pose().popMatrix();
     }
 
-    private void renderOverlay(GuiGraphics guiGraphics) {
+    private void renderOverlay(GuiGraphicsExtractor graphics) {
         if (selection.isPresent()) {
             var selectedFace = selection.get();
             BlockEntity entity = MINECRAFT.level.getBlockEntity(selectedFace.blockPos);
@@ -431,22 +431,22 @@ public class IOConfigOverlay extends BaseOverlay {
                 var ioMode = ioConfigurable.getIOMode(selectedFace.side);
                 IOModeMap map = IOModeMap.getMapFromMode(ioMode);
                 Rect2i iconBounds = map.getRect();
-                guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, IO_CONFIG_OVERLAY, 48, 16, iconBounds.getX(), iconBounds.getY(), getX() + 4,
-                        getY() + height - 4 - MINECRAFT.font.lineHeight - iconBounds.getHeight(), iconBounds.getWidth(),
-                        iconBounds.getHeight());
-                guiGraphics.pose().pushMatrix();
-//                guiGraphics.pose().translate(0, 0, OVERLAY_Z_OFFSET); // to ensure that string is drawn on top
-                guiGraphics.drawString(MINECRAFT.font, map.getComponent(), getX() + 4,
-                        getY() + height - 2 - MINECRAFT.font.lineHeight, CommonColors.DARK_GRAY);
-                guiGraphics.pose().popMatrix();
+                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, IO_CONFIG_OVERLAY, 48, 16, iconBounds.getX(), iconBounds.getY(), getX() + 4,
+                    getY() + height - 4 - MINECRAFT.font.lineHeight - iconBounds.getHeight(), iconBounds.getWidth(),
+                    iconBounds.getHeight());
+                graphics.pose().pushMatrix();
+//                graphics.pose().translate(0, 0, OVERLAY_Z_OFFSET); // to ensure that string is drawn on top
+                graphics.text(MINECRAFT.font, map.getComponent(), getX() + 4,
+                    getY() + height - 2 - MINECRAFT.font.lineHeight, CommonColors.DARK_GRAY);
+                graphics.pose().popMatrix();
             }
         }
     }
 
-    private void renderNeighbourButton(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, NEIGHBOURS_BTN, neighBtnRect.getX(), neighBtnRect.getY(), 16, 16);
+    private void renderNeighbourButton(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, NEIGHBOURS_BTN, neighBtnRect.getX(), neighBtnRect.getY(), 16, 16);
         if (neighBtnRect.contains(mouseX, mouseY)) {
-//            guiGraphics.renderTooltip(MINECRAFT.font, EIOCommonLang.TOGGLE_NEIGHBOUR.copy().withStyle(ChatFormatting.WHITE),
+//            graphics.renderTooltip(MINECRAFT.font, EIOCommonLang.TOGGLE_NEIGHBOUR.copy().withStyle(ChatFormatting.WHITE),
 //                    mouseX, mouseY);
         }
     }

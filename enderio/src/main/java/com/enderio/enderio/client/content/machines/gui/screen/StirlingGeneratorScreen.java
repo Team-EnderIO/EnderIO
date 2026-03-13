@@ -10,7 +10,7 @@ import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget
 import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.machines.stirling_generator.StirlingGeneratorMenu;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -50,20 +50,20 @@ public class StirlingGeneratorScreen extends MachineScreen<StirlingGeneratorMenu
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
     @Override
-    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        super.renderLabels(guiGraphics, mouseX, mouseY);
+    protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+        super.extractLabels(graphics, mouseX, mouseY);
         float genRate = menu.getBlockEntity().getGenerationRate();
         float efficiency = menu.getBlockEntity().getFuelEfficiency();
         MutableComponent gen = TooltipUtil.withArgs(MachinesLang.GENERATING, FORMAT.format(genRate));
         MutableComponent eff = TooltipUtil.withArgs(MachinesLang.FUEL_EFFICIENCY, (int) efficiency);
-        guiGraphics.drawString(font, gen, imageWidth / 2 - font.width(gen.getString()) / 2, 9, CommonColors.DARK_GRAY, false);
+        graphics.text(font, gen, imageWidth / 2 - font.width(gen.getString()) / 2, 9, CommonColors.DARK_GRAY, false);
         if (menu.getBlockEntity().isCapacitorInstalled()) {
-            guiGraphics.drawString(font, eff, imageWidth / 2 - font.width(eff.getString()) / 2, 9 + font.lineHeight + 2,
+            graphics.text(font, eff, imageWidth / 2 - font.width(eff.getString()) / 2, 9 + font.lineHeight + 2,
                 CommonColors.DARK_GRAY, false);
         }
     }

@@ -9,7 +9,7 @@ import com.enderio.enderio.content.filters.FiltersLang;
 import com.enderio.enderio.content.filters.fluid.EnderFluidFilterMenu;
 import com.enderio.enderio.content.filters.fluid.FluidFilterSlot;
 import com.enderio.enderio.content.filters.item.general.EnderItemFilterMenu;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -93,13 +93,13 @@ public class EnderFluidFilterScreen extends EnderContainerScreen<EnderFluidFilte
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float v, int i, int i1) {
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, backgroundTexture, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight, 256, 256);
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        graphics.blit(RenderPipelines.GUI_TEXTURED, backgroundTexture, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
     @Override
-    protected void renderSlot(GuiGraphics guiGraphics, Slot slot, int mouseX, int mouseY) {
-        super.renderSlot(guiGraphics, slot, mouseX, mouseY);
+    protected void extractSlot(GuiGraphicsExtractor graphics, Slot slot, int mouseX, int mouseY) {
+        super.extractSlot(graphics, slot, mouseX, mouseY);
 
         if (!(slot instanceof FluidFilterSlot fluidFilterSlot)) {
             return;
@@ -118,7 +118,7 @@ public class EnderFluidFilterScreen extends EnderContainerScreen<EnderFluidFilte
 
                 int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
                 int atlasHeight = (int) (sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
-                guiGraphics.blit(RenderPipelines.GUI_TEXTURED, TextureAtlas.LOCATION_BLOCKS, slot.x, slot.y, sprite.getU0() * atlasWidth,
+                graphics.blit(RenderPipelines.GUI_TEXTURED, TextureAtlas.LOCATION_BLOCKS, slot.x, slot.y, sprite.getU0() * atlasWidth,
                         sprite.getV0() * atlasHeight, 16, 16, sprite.contents().width(), sprite.contents().height(), atlasWidth,
                         atlasHeight, color);
             }
@@ -126,11 +126,11 @@ public class EnderFluidFilterScreen extends EnderContainerScreen<EnderFluidFilte
     }
 
     @Override
-    protected boolean renderCustomTooltip(GuiGraphics guiGraphics, int x, int y) {
+    protected boolean renderCustomTooltip(GuiGraphicsExtractor graphics, int x, int y) {
         if (this.menu.getCarried().isEmpty() && this.hoveredSlot instanceof FluidFilterSlot fluidFilterSlot) {
             FluidStack value = fluidFilterSlot.getResource();
             if (!value.isEmpty()) {
-                guiGraphics.setTooltipForNextFrame(this.font, value.getHoverName(), x, y);
+                graphics.setTooltipForNextFrame(this.font, value.getHoverName(), x, y);
                 return true;
             }
         }

@@ -19,7 +19,7 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
@@ -102,13 +102,14 @@ public class AlloySmeltingCategory extends MachineRecipeCategory<RecipeHolder<Al
         builder.addSlot(OUTPUT, 26, 52).addItemStacks(List.of(RecipeUtil.getResultStacks(recipe).getFirst().getItem()));
     }
 
-    @Override
-    public void draw(RecipeHolder<AlloySmeltingRecipe> recipe, IRecipeSlotsView recipeSlotsView,
-            GuiGraphics guiGraphics, double mouseX, double mouseY) {
-        animatedFlame.draw(guiGraphics, 3, 29);
-        animatedFlame.draw(guiGraphics, 51, 29);
-        guiGraphics.drawString(Minecraft.getInstance().font, getBasicEnergyString(recipe), 60, 50, 0xff808080, false);
-    }
+    // TODO: 26.1 - reenable
+//    @Override
+//    public void draw(RecipeHolder<AlloySmeltingRecipe> recipe, IRecipeSlotsView recipeSlotsView,
+//            GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
+//        animatedFlame.draw(graphics, 3, 29);
+//        animatedFlame.draw(graphics, 51, 29);
+//        graphics.drawString(Minecraft.getInstance().font, getBasicEnergyString(recipe), 60, 50, 0xff808080, false);
+//    }
 
     @Override
     public void getTooltip(ITooltipBuilder tooltip, RecipeHolder<AlloySmeltingRecipe> recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
