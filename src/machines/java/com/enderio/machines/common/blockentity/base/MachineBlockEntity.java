@@ -35,6 +35,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -736,9 +737,8 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
                 }
             }
 
-            block.playerWillDestroy(level, pos, state, player);
-            level.removeBlock(pos, false);
-            block.destroy(level, pos, state);
+            // Remove the block.
+            level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL_IMMEDIATE);
 
             //TODO: custom sound when sound manager is up and running??
         } else {
