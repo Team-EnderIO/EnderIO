@@ -4,6 +4,9 @@ import com.enderio.api.capability.IEnderCapabilityProvider;
 import com.enderio.api.io.IIOConfig;
 import com.enderio.machines.common.blockentity.MachineState;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -52,6 +55,11 @@ public class MachineInventory extends ItemStackHandler implements IEnderCapabili
      */
     public final MachineInventoryLayout getLayout() {
         return layout;
+    }
+
+    @Override
+    public int getSlots() {
+        return layout.getSlotCount();
     }
 
     @Override
@@ -138,6 +146,44 @@ public class MachineInventory extends ItemStackHandler implements IEnderCapabili
 
     public void updateMachineState(MachineState state, boolean add) {
 
+    }
+
+    @Override
+    public CompoundTag serializeNBT() {
+        ListTag nbtTagList = new ListTag();
+        for (int i = 0; i < stacks.size(); i++)
+        {
+            if (!stacks.get(i).isEmpty())
+            {
+                CompoundTag itemTag = new CompoundTag();
+                itemTag.putInt("Slot", i);
+                stacks.get(i).save(itemTag);
+                nbtTagList.add(itemTag);
+            }
+        }
+
+        // Same as base but we don't store the size.
+        CompoundTag nbt = new CompoundTag();
+        nbt.put("Items", nbtTagList);
+        return nbt;
+    }
+
+    @Override
+    public void deserializeNBT(CompoundTag nbt) {
+        // Use layout instead of NBT to get size
+        setSize(layout.getSlotCount());
+        ListTag tagList = nbt.getList("Items", Tag.TAG_COMPOUND);
+        for (int i = 0; i < tagList.size(); i++)
+        {
+            CompoundTag itemTags = tagList.getCompound(i);
+            int slot = itemTags.getInt("Slot");
+
+            if (slot >= 0 && slot < stacks.size())
+            {
+                stacks.set(slot, ItemStack.of(itemTags));
+            }
+        }
+        onLoad();
     }
 
     private record Wrapped(MachineInventory master, @Nullable Direction side) implements IItemHandler {
