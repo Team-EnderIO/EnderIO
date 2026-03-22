@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.block.FluidModel;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -21,8 +22,7 @@ public class FluidStackStaticWidget extends EIOWidget {
 
     private final Supplier<FluidStorageInfo> fluidStorageSupplier;
 
-    public FluidStackStaticWidget(int x, int y, int width, int height,
-            Supplier<FluidStorageInfo> fluidStorageSupplier) {
+    public FluidStackStaticWidget(int x, int y, int width, int height, Supplier<FluidStorageInfo> fluidStorageSupplier) {
         super(x, y, width, height);
         this.fluidStorageSupplier = fluidStorageSupplier;
     }
@@ -34,24 +34,21 @@ public class FluidStackStaticWidget extends EIOWidget {
         FluidStorageInfo fluidTank = fluidStorageSupplier.get();
         if (!fluidTank.contents().isEmpty()) {
             FluidStack fluidStack = fluidTank.contents();
-            IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluidStack.getFluid());
-            Identifier still = props.getStillTexture(fluidStack);
-            if (still != null) {
-                AbstractTexture texture = minecraft.getTextureManager().getTexture(TextureAtlas.LOCATION_BLOCKS);
-                if (texture instanceof TextureAtlas atlas) {
-                    TextureAtlasSprite sprite = atlas.getSprite(still);
 
-                    int color = props.getTintColor();
+            FluidModel fluidModel = minecraft.getModelManager().getFluidStateModelSet().get(fluidStack.getFluid().defaultFluidState());
+            TextureAtlasSprite sprite = fluidModel.stillMaterial().sprite();
 
-                    int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
-                    int atlasHeight = (int) (sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
-                    // TODO: 1.21.4: Check this
-                    graphics.blit(RenderPipelines.GUI_TEXTURED, TextureAtlas.LOCATION_BLOCKS, x, y, sprite.getU0() * atlasWidth,
-                            sprite.getV0() * atlasHeight, width, height, sprite.contents().width(), sprite.contents().height(),
-                            atlasWidth, atlasHeight, color);
-
-                }
+            int color = 0xFFFFFFFF;
+            if (fluidModel.fluidTintSource() != null) {
+                fluidModel.fluidTintSource().colorAsStack(fluidStack);
             }
+
+            int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
+            int atlasHeight = (int) (sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
+            // TODO: 1.21.4: Check this
+            graphics.blit(RenderPipelines.GUI_TEXTURED, TextureAtlas.LOCATION_BLOCKS, x, y, sprite.getU0() * atlasWidth, sprite.getV0() * atlasHeight, width,
+                height, sprite.contents().width(), sprite.contents().height(), atlasWidth, atlasHeight, color);
+
             renderToolTip(graphics, mouseX, mouseY);
         }
 
@@ -65,10 +62,8 @@ public class FluidStackStaticWidget extends EIOWidget {
     public void renderToolTip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         if (isHovered(mouseX, mouseY)) {
             Minecraft minecraft = Minecraft.getInstance();
-            graphics.setTooltipForNextFrame(minecraft.font, Arrays.asList(
-                    fluidStorageSupplier.get().contents().getHoverName().getVisualOrderText(),
-                    Component.literal(fluidStorageSupplier.get().contents().getAmount() + "mB").getVisualOrderText()),
-                    mouseX, mouseY);
+            graphics.setTooltipForNextFrame(minecraft.font, Arrays.asList(fluidStorageSupplier.get().contents().getHoverName().getVisualOrderText(),
+                Component.literal(fluidStorageSupplier.get().contents().getAmount() + "mB").getVisualOrderText()), mouseX, mouseY);
         }
     }
 }

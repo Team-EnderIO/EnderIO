@@ -1,12 +1,17 @@
 package com.enderio.enderio.content.cold_fire;
 
+import com.enderio.enderio.init.EIOBlocks;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
@@ -29,11 +34,14 @@ public class ColdFireBlock extends FireBlock {
         return true;
     }
 
-    // TODO: 1.21.4: getStateWithAge...
-//    @Override
-//    public BlockState getStateWithAge(LevelAccessor level, BlockPos pos, int age) {
-//        return coldFireStateFromFireState(super.getStateWithAge(level, pos, age));
-//    }
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos, Direction directionToNeighbour, BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
+        return this.canSurvive(state, level, pos) ? this.getStateWithAge(level, pos, state.getValue(AGE)) : Blocks.AIR.defaultBlockState();
+    }
+
+    private BlockState getStateWithAge(LevelReader level, BlockPos pos, int age) {
+        BlockState stateForPlacement = getState(level, pos);
+        return stateForPlacement.is(EIOBlocks.COLD_FIRE) ? stateForPlacement.setValue(AGE, age) : stateForPlacement;
+    }
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {

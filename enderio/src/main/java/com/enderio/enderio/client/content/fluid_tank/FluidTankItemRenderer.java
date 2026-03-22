@@ -31,7 +31,7 @@ public class FluidTankItemRenderer implements SpecialModelRenderer<FluidTankItem
         int overlayCoords, boolean hasFoil, int outlineColor) {
         if (state != null) {
             FluidRendererUtil.submitFluid(poseStack, Sheets.translucentBlockItemSheet(), submitNodeCollector, state.fluid,
-                state.amount / (float) state.capacity, state.color, lightCoords);
+                state.amount / (float) state.capacity, lightCoords);
         }
     }
 
@@ -50,14 +50,12 @@ public class FluidTankItemRenderer implements SpecialModelRenderer<FluidTankItem
             }
             int capacity = fluidHandler.getCapacityAsInt(0, fluid);
             int amount = fluidHandler.getAmountAsInt(0);
-            IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluid.getFluid());
-            int color = props.getTintColor();
-            return new FluidTankState(fluid.getFluid(), capacity, amount, color);
+            return new FluidTankState(fluid.getFluid(), capacity, amount);
         }
         return null;
     }
 
-    public record FluidTankState(Fluid fluid, int capacity, int amount, int color) {}
+    public record FluidTankState(Fluid fluid, int capacity, int amount) {}
 
     public record Unbaked() implements SpecialModelRenderer.Unbaked<FluidTankItemRenderer.FluidTankState> {
 

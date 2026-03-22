@@ -11,6 +11,7 @@ import com.enderio.enderio.content.filters.fluid.FluidFilterSlot;
 import com.enderio.enderio.content.filters.item.general.EnderItemFilterMenu;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.block.FluidModel;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -68,26 +69,23 @@ public class EnderFluidFilterScreen extends EnderContainerScreen<EnderFluidFilte
     protected void init() {
         super.init();
 
-        addRenderableWidget(new IconButton(getGuiLeft() + 3, getGuiTop() + 3, 16, 16, BACK_SPRITE, null,
-                input -> handleButtonPress(AbstractFilterMenu.BACK_BUTTON_ID)));
+        addRenderableWidget(
+            new IconButton(getGuiLeft() + 3, getGuiTop() + 3, 16, 16, BACK_SPRITE, null, input -> handleButtonPress(AbstractFilterMenu.BACK_BUTTON_ID)));
 
         int xPos = getGuiLeft() + WIDTH - 25;
         int yPos = getGuiTop() + 27 + menu.type.rowCount() * 18;
 
         if (getMenu().type.canMatchComponents()) {
-            addRenderableWidget(new ToggleIconButton(xPos, yPos, 16, 16,
-                    (b) -> b ? ICON_MATCH_COMPONENTS : ICON_IGNORE_COMPONENTS,
-                    (b) -> b ? FiltersLang.FILTER_MATCH_COMPONENTS : FiltersLang.FILTER_IGNORE_COMPONENTS,
-                    getMenu()::shouldCompareComponents,
-                    (b) -> handleButtonPress(EnderItemFilterMenu.SHOULD_COMPARE_COMPONENTS_BUTTON_ID)));
+            addRenderableWidget(new ToggleIconButton(xPos, yPos, 16, 16, (b) -> b ? ICON_MATCH_COMPONENTS : ICON_IGNORE_COMPONENTS,
+                (b) -> b ? FiltersLang.FILTER_MATCH_COMPONENTS : FiltersLang.FILTER_IGNORE_COMPONENTS, getMenu()::shouldCompareComponents,
+                (b) -> handleButtonPress(EnderItemFilterMenu.SHOULD_COMPARE_COMPONENTS_BUTTON_ID)));
 
             xPos -= 18;
         }
 
-        addRenderableWidget(
-                new ToggleIconButton(xPos, yPos, 16, 16, (b) -> b ? ICON_DENY_LIST : ICON_ALLOW_LIST,
-                        (b) -> b ? FiltersLang.FILTER_DENY_LIST : FiltersLang.FILTER_ALLOW_LIST, getMenu()::isInverted,
-                        (b) -> handleButtonPress(EnderItemFilterMenu.IS_INVERTED_BUTTON_ID)));
+        addRenderableWidget(new ToggleIconButton(xPos, yPos, 16, 16, (b) -> b ? ICON_DENY_LIST : ICON_ALLOW_LIST,
+            (b) -> b ? FiltersLang.FILTER_DENY_LIST : FiltersLang.FILTER_ALLOW_LIST, getMenu()::isInverted,
+            (b) -> handleButtonPress(EnderItemFilterMenu.IS_INVERTED_BUTTON_ID)));
 
         xPos -= 18;
     }
@@ -106,23 +104,19 @@ public class EnderFluidFilterScreen extends EnderContainerScreen<EnderFluidFilte
         }
 
         var fluidStack = fluidFilterSlot.getResource();
-        IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluidStack.getFluid());
-        Identifier still = props.getStillTexture(fluidStack);
-        if (still != null) {
-            //TODO Blend pipeline?
-            AbstractTexture texture = minecraft.getTextureManager().getTexture(TextureAtlas.LOCATION_BLOCKS);
-            if (texture instanceof TextureAtlas atlas) {
-                TextureAtlasSprite sprite = atlas.getSprite(still);
 
-                int color = props.getTintColor();
+        FluidModel fluidModel = minecraft.getModelManager().getFluidStateModelSet().get(fluidStack.getFluid().defaultFluidState());
+        TextureAtlasSprite sprite = fluidModel.stillMaterial().sprite();
 
-                int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
-                int atlasHeight = (int) (sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
-                graphics.blit(RenderPipelines.GUI_TEXTURED, TextureAtlas.LOCATION_BLOCKS, slot.x, slot.y, sprite.getU0() * atlasWidth,
-                        sprite.getV0() * atlasHeight, 16, 16, sprite.contents().width(), sprite.contents().height(), atlasWidth,
-                        atlasHeight, color);
-            }
+        int color = 0xFFFFFFFF;
+        if (fluidModel.fluidTintSource() != null) {
+            fluidModel.fluidTintSource().colorAsStack(fluidStack);
         }
+
+        int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
+        int atlasHeight = (int) (sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
+        graphics.blit(RenderPipelines.GUI_TEXTURED, TextureAtlas.LOCATION_BLOCKS, slot.x, slot.y, sprite.getU0() * atlasWidth, sprite.getV0() * atlasHeight, 16,
+            16, sprite.contents().width(), sprite.contents().height(), atlasWidth, atlasHeight, color);
     }
 
     @Override
@@ -140,13 +134,13 @@ public class EnderFluidFilterScreen extends EnderContainerScreen<EnderFluidFilte
 
     @Override
     protected void slotClicked(Slot slot, int slotId, int buttonNum, ContainerInput containerInput) {
-//        if (getMenu().getFilter() instanceof ItemFilterCapability itemFilterCapability) {
-//            if (slot != null && slot.index < itemFilterCapability.getEntries().size()) {
-//                if (!itemFilterCapability.getEntries().get(slot.index).isEmpty()) {
-//                    itemFilterCapability.setEntry(slotId, ItemStack.EMPTY);
-//                }
-//            }
+        //        if (getMenu().getFilter() instanceof ItemFilterCapability itemFilterCapability) {
+        //            if (slot != null && slot.index < itemFilterCapability.getEntries().size()) {
+        //                if (!itemFilterCapability.getEntries().get(slot.index).isEmpty()) {
+        //                    itemFilterCapability.setEntry(slotId, ItemStack.EMPTY);
+        //                }
+        //            }
         super.slotClicked(slot, slotId, buttonNum, containerInput);
-//        }
+        //        }
     }
 }

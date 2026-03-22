@@ -1,8 +1,11 @@
 package com.enderio.core.client.item;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.block.FluidModel;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.material.FluidState;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.client.IItemDecorator;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
@@ -29,9 +32,18 @@ public class FluidBarDecorator implements IItemDecorator {
 
         float fillRatio = 1.0F
                 - (float) amount / (float) fluidHandler.getCapacityAsInt(0, fluidResource);
-        IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluidResource.getFluid());
 
-        ItemBarRenderer.renderBar(graphics, fillRatio, xOffset, yOffset, props.getTintColor());
+        // Get fluid model
+        FluidState fluidState = fluidResource.getFluid().defaultFluidState();
+        FluidModel fluidModel = Minecraft.getInstance().getModelManager().getFluidStateModelSet().get(fluidState);
+
+        // Get tint color
+        int color = 0xFFFFFFFF;
+        if (fluidModel.fluidTintSource() != null) {
+            color = fluidModel.fluidTintSource().color(fluidState);
+        }
+
+        ItemBarRenderer.renderBar(graphics, fillRatio, xOffset, yOffset, color);
         return false;
     }
 }

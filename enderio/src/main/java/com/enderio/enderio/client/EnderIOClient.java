@@ -78,11 +78,14 @@ import com.enderio.enderio.init.EIOItems;
 import com.enderio.enderio.init.EIOMenus;
 import com.enderio.enderio.init.EIOParticles;
 import com.enderio.enderio.init.EIOTravelTargets;
+import net.minecraft.client.renderer.block.FluidModel;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.material.Fluid;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
@@ -94,6 +97,7 @@ import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterBlockStateModels;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterConditionalItemModelPropertyEvent;
+import net.neoforged.neoforge.client.event.RegisterFluidModelsEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
 import net.neoforged.neoforge.client.event.RegisterItemModelsEvent;
@@ -400,35 +404,30 @@ public class EnderIOClient {
     }
 
     @SubscribeEvent
-    public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
-        event.registerBlock(ConduitBundleExtension.INSTANCE, EIOBlocks.CONDUIT_BUNDLE);
-
-        // TODO: 1.21.4: How do we do this now?
-//        event.registerItem(new IClientItemExtensions() {
-//            // Minecraft can be null during datagen
-//            final Lazy<BlockEntityWithoutLevelRenderer> renderer = Lazy.of(() -> FluidTankBEWLR.INSTANCE);
-//
-//            @Override
-//            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-//                return renderer.get();
-//            }
-//        }, EIOBlocks.FLUID_TANK.asItem(), EIOBlocks.PRESSURIZED_FLUID_TANK.asItem());
+    public static void registerFluidModels(RegisterFluidModelsEvent event) {
+        Map<FluidType, FluidModel.Unbaked> fluidTypeToModel = new HashMap<>();
 
         for (Holder<FluidType> fluidType : EIOFluids.FLUIDS.fluidTypesRegister().getEntries()) {
             String name = Objects.requireNonNull(fluidType.getKey()).identifier().getPath();
 
-            event.registerFluidType(new IClientFluidTypeExtensions() {
-                @Override
-                public Identifier getStillTexture() {
-                    return EnderIO.id("block/" + name + "_still");
-                }
-
-                @Override
-                public Identifier getFlowingTexture() {
-                    return EnderIO.id("block/" + name + "_flowing");
-                }
-            }, fluidType);
+            fluidTypeToModel.put(fluidType.value(), new FluidModel.Unbaked(
+                new Material(EnderIO.id("block/" + name + "_still")),
+                new Material(EnderIO.id("block/" + name + "_flowing")),
+                null,
+                null,
+                null
+            ));
         }
+
+        for (Holder<Fluid> fluid : EIOFluids.FLUIDS.fluidsRegister().getEntries()) {
+            FluidModel.Unbaked model = fluidTypeToModel.get(fluid.value().getFluidType());
+            event.register(model, fluid.value());
+        }
+    }
+
+    @SubscribeEvent
+    public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
+        event.registerBlock(ConduitBundleExtension.INSTANCE, EIOBlocks.CONDUIT_BUNDLE);
     }
 
     @SubscribeEvent

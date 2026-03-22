@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.block.FluidModel;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -21,8 +22,7 @@ public class FermentationWidget extends EIOWidget {
     private final Supplier<Float> progress;
 
     public FermentationWidget(Supplier<Boolean> shouldShow, Supplier<FluidStack> first, Supplier<FluidStack> second, Supplier<Float> progress, int x, int y,
-        int width,
-        int height) {
+        int width, int height) {
         super(x, y, width, height);
         this.shouldShow = shouldShow;
         this.first = first;
@@ -49,19 +49,18 @@ public class FermentationWidget extends EIOWidget {
             return;
         }
         Minecraft minecraft = Minecraft.getInstance();
-        IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluid.getFluid());
-        Identifier loc = props.getStillTexture();
 
-        AbstractTexture texture = minecraft.getTextureManager().getTexture(TextureAtlas.LOCATION_BLOCKS);
-        if (texture instanceof TextureAtlas atlas) {
-            TextureAtlasSprite sprite = atlas.getSprite(loc);
+        FluidModel fluidModel = minecraft.getModelManager().getFluidStateModelSet().get(fluid.getFluid().defaultFluidState());
+        TextureAtlasSprite sprite = fluidModel.stillMaterial().sprite();
 
-            int color = props.getTintColor();
-
-            int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
-            int atlasHeight = (int) (sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
-            graphics.blit(RenderPipelines.GUI_TEXTURED, TextureAtlas.LOCATION_BLOCKS, x, y, sprite.getU0() * atlasWidth, sprite.getV0() * atlasHeight,
-                width, height, sprite.contents().width(), sprite.contents().height(), atlasWidth, atlasHeight, color);
+        int color = 0xFFFFFFFF;
+        if (fluidModel.fluidTintSource() != null) {
+            fluidModel.fluidTintSource().colorAsStack(fluid);
         }
+
+        int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
+        int atlasHeight = (int) (sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
+        graphics.blit(RenderPipelines.GUI_TEXTURED, TextureAtlas.LOCATION_BLOCKS, x, y, sprite.getU0() * atlasWidth, sprite.getV0() * atlasHeight, width,
+            height, sprite.contents().width(), sprite.contents().height(), atlasWidth, atlasHeight, color);
     }
 }

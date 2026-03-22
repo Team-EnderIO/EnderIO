@@ -3,11 +3,13 @@ package com.enderio.core.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.block.FluidModel;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.data.AtlasIds;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
 
@@ -18,20 +20,22 @@ public class FluidRendererUtil {
         if (fluidStack.isEmpty()) return;
 
         Fluid fluid = fluidStack.getFluid();
-        int color = IClientFluidTypeExtensions.of(fluid)
-            .getTintColor(fluidStack);
-        if (color == -1) color = 0xFFFFFFFF;
-        submitFluid(poseStack, renderType, nodeCollector, fluid, fillAmount, color, packedLight);
+        submitFluid(poseStack, renderType, nodeCollector, fluid, fillAmount, packedLight);
     }
 
-    public static void submitFluid(PoseStack poseStack, RenderType renderType, SubmitNodeCollector nodeCollector, Fluid fluid, float fillAmount,
-        int color, int packedLight) {
+    public static void submitFluid(PoseStack poseStack, RenderType renderType, SubmitNodeCollector nodeCollector, Fluid fluid, float fillAmount, int packedLight) {
+        // Get fluid model
+        FluidState fluidState = fluid.defaultFluidState();
+        FluidModel fluidModel = Minecraft.getInstance().getModelManager().getFluidStateModelSet().get(fluidState);
+
+        // Get tint color
+        int color = 0xFFFFFFFF;
+        if (fluidModel.fluidTintSource() != null) {
+            color = fluidModel.fluidTintSource().color(fluidState);
+        }
+
         // Get fluid texture
-        IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluid);
-        TextureAtlasSprite texture = Minecraft.getInstance()
-            .getAtlasManager()
-            .getAtlasOrThrow(AtlasIds.BLOCKS)
-            .getSprite(props.getStillTexture());
+        TextureAtlasSprite texture = fluidModel.stillMaterial().sprite();
 
         // Get sizes
         float fluidHeight = (14 * fillAmount) / 16.0f;

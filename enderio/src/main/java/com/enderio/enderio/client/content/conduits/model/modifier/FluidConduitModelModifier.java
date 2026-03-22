@@ -5,6 +5,8 @@ import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.model.ConduitModelModifier;
 import com.enderio.enderio.client.content.conduits.model.bundle.port.ConduitBaker;
 import com.enderio.enderio.content.conduits.type.fluid.FluidConduit;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.FluidModel;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 import net.minecraft.client.renderer.block.dispatch.ModelState;
 import net.minecraft.client.resources.model.ModelBaker;
@@ -15,6 +17,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import org.jspecify.annotations.Nullable;
@@ -41,8 +44,10 @@ public class FluidConduitModelModifier implements ConduitModelModifier {
 
         Fluid lockedFluid = BuiltInRegistries.FLUID.getValue(Identifier.parse(fluid.get())); //TODO use value input?
         if (!lockedFluid.isSame(Fluids.EMPTY)) {
-            var clientExtension = IClientFluidTypeExtensions.of(lockedFluid);
-            return List.of(SimpleModelWrapper.bake(new ConduitBaker(baker, new Material(clientExtension.getStillTexture())), FLUID_MODEL, modelState));
+            // Get fluid model
+            FluidState fluidState = lockedFluid.defaultFluidState();
+            FluidModel fluidModel = Minecraft.getInstance().getModelManager().getFluidStateModelSet().get(fluidState);
+            return List.of(SimpleModelWrapper.bake(new ConduitBaker(baker, new Material(fluidModel.stillMaterial().sprite().contents().name(), fluidModel.stillMaterial().forceTranslucent())), FLUID_MODEL, modelState));
         }
 
         return List.of();
