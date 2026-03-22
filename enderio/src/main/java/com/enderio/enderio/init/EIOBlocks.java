@@ -191,7 +191,7 @@ public class EIOBlocks {
     public static final DeferredBlock<PaintedWallBlock> PAINTED_WALL = registerPainted("painted_wall", PaintedWallBlock::new, Blocks.COBBLESTONE_WALL);
 
     private static <B extends Block> DeferredBlock<B> registerPainted(String name, Function<BlockBehaviour.Properties, B> factory, Block reference) {
-        var blockHolder = registerWithItem(name, factory, BlockBehaviour.Properties.ofFullCopy(reference).noOcclusion());
+        var blockHolder = registerWithItem(name, factory, BlockBehaviour.Properties.ofFullCopy(reference).noOcclusion(), b -> new PaintedBlockItem(b.get(), new Item.Properties()));
         PAINTED_BLOCKS.add(Pair.of(blockHolder, reference));
         return blockHolder;
     }
