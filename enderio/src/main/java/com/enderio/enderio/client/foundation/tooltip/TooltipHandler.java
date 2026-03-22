@@ -3,18 +3,20 @@ package com.enderio.enderio.client.foundation.tooltip;
 import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.api.EnderIOCapabilities;
-import com.enderio.enderio.api.EnderIODataComponents;
+import com.enderio.enderio.api.capacitor.CapacitorData;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.components.GrindingBallData;
 import com.enderio.enderio.content.capacitors.CapacitorLang;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.init.EIODataComponents;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -38,7 +40,7 @@ public class TooltipHandler {
         boolean advanced = evt.getFlags().hasShiftDown();
 
         // Misc tooltips.
-        addCapacitorTooltips(forItem, evt.getToolTip(), advanced);
+        addCapacitorTooltips(forItem, evt.getToolTip(), evt.getContext().registries());
         addGrindingBallTooltips(forItem, evt.getToolTip(), advanced);
         addSoulBindableTooltips(forItem, evt.getToolTip(), advanced);
 
@@ -49,10 +51,16 @@ public class TooltipHandler {
 
     // region Configurable items (datapackable or otherwise)
 
-    private static void addCapacitorTooltips(ItemStack itemStack, List<Component> components, boolean showAdvanced) {
-        if (itemStack.has(EIODataComponents.CAPACITOR_DATA)) {
-            var capacitorData = Objects.requireNonNull(itemStack.get(EIODataComponents.CAPACITOR_DATA));
+    private static void addCapacitorTooltips(ItemStack itemStack, List<Component> components, HolderLookup.Provider registries) {
+        CapacitorData capacitorData;
+        var capacitorExtension = itemStack.getCapability(EnderIOCapabilities.CAPACITOR_EXTENSION);
+        if (capacitorExtension != null) {
+            capacitorData = capacitorExtension.getCapacitorData(itemStack, registries);
+        } else {
+            capacitorData = itemStack.get(EIODataComponents.CAPACITOR_DATA);
+        }
 
+        if (capacitorData != null) {
             NumberFormat fmt = NumberFormat.getInstance(Locale.ENGLISH);
             components
                     .add(TooltipUtil.styledWithArgs(CapacitorLang.CAPACITOR_TOOLTIP_BASE, fmt.format(capacitorData.base())));
@@ -66,8 +74,8 @@ public class TooltipHandler {
     }
 
     private static void addGrindingBallTooltips(ItemStack itemStack, List<Component> components, boolean showAdvanced) {
-        if (itemStack.has(EnderIODataComponents.GRINDING_BALL)) {
-            GrindingBallData data = itemStack.get(EnderIODataComponents.GRINDING_BALL);
+        GrindingBallData data = itemStack.typeHolder().getData(GrindingBallData.DATA_MAP_TYPE);
+        if (data != null) {
             components.add(TooltipUtil.styledWithArgs(EIOCommonLang.GRINDINGBALL_MAIN_OUTPUT, (int) (data.outputMultiplier() * 100)));
             components.add(TooltipUtil.styledWithArgs(EIOCommonLang.GRINDINGBALL_BONUS_OUTPUT, (int) (data.bonusMultiplier() * 100)));
             components.add(TooltipUtil.styledWithArgs(EIOCommonLang.GRINDINGBALL_POWER_USE, (int) (data.powerUse() * 100)));

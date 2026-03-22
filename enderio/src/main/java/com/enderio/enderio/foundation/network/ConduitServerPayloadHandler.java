@@ -5,12 +5,10 @@ import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
 import com.enderio.enderio.content.conduits.menu.ConduitMenu;
 import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
-import com.enderio.enderio.content.conduits.type.fluid.FluidConduitNetworkContext;
 import com.enderio.enderio.content.filters.redstone.DoubleRedstoneChannel;
 import com.enderio.enderio.content.filters.redstone.RedstoneCountFilter;
 import com.enderio.enderio.content.filters.redstone.RedstoneTimerFilter;
 import com.enderio.enderio.foundation.network.packets.ServerboundBreakConduitPacket;
-import com.enderio.enderio.foundation.network.packets.ServerboundClearLockedFluidPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundCountFilterPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundDestroyEntireConduitBundlePacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundDoubleChannelPacket;
@@ -66,27 +64,6 @@ public class ConduitServerPayloadHandler {
             var channels = mainHandItem.getCapability(EnderIOCapabilities.REDSTONE_INSERT_FILTER);
             if (channels instanceof RedstoneCountFilter count) {
                 count.setState(packet);
-            }
-        });
-    }
-
-    public void handle(ServerboundClearLockedFluidPacket packet, IPayloadContext context) {
-        context.enqueueWork(() -> {
-            var level = context.player().level();
-            var be = level.getBlockEntity(packet.pos());
-            if (be instanceof ConduitBundle conduitBundle) {
-                var fluidConduit = conduitBundle.getConduitByType(EIOConduitTypes.FLUID.get());
-                if (fluidConduit != null) {
-                    var node = conduitBundle.getConduitNode(fluidConduit);
-
-                    var network = node.getNetwork();
-                    if (network != null) {
-                        var networkContext = network.getContext(FluidConduitNetworkContext.TYPE);
-                        if (networkContext != null) {
-                            networkContext.setLockedFluid(Fluids.EMPTY);
-                        }
-                    }
-                }
             }
         });
     }

@@ -174,6 +174,7 @@ public class EIOItemModelProvider extends ModelProvider {
         itemModels.generateFlatItem(EIOItems.BIG_ITEM_FILTER.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(EIOItems.ADVANCED_ITEM_FILTER.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(EIOItems.BIG_ADVANCED_ITEM_FILTER.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.LIMITED_ITEM_FILTER.get(), ModelTemplates.FLAT_ITEM);
 
         itemModels.generateFlatItem(EIOItems.BASIC_FLUID_FILTER.get(), ModelTemplates.FLAT_ITEM);
 

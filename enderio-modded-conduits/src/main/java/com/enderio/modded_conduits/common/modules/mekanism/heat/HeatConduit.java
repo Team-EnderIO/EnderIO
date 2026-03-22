@@ -14,21 +14,9 @@ import org.jspecify.annotations.NonNull;
 public record HeatConduit(Identifier texture, Component description)
         implements Conduit<HeatConduit, HeatConduitConnectionConfig> {
 
-    private static final HeatTicker TICKER = new HeatTicker();
-
     @Override
-    public ConduitType<HeatConduit> type() {
+    public ConduitType<HeatConduit, HeatConduitConnectionConfig> type() {
         return MekanismModule.TYPE_HEAT.get();
-    }
-
-    @Override
-    public HeatTicker ticker() {
-        return TICKER;
-    }
-
-    @Override
-    public ConnectionConfigType<HeatConduitConnectionConfig> connectionConfigType() {
-        return HeatConduitConnectionConfig.TYPE;
     }
 
     @Override

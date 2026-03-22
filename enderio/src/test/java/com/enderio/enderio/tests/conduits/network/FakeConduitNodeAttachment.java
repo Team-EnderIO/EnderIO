@@ -90,7 +90,7 @@ public class FakeConduitNodeAttachment implements IConduitNodeAttachment {
             throw new IllegalArgumentException("Conduit type not supported by this fake attachment");
         }
 
-        return connectionConfigs.computeIfAbsent(side, s -> conduit.value().connectionConfigType().getDefault());
+        return connectionConfigs.computeIfAbsent(side, s -> conduit.value().type().connectionConfigType().getDefault());
     }
 
     @Override

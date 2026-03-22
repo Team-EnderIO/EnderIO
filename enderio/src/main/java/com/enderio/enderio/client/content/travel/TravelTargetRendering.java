@@ -100,7 +100,10 @@ public class TravelTargetRendering {
             PoseStack poseStack = event.getPoseStack();
             poseStack.pushPose();
             Vec3 projectedView = event.getLevelRenderState().cameraRenderState.pos;
-            poseStack.translate(-projectedView.x, -projectedView.y, -projectedView.z);
+            poseStack.translate(
+                state.target.pos().getX() - projectedView.x,
+                state.target.pos().getY() - projectedView.y,
+                state.target.pos().getZ() - projectedView.z);
 
             // needed for smooth rendering
             // the boolean value controls whether it's still smooth while the game world is

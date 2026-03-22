@@ -24,4 +24,14 @@ public class ConduitApiImpl implements ConduitApi {
     public String makeDescriptionId(ResourceKey<Conduit<?, ?>> key) {
         return Util.makeDescriptionId(EnderIORegistries.Keys.CONDUIT.identifier().getPath(), key.identifier());
     }
+
+    @Override
+    public <T extends Conduit<T, ?>> int compareConduits(Conduit<T, ?> a, Conduit<?, ?> b) {
+        if (a.type() != b.type()) {
+            throw new IllegalArgumentException("Conduits are not of the same type.");
+        }
+
+        //noinspection unchecked
+        return a.compareTo((T) b);
+    }
 }

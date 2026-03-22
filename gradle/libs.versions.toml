@@ -47,6 +47,3 @@ junitPlatformLauncher = { group = "org.junit.platform", name = "junit-platform-l
 jeiApi = ["jeiCommonApi", "jeiNeoforgeApi"]
 jei = ["jeiCommon", "jeiNeoforge"]
 #ccTweakedApi = ["ccTweakedCoreApi", "ccTweakedForgeApi"]
-
-[plugins]
-modpublisher = { id = "com.hypherionmc.modutils.modpublisher", version = "2.+" }

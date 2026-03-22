@@ -4,8 +4,8 @@ import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.ConnectionStatus;
-import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
-import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
+import com.enderio.enderio.api.conduits.connection.path.ConnectionPathProperty;
+import com.enderio.enderio.api.conduits.connection.path.ConnectionPathPropertyConsumer;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.content.conduits.ConduitLang;
 import com.enderio.enderio.init.EIOConduitTypes;
@@ -25,8 +25,7 @@ import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
-
-import java.util.Comparator;
+import com.enderio.enderio.config.conduits.ConduitsConfig;
 import java.util.function.Consumer;
 
 public record EnergyConduit(Identifier texture, Component description, int transferRatePerTick)
@@ -38,25 +37,21 @@ public record EnergyConduit(Identifier texture, Component description, int trans
                     Codec.INT.fieldOf("transfer_rate").forGetter(EnergyConduit::transferRatePerTick))
             .apply(builder, EnergyConduit::new));
 
-    // Not configurable - energy is instantaneous
+    public static final ConnectionPathProperty<Integer> PATH_MAX_TRANSFER_RATE = ConnectionPathProperty.minInt(0);
+    
     @Override
-    public int networkTickRate() {
-        return 1;
-    }
-
-    @Override
-    public ConduitType<EnergyConduit> type() {
+    public ConduitType<EnergyConduit, EnergyConduitConnectionConfig> type() {
         return EIOConduitTypes.ENERGY.get();
-    }
-
-    @Override
-    public EnergyConduitTicker ticker() {
-        return EnergyConduitTicker.INSTANCE;
     }
 
     @Override
     public boolean hasMenu() {
         return true;
+    }
+
+    @Override
+    public boolean canConnectToConduit(EnergyConduit other) {
+        return ConduitsConfig.COMMON.CAN_MIX_ENERGY_CONDUIT_TIERS.get();
     }
 
     @Override
@@ -72,20 +67,16 @@ public record EnergyConduit(Identifier texture, Component description, int trans
     }
 
     @Override
-    public Comparator<ConduitBlockConnection> getGeneralConnectionComparator() {
-        return (a, b) -> Integer.compare(
-            b.connectionConfig(EnergyConduitConnectionConfig.TYPE).priority(),
-            a.connectionConfig(EnergyConduitConnectionConfig.TYPE).priority());
+    public void collectNodePathProperties(ConduitNode node, ConnectionPathPropertyConsumer consumer) {
+        consumer.accept(PATH_MAX_TRANSFER_RATE, transferRatePerTick());
     }
 
     @Override
     public <TCap, TContext> @Nullable TCap proxyCapability(Level level, @Nullable ConduitNode node,
             BlockCapability<TCap, TContext> capability, @Nullable TContext context) {
 
-        if (Capabilities.Energy.BLOCK == capability && (context == null || context instanceof Direction)) {
-            Direction side = (Direction) context;
-
-            if (node != null && context != null) {
+        if (Capabilities.Energy.BLOCK == capability && context instanceof Direction side) {
+            if (node != null) {
                 // Disabled, do not offer the capability (so if we're disconnected we allow auto connect).
                 // Note that this will introduce a minor quirk - if disabled, the cap will be invisible until re-enabled.
                 // in the case of Energizer rods in Powah, you will not be able to place one against the disabled conduit.
@@ -98,7 +89,7 @@ public record EnergyConduit(Identifier texture, Component description, int trans
             }
 
             // noinspection unchecked
-            return (TCap) new EnergyConduitStorage(side, transferRatePerTick(), node);
+            return (TCap) new EnergyConduitStorage(side, node);
         }
 
         return null;
@@ -107,11 +98,6 @@ public record EnergyConduit(Identifier texture, Component description, int trans
     @Override
     public void onRemoved(ConduitNode node, Level level, BlockPos pos) {
         level.invalidateCapabilities(pos);
-    }
-
-    @Override
-    public ConnectionConfigType<EnergyConduitConnectionConfig> connectionConfigType() {
-        return EIOConduitTypes.ConnectionTypes.ENERGY.get();
     }
 
     @Override

@@ -1,21 +1,29 @@
 package com.enderio.modded_conduits.common.modules.mekanism.heat;
 
+import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.network.ConduitNetwork;
-import com.enderio.enderio.api.conduits.ticker.ConduitTicker;
+import com.enderio.enderio.api.conduits.ticker.ConduitTickerBase;
 import com.enderio.modded_conduits.common.modules.mekanism.MekanismModule;
 import mekanism.api.heat.IHeatHandler;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 
-public class HeatTicker implements ConduitTicker<HeatConduit> {
+import java.util.List;
 
-    public HeatTicker() {
+public class HeatTicker extends ConduitTickerBase<HeatConduit> {
+
+    public static final HeatTicker INSTANCE = new HeatTicker();
+
+    private HeatTicker() {
+        super(MekanismModule.TYPE_HEAT::get);
     }
 
     @Override
-    public void tick(ServerLevel level, HeatConduit conduit, ConduitNetwork network) {
+    protected void tickNetwork(ServerLevel level, ConduitNetwork network, List<Holder<Conduit<?, ?>>> tickableConduits) {
         for (var extractConnection : network.extractConnections()) {
-            var insertConnections = network.insertConnectionsFrom(extractConnection);
-            if (insertConnections.isEmpty()) {
+            var insertPaths = network.insertConnectionsFrom(extractConnection);
+            if (insertPaths.isEmpty()) {
                 continue;
             }
 
@@ -24,7 +32,8 @@ public class HeatTicker implements ConduitTicker<HeatConduit> {
                 continue;
             }
 
-            for (var insertConnection : insertConnections) {
+            for (var insertPath : insertPaths) {
+                var insertConnection = insertPath.end();
                 IHeatHandler insertHandler = insertConnection.getSidedCapability(MekanismModule.Capabilities.HEAT);
                 if (insertHandler == null) {
                     continue;
@@ -32,9 +41,9 @@ public class HeatTicker implements ConduitTicker<HeatConduit> {
 
                 double heatCapacity = extractHandler.getTotalHeatCapacity();
                 double invConduction = insertHandler.getTotalInverseConduction()
-                        + extractHandler.getTotalInverseConduction();
+                    + extractHandler.getTotalInverseConduction();
                 double tempToTransfer = (extractHandler.getTotalTemperature() - insertHandler.getTotalTemperature())
-                        / invConduction; // TODO subtract ambient? - HeatAPI.getAmbientTemp(level, )
+                    / invConduction; // TODO subtract ambient? - HeatAPI.getAmbientTemp(level, )
 
                 double heatToTransfer = tempToTransfer * heatCapacity;
                 if (heatToTransfer > 0) {

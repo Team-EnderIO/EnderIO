@@ -43,31 +43,20 @@ public class TransferUtil {
 
     // region Fluids
 
-    // TODO: Possibly raise this too?
-    public static final int DEFAULT_FLUID_DRAIN = 100;
-
     public static void distributeFluids(IOMode mode, ResourceHandler<FluidResource> selfItemHandler, ResourceHandler<FluidResource> otherItemHandler) {
-        distributeFluids(mode.canPush(), mode.canPull(), selfItemHandler, otherItemHandler, DEFAULT_FLUID_DRAIN);
-    }
-
-    public static void distributeFluids(IOMode mode, ResourceHandler<FluidResource> selfItemHandler, ResourceHandler<FluidResource> otherItemHandler, int maxDrain) {
-        distributeFluids(mode.canPush(), mode.canPull(), selfItemHandler, otherItemHandler, maxDrain);
+        distributeFluids(mode.canPush(), mode.canPull(), selfItemHandler, otherItemHandler);
     }
 
     public static void distributeFluids(boolean canPush, boolean canPull, ResourceHandler<FluidResource> selfItemHandler, ResourceHandler<FluidResource> otherItemHandler) {
-        distributeFluids(canPush, canPull, selfItemHandler, otherItemHandler, DEFAULT_FLUID_DRAIN);
-    }
-
-    public static void distributeFluids(boolean canPush, boolean canPull, ResourceHandler<FluidResource> selfItemHandler, ResourceHandler<FluidResource> otherItemHandler, int maxDrain) {
         // TODO: Do we want to imitate old behaviour where if we have no fluid, we pull by default?
 
         // TODO: 1.21.11: Check this is right.
         if (canPush) {
-            ResourceHandlerUtil.move(selfItemHandler, otherItemHandler, fr -> true, maxDrain, null);
+            ResourceHandlerUtil.move(selfItemHandler, otherItemHandler, _ -> true, Integer.MAX_VALUE, null);
         }
 
         if (canPull) {
-            ResourceHandlerUtil.move(otherItemHandler, selfItemHandler, fr -> true, maxDrain, null);
+            ResourceHandlerUtil.move(otherItemHandler, selfItemHandler, _ -> true, Integer.MAX_VALUE, null);
         }
     }
 

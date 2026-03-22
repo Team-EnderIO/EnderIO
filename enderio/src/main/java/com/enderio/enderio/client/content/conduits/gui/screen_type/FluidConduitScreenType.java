@@ -1,6 +1,5 @@
 package com.enderio.enderio.client.content.conduits.gui.screen_type;
 
-import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.conduits.screen.ConduitMenuDataAccess;
 import com.enderio.enderio.api.conduits.screen.ConduitScreenHelper;
@@ -9,32 +8,17 @@ import com.enderio.enderio.content.conduits.ConduitLang;
 import com.enderio.enderio.content.conduits.type.fluid.FluidConduit;
 import com.enderio.enderio.content.conduits.type.fluid.FluidConduitConnectionConfig;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
-import com.enderio.enderio.foundation.network.packets.ServerboundClearLockedFluidPacket;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.Tooltip;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.block.FluidModel;
-import net.minecraft.client.renderer.texture.AbstractTexture;
-import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.AtlasIds;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.CommonColors;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
-
-import java.util.function.Supplier;
 
 public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConnectionConfig> {
 
@@ -51,11 +35,9 @@ public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConn
         int mouseX, int mouseY) {
         super.renderLabels(dataAccess, graphics, startX, startY, font, mouseX, mouseY);
 
-        if (dataAccess.conduit() instanceof FluidConduit fluidConduit && fluidConduit.doesSupportPriority()) {
-            String priority = String.valueOf(dataAccess.getConnectionConfig().insertPriority());
-            graphics.text(font, ConduitLang.PRIORITY, 22, 7 + 4 + 4 + 8 + 16 + 12, CommonColors.DARK_GRAY, false);
-            graphics.text(font, priority, 90 - font.width(priority), 7 + 4 + 4 + 8 + 16 + 12, CommonColors.DARK_GRAY, false);
-        }
+        String priority = String.valueOf(dataAccess.getConnectionConfig().insertPriority());
+        graphics.text(font, ConduitLang.PRIORITY, 22, 7 + 4 + 4 + 8 + 16 + 12, CommonColors.DARK_GRAY, false);
+        graphics.text(font, priority, 90 - font.width(priority), 7 + 4 + 4 + 8 + 16 + 12, CommonColors.DARK_GRAY, false);
     }
 
     private int getIncrement(InputWithModifiers input) {
@@ -74,36 +56,26 @@ public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConn
     public void createLeftWidgets(ConduitScreenHelper screen, int startX, int startY, ConduitMenuDataAccess<FluidConduitConnectionConfig> dataAccess) {
         super.createLeftWidgets(screen, startX, startY, dataAccess);
 
-        // Locked fluid widget
-        if (dataAccess.conduit() instanceof FluidConduit fluidConduit && !fluidConduit.isMultiFluid()) {
-            screen.addRenderableWidget(new FluidWidget(startX, startY + 20, () -> getLockedFluid(dataAccess),
-                () -> ClientPacketDistributor.sendToServer(new ServerboundClearLockedFluidPacket(dataAccess.getBlockPos()))));
-        } else {
-            // Channel colors
-            screen.addColorPicker(startX, startY + 20, ConduitLang.CHANNEL, () -> dataAccess.getConnectionConfig().insertChannel(),
-                value -> dataAccess.updateConnectionConfig(config -> config.withInsertChannel(value)));
-        }
+        // Channel colors
+        screen.addColorPicker(startX, startY + 20, ConduitLang.CHANNEL, () -> dataAccess.getConnectionConfig().insertChannel(),
+            value -> dataAccess.updateConnectionConfig(config -> config.withInsertChannel(value)));
 
         screen.addFilterConfigureButton(startX + 1, startY + 82, FluidConduit.INSERT_FILTER_SLOT);
 
         // Priority up/down
-        if (dataAccess.conduit() instanceof FluidConduit fluidConduit && fluidConduit.doesSupportPriority()) {
-            screen.addIconButton(startX + 70, startY + 38, 9, 9, Component.empty(), ICON_INCREASE,
-                input -> dataAccess.updateConnectionConfig(config -> config.withPriority(config.insertPriority() + getIncrement(input))));
-            screen.addIconButton(startX + 70, startY + 38 + 9, 9, 9, Component.empty(), ICON_DECREASE,
-                input -> dataAccess.updateConnectionConfig(config -> config.withPriority(config.insertPriority() - getIncrement(input))));
-        }
+        screen.addIconButton(startX + 70, startY + 38, 9, 9, Component.empty(), ICON_INCREASE,
+            input -> dataAccess.updateConnectionConfig(config -> config.withPriority(config.insertPriority() + getIncrement(input))));
+        screen.addIconButton(startX + 70, startY + 38 + 9, 9, 9, Component.empty(), ICON_DECREASE,
+            input -> dataAccess.updateConnectionConfig(config -> config.withPriority(config.insertPriority() - getIncrement(input))));
     }
 
     @Override
     public void createRightWidgets(ConduitScreenHelper screen, int startX, int startY, ConduitMenuDataAccess<FluidConduitConnectionConfig> dataAccess) {
         super.createRightWidgets(screen, startX, startY, dataAccess);
 
-        if (dataAccess.conduit() instanceof FluidConduit fluidConduit && fluidConduit.isMultiFluid()) {
-            // Channel colors
-            screen.addColorPicker(startX, startY + 20, ConduitLang.CHANNEL, () -> dataAccess.getConnectionConfig().extractChannel(),
-                value -> dataAccess.updateConnectionConfig(config -> config.withExtractChannel(value)));
-        }
+        // Channel colors
+        screen.addColorPicker(startX, startY + 20, ConduitLang.CHANNEL, () -> dataAccess.getConnectionConfig().extractChannel(),
+            value -> dataAccess.updateConnectionConfig(config -> config.withExtractChannel(value)));
 
         // TODO: Could be good fluid conduit features?
         /*
@@ -144,85 +116,5 @@ public class FluidConduitScreenType extends IOConduitScreenType<FluidConduitConn
     @Override
     protected FluidConduitConnectionConfig setRightEnabled(FluidConduitConnectionConfig config, boolean isEnabled) {
         return config.withIsExtract(isEnabled);
-    }
-
-    private Fluid getLockedFluid(ConduitMenuDataAccess<FluidConduitConnectionConfig> dataAccess) {
-        var tag = dataAccess.getExtraGuiData();
-        if (tag == null) {
-            return Fluids.EMPTY;
-        }
-
-        return tag.getString("LockedFluid").map(rl -> BuiltInRegistries.FLUID.getValue(Identifier.parse(rl))).orElse(Fluids.EMPTY);
-    }
-
-    private static class FluidWidget extends AbstractWidget {
-        private static final Identifier WIDGET_TEXTURE = EnderIO.id("textures/gui/fluidbackground.png");
-
-        private final Runnable onPress;
-        private final Supplier<Fluid> currentFluid;
-
-        FluidWidget(int x, int y, Supplier<Fluid> fluid, Runnable onPress) {
-            super(x, y, 14, 14, Component.empty());
-            this.onPress = onPress;
-            this.currentFluid = fluid;
-        }
-
-        @Override
-        public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
-        }
-
-        @Override
-        public void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-            if (isHoveredOrFocused()) {
-                MutableComponent tooltip = ConduitLang.FLUID_CONDUIT_CHANGE_FLUID1.copy();
-                tooltip.append("\n").append(ConduitLang.FLUID_CONDUIT_CHANGE_FLUID2);
-                if (!currentFluid.get().isSame(Fluids.EMPTY)) {
-                    tooltip
-                        .append("\n")
-                        .append(TooltipUtil.withArgs(ConduitLang.FLUID_CONDUIT_CHANGE_FLUID3, currentFluid.get().getFluidType().getDescription()));
-                }
-                setTooltip(Tooltip.create(TooltipUtil.style(tooltip)));
-            }
-
-            // TODO: 1.21.8: is this needed?
-            //            RenderSystem.enableBlend();
-            //            RenderSystem.defaultBlendFunc();
-            //            RenderSystem.enableDepthTest();
-            // TODO: 1.21.4: 256x256 hardcoded
-            graphics.blit(RenderPipelines.GUI_TEXTURED, WIDGET_TEXTURE, getX(), getY(), 0, 0, this.width, this.height, 256, 256);
-            if (currentFluid.get().isSame(Fluids.EMPTY)) {
-                return;
-            }
-
-            FluidModel fluidModel = Minecraft.getInstance().getModelManager().getFluidStateModelSet().get(currentFluid.get().defaultFluidState());
-            TextureAtlasSprite sprite = fluidModel.stillMaterial().sprite();
-
-            int color = 0xFFFFFFFF;
-            if (fluidModel.fluidTintSource() != null) {
-                fluidModel.fluidTintSource().color(currentFluid.get().defaultFluidState());
-            }
-
-//            RenderSystem.enableBlend();
-
-            int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
-            int atlasHeight = (int) (sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
-
-//            graphics.blit(RenderPipelines.GUI_TEXTURED, TextureAtlas.LOCATION_BLOCKS, getX() + 1, getY() + 1, sprite.getU0() * atlasWidth,
-//                    sprite.getV0() * atlasHeight, 12, 12, atlasWidth, atlasHeight);
-
-            // TODO: 1.21.8: is this the right way to tint?
-            graphics.blit(RenderPipelines.GUI_TEXTURED, TextureAtlas.LOCATION_BLOCKS, getX() + 1, getY() + 1, sprite.getU0() * atlasWidth,
-                sprite.getV0() * atlasHeight, 12, 12, 12, 12, atlasWidth, atlasHeight, color);
-
-//            RenderSystem.setShaderColor(1, 1, 1, 1);
-        }
-
-//        RenderSystem.disableBlend();
-//        RenderSystem.disableDepthTest();
-
-        @Override
-        public void onClick(MouseButtonEvent event, boolean isDoubleClick) {
-            onPress.run();
-        }
     }
 }

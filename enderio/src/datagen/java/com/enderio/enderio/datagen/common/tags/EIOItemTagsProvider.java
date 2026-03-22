@@ -34,7 +34,6 @@ public class EIOItemTagsProvider extends IntrinsicHolderTagsProvider<Item> {
         addDustsTags();
         addIngotTags();
         addNuggetTags();
-        addGridingBallTags();
 
         tag(Tags.Items.STORAGE_BLOCKS)
             .addTag(EIOTags.Items.STORAGE_BLOCKS_AMETHYST)
@@ -170,19 +169,6 @@ public class EIOItemTagsProvider extends IntrinsicHolderTagsProvider<Item> {
             .addTag(EIOTags.Items.GEARS_VIBRANT)
             .addTag(EIOTags.Items.GEARS_ENERGIZED)
             .addTag(EIOTags.Items.GEARS_DARK_STEEL);
-    }
-
-    private void addGridingBallTags() {
-        // TODO: Do we need grinding ball tags?
-        tag(EIOTags.Items.GRINDING_BALLS)
-            .add(EIOItems.SOULARIUM_BALL.get())
-            .add(EIOItems.CONDUCTIVE_ALLOY_BALL.get())
-            .add(EIOItems.PULSATING_ALLOY_BALL.get())
-            .add(EIOItems.REDSTONE_ALLOY_BALL.get())
-            .add(EIOItems.ENERGETIC_ALLOY_BALL.get())
-            .add(EIOItems.VIBRANT_ALLOY_BALL.get())
-            .add(EIOItems.DARK_STEEL_BALL.get())
-            .add(EIOItems.END_STEEL_BALL.get());
     }
 
     private void addCommonItems() {

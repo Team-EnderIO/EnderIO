@@ -60,6 +60,14 @@ public class FilterRecipeProvider extends SubRecipeProvider {
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.ADVANCED_ITEM_FILTER))
                 .save(recipeOutput);
 
+        ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, EIOItems.LIMITED_ITEM_FILTER.get())
+                .define('C', Items.COMPARATOR)
+                .define('F', EIOItems.ADVANCED_ITEM_FILTER)
+                .pattern("CFC")
+                .unlockedBy("has_ingredient",
+                        InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.ADVANCED_ITEM_FILTER))
+                .save(recipeOutput);
+
         ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, EIOItems.BASIC_FLUID_FILTER.get())
                 .define('P',Items.PAPER)
                 .define('B', Items.BUCKET)

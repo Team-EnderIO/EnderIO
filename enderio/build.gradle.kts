@@ -1,10 +1,8 @@
-import com.hypherionmc.modpublisher.properties.ModLoader
 import java.text.SimpleDateFormat
 import java.util.*
 
 plugins {
     id("mod-common-conventions")
-    alias(libs.plugins.modpublisher)
 }
 
 println("Building Ender IO version ${project.version}")
@@ -91,9 +89,6 @@ dependencies {
     // Include built-in "addons"
 //    jarJar(project(":enderio-modded-conduits"))
 //    localRuntime(project(":enderio-modded-conduits"))
-
-    // Bring all other "addons" into the dev env for testing - but do not bundle them in the jar
-    localRuntime(project(":enderio-endergy"))
 
     // Almost Unified
 //    compileOnly(variantOf(libs.almostUnified) {
@@ -271,6 +266,11 @@ var generateModMetadata = tasks.register<ProcessResources>("generateModMetadata"
 sourceSets.main.get().resources.srcDir(generateModMetadata)
 neoForge.ideSyncTask(generateModMetadata)
 
+tasks.named<Jar>("jar") {
+    // FIXME: Temporary - shipping datagen classes with build again for Endergy.
+    from(sourceSets["datagen"].output)
+}
+
 tasks.withType<Jar> {
     manifest {
         attributes(mapOf(
@@ -301,67 +301,6 @@ tasks.register<Jar>("sourcesJar") {
 tasks.build {
     dependsOn(tasks["apiJar"])
     dependsOn(tasks["sourcesJar"])
-}
-
-val curseforge_projectId: String by project
-val modrinth_projectId: String by project
-
-if (getReleaseType() != null) {
-    if (System.getenv("CHANGELOG") != null) {
-        publisher {
-
-            apiKeys {
-                curseforge(System.getenv("CURSEFORGE_TOKEN"))
-                modrinth(System.getenv("MODRINTH_TOKEN"))
-            }
-
-            debug.set(System.getenv("PUBLISH") != "true")
-
-            curseID.set(curseforge_projectId)
-            modrinthID.set(modrinth_projectId)
-
-            versionType.set(getReleaseType())
-            projectVersion.set("${project.version}")
-
-            displayName.set("Ender IO - ${project.version}")
-            changelog.set(System.getenv("CHANGELOG"))
-
-            setGameVersions("1.21.1")
-            setLoaders(ModLoader.NEOFORGE)
-
-            curseEnvironment.set("both")
-            artifact.set(tasks.jar)
-
-            setJavaVersions(JavaVersion.VERSION_21)
-
-            curseDepends {
-                optional("jei", "athena", "applied-energistics-2", "mekanism", "cc-tweaked")
-            }
-
-            modrinthDepends {
-                optional("jei", "athena-ctm", "ae2", "mekanism", "cc-tweaked")
-            }
-        }
-    } else {
-        println("Release disabled, no changelog found in environment");
-    }
-}
-
-fun getReleaseType(): String {
-    // If we"re doing a proper build
-    if (System.getenv("BUILD_VERSION") != null) {
-        val versionString = System.getenv("BUILD_VERSION").lowercase()
-
-        if (versionString.contains("alpha")) {
-            return "alpha"
-        } else if (versionString.contains("beta")) {
-            return "beta"
-        }
-
-        return "release"
-    }
-
-    return "dev"
 }
 
 publishing {

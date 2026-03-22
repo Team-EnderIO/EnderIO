@@ -31,24 +31,14 @@ public record RedstoneConduit(Identifier texture, Identifier activeTexture, Comp
     public static final int INSERT_FILTER_SLOT = 1;
 
     public static final MapCodec<RedstoneConduit> CODEC = RecordCodecBuilder.mapCodec(builder -> builder
-            .group(Identifier.CODEC.fieldOf("texture").forGetter(RedstoneConduit::texture),
-                    Identifier.CODEC.fieldOf("active_texture").forGetter(RedstoneConduit::activeTexture),
-                    ComponentSerialization.CODEC.fieldOf("description").forGetter(RedstoneConduit::description))
-            .apply(builder, RedstoneConduit::new));
+        .group(Identifier.CODEC.fieldOf("texture").forGetter(RedstoneConduit::texture),
+            Identifier.CODEC.fieldOf("active_texture").forGetter(RedstoneConduit::activeTexture),
+            ComponentSerialization.CODEC.fieldOf("description").forGetter(RedstoneConduit::description))
+        .apply(builder, RedstoneConduit::new));
 
     @Override
-    public int networkTickRate() {
-        return 2;
-    }
-
-    @Override
-    public ConduitType<RedstoneConduit> type() {
+    public ConduitType<RedstoneConduit, RedstoneConduitConnectionConfig> type() {
         return EIOConduitTypes.REDSTONE.get();
-    }
-
-    @Override
-    public RedstoneConduitTicker ticker() {
-        return RedstoneConduitTicker.INSTANCE;
     }
 
     @Override
@@ -74,11 +64,6 @@ public record RedstoneConduit(Identifier texture, Identifier activeTexture, Comp
         BlockPos neighbor = conduitPos.relative(direction);
         BlockState blockState = level.getBlockState(neighbor);
         return !blockState.isAir();
-    }
-
-    @Override
-    public ConnectionConfigType<RedstoneConduitConnectionConfig> connectionConfigType() {
-        return RedstoneConduitConnectionConfig.TYPE;
     }
 
     @Override

@@ -12,12 +12,12 @@ public class TestNode implements INetworkNode<BasicNetwork<TestNode>, TestNode> 
     private BasicNetwork<TestNode> network;
 
     public TestNode() {
-        network = new BasicNetwork<>(this);
+        network = new TestNetwork(this);
     }
 
     public TestNode(boolean shouldCreateNetwork) {
         if (shouldCreateNetwork) {
-            network = new BasicNetwork<>(this);
+            network = new TestNetwork(this);
         }
     }
 

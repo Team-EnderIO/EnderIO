@@ -10,7 +10,6 @@ import com.enderio.enderio.foundation.network.packets.ClientboundSyncTravelDataP
 import com.enderio.enderio.foundation.network.packets.ClientboundTravelTargetRemovedPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundTravelTargetUpdatedPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundBreakConduitPacket;
-import com.enderio.enderio.foundation.network.packets.ServerboundClearLockedFluidPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundCountFilterPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundCycleIOConfigPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundDestroyEntireConduitBundlePacket;
@@ -80,9 +79,6 @@ public class EIONetwork {
 
         registrar.playToServer(ServerboundCountFilterPacket.TYPE, ServerboundCountFilterPacket.STREAM_CODEC,
             ConduitServerPayloadHandler.getInstance()::handleCountFilter);
-
-        registrar.playToServer(ServerboundClearLockedFluidPacket.TYPE, ServerboundClearLockedFluidPacket.STREAM_CODEC,
-            ConduitServerPayloadHandler.getInstance()::handle);
 
         registrar.playToClient(ClientboundConduitExtraGuiDataPacket.TYPE, ClientboundConduitExtraGuiDataPacket.STREAM_CODEC,
             ConduitClientPayloadHandler.getInstance()::handle);

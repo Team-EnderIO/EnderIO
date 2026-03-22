@@ -2,7 +2,6 @@ package com.enderio.enderio.compat.jei_machines_to_merge.category;
 
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.api.EnderIODataComponents;
 import com.enderio.enderio.api.components.GrindingBallData;
 import com.enderio.enderio.compat.jei.JEILang;
 import com.enderio.enderio.compat.jei.JEIUtils;
@@ -10,7 +9,6 @@ import com.enderio.enderio.compat.jei_machines_to_merge.util.MachineRecipeCatego
 import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.machines.sag_mill.SagMillingRecipe;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
-import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOBlocks;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
@@ -29,12 +27,14 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import org.jetbrains.annotations.Nullable;
 
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static mezz.jei.api.recipe.RecipeIngredientRole.*;
 
@@ -83,7 +83,16 @@ public class SagMillCategory extends MachineRecipeCategory<RecipeHolder<SagMilli
 
         IRecipeSlotBuilder gridingBallSlot = builder.addSlot(CRAFTING_STATION, 74, 12).add(new ItemStack(Items.AIR));
         if (recipe.value().bonusType().useGrindingBall()) {
-            gridingBallSlot.add(Ingredient.of(BuiltInRegistries.ITEM.get(EIOTags.Items.GRINDING_BALLS).orElseThrow()));
+            List<ItemStack> grindingBalls = BuiltInRegistries.ITEM
+                .getDataMap(GrindingBallData.DATA_MAP_TYPE)
+                .keySet()
+                .stream()
+                .map(BuiltInRegistries.ITEM::getValue)
+                .filter(Objects::nonNull)
+                .map(ItemStack::new)
+                .collect(Collectors.toList());
+
+            gridingBallSlot.addItemStacks(grindingBalls);
         }
 
         List<SagMillingRecipe.OutputItem> results = recipe.value().outputs();
@@ -147,12 +156,18 @@ public class SagMillCategory extends MachineRecipeCategory<RecipeHolder<SagMilli
 
 
     private Component getEnergyString(RecipeHolder<SagMillingRecipe> recipe, IRecipeSlotsView recipeSlotsView) {
+        @Nullable
+        GrindingBallData data = recipeSlotsView.getSlotViews()
+                .get(1)
+                .getDisplayedItemStack()
+                .map(i -> i.typeHolder().getData(GrindingBallData.DATA_MAP_TYPE))
+                .orElse(GrindingBallData.IDENTITY);
+
+        if (data == null) {
+            data = GrindingBallData.IDENTITY;
+        }
+
         return TooltipUtil.withArgs(EIOCommonLang.ENERGY_AMOUNT, NumberFormat.getIntegerInstance(Locale.ENGLISH)
-                .format(recipe.value()
-                        .getEnergyCost(recipeSlotsView.getSlotViews()
-                                .get(1)
-                                .getDisplayedItemStack()
-                                .map(i -> i.getOrDefault(EnderIODataComponents.GRINDING_BALL, GrindingBallData.IDENTITY))
-                                .orElse(GrindingBallData.IDENTITY))));
+                .format(recipe.value().getEnergyCost(data)));
     }
 }

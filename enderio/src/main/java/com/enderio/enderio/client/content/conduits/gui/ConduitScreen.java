@@ -145,12 +145,12 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
 
                 @Override
                 public U getConnectionConfig() {
-                    return menu.connectionConfig(conduit.connectionConfigType());
+                    return menu.connectionConfig(conduit.type().connectionConfigType());
                 }
 
                 @Override
                 public void updateConnectionConfig(java.util.function.Function<U, U> configModifier) {
-                    var newConfig = configModifier.apply(menu.connectionConfig(conduit.connectionConfigType()));
+                    var newConfig = configModifier.apply(menu.connectionConfig(conduit.type().connectionConfigType()));
 
                     // Update on the client so UI is immediately in sync
                     menu.setConnectionConfig(newConfig);

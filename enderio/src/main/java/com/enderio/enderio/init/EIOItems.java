@@ -2,9 +2,7 @@ package com.enderio.enderio.init;
 
 import com.enderio.core.common.registries.ItemDeferredRegister;
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.api.EnderIODataComponents;
 import com.enderio.enderio.api.capacitor.CapacitorData;
-import com.enderio.enderio.api.components.GrindingBallData;
 import com.enderio.enderio.api.conduits.facade.FacadeType;
 import com.enderio.enderio.content.armory.DarkSteelSwordItem;
 import com.enderio.enderio.content.broken_spawner.BrokenSpawnerItem;
@@ -16,6 +14,7 @@ import com.enderio.enderio.content.conduits.facades.ConduitFacadeItem;
 import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
 import com.enderio.enderio.content.filters.fluid.EnderFluidFilterItem;
 import com.enderio.enderio.content.filters.item.general.EnderItemFilterItem;
+import com.enderio.enderio.content.filters.item.limited.LimitedItemFilterItem;
 import com.enderio.enderio.content.filters.redstone.RedstoneFilterItem;
 import com.enderio.enderio.content.filters.soul.EnderSoulFilterItem;
 import com.enderio.enderio.content.fun.EnderiosItem;
@@ -68,35 +67,24 @@ public class EIOItems {
 
     // region Grinding Balls
 
-    // TODO: Can we power the default values with configs?
+    public static final DeferredItem<Item> ENERGETIC_ALLOY_BALL = grindingBall("energetic_alloy_grinding_ball");
 
-    public static final DeferredItem<Item> ENERGETIC_ALLOY_BALL = grindingBall("energetic_alloy_grinding_ball",
-        new GrindingBallData(1.6F, 1.1F, 1.1F, 80000));
+    public static final DeferredItem<Item> VIBRANT_ALLOY_BALL = grindingBall("vibrant_alloy_grinding_ball");
 
-    public static final DeferredItem<Item> VIBRANT_ALLOY_BALL = grindingBall("vibrant_alloy_grinding_ball",
-        new GrindingBallData(1.75F, 1.35F, 1.13F, 80000));
+    public static final DeferredItem<Item> REDSTONE_ALLOY_BALL = grindingBall("redstone_alloy_grinding_ball");
 
-    public static final DeferredItem<Item> REDSTONE_ALLOY_BALL = grindingBall("redstone_alloy_grinding_ball",
-        new GrindingBallData(1.00F, 1.00F, 0.35F, 30000));
+    public static final DeferredItem<Item> CONDUCTIVE_ALLOY_BALL = grindingBall("conductive_alloy_grinding_ball");
 
-    public static final DeferredItem<Item> CONDUCTIVE_ALLOY_BALL = grindingBall("conductive_alloy_grinding_ball",
-        new GrindingBallData(1.35F, 1.00F, 1.0F, 40000));
+    public static final DeferredItem<Item> PULSATING_ALLOY_BALL = grindingBall("pulsating_alloy_grinding_ball");
 
-    public static final DeferredItem<Item> PULSATING_ALLOY_BALL = grindingBall("pulsating_alloy_grinding_ball",
-        new GrindingBallData(1.00F, 1.85F, 1.0F, 100000));
+    public static final DeferredItem<Item> DARK_STEEL_BALL = grindingBall("dark_steel_grinding_ball");
 
-    public static final DeferredItem<Item> DARK_STEEL_BALL = grindingBall("dark_steel_grinding_ball",
-        new GrindingBallData(1.35F, 2.00F, 0.7F, 125000));
+    public static final DeferredItem<Item> SOULARIUM_BALL = grindingBall("soularium_grinding_ball");
 
-    public static final DeferredItem<Item> SOULARIUM_BALL = grindingBall("soularium_grinding_ball",
-        new GrindingBallData(1.2F, 2.15F, 0.9F, 80000));
+    public static final DeferredItem<Item> END_STEEL_BALL = grindingBall("end_steel_grinding_ball");
 
-    public static final DeferredItem<Item> END_STEEL_BALL = grindingBall("end_steel_grinding_ball",
-        new GrindingBallData(1.4F, 2.4F, 0.7F, 75000));
-
-    private static DeferredItem<Item> grindingBall(String name, GrindingBallData data) {
-        return ITEMS.registerItem(name, Item::new, p -> p
-            .component(EnderIODataComponents.GRINDING_BALL, data));
+    private static DeferredItem<Item> grindingBall(String name) {
+        return ITEMS.registerItem(name, Item::new, new Item.Properties());
     }
 
     // endregion
@@ -264,6 +252,8 @@ public class EIOItems {
     public static final DeferredItem<EnderItemFilterItem> ADVANCED_ITEM_FILTER = ITEMS.registerItem("advanced_item_filter", props -> new EnderItemFilterItem(props, EnderItemFilterItem.Type.ADVANCED));
 
     public static final DeferredItem<EnderItemFilterItem> BIG_ADVANCED_ITEM_FILTER = ITEMS.registerItem("big_advanced_item_filter", props -> new EnderItemFilterItem(props, EnderItemFilterItem.Type.BIG_ADVANCED));
+
+    public static final DeferredItem<LimitedItemFilterItem> LIMITED_ITEM_FILTER = ITEMS.registerItem("limited_item_filter", LimitedItemFilterItem::new);
 
     public static final DeferredItem<EnderFluidFilterItem> BASIC_FLUID_FILTER = ITEMS.registerItem("basic_fluid_filter", props -> new EnderFluidFilterItem(props, EnderFluidFilterItem.Type.BASIC));
 

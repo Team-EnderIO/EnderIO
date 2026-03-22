@@ -10,10 +10,8 @@ import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
-import com.enderio.enderio.api.conduits.ticker.ConduitTicker;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.content.conduits.ConduitBlockItem;
-import com.enderio.enderio.content.conduits.type.energy.EnergyConduit;
 import com.enderio.modded_conduits.config.ModdedConduitsConfig;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -45,18 +43,8 @@ public record MEConduit(Identifier texture, Component description, AEColor color
                     .apply(builder, MEConduit::new));
 
     @Override
-    public ConduitType<MEConduit> type() {
+    public ConduitType<MEConduit, MEConduitConnectionConfig> type() {
         return AE2ConduitsModule.AE2_CONDUIT.get();
-    }
-
-    @Override
-    public ConnectionConfigType<MEConduitConnectionConfig> connectionConfigType() {
-        return MEConduitConnectionConfig.TYPE;
-    }
-
-    @Override
-    public @Nullable ConduitTicker<MEConduit> ticker() {
-        return null;
     }
 
     @Override

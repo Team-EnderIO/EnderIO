@@ -1,6 +1,5 @@
 package com.enderio.enderio.content.machines.sag_mill;
 
-import com.enderio.enderio.api.EnderIODataComponents;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.enderio.api.components.GrindingBallData;
@@ -104,7 +103,7 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
                 .slotAccess(INPUT)
                 .outputSlot(4)
                 .slotAccess(OUTPUT)
-                .inputSlot((slot, stack) -> stack.has(EnderIODataComponents.GRINDING_BALL))
+                .inputSlot((_, itemResource) -> itemResource.typeHolder().getData(GrindingBallData.DATA_MAP_TYPE) != null)
                 .slotAccess(GRINDING_BALL)
                 .capacitor()
                 .build();
@@ -147,7 +146,10 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
                 if (recipe.bonusType().useGrindingBall() && grindingBallData.isIdentity()) {
                     ItemStack ball = GRINDING_BALL.getStack(inv);
                     if (!ball.isEmpty()) {
-                        var data = ball.getOrDefault(EnderIODataComponents.GRINDING_BALL, GrindingBallData.IDENTITY);
+                        GrindingBallData data = ball.typeHolder().getData(GrindingBallData.DATA_MAP_TYPE);
+                        if (data == null) {
+                            data = GrindingBallData.IDENTITY;
+                        }
                         setGrindingBallData(data);
                         if (!data.isIdentity()) {
                             ball.shrink(1);

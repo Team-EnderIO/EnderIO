@@ -5,8 +5,10 @@ import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
-import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
-import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
+import com.enderio.enderio.api.conduits.connection.path.ConnectionPathProperty;
+import com.enderio.enderio.api.conduits.connection.path.ConnectionPathPropertyConsumer;
+import com.enderio.enderio.api.conduits.connection.path.SpeedAndTickRatePair;
+import com.enderio.enderio.config.conduits.ConduitsConfig;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.content.conduits.ConduitLang;
 import com.enderio.enderio.init.EIOConduitTypes;
@@ -25,37 +27,30 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.joml.Vector2i;
 
 import java.util.function.Consumer;
 
-public record ItemConduit(Identifier texture, Component description, int transferRatePerCycle,
-        int networkTickRate) implements Conduit<ItemConduit, ItemConduitConnectionConfig> {
+public record ItemConduit(Identifier texture, Component description, int transferRatePerCycle, int networkTickRate)
+    implements Conduit<ItemConduit, ItemConduitConnectionConfig> {
 
     public static final int EXTRACT_FILTER_SLOT = 0;
     public static final int INSERT_FILTER_SLOT = 1;
 
-    public static final MapCodec<ItemConduit> CODEC = RecordCodecBuilder.mapCodec(
-            builder -> builder
-                    .group(Identifier.CODEC.fieldOf("texture").forGetter(ItemConduit::texture),
-                            ComponentSerialization.CODEC.fieldOf("description").forGetter(ItemConduit::description),
-                            // Using optionals in order to support the old conduit format.
-                            Codec.INT.optionalFieldOf("transfer_rate", 4).forGetter(ItemConduit::transferRatePerCycle),
-                            Codec.intRange(1, 20)
-                                    .optionalFieldOf("ticks_per_cycle", 20)
-                                    .forGetter(ItemConduit::networkTickRate))
-                    .apply(builder, ItemConduit::new));
+    public static final MapCodec<ItemConduit> CODEC = RecordCodecBuilder.mapCodec(builder -> builder
+        .group(Identifier.CODEC.fieldOf("texture").forGetter(Conduit::texture),
+            ComponentSerialization.CODEC.fieldOf("description").forGetter(Conduit::description),
+            // Using optionals in order to support the old conduit format.
+            Codec.INT.optionalFieldOf("transfer_rate", 4).forGetter(ItemConduit::transferRatePerCycle),
+            Codec.intRange(1, 20).optionalFieldOf("ticks_per_cycle", 20).forGetter(ItemConduit::networkTickRate))
+        .apply(builder, ItemConduit::new));
+
+    public static final ConnectionPathProperty<SpeedAndTickRatePair> PATH_SPEED_AND_TICK_RATE = SpeedAndTickRatePair.minProperty(SpeedAndTickRatePair.ZERO);
 
     @Override
-    public ConduitType<ItemConduit> type() {
+    public ConduitType<ItemConduit, ItemConduitConnectionConfig> type() {
         return EIOConduitTypes.ITEM.get();
-    }
-
-    @Override
-    public ItemConduitTicker ticker() {
-        return ItemConduitTicker.INSTANCE;
     }
 
     @Override
@@ -69,14 +64,13 @@ public record ItemConduit(Identifier texture, Component description, int transfe
     }
 
     @Override
-    public int compareNodes(ConduitBlockConnection refConnection, ConduitBlockConnection connectionA,
-            ConduitBlockConnection connectionB) {
-        int priorityA = connectionA.connectionConfig(ItemConduitConnectionConfig.TYPE).priority();
-        int priorityB = connectionB.connectionConfig(ItemConduitConnectionConfig.TYPE).priority();
-        if (priorityA != priorityB) {
-            return Integer.compare(priorityB, priorityA);
-        }
-        return Conduit.super.compareNodes(refConnection, connectionA, connectionB);
+    public boolean canConnectToConduit(ItemConduit other) {
+        return ConduitsConfig.COMMON.CAN_MIX_ITEM_CONDUIT_TIERS.get();
+    }
+
+    @Override
+    public void collectNodePathProperties(ConduitNode node, ConnectionPathPropertyConsumer consumer) {
+        consumer.accept(PATH_SPEED_AND_TICK_RATE, new SpeedAndTickRatePair(transferRatePerCycle(), networkTickRate()));
     }
 
     @Override
@@ -111,11 +105,6 @@ public record ItemConduit(Identifier texture, Component description, int transfe
     }
 
     @Override
-    public ConnectionConfigType<ItemConduitConnectionConfig> connectionConfigType() {
-        return EIOConduitTypes.ConnectionTypes.ITEM.get();
-    }
-
-    @Override
     public int getInventorySize() {
         return 2;
     }
@@ -141,7 +130,7 @@ public record ItemConduit(Identifier texture, Component description, int transfe
             return null;
         }
 
-        var config = node.getConnectionConfig(side, connectionConfigType());
+        var config = node.getConnectionConfig(side, type().connectionConfigType());
         if (!config.extractRedstoneControl().isRedstoneSensitive()) {
             return null;
         }
@@ -153,7 +142,7 @@ public record ItemConduit(Identifier texture, Component description, int transfe
     }
 
     @Override
-    public int compareTo(@NonNull ItemConduit o) {
+    public int compareTo(ItemConduit o) {
         double selfEffectiveSpeed = transferRatePerCycle() * (20.0 / networkTickRate());
         double otherEffectiveSpeed = o.transferRatePerCycle() * (20.0 / o.networkTickRate());
 

@@ -48,7 +48,6 @@ public class ConduitLang {
     public static final MutableComponent ENERGY_RATE_TOOLTIP = tooltip("energy/rate");
     public static final MutableComponent FLUID_RAW_RATE_TOOLTIP = tooltip("fluid/raw_rate");
     public static final MutableComponent FLUID_EFFECTIVE_RATE_TOOLTIP = tooltip("fluid/effective_rate");
-    public static final MutableComponent MULTI_FLUID_TOOLTIP = tooltip("fluid/multi");
     public static final MutableComponent ITEM_RAW_RATE_TOOLTIP = tooltip("item/raw_rate");
     public static final MutableComponent ITEM_EFFECTIVE_RATE_TOOLTIP = tooltip("item/effective_rate");
 

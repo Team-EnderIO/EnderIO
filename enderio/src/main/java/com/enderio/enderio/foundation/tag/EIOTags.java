@@ -23,8 +23,6 @@ public class EIOTags {
     public static final String COMMON = "c";
 
     public static class Items {
-        public static final TagKey<Item> GRINDING_BALLS = tag("grinding_balls");
-
         public static final TagKey<Item> HIDE_FACADES = tag("enderio/hide_facades");
 
         public static final TagKey<Item> WRENCH = commonTag("tools/wrench");

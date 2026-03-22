@@ -24,8 +24,6 @@ public class EnderfaceRenderer implements TravelRenderer<EnderfaceTravelTarget> 
     @Override
     public void render(EnderfaceTravelTarget travelData, LevelRenderer levelRenderer, PoseStack poseStack,
             double distanceSquared, boolean active, float partialTick) {
-        poseStack.pushPose();
-        poseStack.translate(travelData.pos().getX(), travelData.pos().getY(), travelData.pos().getZ());
         Minecraft minecraft = Minecraft.getInstance();
         OutlineBuffer outlineBuffer = OutlineBuffer.INSTANCE;
         int outlineColor = 0xFFFFFFFF;
@@ -59,7 +57,6 @@ public class EnderfaceRenderer implements TravelRenderer<EnderfaceTravelTarget> 
         ShapeRenderer.renderShape(poseStack, Minecraft.getInstance().renderBuffers().bufferSource().getBuffer(RenderTypes.lines()), Shapes.block(),
             0,0,0, outlineColor, linesize);
 
-        poseStack.popPose();
         minecraft.renderBuffers().bufferSource().endBatch();
     }
 }

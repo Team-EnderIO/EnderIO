@@ -4,6 +4,7 @@ import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.config.base.BaseConfig;
+import com.enderio.enderio.config.conduits.ConduitsConfig;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.misc_blocks.skull.EnderSkullBlock;
@@ -82,6 +83,7 @@ public class EnderIO {
         modContainer.registerConfig(ModConfig.Type.CLIENT, BaseConfig.CLIENT_SPEC, "enderio/base-client.toml");
         modContainer.registerConfig(ModConfig.Type.COMMON, MachinesConfig.COMMON_SPEC, "enderio/machines-common.toml");
         modContainer.registerConfig(ModConfig.Type.CLIENT, MachinesConfig.CLIENT_SPEC, "enderio/machines-client.toml");
+        modContainer.registerConfig(ModConfig.Type.COMMON, ConduitsConfig.COMMON_SPEC, "enderio/conduits-common.toml");
 
         EIODataComponents.register(modEventBus);
         EIOCreativeTabs.register(modEventBus);

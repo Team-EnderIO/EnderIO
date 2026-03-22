@@ -87,7 +87,7 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
                 BASE_ENERGY_PER_OPERATION, recipeOutput);
 
         build("mossy_cobblestone", ingredientFromTag(Tags.Items.COBBLESTONES_MOSSY),
-                List.of(output(COBBLESTONE), output(VINE, 0.7f)), BASE_ENERGY_PER_OPERATION, recipeOutput);
+                List.of(output(COBBLESTONE), output(VINE, 0.7f)), BASE_ENERGY_PER_OPERATION, BonusType.NONE, recipeOutput);
 
         build("gravel", ingredientFromTag(Tags.Items.GRAVELS),
                 List.of(output(SAND, 0.7f), output(SAND, 0.3f), output(FLINT, 0.1f)), BASE_ENERGY_PER_OPERATION,

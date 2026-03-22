@@ -5,8 +5,9 @@ import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
-import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
-import com.enderio.enderio.api.conduits.network.ConduitBlockConnection;
+import com.enderio.enderio.api.conduits.connection.path.ConnectionPathProperty;
+import com.enderio.enderio.api.conduits.connection.path.ConnectionPathPropertyConsumer;
+import com.enderio.enderio.config.conduits.ConduitsConfig;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.content.conduits.ConduitLang;
 import com.enderio.enderio.init.EIOConduitTypes;
@@ -33,31 +34,23 @@ import org.joml.Vector2i;
 
 import java.util.function.Consumer;
 
-public record FluidConduit(Identifier texture, Component description, int transferRatePerTick,
-        boolean isMultiFluid, boolean doesSupportPriority) implements Conduit<FluidConduit, FluidConduitConnectionConfig> {
+public record FluidConduit(Identifier texture, Component description, int transferRatePerTick)
+    implements Conduit<FluidConduit, FluidConduitConnectionConfig> {
 
     public static final int EXTRACT_FILTER_SLOT = 0;
     public static final int INSERT_FILTER_SLOT = 1;
 
-    public static final MapCodec<FluidConduit> CODEC = RecordCodecBuilder
-            .mapCodec(
-                    builder -> builder
-                            .group(Identifier.CODEC.fieldOf("texture").forGetter(FluidConduit::texture),
-                                    ComponentSerialization.CODEC.fieldOf("description")
-                                            .forGetter(FluidConduit::description),
-                                    Codec.INT.fieldOf("transfer_rate").forGetter(FluidConduit::transferRatePerTick),
-                                    Codec.BOOL.fieldOf("is_multi_fluid").forGetter(FluidConduit::isMultiFluid),
-                                Codec.BOOL.optionalFieldOf("does_support_priority", false).forGetter(FluidConduit::doesSupportPriority))
-                            .apply(builder, FluidConduit::new));
+    public static final MapCodec<FluidConduit> CODEC = RecordCodecBuilder.mapCodec(builder -> builder
+        .group(Identifier.CODEC.fieldOf("texture").forGetter(Conduit::texture),
+            ComponentSerialization.CODEC.fieldOf("description").forGetter(Conduit::description),
+            Codec.INT.fieldOf("transfer_rate").forGetter(FluidConduit::transferRatePerTick))
+        .apply(builder, FluidConduit::new));
+
+    public static final ConnectionPathProperty<Integer> PATH_MAX_TRANSFER_RATE = ConnectionPathProperty.minInt(0);
 
     @Override
-    public ConduitType<FluidConduit> type() {
+    public ConduitType<FluidConduit, FluidConduitConnectionConfig> type() {
         return EIOConduitTypes.FLUID.get();
-    }
-
-    @Override
-    public FluidConduitTicker ticker() {
-        return FluidConduitTicker.INSTANCE;
     }
 
     @Override
@@ -66,55 +59,18 @@ public record FluidConduit(Identifier texture, Component description, int transf
     }
 
     @Override
-    public int compareNodes(ConduitBlockConnection refConnection, ConduitBlockConnection connectionA, ConduitBlockConnection connectionB) {
-        if (doesSupportPriority()) {
-            int priorityA = connectionA.connectionConfig(FluidConduitConnectionConfig.TYPE).insertPriority();
-            int priorityB = connectionB.connectionConfig(FluidConduitConnectionConfig.TYPE).insertPriority();
-            if (priorityA != priorityB) {
-                return Integer.compare(priorityB, priorityA);
-            }
-        }
-
-        return Conduit.super.compareNodes(refConnection, connectionA, connectionB);
-    }
-
-    @Override
     public boolean canReplaceConduit(FluidConduit otherConduit) {
         return compareTo(otherConduit) > 0;
     }
 
     @Override
-    public boolean hasServerConnectionChecks() {
-        return !isMultiFluid();
+    public boolean canConnectToConduit(FluidConduit other) {
+        return ConduitsConfig.COMMON.CAN_MIX_FLUID_CONDUIT_TIERS.get();
     }
 
     @Override
-    public boolean canConnectConduits(ConduitNode selfNode, ConduitNode otherNode) {
-        if (isMultiFluid()) {
-            return true;
-        }
-
-        // Ensure the networks are not locked to different fluids before connecting.
-        var selfNetwork = selfNode.getNetwork();
-        var otherNetwork = otherNode.getNetwork();
-
-        // If one network does not yet exist, then we're good to connect.
-        if (selfNetwork == null || otherNetwork == null) {
-            return true;
-        }
-
-        var selfContext = selfNetwork.getContext(FluidConduitNetworkContext.TYPE);
-        var otherContext = otherNetwork.getContext(FluidConduitNetworkContext.TYPE);
-
-        if (selfContext == null || otherContext == null) {
-            return true;
-        }
-
-        if (selfContext.lockedFluid().isSame(Fluids.EMPTY) || otherContext.lockedFluid().isSame(Fluids.EMPTY)) {
-            return true;
-        }
-
-        return selfContext.lockedFluid().isSame(otherContext.lockedFluid());
+    public void collectNodePathProperties(ConduitNode node, ConnectionPathPropertyConsumer consumer) {
+        consumer.accept(PATH_MAX_TRANSFER_RATE, transferRatePerTick());
     }
 
     @Override
@@ -122,11 +78,6 @@ public record FluidConduit(Identifier texture, Component description, int transf
         var capability = level.getCapability(Capabilities.Fluid.BLOCK, conduitPos.relative(direction),
                 direction.getOpposite());
         return capability != null;
-    }
-
-    @Override
-    public ConnectionConfigType<FluidConduitConnectionConfig> connectionConfigType() {
-        return FluidConduitConnectionConfig.TYPE;
     }
 
     @Override
@@ -149,45 +100,15 @@ public record FluidConduit(Identifier texture, Component description, int transf
     }
 
     @Override
-    public @Nullable CompoundTag getExtraGuiData(ConduitBundle conduitBundle, ConduitNode node, Direction side) {
-        return getExtraWorldData(conduitBundle, node);
-    }
-
-    @Override
-    @Nullable
-    public CompoundTag getExtraWorldData(ConduitBundle conduitBundle, ConduitNode node) {
-        if (node.getNetwork() == null) {
-            return null;
-        }
-
-        var context = node.getNetwork().getContext(FluidConduitNetworkContext.TYPE);
-        if (context == null) {
-            return null;
-        }
-
-        if (context.lockedFluid().isSame(Fluids.EMPTY)) {
-            return null;
-        }
-
-        var tag = new CompoundTag();
-        tag.putString("LockedFluid", BuiltInRegistries.FLUID.getKey(context.lockedFluid()).toString());
-        return tag;
-    }
-
-    @Override
     public void addToTooltip(Item.TooltipContext tooltipContext, Consumer<Component> consumer, TooltipFlag tooltipFlag,
         DataComponentGetter dataComponentGetter) {
         String transferLimitFormatted = String.format("%,d", transferRatePerTick());
         consumer
             .accept(TooltipUtil.styledWithArgs(ConduitLang.FLUID_EFFECTIVE_RATE_TOOLTIP, transferLimitFormatted));
 
-        if (isMultiFluid()) {
-            consumer.accept(ConduitLang.MULTI_FLUID_TOOLTIP);
-        }
-
         if (tooltipFlag.hasShiftDown()) {
             String rawRateFormatted = String.format("%,d",
-                (int) Math.ceil(transferRatePerTick() * (20.0 / networkTickRate())));
+                    (int) Math.ceil(transferRatePerTick() * type().getTickRate(this)));
             consumer.accept(TooltipUtil.styledWithArgs(ConduitLang.FLUID_RAW_RATE_TOOLTIP, rawRateFormatted));
         }
     }
@@ -204,10 +125,6 @@ public record FluidConduit(Identifier texture, Component description, int transf
 
     @Override
     public int compareTo(@NonNull FluidConduit o) {
-        if (isMultiFluid() && !o.isMultiFluid()) {
-            return 1;
-        }
-
         if (transferRatePerTick() < o.transferRatePerTick()) {
             return -1;
         } else if (transferRatePerTick() > o.transferRatePerTick()) {

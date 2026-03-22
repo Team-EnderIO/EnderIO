@@ -3,7 +3,6 @@ package com.enderio.enderio.content.conduits.network;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
-import com.enderio.enderio.api.conduits.ticker.ConduitTicker;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Maps;
@@ -14,7 +13,7 @@ import net.minecraft.CrashReport;
 import net.minecraft.ReportedException;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
+import com.enderio.enderio.api.conduits.ConduitType;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.saveddata.SavedData;
@@ -32,7 +31,7 @@ import java.util.Map;
 @EventBusSubscriber
 public class ConduitNetworkSavedData extends SavedData {
 
-    public static final Codec<ConduitNetworkSavedData> CODEC = ConduitNetwork.CODEC
+    public static final Codec<ConduitNetworkSavedData> CODEC = ConduitNetworkImpl.CODEC
         .listOf()
         .xmap(ConduitNetworkSavedData::new, ConduitNetworkSavedData::getNetworks);
 
@@ -40,14 +39,14 @@ public class ConduitNetworkSavedData extends SavedData {
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    private final Multimap<Holder<Conduit<?, ?>>, ConduitNetwork> networks = HashMultimap.create();
+    private final Multimap<ConduitType<?, ?>, ConduitNetworkImpl> networks = HashMultimap.create();
 
-    private final Multimap<Long, ConduitNetwork> networksByChunk = HashMultimap.create();
-    private final Multimap<ConduitNetwork, Long> chunksByNetwork = HashMultimap.create();
+    private final Multimap<Long, ConduitNetworkImpl> networksByChunk = HashMultimap.create();
+    private final Multimap<ConduitNetworkImpl, Long> chunksByNetwork = HashMultimap.create();
 
     private final Map<Long, Boolean> tickingChunksMap = Maps.newHashMap();
 
-    private final Map<Holder<Conduit<?, ?>>, Map<BlockPos, ConduitNodeImpl>> unloadedNodes = Maps.newHashMap();
+    private final Map<ConduitType<?, ?>, Map<BlockPos, ConduitNodeImpl>> unloadedNodes = Maps.newHashMap();
 
     public static ConduitNetworkSavedData get(ServerLevel level) {
         return level.getDataStorage().computeIfAbsent(TYPE);
@@ -56,24 +55,24 @@ public class ConduitNetworkSavedData extends SavedData {
     private ConduitNetworkSavedData() {
     }
 
-    private ConduitNetworkSavedData(List<ConduitNetwork> networks) {
-        for (ConduitNetwork network : networks) {
+    private ConduitNetworkSavedData(List<ConduitNetworkImpl> networks) {
+        for (ConduitNetworkImpl network : networks) {
             network.setOnChunkCoverageChanged(this::onNetworkChunksChanged);
-            this.networks.put(network.conduit(), network);
+            this.networks.put(network.conduitType(), network);
 
             for (var node : network.nodes()) {
-                unloadedNodes.computeIfAbsent(network.conduit(), c -> Maps.newHashMap()).put(node.pos(), node);
+                unloadedNodes.computeIfAbsent(network.conduitType(), c -> Maps.newHashMap()).put(node.pos(), node);
             }
         }
     }
 
-    private List<ConduitNetwork> getNetworks() {
+    private List<ConduitNetworkImpl> getNetworks() {
         return networks.values().stream().filter(n -> n.isValid() && !n.isEmpty()).toList();
     }
 
     @Nullable
     public ConduitNodeImpl claimNode(Holder<Conduit<?, ?>> conduit, BlockPos pos) {
-        var conduitMap = unloadedNodes.get(conduit);
+        var conduitMap = unloadedNodes.get(conduit.value().type());
         if (conduitMap == null) {
             LOGGER.warn("Conduit data is missing!");
             return null;
@@ -84,32 +83,39 @@ public class ConduitNetworkSavedData extends SavedData {
             return null;
         }
 
-        return conduitMap.remove(pos);
+        var node = conduitMap.remove(pos);
+        if (node.conduit() != conduit) {
+            // Trust block entity as source of truth *just* because it's easier to rebuild a node than it is to reconcile the block entity's data.
+            LOGGER.warn("Conduit mismatch at {}: {} (network) vs {} (block entity). Dumping data, node will be rebuilt.", pos, node.conduit(), conduit);
+            return null;
+        }
+
+        return node;
     }
 
     public void returnNode(Holder<Conduit<?, ?>> conduit, BlockPos pos, ConduitNodeImpl node) {
-        unloadedNodes.computeIfAbsent(conduit, c -> Maps.newHashMap()).put(pos, node);
+        unloadedNodes.computeIfAbsent(conduit.value().type(), c -> Maps.newHashMap()).put(pos, node);
     }
 
-    public static void onNetworkCreated(ServerLevel level, ConduitNetwork network) {
+    public static void onNetworkCreated(ServerLevel level, ConduitNetworkImpl network) {
         get(level).onNetworkCreated(network);
     }
 
-    private void onNetworkCreated(ConduitNetwork network) {
+    private void onNetworkCreated(ConduitNetworkImpl network) {
         Preconditions.checkArgument(network.isValid(), "New network is not valid!");
-        networks.put(network.conduit(), network);
+        networks.put(network.conduitType(), network);
         onNetworkChunksChanged(network);
         network.setOnChunkCoverageChanged(this::onNetworkChunksChanged);
     }
 
-    public static void onNetworkDiscarded(ServerLevel level, ConduitNetwork network) {
+    public static void onNetworkDiscarded(ServerLevel level, ConduitNetworkImpl network) {
         Preconditions.checkArgument(network.isDiscarded(), "Network is not discarded!");
         get(level).onNetworkDiscarded(network);
     }
 
-    private void onNetworkDiscarded(ConduitNetwork network) {
+    private void onNetworkDiscarded(ConduitNetworkImpl network) {
         // Allow empty or discarded networks here
-        networks.remove(network.conduit(), network);
+        networks.remove(network.conduitType(), network);
 
         for (var chunk : network.allChunks()) {
             networksByChunk.remove(chunk, network);
@@ -117,7 +123,7 @@ public class ConduitNetworkSavedData extends SavedData {
         }
     }
 
-    private void onNetworkChunksChanged(ConduitNetwork network) {
+    private void onNetworkChunksChanged(ConduitNetworkImpl network) {
         var knownChunks = chunksByNetwork.get(network);
         var currentChunks = network.allChunks();
 
@@ -168,41 +174,25 @@ public class ConduitNetworkSavedData extends SavedData {
             }
         }
 
-        Registry<Conduit<?, ?>> conduitRegistry = serverLevel.registryAccess().lookupOrThrow(EnderIORegistries.Keys.CONDUIT);
-
-        for (var conduit : networks.keySet()) {
+        for (var conduitType : networks.keySet()) {
             // Skip non-ticking graphs.
-            var ticker = conduit.value().ticker();
+            var ticker = conduitType.ticker();
             if (ticker == null) {
                 continue;
             }
 
-            int conduitId = conduitRegistry.getId(conduit.value());
-            for (var network : networks.get(conduit)) {
+            // TODO: GH-1269
+            int conduitId = EnderIORegistries.CONDUIT_TYPE.getId(conduitType);
+            for (var network : networks.get(conduitType)) {
                 try {
-                    tickNetwork(serverLevel, conduit, conduitId, ticker, network);
+                    ticker.tick(serverLevel, network, conduitId);
                 } catch (Throwable t) {
                     var report = CrashReport.forThrowable(t, "Ticking conduit network");
-                    var category = report.addCategory(conduit.getRegisteredName() + " network being ticked");
+                    var category = report.addCategory(EnderIORegistries.CONDUIT_TYPE.getKey(conduitType) + " network being ticked");
                     network.addCrashInfo(category);
                     throw new ReportedException(report);
                 }
             }
-        }
-    }
-
-    private <T extends Conduit<T, ?>> void tickNetwork(ServerLevel serverLevel, Holder<Conduit<?, ?>> conduit, int conduitId, ConduitTicker<T> ticker,
-        ConduitNetwork network) {
-
-        int conduitTickRate = conduit.value().networkTickRate();
-
-        // TODO: Offsets for networks so they don't all tick on the same tick.
-        if ((serverLevel.getGameTime()) % conduitTickRate == conduitId % conduitTickRate) {
-            // Perform pre-tick network actions
-            network.beforeTicking();
-
-            // noinspection unchecked
-            ticker.tick(serverLevel, (T) conduit.value(), network);
         }
     }
 

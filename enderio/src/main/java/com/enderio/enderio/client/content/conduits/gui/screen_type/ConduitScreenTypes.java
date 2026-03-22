@@ -12,7 +12,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.Map;
 
 public class ConduitScreenTypes {
-    private static Map<ConduitType<?>, ConduitScreenType<?>> SCREEN_TYPES;
+    private static Map<ConduitType<?, ?>, ConduitScreenType<?>> SCREEN_TYPES;
 
     @EnsureSide(EnsureSide.Side.CLIENT)
     public static void init() {
@@ -24,7 +24,7 @@ public class ConduitScreenTypes {
     @EnsureSide(EnsureSide.Side.CLIENT)
     @Nullable
     public static <T extends Conduit<T, U>, U extends ConnectionConfig> ConduitScreenType<U> get(
-            ConduitType<T> conduitType) {
+            ConduitType<T, U> conduitType) {
         // noinspection unchecked
         return (ConduitScreenType<U>) SCREEN_TYPES.get(conduitType);
     }

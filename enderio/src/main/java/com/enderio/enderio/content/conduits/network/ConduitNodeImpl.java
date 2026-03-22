@@ -22,54 +22,50 @@ import org.jspecify.annotations.Nullable;
 import java.util.Objects;
 import java.util.Optional;
 
-public final class ConduitNodeImpl implements INetworkNode<ConduitNetwork, ConduitNodeImpl>, ConduitNode {
-    public static final Codec<ConduitNodeImpl> CODEC = RecordCodecBuilder.create(instance -> instance
-        .group(BlockPos.CODEC.fieldOf("pos").forGetter(ConduitNodeImpl::pos), NodeData.GENERIC_CODEC
-            .optionalFieldOf("data")
-            .forGetter(i -> i.nodeData == null || !i.nodeData.type().isPersistent() ? Optional.empty() : Optional.of(i.nodeData)))
-        .apply(instance, ConduitNodeImpl::new));
+public final class ConduitNodeImpl implements INetworkNode<ConduitNetworkImpl, ConduitNodeImpl>, ConduitNode {
 
+    public static final Codec<ConduitNodeImpl> CODEC = RecordCodecBuilder.create(instance -> instance
+        .group(Conduit.CODEC.optionalFieldOf("conduit", null).forGetter(ConduitNodeImpl::conduit),
+            BlockPos.CODEC.fieldOf("pos").forGetter(ConduitNodeImpl::pos), NodeData.GENERIC_CODEC
+                .optionalFieldOf("data")
+                .forGetter(i -> i.nodeData == null || !i.nodeData.type().isPersistent() ? Optional.empty() : Optional.of(i.nodeData)))
+        .apply(instance, (conduit, pos, dataOpt) -> new ConduitNodeImpl(conduit, pos, dataOpt.orElse(null))));
+
+    private final Holder<Conduit<?, ?>> conduit;
     private final BlockPos pos;
 
-    @Nullable private NodeData nodeData;
+    @Nullable
+    private NodeData nodeData;
 
-    @Nullable private ConduitNetwork network;
+    @Nullable
+    private ConduitNetworkImpl network;
 
-    @Nullable private IConduitNodeAttachment conduitBundle;
-
-    private Holder<Conduit<?, ?>> conduit;
+    @Nullable
+    private IConduitNodeAttachment conduitBundle;
 
     public ConduitNodeImpl(Holder<Conduit<?, ?>> conduit, BlockPos pos) {
-        this(conduit, pos, (NodeData) null);
+        this(conduit, pos, null);
     }
 
     public ConduitNodeImpl(Holder<Conduit<?, ?>> conduit, BlockPos pos, @Nullable NodeData nodeData) {
+        this.conduit = conduit;
         this.pos = pos;
         this.nodeData = nodeData;
-        this.network = new ConduitNetwork(conduit, this);
+        this.network = new ConduitNetworkImpl(conduit.value().type(), this);
     }
 
-    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    private ConduitNodeImpl(BlockPos pos, Optional<NodeData> nodeData) {
-        this.pos = pos;
-        this.nodeData = nodeData.orElse(null);
-        // Does not create a network because we're loading.
-    }
-
-    public void attach(IConduitNodeAttachment conduitBundle, Holder<Conduit<?, ?>> conduit) {
+    public void attach(IConduitNodeAttachment conduitBundle) {
         Preconditions.checkState(network != null, "Conduit node is not connected to a network.");
         this.conduitBundle = conduitBundle;
-        this.conduit = conduit;
         network.onNodeUpdated(this);
     }
 
     public void detach() {
-        if (conduitBundle == null || conduit == null) {
+        if (conduitBundle == null) {
             return;
         }
 
         this.conduitBundle = null;
-        this.conduit = null;
 
         if (network != null) {
             network.onNodeUpdated(this);
@@ -89,13 +85,18 @@ public final class ConduitNodeImpl implements INetworkNode<ConduitNetwork, Condu
     }
 
     @Override
+    public Holder<Conduit<?, ?>> conduit() {
+        return conduit;
+    }
+
+    @Override
     public BlockPos pos() {
         return pos;
     }
 
     @Override
     public boolean isLoaded() {
-        if (!isValid() || conduitBundle == null || conduit == null) {
+        if (!isValid() || conduitBundle == null) {
             return false;
         }
 
@@ -250,12 +251,12 @@ public final class ConduitNodeImpl implements INetworkNode<ConduitNetwork, Condu
     }
 
     @Override
-    public ConduitNetwork getNetwork() {
+    public ConduitNetworkImpl getNetwork() {
         return Objects.requireNonNull(network, "Node is not valid!");
     }
 
     @Override
-    public void setNetwork(@Nullable ConduitNetwork network) {
+    public void setNetwork(@Nullable ConduitNetworkImpl network) {
         this.network = network;
     }
 

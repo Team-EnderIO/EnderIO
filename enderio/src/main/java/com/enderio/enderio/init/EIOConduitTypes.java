@@ -5,16 +5,18 @@ import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContextType;
+import com.enderio.enderio.api.conduits.connection.path.PriorityConnectionPathComparator;
 import com.enderio.enderio.api.conduits.network.node.NodeDataType;
 import com.enderio.enderio.content.conduits.type.energy.EnergyConduit;
 import com.enderio.enderio.content.conduits.type.energy.EnergyConduitConnectionConfig;
-import com.enderio.enderio.content.conduits.type.energy.EnergyConduitNetworkContext;
 import com.enderio.enderio.content.conduits.type.fluid.FluidConduit;
 import com.enderio.enderio.content.conduits.type.fluid.FluidConduitConnectionConfig;
-import com.enderio.enderio.content.conduits.type.fluid.FluidConduitNetworkContext;
+import com.enderio.enderio.content.conduits.type.fluid.FluidConduitTicker;
 import com.enderio.enderio.content.conduits.type.item.ItemConduit;
 import com.enderio.enderio.content.conduits.type.item.ItemConduitConnectionConfig;
 import com.enderio.enderio.content.conduits.type.item.ItemConduitNodeData;
+import com.enderio.enderio.content.conduits.type.item.ItemConduitTicker;
+import com.enderio.enderio.content.conduits.type.redstone.RedstoneConduitTicker;
 import com.enderio.enderio.content.conduits.type.redstone.RedstoneConduit;
 import com.enderio.enderio.content.conduits.type.redstone.RedstoneConduitConnectionConfig;
 import com.enderio.enderio.content.conduits.type.redstone.RedstoneConduitNetworkContext;
@@ -25,20 +27,45 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import java.util.function.Supplier;
 
 public class EIOConduitTypes {
-    private static final DeferredRegister<ConduitType<?>> CONDUIT_TYPES = DeferredRegister
-            .create(EnderIORegistries.CONDUIT_TYPE, EnderIO.MOD_ID);
+    private static final DeferredRegister<ConduitType<?, ?>> CONDUIT_TYPES = DeferredRegister
+        .create(EnderIORegistries.CONDUIT_TYPE, EnderIO.MOD_ID);
 
-    public static final Supplier<ConduitType<EnergyConduit>> ENERGY = CONDUIT_TYPES.register("energy",
-            () -> ConduitType.builder(EnergyConduit.CODEC).exposeCapability(Capabilities.Energy.BLOCK).build());
+    public static final Supplier<ConduitType<EnergyConduit, EnergyConduitConnectionConfig>> ENERGY = CONDUIT_TYPES.register("energy",
+        () -> ConduitType
+            .builder(EnergyConduit.CODEC, EnergyConduitConnectionConfig.TYPE)
+            .exposeCapability(Capabilities.Energy.BLOCK)
+            .doesRequireNetworkCaches()
+            .connectionComparator((a, b) -> Integer.compare(
+                b.connectionConfig(EnergyConduitConnectionConfig.TYPE).priority(),
+                a.connectionConfig(EnergyConduitConnectionConfig.TYPE).priority()))
+            .connectionComparerFromReference(new PriorityConnectionPathComparator(conn ->
+                conn.node().getConnectionConfig(conn.connectionSide(), EnergyConduitConnectionConfig.TYPE).priority()))
+            .build());
 
-    public static final Supplier<ConduitType<RedstoneConduit>> REDSTONE = CONDUIT_TYPES.register("redstone",
-            () -> ConduitType.of(RedstoneConduit.CODEC));
+    public static final Supplier<ConduitType<RedstoneConduit, RedstoneConduitConnectionConfig>> REDSTONE = CONDUIT_TYPES.register("redstone",
+        () -> ConduitType
+            .builder(RedstoneConduit.CODEC, RedstoneConduitConnectionConfig.TYPE)
+            .doesRequireNetworkCaches()
+            .ticker(RedstoneConduitTicker.INSTANCE, 2)
+            .build());
 
-    public static final Supplier<ConduitType<FluidConduit>> FLUID = CONDUIT_TYPES.register("fluid",
-            () -> ConduitType.of(FluidConduit.CODEC));
+    public static final Supplier<ConduitType<FluidConduit, FluidConduitConnectionConfig>> FLUID = CONDUIT_TYPES.register("fluid",
+        () -> ConduitType
+            .builder(FluidConduit.CODEC, FluidConduitConnectionConfig.TYPE)
+            .doesRequireNetworkCaches()
+            .ticker(FluidConduitTicker.INSTANCE, 5)
+            .connectionComparerFromReference(new PriorityConnectionPathComparator(conn ->
+                conn.node().getConnectionConfig(conn.connectionSide(), FluidConduitConnectionConfig.TYPE).insertPriority()))
+            .build());
 
-    public static final Supplier<ConduitType<ItemConduit>> ITEM = CONDUIT_TYPES.register("item",
-            () -> ConduitType.of(ItemConduit.CODEC));
+    public static final Supplier<ConduitType<ItemConduit, ItemConduitConnectionConfig>> ITEM = CONDUIT_TYPES.register("item",
+        () -> ConduitType
+            .builder(ItemConduit.CODEC, ItemConduitConnectionConfig.TYPE)
+            .doesRequireNetworkCaches()
+            .ticker(ItemConduitTicker.INSTANCE, ItemConduit::networkTickRate)
+            .connectionComparerFromReference(new PriorityConnectionPathComparator(conn ->
+                conn.node().getConnectionConfig(conn.connectionSide(), ItemConduitConnectionConfig.TYPE).priority()))
+            .build());
 
     public static class ConnectionTypes {
         private static final DeferredRegister<ConnectionConfigType<?>> CONNECTION_TYPES = DeferredRegister
@@ -69,14 +96,8 @@ public class EIOConduitTypes {
         public static final DeferredRegister<ConduitNetworkContextType<?>> CONDUIT_NETWORK_CONTEXT_TYPES = DeferredRegister
                 .create(EnderIORegistries.CONDUIT_NETWORK_CONTEXT_TYPE, EnderIO.MOD_ID);
 
-        public static final Supplier<ConduitNetworkContextType<EnergyConduitNetworkContext>> ENERGY = CONDUIT_NETWORK_CONTEXT_TYPES
-                .register("energy", () -> EnergyConduitNetworkContext.TYPE);
-
         public static final Supplier<ConduitNetworkContextType<RedstoneConduitNetworkContext>> REDSTONE = CONDUIT_NETWORK_CONTEXT_TYPES
                 .register("redstone", () -> RedstoneConduitNetworkContext.TYPE);
-
-        public static final Supplier<ConduitNetworkContextType<FluidConduitNetworkContext>> FLUID = CONDUIT_NETWORK_CONTEXT_TYPES
-                .register("fluid", () -> FluidConduitNetworkContext.TYPE);
     }
 
     public static void register(IEventBus bus) {

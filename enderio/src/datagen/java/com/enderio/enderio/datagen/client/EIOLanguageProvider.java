@@ -64,7 +64,6 @@ public class EIOLanguageProvider extends LanguageProvider {
     }
 
     private void addTags() {
-        add(EIOTags.Items.GRINDING_BALLS, "Grinding Balls");
         add(EIOTags.Items.HIDE_FACADES, "Hides Facades");
         add(EIOTags.Items.GLIDER, "Gliders");
         add(EIOTags.Items.INSULATION_METAL, "Insulation Metal");
@@ -223,7 +222,6 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(ConduitLang.ENERGY_RATE_TOOLTIP, "Max Output %s \u00B5I/t");
         add(ConduitLang.FLUID_RAW_RATE_TOOLTIP, "Rate: %s mB/network tick");
         add(ConduitLang.FLUID_EFFECTIVE_RATE_TOOLTIP, "Effective Rate: %s mB/t");
-        add(ConduitLang.MULTI_FLUID_TOOLTIP, "Allows multiple fluids to be transported on the same line");
         add(ConduitLang.ITEM_RAW_RATE_TOOLTIP, "Rate: %s Items/network tick");
         add(ConduitLang.ITEM_EFFECTIVE_RATE_TOOLTIP, "Effective Rate: %s Items/sec");
 
@@ -522,6 +520,7 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOItems.BIG_ITEM_FILTER.get(), "Big Item Filter");
         add(EIOItems.ADVANCED_ITEM_FILTER.get(), "Advanced Item Filter");
         add(EIOItems.BIG_ADVANCED_ITEM_FILTER.get(), "Big Advanced Item Filter");
+        add(EIOItems.LIMITED_ITEM_FILTER.get(), "Limited Item Filter");
 
         add(EIOItems.BASIC_FLUID_FILTER.get(), "Basic Fluid Filter");
 

@@ -5,6 +5,10 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import com.enderio.enderio.EnderIO;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.item.Item;
+import net.neoforged.neoforge.registries.datamaps.DataMapType;
 
 public record GrindingBallData(float outputMultiplier, float bonusMultiplier, float powerUse, int durability) {
 
@@ -17,6 +21,12 @@ public record GrindingBallData(float outputMultiplier, float bonusMultiplier, fl
     public static final StreamCodec<ByteBuf, GrindingBallData> STREAM_CODEC = StreamCodec.composite(ByteBufCodecs.FLOAT, GrindingBallData::outputMultiplier,
         ByteBufCodecs.FLOAT, GrindingBallData::bonusMultiplier, ByteBufCodecs.FLOAT, GrindingBallData::powerUse, ByteBufCodecs.INT,
         GrindingBallData::durability, GrindingBallData::new);
+
+    public static final DataMapType<Item, GrindingBallData> DATA_MAP_TYPE = DataMapType.builder(
+        EnderIO.id("grinding_ball"),
+        Registries.ITEM,
+        GrindingBallData.CODEC
+    ).synced(GrindingBallData.CODEC, true).build();
 
     public static final GrindingBallData IDENTITY = new GrindingBallData(1.0f, 1.0f, 1.0f, 0);
 

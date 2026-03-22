@@ -7,6 +7,7 @@ import com.enderio.enderio.datagen.client.EIOLanguageProvider;
 import com.enderio.enderio.datagen.client.models.EIOModelProvider;
 import com.enderio.enderio.datagen.common.advancement.EIOAdvancementGenerator;
 import com.enderio.enderio.datagen.common.advancement.MachinesAdvancementGenerator;
+import com.enderio.enderio.datagen.common.data_maps.GrindingBallDataMapProvider;
 import com.enderio.enderio.datagen.common.data_maps.RangeExtenderDataMapProvider;
 import com.enderio.enderio.datagen.common.data_maps.ReagentDataMapProvider;
 import com.enderio.enderio.datagen.common.datapack_registries.ConduitsBootstrap;
@@ -66,6 +67,7 @@ public class EnderIODataGen {
         //generator.addProvider(true, new EnderIORecipeProvider(lookupProvider.get(), packOutput));
         event.createProvider(EnderIORecipeProvider.Runner::new);
 
+        generator.addProvider(true, new GrindingBallDataMapProvider(packOutput, lookupProvider));
         generator.addProvider(true, new ReagentDataMapProvider(packOutput, lookupProvider));
         generator.addProvider(true, new RangeExtenderDataMapProvider(packOutput, lookupProvider));
 

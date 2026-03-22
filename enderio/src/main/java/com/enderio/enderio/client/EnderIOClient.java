@@ -2,6 +2,7 @@ package com.enderio.enderio.client;
 
 import com.enderio.core.client.item.FluidBarDecorator;
 import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.conduits.model.RegisterConduitModelModifiersEvent;
 import com.enderio.enderio.api.conduits.screen.RegisterConduitScreenTypesEvent;
 import com.enderio.enderio.api.travel.RegisterTravelRenderersEvent;
@@ -15,11 +16,11 @@ import com.enderio.enderio.client.content.conduits.gui.screen_type.RedstoneCondu
 import com.enderio.enderio.client.content.conduits.model.bundle.port.ConduitBlockStateModel;
 import com.enderio.enderio.client.content.conduits.model.bundle.port.ConduitItemModel;
 import com.enderio.enderio.client.content.conduits.model.facades.port.FacadeItemModel;
-import com.enderio.enderio.client.content.conduits.model.modifier.FluidConduitModelModifier;
 import com.enderio.enderio.client.content.conduits.model.modifier.RedstoneConduitModelModifier;
 import com.enderio.enderio.client.content.enderface.EnderfaceRenderer;
 import com.enderio.enderio.client.content.filters.EnderFluidFilterScreen;
 import com.enderio.enderio.client.content.filters.EnderItemFilterScreen;
+import com.enderio.enderio.client.content.filters.LimitedItemFilterScreen;
 import com.enderio.enderio.client.content.filters.EnderSoulFilterScreen;
 import com.enderio.enderio.client.content.filters.redstone.RedstoneCountFilterScreen;
 import com.enderio.enderio.client.content.filters.redstone.RedstoneDoubleChannelFilterScreen;
@@ -62,7 +63,6 @@ import com.enderio.enderio.client.content.misc_blocks.EnderSkullRenderer;
 import com.enderio.enderio.client.content.paint.PaintedSandRenderer;
 import com.enderio.enderio.client.content.tools.CoordinateMenuScreen;
 import com.enderio.enderio.client.content.travel.TravelAnchorHud;
-import com.enderio.enderio.client.content.travel.TravelAnchorRenderer;
 import com.enderio.enderio.client.content.travel.TravelTargetRendering;
 import com.enderio.enderio.client.foundation.particle.RangeParticle;
 import com.enderio.enderio.content.fun.EnderiosItem;
@@ -121,6 +121,10 @@ public class EnderIOClient {
     private static final Map<Item, Identifier> HANG_GLIDER_MODEL_LOCATION = new HashMap<>();
     //public static final Map<Item, BakedModel> GLIDER_MODELS = new HashMap<>();
 
+//    public static final ModelResourceLocation TRAVEL_ANCHOR_BACKDROP_MODEL_LOCATION = ModelResourceLocation.standalone(
+//        ResourceLocation.fromNamespaceAndPath(EnderIOAPI.MOD_ID, "block/travel_anchor_backdrop")
+//    );
+
     public EnderIOClient(ModContainer modContainer) {
         // TODO: Re-enable after config rework.
 //        modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
@@ -172,6 +176,7 @@ public class EnderIOClient {
         event.register(EIOMenus.ADVANCED_ITEM_FILTER.get(), EnderItemFilterScreen::new);
         event.register(EIOMenus.BIG_ITEM_FILTER.get(), EnderItemFilterScreen::new);
         event.register(EIOMenus.BIG_ADVANCED_ITEM_FILTER.get(), EnderItemFilterScreen::new);
+        event.register(EIOMenus.LIMITED_ITEM_FILTER.get(), LimitedItemFilterScreen::new);
         event.register(EIOMenus.BASIC_FLUID_FILTER.get(), EnderFluidFilterScreen::new);
         event.register(EIOMenus.BASIC_SOUL_FILTER.get(), EnderSoulFilterScreen::new);
         event.register(EIOMenus.REDSTONE_DOUBLE_CHANNEL_FILTER.get(), RedstoneDoubleChannelFilterScreen::new);
@@ -305,23 +310,26 @@ public class EnderIOClient {
 
     @SubscribeEvent
     public static void additionalModels(ModelEvent.RegisterStandalone event) {
-        //TODO glider
-//        Set<Identifier> gliderModels = Minecraft.getInstance()
+        // TODO: standalone models
+//        Set<ResourceLocation> gliderModels = Minecraft.getInstance()
 //                .getResourceManager()
 //                .listResources("models/enderio_glider", rl -> rl.getPath().endsWith(".json"))
 //                .keySet();
 //
-//        for (Identifier gliderModelPath : gliderModels) {
+//        for (ResourceLocation gliderModelPath : gliderModels) {
 //            Optional<Item> gliderItem = findGliderForModelRL(gliderModelPath);
 //            if (gliderItem.isPresent()) {
-//                Identifier modelLookupLocation = Identifier
+//                ResourceLocation modelLookupLocation = ResourceLocation
 //                        .fromNamespaceAndPath(gliderModelPath.getNamespace(), gliderModelPath.getPath()
 //                                .substring("models/".length(), gliderModelPath.getPath().length() - 5));
 //
-//                event.register(modelLookupLocation);
-//                HANG_GLIDER_MODEL_LOCATION.put(gliderItem.get(), modelLookupLocation);
+//                ModelResourceLocation modelLocation = ModelResourceLocation.standalone(modelLookupLocation);
+//                event.register(modelLocation);
+//                HANG_GLIDER_MODEL_LOCATION.put(gliderItem.get(), modelLocation);
 //            }
 //        }
+//
+//        event.register(TRAVEL_ANCHOR_BACKDROP_MODEL_LOCATION);
     }
 
     @SubscribeEvent
@@ -432,7 +440,8 @@ public class EnderIOClient {
 
     @SubscribeEvent
     public static void registerTravelRenderers(RegisterTravelRenderersEvent event) {
-        event.register(EIOTravelTargets.TRAVEL_ANCHOR_TYPE.get(), TravelAnchorRenderer::new);
+        // TODO: 26.1
+//        event.register(EIOTravelTargets.TRAVEL_ANCHOR_TYPE.get(), TravelAnchorRenderer::new);
         event.register(EIOTravelTargets.ENDERFACE_TYPE.get(), EnderfaceRenderer::new);
     }
 
@@ -441,7 +450,6 @@ public class EnderIOClient {
     @SubscribeEvent
     public static void registerConduitCoreModelModifiers(RegisterConduitModelModifiersEvent event) {
         event.register(EIOConduitTypes.REDSTONE.get(), RedstoneConduitModelModifier::new);
-        event.register(EIOConduitTypes.FLUID.get(), FluidConduitModelModifier::new);
     }
 
     @SubscribeEvent

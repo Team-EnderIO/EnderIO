@@ -23,6 +23,7 @@ import com.enderio.enderio.content.conduits.network.IConduitNodeAttachment;
 import com.enderio.enderio.foundation.block.entity.Wrenchable;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOConduitTypes;
+import com.mojang.datafixers.util.Pair;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -330,36 +331,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         // Get connection
         var conduitConnection = shape.getConnectionFromHit(context.getClickedPos(), context.getHitResult());
         if (conduitConnection != null) {
-
-            // Disable the connection
-            setConnectionStatus(conduitConnection.getSecond(), conduitConnection.getFirst(), ConnectionStatus.DISABLED);
-
-            // If we were connected to another bundle, we need to sever the graph
-            if (level.getBlockEntity(getBlockPos()
-                    .relative(conduitConnection.getFirst())) instanceof ConduitBundleBlockEntity neighborBundle) {
-                neighborBundle.setConnectionStatus(conduitConnection.getSecond(),
-                        conduitConnection.getFirst().getOpposite(), ConnectionStatus.DISABLED);
-
-                if (level instanceof ServerLevel serverLevel) {
-                    ConduitNodeImpl thisNode = getConduitNode(conduitConnection.getSecond());
-                    ConduitNodeImpl otherNode = neighborBundle.getConduitNode(conduitConnection.getSecond());
-
-                    if (thisNode.isValid() && otherNode.isValid()) {
-                        var thisNetwork = thisNode.getNetwork();
-                        var otherNetwork = otherNode.getNetwork();
-
-                        if (thisNetwork == otherNetwork) {
-                            thisNetwork.disconnect(thisNode, otherNode,
-                                    n -> ConduitNetworkSavedData.onNetworkCreated(serverLevel, n));
-                        }
-
-                        bundleChanged();
-                    } else {
-                        // TODO: Warn, this is a bad place to be.
-                    }
-                }
-            }
-
+            disableNeighborConnection(conduitConnection);
             return InteractionResult.SUCCESS;
         }
 
@@ -371,6 +343,44 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
 
         return InteractionResult.TRY_WITH_EMPTY_HAND;
+    }
+
+    // Exposed publicly for use in tests.
+    public void disableNeighborConnection(Pair<Direction, Holder<Conduit<?, ?>>> conduitConnection) {
+        // Disable the connection
+        setConnectionStatus(conduitConnection.getSecond(), conduitConnection.getFirst(), ConnectionStatus.DISABLED);
+
+        // If we were connected to another bundle, we need to sever the graph
+        if (!(level.getBlockEntity(getBlockPos().relative(conduitConnection.getFirst())) instanceof ConduitBundleBlockEntity neighborBundle)) {
+            return;
+        }
+
+        // Get the other conduit in the neighbor. May not be the exact same as the one we've just disconnected.
+        var otherConduit = neighborBundle.getCompatibleConduit(conduitConnection.getSecond());
+        if (otherConduit == null) {
+            return;
+        }
+
+        neighborBundle.setConnectionStatus(otherConduit, conduitConnection.getFirst().getOpposite(), ConnectionStatus.DISABLED);
+
+        if (level instanceof ServerLevel serverLevel) {
+            ConduitNodeImpl thisNode = getConduitNode(conduitConnection.getSecond());
+            ConduitNodeImpl otherNode = neighborBundle.getConduitNode(otherConduit);
+
+            if (thisNode.isValid() && otherNode.isValid()) {
+                var thisNetwork = thisNode.getNetwork();
+                var otherNetwork = otherNode.getNetwork();
+
+                if (thisNetwork == otherNetwork) {
+                    thisNetwork.disconnect(thisNode, otherNode,
+                        n -> ConduitNetworkSavedData.onNetworkCreated(serverLevel, n));
+                }
+
+                bundleChanged();
+            } else {
+                // TODO: Warn, this is a bad place to be.
+            }
+        }
     }
 
     // endregion
@@ -422,7 +432,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     }
 
     @Override
-    public boolean hasConduitOfType(ConduitType<?> conduitType) {
+    public boolean hasConduitOfType(ConduitType<?, ?> conduitType) {
         return conduits.stream().anyMatch(c -> c.value().type() == conduitType);
     }
 
@@ -432,7 +442,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     }
 
     @Nullable
-    public Holder<Conduit<?, ?>> getConduitByType(ConduitType<?> conduitType) {
+    public Holder<Conduit<?, ?>> getConduitByType(ConduitType<?, ?> conduitType) {
         return conduits.stream().filter(c -> c.value().type() == conduitType).findFirst().orElse(null);
     }
 
@@ -706,17 +716,12 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             return;
         }
 
-        neighborBundle.disconnect(conduit, side.getOpposite());
+        Holder<Conduit<?, ?>> neighborConduit = neighborBundle.getConduitByType(conduit.value().type());
+        if (neighborConduit == null) {
+            return;
+        }
 
-        // TODO: Do we need an equivalent to this?
-//        if (level instanceof ServerLevel serverLevel) {
-//            if (neighborBundle.hasConduitByType(conduit)) {
-//                Optional.of(neighborBundle.getConduitNode(conduit))
-//                        .map(ConduitGraphObject::getGraph)
-//                        .filter(Objects::nonNull)
-//                        .ifPresent(graph -> ConduitSavedData.addPotentialGraph(conduit, graph, serverLevel));
-//            }
-//        }
+        neighborBundle.disconnect(neighborConduit, side.getOpposite());
     }
 
     private void dropItem(ItemStack stack) {
@@ -758,7 +763,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         conduitNodes.put(conduit, loadedNode);
 
         // Attach to the node to provide connection data and inventory.
-        loadedNode.attach(this, conduit);
+        loadedNode.attach(this);
     }
 
     // endregion
@@ -809,7 +814,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
     @Override
     public void setConnectionConfig(Holder<Conduit<?, ?>> conduit, Direction side, ConnectionConfig config) {
-        if (config.type() != conduit.value().connectionConfigType()) {
+        if (config.type() != conduit.value().type().connectionConfigType()) {
             throw new IllegalArgumentException("Connection config is not the right type for this conduit.");
         }
 
@@ -952,7 +957,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     private void disconnect(Holder<Conduit<?, ?>> conduit, Direction side) {
         for (var c : conduits) {
             if (ConduitUtility.canConnectConduits(conduit, c)) {
-                setConnectionStatus(conduit, side, ConnectionStatus.DISCONNECTED);
+                setConnectionStatus(c, side, ConnectionStatus.DISCONNECTED);
             }
         }
     }
@@ -1473,7 +1478,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         public ConnectionContainer(Holder<Conduit<?, ?>> conduit) {
             this.conduit = conduit;
 
-            var defaultConfig = conduit.value().connectionConfigType().getDefault();
+            var defaultConfig = conduit.value().type().connectionConfigType().getDefault();
             for (Direction dir : Direction.values()) {
                 statuses.put(dir, ConnectionStatus.DISCONNECTED);
                 configs.put(dir, defaultConfig);
@@ -1485,7 +1490,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             copy.statuses.putAll(statuses);
 
             // Only copy connection config if compatible.
-            if (this.conduit.value().connectionConfigType() == conduit.value().connectionConfigType()) {
+            if (this.conduit.value().type().connectionConfigType() == conduit.value().type().connectionConfigType()) {
                 copy.configs.putAll(configs);
             }
 
@@ -1535,12 +1540,12 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
 
         public ConnectionConfig getConfig(Direction side) {
-            var defaultConfig = conduit.value().connectionConfigType().getDefault();
+            var defaultConfig = conduit.value().type().connectionConfigType().getDefault();
             var config = configs.getOrDefault(side, defaultConfig);
 
             // Ensure the connection type is correct.
             // If it isn't, revert to the default.
-            if (config.type() != conduit.value().connectionConfigType()) {
+            if (config.type() != conduit.value().type().connectionConfigType()) {
                 config = defaultConfig;
                 configs.put(side, config);
                 bundleChanged();

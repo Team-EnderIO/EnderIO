@@ -3,13 +3,13 @@ package com.enderio.modded_conduits.common.modules.mekanism;
 import com.enderio.core.common.registries.ItemDeferredRegister;
 import com.enderio.core.common.registries.MenuDeferredRegister;
 import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitApi;
 import com.enderio.enderio.api.conduits.ConduitIngredient;
 import com.enderio.enderio.api.conduits.ConduitType;
-import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContextType;
 import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataType;
@@ -18,17 +18,17 @@ import com.enderio.enderio.content.filters.AbstractFilterItem;
 import com.enderio.enderio.init.EIOCreativeTabs;
 import com.enderio.enderio.init.EIOItems;
 import com.enderio.modded_conduits.common.modules.ConduitCommonModule;
-import com.enderio.modded_conduits.common.modules.mekanism.chemical.C2SClearLockedChemicalPacket;
 import com.enderio.modded_conduits.common.modules.mekanism.chemical.ChemicalConduit;
 import com.enderio.modded_conduits.common.modules.mekanism.chemical.ChemicalConduitConnectionConfig;
 import com.enderio.modded_conduits.common.modules.mekanism.chemical.ChemicalConduitData;
-import com.enderio.modded_conduits.common.modules.mekanism.chemical.ChemicalConduitNetworkContext;
+import com.enderio.modded_conduits.common.modules.mekanism.chemical.ChemicalTicker;
 import com.enderio.modded_conduits.common.modules.mekanism.chemical_filter.ChemicalFilter;
 import com.enderio.modded_conduits.common.modules.mekanism.chemical_filter.EnderChemicalFilter;
 import com.enderio.modded_conduits.common.modules.mekanism.chemical_filter.EnderChemicalFilterItem;
 import com.enderio.modded_conduits.common.modules.mekanism.chemical_filter.EnderChemicalFilterMenu;
 import com.enderio.modded_conduits.common.modules.mekanism.heat.HeatConduit;
 import com.enderio.modded_conduits.common.modules.mekanism.heat.HeatConduitConnectionConfig;
+import com.enderio.modded_conduits.common.modules.mekanism.heat.HeatTicker;
 import com.enderio.modded_conduits.common.modules.mekanism.laserio.MekanismLaserIOCompat;
 import mekanism.api.MekanismAPI;
 import mekanism.api.chemical.IChemicalHandler;
@@ -54,7 +54,6 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.capabilities.BlockCapability;
@@ -63,8 +62,6 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -83,7 +80,7 @@ public class MekanismModule implements ConduitCommonModule {
     private static final ItemDeferredRegister ITEMS = ItemDeferredRegister.create(EnderIO.MOD_ID);
     private static final MenuDeferredRegister MENUS = MenuDeferredRegister.create(EnderIO.MOD_ID);
 
-    private static final DeferredRegister<ConduitType<?>> CONDUIT_TYPES = DeferredRegister
+    private static final DeferredRegister<ConduitType<?, ?>> CONDUIT_TYPES = DeferredRegister
             .create(EnderIORegistries.CONDUIT_TYPE, EnderIO.MOD_ID);
 
     public static final DeferredRegister<ConduitDataType<?>> CONDUIT_DATA_TYPES = DeferredRegister
@@ -98,8 +95,6 @@ public class MekanismModule implements ConduitCommonModule {
     static {
         CONDUIT_CONNECTION_CONFIG_TYPES.register("chemical", () -> ChemicalConduitConnectionConfig.TYPE);
         CONDUIT_CONNECTION_CONFIG_TYPES.register("heat", () -> HeatConduitConnectionConfig.TYPE);
-
-        CONDUIT_NETWORK_CONTEXT_TYPES.register("chemical", () -> ChemicalConduitNetworkContext.TYPE);
     }
 
     private static final DeferredRegister.DataComponents DATA_COMPONENT_TYPES = DeferredRegister
@@ -107,11 +102,19 @@ public class MekanismModule implements ConduitCommonModule {
 
     // endregion
 
-    public static final Supplier<ConduitType<ChemicalConduit>> TYPE_CHEMICAL = CONDUIT_TYPES.register("chemical",
-            () -> ConduitType.of(ChemicalConduit.CODEC));
+    public static final Supplier<ConduitType<ChemicalConduit, ChemicalConduitConnectionConfig>> TYPE_CHEMICAL = CONDUIT_TYPES.register("chemical",
+        () -> ConduitType
+            .builder(ChemicalConduit.CODEC, ChemicalConduitConnectionConfig.TYPE)
+            .doesRequireNetworkCaches()
+            .ticker(ChemicalTicker.INSTANCE, 5)
+            .build());
 
-    public static final Supplier<ConduitType<HeatConduit>> TYPE_HEAT = CONDUIT_TYPES.register("heat",
-            () -> ConduitType.of(HeatConduit::new));
+    public static final Supplier<ConduitType<HeatConduit, HeatConduitConnectionConfig>> TYPE_HEAT = CONDUIT_TYPES.register("heat",
+        () -> ConduitType
+            .builder(HeatConduit::new, HeatConduitConnectionConfig.TYPE)
+            .doesRequireNetworkCaches()
+            .ticker(HeatTicker.INSTANCE, 5)
+            .build());
 
     public static final Supplier<ConduitDataType<ChemicalConduitData>> CHEMICAL_DATA_TYPE = CONDUIT_DATA_TYPES
             .register("chemical", () -> new ConduitDataType<>(ChemicalConduitData.CODEC,
@@ -146,8 +149,6 @@ public class MekanismModule implements ConduitCommonModule {
         }
     }
 
-    public static final Component LANG_MULTI_CHEMICAL_TOOLTIP = tooltip("chemical/multi");
-
     public static final Component CHEMICAL_CONDUIT_CHANGE_FLUID1 = tooltip("chemical/change_fluid1");
     public static final Component CHEMICAL_CONDUIT_CHANGE_FLUID2 = tooltip("chemical/change_fluid2");
     public static final MutableComponent CHEMICAL_CONDUIT_CHANGE_FLUID3 = tooltip("chemical/change_fluid3");
@@ -177,7 +178,6 @@ public class MekanismModule implements ConduitCommonModule {
         CONDUIT_CONNECTION_CONFIG_TYPES.register(modEventBus);
         CONDUIT_NETWORK_CONTEXT_TYPES.register(modEventBus);
         DATA_COMPONENT_TYPES.register(modEventBus);
-        modEventBus.addListener(this::registerPayloadHandlers);
         modEventBus.addListener(this::registerCapabilities);
         modEventBus.addListener(this::addToCreativeTabs);
 
@@ -201,7 +201,7 @@ public class MekanismModule implements ConduitCommonModule {
     }
 
     private void addToCreativeTabs(BuildCreativeModeTabContentsEvent event) {
-        if (event.getTabKey() == EIOCreativeTabs.MAIN) {
+        if (event.getTabKey() == EnderIOAPI.MAIN_CREATIVE_TAB) {
             event.insertAfter(EIOItems.BASIC_SOUL_FILTER.get().getDefaultInstance(),
                 BASIC_CHEMICAL_FILTER.get().getDefaultInstance(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
         }
@@ -212,11 +212,11 @@ public class MekanismModule implements ConduitCommonModule {
         context.register(HEAT, new HeatConduit(EnderIO.rl("block/conduit/heat"), Component.translatable(ConduitApi.INSTANCE.makeDescriptionId(HEAT))));
         context.register(CHEMICAL,
             new ChemicalConduit(EnderIO.rl("block/conduit/chemical"), Component.translatable(ConduitApi.INSTANCE.makeDescriptionId(CHEMICAL)),
-            750, false));
+            750));
         context.register(PRESSURIZED_CHEMICAL, new ChemicalConduit(EnderIO.rl("block/conduit/pressurized_chemical"),
-            Component.translatable(ConduitApi.INSTANCE.makeDescriptionId(PRESSURIZED_CHEMICAL)), 2_000, false));
+            Component.translatable(ConduitApi.INSTANCE.makeDescriptionId(PRESSURIZED_CHEMICAL)), 2_000));
         context.register(ENDER_CHEMICAL, new ChemicalConduit(EnderIO.rl("block/conduit/ender_chemical"),
-            Component.translatable(ConduitApi.INSTANCE.makeDescriptionId(ENDER_CHEMICAL)), 64_000, true));
+            Component.translatable(ConduitApi.INSTANCE.makeDescriptionId(ENDER_CHEMICAL)), 64_000));
     }
 
     @Override
@@ -319,33 +319,5 @@ public class MekanismModule implements ConduitCommonModule {
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(OSMIUM)))
                 .save(mekRecipeOutput, EnderIO.rl("mek_chemical_filter"));
-    }
-
-    private void registerPayloadHandlers(RegisterPayloadHandlersEvent event) {
-        var registrar = event.registrar("1");
-
-        registrar.playToServer(C2SClearLockedChemicalPacket.TYPE, C2SClearLockedChemicalPacket.STREAM_CODEC,
-                this::handleClearLockedPacket);
-    }
-
-    private void handleClearLockedPacket(C2SClearLockedChemicalPacket packet, IPayloadContext context) {
-        context.enqueueWork(() -> {
-            var level = context.player().level();
-            var be = level.getBlockEntity(packet.pos());
-            if (be instanceof ConduitBundle conduitBundle) {
-                var chemicalConduit = conduitBundle.getConduitByType(TYPE_CHEMICAL.get());
-                if (chemicalConduit != null) {
-                    var node = conduitBundle.getConduitNode(chemicalConduit);
-
-                    var network = node.getNetwork();
-                    if (network != null) {
-                        var networkContext = network.getContext(ChemicalConduitNetworkContext.TYPE);
-                        if (networkContext != null) {
-                            networkContext.setLockedChemical(MekanismAPI.EMPTY_CHEMICAL);
-                        }
-                    }
-                }
-            }
-        });
     }
 }

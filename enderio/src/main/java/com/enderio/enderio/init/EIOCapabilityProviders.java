@@ -8,6 +8,7 @@ import com.enderio.enderio.content.conduits.facades.ComponentBackedConduitFacade
 import com.enderio.enderio.content.filters.AbstractFilterItem;
 import com.enderio.enderio.content.filters.fluid.EnderFluidFilterItem;
 import com.enderio.enderio.content.filters.item.general.EnderItemFilterItem;
+import com.enderio.enderio.content.filters.item.limited.LimitedItemFilterItem;
 import com.enderio.enderio.content.filters.redstone.RedstoneANDFilter;
 import com.enderio.enderio.content.filters.redstone.RedstoneCountFilter;
 import com.enderio.enderio.content.filters.redstone.RedstoneNANDFilter;
@@ -57,11 +58,14 @@ public class EIOCapabilityProviders {
 
         // Filter menu providers
         event.registerItem(EnderIOCapabilities.FILTER_MENU_PROVIDER, AbstractFilterItem.FILTER_MENU_PROVIDER, EIOItems.BASIC_ITEM_FILTER,
-            EIOItems.ADVANCED_ITEM_FILTER, EIOItems.BIG_ITEM_FILTER, EIOItems.BIG_ADVANCED_ITEM_FILTER, EIOItems.BASIC_ITEM_FILTER, EIOItems.BASIC_SOUL_FILTER);
+            EIOItems.ADVANCED_ITEM_FILTER, EIOItems.BIG_ITEM_FILTER, EIOItems.BIG_ADVANCED_ITEM_FILTER, EIOItems.BASIC_SOUL_FILTER,
+            EIOItems.LIMITED_ITEM_FILTER);
 
         // Filter providers
         event.registerItem(EnderIOCapabilities.ITEM_FILTER, EnderItemFilterItem.ITEM_FILTER_PROVIDER, EIOItems.BASIC_ITEM_FILTER, EIOItems.ADVANCED_ITEM_FILTER,
             EIOItems.BIG_ITEM_FILTER, EIOItems.BIG_ADVANCED_ITEM_FILTER);
+
+        event.registerItem(EnderIOCapabilities.ITEM_FILTER, LimitedItemFilterItem.ITEM_FILTER_PROVIDER, EIOItems.LIMITED_ITEM_FILTER);
 
         event.registerItem(EnderIOCapabilities.FLUID_FILTER, EnderFluidFilterItem.FLUID_FILTER_PROVIDER, EIOItems.BASIC_FLUID_FILTER);
 
