@@ -6,7 +6,6 @@ import com.enderio.enderio.api.conduits.model.RegisterConduitModelModifiersEvent
 import com.enderio.enderio.api.conduits.screen.RegisterConduitScreenTypesEvent;
 import com.enderio.enderio.api.travel.RegisterTravelRenderersEvent;
 import com.enderio.enderio.client.content.conduits.ConduitBundleExtension;
-import com.enderio.enderio.client.content.conduits.ConduitFacadeColor;
 import com.enderio.enderio.client.content.conduits.gui.ConduitScreen;
 import com.enderio.enderio.client.content.conduits.gui.screen_type.ConduitScreenTypes;
 import com.enderio.enderio.client.content.conduits.gui.screen_type.EnergyConduitScreenType;
@@ -60,7 +59,6 @@ import com.enderio.enderio.client.content.machines.renderer.blockentity.FluidTan
 import com.enderio.enderio.client.content.machines.renderer.blockentity.NiardBER;
 import com.enderio.enderio.client.content.machines.renderer.blockentity.ObeliskBER;
 import com.enderio.enderio.client.content.misc_blocks.EnderSkullRenderer;
-import com.enderio.enderio.client.content.paint.PaintedBlockColor;
 import com.enderio.enderio.client.content.paint.PaintedSandRenderer;
 import com.enderio.enderio.client.content.tools.CoordinateMenuScreen;
 import com.enderio.enderio.client.content.travel.TravelAnchorHud;
@@ -80,6 +78,7 @@ import com.enderio.enderio.init.EIOParticles;
 import com.enderio.enderio.init.EIOTravelTargets;
 import net.minecraft.client.renderer.block.FluidModel;
 import net.minecraft.client.resources.model.sprite.Material;
+import net.minecraft.client.color.block.BlockTintSources;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
@@ -110,6 +109,7 @@ import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.fluids.FluidType;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -261,12 +261,12 @@ public class EnderIOClient {
 //            EIOBlocks.PAINTED_SLAB.get(),
 //            EIOBlocks.PAINTED_GLOWSTONE.get(),
 //            EIOBlocks.PAINTED_WALL.get());
-//
-//        for (var glassBlocks : EIOBlocks.GLASS_BLOCKS.values()) {
-//            for (var entry : glassBlocks.COLORS.entrySet()) {
-//                event.register((state, level, pos, tintIndex) -> entry.getKey().getMapColor().col, entry.getValue().get());
-//            }
-//        }
+
+        for (var glassBlocks : EIOBlocks.GLASS_BLOCKS.values()) {
+            for (var entry : glassBlocks.COLORS.entrySet()) {
+                event.register(List.of(BlockTintSources.constant(entry.getKey().getMapColor().col | 0xff000000)), entry.getValue().get());
+            }
+        }
     }
 
     @SubscribeEvent

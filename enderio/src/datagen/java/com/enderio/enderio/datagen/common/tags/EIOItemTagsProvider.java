@@ -1,5 +1,6 @@
 package com.enderio.enderio.datagen.common.tags;
 
+import com.enderio.enderio.content.glass.GlassLighting;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOItems;
@@ -11,7 +12,11 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public class EIOItemTagsProvider extends IntrinsicHolderTagsProvider<Item> {
@@ -219,42 +224,49 @@ public class EIOItemTagsProvider extends IntrinsicHolderTagsProvider<Item> {
         tag(EIOTags.Items.WIND_CHARGES).add(Items.WIND_CHARGE);
     }
 
-    //TODO
     private void addBlockItemTags() {
-//        copy(EIOTags.Blocks.BLOCKS_CONDUCTIVE_ALLOY, EIOTags.Items.BLOCKS_CONDUCTIVE_ALLOY);
-//        copy(EIOTags.Blocks.BLOCKS_ENERGETIC_ALLOY, EIOTags.Items.BLOCKS_ENERGETIC_ALLOY);
-//        copy(EIOTags.Blocks.BLOCKS_VIBRANT_ALLOY, EIOTags.Items.BLOCKS_VIBRANT_ALLOY);
-//        copy(EIOTags.Blocks.BLOCKS_REDSTONE_ALLOY, EIOTags.Items.BLOCKS_REDSTONE_ALLOY);
-//        copy(EIOTags.Blocks.BLOCKS_PULSATING_ALLOY, EIOTags.Items.BLOCKS_PULSATING_ALLOY);
-//        copy(EIOTags.Blocks.BLOCKS_DARK_STEEL, EIOTags.Items.BLOCKS_DARK_STEEL);
-//        copy(EIOTags.Blocks.BLOCKS_SOULARIUM, EIOTags.Items.BLOCKS_SOULARIUM);
-//        copy(EIOTags.Blocks.BLOCKS_END_STEEL, EIOTags.Items.BLOCKS_END_STEEL);
-//
-//        copy(EIOTags.Blocks.FUSED_QUARTZ, EIOTags.Items.FUSED_QUARTZ);
-//        copy(EIOTags.Blocks.ENLIGHTENED_FUSED_QUARTZ, EIOTags.Items.ENLIGHTENED_FUSED_QUARTZ);
-//        copy(EIOTags.Blocks.DARK_FUSED_QUARTZ, EIOTags.Items.DARK_FUSED_QUARTZ);
-//        copy(EIOTags.Blocks.CLEAR_GLASS, EIOTags.Items.CLEAR_GLASS);
-//
-//        var glassBlockCollections = EIOBlocks.GLASS_BLOCKS.entrySet()
-//            .stream()
-//            .sorted(Comparator.comparing(a -> a.getKey().glassName()))
-//            .toList();
-//
-//        for (var entry : glassBlockCollections) {
-//            var glassIdentifier = entry.getKey();
-//            var glassBlocks = entry.getValue();
-//
-//            var tag = tag(EIOTags.Items.GLASS_TAGS.get(glassIdentifier));
-//
-//            var glassItems = new ArrayList<>(glassBlocks.getAllBlocks()
-//                .sorted(Comparator.comparing(DeferredHolder::getKey))
-//                .map(i -> i.get().asItem())
-//                .map(i -> BuiltInRegistries.ITEM.getResourceKey(i).orElseThrow())
-//                .toList());
-//
-//            tag.addAll(glassItems);
-//        }
-//
-//        tag(Tags.Items.CHAINS).add(EIOBlocks.SOUL_CHAIN.asItem());
+        this.tag(EIOTags.Items.BLOCKS_CONDUCTIVE_ALLOY).add(EIOBlocks.CONDUCTIVE_ALLOY_BLOCK.asItem());
+        this.tag(EIOTags.Items.BLOCKS_ENERGETIC_ALLOY).add(EIOBlocks.ENERGETIC_ALLOY_BLOCK.asItem());
+        this.tag(EIOTags.Items.BLOCKS_VIBRANT_ALLOY).add(EIOBlocks.VIBRANT_ALLOY_BLOCK.asItem());
+        this.tag(EIOTags.Items.BLOCKS_REDSTONE_ALLOY).add(EIOBlocks.REDSTONE_ALLOY_BLOCK.asItem());
+        this.tag(EIOTags.Items.BLOCKS_PULSATING_ALLOY).add(EIOBlocks.PULSATING_ALLOY_BLOCK.asItem());
+        this.tag(EIOTags.Items.BLOCKS_DARK_STEEL).add(EIOBlocks.DARK_STEEL_BLOCK.asItem());
+        this.tag(EIOTags.Items.BLOCKS_SOULARIUM).add(EIOBlocks.SOULARIUM_BLOCK.asItem());
+        this.tag(EIOTags.Items.BLOCKS_END_STEEL).add(EIOBlocks.END_STEEL_BLOCK.asItem());
+
+        var fusedQuartzTag = tag(EIOTags.Items.FUSED_QUARTZ);
+        var enlightenedFusedQuartzTag = tag(EIOTags.Items.ENLIGHTENED_FUSED_QUARTZ);
+        var darkFusedQuartzTag = tag(EIOTags.Items.DARK_FUSED_QUARTZ);
+        var clearGlassTag = tag(EIOTags.Items.CLEAR_GLASS);
+
+        var glassBlockCollections = EIOBlocks.GLASS_BLOCKS.entrySet()
+            .stream()
+            .sorted(Comparator.comparing(a -> a.getKey().glassName()))
+            .map(Map.Entry::getValue)
+            .toList();
+
+        for (var glassBlocks : glassBlockCollections) {
+            var glassItems = new ArrayList<>(glassBlocks.getAllBlocks()
+                .sorted(Comparator.comparing(DeferredHolder::getKey))
+                .map(DeferredHolder::get)
+                .toList());
+
+            for (var block : glassItems) {
+                if (block.glassIdentifier().explosionResistance()) {
+                    fusedQuartzTag.add(block.asItem());
+
+                    if (block.glassIdentifier().lighting() == GlassLighting.EMITTING) {
+                        enlightenedFusedQuartzTag.add(block.asItem());
+                    }
+
+                    if (block.glassIdentifier().lighting() == GlassLighting.BLOCKING) {
+                        darkFusedQuartzTag.add(block.asItem());
+                    }
+                } else {
+                    clearGlassTag.add(block.asItem());
+                }
+                this.tag(EIOTags.Items.GLASS_TAGS.get(block.glassIdentifier())).add(block.asItem());
+            }
+        }
     }
 }
