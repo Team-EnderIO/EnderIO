@@ -2,6 +2,7 @@ package com.enderio.enderio.content.machines.drain;
 
 import com.enderio.core.common.storage.FluidStorage;
 import com.enderio.core.common.storage.layout.FluidStorageLayout;
+import com.enderio.core.common.storage.layout.SlotTemplates;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.UseOnly;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
@@ -69,7 +70,7 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements Range
 
     public static final FluidStorageLayout<DrainBlockEntity> FLUID_STORAGE_LAYOUT =
         FluidStorageLayout.<DrainBlockEntity>builder()
-            .outputSlot(TANK_SLOT, slot -> slot
+            .slot(TANK_SLOT, SlotTemplates.output(), slot -> slot
                 .capacity(CAPACITY)
                 .filter((index, resource, drain) -> drain.type.isSame(resource.getFluid())))
             .build();

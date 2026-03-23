@@ -87,6 +87,11 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
             return self();
         }
 
+        // Support use of a 'template' and override
+        public final TBuilder slot(SingleResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T, TContext>> template, UnaryOperator<SlotBuilder<T, TContext>> slotBuilder) {
+            return slot(key, b -> slotBuilder.apply(template.apply(b)));
+        }
+
         protected final TBuilder slots(MultiResourceSlotKey<T> key, Runnable slotCreator) {
             List<Integer> indices = new ArrayList<>(key.count());
             for (int i = 0; i < key.count(); i++) {
@@ -102,70 +107,11 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
         public final TBuilder slots(MultiResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T, TContext>> slotBuilder) {
             return slots(key, () -> slots.add(slotBuilder.apply(createSlotBuilder()).build()));
         }
-        
-        // region Quick Slot Presets
 
-        public TBuilder storageSlot(SingleResourceSlotKey<T> key) {
-            return storageSlot(key, slot -> slot);
+        // Support use of a 'template' and override
+        public final TBuilder slots(MultiResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T, TContext>> template, UnaryOperator<SlotBuilder<T, TContext>> slotBuilder) {
+            return slots(key, b -> slotBuilder.apply(template.apply(b)));
         }
-
-        public TBuilder storageSlot(SingleResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T, TContext>> slotBuilder) {
-            return slot(key, slot -> slotBuilder.apply(setupStorageSlot(slot)));
-        }
-
-        public TBuilder storageSlots(MultiResourceSlotKey<T> key) {
-            return storageSlots(key, slot -> slot);
-        }
-
-        public TBuilder storageSlots(MultiResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T, TContext>> slotBuilder) {
-            return slots(key, slot -> slotBuilder.apply(setupStorageSlot(slot)));
-        }
-
-        private SlotBuilder<T, TContext> setupStorageSlot(SlotBuilder<T, TContext> slotBuilder) {
-            return slotBuilder.canInsert().canExtract().canManualInsert().canManualExtract();
-        }
-
-        public TBuilder inputSlot(SingleResourceSlotKey<T> key) {
-            return inputSlot(key, slot -> slot);
-        }
-
-        public TBuilder inputSlot(SingleResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T, TContext>> slotBuilder) {
-            return slot(key, slot -> slotBuilder.apply(setupInputSlot(slot)));
-        }
-
-        public TBuilder inputSlots(MultiResourceSlotKey<T> key) {
-            return inputSlots(key, slot -> slot);
-        }
-
-        public TBuilder inputSlots(MultiResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T, TContext>> slotBuilder) {
-            return slots(key, slot -> slotBuilder.apply(setupInputSlot(slot)));
-        }
-
-        private SlotBuilder<T, TContext> setupInputSlot(SlotBuilder<T, TContext> slotBuilder) {
-            return slotBuilder.canInsert().canManualInsert().canManualExtract();
-        }
-
-        public TBuilder outputSlot(SingleResourceSlotKey<T> key) {
-            return outputSlot(key, slot -> slot);
-        }
-
-        public TBuilder outputSlot(SingleResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T, TContext>> slotBuilder) {
-            return slot(key, slot -> slotBuilder.apply(setupOutputSlot(slot)));
-        }
-
-        public TBuilder outputSlots(MultiResourceSlotKey<T> key) {
-            return outputSlots(key, slot -> slot);
-        }
-
-        public TBuilder outputSlots(MultiResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T, TContext>> slotBuilder) {
-            return slots(key, slot -> slotBuilder.apply(setupOutputSlot(slot)));
-        }
-
-        private SlotBuilder<T, TContext> setupOutputSlot(SlotBuilder<T, TContext> slotBuilder) {
-            return slotBuilder.canExtract().canManualExtract();
-        }
-        
-        // endregion
 
         public static final class SlotBuilder<T extends Resource, TContext> {
             private boolean canInsert;

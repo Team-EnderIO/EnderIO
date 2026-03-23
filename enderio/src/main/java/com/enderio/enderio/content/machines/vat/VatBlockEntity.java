@@ -3,6 +3,7 @@ package com.enderio.enderio.content.machines.vat;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.core.common.storage.FluidStorage;
 import com.enderio.core.common.storage.layout.FluidStorageLayout;
+import com.enderio.core.common.storage.layout.SlotTemplates;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.core.common.util.EnderResourceUtil;
 import com.enderio.core.common.util.NamedFluidContents;
@@ -61,8 +62,8 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
 
     public static final FluidStorageLayout<VatBlockEntity> FLUID_STORAGE_LAYOUT =
         FluidStorageLayout.<VatBlockEntity>builder()
-            .storageSlot(INPUT_TANK, slot -> slot.capacity(TANK_CAPACITY))
-            .storageSlot(OUTPUT_TANK, slot -> slot.capacity(TANK_CAPACITY))
+            .slot(INPUT_TANK, SlotTemplates.storage(), slot -> slot.capacity(TANK_CAPACITY))
+            .slot(OUTPUT_TANK, SlotTemplates.storage(), slot -> slot.capacity(TANK_CAPACITY))
             .build();
 
     private final FluidStorage<VatBlockEntity> fluidStorage;

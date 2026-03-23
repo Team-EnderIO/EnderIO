@@ -2,6 +2,7 @@ package com.enderio.enderio.content.machines.obelisks.xp;
 
 import com.enderio.core.common.storage.FluidStorage;
 import com.enderio.core.common.storage.layout.FluidStorageLayout;
+import com.enderio.core.common.storage.layout.SlotTemplates;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.storage.SidedResourceHandler;
@@ -42,7 +43,7 @@ public class XPObeliskBlockEntity extends MachineBlockEntity {
 
     public static final FluidStorageLayout<XPObeliskBlockEntity> FLUID_STORAGE_LAYOUT =
         FluidStorageLayout.<XPObeliskBlockEntity>builder()
-            .storageSlot(TANK_SLOT, slot -> slot
+            .slot(TANK_SLOT, SlotTemplates.storage(), slot -> slot
                 .capacity(Integer.MAX_VALUE)
                 .filter((index, resource, obelisk) -> resource.getFluid().is(Tags.Fluids.EXPERIENCE)))
             .build();

@@ -1,6 +1,7 @@
 package com.enderio.core.storage;
 
 import com.enderio.core.common.storage.layout.ItemStorageLayout;
+import com.enderio.core.common.storage.layout.SlotTemplates;
 import com.enderio.core.common.storage.slot.MultiResourceSlotKey;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import net.minecraft.server.MinecraftServer;
@@ -16,7 +17,7 @@ public class ItemStorageLayoutTests {
     @Test
     public void ensureUseDefaultItemCapacityOnSingleSlot(MinecraftServer server) {
         var key = new SingleResourceSlotKey<ItemResource>();
-        var layout = Assertions.assertDoesNotThrow(() -> ItemStorageLayout.<Void>builder().inputSlot(key).build());
+        var layout = Assertions.assertDoesNotThrow(() -> ItemStorageLayout.<Void>builder().slot(key, SlotTemplates.input()).build());
 
         Assertions.assertEquals(64, layout.slotConfig(0).getCapacityAsInt(ItemResource.of(Items.STONE), null));
         Assertions.assertEquals(1, layout.slotConfig(0).getCapacityAsInt(ItemResource.of(Items.IRON_SWORD), null));
@@ -25,7 +26,7 @@ public class ItemStorageLayoutTests {
     @Test
     public void ensureUseDefaultItemCapacityOnMultipleSlots(MinecraftServer server) {
         var key = new MultiResourceSlotKey<ItemResource>(3);
-        var layout = Assertions.assertDoesNotThrow(() -> ItemStorageLayout.<Void>builder().inputSlots(key).build());
+        var layout = Assertions.assertDoesNotThrow(() -> ItemStorageLayout.<Void>builder().slots(key, SlotTemplates.input()).build());
 
         for (int i = 0; i < layout.size(); i++) {
             Assertions.assertEquals(64, layout.slotConfig(i).getCapacityAsInt(ItemResource.of(Items.STONE), null));

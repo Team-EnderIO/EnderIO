@@ -4,6 +4,7 @@ import com.enderio.core.common.storage.FluidStorage;
 import com.enderio.core.common.storage.ItemStorage;
 import com.enderio.core.common.storage.layout.FluidStorageLayout;
 import com.enderio.core.common.storage.layout.ItemStorageLayout;
+import com.enderio.core.common.storage.layout.SlotTemplates;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.core.common.util.EnderResourceUtil;
 import net.minecraft.world.item.Items;
@@ -23,8 +24,8 @@ public class EnderResourceUtilTests {
         var slot1 = new SingleResourceSlotKey<ItemResource>();
         var slot2 = new SingleResourceSlotKey<ItemResource>();
         var layout = ItemStorageLayout.<Void>builder()
-            .storageSlot(slot1)
-            .storageSlot(slot2)
+            .slot(slot1, SlotTemplates.storage())
+            .slot(slot2, SlotTemplates.storage())
             .build();
 
         // Create storage with an item in slot 0 and empty slot 1
@@ -48,8 +49,8 @@ public class EnderResourceUtilTests {
         var slot1 = new SingleResourceSlotKey<ItemResource>();
         var slot2 = new SingleResourceSlotKey<ItemResource>();
         var layout = ItemStorageLayout.<Void>builder()
-            .storageSlot(slot1)
-            .storageSlot(slot2)
+            .slot(slot1, SlotTemplates.storage())
+            .slot(slot2, SlotTemplates.storage())
             .build();
 
         // Create storage with items in both slots
@@ -74,8 +75,8 @@ public class EnderResourceUtilTests {
         var tank1 = new SingleResourceSlotKey<FluidResource>();
         var tank2 = new SingleResourceSlotKey<FluidResource>();
         var layout = FluidStorageLayout.<Void>builder()
-            .storageSlot(tank1, slot -> slot.capacity(10000))
-            .storageSlot(tank2, slot -> slot.capacity(10000))
+            .slot(tank1, SlotTemplates.storage(), slot -> slot.capacity(10000))
+            .slot(tank2, SlotTemplates.storage(), slot -> slot.capacity(10000))
             .build();
 
         // Create storage with water in tank 0 and empty tank 1
@@ -99,8 +100,8 @@ public class EnderResourceUtilTests {
         var tank1 = new SingleResourceSlotKey<FluidResource>();
         var tank2 = new SingleResourceSlotKey<FluidResource>();
         var layout = FluidStorageLayout.<Void>builder()
-            .storageSlot(tank1, slot -> slot.capacity(10000))
-            .storageSlot(tank2, slot -> slot.capacity(10000))
+            .slot(tank1, SlotTemplates.storage(), slot -> slot.capacity(10000))
+            .slot(tank2, SlotTemplates.storage(), slot -> slot.capacity(10000))
             .build();
 
         // Create storage with water in tank 0 and lava in tank 1 (full)
@@ -129,8 +130,8 @@ public class EnderResourceUtilTests {
         var sourceSlot1 = new SingleResourceSlotKey<ItemResource>();
         var sourceSlot2 = new SingleResourceSlotKey<ItemResource>();
         var sourceLayout = ItemStorageLayout.<Void>builder()
-            .storageSlot(sourceSlot1)
-            .storageSlot(sourceSlot2)
+            .slot(sourceSlot1, SlotTemplates.storage())
+            .slot(sourceSlot2, SlotTemplates.storage())
             .build();
         ItemStorage<Void> sourceStorage = new ItemStorage<>(sourceLayout, null);
         sourceStorage.set(0, ItemResource.of(Items.DIAMOND), 20);
@@ -140,8 +141,8 @@ public class EnderResourceUtilTests {
         var destSlot1 = new SingleResourceSlotKey<ItemResource>();
         var destSlot2 = new SingleResourceSlotKey<ItemResource>();
         var destLayout = ItemStorageLayout.<Void>builder()
-            .storageSlot(destSlot1)
-            .storageSlot(destSlot2)
+            .slot(destSlot1, SlotTemplates.storage())
+            .slot(destSlot2, SlotTemplates.storage())
             .build();
         ItemStorage<Void> destStorage = new ItemStorage<>(destLayout, null);
 
@@ -177,8 +178,8 @@ public class EnderResourceUtilTests {
         var sourceTank1 = new SingleResourceSlotKey<FluidResource>();
         var sourceTank2 = new SingleResourceSlotKey<FluidResource>();
         var sourceLayout = FluidStorageLayout.<Void>builder()
-            .storageSlot(sourceTank1, slot -> slot.capacity(10000))
-            .storageSlot(sourceTank2, slot -> slot.capacity(10000))
+            .slot(sourceTank1, SlotTemplates.storage(), slot -> slot.capacity(10000))
+            .slot(sourceTank2, SlotTemplates.storage(), slot -> slot.capacity(10000))
             .build();
         FluidStorage<Void> sourceStorage = new FluidStorage<>(sourceLayout, null);
         sourceStorage.set(0, FluidResource.of(Fluids.WATER), 8000);
@@ -188,8 +189,8 @@ public class EnderResourceUtilTests {
         var destTank1 = new SingleResourceSlotKey<FluidResource>();
         var destTank2 = new SingleResourceSlotKey<FluidResource>();
         var destLayout = FluidStorageLayout.<Void>builder()
-            .storageSlot(destTank1, slot -> slot.capacity(10000))
-            .storageSlot(destTank2, slot -> slot.capacity(10000))
+            .slot(destTank1, SlotTemplates.storage(), slot -> slot.capacity(10000))
+            .slot(destTank2, SlotTemplates.storage(), slot -> slot.capacity(10000))
             .build();
         FluidStorage<Void> destStorage = new FluidStorage<>(destLayout, null);
 

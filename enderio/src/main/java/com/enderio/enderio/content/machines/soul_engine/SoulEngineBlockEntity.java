@@ -2,6 +2,7 @@ package com.enderio.enderio.content.machines.soul_engine;
 
 import com.enderio.core.common.storage.FluidStorage;
 import com.enderio.core.common.storage.layout.FluidStorageLayout;
+import com.enderio.core.common.storage.layout.SlotTemplates;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.FixedScalable;
@@ -75,7 +76,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
 
     public static final FluidStorageLayout<SoulEngineBlockEntity> FLUID_STORAGE_LAYOUT =
         FluidStorageLayout.<SoulEngineBlockEntity>builder()
-            .storageSlot(TANK, slot -> slot
+            .slot(TANK, SlotTemplates.storage(), slot -> slot
                 .capacity(FLUID_CAPACITY)
                 .filter((index, resource, engine) -> engine.isFluidValid(resource.toStack(1))))
             .build();

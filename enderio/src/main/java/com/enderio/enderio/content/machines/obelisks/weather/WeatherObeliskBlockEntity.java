@@ -3,6 +3,7 @@ package com.enderio.enderio.content.machines.obelisks.weather;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.core.common.storage.FluidStorage;
 import com.enderio.core.common.storage.layout.FluidStorageLayout;
+import com.enderio.core.common.storage.layout.SlotTemplates;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.io.IOMode;
 import com.enderio.enderio.foundation.MachineNBTKeys;
@@ -62,7 +63,7 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity {
 
     public static final FluidStorageLayout<WeatherObeliskBlockEntity> FLUID_STORAGE_LAYOUT =
         FluidStorageLayout.<WeatherObeliskBlockEntity>builder()
-            .storageSlot(TANK_SLOT, slot -> slot.capacity(TANK_CAPACITY))
+            .slot(TANK_SLOT, SlotTemplates.storage(), slot -> slot.capacity(TANK_CAPACITY))
             .build();
 
     private final FluidStorage<WeatherObeliskBlockEntity> fluidStorage;

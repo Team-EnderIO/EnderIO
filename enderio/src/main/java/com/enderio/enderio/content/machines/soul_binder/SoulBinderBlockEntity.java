@@ -2,6 +2,7 @@ package com.enderio.enderio.content.machines.soul_binder;
 
 import com.enderio.core.common.storage.FluidStorage;
 import com.enderio.core.common.storage.layout.FluidStorageLayout;
+import com.enderio.core.common.storage.layout.SlotTemplates;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.UseOnly;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
@@ -71,7 +72,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
 
     public static final FluidStorageLayout<SoulBinderBlockEntity> FLUID_STORAGE_LAYOUT =
          FluidStorageLayout.<SoulBinderBlockEntity>builder()
-            .inputSlot(TANK_SLOT, slot -> slot
+            .slot(TANK_SLOT, SlotTemplates.input(), slot -> slot
                 .capacity(TANK_CAPACITY)
                 .filter((index, resource, binder) -> resource.is(Tags.Fluids.EXPERIENCE)))
             .build();

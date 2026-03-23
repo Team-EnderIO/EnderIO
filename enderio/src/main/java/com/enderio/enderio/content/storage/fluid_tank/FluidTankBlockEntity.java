@@ -2,6 +2,7 @@ package com.enderio.enderio.content.storage.fluid_tank;
 
 import com.enderio.core.common.storage.FluidStorage;
 import com.enderio.core.common.storage.layout.FluidStorageLayout;
+import com.enderio.core.common.storage.layout.SlotTemplates;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
@@ -86,7 +87,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
     public static final FluidStorageLayout<FluidTankBlockEntity> FLUID_STORAGE_LAYOUT =
         FluidStorageLayout.<FluidTankBlockEntity>builder()
-            .storageSlot(TANK_SLOT, slot -> slot.capacity((fr, tank) -> tank.getCapacity()))
+            .slot(TANK_SLOT, SlotTemplates.storage(), slot -> slot.capacity((fr, tank) -> tank.getCapacity()))
             .build();
 
     private final FluidStorage<FluidTankBlockEntity> fluidStorage;

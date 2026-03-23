@@ -2,6 +2,7 @@ package com.enderio.enderio.content.machines.niard;
 
 import com.enderio.core.common.storage.FluidStorage;
 import com.enderio.core.common.storage.layout.FluidStorageLayout;
+import com.enderio.core.common.storage.layout.SlotTemplates;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;
@@ -69,7 +70,7 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
 
     public static final FluidStorageLayout<NiardBlockEntity> FLUID_STORAGE_LAYOUT =
         FluidStorageLayout.<NiardBlockEntity>builder()
-            .storageSlot(TANK, slot -> slot.capacity(CAPACITY))
+            .slot(TANK, SlotTemplates.storage(), slot -> slot.capacity(CAPACITY))
             .build();
 
     private final FluidStorage<NiardBlockEntity> fluidStorage;

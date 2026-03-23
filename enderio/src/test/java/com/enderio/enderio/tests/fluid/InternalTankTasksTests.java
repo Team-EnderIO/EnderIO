@@ -4,6 +4,7 @@ import com.enderio.core.common.storage.FluidStorage;
 import com.enderio.core.common.storage.ItemStorage;
 import com.enderio.core.common.storage.layout.FluidStorageLayout;
 import com.enderio.core.common.storage.layout.ItemStorageLayout;
+import com.enderio.core.common.storage.layout.SlotTemplates;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.core.common.util.EnderResourceUtil;
 import com.enderio.enderio.content.storage.fluid_tank.FluidTankBlockEntity;
@@ -32,7 +33,7 @@ public class InternalTankTasksTests {
     // Helper method to create a test fluid storage
     private FluidStorage<Void> createFluidStorage(int capacity) {
         FluidStorageLayout<Void> layout = FluidStorageLayout.<Void>builder()
-            .storageSlot(TANK_SLOT, slot -> slot.capacity((fr, ctx) -> capacity))
+            .slot(TANK_SLOT, SlotTemplates.storage(), slot -> slot.capacity((fr, ctx) -> capacity))
             .build();
         return new FluidStorage<>(layout, null);
     }
@@ -40,8 +41,8 @@ public class InternalTankTasksTests {
     // Helper method to create a test item storage
     private ItemStorage<Void> createItemStorage() {
         ItemStorageLayout<Void> layout = ItemStorageLayout.<Void>builder()
-            .storageSlot(INPUT_SLOT, slot -> slot.capacity((ir, ctx) -> 64))
-            .storageSlot(OUTPUT_SLOT, slot -> slot.capacity((ir, ctx) -> 64))
+            .slot(INPUT_SLOT, SlotTemplates.storage(), slot -> slot.capacity((ir, ctx) -> 64))
+            .slot(OUTPUT_SLOT, SlotTemplates.storage(), slot -> slot.capacity((ir, ctx) -> 64))
             .build();
         return new ItemStorage<>(layout, null);
     }
