@@ -1,7 +1,10 @@
 {
   "variants": {
     "": {
-      "model": "enderio:block/painted_wall"
+      "type": "enderio:paint",
+      "variant": {
+        "model": "minecraft:block/cobblestone_wall"
+      }
     }
   }
 }

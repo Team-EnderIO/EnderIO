@@ -1,7 +1,10 @@
 {
   "variants": {
     "": {
-      "model": "enderio:block/painted_stairs"
+      "type": "enderio:paint",
+      "variant": {
+        "model": "minecraft:block/oak_stairs"
+      }
     }
   }
 }

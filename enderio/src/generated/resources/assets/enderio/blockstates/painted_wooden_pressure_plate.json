@@ -1,7 +1,10 @@
 {
   "variants": {
     "": {
-      "model": "enderio:block/painted_wooden_pressure_plate"
+      "type": "enderio:paint",
+      "variant": {
+        "model": "minecraft:block/oak_pressure_plate"
+      }
     }
   }
 }

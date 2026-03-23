@@ -31,13 +31,13 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.level.BlockAndLightGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.model.DynamicBlockStateModel;
 import net.neoforged.neoforge.client.model.block.CustomUnbakedBlockStateModel;
-import org.jspecify.annotations.Nullable;
+import net.neoforged.neoforge.client.model.quad.MutableQuad;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -342,12 +342,14 @@ public class ConduitBlockStateModel implements DynamicBlockStateModel {
             if (!quad.materialInfo().isTinted()) {
                 newQuads.add(quad);
             } else if (insert != null && quad.materialInfo().tintIndex() == 1) {
-                var mutableQuad = new MutableQuad(quad);
-                mutableQuad.withColor(insert.getTextureDiffuseColor());
+                var mutableQuad = new MutableQuad();
+                mutableQuad.setFrom(quad);
+                mutableQuad.setColor(insert.getTextureDiffuseColor());
                 newQuads.add(mutableQuad.toBakedQuad());
             } else if (extract != null && quad.materialInfo().tintIndex() == 0) {
-                var mutableQuad = new MutableQuad(quad);
-                mutableQuad.withColor(extract.getTextureDiffuseColor());
+                var mutableQuad = new MutableQuad();
+                mutableQuad.setFrom(quad);
+                mutableQuad.setColor(extract.getTextureDiffuseColor());
                 newQuads.add(mutableQuad.toBakedQuad());
             } else {
                 newQuads.add(quad);

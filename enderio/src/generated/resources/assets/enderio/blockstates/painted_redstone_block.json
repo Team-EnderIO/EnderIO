@@ -1,7 +1,10 @@
 {
   "variants": {
     "": {
-      "model": "enderio:block/painted_redstone_block"
+      "type": "enderio:paint",
+      "variant": {
+        "model": "minecraft:block/redstone_block"
+      }
     }
   }
 }

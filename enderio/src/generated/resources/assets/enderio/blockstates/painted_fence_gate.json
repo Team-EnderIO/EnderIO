@@ -1,7 +1,10 @@
 {
   "variants": {
     "": {
-      "model": "enderio:block/painted_fence_gate"
+      "type": "enderio:paint",
+      "variant": {
+        "model": "minecraft:block/oak_fence_gate"
+      }
     }
   }
 }

@@ -1,7 +1,10 @@
 {
   "variants": {
     "": {
-      "model": "enderio:block/painted_sand"
+      "type": "enderio:paint",
+      "variant": {
+        "model": "minecraft:block/sand"
+      }
     }
   }
 }

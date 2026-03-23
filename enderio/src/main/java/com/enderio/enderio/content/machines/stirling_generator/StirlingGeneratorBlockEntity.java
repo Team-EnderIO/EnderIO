@@ -61,7 +61,7 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
     public MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
                 .inputSlot((slot, resource) -> resource.toStack().getBurnTime(RecipeType.SMELTING, level.fuelValues()) > 0
-                        && resource.toStack().getCraftingRemainder() != null)
+                        && resource.toStack().getCraftingRemainder() == null)
                 .slotAccess(FUEL)
                 .capacitor()
                 .build();

@@ -220,6 +220,6 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) { 
     }
 
     public ValueInput asInput(HolderLookup.Provider lookup) {
-        return TagValueInput.create(new ProblemReporter.Collector(), lookup, entityTag);
+        return TagValueInput.create(new ProblemReporter.Collector(), lookup, getEntityTagWithId());
     }
 }

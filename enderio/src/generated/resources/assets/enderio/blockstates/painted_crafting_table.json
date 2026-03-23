@@ -1,7 +1,10 @@
 {
   "variants": {
     "": {
-      "model": "enderio:block/painted_crafting_table"
+      "type": "enderio:paint",
+      "variant": {
+        "model": "minecraft:block/crafting_table"
+      }
     }
   }
 }

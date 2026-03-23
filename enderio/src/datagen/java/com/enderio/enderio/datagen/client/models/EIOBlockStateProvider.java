@@ -4,9 +4,9 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.client.content.conduits.model.bundle.port.ConduitBlockStateModel;
 import com.enderio.enderio.client.content.glass.GlassItemColor;
 import com.enderio.enderio.client.content.machines.IOOverlayBlockStateModel;
+import com.enderio.enderio.client.content.paint.model.port.PaintedBlockStateModel;
 import com.enderio.enderio.content.glass.FusedQuartzBlock;
 import com.enderio.enderio.content.misc_blocks.skull.EnderSkullBlock;
-import com.enderio.enderio.content.paint.block.PaintedStairBlock;
 import com.enderio.enderio.foundation.block.ProgressMachineBlock;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOFluids;
@@ -120,21 +120,23 @@ public class EIOBlockStateProvider extends ModelProvider {
         registerMachineBlocks(blockModels);
         registerFluidBlocks(blockModels);
 
+        registerPaintBlocks(blockModels);
+
         blockModels.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(EIOBlocks.CONDUIT_BUNDLE.get(),
             MultiVariant.of(new CustomBlockStateModelBuilder.Simple(ConduitBlockStateModel.Unbaked.INSTANCE))));
 
         //TODO
         // Painted Blocks
-        for (var pair : EIOBlocks.PAINTED_BLOCKS) {
-            Block block = pair.left().get();
-            Direction itemTextureDirection = Direction.NORTH;
-
-            if (block instanceof PaintedStairBlock) {
-                itemTextureDirection = Direction.WEST;
-            }
-
-            blockModels.createTrivialCube(block);
-        }
+//        for (var pair : EIOBlocks.PAINTED_BLOCKS) {
+//            Block block = pair.left().get();
+//            Direction itemTextureDirection = Direction.NORTH;
+//
+//            if (block instanceof PaintedStairBlock) {
+//                itemTextureDirection = Direction.WEST;
+//            }
+//
+//            blockModels.createTrivialCube(block);
+//        }
 
         blockModels.createTrivialCube(EIOBlocks.PAINTED_TRAVEL_ANCHOR.get());
         simpleTranslucentBlock(blockModels, EIOBlocks.ENDERFACE.get());
@@ -278,6 +280,16 @@ public class EIOBlockStateProvider extends ModelProvider {
 //
 //
 //    }
+
+    private void registerPaintBlocks(BlockModelGenerators blockModels) {
+        for (var pair : EIOBlocks.PAINTED_BLOCKS) {
+            Block block = pair.left().get();
+            Direction itemTextureDirection = Direction.NORTH;
+
+            var paint = wrapPaintModel(pair.right());
+            blockModels.blockStateOutput.accept(MultiVariantGenerator.dispatch(block, paint));
+        }
+    }
 
     private void registerMachineBlocks(BlockModelGenerators blockModels) {
         // Fluid Tanks
@@ -444,6 +456,11 @@ public class EIOBlockStateProvider extends ModelProvider {
         return MultiVariant.of(new IOModelBuilder(new IOOverlayBlockStateModel.Unbaked(plainModel(model))));
     }
 
+    private MultiVariant wrapPaintModel(Block paint) {
+        return MultiVariant.of(new PaintBuilder(new PaintedBlockStateModel.Unbaked(
+            BlockModelGenerators.plainVariant(ModelLocationUtils.getModelLocation(paint)).toUnbaked())));
+    }
+
     public static class IOModelBuilder extends CustomBlockStateModelBuilder {
 
         private final IOOverlayBlockStateModel.Unbaked model;
@@ -460,6 +477,30 @@ public class EIOBlockStateProvider extends ModelProvider {
         @Override
         public CustomBlockStateModelBuilder with(UnbakedMutator variantMutator) {
             return new IOModelBuilder(variantMutator.apply(model));
+        }
+
+        @Override
+        public CustomUnbakedBlockStateModel toUnbaked() {
+            return this.model;
+        }
+    }
+
+    public static class PaintBuilder extends CustomBlockStateModelBuilder {
+
+        private final PaintedBlockStateModel.Unbaked model;
+
+        public PaintBuilder(PaintedBlockStateModel.Unbaked model) {
+            this.model = model;
+        }
+
+        @Override
+        public CustomBlockStateModelBuilder with(VariantMutator variantMutator) {
+            return new PaintBuilder(new PaintedBlockStateModel.Unbaked(model));
+        }
+
+        @Override
+        public CustomBlockStateModelBuilder with(UnbakedMutator variantMutator) {
+            return new PaintBuilder(variantMutator.apply(model));
         }
 
         @Override

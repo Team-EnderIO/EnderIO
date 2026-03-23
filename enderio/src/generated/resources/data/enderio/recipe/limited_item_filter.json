@@ -2,18 +2,13 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "C": {
-      "item": "minecraft:comparator"
-    },
-    "F": {
-      "item": "enderio:advanced_item_filter"
-    }
+    "C": "minecraft:comparator",
+    "F": "enderio:advanced_item_filter"
   },
   "pattern": [
     "CFC"
   ],
   "result": {
-    "count": 1,
     "id": "enderio:limited_item_filter"
   }
 }

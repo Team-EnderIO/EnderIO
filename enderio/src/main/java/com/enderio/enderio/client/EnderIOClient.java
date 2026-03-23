@@ -2,7 +2,6 @@ package com.enderio.enderio.client;
 
 import com.enderio.core.client.item.FluidBarDecorator;
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.conduits.model.RegisterConduitModelModifiersEvent;
 import com.enderio.enderio.api.conduits.screen.RegisterConduitScreenTypesEvent;
 import com.enderio.enderio.api.travel.RegisterTravelRenderersEvent;
@@ -20,8 +19,8 @@ import com.enderio.enderio.client.content.conduits.model.modifier.RedstoneCondui
 import com.enderio.enderio.client.content.enderface.EnderfaceRenderer;
 import com.enderio.enderio.client.content.filters.EnderFluidFilterScreen;
 import com.enderio.enderio.client.content.filters.EnderItemFilterScreen;
-import com.enderio.enderio.client.content.filters.LimitedItemFilterScreen;
 import com.enderio.enderio.client.content.filters.EnderSoulFilterScreen;
+import com.enderio.enderio.client.content.filters.LimitedItemFilterScreen;
 import com.enderio.enderio.client.content.filters.redstone.RedstoneCountFilterScreen;
 import com.enderio.enderio.client.content.filters.redstone.RedstoneDoubleChannelFilterScreen;
 import com.enderio.enderio.client.content.filters.redstone.RedstoneTimerFilterScreen;
@@ -61,6 +60,7 @@ import com.enderio.enderio.client.content.machines.renderer.blockentity.NiardBER
 import com.enderio.enderio.client.content.machines.renderer.blockentity.ObeliskBER;
 import com.enderio.enderio.client.content.misc_blocks.EnderSkullRenderer;
 import com.enderio.enderio.client.content.paint.PaintedSandRenderer;
+import com.enderio.enderio.client.content.paint.model.port.PaintedBlockStateModel;
 import com.enderio.enderio.client.content.tools.CoordinateMenuScreen;
 import com.enderio.enderio.client.content.travel.TravelAnchorHud;
 import com.enderio.enderio.client.content.travel.TravelTargetRendering;
@@ -76,9 +76,9 @@ import com.enderio.enderio.init.EIOItems;
 import com.enderio.enderio.init.EIOMenus;
 import com.enderio.enderio.init.EIOParticles;
 import com.enderio.enderio.init.EIOTravelTargets;
+import net.minecraft.client.color.block.BlockTintSources;
 import net.minecraft.client.renderer.block.FluidModel;
 import net.minecraft.client.resources.model.sprite.Material;
-import net.minecraft.client.color.block.BlockTintSources;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
@@ -103,7 +103,6 @@ import net.neoforged.neoforge.client.event.RegisterItemModelsEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.client.event.RegisterSpecialModelRendererEvent;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.fluids.FluidType;
@@ -385,6 +384,7 @@ public class EnderIOClient {
     public static void registerGeometryLoaders(RegisterBlockStateModels event) {
         event.registerModel(EnderIO.id("conduit"), ConduitBlockStateModel.Unbaked.CODEC);
         event.registerModel(EnderIO.id("io_overlay"), IOOverlayBlockStateModel.Unbaked.MAP_CODEC);
+        event.registerModel(EnderIO.id("paint"), PaintedBlockStateModel.Unbaked.MAP_CODEC);
 
     }
 
