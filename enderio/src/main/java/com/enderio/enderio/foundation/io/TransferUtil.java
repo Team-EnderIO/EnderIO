@@ -106,7 +106,11 @@ public class TransferUtil {
         try (Transaction transaction = Transaction.openRoot()) {
             // Use first available self handler to check total available energy
             // all of the 'self' handlers should be the same buffer.
-            int availableEnergy = transfers.getFirst().self.extract(Integer.MAX_VALUE, transaction);
+            int availableEnergy;
+            try (Transaction checkTransaction = Transaction.open(transaction)) {
+                availableEnergy = transfers.getFirst().self.extract(Integer.MAX_VALUE, checkTransaction);
+            }
+
             if (availableEnergy <= 0) {
                 return;
             }
@@ -134,6 +138,8 @@ public class TransferUtil {
                     break;
                 }
             }
+
+            transaction.commit();
         }
     }
 
