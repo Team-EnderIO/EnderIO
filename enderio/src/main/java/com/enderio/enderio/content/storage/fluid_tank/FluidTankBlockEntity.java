@@ -85,12 +85,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
     public static final SingleResourceSlotKey<FluidResource> TANK_SLOT = new SingleResourceSlotKey<>();
 
-    public static final FluidStorageLayout<FluidTankBlockEntity> FLUID_STORAGE_LAYOUT =
-        FluidStorageLayout.<FluidTankBlockEntity>builder()
-            .slot(TANK_SLOT, SlotTemplates.storage(), slot -> slot.capacity((fr, tank) -> tank.getCapacity()))
-            .build();
-
-    private final FluidStorage<FluidTankBlockEntity> fluidStorage;
+    private final FluidStorage fluidStorage;
 
     // TODO: Swap from optional to nullable?
     private Optional<RecipeHolder<TankRecipe>> currentRecipe = Optional.empty();
@@ -103,7 +98,11 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
     public FluidTankBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState, true);
 
-        fluidStorage = new FluidStorage<>(FLUID_STORAGE_LAYOUT, this) {
+        var fluidStorageLayout = FluidStorageLayout.builder()
+            .slot(TANK_SLOT, SlotTemplates.storage(), slot -> slot.capacity((_) -> this.getCapacity()))
+            .build();
+
+        fluidStorage = new FluidStorage(fluidStorageLayout) {
             @Override
             protected void onContentsChanged(int index, FluidStack previousContents) {
                 onTankContentsChanged();
@@ -120,7 +119,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
     public abstract int getCapacity();
 
-    public FluidStorage<FluidTankBlockEntity> getFluidStorage() {
+    public FluidStorage getFluidStorage() {
         return fluidStorage;
     }
 
