@@ -1289,7 +1289,8 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
         if (level != null && level.isClientSide()) {
             ResourceKey<Level> dimension = level.dimension();
-            getChunkFacadesForDimension(dimension).remove(SectionPos.asLong(worldPosition));
+            getChunkFacadesForDimension(dimension).get(SectionPos.asLong(worldPosition))
+                .remove(worldPosition.asLong()); // TODO: Cleanup mapping if list becomes empty?
             getFacadesForDimension(dimension).remove(worldPosition.asLong());
         }
     }

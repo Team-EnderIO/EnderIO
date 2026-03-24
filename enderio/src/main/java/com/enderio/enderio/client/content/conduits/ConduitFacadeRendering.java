@@ -3,24 +3,18 @@ package com.enderio.enderio.client.content.conduits;
 import com.enderio.enderio.client.content.conduits.model.facades.ClientFacadeVisibility;
 import com.enderio.enderio.compat.ModCompatHelper;
 import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
-import com.mojang.blaze3d.vertex.QuadInstance;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.irisshaders.iris.api.v0.IrisApi;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockQuadOutput;
-import net.minecraft.client.renderer.block.ModelBlockRenderer;
-import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.geometry.BakedQuad;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.util.ARGB;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -31,9 +25,6 @@ import java.util.Map;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class ConduitFacadeRendering {
-
-    private static final ThreadLocal<RandomSource> RANDOM = ThreadLocal
-            .withInitial(() -> new SingleThreadedRandomSource(42L));
 
     @SubscribeEvent
     static void renderFacade(AddSectionGeometryEvent event) {
@@ -94,39 +85,37 @@ public class ConduitFacadeRendering {
 
             VertexConsumerWrapper wrapper = opaque ? null : new AlphaWrapper(context);
 
-            RandomSource random = RANDOM.get();
-
             for (Map.Entry<BlockPos, BlockState> entry : facades.entrySet()) {
-                context.getPoseStack().pushPose();
-                context.getPoseStack()
-                        .translate(entry.getKey().getX() & 15, entry.getKey().getY() & 15, entry.getKey().getZ() & 15);
-
                 var state = entry.getValue();
                 var pos = entry.getKey();
 
-                random.setSeed(42L);
-
                 var model = Minecraft.getInstance()
                         .getModelManager()
-                        .getBlockModelSet()
+                        .getBlockStateModelSet()
                         .get(entry.getValue());
 
-                if (!(model instanceof BlockStateModel blockStateModel)) {
-                    return;
-                }
+                var poseStack = new PoseStack();
+                BlockQuadOutput output = (x, y, z, bakedQuad, quadInstance) -> {
+                    poseStack.pushPose();
+                    poseStack.translate(x, y, z);
 
-                // TODO: 26.1 - work out new ModelBlockRenderer.
-//                BlockQuadOutput output = (float x, float y, float z, BakedQuad quad, QuadInstance instance) -> {
-//                    VertexConsumer buffer = wrapper == null ? wrapper : context.getOrCreateChunkBuffer(quad.spriteInfo().layer());
-//                    buffer.putBulkData(pose, quad, brightness, color, lightmapCoord, overlayCoords);
-//                };
-//
-//                ModelBlockRenderer blockRenderer = new ModelBlockRenderer(true, false, Minecraft.getInstance().getBlockColors());
-//                blockRenderer
-//                    .tesselateBlock(context.getRegion(), blockStateModel.collectParts(context.getRegion(), pos, state, random), state, pos, context.getPoseStack(),
-//                        output, true, OverlayTexture.NO_OVERLAY);
+                    VertexConsumer buffer = wrapper != null ? wrapper : context.getOrCreateChunkBuffer(bakedQuad.materialInfo().layer());
+                    buffer.putBakedQuad(poseStack.last(), bakedQuad, quadInstance);
 
-                context.getPoseStack().popPose();
+                    poseStack.popPose();
+                };
+
+                var renderer = context.getBlockRenderer();
+
+                renderer.tesselateBlock(output,
+                    SectionPos.sectionRelative(pos.getX()),
+                    SectionPos.sectionRelative(pos.getY()),
+                    SectionPos.sectionRelative(pos.getZ()),
+                    context.getRegion(),
+                    pos,
+                    state,
+                    model,
+                    state.getSeed(pos));
             }
         }
 
