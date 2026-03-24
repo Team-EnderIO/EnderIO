@@ -8,7 +8,7 @@ import java.util.Map;
 
 // TODO: Add a machine variant which has additional helpers for things like capacitor slots.
 public class ItemStorageLayout extends ResourceStorageLayout<ItemResource> {
-    protected ItemStorageLayout(List<SlotConfig<ItemResource>> slots, Map<ResourceSlotKey, List<Integer>> keyMap) {
+    protected ItemStorageLayout(List<SlotConfig<ItemResource>> slots, Map<ResourceSlotKey<ItemResource>, List<Integer>> keyMap) {
         super(slots, keyMap);
     }
 

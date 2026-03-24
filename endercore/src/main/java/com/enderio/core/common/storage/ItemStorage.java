@@ -2,6 +2,7 @@ package com.enderio.core.common.storage;
 
 import com.enderio.core.common.storage.layout.ResourceStorageLayout;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 
@@ -33,5 +34,13 @@ public class ItemStorage extends StacksResourceStorage<ItemResource, ItemStack> 
     @Override
     protected boolean matches(ItemStack stack, ItemResource resource) {
         return resource.matches(stack);
+    }
+
+    public void copyFromItem(ItemContainerContents contents) {
+        contents.copyInto(this.stacks);
+    }
+
+    public ItemContainerContents toItemContents() {
+        return ItemContainerContents.fromItems(this.stacks);
     }
 }

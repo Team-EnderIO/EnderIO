@@ -1,12 +1,13 @@
 package com.enderio.enderio.foundation.task;
 
 import com.enderio.core.common.recipes.OutputStack;
-import com.enderio.core.common.storage.ResourceStorage;
+import com.enderio.core.common.storage.FluidStorage;
+import com.enderio.core.common.storage.ItemStorage;
+import com.enderio.core.common.storage.slot.ResourceSlotId;
+import com.enderio.core.common.storage.slot.ResourceSlotKey;
 import com.enderio.enderio.foundation.MachineRecipe;
-import com.enderio.enderio.foundation.inventory.MachineInventory;
-import com.enderio.enderio.foundation.inventory.MultiSlotAccess;
-import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import com.enderio.enderio.foundation.state.MachineState;
+import com.enderio.enderio.foundation.state.MachineStateUpdater;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
@@ -18,7 +19,6 @@ import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jspecify.annotations.Nullable;
@@ -31,11 +31,12 @@ import java.util.List;
 public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends RecipeInput> implements MachineTask {
 
     protected final Level level;
-    protected final MachineInventory inventory;
+    protected final MachineStateUpdater machineStateUpdater;
+    protected final ItemStorage inventory;
     @Nullable
-    protected final ResourceStorage<FluidResource> fluidStorage;
+    protected final FluidStorage fluidStorage;
     @Nullable
-    protected final MultiSlotAccess outputSlots;
+    protected final ResourceSlotKey<ItemResource> outputSlots;
     protected final T recipeInput;
 
     @Nullable
@@ -56,31 +57,47 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public CraftingMachineTask(Level level, MachineInventory inventory, T recipeInput,
-            @Nullable MultiSlotAccess outputSlots, @Nullable RecipeHolder<R> recipe) {
-        this(level, inventory, null, recipeInput, outputSlots, recipe);
+    public CraftingMachineTask(
+        Level level,
+        MachineStateUpdater machineStateUpdater,
+        ItemStorage inventory,
+        T recipeInput,
+        @Nullable ResourceSlotKey<ItemResource> outputSlots,
+        @Nullable RecipeHolder<R> recipe) {
+        this(level, machineStateUpdater, inventory, null, recipeInput, outputSlots, recipe);
     }
 
-    public CraftingMachineTask(Level level, MachineInventory inventory,
-            @Nullable ResourceStorage<FluidResource> fluidStorage, T recipeInput, @Nullable RecipeHolder<R> recipe) {
-        this(level, inventory, fluidStorage, recipeInput, null, recipe);
+    public CraftingMachineTask(
+        Level level,
+        MachineStateUpdater machineStateUpdater,
+        ItemStorage inventory,
+        @Nullable FluidStorage fluidStorage,
+        T recipeInput,
+        @Nullable RecipeHolder<R> recipe) {
+        this(level, machineStateUpdater, inventory, fluidStorage, recipeInput, null, recipe);
     }
 
-    public CraftingMachineTask(Level level, MachineInventory inventory,
-            @Nullable ResourceStorage<FluidResource> fluidStorage, T recipeInput, @Nullable MultiSlotAccess outputSlots,
-            @Nullable RecipeHolder<R> recipe) {
+    public CraftingMachineTask(
+        Level level,
+        MachineStateUpdater machineStateUpdater,
+        ItemStorage inventory,
+        @Nullable FluidStorage fluidStorage,
+        T recipeInput,
+        @Nullable ResourceSlotKey<ItemResource> outputSlots,
+        @Nullable RecipeHolder<R> recipe) {
         this.level = level;
+        this.machineStateUpdater = machineStateUpdater;
         this.inventory = inventory;
         this.fluidStorage = fluidStorage;
         this.recipeInput = recipeInput;
         this.outputSlots = outputSlots;
         this.recipeId = recipe == null ? null : recipe.id();
         this.recipeHolder = recipe;
-        inventory.updateMachineState(MachineState.FULL_OUTPUT, false);
-        inventory.updateMachineState(MachineState.EMPTY_INPUT, true);
+        machineStateUpdater.updateMachineState(MachineState.FULL_OUTPUT, false);
+        machineStateUpdater.updateMachineState(MachineState.EMPTY_INPUT, true);
     }
 
-    public MachineInventory getInventory() {
+    public ItemStorage getInventory() {
         return inventory;
     }
 
@@ -160,11 +177,11 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
 
         // If we don't have a recipe match, complete the task and wait for a new one.
         if (!recipeHolder.value().matches(recipeInput, level)) {
-            inventory.updateMachineState(MachineState.EMPTY_INPUT, true);
+            machineStateUpdater.updateMachineState(MachineState.EMPTY_INPUT, true);
             isComplete = true;
             return;
         }
-        inventory.updateMachineState(MachineState.EMPTY_INPUT, false);
+        machineStateUpdater.updateMachineState(MachineState.EMPTY_INPUT, false);
 
         // Try to consume as much energy as possible to finish the craft.
         if (progressMade < progressRequired) {
@@ -175,7 +192,7 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
         if (progressMade >= progressRequired) {
             // Attempt to complete the craft
             boolean placeOutputs = placeOutputs(outputs, false);
-            inventory.updateMachineState(MachineState.FULL_OUTPUT, !placeOutputs);
+            machineStateUpdater.updateMachineState(MachineState.FULL_OUTPUT, !placeOutputs);
             if (placeOutputs) {
                 // Take the inputs
                 consumeInputs(recipeHolder.value());
@@ -218,8 +235,8 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
                 ItemResource item = ItemResource.of(output.getItem());
 
                 int toInsert = output.getItem().getCount();
-                for (SingleSlotAccess outputAccess : outputSlots.getAccesses()) {
-                    int inserted = outputAccess.insert(getInventory(), item, toInsert, transaction);
+                for (ResourceSlotId<ItemResource> outputSlot : outputSlots) {
+                    int inserted = getInventory().insert(outputSlot, item, toInsert, transaction);
                     toInsert -= inserted;
 
                     if (toInsert == 0) {

@@ -2,9 +2,12 @@ package com.enderio.enderio.content.machines.alloy;
 
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.core.common.storage.ItemStorage;
+import com.enderio.core.common.storage.ResourceStorage;
 import com.enderio.core.common.storage.layout.ItemStorageLayout;
 import com.enderio.core.common.storage.layout.SlotTemplates;
 import com.enderio.core.common.storage.slot.MultiResourceSlotKey;
+import com.enderio.core.common.storage.slot.ResourceSlotId;
+import com.enderio.core.common.storage.slot.ResourceSlotKey;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;
@@ -19,11 +22,13 @@ import com.enderio.enderio.foundation.inventory.MachineSlotTemplates;
 import com.enderio.enderio.foundation.inventory.MultiSlotAccess;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import com.enderio.enderio.foundation.recipe.MachineRecipeCaches;
+import com.enderio.enderio.foundation.state.MachineStateUpdater;
 import com.enderio.enderio.foundation.task.PoweredCraftingMachineTask;
 import com.enderio.enderio.foundation.task.host.CraftingMachineTaskHost;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIORecipeTypes;
+import com.google.common.collect.Iterables;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentGetter;
@@ -55,22 +60,11 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     public static SingleResourceSlotKey<ItemResource> OUTPUT = new SingleResourceSlotKey<>();
     public static SingleResourceSlotKey<ItemResource> CAPACITOR = new SingleResourceSlotKey<>();
 
-//    public static final ItemStorageLayout ITEM_STORAGE_LAYOUT =
-//        ItemStorageLayout.builder()
-//            .slots(INPUTS, SlotTemplates.input(), b -> b
-//                .filter(AlloySmelterBlockEntity::acceptSlotInput))
-//            .slot(OUTPUT, SlotTemplates.output())
-//            .slot(CAPACITOR, MachineSlotTemplates.capacitor())
-//            .build();
-
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
             MachinesConfig.COMMON.ENERGY.ALLOY_SMELTER_CAPACITY);
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE,
             MachinesConfig.COMMON.ENERGY.ALLOY_SMELTER_USAGE);
 
-    // TODO: Non public!
-    public final ItemStorage itemStorage;
-    
     /**
      * The alloying mode for the machine.
      * Determines which recipes it can craft.
@@ -82,18 +76,8 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public AlloySmelterBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(EIOBlockEntities.ALLOY_SMELTER.get(), worldPosition, blockState, true, CapacitorSupport.NONE, // TODO: Set back to REQUIRED
-                EnergyIOMode.Input, CAPACITY, USAGE);
-
-        // Inventory
-//        itemStorage = new ItemStorage<>(ITEM_STORAGE_LAYOUT, this) {
-//            @Override
-//            protected void onContentsChanged(int index, ItemStack previousContents) {
-//                onInventoryContentsChanged(index);
-//                setChanged();
-//            }
-//        };
-        itemStorage = null;
+        super(EIOBlockEntities.ALLOY_SMELTER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, // TODO: Set back to REQUIRED
+            CAPACITOR, EnergyIOMode.Input, CAPACITY, USAGE);
 
         // Crafting task host
         craftingTaskHost = new AlloySmeltingMachineTaskHost(this, this::canAcceptTask,
@@ -143,10 +127,19 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     }
 
     // region Inventory
-    
+
+    @Override
+    protected @Nullable ItemStorageLayout createInventoryLayout() {
+        return ItemStorageLayout.builder()
+            .slots(INPUTS, SlotTemplates.input(), b -> b.filter(this::acceptSlotInput))
+            .slot(OUTPUT, SlotTemplates.output())
+            .slot(CAPACITOR, MachineSlotTemplates.capacitor())
+            .build();
+    }
+
     protected boolean acceptSlotInput(int slot, ItemResource resource) {
         if (getMode().canAlloy()) {
-            if (MachineRecipeCaches.ALLOY_SMELTING_ONLY_ALLOY.hasValidRecipeIf(itemStorage, INPUTS, slot, resource.toStack())) {
+            if (MachineRecipeCaches.ALLOY_SMELTING_ONLY_ALLOY.hasValidRecipeIf(getInventory(), INPUTS, slot, resource.toStack())) {
                 return true;
             }
         }
@@ -155,7 +148,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
             // Check all items are the same, or will be
             var currentItems = INPUTS.slots()
                     .stream()
-                    .map(i -> i.index(itemStorage) == slot ? resource : itemStorage.getResource(i))
+                    .map(i -> i.index(getInventory()) == slot ? resource : getInventory().getResource(i))
                     .filter(i -> !i.isEmpty())
                     .toList();
 
@@ -174,7 +167,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     }
 
     private AlloySmeltingRecipe.Input createRecipeInput() {
-        return new AlloySmeltingRecipe.Input(itemStorage.getStacks(INPUTS), 1);
+        return new AlloySmeltingRecipe.Input(getInventory().getStacks(INPUTS), 1);
     }
 
     // endregion
@@ -192,20 +185,25 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
     protected AlloySmeltingMachineTask createTask(Level level, AlloySmeltingRecipe.Input recipeInput,
             @Nullable RecipeHolder<AlloySmeltingRecipe> recipe) {
-        return null;
-//        return new AlloySmeltingMachineTask(level, getInventory(), getEnergyStorage(), recipeInput, INPUTS, OUTPUT,
-//                recipe);
+        return new AlloySmeltingMachineTask(level, this, getInventory(), getEnergyStorage(), recipeInput, INPUTS, OUTPUT,
+                recipe);
     }
 
     protected static class AlloySmeltingMachineTask
             extends PoweredCraftingMachineTask<AlloySmeltingRecipe, AlloySmeltingRecipe.Input> {
-        private final MultiSlotAccess inputs;
+        private final MultiResourceSlotKey<ItemResource> inputs;
         private int inputsConsumed;
 
-        public AlloySmeltingMachineTask(Level level, MachineInventory inventory,
-                MachineEnergyHandler energyStorage, AlloySmeltingRecipe.Input recipeInput, MultiSlotAccess inputs,
-                SingleSlotAccess outputSlot, @Nullable RecipeHolder<AlloySmeltingRecipe> recipe) {
-            super(level, inventory, null, energyStorage, recipeInput, outputSlot.wrapToMulti(), recipe);
+        public AlloySmeltingMachineTask(
+            Level level,
+            MachineStateUpdater machineStateUpdater,
+            ItemStorage inventory,
+            MachineEnergyHandler energyStorage,
+            AlloySmeltingRecipe.Input recipeInput,
+            MultiResourceSlotKey<ItemResource> inputs,
+            ResourceSlotKey<ItemResource> outputSlot,
+            @Nullable RecipeHolder<AlloySmeltingRecipe> recipe) {
+            super(level, machineStateUpdater, inventory, null, energyStorage, recipeInput, outputSlot, recipe);
             this.inputs = inputs;
         }
 
@@ -217,8 +215,8 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
                 SizedIngredient input = recipe.inputs().getFirst();
 
                 int inputCount = 0;
-                for (int i = inputs.size() - 1; i >= 0; i--) {
-                    ItemStack itemStack = inputs.get(i).getStack(getInventory());
+                for (int i = inputs.count() - 1; i >= 0; i--) {
+                    ItemStack itemStack = getInventory().getStack(inputs.slot(i));
                     if (input.test(itemStack)) {
                         inputCount += Math.min(3 - inputCount, itemStack.getCount());
                     }
@@ -234,14 +232,14 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
         @Override
         protected void consumeInputs(AlloySmeltingRecipe recipe) {
-            MachineInventory inv = getInventory();
+            ItemStorage inv = getInventory();
 
             if (recipe.isSmelting()) {
                 SizedIngredient input = recipe.inputs().get(0);
 
                 int consumed = 0;
-                for (int i = inputs.size() - 1; i >= 0; i--) {
-                    ItemStack itemStack = inputs.get(i).getStack(getInventory());
+                for (int i = inputs.count() - 1; i >= 0; i--) {
+                    ItemStack itemStack = getInventory().getStack(inputs.slot(i));
                     if (input.test(itemStack)) {
                         int consumedNow = Math.min(inputsConsumed - consumed, itemStack.getCount());
                         itemStack.shrink(consumedNow);
@@ -254,8 +252,8 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
                 boolean[] consumed = new boolean[3];
 
                 // Iterate over the slots
-                for (SingleSlotAccess slot : this.inputs.getAccesses()) {
-                    ItemStack stack = slot.getStack(inv);
+                for (ResourceSlotId<ItemResource> slot : this.inputs) {
+                    ItemStack stack = inv.getStack(slot);
 
                     // Iterate over the inputs
                     for (int i = 0; i < 3; i++) {

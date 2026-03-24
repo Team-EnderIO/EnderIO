@@ -17,11 +17,11 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
-public abstract class ResourceStorageLayout<TResource extends Resource> {
-    private final List<SlotConfig<TResource>> slots;
-    private final Map<ResourceSlotKey, List<Integer>> keyMap;
+public abstract class ResourceStorageLayout<T extends Resource> {
+    private final List<SlotConfig<T>> slots;
+    private final Map<ResourceSlotKey<T>, List<Integer>> keyMap;
 
-    protected ResourceStorageLayout(List<SlotConfig<TResource>> slots, Map<ResourceSlotKey, List<Integer>> keyMap) {
+    protected ResourceStorageLayout(List<SlotConfig<T>> slots, Map<ResourceSlotKey<T>, List<Integer>> keyMap) {
         this.slots = slots;
         this.keyMap = keyMap;
     }
@@ -30,16 +30,16 @@ public abstract class ResourceStorageLayout<TResource extends Resource> {
         return slots.size();
     }
 
-    public final SlotConfig<TResource> slotConfig(int index) {
+    public final SlotConfig<T> slotConfig(int index) {
         Objects.checkIndex(index, size());
         return slots.get(index);
     }
 
-    public final SlotConfig<TResource> slotConfig(ResourceSlotId<TResource> slotId) {
+    public final SlotConfig<T> slotConfig(ResourceSlotId<T> slotId) {
         return slotConfig(slotId.index(this));
     }
 
-    public final int indexOf(SingleResourceSlotKey<TResource> key) {
+    public final int indexOf(SingleResourceSlotKey<T> key) {
         List<Integer> indices = keyMap.get(key);
         if (indices == null || indices.size() != 1) {
             // This should never happen
@@ -49,7 +49,7 @@ public abstract class ResourceStorageLayout<TResource extends Resource> {
         return indices.getFirst();
     }
 
-    public final int indexOf(MultiResourceSlotKey<TResource> key, int index) {
+    public final int indexOf(MultiResourceSlotKey<T> key, int index) {
         List<Integer> indices = keyMap.get(key);
         if (indices == null) {
             throw new IllegalArgumentException("Key does not map to any slots: " + key);
@@ -65,7 +65,7 @@ public abstract class ResourceStorageLayout<TResource extends Resource> {
     public static abstract class Builder<TBuilder extends Builder<? extends TBuilder, T>, T extends Resource> {
         
         protected final ArrayList<SlotConfig<T>> slots = new ArrayList<>();
-        protected final Map<ResourceSlotKey, List<Integer>> keyMap = new HashMap<>();
+        protected final Map<ResourceSlotKey<T>, List<Integer>> keyMap = new HashMap<>();
 
         protected Builder() {
         }

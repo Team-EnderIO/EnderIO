@@ -46,11 +46,10 @@ public class PoweredMachineMenu<T extends PoweredMachineBlockEntity> extends Mac
         }
 
         var inventory = machine.getInventory();
-        var layout = inventory.layout();
-        if (!layout.supportsCapacitor()) {
+        if (!machine.supportsCapacitor()) {
             throw new IllegalStateException("Unable to get capacitor slot index, inventory has no capacitor slot.");
         }
 
-        addSlot(new MachineSlot(inventory, layout.getCapacitorSlot(), x, y)).setBackground(EMPTY_CAPACITOR_SLOT);
+        addSlot(new MachineSlot(inventory, machine.getCapacitorSlotIndex(), x, y)).setBackground(EMPTY_CAPACITOR_SLOT);
     }
 }

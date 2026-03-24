@@ -1,5 +1,8 @@
 package com.enderio.enderio.content.machines.obelisks.attractor;
 
+import com.enderio.core.common.storage.layout.ItemStorageLayout;
+import com.enderio.core.common.storage.layout.SlotTemplates;
+import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.UseOnly;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
@@ -12,6 +15,8 @@ import com.enderio.enderio.content.machines.obelisks.ObeliskAreaManager;
 import com.enderio.enderio.content.machines.obelisks.ObeliskBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
+import com.enderio.enderio.foundation.inventory.MachineSlotTemplates;
+import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.mojang.authlib.GameProfile;
 import me.liliandev.ensure.ensures.EnsureSide;
@@ -36,11 +41,14 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
 public class AttractorObeliskBlockEntity extends ObeliskBlockEntity<AttractorObeliskBlockEntity> {
+
+    public static final SingleResourceSlotKey<ItemResource> CAPACITOR = new SingleResourceSlotKey<>();
 
     private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
             MachinesConfig.COMMON.ENERGY.ATTRACTOR_CAPACITY);
@@ -56,8 +64,8 @@ public class AttractorObeliskBlockEntity extends ObeliskBlockEntity<AttractorObe
     private FakePlayer fakePlayer;
 
     public AttractorObeliskBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(EIOBlockEntities.ATTRACTOR_OBELISK.get(), worldPosition, blockState, false, CapacitorSupport.REQUIRED,
-                EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE);
+        super(EIOBlockEntities.ATTRACTOR_OBELISK.get(), worldPosition, blockState, false, CapacitorSupport.REQUIRED, CAPACITOR,
+            EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE);
         targetPos = new Vec3(worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5);
     }
 
@@ -81,12 +89,12 @@ public class AttractorObeliskBlockEntity extends ObeliskBlockEntity<AttractorObe
     }
 
     @Override
-    public @Nullable MachineInventoryLayout createInventoryLayout() {
-        return MachineInventoryLayout.builder()
-                .inputSlot((index, itemStack) -> itemStack.toStack().getCapability(EnderIOCapabilities.SOUL_FILTER) != null)
-                .slotAccess(FILTER)
-                .capacitor()
-                .build();
+    public @Nullable ItemStorageLayout createInventoryLayout() {
+        return ItemStorageLayout.builder()
+            .slot(FILTER, SlotTemplates.input(), b -> b
+                .filter((_, itemResource) -> itemResource.toStack().getCapability(EnderIOCapabilities.SOUL_FILTER) != null))
+            .slot(CAPACITOR, MachineSlotTemplates.capacitor())
+            .build();
     }
 
     @Nullable

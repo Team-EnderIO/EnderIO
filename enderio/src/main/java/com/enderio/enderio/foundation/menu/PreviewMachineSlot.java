@@ -1,28 +1,32 @@
 package com.enderio.enderio.foundation.menu;
 
+import com.enderio.core.common.storage.ItemStorage;
+import com.enderio.core.common.storage.layout.ItemStorageLayout;
+import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.foundation.inventory.MachineInventory;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 /*
  * This slot if only meant for previews. Players can't interact with this slot.
  * */
 
 public class PreviewMachineSlot extends MachineSlot {
-    public PreviewMachineSlot(MachineInventory itemHandler, int index, int xPosition, int yPosition) {
-        super(itemHandler, index, xPosition, yPosition);
+    public PreviewMachineSlot(ItemStorage itemStorage, int index, int xPosition, int yPosition) {
+        super(itemStorage, index, xPosition, yPosition);
 
         // Check config, we need to get this right or bad stuff will happen.
-        MachineInventoryLayout layout = itemHandler.layout();
-        if (layout.canInsert(index) || layout.canExtract(index)) {
+        var layout = itemStorage.layout();
+        if (layout.slotConfig(index).canInsert() || layout.slotConfig(index).canExtract()) {
             throw new RuntimeException("Preview slot can be externally modified!!");
         }
     }
 
-    public PreviewMachineSlot(MachineInventory itemHandler, SingleSlotAccess access, int xPosition, int yPosition) {
-        this(itemHandler, access.getIndex(), xPosition, yPosition);
+    public PreviewMachineSlot(ItemStorage itemStorage, SingleResourceSlotKey<ItemResource> slotId, int xPosition, int yPosition) {
+        this(itemStorage, slotId.index(itemStorage), xPosition, yPosition);
     }
 
     @Override

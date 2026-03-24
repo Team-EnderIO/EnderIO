@@ -1,10 +1,13 @@
 package com.enderio.enderio.foundation.menu;
 
+import com.enderio.core.common.storage.ItemStorage;
+import com.enderio.core.common.storage.slot.ResourceSlotId;
 import com.enderio.enderio.foundation.inventory.MachineInventory;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 import java.util.Optional;
 
@@ -15,22 +18,22 @@ import java.util.Optional;
  */
 public class GhostMachineSlot extends MachineSlot {
 
-    public GhostMachineSlot(MachineInventory itemHandler, int index, int xPosition, int yPosition) {
-        super(itemHandler, index, xPosition, yPosition);
+    public GhostMachineSlot(ItemStorage itemStorage, int index, int xPosition, int yPosition) {
+        super(itemStorage, index, xPosition, yPosition);
 
         // Check config, we need to get this right or bad stuff will happen.
-        MachineInventoryLayout layout = itemHandler.layout();
-        if (layout.canInsert(index) || layout.canExtract(index)) {
+        var layout = itemStorage.layout();
+        if (layout.slotConfig(index).canInsert() || layout.slotConfig(index).canExtract()) {
             throw new RuntimeException("Ghost slot can be externally modified!!");
         }
 
-        if (!layout.guiCanInsert(index)) {
+        if (!layout.slotConfig(index).canManualInsert()) {
             throw new RuntimeException("Ghost slot cannot be modified by the player!");
         }
     }
 
-    public GhostMachineSlot(MachineInventory itemHandler, SingleSlotAccess access, int xPosition, int yPosition) {
-        this(itemHandler, access.getIndex(), xPosition, yPosition);
+    public GhostMachineSlot(ItemStorage itemStorage, ResourceSlotId<ItemResource> slotId, int xPosition, int yPosition) {
+        this(itemStorage, slotId.index(itemStorage), xPosition, yPosition);
     }
 
     @Override

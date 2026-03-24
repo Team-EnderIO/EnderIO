@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public class FluidStorageLayout extends ResourceStorageLayout<FluidResource> {
-    protected FluidStorageLayout(List<SlotConfig<FluidResource>> slots, Map<ResourceSlotKey, List<Integer>> keyMap) {
+    protected FluidStorageLayout(List<SlotConfig<FluidResource>> slots, Map<ResourceSlotKey<FluidResource>, List<Integer>> keyMap) {
         super(slots, keyMap);
     }
 

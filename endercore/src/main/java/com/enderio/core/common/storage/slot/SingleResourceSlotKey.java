@@ -3,9 +3,23 @@ package com.enderio.core.common.storage.slot;
 import com.enderio.core.common.storage.layout.ResourceStorageLayout;
 import net.neoforged.neoforge.transfer.resource.Resource;
 
-public final class SingleResourceSlotKey<T extends Resource> implements ResourceSlotKey, ResourceSlotId<T> {
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+
+public final class SingleResourceSlotKey<T extends Resource> implements ResourceSlotKey<T>, ResourceSlotId<T> {
     @Override
     public int index(ResourceStorageLayout<T> layout) {
         return layout.indexOf(this);
+    }
+
+    @Override
+    public Collection<ResourceSlotId<T>> slots() {
+        return Collections.singleton(this);
+    }
+
+    @Override
+    public Iterator<ResourceSlotId<T>> iterator() {
+        return slots().iterator();
     }
 }

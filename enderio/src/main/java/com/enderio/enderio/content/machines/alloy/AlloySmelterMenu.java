@@ -3,9 +3,7 @@ package com.enderio.enderio.content.machines.alloy;
 import com.enderio.core.common.network.menu.EnumSyncSlot;
 import com.enderio.core.common.network.menu.FloatSyncSlot;
 import com.enderio.core.common.storage.ItemStorage;
-import com.enderio.enderio.foundation.inventory.MachineInventory;
 import com.enderio.enderio.foundation.menu.MachineSlot;
-import com.enderio.enderio.foundation.menu.NewMachineSlot;
 import com.enderio.enderio.foundation.menu.PoweredMachineMenu;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOMenus;
@@ -44,16 +42,12 @@ public class AlloySmelterMenu extends PoweredMachineMenu<AlloySmelterBlockEntity
         // Capacitor slot
         addCapacitorSlot(8, 89);
 
-        addSlot(new NewMachineSlot(getMachineInventoryTemp(), AlloySmelterBlockEntity.INPUTS.slot(0), 55, 38));
-        addSlot(new NewMachineSlot(getMachineInventoryTemp(), AlloySmelterBlockEntity.INPUTS.slot(1), 80, 28));
-        addSlot(new NewMachineSlot(getMachineInventoryTemp(), AlloySmelterBlockEntity.INPUTS.slot(2), 104, 38));
-        addSlot(new NewMachineSlot(getMachineInventoryTemp(), AlloySmelterBlockEntity.OUTPUT, 80, 79));
+        addSlot(new MachineSlot(getMachineInventory(), AlloySmelterBlockEntity.INPUTS.slot(0), 55, 38));
+        addSlot(new MachineSlot(getMachineInventory(), AlloySmelterBlockEntity.INPUTS.slot(1), 80, 28));
+        addSlot(new MachineSlot(getMachineInventory(), AlloySmelterBlockEntity.INPUTS.slot(2), 104, 38));
+        addSlot(new MachineSlot(getMachineInventory(), AlloySmelterBlockEntity.OUTPUT, 80, 79));
 
         addPlayerInventorySlots(8, 126);
-    }
-
-    public ItemStorage getMachineInventoryTemp() {
-        return getBlockEntity().itemStorage;
     }
 
     public float getCraftingProgress() {

@@ -1,5 +1,7 @@
 package com.enderio.enderio.foundation.block.entity;
 
+import com.enderio.core.common.storage.ItemStorage;
+import com.enderio.core.common.storage.layout.ItemStorageLayout;
 import com.enderio.enderio.api.UseOnly;
 import com.enderio.enderio.api.io.IOConfigurable;
 import com.enderio.enderio.api.io.IOMode;
@@ -9,13 +11,13 @@ import com.enderio.enderio.api.soul.binding.SoulBindable;
 import com.enderio.enderio.foundation.MachineNBTKeys;
 import com.enderio.enderio.foundation.block.EIOBlockEntity;
 import com.enderio.enderio.foundation.block.ProgressMachineBlock;
-import com.enderio.enderio.foundation.inventory.MachineInventory;
-import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.foundation.io.IOConfig;
 import com.enderio.enderio.foundation.io.SidedIOConfigurable;
 import com.enderio.enderio.foundation.io.TransferUtil;
 import com.enderio.enderio.foundation.network.packets.ServerboundCycleIOConfigPacket;
 import com.enderio.enderio.foundation.state.MachineState;
+import com.enderio.enderio.foundation.state.MachineStateUpdater;
+import com.enderio.enderio.foundation.storage.SidedResourceHandler;
 import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -62,13 +64,14 @@ import java.util.UUID;
  * Base block entity implementation for machines.
  * Implements Redstone Control and the Machine State system.
  */
-public abstract class MachineBlockEntity extends EIOBlockEntity implements MenuProvider, Wrenchable, IOConfigurable, MachineInventoryHolder {
+public abstract class MachineBlockEntity extends EIOBlockEntity implements MenuProvider, Wrenchable, IOConfigurable, MachineInventoryHolder,
+    MachineStateUpdater {
 
     public static final ICapabilityProvider<MachineBlockEntity, Direction, SideConfig> SIDE_CONFIG_PROVIDER =
         (be, side) -> side != null && be.isIOConfigMutable() ? new SidedIOConfigurable(be, side) : null;
 
-    public static final ICapabilityProvider<MachineBlockEntity, Direction, ResourceHandler<ItemResource>> ITEM_HANDLER_PROVIDER = (be,
-            side) -> be.inventory != null ? be.inventory.getForSide(side) : null;
+    public static final ICapabilityProvider<MachineBlockEntity, Direction, ResourceHandler<ItemResource>> ITEM_HANDLER_PROVIDER =
+        (be, side) -> be.inventory != null ? SidedResourceHandler.of(be.inventory, side, be) : null;
 
     public static final ICapabilityProvider<MachineBlockEntity, Void, SoulBindable> SOUL_BINDABLE = (be, ctx)
         -> be instanceof SoulBindable bindable ? bindable : null;
@@ -78,7 +81,7 @@ public abstract class MachineBlockEntity extends EIOBlockEntity implements MenuP
     public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     @Nullable
-    private final MachineInventory inventory;
+    private final ItemStorage inventory;
 
     private IOConfig ioConfig;
     private final boolean isIoConfigMutable;
@@ -103,7 +106,14 @@ public abstract class MachineBlockEntity extends EIOBlockEntity implements MenuP
         // Create inventory if the machine has a layout
         var layout = createInventoryLayout();
         if (layout != null) {
-            inventory = createMachineInventory(layout);
+            inventory = new ItemStorage(layout) {
+                @Override
+                protected void onContentsChanged(int index, ItemStack previousContents) {
+                    super.onContentsChanged(index, previousContents);
+                    onInventoryContentsChanged(index);
+                    setChanged();
+                }
+            };
         } else {
             inventory = null;
         }
@@ -179,30 +189,12 @@ public abstract class MachineBlockEntity extends EIOBlockEntity implements MenuP
      * @return The slot layout or null for no inventory.
      */
     @Nullable
-    protected MachineInventoryLayout createInventoryLayout() {
+    protected ItemStorageLayout createInventoryLayout() {
         return null;
     }
 
-    /**
-     * @apiNote inventories should call {@link MachineBlockEntity#onInventoryContentsChanged}!
-     */
-    protected MachineInventory createMachineInventory(MachineInventoryLayout layout) {
-        return new MachineInventory(this, layout) {
-            @Override
-            protected void onContentsChanged(int index, ItemStack previousContents) {
-                super.onContentsChanged(index, previousContents);
-                onInventoryContentsChanged(index);
-                setChanged();
-            }
-
-            @Override
-            public void updateMachineState(MachineState state, boolean add) {
-                MachineBlockEntity.this.updateMachineState(state, add);
-            }
-        };
-    }
-
-    public final MachineInventory getInventory() {
+    @Override
+    public final ItemStorage getInventory() {
         if (!hasInventory()) {
             throw new IllegalStateException("This machine does not have an inventory.");
         }
@@ -403,7 +395,8 @@ public abstract class MachineBlockEntity extends EIOBlockEntity implements MenuP
         this.states = states;
     }
 
-    protected void updateMachineState(MachineState state, boolean predicate) {
+    @Override
+    public void updateMachineState(MachineState state, boolean predicate) {
         if (predicate) {
             pushMachineState(state);
         } else {
@@ -607,8 +600,7 @@ public abstract class MachineBlockEntity extends EIOBlockEntity implements MenuP
         super.applyImplicitComponents(componentInput);
 
         if (hasInventory()) {
-            this.inventory
-                    .copyFromItem(componentInput.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY));
+            this.inventory.copyFromItem(componentInput.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY));
         }
 
         if (isIOConfigMutable()) {

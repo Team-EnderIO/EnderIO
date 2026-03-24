@@ -2,6 +2,7 @@ package com.enderio.enderio.foundation.menu;
 
 import com.enderio.core.common.menu.BaseBlockEntityMenu;
 import com.enderio.core.common.network.menu.EnumSyncSlot;
+import com.enderio.core.common.storage.ItemStorage;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.inventory.MachineInventory;
@@ -55,7 +56,7 @@ public abstract class MachineMenu<T extends MachineBlockEntity> extends BaseBloc
         statesSyncSlot = addSyncSlot(MachineStatesSyncSlot.standalone());
     }
 
-    public MachineInventory getMachineInventory() {
+    public ItemStorage getMachineInventory() {
         if (!getBlockEntity().hasInventory()) {
             throw new IllegalStateException("Machine does not have an inventory.");
         }
