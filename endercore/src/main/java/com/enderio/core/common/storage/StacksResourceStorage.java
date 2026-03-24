@@ -1,6 +1,7 @@
 package com.enderio.core.common.storage;
 
 import com.enderio.core.common.storage.layout.ResourceStorageLayout;
+import com.enderio.core.common.storage.slot.MultiResourceSlotKey;
 import com.enderio.core.common.storage.slot.ResourceSlotId;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.NonNullList;
@@ -12,8 +13,11 @@ import net.neoforged.neoforge.transfer.TransferPreconditions;
 import net.neoforged.neoforge.transfer.resource.Resource;
 import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
+import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 
@@ -70,7 +74,7 @@ public abstract class StacksResourceStorage<T extends Resource, S, C> implements
     @Override
     public boolean isValid(int index, T resource) {
         Objects.checkIndex(index, size());
-        return layout.slotConfig(index).isValid(index, resource, context);
+        return layout.slotConfig(index).isValid(context, index, resource);
     }
 
     protected int getCapacity(int index, T resource) {
@@ -86,6 +90,16 @@ public abstract class StacksResourceStorage<T extends Resource, S, C> implements
 
     public void setStack(ResourceSlotId<T> slotId, S stack) {
         set(slotId.index(layout), getResourceFrom(stack), getAmountFrom(stack));
+    }
+
+    @Unmodifiable
+    public List<S> getStacks(MultiResourceSlotKey<T> key) {
+        return getStacks(key.slots());
+    }
+
+    @Unmodifiable
+    public List<S> getStacks(Collection<ResourceSlotId<T>> slots) {
+        return slots.stream().map(this::getStack).toList();
     }
 
     @Override

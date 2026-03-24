@@ -1,5 +1,7 @@
 package com.enderio.enderio.foundation.recipe;
 
+import com.enderio.core.common.storage.ItemStorage;
+import com.enderio.core.common.storage.slot.MultiResourceSlotKey;
 import com.enderio.enderio.foundation.inventory.MachineInventory;
 import com.enderio.enderio.foundation.inventory.MultiSlotAccess;
 import net.minecraft.core.Holder;
@@ -13,6 +15,7 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.fml.util.thread.EffectiveSide;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,6 +57,28 @@ public class RecipeInputCache<T extends RecipeInput, R extends Recipe<T>> {
             var input = inputs.get(i);
             var invStack = input.getStack(inventory);
             if (input.getIndex() == slot) {
+                currentItems.add(toAdd);
+            } else if (!invStack.isEmpty()) {
+                currentItems.add(invStack);
+            }
+        }
+
+        // Try and match the items list
+        return hasRecipe(currentItems);
+    }
+
+    /**
+     * Test if there is a valid recipe if toAdd was added to the inventory.
+     */
+    public boolean hasValidRecipeIf(ItemStorage<?> inventory, MultiResourceSlotKey<ItemResource> inputs, int slot, ItemStack toAdd) {
+        // Collect the list of items that the recipe will match against
+        var currentItems = new ArrayList<ItemStack>();
+
+        // Build the new inventory state after the addition
+        for (int i = 0; i < inputs.count(); i++) {
+            var input = inputs.slot(i);
+            var invStack = inventory.getStack(input);
+            if (input.index(inventory) == slot) {
                 currentItems.add(toAdd);
             } else if (!invStack.isEmpty()) {
                 currentItems.add(invStack);

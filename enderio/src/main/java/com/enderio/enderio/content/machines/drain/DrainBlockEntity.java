@@ -72,7 +72,7 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements Range
         FluidStorageLayout.<DrainBlockEntity>builder()
             .slot(TANK_SLOT, SlotTemplates.output(), slot -> slot
                 .capacity(CAPACITY)
-                .filter((index, resource, drain) -> drain.type.isSame(resource.getFluid())))
+                .filter((drain, index, resource) -> drain.type.isSame(resource.getFluid())))
             .build();
 
     private final FluidStorage<DrainBlockEntity> fluidStorage;

@@ -121,7 +121,7 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
             @Nullable
             private BiFunction<T, TContext, Integer> capacityFunc;
             @Nullable
-            private TriPredicate<Integer, T, TContext> filter;
+            private TriPredicate<TContext, Integer, T> filter;
             
             public SlotBuilder<T, TContext> canInsert() {
                 return canInsert(true);
@@ -174,7 +174,7 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
                 return this;
             }
 
-            public SlotBuilder<T, TContext> filter(TriPredicate<Integer, T, TContext> filter) {
+            public SlotBuilder<T, TContext> filter(TriPredicate<TContext, Integer, T> filter) {
                 this.filter = filter;
                 return this;
             }
@@ -197,18 +197,18 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
         boolean canManualExtract,
         BiFunction<T, TContext, Integer> capacityFunc,
         @Nullable
-        TriPredicate<Integer, T, TContext> filter) {
+        TriPredicate<TContext, Integer, T> filter) {
 
         public int getCapacityAsInt(T resource, TContext context) {
             return capacityFunc.apply(resource, context);
         }
 
-        public boolean isValid(int index, T resource, TContext context) {
+        public boolean isValid(TContext context, int index, T resource) {
             if (filter == null) {
                 return true;
             }
 
-            return filter.test(index, resource, context);
+            return filter.test(context, index, resource);
         }
     }
 }

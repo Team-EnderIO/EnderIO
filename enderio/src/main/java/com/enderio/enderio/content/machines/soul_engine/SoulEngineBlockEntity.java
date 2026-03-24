@@ -78,7 +78,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
         FluidStorageLayout.<SoulEngineBlockEntity>builder()
             .slot(TANK, SlotTemplates.storage(), slot -> slot
                 .capacity(FLUID_CAPACITY)
-                .filter((index, resource, engine) -> engine.isFluidValid(resource.toStack(1))))
+                .filter((engine, index, resource) -> engine.isFluidValid(resource.toStack(1))))
             .build();
 
     private final FluidStorage<SoulEngineBlockEntity> fluidStorage;

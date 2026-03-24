@@ -45,7 +45,7 @@ public class XPObeliskBlockEntity extends MachineBlockEntity {
         FluidStorageLayout.<XPObeliskBlockEntity>builder()
             .slot(TANK_SLOT, SlotTemplates.storage(), slot -> slot
                 .capacity(Integer.MAX_VALUE)
-                .filter((index, resource, obelisk) -> resource.getFluid().is(Tags.Fluids.EXPERIENCE)))
+                .filter((_, _, resource) -> resource.getFluid().is(Tags.Fluids.EXPERIENCE)))
             .build();
 
     private final FluidStorage<XPObeliskBlockEntity> fluidStorage;

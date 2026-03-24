@@ -62,11 +62,10 @@ import java.util.UUID;
  * Base block entity implementation for machines.
  * Implements Redstone Control and the Machine State system.
  */
-public abstract class MachineBlockEntity extends EIOBlockEntity
-        implements MenuProvider, Wrenchable, IOConfigurable, MachineInventoryHolder {
+public abstract class MachineBlockEntity extends EIOBlockEntity implements MenuProvider, Wrenchable, IOConfigurable, MachineInventoryHolder {
 
-    public static final ICapabilityProvider<MachineBlockEntity, Direction, SideConfig> SIDE_CONFIG_PROVIDER = (be,
-                                                                                                                side) -> side != null && be.isIOConfigMutable() ? new SidedIOConfigurable(be, side) : null;
+    public static final ICapabilityProvider<MachineBlockEntity, Direction, SideConfig> SIDE_CONFIG_PROVIDER =
+        (be, side) -> side != null && be.isIOConfigMutable() ? new SidedIOConfigurable(be, side) : null;
 
     public static final ICapabilityProvider<MachineBlockEntity, Direction, ResourceHandler<ItemResource>> ITEM_HANDLER_PROVIDER = (be,
             side) -> be.inventory != null ? be.inventory.getForSide(side) : null;
