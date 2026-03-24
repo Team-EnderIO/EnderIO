@@ -22,19 +22,17 @@ import java.util.Objects;
 import java.util.function.Function;
 
 // Mostly the same as StacksResourceHandler, but we save differently and support variable fluid capacity.
-public abstract class StacksResourceStorage<T extends Resource, S, C> implements ResourceStorage<T>, ValueIOSerializable {
+public abstract class StacksResourceStorage<T extends Resource, S> implements ResourceStorage<T>, ValueIOSerializable {
 
-    private final ResourceStorageLayout<T, C> layout;
-    protected final C context;
+    private final ResourceStorageLayout<T> layout;
     private final S emptyStack;
     private final Codec<S> stackCodec;
     private final ArrayList<StackJournal> snapshotJournals;
 
     protected NonNullList<S> stacks;
 
-    protected StacksResourceStorage(ResourceStorageLayout<T, C> layout, C context, S emptyStack, Codec<S> stackCodec) {
+    protected StacksResourceStorage(ResourceStorageLayout<T> layout, S emptyStack, Codec<S> stackCodec) {
         this.layout = layout;
-        this.context = context;
         this.emptyStack = emptyStack;
         this.stackCodec = stackCodec;
         this.stacks = NonNullList.withSize(layout.size(), emptyStack);
@@ -74,12 +72,12 @@ public abstract class StacksResourceStorage<T extends Resource, S, C> implements
     @Override
     public boolean isValid(int index, T resource) {
         Objects.checkIndex(index, size());
-        return layout.slotConfig(index).isValid(context, index, resource);
+        return layout.slotConfig(index).isValid(index, resource);
     }
 
     protected int getCapacity(int index, T resource) {
         Objects.checkIndex(index, size());
-        return layout.slotConfig(index).getCapacityAsInt(resource, context);
+        return layout.slotConfig(index).getCapacityAsInt(resource);
     }
 
     // Helpers for dealing with stacks
@@ -103,7 +101,7 @@ public abstract class StacksResourceStorage<T extends Resource, S, C> implements
     }
 
     @Override
-    public ResourceStorageLayout<T, C> layout() {
+    public ResourceStorageLayout<T> layout() {
         return layout;
     }
 

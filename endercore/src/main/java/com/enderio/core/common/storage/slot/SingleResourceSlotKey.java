@@ -5,7 +5,7 @@ import net.neoforged.neoforge.transfer.resource.Resource;
 
 public final class SingleResourceSlotKey<T extends Resource> implements ResourceSlotKey, ResourceSlotId<T> {
     @Override
-    public int index(ResourceStorageLayout<T, ?> layout) {
+    public int index(ResourceStorageLayout<T> layout) {
         return layout.indexOf(this);
     }
 }

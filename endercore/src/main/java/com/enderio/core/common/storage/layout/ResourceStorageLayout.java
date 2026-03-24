@@ -4,26 +4,24 @@ import com.enderio.core.common.storage.slot.MultiResourceSlotKey;
 import com.enderio.core.common.storage.slot.ResourceSlotId;
 import com.enderio.core.common.storage.slot.ResourceSlotKey;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
-import net.neoforged.neoforge.common.util.TriPredicate;
 import net.neoforged.neoforge.transfer.resource.Resource;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
-import java.util.stream.IntStream;
 
-public abstract class ResourceStorageLayout<TResource extends Resource, TContext> {
-    private final List<SlotConfig<TResource, TContext>> slots;
+public abstract class ResourceStorageLayout<TResource extends Resource> {
+    private final List<SlotConfig<TResource>> slots;
     private final Map<ResourceSlotKey, List<Integer>> keyMap;
 
-    protected ResourceStorageLayout(List<SlotConfig<TResource, TContext>> slots, Map<ResourceSlotKey, List<Integer>> keyMap) {
+    protected ResourceStorageLayout(List<SlotConfig<TResource>> slots, Map<ResourceSlotKey, List<Integer>> keyMap) {
         this.slots = slots;
         this.keyMap = keyMap;
     }
@@ -32,12 +30,12 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
         return slots.size();
     }
 
-    public final SlotConfig<TResource, TContext> slotConfig(int index) {
+    public final SlotConfig<TResource> slotConfig(int index) {
         Objects.checkIndex(index, size());
         return slots.get(index);
     }
 
-    public final SlotConfig<TResource, TContext> slotConfig(ResourceSlotId<TResource> slotId) {
+    public final SlotConfig<TResource> slotConfig(ResourceSlotId<TResource> slotId) {
         return slotConfig(slotId.index(this));
     }
 
@@ -64,9 +62,9 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
         return indices.get(index);
     }
 
-    public static abstract class Builder<TBuilder extends Builder<? extends TBuilder, T, TContext>, T extends Resource, TContext> {
+    public static abstract class Builder<TBuilder extends Builder<? extends TBuilder, T>, T extends Resource> {
         
-        protected final ArrayList<SlotConfig<T, TContext>> slots = new ArrayList<>();
+        protected final ArrayList<SlotConfig<T>> slots = new ArrayList<>();
         protected final Map<ResourceSlotKey, List<Integer>> keyMap = new HashMap<>();
 
         protected Builder() {
@@ -77,18 +75,18 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
             return (TBuilder) this;
         }
 
-        protected SlotBuilder<T, TContext> createSlotBuilder() {
+        protected SlotBuilder<T> createSlotBuilder() {
             return new SlotBuilder<>();
         }
 
-        public final TBuilder slot(SingleResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T, TContext>> slotBuilder) {
+        public final TBuilder slot(SingleResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T>> slotBuilder) {
             slots.add(slotBuilder.apply(createSlotBuilder()).build());
             keyMap.put(key, List.of(slots.size() - 1));
             return self();
         }
 
         // Support use of a 'template' and override
-        public final TBuilder slot(SingleResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T, TContext>> template, UnaryOperator<SlotBuilder<T, TContext>> slotBuilder) {
+        public final TBuilder slot(SingleResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T>> template, UnaryOperator<SlotBuilder<T>> slotBuilder) {
             return slot(key, b -> slotBuilder.apply(template.apply(b)));
         }
 
@@ -104,82 +102,82 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
             return self();
         }
 
-        public final TBuilder slots(MultiResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T, TContext>> slotBuilder) {
+        public final TBuilder slots(MultiResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T>> slotBuilder) {
             return slots(key, () -> slots.add(slotBuilder.apply(createSlotBuilder()).build()));
         }
 
         // Support use of a 'template' and override
-        public final TBuilder slots(MultiResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T, TContext>> template, UnaryOperator<SlotBuilder<T, TContext>> slotBuilder) {
+        public final TBuilder slots(MultiResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T>> template, UnaryOperator<SlotBuilder<T>> slotBuilder) {
             return slots(key, b -> slotBuilder.apply(template.apply(b)));
         }
 
-        public static final class SlotBuilder<T extends Resource, TContext> {
+        public static final class SlotBuilder<T extends Resource> {
             private boolean canInsert;
             private boolean canExtract;
             private boolean canManualInsert;
             private boolean canManualExtract;
             @Nullable
-            private BiFunction<T, TContext, Integer> capacityFunc;
+            private Function<T, Integer> capacityFunc;
             @Nullable
-            private TriPredicate<TContext, Integer, T> filter;
+            private BiPredicate<Integer, T> filter;
             
-            public SlotBuilder<T, TContext> canInsert() {
+            public SlotBuilder<T> canInsert() {
                 return canInsert(true);
             }
             
-            public SlotBuilder<T, TContext> canInsert(boolean canInsert) {
+            public SlotBuilder<T> canInsert(boolean canInsert) {
                 this.canInsert = canInsert;
                 return this;
             }
             
-            public SlotBuilder<T, TContext> canExtract() {
+            public SlotBuilder<T> canExtract() {
                 return canExtract(true);
             }
             
-            public SlotBuilder<T, TContext> canExtract(boolean canExtract) {
+            public SlotBuilder<T> canExtract(boolean canExtract) {
                 this.canExtract = canExtract;
                 return this;
             }
 
-            public SlotBuilder<T, TContext> canManualInsert() {
+            public SlotBuilder<T> canManualInsert() {
                 return canManualInsert(true);
             }
 
-            public SlotBuilder<T, TContext> canManualInsert(boolean canManualInsert) {
+            public SlotBuilder<T> canManualInsert(boolean canManualInsert) {
                 this.canManualInsert = canManualInsert;
                 return this;
             }
 
-            public SlotBuilder<T, TContext> canManualExtract() {
+            public SlotBuilder<T> canManualExtract() {
                 return canManualExtract(true);
             }
 
-            public SlotBuilder<T, TContext> canManualExtract(boolean canManualExtract) {
+            public SlotBuilder<T> canManualExtract(boolean canManualExtract) {
                 this.canManualExtract = canManualExtract;
                 return this;
             }
 
-            public SlotBuilder<T, TContext> capacity(int capacity) {
-                this.capacityFunc = (resource, context) -> capacity;
+            public SlotBuilder<T> capacity(int capacity) {
+                this.capacityFunc = _ -> capacity;
                 return this;
             }
             
-            public SlotBuilder<T, TContext> capacity(Function<T, Integer> capacityFunc) {
-                this.capacityFunc = (resource, context) -> capacityFunc.apply(resource);
+            public SlotBuilder<T> capacity(Supplier<Integer> capacityGetter) {
+                this.capacityFunc = _ -> capacityGetter.get();
                 return this;
             }
 
-            public SlotBuilder<T, TContext> capacity(BiFunction<T, TContext, Integer> capacityFunc) {
+            public SlotBuilder<T> capacity(Function<T, Integer> capacityFunc) {
                 this.capacityFunc = capacityFunc;
                 return this;
             }
 
-            public SlotBuilder<T, TContext> filter(TriPredicate<TContext, Integer, T> filter) {
+            public SlotBuilder<T> filter(BiPredicate<Integer, T> filter) {
                 this.filter = filter;
                 return this;
             }
 
-            public SlotConfig<T, TContext> build() {
+            public SlotConfig<T> build() {
                 // We can easily default this on items, but fluid must be explicitly set.
                 if (capacityFunc == null) {
                     throw new IllegalStateException("Capacity must be set!");
@@ -190,25 +188,24 @@ public abstract class ResourceStorageLayout<TResource extends Resource, TContext
         }
     }
 
-    public record SlotConfig<T extends Resource, TContext>(
+    public record SlotConfig<T extends Resource>(
         boolean canInsert,
         boolean canExtract,
         boolean canManualInsert,
         boolean canManualExtract,
-        BiFunction<T, TContext, Integer> capacityFunc,
-        @Nullable
-        TriPredicate<TContext, Integer, T> filter) {
+        Function<T, Integer> capacityFunc,
+        @Nullable BiPredicate<Integer, T> filter) {
 
-        public int getCapacityAsInt(T resource, TContext context) {
-            return capacityFunc.apply(resource, context);
+        public int getCapacityAsInt(T resource) {
+            return capacityFunc.apply(resource);
         }
 
-        public boolean isValid(TContext context, int index, T resource) {
+        public boolean isValid(int index, T resource) {
             if (filter == null) {
                 return true;
             }
 
-            return filter.test(context, index, resource);
+            return filter.test(index, resource);
         }
     }
 }

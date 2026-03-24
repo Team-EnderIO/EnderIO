@@ -19,8 +19,8 @@ public class ItemStorageLayoutTests {
         var key = new SingleResourceSlotKey<ItemResource>();
         var layout = Assertions.assertDoesNotThrow(() -> ItemStorageLayout.<Void>builder().slot(key, SlotTemplates.input()).build());
 
-        Assertions.assertEquals(64, layout.slotConfig(0).getCapacityAsInt(ItemResource.of(Items.STONE), null));
-        Assertions.assertEquals(1, layout.slotConfig(0).getCapacityAsInt(ItemResource.of(Items.IRON_SWORD), null));
+        Assertions.assertEquals(64, layout.slotConfig(0).getCapacityAsInt(ItemResource.of(Items.STONE)));
+        Assertions.assertEquals(1, layout.slotConfig(0).getCapacityAsInt(ItemResource.of(Items.IRON_SWORD)));
     }
 
     @Test
@@ -29,8 +29,8 @@ public class ItemStorageLayoutTests {
         var layout = Assertions.assertDoesNotThrow(() -> ItemStorageLayout.<Void>builder().slots(key, SlotTemplates.input()).build());
 
         for (int i = 0; i < layout.size(); i++) {
-            Assertions.assertEquals(64, layout.slotConfig(i).getCapacityAsInt(ItemResource.of(Items.STONE), null));
-            Assertions.assertEquals(1, layout.slotConfig(i).getCapacityAsInt(ItemResource.of(Items.IRON_SWORD), null));
+            Assertions.assertEquals(64, layout.slotConfig(i).getCapacityAsInt(ItemResource.of(Items.STONE)));
+            Assertions.assertEquals(1, layout.slotConfig(i).getCapacityAsInt(ItemResource.of(Items.IRON_SWORD)));
         }
     }
 }

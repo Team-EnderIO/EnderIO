@@ -14,8 +14,8 @@ public class GeneralStorageLayoutTests {
     public void singleSlotIdWorks() {
         var key = new SingleResourceSlotKey<ItemResource>();
 
-        var layout = ItemStorageLayout.<Void>builder().slot(key, SlotTemplates.input()).build();
-        var storage = new ItemStorage<>(layout, null);
+        var layout = ItemStorageLayout.builder().slot(key, SlotTemplates.input()).build();
+        var storage = new ItemStorage(layout);
 
         Assertions.assertDoesNotThrow(() -> storage.getAmountAsInt(key));
     }
@@ -24,8 +24,8 @@ public class GeneralStorageLayoutTests {
     public void multiSlotIdWorks() {
         var key = new MultiResourceSlotKey<ItemResource>(2);
 
-        var layout = ItemStorageLayout.<Void>builder().slots(key, SlotTemplates.input()).build();
-        var storage = new ItemStorage<>(layout, null);
+        var layout = ItemStorageLayout.builder().slots(key, SlotTemplates.input()).build();
+        var storage = new ItemStorage(layout);
 
         Assertions.assertDoesNotThrow(() -> storage.getAmountAsInt(key.slot(1)));
     }
@@ -34,8 +34,8 @@ public class GeneralStorageLayoutTests {
     public void multiSlotIterator() {
         var key = new MultiResourceSlotKey<ItemResource>(4);
 
-        var layout = ItemStorageLayout.<Void>builder().slots(key, SlotTemplates.input()).build();
-        var storage = new ItemStorage<>(layout, null);
+        var layout = ItemStorageLayout.builder().slots(key, SlotTemplates.input()).build();
+        var storage = new ItemStorage(layout);
 
         Assertions.assertDoesNotThrow(() -> {
             for (var slotId : key) {
@@ -47,7 +47,7 @@ public class GeneralStorageLayoutTests {
     @Test
     public void ensureUnknownSingleSlotKeyThrows() {
         var key = new SingleResourceSlotKey<ItemResource>();
-        var layout = ItemStorageLayout.<Void>builder().slot(key, SlotTemplates.input()).build();
+        var layout = ItemStorageLayout.builder().slot(key, SlotTemplates.input()).build();
 
         var unknownKey = new SingleResourceSlotKey<ItemResource>();
         Assertions.assertThrows(IllegalArgumentException.class, () -> layout.indexOf(unknownKey));
@@ -56,7 +56,7 @@ public class GeneralStorageLayoutTests {
     @Test
     public void ensureUnknownMultiSlotKeyThrows() {
         var key = new MultiResourceSlotKey<ItemResource>(3);
-        var layout = ItemStorageLayout.<Void>builder().slots(key, SlotTemplates.input()).build();
+        var layout = ItemStorageLayout.builder().slots(key, SlotTemplates.input()).build();
 
         var unknownKey = new MultiResourceSlotKey<ItemResource>(2);
         Assertions.assertThrows(IllegalArgumentException.class, () -> layout.indexOf(unknownKey, 1));

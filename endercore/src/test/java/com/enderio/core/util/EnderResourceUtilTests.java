@@ -23,13 +23,13 @@ public class EnderResourceUtilTests {
         // Create layout with 2 storage slots
         var slot1 = new SingleResourceSlotKey<ItemResource>();
         var slot2 = new SingleResourceSlotKey<ItemResource>();
-        var layout = ItemStorageLayout.<Void>builder()
+        var layout = ItemStorageLayout.builder()
             .slot(slot1, SlotTemplates.storage())
             .slot(slot2, SlotTemplates.storage())
             .build();
 
         // Create storage with an item in slot 0 and empty slot 1
-        ItemStorage<Void> storage = new ItemStorage<>(layout, null);
+        ItemStorage storage = new ItemStorage(layout);
         storage.set(0, ItemResource.of(Items.DIAMOND), 10);
 
         // Move item from slot 0 to slot 1
@@ -48,13 +48,13 @@ public class EnderResourceUtilTests {
         // Create layout with 2 storage slots
         var slot1 = new SingleResourceSlotKey<ItemResource>();
         var slot2 = new SingleResourceSlotKey<ItemResource>();
-        var layout = ItemStorageLayout.<Void>builder()
+        var layout = ItemStorageLayout.builder()
             .slot(slot1, SlotTemplates.storage())
             .slot(slot2, SlotTemplates.storage())
             .build();
 
         // Create storage with items in both slots
-        ItemStorage<Void> storage = new ItemStorage<>(layout, null);
+        ItemStorage storage = new ItemStorage(layout);
         storage.set(0, ItemResource.of(Items.DIAMOND), 32);
         storage.set(1, ItemResource.of(Items.EMERALD), 64); // Full slot with different item
 
@@ -74,13 +74,13 @@ public class EnderResourceUtilTests {
         // Create layout with 2 fluid tanks, each with 10000 capacity
         var tank1 = new SingleResourceSlotKey<FluidResource>();
         var tank2 = new SingleResourceSlotKey<FluidResource>();
-        var layout = FluidStorageLayout.<Void>builder()
+        var layout = FluidStorageLayout.builder()
             .slot(tank1, SlotTemplates.storage(), slot -> slot.capacity(10000))
             .slot(tank2, SlotTemplates.storage(), slot -> slot.capacity(10000))
             .build();
 
         // Create storage with water in tank 0 and empty tank 1
-        FluidStorage<Void> storage = new FluidStorage<>(layout, null);
+        FluidStorage storage = new FluidStorage(layout);
         storage.set(0, FluidResource.of(Fluids.WATER), 5000);
 
         // Move fluid from tank 0 to tank 1
@@ -99,13 +99,13 @@ public class EnderResourceUtilTests {
         // Create layout with 2 fluid tanks
         var tank1 = new SingleResourceSlotKey<FluidResource>();
         var tank2 = new SingleResourceSlotKey<FluidResource>();
-        var layout = FluidStorageLayout.<Void>builder()
+        var layout = FluidStorageLayout.builder()
             .slot(tank1, SlotTemplates.storage(), slot -> slot.capacity(10000))
             .slot(tank2, SlotTemplates.storage(), slot -> slot.capacity(10000))
             .build();
 
         // Create storage with water in tank 0 and lava in tank 1 (full)
-        FluidStorage<Void> storage = new FluidStorage<>(layout, null);
+        FluidStorage storage = new FluidStorage(layout);
         storage.set(0, FluidResource.of(Fluids.WATER), 5000);
         storage.set(1, FluidResource.of(Fluids.LAVA), 10000); // Full tank with different fluid
 
@@ -129,22 +129,22 @@ public class EnderResourceUtilTests {
         // Create source storage with 2 slots containing items
         var sourceSlot1 = new SingleResourceSlotKey<ItemResource>();
         var sourceSlot2 = new SingleResourceSlotKey<ItemResource>();
-        var sourceLayout = ItemStorageLayout.<Void>builder()
+        var sourceLayout = ItemStorageLayout.builder()
             .slot(sourceSlot1, SlotTemplates.storage())
             .slot(sourceSlot2, SlotTemplates.storage())
             .build();
-        ItemStorage<Void> sourceStorage = new ItemStorage<>(sourceLayout, null);
+        ItemStorage sourceStorage = new ItemStorage(sourceLayout);
         sourceStorage.set(0, ItemResource.of(Items.DIAMOND), 20);
         sourceStorage.set(1, ItemResource.of(Items.EMERALD), 30);
 
         // Create destination storage with 2 empty slots
         var destSlot1 = new SingleResourceSlotKey<ItemResource>();
         var destSlot2 = new SingleResourceSlotKey<ItemResource>();
-        var destLayout = ItemStorageLayout.<Void>builder()
+        var destLayout = ItemStorageLayout.builder()
             .slot(destSlot1, SlotTemplates.storage())
             .slot(destSlot2, SlotTemplates.storage())
             .build();
-        ItemStorage<Void> destStorage = new ItemStorage<>(destLayout, null);
+        ItemStorage destStorage = new ItemStorage(destLayout);
 
         // Move up to 15 diamonds from source to destination slot 0
         int amountMoved = EnderResourceUtil.moveInto(
@@ -177,22 +177,22 @@ public class EnderResourceUtilTests {
         // Create source storage with multiple fluid tanks
         var sourceTank1 = new SingleResourceSlotKey<FluidResource>();
         var sourceTank2 = new SingleResourceSlotKey<FluidResource>();
-        var sourceLayout = FluidStorageLayout.<Void>builder()
+        var sourceLayout = FluidStorageLayout.builder()
             .slot(sourceTank1, SlotTemplates.storage(), slot -> slot.capacity(10000))
             .slot(sourceTank2, SlotTemplates.storage(), slot -> slot.capacity(10000))
             .build();
-        FluidStorage<Void> sourceStorage = new FluidStorage<>(sourceLayout, null);
+        FluidStorage sourceStorage = new FluidStorage(sourceLayout);
         sourceStorage.set(0, FluidResource.of(Fluids.WATER), 8000);
         sourceStorage.set(1, FluidResource.of(Fluids.LAVA), 6000);
 
         // Create destination storage with 2 tanks
         var destTank1 = new SingleResourceSlotKey<FluidResource>();
         var destTank2 = new SingleResourceSlotKey<FluidResource>();
-        var destLayout = FluidStorageLayout.<Void>builder()
+        var destLayout = FluidStorageLayout.builder()
             .slot(destTank1, SlotTemplates.storage(), slot -> slot.capacity(10000))
             .slot(destTank2, SlotTemplates.storage(), slot -> slot.capacity(10000))
             .build();
-        FluidStorage<Void> destStorage = new FluidStorage<>(destLayout, null);
+        FluidStorage destStorage = new FluidStorage(destLayout);
 
         // Move only water from source to destination tank 0
         // Lava won't move despite the filter, because water is in the first slot of the source.
@@ -200,7 +200,7 @@ public class EnderResourceUtilTests {
             sourceStorage,
             destStorage,
             0,
-            resource -> true, // Accept all fluids for now
+            _ -> true, // Accept all fluids for now
             5000,
             null
         );

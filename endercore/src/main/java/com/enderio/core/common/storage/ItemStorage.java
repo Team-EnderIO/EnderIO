@@ -5,9 +5,9 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 
-public class ItemStorage<TOwner> extends StacksResourceStorage<ItemResource, ItemStack, TOwner> implements ValueIOSerializable {
-    public ItemStorage(ResourceStorageLayout<ItemResource, TOwner> layout, TOwner context) {
-        super(layout, context, ItemStack.EMPTY, ItemStack.OPTIONAL_CODEC);
+public class ItemStorage extends StacksResourceStorage<ItemResource, ItemStack> implements ValueIOSerializable {
+    public ItemStorage(ResourceStorageLayout<ItemResource> layout) {
+        super(layout, ItemStack.EMPTY, ItemStack.OPTIONAL_CODEC);
     }
 
     @Override

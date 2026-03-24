@@ -14,7 +14,7 @@ import org.jetbrains.annotations.ApiStatus;
  */
 public interface ResourceStorage<T extends Resource> extends ResourceHandler<T> {
 
-    ResourceStorageLayout<T, ?> layout();
+    ResourceStorageLayout<T> layout();
 
     void set(int index, T resource, int amount);
     void setTransactional(int index, T resource, int amount, TransactionContext transaction);
