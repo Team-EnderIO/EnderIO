@@ -29,7 +29,7 @@ public final class ConduitNodeImpl implements INetworkNode<ConduitNetworkImpl, C
             BlockPos.CODEC.fieldOf("pos").forGetter(ConduitNodeImpl::pos), NodeData.GENERIC_CODEC
                 .optionalFieldOf("data")
                 .forGetter(i -> i.nodeData == null || !i.nodeData.type().isPersistent() ? Optional.empty() : Optional.of(i.nodeData)))
-        .apply(instance, (conduit, pos, dataOpt) -> new ConduitNodeImpl(conduit, pos, dataOpt.orElse(null))));
+        .apply(instance, ConduitNodeImpl::new));
 
     private final Holder<Conduit<?, ?>> conduit;
     private final BlockPos pos;
@@ -44,7 +44,7 @@ public final class ConduitNodeImpl implements INetworkNode<ConduitNetworkImpl, C
     private IConduitNodeAttachment conduitBundle;
 
     public ConduitNodeImpl(Holder<Conduit<?, ?>> conduit, BlockPos pos) {
-        this(conduit, pos, null);
+        this(conduit, pos, (NodeData) null);
     }
 
     public ConduitNodeImpl(Holder<Conduit<?, ?>> conduit, BlockPos pos, @Nullable NodeData nodeData) {
@@ -52,6 +52,13 @@ public final class ConduitNodeImpl implements INetworkNode<ConduitNetworkImpl, C
         this.pos = pos;
         this.nodeData = nodeData;
         this.network = new ConduitNetworkImpl(conduit.value().type(), this);
+    }
+
+    // Intended for deserialization, will not create a network
+    private ConduitNodeImpl(Holder<Conduit<?, ?>> conduit, BlockPos pos, Optional<NodeData> nodeDataOpt) {
+        this.conduit = conduit;
+        this.pos = pos;
+        this.nodeData = nodeDataOpt.orElse(null);
     }
 
     public void attach(IConduitNodeAttachment conduitBundle) {
