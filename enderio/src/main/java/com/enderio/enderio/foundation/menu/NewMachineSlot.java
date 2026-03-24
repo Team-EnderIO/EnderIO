@@ -18,18 +18,18 @@ public class NewMachineSlot extends ResourceHandlerSlot implements SlotWithOverl
     @Nullable
     private Identifier foregroundSprite;
 
-    public NewMachineSlot(ItemStorage<?> handler, int index, int xPosition, int yPosition) {
+    public NewMachineSlot(ItemStorage handler, int index, int xPosition, int yPosition) {
         super(handler, handler::set, index, xPosition, yPosition);
         this.index = index;
     }
 
-    public NewMachineSlot(ItemStorage<?> handler, ResourceSlotId<ItemResource> slotId, int xPosition, int yPosition) {
+    public NewMachineSlot(ItemStorage handler, ResourceSlotId<ItemResource> slotId, int xPosition, int yPosition) {
         this(handler, slotId.index(handler), xPosition, yPosition);
     }
 
     @Override
-    public ItemStorage<?> getResourceHandler() {
-        return (ItemStorage<?>) super.getResourceHandler();
+    public ItemStorage getResourceHandler() {
+        return (ItemStorage) super.getResourceHandler();
     }
 
     @Override

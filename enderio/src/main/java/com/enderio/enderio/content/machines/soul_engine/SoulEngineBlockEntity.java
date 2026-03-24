@@ -74,14 +74,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
 
     public static final SingleResourceSlotKey<FluidResource> TANK = new SingleResourceSlotKey<>();
 
-    public static final FluidStorageLayout<SoulEngineBlockEntity> FLUID_STORAGE_LAYOUT =
-        FluidStorageLayout.<SoulEngineBlockEntity>builder()
-            .slot(TANK, SlotTemplates.storage(), slot -> slot
-                .capacity(FLUID_CAPACITY)
-                .filter((engine, index, resource) -> engine.isFluidValid(resource.toStack(1))))
-            .build();
-
-    private final FluidStorage<SoulEngineBlockEntity> fluidStorage;
+    private final FluidStorage fluidStorage;
 
     private EngineSoul.SoulData soulData;
     private int burnedTicks = 0;
@@ -92,7 +85,13 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
         super(EIOBlockEntities.SOUL_ENGINE.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
                 EnergyIOMode.Output, CAPACITY, FixedScalable.ZERO);
 
-        fluidStorage = new FluidStorage<>(FLUID_STORAGE_LAYOUT, this) {
+        var fluidStorageLayout = FluidStorageLayout.builder()
+            .slot(TANK, SlotTemplates.storage(), slot -> slot
+                .capacity(FLUID_CAPACITY)
+                .filter((_, resource) -> isFluidValid(resource.toStack(1))))
+            .build();
+
+        fluidStorage = new FluidStorage(fluidStorageLayout) {
             @Override
             protected void onContentsChanged(int index, FluidStack previousContents) {
                 super.onContentsChanged(index, previousContents);

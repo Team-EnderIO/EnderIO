@@ -68,12 +68,12 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
     public static final SingleResourceSlotKey<FluidResource> TANK = new SingleResourceSlotKey<>();
     public static final int CAPACITY = 4 * FluidType.BUCKET_VOLUME;
 
-    public static final FluidStorageLayout<NiardBlockEntity> FLUID_STORAGE_LAYOUT =
-        FluidStorageLayout.<NiardBlockEntity>builder()
+    public static final FluidStorageLayout FLUID_STORAGE_LAYOUT =
+        FluidStorageLayout.builder()
             .slot(TANK, SlotTemplates.storage(), slot -> slot.capacity(CAPACITY))
             .build();
 
-    private final FluidStorage<NiardBlockEntity> fluidStorage;
+    private final FluidStorage fluidStorage;
 
     private static final int ENERGY_PER_BUCKET = 1_500;
     private static final int BASE_IDLE_TICKS = 40;
@@ -86,7 +86,7 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
         super(EIOBlockEntities.NIARD.get(), worldPosition, blockState, false, CapacitorSupport.REQUIRED,
             EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE);
 
-        fluidStorage = new FluidStorage<>(FLUID_STORAGE_LAYOUT, this) {
+        fluidStorage = new FluidStorage(FLUID_STORAGE_LAYOUT) {
             @Override
             protected void onContentsChanged(int index, FluidStack previousContents) {
                 super.onContentsChanged(index, previousContents);
@@ -101,7 +101,7 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
         iterator = new NiardRangeIterator(worldPosition, actionRange);
     }
 
-    public FluidStorage<NiardBlockEntity> getFluidStorage() {
+    public FluidStorage getFluidStorage() {
         return fluidStorage;
     }
 

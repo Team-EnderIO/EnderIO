@@ -60,19 +60,19 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
     public static final SingleResourceSlotKey<FluidResource> OUTPUT_TANK = new SingleResourceSlotKey<>();
     public static final MultiSlotAccess REAGENTS = new MultiSlotAccess();
 
-    public static final FluidStorageLayout<VatBlockEntity> FLUID_STORAGE_LAYOUT =
-        FluidStorageLayout.<VatBlockEntity>builder()
+    public static final FluidStorageLayout FLUID_STORAGE_LAYOUT =
+        FluidStorageLayout.builder()
             .slot(INPUT_TANK, SlotTemplates.storage(), slot -> slot.capacity(TANK_CAPACITY))
             .slot(OUTPUT_TANK, SlotTemplates.storage(), slot -> slot.capacity(TANK_CAPACITY))
             .build();
 
-    private final FluidStorage<VatBlockEntity> fluidStorage;
+    private final FluidStorage fluidStorage;
     private final CraftingMachineTaskHost<FermentingRecipe, FermentingRecipe.Input> craftingTaskHost;
 
     public VatBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.VAT.get(), worldPosition, blockState, true);
 
-        fluidStorage = new FluidStorage<>(FLUID_STORAGE_LAYOUT, this) {
+        fluidStorage = new FluidStorage(FLUID_STORAGE_LAYOUT) {
             @Override
             protected void onContentsChanged(int index, FluidStack previousContents) {
                 super.onContentsChanged(index, previousContents);
@@ -88,7 +88,7 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
                 this::createTask, this::createRecipeInput);
     }
 
-    public FluidStorage<VatBlockEntity> getFluidStorage() {
+    public FluidStorage getFluidStorage() {
         return fluidStorage;
     }
 
@@ -187,7 +187,7 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
             extends CraftingMachineTask<FermentingRecipe, FermentingRecipe.Input> {
 
         public VatCraftingMachineTask(@NonNull Level level, MachineInventory inventory,
-                FluidStorage<VatBlockEntity> fluidStorage, FermentingRecipe.Input input,
+                FluidStorage fluidStorage, FermentingRecipe.Input input,
                 @Nullable RecipeHolder<FermentingRecipe> recipe) {
             super(level, inventory, fluidStorage, input, recipe);
         }

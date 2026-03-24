@@ -52,7 +52,7 @@ public class AlloySmelterMenu extends PoweredMachineMenu<AlloySmelterBlockEntity
         addPlayerInventorySlots(8, 126);
     }
 
-    public ItemStorage<AlloySmelterBlockEntity> getMachineInventoryTemp() {
+    public ItemStorage getMachineInventoryTemp() {
         return getBlockEntity().itemStorage;
     }
 

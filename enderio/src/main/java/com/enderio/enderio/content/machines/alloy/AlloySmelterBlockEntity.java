@@ -55,13 +55,13 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     public static SingleResourceSlotKey<ItemResource> OUTPUT = new SingleResourceSlotKey<>();
     public static SingleResourceSlotKey<ItemResource> CAPACITOR = new SingleResourceSlotKey<>();
 
-    public static final ItemStorageLayout<AlloySmelterBlockEntity> ITEM_STORAGE_LAYOUT =
-        ItemStorageLayout.<AlloySmelterBlockEntity>builder()
-            .slots(INPUTS, SlotTemplates.input(), b -> b
-                .filter(AlloySmelterBlockEntity::acceptSlotInput))
-            .slot(OUTPUT, SlotTemplates.output())
-            .slot(CAPACITOR, MachineSlotTemplates.capacitor())
-            .build();
+//    public static final ItemStorageLayout ITEM_STORAGE_LAYOUT =
+//        ItemStorageLayout.builder()
+//            .slots(INPUTS, SlotTemplates.input(), b -> b
+//                .filter(AlloySmelterBlockEntity::acceptSlotInput))
+//            .slot(OUTPUT, SlotTemplates.output())
+//            .slot(CAPACITOR, MachineSlotTemplates.capacitor())
+//            .build();
 
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
             MachinesConfig.COMMON.ENERGY.ALLOY_SMELTER_CAPACITY);
@@ -69,7 +69,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
             MachinesConfig.COMMON.ENERGY.ALLOY_SMELTER_USAGE);
 
     // TODO: Non public!
-    public final ItemStorage<AlloySmelterBlockEntity> itemStorage;
+    public final ItemStorage itemStorage;
     
     /**
      * The alloying mode for the machine.
@@ -86,13 +86,14 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
                 EnergyIOMode.Input, CAPACITY, USAGE);
 
         // Inventory
-        itemStorage = new ItemStorage<>(ITEM_STORAGE_LAYOUT, this) {
-            @Override
-            protected void onContentsChanged(int index, ItemStack previousContents) {
-                onInventoryContentsChanged(index);
-                setChanged();
-            }
-        };
+//        itemStorage = new ItemStorage<>(ITEM_STORAGE_LAYOUT, this) {
+//            @Override
+//            protected void onContentsChanged(int index, ItemStack previousContents) {
+//                onInventoryContentsChanged(index);
+//                setChanged();
+//            }
+//        };
+        itemStorage = null;
 
         // Crafting task host
         craftingTaskHost = new AlloySmeltingMachineTaskHost(this, this::canAcceptTask,

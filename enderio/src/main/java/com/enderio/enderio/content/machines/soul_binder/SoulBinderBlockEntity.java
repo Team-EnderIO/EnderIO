@@ -70,14 +70,14 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
 
     public static final SingleResourceSlotKey<FluidResource> TANK_SLOT = new SingleResourceSlotKey<>();
 
-    public static final FluidStorageLayout<SoulBinderBlockEntity> FLUID_STORAGE_LAYOUT =
-         FluidStorageLayout.<SoulBinderBlockEntity>builder()
+    public static final FluidStorageLayout FLUID_STORAGE_LAYOUT =
+         FluidStorageLayout.builder()
             .slot(TANK_SLOT, SlotTemplates.input(), slot -> slot
                 .capacity(TANK_CAPACITY)
-                .filter((_, _, resource) -> resource.is(Tags.Fluids.EXPERIENCE)))
+                .filter((_, resource) -> resource.is(Tags.Fluids.EXPERIENCE)))
             .build();
 
-    private final FluidStorage<SoulBinderBlockEntity> fluidStorage;
+    private final FluidStorage fluidStorage;
 
     public static final SingleSlotAccess INPUT_SOUL = new SingleSlotAccess();
     public static final SingleSlotAccess INPUT_OTHER = new SingleSlotAccess();
@@ -93,7 +93,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
         super(EIOBlockEntities.SOUL_BINDER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
                 EnergyIOMode.Input, CAPACITY, USAGE);
 
-        fluidStorage = new FluidStorage<>(FLUID_STORAGE_LAYOUT, this) {
+        fluidStorage = new FluidStorage(FLUID_STORAGE_LAYOUT) {
             @Override
             protected void onContentsChanged(int index, FluidStack previousContents) {
                 super.onContentsChanged(index, previousContents);

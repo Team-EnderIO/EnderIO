@@ -41,21 +41,21 @@ public class XPObeliskBlockEntity extends MachineBlockEntity {
 
     public static final SingleResourceSlotKey<FluidResource> TANK_SLOT = new SingleResourceSlotKey<>();
 
-    public static final FluidStorageLayout<XPObeliskBlockEntity> FLUID_STORAGE_LAYOUT =
-        FluidStorageLayout.<XPObeliskBlockEntity>builder()
+    public static final FluidStorageLayout FLUID_STORAGE_LAYOUT =
+        FluidStorageLayout.builder()
             .slot(TANK_SLOT, SlotTemplates.storage(), slot -> slot
                 .capacity(Integer.MAX_VALUE)
-                .filter((_, _, resource) -> resource.getFluid().is(Tags.Fluids.EXPERIENCE)))
+                .filter((_, resource) -> resource.getFluid().is(Tags.Fluids.EXPERIENCE)))
             .build();
 
-    private final FluidStorage<XPObeliskBlockEntity> fluidStorage;
+    private final FluidStorage fluidStorage;
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public XPObeliskBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.XP_OBELISK.get(), worldPosition, blockState, true);
 
-        fluidStorage = new FluidStorage<>(FLUID_STORAGE_LAYOUT, this) {
+        fluidStorage = new FluidStorage(FLUID_STORAGE_LAYOUT) {
             @Override
             protected void onContentsChanged(int index, FluidStack previousContents) {
                 super.onContentsChanged(index, previousContents);

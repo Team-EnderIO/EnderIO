@@ -70,7 +70,7 @@ public class RecipeInputCache<T extends RecipeInput, R extends Recipe<T>> {
     /**
      * Test if there is a valid recipe if toAdd was added to the inventory.
      */
-    public boolean hasValidRecipeIf(ItemStorage<?> inventory, MultiResourceSlotKey<ItemResource> inputs, int slot, ItemStack toAdd) {
+    public boolean hasValidRecipeIf(ItemStorage inventory, MultiResourceSlotKey<ItemResource> inputs, int slot, ItemStack toAdd) {
         // Collect the list of items that the recipe will match against
         var currentItems = new ArrayList<ItemStack>();
 

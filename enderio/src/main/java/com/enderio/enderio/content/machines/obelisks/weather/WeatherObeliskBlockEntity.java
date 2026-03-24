@@ -61,18 +61,18 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity {
 
     public static final SingleResourceSlotKey<FluidResource> TANK_SLOT = new SingleResourceSlotKey<>();
 
-    public static final FluidStorageLayout<WeatherObeliskBlockEntity> FLUID_STORAGE_LAYOUT =
-        FluidStorageLayout.<WeatherObeliskBlockEntity>builder()
+    public static final FluidStorageLayout FLUID_STORAGE_LAYOUT =
+        FluidStorageLayout.builder()
             .slot(TANK_SLOT, SlotTemplates.storage(), slot -> slot.capacity(TANK_CAPACITY))
             .build();
 
-    private final FluidStorage<WeatherObeliskBlockEntity> fluidStorage;
+    private final FluidStorage fluidStorage;
     private final CraftingMachineTaskHost<WeatherChangeRecipe, WeatherChangeRecipe.Input> craftingTaskHost;
 
     public WeatherObeliskBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.WEATHER_OBELISK.get(), worldPosition, blockState, false);
 
-        fluidStorage = new FluidStorage<>(FLUID_STORAGE_LAYOUT, this) {
+        fluidStorage = new FluidStorage(FLUID_STORAGE_LAYOUT) {
             @Override
             protected void onContentsChanged(int index, FluidStack previousContents) {
                 super.onContentsChanged(index, previousContents);

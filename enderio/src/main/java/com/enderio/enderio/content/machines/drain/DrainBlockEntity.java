@@ -68,14 +68,7 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements Range
 
     public static final SingleResourceSlotKey<FluidResource> TANK_SLOT = new SingleResourceSlotKey<>();
 
-    public static final FluidStorageLayout<DrainBlockEntity> FLUID_STORAGE_LAYOUT =
-        FluidStorageLayout.<DrainBlockEntity>builder()
-            .slot(TANK_SLOT, SlotTemplates.output(), slot -> slot
-                .capacity(CAPACITY)
-                .filter((drain, index, resource) -> drain.type.isSame(resource.getFluid())))
-            .build();
-
-    private final FluidStorage<DrainBlockEntity> fluidStorage;
+    private final FluidStorage fluidStorage;
     private List<BlockPos> positions;
     private int currentIndex = 0;
     private boolean fluidFound = false;
@@ -88,7 +81,13 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements Range
         super(EIOBlockEntities.DRAIN.get(), worldPosition, blockState, false, CapacitorSupport.REQUIRED,
                 EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE);
 
-        fluidStorage = new FluidStorage<>(FLUID_STORAGE_LAYOUT, this) {
+        var fluidStorageLayout = FluidStorageLayout.builder()
+            .slot(TANK_SLOT, SlotTemplates.output(), slot -> slot
+                .capacity(CAPACITY)
+                .filter((_, resource) -> type.isSame(resource.getFluid())))
+            .build();;
+
+        fluidStorage = new FluidStorage(fluidStorageLayout) {
             @Override
             protected void onContentsChanged(int index, FluidStack previousContents) {
                 super.onContentsChanged(index, previousContents);

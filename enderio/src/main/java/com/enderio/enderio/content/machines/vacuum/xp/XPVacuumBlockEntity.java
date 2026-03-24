@@ -39,17 +39,17 @@ public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb>
 
     public static int CAPACITY = Integer.MAX_VALUE;
 
-    public static final FluidStorageLayout<XPVacuumBlockEntity> FLUID_STORAGE_LAYOUT =
-        FluidStorageLayout.<XPVacuumBlockEntity>builder()
+    public static final FluidStorageLayout FLUID_STORAGE_LAYOUT =
+        FluidStorageLayout.builder()
             .slot(TANK, SlotTemplates.storage(), slot -> slot.capacity(CAPACITY))
             .build();
 
-    private final FluidStorage<XPVacuumBlockEntity> fluidStorage;
+    private final FluidStorage fluidStorage;
 
     public XPVacuumBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.XP_VACUUM.get(), worldPosition, blockState, ExperienceOrb.class);
 
-        fluidStorage = new FluidStorage<>(FLUID_STORAGE_LAYOUT, this) {
+        fluidStorage = new FluidStorage(FLUID_STORAGE_LAYOUT) {
             @Override
             protected void onContentsChanged(int index, FluidStack previousContents) {
                 super.onContentsChanged(index, previousContents);

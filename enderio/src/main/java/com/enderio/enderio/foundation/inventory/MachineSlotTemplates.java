@@ -9,10 +9,10 @@ import net.neoforged.neoforge.transfer.item.ItemResource;
 import java.util.function.UnaryOperator;
 
 public class MachineSlotTemplates {
-    public static <TContext> UnaryOperator<ResourceStorageLayout.Builder.SlotBuilder<ItemResource, TContext>> capacitor() {
-        var storageSlotBuilder = SlotTemplates.<ItemResource, TContext>storage();
+    public static UnaryOperator<ResourceStorageLayout.Builder.SlotBuilder<ItemResource>> capacitor() {
+        var storageSlotBuilder = SlotTemplates.<ItemResource>storage();
         return builder -> storageSlotBuilder.apply(builder)
-            .filter((_, _, itemResource) -> itemResource.has(EIODataComponents.CAPACITOR_DATA) ||
+            .filter((_, itemResource) -> itemResource.has(EIODataComponents.CAPACITOR_DATA) ||
                 itemResource.toStack().getCapability(EnderIOCapabilities.CAPACITOR_EXTENSION) != null);
     }
 }
