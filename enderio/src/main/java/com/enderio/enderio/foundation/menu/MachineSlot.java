@@ -3,8 +3,6 @@ package com.enderio.enderio.foundation.menu;
 import com.enderio.core.common.menu.SlotWithOverlay;
 import com.enderio.core.common.storage.ItemStorage;
 import com.enderio.core.common.storage.slot.ResourceSlotId;
-import com.enderio.enderio.foundation.inventory.MachineInventory;
-import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -28,22 +26,22 @@ public class MachineSlot extends ResourceHandlerSlot implements SlotWithOverlay 
     }
 
     @Override
-    public MachineInventory getResourceHandler() {
-        return (MachineInventory) super.getResourceHandler();
+    public ItemStorage getResourceHandler() {
+        return (ItemStorage) super.getResourceHandler();
     }
 
     @Override
     public boolean mayPlace(ItemStack stack) {
-        return getResourceHandler().layout().guiCanInsert(this.index) && super.mayPlace(stack);
+        return getResourceHandler().layout().slotConfig(index).canManualInsert() && super.mayPlace(stack);
     }
 
     @Override
     public boolean mayPickup(Player playerIn) {
-        return getResourceHandler().layout().guiCanExtract(this.index) && super.mayPickup(playerIn);
+        return getResourceHandler().layout().slotConfig(index).canManualExtract() && super.mayPickup(playerIn);
     }
 
     public boolean canQuickInsertStack() {
-        return isActive() && getResourceHandler().layout().guiCanInsert(getSlotIndex());
+        return isActive() && getResourceHandler().layout().slotConfig(index).canManualInsert();
     }
 
     @Override

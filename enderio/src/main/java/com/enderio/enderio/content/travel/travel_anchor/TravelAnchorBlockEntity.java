@@ -1,10 +1,11 @@
 package com.enderio.enderio.content.travel.travel_anchor;
 
+import com.enderio.core.common.storage.layout.ItemStorageLayout;
+import com.enderio.core.common.storage.layout.SlotTemplates;
+import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.travel.TravelTarget;
 import com.enderio.enderio.api.travel.TravelTargetApi;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
-import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
-import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import com.enderio.enderio.init.EIOBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
@@ -16,6 +17,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
@@ -23,7 +25,7 @@ import java.util.Optional;
 // TODO: Shouldn't be a machine block entity...
 public class TravelAnchorBlockEntity extends MachineBlockEntity {
 
-    public static final SingleSlotAccess GHOST = new SingleSlotAccess();
+    public static final SingleResourceSlotKey<ItemResource> GHOST = new SingleResourceSlotKey<>();
 
     public TravelAnchorBlockEntity(BlockPos worldPosition, BlockState blockState) {
         this(EIOBlockEntities.TRAVEL_ANCHOR.get(), worldPosition, blockState);
@@ -51,14 +53,16 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public @Nullable MachineInventoryLayout createInventoryLayout() {
-        return MachineInventoryLayout.builder().setStackLimit(1).ghostSlot().slotAccess(GHOST).build();
+    public @Nullable ItemStorageLayout createInventoryLayout() {
+        return ItemStorageLayout.builder()
+            .slot(GHOST, SlotTemplates.ghost(), b -> b.capacity(1))
+            .build();
     }
 
     @Override
     protected void onInventoryContentsChanged(int slot) {
         super.onInventoryContentsChanged(slot);
-        ItemStack stack = GHOST.getStack(getInventory());
+        ItemStack stack = getInventory().getStack(GHOST);
         setIcon(stack.getItem());
     }
 

@@ -5,7 +5,6 @@ import com.enderio.core.common.network.menu.EnumSyncSlot;
 import com.enderio.core.common.storage.ItemStorage;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
-import com.enderio.enderio.foundation.inventory.MachineInventory;
 import com.enderio.enderio.foundation.network.menu_sync.MachineStatesSyncSlot;
 import com.enderio.enderio.foundation.state.MachineState;
 import net.minecraft.network.RegistryFriendlyByteBuf;

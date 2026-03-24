@@ -17,6 +17,10 @@ public class SlotTemplates {
         return builder -> builder.canExtract().canManualExtract();
     }
 
+    public static <T extends Resource> UnaryOperator<ResourceStorageLayout.Builder.SlotBuilder<T>> ghost() {
+        return builder -> builder.canManualInsert();
+    }
+
     public static <T extends Resource> UnaryOperator<ResourceStorageLayout.Builder.SlotBuilder<T>> inaccessible() {
         return builder -> builder;
     }

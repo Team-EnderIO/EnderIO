@@ -1,10 +1,11 @@
 package com.enderio.enderio.content.machines.vacuum.chest;
 
+import com.enderio.core.common.storage.layout.ItemStorageLayout;
+import com.enderio.core.common.storage.layout.SlotTemplates;
+import com.enderio.core.common.storage.slot.MultiResourceSlotKey;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.content.machines.vacuum.VacuumMachineBlockEntity;
-import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
-import com.enderio.enderio.foundation.inventory.MachineInventoryLayout.Builder;
 import com.enderio.enderio.init.EIOBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -21,6 +22,8 @@ import java.util.function.Predicate;
 
 public class VacuumChestBlockEntity extends VacuumMachineBlockEntity<ItemEntity> {
 
+    public static MultiResourceSlotKey<ItemResource> INVENTORY = new MultiResourceSlotKey<>(27);
+
     public VacuumChestBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.VACUUM_CHEST.get(), worldPosition, blockState, ItemEntity.class);
     }
@@ -31,13 +34,12 @@ public class VacuumChestBlockEntity extends VacuumMachineBlockEntity<ItemEntity>
     }
 
     @Override
-    public MachineInventoryLayout createInventoryLayout() {
-        return extractableGUISlot(MachineInventoryLayout.builder(), 27)
-                .slot(slot -> slot.guiInsert()
-                        .guiExtract()
-                        .filter((i, resource) -> resource.toStack().getCapability(EnderIOCapabilities.ITEM_FILTER) != null))
-                .slotAccess(FILTER)
-                .build();
+    public ItemStorageLayout createInventoryLayout() {
+        return ItemStorageLayout.builder()
+            .slots(INVENTORY, SlotTemplates.storage())
+            .slot(FILTER, SlotTemplates.input(), b -> b
+                .filter((_, itemResource) -> itemResource.toStack().getCapability(EnderIOCapabilities.ITEM_FILTER) != null))
+            .build();
     }
 
     @Override
@@ -45,7 +47,7 @@ public class VacuumChestBlockEntity extends VacuumMachineBlockEntity<ItemEntity>
         ItemStack itemToReceive = entity.getItem().copy();
 
         // Enable the filter to adjust the amount to accept (limited item filter)
-        var filter = FILTER.getItemStack(this).getCapability(EnderIOCapabilities.ITEM_FILTER);
+        var filter = getInventory().getStack(FILTER).getCapability(EnderIOCapabilities.ITEM_FILTER);
         if (filter != null) {
             itemToReceive = filter.test(getInventory(), itemToReceive);
         }
@@ -74,20 +76,11 @@ public class VacuumChestBlockEntity extends VacuumMachineBlockEntity<ItemEntity>
 
     @Override
     public Predicate<ItemEntity> getFilter() {
-        var filter = FILTER.getItemStack(this).getCapability(EnderIOCapabilities.ITEM_FILTER);
+        var filter = getInventory().getStack(FILTER).getCapability(EnderIOCapabilities.ITEM_FILTER);
         if (filter != null) {
             return itemEntity -> !filter.test(getInventory(), itemEntity.getItem()).isEmpty();
         }
 
         return super.getFilter();
-    }
-
-    // Slot config
-
-    public Builder extractableGUISlot(Builder builder, int count) {
-        for (int i = 0; i < count; i++) {
-            builder.slot(slot -> slot.guiInsert().guiExtract().extract());
-        }
-        return builder;
     }
 }

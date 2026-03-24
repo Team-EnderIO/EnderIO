@@ -2,8 +2,6 @@ package com.enderio.enderio.foundation.recipe;
 
 import com.enderio.core.common.storage.ItemStorage;
 import com.enderio.core.common.storage.slot.MultiResourceSlotKey;
-import com.enderio.enderio.foundation.inventory.MachineInventory;
-import com.enderio.enderio.foundation.inventory.MultiSlotAccess;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -43,28 +41,6 @@ public class RecipeInputCache<T extends RecipeInput, R extends Recipe<T>> {
         this.filter = filter;
         this.itemToRecipesCache = new HashMap<>();
         this.recipeToIngredientCache = new HashMap<>();
-    }
-
-    /**
-     * Test if there is a valid recipe if toAdd was added to the inventory.
-     */
-    public boolean hasValidRecipeIf(MachineInventory inventory, MultiSlotAccess inputs, int slot, ItemStack toAdd) {
-        // Collect the list of items that the recipe will match against
-        var currentItems = new ArrayList<ItemStack>();
-
-        // Build the new inventory state after the addition
-        for (int i = 0; i < inputs.size(); i++) {
-            var input = inputs.get(i);
-            var invStack = input.getStack(inventory);
-            if (input.getIndex() == slot) {
-                currentItems.add(toAdd);
-            } else if (!invStack.isEmpty()) {
-                currentItems.add(invStack);
-            }
-        }
-
-        // Try and match the items list
-        return hasRecipe(currentItems);
     }
 
     /**

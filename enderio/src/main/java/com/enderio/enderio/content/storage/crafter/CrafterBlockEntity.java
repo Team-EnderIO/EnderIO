@@ -11,9 +11,7 @@ import com.enderio.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
-import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.foundation.inventory.MachineSlotTemplates;
-import com.enderio.enderio.foundation.inventory.MultiSlotAccess;
 import com.enderio.enderio.init.EIOBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -102,7 +100,7 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
     }
 
     private static UnaryOperator<ResourceStorageLayout.Builder.SlotBuilder<ItemResource>> singleItemInput() {
-        return builder -> SlotTemplates.<ItemResource>input().apply(builder).capacity(1);
+        return builder -> SlotTemplates.<ItemResource>ghost().apply(builder).capacity(1);
     }
 
     private boolean acceptSlotInput(int slot, ItemResource resource) {

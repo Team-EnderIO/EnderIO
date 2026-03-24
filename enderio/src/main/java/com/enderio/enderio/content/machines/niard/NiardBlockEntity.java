@@ -2,6 +2,7 @@ package com.enderio.enderio.content.machines.niard;
 
 import com.enderio.core.common.storage.FluidStorage;
 import com.enderio.core.common.storage.layout.FluidStorageLayout;
+import com.enderio.core.common.storage.layout.ItemStorageLayout;
 import com.enderio.core.common.storage.layout.SlotTemplates;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
@@ -14,8 +15,7 @@ import com.enderio.enderio.foundation.attachment.ActionRange;
 import com.enderio.enderio.foundation.attachment.RangedActor;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
-import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
-import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
+import com.enderio.enderio.foundation.inventory.MachineSlotTemplates;
 import com.enderio.enderio.foundation.io.fluid.FluidItemInteractive;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.foundation.storage.SidedResourceHandler;
@@ -45,6 +45,7 @@ import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jspecify.annotations.Nullable;
 
@@ -78,12 +79,13 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
     private static final int ENERGY_PER_BUCKET = 1_500;
     private static final int BASE_IDLE_TICKS = 40;
 
-    public static final SingleSlotAccess FLUID_FILL_INPUT = new SingleSlotAccess();
-    public static final SingleSlotAccess FLUID_FILL_OUTPUT = new SingleSlotAccess();
+    public static final SingleResourceSlotKey<ItemResource> FLUID_FILL_INPUT = new SingleResourceSlotKey<>();
+    public static final SingleResourceSlotKey<ItemResource> FLUID_FILL_OUTPUT = new SingleResourceSlotKey<>();
+    public static final SingleResourceSlotKey<ItemResource> CAPACITOR = new SingleResourceSlotKey<>();
 
 
     public NiardBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(EIOBlockEntities.NIARD.get(), worldPosition, blockState, false, CapacitorSupport.REQUIRED,
+        super(EIOBlockEntities.NIARD.get(), worldPosition, blockState, false, CapacitorSupport.REQUIRED, CAPACITOR,
             EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE);
 
         fluidStorage = new FluidStorage(FLUID_STORAGE_LAYOUT) {
@@ -121,7 +123,7 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
     }
 
     private void fillTank() {
-        InternalTankTasks.fillInternal(this, fluidStorage, TANK, FLUID_FILL_INPUT, FLUID_FILL_OUTPUT);
+        InternalTankTasks.fillInternal(fluidStorage, TANK, getInventory(), FLUID_FILL_INPUT, FLUID_FILL_OUTPUT);
     }
 
     private void tryPlaceFluid() {
@@ -175,13 +177,12 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
     }
 
     @Override
-    public MachineInventoryLayout createInventoryLayout() {
-        return MachineInventoryLayout.builder()
-            .capacitor()
-            .inputSlot((slot, stack) -> acceptItemDrain(stack.toStack()))
-            .slotAccess(FLUID_FILL_INPUT)
-            .outputSlot()
-            .slotAccess(FLUID_FILL_OUTPUT)
+    public ItemStorageLayout createInventoryLayout() {
+        return ItemStorageLayout.builder()
+            .slot(CAPACITOR, MachineSlotTemplates.capacitor())
+            .slot(FLUID_FILL_INPUT, SlotTemplates.input(), b -> b
+                .filter((_, itemResource) -> acceptItemDrain(itemResource.toStack())))
+            .slot(FLUID_FILL_OUTPUT, SlotTemplates.output())
             .build();
     }
 

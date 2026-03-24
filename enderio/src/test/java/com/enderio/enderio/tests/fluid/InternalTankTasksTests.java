@@ -8,7 +8,7 @@ import com.enderio.core.common.storage.layout.SlotTemplates;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.core.common.util.EnderResourceUtil;
 import com.enderio.enderio.content.storage.fluid_tank.FluidTankBlockEntity;
-import com.enderio.enderio.content.storage.fluid_tank.NewInternalTankTasks;
+import com.enderio.enderio.content.storage.fluid_tank.InternalTankTasks;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.world.item.ItemStack;
@@ -66,7 +66,7 @@ public class InternalTankTasksTests {
         itemStorage.set(INPUT_SLOT, ItemResource.of(Items.WATER_BUCKET), 1);
 
         // Act
-        NewInternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
+        InternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
 
         // Assert
         Assertions.assertEquals(FluidType.BUCKET_VOLUME, fluidStorage.getAmountAsInt(TANK_SLOT),
@@ -91,7 +91,7 @@ public class InternalTankTasksTests {
         itemStorage.set(INPUT_SLOT, ItemResource.of(Items.WATER_BUCKET), 1);
 
         // Act - first fill
-        NewInternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
+        InternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
 
         // Assert after first fill
         Assertions.assertEquals(FluidType.BUCKET_VOLUME, fluidStorage.getAmountAsInt(TANK_SLOT));
@@ -103,7 +103,7 @@ public class InternalTankTasksTests {
         itemStorage.set(INPUT_SLOT, ItemResource.of(Items.WATER_BUCKET), 1);
 
         // Act - second fill
-        NewInternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
+        InternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
 
         // Assert after second fill
         Assertions.assertEquals(FluidType.BUCKET_VOLUME * 2, fluidStorage.getAmountAsInt(TANK_SLOT));
@@ -125,7 +125,7 @@ public class InternalTankTasksTests {
         itemStorage.set(INPUT_SLOT, ItemResource.of(Items.WATER_BUCKET), 1);
 
         // Act
-        NewInternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
+        InternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
 
         // Assert - nothing should change
         Assertions.assertEquals(FluidType.BUCKET_VOLUME, fluidStorage.getAmountAsInt(TANK_SLOT),
@@ -148,7 +148,7 @@ public class InternalTankTasksTests {
         itemStorage.set(OUTPUT_SLOT, ItemResource.of(Items.BUCKET), 64);
 
         // Act
-        NewInternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
+        InternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
 
         // Assert - nothing should change because output is full
         Assertions.assertEquals(0, fluidStorage.getAmountAsInt(TANK_SLOT),
@@ -169,7 +169,7 @@ public class InternalTankTasksTests {
         itemStorage.set(INPUT_SLOT, ItemResource.of(ItemStack.EMPTY), 0);
 
         // Act
-        NewInternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
+        InternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
 
         // Assert - nothing should happen
         Assertions.assertEquals(0, fluidStorage.getAmountAsInt(TANK_SLOT),
@@ -188,7 +188,7 @@ public class InternalTankTasksTests {
         itemStorage.set(INPUT_SLOT, ItemResource.of(Items.COBBLESTONE), 1);
 
         // Act
-        NewInternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
+        InternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
 
         // Assert - nothing should happen
         Assertions.assertEquals(0, fluidStorage.getAmountAsInt(TANK_SLOT),
@@ -212,7 +212,7 @@ public class InternalTankTasksTests {
         itemStorage.set(INPUT_SLOT, ItemResource.of(Items.LAVA_BUCKET), 1);
 
         // Act
-        NewInternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
+        InternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
 
         // Assert - should not mix fluids
         Assertions.assertEquals(FluidType.BUCKET_VOLUME, fluidStorage.getAmountAsInt(TANK_SLOT),
@@ -237,7 +237,7 @@ public class InternalTankTasksTests {
         itemStorage.set(OUTPUT_SLOT, ItemResource.of(Items.GLASS_BOTTLE), 1);
 
         // Act
-        NewInternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
+        InternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
 
         // Assert - should not work because output has wrong item
         Assertions.assertEquals(0, fluidStorage.getAmountAsInt(TANK_SLOT),
@@ -264,7 +264,7 @@ public class InternalTankTasksTests {
         itemStorage.set(INPUT_SLOT, ItemResource.of(fluidContainer), 1);
 
         // Act
-        NewInternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
+        InternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
 
         // Assert
         Assertions.assertEquals(500, fluidStorage.getAmountAsInt(TANK_SLOT),
@@ -291,7 +291,7 @@ public class InternalTankTasksTests {
         itemStorage.set(INPUT_SLOT, ItemResource.of(fluidContainer), 1);
 
         // Act
-        NewInternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
+        InternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
 
         // Assert
         Assertions.assertEquals(FluidType.BUCKET_VOLUME * 3, fluidStorage.getAmountAsInt(TANK_SLOT),
@@ -313,7 +313,7 @@ public class InternalTankTasksTests {
         itemStorage.set(INPUT_SLOT, ItemResource.of(fluidContainer), 1);
 
         // Act
-        NewInternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
+        InternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
 
         // Assert - only 2 buckets should transfer
         Assertions.assertEquals(FluidType.BUCKET_VOLUME * 2, fluidStorage.getAmountAsInt(TANK_SLOT),
@@ -343,7 +343,7 @@ public class InternalTankTasksTests {
         itemStorage.set(INPUT_SLOT, ItemResource.of(emptyContainer), 1);
 
         // Act
-        NewInternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
+        InternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
 
         // Assert - nothing should happen with empty container
         Assertions.assertEquals(0, fluidStorage.getAmountAsInt(TANK_SLOT),
@@ -368,7 +368,7 @@ public class InternalTankTasksTests {
         itemStorage.set(OUTPUT_SLOT, ItemResource.of(Items.COBBLESTONE), 1);
 
         // Act
-        NewInternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
+        InternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
 
         // Assert - transfer should not happen because output is not empty
         Assertions.assertEquals(0, fluidStorage.getAmountAsInt(TANK_SLOT),
@@ -393,7 +393,7 @@ public class InternalTankTasksTests {
         itemStorage.set(INPUT_SLOT, ItemResource.of(lavaContainer), 1);
 
         // Act
-        NewInternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
+        InternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
 
         // Assert - should not mix fluids
         Assertions.assertEquals(FluidType.BUCKET_VOLUME, fluidStorage.getAmountAsInt(TANK_SLOT),
@@ -432,7 +432,7 @@ public class InternalTankTasksTests {
         itemStorage.set(INPUT_SLOT, ItemResource.of(Items.BUCKET), 1);
 
         // Act
-        NewInternalTankTasks.drainInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
+        InternalTankTasks.drainInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
 
         // Assert
         Assertions.assertEquals(0, fluidStorage.getAmountAsInt(TANK_SLOT),
@@ -458,7 +458,7 @@ public class InternalTankTasksTests {
         itemStorage.set(INPUT_SLOT, ItemResource.of(Items.WATER_BUCKET), 1);
 
         // Act
-        NewInternalTankTasks.drainInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
+        InternalTankTasks.drainInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
 
         // Assert
         Assertions.assertEquals(FluidType.BUCKET_VOLUME, fluidStorage.getAmountAsInt(TANK_SLOT),
@@ -482,7 +482,7 @@ public class InternalTankTasksTests {
         itemStorage.setStack(INPUT_SLOT, getFilledFluidTank(Fluids.WATER, 0));
 
         // Act
-        NewInternalTankTasks.drainInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
+        InternalTankTasks.drainInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
 
         // Assert
         Assertions.assertEquals(0, fluidStorage.getAmountAsInt(TANK_SLOT),
@@ -517,7 +517,7 @@ public class InternalTankTasksTests {
         itemStorage.setStack(INPUT_SLOT, getFilledFluidTank(Fluids.WATER, FluidTankBlockEntity.Standard.CAPACITY));
 
         // Act
-        NewInternalTankTasks.drainInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
+        InternalTankTasks.drainInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
 
         // Assert
         Assertions.assertEquals(FluidType.BUCKET_VOLUME, fluidStorage.getAmountAsInt(TANK_SLOT),

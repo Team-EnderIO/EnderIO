@@ -2,7 +2,9 @@ package com.enderio.enderio.content.machines.soul_binder;
 
 import com.enderio.core.common.storage.FluidStorage;
 import com.enderio.core.common.storage.layout.FluidStorageLayout;
+import com.enderio.core.common.storage.layout.ItemStorageLayout;
 import com.enderio.core.common.storage.layout.SlotTemplates;
+import com.enderio.core.common.storage.slot.MultiResourceSlotKey;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.UseOnly;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
@@ -13,9 +15,7 @@ import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.foundation.MachineNBTKeys;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
-import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
-import com.enderio.enderio.foundation.inventory.MultiSlotAccess;
-import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
+import com.enderio.enderio.foundation.inventory.MachineSlotTemplates;
 import com.enderio.enderio.foundation.recipe.MachineRecipeCaches;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.foundation.storage.SidedResourceHandler;
@@ -79,9 +79,10 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
 
     private final FluidStorage fluidStorage;
 
-    public static final SingleSlotAccess INPUT_SOUL = new SingleSlotAccess();
-    public static final SingleSlotAccess INPUT_OTHER = new SingleSlotAccess();
-    public static final MultiSlotAccess OUTPUT = new MultiSlotAccess();
+    public static final SingleResourceSlotKey<ItemResource> INPUT_SOUL = new SingleResourceSlotKey<>();
+    public static final SingleResourceSlotKey<ItemResource> INPUT_OTHER = new SingleResourceSlotKey<>();
+    public static final MultiResourceSlotKey<ItemResource> OUTPUT = new MultiResourceSlotKey<>(2);
+    public static final SingleResourceSlotKey<ItemResource> CAPACITOR = new SingleResourceSlotKey<>();
 
     @UseOnly(LogicalSide.CLIENT)
     @Nullable
@@ -90,7 +91,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
     private final CraftingMachineTaskHost<SoulBindingRecipe, SoulBindingRecipe.Input> craftingTaskHost;
 
     public SoulBinderBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(EIOBlockEntities.SOUL_BINDER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
+        super(EIOBlockEntities.SOUL_BINDER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, CAPACITOR,
                 EnergyIOMode.Input, CAPACITY, USAGE);
 
         fluidStorage = new FluidStorage(FLUID_STORAGE_LAYOUT) {
@@ -148,19 +149,18 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
     // region Inventory
 
     @Override
-    public MachineInventoryLayout createInventoryLayout() {
+    public ItemStorageLayout createInventoryLayout() {
         // TODO: Support for non-soul vial storages.
-        return MachineInventoryLayout.builder()
-                .setStackLimit(1)
-                .inputSlot((slot, resource) -> resource.is(EIOItems.SOUL_VIAL.get()) && SoulBoundUtils.isBound(resource.toStack()))
-                .slotAccess(INPUT_SOUL)
-                .inputSlot(this::isValidInput)
-                .slotAccess(INPUT_OTHER)
-                .setStackLimit(64)
-                .outputSlot(2)
-                .slotAccess(OUTPUT)
-                .capacitor()
-                .build();
+        return ItemStorageLayout
+            .builder()
+            .slot(INPUT_SOUL, SlotTemplates.input(),
+                b -> b.capacity(1).filter((_, itemResource) -> itemResource.is(EIOItems.SOUL_VIAL.get()) && SoulBoundUtils.isBound(itemResource.toStack())))
+            .slot(INPUT_OTHER, SlotTemplates.input(), b -> b
+                .capacity(1)
+                .filter(this::isValidInput))
+            .slots(OUTPUT, SlotTemplates.output())
+            .slot(CAPACITOR, MachineSlotTemplates.capacitor())
+            .build();
     }
 
     private boolean isValidInput(int index, ItemResource stack) {
@@ -181,14 +181,14 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
     }
 
     private SoulBindingRecipe.Input createRecipeInput() {
-        return new SoulBindingRecipe.Input(INPUT_SOUL.getStack(getInventory()),
-                INPUT_OTHER.getStack(getInventory()), fluidStorage.getStack(TANK_SLOT));
+        return new SoulBindingRecipe.Input(getInventory().getStack(INPUT_SOUL),
+                getInventory().getStack(INPUT_OTHER), fluidStorage.getStack(TANK_SLOT));
     }
 
     @EnsureSide(EnsureSide.Side.CLIENT)
     private SoulBindingRecipe.Input createFakeRecipeInput() {
-        return new SoulBindingRecipe.Input(INPUT_SOUL.getStack(getInventory()),
-                INPUT_OTHER.getStack(getInventory()),
+        return new SoulBindingRecipe.Input(getInventory().getStack(INPUT_SOUL),
+                getInventory().getStack(INPUT_OTHER),
                 new FluidStack(EIOFluids.XP_JUICE.source(), Integer.MAX_VALUE));
     }
 
@@ -209,7 +209,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
 
     private boolean hasValidRecipe() {
         return MachineRecipeCaches.SOUL_BINDING
-                .hasRecipe(List.of(INPUT_SOUL.getStack(getInventory()), INPUT_OTHER.getStack(getInventory())));
+                .hasRecipe(List.of(getInventory().getStack(INPUT_SOUL), getInventory().getStack(INPUT_OTHER)));
     }
 
     // region Fluid Storage
@@ -233,12 +233,12 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
 
     protected PoweredCraftingMachineTask<SoulBindingRecipe, SoulBindingRecipe.Input> createTask(Level level,
             SoulBindingRecipe.Input container, @Nullable RecipeHolder<SoulBindingRecipe> recipe) {
-        return new PoweredCraftingMachineTask<>(level, getInventory(), fluidStorage, getEnergyStorage(), container, OUTPUT, recipe) {
+        return new PoweredCraftingMachineTask<>(level, this, getInventory(), fluidStorage, getEnergyStorage(), container, OUTPUT, recipe) {
 
             @Override
             protected void consumeInputs(SoulBindingRecipe recipe) {
-                INPUT_SOUL.getStack(getInventory()).shrink(1);
-                INPUT_OTHER.getStack(getInventory()).shrink(1);
+                getInventory().getStack(INPUT_SOUL).shrink(1);
+                getInventory().getStack(INPUT_OTHER).shrink(1);
 
                 int currentFluidAmount = fluidStorage.getAmountAsInt(TANK_SLOT);
                 int leftover = ExperienceUtil

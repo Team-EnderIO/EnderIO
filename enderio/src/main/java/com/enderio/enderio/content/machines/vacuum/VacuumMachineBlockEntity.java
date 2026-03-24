@@ -1,12 +1,12 @@
 package com.enderio.enderio.content.machines.vacuum;
 
+import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.UseOnly;
 import com.enderio.enderio.api.io.IOMode;
 import com.enderio.enderio.foundation.MachineNBTKeys;
 import com.enderio.enderio.foundation.attachment.ActionRange;
 import com.enderio.enderio.foundation.attachment.RangedActor;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
-import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import com.enderio.enderio.foundation.io.IOConfig;
 import com.enderio.enderio.foundation.util.AttractionUtil;
 import com.enderio.enderio.init.EIODataComponents;
@@ -23,6 +23,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.fml.LogicalSide;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -37,7 +38,8 @@ public abstract class VacuumMachineBlockEntity<T extends Entity> extends Machine
     protected static final double SPEED_4 = SPEED * 4;
     private final List<WeakReference<T>> entities = new ArrayList<>();
     private final Class<T> targetClass;
-    public static final SingleSlotAccess FILTER = new SingleSlotAccess();
+
+    public static final SingleResourceSlotKey<ItemResource> FILTER = new SingleResourceSlotKey<>();
 
     private static final ActionRange DEFAULT_RANGE = new ActionRange(5, false);
 

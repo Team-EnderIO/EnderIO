@@ -2,6 +2,7 @@ package com.enderio.enderio.foundation.task.host;
 
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.enderio.foundation.MachineRecipe;
+import com.enderio.enderio.foundation.state.MachineStateUpdater;
 import com.enderio.enderio.foundation.task.CraftingMachineTask;
 import com.enderio.enderio.foundation.task.MachineTask;
 import net.minecraft.server.level.ServerLevel;

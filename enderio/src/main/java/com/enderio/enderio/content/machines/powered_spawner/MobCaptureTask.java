@@ -20,7 +20,7 @@ public class MobCaptureTask extends PoweredSpawnerTask {
     @Override
     public boolean isCompleted() {
         // Ensure we have an item to take from
-        var inputStack = PoweredSpawnerBlockEntity.INPUT.getItemStack(blockEntity);
+        var inputStack = blockEntity.getInventory().getStack(PoweredSpawnerBlockEntity.INPUT);
         var inputSoulHandler = inputStack.getCapability(EnderIOCapabilities.SOUL_HANDLER_ITEM);
         if (inputStack.isEmpty() || inputSoulHandler == null || !inputSoulHandler.tryInsertSoul(getSoulForCapture(), true)) {
             return true;
@@ -34,7 +34,7 @@ public class MobCaptureTask extends PoweredSpawnerTask {
         final Soul capturedSoul = getSoulForCapture();
 
         // Ensure we have a storage to fill
-        var inputStack = PoweredSpawnerBlockEntity.INPUT.getItemStack(blockEntity);
+        var inputStack = blockEntity.getInventory().getStack(PoweredSpawnerBlockEntity.INPUT);
         if (inputStack.isEmpty()) {
             // Nothing to put into the output, so give up.
             isComplete = true;

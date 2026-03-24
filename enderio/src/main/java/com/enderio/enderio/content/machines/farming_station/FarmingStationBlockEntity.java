@@ -1,5 +1,10 @@
 package com.enderio.enderio.content.machines.farming_station;
 
+import com.enderio.core.common.storage.layout.ItemStorageLayout;
+import com.enderio.core.common.storage.layout.SlotTemplates;
+import com.enderio.core.common.storage.slot.MultiResourceSlotKey;
+import com.enderio.core.common.storage.slot.ResourceSlotId;
+import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.UseOnly;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;
@@ -16,9 +21,6 @@ import com.enderio.enderio.foundation.attachment.ActionRange;
 import com.enderio.enderio.foundation.attachment.RangedActor;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
-import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
-import com.enderio.enderio.foundation.inventory.MultiSlotAccess;
-import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import com.enderio.enderio.foundation.souldata.FarmSoul;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.init.EIOBlockEntities;
@@ -66,10 +68,11 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
 
     private static final ActionRange DEFAULT_RANGE = new ActionRange(5, false);
 
-    public static final MultiSlotAccess TOOLS = new MultiSlotAccess(); // Order - Axe, Hoe, Shears
-    public static final MultiSlotAccess AREAS = new MultiSlotAccess(); // Order - NE, SE, SW, NW
-    public static final MultiSlotAccess BONEMEAL = new MultiSlotAccess();
-    public static final MultiSlotAccess OUTPUT = new MultiSlotAccess();
+    public static final MultiResourceSlotKey<ItemResource> TOOLS = new MultiResourceSlotKey<>(3); // Order - Axe, Hoe, Shears
+    public static final MultiResourceSlotKey<ItemResource> AREAS = new MultiResourceSlotKey<>(4); // Order - NE, SE, SW, NW
+    public static final MultiResourceSlotKey<ItemResource> BONEMEAL = new MultiResourceSlotKey<>(2);
+    public static final MultiResourceSlotKey<ItemResource> OUTPUT = new MultiResourceSlotKey<>(6);
+    public static final SingleResourceSlotKey<ItemResource> CAPACITOR = new SingleResourceSlotKey<>();
 
     private List<BlockPos> positions;
     private int currentIndex = 0;
@@ -88,7 +91,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     private FakePlayer farmPlayer;
 
     public FarmingStationBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(EIOBlockEntities.FARMING_STATION.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
+        super(EIOBlockEntities.FARMING_STATION.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, CAPACITOR,
                 EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE);
     }
 
@@ -114,18 +117,15 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     }
 
     @Override
-    protected @Nullable MachineInventoryLayout createInventoryLayout() {
-        return MachineInventoryLayout.builder()
-                .capacitor()
-                .inputSlot(3, this::validToolForSlot)
-                .slotAccess(TOOLS)
-                .inputSlot(4)
-                .slotAccess(AREAS)
-                .inputSlot(2, (integer, stack) -> stack.is(Tags.Items.FERTILIZERS))
-                .slotAccess(BONEMEAL)
-                .outputSlot(6)
-                .slotAccess(OUTPUT)
-                .build();
+    protected @Nullable ItemStorageLayout createInventoryLayout() {
+        return ItemStorageLayout.builder()
+            .slots(TOOLS, SlotTemplates.input(), b -> b
+                .filter(this::validToolForSlot))
+            .slots(AREAS, SlotTemplates.input())
+            .slots(BONEMEAL, SlotTemplates.input(), b -> b
+                .filter((_, itemResource) -> itemResource.is(Tags.Items.FERTILIZERS)))
+            .slots(OUTPUT, SlotTemplates.output())
+            .build();
     }
 
     @Override
@@ -192,20 +192,20 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
         };
     }
 
-    public SingleSlotAccess getSeedForPos(BlockPos soil) {
+    public ResourceSlotId<ItemResource> getSeedForPos(BlockPos soil) {
         if (soil.getX() >= getBlockPos().getX() && soil.getZ() <= getBlockPos().getZ()) {
-            return AREAS.get(0); //NE
+            return AREAS.slot(0); //NE
         }
         if (soil.getX() >= getBlockPos().getX() && soil.getZ() > getBlockPos().getZ()) {
-            return AREAS.get(1); //SE
+            return AREAS.slot(1); //SE
         }
         if (soil.getX() < getBlockPos().getX() && soil.getZ() > getBlockPos().getZ()) {
-            return AREAS.get(2); //SW
+            return AREAS.slot(2); //SW
         }
         if (soil.getX() < getBlockPos().getX() && soil.getZ() <= getBlockPos().getZ()) {
-            return AREAS.get(3); //NW
+            return AREAS.slot(3); //NW
         }
-        return AREAS.get(3);//NW
+        return AREAS.slot(3);//NW
     }
 
     @Override
@@ -248,11 +248,12 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
         ArrayList<ItemStack> list = new ArrayList<>();
         for (ItemStack drop : drops) {
             if (soil != null) {
-                ItemStack seeds = getSeedForPos(soil).getItemStack(this);
+                var seedSlot = getSeedForPos(soil);
+                ItemStack seeds = getInventory().getStack(seedSlot);
                 if (seeds.isEmpty()) {
                     if (drop.getItem() instanceof BlockItem || drop.getItem() instanceof SpecialPlantable) {
                         // Collect potential seeds
-                        getSeedForPos(soil).setStackInSlot(this, drop);
+                        getInventory().setStack(seedSlot, drop);
                         continue;
                     }
                 } else if (ItemStack.isSameItem(drop, seeds)) {
@@ -272,7 +273,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
             for (int i = 0; i < 6; i++) {
                 int inserted;
                 try (Transaction transaction = Transaction.openRoot()) {
-                     inserted = OUTPUT.get(i).insert(this, ItemResource.of(temp), temp.getCount(), transaction);
+                     inserted = getInventory().insert(OUTPUT.slot(i), ItemResource.of(temp), temp.getCount(), transaction);
                 }
 
                 if (inserted == drop.getCount()) {
@@ -288,7 +289,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
             for (ItemStack drop : drops) {
                 try (Transaction transaction = Transaction.openRoot()) {
                     for (int i = 0; i < 6; i++) {
-                        int inserted = OUTPUT.get(i).insert(this, ItemResource.of(drop), drop.getCount(), transaction);
+                        int inserted = getInventory().insert(OUTPUT.slot(i), ItemResource.of(drop), drop.getCount(), transaction);
                         if (inserted == drop.getCount()) {
                             drop.setCount(0);
                             break;
@@ -308,7 +309,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     public boolean consumeBonemeal() {
         boolean consumed = false;
         for (int i = 0; i < 2; i++) {
-            ItemStack itemStack = BONEMEAL.get(i).getItemStack(this);
+            ItemStack itemStack = getInventory().getStack(BONEMEAL.slot(i));
             if (!itemStack.isEmpty()) {
                 if (soulData == null || level.getRandom().nextFloat() < soulData.bonemeal()) {
                     itemStack.shrink(1);
@@ -322,7 +323,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
 
     @Override
     public ItemStack getSeedsForPos(BlockPos pos) {
-        var stack = getSeedForPos(pos).getItemStack(this);
+        var stack = getInventory().getStack(getSeedForPos(pos));
         if (stack.getCount() > 1) // leave one item in the slot
             return stack;
         return ItemStack.EMPTY;
@@ -330,17 +331,17 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
 
     @Override
     public ItemStack getAxe() {
-        return TOOLS.get(0).getItemStack(this);
+        return getInventory().getStack(TOOLS.slot(0));
     }
 
     @Override
     public ItemStack getHoe() {
-        return TOOLS.get(1).getItemStack(this);
+        return getInventory().getStack(TOOLS.slot(1));
     }
 
     @Override
     public ItemStack getShears() {
-        return TOOLS.get(2).getItemStack(this);
+        return getInventory().getStack(TOOLS.slot(2));
     }
 
     @EnsureSide(EnsureSide.Side.SERVER)

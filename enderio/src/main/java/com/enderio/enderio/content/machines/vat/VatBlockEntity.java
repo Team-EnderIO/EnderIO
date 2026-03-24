@@ -2,20 +2,21 @@ package com.enderio.enderio.content.machines.vat;
 
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.core.common.storage.FluidStorage;
+import com.enderio.core.common.storage.ItemStorage;
 import com.enderio.core.common.storage.layout.FluidStorageLayout;
+import com.enderio.core.common.storage.layout.ItemStorageLayout;
 import com.enderio.core.common.storage.layout.SlotTemplates;
+import com.enderio.core.common.storage.slot.MultiResourceSlotKey;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.core.common.util.EnderResourceUtil;
 import com.enderio.core.common.util.NamedFluidContents;
 import com.enderio.enderio.api.UseOnly;
 import com.enderio.enderio.foundation.MachineNBTKeys;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
-import com.enderio.enderio.foundation.inventory.MachineInventory;
-import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
-import com.enderio.enderio.foundation.inventory.MultiSlotAccess;
 import com.enderio.enderio.foundation.recipe.MachineRecipeCaches;
 import com.enderio.enderio.foundation.io.fluid.FluidItemInteractive;
 import com.enderio.enderio.foundation.state.MachineState;
+import com.enderio.enderio.foundation.state.MachineStateUpdater;
 import com.enderio.enderio.foundation.storage.SidedResourceHandler;
 import com.enderio.enderio.foundation.task.CraftingMachineTask;
 import com.enderio.enderio.foundation.task.host.CraftingMachineTaskHost;
@@ -58,7 +59,8 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
     public static final int TANK_CAPACITY = 8 * FluidType.BUCKET_VOLUME;
     public static final SingleResourceSlotKey<FluidResource> INPUT_TANK = new SingleResourceSlotKey<>();
     public static final SingleResourceSlotKey<FluidResource> OUTPUT_TANK = new SingleResourceSlotKey<>();
-    public static final MultiSlotAccess REAGENTS = new MultiSlotAccess();
+
+    public static final MultiResourceSlotKey<ItemResource> REAGENTS = new MultiResourceSlotKey<>(2);
 
     public static final FluidStorageLayout FLUID_STORAGE_LAYOUT =
         FluidStorageLayout.builder()
@@ -120,14 +122,14 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
 
     protected VatCraftingMachineTask createTask(Level level, FermentingRecipe.Input input,
             @Nullable RecipeHolder<FermentingRecipe> recipe) {
-        return new VatCraftingMachineTask(level, getInventory(), fluidStorage, input, recipe);
+        return new VatCraftingMachineTask(level, this, getInventory(), fluidStorage, input, recipe);
     }
 
     @Override
-    public @Nullable MachineInventoryLayout createInventoryLayout() {
-        return MachineInventoryLayout.builder()
-            .inputSlot(2, this::acceptSlotInput)
-            .slotAccess(REAGENTS)
+    public @Nullable ItemStorageLayout createInventoryLayout() {
+        return ItemStorageLayout.builder()
+            .slots(REAGENTS, SlotTemplates.input(), b -> b
+                .filter(this::acceptSlotInput))
             .build();
     }
 
@@ -142,7 +144,7 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
     }
 
     private FermentingRecipe.Input createRecipeInput() {
-        List<ItemStack> reagents = REAGENTS.getItemStacks(getInventory());
+        List<ItemStack> reagents = getInventory().getStacks(REAGENTS);
         return new FermentingRecipe.Input(reagents.get(0), reagents.get(1), fluidStorage.getStack(INPUT_TANK));
     }
 
@@ -186,16 +188,16 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
     protected static class VatCraftingMachineTask
             extends CraftingMachineTask<FermentingRecipe, FermentingRecipe.Input> {
 
-        public VatCraftingMachineTask(@NonNull Level level, MachineInventory inventory,
+        public VatCraftingMachineTask(@NonNull Level level, MachineStateUpdater machineStateUpdater, ItemStorage inventory,
                 FluidStorage fluidStorage, FermentingRecipe.Input input,
                 @Nullable RecipeHolder<FermentingRecipe> recipe) {
-            super(level, inventory, fluidStorage, input, recipe);
+            super(level, machineStateUpdater, inventory, fluidStorage, input, recipe);
         }
 
         @Override
         protected void consumeInputs(FermentingRecipe recipe) {
-            REAGENTS.get(0).getStack(inventory).shrink(1);
-            REAGENTS.get(1).getStack(inventory).shrink(1);
+            inventory.getStack(REAGENTS.slot(0)).shrink(1);
+            inventory.getStack(REAGENTS.slot(1)).shrink(1);
 
             FluidStack inputFluid = EnderResourceUtil.getFluidStack(fluidStorage, INPUT_TANK);
             try (Transaction transaction = Transaction.openRoot()) {

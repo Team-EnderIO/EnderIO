@@ -1,10 +1,11 @@
 package com.enderio.enderio.content.enchanter;
 
 import com.enderio.core.common.blockentity.EnderBlockEntity;
+import com.enderio.core.common.storage.ItemStorage;
+import com.enderio.core.common.storage.layout.ItemStorageLayout;
+import com.enderio.core.common.storage.layout.SlotTemplates;
+import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.foundation.MachineNBTKeys;
-import com.enderio.enderio.foundation.inventory.MachineInventory;
-import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
-import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import com.enderio.enderio.foundation.io.DumbIOConfigurable;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIORecipeTypes;
@@ -34,12 +35,12 @@ public class EnchanterBlockEntity extends EnderBlockEntity implements MenuProvid
 
     @Nullable
     private RecipeHolder<EnchanterRecipe> currentRecipe;
-    public static final SingleSlotAccess BOOK = new SingleSlotAccess();
-    public static final SingleSlotAccess CATALYST = new SingleSlotAccess();
-    public static final SingleSlotAccess LAPIS = new SingleSlotAccess();
-    public static final SingleSlotAccess OUTPUT = new SingleSlotAccess();
+    public static final SingleResourceSlotKey<ItemResource> BOOK = new SingleResourceSlotKey<>();
+    public static final SingleResourceSlotKey<ItemResource> CATALYST = new SingleResourceSlotKey<>();
+    public static final SingleResourceSlotKey<ItemResource> LAPIS = new SingleResourceSlotKey<>();
+    public static final SingleResourceSlotKey<ItemResource> OUTPUT = new SingleResourceSlotKey<>();
 
-    private final MachineInventory inventory;
+    private final ItemStorage inventory;
 
     public EnchanterBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.ENCHANTER.get(), worldPosition, blockState);
@@ -48,8 +49,8 @@ public class EnchanterBlockEntity extends EnderBlockEntity implements MenuProvid
     }
 
     public EnchanterRecipe.Input createRecipeInput() {
-        return new EnchanterRecipe.Input(BOOK.getStack(getInventory()), CATALYST.getStack(getInventory()),
-                LAPIS.getStack(getInventory()));
+        return new EnchanterRecipe.Input(getInventory().getStack(BOOK), getInventory().getStack(CATALYST),
+            getInventory().getStack(CATALYST));
     }
 
     // region MenuProvider
@@ -68,26 +69,24 @@ public class EnchanterBlockEntity extends EnderBlockEntity implements MenuProvid
 
     // region Inventory & Recipe
 
-    public MachineInventory getInventory() {
+    public ItemStorage getInventory() {
         return inventory;
     }
 
-    private MachineInventoryLayout getInventoryLayout() {
-        return MachineInventoryLayout.builder()
-                .inputSlot((slot, stack) -> stack.getItem() == Items.WRITABLE_BOOK)
-                .slotAccess(BOOK)
-                .inputSlot()
-                .slotAccess(CATALYST)
-                .inputSlot((slot, stack) -> stack.is(Tags.Items.GEMS_LAPIS))
-                .slotAccess(LAPIS)
-                .outputSlot()
-                .slotAccess(OUTPUT)
-                .build();
+    private ItemStorageLayout getInventoryLayout() {
+        return ItemStorageLayout.builder()
+            .slot(BOOK, SlotTemplates.input(), b -> b
+                .filter((_, itemResource) -> itemResource.is(Items.WRITABLE_BOOK)))
+            .slot(CATALYST, SlotTemplates.input())
+            .slot(LAPIS, SlotTemplates.input(), b -> b
+                .filter((_, itemResource) -> itemResource.is(Tags.Items.GEMS_LAPIS)))
+            .slot(OUTPUT, SlotTemplates.output())
+            .build();
     }
 
-    private MachineInventory createInventory() {
+    private ItemStorage createInventory() {
         // Custom behaviour as this works more like a crafting table than a machine.
-        return new MachineInventory(DumbIOConfigurable.DISABLED, getInventoryLayout()) {
+        return new ItemStorage(getInventoryLayout()) {
 
             @Override
             protected void onContentsChanged(int slot, ItemStack previousContents) {

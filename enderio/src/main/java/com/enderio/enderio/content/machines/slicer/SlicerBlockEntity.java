@@ -1,5 +1,9 @@
 package com.enderio.enderio.content.machines.slicer;
 
+import com.enderio.core.common.storage.layout.ItemStorageLayout;
+import com.enderio.core.common.storage.layout.SlotTemplates;
+import com.enderio.core.common.storage.slot.MultiResourceSlotKey;
+import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
@@ -7,11 +11,8 @@ import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.foundation.MachineNBTKeys;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
-import com.enderio.enderio.foundation.inventory.MachineInventory;
-import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
-import com.enderio.enderio.foundation.inventory.MultiSlotAccess;
-import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import com.enderio.enderio.foundation.tag.EIOTags;
+import com.enderio.enderio.foundation.inventory.MachineSlotTemplates;
 import com.enderio.enderio.foundation.task.CraftingMachineTask;
 import com.enderio.enderio.foundation.task.PoweredCraftingMachineTask;
 import com.enderio.enderio.foundation.task.host.CraftingMachineTaskHost;
@@ -40,15 +41,16 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE,
             MachinesConfig.COMMON.ENERGY.SLICER_USAGE);
 
-    public static final SingleSlotAccess OUTPUT = new SingleSlotAccess();
-    public static final MultiSlotAccess INPUTS = new MultiSlotAccess();
-    public static final SingleSlotAccess AXE = new SingleSlotAccess();
-    public static final SingleSlotAccess SHEARS = new SingleSlotAccess();
+    public static final SingleResourceSlotKey<ItemResource> OUTPUT = new SingleResourceSlotKey<>();
+    public static final MultiResourceSlotKey<ItemResource> INPUTS = new MultiResourceSlotKey<>();
+    public static final SingleResourceSlotKey<ItemResource> AXE = new SingleResourceSlotKey<>();
+    public static final SingleResourceSlotKey<ItemResource> SHEARS = new SingleResourceSlotKey<>();
+    public static final SingleResourceSlotKey<ItemResource> CAPACITOR = new SingleResourceSlotKey<>();
 
     private final CraftingMachineTaskHost<SlicingRecipe, SlicingRecipe.Input> craftingTaskHost;
 
     public SlicerBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(EIOBlockEntities.SLICE_AND_SPLICE.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
+        super(EIOBlockEntities.SLICE_AND_SPLICE.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, CAPACITOR,
                 EnergyIOMode.Input, CAPACITY, USAGE);
 
         craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy, EIORecipeTypes.SLICING.get(),
@@ -89,20 +91,20 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
     // region Inventory
 
     @Override
-    public MachineInventoryLayout createInventoryLayout() {
-        return MachineInventoryLayout.builder()
-                .setStackLimit(1) // Force all input slots to have 1 output
-                .inputSlot(6, this::isValidInput)
-                .slotAccess(INPUTS)
-                .inputSlot(this::validAxe)
-                .slotAccess(AXE)
-                .inputSlot((slot, stack) -> stack.getItem() instanceof ShearsItem)
-                .slotAccess(SHEARS)
-                .setStackLimit(64) // Reset originalStack limit
-                .outputSlot()
-                .slotAccess(OUTPUT)
-                .capacitor()
-                .build();
+    public ItemStorageLayout createInventoryLayout() {
+        return ItemStorageLayout.builder()
+            .slots(INPUTS, SlotTemplates.input(), b -> b
+                .capacity(1)
+                .filter(this::isValidInput))
+            .slot(AXE, SlotTemplates.input(), b -> b
+                .capacity(1)
+                .filter(this::validAxe))
+            .slot(SHEARS, SlotTemplates.input(), b -> b
+                .capacity(1)
+                .filter((_, itemResource) -> itemResource.getItem() instanceof ShearsItem))
+            .slot(OUTPUT, SlotTemplates.output())
+            .slot(CAPACITOR, MachineSlotTemplates.capacitor())
+            .build();
     }
 
     private boolean isValidInput(int index, ItemResource stack) {
@@ -144,7 +146,7 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
             protected void consumeInputs(SlicingRecipe recipe) {
                 // Deduct ingredients
                 MachineInventory inv = getInventory();
-                for (SingleSlotAccess access : INPUTS.getAccesses()) {
+                for (SingleResourceSlotKey<ItemResource> access : INPUTS.getAccesses()) {
                     access.getStack(inv).shrink(1);
                 }
 
