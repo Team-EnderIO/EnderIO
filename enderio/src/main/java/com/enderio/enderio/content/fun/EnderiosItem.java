@@ -25,8 +25,6 @@ import org.jspecify.annotations.Nullable;
 import java.util.Calendar;
 
 public class EnderiosItem extends Item {
-    public static final Identifier INVERTED_PROPERTY = EnderIO.id("enderios_inverted");
-
     // TODO: 1.21.4: Does this still have a cooldown?
     private static final FoodProperties PROPERTIES = new FoodProperties.Builder()
         .nutrition(10)
@@ -61,8 +59,8 @@ public class EnderiosItem extends Item {
         return Calendar.getInstance().get(Calendar.DAY_OF_MONTH) == 1;
     }
 
-    public static class Soiredne implements ConditionalItemModelProperty {
-        public static final MapCodec<Soiredne> MAP_CODEC = MapCodec.unit(new Soiredne());
+    public static class SoiredneItemProperty implements ConditionalItemModelProperty {
+        public static final MapCodec<SoiredneItemProperty> MAP_CODEC = MapCodec.unit(new SoiredneItemProperty());
 
         @Override
         public MapCodec<? extends ConditionalItemModelProperty> type() {

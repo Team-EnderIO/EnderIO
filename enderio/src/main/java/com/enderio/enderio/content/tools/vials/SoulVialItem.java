@@ -54,9 +54,6 @@ import java.util.function.Consumer;
 
 @EventBusSubscriber
 public class SoulVialItem extends Item implements AdvancedTooltipProvider {
-
-    public static final Identifier FILLED_MODEL_PROPERTY = EnderIO.id("soul_vial_filled");
-
     /**
      * Should match key from {@link LivingEntity#addAdditionalSaveData(ValueOutput)} )}
      */
@@ -334,24 +331,4 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
     }
 
     // endregion
-
-    //TODO Move?
-    @SubscribeEvent
-    public static void itemOverrides(RegisterConditionalItemModelPropertyEvent event) {
-        event.register(FILLED_MODEL_PROPERTY, Filled.MAP_CODEC);
-    }
-
-    public static class Filled implements ConditionalItemModelProperty {
-        public static final MapCodec<Filled> MAP_CODEC = MapCodec.unit(new Filled());
-
-        @Override
-        public MapCodec<? extends ConditionalItemModelProperty> type() {
-            return MAP_CODEC;
-        }
-
-        @Override
-        public boolean get(ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int seed, ItemDisplayContext displayContext) {
-            return stack.has(EIODataComponents.SOUL) && stack.get(EIODataComponents.SOUL).hasEntity();
-        }
-    }
 }

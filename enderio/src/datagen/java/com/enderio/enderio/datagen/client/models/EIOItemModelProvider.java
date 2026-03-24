@@ -4,10 +4,10 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.client.content.conduits.model.bundle.port.ConduitItemModel;
 import com.enderio.enderio.client.content.conduits.model.facades.port.FacadeItemModel;
 import com.enderio.enderio.client.content.fluid_tank.FluidTankItemRenderer;
+import com.enderio.enderio.client.foundation.model.item.IsSoulBoundItemProperty;
 import com.enderio.enderio.content.conduits.facades.ConduitFacadeItem;
 import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
 import com.enderio.enderio.content.fun.EnderiosItem;
-import com.enderio.enderio.content.tools.vials.SoulVialItem;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOFluids;
 import com.enderio.enderio.init.EIOItems;
@@ -277,19 +277,19 @@ public class EIOItemModelProvider extends ModelProvider {
     public void generateEnderios(ItemModelGenerators itemModelGenerators, Item item) {
         ItemModel.Unbaked plain = ItemModelUtils.plainModel(itemModelGenerators.createFlatItemModel(item, ModelTemplates.FLAT_ITEM));
         ItemModel.Unbaked soiredne = ItemModelUtils.plainModel(itemModelGenerators.createFlatItemModel(item, "_inverted",ModelTemplates.FLAT_ITEM));
-        itemModelGenerators.itemModelOutput.accept(item, ItemModelUtils.conditional(new EnderiosItem.Soiredne(), soiredne, plain));
+        itemModelGenerators.itemModelOutput.accept(item, ItemModelUtils.conditional(new EnderiosItem.SoiredneItemProperty(), soiredne, plain));
     }
 
     public void generateSoulVial(ItemModelGenerators itemModelGenerators, Item item) {
         ItemModel.Unbaked plain = ItemModelUtils.plainModel(itemModelGenerators.createFlatItemModel(item, ModelTemplates.FLAT_ITEM));
         ItemModel.Unbaked filled = ItemModelUtils.plainModel(itemModelGenerators.createFlatItemModel(item, "_filled", ModelTemplates.FLAT_ITEM));
-        itemModelGenerators.itemModelOutput.accept(item, ItemModelUtils.conditional(new SoulVialItem.Filled(), filled, plain));
+        itemModelGenerators.itemModelOutput.accept(item, ItemModelUtils.conditional(new IsSoulBoundItemProperty(), filled, plain));
     }
 
     public void generateProbe(ItemModelGenerators itemModelGenerators, Item item) {
         ItemModel.Unbaked probe = ItemModelUtils.plainModel(itemModelGenerators.createFlatItemModel(item, "_probe", ModelTemplates.FLAT_ITEM));
         ItemModel.Unbaked copy = ItemModelUtils.plainModel(itemModelGenerators.createFlatItemModel(item, "_copy", ModelTemplates.FLAT_ITEM));
-        itemModelGenerators.itemModelOutput.accept(item, ItemModelUtils.conditional(new ConduitProbeItem.Probe(), probe, copy));
+        itemModelGenerators.itemModelOutput.accept(item, ItemModelUtils.conditional(new ConduitProbeItem.ProbeModeItemProperty(), probe, copy));
     }
 
     private Identifier key(Block block) {

@@ -64,7 +64,9 @@ import com.enderio.enderio.client.content.paint.model.port.PaintedBlockStateMode
 import com.enderio.enderio.client.content.tools.CoordinateMenuScreen;
 import com.enderio.enderio.client.content.travel.TravelAnchorHud;
 import com.enderio.enderio.client.content.travel.TravelTargetRendering;
+import com.enderio.enderio.client.foundation.model.item.IsSoulBoundItemProperty;
 import com.enderio.enderio.client.foundation.particle.RangeParticle;
+import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
 import com.enderio.enderio.content.fun.EnderiosItem;
 import com.enderio.enderio.content.misc_blocks.skull.EnderSkullBlock;
 import com.enderio.enderio.init.EIOBlockEntities;
@@ -130,42 +132,16 @@ public class EnderIOClient {
     }
 
     @SubscribeEvent
-    public static void clientSetup(FMLClientSetupEvent event) {
-        TravelTargetRendering.init();
-        ConduitScreenTypes.init();
-
-        // TODO: 1.21.4: Item model components.
-//        event.enqueueWork(() -> {
-//            //switch to item model component in 1.21.2
-//            ItemProperties.register(EIOItems.SOUL_VIAL.get(), SoulVialItem.FILLED_MODEL_PROPERTY,
-//                (stack, level, player, seed) -> SoulBoundUtils.isBound(stack) ? 1 : 0);
-//
-//            ItemProperties.register(EIOItems.ENDERIOS.asItem(), EnderiosItem.INVERTED_PROPERTY,
-//                (ClampedItemPropertyFunction) (itemStack, clientLevel, livingEntity, seed) -> {
-//                    Component name = itemStack.get(DataComponents.CUSTOM_NAME);
-//                    if (name != null && name.getContents() instanceof PlainTextContents literal && literal.text().equalsIgnoreCase("soiredne")) {
-//                        return 1;
-//                    }
-//                    return 0;
-//                });
-//
-//            // Register item property for conduit probe state switching
-//            ItemProperties.register(EIOItems.CONDUIT_PROBE.get(), ConduitProbeItem.PROBE_STATE_PREDICATE,
-//                (stack, level, player, seed) -> {
-//                    ConduitProbeItem.State state = ConduitProbeItem.getState(stack);
-//                    return state == ConduitProbeItem.State.COPY_PASTE ? 1.0f : 0.0f;
-//                });
-//
-//            // Register fluid render types
-//            for (var fluid : EIOFluids.FLUIDS.fluidsRegister().getEntries()) {
-//                ItemBlockRenderTypes.setRenderLayer(fluid.get(), RenderType.translucent());
-//            }
-//        });
+    public static void registerConditionalProperties(RegisterConditionalItemModelPropertyEvent event) {
+        event.register(EnderIO.id("is_soul_bound"), IsSoulBoundItemProperty.MAP_CODEC);
+        event.register(EnderIO.id("conduit_probe_mode"), ConduitProbeItem.ProbeModeItemProperty.MAP_CODEC);
+        event.register(EnderIO.id("enderios_inverted"), EnderiosItem.SoiredneItemProperty.MAP_CODEC);
     }
 
     @SubscribeEvent
-    public static void registerConditionalItemProperties(RegisterConditionalItemModelPropertyEvent event) {
-        event.register(EnderiosItem.INVERTED_PROPERTY, EnderiosItem.Soiredne.MAP_CODEC);
+    public static void clientSetup(FMLClientSetupEvent event) {
+        TravelTargetRendering.init();
+        ConduitScreenTypes.init();
     }
 
     @SubscribeEvent

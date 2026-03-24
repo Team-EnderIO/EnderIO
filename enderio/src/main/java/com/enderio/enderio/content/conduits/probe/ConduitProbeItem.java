@@ -52,8 +52,6 @@ import java.util.function.Consumer;
 @EventBusSubscriber(Dist.CLIENT)
 public class ConduitProbeItem extends Item {
 
-    public static final Identifier PROBE_STATE_PREDICATE = EnderIO.id("probe_state");
-
     public ConduitProbeItem(Properties properties) {
         super(properties.stacksTo(1));
     }
@@ -257,14 +255,8 @@ public class ConduitProbeItem extends Item {
             ProbeConfigData::new);
     }
 
-    //TODO Move?
-    @SubscribeEvent
-    public static void itemOverrides(RegisterConditionalItemModelPropertyEvent event) {
-        event.register(PROBE_STATE_PREDICATE, Probe.MAP_CODEC);
-    }
-
-    public static class Probe implements ConditionalItemModelProperty {
-        public static final MapCodec<Probe> MAP_CODEC = MapCodec.unit(new Probe());
+    public static class ProbeModeItemProperty implements ConditionalItemModelProperty {
+        public static final MapCodec<ProbeModeItemProperty> MAP_CODEC = MapCodec.unit(new ProbeModeItemProperty());
 
         @Override
         public MapCodec<? extends ConditionalItemModelProperty> type() {

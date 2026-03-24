@@ -14,12 +14,8 @@
 //import net.minecraft.client.Minecraft;
 //import net.minecraft.client.gui.Font;
 //import net.minecraft.client.renderer.LevelRenderer;
-//import net.minecraft.client.renderer.LightTexture;
-//import net.minecraft.client.renderer.RenderType;
 //import net.minecraft.client.renderer.block.ModelBlockRenderer;
-//import net.minecraft.client.renderer.block.model.BakedQuad;
 //import net.minecraft.client.renderer.texture.OverlayTexture;
-//import net.minecraft.client.resources.model.BakedModel;
 //import net.minecraft.core.Direction;
 //import net.minecraft.network.chat.Component;
 //import net.minecraft.util.RandomSource;
@@ -58,7 +54,7 @@
 //
 //    @Override
 //    public void render(AnchorTravelTarget travelData, LevelRenderer levelRenderer, PoseStack poseStack,
-//            double distanceSquared, boolean active, float partialTick) {
+//        double distanceSquared, boolean active, float partialTick) {
 //        Minecraft minecraft = Minecraft.getInstance();
 //        if (Objects.isNull(minecraft.level) || !travelData.isVisible()) {
 //            return;
@@ -175,8 +171,6 @@
 //            poseStack.popPose();
 //        }
 //
-//        poseStack.popPose();
-//        minecraft.renderBuffers().bufferSource().endBatch();
 //        if (!travelData.name().trim().isEmpty()) {
 //            // Render Text
 //            poseStack.pushPose();

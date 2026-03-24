@@ -9,6 +9,6 @@
       "type": "minecraft:model",
       "model": "enderio:item/conduit_probe_probe"
     },
-    "property": "enderio:probe_state"
+    "property": "enderio:conduit_probe_mode"
   }
 }

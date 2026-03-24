@@ -47,7 +47,8 @@ public class TravelAnchorMenu extends MachineMenu<TravelAnchorBlockEntity> {
     }
 
     public String getName() {
-        return name.get();
+        String name = this.name.get();
+        return name == null ? "" : name;
     }
 
     public void setName(String newName) {
