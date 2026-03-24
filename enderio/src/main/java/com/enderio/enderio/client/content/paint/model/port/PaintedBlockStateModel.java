@@ -94,6 +94,10 @@ public class PaintedBlockStateModel implements DynamicBlockStateModel {
     @Override
     public Material.Baked particleMaterial(BlockAndTintGetter level, BlockPos pos, BlockState state) {
         Block paint = level.getModelData(pos).get(SinglePaintedBlockEntity.PAINT);
+        if (paint == null) {
+            return particleMaterial();
+        }
+
         return Minecraft.getInstance().getModelManager().getBlockStateModelSet().getParticleMaterial(paint.defaultBlockState());
     }
 
