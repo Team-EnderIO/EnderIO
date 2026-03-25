@@ -94,20 +94,12 @@ public class ConduitFacadeRendering {
                         .getBlockStateModelSet()
                         .get(entry.getValue());
 
-                var poseStack = new PoseStack();
                 BlockQuadOutput output = (x, y, z, bakedQuad, quadInstance) -> {
-                    poseStack.pushPose();
-                    poseStack.translate(x, y, z);
-
                     VertexConsumer buffer = wrapper != null ? wrapper : context.getOrCreateChunkBuffer(bakedQuad.materialInfo().layer());
-                    buffer.putBakedQuad(poseStack.last(), bakedQuad, quadInstance);
-
-                    poseStack.popPose();
+                    buffer.putBlockBakedQuad(x, y, z, bakedQuad, quadInstance);
                 };
 
-                var renderer = context.getBlockRenderer();
-
-                renderer.tesselateBlock(output,
+                context.getBlockRenderer().tesselateBlock(output,
                     SectionPos.sectionRelative(pos.getX()),
                     SectionPos.sectionRelative(pos.getY()),
                     SectionPos.sectionRelative(pos.getZ()),
