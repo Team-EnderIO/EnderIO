@@ -43,7 +43,6 @@ public class EnderIODataGen {
         eventBus.addListener(this::onGatherData);
     }
 
-    // TODO: 1.21.8: investigate split between Client and Server properly https://docs.neoforged.net/docs/1.21.8/resources/#data-generation
     public void onGatherData(GatherDataEvent.Client event) {
         // Create datapack registry objects
         event.createDatapackRegistryObjects(createDatapackEntriesBuilder(), Set.of(EnderIO.MOD_ID));
@@ -64,7 +63,6 @@ public class EnderIODataGen {
         generator.addProvider(true, new AdvancementProvider(packOutput, lookupProvider,
             List.of(new EIOAdvancementGenerator(), new MachinesAdvancementGenerator())));
 
-        //generator.addProvider(true, new EnderIORecipeProvider(lookupProvider.get(), packOutput));
         event.createProvider(EnderIORecipeProvider.Runner::new);
 
         generator.addProvider(true, new GrindingBallDataMapProvider(packOutput, lookupProvider));
@@ -82,8 +80,6 @@ public class EnderIODataGen {
             ), lookupProvider));
 
         generator.addProvider(true, new EIOModelProvider(packOutput));
-        //generator.addProvider(true, new EIOItemModelProvider(packOutput));
-        //generator.addProvider(true, new EIOBlockStateProvider(packOutput));
         generator.addProvider(true, new EIOLanguageProvider(packOutput));
     }
 
