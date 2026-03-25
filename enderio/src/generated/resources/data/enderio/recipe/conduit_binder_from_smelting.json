@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 0.0,
+  "ingredient": "enderio:conduit_binder_composite",
+  "result": {
+    "count": 2,
+    "id": "enderio:conduit_binder"
+  }
+}

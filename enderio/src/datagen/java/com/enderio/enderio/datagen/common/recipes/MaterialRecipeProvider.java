@@ -17,7 +17,7 @@ import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.CookingBookCategory;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -174,20 +174,19 @@ public class MaterialRecipeProvider extends SubRecipeProvider {
                 .unlockedBy("has_ingredient_clay", InventoryChangeTrigger.TriggerInstance.hasItems(Items.CLAY_BALL))
                 .save(recipeOutput);
 
-        // TODO: 26.1 - Neo doesn't add ItemStackTemplate compatible overrides.
-//        SimpleCookingRecipeBuilder
-//                .smelting(Ingredient.of(EIOItems.CONDUIT_BINDER_COMPOSITE.get()), RecipeCategory.MISC, CookingBookCategory.MISC,
-//                        new ItemStack(EIOItems.CONDUIT_BINDER.get(), 2), 0, 200)
-//                .unlockedBy("has_ingredient",
-//                        InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER_COMPOSITE.get()))
-//                .save(recipeOutput, EnderIO.id(EIOItems.CONDUIT_BINDER.getId().getPath() + "_from_smelting").toString());
-//
-//        SimpleCookingRecipeBuilder
-//                .blasting(Ingredient.of(EIOItems.CONDUIT_BINDER_COMPOSITE.get()), RecipeCategory.MISC, CookingBookCategory.MISC,
-//                        new ItemStack(EIOItems.CONDUIT_BINDER.get(), 2), 0, 100)
-//                .unlockedBy("has_ingredient",
-//                        InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER_COMPOSITE.get()))
-//                .save(recipeOutput, EnderIO.id(EIOItems.CONDUIT_BINDER.getId().getPath() + "_from_blasting").toString());
+        SimpleCookingRecipeBuilder
+                .smelting(Ingredient.of(EIOItems.CONDUIT_BINDER_COMPOSITE.get()), RecipeCategory.MISC, CookingBookCategory.MISC,
+                        new ItemStackTemplate(EIOItems.CONDUIT_BINDER.get(), 2), 0, 200)
+                .unlockedBy("has_ingredient",
+                        InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER_COMPOSITE.get()))
+                .save(recipeOutput, EnderIO.id(EIOItems.CONDUIT_BINDER.getId().getPath() + "_from_smelting").toString());
+
+        SimpleCookingRecipeBuilder
+                .blasting(Ingredient.of(EIOItems.CONDUIT_BINDER_COMPOSITE.get()), RecipeCategory.MISC, CookingBookCategory.MISC,
+                        new ItemStackTemplate(EIOItems.CONDUIT_BINDER.get(), 2), 0, 100)
+                .unlockedBy("has_ingredient",
+                        InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER_COMPOSITE.get()))
+                .save(recipeOutput, EnderIO.id(EIOItems.CONDUIT_BINDER.getId().getPath() + "_from_blasting").toString());
     }
 
     private void addCapacitors(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput) {
