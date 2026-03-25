@@ -32,9 +32,10 @@ public class MobCaptureTask extends PoweredSpawnerTask {
     @Override
     protected void onTaskCompleted() {
         final Soul capturedSoul = getSoulForCapture();
+        var inventory = blockEntity.getInventory();
 
         // Ensure we have a storage to fill
-        var inputStack = blockEntity.getInventory().getStack(PoweredSpawnerBlockEntity.INPUT);
+        var inputStack = inventory.getStack(PoweredSpawnerBlockEntity.INPUT);
         if (inputStack.isEmpty()) {
             // Nothing to put into the output, so give up.
             isComplete = true;
@@ -59,27 +60,27 @@ public class MobCaptureTask extends PoweredSpawnerTask {
 
         // If we can add another, leave it in the input for the next task.
         if (resultSoulHandler.tryInsertSoul(capturedSoul, true)) {
-            PoweredSpawnerBlockEntity.INPUT.setStackInSlot(blockEntity, resultStack);
+            inventory.setStack(PoweredSpawnerBlockEntity.INPUT, resultStack);
             isComplete = true;
             return;
         }
 
         // Otherwise, try and put it into the output.
-        var currentOutputStack = PoweredSpawnerBlockEntity.OUTPUT.getItemStack(blockEntity);
+        var currentOutputStack = inventory.getStack(PoweredSpawnerBlockEntity.OUTPUT);
         if (!currentOutputStack.isEmpty() && !ItemStack.isSameItemSameComponents(currentOutputStack, resultStack)) {
             setBlockedReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.OUTPUT_FULL);
             return;
         }
 
         if (currentOutputStack.isEmpty()) {
-            PoweredSpawnerBlockEntity.OUTPUT.setStackInSlot(blockEntity, resultStack);
+            inventory.setStack(PoweredSpawnerBlockEntity.OUTPUT, resultStack);
         } else {
             resultStack.setCount(currentOutputStack.getCount() + 1);
-            PoweredSpawnerBlockEntity.OUTPUT.setStackInSlot(blockEntity, resultStack);
+            inventory.setStack(PoweredSpawnerBlockEntity.OUTPUT, resultStack);
         }
 
         // Deduct input
-        PoweredSpawnerBlockEntity.INPUT.setStackInSlot(blockEntity,
+        inventory.setStack(PoweredSpawnerBlockEntity.INPUT,
             inputStack.copyWithCount(inputStack.getCount() - 1));
 
         isComplete = true;

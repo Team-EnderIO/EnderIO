@@ -53,24 +53,24 @@ public class Issue1033 {
                 // Create first damaged golden axe with mending enchantment
                 .thenExecute(() -> {
                     ItemStack firstAxe = createDamagedMendingAxe(mendingEnchantment, 20);
-                    helper.insertItemIntoSlot(0, 0, 0, FluidTankBlockEntity.FLUID_DRAIN_INPUT.getIndex(), firstAxe);
+                    helper.insertItemIntoSlot(0, 0, 0, FluidTankBlockEntity.FLUID_DRAIN_INPUT, firstAxe);
                 })
                 
                 // Wait for repair to complete (tank ticks every 5 ticks, give it 2 seconds)
                 .thenExecuteAfter(40, () -> {
-                    helper.assertSlotHasItem(0, 0, 0, FluidTankBlockEntity.FLUID_DRAIN_OUTPUT.getIndex(), Items.GOLDEN_AXE);
+                    helper.assertSlotHasItem(0, 0, 0, FluidTankBlockEntity.FLUID_DRAIN_OUTPUT, Items.GOLDEN_AXE);
                 })
                 
                 // Insert second damaged axe while first is still in output
                 .thenExecute(() -> {
                     ItemStack secondAxe = createDamagedMendingAxe(mendingEnchantment, 30);
-                    helper.insertItemIntoSlot(0, 0, 0, FluidTankBlockEntity.FLUID_DRAIN_INPUT.getIndex(), secondAxe);
+                    helper.insertItemIntoSlot(0, 0, 0, FluidTankBlockEntity.FLUID_DRAIN_INPUT, secondAxe);
                 })
                 
                 // Wait a few more ticks to ensure the tank has processed
                 .thenExecuteAfter(20, () -> {
-                    ItemStack outputItem = helper.getItemInSlot(0, 0, 0, FluidTankBlockEntity.FLUID_DRAIN_OUTPUT.getIndex());
-                    ItemStack inputItem = helper.getItemInSlot(0, 0, 0, FluidTankBlockEntity.FLUID_DRAIN_INPUT.getIndex());
+                    ItemStack outputItem = helper.getItemInSlot(0, 0, 0, FluidTankBlockEntity.FLUID_DRAIN_OUTPUT);
+                    ItemStack inputItem = helper.getItemInSlot(0, 0, 0, FluidTankBlockEntity.FLUID_DRAIN_INPUT);
                     
                     if (outputItem.isEmpty()) {
                         throw helper.assertionException(

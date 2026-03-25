@@ -101,12 +101,11 @@ public class EnchanterBlockEntity extends EnderBlockEntity implements MenuProvid
                         .getRecipeFor(EIORecipeTypes.ENCHANTING.get(), recipeInput, level)
                         .orElse(null);
                 }
-                if (!OUTPUT.isSlot(slot)) {
+                if (OUTPUT.index(getInventory()) != slot) {
                     if (currentRecipe != null) {
-                        OUTPUT.setStackInSlot(this,
-                                currentRecipe.value().assemble(recipeInput));
+                        getInventory().setStack(OUTPUT, currentRecipe.value().assemble(recipeInput));
                     } else {
-                        OUTPUT.setStackInSlot(this, ItemStack.EMPTY);
+                        getInventory().setStack(OUTPUT, ItemStack.EMPTY);
                     }
                 }
 
@@ -119,7 +118,7 @@ public class EnchanterBlockEntity extends EnderBlockEntity implements MenuProvid
                     return 0;
                 }
 
-                if (OUTPUT.isSlot(index) && level.isClientSide()) {
+                if (OUTPUT.index(getInventory()) == index && level.isClientSide()) {
                     return 0;
                 }
                 return super.extract(index, resource, amount, transaction);

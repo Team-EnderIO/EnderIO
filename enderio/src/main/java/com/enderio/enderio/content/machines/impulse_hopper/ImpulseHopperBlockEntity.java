@@ -76,8 +76,8 @@ public class ImpulseHopperBlockEntity extends PoweredMachineBlockEntity {
     }
 
     public boolean canPass(int slot) {
-        ItemStack input = INPUT.get(slot).getItemStack(this);
-        ItemStack ghost = GHOST.get(slot).getItemStack(this);
+        ItemStack input = getInventory().getStack(INPUT.slot(slot));
+        ItemStack ghost = getInventory().getStack(GHOST.slot(slot));
         if (ItemStack.isSameItemSameComponents(input, ghost)) {
             return input.getCount() >= ghost.getCount();
         }
@@ -85,10 +85,10 @@ public class ImpulseHopperBlockEntity extends PoweredMachineBlockEntity {
     }
 
     public boolean canHoldAndMerge(int slot) {
-        boolean canHold = OUTPUT.get(slot).getItemStack(this).getCount()
-                + GHOST.get(slot).getItemStack(this).getCount() <= GHOST.get(slot).getItemStack(this).getMaxStackSize();
-        boolean canMerge = ItemStack.isSameItemSameComponents(INPUT.get(slot).getItemStack(this),
-                GHOST.get(slot).getItemStack(this));
+        boolean canHold = getInventory().getStack(OUTPUT.slot(slot)).getCount()
+                + getInventory().getStack(GHOST.slot(slot)).getCount() <= getInventory().getStack(GHOST.slot(slot)).getMaxStackSize();
+        boolean canMerge = ItemStack.isSameItemSameComponents(getInventory().getStack(INPUT.slot(slot)),
+                getInventory().getStack(GHOST.slot(slot)));
         return canHold && canMerge;
     }
 
@@ -96,7 +96,7 @@ public class ImpulseHopperBlockEntity extends PoweredMachineBlockEntity {
         int totalpower = 0;
         for (int i = 0; i < 6; i++) {
             if (canPass(i) && canHoldAndMerge(i)) {
-                totalpower += GHOST.get(i).getItemStack(this).getCount() * ENERGY_USAGE_PER_ITEM;
+                totalpower += getInventory().getStack(GHOST.slot(i)).getCount() * ENERGY_USAGE_PER_ITEM;
                 continue;
             }
             return false;
@@ -106,9 +106,9 @@ public class ImpulseHopperBlockEntity extends PoweredMachineBlockEntity {
 
     private void passItems() {
         for (int i = 0; i < 6; i++) {
-            ItemStack stack = INPUT.get(i).getItemStack(this);
-            ItemStack ghost = GHOST.get(i).getItemStack(this);
-            ItemStack result = OUTPUT.get(i).getItemStack(this);
+            ItemStack stack = getInventory().getStack(INPUT.slot(i));
+            ItemStack ghost = getInventory().getStack(GHOST.slot(i));
+            ItemStack result = getInventory().getStack(OUTPUT.slot(i));
             if (ghost.isEmpty()) {
                 continue;
             }
@@ -120,11 +120,11 @@ public class ImpulseHopperBlockEntity extends PoweredMachineBlockEntity {
             }
             this.getEnergyStorage().consume(ghost.getCount() * ENERGY_USAGE_PER_ITEM, null);
             stack.shrink(ghost.getCount());
-            OUTPUT.get(i).setStackInSlot(this, result);
+            getInventory().setStack(OUTPUT.slot(i), result);
         }
     }
 
     public boolean ghostSlotHasItem(int slot) {
-        return GHOST.get(slot).getItemStack(this).isEmpty();
+        return getInventory().getStack(GHOST.slot(slot)).isEmpty();
     }
 }

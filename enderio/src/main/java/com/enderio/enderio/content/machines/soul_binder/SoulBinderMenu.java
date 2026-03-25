@@ -41,8 +41,8 @@ public class SoulBinderMenu extends PoweredMachineMenu<SoulBinderBlockEntity> {
 
         addSlot(new MachineSlot(getMachineInventory(), SoulBinderBlockEntity.INPUT_SOUL, 38, 34));
         addSlot(new MachineSlot(getMachineInventory(), SoulBinderBlockEntity.INPUT_OTHER, 59, 34));
-        addSlot(new MachineSlot(getMachineInventory(), SoulBinderBlockEntity.OUTPUT.get(0), 112, 34));
-        addSlot(new MachineSlot(getMachineInventory(), SoulBinderBlockEntity.OUTPUT.get(1), 134, 34));
+        addSlot(new MachineSlot(getMachineInventory(), SoulBinderBlockEntity.OUTPUT.slot(0), 112, 34));
+        addSlot(new MachineSlot(getMachineInventory(), SoulBinderBlockEntity.OUTPUT.slot(1), 134, 34));
 
         addPlayerInventorySlots(8, 84);
     }

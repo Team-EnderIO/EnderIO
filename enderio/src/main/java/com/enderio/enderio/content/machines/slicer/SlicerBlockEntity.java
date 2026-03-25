@@ -1,5 +1,6 @@
 package com.enderio.enderio.content.machines.slicer;
 
+import com.enderio.core.common.storage.ItemStorage;
 import com.enderio.core.common.storage.layout.ItemStorageLayout;
 import com.enderio.core.common.storage.layout.SlotTemplates;
 import com.enderio.core.common.storage.slot.MultiResourceSlotKey;
@@ -42,7 +43,7 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
             MachinesConfig.COMMON.ENERGY.SLICER_USAGE);
 
     public static final SingleResourceSlotKey<ItemResource> OUTPUT = new SingleResourceSlotKey<>();
-    public static final MultiResourceSlotKey<ItemResource> INPUTS = new MultiResourceSlotKey<>();
+    public static final MultiResourceSlotKey<ItemResource> INPUTS = new MultiResourceSlotKey<>(6);
     public static final SingleResourceSlotKey<ItemResource> AXE = new SingleResourceSlotKey<>();
     public static final SingleResourceSlotKey<ItemResource> SHEARS = new SingleResourceSlotKey<>();
     public static final SingleResourceSlotKey<ItemResource> CAPACITOR = new SingleResourceSlotKey<>();
@@ -57,8 +58,8 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
                 this::createTask, this::createRecipeInput) {
             @Override
             protected @Nullable CraftingMachineTask<SlicingRecipe, SlicingRecipe.Input> getNewTask() {
-                if (AXE.getItemStack(SlicerBlockEntity.this).isEmpty()
-                        || SHEARS.getItemStack(SlicerBlockEntity.this).isEmpty()) {
+                if (getInventory().getStack(AXE).isEmpty()
+                        || getInventory().getStack(SHEARS).isEmpty()) {
                     return null;
                 }
 
@@ -122,7 +123,7 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
     }
 
     private SlicingRecipe.Input createRecipeInput() {
-        return new SlicingRecipe.Input(INPUTS.getItemStacks(getInventory()));
+        return new SlicingRecipe.Input(getInventory().getStacks(INPUTS));
     }
 
     // endregion
@@ -140,20 +141,20 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
 
     protected PoweredCraftingMachineTask<SlicingRecipe, SlicingRecipe.Input> createTask(Level level,
             SlicingRecipe.Input recipeInput, @Nullable RecipeHolder<SlicingRecipe> recipe) {
-        return new PoweredCraftingMachineTask<>(level, getInventory(), getEnergyStorage(), recipeInput, OUTPUT,
+        return new PoweredCraftingMachineTask<>(level, this, getInventory(), getEnergyStorage(), recipeInput, OUTPUT,
                 recipe) {
             @Override
             protected void consumeInputs(SlicingRecipe recipe) {
                 // Deduct ingredients
-                MachineInventory inv = getInventory();
-                for (SingleResourceSlotKey<ItemResource> access : INPUTS.getAccesses()) {
-                    access.getStack(inv).shrink(1);
+                ItemStorage inv = getInventory();
+                for (var inputSlot : INPUTS) {
+                    inv.getStack(inputSlot).shrink(1);
                 }
 
                 if (level instanceof ServerLevel serverLevel) {
-                    AXE.getStack(inv).hurtAndBreak(1, serverLevel, null, item -> {
+                    inv.getStack(AXE).hurtAndBreak(1, serverLevel, null, item -> {
                     });
-                    SHEARS.getStack(inv).hurtAndBreak(1, serverLevel, null, item -> {
+                    inv.getStack(SHEARS).hurtAndBreak(1, serverLevel, null, item -> {
                     });
                 }
             }

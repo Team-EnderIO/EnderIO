@@ -38,7 +38,7 @@ public class SlicerMenu extends PoweredMachineMenu<SlicerBlockEntity> {
         addSlot(new MachineSlot(getMachineInventory(), SlicerBlockEntity.SHEARS, 66, 28));
 
         for (int i = 0; i < 6; i++) {
-            addSlot(new MachineSlot(getMachineInventory(), SlicerBlockEntity.INPUTS.get(i), 38 + 18 * (i % 3),
+            addSlot(new MachineSlot(getMachineInventory(), SlicerBlockEntity.INPUTS.slot(i), 38 + 18 * (i % 3),
                     i < 3 ? 52 : 70));
         }
         addSlot(new MachineSlot(getMachineInventory(), SlicerBlockEntity.OUTPUT, 128, 61));

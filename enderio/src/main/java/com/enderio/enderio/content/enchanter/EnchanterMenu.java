@@ -98,11 +98,11 @@ public class EnchanterMenu extends BaseBlockEntityMenu<EnchanterBlockEntity> {
             if (recipe != null && (player.experienceLevel >= recipe.getXPCost(recipeInput) || player.isCreative())) {
                 int amount = recipe.getInputAmountConsumed(recipeInput);
                 int lapizForLevel = recipe.getLapisForLevel(
-                        recipe.getEnchantmentLevel(EnchanterBlockEntity.CATALYST.getStack(inventory).getCount()));
+                        recipe.getEnchantmentLevel(inventory.getStack(EnchanterBlockEntity.CATALYST).getCount()));
                 player.giveExperienceLevels(-recipe.getXPCost(recipeInput));
-                EnchanterBlockEntity.BOOK.getStack(inventory).shrink(1);
-                EnchanterBlockEntity.CATALYST.getStack(inventory).shrink(amount);
-                EnchanterBlockEntity.LAPIS.getStack(inventory).shrink(lapizForLevel);
+                inventory.getStack(EnchanterBlockEntity.BOOK).shrink(1);
+                inventory.getStack(EnchanterBlockEntity.CATALYST).shrink(amount);
+                inventory.getStack(EnchanterBlockEntity.LAPIS).shrink(lapizForLevel);
                 super.onTake(player, stack);
             }
         }
