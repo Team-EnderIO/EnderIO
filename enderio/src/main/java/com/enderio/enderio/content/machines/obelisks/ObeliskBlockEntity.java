@@ -69,15 +69,13 @@ public abstract class ObeliskBlockEntity<T extends ObeliskBlockEntity<T>> extend
     }
 
     @Override
-    public void setRemoved() {
-        super.setRemoved();
+    public void preRemoveSideEffects(BlockPos pos, BlockState state) {
+        super.preRemoveSideEffects(pos, state);
 
-        if (level instanceof ServerLevel serverLevel) {
-            var manager = getAreaManager(serverLevel);
-            if (manager != null) {
-                // noinspection unchecked
-                manager.unregister((T) this);
-            }
+        var manager = getAreaManager((ServerLevel) level);
+        if (manager != null) {
+            // noinspection unchecked
+            manager.unregister((T) this);
         }
     }
 

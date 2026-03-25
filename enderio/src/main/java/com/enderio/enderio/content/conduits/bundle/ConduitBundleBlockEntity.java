@@ -1272,7 +1272,6 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
     }
 
-    // TODO: 1.21.8: use preRemoveSideEffects?
     @Override
     public void setRemoved() {
         super.setRemoved();

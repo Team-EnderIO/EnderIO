@@ -173,14 +173,12 @@ public class AttractorObeliskBlockEntity extends ObeliskBlockEntity<AttractorObe
     }
 
     @Override
-    public void setRemoved() {
-        super.setRemoved();
+    public void preRemoveSideEffects(BlockPos pos, BlockState state) {
+        super.preRemoveSideEffects(pos, state);
 
-        if (level != null && !level.isClientSide()) {
-            if (fakePlayer != null) {
-                fakePlayer.discard();
-                fakePlayer = null;
-            }
+        if (fakePlayer != null) {
+            fakePlayer.discard();
+            fakePlayer = null;
         }
     }
 }
