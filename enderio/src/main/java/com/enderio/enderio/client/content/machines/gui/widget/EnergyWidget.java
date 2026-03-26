@@ -45,7 +45,7 @@ public class EnergyWidget extends EIOWidget {
         for (int i = 0; i < Math.ceil(renderableHeight / 16f); i++) {
             int drawingHeight = Math.min(16, renderableHeight - 16*i);
             int notDrawingHeight = 16 - drawingHeight;
-            graphics.blit(RenderPipelines.GUI_TEXTURED, WIDGETS, x, y + notDrawingHeight, 0, 0, 128 + notDrawingHeight, width, drawingHeight, 256, 256);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, WIDGETS, x, y + notDrawingHeight, 0, 128 + notDrawingHeight, width, drawingHeight, 256, 256);
             graphics.pose().translate(0,-16);
         }
 

@@ -66,7 +66,7 @@ public class CapacitorEnergyWidget extends EnergyWidget {
 
         //TODO blend pipeline + ghost item
         //noinspection IntegerDivisionInFloatingPointContext
-        graphics.blit(RenderPipelines.GUI_TEXTURED, WIDGETS, x, y + height/2 + 6, 0, 160 + tick / 10 * 9, 128, width, height, 256, 256);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, WIDGETS, x, y + height/2 + 6, 160 + tick / 10 * 9, 128, width, height, 256, 256);
         graphics.fakeItem(CAPACITOR, x - 4, y + height/2 + 25);
 
     }
