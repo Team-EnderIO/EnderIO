@@ -25,7 +25,7 @@ public class ToolsLang {
 
     public static final MutableComponent SOUL_VIAL_ERROR_PLAYER = message("soul_vial/error/player");
     public static final MutableComponent SOUL_VIAL_ERROR_BOSS = message("soul_vial/error/boss");
-    public static final MutableComponent SOUL_VIAL_ERROR_BLACKLISTED = message("soul_vial/error/blacklisted");
+    public static final MutableComponent SOUL_VIAL_ERROR_DENIED = message("soul_vial/error/denied");
     public static final MutableComponent SOUL_VIAL_ERROR_FAILED = message("soul_vial/error/failed");
     public static final MutableComponent SOUL_VIAL_ERROR_DEAD = message("soul_vial/error/dead");
 

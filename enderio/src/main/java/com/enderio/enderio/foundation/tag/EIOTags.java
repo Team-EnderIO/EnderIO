@@ -85,8 +85,8 @@ public class EIOTags {
         public static final TagKey<Item> DARK_FUSED_QUARTZ = commonTag("glass_blocks/dark_fused_quartz");
         public static final TagKey<Item> CLEAR_GLASS = commonTag("glass_blocks/clear");
 
-        public static final TagKey<Item> BROKEN_SPAWNER_BLACKLIST = tag("blacklists/broken_spawner");
-        public static final TagKey<Item> ELECTROMAGNET_BLACKLIST = tag("blacklists/electromagnet");
+        public static final TagKey<Item> BROKEN_SPAWNER_DENY_LIST = tag("deny_lists/broken_spawner");
+        public static final TagKey<Item> ELECTROMAGNET_DENY_LIST = tag("deny_lists/electromagnet");
 
         public static final TagKey<Item> BLOCKS_CONDUCTIVE_ALLOY = commonTag("storage_blocks/conductive_alloy");
         public static final TagKey<Item> BLOCKS_DARK_STEEL = commonTag("storage_blocks/dark_steel");
@@ -194,11 +194,10 @@ public class EIOTags {
     }
 
     public static class EntityTypes {
-        // TODO: 1.22: Rename allow/deny list.
-        public static final TagKey<EntityType<?>> SPAWNER_BLACKLIST = tag("spawner_blacklist");
-        public static final TagKey<EntityType<?>> SPAWNER_WHITELIST = tag("spawner_whitelist");
-        public static final TagKey<EntityType<?>> SOUL_VIAL_WHITELIST = tag("soul_vial_whitelist");
-        public static final TagKey<EntityType<?>> SOUL_VIAL_BLACKLIST = tag("soul_vial_blacklist");
+        public static final TagKey<EntityType<?>> SPAWNER_DENY_LIST = tag("spawner_deny_list");
+        public static final TagKey<EntityType<?>> SPAWNER_ALLOW_LIST = tag("spawner_allow_list");
+        public static final TagKey<EntityType<?>> SOUL_VIAL_ALLOY_LIST = tag("soul_vial_allow_list");
+        public static final TagKey<EntityType<?>> SOUL_VIAL_DENY_LIST = tag("soul_vial_deny_list");
 
         private static TagKey<EntityType<?>> tag(String name) {
             return TagKey.create(Registries.ENTITY_TYPE, EnderIO.id(name));

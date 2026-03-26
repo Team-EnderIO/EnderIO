@@ -17,16 +17,16 @@ public class EIOEntityTagsProvider extends EntityTypeTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
-        this.tag(EIOTags.EntityTypes.SOUL_VIAL_BLACKLIST)
+        this.tag(EIOTags.EntityTypes.SOUL_VIAL_DENY_LIST)
                 .add(EntityType.WARDEN)
                 .addTag(Tags.EntityTypes.CAPTURING_NOT_SUPPORTED)
                 .addTag(Tags.EntityTypes.BOSSES);
 
-        this.tag(EIOTags.EntityTypes.SOUL_VIAL_WHITELIST);
+        this.tag(EIOTags.EntityTypes.SOUL_VIAL_ALLOY_LIST);
 
-        this.tag(EIOTags.EntityTypes.SPAWNER_BLACKLIST).addTag(Tags.EntityTypes.BOSSES).add(EntityType.WARDEN);
+        this.tag(EIOTags.EntityTypes.SPAWNER_DENY_LIST).addTag(Tags.EntityTypes.BOSSES).add(EntityType.WARDEN);
 
-        this.tag(EIOTags.EntityTypes.SPAWNER_WHITELIST);
+        this.tag(EIOTags.EntityTypes.SPAWNER_ALLOW_LIST);
 
     }
 }

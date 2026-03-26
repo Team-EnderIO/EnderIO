@@ -30,5 +30,5 @@ public class FarmSoul {
             FarmSoul.SoulData::power, FarmSoul.SoulData::new);
 
     public static final String NAME = "farm";
-    public static final SoulDataReloadListener<FarmSoul.SoulData> RELOAD_LISTENER = new SoulDataReloadListener<>(NAME, CODEC);
+    public static final SoulDataReloadListener<FarmSoul.SoulData> RELOAD_LISTENER = new SoulDataReloadListener<>(CODEC, NAME);
 }

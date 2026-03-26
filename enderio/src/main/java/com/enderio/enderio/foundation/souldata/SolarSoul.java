@@ -43,5 +43,5 @@ public class SolarSoul {
     );
 
     public static final String NAME = "solar";
-    public static final SoulDataReloadListener<SoulData> RELOAD_LISTENER = new SoulDataReloadListener<>(NAME, CODEC);
+    public static final SoulDataReloadListener<SoulData> RELOAD_LISTENER = new SoulDataReloadListener<>(CODEC, NAME);
 }

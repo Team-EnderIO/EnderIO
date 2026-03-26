@@ -58,8 +58,7 @@ public class SoulDataReloadListener<T extends SoulData> extends SimpleJsonResour
     private static final Map<String, SoulDataReloadListener<? extends SoulData>> LOADED_SOUL_DATA = new HashMap<>();
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    // TODO: 1.21.4: Rearrange order of parameters
-    protected SoulDataReloadListener(String folder, Codec codec) {
+    protected SoulDataReloadListener(Codec codec, String folder) {
         super(codec, FileToIdConverter.json("eio_soul/" + folder));
         this.folderName = "eio_soul/" + folder;
         LOADED_SOUL_DATA.put(folder, this);

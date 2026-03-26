@@ -43,13 +43,13 @@ public class ElectromagnetItem extends PoweredToggledItem {
         return BaseConfig.COMMON.ITEMS.ELECTROMAGNET_MAX_ITEMS.get();
     }
 
-    private boolean isBlacklisted(ItemEntity entity) {
-        return entity.getItem().is(EIOTags.Items.ELECTROMAGNET_BLACKLIST);
+    private boolean isDenied(ItemEntity entity) {
+        return entity.getItem().is(EIOTags.Items.ELECTROMAGNET_DENY_LIST);
     }
 
     private boolean isMagnetable(Entity entity) {
         if (entity instanceof ItemEntity itemEntity) {
-            return !isBlacklisted(itemEntity);
+            return !isDenied(itemEntity);
         }
         return entity instanceof ExperienceOrb;
     }

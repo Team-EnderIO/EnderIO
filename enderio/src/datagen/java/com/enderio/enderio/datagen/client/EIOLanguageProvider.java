@@ -67,8 +67,8 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOTags.Items.HIDE_FACADES, "Hides Facades");
         add(EIOTags.Items.GLIDER, "Gliders");
         add(EIOTags.Items.INSULATION_METAL, "Insulation Metal");
-        add(EIOTags.Items.BROKEN_SPAWNER_BLACKLIST, "Broken Spawner Blacklist");
-        add(EIOTags.Items.ELECTROMAGNET_BLACKLIST, "Electromagnet Blacklist");
+        add(EIOTags.Items.BROKEN_SPAWNER_DENY_LIST, "Broken Spawner Deny List");
+        add(EIOTags.Items.ELECTROMAGNET_DENY_LIST, "Electromagnet Deny List");
 
         // TODO: Glass tags?
 
@@ -95,10 +95,10 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOTags.Fluids.SOLAR_PANEL_LIGHT, "Solar Panel Light");
         add(EIOTags.Fluids.SOLAR_PANEL_DARK, "Solar Panel Dark");
 
-        add(EIOTags.EntityTypes.SPAWNER_BLACKLIST, "Spawner Blacklist");
-        add(EIOTags.EntityTypes.SPAWNER_WHITELIST, "Spawner Whitelist");
-        add(EIOTags.EntityTypes.SOUL_VIAL_BLACKLIST, "Soul Vial Blacklist");
-        add(EIOTags.EntityTypes.SOUL_VIAL_WHITELIST, "Soul Vial Whitelist");
+        add(EIOTags.EntityTypes.SPAWNER_DENY_LIST, "Spawner Deny List");
+        add(EIOTags.EntityTypes.SPAWNER_ALLOW_LIST, "Spawner Allow List");
+        add(EIOTags.EntityTypes.SOUL_VIAL_DENY_LIST, "Soul Vial Deny List");
+        add(EIOTags.EntityTypes.SOUL_VIAL_ALLOY_LIST, "Soul Vial Allow List");
     }
 
     private void addCapacitorTooltips() {
@@ -254,7 +254,7 @@ public class EIOLanguageProvider extends LanguageProvider {
 
         add(ToolsLang.SOUL_VIAL_ERROR_PLAYER, "You cannot put player in a bottle!");
         add(ToolsLang.SOUL_VIAL_ERROR_BOSS, "Nice try. Bosses don't like bottles.");
-        add(ToolsLang.SOUL_VIAL_ERROR_BLACKLISTED, "This entity has been blacklisted.");
+        add(ToolsLang.SOUL_VIAL_ERROR_DENIED, "This entity has been deny listed.");
         add(ToolsLang.SOUL_VIAL_ERROR_FAILED, "This entity cannot be captured.");
         add(ToolsLang.SOUL_VIAL_ERROR_DEAD, "Cannot capture a dead mob!");
 

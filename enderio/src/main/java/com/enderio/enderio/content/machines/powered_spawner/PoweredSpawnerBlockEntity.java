@@ -121,8 +121,8 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
 
         // Whitelist takes precedence over all
         // This allows easier allowing of restricted mobs than removing from tags.
-        if (entityType.builtInRegistryHolder().is(EIOTags.EntityTypes.SPAWNER_BLACKLIST) &&
-            !entityType.builtInRegistryHolder().is(EIOTags.EntityTypes.SPAWNER_WHITELIST)) {
+        if (entityType.builtInRegistryHolder().is(EIOTags.EntityTypes.SPAWNER_DENY_LIST) &&
+            !entityType.builtInRegistryHolder().is(EIOTags.EntityTypes.SPAWNER_ALLOW_LIST)) {
             setReason(SpawnerBlockedReason.DISABLED);
             return null;
         }

@@ -38,7 +38,7 @@ public class EntityCaptureUtils {
 
     public enum CapturableStatus {
         CAPTURABLE(Component.empty()),
-        BLACKLISTED(ToolsLang.SOUL_VIAL_ERROR_BLACKLISTED),
+        DENIED(ToolsLang.SOUL_VIAL_ERROR_DENIED),
         INCOMPATIBLE(ToolsLang.SOUL_VIAL_ERROR_FAILED);
 
         CapturableStatus(Component errorMessage) {
@@ -63,17 +63,17 @@ public class EntityCaptureUtils {
 
         // Don't allow capturing of the ender dragon
         if (type.equals(EntityType.ENDER_DRAGON)) {
-            return CapturableStatus.BLACKLISTED;
+            return CapturableStatus.DENIED;
         }
 
         // Whitelist takes precedence over all
         // This allows easier allowing of restricted mobs than removing from tags.
-        if (type.builtInRegistryHolder().is(EIOTags.EntityTypes.SOUL_VIAL_WHITELIST)) {
+        if (type.builtInRegistryHolder().is(EIOTags.EntityTypes.SOUL_VIAL_ALLOY_LIST)) {
             return CapturableStatus.CAPTURABLE;
         }
 
-        if (type.builtInRegistryHolder().is(EIOTags.EntityTypes.SOUL_VIAL_BLACKLIST)) {
-            return CapturableStatus.BLACKLISTED;
+        if (type.builtInRegistryHolder().is(EIOTags.EntityTypes.SOUL_VIAL_DENY_LIST)) {
+            return CapturableStatus.DENIED;
         }
 
         return CapturableStatus.CAPTURABLE;

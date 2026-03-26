@@ -39,5 +39,5 @@ public class SpawnerSoul {
 
     public static final String NAME = "spawner";
 
-    public static final SoulDataReloadListener<SoulData> RELOAD_LISTENER = new SoulDataReloadListener<>(NAME, CODEC);
+    public static final SoulDataReloadListener<SoulData> RELOAD_LISTENER = new SoulDataReloadListener<>(CODEC, NAME);
 }

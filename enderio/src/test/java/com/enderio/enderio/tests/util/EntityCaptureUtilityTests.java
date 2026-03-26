@@ -19,15 +19,15 @@ public class EntityCaptureUtilityTests {
     }
 
     @Test
-    public void testGetCapturableStatus_RejectBlacklisted(MinecraftServer server) {
-        Assertions.assertEquals(EntityCaptureUtils.CapturableStatus.BLACKLISTED, EntityCaptureUtils.getCapturableStatus(EntityType.WARDEN));
+    public void testGetCapturableStatus_RejectDenied(MinecraftServer server) {
+        Assertions.assertEquals(EntityCaptureUtils.CapturableStatus.DENIED, EntityCaptureUtils.getCapturableStatus(EntityType.WARDEN));
     }
 
     @Test
-    public void testGetCapturableStatus_AllowWhitelisted(MinecraftServer server) {
+    public void testGetCapturableStatus_PermitAllowListed(MinecraftServer server) {
         // Ensure the test datapack is working
-        Assertions.assertTrue(EntityType.ZOMBIE.builtInRegistryHolder().is(EIOTags.EntityTypes.SOUL_VIAL_BLACKLIST));
-        Assertions.assertTrue(EntityType.ZOMBIE.builtInRegistryHolder().is(EIOTags.EntityTypes.SOUL_VIAL_WHITELIST));
+        Assertions.assertTrue(EntityType.ZOMBIE.builtInRegistryHolder().is(EIOTags.EntityTypes.SOUL_VIAL_DENY_LIST));
+        Assertions.assertTrue(EntityType.ZOMBIE.builtInRegistryHolder().is(EIOTags.EntityTypes.SOUL_VIAL_ALLOY_LIST));
 
         // Ensure whitelist has precedence
         Assertions.assertEquals(EntityCaptureUtils.CapturableStatus.CAPTURABLE, EntityCaptureUtils.getCapturableStatus(EntityType.ZOMBIE));
