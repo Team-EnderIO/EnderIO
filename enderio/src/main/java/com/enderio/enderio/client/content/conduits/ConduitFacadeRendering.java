@@ -11,6 +11,7 @@ import net.irisshaders.iris.api.v0.IrisApi;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockQuadOutput;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
+import net.minecraft.client.renderer.state.level.BlockBreakingRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.util.ARGB;
@@ -19,12 +20,39 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.AddSectionGeometryEvent;
+import net.neoforged.neoforge.client.event.ExtractLevelRenderStateEvent;
 import net.neoforged.neoforge.client.model.pipeline.VertexConsumerWrapper;
 
+import java.util.List;
 import java.util.Map;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class ConduitFacadeRendering {
+
+    /**
+     * This fixes the block breaking overlay when a facade is attached to use the model of the facade.
+     * Without this, it will use the model of the conduit, and be invisible in most cases.
+     */
+    @SubscribeEvent
+    static void extractFacadeBlockBreakingStates(ExtractLevelRenderStateEvent event) {
+        List<BlockBreakingRenderState> blockBreakingRenderStates = event.getRenderState().blockBreakingRenderStates;
+        if (blockBreakingRenderStates.isEmpty()) {
+            return;
+        }
+
+        var facadesForDim = ConduitBundleBlockEntity.FACADES.get(event.getLevel().dimension());
+        if (facadesForDim == null) {
+            return;
+        }
+
+        for (int i = 0; i < blockBreakingRenderStates.size(); i++) {
+            var blockBreakingState = blockBreakingRenderStates.get(i);
+            BlockState facadeState = facadesForDim.get(blockBreakingState.blockPos().asLong());
+            if (facadeState != null) {
+                blockBreakingRenderStates.set(i, new BlockBreakingRenderState(blockBreakingState.blockPos(), facadeState, blockBreakingState.progress()));
+            }
+        }
+    }
 
     @SubscribeEvent
     static void renderFacade(AddSectionGeometryEvent event) {
