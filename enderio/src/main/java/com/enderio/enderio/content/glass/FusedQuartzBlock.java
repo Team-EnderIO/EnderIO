@@ -28,7 +28,6 @@ public class FusedQuartzBlock extends TransparentBlock {
 
     @Override
     protected int getLightDampening(BlockState state) {
-        // TODO: 1.21.4: Is there a constant for light level so this isn't a magic number?
         return glassIdentifier.lighting() == GlassLighting.BLOCKING ? 15 : 0;
     }
 

@@ -272,7 +272,7 @@ public class IOConfigOverlay extends BaseOverlay {
             blockTransform.mul(rotYaw);
 
             // Draw block
-            renderWorld(graphics, centerX, centerY, blockTransform, a);
+//            renderWorld(graphics, centerX, centerY, blockTransform, a);
 
             // Build ray transformation matrix
             // Rotate 180 around Z, otherwise the block is upside down
@@ -302,7 +302,7 @@ public class IOConfigOverlay extends BaseOverlay {
                                                                                                              // to eye
                     .map(closest -> new SelectedFace(closest.getValue(), closest.getKey().getDirection()));
 
-            renderSelection(graphics, centerX, centerY, blockTransform);
+//            renderSelection(graphics, centerX, centerY, blockTransform);
             renderOverlay(graphics);
 
             graphics.disableScissor();

@@ -61,10 +61,6 @@ public class ConduitSelectionButton extends AbstractButton {
             return;
         }
 
-        // TODO: 1.21.8: is this needed?
-//        RenderSystem.enableBlend();
-//        RenderSystem.defaultBlendFunc();
-//        RenderSystem.enableDepthTest();
         graphics.blit(RenderPipelines.GUI_TEXTURED, ConduitScreen.TEXTURE, getX(), getY(), 227, 0, this.width, this.height, 256, 256);
         if (currentConduit.get() == conduit) {
             graphics.blit(RenderPipelines.GUI_TEXTURED, ConduitScreen.TEXTURE, getX() - 3, getY(), 224, 0, 3, this.height, 256, 256);
@@ -79,9 +75,6 @@ public class ConduitSelectionButton extends AbstractButton {
         }
 
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, iconLocation, getX() + 3, getY() + 6, 12, 12);
-
-//        RenderSystem.disableDepthTest();
-//        RenderSystem.disableBlend();
     }
 
     @Override

@@ -25,7 +25,6 @@ import org.jspecify.annotations.Nullable;
 import java.util.Calendar;
 
 public class EnderiosItem extends Item {
-    // TODO: 1.21.4: Does this still have a cooldown?
     private static final FoodProperties PROPERTIES = new FoodProperties.Builder()
         .nutrition(10)
         .saturationModifier(0.8f)

@@ -257,12 +257,6 @@ public class EnderIOClient {
     // TODO: 1.21.4: Deal with the new item tint system
 //    @SubscribeEvent
 //    public static void registerItemColorHandlers(RegisterColorHandlersEvent.Item event) {
-//        event.register(ConduitFacadeColor.INSTANCE,
-//            EIOItems.CONDUIT_FACADE.get(),
-//            EIOItems.TRANSPARENT_CONDUIT_FACADE.get(),
-//            EIOItems.HARDENED_CONDUIT_FACADE.get(),
-//            EIOItems.TRANSPARENT_HARDENED_CONDUIT_FACADE.get());
-//
 //        event.register(PaintedBlockColor.INSTANCE,
 //            EIOBlocks.PAINTED_FENCE.get(),
 //            EIOBlocks.PAINTED_FENCE_GATE.get(),

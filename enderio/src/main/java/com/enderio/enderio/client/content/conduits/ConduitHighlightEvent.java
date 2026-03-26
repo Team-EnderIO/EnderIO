@@ -48,7 +48,6 @@ public class ConduitHighlightEvent {
 
             VoxelShape shape = conduit.getShape().getShapeFromHit(pos, result);
 
-            // TODO: 1.21.11: Check this is equivalent to (double) pos.getX() - camPos.x, (double) pos.getY() - camPos.y, (double) pos.getZ() - camPos.z,
             Vec3 offset = Vec3.atLowerCornerOf(result.getBlockPos()).subtract(event.getCamera().position());
 
             event.addCustomRenderer((renderState, buffer, poseStack, translucentPass, levelRenderState) -> {
