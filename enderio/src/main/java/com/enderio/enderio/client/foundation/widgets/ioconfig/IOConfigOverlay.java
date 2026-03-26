@@ -3,6 +3,7 @@ package com.enderio.enderio.client.foundation.widgets.ioconfig;
 import com.enderio.core.client.gui.screen.BaseOverlay;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.io.IOConfigurable;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.foundation.network.packets.ServerboundCycleIOConfigPacket;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
@@ -11,9 +12,12 @@ import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Axis;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Rect2i;
@@ -73,11 +77,10 @@ public class IOConfigOverlay extends BaseOverlay {
     private final Vector3f multiblockSize;
     private final List<BlockPos> configurable = new ArrayList<>();
     private final List<BlockPos> neighbours = new ArrayList<>();
-    private float scale = 20;
-    private float pitch;
-    private float yaw;
     private boolean neighbourVisible = true;
     private Optional<SelectedFace> selection = Optional.empty();
+
+    private final IOConfigSceneCamera camera;
 
     // Neighbour Button
     public static final Identifier NEIGHBOURS_BTN = EnderIO.id("buttons/neighbour");
@@ -107,6 +110,8 @@ public class IOConfigOverlay extends BaseOverlay {
         }
 
         var radius = Math.max(Math.max(multiblockSize.x(), multiblockSize.y()), multiblockSize.z());
+
+        float scale = 20f;
         scale -= (radius - 1) * 3; // adjust later
         scale = Math.min(40, Math.max(10, scale)); // clamp
 
@@ -119,8 +124,11 @@ public class IOConfigOverlay extends BaseOverlay {
             }
 
         });
-        pitch = MINECRAFT.player.getXRot();
-        yaw = MINECRAFT.player.getYRot();
+        float pitch = MINECRAFT.player.getXRot();
+        float yaw = MINECRAFT.player.getYRot();
+
+        // TODO: properly integrate
+        this.camera = new IOConfigSceneCamera(worldOrigin, scale, pitch, yaw);
 
         initBuffers(MINECRAFT.renderBuffers().bufferSource());
         neighBtnRect = new Rect2i(getX() + getWidth() - 2 - 16, getY() + getHeight() - 2 - 16, 16, 16);
@@ -133,16 +141,16 @@ public class IOConfigOverlay extends BaseOverlay {
 
     @Override
     public Object getValueForRestore() {
-        return new RestoreData(this.visible, yaw, pitch, scale);
+        return new RestoreData(this.visible, camera.yaw(), camera.pitch(), camera.scale());
     }
 
     @Override
     public void restoreValue(Object value) {
         if (value instanceof RestoreData restoreData) {
             this.visible = restoreData.isVisible;
-            this.yaw = restoreData.yaw;
-            this.pitch = restoreData.pitch;
-            this.scale = restoreData.scale;
+            camera.setYaw(restoreData.yaw);
+            camera.setPitch(restoreData.pitch);
+            camera.setScale(restoreData.scale);
         }
     }
 
@@ -226,11 +234,29 @@ public class IOConfigOverlay extends BaseOverlay {
                 && !neighBtnRect.contains((int) event.x(), (int) event.y())) {
             double dx = dragX / (double) MINECRAFT.getWindow().getGuiScaledWidth();
             double dy = dragY / (double) MINECRAFT.getWindow().getGuiScaledHeight();
-            yaw += 4 * (float) dx * 180;
-            pitch += 2 * (float) dy * 180;
 
-            pitch = Math.min(80, Math.max(-80, pitch)); // clamp
+            // Determine if we're panning or rotating.
+            if (event.hasShiftDown()) {
+                // 16 seems to be reasonable
+                float dragSpeed = 16f;
 
+                Vector3f delta = new Vector3f((float)-dx * dragSpeed, (float)-dy * dragSpeed, 0);
+                var dragDelta = camera.rayTransform().transformPosition(delta);
+
+                var sceneOrigin = camera.sceneOrigin();
+                camera.setSceneOrigin(sceneOrigin.add(dragDelta.x, dragDelta.y, dragDelta.z));
+            } else {
+                float yaw = camera.yaw();
+                float pitch = camera.pitch();
+
+                yaw += 4 * (float) dx * 180;
+                pitch += 2 * (float) dy * 180;
+
+                pitch = Math.min(80, Math.max(-80, pitch)); // clamp
+
+                camera.setYaw(yaw);
+                camera.setPitch(pitch);
+            }
         }
         return false;
     }
@@ -238,8 +264,10 @@ public class IOConfigOverlay extends BaseOverlay {
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
         if (visible) {
+            float scale = camera.scale();
             scale -= deltaY;
             scale = Math.min(40, Math.max(10, scale)); // clamp
+            camera.setScale(scale);
             return true;
         }
         return false;
@@ -253,6 +281,8 @@ public class IOConfigOverlay extends BaseOverlay {
             graphics.fill(getX(), getY(), getX() + width, getY() + height, 0xFF000000);
 //            RenderSystem.enableDepthTest();
 
+            float scale = camera.scale();
+
             // Calculate widget center
             int centerX = getX() + (width / 2);
             int centerY = getY() + (height / 2);
@@ -260,41 +290,35 @@ public class IOConfigOverlay extends BaseOverlay {
             float diffX = (mouseX - centerX) / scale;
             float diffY = (mouseY - centerY) / scale;
 
-            Quaternionf rotPitch = Axis.XN.rotationDegrees(pitch);
-            Quaternionf rotYaw = Axis.YP.rotationDegrees(yaw);
-
-            // Build block transformation matrix
-            // Rotate 180 around Z, otherwise the block is upside down
-            Quaternionf blockTransform = new Quaternionf(ROT_180_Z);
-            // Rotate around X (pitch) in negative direction
-            blockTransform.mul(rotPitch);
-            // Rotate around Y (yaw)
-            blockTransform.mul(rotYaw);
+            graphics.submitPictureInPictureRenderState(
+                IOConfigSceneRenderState.create(
+                    MINECRAFT.level,
+                    getX(),
+                    getY(),
+                    getWidth(),
+                    getHeight(),
+                    graphics.peekScissorStack(),
+                    this.camera.state(),
+                    configurable,
+                    neighbours,
+                    neighbourVisible
+                ));
 
             // Draw block
 //            renderWorld(graphics, centerX, centerY, blockTransform, a);
-
-            // Build ray transformation matrix
-            // Rotate 180 around Z, otherwise the block is upside down
-            Matrix4f rayTransform = new Matrix4f();
-            rayTransform.set(ROT_180_Z);
-            // Rotate around Y (yaw)
-            rayTransform.rotate(rotYaw);
-            // Rotate around X (pitch) in negative direction
-            rayTransform.rotate(rotPitch);
 
             // Ray-cast hit on block shape
             Map<BlockHitResult, BlockPos> hits = new HashMap<>();
             configurable.forEach(blockPos -> {
                 BlockState state = MINECRAFT.level.getBlockState(blockPos);
-                BlockHitResult hit = raycast(blockPos, state, diffX, diffY, rayTransform);
+                BlockHitResult hit = raycast(blockPos, state, diffX, diffY, camera.rayTransform());
                 if (hit != null && hit.getType() != HitResult.Type.MISS) {
                     hits.put(hit, blockPos);
                 }
 
             });
 
-            Vec3 eyePosition = transform(RAY_START, rayTransform).add(worldOrigin.x, worldOrigin.y, worldOrigin.z);
+            Vec3 eyePosition = transform(RAY_START, camera.rayTransform()).add(worldOrigin.x, worldOrigin.y, worldOrigin.z);
             selection = hits.entrySet()
                     .stream()
                     .min(Comparator.comparingDouble(entry -> entry.getValue().distToCenterSqr(eyePosition))) // find
@@ -325,7 +349,7 @@ public class IOConfigOverlay extends BaseOverlay {
             for (var neighbour : neighbours) {
                 Vector3f pos = new Vector3f(neighbour.getX() - worldOrigin.x(), neighbour.getY() - worldOrigin.y(),
                         neighbour.getZ() - worldOrigin.z());
-                renderBlock(graphics, neighbour, pos, ghostBuffers, partialTick);
+                ////renderBlock(graphics, neighbour, pos, ghostBuffers, partialTick);
             }
 
         }
@@ -335,50 +359,12 @@ public class IOConfigOverlay extends BaseOverlay {
         for (var configurable : configurable) {
             Vector3f pos = new Vector3f(configurable.getX() - worldOrigin.x(), configurable.getY() - worldOrigin.y(),
                     configurable.getZ() - worldOrigin.z());
-            renderBlock(graphics, configurable, pos, solidBuffers, partialTick);
+            ////renderBlock(graphics, configurable, pos, solidBuffers, partialTick);
         }
         solidBuffers.endBatch();
 
         graphics.pose().popMatrix();
 //        Lighting.setupFor3DItems();
-    }
-
-    private void renderBlock(GuiGraphicsExtractor graphics, BlockPos blockPos, Vector3f renderPos,
-            MultiBufferSource.BufferSource buffers, float partialTick) {
-        graphics.pose().pushMatrix();
-//        graphics.pose().translate(renderPos.x(), renderPos.y(), renderPos.z());
-
-        ModelData modelData = Optional.ofNullable(MINECRAFT.level.getModelDataManager().getAt(blockPos))
-                .orElse(ModelData.EMPTY);
-
-//        BlockState blockState = MINECRAFT.level.getBlockState(blockPos);
-//        RenderShape rendershape = blockState.getRenderShape();
-//        if (rendershape != RenderShape.INVISIBLE) {
-//            var renderer = MINECRAFT.getBlockRenderer();
-//            BlockStateModel bakedmodel = renderer.getBlockModel(blockState);
-//            modelData = bakedmodel.getModelData(MINECRAFT.level, blockPos, blockState, modelData);
-//            int blockColor = MINECRAFT.getBlockColors().getColor(blockState, MINECRAFT.level, blockPos, 0);
-//            float r = ARGB.red(blockColor) / 255F;
-//            float g = ARGB.green(blockColor) / 255F;
-//            float b = ARGB.blue(blockColor) / 255F;
-//            for (RenderType renderType : bakedmodel.getRenderTypes(blockState, RandomSource.create(42), modelData)) {
-//                renderer.getModelRenderer()
-//                        .renderModel(graphics.pose().last(),
-//                                buffers.getBuffer(RenderTypeHelper.getEntityRenderType(renderType)), blockState,
-//                                bakedmodel, r, g, b, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, modelData,
-//                                renderType);
-//            }
-//            BlockEntity blockEntity = MINECRAFT.level.getBlockEntity(blockPos);
-//            if (blockEntity != null) {
-//                var beRenderer = MINECRAFT.getBlockEntityRenderDispatcher().getRenderer(blockEntity);
-//                if (beRenderer != null) {
-//                    beRenderer.render(blockEntity, partialTick, graphics.pose(), buffers, LightTexture.FULL_BRIGHT,
-//                            OverlayTexture.NO_OVERLAY);
-//                }
-//
-//            }
-//        }
-        graphics.pose().popMatrix();
     }
 
     private void renderSelection(GuiGraphicsExtractor graphics, int centerX, int centerY, Quaternionf transform) {
@@ -446,8 +432,8 @@ public class IOConfigOverlay extends BaseOverlay {
     private void renderNeighbourButton(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, NEIGHBOURS_BTN, neighBtnRect.getX(), neighBtnRect.getY(), 16, 16);
         if (neighBtnRect.contains(mouseX, mouseY)) {
-//            graphics.renderTooltip(MINECRAFT.font, EIOCommonLang.TOGGLE_NEIGHBOUR.copy().withStyle(ChatFormatting.WHITE),
-//                    mouseX, mouseY);
+            graphics.tooltip(MINECRAFT.font, List.of(ClientTooltipComponent.create(EIOCommonLang.TOGGLE_NEIGHBOUR.copy().withStyle(ChatFormatting.WHITE).getVisualOrderText())),
+                    mouseX, mouseY, DefaultTooltipPositioner.INSTANCE, null);
         }
     }
 

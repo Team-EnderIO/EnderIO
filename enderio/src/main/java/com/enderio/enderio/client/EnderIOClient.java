@@ -67,6 +67,8 @@ import com.enderio.enderio.client.content.travel.TravelAnchorHud;
 import com.enderio.enderio.client.content.travel.TravelTargetRendering;
 import com.enderio.enderio.client.foundation.model.item.IsSoulBoundItemProperty;
 import com.enderio.enderio.client.foundation.particle.RangeParticle;
+import com.enderio.enderio.client.foundation.widgets.ioconfig.IOConfigSceneRenderState;
+import com.enderio.enderio.client.foundation.widgets.ioconfig.IOConfigSceneRenderer;
 import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
 import com.enderio.enderio.content.fun.EnderiosItem;
 import com.enderio.enderio.content.misc_blocks.skull.EnderSkullBlock;
@@ -106,6 +108,7 @@ import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
 import net.neoforged.neoforge.client.event.RegisterItemModelsEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
+import net.neoforged.neoforge.client.event.RegisterPictureInPictureRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterSpecialModelRendererEvent;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
@@ -131,6 +134,16 @@ public class EnderIOClient {
     public EnderIOClient(ModContainer modContainer) {
         // TODO: Re-enable after config rework.
 //        modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
+    }
+
+    @SubscribeEvent
+    public static void registerPip(RegisterPictureInPictureRenderersEvent event) {
+        event.register(
+            // The PiP render state class
+            IOConfigSceneRenderState.class,
+            // A factory that takes in the `MultiBufferSource.BufferSource` and returns the PiP renderer
+            IOConfigSceneRenderer::new
+        );
     }
 
     @SubscribeEvent
