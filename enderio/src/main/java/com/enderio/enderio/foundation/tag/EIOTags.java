@@ -115,6 +115,8 @@ public class EIOTags {
         public static final TagKey<Item> LIGHTNING_ROD = tag("lightning_rod");
         public static final TagKey<Item> WIND_CHARGES = tag("wind_charges");
 
+        public static final TagKey<Item> SLICER_INCOMPATIBLE_AXE = tag("slicer_incompatible_axe");
+
         public static Map<GlassIdentifier, TagKey<Item>> createGlassTags() {
             Map<GlassIdentifier, TagKey<Item>> map = new HashMap<>();
             for (GlassLighting lighting : GlassLighting.values()) {

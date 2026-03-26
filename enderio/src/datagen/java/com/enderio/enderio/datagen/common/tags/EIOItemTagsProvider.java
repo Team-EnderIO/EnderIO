@@ -62,6 +62,9 @@ public class EIOItemTagsProvider extends IntrinsicHolderTagsProvider<Item> {
         addGliderTags();
         addReagentTags();
 
+        tag(EIOTags.Items.SLICER_INCOMPATIBLE_AXE)
+            .add(Items.WOODEN_AXE);
+
         addBlockItemTags();
     }
 

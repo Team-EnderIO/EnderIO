@@ -11,6 +11,7 @@ import com.enderio.enderio.foundation.inventory.MachineInventory;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.foundation.inventory.MultiSlotAccess;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
+import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.foundation.task.CraftingMachineTask;
 import com.enderio.enderio.foundation.task.PoweredCraftingMachineTask;
 import com.enderio.enderio.foundation.task.host.CraftingMachineTaskHost;
@@ -109,8 +110,7 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
     }
 
     private boolean validAxe(int slot, ItemResource stack) {
-        // TODO: 1.21.4: Need an EIO tag for axes that can't be used to slice.
-        return stack.is(ItemTags.AXES) && !stack.is(Items.WOODEN_AXE);
+        return stack.is(ItemTags.AXES) && !stack.is(EIOTags.Items.SLICER_INCOMPATIBLE_AXE);
     }
 
     @Override
