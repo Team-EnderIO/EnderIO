@@ -298,7 +298,7 @@ public class IOConfigOverlay extends BaseOverlay {
                     getWidth(),
                     getHeight(),
                     graphics.peekScissorStack(),
-                    this.camera.state(),
+                    this.camera.viewMatrix(),
                     configurable,
                     neighbours,
                     neighbourVisible

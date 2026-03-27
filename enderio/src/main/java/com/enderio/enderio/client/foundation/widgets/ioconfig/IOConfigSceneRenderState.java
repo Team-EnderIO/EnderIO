@@ -4,6 +4,7 @@ import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.state.gui.pip.PictureInPictureRenderState;
 import net.minecraft.core.BlockPos;
+import org.joml.Matrix4f;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -17,14 +18,14 @@ public record IOConfigSceneRenderState(
     float scale, // The scale factor when drawing to the picture
     @Nullable ScreenRectangle scissorArea, // The rendering area
     @Nullable ScreenRectangle bounds, // The bounds of the element
-    IOConfigSceneCameraState cameraState,
+    Matrix4f viewMatrix,
     List<IOConfigSceneBlock> primaryBlocks,
     List<IOConfigSceneBlock> neighborBlocks,
     boolean shouldRenderNeighbors
 ) implements PictureInPictureRenderState {
 
     public static IOConfigSceneRenderState create(ClientLevel level, int x, int y, int width, int height, @Nullable ScreenRectangle scissorArea,
-        IOConfigSceneCameraState cameraState, List<BlockPos> primaryBlockPositions, List<BlockPos> neighborBlockPositions, boolean shouldRenderNeighbors) {
+        Matrix4f viewMatrix, List<BlockPos> primaryBlockPositions, List<BlockPos> neighborBlockPositions, boolean shouldRenderNeighbors) {
 
         if (primaryBlockPositions.isEmpty()) {
             throw new IllegalArgumentException("You must provide at least one primary block to the renderer.");
@@ -41,7 +42,7 @@ public record IOConfigSceneRenderState(
         }
 
         return new IOConfigSceneRenderState(x, x + width, y, y + height, 1, scissorArea,
-            PictureInPictureRenderState.getBounds(x, y, x + width, y + height, scissorArea), cameraState, primaryBlocks, neighborBlocks, shouldRenderNeighbors);
+            PictureInPictureRenderState.getBounds(x, y, x + width, y + height, scissorArea), viewMatrix, primaryBlocks, neighborBlocks, shouldRenderNeighbors);
     }
 
 }

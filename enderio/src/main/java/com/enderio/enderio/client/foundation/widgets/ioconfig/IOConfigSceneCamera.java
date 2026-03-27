@@ -22,6 +22,7 @@ public class IOConfigSceneCamera {
     private Quaternionf blockTransform;
     private Matrix4f rayTransform;
     private IOConfigSceneCameraState state;
+    private Matrix4f viewMatrix;
     private boolean isDirty = true;
 
     public IOConfigSceneCamera(BlockPos centerBlock) {
@@ -98,6 +99,14 @@ public class IOConfigSceneCamera {
         return state;
     }
 
+    public Matrix4f viewMatrix() {
+        if (isDirty) {
+            recompute();
+        }
+
+        return viewMatrix;
+    }
+
     private void recompute() {
         // Compute rotation
         Quaternionf rotPitch = Axis.XN.rotationDegrees(pitch);
@@ -122,6 +131,13 @@ public class IOConfigSceneCamera {
 
         // Create state
         state = new IOConfigSceneCameraState(sceneOrigin, scale, blockTransform);
+
+        // Create view matrix
+        viewMatrix = new Matrix4f();
+        viewMatrix.scale(scale, scale, -scale);
+        viewMatrix.rotate(blockTransform);
+        viewMatrix.translate((float)-sceneOrigin.x, (float)-sceneOrigin.y, (float)-sceneOrigin.z);
+
         isDirty = false;
     }
 }

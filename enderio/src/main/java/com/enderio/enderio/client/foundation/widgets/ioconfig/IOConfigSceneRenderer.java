@@ -40,7 +40,7 @@ public class IOConfigSceneRenderer extends PictureInPictureRenderer<IOConfigScen
     protected void renderToTexture(IOConfigSceneRenderState state, PoseStack poseStack) {
         poseStack.pushPose();
 
-        state.cameraState().apply(poseStack);
+        poseStack.mulPose(state.viewMatrix());
 
         Minecraft.getInstance().gameRenderer.getLighting().setupFor(Lighting.Entry.LEVEL);
 
@@ -48,17 +48,13 @@ public class IOConfigSceneRenderer extends PictureInPictureRenderer<IOConfigScen
         if (state.shouldRenderNeighbors()) {
             for (var block : state.neighborBlocks()) {
                 // TODO: Render translucent...
-                renderBlock(
-                    state.cameraState().sceneOrigin(),
-                    poseStack,
+                renderBlock(poseStack,
                     block);
             }
         }
 
         for (var block : state.primaryBlocks()) {
-            renderBlock(
-                state.cameraState().sceneOrigin(),
-                poseStack,
+            renderBlock(poseStack,
                 block);
         }
 
@@ -68,10 +64,9 @@ public class IOConfigSceneRenderer extends PictureInPictureRenderer<IOConfigScen
         poseStack.popPose();
     }
 
-    private void renderBlock(Vec3 worldOrigin, PoseStack poseStack, IOConfigSceneBlock block) {
+    private void renderBlock(PoseStack poseStack, IOConfigSceneBlock block) {
         poseStack.pushPose();
-        poseStack.translate(new Vec3(block.pos().getX(), block.pos().getY(), block.pos().getZ())
-            .subtract(worldOrigin));
+        poseStack.translate(new Vec3(block.pos()));
 
         block.blockModelRenderState().submit(poseStack, collector, LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 0);
 

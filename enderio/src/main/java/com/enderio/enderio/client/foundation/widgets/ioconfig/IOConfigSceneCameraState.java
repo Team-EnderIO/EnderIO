@@ -8,6 +8,7 @@ import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
+// TODO: remove
 public record IOConfigSceneCameraState(
     Vec3 sceneOrigin,
     float scale,
