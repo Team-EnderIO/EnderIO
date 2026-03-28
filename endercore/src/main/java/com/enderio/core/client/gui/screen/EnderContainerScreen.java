@@ -31,9 +31,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public abstract class EnderContainerScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> {
-
-    private static final int ITEM_RENDER_Z = 400;
-
     private final Multimap<Integer, Renderable> overlayRenderables = HashMultimap.create();
     private final Multimap<Integer, GuiEventListener> overlayWidgets = HashMultimap.create();
 
@@ -96,7 +93,7 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
             for (var overlay : overlayWidgets.get(layer)) {
                 if (!(overlay instanceof AbstractWidget widget) || widget.isActive()) {
                     if (overlay.isMouseOver(mouseX, mouseY)) {
-                        return;]
+                        return;
                     }
                 }
             }
