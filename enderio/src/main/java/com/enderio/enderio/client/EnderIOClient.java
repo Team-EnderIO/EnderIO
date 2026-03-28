@@ -27,6 +27,7 @@ import com.enderio.enderio.client.content.filters.redstone.RedstoneTimerFilterSc
 import com.enderio.enderio.client.content.fluid_tank.FluidTankItemRenderer;
 import com.enderio.enderio.client.content.glass.GlassIconDecorator;
 import com.enderio.enderio.client.content.glass.GlassItemColor;
+import com.enderio.enderio.client.content.machines.IOOverlayBlockModel;
 import com.enderio.enderio.client.content.machines.IOOverlayBlockStateModel;
 import com.enderio.enderio.client.content.machines.gui.screen.AlloySmelterScreen;
 import com.enderio.enderio.client.content.machines.gui.screen.AttractorObeliskScreen;
@@ -73,6 +74,7 @@ import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
 import com.enderio.enderio.content.fun.EnderiosItem;
 import com.enderio.enderio.content.misc_blocks.skull.EnderSkullBlock;
 import com.enderio.enderio.content.paint.block.PaintExtension;
+import com.enderio.enderio.foundation.block.MachineBlock;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOConduitTypes;
@@ -83,6 +85,7 @@ import com.enderio.enderio.init.EIOMenus;
 import com.enderio.enderio.init.EIOParticles;
 import com.enderio.enderio.init.EIOTravelTargets;
 import net.minecraft.client.color.block.BlockTintSources;
+import net.minecraft.client.renderer.block.BuiltInBlockModels;
 import net.minecraft.client.renderer.block.FluidModel;
 import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.Holder;
@@ -99,6 +102,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
+import net.neoforged.neoforge.client.event.RegisterBlockModelsEvent;
 import net.neoforged.neoforge.client.event.RegisterBlockStateModels;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterConditionalItemModelPropertyEvent;
@@ -370,7 +374,19 @@ public class EnderIOClient {
         event.registerModel(EnderIO.id("conduit"), ConduitBlockStateModel.Unbaked.CODEC);
         event.registerModel(EnderIO.id("io_overlay"), IOOverlayBlockStateModel.Unbaked.MAP_CODEC);
         event.registerModel(EnderIO.id("paint"), PaintedBlockStateModel.Unbaked.MAP_CODEC);
+    }
 
+    @SubscribeEvent
+    public static void registerBlockModels(RegisterBlockModelsEvent event) {
+        BuiltInBlockModels.ModelFactory factory = (_, state) -> new IOOverlayBlockModel.Unbaked(state, Optional.empty());
+
+        for (var block : EIOBlocks.BLOCKS.getEntries()) {
+            if (block.get() instanceof MachineBlock<?>) {
+                event.register(factory, block.get());
+            }
+        }
+
+        event.register(factory, EIOBlocks.CONDUIT_BUNDLE.get());
     }
 
     @SubscribeEvent

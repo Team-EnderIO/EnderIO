@@ -177,14 +177,14 @@ public class IOConfigOverlay extends BaseOverlay {
 
     @Nullable
     private BlockHitResult raycast(BlockPos pos, BlockState state, Ray ray) {
-        // Start .5 blocks behind the point
-        Vector3f start = ray.origin.add(ray.direction().mul(-0.5f, new Vector3f()), new Vector3f());
+        // Start 1 blocks behind the point
+        Vector3f start = ray.origin.add(ray.direction().mul(-1f, new Vector3f()), new Vector3f());
 
         // Travel 3.5 blocks toward the point
         Vector3f end = ray.origin.add(ray.direction().mul(3.5f, new Vector3f()), new Vector3f());
 
         // Get block's shape and cast a ray through it
-        VoxelShape shape = state.getShape(EmptyBlockGetter.INSTANCE, BlockPos.ZERO);
+        VoxelShape shape = state.getShape(MINECRAFT.level, pos);
         return shape.clip(new Vec3(start.x, start.y, start.z), new Vec3(end.x, end.y, end.z), pos);
     }
 

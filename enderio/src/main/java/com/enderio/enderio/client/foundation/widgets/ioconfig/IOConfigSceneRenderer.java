@@ -73,9 +73,6 @@ public class IOConfigSceneRenderer extends PictureInPictureRenderer<IOConfigScen
                 block);
         }
 
-        featureRenderDispatcher.renderAllFeatures();
-        bufferSource.endBatch();
-
         if (state.selection() != null) {
             renderSelection(poseStack, state.selection().getFirst(), state.selection().getSecond());
         }
@@ -88,6 +85,9 @@ public class IOConfigSceneRenderer extends PictureInPictureRenderer<IOConfigScen
         poseStack.translate(new Vec3(block.pos()));
 
         block.blockModelRenderState().submit(poseStack, collector, LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 0);
+
+        featureRenderDispatcher.renderAllFeatures();
+        bufferSource.endBatch();
 
         poseStack.popPose();
     }

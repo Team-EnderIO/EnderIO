@@ -15,9 +15,7 @@ public record IOConfigSceneBlock(
         BlockModelRenderState modelRenderState = new BlockModelRenderState();
 
         var state = level.getBlockState(pos);
-        // TODO: Unsure how we funnel ModelData through at this stage.
-//        ModelData modelData = blockEntity != null ? blockEntity.getModelData() : ModelData.EMPTY;
-        BlockDisplayContext context = BlockDisplayContext.create();
+        BlockDisplayContext context = new IOConfigBlockDisplayContext(level, pos);
         Minecraft.getInstance().getBlockModelResolver().update(modelRenderState, state, context);
 
         return new IOConfigSceneBlock(pos, modelRenderState);
