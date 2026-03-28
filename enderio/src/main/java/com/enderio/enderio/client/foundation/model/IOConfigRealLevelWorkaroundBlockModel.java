@@ -1,4 +1,4 @@
-package com.enderio.enderio.client.content.machines;
+package com.enderio.enderio.client.foundation.model;
 
 import com.enderio.enderio.client.foundation.widgets.ioconfig.IOConfigBlockDisplayContext;
 import com.mojang.math.Transformation;
@@ -17,12 +17,15 @@ import org.joml.Matrix4fc;
 import java.util.List;
 import java.util.Optional;
 
-public class IOOverlayBlockModel implements BlockModel {
+/**
+ * Workaround for rendering blocks in IOConfig which require ModelData.
+ * Thanks XFactHD for this workaround, taken from Framed Blocks with permission.
+ */
+public class IOConfigRealLevelWorkaroundBlockModel implements BlockModel {
     private final BlockStateModel model;
     private final Matrix4fc transformation;
 
-    public IOOverlayBlockModel(BlockStateModel model, Matrix4fc transformation)
-    {
+    public IOConfigRealLevelWorkaroundBlockModel(BlockStateModel model, Matrix4fc transformation) {
         this.model = model;
         this.transformation = transformation;
     }
@@ -31,16 +34,14 @@ public class IOOverlayBlockModel implements BlockModel {
     public void update(BlockModelRenderState output, BlockState state, BlockDisplayContext context, long seed) {
         BlockAndTintGetter level;
         BlockPos pos;
-        if (context instanceof IOConfigBlockDisplayContext ctx)
-        {
+        if (context instanceof IOConfigBlockDisplayContext ctx) {
             level = ctx.realLevel();
             pos = ctx.pos();
-        }
-        else
-        {
+        } else {
             level = BlockAndTintGetter.EMPTY;
             pos = BlockPos.ZERO;
         }
+
         int materialFlags = model.materialFlags(level, pos, state);
         List<BlockStateModelPart> partList = output.setupModel(transformation, (materialFlags & BakedQuad.FLAG_TRANSLUCENT) != 0);
         model.collectParts(level, pos, state, output.scratchRandomSource(seed), partList);
@@ -49,10 +50,9 @@ public class IOOverlayBlockModel implements BlockModel {
 
     public record Unbaked(BlockState state, Optional<Transformation> transformation) implements BlockModel.Unbaked {
         @Override
-        public BlockModel bake(BakingContext context, Matrix4fc transformation)
-        {
+        public BlockModel bake(BakingContext context, Matrix4fc transformation) {
             Matrix4fc modelTransform = Transformation.compose(transformation, this.transformation);
-            return new IOOverlayBlockModel(context.modelGetter().apply(state), modelTransform);
+            return new IOConfigRealLevelWorkaroundBlockModel(context.modelGetter().apply(state), modelTransform);
         }
     }
 }

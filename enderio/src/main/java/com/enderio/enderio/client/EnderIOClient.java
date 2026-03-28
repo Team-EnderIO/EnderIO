@@ -27,7 +27,7 @@ import com.enderio.enderio.client.content.filters.redstone.RedstoneTimerFilterSc
 import com.enderio.enderio.client.content.fluid_tank.FluidTankItemRenderer;
 import com.enderio.enderio.client.content.glass.GlassIconDecorator;
 import com.enderio.enderio.client.content.glass.GlassItemColor;
-import com.enderio.enderio.client.content.machines.IOOverlayBlockModel;
+import com.enderio.enderio.client.foundation.model.IOConfigRealLevelWorkaroundBlockModel;
 import com.enderio.enderio.client.content.machines.IOOverlayBlockStateModel;
 import com.enderio.enderio.client.content.machines.gui.screen.AlloySmelterScreen;
 import com.enderio.enderio.client.content.machines.gui.screen.AttractorObeliskScreen;
@@ -142,12 +142,7 @@ public class EnderIOClient {
 
     @SubscribeEvent
     public static void registerPip(RegisterPictureInPictureRenderersEvent event) {
-        event.register(
-            // The PiP render state class
-            IOConfigSceneRenderState.class,
-            // A factory that takes in the `MultiBufferSource.BufferSource` and returns the PiP renderer
-            IOConfigSceneRenderer::new
-        );
+        event.register(IOConfigSceneRenderState.class, IOConfigSceneRenderer::new);
     }
 
     @SubscribeEvent
@@ -378,7 +373,7 @@ public class EnderIOClient {
 
     @SubscribeEvent
     public static void registerBlockModels(RegisterBlockModelsEvent event) {
-        BuiltInBlockModels.ModelFactory factory = (_, state) -> new IOOverlayBlockModel.Unbaked(state, Optional.empty());
+        BuiltInBlockModels.ModelFactory factory = (_, state) -> new IOConfigRealLevelWorkaroundBlockModel.Unbaked(state, Optional.empty());
 
         for (var block : EIOBlocks.BLOCKS.getEntries()) {
             if (block.get() instanceof MachineBlock<?>) {

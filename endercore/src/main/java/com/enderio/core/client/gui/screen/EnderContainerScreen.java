@@ -96,7 +96,7 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
             for (var overlay : overlayWidgets.get(layer)) {
                 if (!(overlay instanceof AbstractWidget widget) || widget.isActive()) {
                     if (overlay.isMouseOver(mouseX, mouseY)) {
-                        return;
+                        return;]
                     }
                 }
             }
