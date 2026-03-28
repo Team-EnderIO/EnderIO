@@ -93,12 +93,12 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
     @Override
     public ItemStorageLayout createInventoryLayout() {
         return ItemStorageLayout.builder()
-            .slot(CAPACITOR, MachineSlotTemplates.capacitor())
-            .slot(INPUT, SlotTemplates.input(), b -> b
+            .add(CAPACITOR, MachineSlotTemplates.capacitor())
+            .add(INPUT, SlotTemplates.input(), b -> b
                 .filter(this::isValidInput))
-            .slot(PAINT, SlotTemplates.input(), b -> b
+            .add(PAINT, SlotTemplates.input(), b -> b
                 .filter(this::isValidPaint))
-            .slot(OUTPUT, SlotTemplates.output())
+            .add(OUTPUT, SlotTemplates.output())
             .build();
     }
 

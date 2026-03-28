@@ -119,12 +119,12 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     @Override
     protected @Nullable ItemStorageLayout createInventoryLayout() {
         return ItemStorageLayout.builder()
-            .slots(TOOLS, SlotTemplates.input(), b -> b
+            .add(TOOLS, SlotTemplates.input(), b -> b
                 .filter(this::validToolForSlot))
-            .slots(AREAS, SlotTemplates.input())
-            .slots(BONEMEAL, SlotTemplates.input(), b -> b
+            .add(AREAS, SlotTemplates.input())
+            .add(BONEMEAL, SlotTemplates.input(), b -> b
                 .filter((_, itemResource) -> itemResource.is(Tags.Items.FERTILIZERS)))
-            .slots(OUTPUT, SlotTemplates.output())
+            .add(OUTPUT, SlotTemplates.output())
             .build();
     }
 

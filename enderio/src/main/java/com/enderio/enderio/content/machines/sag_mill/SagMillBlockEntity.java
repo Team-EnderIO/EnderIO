@@ -15,7 +15,6 @@ import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
 import com.enderio.enderio.foundation.inventory.MachineSlotTemplates;
 import com.enderio.enderio.foundation.recipe.MachineRecipeCaches;
-import com.enderio.enderio.foundation.state.MachineStateUpdater;
 import com.enderio.enderio.foundation.task.PoweredCraftingMachineTask;
 import com.enderio.enderio.foundation.task.host.CraftingMachineTaskHost;
 import com.enderio.enderio.init.EIOBlockEntities;
@@ -103,12 +102,12 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
     @Override
     public ItemStorageLayout createInventoryLayout() {
         return ItemStorageLayout.builder()
-            .slot(INPUT, SlotTemplates.input(), b -> b
+            .add(INPUT, SlotTemplates.input(), b -> b
                 .filter(this::isValidInput))
-            .slots(OUTPUT, SlotTemplates.output())
-            .slot(GRINDING_BALL, SlotTemplates.input(), b -> b
+            .add(OUTPUT, SlotTemplates.output())
+            .add(GRINDING_BALL, SlotTemplates.input(), b -> b
                 .filter((_, itemResource) -> itemResource.typeHolder().getData(GrindingBallData.DATA_MAP_TYPE) != null))
-            .slot(CAPACITOR, MachineSlotTemplates.capacitor())
+            .add(CAPACITOR, MachineSlotTemplates.capacitor())
             .build();
     }
 

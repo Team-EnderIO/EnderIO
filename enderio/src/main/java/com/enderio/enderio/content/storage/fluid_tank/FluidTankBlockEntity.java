@@ -98,7 +98,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
         super(type, worldPosition, blockState, true);
 
         var fluidStorageLayout = FluidStorageLayout.builder()
-            .slot(TANK_SLOT, SlotTemplates.storage(), slot -> slot.capacity((_) -> this.getCapacity()))
+            .add(TANK_SLOT, SlotTemplates.storage(), slot -> slot.capacity((_) -> this.getCapacity()))
             .build();
 
         fluidStorage = new FluidStorage(fluidStorageLayout) {
@@ -205,12 +205,12 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
     @Override
     public ItemStorageLayout createInventoryLayout() {
         return ItemStorageLayout.builder()
-            .slot(FLUID_FILL_INPUT, SlotTemplates.input(), b -> b
+            .add(FLUID_FILL_INPUT, SlotTemplates.input(), b -> b
                 .filter((_, itemResource) -> acceptItemFill(itemResource)))
-            .slot(FLUID_FILL_OUTPUT, SlotTemplates.output())
-            .slot(FLUID_DRAIN_INPUT, SlotTemplates.input(), b -> b
+            .add(FLUID_FILL_OUTPUT, SlotTemplates.output())
+            .add(FLUID_DRAIN_INPUT, SlotTemplates.input(), b -> b
                 .filter((_, itemResource) -> acceptItemDrain(itemResource)))
-            .slot(FLUID_DRAIN_OUTPUT, SlotTemplates.output())
+            .add(FLUID_DRAIN_OUTPUT, SlotTemplates.output())
             .build();
     }
 

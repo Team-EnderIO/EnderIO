@@ -71,7 +71,7 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
 
     public static final FluidStorageLayout FLUID_STORAGE_LAYOUT =
         FluidStorageLayout.builder()
-            .slot(TANK, SlotTemplates.storage(), slot -> slot.capacity(CAPACITY))
+            .add(TANK, SlotTemplates.storage(), slot -> slot.capacity(CAPACITY))
             .build();
 
     private final FluidStorage fluidStorage;
@@ -179,10 +179,10 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
     @Override
     public ItemStorageLayout createInventoryLayout() {
         return ItemStorageLayout.builder()
-            .slot(CAPACITOR, MachineSlotTemplates.capacitor())
-            .slot(FLUID_FILL_INPUT, SlotTemplates.input(), b -> b
+            .add(CAPACITOR, MachineSlotTemplates.capacitor())
+            .add(FLUID_FILL_INPUT, SlotTemplates.input(), b -> b
                 .filter((_, itemResource) -> acceptItemDrain(itemResource.toStack())))
-            .slot(FLUID_FILL_OUTPUT, SlotTemplates.output())
+            .add(FLUID_FILL_OUTPUT, SlotTemplates.output())
             .build();
     }
 

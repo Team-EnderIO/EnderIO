@@ -72,7 +72,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
 
     public static final FluidStorageLayout FLUID_STORAGE_LAYOUT =
          FluidStorageLayout.builder()
-            .slot(TANK_SLOT, SlotTemplates.input(), slot -> slot
+            .add(TANK_SLOT, SlotTemplates.input(), slot -> slot
                 .capacity(TANK_CAPACITY)
                 .filter((_, resource) -> resource.is(Tags.Fluids.EXPERIENCE)))
             .build();
@@ -153,13 +153,13 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
         // TODO: Support for non-soul vial storages.
         return ItemStorageLayout
             .builder()
-            .slot(INPUT_SOUL, SlotTemplates.input(),
+            .add(INPUT_SOUL, SlotTemplates.input(),
                 b -> b.capacity(1).filter((_, itemResource) -> itemResource.is(EIOItems.SOUL_VIAL.get()) && SoulBoundUtils.isBound(itemResource.toStack())))
-            .slot(INPUT_OTHER, SlotTemplates.input(), b -> b
+            .add(INPUT_OTHER, SlotTemplates.input(), b -> b
                 .capacity(1)
                 .filter(this::isValidInput))
-            .slots(OUTPUT, SlotTemplates.output())
-            .slot(CAPACITOR, MachineSlotTemplates.capacitor())
+            .add(OUTPUT, SlotTemplates.output())
+            .add(CAPACITOR, MachineSlotTemplates.capacitor())
             .build();
     }
 

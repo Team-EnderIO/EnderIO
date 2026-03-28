@@ -64,8 +64,8 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
 
     public static final FluidStorageLayout FLUID_STORAGE_LAYOUT =
         FluidStorageLayout.builder()
-            .slot(INPUT_TANK, SlotTemplates.storage(), slot -> slot.capacity(TANK_CAPACITY))
-            .slot(OUTPUT_TANK, SlotTemplates.storage(), slot -> slot.capacity(TANK_CAPACITY))
+            .add(INPUT_TANK, SlotTemplates.storage(), slot -> slot.capacity(TANK_CAPACITY))
+            .add(OUTPUT_TANK, SlotTemplates.storage(), slot -> slot.capacity(TANK_CAPACITY))
             .build();
 
     private final FluidStorage fluidStorage;
@@ -128,7 +128,7 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
     @Override
     public @Nullable ItemStorageLayout createInventoryLayout() {
         return ItemStorageLayout.builder()
-            .slots(REAGENTS, SlotTemplates.input(), b -> b
+            .add(REAGENTS, SlotTemplates.input(), b -> b
                 .filter(this::acceptSlotInput))
             .build();
     }

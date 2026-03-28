@@ -64,10 +64,10 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
     @Override
     public ItemStorageLayout createInventoryLayout() {
         return ItemStorageLayout.builder()
-            .slot(FUEL, SlotTemplates.input(), b -> b
+            .add(FUEL, SlotTemplates.input(), b -> b
                 .filter((_, resource) -> resource.toStack().getBurnTime(RecipeType.SMELTING, level.fuelValues()) > 0
                     && resource.toStack().getCraftingRemainder() == null))
-            .slot(CAPACITOR, MachineSlotTemplates.capacitor())
+            .add(CAPACITOR, MachineSlotTemplates.capacitor())
             .build();
     }
 

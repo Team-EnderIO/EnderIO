@@ -86,7 +86,7 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements Range
                 EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE);
 
         var fluidStorageLayout = FluidStorageLayout.builder()
-            .slot(TANK_SLOT, SlotTemplates.output(), slot -> slot
+            .add(TANK_SLOT, SlotTemplates.output(), slot -> slot
                 .capacity(CAPACITY)
                 .filter((_, resource) -> type.isSame(resource.getFluid())))
             .build();;
@@ -126,7 +126,7 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements Range
     @Override
     public @Nullable ItemStorageLayout createInventoryLayout() {
         return ItemStorageLayout.builder()
-            .slot(CAPACITOR, MachineSlotTemplates.capacitor())
+            .add(CAPACITOR, MachineSlotTemplates.capacitor())
             .build();
     }
 

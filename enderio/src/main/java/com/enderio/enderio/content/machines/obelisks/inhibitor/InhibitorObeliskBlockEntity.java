@@ -52,7 +52,7 @@ public class InhibitorObeliskBlockEntity extends ObeliskBlockEntity<InhibitorObe
     @Override
     public @Nullable ItemStorageLayout createInventoryLayout() {
         return ItemStorageLayout.builder()
-            .slot(CAPACITOR, MachineSlotTemplates.capacitor())
+            .add(CAPACITOR, MachineSlotTemplates.capacitor())
             .build();
     }
 

@@ -234,13 +234,13 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     @Override
     public ItemStorageLayout createInventoryLayout() {
         return ItemStorageLayout.builder()
-            .slot(CAPACITOR, MachineSlotTemplates.capacitor())
-            .slot(INPUT, SlotTemplates.input(), b ->
+            .add(CAPACITOR, MachineSlotTemplates.capacitor())
+            .add(INPUT, SlotTemplates.input(), b ->
                 b.filter((_, itemResource) -> {
                     var soulHandler = itemResource.toStack().getCapability(EnderIOCapabilities.SOUL_HANDLER_ITEM);
                     return soulHandler != null && soulHandler.tryInsertSoul(getSoulForCapture(), true);
                 }))
-            .slot(OUTPUT, SlotTemplates.output())
+            .add(OUTPUT, SlotTemplates.output())
             .build();
     }
 

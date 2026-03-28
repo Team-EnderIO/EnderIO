@@ -25,7 +25,6 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ShearsItem;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
@@ -94,17 +93,17 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
     @Override
     public ItemStorageLayout createInventoryLayout() {
         return ItemStorageLayout.builder()
-            .slots(INPUTS, SlotTemplates.input(), b -> b
+            .add(INPUTS, SlotTemplates.input(), b -> b
                 .capacity(1)
                 .filter(this::isValidInput))
-            .slot(AXE, SlotTemplates.input(), b -> b
+            .add(AXE, SlotTemplates.input(), b -> b
                 .capacity(1)
                 .filter(this::validAxe))
-            .slot(SHEARS, SlotTemplates.input(), b -> b
+            .add(SHEARS, SlotTemplates.input(), b -> b
                 .capacity(1)
                 .filter((_, itemResource) -> itemResource.getItem() instanceof ShearsItem))
-            .slot(OUTPUT, SlotTemplates.output())
-            .slot(CAPACITOR, MachineSlotTemplates.capacitor())
+            .add(OUTPUT, SlotTemplates.output())
+            .add(CAPACITOR, MachineSlotTemplates.capacitor())
             .build();
     }
 

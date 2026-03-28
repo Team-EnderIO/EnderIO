@@ -126,9 +126,9 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     @Override
     protected @Nullable ItemStorageLayout createInventoryLayout() {
         return ItemStorageLayout.builder()
-            .slots(INPUTS, SlotTemplates.input(), b -> b.filter(this::acceptSlotInput))
-            .slot(OUTPUT, SlotTemplates.output())
-            .slot(CAPACITOR, MachineSlotTemplates.capacitor())
+            .add(INPUTS, SlotTemplates.input(), b -> b.filter(this::acceptSlotInput))
+            .add(OUTPUT, SlotTemplates.output())
+            .add(CAPACITOR, MachineSlotTemplates.capacitor())
             .build();
     }
 

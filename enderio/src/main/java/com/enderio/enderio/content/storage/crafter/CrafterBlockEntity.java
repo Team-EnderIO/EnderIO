@@ -91,11 +91,11 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
     @Override
     public ItemStorageLayout createInventoryLayout() {
         return ItemStorageLayout.builder()
-            .slot(CAPACITOR, MachineSlotTemplates.capacitor())
-            .slots(INPUT, singleItemInput(), b -> b.filter(this::acceptSlotInput))
-            .slot(OUTPUT, SlotTemplates.output())
-            .slots(GHOST, singleItemInput())
-            .slot(PREVIEW, SlotTemplates.inaccessible())
+            .add(CAPACITOR, MachineSlotTemplates.capacitor())
+            .add(INPUT, singleItemInput(), b -> b.filter(this::acceptSlotInput))
+            .add(OUTPUT, SlotTemplates.output())
+            .add(GHOST, singleItemInput())
+            .add(PREVIEW, SlotTemplates.inaccessible())
             .build();
     }
 

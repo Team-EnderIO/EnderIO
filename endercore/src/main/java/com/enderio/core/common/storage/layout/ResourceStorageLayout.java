@@ -79,18 +79,18 @@ public abstract class ResourceStorageLayout<T extends Resource> {
             return new SlotBuilder<>();
         }
 
-        public final TBuilder slot(SingleResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T>> slotBuilder) {
+        public final TBuilder add(SingleResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T>> slotBuilder) {
             slots.add(slotBuilder.apply(createSlotBuilder()).build());
             keyMap.put(key, List.of(slots.size() - 1));
             return self();
         }
 
         // Support use of a 'template' and override
-        public final TBuilder slot(SingleResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T>> template, UnaryOperator<SlotBuilder<T>> slotBuilder) {
-            return slot(key, b -> slotBuilder.apply(template.apply(b)));
+        public final TBuilder add(SingleResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T>> template, UnaryOperator<SlotBuilder<T>> slotBuilder) {
+            return add(key, b -> slotBuilder.apply(template.apply(b)));
         }
 
-        protected final TBuilder slots(MultiResourceSlotKey<T> key, Runnable slotCreator) {
+        protected final TBuilder add(MultiResourceSlotKey<T> key, Runnable slotCreator) {
             List<Integer> indices = new ArrayList<>(key.count());
             for (int i = 0; i < key.count(); i++) {
                 slotCreator.run();
@@ -102,13 +102,13 @@ public abstract class ResourceStorageLayout<T extends Resource> {
             return self();
         }
 
-        public final TBuilder slots(MultiResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T>> slotBuilder) {
-            return slots(key, () -> slots.add(slotBuilder.apply(createSlotBuilder()).build()));
+        public final TBuilder add(MultiResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T>> slotBuilder) {
+            return add(key, () -> slots.add(slotBuilder.apply(createSlotBuilder()).build()));
         }
 
         // Support use of a 'template' and override
-        public final TBuilder slots(MultiResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T>> template, UnaryOperator<SlotBuilder<T>> slotBuilder) {
-            return slots(key, b -> slotBuilder.apply(template.apply(b)));
+        public final TBuilder add(MultiResourceSlotKey<T> key, UnaryOperator<SlotBuilder<T>> template, UnaryOperator<SlotBuilder<T>> slotBuilder) {
+            return add(key, b -> slotBuilder.apply(template.apply(b)));
         }
 
         public static final class SlotBuilder<T extends Resource> {

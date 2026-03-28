@@ -6,7 +6,6 @@ import com.enderio.core.common.storage.layout.ItemStorageLayout;
 import com.enderio.core.common.storage.layout.SlotTemplates;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.foundation.MachineNBTKeys;
-import com.enderio.enderio.foundation.io.DumbIOConfigurable;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIORecipeTypes;
 import net.minecraft.core.BlockPos;
@@ -75,12 +74,12 @@ public class EnchanterBlockEntity extends EnderBlockEntity implements MenuProvid
 
     private ItemStorageLayout getInventoryLayout() {
         return ItemStorageLayout.builder()
-            .slot(BOOK, SlotTemplates.input(), b -> b
+            .add(BOOK, SlotTemplates.input(), b -> b
                 .filter((_, itemResource) -> itemResource.is(Items.WRITABLE_BOOK)))
-            .slot(CATALYST, SlotTemplates.input())
-            .slot(LAPIS, SlotTemplates.input(), b -> b
+            .add(CATALYST, SlotTemplates.input())
+            .add(LAPIS, SlotTemplates.input(), b -> b
                 .filter((_, itemResource) -> itemResource.is(Tags.Items.GEMS_LAPIS)))
-            .slot(OUTPUT, SlotTemplates.output())
+            .add(OUTPUT, SlotTemplates.output())
             .build();
     }
 

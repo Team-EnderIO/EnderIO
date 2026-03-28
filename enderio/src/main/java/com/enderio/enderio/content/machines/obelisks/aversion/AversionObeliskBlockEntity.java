@@ -49,9 +49,9 @@ public class AversionObeliskBlockEntity extends ObeliskBlockEntity<AversionObeli
     @Override
     public @Nullable ItemStorageLayout createInventoryLayout() {
         return ItemStorageLayout.builder()
-            .slot(FILTER, SlotTemplates.input(), b -> b
+            .add(FILTER, SlotTemplates.input(), b -> b
                 .filter((_, itemResource) -> itemResource.toStack().getCapability(EnderIOCapabilities.SOUL_FILTER) != null))
-            .slot(CAPACITOR, MachineSlotTemplates.capacitor())
+            .add(CAPACITOR, MachineSlotTemplates.capacitor())
             .build();
     }
 

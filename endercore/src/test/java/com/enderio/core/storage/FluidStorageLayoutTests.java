@@ -12,12 +12,12 @@ public class FluidStorageLayoutTests {
     @Test
     public void ensureNoSlotCapacityThrowsOnSingleSlot() {
         var key = new SingleResourceSlotKey<FluidResource>();
-        Assertions.assertThrows(IllegalStateException.class, () -> FluidStorageLayout.<Void>builder().slot(key, SlotTemplates.input()).build());
+        Assertions.assertThrows(IllegalStateException.class, () -> FluidStorageLayout.<Void>builder().add(key, SlotTemplates.input()).build());
     }
 
     @Test
     public void ensureNoSlotCapacityThrowsOnMultipleSlots() {
         var key = new MultiResourceSlotKey<FluidResource>(3);
-        Assertions.assertThrows(IllegalStateException.class, () -> FluidStorageLayout.<Void>builder().slots(key, SlotTemplates.input()).build());
+        Assertions.assertThrows(IllegalStateException.class, () -> FluidStorageLayout.<Void>builder().add(key, SlotTemplates.input()).build());
     }
 }

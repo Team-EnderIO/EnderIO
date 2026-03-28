@@ -33,7 +33,7 @@ public class InternalTankTasksTests {
     // Helper method to create a test fluid storage
     private FluidStorage createFluidStorage(int capacity) {
         FluidStorageLayout layout = FluidStorageLayout.builder()
-            .slot(TANK_SLOT, SlotTemplates.storage(), slot -> slot.capacity(capacity))
+            .add(TANK_SLOT, SlotTemplates.storage(), slot -> slot.capacity(capacity))
             .build();
         return new FluidStorage(layout);
     }
@@ -41,8 +41,8 @@ public class InternalTankTasksTests {
     // Helper method to create a test item storage
     private ItemStorage createItemStorage() {
         ItemStorageLayout layout = ItemStorageLayout.builder()
-            .slot(INPUT_SLOT, SlotTemplates.storage(), slot -> slot.capacity(64))
-            .slot(OUTPUT_SLOT, SlotTemplates.storage(), slot -> slot.capacity(64))
+            .add(INPUT_SLOT, SlotTemplates.storage(), slot -> slot.capacity(64))
+            .add(OUTPUT_SLOT, SlotTemplates.storage(), slot -> slot.capacity(64))
             .build();
         return new ItemStorage(layout);
     }

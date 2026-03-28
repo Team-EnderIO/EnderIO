@@ -41,7 +41,7 @@ public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb>
 
     public static final FluidStorageLayout FLUID_STORAGE_LAYOUT =
         FluidStorageLayout.builder()
-            .slot(TANK, SlotTemplates.storage(), slot -> slot.capacity(CAPACITY))
+            .add(TANK, SlotTemplates.storage(), slot -> slot.capacity(CAPACITY))
             .build();
 
     private final FluidStorage fluidStorage;

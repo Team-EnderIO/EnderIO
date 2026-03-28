@@ -36,8 +36,8 @@ public class VacuumChestBlockEntity extends VacuumMachineBlockEntity<ItemEntity>
     @Override
     public ItemStorageLayout createInventoryLayout() {
         return ItemStorageLayout.builder()
-            .slots(INVENTORY, SlotTemplates.storage())
-            .slot(FILTER, SlotTemplates.input(), b -> b
+            .add(INVENTORY, SlotTemplates.storage())
+            .add(FILTER, SlotTemplates.input(), b -> b
                 .filter((_, itemResource) -> itemResource.toStack().getCapability(EnderIOCapabilities.ITEM_FILTER) != null))
             .build();
     }

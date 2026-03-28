@@ -91,7 +91,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
                 EnergyIOMode.Output, CAPACITY, FixedScalable.ZERO);
 
         var fluidStorageLayout = FluidStorageLayout.builder()
-            .slot(TANK, SlotTemplates.storage(), slot -> slot
+            .add(TANK, SlotTemplates.storage(), slot -> slot
                 .capacity(FLUID_CAPACITY)
                 .filter((_, resource) -> isFluidValid(resource.toStack(1))))
             .build();
@@ -126,7 +126,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     @Override
     public ItemStorageLayout createInventoryLayout() {
         return ItemStorageLayout.builder()
-            .slot(CAPACITOR, MachineSlotTemplates.capacitor())
+            .add(CAPACITOR, MachineSlotTemplates.capacitor())
             .build();
     }
 
