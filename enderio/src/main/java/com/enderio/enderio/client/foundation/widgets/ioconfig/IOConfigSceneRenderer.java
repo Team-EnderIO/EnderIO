@@ -1,12 +1,11 @@
 package com.enderio.enderio.client.foundation.widgets.ioconfig;
 
 import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.client.EIOPipelineModifiers;
 import com.enderio.enderio.client.foundation.model.ModelRenderUtil;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.pipeline.ColorTargetState;
-import com.mojang.blaze3d.pipeline.DepthStencilState;
-import com.mojang.blaze3d.platform.CompareOp;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
@@ -42,25 +41,6 @@ import java.util.SequencedMap;
 
 @EventBusSubscriber
 public class IOConfigSceneRenderer extends PictureInPictureRenderer<IOConfigSceneRenderState> {
-
-    public static final ResourceKey<PipelineModifier> FORCE_TRANSLUCENT = ResourceKey.create(PipelineModifier.MODIFIERS_KEY, EnderIO.id("force_translucent"));
-
-    @SubscribeEvent
-    public static void onRegisterModifiers(RegisterPipelineModifiersEvent event)
-    {
-        event.register(FORCE_TRANSLUCENT, (pipeline, name) ->
-        {
-            if (pipeline == RenderPipelines.ENTITY_CUTOUT || pipeline == RenderPipelines.ENTITY_CUTOUT_CULL || pipeline == RenderPipelines.ENTITY_SOLID)
-            {
-                return pipeline.toBuilder()
-                    .withLocation(name)
-                    .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
-                    .build();
-            }
-            return pipeline;
-        });
-    }
-
     private static final Identifier SELECTED_ICON = EnderIO.id("block/overlay/selected_face");
 
     private final FeatureRenderDispatcher solidFeatureRenderDispatcher;
@@ -110,24 +90,28 @@ public class IOConfigSceneRenderer extends PictureInPictureRenderer<IOConfigScen
 
         poseStack.mulPose(state.viewMatrix());
 
-        Minecraft.getInstance().gameRenderer.getLighting().setupFor(Lighting.Entry.ITEMS_FLAT);
+        Minecraft.getInstance().gameRenderer.getLighting().setupFor(Lighting.Entry.ITEMS_3D);
 
-        RenderSystem.pushPipelineModifier(FORCE_TRANSLUCENT);
-
+        // Render neighbors transparently, if enabled
         if (state.shouldRenderNeighbors()) {
+            RenderSystem.pushPipelineModifier(EIOPipelineModifiers.FORCE_TRANSLUCENT);
+
             for (var block : state.neighborBlocks()) {
                 renderBlock(poseStack, ghostCollector, block);
             }
+
+            ghostFeatureRenderDispatcher.renderAllFeatures();
+            ghostBufferSource.endBatch();
+
+            RenderSystem.popPipelineModifier();
+
+            // Flush the depth texture now, all primary blocks should render over the top if required.
+            // Note; we could consider seeing if we can sort in distance from the camera to do 'true' transparency?
+            var device = RenderSystem.getDevice();
+            device.createCommandEncoder().clearDepthTexture(this.depthTexture, 1f);
         }
 
-        ghostFeatureRenderDispatcher.renderAllFeatures();
-        ghostBufferSource.endBatch();
-
-        RenderSystem.popPipelineModifier();
-
-        var device = RenderSystem.getDevice();
-        device.createCommandEncoder().clearDepthTexture(this.depthTexture, 1f);
-
+        // Now render the primary blocks
         for (var block : state.primaryBlocks()) {
             renderBlock(poseStack, solidCollector, block);
         }
@@ -186,15 +170,10 @@ public class IOConfigSceneRenderer extends PictureInPictureRenderer<IOConfigScen
     }
 
     // Transparency hack
-
     private static class GhostBufferSource extends MultiBufferSource.BufferSource {
 
         public GhostBufferSource(MultiBufferSource.BufferSource bufferSource) {
             super(bufferSource.sharedBuffer, bufferSource.fixedBuffers);
-        }
-
-        protected GhostBufferSource(ByteBufferBuilder sharedBuffer, SequencedMap<RenderType, ByteBufferBuilder> fixedBuffers) {
-            super(sharedBuffer, fixedBuffers);
         }
 
         @Override
@@ -210,13 +189,13 @@ public class IOConfigSceneRenderer extends PictureInPictureRenderer<IOConfigScen
 
             @Override
             public VertexConsumer setColor(int r, int g, int b, int a) {
-                super.setColor(r, g, b, /*MachinesConfig.CLIENT.IO_CONFIG_NEIGHBOUR_TRANSPARENCY.get().floatValue()*/ 0.7f);
+                super.setColor(r, g, b, MachinesConfig.CLIENT.IO_CONFIG_NEIGHBOUR_TRANSPARENCY.get().floatValue());
                 return this;
             }
 
             @Override
             public VertexConsumer setColor(int packedColor) {
-                super.setColor(ARGB.color(/*MachinesConfig.CLIENT.IO_CONFIG_NEIGHBOUR_TRANSPARENCY.get().floatValue()*/ 0.7f, packedColor));
+                super.setColor(ARGB.color(MachinesConfig.CLIENT.IO_CONFIG_NEIGHBOUR_TRANSPARENCY.get().floatValue(), packedColor));
                 return this;
             }
         }

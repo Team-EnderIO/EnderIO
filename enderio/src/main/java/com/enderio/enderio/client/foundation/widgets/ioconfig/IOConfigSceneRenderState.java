@@ -13,13 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public record IOConfigSceneRenderState(
-    int x0, // The left X
-    int x1, // The right X
-    int y0, // The top Y
-    int y1, // The bottom Y
-    float scale, // The scale factor when drawing to the picture
-    @Nullable ScreenRectangle scissorArea, // The rendering area
-    @Nullable ScreenRectangle bounds, // The bounds of the element
+    int x0,
+    int x1,
+    int y0,
+    int y1,
+    float scale,
+    @Nullable ScreenRectangle scissorArea,
+    @Nullable ScreenRectangle bounds,
     Matrix4f viewMatrix,
     List<IOConfigSceneBlock> primaryBlocks,
     List<IOConfigSceneBlock> neighborBlocks,
@@ -30,10 +30,6 @@ public record IOConfigSceneRenderState(
     public static IOConfigSceneRenderState create(ClientLevel level, int x, int y, int width, int height, @Nullable ScreenRectangle scissorArea,
         Matrix4f viewMatrix, List<BlockPos> primaryBlockPositions, List<BlockPos> neighborBlockPositions, boolean shouldRenderNeighbors,
         @Nullable Pair<BlockPos, Direction> selection) {
-
-        if (primaryBlockPositions.isEmpty()) {
-            throw new IllegalArgumentException("You must provide at least one primary block to the renderer.");
-        }
 
         List<IOConfigSceneBlock> primaryBlocks = new ArrayList<>();
         for (BlockPos pos : primaryBlockPositions) {

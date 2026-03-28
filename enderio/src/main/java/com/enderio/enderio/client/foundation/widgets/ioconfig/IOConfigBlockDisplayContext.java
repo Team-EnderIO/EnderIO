@@ -4,6 +4,10 @@ import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.client.renderer.block.model.BlockDisplayContext;
 import net.minecraft.core.BlockPos;
 
+/**
+ * Provides the level and position of the block for rendering in the IO Config widget.
+ * Hopefully there'll be a solution added to NeoForge to handle this compatibly across mods.
+ */
 public class IOConfigBlockDisplayContext extends BlockDisplayContext {
     private final BlockAndTintGetter realLevel;
     private final BlockPos pos;
