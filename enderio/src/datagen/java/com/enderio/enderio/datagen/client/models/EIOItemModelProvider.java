@@ -9,6 +9,9 @@ import com.enderio.enderio.client.foundation.model.item.IsSoulBoundItemProperty;
 import com.enderio.enderio.content.conduits.facades.ConduitFacadeItem;
 import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
 import com.enderio.enderio.content.fun.EnderiosItem;
+import com.enderio.enderio.content.paint.block.PaintedFenceBlock;
+import com.enderio.enderio.content.paint.block.PaintedStairBlock;
+import com.enderio.enderio.content.paint.block.PaintedWallBlock;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOFluids;
 import com.enderio.enderio.init.EIOItems;
@@ -21,6 +24,7 @@ import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.resources.model.sprite.Material;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
@@ -28,6 +32,8 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.WallSide;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.client.model.item.DynamicFluidContainerModel;
 import net.neoforged.neoforge.common.NeoForgeMod;
@@ -218,7 +224,20 @@ public class EIOItemModelProvider extends ModelProvider {
         fluidTank(itemModels, EIOBlocks.PRESSURIZED_FLUID_TANK.get());
 
         for (var painted : EIOBlocks.PAINTED_BLOCKS) {
-            itemModels.itemModelOutput.accept(painted.key().asItem(), new PaintedItemModel.Unbaked(painted.left().get()));
+            BlockState block = painted.left().get().defaultBlockState();
+            if (block.getBlock() instanceof PaintedStairBlock) {
+                block = block.setValue(PaintedStairBlock.FACING, Direction.WEST);
+            }
+
+            if (block.getBlock() instanceof PaintedWallBlock) {
+                block = block.setValue(PaintedWallBlock.UP, true).setValue(PaintedWallBlock.NORTH, WallSide.LOW).setValue(PaintedWallBlock.SOUTH, WallSide.LOW);
+            }
+
+            if (block.getBlock() instanceof PaintedFenceBlock) {
+                block = block.setValue(PaintedFenceBlock.NORTH, true).setValue(PaintedFenceBlock.SOUTH, true);
+            }
+
+            itemModels.itemModelOutput.accept(painted.key().asItem(), new PaintedItemModel.Unbaked(block));
         }
     }
 

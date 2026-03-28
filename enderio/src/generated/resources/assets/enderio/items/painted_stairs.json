@@ -1,6 +1,14 @@
 {
   "model": {
     "type": "enderio:painted",
-    "model": "enderio:painted_stairs"
+    "model": {
+      "Name": "enderio:painted_stairs",
+      "Properties": {
+        "facing": "west",
+        "half": "bottom",
+        "shape": "straight",
+        "waterlogged": "false"
+      }
+    }
   }
 }

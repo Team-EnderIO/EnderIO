@@ -20,7 +20,6 @@ import net.minecraft.client.resources.model.cuboid.ItemTransforms;
 import net.minecraft.client.resources.model.geometry.BakedQuad;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.ItemOwner;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -60,6 +59,10 @@ public class PaintedItemModel implements ItemModel {
         ItemDisplayContext itemDisplayContext, @Nullable ClientLevel clientLevel, @Nullable ItemOwner itemOwner, int i) {
 
         var data = itemStack.getComponents().get(EIODataComponents.BLOCK_PAINT);
+
+        if (data == null) {
+            return;
+        }
 
         itemStackRenderState.appendModelIdentityElement(this);
         itemStackRenderState.appendModelIdentityElement(data.paint());
@@ -174,9 +177,9 @@ public class PaintedItemModel implements ItemModel {
     public record ModelState(List<BakedQuad> quads, IntList tints, ModelRenderProperties properties, boolean animated) {}
 
 
-    public record Unbaked(Block model) implements ItemModel.Unbaked {
+    public record Unbaked(BlockState model) implements ItemModel.Unbaked {
         public static final MapCodec<Unbaked> CODEC = RecordCodecBuilder.mapCodec(builder -> builder.group(
-                BuiltInRegistries.BLOCK.byNameCodec().fieldOf("model").forGetter(Unbaked::model))
+                BlockState.CODEC.fieldOf("model").forGetter(Unbaked::model))
             .apply(builder, Unbaked::new));
 
         @Override
@@ -187,7 +190,7 @@ public class PaintedItemModel implements ItemModel {
         @Override
         public ItemModel bake(BakingContext bakingContext, Matrix4fc matrix4fc) {
             ItemTransforms transforms = bakingContext.blockModelBaker().getModel(ModelLocationUtils.getModelLocation(Blocks.GRASS_BLOCK)).getTopTransforms();
-            return new PaintedItemModel(model.defaultBlockState(), transforms);
+            return new PaintedItemModel(model, transforms);
         }
 
         @Override

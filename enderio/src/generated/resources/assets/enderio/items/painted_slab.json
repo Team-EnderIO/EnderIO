@@ -1,6 +1,12 @@
 {
   "model": {
     "type": "enderio:painted",
-    "model": "enderio:painted_slab"
+    "model": {
+      "Name": "enderio:painted_slab",
+      "Properties": {
+        "type": "bottom",
+        "waterlogged": "false"
+      }
+    }
   }
 }

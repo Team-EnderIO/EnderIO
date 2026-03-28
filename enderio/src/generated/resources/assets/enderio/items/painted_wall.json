@@ -1,6 +1,16 @@
 {
   "model": {
     "type": "enderio:painted",
-    "model": "enderio:painted_wall"
+    "model": {
+      "Name": "enderio:painted_wall",
+      "Properties": {
+        "east": "none",
+        "north": "low",
+        "south": "low",
+        "up": "true",
+        "waterlogged": "false",
+        "west": "none"
+      }
+    }
   }
 }

@@ -1,6 +1,8 @@
 {
   "model": {
     "type": "enderio:painted",
-    "model": "enderio:painted_sand"
+    "model": {
+      "Name": "enderio:painted_sand"
+    }
   }
 }

@@ -1,6 +1,11 @@
 {
   "model": {
     "type": "enderio:painted",
-    "model": "enderio:painted_wooden_pressure_plate"
+    "model": {
+      "Name": "enderio:painted_wooden_pressure_plate",
+      "Properties": {
+        "powered": "false"
+      }
+    }
   }
 }

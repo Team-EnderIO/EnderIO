@@ -1,6 +1,8 @@
 {
   "model": {
     "type": "enderio:painted",
-    "model": "enderio:painted_redstone_block"
+    "model": {
+      "Name": "enderio:painted_redstone_block"
+    }
   }
 }
