@@ -60,14 +60,6 @@ import java.util.SequencedMap;
  * Definition  of {@link GhostBuffers}, {@link GhostRenderLayer} and initBuffers method are taken from Patchouli (License information: <a href="https://github.com/VazkiiMods/Patchouli">here</a>)
  */
 public class IOConfigOverlay extends BaseOverlay {
-
-    private static final Quaternionf ROT_180_Z = Axis.ZP.rotation((float) Math.PI);
-    private static final Vec3 RAY_ORIGIN = new Vec3(1.5, 1.5, 1.5);
-    private static final Vec3 RAY_START = new Vec3(1.5, 1.5, -1);
-    private static final Vec3 RAY_END = new Vec3(1.5, 1.5, 3);
-    private static final BlockPos POS = new BlockPos(1, 1, 1);
-    private static final int Z_OFFSET = 100;
-    private static final int OVERLAY_Z_OFFSET = 500;
     private static final Identifier IO_CONFIG_OVERLAY = EnderIO.id("buttons/io_config_overlay");
     private static final Identifier SELECTED_ICON = EnderIO.id("block/overlay/selected_face");
     private static final Minecraft MINECRAFT = Minecraft.getInstance();
@@ -135,11 +127,6 @@ public class IOConfigOverlay extends BaseOverlay {
     }
 
     @Override
-    public int getAdditionalZOffset() {
-        return OVERLAY_Z_OFFSET;
-    }
-
-    @Override
     public Object getValueForRestore() {
         return new RestoreData(this.visible, camera.yaw(), camera.pitch(), camera.scale());
     }
@@ -171,32 +158,36 @@ public class IOConfigOverlay extends BaseOverlay {
 //        solidBuffers = new SolidBuffers(fallback, solidLayers);
     }
 
-    private static Vec3 transform(Vec3 vec, Matrix4f transform) {
-        // Move vector to a (0,0,0) origin as the transformation matrix expects
-        Vector4f vec4 = new Vector4f((float) (vec.x - RAY_ORIGIN.x), (float) (vec.y - RAY_ORIGIN.y),
-                (float) (vec.z - RAY_ORIGIN.z), 1F);
-        // Apply the transformation matrix
-        vec4.mul(transform);
-        // Move transformed vector back to the actual origin
-        return new Vec3(vec4.x() + RAY_ORIGIN.x, vec4.y() + RAY_ORIGIN.y, vec4.z() + RAY_ORIGIN.z);
+    private Ray createRay(float x, float y) {
+        Matrix4f invView = new Matrix4f(camera.viewMatrix()).invert();
+
+        // Determine mouse coordinate in-world
+        var viewPoint = new Vector4f(x, y, 0, 1);
+        viewPoint.mul(invView);
+
+        var origin = new Vector3f(viewPoint.x, viewPoint.y, viewPoint.z);
+
+        // Determine forward vector
+        var direction = new Vector3f(0, 0, -1);
+        invView.transformDirection(direction).normalize();
+
+        return new Ray(origin, direction);
     }
 
     @Nullable
-    private BlockHitResult raycast(BlockPos pos, BlockState state, float diffX, float diffY, Matrix4f transform) {
-        // Add mouse offset to start and end vectors
-        Vec3 start = RAY_START.add(diffX, diffY, 0);
-        Vec3 end = RAY_END.add(diffX, diffY, 0);
+    private BlockHitResult raycast(BlockPos pos, BlockState state, Ray ray) {
+        // Start .5 blocks behind the point
+        Vector3f start = ray.origin.add(ray.direction().mul(-0.5f, new Vector3f()), new Vector3f());
 
-        // Rotate start and end vectors around the block
-        start = transform(start, transform);
-        end = transform(end, transform);
+        // Travel 3.5 blocks toward the point
+        Vector3f end = ray.origin.add(ray.direction().mul(3.5f, new Vector3f()), new Vector3f());
 
         // Get block's shape and cast a ray through it
         VoxelShape shape = state.getShape(EmptyBlockGetter.INSTANCE, BlockPos.ZERO);
-        Vector3f centerPos = new Vector3f(pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f).sub(worldOrigin);
-        shape = shape.move(centerPos.x(), centerPos.y(), centerPos.z());
-        return shape.clip(start, end, POS);
+        return shape.clip(new Vec3(start.x, start.y, start.z), new Vec3(end.x, end.y, end.z), pos);
     }
+
+    private record Ray(Vector3f origin, Vector3f direction) {}
 
     public void toggleNeighbourVisibility() {
         neighbourVisible = !neighbourVisible;
@@ -237,11 +228,12 @@ public class IOConfigOverlay extends BaseOverlay {
 
             // Determine if we're panning or rotating.
             if (event.hasShiftDown()) {
+                // TODO: Could use a little work...
                 // 16 seems to be reasonable
                 float dragSpeed = 16f;
 
                 Vector3f delta = new Vector3f((float)-dx * dragSpeed, (float)-dy * dragSpeed, 0);
-                var dragDelta = camera.rayTransform().transformPosition(delta);
+                var dragDelta = delta.rotate(camera.blockTransform());
 
                 var sceneOrigin = camera.sceneOrigin();
                 camera.setSceneOrigin(sceneOrigin.add(dragDelta.x, dragDelta.y, dragDelta.z));
@@ -275,96 +267,62 @@ public class IOConfigOverlay extends BaseOverlay {
 
     @Override
     protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
-        if (visible) {
-            graphics.enableScissor(getX(), getY(), getX() + width, getY() + height);
-//            RenderSystem.disableDepthTest();
-            graphics.fill(getX(), getY(), getX() + width, getY() + height, 0xFF000000);
-//            RenderSystem.enableDepthTest();
-
-            float scale = camera.scale();
-
-            // Calculate widget center
-            int centerX = getX() + (width / 2);
-            int centerY = getY() + (height / 2);
-            // Calculate mouse offset from center and scale to the block space
-            float diffX = (mouseX - centerX) / scale;
-            float diffY = (mouseY - centerY) / scale;
-
-            graphics.submitPictureInPictureRenderState(
-                IOConfigSceneRenderState.create(
-                    MINECRAFT.level,
-                    getX(),
-                    getY(),
-                    getWidth(),
-                    getHeight(),
-                    graphics.peekScissorStack(),
-                    this.camera.viewMatrix(),
-                    configurable,
-                    neighbours,
-                    neighbourVisible
-                ));
-
-            // Draw block
-//            renderWorld(graphics, centerX, centerY, blockTransform, a);
-
-            // Ray-cast hit on block shape
-            Map<BlockHitResult, BlockPos> hits = new HashMap<>();
-            configurable.forEach(blockPos -> {
-                BlockState state = MINECRAFT.level.getBlockState(blockPos);
-                BlockHitResult hit = raycast(blockPos, state, diffX, diffY, camera.rayTransform());
-                if (hit != null && hit.getType() != HitResult.Type.MISS) {
-                    hits.put(hit, blockPos);
-                }
-
-            });
-
-            Vec3 eyePosition = transform(RAY_START, camera.rayTransform()).add(worldOrigin.x, worldOrigin.y, worldOrigin.z);
-            selection = hits.entrySet()
-                    .stream()
-                    .min(Comparator.comparingDouble(entry -> entry.getValue().distToCenterSqr(eyePosition))) // find
-                                                                                                             // closest
-                                                                                                             // to eye
-                    .map(closest -> new SelectedFace(closest.getValue(), closest.getKey().getDirection()));
-
-//            renderSelection(graphics, centerX, centerY, blockTransform);
-            renderOverlay(graphics);
-
-            graphics.disableScissor();
-
-            // after scissor to prevent clipping the tooltip
-            renderNeighbourButton(graphics, mouseX, mouseY);
+        if (!visible) {
+            return;
         }
-    }
 
-    private void renderWorld(GuiGraphicsExtractor graphics, int centerX, int centerY, Quaternionf transform,
-            float partialTick) {
-//        Lighting.setupForFlatItems();
-        graphics.pose().pushMatrix();
-//        graphics.pose().translate(centerX, centerY, Z_OFFSET);
-//        graphics.pose().scale(scale, scale, -scale);
-//        graphics.pose().mulPose(transform);
+        graphics.enableScissor(getX(), getY(), getX() + width, getY() + height);
+        graphics.fill(getX(), getY(), getX() + width, getY() + height, 0xFF000000);
 
-        // RenderNeighbours
-        if (neighbourVisible) {
-            for (var neighbour : neighbours) {
-                Vector3f pos = new Vector3f(neighbour.getX() - worldOrigin.x(), neighbour.getY() - worldOrigin.y(),
-                        neighbour.getZ() - worldOrigin.z());
-                ////renderBlock(graphics, neighbour, pos, ghostBuffers, partialTick);
+        // Calculate widget center
+        int centerX = getX() + (width / 2);
+        int centerY = getY() + (height / 2);
+
+        // Calculate mouse offset from center of overlay
+        float adjustedMouseX = (mouseX - centerX);
+        float adjustedMouseY = (mouseY - centerY);
+
+        var ray = createRay(adjustedMouseX, adjustedMouseY);
+
+        // Ray-cast hit on block shape
+        Map<BlockHitResult, BlockPos> hits = new HashMap<>();
+        configurable.forEach(blockPos -> {
+            BlockState state = MINECRAFT.level.getBlockState(blockPos);
+            BlockHitResult hit = raycast(blockPos, state, ray);
+            if (hit != null && hit.getType() != HitResult.Type.MISS) {
+                hits.put(hit, blockPos);
             }
+        });
 
-        }
-        ghostBuffers.endBatch();
+        // Find the hit that is closest to the camera
+        Vec3 eyePosition = camera.getEyePosition();
+        selection = hits.entrySet()
+            .stream()
+            .min(Comparator.comparingDouble(entry -> entry.getValue().distToCenterSqr(eyePosition)))
+            .map(closest -> new SelectedFace(closest.getValue(), closest.getKey().getDirection()));
 
-        // Render configurable
-        for (var configurable : configurable) {
-            Vector3f pos = new Vector3f(configurable.getX() - worldOrigin.x(), configurable.getY() - worldOrigin.y(),
-                    configurable.getZ() - worldOrigin.z());
-            ////renderBlock(graphics, configurable, pos, solidBuffers, partialTick);
-        }
-        solidBuffers.endBatch();
+        // Render the scene
+        graphics.submitPictureInPictureRenderState(
+            IOConfigSceneRenderState.create(
+                MINECRAFT.level,
+                getX(),
+                getY(),
+                getWidth(),
+                getHeight(),
+                graphics.peekScissorStack(),
+                this.camera.viewMatrix(),
+                configurable,
+                neighbours,
+                neighbourVisible
+            ));
 
-        graphics.pose().popMatrix();
-//        Lighting.setupFor3DItems();
+//        renderSelection(graphics, centerX, centerY, blockTransform);
+        renderOverlay(graphics);
+
+        graphics.disableScissor();
+
+        // after scissor to prevent clipping the tooltip
+        renderNeighbourButton(graphics, mouseX, mouseY);
     }
 
     private void renderSelection(GuiGraphicsExtractor graphics, int centerX, int centerY, Quaternionf transform) {
@@ -421,7 +379,6 @@ public class IOConfigOverlay extends BaseOverlay {
                     getY() + height - 4 - MINECRAFT.font.lineHeight - iconBounds.getHeight(), iconBounds.getWidth(),
                     iconBounds.getHeight());
                 graphics.pose().pushMatrix();
-//                graphics.pose().translate(0, 0, OVERLAY_Z_OFFSET); // to ensure that string is drawn on top
                 graphics.text(MINECRAFT.font, map.getComponent(), getX() + 4,
                     getY() + height - 2 - MINECRAFT.font.lineHeight, CommonColors.DARK_GRAY);
                 graphics.pose().popMatrix();

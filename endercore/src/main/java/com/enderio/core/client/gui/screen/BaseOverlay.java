@@ -24,8 +24,4 @@ public abstract class BaseOverlay extends AbstractWidget implements StateRestori
             this.visible = isVisible;
         }
     }
-
-    public int getAdditionalZOffset() {
-        return 0;
-    }
 }
