@@ -2,7 +2,6 @@ package com.enderio.enderio.client.foundation.widgets.ioconfig;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.render.pip.PictureInPictureRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -11,12 +10,8 @@ import net.minecraft.client.renderer.feature.FeatureRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Quaternionf;
 
 public class IOConfigSceneRenderer extends PictureInPictureRenderer<IOConfigSceneRenderState> {
-
-    private static final Quaternionf ROT_180_Z = Axis.ZP.rotation((float) Math.PI);
-
     private final FeatureRenderDispatcher featureRenderDispatcher;
     private final SubmitNodeCollector collector;
 

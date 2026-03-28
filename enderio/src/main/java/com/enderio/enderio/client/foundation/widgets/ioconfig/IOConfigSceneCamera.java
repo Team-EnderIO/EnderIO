@@ -21,7 +21,6 @@ public class IOConfigSceneCamera {
 
     private Quaternionf blockTransform;
     private Matrix4f rayTransform;
-    private IOConfigSceneCameraState state;
     private Matrix4f viewMatrix;
     private boolean isDirty = true;
 
@@ -91,14 +90,6 @@ public class IOConfigSceneCamera {
         return rayTransform;
     }
 
-    public IOConfigSceneCameraState state() {
-        if (isDirty) {
-            recompute();
-        }
-
-        return state;
-    }
-
     public Matrix4f viewMatrix() {
         if (isDirty) {
             recompute();
@@ -128,9 +119,6 @@ public class IOConfigSceneCamera {
         rayTransform.rotate(rotYaw);
         // Rotate around X (pitch) in negative direction
         rayTransform.rotate(rotPitch);
-
-        // Create state
-        state = new IOConfigSceneCameraState(sceneOrigin, scale, blockTransform);
 
         // Create view matrix
         viewMatrix = new Matrix4f();
