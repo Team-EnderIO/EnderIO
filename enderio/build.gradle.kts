@@ -105,7 +105,7 @@ dependencies {
 
     // Jade for conduit addon
     compileOnly(libs.jade)
-//    localRuntime(libs.jade) // TODO: 26.1
+    localRuntime(libs.jade)
 
     //Athena ctm
 //    localRuntime(libs.athena)
