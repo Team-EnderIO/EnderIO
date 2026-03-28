@@ -80,9 +80,6 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
                 }
             }
         }
-
-        // TODO: wat.
-//        extractTooltip(graphics, mouseX, mouseY);
     }
 
     @Override
