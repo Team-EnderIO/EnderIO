@@ -457,8 +457,7 @@ public class EIOBlockStateProvider extends ModelProvider {
     }
 
     private MultiVariant wrapPaintModel(Block paint) {
-        return MultiVariant.of(new PaintBuilder(new PaintedBlockStateModel.Unbaked(
-            BlockModelGenerators.plainVariant(ModelLocationUtils.getModelLocation(paint)).toUnbaked())));
+        return MultiVariant.of(new PaintBuilder(new PaintedBlockStateModel.Unbaked(paint)));
     }
 
     public static class IOModelBuilder extends CustomBlockStateModelBuilder {
@@ -495,7 +494,7 @@ public class EIOBlockStateProvider extends ModelProvider {
 
         @Override
         public CustomBlockStateModelBuilder with(VariantMutator variantMutator) {
-            return new PaintBuilder(new PaintedBlockStateModel.Unbaked(model));
+            return new PaintBuilder(model);
         }
 
         @Override

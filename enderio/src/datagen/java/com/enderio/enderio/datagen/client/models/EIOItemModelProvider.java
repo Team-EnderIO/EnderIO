@@ -4,6 +4,7 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.client.content.conduits.model.bundle.port.ConduitItemModel;
 import com.enderio.enderio.client.content.conduits.model.facades.port.FacadeItemModel;
 import com.enderio.enderio.client.content.fluid_tank.FluidTankItemRenderer;
+import com.enderio.enderio.client.content.paint.model.port.PaintedItemModel;
 import com.enderio.enderio.client.foundation.model.item.IsSoulBoundItemProperty;
 import com.enderio.enderio.content.conduits.facades.ConduitFacadeItem;
 import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
@@ -215,6 +216,10 @@ public class EIOItemModelProvider extends ModelProvider {
 
         fluidTank(itemModels, EIOBlocks.FLUID_TANK.get());
         fluidTank(itemModels, EIOBlocks.PRESSURIZED_FLUID_TANK.get());
+
+        for (var painted : EIOBlocks.PAINTED_BLOCKS) {
+            itemModels.itemModelOutput.accept(painted.key().asItem(), new PaintedItemModel.Unbaked(painted.left().get()));
+        }
     }
 
     private static void createFacade(ItemModelGenerators itemModels, Item item) {

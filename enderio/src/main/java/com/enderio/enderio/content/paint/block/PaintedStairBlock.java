@@ -18,7 +18,7 @@ import org.jspecify.annotations.Nullable;
 public class PaintedStairBlock extends StairBlock implements EntityBlock, PaintedBlock {
 
     public PaintedStairBlock(Properties properties) {
-        super(Blocks.OAK_PLANKS.defaultBlockState(), properties);
+        super(Blocks.OAK_STAIRS.defaultBlockState(), properties);
     }
 
     @Nullable

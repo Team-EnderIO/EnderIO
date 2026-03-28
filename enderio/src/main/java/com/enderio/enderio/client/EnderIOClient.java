@@ -61,6 +61,7 @@ import com.enderio.enderio.client.content.machines.renderer.blockentity.ObeliskB
 import com.enderio.enderio.client.content.misc_blocks.EnderSkullRenderer;
 import com.enderio.enderio.client.content.paint.PaintedSandRenderer;
 import com.enderio.enderio.client.content.paint.model.port.PaintedBlockStateModel;
+import com.enderio.enderio.client.content.paint.model.port.PaintedItemModel;
 import com.enderio.enderio.client.content.tools.CoordinateMenuScreen;
 import com.enderio.enderio.client.content.travel.TravelAnchorHud;
 import com.enderio.enderio.client.content.travel.TravelTargetRendering;
@@ -69,6 +70,7 @@ import com.enderio.enderio.client.foundation.particle.RangeParticle;
 import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
 import com.enderio.enderio.content.fun.EnderiosItem;
 import com.enderio.enderio.content.misc_blocks.skull.EnderSkullBlock;
+import com.enderio.enderio.content.paint.block.PaintExtension;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOConduitTypes;
@@ -362,6 +364,7 @@ public class EnderIOClient {
     public static void registerItemModels(RegisterItemModelsEvent event) {
         event.register(EnderIO.id("conduit"), ConduitItemModel.Unbaked.CODEC);
         event.register(EnderIO.id("facade"), FacadeItemModel.Unbaked.CODEC);
+        event.register(EnderIO.id("painted"), PaintedItemModel.Unbaked.CODEC);
     }
 
     @SubscribeEvent
@@ -406,6 +409,9 @@ public class EnderIOClient {
     @SubscribeEvent
     public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
         event.registerBlock(ConduitBundleExtension.INSTANCE, EIOBlocks.CONDUIT_BUNDLE);
+        for (var entry : EIOBlocks.PAINTED_BLOCKS) {
+            event.registerBlock(PaintExtension.INSTANCE, entry.first());
+        }
     }
 
     @SubscribeEvent

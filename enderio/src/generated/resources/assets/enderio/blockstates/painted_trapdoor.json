@@ -2,9 +2,7 @@
   "variants": {
     "": {
       "type": "enderio:paint",
-      "variant": {
-        "model": "minecraft:block/oak_trapdoor"
-      }
+      "block": "minecraft:oak_trapdoor"
     }
   }
 }

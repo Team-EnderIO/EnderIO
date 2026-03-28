@@ -1,6 +1,6 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "enderio:block/painted_crafting_table"
+    "type": "enderio:painted",
+    "model": "enderio:painted_crafting_table"
   }
 }

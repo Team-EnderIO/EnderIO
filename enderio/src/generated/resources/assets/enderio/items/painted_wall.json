@@ -1,6 +1,6 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "enderio:block/painted_wall"
+    "type": "enderio:painted",
+    "model": "enderio:painted_wall"
   }
 }

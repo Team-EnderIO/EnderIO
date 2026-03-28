@@ -3,13 +3,14 @@ package com.enderio.enderio.client.content.paint.model.port;
 import com.enderio.core.data.model.ModelHelper;
 import com.enderio.enderio.content.paint.block.entity.SinglePaintedBlockEntity;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.SimpleModelWrapper;
 import net.minecraft.client.resources.model.geometry.BakedQuad;
@@ -17,6 +18,7 @@ import net.minecraft.client.resources.model.geometry.QuadCollection;
 import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -24,9 +26,10 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.neoforged.neoforge.client.model.DynamicBlockStateModel;
 import net.neoforged.neoforge.client.model.block.CustomUnbakedBlockStateModel;
+import net.neoforged.neoforge.client.model.quad.BakedColors;
 import net.neoforged.neoforge.client.model.quad.MutableQuad;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Vector2f;
+import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,10 +38,10 @@ import java.util.Optional;
 
 public class PaintedBlockStateModel implements DynamicBlockStateModel {
 
-    private final BlockStateModel part;
+    private final Block block;
 
-    public PaintedBlockStateModel(BlockStateModel part) {
-        this.part = part;
+    public PaintedBlockStateModel(Block block) {
+        this.block = block;
     }
 
     @Override
@@ -50,7 +53,13 @@ public class PaintedBlockStateModel implements DynamicBlockStateModel {
 
         for (Direction side : directions) {
             List<BlockStateModelPart> shapeParts = new ArrayList<>();
-            this.part.collectParts(level, pos, state, random, shapeParts);
+            BlockState toCopy = block.defaultBlockState();
+            for (Property prop : block.defaultBlockState().getProperties()) {
+                if (state.hasProperty(prop)) {
+                    toCopy = toCopy.setValue(prop, state.getValue(prop));
+                }
+            }
+            Minecraft.getInstance().getModelManager().getBlockStateModelSet().get(toCopy).collectParts(level, pos, state, random, shapeParts);
             List<BakedQuad> shape = shapeParts.stream().flatMap(p -> p.getQuads(side).stream()).toList();
             Direction directon = null;
             for (Property<?> property : state.getProperties()) {
@@ -77,11 +86,11 @@ public class PaintedBlockStateModel implements DynamicBlockStateModel {
         BlockState state = paintWithRotation(paint, rotation);
         var model = getModel(state);
 
-        Optional<TextureAtlasSprite> spriteOptional = getSpriteData(paint, side, rotation, level, pos, random);
+        Optional<List<Pair<BakedColors, BakedQuad.MaterialInfo>>> spriteOptional = getSpriteData(paint, side, rotation, level, pos, random);
         List<BakedQuad> returnQuads = new ArrayList<>();
         for (BakedQuad shapeQuad : shape) {
-           TextureAtlasSprite spriteData = spriteOptional.orElseGet(() -> getSpriteFromModel(shapeQuad, model, paint, rotation, level, pos));
-            returnQuads.add(paintQuad(shapeQuad, spriteData));
+            List<Pair<BakedColors, BakedQuad.MaterialInfo>> spriteData = spriteOptional.orElseGet(() -> getSpriteFromModel(shapeQuad, model, paint, rotation, level, pos));
+            returnQuads.addAll(paintQuad(shapeQuad, spriteData));
         }
         return returnQuads;
     }
@@ -123,13 +132,13 @@ public class PaintedBlockStateModel implements DynamicBlockStateModel {
      * @param rotation a rotation value, so that if both blocks support rotation, the correct texture is gathered
      * @return an Optional of a Pair of the texture of the Block and if the texture is tinted at that side
      */
-    private Optional<TextureAtlasSprite> getSpriteData(Block paint, @Nullable Direction side, @Nullable Direction rotation, BlockAndTintGetter level, BlockPos pos, RandomSource random) {
+    private Optional<List<Pair<BakedColors, BakedQuad.MaterialInfo>>> getSpriteData(Block paint, @Nullable Direction side, @Nullable Direction rotation, BlockAndTintGetter level, BlockPos pos, RandomSource random) {
         BlockState state = paintWithRotation(paint, rotation);
         List<BlockStateModelPart> parts = new ArrayList<>();
         getModel(state).collectParts(level, pos, state, random, parts);
         List<BakedQuad> quads = parts.stream().flatMap(p -> p.getQuads(side).stream()).toList();
         return quads.isEmpty() ? Optional.empty()
-            : Optional.of(quads.get(0).materialInfo().sprite());
+            : Optional.of(quads.stream().map(q-> Pair.of(q.bakedColors(), q.materialInfo())).toList());
     }
 
     /**
@@ -145,13 +154,13 @@ public class PaintedBlockStateModel implements DynamicBlockStateModel {
      * @param rotation
      * @return Returns TextureData from baked model information. Is slower than the primary method, so this is just a fallback.
      */
-    protected TextureAtlasSprite getSpriteFromModel(BakedQuad shape, BlockStateModel model, Block paint,
+    protected List<Pair<BakedColors, BakedQuad.MaterialInfo>> getSpriteFromModel(BakedQuad shape, BlockStateModel model, Block paint,
         Direction rotation,  BlockAndTintGetter level, BlockPos pos) {
         BlockState state = paintWithRotation(paint, rotation);
         List<BlockStateModelPart> parts = new ArrayList<>();
         model.collectParts(level, pos, state, RandomSource.create(), parts);
         List<BakedQuad> quads = parts.stream().flatMap(p -> p.getQuads(shape.direction()).stream()).toList();
-        return quads.isEmpty() ? ModelHelper.getMissingTexture() : quads.get(0).materialInfo().sprite();
+        return quads.isEmpty() ? null : quads.stream().map(q-> Pair.of(q.bakedColors(), q.materialInfo())).toList();
     }
 
     /**
@@ -167,40 +176,46 @@ public class PaintedBlockStateModel implements DynamicBlockStateModel {
      * @param sprite     sprite that should be used
      * @return a new Quad with the same coordinates but a different texture
      */
-    protected BakedQuad paintQuad(BakedQuad toCopy, TextureAtlasSprite sprite) {
+    protected List<BakedQuad> paintQuad(BakedQuad toCopy,  @UnknownNullability List<Pair<BakedColors, BakedQuad.MaterialInfo>> sprites) {
+        List<BakedQuad> quads = new ArrayList<>();
         MutableQuad copied = new MutableQuad();
-        copied.setFrom(toCopy);
-
-        for (int i = 0; i < 4; i++) {
-            Vector2f uv = copied.copyUv(i);
-            float uv0 = (uv.x - toCopy.materialInfo().sprite().getU0()) * sprite.contents().width()
-                / toCopy.materialInfo().sprite().contents().width() + sprite.getU0();
-            float uv1 = (uv.y - toCopy.materialInfo().sprite().getV0()) * sprite.contents().height()
-                / toCopy.materialInfo().sprite().contents().height() + sprite.getV0();
-            copied.setUv(i, uv0, uv1);
+        for (var sprite : sprites) {
+            copied.setFrom(toCopy);
+            BakedQuad.MaterialInfo info = sprite.getSecond();
+            if (sprite.getSecond() == null) {
+                copied.setSprite(ModelHelper.getMissingTexture(), ChunkSectionLayer.SOLID, null);
+            } else {
+                copied.setSpriteAndMoveUv(info.sprite(), info.layer(), info.itemRenderType());
+                copied.setColor(sprite.getFirst());
+                copied.setShade(info.shade());
+                copied.setLightEmission(info.lightEmission());
+                copied.setAmbientOcclusion(info.ambientOcclusion());
+                copied.setTintIndex(info.tintIndex());
+            }
+            quads.add(copied.toBakedQuad());
         }
-
-        return copied.toBakedQuad();
+        return quads.reversed();
     }
 
     @Override
     public @BakedQuad.MaterialFlags int materialFlags() {
-        return part.materialFlags();
+        // TODO: 26.1 can we refine this? for now we'll just return all flags lol
+        return 0xFFFFFFFF;
     }
 
-    public record Unbaked(BlockStateModel.Unbaked variant) implements CustomUnbakedBlockStateModel {
+    public record Unbaked(Block block) implements CustomUnbakedBlockStateModel {
         public static final MapCodec<Unbaked> MAP_CODEC = RecordCodecBuilder.mapCodec(builder ->
-            builder.group(Unbaked.CODEC.fieldOf("variant").forGetter(Unbaked::variant))
+            builder.group(BuiltInRegistries.BLOCK.byNameCodec().fieldOf("block").forGetter(Unbaked::block))
                 .apply(builder, Unbaked::new));
 
         @Override
         public BlockStateModel bake(ModelBaker baker) {
-            return new PaintedBlockStateModel(variant.bake(baker));
+            return new PaintedBlockStateModel(block);
         }
 
         @Override
         public void resolveDependencies(Resolver resolver) {
-            variant.resolveDependencies(resolver);
+
         }
 
         @Override

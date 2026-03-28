@@ -1,6 +1,6 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "enderio:block/painted_slab"
+    "type": "enderio:painted",
+    "model": "enderio:painted_slab"
   }
 }

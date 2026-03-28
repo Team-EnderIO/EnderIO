@@ -2,9 +2,7 @@
   "variants": {
     "": {
       "type": "enderio:paint",
-      "variant": {
-        "model": "minecraft:block/oak_slab"
-      }
+      "block": "minecraft:oak_slab"
     }
   }
 }

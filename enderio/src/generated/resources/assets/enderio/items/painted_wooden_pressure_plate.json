@@ -1,6 +1,6 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "enderio:block/painted_wooden_pressure_plate"
+    "type": "enderio:painted",
+    "model": "enderio:painted_wooden_pressure_plate"
   }
 }
