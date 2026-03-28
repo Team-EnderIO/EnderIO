@@ -3,19 +3,13 @@ package com.enderio.enderio.client.foundation.widgets.ioconfig;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.client.foundation.model.ModelRenderUtil;
 import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.render.pip.PictureInPictureRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.feature.FeatureRenderDispatcher;
-import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -25,8 +19,6 @@ import net.minecraft.data.AtlasIds;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Matrix4f;
-import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 public class IOConfigSceneRenderer extends PictureInPictureRenderer<IOConfigSceneRenderState> {
@@ -59,7 +51,6 @@ public class IOConfigSceneRenderer extends PictureInPictureRenderer<IOConfigScen
 
         Minecraft.getInstance().gameRenderer.getLighting().setupFor(Lighting.Entry.LEVEL);
 
-        // TODO: Not currently rendering correctly, blocks all overlap weirdly.
         if (state.shouldRenderNeighbors()) {
             for (var block : state.neighborBlocks()) {
                 // TODO: Render translucent...

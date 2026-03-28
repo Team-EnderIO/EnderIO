@@ -105,7 +105,7 @@ public class IOConfigSceneCamera {
 
         // Create view matrix
         viewMatrix = new Matrix4f();
-        viewMatrix.scale(scale, scale, -scale);
+        viewMatrix.scale(scale, scale, scale);
         viewMatrix.rotate(blockTransform);
         viewMatrix.translate((float)-sceneOrigin.x, (float)-sceneOrigin.y, (float)-sceneOrigin.z);
 

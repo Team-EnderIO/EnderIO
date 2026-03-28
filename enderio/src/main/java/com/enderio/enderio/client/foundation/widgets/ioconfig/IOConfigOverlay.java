@@ -169,7 +169,7 @@ public class IOConfigOverlay extends BaseOverlay {
         var origin = new Vector3f(viewPoint.x, viewPoint.y, viewPoint.z);
 
         // Determine forward vector
-        var direction = new Vector3f(0, 0, -1);
+        var direction = new Vector3f(0, 0, 1);
         invView.transformDirection(direction).normalize();
 
         return new Ray(origin, direction);
