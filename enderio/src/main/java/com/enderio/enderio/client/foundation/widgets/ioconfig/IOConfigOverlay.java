@@ -10,6 +10,7 @@ import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Axis;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.minecraft.ChatFormatting;
@@ -313,7 +314,8 @@ public class IOConfigOverlay extends BaseOverlay {
                 this.camera.viewMatrix(),
                 configurable,
                 neighbours,
-                neighbourVisible
+                neighbourVisible,
+                selection.map(selected -> new Pair<>(selected.blockPos(), selected.side())).orElse(null)
             ));
 
 //        renderSelection(graphics, centerX, centerY, blockTransform);
@@ -323,48 +325,6 @@ public class IOConfigOverlay extends BaseOverlay {
 
         // after scissor to prevent clipping the tooltip
         renderNeighbourButton(graphics, mouseX, mouseY);
-    }
-
-    private void renderSelection(GuiGraphicsExtractor graphics, int centerX, int centerY, Quaternionf transform) {
-        if (selection.isEmpty()) {
-            return;
-        }
-        graphics.pose().pushMatrix();
-//        graphics.pose().translate(centerX, centerY, Z_OFFSET);
-//        graphics.pose().scale(scale, scale, -scale);
-//        graphics.pose().mulPose(transform);
-
-        BufferBuilder bufferbuilder = Tesselator.getInstance()
-                .begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-        // TODO: 1.21.4: Was this needed?
-//        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
-
-        TextureAtlasSprite tex = MINECRAFT.getAtlasManager().getAtlasOrThrow(AtlasIds.BLOCKS).getSprite(SELECTED_ICON);
-//        RenderSystem.setShaderTexture(0, tex.atlasLocation());
-//        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-
-        var selectedFace = selection.get();
-        BlockPos blockPos = selectedFace.blockPos;
-//        graphics.pose()
-//                .translate(blockPos.getX() - worldOrigin.x(), blockPos.getY() - worldOrigin.y(),
-//                        blockPos.getZ() - worldOrigin.z());
-//        Vector3f[] vec = ModelRenderUtil.createQuadVerts(selectedFace.side, 0, 1, 1);
-//        Matrix4f matrix4f = graphics.pose().last().pose();
-//        bufferbuilder.addVertex(matrix4f, vec[0].x(), vec[0].y(), vec[0].z())
-//                .setColor(1F, 1F, 1F, 1F)
-//                .setUv(tex.getU0(), tex.getV0());
-//        bufferbuilder.addVertex(matrix4f, vec[1].x(), vec[1].y(), vec[1].z())
-//                .setColor(1F, 1F, 1F, 1F)
-//                .setUv(tex.getU0(), tex.getV1());
-//        bufferbuilder.addVertex(matrix4f, vec[2].x(), vec[2].y(), vec[2].z())
-//                .setColor(1F, 1F, 1F, 1F)
-//                .setUv(tex.getU1(), tex.getV1());
-//        bufferbuilder.addVertex(matrix4f, vec[3].x(), vec[3].y(), vec[3].z())
-//                .setColor(1F, 1F, 1F, 1F)
-//                .setUv(tex.getU1(), tex.getV0());
-//        BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
-
-        graphics.pose().popMatrix();
     }
 
     private void renderOverlay(GuiGraphicsExtractor graphics) {

@@ -1,9 +1,11 @@
 package com.enderio.enderio.client.foundation.widgets.ioconfig;
 
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.state.gui.pip.PictureInPictureRenderState;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import org.joml.Matrix4f;
 import org.jspecify.annotations.Nullable;
 
@@ -21,11 +23,13 @@ public record IOConfigSceneRenderState(
     Matrix4f viewMatrix,
     List<IOConfigSceneBlock> primaryBlocks,
     List<IOConfigSceneBlock> neighborBlocks,
-    boolean shouldRenderNeighbors
+    boolean shouldRenderNeighbors,
+    @Nullable Pair<BlockPos, Direction> selection
 ) implements PictureInPictureRenderState {
 
     public static IOConfigSceneRenderState create(ClientLevel level, int x, int y, int width, int height, @Nullable ScreenRectangle scissorArea,
-        Matrix4f viewMatrix, List<BlockPos> primaryBlockPositions, List<BlockPos> neighborBlockPositions, boolean shouldRenderNeighbors) {
+        Matrix4f viewMatrix, List<BlockPos> primaryBlockPositions, List<BlockPos> neighborBlockPositions, boolean shouldRenderNeighbors,
+        @Nullable Pair<BlockPos, Direction> selection) {
 
         if (primaryBlockPositions.isEmpty()) {
             throw new IllegalArgumentException("You must provide at least one primary block to the renderer.");
@@ -42,7 +46,8 @@ public record IOConfigSceneRenderState(
         }
 
         return new IOConfigSceneRenderState(x, x + width, y, y + height, 1, scissorArea,
-            PictureInPictureRenderState.getBounds(x, y, x + width, y + height, scissorArea), viewMatrix, primaryBlocks, neighborBlocks, shouldRenderNeighbors);
+            PictureInPictureRenderState.getBounds(x, y, x + width, y + height, scissorArea), viewMatrix, primaryBlocks, neighborBlocks,
+            shouldRenderNeighbors, selection);
     }
 
 }
