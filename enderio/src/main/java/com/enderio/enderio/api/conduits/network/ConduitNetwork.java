@@ -37,7 +37,7 @@ public interface ConduitNetwork {
 
     /**
      * Ensure that all caches have been computed if they were dirty.
-     * All cache methods call this for you, however this can be called early if you are timing your own code or want to make sure potential exceptions can be caught in-place.
+     * Cache methods will not return the correct data if this isn't called.
      * @implNote Does nothing if {@link ConduitType#doesRequireNetworkCaches()} is false.
      * @implNote This can be an expensive method to call.
      */

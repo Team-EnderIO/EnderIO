@@ -1,6 +1,7 @@
 package com.enderio.enderio.content.filters.item.limited;
 
 import com.enderio.core.common.serialization.OrderedListCodec;
+import com.enderio.core.common.util.EqualityUtil;
 import com.enderio.enderio.api.filter.ItemFilter;
 import com.enderio.enderio.content.filters.item.ItemFilterUtils;
 import com.enderio.enderio.content.filters.item.general.DamageFilterMode;
@@ -16,6 +17,7 @@ import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A filter that limits transfer of items so a connected inventory always maintains
@@ -109,5 +111,26 @@ public record LimitedItemFilter(NonNullList<ItemStack> matches, boolean shouldCo
 
         // Whitelist only: deny items not found in filter
         return ItemStack.EMPTY;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        LimitedItemFilter other = (LimitedItemFilter) o;
+        return shouldCompareComponents == other.shouldCompareComponents &&
+            damageFilterMode == other.damageFilterMode &&
+            EqualityUtil.areListsEqual(matches, other.matches, ItemStack::matches);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(EqualityUtil.hashListContents(matches, ItemStack::hashItemAndComponents), shouldCompareComponents, damageFilterMode);
     }
 }

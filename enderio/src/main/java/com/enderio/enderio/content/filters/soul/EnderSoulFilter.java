@@ -13,6 +13,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.List;
+import java.util.Objects;
 
 // TODO: should tag comparison compare health?
 public record EnderSoulFilter(NonNullList<Soul> matches, boolean isDenyList, boolean shouldCompareTags)
@@ -96,5 +97,20 @@ public record EnderSoulFilter(NonNullList<Soul> matches, boolean isDenyList, boo
         }
 
         return isDenyList;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EnderSoulFilter that = (EnderSoulFilter) o;
+        return isDenyList == that.isDenyList &&
+                shouldCompareTags == that.shouldCompareTags &&
+                Objects.equals(matches, that.matches);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(matches, isDenyList, shouldCompareTags);
     }
 }

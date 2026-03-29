@@ -1,13 +1,12 @@
 package com.enderio.enderio.content.filters.item.general;
 
 import com.enderio.core.common.serialization.OrderedListCodec;
+import com.enderio.core.common.util.EqualityUtil;
 import com.enderio.enderio.api.filter.ItemFilter;
 import com.enderio.enderio.content.filters.item.ItemFilterUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.component.DataComponentType;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -79,5 +78,27 @@ public record EnderItemFilter(NonNullList<ItemStack> matches, boolean isDenyList
         }
 
         return isDenyList ? itemStack : ItemStack.EMPTY;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        EnderItemFilter other = (EnderItemFilter) o;
+        return isDenyList == other.isDenyList &&
+            shouldCompareComponents == other.shouldCompareComponents &&
+            damageFilterMode == other.damageFilterMode &&
+            EqualityUtil.areListsEqual(matches, other.matches, ItemStack::matches);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(EqualityUtil.hashListContents(matches, ItemStack::hashItemAndComponents), isDenyList, shouldCompareComponents, damageFilterMode);
     }
 }

@@ -1,6 +1,7 @@
 package com.enderio.enderio.content.filters.fluid;
 
 import com.enderio.core.common.serialization.OrderedListCodec;
+import com.enderio.core.common.util.EqualityUtil;
 import com.enderio.enderio.api.filter.FluidFilter;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -13,6 +14,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 
 public record EnderFluidFilter(NonNullList<FluidStack> matches, boolean isDenyList, boolean shouldCompareComponents)
         implements FluidFilter {
@@ -64,5 +66,26 @@ public record EnderFluidFilter(NonNullList<FluidStack> matches, boolean isDenyLi
         }
 
         return isDenyList ? stack : FluidStack.EMPTY;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        EnderFluidFilter other = (EnderFluidFilter) o;
+        return isDenyList == other.isDenyList &&
+                shouldCompareComponents == other.shouldCompareComponents &&
+                EqualityUtil.areListsEqual(matches, other.matches, FluidStack::matches);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(EqualityUtil.hashListContents(matches, FluidStack::hashFluidAndComponents), isDenyList, shouldCompareComponents);
     }
 }
