@@ -31,9 +31,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public abstract class EnderContainerScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> {
-
-    private static final int ITEM_RENDER_Z = 400;
-
     private final Multimap<Integer, Renderable> overlayRenderables = HashMultimap.create();
     private final Multimap<Integer, GuiEventListener> overlayWidgets = HashMultimap.create();
 
@@ -69,49 +66,23 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
     }
 
     @Override
+    public void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        super.extractContents(graphics, mouseX, mouseY, a);
+
+        for (var layer : overlayRenderables.keySet()) {
+            for (var overlay : overlayRenderables.get(layer)) {
+                if (!(overlay instanceof AbstractWidget widget) || widget.isActive()) {
+                    overlay.extractRenderState(graphics, mouseX, mouseY, a);
+                }
+            }
+        }
+    }
+
+    @Override
     protected void extractLabels(GuiGraphicsExtractor graphics, int xm, int ym) {
         if (shouldRenderLabels) {
             super.extractLabels(graphics, xm, ym);
         }
-
-        // Move back to screen space rather than aligned to the background coordinates
-        graphics.pose().pushMatrix();
-//        graphics.pose().translate(-leftPos, -topPos, 0.0D);
-        graphics.pose().translate(-leftPos, -topPos);
-
-        // TODO: 1.21.8: Handle z offsets disappearing...
-        int zOffset = 200;
-        for (var layer : overlayRenderables.keySet()) {
-            // Offset deeper for each layer.
-            graphics.pose().pushMatrix();
-            zOffset += 150;
-//            graphics.pose().translate(0, 0, zOffset);
-
-            for (var overlay : overlayRenderables.get(layer)) {
-                if (!(overlay instanceof AbstractWidget widget) || widget.isActive()) {
-                    overlay.extractRenderState(graphics, xm, ym,
-                            Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(false));
-
-                    if (overlay instanceof BaseOverlay baseOverlay) {
-                        zOffset += baseOverlay.getAdditionalZOffset();
-                    }
-                }
-            }
-
-            graphics.pose().popMatrix();
-        }
-
-        graphics.pose().popMatrix();
-
-//        graphics.pose().translate(0, 0, zOffset);
-
-        graphics.pose().pushMatrix();
-//        graphics.pose().translate(-leftPos, -topPos, 0.0D);
-        graphics.pose().translate(-leftPos, -topPos);
-
-        extractTooltip(graphics, xm, ym);
-
-        graphics.pose().popMatrix();
     }
 
     @Override

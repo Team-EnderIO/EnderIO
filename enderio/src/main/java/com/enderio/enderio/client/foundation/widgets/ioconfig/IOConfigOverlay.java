@@ -3,30 +3,27 @@ package com.enderio.enderio.client.foundation.widgets.ioconfig;
 import com.enderio.core.client.gui.screen.BaseOverlay;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.io.IOConfigurable;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.foundation.network.packets.ServerboundCycleIOConfigPacket;
-import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.math.Axis;
+import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.data.AtlasIds;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.CommonColors;
-import net.minecraft.world.level.EmptyBlockGetter;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -34,10 +31,8 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
-import net.neoforged.neoforge.model.data.ModelData;
 import org.jspecify.annotations.Nullable;
 import org.joml.Matrix4f;
-import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
@@ -52,32 +47,16 @@ import java.util.SequencedMap;
 /**
  * Thanks XFactHD for help and providing a demo for a preview widget and raycast example
  * <a href="https://gist.github.com/XFactHD/4b214f98a1b30a590c6e0de6bd84602a">Preview Widget Gist</a>
- * <p>
- * Definition  of {@link GhostBuffers}, {@link GhostRenderLayer} and initBuffers method are taken from Patchouli (License information: <a href="https://github.com/VazkiiMods/Patchouli">here</a>)
  */
 public class IOConfigOverlay extends BaseOverlay {
-
-    private static final Quaternionf ROT_180_Z = Axis.ZP.rotation((float) Math.PI);
-    private static final Vec3 RAY_ORIGIN = new Vec3(1.5, 1.5, 1.5);
-    private static final Vec3 RAY_START = new Vec3(1.5, 1.5, -1);
-    private static final Vec3 RAY_END = new Vec3(1.5, 1.5, 3);
-    private static final BlockPos POS = new BlockPos(1, 1, 1);
-    private static final int Z_OFFSET = 100;
-    private static final int OVERLAY_Z_OFFSET = 500;
     private static final Identifier IO_CONFIG_OVERLAY = EnderIO.id("buttons/io_config_overlay");
-    private static final Identifier SELECTED_ICON = EnderIO.id("block/overlay/selected_face");
     private static final Minecraft MINECRAFT = Minecraft.getInstance();
-    private static MultiBufferSource.BufferSource ghostBuffers;
-    private static MultiBufferSource.BufferSource solidBuffers;
-    private final Vector3f worldOrigin;
-    private final Vector3f multiblockSize;
     private final List<BlockPos> configurable = new ArrayList<>();
     private final List<BlockPos> neighbours = new ArrayList<>();
-    private float scale = 20;
-    private float pitch;
-    private float yaw;
     private boolean neighbourVisible = true;
     private Optional<SelectedFace> selection = Optional.empty();
+
+    private final IOConfigSceneCamera camera;
 
     // Neighbour Button
     public static final Identifier NEIGHBOURS_BTN = EnderIO.id("buttons/neighbour");
@@ -87,6 +66,8 @@ public class IOConfigOverlay extends BaseOverlay {
         super(x, y, width, height, Component.empty());
         this.configurable.addAll(_configurable);
 
+        Vector3f worldOrigin;
+        Vector3f multiblockSize;
         if (configurable.size() == 1) {
             BlockPos bc = configurable.get(0);
             worldOrigin = new Vector3f(bc.getX() + 0.5f, bc.getY() + 0.5f, bc.getZ() + 0.5f);
@@ -107,6 +88,8 @@ public class IOConfigOverlay extends BaseOverlay {
         }
 
         var radius = Math.max(Math.max(multiblockSize.x(), multiblockSize.y()), multiblockSize.z());
+
+        float scale = 20f;
         scale -= (radius - 1) * 3; // adjust later
         scale = Math.min(40, Math.max(10, scale)); // clamp
 
@@ -117,77 +100,34 @@ public class IOConfigOverlay extends BaseOverlay {
                     neighbours.add(loc);
                 }
             }
-
         });
-        pitch = MINECRAFT.player.getXRot();
-        yaw = MINECRAFT.player.getYRot();
 
-        initBuffers(MINECRAFT.renderBuffers().bufferSource());
+        float pitch = MINECRAFT.player.getXRot();
+        float yaw = MINECRAFT.player.getYRot();
+
+        // Pass starting values into the camera
+        this.camera = new IOConfigSceneCamera(worldOrigin, scale, pitch, yaw);
+
         neighBtnRect = new Rect2i(getX() + getWidth() - 2 - 16, getY() + getHeight() - 2 - 16, 16, 16);
     }
 
     @Override
-    public int getAdditionalZOffset() {
-        return OVERLAY_Z_OFFSET;
-    }
-
-    @Override
     public Object getValueForRestore() {
-        return new RestoreData(this.visible, yaw, pitch, scale);
+        return new RestoreData(this.visible, camera.sceneOrigin(), camera.yaw(), camera.pitch(), camera.scale());
     }
 
     @Override
     public void restoreValue(Object value) {
-        if (value instanceof RestoreData restoreData) {
-            this.visible = restoreData.isVisible;
-            this.yaw = restoreData.yaw;
-            this.pitch = restoreData.pitch;
-            this.scale = restoreData.scale;
+        if (value instanceof RestoreData(boolean isVisible, Vec3 sceneOrigin, float yaw, float pitch, float scale)) {
+            this.visible = isVisible;
+            camera.setSceneOrigin(sceneOrigin);
+            camera.setYaw(yaw);
+            camera.setPitch(pitch);
+            camera.setScale(scale);
         }
     }
 
-    private record RestoreData(boolean isVisible, float yaw, float pitch, float scale) {
-    }
-
-    private void initBuffers(MultiBufferSource.BufferSource original) {
-        ByteBufferBuilder fallback = original.sharedBuffer;
-        SequencedMap<RenderType, ByteBufferBuilder> layerBuffers = original.fixedBuffers;
-        SequencedMap<RenderType, ByteBufferBuilder> ghostLayers = new Object2ObjectLinkedOpenHashMap<>();
-        SequencedMap<RenderType, ByteBufferBuilder> solidLayers = new Object2ObjectLinkedOpenHashMap<>();
-
-        for (Map.Entry<RenderType, ByteBufferBuilder> e : layerBuffers.entrySet()) {
-//            ghostLayers.put(GhostRenderLayer.remap(e.getKey()), e.getValue());
-//            solidLayers.put(SolidRenderLayer.remap(e.getKey()), e.getValue());
-        }
-//        ghostBuffers = new GhostBuffers(fallback, ghostLayers);
-//        solidBuffers = new SolidBuffers(fallback, solidLayers);
-    }
-
-    private static Vec3 transform(Vec3 vec, Matrix4f transform) {
-        // Move vector to a (0,0,0) origin as the transformation matrix expects
-        Vector4f vec4 = new Vector4f((float) (vec.x - RAY_ORIGIN.x), (float) (vec.y - RAY_ORIGIN.y),
-                (float) (vec.z - RAY_ORIGIN.z), 1F);
-        // Apply the transformation matrix
-        vec4.mul(transform);
-        // Move transformed vector back to the actual origin
-        return new Vec3(vec4.x() + RAY_ORIGIN.x, vec4.y() + RAY_ORIGIN.y, vec4.z() + RAY_ORIGIN.z);
-    }
-
-    @Nullable
-    private BlockHitResult raycast(BlockPos pos, BlockState state, float diffX, float diffY, Matrix4f transform) {
-        // Add mouse offset to start and end vectors
-        Vec3 start = RAY_START.add(diffX, diffY, 0);
-        Vec3 end = RAY_END.add(diffX, diffY, 0);
-
-        // Rotate start and end vectors around the block
-        start = transform(start, transform);
-        end = transform(end, transform);
-
-        // Get block's shape and cast a ray through it
-        VoxelShape shape = state.getShape(EmptyBlockGetter.INSTANCE, BlockPos.ZERO);
-        Vector3f centerPos = new Vector3f(pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f).sub(worldOrigin);
-        shape = shape.move(centerPos.x(), centerPos.y(), centerPos.z());
-        return shape.clip(start, end, POS);
+    private record RestoreData(boolean isVisible, Vec3 sceneOrigin, float yaw, float pitch, float scale) {
     }
 
     public void toggleNeighbourVisibility() {
@@ -196,260 +136,202 @@ public class IOConfigOverlay extends BaseOverlay {
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        if (this.active && this.visible) {
-            if (event.button() == 0) {
-                if (neighBtnRect.contains((int) event.x(), (int) event.y())) {
-                    toggleNeighbourVisibility();
+        if (!this.active || !this.visible) {
+            return false;
+        }
+
+        if (event.button() == 0) {
+            if (neighBtnRect.contains((int) event.x(), (int) event.y())) {
+                toggleNeighbourVisibility();
+                this.playDownSound(MINECRAFT.getSoundManager());
+                return true;
+            }
+        }
+
+        if (event.button() == 1) {
+            if (selection.isPresent()) {
+                var selectedFace = selection.get();
+                BlockEntity entity = MINECRAFT.level.getBlockEntity(selectedFace.blockPos);
+                if (entity instanceof IOConfigurable) {
+                    ClientPacketDistributor
+                            .sendToServer(new ServerboundCycleIOConfigPacket(selectedFace.blockPos, selectedFace.side));
                     this.playDownSound(MINECRAFT.getSoundManager());
                     return true;
                 }
             }
-            if (event.button() == 1) {
-                if (selection.isPresent()) {
-                    var selectedFace = selection.get();
-                    BlockEntity entity = MINECRAFT.level.getBlockEntity(selectedFace.blockPos);
-                    if (entity instanceof IOConfigurable) {
-                        ClientPacketDistributor
-                                .sendToServer(new ServerboundCycleIOConfigPacket(selectedFace.blockPos, selectedFace.side));
-                        this.playDownSound(MINECRAFT.getSoundManager());
-                        return true;
-                    }
-                }
-            }
         }
+
         return false;
     }
 
     @Override
     public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
-        if (visible && isValidClickButton(event.buttonInfo()) && isMouseOver(event.x(), event.y())
-                && !neighBtnRect.contains((int) event.x(), (int) event.y())) {
-            double dx = dragX / (double) MINECRAFT.getWindow().getGuiScaledWidth();
-            double dy = dragY / (double) MINECRAFT.getWindow().getGuiScaledHeight();
+        if (!visible ||
+            !isValidClickButton(event.buttonInfo()) ||
+            !isMouseOver(event.x(), event.y()) ||
+            neighBtnRect.contains((int) event.x(), (int) event.y())) {
+            return false;
+        }
+
+        double dx = dragX / (double) MINECRAFT.getWindow().getGuiScaledWidth();
+        double dy = dragY / (double) MINECRAFT.getWindow().getGuiScaledHeight();
+
+        // Determine if we're panning or rotating.
+        if (event.hasShiftDown()) {
+            // TODO: Could use a little work...
+            // 16 seems to be reasonable
+            float dragSpeed = 16f;
+
+            Vector3f delta = new Vector3f((float)-dx * dragSpeed, (float)-dy * dragSpeed, 0);
+            var dragDelta = delta.rotate(camera.blockTransform());
+
+            var sceneOrigin = camera.sceneOrigin();
+            camera.setSceneOrigin(sceneOrigin.add(dragDelta.x, dragDelta.y, dragDelta.z));
+        } else {
+            float yaw = camera.yaw();
+            float pitch = camera.pitch();
+
             yaw += 4 * (float) dx * 180;
             pitch += 2 * (float) dy * 180;
 
             pitch = Math.min(80, Math.max(-80, pitch)); // clamp
 
+            camera.setYaw(yaw);
+            camera.setPitch(pitch);
         }
         return false;
     }
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
-        if (visible) {
-            scale -= deltaY;
-            scale = Math.min(40, Math.max(10, scale)); // clamp
-            return true;
+        if (!visible) {
+            return false;
         }
-        return false;
+
+        float scale = camera.scale();
+        scale -= deltaY;
+        scale = Math.min(40, Math.max(10, scale)); // clamp
+        camera.setScale(scale);
+        return true;
     }
 
     @Override
     protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
-        if (visible) {
-            graphics.enableScissor(getX(), getY(), getX() + width, getY() + height);
-//            RenderSystem.disableDepthTest();
-            graphics.fill(getX(), getY(), getX() + width, getY() + height, 0xFF000000);
-//            RenderSystem.enableDepthTest();
-
-            // Calculate widget center
-            int centerX = getX() + (width / 2);
-            int centerY = getY() + (height / 2);
-            // Calculate mouse offset from center and scale to the block space
-            float diffX = (mouseX - centerX) / scale;
-            float diffY = (mouseY - centerY) / scale;
-
-            Quaternionf rotPitch = Axis.XN.rotationDegrees(pitch);
-            Quaternionf rotYaw = Axis.YP.rotationDegrees(yaw);
-
-            // Build block transformation matrix
-            // Rotate 180 around Z, otherwise the block is upside down
-            Quaternionf blockTransform = new Quaternionf(ROT_180_Z);
-            // Rotate around X (pitch) in negative direction
-            blockTransform.mul(rotPitch);
-            // Rotate around Y (yaw)
-            blockTransform.mul(rotYaw);
-
-            // Draw block
-//            renderWorld(graphics, centerX, centerY, blockTransform, a);
-
-            // Build ray transformation matrix
-            // Rotate 180 around Z, otherwise the block is upside down
-            Matrix4f rayTransform = new Matrix4f();
-            rayTransform.set(ROT_180_Z);
-            // Rotate around Y (yaw)
-            rayTransform.rotate(rotYaw);
-            // Rotate around X (pitch) in negative direction
-            rayTransform.rotate(rotPitch);
-
-            // Ray-cast hit on block shape
-            Map<BlockHitResult, BlockPos> hits = new HashMap<>();
-            configurable.forEach(blockPos -> {
-                BlockState state = MINECRAFT.level.getBlockState(blockPos);
-                BlockHitResult hit = raycast(blockPos, state, diffX, diffY, rayTransform);
-                if (hit != null && hit.getType() != HitResult.Type.MISS) {
-                    hits.put(hit, blockPos);
-                }
-
-            });
-
-            Vec3 eyePosition = transform(RAY_START, rayTransform).add(worldOrigin.x, worldOrigin.y, worldOrigin.z);
-            selection = hits.entrySet()
-                    .stream()
-                    .min(Comparator.comparingDouble(entry -> entry.getValue().distToCenterSqr(eyePosition))) // find
-                                                                                                             // closest
-                                                                                                             // to eye
-                    .map(closest -> new SelectedFace(closest.getValue(), closest.getKey().getDirection()));
-
-//            renderSelection(graphics, centerX, centerY, blockTransform);
-            renderOverlay(graphics);
-
-            graphics.disableScissor();
-
-            // after scissor to prevent clipping the tooltip
-            renderNeighbourButton(graphics, mouseX, mouseY);
+        if (!visible) {
+            return;
         }
-    }
 
-    private void renderWorld(GuiGraphicsExtractor graphics, int centerX, int centerY, Quaternionf transform,
-            float partialTick) {
-//        Lighting.setupForFlatItems();
-        graphics.pose().pushMatrix();
-//        graphics.pose().translate(centerX, centerY, Z_OFFSET);
-//        graphics.pose().scale(scale, scale, -scale);
-//        graphics.pose().mulPose(transform);
+        // Render black backdrop
+        graphics.fill(getX(), getY(), getX() + width, getY() + height, 0xFF000000);
 
-        // RenderNeighbours
-        if (neighbourVisible) {
-            for (var neighbour : neighbours) {
-                Vector3f pos = new Vector3f(neighbour.getX() - worldOrigin.x(), neighbour.getY() - worldOrigin.y(),
-                        neighbour.getZ() - worldOrigin.z());
-                renderBlock(graphics, neighbour, pos, ghostBuffers, partialTick);
+        // Calculate widget center
+        int centerX = getX() + (width / 2);
+        int centerY = getY() + (height / 2);
+
+        // Calculate mouse offset from center of overlay
+        float adjustedMouseX = (mouseX - centerX);
+        float adjustedMouseY = (mouseY - centerY);
+
+        // Ray-cast hit on block shape
+        var ray = createRay(adjustedMouseX, adjustedMouseY);
+        Map<BlockHitResult, BlockPos> hits = new HashMap<>();
+        configurable.forEach(blockPos -> {
+            BlockState state = MINECRAFT.level.getBlockState(blockPos);
+            BlockHitResult hit = raycast(blockPos, state, ray);
+            if (hit != null && hit.getType() != HitResult.Type.MISS) {
+                hits.put(hit, blockPos);
             }
+        });
 
-        }
-        ghostBuffers.endBatch();
+        // Find the hit that is closest to the camera
+        Vec3 eyePosition = camera.getEyePosition();
+        selection = hits.entrySet()
+            .stream()
+            .min(Comparator.comparingDouble(entry -> entry.getValue().distToCenterSqr(eyePosition)))
+            .map(closest -> new SelectedFace(closest.getValue(), closest.getKey().getDirection()));
 
-        // Render configurable
-        for (var configurable : configurable) {
-            Vector3f pos = new Vector3f(configurable.getX() - worldOrigin.x(), configurable.getY() - worldOrigin.y(),
-                    configurable.getZ() - worldOrigin.z());
-            renderBlock(graphics, configurable, pos, solidBuffers, partialTick);
-        }
-        solidBuffers.endBatch();
+        // Render the scene
+        graphics.submitPictureInPictureRenderState(
+            IOConfigSceneRenderState.create(
+                MINECRAFT.level,
+                getX(),
+                getY(),
+                getWidth(),
+                getHeight(),
+                graphics.peekScissorStack(),
+                this.camera.viewMatrix(),
+                configurable,
+                neighbours,
+                neighbourVisible,
+                selection.map(selected -> new Pair<>(selected.blockPos(), selected.side())).orElse(null)
+            ));
 
-        graphics.pose().popMatrix();
-//        Lighting.setupFor3DItems();
+        // Render label
+        extractSelectedModeLabel(graphics);
+
+        // after scissor to prevent clipping the tooltip
+        extractShowNeighborButton(graphics, mouseX, mouseY);
     }
 
-    private void renderBlock(GuiGraphicsExtractor graphics, BlockPos blockPos, Vector3f renderPos,
-            MultiBufferSource.BufferSource buffers, float partialTick) {
-        graphics.pose().pushMatrix();
-//        graphics.pose().translate(renderPos.x(), renderPos.y(), renderPos.z());
-
-        ModelData modelData = Optional.ofNullable(MINECRAFT.level.getModelDataManager().getAt(blockPos))
-                .orElse(ModelData.EMPTY);
-
-//        BlockState blockState = MINECRAFT.level.getBlockState(blockPos);
-//        RenderShape rendershape = blockState.getRenderShape();
-//        if (rendershape != RenderShape.INVISIBLE) {
-//            var renderer = MINECRAFT.getBlockRenderer();
-//            BlockStateModel bakedmodel = renderer.getBlockModel(blockState);
-//            modelData = bakedmodel.getModelData(MINECRAFT.level, blockPos, blockState, modelData);
-//            int blockColor = MINECRAFT.getBlockColors().getColor(blockState, MINECRAFT.level, blockPos, 0);
-//            float r = ARGB.red(blockColor) / 255F;
-//            float g = ARGB.green(blockColor) / 255F;
-//            float b = ARGB.blue(blockColor) / 255F;
-//            for (RenderType renderType : bakedmodel.getRenderTypes(blockState, RandomSource.create(42), modelData)) {
-//                renderer.getModelRenderer()
-//                        .renderModel(graphics.pose().last(),
-//                                buffers.getBuffer(RenderTypeHelper.getEntityRenderType(renderType)), blockState,
-//                                bakedmodel, r, g, b, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, modelData,
-//                                renderType);
-//            }
-//            BlockEntity blockEntity = MINECRAFT.level.getBlockEntity(blockPos);
-//            if (blockEntity != null) {
-//                var beRenderer = MINECRAFT.getBlockEntityRenderDispatcher().getRenderer(blockEntity);
-//                if (beRenderer != null) {
-//                    beRenderer.render(blockEntity, partialTick, graphics.pose(), buffers, LightTexture.FULL_BRIGHT,
-//                            OverlayTexture.NO_OVERLAY);
-//                }
-//
-//            }
-//        }
-        graphics.pose().popMatrix();
-    }
-
-    private void renderSelection(GuiGraphicsExtractor graphics, int centerX, int centerY, Quaternionf transform) {
+    private void extractSelectedModeLabel(GuiGraphicsExtractor graphics) {
         if (selection.isEmpty()) {
             return;
         }
-        graphics.pose().pushMatrix();
-//        graphics.pose().translate(centerX, centerY, Z_OFFSET);
-//        graphics.pose().scale(scale, scale, -scale);
-//        graphics.pose().mulPose(transform);
-
-        BufferBuilder bufferbuilder = Tesselator.getInstance()
-                .begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-        // TODO: 1.21.4: Was this needed?
-//        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
-
-        TextureAtlasSprite tex = MINECRAFT.getAtlasManager().getAtlasOrThrow(AtlasIds.BLOCKS).getSprite(SELECTED_ICON);
-//        RenderSystem.setShaderTexture(0, tex.atlasLocation());
-//        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
         var selectedFace = selection.get();
-        BlockPos blockPos = selectedFace.blockPos;
-//        graphics.pose()
-//                .translate(blockPos.getX() - worldOrigin.x(), blockPos.getY() - worldOrigin.y(),
-//                        blockPos.getZ() - worldOrigin.z());
-//        Vector3f[] vec = ModelRenderUtil.createQuadVerts(selectedFace.side, 0, 1, 1);
-//        Matrix4f matrix4f = graphics.pose().last().pose();
-//        bufferbuilder.addVertex(matrix4f, vec[0].x(), vec[0].y(), vec[0].z())
-//                .setColor(1F, 1F, 1F, 1F)
-//                .setUv(tex.getU0(), tex.getV0());
-//        bufferbuilder.addVertex(matrix4f, vec[1].x(), vec[1].y(), vec[1].z())
-//                .setColor(1F, 1F, 1F, 1F)
-//                .setUv(tex.getU0(), tex.getV1());
-//        bufferbuilder.addVertex(matrix4f, vec[2].x(), vec[2].y(), vec[2].z())
-//                .setColor(1F, 1F, 1F, 1F)
-//                .setUv(tex.getU1(), tex.getV1());
-//        bufferbuilder.addVertex(matrix4f, vec[3].x(), vec[3].y(), vec[3].z())
-//                .setColor(1F, 1F, 1F, 1F)
-//                .setUv(tex.getU1(), tex.getV0());
-//        BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
-
-        graphics.pose().popMatrix();
-    }
-
-    private void renderOverlay(GuiGraphicsExtractor graphics) {
-        if (selection.isPresent()) {
-            var selectedFace = selection.get();
-            BlockEntity entity = MINECRAFT.level.getBlockEntity(selectedFace.blockPos);
-            if (entity instanceof IOConfigurable ioConfigurable) {
-                var ioMode = ioConfigurable.getIOMode(selectedFace.side);
-                IOModeMap map = IOModeMap.getMapFromMode(ioMode);
-                Rect2i iconBounds = map.getRect();
-                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, IO_CONFIG_OVERLAY, 48, 16, iconBounds.getX(), iconBounds.getY(), getX() + 4,
-                    getY() + height - 4 - MINECRAFT.font.lineHeight - iconBounds.getHeight(), iconBounds.getWidth(),
-                    iconBounds.getHeight());
-                graphics.pose().pushMatrix();
-//                graphics.pose().translate(0, 0, OVERLAY_Z_OFFSET); // to ensure that string is drawn on top
-                graphics.text(MINECRAFT.font, map.getComponent(), getX() + 4,
-                    getY() + height - 2 - MINECRAFT.font.lineHeight, CommonColors.DARK_GRAY);
-                graphics.pose().popMatrix();
-            }
+        BlockEntity entity = MINECRAFT.level.getBlockEntity(selectedFace.blockPos);
+        if (entity instanceof IOConfigurable ioConfigurable) {
+            var ioMode = ioConfigurable.getIOMode(selectedFace.side);
+            IOModeMap map = IOModeMap.getMapFromMode(ioMode);
+            Rect2i iconBounds = map.getRect();
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, IO_CONFIG_OVERLAY, 48, 16, iconBounds.getX(), iconBounds.getY(), getX() + 4,
+                getY() + height - 4 - MINECRAFT.font.lineHeight - iconBounds.getHeight(), iconBounds.getWidth(),
+                iconBounds.getHeight());
+            graphics.pose().pushMatrix();
+            graphics.text(MINECRAFT.font, map.getComponent(), getX() + 4,
+                getY() + height - 2 - MINECRAFT.font.lineHeight, CommonColors.DARK_GRAY);
+            graphics.pose().popMatrix();
         }
     }
 
-    private void renderNeighbourButton(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+    private void extractShowNeighborButton(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, NEIGHBOURS_BTN, neighBtnRect.getX(), neighBtnRect.getY(), 16, 16);
         if (neighBtnRect.contains(mouseX, mouseY)) {
-//            graphics.renderTooltip(MINECRAFT.font, EIOCommonLang.TOGGLE_NEIGHBOUR.copy().withStyle(ChatFormatting.WHITE),
-//                    mouseX, mouseY);
+            graphics.tooltip(MINECRAFT.font, List.of(ClientTooltipComponent.create(EIOCommonLang.TOGGLE_NEIGHBOUR.copy().withStyle(ChatFormatting.WHITE).getVisualOrderText())),
+                    mouseX, mouseY, DefaultTooltipPositioner.INSTANCE, null);
         }
     }
+
+    private Ray createRay(float x, float y) {
+        Matrix4f invView = new Matrix4f(camera.viewMatrix()).invert();
+
+        // Determine mouse coordinate in-world
+        var viewPoint = new Vector4f(x, y, 0, 1);
+        viewPoint.mul(invView);
+
+        var origin = new Vector3f(viewPoint.x, viewPoint.y, viewPoint.z);
+
+        // Determine forward vector
+        var direction = new Vector3f(0, 0, 1);
+        invView.transformDirection(direction).normalize();
+
+        return new Ray(origin, direction);
+    }
+
+    @Nullable
+    private BlockHitResult raycast(BlockPos pos, BlockState state, Ray ray) {
+        // Start 1 blocks behind the point
+        Vector3f start = ray.origin.add(ray.direction().mul(-1f, new Vector3f()), new Vector3f());
+
+        // Travel 3.5 blocks toward the point
+        Vector3f end = ray.origin.add(ray.direction().mul(3.5f, new Vector3f()), new Vector3f());
+
+        // Get block's shape and cast a ray through it
+        VoxelShape shape = state.getShape(MINECRAFT.level, pos);
+        return shape.clip(new Vec3(start.x, start.y, start.z), new Vec3(end.x, end.y, end.z), pos);
+    }
+
+    private record Ray(Vector3f origin, Vector3f direction) {}
 
     @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
@@ -457,83 +339,4 @@ public class IOConfigOverlay extends BaseOverlay {
 
     private record SelectedFace(BlockPos blockPos, Direction side) {
     }
-
-//    private static class GhostBuffers extends MultiBufferSource.BufferSource {
-//        private GhostBuffers(ByteBufferBuilder fallback, SequencedMap<RenderType, ByteBufferBuilder> layerBuffers) {
-//            super(fallback, layerBuffers);
-//        }
-//
-//        @Override
-//        public VertexConsumer getBuffer(RenderType type) {
-//            return super.getBuffer(GhostRenderLayer.remap(type));
-//        }
-//    }
-//
-//    private static class SolidBuffers extends MultiBufferSource.BufferSource {
-//        private SolidBuffers(ByteBufferBuilder fallback, SequencedMap<RenderType, ByteBufferBuilder> layerBuffers) {
-//            super(fallback, layerBuffers);
-//        }
-//
-//        @Override
-//        public VertexConsumer getBuffer(RenderType type) {
-//            return super.getBuffer(SolidRenderLayer.remap(type));
-//        }
-//    }
-
-    // Solid buffers, but without depth testing.
-//    private static class SolidRenderLayer extends RenderType {
-//        private static final Map<RenderType, RenderType> REMAPPED_TYPES = new IdentityHashMap<>();
-//
-//        private SolidRenderLayer(RenderType original) {
-//            super(String.format("%s_%s_solid", original, EnderIO.MOD_ID), original.format(), original.mode(),
-//                    original.bufferSize(), original.affectsCrumbling(), true, () -> {
-//                        original.setupRenderState();
-//
-//                        RenderSystem.disableDepthTest();
-//                    }, () -> {
-//                        RenderSystem.enableDepthTest();
-//
-//                        original.clearRenderState();
-//                    });
-//        }
-//
-//        public static RenderType remap(RenderType in) {
-//            if (in instanceof SolidRenderLayer) {
-//                return in;
-//            } else {
-//                return REMAPPED_TYPES.computeIfAbsent(in, SolidRenderLayer::new);
-//            }
-//        }
-//    }
-
-//    private static class GhostRenderLayer extends RenderType {
-//        private static final Map<RenderType, RenderType> REMAPPED_TYPES = new IdentityHashMap<>();
-//
-//        private GhostRenderLayer(RenderType original) {
-//            super(String.format("%s_%s_ghost", original, EnderIO.MOD_ID), original.format(), original.mode(),
-//                    original.bufferSize(), original.affectsCrumbling(), true, () -> {
-//                        original.setupRenderState();
-//
-//                        RenderSystem.disableDepthTest();
-//                        RenderSystem.enableBlend();
-//                        RenderSystem.setShaderColor(1, 1, 1,
-//                                MachinesConfig.CLIENT.IO_CONFIG_NEIGHBOUR_TRANSPARENCY.get().floatValue());
-//                    }, () -> {
-//                        RenderSystem.setShaderColor(1, 1, 1, 1);
-//                        RenderSystem.disableBlend();
-//                        RenderSystem.enableDepthTest();
-//
-//                        original.clearRenderState();
-//                    });
-//        }
-//
-//        public static RenderType remap(RenderType in) {
-//            if (in instanceof GhostRenderLayer) {
-//                return in;
-//            } else {
-//                return REMAPPED_TYPES.computeIfAbsent(in, GhostRenderLayer::new);
-//            }
-//        }
-//    }
-
 }

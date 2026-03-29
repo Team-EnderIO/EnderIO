@@ -27,6 +27,7 @@ import com.enderio.enderio.client.content.filters.redstone.RedstoneTimerFilterSc
 import com.enderio.enderio.client.content.fluid_tank.FluidTankItemRenderer;
 import com.enderio.enderio.client.content.glass.GlassIconDecorator;
 import com.enderio.enderio.client.content.glass.GlassItemColor;
+import com.enderio.enderio.client.foundation.model.IOConfigRealLevelWorkaroundBlockModel;
 import com.enderio.enderio.client.content.machines.IOOverlayBlockStateModel;
 import com.enderio.enderio.client.content.machines.gui.screen.AlloySmelterScreen;
 import com.enderio.enderio.client.content.machines.gui.screen.AttractorObeliskScreen;
@@ -67,10 +68,13 @@ import com.enderio.enderio.client.content.travel.TravelAnchorHud;
 import com.enderio.enderio.client.content.travel.TravelTargetRendering;
 import com.enderio.enderio.client.foundation.model.item.IsSoulBoundItemProperty;
 import com.enderio.enderio.client.foundation.particle.RangeParticle;
+import com.enderio.enderio.client.foundation.widgets.ioconfig.IOConfigSceneRenderState;
+import com.enderio.enderio.client.foundation.widgets.ioconfig.IOConfigSceneRenderer;
 import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
 import com.enderio.enderio.content.fun.EnderiosItem;
 import com.enderio.enderio.content.misc_blocks.skull.EnderSkullBlock;
 import com.enderio.enderio.content.paint.block.PaintExtension;
+import com.enderio.enderio.foundation.block.MachineBlock;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOConduitTypes;
@@ -81,6 +85,7 @@ import com.enderio.enderio.init.EIOMenus;
 import com.enderio.enderio.init.EIOParticles;
 import com.enderio.enderio.init.EIOTravelTargets;
 import net.minecraft.client.color.block.BlockTintSources;
+import net.minecraft.client.renderer.block.BuiltInBlockModels;
 import net.minecraft.client.renderer.block.FluidModel;
 import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.Holder;
@@ -97,6 +102,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
+import net.neoforged.neoforge.client.event.RegisterBlockModelsEvent;
 import net.neoforged.neoforge.client.event.RegisterBlockStateModels;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterConditionalItemModelPropertyEvent;
@@ -106,6 +112,7 @@ import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
 import net.neoforged.neoforge.client.event.RegisterItemModelsEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
+import net.neoforged.neoforge.client.event.RegisterPictureInPictureRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterSpecialModelRendererEvent;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
@@ -131,6 +138,11 @@ public class EnderIOClient {
     public EnderIOClient(ModContainer modContainer) {
         // TODO: Re-enable after config rework.
 //        modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
+    }
+
+    @SubscribeEvent
+    public static void registerPip(RegisterPictureInPictureRenderersEvent event) {
+        event.register(IOConfigSceneRenderState.class, IOConfigSceneRenderer::new);
     }
 
     @SubscribeEvent
@@ -357,7 +369,19 @@ public class EnderIOClient {
         event.registerModel(EnderIO.id("conduit"), ConduitBlockStateModel.Unbaked.CODEC);
         event.registerModel(EnderIO.id("io_overlay"), IOOverlayBlockStateModel.Unbaked.MAP_CODEC);
         event.registerModel(EnderIO.id("paint"), PaintedBlockStateModel.Unbaked.MAP_CODEC);
+    }
 
+    @SubscribeEvent
+    public static void registerBlockModels(RegisterBlockModelsEvent event) {
+        BuiltInBlockModels.ModelFactory factory = (_, state) -> new IOConfigRealLevelWorkaroundBlockModel.Unbaked(state, Optional.empty());
+
+        for (var block : EIOBlocks.BLOCKS.getEntries()) {
+            if (block.get() instanceof MachineBlock<?>) {
+                event.register(factory, block.get());
+            }
+        }
+
+        event.register(factory, EIOBlocks.CONDUIT_BUNDLE.get());
     }
 
     @SubscribeEvent
