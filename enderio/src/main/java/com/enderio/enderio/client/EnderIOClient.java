@@ -74,6 +74,7 @@ import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
 import com.enderio.enderio.content.fun.EnderiosItem;
 import com.enderio.enderio.content.misc_blocks.skull.EnderSkullBlock;
 import com.enderio.enderio.content.paint.block.PaintExtension;
+import com.enderio.enderio.content.paint.block.PaintedBlock;
 import com.enderio.enderio.foundation.block.MachineBlock;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOBlocks;
@@ -377,6 +378,10 @@ public class EnderIOClient {
 
         for (var block : EIOBlocks.BLOCKS.getEntries()) {
             if (block.get() instanceof MachineBlock<?>) {
+                event.register(factory, block.get());
+            }
+
+            if (block.get() instanceof PaintedBlock) {
                 event.register(factory, block.get());
             }
         }
