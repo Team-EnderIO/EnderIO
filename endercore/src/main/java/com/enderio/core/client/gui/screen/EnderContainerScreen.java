@@ -72,8 +72,7 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
         for (var layer : overlayRenderables.keySet()) {
             for (var overlay : overlayRenderables.get(layer)) {
                 if (!(overlay instanceof AbstractWidget widget) || widget.isActive()) {
-                    overlay.extractRenderState(graphics, mouseX, mouseY,
-                        Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(false));
+                    overlay.extractRenderState(graphics, mouseX, mouseY, a);
                 }
             }
         }

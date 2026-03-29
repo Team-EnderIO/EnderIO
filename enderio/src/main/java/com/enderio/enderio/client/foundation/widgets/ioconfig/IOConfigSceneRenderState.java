@@ -23,7 +23,6 @@ public record IOConfigSceneRenderState(
     Matrix4f viewMatrix,
     List<IOConfigSceneBlock> primaryBlocks,
     List<IOConfigSceneBlock> neighborBlocks,
-    boolean shouldRenderNeighbors,
     @Nullable Pair<BlockPos, Direction> selection
 ) implements PictureInPictureRenderState {
 
@@ -37,13 +36,14 @@ public record IOConfigSceneRenderState(
         }
 
         List<IOConfigSceneBlock> neighborBlocks = new ArrayList<>();
-        for (BlockPos pos : neighborBlockPositions) {
-            neighborBlocks.add(IOConfigSceneBlock.create(level, pos));
+        if (shouldRenderNeighbors) {
+            for (BlockPos pos : neighborBlockPositions) {
+                neighborBlocks.add(IOConfigSceneBlock.create(level, pos));
+            }
         }
 
         return new IOConfigSceneRenderState(x, x + width, y, y + height, 1, scissorArea,
-            PictureInPictureRenderState.getBounds(x, y, x + width, y + height, scissorArea), viewMatrix, primaryBlocks, neighborBlocks,
-            shouldRenderNeighbors, selection);
+            PictureInPictureRenderState.getBounds(x, y, x + width, y + height, scissorArea), new Matrix4f(viewMatrix), primaryBlocks, neighborBlocks, selection);
     }
 
 }

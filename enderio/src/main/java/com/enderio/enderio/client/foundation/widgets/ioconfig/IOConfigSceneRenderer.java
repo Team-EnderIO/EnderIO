@@ -92,8 +92,8 @@ public class IOConfigSceneRenderer extends PictureInPictureRenderer<IOConfigScen
 
         Minecraft.getInstance().gameRenderer.getLighting().setupFor(Lighting.Entry.ITEMS_3D);
 
-        // Render neighbors transparently, if enabled
-        if (state.shouldRenderNeighbors()) {
+        // Render neighbors transparently, if any to show
+        if (!state.neighborBlocks().isEmpty()) {
             RenderSystem.pushPipelineModifier(EIOPipelineModifiers.FORCE_TRANSLUCENT);
 
             for (var block : state.neighborBlocks()) {
@@ -189,7 +189,7 @@ public class IOConfigSceneRenderer extends PictureInPictureRenderer<IOConfigScen
 
             @Override
             public VertexConsumer setColor(int r, int g, int b, int a) {
-                super.setColor(r, g, b, MachinesConfig.CLIENT.IO_CONFIG_NEIGHBOUR_TRANSPARENCY.get().floatValue());
+                super.setColor(r, g, b, (int)(MachinesConfig.CLIENT.IO_CONFIG_NEIGHBOUR_TRANSPARENCY.get().floatValue() * 255));
                 return this;
             }
 

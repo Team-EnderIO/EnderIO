@@ -18,7 +18,7 @@ public record IOConfigSceneBlock(
         BlockDisplayContext context = new IOConfigBlockDisplayContext(level, pos);
         Minecraft.getInstance().getBlockModelResolver().update(modelRenderState, state, context);
 
-        return new IOConfigSceneBlock(pos, modelRenderState);
+        return new IOConfigSceneBlock(pos.immutable(), modelRenderState);
     }
 
 }
