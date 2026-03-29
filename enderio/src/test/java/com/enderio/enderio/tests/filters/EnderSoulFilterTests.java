@@ -62,4 +62,62 @@ public class EnderSoulFilterTests {
         Assertions.assertTrue(filter.test(Soul.of(EntityType.COD)));
         Assertions.assertTrue(filter.test(Soul.of(EntityType.SHEEP)));
     }
+
+    @Test
+    public void testEqualsSameValues() {
+        var filter1 = new EnderSoulFilter(NonNullList.of(Soul.EMPTY, Soul.of(EntityType.ALLAY), Soul.of(EntityType.SKELETON)), false, false);
+        var filter2 = new EnderSoulFilter(NonNullList.of(Soul.EMPTY, Soul.of(EntityType.ALLAY), Soul.of(EntityType.SKELETON)), false, false);
+
+        Assertions.assertEquals(filter1, filter2);
+        Assertions.assertEquals(filter1.hashCode(), filter2.hashCode());
+    }
+
+    @Test
+    public void testEqualsSameInstance() {
+        var filter1 = new EnderSoulFilter(NonNullList.of(Soul.EMPTY, Soul.of(EntityType.ALLAY)), false, false);
+
+        Assertions.assertEquals(filter1, filter1);
+        Assertions.assertEquals(filter1.hashCode(), filter1.hashCode());
+    }
+
+    @Test
+    public void testNotEqualsDifferentMatches() {
+        var filter1 = new EnderSoulFilter(NonNullList.of(Soul.EMPTY, Soul.of(EntityType.ALLAY)), false, false);
+        var filter2 = new EnderSoulFilter(NonNullList.of(Soul.EMPTY, Soul.of(EntityType.SKELETON)), false, false);
+
+        Assertions.assertNotEquals(filter1, filter2);
+    }
+
+    @Test
+    public void testNotEqualsDifferentIsDenyList() {
+        var filter1 = new EnderSoulFilter(NonNullList.of(Soul.EMPTY, Soul.of(EntityType.ALLAY)), false, false);
+        var filter2 = new EnderSoulFilter(NonNullList.of(Soul.EMPTY, Soul.of(EntityType.ALLAY)), true, false);
+
+        Assertions.assertNotEquals(filter1, filter2);
+    }
+
+    @Test
+    public void testNotEqualsDifferentShouldCompareTags() {
+        var filter1 = new EnderSoulFilter(NonNullList.of(Soul.EMPTY, Soul.of(EntityType.ALLAY)), false, false);
+        var filter2 = new EnderSoulFilter(NonNullList.of(Soul.EMPTY, Soul.of(EntityType.ALLAY)), false, true);
+
+        Assertions.assertNotEquals(filter1, filter2);
+    }
+
+    @Test
+    public void testNotEqualsDifferentMatchCount() {
+        var filter1 = new EnderSoulFilter(NonNullList.of(Soul.EMPTY, Soul.of(EntityType.ALLAY)), false, false);
+        var filter2 = new EnderSoulFilter(NonNullList.of(Soul.EMPTY, Soul.of(EntityType.ALLAY), Soul.of(EntityType.SKELETON)), false, false);
+
+        Assertions.assertNotEquals(filter1, filter2);
+    }
+
+    @Test
+    public void testEmptyListEquals() {
+        var filter1 = new EnderSoulFilter(NonNullList.of(Soul.EMPTY), false, false);
+        var filter2 = new EnderSoulFilter(NonNullList.of(Soul.EMPTY), false, false);
+
+        Assertions.assertEquals(filter1, filter2);
+        Assertions.assertEquals(filter1.hashCode(), filter2.hashCode());
+    }
 }
