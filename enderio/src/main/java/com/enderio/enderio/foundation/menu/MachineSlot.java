@@ -8,6 +8,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jspecify.annotations.Nullable;
 
 public class MachineSlot extends ResourceHandlerSlot implements SlotWithOverlay {
@@ -32,12 +33,27 @@ public class MachineSlot extends ResourceHandlerSlot implements SlotWithOverlay 
 
     @Override
     public boolean mayPlace(ItemStack stack) {
-        return getResourceHandler().layout().slotConfig(index).canManualInsert() && super.mayPlace(stack);
+        if (stack.isEmpty()) {
+            return false;
+        }
+
+        try (var tx = Transaction.openRoot()) {
+            // Simulated extraction
+            return getResourceHandler().internalInsert(index, ItemResource.of(stack), 1, tx) == 1;
+        }
     }
 
     @Override
     public boolean mayPickup(Player playerIn) {
-        return getResourceHandler().layout().slotConfig(index).canManualExtract() && super.mayPickup(playerIn);
+        var resource = getResourceHandler().getResource(index);
+        if (resource.isEmpty()) {
+            return false;
+        }
+
+        try (var tx = Transaction.openRoot()) {
+            // Simulated extraction
+            return getResourceHandler().internalExtract(index, resource, 1, tx) == 1;
+        }
     }
 
     public boolean canQuickInsertStack() {
