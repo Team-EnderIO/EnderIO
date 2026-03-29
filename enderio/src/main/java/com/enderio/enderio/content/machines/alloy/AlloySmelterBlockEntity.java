@@ -71,8 +71,8 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public AlloySmelterBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(EIOBlockEntities.ALLOY_SMELTER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, // TODO: Set back to REQUIRED
-            CAPACITOR, EnergyIOMode.Input, CAPACITY, USAGE);
+        super(EIOBlockEntities.ALLOY_SMELTER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, CAPACITOR, EnergyIOMode.Input,
+            CAPACITY, USAGE);
 
         // Crafting task host
         craftingTaskHost = new AlloySmeltingMachineTaskHost(this, this::canAcceptTask,
@@ -80,9 +80,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     }
 
     protected boolean canAcceptTask() {
-        // TODO
-        return false;
-//        return hasEnergy() && !isRedstoneBlocked();
+        return hasEnergy() && !isRedstoneBlocked();
     }
 
     /**
@@ -234,10 +232,11 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
                 int consumed = 0;
                 for (int i = inputs.count() - 1; i >= 0; i--) {
-                    ItemStack itemStack = getInventory().getStack(inputs.slot(i));
+                    ItemStack itemStack = inv.getStack(inputs.slot(i));
                     if (input.test(itemStack)) {
                         int consumedNow = Math.min(inputsConsumed - consumed, itemStack.getCount());
                         itemStack.shrink(consumedNow);
+                        inv.setStack(inputs.slot(i), itemStack);
                         consumed += consumedNow;
                     }
                 }
@@ -264,7 +263,9 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
                             if (input.test(stack)) {
                                 consumed[i] = true;
+
                                 stack.shrink(input.count());
+                                inv.setStack(slot, stack);
                             }
                         } else if (stack.isEmpty()) {
                             // If we don't expect an input, make sure we have a blank for it.

@@ -236,7 +236,7 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
 
                 int toInsert = output.getItem().getCount();
                 for (ResourceSlotId<ItemResource> outputSlot : outputSlots) {
-                    int inserted = getInventory().insert(outputSlot, item, toInsert, transaction);
+                    int inserted = getInventory().internalInsert(outputSlot, item, toInsert, transaction);
                     toInsert -= inserted;
 
                     if (toInsert == 0) {
