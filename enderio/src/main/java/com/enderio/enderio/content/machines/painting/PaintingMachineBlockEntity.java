@@ -147,7 +147,7 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
                 recipe) {
             @Override
             protected void consumeInputs(PaintingRecipe recipe) {
-                getInventory().getStack(INPUT).shrink(1);
+                getInventory().mutateStack(INPUT, stack -> stack.shrink(1));
             }
 
             @Override

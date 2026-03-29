@@ -20,6 +20,7 @@ import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
+import net.neoforged.neoforge.transfer.resource.Resource;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
@@ -32,7 +33,7 @@ import java.util.stream.Stream;
  * Represents a stored soul, derived from a {@link LivingEntity}.
  * @param entityTag the entity's NBT tag.
  */
-public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) { //TODO can ValueOutput be used instead of the tag? Couldn't find a codex for it
+public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) implements Resource { //TODO can ValueOutput be used instead of the tag? Couldn't find a codex for it
 
     // Keys that should not be compared or saved
     // Note be careful adding new things to this list - it will affect saves.
@@ -181,6 +182,7 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) { 
         return entityType != null;
     }
 
+    @Override
     public boolean isEmpty() {
         return entityType == null;
     }
