@@ -5,15 +5,15 @@ import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.foundation.state.MachineStateType;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -58,23 +58,31 @@ public class ActivityWidget extends AbstractWidget {
 
         RenderSystem.disableBlend();
         RenderSystem.disableDepthTest();
-        renderToolTip(guiGraphics, mouseX, mouseY);
+
+        updateTooltip();
     }
 
-    private void renderToolTip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    private void updateTooltip() {
         if (isHovered()) {
-            Minecraft minecraft = Minecraft.getInstance();
+            MutableComponent component;
 
-            List<Component> list = state.get()
+            List<MutableComponent> list = state.get()
                     .stream()
                     .filter(s -> state.get().size() <= 1 || s.type() != MachineStateType.ACTIVE)
-                    .map(s -> (Component) s.component())
+                    .map(MachineState::component)
                     .toList();
+
             if (list.isEmpty()) {
-                list = List.of(MachinesLang.STATUS_IDLE);
+                component = MachinesLang.STATUS_IDLE;
+            } else {
+                component = MutableComponent.create(list.getFirst().getContents());
+
+                for (int i = 1; i < list.size(); i++) {
+                    component = component.append("\n").append(list.get(i));
+                }
             }
 
-            guiGraphics.renderTooltip(minecraft.font, list, Optional.empty(), mouseX, mouseY);
+            setTooltip(Tooltip.create(component));
         }
     }
 
