@@ -12,6 +12,7 @@ public class MachineSlotTemplates {
     public static UnaryOperator<ResourceStorageLayout.Builder.SlotBuilder<ItemResource>> capacitor() {
         var storageSlotBuilder = SlotTemplates.<ItemResource>storage();
         return builder -> storageSlotBuilder.apply(builder)
+            .capacity(1)
             .filter((_, itemResource) -> itemResource.has(EIODataComponents.CAPACITOR_DATA) ||
                 itemResource.toStack().getCapability(EnderIOCapabilities.CAPACITOR_EXTENSION) != null);
     }
