@@ -8,7 +8,6 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.common.util.ValueIOSerializable;
-import net.neoforged.neoforge.transfer.StacksResourceHandler;
 import net.neoforged.neoforge.transfer.TransferPreconditions;
 import net.neoforged.neoforge.transfer.resource.Resource;
 import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
@@ -19,7 +18,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Function;
+import java.util.function.Consumer;
+import java.util.function.UnaryOperator;
 
 // Mostly the same as StacksResourceHandler, but we save differently and support variable fluid capacity.
 public abstract class StacksResourceStorage<T extends Resource, S> implements ResourceStorage<T>, ValueIOSerializable {
@@ -88,6 +88,12 @@ public abstract class StacksResourceStorage<T extends Resource, S> implements Re
 
     public void setStack(ResourceSlotId<T> slotId, S stack) {
         set(slotId.index(layout), getResourceFrom(stack), getAmountFrom(stack));
+    }
+
+    public void mutateStack(ResourceSlotId<T> slotId, Consumer<S> mutator) {
+        S stack = getStack(slotId);
+        mutator.accept(stack);
+        setStack(slotId, stack);
     }
 
     @Unmodifiable

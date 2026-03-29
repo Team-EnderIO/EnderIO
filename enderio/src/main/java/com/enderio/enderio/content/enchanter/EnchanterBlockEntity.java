@@ -49,7 +49,7 @@ public class EnchanterBlockEntity extends EnderBlockEntity implements MenuProvid
 
     public EnchanterRecipe.Input createRecipeInput() {
         return new EnchanterRecipe.Input(getInventory().getStack(BOOK), getInventory().getStack(CATALYST),
-            getInventory().getStack(CATALYST));
+            getInventory().getStack(LAPIS));
     }
 
     // region MenuProvider
