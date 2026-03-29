@@ -72,8 +72,8 @@ public class ModIdItemFilterTests {
 
     @Test
     public void testEmptyListEquals() {
-        var filter1 = new ModIdItemFilter(NonNullList.of(ItemStack.EMPTY, ItemStack.EMPTY), false);
-        var filter2 = new ModIdItemFilter(NonNullList.of(ItemStack.EMPTY, ItemStack.EMPTY), false);
+        var filter1 = new ModIdItemFilter(NonNullList.of(ItemStack.EMPTY), false);
+        var filter2 = new ModIdItemFilter(NonNullList.of(ItemStack.EMPTY), false);
 
         Assertions.assertEquals(filter1, filter2);
         Assertions.assertEquals(filter1.hashCode(), filter2.hashCode());

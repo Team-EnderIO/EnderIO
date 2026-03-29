@@ -102,8 +102,8 @@ public class EnderFluidFilterTests {
 
     @Test
     public void testEmptyListEquals() {
-        var filter1 = new EnderFluidFilter(NonNullList.of(FluidStack.EMPTY, FluidStack.EMPTY), false, false);
-        var filter2 = new EnderFluidFilter(NonNullList.of(FluidStack.EMPTY, FluidStack.EMPTY), false, false);
+        var filter1 = new EnderFluidFilter(NonNullList.of(FluidStack.EMPTY), false, false);
+        var filter2 = new EnderFluidFilter(NonNullList.of(FluidStack.EMPTY), false, false);
 
         Assertions.assertEquals(filter1, filter2);
         Assertions.assertEquals(filter1.hashCode(), filter2.hashCode());

@@ -67,8 +67,8 @@ public class ExistingItemFilterTests {
 
     @Test
     public void testEmptyListEquals() {
-        var filter1 = new ExistingItemFilter(true, NonNullList.of(ItemStack.EMPTY, ItemStack.EMPTY), false, false);
-        var filter2 = new ExistingItemFilter(true, NonNullList.of(ItemStack.EMPTY, ItemStack.EMPTY), false, false);
+        var filter1 = new ExistingItemFilter(true, NonNullList.of(ItemStack.EMPTY), false, false);
+        var filter2 = new ExistingItemFilter(true, NonNullList.of(ItemStack.EMPTY), false, false);
 
         Assertions.assertEquals(filter1, filter2);
         Assertions.assertEquals(filter1.hashCode(), filter2.hashCode());

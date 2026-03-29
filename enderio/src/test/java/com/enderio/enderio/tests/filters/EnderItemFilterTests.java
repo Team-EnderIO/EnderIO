@@ -274,8 +274,8 @@ public class EnderItemFilterTests {
 
     @Test
     public void testEmptyListEquals() {
-        var filter1 = new EnderItemFilter(NonNullList.of(ItemStack.EMPTY, ItemStack.EMPTY), false, false, DamageFilterMode.IGNORE);
-        var filter2 = new EnderItemFilter(NonNullList.of(ItemStack.EMPTY, ItemStack.EMPTY), false, false, DamageFilterMode.IGNORE);
+        var filter1 = new EnderItemFilter(NonNullList.of(ItemStack.EMPTY), false, false, DamageFilterMode.IGNORE);
+        var filter2 = new EnderItemFilter(NonNullList.of(ItemStack.EMPTY), false, false, DamageFilterMode.IGNORE);
 
         Assertions.assertEquals(filter1, filter2);
         Assertions.assertEquals(filter1.hashCode(), filter2.hashCode());

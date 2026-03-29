@@ -60,8 +60,8 @@ public class LimitedItemFilterTests {
 
     @Test
     public void testEmptyListEquals() {
-        var filter1 = new LimitedItemFilter(NonNullList.of(ItemStack.EMPTY, ItemStack.EMPTY), false, DamageFilterMode.IGNORE);
-        var filter2 = new LimitedItemFilter(NonNullList.of(ItemStack.EMPTY, ItemStack.EMPTY), false, DamageFilterMode.IGNORE);
+        var filter1 = new LimitedItemFilter(NonNullList.of(ItemStack.EMPTY), false, DamageFilterMode.IGNORE);
+        var filter2 = new LimitedItemFilter(NonNullList.of(ItemStack.EMPTY), false, DamageFilterMode.IGNORE);
 
         Assertions.assertEquals(filter1, filter2);
         Assertions.assertEquals(filter1.hashCode(), filter2.hashCode());

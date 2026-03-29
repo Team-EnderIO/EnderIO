@@ -114,8 +114,8 @@ public class EnderSoulFilterTests {
 
     @Test
     public void testEmptyListEquals() {
-        var filter1 = new EnderSoulFilter(NonNullList.of(Soul.EMPTY, Soul.EMPTY), false, false);
-        var filter2 = new EnderSoulFilter(NonNullList.of(Soul.EMPTY, Soul.EMPTY), false, false);
+        var filter1 = new EnderSoulFilter(NonNullList.of(Soul.EMPTY), false, false);
+        var filter2 = new EnderSoulFilter(NonNullList.of(Soul.EMPTY), false, false);
 
         Assertions.assertEquals(filter1, filter2);
         Assertions.assertEquals(filter1.hashCode(), filter2.hashCode());
