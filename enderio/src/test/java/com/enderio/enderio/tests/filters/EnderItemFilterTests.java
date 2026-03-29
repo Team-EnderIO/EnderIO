@@ -214,4 +214,70 @@ public class EnderItemFilterTests {
         Assertions.assertTrue(filter.test(null, sword75Damage).isEmpty());
         Assertions.assertFalse(filter.test(null, sword99Damage).isEmpty());
     }
+
+    @Test
+    public void testEqualsSameValues() {
+        var filter1 = new EnderItemFilter(NonNullList.of(ItemStack.EMPTY, new ItemStack(Items.SAND, 1)), false, false, DamageFilterMode.IGNORE);
+        var filter2 = new EnderItemFilter(NonNullList.of(ItemStack.EMPTY, new ItemStack(Items.SAND, 1)), false, false, DamageFilterMode.IGNORE);
+
+        Assertions.assertEquals(filter1, filter2);
+        Assertions.assertEquals(filter1.hashCode(), filter2.hashCode());
+    }
+
+    @Test
+    public void testEqualsSameInstance() {
+        var filter1 = new EnderItemFilter(NonNullList.of(ItemStack.EMPTY, new ItemStack(Items.SAND, 1)), false, false, DamageFilterMode.IGNORE);
+
+        Assertions.assertEquals(filter1, filter1);
+        Assertions.assertEquals(filter1.hashCode(), filter1.hashCode());
+    }
+
+    @Test
+    public void testNotEqualsDifferentMatches() {
+        var filter1 = new EnderItemFilter(NonNullList.of(ItemStack.EMPTY, new ItemStack(Items.SAND, 1)), false, false, DamageFilterMode.IGNORE);
+        var filter2 = new EnderItemFilter(NonNullList.of(ItemStack.EMPTY, new ItemStack(Items.COBBLESTONE, 1)), false, false, DamageFilterMode.IGNORE);
+
+        Assertions.assertNotEquals(filter1, filter2);
+    }
+
+    @Test
+    public void testNotEqualsDifferentIsDenyList() {
+        var filter1 = new EnderItemFilter(NonNullList.of(ItemStack.EMPTY, new ItemStack(Items.SAND, 1)), false, false, DamageFilterMode.IGNORE);
+        var filter2 = new EnderItemFilter(NonNullList.of(ItemStack.EMPTY, new ItemStack(Items.SAND, 1)), true, false, DamageFilterMode.IGNORE);
+
+        Assertions.assertNotEquals(filter1, filter2);
+    }
+
+    @Test
+    public void testNotEqualsDifferentShouldCompareComponents() {
+        var filter1 = new EnderItemFilter(NonNullList.of(ItemStack.EMPTY, new ItemStack(Items.SAND, 1)), false, false, DamageFilterMode.IGNORE);
+        var filter2 = new EnderItemFilter(NonNullList.of(ItemStack.EMPTY, new ItemStack(Items.SAND, 1)), false, true, DamageFilterMode.IGNORE);
+
+        Assertions.assertNotEquals(filter1, filter2);
+    }
+
+    @Test
+    public void testNotEqualsDifferentDamageFilterMode() {
+        var filter1 = new EnderItemFilter(NonNullList.of(ItemStack.EMPTY, new ItemStack(Items.SAND, 1)), false, false, DamageFilterMode.IGNORE);
+        var filter2 = new EnderItemFilter(NonNullList.of(ItemStack.EMPTY, new ItemStack(Items.SAND, 1)), false, false, DamageFilterMode.IS_DAMAGEABLE);
+
+        Assertions.assertNotEquals(filter1, filter2);
+    }
+
+    @Test
+    public void testNotEqualsDifferentMatchCount() {
+        var filter1 = new EnderItemFilter(NonNullList.of(ItemStack.EMPTY, new ItemStack(Items.SAND, 1)), false, false, DamageFilterMode.IGNORE);
+        var filter2 = new EnderItemFilter(NonNullList.of(ItemStack.EMPTY, new ItemStack(Items.SAND, 1), new ItemStack(Items.DIRT, 1)), false, false, DamageFilterMode.IGNORE);
+
+        Assertions.assertNotEquals(filter1, filter2);
+    }
+
+    @Test
+    public void testEmptyListEquals() {
+        var filter1 = new EnderItemFilter(NonNullList.of(ItemStack.EMPTY, ItemStack.EMPTY), false, false, DamageFilterMode.IGNORE);
+        var filter2 = new EnderItemFilter(NonNullList.of(ItemStack.EMPTY, ItemStack.EMPTY), false, false, DamageFilterMode.IGNORE);
+
+        Assertions.assertEquals(filter1, filter2);
+        Assertions.assertEquals(filter1.hashCode(), filter2.hashCode());
+    }
 }

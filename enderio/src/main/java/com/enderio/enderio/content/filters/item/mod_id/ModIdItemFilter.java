@@ -1,6 +1,7 @@
 package com.enderio.enderio.content.filters.item.mod_id;
 
 import com.enderio.core.common.serialization.OrderedListCodec;
+import com.enderio.core.common.util.EqualityUtil;
 import com.enderio.enderio.api.filter.ItemFilter;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -14,6 +15,7 @@ import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 
 public record ModIdItemFilter(NonNullList<ItemStack> examples, boolean isDenyList) implements ItemFilter {
     public static final Codec<ModIdItemFilter> CODEC = RecordCodecBuilder.create(componentInstance -> componentInstance
@@ -51,5 +53,25 @@ public record ModIdItemFilter(NonNullList<ItemStack> examples, boolean isDenyLis
         }
 
         return isDenyList ? stack : ItemStack.EMPTY;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        ModIdItemFilter other = (ModIdItemFilter) o;
+        return isDenyList == other.isDenyList &&
+            EqualityUtil.areListsEqual(examples, other.examples, ItemStack::matches);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(EqualityUtil.hashListContents(examples, ItemStack::hashItemAndComponents), isDenyList);
     }
 }

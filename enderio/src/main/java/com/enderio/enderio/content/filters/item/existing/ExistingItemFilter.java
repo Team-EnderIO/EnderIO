@@ -1,6 +1,7 @@
 package com.enderio.enderio.content.filters.item.existing;
 
 import com.enderio.core.common.serialization.OrderedListCodec;
+import com.enderio.core.common.util.EqualityUtil;
 import com.enderio.enderio.api.filter.ItemFilter;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -13,6 +14,7 @@ import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 
 // This is just an example as to why we needed a more extensive filter interface :)
 public record ExistingItemFilter(boolean hasSnapshot, NonNullList<ItemStack> snapshot, boolean shouldCompareComponents,
@@ -76,5 +78,27 @@ public record ExistingItemFilter(boolean hasSnapshot, NonNullList<ItemStack> sna
         }
 
         return isInverted ? stack : ItemStack.EMPTY;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        ExistingItemFilter other = (ExistingItemFilter) o;
+        return hasSnapshot == other.hasSnapshot &&
+            shouldCompareComponents == other.shouldCompareComponents &&
+            isInverted == other.isInverted &&
+            EqualityUtil.areListsEqual(snapshot, other.snapshot, ItemStack::matches);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(hasSnapshot, EqualityUtil.hashListContents(snapshot, ItemStack::hashItemAndComponents), shouldCompareComponents, isInverted);
     }
 }

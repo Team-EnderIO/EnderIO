@@ -28,4 +28,54 @@ public class ModIdItemFilterTests {
         Assertions.assertFalse(filter.test(null, new ItemStack(EIOItems.BASIC_CAPACITOR.get(), 1)).isEmpty());
         Assertions.assertFalse(filter.test(null, new ItemStack(EIOItems.GRAINS_OF_INFINITY.get(), 1)).isEmpty());
     }
+
+    @Test
+    public void testEqualsSameValues() {
+        var filter1 = new ModIdItemFilter(NonNullList.of(ItemStack.EMPTY, new ItemStack(Items.SAND, 1)), false);
+        var filter2 = new ModIdItemFilter(NonNullList.of(ItemStack.EMPTY, new ItemStack(Items.SAND, 1)), false);
+
+        Assertions.assertEquals(filter1, filter2);
+        Assertions.assertEquals(filter1.hashCode(), filter2.hashCode());
+    }
+
+    @Test
+    public void testEqualsSameInstance() {
+        var filter1 = new ModIdItemFilter(NonNullList.of(ItemStack.EMPTY, new ItemStack(Items.SAND, 1)), false);
+
+        Assertions.assertEquals(filter1, filter1);
+        Assertions.assertEquals(filter1.hashCode(), filter1.hashCode());
+    }
+
+    @Test
+    public void testNotEqualsDifferentExamples() {
+        var filter1 = new ModIdItemFilter(NonNullList.of(ItemStack.EMPTY, new ItemStack(Items.SAND, 1)), false);
+        var filter2 = new ModIdItemFilter(NonNullList.of(ItemStack.EMPTY, new ItemStack(Items.COBBLESTONE, 1)), false);
+
+        Assertions.assertNotEquals(filter1, filter2);
+    }
+
+    @Test
+    public void testNotEqualsDifferentIsDenyList() {
+        var filter1 = new ModIdItemFilter(NonNullList.of(ItemStack.EMPTY, new ItemStack(Items.SAND, 1)), false);
+        var filter2 = new ModIdItemFilter(NonNullList.of(ItemStack.EMPTY, new ItemStack(Items.SAND, 1)), true);
+
+        Assertions.assertNotEquals(filter1, filter2);
+    }
+
+    @Test
+    public void testNotEqualsDifferentExampleCount() {
+        var filter1 = new ModIdItemFilter(NonNullList.of(ItemStack.EMPTY, new ItemStack(Items.SAND, 1)), false);
+        var filter2 = new ModIdItemFilter(NonNullList.of(ItemStack.EMPTY, new ItemStack(Items.SAND, 1), new ItemStack(Items.DIRT, 1)), false);
+
+        Assertions.assertNotEquals(filter1, filter2);
+    }
+
+    @Test
+    public void testEmptyListEquals() {
+        var filter1 = new ModIdItemFilter(NonNullList.of(ItemStack.EMPTY, ItemStack.EMPTY), false);
+        var filter2 = new ModIdItemFilter(NonNullList.of(ItemStack.EMPTY, ItemStack.EMPTY), false);
+
+        Assertions.assertEquals(filter1, filter2);
+        Assertions.assertEquals(filter1.hashCode(), filter2.hashCode());
+    }
 }

@@ -50,4 +50,62 @@ public class EnderFluidFilterTests {
         testStack4.set(DataComponents.RARITY, Rarity.COMMON);
         Assertions.assertTrue(filter.test(null, testStack4).isEmpty());
     }
+
+    @Test
+    public void testEqualsSameValues() {
+        var filter1 = new EnderFluidFilter(NonNullList.of(FluidStack.EMPTY, new FluidStack(Fluids.WATER, 1000)), false, false);
+        var filter2 = new EnderFluidFilter(NonNullList.of(FluidStack.EMPTY, new FluidStack(Fluids.WATER, 1000)), false, false);
+
+        Assertions.assertEquals(filter1, filter2);
+        Assertions.assertEquals(filter1.hashCode(), filter2.hashCode());
+    }
+
+    @Test
+    public void testEqualsSameInstance() {
+        var filter1 = new EnderFluidFilter(NonNullList.of(FluidStack.EMPTY, new FluidStack(Fluids.WATER, 1000)), false, false);
+
+        Assertions.assertEquals(filter1, filter1);
+        Assertions.assertEquals(filter1.hashCode(), filter1.hashCode());
+    }
+
+    @Test
+    public void testNotEqualsDifferentMatches() {
+        var filter1 = new EnderFluidFilter(NonNullList.of(FluidStack.EMPTY, new FluidStack(Fluids.WATER, 1000)), false, false);
+        var filter2 = new EnderFluidFilter(NonNullList.of(FluidStack.EMPTY, new FluidStack(Fluids.LAVA, 1000)), false, false);
+
+        Assertions.assertNotEquals(filter1, filter2);
+    }
+
+    @Test
+    public void testNotEqualsDifferentIsDenyList() {
+        var filter1 = new EnderFluidFilter(NonNullList.of(FluidStack.EMPTY, new FluidStack(Fluids.WATER, 1000)), false, false);
+        var filter2 = new EnderFluidFilter(NonNullList.of(FluidStack.EMPTY, new FluidStack(Fluids.WATER, 1000)), true, false);
+
+        Assertions.assertNotEquals(filter1, filter2);
+    }
+
+    @Test
+    public void testNotEqualsDifferentShouldCompareComponents() {
+        var filter1 = new EnderFluidFilter(NonNullList.of(FluidStack.EMPTY, new FluidStack(Fluids.WATER, 1000)), false, false);
+        var filter2 = new EnderFluidFilter(NonNullList.of(FluidStack.EMPTY, new FluidStack(Fluids.WATER, 1000)), false, true);
+
+        Assertions.assertNotEquals(filter1, filter2);
+    }
+
+    @Test
+    public void testNotEqualsDifferentMatchCount() {
+        var filter1 = new EnderFluidFilter(NonNullList.of(FluidStack.EMPTY, new FluidStack(Fluids.WATER, 1000)), false, false);
+        var filter2 = new EnderFluidFilter(NonNullList.of(FluidStack.EMPTY, new FluidStack(Fluids.WATER, 1000), new FluidStack(Fluids.LAVA, 1000)), false, false);
+
+        Assertions.assertNotEquals(filter1, filter2);
+    }
+
+    @Test
+    public void testEmptyListEquals() {
+        var filter1 = new EnderFluidFilter(NonNullList.of(FluidStack.EMPTY, FluidStack.EMPTY), false, false);
+        var filter2 = new EnderFluidFilter(NonNullList.of(FluidStack.EMPTY, FluidStack.EMPTY), false, false);
+
+        Assertions.assertEquals(filter1, filter2);
+        Assertions.assertEquals(filter1.hashCode(), filter2.hashCode());
+    }
 }
