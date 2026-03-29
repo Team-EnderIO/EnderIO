@@ -1314,7 +1314,20 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
         if (level != null && level.isClientSide()) {
             ResourceKey<Level> dimension = level.dimension();
-            getChunkFacadesForDimension(dimension).remove(SectionPos.asLong(worldPosition));
+
+            // Remove only this specific position from the chunk set, not the entire chunk
+            Long2ObjectMap<LongSet> chunkFacades = getChunkFacadesForDimension(dimension);
+            long sectionPos = SectionPos.asLong(worldPosition);
+            LongSet chunkList = chunkFacades.get(sectionPos);
+            if (chunkList != null) {
+                chunkList.remove(worldPosition.asLong());
+
+                // Only remove the chunk entry if it's now empty
+                if (chunkList.isEmpty()) {
+                    chunkFacades.remove(sectionPos);
+                }
+            }
+
             getFacadesForDimension(dimension).remove(worldPosition.asLong());
         }
     }
