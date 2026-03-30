@@ -17,6 +17,7 @@ public record EnergyConduitStorage(Direction side, @Nullable ConduitNode node) i
         }
 
         var network = node.getNetwork();
+        network.ensureCachesReady();
         var inserts = network.insertConnectionsFrom(new ConduitBlockConnection(node, side));
 
         int energyToSend = Math.min(amount, getTransferRate());
