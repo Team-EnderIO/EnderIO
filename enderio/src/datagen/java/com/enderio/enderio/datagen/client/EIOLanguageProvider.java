@@ -5,6 +5,7 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitApi;
 import com.enderio.enderio.api.io.RedstoneControl;
+import com.enderio.enderio.client.content.keymaps.KeymapHandler;
 import com.enderio.enderio.compat.jei.JEILang;
 import com.enderio.enderio.content.advancements.AdvancementsLang;
 import com.enderio.enderio.content.armory.ArmoryLang;
@@ -61,6 +62,7 @@ public class EIOLanguageProvider extends LanguageProvider {
         addFluids();
         addAdvancementsLang();
         addCommonLang();
+        addKeybindsLang();
     }
 
     private void addTags() {
@@ -724,8 +726,20 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOCommonLang.GRINDINGBALL_BONUS_OUTPUT, "Bonus Output %s%%");
         add(EIOCommonLang.GRINDINGBALL_POWER_USE, "Power Use %s%%");
 
+        add(EIOCommonLang.ELECTROMAGNET_ON, "Electromagnet On");
+        add(EIOCommonLang.ELECTROMAGNET_OFF, "Electromagnet Off");
+        add(EIOCommonLang.ERROR_TOO_FAR, "ERROR: Too far");
+        add(EIOCommonLang.ERROR_CANNOT_TELEPORT, "ERROR: Cannot teleport");
+        add(EIOCommonLang.ERROR_INVALID_DESTINATION, "ERROR: Destination not a valid target");
+
         add(EIOCommonLang.DARK_STEEL_LADDER_FASTER, "Faster than regular ladders");
         add(EIOCommonLang.TOO_MANY_LEVELS, "You have more than 21862 levels, that's too much XP.");
+    }
+
+    private void addKeybindsLang(){
+        add(KeymapHandler.ENDERIO_KEYBIND_CATEGORY, "EnderIO");
+        add(KeymapHandler.TOGGLE_MAGNET_KEY.get().getName(), "Toggle Electromagnet");
+        add(KeymapHandler.TRAVEL_STAFF_KEY.get().getName(), "Staff of Travelling");
     }
 
     private void addAdvancementsLang() {

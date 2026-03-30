@@ -2,15 +2,23 @@ package com.enderio.enderio.foundation.network;
 
 import com.enderio.enderio.api.travel.TravelTarget;
 import com.enderio.enderio.api.travel.TravelTargetApi;
+import com.enderio.enderio.compat.curios.CuriosCompat;
+import com.enderio.enderio.config.base.BaseConfig;
 import com.enderio.enderio.content.filters.FilterSlot;
 import com.enderio.enderio.content.filters.fluid.FluidFilterSlot;
+import com.enderio.enderio.content.tools.ElectromagnetItem;
 import com.enderio.enderio.content.travel.TravelHandler;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
+import com.enderio.enderio.foundation.network.packets.ServerboundRequestShortTravelPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundRequestTravelPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundSetFluidFilterSlotPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundSetItemFilterSlotPacket;
+import com.enderio.enderio.foundation.network.packets.ServerboundToggleMagnetPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundUpdateCoordinateSelectionNameMenuPacket;
-import net.minecraft.network.chat.Component;
+import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.Optional;
@@ -33,28 +41,96 @@ public class ServerPayloadHandler {
     public void handleTravelRequest(ServerboundRequestTravelPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
             var player = context.player();
+            // For keybind anchor teleports
+            ItemStack travelItemStack = TravelHandler.findTravelItem(player);
 
             Optional<TravelTarget> target = TravelTargetApi.INSTANCE.get(player.level(), packet.pos());
 
+            boolean canBlockTeleport = TravelHandler.canBlockTeleport(player);
+
             // These errors should only ever be triggered if there's some form of desync
-            if (!TravelHandler.canBlockTeleport(player)) {
-                player.displayClientMessage(Component.nullToEmpty("ERROR: Cannot teleport"), true);
+            if (!canBlockTeleport && travelItemStack.isEmpty()) {
+                player.displayClientMessage(EIOCommonLang.ERROR_CANNOT_TELEPORT, true);
                 return;
             }
             if (target.isEmpty()) {
-                player.displayClientMessage(Component.nullToEmpty("ERROR: Destination not a valid target"), true);
+                player.displayClientMessage(EIOCommonLang.ERROR_INVALID_DESTINATION, true);
                 return;
             }
             // Eventually change the packet structure to include what teleport method was
             // used so this range can be selected correctly
             int range = Math.max(target.get().block2BlockRange(), target.get().item2BlockRange());
             if (packet.pos().distSqr(player.getOnPos()) > range * range) {
-                player.displayClientMessage(Component.nullToEmpty("ERROR: Too far"), true);
+                player.displayClientMessage(EIOCommonLang.ERROR_TOO_FAR, true);
                 return;
             }
 
-            TravelHandler.blockTeleportTo(player.level(), player, target.get(), false);
+            // Try to do teleport
+            boolean successfulTeleport = TravelHandler.blockTeleportTo(player.level(), player, target.get(), false);
+            if(successfulTeleport && !canBlockTeleport && !travelItemStack.isEmpty()){
+                TravelHandler.consumeResources(travelItemStack);
+                player.getCooldowns().addCooldown(travelItemStack.getItem(), BaseConfig.COMMON.ITEMS.TRAVELLING_BLINK_DISABLED_TIME.get());
+            }
         });
+    }
+
+    public void handleShortTravelRequest(ServerboundRequestShortTravelPacket packet, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            var player = context.player();
+            if(player == null)
+                return;
+
+            // For keybind anchor teleports
+            ItemStack travelItemStack = TravelHandler.findTravelItem(player);
+
+            // These errors should only ever be triggered if there's some form of desync
+            if (travelItemStack.isEmpty()) {
+                player.displayClientMessage(EIOCommonLang.ERROR_CANNOT_TELEPORT, true);
+                return;
+            }
+
+            if(TravelHandler.shortTeleport(player.level(), player, false)){
+                TravelHandler.consumeResources(travelItemStack);
+                player.getCooldowns().addCooldown(travelItemStack.getItem(), BaseConfig.COMMON.ITEMS.TRAVELLING_BLINK_DISABLED_TIME.get());
+            }
+        });
+    }
+
+    /**
+     * Toggles first magnet it finds and displays message on action bar based on new active/inactive status of magnet
+     */
+    public void handleMagnetToggle(ServerboundToggleMagnetPacket packet, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            var player = context.player();
+
+            var curios = CuriosCompat.getActiveCurios(player, stack -> stack.getItem() instanceof ElectromagnetItem);
+            if(curios.isPresent()){
+                for(ItemStack curioStack : curios.get()){
+                    toggleMagnet(curioStack, player);
+                    return;
+                }
+            }
+
+            for(int i = 0; i < player.getInventory().getContainerSize(); i++){
+                ItemStack stack = player.getInventory().getItem(i);
+                if(stack.getItem() instanceof ElectromagnetItem){
+                    toggleMagnet(stack, player);
+                    return;
+                }
+            }
+
+        });
+    }
+
+    private void toggleMagnet(ItemStack stack, Player player) {
+        var magnetActive = stack.getComponents().get(EIODataComponents.TOGGLED);
+        if(magnetActive != null && magnetActive){
+            stack.set(EIODataComponents.TOGGLED, false);
+            player.displayClientMessage(EIOCommonLang.ELECTROMAGNET_OFF, true);
+        } else {
+            stack.set(EIODataComponents.TOGGLED, true);
+            player.displayClientMessage(EIOCommonLang.ELECTROMAGNET_ON, true);
+        }
     }
 
     public void handleSetItemFilterSlot(ServerboundSetItemFilterSlotPacket packet, IPayloadContext context) {

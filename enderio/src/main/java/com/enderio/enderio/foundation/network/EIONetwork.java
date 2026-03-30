@@ -17,11 +17,13 @@ import com.enderio.enderio.foundation.network.packets.ServerboundDoubleChannelPa
 import com.enderio.enderio.foundation.network.packets.ServerboundEnderfaceInteractPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundOpenConduitFilterMenu;
 import com.enderio.enderio.foundation.network.packets.ServerboundRemoveConduitFacadePacket;
+import com.enderio.enderio.foundation.network.packets.ServerboundRequestShortTravelPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundRequestTravelPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundSetFluidFilterSlotPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundSetItemFilterSlotPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundSyncProbeStatePacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundTimerFilterPacket;
+import com.enderio.enderio.foundation.network.packets.ServerboundToggleMagnetPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundTransferItemsPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundUpdateCoordinateSelectionNameMenuPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundUpdateCrafterTemplatePacket;
@@ -65,6 +67,9 @@ public class EIONetwork {
         registrar.playToServer(ServerboundRequestTravelPacket.TYPE, ServerboundRequestTravelPacket.STREAM_CODEC,
             ServerPayloadHandler.getInstance()::handleTravelRequest);
 
+        registrar.playToServer(ServerboundRequestShortTravelPacket.TYPE, ServerboundRequestShortTravelPacket.STREAM_CODEC,
+            ServerPayloadHandler.getInstance()::handleShortTravelRequest);
+
         registrar.playToServer(ServerboundSetFluidFilterSlotPacket.TYPE, ServerboundSetFluidFilterSlotPacket.STREAM_CODEC,
             ServerPayloadHandler.getInstance()::handleSetFluidFilterSlot);
 
@@ -76,6 +81,9 @@ public class EIONetwork {
 
         registrar.playToServer(ServerboundTimerFilterPacket.TYPE, ServerboundTimerFilterPacket.STREAM_CODEC,
             ConduitServerPayloadHandler.getInstance()::handleTimerFilter);
+
+        registrar.playToServer(ServerboundToggleMagnetPacket.TYPE, ServerboundToggleMagnetPacket.STREAM_CODEC,
+            ServerPayloadHandler.getInstance()::handleMagnetToggle);
 
         registrar.playToServer(ServerboundCountFilterPacket.TYPE, ServerboundCountFilterPacket.STREAM_CODEC,
             ConduitServerPayloadHandler.getInstance()::handleCountFilter);
