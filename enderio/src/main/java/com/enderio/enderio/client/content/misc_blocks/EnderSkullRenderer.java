@@ -4,6 +4,7 @@ import com.enderio.enderio.content.misc_blocks.skull.EnderSkullBlock;
 import com.enderio.enderio.foundation.block.entity.EnderSkullBlockEntity;
 import com.enderio.enderio.init.EIOBlocks;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Transformation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -34,7 +35,10 @@ import net.minecraft.world.level.block.state.properties.RotationSegment;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Matrix4f;
 import org.jspecify.annotations.Nullable;
+
+import static net.minecraft.client.renderer.blockentity.SkullBlockRenderer.TRANSFORMATIONS;
 
 public class EnderSkullRenderer implements BlockEntityRenderer<EnderSkullBlockEntity, EnderSkullRenderer.EnderSkullBlockRenderState> {
 
@@ -57,49 +61,61 @@ public class EnderSkullRenderer implements BlockEntityRenderer<EnderSkullBlockEn
         ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
         BlockEntityRenderer.super.extractRenderState(blockEntity, renderState, partialTick, cameraPosition, breakProgress);
         renderState.animationProgress = blockEntity.getAnimation(partialTick);
+        BlockState blockState = blockEntity.getBlockState();
+        if (blockState.getBlock() instanceof WallSkullBlock) {
+            Direction facing = blockState.getValue(WallSkullBlock.FACING);
+            renderState.transformation = TRANSFORMATIONS.wallTransformation(facing);
+        } else {
+            renderState.transformation = TRANSFORMATIONS.freeTransformations(blockState.getValue(SkullBlock.ROTATION));
+        }
+
+        float f = blockEntity.getAnimation(partialTick);
         BlockState blockstate = blockEntity.getBlockState();
-        boolean flag = blockstate.getBlock() instanceof WallSkullBlock;
-        renderState.direction = flag ? blockstate.getValue(WallSkullBlock.FACING) : null;
-        int i = flag ? RotationSegment.convertToSegment(renderState.direction.getOpposite()) : blockstate.getValue(SkullBlock.ROTATION);
-        renderState.rotationDegrees = RotationSegment.convertToDegrees(i);
+        LocalPlayer player = Minecraft.getInstance().player;
+        Vec3 position = player.position();
+        HitResult hitResult = player.pick(10D, 0.0f, false); //I would rather not do this every tick, but I don't see how.
+        skullmodelbase.active = false;
+
+        if (hitResult instanceof BlockHitResult blockHitResult && player.level().getBlockEntity(blockHitResult.getBlockPos()) == blockEntity) {
+            blockEntity.setAnimation(30.0f);
+            f = 30.0f;
+        }
+
+        if (f > 0) {
+            skullmodelbase.active = true;
+            float rotationDegrees = (float) (
+                Mth.atan2(position.z - blockEntity.getBlockPos().getZ() - 0.5D, position.x - blockEntity.getBlockPos().getX() - 0.5D) * 180.0f / Math.PI + 90);
+            int rotation = RotationSegment.convertToSegment(rotationDegrees);
+
+            if (blockstate.is(EIOBlocks.ENDERMAN_HEAD.get())) {
+                player.level().setBlock(blockEntity.getBlockPos(), blockstate.setValue(SkullBlock.ROTATION, rotation), 3);
+            }
+            //TODO fix smooth rendering? It may be more fun to have it be rigid?
+            //renderState.transformation = renderState.transformation.compose(new Transformation(new Matrix4f().identity().rotateY((float) Math.toRadians(rotationDegrees))));
+        }
         renderState.skullType = EnderSkullBlock.EIOSkulls.ENDERMAN;
         renderState.renderType = RENDERTYPE;
-        renderState.blockEntity = blockEntity;
     }
 
     @Override
     public void submit(EnderSkullBlockRenderState renderState, PoseStack poseStack, SubmitNodeCollector nodeCollector, CameraRenderState cameraRenderState) {
-        // TODO: 26.1 - Not quite sure what's going on here...
-//        float f = renderState.animationProgress;
-//        BlockState blockstate = renderState.blockState;
-//        LocalPlayer player = Minecraft.getInstance().player;
-//        Vec3 position = player.position();
-//        HitResult hitResult = player.pick(10D, 0.0f, false); //I would rather not do this every tick, but I don't see how.
-//        skullmodelbase.active = false;
-//        if (hitResult instanceof BlockHitResult blockHitResult && player.level().getBlockEntity(blockHitResult.getBlockPos()) == renderState.blockEntity) {
-//            renderState.blockEntity.setAnimation(30.0f);
-//            f = 30.0f;
-//        }
-//        if (f > 0) {
-//            skullmodelbase.active = true;
-//            renderState.rotationDegrees = (float) (
-//                Mth.atan2(position.z - renderState.blockEntity.getBlockPos().getZ() - 0.5D, position.x - renderState.blockEntity.getBlockPos().getX() - 0.5D) * 180.0f / Math.PI + 90);
-//            renderState.rotationDegrees += (float) (player.getRandom().nextGaussian() * 2);
-//            int rotation = RotationSegment.convertToSegment(renderState.rotationDegrees);
-//            if (player.level().getBlockEntity(renderState.blockEntity.getBlockPos()) == renderState.blockEntity && blockstate.is(EIOBlocks.ENDERMAN_HEAD.get())) {
-//                player.level().setBlock(renderState.blockEntity.getBlockPos(), blockstate.setValue(SkullBlock.ROTATION, rotation), 3);
-//            }
-//        }
-//        SkullBlockRenderer.submitSkull(renderState.direction, renderState.rotationDegrees, renderState.animationProgress, poseStack, nodeCollector,
-//            renderState.lightCoords, skullmodelbase, renderState.renderType, 0, renderState.breakProgress
-//        );
+        poseStack.pushPose();
+        Transformation compose = renderState.transformation;
+
+        if (renderState.animationProgress > 0) {
+            float rotationDegrees = (float) (Minecraft.getInstance().player.getRandom().nextGaussian() * 2);
+            compose = compose.compose(
+                new Transformation(new Matrix4f().identity().rotateY((float) Math.toRadians(rotationDegrees))));
+        }
+
+        poseStack.mulPose(compose);
+        SkullBlockRenderer.submitSkull(renderState.animationProgress, poseStack, nodeCollector, renderState.lightCoords, skullmodelbase, renderState.renderType, 0, renderState.breakProgress);
+        poseStack.popPose();
     }
 
     public static class EnderSkullBlockRenderState extends BlockEntityRenderState {
         public float animationProgress;
-        public Direction direction = Direction.NORTH;
-        public EnderSkullBlockEntity blockEntity;
-        public float rotationDegrees;
+        public Transformation transformation = Transformation.IDENTITY;
         public SkullBlock.Type skullType = SkullBlock.Types.ZOMBIE;
         public RenderType renderType;
     }
