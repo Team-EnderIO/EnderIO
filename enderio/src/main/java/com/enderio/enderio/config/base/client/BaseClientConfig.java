@@ -14,7 +14,8 @@ public class BaseClientConfig {
         builder.pop();
         builder.push("visual");
         MACHINE_PARTICLES = builder.comment("Enable machine particles").define("machineParticles", true);
-        ANCHORS_USE_ICON_AS_BLOCK = builder.comment("Try to render items as blocks").define("anchorsUseIconAsBlock", true);
+        ANCHORS_USE_ICON_AS_BLOCK = builder.comment("Whether Travel Anchors try to render items as blocks")
+            .define("anchorsUseIconAsBlock", true);
         builder.pop();
     }
 }
