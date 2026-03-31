@@ -8,12 +8,9 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.block.FluidModel;
-import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.Arrays;
@@ -42,7 +39,7 @@ public class FluidStackWidget extends EIOWidget {
 
             int color = 0xFFFFFFFF;
             if (fluidModel.fluidTintSource() != null) {
-                fluidModel.fluidTintSource().colorAsStack(fluidStack);
+                color = fluidModel.fluidTintSource().colorAsStack(fluidStack);
             }
 
             int stored = fluidStack.getAmount();
