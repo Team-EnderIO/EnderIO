@@ -32,10 +32,12 @@ public class WeatherChangeCategory extends MachineRecipeCategory<RecipeHolder<We
         WeatherChangeRecipe.class);
 
     private final IDrawable icon;
+    private final IDrawable background;
     private final IDrawableStatic staticFlame;
     private final IDrawable animatedFlame;
 
     public WeatherChangeCategory(IGuiHelper guiHelper) {
+        this.background = guiHelper.createDrawable(WeatherObeliskScreen.WEATHER_BG, 18, 4, 120, 76);
         this.icon = guiHelper.createDrawableItemStack(new ItemStack(EIOBlocks.WEATHER_OBELISK.get()));
 
         staticFlame = guiHelper.createDrawable(WeatherObeliskScreen.WEATHER_BG, 176, 0, 12, 32);
@@ -78,10 +80,10 @@ public class WeatherChangeCategory extends MachineRecipeCategory<RecipeHolder<We
             .setFluidRenderer(WeatherObeliskBlockEntity.TANK_CAPACITY, false, 16, 63);
     }
 
-    // TODO: 26.1 - reenable
-//    @Override
-//    public void draw(RecipeHolder<WeatherChangeRecipe> recipe, IRecipeSlotsView recipeSlotsView,
-//        GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
-//        animatedFlame.draw(graphics, 63, 24);
-//    }
+    @Override
+    public void draw(RecipeHolder<WeatherChangeRecipe> recipe, IRecipeSlotsView recipeSlotsView,
+        GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
+        background.draw(graphics);
+        animatedFlame.draw(graphics, 63, 24);
+    }
 }

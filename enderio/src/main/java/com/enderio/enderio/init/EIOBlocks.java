@@ -183,7 +183,7 @@ public class EIOBlocks {
     public static final DeferredBlock<PaintedWallBlock> PAINTED_WALL = registerPainted("painted_wall", PaintedWallBlock::new, Blocks.COBBLESTONE_WALL);
 
     private static <B extends Block> DeferredBlock<B> registerPainted(String name, Function<BlockBehaviour.Properties, B> factory, Block reference) {
-        var blockHolder = registerWithItem(name, factory, BlockBehaviour.Properties.ofFullCopy(reference).noOcclusion(), (p, b) -> new PaintedBlockItem(b.get(), p));
+        var blockHolder = registerWithItem(name, factory, BlockBehaviour.Properties.ofFullCopy(reference).noOcclusion(), (p, b) -> new PaintedBlockItem(b.get(), p.useBlockDescriptionPrefix()));
         PAINTED_BLOCKS.add(Pair.of(blockHolder, reference));
         return blockHolder;
     }
@@ -500,15 +500,15 @@ public class EIOBlocks {
 
     // Items that need capabilities (exposed as DeferredItems)
     public static final DeferredItem<FluidTankBlockItem> FLUID_TANK_ITEM = ITEMS.registerItem("fluid_tank",
-        p -> new FluidTankBlockItem(FLUID_TANK.get(), p, 16000));
+        p -> new FluidTankBlockItem(FLUID_TANK.get(), p.useBlockDescriptionPrefix(), 16000));
     public static final DeferredItem<FluidTankBlockItem> PRESSURIZED_FLUID_TANK_ITEM = ITEMS.registerItem("pressurized_fluid_tank",
-        p -> new FluidTankBlockItem(PRESSURIZED_FLUID_TANK.get(), p, 32000));
+        p -> new FluidTankBlockItem(PRESSURIZED_FLUID_TANK.get(), p.useBlockDescriptionPrefix(), 32000));
 
     public static final DeferredItem<BlockItem> POWERED_SPAWNER_ITEM = ITEMS.registerItem("powered_spawner",
-        p -> new BlockItem(POWERED_SPAWNER.get(), p), p -> p.component(EIODataComponents.SOUL, Soul.EMPTY));
+        p -> new BlockItem(POWERED_SPAWNER.get(), p), p -> p.component(EIODataComponents.SOUL, Soul.EMPTY).useBlockDescriptionPrefix());
 
     public static final DeferredItem<BlockItem> SOUL_ENGINE_ITEM = ITEMS.registerItem("soul_engine",
-        p -> new BlockItem(SOUL_ENGINE.get(), p), p -> p.component(EIODataComponents.SOUL, Soul.EMPTY));
+        p -> new BlockItem(SOUL_ENGINE.get(), p), p -> p.component(EIODataComponents.SOUL, Soul.EMPTY).useBlockDescriptionPrefix());
 
 //    public static final Map<SolarPanelTier, DeferredItem<BlockItem>> SOLAR_PANEL_ITEMS = Util.make(() -> {
 //        Map<SolarPanelTier, DeferredItem<BlockItem>> items = new HashMap<>();

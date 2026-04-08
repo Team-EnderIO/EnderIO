@@ -45,13 +45,6 @@ public class GhostMachineSlot extends MachineSlot {
         return stack;
     }
 
-    //TODO this is final now...
-//    @Override
-//    public ItemStack remove(int amount) {
-//        set(ItemStack.EMPTY);
-//        return ItemStack.EMPTY;
-//    }
-
     @Override
     public Optional<ItemStack> tryRemove(int count, int decrement, Player player) {
         if (!this.allowModification(player) && decrement < this.getItem().getCount()) {

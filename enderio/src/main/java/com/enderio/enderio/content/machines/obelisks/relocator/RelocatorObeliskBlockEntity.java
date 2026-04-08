@@ -81,7 +81,7 @@ public class RelocatorObeliskBlockEntity extends ObeliskBlockEntity<RelocatorObe
             double x = getBlockPos().getX() + (randomsource.nextDouble() - randomsource.nextDouble()) * 5 + 0.5D;
             double y = getBlockPos().getY() + randomsource.nextInt(3) - 1;
             double z = getBlockPos().getZ() + (randomsource.nextDouble() - randomsource.nextDouble()) * 5 + 0.5D;
-            EntityTeleportEvent telEvent = new EntityTeleportEvent(event.getEntity(), x, y, z);
+            EntityTeleportEvent telEvent = new EntityTeleportEvent(event.getEntity(), event.getLevel().getLevel(), x, y, z);
             if (!NeoForge.EVENT_BUS.post(telEvent).isCanceled()) {
                 event.getEntity().teleportTo(x, y, z);
                 return true;
