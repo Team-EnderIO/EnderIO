@@ -48,8 +48,8 @@ public class CapacitorEnergyWidget extends EnergyWidget {
 
         Matrix3x2fStack pose = graphics.pose();
         pose.pushMatrix();
-        pose.translate(0,0); //TODO Z push not possible
-        graphics.setComponentTooltipForNextFrame(minecraft.font, list, mouseX, mouseY); //TODO does this render?
+        pose.translate(0,0);
+        graphics.setComponentTooltipForNextFrame(minecraft.font, list, mouseX, mouseY);
         pose.popMatrix();
     }
 
@@ -64,10 +64,7 @@ public class CapacitorEnergyWidget extends EnergyWidget {
         int heightModifier = (int) Math.round(Math.sin(level.getGameTime() * 0.05) * 12);
         graphics.fakeItem(CAPACITOR, x - 4, y + height/2 - 8 + heightModifier);
 
-        //TODO blend pipeline + ghost item
         //noinspection IntegerDivisionInFloatingPointContext
         graphics.blit(RenderPipelines.GUI_TEXTURED, WIDGETS, x, y + height/2 + 6, 160 + tick / 10 * 9, 128, width, height, 256, 256);
-        graphics.fakeItem(CAPACITOR, x - 4, y + height/2 + 25);
-
     }
 }

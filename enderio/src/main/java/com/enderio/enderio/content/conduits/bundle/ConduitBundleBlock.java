@@ -139,7 +139,6 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
 
     @Override
     public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player) {
-        // TODO: 1.21.4: Check this works?
         var target = player.pick(player.blockInteractionRange(), 0, false);
 
         if (level instanceof Level realLevel

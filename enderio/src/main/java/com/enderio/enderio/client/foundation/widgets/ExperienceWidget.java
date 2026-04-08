@@ -27,8 +27,6 @@ public class ExperienceWidget extends EIOWidget {
 
     @Override
     public void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-        //TODO depth pipeline
-
         ExperienceUtil.ExperienceLevel expLevel = ExperienceUtil
                 .getLevelFromFluidWithLeftover(getFluid.get().getAmount());
         int fill = (int) ((((float) expLevel.experience()) / ExperienceUtil.getXpNeededForNextLevel(expLevel.level()))

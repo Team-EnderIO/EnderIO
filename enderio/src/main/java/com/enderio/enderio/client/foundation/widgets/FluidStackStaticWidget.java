@@ -30,7 +30,6 @@ public class FluidStackStaticWidget extends EIOWidget {
     @Override
     public void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         Minecraft minecraft = Minecraft.getInstance();
-        //TODO blend depth pipeline
         FluidStorageInfo fluidTank = fluidStorageSupplier.get();
         if (!fluidTank.contents().isEmpty()) {
             FluidStack fluidStack = fluidTank.contents();
@@ -45,7 +44,6 @@ public class FluidStackStaticWidget extends EIOWidget {
 
             int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
             int atlasHeight = (int) (sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
-            // TODO: 1.21.4: Check this
             graphics.blit(RenderPipelines.GUI_TEXTURED, TextureAtlas.LOCATION_BLOCKS, x, y, sprite.getU0() * atlasWidth, sprite.getV0() * atlasHeight, width,
                 height, sprite.contents().width(), sprite.contents().height(), atlasWidth, atlasHeight, color);
 

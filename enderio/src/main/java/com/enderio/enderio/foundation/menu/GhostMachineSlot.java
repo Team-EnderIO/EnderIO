@@ -3,7 +3,10 @@ package com.enderio.enderio.foundation.menu;
 import com.enderio.enderio.foundation.inventory.MachineInventory;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Optional;
@@ -13,10 +16,15 @@ import java.util.Optional;
  * This item will also only have a originalStack size of one. It can never be more than 1.
  * This item can be set or cleared in GUI but can never actually be "stolen" or deduct player resources.
  */
-public class GhostMachineSlot extends MachineSlot {
+public class GhostMachineSlot extends Slot {
+
+    private static final Container emptyInventory = new SimpleContainer(0);
+
+    private final MachineInventory itemHandler;
+    private final int index;
 
     public GhostMachineSlot(MachineInventory itemHandler, int index, int xPosition, int yPosition) {
-        super(itemHandler, index, xPosition, yPosition);
+        super(emptyInventory, 0, xPosition, yPosition);
 
         // Check config, we need to get this right or bad stuff will happen.
         MachineInventoryLayout layout = itemHandler.layout();
@@ -27,10 +35,23 @@ public class GhostMachineSlot extends MachineSlot {
         if (!layout.guiCanInsert(index)) {
             throw new RuntimeException("Ghost slot cannot be modified by the player!");
         }
+
+        this.itemHandler = itemHandler;
+        this.index = index;
     }
 
     public GhostMachineSlot(MachineInventory itemHandler, SingleSlotAccess access, int xPosition, int yPosition) {
         this(itemHandler, access.getIndex(), xPosition, yPosition);
+    }
+
+    @Override
+    public final ItemStack getItem() {
+        return itemHandler.getStack(index);
+    }
+
+    @Override
+    public void set(ItemStack itemStack) {
+        itemHandler.setStack(index, itemStack);
     }
 
     @Override
@@ -43,6 +64,12 @@ public class GhostMachineSlot extends MachineSlot {
         }
 
         return stack;
+    }
+
+    @Override
+    public ItemStack remove(int amount) {
+        set(ItemStack.EMPTY);
+        return ItemStack.EMPTY;
     }
 
     @Override

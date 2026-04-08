@@ -21,13 +21,12 @@ public record EnderFluidFilter(NonNullList<FluidStack> matches, boolean isDenyLi
 
     public static final EnderFluidFilter EMPTY = new EnderFluidFilter(0);
 
-    // TODO: 1.22: Rename fields.
     public static final Codec<EnderFluidFilter> CODEC = RecordCodecBuilder.create(inst -> inst
             .group(OrderedListCodec.create(256, FluidStack.OPTIONAL_CODEC, FluidStack.EMPTY)
                     .fieldOf("fluids")
                     .forGetter(EnderFluidFilter::matches),
-                    Codec.BOOL.fieldOf("isInvert").forGetter(EnderFluidFilter::isDenyList),
-                    Codec.BOOL.fieldOf("isNbt").forGetter(EnderFluidFilter::shouldCompareComponents))
+                    Codec.BOOL.fieldOf("isDenyList").forGetter(EnderFluidFilter::isDenyList),
+                    Codec.BOOL.fieldOf("shouldCompareComponents").forGetter(EnderFluidFilter::shouldCompareComponents))
             .apply(inst, EnderFluidFilter::new));
 
     // @formatter:off

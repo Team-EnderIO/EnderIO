@@ -364,7 +364,6 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
         super.applyImplicitComponents(components);
         boundSoul = components.getOrDefault(EIODataComponents.SOUL, Soul.EMPTY);
 
-        // TODO: Ender IO 8 - remove.
         var actionRange = components.get(EIODataComponents.ACTION_RANGE);
         if (actionRange != null) {
             this.isRangeVisible = actionRange.isVisible();

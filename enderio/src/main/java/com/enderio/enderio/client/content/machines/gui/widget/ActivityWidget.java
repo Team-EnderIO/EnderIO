@@ -36,8 +36,6 @@ public class ActivityWidget extends AbstractWidget {
 
     @Override
     protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-        //TODO blend depth pipeline
-
         MachineState prio = null;
         for (MachineState machineState : state.get()) {
             if (prio == null || machineState.type().getPriority() > prio.type().getPriority()) {

@@ -89,8 +89,8 @@ public abstract class ObeliskScreen<J extends ObeliskBlockEntity<J>, T extends O
             @Nullable String countString) {
         if (menu.getBlockEntity().requiresFilter() && slot.index == 1 && itemstack.isEmpty()) {
             ItemStack stack = new ItemStack(EIOItems.BASIC_SOUL_FILTER.get());
-            //TODO ghost item rendering and blend pipeline
             graphics.fakeItem(stack, slot.x, slot.y);
+            graphics.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, 0x80888888);
         } else {
             super.renderSlotContents(graphics, itemstack, slot, countString);
         }

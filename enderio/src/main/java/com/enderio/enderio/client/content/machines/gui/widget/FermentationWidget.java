@@ -32,8 +32,6 @@ public class FermentationWidget extends EIOWidget {
 
     @Override
     protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-        //TODO depth pipeline
-
         if (shouldShow.get() && !first.get().isEmpty()) {
             renderFluid(graphics, first.get(), 1 - progress.get());
             renderFluid(graphics, second.get(), progress.get());

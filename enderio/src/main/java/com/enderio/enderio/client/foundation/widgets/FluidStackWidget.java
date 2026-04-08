@@ -29,7 +29,6 @@ public class FluidStackWidget extends EIOWidget {
     @Override
     protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         Minecraft minecraft = Minecraft.getInstance();
-        //TODO Blend + depth pipeline?
         FluidStorageInfo fluidTank = fluidStorageSupplier.get();
         if (!fluidTank.contents().isEmpty()) {
             FluidStack fluidStack = fluidTank.contents();

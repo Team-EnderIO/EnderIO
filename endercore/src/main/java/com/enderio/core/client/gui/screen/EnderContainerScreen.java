@@ -116,10 +116,7 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
 
         if (slot instanceof SlotWithOverlay slotWithOverlay) {
             if (slotWithOverlay.getForegroundSprite() != null) {
-                // TODO: 1.21.8: Check this?
-//                RenderSystem.disableDepthTest();
                 graphics.blitSprite(RenderPipelines.GUI_TEXTURED, slotWithOverlay.getForegroundSprite(), slot.x, slot.y, 16, 16);
-//                RenderSystem.enableDepthTest();
             }
         }
     }

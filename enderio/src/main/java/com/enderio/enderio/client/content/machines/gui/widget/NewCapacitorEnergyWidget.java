@@ -50,10 +50,6 @@ public class NewCapacitorEnergyWidget extends NewEnergyWidget {
             list.add(Component.literal(s.stripLeading().stripTrailing()));
         }
 
-        Matrix3x2fStack pose = graphics.pose();
-        pose.pushMatrix();
-        pose.translate(0, 0); //TODO can't push Z 1
         graphics.setComponentTooltipForNextFrame(minecraft.font, list, mouseX, mouseY);
-        pose.popMatrix();
     }
 }

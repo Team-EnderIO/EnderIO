@@ -23,13 +23,12 @@ public record EnderItemFilter(NonNullList<ItemStack> matches, boolean isDenyList
 
     public static final EnderItemFilter EMPTY = new EnderItemFilter(0);
 
-    // TODO: 1.22: Change field names
     public static final Codec<EnderItemFilter> CODEC = RecordCodecBuilder.create(componentInstance -> componentInstance
             .group(OrderedListCodec.create(256, ItemStack.OPTIONAL_CODEC, ItemStack.EMPTY)
                     .fieldOf("items")
                     .forGetter(EnderItemFilter::matches),
-                    Codec.BOOL.optionalFieldOf("isInvert", false).forGetter(EnderItemFilter::isDenyList),
-                    Codec.BOOL.optionalFieldOf("isNbt", false).forGetter(EnderItemFilter::shouldCompareComponents),
+                    Codec.BOOL.optionalFieldOf("isDenyList", false).forGetter(EnderItemFilter::isDenyList),
+                    Codec.BOOL.optionalFieldOf("shouldCompareComponents", false).forGetter(EnderItemFilter::shouldCompareComponents),
                     DamageFilterMode.CODEC.optionalFieldOf("damageMode", DamageFilterMode.IGNORE)
                             .forGetter(EnderItemFilter::damageFilterMode))
             .apply(componentInstance, EnderItemFilter::new));

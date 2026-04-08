@@ -30,8 +30,6 @@ public class ExperienceCraftingWidget extends EIOWidget {
 
     @Override
     protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
-        //TODO blend depth pipeline
-
         int k = 1;
         if (maxXP.get() > 0) {
             k = (int) (((fluidStorageSupplier.get().contents().getAmount()

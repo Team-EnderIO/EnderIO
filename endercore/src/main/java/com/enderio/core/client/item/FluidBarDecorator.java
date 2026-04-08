@@ -8,7 +8,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.FluidState;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.client.IItemDecorator;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
 
 public class FluidBarDecorator implements IItemDecorator {
@@ -43,7 +42,7 @@ public class FluidBarDecorator implements IItemDecorator {
             color = fluidModel.fluidTintSource().color(fluidState);
         }
 
-        ItemBarRenderer.renderBar(graphics, fillRatio, xOffset, yOffset, color);
+        ItemBarRenderer.extractBar(graphics, fillRatio, xOffset, yOffset, color);
         return false;
     }
 }

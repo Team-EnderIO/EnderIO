@@ -87,7 +87,6 @@ public class BlockDetectorBlock extends DirectionalBlock {
         return getSignal(state, level, pos, direction);
     }
 
-    // TODO: 1.21.4: Check this change.
     @Override
     protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         level.setBlockAndUpdate(pos, state);
