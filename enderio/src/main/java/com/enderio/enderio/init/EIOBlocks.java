@@ -305,9 +305,14 @@ public class EIOBlocks {
     public static final DeferredBlock<EnderSkullBlock> ENDERMAN_HEAD = registerWithItem("enderman_head", EnderSkullBlock::new,
             BlockBehaviour.Properties.ofFullCopy(Blocks.SKELETON_SKULL).instrument(NoteBlockInstrument.SKELETON).strength(1.0F).pushReaction(PushReaction.DESTROY));
 
-    // TODO: 1.21.4: currently using plain register to access ENDERMAN_HEAD during properties construction. Any better options?
-    public static final DeferredBlock<WallEnderSkullBlock> WALL_ENDERMAN_HEAD = BLOCKS.register("wall_enderman_head", (rl) -> new WallEnderSkullBlock(
-        BlockBehaviour.Properties.ofFullCopy(Blocks.SKELETON_SKULL).setId(ResourceKey.create(Registries.BLOCK, rl)).strength(1.0F).overrideLootTable(ENDERMAN_HEAD.get().getLootTable()).pushReaction(PushReaction.DESTROY)));
+    public static final DeferredBlock<WallEnderSkullBlock> WALL_ENDERMAN_HEAD = BLOCKS.registerBlock(
+        "wall_enderman_head",
+        WallEnderSkullBlock::new,
+        () -> BlockBehaviour.Properties
+            .ofFullCopy(Blocks.SKELETON_SKULL)
+            .strength(1.0F)
+            .overrideLootTable(ENDERMAN_HEAD.get().getLootTable())
+            .pushReaction(PushReaction.DESTROY));
 
     public static final DeferredBlock<IndustrialInsulationBlock> INDUSTRIAL_INSULATION = registerWithItem("industrial_insulation",
         IndustrialInsulationBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.SPONGE));
