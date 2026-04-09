@@ -1,8 +1,9 @@
 {
+	"format_version": "1.21.6",
 	"credit": "Made with Blockbench by Rover656",
 	"textures": {
-		"page": "enderio:block/enchanter",
-		"book": "item/book"
+		"page": "enderio:block/enchanter_book_pages",
+		"book": "enderio:block/enchanter_book_cover"
 	},
 	"elements": [
 		{
