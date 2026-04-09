@@ -1,4 +1,4 @@
-package com.enderio.enderio.tests.soul;
+package com.enderio.enderio.tests.api.soul;
 
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.api.soul.SoulBoundUtils;
