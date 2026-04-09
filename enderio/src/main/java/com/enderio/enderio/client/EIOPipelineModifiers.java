@@ -3,6 +3,8 @@ package com.enderio.enderio.client;
 import com.enderio.enderio.EnderIO;
 import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.pipeline.ColorTargetState;
+import com.mojang.blaze3d.pipeline.DepthStencilState;
+import com.mojang.blaze3d.platform.CompareOp;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.ResourceKey;
 import net.neoforged.api.distmarker.Dist;
@@ -17,6 +19,7 @@ public class EIOPipelineModifiers {
      * Force ENTITY_CUTOUT, ENTITY_CUTOUT_CULLED and ENTITY_SOLID to blend.
      */
     public static final ResourceKey<PipelineModifier> FORCE_TRANSLUCENT = ResourceKey.create(PipelineModifier.MODIFIERS_KEY, EnderIO.id("force_translucent"));
+    public static final ResourceKey<PipelineModifier> FORCE_NO_DEPTH = ResourceKey.create(PipelineModifier.MODIFIERS_KEY, EnderIO.id("force_no_depth"));
 
     @SubscribeEvent
     public static void onRegisterModifiers(RegisterPipelineModifiersEvent event)
@@ -32,5 +35,11 @@ public class EIOPipelineModifiers {
             }
             return pipeline;
         });
+
+        event.register(FORCE_NO_DEPTH, (pipeline, name) -> pipeline.toBuilder()
+                    .withLocation(name)
+                    .withDepthStencilState(new DepthStencilState(CompareOp.GREATER_THAN, true, pipeline.getDepthStencilState().depthBiasScaleFactor(),
+                        pipeline.getDepthStencilState().depthBiasConstant()))
+                    .build());
     }
 }

@@ -2,6 +2,7 @@ package com.enderio.enderio.client;
 
 import com.enderio.core.client.item.FluidBarDecorator;
 import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.conduits.model.RegisterConduitModelModifiersEvent;
 import com.enderio.enderio.api.conduits.screen.RegisterConduitScreenTypesEvent;
 import com.enderio.enderio.api.travel.RegisterTravelRenderersEvent;
@@ -27,7 +28,6 @@ import com.enderio.enderio.client.content.filters.redstone.RedstoneTimerFilterSc
 import com.enderio.enderio.client.content.fluid_tank.FluidTankItemRenderer;
 import com.enderio.enderio.client.content.glass.GlassIconDecorator;
 import com.enderio.enderio.client.content.glass.GlassItemColor;
-import com.enderio.enderio.client.foundation.model.IOConfigRealLevelWorkaroundBlockModel;
 import com.enderio.enderio.client.content.machines.IOOverlayBlockStateModel;
 import com.enderio.enderio.client.content.machines.gui.screen.AlloySmelterScreen;
 import com.enderio.enderio.client.content.machines.gui.screen.AttractorObeliskScreen;
@@ -65,7 +65,9 @@ import com.enderio.enderio.client.content.paint.model.port.PaintedBlockStateMode
 import com.enderio.enderio.client.content.paint.model.port.PaintedItemModel;
 import com.enderio.enderio.client.content.tools.CoordinateMenuScreen;
 import com.enderio.enderio.client.content.travel.TravelAnchorHud;
+import com.enderio.enderio.client.content.travel.TravelAnchorRenderer;
 import com.enderio.enderio.client.content.travel.TravelTargetRendering;
+import com.enderio.enderio.client.foundation.model.IOConfigRealLevelWorkaroundBlockModel;
 import com.enderio.enderio.client.foundation.model.item.IsSoulBoundItemProperty;
 import com.enderio.enderio.client.foundation.particle.RangeParticle;
 import com.enderio.enderio.client.foundation.widgets.ioconfig.IOConfigSceneRenderState;
@@ -88,6 +90,11 @@ import com.enderio.enderio.init.EIOTravelTargets;
 import net.minecraft.client.color.block.BlockTintSources;
 import net.minecraft.client.renderer.block.BuiltInBlockModels;
 import net.minecraft.client.renderer.block.FluidModel;
+import net.minecraft.client.renderer.block.dispatch.BlockModelRotation;
+import net.minecraft.client.renderer.block.dispatch.SingleVariant;
+import net.minecraft.client.renderer.block.model.BlockModel;
+import net.minecraft.client.renderer.block.model.BlockStateModelWrapper;
+import net.minecraft.client.resources.model.SimpleModelWrapper;
 import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -117,7 +124,10 @@ import net.neoforged.neoforge.client.event.RegisterPictureInPictureRenderersEven
 import net.neoforged.neoforge.client.event.RegisterSpecialModelRendererEvent;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
+import net.neoforged.neoforge.client.model.standalone.SimpleUnbakedStandaloneModel;
+import net.neoforged.neoforge.client.model.standalone.StandaloneModelKey;
 import net.neoforged.neoforge.fluids.FluidType;
+import org.joml.Matrix4f;
 
 import java.util.HashMap;
 import java.util.List;
@@ -132,9 +142,8 @@ public class EnderIOClient {
     private static final Map<Item, Identifier> HANG_GLIDER_MODEL_LOCATION = new HashMap<>();
     //public static final Map<Item, BakedModel> GLIDER_MODELS = new HashMap<>();
 
-//    public static final ModelResourceLocation TRAVEL_ANCHOR_BACKDROP_MODEL_LOCATION = ModelResourceLocation.standalone(
-//        ResourceLocation.fromNamespaceAndPath(EnderIOAPI.MOD_ID, "block/travel_anchor_backdrop")
-//    );
+    private static final Identifier TRAVEL_ANCHOR_BACKDROP_MODEL_LOCATION = Identifier.fromNamespaceAndPath(EnderIOAPI.MOD_ID, "block/travel_anchor_backdrop");
+    public static final StandaloneModelKey<BlockModel> TRAVEL_ANCHOR_BACKDROP = new StandaloneModelKey<>(() -> "travel_anchor_backdrop");
 
     public EnderIOClient(ModContainer modContainer) {
         // TODO: Re-enable after config rework.
@@ -313,7 +322,10 @@ public class EnderIOClient {
 //            }
 //        }
 //
-//        event.register(TRAVEL_ANCHOR_BACKDROP_MODEL_LOCATION);
+        event.register(TRAVEL_ANCHOR_BACKDROP, new SimpleUnbakedStandaloneModel<>(TRAVEL_ANCHOR_BACKDROP_MODEL_LOCATION, (model, baker, _) -> {
+            var stateModel = new SingleVariant(SimpleModelWrapper.bake(baker, model, BlockModelRotation.IDENTITY));
+            return new BlockStateModelWrapper(stateModel, List.of(), new Matrix4f());
+        }));
     }
 
     @SubscribeEvent
@@ -446,7 +458,7 @@ public class EnderIOClient {
     @SubscribeEvent
     public static void registerTravelRenderers(RegisterTravelRenderersEvent event) {
         // TODO: 26.1
-//        event.register(EIOTravelTargets.TRAVEL_ANCHOR_TYPE.get(), TravelAnchorRenderer::new);
+        event.register(EIOTravelTargets.TRAVEL_ANCHOR_TYPE.get(), TravelAnchorRenderer::new);
         event.register(EIOTravelTargets.ENDERFACE_TYPE.get(), EnderfaceRenderer::new);
     }
 
