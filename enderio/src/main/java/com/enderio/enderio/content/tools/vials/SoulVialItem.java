@@ -218,7 +218,6 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
             float rotation = Mth.wrapDegrees(level.getRandom().nextFloat() * 360.0f);
 
             // Try to get the entity NBT from the item.
-            // TODO: 1.21.4: Do we need our own spawn reason? or is this fine?
             Optional<Entity> entity = EntityType.create(storedSoul.asInput(level.registryAccess()), level, EntitySpawnReason.SPAWN_ITEM_USE);
 
             // Position the entity and add it.

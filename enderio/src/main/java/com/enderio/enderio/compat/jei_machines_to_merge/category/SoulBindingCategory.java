@@ -3,6 +3,7 @@ package com.enderio.enderio.compat.jei_machines_to_merge.category;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.api.soul.SoulBoundUtils;
+import com.enderio.enderio.client.content.machines.gui.screen.SoulBinderScreen;
 import com.enderio.enderio.compat.jei.JEILang;
 import com.enderio.enderio.compat.jei.JEIUtils;
 import com.enderio.enderio.compat.jei_machines_to_merge.util.MachineRecipeCategory;
@@ -43,9 +44,11 @@ public class SoulBindingCategory extends MachineRecipeCategory<RecipeHolder<Soul
     public static final IRecipeType<RecipeHolder<SoulBindingRecipe>> TYPE = JEIUtils.createRecipeType(EnderIO.MOD_ID,
             "soul_binding", SoulBindingRecipe.class);
 
+    private final IDrawable background;
     private final IDrawable icon;
 
     public SoulBindingCategory(IGuiHelper guiHelper) {
+        this.background = guiHelper.createDrawable(SoulBinderScreen.BG_TEXTURE, 35, 30, 118, 44);
         this.icon = guiHelper.createDrawableItemStack(new ItemStack(EIOBlocks.SOUL_BINDER.get()));
     }
 
@@ -161,25 +164,22 @@ public class SoulBindingCategory extends MachineRecipeCategory<RecipeHolder<Soul
         builder.addSlot(OUTPUT, 99, 4).addItemStacks(results);
     }
 
-    // TODO: 26.1 - reenable
-//    @Override
-//    public void draw(RecipeHolder<SoulBindingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics,
-//            double mouseX, double mouseY) {
-//        Minecraft mc = Minecraft.getInstance();
-//
-//        int cost = recipe.value().experience();
-//        String costText = cost < 0 ? "err" : Integer.toString(cost);
-//        String text = I18n.get("container.repair.cost", costText);
-//
-//        Minecraft minecraft = Minecraft.getInstance();
-//        LocalPlayer player = minecraft.player;
-//
-//        // Show red if the player doesn't have enough levels
-//        int mainColor = playerHasEnoughLevels(player, cost) ? 0xFF80FF20 : 0xFFFF6060;
-//        graphics.drawString(minecraft.font, text, 5, 24, mainColor);
-//
-//        graphics.drawString(Minecraft.getInstance().font, getBasicEnergyString(recipe), 5, 34, 0xff808080, false);
-//    }
+    @Override
+    public void draw(RecipeHolder<SoulBindingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor guiGraphics, double mouseX, double mouseY) {
+        background.draw(guiGraphics);
+        int cost = recipe.value().experience();
+        String costText = cost < 0 ? "err" : Integer.toString(cost);
+        String text = I18n.get("container.repair.cost", costText);
+
+        Minecraft minecraft = Minecraft.getInstance();
+        LocalPlayer player = minecraft.player;
+
+        // Show red if the player doesn't have enough levels
+        int mainColor = playerHasEnoughLevels(player, cost) ? 0xFF80FF20 : 0xFFFF6060;
+        guiGraphics.text(minecraft.font, text, 5, 24, mainColor);
+
+        guiGraphics.text(Minecraft.getInstance().font, getBasicEnergyString(recipe), 5, 34, 0xff808080, false);
+    }
 
     @Override
     public void getTooltip(ITooltipBuilder tooltip, RecipeHolder<SoulBindingRecipe> recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {

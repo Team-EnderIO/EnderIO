@@ -97,7 +97,7 @@ dependencies {
 
     // JEI
     compileOnly(libs.bundles.jeiApi)
-//    localRuntime(libs.bundles.jei)
+    localRuntime(libs.bundles.jei)
 
     // CC: Tweaked
 //    compileOnly(libs.bundles.ccTweakedApi)

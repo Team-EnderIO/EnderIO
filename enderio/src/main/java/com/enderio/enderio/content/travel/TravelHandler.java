@@ -9,6 +9,7 @@ import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -340,11 +341,15 @@ public class TravelHandler {
     }
 
     private static Optional<Vec3> teleportEvent(Player player, Vec3 target) {
-        EntityTeleportEvent event = new EntityTeleportEvent(player, target.x(), target.y(), target.z());
-        if (NeoForge.EVENT_BUS.post(event).isCanceled()) {
-            return Optional.empty();
+        if (player.level() instanceof ServerLevel level) {
+            EntityTeleportEvent event = new EntityTeleportEvent(player, level, target.x(), target.y(), target.z());
+            if (NeoForge.EVENT_BUS.post(event).isCanceled()) {
+                return Optional.empty();
+            }
+
+            return Optional.of(new Vec3(event.getTargetX(), event.getTargetY(), event.getTargetZ()));
         }
 
-        return Optional.of(new Vec3(event.getTargetX(), event.getTargetY(), event.getTargetZ()));
+        return Optional.empty();
     }
 }

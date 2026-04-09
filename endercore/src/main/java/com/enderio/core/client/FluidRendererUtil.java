@@ -7,10 +7,9 @@ import net.minecraft.client.renderer.block.FluidModel;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
-import net.minecraft.data.AtlasIds;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
 
 public class FluidRendererUtil {
@@ -20,6 +19,10 @@ public class FluidRendererUtil {
         if (fluidStack.isEmpty()) return;
 
         Fluid fluid = fluidStack.getFluid();
+        int light = fluid.getFluidType().getLightLevel(fluidStack);
+        if (light > 0) {
+            packedLight = LightCoordsUtil.pack(light, light);
+        }
         submitFluid(poseStack, renderType, nodeCollector, fluid, fillAmount, packedLight);
     }
 

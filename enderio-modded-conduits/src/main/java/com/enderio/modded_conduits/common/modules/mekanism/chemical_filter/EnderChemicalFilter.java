@@ -1,6 +1,7 @@
 package com.enderio.modded_conduits.common.modules.mekanism.chemical_filter;
 
 import com.enderio.core.common.serialization.OrderedListCodec;
+import com.enderio.core.common.util.EqualityUtil;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import mekanism.api.chemical.ChemicalStack;
@@ -12,6 +13,7 @@ import net.minecraft.network.codec.StreamCodec;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 
 public record EnderChemicalFilter(NonNullList<ChemicalStack> matches, boolean isDenyList)
     implements ChemicalFilter {
@@ -61,5 +63,25 @@ public record EnderChemicalFilter(NonNullList<ChemicalStack> matches, boolean is
         }
 
         return isDenyList ? stack : ChemicalStack.EMPTY;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        EnderChemicalFilter other = (EnderChemicalFilter) o;
+        return isDenyList == other.isDenyList &&
+            Objects.equals(matches, other.matches);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(matches, isDenyList);
     }
 }

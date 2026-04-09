@@ -33,7 +33,7 @@ import java.util.stream.Stream;
  * Represents a stored soul, derived from a {@link LivingEntity}.
  * @param entityTag the entity's NBT tag.
  */
-public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) implements Resource { //TODO can ValueOutput be used instead of the tag? Couldn't find a codex for it
+public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) implements Resource {
 
     // Keys that should not be compared or saved
     // Note be careful adding new things to this list - it will affect saves.

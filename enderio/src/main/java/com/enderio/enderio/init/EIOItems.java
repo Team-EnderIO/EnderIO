@@ -1,6 +1,5 @@
 package com.enderio.enderio.init;
 
-import com.enderio.core.common.registries.ItemDeferredRegister;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.capacitor.CapacitorData;
 import com.enderio.enderio.api.conduits.facade.FacadeType;
@@ -36,12 +35,13 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.component.ItemLore;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.List;
 
 @SuppressWarnings("unused")
 public class EIOItems {
-    public static final ItemDeferredRegister ITEMS = ItemDeferredRegister.create(EnderIO.MOD_ID);
+    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(EnderIO.MOD_ID);
 
     // region Alloys
 
@@ -84,7 +84,7 @@ public class EIOItems {
     public static final DeferredItem<Item> END_STEEL_BALL = grindingBall("end_steel_grinding_ball");
 
     private static DeferredItem<Item> grindingBall(String name) {
-        return ITEMS.registerItem(name, Item::new, new Item.Properties());
+        return ITEMS.registerItem(name, Item::new, Item.Properties::new);
     }
 
     // endregion

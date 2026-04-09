@@ -6,19 +6,15 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
-import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
-import org.jspecify.annotations.Nullable;
 import org.joml.Vector3fc;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-// TODO: No longer lights in the inventory/hand like other machines...
-// TODO: PORT: Hook back up
 public class FluidTankItemRenderer implements SpecialModelRenderer<FluidTankItemRenderer.FluidTankState> {
 
     public static final FluidTankItemRenderer INSTANCE = new FluidTankItemRenderer();
@@ -31,7 +27,7 @@ public class FluidTankItemRenderer implements SpecialModelRenderer<FluidTankItem
         int overlayCoords, boolean hasFoil, int outlineColor) {
         if (state != null) {
             FluidRendererUtil.submitFluid(poseStack, Sheets.translucentBlockItemSheet(), submitNodeCollector, state.fluid,
-                state.amount / (float) state.capacity, lightCoords);
+                state.fluid.amount() / (float) state.capacity, lightCoords);
         }
     }
 
@@ -50,12 +46,12 @@ public class FluidTankItemRenderer implements SpecialModelRenderer<FluidTankItem
             }
             int capacity = fluidHandler.getCapacityAsInt(0, fluid);
             int amount = fluidHandler.getAmountAsInt(0);
-            return new FluidTankState(fluid.getFluid(), capacity, amount);
+            return new FluidTankState(fluid.toStack(amount), capacity);
         }
         return null;
     }
 
-    public record FluidTankState(Fluid fluid, int capacity, int amount) {}
+    public record FluidTankState(FluidStack fluid, int capacity) {}
 
     public record Unbaked() implements SpecialModelRenderer.Unbaked<FluidTankItemRenderer.FluidTankState> {
 

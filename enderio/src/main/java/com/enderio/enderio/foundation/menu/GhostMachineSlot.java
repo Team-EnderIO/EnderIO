@@ -1,8 +1,11 @@
 package com.enderio.enderio.foundation.menu;
 
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
 import com.enderio.core.common.storage.ItemStorage;
 import com.enderio.core.common.storage.slot.ResourceSlotId;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 
@@ -13,10 +16,15 @@ import java.util.Optional;
  * This item will also only have a originalStack size of one. It can never be more than 1.
  * This item can be set or cleared in GUI but can never actually be "stolen" or deduct player resources.
  */
-public class GhostMachineSlot extends MachineSlot {
+public class GhostMachineSlot extends Slot {
+
+    private static final Container emptyInventory = new SimpleContainer(0);
+
+    private final ItemStorage itemStorage;
+    private final int index;
 
     public GhostMachineSlot(ItemStorage itemStorage, int index, int xPosition, int yPosition) {
-        super(itemStorage, index, xPosition, yPosition);
+        super(emptyInventory, 0, xPosition, yPosition);
 
         // Check config, we need to get this right or bad stuff will happen.
         var layout = itemStorage.layout();
@@ -27,10 +35,23 @@ public class GhostMachineSlot extends MachineSlot {
         if (!layout.slotConfig(index).canManualInsert()) {
             throw new RuntimeException("Ghost slot cannot be modified by the player!");
         }
+
+        this.itemStorage = itemStorage;
+        this.index = index;
     }
 
     public GhostMachineSlot(ItemStorage itemStorage, ResourceSlotId<ItemResource> slotId, int xPosition, int yPosition) {
         this(itemStorage, slotId.index(itemStorage), xPosition, yPosition);
+    }
+
+    @Override
+    public final ItemStack getItem() {
+        return itemStorage.getStack(index);
+    }
+
+    @Override
+    public void set(ItemStack itemStack) {
+        itemStorage.setStack(index, itemStack);
     }
 
     @Override
@@ -45,12 +66,11 @@ public class GhostMachineSlot extends MachineSlot {
         return stack;
     }
 
-    //TODO this is final now...
-//    @Override
-//    public ItemStack remove(int amount) {
-//        set(ItemStack.EMPTY);
-//        return ItemStack.EMPTY;
-//    }
+    @Override
+    public ItemStack remove(int amount) {
+        set(ItemStack.EMPTY);
+        return ItemStack.EMPTY;
+    }
 
     @Override
     public Optional<ItemStack> tryRemove(int count, int decrement, Player player) {

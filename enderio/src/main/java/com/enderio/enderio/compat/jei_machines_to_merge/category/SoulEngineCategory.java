@@ -2,6 +2,7 @@ package com.enderio.enderio.compat.jei_machines_to_merge.category;
 
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.soul.Soul;
+import com.enderio.enderio.client.content.machines.gui.screen.SoulEngineScreen;
 import com.enderio.enderio.compat.jei.JEILang;
 import com.enderio.enderio.content.machines.soul_engine.SoulEngineBlockEntity;
 import com.enderio.enderio.content.tools.vials.SoulVialItem;
@@ -25,6 +26,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.CommonColors;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
@@ -39,9 +41,12 @@ public class SoulEngineCategory implements IRecipeCategory<EngineSoul.SoulData> 
 
     public static final IRecipeType<EngineSoul.SoulData> TYPE = IRecipeType.create(EnderIO.MOD_ID, "soul_engine",
             EngineSoul.SoulData.class);
+
+    private final IDrawable background;
     private final IDrawable icon;
 
     public SoulEngineCategory(IGuiHelper guiHelper) {
+        this.background = guiHelper.createDrawable(SoulEngineScreen.BG_TEXTURE, 49, 18, 124, 53);
         this.icon = guiHelper.createDrawableItemStack(new ItemStack(EIOBlocks.SOUL_ENGINE.get()));
     }
 
@@ -101,18 +106,18 @@ public class SoulEngineCategory implements IRecipeCategory<EngineSoul.SoulData> 
 
     }
 
-    // TODO: 26.1 - reenable
-//    @Override
-//    public void draw(EngineSoul.SoulData recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics,
-//            double mouseX, double mouseY) {
-//        EntityType<?> value = BuiltInRegistries.ENTITY_TYPE.get(recipe.entitytype()).orElseThrow().value();
-//        if (recipe.getKey().equals(BuiltInRegistries.ENTITY_TYPE.getKey(value))) {
-//            graphics.drawString(Minecraft.getInstance().font, value.getDescription().getString(), 50, 5, 4210752,
-//                    false);
-//        }
-//
-//        graphics.drawString(Minecraft.getInstance().font, recipe.tickpermb() + " t/mb", 50, 30, 4210752, false);
-//        graphics.drawString(Minecraft.getInstance().font, recipe.powerpermb() + " µI/mb", 50, 40, 4210752, false);
-//
-//    }
+    @Override
+    public void draw(EngineSoul.SoulData recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics,
+            double mouseX, double mouseY) {
+        background.draw(graphics);
+        EntityType<?> value = BuiltInRegistries.ENTITY_TYPE.get(recipe.entitytype()).orElseThrow().value();
+        if (recipe.getKey().equals(BuiltInRegistries.ENTITY_TYPE.getKey(value))) {
+            graphics.text(Minecraft.getInstance().font, value.getDescription().getString(), 50, 5, CommonColors.DARK_GRAY,
+                    false);
+        }
+
+        graphics.text(Minecraft.getInstance().font, recipe.tickpermb() + " t/mb", 50, 30, CommonColors.DARK_GRAY, false);
+        graphics.text(Minecraft.getInstance().font, recipe.powerpermb() + " µI/mb", 50, 40, CommonColors.DARK_GRAY, false);
+
+    }
 }

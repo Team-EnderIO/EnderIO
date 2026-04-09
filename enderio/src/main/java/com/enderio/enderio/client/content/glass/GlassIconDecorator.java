@@ -13,31 +13,26 @@ import net.neoforged.neoforge.client.IItemDecorator;
 public class GlassIconDecorator implements IItemDecorator {
     public static final GlassIconDecorator INSTANCE = new GlassIconDecorator();
 
-    //TODO ensure Z is correct
-    private static final float COUNT_BLIT_HEIGHT = 200;
-
     @Override
-    public boolean render(GuiGraphicsExtractor graphics, Font font, ItemStack stack, int xOffset, int yOffset) {
-        if (stack.getItem() instanceof BlockItem blockItem) {
-            if (blockItem.getBlock() instanceof FusedQuartzBlock block) {
-                graphics.pose().pushMatrix();
-                graphics.pose().translate(xOffset, yOffset);
-
-                Identifier collisionSprite = EIOEnumIcons.GLASS_COLLISION_PREDICATE.get(block.getCollisionPredicate());
-                if (collisionSprite != null) {
-                    graphics.blitSprite(RenderPipelines.GUI_TEXTURED, collisionSprite, 0, 0, 16, 16);
-                }
-                
-                Identifier lightingSprite = EIOEnumIcons.GLASS_LIGHTING.get(block.getGlassLighting());
-                if (lightingSprite != null) {
-                    graphics.blitSprite(RenderPipelines.GUI_TEXTURED, lightingSprite, 0, 0, 16, 16);
-                }
-
-                graphics.pose().popMatrix();
-                return true;
-            }
+    public boolean render(GuiGraphicsExtractor graphics, Font font, ItemStack stack, int x, int y) {
+        if (!(stack.getItem() instanceof BlockItem blockItem)) {
+            return false;
         }
 
-        return false;
+        if (!(blockItem.getBlock() instanceof FusedQuartzBlock block)) {
+            return false;
+        }
+
+        Identifier collisionSprite = EIOEnumIcons.GLASS_COLLISION_PREDICATE.get(block.getCollisionPredicate());
+        if (collisionSprite != null) {
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, collisionSprite, x, y, 16, 16);
+        }
+
+        Identifier lightingSprite = EIOEnumIcons.GLASS_LIGHTING.get(block.getGlassLighting());
+        if (lightingSprite != null) {
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, lightingSprite, x, y, 16, 16);
+        }
+
+        return true;
     }
 }

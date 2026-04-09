@@ -40,11 +40,13 @@ public class AlloySmeltingCategory extends MachineRecipeCategory<RecipeHolder<Al
             .createRecipeType(EnderIO.MOD_ID, "alloy_smelting", AlloySmeltingRecipe.class);
 
     private final IDrawable icon;
+    private final IDrawableStatic background;
     private final IDrawableStatic staticFlame;
     private final IDrawable animatedFlame;
 
     public AlloySmeltingCategory(IGuiHelper guiHelper) {
         this.icon = guiHelper.createDrawableItemStack(new ItemStack(EIOBlocks.ALLOY_SMELTER.get()));
+        this.background = guiHelper.createDrawable(BG_TEXTURE, 0, 0, WIDTH, HEIGHT);
 
         // TODO: Swap to our sprites.
         staticFlame = guiHelper.createDrawable(StirlingGeneratorScreen.BG_TEXTURE, 176, 0, 14, 14);
@@ -102,14 +104,14 @@ public class AlloySmeltingCategory extends MachineRecipeCategory<RecipeHolder<Al
         builder.addSlot(OUTPUT, 26, 52).addItemStacks(List.of(RecipeUtil.getResultStacks(recipe).getFirst().getItem()));
     }
 
-    // TODO: 26.1 - reenable
-//    @Override
-//    public void draw(RecipeHolder<AlloySmeltingRecipe> recipe, IRecipeSlotsView recipeSlotsView,
-//            GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
-//        animatedFlame.draw(graphics, 3, 29);
-//        animatedFlame.draw(graphics, 51, 29);
-//        graphics.drawString(Minecraft.getInstance().font, getBasicEnergyString(recipe), 60, 50, 0xff808080, false);
-//    }
+    @Override
+    public void draw(RecipeHolder<AlloySmeltingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor guiGraphics, double mouseX,
+        double mouseY) {
+        background.draw(guiGraphics);
+        animatedFlame.draw(guiGraphics, 3, 29);
+        animatedFlame.draw(guiGraphics, 51, 29);
+        guiGraphics.text(Minecraft.getInstance().font, getBasicEnergyString(recipe), 60, 50, 0xff808080, false);
+    }
 
     @Override
     public void getTooltip(ITooltipBuilder tooltip, RecipeHolder<AlloySmeltingRecipe> recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {

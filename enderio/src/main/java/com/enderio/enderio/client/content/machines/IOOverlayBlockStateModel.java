@@ -121,9 +121,9 @@ public class IOOverlayBlockStateModel implements DynamicBlockStateModel {
                     }
                 });
             }
-
-            parts.add(model);
         }
+
+        parts.add(model);
     }
 
     public record Unbaked(Variant variant) implements CustomUnbakedBlockStateModel {

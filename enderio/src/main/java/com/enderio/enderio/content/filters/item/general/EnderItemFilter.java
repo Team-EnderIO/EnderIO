@@ -1,13 +1,12 @@
 package com.enderio.enderio.content.filters.item.general;
 
 import com.enderio.core.common.serialization.OrderedListCodec;
+import com.enderio.core.common.util.EqualityUtil;
 import com.enderio.enderio.api.filter.ItemFilter;
 import com.enderio.enderio.content.filters.item.ItemFilterUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.component.DataComponentType;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -24,13 +23,12 @@ public record EnderItemFilter(NonNullList<ItemStack> matches, boolean isDenyList
 
     public static final EnderItemFilter EMPTY = new EnderItemFilter(0);
 
-    // TODO: 1.22: Change field names
     public static final Codec<EnderItemFilter> CODEC = RecordCodecBuilder.create(componentInstance -> componentInstance
             .group(OrderedListCodec.create(256, ItemStack.OPTIONAL_CODEC, ItemStack.EMPTY)
                     .fieldOf("items")
                     .forGetter(EnderItemFilter::matches),
-                    Codec.BOOL.optionalFieldOf("isInvert", false).forGetter(EnderItemFilter::isDenyList),
-                    Codec.BOOL.optionalFieldOf("isNbt", false).forGetter(EnderItemFilter::shouldCompareComponents),
+                    Codec.BOOL.optionalFieldOf("isDenyList", false).forGetter(EnderItemFilter::isDenyList),
+                    Codec.BOOL.optionalFieldOf("shouldCompareComponents", false).forGetter(EnderItemFilter::shouldCompareComponents),
                     DamageFilterMode.CODEC.optionalFieldOf("damageMode", DamageFilterMode.IGNORE)
                             .forGetter(EnderItemFilter::damageFilterMode))
             .apply(componentInstance, EnderItemFilter::new));
@@ -79,5 +77,27 @@ public record EnderItemFilter(NonNullList<ItemStack> matches, boolean isDenyList
         }
 
         return isDenyList ? itemStack : ItemStack.EMPTY;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        EnderItemFilter other = (EnderItemFilter) o;
+        return isDenyList == other.isDenyList &&
+            shouldCompareComponents == other.shouldCompareComponents &&
+            damageFilterMode == other.damageFilterMode &&
+            EqualityUtil.areListsEqual(matches, other.matches, ItemStack::matches);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(EqualityUtil.hashListContents(matches, ItemStack::hashItemAndComponents), isDenyList, shouldCompareComponents, damageFilterMode);
     }
 }

@@ -1,6 +1,7 @@
 package com.enderio.enderio.compat.jei_machines_to_merge.category;
 
 import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.client.content.machines.gui.screen.VatScreen;
 import com.enderio.enderio.compat.jei.JEILang;
 import com.enderio.enderio.compat.jei.JEIUtils;
 import com.enderio.enderio.compat.jei_machines_to_merge.util.MachineRecipeCategory;
@@ -31,9 +32,11 @@ public class VATCategory extends MachineRecipeCategory<RecipeHolder<FermentingRe
     public static final IRecipeType<RecipeHolder<FermentingRecipe>> TYPE = JEIUtils.createRecipeType(EnderIO.MOD_ID,
             "vat_fermenting", FermentingRecipe.class);
 
+    private final IDrawable background;
     private final IDrawable icon;
 
     public VATCategory(IGuiHelper guiHelper) {
+        this.background = guiHelper.createDrawable(VatScreen.VAT_BG, 28, 10, 120, 53);
         this.icon = guiHelper.createDrawableItemStack(new ItemStack(EIOBlocks.VAT.get()));
     }
 
@@ -94,23 +97,23 @@ public class VATCategory extends MachineRecipeCategory<RecipeHolder<FermentingRe
         return 1;
     }
 
-    // TODO: 26.1 - reenable
-//    @Override
-//    public void draw(RecipeHolder<FermentingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics,
-//            double mouseX, double mouseY) {
-//        // left modifier
-//        ItemStack item = recipeSlotsView.getSlotViews().get(0).getDisplayedItemStack().get();
-//        double modifier = FermentingRecipe.getModifier(item, recipe.value().firstReagent());
-//        String text = "x" + modifier;
-//        Font font = Minecraft.getInstance().font;
-//        int x = 28 + 8 - font.width(text) / 2;
-//        graphics.drawString(font, text, x, 22, 4210752, false);
-//
-//        // right modifier
-//        item = recipeSlotsView.getSlotViews().get(1).getDisplayedItemStack().get();
-//        modifier = FermentingRecipe.getModifier(item, recipe.value().secondReagent());
-//        text = "x" + modifier;
-//        x = 77 + 8 - font.width(text) / 2;
-//        graphics.drawString(font, text, x, 22, 4210752, false);
-//    }
+    @Override
+    public void draw(RecipeHolder<FermentingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics,
+            double mouseX, double mouseY) {
+        background.draw(graphics);
+        // left modifier
+        ItemStack item = recipeSlotsView.getSlotViews().get(0).getDisplayedItemStack().get();
+        double modifier = FermentingRecipe.getModifier(item, recipe.value().firstReagent());
+        String text = "x" + modifier;
+        Font font = Minecraft.getInstance().font;
+        int x = 28 + 8 - font.width(text) / 2;
+        graphics.text(font, text, x, 22, 4210752, false);
+
+        // right modifier
+        item = recipeSlotsView.getSlotViews().get(1).getDisplayedItemStack().get();
+        modifier = FermentingRecipe.getModifier(item, recipe.value().secondReagent());
+        text = "x" + modifier;
+        x = 77 + 8 - font.width(text) / 2;
+        graphics.text(font, text, x, 22, 4210752, false);
+    }
 }

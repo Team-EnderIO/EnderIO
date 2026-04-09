@@ -46,9 +46,11 @@ public class SagMillCategory extends MachineRecipeCategory<RecipeHolder<SagMilli
     private static final int WIDTH = 123;
     private static final int HEIGHT = 65;
 
+    private final IDrawable background;
     private final IDrawable icon;
 
     public SagMillCategory(IGuiHelper guiHelper) {
+        this.background = guiHelper.createDrawable(BG_TEXTURE, 0, 0, WIDTH, HEIGHT);
         this.icon = guiHelper.createDrawableItemStack(new ItemStack(EIOBlocks.SAG_MILL.get()));
     }
 
@@ -137,13 +139,13 @@ public class SagMillCategory extends MachineRecipeCategory<RecipeHolder<SagMilli
         };
     }
 
-    // TODO: 26.1 - reenable
-//    @Override
-//    public void draw(RecipeHolder<SagMillingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics,
-//            double mouseX, double mouseY) {
-//        graphics.drawString(Minecraft.getInstance().font, getEnergyString(recipe, recipeSlotsView), 83, 47,
-//                0xff808080, false);
-//    }
+    @Override
+    public void draw(RecipeHolder<SagMillingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics,
+            double mouseX, double mouseY) {
+        background.draw(graphics);
+        graphics.text(Minecraft.getInstance().font, getEnergyString(recipe, recipeSlotsView), 83, 47,
+                0xff808080, false);
+    }
 
     @Override
     public void getTooltip(ITooltipBuilder tooltip, RecipeHolder<SagMillingRecipe> recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {

@@ -46,6 +46,12 @@ public class PaintedBlockStateModel implements DynamicBlockStateModel {
 
     @Override
     public void collectParts(BlockAndTintGetter level, BlockPos pos, BlockState state, RandomSource random, List<BlockStateModelPart> parts) {
+
+        Block paint = level.getModelData(pos).get(SinglePaintedBlockEntity.PAINT);
+        if (paint == null) {
+            return;
+        }
+
         QuadCollection.Builder builder = new QuadCollection.Builder();
 
         List<Direction> directions = new ArrayList<>(Arrays.asList(Direction.values()));
@@ -69,7 +75,7 @@ public class PaintedBlockStateModel implements DynamicBlockStateModel {
                 }
             }
 
-            List<BakedQuad> result = this.getQuadsUsingShape(level.getModelData(pos).get(SinglePaintedBlockEntity.PAINT), shape, side, directon, level, pos, random);
+            List<BakedQuad> result = this.getQuadsUsingShape(paint, shape, side, directon, level, pos, random);
             for (BakedQuad quad : result) {
                 if (directon != null) {
                     builder.addCulledFace(directon, quad);

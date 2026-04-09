@@ -183,7 +183,7 @@ public class EIOBlocks {
     public static final DeferredBlock<PaintedWallBlock> PAINTED_WALL = registerPainted("painted_wall", PaintedWallBlock::new, Blocks.COBBLESTONE_WALL);
 
     private static <B extends Block> DeferredBlock<B> registerPainted(String name, Function<BlockBehaviour.Properties, B> factory, Block reference) {
-        var blockHolder = registerWithItem(name, factory, BlockBehaviour.Properties.ofFullCopy(reference).noOcclusion(), (p, b) -> new PaintedBlockItem(b.get(), p));
+        var blockHolder = registerWithItem(name, factory, BlockBehaviour.Properties.ofFullCopy(reference).noOcclusion(), (p, b) -> new PaintedBlockItem(b.get(), p.useBlockDescriptionPrefix()));
         PAINTED_BLOCKS.add(Pair.of(blockHolder, reference));
         return blockHolder;
     }
@@ -305,9 +305,14 @@ public class EIOBlocks {
     public static final DeferredBlock<EnderSkullBlock> ENDERMAN_HEAD = registerWithItem("enderman_head", EnderSkullBlock::new,
             BlockBehaviour.Properties.ofFullCopy(Blocks.SKELETON_SKULL).instrument(NoteBlockInstrument.SKELETON).strength(1.0F).pushReaction(PushReaction.DESTROY));
 
-    // TODO: 1.21.4: currently using plain register to access ENDERMAN_HEAD during properties construction. Any better options?
-    public static final DeferredBlock<WallEnderSkullBlock> WALL_ENDERMAN_HEAD = BLOCKS.register("wall_enderman_head", (rl) -> new WallEnderSkullBlock(
-        BlockBehaviour.Properties.ofFullCopy(Blocks.SKELETON_SKULL).setId(ResourceKey.create(Registries.BLOCK, rl)).strength(1.0F).overrideLootTable(ENDERMAN_HEAD.get().getLootTable()).pushReaction(PushReaction.DESTROY)));
+    public static final DeferredBlock<WallEnderSkullBlock> WALL_ENDERMAN_HEAD = BLOCKS.registerBlock(
+        "wall_enderman_head",
+        WallEnderSkullBlock::new,
+        () -> BlockBehaviour.Properties
+            .ofFullCopy(Blocks.SKELETON_SKULL)
+            .strength(1.0F)
+            .overrideLootTable(ENDERMAN_HEAD.get().getLootTable())
+            .pushReaction(PushReaction.DESTROY));
 
     public static final DeferredBlock<IndustrialInsulationBlock> INDUSTRIAL_INSULATION = registerWithItem("industrial_insulation",
         IndustrialInsulationBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.SPONGE));
@@ -500,15 +505,15 @@ public class EIOBlocks {
 
     // Items that need capabilities (exposed as DeferredItems)
     public static final DeferredItem<FluidTankBlockItem> FLUID_TANK_ITEM = ITEMS.registerItem("fluid_tank",
-        p -> new FluidTankBlockItem(FLUID_TANK.get(), p, 16000));
+        p -> new FluidTankBlockItem(FLUID_TANK.get(), p.useBlockDescriptionPrefix(), 16000));
     public static final DeferredItem<FluidTankBlockItem> PRESSURIZED_FLUID_TANK_ITEM = ITEMS.registerItem("pressurized_fluid_tank",
-        p -> new FluidTankBlockItem(PRESSURIZED_FLUID_TANK.get(), p, 32000));
+        p -> new FluidTankBlockItem(PRESSURIZED_FLUID_TANK.get(), p.useBlockDescriptionPrefix(), 32000));
 
     public static final DeferredItem<BlockItem> POWERED_SPAWNER_ITEM = ITEMS.registerItem("powered_spawner",
-        p -> new BlockItem(POWERED_SPAWNER.get(), p), p -> p.component(EIODataComponents.SOUL, Soul.EMPTY));
+        p -> new BlockItem(POWERED_SPAWNER.get(), p), p -> p.component(EIODataComponents.SOUL, Soul.EMPTY).useBlockDescriptionPrefix());
 
     public static final DeferredItem<BlockItem> SOUL_ENGINE_ITEM = ITEMS.registerItem("soul_engine",
-        p -> new BlockItem(SOUL_ENGINE.get(), p), p -> p.component(EIODataComponents.SOUL, Soul.EMPTY));
+        p -> new BlockItem(SOUL_ENGINE.get(), p), p -> p.component(EIODataComponents.SOUL, Soul.EMPTY).useBlockDescriptionPrefix());
 
 //    public static final Map<SolarPanelTier, DeferredItem<BlockItem>> SOLAR_PANEL_ITEMS = Util.make(() -> {
 //        Map<SolarPanelTier, DeferredItem<BlockItem>> items = new HashMap<>();

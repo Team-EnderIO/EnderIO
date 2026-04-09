@@ -2,6 +2,7 @@ package com.enderio.enderio.client;
 
 import com.enderio.core.client.item.FluidBarDecorator;
 import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.conduits.model.RegisterConduitModelModifiersEvent;
 import com.enderio.enderio.api.conduits.screen.RegisterConduitScreenTypesEvent;
 import com.enderio.enderio.api.travel.RegisterTravelRenderersEvent;
@@ -64,13 +65,19 @@ import com.enderio.enderio.client.content.paint.model.port.PaintedBlockStateMode
 import com.enderio.enderio.client.content.paint.model.port.PaintedItemModel;
 import com.enderio.enderio.client.content.tools.CoordinateMenuScreen;
 import com.enderio.enderio.client.content.travel.TravelAnchorHud;
+import com.enderio.enderio.client.content.travel.TravelAnchorRenderer;
 import com.enderio.enderio.client.content.travel.TravelTargetRendering;
+import com.enderio.enderio.client.foundation.model.IOConfigRealLevelWorkaroundBlockModel;
 import com.enderio.enderio.client.foundation.model.item.IsSoulBoundItemProperty;
 import com.enderio.enderio.client.foundation.particle.RangeParticle;
+import com.enderio.enderio.client.foundation.widgets.ioconfig.IOConfigSceneRenderState;
+import com.enderio.enderio.client.foundation.widgets.ioconfig.IOConfigSceneRenderer;
 import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
 import com.enderio.enderio.content.fun.EnderiosItem;
 import com.enderio.enderio.content.misc_blocks.skull.EnderSkullBlock;
 import com.enderio.enderio.content.paint.block.PaintExtension;
+import com.enderio.enderio.content.paint.block.PaintedBlock;
+import com.enderio.enderio.foundation.block.MachineBlock;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOConduitTypes;
@@ -81,7 +88,13 @@ import com.enderio.enderio.init.EIOMenus;
 import com.enderio.enderio.init.EIOParticles;
 import com.enderio.enderio.init.EIOTravelTargets;
 import net.minecraft.client.color.block.BlockTintSources;
+import net.minecraft.client.renderer.block.BuiltInBlockModels;
 import net.minecraft.client.renderer.block.FluidModel;
+import net.minecraft.client.renderer.block.dispatch.BlockModelRotation;
+import net.minecraft.client.renderer.block.dispatch.SingleVariant;
+import net.minecraft.client.renderer.block.model.BlockModel;
+import net.minecraft.client.renderer.block.model.BlockStateModelWrapper;
+import net.minecraft.client.resources.model.SimpleModelWrapper;
 import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -97,6 +110,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
+import net.neoforged.neoforge.client.event.RegisterBlockModelsEvent;
 import net.neoforged.neoforge.client.event.RegisterBlockStateModels;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterConditionalItemModelPropertyEvent;
@@ -106,10 +120,14 @@ import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
 import net.neoforged.neoforge.client.event.RegisterItemModelsEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
+import net.neoforged.neoforge.client.event.RegisterPictureInPictureRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterSpecialModelRendererEvent;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
+import net.neoforged.neoforge.client.model.standalone.SimpleUnbakedStandaloneModel;
+import net.neoforged.neoforge.client.model.standalone.StandaloneModelKey;
 import net.neoforged.neoforge.fluids.FluidType;
+import org.joml.Matrix4f;
 
 import java.util.HashMap;
 import java.util.List;
@@ -124,13 +142,17 @@ public class EnderIOClient {
     private static final Map<Item, Identifier> HANG_GLIDER_MODEL_LOCATION = new HashMap<>();
     //public static final Map<Item, BakedModel> GLIDER_MODELS = new HashMap<>();
 
-//    public static final ModelResourceLocation TRAVEL_ANCHOR_BACKDROP_MODEL_LOCATION = ModelResourceLocation.standalone(
-//        ResourceLocation.fromNamespaceAndPath(EnderIOAPI.MOD_ID, "block/travel_anchor_backdrop")
-//    );
+    private static final Identifier TRAVEL_ANCHOR_BACKDROP_MODEL_LOCATION = Identifier.fromNamespaceAndPath(EnderIOAPI.MOD_ID, "block/travel_anchor_backdrop");
+    public static final StandaloneModelKey<BlockModel> TRAVEL_ANCHOR_BACKDROP = new StandaloneModelKey<>(() -> "travel_anchor_backdrop");
 
     public EnderIOClient(ModContainer modContainer) {
         // TODO: Re-enable after config rework.
 //        modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
+    }
+
+    @SubscribeEvent
+    public static void registerPip(RegisterPictureInPictureRenderersEvent event) {
+        event.register(IOConfigSceneRenderState.class, IOConfigSceneRenderer::new);
     }
 
     @SubscribeEvent
@@ -300,7 +322,10 @@ public class EnderIOClient {
 //            }
 //        }
 //
-//        event.register(TRAVEL_ANCHOR_BACKDROP_MODEL_LOCATION);
+        event.register(TRAVEL_ANCHOR_BACKDROP, new SimpleUnbakedStandaloneModel<>(TRAVEL_ANCHOR_BACKDROP_MODEL_LOCATION, (model, baker, _) -> {
+            var stateModel = new SingleVariant(SimpleModelWrapper.bake(baker, model, BlockModelRotation.IDENTITY));
+            return new BlockStateModelWrapper(stateModel, List.of(), new Matrix4f());
+        }));
     }
 
     @SubscribeEvent
@@ -357,7 +382,23 @@ public class EnderIOClient {
         event.registerModel(EnderIO.id("conduit"), ConduitBlockStateModel.Unbaked.CODEC);
         event.registerModel(EnderIO.id("io_overlay"), IOOverlayBlockStateModel.Unbaked.MAP_CODEC);
         event.registerModel(EnderIO.id("paint"), PaintedBlockStateModel.Unbaked.MAP_CODEC);
+    }
 
+    @SubscribeEvent
+    public static void registerBlockModels(RegisterBlockModelsEvent event) {
+        BuiltInBlockModels.ModelFactory factory = (_, state) -> new IOConfigRealLevelWorkaroundBlockModel.Unbaked(state, Optional.empty());
+
+        for (var block : EIOBlocks.BLOCKS.getEntries()) {
+            if (block.get() instanceof MachineBlock<?>) {
+                event.register(factory, block.get());
+            }
+
+            if (block.get() instanceof PaintedBlock) {
+                event.register(factory, block.get());
+            }
+        }
+
+        event.register(factory, EIOBlocks.CONDUIT_BUNDLE.get());
     }
 
     @SubscribeEvent
@@ -417,7 +458,7 @@ public class EnderIOClient {
     @SubscribeEvent
     public static void registerTravelRenderers(RegisterTravelRenderersEvent event) {
         // TODO: 26.1
-//        event.register(EIOTravelTargets.TRAVEL_ANCHOR_TYPE.get(), TravelAnchorRenderer::new);
+        event.register(EIOTravelTargets.TRAVEL_ANCHOR_TYPE.get(), TravelAnchorRenderer::new);
         event.register(EIOTravelTargets.ENDERFACE_TYPE.get(), EnderfaceRenderer::new);
     }
 

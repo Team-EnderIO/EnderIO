@@ -83,11 +83,19 @@ public abstract class StacksResourceStorage<T extends Resource, S> implements Re
     // Helpers for dealing with stacks
     public S getStack(ResourceSlotId<T> slotId) {
         int index = slotId.index(layout);
+        return getStack(index);
+    }
+
+    public S getStack(int index) {
         return getStackFrom(getResource(index), getAmountAsInt(index));
     }
 
     public void setStack(ResourceSlotId<T> slotId, S stack) {
-        set(slotId.index(layout), getResourceFrom(stack), getAmountFrom(stack));
+        setStack(slotId.index(layout), stack);
+    }
+
+    public void setStack(int index, S stack) {
+        set(index, getResourceFrom(stack), getAmountFrom(stack));
     }
 
     public void mutateStack(ResourceSlotId<T> slotId, Consumer<S> mutator) {

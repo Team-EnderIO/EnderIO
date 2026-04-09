@@ -31,6 +31,22 @@ configurations {
         extendsFrom(localRuntime)
     }
 
+    testImplementation {
+        extendsFrom(implementation.get())
+    }
+
+    testCompileOnly {
+        extendsFrom(compileOnly.get())
+    }
+
+    testRuntimeOnly {
+        extendsFrom(runtimeOnly.get())
+    }
+
+    testAnnotationProcessor {
+        extendsFrom(annotationProcessor.get())
+    }
+
     val gametestAnnotationProcessor by getting {
         extendsFrom(annotationProcessor.get())
     }
@@ -108,7 +124,7 @@ neoForge {
     }
 
     addModdingDependenciesTo(sourceSets.getByName("datagen"))
-    addModdingDependenciesTo(sourceSets.getByName("gametest"))
+//    addModdingDependenciesTo(sourceSets.getByName("gametest"))
 
     mods {
         create("enderio_modded_conduits") {
@@ -116,9 +132,9 @@ neoForge {
             sourceSet(sourceSets.getByName("main"))
         }
 
-        create("enderio_modded_conduits_tests") {
-            sourceSet(sourceSets.getByName("gametest"))
-        }
+//        create("enderio_modded_conduits_tests") {
+//            sourceSet(sourceSets.getByName("gametest"))
+//        }
     }
 
     runs {

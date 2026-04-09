@@ -7,11 +7,13 @@ import com.enderio.enderio.foundation.state.MachineStateType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 
 import java.util.List;
 import java.util.Objects;
@@ -34,8 +36,6 @@ public class ActivityWidget extends AbstractWidget {
 
     @Override
     protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-        //TODO blend depth pipeline
-
         MachineState prio = null;
         for (MachineState machineState : state.get()) {
             if (prio == null || machineState.type().getPriority() > prio.type().getPriority()) {
@@ -55,26 +55,30 @@ public class ActivityWidget extends AbstractWidget {
                     getY(), 16, 16);
         }
 
-        renderToolTip(graphics, mouseX, mouseY);
+        renderToolTip();
     }
 
-    private void renderToolTip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+    private void renderToolTip() {
         if (isHovered()) {
-            Minecraft minecraft = Minecraft.getInstance();
+            MutableComponent component;
 
-            List<Component> list = state.get()
+            List<MutableComponent> list = state.get()
                     .stream()
                     .filter(s -> state.get().size() <= 1 || s.type() != MachineStateType.ACTIVE)
-                    .map(s -> (Component) s.component())
+                    .map(MachineState::component)
                     .toList();
+
             if (list.isEmpty()) {
-                list = List.of(MachinesLang.STATUS_IDLE);
+                component = MachinesLang.STATUS_IDLE;
+            } else {
+                component = MutableComponent.create(list.getFirst().getContents());
+
+                for (int i = 1; i < list.size(); i++) {
+                    component = component.append("\n").append(list.get(i));
+                }
             }
 
-            //TODO which is what we need? widget has it's own tooltip stuff, but it's a bit different
-            graphics.tooltip(minecraft.font, list.stream().map(c -> ClientTooltipComponent.create(c.getVisualOrderText())).toList(), mouseX, mouseY,
-                DefaultTooltipPositioner.INSTANCE, null);
-
+            setTooltip(Tooltip.create(component));
         }
     }
 

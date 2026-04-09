@@ -9,9 +9,11 @@ import com.enderio.enderio.content.machines.slicer.SlicingRecipe;
 import com.enderio.enderio.init.EIOBlocks;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.types.IRecipeType;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -34,9 +36,11 @@ public class SlicingRecipeCategory extends MachineRecipeCategory<RecipeHolder<Sl
     private static final int WIDTH = 108;
     private static final int HEIGHT = 60;
 
+    private final IDrawable background;
     private final IDrawable icon;
 
     public SlicingRecipeCategory(IGuiHelper guiHelper) {
+        this.background = guiHelper.createDrawable(BG_TEXTURE, 0, 0, WIDTH, HEIGHT);
         this.icon = guiHelper.createDrawableItemStack(new ItemStack(EIOBlocks.SLICE_AND_SPLICE.get()));
     }
 
@@ -80,5 +84,10 @@ public class SlicingRecipeCategory extends MachineRecipeCategory<RecipeHolder<Sl
 
         // Output
         builder.addSlot(OUTPUT, 91, 34).addItemStacks(List.of(RecipeUtil.getResultStacks(recipe).get(0).getItem()));
+    }
+
+    @Override
+    public void draw(RecipeHolder<SlicingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor guiGraphics, double mouseX, double mouseY) {
+        background.draw(guiGraphics);
     }
 }

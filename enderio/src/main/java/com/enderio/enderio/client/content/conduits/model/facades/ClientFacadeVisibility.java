@@ -22,8 +22,7 @@ public class ClientFacadeVisibility {
     @SubscribeEvent
     public static void onTick(PlayerTickEvent.Pre event) {
         // Update every tick on the client.
-
-        if (Minecraft.getInstance() == null || Minecraft.getInstance().level == null) {
+        if (Minecraft.getInstance().level == null) {
             return;
         }
 
@@ -36,21 +35,20 @@ public class ClientFacadeVisibility {
 
     private static void setFacadesVisible(boolean visible) {
         if (visible != FACADES_VISIBLE) {
-            // TODO: 1.21.8: What is the replacement here?
-//            RenderSystem.recordRenderCall(() -> {
+            Minecraft.getInstance().execute(() -> {
                 var level = Minecraft.getInstance().level;
                 if (level != null) {
                     var chunkFacadesForDim = ConduitBundleBlockEntity.CHUNK_FACADES.get(level.dimension());
                     if (chunkFacadesForDim != null) {
                         chunkFacadesForDim.keySet().forEach((section) -> {
                             Minecraft.getInstance().levelRenderer.setSectionDirty(
-                                SectionPos.x(section), 
+                                SectionPos.x(section),
                                 SectionPos.y(section),
                                 SectionPos.z(section));
                         });
                     }
                 }
-//            });
+            });
         }
 
         FACADES_VISIBLE = visible;

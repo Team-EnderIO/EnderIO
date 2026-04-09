@@ -13,8 +13,7 @@ public enum MobSpawnMode implements StringRepresentable {
     /**
      * Create a new instance of the entity.
      */
-    // TODO: Ender IO 8 - rename to "new"
-    NEW(0, "entity_type"),
+    NEW(0, "new"),
 
     /**
      * Create an exact copy of the original entity.

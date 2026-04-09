@@ -13,6 +13,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.List;
+import java.util.Objects;
 
 // TODO: should tag comparison compare health?
 public record EnderSoulFilter(NonNullList<Soul> matches, boolean isDenyList, boolean shouldCompareTags)
@@ -20,15 +21,14 @@ public record EnderSoulFilter(NonNullList<Soul> matches, boolean isDenyList, boo
 
     public static final EnderSoulFilter EMPTY = new EnderSoulFilter(0);
 
-    // TODO: 1.22 Rename fields.
     public static final Codec<EnderSoulFilter> CODEC = RecordCodecBuilder.create(
         componentInstance -> componentInstance
             .group(
                 OrderedListCodec.create(256, Soul.OPTIONAL_CODEC, Soul.EMPTY)
                     .fieldOf("entities")
                     .forGetter(EnderSoulFilter::matches),
-                Codec.BOOL.fieldOf("isInvert").forGetter(EnderSoulFilter::isDenyList),
-                Codec.BOOL.fieldOf("nbt").forGetter(EnderSoulFilter::shouldCompareTags))
+                Codec.BOOL.fieldOf("isDenyList").forGetter(EnderSoulFilter::isDenyList),
+                Codec.BOOL.fieldOf("shouldCompareTags").forGetter(EnderSoulFilter::shouldCompareTags))
             .apply(componentInstance, EnderSoulFilter::new));
 
     // @formatter:off
@@ -96,5 +96,20 @@ public record EnderSoulFilter(NonNullList<Soul> matches, boolean isDenyList, boo
         }
 
         return isDenyList;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EnderSoulFilter that = (EnderSoulFilter) o;
+        return isDenyList == that.isDenyList &&
+                shouldCompareTags == that.shouldCompareTags &&
+                Objects.equals(matches, that.matches);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(matches, isDenyList, shouldCompareTags);
     }
 }
