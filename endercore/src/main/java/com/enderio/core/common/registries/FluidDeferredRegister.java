@@ -124,7 +124,9 @@ public class FluidDeferredRegister {
             fluid.type(fluidTypes.register(name, () -> fluidTypeFactory.apply(fluidTypeProperties)));
             fluid.source(fluids.register("fluid_" + name + "_still", () -> new BaseFlowingFluid.Source(fluid.createProperties())));
             fluid.flowing(fluids.register("fluid_" + name + "_flowing", () -> new BaseFlowingFluid.Flowing(fluid.createProperties())));
-            fluid.block(blocks.registerBlock(name, p -> blockFactory.apply(fluid.flowing().get(), p), blockProperties));
+
+            // TODO: Properly embrace supplier here
+            fluid.block(blocks.registerBlock(name, p -> blockFactory.apply(fluid.flowing().get(), p), () -> blockProperties));
 
             if (bucketFactory != null) {
                 fluid.bucket(items.registerItem(name + "_bucket", p -> bucketFactory.apply(fluid.source().get(), p)));
