@@ -1,5 +1,5 @@
 {
-  "type": "entity_type",
+  "type": "new",
   "entity": "minecraft:ravager",
   "power": 60000
 }

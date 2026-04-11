@@ -1,5 +1,5 @@
 {
-  "type": "entity_type",
+  "type": "new",
   "entity": "minecraft:drowned",
   "power": 32000
 }

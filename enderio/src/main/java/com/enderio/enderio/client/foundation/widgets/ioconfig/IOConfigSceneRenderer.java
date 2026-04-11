@@ -4,17 +4,13 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.client.EIOPipelineModifiers;
 import com.enderio.enderio.client.foundation.model.ModelRenderUtil;
 import com.enderio.enderio.config.machines.MachinesConfig;
-import com.mojang.blaze3d.pipeline.BlendFunction;
-import com.mojang.blaze3d.pipeline.ColorTargetState;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.render.pip.PictureInPictureRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.SubmitNodeStorage;
 import net.minecraft.client.renderer.feature.FeatureRenderDispatcher;
@@ -26,20 +22,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.data.AtlasIds;
 import net.minecraft.resources.Identifier;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.model.pipeline.VertexConsumerWrapper;
-import net.neoforged.neoforge.client.pipeline.PipelineModifier;
-import net.neoforged.neoforge.client.pipeline.RegisterPipelineModifiersEvent;
 import org.joml.Vector3f;
 
-import java.util.SequencedMap;
-
-@EventBusSubscriber
 public class IOConfigSceneRenderer extends PictureInPictureRenderer<IOConfigSceneRenderState> {
     private static final Identifier SELECTED_ICON = EnderIO.id("block/overlay/selected_face");
 

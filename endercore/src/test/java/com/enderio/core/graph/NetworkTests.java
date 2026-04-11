@@ -1,4 +1,4 @@
-package com.enderio.core;
+package com.enderio.core.graph;
 
 import com.enderio.core.common.graph.BasicNetwork;
 import com.enderio.core.common.graph.Network;

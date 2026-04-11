@@ -9,6 +9,5 @@
   "item.enderio.basic_chemical_filter": "Basic Chemical Filter",
   "tooltip.enderio.conduit.chemical.change_fluid1": "Locked Chemical:",
   "tooltip.enderio.conduit.chemical.change_fluid2": "Clicca per reimpostare!",
-  "tooltip.enderio.conduit.chemical.change_fluid3": "Sostanza: %s",
-  "tooltip.enderio.conduit.chemical.multi": "Consente di trasportare più tipi di sostanze chimiche sulla stessa linea"
+  "tooltip.enderio.conduit.chemical.change_fluid3": "Sostanza: %s"
 }

@@ -3,7 +3,9 @@ package com.enderio.enderio.content.travel;
 import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.enderio.api.travel.TravelTarget;
 import com.enderio.enderio.api.travel.TravelTargetApi;
+import com.enderio.enderio.compat.curios.CuriosCompat;
 import com.enderio.enderio.config.base.BaseConfig;
+import com.enderio.enderio.foundation.network.packets.ServerboundRequestShortTravelPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundRequestTravelPacket;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIODataComponents;
@@ -28,6 +30,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jspecify.annotations.Nullable;
 
@@ -57,6 +60,15 @@ public class TravelHandler {
         return comp != null && comp;
     }
 
+    public static boolean isTravelItem(ItemStack stack){
+        if(stack != null && !stack.isEmpty()) {
+            Boolean comp = stack.get(EIODataComponents.TRAVEL_ITEM);
+            if (comp != null && comp) {
+                return true;
+            }
+        }
+        return false;
+    }
     // NOTE: This isn't as flexible as how Integration system used to work.
     public static boolean canBlockTeleport(Player player) {
         return player.level().getBlockState(player.blockPosition().below()).is(EIOTags.Blocks.BLOCKS_TELEPORTATION);
@@ -76,12 +88,44 @@ public class TravelHandler {
         }
     }
 
+
+    // FIXME: Move this too (maybe).
+    /**
+     * Includes hasResources()/charge level check
+     */
+    public static ItemStack findTravelItem(Player player) {
+        var curios = CuriosCompat.getActiveCurios(player, TravelHandler::isTravelItem);
+        if(curios.isPresent()){
+            for(ItemStack stack : curios.get()){
+                if(!player.getCooldowns().isOnCooldown(stack)
+                    && (player.isCreative() || TravelHandler.hasResources(stack))){
+                    return stack;
+                }
+            }
+        }
+
+        for(int i = 0; i < player.getInventory().getContainerSize(); i++){
+            ItemStack stack = player.getInventory().getItem(i);
+            if(isTravelItem(stack)&& !player.getCooldowns().isOnCooldown(stack)
+                && (player.isCreative() || TravelHandler.hasResources(stack))) {
+                return stack;
+            }
+        }
+
+        return ItemStack.EMPTY;
+    }
+
     public static boolean shortTeleport(Level level, Player player) {
+        return shortTeleport(level, player, false);
+    }
+
+    public static boolean shortTeleport(Level level, Player player, boolean sendToServer) {
         Optional<Vec3> pos = teleportPosition(level, player);
         if (pos.isPresent()) {
-            if (player instanceof ServerPlayer serverPlayer) {
-                Optional<Vec3> eventPos = teleportEvent(player, pos.get());
-                if (eventPos.isPresent()) {
+            Optional<Vec3> eventPos = teleportEvent(player, pos.get());
+            if (eventPos.isPresent()) {
+                if (player instanceof ServerPlayer serverPlayer) {
+
                     player.teleportTo(eventPos.get().x(), eventPos.get().y(), eventPos.get().z());
                     serverPlayer.connection.resetPosition();
                     player.fallDistance = 0;
@@ -95,11 +139,15 @@ public class TravelHandler {
                         level.playSound(null, player.position().x(), player.position().y(), player.position().z(), SoundEvents.ENDERMAN_TELEPORT,
                             SoundSource.PLAYERS, 1.0F, 1.0F);
                     }
-                } else {
-                    if (!level.isClientSide()) {
-                        level.playSound(null, player.position().x(), player.position().y(), player.position().z(), SoundEvents.DISPENSER_FAIL,
-                            SoundSource.PLAYERS, 1.0F, 1.0F);
-                    }
+                }else if(sendToServer){
+                    ClientPacketDistributor.sendToServer(new ServerboundRequestShortTravelPacket());
+                }else{
+                    return false;
+                }
+            } else {
+                if (!level.isClientSide()) {
+                    level.playSound(null, player.position().x(), player.position().y(), player.position().z(), SoundEvents.DISPENSER_FAIL,
+                        SoundSource.PLAYERS, 1.0F, 1.0F);
                 }
             }
             return true;

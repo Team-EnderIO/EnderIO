@@ -9,6 +9,5 @@
   "item.enderio.basic_chemical_filter": "Basic Chemical Filter",
   "tooltip.enderio.conduit.chemical.change_fluid1": "Locked Chemical:",
   "tooltip.enderio.conduit.chemical.change_fluid2": "クリックでリセット",
-  "tooltip.enderio.conduit.chemical.change_fluid3": "Chemical: %s",
-  "tooltip.enderio.conduit.chemical.multi": "複数の化学物質を同じラインで輸送できます"
+  "tooltip.enderio.conduit.chemical.change_fluid3": "Chemical: %s"
 }

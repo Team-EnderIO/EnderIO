@@ -284,6 +284,9 @@ public class EnderGameTestHelper extends ExtendedGameTestHelper {
         }
     }
 
+    /**
+     * Assert that a block has exactly the expected amount of energy stored.
+     */
     public void assertEnergyStored(int x, int y, int z, int expectedAmount) {
         var energyHandler = getLevel().getCapability(Capabilities.Energy.BLOCK, absolutePos(new BlockPos(x, y, z)), null);
         if (energyHandler == null) {
@@ -294,5 +297,47 @@ public class EnderGameTestHelper extends ExtendedGameTestHelper {
         if (stored != expectedAmount) {
             throw assertionException("Expected " + expectedAmount + " energy in block at " + x + "," + y + "," + z + ", but found " + stored);
         }
+    }
+
+    /**
+     * Assert that a block has at least the expected minimum amount of energy stored.
+     */
+    public void assertEnergyStoredAtLeast(int x, int y, int z, int minAmount) {
+        var energyHandler = getLevel().getCapability(Capabilities.Energy.BLOCK, absolutePos(new BlockPos(x, y, z)), null);
+        if (energyHandler == null) {
+            throw assertionException("No energy handler at " + x + "," + y + "," + z);
+        }
+
+        int stored = energyHandler.getAmountAsInt();
+        if (stored < minAmount) {
+            throw assertionException("Expected at least " + minAmount + " energy in block at " + x + "," + y + "," + z + ", but found " + stored);
+        }
+    }
+
+    /**
+     * Assert that a block has at most the expected maximum amount of energy stored.
+     */
+    public void assertEnergyStoredAtMost(int x, int y, int z, int maxAmount) {
+        var energyHandler = getLevel().getCapability(Capabilities.Energy.BLOCK, absolutePos(new BlockPos(x, y, z)), null);
+        if (energyHandler == null) {
+            throw assertionException("No energy handler at " + x + "," + y + "," + z);
+        }
+
+        int stored = energyHandler.getAmountAsInt();
+        if (stored > maxAmount) {
+            throw assertionException("Expected at most " + maxAmount + " energy in block at " + x + "," + y + "," + z + ", but found " + stored);
+        }
+    }
+
+    /**
+     * Get the amount of energy stored in a block.
+     */
+    public int getEnergyStored(int x, int y, int z) {
+        var energyHandler = getLevel().getCapability(Capabilities.Energy.BLOCK, absolutePos(new BlockPos(x, y, z)), null);
+        if (energyHandler == null) {
+            throw assertionException("No energy handler at " + x + "," + y + "," + z);
+        }
+
+        return energyHandler.getAmountAsInt();
     }
 }

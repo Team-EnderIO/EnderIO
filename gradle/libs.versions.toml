@@ -1,8 +1,8 @@
 [versions]
-minecraft = { strictly = "[26.1.1, 26.2)", prefer = "26.1.1" }
-neoforge = "26.1.1.11-beta"
+minecraft = { strictly = "[26.1.2, 26.2)", prefer = "26.1.2" }
+neoforge = "26.1.2.3-beta"
 almostUnified = "1.21.1-1.0.0"
-jeiVersion = "29.4.0.23"
+jeiVersion = "29.5.0.24"
 ccTweaked = "1.113.1"
 jade = "26.0.6+neoforge"
 #athena = "4.2.1"
@@ -13,6 +13,7 @@ refinedStorage = { strictly = "[2.0.0-beta.1,)", prefer = "2.0.0" }
 laserio = "5648871"
 graphlib = { strictly = "[3.0.4, 3.1)", prefer = "3.0.5" }
 ftbUltimine = { strictly = "[2101.1.7,2102)", prefer = "2101.1.7" }
+curios = "15.0.0-beta.1+26.1"
 sodium = "mc1.21.1-0.6.13-neoforge"
 iris = "1.8.12+1.21.1-neoforge"
 
@@ -22,10 +23,10 @@ jetbrainsAnnotations = { group = "org.jetbrains", name = "annotations", version 
 neoforgeTestFramework = { group = "net.neoforged", name = "testframework", version.ref = "neoforge"}
 
 #almostUnified = { group = "com.almostreliable.mods", name = "almostunified-neoforge", version.ref = "almostUnified" }
-jeiCommonApi = { group = "mezz.jei", name = "jei-26.1.1-common-api", version.ref = "jeiVersion" }
-jeiNeoforgeApi = { group = "mezz.jei", name = "jei-26.1.1-neoforge-api", version.ref = "jeiVersion" }
-jeiCommon = { group = "mezz.jei", name = "jei-26.1.1-common", version.ref = "jeiVersion" }
-jeiNeoforge = { group = "mezz.jei", name = "jei-26.1.1-neoforge", version.ref = "jeiVersion" }
+jeiCommonApi = { group = "mezz.jei", name = "jei-26.1.2-common-api", version.ref = "jeiVersion" }
+jeiNeoforgeApi = { group = "mezz.jei", name = "jei-26.1.2-neoforge-api", version.ref = "jeiVersion" }
+jeiCommon = { group = "mezz.jei", name = "jei-26.1.2-common", version.ref = "jeiVersion" }
+jeiNeoforge = { group = "mezz.jei", name = "jei-26.1.2-neoforge", version.ref = "jeiVersion" }
 #ccTweakedCoreApi = { group = "cc.tweaked", name = "cc-tweaked-1.21.1-core-api", version.ref = "ccTweaked" }
 #ccTweakedForgeApi = { group = "cc.tweaked", name = "cc-tweaked-1.21.1-forge-api", version.ref = "ccTweaked" }
 #ccTweakedForge = { group = "cc.tweaked", name = "cc-tweaked-1.21.1-forge", version.ref = "ccTweaked" }
@@ -37,6 +38,7 @@ ae2 = { group = "org.appliedenergistics", name = "appliedenergistics2", version.
 #laserio = { group = "curse.maven", name = "laserio-626839", version.ref = "laserio" }
 graphlib = { group = "dev.gigaherz.graph", name = "GraphLib3", version.ref = "graphlib"}
 #ftbUltimine = { group = "dev.ftb.mods", name = "ftb-ultimine-neoforge", version.ref = "ftbUltimine" }
+curios = { group = "top.theillusivec4.curios", name = "curios-neoforge", version.ref = "curios" }
 sodium = { group = "maven.modrinth", name = "sodium", version.ref = "sodium" }
 iris = { group = "maven.modrinth", name = "iris", version.ref = "iris" }
 
