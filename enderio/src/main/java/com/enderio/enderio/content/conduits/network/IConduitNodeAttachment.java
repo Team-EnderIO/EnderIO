@@ -23,12 +23,7 @@ public interface IConduitNodeAttachment {
     void markNodesDirty();
 
     @Nullable
-    <TCapability> TCapability getNeighborSidedCapability(Holder<Conduit<?, ?>> conduit,
-        BlockCapability<TCapability, Direction> capability, Direction side);
-
-    @Nullable
-    <TCapability> TCapability getNeighborVoidCapability(Holder<Conduit<?, ?>> conduit,
-        BlockCapability<TCapability, Void> capability, Direction side);
+    <T, C> T getCapability(Holder<Conduit<?, ?>> conduit, BlockCapability<T, C> capability, Direction neighborSide, @Nullable C context);
 
     boolean hasRedstoneSignal(@Nullable DyeColor signalColor);
 

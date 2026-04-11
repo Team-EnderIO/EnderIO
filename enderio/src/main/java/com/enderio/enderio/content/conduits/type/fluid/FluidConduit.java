@@ -3,6 +3,7 @@ package com.enderio.enderio.content.conduits.type.fluid;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.ConduitCapabilityAccessor;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.api.conduits.connection.path.ConnectionPathProperty;
@@ -25,13 +26,16 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluids;
+import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.joml.Vector2i;
 
+import java.util.Set;
 import java.util.function.Consumer;
 
 public record FluidConduit(Identifier texture, Component description, int transferRatePerTick)
@@ -74,9 +78,8 @@ public record FluidConduit(Identifier texture, Component description, int transf
     }
 
     @Override
-    public boolean canConnectToBlock(Level level, BlockPos conduitPos, Direction direction) {
-        var capability = level.getCapability(Capabilities.Fluid.BLOCK, conduitPos.relative(direction),
-                direction.getOpposite());
+    public boolean canConnectToBlock(ConduitCapabilityAccessor capabilityAccessor, BlockGetter level, BlockPos conduitPos, Direction direction) {
+        var capability = capabilityAccessor.getSidedCapability(Capabilities.Fluid.BLOCK, direction);
         return capability != null;
     }
 

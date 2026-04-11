@@ -23,15 +23,14 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipProvider;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.ApiStatus;
 import org.jspecify.annotations.Nullable;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.item.CreativeModeTab;
 import org.joml.Vector2i;
-import java.util.Optional;
+
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -136,10 +135,10 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
         return false;
     }
 
-    boolean canConnectToBlock(Level level, BlockPos conduitPos, Direction direction);
+    boolean canConnectToBlock(ConduitCapabilityAccessor capabilityAccessor, BlockGetter level, BlockPos conduitPos, Direction direction);
 
-    default boolean canForceConnectToBlock(Level level, BlockPos conduitPos, Direction direction) {
-        return canConnectToBlock(level, conduitPos, direction);
+    default boolean canForceConnectToBlock(ConduitCapabilityAccessor capabilityAccessor, BlockGetter level, BlockPos conduitPos, Direction direction) {
+        return canConnectToBlock(capabilityAccessor, level, conduitPos, direction);
     }
 
     // endregion

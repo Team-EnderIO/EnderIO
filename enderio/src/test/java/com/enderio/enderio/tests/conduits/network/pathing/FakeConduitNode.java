@@ -130,22 +130,9 @@ public class FakeConduitNode implements ConduitNode {
     public <T extends NodeData> void setNodeData(@Nullable T data) {
         throw new UnsupportedOperationException("Not needed for pathfinding tests");
     }
-    
+
     @Override
-    @Nullable
-    public <TCapability> TCapability getNeighborSidedCapability(
-        BlockCapability<TCapability, Direction> capability,
-        Direction side
-    ) {
-        throw new UnsupportedOperationException("Not needed for pathfinding tests");
-    }
-    
-    @Override
-    @Nullable
-    public <TCapability> TCapability getNeighborVoidCapability(
-        BlockCapability<TCapability, Void> capability,
-        Direction side
-    ) {
+    public @Nullable <T, C> T getCapability(BlockCapability<T, C> capability, Direction neighborSide, @Nullable C context) {
         throw new UnsupportedOperationException("Not needed for pathfinding tests");
     }
     
