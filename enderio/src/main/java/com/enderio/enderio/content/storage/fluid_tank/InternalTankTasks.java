@@ -11,6 +11,7 @@ import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.fluids.FluidType;
@@ -34,7 +35,7 @@ public class InternalTankTasks {
         ItemStack outputItem = fluidFillOutput.getItemStack(blockEntity);
 
         if (!inputItem.isEmpty()) {
-            if (inputItem.getItem() instanceof BucketItem filledBucket) {
+            if (inputItem.getItem() instanceof BucketItem filledBucket && !filledBucket.content.isSame(Fluids.EMPTY)) {
                 if (outputItem.isEmpty() || (outputItem.getItem() == Items.BUCKET
                     && outputItem.getCount() < outputItem.getMaxStackSize())) {
 
