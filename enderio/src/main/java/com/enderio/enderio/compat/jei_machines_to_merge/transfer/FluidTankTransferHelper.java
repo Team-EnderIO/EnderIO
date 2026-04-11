@@ -64,7 +64,7 @@ public class FluidTankTransferHelper implements IRecipeTransferHandler<FluidTank
         if (!hasItem || !hasFluid) {
             Component message = Component.translatable("jei.tooltip.error.recipe.transfer.missing");
             List<IRecipeSlotView> empty = new ArrayList<>();
-            if (!hasItem && item.isEmpty()) {
+            if (!hasItem && (item == null || item.isEmpty())) {
                 empty.add(recipeSlots.getSlotViews().get(0));
             }
             if (!hasFluid) {
@@ -87,12 +87,13 @@ public class FluidTankTransferHelper implements IRecipeTransferHandler<FluidTank
         return null;
     }
 
+    @Nullable
     private Ingredient getIngredientItem(Player player, Ingredient ingredient) {
         for (var item : player.getInventory().getNonEquipmentItems()) {
             if (ingredient.test(item)) {
                 return ingredient;
             }
         }
-        return Ingredient.of(HolderSet.empty());
+        return null;
     }
 }
