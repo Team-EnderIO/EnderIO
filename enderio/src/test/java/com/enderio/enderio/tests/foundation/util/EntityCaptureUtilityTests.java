@@ -1,4 +1,4 @@
-package com.enderio.enderio.tests.util;
+package com.enderio.enderio.tests.foundation.util;
 
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.foundation.util.EntityCaptureUtils;

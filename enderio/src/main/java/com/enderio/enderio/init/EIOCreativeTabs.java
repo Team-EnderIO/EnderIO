@@ -1,18 +1,12 @@
 package com.enderio.enderio.init;
 
-import com.enderio.core.common.item.CreativeTabVariants;
 import com.enderio.core.common.item.ICustomCreativeTabEntries;
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.api.EnderIORegistries;
-import com.enderio.enderio.api.conduits.Conduit;
-import com.enderio.enderio.api.conduits.ConduitApi;
 import com.enderio.enderio.content.broken_spawner.BrokenSpawnerItem;
-import com.enderio.enderio.content.conduits.ConduitBlockItem;
 import com.enderio.enderio.content.paint.block.PaintedBlock;
 import com.enderio.enderio.content.tools.vials.SoulVialItem;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -23,9 +17,7 @@ import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -91,11 +83,6 @@ public class EIOCreativeTabs {
                 customCreativeTabEntries.addAdditionalCreativeTabEntries(properties, output);
             } else {
                 output.accept(item);
-
-                // TODO: Remove this old interface
-                if (item instanceof CreativeTabVariants variants) {
-                    variants.addAllVariants(output);
-                }
             }
         }
     }

@@ -1,5 +1,5 @@
 {
-  "type": "entity_type",
+  "type": "new",
   "entity": "minecraft:enderman",
   "power": 60000
 }

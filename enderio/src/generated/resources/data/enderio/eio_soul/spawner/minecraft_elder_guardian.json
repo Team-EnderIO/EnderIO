@@ -1,5 +1,5 @@
 {
-  "type": "entity_type",
+  "type": "new",
   "entity": "minecraft:elder_guardian",
   "power": 32000
 }
