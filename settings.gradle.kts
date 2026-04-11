@@ -96,9 +96,17 @@ dependencyResolutionManagement {
             }
         }
 
+//        maven {
+//            name = "FTB Maven"
+//            url = uri("https://maven.ftb.dev/releases")
+//            content {
+//                includeGroup("dev.ftb.mods")
+//            }
+//        }
+
         maven {
-            name = "FTB Maven"
-            url = uri("https://maven.ftb.dev/releases")
+            name = "FTB Snapshot Maven"
+            url = uri("https://maven.ftb.dev/snapshots")
             content {
                 includeGroup("dev.ftb.mods")
             }
