@@ -31,12 +31,26 @@ public final class SolarPanelNode implements INetworkNode<SolarPanelNetwork, Sol
     /**
      * Lossy on purpose, adding energy by generation when we're solar just means we lose the leftovers.
      */
-    public void addEnergy(int energy) {
+    private int addEnergy(int energy) {
         int energyToInsert = Math.min(getMaxEnergyStored() - getEnergyStored(), energy);
         energyStored += energyToInsert;
+        blockEntity.setChanged();
+        return energyToInsert;
+    }
 
-        if (energyToInsert < energy) {
-            // TODO: Try and push into other buffers in the network.
+    public void addEnergyToNetwork(int energy) {
+        int energyInserted = Math.min(getMaxEnergyStored() - getEnergyStored(), energy);
+        energyStored += energyInserted;
+        blockEntity.setChanged();
+
+        if (energyInserted < energy) {
+            for (var node : network.nodes()) {
+                if (node == this) {
+                    continue;
+                }
+
+                energyInserted -= node.addEnergy(energy - energyInserted);
+            }
         }
     }
 

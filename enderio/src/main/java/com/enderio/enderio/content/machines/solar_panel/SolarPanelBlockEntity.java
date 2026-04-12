@@ -98,7 +98,7 @@ public class SolarPanelBlockEntity extends EIOBlockEntity {
     @Override
     public void serverTick() {
         if (isGenerating()) {
-            node.addEnergy(getGenerationRate());
+            node.addEnergyToNetwork(getGenerationRate());
         }
 
         if (reloadCache != reload && boundSoul.hasEntity()) {

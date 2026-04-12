@@ -35,16 +35,4 @@ public final class SolarPanelNetwork extends Network<SolarPanelNetwork, SolarPan
     public int getTotalMaxEnergyStored() {
         return nodes().stream().mapToInt(SolarPanelNode::getMaxEnergyStored).sum();
     }
-
-    public int extractEnergy(int maxExtract, boolean simulate) {
-        int extracted = 0;
-        for (var node : nodes()) {
-            extracted += node.extractEnergy(maxExtract, simulate);
-            if (extracted >= maxExtract) {
-                break;
-            }
-        }
-
-        return extracted;
-    }
 }

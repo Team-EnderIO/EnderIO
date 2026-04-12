@@ -21,7 +21,16 @@ public class SolarPanelEnergyStorage implements IEnergyStorage {
 
         // If we haven't extracted enough, try to take from the network
         if (extracted < amount) {
-            extracted += node.getNetwork().extractEnergy(amount - extracted, simulate);
+            for (var otherNode : node.getNetwork().nodes()) {
+                if (otherNode == node) {
+                    continue;
+                }
+
+                extracted += otherNode.extractEnergy(amount - extracted, simulate);
+                if (extracted >= amount) {
+                    break;
+                }
+            }
         }
 
         return extracted;
