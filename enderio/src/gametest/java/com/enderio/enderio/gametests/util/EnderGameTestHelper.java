@@ -76,6 +76,27 @@ public class EnderGameTestHelper extends ExtendedGameTestHelper {
         }
     }
 
+    public void assertContainerHasAtleast(int x, int y, int z, Item item, int count) {
+        var itemHandler = getLevel().getCapability(Capabilities.ItemHandler.BLOCK, absolutePos(new BlockPos(x, y, z)),
+            null);
+        if (itemHandler == null) {
+            throw new GameTestAssertException("No item handler at " + x + "," + y + "," + z);
+        }
+
+        int foundCount = 0;
+        for (int i = 0; i < itemHandler.getSlots(); i++) {
+            var stack = itemHandler.getStackInSlot(i);
+            if (stack.is(item)) {
+                foundCount += stack.getCount();
+            }
+        }
+
+        if (foundCount < count) {
+            throw new GameTestAssertException("Expected " + count + " of " + item + " in container at " + x + "," + y
+                + "," + z + " but found " + foundCount);
+        }
+    }
+
     /**
      * Insert an item into a specific slot of a container.
      */
