@@ -215,6 +215,10 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
         // See that we can add all the outputs
         try (Transaction transaction = Transaction.openRoot()) {
             for (OutputStack output : outputs) {
+                if (output.isEmpty()) { //skip empty outputs
+                    continue;
+                }
+
                 ItemResource item = ItemResource.of(output.getItem());
 
                 int toInsert = output.getItem().getCount();
