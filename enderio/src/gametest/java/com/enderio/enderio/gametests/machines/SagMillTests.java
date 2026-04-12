@@ -63,24 +63,24 @@ public class SagMillTests {
             helper.startSequence()
                 .thenExecute(() -> {
                     // Insert the capacitor and fill with energy.
-                    helper.insertIntoContainer(0, 1, 0, EIOItems.OCTADIC_CAPACITOR.get(), 1);
-                    helper.provideEnergy(0, 1, 0, energyToAdd);
+                    helper.insertIntoContainer(0, 0, 0, EIOItems.OCTADIC_CAPACITOR.get(), 1);
+                    helper.provideEnergy(0, 0, 0, energyToAdd);
                 })
                 // Insert copper ore for grinding
-                .thenExecute(() -> helper.insertIntoContainer(0, 1, 0, Items.COPPER_ORE, 2))
+                .thenExecute(() -> helper.insertIntoContainer(0, 0, 0, Items.COPPER_ORE, 2))
                 // Wait for processing
                 .thenExecuteAfter(40, () -> {
                     // Verify input was consumed
-                    helper.assertContainerHasExactly(0, 1, 0, Items.COPPER_ORE, 0);
+                    helper.assertContainerHasExactly(0, 0, 0, Items.COPPER_ORE, 0);
 
                     // Should get raw copper output from copper ore
-                    helper.assertContainerHasAtleast(0, 1, 0, Items.RAW_COPPER, 2);
+                    helper.assertContainerHasAtleast(0, 0, 0, Items.RAW_COPPER, 2);
 
                     // Ensure energy was consumed correctly
                     var input = new SagMillingRecipe.Input(new ItemStack(Items.COPPER_ORE, 1), GrindingBallData.IDENTITY);
-                    var recipe = helper.getLevel().getRecipeManager().getRecipeFor(EIORecipes.SAG_MILLING.type().get(), input, helper.getLevel()).orElseThrow();
+                    var recipe = helper.getLevel().recipeAccess().getRecipeFor(EIORecipeTypes.SAG_MILLING.get(), input, helper.getLevel()).orElseThrow();
                     int expectedEnergy = energyToAdd - recipe.value().getBaseEnergyCost() * 2;
-                    helper.assertEnergyStored(0, 1, 0, expectedEnergy);
+                    helper.assertEnergyStored(0, 0, 0, expectedEnergy);
                 })
                 .thenSucceed();
         });
@@ -97,24 +97,24 @@ public class SagMillTests {
             helper.startSequence()
                 .thenExecute(() -> {
                     // Insert the capacitor and fill with energy.
-                    helper.insertIntoContainer(0, 1, 0, EIOItems.OCTADIC_CAPACITOR.get(), 1);
-                    helper.provideEnergy(0, 1, 0, energyToAdd);
+                    helper.insertIntoContainer(0, 0, 0, EIOItems.OCTADIC_CAPACITOR.get(), 1);
+                    helper.provideEnergy(0, 0, 0, energyToAdd);
                 })
                 // Insert raw copper for grinding
-                .thenExecute(() -> helper.insertIntoContainer(0, 1, 0, Items.RAW_COPPER, 2))
+                .thenExecute(() -> helper.insertIntoContainer(0, 0, 0, Items.RAW_COPPER, 2))
                 // Wait for processing
                 .thenExecuteAfter(40, () -> {
                     // Verify input was consumed
-                    helper.assertContainerHasExactly(0, 1, 0, Items.RAW_COPPER, 0);
+                    helper.assertContainerHasExactly(0, 0, 0, Items.RAW_COPPER, 0);
 
-                    // Should get powdered copper output from raw copper
-                    helper.assertContainerHasAtleast(0, 1, 0, EIOItems.POWDERED_COPPER.asItem(), 2);
+                    // Should get powedered copper output from raw copper
+                    helper.assertContainerHasAtleast(0, 0, 0, EIOItems.POWDERED_COPPER.asItem(), 2);
 
                     // Ensure energy was consumed correctly
                     var input = new SagMillingRecipe.Input(new ItemStack(Items.RAW_COPPER, 1), GrindingBallData.IDENTITY);
-                    var recipe = helper.getLevel().getRecipeManager().getRecipeFor(EIORecipes.SAG_MILLING.type().get(), input, helper.getLevel()).orElseThrow();
+                    var recipe = helper.getLevel().recipeAccess().getRecipeFor(EIORecipeTypes.SAG_MILLING.get(), input, helper.getLevel()).orElseThrow();
                     int expectedEnergy = energyToAdd - recipe.value().getBaseEnergyCost() * 2;
-                    helper.assertEnergyStored(0, 1, 0, expectedEnergy);
+                    helper.assertEnergyStored(0, 0, 0, expectedEnergy);
                 })
                 .thenSucceed();
         });
