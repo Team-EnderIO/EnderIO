@@ -19,6 +19,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -60,8 +61,7 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
     @Override
     public MachineInventoryLayout createInventoryLayout() {
         return MachineInventoryLayout.builder()
-                .inputSlot((slot, resource) -> resource.toStack().getBurnTime(RecipeType.SMELTING, level.fuelValues()) > 0
-                        && resource.toStack().getCraftingRemainder() == null)
+                .storageSlot((slot, resource) -> resource.toStack().getBurnTime(RecipeType.SMELTING, level.fuelValues()) > 0)
                 .slotAccess(FUEL)
                 .capacitor()
                 .build();
@@ -104,7 +104,11 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
                         burnDuration = burnTime;
 
                         // Remove the fuel
+                        ItemStackTemplate remainder = fuel.getCraftingRemainder();
                         fuel.shrink(1);
+                        if (fuel.isEmpty()) {
+                            FUEL.setStackInSlot(this, remainder != null ? remainder.create() : ItemStack.EMPTY);
+                        }
                     }
                 }
             }
