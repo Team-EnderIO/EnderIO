@@ -3,9 +3,9 @@ package com.enderio.enderio.content.machines.solar_panel;
 import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.content.machines.MachinesLang;
-import com.enderio.enderio.foundation.block.entity.legacy.LegacyMachineBlockEntity;
-import com.enderio.enderio.foundation.block.legacy.LegacyMachineBlock;
+import com.enderio.enderio.foundation.block.EIOEntityBlock;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -13,19 +13,22 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Supplier;
 
-public class SolarPanelBlock extends LegacyMachineBlock implements AdvancedTooltipProvider {
+public class SolarPanelBlock extends EIOEntityBlock<SolarPanelBlockEntity> implements AdvancedTooltipProvider {
 
     public static final BooleanProperty NORTH = BooleanProperty.create("north");
     public static final BooleanProperty NORTH_EAST = BooleanProperty.create("north_east");
@@ -39,9 +42,10 @@ public class SolarPanelBlock extends LegacyMachineBlock implements AdvancedToolt
     private static final VoxelShape SHAPE = Block.box(0, 0, 0, 16, 3, 16);
     private final ISolarPanelTier tier;
 
-    public SolarPanelBlock(Supplier<BlockEntityType<? extends LegacyMachineBlockEntity>> blockEntityType,
-            Properties properties, ISolarPanelTier tier) {
+    public SolarPanelBlock(Supplier<BlockEntityType<? extends SolarPanelBlockEntity>> blockEntityType,
+                           Properties properties, ISolarPanelTier tier) {
         super(blockEntityType, properties);
+
         registerDefaultState(getStateDefinition().any()
                 .setValue(NORTH, true)
                 .setValue(NORTH_WEST, true)
@@ -52,6 +56,16 @@ public class SolarPanelBlock extends LegacyMachineBlock implements AdvancedToolt
                 .setValue(SOUTH, true)
                 .setValue(SOUTH_EAST, true));
         this.tier = tier;
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        throw new NotImplementedException("Block codecs are a later problem...");
+    }
+
+    @Override
+    protected RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     @Override

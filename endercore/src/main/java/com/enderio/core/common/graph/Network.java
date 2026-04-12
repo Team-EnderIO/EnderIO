@@ -43,7 +43,7 @@ public abstract class Network<TNet extends Network<TNet, TNode>, TNode extends I
      * Create a network with a single starting node.
      * @param initialNode The initial node. This node must not be attached to any other graphs.
      */
-    public Network(TNode initialNode) {
+    protected Network(TNode initialNode) {
         this(List.of(initialNode), List.of());
     }
 
@@ -52,7 +52,7 @@ public abstract class Network<TNet extends Network<TNet, TNode>, TNode extends I
      * @param nodes All the nodes in this network. None may be attached to another network.
      * @param edges All the edges linking nodes together. Edges must reflect the nodes in the {@code nodes} list.
      */
-    public Network(List<TNode> nodes, List<Pair<TNode, TNode>> edges) {
+    protected Network(List<TNode> nodes, List<Pair<TNode, TNode>> edges) {
         // Ensure there's at least one edge.
         Preconditions.checkArgument(!nodes.isEmpty(), "Cannot create a network with no nodes.");
         Preconditions.checkArgument(nodes.stream().noneMatch(INetworkNode::isValid),
@@ -94,7 +94,7 @@ public abstract class Network<TNet extends Network<TNet, TNode>, TNode extends I
      * @param nodes All the nodes in this network. None may be attached to another network.
      * @param edges All the edges linking nodes together, indexing nodes in {@code nodes}.
      */
-    public Network(List<TNode> nodes, IndexedEdgeList edges) {
+    protected Network(List<TNode> nodes, IndexedEdgeList edges) {
         this(nodes, edges.expand(nodes));
     }
 
