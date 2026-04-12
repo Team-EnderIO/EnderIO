@@ -3,6 +3,7 @@ package com.enderio.enderio.content.machines.solar_panel;
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.foundation.MachineNBTKeys;
 import com.enderio.enderio.foundation.block.EIOBlockEntity;
+import com.enderio.enderio.foundation.io.TransferUtil;
 import com.enderio.enderio.foundation.souldata.SolarSoul;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIODataComponents;
@@ -12,11 +13,14 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class SolarPanelBlockEntity extends EIOBlockEntity {
@@ -33,6 +37,8 @@ public class SolarPanelBlockEntity extends EIOBlockEntity {
     private SolarSoul.SoulData soulData;
     private static boolean reload = false;
     private boolean reloadCache = !reload;
+
+    private final List<Direction> connectedPanelSides = new ArrayList<>();
 
     public SolarPanelBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState, ISolarPanelTier tier) {
         super(type, worldPosition, blockState);
@@ -66,6 +72,23 @@ public class SolarPanelBlockEntity extends EIOBlockEntity {
                 node.getNetwork().connect(node, panel.node);
             }
         }
+
+        detectConnectedPanels();
+    }
+
+    @Override
+    public void neighborChanged(Block neighborBlock, BlockPos neighborPos) {
+        super.neighborChanged(neighborBlock, neighborPos);
+        detectConnectedPanels();
+    }
+
+    private void detectConnectedPanels() {
+        connectedPanelSides.clear();
+        for (Direction side : Direction.Plane.HORIZONTAL) {
+            if (level.getBlockEntity(getBlockPos().relative(side)) instanceof SolarPanelBlockEntity) {
+                connectedPanelSides.add(side);
+            }
+        }
     }
 
     // endregion
@@ -82,6 +105,11 @@ public class SolarPanelBlockEntity extends EIOBlockEntity {
             Optional<SolarSoul.SoulData> op = SolarSoul.SOLAR.matches(boundSoul.entityType());
             op.ifPresent(data -> soulData = data);
             reloadCache = reload;
+        }
+
+        // Push energy to non-panel neighbors
+        if (level != null && node.getNetwork().getTotalEnergyStored() > 0) {
+            TransferUtil.distributeEnergyEvenly(level, worldPosition, dir -> !connectedPanelSides.contains(dir));
         }
 
         super.serverTick();
