@@ -270,6 +270,8 @@ public class SolarPanelBlockEntity extends EIOBlockEntity {
             if (energyStorage.contains(MachineNBTKeys.ENERGY_STORED)) {
                 this.node.setEnergyStored(energyStorage.getInt(MachineNBTKeys.ENERGY_STORED));
             }
+        } else if (tag.contains(MachineNBTKeys.ENERGY_STORED)) {
+            this.node.setEnergyStored(tag.getInt(MachineNBTKeys.ENERGY_STORED));
         }
 
         super.loadAdditional(tag, lookupProvider);
