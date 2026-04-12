@@ -4,6 +4,7 @@ import com.enderio.core.CoreNBTKeys;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.common.util.ValueIOSerializable;
@@ -134,7 +135,7 @@ public class PoweredMachineEnergyStorage implements EnergyHandler, ValueIOSerial
             return 0;
         }
 
-        int inserted = Math.min(getCapacityAsInt() - this.energyStored, amount);
+        int inserted = Mth.clamp(getCapacityAsInt() - this.energyStored, 0, amount);
         if (inserted > 0) {
             energyJournal.updateSnapshots(transactionContext);
             energyStored += inserted;
