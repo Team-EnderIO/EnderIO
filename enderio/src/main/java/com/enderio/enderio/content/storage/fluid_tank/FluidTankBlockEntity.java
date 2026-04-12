@@ -155,9 +155,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
         // bucket types
         var fluidHandlerCap = ItemAccess.forStack(stack).getCapability(Capabilities.Fluid.ITEM);
         if (fluidHandlerCap != null) {
-            try (var transaction = Transaction.openRoot()) {
-                var extracted = ResourceHandlerUtil.extractFirst(fluidHandlerCap, fr -> true, 1, transaction);
-                if (extracted != null && !extracted.isEmpty()) {
+            for (int i = 0; i < fluidHandlerCap.size(); i++) {
+                if (!fluidHandlerCap.getResource(i).isEmpty()) {
                     return true;
                 }
             }
