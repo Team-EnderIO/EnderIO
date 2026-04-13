@@ -156,6 +156,7 @@ public class ItemConduitTicker extends ConduitTickerBase<ItemConduit> {
                         int inserted = ResourceHandlerUtil.insertStacking(insertHandler, itemResource, amountToInsert, transaction);
 
                         if (inserted > 0) {
+                            transaction.commit();
                             totalExtracted += inserted;
 
                             // Track how much was inserted through this path.
@@ -165,8 +166,6 @@ public class ItemConduitTicker extends ConduitTickerBase<ItemConduit> {
                                 if (connectionConfig.isRoundRobin()) {
                                     nodeData.setIndex(extractConnection.connectionSide(), senderIndex + 1);
                                 }
-
-                                transaction.commit();
                                 continue toNextExtract;
                             } else {
                                 continue nextItem;
