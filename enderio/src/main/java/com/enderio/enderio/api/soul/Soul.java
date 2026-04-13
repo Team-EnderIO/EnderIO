@@ -13,6 +13,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Leashable;
@@ -32,26 +33,6 @@ import java.util.stream.Stream;
  * @param entityTag the entity's NBT tag.
  */
 public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) {
-    private static final Codec<Soul> NEW_CODEC = RecordCodecBuilder.create(
-        instance -> instance.group(
-            BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("entity_type").forGetter(Soul::entityType),
-            CompoundTag.CODEC.fieldOf("entity_tag").forGetter(Soul::entityTag)
-        ).apply(instance, Soul::new));
-
-    private static final Codec<Soul> OLD_CODEC = RecordCodecBuilder.create(
-        instance -> instance.group(
-            CompoundTag.CODEC.fieldOf("entityTag").forGetter(Soul::entityTag)
-        ).apply(instance, Soul::new));
-
-    public static final Codec<Soul> CODEC = Codec.withAlternative(NEW_CODEC, OLD_CODEC);
-
-    public static final StreamCodec<RegistryFriendlyByteBuf, Soul> STREAM_CODEC = StreamCodec.composite(
-        ByteBufCodecs.registry(Registries.ENTITY_TYPE),
-        Soul::entityType,
-        ByteBufCodecs.COMPOUND_TAG,
-        Soul::entityTag,
-        Soul::new
-    );
 
     // Keys that should not be compared or saved
     // Note be careful adding new things to this list - it will affect saves.
@@ -87,6 +68,31 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) {
         Entity.PASSENGERS_TAG
     );
 
+    public static final Soul EMPTY = new Soul(null, new CompoundTag());
+
+    private static final Codec<Soul> NEW_CODEC = RecordCodecBuilder.create(
+        instance -> instance.group(
+            BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("entity_type").forGetter(Soul::entityType),
+            CompoundTag.CODEC.fieldOf("entity_tag").forGetter(Soul::entityTag)
+        ).apply(instance, Soul::new));
+
+    private static final Codec<Soul> OLD_CODEC = RecordCodecBuilder.create(
+        instance -> instance.group(
+            CompoundTag.CODEC.fieldOf("entityTag").forGetter(Soul::entityTag)
+        ).apply(instance, Soul::new));
+
+    public static final Codec<Soul> CODEC = Codec.withAlternative(NEW_CODEC, OLD_CODEC);
+
+    public static final Codec<Soul> OPTIONAL_CODEC = ExtraCodecs.optionalEmptyMap(CODEC).xmap(opt -> opt.orElse(EMPTY), soul -> soul.isEmpty() ? Optional.empty() : Optional.of(soul));
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, Soul> STREAM_CODEC = StreamCodec.composite(
+        ByteBufCodecs.registry(Registries.ENTITY_TYPE),
+        Soul::entityType,
+        ByteBufCodecs.COMPOUND_TAG,
+        Soul::entityTag,
+        Soul::new
+    );
+
     public Soul {
         // Remove tags we don't want
         IGNORED_KEYS.forEach(entityTag::remove);
@@ -118,8 +124,6 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) {
             }
         }
     };
-
-    public static final Soul EMPTY = new Soul(null, new CompoundTag());
 
     public static Soul of(LivingEntity entity) {
         var entityTag = new CompoundTag();
