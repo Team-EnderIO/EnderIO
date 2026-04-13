@@ -3,7 +3,6 @@ package com.enderio.enderio.content.machines.solar_panel;
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.foundation.MachineNBTKeys;
 import com.enderio.enderio.foundation.block.EIOBlockEntity;
-import com.enderio.enderio.foundation.io.TransferUtil;
 import com.enderio.enderio.foundation.souldata.SolarSoul;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIODataComponents;
@@ -39,15 +38,14 @@ public class SolarPanelBlockEntity extends EIOBlockEntity {
     private final SolarPanelNode node;
     private final SolarPanelEnergyStorage energyStorage;
 
-    private Map<Direction, BlockCapabilityCache<IEnergyStorage, Direction>> energyStorageCaches = new EnumMap<>(Direction.class);
+    private final Map<Direction, BlockCapabilityCache<IEnergyStorage, Direction>> energyStorageCaches = new EnumMap<>(Direction.class);
+    private final Set<IEnergyStorage> validPushTargetCache = new HashSet<>();
+    private boolean isValidPushTargetCacheDirty = true;
 
-    // TODO: Add soul support.
     private Soul boundSoul = Soul.EMPTY;
     private SolarSoul.SoulData soulData;
     private static boolean reload = false;
     private boolean reloadCache = !reload;
-
-    private final List<Direction> connectedPanelSides = new ArrayList<>();
 
     public SolarPanelBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState, ISolarPanelTier tier) {
         super(type, worldPosition, blockState);
@@ -83,8 +81,13 @@ public class SolarPanelBlockEntity extends EIOBlockEntity {
                     continue;
                 }
 
-                energyStorageCaches.put(side, BlockCapabilityCache.create(Capabilities.EnergyStorage.BLOCK, serverLevel, getBlockPos().relative(side),
-                    side.getOpposite()));
+                energyStorageCaches.put(side, BlockCapabilityCache.create(
+                    Capabilities.EnergyStorage.BLOCK,
+                    serverLevel,
+                    getBlockPos().relative(side),
+                    side.getOpposite(),
+                    () -> !isRemoved(),
+                    () -> isValidPushTargetCacheDirty = true));
             }
         }
 
@@ -93,35 +96,33 @@ public class SolarPanelBlockEntity extends EIOBlockEntity {
                 node.getNetwork().connect(node, panel.node);
             }
         }
-
-        detectConnectedPanels();
     }
 
     @Override
     public void neighborChanged(Block neighborBlock, BlockPos neighborPos) {
         super.neighborChanged(neighborBlock, neighborPos);
-        detectConnectedPanels();
-    }
 
-    private void detectConnectedPanels() {
-        connectedPanelSides.clear();
-        for (Direction side : Direction.Plane.HORIZONTAL) {
-            if (level.getBlockEntity(getBlockPos().relative(side)) instanceof SolarPanelBlockEntity) {
-                connectedPanelSides.add(side);
-            }
+        if (!level.isClientSide()) {
+            isValidPushTargetCacheDirty = true;
         }
     }
 
     Set<IEnergyStorage> getValidPushTargets() {
-        Set<IEnergyStorage> validTargets = new HashSet<>();
-        for (var cache : energyStorageCaches.values()) {
-            var energyStorage = cache.getCapability();
-            if (energyStorage != null) {
-                validTargets.add(energyStorage);
+        if (isValidPushTargetCacheDirty) {
+            validPushTargetCache.clear();
+            for (Direction side : Direction.values()) {
+                if (side == Direction.UP) {
+                    continue;
+                }
+
+                var energyStorage = energyStorageCaches.get(side).getCapability();
+                if (energyStorage != null && energyStorage.canReceive()) {
+                    validPushTargetCache.add(energyStorage);
+                }
             }
         }
 
-        return validTargets;
+        return validPushTargetCache;
     }
 
     // endregion
