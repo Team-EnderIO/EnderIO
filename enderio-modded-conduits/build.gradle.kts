@@ -84,26 +84,26 @@ dependencies {
     accessTransformers(project(":enderio"))
 
     // AE2
-    compileOnly(variantOf(libs.ae2) {
-        classifier("api")
-    })
-
-    runtimeOnly(libs.ae2)
+//    compileOnly(variantOf(libs.ae2) {
+//        classifier("api")
+//    })
+//
+//    runtimeOnly(libs.ae2)
 
     // Mekanism
-    compileOnly(variantOf(libs.mekanism) {
-        classifier("api")
-    })
-
-    runtimeOnly(libs.mekanism)
+//    compileOnly(variantOf(libs.mekanism) {
+//        classifier("api")
+//    })
+//
+//    runtimeOnly(libs.mekanism)
 
     // Refined Storage
     compileOnly(libs.refinedStorage)
     runtimeOnly(libs.refinedStorage)
 
     //Laserio
-    compileOnly(libs.laserio)
-    runtimeOnly(libs.laserio)
+//    compileOnly(libs.laserio)
+//    runtimeOnly(libs.laserio)
 
     // Unit tests
     testImplementation(libs.junitJupiter)
@@ -142,14 +142,12 @@ neoForge {
             logLevel = org.slf4j.event.Level.INFO
         }
 
-        val data by creating {
-            data()
+        val clientData by creating {
+            clientData()
 
             programArguments.addAll(
                     "--mod", "enderio_modded_conduits",
-                    // TODO: Fix missing models...
-                    //"--all",
-                    "--server", "--client",
+                    "--all",
                     "--output", file("src/generated/resources").absolutePath,
                     "--existing", file("src/main/resources").absolutePath,
             )

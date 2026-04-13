@@ -7,20 +7,22 @@ import com.enderio.enderio.api.conduits.ConduitApi;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.node.NodeDataType;
-import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataType;
 import com.enderio.enderio.init.EIOItems;
 import com.enderio.modded_conduits.common.ModuleModIds;
 import com.enderio.modded_conduits.common.modules.ConduitCommonModule;
 import com.refinedmods.refinedstorage.common.content.Tags;
 import com.refinedmods.refinedstorage.neoforge.RefinedStorageNeoForgeApiImpl;
-import net.minecraft.advancements.critereon.InventoryChangeTrigger;
+import net.minecraft.advancements.criterion.InventoryChangeTrigger;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
@@ -36,15 +38,13 @@ public class RefinedStorageCommonModule implements ConduitCommonModule {
 
     public static class ConduitKeys {
         public static final ResourceKey<Conduit<?, ?>> RS = ResourceKey.create(EnderIORegistries.Keys.CONDUIT,
-                EnderIO.rl("rs"));
+                EnderIO.id("rs"));
     }
 
     public static final DeferredRegister<ConduitType<?, ?>> CONDUIT_TYPES = DeferredRegister
             .create(EnderIORegistries.CONDUIT_TYPE, EnderIO.MOD_ID);
     public static final DeferredRegister<ConnectionConfigType<?>> CONDUIT_CONNECTION_CONFIG_TYPES = DeferredRegister
             .create(EnderIORegistries.CONDUIT_CONNECTION_CONFIG_TYPE, EnderIO.MOD_ID);
-    public static final DeferredRegister<ConduitDataType<?>> CONDUIT_DATA_TYPES = DeferredRegister
-            .create(EnderIORegistries.CONDUIT_DATA_TYPE, EnderIO.MOD_ID);
 
     public static final DeferredRegister<NodeDataType<?>> CONDUIT_NODE_DATA_TYPES = DeferredRegister
             .create(EnderIORegistries.CONDUIT_NODE_DATA_TYPE, EnderIO.MOD_ID);
@@ -63,21 +63,16 @@ public class RefinedStorageCommonModule implements ConduitCommonModule {
         CONDUIT_NODE_DATA_TYPES.register("rs", () -> RSConduitNodeData.TYPE);
     }
 
-    // TODO: 1.22: Remove.
-    public static final Supplier<ConduitDataType<RSNetworkHost>> LEGACY_DATA_TYPE = CONDUIT_DATA_TYPES.register("rs",
-            () -> new ConduitDataType<>(RSNetworkHost.CODEC, RSNetworkHost.STREAM_CODEC, RSNetworkHost::new));
-
     @Override
     public void initialize(IEventBus modEventBus) {
         CONDUIT_TYPES.register(modEventBus);
         CONDUIT_CONNECTION_CONFIG_TYPES.register(modEventBus);
-        CONDUIT_DATA_TYPES.register(modEventBus);
         CONDUIT_NODE_DATA_TYPES.register(modEventBus);
     }
 
     @Override
     public void bootstrapConduits(BootstrapContext<Conduit<?, ?>> context) {
-        context.register(ConduitKeys.RS, new RSConduit(EnderIO.rl("block/conduit/rs"), Component.translatable(ConduitApi.INSTANCE.makeDescriptionId(ConduitKeys.RS))));
+        context.register(ConduitKeys.RS, new RSConduit(EnderIO.id("block/conduit/rs"), Component.translatable(ConduitApi.INSTANCE.makeDescriptionId(ConduitKeys.RS))));
     }
 
     @Override
@@ -91,13 +86,15 @@ public class RefinedStorageCommonModule implements ConduitCommonModule {
 
         var conduit = lookupProvider.holderOrThrow(ConduitKeys.RS);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ConduitApi.INSTANCE.getConduitItem(conduit, 3))
-                .pattern("BBB")
-                .pattern("III")
-                .pattern("BBB")
-                .define('B', EIOItems.CONDUIT_BINDER)
-                .define('I', Tags.CABLES)
-                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
-                .save(rsRecipeOutput, EnderIO.rl("rs_conduit"));
+        HolderGetter<Item> itemsRegistry = lookupProvider.lookupOrThrow(Registries.ITEM);
+
+        ShapedRecipeBuilder.shaped(itemsRegistry, RecipeCategory.BUILDING_BLOCKS, ConduitApi.INSTANCE.getConduitStackTemplate(conduit, 3))
+            .pattern("BBB")
+            .pattern("III")
+            .pattern("BBB")
+            .define('B', EIOItems.CONDUIT_BINDER)
+            .define('I', Tags.CABLES)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
+            .save(rsRecipeOutput, EnderIO.id("rs_conduit").toString());
     }
 }

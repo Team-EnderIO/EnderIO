@@ -87,8 +87,8 @@ dependencies {
     jarJar(project(":endercore"))
 
     // Include built-in "addons"
-//    jarJar(project(":enderio-modded-conduits"))
-//    localRuntime(project(":enderio-modded-conduits"))
+    jarJar(project(":enderio-modded-conduits"))
+    localRuntime(project(":enderio-modded-conduits"))
 
     // Almost Unified
 //    compileOnly(variantOf(libs.almostUnified) {

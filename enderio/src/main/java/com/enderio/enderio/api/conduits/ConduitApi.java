@@ -3,6 +3,7 @@ package com.enderio.enderio.api.conduits;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.ServiceLoader;
@@ -11,8 +12,16 @@ public interface ConduitApi {
 
     ConduitApi INSTANCE = ServiceLoader.load(ConduitApi.class).findFirst().orElseThrow();
 
+    ItemStackTemplate getConduitStackTemplate(Holder<Conduit<?, ?>> conduit, int count);
+
+    @ApiStatus.NonExtendable
+    default ItemStackTemplate getConduitStackTemplate(Holder<Conduit<?, ?>> conduit) {
+        return getConduitStackTemplate(conduit, 1);
+    }
+
     ItemStack getConduitItem(Holder<Conduit<?, ?>> conduit, int count);
 
+    @ApiStatus.NonExtendable
     default ItemStack getConduitItem(Holder<Conduit<?, ?>> conduit) {
         return getConduitItem(conduit, 1);
     }

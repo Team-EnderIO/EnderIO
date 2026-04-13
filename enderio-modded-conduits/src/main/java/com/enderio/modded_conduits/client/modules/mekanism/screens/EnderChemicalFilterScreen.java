@@ -1,149 +1,149 @@
-package com.enderio.modded_conduits.client.modules.mekanism.screens;
-
-import com.enderio.core.client.gui.screen.EnderContainerScreen;
-import com.enderio.core.client.gui.widgets.IconButton;
-import com.enderio.core.client.gui.widgets.ToggleIconButton;
-import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.content.filters.AbstractFilterMenu;
-import com.enderio.enderio.content.filters.FiltersLang;
-import com.enderio.enderio.content.filters.item.general.EnderItemFilterMenu;
-import com.enderio.modded_conduits.common.modules.mekanism.chemical_filter.ChemicalFilterSlot;
-import com.enderio.modded_conduits.common.modules.mekanism.chemical_filter.EnderChemicalFilterMenu;
-import com.mojang.blaze3d.systems.RenderSystem;
-import mekanism.api.chemical.ChemicalStack;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.ClickType;
-import net.minecraft.world.inventory.Slot;
-import org.apache.commons.lang3.NotImplementedException;
-
-public class EnderChemicalFilterScreen extends EnderContainerScreen<EnderChemicalFilterMenu> {
-
-    private static final int WIDTH = 183;
-    private static final int HEIGHT = 199;
-
-    // TODO: we need a central place for resource locations like these...
-    private static final Identifier BG_2x9 = EnderIO.rl("textures/gui/screens/filter_2x9.png");
-    private static final Identifier BG_1x9 = EnderIO.rl("textures/gui/screens/filter_1x9.png");
-    private static final Identifier BG_3x9 = EnderIO.rl("textures/gui/screens/filter_3x9.png");
-    private static final Identifier BG_4x9 = EnderIO.rl("textures/gui/screens/filter_4x9.png");
-
-    private static final Identifier BACK_SPRITE = EnderIO.rl("icon/back");
-
-    private static final Identifier ICON_MATCH_COMPONENTS = EnderIO.rl("icon/match_components");
-    private static final Identifier ICON_IGNORE_COMPONENTS = EnderIO.rl("icon/ignore_components");
-
-    private static final Identifier ICON_ALLOW_LIST = EnderIO.rl("icon/allow_list");
-    private static final Identifier ICON_DENY_LIST = EnderIO.rl("icon/deny_list");
-
-    private final Identifier backgroundTexture;
-
-    public EnderChemicalFilterScreen(EnderChemicalFilterMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title);
-
-        this.shouldRenderLabels = true;
-
-        this.titleLabelX = 28;
-        this.titleLabelY = 14;
-
-        this.inventoryLabelX += 6;
-        this.inventoryLabelY = 34 + menu.type.rowCount() * 18;
-
-        this.imageWidth = WIDTH;
-        this.imageHeight = HEIGHT - (4 - menu.type.rowCount()) * 18;
-
-        switch (menu.type.rowCount()) {
-        case 1 -> backgroundTexture = BG_1x9;
-        case 2 -> backgroundTexture = BG_2x9;
-        case 3 -> backgroundTexture = BG_3x9;
-        case 4 -> backgroundTexture = BG_4x9;
-        default -> throw new NotImplementedException();
-        }
-    }
-
-    @Override
-    protected void init() {
-        super.init();
-
-        addRenderableWidget(new IconButton(getGuiLeft() + 3, getGuiTop() + 3, 16, 16, BACK_SPRITE, null,
-            () -> handleButtonPress(AbstractFilterMenu.BACK_BUTTON_ID)));
-
-        int xPos = getGuiLeft() + WIDTH - 25;
-        int yPos = getGuiTop() + 27 + menu.type.rowCount() * 18;
-
-        addRenderableWidget(
-            new ToggleIconButton(xPos, yPos, 16, 16, (b) -> b ? ICON_DENY_LIST : ICON_ALLOW_LIST,
-                (b) -> b ? FiltersLang.FILTER_DENY_LIST : FiltersLang.FILTER_ALLOW_LIST, getMenu()::isInverted,
-                (b) -> handleButtonPress(EnderItemFilterMenu.IS_INVERTED_BUTTON_ID)));
-
-        xPos -= 18;
-    }
-
-    @Override
-    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
-        super.extractBackground(graphics, mouseX, mouseY, a);
-        graphics.blit(backgroundTexture, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight);
-    }
-
-    @Override
-    public void renderSlot(GuiGraphicsExtractor graphics, Slot slot) {
-        super.renderSlot(graphics, slot);
-
-        if (!(slot instanceof ChemicalFilterSlot chemicalFilterSlot)) {
-            return;
-        }
-
-        var chemicalStack = chemicalFilterSlot.getResource();
-
-        if (chemicalStack.isEmpty()) {
-            return;
-        }
-
-        TextureAtlasSprite sprite = Minecraft.getInstance()
-            .getTextureAtlas(TextureAtlas.LOCATION_BLOCKS)
-            .apply(chemicalStack.getChemical().getIcon());
-
-        int color = chemicalStack.getChemicalTint();
-        RenderSystem.setShaderColor(((color >> 16) & 0xFF) / 255.0F, ((color >> 8) & 0xFF) / 255.0F,
-            (color & 0xFF) / 255.0F, 1);
-        RenderSystem.enableBlend();
-
-        int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
-        int atlasHeight = (int) (sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
-        graphics.blit(TextureAtlas.LOCATION_BLOCKS, slot.x, slot.y, 16, 16, sprite.getU0() * atlasWidth,
-            sprite.getV0() * atlasHeight, sprite.contents().width(), sprite.contents().height(), atlasWidth,
-            atlasHeight);
-        RenderSystem.setShaderColor(1, 1, 1, 1);
-    }
-
-    @Override
-    protected boolean renderCustomTooltip(GuiGraphicsExtractor graphics, int x, int y) {
-        if (this.menu.getCarried().isEmpty() && this.hoveredSlot instanceof ChemicalFilterSlot chemicalFilterSlot) {
-            ChemicalStack value = chemicalFilterSlot.getResource();
-            if (!value.isEmpty()) {
-                graphics.renderTooltip(this.font, value.getTextComponent(), x, y);
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    @Override
-    protected void slotClicked(Slot slot, int slotId, int mouseButton, ClickType type) {
-//        if (getMenu().getFilter() instanceof ItemFilterCapability itemFilterCapability) {
-//            if (slot != null && slot.index < itemFilterCapability.getEntries().size()) {
-//                if (!itemFilterCapability.getEntries().get(slot.index).isEmpty()) {
-//                    itemFilterCapability.setEntry(slotId, ItemStack.EMPTY);
-//                }
-//            }
-        super.slotClicked(slot, slotId, mouseButton, type);
+//package com.enderio.modded_conduits.client.modules.mekanism.screens;
+//
+//import com.enderio.core.client.gui.screen.EnderContainerScreen;
+//import com.enderio.core.client.gui.widgets.IconButton;
+//import com.enderio.core.client.gui.widgets.ToggleIconButton;
+//import com.enderio.enderio.EnderIO;
+//import com.enderio.enderio.content.filters.AbstractFilterMenu;
+//import com.enderio.enderio.content.filters.FiltersLang;
+//import com.enderio.enderio.content.filters.item.general.EnderItemFilterMenu;
+//import com.enderio.modded_conduits.common.modules.mekanism.chemical_filter.ChemicalFilterSlot;
+//import com.enderio.modded_conduits.common.modules.mekanism.chemical_filter.EnderChemicalFilterMenu;
+//import com.mojang.blaze3d.systems.RenderSystem;
+//import mekanism.api.chemical.ChemicalStack;
+//import net.minecraft.client.Minecraft;
+//import net.minecraft.client.gui.GuiGraphicsExtractor;
+//import net.minecraft.client.renderer.texture.TextureAtlas;
+//import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+//import net.minecraft.network.chat.Component;
+//import net.minecraft.resources.Identifier;
+//import net.minecraft.world.entity.player.Inventory;
+//import net.minecraft.world.inventory.ClickType;
+//import net.minecraft.world.inventory.Slot;
+//import org.apache.commons.lang3.NotImplementedException;
+//
+//public class EnderChemicalFilterScreen extends EnderContainerScreen<EnderChemicalFilterMenu> {
+//
+//    private static final int WIDTH = 183;
+//    private static final int HEIGHT = 199;
+//
+//    // TODO: we need a central place for resource locations like these...
+//    private static final Identifier BG_2x9 = EnderIO.rl("textures/gui/screens/filter_2x9.png");
+//    private static final Identifier BG_1x9 = EnderIO.rl("textures/gui/screens/filter_1x9.png");
+//    private static final Identifier BG_3x9 = EnderIO.rl("textures/gui/screens/filter_3x9.png");
+//    private static final Identifier BG_4x9 = EnderIO.rl("textures/gui/screens/filter_4x9.png");
+//
+//    private static final Identifier BACK_SPRITE = EnderIO.rl("icon/back");
+//
+//    private static final Identifier ICON_MATCH_COMPONENTS = EnderIO.rl("icon/match_components");
+//    private static final Identifier ICON_IGNORE_COMPONENTS = EnderIO.rl("icon/ignore_components");
+//
+//    private static final Identifier ICON_ALLOW_LIST = EnderIO.rl("icon/allow_list");
+//    private static final Identifier ICON_DENY_LIST = EnderIO.rl("icon/deny_list");
+//
+//    private final Identifier backgroundTexture;
+//
+//    public EnderChemicalFilterScreen(EnderChemicalFilterMenu menu, Inventory playerInventory, Component title) {
+//        super(menu, playerInventory, title);
+//
+//        this.shouldRenderLabels = true;
+//
+//        this.titleLabelX = 28;
+//        this.titleLabelY = 14;
+//
+//        this.inventoryLabelX += 6;
+//        this.inventoryLabelY = 34 + menu.type.rowCount() * 18;
+//
+//        this.imageWidth = WIDTH;
+//        this.imageHeight = HEIGHT - (4 - menu.type.rowCount()) * 18;
+//
+//        switch (menu.type.rowCount()) {
+//        case 1 -> backgroundTexture = BG_1x9;
+//        case 2 -> backgroundTexture = BG_2x9;
+//        case 3 -> backgroundTexture = BG_3x9;
+//        case 4 -> backgroundTexture = BG_4x9;
+//        default -> throw new NotImplementedException();
 //        }
-    }
-}
-
+//    }
+//
+//    @Override
+//    protected void init() {
+//        super.init();
+//
+//        addRenderableWidget(new IconButton(getGuiLeft() + 3, getGuiTop() + 3, 16, 16, BACK_SPRITE, null,
+//            () -> handleButtonPress(AbstractFilterMenu.BACK_BUTTON_ID)));
+//
+//        int xPos = getGuiLeft() + WIDTH - 25;
+//        int yPos = getGuiTop() + 27 + menu.type.rowCount() * 18;
+//
+//        addRenderableWidget(
+//            new ToggleIconButton(xPos, yPos, 16, 16, (b) -> b ? ICON_DENY_LIST : ICON_ALLOW_LIST,
+//                (b) -> b ? FiltersLang.FILTER_DENY_LIST : FiltersLang.FILTER_ALLOW_LIST, getMenu()::isInverted,
+//                (b) -> handleButtonPress(EnderItemFilterMenu.IS_INVERTED_BUTTON_ID)));
+//
+//        xPos -= 18;
+//    }
+//
+//    @Override
+//    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+//        super.extractBackground(graphics, mouseX, mouseY, a);
+//        graphics.blit(backgroundTexture, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight);
+//    }
+//
+//    @Override
+//    public void renderSlot(GuiGraphicsExtractor graphics, Slot slot) {
+//        super.renderSlot(graphics, slot);
+//
+//        if (!(slot instanceof ChemicalFilterSlot chemicalFilterSlot)) {
+//            return;
+//        }
+//
+//        var chemicalStack = chemicalFilterSlot.getResource();
+//
+//        if (chemicalStack.isEmpty()) {
+//            return;
+//        }
+//
+//        TextureAtlasSprite sprite = Minecraft.getInstance()
+//            .getTextureAtlas(TextureAtlas.LOCATION_BLOCKS)
+//            .apply(chemicalStack.getChemical().getIcon());
+//
+//        int color = chemicalStack.getChemicalTint();
+//        RenderSystem.setShaderColor(((color >> 16) & 0xFF) / 255.0F, ((color >> 8) & 0xFF) / 255.0F,
+//            (color & 0xFF) / 255.0F, 1);
+//        RenderSystem.enableBlend();
+//
+//        int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
+//        int atlasHeight = (int) (sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
+//        graphics.blit(TextureAtlas.LOCATION_BLOCKS, slot.x, slot.y, 16, 16, sprite.getU0() * atlasWidth,
+//            sprite.getV0() * atlasHeight, sprite.contents().width(), sprite.contents().height(), atlasWidth,
+//            atlasHeight);
+//        RenderSystem.setShaderColor(1, 1, 1, 1);
+//    }
+//
+//    @Override
+//    protected boolean renderCustomTooltip(GuiGraphicsExtractor graphics, int x, int y) {
+//        if (this.menu.getCarried().isEmpty() && this.hoveredSlot instanceof ChemicalFilterSlot chemicalFilterSlot) {
+//            ChemicalStack value = chemicalFilterSlot.getResource();
+//            if (!value.isEmpty()) {
+//                graphics.renderTooltip(this.font, value.getTextComponent(), x, y);
+//                return true;
+//            }
+//        }
+//
+//        return false;
+//    }
+//
+//    @Override
+//    protected void slotClicked(Slot slot, int slotId, int mouseButton, ClickType type) {
+////        if (getMenu().getFilter() instanceof ItemFilterCapability itemFilterCapability) {
+////            if (slot != null && slot.index < itemFilterCapability.getEntries().size()) {
+////                if (!itemFilterCapability.getEntries().get(slot.index).isEmpty()) {
+////                    itemFilterCapability.setEntry(slotId, ItemStack.EMPTY);
+////                }
+////            }
+//        super.slotClicked(slot, slotId, mouseButton, type);
+////        }
+//    }
+//}
+//
