@@ -27,7 +27,13 @@ public record EnderSoulFilter(NonNullList<Soul> matches, boolean isDenyList, boo
             .group(
                 OrderedListCodec.create(256, Soul.CODEC, Soul.EMPTY)
                     .fieldOf("entities")
-                    .forGetter(EnderSoulFilter::matches),
+                    .forGetter(filter -> {
+                        NonNullList<Soul> sparse = NonNullList.create();
+                        for (Soul soul : filter.matches()) {
+                            if (!soul.isEmpty()) sparse.add(soul);
+                        }
+                        return sparse;
+                }),
                 Codec.BOOL.fieldOf("isInvert").forGetter(EnderSoulFilter::isDenyList),
                 Codec.BOOL.fieldOf("nbt").forGetter(EnderSoulFilter::shouldCompareTags))
             .apply(componentInstance, EnderSoulFilter::new));
