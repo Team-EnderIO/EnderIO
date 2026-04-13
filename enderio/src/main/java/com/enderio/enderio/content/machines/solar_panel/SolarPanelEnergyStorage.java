@@ -16,6 +16,10 @@ public class SolarPanelEnergyStorage implements IEnergyStorage {
 
     @Override
     public int extractEnergy(int amount, boolean simulate) {
+        if (amount <= 0) {
+            return 0;
+        }
+
         // Initially try to take from the current node
         int extracted = node.extractEnergy(amount, simulate);
 
