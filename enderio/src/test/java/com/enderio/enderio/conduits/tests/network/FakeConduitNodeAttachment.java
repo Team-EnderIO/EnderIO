@@ -51,14 +51,7 @@ public class FakeConduitNodeAttachment implements IConduitNodeAttachment {
     }
 
     @Override
-    public <TCapability> @Nullable TCapability getNeighborSidedCapability(Holder<Conduit<?, ?>> conduit, BlockCapability<TCapability, Direction> capability,
-        Direction side) {
-        return null;
-    }
-
-    @Override
-    public <TCapability> @Nullable TCapability getNeighborVoidCapability(Holder<Conduit<?, ?>> conduit, BlockCapability<TCapability, Void> capability,
-        Direction side) {
+    public @Nullable <T, C> T getCapability(Holder<Conduit<?, ?>> conduit, BlockCapability<T, C> capability, Direction neighborSide, @Nullable C context) {
         return null;
     }
 

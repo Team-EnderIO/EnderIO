@@ -3,10 +3,12 @@ package com.enderio.modded_conduits.common.modules.appeng;
 import appeng.api.AECapabilities;
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.GridHelper;
+import appeng.api.networking.IGridNode;
 import appeng.api.networking.IManagedGridNode;
 import appeng.api.util.AEColor;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.ConduitCapabilityAccessor;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
@@ -24,6 +26,7 @@ import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import org.jetbrains.annotations.NotNull;
@@ -68,7 +71,7 @@ public record MEConduit(ResourceLocation texture, Component description, AEColor
     }
 
     @Override
-    public boolean canConnectToBlock(Level level, BlockPos conduitPos, Direction direction) {
+    public boolean canConnectToBlock(Level level, ConduitCapabilityAccessor capabilityAccessor, BlockPos conduitPos, Direction direction) {
         return GridHelper.getExposedNode(level, conduitPos.relative(direction), direction.getOpposite()) != null;
     }
 

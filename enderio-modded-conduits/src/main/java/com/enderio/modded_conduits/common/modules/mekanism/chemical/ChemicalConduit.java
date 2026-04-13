@@ -2,6 +2,7 @@ package com.enderio.modded_conduits.common.modules.mekanism.chemical;
 
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.ConduitCapabilityAccessor;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.bundle.SlotType;
 import com.enderio.enderio.api.conduits.connection.path.ConnectionPathProperty;
@@ -23,6 +24,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector2i;
@@ -67,9 +69,8 @@ public record ChemicalConduit(ResourceLocation texture, Component description, l
     }
 
     @Override
-    public boolean canConnectToBlock(Level level, BlockPos conduitPos, Direction direction) {
-        return level.getCapability(MekanismModule.Capabilities.CHEMICAL, conduitPos.relative(direction),
-                direction.getOpposite()) != null;
+    public boolean canConnectToBlock(Level level, ConduitCapabilityAccessor capabilityAccessor, BlockPos conduitPos, Direction direction) {
+        return capabilityAccessor.getSidedCapability(MekanismModule.Capabilities.CHEMICAL, direction) != null;
     }
 
     @Override

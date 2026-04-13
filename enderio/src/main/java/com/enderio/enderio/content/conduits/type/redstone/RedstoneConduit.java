@@ -2,6 +2,7 @@ package com.enderio.enderio.content.conduits.type.redstone;
 
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.ConduitCapabilityAccessor;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.api.conduits.bundle.SlotType;
@@ -20,6 +21,7 @@ import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -55,7 +57,7 @@ public record RedstoneConduit(ResourceLocation texture, ResourceLocation activeT
     }
 
     @Override
-    public boolean canConnectToBlock(Level level, BlockPos conduitPos, Direction direction) {
+    public boolean canConnectToBlock(Level level, ConduitCapabilityAccessor capabilityAccessor, BlockPos conduitPos, Direction direction) {
         BlockPos neighbor = conduitPos.relative(direction);
         BlockState blockState = level.getBlockState(neighbor);
         return blockState.is(EIOTags.Blocks.REDSTONE_CONNECTABLE)
@@ -63,7 +65,7 @@ public record RedstoneConduit(ResourceLocation texture, ResourceLocation activeT
     }
 
     @Override
-    public boolean canForceConnectToBlock(Level level, BlockPos conduitPos, Direction direction) {
+    public boolean canForceConnectToBlock(Level level, ConduitCapabilityAccessor capabilityAccessor, BlockPos conduitPos, Direction direction) {
         BlockPos neighbor = conduitPos.relative(direction);
         BlockState blockState = level.getBlockState(neighbor);
         return !blockState.isAir();

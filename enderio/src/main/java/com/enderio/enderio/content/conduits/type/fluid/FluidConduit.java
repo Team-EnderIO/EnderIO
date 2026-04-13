@@ -3,6 +3,7 @@ package com.enderio.enderio.content.conduits.type.fluid;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.ConduitCapabilityAccessor;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.api.conduits.bundle.SlotType;
@@ -29,6 +30,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -81,9 +83,8 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
     }
 
     @Override
-    public boolean canConnectToBlock(Level level, BlockPos conduitPos, Direction direction) {
-        IFluidHandler capability = level.getCapability(Capabilities.FluidHandler.BLOCK, conduitPos.relative(direction),
-                direction.getOpposite());
+    public boolean canConnectToBlock(Level level, ConduitCapabilityAccessor capabilityAccessor, BlockPos conduitPos, Direction direction) {
+        IFluidHandler capability = capabilityAccessor.getSidedCapability(Capabilities.FluidHandler.BLOCK, direction);
         return capability != null;
     }
 
