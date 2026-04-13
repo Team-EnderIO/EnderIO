@@ -174,15 +174,6 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
             return inputs.get(slotIndex);
         }
 
-        public ItemStack getFirstPopulated() {
-            for (ItemStack stack : inputs) {
-                if (!stack.isEmpty()) {
-                    return stack;
-                }
-            }
-            return ItemStack.EMPTY;
-        }
-
         @Override
         public int size() {
             return inputs.size();

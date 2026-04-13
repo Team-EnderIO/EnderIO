@@ -26,9 +26,6 @@ public record ActionRange(int range, boolean isVisible) {
     public static final StreamCodec<ByteBuf, ActionRange> STREAM_CODEC = StreamCodec.composite(ByteBufCodecs.INT,
             ActionRange::range, ByteBufCodecs.BOOL, ActionRange::isVisible, ActionRange::new);
 
-    public static NetworkDataSlot.CodecType<ActionRange> DATA_SLOT_TYPE = new NetworkDataSlot.CodecType<>(CODEC,
-            STREAM_CODEC.cast());
-
     public ActionRange visible() {
         return new ActionRange(range, true);
     }
