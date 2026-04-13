@@ -64,6 +64,7 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
     @Override
     public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         // TODO: 1.21.4: Do not assume 256x256 texture?
+        super.extractBackground(graphics, mouseX, mouseY, a);
         graphics.blit(RenderPipelines.GUI_TEXTURED, getBackgroundImage(), getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight, 256, 256);
     }
 

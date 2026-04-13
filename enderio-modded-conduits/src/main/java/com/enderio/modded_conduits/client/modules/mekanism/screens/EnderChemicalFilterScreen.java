@@ -86,6 +86,7 @@ public class EnderChemicalFilterScreen extends EnderContainerScreen<EnderChemica
 
     @Override
     public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        super.extractBackground(graphics, mouseX, mouseY, a);
         graphics.blit(backgroundTexture, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight);
     }
 
