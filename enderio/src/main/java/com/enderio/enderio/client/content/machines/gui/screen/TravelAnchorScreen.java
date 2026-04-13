@@ -45,7 +45,6 @@ public class TravelAnchorScreen extends MachineScreen<TravelAnchorMenu> {
         nameInput.setResponder(menu::setName);
         nameInput.setValue(menu.getName());
         this.addRenderableWidget(nameInput);
-        this.setInitialFocus(nameInput);
         nameInput.setEditable(true);
 
         addRenderableWidget(ToggleIconButton.of(leftPos + 150, topPos + 10, 16, 16, VISIBLE_BUTTON, NOT_VISIBLE_BUTTON,
