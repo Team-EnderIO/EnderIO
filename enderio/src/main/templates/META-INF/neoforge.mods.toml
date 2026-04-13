@@ -33,11 +33,11 @@ versionRange="${mod_version}"
 side="BOTH"
 
 # FTB Ultimine Compat
-#[[dependencies.enderio]]
-#modId="ftbultimine"
-#type="optional"
-#versionRange="${ftb_ultimine_version_range}"
-#side="BOTH"
+[[dependencies.enderio]]
+modId="ftbultimine"
+type="optional"
+versionRange="${ftb_ultimine_version_range}"
+side="BOTH"
 
 # Modded conduits
 #[[dependencies.enderio]]
