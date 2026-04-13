@@ -26,7 +26,7 @@ public record EnderSoulFilter(NonNullList<Soul> matches, boolean isDenyList, boo
     public static final Codec<EnderSoulFilter> CODEC = RecordCodecBuilder.create(
         componentInstance -> componentInstance
             .group(
-                OrderedListCodec.create(256, Soul.CODEC, Soul.EMPTY)
+                OrderedListCodec.create(256, Soul.OPTIONAL_CODEC, Soul.EMPTY)
                     .fieldOf("entities")
                     .forGetter(EnderSoulFilter::matches),
                 Codec.BOOL.fieldOf("isInvert").forGetter(EnderSoulFilter::isDenyList),
