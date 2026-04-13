@@ -9,6 +9,8 @@ public final class SolarPanelNetwork extends Network<SolarPanelNetwork, SolarPan
 
     public SolarPanelNetwork(SolarPanelNode initialNode) {
         super(initialNode);
+
+        initialNode.makePrimaryNode();
     }
 
     private SolarPanelNetwork(List<SolarPanelNode> solarPanelNodes, List<Pair<SolarPanelNode, SolarPanelNode>> edges) {
@@ -34,5 +36,15 @@ public final class SolarPanelNetwork extends Network<SolarPanelNetwork, SolarPan
 
     public int getTotalMaxEnergyStored() {
         return nodes().stream().mapToInt(SolarPanelNode::getMaxEnergyStored).sum();
+    }
+
+    @Override
+    protected void onNodeRemoved(SolarPanelNode node) {
+        super.onNodeRemoved(node);
+
+        // If we removed the 'primary', find a new one.
+        if (node.isPrimaryNode()) {
+            nodes().stream().findFirst().ifPresent(SolarPanelNode::makePrimaryNode);
+        }
     }
 }

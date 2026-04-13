@@ -12,25 +12,34 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 public class SolarPanelBlockEntity extends EIOBlockEntity {
 
     public static final ICapabilityProvider<SolarPanelBlockEntity, Direction, IEnergyStorage> ENERGY_STORAGE_PROVIDER = (
-        be, side) -> be.energyStorage;
+        be, side) -> side != Direction.UP ? be.energyStorage : null;
     
     private final ISolarPanelTier tier;
     private final SolarPanelNode node;
     private final SolarPanelEnergyStorage energyStorage;
+
+    private Map<Direction, BlockCapabilityCache<IEnergyStorage, Direction>> energyStorageCaches = new EnumMap<>(Direction.class);
 
     // TODO: Add soul support.
     private Soul boundSoul = Soul.EMPTY;
@@ -67,6 +76,18 @@ public class SolarPanelBlockEntity extends EIOBlockEntity {
     public void onLoad() {
         super.onLoad();
 
+        // Create all energy caches
+        if (level instanceof ServerLevel serverLevel) {
+            for (Direction side : Direction.values()) {
+                if (side == Direction.UP) {
+                    continue;
+                }
+
+                energyStorageCaches.put(side, BlockCapabilityCache.create(Capabilities.EnergyStorage.BLOCK, serverLevel, getBlockPos().relative(side),
+                    side.getOpposite()));
+            }
+        }
+
         for (Direction side : Direction.Plane.HORIZONTAL) {
             if (level.getBlockEntity(getBlockPos().relative(side)) instanceof SolarPanelBlockEntity panel) {
                 node.getNetwork().connect(node, panel.node);
@@ -91,6 +112,18 @@ public class SolarPanelBlockEntity extends EIOBlockEntity {
         }
     }
 
+    Set<IEnergyStorage> getValidPushTargets() {
+        Set<IEnergyStorage> validTargets = new HashSet<>();
+        for (var cache : energyStorageCaches.values()) {
+            var energyStorage = cache.getCapability();
+            if (energyStorage != null) {
+                validTargets.add(energyStorage);
+            }
+        }
+
+        return validTargets;
+    }
+
     // endregion
 
     // region Energy Generation
@@ -108,8 +141,8 @@ public class SolarPanelBlockEntity extends EIOBlockEntity {
         }
 
         // Push energy to non-panel neighbors
-        if (level != null && node.getNetwork().getTotalEnergyStored() > 0) {
-            TransferUtil.distributeEnergyEvenly(level, worldPosition, dir -> !connectedPanelSides.contains(dir));
+        if (node.isPrimaryNode()) {
+            node.distributeEnergy();
         }
 
         super.serverTick();

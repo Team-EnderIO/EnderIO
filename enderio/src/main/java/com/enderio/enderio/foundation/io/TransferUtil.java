@@ -14,6 +14,7 @@ import net.neoforged.neoforge.items.IItemHandler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 
 public class TransferUtil {
@@ -161,6 +162,37 @@ public class TransferUtil {
                 break;
             }
         }
+    }
+
+    public static int distributeEnergyEvenlyBetween(int availableEnergy, Set<IEnergyStorage> receivers) {
+        // Abort if we have no valid pairs
+        if (receivers.isEmpty()) {
+            return 0;
+        }
+
+        // Distribute evenly
+        int energyRemaining = availableEnergy;
+        int toShareWith = receivers.size();
+
+        for (IEnergyStorage receiver : receivers) {
+            // If we have too little energy left, just give it to the first handler that will accept it all
+            int shareAmount;
+            if (energyRemaining <= toShareWith) {
+                shareAmount = energyRemaining;
+            } else {
+                shareAmount = energyRemaining / toShareWith;
+            }
+
+            int inserted = receiver.receiveEnergy(shareAmount, false);
+            energyRemaining -= inserted;
+
+            toShareWith--;
+            if (energyRemaining <= 0) {
+                break;
+            }
+        }
+
+        return availableEnergy - energyRemaining;
     }
 
     // endregion
