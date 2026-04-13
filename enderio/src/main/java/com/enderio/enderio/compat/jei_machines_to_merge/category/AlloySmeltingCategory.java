@@ -1,5 +1,6 @@
 package com.enderio.enderio.compat.jei_machines_to_merge.category;
 
+import com.enderio.core.common.util.IngredientUtility;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.client.content.machines.gui.screen.StirlingGeneratorScreen;
 import com.enderio.enderio.compat.jei.JEILang;
@@ -84,19 +85,19 @@ public class AlloySmeltingCategory extends MachineRecipeCategory<RecipeHolder<Al
         List<SizedIngredient> inputs = recipe.value().inputs();
 
         if (!inputs.isEmpty()) {
-            builder.addSlot(INPUT, 1, 11).add(inputs.getFirst().ingredient());
+            builder.addSlot(INPUT, 1, 11).addItemStacks(IngredientUtility.getItemStacks(inputs.get(0)));
         } else {
             builder.addSlot(RENDER_ONLY, 1, 11);
         }
 
         if (inputs.size() > 1) {
-            builder.addSlot(INPUT, 26, 1).add(inputs.get(1).ingredient());
+            builder.addSlot(INPUT, 26, 1).addItemStacks(IngredientUtility.getItemStacks(inputs.get(1)));
         } else {
             builder.addSlot(RENDER_ONLY, 26, 1);
         }
 
         if (inputs.size() > 2) {
-            builder.addSlot(INPUT, 50, 11).add(inputs.get(2).ingredient());
+            builder.addSlot(INPUT, 50, 11).addItemStacks(IngredientUtility.getItemStacks(inputs.get(2)));
         } else {
             builder.addSlot(RENDER_ONLY, 50, 11);
         }

@@ -1,5 +1,6 @@
 package com.enderio.enderio.compat.jei_machines_to_merge.util;
 
+import com.enderio.core.common.util.IngredientUtility;
 import com.enderio.enderio.content.enchanter.EnchanterRecipe;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -34,8 +35,7 @@ public class WrappedEnchanterRecipe implements Recipe<EnchanterRecipe.Input> {
     }
 
     public List<ItemStack> getInputs() {
-        int size = recipe.value().input().count() * level;
-        return recipe.value().input().ingredient().getValues().stream().map(v -> new ItemStack(v.value(), size)).toList();
+        return IngredientUtility.getItemStacks(recipe.value().input(), count -> count * level);
     }
 
     public List<ItemStack> getLapis() {
