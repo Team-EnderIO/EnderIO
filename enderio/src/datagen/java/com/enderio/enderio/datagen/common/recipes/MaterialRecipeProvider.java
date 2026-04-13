@@ -26,7 +26,6 @@ import net.neoforged.neoforge.common.Tags;
 public class MaterialRecipeProvider extends SubRecipeProvider {
     @Override
     public void buildRecipes(RecipeOutput recipeOutput, HolderLookup.Provider registries) {
-        addVanilla(recipeOutput);
         addAlloys(recipeOutput);
         addIngots(recipeOutput);
         addCraftingComponents(recipeOutput);
@@ -85,17 +84,6 @@ public class MaterialRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput);
 
         // endregion
-    }
-
-    private void addVanilla(RecipeOutput recipeOutput) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.STICK, 16)
-                .pattern("W")
-                .pattern("W")
-                .define('W', ItemTags.LOGS)
-                .unlockedBy("has_ingredient",
-                        InventoryChangeTrigger.TriggerInstance
-                                .hasItems(ItemPredicate.Builder.item().of(ItemTags.LOGS).build()))
-                .save(recipeOutput, EnderIO.rl("stick"));
     }
 
     private void addAlloys(RecipeOutput recipeOutput) {
