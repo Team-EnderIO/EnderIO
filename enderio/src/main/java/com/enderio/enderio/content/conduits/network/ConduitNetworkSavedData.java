@@ -43,8 +43,13 @@ import java.util.Optional;
 @EventBusSubscriber
 public class ConduitNetworkSavedData extends SavedData {
 
-    public static final Codec<ConduitNetworkSavedData> CODEC = ConduitNetworkImpl.CODEC.listOf()
-            .xmap(ConduitNetworkSavedData::new, ConduitNetworkSavedData::getNetworks);
+	public static final Codec<ConduitNetworkSavedData> CODEC = ConduitNetworkImpl.CODEC.listOf()
+	        .xmap(
+	            list -> new ConduitNetworkSavedData(
+	                list.stream().filter(Objects::nonNull).toList()
+	            ),
+	            ConduitNetworkSavedData::getNetworks
+	        );
 
     private final Multimap<ConduitType<?, ?>, ConduitNetworkImpl> networks = HashMultimap.create();
 
@@ -83,9 +88,9 @@ public class ConduitNetworkSavedData extends SavedData {
             return loadLegacy(nbt, lookupProvider);
         }
 
-        // TODO: Are we handling partials fine here?
-        return CODEC.parse(lookupProvider.createSerializationContext(NbtOps.INSTANCE), nbt.get(KEY_NEW_DATA))
-                .getPartialOrThrow();
+        var result = CODEC.parse(lookupProvider.createSerializationContext(NbtOps.INSTANCE), nbt.get(KEY_NEW_DATA));
+        result.error().ifPresent(e -> LOGGER.error("Errors loading conduit network data, some networks may be missing: {}", e.message()));
+        return result.getPartialOrThrow();
     }
 
     private List<ConduitNetworkImpl> getNetworks() {
