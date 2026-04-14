@@ -1,27 +1,38 @@
 package com.enderio.enderio.content.machines.solar_panel;
 
-import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
-public class SolarPanelEnergyStorage implements IEnergyStorage {
+public class SolarPanelEnergyHandler implements EnergyHandler {
     private final SolarPanelNode node;
 
-    public SolarPanelEnergyStorage(SolarPanelNode node) {
+    public SolarPanelEnergyHandler(SolarPanelNode node) {
         this.node = node;
     }
 
     @Override
-    public int receiveEnergy(int amount, boolean simulate) {
+    public long getAmountAsLong() {
+        return node.getNetwork().getTotalEnergyStored();
+    }
+
+    @Override
+    public long getCapacityAsLong() {
+        return node.getNetwork().getTotalMaxEnergyStored();
+    }
+
+    @Override
+    public int insert(int amount, TransactionContext transaction) {
         return 0;
     }
 
     @Override
-    public int extractEnergy(int amount, boolean simulate) {
+    public int extract(int amount, TransactionContext transaction) {
         if (amount <= 0) {
             return 0;
         }
 
         // Initially try to take from the current node
-        int extracted = node.extractEnergy(amount, simulate);
+        int extracted = node.extractEnergy(amount, transaction);
 
         // If we haven't extracted enough, try to take from the network
         if (extracted < amount) {
@@ -30,7 +41,7 @@ public class SolarPanelEnergyStorage implements IEnergyStorage {
                     continue;
                 }
 
-                extracted += otherNode.extractEnergy(amount - extracted, simulate);
+                extracted += otherNode.extractEnergy(amount - extracted, transaction);
                 if (extracted >= amount) {
                     break;
                 }
@@ -38,25 +49,5 @@ public class SolarPanelEnergyStorage implements IEnergyStorage {
         }
 
         return extracted;
-    }
-
-    @Override
-    public int getEnergyStored() {
-        return node.getNetwork().getTotalEnergyStored();
-    }
-
-    @Override
-    public int getMaxEnergyStored() {
-        return node.getNetwork().getTotalMaxEnergyStored();
-    }
-
-    @Override
-    public boolean canExtract() {
-        return true;
-    }
-
-    @Override
-    public boolean canReceive() {
-        return false;
     }
 }

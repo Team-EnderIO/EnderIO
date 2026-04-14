@@ -9,10 +9,13 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
@@ -80,40 +83,46 @@ public class SolarPanelBlock extends EIOEntityBlock<SolarPanelBlockEntity> imple
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState,
-            LevelAccessor level, BlockPos currentPos, BlockPos neighborPos) {
-        if (direction.getAxis().getPlane() == Direction.Plane.HORIZONTAL) {
-            if (direction == Direction.NORTH) {
-                state = state.setValue(NORTH, neighborState.getBlock() != this);
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos, Direction directionToNeighbour,
+        BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
+
+        if (directionToNeighbour.getAxis().getPlane() == Direction.Plane.HORIZONTAL) {
+            if (directionToNeighbour == Direction.NORTH) {
+                state = state.setValue(NORTH, neighbourState.getBlock() != this);
             }
-            if (direction == Direction.EAST) {
-                state = state.setValue(EAST, neighborState.getBlock() != this);
+
+            if (directionToNeighbour == Direction.EAST) {
+                state = state.setValue(EAST, neighbourState.getBlock() != this);
             }
-            if (direction == Direction.SOUTH) {
-                state = state.setValue(SOUTH, neighborState.getBlock() != this);
+
+            if (directionToNeighbour == Direction.SOUTH) {
+                state = state.setValue(SOUTH, neighbourState.getBlock() != this);
             }
-            if (direction == Direction.WEST) {
-                state = state.setValue(WEST, neighborState.getBlock() != this);
+
+            if (directionToNeighbour == Direction.WEST) {
+                state = state.setValue(WEST, neighbourState.getBlock() != this);
             }
+
             state = state.setValue(NORTH_EAST,
                     state.getValue(NORTH) || state.getValue(EAST)
-                            || level.getBlockState(currentPos.relative(Direction.NORTH).relative(Direction.EAST))
+                            || level.getBlockState(pos.relative(Direction.NORTH).relative(Direction.EAST))
                                     .getBlock() != this);
             state = state.setValue(NORTH_WEST,
                     state.getValue(NORTH) || state.getValue(WEST)
-                            || level.getBlockState(currentPos.relative(Direction.NORTH).relative(Direction.WEST))
+                            || level.getBlockState(pos.relative(Direction.NORTH).relative(Direction.WEST))
                                     .getBlock() != this);
             state = state.setValue(SOUTH_EAST,
                     state.getValue(SOUTH) || state.getValue(EAST)
-                            || level.getBlockState(currentPos.relative(Direction.SOUTH).relative(Direction.EAST))
+                            || level.getBlockState(pos.relative(Direction.SOUTH).relative(Direction.EAST))
                                     .getBlock() != this);
             state = state.setValue(SOUTH_WEST,
                     state.getValue(SOUTH) || state.getValue(WEST)
-                            || level.getBlockState(currentPos.relative(Direction.SOUTH).relative(Direction.WEST))
+                            || level.getBlockState(pos.relative(Direction.SOUTH).relative(Direction.WEST))
                                     .getBlock() != this);
             return state;
         }
-        return super.updateShape(state, direction, neighborState, level, currentPos, neighborPos);
+
+        return super.updateShape(state, level, ticks, pos, directionToNeighbour, neighbourPos, neighbourState, random);
     }
 
     @Override

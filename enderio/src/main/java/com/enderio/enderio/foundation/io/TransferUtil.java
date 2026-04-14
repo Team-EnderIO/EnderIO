@@ -144,7 +144,7 @@ public class TransferUtil {
         }
     }
 
-    public static int distributeEnergyEvenlyBetween(int availableEnergy, Set<IEnergyStorage> receivers) {
+    public static int distributeEnergyEvenlyBetween(int availableEnergy, Set<EnergyHandler> receivers, Transaction transaction) {
         // Abort if we have no valid pairs
         if (receivers.isEmpty()) {
             return 0;
@@ -154,7 +154,7 @@ public class TransferUtil {
         int energyRemaining = availableEnergy;
         int toShareWith = receivers.size();
 
-        for (IEnergyStorage receiver : receivers) {
+        for (EnergyHandler receiver : receivers) {
             // If we have too little energy left, just give it to the first handler that will accept it all
             int shareAmount;
             if (energyRemaining <= toShareWith) {
@@ -163,7 +163,7 @@ public class TransferUtil {
                 shareAmount = energyRemaining / toShareWith;
             }
 
-            int inserted = receiver.receiveEnergy(shareAmount, false);
+            int inserted = receiver.insert(shareAmount, transaction);
             energyRemaining -= inserted;
 
             toShareWith--;

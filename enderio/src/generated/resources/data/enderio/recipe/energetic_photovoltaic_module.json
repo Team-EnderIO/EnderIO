@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": "enderio:basic_capacitor",
+    "D": "minecraft:redstone",
+    "E": "#c:ingots/gold",
+    "F": "#c:glass_blocks",
+    "P": "enderio:photovoltaic_plate"
+  },
+  "pattern": [
+    "EFE",
+    "PPP",
+    "CDC"
+  ],
+  "result": {
+    "id": "enderio:energetic_photovoltaic_module"
+  }
+}

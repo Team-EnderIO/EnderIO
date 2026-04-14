@@ -6,6 +6,7 @@ import com.enderio.enderio.client.content.glass.GlassItemColor;
 import com.enderio.enderio.client.content.machines.IOOverlayBlockStateModel;
 import com.enderio.enderio.client.content.paint.model.port.PaintedBlockStateModel;
 import com.enderio.enderio.content.glass.FusedQuartzBlock;
+import com.enderio.enderio.content.machines.solar_panel.SolarPanelBlock;
 import com.enderio.enderio.content.misc_blocks.skull.EnderSkullBlock;
 import com.enderio.enderio.foundation.block.ProgressMachineBlock;
 import com.enderio.enderio.init.EIOBlocks;
@@ -18,6 +19,7 @@ import net.minecraft.client.data.models.blockstates.ConditionBuilder;
 import net.minecraft.client.data.models.blockstates.MultiPartGenerator;
 import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.blockstates.PropertyDispatch;
+import net.minecraft.client.data.models.model.ItemModelUtils;
 import net.minecraft.client.data.models.model.ModelLocationUtils;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureMapping;
@@ -340,10 +342,9 @@ public class EIOBlockStateProvider extends ModelProvider {
 //            Blocks.DIRT, null);
 
         // Solar Panels
-//        for (var entry : EIOBlocks.SOLAR_PANELS.entrySet()) {
-//            solarPanelBlock(entry.getValue().get(), entry.getKey());
-//            blockModels.createTrivialCube(entry.getValue().get()); //TODO TEMP
-//        }
+        for (var entry : EIOBlocks.SOLAR_PANELS.entrySet()) {
+            solarPanelBlock(blockModels, entry.getValue().get());
+        }
 
         // Capacitor Banks
 //        for (var capacitorBank : EIOBlocks.CAPACITOR_BANKS.values()) {
@@ -425,32 +426,29 @@ public class EIOBlockStateProvider extends ModelProvider {
                 .with(BlockModelGenerators.ROTATION_HORIZONTAL_FACING));
     }
 
-//    private void solarPanelBlock(SolarPanelBlock block, SolarPanelTier tier) {
-//        String name = name(block);
-//        String tierName = tier.name().toLowerCase(Locale.ROOT);
-//
-//        var baseModel = models()
-//            .withExistingParent(name + "_base", EnderIO.rl("block/photovoltaic_cell_base"))
-//            .texture("panel", "block/" + tierName + "_top")
-//            .texture("side", "block/" + tierName + "_side");
-//        var sideModel = models()
-//            .withExistingParent(name + "_side", EnderIO.rl("block/photovoltaic_cell_side"))
-//            .texture("side", "block/" + tierName + "_side");
-//        var cornerModel = models()
-//            .withExistingParent(name + "_corner", EnderIO.rl("block/photovoltaic_cell_corner"))
-//            .texture("side", "block/" + tierName + "_side");
-//
-//        var builder = getMultipartBuilder(block);
-//        builder.part().modelFile(baseModel).addModel();
-//        builder.part().modelFile(sideModel).addModel().condition(SolarPanelBlock.NORTH, true);
-//        builder.part().modelFile(sideModel).rotationY(90).addModel().condition(SolarPanelBlock.EAST, true);
-//        builder.part().modelFile(sideModel).rotationY(180).addModel().condition(SolarPanelBlock.SOUTH, true);
-//        builder.part().modelFile(sideModel).rotationY(270).addModel().condition(SolarPanelBlock.WEST, true);
-//        builder.part().modelFile(cornerModel).addModel().condition(SolarPanelBlock.NORTH_EAST, true);
-//        builder.part().modelFile(cornerModel).rotationY(90).addModel().condition(SolarPanelBlock.SOUTH_EAST, true);
-//        builder.part().modelFile(cornerModel).rotationY(180).addModel().condition(SolarPanelBlock.SOUTH_WEST, true);
-//        builder.part().modelFile(cornerModel).rotationY(270).addModel().condition(SolarPanelBlock.NORTH_WEST, true);
-//    }
+    private void solarPanelBlock(BlockModelGenerators blockModels, SolarPanelBlock block) {
+        TextureMapping baseMapping = EIOTextureSlots.photovoltaicPanelAndSide(block);
+        TextureMapping sideMapping = EIOTextureSlots.photovoltaicSide(block);
+
+        var baseVariant = plainVariant(EIOModelTemplates.PHOTOVOLTAIC_MODULE_BASE.create(block, baseMapping, blockModels.modelOutput));
+        var sideVariant = plainVariant(EIOModelTemplates.PHOTOVOLTAIC_MODULE_SIDE.create(block, sideMapping, blockModels.modelOutput));
+        var cornerVariant = plainVariant(EIOModelTemplates.PHOTOVOLTAIC_MODULE_CORNER.create(block, sideMapping, blockModels.modelOutput));
+
+        var builder = MultiPartGenerator.multiPart(block);
+        builder.with(baseVariant);
+
+        builder.with(condition().term(SolarPanelBlock.NORTH, true), sideVariant);
+        builder.with(condition().term(SolarPanelBlock.EAST, true), sideVariant.with(Y_ROT_90));
+        builder.with(condition().term(SolarPanelBlock.SOUTH, true), sideVariant.with(Y_ROT_180));
+        builder.with(condition().term(SolarPanelBlock.WEST, true), sideVariant.with(Y_ROT_270));
+
+        builder.with(condition().term(SolarPanelBlock.NORTH_EAST, true), cornerVariant);
+        builder.with(condition().term(SolarPanelBlock.SOUTH_EAST, true), cornerVariant.with(Y_ROT_90));
+        builder.with(condition().term(SolarPanelBlock.SOUTH_WEST, true), cornerVariant.with(Y_ROT_180));
+        builder.with(condition().term(SolarPanelBlock.NORTH_WEST, true), cornerVariant.with(Y_ROT_270));
+
+        blockModels.blockStateOutput.accept(builder);
+    }
 
     private MultiVariant wrapMachineModel(Identifier model) {
         return MultiVariant.of(new IOModelBuilder(new IOOverlayBlockStateModel.Unbaked(plainModel(model))));

@@ -3,6 +3,7 @@ package com.enderio.enderio.datagen.common.recipes;
 import com.enderio.core.data.recipe.SubRecipeProvider;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.soul.binding.ingredients.AnySoulBindableIngredient;
+import com.enderio.enderio.content.machines.solar_panel.SolarPanelTier;
 import com.enderio.enderio.content.machines.soul_binder.SoulBindingRecipe;
 import com.enderio.enderio.foundation.souldata.EngineSoul;
 import com.enderio.enderio.foundation.souldata.FarmSoul;
@@ -64,15 +65,15 @@ public class SoulBindingRecipeProvider extends SubRecipeProvider {
                 recipeOutput);
         build(EIOItems.ANIMAL_TOKEN, Ingredient.of(EIOItems.SOULARIUM_BALL), 12800, 1, MobCategory.CREATURE,
                 recipeOutput);
-//        build(EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.ENERGETIC),
-//                Ingredient.of(EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.ENERGETIC)), 12800, 8, EntityType.PHANTOM,
-//                recipeOutput);
-//        build(EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.PULSATING),
-//                Ingredient.of(EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.PULSATING)), 51200, 12, EntityType.PHANTOM,
-//                recipeOutput);
-//        build(EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.VIBRANT),
-//                Ingredient.of(EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.VIBRANT)), 288000, 14, EntityType.PHANTOM,
-//                recipeOutput);
+        build(EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.ENERGETIC),
+                Ingredient.of(EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.ENERGETIC)), 12800, 8, EntityType.PHANTOM,
+                recipeOutput);
+        build(EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.PULSATING),
+                Ingredient.of(EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.PULSATING)), 51200, 12, EntityType.PHANTOM,
+                recipeOutput);
+        build(EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.VIBRANT),
+                Ingredient.of(EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.VIBRANT)), 288000, 14, EntityType.PHANTOM,
+                recipeOutput);
 
         InfestedBlock.BLOCK_BY_HOST_BLOCK.forEach((original, infested) -> buildInfested(infested, original, recipeOutput));
     }

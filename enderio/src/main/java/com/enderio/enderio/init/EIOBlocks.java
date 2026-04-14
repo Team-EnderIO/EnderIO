@@ -21,6 +21,9 @@ import com.enderio.enderio.content.machines.obelisks.weather.WeatherObeliskBlock
 import com.enderio.enderio.content.machines.obelisks.xp.XPObeliskBlockEntity;
 import com.enderio.enderio.content.machines.powered_spawner.MindKillerBlock;
 import com.enderio.enderio.content.machines.powered_spawner.PoweredSpawnerBlockEntity;
+import com.enderio.enderio.content.machines.solar_panel.SolarPanelBlock;
+import com.enderio.enderio.content.machines.solar_panel.SolarPanelBlockEntity;
+import com.enderio.enderio.content.machines.solar_panel.SolarPanelTier;
 import com.enderio.enderio.content.machines.soul_engine.SoulEngineBlockEntity;
 import com.enderio.enderio.content.machines.vacuum.chest.VacuumChestBlockEntity;
 import com.enderio.enderio.content.machines.vacuum.xp.XPVacuumBlockEntity;
@@ -54,11 +57,13 @@ import com.enderio.enderio.content.travel.travel_anchor.TravelAnchorBlockEntity;
 import com.enderio.enderio.foundation.block.MachineBlock;
 import com.enderio.enderio.foundation.block.ProgressMachineBlock;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
+import com.google.common.collect.ImmutableMap;
 import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.util.Util;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -84,6 +89,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -438,14 +444,14 @@ public class EIOBlocks {
         (p, block) -> new PaintedBlockItem(block.get(), p));
 
     // Solar Panels
-//    public static final Map<SolarPanelTier, DeferredBlock<SolarPanelBlock>> SOLAR_PANELS = Util.make(() -> {
-//        Map<SolarPanelTier, DeferredBlock<SolarPanelBlock>> panels = new HashMap<>();
-//        for (SolarPanelTier tier : SolarPanelTier.values()) {
-//            panels.put(tier, solarPanel(tier.name().toLowerCase(Locale.ROOT) + "_photovoltaic_module",
-//                () -> EIOBlockEntities.SOLAR_PANELS.get(tier)::get, tier));
-//        }
-//        return ImmutableMap.copyOf(panels);
-//    });
+    public static final Map<SolarPanelTier, DeferredBlock<SolarPanelBlock>> SOLAR_PANELS = Util.make(() -> {
+        Map<SolarPanelTier, DeferredBlock<SolarPanelBlock>> panels = new HashMap<>();
+        for (SolarPanelTier tier : SolarPanelTier.values()) {
+            panels.put(tier, solarPanel(tier.name().toLowerCase(Locale.ROOT) + "_photovoltaic_module",
+                () -> EIOBlockEntities.SOLAR_PANELS.get(tier)::get, tier));
+        }
+        return ImmutableMap.copyOf(panels);
+    });
 
     // Capacitor Banks
 //    public static final Map<CapacitorTier, DeferredBlock<CapacitorBankBlock>> CAPACITOR_BANKS = Util.make(() -> {
@@ -515,14 +521,16 @@ public class EIOBlocks {
     public static final DeferredItem<BlockItem> SOUL_ENGINE_ITEM = ITEMS.registerItem("soul_engine",
         p -> new BlockItem(SOUL_ENGINE.get(), p), p -> p.component(EIODataComponents.SOUL, Soul.EMPTY).useBlockDescriptionPrefix());
 
-//    public static final Map<SolarPanelTier, DeferredItem<BlockItem>> SOLAR_PANEL_ITEMS = Util.make(() -> {
-//        Map<SolarPanelTier, DeferredItem<BlockItem>> items = new HashMap<>();
-//        for (var entry : SOLAR_PANELS.entrySet()) {
-//            items.put(entry.getKey(), ITEMS.registerItem(entry.getValue().getId().getPath(),
-//                p -> new BlockItem(entry.getValue().get(), p), new Item.Properties().component(EIODataComponents.SOUL, Soul.EMPTY)));
-//        }
-//        return ImmutableMap.copyOf(items);
-//    });
+    public static final Map<SolarPanelTier, DeferredItem<BlockItem>> SOLAR_PANEL_ITEMS = Util.make(() -> {
+        Map<SolarPanelTier, DeferredItem<BlockItem>> items = new HashMap<>();
+        for (var entry : SOLAR_PANELS.entrySet()) {
+            items.put(entry.getKey(), ITEMS.registerItem(
+                entry.getValue().getId().getPath(),
+                p -> new BlockItem(entry.getValue().get(), p),
+                () -> new Item.Properties().component(EIODataComponents.SOUL, Soul.EMPTY).useBlockDescriptionPrefix()));
+        }
+        return ImmutableMap.copyOf(items);
+    });
 
 //    public static final Map<CapacitorTier, DeferredItem<CapacitorBankItem>> CAPACITOR_BANK_ITEMS = Util.make(() -> {
 //        Map<CapacitorTier, DeferredItem<CapacitorBankItem>> items = new HashMap<>();
@@ -562,7 +570,7 @@ public class EIOBlocks {
         Supplier<Supplier<BlockEntityType<? extends SolarPanelBlockEntity>>> regiliteBlockEntity, SolarPanelTier tier) {
         return BLOCKS.registerBlock(name,
             props -> new SolarPanelBlock(regiliteBlockEntity.get(), props, tier),
-            BlockBehaviour.Properties.of().strength(2.5f, 8));
+            () -> BlockBehaviour.Properties.of().strength(2.5f, 8));
     }
 
 //    private static DeferredBlock<CapacitorBankBlock> capacitorBank(String name,
@@ -593,8 +601,15 @@ public class EIOBlocks {
 
     // endregion
 
+    @Deprecated(forRemoval = true)
     private static <B extends Block> DeferredBlock<B> registerWithItem(String name, Function<BlockBehaviour.Properties, ? extends B> func, BlockBehaviour.Properties blockProperties) {
         var blockHolder = BLOCKS.<B>registerBlock(name, func, () -> blockProperties);
+        ITEMS.registerSimpleBlockItem(blockHolder);
+        return blockHolder;
+    }
+
+    private static <B extends Block> DeferredBlock<B> registerWithItem(String name, Function<BlockBehaviour.Properties, ? extends B> func, Supplier<BlockBehaviour.Properties> blockProperties) {
+        var blockHolder = BLOCKS.<B>registerBlock(name, func, blockProperties);
         ITEMS.registerSimpleBlockItem(blockHolder);
         return blockHolder;
     }

@@ -89,15 +89,15 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
             .add(EIOBlocks.WEATHER_OBELISK.get());
         
         // Solar Panels and Capacitor Banks
-//        var solarPanels = EIOBlocks.SOLAR_PANELS.values()
-//            .stream()
-//            .sorted(Comparator.comparing(DeferredHolder::getKey))
-//            .toList();
+        var solarPanels = EIOBlocks.SOLAR_PANELS.values()
+            .stream()
+            .sorted(Comparator.comparing(DeferredHolder::getKey))
+            .toList();
 
-//        for (var solarPanel : solarPanels) {
-//            tag(BlockTags.MINEABLE_WITH_PICKAXE).add(solarPanel.get());
-//            tag(BlockTags.NEEDS_IRON_TOOL).add(solarPanel.get());
-//        }
+        for (var solarPanel : solarPanels) {
+            tag(BlockTags.MINEABLE_WITH_PICKAXE).add(solarPanel.get());
+            tag(BlockTags.NEEDS_IRON_TOOL).add(solarPanel.get());
+        }
 
 //        var capacitorBanks = EIOBlocks.CAPACITOR_BANKS.values()
 //            .stream()

@@ -9,6 +9,7 @@ import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -16,30 +17,30 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
-import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 
-import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
 public class SolarPanelBlockEntity extends EIOBlockEntity {
 
-    public static final ICapabilityProvider<SolarPanelBlockEntity, Direction, IEnergyStorage> ENERGY_STORAGE_PROVIDER = (
-        be, side) -> side != Direction.UP ? be.energyStorage : null;
+    public static final ICapabilityProvider<SolarPanelBlockEntity, Direction, EnergyHandler> ENERGY_STORAGE_PROVIDER = (
+        be, side) -> side != Direction.UP ? be.energyHandler : null;
     
     private final ISolarPanelTier tier;
     private final SolarPanelNode node;
-    private final SolarPanelEnergyStorage energyStorage;
+    private final SolarPanelEnergyHandler energyHandler;
 
-    private final Map<Direction, BlockCapabilityCache<IEnergyStorage, Direction>> energyStorageCaches = new EnumMap<>(Direction.class);
-    private final Set<IEnergyStorage> validPushTargetCache = new HashSet<>();
+    private final Map<Direction, BlockCapabilityCache<EnergyHandler, Direction>> energyHandlerCaches = new EnumMap<>(Direction.class);
+    private final Set<EnergyHandler> validPushTargetCache = new HashSet<>();
     private boolean isValidPushTargetCacheDirty = true;
 
     private Soul boundSoul = Soul.EMPTY;
@@ -52,7 +53,7 @@ public class SolarPanelBlockEntity extends EIOBlockEntity {
         this.tier = tier;
         
         this.node = new SolarPanelNode(this);
-        this.energyStorage = new SolarPanelEnergyStorage(this.node);
+        this.energyHandler = new SolarPanelEnergyHandler(this.node);
     }
     
     public ISolarPanelTier tier() {
@@ -81,8 +82,8 @@ public class SolarPanelBlockEntity extends EIOBlockEntity {
                     continue;
                 }
 
-                energyStorageCaches.put(side, BlockCapabilityCache.create(
-                    Capabilities.EnergyStorage.BLOCK,
+                energyHandlerCaches.put(side, BlockCapabilityCache.create(
+                    Capabilities.Energy.BLOCK,
                     serverLevel,
                     getBlockPos().relative(side),
                     side.getOpposite(),
@@ -99,15 +100,15 @@ public class SolarPanelBlockEntity extends EIOBlockEntity {
     }
 
     @Override
-    public void neighborChanged(Block neighborBlock, BlockPos neighborPos) {
-        super.neighborChanged(neighborBlock, neighborPos);
+    public void onNeighbourBlockChanged(Block neighborBlock, BlockPos neighborPos) {
+        super.onNeighbourBlockChanged(neighborBlock, neighborPos);
 
         if (!level.isClientSide()) {
             isValidPushTargetCacheDirty = true;
         }
     }
 
-    Set<IEnergyStorage> getValidPushTargets() {
+    Set<EnergyHandler> getValidPushTargets() {
         if (isValidPushTargetCacheDirty) {
             validPushTargetCache.clear();
             for (Direction side : Direction.values()) {
@@ -115,9 +116,13 @@ public class SolarPanelBlockEntity extends EIOBlockEntity {
                     continue;
                 }
 
-                var energyStorage = energyStorageCaches.get(side).getCapability();
-                if (energyStorage != null && energyStorage.canReceive()) {
-                    validPushTargetCache.add(energyStorage);
+                var energyHandler = energyHandlerCaches.get(side).getCapability();
+                if (energyHandler instanceof SolarPanelEnergyHandler) {
+                    continue;
+                }
+
+                if (energyHandler != null) {
+                    validPushTargetCache.add(energyHandler);
                 }
             }
         }
@@ -136,7 +141,7 @@ public class SolarPanelBlockEntity extends EIOBlockEntity {
         }
 
         if (reloadCache != reload && boundSoul.hasEntity()) {
-            Optional<SolarSoul.SoulData> op = SolarSoul.SOLAR.matches(boundSoul.entityType());
+            Optional<SolarSoul.SoulData> op = SolarSoul.RELOAD_LISTENER.matches(boundSoul.entityType());
             op.ifPresent(data -> soulData = data);
             reloadCache = reload;
         }
@@ -192,7 +197,7 @@ public class SolarPanelBlockEntity extends EIOBlockEntity {
             outputScale = getOutputScale(level);
         } else if (night) {
             // A Day night cycle is 20 minutes, night is 10 minutes
-            int dayTime = (int) (level.getDayTime() % GameTicks.DAY_IN_TICKS);
+            int dayTime = (int) (level.getDefaultClockTime() % GameTicks.DAY_IN_TICKS);
 
             // Over how long should generation scale up/down and the start/end of the night
             float rampTimeMinutes = 1.5f;
@@ -220,7 +225,7 @@ public class SolarPanelBlockEntity extends EIOBlockEntity {
 
         float outputScale;
         // A Day night cycle is 20 minutes, daytime is 10 minutes
-        int dayTime = (int) (level.getDayTime() % GameTicks.DAY_IN_TICKS);
+        int dayTime = (int) (level.getDefaultClockTime() % GameTicks.DAY_IN_TICKS);
 
         // Over how long should generation scale up/down and the start/end of the day
         float rampTimeMinutes = 1.5f;
@@ -295,34 +300,26 @@ public class SolarPanelBlockEntity extends EIOBlockEntity {
     // region Serialization
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        boundSoul = Soul.parseOptional(lookupProvider, tag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
 
-        // Old serialization format
-        if (tag.contains(MachineNBTKeys.ENERGY)) {
-            var energyStorage = tag.getCompound(MachineNBTKeys.ENERGY);
-            if (energyStorage.contains(MachineNBTKeys.ENERGY_STORED)) {
-                this.node.setEnergyStored(energyStorage.getInt(MachineNBTKeys.ENERGY_STORED));
-            }
-        } else if (tag.contains(MachineNBTKeys.ENERGY_STORED)) {
-            this.node.setEnergyStored(tag.getInt(MachineNBTKeys.ENERGY_STORED));
-        }
+        input.read(MachineNBTKeys.ENTITY_STORAGE, Soul.OPTIONAL_CODEC)
+            .ifPresent(soul -> boundSoul = soul);
 
-        super.loadAdditional(tag, lookupProvider);
+        input.getInt(MachineNBTKeys.ENERGY_STORED)
+            .ifPresent(this.node::setEnergyStored);
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        tag.put(MachineNBTKeys.ENTITY_STORAGE, boundSoul.saveOptional(lookupProvider));
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
 
-        // TODO: 26.1 - serialize the node instead?
-        tag.putInt(MachineNBTKeys.ENERGY_STORED, node.getEnergyStored());
-
-        super.saveAdditional(tag, lookupProvider);
+        output.store(MachineNBTKeys.ENTITY_STORAGE, Soul.OPTIONAL_CODEC, boundSoul);
+        output.putInt(MachineNBTKeys.ENERGY_STORED, node.getEnergyStored());
     }
 
     @Override
-    protected void applyImplicitComponents(DataComponentInput components) {
+    protected void applyImplicitComponents(DataComponentGetter components) {
         super.applyImplicitComponents(components);
         boundSoul = components.getOrDefault(EIODataComponents.SOUL, Soul.EMPTY);
         node.setEnergyStored(components.getOrDefault(EIODataComponents.ENERGY, 0));

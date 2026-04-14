@@ -22,6 +22,8 @@ import com.enderio.enderio.content.machines.powered_spawner.MindKillerBlockEntit
 import com.enderio.enderio.content.machines.powered_spawner.PoweredSpawnerBlockEntity;
 import com.enderio.enderio.content.machines.sag_mill.SagMillBlockEntity;
 import com.enderio.enderio.content.machines.slicer.SlicerBlockEntity;
+import com.enderio.enderio.content.machines.solar_panel.SolarPanelBlockEntity;
+import com.enderio.enderio.content.machines.solar_panel.SolarPanelTier;
 import com.enderio.enderio.content.machines.soul_binder.SoulBinderBlockEntity;
 import com.enderio.enderio.content.machines.soul_engine.SoulEngineBlockEntity;
 import com.enderio.enderio.content.machines.stirling_generator.StirlingGeneratorBlockEntity;
@@ -39,10 +41,16 @@ import com.enderio.enderio.content.travel.travel_anchor.TravelAnchorBlockEntity;
 import com.enderio.enderio.foundation.block.entity.EnderSkullBlockEntity;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
+import com.google.common.collect.ImmutableMap;
+import net.minecraft.util.Util;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.registries.DeferredHolder;
+
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 public class EIOBlockEntities {
     public static final BlockEntityTypeDeferredRegister BLOCK_ENTITY_TYPES = BlockEntityTypeDeferredRegister.create(EnderIO.MOD_ID);
@@ -216,7 +224,7 @@ public class EIOBlockEntities {
                 .builder(tier.name().toLowerCase(Locale.ROOT) + "_photovoltaic_cell",
                     (worldPosition, blockState) -> new SolarPanelBlockEntity(EIOBlockEntities.SOLAR_PANELS.get(tier).get(),worldPosition, blockState, tier),
                     () -> EIOBlocks.SOLAR_PANELS.get(tier).get())
-                .capability(Capabilities.EnergyStorage.BLOCK, SolarPanelBlockEntity.ENERGY_STORAGE_PROVIDER)
+                .capability(Capabilities.Energy.BLOCK, SolarPanelBlockEntity.ENERGY_STORAGE_PROVIDER)
                 .build())
             ;
         }

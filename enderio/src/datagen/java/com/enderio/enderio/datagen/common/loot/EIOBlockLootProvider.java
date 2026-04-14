@@ -147,9 +147,9 @@ public class EIOBlockLootProvider extends BlockLootSubProvider {
         add(EIOBlocks.PAINTED_TRAVEL_ANCHOR.get(), createPaintedTable(EIOBlocks.PAINTED_TRAVEL_ANCHOR.get()));
 
         // Solar Panels
-//        for (var solarPanel : EIOBlocks.SOLAR_PANELS.values()) {
-//            copyComponents(solarPanel.get());
-//        }
+        for (var solarPanel : EIOBlocks.SOLAR_PANELS.values()) {
+            copyComponents(solarPanel.get());
+        }
 
         // Capacitor Banks
 //        for (var capacitorBank : EIOBlocks.CAPACITOR_BANKS.values()) {

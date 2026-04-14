@@ -658,14 +658,14 @@ public class EIOLanguageProvider extends LanguageProvider {
 //        add(EIOBlocks.CREATIVE_POWER.get(), "Creative Power");
 
         // Solar Panels
-//        for (var entry : EIOBlocks.SOLAR_PANELS.entrySet()) {
-//            String displayName = switch (entry.getKey()) {
-//                case ENERGETIC -> "Energetic Photovoltaic Module";
-//                case PULSATING -> "Pulsating Photovoltaic Module";
-//                case VIBRANT -> "Vibrant Photovoltaic Module";
-//            };
-//            add(entry.getValue().get(), displayName);
-//        }
+        for (var entry : EIOBlocks.SOLAR_PANELS.entrySet()) {
+            String displayName = switch (entry.getKey()) {
+                case ENERGETIC -> "Energetic Photovoltaic Module";
+                case PULSATING -> "Pulsating Photovoltaic Module";
+                case VIBRANT -> "Vibrant Photovoltaic Module";
+            };
+            add(entry.getValue().get(), displayName);
+        }
 
         // Capacitor Banks
 //        for (var entry : EIOBlocks.CAPACITOR_BANKS.entrySet()) {
