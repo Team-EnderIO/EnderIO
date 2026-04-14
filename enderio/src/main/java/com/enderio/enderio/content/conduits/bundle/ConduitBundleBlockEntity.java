@@ -4,6 +4,7 @@ import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.UseOnly;
 import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.ConduitCapabilityAccessor;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.ConduitUtility;
 import com.enderio.enderio.api.conduits.bundle.AddConduitResult;
@@ -188,6 +189,12 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             // Fire on-created events
             for (var conduit : conduits) {
                 conduit.value().onCreated(conduitNodes.get(conduit), level, getBlockPos(), null);
+
+                // For any side that has connected as loaded, query canConnectToBlock once. This will establish any relevant capability caches
+                // TODO: Maybe we *should* just tryConnectTo any blocks on load (in case of datapack change, mod update etc.)
+                for (Direction side : Direction.values()) {
+                    conduit.value().canConnectToBlock(level, getCacheFor(conduit), getBlockPos(), side);
+                }
             }
 
             // Attempt to make connections for recovered nodes.
@@ -296,7 +303,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
 
         // TODO: This should be cached and updated whenever neighbors change...
-        return conduit.value().canForceConnectToBlock(level, getBlockPos(), side);
+        return conduit.value().canForceConnectToBlock(level, getCacheFor(conduit),getBlockPos(), side);
     }
 
     @Override
@@ -918,8 +925,8 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
             disconnect(conduit, side);
             return false;
-        } else if (conduit.value().canConnectToBlock(level, getBlockPos(), side)
-                || (isForcedConnection && conduit.value().canForceConnectToBlock(level, getBlockPos(), side))) {
+        } else if (conduit.value().canConnectToBlock(level, getCacheFor(conduit),getBlockPos(), side)
+                || (isForcedConnection && conduit.value().canForceConnectToBlock(level, getCacheFor(conduit),getBlockPos(), side))) {
             connectBlock(conduit, side);
             return true;
         }
@@ -976,7 +983,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
                 if (currentStatus.canConnect()) {
                     tryConnectTo(conduit, side, false);
                 } else if (currentStatus.isEndpoint()) {
-                    if (!conduit.value().canForceConnectToBlock(level, getBlockPos(), side)) {
+                    if (!conduit.value().canForceConnectToBlock(level, getCacheFor(conduit),getBlockPos(), side)) {
                         disconnect(conduit, side);
                         onConnectionsUpdated(conduit);
                     }
@@ -987,40 +994,27 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
     // endregion
 
-    // region Node Interactions
+    // region World Interactions
 
     public void markNodesDirty() {
         hasDirtyNodes = true;
     }
 
-    @Nullable
-    public <TCapability> TCapability getNeighborSidedCapability(Holder<Conduit<?, ?>> conduit,
-            BlockCapability<TCapability, Direction> capability, Direction side) {
-        // Doesn't use EnderBlockEntity's capability cache so that we can bin capability
-        // caches that aren't needed when conduits are removed.
-        // Probably an "early optimization" but I don't think this really hurts.
-        if (level instanceof ServerLevel serverLevel) {
-            var capabilityCache = neighbouringCapabilityCaches.computeIfAbsent(conduit,
-                    c -> new NeighboringCapabilityCaches());
-            return capabilityCache.getSidedCapability(capability, serverLevel, getBlockPos(), side);
-        }
-
-        return null;
+    private void onCapabilityInvalidated() {
+        checkConnection = checkConnection.activate();
     }
 
-    @Nullable
-    public <TCapability> TCapability getNeighborVoidCapability(Holder<Conduit<?, ?>> conduit,
-            BlockCapability<TCapability, Void> capability, Direction side) {
-        // Doesn't use EnderBlockEntity's capability cache so that we can bin capability
-        // caches that aren't needed when conduits are removed.
-        // Probably an "early optimization" but I don't think this really hurts.
-        if (level instanceof ServerLevel serverLevel) {
-            var capabilityCache = neighbouringCapabilityCaches.computeIfAbsent(conduit,
-                    c -> new NeighboringCapabilityCaches());
-            return capabilityCache.getVoidCapability(capability, serverLevel, getBlockPos(), side);
-        }
+    private NeighboringCapabilityCaches getCacheFor(Holder<Conduit<?, ?>> conduit) {
+        return neighbouringCapabilityCaches.computeIfAbsent(conduit,
+            c -> new NeighboringCapabilityCaches(this::onCapabilityInvalidated));
+    }
 
-        return null;
+    // Doesn't use EnderBlockEntity's capability cache so that we can bin capability
+    // caches that aren't needed when conduits are removed.
+    // Probably an "early optimization" but I don't think this really hurts.
+    @Override
+    public @Nullable <T, C> T getCapability(Holder<Conduit<?, ?>> conduit, BlockCapability<T, C> capability, Direction neighborSide, @Nullable C context) {
+        return getCacheFor(conduit).getCapability(capability, neighborSide, context);
     }
 
     // endregion
@@ -1599,38 +1593,28 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
     }
 
-    private static class NeighboringCapabilityCaches {
-        private final Map<Direction, Map<BlockCapability<?, Direction>, BlockCapabilityCache<?, Direction>>> directionalCaches = new EnumMap<>(
-                Direction.class);
-        private final Map<Direction, Map<BlockCapability<?, Void>, BlockCapabilityCache<?, Void>>> voidCaches = new EnumMap<>(
-                Direction.class);
+    private class NeighboringCapabilityCaches implements ConduitCapabilityAccessor {
+        private final Runnable invalidationListener;
 
-        /**
-         * Get a capability for the given side of the node
-         */
-        @Nullable
-        public <TCapability> TCapability getSidedCapability(BlockCapability<TCapability, Direction> capability,
-                ServerLevel level, BlockPos conduitPos, Direction side) {
-            var cacheMap = directionalCaches.computeIfAbsent(side, s -> new HashMap<>());
-            var cache = cacheMap.computeIfAbsent(capability,
-                    c -> BlockCapabilityCache.create(c, level, conduitPos.relative(side), side.getOpposite()));
+        private final Map<Direction, Map<BlockCapability<?, ?>, Map<Object, BlockCapabilityCache<?, ?>>>> cachesByNeighbor = new EnumMap<>(Direction.class);
 
-            // noinspection unchecked
-            return (TCapability) cache.getCapability();
+        private NeighboringCapabilityCaches(Runnable invalidationListener) {
+            this.invalidationListener = invalidationListener;
         }
 
-        /**
-         * Get a capability for the given side of the node
-         */
-        @Nullable
-        public <TCapability> TCapability getVoidCapability(BlockCapability<TCapability, Void> capability,
-                ServerLevel level, BlockPos conduitPos, Direction side) {
-            var cacheMap = voidCaches.computeIfAbsent(side, s -> new HashMap<>());
-            var cache = cacheMap.computeIfAbsent(capability,
-                    c -> BlockCapabilityCache.create(c, level, conduitPos.relative(side), null));
+        @Override
+        public @Nullable <T, C> T getCapability(BlockCapability<T, C> capability, Direction neighborSide, @Nullable C context) {
+            if (!(level instanceof ServerLevel serverLevel)) {
+                return level.getCapability(capability, getBlockPos().relative(neighborSide), context);
+            }
 
-            // noinspection unchecked
-            return (TCapability) cache.getCapability();
+            var cachesByCapability = cachesByNeighbor.computeIfAbsent(neighborSide, d -> new HashMap<>());
+            var cachesByContext = cachesByCapability.computeIfAbsent(capability, c -> new HashMap<>());
+            var cache = cachesByContext.computeIfAbsent(context, c ->
+                BlockCapabilityCache.create(capability, serverLevel, getBlockPos().relative(neighborSide), context, () -> !isRemoved(), invalidationListener));
+
+            //noinspection unchecked
+            return (T)cache.getCapability();
         }
     }
 

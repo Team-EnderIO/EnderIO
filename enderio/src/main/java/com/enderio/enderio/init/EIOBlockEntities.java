@@ -209,19 +209,19 @@ public class EIOBlockEntities {
         .apply(EIOBlockEntities::soulBoundCapability)
         .build();
 
-//    public static final Map<SolarPanelTier, DeferredHolder<BlockEntityType<?>, BlockEntityType<SolarPanelBlockEntity>>> SOLAR_PANELS = Util.make(() -> {
-//        Map<SolarPanelTier, DeferredHolder<BlockEntityType<?>, BlockEntityType<SolarPanelBlockEntity>>> map = new HashMap<>();
-//        for (SolarPanelTier tier : SolarPanelTier.values()) {
-//            map.put(tier, BLOCK_ENTITY_TYPES
-//                .builder(tier.name().toLowerCase(Locale.ROOT) + "_photovoltaic_cell",
-//                    (worldPosition, blockState) -> new SolarPanelBlockEntity(worldPosition, blockState, tier),
-//                    () -> EIOBlocks.SOLAR_PANELS.get(tier).get())
-//                .apply(EIOBlockEntities::legacyPoweredMachineBlockEntityCapabilities)
-//                .build())
-//            ;
-//        }
-//        return ImmutableMap.copyOf(map);
-//    });
+    public static final Map<SolarPanelTier, DeferredHolder<BlockEntityType<?>, BlockEntityType<SolarPanelBlockEntity>>> SOLAR_PANELS = Util.make(() -> {
+        Map<SolarPanelTier, DeferredHolder<BlockEntityType<?>, BlockEntityType<SolarPanelBlockEntity>>> map = new HashMap<>();
+        for (SolarPanelTier tier : SolarPanelTier.values()) {
+            map.put(tier, BLOCK_ENTITY_TYPES
+                .builder(tier.name().toLowerCase(Locale.ROOT) + "_photovoltaic_cell",
+                    (worldPosition, blockState) -> new SolarPanelBlockEntity(EIOBlockEntities.SOLAR_PANELS.get(tier).get(),worldPosition, blockState, tier),
+                    () -> EIOBlocks.SOLAR_PANELS.get(tier).get())
+                .capability(Capabilities.EnergyStorage.BLOCK, SolarPanelBlockEntity.ENERGY_STORAGE_PROVIDER)
+                .build())
+            ;
+        }
+        return ImmutableMap.copyOf(map);
+    });
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MindKillerBlockEntity>> MIND_KILLER = BLOCK_ENTITY_TYPES
         .register("mind_killer", MindKillerBlockEntity::new, EIOBlocks.MIND_KILLER::get);

@@ -1,6 +1,7 @@
 package com.enderio.modded_conduits.common.modules.refinedstorage;
 
 import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.ConduitCapabilityAccessor;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
@@ -13,6 +14,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import org.jspecify.annotations.NonNull;
@@ -38,10 +40,9 @@ public record RSConduit(Identifier texture, Component description)
     }
 
     @Override
-    public boolean canConnectToBlock(Level level, BlockPos conduitPos, Direction direction) {
-        var cap = level.getCapability(
-                RefinedStorageNeoForgeApiImpl.INSTANCE.getNetworkNodeContainerProviderCapability(),
-                conduitPos.relative(direction), direction.getOpposite());
+    public boolean canConnectToBlock(Level level, ConduitCapabilityAccessor capabilityAccessor, BlockPos conduitPos, Direction direction) {
+        var cap = capabilityAccessor.getSidedCapability(
+            RefinedStorageNeoForgeApiImpl.INSTANCE.getNetworkNodeContainerProviderCapability(), direction);
         if (cap != null) {
             for (var connection : cap.getContainers()) {
                 if (connection.canAcceptIncomingConnection(direction.getOpposite(), level.getBlockState(conduitPos))) {

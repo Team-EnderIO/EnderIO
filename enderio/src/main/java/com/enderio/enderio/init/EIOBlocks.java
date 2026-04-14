@@ -558,13 +558,13 @@ public class EIOBlocks {
                 .noOcclusion());
     }
 
-//    private static DeferredBlock<SolarPanelBlock> solarPanel(String name,
-//        Supplier<Supplier<BlockEntityType<? extends SolarPanelBlockEntity>>> regiliteBlockEntity, SolarPanelTier tier) {
-//        return BLOCKS.registerBlock(name,
-//            props -> new SolarPanelBlock(regiliteBlockEntity.get()::get, props, tier),
-//            BlockBehaviour.Properties.of().strength(2.5f, 8));
-//    }
-//
+    private static DeferredBlock<SolarPanelBlock> solarPanel(String name,
+        Supplier<Supplier<BlockEntityType<? extends SolarPanelBlockEntity>>> regiliteBlockEntity, SolarPanelTier tier) {
+        return BLOCKS.registerBlock(name,
+            props -> new SolarPanelBlock(regiliteBlockEntity.get(), props, tier),
+            BlockBehaviour.Properties.of().strength(2.5f, 8));
+    }
+
 //    private static DeferredBlock<CapacitorBankBlock> capacitorBank(String name,
 //        Supplier<Supplier<BlockEntityType<? extends CapacitorBankBlockEntity>>> regiliteBlockEntity, CapacitorTier tier) {
 //        return BLOCKS.registerBlock(name,
