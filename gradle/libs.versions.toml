@@ -9,10 +9,11 @@ jade = "26.0.6+neoforge"
 ae2 = { strictly = "[26.1.5-alpha,)", prefer = "26.1.5-alpha" }
 mekanism = { strictly = "[1.21.1-10.7.0,)", prefer = "1.21.1-10.7.16.82" }
 mekanismMod = { strictly = "[10.7.0,)", prefer = "10.7.16.82" } # workaround for Mek having MC version in the version specifier.
-refinedStorage = { strictly = "[2.0.0-beta.1,)", prefer = "2.0.0" }
+refinedStorage = { strictly = "[3.0.0-beta.1,)", prefer = "3.0.0-beta.1" }
 laserio = "5648871"
 graphlib = { strictly = "[3.0.4, 3.1)", prefer = "3.0.5" }
-ftbUltimine = { strictly = "[2101.1.7,2102)", prefer = "2101.1.7" }
+ftbLibrary = { strictly = "[26.1.1.1-SNAPSHOT, 26.2)", prefer = "26.1.1.1-SNAPSHOT" }
+ftbUltimine = { strictly = "[26.1, 26.2)", prefer = "26.1.0.1-SNAPSHOT" }
 curios = "15.0.0-beta.1+26.1"
 sodium = "mc1.21.1-0.6.13-neoforge"
 iris = "1.8.12+1.21.1-neoforge"
@@ -34,10 +35,11 @@ jade = { group = "maven.modrinth", name = "jade", version.ref = "jade" }
 #athena = { group = "maven.modrinth", name = "athena-ctm", version.ref = "athena" }
 ae2 = { group = "org.appliedenergistics", name = "appliedenergistics2", version.ref = "ae2" }
 #mekanism = { group = "mekanism", name = "Mekanism", version.ref = "mekanism" }
-#refinedStorage = { group = "com.refinedmods.refinedstorage", name = "refinedstorage-neoforge", version.ref = "refinedStorage" }
+refinedStorage = { group = "com.refinedmods.refinedstorage", name = "refinedstorage-neoforge", version.ref = "refinedStorage" }
 #laserio = { group = "curse.maven", name = "laserio-626839", version.ref = "laserio" }
 graphlib = { group = "dev.gigaherz.graph", name = "GraphLib3", version.ref = "graphlib"}
-#ftbUltimine = { group = "dev.ftb.mods", name = "ftb-ultimine-neoforge", version.ref = "ftbUltimine" }
+ftbLibrary = { group = "dev.ftb.mods", name = "ftb-library-neoforge", version.ref = "ftbLibrary" }
+ftbUltimine = { group = "dev.ftb.mods", name = "ftb-ultimine-neoforge", version.ref = "ftbUltimine" }
 curios = { group = "top.theillusivec4.curios", name = "curios-neoforge", version.ref = "curios" }
 sodium = { group = "maven.modrinth", name = "sodium", version.ref = "sodium" }
 iris = { group = "maven.modrinth", name = "iris", version.ref = "iris" }

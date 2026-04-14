@@ -33,6 +33,7 @@
 //
 //    @Override
 //    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+//        super.extractBackground(graphics, mouseX, mouseY, a);
 //        graphics.blit(BG_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight);
 //    }
 //}

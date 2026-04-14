@@ -133,9 +133,9 @@ public class MachinesJEI implements IModPlugin {
         registration.registerSubtypeInterpreter(EIOBlocks.SOUL_ENGINE.asItem(),
                 new SoulBindableSubtypeInterpreter());
 
-//        for (var solarPanel : EIOBlocks.SOLAR_PANELS.values()) {
-//            registration.registerSubtypeInterpreter(solarPanel.asItem(), new SoulBindableSubtypeInterpreter());
-//        }
+        for (var solarPanel : EIOBlocks.SOLAR_PANELS.values()) {
+            registration.registerSubtypeInterpreter(solarPanel.asItem(), new SoulBindableSubtypeInterpreter());
+        }
     }
 
     @Override

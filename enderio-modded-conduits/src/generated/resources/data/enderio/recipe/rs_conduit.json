@@ -8,12 +8,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
-    "B": {
-      "item": "enderio:conduit_binder"
-    },
-    "I": {
-      "tag": "refinedstorage:cables"
-    }
+    "B": "enderio:conduit_binder",
+    "I": "#refinedstorage:cables"
   },
   "pattern": [
     "BBB",

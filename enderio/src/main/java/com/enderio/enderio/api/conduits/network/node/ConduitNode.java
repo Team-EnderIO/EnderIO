@@ -1,6 +1,7 @@
 package com.enderio.enderio.api.conduits.network.node;
 
 import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.ConduitCapabilityAccessor;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.ConnectionStatus;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
@@ -21,7 +22,7 @@ import org.jspecify.annotations.Nullable;
  * Each node represents a single conduit within a bundle, and can have up to six connections in any {@link Direction}.
  */
 @ApiStatus.AvailableSince("8.0.0")
-public interface ConduitNode {
+public interface ConduitNode extends ConduitCapabilityAccessor {
     /**
      * @return the conduit the node represents.
      * @apiNote Currently the node must be valid (loaded, attached etc.) for this to not throw an exception.
@@ -104,27 +105,19 @@ public interface ConduitNode {
     <T extends NodeData> void setNodeData(@Nullable T data);
 
     /**
-     * Get the desired capability from a neighboring block.
-     *
-     * @param capability the desired capability.
-     * @param side the side to query for a neighboring capability.
-     * @return the capability or null if it is not available.
      * @throws IllegalStateException if this node is not loaded
      */
-    @Nullable
-    <TCapability> TCapability getNeighborSidedCapability(BlockCapability<TCapability, Direction> capability,
-            Direction side);
+    @Override
+    @Nullable <T, C> T getCapability(BlockCapability<T, C> capability, Direction neighborSide, @Nullable C context);
 
     /**
-     * Get the desired capability from a neighboring block.
-     *
-     * @param capability the desired capability.
-     * @param side the side to query for a neighboring capability.
-     * @return the capability or null if it is not available.
      * @throws IllegalStateException if this node is not loaded
      */
+    @Override
     @Nullable
-    <TCapability> TCapability getNeighborVoidCapability(BlockCapability<TCapability, Void> capability, Direction side);
+    default <T> T getSidedCapability(BlockCapability<T, Direction> capability, Direction neighborSide) {
+        return ConduitCapabilityAccessor.super.getSidedCapability(capability, neighborSide);
+    }
 
     /**
      * @param signalColor the redstone conduit signal color to check for, or null for in-world signal only.

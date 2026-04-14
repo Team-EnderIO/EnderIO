@@ -3,13 +3,10 @@ package com.enderio.modded_conduits.common;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.modded_conduits.common.modules.ConduitCommonModule;
-import com.enderio.modded_conduits.common.modules.appeng.AE2ConduitsModule;
-import com.enderio.modded_conduits.common.modules.mekanism.MekanismModule;
 import com.enderio.modded_conduits.common.modules.refinedstorage.RefinedStorageCommonModule;
 import com.enderio.modded_conduits.config.ModdedConduitsConfig;
 import com.enderio.modded_conduits.data.ModConduitRecipeProvider;
 import net.minecraft.core.RegistrySetBuilder;
-import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceKey;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -37,8 +34,8 @@ public class ModdedConduits {
     // TODO: 1.22 - our own mod id.
 
     private static final Map<String, Supplier<ConduitCommonModule>> CONDUIT_MODULES = Map.ofEntries(
-            entry(ModuleModIds.APPLIED_ENERGISTICS, () -> AE2ConduitsModule.INSTANCE),
-            entry(ModuleModIds.MEKANISM, () -> MekanismModule.INSTANCE),
+//            entry(ModuleModIds.APPLIED_ENERGISTICS, () -> AE2ConduitsModule.INSTANCE),
+//            entry(ModuleModIds.MEKANISM, () -> MekanismModule.INSTANCE),
             entry(ModuleModIds.REFINED_STORAGE, () -> RefinedStorageCommonModule.INSTANCE));
 
     public static IEventBus modEventBus;
@@ -65,14 +62,9 @@ public class ModdedConduits {
     }
 
     @SubscribeEvent
-    public static void onData(GatherDataEvent event) {
+    public static void onData(GatherDataEvent.Client event) {
         event.createDatapackRegistryObjects(createDatapackEntriesBuilder(), ModdedConduits::buildConduitConditions, Set.of(EnderIO.MOD_ID));
-
-        PackOutput packOutput = event.getGenerator().getPackOutput();
-        var registries = event.getLookupProvider();
-
-        event.getGenerator()
-            .addProvider(event.includeServer(), new ModConduitRecipeProvider(packOutput, registries));
+        event.createProvider(ModConduitRecipeProvider.Runner::new);
     }
 
     private static RegistrySetBuilder createDatapackEntriesBuilder() {

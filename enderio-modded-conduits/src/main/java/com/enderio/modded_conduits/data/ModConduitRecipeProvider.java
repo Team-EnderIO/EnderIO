@@ -9,16 +9,32 @@ import net.minecraft.data.recipes.RecipeProvider;
 import java.util.concurrent.CompletableFuture;
 
 public class ModConduitRecipeProvider extends RecipeProvider {
-    private final CompletableFuture<HolderLookup.Provider> registries;
-
-    public ModConduitRecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-        super(output, registries);
-        this.registries = registries;
+    public ModConduitRecipeProvider(HolderLookup.Provider registries, RecipeOutput output) {
+        super(registries, output);
     }
 
     @Override
-    protected void buildRecipes(RecipeOutput recipeOutput) {
-        HolderLookup.Provider lookupProvider = registries.resultNow();
-        ModdedConduits.executeOnLoadedModules(module -> module.buildRecipes(lookupProvider, recipeOutput));
+    protected void buildRecipes() {
+        ModdedConduits.executeOnLoadedModules(module -> module.buildRecipes(registries, output));
+    }
+
+    public static final class Runner extends RecipeProvider.Runner
+    {
+        public Runner(PackOutput output, CompletableFuture<HolderLookup.Provider> registries)
+        {
+            super(output, registries);
+        }
+
+        @Override
+        protected RecipeProvider createRecipeProvider(HolderLookup.Provider registries, RecipeOutput output)
+        {
+            return new ModConduitRecipeProvider(registries, output);
+        }
+
+        @Override
+        public String getName()
+        {
+            return "Ender IO Modded Conduits Recipe Generator";
+        }
     }
 }

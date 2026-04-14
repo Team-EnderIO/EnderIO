@@ -30,7 +30,6 @@ public class MaterialRecipeProvider extends SubRecipeProvider {
     public void buildRecipes(HolderLookup.Provider registries, RecipeOutput recipeOutput) {
         var items = registries.lookupOrThrow(Registries.ITEM);
 
-        addVanilla(items, recipeOutput);
         addAlloys(items, recipeOutput);
         addIngots(items, recipeOutput);
         addCraftingComponents(items, recipeOutput);
@@ -89,17 +88,6 @@ public class MaterialRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput);
 
         // endregion
-    }
-
-    private void addVanilla(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput) {
-        ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, Items.STICK, 16)
-                .pattern("W")
-                .pattern("W")
-                .define('W', ItemTags.LOGS)
-                .unlockedBy("has_ingredient",
-                        InventoryChangeTrigger.TriggerInstance
-                                .hasItems(ItemPredicate.Builder.item().of(items, ItemTags.LOGS).build()))
-                .save(recipeOutput, EnderIO.id("stick").toString());
     }
 
     private void addAlloys(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput) {

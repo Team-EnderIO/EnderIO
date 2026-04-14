@@ -3,6 +3,8 @@ package com.enderio.enderio;
 import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.compat.ftb_ultimine.FTBUltimineCompat;
+import com.enderio.enderio.compat.inventorysorter.InventorySorterCompat;
 import com.enderio.enderio.config.base.BaseConfig;
 import com.enderio.enderio.config.conduits.ConduitsConfig;
 import com.enderio.enderio.config.machines.MachinesConfig;
@@ -39,6 +41,7 @@ import net.minecraft.world.level.block.SkullBlock;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
@@ -53,6 +56,8 @@ import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Map;
+import java.util.function.Consumer;
 
 @Mod(EnderIO.MOD_ID)
 @EventBusSubscriber(modid = EnderIO.MOD_ID)
@@ -65,6 +70,13 @@ public class EnderIO {
     public static Identifier id(String path) {
         return EnderIOAPI.rl(path);
     }
+
+    private static final Map<String, Consumer<IEventBus>> MOD_INTEGRATIONS = Map.ofEntries(
+//        Map.entry("computercraft", eventBus -> ComputerCraftCompat.init()),
+        Map.entry("ftbultimine", FTBUltimineCompat::init),
+//        Map.entry("laserio", LaserIOCompat::init),
+        Map.entry("inventorysorter", InventorySorterCompat::init)
+    );
     private final Logger logger = LogUtils.getLogger();
 
     public EnderIO(IEventBus modEventBus, ModContainer modContainer) {
@@ -102,6 +114,14 @@ public class EnderIO {
         EIOConduitTypes.register(modEventBus);
         EIOTravelTargets.register(modEventBus);
         EIORecipeBookCategories.register(modEventBus);
+
+        // Handle mod compat
+        for (Map.Entry<String, Consumer<IEventBus>> entry : MOD_INTEGRATIONS.entrySet()) {
+            logger.debug("Activating mod integration for {}", entry.getKey());
+            if (ModList.get().isLoaded(entry.getKey())) {
+                entry.getValue().accept(modEventBus);
+            }
+        }
 
         modEventBus.addListener(this::registerRegistries);
         modEventBus.addListener(this::registerDatapackRegistries);

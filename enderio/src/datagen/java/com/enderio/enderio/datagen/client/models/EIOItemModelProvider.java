@@ -38,6 +38,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.client.model.item.DynamicFluidContainerModel;
 import net.neoforged.neoforge.common.NeoForgeMod;
 
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -222,6 +223,13 @@ public class EIOItemModelProvider extends ModelProvider {
 
         fluidTank(itemModels, EIOBlocks.FLUID_TANK.get());
         fluidTank(itemModels, EIOBlocks.PRESSURIZED_FLUID_TANK.get());
+
+        // Solar Panels
+        for (var entry : EIOBlocks.SOLAR_PANELS.entrySet()) {
+            TextureMapping baseMapping = EIOTextureSlots.photovoltaicPanelAndSide(entry.getValue().get());
+            itemModels.itemModelOutput.accept(entry.getValue().asItem(), ItemModelUtils.plainModel(EIOModelTemplates.PHOTOVOLTAIC_MODULE_ITEM
+                .create(entry.getValue().asItem(), baseMapping, itemModels.modelOutput)));
+        }
 
         for (var painted : EIOBlocks.PAINTED_BLOCKS) {
             BlockState block = painted.left().get().defaultBlockState();

@@ -65,6 +65,8 @@ public class AlloySmelterScreen extends MachineScreen<AlloySmelterMenu> {
 
     @Override
     public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        super.extractBackground(graphics, mouseX, mouseY, a);
+
         switch (menu.getMode()) {
         case ALL -> graphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE_AUTO, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
         case ALLOYS -> graphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE_ALLOY, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);

@@ -87,8 +87,8 @@ dependencies {
     jarJar(project(":endercore"))
 
     // Include built-in "addons"
-//    jarJar(project(":enderio-modded-conduits"))
-//    localRuntime(project(":enderio-modded-conduits"))
+    jarJar(project(":enderio-modded-conduits"))
+    localRuntime(project(":enderio-modded-conduits"))
 
     // Almost Unified
 //    compileOnly(variantOf(libs.almostUnified) {
@@ -139,8 +139,11 @@ dependencies {
     jarJar(libs.graphlib)
 
     // FTB Ultimine Addon
-//    compileOnly(libs.ftbUltimine)
-//    localRuntime(libs.ftbUltimine)
+    // TODO: Stop including FTB Library when it is transitively available via Ultimine
+    compileOnly(libs.ftbUltimine)
+    compileOnly(libs.ftbLibrary)
+    localRuntime(libs.ftbUltimine)
+    localRuntime(libs.ftbLibrary)
 
 	// Curio compat
     compileOnly(libs.curios)

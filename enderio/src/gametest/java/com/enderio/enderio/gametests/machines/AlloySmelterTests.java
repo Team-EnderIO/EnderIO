@@ -1,5 +1,6 @@
 package com.enderio.enderio.gametests.machines;
 
+import com.enderio.enderio.content.machines.alloy.AlloySmelterMode;
 import com.enderio.enderio.content.machines.alloy.AlloySmeltingRecipe;
 import com.enderio.enderio.gametests.util.EnderGameTestHelper;
 import com.enderio.enderio.init.EIOBlocks;
@@ -49,11 +50,12 @@ public class AlloySmelterTests {
                     helper.assertContainerHasExactly(0, 0, 0, EIOItems.DARK_STEEL_INGOT.get(), 1);
 
                     // Ensure energy was consumed correctly
-                    var input = new AlloySmeltingRecipe.Input(List.of(
-                        new ItemStack(Items.IRON_INGOT, 1),
-                        new ItemStack(Items.COAL, 2),
-                        new ItemStack(Items.OBSIDIAN, 1)
-                    ), 1);
+                    var input = new AlloySmeltingRecipe.Input(AlloySmelterMode.ALLOYS,
+                        List.of(
+                            new ItemStack(Items.IRON_INGOT, 1),
+                            new ItemStack(Items.COAL, 2),
+                            new ItemStack(Items.OBSIDIAN, 1)
+                        ), 1);
 
                     // Ensure energy was consumed correctly
                     var recipe = helper.getLevel().recipeAccess().getRecipeFor(EIORecipeTypes.ALLOY_SMELTING.get(), input, helper.getLevel()).orElseThrow();
@@ -89,11 +91,12 @@ public class AlloySmelterTests {
                     helper.assertContainerHasExactly(0, 0, 0, Items.IRON_INGOT, 3);
 
                     // Ensure energy was consumed correctly
-                    var input = new AlloySmeltingRecipe.Input(List.of(
-                        new ItemStack(Items.RAW_IRON, 3),
-                        ItemStack.EMPTY,
-                        ItemStack.EMPTY
-                    ), 3);
+                    var input = new AlloySmeltingRecipe.Input(AlloySmelterMode.FURNACE,
+                        List.of(
+                            new ItemStack(Items.RAW_IRON, 3),
+                            ItemStack.EMPTY,
+                            ItemStack.EMPTY
+                        ), 3);
 
                     var recipe = helper.getLevel().recipeAccess().getRecipeFor(EIORecipeTypes.ALLOY_SMELTING.get(), input, helper.getLevel()).orElseThrow();
                     int expectedEnergy = energyToAdd - recipe.value().energy();

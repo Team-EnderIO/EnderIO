@@ -39,6 +39,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.item.ItemResource;
@@ -153,7 +154,11 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
         // bucket types
         var fluidHandlerCap = ItemAccess.forStack(stack).getCapability(Capabilities.Fluid.ITEM);
         if (fluidHandlerCap != null) {
-            return true;
+            for (int i = 0; i < fluidHandlerCap.size(); i++) {
+                if (!fluidHandlerCap.getResource(i).isEmpty()) {
+                    return true;
+                }
+            }
         }
 
         // fill recipes

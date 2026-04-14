@@ -7,8 +7,14 @@ import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Util;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 
 public class ConduitApiImpl implements ConduitApi {
+
+    @Override
+    public ItemStackTemplate getConduitStackTemplate(Holder<Conduit<?, ?>> conduit, int count) {
+        return ConduitBlockItem.getStackTemplateFor(conduit, count);
+    }
 
     @Override
     public ItemStack getConduitItem(Holder<Conduit<?, ?>> conduit, int count) {

@@ -50,5 +50,74 @@ public class SagMillTests {
                 .thenSucceed();
         });
     }
+
+    //TODO can we properly handle conditional outputs?
+    @GameTest
+    @TestHolder(description = "Tests that the SAG Mill can process copper ore to raw copper.")
+    public static void testSagMillCopperOreGrinding(final DynamicTest test) {
+        test.registerGameTestTemplate(() -> StructureTemplateBuilder.withSize(1, 1, 1)
+            .set(0, 0, 0, EIOBlocks.SAG_MILL.get().defaultBlockState()));
+
+        int energyToAdd = 10000;
+        test.onGameTest(EnderGameTestHelper.class, helper -> {
+            helper.startSequence()
+                .thenExecute(() -> {
+                    // Insert the capacitor and fill with energy.
+                    helper.insertIntoContainer(0, 0, 0, EIOItems.OCTADIC_CAPACITOR.get(), 1);
+                    helper.provideEnergy(0, 0, 0, energyToAdd);
+                })
+                // Insert copper ore for grinding
+                .thenExecute(() -> helper.insertIntoContainer(0, 0, 0, Items.COPPER_ORE, 2))
+                // Wait for processing
+                .thenExecuteAfter(40, () -> {
+                    // Verify input was consumed
+                    helper.assertContainerHasExactly(0, 0, 0, Items.COPPER_ORE, 0);
+
+                    // Should get raw copper output from copper ore
+                    helper.assertContainerHasAtleast(0, 0, 0, Items.RAW_COPPER, 2);
+
+                    // Ensure energy was consumed correctly
+                    var input = new SagMillingRecipe.Input(new ItemStack(Items.COPPER_ORE, 1), GrindingBallData.IDENTITY);
+                    var recipe = helper.getLevel().recipeAccess().getRecipeFor(EIORecipeTypes.SAG_MILLING.get(), input, helper.getLevel()).orElseThrow();
+                    int expectedEnergy = energyToAdd - recipe.value().getBaseEnergyCost() * 2;
+                    helper.assertEnergyStored(0, 0, 0, expectedEnergy);
+                })
+                .thenSucceed();
+        });
+    }
+
+    @GameTest
+    @TestHolder(description = "Tests that the SAG Mill can process raw copper to copper dust.")
+    public static void testSagMillRawCopperGrinding(final DynamicTest test) {
+        test.registerGameTestTemplate(() -> StructureTemplateBuilder.withSize(1, 1, 1)
+            .set(0, 0, 0, EIOBlocks.SAG_MILL.get().defaultBlockState()));
+
+        int energyToAdd = 10000;
+        test.onGameTest(EnderGameTestHelper.class, helper -> {
+            helper.startSequence()
+                .thenExecute(() -> {
+                    // Insert the capacitor and fill with energy.
+                    helper.insertIntoContainer(0, 0, 0, EIOItems.OCTADIC_CAPACITOR.get(), 1);
+                    helper.provideEnergy(0, 0, 0, energyToAdd);
+                })
+                // Insert raw copper for grinding
+                .thenExecute(() -> helper.insertIntoContainer(0, 0, 0, Items.RAW_COPPER, 2))
+                // Wait for processing
+                .thenExecuteAfter(40, () -> {
+                    // Verify input was consumed
+                    helper.assertContainerHasExactly(0, 0, 0, Items.RAW_COPPER, 0);
+
+                    // Should get powedered copper output from raw copper
+                    helper.assertContainerHasAtleast(0, 0, 0, EIOItems.POWDERED_COPPER.asItem(), 2);
+
+                    // Ensure energy was consumed correctly
+                    var input = new SagMillingRecipe.Input(new ItemStack(Items.RAW_COPPER, 1), GrindingBallData.IDENTITY);
+                    var recipe = helper.getLevel().recipeAccess().getRecipeFor(EIORecipeTypes.SAG_MILLING.get(), input, helper.getLevel()).orElseThrow();
+                    int expectedEnergy = energyToAdd - recipe.value().getBaseEnergyCost() * 2;
+                    helper.assertEnergyStored(0, 0, 0, expectedEnergy);
+                })
+                .thenSucceed();
+        });
+    }
 }
 

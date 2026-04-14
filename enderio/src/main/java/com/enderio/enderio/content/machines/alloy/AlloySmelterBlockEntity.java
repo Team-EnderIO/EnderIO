@@ -160,7 +160,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     }
 
     private AlloySmeltingRecipe.Input createRecipeInput() {
-        return new AlloySmeltingRecipe.Input(getInventory().getStacks(INPUTS), 1);
+        return new AlloySmeltingRecipe.Input(mode, getInventory().getStacks(INPUTS), 1);
     }
 
     // endregion

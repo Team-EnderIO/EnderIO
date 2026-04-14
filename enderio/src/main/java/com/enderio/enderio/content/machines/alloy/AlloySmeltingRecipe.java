@@ -103,6 +103,12 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
             return false;
         }
 
+        if (isSmelting && !recipeInput.mode().canSmelt()) {
+            return false;
+        } else if (!isSmelting && !recipeInput.mode().canAlloy()) {
+            return false;
+        }
+
         // Simpler smelting match logic
         if (isSmelting) {
             int emptyCount = 0;
@@ -208,7 +214,7 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
         return EIORecipeBookCategories.ALLOY_SMELTING.get();
     }
 
-    public record Input(List<ItemStack> inputs, int inputsConsumed) implements RecipeInput {
+    public record Input(AlloySmelterMode mode, List<ItemStack> inputs, int inputsConsumed) implements RecipeInput {
 
         @Override
         public ItemStack getItem(int slotIndex) {
@@ -219,22 +225,13 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
             return inputs.get(slotIndex);
         }
 
-        public ItemStack getFirstPopulated() {
-            for (ItemStack stack : inputs) {
-                if (!stack.isEmpty()) {
-                    return stack;
-                }
-            }
-            return ItemStack.EMPTY;
-        }
-
         @Override
         public int size() {
             return inputs.size();
         }
 
         public Input withInputsConsumed(int inputsConsumed) {
-            return new Input(inputs, inputsConsumed);
+            return new Input(mode, inputs, inputsConsumed);
         }
     }
 

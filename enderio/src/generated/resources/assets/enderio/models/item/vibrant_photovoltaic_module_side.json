@@ -1,0 +1,7 @@
+{
+  "parent": "enderio:item/template_photovoltaic_module",
+  "textures": {
+    "panel": "enderio:block/vibrant_photovoltaic_module_top",
+    "side": "enderio:block/vibrant_photovoltaic_module_side"
+  }
+}

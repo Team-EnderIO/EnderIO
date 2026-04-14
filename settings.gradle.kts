@@ -1,7 +1,7 @@
 pluginManagement {
     plugins {
-        id("net.neoforged.moddev") version "2.0.140"
-        id("net.neoforged.moddev.repositories") version "2.0.140"
+        id("net.neoforged.moddev") version "2.0.141"
+        id("net.neoforged.moddev.repositories") version "2.0.141"
     }
 
     repositories {
@@ -96,9 +96,17 @@ dependencyResolutionManagement {
             }
         }
 
+//        maven {
+//            name = "FTB Maven"
+//            url = uri("https://maven.ftb.dev/releases")
+//            content {
+//                includeGroup("dev.ftb.mods")
+//            }
+//        }
+
         maven {
-            name = "FTB Maven"
-            url = uri("https://maven.ftb.dev/releases")
+            name = "FTB Snapshot Maven"
+            url = uri("https://maven.ftb.dev/snapshots")
             content {
                 includeGroup("dev.ftb.mods")
             }
@@ -139,4 +147,4 @@ dependencyResolutionManagement {
 include("ensure_plugin")
 include("endercore")
 include("enderio")
-//include("enderio-modded-conduits")
+include("enderio-modded-conduits")

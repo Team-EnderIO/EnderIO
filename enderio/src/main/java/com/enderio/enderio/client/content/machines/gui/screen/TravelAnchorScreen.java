@@ -45,7 +45,6 @@ public class TravelAnchorScreen extends MachineScreen<TravelAnchorMenu> {
         nameInput.setResponder(menu::setName);
         nameInput.setValue(menu.getName());
         this.addRenderableWidget(nameInput);
-        this.setInitialFocus(nameInput);
         nameInput.setEditable(true);
 
         addRenderableWidget(ToggleIconButton.of(leftPos + 150, topPos + 10, 16, 16, VISIBLE_BUTTON, NOT_VISIBLE_BUTTON,
@@ -54,6 +53,8 @@ public class TravelAnchorScreen extends MachineScreen<TravelAnchorMenu> {
 
     @Override
     public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        super.extractBackground(graphics, mouseX, mouseY, a);
+
         nameInput.setValue(menu.getName()); //TODO stupid but it works
         menu.setVisible(menu.isVisible()); //TODO stupid but it works
         graphics.blit(RenderPipelines.GUI_TEXTURED, TRAVEL_ANCHOR_BG, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);

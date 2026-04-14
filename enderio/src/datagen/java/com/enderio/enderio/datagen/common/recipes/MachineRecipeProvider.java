@@ -3,6 +3,7 @@ package com.enderio.enderio.datagen.common.recipes;
 import com.enderio.core.data.recipe.SubRecipeProvider;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.soul.binding.ingredients.EmptySoulBindableIngredient;
+import com.enderio.enderio.content.machines.solar_panel.SolarPanelTier;
 import com.enderio.enderio.foundation.soul.ShapedEntityStorageRecipeBuilder;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOBlocks;
@@ -297,48 +298,48 @@ public class MachineRecipeProvider extends SubRecipeProvider {
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.VOID_CHASSIS.get()))
                 .save(recipeOutput);
 
-//        ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.ENERGETIC))
-//                .define('E', Tags.Items.INGOTS_GOLD)
-//                .define('F', Tags.Items.GLASS_BLOCKS)
-//                .define('P', EIOItems.PHOTOVOLTAIC_PLATE)
-//                .define('C', EIOItems.BASIC_CAPACITOR)
-//                .define('D', Items.REDSTONE)
-//                .pattern("EFE")
-//                .pattern("PPP")
-//                .pattern("CDC")
-//                .unlockedBy("has_ingredient",
-//                        InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.PHOTOVOLTAIC_PLATE.get()))
-//                .save(recipeOutput);
-//
-//        ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.PULSATING))
-//                .define('I', EIOTags.Items.INGOTS_PULSATING_ALLOY)
-//                .define('F', EIOTags.Items.ENLIGHTENED_FUSED_QUARTZ)
-//                .define('P', EIOItems.PHOTOVOLTAIC_PLATE)
-//                .define('D', EIOTags.Items.DUSTS_COAL)
-//                .define('C', EIOItems.DOUBLE_LAYER_CAPACITOR)
-//                .define('S', EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.ENERGETIC))
-//                .pattern("IFI")
-//                .pattern("PDP")
-//                .pattern("CSC")
-//                .unlockedBy("has_ingredient",
-//                        InventoryChangeTrigger.TriggerInstance
-//                                .hasItems(EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.ENERGETIC)))
-//                .save(recipeOutput);
-//
-//        ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.VIBRANT))
-//                .define('I', EIOTags.Items.INGOTS_VIBRANT_ALLOY)
-//                .define('F', EIOTags.Items.DARK_FUSED_QUARTZ)
-//                .define('P', EIOItems.PHOTOVOLTAIC_PLATE)
-//                .define('G', Items.GLOWSTONE)
-//                .define('C', EIOItems.OCTADIC_CAPACITOR)
-//                .define('S', EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.PULSATING))
-//                .pattern("IFI")
-//                .pattern("PGP")
-//                .pattern("CSC")
-//                .unlockedBy("has_ingredient",
-//                        InventoryChangeTrigger.TriggerInstance
-//                                .hasItems(EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.PULSATING)))
-//                .save(recipeOutput);
+        ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.ENERGETIC))
+                .define('E', Tags.Items.INGOTS_GOLD)
+                .define('F', Tags.Items.GLASS_BLOCKS)
+                .define('P', EIOItems.PHOTOVOLTAIC_PLATE)
+                .define('C', EIOItems.BASIC_CAPACITOR)
+                .define('D', Items.REDSTONE)
+                .pattern("EFE")
+                .pattern("PPP")
+                .pattern("CDC")
+                .unlockedBy("has_ingredient",
+                        InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.PHOTOVOLTAIC_PLATE.get()))
+                .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.PULSATING))
+                .define('I', EIOTags.Items.INGOTS_PULSATING_ALLOY)
+                .define('F', EIOTags.Items.ENLIGHTENED_FUSED_QUARTZ)
+                .define('P', EIOItems.PHOTOVOLTAIC_PLATE)
+                .define('D', EIOTags.Items.DUSTS_COAL)
+                .define('C', EIOItems.DOUBLE_LAYER_CAPACITOR)
+                .define('S', EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.ENERGETIC))
+                .pattern("IFI")
+                .pattern("PDP")
+                .pattern("CSC")
+                .unlockedBy("has_ingredient",
+                        InventoryChangeTrigger.TriggerInstance
+                                .hasItems(EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.ENERGETIC)))
+                .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.VIBRANT))
+                .define('I', EIOTags.Items.INGOTS_VIBRANT_ALLOY)
+                .define('F', EIOTags.Items.DARK_FUSED_QUARTZ)
+                .define('P', EIOItems.PHOTOVOLTAIC_PLATE)
+                .define('G', Items.GLOWSTONE)
+                .define('C', EIOItems.OCTADIC_CAPACITOR)
+                .define('S', EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.PULSATING))
+                .pattern("IFI")
+                .pattern("PGP")
+                .pattern("CSC")
+                .unlockedBy("has_ingredient",
+                        InventoryChangeTrigger.TriggerInstance
+                                .hasItems(EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.PULSATING)))
+                .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, EIOBlocks.PAINTING_MACHINE.get())
                 .pattern("RGB")
@@ -542,7 +543,7 @@ public class MachineRecipeProvider extends SubRecipeProvider {
         list.add(EIOBlocks.DRAIN);
         list.add(EIOBlocks.NIARD);
         list.add(EIOBlocks.CRAFTER);
-//        list.addAll(EIOBlocks.SOLAR_PANELS.values());
+        list.addAll(EIOBlocks.SOLAR_PANELS.values());
         list.add(EIOBlocks.PAINTING_MACHINE);
         list.add(EIOBlocks.IMPULSE_HOPPER);
         list.add(EIOBlocks.XP_OBELISK);

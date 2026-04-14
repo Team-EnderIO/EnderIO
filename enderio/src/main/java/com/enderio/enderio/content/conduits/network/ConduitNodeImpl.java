@@ -170,17 +170,10 @@ public final class ConduitNodeImpl implements INetworkNode<ConduitNetworkImpl, C
     // region World Interaction
 
     @Override
-    public <TCapability> TCapability getNeighborSidedCapability(BlockCapability<TCapability, Direction> capability, Direction side) {
+    public @Nullable <T, C> T getCapability(BlockCapability<T, C> capability, Direction neighborSide, @Nullable C context) {
         ensureValid();
         // noinspection DataFlowIssue
-        return conduitBundle.getNeighborSidedCapability(conduit, capability, side);
-    }
-
-    @Override
-    public <TCapability> TCapability getNeighborVoidCapability(BlockCapability<TCapability, Void> capability, Direction side) {
-        ensureValid();
-        // noinspection DataFlowIssue
-        return conduitBundle.getNeighborVoidCapability(conduit, capability, side);
+        return conduitBundle.getCapability(conduit, capability, neighborSide, context);
     }
 
     @Override

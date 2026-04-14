@@ -3,6 +3,7 @@ package com.enderio.modded_conduits.common.modules.refinedstorage;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.conduits.network.node.NodeData;
 import com.enderio.enderio.api.conduits.network.node.NodeDataType;
+import com.enderio.enderio.init.EIOBlocks;
 import com.refinedmods.refinedstorage.api.network.impl.node.grid.GridNetworkNode;
 import com.refinedmods.refinedstorage.api.network.node.NetworkNode;
 import com.refinedmods.refinedstorage.common.api.RefinedStorageApi;
@@ -43,7 +44,7 @@ public class RSConduitNodeData implements NodeData {
         containerProvider.addContainer(mainNodeContainer);
 
         containerProvider.initialize(level, () -> {});
-        level.blockUpdated(pos, level.getBlockState(pos).getBlock());
+        level.updateNeighborsAt(pos, level.getBlockState(pos).getBlock());
 
         // TODO: is this necessary?
         var state = level.getBlockState(pos);
