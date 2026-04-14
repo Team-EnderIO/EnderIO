@@ -22,6 +22,12 @@
   },
   "outputs": [
     {
+      "item": {
+        "count": 1,
+        "tag": "c:dusts/osmium"
+      }
+    },
+    {
       "chance": 0.8,
       "item": {
         "count": 1,
