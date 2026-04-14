@@ -229,9 +229,9 @@ public class EIOBlockEntities {
         for (SolarPanelTier tier : SolarPanelTier.values()) {
             map.put(tier, BLOCK_ENTITY_TYPES
                 .builder(tier.name().toLowerCase(Locale.ROOT) + "_photovoltaic_cell",
-                    (worldPosition, blockState) -> new SolarPanelBlockEntity(worldPosition, blockState, tier),
+                    (worldPosition, blockState) -> new SolarPanelBlockEntity(EIOBlockEntities.SOLAR_PANELS.get(tier).get(),worldPosition, blockState, tier),
                     () -> EIOBlocks.SOLAR_PANELS.get(tier).get())
-                .apply(EIOBlockEntities::legacyPoweredMachineBlockEntityCapabilities)
+                .capability(Capabilities.EnergyStorage.BLOCK, SolarPanelBlockEntity.ENERGY_STORAGE_PROVIDER)
                 .build())
             ;
         }

@@ -1,94 +1,152 @@
 package com.enderio.enderio.content.machines.solar_panel;
 
-import com.enderio.core.common.network.NetworkDataSlot;
-import com.enderio.enderio.api.capacitor.FixedScalable;
-import com.enderio.enderio.api.io.IOMode;
-import com.enderio.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.foundation.MachineNBTKeys;
-import com.enderio.enderio.foundation.block.entity.legacy.LegacyPoweredMachineBlockEntity;
-import com.enderio.enderio.foundation.block.entity.multienergy.MultiEnergyNode;
-import com.enderio.enderio.foundation.block.entity.multienergy.MultiEnergyStorageWrapper;
-import com.enderio.enderio.foundation.io.IOConfig;
-import com.enderio.enderio.foundation.io.energy.MachineEnergyStorage;
+import com.enderio.enderio.foundation.block.EIOBlockEntity;
 import com.enderio.enderio.foundation.souldata.SolarSoul;
 import com.enderio.enderio.foundation.tag.EIOTags;
-import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
-import dev.gigaherz.graph3.Graph;
-import dev.gigaherz.graph3.GraphObject;
-import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
-import org.jetbrains.annotations.Nullable;
+import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
-import static com.enderio.enderio.content.machines.powered_spawner.PoweredSpawnerBlockEntity.NO_MOB;
+public class SolarPanelBlockEntity extends EIOBlockEntity {
 
-public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
-
+    public static final ICapabilityProvider<SolarPanelBlockEntity, Direction, IEnergyStorage> ENERGY_STORAGE_PROVIDER = (
+        be, side) -> side != Direction.UP ? be.energyStorage : null;
+    
     private final ISolarPanelTier tier;
+    private final SolarPanelNode node;
+    private final SolarPanelEnergyStorage energyStorage;
 
-    private final MultiEnergyNode node;
+    private final Map<Direction, BlockCapabilityCache<IEnergyStorage, Direction>> energyStorageCaches = new EnumMap<>(Direction.class);
+    private final Set<IEnergyStorage> validPushTargetCache = new HashSet<>();
+    private boolean isValidPushTargetCacheDirty = true;
 
     private Soul boundSoul = Soul.EMPTY;
     private SolarSoul.SoulData soulData;
     private static boolean reload = false;
     private boolean reloadCache = !reload;
 
-    public SolarPanelBlockEntity(BlockPos worldPosition, BlockState blockState, SolarPanelTier tier) {
-        super(EnergyIOMode.Output, new FixedScalable(tier::getStorageCapacity),
-                new FixedScalable(tier::getStorageCapacity), EIOBlockEntities.SOLAR_PANELS.get(tier).get(),
-                worldPosition, blockState);
-
+    public SolarPanelBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState, ISolarPanelTier tier) {
+        super(type, worldPosition, blockState);
         this.tier = tier;
-        this.node = new MultiEnergyNode(() -> energyStorage,
-                () -> (MultiEnergyStorageWrapper) getExposedEnergyStorage(), worldPosition);
-        addDataSlot(NetworkDataSlot.RESOURCE_LOCATION.create(() -> this.getEntityTypeId().orElse(NO_MOB),
-                this::setEntityType));
+        
+        this.node = new SolarPanelNode(this);
+        this.energyStorage = new SolarPanelEnergyStorage(this.node);
+    }
+    
+    public ISolarPanelTier tier() {
+        return tier;
     }
 
-    @Nullable
+    // region Graph logic
+
     @Override
-    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
-        return null;
+    public void setRemoved() {
+        if (node.isValid()) {
+            node.getNetwork().remove(node);
+        }
+
+        super.setRemoved();
     }
 
     @Override
-    public @Nullable MachineEnergyStorage createExposedEnergyStorage() {
-        return new MultiEnergyStorageWrapper(this, EnergyIOMode.Output, () -> tier);
+    public void onLoad() {
+        super.onLoad();
+
+        // Create all energy caches
+        if (level instanceof ServerLevel serverLevel) {
+            for (Direction side : Direction.values()) {
+                if (side == Direction.UP) {
+                    continue;
+                }
+
+                energyStorageCaches.put(side, BlockCapabilityCache.create(
+                    Capabilities.EnergyStorage.BLOCK,
+                    serverLevel,
+                    getBlockPos().relative(side),
+                    side.getOpposite(),
+                    () -> !isRemoved(),
+                    () -> isValidPushTargetCacheDirty = true));
+            }
+        }
+
+        for (Direction side : Direction.Plane.HORIZONTAL) {
+            if (level.getBlockEntity(getBlockPos().relative(side)) instanceof SolarPanelBlockEntity panel) {
+                node.getNetwork().connect(node, panel.node);
+            }
+        }
     }
+
+    @Override
+    public void neighborChanged(Block neighborBlock, BlockPos neighborPos) {
+        super.neighborChanged(neighborBlock, neighborPos);
+
+        if (!level.isClientSide()) {
+            isValidPushTargetCacheDirty = true;
+        }
+    }
+
+    Set<IEnergyStorage> getValidPushTargets() {
+        if (isValidPushTargetCacheDirty) {
+            validPushTargetCache.clear();
+            for (Direction side : Direction.values()) {
+                if (side == Direction.UP) {
+                    continue;
+                }
+
+                var energyStorage = energyStorageCaches.get(side).getCapability();
+                if (energyStorage != null && energyStorage.canReceive()) {
+                    validPushTargetCache.add(energyStorage);
+                }
+            }
+        }
+
+        return validPushTargetCache;
+    }
+
+    // endregion
+
+    // region Energy Generation
 
     @Override
     public void serverTick() {
         if (isGenerating()) {
-            getEnergyStorage().addEnergy(getGenerationRate());
+            node.addEnergyToNetwork(getGenerationRate());
         }
+
         if (reloadCache != reload && boundSoul.hasEntity()) {
             Optional<SolarSoul.SoulData> op = SolarSoul.SOLAR.matches(boundSoul.entityType());
             op.ifPresent(data -> soulData = data);
             reloadCache = reload;
         }
 
-        super.serverTick();
-    }
+        // Push energy to non-panel neighbors
+        if (node.isPrimaryNode()) {
+            node.distributeEnergy();
+        }
 
-    @Override
-    protected boolean isActive() {
-        return canAct() && hasEnergy() && isGenerating();
+        super.serverTick();
     }
 
     public boolean isGenerating() {
@@ -97,7 +155,7 @@ public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
         }
         if (!this.level.dimensionType().hasSkyLight()) {
             return soulData == null
-                    || (soulData.level().isPresent() && !soulData.level().get().equals(this.level.dimension()));
+                || (soulData.level().isPresent() && !soulData.level().get().equals(this.level.dimension()));
         }
 
         return getGenerationRate() > 0;
@@ -214,106 +272,6 @@ public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
         return false;
     }
 
-    @Override
-    protected boolean shouldPushEnergyTo(Direction direction) {
-        if (node.getGraph() == null) {
-            return true;
-        }
-
-        for (GraphObject<Mergeable.Dummy> neighbour : node.getGraph().getNeighbours(node)) {
-            if (neighbour instanceof MultiEnergyNode neighbourMultiEnergyNode) {
-                if (neighbourMultiEnergyNode.pos.equals(worldPosition.relative(direction))) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    @Override
-    public void setRemoved() {
-        if (node.getGraph() != null) {
-            node.getGraph().remove(node);
-        }
-
-        super.setRemoved();
-    }
-
-    @Override
-    public void onLoad() {
-        super.onLoad();
-        if (node.getGraph() == null) {
-            Graph.integrate(node, List.of());
-        }
-
-        for (Direction direction : new Direction[] { Direction.NORTH, Direction.EAST, Direction.SOUTH,
-                Direction.WEST }) {
-            if (level.getBlockEntity(worldPosition.relative(direction)) instanceof SolarPanelBlockEntity panel
-                    && panel.tier == tier) {
-                Graph.connect(node, panel.node);
-            }
-        }
-    }
-
-    @Override
-    public IOConfig getDefaultIOConfig() {
-        return IOConfig.of(dir -> dir == Direction.UP ? IOMode.NONE : IOMode.PUSH);
-    }
-
-    @Override
-    public boolean isIOConfigMutable() {
-        return false;
-    }
-
-    @Override
-    public boolean canOpenMenu() {
-        return false;
-    }
-
-    @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        boundSoul = Soul.parseOptional(lookupProvider, tag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
-
-        super.loadAdditional(tag, lookupProvider);
-    }
-
-    @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        tag.put(MachineNBTKeys.ENTITY_STORAGE, boundSoul.saveOptional(lookupProvider));
-
-        super.saveAdditional(tag, lookupProvider);
-    }
-
-    @Override
-    protected void applyImplicitComponents(DataComponentInput components) {
-        super.applyImplicitComponents(components);
-        boundSoul = components.getOrDefault(EIODataComponents.SOUL, Soul.EMPTY);
-    }
-
-    @Override
-    protected void collectImplicitComponents(DataComponentMap.Builder components) {
-        super.collectImplicitComponents(components);
-
-        if (boundSoul.hasEntity()) {
-            components.set(EIODataComponents.SOUL, boundSoul);
-        }
-    }
-
-    @Nullable
-    public Optional<ResourceLocation> getEntityTypeId() {
-        return boundSoul.isEmpty() ? Optional.empty() : Optional.of(boundSoul.entityTypeId());
-    }
-
-    public void setEntityType(ResourceLocation entityType) {
-        boundSoul = Soul.of(entityType);
-    }
-
-    @SubscribeEvent
-    static void onReload(RecipesUpdatedEvent event) {
-        reload = !reload;
-    }
-
     private static final class GameTicks {
         static final int TICKS_PER_SECOND = 20;
         static final int MINUTE_IN_TICKS = TICKS_PER_SECOND * 60;
@@ -331,4 +289,57 @@ public class SolarPanelBlockEntity extends LegacyPoweredMachineBlockEntity {
             return minutes * 60 * TICKS_PER_SECOND;
         }
     }
+    
+    // endregion
+
+    // region Serialization
+
+    @Override
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        boundSoul = Soul.parseOptional(lookupProvider, tag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
+
+        // Old serialization format
+        if (tag.contains(MachineNBTKeys.ENERGY)) {
+            var energyStorage = tag.getCompound(MachineNBTKeys.ENERGY);
+            if (energyStorage.contains(MachineNBTKeys.ENERGY_STORED)) {
+                this.node.setEnergyStored(energyStorage.getInt(MachineNBTKeys.ENERGY_STORED));
+            }
+        } else if (tag.contains(MachineNBTKeys.ENERGY_STORED)) {
+            this.node.setEnergyStored(tag.getInt(MachineNBTKeys.ENERGY_STORED));
+        }
+
+        super.loadAdditional(tag, lookupProvider);
+    }
+
+    @Override
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
+        tag.put(MachineNBTKeys.ENTITY_STORAGE, boundSoul.saveOptional(lookupProvider));
+
+        // TODO: 26.1 - serialize the node instead?
+        tag.putInt(MachineNBTKeys.ENERGY_STORED, node.getEnergyStored());
+
+        super.saveAdditional(tag, lookupProvider);
+    }
+
+    @Override
+    protected void applyImplicitComponents(DataComponentInput components) {
+        super.applyImplicitComponents(components);
+        boundSoul = components.getOrDefault(EIODataComponents.SOUL, Soul.EMPTY);
+        node.setEnergyStored(components.getOrDefault(EIODataComponents.ENERGY, 0));
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+
+        if (boundSoul.hasEntity()) {
+            components.set(EIODataComponents.SOUL, boundSoul);
+        }
+
+        if (node.getEnergyStored() != 0) {
+            components.set(EIODataComponents.ENERGY, node.getEnergyStored());
+        }
+    }
+
+    // endregion
 }
