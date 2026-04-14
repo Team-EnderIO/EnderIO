@@ -1,6 +1,7 @@
 package com.enderio.modded_conduits.common.modules.mekanism.heat;
 
 import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.ConduitCapabilityAccessor;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.modded_conduits.common.modules.mekanism.MekanismModule;
@@ -8,6 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,9 +27,8 @@ public record HeatConduit(ResourceLocation texture, Component description)
     }
 
     @Override
-    public boolean canConnectToBlock(Level level, BlockPos conduitPos, Direction direction) {
-        return level.getCapability(MekanismModule.Capabilities.HEAT, conduitPos.relative(direction),
-                direction.getOpposite()) != null;
+    public boolean canConnectToBlock(Level level, ConduitCapabilityAccessor capabilityAccessor, BlockPos conduitPos, Direction direction) {
+        return capabilityAccessor.getSidedCapability(MekanismModule.Capabilities.HEAT, direction) != null;
     }
 
     @Override

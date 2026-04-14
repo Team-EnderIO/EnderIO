@@ -28,6 +28,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipProvider;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import org.apache.commons.lang3.NotImplementedException;
@@ -141,8 +142,26 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
         return false;
     }
 
-    boolean canConnectToBlock(Level level, BlockPos conduitPos, Direction direction);
+    default boolean canConnectToBlock(Level level, ConduitCapabilityAccessor capabilityAccessor, BlockPos conduitPos, Direction direction) {
+        return canConnectToBlock(level, conduitPos, direction);
+    }
 
+    /**
+     * @deprecated Use {@link #canConnectToBlock(Level, ConduitCapabilityAccessor, BlockPos, Direction)} instead as it provides capability caching and invalidation handling.
+     */
+    @Deprecated(since = "8.2.6")
+    default boolean canConnectToBlock(Level level, BlockPos conduitPos, Direction direction) {
+        return false;
+    }
+
+    default boolean canForceConnectToBlock(Level level, ConduitCapabilityAccessor capabilityAccessor, BlockPos conduitPos, Direction direction) {
+        return canConnectToBlock(level, capabilityAccessor, conduitPos, direction);
+    }
+
+    /**
+     * @deprecated Use {@link #canConnectToBlock(Level, ConduitCapabilityAccessor, BlockPos, Direction)} instead as it provides capability caching and invalidation handling.
+     */
+    @Deprecated(since = "8.2.6")
     default boolean canForceConnectToBlock(Level level, BlockPos conduitPos, Direction direction) {
         return canConnectToBlock(level, conduitPos, direction);
     }

@@ -34,8 +34,8 @@ public record ConduitBlockConnection(ConduitNode node, Direction connectionSide)
      * @return the capability or null if it is not available.
      */
     @Nullable
-    public <TCapability> TCapability getSidedCapability(BlockCapability<TCapability, Direction> capability) {
-        return node.getNeighborSidedCapability(capability, connectionSide);
+    public <T, C> T getCapability(BlockCapability<T, C> capability, @Nullable C context) {
+        return node.getCapability(capability, connectionSide, context);
     }
 
     /**
@@ -45,8 +45,8 @@ public record ConduitBlockConnection(ConduitNode node, Direction connectionSide)
      * @return the capability or null if it is not available.
      */
     @Nullable
-    public <TCapability> TCapability getVoidCapability(BlockCapability<TCapability, Void> capability) {
-        return node.getNeighborVoidCapability(capability, connectionSide);
+    public <T> T getSidedCapability(BlockCapability<T, Direction> capability) {
+        return getCapability(capability, connectionSide.getOpposite());
     }
 
     /**

@@ -2,6 +2,7 @@ package com.enderio.enderio.content.conduits.type.energy;
 
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.api.conduits.Conduit;
+import com.enderio.enderio.api.conduits.ConduitCapabilityAccessor;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.ConnectionStatus;
 import com.enderio.enderio.api.conduits.connection.path.ConnectionPathProperty;
@@ -22,6 +23,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -62,9 +64,8 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
     }
 
     @Override
-    public boolean canConnectToBlock(Level level, BlockPos conduitPos, Direction direction) {
-        IEnergyStorage capability = level.getCapability(Capabilities.EnergyStorage.BLOCK,
-                conduitPos.relative(direction), direction.getOpposite());
+    public boolean canConnectToBlock(Level level, ConduitCapabilityAccessor capabilityAccessor, BlockPos conduitPos, Direction direction) {
+        IEnergyStorage capability = capabilityAccessor.getSidedCapability(Capabilities.EnergyStorage.BLOCK, direction);
         return capability != null;
     }
 
