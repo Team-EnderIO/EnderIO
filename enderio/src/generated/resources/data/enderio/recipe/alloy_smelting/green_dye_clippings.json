@@ -9,7 +9,7 @@
     },
     {
       "count": 1,
-      "ingredient": "minecraft:egg"
+      "ingredient": "#minecraft:eggs"
     }
   ],
   "output": {
