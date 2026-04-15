@@ -10,6 +10,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
@@ -18,7 +19,7 @@ import java.util.List;
 import java.util.Objects;
 
 public record EnderItemFilter(NonNullList<ItemStack> matches, boolean isDenyList, boolean shouldCompareComponents,
-        DamageFilterMode damageFilterMode) implements ItemFilter {
+        DamageFilterMode damageFilterMode) implements ItemFilter, TooltipComponent {
 
     public static final EnderItemFilter EMPTY = new EnderItemFilter(0);
 

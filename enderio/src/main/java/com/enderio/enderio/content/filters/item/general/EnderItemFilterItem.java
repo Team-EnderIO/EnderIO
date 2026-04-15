@@ -8,17 +8,23 @@ import com.enderio.enderio.content.filters.FiltersLang;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOMenus;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.tooltip.BundleTooltip;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.neoforged.fml.LogicalSide;
+import net.minecraft.world.item.component.BundleContents;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import oshi.util.tuples.Pair;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 public class EnderItemFilterItem extends AbstractFilterItem<EnderItemFilter> {
@@ -59,6 +65,20 @@ public class EnderItemFilterItem extends AbstractFilterItem<EnderItemFilter> {
         var filter = getFilter(stack);
         if (filter.shouldCompareComponents() && !type.canMatchComponents()) {
             tooltipComponents.add(FiltersLang.FILTER_CONFIG_NOT_ALLOWED_COMPONENT_MATCH);
+        }
+
+        if (filter.isDenyList()) {
+            tooltipComponents.add(FiltersLang.FILTER_DENY_LIST);
+        } else {
+            tooltipComponents.add(FiltersLang.FILTER_ALLOW_LIST);
+        }
+
+        if (type.canMatchComponents) {
+            if (filter.shouldCompareComponents()) {
+                tooltipComponents.add(FiltersLang.FILTER_MATCH_COMPONENTS);
+            } else {
+                tooltipComponents.add(FiltersLang.FILTER_IGNORE_COMPONENTS);
+            }
         }
     }
 
