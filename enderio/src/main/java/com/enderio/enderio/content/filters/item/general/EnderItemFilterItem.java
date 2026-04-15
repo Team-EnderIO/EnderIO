@@ -80,6 +80,10 @@ public class EnderItemFilterItem extends AbstractFilterItem<EnderItemFilter> {
                 tooltipComponents.add(FiltersLang.FILTER_IGNORE_COMPONENTS);
             }
         }
+
+        if (type.canFilterByDamage()) {
+            tooltipComponents.add(FiltersLang.DAMAGE_FILTER_MODE.copy().append(" - ").append(filter.damageFilterMode().getComponent()));
+        }
     }
 
     public enum Type {
