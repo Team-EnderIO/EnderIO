@@ -86,8 +86,8 @@ jobs:
             build/libs/*-@(api|sources).jar
           changelog: ${{ github.event.release.body }}
           loaders: neoforge
-          game-versions: 1.21.1
-          java: 21
+          game-versions: 26.1.2
+          java: 25
           dependencies: |
             jei(optional){curseforge:238222}
             athena(optional){curseforge:841890}
@@ -120,8 +120,8 @@ jobs:
             build/libs/*-@(api|sources).jar
           changelog: ${{ github.event.release.body }}
           loaders: neoforge
-          game-versions: 1.21.1
-          java: 21
+          game-versions: 26.1.2
+          java: 25
           dependencies: |
             jei(optional){modrinth:u6dRKJwZ}
             athena(optional){modrinth:b1ZV3DIJ}
