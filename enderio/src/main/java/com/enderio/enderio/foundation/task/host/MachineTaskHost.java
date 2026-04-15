@@ -94,21 +94,26 @@ public abstract class MachineTaskHost implements ValueIOSerializable {
     }
 
     public void tick() {
-        // If we have no active task, get a new one
-        if (isNewTaskAvailable && canAcceptNewTask.get() && shouldStartNewTask()) {
-            currentTask = getNewTask();
-            isNewTaskAvailable = false;
+        findNewTaskIfAble();
+        if (currentTask == null) {
+            return;
         }
 
-        // If we have an unfinished task, continue it.
-        if (currentTask != null && !currentTask.isCompleted()) {
+        if (!currentTask.isCompleted()) {
             currentTask.tick();
         }
 
-        // If the task finished, next tick we'll try find a new one.
-        // Just in case the task didn't perform an action that caused a task change.
-        if (currentTask != null && currentTask.isCompleted()) {
+        if (currentTask.isCompleted()) {
+            currentTask = null;
             newTaskAvailable();
+            findNewTaskIfAble();
+        }
+    }
+
+    private void findNewTaskIfAble() {
+        if (isNewTaskAvailable && canAcceptNewTask.get() && shouldStartNewTask()) {
+            currentTask = getNewTask();
+            isNewTaskAvailable = false;
         }
     }
 
