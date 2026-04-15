@@ -35,7 +35,7 @@ public class HeatTicker extends ConduitTickerBase<HeatConduit> {
             for (var insertPath : insertPaths) {
                 var insertConnection = insertPath.end();
                 IHeatHandler insertHandler = insertConnection.getSidedCapability(MekanismModule.Capabilities.HEAT);
-                if (insertHandler == null) {
+                if (insertHandler == null || insertHandler == extractHandler) {
                     continue;
                 }
 
