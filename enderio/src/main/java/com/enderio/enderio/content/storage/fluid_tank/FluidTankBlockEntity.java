@@ -117,12 +117,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
         // bucket types
         IFluidHandlerItem fluidHandlerCap = item.getCapability(Capabilities.FluidHandler.ITEM);
         if (fluidHandlerCap != null) {
-            for (int i = 0; i < fluidHandlerCap.getTanks(); i++) {
-                if (!fluidHandlerCap.getFluidInTank(i).isEmpty()) {
-                    return true;
-                }
-            }
-            return false;
+            return true;
         }
 
         // fill recipes
