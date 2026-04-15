@@ -5,6 +5,7 @@ import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.compat.cctweaked.ComputerCraftCompat;
 import com.enderio.enderio.compat.ftb_ultimine.FTBUltimineCompat;
+import com.enderio.enderio.compat.guideme.GuideMECompat;
 import com.enderio.enderio.compat.inventorysorter.InventorySorterCompat;
 import com.enderio.enderio.compat.laserio.LaserIOCompat;
 import com.enderio.enderio.config.base.BaseConfig;
@@ -64,7 +65,8 @@ public class EnderIO {
         Map.entry("computercraft", eventBus -> ComputerCraftCompat.init()),
         Map.entry("ftbultimine", eventBus -> FTBUltimineCompat.init()),
         Map.entry("laserio", LaserIOCompat::init),
-        Map.entry("inventorysorter", InventorySorterCompat::init)
+        Map.entry("inventorysorter", InventorySorterCompat::init),
+        Map.entry("guideme", eventBus -> GuideMECompat.init())
     );
 
     private final Logger logger = LogUtils.getLogger();

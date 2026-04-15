@@ -144,6 +144,12 @@ dependencies {
     compileOnly(libs.curios)
     localRuntime(libs.curios)
 
+    // GuideME for guides
+    compileOnly(variantOf(libs.guideme) {
+        classifier("api")
+    })
+    runtimeOnly(libs.guideme)
+
     // Sodium + Iris to test shader compatibility
     compileOnly(libs.iris)
     localRuntime(libs.sodium)
@@ -191,6 +197,7 @@ neoForge {
     runs {
         configureEach {
             logLevel = org.slf4j.event.Level.INFO
+            systemProperty("guideme.enderio.guide.sources", file("guidebook").absolutePath)
         }
 
         // Client & Server runs contain default addons for ease.
@@ -198,6 +205,12 @@ neoForge {
         val client by creating {
             client()
             loadedMods = listOf(modEnderio)
+        }
+
+        val guide by creating {
+            client()
+            loadedMods = listOf(modEnderio)
+            systemProperty("guideme.showOnStartup", "enderio:guide")
         }
 
         val server by creating {
@@ -275,6 +288,10 @@ neoForge.ideSyncTask(generateModMetadata)
 tasks.named<Jar>("jar") {
     // FIXME: Temporary - shipping datagen classes with build again for Endergy.
     from(sourceSets["datagen"].output)
+
+    from("guidebook") {
+        into("assets/enderio/enderioguide")
+    }
 }
 
 tasks.withType<Jar> {
