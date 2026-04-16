@@ -11,13 +11,14 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 
 import java.util.List;
 import java.util.Objects;
 
 // TODO: should tag comparison compare health?
 public record EnderSoulFilter(NonNullList<Soul> matches, boolean isDenyList, boolean shouldCompareTags)
-    implements SoulFilter {
+    implements SoulFilter, TooltipComponent {
 
     public static final EnderSoulFilter EMPTY = new EnderSoulFilter(0);
 

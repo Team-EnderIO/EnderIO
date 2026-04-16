@@ -28,6 +28,7 @@ import com.enderio.enderio.client.content.filters.item.ClientEnderItemFilterTool
 import com.enderio.enderio.client.content.filters.redstone.RedstoneCountFilterScreen;
 import com.enderio.enderio.client.content.filters.redstone.RedstoneDoubleChannelFilterScreen;
 import com.enderio.enderio.client.content.filters.redstone.RedstoneTimerFilterScreen;
+import com.enderio.enderio.client.content.filters.soul.ClientEnderSoulFilterTooltip;
 import com.enderio.enderio.client.content.fluid_tank.FluidTankBEWLR;
 import com.enderio.enderio.client.content.glass.GlassIconDecorator;
 import com.enderio.enderio.client.content.machines.IOOverlayBakedModel;
@@ -75,6 +76,7 @@ import com.enderio.enderio.client.content.travel.TravelTargetRendering;
 import com.enderio.enderio.client.foundation.particle.RangeParticle;
 import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
 import com.enderio.enderio.content.filters.item.general.EnderItemFilter;
+import com.enderio.enderio.content.filters.soul.EnderSoulFilter;
 import com.enderio.enderio.content.fun.EnderiosItem;
 import com.enderio.enderio.content.misc_blocks.skull.EnderSkullBlock;
 import com.enderio.enderio.content.tools.vials.SoulVialItem;
@@ -180,6 +182,7 @@ public class EnderIOClient {
     @SubscribeEvent
     public static void registerClientTooltipComponents(RegisterClientTooltipComponentFactoriesEvent event) {
         event.register(EnderItemFilter.class, ClientEnderItemFilterTooltip::new);
+        event.register(EnderSoulFilter.class, ClientEnderSoulFilterTooltip::new);
     }
 
     @SubscribeEvent
