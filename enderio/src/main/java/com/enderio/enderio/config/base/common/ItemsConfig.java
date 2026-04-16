@@ -22,6 +22,8 @@ public class ItemsConfig {
     public final ModConfigSpec.IntValue TRAVELLING_TO_BLOCK_RANGE;
     public final ModConfigSpec.IntValue TRAVELLING_BLOCK_TO_BLOCK_RANGE;
 
+    public final ModConfigSpec.BooleanValue ALLOW_SOUL_VIALS_TO_CHANGE_SPAWNERS;
+
     public ItemsConfig(ModConfigSpec.Builder builder) {
         builder.push("items");
 
@@ -50,6 +52,10 @@ public class ItemsConfig {
         builder.comment("the following config values are only used if EIOMachines is loaded");
         TRAVELLING_TO_BLOCK_RANGE = builder.defineInRange("itemToBlockRange", 192, 4, 16 * 32);
         TRAVELLING_BLOCK_TO_BLOCK_RANGE = builder.defineInRange("blockToBlockRange", 96, 4, 16 * 32);
+        builder.pop();
+
+        builder.push("soulVials");
+        ALLOW_SOUL_VIALS_TO_CHANGE_SPAWNERS = builder.comment("If true, soul vials can change spawners").define("allowSpawners", false);
         builder.pop();
 
         builder.pop();
