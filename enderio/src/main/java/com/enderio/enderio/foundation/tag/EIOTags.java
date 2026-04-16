@@ -33,12 +33,36 @@ public class EIOTags {
         public static final TagKey<Item> DUSTS_IRON = commonTag("dusts/iron");
         public static final TagKey<Item> DUSTS_GOLD = commonTag("dusts/gold");
         public static final TagKey<Item> DUSTS_COPPER = commonTag("dusts/copper");
-        public static final TagKey<Item> DUSTS_TIN = commonTag("dusts/tin");
         public static final TagKey<Item> DUSTS_ENDER = commonTag("dusts/ender_pearl");
         public static final TagKey<Item> DUSTS_OBSIDIAN = commonTag("dusts/obsidian");
         public static final TagKey<Item> DUSTS_QUARTZ = commonTag("dusts/quartz");
         public static final TagKey<Item> DUSTS_SULFUR = commonTag("dusts/sulfur");
         public static final TagKey<Item> DUSTS_PRISMARINE = commonTag("dusts/prismarine");
+
+        public static final TagKey<Item> ORES_ALUMINUM = commonTag("ores/aluminum");
+        public static final TagKey<Item> INGOTS_ALUMINUM = commonTag("ingots/aluminum");
+        public static final TagKey<Item> DUSTS_ALUMINUM = commonTag("dusts/aluminum");
+        public static final TagKey<Item> RAW_MATERIALS_ALUMINUM = commonTag("raw_materials/aluminum");
+
+        public static final TagKey<Item> ORES_OSMIUM = commonTag("ores/osmium");
+        public static final TagKey<Item> INGOTS_OSMIUM = commonTag("ingots/osmium");
+        public static final TagKey<Item> DUSTS_OSMIUM = commonTag("dusts/osmium");
+        public static final TagKey<Item> RAW_MATERIALS_OSMIUM = commonTag("raw_materials/osmium");
+
+        public static final TagKey<Item> ORES_TIN = commonTag("ores/tin");
+        public static final TagKey<Item> INGOTS_TIN = commonTag("ingots/tin");
+        public static final TagKey<Item> DUSTS_TIN = commonTag("dusts/tin");
+        public static final TagKey<Item> RAW_MATERIALS_TIN = commonTag("raw_materials/tin");
+
+        public static final TagKey<Item> ORES_URANIUM = commonTag("ores/uranium");
+        public static final TagKey<Item> INGOTS_URANIUM = commonTag("ingots/uranium");
+        public static final TagKey<Item> DUSTS_URANIUM = commonTag("dusts/uranium");
+        public static final TagKey<Item> RAW_MATERIALS_URANIUM = commonTag("raw_materials/uranium");
+
+        public static final TagKey<Item> ORES_LEAD = commonTag("ores/lead");
+        public static final TagKey<Item> INGOTS_LEAD = commonTag("ingots/lead");
+        public static final TagKey<Item> DUSTS_LEAD = commonTag("dusts/lead");
+        public static final TagKey<Item> RAW_MATERIALS_LEAD = commonTag("raw_materials/lead");
 
         public static final TagKey<Item> DUSTS_GRAINS_OF_INFINITY = commonTag("dusts/grains_of_infinity");
         public static final TagKey<Item> DUSTS_GRAINS_OF_PRESCIENCE = commonTag("dusts/grains_of_prescience");
