@@ -61,6 +61,20 @@ public class EnderFluidFilterItem extends AbstractFilterItem<EnderFluidFilter> {
         if (filter.shouldCompareComponents() && !type.canMatchComponents()) {
             tooltipComponents.add(FiltersLang.FILTER_CONFIG_NOT_ALLOWED_COMPONENT_MATCH);
         }
+
+        if (filter.isDenyList()) {
+            tooltipComponents.add(FiltersLang.FILTER_DENY_LIST);
+        } else {
+            tooltipComponents.add(FiltersLang.FILTER_ALLOW_LIST);
+        }
+
+        if (type.canMatchComponents) {
+            if (filter.shouldCompareComponents()) {
+                tooltipComponents.add(FiltersLang.FILTER_MATCH_COMPONENTS);
+            } else {
+                tooltipComponents.add(FiltersLang.FILTER_IGNORE_COMPONENTS);
+            }
+        }
     }
 
     public enum Type {

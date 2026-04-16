@@ -9,6 +9,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.Objects;
 
 public record EnderFluidFilter(NonNullList<FluidStack> matches, boolean isDenyList, boolean shouldCompareComponents)
-        implements FluidFilter {
+        implements FluidFilter, TooltipComponent {
 
     public static final EnderFluidFilter EMPTY = new EnderFluidFilter(0);
 

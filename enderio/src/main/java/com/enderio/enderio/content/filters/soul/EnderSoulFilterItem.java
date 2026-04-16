@@ -4,17 +4,21 @@ import com.enderio.core.annotations.UseOnly;
 import com.enderio.enderio.api.filter.SoulFilter;
 import com.enderio.enderio.content.filters.AbstractFilterItem;
 import com.enderio.enderio.content.filters.AbstractFilterMenu;
+import com.enderio.enderio.content.filters.FiltersLang;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOMenus;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.fml.LogicalSide;
+import net.minecraft.world.item.TooltipFlag;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 public class EnderSoulFilterItem extends AbstractFilterItem<EnderSoulFilter> {
@@ -42,6 +46,27 @@ public class EnderSoulFilterItem extends AbstractFilterItem<EnderSoulFilter> {
     @Override
     protected AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, AbstractFilterMenu.FilterAccess filterAccess) {
         return type.openMenu(containerId, playerInventory, filterAccess);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+
+        var filter = getFilter(stack);
+        if (filter.isDenyList()) {
+            tooltipComponents.add(FiltersLang.FILTER_DENY_LIST);
+        } else {
+            tooltipComponents.add(FiltersLang.FILTER_ALLOW_LIST);
+        }
+
+        // TODO: should call these tags...
+        if (type.canMatchComponents) {
+            if (filter.shouldCompareTags()) {
+                tooltipComponents.add(FiltersLang.FILTER_MATCH_COMPONENTS);
+            } else {
+                tooltipComponents.add(FiltersLang.FILTER_IGNORE_COMPONENTS);
+            }
+        }
     }
 
     public enum Type {

@@ -1,8 +1,5 @@
-package com.enderio.enderio.client.content.filters.soul;
+package com.enderio.core.client.gui.tooltip;
 
-import com.enderio.enderio.content.filters.item.general.EnderItemFilter;
-import com.enderio.enderio.content.filters.soul.EnderSoulFilter;
-import com.enderio.enderio.foundation.soul.SoulUtility;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -11,18 +8,27 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
-public class ClientEnderSoulFilterTooltip implements ClientTooltipComponent {
+public abstract class AbstractClientSlotListTooltip implements ClientTooltipComponent {
 
     private static final ResourceLocation BACKGROUND_SPRITE = ResourceLocation.withDefaultNamespace("container/bundle/background");
     private static final ResourceLocation SLOT_SPRITE = ResourceLocation.withDefaultNamespace("container/bundle/slot");
+
     private static final int SLOT_SIZE_X = 18;
     private static final int SLOT_SIZE_Y = 20;
 
-    private final EnderSoulFilter filter;
+    private final int maxSlotWidth;
 
-    public ClientEnderSoulFilterTooltip(EnderSoulFilter filter) {
-        this.filter = filter;
+    public AbstractClientSlotListTooltip() {
+        this.maxSlotWidth = 5;
     }
+
+    public AbstractClientSlotListTooltip(int maxSlotWidth) {
+        this.maxSlotWidth = maxSlotWidth;
+    }
+
+    protected abstract int slotCount();
+
+    protected abstract void renderSlotContent(int x, int y, int itemIndex, GuiGraphics guiGraphics, Font font);
 
     @Override
     public int getHeight() {
@@ -35,19 +41,19 @@ public class ClientEnderSoulFilterTooltip implements ClientTooltipComponent {
     }
 
     private int gridSizeX() {
-        return Math.min(5, nonEmptyItems().size());
+        return Math.min(maxSlotWidth, slotCount());
     }
 
     private int gridSizeY() {
-        return (int)Math.ceil(((double)nonEmptyItems().size()) / (double)this.gridSizeX());
+        return (int)Math.ceil(((double)slotCount()) / (double)this.gridSizeX());
     }
 
     private int backgroundWidth() {
-        return this.gridSizeX() * 18 + 2;
+        return this.gridSizeX() * SLOT_SIZE_X + 2;
     }
 
     private int backgroundHeight() {
-        return this.gridSizeY() * 20 + 2;
+        return this.gridSizeY() * SLOT_SIZE_Y + 2;
     }
 
     @Override
@@ -67,24 +73,15 @@ public class ClientEnderSoulFilterTooltip implements ClientTooltipComponent {
     }
 
     private void renderSlot(int x, int y, int itemIndex, GuiGraphics guiGraphics, Font font) {
-        if (itemIndex >= nonEmptyItems().size()) {
+        if (itemIndex >= slotCount()) {
             return;
         }
 
-        ItemStack itemstack = nonEmptyItems().get(itemIndex);
         this.blit(guiGraphics, x, y, SLOT_SPRITE, 18, 20);
-        guiGraphics.renderItem(itemstack, x + 1, y + 1, itemIndex);
-        guiGraphics.renderItemDecorations(font, itemstack, x + 1, y + 1);
+        renderSlotContent(x, y, itemIndex, guiGraphics, font);
     }
 
-    private void blit(GuiGraphics guiGraphics, int x, int y, ResourceLocation sprite, int w, int h) {
+    protected void blit(GuiGraphics guiGraphics, int x, int y, ResourceLocation sprite, int w, int h) {
         guiGraphics.blitSprite(sprite, x, y, 0, w, h);
-    }
-
-    private List<ItemStack> nonEmptyItems() {
-        return this.filter.matches().stream()
-            .filter(soul -> !soul.isEmpty())
-            .map(SoulUtility::getStackForDisplay)
-            .toList();
     }
 }
