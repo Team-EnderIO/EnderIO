@@ -18,9 +18,7 @@
   "type": "enderio:sag_milling",
   "bonus": "none",
   "energy": 2400,
-  "input": {
-    "tag": "c:ingots/lead"
-  },
+  "input": "#c:ingots/lead",
   "outputs": [
     {
       "item": {

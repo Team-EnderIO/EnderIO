@@ -17,9 +17,7 @@
   ],
   "type": "enderio:sag_milling",
   "energy": 2400,
-  "input": {
-    "tag": "c:ores/lead"
-  },
+  "input": "#c:ores/lead",
   "outputs": [
     {
       "item": {
@@ -37,7 +35,6 @@
     {
       "chance": 0.15,
       "item": {
-        "count": 1,
         "id": "minecraft:cobblestone"
       }
     }

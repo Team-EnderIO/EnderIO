@@ -17,9 +17,7 @@
   ],
   "type": "enderio:sag_milling",
   "energy": 2400,
-  "input": {
-    "tag": "c:raw_materials/osmium"
-  },
+  "input": "#c:raw_materials/osmium",
   "outputs": [
     {
       "item": {
