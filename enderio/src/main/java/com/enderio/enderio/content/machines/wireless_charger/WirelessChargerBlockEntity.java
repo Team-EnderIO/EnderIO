@@ -87,6 +87,9 @@ public class WirelessChargerBlockEntity extends PoweredMachineBlockEntity implem
             Inventory inventory = player.getInventory();
             for (int i = 0; i < inventory.getContainerSize(); i++) {
                 ItemStack stack = inventory.getItem(i);
+                if (stack.isEmpty()) {
+                    continue;
+                }
                 @Nullable EnergyHandler cap = stack.getCapability(Capabilities.Energy.ITEM, ItemAccess.forStack(stack));
                 if (cap != null) {
                     try (Transaction transaction = Transaction.openRoot()) {
