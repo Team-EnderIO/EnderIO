@@ -1,6 +1,6 @@
 package com.enderio.enderio.content.conduits.legacy;
 
-import com.enderio.enderio.api.UseOnly;
+import com.enderio.core.annotations.UseOnly;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.bundle.SlotType;
 import com.enderio.enderio.api.io.RedstoneControl;

@@ -1,6 +1,6 @@
 package com.enderio.enderio.api.farm;
 
-import com.enderio.enderio.api.UseOnly;
+import com.enderio.core.annotations.UseOnly;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;

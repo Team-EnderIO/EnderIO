@@ -1,17 +1,18 @@
 package com.enderio.enderio.content.filters.soul;
 
+import com.enderio.core.annotations.UseOnly;
 import com.enderio.core.common.network.menu.BoolSyncSlot;
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.content.filters.AbstractFilterMenu;
 import com.enderio.enderio.foundation.soul.StoredEntityDataSyncSlot;
 import com.enderio.enderio.init.EIODataComponents;
-import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.fml.LogicalSide;
 import org.jetbrains.annotations.Nullable;
 
 public class EnderSoulFilterMenu extends AbstractFilterMenu<EnderSoulFilter> {
@@ -79,7 +80,7 @@ public class EnderSoulFilterMenu extends AbstractFilterMenu<EnderSoulFilter> {
         return shouldCompareTagsSyncSlot.get();
     }
 
-    @EnsureSide(EnsureSide.Side.SERVER)
+    @UseOnly(LogicalSide.SERVER)
     private Soul getEntityInFilter(int slotIndex) {
         var filter = getFilter();
         if (slotIndex >= filter.matches().size()) {
@@ -89,7 +90,7 @@ public class EnderSoulFilterMenu extends AbstractFilterMenu<EnderSoulFilter> {
         return filter.matches().get(slotIndex);
     }
 
-    @EnsureSide(EnsureSide.Side.SERVER)
+    @UseOnly(LogicalSide.SERVER)
     private void setEntityInFilter(int slotIndex, Soul entity) {
         modifyFilter(filter -> {
             // Copy match list

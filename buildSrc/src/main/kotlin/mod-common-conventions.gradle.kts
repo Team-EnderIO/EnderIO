@@ -25,12 +25,6 @@ idea {
 dependencies {
     compileOnly(libs.findLibrary("jetbrainsAnnotations").get())
 
-    // Depend on ensure compiler plugin
-    compileOnly(project(":ensure_plugin"))
-    annotationProcessor(project(":ensure_plugin"))
-    testCompileOnly(project(":ensure_plugin"))
-    testAnnotationProcessor(project(":ensure_plugin"))
-
     testImplementation(libs.findLibrary("junitJupiter").get())
     testRuntimeOnly(libs.findLibrary("junitPlatformLauncher").get())
 }
@@ -41,10 +35,8 @@ java {
     }
 }
 
-// Use ensure plugin
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
-    options.compilerArgs.add("-Xplugin:ContextEnsure")
     options.compilerArgs.addAll(arrayOf("-Xmaxerrs", "400"))
 }
 

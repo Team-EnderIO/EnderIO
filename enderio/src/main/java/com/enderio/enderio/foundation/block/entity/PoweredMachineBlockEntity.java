@@ -1,10 +1,9 @@
 package com.enderio.enderio.foundation.block.entity;
 
 import com.enderio.enderio.api.EnderIOCapabilities;
-import com.enderio.enderio.api.UseOnly;
+import com.enderio.core.annotations.UseOnly;
 import com.enderio.enderio.api.capacitor.CapacitorData;
 import com.enderio.enderio.api.capacitor.CapacitorScalable;
-import com.enderio.enderio.api.io.IOMode;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.enderio.content.capacitors.CapacitorItem;
 import com.enderio.enderio.foundation.MachineNBTKeys;
@@ -29,7 +28,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 

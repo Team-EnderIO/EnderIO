@@ -1,11 +1,11 @@
 package com.enderio.enderio.foundation.attachment;
 
+import com.enderio.core.annotations.UseOnly;
 import com.enderio.core.common.network.NetworkDataSlot;
 import com.enderio.enderio.foundation.particle.RangeParticleData;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
-import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -14,6 +14,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.Mth;
+import net.neoforged.fml.LogicalSide;
 
 public record ActionRange(int range, boolean isVisible) {
 
@@ -46,7 +47,7 @@ public record ActionRange(int range, boolean isVisible) {
         return new ActionRange(Mth.clamp(range(), min, max), isVisible);
     }
 
-    @EnsureSide(EnsureSide.Side.CLIENT)
+    @UseOnly(LogicalSide.CLIENT)
     public void addClientParticle(ClientLevel level, BlockPos pos, String color) {
         if (!isVisible) {
             return;

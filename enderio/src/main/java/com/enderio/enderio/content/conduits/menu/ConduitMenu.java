@@ -2,7 +2,7 @@ package com.enderio.enderio.content.conduits.menu;
 
 import com.enderio.core.common.menu.BaseEnderMenu;
 import com.enderio.enderio.api.EnderIOCapabilities;
-import com.enderio.enderio.api.UseOnly;
+import com.enderio.core.annotations.UseOnly;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
@@ -12,7 +12,6 @@ import com.enderio.enderio.foundation.network.packets.ClientboundConduitListPack
 import com.enderio.enderio.foundation.network.packets.ServerboundOpenConduitFilterMenu;
 import com.enderio.enderio.foundation.network.packets.SetConduitConnectionConfigPacket;
 import com.enderio.enderio.init.EIOMenus;
-import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -138,7 +137,7 @@ public class ConduitMenu extends BaseEnderMenu {
         return conduitInventory;
     }
 
-    @EnsureSide(EnsureSide.Side.CLIENT)
+    @UseOnly(LogicalSide.CLIENT)
     public void setConnectedConduits(List<Holder<Conduit<?, ?>>> connectedConduits) {
         if (connectionAccessor instanceof ClientConnectionAccessor clientConnectionAccessor) {
             clientConnectionAccessor.connectedConduits = connectedConduits;
@@ -184,7 +183,7 @@ public class ConduitMenu extends BaseEnderMenu {
         return connectionAccessor.getConduitExtraGuiData(conduit, side);
     }
 
-    @EnsureSide(EnsureSide.Side.CLIENT)
+    @UseOnly(LogicalSide.CLIENT)
     public void setExtraGuiData(CompoundTag extraGuiData) {
         if (connectionAccessor instanceof ClientConnectionAccessor clientConnectionAccessor) {
             clientConnectionAccessor.extraGuiData = extraGuiData;

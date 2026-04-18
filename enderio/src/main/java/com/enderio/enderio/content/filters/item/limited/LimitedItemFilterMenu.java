@@ -1,11 +1,11 @@
 package com.enderio.enderio.content.filters.item.limited;
 
+import com.enderio.core.annotations.UseOnly;
 import com.enderio.core.common.network.menu.BoolSyncSlot;
 import com.enderio.core.common.network.menu.EnumSyncSlot;
 import com.enderio.enderio.content.filters.AbstractFilterMenu;
 import com.enderio.enderio.content.filters.item.general.DamageFilterMode;
 import com.enderio.enderio.init.EIODataComponents;
-import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.world.entity.player.Inventory;
@@ -13,8 +13,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.fml.LogicalSide;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
 
 public class LimitedItemFilterMenu extends AbstractFilterMenu<LimitedItemFilter> {
 
@@ -88,13 +88,13 @@ public class LimitedItemFilterMenu extends AbstractFilterMenu<LimitedItemFilter>
         return damageFilterSyncSlot.get();
     }
 
-    @EnsureSide(EnsureSide.Side.CLIENT)
+    @UseOnly(LogicalSide.CLIENT)
     public void setDamageFilterMode(DamageFilterMode mode) {
         damageFilterSyncSlot.set(mode);
         updateSlot(damageFilterSyncSlot);
     }
 
-    @EnsureSide(EnsureSide.Side.SERVER)
+    @UseOnly(LogicalSide.SERVER)
     private ItemStack getItemInFilter(int slotIndex) {
         var filter = getFilter();
         if (slotIndex >= filter.matches().size()) {
@@ -104,7 +104,7 @@ public class LimitedItemFilterMenu extends AbstractFilterMenu<LimitedItemFilter>
         return filter.matches().get(slotIndex);
     }
 
-    @EnsureSide(EnsureSide.Side.SERVER)
+    @UseOnly(LogicalSide.SERVER)
     private void setItemInFilter(int slotIndex, ItemStack stack) {
         modifyFilter(filter -> {
             var matches = NonNullList.withSize(LimitedItemFilter.SLOT_COUNT, ItemStack.EMPTY);

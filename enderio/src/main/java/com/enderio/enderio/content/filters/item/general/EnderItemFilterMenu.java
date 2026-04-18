@@ -1,17 +1,18 @@
 package com.enderio.enderio.content.filters.item.general;
 
+import com.enderio.core.annotations.UseOnly;
 import com.enderio.core.common.network.menu.BoolSyncSlot;
 import com.enderio.core.common.network.menu.EnumSyncSlot;
 import com.enderio.enderio.content.filters.AbstractFilterMenu;
 import com.enderio.enderio.content.filters.item.ItemFilterSlot;
 import com.enderio.enderio.init.EIODataComponents;
-import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.fml.LogicalSide;
 import org.jetbrains.annotations.Nullable;
 
 public class EnderItemFilterMenu extends AbstractFilterMenu<EnderItemFilter> {
@@ -112,7 +113,7 @@ public class EnderItemFilterMenu extends AbstractFilterMenu<EnderItemFilter> {
         return damageFilterSyncSlot.get();
     }
 
-    @EnsureSide(EnsureSide.Side.CLIENT)
+    @UseOnly(LogicalSide.CLIENT)
     public void setDamageFilterMode(DamageFilterMode mode) {
         if (damageFilterSyncSlot != null) {
             damageFilterSyncSlot.set(mode);
@@ -120,7 +121,7 @@ public class EnderItemFilterMenu extends AbstractFilterMenu<EnderItemFilter> {
         }
     }
 
-    @EnsureSide(EnsureSide.Side.SERVER)
+    @UseOnly(LogicalSide.SERVER)
     private ItemStack getItemInFilter(int slotIndex) {
         var filter = getFilter();
         if (slotIndex >= filter.matches().size()) {
@@ -130,7 +131,7 @@ public class EnderItemFilterMenu extends AbstractFilterMenu<EnderItemFilter> {
         return filter.matches().get(slotIndex);
     }
 
-    @EnsureSide(EnsureSide.Side.SERVER)
+    @UseOnly(LogicalSide.SERVER)
     private void setItemInFilter(int slotIndex, ItemStack stack) {
         modifyFilter(filter -> {
             // Copy match list

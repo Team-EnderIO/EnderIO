@@ -3,7 +3,7 @@ package com.enderio.enderio.content.machines.vat;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.core.common.util.NamedFluidContents;
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.api.UseOnly;
+import com.enderio.core.annotations.UseOnly;
 import com.enderio.enderio.foundation.attachment.FluidTankUser;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.inventory.MachineInventory;

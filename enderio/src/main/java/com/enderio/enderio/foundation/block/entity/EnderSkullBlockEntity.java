@@ -1,11 +1,12 @@
 package com.enderio.enderio.foundation.block.entity;
 
+import com.enderio.core.annotations.UseOnly;
 import com.enderio.enderio.init.EIOBlockEntities;
-import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.fml.LogicalSide;
 
 public class EnderSkullBlockEntity extends BlockEntity {
     private float animationticks = 0;
@@ -15,19 +16,19 @@ public class EnderSkullBlockEntity extends BlockEntity {
     }
 
 
-    @EnsureSide(EnsureSide.Side.CLIENT)
+    @UseOnly(LogicalSide.CLIENT)
     public float getAnimation(float partialTick) {
         return animationticks;
     }
 
 
-    @EnsureSide(EnsureSide.Side.CLIENT)
+    @UseOnly(LogicalSide.CLIENT)
     public void setAnimation(float ticks) {
         animationticks = ticks;
     }
 
 
-    @EnsureSide(EnsureSide.Side.CLIENT)
+    @UseOnly(LogicalSide.CLIENT)
     public static void animation(Level level, BlockPos blockPos, BlockState state, EnderSkullBlockEntity enderSkull) {
         if (enderSkull.animationticks > 0) {
             enderSkull.animationticks--;

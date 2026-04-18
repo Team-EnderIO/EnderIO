@@ -2,7 +2,7 @@ package com.enderio.enderio.content.machines.powered_spawner;
 
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIOCapabilities;
-import com.enderio.enderio.api.UseOnly;
+import com.enderio.core.annotations.UseOnly;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;

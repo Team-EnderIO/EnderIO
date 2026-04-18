@@ -1,6 +1,6 @@
 package com.enderio.enderio.content.machines.soul_binder;
 
-import com.enderio.enderio.api.UseOnly;
+import com.enderio.core.annotations.UseOnly;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
@@ -26,7 +26,6 @@ import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOFluids;
 import com.enderio.enderio.init.EIOItems;
 import com.enderio.enderio.init.EIORecipes;
-import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
@@ -138,7 +137,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
                 INPUT_OTHER.getItemStack(getInventory()), TANK.getFluid(getFluidHandler()));
     }
 
-    @EnsureSide(EnsureSide.Side.CLIENT)
+    @UseOnly(LogicalSide.CLIENT)
     private SoulBindingRecipe.Input createFakeRecipeInput() {
         return new SoulBindingRecipe.Input(INPUT_SOUL.getItemStack(getInventory()),
                 INPUT_OTHER.getItemStack(getInventory()),
@@ -147,7 +146,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
 
     // endregion
 
-    @EnsureSide(EnsureSide.Side.CLIENT)
+    @UseOnly(LogicalSide.CLIENT)
     public int getClientExp() {
         // This should always set a valid recipe.
         if (level != null && clientRecipe == null && hasValidRecipe()) {

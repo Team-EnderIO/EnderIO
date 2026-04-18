@@ -1,16 +1,17 @@
 package com.enderio.enderio.content.filters.fluid;
 
+import com.enderio.core.annotations.UseOnly;
 import com.enderio.core.common.network.menu.BoolSyncSlot;
 import com.enderio.core.common.network.menu.FluidStackSyncSlot;
 import com.enderio.enderio.content.filters.AbstractFilterMenu;
 import com.enderio.enderio.init.EIODataComponents;
-import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -79,7 +80,7 @@ public class EnderFluidFilterMenu extends AbstractFilterMenu<EnderFluidFilter> {
         return shouldCompareComponentsSyncSlot.get();
     }
 
-    @EnsureSide(EnsureSide.Side.SERVER)
+    @UseOnly(LogicalSide.SERVER)
     private FluidStack getFluidInFilter(int slotIndex) {
         var filter = getFilter();
         if (slotIndex >= filter.matches().size()) {
@@ -89,7 +90,7 @@ public class EnderFluidFilterMenu extends AbstractFilterMenu<EnderFluidFilter> {
         return filter.matches().get(slotIndex);
     }
 
-    @EnsureSide(EnsureSide.Side.SERVER)
+    @UseOnly(LogicalSide.SERVER)
     private void setFluidInFilter(int slotIndex, FluidStack stack) {
         modifyFilter(filter -> {
             // Copy match list
