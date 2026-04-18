@@ -2,7 +2,7 @@ package com.enderio.enderio.content.conduits.bundle;
 
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.enderio.api.EnderIOCapabilities;
-import com.enderio.enderio.api.UseOnly;
+import com.enderio.core.annotations.UseOnly;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitCapabilityAccessor;
 import com.enderio.enderio.api.conduits.ConduitType;
@@ -32,7 +32,6 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
-import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -242,7 +241,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         shape.updateConduit(this);
     }
 
-    @EnsureSide(EnsureSide.Side.CLIENT)
+    @UseOnly(LogicalSide.CLIENT)
     public void updateModel() {
         requestModelDataUpdate();
         if (level != null) {
@@ -738,7 +737,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
     }
 
-    @EnsureSide(EnsureSide.Side.SERVER)
+    @UseOnly(LogicalSide.SERVER)
     public ConduitNodeImpl getConduitNode(Holder<Conduit<?, ?>> conduit) {
         if (!hasConduitStrict(conduit)) {
             throw new IllegalStateException("Conduit not found in bundle.");
@@ -758,14 +757,14 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     }
 
     // Synced by the GUI, only available on the server BE.
-    @EnsureSide(EnsureSide.Side.SERVER)
+    @UseOnly(LogicalSide.SERVER)
     @Override
     @Nullable
     public CompoundTag getConduitExtraGuiData(Holder<Conduit<?, ?>> conduit, Direction side) {
         return conduit.value().getExtraGuiData(this, getConduitNode(conduit), side);
     }
 
-    @EnsureSide(EnsureSide.Side.SERVER)
+    @UseOnly(LogicalSide.SERVER)
     private void setNode(Holder<Conduit<?, ?>> conduit, ConduitNodeImpl loadedNode) {
         conduitNodes.put(conduit, loadedNode);
 
@@ -1198,7 +1197,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
     }
 
-    @EnsureSide(EnsureSide.Side.SERVER)
+    @UseOnly(LogicalSide.SERVER)
     private void loadFromSavedData() {
         if (!(level instanceof ServerLevel serverLevel)) {
             return;
@@ -1213,7 +1212,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         lazyNodeData = null;
     }
 
-    @EnsureSide(EnsureSide.Side.SERVER)
+    @UseOnly(LogicalSide.SERVER)
     private void loadConduitFromSavedData(ConduitNetworkSavedData savedData, Holder<Conduit<?, ?>> conduit,
             int typeIndex) {
         if (level == null || level.isClientSide()) {

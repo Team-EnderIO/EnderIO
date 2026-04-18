@@ -1,10 +1,11 @@
 package com.enderio.enderio.client.content.conduits.model.modifier;
 
+import com.enderio.core.annotations.UseOnly;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.model.ConduitModelModifier;
 import com.enderio.enderio.api.conduits.model.RegisterConduitModelModifiersEvent;
-import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.resources.Identifier;
+import net.neoforged.fml.LogicalSide;
 import net.neoforged.fml.ModLoader;
 import org.jspecify.annotations.Nullable;
 
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
 public class ConduitModelModifiers {
     private static Map<ConduitType<?, ?>, ConduitModelModifier> MODIFIERS;
 
-    @EnsureSide(EnsureSide.Side.CLIENT)
+    @UseOnly(LogicalSide.CLIENT)
     public static void init() {
         var event = new RegisterConduitModelModifiersEvent();
         ModLoader.postEvent(event);
@@ -26,13 +27,13 @@ public class ConduitModelModifiers {
         factories.forEach((t, f) -> MODIFIERS.put(t, f.createModifier()));
     }
 
-    @EnsureSide(EnsureSide.Side.CLIENT)
+    @UseOnly(LogicalSide.CLIENT)
     @Nullable
     public static ConduitModelModifier getModifier(ConduitType<?, ?> type) {
         return MODIFIERS.get(type);
     }
 
-    @EnsureSide(EnsureSide.Side.CLIENT)
+    @UseOnly(LogicalSide.CLIENT)
     public static Set<Identifier> getAllModelDependencies() {
         return MODIFIERS.values()
                 .stream()

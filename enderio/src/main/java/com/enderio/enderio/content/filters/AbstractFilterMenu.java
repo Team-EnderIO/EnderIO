@@ -1,8 +1,8 @@
 package com.enderio.enderio.content.filters;
 
+import com.enderio.core.annotations.UseOnly;
 import com.enderio.core.common.menu.BaseEnderMenu;
 import com.enderio.core.common.network.menu.IntSyncSlot;
-import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
@@ -11,6 +11,7 @@ import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jspecify.annotations.Nullable;
 
@@ -51,34 +52,34 @@ public abstract class AbstractFilterMenu<T> extends BaseEnderMenu {
     protected abstract DataComponentType<T> dataComponentType();
     protected abstract T defaultFilter();
 
-    @EnsureSide(EnsureSide.Side.SERVER)
+    @UseOnly(LogicalSide.SERVER)
     protected T getFilter() {
         return getFilterStack().getOrDefault(dataComponentType(), defaultFilter());
     }
 
-    @EnsureSide(EnsureSide.Side.SERVER)
+    @UseOnly(LogicalSide.SERVER)
     protected void setFilter(T filter) {
         var stack = getFilterStack().copy();
         stack.set(dataComponentType(), filter);
         setFilterStack(stack);
     }
 
-    @EnsureSide(EnsureSide.Side.SERVER)
+    @UseOnly(LogicalSide.SERVER)
     protected void modifyFilter(Function<T, T> modifier) {
         setFilter(modifier.apply(getFilter()));
     }
 
-    @EnsureSide(EnsureSide.Side.SERVER)
+    @UseOnly(LogicalSide.SERVER)
     protected ItemStack getFilterStack() {
         return Objects.requireNonNull(filterAccess).getFilterItem();
     }
 
-    @EnsureSide(EnsureSide.Side.SERVER)
+    @UseOnly(LogicalSide.SERVER)
     protected void setFilterStack(ItemStack stack) {
         Objects.requireNonNull(filterAccess).setFilterItem(stack);
     }
 
-    @EnsureSide(EnsureSide.Side.SERVER)
+    @UseOnly(LogicalSide.SERVER)
     protected void modifyFilterStack(Function<ItemStack, ItemStack> modifier) {
         setFilterStack(modifier.apply(getFilterStack()));
     }
@@ -110,7 +111,7 @@ public abstract class AbstractFilterMenu<T> extends BaseEnderMenu {
         return super.clickMenuButton(player, id);
     }
 
-    @EnsureSide(EnsureSide.Side.SERVER)
+    @UseOnly(LogicalSide.SERVER)
     private int getPlayerInventorySlot() {
         if (filterAccess instanceof HandFilterAccess) {
             return getPlayerInventory().getSelectedSlot();

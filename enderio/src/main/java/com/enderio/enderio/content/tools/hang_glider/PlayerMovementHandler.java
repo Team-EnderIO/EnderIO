@@ -1,6 +1,6 @@
 package com.enderio.enderio.content.tools.hang_glider;
 
-import com.enderio.enderio.api.UseOnly;
+import com.enderio.core.annotations.UseOnly;
 import com.enderio.enderio.api.glider.GliderMovementInfo;
 import com.enderio.enderio.api.integration.IntegrationManager;
 import com.enderio.enderio.content.tools.ToolsLang;

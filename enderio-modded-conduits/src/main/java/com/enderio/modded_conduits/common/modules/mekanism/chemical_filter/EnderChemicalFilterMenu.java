@@ -1,9 +1,9 @@
 //package com.enderio.modded_conduits.common.modules.mekanism.chemical_filter;
 //
+//import com.enderio.core.annotations.UseOnly;
 //import com.enderio.core.common.network.menu.BoolSyncSlot;
 //import com.enderio.enderio.content.filters.AbstractFilterMenu;
 //import com.enderio.modded_conduits.common.modules.mekanism.MekanismModule;
-//import me.liliandev.ensure.ensures.EnsureSide;
 //import mekanism.api.chemical.ChemicalStack;
 //import net.minecraft.core.NonNullList;
 //import net.minecraft.core.component.DataComponentType;
@@ -11,7 +11,8 @@
 //import net.minecraft.world.entity.player.Player;
 //import net.minecraft.world.inventory.MenuType;
 //import net.minecraft.world.item.ItemStack;
-//import org.jspecify.annotations.Nullable;
+//import net.neoforged.fml.LogicalSide;
+//import org.jetbrains.annotations.Nullable;
 //
 //public class EnderChemicalFilterMenu extends AbstractFilterMenu<EnderChemicalFilter> {
 //
@@ -71,7 +72,7 @@
 //        return isInvertedSyncSlot.get();
 //    }
 //
-//    @EnsureSide(EnsureSide.Side.SERVER)
+//    @UseOnly(LogicalSide.SERVER)
 //    private ChemicalStack getChemicalInFilter(int slotIndex) {
 //        var filter = getFilter();
 //        if (slotIndex >= filter.matches().size()) {
@@ -81,7 +82,7 @@
 //        return filter.matches().get(slotIndex);
 //    }
 //
-//    @EnsureSide(EnsureSide.Side.SERVER)
+//    @UseOnly(LogicalSide.SERVER)
 //    private void setChemicalInFilter(int slotIndex, ChemicalStack stack) {
 //        modifyFilter(filter -> {
 //            // Copy match list

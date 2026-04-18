@@ -1,7 +1,7 @@
 package com.enderio.enderio.content.machines.obelisks;
 
 import com.enderio.enderio.api.EnderIOCapabilities;
-import com.enderio.enderio.api.UseOnly;
+import com.enderio.core.annotations.UseOnly;
 import com.enderio.enderio.api.capacitor.CapacitorScalable;
 import com.enderio.enderio.api.filter.SoulFilter;
 import com.enderio.enderio.api.io.IOMode;

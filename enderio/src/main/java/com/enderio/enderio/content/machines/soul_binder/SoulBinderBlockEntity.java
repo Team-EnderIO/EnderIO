@@ -3,7 +3,6 @@ package com.enderio.enderio.content.machines.soul_binder;
 import com.enderio.core.common.storage.FluidStorage;
 import com.enderio.core.common.storage.layout.FluidStorageLayout;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
-import com.enderio.enderio.api.UseOnly;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
@@ -26,7 +25,7 @@ import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOFluids;
 import com.enderio.enderio.init.EIOItems;
 import com.enderio.enderio.init.EIORecipeTypes;
-import me.liliandev.ensure.ensures.EnsureSide;
+import com.enderio.core.annotations.UseOnly;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentGetter;
@@ -184,7 +183,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
                 INPUT_OTHER.getStack(getInventory()), fluidStorage.getStack(TANK_SLOT));
     }
 
-    @EnsureSide(EnsureSide.Side.CLIENT)
+    @UseOnly(LogicalSide.CLIENT)
     private SoulBindingRecipe.Input createFakeRecipeInput() {
         return new SoulBindingRecipe.Input(INPUT_SOUL.getStack(getInventory()),
                 INPUT_OTHER.getStack(getInventory()),
@@ -193,7 +192,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
 
     // endregion
 
-    @EnsureSide(EnsureSide.Side.CLIENT)
+    @UseOnly(LogicalSide.CLIENT)
     public int getClientExp() {
         // This should always set a valid recipe.
         if (level != null && clientRecipe == null && hasValidRecipe()) {

@@ -1,6 +1,6 @@
 package com.enderio.enderio.content.machines.farming_station;
 
-import com.enderio.enderio.api.UseOnly;
+import com.enderio.core.annotations.UseOnly;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.enderio.api.farm.FarmInteraction;
@@ -24,7 +24,6 @@ import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
 import com.mojang.authlib.GameProfile;
-import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentGetter;
@@ -343,7 +342,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
         return TOOLS.get(2).getItemStack(this);
     }
 
-    @EnsureSide(EnsureSide.Side.SERVER)
+    @UseOnly(LogicalSide.SERVER)
     @Override
     public FakePlayer getPlayer() {
         if (!(level instanceof ServerLevel serverLevel)) {
