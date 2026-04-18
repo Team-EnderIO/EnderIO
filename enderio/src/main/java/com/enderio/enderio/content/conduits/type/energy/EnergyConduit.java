@@ -27,6 +27,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.energy.EmptyEnergyStorage;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -79,25 +80,30 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
         consumer.accept(PATH_MAX_TRANSFER_RATE, transferRatePerTick());
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public <TCap, TContext> @Nullable TCap proxyCapability(Level level, @Nullable ConduitNode node,
+    public <TCap, TContext> @Nullable TCap proxyCapability(Level level, ConduitNode node,
             BlockCapability<TCap, TContext> capability, @Nullable TContext context) {
 
         if (Capabilities.EnergyStorage.BLOCK == capability && context instanceof Direction side) {
-            if (node != null) {
-                // Disabled, do not offer the capability (so if we're disconnected we allow auto connect).
-                // Note that this will introduce a minor quirk - if disabled, the cap will be invisible until re-enabled.
-                // in the case of Energizer rods in Powah, you will not be able to place one against the disabled conduit.
-                // This is necessary however, because many cables will retain a 'connected' appearance if the capability is still exposed.
-                // See GH-1184 for the original bug report.
-                // TODO: Review whether not hiding a disconnected cap could have other unforseen issues, such as cables attaching to conduits weirdly.
-                if (node.getConnectionStatus(side) == ConnectionStatus.DISABLED) {
-                    return null;
-                }
+            // Disabled, do not offer the capability (so if we're disconnected we allow auto connect).
+            // Note that this will introduce a minor quirk - if disabled, the cap will be invisible until re-enabled.
+            // in the case of Energizer rods in Powah, you will not be able to place one against the disabled conduit.
+            // This is necessary however, because many cables will retain a 'connected' appearance if the capability is still exposed.
+            // See GH-1184 for the original bug report.
+            // TODO: Review whether not hiding a disconnected cap could have other unforseen issues, such as cables attaching to conduits weirdly.
+            if (node.getConnectionStatus(side) == ConnectionStatus.DISABLED) {
+                return null;
             }
 
-            // noinspection unchecked
-            return (TCap) new EnergyConduitStorage(side, node);
+            // If this conduit can be 'extracted' from (in this case, we'll push energy lol) we return a cap.
+            var config = node.getConnectionConfig(side, EnergyConduitConnectionConfig.TYPE);
+            if (config.isExtract()) {
+                return (TCap) new EnergyConduitStorage(side, node);
+            }
+
+            // Return an empty cap if we're not pushing energy, so that blocks know they can connect to receive energy
+            return (TCap) EnergyConduitStorageStub.INSTANCE;
         }
 
         return null;

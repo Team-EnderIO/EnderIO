@@ -9,10 +9,14 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
-public record EnergyConduitStorage(Direction side, @Nullable ConduitNode node) implements IEnergyStorage {
+public record EnergyConduitStorage(Direction side, ConduitNode node) implements IEnergyStorage {
     @Override
     public int receiveEnergy(int amount, boolean simulate) {
-        if (node == null || !node.isLoaded() || amount <= 0) {
+        if (!node.isLoaded() || amount <= 0) {
+            return 0;
+        }
+
+        if (!node.getConnectionConfig(side, EnergyConduitConnectionConfig.TYPE).canExtract(node::hasRedstoneSignal)) {
             return 0;
         }
 
