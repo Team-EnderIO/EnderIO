@@ -54,6 +54,11 @@ public record RedstoneConduit(Identifier texture, Identifier activeTexture, Comp
     }
 
     @Override
+    public boolean shouldCheckConnectionsOnNeighborChange() {
+        return true;
+    }
+
+    @Override
     public boolean canConnectToBlock(Level level, ConduitCapabilityAccessor capabilityAccessor, BlockPos conduitPos, Direction direction) {
         BlockPos neighbor = conduitPos.relative(direction);
         BlockState blockState = level.getBlockState(neighbor);
