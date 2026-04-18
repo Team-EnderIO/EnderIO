@@ -69,6 +69,11 @@ public record ChemicalConduit(ResourceLocation texture, Component description, l
     }
 
     @Override
+    public boolean shouldCheckConnectionsOnNeighborChange() {
+        return false;
+    }
+
+    @Override
     public boolean canConnectToBlock(Level level, ConduitCapabilityAccessor capabilityAccessor, BlockPos conduitPos, Direction direction) {
         return capabilityAccessor.getSidedCapability(MekanismModule.Capabilities.CHEMICAL, direction) != null;
     }

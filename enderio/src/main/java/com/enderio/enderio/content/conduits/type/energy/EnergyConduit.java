@@ -64,6 +64,11 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
     }
 
     @Override
+    public boolean shouldCheckConnectionsOnNeighborChange() {
+        return false;
+    }
+
+    @Override
     public boolean canConnectToBlock(Level level, ConduitCapabilityAccessor capabilityAccessor, BlockPos conduitPos, Direction direction) {
         IEnergyStorage capability = capabilityAccessor.getSidedCapability(Capabilities.EnergyStorage.BLOCK, direction);
         return capability != null;

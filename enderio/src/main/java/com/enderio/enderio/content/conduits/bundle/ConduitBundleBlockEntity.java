@@ -971,14 +971,20 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     }
 
     // TODO: I've not properly reviewed this method.
-    public void updateConnections(Level level, BlockPos pos, @Nullable BlockPos fromPos, boolean shouldActivate) {
+    public void updateConnections(Level level, BlockPos pos, @Nullable BlockPos fromPos, boolean isNeighborChanged) {
         if (fromPos != null && level.getBlockEntity(fromPos) instanceof ConduitBundleBlockEntity) {
             return;
         }
 
         for (Direction side : Direction.values()) {
             for (var conduit : conduits) {
-                if (shouldActivate && conduit.value().hasConnectionDelay()) {
+                if (isNeighborChanged && !conduit.value().shouldCheckConnectionsOnNeighborChange()) {
+                    continue;
+                }
+
+                // If triggered by neighbor changed, we can delay the connection.
+                // TODO: 26.1 - consider removal of connection delays, cap invalidation may be enough...
+                if (isNeighborChanged && conduit.value().hasConnectionDelay()) {
                     checkConnection = checkConnection.activate();
                     continue;
                 }
