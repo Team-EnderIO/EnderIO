@@ -85,30 +85,32 @@ public class InternalTankTasks {
 
         if (!inputItem.isEmpty()) {
             if (inputItem.getItem() == Items.BUCKET) {
-                if (fluidStorage.getAmountAsInt(tankSlot) > 0) {
+                if (outputItem.isEmpty() || (outputItem.getCount() < outputItem.getMaxStackSize())) {
+                    if (fluidStorage.getAmountAsInt(tankSlot) > 0) {
 
-                    try (Transaction transaction = Transaction.openRoot()) {
-                        var resource = fluidStorage.getResource(tankSlot);
-                        if (resource.isEmpty()) {
-                            return;
-                        }
+                        try (Transaction transaction = Transaction.openRoot()) {
+                            var resource = fluidStorage.getResource(tankSlot);
+                            if (resource.isEmpty()) {
+                                return;
+                            }
 
-                        // Ensure there's a bucket to be given to the player.
-                        if (resource.getFluid().getBucket() == Items.AIR) {
-                            return;
-                        }
+                            // Ensure there's a bucket to be given to the player.
+                            if (resource.getFluid().getBucket() == Items.AIR) {
+                                return;
+                            }
 
-                        int extracted = fluidStorage.internalExtract(tankSlot, resource, FluidType.BUCKET_VOLUME, transaction);
-                        if (extracted != FluidType.BUCKET_VOLUME) {
-                            return;
-                        }
+                            int extracted = fluidStorage.internalExtract(tankSlot, resource, FluidType.BUCKET_VOLUME, transaction);
+                            if (extracted != FluidType.BUCKET_VOLUME) {
+                                return;
+                            }
 
-                        transaction.commit();
-                        inputItem.shrink(1);
-                        if (outputItem.isEmpty()) {
-                            fluidDrainOutput.setStackInSlot(blockEntity, resource.getFluid().getBucket().getDefaultInstance());
-                        } else {
-                            outputItem.grow(1);
+                            transaction.commit();
+                            inputItem.shrink(1);
+                            if (outputItem.isEmpty()) {
+                                fluidDrainOutput.setStackInSlot(blockEntity, resource.getFluid().getBucket().getDefaultInstance());
+                            } else {
+                                outputItem.grow(1);
+                            }
                         }
                     }
                 }

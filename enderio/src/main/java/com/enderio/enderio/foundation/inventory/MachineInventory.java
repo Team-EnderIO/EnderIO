@@ -58,7 +58,7 @@ public class MachineInventory extends ItemStacksResourceHandler {
 
     @Override
     protected int getCapacity(int index, ItemResource resource) {
-        return layout.getStackLimit(index);
+        return Math.min(layout.getStackLimit(index), super.getCapacity(index, resource));
     }
 
     @Nullable
