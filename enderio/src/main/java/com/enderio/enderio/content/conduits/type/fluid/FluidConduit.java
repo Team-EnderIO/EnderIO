@@ -76,11 +76,6 @@ public record FluidConduit(Identifier texture, Component description, int transf
     }
 
     @Override
-    public boolean shouldCheckConnectionsOnNeighborChange() {
-        return false;
-    }
-
-    @Override
     public boolean canConnectToBlock(Level level, ConduitCapabilityAccessor capabilityAccessor, BlockPos conduitPos, Direction direction) {
         var capability = capabilityAccessor.getSidedCapability(Capabilities.Fluid.BLOCK, direction);
         return capability != null;

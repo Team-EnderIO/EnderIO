@@ -119,7 +119,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     private boolean hasDirtyNodes = false;
 
     // Deferred connection check
-    private UpdateState checkConnection = UpdateState.NONE;
+    private boolean shouldCheckForConnections;
 
     // NBT Keys
     private static final String FACADE_PROVIDER_KEY = "FacadeProvider";
@@ -161,9 +161,9 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         super.serverTick();
 
         if (level != null) {
-            checkConnection = checkConnection.next();
-            if (checkConnection.isInitialized()) {
+            if (shouldCheckForConnections) {
                 updateConnections(level, false);
+                shouldCheckForConnections = false;
             }
 
             if (hasDirtyNodes) {
@@ -976,13 +976,6 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
                     continue;
                 }
 
-                // If triggered by neighbor changed, we can delay the connection.
-                // TODO: 26.1 - consider removal of connection delays, cap invalidation may be enough...
-                if (isNeighborChanged && conduit.value().hasConnectionDelay()) {
-                    checkConnection = checkConnection.activate();
-                    continue;
-                }
-
                 var currentStatus = getConnectionStatus(conduit, side);
 
                 if (currentStatus.canConnect()) {
@@ -1006,7 +999,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     }
 
     private void onCapabilityInvalidated() {
-        checkConnection = checkConnection.activate();
+        shouldCheckForConnections = true;
     }
 
     private NeighboringCapabilityCaches getCacheFor(Holder<Conduit<?, ?>> conduit) {
@@ -1620,26 +1613,6 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
             //noinspection unchecked
             return (T)cache.getCapability();
-        }
-    }
-
-    public enum UpdateState {
-        NONE, NEXT_NEXT, NEXT, INITIALIZED;
-
-        public boolean isInitialized() {
-            return this == INITIALIZED;
-        }
-
-        public UpdateState next() {
-            return switch (this) {
-            case NONE, INITIALIZED -> NONE;
-            case NEXT_NEXT -> NEXT;
-            case NEXT -> INITIALIZED;
-            };
-        }
-
-        public UpdateState activate() {
-            return NEXT_NEXT;
         }
     }
 }

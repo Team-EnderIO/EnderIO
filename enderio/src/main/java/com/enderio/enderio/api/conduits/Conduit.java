@@ -129,23 +129,13 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
     // region Connections
 
     /**
-     * Will be removed in 9.x. No longer needed since conduits can handle capability invalidation
-     * @return if this is not always able to determine connectivity to its neighbours at time of placement, but the tick later
-     */
-    @Deprecated(since = "8.2.7")
-    default boolean hasConnectionDelay() {
-        return false;
-    }
-
-    /**
      * If the conduit checks for presence of capabilities, this should return false.
      * Ensure that inside {@link #canConnectToBlock(Level, ConduitCapabilityAccessor, BlockPos, Direction)} you make use of {@link ConduitCapabilityAccessor}
      * as that handles invalidation listening.
      * @return if this conduit should check connections on neighbor changed events.
      */
     default boolean shouldCheckConnectionsOnNeighborChange() {
-        // TODO: 26.1 - default to false.
-        return true;
+        return false;
     }
 
     default boolean canConnectToBlock(Level level, ConduitCapabilityAccessor capabilityAccessor, BlockPos conduitPos, Direction direction) {

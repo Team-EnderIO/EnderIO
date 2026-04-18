@@ -66,11 +66,6 @@ public record ItemConduit(Identifier texture, Component description, int transfe
     }
 
     @Override
-    public boolean shouldCheckConnectionsOnNeighborChange() {
-        return false;
-    }
-
-    @Override
     public boolean canConnectToConduit(ItemConduit other) {
         return ConduitsConfig.COMMON.CAN_MIX_ITEM_CONDUIT_TIERS.get();
     }
