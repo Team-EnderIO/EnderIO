@@ -1,6 +1,7 @@
 package com.enderio.core.common.storage.layout;
 
 import com.enderio.core.common.storage.slot.ResourceSlotKey;
+import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class ItemStorageLayout extends ResourceStorageLayout<ItemResource> {
 
         @Override
         protected SlotBuilder<ItemResource> createSlotBuilder() {
-            return super.createSlotBuilder().capacity(ItemResource::getMaxStackSize);
+            return super.createSlotBuilder().capacity(Item.ABSOLUTE_MAX_STACK_SIZE);
         }
 
         public ItemStorageLayout build() {

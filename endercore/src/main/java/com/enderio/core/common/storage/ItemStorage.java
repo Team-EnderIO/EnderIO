@@ -22,6 +22,12 @@ public class ItemStorage extends StacksResourceStorage<ItemResource, ItemStack> 
     }
 
     @Override
+    protected int getCapacity(int index, ItemResource resource) {
+        int slotCapacity = super.getCapacity(index, resource);
+        return resource.isEmpty() ? slotCapacity : Math.min(resource.getMaxStackSize(), slotCapacity);
+    }
+
+    @Override
     protected ItemStack getStackFrom(ItemResource resource, int amount) {
         return resource.toStack(amount);
     }
