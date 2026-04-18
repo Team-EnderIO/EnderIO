@@ -1,7 +1,7 @@
 package com.enderio.enderio.foundation.task.host;
 
 import com.enderio.core.common.blockentity.EnderBlockEntity;
-import com.enderio.enderio.api.UseOnly;
+import com.enderio.core.annotations.UseOnly;
 import com.enderio.enderio.foundation.task.MachineTask;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;

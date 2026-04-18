@@ -144,7 +144,6 @@ dependencyResolutionManagement {
     }
 }
 
-include("ensure_plugin")
 include("endercore")
 include("enderio")
 include("enderio-modded-conduits")

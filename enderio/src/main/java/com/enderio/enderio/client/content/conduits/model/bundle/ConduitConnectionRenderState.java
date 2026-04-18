@@ -1,10 +1,11 @@
 package com.enderio.enderio.client.content.conduits.model.bundle;
 
+import com.enderio.core.annotations.UseOnly;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.enderio.enderio.api.conduits.connection.config.IOConnectionConfig;
 import com.enderio.enderio.api.conduits.connection.config.RedstoneSensitiveConnectionConfig;
-import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.world.item.DyeColor;
+import net.neoforged.fml.LogicalSide;
 
 public record ConduitConnectionRenderState(boolean canInput, DyeColor inputChannel, boolean canOutput,
         DyeColor outputChannel, boolean isRedstoneSensitive, DyeColor redstoneChannel) {
@@ -13,7 +14,7 @@ public record ConduitConnectionRenderState(boolean canInput, DyeColor inputChann
         return new ConduitConnectionRenderState(false, DyeColor.GREEN, false, DyeColor.GREEN, false, DyeColor.RED);
     }
 
-    @EnsureSide(EnsureSide.Side.CLIENT)
+    @UseOnly(LogicalSide.CLIENT)
     public static ConduitConnectionRenderState of(ConnectionConfig connectionConfig) {
         boolean canInsert = false;
         boolean canExtract = false;

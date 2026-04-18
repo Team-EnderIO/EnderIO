@@ -1,10 +1,9 @@
 package com.enderio.enderio.foundation.block.entity;
 
 import com.enderio.enderio.api.EnderIOCapabilities;
-import com.enderio.enderio.api.UseOnly;
+import com.enderio.core.annotations.UseOnly;
 import com.enderio.enderio.api.capacitor.CapacitorData;
 import com.enderio.enderio.api.capacitor.CapacitorScalable;
-import com.enderio.enderio.api.io.IOMode;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.enderio.content.capacitors.CapacitorItem;
 import com.enderio.enderio.foundation.MachineNBTKeys;
