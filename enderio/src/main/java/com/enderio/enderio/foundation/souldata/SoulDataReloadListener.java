@@ -66,7 +66,10 @@ public class SoulDataReloadListener<T extends SoulData> extends SimpleJsonResour
 
     @Override
     protected void apply(Map<Identifier, T> soulData, ResourceManager resourceManager, ProfilerFiller profiler) {
-        this.map = new HashMap<>(soulData);
+        this.map = new HashMap<>();
+        for (T soul : soulData.values()) {
+            this.map.put(soul.getKey(), soul);
+        }
         LOGGER.info("Data loader for {} loaded {} jsons", this.folderName, this.map.size());
     }
 
