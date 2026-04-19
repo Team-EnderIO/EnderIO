@@ -27,9 +27,14 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
@@ -48,6 +53,33 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
             MachinesConfig.COMMON.ENERGY.PAINTING_MACHINE_CAPACITY);
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE,
             MachinesConfig.COMMON.ENERGY.PAINTING_MACHINE_USAGE);
+
+    public static final BlockGetter BLOCK_GETTER = new BlockGetter() {
+        @Override
+        public @Nullable BlockEntity getBlockEntity(BlockPos pos) {
+            return null;
+        }
+
+        @Override
+        public BlockState getBlockState(BlockPos pos) {
+            return Blocks.AIR.defaultBlockState();
+        }
+
+        @Override
+        public FluidState getFluidState(BlockPos pos) {
+            return Fluids.EMPTY.defaultFluidState();
+        }
+
+        @Override
+        public int getHeight() {
+            return 0;
+        }
+
+        @Override
+        public int getMinY() {
+            return 0;
+        }
+    };
 
     private final AABB area;
 
@@ -110,7 +142,7 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
                 return false;
             }
 
-            return block.defaultBlockState().isCollisionShapeFullBlock(BlockAndTintGetter.EMPTY, BlockPos.ZERO);
+            return block.defaultBlockState().isCollisionShapeFullBlock(BLOCK_GETTER, BlockPos.ZERO);
         }
         return false;
     }
