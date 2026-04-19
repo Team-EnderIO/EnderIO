@@ -5,6 +5,7 @@ import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.enderio.api.io.IOMode;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
+import com.enderio.enderio.compat.curios.CuriosCompat;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.foundation.MachineNBTKeys;
 import com.enderio.enderio.foundation.attachment.ActionRange;
@@ -108,6 +109,37 @@ public class WirelessChargerBlockEntity extends PoweredMachineBlockEntity implem
 
                         if (toDistribute <= 0) {
                             return;
+                        }
+                    }
+                }
+            }
+
+            //Curios compat
+            var items = CuriosCompat.getActiveCurios(player, s -> true);
+            if (items.isPresent()) {
+                for (ItemStack stack : items.get()) {
+                    if (stack.isEmpty()) {
+                        continue;
+                    }
+                    @Nullable EnergyHandler cap = stack.getCapability(Capabilities.Energy.ITEM, ItemAccess.forStack(stack));
+                    if (cap != null) {
+                        try (Transaction transaction = Transaction.openRoot()) {
+                            int maxConsumed;
+                            try (Transaction simulatedConsume = Transaction.open(transaction)) {
+                                maxConsumed = energyStorage.consume(toDistribute, simulatedConsume);
+                            }
+
+                            int inserted = cap.insert(maxConsumed, transaction);
+                            if (inserted != energyStorage.consume(inserted, transaction)) {
+                                continue;
+                            }
+
+                            toDistribute -= inserted;
+                            transaction.commit();
+
+                            if (toDistribute <= 0) {
+                                return;
+                            }
                         }
                     }
                 }
