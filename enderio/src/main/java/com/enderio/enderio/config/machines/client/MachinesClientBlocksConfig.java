@@ -14,6 +14,7 @@ public class MachinesClientBlocksConfig {
     public final ModConfigSpec.ConfigValue<String> AVERSION_RANGE_COLOR;
     public final ModConfigSpec.ConfigValue<String> ATTRACTOR_RANGE_COLOR;
     public final ModConfigSpec.ConfigValue<String> WIRELESS_CHARGER_RANGE_COLOR;
+    public final ModConfigSpec.ConfigValue<String> FARM_RANGE_COLOR;
 
     public MachinesClientBlocksConfig(ModConfigSpec.Builder builder) {
         builder.push("blocks");
@@ -37,6 +38,8 @@ public class MachinesClientBlocksConfig {
                 .define("attractorRangeColor", "8B0000");
         WIRELESS_CHARGER_RANGE_COLOR = builder.comment("The color of the range box of the Wireless Charger")
                 .define("wirelessChargerRangeColor", "C7CC2A");
+        FARM_RANGE_COLOR = builder.comment("The color of the range box of the Farming Station")
+            .define("farmingStationRangeColor", "00FF00");
         builder.pop();
     }
 }

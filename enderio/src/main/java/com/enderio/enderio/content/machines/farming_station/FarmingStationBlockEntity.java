@@ -147,7 +147,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     public void clientTick() {
         if (level.isClientSide() && level instanceof ClientLevel clientLevel) {
             getActionRange().addClientParticle(clientLevel, getParticleLocation(),
-                    MachinesConfig.CLIENT.BLOCKS.DRAIN_RANGE_COLOR.get());
+                    MachinesConfig.CLIENT.BLOCKS.FARM_RANGE_COLOR.get());
         }
 
         super.clientTick();
@@ -425,11 +425,10 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
 
-        var range = input.read(MachineNBTKeys.ACTION_RANGE, ActionRange.CODEC);
-        range.ifPresent(r -> this.actionRange = r);
+        actionRange = input.read(MachineNBTKeys.ACTION_RANGE, ActionRange.CODEC)
+            .orElse(DEFAULT_RANGE);
 
-        var bound = input.read(MachineNBTKeys.ENTITY_STORAGE, Soul.OPTIONAL_CODEC);
-        bound.ifPresent(b -> this.boundSoul = b);
+        boundSoul = input.read(MachineNBTKeys.ENTITY_STORAGE, Soul.OPTIONAL_CODEC).orElse(Soul.EMPTY);
     }
 
     @Override
