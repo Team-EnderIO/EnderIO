@@ -39,16 +39,16 @@ public class AlloyRecipeProvider extends SubRecipeProvider {
 
         // region Metal Alloys
 
-        build(new ItemStack(EIOItems.CONDUCTIVE_ALLOY_INGOT.get()),
+        build(new ItemStack(EIOItems.CONDUCTIVE_ALLOY_INGOT.get(), 2),
                 List.of(SizedIngredient.of(Tags.Items.INGOTS_IRON, 1),
                     SizedIngredient.of(Tags.Items.INGOTS_COPPER, 1)),
                 3200, 0.3f, recipeOutput);
-        build(new ItemStack(EIOItems.ENERGETIC_ALLOY_INGOT.get()),
+        build(new ItemStack(EIOItems.ENERGETIC_ALLOY_INGOT.get(), 2),
                 List.of(SizedIngredient.of(Tags.Items.DUSTS_REDSTONE, 1),
                         SizedIngredient.of(EIOTags.Items.INGOTS_CONDUCTIVE_ALLOY, 1),
                         SizedIngredient.of(Tags.Items.INGOTS_GOLD, 1)),
                 4800, 0.3f, recipeOutput);
-        build(new ItemStack(EIOItems.VIBRANT_ALLOY_INGOT.get()),
+        build(new ItemStack(EIOItems.VIBRANT_ALLOY_INGOT.get(), 2),
                 List.of(SizedIngredient.of(EIOTags.Items.INGOTS_ENERGETIC_ALLOY, 1),
                         SizedIngredient.of(Tags.Items.ENDER_PEARLS, 1),
                         SizedIngredient.of(Tags.Items.DUSTS_GLOWSTONE, 1)),
@@ -62,15 +62,15 @@ public class AlloyRecipeProvider extends SubRecipeProvider {
         build(EnderIO.rl("dark_steel_ingot_with_coal"),
                 List.of(SizedIngredient.of(Tags.Items.INGOTS_IRON, 1), SizedIngredient.of(Items.COAL, 2),
                         SizedIngredient.of(Tags.Items.OBSIDIANS, 1)),
-                new ItemStack(EIOItems.DARK_STEEL_INGOT.get()), 3200, 0.3f, recipeOutput);
-        build(new ItemStack(EIOItems.DARK_STEEL_INGOT.get()), List.of(SizedIngredient.of(Tags.Items.INGOTS_IRON, 1),
+                new ItemStack(EIOItems.DARK_STEEL_INGOT.get(), 2), 3200, 0.3f, recipeOutput);
+        build(new ItemStack(EIOItems.DARK_STEEL_INGOT.get(), 2), List.of(SizedIngredient.of(Tags.Items.INGOTS_IRON, 1),
                 SizedIngredient.of(EIOTags.Items.DUSTS_COAL, 1), SizedIngredient.of(Tags.Items.OBSIDIANS, 1)), 3200,
                 0.3f, recipeOutput);
         build(new ItemStack(EIOItems.SOULARIUM_INGOT.get()),
                 List.of(new SizedIngredient(Ingredient.of(Items.SOUL_SAND, Items.SOUL_SOIL), 1),
                         SizedIngredient.of(Tags.Items.INGOTS_GOLD, 1)),
                 5600, 0.3f, recipeOutput);
-        build(new ItemStack(EIOItems.END_STEEL_INGOT.get()), List.of(SizedIngredient.of(Tags.Items.END_STONES, 1),
+        build(new ItemStack(EIOItems.END_STEEL_INGOT.get(), 2), List.of(SizedIngredient.of(Tags.Items.END_STONES, 1),
                 SizedIngredient.of(EIOTags.Items.INGOTS_DARK_STEEL, 1), SizedIngredient.of(Tags.Items.OBSIDIANS, 1)),
                 6400, 0.3f, recipeOutput);
 
@@ -149,7 +149,7 @@ public class AlloyRecipeProvider extends SubRecipeProvider {
         // region Misc
 
         build(new ItemStack(EIOItems.PHOTOVOLTAIC_PLATE.get()),
-                List.of(SizedIngredient.of(EIOItems.PHOTOVOLTAIC_COMPOSITE.get(), 3)), 5600, 0.3f, recipeOutput);
+                List.of(SizedIngredient.of(EIOItems.PHOTOVOLTAIC_COMPOSITE.get(), 1)), 5600, 0.3f, recipeOutput);
 
         build(new ItemStack(Items.ENDER_PEARL), List.of(SizedIngredient.of(EIOTags.Items.DUSTS_ENDER, 9)), 2000, 0.3f,
                 recipeOutput);
