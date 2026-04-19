@@ -108,12 +108,12 @@ public class PoweredSpawnerScreen extends MachineScreen<PoweredSpawnerMenu> {
     @Override
     protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         String modeLabel = Objects.requireNonNull(menu.getMode().getComponent()).getString();
-        graphics.text(font, modeLabel, (int) (imageWidth / 2f - font.width(modeLabel) / 2f), 25, CommonColors.DARK_GRAY, true);
+        graphics.text(font, modeLabel, (int) (imageWidth / 2f - font.width(modeLabel) / 2f), 25, CommonColors.DARK_GRAY, false);
 
         var entityType = getMenu().getBlockEntity().getEntityType();
         if (entityType != null) {
             String name = entityType.getDescription().getString();
-            graphics.text(font, name, (int) (imageWidth / 2f - font.width(name) / 2f), 65, CommonColors.DARK_GRAY, true);
+            graphics.text(font, name, (int) (imageWidth / 2f - font.width(name) / 2f), 65, CommonColors.DARK_GRAY, false);
         }
 
         super.extractLabels(graphics, mouseX, mouseY);
