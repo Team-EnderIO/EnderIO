@@ -39,21 +39,9 @@ type="optional"
 versionRange="${ftb_ultimine_version_range}"
 side="BOTH"
 
-# Modded conduits
-#[[dependencies.enderio]]
-#modId="mekanism"
-#type="optional"
-#versionRange="${mekanism_version_range}"
-#side="BOTH"
-#
-#[[dependencies.enderio]]
-#modId="ae2"
-#type="optional"
-#versionRange="${ae2_version_range}"
-#side="BOTH"
-#
-#[[dependencies.enderio]]
-#modId="refinedstorage"
-#type="optional"
-#versionRange="${refinedstorage_version_range}"
-#side="BOTH"
+# Curios Compat
+[[dependencies.enderio]]
+modId="curios"
+type="optional"
+versionRange="${curios_version_range}"
+side="BOTH"
