@@ -78,7 +78,7 @@ configurations {
     }
 }
 
-
+val neoforgeVersionRange: String by project
 dependencies {
     val localRuntime by configurations.getting
 
@@ -126,10 +126,6 @@ dependencies {
 
 //    localRuntime(libs.mekanism)
 
-    // Refined Storage
-//    compileOnly(libs.refinedStorage)
-//    localRuntime(libs.refinedStorage)
-
     //Laserio
 //    compileOnly(libs.laserio)
 //    localRuntime(libs.laserio)
@@ -142,8 +138,10 @@ dependencies {
     // TODO: Stop including FTB Library when it is transitively available via Ultimine
     compileOnly(libs.ftbUltimine)
     compileOnly(libs.ftbLibrary)
-    localRuntime(libs.ftbUltimine)
-    localRuntime(libs.ftbLibrary)
+
+    // TODO: Disabled until they fix Neo .21 compat
+//    localRuntime(libs.ftbUltimine)
+//    localRuntime(libs.ftbLibrary)
 
 	// Curio compat
     compileOnly(libs.curios)
@@ -157,23 +155,24 @@ dependencies {
     // Unit tests
     testImplementation(libs.junitJupiter)
     testRuntimeOnly(libs.junitPlatformLauncher)
-    testImplementation(libs.neoforgeTestFramework)
+    testImplementation("net.neoforged:testframework:${neoforgeVersionRange}")
 
     // Setup gametests
     val gametestImplementation by configurations.getting
-    gametestImplementation(libs.neoforgeTestFramework) {
+    gametestImplementation("net.neoforged:testframework:${neoforgeVersionRange}") {
         isTransitive = false
     }
 
     // Also allow running gametests in client+server but don't declare as a dependency
-    localRuntime(libs.neoforgeTestFramework) {
+    localRuntime("net.neoforged:testframework:${neoforgeVersionRange}") {
         isTransitive = false
     }
 }
 
+val neoforgeVersion: String by project
 neoForge {
     enable {
-        version = libs.versions.neoforge.get()
+        version = neoforgeVersion
         isDisableRecompilation = System.getenv("CI") == "true"
     }
 
@@ -244,11 +243,12 @@ neoForge {
 }
 
 // Expand variables in mods.toml
+val minecraftVersionRange: String by project
 var generateModMetadata = tasks.register<ProcessResources>("generateModMetadata") {
     val replaceProperties = mapOf(
             "mod_version" to project.version,
-            "minecraft_version_range" to libs.versions.minecraft.get(),
-            "neoforge_version" to libs.versions.neoforge.get(),
+            "minecraft_version_range" to minecraftVersionRange,
+            "neoforge_version" to neoforgeVersionRange,
             "mekanism_version_range" to libs.versions.mekanismMod.get(),
             "ae2_version_range" to libs.versions.ae2.get(),
             "refinedstorage_version_range" to libs.versions.refinedStorage.get(),

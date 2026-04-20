@@ -1,6 +1,4 @@
 [versions]
-minecraft = { strictly = "[26.1.2, 26.2)", prefer = "26.1.2" }
-neoforge = "26.1.2.3-beta"
 almostUnified = "1.21.1-1.0.0"
 jeiVersion = "29.5.0.24"
 ccTweaked = "1.113.1"
@@ -21,7 +19,6 @@ iris = "1.8.12+1.21.1-neoforge"
 [libraries]
 jspecify = { group = "org.jspecify", name = "jspecify", version = "1.0.0"}
 jetbrainsAnnotations = { group = "org.jetbrains", name = "annotations", version = "23.0.0"}
-neoforgeTestFramework = { group = "net.neoforged", name = "testframework", version.ref = "neoforge"}
 
 #almostUnified = { group = "com.almostreliable.mods", name = "almostunified-neoforge", version.ref = "almostUnified" }
 jeiCommonApi = { group = "mezz.jei", name = "jei-26.1.2-common-api", version.ref = "jeiVersion" }

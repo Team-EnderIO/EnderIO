@@ -1,7 +1,6 @@
 package com.enderio.enderio.foundation.network;
 
 import com.enderio.enderio.api.EnderIOCapabilities;
-import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
 import com.enderio.enderio.content.conduits.menu.ConduitMenu;
 import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
@@ -16,15 +15,14 @@ import com.enderio.enderio.foundation.network.packets.ServerboundOpenConduitFilt
 import com.enderio.enderio.foundation.network.packets.ServerboundRemoveConduitFacadePacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundSyncProbeStatePacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundTimerFilterPacket;
-import com.enderio.enderio.init.EIOConduitTypes;
 import com.enderio.enderio.init.EIOItems;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class ConduitServerPayloadHandler {
@@ -110,7 +108,7 @@ public class ConduitServerPayloadHandler {
                 }
 
                 // Fire block break event.
-                BlockEvent.BreakEvent event = CommonHooks.fireBlockBreak(level, player.gameMode.getGameModeForPlayer(), player, pos, blockstate);
+                BreakBlockEvent event = CommonHooks.fireBlockBreak(level, player.gameMode.getGameModeForPlayer(), player, pos, blockstate);
                 if (event.isCanceled()) {
                     // Send block entity data back
                     level.sendBlockUpdated(pos, blockstate, blockstate, Block.UPDATE_ALL);
@@ -148,7 +146,7 @@ public class ConduitServerPayloadHandler {
             var blockEntity = level.getBlockEntity(pos);
             if (blockEntity instanceof ConduitBundleBlockEntity conduitBundle) {
                 // Fire block break event.
-                BlockEvent.BreakEvent event = CommonHooks.fireBlockBreak(level, player.gameMode.getGameModeForPlayer(), player, pos, blockState);
+                BreakBlockEvent event = CommonHooks.fireBlockBreak(level, player.gameMode.getGameModeForPlayer(), player, pos, blockState);
                 if (event.isCanceled()) {
                     // Send block entity data back
                     level.sendBlockUpdated(pos, blockState, blockState, Block.UPDATE_ALL);
@@ -190,7 +188,7 @@ public class ConduitServerPayloadHandler {
             var blockEntity = level.getBlockEntity(pos);
             if (blockEntity instanceof ConduitBundleBlockEntity conduitBundle) {
                 // Fire block break event.
-                BlockEvent.BreakEvent event = CommonHooks.fireBlockBreak(level, player.gameMode.getGameModeForPlayer(), player, pos, blockState);
+                BreakBlockEvent event = CommonHooks.fireBlockBreak(level, player.gameMode.getGameModeForPlayer(), player, pos, blockState);
                 if (event.isCanceled()) {
                     // Send block entity data back
                     level.sendBlockUpdated(pos, blockState, blockState, Block.UPDATE_ALL);
