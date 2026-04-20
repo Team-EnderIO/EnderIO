@@ -1,5 +1,6 @@
 package com.enderio.enderio.content.travel;
 
+import com.enderio.core.annotations.UseOnly;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.travel.TravelTarget;
 import com.enderio.enderio.foundation.network.packets.ClientboundSyncTravelDataPacket;
@@ -7,7 +8,6 @@ import com.enderio.enderio.foundation.network.packets.ClientboundTravelTargetRem
 import com.enderio.enderio.foundation.network.packets.ClientboundTravelTargetUpdatedPacket;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -20,6 +20,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.saveddata.SavedDataType;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.LogicalSide;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -70,7 +71,7 @@ public class TravelTargetSavedData extends SavedData {
         }
     }
 
-    @EnsureSide(EnsureSide.Side.CLIENT)
+    @UseOnly(LogicalSide.CLIENT)
     public static void setTravelData(Level level, TravelTargetSavedData data) {
         CLIENT_DATA.put(level.dimension(), data);
     }

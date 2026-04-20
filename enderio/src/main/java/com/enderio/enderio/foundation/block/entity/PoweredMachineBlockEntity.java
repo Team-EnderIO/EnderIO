@@ -3,7 +3,7 @@ package com.enderio.enderio.foundation.block.entity;
 import com.enderio.core.common.storage.ItemStorage;
 import com.enderio.core.common.storage.slot.ResourceSlotId;
 import com.enderio.enderio.api.EnderIOCapabilities;
-import com.enderio.enderio.api.UseOnly;
+import com.enderio.core.annotations.UseOnly;
 import com.enderio.enderio.api.capacitor.CapacitorData;
 import com.enderio.enderio.api.capacitor.CapacitorScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;

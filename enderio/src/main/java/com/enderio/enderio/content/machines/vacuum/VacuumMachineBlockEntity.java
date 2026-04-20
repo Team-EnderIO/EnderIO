@@ -1,7 +1,7 @@
 package com.enderio.enderio.content.machines.vacuum;
 
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
-import com.enderio.enderio.api.UseOnly;
+import com.enderio.core.annotations.UseOnly;
 import com.enderio.enderio.api.io.IOMode;
 import com.enderio.enderio.foundation.MachineNBTKeys;
 import com.enderio.enderio.foundation.attachment.ActionRange;

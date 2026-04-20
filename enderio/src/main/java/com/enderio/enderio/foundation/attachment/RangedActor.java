@@ -1,6 +1,6 @@
 package com.enderio.enderio.foundation.attachment;
 
-import com.enderio.enderio.api.UseOnly;
+import com.enderio.core.annotations.UseOnly;
 import net.neoforged.fml.LogicalSide;
 
 public interface RangedActor {

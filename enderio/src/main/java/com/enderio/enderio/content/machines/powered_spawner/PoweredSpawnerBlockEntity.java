@@ -5,7 +5,7 @@ import com.enderio.core.common.storage.layout.SlotTemplates;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIOCapabilities;
-import com.enderio.enderio.api.UseOnly;
+import com.enderio.core.annotations.UseOnly;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
@@ -32,9 +32,11 @@ import com.mojang.datafixers.util.Either;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
@@ -76,6 +78,8 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
 
     private boolean isRangeVisible = false;
     private boolean mindKiller = false;
+    private double spin;
+    private double oSpin;
 
     public PoweredSpawnerBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.POWERED_SPAWNER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, CAPACITOR,
@@ -179,6 +183,14 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
         return isRangeVisible;
     }
 
+    public double getOSpin() {
+        return oSpin;
+    }
+
+    public double getSpin() {
+        return spin;
+    }
+
     @UseOnly(LogicalSide.SERVER)
     public void setIsRangeVisible(boolean isRangeVisible) {
         this.isRangeVisible = isRangeVisible;
@@ -207,11 +219,22 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
 
     @Override
     public void clientTick() {
-        if (level != null && isRangeVisible()) {
-            var pos = getBlockPos();
-            level.addAlwaysVisibleParticle(
+        if (level != null) {
+            if (isRangeVisible()) {
+                var pos = getBlockPos();
+                level.addAlwaysVisibleParticle(
                     new RangeParticleData(ACTION_RANGE, MachinesConfig.CLIENT.BLOCKS.POWERED_SPAWNER_RANGE_COLOR.get()),
                     true, pos.getX(), pos.getY(), pos.getZ(), 0, 0, 0);
+            }
+
+            RandomSource random = level.getRandom();
+            double xP = getBlockPos().getX() + random.nextDouble();
+            double yP = getBlockPos().getY() + random.nextDouble();
+            double zP = getBlockPos().getZ() + random.nextDouble();
+            level.addParticle(ParticleTypes.SMOKE, xP, yP, zP, 0.0, 0.0, 0.0);
+            level.addParticle(ParticleTypes.SOUL_FIRE_FLAME, xP, yP, zP, 0.0, 0.0, 0.0);
+            this.oSpin = this.spin;
+            this.spin = (this.spin + 1000.0F / 350.0F) % 360.0;
         }
 
         super.clientTick();

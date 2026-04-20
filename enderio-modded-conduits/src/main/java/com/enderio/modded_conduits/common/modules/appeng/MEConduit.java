@@ -61,13 +61,13 @@
 //    }
 //
 //    @Override
-//    public boolean hasConnectionDelay() {
-//        return true;
+//    public boolean canConnectToConduit(MEConduit other) {
+//        return other.color == color;
 //    }
 //
 //    @Override
-//    public boolean canConnectToConduit(MEConduit other) {
-//        return other.color == color;
+//    public boolean shouldCheckConnectionsOnNeighborChange() {
+//        return false;
 //    }
 //
 //    @Override

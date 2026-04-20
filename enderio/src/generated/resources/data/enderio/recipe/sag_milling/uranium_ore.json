@@ -1,0 +1,42 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ores/uranium"
+      }
+    },
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:raw_materials/uranium"
+      }
+    }
+  ],
+  "type": "enderio:sag_milling",
+  "energy": 2400,
+  "input": "#c:ores/uranium",
+  "outputs": [
+    {
+      "item": {
+        "count": 1,
+        "tag": "c:raw_materials/uranium"
+      }
+    },
+    {
+      "chance": 0.33,
+      "item": {
+        "count": 1,
+        "tag": "c:raw_materials/uranium"
+      }
+    },
+    {
+      "chance": 0.15,
+      "item": {
+        "id": "minecraft:cobblestone"
+      }
+    }
+  ]
+}

@@ -1,25 +1,22 @@
-val minecraftVersion: String by project
-val minecraftVersionRange: String by project
-val neoForgeVersionRange: String by project
-val loaderVersionRange: String by project
-
 plugins {
     id("mod-common-conventions")
 }
 
+val neoforgeVersionRange: String by project
 dependencies {
     testImplementation(libs.junitJupiter)
     testRuntimeOnly(libs.junitPlatformLauncher)
-    testImplementation(libs.neoforgeTestFramework)
+    testImplementation("net.neoforged:testframework:${neoforgeVersionRange}")
 }
 
 tasks.test {
     useJUnitPlatform()
 }
 
+val neoforgeVersion: String by project
 neoForge {
     enable {
-        version = libs.versions.neoforge.get()
+        version = neoforgeVersion
         isDisableRecompilation = System.getenv("CI") == "true"
     }
 
@@ -36,11 +33,12 @@ neoForge {
 }
 
 // Expand variables in mods.toml
+val minecraftVersionRange: String by project
 var generateModMetadata = tasks.register<ProcessResources>("generateModMetadata") {
     val replaceProperties = mapOf(
             "mod_version" to project.version,
-            "minecraft_version_range" to libs.versions.minecraft.get(),
-            "neoforge_version" to libs.versions.neoforge.get(),
+            "minecraft_version_range" to minecraftVersionRange,
+            "neoforge_version" to neoforgeVersion,
     )
 
     inputs.properties(replaceProperties)

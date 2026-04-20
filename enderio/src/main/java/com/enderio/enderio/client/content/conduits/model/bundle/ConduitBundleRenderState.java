@@ -1,10 +1,10 @@
 package com.enderio.enderio.client.content.conduits.model.bundle;
 
+import com.enderio.core.annotations.UseOnly;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.client.content.conduits.model.modifier.ConduitModelModifiers;
 import com.enderio.enderio.content.conduits.OffsetHelper;
-import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
@@ -13,6 +13,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.model.data.ModelProperty;
 import org.jspecify.annotations.Nullable;
+import net.neoforged.fml.LogicalSide;
 
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +32,7 @@ public class ConduitBundleRenderState {
     private BlockState facadeBlockstate;
     private boolean doesFacadeHideConduits;
 
-    @EnsureSide(EnsureSide.Side.CLIENT)
+    @UseOnly(LogicalSide.CLIENT)
     public static ConduitBundleRenderState of(ConduitBundle bundle) {
         var renderState = new ConduitBundleRenderState();
 

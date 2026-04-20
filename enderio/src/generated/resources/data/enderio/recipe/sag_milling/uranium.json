@@ -1,0 +1,30 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ingots/uranium"
+      }
+    },
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:dusts/uranium"
+      }
+    }
+  ],
+  "type": "enderio:sag_milling",
+  "bonus": "none",
+  "energy": 2400,
+  "input": "#c:ingots/uranium",
+  "outputs": [
+    {
+      "item": {
+        "count": 1,
+        "tag": "c:dusts/uranium"
+      }
+    }
+  ]
+}

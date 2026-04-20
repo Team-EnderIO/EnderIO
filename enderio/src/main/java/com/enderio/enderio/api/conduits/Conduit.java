@@ -23,7 +23,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipProvider;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import org.apache.commons.lang3.NotImplementedException;
@@ -32,7 +31,6 @@ import org.jspecify.annotations.Nullable;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 import org.joml.Vector2i;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -131,9 +129,12 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
     // region Connections
 
     /**
-     * @return if this is not always able to determine connectivity to its neighbours at time of placement, but the tick later
+     * If the conduit checks for presence of capabilities, this should return false.
+     * Ensure that inside {@link #canConnectToBlock(Level, ConduitCapabilityAccessor, BlockPos, Direction)} you make use of {@link ConduitCapabilityAccessor}
+     * as that handles invalidation listening.
+     * @return if this conduit should check connections on neighbor changed events.
      */
-    default boolean hasConnectionDelay() {
+    default boolean shouldCheckConnectionsOnNeighborChange() {
         return false;
     }
 

@@ -5,7 +5,7 @@ import com.enderio.core.common.storage.layout.FluidStorageLayout;
 import com.enderio.core.common.storage.layout.ItemStorageLayout;
 import com.enderio.core.common.storage.layout.SlotTemplates;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
-import com.enderio.enderio.api.UseOnly;
+import com.enderio.core.annotations.UseOnly;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.enderio.api.io.IOMode;

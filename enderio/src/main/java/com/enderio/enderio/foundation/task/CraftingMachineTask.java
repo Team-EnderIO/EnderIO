@@ -94,7 +94,12 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
         this.recipeId = recipe == null ? null : recipe.id();
         this.recipeHolder = recipe;
         machineStateUpdater.updateMachineState(MachineState.FULL_OUTPUT, false);
-        machineStateUpdater.updateMachineState(MachineState.EMPTY_INPUT, true);
+
+        if (recipe != null) {
+            machineStateUpdater.updateMachineState(MachineState.EMPTY_INPUT, !recipe.value().matches(recipeInput, level));
+        } else {
+            machineStateUpdater.updateMachineState(MachineState.EMPTY_INPUT, true);
+        }
     }
 
     public ItemStorage getInventory() {

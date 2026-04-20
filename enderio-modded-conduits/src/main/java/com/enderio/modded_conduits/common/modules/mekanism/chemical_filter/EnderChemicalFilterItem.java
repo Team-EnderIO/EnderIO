@@ -1,15 +1,16 @@
 //package com.enderio.modded_conduits.common.modules.mekanism.chemical_filter;
 //
+//import com.enderio.core.annotations.UseOnly;
 //import com.enderio.enderio.content.filters.AbstractFilterItem;
 //import com.enderio.enderio.content.filters.AbstractFilterMenu;
 //import com.enderio.modded_conduits.common.modules.mekanism.MekanismModule;
-//import me.liliandev.ensure.ensures.EnsureSide;
 //import net.minecraft.core.component.DataComponentType;
 //import net.minecraft.network.RegistryFriendlyByteBuf;
 //import net.minecraft.world.entity.player.Inventory;
 //import net.minecraft.world.inventory.AbstractContainerMenu;
 //import net.minecraft.world.inventory.MenuType;
 //import net.minecraft.world.item.ItemStack;
+//import net.neoforged.fml.LogicalSide;
 //import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 //import net.neoforged.neoforge.registries.DeferredHolder;
 //
@@ -61,13 +62,13 @@
 //            return rowCount * 9;
 //        }
 //
-//        @EnsureSide(EnsureSide.Side.SERVER)
+//        @UseOnly(LogicalSide.SERVER)
 //        public EnderChemicalFilterMenu openMenu(int containerId, Inventory playerInventory,
 //            AbstractFilterMenu.FilterAccess filterAccess) {
 //            return new EnderChemicalFilterMenu(menuType.get().get(), this, containerId, playerInventory, filterAccess);
 //        }
 //
-//        @EnsureSide(EnsureSide.Side.CLIENT)
+//        @UseOnly(LogicalSide.CLIENT)
 //        public EnderChemicalFilterMenu openMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
 //            return new EnderChemicalFilterMenu(menuType.get().get(), this, containerId, playerInventory);
 //        }

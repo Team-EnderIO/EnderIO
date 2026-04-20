@@ -1,12 +1,12 @@
 package com.enderio.enderio.content.filters.item.general;
 
+import com.enderio.core.annotations.UseOnly;
 import com.enderio.enderio.api.filter.ItemFilter;
 import com.enderio.enderio.content.filters.AbstractFilterItem;
 import com.enderio.enderio.content.filters.AbstractFilterMenu;
 import com.enderio.enderio.content.filters.FiltersLang;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOMenus;
-import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -16,6 +16,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
+import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 
 import java.util.function.Consumer;
@@ -97,13 +98,13 @@ public class EnderItemFilterItem extends AbstractFilterItem<EnderItemFilter> {
             return canFilterByDamage;
         }
 
-        @EnsureSide(EnsureSide.Side.SERVER)
+        @UseOnly(LogicalSide.SERVER)
         public EnderItemFilterMenu openMenu(int containerId, Inventory playerInventory,
                 AbstractFilterMenu.FilterAccess filterAccess) {
             return new EnderItemFilterMenu(menuType.get().get(), this, containerId, playerInventory, filterAccess);
         }
 
-        @EnsureSide(EnsureSide.Side.CLIENT)
+        @UseOnly(LogicalSide.CLIENT)
         public EnderItemFilterMenu openMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
             return new EnderItemFilterMenu(menuType.get().get(), this, containerId, playerInventory);
         }

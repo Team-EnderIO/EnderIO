@@ -59,6 +59,7 @@ import com.enderio.enderio.client.content.machines.gui.screen.XPVacuumScreen;
 import com.enderio.enderio.client.content.machines.renderer.blockentity.FluidTankBER;
 import com.enderio.enderio.client.content.machines.renderer.blockentity.NiardBER;
 import com.enderio.enderio.client.content.machines.renderer.blockentity.ObeliskBER;
+import com.enderio.enderio.client.content.machines.renderer.blockentity.PoweredSpawnerBER;
 import com.enderio.enderio.client.content.misc_blocks.EnderSkullRenderer;
 import com.enderio.enderio.client.content.paint.PaintedSandRenderer;
 import com.enderio.enderio.client.content.paint.model.port.PaintedBlockStateModel;
@@ -238,6 +239,7 @@ public class EnderIOClient {
 
         event.registerBlockEntityRenderer(EIOBlockEntities.FLUID_TANK.get(), FluidTankBER::new);
         event.registerBlockEntityRenderer(EIOBlockEntities.PRESSURIZED_FLUID_TANK.get(), FluidTankBER::new);
+        event.registerBlockEntityRenderer(EIOBlockEntities.POWERED_SPAWNER.get(), PoweredSpawnerBER::new);
 
         event.registerBlockEntityRenderer(EIOBlockEntities.ENDER_SKULL.get(), EnderSkullRenderer::new);
 

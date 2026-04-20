@@ -13,6 +13,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePrope
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
 import net.neoforged.neoforge.common.loot.AddTableLootModifier;
+import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
 import net.neoforged.neoforge.common.loot.LootTableIdCondition;
 
 import java.util.concurrent.CompletableFuture;
@@ -30,7 +31,7 @@ public class EIOLootModifiersProvider extends GlobalLootModifierProvider {
         // armory is enabled.
 
         add("broken_spawner", new BrokenSpawnerLootModifier(new LootItemCondition[] {
-                LootItemBlockStatePropertyCondition.hasBlockStateProperties(Blocks.SPAWNER).build() }));
+                LootItemBlockStatePropertyCondition.hasBlockStateProperties(Blocks.SPAWNER).build() }, IGlobalLootModifier.DEFAULT_PRIORITY));
 
         // TODO: Rarer loot, like nether and ancient city.
         // Can wait until a further balance pass, maybe once we have tools and armor in.
@@ -58,7 +59,8 @@ public class EIOLootModifiersProvider extends GlobalLootModifierProvider {
                 .toArray(LootTableIdCondition.Builder[]::new);
         add(modifierName,
                 new AddTableLootModifier(
-                        new LootItemCondition[] { AnyOfCondition.anyOf(mappedTargetConditions).build() },
-                        ResourceKey.create(Registries.LOOT_TABLE, EnderIO.id("chests/" + modifierName))));
+                    new LootItemCondition[] { AnyOfCondition.anyOf(mappedTargetConditions).build() },
+                    IGlobalLootModifier.DEFAULT_PRIORITY,
+                    ResourceKey.create(Registries.LOOT_TABLE, EnderIO.id("chests/" + modifierName))));
     }
 }

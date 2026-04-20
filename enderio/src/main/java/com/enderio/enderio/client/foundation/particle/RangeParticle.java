@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.state.level.QuadParticleRenderState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.util.ARGB;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -44,9 +45,10 @@ public class RangeParticle extends SingleQuadParticle {
         var quad = new Quaternionf(0,0,0,1);
 
         // TODO: 26.1 - tidy?
-        float x = (float)this.x;
-        float y = (float)this.y;
-        float z = (float)this.z;
+        Vec3 pos = camera.position();
+        float x = (float)(Mth.lerp(partialTickTime, this.xo, this.x) - pos.x());
+        float y = (float)(Mth.lerp(partialTickTime, this.yo, this.y) - pos.y());
+        float z = (float)(Mth.lerp(partialTickTime, this.zo, this.z) - pos.z());
 
         var offsetPos = getOffset(Direction.SOUTH).add(x, y, z);
         particleTypeRenderState.add(this.getLayer(), offsetPos.x, offsetPos.y, offsetPos.z, quad.x, quad.y, quad.z, quad.w, this.getQuadSize(partialTickTime),

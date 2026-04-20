@@ -1,0 +1,30 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ingots/lead"
+      }
+    },
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:dusts/lead"
+      }
+    }
+  ],
+  "type": "enderio:sag_milling",
+  "bonus": "none",
+  "energy": 2400,
+  "input": "#c:ingots/lead",
+  "outputs": [
+    {
+      "item": {
+        "count": 1,
+        "tag": "c:dusts/lead"
+      }
+    }
+  ]
+}

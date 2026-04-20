@@ -9,6 +9,7 @@ import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.monster.Slime;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -16,6 +17,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
+import net.neoforged.neoforge.event.entity.living.MobSplitEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
 import java.util.List;
@@ -24,6 +26,7 @@ import java.util.UUID;
 @EventBusSubscriber()
 public class MobSpawnTask extends PoweredSpawnerTask {
 
+    public static final String MOVABLE = "enderio:movable";
     private float efficiency = 1;
 
     public MobSpawnTask(PoweredSpawnerBlockEntity blockEntity) {
@@ -117,7 +120,7 @@ public class MobSpawnTask extends PoweredSpawnerTask {
                 if (entity instanceof Mob mob) { // based on vanilla spawner
                     if (blockEntity.hasMindKiller()) {
                         mob.setNoAi(true);
-                        mob.getPersistentData().putBoolean("enderio:movable", true);
+                        mob.getPersistentData().putBoolean(MOVABLE, true);
                     }
                     FinalizeSpawnEvent event = EventHooks.finalizeMobSpawnSpawner(mob, level,
                             level.getCurrentDifficultyAt(pos), EntitySpawnReason.SPAWNER, null, blockEntity, false);
@@ -152,10 +155,20 @@ public class MobSpawnTask extends PoweredSpawnerTask {
     @SubscribeEvent
     public static void tickNoAIMobs(EntityTickEvent.Pre e) {
         if (e.getEntity() instanceof Mob mob) {
-            if (!mob.level().isClientSide() && mob.isNoAi() && mob.getPersistentData().getBooleanOr("enderio:movable", false)) {
+            if (!mob.level().isClientSide() && mob.isNoAi() && mob.getPersistentData().getBooleanOr(MOVABLE, false)) {
                 mob.setNoAi(false);
                 mob.travel(new Vec3(mob.xxa, mob.yya, mob.zza));
                 mob.setNoAi(true);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void mobSplit(MobSplitEvent event) {
+        Mob parent = event.getParent();
+        if (!parent.level().isClientSide() && parent.isNoAi() && parent.getPersistentData().getBooleanOr(MOVABLE, false)) {
+            for (var child: event.getChildren()) {
+                child.getPersistentData().putBoolean(MOVABLE, true);
             }
         }
     }

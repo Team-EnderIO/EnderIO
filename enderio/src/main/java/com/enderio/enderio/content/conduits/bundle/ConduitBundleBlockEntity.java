@@ -2,7 +2,7 @@ package com.enderio.enderio.content.conduits.bundle;
 
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.enderio.api.EnderIOCapabilities;
-import com.enderio.enderio.api.UseOnly;
+import com.enderio.core.annotations.UseOnly;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitCapabilityAccessor;
 import com.enderio.enderio.api.conduits.ConduitType;
@@ -32,7 +32,6 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
-import me.liliandev.ensure.ensures.EnsureSide;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -120,7 +119,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     private boolean hasDirtyNodes = false;
 
     // Deferred connection check
-    private UpdateState checkConnection = UpdateState.NONE;
+    private boolean shouldCheckForConnections;
 
     // NBT Keys
     private static final String FACADE_PROVIDER_KEY = "FacadeProvider";
@@ -162,9 +161,9 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         super.serverTick();
 
         if (level != null) {
-            checkConnection = checkConnection.next();
-            if (checkConnection.isInitialized()) {
+            if (shouldCheckForConnections) {
                 updateConnections(level, false);
+                shouldCheckForConnections = false;
             }
 
             if (hasDirtyNodes) {
@@ -242,7 +241,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         shape.updateConduit(this);
     }
 
-    @EnsureSide(EnsureSide.Side.CLIENT)
+    @UseOnly(LogicalSide.CLIENT)
     public void updateModel() {
         requestModelDataUpdate();
         if (level != null) {
@@ -738,7 +737,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
     }
 
-    @EnsureSide(EnsureSide.Side.SERVER)
+    @UseOnly(LogicalSide.SERVER)
     public ConduitNodeImpl getConduitNode(Holder<Conduit<?, ?>> conduit) {
         if (!hasConduitStrict(conduit)) {
             throw new IllegalStateException("Conduit not found in bundle.");
@@ -758,14 +757,14 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     }
 
     // Synced by the GUI, only available on the server BE.
-    @EnsureSide(EnsureSide.Side.SERVER)
+    @UseOnly(LogicalSide.SERVER)
     @Override
     @Nullable
     public CompoundTag getConduitExtraGuiData(Holder<Conduit<?, ?>> conduit, Direction side) {
         return conduit.value().getExtraGuiData(this, getConduitNode(conduit), side);
     }
 
-    @EnsureSide(EnsureSide.Side.SERVER)
+    @UseOnly(LogicalSide.SERVER)
     private void setNode(Holder<Conduit<?, ?>> conduit, ConduitNodeImpl loadedNode) {
         conduitNodes.put(conduit, loadedNode);
 
@@ -970,11 +969,10 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     }
 
     // TODO: I've not properly reviewed this method.
-    public void updateConnections(Level level, boolean shouldActivate) {
+    public void updateConnections(Level level, boolean isNeighborChanged) {
         for (Direction side : Direction.values()) {
             for (var conduit : conduits) {
-                if (shouldActivate && conduit.value().hasConnectionDelay()) {
-                    checkConnection = checkConnection.activate();
+                if (isNeighborChanged && !conduit.value().shouldCheckConnectionsOnNeighborChange()) {
                     continue;
                 }
 
@@ -1001,7 +999,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     }
 
     private void onCapabilityInvalidated() {
-        checkConnection = checkConnection.activate();
+        shouldCheckForConnections = true;
     }
 
     private NeighboringCapabilityCaches getCacheFor(Holder<Conduit<?, ?>> conduit) {
@@ -1198,7 +1196,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
     }
 
-    @EnsureSide(EnsureSide.Side.SERVER)
+    @UseOnly(LogicalSide.SERVER)
     private void loadFromSavedData() {
         if (!(level instanceof ServerLevel serverLevel)) {
             return;
@@ -1213,7 +1211,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         lazyNodeData = null;
     }
 
-    @EnsureSide(EnsureSide.Side.SERVER)
+    @UseOnly(LogicalSide.SERVER)
     private void loadConduitFromSavedData(ConduitNetworkSavedData savedData, Holder<Conduit<?, ?>> conduit,
             int typeIndex) {
         if (level == null || level.isClientSide()) {
@@ -1615,26 +1613,6 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
             //noinspection unchecked
             return (T)cache.getCapability();
-        }
-    }
-
-    public enum UpdateState {
-        NONE, NEXT_NEXT, NEXT, INITIALIZED;
-
-        public boolean isInitialized() {
-            return this == INITIALIZED;
-        }
-
-        public UpdateState next() {
-            return switch (this) {
-            case NONE, INITIALIZED -> NONE;
-            case NEXT_NEXT -> NEXT;
-            case NEXT -> INITIALIZED;
-            };
-        }
-
-        public UpdateState activate() {
-            return NEXT_NEXT;
         }
     }
 }

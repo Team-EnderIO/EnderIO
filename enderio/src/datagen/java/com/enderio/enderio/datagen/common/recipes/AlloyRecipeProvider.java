@@ -93,7 +93,7 @@ public class AlloyRecipeProvider extends SubRecipeProvider {
         // region Dyes
 
         build(new ItemStackTemplate(Items.GREEN_DYE), "clippings",
-                List.of(SizedIngredient.of(EIOItems.PLANT_MATTER_GREEN.get(), 6), SizedIngredient.of(Items.EGG, 1)),
+                List.of(SizedIngredient.of(EIOItems.PLANT_MATTER_GREEN.get(), 6), sizedFromTag(ItemTags.EGGS, 1)),
                 1000, 0.3f, recipeOutput);
         build(new ItemStackTemplate(Items.GREEN_DYE, 2), "double_clippings",
                 List.of(SizedIngredient.of(EIOItems.PLANT_MATTER_GREEN.get(), 12),
@@ -101,7 +101,7 @@ public class AlloyRecipeProvider extends SubRecipeProvider {
                 1600, 0.3f, recipeOutput);
 
         build(new ItemStackTemplate(Items.BROWN_DYE), "twigs",
-                List.of(SizedIngredient.of(EIOItems.PLANT_MATTER_BROWN.get(), 6), SizedIngredient.of(Items.EGG, 1)),
+                List.of(SizedIngredient.of(EIOItems.PLANT_MATTER_BROWN.get(), 6), sizedFromTag(ItemTags.EGGS, 1)),
                 1000, 0.3f, recipeOutput);
         build(new ItemStackTemplate(Items.BROWN_DYE, 2), "twigs_double",
                 List.of(SizedIngredient.of(EIOItems.PLANT_MATTER_BROWN.get(), 12),
@@ -109,14 +109,14 @@ public class AlloyRecipeProvider extends SubRecipeProvider {
                 1600, 0.3f, recipeOutput);
 
         build(new ItemStackTemplate(Items.BLACK_DYE),
-                List.of(sizedFromTag(EIOTags.Items.DUSTS_COAL, 1), SizedIngredient.of(Items.EGG, 1)), 1000, 0.3f,
+                List.of(sizedFromTag(EIOTags.Items.DUSTS_COAL, 1), sizedFromTag(ItemTags.EGGS, 1)), 1000, 0.3f,
                 recipeOutput);
         build(new ItemStackTemplate(Items.BLACK_DYE, 2), "double",
                 List.of(sizedFromTag(EIOTags.Items.DUSTS_COAL, 2), sizedFromTag(Tags.Items.SLIME_BALLS, 1)),
                 1600, 0.3f, recipeOutput);
 
         build(new ItemStackTemplate(Items.RED_DYE, 12), List.of(SizedIngredient.of(Items.BEETROOT, 1),
-                SizedIngredient.of(Items.CLAY_BALL, 3), SizedIngredient.of(Items.EGG, 6)), 1600, 0.3f, recipeOutput);
+                SizedIngredient.of(Items.CLAY_BALL, 3), sizedFromTag(ItemTags.EGGS, 6)), 1600, 0.3f, recipeOutput);
 
         // endregion
 

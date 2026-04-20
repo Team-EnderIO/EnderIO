@@ -398,6 +398,7 @@ public class TravelHandler {
             return Optional.of(new Vec3(event.getTargetX(), event.getTargetY(), event.getTargetZ()));
         }
 
-        return Optional.empty();
+        //TODO rework to be server side only
+        return Optional.of(new Vec3(target.x, target.y, target.z));
     }
 }

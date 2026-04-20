@@ -18,6 +18,9 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.conditions.ICondition;
+import net.neoforged.neoforge.common.conditions.NotCondition;
+import net.neoforged.neoforge.common.conditions.TagEmptyCondition;
 
 import java.util.List;
 
@@ -40,6 +43,8 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
 
         buildOreBlockRecipes(items, recipeOutput);
         buildRawOreRecipes(items, recipeOutput);
+        buildModCompat(items, recipeOutput);
+
 
         build1toN("iron", Tags.Items.INGOTS_IRON, POWDERED_IRON.get(), 1, BonusType.NONE, recipeOutput);
         build1toN("gold", Tags.Items.INGOTS_GOLD, POWDERED_GOLD.get(), 1, BonusType.NONE, recipeOutput);
@@ -249,6 +254,44 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
                 BASE_ENERGY_PER_OPERATION, recipeOutput);
     }
 
+
+    private void buildModCompat(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput) {
+        build("raw_aluminum", ingredientFromTag(EIOTags.Items.RAW_MATERIALS_ALUMINUM), List.of(output(EIOTags.Items.DUSTS_ALUMINUM), output(EIOTags.Items.DUSTS_ALUMINUM, 0.80f),
+                output(EIOTags.Items.DUSTS_IRON, 0.20f)), BASE_ENERGY_PER_OPERATION, recipeOutput, EIOTags.Items.RAW_MATERIALS_ALUMINUM, EIOTags.Items.DUSTS_ALUMINUM);
+        build("aluminum_ore", ingredientFromTag(EIOTags.Items.ORES_ALUMINUM), List.of(output(EIOTags.Items.RAW_MATERIALS_ALUMINUM), output(EIOTags.Items.RAW_MATERIALS_ALUMINUM, 0.33f), output(COBBLESTONE, 0.15f)),
+            BASE_ENERGY_PER_OPERATION, recipeOutput, EIOTags.Items.ORES_ALUMINUM, EIOTags.Items.RAW_MATERIALS_ALUMINUM);
+        build("aluminum", ingredientFromTag(EIOTags.Items.INGOTS_ALUMINUM), List.of(output(EIOTags.Items.DUSTS_ALUMINUM, 1)), BASE_ENERGY_PER_OPERATION, BonusType.NONE,
+            recipeOutput, EIOTags.Items.INGOTS_ALUMINUM, EIOTags.Items.DUSTS_ALUMINUM);
+
+        build("raw_osmium", ingredientFromTag(EIOTags.Items.RAW_MATERIALS_OSMIUM), List.of(output(EIOTags.Items.DUSTS_OSMIUM), output(EIOTags.Items.DUSTS_OSMIUM, 0.80f),
+            output(EIOTags.Items.DUSTS_IRON, 0.20f)), BASE_ENERGY_PER_OPERATION, recipeOutput, EIOTags.Items.RAW_MATERIALS_OSMIUM, EIOTags.Items.DUSTS_OSMIUM);
+        build("osmium_ore", ingredientFromTag(EIOTags.Items.ORES_OSMIUM), List.of(output(EIOTags.Items.RAW_MATERIALS_OSMIUM), output(EIOTags.Items.RAW_MATERIALS_OSMIUM, 0.33f), output(COBBLESTONE, 0.15f)),
+            BASE_ENERGY_PER_OPERATION, recipeOutput, EIOTags.Items.ORES_OSMIUM, EIOTags.Items.RAW_MATERIALS_OSMIUM);
+        build("osmium", ingredientFromTag(EIOTags.Items.INGOTS_OSMIUM), List.of(output(EIOTags.Items.DUSTS_OSMIUM, 1)), BASE_ENERGY_PER_OPERATION, BonusType.NONE,
+            recipeOutput, EIOTags.Items.INGOTS_OSMIUM, EIOTags.Items.DUSTS_OSMIUM);
+
+        build("raw_tin", ingredientFromTag(EIOTags.Items.RAW_MATERIALS_TIN), List.of(output(EIOTags.Items.DUSTS_TIN), output(EIOTags.Items.DUSTS_TIN, 0.80f),
+            output(EIOTags.Items.DUSTS_COPPER, 0.20f)), BASE_ENERGY_PER_OPERATION, recipeOutput, EIOTags.Items.RAW_MATERIALS_TIN, EIOTags.Items.DUSTS_TIN);
+        build("tin_ore", ingredientFromTag(EIOTags.Items.ORES_TIN), List.of(output(EIOTags.Items.RAW_MATERIALS_TIN), output(EIOTags.Items.RAW_MATERIALS_TIN, 0.33f), output(COBBLESTONE, 0.15f)),
+            BASE_ENERGY_PER_OPERATION, recipeOutput, EIOTags.Items.ORES_TIN, EIOTags.Items.RAW_MATERIALS_TIN);
+        build("tin", ingredientFromTag(EIOTags.Items.INGOTS_TIN), List.of(output(EIOTags.Items.DUSTS_TIN, 1)), BASE_ENERGY_PER_OPERATION, BonusType.NONE,
+            recipeOutput, EIOTags.Items.INGOTS_TIN, EIOTags.Items.DUSTS_TIN);
+
+        build("raw_uranium", ingredientFromTag(EIOTags.Items.RAW_MATERIALS_URANIUM), List.of(output(EIOTags.Items.DUSTS_URANIUM), output(EIOTags.Items.DUSTS_URANIUM, 0.80f),
+            output(EIOTags.Items.DUSTS_LEAD, 0.20f)), BASE_ENERGY_PER_OPERATION, recipeOutput, EIOTags.Items.RAW_MATERIALS_URANIUM, EIOTags.Items.DUSTS_URANIUM);
+        build("uranium_ore", ingredientFromTag(EIOTags.Items.ORES_URANIUM), List.of(output(EIOTags.Items.RAW_MATERIALS_URANIUM), output(EIOTags.Items.RAW_MATERIALS_URANIUM, 0.33f), output(COBBLESTONE, 0.15f)),
+            BASE_ENERGY_PER_OPERATION, recipeOutput, EIOTags.Items.ORES_URANIUM, EIOTags.Items.RAW_MATERIALS_URANIUM);
+        build("uranium", ingredientFromTag(EIOTags.Items.INGOTS_URANIUM), List.of(output(EIOTags.Items.DUSTS_URANIUM, 1)), BASE_ENERGY_PER_OPERATION, BonusType.NONE,
+            recipeOutput, EIOTags.Items.INGOTS_URANIUM, EIOTags.Items.DUSTS_URANIUM);
+
+        build("raw_lead", ingredientFromTag(EIOTags.Items.RAW_MATERIALS_LEAD), List.of(output(EIOTags.Items.DUSTS_LEAD), output(EIOTags.Items.DUSTS_LEAD, 0.80f),
+            output(EIOTags.Items.DUSTS_GOLD, 0.20f)), BASE_ENERGY_PER_OPERATION, recipeOutput, EIOTags.Items.RAW_MATERIALS_LEAD, EIOTags.Items.DUSTS_LEAD);
+        build("lead_ore", ingredientFromTag(EIOTags.Items.ORES_LEAD), List.of(output(EIOTags.Items.RAW_MATERIALS_LEAD), output(EIOTags.Items.RAW_MATERIALS_LEAD, 0.33f), output(COBBLESTONE, 0.15f)),
+            BASE_ENERGY_PER_OPERATION, recipeOutput, EIOTags.Items.ORES_LEAD, EIOTags.Items.RAW_MATERIALS_LEAD);
+        build("lead", ingredientFromTag(EIOTags.Items.INGOTS_LEAD), List.of(output(EIOTags.Items.DUSTS_LEAD, 1)), BASE_ENERGY_PER_OPERATION, BonusType.NONE,
+            recipeOutput, EIOTags.Items.INGOTS_LEAD, EIOTags.Items.DUSTS_LEAD);
+    }
+
     // region Helpers
 
     private void buildOre(String name, Ingredient input, Item output, RecipeOutput recipeOutput) {
@@ -282,14 +325,36 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
         build(EnderIO.id("sag_milling/" + name), input, outputs, energy, BonusType.MULTIPLY_OUTPUT, recipeOutput);
     }
 
+    @SafeVarargs
+    protected final void build(String name, Ingredient input, List<SagMillingRecipe.OutputItem> outputs, int energy, RecipeOutput recipeOutput,
+        TagKey<Item>... neededTags) {
+        build(EnderIO.id("sag_milling/" + name), input, outputs, energy, BonusType.MULTIPLY_OUTPUT, recipeOutput, neededTags);
+    }
+
     protected void build(String name, Ingredient input, List<SagMillingRecipe.OutputItem> outputs, int energy,
             BonusType bonusType, RecipeOutput recipeOutput) {
         build(EnderIO.id("sag_milling/" + name), input, outputs, energy, bonusType, recipeOutput);
     }
 
     protected void build(Identifier id, Ingredient input, List<SagMillingRecipe.OutputItem> outputs, int energy,
-            BonusType bonusType, RecipeOutput recipeOutput) {
+        BonusType bonusType, RecipeOutput recipeOutput) {
         recipeOutput.accept(ResourceKey.create(Registries.RECIPE, id), new SagMillingRecipe(input, outputs, energy, bonusType), null);
+    }
+
+    @SafeVarargs
+    protected final void build(String name, Ingredient input, List<SagMillingRecipe.OutputItem> outputs, int energy, BonusType bonusType,
+        RecipeOutput recipeOutput, TagKey<Item>... neededTags) {
+        build(EnderIO.id("sag_milling/" + name), input, outputs, energy, bonusType, recipeOutput, neededTags);
+    }
+
+    @SafeVarargs
+    protected final void build(Identifier id, Ingredient input, List<SagMillingRecipe.OutputItem> outputs, int energy, BonusType bonusType,
+        RecipeOutput recipeOutput, TagKey<Item>... neededTags) {
+        ICondition[] conditions = new ICondition[neededTags.length];
+        for (int i = 0; i < neededTags.length; i++) {
+            conditions[i] = new NotCondition(new TagEmptyCondition(neededTags[i]));
+        }
+        recipeOutput.accept(ResourceKey.create(Registries.RECIPE, id), new SagMillingRecipe(input, outputs, energy, bonusType), null, conditions);
     }
 
     protected SagMillingRecipe.OutputItem output(ItemLike item) {

@@ -1,10 +1,12 @@
 package com.enderio.enderio.client.content.conduits.model.facades;
 
+import com.enderio.core.annotations.UseOnly;
 import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.SectionPos;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.LogicalSide;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
@@ -15,6 +17,7 @@ public class ClientFacadeVisibility {
     private static boolean FACADES_VISIBLE = true;
 
     //@EnsureSide(EnsureSide.Side.CLIENT) //TODO why does this crash?
+    @UseOnly(LogicalSide.CLIENT)
     public static boolean areFacadesVisible() {
         return FACADES_VISIBLE;
     }
