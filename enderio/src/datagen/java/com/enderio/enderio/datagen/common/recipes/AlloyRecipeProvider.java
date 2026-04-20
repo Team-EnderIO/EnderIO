@@ -149,7 +149,7 @@ public class AlloyRecipeProvider extends SubRecipeProvider {
         // region Misc
 
         build(new ItemStack(EIOItems.PHOTOVOLTAIC_PLATE.get()),
-                List.of(SizedIngredient.of(EIOItems.PHOTOVOLTAIC_COMPOSITE.get(), 1)), 5600, 0.3f, recipeOutput);
+                List.of(SizedIngredient.of(EIOItems.PHOTOVOLTAIC_COMPOSITE.get(), 2)), 5600, 0.3f, recipeOutput);
 
         build(new ItemStack(Items.ENDER_PEARL), List.of(SizedIngredient.of(EIOTags.Items.DUSTS_ENDER, 9)), 2000, 0.3f,
                 recipeOutput);
