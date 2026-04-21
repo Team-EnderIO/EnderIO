@@ -236,8 +236,8 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
 
             @Override
             protected void consumeInputs(SoulBindingRecipe recipe) {
-                getInventory().getStack(INPUT_SOUL).shrink(1);
-                getInventory().getStack(INPUT_OTHER).shrink(1);
+                getInventory().mutateStack(INPUT_SOUL, stack -> stack.shrink(1));
+                getInventory().mutateStack(INPUT_OTHER, stack -> stack.shrink(1));
 
                 int currentFluidAmount = fluidStorage.getAmountAsInt(TANK_SLOT);
                 int leftover = ExperienceUtil

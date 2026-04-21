@@ -196,8 +196,8 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
 
         @Override
         protected void consumeInputs(FermentingRecipe recipe) {
-            inventory.getStack(REAGENTS.slot(0)).shrink(1);
-            inventory.getStack(REAGENTS.slot(1)).shrink(1);
+            inventory.mutateStack(REAGENTS.slot(0), stack -> stack.shrink(1));
+            inventory.mutateStack(REAGENTS.slot(1), stack -> stack.shrink(1));
 
             FluidStack inputFluid = EnderResourceUtil.getFluidStack(fluidStorage, INPUT_TANK);
             try (Transaction transaction = Transaction.openRoot()) {

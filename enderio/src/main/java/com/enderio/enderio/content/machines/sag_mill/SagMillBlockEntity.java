@@ -142,7 +142,7 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
             @Override
             protected void consumeInputs(SagMillingRecipe recipe) {
                 ItemStorage inv = getInventory();
-                inv.getStack(INPUT).shrink(1);
+                inv.mutateStack(INPUT, stack -> stack.shrink(1));
 
                 // Claim any available grinding balls.
                 if (recipe.bonusType().useGrindingBall() && grindingBallData.isIdentity()) {
@@ -154,7 +154,7 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
                         }
                         setGrindingBallData(data);
                         if (!data.isIdentity()) {
-                            ball.shrink(1);
+                            inv.mutateStack(GRINDING_BALL, stack -> stack.shrink(1));
                         }
                     }
                 }

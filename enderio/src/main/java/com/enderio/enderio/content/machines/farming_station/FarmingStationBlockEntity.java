@@ -243,81 +243,68 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
 
     // TODO handle inv full
     public boolean collectDrops(List<ItemStack> drops, @Nullable BlockPos soil) {
-        // TODO: 1.21.11: Properly adopt transactions.
-        ArrayList<ItemStack> list = new ArrayList<>();
-        for (ItemStack drop : drops) {
-            if (soil != null) {
-                var seedSlot = getSeedForPos(soil);
-                ItemStack seeds = getInventory().getStack(seedSlot);
-                if (seeds.isEmpty()) {
-                    if (drop.getItem() instanceof BlockItem || drop.getItem() instanceof SpecialPlantable) {
-                        // Collect potential seeds
-                        getInventory().setStack(seedSlot, drop);
-                        continue;
-                    }
-                } else if (ItemStack.isSameItem(drop, seeds)) {
-                    int leftOver = seeds.getMaxStackSize() - seeds.getCount();
-                    if (drop.getCount() > leftOver) {
-                        seeds.setCount(seeds.getMaxStackSize());
-                        drop.shrink(leftOver);
-                    } else {
-                        seeds.setCount(seeds.getCount() + drop.getCount());
-                        drop.setCount(0);
-                        continue;
-                    }
-                }
-            }
-            ItemStack temp = drop.copy();
-            list.add(temp);
-            for (int i = 0; i < 6; i++) {
-                int inserted;
-                try (Transaction transaction = Transaction.openRoot()) {
-                     inserted = getInventory().insert(OUTPUT.slot(i), ItemResource.of(temp), temp.getCount(), transaction);
-                }
-
-                if (inserted == drop.getCount()) {
-                    drop.setCount(0);
-                    break;
-                } else {
-                    drop.setCount(drop.getCount() - inserted);
-                }
-            }
-        }
-        boolean empty = list.stream().filter(d -> !d.isEmpty()).findAny().isEmpty();
-        if (empty) {
+        var inventory = getInventory();
+        try (Transaction transaction = Transaction.openRoot()) {
             for (ItemStack drop : drops) {
-                try (Transaction transaction = Transaction.openRoot()) {
-                    for (int i = 0; i < 6; i++) {
-                        int inserted = getInventory().insert(OUTPUT.slot(i), ItemResource.of(drop), drop.getCount(), transaction);
-                        if (inserted == drop.getCount()) {
-                            drop.setCount(0);
-                            break;
-                        } else {
-                            drop.setCount(drop.getCount() - inserted);
+                if (soil != null) {
+                    var seedSlot = getSeedForPos(soil);
+                    ItemStack seeds = inventory.getStack(seedSlot);
+                    if (seeds.isEmpty()) {
+                        if (drop.getItem() instanceof BlockItem || drop.getItem() instanceof SpecialPlantable) {
+                            // Collect potential seeds
+                            int amount = inventory.insert(seedSlot, ItemResource.of(drop), drop.getCount(), transaction);
+                            drop.shrink(amount);
+                            continue;
                         }
+                    } else if (ItemStack.isSameItem(drop, seeds)) {
+                        int amount = inventory.insert(seedSlot, ItemResource.of(drop), drop.getCount(), transaction);
+                        drop.shrink(amount);
+                    }
+                }
+
+                for (var outputSlot : OUTPUT) {
+                    if (drop.isEmpty()) {
+                        continue;
                     }
 
-                    transaction.commit();
+                    int amount = inventory.insert(outputSlot, ItemResource.of(drop), drop.getCount(), transaction);
+                    drop.shrink(amount);
+                }
+
+                if (!drop.isEmpty()) {
+                    updateMachineState(MachineState.FULL_OUTPUT, true);
+                    return false;
                 }
             }
+
+            transaction.commit();
+            return true;
         }
-        updateMachineState(MachineState.FULL_OUTPUT, !empty);
-        return empty;
     }
 
     public boolean consumeBonemeal() {
-        boolean consumed = false;
-        for (int i = 0; i < 2; i++) {
-            ItemStack itemStack = getInventory().getStack(BONEMEAL.slot(i));
-            if (!itemStack.isEmpty()) {
-                if (soulData == null || level.getRandom().nextFloat() < soulData.bonemeal()) {
-                    itemStack.shrink(1);
+        try (Transaction transaction = Transaction.openRoot()) {
+            for (var boneMealSlot : BONEMEAL) {
+                var resource = getInventory().getResource(boneMealSlot);
+                if (resource.isEmpty()) {
+                    continue;
                 }
-                consumed = true;
-                break;
+
+                int extract = getInventory().extract(boneMealSlot, resource, 1, transaction);
+                if (extract != 1) {
+                    continue;
+                }
+
+                // Only commit to consumption if we were supposed to consume it
+                if (soulData == null || level.getRandom().nextFloat() < soulData.bonemeal()) {
+                    transaction.commit();
+                }
+
+                return true;
             }
         }
-        return consumed;
+
+        return false;
     }
 
     @Override

@@ -147,14 +147,12 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
                 // Deduct ingredients
                 ItemStorage inv = getInventory();
                 for (var inputSlot : INPUTS) {
-                    inv.getStack(inputSlot).shrink(1);
+                    inv.mutateStack(inputSlot, stack -> stack.shrink(1));
                 }
 
                 if (level instanceof ServerLevel serverLevel) {
-                    inv.getStack(AXE).hurtAndBreak(1, serverLevel, null, item -> {
-                    });
-                    inv.getStack(SHEARS).hurtAndBreak(1, serverLevel, null, item -> {
-                    });
+                    inv.mutateStack(AXE, stack -> stack.hurtAndBreak(1, serverLevel, null, _ -> {}));
+                    inv.mutateStack(SHEARS, stack -> stack.hurtAndBreak(1, serverLevel, null, _ -> {}));
                 }
             }
         };
