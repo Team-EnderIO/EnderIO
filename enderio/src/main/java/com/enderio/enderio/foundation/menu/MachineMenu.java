@@ -15,6 +15,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
@@ -165,7 +166,7 @@ public abstract class MachineMenu<T extends MachineBlockEntity> extends BaseBloc
                 if (!(slot instanceof GhostMachineSlot)) {
 
                     // Do not insert into a slot that cannot be inserted into normally.
-                    if (!(slot instanceof MachineSlot machineSlot) || machineSlot.canQuickInsertStack()) {
+                    if (!(slot instanceof MachineSlot machineSlot) || machineSlot.canQuickInsertStack(ItemResource.of(stack))) {
 
                         ItemStack itemstack = slot.getItem();
                         if (!itemstack.isEmpty() && ItemStack.isSameItemSameComponents(stack, itemstack)) {
@@ -214,7 +215,7 @@ public abstract class MachineMenu<T extends MachineBlockEntity> extends BaseBloc
                 if (!(slot1 instanceof GhostMachineSlot)) {
 
                     // Do not insert into a slot that cannot be inserted into normally.
-                    if (!(slot1 instanceof MachineSlot machineSlot) || machineSlot.canQuickInsertStack()) {
+                    if (!(slot1 instanceof MachineSlot machineSlot) || machineSlot.canQuickInsertStack(ItemResource.of(stack))) {
                         ItemStack itemstack1 = slot1.getItem();
                         if (itemstack1.isEmpty() && slot1.mayPlace(stack)) {
                             if (stack.getCount() > slot1.getMaxStackSize()) {

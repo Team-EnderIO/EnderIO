@@ -31,33 +31,8 @@ public class MachineSlot extends ResourceHandlerSlot implements SlotWithOverlay 
         return (ItemStorage) super.getResourceHandler();
     }
 
-    @Override
-    public boolean mayPlace(ItemStack stack) {
-        if (stack.isEmpty()) {
-            return false;
-        }
-
-        try (var tx = Transaction.openRoot()) {
-            // Simulated extraction
-            return getResourceHandler().internalInsert(index, ItemResource.of(stack), 1, tx) == 1;
-        }
-    }
-
-    @Override
-    public boolean mayPickup(Player playerIn) {
-        var resource = getResourceHandler().getResource(index);
-        if (resource.isEmpty()) {
-            return false;
-        }
-
-        try (var tx = Transaction.openRoot()) {
-            // Simulated extraction
-            return getResourceHandler().internalExtract(index, resource, 1, tx) == 1;
-        }
-    }
-
-    public boolean canQuickInsertStack() {
-        return isActive() && getResourceHandler().layout().slotConfig(index).canManualInsert();
+    public boolean canQuickInsertStack(ItemResource itemResource) {
+        return isActive() && getResourceHandler().layout().slotConfig(index).guiRules().canInsert(itemResource);
     }
 
     @Override

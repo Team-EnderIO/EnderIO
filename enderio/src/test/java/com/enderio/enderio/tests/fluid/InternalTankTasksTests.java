@@ -11,6 +11,7 @@ import com.enderio.enderio.content.storage.fluid_tank.FluidTankBlockEntity;
 import com.enderio.enderio.content.storage.fluid_tank.InternalTankTasks;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIODataComponents;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluid;
@@ -20,9 +21,12 @@ import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.testframework.junit.EphemeralTestServerProvider;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
+@ExtendWith(EphemeralTestServerProvider.class)
 public class InternalTankTasksTests {
 
     // Define slot keys for testing
@@ -41,8 +45,8 @@ public class InternalTankTasksTests {
     // Helper method to create a test item storage
     private ItemStorage createItemStorage() {
         ItemStorageLayout layout = ItemStorageLayout.builder()
-            .add(INPUT_SLOT, SlotTemplates.storage(), slot -> slot.capacity(64))
-            .add(OUTPUT_SLOT, SlotTemplates.storage(), slot -> slot.capacity(64))
+            .add(INPUT_SLOT, SlotTemplates.input(), slot -> slot.capacity(64))
+            .add(OUTPUT_SLOT, SlotTemplates.output(), slot -> slot.capacity(64))
             .build();
         return new ItemStorage(layout);
     }
@@ -57,7 +61,7 @@ public class InternalTankTasksTests {
     // region fillInternal tests
 
     @Test
-    public void testFillInternalWithWaterBucket() {
+    public void testFillInternalWithWaterBucket(MinecraftServer server) {
         // Arrange
         FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
         ItemStorage itemStorage = createItemStorage();
@@ -82,7 +86,7 @@ public class InternalTankTasksTests {
     }
 
     @Test
-    public void testFillInternalWithMultipleBuckets() {
+    public void testFillInternalWithMultipleBuckets(MinecraftServer server) {
         // Arrange
         FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
         ItemStorage itemStorage = createItemStorage();
@@ -113,7 +117,7 @@ public class InternalTankTasksTests {
     }
 
     @Test
-    public void testFillInternalWithFullTank() {
+    public void testFillInternalWithFullTank(MinecraftServer server) {
         // Arrange
         FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME);
         ItemStorage itemStorage = createItemStorage();
@@ -137,7 +141,7 @@ public class InternalTankTasksTests {
     }
 
     @Test
-    public void testFillInternalWithOutputSlotFull() {
+    public void testFillInternalWithOutputSlotFull(MinecraftServer server) {
         // Arrange
         FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
         ItemStorage itemStorage = createItemStorage();
@@ -160,7 +164,7 @@ public class InternalTankTasksTests {
     }
 
     @Test
-    public void testFillInternalWithEmptyInput() {
+    public void testFillInternalWithEmptyInput(MinecraftServer server) {
         // Arrange
         FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
         ItemStorage itemStorage = createItemStorage();
@@ -179,7 +183,7 @@ public class InternalTankTasksTests {
     }
 
     @Test
-    public void testFillInternalWithInvalidInput() {
+    public void testFillInternalWithInvalidInput(MinecraftServer server) {
         // Arrange
         FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
         ItemStorage itemStorage = createItemStorage();
@@ -200,7 +204,7 @@ public class InternalTankTasksTests {
     }
 
     @Test
-    public void testFillInternalWithDifferentFluidType() {
+    public void testFillInternalWithDifferentFluidType(MinecraftServer server) {
         // Arrange
         FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
         ItemStorage itemStorage = createItemStorage();
@@ -226,7 +230,7 @@ public class InternalTankTasksTests {
     }
 
     @Test
-    public void testFillInternalWithOutputSlotBlocked() {
+    public void testFillInternalWithOutputSlotBlocked(MinecraftServer server) {
         // Arrange
         FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
         ItemStorage itemStorage = createItemStorage();
@@ -254,7 +258,7 @@ public class InternalTankTasksTests {
     // which is not available in unit tests. These should be converted to game tests.
 
     @Test
-    public void testFillInternalWithFluidContainer() {
+    public void testFillInternalWithFluidContainer(MinecraftServer server) {
         // Arrange
         FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
         ItemStorage itemStorage = createItemStorage();
@@ -278,7 +282,7 @@ public class InternalTankTasksTests {
     }
 
     @Test
-    public void testFillInternalWithFluidContainerToPartiallyFilledTank() {
+    public void testFillInternalWithFluidContainerToPartiallyFilledTank(MinecraftServer server) {
         // Arrange
         FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
         ItemStorage itemStorage = createItemStorage();
@@ -303,7 +307,7 @@ public class InternalTankTasksTests {
     }
 
     @Test
-    public void testFillInternalWithFluidContainerExceedingCapacity() {
+    public void testFillInternalWithFluidContainerExceedingCapacity(MinecraftServer server) {
         // Arrange - tank can only hold 2 buckets
         FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 2);
         ItemStorage itemStorage = createItemStorage();
@@ -333,7 +337,7 @@ public class InternalTankTasksTests {
     }
 
     @Test
-    public void testFillInternalWithEmptyFluidContainer() {
+    public void testFillInternalWithEmptyFluidContainer(MinecraftServer server) {
         // Arrange
         FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
         ItemStorage itemStorage = createItemStorage();
@@ -355,7 +359,7 @@ public class InternalTankTasksTests {
     }
 
     @Test
-    public void testFillInternalWithFluidContainerWhenOutputNotEmpty() {
+    public void testFillInternalWithFluidContainerWhenOutputNotEmpty(MinecraftServer server) {
         // Arrange
         FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
         ItemStorage itemStorage = createItemStorage();
@@ -380,7 +384,7 @@ public class InternalTankTasksTests {
     }
 
     @Test
-    public void testFillInternalWithFluidContainerDifferentFluidTypes() {
+    public void testFillInternalWithFluidContainerDifferentFluidTypes(MinecraftServer server) {
         // Arrange
         FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
         ItemStorage itemStorage = createItemStorage();
@@ -420,7 +424,7 @@ public class InternalTankTasksTests {
     // region drainInternal tests
 
     @Test
-    public void testDrainInternalWithEmptyBucket() {
+    public void testDrainInternalWithEmptyBucket(MinecraftServer server) {
         // Arrange
         FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
         ItemStorage itemStorage = createItemStorage();
@@ -446,7 +450,7 @@ public class InternalTankTasksTests {
     }
 
     @Test
-    public void testDrainInternalWithWaterBucketItem() {
+    public void testDrainInternalWithWaterBucketItem(MinecraftServer server) {
         // Arrange
         FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
         ItemStorage itemStorage = createItemStorage();
@@ -470,7 +474,7 @@ public class InternalTankTasksTests {
     }
 
     @Test
-    public void testDrainInternalWithEmptyFluidTank() {
+    public void testDrainInternalWithEmptyFluidTank(MinecraftServer server) {
         // Arrange
         FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
         ItemStorage itemStorage = createItemStorage();
@@ -505,7 +509,7 @@ public class InternalTankTasksTests {
     }
 
     @Test
-    public void testDrainInternalWithFullFluidTank() {
+    public void testDrainInternalWithFullFluidTank(MinecraftServer server) {
         // Arrange
         FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
         ItemStorage itemStorage = createItemStorage();

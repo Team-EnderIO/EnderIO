@@ -1,5 +1,6 @@
 package com.enderio.enderio.foundation.block.entity;
 
+import com.enderio.core.common.storage.ExternalResourceStorageView;
 import com.enderio.core.common.storage.ItemStorage;
 import com.enderio.core.common.storage.layout.ItemStorageLayout;
 import com.enderio.core.annotations.UseOnly;
@@ -71,7 +72,7 @@ public abstract class MachineBlockEntity extends EIOBlockEntity implements MenuP
         (be, side) -> side != null && be.isIOConfigMutable() ? new SidedIOConfigurable(be, side) : null;
 
     public static final ICapabilityProvider<MachineBlockEntity, Direction, ResourceHandler<ItemResource>> ITEM_HANDLER_PROVIDER =
-        (be, side) -> be.inventory != null ? SidedResourceHandler.of(be.inventory, side, be) : null;
+        (be, side) -> be.inventory != null ? SidedResourceHandler.of(new ExternalResourceStorageView<>(be.inventory), side, be) : null;
 
     public static final ICapabilityProvider<MachineBlockEntity, Void, SoulBindable> SOUL_BINDABLE = (be, ctx)
         -> be instanceof SoulBindable bindable ? bindable : null;

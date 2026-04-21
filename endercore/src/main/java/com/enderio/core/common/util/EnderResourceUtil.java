@@ -10,6 +10,7 @@ import net.neoforged.neoforge.transfer.RangedResourceHandler;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import net.neoforged.neoforge.transfer.TransferPreconditions;
+import net.neoforged.neoforge.transfer.access.HandlerItemAccess;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.item.ItemResource;
@@ -70,6 +71,8 @@ public class EnderResourceUtil {
 
     // region Move resources between slots.
 
+    // TODO: should remove if unnecessary
+
     public static boolean tryMoveItem(ResourceStorage<ItemResource> storage, int from, int to, @Nullable TransactionContext transaction) {
         return tryMoveResource(storage, from, to, ItemResource.EMPTY, transaction);
     }
@@ -98,7 +101,7 @@ public class EnderResourceUtil {
         int amountToMove = storage.getAmountAsInt(from);
 
         try (Transaction subTransaction = Transaction.open(transaction)) {
-            int amountMoved = storage.internalInsert(to, resourceToMove, amountToMove, subTransaction);
+            int amountMoved = storage.insert(to, resourceToMove, amountToMove, subTransaction);
             if (amountMoved != amountToMove) {
                 return false;
             }

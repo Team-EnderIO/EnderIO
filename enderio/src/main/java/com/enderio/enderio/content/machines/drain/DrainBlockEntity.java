@@ -164,7 +164,7 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements Range
 
         // Check if we can insert the fluid
         try (Transaction transaction = Transaction.openRoot()) {
-            long inserted = fluidStorage.internalInsert(TANK_SLOT, FluidResource.of(type), FluidType.BUCKET_VOLUME, transaction);
+            long inserted = fluidStorage.insert(TANK_SLOT, FluidResource.of(type), FluidType.BUCKET_VOLUME, transaction);
             // Don't commit, just simulate
             return inserted == FluidType.BUCKET_VOLUME;
         }
@@ -213,7 +213,7 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements Range
             // Check if we can insert the fluid
             if (consumed >= ENERGY_PER_BUCKET) {
                 try (Transaction transaction = Transaction.openRoot()) {
-                    long inserted = fluidStorage.internalInsert(TANK_SLOT, FluidResource.of(fluidState.getType()), FluidType.BUCKET_VOLUME, transaction);
+                    long inserted = fluidStorage.insert(TANK_SLOT, FluidResource.of(fluidState.getType()), FluidType.BUCKET_VOLUME, transaction);
 
                     if (inserted == FluidType.BUCKET_VOLUME) {
                         if (consumed >= ENERGY_PER_BUCKET) {

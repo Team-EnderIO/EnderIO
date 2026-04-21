@@ -202,7 +202,7 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
             FluidStack inputFluid = EnderResourceUtil.getFluidStack(fluidStorage, INPUT_TANK);
             try (Transaction transaction = Transaction.openRoot()) {
                 int inputIndex = fluidStorage.layout().indexOf(INPUT_TANK);
-                fluidStorage.internalExtract(inputIndex, FluidResource.of(inputFluid), recipe.input().amount(), transaction);
+                fluidStorage.extract(inputIndex, FluidResource.of(inputFluid), recipe.input().amount(), transaction);
                 transaction.commit();
             }
         }

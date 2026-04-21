@@ -112,48 +112,20 @@ public abstract class ResourceStorageLayout<T extends Resource> {
         }
 
         public static final class SlotBuilder<T extends Resource> {
-            private boolean canInsert;
-            private boolean canExtract;
-            private boolean canManualInsert;
-            private boolean canManualExtract;
+            private SlotAccessRules<T> externalRules = new SimpleSlotAccessRules<>(true, true);
+            private SlotAccessRules<T> guiRules = new SimpleSlotAccessRules<>(true, true);
             @Nullable
             private Function<T, Integer> capacityFunc;
             @Nullable
             private BiPredicate<Integer, T> filter;
-            
-            public SlotBuilder<T> canInsert() {
-                return canInsert(true);
-            }
-            
-            public SlotBuilder<T> canInsert(boolean canInsert) {
-                this.canInsert = canInsert;
-                return this;
-            }
-            
-            public SlotBuilder<T> canExtract() {
-                return canExtract(true);
-            }
-            
-            public SlotBuilder<T> canExtract(boolean canExtract) {
-                this.canExtract = canExtract;
+
+            public SlotBuilder<T> externalRules(SlotAccessRules<T> mode) {
+                externalRules = mode;
                 return this;
             }
 
-            public SlotBuilder<T> canManualInsert() {
-                return canManualInsert(true);
-            }
-
-            public SlotBuilder<T> canManualInsert(boolean canManualInsert) {
-                this.canManualInsert = canManualInsert;
-                return this;
-            }
-
-            public SlotBuilder<T> canManualExtract() {
-                return canManualExtract(true);
-            }
-
-            public SlotBuilder<T> canManualExtract(boolean canManualExtract) {
-                this.canManualExtract = canManualExtract;
+            public SlotBuilder<T> guiRules(SlotAccessRules<T> mode) {
+                guiRules = mode;
                 return this;
             }
 
@@ -183,16 +155,14 @@ public abstract class ResourceStorageLayout<T extends Resource> {
                     throw new IllegalStateException("Capacity must be set!");
                 }
 
-                return new SlotConfig<>(canInsert, canExtract, canManualInsert, canManualExtract, capacityFunc, filter);
+                return new SlotConfig<>(externalRules, guiRules, capacityFunc, filter);
             }
         }
     }
 
     public record SlotConfig<T extends Resource>(
-        boolean canInsert,
-        boolean canExtract,
-        boolean canManualInsert,
-        boolean canManualExtract,
+        SlotAccessRules<T> externalRules,
+        SlotAccessRules<T> guiRules,
         Function<T, Integer> capacityFunc,
         @Nullable BiPredicate<Integer, T> filter) {
 

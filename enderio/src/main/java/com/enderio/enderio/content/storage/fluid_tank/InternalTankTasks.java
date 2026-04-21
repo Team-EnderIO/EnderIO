@@ -141,7 +141,7 @@ public class InternalTankTasks {
         int fluidAmount = xpAmount * ExperienceUtil.EXP_TO_FLUID;
 
         try (Transaction transaction = Transaction.openRoot()) {
-            int extracted = fluidStorage.internalExtract(tankSlot, resource, fluidAmount, transaction);
+            int extracted = fluidStorage.extract(tankSlot, resource, fluidAmount, transaction);
             if (extracted <= 0) {
                 return;
             }

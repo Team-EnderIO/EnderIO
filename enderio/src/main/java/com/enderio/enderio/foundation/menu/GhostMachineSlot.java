@@ -25,17 +25,6 @@ public class GhostMachineSlot extends Slot {
 
     public GhostMachineSlot(ItemStorage itemStorage, int index, int xPosition, int yPosition) {
         super(emptyInventory, 0, xPosition, yPosition);
-
-        // Check config, we need to get this right or bad stuff will happen.
-        var layout = itemStorage.layout();
-        if (layout.slotConfig(index).canInsert() || layout.slotConfig(index).canExtract()) {
-            throw new RuntimeException("Ghost slot can be externally modified!!");
-        }
-
-        if (!layout.slotConfig(index).canManualInsert()) {
-            throw new RuntimeException("Ghost slot cannot be modified by the player!");
-        }
-
         this.itemStorage = itemStorage;
         this.index = index;
     }

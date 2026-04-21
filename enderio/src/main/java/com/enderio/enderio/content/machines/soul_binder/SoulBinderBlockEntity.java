@@ -248,7 +248,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
                 FluidStack currentFluid = getStoredFluid();
                 if (!currentFluid.isEmpty() && toExtract > 0) {
                     try (Transaction transaction = Transaction.openRoot()) {
-                        fluidStorage.internalExtract(TANK_SLOT, FluidResource.of(currentFluid.getFluid()), toExtract, transaction);
+                        fluidStorage.extract(TANK_SLOT, FluidResource.of(currentFluid.getFluid()), toExtract, transaction);
                         transaction.commit();
                     }
                 }

@@ -197,7 +197,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
                 // Drain 1mb of fluid
                 int tankIndex = fluidStorage.layout().indexOf(TANK);
                 FluidStack currentFluid = fluidStorage.getStack(TANK);
-                fluidStorage.internalExtract(tankIndex, FluidResource.of(currentFluid), 1, transaction);
+                fluidStorage.extract(tankIndex, FluidResource.of(currentFluid), 1, transaction);
 
                 transaction.commit();
                 burnedTicks -= soulData.tickpermb();

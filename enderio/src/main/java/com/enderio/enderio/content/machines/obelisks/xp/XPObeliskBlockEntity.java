@@ -140,7 +140,7 @@ public class XPObeliskBlockEntity extends MachineBlockEntity {
         // Drain the fluid
         int drained;
         try (Transaction transaction = Transaction.openRoot()) {
-            drained = fluidStorage.internalExtract(TANK_SLOT, FluidResource.of(currentFluid.getFluid()), cappedVolume, transaction);
+            drained = fluidStorage.extract(TANK_SLOT, FluidResource.of(currentFluid.getFluid()), cappedVolume, transaction);
             transaction.commit();
         }
 
@@ -193,7 +193,7 @@ public class XPObeliskBlockEntity extends MachineBlockEntity {
         // Add the fluid
         int filled;
         try (Transaction transaction = Transaction.openRoot()) {
-            filled = fluidStorage.internalInsert(TANK_SLOT, FluidResource.of(fillFluid), cappedVolume, transaction);
+            filled = fluidStorage.insert(TANK_SLOT, FluidResource.of(fillFluid), cappedVolume, transaction);
             transaction.commit();
         }
 

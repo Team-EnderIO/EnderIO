@@ -14,11 +14,12 @@ public class PreviewMachineSlot extends MachineSlot {
     public PreviewMachineSlot(ItemStorage itemStorage, int index, int xPosition, int yPosition) {
         super(itemStorage, index, xPosition, yPosition);
 
+        // TODO: May have to abandon the safety here? perhaps 'preview' shouldn't be in the inventory at all though!!!
         // Check config, we need to get this right or bad stuff will happen.
-        var layout = itemStorage.layout();
-        if (layout.slotConfig(index).canInsert() || layout.slotConfig(index).canExtract()) {
-            throw new RuntimeException("Preview slot can be externally modified!!");
-        }
+//        var layout = itemStorage.layout();
+//        if (layout.slotConfig(index).canInsert() || layout.slotConfig(index).canExtract()) {
+//            throw new RuntimeException("Preview slot can be externally modified!!");
+//        }
     }
 
     public PreviewMachineSlot(ItemStorage itemStorage, SingleResourceSlotKey<ItemResource> slotId, int xPosition, int yPosition) {

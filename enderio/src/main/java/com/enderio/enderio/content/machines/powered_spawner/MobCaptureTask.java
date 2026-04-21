@@ -44,7 +44,7 @@ public class MobCaptureTask extends PoweredSpawnerTask {
             }
 
             // Try and take one input item
-            int extracted = inventory.internalExtract(PoweredSpawnerBlockEntity.INPUT, inputResource, 1, rootTransaction);
+            int extracted = inventory.extract(PoweredSpawnerBlockEntity.INPUT, inputResource, 1, rootTransaction);
             if (extracted != 1) {
                 isComplete = true;
                 return;
@@ -67,7 +67,7 @@ public class MobCaptureTask extends PoweredSpawnerTask {
             // Now, if we can insert more attempt to place back in the INPUT
             int amountToInsert = resultStack.getCount();
             if (canInsertMore) {
-                int inserted = inventory.internalInsert(PoweredSpawnerBlockEntity.INPUT, ItemResource.of(resultStack), amountToInsert, rootTransaction);
+                int inserted = inventory.insert(PoweredSpawnerBlockEntity.INPUT, ItemResource.of(resultStack), amountToInsert, rootTransaction);
                 if (inserted == amountToInsert) {
                     rootTransaction.commit();
                     isComplete = true;
@@ -78,7 +78,7 @@ public class MobCaptureTask extends PoweredSpawnerTask {
             }
 
             // If we haven't inserted everything, try and drop it into OUTPUT
-            int inserted = inventory.internalInsert(PoweredSpawnerBlockEntity.OUTPUT, ItemResource.of(resultStack), amountToInsert, rootTransaction);
+            int inserted = inventory.insert(PoweredSpawnerBlockEntity.OUTPUT, ItemResource.of(resultStack), amountToInsert, rootTransaction);
             if (inserted == amountToInsert) {
                 rootTransaction.commit();
                 isComplete = true;

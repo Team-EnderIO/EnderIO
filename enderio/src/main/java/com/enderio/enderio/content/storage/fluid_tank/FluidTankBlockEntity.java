@@ -276,7 +276,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
                         for (Holder<Fluid> fluidToTry : possibleFluids) {
                             var fluidResource = FluidResource.of(fluidToTry);
                             try (Transaction simulateTransaction = Transaction.open(transaction)) {
-                                int filled = fluidStorage.internalInsert(TANK_SLOT, fluidResource, recipe.value().fluid().amount(), simulateTransaction);
+                                int filled = fluidStorage.insert(TANK_SLOT, fluidResource, recipe.value().fluid().amount(), simulateTransaction);
                                 if (filled == recipe.value().fluid().amount()) {
                                     fluidToFill = fluidResource;
                                     break;
@@ -288,7 +288,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
                             return;
                         }
 
-                        int inserted = fluidStorage.internalInsert(TANK_SLOT, fluidToFill,
+                        int inserted = fluidStorage.insert(TANK_SLOT, fluidToFill,
                             recipe.value().fluid().amount(), transaction);
                         if (inserted != recipe.value().fluid().amount()) {
                             return;

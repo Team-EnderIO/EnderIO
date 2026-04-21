@@ -272,7 +272,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
             for (int i = 0; i < 6; i++) {
                 int inserted;
                 try (Transaction transaction = Transaction.openRoot()) {
-                     inserted = getInventory().internalInsert(OUTPUT.slot(i), ItemResource.of(temp), temp.getCount(), transaction);
+                     inserted = getInventory().insert(OUTPUT.slot(i), ItemResource.of(temp), temp.getCount(), transaction);
                 }
 
                 if (inserted == drop.getCount()) {
@@ -288,7 +288,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
             for (ItemStack drop : drops) {
                 try (Transaction transaction = Transaction.openRoot()) {
                     for (int i = 0; i < 6; i++) {
-                        int inserted = getInventory().internalInsert(OUTPUT.slot(i), ItemResource.of(drop), drop.getCount(), transaction);
+                        int inserted = getInventory().insert(OUTPUT.slot(i), ItemResource.of(drop), drop.getCount(), transaction);
                         if (inserted == drop.getCount()) {
                             drop.setCount(0);
                             break;

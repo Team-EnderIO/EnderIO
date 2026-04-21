@@ -7,7 +7,6 @@ import net.neoforged.neoforge.transfer.item.ItemResource;
 import java.util.List;
 import java.util.Map;
 
-// TODO: Add a machine variant which has additional helpers for things like capacitor slots.
 public class ItemStorageLayout extends ResourceStorageLayout<ItemResource> {
     protected ItemStorageLayout(List<SlotConfig<ItemResource>> slots, Map<ResourceSlotKey<ItemResource>, List<Integer>> keyMap) {
         super(slots, keyMap);

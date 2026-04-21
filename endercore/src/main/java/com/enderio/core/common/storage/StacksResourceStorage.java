@@ -142,25 +142,24 @@ public abstract class StacksResourceStorage<T extends Resource, S> implements Re
     }
 
     @Override
-    public int internalInsert(int index, T resource, int amount, TransactionContext transaction) {
-        return insertImpl(index, resource, amount, transaction);
-    }
-
-    @Override
     public int insert(int index, T resource, int amount, TransactionContext transaction) {
         Objects.checkIndex(index, size());
         TransferPreconditions.checkNonNegative(amount);
 
-        if (!layout.slotConfig(index).canInsert()) {
-            return 0;
+        S currentStack = stacks.get(index);
+        int currentAmount = getAmountFrom(currentStack);
+
+        if ((currentAmount == 0 || matches(currentStack, resource)) && isValid(index, resource)) {
+            int inserted = Math.min(amount, getCapacity(index, resource) - currentAmount);
+
+            if (inserted > 0) {
+                snapshotJournals.get(index).updateSnapshots(transaction);
+                stacks.set(index, getStackFrom(resource, currentAmount + inserted));
+                return inserted;
+            }
         }
 
-        return insertImpl(index, resource, amount, transaction);
-    }
-
-    @Override
-    public int internalExtract(int index, T resource, int amount, TransactionContext transaction) {
-        return extractImpl(index, resource, amount, transaction);
+        return 0;
     }
 
     @Override
@@ -168,11 +167,20 @@ public abstract class StacksResourceStorage<T extends Resource, S> implements Re
         Objects.checkIndex(index, size());
         TransferPreconditions.checkNonNegative(amount);
 
-        if (!layout.slotConfig(index).canExtract()) {
-            return 0;
+        S currentStack = stacks.get(index);
+
+        if (matches(currentStack, resource)) {
+            int currentAmount = getAmountFrom(currentStack);
+            int extracted = Math.min(amount, currentAmount);
+
+            if (extracted > 0) {
+                snapshotJournals.get(index).updateSnapshots(transaction);
+                stacks.set(index, getStackFrom(resource, currentAmount - extracted));
+                return extracted;
+            }
         }
 
-        return extractImpl(index, resource, amount, transaction);
+        return 0;
     }
 
     @Override
@@ -196,46 +204,6 @@ public abstract class StacksResourceStorage<T extends Resource, S> implements Re
     public long getCapacityAsLong(int index, T resource) {
         Objects.checkIndex(index, size());
         return resource.isEmpty() || isValid(index, resource) ? getCapacity(index, resource) : 0;
-    }
-
-    private int insertImpl(int index, T resource, int amount, TransactionContext transaction) {
-        Objects.checkIndex(index, size());
-        TransferPreconditions.checkNonEmptyNonNegative(resource, amount);
-
-        S currentStack = stacks.get(index);
-        int currentAmount = getAmountFrom(currentStack);
-
-        if ((currentAmount == 0 || matches(currentStack, resource)) && isValid(index, resource)) {
-            int inserted = Math.min(amount, getCapacity(index, resource) - currentAmount);
-
-            if (inserted > 0) {
-                snapshotJournals.get(index).updateSnapshots(transaction);
-                stacks.set(index, getStackFrom(resource, currentAmount + inserted));
-                return inserted;
-            }
-        }
-
-        return 0;
-    }
-
-    private int extractImpl(int index, T resource, int amount, TransactionContext transaction) {
-        Objects.checkIndex(index, size());
-        TransferPreconditions.checkNonEmptyNonNegative(resource, amount);
-
-        S currentStack = stacks.get(index);
-
-        if (matches(currentStack, resource)) {
-            int currentAmount = getAmountFrom(currentStack);
-            int extracted = Math.min(amount, currentAmount);
-
-            if (extracted > 0) {
-                snapshotJournals.get(index).updateSnapshots(transaction);
-                stacks.set(index, getStackFrom(resource, currentAmount - extracted));
-                return extracted;
-            }
-        }
-
-        return 0;
     }
 
     @Override

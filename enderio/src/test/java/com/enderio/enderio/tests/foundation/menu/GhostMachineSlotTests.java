@@ -21,28 +21,29 @@ public class GhostMachineSlotTests {
 
     private static final ItemStorageLayout GHOST_LAYOUT = ItemStorageLayout.builder()
         .add(GHOST_SLOT, SlotTemplates.ghost())
-        .build();;
+        .build();
 
-    @Test
-    void testConstructorValidation(MinecraftServer server) {
-        // Valid ghost slot layout
-        ItemStorage validInventory = new ItemStorage(GHOST_LAYOUT);
-        Assertions.assertDoesNotThrow(() -> new GhostMachineSlot(validInventory, 0, 0, 0));
-
-        // Invalid: can insert externally
-        ItemStorageLayout invalidInsertLayout = ItemStorageLayout.builder()
-            .add(GHOST_SLOT, SlotTemplates.input())
-            .build();
-        ItemStorage invalidInsertInventory = new ItemStorage(invalidInsertLayout);
-        Assertions.assertThrows(RuntimeException.class, () -> new GhostMachineSlot(invalidInsertInventory, 0, 0, 0));
-
-        // Invalid: can extract externally
-        ItemStorageLayout invalidExtractLayout = ItemStorageLayout.builder()
-            .add(GHOST_SLOT, SlotTemplates.output())
-            .build();
-        ItemStorage invalidExtractInventory = new ItemStorage(invalidExtractLayout);
-        Assertions.assertThrows(RuntimeException.class, () -> new GhostMachineSlot(invalidExtractInventory, 0, 0, 0));
-    }
+    // TODO: Might not come back.
+//    @Test
+//    void testConstructorValidation(MinecraftServer server) {
+//        // Valid ghost slot layout
+//        ItemStorage validInventory = new ItemStorage(GHOST_LAYOUT);
+//        Assertions.assertDoesNotThrow(() -> new GhostMachineSlot(validInventory, 0, 0, 0));
+//
+//        // Invalid: can insert externally
+//        ItemStorageLayout invalidInsertLayout = ItemStorageLayout.builder()
+//            .add(GHOST_SLOT, SlotTemplates.input())
+//            .build();
+//        ItemStorage invalidInsertInventory = new ItemStorage(invalidInsertLayout);
+//        Assertions.assertThrows(RuntimeException.class, () -> new GhostMachineSlot(invalidInsertInventory, 0, 0, 0));
+//
+//        // Invalid: can extract externally
+//        ItemStorageLayout invalidExtractLayout = ItemStorageLayout.builder()
+//            .add(GHOST_SLOT, SlotTemplates.output())
+//            .build();
+//        ItemStorage invalidExtractInventory = new ItemStorage(invalidExtractLayout);
+//        Assertions.assertThrows(RuntimeException.class, () -> new GhostMachineSlot(invalidExtractInventory, 0, 0, 0));
+//    }
 
     @Test
     void testSafeInsert_SetsSlot_DoesNotConsumeItem(MinecraftServer server) {

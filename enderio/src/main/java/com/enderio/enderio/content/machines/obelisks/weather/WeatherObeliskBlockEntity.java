@@ -110,7 +110,7 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity {
             @Override
             protected void consumeInputs(WeatherChangeRecipe recipe) {
                 try (Transaction transaction = Transaction.openRoot()) {
-                    fluidStorage.internalExtract(TANK_SLOT, FluidResource.of(recipe.fluid()), recipe.fluid().amount(), transaction);
+                    fluidStorage.extract(TANK_SLOT, FluidResource.of(recipe.fluid()), recipe.fluid().amount(), transaction);
                     transaction.commit();
                 }
                 getInventory().getStack(ROCKET).shrink(1);
