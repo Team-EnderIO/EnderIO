@@ -105,13 +105,16 @@ public class EnderFluidFilterScreen extends EnderContainerScreen<EnderFluidFilte
         }
 
         var fluidStack = fluidFilterSlot.getResource();
+        if (fluidStack.isEmpty()) {
+            return;
+        }
 
         FluidModel fluidModel = minecraft.getModelManager().getFluidStateModelSet().get(fluidStack.getFluid().defaultFluidState());
         TextureAtlasSprite sprite = fluidModel.stillMaterial().sprite();
 
         int color = 0xFFFFFFFF;
         if (fluidModel.fluidTintSource() != null) {
-            fluidModel.fluidTintSource().colorAsStack(fluidStack);
+            color = fluidModel.fluidTintSource().colorAsStack(fluidStack);
         }
 
         int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
