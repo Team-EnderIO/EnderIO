@@ -120,6 +120,7 @@ public class ImpulseHopperBlockEntity extends PoweredMachineBlockEntity {
             }
             this.getEnergyStorage().consume(ghost.getCount() * ENERGY_USAGE_PER_ITEM, null);
             stack.shrink(ghost.getCount());
+            getInventory().setStack(INPUT.slot(i), stack);
             getInventory().setStack(OUTPUT.slot(i), result);
         }
     }
