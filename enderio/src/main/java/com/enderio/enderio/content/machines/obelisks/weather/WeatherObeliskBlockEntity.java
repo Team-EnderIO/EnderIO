@@ -104,7 +104,7 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity {
     private CraftingMachineTask<WeatherChangeRecipe, WeatherChangeRecipe.Input> createTask(Level level,
             WeatherChangeRecipe.Input input,
             @Nullable RecipeHolder<WeatherChangeRecipe> weatherChangeRecipeRecipeHolder) {
-        return new CraftingMachineTask<>(level, getInventory(), input, null, weatherChangeRecipeRecipeHolder) {
+        return new CraftingMachineTask<>(level, getInventory(), this.fluidStorage, input, weatherChangeRecipeRecipeHolder) {
 
             @Override
             protected void consumeInputs(WeatherChangeRecipe recipe) {
