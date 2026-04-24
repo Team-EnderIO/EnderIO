@@ -61,8 +61,8 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
 
     public static final FluidStorageLayout<VatBlockEntity> FLUID_STORAGE_LAYOUT =
         FluidStorageLayout.<VatBlockEntity>builder()
-            .storageSlot(INPUT_TANK, slot -> slot.capacity(TANK_CAPACITY))
-            .storageSlot(OUTPUT_TANK, slot -> slot.capacity(TANK_CAPACITY))
+            .inputSlot(INPUT_TANK, slot -> slot.capacity(TANK_CAPACITY))
+            .outputSlot(OUTPUT_TANK, slot -> slot.capacity(TANK_CAPACITY))
             .build();
 
     private final FluidStorage<VatBlockEntity> fluidStorage;
@@ -210,7 +210,7 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
 
             try (Transaction transaction = Transaction.openRoot()) {
                 int outputIndex = fluidStorage.layout().indexOf(OUTPUT_TANK);
-                int inserted = fluidStorage.insert(outputIndex, FluidResource.of(output), output.getAmount(), transaction);
+                int inserted = fluidStorage.internalInsert(outputIndex, FluidResource.of(output), output.getAmount(), transaction);
                 if (inserted == output.getAmount()) {
                     if (!simulate) {
                         transaction.commit();

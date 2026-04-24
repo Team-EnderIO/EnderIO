@@ -71,7 +71,7 @@ public class WeatherObeliskTransferHelper implements IRecipeTransferHandler<Weat
         }
 
         if (doTransfer) {
-            ClientPacketDistributor.sendToServer(new ServerboundTransferItemsPacket(List.of(Ingredient.of(fireWork.getItem())), WeatherObeliskMenu.INPUTS_INDEX,WeatherObeliskMenu.LAST_INDEX + 1, maxTransfer));
+            ClientPacketDistributor.sendToServer(ServerboundTransferItemsPacket.fromIngredients(List.of(Ingredient.of(fireWork.getItem())), WeatherObeliskMenu.INPUTS_INDEX,WeatherObeliskMenu.LAST_INDEX + 1, maxTransfer));
         }
         return null;
     }

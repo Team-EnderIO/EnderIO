@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.ARGB;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
 
@@ -33,8 +34,8 @@ public class FermentationWidget extends EIOWidget {
     @Override
     protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         if (shouldShow.get() && !first.get().isEmpty()) {
-            renderFluid(graphics, first.get(), 1 - progress.get());
             renderFluid(graphics, second.get(), progress.get());
+            renderFluid(graphics, first.get(), 1 - progress.get());
         }
 
     }
@@ -53,7 +54,8 @@ public class FermentationWidget extends EIOWidget {
 
         int color = 0xFFFFFFFF;
         if (fluidModel.fluidTintSource() != null) {
-            fluidModel.fluidTintSource().colorAsStack(fluid);
+            color = fluidModel.fluidTintSource().colorAsStack(fluid);
+            color = ARGB.color(opacity, color);
         }
 
         int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));

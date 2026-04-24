@@ -16,6 +16,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
@@ -56,8 +57,8 @@ public class VATTransferHelper implements IRecipeTransferHandler<VatMenu, Recipe
         boolean hasFluid = recipe.value().input().ingredient().test(new FluidStack(container.getInputTank().contents().getFluid(), container.getInputTank().contents().getAmount()));
         boolean hasLeft = container.slots.get(VatMenu.INPUTS_INDEX).getItem().is(recipe.value().firstReagent());
         boolean hasRight = container.slots.get(VatMenu.INPUTS_INDEX + 1).getItem().is(recipe.value().secondReagent());
-        Ingredient left = getIngredientItem(player, Ingredient.of(BuiltInRegistries.ITEM.get(recipe.value().firstReagent()).orElseThrow()));
-        Ingredient right = getIngredientItem(player, Ingredient.of(BuiltInRegistries.ITEM.get(recipe.value().secondReagent()).orElseThrow()));
+        Optional<Ingredient> left = getIngredientItem(player, Ingredient.of(BuiltInRegistries.ITEM.get(recipe.value().firstReagent()).orElseThrow()));
+        Optional<Ingredient> right = getIngredientItem(player, Ingredient.of(BuiltInRegistries.ITEM.get(recipe.value().secondReagent()).orElseThrow()));
 
         if (!hasLeft || !hasRight || !hasFluid) {
             Component message = Component.translatable("jei.tooltip.error.recipe.transfer.missing");
@@ -82,12 +83,12 @@ public class VATTransferHelper implements IRecipeTransferHandler<VatMenu, Recipe
         return null;
     }
 
-    private Ingredient getIngredientItem(Player player, Ingredient ingredient) {
+    private Optional<Ingredient> getIngredientItem(Player player, Ingredient ingredient) {
         for (var item : player.getInventory().getNonEquipmentItems()) {
             if (ingredient.test(item)) {
-                return ingredient;
+                return Optional.of(ingredient);
             }
         }
-        return Ingredient.of(HolderSet.empty());
+        return Optional.empty();
     }
 }
