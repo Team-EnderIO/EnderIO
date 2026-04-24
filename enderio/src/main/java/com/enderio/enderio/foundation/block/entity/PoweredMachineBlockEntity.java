@@ -311,6 +311,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
     protected void applyImplicitComponents(DataComponentGetter componentInput) {
         super.applyImplicitComponents(componentInput);
         energyStorage.set(componentInput.getOrDefault(EIODataComponents.ENERGY, 0));
+        updateCapacitorData();
     }
 
     @Override
