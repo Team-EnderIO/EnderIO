@@ -57,6 +57,7 @@ public class SoulDataProvider implements DataProvider {
         addSpawnerData(EntityType.CAVE_SPIDER, 32_000, MobSpawnMode.NEW, finshedSoulDataConsumer);
         addSpawnerData(EntityType.CHICKEN, 10_000, MobSpawnMode.NEW, finshedSoulDataConsumer);
         addSpawnerData(EntityType.COD, 10_000, MobSpawnMode.NEW, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.COPPER_GOLEM, 50_000, MobSpawnMode.NEW, finshedSoulDataConsumer);
         addSpawnerData(EntityType.COW, 10_000, MobSpawnMode.NEW, finshedSoulDataConsumer);
         addSpawnerData(EntityType.CREEPER, 32_000, MobSpawnMode.NEW, finshedSoulDataConsumer);
         addSpawnerData(EntityType.DOLPHIN, 12_000, MobSpawnMode.NEW, finshedSoulDataConsumer);
@@ -83,6 +84,7 @@ public class SoulDataProvider implements DataProvider {
         addSpawnerData(EntityType.MAGMA_CUBE, 32_000, MobSpawnMode.NEW, finshedSoulDataConsumer);
         addSpawnerData(EntityType.MULE, 12_000, MobSpawnMode.NEW, finshedSoulDataConsumer);
         addSpawnerData(EntityType.MOOSHROOM, 12_000, MobSpawnMode.NEW, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.NAUTILUS, 12_000, MobSpawnMode.NEW, finshedSoulDataConsumer);
         addSpawnerData(EntityType.OCELOT, 12_000, MobSpawnMode.NEW, finshedSoulDataConsumer);
         addSpawnerData(EntityType.PANDA, 12_000, MobSpawnMode.NEW, finshedSoulDataConsumer);
         addSpawnerData(EntityType.PARROT, 12_000, MobSpawnMode.NEW, finshedSoulDataConsumer);
