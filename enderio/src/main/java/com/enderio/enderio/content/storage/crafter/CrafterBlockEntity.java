@@ -27,6 +27,7 @@ import net.minecraft.world.item.crafting.display.SlotDisplayContext;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayDeque;
@@ -162,14 +163,19 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
         }
 
         // output
-        if (canMergeOutput(outputBuffer.peek())) {
-            var stack = getInventory().getStack(OUTPUT);
-            if (stack.isEmpty()) {
-                getInventory().setStack(OUTPUT, outputBuffer.peek().copy());
-            } else {
-                stack.grow(outputBuffer.peek().getCount());
+        try (Transaction transaction = Transaction.openRoot()) {
+            var toAdd = outputBuffer.peek();
+            int inserted = getInventory().insert(OUTPUT, ItemResource.of(toAdd), toAdd.count(), transaction);
+            if (inserted == 0) {
+                return;
             }
-            outputBuffer.remove();
+
+            toAdd.shrink(inserted);
+            if (toAdd.isEmpty()) {
+                outputBuffer.remove();
+            }
+
+            transaction.commit();
         }
     }
 

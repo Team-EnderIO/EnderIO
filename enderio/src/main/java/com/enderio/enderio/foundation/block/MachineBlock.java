@@ -117,7 +117,7 @@ public class MachineBlock<T extends MachineBlockEntity> extends EIOEntityBlock<T
             if (soulHandler != null) {
                 for (int i = 0; i < soulHandler.getSlots(); i++) {
                     Soul soul = soulHandler.getSoulInSlot(i);
-                    if (soulBindable.isSoulValid(soul)) {
+                    if (!soul.isEmpty() && soulBindable.isSoulValid(soul)) {
                         soulBindable.bindSoul(soul.copy());
                         return InteractionResult.SUCCESS;
                     }
