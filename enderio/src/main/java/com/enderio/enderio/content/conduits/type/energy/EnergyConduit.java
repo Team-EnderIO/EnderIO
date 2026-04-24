@@ -72,8 +72,9 @@ public record EnergyConduit(Identifier texture, Component description, int trans
         consumer.accept(PATH_MAX_TRANSFER_RATE, transferRatePerTick());
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public <TCap, TContext> @Nullable TCap proxyCapability(Level level, @Nullable ConduitNode node,
+    public <TCap, TContext> @Nullable TCap proxyCapability(Level level, ConduitNode node,
             BlockCapability<TCap, TContext> capability, @Nullable TContext context) {
 
         if (Capabilities.Energy.BLOCK == capability && context instanceof Direction side) {
@@ -89,8 +90,14 @@ public record EnergyConduit(Identifier texture, Component description, int trans
                 }
             }
 
-            // noinspection unchecked
-            return (TCap) new EnergyConduitStorage(side, node);
+            // If this conduit can be 'extracted' from (in this case, we'll push energy lol) we return a cap.
+            var config = node.getConnectionConfig(side, EnergyConduitConnectionConfig.TYPE);
+            if (config.isExtract()) {
+                return (TCap) new EnergyConduitStorage(side, node);
+            }
+
+            // Return an empty cap if we're not pushing energy, so that blocks know they can connect to receive energy
+            return (TCap) EnergyConduitStorageStub.INSTANCE;
         }
 
         return null;

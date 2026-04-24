@@ -1,0 +1,5 @@
+{
+  "type": "entity_type",
+  "entity": "minecraft:sniffer",
+  "power": 60000
+}

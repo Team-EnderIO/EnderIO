@@ -13,6 +13,7 @@ import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -136,7 +137,7 @@ public class SolarPanelBlockEntity extends EIOBlockEntity {
 
     @Override
     public void serverTick() {
-        if (isGenerating()) {
+        if (getGenerationRate() > 0) {
             node.addEnergyToNetwork(getGenerationRate());
         }
 
@@ -152,18 +153,6 @@ public class SolarPanelBlockEntity extends EIOBlockEntity {
         }
 
         super.serverTick();
-    }
-
-    public boolean isGenerating() {
-        if (level == null || !this.level.canSeeSky(getBlockPos().above())) {
-            return false;
-        }
-        if (!this.level.dimensionType().hasSkyLight()) {
-            return soulData == null
-                || (soulData.level().isPresent() && !soulData.level().get().equals(this.level.dimension()));
-        }
-
-        return getGenerationRate() > 0;
     }
 
     /**
@@ -190,10 +179,22 @@ public class SolarPanelBlockEntity extends EIOBlockEntity {
             night = soulData.nighttime();
         }
 
-        float outputScale = 0;
         if ((day && night) || (day && hasLiquidSunshine()) || (night && hasLiquidDarkness())) {
-            outputScale = 1;
-        } else if (day) {
+            return tier.getProductionRate(); //Max power, ignore if it can see the sky
+        }
+
+        if (!this.level.dimensionType().hasSkyLight()) {
+            if (soulData == null || soulData.level().isEmpty() || !soulData.level().get().equals(this.level.dimension())) {
+                return 0; //No light in dimension and no soul to override it
+            }
+        }
+
+        if (!this.level.canSeeSky(getBlockPos().above())) {
+            return 0; //No sky, no power
+        }
+
+        float outputScale = 0;
+        if (day) {
             outputScale = getOutputScale(level);
         } else if (night) {
             // A Day night cycle is 20 minutes, night is 10 minutes
@@ -218,7 +219,7 @@ public class SolarPanelBlockEntity extends EIOBlockEntity {
                 outputScale = 1;
             }
         }
-        return (int) Math.ceil(outputScale * tier.getProductionRate());
+        return Mth.ceil(outputScale * tier.getProductionRate());
     }
 
     public static float getOutputScale(Level level) {

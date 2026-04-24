@@ -46,8 +46,8 @@ public class AlloySmelterTests {
                     helper.assertContainerHasExactly(0, 0, 0, Items.COAL, 0);
                     helper.assertContainerHasExactly(0, 0, 0, Items.OBSIDIAN, 0);
 
-                    // Verify that we have 1 Dark Steel Ingot in the output
-                    helper.assertContainerHasExactly(0, 0, 0, EIOItems.DARK_STEEL_INGOT.get(), 1);
+                    // Verify that we have 2 Dark Steel Ingot in the output
+                    helper.assertContainerHasExactly(0, 0, 0, EIOItems.DARK_STEEL_INGOT.get(), 2);
 
                     // Ensure energy was consumed correctly
                     var input = new AlloySmeltingRecipe.Input(AlloySmelterMode.ALLOYS,
