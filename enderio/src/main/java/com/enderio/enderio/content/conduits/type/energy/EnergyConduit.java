@@ -25,6 +25,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.transfer.energy.EmptyEnergyHandler;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import com.enderio.enderio.config.conduits.ConduitsConfig;
@@ -97,7 +98,7 @@ public record EnergyConduit(Identifier texture, Component description, int trans
             }
 
             // Return an empty cap if we're not pushing energy, so that blocks know they can connect to receive energy
-            return (TCap) EnergyConduitStorageStub.INSTANCE;
+            return (TCap) EmptyEnergyHandler.INSTANCE;
         }
 
         return null;
