@@ -294,12 +294,12 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
                             return;
                         }
 
-                        getInventory().getStack(FLUID_FILL_INPUT).shrink(1);
+                        getInventory().mutateStack(FLUID_FILL_INPUT, s -> s.shrink(1));
 
                         if (outputStack.isEmpty()) {
                             getInventory().setStack(FLUID_FILL_OUTPUT, recipeResultStack.copy());
                         } else {
-                            getInventory().getStack(FLUID_FILL_OUTPUT).grow(1);
+                            getInventory().mutateStack(FLUID_FILL_OUTPUT, s -> s.grow(1));
                         }
 
                         transaction.commit();
@@ -324,12 +324,12 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
                             return;
                         }
 
-                        getInventory().getStack(FLUID_DRAIN_INPUT).shrink(1);
+                        getInventory().mutateStack(FLUID_DRAIN_INPUT, s -> s.shrink(1));
 
                         if (outputStack.isEmpty()) {
                             getInventory().setStack(FLUID_DRAIN_OUTPUT, recipeResultStack.copy());
                         } else {
-                            getInventory().getStack(FLUID_DRAIN_OUTPUT).grow(1);
+                            getInventory().mutateStack(FLUID_DRAIN_OUTPUT, s -> s.grow(1));
                         }
 
                         transaction.commit();

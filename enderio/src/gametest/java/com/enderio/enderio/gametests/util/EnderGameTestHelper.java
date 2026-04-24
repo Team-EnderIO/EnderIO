@@ -1,5 +1,6 @@
 package com.enderio.enderio.gametests.util;
 
+import com.enderio.core.common.storage.ExternalResourceStorageView;
 import com.enderio.core.common.storage.ItemStorage;
 import com.enderio.core.common.storage.ResourceStorage;
 import com.enderio.core.common.storage.slot.ResourceSlotId;
@@ -128,8 +129,16 @@ public class EnderGameTestHelper extends ExtendedGameTestHelper {
             throw assertionException("No item handler at " + x + "," + y + "," + z);
         }
 
-        if (!(itemHandler instanceof ResourceStorage<ItemResource> itemStorage)) {
-            throw assertionException("No item storage (Endercore) at " + x + "," + y + "," + z);
+        // TODO: This is a tiny bit horrible.
+        ResourceStorage<ItemResource> itemStorage = null;
+        if (itemHandler instanceof ResourceStorage<ItemResource>) {
+            itemStorage = (ResourceStorage<ItemResource>) itemHandler;
+        } else if (itemHandler instanceof ExternalResourceStorageView<ItemResource> externalItemStorage) {
+            itemStorage = externalItemStorage.getDelegate();
+        }
+
+        if (itemStorage == null) {
+            throw assertionException("No item storage at " + x + "," + y + "," + z);
         }
 
         try (Transaction transaction = Transaction.openRoot()) {
@@ -163,8 +172,16 @@ public class EnderGameTestHelper extends ExtendedGameTestHelper {
             throw assertionException("No item handler at " + x + "," + y + "," + z);
         }
 
-        if (!(itemHandler instanceof ResourceStorage<ItemResource> itemStorage)) {
-            throw assertionException("No item storage (Endercore) at " + x + "," + y + "," + z);
+        // TODO: This is a tiny bit horrible.
+        ResourceStorage<ItemResource> itemStorage = null;
+        if (itemHandler instanceof ResourceStorage<ItemResource>) {
+            itemStorage = (ResourceStorage<ItemResource>) itemHandler;
+        } else if (itemHandler instanceof ExternalResourceStorageView<ItemResource> externalItemStorage) {
+            itemStorage = externalItemStorage.getDelegate();
+        }
+
+        if (itemStorage == null) {
+            throw assertionException("No item storage at " + x + "," + y + "," + z);
         }
 
         return itemStorage.getResource(slot).toStack(itemStorage.getAmountAsInt(slot));

@@ -119,12 +119,12 @@ public class InternalTankTasks {
         SingleResourceSlotKey<ItemResource> fluidDrainOutput
     ) {
         FluidResource resource = fluidStorage.getResource(tankSlot);
-        if (!resource.isEmpty() && resource.is(Tags.Fluids.EXPERIENCE)) {
+        if (resource.isEmpty() || !resource.is(Tags.Fluids.EXPERIENCE)) {
             return;
         }
 
         // Get the tool in the input
-        var tool = EnderResourceUtil.getItemStack(itemStorage, fluidDrainOutput);
+        var tool = EnderResourceUtil.getItemStack(itemStorage, fluidDrainInput);
 
         // Find mending enchantment
         var enchantmentsRecipe = registries.lookupOrThrow(Registries.ENCHANTMENT);
@@ -134,25 +134,32 @@ public class InternalTankTasks {
             return;
         }
 
-        ItemStack repairedTool = tool.copy();
-
         int damage = tool.getDamageValue();
         int xpAmount = (int) Math.floor(damage / tool.getXpRepairRatio());
         int fluidAmount = xpAmount * ExperienceUtil.EXP_TO_FLUID;
 
         try (Transaction transaction = Transaction.openRoot()) {
-            int extracted = fluidStorage.extract(tankSlot, resource, fluidAmount, transaction);
-            if (extracted <= 0) {
+            int extractedTools = itemStorage.extract(fluidDrainInput, ItemResource.of(tool), 1, transaction);
+            if (extractedTools <= 0) {
                 return;
             }
 
-            int repairAmount = (int) Math.floor(extracted * tool.getXpRepairRatio() / ExperienceUtil.EXP_TO_FLUID);
+            int extractedExperience = fluidStorage.extract(tankSlot, resource, fluidAmount, transaction);
+            if (extractedExperience <= 0) {
+                return;
+            }
+
+            int repairAmount = (int) Math.floor(extractedExperience * tool.getXpRepairRatio() / ExperienceUtil.EXP_TO_FLUID);
+
+            ItemStack repairedTool = tool.copy();
             repairedTool.setDamageValue(Math.max(0, damage - repairAmount));
 
-            transaction.commit();
+            int toolsInserted = itemStorage.insert(fluidDrainOutput, ItemResource.of(repairedTool), repairedTool.count(), transaction);
+            if (toolsInserted <= 0) {
+                return;
+            }
 
-            itemStorage.set(fluidDrainInput, ItemResource.EMPTY, 0);
-            itemStorage.set(fluidDrainOutput, ItemResource.of(repairedTool), repairedTool.count());
+            transaction.commit();
         }
     }
 
