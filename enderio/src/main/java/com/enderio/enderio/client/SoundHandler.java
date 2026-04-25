@@ -23,6 +23,10 @@ public class SoundHandler {
         }
     }
 
+    public static void playSound(BlockPos pos, SoundEvent soundEvent, SoundSource source, double volume, float pitch, RandomSource random, double x, double y, double z) {
+        SoundHandler.playSound(pos, soundEvent, source, (float) volume, pitch, random, x, y, z);
+    }
+
     public static void stopSound(BlockPos pos) {
         SoundInstance sound = SOUND_MAP.getOrDefault(pos.asLong(), null);
         if (sound != null && isActive(sound)) {

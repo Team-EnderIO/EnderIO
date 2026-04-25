@@ -5,6 +5,7 @@ import com.enderio.core.common.util.NamedFluidContents;
 import com.enderio.enderio.EnderIO;
 import com.enderio.core.annotations.UseOnly;
 import com.enderio.enderio.client.SoundHandler;
+import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.foundation.attachment.FluidTankUser;
 import com.enderio.enderio.foundation.block.ProgressMachineBlock;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
@@ -95,7 +96,7 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
             double y = pos.getY();
             double z = pos.getZ() + 0.5;
 
-            SoundHandler.playSound(pos, EIOSounds.VAT.get(), SoundSource.BLOCKS, 1.0f, 1.0f, random, x, y, z);
+            SoundHandler.playSound(pos, EIOSounds.VAT.get(), SoundSource.BLOCKS, MachinesConfig.CLIENT.MACHINE_VOLUME.get(), 1.0f, random, x, y, z);
         } else {
             SoundHandler.stopSound(pos);
         }

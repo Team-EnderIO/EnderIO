@@ -9,9 +9,9 @@ public enum SolarPanelTier implements ISolarPanelTier {
     PULSATING(MachinesConfig.COMMON.ENERGY.PULSATING_SOLAR_PANEL_MAX_PRODUCTION),
     VIBRANT(MachinesConfig.COMMON.ENERGY.VIBRANT_SOLAR_PANEL_MAX_PRODUCTION);
 
-    private final ModConfigSpec.ConfigValue<Integer> productionRate;
+    private final ModConfigSpec.IntValue productionRate;
 
-    SolarPanelTier(ModConfigSpec.ConfigValue<Integer> productionRate) {
+    SolarPanelTier(ModConfigSpec.IntValue productionRate) {
         this.productionRate = productionRate;
     }
 

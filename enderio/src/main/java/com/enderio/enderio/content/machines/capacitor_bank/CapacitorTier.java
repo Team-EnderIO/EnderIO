@@ -10,9 +10,9 @@ public enum CapacitorTier implements CapacityTier {
     ADVANCED(MachinesConfig.COMMON.ENERGY.ADVANCED_CAPACITOR_BANK_CAPACITY),
     VIBRANT(MachinesConfig.COMMON.ENERGY.VIBRANT_CAPACITOR_BANK_CAPACITY);
 
-    private final ModConfigSpec.ConfigValue<Integer> capacity;
+    private final ModConfigSpec.IntValue capacity;
 
-    CapacitorTier(ModConfigSpec.ConfigValue<Integer> capacity) {
+    CapacitorTier(ModConfigSpec.IntValue capacity) {
         this.capacity = capacity;
     }
 

@@ -126,7 +126,7 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
             double y = pos.getY();
             double z = pos.getZ() + 0.5;
 
-            SoundHandler.playSound(pos, EIOSounds.STIRLING.get(), SoundSource.BLOCKS, 1.0f, 1.0f, random, x, y, z);
+            SoundHandler.playSound(pos, EIOSounds.STIRLING.get(), SoundSource.BLOCKS, MachinesConfig.CLIENT.MACHINE_VOLUME.get(), 1.0f, random, x, y, z);
 
 
             Direction direction = state.getValue(ProgressMachineBlock.FACING);

@@ -109,14 +109,14 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
             double y = pos.getY();
             double z = pos.getZ() + 0.5;
 
-            SoundHandler.playSound(pos, EIOSounds.SAG_MILL.get(), SoundSource.BLOCKS, 1.0f, 1.0f, random, x, y, z);
+            SoundHandler.playSound(pos, EIOSounds.SAG_MILL.get(), SoundSource.BLOCKS, MachinesConfig.CLIENT.MACHINE_VOLUME.get(), 1.0f, random, x, y, z);
 
             Direction direction = state.getValue(ProgressMachineBlock.FACING);
             Direction.Axis axis = direction.getAxis();
             double r = 0.7;
             double ss = random.nextDouble() * 0.6 - 0.3;
             double dx = axis == Direction.Axis.X ? direction.getStepX() * r : ss;
-            double dy = random.nextDouble() * 16.0 / 16.0;
+            double dy = random.nextDouble();
             double dz = axis == Direction.Axis.Z ? direction.getStepZ() * r : ss;
             level.addParticle(ParticleTypes.DUST_PLUME, x + dx, y + dy, z + dz, 0.0, 0.0, 0.0);
             ItemStack input = INPUT.getItemStack(this);

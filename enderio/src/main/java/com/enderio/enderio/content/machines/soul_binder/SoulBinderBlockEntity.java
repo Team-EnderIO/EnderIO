@@ -29,8 +29,6 @@ import com.enderio.enderio.init.EIOFluids;
 import com.enderio.enderio.init.EIOItems;
 import com.enderio.enderio.init.EIORecipes;
 import com.enderio.enderio.init.EIOSounds;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -108,12 +106,12 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
             double y = pos.getY();
             double z = pos.getZ() + 0.5;
 
-            SoundHandler.playSound(pos, EIOSounds.SOUL_BINDER.get(), SoundSource.BLOCKS, 1.0f, 1.0f, random, x, y, z);
+            SoundHandler.playSound(pos, EIOSounds.SOUL_BINDER.get(), SoundSource.BLOCKS, MachinesConfig.CLIENT.MACHINE_VOLUME.get(), 1.0f, random, x, y, z);
 
             Direction direction = state.getValue(ProgressMachineBlock.FACING);
             Direction.Axis axis = direction.getAxis();
             double r = 0.52;
-            double ss = random.nextDouble() * 0.6 - 0.2;
+            double ss = random.nextDouble() * 0.8 - 0.4;
             double dx = axis == Direction.Axis.X ? direction.getStepX() * r : ss;
             double dy = random.nextDouble() * 6.0 / 16.0 + 7.0 / 16.0;
             double dz = axis == Direction.Axis.Z ? direction.getStepZ() * r : ss;

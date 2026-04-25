@@ -115,9 +115,6 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
             double x = pos.getX() + 0.5;
             double y = pos.getY();
             double z = pos.getZ() + 0.5;
-            if (random.nextDouble() < 0.1) {
-                //level.playLocalSound(x, y, z, SoundEvents.FURNACE_FIRE_CRACKLE, SoundSource.BLOCKS, 1.0F, 1.0F, false);
-            }
 
             Direction direction = state.getValue(ProgressMachineBlock.FACING);
             Direction.Axis axis = direction.getAxis();
