@@ -62,10 +62,6 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
 
     private final CraftingMachineTaskHost<SagMillingRecipe, SagMillingRecipe.Input> craftingTaskHost;
 
-    @UseOnly(LogicalSide.CLIENT)
-    @Nullable
-    private SoundInstance sound;
-
     public SagMillBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.SAG_MILL.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
                 EnergyIOMode.Input, CAPACITY, USAGE);
@@ -113,10 +109,7 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
             double y = pos.getY();
             double z = pos.getZ() + 0.5;
 
-            if (sound == null || !SoundHandler.isActive(sound)) {
-                sound = new SimpleSoundInstance(EIOSounds.SAG_MILL.get(), SoundSource.BLOCKS, 1.0f, 1.0f, random, x, y, z);
-                SoundHandler.playSound(sound);
-            }
+            SoundHandler.playSound(pos, EIOSounds.SAG_MILL.get(), SoundSource.BLOCKS, 1.0f, 1.0f, random, x, y, z);
 
             Direction direction = state.getValue(ProgressMachineBlock.FACING);
             Direction.Axis axis = direction.getAxis();
@@ -132,9 +125,8 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
             } else {
                 level.addParticle(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.GRAVEL.defaultBlockState()), x + dx, y + dy, z + dz, 0.0, 0.0, 0.0);
             }
-        } else if (sound != null && SoundHandler.isActive(sound)) {
-            SoundHandler.stopSound(sound);
-            sound = null;
+        } else {
+            SoundHandler.stopSound(pos);
         }
     }
 

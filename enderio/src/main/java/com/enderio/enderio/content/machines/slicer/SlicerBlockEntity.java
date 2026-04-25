@@ -56,10 +56,6 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
 
     private final CraftingMachineTaskHost<SlicingRecipe, SlicingRecipe.Input> craftingTaskHost;
 
-    @UseOnly(LogicalSide.CLIENT)
-    @Nullable
-    private SoundInstance sound;
-
     public SlicerBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.SLICE_AND_SPLICE.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
                 EnergyIOMode.Input, CAPACITY, USAGE);
@@ -100,10 +96,8 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
             double y = pos.getY();
             double z = pos.getZ() + 0.5;
 
-            if (sound == null || !SoundHandler.isActive(sound)) {
-                sound = new SimpleSoundInstance(EIOSounds.SLICER.get(), SoundSource.BLOCKS, 1.0f, 1.0f, random, x, y, z);
-                SoundHandler.playSound(sound);
-            }
+            SoundHandler.playSound(pos, EIOSounds.SLICER.get(), SoundSource.BLOCKS, 1.0f, 1.0f, random, x, y, z);
+
 
             Direction direction = state.getValue(ProgressMachineBlock.FACING);
             Direction.Axis axis = direction.getAxis();
@@ -113,9 +107,8 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
             double dy = random.nextDouble() * 6.0 / 16.0 + 7.0 / 16.0;
             double dz = axis == Direction.Axis.Z ? direction.getStepZ() * r : ss;
             level.addParticle(ParticleTypes.SOUL_FIRE_FLAME, x + dx, y + dy, z + dz, 0.0, 0.0, 0.0);
-        } else if (sound != null && SoundHandler.isActive(sound)) {
-            SoundHandler.stopSound(sound);
-            sound = null;
+        } else {
+            SoundHandler.stopSound(pos);
         }
     }
 

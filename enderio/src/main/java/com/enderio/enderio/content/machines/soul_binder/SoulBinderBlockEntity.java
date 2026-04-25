@@ -75,10 +75,6 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
     @Nullable
     private RecipeHolder<SoulBindingRecipe> clientRecipe;
 
-    @UseOnly(LogicalSide.CLIENT)
-    @Nullable
-    private SoundInstance sound;
-
     private final CraftingMachineTaskHost<SoulBindingRecipe, SoulBindingRecipe.Input> craftingTaskHost;
 
     public SoulBinderBlockEntity(BlockPos worldPosition, BlockState blockState) {
@@ -112,10 +108,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
             double y = pos.getY();
             double z = pos.getZ() + 0.5;
 
-            if (sound == null || !SoundHandler.isActive(sound)) {
-                sound = new SimpleSoundInstance(EIOSounds.SOUL_BINDER.get(), SoundSource.BLOCKS, 1.0f, 1.0f, random, x, y, z);
-                SoundHandler.playSound(sound);
-            }
+            SoundHandler.playSound(pos, EIOSounds.SOUL_BINDER.get(), SoundSource.BLOCKS, 1.0f, 1.0f, random, x, y, z);
 
             Direction direction = state.getValue(ProgressMachineBlock.FACING);
             Direction.Axis axis = direction.getAxis();
@@ -125,9 +118,8 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
             double dy = random.nextDouble() * 6.0 / 16.0 + 7.0 / 16.0;
             double dz = axis == Direction.Axis.Z ? direction.getStepZ() * r : ss;
             level.addParticle(ParticleTypes.SOUL_FIRE_FLAME, x + dx, y + dy, z + dz, 0.0, 0.0, 0.0); //TODO green flame
-        } else if (sound != null && SoundHandler.isActive(sound)) {
-            SoundHandler.stopSound(sound);
-            sound = null;
+        } else {
+            SoundHandler.stopSound(pos);
         }
     }
 

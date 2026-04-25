@@ -64,10 +64,6 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
     private final MachineFluidHandler fluidHandler;
     private final CraftingMachineTaskHost<FermentingRecipe, FermentingRecipe.Input> craftingTaskHost;
 
-    @UseOnly(LogicalSide.CLIENT)
-    @Nullable
-    private SoundInstance sound;
-
     public VatBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.VAT.get(), worldPosition, blockState, true);
         fluidHandler = createFluidHandler();
@@ -99,13 +95,9 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
             double y = pos.getY();
             double z = pos.getZ() + 0.5;
 
-            if (sound == null || !SoundHandler.isActive(sound)) {
-                sound = new SimpleSoundInstance(EIOSounds.VAT.get(), SoundSource.BLOCKS, 1.0f, 1.0f, random, x, y, z);
-                SoundHandler.playSound(sound);
-            }
-        } else if (sound != null && SoundHandler.isActive(sound)) {
-            SoundHandler.stopSound(sound);
-            sound = null;
+            SoundHandler.playSound(pos, EIOSounds.VAT.get(), SoundSource.BLOCKS, 1.0f, 1.0f, random, x, y, z);
+        } else {
+            SoundHandler.stopSound(pos);
         }
     }
 

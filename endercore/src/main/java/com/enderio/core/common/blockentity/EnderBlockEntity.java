@@ -91,6 +91,7 @@ public class EnderBlockEntity extends BlockEntity {
     public void endTick() {
     }
 
+    @UseOnly(LogicalSide.CLIENT)
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
     }
 

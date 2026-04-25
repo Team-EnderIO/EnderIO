@@ -59,10 +59,6 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
     private int burnTime;
     private int burnDuration;
 
-    @UseOnly(LogicalSide.CLIENT)
-    @Nullable
-    private SoundInstance sound;
-
     public StirlingGeneratorBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.STIRLING_GENERATOR.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
                 EnergyIOMode.Output, CAPACITY, FixedScalable.ZERO);
@@ -130,10 +126,8 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
             double y = pos.getY();
             double z = pos.getZ() + 0.5;
 
-            if (sound == null || !SoundHandler.isActive(sound)) {
-                sound = new SimpleSoundInstance(EIOSounds.STIRLING.get(), SoundSource.BLOCKS, 1.0f, 1.0f, random, x, y, z);
-                SoundHandler.playSound(sound);
-            }
+            SoundHandler.playSound(pos, EIOSounds.STIRLING.get(), SoundSource.BLOCKS, 1.0f, 1.0f, random, x, y, z);
+
 
             Direction direction = state.getValue(ProgressMachineBlock.FACING);
             Direction.Axis axis = direction.getAxis();
@@ -144,9 +138,8 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
             double dz = axis == Direction.Axis.Z ? direction.getStepZ() * r : ss;
             level.addParticle(ParticleTypes.SMOKE, x + dx, y + dy, z + dz, 0.0, 0.0, 0.0);
             level.addParticle(ParticleTypes.FLAME, x + dx, y + dy, z + dz, 0.0, 0.0, 0.0);
-        } else if (sound != null && SoundHandler.isActive(sound)) {
-            SoundHandler.stopSound(sound);
-            sound = null;
+        } else {
+            SoundHandler.stopSound(pos);
         }
     }
 
