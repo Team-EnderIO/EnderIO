@@ -1,13 +1,16 @@
 package com.enderio.enderio.content.machines.stirling_generator;
 
+import com.enderio.core.annotations.UseOnly;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.FixedScalable;
 import com.enderio.enderio.api.capacitor.LinearScalable;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.enderio.api.capacitor.SteppedScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
+import com.enderio.enderio.client.SoundHandler;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.foundation.MachineNBTKeys;
+import com.enderio.enderio.foundation.block.ProgressMachineBlock;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
@@ -15,9 +18,18 @@ import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import com.enderio.enderio.foundation.io.energy.MachineEnergyStorage;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.init.EIOBlockEntities;
+import com.enderio.enderio.init.EIOSounds;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -25,6 +37,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.fml.LogicalSide;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
@@ -45,6 +58,10 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
 
     private int burnTime;
     private int burnDuration;
+
+    @UseOnly(LogicalSide.CLIENT)
+    @Nullable
+    private SoundInstance sound;
 
     public StirlingGeneratorBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.STIRLING_GENERATOR.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
@@ -107,8 +124,35 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+        if (state.getValue(ProgressMachineBlock.POWERED)) {
+            double x = pos.getX() + 0.5;
+            double y = pos.getY();
+            double z = pos.getZ() + 0.5;
+
+            if (sound == null || !SoundHandler.isActive(sound)) {
+                sound = new SimpleSoundInstance(EIOSounds.STIRLING.get(), SoundSource.BLOCKS, 1.0f, 1.0f, random, x, y, z);
+                SoundHandler.playSound(sound);
+            }
+
+            Direction direction = state.getValue(ProgressMachineBlock.FACING);
+            Direction.Axis axis = direction.getAxis();
+            double r = 0.52;
+            double ss = random.nextDouble() * 0.6 - 0.3;
+            double dx = axis == Direction.Axis.X ? direction.getStepX() * r : ss;
+            double dy = random.nextDouble() * 6.0 / 16.0;
+            double dz = axis == Direction.Axis.Z ? direction.getStepZ() * r : ss;
+            level.addParticle(ParticleTypes.SMOKE, x + dx, y + dy, z + dz, 0.0, 0.0, 0.0);
+            level.addParticle(ParticleTypes.FLAME, x + dx, y + dy, z + dz, 0.0, 0.0, 0.0);
+        } else if (sound != null && SoundHandler.isActive(sound)) {
+            SoundHandler.stopSound(sound);
+            sound = null;
+        }
+    }
+
+    @Override
     public boolean isActive() {
-        return canAct() && hasEnergy() && isGenerating();
+        return canAct() && isGenerating();
     }
 
     public boolean isGenerating() {
@@ -155,6 +199,15 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
+    public void setChanged() {
+        super.setChanged();
+
+        if (isActive()) {
+            updateMachineState(MachineState.EMPTY_INPUT, false);
+        }
+    }
+
+    @Override
     public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
         super.loadAdditional(tag, lookupProvider);
 
@@ -190,5 +243,10 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
                 (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored())
                         && isCapacitorInstalled());
         updateMachineState(MachineState.EMPTY_INPUT, FUEL.getItemStack(this).isEmpty());
+    }
+
+    @Override
+    protected void updatePowerState() {
+
     }
 }

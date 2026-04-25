@@ -5,8 +5,10 @@ import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.enderio.api.soul.SoulBoundUtils;
+import com.enderio.enderio.client.SoundHandler;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.foundation.attachment.FluidTankUser;
+import com.enderio.enderio.foundation.block.ProgressMachineBlock;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
@@ -26,10 +28,17 @@ import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOFluids;
 import com.enderio.enderio.init.EIOItems;
 import com.enderio.enderio.init.EIORecipes;
+import com.enderio.enderio.init.EIOSounds;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -66,6 +75,10 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
     @Nullable
     private RecipeHolder<SoulBindingRecipe> clientRecipe;
 
+    @UseOnly(LogicalSide.CLIENT)
+    @Nullable
+    private SoundInstance sound;
+
     private final CraftingMachineTaskHost<SoulBindingRecipe, SoulBindingRecipe.Input> craftingTaskHost;
 
     public SoulBinderBlockEntity(BlockPos worldPosition, BlockState blockState) {
@@ -89,6 +102,32 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
 
         if (canAct()) {
             craftingTaskHost.tick();
+        }
+    }
+
+    @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+        if (state.getValue(ProgressMachineBlock.POWERED)) {
+            double x = pos.getX() + 0.5;
+            double y = pos.getY();
+            double z = pos.getZ() + 0.5;
+
+            if (sound == null || !SoundHandler.isActive(sound)) {
+                sound = new SimpleSoundInstance(EIOSounds.SOUL_BINDER.get(), SoundSource.BLOCKS, 1.0f, 1.0f, random, x, y, z);
+                SoundHandler.playSound(sound);
+            }
+
+            Direction direction = state.getValue(ProgressMachineBlock.FACING);
+            Direction.Axis axis = direction.getAxis();
+            double r = 0.52;
+            double ss = random.nextDouble() * 0.6 - 0.2;
+            double dx = axis == Direction.Axis.X ? direction.getStepX() * r : ss;
+            double dy = random.nextDouble() * 6.0 / 16.0 + 7.0 / 16.0;
+            double dz = axis == Direction.Axis.Z ? direction.getStepZ() * r : ss;
+            level.addParticle(ParticleTypes.SOUL_FIRE_FLAME, x + dx, y + dy, z + dz, 0.0, 0.0, 0.0); //TODO green flame
+        } else if (sound != null && SoundHandler.isActive(sound)) {
+            SoundHandler.stopSound(sound);
+            sound = null;
         }
     }
 

@@ -2,6 +2,7 @@ package com.enderio.enderio.foundation.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -34,6 +35,14 @@ public abstract class EIOEntityBlock<T extends EIOBlockEntity> extends BaseEntit
             BlockEntityType<T> blockEntityType) {
         return createTickerHelper(blockEntityType, typeSupplier.get(), EIOBlockEntity::tick);
     }
+
+    @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+        if (level.getBlockEntity(pos) instanceof EIOBlockEntity blockEntity) {
+            blockEntity.animateTick(state, level, pos, random);
+        }
+    }
+
 
     @Override
     public boolean canConnectRedstone(BlockState state, BlockGetter level, BlockPos pos,

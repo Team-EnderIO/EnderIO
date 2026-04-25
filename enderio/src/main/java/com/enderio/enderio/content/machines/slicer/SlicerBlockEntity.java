@@ -1,9 +1,12 @@
 package com.enderio.enderio.content.machines.slicer;
 
+import com.enderio.core.annotations.UseOnly;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
+import com.enderio.enderio.client.SoundHandler;
 import com.enderio.enderio.config.machines.MachinesConfig;
+import com.enderio.enderio.foundation.block.ProgressMachineBlock;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
 import com.enderio.enderio.foundation.inventory.MachineInventory;
@@ -15,10 +18,17 @@ import com.enderio.enderio.foundation.task.PoweredCraftingMachineTask;
 import com.enderio.enderio.foundation.task.host.CraftingMachineTaskHost;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIORecipes;
+import com.enderio.enderio.init.EIOSounds;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -29,6 +39,7 @@ import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.fml.LogicalSide;
 import org.jetbrains.annotations.Nullable;
 
 public class SlicerBlockEntity extends PoweredMachineBlockEntity {
@@ -44,6 +55,10 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
     public static final SingleSlotAccess SHEARS = new SingleSlotAccess();
 
     private final CraftingMachineTaskHost<SlicingRecipe, SlicingRecipe.Input> craftingTaskHost;
+
+    @UseOnly(LogicalSide.CLIENT)
+    @Nullable
+    private SoundInstance sound;
 
     public SlicerBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.SLICE_AND_SPLICE.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
@@ -75,6 +90,32 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
 
         if (canAct()) {
             craftingTaskHost.tick();
+        }
+    }
+
+    @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+        if (state.getValue(ProgressMachineBlock.POWERED)) {
+            double x = pos.getX() + 0.5;
+            double y = pos.getY();
+            double z = pos.getZ() + 0.5;
+
+            if (sound == null || !SoundHandler.isActive(sound)) {
+                sound = new SimpleSoundInstance(EIOSounds.SLICER.get(), SoundSource.BLOCKS, 1.0f, 1.0f, random, x, y, z);
+                SoundHandler.playSound(sound);
+            }
+
+            Direction direction = state.getValue(ProgressMachineBlock.FACING);
+            Direction.Axis axis = direction.getAxis();
+            double r = 0.52;
+            double ss = random.nextDouble() * 0.6 - 0.2;
+            double dx = axis == Direction.Axis.X ? direction.getStepX() * r : ss;
+            double dy = random.nextDouble() * 6.0 / 16.0 + 7.0 / 16.0;
+            double dz = axis == Direction.Axis.Z ? direction.getStepZ() * r : ss;
+            level.addParticle(ParticleTypes.SOUL_FIRE_FLAME, x + dx, y + dy, z + dz, 0.0, 0.0, 0.0);
+        } else if (sound != null && SoundHandler.isActive(sound)) {
+            SoundHandler.stopSound(sound);
+            sound = null;
         }
     }
 
