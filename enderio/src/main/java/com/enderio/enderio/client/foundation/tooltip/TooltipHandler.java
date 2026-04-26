@@ -52,7 +52,7 @@ public class TooltipHandler {
 
     // region Configurable items (datapackable or otherwise)
 
-    private static void addCapacitorTooltips(ItemStack itemStack, List<Component> components, HolderLookup.Provider registries) {
+    private static void addCapacitorTooltips(ItemStack itemStack, List<Component> components, @Nullable HolderLookup.Provider registries) {
         CapacitorData capacitorData;
         var capacitorExtension = itemStack.getCapability(EnderIOCapabilities.CAPACITOR_EXTENSION);
         if (capacitorExtension != null) {

@@ -29,7 +29,7 @@ public interface ICapacitorExtension {
      * @return the capacitor data, or null if none is present
      */
     @Nullable
-    default CapacitorData getCapacitorData(ItemStack capacitorStack, HolderLookup.Provider registries) {
+    default CapacitorData getCapacitorData(ItemStack capacitorStack, @Nullable HolderLookup.Provider registries) {
         return capacitorStack.get(EIODataComponents.CAPACITOR_DATA);
     }
 }
