@@ -4,7 +4,10 @@ import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.core.common.util.NamedFluidContents;
 import com.enderio.enderio.EnderIO;
 import com.enderio.core.annotations.UseOnly;
+import com.enderio.enderio.client.SoundHandler;
+import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.foundation.attachment.FluidTankUser;
+import com.enderio.enderio.foundation.block.ProgressMachineBlock;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.inventory.MachineInventory;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
@@ -21,11 +24,18 @@ import com.enderio.enderio.foundation.task.host.CraftingMachineTaskHost;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIORecipes;
+import com.enderio.enderio.init.EIOSounds;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -77,6 +87,19 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidTankUser,
             craftingTaskHost.tick();
         }
         updateMachineState(MachineState.ACTIVE, isActive());
+    }
+
+    @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+        if (state.getValue(ProgressMachineBlock.POWERED)) {
+            double x = pos.getX() + 0.5;
+            double y = pos.getY();
+            double z = pos.getZ() + 0.5;
+
+            SoundHandler.playSound(pos, EIOSounds.VAT.get(), SoundSource.BLOCKS, MachinesConfig.CLIENT.MACHINE_VOLUME.get(), 1.0f, random, x, y, z);
+        } else {
+            SoundHandler.stopSound(pos);
+        }
     }
 
     public boolean isActive() {

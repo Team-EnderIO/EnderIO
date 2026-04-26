@@ -124,7 +124,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
         return energyIOMode;
     }
 
-    private void updatePowerState() {
+    protected void updatePowerState() {
         updateMachineState(MachineState.NO_POWER, energyStorage.getEnergyStored() <= 0);
     }
 

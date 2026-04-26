@@ -10,6 +10,7 @@ import com.enderio.enderio.api.soul.binding.SoulBindable;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.foundation.MachineNBTKeys;
 import com.enderio.enderio.foundation.attachment.FluidTankUser;
+import com.enderio.enderio.foundation.block.ProgressMachineBlock;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
@@ -22,15 +23,18 @@ import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -103,6 +107,25 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
 
         updateMachineState(MachineState.NOT_SOULBOUND, soulData == null || boundSoul.entityType() != null);
         super.serverTick();
+    }
+
+    @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+        if (state.getValue(ProgressMachineBlock.POWERED)) {
+            double x = pos.getX() + 0.5;
+            double y = pos.getY();
+            double z = pos.getZ() + 0.5;
+
+            Direction direction = state.getValue(ProgressMachineBlock.FACING);
+            Direction.Axis axis = direction.getAxis();
+            double r = 0.52;
+            double ss = random.nextDouble() * 0.6 - 0.3;
+            double dx = axis == Direction.Axis.X ? direction.getStepX() * r : ss;
+            double dy = random.nextDouble() * 6.0 / 16.0;
+            double dz = axis == Direction.Axis.Z ? direction.getStepZ() * r : ss;
+            level.addParticle(ParticleTypes.SMOKE, x + dx, y + dy, z + dz, 0.0, 0.0, 0.0);
+            level.addParticle(ParticleTypes.SOUL_FIRE_FLAME, x + dx, y + dy, z + dz, 0.0, 0.0, 0.0);
+        }
     }
 
     @Nullable

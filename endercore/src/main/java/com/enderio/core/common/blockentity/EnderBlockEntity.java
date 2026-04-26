@@ -13,6 +13,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -88,6 +89,10 @@ public class EnderBlockEntity extends BlockEntity {
      * Perform client and server side ticking.
      */
     public void endTick() {
+    }
+
+    @UseOnly(LogicalSide.CLIENT)
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
     }
 
     // endregion
