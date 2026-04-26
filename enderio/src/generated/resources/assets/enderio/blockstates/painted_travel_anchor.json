@@ -1,7 +1,8 @@
 {
   "variants": {
     "": {
-      "model": "enderio:block/painted_travel_anchor"
+      "type": "enderio:paint",
+      "block": "minecraft:oak_planks"
     }
   }
 }

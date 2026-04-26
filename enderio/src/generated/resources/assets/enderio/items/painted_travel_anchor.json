@@ -1,6 +1,11 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "enderio:block/painted_travel_anchor"
+    "type": "enderio:painted",
+    "model": {
+      "Name": "enderio:painted_travel_anchor",
+      "Properties": {
+        "facing": "north"
+      }
+    }
   }
 }

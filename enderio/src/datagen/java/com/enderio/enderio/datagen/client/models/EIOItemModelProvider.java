@@ -32,6 +32,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.WallSide;
 import net.minecraft.world.level.material.Fluid;
@@ -247,6 +248,8 @@ public class EIOItemModelProvider extends ModelProvider {
 
             itemModels.itemModelOutput.accept(painted.key().asItem(), new PaintedItemModel.Unbaked(block));
         }
+
+        itemModels.itemModelOutput.accept(EIOBlocks.PAINTED_TRAVEL_ANCHOR.asItem(), new PaintedItemModel.Unbaked(EIOBlocks.PAINTED_TRAVEL_ANCHOR.get().defaultBlockState()));
     }
 
     private static void createFacade(ItemModelGenerators itemModels, Item item) {
