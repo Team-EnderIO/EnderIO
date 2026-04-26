@@ -102,7 +102,7 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
                 BASE_ENERGY_PER_OPERATION, recipeOutput);
 
         build("clay", Ingredient.of(CLAY),
-                List.of(output(CLAY_BALL, 2), output(CLAY_BALL, 0.1f), output(SILICON.get(), 2, 0.8f)),
+                List.of(output(CLAY_BALL, 2), output(CLAY_BALL, 0.1f), output(EIOTags.Items.SILICON, 2, 0.8f)),
                 BASE_ENERGY_PER_OPERATION, recipeOutput);
 
         build("wool", Ingredient.of(ItemTags.WOOL), List.of(output(STRING, 2), output(STRING, 0.1f)),
@@ -214,7 +214,7 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
                 BASE_ENERGY_PER_OPERATION, recipeOutput);
 
         build("redstone_ore", Ingredient.of(Tags.Items.ORES_REDSTONE), List.of(output(REDSTONE, 8),
-                output(REDSTONE, 0.2f), output(SILICON.get(), 0.8f), output(COBBLESTONE, 0.15f)),
+                output(REDSTONE, 0.2f), output(EIOTags.Items.SILICON, 0.8f), output(COBBLESTONE, 0.15f)),
                 BASE_ENERGY_PER_OPERATION, recipeOutput);
 
         build("diamond_ore", Ingredient.of(Tags.Items.ORES_DIAMOND), List.of(output(DIAMOND, 2), output(DIAMOND, 0.25f),
