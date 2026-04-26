@@ -345,7 +345,7 @@ public class MachineInventoryLayout {
                 .insert()
                 .guiInsert()
                 .guiExtract()
-                .filter((i, s) -> s.has(EIODataComponents.CAPACITOR_DATA) || s.getCapability(EnderIOCapabilities.CAPACITOR_EXTENSION) != null)
+                .filter((i, s) -> s.has(EIODataComponents.CAPACITOR_DATA) || s.toStack().getCapability(EnderIOCapabilities.CAPACITOR_EXTENSION) != null)
                 .stackLimit(1));
             capacitorSlot = slots.size() - 1;
             return this;

@@ -159,7 +159,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
             double dx = axis == Direction.Axis.X ? direction.getStepX() * r : ss;
             double dy = random.nextDouble() * 6.0 / 16.0 + 7.0 / 16.0;
             double dz = axis == Direction.Axis.Z ? direction.getStepZ() * r : ss;
-            level.addParticle(ParticleTypes.SOUL_FIRE_FLAME, x + dx, y + dy, z + dz, 0.0, 0.0, 0.0); //TODO green flame
+            level.addParticle(ParticleTypes.COPPER_FIRE_FLAME, x + dx, y + dy, z + dz, 0.0, 0.0, 0.0); //TODO green flame
         } else {
             SoundHandler.stopSound(pos);
         }
