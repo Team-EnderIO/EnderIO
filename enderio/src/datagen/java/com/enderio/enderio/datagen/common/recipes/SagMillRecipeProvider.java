@@ -36,6 +36,7 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
         buildRawOreRecipes(recipeOutput);
         buildModCompat(recipeOutput, registries);
 
+        build1toN("copper", Tags.Items.INGOTS_COPPER, POWDERED_COPPER.get(), 1, BonusType.NONE, recipeOutput);
         build1toN("iron", Tags.Items.INGOTS_IRON, POWDERED_IRON.get(), 1, BonusType.NONE, recipeOutput);
         build1toN("gold", Tags.Items.INGOTS_GOLD, POWDERED_GOLD.get(), 1, BonusType.NONE, recipeOutput);
         build1toN("obsidian", Tags.Items.OBSIDIANS, POWDERED_OBSIDIAN.get(), 4, recipeOutput);
