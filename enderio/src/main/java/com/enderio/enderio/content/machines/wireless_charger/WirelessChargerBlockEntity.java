@@ -52,7 +52,7 @@ public class WirelessChargerBlockEntity extends PoweredMachineBlockEntity implem
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE,
             MachinesConfig.COMMON.ENERGY.WIRELESS_CHARGER_USAGE);
 
-    private final ModConfigSpec.ConfigValue<Integer> energyUpkeep;
+    private final ModConfigSpec.IntValue energyUpkeep;
 
     private ActionRange actionRange;
     private int maxRange;

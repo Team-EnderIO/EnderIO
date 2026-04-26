@@ -1,5 +1,6 @@
 package com.enderio.enderio.foundation.inventory;
 
+import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.init.EIODataComponents;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 
@@ -344,7 +345,7 @@ public class MachineInventoryLayout {
                 .insert()
                 .guiInsert()
                 .guiExtract()
-                .filter((i, s) -> s.has(EIODataComponents.CAPACITOR_DATA))
+                .filter((i, s) -> s.has(EIODataComponents.CAPACITOR_DATA) || s.getCapability(EnderIOCapabilities.CAPACITOR_EXTENSION) != null)
                 .stackLimit(1));
             capacitorSlot = slots.size() - 1;
             return this;

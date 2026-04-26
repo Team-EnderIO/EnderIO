@@ -34,8 +34,8 @@ public class StirlingGeneratorScreen extends MachineScreen<StirlingGeneratorMenu
     protected void init() {
         super.init();
 
-        addRenderableOnly(new ProgressWidget.BottomUp(BG_TEXTURE, menu::getBurnProgress, getGuiLeft() + 81,
-                getGuiTop() + 53, 14, 14, 176, 0));
+        addRenderableOnly(new ProgressWidget.BottomUp(BG_TEXTURE, menu::getBurnProgress, getGuiLeft() + 80,
+                getGuiTop() + 52, 14, 14, 176, 0));
 
         addRenderableOnly(new CapacitorEnergyWidget(16 + leftPos, 14 + topPos, 9, 42, menu::getEnergyStorage,
                 menu::isCapacitorInstalled));

@@ -7,6 +7,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ProblemReporter;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -72,6 +73,10 @@ public class EnderBlockEntity extends BlockEntity {
      * Perform client and server side ticking.
      */
     public void endTick() {
+    }
+
+    @UseOnly(LogicalSide.CLIENT)
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
     }
 
     // endregion

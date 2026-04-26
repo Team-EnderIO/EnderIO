@@ -8,6 +8,9 @@ import com.enderio.core.common.util.EnderResourceUtil;
 import com.enderio.core.common.util.NamedFluidContents;
 import com.enderio.enderio.foundation.MachineNBTKeys;
 import com.enderio.core.annotations.UseOnly;
+import com.enderio.enderio.client.SoundHandler;
+import com.enderio.enderio.config.machines.MachinesConfig;
+import com.enderio.enderio.foundation.block.ProgressMachineBlock;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.inventory.MachineInventory;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
@@ -25,6 +28,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
+import com.enderio.enderio.init.EIOSounds;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -105,6 +111,19 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
             craftingTaskHost.tick();
         }
         updateMachineState(MachineState.ACTIVE, isActive());
+    }
+
+    @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+        if (state.getValue(ProgressMachineBlock.POWERED)) {
+            double x = pos.getX() + 0.5;
+            double y = pos.getY();
+            double z = pos.getZ() + 0.5;
+
+            SoundHandler.playSound(pos, EIOSounds.VAT.get(), SoundSource.BLOCKS, MachinesConfig.CLIENT.MACHINE_VOLUME.get(), 1.0f, random, x, y, z);
+        } else {
+            SoundHandler.stopSound(pos);
+        }
     }
 
     public boolean isActive() {

@@ -3,8 +3,10 @@ package com.enderio.enderio.content.machines.slicer;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
+import com.enderio.enderio.client.SoundHandler;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.foundation.MachineNBTKeys;
+import com.enderio.enderio.foundation.block.ProgressMachineBlock;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
 import com.enderio.enderio.foundation.inventory.MachineInventory;
@@ -20,10 +22,14 @@ import com.enderio.enderio.init.EIORecipeTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.ItemTags;
+import com.enderio.enderio.init.EIOSounds;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ShearsItem;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
@@ -77,6 +83,29 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
 
         if (canAct()) {
             craftingTaskHost.tick();
+        }
+    }
+
+    @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+        if (state.getValue(ProgressMachineBlock.POWERED)) {
+            double x = pos.getX() + 0.5;
+            double y = pos.getY();
+            double z = pos.getZ() + 0.5;
+
+            SoundHandler.playSound(pos, EIOSounds.SLICER.get(), SoundSource.BLOCKS, MachinesConfig.CLIENT.MACHINE_VOLUME.get(), 1.0f, random, x, y, z);
+
+
+            Direction direction = state.getValue(ProgressMachineBlock.FACING);
+            Direction.Axis axis = direction.getAxis();
+            double r = 0.52;
+            double ss = random.nextDouble() * 0.8 - 0.4;
+            double dx = axis == Direction.Axis.X ? direction.getStepX() * r : ss;
+            double dy = random.nextDouble() * 6.0 / 16.0 + 7.0 / 16.0;
+            double dz = axis == Direction.Axis.Z ? direction.getStepZ() * r : ss;
+            level.addParticle(ParticleTypes.SOUL_FIRE_FLAME, x + dx, y + dy, z + dz, 0.0, 0.0, 0.0);
+        } else {
+            SoundHandler.stopSound(pos);
         }
     }
 
