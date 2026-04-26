@@ -455,6 +455,7 @@ public class EnderIOClient {
         for (var entry : EIOBlocks.PAINTED_BLOCKS) {
             event.registerBlock(PaintExtension.INSTANCE, entry.first());
         }
+        event.registerBlock(PaintExtension.INSTANCE, EIOBlocks.PAINTED_TRAVEL_ANCHOR);
     }
 
     @SubscribeEvent

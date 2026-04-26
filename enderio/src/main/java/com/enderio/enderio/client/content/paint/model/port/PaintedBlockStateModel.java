@@ -29,7 +29,6 @@ import net.neoforged.neoforge.client.model.block.CustomUnbakedBlockStateModel;
 import net.neoforged.neoforge.client.model.quad.BakedColors;
 import net.neoforged.neoforge.client.model.quad.MutableQuad;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,6 +51,12 @@ public class PaintedBlockStateModel implements DynamicBlockStateModel {
             return;
         }
 
+        //The block is a full block, just render it
+        if (paint.defaultBlockState().isCollisionShapeFullBlock(level, pos)) {
+            Minecraft.getInstance().getModelManager().getBlockStateModelSet().get(paint.defaultBlockState()).collectParts(level, pos, state, random, parts);
+            return;
+        }
+
         QuadCollection.Builder builder = new QuadCollection.Builder();
 
         List<Direction> directions = new ArrayList<>(Arrays.asList(Direction.values()));
@@ -65,6 +70,7 @@ public class PaintedBlockStateModel implements DynamicBlockStateModel {
                     toCopy = toCopy.setValue(prop, state.getValue(prop));
                 }
             }
+
             Minecraft.getInstance().getModelManager().getBlockStateModelSet().get(toCopy).collectParts(level, pos, state, random, shapeParts);
             List<BakedQuad> shape = shapeParts.stream().flatMap(p -> p.getQuads(side).stream()).toList();
             Direction directon = null;
@@ -166,7 +172,7 @@ public class PaintedBlockStateModel implements DynamicBlockStateModel {
         List<BlockStateModelPart> parts = new ArrayList<>();
         model.collectParts(level, pos, state, RandomSource.create(), parts);
         List<BakedQuad> quads = parts.stream().flatMap(p -> p.getQuads(shape.direction()).stream()).toList();
-        return quads.isEmpty() ? null : quads.stream().map(q-> Pair.of(q.bakedColors(), q.materialInfo())).toList();
+        return quads.isEmpty() ? List.of() : quads.stream().map(q-> Pair.of(q.bakedColors(), q.materialInfo())).toList();
     }
 
     /**
@@ -182,7 +188,7 @@ public class PaintedBlockStateModel implements DynamicBlockStateModel {
      * @param sprite     sprite that should be used
      * @return a new Quad with the same coordinates but a different texture
      */
-    protected List<BakedQuad> paintQuad(BakedQuad toCopy,  @UnknownNullability List<Pair<BakedColors, BakedQuad.MaterialInfo>> sprites) {
+    protected List<BakedQuad> paintQuad(BakedQuad toCopy, List<Pair<BakedColors, BakedQuad.MaterialInfo>> sprites) {
         List<BakedQuad> quads = new ArrayList<>();
         MutableQuad copied = new MutableQuad();
         for (var sprite : sprites) {
