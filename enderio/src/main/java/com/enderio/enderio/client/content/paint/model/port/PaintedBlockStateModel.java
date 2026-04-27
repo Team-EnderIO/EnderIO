@@ -20,6 +20,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.TriState;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -53,7 +54,39 @@ public class PaintedBlockStateModel implements DynamicBlockStateModel {
 
         //The block is a full block, just render it
         if (paint.defaultBlockState().isCollisionShapeFullBlock(level, pos)) {
-            Minecraft.getInstance().getModelManager().getBlockStateModelSet().get(paint.defaultBlockState()).collectParts(level, pos, state, random, parts);
+            List<BlockStateModelPart> wrapped = new ArrayList<>();
+            Minecraft.getInstance().getModelManager().getBlockStateModelSet().get(paint.defaultBlockState()).collectParts(level, pos, state, random, wrapped);
+            for (var part: wrapped) {
+                parts.add(new BlockStateModelPart() {
+                    @Override
+                    public List<BakedQuad> getQuads(@org.jspecify.annotations.Nullable Direction direction) {
+                        return part.getQuads(direction);
+                    }
+
+                    @Override
+                    public boolean useAmbientOcclusion() {
+                        return part.useAmbientOcclusion();
+                    }
+
+                    @Override
+                    public Material.Baked particleMaterial() {
+                        return part.particleMaterial();
+                    }
+
+                    @Override
+                    public @BakedQuad.MaterialFlags int materialFlags() {
+                        return part.materialFlags();
+                    }
+
+                    @Override
+                    public TriState ambientOcclusion() {
+                        if (part.ambientOcclusion() != TriState.FALSE) {
+                            return TriState.TRUE;
+                        }
+                        return part.ambientOcclusion();
+                    }
+                });
+            }
             return;
         }
 
