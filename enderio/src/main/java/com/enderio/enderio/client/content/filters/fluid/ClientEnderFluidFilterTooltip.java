@@ -34,7 +34,7 @@ public class ClientEnderFluidFilterTooltip extends AbstractClientSlotListTooltip
     }
 
     @Override
-    protected void extractSlotContent(int x, int y, int slotIndex, GuiGraphicsExtractor guiGraphics, Font font) {
+    protected void extractSlotContents(int x, int y, int slotIndex, GuiGraphicsExtractor guiGraphics, Font font) {
         var fluidStack = fluidStacksToDisplay().get(slotIndex);
 
         FluidModel fluidModel = Minecraft.getInstance().getModelManager().getFluidStateModelSet().get(fluidStack.getFluid().defaultFluidState());
@@ -47,7 +47,7 @@ public class ClientEnderFluidFilterTooltip extends AbstractClientSlotListTooltip
 
         int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
         int atlasHeight = (int) (sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, TextureAtlas.LOCATION_BLOCKS, x + 1, y + 1, sprite.getU0() * atlasWidth, sprite.getV0() * atlasHeight,
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, TextureAtlas.LOCATION_BLOCKS, x, y, sprite.getU0() * atlasWidth, sprite.getV0() * atlasHeight,
             16, 16, sprite.contents().width(), sprite.contents().height(), atlasWidth, atlasHeight, color);
     }
 }

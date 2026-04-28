@@ -8,14 +8,6 @@ import java.util.List;
 
 public abstract class AbstractClientItemListTooltip extends AbstractClientSlotListTooltip {
 
-    public AbstractClientItemListTooltip() {
-        super();
-    }
-
-    public AbstractClientItemListTooltip(int maxSlotWidth) {
-        super(maxSlotWidth);
-    }
-
     protected abstract List<ItemStack> itemStacksToDisplay();
 
     @Override
@@ -24,14 +16,14 @@ public abstract class AbstractClientItemListTooltip extends AbstractClientSlotLi
     }
 
     @Override
-    protected void extractSlotContent(int x, int y, int itemIndex, GuiGraphicsExtractor guiGraphics, Font font) {
+    protected void extractSlotContents(int x, int y, int itemIndex, GuiGraphicsExtractor guiGraphics, Font font) {
         var items = itemStacksToDisplay();
         if (itemIndex >= items.size()) {
             return;
         }
 
         ItemStack itemstack = items.get(itemIndex);
-        guiGraphics.item(itemstack, x + 1, y + 1, itemIndex);
-        guiGraphics.itemDecorations(font, itemstack, x + 1, y + 1);
+        guiGraphics.item(itemstack, x, y, itemIndex);
+        guiGraphics.itemDecorations(font, itemstack, x, y);
     }
 }
