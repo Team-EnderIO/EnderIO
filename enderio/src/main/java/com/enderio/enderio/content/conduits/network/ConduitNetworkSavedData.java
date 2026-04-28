@@ -83,9 +83,9 @@ public class ConduitNetworkSavedData extends SavedData {
             return loadLegacy(nbt, lookupProvider);
         }
 
-        // TODO: Are we handling partials fine here?
-        return CODEC.parse(lookupProvider.createSerializationContext(NbtOps.INSTANCE), nbt.get(KEY_NEW_DATA))
-                .getPartialOrThrow();
+        var result = CODEC.parse(lookupProvider.createSerializationContext(NbtOps.INSTANCE), nbt.get(KEY_NEW_DATA));
+        result.error().ifPresent(e -> LOGGER.error("Errors loading conduit network data, some networks may be missing: {}", e.message()));
+        return result.getPartialOrThrow();
     }
 
     private List<ConduitNetworkImpl> getNetworks() {
