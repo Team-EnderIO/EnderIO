@@ -1,15 +1,12 @@
-package com.enderio.enderio.client.content.filters;
+package com.enderio.enderio.client.content.filters.item;
 
 import com.enderio.core.client.gui.screen.EnderContainerScreen;
 import com.enderio.core.client.gui.widgets.IconButton;
 import com.enderio.core.client.gui.widgets.ToggleIconButton;
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.content.filters.AbstractFilterMenu;
 import com.enderio.enderio.content.filters.FiltersLang;
-import com.enderio.enderio.content.filters.soul.EnderSoulFilterMenu;
-import com.enderio.enderio.content.filters.soul.SoulFilterSlot;
-import com.enderio.enderio.content.tools.vials.SoulVialItem;
+import com.enderio.enderio.content.filters.item.general.EnderItemFilterMenu;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
@@ -17,12 +14,9 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SpawnEggItem;
 import org.apache.commons.lang3.NotImplementedException;
-import org.jspecify.annotations.Nullable;
 
-public class EnderSoulFilterScreen extends EnderContainerScreen<EnderSoulFilterMenu> {
+public class EnderItemFilterScreen extends EnderContainerScreen<EnderItemFilterMenu> {
 
     private static final int WIDTH = 183;
     private static final int HEIGHT = 199;
@@ -42,7 +36,7 @@ public class EnderSoulFilterScreen extends EnderContainerScreen<EnderSoulFilterM
 
     private final Identifier backgroundTexture;
 
-    public EnderSoulFilterScreen(EnderSoulFilterMenu menu, Inventory playerInventory, Component title) {
+    public EnderItemFilterScreen(EnderItemFilterMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title, WIDTH, HEIGHT - (4 - menu.type.rowCount()) * 18);
 
         this.shouldRenderLabels = true;
@@ -72,13 +66,19 @@ public class EnderSoulFilterScreen extends EnderContainerScreen<EnderSoulFilterM
         int xPos = getGuiLeft() + WIDTH - 25;
         int yPos = getGuiTop() + 27 + menu.type.rowCount() * 18;
 
+        if (getMenu().type.canFilterByDamage()) {
+            addRenderableWidget(new DamageFilterModePickerWidget(xPos, yPos, getMenu()::damageFilterMode,
+                    getMenu()::setDamageFilterMode, FiltersLang.DAMAGE_FILTER_MODE));
+
+            xPos -= 18;
+        }
+
         if (getMenu().type.canMatchComponents()) {
-            // TODO: Change to NBT...
             addRenderableWidget(new ToggleIconButton(xPos, yPos, 16, 16,
                     (b) -> b ? ICON_MATCH_COMPONENTS : ICON_IGNORE_COMPONENTS,
                     (b) -> b ? FiltersLang.FILTER_MATCH_COMPONENTS : FiltersLang.FILTER_IGNORE_COMPONENTS,
-                    getMenu()::shouldCompareTags,
-                    (b) -> handleButtonPress(EnderSoulFilterMenu.SHOULD_COMPARE_TAGS_BUTTON_ID)));
+                    getMenu()::shouldCompareComponents,
+                    (b) -> handleButtonPress(EnderItemFilterMenu.SHOULD_COMPARE_COMPONENTS_BUTTON_ID)));
 
             xPos -= 18;
         }
@@ -86,7 +86,7 @@ public class EnderSoulFilterScreen extends EnderContainerScreen<EnderSoulFilterM
         addRenderableWidget(
                 new ToggleIconButton(xPos, yPos, 16, 16, (b) -> b ? ICON_DENY_LIST : ICON_ALLOW_LIST,
                         (b) -> b ? FiltersLang.FILTER_DENY_LIST : FiltersLang.FILTER_ALLOW_LIST, getMenu()::isInverted,
-                        (b) -> handleButtonPress(EnderSoulFilterMenu.IS_INVERTED_BUTTON_ID)));
+                        (b) -> handleButtonPress(EnderItemFilterMenu.IS_INVERTED_BUTTON_ID)));
 
         xPos -= 18;
     }
@@ -95,46 +95,6 @@ public class EnderSoulFilterScreen extends EnderContainerScreen<EnderSoulFilterM
     public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         super.extractBackground(graphics, mouseX, mouseY, a);
         graphics.blit(RenderPipelines.GUI_TEXTURED, backgroundTexture, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight, 256, 256);
-    }
-
-    @Override
-    protected void renderSlotContents(GuiGraphicsExtractor graphics, ItemStack itemstack, Slot slot, @Nullable String countString) {
-        super.renderSlotContents(graphics, itemstack, slot, countString);
-
-        if (slot instanceof SoulFilterSlot soulFilterSlot) {
-            var soul = soulFilterSlot.getResource();
-            if (!soul.hasEntity()) {
-                return;
-            }
-
-            ItemStack renderStack = getRenderStack(soul);
-            super.renderSlotContents(graphics, renderStack, slot, countString);
-        }
-
-        super.renderSlotContents(graphics, itemstack, slot, countString);
-    }
-
-    @Override
-    protected boolean renderCustomTooltip(GuiGraphicsExtractor graphics, int x, int y) {
-        if (this.menu.getCarried().isEmpty() && this.hoveredSlot instanceof SoulFilterSlot soulFilterSlot) {
-            var soul = soulFilterSlot.getResource();
-            if (!soul.hasEntity()) {
-                return true;
-            }
-
-            ItemStack renderStack = getRenderStack(soul);
-            // TODO: Maybe add extra tooltip to show there is entity NBT?
-            graphics.setTooltipForNextFrame(font, getTooltipFromContainerItem(renderStack), renderStack.getTooltipImage(), renderStack, x, y);
-            return true;
-        }
-
-        return super.renderCustomTooltip(graphics, x, y);
-    }
-
-    private ItemStack getRenderStack(Soul soul) {
-        return SpawnEggItem.byId(soul.entityType())
-            .map(itemHolder -> itemHolder.value().getDefaultInstance())
-            .orElse(SoulVialItem.forSoul(soul));
     }
 
     @Override

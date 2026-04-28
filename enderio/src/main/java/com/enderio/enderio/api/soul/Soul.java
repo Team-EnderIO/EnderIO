@@ -61,7 +61,7 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) {
 
     public static final Codec<Soul> CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
-            BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("EntityType").orElse(null).forGetter(Soul::entityType),
+            BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("EntityType").forGetter(Soul::entityType),
             CompoundTag.CODEC.fieldOf("EntityTag").forGetter(Soul::entityTag)
         ).apply(instance, Soul::new));
 

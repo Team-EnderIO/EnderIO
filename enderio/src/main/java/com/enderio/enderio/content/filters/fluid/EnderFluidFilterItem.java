@@ -53,13 +53,27 @@ public class EnderFluidFilterItem extends AbstractFilterItem<EnderFluidFilter> {
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag flag) {
         super.appendHoverText(stack, context, tooltipDisplay, tooltipAdder, flag);
 
-        // Display warning on basic item filters which have been set to match on
+        // Display warning on basic fluid filters which have been set to match on
         // NBT/Components.
         // This avoids us invalidating existing filters, but lets the user know that the
         // filter has invalid settings that they can't see.
         var filter = getFilter(stack);
         if (filter.shouldCompareComponents() && !type.canMatchComponents()) {
             tooltipAdder.accept(FiltersLang.FILTER_CONFIG_NOT_ALLOWED_COMPONENT_MATCH);
+        }
+
+        if (filter.isDenyList()) {
+            tooltipAdder.accept(FiltersLang.FILTER_DENY_LIST);
+        } else {
+            tooltipAdder.accept(FiltersLang.FILTER_ALLOW_LIST);
+        }
+
+        if (type.canMatchComponents) {
+            if (filter.shouldCompareComponents()) {
+                tooltipAdder.accept(FiltersLang.FILTER_MATCH_COMPONENTS);
+            } else {
+                tooltipAdder.accept(FiltersLang.FILTER_IGNORE_COMPONENTS);
+            }
         }
     }
 

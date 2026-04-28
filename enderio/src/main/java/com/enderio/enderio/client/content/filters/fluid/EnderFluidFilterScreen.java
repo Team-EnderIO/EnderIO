@@ -1,4 +1,4 @@
-package com.enderio.enderio.client.content.filters;
+package com.enderio.enderio.client.content.filters.fluid;
 
 import com.enderio.core.client.gui.screen.EnderContainerScreen;
 import com.enderio.core.client.gui.widgets.IconButton;

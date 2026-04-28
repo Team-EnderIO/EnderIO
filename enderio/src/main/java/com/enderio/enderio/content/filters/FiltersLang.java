@@ -17,6 +17,8 @@ public class FiltersLang {
 
     public static final Component FILTER_MATCH_COMPONENTS = gui("match_components");
     public static final Component FILTER_IGNORE_COMPONENTS = gui("ignore_components");
+    public static final Component FILTER_MATCH_TAGS = gui("match_tags");
+    public static final Component FILTER_IGNORE_TAGS = gui("ignore_tags");
     public static final Component DAMAGE_FILTER_MODE = gui("damage_filter");
 
     // TODO: Consider making these common keys

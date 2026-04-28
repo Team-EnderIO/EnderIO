@@ -8,18 +8,24 @@ import com.enderio.enderio.content.filters.FiltersLang;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOMenus;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.tooltip.BundleTooltip;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.neoforged.fml.LogicalSide;
+import net.minecraft.world.item.component.BundleContents;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import oshi.util.tuples.Pair;
 
 import java.util.function.Consumer;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 public class EnderItemFilterItem extends AbstractFilterItem<EnderItemFilter> {
@@ -60,6 +66,24 @@ public class EnderItemFilterItem extends AbstractFilterItem<EnderItemFilter> {
         var filter = getFilter(stack);
         if (filter.shouldCompareComponents() && !type.canMatchComponents()) {
             tooltipAdder.accept(FiltersLang.FILTER_CONFIG_NOT_ALLOWED_COMPONENT_MATCH);
+        }
+
+        if (filter.isDenyList()) {
+            tooltipAdder.accept(FiltersLang.FILTER_DENY_LIST);
+        } else {
+            tooltipAdder.accept(FiltersLang.FILTER_ALLOW_LIST);
+        }
+
+        if (type.canMatchComponents) {
+            if (filter.shouldCompareComponents()) {
+                tooltipAdder.accept(FiltersLang.FILTER_MATCH_COMPONENTS);
+            } else {
+                tooltipAdder.accept(FiltersLang.FILTER_IGNORE_COMPONENTS);
+            }
+        }
+
+        if (type.canFilterByDamage()) {
+            tooltipAdder.accept(FiltersLang.DAMAGE_FILTER_MODE.copy().append(" - ").append(filter.damageFilterMode().getComponent()));
         }
     }
 
