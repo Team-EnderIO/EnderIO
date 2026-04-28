@@ -15,6 +15,13 @@ public class SoulCodecTests {
     // Test CODEC vs OPTIONAL_CODEC
 
     private static final String NULL_FORMAT = "{}";
+    private static final String NULL_ENTITY_TYPE = """
+        {
+            "entity_type": null,
+            "entity_tag": {
+                "Health": 10.0
+            }
+        }""";
 
     @Test
     public void testOptionalCodecWorks(MinecraftServer server) {
@@ -36,6 +43,35 @@ public class SoulCodecTests {
     public void testCodecNullFails(MinecraftServer server) {
         // Parse json
         var json = JsonParser.parseString(NULL_FORMAT);
+
+        // Attempt to deserialize
+        var ops = server.registryAccess().createSerializationContext(JsonOps.INSTANCE);
+        var result = Soul.CODEC.parse(ops, json);
+
+        Assertions.assertTrue(result.isError());
+    }
+
+    // This test is temporary, just to ensure that if any data has somehow saved with a null entity type, it resolves properly.
+    @Test
+    public void testOptionalCodecWithNullEntityTypeFails(MinecraftServer server) {
+        // Parse json
+        var json = JsonParser.parseString(NULL_ENTITY_TYPE);
+
+        // Attempt to deserialize
+        var ops = server.registryAccess().createSerializationContext(JsonOps.INSTANCE);
+        var result = Soul.OPTIONAL_CODEC.parse(ops, json);
+
+        Assertions.assertTrue(result.isSuccess());
+
+        var soul = result.getOrThrow();
+        Assertions.assertNotNull(soul);
+        Assertions.assertEquals(Soul.EMPTY, soul);
+    }
+
+    @Test
+    public void testCodecWithNullEntityTypeFails(MinecraftServer server) {
+        // Parse json
+        var json = JsonParser.parseString(NULL_ENTITY_TYPE);
 
         // Attempt to deserialize
         var ops = server.registryAccess().createSerializationContext(JsonOps.INSTANCE);
