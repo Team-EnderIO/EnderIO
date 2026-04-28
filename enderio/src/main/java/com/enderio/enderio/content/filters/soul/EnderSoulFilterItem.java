@@ -59,12 +59,11 @@ public class EnderSoulFilterItem extends AbstractFilterItem<EnderSoulFilter> {
             tooltipComponents.add(FiltersLang.FILTER_ALLOW_LIST);
         }
 
-        // TODO: should call these tags...
-        if (type.canMatchComponents) {
+        if (type.canMatchTags) {
             if (filter.shouldCompareTags()) {
-                tooltipComponents.add(FiltersLang.FILTER_MATCH_COMPONENTS);
+                tooltipComponents.add(FiltersLang.FILTER_MATCH_TAGS);
             } else {
-                tooltipComponents.add(FiltersLang.FILTER_IGNORE_COMPONENTS);
+                tooltipComponents.add(FiltersLang.FILTER_IGNORE_TAGS);
             }
         }
     }
@@ -74,12 +73,12 @@ public class EnderSoulFilterItem extends AbstractFilterItem<EnderSoulFilter> {
 
         private final Supplier<Supplier<MenuType<EnderSoulFilterMenu>>> menuType;
         private final int rowCount;
-        private final boolean canMatchComponents;
+        private final boolean canMatchTags;
 
-        Type(Supplier<Supplier<MenuType<EnderSoulFilterMenu>>> menuType, int rowCount, boolean canMatchComponents) {
+        Type(Supplier<Supplier<MenuType<EnderSoulFilterMenu>>> menuType, int rowCount, boolean canMatchTags) {
             this.menuType = menuType;
             this.rowCount = rowCount;
-            this.canMatchComponents = canMatchComponents;
+            this.canMatchTags = canMatchTags;
         }
 
         public int rowCount() {
@@ -91,7 +90,7 @@ public class EnderSoulFilterItem extends AbstractFilterItem<EnderSoulFilter> {
         }
 
         public boolean canMatchComponents() {
-            return canMatchComponents;
+            return canMatchTags;
         }
 
         @UseOnly(LogicalSide.SERVER)

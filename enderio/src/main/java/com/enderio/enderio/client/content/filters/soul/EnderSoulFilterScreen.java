@@ -75,10 +75,9 @@ public class EnderSoulFilterScreen extends EnderContainerScreen<EnderSoulFilterM
         int yPos = getGuiTop() + 27 + menu.type.rowCount() * 18;
 
         if (getMenu().type.canMatchComponents()) {
-            // TODO: Change to NBT...
             addRenderableWidget(new ToggleIconButton(xPos, yPos, 16, 16,
                     (b) -> b ? ICON_MATCH_COMPONENTS : ICON_IGNORE_COMPONENTS,
-                    (b) -> b ? FiltersLang.FILTER_MATCH_COMPONENTS : FiltersLang.FILTER_IGNORE_COMPONENTS,
+                    (b) -> b ? FiltersLang.FILTER_MATCH_TAGS : FiltersLang.FILTER_IGNORE_TAGS,
                     getMenu()::shouldCompareTags,
                     (b) -> handleButtonPress(EnderSoulFilterMenu.SHOULD_COMPARE_TAGS_BUTTON_ID)));
 
