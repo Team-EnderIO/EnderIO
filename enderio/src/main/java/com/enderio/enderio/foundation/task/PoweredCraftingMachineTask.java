@@ -1,6 +1,4 @@
 package com.enderio.enderio.foundation.task;
-
-import com.enderio.core.common.storage.FluidStorage;
 import com.enderio.core.common.storage.ItemStorage;
 import com.enderio.core.common.storage.slot.ResourceSlotKey;
 import com.enderio.enderio.foundation.MachineRecipe;
@@ -54,6 +52,8 @@ public abstract class PoweredCraftingMachineTask<R extends MachineRecipe<C>, C e
 
     @Override
     protected int getProgressRequired(R recipe) {
-        return recipe.getEnergyCost(recipeInput);
+        // TODO switch to timed progress
+//        return recipe.getEnergyCost(recipeInput);
+        return 100;
     }
 }

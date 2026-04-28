@@ -34,17 +34,17 @@ public final class SlicingRecipe implements MachineRecipe<SlicingRecipe.Input> {
     public static final MapCodec<SlicingRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance
         .group(ItemStackTemplate.CODEC.fieldOf("output").forGetter(SlicingRecipe::output),
             new ValidatingListCodec<>(Ingredient.CODEC.listOf(), 6).fieldOf("inputs").forGetter(SlicingRecipe::inputs),
-            Codec.INT.fieldOf("energy").forGetter(SlicingRecipe::energy))
+            Codec.INT.fieldOf("operation_time").forGetter(SlicingRecipe::operationTime))
         .apply(instance, SlicingRecipe::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, SlicingRecipe> STREAM_CODEC = StreamCodec.composite(ItemStackTemplate.STREAM_CODEC, SlicingRecipe::output,
-        Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()), SlicingRecipe::inputs, ByteBufCodecs.INT, SlicingRecipe::energy, SlicingRecipe::new);
+        Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()), SlicingRecipe::inputs, ByteBufCodecs.INT, SlicingRecipe::operationTime, SlicingRecipe::new);
 
     public static final RecipeSerializer<SlicingRecipe> SERIALIZER = new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC);
 
     private final ItemStackTemplate output;
     private final List<Ingredient> inputs;
-    private final int energy;
+    private final int operationTime;
 
     @Nullable
     private PlacementInfo placementInfo;
@@ -52,7 +52,7 @@ public final class SlicingRecipe implements MachineRecipe<SlicingRecipe.Input> {
     public SlicingRecipe(ItemStackTemplate output, List<Ingredient> inputs, int energy) {
         this.output = output;
         this.inputs = inputs;
-        this.energy = energy;
+        this.operationTime = energy;
     }
 
     public ItemStackTemplate output() {
@@ -63,13 +63,13 @@ public final class SlicingRecipe implements MachineRecipe<SlicingRecipe.Input> {
         return inputs;
     }
 
-    public int energy() {
-        return energy;
+    public int operationTime() {
+        return operationTime;
     }
 
     @Override
-    public int getBaseEnergyCost() {
-        return energy;
+    public int getOperationTime(Input input) {
+        return operationTime;
     }
 
     @Override

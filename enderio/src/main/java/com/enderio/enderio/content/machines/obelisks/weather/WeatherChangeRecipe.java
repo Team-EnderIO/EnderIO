@@ -51,7 +51,7 @@ public record WeatherChangeRecipe(FluidStackTemplate fluid, WeatherMode mode, Pl
     }
 
     @Override
-    public int getBaseEnergyCost() {
+    public int getOperationTime(Input input) {
         return 0;
     }
 

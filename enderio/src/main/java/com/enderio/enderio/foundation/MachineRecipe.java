@@ -3,6 +3,7 @@ package com.enderio.enderio.foundation;
 import com.enderio.core.common.recipes.OutputStack;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeInput;
@@ -11,23 +12,24 @@ import java.util.List;
 
 public interface MachineRecipe<T extends RecipeInput> extends Recipe<T> {
     /**
-     * Gets the basic energy cost, irrespective of machine configuration.
+     * @param input the recipe input
+     * @return the operation time in ticks.
      */
-    int getBaseEnergyCost();
-
-    /**
-     * Get the energy cost of a machine.
-     * @param container Container/context. This is the state of the container *after* inputs are taken.
-     */
-    default int getEnergyCost(T container) {
-        return getBaseEnergyCost();
-    }
+    int getOperationTime(T input);
 
     /**
      * Craft outputs for this recipe.
      * @return An array of item and fluid outputs.
      */
     List<OutputStack> craft(T container, RegistryAccess registryAccess);
+
+    /**
+     * Craft outputs for this recipe.
+     * @return An array of item and fluid outputs.
+     */
+    default List<OutputStack> craft(T container, RegistryAccess registryAccess, RandomSource random) {
+        return craft(container, registryAccess);
+    }
 
     /**
      * Get the results of this machine, for display or verification purposes only.

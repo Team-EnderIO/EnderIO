@@ -77,7 +77,7 @@ public final class FermentingRecipe implements MachineRecipe<FermentingRecipe.In
     }
 
     @Override
-    public int getBaseEnergyCost() {
+    public int getOperationTime(Input input) {
         return 0;
     }
 

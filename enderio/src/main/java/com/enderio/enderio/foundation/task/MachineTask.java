@@ -2,10 +2,17 @@ package com.enderio.enderio.foundation.task;
 
 import net.neoforged.neoforge.common.util.ValueIOSerializable;
 
-public interface MachineTask extends ValueIOSerializable {
-    void tick();
+public abstract class MachineTask<C extends MachineTaskContext> implements ValueIOSerializable {
 
-    float getProgress();
+    protected final C context;
 
-    boolean isCompleted();
+    protected MachineTask(C context) {
+        this.context = context;
+    }
+
+    public abstract void tick();
+
+    public abstract float getProgress();
+
+    public abstract boolean isCompleted();
 }

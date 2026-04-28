@@ -67,8 +67,8 @@ public final class PaintingRecipe implements MachineRecipe<PaintingRecipe.Input>
     }
 
     @Override
-    public int getBaseEnergyCost() {
-        return MachinesConfig.COMMON.ENERGY.PAINTING_MACHINE_ENERGY_COST.get();
+    public int getOperationTime(Input input) {
+        return MachinesConfig.COMMON.ENERGY.PAINTING_MACHINE_OPERATION_TIME.get();
     }
 
     @Override

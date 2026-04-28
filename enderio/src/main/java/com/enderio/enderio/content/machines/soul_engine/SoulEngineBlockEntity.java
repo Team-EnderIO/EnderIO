@@ -6,9 +6,9 @@ import com.enderio.core.common.storage.layout.ItemStorageLayout;
 import com.enderio.core.common.storage.layout.SlotTemplates;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
-import com.enderio.enderio.api.capacitor.FixedScalable;
-import com.enderio.enderio.api.capacitor.LinearScalable;
-import com.enderio.enderio.api.capacitor.QuadraticScalable;
+import com.enderio.enderio.api.capacitor.scaling.FixedIntScalable;
+import com.enderio.enderio.api.capacitor.scaling.LinearIntScalable;
+import com.enderio.enderio.api.capacitor.scaling.QuadraticIntScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.api.soul.binding.SoulBindable;
@@ -66,12 +66,12 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     public static final ICapabilityProvider<SoulEngineBlockEntity, Direction, ResourceHandler<FluidResource>> FLUID_HANDLER_PROVIDER = (be,
         side) -> be.fluidStorage != null ? SidedResourceHandler.of(be.fluidStorage, side, be) : null;
 
-    private static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
+    private static final QuadraticIntScalable CAPACITY = new QuadraticIntScalable(CapacitorModifier.ENERGY_CAPACITY,
             MachinesConfig.COMMON.ENERGY.SOUL_ENGINE_CAPACITY);
-    public static final LinearScalable BURN_SPEED = new LinearScalable(CapacitorModifier.FIXED,
+    public static final LinearIntScalable BURN_SPEED = new LinearIntScalable(CapacitorModifier.FIXED,
             MachinesConfig.COMMON.ENERGY.SOUL_ENGINE_BURN_SPEED);
     // TODO capacitor increase efficiency
-    public static final LinearScalable GENERATION_SPEED = new LinearScalable(CapacitorModifier.FIXED, () -> 1);
+    public static final LinearIntScalable GENERATION_SPEED = new LinearIntScalable(CapacitorModifier.FIXED, () -> 1);
 
     private static final String BURNED_TICKS = "BurnedTicks";
 
@@ -91,7 +91,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
 
     public SoulEngineBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.SOUL_ENGINE.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, CAPACITOR,
-                EnergyIOMode.Output, CAPACITY, FixedScalable.ZERO);
+                EnergyIOMode.Output, CAPACITY, FixedIntScalable.ZERO);
 
         var fluidStorageLayout = FluidStorageLayout.builder()
             .add(TANK, SlotTemplates.storage(), slot -> slot
@@ -230,7 +230,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     }
 
     public int getBurnRate() {
-        return BURN_SPEED.scaleI(this::getCapacitorData).get();
+        return BURN_SPEED.scaled(this::getCapacitorData).get();
     }
 
     public float getGenerationRate() {

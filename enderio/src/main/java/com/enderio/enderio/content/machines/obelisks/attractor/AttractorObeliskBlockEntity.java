@@ -6,8 +6,8 @@ import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.core.annotations.UseOnly;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
-import com.enderio.enderio.api.capacitor.LinearScalable;
-import com.enderio.enderio.api.capacitor.QuadraticScalable;
+import com.enderio.enderio.api.capacitor.scaling.LinearIntScalable;
+import com.enderio.enderio.api.capacitor.scaling.QuadraticIntScalable;
 import com.enderio.enderio.api.filter.SoulFilter;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.enderio.config.machines.MachinesConfig;
@@ -46,11 +46,11 @@ public class AttractorObeliskBlockEntity extends ObeliskBlockEntity<AttractorObe
 
     public static final SingleResourceSlotKey<ItemResource> CAPACITOR = new SingleResourceSlotKey<>();
 
-    private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
+    private static final QuadraticIntScalable ENERGY_CAPACITY = new QuadraticIntScalable(CapacitorModifier.ENERGY_CAPACITY,
             MachinesConfig.COMMON.ENERGY.ATTRACTOR_CAPACITY);
-    private static final LinearScalable ENERGY_USAGE = new LinearScalable(CapacitorModifier.ENERGY_USE,
+    private static final LinearIntScalable ENERGY_USAGE = new LinearIntScalable(CapacitorModifier.ENERGY_USE,
             MachinesConfig.COMMON.ENERGY.ATTRACTOR_USAGE);
-    private static final LinearScalable RANGE = new LinearScalable(CapacitorModifier.ENERGY_USE,
+    private static final LinearIntScalable RANGE = new LinearIntScalable(CapacitorModifier.ENERGY_USE,
             MachinesConfig.COMMON.ATTRACTOR_RANGE);
 
     private final Vec3 targetPos;
@@ -101,7 +101,7 @@ public class AttractorObeliskBlockEntity extends ObeliskBlockEntity<AttractorObe
 
     @Override
     public int getMaxRange() {
-        return RANGE.scaleI(this::getCapacitorData).get();
+        return RANGE.scaled(this::getCapacitorData).get();
     }
 
     @Override
