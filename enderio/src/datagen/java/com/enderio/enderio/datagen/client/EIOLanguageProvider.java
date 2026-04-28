@@ -272,6 +272,8 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(FiltersLang.FILTER_DENY_LIST, "Deny List");
         add(FiltersLang.FILTER_MATCH_COMPONENTS, "Match Components");
         add(FiltersLang.FILTER_IGNORE_COMPONENTS, "Ignore Components");
+        add(FiltersLang.FILTER_MATCH_TAGS, "Match NBT");
+        add(FiltersLang.FILTER_IGNORE_TAGS, "Ignore NBT");
         add(FiltersLang.DAMAGE_FILTER_MODE, "Damage Filter");
 
         add(FiltersLang.GUI_FILTER, "Filter");

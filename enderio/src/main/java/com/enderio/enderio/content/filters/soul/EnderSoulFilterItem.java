@@ -4,17 +4,21 @@ import com.enderio.core.annotations.UseOnly;
 import com.enderio.enderio.api.filter.SoulFilter;
 import com.enderio.enderio.content.filters.AbstractFilterItem;
 import com.enderio.enderio.content.filters.AbstractFilterMenu;
+import com.enderio.enderio.content.filters.FiltersLang;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOMenus;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.fml.LogicalSide;
+import net.minecraft.world.item.TooltipFlag;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 public class EnderSoulFilterItem extends AbstractFilterItem<EnderSoulFilter> {
@@ -44,17 +48,37 @@ public class EnderSoulFilterItem extends AbstractFilterItem<EnderSoulFilter> {
         return type.openMenu(containerId, playerInventory, filterAccess);
     }
 
+    @Override
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+
+        var filter = getFilter(stack);
+        if (filter.isDenyList()) {
+            tooltipComponents.add(FiltersLang.FILTER_DENY_LIST);
+        } else {
+            tooltipComponents.add(FiltersLang.FILTER_ALLOW_LIST);
+        }
+
+        if (type.canMatchTags) {
+            if (filter.shouldCompareTags()) {
+                tooltipComponents.add(FiltersLang.FILTER_MATCH_TAGS);
+            } else {
+                tooltipComponents.add(FiltersLang.FILTER_IGNORE_TAGS);
+            }
+        }
+    }
+
     public enum Type {
         BASIC(() -> EIOMenus.BASIC_SOUL_FILTER, 1, true);
 
         private final Supplier<Supplier<MenuType<EnderSoulFilterMenu>>> menuType;
         private final int rowCount;
-        private final boolean canMatchComponents;
+        private final boolean canMatchTags;
 
-        Type(Supplier<Supplier<MenuType<EnderSoulFilterMenu>>> menuType, int rowCount, boolean canMatchComponents) {
+        Type(Supplier<Supplier<MenuType<EnderSoulFilterMenu>>> menuType, int rowCount, boolean canMatchTags) {
             this.menuType = menuType;
             this.rowCount = rowCount;
-            this.canMatchComponents = canMatchComponents;
+            this.canMatchTags = canMatchTags;
         }
 
         public int rowCount() {
@@ -66,7 +90,7 @@ public class EnderSoulFilterItem extends AbstractFilterItem<EnderSoulFilter> {
         }
 
         public boolean canMatchComponents() {
-            return canMatchComponents;
+            return canMatchTags;
         }
 
         @UseOnly(LogicalSide.SERVER)
