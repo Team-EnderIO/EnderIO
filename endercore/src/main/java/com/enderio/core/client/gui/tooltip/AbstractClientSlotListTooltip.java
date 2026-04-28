@@ -58,6 +58,10 @@ public abstract class AbstractClientSlotListTooltip implements ClientTooltipComp
 
     @Override
     public void renderImage(Font font, int x, int y, GuiGraphics guiGraphics) {
+        if (slotCount() <= 0) {
+            return;
+        }
+        
         int i = this.gridSizeX();
         int j = this.gridSizeY();
         guiGraphics.blitSprite(BACKGROUND_SPRITE, x, y, this.backgroundWidth(), this.backgroundHeight());
