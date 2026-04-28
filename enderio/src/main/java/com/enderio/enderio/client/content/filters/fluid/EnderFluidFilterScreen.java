@@ -1,31 +1,35 @@
-package com.enderio.enderio.client.content.filters;
+package com.enderio.enderio.client.content.filters.fluid;
 
 import com.enderio.core.client.gui.screen.EnderContainerScreen;
 import com.enderio.core.client.gui.widgets.IconButton;
 import com.enderio.core.client.gui.widgets.ToggleIconButton;
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.content.filters.AbstractFilterMenu;
 import com.enderio.enderio.content.filters.FiltersLang;
-import com.enderio.enderio.content.filters.soul.EnderSoulFilterMenu;
-import com.enderio.enderio.content.filters.soul.SoulFilterSlot;
-import com.enderio.enderio.content.tools.vials.SoulVialItem;
+import com.enderio.enderio.content.filters.fluid.EnderFluidFilterMenu;
+import com.enderio.enderio.content.filters.fluid.FluidFilterSlot;
+import com.enderio.enderio.content.filters.item.general.EnderItemFilterMenu;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.texture.AbstractTexture;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SpawnEggItem;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.fluids.FluidStack;
 import org.apache.commons.lang3.NotImplementedException;
-import org.jetbrains.annotations.Nullable;
 
-public class EnderSoulFilterScreen extends EnderContainerScreen<EnderSoulFilterMenu> {
+public class EnderFluidFilterScreen extends EnderContainerScreen<EnderFluidFilterMenu> {
 
     private static final int WIDTH = 183;
     private static final int HEIGHT = 199;
 
+    // TODO: we need a central place for resource locations like these...
     private static final ResourceLocation BG_2x9 = EnderIO.rl("textures/gui/screens/filter_2x9.png");
     private static final ResourceLocation BG_1x9 = EnderIO.rl("textures/gui/screens/filter_1x9.png");
     private static final ResourceLocation BG_3x9 = EnderIO.rl("textures/gui/screens/filter_3x9.png");
@@ -41,7 +45,7 @@ public class EnderSoulFilterScreen extends EnderContainerScreen<EnderSoulFilterM
 
     private final ResourceLocation backgroundTexture;
 
-    public EnderSoulFilterScreen(EnderSoulFilterMenu menu, Inventory playerInventory, Component title) {
+    public EnderFluidFilterScreen(EnderFluidFilterMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
 
         this.shouldRenderLabels = true;
@@ -75,12 +79,11 @@ public class EnderSoulFilterScreen extends EnderContainerScreen<EnderSoulFilterM
         int yPos = getGuiTop() + 27 + menu.type.rowCount() * 18;
 
         if (getMenu().type.canMatchComponents()) {
-            // TODO: Change to NBT...
             addRenderableWidget(new ToggleIconButton(xPos, yPos, 16, 16,
                     (b) -> b ? ICON_MATCH_COMPONENTS : ICON_IGNORE_COMPONENTS,
                     (b) -> b ? FiltersLang.FILTER_MATCH_COMPONENTS : FiltersLang.FILTER_IGNORE_COMPONENTS,
-                    getMenu()::shouldCompareTags,
-                    (b) -> handleButtonPress(EnderSoulFilterMenu.SHOULD_COMPARE_TAGS_BUTTON_ID)));
+                    getMenu()::shouldCompareComponents,
+                    (b) -> handleButtonPress(EnderItemFilterMenu.SHOULD_COMPARE_COMPONENTS_BUTTON_ID)));
 
             xPos -= 18;
         }
@@ -88,7 +91,7 @@ public class EnderSoulFilterScreen extends EnderContainerScreen<EnderSoulFilterM
         addRenderableWidget(
                 new ToggleIconButton(xPos, yPos, 16, 16, (b) -> b ? ICON_DENY_LIST : ICON_ALLOW_LIST,
                         (b) -> b ? FiltersLang.FILTER_DENY_LIST : FiltersLang.FILTER_ALLOW_LIST, getMenu()::isInverted,
-                        (b) -> handleButtonPress(EnderSoulFilterMenu.IS_INVERTED_BUTTON_ID)));
+                        (b) -> handleButtonPress(EnderItemFilterMenu.IS_INVERTED_BUTTON_ID)));
 
         xPos -= 18;
     }
@@ -99,50 +102,48 @@ public class EnderSoulFilterScreen extends EnderContainerScreen<EnderSoulFilterM
     }
 
     @Override
-    protected void renderSlotContents(GuiGraphics guiGraphics, ItemStack itemstack, Slot slot, @Nullable String countString) {
-        super.renderSlotContents(guiGraphics, itemstack, slot, countString);
+    public void renderSlot(GuiGraphics guiGraphics, Slot slot) {
+        super.renderSlot(guiGraphics, slot);
 
-        if (slot instanceof SoulFilterSlot soulFilterSlot) {
-            var soul = soulFilterSlot.getResource();
-            if (!soul.hasEntity()) {
-                return;
-            }
-
-            ItemStack renderStack = getRenderStack(soul);
-            super.renderSlotContents(guiGraphics, renderStack, slot, countString);
+        if (!(slot instanceof FluidFilterSlot fluidFilterSlot)) {
+            return;
         }
 
-        super.renderSlotContents(guiGraphics, itemstack, slot, countString);
+        var fluidStack = fluidFilterSlot.getResource();
+        IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluidStack.getFluid());
+        ResourceLocation still = props.getStillTexture(fluidStack);
+        if (still != null) {
+            AbstractTexture texture = minecraft.getTextureManager().getTexture(TextureAtlas.LOCATION_BLOCKS);
+            if (texture instanceof TextureAtlas atlas) {
+                TextureAtlasSprite sprite = atlas.getSprite(still);
+
+                int color = props.getTintColor();
+                RenderSystem.setShaderColor(FastColor.ARGB32.red(color) / 255.0F,
+                        FastColor.ARGB32.green(color) / 255.0F, FastColor.ARGB32.blue(color) / 255.0F,
+                        FastColor.ARGB32.alpha(color) / 255.0F);
+                RenderSystem.enableBlend();
+
+                int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
+                int atlasHeight = (int) (sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
+                guiGraphics.blit(TextureAtlas.LOCATION_BLOCKS, slot.x, slot.y, 16, 16, sprite.getU0() * atlasWidth,
+                        sprite.getV0() * atlasHeight, sprite.contents().width(), sprite.contents().height(), atlasWidth,
+                        atlasHeight);
+                RenderSystem.setShaderColor(1, 1, 1, 1);
+            }
+        }
     }
 
     @Override
     protected boolean renderCustomTooltip(GuiGraphics guiGraphics, int x, int y) {
-        if (this.menu.getCarried().isEmpty() && this.hoveredSlot instanceof SoulFilterSlot soulFilterSlot) {
-            var soul = soulFilterSlot.getResource();
-            if (!soul.hasEntity()) {
+        if (this.menu.getCarried().isEmpty() && this.hoveredSlot instanceof FluidFilterSlot fluidFilterSlot) {
+            FluidStack value = fluidFilterSlot.getResource();
+            if (!value.isEmpty()) {
+                guiGraphics.renderTooltip(this.font, value.getHoverName(), x, y);
                 return true;
             }
-
-            ItemStack renderStack = getRenderStack(soul);
-            // TODO: Maybe add extra tooltip to show there is entity NBT?
-            guiGraphics.renderTooltip(font, getTooltipFromContainerItem(renderStack), renderStack.getTooltipImage(), renderStack, x, y);
-            return true;
         }
 
-        return super.renderCustomTooltip(guiGraphics, x, y);
-    }
-
-    private ItemStack getRenderStack(Soul soul) {
-        // Show spawn egg if available - this is easier to identify visually.
-        ItemStack renderItem;
-        var spawnEgg = SpawnEggItem.byId(soul.entityType());
-        if (spawnEgg != null) {
-            renderItem = spawnEgg.getDefaultInstance();
-        } else {
-            renderItem = SoulVialItem.forSoul(soul);
-        }
-
-        return renderItem;
+        return false;
     }
 
     @Override

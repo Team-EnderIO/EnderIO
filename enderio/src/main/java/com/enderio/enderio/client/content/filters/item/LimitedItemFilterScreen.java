@@ -1,4 +1,4 @@
-package com.enderio.enderio.client.content.filters;
+package com.enderio.enderio.client.content.filters.item;
 
 import com.enderio.core.client.gui.screen.EnderContainerScreen;
 import com.enderio.core.client.gui.widgets.IconButton;
@@ -11,7 +11,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.Slot;
 
 public class LimitedItemFilterScreen extends EnderContainerScreen<LimitedItemFilterMenu> {
 

@@ -1,4 +1,4 @@
-package com.enderio.enderio.client.content.filters;
+package com.enderio.enderio.client.content.filters.soul;
 
 import com.enderio.core.client.gui.tooltip.AbstractClientItemListTooltip;
 import com.enderio.enderio.content.filters.soul.EnderSoulFilter;

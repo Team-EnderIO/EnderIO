@@ -53,7 +53,7 @@ public class EnderFluidFilterItem extends AbstractFilterItem<EnderFluidFilter> {
             TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
 
-        // Display warning on basic item filters which have been set to match on
+        // Display warning on basic fluid filters which have been set to match on
         // NBT/Components.
         // This avoids us invalidating existing filters, but lets the user know that the
         // filter has invalid settings that they can't see.
