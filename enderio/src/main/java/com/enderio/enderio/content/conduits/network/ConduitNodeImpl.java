@@ -33,7 +33,7 @@ public final class ConduitNodeImpl implements INetworkNode<ConduitNetworkImpl, C
 
     private static final Codec<ConduitNodeImpl> NEW_CODEC = RecordCodecBuilder
             .create(instance -> instance.group(
-                Conduit.CODEC.optionalFieldOf("conduit", null).forGetter(ConduitNodeImpl::conduit),
+                Conduit.CODEC.optionalFieldOf("conduit").forGetter(node -> Optional.ofNullable(node.conduit)),
                 BlockPos.CODEC.fieldOf("pos").forGetter(ConduitNodeImpl::pos),
                     NodeData.GENERIC_CODEC.optionalFieldOf("data")
                             .forGetter(i -> i.nodeData == null || !i.nodeData.type().isPersistent() ? Optional.empty()
@@ -43,6 +43,7 @@ public final class ConduitNodeImpl implements INetworkNode<ConduitNetworkImpl, C
     public static final Codec<ConduitNodeImpl> CODEC = Codec.withAlternative(NEW_CODEC, LEGACY_V7_CODEC);
 
     // TODO: final in 21.11
+    @Nullable
     private Holder<Conduit<?, ?>> conduit;
     private final BlockPos pos;
 
@@ -82,8 +83,8 @@ public final class ConduitNodeImpl implements INetworkNode<ConduitNetworkImpl, C
         }
     }
 
-    private ConduitNodeImpl(Holder<Conduit<?, ?>> conduit, BlockPos pos, Optional<NodeData> nodeData) {
-        this.conduit = conduit;
+    private ConduitNodeImpl(Optional<Holder<Conduit<?, ?>>> conduit, BlockPos pos, Optional<NodeData> nodeData) {
+        this.conduit = conduit.orElse(null);
         this.pos = pos;
         this.nodeData = nodeData.orElse(null);
     }
