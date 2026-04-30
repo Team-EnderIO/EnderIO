@@ -188,8 +188,8 @@ public class WirelessChargerBlockEntity extends PoweredMachineBlockEntity implem
     }
 
     @Override
-    protected void saveAdditional(ValueOutput output) {
-        super.saveAdditional(output);
+    protected void saveAdditionalSynced(ValueOutput output) {
+        super.saveAdditionalSynced(output);
         output.store(MachineNBTKeys.ACTION_RANGE, ActionRange.CODEC, actionRange);
     }
 
