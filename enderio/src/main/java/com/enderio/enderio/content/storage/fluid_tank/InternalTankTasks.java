@@ -4,6 +4,7 @@ import com.enderio.core.common.storage.ResourceStorage;
 import com.enderio.core.common.storage.slot.ResourceSlotId;
 import com.enderio.core.common.util.EnderResourceUtil;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
+import com.enderio.enderio.foundation.inventory.MachineInventory;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import com.enderio.enderio.foundation.util.ExperienceUtil;
 import net.minecraft.core.registries.Registries;
@@ -20,8 +21,86 @@ import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 public class InternalTankTasks {
+
+    private record SingleItemOutputAccess(MachineInventory inventory, SingleSlotAccess inputSlot, SingleSlotAccess outputSlot) implements ItemAccess {
+        @Override
+        public ItemResource getResource() {
+            return inputSlot.getResource(inventory);
+        }
+
+        @Override
+        public int getAmount() {
+            return Math.min(1, inventory.getAmountAsInt(inputSlot.getIndex()));
+        }
+
+        @Override
+        public int insert(ItemResource resource, int amount, TransactionContext transaction) {
+            // NeoForge currently requires a non-empty returned item, but may later allow null
+            // to mean "the source item was consumed without a remainder".
+            if (resource == null) {
+                return Math.min(amount, 1);
+            }
+
+            return outputSlot.insert(inventory, resource, Math.min(amount, 1), transaction);
+        }
+
+        @Override
+        public int extract(ItemResource resource, int amount, TransactionContext transaction) {
+            return inventory.extract(inputSlot.getIndex(), resource, Math.min(amount, 1), transaction);
+        }
+    }
+
+    private static int getSingleItemFluidAmount(ItemAccess itemAccess) {
+        var fluidHandlerItem = itemAccess.getCapability(Capabilities.Fluid.ITEM);
+        for (int i = 0; i < fluidHandlerItem.size(); i++) {
+            FluidResource resource = fluidHandlerItem.getResource(i);
+            int amount = fluidHandlerItem.getAmountAsInt(i);
+
+            if (!resource.isEmpty() && amount > 0) {
+                return amount;
+            }
+        }
+
+        return 0;
+    }
+
+    private static <T extends MachineBlockEntity> boolean tryFillNonStandardBucketItem(
+        T blockEntity,
+        ResourceStorage<FluidResource> fluidStorage,
+        ResourceSlotId<FluidResource> tankSlot,
+        SingleSlotAccess fluidFillInput,
+        SingleSlotAccess fluidFillOutput
+    ) {
+        ItemStack inputItem = fluidFillInput.getItemStack(blockEntity);
+        if (!(inputItem.getItem() instanceof BucketItem) || inputItem.getItem().getClass() == BucketItem.class) {
+            return false;
+        }
+
+        ItemAccess itemAccess = new SingleItemOutputAccess(blockEntity.getInventory(), fluidFillInput, fluidFillOutput);
+        var fluidHandlerItem = itemAccess.getCapability(Capabilities.Fluid.ITEM);
+        if (fluidHandlerItem == null) {
+            return false;
+        }
+
+        int containedAmount = getSingleItemFluidAmount(itemAccess);
+        if (containedAmount <= 0) {
+            return false;
+        }
+
+        // Non-standard BucketItem subclasses can advertise custom amounts or remainders through their capability.
+        // Use the capability exchange path so their returned item is preserved in the output slot.
+        try (Transaction transaction = Transaction.openRoot()) {
+            int moved = EnderResourceUtil.moveInto(fluidHandlerItem, fluidStorage, tankSlot, fr -> true, containedAmount, transaction);
+            if (moved == containedAmount) {
+                transaction.commit();
+            }
+        }
+
+        return true;
+    }
 
     // TODO: enable fluid tanks to receive stackable fluid containers
     public static <T extends MachineBlockEntity> void fillInternal(
@@ -35,6 +114,10 @@ public class InternalTankTasks {
         ItemStack outputItem = fluidFillOutput.getItemStack(blockEntity);
 
         if (!inputItem.isEmpty()) {
+            if (tryFillNonStandardBucketItem(blockEntity, fluidStorage, tankSlot, fluidFillInput, fluidFillOutput)) {
+                return;
+            }
+
             if (inputItem.getItem() instanceof BucketItem filledBucket && !filledBucket.content.isSame(Fluids.EMPTY)) {
                 if (outputItem.isEmpty() || (outputItem.getItem() == Items.BUCKET
                     && outputItem.getCount() < outputItem.getMaxStackSize())) {
