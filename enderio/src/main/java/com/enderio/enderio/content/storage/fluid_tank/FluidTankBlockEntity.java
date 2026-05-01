@@ -153,12 +153,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
         // bucket types
         var fluidHandlerCap = ItemAccess.forStack(stack).getCapability(Capabilities.Fluid.ITEM);
-        if (fluidHandlerCap != null) {
-            for (int i = 0; i < fluidHandlerCap.size(); i++) {
-                if (!fluidHandlerCap.getResource(i).isEmpty()) {
-                    return true;
-                }
-            }
+        if (fluidHandlerCap != null && !ResourceHandlerUtil.isEmpty(fluidHandlerCap)) {
+            return true;
         }
 
         // fill recipes
@@ -179,7 +175,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
         // bucket types
         var fluidHandlerCap = ItemAccess.forStack(stack).getCapability(Capabilities.Fluid.ITEM);
-        if (fluidHandlerCap != null) {
+        if (fluidHandlerCap != null && !ResourceHandlerUtil.isFull(fluidHandlerCap)) {
             return true;
         }
 

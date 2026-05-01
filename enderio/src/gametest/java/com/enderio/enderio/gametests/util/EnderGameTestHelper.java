@@ -1,7 +1,6 @@
 package com.enderio.enderio.gametests.util;
 
 import com.enderio.core.common.storage.ExternalResourceStorageView;
-import com.enderio.core.common.storage.ItemStorage;
 import com.enderio.core.common.storage.ResourceStorage;
 import com.enderio.core.common.storage.slot.ResourceSlotId;
 import com.enderio.enderio.api.io.IOConfigurable;
@@ -12,7 +11,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;

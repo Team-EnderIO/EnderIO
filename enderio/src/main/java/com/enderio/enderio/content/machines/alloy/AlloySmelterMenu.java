@@ -2,7 +2,6 @@ package com.enderio.enderio.content.machines.alloy;
 
 import com.enderio.core.common.network.menu.EnumSyncSlot;
 import com.enderio.core.common.network.menu.FloatSyncSlot;
-import com.enderio.core.common.storage.ItemStorage;
 import com.enderio.enderio.foundation.menu.MachineSlot;
 import com.enderio.enderio.foundation.menu.PoweredMachineMenu;
 import com.enderio.enderio.init.EIOBlockEntities;

@@ -4,11 +4,9 @@ import com.enderio.core.common.menu.SlotWithOverlay;
 import com.enderio.core.common.storage.ItemStorage;
 import com.enderio.core.common.storage.slot.ResourceSlotId;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
-import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jspecify.annotations.Nullable;
 
 public class MachineSlot extends ResourceHandlerSlot implements SlotWithOverlay {
@@ -29,6 +27,11 @@ public class MachineSlot extends ResourceHandlerSlot implements SlotWithOverlay 
     @Override
     public ItemStorage getResourceHandler() {
         return (ItemStorage) super.getResourceHandler();
+    }
+
+    @Override
+    public boolean mayPlace(ItemStack stack) {
+        return super.mayPlace(stack) && getResourceHandler().layout().slotConfig(index).guiRules().canInsert(ItemResource.of(stack));
     }
 
     public boolean canQuickInsertStack(ItemResource itemResource) {
