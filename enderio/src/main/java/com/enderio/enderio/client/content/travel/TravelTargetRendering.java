@@ -8,6 +8,8 @@ import com.enderio.enderio.api.travel.TravelTargetApi;
 import com.enderio.enderio.api.travel.TravelTargetType;
 import com.enderio.enderio.client.content.keymaps.KeymapHandler;
 import com.enderio.enderio.content.travel.TravelHandler;
+import com.mojang.blaze3d.pipeline.RenderTarget;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -24,6 +26,7 @@ import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,27 +93,43 @@ public class TravelTargetRendering {
         }
     }
 
-    // TODO: 26.1: Check this render stage is right.
     @SubscribeEvent
-    public static void renderLevel(RenderLevelStageEvent.AfterTranslucentBlocks event) {
+    public static void renderLevel(RenderLevelStageEvent.AfterWeather event) {
         List<ExtractTravelTarget> renderStates = event.getLevelRenderState().getRenderData(DATA_KEY);
         if (renderStates == null) {
             return;
         }
-        for (ExtractTravelTarget state : renderStates) {
-            PoseStack poseStack = event.getPoseStack();
-            poseStack.pushPose();
-            Vec3 projectedView = event.getLevelRenderState().cameraRenderState.pos;
-            poseStack.translate(
-                state.target.pos().getX() - projectedView.x,
-                state.target.pos().getY() - projectedView.y,
-                state.target.pos().getZ() - projectedView.z);
 
-            // needed for smooth rendering
-            // the boolean value controls whether it's still smooth while the game world is
-            // paused (e.g. /tick freeze)
-            render(state.target, event.getLevelRenderer(), poseStack, state.distanceSquared, state.active, state.partialTick);
-            poseStack.popPose();
+        RenderTarget mainTarget = Minecraft.getInstance().getMainRenderTarget();
+        if (mainTarget.getDepthTexture() != null) {
+            RenderSystem.getDevice().createCommandEncoder().clearDepthTexture(mainTarget.getDepthTexture(), 1.0);
+        }
+
+        renderStates.sort(Comparator.comparingDouble(ExtractTravelTarget::distanceSquared).reversed());
+        var previousColorTextureOverride = RenderSystem.outputColorTextureOverride;
+        var previousDepthTextureOverride = RenderSystem.outputDepthTextureOverride;
+        try {
+            RenderSystem.outputColorTextureOverride = mainTarget.getColorTextureView();
+            RenderSystem.outputDepthTextureOverride = mainTarget.getDepthTextureView();
+
+            for (ExtractTravelTarget state : renderStates) {
+                PoseStack poseStack = event.getPoseStack();
+                poseStack.pushPose();
+                Vec3 projectedView = event.getLevelRenderState().cameraRenderState.pos;
+                poseStack.translate(
+                    state.target.pos().getX() - projectedView.x,
+                    state.target.pos().getY() - projectedView.y,
+                    state.target.pos().getZ() - projectedView.z);
+
+                // needed for smooth rendering
+                // the boolean value controls whether it's still smooth while the game world is
+                // paused (e.g. /tick freeze)
+                render(state.target, event.getLevelRenderer(), poseStack, state.distanceSquared, state.active, state.partialTick);
+                poseStack.popPose();
+            }
+        } finally {
+            RenderSystem.outputColorTextureOverride = previousColorTextureOverride;
+            RenderSystem.outputDepthTextureOverride = previousDepthTextureOverride;
         }
     }
 }

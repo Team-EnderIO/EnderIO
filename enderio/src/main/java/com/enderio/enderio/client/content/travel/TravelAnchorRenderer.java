@@ -1,29 +1,34 @@
 package com.enderio.enderio.client.content.travel;
 
 import com.enderio.enderio.api.travel.TravelRenderer;
-import com.enderio.enderio.client.EIOPipelineModifiers;
 import com.enderio.enderio.client.EnderIOClient;
-import com.enderio.enderio.client.foundation.renderer.OutlineBuffer;
-import com.enderio.enderio.compat.ModCompatHelper;
 import com.enderio.enderio.content.travel.travel_anchor.AnchorTravelTarget;
 import com.enderio.enderio.content.travel.travel_anchor.PaintedTravelAnchorBlockEntity;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import it.unimi.dsi.fastutil.objects.Object2ObjectSortedMaps;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.OutlineBufferSource;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.SubmitNodeStorage;
 import net.minecraft.client.renderer.block.BlockModelRenderState;
 import net.minecraft.client.renderer.block.model.BlockDisplayContext;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.feature.FeatureRenderDispatcher;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.LightCoordsUtil;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
@@ -48,12 +53,16 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
         return minecraft.getModelManager().getStandaloneModel(EnderIOClient.TRAVEL_ANCHOR_BACKDROP);
     });
 
+    private static final BackdropTintingBufferSource FEATURE_BUFFER = new BackdropTintingBufferSource();
+    private static final OutlineBufferSource FEATURE_OUTLINE_BUFFER = new OutlineBufferSource();
+    private static final MultiBufferSource.BufferSource TEXT_BUFFER = MultiBufferSource.immediate(new ByteBufferBuilder(RenderType.SMALL_BUFFER_SIZE));
+
     public static FeatureRenderDispatcher FEATURE = new FeatureRenderDispatcher(
         new SubmitNodeStorage(),
         Minecraft.getInstance().getModelManager(),
-        Minecraft.getInstance().renderBuffers().bufferSource(),
+        FEATURE_BUFFER,
         Minecraft.getInstance().getAtlasManager(),
-        Minecraft.getInstance().renderBuffers().outlineBufferSource(),
+        FEATURE_OUTLINE_BUFFER,
         Minecraft.getInstance().renderBuffers().crumblingBufferSource(),
         Minecraft.getInstance().font,
         Minecraft.getInstance().gameRenderer.getGameRenderState()
@@ -61,6 +70,32 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
 
     public static SubmitNodeStorage NODE = FEATURE.getSubmitNodeStorage();
 
+    private static void renderFeatures() {
+        FEATURE.renderAllFeatures();
+        FEATURE_BUFFER.endBatch();
+        FEATURE_OUTLINE_BUFFER.endOutlineBatch();
+    }
+
+    private static void renderBackdrop(PoseStack poseStack, int packedLight, int color) {
+        BlockModelRenderState renderState = new BlockModelRenderState();
+        BACKDROP.get().update(renderState, Blocks.AIR.defaultBlockState(), BlockDisplayContext.create(), 42);
+
+        FEATURE_BUFFER.setTintColor(color);
+        try {
+            renderState.submit(poseStack, NODE, packedLight, OverlayTexture.NO_OVERLAY, 0);
+            renderFeatures();
+        } finally {
+            FEATURE_BUFFER.clearTintColor();
+        }
+    }
+
+    private static void renderBlockModel(PoseStack poseStack, BlockState blockState, int packedLight) {
+        BlockModelRenderState modelRenderState = new BlockModelRenderState();
+        Minecraft.getInstance().getBlockModelResolver().update(modelRenderState, blockState, BlockDisplayContext.create());
+
+        modelRenderState.submit(poseStack, NODE, packedLight, OverlayTexture.NO_OVERLAY, 0);
+        renderFeatures();
+    }
 
     @Override
     public void render(AnchorTravelTarget travelData, LevelRenderer levelRenderer, PoseStack poseStack,
@@ -78,25 +113,24 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
         Vec3 towardsCamera = offsetToCamera.normalize();
         double distanceToCamera = offsetToCamera.length();
 
-        {
-            double anchorScale = (float) Math.sqrt(distanceToCamera);
-            if (active) {
-                anchorScale = anchorScale * 1.3;
-            }
-            anchorScale = anchorScale * (Math.sin(Math.toRadians(minecraft.options.fov().get() / 4d)));
-            anchorScale = Math.max(anchorScale, 1.0F);
+        double anchorScale = (float) Math.sqrt(distanceToCamera);
+        if (active) {
+            anchorScale = anchorScale * 1.3;
+        }
+        anchorScale = anchorScale * (Math.sin(Math.toRadians(minecraft.options.fov().get() / 4d)));
+        anchorScale = Math.max(anchorScale, 1.0F);
 
+        {
             poseStack.translate(0.5, 0.5, 0.5);
             float s = (float) anchorScale;
             poseStack.scale(s, s, s);
             poseStack.translate(-0.5, -0.5, -0.5);
         }
 
-        OutlineBuffer buffer = OutlineBuffer.INSTANCE;
         int outlineColor = 0xFF0B4D42;
         int textColor = 0xFFFFFFFF;
         if (active) {
-            textColor = ChatFormatting.AQUA.getColor() == null ? 0xFFFFFF : ChatFormatting.AQUA.getColor();
+            textColor = ChatFormatting.AQUA.getColor() == null ? 0xFFFFFFFF : ARGB.opaque(ChatFormatting.AQUA.getColor());
             outlineColor = textColor;
         }
         float outlineR = ((outlineColor & (0xFF << 16)) >> 16) / 255F;
@@ -108,25 +142,13 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
         boolean hasIcon = travelData.icon() != Items.AIR;
 
         if (!hasIcon) {
-            // Render Model
-            {
-                BlockState blockState = minecraft.level.getBlockState(travelData.pos());
-                if (minecraft.level.getBlockEntity(travelData.pos()) instanceof PaintedTravelAnchorBlockEntity paintedTravelAnchorBlock) {
-                    Optional<Block> paint = paintedTravelAnchorBlock.getPrimaryPaint();
+            BlockState blockState = minecraft.level.getBlockState(travelData.pos());
+            if (minecraft.level.getBlockEntity(travelData.pos()) instanceof PaintedTravelAnchorBlockEntity paintedTravelAnchorBlock) {
+                Optional<Block> paint = paintedTravelAnchorBlock.getPrimaryPaint();
 
-                    if (paint.isPresent()) {
-                        blockState = paint.get().defaultBlockState();
-                    }
+                if (paint.isPresent()) {
+                    blockState = paint.get().defaultBlockState();
                 }
-
-                BlockModelRenderState modelRenderState = new BlockModelRenderState();
-
-                BlockDisplayContext context = BlockDisplayContext.create();
-                Minecraft.getInstance().getBlockModelResolver().update(modelRenderState, blockState, context);
-
-                modelRenderState.submit(poseStack, NODE, packedLight, OverlayTexture.NO_OVERLAY, 0);
-                FEATURE.renderAllFeatures();
-                Minecraft.getInstance().renderBuffers().bufferSource().endBatch();
             }
 
             // Render outline block
@@ -140,37 +162,13 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
                 poseStack.translate(offset.x, offset.y, offset.z);
                 poseStack.scale(scale, scale, scale);
 
-                BlockModelRenderState renderState = new BlockModelRenderState();
-                BACKDROP.get().update(renderState, Blocks.AIR.defaultBlockState(), BlockDisplayContext.create(), 42);
-                renderState.submit(poseStack, NODE, packedLight, OverlayTexture.NO_OVERLAY, ARGB.colorFromFloat(1, outlineR, outlineG, outlineB));
-
-                RenderSystem.pushPipelineModifier(EIOPipelineModifiers.FORCE_NO_DEPTH);
-                FEATURE.renderAllFeatures();
-                Minecraft.getInstance().renderBuffers().bufferSource().endBatch();
-                RenderSystem.popPipelineModifier();
+                renderBackdrop(poseStack, packedLight, ARGB.colorFromFloat(1, outlineR, outlineG, outlineB));
 
                 poseStack.popPose();
             }
 
-            {
-                BlockState blockState = minecraft.level.getBlockState(travelData.pos());
-                if (minecraft.level.getBlockEntity(travelData.pos()) instanceof PaintedTravelAnchorBlockEntity paintedTravelAnchorBlock) {
-                    Optional<Block> paint = paintedTravelAnchorBlock.getPrimaryPaint();
-
-                    if (paint.isPresent()) {
-                        blockState = paint.get().defaultBlockState();
-                    }
-                }
-
-                BlockModelRenderState modelRenderState = new BlockModelRenderState();
-
-                BlockDisplayContext context = BlockDisplayContext.create();
-                Minecraft.getInstance().getBlockModelResolver().update(modelRenderState, blockState, context);
-
-                modelRenderState.submit(poseStack, NODE, packedLight, OverlayTexture.NO_OVERLAY, 0);
-                FEATURE.renderAllFeatures();
-                Minecraft.getInstance().renderBuffers().bufferSource().endBatch();
-            }
+            // Render Model
+            renderBlockModel(poseStack, blockState, packedLight);
 
         } else {
             // Render Icon
@@ -193,19 +191,22 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             }
 
             ItemStack stack = new ItemStack(travelData.icon());
-//            BakedModel bakedmodel = minecraft.getItemRenderer().getModel(stack, minecraft.level, null, 0);
-//            minecraft
-//                .getItemRenderer()
-//                .render(stack, ItemDisplayContext.GUI, false, poseStack, OutlineBuffer.INSTANCE, packedLight, OverlayTexture.NO_OVERLAY, bakedmodel);
+            ItemStackRenderState itemRenderState = new ItemStackRenderState();
+            minecraft.getItemModelResolver().updateForTopItem(itemRenderState, stack, ItemDisplayContext.GUI, minecraft.level, null, 0);
 
-            float s = 1.5F;
-            poseStack.scale(s, s, s);
-            poseStack.translate(-0.5, -0.5, -2);
-            poseStack.rotateAround(Axis.ZN.rotationDegrees(45), 0.5F, 0.5F, 0.5F);
+            poseStack.pushPose();
+            {
+                float s = 1.5F;
+                poseStack.scale(s, s, s);
+                poseStack.translate(-0.5, -0.5, -2);
+                poseStack.rotateAround(Axis.ZN.rotationDegrees(45), 0.5F, 0.5F, 0.5F);
 
-            BlockModelRenderState renderState = new BlockModelRenderState();
-            BACKDROP.get().update(renderState, Blocks.AIR.defaultBlockState(), BlockDisplayContext.create(), 42);
-            renderState.submit(poseStack, NODE, packedLight, OverlayTexture.NO_OVERLAY, ARGB.colorFromFloat(1, outlineR, outlineG, outlineB));
+                renderBackdrop(poseStack, packedLight, ARGB.colorFromFloat(1, outlineR, outlineG, outlineB));
+            }
+            poseStack.popPose();
+
+            itemRenderState.submit(poseStack, NODE, packedLight, OverlayTexture.NO_OVERLAY, 0);
+            renderFeatures();
 
             poseStack.popPose();
         }
@@ -241,27 +242,94 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             int textBg1 = textBg;
             int textBg2 = 0;
 
-            if (ModCompatHelper.hasIris()) {
-                // required for text to render correctly, possibly an Iris bug
-                // is there a better way to draw text?
-                var _m = mode1;
-                mode1 = mode2;
-                mode2 = _m;
-
-                int _t = textBg1;
-                textBg1 = textBg2;
-                textBg2 = _t;
-            }
             Matrix4f matrix4f = poseStack.last().pose();
 
-            minecraft.font.drawInBatch(textComponent, halfWidth, 0, textColor, false, matrix4f, buffer, mode1, textBg1, packedLight);
-            minecraft.font.drawInBatch(textComponent, halfWidth, 0, textColor, false, matrix4f, buffer, mode2, textBg2, packedLight);
+            minecraft.font.drawInBatch(textComponent, halfWidth, 0, textColor, false, matrix4f, TEXT_BUFFER, mode1, textBg1, packedLight);
+            minecraft.font.drawInBatch(textComponent, halfWidth, 0, textColor, false, matrix4f, TEXT_BUFFER, mode2, textBg2, packedLight);
+            TEXT_BUFFER.endBatch();
 
             poseStack.popPose();
         }
 
         poseStack.popPose();
-        // Seems to work fine without this line, but leaving it here in case there are future buffer problems
-        // minecraft.renderBuffers().bufferSource().endBatch();
+    }
+
+    private static class BackdropTintingBufferSource extends MultiBufferSource.BufferSource {
+
+        private int tintColor = -1;
+
+        private BackdropTintingBufferSource() {
+            super(new ByteBufferBuilder(RenderType.SMALL_BUFFER_SIZE), Object2ObjectSortedMaps.emptyMap());
+        }
+
+        private void setTintColor(int tintColor) {
+            this.tintColor = tintColor;
+        }
+
+        private void clearTintColor() {
+            this.tintColor = -1;
+        }
+
+        @Override
+        public VertexConsumer getBuffer(RenderType renderType) {
+            if (this.tintColor != -1) {
+                // Tinting is only used for the standalone backdrop model, which must stay translucent.
+                renderType = Sheets.translucentBlockItemSheet();
+            }
+
+            VertexConsumer buffer = super.getBuffer(renderType);
+            return this.tintColor == -1 ? buffer : new TintingVertexConsumer(buffer, this.tintColor);
+        }
+    }
+
+    private record TintingVertexConsumer(VertexConsumer delegate, int tintColor) implements VertexConsumer {
+
+        @Override
+        public VertexConsumer addVertex(float x, float y, float z) {
+            this.delegate.addVertex(x, y, z);
+            return this;
+        }
+
+        @Override
+        public VertexConsumer setColor(int r, int g, int b, int a) {
+            this.delegate.setColor(ARGB.multiply(ARGB.color(a, r, g, b), this.tintColor));
+            return this;
+        }
+
+        @Override
+        public VertexConsumer setColor(int color) {
+            this.delegate.setColor(ARGB.multiply(color, this.tintColor));
+            return this;
+        }
+
+        @Override
+        public VertexConsumer setUv(float u, float v) {
+            this.delegate.setUv(u, v);
+            return this;
+        }
+
+        @Override
+        public VertexConsumer setUv1(int u, int v) {
+            this.delegate.setUv1(u, v);
+            return this;
+        }
+
+        @Override
+        public VertexConsumer setUv2(int u, int v) {
+            this.delegate.setUv2(u, v);
+            return this;
+        }
+
+        @Override
+        public VertexConsumer setNormal(float x, float y, float z) {
+            this.delegate.setNormal(x, y, z);
+            return this;
+        }
+
+        @Override
+        public VertexConsumer setLineWidth(float width) {
+            this.delegate.setLineWidth(width);
+            return this;
+        }
     }
 }
