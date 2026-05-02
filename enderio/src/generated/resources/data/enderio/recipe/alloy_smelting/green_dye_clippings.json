@@ -11,7 +11,7 @@
       "ingredient": "#minecraft:eggs"
     }
   ],
-  "operation_time": 1000,
+  "operation_time": 100,
   "output": {
     "id": "minecraft:green_dye"
   }

@@ -11,7 +11,7 @@
       "ingredient": "#c:dusts/glowstone"
     }
   ],
-  "operation_time": 3200,
+  "operation_time": 100,
   "output": {
     "id": "enderio:fused_quartz_e"
   }

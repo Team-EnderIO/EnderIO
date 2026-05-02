@@ -14,6 +14,7 @@ import com.enderio.enderio.foundation.MachineNBTKeys;
 import com.enderio.enderio.foundation.block.ProgressMachineBlock;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
+import com.enderio.enderio.foundation.capacitor.TempMachineSpeedScalable;
 import com.enderio.enderio.foundation.crafting.MachineCraftingContext;
 import com.enderio.enderio.foundation.crafting.MachineCraftingManager;
 import com.enderio.enderio.foundation.crafting.MachineCraftingStatus;
@@ -64,6 +65,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
             MachinesConfig.COMMON.ENERGY.ALLOY_SMELTER_USAGE);
 
     private final ResourceHandler<ItemResource> inputHandler;
+    public static final TempMachineSpeedScalable SPEED = new TempMachineSpeedScalable(USAGE);
 
     /**
      * The alloying mode for the machine.
@@ -259,14 +261,13 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
         @Override
         public int getCraftingTicks(RecipeHolder<AlloySmeltingRecipe> recipe) {
-            return recipe.value().getOperationTime(recipeInput()) / 100;
+            return Math.round(recipe.value().getOperationTime(recipeInput()) * SPEED.scale(getCapacitorData()));
         }
 
         @Override
         public boolean tryProgressCraft(TransactionContext transaction) {
-            // TODO: Config for rates.
-            int consumed = getEnergyStorage().consume(10, transaction);
-            return consumed == 10;
+            int consumed = getEnergyStorage().consume(getMaxEnergyUse(), transaction);
+            return consumed == getMaxEnergyUse();
         }
 
         @Override

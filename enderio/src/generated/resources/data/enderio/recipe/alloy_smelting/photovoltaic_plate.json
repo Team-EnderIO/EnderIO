@@ -7,7 +7,7 @@
       "ingredient": "enderio:photovoltaic_composite"
     }
   ],
-  "operation_time": 5600,
+  "operation_time": 200,
   "output": {
     "id": "enderio:photovoltaic_plate"
   }

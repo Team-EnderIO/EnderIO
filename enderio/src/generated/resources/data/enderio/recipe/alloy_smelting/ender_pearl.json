@@ -7,7 +7,7 @@
       "ingredient": "#c:dusts/ender_pearl"
     }
   ],
-  "operation_time": 2000,
+  "operation_time": 140,
   "output": {
     "id": "minecraft:ender_pearl"
   }

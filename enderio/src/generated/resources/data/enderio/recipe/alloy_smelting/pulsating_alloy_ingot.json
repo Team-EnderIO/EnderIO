@@ -11,7 +11,7 @@
       "ingredient": "#c:ender_pearls"
     }
   ],
-  "operation_time": 4800,
+  "operation_time": 160,
   "output": {
     "count": 2,
     "id": "enderio:pulsating_alloy_ingot"

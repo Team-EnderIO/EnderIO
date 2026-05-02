@@ -11,7 +11,7 @@
       "ingredient": "#c:dusts/glowstone"
     }
   ],
-  "operation_time": 3200,
+  "operation_time": 140,
   "output": {
     "id": "enderio:clear_glass_e"
   }

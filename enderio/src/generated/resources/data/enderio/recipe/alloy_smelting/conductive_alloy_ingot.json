@@ -11,7 +11,7 @@
       "ingredient": "#c:ingots/copper"
     }
   ],
-  "operation_time": 3200,
+  "operation_time": 100,
   "output": {
     "count": 2,
     "id": "enderio:conductive_alloy_ingot"

@@ -11,7 +11,7 @@
       "ingredient": "#c:storage_blocks/amethyst"
     }
   ],
-  "operation_time": 6400,
+  "operation_time": 200,
   "output": {
     "id": "enderio:fused_quartz_d"
   }

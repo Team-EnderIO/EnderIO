@@ -11,7 +11,7 @@
       "ingredient": "#c:storage_blocks/amethyst"
     }
   ],
-  "operation_time": 1600,
+  "operation_time": 70,
   "output": {
     "id": "enderio:clear_glass_d"
   }

@@ -15,7 +15,7 @@
       "ingredient": "#c:obsidians"
     }
   ],
-  "operation_time": 6400,
+  "operation_time": 320,
   "output": {
     "count": 2,
     "id": "enderio:end_steel_ingot"
