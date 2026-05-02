@@ -17,6 +17,7 @@ import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jspecify.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
+import java.util.Objects;
 
 /**
  * The MachineCraftingManager tracks and maintains information about the current crafting recipe being processed by a machine.
@@ -52,18 +53,18 @@ public final class MachineCraftingManager<T extends Recipe<U>, U extends RecipeI
         this.randomSource = RandomSource.create(randomSeed);
     }
 
-    public MachineCraftingState state() {
+    public MachineCraftingStatus status() {
         if (currentRecipeId == null) {
-            return MachineCraftingState.IDLE;
+            return MachineCraftingStatus.IDLE;
         }
 
         if (craftingTicks < totalCraftingTicks) {
-            return MachineCraftingState.ACTIVE;
+            return MachineCraftingStatus.ACTIVE;
         }
 
         // TODO: May want a flag to indicate this is definite.
         // But in theory, we shouldn't ever hit this because the moment craftingTicks exceeds total it should dump outputs or get blocked.
-        return MachineCraftingState.OUTPUT_BLOCKED;
+        return MachineCraftingStatus.OUTPUT_BLOCKED;
     }
 
     public float craftingProgress() {
@@ -87,8 +88,13 @@ public final class MachineCraftingManager<T extends Recipe<U>, U extends RecipeI
      * @return whether the manager should tick.
      */
     private boolean shouldTick() {
+        var level = context.level();
+        if (level == null) {
+            return false;
+        }
+
         var recipeInput = context.recipeInput();
-        var recipeManager = context.level().recipeAccess();
+        var recipeManager = level.recipeAccess();
         if (recipeManager != cachedRecipeManager.get()) {
             // Track the new recipe manager *and* force us to refresh the current recipe holder if present
             cachedRecipeManager = new WeakReference<>(recipeManager);
@@ -114,7 +120,11 @@ public final class MachineCraftingManager<T extends Recipe<U>, U extends RecipeI
             return;
         }
 
+        // Ensure we have a recipe, bail if we can't.
         ensureRecipeReady();
+        if (currentRecipeId == null) {
+            return;
+        }
 
         // If we're not done yet, attempt to make progress
         if (craftingTicks < totalCraftingTicks) {
@@ -146,7 +156,7 @@ public final class MachineCraftingManager<T extends Recipe<U>, U extends RecipeI
             return;
         }
 
-        ServerLevel level = context.level();
+        ServerLevel level = Objects.requireNonNull(context.level());
         RecipeManager recipeManager = level.recipeAccess();
         U recipeInput = context.recipeInput();
 
@@ -170,17 +180,20 @@ public final class MachineCraftingManager<T extends Recipe<U>, U extends RecipeI
     }
 
     private boolean tryFinaliseCraft() {
-        try (Transaction transaction = Transaction.openRoot()) {
-            if (!context.consumeRecipeInputs(currentRecipeHolder.value(), transaction)) {
-                // Shouldn't really hit this, however if we do - it means we can't consume input, we'll just 'get stuck'
-                return false;
-            }
+        Objects.requireNonNull(currentRecipeHolder);
 
+        try (Transaction transaction = Transaction.openRoot()) {
             // Ensure the seed is correct before attempting to insert outputs
             // This is important to ensure any recipes which have randomness will always output the same things each attempt.
             randomSource.setSeed(randomSeed);
 
-            if (context.insertRecipeOutputs(currentRecipeHolder.value(), randomSource, transaction)) {
+            // Try and insert result first, and *then* consume inputs. This ensures that the recipeInput is still valid for the context to use.
+            if (!context.insertRecipeOutputs(currentRecipeHolder.value(), randomSource, transaction)) {
+                return false;
+            }
+
+            // Now try to consume inputs - shouldn't fail, but if it does we'll just 'get stuck'
+            if (context.consumeRecipeInputs(currentRecipeHolder.value(), transaction)) {
                 transaction.commit();
 
                 // We're done, releaase the recipe.
@@ -210,6 +223,25 @@ public final class MachineCraftingManager<T extends Recipe<U>, U extends RecipeI
     private void clearRecipe() {
         currentRecipeId = null;
         currentRecipeHolder = null;
+    }
+
+    @Nullable
+    public MachineCraftingState getCraftingState() {
+        if (currentRecipeId == null) {
+            return null;
+        }
+
+        return new MachineCraftingState(currentRecipeId, craftingTicks, randomSeed);
+    }
+
+    public void applyCraftingState(@Nullable MachineCraftingState craftingState) {
+        if (craftingState == null) {
+            return;
+        }
+
+        currentRecipeId = craftingState.recipeId();
+        craftingTicks = craftingState.craftingTicks();
+        randomSeed = craftingState.randomSeed();
     }
 
     @Override

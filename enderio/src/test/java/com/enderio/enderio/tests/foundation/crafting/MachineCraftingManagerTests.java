@@ -2,7 +2,7 @@ package com.enderio.enderio.tests.foundation.crafting;
 
 import com.enderio.enderio.foundation.crafting.MachineCraftingContext;
 import com.enderio.enderio.foundation.crafting.MachineCraftingManager;
-import com.enderio.enderio.foundation.crafting.MachineCraftingState;
+import com.enderio.enderio.foundation.crafting.MachineCraftingStatus;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
@@ -72,7 +72,7 @@ public class MachineCraftingManagerTests {
     }
 
     @Test
-    public void activeRecipe_ReturnsCorrectState(MinecraftServer server) {
+    public void activeRecipe_ReturnsCorrectStatus(MinecraftServer server) {
         // Arrange.
         when(context.recipeInput()).thenReturn(new SingleRecipeInput(new ItemStack(Items.BEEF)));
 
@@ -87,7 +87,7 @@ public class MachineCraftingManagerTests {
         // Assert.
         verify(context).tryProgressCraft(any());
         Assertions.assertEquals(1 / 5f, manager.craftingProgress());
-        Assertions.assertEquals(MachineCraftingState.ACTIVE, manager.state());
+        Assertions.assertEquals(MachineCraftingStatus.ACTIVE, manager.status());
         Assertions.assertEquals(Items.COOKED_BEEF, manager.currentRecipe().value().result().item().value());
     }
 }

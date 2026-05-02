@@ -170,7 +170,8 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
     public List<OutputStack> craft(Input container, RegistryAccess registryAccess) {
         ItemStack outputStack = output.create();
         if (isSmelting) {
-            outputStack.setCount(outputStack.getCount() * container.inputsConsumed);
+            int inputsConsumed = Math.min(3, container.inputs.stream().mapToInt(ItemStack::getCount).sum());
+            outputStack.setCount(outputStack.getCount() * inputsConsumed);
         }
         return List.of(OutputStack.of(outputStack));
     }
@@ -214,7 +215,7 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
         return EIORecipeBookCategories.ALLOY_SMELTING.get();
     }
 
-    public record Input(AlloySmelterMode mode, List<ItemStack> inputs, int inputsConsumed) implements RecipeInput {
+    public record Input(AlloySmelterMode mode, List<ItemStack> inputs) implements RecipeInput {
 
         @Override
         public ItemStack getItem(int slotIndex) {
@@ -228,10 +229,6 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
         @Override
         public int size() {
             return inputs.size();
-        }
-
-        public Input withInputsConsumed(int inputsConsumed) {
-            return new Input(mode, inputs, inputsConsumed);
         }
     }
 

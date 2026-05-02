@@ -55,7 +55,7 @@ public class AlloySmelterTests {
                             new ItemStack(Items.IRON_INGOT, 1),
                             new ItemStack(Items.COAL, 2),
                             new ItemStack(Items.OBSIDIAN, 1)
-                        ), 1);
+                        ));
 
                     // Ensure energy was consumed correctly
                     var recipe = helper.getLevel().recipeAccess().getRecipeFor(EIORecipeTypes.ALLOY_SMELTING.get(), input, helper.getLevel()).orElseThrow();
@@ -97,7 +97,7 @@ public class AlloySmelterTests {
                             new ItemStack(Items.RAW_IRON, 3),
                             ItemStack.EMPTY,
                             ItemStack.EMPTY
-                        ), 3);
+                        ));
 
                     var recipe = helper.getLevel().recipeAccess().getRecipeFor(EIORecipeTypes.ALLOY_SMELTING.get(), input, helper.getLevel()).orElseThrow();
                     // TODO.
