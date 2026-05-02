@@ -90,4 +90,26 @@ public class MachineCraftingManagerTests {
         Assertions.assertEquals(MachineCraftingStatus.ACTIVE, manager.status());
         Assertions.assertEquals(Items.COOKED_BEEF, manager.currentRecipe().value().result().item().value());
     }
+
+    @Test
+    public void inputRemovedMidCraft_CraftCancelsCorrectly(MinecraftServer server) {
+        // Arrange.
+        when(context.recipeInput()).thenReturn(new SingleRecipeInput(new ItemStack(Items.BEEF)));
+
+        when(context.tryProgressCraft(any())).thenReturn(true);
+        when(context.getCraftingTicks(any())).thenReturn(5);
+
+        var manager = new MachineCraftingManager<>(RecipeType.SMELTING, context);
+
+        // Act.
+        manager.tick();
+        when(context.recipeInput()).thenReturn(new SingleRecipeInput(new ItemStack(Items.AIR)));
+        manager.tick();
+
+        // Assert - ensure the machine only progressed once (first tick) and shows as idle again.
+        verify(context, times(1)).tryProgressCraft(any());
+
+        Assertions.assertEquals(MachineCraftingStatus.IDLE, manager.status());
+        Assertions.assertNull(manager.currentRecipe());
+    }
 }

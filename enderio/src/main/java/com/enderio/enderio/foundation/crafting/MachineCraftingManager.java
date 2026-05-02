@@ -151,19 +151,16 @@ public final class MachineCraftingManager<T extends Recipe<U>, U extends RecipeI
     }
 
     private void ensureRecipeReady() {
-        // If everything is great, short circuit
-        if (currentRecipeHolder != null && currentRecipeHolder.id().equals(currentRecipeId)) {
-            return;
-        }
-
         ServerLevel level = Objects.requireNonNull(context.level());
-        RecipeManager recipeManager = level.recipeAccess();
         U recipeInput = context.recipeInput();
+        RecipeManager recipeManager = level.recipeAccess();
 
         // Ensure current recipe is valid
         if (currentRecipeId != null) {
             if (currentRecipeHolder != null) {
-                return;
+                if (currentRecipeHolder.value().matches(recipeInput, level)) {
+                    return;
+                }
             }
 
             // Fetch the recipe and store it.
