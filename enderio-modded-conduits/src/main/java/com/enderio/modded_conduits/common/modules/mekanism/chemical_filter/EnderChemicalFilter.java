@@ -10,13 +10,14 @@
 //import net.minecraft.network.RegistryFriendlyByteBuf;
 //import net.minecraft.network.codec.ByteBufCodecs;
 //import net.minecraft.network.codec.StreamCodec;
-//import org.jspecify.annotations.Nullable;
+//import net.minecraft.world.inventory.tooltip.TooltipComponent;
+//import org.jetbrains.annotations.Nullable;
 //
 //import java.util.List;
 //import java.util.Objects;
 //
 //public record EnderChemicalFilter(NonNullList<ChemicalStack> matches, boolean isDenyList)
-//    implements ChemicalFilter {
+//    implements ChemicalFilter, TooltipComponent {
 //
 //    public static final EnderChemicalFilter EMPTY = new EnderChemicalFilter(0);
 //

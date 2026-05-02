@@ -93,7 +93,7 @@ public class EIOBlockStateProvider extends ModelProvider {
 
         // Miscellaneous
         blockModels.createAxisAlignedPillarBlockCustomModel(EIOBlocks.SOUL_CHAIN.get(),  plainVariant(ModelLocationUtils.getModelLocation(EIOBlocks.SOUL_CHAIN.get())));
-        blockModels.registerSimpleFlatItemModel(EIOBlocks.SOUL_CHAIN.get());
+        blockModels.registerSimpleFlatItemModel(EIOBlocks.SOUL_CHAIN.asItem());
 
         Identifier Identifier = ModelLocationUtils.decorateItemModelLocation("template_skull");
         blockModels.createHead(EIOBlocks.ENDERMAN_HEAD.get(), EIOBlocks.WALL_ENDERMAN_HEAD.get(), EnderSkullBlock.EIOSkulls.ENDERMAN, Identifier);
@@ -127,20 +127,6 @@ public class EIOBlockStateProvider extends ModelProvider {
         blockModels.blockStateOutput.accept(BlockModelGenerators.createSimpleBlock(EIOBlocks.CONDUIT_BUNDLE.get(),
             MultiVariant.of(new CustomBlockStateModelBuilder.Simple(ConduitBlockStateModel.Unbaked.INSTANCE))));
 
-        //TODO
-        // Painted Blocks
-//        for (var pair : EIOBlocks.PAINTED_BLOCKS) {
-//            Block block = pair.left().get();
-//            Direction itemTextureDirection = Direction.NORTH;
-//
-//            if (block instanceof PaintedStairBlock) {
-//                itemTextureDirection = Direction.WEST;
-//            }
-//
-//            blockModels.createTrivialCube(block);
-//        }
-
-        blockModels.createTrivialCube(EIOBlocks.PAINTED_TRAVEL_ANCHOR.get());
         simpleTranslucentBlock(blockModels, EIOBlocks.ENDERFACE.get());
         this.createFire(blockModels, EIOBlocks.COLD_FIRE.get());
     }
@@ -261,28 +247,6 @@ public class EIOBlockStateProvider extends ModelProvider {
         blockModelGenerators.registerSimpleItemModel(block, ModelLocationUtils.getModelLocation(vanilla));
     }
 
-//    @Override
-//    protected void registerStatesAndModels() {
-//
-//        // Painted Blocks
-//        for (var pair : EIOBlocks.PAINTED_BLOCKS) {
-//            Block block = pair.left().get();
-//            Direction itemTextureDirection = Direction.NORTH;
-//
-//            if (block instanceof PaintedStairBlock) {
-//                itemTextureDirection = Direction.WEST;
-//            }
-//
-//            simpleBlock(pair.left().get(), models().getBuilder(name(pair.left().get()))
-//                .customLoader(PaintedBlockModelBuilder::begin)
-//                .reference(pair.right())
-//                .itemTextureRotation(itemTextureDirection)
-//                .end());
-//        }
-//
-//
-//    }
-
     private void registerPaintBlocks(BlockModelGenerators blockModels) {
         for (var pair : EIOBlocks.PAINTED_BLOCKS) {
             Block block = pair.left().get();
@@ -291,6 +255,9 @@ public class EIOBlockStateProvider extends ModelProvider {
             var paint = wrapPaintModel(pair.right());
             blockModels.blockStateOutput.accept(MultiVariantGenerator.dispatch(block, paint));
         }
+
+        var paint = wrapPaintModel(Blocks.OAK_PLANKS);
+        blockModels.blockStateOutput.accept(MultiVariantGenerator.dispatch(EIOBlocks.PAINTED_TRAVEL_ANCHOR.get(), paint));
     }
 
     private void registerMachineBlocks(BlockModelGenerators blockModels) {
@@ -338,8 +305,6 @@ public class EIOBlockStateProvider extends ModelProvider {
 
         // Travel Anchors
         blockModels.createNonTemplateModelBlock(EIOBlocks.TRAVEL_ANCHOR.get());
-//        EIOBlockState.paintedBlock("painted_travel_anchor", this, EIOBlocks.PAINTED_TRAVEL_ANCHOR.get(),
-//            Blocks.DIRT, null);
 
         // Solar Panels
         for (var entry : EIOBlocks.SOLAR_PANELS.entrySet()) {

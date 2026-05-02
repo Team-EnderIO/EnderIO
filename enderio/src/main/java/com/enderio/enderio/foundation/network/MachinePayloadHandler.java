@@ -94,11 +94,11 @@ public class MachinePayloadHandler {
                         Slot recipeSlot = menu.getSlot(j);
                         Slot invSlot = menu.getSlot(i);
 
-                        if (recipeSlot.getItem().isEmpty()) {
+                        if (!recipeSlot.getItem().isEmpty() || packet.stacks().get(relative).isEmpty()) {
                             continue;
                         }
 
-                        if ((recipeSlot.getItem().isEmpty() && packet.stacks().get(relative).test(invSlot.getItem()))
+                        if ((recipeSlot.getItem().isEmpty() && packet.stacks().get(relative).get().test(invSlot.getItem()))
                                 || ItemStack.isSameItemSameComponents(invSlot.getItem(), recipeSlot.getItem())) {
                             if (packet.maxTransfer()) {
                                 int toTransfer = invSlot.getItem().getMaxStackSize() - recipeSlot.getItem().getCount();

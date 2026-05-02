@@ -9,6 +9,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
@@ -19,7 +20,7 @@ import java.util.Objects;
 
 // This is just an example as to why we needed a more extensive filter interface :)
 public record ExistingItemFilter(boolean hasSnapshot, NonNullList<ItemStack> snapshot, boolean shouldCompareComponents,
-        boolean isInverted) implements ItemFilter {
+        boolean isInverted) implements ItemFilter, TooltipComponent {
 
     public static final Codec<ExistingItemFilter> CODEC = RecordCodecBuilder
             .create(componentInstance -> componentInstance

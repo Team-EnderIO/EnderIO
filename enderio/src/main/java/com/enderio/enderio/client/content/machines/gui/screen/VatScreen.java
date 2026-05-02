@@ -19,11 +19,12 @@ import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.CommonColors;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.FluidStack;
-import org.jspecify.annotations.NonNull;
 
 public class VatScreen extends MachineScreen<VatMenu> {
 
@@ -48,7 +49,7 @@ public class VatScreen extends MachineScreen<VatMenu> {
         addRenderableOnly(new FluidStackWidget(30 + leftPos, 12 + topPos, 15, 47, this::getFakedInputTankContents));
         addRenderableOnly(new FluidStackWidget(132 + leftPos, 12 + topPos, 15, 47, menu::getOutputTank));
 
-        addRenderableOnly(new FermentationWidget(this::isCrafting, this::inputFluidStack, this::outputFluidStack,
+        addRenderableOnly(new FermentationWidget(this::isCrafting, this::inputFluidStack, this::resultFluidStack,
                 menu::getCraftingProgress, 76 + leftPos, 34 + topPos, 26, 28));
 
         addRenderableOnly(new ProgressWidget.BottomUp(VAT_BG, menu::getCraftingProgress, 82 + leftPos, 64 + topPos, 14,
@@ -85,51 +86,45 @@ public class VatScreen extends MachineScreen<VatMenu> {
     }
 
     private boolean isCrafting() {
-        return menu.getRecipe() != null && menu.getCraftingProgress() > 0;
+        return menu.getCraftingProgress() > 0;
     }
 
     private FluidStack inputFluidStack() {
         return getMenu().getInputTank().contents();
     }
 
-    private FluidStack outputFluidStack() {
-        if (menu.getRecipe() == null) {
-            return FluidStack.EMPTY;
-        }
+    private FluidStack resultFluidStack() {
+        return getMenu().getResult().contents();
+    }
 
-        return menu.getRecipe().value().output().create();
+    private int getInputAmount() {
+        return getMenu().getInputAmount();
     }
 
     private FluidStorageInfo getFakedInputTankContents() {
         // Remove the amount of fluid in client screen to fake the effect of consumption of fluid.
         var currentContents = menu.getInputTank();
 
-        int reduced = 0;
-        var recipe = menu.getRecipe();
-        if (isCrafting() && recipe != null) {
-            reduced = recipe.value().input().amount();
-        }
-
+        int reduced = getInputAmount();
         int adjustedAmount = Math.max(menu.getInputTank().contents().getAmount() - reduced, 0);
         return new FluidStorageInfo(currentContents.contents().copyWithAmount(adjustedAmount), currentContents.capacity());
     }
 
     private void drawModifierStrings(GuiGraphicsExtractor graphics) {
-        var recipe = menu.getRecipe();
-        if (!isCrafting() || recipe == null) {
+        if (!isCrafting() || getInputAmount() < 0) {
             return;
         }
 
         // left modifier
         ItemStack item = getMenu().getSlot(0).getItem();
-        double modifier = FermentingRecipe.getModifier(item, recipe.value().firstReagent());
+        double modifier = getMenu().getFirstReagent();
         String text = "x" + modifier;
         int x = getGuiLeft() + 63 - minecraft.font.width(text) / 2;
         graphics.text(minecraft.font, text, x, getGuiTop() + 32, CommonColors.DARK_GRAY, false);
 
         // right modifier
         item = getMenu().getSlot(1).getItem();
-        modifier = FermentingRecipe.getModifier(item, recipe.value().secondReagent());
+        modifier = getMenu().getSecondReagent();
         text = "x" + modifier;
         x = getGuiLeft() + 113 - minecraft.font.width(text) / 2;
         graphics.text(minecraft.font, text, x, getGuiTop() + 32, CommonColors.DARK_GRAY, false);

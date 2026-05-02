@@ -2,22 +2,19 @@ package com.enderio.enderio.content.tools.vials;
 
 import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.common.util.TooltipUtil;
-import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.api.soul.SoulBoundUtils;
+import com.enderio.enderio.config.base.BaseConfig;
 import com.enderio.enderio.content.tools.ToolsLang;
 import com.enderio.enderio.foundation.util.EntityCaptureUtils;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOItems;
-import com.mojang.serialization.MapCodec;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.item.properties.conditional.ConditionalItemModelProperty;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -32,17 +29,18 @@ import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.npc.wanderingtrader.WanderingTrader;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.Spawner;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.neoforge.client.event.RegisterConditionalItemModelPropertyEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.jspecify.annotations.Nullable;
 
@@ -136,7 +134,7 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
-        if (context.getLevel().isClientSide()) {
+        if (!(context.getLevel() instanceof ServerLevel serverLevel)) {
             return InteractionResult.FAIL;
         }
 
@@ -147,13 +145,33 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
             return InteractionResult.FAIL;
         }
 
-        return releaseEntity(context.getLevel(), context.getItemInHand(), context.getClickedFace(), context.getClickedPos(), () -> {
+        Runnable consumeVial = () -> {
             context.getItemInHand().shrink(1);
             var emptyVial = EIOItems.SOUL_VIAL.get().getDefaultInstance();
             if (!player.addItem(emptyVial)) {
                 player.drop(emptyVial, false);
             }
-        });
+        };
+
+        if (BaseConfig.COMMON.ITEMS.ALLOW_SOUL_VIALS_TO_CHANGE_SPAWNERS.get()) {
+            if (context.getLevel().getBlockEntity(context.getClickedPos()) instanceof Spawner spawnerHolder) {
+                var storedSoul = context.getItemInHand().get(EIODataComponents.SOUL);
+                if (storedSoul == null || storedSoul.isEmpty()) {
+                    return InteractionResult.FAIL;
+                }
+
+                BlockPos pos = context.getClickedPos();
+                BlockState blockState = serverLevel.getBlockState(pos);
+
+                spawnerHolder.setEntityId(storedSoul.entityType(), serverLevel.getRandom());
+                serverLevel.sendBlockUpdated(pos, blockState, blockState, 3);
+                serverLevel.gameEvent(context.getPlayer(), GameEvent.BLOCK_CHANGE, pos);
+                consumeVial.run();
+                return InteractionResult.CONSUME;
+            }
+        }
+
+        return releaseEntity(context.getLevel(), context.getItemInHand(), context.getClickedFace(), context.getClickedPos(), consumeVial);
     }
 
     /**

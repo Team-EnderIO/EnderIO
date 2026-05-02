@@ -5,33 +5,33 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class MachinesCommonConfig {
     public final EnergyConfig ENERGY;
-    public final ModConfigSpec.ConfigValue<Double> ENCHANTER_LAPIS_COST_FACTOR;
-    public final ModConfigSpec.ConfigValue<Double> ENCHANTER_LEVEL_COST_FACTOR;
-    public final ModConfigSpec.ConfigValue<Integer> ENCHANTER_BASE_LEVEL_COST;
-    public final ModConfigSpec.ConfigValue<Integer> MAX_SPAWNER_ENTITIES;
-    public final ModConfigSpec.ConfigValue<Integer> MAX_SPAWNERS;
-    public final ModConfigSpec.ConfigValue<Integer> DEFAULT_SPAWN_ENERGY_COST;
+    public final ModConfigSpec.DoubleValue ENCHANTER_LAPIS_COST_FACTOR;
+    public final ModConfigSpec.DoubleValue ENCHANTER_LEVEL_COST_FACTOR;
+    public final ModConfigSpec.IntValue ENCHANTER_BASE_LEVEL_COST;
+    public final ModConfigSpec.IntValue MAX_SPAWNER_ENTITIES;
+    public final ModConfigSpec.IntValue MAX_SPAWNERS;
+    public final ModConfigSpec.IntValue DEFAULT_SPAWN_ENERGY_COST;
     public final ModConfigSpec.ConfigValue<MobSpawnMode> SPAWN_TYPE;
     public final ModConfigSpec.IntValue SPAWN_AMOUNT;
-    public final ModConfigSpec.ConfigValue<Integer> ATTRACTOR_RANGE;
-    public final ModConfigSpec.ConfigValue<Boolean> ATTRACTOR_PULL_BOSSES;
-    public final ModConfigSpec.ConfigValue<Integer> INHIBITOR_RANGE;
-    public final ModConfigSpec.ConfigValue<Integer> AVERSION_RANGE;
-    public final ModConfigSpec.ConfigValue<Integer> RELOCATOR_RANGE;
+    public final ModConfigSpec.IntValue ATTRACTOR_RANGE;
+    public final ModConfigSpec.BooleanValue ATTRACTOR_PULL_BOSSES;
+    public final ModConfigSpec.IntValue INHIBITOR_RANGE;
+    public final ModConfigSpec.IntValue AVERSION_RANGE;
+    public final ModConfigSpec.IntValue RELOCATOR_RANGE;
     public final ModConfigSpec.IntValue ENDERFACE_RANGE;
-    public final ModConfigSpec.ConfigValue<Integer> WIRELESS_CHARGER_RANGE;
+    public final ModConfigSpec.IntValue WIRELESS_CHARGER_RANGE;
 
     public MachinesCommonConfig(ModConfigSpec.Builder builder) {
         ENERGY = new EnergyConfig(builder);
 
         builder.push("enchanter");
         ENCHANTER_LAPIS_COST_FACTOR = builder.comment("The lapis cost is enchant level multiplied by this value.")
-                .define("lapisCostFactor", 3.0d);
+                .defineInRange("lapisCostFactor", 3.0, 1.0, Double.MAX_VALUE);
         ENCHANTER_LEVEL_COST_FACTOR = builder.comment(
                 "The final XP cost for an enchantment is multiplied by this value. To halve costs set to 0.5, to double them set it to 2.")
-                .define("levelCostFactor", 0.75d);
+                .defineInRange("levelCostFactor", 0.75, 0.0, Double.MAX_VALUE);
         ENCHANTER_BASE_LEVEL_COST = builder.comment("Base level cost added to all recipes in the enchanter.")
-                .define("baseLevelCost", 2);
+                .defineInRange("baseLevelCost", 2, 0, Integer.MAX_VALUE);
         builder.pop();
 
         builder.push("poweredSpawner");
@@ -56,16 +56,16 @@ public class MachinesCommonConfig {
         builder.pop();
 
         builder.push("wirelessCharger");
-        WIRELESS_CHARGER_RANGE = builder.comment("Base range").define("baseRange", 16);
+        WIRELESS_CHARGER_RANGE = builder.comment("Base range").defineInRange("baseRange", 16, 0, Integer.MAX_VALUE);
         builder.pop();
 
         builder.push("obelisks");
-        ATTRACTOR_RANGE = builder.comment("Attractor Obelisk base range").define("attractorRange", 8);
+        ATTRACTOR_RANGE = builder.comment("Attractor Obelisk base range").defineInRange("attractorRange", 8, 0, Integer.MAX_VALUE);
         ATTRACTOR_PULL_BOSSES = builder.comment("Attractor Obelisk attracts bosses")
                 .define("attractorAttractBosses", false);
-        INHIBITOR_RANGE = builder.comment("Inhibitor Obelisk base range").define("inhibitorRange", 16);
-        AVERSION_RANGE = builder.comment("Aversion Obelisk base range").define("aversionRange", 16);
-        RELOCATOR_RANGE = builder.comment("Relocator Obelisk base range").define("relocatorRange", 16);
+        INHIBITOR_RANGE = builder.comment("Inhibitor Obelisk base range").defineInRange("inhibitorRange", 16, 0, Integer.MAX_VALUE);
+        AVERSION_RANGE = builder.comment("Aversion Obelisk base range").defineInRange("aversionRange", 16, 0, Integer.MAX_VALUE);
+        RELOCATOR_RANGE = builder.comment("Relocator Obelisk base range").defineInRange("relocatorRange", 16, 0, Integer.MAX_VALUE);
         builder.pop();
     }
 }

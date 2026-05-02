@@ -184,5 +184,54 @@ public class ItemConduitTests {
             .thenSucceed();
     }
 
+    @GameTest
+    @TestHolder(description = "Ensures item conduits do not void items when transferring into a nearly full container.")
+    public static void itemConduitNearFullTransfer(final DynamicTest test) {
+        test.registerGameTestTemplate(
+            () -> StructureTemplateBuilder.withSize(1, 1, 3)
+                .set(0, 0, 0, Blocks.CHEST.defaultBlockState())
+                .set(0, 0, 2, Blocks.CHEST.defaultBlockState()));
+
+        test.onGameTest(ConduitGameTestHelper.class, helper -> {
+            var itemConduit = helper.getConduit(EIOConduits.ITEM);
+            final int tickRate = itemConduit.value().type().getTickRate(itemConduit);
+            final int transferRatePerCycle = ((ItemConduit)itemConduit.value()).transferRatePerCycle();
+
+            // Move 1/2 the amount the conduit can transfer per cycle.
+            // This ensures that we don't lose the full amount.
+            final int amountToMove = transferRatePerCycle / 2;
+
+            helper.startSequence()
+                // Destroy any previous conduit
+                .thenExecute(() -> helper.setBlock(0, 0, 1, Blocks.AIR))
+                // Place a conduit between the two chests
+                .thenExecute(() -> helper.placeConduit(itemConduit, 0, 0, 1))
+                // Configure the extract end
+                .thenExecute(() -> helper
+                    .getConduitBundle(0, 0, 1, false)
+                    .setConnectionConfig(itemConduit, Direction.NORTH,
+                        ItemConduitConnectionConfig.DEFAULT.withIsExtract(true).withIsInsert(false).withExtractRedstoneControl(RedstoneControl.NEVER_ACTIVE)))
+                // Configure the insert end
+                .thenExecute(() -> helper
+                    .getConduitBundle(0, 0, 1, false)
+                    .setConnectionConfig(itemConduit, Direction.SOUTH, ItemConduitConnectionConfig.DEFAULT.withIsExtract(false).withIsInsert(true)))
+                // Fill destination chest nearly full, leaving space for the 1/2 the transfer rate.
+                .thenExecute(() -> helper.insertIntoContainer(0, 0, 2, Items.DIRT, 26 * 64 + (64 - amountToMove)))
+                // Put a full stack of dirt in the source chest
+                .thenExecute(() -> helper.insertIntoContainer(0, 0, 0, Items.DIRT, 64))
+                // Now enable extraction with redstone control
+                .thenExecute(() -> helper
+                    .getConduitBundle(0, 0, 1, false)
+                    .setConnectionConfig(itemConduit, Direction.NORTH,
+                        ItemConduitConnectionConfig.DEFAULT.withIsExtract(true).withIsInsert(false).withExtractRedstoneControl(RedstoneControl.ALWAYS_ACTIVE)))
+                // Wait for transfer to complete: only 32 items should fit, source retains the other 32
+                // Base item conduit moves 32 items per tick so wait 2 ticks to be sure
+                .thenExecuteAfter(tickRate * 2, () -> helper.assertContainerHasExactly(0, 0, 0, Items.DIRT, (64 - amountToMove)))
+                // Destination should now be completely full (27 stacks of 64)
+                .thenExecute(() -> helper.assertContainerHasExactly(0, 0, 2, Items.DIRT, 27 * 64))
+                .thenSucceed();
+        });
+    }
+
     // TODO: Test item filters?
 }

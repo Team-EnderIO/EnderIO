@@ -4,7 +4,6 @@ import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.ApiStatus;
 import org.jspecify.annotations.Nullable;
 
@@ -29,7 +28,7 @@ public interface ICapacitorExtension {
      * @return the capacitor data, or null if none is present
      */
     @Nullable
-    default CapacitorData getCapacitorData(ItemStack capacitorStack, HolderLookup.Provider registries) {
+    default CapacitorData getCapacitorData(ItemStack capacitorStack, HolderLookup.@Nullable Provider registries) {
         return capacitorStack.get(EIODataComponents.CAPACITOR_DATA);
     }
 }

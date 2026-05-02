@@ -12,6 +12,9 @@ import com.enderio.core.common.util.EnderResourceUtil;
 import com.enderio.core.common.util.NamedFluidContents;
 import com.enderio.enderio.foundation.MachineNBTKeys;
 import com.enderio.core.annotations.UseOnly;
+import com.enderio.enderio.client.SoundHandler;
+import com.enderio.enderio.config.machines.MachinesConfig;
+import com.enderio.enderio.foundation.block.ProgressMachineBlock;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.recipe.MachineRecipeCaches;
 import com.enderio.enderio.foundation.io.fluid.FluidItemInteractive;
@@ -27,6 +30,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
+import com.enderio.enderio.init.EIOSounds;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -56,7 +62,8 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
     public static final ICapabilityProvider<VatBlockEntity, Direction, ResourceHandler<FluidResource>> FLUID_HANDLER_PROVIDER = (be,
         side) -> be.fluidStorage != null ? SidedResourceHandler.of(be.fluidStorage, side, be) : null;
 
-    public static final int TANK_CAPACITY = 8 * FluidType.BUCKET_VOLUME;
+    // TODO: Configurable tank sizes...
+    public static final int TANK_CAPACITY = 16 * FluidType.BUCKET_VOLUME;
     public static final SingleResourceSlotKey<FluidResource> INPUT_TANK = new SingleResourceSlotKey<>();
     public static final SingleResourceSlotKey<FluidResource> OUTPUT_TANK = new SingleResourceSlotKey<>();
 
@@ -64,8 +71,8 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
 
     public static final FluidStorageLayout FLUID_STORAGE_LAYOUT =
         FluidStorageLayout.builder()
-            .add(INPUT_TANK, SlotTemplates.storage(), slot -> slot.capacity(TANK_CAPACITY))
-            .add(OUTPUT_TANK, SlotTemplates.storage(), slot -> slot.capacity(TANK_CAPACITY))
+            .add(INPUT_TANK, SlotTemplates.input(), slot -> slot.capacity(TANK_CAPACITY))
+            .add(OUTPUT_TANK, SlotTemplates.output(), slot -> slot.capacity(TANK_CAPACITY))
             .build();
 
     private final FluidStorage fluidStorage;
@@ -108,6 +115,19 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
             craftingTaskHost.tick();
         }
         updateMachineState(MachineState.ACTIVE, isActive());
+    }
+
+    @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+        if (state.getValue(ProgressMachineBlock.POWERED)) {
+            double x = pos.getX() + 0.5;
+            double y = pos.getY();
+            double z = pos.getZ() + 0.5;
+
+            SoundHandler.playSound(pos, EIOSounds.VAT.get(), SoundSource.BLOCKS, MachinesConfig.CLIENT.MACHINE_VOLUME.get(), 1.0f, random, x, y, z);
+        } else {
+            SoundHandler.stopSound(pos);
+        }
     }
 
     public boolean isActive() {

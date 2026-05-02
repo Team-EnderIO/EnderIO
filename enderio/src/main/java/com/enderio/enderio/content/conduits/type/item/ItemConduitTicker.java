@@ -78,24 +78,27 @@ public class ItemConduitTicker extends ConduitTickerBase<ItemConduit> {
                         continue;
                     }
 
-                    int extracted = extractHandler.extract(i, itemResource, speed - totalExtracted, transaction);
-                    if (extracted <= 0) {
+                    int availableToExtract;
+                    try (Transaction simulateTransaction = Transaction.open(transaction)) {
+                        availableToExtract = extractHandler.extract(i, itemResource, speed - totalExtracted, simulateTransaction);
+                    }
+                    if (availableToExtract <= 0) {
                         continue;
                     }
 
                     // Ensure we cap the stack to its max size, even if the parent handler doesn't respect it.
-                    int extractedItemMaxStack = itemResource.toStack(extracted).getMaxStackSize();
-                    if (extracted > extractedItemMaxStack) {
-                        extracted = extractedItemMaxStack;
+                    int extractedItemMaxStack = itemResource.toStack(availableToExtract).getMaxStackSize();
+                    if (availableToExtract > extractedItemMaxStack) {
+                        availableToExtract = extractedItemMaxStack;
                     }
 
                     if (extractFilter != null) {
-                        var filteredStack = extractFilter.test(extractHandler, itemResource.toStack(extracted));
+                        var filteredStack = extractFilter.test(extractHandler, itemResource.toStack(availableToExtract));
                         if (filteredStack.isEmpty()) {
                             continue;
                         }
 
-                        extracted = filteredStack.getCount();
+                        availableToExtract = filteredStack.getCount();
                     }
 
                     int startingIndex = 0;
@@ -132,11 +135,11 @@ public class ItemConduitTicker extends ConduitTickerBase<ItemConduit> {
                             continue;
                         }
 
-                        int amountToInsert = extracted;
+                        int amountToInsert = availableToExtract;
 
                         // Limit to path's max speed
-                        if (extracted > remaining) {
-                            extracted = remaining;
+                        if (amountToInsert > remaining) {
+                            amountToInsert = remaining;
                         }
 
                         var insertFilter = insertConnection
@@ -154,8 +157,13 @@ public class ItemConduitTicker extends ConduitTickerBase<ItemConduit> {
                         }
 
                         int inserted = ResourceHandlerUtil.insertStacking(insertHandler, itemResource, amountToInsert, transaction);
-
                         if (inserted > 0) {
+                            int extracted = extractHandler.extract(i, itemResource, inserted, transaction);
+                            if (extracted != inserted) {
+                                // If we somehow failed to extract this item, just move onto the next one.
+                                continue nextItem;
+                            }
+
                             transaction.commit();
                             totalExtracted += inserted;
 

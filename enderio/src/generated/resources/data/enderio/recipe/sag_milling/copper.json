@@ -1,0 +1,13 @@
+{
+  "type": "enderio:sag_milling",
+  "bonus": "none",
+  "energy": 2400,
+  "input": "#c:ingots/copper",
+  "outputs": [
+    {
+      "item": {
+        "id": "enderio:powdered_copper"
+      }
+    }
+  ]
+}

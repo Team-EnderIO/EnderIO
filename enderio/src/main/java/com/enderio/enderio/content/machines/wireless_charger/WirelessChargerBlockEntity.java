@@ -57,7 +57,7 @@ public class WirelessChargerBlockEntity extends PoweredMachineBlockEntity implem
 
     public static final SingleResourceSlotKey<ItemResource> CAPACITOR = new SingleResourceSlotKey<>();
 
-    private final ModConfigSpec.ConfigValue<Integer> energyUpkeep;
+    private final ModConfigSpec.IntValue energyUpkeep;
 
     private ActionRange actionRange;
     private int maxRange;
@@ -193,8 +193,8 @@ public class WirelessChargerBlockEntity extends PoweredMachineBlockEntity implem
     }
 
     @Override
-    protected void saveAdditional(ValueOutput output) {
-        super.saveAdditional(output);
+    protected void saveAdditionalSynced(ValueOutput output) {
+        super.saveAdditionalSynced(output);
         output.store(MachineNBTKeys.ACTION_RANGE, ActionRange.CODEC, actionRange);
     }
 

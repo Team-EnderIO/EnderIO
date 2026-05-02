@@ -211,7 +211,7 @@ neoForge {
             gameDirectory = project.file("run/server")
         }
 
-        val clientData by creating {
+        val data by creating {
             clientData()
             loadedMods = listOf(modEnderio)
 

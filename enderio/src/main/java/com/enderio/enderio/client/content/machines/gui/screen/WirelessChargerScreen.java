@@ -62,18 +62,10 @@ public class WirelessChargerScreen extends MachineScreen<WirelessChargerMenu> {
     }
 
     @Override
-    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
-        super.extractRenderState(graphics, mouseX, mouseY, a);
-
-        int rangeOffset = 50;
-        graphics.text(font, getMenu().getBlockEntity().getRange() + "",
-                leftPos + imageWidth - 8 - 16 - font.width(getMenu().getBlockEntity().getRange() + "") - 10,
-                topPos + rangeOffset + 5, 0, false);
-    }
-
-    @Override
     protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         int rangeOffset = 50;
+        graphics.text(font, getMenu().getBlockEntity().getRange() + "", imageWidth - 8 - 16 - font.width(getMenu().getBlockEntity().getRange() + "") - 10,
+            rangeOffset + 5, CommonColors.DARK_GRAY, false);
         graphics.text(font, MachinesLang.RANGE, imageWidth - 9 - font.width(MachinesLang.RANGE), rangeOffset - 10,
             CommonColors.DARK_GRAY, false);
         graphics.text(font, MachinesLang.MAX_RANGE, imageWidth / 2 - font.width(MachinesLang.MAX_RANGE) / 2, 20, CommonColors.DARK_GRAY,

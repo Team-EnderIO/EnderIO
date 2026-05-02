@@ -9,14 +9,23 @@ import com.enderio.enderio.api.capacitor.LinearScalable;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.enderio.api.capacitor.SteppedScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
+import com.enderio.enderio.client.SoundHandler;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.foundation.MachineNBTKeys;
+import com.enderio.enderio.foundation.block.ProgressMachineBlock;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
 import com.enderio.enderio.foundation.inventory.MachineSlotTemplates;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.init.EIOBlockEntities;
+import com.enderio.enderio.init.EIOSounds;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -122,8 +131,32 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+        if (state.getValue(ProgressMachineBlock.POWERED)) {
+            double x = pos.getX() + 0.5;
+            double y = pos.getY();
+            double z = pos.getZ() + 0.5;
+
+            SoundHandler.playSound(pos, EIOSounds.STIRLING.get(), SoundSource.BLOCKS, MachinesConfig.CLIENT.MACHINE_VOLUME.get(), 1.0f, random, x, y, z);
+
+
+            Direction direction = state.getValue(ProgressMachineBlock.FACING);
+            Direction.Axis axis = direction.getAxis();
+            double r = 0.52;
+            double ss = random.nextDouble() * 0.6 - 0.3;
+            double dx = axis == Direction.Axis.X ? direction.getStepX() * r : ss;
+            double dy = random.nextDouble() * 6.0 / 16.0;
+            double dz = axis == Direction.Axis.Z ? direction.getStepZ() * r : ss;
+            level.addParticle(ParticleTypes.SMOKE, x + dx, y + dy, z + dz, 0.0, 0.0, 0.0);
+            level.addParticle(ParticleTypes.FLAME, x + dx, y + dy, z + dz, 0.0, 0.0, 0.0);
+        } else {
+            SoundHandler.stopSound(pos);
+        }
+    }
+
+    @Override
     public boolean isActive() {
-        return canAct() && hasEnergy() && isGenerating();
+        return canAct() && isGenerating();
     }
 
     public boolean isGenerating() {
@@ -156,6 +189,14 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
         }
     }
 
+    public void setChanged() {
+        super.setChanged();
+
+        if (isActive()) {
+            updateMachineState(MachineState.EMPTY_INPUT, false);
+        }
+    }
+
     @Override
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
@@ -184,5 +225,10 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
         updateMachineState(MachineState.FULL_POWER,
                 EnergyHandlerUtil.isFull(getEnergyStorage()) && isCapacitorInstalled());
         updateMachineState(MachineState.EMPTY_INPUT, getInventory().getStack(FUEL).isEmpty());
+    }
+
+    @Override
+    protected void updatePowerState() {
+
     }
 }

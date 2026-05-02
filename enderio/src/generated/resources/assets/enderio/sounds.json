@@ -1,0 +1,32 @@
+{
+  "block.sag_mill.tumble": {
+    "sounds": [
+      "enderio:block/sag_mill/tumble"
+    ],
+    "subtitle": "block.sag_mill.tumble"
+  },
+  "block.slice_and_splice.slice": {
+    "sounds": [
+      "enderio:block/slice_and_splice/slice"
+    ],
+    "subtitle": "block.slice_and_splice.slice"
+  },
+  "block.soul_binder.grind": {
+    "sounds": [
+      "enderio:block/soul_binder/grind"
+    ],
+    "subtitle": "block.soul_binder.grind"
+  },
+  "block.stirling_generator.burn": {
+    "sounds": [
+      "enderio:block/stirling_generator/burn"
+    ],
+    "subtitle": "block.stirling_generator.burn"
+  },
+  "block.vat.gurgle": {
+    "sounds": [
+      "enderio:block/vat/gurgle"
+    ],
+    "subtitle": "block.vat.gurgle"
+  }
+}

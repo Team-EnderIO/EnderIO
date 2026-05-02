@@ -25,6 +25,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.transfer.energy.EmptyEnergyHandler;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import com.enderio.enderio.config.conduits.ConduitsConfig;
@@ -72,8 +73,9 @@ public record EnergyConduit(Identifier texture, Component description, int trans
         consumer.accept(PATH_MAX_TRANSFER_RATE, transferRatePerTick());
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public <TCap, TContext> @Nullable TCap proxyCapability(Level level, @Nullable ConduitNode node,
+    public <TCap, TContext> @Nullable TCap proxyCapability(Level level, ConduitNode node,
             BlockCapability<TCap, TContext> capability, @Nullable TContext context) {
 
         if (Capabilities.Energy.BLOCK == capability && context instanceof Direction side) {
@@ -89,8 +91,14 @@ public record EnergyConduit(Identifier texture, Component description, int trans
                 }
             }
 
-            // noinspection unchecked
-            return (TCap) new EnergyConduitStorage(side, node);
+            // If this conduit can be 'extracted' from (in this case, we'll push energy lol) we return a cap.
+            var config = node.getConnectionConfig(side, EnergyConduitConnectionConfig.TYPE);
+            if (config.isExtract()) {
+                return (TCap) new EnergyConduitStorage(side, node);
+            }
+
+            // Return an empty cap if we're not pushing energy, so that blocks know they can connect to receive energy
+            return (TCap) EmptyEnergyHandler.INSTANCE;
         }
 
         return null;

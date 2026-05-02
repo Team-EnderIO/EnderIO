@@ -31,6 +31,7 @@ import com.enderio.enderio.init.EIOMenus;
 import com.enderio.enderio.init.EIOParticles;
 import com.enderio.enderio.init.EIORecipeBookCategories;
 import com.enderio.enderio.init.EIORecipeTypes;
+import com.enderio.enderio.init.EIOSounds;
 import com.enderio.enderio.init.EIOTravelTargets;
 import com.mojang.logging.LogUtils;
 import net.minecraft.resources.Identifier;
@@ -114,6 +115,7 @@ public class EnderIO {
         EIOConduitTypes.register(modEventBus);
         EIOTravelTargets.register(modEventBus);
         EIORecipeBookCategories.register(modEventBus);
+        EIOSounds.register(modEventBus);
 
         // Handle mod compat
         for (Map.Entry<String, Consumer<IEventBus>> entry : MOD_INTEGRATIONS.entrySet()) {

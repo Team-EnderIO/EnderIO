@@ -19,7 +19,7 @@
       "chance": 0.8,
       "item": {
         "count": 2,
-        "id": "enderio:silicon"
+        "tag": "c:silicon"
       }
     }
   ]

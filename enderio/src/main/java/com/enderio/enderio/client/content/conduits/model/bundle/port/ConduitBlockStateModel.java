@@ -125,15 +125,9 @@ public class ConduitBlockStateModel implements DynamicBlockStateModel {
                         OffsetHelper.offsetConduit(i, connectedTypes.size()));
                     offsets.computeIfAbsent(conduit, ignored -> new ArrayList<>()).add(offset);
 
-                    ModelState rotationTranslation = new ModelState() {
-                        @Override
-                        public Transformation transformation() {
-                            var mat = new Matrix4f();
-                            translateTransformation(offset).getMatrix().mul(rotate(direction).transformation().getMatrix(), mat);
-                            return new Transformation(mat);
-                        }
-                    };
-
+                    var mat = new Matrix4f();
+                    translateTransformation(offset).getMatrix().mul(rotate(direction).transformation().getMatrix(), mat);
+                    ModelState rotationTranslation = new TransformationModelState(new Transformation(mat), conduit);
                     parts.add(SimpleModelWrapper.bake(new ConduitBaker(this.baker, new Material(bundleState.getTexture(conduit))),
                         ConduitAdditionalModels.CONDUIT_CONNECTION, rotationTranslation)); //TODO emission?
 
@@ -275,12 +269,7 @@ public class ConduitBlockStateModel implements DynamicBlockStateModel {
             for (Holder<Conduit<?, ?>> toRender : rendered) {
                 List<Vec3i> offsetsForType = offsets.get(toRender);
                 if (box == null || !box.contains(offsetsForType.getFirst())) {
-                    ModelState offsetType = new ModelState() {
-                        @Override
-                        public Transformation transformation() {
-                            return translateTransformation(offsetsForType.getFirst());
-                        }
-                    };
+                    ModelState offsetType = new TransformationModelState(translateTransformation(offsetsForType.getFirst()), toRender);
                     parts.add(SimpleModelWrapper.bake(new ConduitBaker(this.baker, new Material(bundleState.getTexture(toRender))),
                         ConduitAdditionalModels.CONDUIT_CORE, offsetType)); //TODO emissive?
                 }
@@ -291,43 +280,27 @@ public class ConduitBlockStateModel implements DynamicBlockStateModel {
                     Vec3i offset = OffsetHelper.translationFor(axis,
                         OffsetHelper.offsetConduit(notRenderedEntry.getValue(), allTypes.size()));
                     if (!box.contains(offset)) {
-                        ModelState translate = new ModelState() {
-                            @Override
-                            public Transformation transformation() {
-                                return translateTransformation(offset);
-                            }
-                        };
+                        ModelState translate = new TransformationModelState(translateTransformation(offset), notRenderedEntry.getKey());
                         parts.add(SimpleModelWrapper.bake(new ConduitBaker(this.baker, new Material(bundleState.getTexture(notRenderedEntry.getKey()))),
                             ConduitAdditionalModels.CONDUIT_CORE, translate)); //TODO emissive?
                     }
                 }
                 Vec3i min = box.getMin();
                 var size = box.size();
-                ModelState boxTranslate = new ModelState() {
-                    @Override
-                    public Transformation transformation() {
-                        var scaling = new Transformation(null, null, new Vector3f(size.getX(), size.getY(), size.getZ()), null)
-                            .applyOrigin(new Vector3f(-0.5f)).getMatrix();
-                        var center = new Transformation(new Vector3f(6.5f / 16, 6.5f /16, 6.5f /16), null, null, null).getMatrix();
-                        var translate = translateTransformation(min).getMatrix();
-                        return new Transformation(translate.mul(center.mul(scaling, new Matrix4f()), new Matrix4f()));
-                    }
-                };
 
+                var scaling = new Transformation(null, null, new Vector3f(size.getX(), size.getY(), size.getZ()), null)
+                    .applyOrigin(new Vector3f(-0.5f)).getMatrix();
+                var center = new Transformation(new Vector3f(6.5f / 16, 6.5f /16, 6.5f /16), null, null, null).getMatrix();
+                var translate = translateTransformation(min).getMatrix();
+                ModelState boxTranslate = new TransformationModelState(new Transformation(translate.mul(center.mul(scaling, new Matrix4f()), new Matrix4f())), null);
                 final var model = SimpleModelWrapper.bake(this.baker, ConduitAdditionalModels.BOX, boxTranslate);
                 parts.add(model);
 
 
             } else {
                 for (Map.Entry<Holder<Conduit<?, ?>>, Integer> notRenderedEntry : notRendered.entrySet()) {
-                    ModelState translate = new ModelState() {
-                        @Override
-                        public Transformation transformation() {
-                            return translateTransformation(OffsetHelper.translationFor(axis,
-                                OffsetHelper.offsetConduit(notRenderedEntry.getValue(), allTypes.size())));
-                        }
-                    };
-
+                    ModelState translate = new TransformationModelState(translateTransformation(OffsetHelper.translationFor(axis,
+                        OffsetHelper.offsetConduit(notRenderedEntry.getValue(), allTypes.size()))), notRenderedEntry.getKey());
                     parts.add(SimpleModelWrapper.bake(new ConduitBaker(this.baker, new Material(bundleState.getTexture(notRenderedEntry.getKey()))),
                         ConduitAdditionalModels.CONDUIT_CORE, translate));
 
@@ -375,6 +348,13 @@ public class ConduitBlockStateModel implements DynamicBlockStateModel {
 
     private static Vector3f scale(Vec3i vector, float scaler) {
         return new Vector3f(vector.getX() * scaler, vector.getY() * scaler, vector.getZ() * scaler);
+    }
+
+    public record TransformationModelState(Transformation transformation, Holder<Conduit<?, ?>> conduit) implements ModelState {
+        @Override
+        public Transformation transformation() {
+            return transformation;
+        }
     }
 
     public record Unbaked() implements CustomUnbakedBlockStateModel {

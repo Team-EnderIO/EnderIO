@@ -69,14 +69,15 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
 
     /**
      * Proxy a capability to the conduit bundle block.
+     * Will never be called on the client.
      * @param level the level.
-     * @param node the node that is being queried for proxying. Will be null on the client.
+     * @param node the node that is being queried for proxying.
      * @param capability the capability being requested.
      * @param context the context for the capability.
      * @return the capability or null if it is not exposed.
      */
     @Nullable
-    default <TCapability, TContext> TCapability proxyCapability(Level level, @Nullable ConduitNode node,
+    default <TCapability, TContext> TCapability proxyCapability(Level level, ConduitNode node,
             BlockCapability<TCapability, TContext> capability, @Nullable TContext context) {
         return null;
     }

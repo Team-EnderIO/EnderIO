@@ -1,6 +1,8 @@
 package com.enderio.enderio.content.machines.vat;
 
 import com.enderio.core.common.network.menu.FloatSyncSlot;
+import com.enderio.core.common.network.menu.IntSyncSlot;
+import com.enderio.core.common.network.menu.StringSyncSlot;
 import com.enderio.enderio.foundation.fluid.FluidStorageInfo;
 import com.enderio.enderio.foundation.fluid.FluidStorageSyncSlot;
 import com.enderio.enderio.foundation.menu.MachineMenu;
@@ -8,10 +10,13 @@ import com.enderio.enderio.foundation.menu.MachineSlot;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOMenus;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.resources.Identifier;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import org.jspecify.annotations.Nullable;
+import net.minecraft.world.item.Item;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 public class VatMenu extends MachineMenu<VatBlockEntity> {
     public static final int INPUTS_INDEX = 0;
@@ -25,8 +30,10 @@ public class VatMenu extends MachineMenu<VatBlockEntity> {
     private final FluidStorageSyncSlot inputTankSlot;
     private final FluidStorageSyncSlot outputTankSlot;
 
-    // TODO: 1.21.4: Deal with client not knowing recipes.
-//    private final RecipeSyncSlot<FermentingRecipe> recipeSlot;
+    private final IntSyncSlot inputAmount;
+    private final FluidStorageSyncSlot result;
+    private final FloatSyncSlot firstReagent;
+    private final FloatSyncSlot secondReagent;
 
     public VatMenu(int containerId, Inventory inventory, VatBlockEntity blockEntity) {
         super(EIOMenus.VAT.get(), containerId, inventory, blockEntity);
@@ -37,8 +44,35 @@ public class VatMenu extends MachineMenu<VatBlockEntity> {
                 FluidStorageSyncSlot.readOnly(() -> new FluidStorageInfo(blockEntity.getInputFluid(), VatBlockEntity.TANK_CAPACITY)));
         outputTankSlot = addSyncSlot(
                 FluidStorageSyncSlot.readOnly(() -> new FluidStorageInfo(blockEntity.getOutputFluid(), VatBlockEntity.TANK_CAPACITY)));
-//        recipeSlot = addSyncSlot(
-//                RecipeSyncSlot.readOnly(EIORecipes.VAT_FERMENTING.type().get(), blockEntity::getRecipe));
+
+        inputAmount = addSyncSlot(IntSyncSlot.readOnly(() -> {
+            if (blockEntity.getRecipe() == null) {
+                return 0;
+            }
+            return blockEntity.getRecipe().value().input().amount();
+        }));
+
+        result = addSyncSlot(FluidStorageSyncSlot.readOnly(() -> {
+            if (blockEntity.getRecipe() == null) {
+                return new FluidStorageInfo(FluidStack.EMPTY, 0);
+            }
+            return new FluidStorageInfo(blockEntity.getRecipe().value().output().create(),  VatBlockEntity.TANK_CAPACITY);
+        }));
+
+        firstReagent = addSyncSlot(FloatSyncSlot.readOnly(() -> {
+            if (blockEntity.getRecipe() == null) {
+                return 0f;
+            }
+            return (float) FermentingRecipe.getModifier(getSlot(0).getItem(), blockEntity.getRecipe().value().firstReagent());
+        }));
+
+        secondReagent = addSyncSlot(FloatSyncSlot.readOnly(() -> {
+            if (blockEntity.getRecipe() == null) {
+                return 0f;
+            }
+            return (float) FermentingRecipe.getModifier(getSlot(0).getItem(), blockEntity.getRecipe().value().secondReagent());
+        }));
+
     }
 
     public VatMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
@@ -48,7 +82,11 @@ public class VatMenu extends MachineMenu<VatBlockEntity> {
         craftingProgressSlot = addSyncSlot(FloatSyncSlot.standalone());
         inputTankSlot = addSyncSlot(FluidStorageSyncSlot.standalone());
         outputTankSlot = addSyncSlot(FluidStorageSyncSlot.standalone());
-//        recipeSlot = addSyncSlot(RecipeSyncSlot.standalone(EIORecipes.VAT_FERMENTING.type().get()));
+
+        inputAmount = addSyncSlot(IntSyncSlot.standalone());
+        result = addSyncSlot(FluidStorageSyncSlot.standalone());
+        firstReagent = addSyncSlot(FloatSyncSlot.standalone());
+        secondReagent = addSyncSlot(FloatSyncSlot.standalone());
     }
 
     private void addSlots() {
@@ -70,10 +108,21 @@ public class VatMenu extends MachineMenu<VatBlockEntity> {
         return outputTankSlot.get();
     }
 
-    @Nullable
-    public RecipeHolder<FermentingRecipe> getRecipe() {
-//        return recipeSlot.get();
-        return null;
+
+    public int getInputAmount() {
+        return inputAmount.get();
+    }
+
+    public FluidStorageInfo getResult() {
+        return result.get();
+    }
+
+    public float getFirstReagent() {
+        return firstReagent.get();
+    }
+
+    public float getSecondReagent() {
+        return secondReagent.get();
     }
 
     @Override

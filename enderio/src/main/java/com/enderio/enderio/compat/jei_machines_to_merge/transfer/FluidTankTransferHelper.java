@@ -59,12 +59,12 @@ public class FluidTankTransferHelper implements IRecipeTransferHandler<FluidTank
         }
 
         boolean hasItem = recipe.value().input().test(container.slots.get(0).getItem());
-        Ingredient item = getIngredientItem(player, recipe.value().input());
+        Optional<Ingredient> item = getIngredientItem(player, recipe.value().input());
 
         if (!hasItem || !hasFluid) {
             Component message = Component.translatable("jei.tooltip.error.recipe.transfer.missing");
             List<IRecipeSlotView> empty = new ArrayList<>();
-            if (!hasItem && (item == null || item.isEmpty())) {
+            if (!hasItem && item.isEmpty()) {
                 empty.add(recipeSlots.getSlotViews().get(0));
             }
             if (!hasFluid) {
@@ -76,7 +76,7 @@ public class FluidTankTransferHelper implements IRecipeTransferHandler<FluidTank
         }
 
         if (doTransfer) {
-            List<Ingredient> toSend = NonNullList.withSize(4, Ingredient.of(HolderSet.empty()));
+            List<Optional<Ingredient>> toSend = NonNullList.withSize(4, Optional.empty());
             if (recipe.value().mode() == TankRecipe.Mode.EMPTY) {
                 toSend.set(0, item);
             } else {
@@ -87,13 +87,12 @@ public class FluidTankTransferHelper implements IRecipeTransferHandler<FluidTank
         return null;
     }
 
-    @Nullable
-    private Ingredient getIngredientItem(Player player, Ingredient ingredient) {
+    private Optional<Ingredient> getIngredientItem(Player player, Ingredient ingredient) {
         for (var item : player.getInventory().getNonEquipmentItems()) {
             if (ingredient.test(item)) {
-                return ingredient;
+                return Optional.of(ingredient);
             }
         }
-        return null;
+        return Optional.empty();
     }
 }

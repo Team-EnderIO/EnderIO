@@ -4,6 +4,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.fml.ModList;
 import top.theillusivec4.curios.api.CuriosApi;
+import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 
 import javax.annotation.Nullable;
@@ -16,8 +17,13 @@ public class CuriosCompat {
 
     public static Optional<List<ItemStack>> getActiveCurios(Player player, @Nullable Predicate<ItemStack> filter){
         if(ModList.get().isLoaded("curios")) {
+            Optional<ICuriosItemHandler> curiosInventory = CuriosApi.getCuriosInventory(player);
+            if (curiosInventory.isEmpty()) {
+                return Optional.empty();
+            }
+
             List<ItemStack> result = new ArrayList<>();
-            var handlers = CuriosApi.getCuriosInventory(player).get().getCurios().values().stream()
+            var handlers = curiosInventory.get().getCurios().values().stream()
                 .map(ICurioStacksHandler::getStacks)
                 .toList();
             for (var stackHandler : handlers) {

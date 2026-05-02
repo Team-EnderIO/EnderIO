@@ -28,6 +28,10 @@ public record EnergyConduitStorage(Direction side, @Nullable ConduitNode node) i
             return 0;
         }
 
+        if (!node.getConnectionConfig(side, EnergyConduitConnectionConfig.TYPE).canExtract(node::hasRedstoneSignal)) {
+            return 0;
+        }
+
         var network = node.getNetwork();
         network.ensureCachesReady();
         var inserts = network.insertConnectionsFrom(new ConduitBlockConnection(node, side));

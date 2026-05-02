@@ -441,7 +441,7 @@ public class EIOBlocks {
     public static final DeferredBlock<PaintedTravelAnchorBlock> PAINTED_TRAVEL_ANCHOR = registerWithItem("painted_travel_anchor",
         PaintedTravelAnchorBlock::new,
         BlockBehaviour.Properties.of().strength(2.5f, 8).noOcclusion(),
-        (p, block) -> new PaintedBlockItem(block.get(), p));
+        (p, block) -> new PaintedBlockItem(block.get(), p.useBlockDescriptionPrefix()));
 
     // Solar Panels
     public static final Map<SolarPanelTier, DeferredBlock<SolarPanelBlock>> SOLAR_PANELS = Util.make(() -> {

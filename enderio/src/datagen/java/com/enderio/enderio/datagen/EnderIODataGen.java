@@ -16,6 +16,7 @@ import com.enderio.enderio.datagen.common.loot.EIOBlockLootProvider;
 import com.enderio.enderio.datagen.common.loot.EIOLootModifiersProvider;
 import com.enderio.enderio.datagen.common.recipes.EnderIORecipeProvider;
 import com.enderio.enderio.datagen.common.souldata.SoulDataProvider;
+import com.enderio.enderio.datagen.client.sounds.EIOSoundDefinitionProvider;
 import com.enderio.enderio.datagen.common.tags.EIOBlockTagsProvider;
 import com.enderio.enderio.datagen.common.tags.EIOEntityTagsProvider;
 import com.enderio.enderio.datagen.common.tags.EIOFluidTagsProvider;
@@ -81,6 +82,7 @@ public class EnderIODataGen {
 
         generator.addProvider(true, new EIOModelProvider(packOutput));
         generator.addProvider(true, new EIOLanguageProvider(packOutput));
+        generator.addProvider(true, new EIOSoundDefinitionProvider(packOutput));
     }
 
     private static RegistrySetBuilder createDatapackEntriesBuilder() {
