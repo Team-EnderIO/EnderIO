@@ -1,9 +1,9 @@
 {
   "type": "enderio:soul_binding",
-  "energy": 10000,
   "entity_type": "minecraft:silverfish",
   "experience": 0,
   "input": "minecraft:mossy_stone_bricks",
+  "operation_time": 10000,
   "output": {
     "id": "minecraft:infested_mossy_stone_bricks"
   }

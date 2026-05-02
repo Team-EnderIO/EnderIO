@@ -1,8 +1,8 @@
 {
   "type": "enderio:sag_milling",
   "bonus": "none",
-  "energy": 2400,
   "input": "#c:glass_blocks",
+  "operation_time": 2400,
   "outputs": [
     {
       "item": {

@@ -1,7 +1,7 @@
 {
   "type": "enderio:sag_milling",
-  "energy": 2400,
   "input": "#c:obsidians",
+  "operation_time": 2400,
   "outputs": [
     {
       "item": {

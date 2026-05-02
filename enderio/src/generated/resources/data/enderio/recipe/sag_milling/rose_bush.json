@@ -1,7 +1,7 @@
 {
   "type": "enderio:sag_milling",
-  "energy": 2400,
   "input": "minecraft:rose_bush",
+  "operation_time": 2400,
   "outputs": [
     {
       "chance": 0.8,
