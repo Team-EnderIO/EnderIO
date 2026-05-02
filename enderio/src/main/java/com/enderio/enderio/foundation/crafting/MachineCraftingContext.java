@@ -1,19 +1,26 @@
 package com.enderio.enderio.foundation.crafting;
 
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 import java.util.Optional;
 
+/**
+ * This context will only be used on the server.
+ * @param <T>
+ * @param <U>
+ */
 public interface MachineCraftingContext<T extends Recipe<U>, U extends RecipeInput> {
     // TODO: When implementing this, consider caching recipeInput until inventory contents change (lazy)
     U recipeInput();
 
-    // TODO: When implementing this, consider using vanillas RecipeCache.
-    Optional<RecipeHolder<T>> findRecipe();
+    ServerLevel level();
 
     int getCraftingTicks(RecipeHolder<T> recipe);
 

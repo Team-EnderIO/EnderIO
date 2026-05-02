@@ -1,7 +1,6 @@
 package com.enderio.enderio.foundation.crafting;
 
 public enum MachineCraftingState {
-    IDLE,
-    CRAFTING,
+    IDLE, ACTIVE,
     OUTPUT_BLOCKED,
 }

@@ -1,4 +1,5 @@
 package com.enderio.enderio.foundation.task;
+import com.enderio.core.common.storage.FluidStorage;
 import com.enderio.core.common.storage.ItemStorage;
 import com.enderio.core.common.storage.slot.ResourceSlotKey;
 import com.enderio.enderio.foundation.MachineRecipe;
