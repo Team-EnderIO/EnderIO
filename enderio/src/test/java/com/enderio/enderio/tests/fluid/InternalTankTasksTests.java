@@ -19,12 +19,17 @@ import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.testframework.junit.EphemeralTestServerProvider;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
+import java.util.function.BiPredicate;
 
 @ExtendWith(EphemeralTestServerProvider.class)
 public class InternalTankTasksTests {
@@ -43,9 +48,9 @@ public class InternalTankTasksTests {
     }
 
     // Helper method to create a test item storage
-    private ItemStorage createItemStorage() {
+    private ItemStorage createItemStorage(BiPredicate<Integer, ItemResource> inputFilter) {
         ItemStorageLayout layout = ItemStorageLayout.builder()
-            .add(INPUT_SLOT, SlotTemplates.input(), slot -> slot.capacity(64))
+            .add(INPUT_SLOT, SlotTemplates.input(), slot -> slot.capacity(64).filter(inputFilter))
             .add(OUTPUT_SLOT, SlotTemplates.output(), slot -> slot.capacity(64))
             .build();
         return new ItemStorage(layout);
@@ -58,478 +63,355 @@ public class InternalTankTasksTests {
         return stack;
     }
 
-    // region fillInternal tests
+    // region fillUsingItem tests
 
     @Test
-    public void testFillInternalWithWaterBucket(MinecraftServer server) {
+    public void fillUsingItem_WaterBucket(MinecraftServer server) {
         // Arrange
         FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
-        ItemStorage itemStorage = createItemStorage();
 
-        // Set up input: water bucket
+        // Due to validation, the restricted ItemAccess should automatically push empties into the output
+        ItemStorage itemStorage = createItemStorage(this::isNonEmptyFluidStorage);
         itemStorage.set(INPUT_SLOT, ItemResource.of(Items.WATER_BUCKET), 1);
+
+        // Restricted handler, item is in input, but exchange can place items in output if they don't match the filter
+        ItemAccess itemToDrain = EnderResourceUtil.getItemAccessRestricted(itemStorage, INPUT_SLOT, OUTPUT_SLOT);
 
         // Act
-        InternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
+        int filled = InternalTankTasks.fillUsingItem(fluidStorage, TANK_SLOT, itemToDrain);
 
         // Assert
-        Assertions.assertEquals(FluidType.BUCKET_VOLUME, fluidStorage.getAmountAsInt(TANK_SLOT),
-            "Fluid tank should contain one bucket of water");
-        Assertions.assertEquals(Fluids.WATER, fluidStorage.getResource(TANK_SLOT).getFluid(),
-            "Fluid tank should contain water");
-        Assertions.assertEquals(0, itemStorage.getAmountAsInt(INPUT_SLOT),
-            "Input slot should be empty");
-        Assertions.assertEquals(1, itemStorage.getAmountAsInt(OUTPUT_SLOT),
-            "Output slot should contain one empty bucket");
-        Assertions.assertEquals(Items.BUCKET, itemStorage.getResource(OUTPUT_SLOT).getItem(),
-            "Output slot should contain an empty bucket");
-    }
-
-    @Test
-    public void testFillInternalWithMultipleBuckets(MinecraftServer server) {
-        // Arrange
-        FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
-        ItemStorage itemStorage = createItemStorage();
-
-        // Set up input
-        itemStorage.set(INPUT_SLOT, ItemResource.of(Items.WATER_BUCKET), 1);
-
-        // Act - first fill
-        InternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
-
-        // Assert after first fill
+        Assertions.assertEquals(FluidType.BUCKET_VOLUME, filled);
         Assertions.assertEquals(FluidType.BUCKET_VOLUME, fluidStorage.getAmountAsInt(TANK_SLOT));
-        Assertions.assertEquals(0, itemStorage.getAmountAsInt(INPUT_SLOT),
-            "Input should have no bucket remaining");
+        Assertions.assertEquals(Fluids.WATER, fluidStorage.getResource(TANK_SLOT).getFluid());
+
+        // Ensure the item has moved from the input to the output due to slot filtering rules.
+        Assertions.assertEquals(0, itemStorage.getAmountAsInt(INPUT_SLOT));
         Assertions.assertEquals(1, itemStorage.getAmountAsInt(OUTPUT_SLOT));
+        Assertions.assertEquals(Items.BUCKET, itemStorage.getResource(OUTPUT_SLOT).getItem());
+    }
 
-        // Set up input again
+    @Test
+    public void fillUsingItem_MultipleWaterBuckets(MinecraftServer server) {
+        // Arrange
+        FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
+
+        // Due to validation, the restricted ItemAccess should automatically push empties into the output
+        ItemStorage itemStorage = createItemStorage(this::isNonEmptyFluidStorage);
         itemStorage.set(INPUT_SLOT, ItemResource.of(Items.WATER_BUCKET), 1);
 
-        // Act - second fill
-        InternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
+        // Restricted handler, item is in input, but exchange can place items in output if they don't match the filter
+        ItemAccess itemToDrain = EnderResourceUtil.getItemAccessRestricted(itemStorage, INPUT_SLOT, OUTPUT_SLOT);
 
-        // Assert after second fill
+        // Act
+        int filled = InternalTankTasks.fillUsingItem(fluidStorage, TANK_SLOT, itemToDrain);
+        itemStorage.set(INPUT_SLOT, ItemResource.of(Items.WATER_BUCKET), 1);
+        filled += InternalTankTasks.fillUsingItem(fluidStorage, TANK_SLOT, itemToDrain);
+
+        // Assert
+        Assertions.assertEquals(FluidType.BUCKET_VOLUME * 2, filled);
         Assertions.assertEquals(FluidType.BUCKET_VOLUME * 2, fluidStorage.getAmountAsInt(TANK_SLOT));
-        Assertions.assertEquals(0, itemStorage.getAmountAsInt(INPUT_SLOT),
-            "Input should have no bucket remaining");
+        Assertions.assertEquals(Fluids.WATER, fluidStorage.getResource(TANK_SLOT).getFluid());
+
+        // Ensure the item has moved from the input to the output due to slot filtering rules.
+        Assertions.assertEquals(0, itemStorage.getAmountAsInt(INPUT_SLOT));
         Assertions.assertEquals(2, itemStorage.getAmountAsInt(OUTPUT_SLOT));
+        Assertions.assertEquals(Items.BUCKET, itemStorage.getResource(OUTPUT_SLOT).getItem());
     }
 
     @Test
-    public void testFillInternalWithFullTank(MinecraftServer server) {
+    public void fillUsingItem_FluidTank(MinecraftServer server) {
         // Arrange
-        FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME);
-        ItemStorage itemStorage = createItemStorage();
+        FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
 
-        // Fill tank completely
-        fluidStorage.set(TANK_SLOT, FluidResource.of(Fluids.WATER), FluidType.BUCKET_VOLUME);
+        // Due to validation, the restricted ItemAccess should automatically push empties into the output
+        ItemStorage itemStorage = createItemStorage(this::isNonEmptyFluidStorage);
+        itemStorage.set(INPUT_SLOT, ItemResource.of(getFilledFluidTank(Fluids.WATER, FluidType.BUCKET_VOLUME)), 1);
 
-        // Try to add another bucket
+        // Restricted handler, item is in input, but exchange can place items in output if they don't match the filter
+        ItemAccess itemToDrain = EnderResourceUtil.getItemAccessRestricted(itemStorage, INPUT_SLOT, OUTPUT_SLOT);
+
+        // Act
+        int filled = InternalTankTasks.fillUsingItem(fluidStorage, TANK_SLOT, itemToDrain);
+
+        // Assert
+        Assertions.assertEquals(FluidType.BUCKET_VOLUME, filled);
+        Assertions.assertEquals(FluidType.BUCKET_VOLUME, fluidStorage.getAmountAsInt(TANK_SLOT));
+        Assertions.assertEquals(Fluids.WATER, fluidStorage.getResource(TANK_SLOT).getFluid());
+
+        // Ensure the item has moved from the input to the output due to slot filtering rules.
+        Assertions.assertEquals(0, itemStorage.getAmountAsInt(INPUT_SLOT));
+        Assertions.assertEquals(1, itemStorage.getAmountAsInt(OUTPUT_SLOT));
+        Assertions.assertEquals(EIOBlocks.FLUID_TANK.asItem(), itemStorage.getResource(OUTPUT_SLOT).getItem());
+    }
+
+    @Test
+    public void fillUsingItem_FluidTank_PartialFill(MinecraftServer server) {
+        // Arrange
+        FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
+        fluidStorage.set(TANK_SLOT, FluidResource.of(Fluids.WATER), FluidType.BUCKET_VOLUME * 9);
+
+        // Due to validation, the restricted ItemAccess should automatically push empties into the output
+        ItemStorage itemStorage = createItemStorage(this::isNonEmptyFluidStorage);
+        itemStorage.set(INPUT_SLOT, ItemResource.of(getFilledFluidTank(Fluids.WATER, FluidType.BUCKET_VOLUME * 2)), 1);
+
+        // Restricted handler, item is in input, but exchange can place items in output if they don't match the filter
+        ItemAccess itemToDrain = EnderResourceUtil.getItemAccessRestricted(itemStorage, INPUT_SLOT, OUTPUT_SLOT);
+
+        // Act
+        int filled = InternalTankTasks.fillUsingItem(fluidStorage, TANK_SLOT, itemToDrain);
+
+        // Assert
+        Assertions.assertEquals(FluidType.BUCKET_VOLUME, filled);
+        Assertions.assertEquals(FluidType.BUCKET_VOLUME * 10, fluidStorage.getAmountAsInt(TANK_SLOT));
+        Assertions.assertEquals(Fluids.WATER, fluidStorage.getResource(TANK_SLOT).getFluid());
+
+        // Ensure the fluid tank remains inside the input slot, but with less fluid inside.
+        Assertions.assertEquals(1, itemStorage.getAmountAsInt(INPUT_SLOT));
+        Assertions.assertEquals(EIOBlocks.FLUID_TANK.asItem(), itemStorage.getResource(INPUT_SLOT).getItem());
+        Assertions.assertEquals(EnderResourceUtil.getItemAccess(itemStorage, INPUT_SLOT).getCapability(Capabilities.Fluid.ITEM).getAmountAsInt(0), FluidType.BUCKET_VOLUME);
+        Assertions.assertEquals(0, itemStorage.getAmountAsInt(OUTPUT_SLOT));
+    }
+
+    @Test
+    public void fillUsingItem_FullTank_NothingChanges(MinecraftServer server) {
+        // Arrange
+        FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
+        fluidStorage.set(TANK_SLOT, FluidResource.of(Fluids.WATER), FluidType.BUCKET_VOLUME * 10);
+
+        // Due to validation, the restricted ItemAccess should automatically push empties into the output
+        ItemStorage itemStorage = createItemStorage(this::isNonEmptyFluidStorage);
         itemStorage.set(INPUT_SLOT, ItemResource.of(Items.WATER_BUCKET), 1);
 
-        // Act
-        InternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
+        // Restricted handler, item is in input, but exchange can place items in output if they don't match the filter
+        ItemAccess itemToDrain = EnderResourceUtil.getItemAccessRestricted(itemStorage, INPUT_SLOT, OUTPUT_SLOT);
 
-        // Assert - nothing should change
-        Assertions.assertEquals(FluidType.BUCKET_VOLUME, fluidStorage.getAmountAsInt(TANK_SLOT),
-            "Fluid tank should remain full");
-        Assertions.assertEquals(1, itemStorage.getAmountAsInt(INPUT_SLOT),
-            "Input bucket should remain");
-        Assertions.assertEquals(0, itemStorage.getAmountAsInt(OUTPUT_SLOT),
-            "Output should be empty");
+        // Act
+        int filled = InternalTankTasks.fillUsingItem(fluidStorage, TANK_SLOT, itemToDrain);
+
+        // Assert
+        Assertions.assertEquals(0, filled);
+
+        // Ensure the item stayed in the input
+        Assertions.assertEquals(1, itemStorage.getAmountAsInt(INPUT_SLOT));
+        Assertions.assertEquals(Items.WATER_BUCKET, itemStorage.getResource(INPUT_SLOT).getItem());
+        Assertions.assertEquals(0, itemStorage.getAmountAsInt(OUTPUT_SLOT));
     }
 
     @Test
-    public void testFillInternalWithOutputSlotFull(MinecraftServer server) {
+    public void fillUsingItem_OutputSlotFull_NothingChanges(MinecraftServer server) {
         // Arrange
         FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
-        ItemStorage itemStorage = createItemStorage();
 
-        // Set up input: water bucket
+        // Due to validation, the restricted ItemAccess should automatically push empties into the output
+        ItemStorage itemStorage = createItemStorage(this::isNonEmptyFluidStorage);
         itemStorage.set(INPUT_SLOT, ItemResource.of(Items.WATER_BUCKET), 1);
-        // Fill output slot completely
-        itemStorage.set(OUTPUT_SLOT, ItemResource.of(Items.BUCKET), 64);
+        itemStorage.set(OUTPUT_SLOT, ItemResource.of(Items.BUCKET), Items.BUCKET.getDefaultMaxStackSize());
+
+        // Restricted handler, item is in input, but exchange can place items in output if they don't match the filter
+        ItemAccess itemToDrain = EnderResourceUtil.getItemAccessRestricted(itemStorage, INPUT_SLOT, OUTPUT_SLOT);
 
         // Act
-        InternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
+        int filled = InternalTankTasks.fillUsingItem(fluidStorage, TANK_SLOT, itemToDrain);
 
-        // Assert - nothing should change because output is full
-        Assertions.assertEquals(0, fluidStorage.getAmountAsInt(TANK_SLOT),
-            "Fluid tank should remain empty");
-        Assertions.assertEquals(1, itemStorage.getAmountAsInt(INPUT_SLOT),
-            "Input bucket should remain");
-        Assertions.assertEquals(64, itemStorage.getAmountAsInt(OUTPUT_SLOT),
-            "Output should remain full");
+        // Assert
+        Assertions.assertEquals(0, filled);
+
+        // Ensure the item stayed in the input
+        Assertions.assertEquals(1, itemStorage.getAmountAsInt(INPUT_SLOT));
+        Assertions.assertEquals(Items.WATER_BUCKET, itemStorage.getResource(INPUT_SLOT).getItem());
+        Assertions.assertEquals(Items.BUCKET.getDefaultMaxStackSize(), itemStorage.getAmountAsInt(OUTPUT_SLOT));
     }
 
     @Test
-    public void testFillInternalWithEmptyInput(MinecraftServer server) {
+    public void fillUsingItem_WrongFluidType_NothingChanges(MinecraftServer server) {
         // Arrange
         FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
-        ItemStorage itemStorage = createItemStorage();
-
-        // Input is empty
-        itemStorage.set(INPUT_SLOT, ItemResource.of(ItemStack.EMPTY), 0);
-
-        // Act
-        InternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
-
-        // Assert - nothing should happen
-        Assertions.assertEquals(0, fluidStorage.getAmountAsInt(TANK_SLOT),
-            "Fluid tank should remain empty");
-        Assertions.assertEquals(0, itemStorage.getAmountAsInt(OUTPUT_SLOT),
-            "Output should remain empty");
-    }
-
-    @Test
-    public void testFillInternalWithInvalidInput(MinecraftServer server) {
-        // Arrange
-        FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
-        ItemStorage itemStorage = createItemStorage();
-
-        // Set up input: cobblestone (not a bucket)
-        itemStorage.set(INPUT_SLOT, ItemResource.of(Items.COBBLESTONE), 1);
-
-        // Act
-        InternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
-
-        // Assert - nothing should happen
-        Assertions.assertEquals(0, fluidStorage.getAmountAsInt(TANK_SLOT),
-            "Fluid tank should remain empty");
-        Assertions.assertEquals(1, itemStorage.getAmountAsInt(INPUT_SLOT),
-            "Input item should remain");
-        Assertions.assertEquals(0, itemStorage.getAmountAsInt(OUTPUT_SLOT),
-            "Output should remain empty");
-    }
-
-    @Test
-    public void testFillInternalWithDifferentFluidType(MinecraftServer server) {
-        // Arrange
-        FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
-        ItemStorage itemStorage = createItemStorage();
-
-        // Tank already has water
         fluidStorage.set(TANK_SLOT, FluidResource.of(Fluids.WATER), FluidType.BUCKET_VOLUME);
 
-        // Try to add lava bucket
+        // Due to validation, the restricted ItemAccess should automatically push empties into the output
+        ItemStorage itemStorage = createItemStorage(this::isNonEmptyFluidStorage);
         itemStorage.set(INPUT_SLOT, ItemResource.of(Items.LAVA_BUCKET), 1);
+        itemStorage.set(OUTPUT_SLOT, ItemResource.of(Items.BUCKET), Items.BUCKET.getDefaultMaxStackSize());
+
+        // Restricted handler, item is in input, but exchange can place items in output if they don't match the filter
+        ItemAccess itemToDrain = EnderResourceUtil.getItemAccessRestricted(itemStorage, INPUT_SLOT, OUTPUT_SLOT);
 
         // Act
-        InternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
-
-        // Assert - should not mix fluids
-        Assertions.assertEquals(FluidType.BUCKET_VOLUME, fluidStorage.getAmountAsInt(TANK_SLOT),
-            "Fluid tank should still contain one bucket");
-        Assertions.assertEquals(Fluids.WATER, fluidStorage.getResource(TANK_SLOT).getFluid(),
-            "Fluid tank should still contain water");
-        Assertions.assertEquals(1, itemStorage.getAmountAsInt(INPUT_SLOT),
-            "Lava bucket should remain in input");
-        Assertions.assertEquals(0, itemStorage.getAmountAsInt(OUTPUT_SLOT),
-            "Output should remain empty");
-    }
-
-    @Test
-    public void testFillInternalWithOutputSlotBlocked(MinecraftServer server) {
-        // Arrange
-        FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
-        ItemStorage itemStorage = createItemStorage();
-
-        // Set up input: water bucket
-        itemStorage.set(INPUT_SLOT, ItemResource.of(Items.WATER_BUCKET), 1);
-        // Output slot has glass bottle
-        itemStorage.set(OUTPUT_SLOT, ItemResource.of(Items.GLASS_BOTTLE), 1);
-
-        // Act
-        InternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
-
-        // Assert - should not work because output has wrong item
-        Assertions.assertEquals(0, fluidStorage.getAmountAsInt(TANK_SLOT),
-            "Fluid tank should remain empty");
-        Assertions.assertEquals(1, itemStorage.getAmountAsInt(INPUT_SLOT),
-            "Input bucket should remain");
-        Assertions.assertEquals(1, itemStorage.getAmountAsInt(OUTPUT_SLOT),
-            "Output should still contain a glass bottle");
-    }
-
-    // ========== Tests for fluid handler capability path (non-bucket items) ==========
-
-    // Fluid container tests are commented out because they require the full NeoForge capability system
-    // which is not available in unit tests. These should be converted to game tests.
-
-    @Test
-    public void testFillInternalWithFluidContainer(MinecraftServer server) {
-        // Arrange
-        FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
-        ItemStorage itemStorage = createItemStorage();
-
-        // Create a fluid container with 500mb of water (half a bucket)
-        ItemStack fluidContainer = getFilledFluidTank(Fluids.WATER, 500);
-        itemStorage.set(INPUT_SLOT, ItemResource.of(fluidContainer), 1);
-
-        // Act
-        InternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
+        int filled = InternalTankTasks.fillUsingItem(fluidStorage, TANK_SLOT, itemToDrain);
 
         // Assert
-        Assertions.assertEquals(500, fluidStorage.getAmountAsInt(TANK_SLOT),
-            "Fluid tank should contain 500mb of water");
-        Assertions.assertEquals(Fluids.WATER, fluidStorage.getResource(TANK_SLOT).getFluid(),
-            "Fluid tank should contain water");
-        Assertions.assertEquals(0, itemStorage.getAmountAsInt(INPUT_SLOT),
-            "Input slot should be empty after transfer");
-        Assertions.assertEquals(1, itemStorage.getAmountAsInt(OUTPUT_SLOT),
-            "Output slot should contain the empty container");
+        Assertions.assertEquals(0, filled);
+
+        // Ensure the item stayed in the input
+        Assertions.assertEquals(1, itemStorage.getAmountAsInt(INPUT_SLOT));
+        Assertions.assertEquals(Items.LAVA_BUCKET, itemStorage.getResource(INPUT_SLOT).getItem());
+        Assertions.assertEquals(Items.BUCKET.getDefaultMaxStackSize(), itemStorage.getAmountAsInt(OUTPUT_SLOT));
     }
 
     @Test
-    public void testFillInternalWithFluidContainerToPartiallyFilledTank(MinecraftServer server) {
+    public void fillUsingItem_NoInput_NothingChanges(MinecraftServer server) {
         // Arrange
         FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
-        ItemStorage itemStorage = createItemStorage();
 
-        // Pre-fill tank with 1 bucket
-        fluidStorage.set(TANK_SLOT, FluidResource.of(Fluids.WATER), FluidType.BUCKET_VOLUME);
+        // Due to validation, the restricted ItemAccess should automatically push empties into the output
+        ItemStorage itemStorage = createItemStorage(this::isNonEmptyFluidStorage);
 
-        // Create a fluid container with 2 buckets of water
-        ItemStack fluidContainer = getFilledFluidTank(Fluids.WATER, FluidType.BUCKET_VOLUME * 2);
-        itemStorage.set(INPUT_SLOT, ItemResource.of(fluidContainer), 1);
+        // Restricted handler, item is in input, but exchange can place items in output if they don't match the filter
+        ItemAccess itemToDrain = EnderResourceUtil.getItemAccessRestricted(itemStorage, INPUT_SLOT, OUTPUT_SLOT);
 
         // Act
-        InternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
+        int filled = InternalTankTasks.fillUsingItem(fluidStorage, TANK_SLOT, itemToDrain);
 
         // Assert
-        Assertions.assertEquals(FluidType.BUCKET_VOLUME * 3, fluidStorage.getAmountAsInt(TANK_SLOT),
-            "Fluid tank should contain 3 buckets total");
-        Assertions.assertEquals(0, itemStorage.getAmountAsInt(INPUT_SLOT),
-            "Input slot should be empty");
-        Assertions.assertEquals(1, itemStorage.getAmountAsInt(OUTPUT_SLOT),
-            "Output slot should contain the empty container");
+        Assertions.assertEquals(0, filled);
+
+        // Ensure the item stayed in the input
+        Assertions.assertEquals(0, itemStorage.getAmountAsInt(INPUT_SLOT));
+        Assertions.assertEquals(0, itemStorage.getAmountAsInt(OUTPUT_SLOT));
     }
 
-    @Test
-    public void testFillInternalWithFluidContainerExceedingCapacity(MinecraftServer server) {
-        // Arrange - tank can only hold 2 buckets
-        FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 2);
-        ItemStorage itemStorage = createItemStorage();
+    private boolean isNonEmptyFluidStorage(int index, ItemResource itemResource) {
+        var fluidHandler = ItemAccess.forStack(itemResource.toStack()).getCapability(Capabilities.Fluid.ITEM);
+        if (fluidHandler == null) {
+            return false;
+        }
 
-        // Create a fluid container with 3 buckets of water (more than tank capacity)
-        ItemStack fluidContainer = getFilledFluidTank(Fluids.WATER, FluidType.BUCKET_VOLUME * 3);
-        itemStorage.set(INPUT_SLOT, ItemResource.of(fluidContainer), 1);
-
-        // Act
-        InternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
-
-        // Assert - only 2 buckets should transfer
-        Assertions.assertEquals(FluidType.BUCKET_VOLUME * 2, fluidStorage.getAmountAsInt(TANK_SLOT),
-            "Fluid tank should be full (2 buckets)");
-        Assertions.assertEquals(0, itemStorage.getAmountAsInt(INPUT_SLOT),
-            "Input slot should be empty");
-        Assertions.assertEquals(1, itemStorage.getAmountAsInt(OUTPUT_SLOT),
-            "Output slot should contain the container");
-
-        // Check that the output container has the remaining fluid (1 bucket)
-        ItemStack outputStack = EnderResourceUtil.getItemStack(itemStorage, OUTPUT_SLOT);
-        var fluidContent = outputStack.get(EIODataComponents.ITEM_FLUID_CONTENT);
-        Assertions.assertNotNull(fluidContent, "Output container should have fluid content");
-        FluidStack fluidStack = fluidContent.copy();
-        Assertions.assertEquals(FluidType.BUCKET_VOLUME, fluidStack.getAmount(),
-            "Output container should have 1 bucket remaining");
-    }
-
-    @Test
-    public void testFillInternalWithEmptyFluidContainer(MinecraftServer server) {
-        // Arrange
-        FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
-        ItemStorage itemStorage = createItemStorage();
-
-        // Create an empty fluid container
-        ItemStack emptyContainer = getFilledFluidTank(Fluids.WATER, 0);
-        itemStorage.set(INPUT_SLOT, ItemResource.of(emptyContainer), 1);
-
-        // Act
-        InternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
-
-        // Assert - nothing should happen with empty container
-        Assertions.assertEquals(0, fluidStorage.getAmountAsInt(TANK_SLOT),
-            "Fluid tank should remain empty");
-        Assertions.assertEquals(0, itemStorage.getAmountAsInt(INPUT_SLOT),
-            "Input should be moved even though empty");
-        Assertions.assertEquals(1, itemStorage.getAmountAsInt(OUTPUT_SLOT),
-            "Output should contain the empty container");
-    }
-
-    @Test
-    public void testFillInternalWithFluidContainerWhenOutputNotEmpty(MinecraftServer server) {
-        // Arrange
-        FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
-        ItemStorage itemStorage = createItemStorage();
-
-        // Create a fluid container with water
-        ItemStack fluidContainer = getFilledFluidTank(Fluids.WATER, FluidType.BUCKET_VOLUME);
-        itemStorage.set(INPUT_SLOT, ItemResource.of(fluidContainer), 1);
-
-        // Output slot already has something
-        itemStorage.set(OUTPUT_SLOT, ItemResource.of(Items.COBBLESTONE), 1);
-
-        // Act
-        InternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
-
-        // Assert - transfer should not happen because output is not empty
-        Assertions.assertEquals(0, fluidStorage.getAmountAsInt(TANK_SLOT),
-            "Fluid tank should remain empty");
-        Assertions.assertEquals(1, itemStorage.getAmountAsInt(INPUT_SLOT),
-            "Input container should remain");
-        Assertions.assertEquals(Items.COBBLESTONE, itemStorage.getResource(OUTPUT_SLOT).getItem(),
-            "Output should still have cobblestone");
-    }
-
-    @Test
-    public void testFillInternalWithFluidContainerDifferentFluidTypes(MinecraftServer server) {
-        // Arrange
-        FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
-        ItemStorage itemStorage = createItemStorage();
-
-        // Pre-fill tank with water
-        fluidStorage.set(TANK_SLOT, FluidResource.of(Fluids.WATER), FluidType.BUCKET_VOLUME);
-
-        // Try to add lava from a fluid container
-        ItemStack lavaContainer = getFilledFluidTank(Fluids.LAVA, FluidType.BUCKET_VOLUME);
-        itemStorage.set(INPUT_SLOT, ItemResource.of(lavaContainer), 1);
-
-        // Act
-        InternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
-
-        // Assert - should not mix fluids
-        Assertions.assertEquals(FluidType.BUCKET_VOLUME, fluidStorage.getAmountAsInt(TANK_SLOT),
-            "Fluid tank should still contain only 1 bucket");
-        Assertions.assertEquals(Fluids.WATER, fluidStorage.getResource(TANK_SLOT).getFluid(),
-            "Fluid tank should still contain water");
-        Assertions.assertEquals(1, itemStorage.getAmountAsInt(INPUT_SLOT),
-            "Input should remain in place");
-        Assertions.assertEquals(0, itemStorage.getAmountAsInt(OUTPUT_SLOT),
-            "No output should be generated");
-
-        // The lava should remain in the input slot
-        ItemStack outputStack = EnderResourceUtil.getItemStack(itemStorage, INPUT_SLOT);
-        var fluidContent = outputStack.get(EIODataComponents.ITEM_FLUID_CONTENT);
-        Assertions.assertNotNull(fluidContent, "Input container should have fluid content");
-        FluidStack fluidStack = fluidContent.copy();
-        Assertions.assertEquals(Fluids.LAVA, fluidStack.getFluid(), "Container should still have lava");
-        Assertions.assertEquals(FluidType.BUCKET_VOLUME, fluidStack.getAmount(),
-            "Container should still have full bucket of lava");
+        return !ResourceHandlerUtil.isEmpty(fluidHandler);
     }
 
     // endregion
     
-    // region drainInternal tests
+    // region drainIntoItem tests
 
     @Test
-    public void testDrainInternalWithEmptyBucket(MinecraftServer server) {
+    public void drainIntoItem_EmptyBucket(MinecraftServer server) {
         // Arrange
         FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
-        ItemStorage itemStorage = createItemStorage();
-
-        // Tank has water
         fluidStorage.set(TANK_SLOT, FluidResource.of(Fluids.WATER), FluidType.BUCKET_VOLUME);
 
-        // Set up input: empty bucket
+        ItemStorage itemStorage = createItemStorage(this::isNonFullFluidStorage);
         itemStorage.set(INPUT_SLOT, ItemResource.of(Items.BUCKET), 1);
 
+        // Restricted handler, item is in input, but exchange can place items in output if they don't match the filter
+        ItemAccess itemToFill = EnderResourceUtil.getItemAccessRestricted(itemStorage, INPUT_SLOT, OUTPUT_SLOT);
+
         // Act
-        InternalTankTasks.drainInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
+        int drained = InternalTankTasks.drainIntoItem(fluidStorage, TANK_SLOT, itemToFill);
 
         // Assert
-        Assertions.assertEquals(0, fluidStorage.getAmountAsInt(TANK_SLOT),
-            "Fluid tank should be empty");
-        Assertions.assertEquals(0, itemStorage.getAmountAsInt(INPUT_SLOT),
-            "Input slot should be empty");
-        Assertions.assertEquals(1, itemStorage.getAmountAsInt(OUTPUT_SLOT),
-            "Output slot should contain one water bucket");
-        Assertions.assertEquals(Items.WATER_BUCKET, itemStorage.getResource(OUTPUT_SLOT).getItem(),
-            "Output slot should contain one water bucket");
+        Assertions.assertEquals(FluidType.BUCKET_VOLUME, drained);
+        Assertions.assertEquals(0, fluidStorage.getAmountAsInt(TANK_SLOT));
+
+        Assertions.assertEquals(0, itemStorage.getAmountAsInt(INPUT_SLOT));
+        Assertions.assertEquals(1, itemStorage.getAmountAsInt(OUTPUT_SLOT));
+        Assertions.assertEquals(Items.WATER_BUCKET, itemStorage.getResource(OUTPUT_SLOT).getItem());
     }
 
     @Test
-    public void testDrainInternalWithWaterBucketItem(MinecraftServer server) {
+    public void drainIntoItem_MultipleEmptyBuckets_OneBucketFilled(MinecraftServer server) {
         // Arrange
         FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
-        ItemStorage itemStorage = createItemStorage();
-
-        // Tank has water
         fluidStorage.set(TANK_SLOT, FluidResource.of(Fluids.WATER), FluidType.BUCKET_VOLUME);
 
-        // Set up input: already full water bucket
-        itemStorage.set(INPUT_SLOT, ItemResource.of(Items.WATER_BUCKET), 1);
+        ItemStorage itemStorage = createItemStorage(this::isNonFullFluidStorage);
+        itemStorage.set(INPUT_SLOT, ItemResource.of(Items.BUCKET), 2);
+
+        // Restricted handler, item is in input, but exchange can place items in output if they don't match the filter
+        ItemAccess itemToFill = EnderResourceUtil.getItemAccessRestricted(itemStorage, INPUT_SLOT, OUTPUT_SLOT);
 
         // Act
-        InternalTankTasks.drainInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
+        int drained = InternalTankTasks.drainIntoItem(fluidStorage, TANK_SLOT, itemToFill);
 
         // Assert
-        Assertions.assertEquals(FluidType.BUCKET_VOLUME, fluidStorage.getAmountAsInt(TANK_SLOT),
-            "Fluid tank should still have water");
-        Assertions.assertEquals(0, itemStorage.getAmountAsInt(INPUT_SLOT),
-            "Input slot should be empty");
-        Assertions.assertEquals(1, itemStorage.getAmountAsInt(OUTPUT_SLOT),
-            "Output slot should contain the water bucket");
+        Assertions.assertEquals(FluidType.BUCKET_VOLUME, drained);
+        Assertions.assertEquals(0, fluidStorage.getAmountAsInt(TANK_SLOT));
+
+        Assertions.assertEquals(1, itemStorage.getAmountAsInt(INPUT_SLOT));
+        Assertions.assertEquals(1, itemStorage.getAmountAsInt(OUTPUT_SLOT));
+        Assertions.assertEquals(Items.WATER_BUCKET, itemStorage.getResource(OUTPUT_SLOT).getItem());
     }
 
     @Test
-    public void testDrainInternalWithEmptyFluidTank(MinecraftServer server) {
+    public void drainIntoItem_EmptyFluidTank_TankNotFull(MinecraftServer server) {
         // Arrange
         FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
-        ItemStorage itemStorage = createItemStorage();
-
-        // Tank has water
         fluidStorage.set(TANK_SLOT, FluidResource.of(Fluids.WATER), FluidType.BUCKET_VOLUME);
 
-        // Set up input: empty fluid tank
-        itemStorage.setStack(INPUT_SLOT, getFilledFluidTank(Fluids.WATER, 0));
+        ItemStorage itemStorage = createItemStorage(this::isNonFullFluidStorage);
+        itemStorage.set(INPUT_SLOT, ItemResource.of(EIOBlocks.FLUID_TANK.asItem()), 1);
+
+        // Restricted handler, item is in input, but exchange can place items in output if they don't match the filter
+        ItemAccess itemToFill = EnderResourceUtil.getItemAccessRestricted(itemStorage, INPUT_SLOT, OUTPUT_SLOT);
 
         // Act
-        InternalTankTasks.drainInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
+        int drained = InternalTankTasks.drainIntoItem(fluidStorage, TANK_SLOT, itemToFill);
 
         // Assert
-        Assertions.assertEquals(0, fluidStorage.getAmountAsInt(TANK_SLOT),
-            "Fluid tank should be empty");
-        Assertions.assertEquals(0, itemStorage.getAmountAsInt(INPUT_SLOT),
-            "Input slot should be empty");
-        Assertions.assertEquals(1, itemStorage.getAmountAsInt(OUTPUT_SLOT),
-            "Output slot should contain a fluid tank");
-        Assertions.assertEquals(EIOBlocks.FLUID_TANK_ITEM.get(), itemStorage.getResource(OUTPUT_SLOT).getItem(),
-            "Output slot should contain a fluid tank");
+        Assertions.assertEquals(FluidType.BUCKET_VOLUME, drained);
+        Assertions.assertEquals(0, fluidStorage.getAmountAsInt(TANK_SLOT));
 
-        // The output container should contain water
-        ItemStack outputStack = EnderResourceUtil.getItemStack(itemStorage, OUTPUT_SLOT);
-        var fluidContent = outputStack.get(EIODataComponents.ITEM_FLUID_CONTENT);
-        Assertions.assertNotNull(fluidContent, "Output container should have fluid content");
-        FluidStack fluidStack = fluidContent.copy();
-        Assertions.assertEquals(Fluids.WATER, fluidStack.getFluid(), "Container should have water");
-        Assertions.assertEquals(FluidType.BUCKET_VOLUME, fluidStack.getAmount(),
-            "Container should have a buckets worth of water");
+        // n.b. the item should remain in the input slot because it still has room for more fluid.
+        // the Fluid Tank should ideally also filter for whether the tank has a *different* fluid in case it's no longer a valid target, and chuck the item to output manually.
+        Assertions.assertEquals(1, itemStorage.getAmountAsInt(INPUT_SLOT));
+        Assertions.assertEquals(EIOBlocks.FLUID_TANK.asItem(), itemStorage.getResource(INPUT_SLOT).getItem());
+        Assertions.assertEquals(EnderResourceUtil.getItemAccess(itemStorage, INPUT_SLOT).getCapability(Capabilities.Fluid.ITEM).getAmountAsInt(0), FluidType.BUCKET_VOLUME);
+        Assertions.assertEquals(0, itemStorage.getAmountAsInt(OUTPUT_SLOT));
     }
 
     @Test
-    public void testDrainInternalWithFullFluidTank(MinecraftServer server) {
+    public void drainIntoItem_FullFluidTank_NothingChanges(MinecraftServer server) {
         // Arrange
         FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
-        ItemStorage itemStorage = createItemStorage();
-
-        // Tank has water
         fluidStorage.set(TANK_SLOT, FluidResource.of(Fluids.WATER), FluidType.BUCKET_VOLUME);
 
-        // Set up input: empty fluid tank
+        ItemStorage itemStorage = createItemStorage(this::isNonFullFluidStorage);
         itemStorage.setStack(INPUT_SLOT, getFilledFluidTank(Fluids.WATER, FluidTankBlockEntity.Standard.CAPACITY));
 
+        // Restricted handler, item is in input, but exchange can place items in output if they don't match the filter
+        ItemAccess itemToFill = EnderResourceUtil.getItemAccessRestricted(itemStorage, INPUT_SLOT, OUTPUT_SLOT);
+
         // Act
-        InternalTankTasks.drainInternal(fluidStorage, TANK_SLOT, itemStorage, INPUT_SLOT, OUTPUT_SLOT);
+        int drained = InternalTankTasks.drainIntoItem(fluidStorage, TANK_SLOT, itemToFill);
 
         // Assert
-        Assertions.assertEquals(FluidType.BUCKET_VOLUME, fluidStorage.getAmountAsInt(TANK_SLOT),
-            "Fluid tank should still have water");
-        Assertions.assertEquals(0, itemStorage.getAmountAsInt(INPUT_SLOT),
-            "Input slot should be empty");
-        Assertions.assertEquals(EIOBlocks.FLUID_TANK_ITEM.get(), itemStorage.getResource(OUTPUT_SLOT).getItem(),
-            "Output slot should contain a fluid tank");
+        Assertions.assertEquals(0, drained);
+        Assertions.assertEquals(FluidType.BUCKET_VOLUME, fluidStorage.getAmountAsInt(TANK_SLOT));
+
+        Assertions.assertEquals(1, itemStorage.getAmountAsInt(INPUT_SLOT));
+        Assertions.assertEquals(EIOBlocks.FLUID_TANK.asItem(), itemStorage.getResource(INPUT_SLOT).getItem());
+    }
+
+    @Test
+    public void drainIntoItem_FluidTank_WrongFluid_NothingChanges(MinecraftServer server) {
+        // Arrange
+        FluidStorage fluidStorage = createFluidStorage(FluidType.BUCKET_VOLUME * 10);
+        fluidStorage.set(TANK_SLOT, FluidResource.of(Fluids.WATER), FluidType.BUCKET_VOLUME);
+
+        ItemStorage itemStorage = createItemStorage(this::isNonFullFluidStorage);
+        itemStorage.setStack(INPUT_SLOT, getFilledFluidTank(Fluids.LAVA, FluidType.BUCKET_VOLUME));
+
+        // Restricted handler, item is in input, but exchange can place items in output if they don't match the filter
+        ItemAccess itemToFill = EnderResourceUtil.getItemAccessRestricted(itemStorage, INPUT_SLOT, OUTPUT_SLOT);
+
+        // Act
+        int drained = InternalTankTasks.drainIntoItem(fluidStorage, TANK_SLOT, itemToFill);
+
+        // Assert
+        Assertions.assertEquals(0, drained);
+        Assertions.assertEquals(FluidType.BUCKET_VOLUME, fluidStorage.getAmountAsInt(TANK_SLOT));
+
+        Assertions.assertEquals(1, itemStorage.getAmountAsInt(INPUT_SLOT));
+        Assertions.assertEquals(EIOBlocks.FLUID_TANK.asItem(), itemStorage.getResource(INPUT_SLOT).getItem());
+    }
+
+    private boolean isNonFullFluidStorage(int index, ItemResource itemResource) {
+        var fluidHandler = ItemAccess.forStack(itemResource.toStack()).getCapability(Capabilities.Fluid.ITEM);
+        if (fluidHandler == null) {
+            return false;
+        }
+
+        return !ResourceHandlerUtil.isFull(fluidHandler);
     }
 
     // endregion

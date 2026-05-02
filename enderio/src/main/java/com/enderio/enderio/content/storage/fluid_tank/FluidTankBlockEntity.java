@@ -5,6 +5,7 @@ import com.enderio.core.common.storage.layout.FluidStorageLayout;
 import com.enderio.core.common.storage.layout.ItemStorageLayout;
 import com.enderio.core.common.storage.layout.SlotTemplates;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
+import com.enderio.core.common.util.EnderResourceUtil;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.io.fluid.FluidItemInteractive;
 import com.enderio.enderio.foundation.state.MachineState;
@@ -95,6 +96,9 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
     public static final SingleResourceSlotKey<ItemResource> FLUID_DRAIN_INPUT = new SingleResourceSlotKey<>();
     public static final SingleResourceSlotKey<ItemResource> FLUID_DRAIN_OUTPUT = new SingleResourceSlotKey<>();
 
+    private final ItemAccess fillItemAccess;
+    private final ItemAccess drainItemAccess;
+
     public FluidTankBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState, true);
 
@@ -115,6 +119,10 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
                 }
             }
         };
+
+        // Ensures that when an item is no longer fit to be an input, it'll overflow to the output.
+        fillItemAccess = EnderResourceUtil.getItemAccessRestricted(getInventory(), FLUID_FILL_INPUT, FLUID_FILL_OUTPUT);
+        drainItemAccess = EnderResourceUtil.getItemAccessRestricted(getInventory(), FLUID_DRAIN_INPUT, FLUID_DRAIN_OUTPUT);
     }
 
     public abstract int getCapacity();
@@ -151,10 +159,17 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
     public boolean acceptItemFill(ItemResource item) {
         var stack = item.toStack();
 
-        // bucket types
+        // An item that has fluid that is compatible with our tank.
         var fluidHandlerCap = ItemAccess.forStack(stack).getCapability(Capabilities.Fluid.ITEM);
         if (fluidHandlerCap != null && !ResourceHandlerUtil.isEmpty(fluidHandlerCap)) {
-            return true;
+            FluidResource currentFluid = fluidStorage.getResource(TANK_SLOT);
+            if (currentFluid.isEmpty()) {
+                return true;
+            }
+
+            if (ResourceHandlerUtil.contains(fluidHandlerCap, currentFluid)) {
+                return true;
+            }
         }
 
         // fill recipes
@@ -171,18 +186,36 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
     }
 
     public boolean acceptItemDrain(ItemResource item) {
+        var currentFluid = fluidStorage.getResource(TANK_SLOT);
+
         var stack = item.toStack();
 
-        // bucket types
+        // Any item that can accept fluid.
         var fluidHandlerCap = ItemAccess.forStack(stack).getCapability(Capabilities.Fluid.ITEM);
         if (fluidHandlerCap != null && !ResourceHandlerUtil.isFull(fluidHandlerCap)) {
-            return true;
+            if (ResourceHandlerUtil.isEmpty(fluidHandlerCap)) {
+                return true;
+            }
+
+            // If we have no fluid -and- the incoming container is completely empty - allow it to wait.
+            // This prevents a partially filled tank permanently hanging out in the input
+            if (currentFluid.isEmpty() && ResourceHandlerUtil.isEmpty(fluidHandlerCap)) {
+                return true;
+            }
+
+            // Ensure the currently stored fluid can go into this container.
+            if (currentRecipe.isPresent()) {
+                for (int i = 0; i < fluidHandlerCap.size(); i++) {
+                    var resource = fluidHandlerCap.getResource(i);
+                    if (resource.equals(currentFluid) && fluidHandlerCap.getAmountAsLong(i) < fluidHandlerCap.getCapacityAsLong(i, resource)) {
+                        return true;
+                    }
+                }
+            }
         }
 
         // Mending
-        FluidStack fluid = fluidStorage.getStack(TANK_SLOT);
-
-        if (stack.isDamageableItem() && !fluid.isEmpty() && fluid.is(Tags.Fluids.EXPERIENCE)) {
+        if (currentFluid.is(Tags.Fluids.EXPERIENCE) && stack.isDamaged()) {
             var enchantmentsRecipe = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
             var mendingEnchantment = enchantmentsRecipe.getOrThrow(Enchantments.MENDING);
 
@@ -235,15 +268,15 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
 
     private void fillInternal() {
-        InternalTankTasks.fillInternal(fluidStorage, TANK_SLOT, getInventory(), FLUID_FILL_INPUT, FLUID_FILL_OUTPUT);
+        InternalTankTasks.fillUsingItem(fluidStorage, TANK_SLOT, fillItemAccess);
     }
 
     private void drainInternal() {
-        InternalTankTasks.drainInternal(fluidStorage, TANK_SLOT, getInventory(), FLUID_DRAIN_INPUT, FLUID_DRAIN_OUTPUT);
+        InternalTankTasks.drainIntoItem(fluidStorage, TANK_SLOT, drainItemAccess);
     }
 
     private void tryMendTool() {
-        InternalTankTasks.tryMendTool(level.registryAccess(), fluidStorage, TANK_SLOT, getInventory(), FLUID_DRAIN_INPUT, FLUID_DRAIN_OUTPUT);
+        InternalTankTasks.tryMendTool(level.registryAccess(), fluidStorage, TANK_SLOT, drainItemAccess);
     }
 
     // endregion

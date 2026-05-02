@@ -5,6 +5,7 @@ import com.enderio.core.common.storage.layout.FluidStorageLayout;
 import com.enderio.core.common.storage.layout.ItemStorageLayout;
 import com.enderio.core.common.storage.layout.SlotTemplates;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
+import com.enderio.core.common.util.EnderResourceUtil;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
@@ -83,6 +84,7 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
     public static final SingleResourceSlotKey<ItemResource> FLUID_FILL_OUTPUT = new SingleResourceSlotKey<>();
     public static final SingleResourceSlotKey<ItemResource> CAPACITOR = new SingleResourceSlotKey<>();
 
+    private final ItemAccess fillItemAccess;
 
     public NiardBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.NIARD.get(), worldPosition, blockState, false, CapacitorSupport.REQUIRED, CAPACITOR,
@@ -101,6 +103,8 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
         };
 
         iterator = new NiardRangeIterator(worldPosition, actionRange);
+
+        fillItemAccess = EnderResourceUtil.getItemAccessRestricted(getInventory(), FLUID_FILL_INPUT, FLUID_FILL_OUTPUT);
     }
 
     public FluidStorage getFluidStorage() {
@@ -123,7 +127,7 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
     }
 
     private void fillTank() {
-        InternalTankTasks.fillInternal(fluidStorage, TANK, getInventory(), FLUID_FILL_INPUT, FLUID_FILL_OUTPUT);
+        InternalTankTasks.fillUsingItem(fluidStorage, TANK, fillItemAccess);
     }
 
     private void tryPlaceFluid() {
