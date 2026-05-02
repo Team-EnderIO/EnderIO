@@ -3,6 +3,7 @@ package com.enderio.modded_conduits.common.modules.refinedstorage;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitCapabilityAccessor;
 import com.enderio.enderio.api.conduits.ConduitType;
+import com.enderio.enderio.api.conduits.connection.ConnectionReader;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.mojang.serialization.MapCodec;
@@ -78,8 +79,8 @@ public record RSConduit(ResourceLocation texture, Component description)
     }
 
     @Override
-    public <TCapability, TContext> @Nullable TCapability proxyCapability(Level level, @Nullable ConduitNode node,
-            BlockCapability<TCapability, TContext> capability, @Nullable TContext tContext) {
+    public @Nullable <TCapability, TContext> TCapability proxyCapability(Level level, ConnectionReader connectionReader, @Nullable ConduitNode node,
+        BlockCapability<TCapability, TContext> capability, @Nullable TContext tContext) {
 
         if (node != null && capability == RefinedStorageNeoForgeApiImpl.INSTANCE.getNetworkNodeContainerProviderCapability()) {
             var data = node.getOrCreateNodeData(RSConduitNodeData.TYPE);
@@ -88,6 +89,7 @@ public record RSConduit(ResourceLocation texture, Component description)
                 return (TCapability) data.containerProvider;
             }
         }
+
         return null;
     }
 

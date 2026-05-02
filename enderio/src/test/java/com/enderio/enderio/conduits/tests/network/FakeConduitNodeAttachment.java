@@ -87,22 +87,6 @@ public class FakeConduitNodeAttachment implements IConduitNodeAttachment {
     }
 
     @Override
-    public <T extends ConnectionConfig> T getConnectionConfig(Holder<Conduit<?, ?>> conduit, Direction side, ConnectionConfigType<T> type) {
-        if (this.conduit != conduit) {
-            throw new IllegalArgumentException("Conduit type not supported by this fake attachment");
-        }
-
-        var config = connectionConfigs.computeIfAbsent(side, s -> type.getDefault());
-        if (config.type() != type) {
-            config = type.getDefault();
-            connectionConfigs.put(side, config);
-        }
-
-        //noinspection unchecked
-        return (T)config;
-    }
-
-    @Override
     public void setConnectionConfig(Holder<Conduit<?, ?>> conduit, Direction side, ConnectionConfig config) {
         if (this.conduit != conduit) {
             throw new IllegalArgumentException("Conduit type not supported by this fake attachment");

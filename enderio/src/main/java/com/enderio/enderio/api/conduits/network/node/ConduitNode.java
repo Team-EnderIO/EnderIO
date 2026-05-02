@@ -3,6 +3,7 @@ package com.enderio.enderio.api.conduits.network.node;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitCapabilityAccessor;
 import com.enderio.enderio.api.conduits.ConduitType;
+import com.enderio.enderio.api.conduits.connection.ConnectionReader;
 import com.enderio.enderio.api.conduits.connection.ConnectionStatus;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
@@ -22,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
  * Each node represents a single conduit within a bundle, and can have up to six connections in any {@link Direction}.
  */
 @ApiStatus.AvailableSince("8.0.0")
-public interface ConduitNode extends ConduitCapabilityAccessor {
+public interface ConduitNode extends ConduitCapabilityAccessor, ConnectionReader {
     /**
      * @return the conduit the node represents.
      * @apiNote Currently the node must be valid (loaded, attached etc.) for this to not throw an exception.
@@ -125,39 +126,6 @@ public interface ConduitNode extends ConduitCapabilityAccessor {
      * @throws IllegalStateException if this node is not loaded
      */
     boolean hasRedstoneSignal(@Nullable DyeColor signalColor);
-
-    @ApiStatus.Experimental
-    ConnectionStatus getConnectionStatus(Direction side);
-
-    /**
-     * @param side side to check for.
-     * @return whether this node is connected to a block on this {@code side}.
-     * @throws IllegalStateException if this node is not loaded
-     */
-    boolean isConnectedToBlock(Direction side);
-
-    /**
-     * @param side side to check for.
-     * @return whether this node is connected to a block or another conduit on this {@code side}.
-     * @throws IllegalStateException if this node is not loaded
-     */
-    boolean isConnectedTo(Direction side);
-
-    /**
-     * @param side the connection to query.
-     * @return the configuration for this connection, untyped.
-     * @throws IllegalStateException if this node is not loaded
-     */
-    ConnectionConfig getConnectionConfig(Direction side);
-
-    /**
-     * @param side the connection to query.
-     * @param type the type of configuration to get.
-     * @return the configuration for this connection.
-     * @throws IllegalStateException if this node is not loaded
-     * @throws IllegalStateException if the type requested does not match the stored type.
-     */
-    <T extends ConnectionConfig> T getConnectionConfig(Direction side, ConnectionConfigType<T> type);
 
     /**
      * @param side connection side to get an inventory for.

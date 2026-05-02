@@ -10,6 +10,7 @@ import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitCapabilityAccessor;
 import com.enderio.enderio.api.conduits.ConduitType;
+import com.enderio.enderio.api.conduits.connection.ConnectionReader;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.io.RedstoneControl;
@@ -148,11 +149,11 @@ public record MEConduit(ResourceLocation texture, Component description, AEColor
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public <TCapability, TContext> @Nullable TCapability proxyCapability(Level level, @Nullable ConduitNode node,
-            BlockCapability<TCapability, TContext> capability, @Nullable TContext tContext) {
+    public @Nullable <TCapability, TContext> TCapability proxyCapability(Level level, ConnectionReader connectionReader, @Nullable ConduitNode node,
+        BlockCapability<TCapability, TContext> capability, @Nullable TContext tContext) {
         if (node != null && capability == AECapabilities.IN_WORLD_GRID_NODE_HOST) {
-            // noinspection unchecked
             return (TCapability) node.getOrCreateNodeData(MEConduitNodeData.TYPE);
         }
 
