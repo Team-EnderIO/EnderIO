@@ -79,55 +79,6 @@ public class EnderResourceUtil {
 
     // endregion
 
-    // region Move resources between slots.
-
-    // TODO: should remove if unnecessary
-
-    public static boolean tryMoveItem(ResourceStorage<ItemResource> storage, int from, int to, @Nullable TransactionContext transaction) {
-        return tryMoveResource(storage, from, to, ItemResource.EMPTY, transaction);
-    }
-
-    public static boolean tryMoveItem(ResourceStorage<ItemResource> storage, ResourceSlotId<ItemResource> from, ResourceSlotId<ItemResource> to, @Nullable TransactionContext transaction) {
-        return tryMoveResource(storage, from, to, ItemResource.EMPTY, transaction);
-    }
-
-    public static boolean tryMoveFluid(ResourceStorage<FluidResource> storage, int from, int to, @Nullable TransactionContext transaction) {
-        return tryMoveResource(storage, from, to, FluidResource.EMPTY, transaction);
-    }
-
-    public static boolean tryMoveFluid(ResourceStorage<FluidResource> storage, ResourceSlotId<FluidResource> from, ResourceSlotId<FluidResource> to, @Nullable TransactionContext transaction) {
-        return tryMoveResource(storage, from, to, FluidResource.EMPTY, transaction);
-    }
-
-    /**
-     * Helper to move all the resources in one slot to another.
-     * @param storage
-     * @param from
-     * @param to
-     * @param <T>
-     */
-    public static <T extends Resource> boolean tryMoveResource(ResourceStorage<T> storage, int from, int to, T emptyResource, @Nullable TransactionContext transaction) {
-        T resourceToMove = storage.getResource(from);
-        int amountToMove = storage.getAmountAsInt(from);
-
-        try (Transaction subTransaction = Transaction.open(transaction)) {
-            int amountMoved = storage.insert(to, resourceToMove, amountToMove, subTransaction);
-            if (amountMoved != amountToMove) {
-                return false;
-            }
-
-            storage.setTransactional(from, emptyResource, 0, subTransaction);
-            subTransaction.commit();
-            return true;
-        }
-    }
-
-    public static <T extends Resource> boolean tryMoveResource(ResourceStorage<T> storage, ResourceSlotId<T> from, ResourceSlotId<T> to, T emptyResource, @Nullable TransactionContext transaction) {
-        return tryMoveResource(storage, from.index(storage.layout()), to.index(storage.layout()), emptyResource, transaction);
-    }
-
-    // endregion
-
     // region Move from one storage into specific slot of another storage.
 
     public static <T extends Resource> int moveInto(
