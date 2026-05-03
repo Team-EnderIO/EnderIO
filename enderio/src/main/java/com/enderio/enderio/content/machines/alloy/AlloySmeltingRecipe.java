@@ -12,6 +12,7 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
@@ -167,7 +168,7 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
     }
 
     @Override
-    public List<OutputStack> craft(Input container, RegistryAccess registryAccess) {
+    public List<OutputStack> craft(Input container, RandomSource randomSource, RegistryAccess registryAccess) {
         ItemStack outputStack = output.create();
         if (isSmelting) {
             int inputsConsumed = Math.min(3, container.inputs.stream().mapToInt(ItemStack::getCount).sum());

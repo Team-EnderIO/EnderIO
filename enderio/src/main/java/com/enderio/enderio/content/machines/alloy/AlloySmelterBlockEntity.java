@@ -46,6 +46,7 @@ import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.resource.ResourceStack;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jspecify.annotations.Nullable;
 
@@ -74,7 +75,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     private AlloySmelterMode mode = AlloySmelterMode.ALL;
 
     private final MachineCraftingManager<AlloySmeltingRecipe, AlloySmeltingRecipe.Input> craftingManager;
-    private AlloySmeltingRecipe.Input recipeInput;
+    private AlloySmeltingRecipe.@Nullable Input recipeInput;
 
     public AlloySmelterBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.ALLOY_SMELTER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, CAPACITOR, EnergyIOMode.Input,
@@ -181,7 +182,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
     public AlloySmeltingRecipe.Input getRecipeInput() {
         if (recipeInput == null) {
-            recipeInput = new AlloySmeltingRecipe.Input(mode, getInventory().getStacks(INPUTS));;
+            recipeInput = new AlloySmeltingRecipe.Input(mode, getInventory().getStacks(INPUTS));
         }
 
         return recipeInput;
@@ -265,9 +266,16 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         }
 
         @Override
-        public boolean tryProgressCraft(TransactionContext transaction) {
-            int consumed = getEnergyStorage().consume(getMaxEnergyUse(), transaction);
-            return consumed == getMaxEnergyUse();
+        public boolean tryProgressCraft(AlloySmeltingRecipe recipe) {
+            try (var transaction = Transaction.openRoot()) {
+                int consumed = getEnergyStorage().consume(getMaxEnergyUse(), transaction);
+                if (consumed == getMaxEnergyUse()) {
+                    transaction.commit();
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         @Override
@@ -302,7 +310,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         @Override
         public boolean insertRecipeOutputs(AlloySmeltingRecipe recipe, RandomSource random, TransactionContext transaction) {
             // TODO: Once we're fully migrated, just use assemble for single output recipes...
-            var results = recipe.craft(recipeInput(), level.registryAccess());
+            var results = recipe.craft(recipeInput(), random, level.registryAccess());
 
             for (var result : results) {
                 if (result.isItem()) {

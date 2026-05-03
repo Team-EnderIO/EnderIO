@@ -132,12 +132,8 @@ public final class MachineCraftingManager<T extends Recipe<U>, U extends RecipeI
 
         // If we're not done yet, attempt to make progress
         if (craftingTicks < totalCraftingTicks) {
-            // TODO: Do we want to do this? It just means less boilerplate in all the implementations if they're provided transactions.
-            try (var transaction = Transaction.openRoot()) {
-                if (context.tryProgressCraft(transaction)) {
-                    craftingTicks++;
-                    transaction.commit();
-                }
+            if (context.tryProgressCraft(currentRecipeHolder.value())) {
+                craftingTicks++;
             }
         }
 

@@ -13,6 +13,7 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
@@ -73,7 +74,7 @@ public final class SlicingRecipe implements MachineRecipe<SlicingRecipe.Input> {
     }
 
     @Override
-    public List<OutputStack> craft(Input recipeInput, RegistryAccess registryAccess) {
+    public List<OutputStack> craft(Input recipeInput, RandomSource randomSource, RegistryAccess registryAccess) {
         return getResultStacks(registryAccess);
     }
 

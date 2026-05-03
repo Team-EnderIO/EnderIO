@@ -172,7 +172,7 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
         if (!hasDeterminedOutputs) {
             hasDeterminedOutputs = true;
             T processedRecipeInput = prepareToDetermineOutputs(recipeHolder.value(), recipeInput);
-            outputs = recipeHolder.value().craft(processedRecipeInput, level.registryAccess());
+            outputs = recipeHolder.value().craft(processedRecipeInput, level.getRandom(), level.registryAccess());
 
             // TODO: Compact any items that are the same into singular stacks?
 

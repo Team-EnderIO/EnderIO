@@ -70,7 +70,7 @@ public class MachineCraftingManagerTests {
 
         when(context.recipeInput()).thenReturn(new SingleRecipeInput(new ItemStack(Items.BEEF)));
 
-        when(context.tryProgressCraft(any())).thenReturn(true);
+        when(context.tryProgressCraft(argThat(isValidRecipe))).thenReturn(true);
         when(context.getCraftingTicks(any())).thenReturn(1);
 
         when(context.consumeRecipeInputs(argThat(isValidRecipe), any())).thenReturn(true);

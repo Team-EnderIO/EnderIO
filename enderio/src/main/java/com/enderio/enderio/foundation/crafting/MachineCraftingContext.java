@@ -24,10 +24,13 @@ public interface MachineCraftingContext<T extends Recipe<U>, U extends RecipeInp
 
     /**
      * Called each tick, and should attempt to consume any running-costs for the tick (i.e. energy).
-     * @param transaction the transaction to use for any resource operations.
+     *
+     * @param recipe
      * @return whether the requisites for the tick have been met and consumed.
      */
-    boolean tryProgressCraft(TransactionContext transaction);
+    boolean tryProgressCraft(T recipe);
+
+    // Note: while consume and insert *could* be merged - order is important so lets take the ability for us to get it wrong out of the equation.
 
     boolean consumeRecipeInputs(T recipe, TransactionContext transaction);
 

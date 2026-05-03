@@ -13,6 +13,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -72,7 +73,7 @@ public final class PaintingRecipe implements MachineRecipe<PaintingRecipe.Input>
     }
 
     @Override
-    public List<OutputStack> craft(Input recipeInput, RegistryAccess registryAccess) {
+    public List<OutputStack> craft(Input recipeInput, RandomSource randomSource, RegistryAccess registryAccess) {
         List<OutputStack> outputs = new ArrayList<>();
         ItemStack outputStack = output.create();
 

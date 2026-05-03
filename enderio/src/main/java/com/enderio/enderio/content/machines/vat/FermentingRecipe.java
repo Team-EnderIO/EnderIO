@@ -18,6 +18,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -82,7 +83,7 @@ public final class FermentingRecipe implements MachineRecipe<FermentingRecipe.In
     }
 
     @Override
-    public List<OutputStack> craft(Input input, RegistryAccess registryAccess) {
+    public List<OutputStack> craft(Input input, RandomSource randomSource, RegistryAccess registryAccess) {
         ItemStack firstInput = input.getItem(0);
         ItemStack secondInput = input.getItem(1);
 

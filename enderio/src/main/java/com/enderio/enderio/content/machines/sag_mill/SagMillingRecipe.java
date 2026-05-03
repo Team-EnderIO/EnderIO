@@ -20,6 +20,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.ByIdMap;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.Item;
@@ -58,7 +59,6 @@ public final class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.In
 
     public static final RecipeSerializer<SagMillingRecipe> SERIALIZER = new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC);
 
-    private static final Random RANDOM = new Random();
     private final Ingredient input;
     private final List<OutputItem> outputs;
     private final int operationTime;
@@ -100,7 +100,7 @@ public final class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.In
     }
 
     @Override
-    public List<OutputStack> craft(Input recipeInput, RegistryAccess registryAccess) {
+    public List<OutputStack> craft(Input recipeInput, RandomSource randomSource, RegistryAccess registryAccess) {
         List<OutputStack> outputs = new ArrayList<>();
 
         // Iterate over the number of outputs
@@ -110,9 +110,9 @@ public final class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.In
         // Iterate over the number of outputs.
         // Without a grinding ball this only runs once.
         while (outputCount > 0) {
-            if (RANDOM.nextFloat() < outputCount) {
+            if (randomSource.nextFloat() < outputCount) {
                 for (OutputItem output : this.outputs) {
-                    if (output.isPresent() && RANDOM.nextFloat() < output.chance() * chanceMult) {
+                    if (output.isPresent() && randomSource.nextFloat() < output.chance() * chanceMult) {
                         // Collect the output
                         Optional<ItemStackTemplate> outputStackOptional = output.getItemStackTemplate();
                         if (outputStackOptional.isEmpty()) {

@@ -20,6 +20,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.flag.FeatureFlagSet;
@@ -129,7 +130,7 @@ public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.
     }
 
     @Override
-    public List<OutputStack> craft(Input input, RegistryAccess registryAccess) {
+    public List<OutputStack> craft(Input input, RandomSource randomSource, RegistryAccess registryAccess) {
         ItemStack vial = input.getItem(0);
 
         List<OutputStack> results = getResultStacks(registryAccess);

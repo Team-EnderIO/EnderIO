@@ -1,7 +1,6 @@
 package com.enderio.enderio.foundation;
 
 import com.enderio.core.common.recipes.OutputStack;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
@@ -21,15 +20,7 @@ public interface MachineRecipe<T extends RecipeInput> extends Recipe<T> {
      * Craft outputs for this recipe.
      * @return An array of item and fluid outputs.
      */
-    List<OutputStack> craft(T container, RegistryAccess registryAccess);
-
-    /**
-     * Craft outputs for this recipe.
-     * @return An array of item and fluid outputs.
-     */
-    default List<OutputStack> craft(T container, RegistryAccess registryAccess, RandomSource random) {
-        return craft(container, registryAccess);
-    }
+    List<OutputStack> craft(T container, RandomSource randomSource, RegistryAccess registryAccess);
 
     /**
      * Get the results of this machine, for display or verification purposes only.
@@ -38,7 +29,7 @@ public interface MachineRecipe<T extends RecipeInput> extends Recipe<T> {
     List<OutputStack> getResultStacks(RegistryAccess registryAccess);
 
     /**
-     * @deprecated Replaced by {@link #craft(T, RegistryAccess)} to support multiple outputs and output types.
+     * @deprecated Replaced by {@link #craft(RecipeInput, RandomSource, RegistryAccess)} to support multiple outputs and output types.
      */
     @Deprecated
     @Override
