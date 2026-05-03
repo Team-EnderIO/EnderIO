@@ -86,6 +86,7 @@ import com.enderio.enderio.content.filters.soul.EnderSoulFilter;
 import com.enderio.enderio.content.fun.EnderiosItem;
 import com.enderio.enderio.content.misc_blocks.skull.EnderSkullBlock;
 import com.enderio.enderio.content.tools.vials.SoulVialItem;
+import com.enderio.enderio.content.tools.vials.VoidVialItem;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOConduitTypes;
@@ -161,6 +162,9 @@ public class EnderIOClient {
             //switch to item model component in 1.21.2
             ItemProperties.register(EIOItems.SOUL_VIAL.get(), SoulVialItem.FILLED_MODEL_PROPERTY,
                 (stack, level, player, seed) -> SoulBoundUtils.isBound(stack) ? 1 : 0);
+
+            ItemProperties.register(EIOItems.VOID_VIAL.get(), VoidVialItem.FILLED_MODEL_PROPERTY,
+                (stack, level, player, seed) -> VoidVialItem.isFilled(stack) ? 1 : 0);
 
             ItemProperties.register(EIOItems.ENDERIOS.asItem(), EnderiosItem.INVERTED_PROPERTY,
                 (ClampedItemPropertyFunction) (itemStack, clientLevel, livingEntity, seed) -> {

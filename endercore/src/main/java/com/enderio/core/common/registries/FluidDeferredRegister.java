@@ -79,6 +79,8 @@ public class FluidDeferredRegister {
         @Nullable
         private Function<Fluid, BucketItem> bucketFactory;
 
+        private int tintColor = 0xFFFFFFFF;
+
         private Builder(String name) {
             this.name = name;
 
@@ -97,6 +99,11 @@ public class FluidDeferredRegister {
                         @Override
                         public ResourceLocation getFlowingTexture() {
                             return ResourceLocation.fromNamespaceAndPath(namespace, "block/" + name + "_flowing");
+                        }
+
+                        @Override
+                        public int getTintColor() {
+                            return tintColor;
                         }
                     });
                 }
@@ -133,6 +140,11 @@ public class FluidDeferredRegister {
 
         public Builder blockProperties(UnaryOperator<BlockBehaviour.Properties> blockProperties) {
             this.blockProperties = blockProperties.apply(this.blockProperties);
+            return this;
+        }
+
+        public Builder tintColor(int tintColor) {
+            this.tintColor = tintColor;
             return this;
         }
 

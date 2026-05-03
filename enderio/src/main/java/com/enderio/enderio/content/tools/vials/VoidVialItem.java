@@ -2,6 +2,7 @@ package com.enderio.enderio.content.tools.vials;
 
 import com.enderio.core.common.capability.StrictFluidHandlerItemStack;
 import com.enderio.core.common.util.TooltipUtil;
+import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.content.tools.ToolsLang;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.foundation.util.ExperienceUtil;
@@ -9,6 +10,7 @@ import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOFluids;
 import com.google.common.primitives.Ints;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
@@ -34,11 +36,18 @@ import java.util.List;
 @EventBusSubscriber
 public class VoidVialItem extends Item {
 
+    public static final ResourceLocation FILLED_MODEL_PROPERTY = EnderIO.rl("void_vial_filled");
+
     public static final ICapabilityProvider<ItemStack, Void, IFluidHandlerItem> FLUID_HANDLER_PROVIDER = (stack, v) -> new StrictFluidHandlerItemStack(
         () -> EIODataComponents.ITEM_FLUID_CONTENT, stack, Ints.saturatedCast(ExperienceUtil.getFluidFromLevel(10)), Tags.Fluids.EXPERIENCE);
 
     public VoidVialItem(Properties properties) {
         super(properties.stacksTo(1));
+    }
+
+    public static boolean isFilled(ItemStack stack) {
+        var fluidHandler = stack.getCapability(Capabilities.FluidHandler.ITEM);
+        return fluidHandler != null && !fluidHandler.getFluidInTank(0).isEmpty();
     }
 
     @Override
@@ -77,20 +86,13 @@ public class VoidVialItem extends Item {
 
     @Override
     public boolean isBarVisible(ItemStack stack) {
-        return stack.getCapability(Capabilities.FluidHandler.ITEM) != null;
+        return isFilled(stack);
     }
 
     @Override
     public int getBarColor(ItemStack stack) {
-        var fluidHandler = stack.getCapability(Capabilities.FluidHandler.ITEM);
-        var storedFluid = fluidHandler.getFluidInTank(0);
-
-        if (!storedFluid.isEmpty()) {
-            IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(storedFluid.getFluid());
-            return props.getTintColor();
-        }
-
-        return 0xFF000000;
+        // Color from XP Juice texture
+        return 0xFF66FF03;
     }
 
     @Override

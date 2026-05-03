@@ -4,6 +4,7 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
 import com.enderio.enderio.content.fun.EnderiosItem;
 import com.enderio.enderio.content.tools.vials.SoulVialItem;
+import com.enderio.enderio.content.tools.vials.VoidVialItem;
 import com.enderio.enderio.datagen.client.models.item.FacadeItemModelBuilder;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOFluids;
@@ -143,7 +144,12 @@ public class EIOItemModelProvider extends ItemModelProvider {
             .model(basicItem(EnderIO.rl("soul_vial_filled")))
             .end();
 
-        basicItem(EIOItems.VOID_VIAL.get());
+        basicItem(EIOItems.VOID_VIAL.get())
+            .override()
+            .predicate(VoidVialItem.FILLED_MODEL_PROPERTY, 1)
+            .model(basicItem(EnderIO.rl("void_vial_filled")))
+            .end();
+
         basicItem(EIOItems.EXPERIENCE_ROD.get());
         basicItem(EIOItems.YETA_WRENCH.get());
         basicItem(EIOItems.COORDINATE_SELECTOR.get());
