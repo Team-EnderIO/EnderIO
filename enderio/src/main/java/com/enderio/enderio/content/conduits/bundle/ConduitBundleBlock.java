@@ -294,6 +294,15 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
                 } else {
                     // TODO: Facade particles?
                 }
+            } else {
+                if (!player.getAbilities().instabuild) {
+                    if (conduitBundle.hasFacade()) {
+                        popResource(level, pos, conduitBundle.getFacadeProvider());
+                    } else {
+                        var lastConduit = conduitBundle.getConduits().getFirst();
+                        popResource(level, pos, ConduitBlockItem.getStackFor(lastConduit, 1));
+                    }
+                }
             }
 
             // When the block entity is removed, it will drop all necessary resources.
@@ -346,6 +355,17 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
         }
 
         return false;
+    }
+
+    @Override
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        // Wipe out all conduits and facades before the block is removed - this sends the relevant notifications to neighboring conduits
+        // TODO: I think conduits would do well to interact over capabilities instead of relying on manual block entity manipulation. A topic for 26.1.
+        if (!level.isClientSide() && level.getBlockEntity(pos) instanceof ConduitBundleBlockEntity conduitBundle) {
+            conduitBundle.clearContent();
+        }
+
+        super.onRemove(state, level, pos, newState, movedByPiston);
     }
 
     // endregion
