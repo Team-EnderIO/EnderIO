@@ -1,5 +1,8 @@
 package com.enderio.enderio.content.machines.obelisks.relocator;
 
+import com.enderio.core.common.storage.layout.ItemStorageLayout;
+import com.enderio.core.common.storage.layout.SlotTemplates;
+import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.LinearScalable;
@@ -10,7 +13,7 @@ import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.content.machines.obelisks.ObeliskAreaManager;
 import com.enderio.enderio.content.machines.obelisks.ObeliskBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
-import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
+import com.enderio.enderio.foundation.inventory.MachineSlotTemplates;
 import com.enderio.enderio.init.EIOBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -22,6 +25,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
 import net.neoforged.neoforge.event.entity.living.FinalizeSpawnEvent;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jspecify.annotations.Nullable;
 
 public class RelocatorObeliskBlockEntity extends ObeliskBlockEntity<RelocatorObeliskBlockEntity> {
@@ -33,8 +37,10 @@ public class RelocatorObeliskBlockEntity extends ObeliskBlockEntity<RelocatorObe
     private static final LinearScalable RANGE = new LinearScalable(CapacitorModifier.ENERGY_USE,
             MachinesConfig.COMMON.RELOCATOR_RANGE);
 
+    public static final SingleResourceSlotKey<ItemResource> CAPACITOR = new SingleResourceSlotKey<>();
+
     public RelocatorObeliskBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(EIOBlockEntities.RELOCATOR_OBELISK.get(), worldPosition, blockState, false, CapacitorSupport.REQUIRED,
+        super(EIOBlockEntities.RELOCATOR_OBELISK.get(), worldPosition, blockState, false, CapacitorSupport.REQUIRED, CAPACITOR,
                 EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE);
     }
 
@@ -44,12 +50,12 @@ public class RelocatorObeliskBlockEntity extends ObeliskBlockEntity<RelocatorObe
     }
 
     @Override
-    public @Nullable MachineInventoryLayout createInventoryLayout() {
-        return MachineInventoryLayout.builder()
-                .inputSlot((integer, resource) -> resource.toStack().getCapability(EnderIOCapabilities.SOUL_FILTER) != null)
-                .slotAccess(FILTER)
-                .capacitor()
-                .build();
+    public @Nullable ItemStorageLayout createInventoryLayout() {
+        return ItemStorageLayout.builder()
+            .add(FILTER, SlotTemplates.input(), b -> b
+                .filter((_, itemResource) -> itemResource.toStack().getCapability(EnderIOCapabilities.SOUL_FILTER) != null))
+            .add(CAPACITOR, MachineSlotTemplates.capacitor())
+            .build();
     }
 
     @Nullable

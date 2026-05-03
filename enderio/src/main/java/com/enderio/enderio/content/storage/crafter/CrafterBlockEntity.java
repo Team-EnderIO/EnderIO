@@ -1,14 +1,17 @@
 package com.enderio.enderio.content.storage.crafter;
 
+import com.enderio.core.common.storage.layout.ItemStorageLayout;
+import com.enderio.core.common.storage.layout.ResourceStorageLayout;
+import com.enderio.core.common.storage.layout.SlotTemplates;
+import com.enderio.core.common.storage.slot.MultiResourceSlotKey;
+import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
-import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
-import com.enderio.enderio.foundation.inventory.MultiSlotAccess;
-import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
+import com.enderio.enderio.foundation.inventory.MachineSlotTemplates;
 import com.enderio.enderio.init.EIOBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -24,11 +27,13 @@ import net.minecraft.world.item.crafting.display.SlotDisplayContext;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayDeque;
 import java.util.Optional;
 import java.util.Queue;
+import java.util.function.UnaryOperator;
 
 // TODO: Might want to see if we can adapt this into a crafting task.
 public class CrafterBlockEntity extends PoweredMachineBlockEntity {
@@ -37,28 +42,31 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
             MachinesConfig.COMMON.ENERGY.CRAFTER_CAPACITY);
     public static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE,
             MachinesConfig.COMMON.ENERGY.CRAFTER_USAGE);
-    public static final MultiSlotAccess INPUT = new MultiSlotAccess();
-    public static final SingleSlotAccess OUTPUT = new SingleSlotAccess();
-    public static final MultiSlotAccess GHOST = new MultiSlotAccess();
-    public static final SingleSlotAccess PREVIEW = new SingleSlotAccess();
+
+    public static final MultiResourceSlotKey<ItemResource> INPUT = new MultiResourceSlotKey<>(9);
+    public static final SingleResourceSlotKey<ItemResource> OUTPUT = new SingleResourceSlotKey<>();
+    public static final MultiResourceSlotKey<ItemResource> GHOST = new MultiResourceSlotKey<>(9);
+    public static final SingleResourceSlotKey<ItemResource> PREVIEW = new SingleResourceSlotKey<>();
+    public static final SingleResourceSlotKey<ItemResource> CAPACITOR = new SingleResourceSlotKey<>();
 
     @Nullable
     private RecipeHolder<CraftingRecipe> recipe;
     private final Queue<ItemStack> outputBuffer = new ArrayDeque<>();
 
     public CrafterBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(EIOBlockEntities.CRAFTER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
+        super(EIOBlockEntities.CRAFTER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, CAPACITOR,
                 EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE);
     }
 
-    private CraftingInput getCraftingInput(MultiSlotAccess sourceSlots) {
-        return CraftingInput.of(3, 3, sourceSlots.getItemStacks(getInventory()));
+    private CraftingInput getCraftingInput(MultiResourceSlotKey<ItemResource> sourceSlots) {
+        return CraftingInput.of(3, 3, getInventory().getStacks(sourceSlots));
     }
 
     @Override
     protected void onInventoryContentsChanged(int slot) {
         super.onInventoryContentsChanged(slot);
-        if (GHOST.contains(slot)) {
+
+        if (GHOST.contains(getInventory(), slot)) {
             updateRecipe();
         }
     }
@@ -69,10 +77,10 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
         if (getLevel() instanceof ServerLevel level) {
             recipe = level.recipeAccess().getRecipeFor(RecipeType.CRAFTING, input, level).orElse(null);
         }
-        PREVIEW.setStackInSlot(this, ItemStack.EMPTY);
+        getInventory().setStack(PREVIEW, ItemStack.EMPTY);
 
         if (recipe != null) {
-            PREVIEW.setStackInSlot(this, recipe.value().display().getFirst().result().resolveForFirstStack(SlotDisplayContext.fromLevel(getLevel())));
+            getInventory().setStack(PREVIEW, recipe.value().display().getFirst().result().resolveForFirstStack(SlotDisplayContext.fromLevel(getLevel())));
         }
     }
 
@@ -82,21 +90,18 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
-    public MachineInventoryLayout createInventoryLayout() {
-        return MachineInventoryLayout.builder()
-                .capacitor()
-                .setStackLimit(1)
-                .inputSlot(9, this::acceptSlotInput)
-                .slotAccess(INPUT)
-                .setStackLimit(64)
-                .outputSlot(1)
-                .slotAccess(OUTPUT)
-                .setStackLimit(1)
-                .ghostSlot(9)
-                .slotAccess(GHOST)
-                .previewSlot()
-                .slotAccess(PREVIEW)
-                .build();
+    public ItemStorageLayout createInventoryLayout() {
+        return ItemStorageLayout.builder()
+            .add(CAPACITOR, MachineSlotTemplates.capacitor())
+            .add(INPUT, singleItemInput(), b -> b.filter(this::acceptSlotInput))
+            .add(OUTPUT, SlotTemplates.output())
+            .add(GHOST, singleItemInput())
+            .add(PREVIEW, SlotTemplates.inaccessible())
+            .build();
+    }
+
+    private static UnaryOperator<ResourceStorageLayout.Builder.SlotBuilder<ItemResource>> singleItemInput() {
+        return builder -> SlotTemplates.<ItemResource>ghost().apply(builder).capacity(1);
     }
 
     private boolean acceptSlotInput(int slot, ItemResource resource) {
@@ -158,14 +163,19 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
         }
 
         // output
-        if (canMergeOutput(outputBuffer.peek())) {
-            var stack = OUTPUT.getItemStack(this);
-            if (stack.isEmpty()) {
-                OUTPUT.setStackInSlot(this, outputBuffer.peek().copy());
-            } else {
-                stack.grow(outputBuffer.peek().getCount());
+        try (Transaction transaction = Transaction.openRoot()) {
+            var toAdd = outputBuffer.peek();
+            int inserted = getInventory().insert(OUTPUT, ItemResource.of(toAdd), toAdd.count(), transaction);
+            if (inserted == 0) {
+                return;
             }
-            outputBuffer.remove();
+
+            toAdd.shrink(inserted);
+            if (toAdd.isEmpty()) {
+                outputBuffer.remove();
+            }
+
+            transaction.commit();
         }
     }
 
@@ -178,14 +188,16 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
     }
 
     private boolean canMergeOutput(ItemStack item) {
-        ItemStack output = OUTPUT.getItemStack(this);
+        ItemStack output = getInventory().getStack(OUTPUT);
         return output.isEmpty()
                 || (ItemStack.isSameItemSameComponents(output, item) && (output.getCount() + item.getCount() <= 64));
     }
 
     private void craftItem() {
+        var inventory = getInventory();
+
         for (int i = 0; i < 9; i++) {
-            if (!ItemStack.isSameItem(INPUT.get(i).getItemStack(this), GHOST.get(i).getItemStack(this))) {
+            if (!ItemStack.isSameItem(inventory.getStack(INPUT.slot(i)), inventory.getStack(GHOST.slot(i)))) {
                 return;
             }
         }
@@ -207,7 +219,7 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
 
     private void clearInput() {
         for (int i = 0; i < 9; i++) {
-            INPUT.get(i).setStackInSlot(this, ItemStack.EMPTY);
+            getInventory().setStack(INPUT.slot(i), ItemStack.EMPTY);
         }
     }
 }

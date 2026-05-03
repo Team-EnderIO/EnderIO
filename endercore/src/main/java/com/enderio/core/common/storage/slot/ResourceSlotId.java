@@ -7,7 +7,7 @@ import org.jetbrains.annotations.ApiStatus;
 
 @FunctionalInterface
 public interface ResourceSlotId<T extends Resource> {
-    int index(ResourceStorageLayout<T, ?> layout);
+    int index(ResourceStorageLayout<T> layout);
 
     @ApiStatus.NonExtendable
     default int index(ResourceStorage<T> storage) {

@@ -90,8 +90,8 @@ public class VatMenu extends MachineMenu<VatBlockEntity> {
     }
 
     private void addSlots() {
-        addSlot(new MachineSlot(getMachineInventory(), VatBlockEntity.REAGENTS.get(0), 56, 12));
-        addSlot(new MachineSlot(getMachineInventory(), VatBlockEntity.REAGENTS.get(1), 105, 12));
+        addSlot(new MachineSlot(getMachineInventory(), VatBlockEntity.REAGENTS.slot(0), 56, 12));
+        addSlot(new MachineSlot(getMachineInventory(), VatBlockEntity.REAGENTS.slot(1), 105, 12));
 
         addPlayerInventorySlots(8, 84);
     }

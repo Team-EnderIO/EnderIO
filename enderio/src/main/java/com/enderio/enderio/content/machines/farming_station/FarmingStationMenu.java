@@ -30,20 +30,20 @@ public class FarmingStationMenu extends PoweredMachineMenu<FarmingStationBlockEn
 
         var inventory = getMachineInventory();
         // Tool inputs TODO: Shadow slots to show compatible tools?
-        addSlot(new MachineSlot(inventory, FarmingStationBlockEntity.TOOLS.get(0), 44, 19));
-        addSlot(new MachineSlot(inventory, FarmingStationBlockEntity.TOOLS.get(1), 44 + 18, 19));
-        addSlot(new MachineSlot(inventory, FarmingStationBlockEntity.TOOLS.get(2), 44 + 18 * 2, 19));
+        addSlot(new MachineSlot(inventory, FarmingStationBlockEntity.TOOLS.slot(0), 44, 19));
+        addSlot(new MachineSlot(inventory, FarmingStationBlockEntity.TOOLS.slot(1), 44 + 18, 19));
+        addSlot(new MachineSlot(inventory, FarmingStationBlockEntity.TOOLS.slot(2), 44 + 18 * 2, 19));
 
-        addSlot(new MachineSlot(inventory, FarmingStationBlockEntity.AREAS.get(0), 53, 44));
-        addSlot(new MachineSlot(inventory, FarmingStationBlockEntity.AREAS.get(1), 53 + 18, 44));
-        addSlot(new MachineSlot(inventory, FarmingStationBlockEntity.AREAS.get(2), 53, 44 + 18));
-        addSlot(new MachineSlot(inventory, FarmingStationBlockEntity.AREAS.get(3), 53 + 18, 44 + 18));
+        addSlot(new MachineSlot(inventory, FarmingStationBlockEntity.AREAS.slot(0), 53, 44));
+        addSlot(new MachineSlot(inventory, FarmingStationBlockEntity.AREAS.slot(1), 53 + 18, 44));
+        addSlot(new MachineSlot(inventory, FarmingStationBlockEntity.AREAS.slot(2), 53, 44 + 18));
+        addSlot(new MachineSlot(inventory, FarmingStationBlockEntity.AREAS.slot(3), 53 + 18, 44 + 18));
 
-        addSlot(new MachineSlot(inventory, FarmingStationBlockEntity.BONEMEAL.get(0), 116, 19));
-        addSlot(new MachineSlot(inventory, FarmingStationBlockEntity.BONEMEAL.get(1), 116 + 18, 19));
+        addSlot(new MachineSlot(inventory, FarmingStationBlockEntity.BONEMEAL.slot(0), 116, 19));
+        addSlot(new MachineSlot(inventory, FarmingStationBlockEntity.BONEMEAL.slot(1), 116 + 18, 19));
 
         for (int i = 0; i < 6; i++) {
-            addSlot(new MachineSlot(inventory, FarmingStationBlockEntity.OUTPUT.get(i), 107 + 18 * (i % 3),
+            addSlot(new MachineSlot(inventory, FarmingStationBlockEntity.OUTPUT.slot(i), 107 + 18 * (i % 3),
                     i < 3 ? 44 : 44 + 18));
         }
 

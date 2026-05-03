@@ -1,8 +1,8 @@
 package com.enderio.enderio.content.enchanter;
 
 import com.enderio.core.common.menu.BaseBlockEntityMenu;
-import com.enderio.enderio.foundation.inventory.MachineInventory;
-import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
+import com.enderio.core.common.storage.ItemStorage;
+import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.foundation.menu.MachineSlot;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOMenus;
@@ -11,6 +11,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jspecify.annotations.Nullable;
 
 public class EnchanterMenu extends BaseBlockEntityMenu<EnchanterBlockEntity> {
@@ -37,7 +38,7 @@ public class EnchanterMenu extends BaseBlockEntityMenu<EnchanterBlockEntity> {
         addPlayerInventorySlots(8, 84);
     }
 
-    public MachineInventory getMachineInventory() {
+    public ItemStorage getMachineInventory() {
         return getBlockEntity().getInventory();
     }
 
@@ -82,7 +83,7 @@ public class EnchanterMenu extends BaseBlockEntityMenu<EnchanterBlockEntity> {
         @Nullable
         private final EnchanterBlockEntity blockEntity;
 
-        public EnchanterOutputMachineSlot(@Nullable EnchanterBlockEntity blockEntity, SingleSlotAccess access,
+        public EnchanterOutputMachineSlot(@Nullable EnchanterBlockEntity blockEntity, SingleResourceSlotKey<ItemResource> access,
                 int xPosition, int yPosition) {
             super(blockEntity.getInventory(), access, xPosition, yPosition);
             this.blockEntity = blockEntity;
@@ -97,11 +98,12 @@ public class EnchanterMenu extends BaseBlockEntityMenu<EnchanterBlockEntity> {
             if (recipe != null && (player.experienceLevel >= recipe.getXPCost(recipeInput) || player.isCreative())) {
                 int amount = recipe.getInputAmountConsumed(recipeInput);
                 int lapizForLevel = recipe.getLapisForLevel(
-                        recipe.getEnchantmentLevel(EnchanterBlockEntity.CATALYST.getStack(inventory).getCount()));
+                        recipe.getEnchantmentLevel(inventory.getStack(EnchanterBlockEntity.CATALYST).getCount()));
                 player.giveExperienceLevels(-recipe.getXPCost(recipeInput));
-                EnchanterBlockEntity.BOOK.getStack(inventory).shrink(1);
-                EnchanterBlockEntity.CATALYST.getStack(inventory).shrink(amount);
-                EnchanterBlockEntity.LAPIS.getStack(inventory).shrink(lapizForLevel);
+
+                inventory.mutateStack(EnchanterBlockEntity.BOOK, s -> s.shrink(1));
+                inventory.mutateStack(EnchanterBlockEntity.CATALYST, s -> s.shrink(amount));
+                inventory.mutateStack(EnchanterBlockEntity.LAPIS, s -> s.shrink(lapizForLevel));
                 super.onTake(player, stack);
             }
         }

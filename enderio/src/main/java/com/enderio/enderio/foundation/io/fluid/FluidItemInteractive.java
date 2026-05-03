@@ -77,7 +77,7 @@ public interface FluidItemInteractive {
 
                 transaction.commit();
                 return true;
-            } else if (fluidStorage.layout().slotConfig(tankSlot).canInsert()) {
+            } else if (fluidStorage.layout().slotConfig(tankSlot).externalRules().canInsert(resourceFromItem)) {
                 int filled = fluidStorage.insert(tankSlot, resourceFromItem, amountAvailable, transaction);
                 if (filled <= 0) {
                     return false;

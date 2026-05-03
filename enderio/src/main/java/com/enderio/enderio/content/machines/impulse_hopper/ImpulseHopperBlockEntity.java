@@ -1,13 +1,16 @@
 package com.enderio.enderio.content.machines.impulse_hopper;
 
+import com.enderio.core.common.storage.layout.ItemStorageLayout;
+import com.enderio.core.common.storage.layout.SlotTemplates;
+import com.enderio.core.common.storage.slot.MultiResourceSlotKey;
+import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
-import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
-import com.enderio.enderio.foundation.inventory.MultiSlotAccess;
+import com.enderio.enderio.foundation.inventory.MachineSlotTemplates;
 import com.enderio.enderio.init.EIOBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
@@ -15,6 +18,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 public class ImpulseHopperBlockEntity extends PoweredMachineBlockEntity {
     public static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
@@ -23,12 +27,13 @@ public class ImpulseHopperBlockEntity extends PoweredMachineBlockEntity {
             MachinesConfig.COMMON.ENERGY.IMPULSE_HOPPER_USAGE);
     private static final int ENERGY_USAGE_PER_ITEM = 10; // TODO: What is? surely should use the ENERGY_USAGE key
 
-    public static final MultiSlotAccess INPUT = new MultiSlotAccess();
-    public static final MultiSlotAccess OUTPUT = new MultiSlotAccess();
-    public static final MultiSlotAccess GHOST = new MultiSlotAccess();
+    public static final MultiResourceSlotKey<ItemResource> INPUT = new MultiResourceSlotKey<>(6);
+    public static final MultiResourceSlotKey<ItemResource> OUTPUT = new MultiResourceSlotKey<>(6);
+    public static final MultiResourceSlotKey<ItemResource> GHOST = new MultiResourceSlotKey<>(6);
+    public static final SingleResourceSlotKey<ItemResource> CAPACITOR = new SingleResourceSlotKey<>();
 
     public ImpulseHopperBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(EIOBlockEntities.IMPULSE_HOPPER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
+        super(EIOBlockEntities.IMPULSE_HOPPER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, CAPACITOR,
                 EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE);
     }
 
@@ -38,17 +43,15 @@ public class ImpulseHopperBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
-    public MachineInventoryLayout createInventoryLayout() {
-        return MachineInventoryLayout.builder()
-                .inputSlot(6,
-                        (integer, itemResource) -> itemResource.matches(GHOST.get(integer).getItemStack(this)))
-                .slotAccess(INPUT)
-                .outputSlot(6)
-                .slotAccess(OUTPUT)
-                .ghostSlot(6)
-                .slotAccess(GHOST)
-                .capacitor()
-                .build();
+    public ItemStorageLayout createInventoryLayout() {
+        return ItemStorageLayout.builder()
+            .add(INPUT, SlotTemplates.input(), b -> b
+                // Note this filter is a bit rubbish - checking by ID only works because we're slot 0-5. Review sometime.
+                .filter((index, itemResource) -> itemResource.matches(getInventory().getStack(GHOST.slot(index)))))
+            .add(OUTPUT, SlotTemplates.output())
+            .add(GHOST, SlotTemplates.ghost())
+            .add(CAPACITOR, MachineSlotTemplates.capacitor())
+            .build();
     }
 
     @Override
@@ -73,8 +76,8 @@ public class ImpulseHopperBlockEntity extends PoweredMachineBlockEntity {
     }
 
     public boolean canPass(int slot) {
-        ItemStack input = INPUT.get(slot).getItemStack(this);
-        ItemStack ghost = GHOST.get(slot).getItemStack(this);
+        ItemStack input = getInventory().getStack(INPUT.slot(slot));
+        ItemStack ghost = getInventory().getStack(GHOST.slot(slot));
         if (ItemStack.isSameItemSameComponents(input, ghost)) {
             return input.getCount() >= ghost.getCount();
         }
@@ -82,10 +85,10 @@ public class ImpulseHopperBlockEntity extends PoweredMachineBlockEntity {
     }
 
     public boolean canHoldAndMerge(int slot) {
-        boolean canHold = OUTPUT.get(slot).getItemStack(this).getCount()
-                + GHOST.get(slot).getItemStack(this).getCount() <= GHOST.get(slot).getItemStack(this).getMaxStackSize();
-        boolean canMerge = ItemStack.isSameItemSameComponents(INPUT.get(slot).getItemStack(this),
-                GHOST.get(slot).getItemStack(this));
+        boolean canHold = getInventory().getStack(OUTPUT.slot(slot)).getCount()
+                + getInventory().getStack(GHOST.slot(slot)).getCount() <= getInventory().getStack(GHOST.slot(slot)).getMaxStackSize();
+        boolean canMerge = ItemStack.isSameItemSameComponents(getInventory().getStack(INPUT.slot(slot)),
+                getInventory().getStack(GHOST.slot(slot)));
         return canHold && canMerge;
     }
 
@@ -93,7 +96,7 @@ public class ImpulseHopperBlockEntity extends PoweredMachineBlockEntity {
         int totalpower = 0;
         for (int i = 0; i < 6; i++) {
             if (canPass(i) && canHoldAndMerge(i)) {
-                totalpower += GHOST.get(i).getItemStack(this).getCount() * ENERGY_USAGE_PER_ITEM;
+                totalpower += getInventory().getStack(GHOST.slot(i)).getCount() * ENERGY_USAGE_PER_ITEM;
                 continue;
             }
             return false;
@@ -103,9 +106,9 @@ public class ImpulseHopperBlockEntity extends PoweredMachineBlockEntity {
 
     private void passItems() {
         for (int i = 0; i < 6; i++) {
-            ItemStack stack = INPUT.get(i).getItemStack(this);
-            ItemStack ghost = GHOST.get(i).getItemStack(this);
-            ItemStack result = OUTPUT.get(i).getItemStack(this);
+            ItemStack stack = getInventory().getStack(INPUT.slot(i));
+            ItemStack ghost = getInventory().getStack(GHOST.slot(i));
+            ItemStack result = getInventory().getStack(OUTPUT.slot(i));
             if (ghost.isEmpty()) {
                 continue;
             }
@@ -117,11 +120,12 @@ public class ImpulseHopperBlockEntity extends PoweredMachineBlockEntity {
             }
             this.getEnergyStorage().consume(ghost.getCount() * ENERGY_USAGE_PER_ITEM, null);
             stack.shrink(ghost.getCount());
-            OUTPUT.get(i).setStackInSlot(this, result);
+            getInventory().setStack(INPUT.slot(i), stack);
+            getInventory().setStack(OUTPUT.slot(i), result);
         }
     }
 
     public boolean ghostSlotHasItem(int slot) {
-        return GHOST.get(slot).getItemStack(this).isEmpty();
+        return getInventory().getStack(GHOST.slot(slot)).isEmpty();
     }
 }

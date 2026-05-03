@@ -5,6 +5,8 @@ import com.enderio.enderio.api.soul.Soul;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 public class MobCaptureTask extends PoweredSpawnerTask {
 
@@ -20,7 +22,7 @@ public class MobCaptureTask extends PoweredSpawnerTask {
     @Override
     public boolean isCompleted() {
         // Ensure we have an item to take from
-        var inputStack = PoweredSpawnerBlockEntity.INPUT.getItemStack(blockEntity);
+        var inputStack = blockEntity.getInventory().getStack(PoweredSpawnerBlockEntity.INPUT);
         var inputSoulHandler = inputStack.getCapability(EnderIOCapabilities.SOUL_HANDLER_ITEM);
         if (inputStack.isEmpty() || inputSoulHandler == null || !inputSoulHandler.tryInsertSoul(getSoulForCapture(), true)) {
             return true;
@@ -32,57 +34,59 @@ public class MobCaptureTask extends PoweredSpawnerTask {
     @Override
     protected void onTaskCompleted() {
         final Soul capturedSoul = getSoulForCapture();
+        var inventory = blockEntity.getInventory();
 
-        // Ensure we have a storage to fill
-        var inputStack = PoweredSpawnerBlockEntity.INPUT.getItemStack(blockEntity);
-        if (inputStack.isEmpty()) {
-            // Nothing to put into the output, so give up.
-            isComplete = true;
-            return;
+        try (Transaction rootTransaction = Transaction.openRoot()) {
+            var inputResource = inventory.getResource(PoweredSpawnerBlockEntity.INPUT);
+            if (inputResource.isEmpty()) {
+                isComplete = true;
+                return;
+            }
+
+            // Try and take one input item
+            int extracted = inventory.extract(PoweredSpawnerBlockEntity.INPUT, inputResource, 1, rootTransaction);
+            if (extracted != 1) {
+                isComplete = true;
+                return;
+            }
+
+            // Convert to stack
+            var resultStack = inputResource.toStack(extracted);
+
+            // Insert the soul into the stack
+            var resultSoulHandler = resultStack.getCapability(EnderIOCapabilities.SOUL_HANDLER_ITEM);
+            if (resultSoulHandler == null || !resultSoulHandler.tryInsertSoul(capturedSoul, false)) {
+                // Cannot insert soul into the input, so give up
+                isComplete = true;
+                return;
+            }
+
+            // Now we'll see if the stack cannot contain more of this soul
+            boolean canInsertMore = resultSoulHandler.tryInsertSoul(capturedSoul, true);
+
+            // Now, if we can insert more attempt to place back in the INPUT
+            int amountToInsert = resultStack.getCount();
+            if (canInsertMore) {
+                int inserted = inventory.insert(PoweredSpawnerBlockEntity.INPUT, ItemResource.of(resultStack), amountToInsert, rootTransaction);
+                if (inserted == amountToInsert) {
+                    rootTransaction.commit();
+                    isComplete = true;
+                    return;
+                }
+
+                amountToInsert -= inserted;
+            }
+
+            // If we haven't inserted everything, try and drop it into OUTPUT
+            int inserted = inventory.insert(PoweredSpawnerBlockEntity.OUTPUT, ItemResource.of(resultStack), amountToInsert, rootTransaction);
+            if (inserted == amountToInsert) {
+                rootTransaction.commit();
+                isComplete = true;
+            } else {
+                // We cannot output everything, so we're blocked on the output
+                setBlockedReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.OUTPUT_FULL);
+            }
         }
-
-        // Clone the input
-        var resultStack = inputStack.copyWithCount(1);
-        var resultSoulHandler = resultStack.getCapability(EnderIOCapabilities.SOUL_HANDLER_ITEM);
-        if (resultSoulHandler == null || !resultSoulHandler.tryInsertSoul(capturedSoul, true)) {
-            // Cannot insert soul into the input, so give up
-            isComplete = true;
-            return;
-        }
-
-        // Insert the soul.
-        if (!resultSoulHandler.tryInsertSoul(capturedSoul, false)) {
-            // Unknown failure, give up.
-            isComplete = true;
-            return;
-        }
-
-        // If we can add another, leave it in the input for the next task.
-        if (resultSoulHandler.tryInsertSoul(capturedSoul, true)) {
-            PoweredSpawnerBlockEntity.INPUT.setStackInSlot(blockEntity, resultStack);
-            isComplete = true;
-            return;
-        }
-
-        // Otherwise, try and put it into the output.
-        var currentOutputStack = PoweredSpawnerBlockEntity.OUTPUT.getItemStack(blockEntity);
-        if (!currentOutputStack.isEmpty() && !ItemStack.isSameItemSameComponents(currentOutputStack, resultStack)) {
-            setBlockedReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.OUTPUT_FULL);
-            return;
-        }
-
-        if (currentOutputStack.isEmpty()) {
-            PoweredSpawnerBlockEntity.OUTPUT.setStackInSlot(blockEntity, resultStack);
-        } else {
-            resultStack.setCount(currentOutputStack.getCount() + 1);
-            PoweredSpawnerBlockEntity.OUTPUT.setStackInSlot(blockEntity, resultStack);
-        }
-
-        // Deduct input
-        PoweredSpawnerBlockEntity.INPUT.setStackInSlot(blockEntity,
-            inputStack.copyWithCount(inputStack.getCount() - 1));
-
-        isComplete = true;
     }
 
     private Soul getSoulForCapture() {

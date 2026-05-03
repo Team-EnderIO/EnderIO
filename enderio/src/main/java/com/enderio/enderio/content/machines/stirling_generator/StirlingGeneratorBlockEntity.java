@@ -1,5 +1,8 @@
 package com.enderio.enderio.content.machines.stirling_generator;
 
+import com.enderio.core.common.storage.layout.ItemStorageLayout;
+import com.enderio.core.common.storage.layout.SlotTemplates;
+import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.FixedScalable;
 import com.enderio.enderio.api.capacitor.LinearScalable;
@@ -12,8 +15,7 @@ import com.enderio.enderio.foundation.MachineNBTKeys;
 import com.enderio.enderio.foundation.block.ProgressMachineBlock;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
-import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
-import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
+import com.enderio.enderio.foundation.inventory.MachineSlotTemplates;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOSounds;
@@ -35,6 +37,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.transfer.energy.EnergyHandlerUtil;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jspecify.annotations.Nullable;
 
 public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
@@ -49,13 +52,14 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
     public static final LinearScalable GENERATION_SPEED = new LinearScalable(
             CapacitorModifier.BURNING_ENERGY_GENERATION, MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_PRODUCTION);
 
-    public static final SingleSlotAccess FUEL = new SingleSlotAccess();
+    public static final SingleResourceSlotKey<ItemResource> FUEL = new SingleResourceSlotKey<>();
+    public static final SingleResourceSlotKey<ItemResource> CAPACITOR = new SingleResourceSlotKey<>();
 
     private int burnTime;
     private int burnDuration;
 
     public StirlingGeneratorBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(EIOBlockEntities.STIRLING_GENERATOR.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
+        super(EIOBlockEntities.STIRLING_GENERATOR.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, CAPACITOR,
                 EnergyIOMode.Output, CAPACITY, FixedScalable.ZERO);
     }
 
@@ -68,12 +72,12 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
-    public MachineInventoryLayout createInventoryLayout() {
-        return MachineInventoryLayout.builder()
-                .storageSlot((slot, resource) -> resource.toStack().getBurnTime(RecipeType.SMELTING, level.fuelValues()) > 0)
-                .slotAccess(FUEL)
-                .capacitor()
-                .build();
+    public ItemStorageLayout createInventoryLayout() {
+        return ItemStorageLayout.builder()
+            .add(FUEL, SlotTemplates.input(), b -> b
+                .filter((_, resource) -> resource.toStack().getBurnTime(RecipeType.SMELTING, level.fuelValues()) > 0))
+            .add(CAPACITOR, MachineSlotTemplates.capacitor())
+            .build();
     }
 
     @Override
@@ -100,7 +104,7 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
         if (canAct()) {
             if (!isGenerating() && !EnergyHandlerUtil.isFull(getEnergyStorage())) {
                 // Get the fuel
-                ItemStack fuel = FUEL.getItemStack(this);
+                ItemStack fuel = getInventory().getStack(FUEL);
                 if (!fuel.isEmpty()) {
                     // Get the burn time.
                     int burningTime = fuel.getBurnTime(RecipeType.SMELTING, level.fuelValues());
@@ -116,7 +120,7 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
                         ItemStackTemplate remainder = fuel.getCraftingRemainder();
                         fuel.shrink(1);
                         if (fuel.isEmpty()) {
-                            FUEL.setStackInSlot(this, remainder != null ? remainder.create() : ItemStack.EMPTY);
+                            getInventory().setStack(FUEL, remainder != null ? remainder.create() : ItemStack.EMPTY);
                         }
                     }
                 }
@@ -180,8 +184,8 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
     @Override
     protected void onInventoryContentsChanged(int slot) {
         super.onInventoryContentsChanged(slot);
-        if (FUEL.isSlot(slot)) {
-            updateMachineState(MachineState.EMPTY_INPUT, FUEL.getItemStack(this).isEmpty());
+        if (FUEL.index(getInventory()) == slot) {
+            updateMachineState(MachineState.EMPTY_INPUT, getInventory().getStack(FUEL).isEmpty());
         }
     }
 
@@ -202,7 +206,7 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
 
         updateMachineState(MachineState.NO_POWER, false);
         updateMachineState(MachineState.FULL_POWER, EnergyHandlerUtil.isFull(getEnergyStorage()) && isCapacitorInstalled());
-        updateMachineState(MachineState.EMPTY_INPUT, FUEL.getItemStack(this).isEmpty());
+        updateMachineState(MachineState.EMPTY_INPUT, getInventory().getStack(FUEL).isEmpty());
     }
 
     @Override
@@ -220,7 +224,7 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
         updateMachineState(MachineState.NO_POWER, false);
         updateMachineState(MachineState.FULL_POWER,
                 EnergyHandlerUtil.isFull(getEnergyStorage()) && isCapacitorInstalled());
-        updateMachineState(MachineState.EMPTY_INPUT, FUEL.getItemStack(this).isEmpty());
+        updateMachineState(MachineState.EMPTY_INPUT, getInventory().getStack(FUEL).isEmpty());
     }
 
     @Override

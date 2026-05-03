@@ -1,5 +1,8 @@
 package com.enderio.enderio.gametests.util;
 
+import com.enderio.core.common.storage.ExternalResourceStorageView;
+import com.enderio.core.common.storage.ResourceStorage;
+import com.enderio.core.common.storage.slot.ResourceSlotId;
 import com.enderio.enderio.api.io.IOConfigurable;
 import com.enderio.enderio.foundation.energy.MachineEnergyHandler;
 import net.minecraft.core.BlockPos;
@@ -106,7 +109,38 @@ public class EnderGameTestHelper extends ExtendedGameTestHelper {
         }
 
         try (Transaction transaction = Transaction.openRoot()) {
-            int inserted = itemHandler.insert(ItemResource.of(itemStack), itemStack.getCount(), transaction);
+            int inserted = itemHandler.insert(slot, ItemResource.of(itemStack), itemStack.getCount(), transaction);
+            if (inserted != itemStack.getCount()) {
+                throw assertionException("Could not insert " + itemStack + " into container at " + x + "," + y + "," + z);
+            }
+
+            transaction.commit();
+        }
+    }
+
+    /**
+     * Insert an item into a specific slot of a container.
+     */
+    public void insertItemIntoSlot(int x, int y, int z, ResourceSlotId<ItemResource> slot, ItemStack itemStack) {
+        var itemHandler = getLevel().getCapability(Capabilities.Item.BLOCK, absolutePos(new BlockPos(x, y, z)), null);
+        if (itemHandler == null) {
+            throw assertionException("No item handler at " + x + "," + y + "," + z);
+        }
+
+        // TODO: This is a tiny bit horrible.
+        ResourceStorage<ItemResource> itemStorage = null;
+        if (itemHandler instanceof ResourceStorage<ItemResource>) {
+            itemStorage = (ResourceStorage<ItemResource>) itemHandler;
+        } else if (itemHandler instanceof ExternalResourceStorageView<ItemResource> externalItemStorage) {
+            itemStorage = externalItemStorage.getDelegate();
+        }
+
+        if (itemStorage == null) {
+            throw assertionException("No item storage at " + x + "," + y + "," + z);
+        }
+
+        try (Transaction transaction = Transaction.openRoot()) {
+            int inserted = itemStorage.insert(slot, ItemResource.of(itemStack), itemStack.getCount(), transaction);
             if (inserted != itemStack.getCount()) {
                 throw assertionException("Could not insert " + itemStack + " into container at " + x + "," + y + "," + z);
             }
@@ -128,6 +162,30 @@ public class EnderGameTestHelper extends ExtendedGameTestHelper {
     }
 
     /**
+     * Get the item stack in a specific slot of a container.
+     */
+    public ItemStack getItemInSlot(int x, int y, int z, ResourceSlotId<ItemResource> slot) {
+        var itemHandler = getLevel().getCapability(Capabilities.Item.BLOCK, absolutePos(new BlockPos(x, y, z)), null);
+        if (itemHandler == null) {
+            throw assertionException("No item handler at " + x + "," + y + "," + z);
+        }
+
+        // TODO: This is a tiny bit horrible.
+        ResourceStorage<ItemResource> itemStorage = null;
+        if (itemHandler instanceof ResourceStorage<ItemResource>) {
+            itemStorage = (ResourceStorage<ItemResource>) itemHandler;
+        } else if (itemHandler instanceof ExternalResourceStorageView<ItemResource> externalItemStorage) {
+            itemStorage = externalItemStorage.getDelegate();
+        }
+
+        if (itemStorage == null) {
+            throw assertionException("No item storage at " + x + "," + y + "," + z);
+        }
+
+        return itemStorage.getResource(slot).toStack(itemStorage.getAmountAsInt(slot));
+    }
+
+    /**
      * Assert that a specific slot contains a specific item.
      */
     public void assertSlotHasItem(int x, int y, int z, int slot, Item expectedItem) {
@@ -140,9 +198,33 @@ public class EnderGameTestHelper extends ExtendedGameTestHelper {
     }
 
     /**
+     * Assert that a specific slot contains a specific item.
+     */
+    public void assertSlotHasItem(int x, int y, int z, ResourceSlotId<ItemResource> slot, Item expectedItem) {
+        ItemStack stack = getItemInSlot(x, y, z, slot);
+        if (!stack.is(expectedItem)) {
+            throw assertionException(
+                "Expected " + expectedItem + " in slot " + slot + " at " + x + "," + y + "," + z +
+                    ", but found: " + (stack.isEmpty() ? "empty" : stack.getItem()));
+        }
+    }
+
+    /**
      * Assert that a specific slot is empty.
      */
     public void assertSlotHasNoItem(int x, int y, int z, int slot) {
+        ItemStack stack = getItemInSlot(x, y, z, slot);
+        if (!stack.isEmpty()) {
+            throw assertionException(
+                "Expected empty slot " + slot + " at " + x + "," + y + "," + z +
+                    ", but found: " + stack.getItem());
+        }
+    }
+
+    /**
+     * Assert that a specific slot is empty.
+     */
+    public void assertSlotHasNoItem(int x, int y, int z, ResourceSlotId<ItemResource> slot) {
         ItemStack stack = getItemInSlot(x, y, z, slot);
         if (!stack.isEmpty()) {
             throw assertionException(

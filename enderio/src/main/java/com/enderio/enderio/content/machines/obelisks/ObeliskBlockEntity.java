@@ -1,5 +1,7 @@
 package com.enderio.enderio.content.machines.obelisks;
 
+import com.enderio.core.common.storage.slot.ResourceSlotId;
+import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.core.annotations.UseOnly;
 import com.enderio.enderio.api.capacitor.CapacitorScalable;
@@ -12,7 +14,6 @@ import com.enderio.enderio.foundation.attachment.ActionRange;
 import com.enderio.enderio.foundation.attachment.RangedActor;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
-import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import com.enderio.enderio.foundation.io.IOConfig;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.foundation.state.MachineStateType;
@@ -31,6 +32,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.fml.LogicalSide;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 import javax.annotation.Nullable;
 
@@ -38,17 +40,18 @@ public abstract class ObeliskBlockEntity<T extends ObeliskBlockEntity<T>> extend
         implements RangedActor {
 
     private @Nullable AABB aabb;
-    public static final SingleSlotAccess FILTER = new SingleSlotAccess();
+
+    // TODO: move into the individual classes and accept as a parameter?
+    public static final SingleResourceSlotKey<ItemResource> FILTER = new SingleResourceSlotKey<>();
 
     private static final ActionRange DEFAULT_RANGE = new ActionRange(0, false);
 
     private ActionRange actionRange = DEFAULT_RANGE;
 
-    public ObeliskBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState,
-                              boolean isIoConfigMutable, CapacitorSupport capacitorSupport, EnergyIOMode energyIOMode,
-                              CapacitorScalable scalableEnergyCapacity, CapacitorScalable scalableMaxEnergyUse) {
-        super(type, worldPosition, blockState, isIoConfigMutable, capacitorSupport, energyIOMode,
-                scalableEnergyCapacity, scalableMaxEnergyUse);
+    public ObeliskBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState, boolean isIoConfigMutable,
+        CapacitorSupport capacitorSupport, @Nullable ResourceSlotId<ItemResource> capacitorSlotId, EnergyIOMode energyIOMode,
+        CapacitorScalable scalableEnergyCapacity, CapacitorScalable scalableMaxEnergyUse) {
+        super(type, worldPosition, blockState, isIoConfigMutable, capacitorSupport, capacitorSlotId, energyIOMode, scalableEnergyCapacity, scalableMaxEnergyUse);
     }
 
     @Nullable
@@ -99,7 +102,7 @@ public abstract class ObeliskBlockEntity<T extends ObeliskBlockEntity<T>> extend
 
     @Nullable
     protected SoulFilter getSoulFilter() {
-        return FILTER.getItemStack(this).getCapability(EnderIOCapabilities.SOUL_FILTER);
+        return getInventory().getStack(FILTER).getCapability(EnderIOCapabilities.SOUL_FILTER);
     }
 
     @Override

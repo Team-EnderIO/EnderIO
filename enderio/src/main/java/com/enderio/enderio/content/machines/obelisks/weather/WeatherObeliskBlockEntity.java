@@ -3,12 +3,12 @@ package com.enderio.enderio.content.machines.obelisks.weather;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.core.common.storage.FluidStorage;
 import com.enderio.core.common.storage.layout.FluidStorageLayout;
+import com.enderio.core.common.storage.layout.ItemStorageLayout;
+import com.enderio.core.common.storage.layout.SlotTemplates;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.io.IOMode;
 import com.enderio.enderio.foundation.MachineNBTKeys;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
-import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
-import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import com.enderio.enderio.foundation.io.IOConfig;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.foundation.storage.SidedResourceHandler;
@@ -42,6 +42,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jspecify.annotations.Nullable;
 
@@ -55,23 +56,23 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity {
     public static final ICapabilityProvider<WeatherObeliskBlockEntity, Direction, ResourceHandler<FluidResource>> FLUID_HANDLER_PROVIDER = (be,
         side) -> be.fluidStorage != null ? SidedResourceHandler.of(be.fluidStorage, side, be) : null;
 
-    public static final SingleSlotAccess ROCKET = new SingleSlotAccess();
+    public static final SingleResourceSlotKey<ItemResource> ROCKET = new SingleResourceSlotKey<>();
     public static final int TANK_CAPACITY = 3000;
 
     public static final SingleResourceSlotKey<FluidResource> TANK_SLOT = new SingleResourceSlotKey<>();
 
-    public static final FluidStorageLayout<WeatherObeliskBlockEntity> FLUID_STORAGE_LAYOUT =
-        FluidStorageLayout.<WeatherObeliskBlockEntity>builder()
-            .storageSlot(TANK_SLOT, slot -> slot.capacity(TANK_CAPACITY))
+    public static final FluidStorageLayout FLUID_STORAGE_LAYOUT =
+        FluidStorageLayout.builder()
+            .add(TANK_SLOT, SlotTemplates.storage(), slot -> slot.capacity(TANK_CAPACITY))
             .build();
 
-    private final FluidStorage<WeatherObeliskBlockEntity> fluidStorage;
+    private final FluidStorage fluidStorage;
     private final CraftingMachineTaskHost<WeatherChangeRecipe, WeatherChangeRecipe.Input> craftingTaskHost;
 
     public WeatherObeliskBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.WEATHER_OBELISK.get(), worldPosition, blockState, false);
 
-        fluidStorage = new FluidStorage<>(FLUID_STORAGE_LAYOUT, this) {
+        fluidStorage = new FluidStorage(FLUID_STORAGE_LAYOUT) {
             @Override
             protected void onContentsChanged(int index, FluidStack previousContents) {
                 super.onContentsChanged(index, previousContents);
@@ -89,7 +90,7 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity {
 
             @Override
             protected boolean shouldStartNewTask() {
-                if (ROCKET.getStack(getInventory()).isEmpty()) {
+                if (getInventory().getStack(ROCKET).isEmpty()) {
                     return true;
                 }
                 return super.shouldStartNewTask();
@@ -104,20 +105,20 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity {
     private CraftingMachineTask<WeatherChangeRecipe, WeatherChangeRecipe.Input> createTask(Level level,
             WeatherChangeRecipe.Input input,
             @Nullable RecipeHolder<WeatherChangeRecipe> weatherChangeRecipeRecipeHolder) {
-        return new CraftingMachineTask<>(level, getInventory(), this.fluidStorage, input, weatherChangeRecipeRecipeHolder) {
+        return new CraftingMachineTask<>(level, this, getInventory(), fluidStorage, input, weatherChangeRecipeRecipeHolder) {
 
             @Override
             protected void consumeInputs(WeatherChangeRecipe recipe) {
                 try (Transaction transaction = Transaction.openRoot()) {
-                    fluidStorage.internalExtract(TANK_SLOT, FluidResource.of(recipe.fluid()), recipe.fluid().amount(), transaction);
+                    fluidStorage.extract(TANK_SLOT, FluidResource.of(recipe.fluid()), recipe.fluid().amount(), transaction);
                     transaction.commit();
                 }
-                ROCKET.getStack(getInventory()).shrink(1);
+                getInventory().getStack(ROCKET).shrink(1);
             }
 
             @Override
             protected int makeProgress(int remainingProgress) {
-                boolean hasRocket = !ROCKET.getStack(getInventory()).isEmpty();
+                boolean hasRocket = !getInventory().getStack(ROCKET).isEmpty();
                 boolean weatherDifferent = switch (getRecipe().mode()) {
                 case RAIN -> !level.isRaining();
                 case CLEAR -> level.isRaining() || level.isThundering();
@@ -187,11 +188,11 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected @Nullable MachineInventoryLayout createInventoryLayout() {
-        return MachineInventoryLayout.builder()
-                .storageSlot((i, s) -> s.is(Items.FIREWORK_ROCKET))
-                .slotAccess(ROCKET)
-                .build();
+    protected @Nullable ItemStorageLayout createInventoryLayout() {
+        return ItemStorageLayout.builder()
+            .add(ROCKET, SlotTemplates.storage(), b -> b
+                .filter((_, itemResource) -> itemResource.is(Items.FIREWORK_ROCKET)))
+            .build();
     }
 
     @Override

@@ -5,9 +5,9 @@ import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 
-public class FluidStorage<TOwner> extends StacksResourceStorage<FluidResource, FluidStack, TOwner> implements ValueIOSerializable {
-    public FluidStorage(ResourceStorageLayout<FluidResource, TOwner> layout, TOwner context) {
-        super(layout, context, FluidStack.EMPTY, FluidStack.OPTIONAL_CODEC);
+public class FluidStorage extends StacksResourceStorage<FluidResource, FluidStack> implements ValueIOSerializable {
+    public FluidStorage(ResourceStorageLayout<FluidResource> layout) {
+        super(layout, FluidStack.EMPTY, FluidStack.OPTIONAL_CODEC);
     }
 
     @Override

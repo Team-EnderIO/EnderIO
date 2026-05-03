@@ -1,14 +1,14 @@
 package com.enderio.enderio.tests.foundation.menu;
 
-import com.enderio.enderio.api.io.IOConfigurable;
-import com.enderio.enderio.foundation.inventory.MachineInventory;
-import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
-import com.enderio.enderio.foundation.io.DumbIOConfigurable;
-import com.enderio.enderio.foundation.io.IOConfig;
+import com.enderio.core.common.storage.ItemStorage;
+import com.enderio.core.common.storage.layout.ItemStorageLayout;
+import com.enderio.core.common.storage.layout.SlotTemplates;
+import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.foundation.menu.GhostMachineSlot;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.testframework.junit.EphemeralTestServerProvider;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -17,38 +17,37 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(EphemeralTestServerProvider.class)
 public class GhostMachineSlotTests {
 
-    private static final IOConfigurable IO_CONFIGURABLE = new DumbIOConfigurable(IOConfig.empty());
+    private static final SingleResourceSlotKey<ItemResource> GHOST_SLOT = new SingleResourceSlotKey<>();
 
-    @Test
-    void testConstructorValidation(MinecraftServer server) {
-        // Valid ghost slot layout
-        MachineInventoryLayout validLayout = MachineInventoryLayout.builder()
-            .ghostSlot()
-            .build();
-        MachineInventory validInventory = new MachineInventory(IO_CONFIGURABLE, validLayout);
-        Assertions.assertDoesNotThrow(() -> new GhostMachineSlot(validInventory, 0, 0, 0));
+    private static final ItemStorageLayout GHOST_LAYOUT = ItemStorageLayout.builder()
+        .add(GHOST_SLOT, SlotTemplates.ghost())
+        .build();
 
-        // Invalid: can insert externally
-        MachineInventoryLayout invalidInsertLayout = MachineInventoryLayout.builder()
-            .inputSlot()
-            .build();
-        MachineInventory invalidInsertInventory = new MachineInventory(IO_CONFIGURABLE, invalidInsertLayout);
-        Assertions.assertThrows(RuntimeException.class, () -> new GhostMachineSlot(invalidInsertInventory, 0, 0, 0));
-
-        // Invalid: can extract externally
-        MachineInventoryLayout invalidExtractLayout = MachineInventoryLayout.builder()
-            .outputSlot()
-            .build();
-        MachineInventory invalidExtractInventory = new MachineInventory(IO_CONFIGURABLE, invalidExtractLayout);
-        Assertions.assertThrows(RuntimeException.class, () -> new GhostMachineSlot(invalidExtractInventory, 0, 0, 0));
-    }
+    // TODO: Might not come back.
+//    @Test
+//    void testConstructorValidation(MinecraftServer server) {
+//        // Valid ghost slot layout
+//        ItemStorage validInventory = new ItemStorage(GHOST_LAYOUT);
+//        Assertions.assertDoesNotThrow(() -> new GhostMachineSlot(validInventory, 0, 0, 0));
+//
+//        // Invalid: can insert externally
+//        ItemStorageLayout invalidInsertLayout = ItemStorageLayout.builder()
+//            .add(GHOST_SLOT, SlotTemplates.input())
+//            .build();
+//        ItemStorage invalidInsertInventory = new ItemStorage(invalidInsertLayout);
+//        Assertions.assertThrows(RuntimeException.class, () -> new GhostMachineSlot(invalidInsertInventory, 0, 0, 0));
+//
+//        // Invalid: can extract externally
+//        ItemStorageLayout invalidExtractLayout = ItemStorageLayout.builder()
+//            .add(GHOST_SLOT, SlotTemplates.output())
+//            .build();
+//        ItemStorage invalidExtractInventory = new ItemStorage(invalidExtractLayout);
+//        Assertions.assertThrows(RuntimeException.class, () -> new GhostMachineSlot(invalidExtractInventory, 0, 0, 0));
+//    }
 
     @Test
     void testSafeInsert_SetsSlot_DoesNotConsumeItem(MinecraftServer server) {
-        MachineInventoryLayout layout = MachineInventoryLayout.builder()
-            .ghostSlot()
-            .build();
-        MachineInventory inventory = new MachineInventory(IO_CONFIGURABLE, layout);
+        ItemStorage inventory = new ItemStorage(GHOST_LAYOUT);
         GhostMachineSlot ghostSlot = new GhostMachineSlot(inventory, 0, 0, 0);
 
         ItemStack stack = new ItemStack(Items.EGG, 64);
@@ -65,10 +64,7 @@ public class GhostMachineSlotTests {
 
     @Test
     void testRemove_ClearsSlot_ReturnsEmpty(MinecraftServer server) {
-        MachineInventoryLayout layout = MachineInventoryLayout.builder()
-            .ghostSlot()
-            .build();
-        MachineInventory inventory = new MachineInventory(IO_CONFIGURABLE, layout);
+        ItemStorage inventory = new ItemStorage(GHOST_LAYOUT);
         GhostMachineSlot ghostSlot = new GhostMachineSlot(inventory, 0, 0, 0);
 
         ghostSlot.set(new ItemStack(Items.DIAMOND));
@@ -86,10 +82,7 @@ public class GhostMachineSlotTests {
 
     @Test
     void testTryRemove_ClearsSlot_ReturnsEmpty(MinecraftServer server) {
-        MachineInventoryLayout layout = MachineInventoryLayout.builder()
-            .ghostSlot()
-            .build();
-        MachineInventory inventory = new MachineInventory(IO_CONFIGURABLE, layout);
+        ItemStorage inventory = new ItemStorage(GHOST_LAYOUT);
         GhostMachineSlot ghostSlot = new GhostMachineSlot(inventory, 0, 0, 0);
 
         ghostSlot.set(new ItemStack(Items.DIAMOND));

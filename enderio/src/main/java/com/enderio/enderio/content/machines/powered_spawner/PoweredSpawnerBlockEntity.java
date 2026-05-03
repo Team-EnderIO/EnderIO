@@ -1,5 +1,8 @@
 package com.enderio.enderio.content.machines.powered_spawner;
 
+import com.enderio.core.common.storage.layout.ItemStorageLayout;
+import com.enderio.core.common.storage.layout.SlotTemplates;
+import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.core.annotations.UseOnly;
@@ -14,8 +17,7 @@ import com.enderio.enderio.content.tools.vials.SoulVialItem;
 import com.enderio.enderio.foundation.MachineNBTKeys;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
-import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
-import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
+import com.enderio.enderio.foundation.inventory.MachineSlotTemplates;
 import com.enderio.enderio.foundation.particle.RangeParticleData;
 import com.enderio.enderio.foundation.souldata.SpawnerSoul;
 import com.enderio.enderio.foundation.state.MachineState;
@@ -48,13 +50,15 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.common.extensions.IOwnedSpawner;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
 
 public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity implements IOwnedSpawner, SoulBindable {
-    public static final SingleSlotAccess INPUT = new SingleSlotAccess();
-    public static final SingleSlotAccess OUTPUT = new SingleSlotAccess();
+    public static final SingleResourceSlotKey<ItemResource> INPUT = new SingleResourceSlotKey<>();
+    public static final SingleResourceSlotKey<ItemResource> OUTPUT = new SingleResourceSlotKey<>();
+    public static final SingleResourceSlotKey<ItemResource> CAPACITOR = new SingleResourceSlotKey<>();
 
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
             MachinesConfig.COMMON.ENERGY.POWERED_SPAWNER_CAPACITY);
@@ -78,7 +82,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     private double oSpin;
 
     public PoweredSpawnerBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(EIOBlockEntities.POWERED_SPAWNER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
+        super(EIOBlockEntities.POWERED_SPAWNER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, CAPACITOR,
                 EnergyIOMode.Input, CAPACITY, USAGE);
 
         taskHost = new MachineTaskHost(this, this::hasEnergy) {
@@ -133,12 +137,12 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
 
         // Ensure output is free in capture mode
         if (mode == PoweredSpawnerMode.CAPTURE) {
-            if (!INPUT.getItemStack(this).is(EIOItems.SOUL_VIAL)) {
+            if (!getInventory().getStack(INPUT).is(EIOItems.SOUL_VIAL)) {
                 setReason(SpawnerBlockedReason.INPUT_EMPTY);
                 return null;
             }
 
-            var outputSlotStack = OUTPUT.getItemStack(this);
+            var outputSlotStack = getInventory().getStack(OUTPUT);
             if (!outputSlotStack.isEmpty()) {
                 var potentialSoulVial = SoulVialItem.forSoul(getSoulForCapture());
                 if (!ItemStack.isSameItemSameComponents(potentialSoulVial, outputSlotStack)) {
@@ -251,17 +255,16 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     // region Inventory
 
     @Override
-    public MachineInventoryLayout createInventoryLayout() {
-        return MachineInventoryLayout.builder()
-                .capacitor()
-                .inputSlot((i, resource) -> {
-                    var soulHandler = resource.toStack().getCapability(EnderIOCapabilities.SOUL_HANDLER_ITEM);
+    public ItemStorageLayout createInventoryLayout() {
+        return ItemStorageLayout.builder()
+            .add(CAPACITOR, MachineSlotTemplates.capacitor())
+            .add(INPUT, SlotTemplates.input(), b ->
+                b.filter((_, itemResource) -> {
+                    var soulHandler = itemResource.toStack().getCapability(EnderIOCapabilities.SOUL_HANDLER_ITEM);
                     return soulHandler != null && soulHandler.tryInsertSoul(getSoulForCapture(), true);
-                })
-                .slotAccess(INPUT)
-                .outputSlot()
-                .slotAccess(OUTPUT)
-                .build();
+                }))
+            .add(OUTPUT, SlotTemplates.output())
+            .build();
     }
 
     private Soul getSoulForCapture() {

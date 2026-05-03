@@ -1,17 +1,18 @@
 package com.enderio.core.common.storage.slot;
 
+import com.enderio.core.common.storage.ResourceStorage;
 import com.enderio.core.common.storage.layout.ResourceStorageLayout;
 import net.neoforged.neoforge.transfer.resource.Resource;
 
+import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.IntStream;
 
-public final class MultiResourceSlotKey<T extends Resource> implements ResourceSlotKey, Iterable<ResourceSlotId<T>> {
+public final class MultiResourceSlotKey<T extends Resource> implements ResourceSlotKey<T>, Iterable<ResourceSlotId<T>> {
     private final int count;
     private final Map<Integer, ResourceSlotId<T>> slotIdCache;
 
@@ -35,6 +36,25 @@ public final class MultiResourceSlotKey<T extends Resource> implements ResourceS
     public ResourceSlotId<T> slot(int index) {
         Objects.checkIndex(index, count);
         return slotIdCache.get(index);
+    }
+
+    public boolean contains(ResourceStorage<T> storage, int actualIndex) {
+        return contains(storage.layout(), actualIndex);
+    }
+
+    public boolean contains(ResourceStorageLayout<T> layout, int actualIndex) {
+        for (var slotId : this) {
+            if (slotId.index(layout) == actualIndex) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public Collection<ResourceSlotId<T>> slots() {
+        return Collections.unmodifiableCollection(slotIdCache.values());
     }
 
     @Override

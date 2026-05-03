@@ -2,6 +2,7 @@ package com.enderio.enderio.content.machines.vacuum.xp;
 
 import com.enderio.core.common.storage.FluidStorage;
 import com.enderio.core.common.storage.layout.FluidStorageLayout;
+import com.enderio.core.common.storage.layout.SlotTemplates;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.content.machines.vacuum.VacuumMachineBlockEntity;
@@ -38,17 +39,17 @@ public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb>
 
     public static int CAPACITY = Integer.MAX_VALUE;
 
-    public static final FluidStorageLayout<XPVacuumBlockEntity> FLUID_STORAGE_LAYOUT =
-        FluidStorageLayout.<XPVacuumBlockEntity>builder()
-            .storageSlot(TANK, slot -> slot.capacity(CAPACITY))
+    public static final FluidStorageLayout FLUID_STORAGE_LAYOUT =
+        FluidStorageLayout.builder()
+            .add(TANK, SlotTemplates.storage(), slot -> slot.capacity(CAPACITY))
             .build();
 
-    private final FluidStorage<XPVacuumBlockEntity> fluidStorage;
+    private final FluidStorage fluidStorage;
 
     public XPVacuumBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.XP_VACUUM.get(), worldPosition, blockState, ExperienceOrb.class);
 
-        fluidStorage = new FluidStorage<>(FLUID_STORAGE_LAYOUT, this) {
+        fluidStorage = new FluidStorage(FLUID_STORAGE_LAYOUT) {
             @Override
             protected void onContentsChanged(int index, FluidStack previousContents) {
                 super.onContentsChanged(index, previousContents);

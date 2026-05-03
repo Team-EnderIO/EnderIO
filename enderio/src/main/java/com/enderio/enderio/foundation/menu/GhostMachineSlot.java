@@ -1,13 +1,13 @@
 package com.enderio.enderio.foundation.menu;
 
-import com.enderio.enderio.foundation.inventory.MachineInventory;
-import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
-import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
+import com.enderio.core.common.storage.ItemStorage;
+import com.enderio.core.common.storage.slot.ResourceSlotId;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 import java.util.Optional;
 
@@ -20,38 +20,27 @@ public class GhostMachineSlot extends Slot {
 
     private static final Container emptyInventory = new SimpleContainer(0);
 
-    private final MachineInventory itemHandler;
+    private final ItemStorage itemStorage;
     private final int index;
 
-    public GhostMachineSlot(MachineInventory itemHandler, int index, int xPosition, int yPosition) {
+    public GhostMachineSlot(ItemStorage itemStorage, int index, int xPosition, int yPosition) {
         super(emptyInventory, 0, xPosition, yPosition);
-
-        // Check config, we need to get this right or bad stuff will happen.
-        MachineInventoryLayout layout = itemHandler.layout();
-        if (layout.canInsert(index) || layout.canExtract(index)) {
-            throw new RuntimeException("Ghost slot can be externally modified!!");
-        }
-
-        if (!layout.guiCanInsert(index)) {
-            throw new RuntimeException("Ghost slot cannot be modified by the player!");
-        }
-
-        this.itemHandler = itemHandler;
+        this.itemStorage = itemStorage;
         this.index = index;
     }
 
-    public GhostMachineSlot(MachineInventory itemHandler, SingleSlotAccess access, int xPosition, int yPosition) {
-        this(itemHandler, access.getIndex(), xPosition, yPosition);
+    public GhostMachineSlot(ItemStorage itemStorage, ResourceSlotId<ItemResource> slotId, int xPosition, int yPosition) {
+        this(itemStorage, slotId.index(itemStorage), xPosition, yPosition);
     }
 
     @Override
     public final ItemStack getItem() {
-        return itemHandler.getStack(index);
+        return itemStorage.getStack(index);
     }
 
     @Override
     public void set(ItemStack itemStack) {
-        itemHandler.setStack(index, itemStack);
+        itemStorage.setStack(index, itemStack);
     }
 
     @Override

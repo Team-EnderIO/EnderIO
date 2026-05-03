@@ -41,10 +41,10 @@ public class SagMillMenu extends PoweredMachineMenu<SagMillBlockEntity> {
 
         addSlot(new MachineSlot(getMachineInventory(), SagMillBlockEntity.INPUT, 80, 28));
 
-        addSlot(new MachineSlot(getMachineInventory(), SagMillBlockEntity.OUTPUT.get(0), 49, 75));
-        addSlot(new MachineSlot(getMachineInventory(), SagMillBlockEntity.OUTPUT.get(1), 70, 75));
-        addSlot(new MachineSlot(getMachineInventory(), SagMillBlockEntity.OUTPUT.get(2), 91, 75));
-        addSlot(new MachineSlot(getMachineInventory(), SagMillBlockEntity.OUTPUT.get(3), 112, 75));
+        addSlot(new MachineSlot(getMachineInventory(), SagMillBlockEntity.OUTPUT.slot(0), 49, 75));
+        addSlot(new MachineSlot(getMachineInventory(), SagMillBlockEntity.OUTPUT.slot(1), 70, 75));
+        addSlot(new MachineSlot(getMachineInventory(), SagMillBlockEntity.OUTPUT.slot(2), 91, 75));
+        addSlot(new MachineSlot(getMachineInventory(), SagMillBlockEntity.OUTPUT.slot(3), 112, 75));
 
         addSlot(new MachineSlot(getMachineInventory(), SagMillBlockEntity.GRINDING_BALL, 122, 39));
 

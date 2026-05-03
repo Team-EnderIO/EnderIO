@@ -14,39 +14,10 @@ import org.jetbrains.annotations.ApiStatus;
  */
 public interface ResourceStorage<T extends Resource> extends ResourceHandler<T> {
 
-    ResourceStorageLayout<T, ?> layout();
+    ResourceStorageLayout<T> layout();
 
     void set(int index, T resource, int amount);
     void setTransactional(int index, T resource, int amount, TransactionContext transaction);
-
-    // For use in block implementations - bypasses layout slot settings
-    int internalInsert(int index, T resource, int amount, TransactionContext transaction);
-
-    default int internalInsert(T resource, int amount, TransactionContext transaction) {
-        TransferPreconditions.checkNonEmptyNonNegative(resource, amount);
-
-        int inserted = 0;
-        int size = size();
-        for (int index = 0; index < size; index++) {
-            inserted += internalInsert(index, resource, amount - inserted, transaction);
-            if (inserted == amount) break;
-        }
-        return inserted;
-    }
-
-    int internalExtract(int index, T resource, int amount, TransactionContext transaction);
-
-    default int internalExtract(T resource, int amount, TransactionContext transaction) {
-        TransferPreconditions.checkNonEmptyNonNegative(resource, amount);
-
-        int extracted = 0;
-        int size = size();
-        for (int index = 0; index < size; index++) {
-            extracted += internalExtract(index, resource, amount - extracted, transaction);
-            if (extracted == amount) break;
-        }
-        return extracted;
-    }
 
     @ApiStatus.NonExtendable
     default T getResource(ResourceSlotId<T> slotId) {
@@ -89,18 +60,8 @@ public interface ResourceStorage<T extends Resource> extends ResourceHandler<T> 
     }
 
     @ApiStatus.NonExtendable
-    default int internalInsert(ResourceSlotId<T> slotId, T resource, int amount, TransactionContext transaction) {
-        return this.internalInsert(slotId.index(layout()), resource, amount, transaction);
-    }
-
-    @ApiStatus.NonExtendable
     default int extract(ResourceSlotId<T> slotId, T resource, int amount, TransactionContext transaction) {
         return this.extract(slotId.index(layout()), resource, amount, transaction);
-    }
-
-    @ApiStatus.NonExtendable
-    default int internalExtract(ResourceSlotId<T> slotId, T resource, int amount, TransactionContext transaction) {
-        return this.internalExtract(slotId.index(layout()), resource, amount, transaction);
     }
 }
 

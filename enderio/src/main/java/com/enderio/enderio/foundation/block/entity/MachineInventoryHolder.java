@@ -1,9 +1,9 @@
 package com.enderio.enderio.foundation.block.entity;
 
-import com.enderio.enderio.foundation.inventory.MachineInventory;
+import com.enderio.core.common.storage.ItemStorage;
 
 public interface MachineInventoryHolder {
     boolean hasInventory();
 
-    MachineInventory getInventory();
+    ItemStorage getInventory();
 }

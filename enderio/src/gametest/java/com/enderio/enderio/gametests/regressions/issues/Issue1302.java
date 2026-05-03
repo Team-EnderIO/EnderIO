@@ -33,7 +33,7 @@ public class Issue1302 {
                 // Wait long enough for all sponges to be processed (tank acts every 5 ticks)
                 .thenExecuteAfter(20, () -> {
                     // All 3 wet sponges should have been consumed
-                    helper.assertSlotHasNoItem(0, 0, 0, FluidTankBlockEntity.FLUID_FILL_INPUT.getIndex());
+                    helper.assertSlotHasNoItem(0, 0, 0, FluidTankBlockEntity.FLUID_FILL_INPUT);
                     // Should have produced exactly 3 dry sponges, not 4
                     helper.assertContainerHasExactly(0, 0, 0, Items.SPONGE, 3);
                     // Should have exactly 3000 mB of water in the tank

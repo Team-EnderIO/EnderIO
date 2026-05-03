@@ -1,11 +1,11 @@
 package com.enderio.enderio.foundation.menu;
 
 import com.enderio.core.common.menu.SlotWithOverlay;
-import com.enderio.enderio.foundation.inventory.MachineInventory;
-import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
+import com.enderio.core.common.storage.ItemStorage;
+import com.enderio.core.common.storage.slot.ResourceSlotId;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
 import org.jspecify.annotations.Nullable;
 
@@ -15,33 +15,27 @@ public class MachineSlot extends ResourceHandlerSlot implements SlotWithOverlay 
     @Nullable
     private Identifier foregroundSprite;
 
-    public MachineSlot(MachineInventory handler, int index, int xPosition, int yPosition) {
-        super(handler, handler::set, index, xPosition, yPosition);
+    public MachineSlot(ItemStorage itemStorage, int index, int xPosition, int yPosition) {
+        super(itemStorage, itemStorage::set, index, xPosition, yPosition);
         this.index = index;
     }
 
-    public MachineSlot(MachineInventory handler, SingleSlotAccess access, int xPosition, int yPosition) {
-        super(handler, handler::set, access.getIndex(), xPosition, yPosition);
-        this.index = access.getIndex();
+    public MachineSlot(ItemStorage itemStorage, ResourceSlotId<ItemResource> slotId, int xPosition, int yPosition) {
+        this(itemStorage, slotId.index(itemStorage), xPosition, yPosition);
     }
 
     @Override
-    public MachineInventory getResourceHandler() {
-        return (MachineInventory) super.getResourceHandler();
+    public ItemStorage getResourceHandler() {
+        return (ItemStorage) super.getResourceHandler();
     }
 
     @Override
     public boolean mayPlace(ItemStack stack) {
-        return getResourceHandler().layout().guiCanInsert(this.index) && super.mayPlace(stack);
+        return super.mayPlace(stack) && getResourceHandler().layout().slotConfig(index).guiRules().canInsert(ItemResource.of(stack));
     }
 
-    @Override
-    public boolean mayPickup(Player playerIn) {
-        return getResourceHandler().layout().guiCanExtract(this.index) && super.mayPickup(playerIn);
-    }
-
-    public boolean canQuickInsertStack() {
-        return isActive() && getResourceHandler().layout().guiCanInsert(getSlotIndex());
+    public boolean canQuickInsertStack(ItemResource itemResource) {
+        return isActive() && getResourceHandler().layout().slotConfig(index).guiRules().canInsert(itemResource);
     }
 
     @Override

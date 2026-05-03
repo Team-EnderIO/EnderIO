@@ -41,9 +41,9 @@ public class AlloySmelterMenu extends PoweredMachineMenu<AlloySmelterBlockEntity
         // Capacitor slot
         addCapacitorSlot(8, 89);
 
-        addSlot(new MachineSlot(getMachineInventory(), AlloySmelterBlockEntity.INPUTS.get(0), 55, 38));
-        addSlot(new MachineSlot(getMachineInventory(), AlloySmelterBlockEntity.INPUTS.get(1), 80, 28));
-        addSlot(new MachineSlot(getMachineInventory(), AlloySmelterBlockEntity.INPUTS.get(2), 104, 38));
+        addSlot(new MachineSlot(getMachineInventory(), AlloySmelterBlockEntity.INPUTS.slot(0), 55, 38));
+        addSlot(new MachineSlot(getMachineInventory(), AlloySmelterBlockEntity.INPUTS.slot(1), 80, 28));
+        addSlot(new MachineSlot(getMachineInventory(), AlloySmelterBlockEntity.INPUTS.slot(2), 104, 38));
         addSlot(new MachineSlot(getMachineInventory(), AlloySmelterBlockEntity.OUTPUT, 80, 79));
 
         addPlayerInventorySlots(8, 126);

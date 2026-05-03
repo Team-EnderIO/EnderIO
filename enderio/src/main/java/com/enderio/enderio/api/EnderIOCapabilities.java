@@ -41,6 +41,7 @@ public class EnderIOCapabilities {
     public static final BlockCapability<SoulBindable, Void> SOUL_BINDABLE_BLOCK = BlockCapability
         .createVoid(EnderIOAPI.rl("soul_bindable"), SoulBindable.class);
 
+    // TODO: Convert to ResourceHandler
     public static final ItemCapability<com.enderio.enderio.api.soul.storage.SoulHandler, Void> SOUL_HANDLER_ITEM = ItemCapability
         .createVoid(EnderIOAPI.rl("soul_handler"), com.enderio.enderio.api.soul.storage.SoulHandler.class);
 

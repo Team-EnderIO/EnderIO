@@ -1,6 +1,9 @@
 package com.enderio.enderio.content.machines.painting;
 
 import com.enderio.core.common.recipes.OutputStack;
+import com.enderio.core.common.storage.layout.ItemStorageLayout;
+import com.enderio.core.common.storage.layout.SlotTemplates;
+import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
@@ -10,8 +13,7 @@ import com.enderio.enderio.content.paint.block.PaintedBlock;
 import com.enderio.enderio.foundation.MachineNBTKeys;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
-import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
-import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
+import com.enderio.enderio.foundation.inventory.MachineSlotTemplates;
 import com.enderio.enderio.foundation.recipe.MachineRecipeCaches;
 import com.enderio.enderio.foundation.task.PoweredCraftingMachineTask;
 import com.enderio.enderio.foundation.task.host.CraftingMachineTaskHost;
@@ -19,7 +21,6 @@ import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOCriterions;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIORecipeTypes;
-import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
@@ -27,15 +28,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.EmptyBlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
@@ -47,9 +43,11 @@ import java.util.Optional;
 
 public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
 
-    public static final SingleSlotAccess INPUT = new SingleSlotAccess();
-    public static final SingleSlotAccess PAINT = new SingleSlotAccess();
-    public static final SingleSlotAccess OUTPUT = new SingleSlotAccess();
+    public static final SingleResourceSlotKey<ItemResource> INPUT = new SingleResourceSlotKey<>();
+    public static final SingleResourceSlotKey<ItemResource> PAINT = new SingleResourceSlotKey<>();
+    public static final SingleResourceSlotKey<ItemResource> OUTPUT = new SingleResourceSlotKey<>();
+    public static final SingleResourceSlotKey<ItemResource> CAPACITOR = new SingleResourceSlotKey<>();
+
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
             MachinesConfig.COMMON.ENERGY.PAINTING_MACHINE_CAPACITY);
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE,
@@ -60,7 +58,7 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
     private final CraftingMachineTaskHost<PaintingRecipe, PaintingRecipe.Input> craftingTaskHost;
 
     public PaintingMachineBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(EIOBlockEntities.PAINTING_MACHINE.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
+        super(EIOBlockEntities.PAINTING_MACHINE.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, CAPACITOR,
                 EnergyIOMode.Input, CAPACITY, USAGE);
 
         area = AABB.ofSize(worldPosition.getCenter(), 10, 10, 10);
@@ -93,16 +91,15 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
     // region Inventory
 
     @Override
-    public MachineInventoryLayout createInventoryLayout() {
-        return MachineInventoryLayout.builder()
-                .capacitor()
-                .inputSlot(this::isValidInput)
-                .slotAccess(INPUT)
-                .inputSlot(this::isValidPaint)
-                .slotAccess(PAINT)
-                .outputSlot()
-                .slotAccess(OUTPUT)
-                .build();
+    public ItemStorageLayout createInventoryLayout() {
+        return ItemStorageLayout.builder()
+            .add(CAPACITOR, MachineSlotTemplates.capacitor())
+            .add(INPUT, SlotTemplates.input(), b -> b
+                .filter(this::isValidInput))
+            .add(PAINT, SlotTemplates.input(), b -> b
+                .filter(this::isValidPaint))
+            .add(OUTPUT, SlotTemplates.output())
+            .build();
     }
 
     private boolean isValidInput(int index, ItemResource stack) {
@@ -128,7 +125,7 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
     }
 
     private PaintingRecipe.Input createRecipeInput() {
-        return new PaintingRecipe.Input(INPUT.getStack(getInventory()), PAINT.getStack(getInventory()));
+        return new PaintingRecipe.Input(getInventory().getStack(INPUT), getInventory().getStack(PAINT));
     }
 
     // endregion
@@ -146,11 +143,11 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
 
     protected PoweredCraftingMachineTask<PaintingRecipe, PaintingRecipe.Input> createTask(Level level,
             PaintingRecipe.Input recipeInput, @Nullable RecipeHolder<PaintingRecipe> recipe) {
-        return new PoweredCraftingMachineTask<>(level, getInventory(), getEnergyStorage(), recipeInput, OUTPUT,
+        return new PoweredCraftingMachineTask<>(level, this, getInventory(), getEnergyStorage(), recipeInput, OUTPUT,
                 recipe) {
             @Override
             protected void consumeInputs(PaintingRecipe recipe) {
-                INPUT.getStack(getInventory()).shrink(1);
+                getInventory().mutateStack(INPUT, stack -> stack.shrink(1));
             }
 
             @Override

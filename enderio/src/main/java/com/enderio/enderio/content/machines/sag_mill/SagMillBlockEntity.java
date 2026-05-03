@@ -1,5 +1,10 @@
 package com.enderio.enderio.content.machines.sag_mill;
 
+import com.enderio.core.common.storage.ItemStorage;
+import com.enderio.core.common.storage.layout.ItemStorageLayout;
+import com.enderio.core.common.storage.layout.SlotTemplates;
+import com.enderio.core.common.storage.slot.MultiResourceSlotKey;
+import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.enderio.api.components.GrindingBallData;
@@ -10,10 +15,7 @@ import com.enderio.enderio.foundation.MachineNBTKeys;
 import com.enderio.enderio.foundation.block.ProgressMachineBlock;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
-import com.enderio.enderio.foundation.inventory.MachineInventory;
-import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
-import com.enderio.enderio.foundation.inventory.MultiSlotAccess;
-import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
+import com.enderio.enderio.foundation.inventory.MachineSlotTemplates;
 import com.enderio.enderio.foundation.recipe.MachineRecipeCaches;
 import com.enderio.enderio.foundation.task.PoweredCraftingMachineTask;
 import com.enderio.enderio.foundation.task.host.CraftingMachineTaskHost;
@@ -51,9 +53,10 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE,
             MachinesConfig.COMMON.ENERGY.SAG_MILL_USAGE);
 
-    public static final SingleSlotAccess INPUT = new SingleSlotAccess();
-    public static final SingleSlotAccess GRINDING_BALL = new SingleSlotAccess();
-    public static final MultiSlotAccess OUTPUT = new MultiSlotAccess();
+    public static final SingleResourceSlotKey<ItemResource> INPUT = new SingleResourceSlotKey<>();
+    public static final SingleResourceSlotKey<ItemResource> GRINDING_BALL = new SingleResourceSlotKey<>();
+    public static final MultiResourceSlotKey<ItemResource> OUTPUT = new MultiResourceSlotKey<>(4);
+    public static final SingleResourceSlotKey<ItemResource> CAPACITOR = new SingleResourceSlotKey<>();
 
     private GrindingBallData grindingBallData = GrindingBallData.IDENTITY;
     private int grindingBallDamage;
@@ -61,7 +64,7 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
     private final CraftingMachineTaskHost<SagMillingRecipe, SagMillingRecipe.Input> craftingTaskHost;
 
     public SagMillBlockEntity(BlockPos worldPosition, BlockState blockState) {
-        super(EIOBlockEntities.SAG_MILL.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED,
+        super(EIOBlockEntities.SAG_MILL.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, CAPACITOR,
                 EnergyIOMode.Input, CAPACITY, USAGE);
 
         craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy, EIORecipeTypes.SAG_MILLING.get(),
@@ -117,7 +120,7 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
             double dy = random.nextDouble();
             double dz = axis == Direction.Axis.Z ? direction.getStepZ() * r : ss;
             level.addParticle(ParticleTypes.DUST_PLUME, x + dx, y + dy, z + dz, 0.0, 0.0, 0.0);
-            ItemStack input = INPUT.getItemStack(this);
+            ItemStack input = getInventory().getStack(INPUT);
             if (input.getItem() instanceof BlockItem blockItem) {
                 level.addParticle(new BlockParticleOption(ParticleTypes.BLOCK, blockItem.getBlock().defaultBlockState()), x + dx, y + dy, z + dz, 0.0, 0.0, 0.0);
             } else {
@@ -135,16 +138,15 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
-    public MachineInventoryLayout createInventoryLayout() {
-        return MachineInventoryLayout.builder()
-                .inputSlot(this::isValidInput)
-                .slotAccess(INPUT)
-                .outputSlot(4)
-                .slotAccess(OUTPUT)
-                .inputSlot((_, itemResource) -> itemResource.typeHolder().getData(GrindingBallData.DATA_MAP_TYPE) != null)
-                .slotAccess(GRINDING_BALL)
-                .capacitor()
-                .build();
+    public ItemStorageLayout createInventoryLayout() {
+        return ItemStorageLayout.builder()
+            .add(INPUT, SlotTemplates.input(), b -> b
+                .filter(this::isValidInput))
+            .add(OUTPUT, SlotTemplates.output())
+            .add(GRINDING_BALL, SlotTemplates.input(), b -> b
+                .filter((_, itemResource) -> itemResource.typeHolder().getData(GrindingBallData.DATA_MAP_TYPE) != null))
+            .add(CAPACITOR, MachineSlotTemplates.capacitor())
+            .build();
     }
 
     private boolean isValidInput(int index, ItemResource stack) {
@@ -158,7 +160,7 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
     }
 
     private SagMillingRecipe.Input createRecipeInput() {
-        return new SagMillingRecipe.Input(INPUT.getStack(getInventory()), getGrindingBallData());
+        return new SagMillingRecipe.Input(getInventory().getStack(INPUT), getGrindingBallData());
     }
 
     // region Crafting Task
@@ -173,16 +175,16 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
     }
 
     protected PoweredCraftingMachineTask<SagMillingRecipe, SagMillingRecipe.Input> createTask(Level level,
-            SagMillingRecipe.Input container, @Nullable RecipeHolder<SagMillingRecipe> recipe) {
-        return new PoweredCraftingMachineTask<>(level, getInventory(), getEnergyStorage(), container, OUTPUT, recipe) {
+        SagMillingRecipe.Input container, @Nullable RecipeHolder<SagMillingRecipe> recipe) {
+        return new PoweredCraftingMachineTask<>(level, this, getInventory(), getEnergyStorage(), container, OUTPUT, recipe) {
             @Override
             protected void consumeInputs(SagMillingRecipe recipe) {
-                MachineInventory inv = getInventory();
-                INPUT.getStack(inv).shrink(1);
+                ItemStorage inv = getInventory();
+                inv.mutateStack(INPUT, stack -> stack.shrink(1));
 
                 // Claim any available grinding balls.
                 if (recipe.bonusType().useGrindingBall() && grindingBallData.isIdentity()) {
-                    ItemStack ball = GRINDING_BALL.getStack(inv);
+                    ItemStack ball = inv.getStack(GRINDING_BALL);
                     if (!ball.isEmpty()) {
                         GrindingBallData data = ball.typeHolder().getData(GrindingBallData.DATA_MAP_TYPE);
                         if (data == null) {
@@ -190,7 +192,7 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
                         }
                         setGrindingBallData(data);
                         if (!data.isIdentity()) {
-                            ball.shrink(1);
+                            inv.mutateStack(GRINDING_BALL, stack -> stack.shrink(1));
                         }
                     }
                 }

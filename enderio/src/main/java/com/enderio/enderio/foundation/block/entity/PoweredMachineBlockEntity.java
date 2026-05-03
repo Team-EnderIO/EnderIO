@@ -1,5 +1,7 @@
 package com.enderio.enderio.foundation.block.entity;
 
+import com.enderio.core.common.storage.ItemStorage;
+import com.enderio.core.common.storage.slot.ResourceSlotId;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.core.annotations.UseOnly;
 import com.enderio.enderio.api.capacitor.CapacitorData;
@@ -9,7 +11,6 @@ import com.enderio.enderio.content.capacitors.CapacitorItem;
 import com.enderio.enderio.foundation.MachineNBTKeys;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
 import com.enderio.enderio.foundation.energy.PoweredMachineEnergyStorage;
-import com.enderio.enderio.foundation.inventory.MachineInventory;
 import com.enderio.enderio.foundation.io.TransferUtil;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.init.EIODataComponents;
@@ -31,6 +32,8 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 import net.neoforged.neoforge.transfer.energy.EnergyHandlerUtil;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class PoweredMachineBlockEntity extends MachineBlockEntity implements MachineInstallable {
 
@@ -38,6 +41,10 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
             be, side) -> side == null ? be.energyStorage : be.energyStorage.getSided(side);
 
     private final CapacitorSupport capacitorSupport;
+
+    @Nullable
+    private final ResourceSlotId<ItemResource> capacitorSlotId;
+
     private CapacitorData capacitorData = CapacitorData.NONE;
     private boolean isCapacitorDataDirty;
 
@@ -47,20 +54,28 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
 
     private final PoweredMachineEnergyStorage energyStorage;
 
-    public PoweredMachineBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState,
-                                     boolean isIoConfigMutable, CapacitorSupport capacitorSupport, EnergyIOMode energyIOMode,
-                                     CapacitorScalable scalableEnergyCapacity, CapacitorScalable scalableMaxEnergyUse) {
+    public PoweredMachineBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState, boolean isIoConfigMutable,
+        CapacitorSupport capacitorSupport, @Nullable ResourceSlotId<ItemResource> capacitorSlotId, EnergyIOMode energyIOMode,
+        CapacitorScalable scalableEnergyCapacity, CapacitorScalable scalableMaxEnergyUse) {
         super(type, worldPosition, blockState, isIoConfigMutable);
 
         this.capacitorSupport = capacitorSupport;
+
+        if (this.capacitorSupport == CapacitorSupport.NONE && capacitorSlotId != null) {
+            throw new IllegalArgumentException("A machine which does not support capacitors cannot have a capacitor slot!");
+        } else if (this.capacitorSupport == CapacitorSupport.REQUIRED && capacitorSlotId == null) {
+            throw new IllegalArgumentException("A machine which requires a capacitor must have a capacitor slot!");
+        }
+
+        this.capacitorSlotId = capacitorSlotId;
         this.energyIOMode = energyIOMode;
         this.scalableEnergyCapacity = scalableEnergyCapacity;
         this.scalableMaxEnergyUse = scalableMaxEnergyUse;
 
         // Sanity check for capacitors.
-        if (supportsCapacitor() && (!hasInventory() || !getInventory().layout().supportsCapacitor())) {
+        if (supportsCapacitor() && (!hasInventory() || capacitorSlotId == null)) {
             throw new IllegalStateException(
-                    "A machine which accepts a capacitor must have an inventory with a capacitor slot!");
+                "A machine which accepts a capacitor must have an inventory with a capacitor slot!");
         }
 
         energyStorage = new PoweredMachineEnergyStorage(this) {
@@ -214,8 +229,13 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
             return ItemStack.EMPTY;
         }
 
-        MachineInventory inventory = getInventory();
-        return inventory.getStack(inventory.layout().getCapacitorSlot());
+        ItemStorage inventory = getInventory();
+
+        if (capacitorSlotId == null) {
+            throw new IllegalStateException("Unable to get capacitor item, inventory has no capacitor slot.");
+        }
+
+        return inventory.getStack(capacitorSlotId);
     }
 
     public final int getCapacitorSlotIndex() {
@@ -224,11 +244,11 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
         }
 
         var layout = getInventory().layout();
-        if (!layout.supportsCapacitor()) {
+        if (capacitorSlotId == null) {
             throw new IllegalStateException("Unable to get capacitor slot index, inventory has no capacitor slot.");
         }
 
-        return layout.getCapacitorSlot();
+        return capacitorSlotId.index(layout);
     }
 
     protected void updateCapacitorData() {
@@ -275,9 +295,9 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
 
     @Override
     public InteractionResult tryItemInstall(ItemStack stack, UseOnContext context) {
-        if (stack.getItem() instanceof CapacitorItem && supportsCapacitor() && !isCapacitorInstalled()) {
-            MachineInventory inventory = getInventory();
-            inventory.setStack(inventory.layout().getCapacitorSlot(), stack.copyWithCount(1));
+        if (stack.getItem() instanceof CapacitorItem && supportsCapacitor() && !isCapacitorInstalled() && capacitorSlotId != null) {
+            ItemStorage inventory = getInventory();
+            inventory.setStack(capacitorSlotId, stack.copyWithCount(1));
             stack.shrink(1);
             return InteractionResult.SUCCESS;
         }

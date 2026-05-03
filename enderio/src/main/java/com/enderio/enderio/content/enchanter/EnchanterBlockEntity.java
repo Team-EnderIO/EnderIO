@@ -1,11 +1,11 @@
 package com.enderio.enderio.content.enchanter;
 
 import com.enderio.core.common.blockentity.EnderBlockEntity;
+import com.enderio.core.common.storage.ItemStorage;
+import com.enderio.core.common.storage.layout.ItemStorageLayout;
+import com.enderio.core.common.storage.layout.SlotTemplates;
+import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.foundation.MachineNBTKeys;
-import com.enderio.enderio.foundation.inventory.MachineInventory;
-import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
-import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
-import com.enderio.enderio.foundation.io.DumbIOConfigurable;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIORecipeTypes;
 import net.minecraft.core.BlockPos;
@@ -34,12 +34,12 @@ public class EnchanterBlockEntity extends EnderBlockEntity implements MenuProvid
 
     @Nullable
     private RecipeHolder<EnchanterRecipe> currentRecipe;
-    public static final SingleSlotAccess BOOK = new SingleSlotAccess();
-    public static final SingleSlotAccess CATALYST = new SingleSlotAccess();
-    public static final SingleSlotAccess LAPIS = new SingleSlotAccess();
-    public static final SingleSlotAccess OUTPUT = new SingleSlotAccess();
+    public static final SingleResourceSlotKey<ItemResource> BOOK = new SingleResourceSlotKey<>();
+    public static final SingleResourceSlotKey<ItemResource> CATALYST = new SingleResourceSlotKey<>();
+    public static final SingleResourceSlotKey<ItemResource> LAPIS = new SingleResourceSlotKey<>();
+    public static final SingleResourceSlotKey<ItemResource> OUTPUT = new SingleResourceSlotKey<>();
 
-    private final MachineInventory inventory;
+    private final ItemStorage inventory;
 
     public EnchanterBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.ENCHANTER.get(), worldPosition, blockState);
@@ -48,8 +48,8 @@ public class EnchanterBlockEntity extends EnderBlockEntity implements MenuProvid
     }
 
     public EnchanterRecipe.Input createRecipeInput() {
-        return new EnchanterRecipe.Input(BOOK.getStack(getInventory()), CATALYST.getStack(getInventory()),
-                LAPIS.getStack(getInventory()));
+        return new EnchanterRecipe.Input(getInventory().getStack(BOOK), getInventory().getStack(CATALYST),
+            getInventory().getStack(LAPIS));
     }
 
     // region MenuProvider
@@ -68,26 +68,24 @@ public class EnchanterBlockEntity extends EnderBlockEntity implements MenuProvid
 
     // region Inventory & Recipe
 
-    public MachineInventory getInventory() {
+    public ItemStorage getInventory() {
         return inventory;
     }
 
-    private MachineInventoryLayout getInventoryLayout() {
-        return MachineInventoryLayout.builder()
-                .inputSlot((slot, stack) -> stack.getItem() == Items.WRITABLE_BOOK)
-                .slotAccess(BOOK)
-                .inputSlot()
-                .slotAccess(CATALYST)
-                .inputSlot((slot, stack) -> stack.is(Tags.Items.GEMS_LAPIS))
-                .slotAccess(LAPIS)
-                .outputSlot()
-                .slotAccess(OUTPUT)
-                .build();
+    private ItemStorageLayout getInventoryLayout() {
+        return ItemStorageLayout.builder()
+            .add(BOOK, SlotTemplates.input(), b -> b
+                .filter((_, itemResource) -> itemResource.is(Items.WRITABLE_BOOK)))
+            .add(CATALYST, SlotTemplates.input())
+            .add(LAPIS, SlotTemplates.input(), b -> b
+                .filter((_, itemResource) -> itemResource.is(Tags.Items.GEMS_LAPIS)))
+            .add(OUTPUT, SlotTemplates.output())
+            .build();
     }
 
-    private MachineInventory createInventory() {
+    private ItemStorage createInventory() {
         // Custom behaviour as this works more like a crafting table than a machine.
-        return new MachineInventory(DumbIOConfigurable.DISABLED, getInventoryLayout()) {
+        return new ItemStorage(getInventoryLayout()) {
 
             @Override
             protected void onContentsChanged(int slot, ItemStack previousContents) {
@@ -102,12 +100,11 @@ public class EnchanterBlockEntity extends EnderBlockEntity implements MenuProvid
                         .getRecipeFor(EIORecipeTypes.ENCHANTING.get(), recipeInput, level)
                         .orElse(null);
                 }
-                if (!OUTPUT.isSlot(slot)) {
+                if (OUTPUT.index(getInventory()) != slot) {
                     if (currentRecipe != null) {
-                        OUTPUT.setStackInSlot(this,
-                                currentRecipe.value().assemble(recipeInput));
+                        getInventory().setStack(OUTPUT, currentRecipe.value().assemble(recipeInput));
                     } else {
-                        OUTPUT.setStackInSlot(this, ItemStack.EMPTY);
+                        getInventory().setStack(OUTPUT, ItemStack.EMPTY);
                     }
                 }
 
@@ -120,7 +117,7 @@ public class EnchanterBlockEntity extends EnderBlockEntity implements MenuProvid
                     return 0;
                 }
 
-                if (OUTPUT.isSlot(index) && level.isClientSide()) {
+                if (OUTPUT.index(getInventory()) == index && level.isClientSide()) {
                     return 0;
                 }
                 return super.extract(index, resource, amount, transaction);

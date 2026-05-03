@@ -29,7 +29,7 @@ public class PoweredMachineEnergyStorage implements EnergyHandler, ValueIOSerial
 
     @Override
     public long getAmountAsLong() {
-        return energyStored;
+        return Math.min(energyStored, getCapacityAsLong());
     }
 
     @Override
@@ -101,7 +101,7 @@ public class PoweredMachineEnergyStorage implements EnergyHandler, ValueIOSerial
         TransferPreconditions.checkNonNegative(maxEnergyToConsume);
 
         try (Transaction subTransaction = Transaction.open(transactionContext)) {
-            int consumed = Math.min(energyStored, Math.min(maxEnergyToConsume, getMaxConsumption()));
+            int consumed = Math.min(getAmountAsInt(), Math.min(maxEnergyToConsume, getMaxConsumption()));
             if (consumed > 0) {
                 energyJournal.updateSnapshots(subTransaction);
                 energyStored -= consumed;
@@ -135,7 +135,7 @@ public class PoweredMachineEnergyStorage implements EnergyHandler, ValueIOSerial
             return 0;
         }
 
-        int inserted = Mth.clamp(getCapacityAsInt() - this.energyStored, 0, amount);
+        int inserted = Mth.clamp(getCapacityAsInt() - getAmountAsInt(), 0, amount);
         if (inserted > 0) {
             energyJournal.updateSnapshots(transactionContext);
             energyStored += inserted;
@@ -152,7 +152,7 @@ public class PoweredMachineEnergyStorage implements EnergyHandler, ValueIOSerial
             return 0;
         }
 
-        int extracted = Math.min(energyStored, amount);
+        int extracted = Math.min(getAmountAsInt(), amount);
         if (extracted > 0) {
             energyJournal.updateSnapshots(transactionContext);
             energyStored -= extracted;

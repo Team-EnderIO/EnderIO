@@ -24,10 +24,10 @@ public class ImpulseHopperMenu extends PoweredMachineMenu<ImpulseHopperBlockEnti
     private void addSlots() {
         for (int i = 0; i < 6; i++) {
             this.addSlot(
-                    new MachineSlot(getMachineInventory(), ImpulseHopperBlockEntity.INPUT.get(i), 8 + 36 + i * 18, 9));
-            this.addSlot(new GhostMachineSlot(getMachineInventory(), ImpulseHopperBlockEntity.GHOST.get(i),
+                    new MachineSlot(getMachineInventory(), ImpulseHopperBlockEntity.INPUT.slot(i), 8 + 36 + i * 18, 9));
+            this.addSlot(new GhostMachineSlot(getMachineInventory(), ImpulseHopperBlockEntity.GHOST.slot(i),
                     8 + 36 + i * 18, 9 + 27));
-            this.addSlot(new MachineSlot(getMachineInventory(), ImpulseHopperBlockEntity.OUTPUT.get(i), 8 + 36 + i * 18,
+            this.addSlot(new MachineSlot(getMachineInventory(), ImpulseHopperBlockEntity.OUTPUT.slot(i), 8 + 36 + i * 18,
                     9 + 54));
         }
 

@@ -33,7 +33,7 @@ public class CrafterMenu extends PoweredMachineMenu<CrafterBlockEntity> {
         // Main storage slots [1-9]
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                this.addSlot(new MachineSlot(getMachineInventory(), CrafterBlockEntity.INPUT.get((3 * i) + j),
+                this.addSlot(new MachineSlot(getMachineInventory(), CrafterBlockEntity.INPUT.slot((3 * i) + j),
                         113 + (j * 18), 16 + (i * 18)));
             }
         }
@@ -44,7 +44,7 @@ public class CrafterMenu extends PoweredMachineMenu<CrafterBlockEntity> {
         // Recipe Display slots [11-19]
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                this.addSlot(new GhostMachineSlot(getMachineInventory(), CrafterBlockEntity.GHOST.get((3 * i) + j),
+                this.addSlot(new GhostMachineSlot(getMachineInventory(), CrafterBlockEntity.GHOST.slot((3 * i) + j),
                         31 + (j * 18), 16 + (i * 18)));
             }
         }

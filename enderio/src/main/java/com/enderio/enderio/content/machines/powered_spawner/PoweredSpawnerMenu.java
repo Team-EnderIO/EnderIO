@@ -2,8 +2,8 @@ package com.enderio.enderio.content.machines.powered_spawner;
 
 import com.enderio.core.common.network.menu.EnumSyncSlot;
 import com.enderio.core.common.network.menu.FloatSyncSlot;
-import com.enderio.enderio.foundation.inventory.MachineInventory;
-import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
+import com.enderio.core.common.storage.ItemStorage;
+import com.enderio.core.common.storage.slot.ResourceSlotId;
 import com.enderio.enderio.foundation.menu.MachineSlot;
 import com.enderio.enderio.foundation.menu.PoweredMachineMenu;
 import com.enderio.enderio.init.EIOBlockEntities;
@@ -11,6 +11,7 @@ import com.enderio.enderio.init.EIOMenus;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 public class PoweredSpawnerMenu extends PoweredMachineMenu<PoweredSpawnerBlockEntity> {
 
@@ -76,7 +77,7 @@ public class PoweredSpawnerMenu extends PoweredMachineMenu<PoweredSpawnerBlockEn
     }
 
     private class SpawnerSlot extends MachineSlot {
-        public SpawnerSlot(MachineInventory itemHandler, SingleSlotAccess access, int xPosition, int yPosition) {
+        public SpawnerSlot(ItemStorage itemHandler, ResourceSlotId<ItemResource> access, int xPosition, int yPosition) {
             super(itemHandler, access, xPosition, yPosition);
         }
 

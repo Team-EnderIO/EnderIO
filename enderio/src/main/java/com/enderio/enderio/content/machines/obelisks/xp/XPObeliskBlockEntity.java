@@ -2,6 +2,7 @@ package com.enderio.enderio.content.machines.obelisks.xp;
 
 import com.enderio.core.common.storage.FluidStorage;
 import com.enderio.core.common.storage.layout.FluidStorageLayout;
+import com.enderio.core.common.storage.layout.SlotTemplates;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.storage.SidedResourceHandler;
@@ -40,21 +41,21 @@ public class XPObeliskBlockEntity extends MachineBlockEntity {
 
     public static final SingleResourceSlotKey<FluidResource> TANK_SLOT = new SingleResourceSlotKey<>();
 
-    public static final FluidStorageLayout<XPObeliskBlockEntity> FLUID_STORAGE_LAYOUT =
-        FluidStorageLayout.<XPObeliskBlockEntity>builder()
-            .storageSlot(TANK_SLOT, slot -> slot
+    public static final FluidStorageLayout FLUID_STORAGE_LAYOUT =
+        FluidStorageLayout.builder()
+            .add(TANK_SLOT, SlotTemplates.storage(), slot -> slot
                 .capacity(Integer.MAX_VALUE)
-                .filter((index, resource, obelisk) -> resource.getFluid().is(Tags.Fluids.EXPERIENCE)))
+                .filter((_, resource) -> resource.getFluid().is(Tags.Fluids.EXPERIENCE)))
             .build();
 
-    private final FluidStorage<XPObeliskBlockEntity> fluidStorage;
+    private final FluidStorage fluidStorage;
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public XPObeliskBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.XP_OBELISK.get(), worldPosition, blockState, true);
 
-        fluidStorage = new FluidStorage<>(FLUID_STORAGE_LAYOUT, this) {
+        fluidStorage = new FluidStorage(FLUID_STORAGE_LAYOUT) {
             @Override
             protected void onContentsChanged(int index, FluidStack previousContents) {
                 super.onContentsChanged(index, previousContents);
@@ -139,7 +140,7 @@ public class XPObeliskBlockEntity extends MachineBlockEntity {
         // Drain the fluid
         int drained;
         try (Transaction transaction = Transaction.openRoot()) {
-            drained = fluidStorage.internalExtract(TANK_SLOT, FluidResource.of(currentFluid.getFluid()), cappedVolume, transaction);
+            drained = fluidStorage.extract(TANK_SLOT, FluidResource.of(currentFluid.getFluid()), cappedVolume, transaction);
             transaction.commit();
         }
 
@@ -192,7 +193,7 @@ public class XPObeliskBlockEntity extends MachineBlockEntity {
         // Add the fluid
         int filled;
         try (Transaction transaction = Transaction.openRoot()) {
-            filled = fluidStorage.internalInsert(TANK_SLOT, FluidResource.of(fillFluid), cappedVolume, transaction);
+            filled = fluidStorage.insert(TANK_SLOT, FluidResource.of(fillFluid), cappedVolume, transaction);
             transaction.commit();
         }
 
