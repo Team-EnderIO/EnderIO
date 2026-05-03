@@ -5,6 +5,7 @@ import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.foundation.util.ExperienceUtil;
 import com.enderio.enderio.init.EIOFluids;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -36,13 +37,18 @@ public class ExperienceRodItem extends Item {
         }
 
         Player player = context.getPlayer();
+        if (player == null) {
+            return InteractionResult.PASS;
+        }
+
         BlockPos pos = context.getClickedPos();
+        Direction clickedFace = context.getClickedFace();
 
         boolean wasSuccess;
         if (player.isShiftKeyDown()) {
-            wasSuccess = transferFromPlayerToBlock(player, level, pos);
+            wasSuccess = transferFromPlayerToBlock(player, level, pos, clickedFace);
         } else {
-            wasSuccess = transferFromBlockToPlayer(player, level, pos);
+            wasSuccess = transferFromBlockToPlayer(player, level, pos, clickedFace);
         }
 
         if (wasSuccess) {
@@ -60,17 +66,20 @@ public class ExperienceRodItem extends Item {
         return InteractionResult.PASS;
     }
 
-    private static boolean transferFromBlockToPlayer(Player player, Level level, BlockPos pos) {
+    private static boolean transferFromBlockToPlayer(Player player, Level level, BlockPos pos, Direction side) {
         try {
-            var fluidHandler = level.getCapability(Capabilities.FluidHandler.BLOCK, pos, null);
+            var fluidHandler = level.getCapability(Capabilities.FluidHandler.BLOCK, pos, side);
             if (fluidHandler != null) {
                 FluidStack availableFluid = fluidHandler.getFluidInTank(0);
                 if (availableFluid.is(Tags.Fluids.EXPERIENCE) && availableFluid.getAmount() > 0) {
                     int requiredXp = player.getXpNeededForNextLevel();
                     int fluidVolume = requiredXp * ExperienceUtil.EXP_TO_FLUID;
 
-                    FluidStack drained = fluidHandler.drain(fluidVolume, IFluidHandler.FluidAction.EXECUTE);
+                    // See if we can drain the amount we need,
+                    FluidStack availableToDrain = fluidHandler.drain(fluidVolume, IFluidHandler.FluidAction.EXECUTE);
+                    int volumeToDrain = availableToDrain.getAmount() - (availableToDrain.getAmount() % ExperienceUtil.EXP_TO_FLUID);
 
+                    FluidStack drained = fluidHandler.drain(volumeToDrain, IFluidHandler.FluidAction.SIMULATE);
                     if (!drained.isEmpty()) {
                         player.giveExperiencePoints(drained.getAmount() / ExperienceUtil.EXP_TO_FLUID);
                         return true;
@@ -86,13 +95,13 @@ public class ExperienceRodItem extends Item {
         return false;
     }
 
-    private static boolean transferFromPlayerToBlock(Player player, Level level, BlockPos pos) {
+    private static boolean transferFromPlayerToBlock(Player player, Level level, BlockPos pos, Direction direction) {
         try {
             if (player.experienceLevel <= 0 && player.experienceProgress <= 0.0f) {
                 return false;
             }
 
-            var fluidHandler = level.getCapability(Capabilities.FluidHandler.BLOCK, pos, null);
+            var fluidHandler = level.getCapability(Capabilities.FluidHandler.BLOCK, pos, direction);
             if (fluidHandler != null) {
                 long fluidVolume = ExperienceUtil.getPlayerTotalXp(player) * ExperienceUtil.EXP_TO_FLUID;
                 int cappedVolume = (int) Math.min(Integer.MAX_VALUE, fluidVolume);

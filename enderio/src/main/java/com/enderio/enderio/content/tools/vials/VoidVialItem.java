@@ -26,7 +26,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
-import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.entity.player.PlayerXpEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -158,9 +157,20 @@ public class VoidVialItem extends Item implements ICustomCreativeTabEntries {
         if (stack.getItem() instanceof VoidVialItem) {
             IFluidHandler cap = stack.getCapability(Capabilities.FluidHandler.ITEM);
             if (cap != null && event.getOrb().getValue() > 0 && cap.getFluidInTank(0).getAmount() < cap.getTankCapacity(0)) {
-                int exp = event.getOrb().getValue() * ExperienceUtil.EXP_TO_FLUID;
-                int amount = cap.fill(new FluidStack(EIOFluids.XP_JUICE.source(), exp), IFluidHandler.FluidAction.EXECUTE);
-                event.getOrb().value = (exp - amount) / ExperienceUtil.EXP_TO_FLUID;
+                int orbFluidVolume = event.getOrb().getValue() * ExperienceUtil.EXP_TO_FLUID;
+
+                int simulatedFilled = cap.fill(new FluidStack(EIOFluids.XP_JUICE.source(), orbFluidVolume), IFluidHandler.FluidAction.SIMULATE);
+
+                // Ensure we're aligning to the EXP_TO_FLUID boundary
+                int amountToFill = simulatedFilled - (simulatedFilled % ExperienceUtil.EXP_TO_FLUID);
+                if (amountToFill <= 0) {
+                    return;
+                }
+
+                cap.fill(new FluidStack(EIOFluids.XP_JUICE.source(), amountToFill), IFluidHandler.FluidAction.EXECUTE);
+
+                int newOrbVolume = (orbFluidVolume - amountToFill);
+                event.getOrb().value = newOrbVolume / ExperienceUtil.EXP_TO_FLUID;
             }
         }
     }
