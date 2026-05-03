@@ -1,6 +1,7 @@
 package com.enderio.enderio.content.tools.vials;
 
 import com.enderio.core.common.capability.StrictFluidHandlerItemStack;
+import com.enderio.core.common.item.ICustomCreativeTabEntries;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.content.tools.ToolsLang;
@@ -15,6 +16,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -34,7 +36,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import java.util.List;
 
 @EventBusSubscriber
-public class VoidVialItem extends Item {
+public class VoidVialItem extends Item implements ICustomCreativeTabEntries {
 
     public static final ResourceLocation FILLED_MODEL_PROPERTY = EnderIO.rl("void_vial_filled");
 
@@ -43,6 +45,14 @@ public class VoidVialItem extends Item {
 
     public VoidVialItem(Properties properties) {
         super(properties.stacksTo(1));
+    }
+
+    @Override
+    public void addAdditionalCreativeTabEntries(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
+        var filledStack = new ItemStack(this);
+        var fluidHandler = filledStack.getCapability(Capabilities.FluidHandler.ITEM);
+        fluidHandler.fill(new FluidStack(EIOFluids.XP_JUICE.source(), Integer.MAX_VALUE), IFluidHandler.FluidAction.EXECUTE);
+        output.accept(filledStack);
     }
 
     public static boolean isFilled(ItemStack stack) {
@@ -107,11 +117,7 @@ public class VoidVialItem extends Item {
 
     @Override
     public boolean isFoil(ItemStack stack) {
-        var fluidHandler = stack.getCapability(Capabilities.FluidHandler.ITEM);
-        if (fluidHandler != null) {
-            return fluidHandler.getFluidInTank(0).getAmount() == fluidHandler.getTankCapacity(0);
-        }
-        return super.isFoil(stack);
+        return isFilled(stack);
     }
 
     @Override
