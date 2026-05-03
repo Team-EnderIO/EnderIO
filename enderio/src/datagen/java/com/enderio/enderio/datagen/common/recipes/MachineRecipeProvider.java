@@ -289,7 +289,7 @@ public class MachineRecipeProvider extends SubRecipeProvider {
                 .pattern("IRI")
                 .pattern("IPI")
                 .define('I', Tags.Items.INGOTS_IRON)
-                .define('R', EIOItems.EXPERIENCE_ROD)
+                .define('R', EIOItems.VOID_VIAL)
                 .define('P', EIOTags.Items.GEMS_PULSATING_CRYSTAL)
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.PULSATING_CRYSTAL.get()))

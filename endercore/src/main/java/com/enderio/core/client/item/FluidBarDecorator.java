@@ -26,7 +26,13 @@ public class FluidBarDecorator implements IItemDecorator {
 
         float fillRatio = 1.0F
                 - (float) fluidHandler.getFluidInTank(0).getAmount() / (float) fluidHandler.getTankCapacity(0);
-        ItemBarRenderer.renderBar(guiGraphics, fillRatio, xOffset, yOffset, 0, BAR_COLOR);
+        IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluidHandler.getFluidInTank(0).getFluid());
+        int tintColor = props.getTintColor();
+        if (tintColor == 0xFFFFFFFF || tintColor == 0xFFFFFF) {
+            tintColor = BAR_COLOR;
+        }
+
+        ItemBarRenderer.renderBar(guiGraphics, fillRatio, xOffset, yOffset, 0, tintColor);
         return false;
     }
 }

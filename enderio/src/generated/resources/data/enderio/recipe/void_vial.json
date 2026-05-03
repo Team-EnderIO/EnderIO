@@ -3,22 +3,22 @@
   "category": "equipment",
   "key": {
     "G": {
-      "tag": "c:glass_blocks"
+      "item": "enderio:grains_of_infinity"
     },
-    "I": {
-      "tag": "c:ingots/iron"
+    "Q": {
+      "tag": "c:glass_blocks/fused_quartz"
+    },
+    "S": {
+      "tag": "c:ingots/soularium"
     },
     "V": {
       "item": "enderio:suspicious_seed"
-    },
-    "X": {
-      "item": "enderio:grains_of_infinity"
     }
   },
   "pattern": [
-    " I ",
-    "GVG",
-    "XGX"
+    " S ",
+    "QVQ",
+    "GQG"
   ],
   "result": {
     "count": 1,
