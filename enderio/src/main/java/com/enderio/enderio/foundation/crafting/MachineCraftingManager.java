@@ -45,6 +45,7 @@ public final class MachineCraftingManager<T extends Recipe<U>, U extends RecipeI
     private U lastRecipeInput;
 
     private WeakReference<@Nullable RecipeManager> cachedRecipeManager = new WeakReference<>(null);
+    private boolean hasInitiallyCachedRecipeManager;
 
     public MachineCraftingManager(RecipeType<T> recipeType, MachineCraftingContext<T, U> context) {
         this.recipeType = recipeType;
@@ -95,8 +96,9 @@ public final class MachineCraftingManager<T extends Recipe<U>, U extends RecipeI
 
         // If this is the first time we've accessed the recipe manager, ensure it is tracked.
         var recipeManager = level.recipeAccess();
-        if (cachedRecipeManager.get() == null) {
+        if (!hasInitiallyCachedRecipeManager) {
             cachedRecipeManager = new WeakReference<>(recipeManager);
+            hasInitiallyCachedRecipeManager = true;
         }
 
         // The recipe input has changed.

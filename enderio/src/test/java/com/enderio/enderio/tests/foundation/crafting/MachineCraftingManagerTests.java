@@ -165,7 +165,10 @@ public class MachineCraftingManagerTests {
         var input = new SingleRecipeInput(new ItemStack(Items.BEEF));
         var steakRecipe = server.getRecipeManager().getRecipeFor(RecipeType.SMELTING, input, level).get();
 
-        // Mock recipe manager so we can check that getRecipeFor is only called once.
+        // Setup recipe managers
+        var realRecipeManager = spy(server.getRecipeManager());
+        when(level.recipeAccess()).thenReturn(realRecipeManager);
+
         var fakeRecipeManager = mock(RecipeManager.class);
         when(fakeRecipeManager.getRecipeFor(eq(RecipeType.SMELTING), eq(input), eq(level), eq(steakRecipe.id()))).thenReturn(Optional.of(steakRecipe));
 
@@ -176,13 +179,15 @@ public class MachineCraftingManagerTests {
 
         var manager = new MachineCraftingManager<>(RecipeType.SMELTING, context);
 
-        // Act & Assert.
+        // Act.
         manager.tick();
-        Assertions.assertEquals(steakRecipe, manager.currentRecipe());
-
         when(level.recipeAccess()).thenReturn(fakeRecipeManager);
         manager.tick();
 
+        // Assert.
+        Assertions.assertEquals(steakRecipe, manager.currentRecipe());
+
+        verify(realRecipeManager, times(1)).getRecipeFor(eq(RecipeType.SMELTING), eq(input), eq(level));
         verify(fakeRecipeManager, times(1)).getRecipeFor(eq(RecipeType.SMELTING), eq(input), eq(level), eq(steakRecipe.id()));
 
         // Ensure no progress was lost as the recipe is the same.
