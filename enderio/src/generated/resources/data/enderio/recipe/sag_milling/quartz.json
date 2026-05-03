@@ -2,7 +2,7 @@
   "type": "enderio:sag_milling",
   "bonus": "chance_only",
   "input": "#c:gems/quartz",
-  "operation_time": 2400,
+  "operation_time": 200,
   "outputs": [
     {
       "item": {

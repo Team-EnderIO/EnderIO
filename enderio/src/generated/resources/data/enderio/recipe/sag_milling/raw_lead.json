@@ -17,7 +17,7 @@
   ],
   "type": "enderio:sag_milling",
   "input": "#c:raw_materials/lead",
-  "operation_time": 2400,
+  "operation_time": 200,
   "outputs": [
     {
       "item": {

@@ -2,7 +2,7 @@
   "type": "enderio:sag_milling",
   "bonus": "none",
   "input": "minecraft:bone_block",
-  "operation_time": 2400,
+  "operation_time": 200,
   "outputs": [
     {
       "item": {

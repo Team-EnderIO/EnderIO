@@ -18,7 +18,7 @@
   "type": "enderio:sag_milling",
   "bonus": "none",
   "input": "#c:ingots/uranium",
-  "operation_time": 2400,
+  "operation_time": 200,
   "outputs": [
     {
       "item": {

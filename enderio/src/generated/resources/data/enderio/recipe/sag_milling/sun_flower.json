@@ -1,7 +1,7 @@
 {
   "type": "enderio:sag_milling",
   "input": "minecraft:sunflower",
-  "operation_time": 2400,
+  "operation_time": 200,
   "outputs": [
     {
       "chance": 0.8,
