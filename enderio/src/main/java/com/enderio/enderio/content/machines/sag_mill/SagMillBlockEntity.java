@@ -226,6 +226,7 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
         grindingBallData = components.getOrDefault(EIODataComponents.SAG_MILL_GRINDING_BALL,
                 GrindingBallData.IDENTITY);
         grindingBallDamage = components.getOrDefault(EIODataComponents.SAG_MILL_GRINDING_BALL_DAMAGE, 0);
+        craftingManager.applyCraftingState(components.get(EIODataComponents.MACHINE_CRAFTING_STATE));
     }
 
     @Override
@@ -236,6 +237,8 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
             components.set(EIODataComponents.SAG_MILL_GRINDING_BALL, grindingBallData);
             components.set(EIODataComponents.SAG_MILL_GRINDING_BALL_DAMAGE, grindingBallDamage);
         }
+
+        components.set(EIODataComponents.MACHINE_CRAFTING_STATE, craftingManager.getCraftingState());
     }
 
     @Override

@@ -60,8 +60,9 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     public static final QuadraticIntScalable USAGE = new QuadraticIntScalable(CapacitorModifier.ENERGY_USE,
             MachinesConfig.COMMON.ENERGY.ALLOY_SMELTER_USAGE);
 
-    private final ResourceHandler<ItemResource> inputHandler;
     public static final TempMachineSpeedScalable SPEED = new TempMachineSpeedScalable(USAGE);
+
+    private final ResourceHandler<ItemResource> inputHandler;
 
     /**
      * The alloying mode for the machine.
