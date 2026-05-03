@@ -1,0 +1,12 @@
+{
+  "athena:loader": "athena:ctm",
+  "ctm_textures": {
+    "center": "enderio:block/ctm/clear_glass/center",
+    "empty": "enderio:block/ctm/clear_glass/empty",
+    "horizontal": "enderio:block/ctm/clear_glass/horizontal",
+    "particle": "enderio:block/ctm/clear_glass/particle",
+    "vertical": "enderio:block/ctm/clear_glass/vertical"
+  },
+  "render_type": "cutout",
+  "tint": 0
+}

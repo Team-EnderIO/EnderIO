@@ -9,6 +9,7 @@ import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.facade.ConduitFacadeProvider;
 import com.enderio.enderio.api.conduits.facade.FacadeType;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
+import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
@@ -162,8 +163,17 @@ public interface ConduitBundle {
     void setConnectionConfig(Holder<Conduit<?, ?>> conduit, Direction side, ConnectionConfig config);
 
     // TODO
-    <T extends ConnectionConfig> T getConnectionConfig(Holder<Conduit<?, ?>> conduit, Direction side,
-            ConnectionConfigType<T> type);
+    @ApiStatus.NonExtendable
+    default <T extends ConnectionConfig> T getConnectionConfig(Holder<Conduit<?, ?>> conduit, Direction side,
+            ConnectionConfigType<T> type) {
+        var config = getConnectionConfig(conduit, side);
+        if (config.type() != type) {
+            throw new IllegalStateException("Connection config type mismatch.");
+        }
+
+        // noinspection unchecked
+        return (T) config;
+    }
 
     // TODO
     @Nullable

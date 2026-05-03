@@ -79,6 +79,10 @@ configurations {
 }
 
 val neoforgeVersionRange: String by project
+
+// https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3
+val mockitoAgent = configurations.create("mockitoAgent")
+
 dependencies {
     val localRuntime by configurations.getting
 
@@ -108,7 +112,7 @@ dependencies {
     localRuntime(libs.jade)
 
     //Athena ctm
-//    localRuntime(libs.athena)
+    localRuntime(libs.athena)
 
     // AE2
 //    compileOnly(variantOf(libs.ae2) {
@@ -156,6 +160,11 @@ dependencies {
     testImplementation(libs.junitJupiter)
     testRuntimeOnly(libs.junitPlatformLauncher)
     testImplementation("net.neoforged:testframework:${neoforgeVersionRange}")
+
+    // Mocks
+    testImplementation(libs.mockito)
+    testImplementation(libs.mockitoJunit)
+    mockitoAgent(libs.mockito) { isTransitive = false }
 
     // Setup gametests
     val gametestImplementation by configurations.getting
@@ -270,6 +279,12 @@ var generateModMetadata = tasks.register<ProcessResources>("generateModMetadata"
 // Add results to source set and to IDE sync
 sourceSets.main.get().resources.srcDir(generateModMetadata)
 neoForge.ideSyncTask(generateModMetadata)
+
+tasks {
+    test {
+        jvmArgs("-javaagent:${mockitoAgent.asPath}")
+    }
+}
 
 tasks.named<Jar>("jar") {
     // FIXME: Temporary - shipping datagen classes with build again for Endergy.

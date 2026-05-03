@@ -31,8 +31,6 @@ public interface IConduitNodeAttachment {
 
     ConnectionConfig getConnectionConfig(Holder<Conduit<?, ?>> conduit, Direction side);
 
-    <T extends ConnectionConfig> T getConnectionConfig(Holder<Conduit<?, ?>> conduit, Direction side, ConnectionConfigType<T> type);
-
     void setConnectionConfig(Holder<Conduit<?, ?>> conduit, Direction side, ConnectionConfig config);
 
     @Nullable

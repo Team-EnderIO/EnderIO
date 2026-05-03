@@ -195,31 +195,10 @@ public final class ConduitNodeImpl implements INetworkNode<ConduitNetworkImpl, C
     }
 
     @Override
-    public boolean isConnectedToBlock(Direction side) {
-        ensureValid();
-        // noinspection DataFlowIssue
-        return conduitBundle.getConnectionStatus(conduit, side).isEndpoint();
-    }
-
-    @Override
-    public boolean isConnectedTo(Direction side) {
-        ensureValid();
-        // noinspection DataFlowIssue
-        return conduitBundle.getConnectionStatus(conduit, side).isConnected();
-    }
-
-    @Override
     public ConnectionConfig getConnectionConfig(Direction side) {
         ensureValid();
         // noinspection DataFlowIssue
         return conduitBundle.getConnectionConfig(conduit, side);
-    }
-
-    @Override
-    public <T extends ConnectionConfig> T getConnectionConfig(Direction side, ConnectionConfigType<T> type) {
-        ensureValid();
-        // noinspection DataFlowIssue
-        return conduitBundle.getConnectionConfig(conduit, side, type);
     }
 
     // endregion

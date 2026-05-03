@@ -147,25 +147,10 @@ public class FakeConduitNode implements ConduitNode {
     }
     
     @Override
-    public boolean isConnectedToBlock(Direction side) {
-        throw new UnsupportedOperationException("Not needed for pathfinding tests");
-    }
-    
-    @Override
-    public boolean isConnectedTo(Direction side) {
-        throw new UnsupportedOperationException("Not needed for pathfinding tests");
-    }
-    
-    @Override
     public ConnectionConfig getConnectionConfig(Direction side) {
         throw new UnsupportedOperationException("Not needed for pathfinding tests");
     }
-    
-    @Override
-    public <T extends ConnectionConfig> T getConnectionConfig(Direction side, ConnectionConfigType<T> type) {
-        throw new UnsupportedOperationException("Not needed for pathfinding tests");
-    }
-    
+
     @Override
     public IItemHandlerModifiable getInventory(Direction side) {
         throw new UnsupportedOperationException("Not needed for pathfinding tests");

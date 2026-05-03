@@ -1,4 +1,4 @@
-package com.enderio.enderio.conduits.tests;
+package com.enderio.enderio.tests.conduits;
 
 import com.enderio.enderio.api.conduits.connection.path.SpeedAndTickRatePair;
 import org.junit.jupiter.api.Assertions;

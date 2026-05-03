@@ -3,7 +3,7 @@ almostUnified = "1.21.1-1.0.0"
 jeiVersion = "29.5.0.24"
 ccTweaked = "1.113.1"
 jade = "26.0.6+neoforge"
-#athena = "4.2.1"
+athena = "4.7.3"
 ae2 = { strictly = "[26.1.5-alpha,)", prefer = "26.1.5-alpha" }
 mekanism = { strictly = "[1.21.1-10.7.0,)", prefer = "1.21.1-10.7.16.82" }
 mekanismMod = { strictly = "[10.7.0,)", prefer = "10.7.16.82" } # workaround for Mek having MC version in the version specifier.
@@ -15,6 +15,7 @@ ftbUltimine = { strictly = "[26.1, 26.2)", prefer = "26.1.0.1-SNAPSHOT" }
 curios = "15.0.0-beta.1+26.1"
 sodium = "mc1.21.1-0.6.13-neoforge"
 iris = "1.8.12+1.21.1-neoforge"
+mockito = "5.23.0"
 
 [libraries]
 jspecify = { group = "org.jspecify", name = "jspecify", version = "1.0.0"}
@@ -29,7 +30,7 @@ jeiNeoforge = { group = "mezz.jei", name = "jei-26.1.2-neoforge", version.ref = 
 #ccTweakedForgeApi = { group = "cc.tweaked", name = "cc-tweaked-1.21.1-forge-api", version.ref = "ccTweaked" }
 #ccTweakedForge = { group = "cc.tweaked", name = "cc-tweaked-1.21.1-forge", version.ref = "ccTweaked" }
 jade = { group = "maven.modrinth", name = "jade", version.ref = "jade" }
-#athena = { group = "maven.modrinth", name = "athena-ctm", version.ref = "athena" }
+athena = { group = "maven.modrinth", name = "athena-ctm", version.ref = "athena" }
 ae2 = { group = "org.appliedenergistics", name = "appliedenergistics2", version.ref = "ae2" }
 #mekanism = { group = "mekanism", name = "Mekanism", version.ref = "mekanism" }
 refinedStorage = { group = "com.refinedmods.refinedstorage", name = "refinedstorage-neoforge", version.ref = "refinedStorage" }
@@ -43,6 +44,8 @@ iris = { group = "maven.modrinth", name = "iris", version.ref = "iris" }
 
 junitJupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version = "5.7.1"}
 junitPlatformLauncher = { group = "org.junit.platform", name = "junit-platform-launcher" }
+mockito = { group = "org.mockito", name = "mockito-core", version.ref = "mockito"}
+mockitoJunit = { group = "org.mockito", name = "mockito-junit-jupiter", version.ref = "mockito"}
 
 [bundles]
 jeiApi = ["jeiCommonApi", "jeiNeoforgeApi"]

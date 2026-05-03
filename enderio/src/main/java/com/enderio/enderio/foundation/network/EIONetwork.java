@@ -9,14 +9,11 @@ import com.enderio.enderio.foundation.network.packets.ClientboundSoulEngineSoulP
 import com.enderio.enderio.foundation.network.packets.ClientboundSyncTravelDataPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundTravelTargetRemovedPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundTravelTargetUpdatedPacket;
-import com.enderio.enderio.foundation.network.packets.ServerboundBreakConduitPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundCountFilterPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundCycleIOConfigPacket;
-import com.enderio.enderio.foundation.network.packets.ServerboundDestroyEntireConduitBundlePacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundDoubleChannelPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundEnderfaceInteractPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundOpenConduitFilterMenu;
-import com.enderio.enderio.foundation.network.packets.ServerboundRemoveConduitFacadePacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundRequestShortTravelPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundRequestTravelPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundSetFluidFilterSlotPacket;
@@ -39,7 +36,7 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 @EventBusSubscriber
 public class EIONetwork {
-    private static final String PROTOCOL_VERSION = "2";
+    private static final String PROTOCOL_VERSION = "3";
 
     @SubscribeEvent
     public static void register(final RegisterPayloadHandlersEvent event) {
@@ -100,15 +97,6 @@ public class EIONetwork {
             ConduitServerPayloadHandler.getInstance()::handle);
 
         registrar.playToServer(ServerboundSyncProbeStatePacket.TYPE, ServerboundSyncProbeStatePacket.STREAM_CODEC,
-            ConduitServerPayloadHandler.getInstance()::handle);
-
-        registrar.playToServer(ServerboundBreakConduitPacket.TYPE, ServerboundBreakConduitPacket.STREAM_CODEC,
-            ConduitServerPayloadHandler.getInstance()::handle);
-
-        registrar.playToServer(ServerboundRemoveConduitFacadePacket.TYPE, ServerboundRemoveConduitFacadePacket.STREAM_CODEC,
-            ConduitServerPayloadHandler.getInstance()::handle);
-
-        registrar.playToServer(ServerboundDestroyEntireConduitBundlePacket.TYPE, ServerboundDestroyEntireConduitBundlePacket.STREAM_CODEC,
             ConduitServerPayloadHandler.getInstance()::handle);
 
         registrar.playToClient(ClientboundPoweredSpawnerSoulPacket.TYPE, ClientboundPoweredSpawnerSoulPacket.STREAM_CODEC,

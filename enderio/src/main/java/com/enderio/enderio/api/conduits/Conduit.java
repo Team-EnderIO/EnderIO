@@ -2,6 +2,7 @@ package com.enderio.enderio.api.conduits;
 
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
+import com.enderio.enderio.api.conduits.connection.ConnectionReader;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.enderio.enderio.api.conduits.connection.path.ConnectionPathPropertyConsumer;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
@@ -69,16 +70,37 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
 
     /**
      * Proxy a capability to the conduit bundle block.
-     * Will never be called on the client.
+     * @deprecated Use {@link #proxyCapability(Level, ConnectionReader, ConduitNode, BlockCapability, Object)} instead.
      * @param level the level.
      * @param node the node that is being queried for proxying.
      * @param capability the capability being requested.
      * @param context the context for the capability.
      * @return the capability or null if it is not exposed.
      */
+    @Deprecated(since = "8.2.8")
     @Nullable
     default <TCapability, TContext> TCapability proxyCapability(Level level, ConduitNode node,
             BlockCapability<TCapability, TContext> capability, @Nullable TContext context) {
+        return null;
+    }
+
+    /**
+     * Proxy a capability to the conduit bundle block.
+     * @param level the level.
+     * @param connectionReader the connection accessor for the node.
+     * @param node the node that is being queried for proxying. Will always be null on the client, may be null on server.
+     * @param capability the capability being requested.
+     * @param context the context for the capability.
+     * @return the capability or null if it is not exposed.
+     */
+    @Nullable
+    default <TCapability, TContext> TCapability proxyCapability(Level level, ConnectionReader connectionReader, @Nullable ConduitNode node,
+        BlockCapability<TCapability, TContext> capability, @Nullable TContext context) {
+        // Old contract was non-null node - uphold this.
+        if (node != null) {
+            return proxyCapability(level, node, capability, context);
+        }
+
         return null;
     }
 

@@ -5,6 +5,7 @@ import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.datagen.client.EIOLanguageProvider;
 import com.enderio.enderio.datagen.client.models.EIOModelProvider;
+import com.enderio.enderio.datagen.client.models.block.AthenaProvider;
 import com.enderio.enderio.datagen.common.advancement.EIOAdvancementGenerator;
 import com.enderio.enderio.datagen.common.advancement.MachinesAdvancementGenerator;
 import com.enderio.enderio.datagen.common.data_maps.GrindingBallDataMapProvider;
@@ -83,6 +84,7 @@ public class EnderIODataGen {
         generator.addProvider(true, new EIOModelProvider(packOutput));
         generator.addProvider(true, new EIOLanguageProvider(packOutput));
         generator.addProvider(true, new EIOSoundDefinitionProvider(packOutput));
+        generator.addProvider(true, new AthenaProvider(packOutput));
     }
 
     private static RegistrySetBuilder createDatapackEntriesBuilder() {
