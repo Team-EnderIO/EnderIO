@@ -5,7 +5,7 @@ almostUnified = "1.21.1-1.0.0"
 jeiVersion = "19.25.0.321"
 ccTweaked = "1.113.1"
 jade = "15.10.3+neoforge"
-athena = "4.0.1"
+athena = "4.0.4"
 ae2 = { strictly = "[19.0.23-beta,)", prefer = "19.0.23-beta" }
 mekanism = { strictly = "[1.21.1-10.7.0,)", prefer = "1.21.1-10.7.16.82" }
 mekanismMod = { strictly = "[10.7.0,)", prefer = "10.7.16.82" } # workaround for Mek having MC version in the version specifier.
