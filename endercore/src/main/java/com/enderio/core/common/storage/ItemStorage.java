@@ -1,15 +1,21 @@
 package com.enderio.core.common.storage;
 
 import com.enderio.core.common.storage.layout.ResourceStorageLayout;
+import com.mojang.logging.LogUtils;
+import net.minecraft.world.ItemStackWithSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemContainerContents;
+import net.minecraft.world.level.storage.ValueInput;
 import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import net.neoforged.neoforge.transfer.item.ItemResource;
+import org.slf4j.Logger;
 
 public class ItemStorage extends StacksResourceStorage<ItemResource, ItemStack> implements ValueIOSerializable {
     public ItemStorage(ResourceStorageLayout<ItemResource> layout) {
         super(layout, ItemStack.EMPTY, ItemStack.OPTIONAL_CODEC);
     }
+
+    private static Logger LOGGER = LogUtils.getLogger();
 
     @Override
     protected ItemResource getResourceFrom(ItemStack stack) {
@@ -48,5 +54,21 @@ public class ItemStorage extends StacksResourceStorage<ItemResource, ItemStack> 
 
     public ItemContainerContents toItemContents() {
         return ItemContainerContents.fromItems(this.stacks);
+    }
+
+    @Override
+    public void deserialize(ValueInput input) {
+        input.list("Items", ItemStackWithSlot.CODEC).ifPresentOrElse(this::deserializeLegacy, () -> super.deserialize(input));
+    }
+
+    // TODO: EIO 9.1: Remove as it we'll have left alpha.
+    private void deserializeLegacy(ValueInput.TypedInputList<ItemStackWithSlot> items) {
+        items.forEach(slot -> {
+            if (slot.isValidInContainer(layout().size())) {
+                stacks.set(slot.slot(), slot.stack());
+            } else {
+                LOGGER.warn("Skipping item from slot {}, as it is outside the bounds of the inventory.", slot);
+            }
+        });
     }
 }
