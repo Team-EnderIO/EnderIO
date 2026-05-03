@@ -414,13 +414,18 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     private static <TCap, TContext> TCap getProxiedCapability(BlockCapability<TCap, TContext> capability, ConduitBundleBlockEntity blockEntity,
         Holder<Conduit<?, ?>> conduit, @Nullable TContext context) {
         // No capabilities if there's no level or the chunk is not loaded.
-        // The chunk load check has been added as prior version of Ender IO checked that the node was loaded.
+        // The chunk load check has been added as a prior version of Ender IO checked that the node was loaded.
         // I was unable to find any exact crashes or cause a crash when that check was removed, but I want to be cautious nonetheless.
         if (blockEntity.level == null || !blockEntity.level.isLoaded(blockEntity.getBlockPos())) {
             return null;
         }
 
+        // Connection reader shouldn't really be null at this point, but it's good to be safe.
         var connectionReader = blockEntity.conduitConnections.get(conduit);
+        if (connectionReader == null) {
+            return null;
+        }
+
         var node = blockEntity.conduitNodes.get(conduit);
         return conduit.value().proxyCapability(blockEntity.level, connectionReader, node, capability, context);
     }

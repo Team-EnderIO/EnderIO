@@ -75,7 +75,7 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
      * Proxy a capability to the conduit bundle block.
      * @deprecated Use {@link #proxyCapability(Level, ConnectionReader, ConduitNode, BlockCapability, Object)} instead.
      * @param level the level.
-     * @param node the node that is being queried for proxying. Will always be null on the client, may be null on server.
+     * @param node the node that is being queried for proxying.
      * @param capability the capability being requested.
      * @param context the context for the capability.
      * @return the capability or null if it is not exposed.
