@@ -10,6 +10,7 @@ import com.enderio.enderio.api.conduits.ConduitUtility;
 import com.enderio.enderio.api.conduits.bundle.AddConduitResult;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.api.conduits.bundle.SlotType;
+import com.enderio.enderio.api.conduits.connection.ConnectionReader;
 import com.enderio.enderio.api.conduits.connection.ConnectionStatus;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
@@ -412,18 +413,21 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     @Nullable
     private static <TCap, TContext> TCap getProxiedCapability(BlockCapability<TCap, TContext> capability, ConduitBundleBlockEntity blockEntity,
         Holder<Conduit<?, ?>> conduit, @Nullable TContext context) {
-        if (blockEntity.level == null) {
+        // No capabilities if there's no level or the chunk is not loaded.
+        // The chunk load check has been added as a prior version of Ender IO checked that the node was loaded.
+        // I was unable to find any exact crashes or cause a crash when that check was removed, but I want to be cautious nonetheless.
+        if (blockEntity.level == null || !blockEntity.level.isLoaded(blockEntity.getBlockPos())) {
+            return null;
+        }
+
+        // Connection reader shouldn't really be null at this point, but it's good to be safe.
+        var connectionReader = blockEntity.conduitConnections.get(conduit);
+        if (connectionReader == null) {
             return null;
         }
 
         var node = blockEntity.conduitNodes.get(conduit);
-
-        // Forbid unloaded nodes from being queried
-        if (node != null && !node.isLoaded()) {
-            return null;
-        }
-
-        return conduit.value().proxyCapability(blockEntity.level, node, capability, context);
+        return conduit.value().proxyCapability(blockEntity.level, connectionReader, node, capability, context);
     }
 
     // endregion
@@ -782,7 +786,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     public List<Holder<Conduit<?, ?>>> getConnectedConduits(Direction side) {
         return conduitConnections.entrySet()
                 .stream()
-                .filter(e -> e.getValue().getStatus(side).isConnected())
+                .filter(e -> e.getValue().getConnectionStatus(side).isConnected())
                 .map(Map.Entry::getKey)
                 .sorted(Comparator.comparingInt(ConduitSorter::getSortIndex))
                 .toList();
@@ -800,24 +804,12 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
     @Override
     public ConnectionStatus getConnectionStatus(Holder<Conduit<?, ?>> conduit, Direction side) {
-        return conduitConnections.computeIfAbsent(conduit, ConnectionContainer::new).getStatus(side);
+        return conduitConnections.computeIfAbsent(conduit, ConnectionContainer::new).getConnectionStatus(side);
     }
 
     @Override
     public ConnectionConfig getConnectionConfig(Holder<Conduit<?, ?>> conduit, Direction side) {
-        return conduitConnections.computeIfAbsent(conduit, ConnectionContainer::new).getConfig(side);
-    }
-
-    @Override
-    public <T extends ConnectionConfig> T getConnectionConfig(Holder<Conduit<?, ?>> conduit, Direction side,
-            ConnectionConfigType<T> type) {
-        var config = conduitConnections.computeIfAbsent(conduit, ConnectionContainer::new).getConfig(side);
-        if (config.type() != type) {
-            throw new IllegalStateException("Connection config type mismatch.");
-        }
-
-        // noinspection unchecked
-        return (T) config;
+        return conduitConnections.computeIfAbsent(conduit, ConnectionContainer::new).getConnectionConfig(side);
     }
 
     @Override
@@ -826,7 +818,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             throw new IllegalArgumentException("Connection config is not the right type for this conduit.");
         }
 
-        conduitConnections.computeIfAbsent(conduit, ConnectionContainer::new).setConfig(side, config);
+        conduitConnections.computeIfAbsent(conduit, ConnectionContainer::new).setConnectionConfig(side, config);
         if (config.isConnected() && getConnectionStatus(conduit, side) != ConnectionStatus.CONNECTED_BLOCK) {
             setConnectionStatus(conduit, side, ConnectionStatus.CONNECTED_BLOCK);
         } else if (!config.isConnected()) {
@@ -846,7 +838,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             throw new IllegalArgumentException("Conduit is not present in this bundle.");
         }
 
-        conduitConnections.computeIfAbsent(conduit, ConnectionContainer::new).setStatus(side, status);
+        conduitConnections.computeIfAbsent(conduit, ConnectionContainer::new).setConnectionStatus(side, status);
         onConnectionsUpdated(conduit);
 
         bundleChanged();
@@ -1457,14 +1449,14 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
                         }
 
                         if (side != null) {
-                            connections.setStatus(side, status);
+                            connections.setConnectionStatus(side, status);
 
                             if (connectionTag.contains("Config")) {
                                 ConnectionConfig config = ConnectionConfig.GENERIC_CODEC
                                         .parse(registries.createSerializationContext(NbtOps.INSTANCE),
                                                 connectionTag.get("Config"))
                                         .getOrThrow();
-                                connections.setConfig(side, config);
+                                connections.setConnectionConfig(side, config);
                             }
 
                             if (connectionTag.contains("Inventory")) {
@@ -1566,7 +1558,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
     }
 
-    private class ConnectionContainer {
+    private class ConnectionContainer implements ConnectionReader {
         private final Holder<Conduit<?, ?>> conduit;
         private final Map<Direction, ConnectionStatus> statuses = new EnumMap<>(Direction.class);
         private final Map<Direction, ConnectionConfig> configs = new EnumMap<>(Direction.class);
@@ -1615,11 +1607,12 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             return inventories.computeIfAbsent(side, s -> new ConnectionInventory());
         }
 
-        public ConnectionStatus getStatus(Direction side) {
+        @Override
+        public ConnectionStatus getConnectionStatus(Direction side) {
             return statuses.getOrDefault(side, ConnectionStatus.DISCONNECTED);
         }
 
-        public void setStatus(Direction side, ConnectionStatus status) {
+        public void setConnectionStatus(Direction side, ConnectionStatus status) {
             statuses.put(side, status);
 
             if (status == ConnectionStatus.CONNECTED_BLOCK) {
@@ -1636,7 +1629,8 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             }
         }
 
-        public ConnectionConfig getConfig(Direction side) {
+        @Override
+        public ConnectionConfig getConnectionConfig(Direction side) {
             var defaultConfig = conduit.value().type().connectionConfigType().getDefault();
             var config = configs.getOrDefault(side, defaultConfig);
 
@@ -1657,7 +1651,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             return config;
         }
 
-        public void setConfig(Direction side, ConnectionConfig config) {
+        public void setConnectionConfig(Direction side, ConnectionConfig config) {
             configs.put(side, config);
 
             if (conduit.value().type() == EIOConduitTypes.REDSTONE.get()) {
@@ -1803,15 +1797,15 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
                 var state = legacySide.getConnectionState(conduitIndex);
 
                 if (state == StaticConnectionStates.CONNECTED || state == StaticConnectionStates.CONNECTED_ACTIVE) {
-                    connections.setStatus(side, ConnectionStatus.CONNECTED_CONDUIT);
+                    connections.setConnectionStatus(side, ConnectionStatus.CONNECTED_CONDUIT);
                 } else if (state == StaticConnectionStates.DISCONNECTED) {
-                    connections.setStatus(side, ConnectionStatus.DISCONNECTED);
+                    connections.setConnectionStatus(side, ConnectionStatus.DISCONNECTED);
                 } else if (state == StaticConnectionStates.DISABLED) {
-                    connections.setStatus(side, ConnectionStatus.DISABLED);
+                    connections.setConnectionStatus(side, ConnectionStatus.DISABLED);
                 } else if (state instanceof DynamicConnectionState dynamicState) {
-                    connections.setStatus(side, ConnectionStatus.CONNECTED_BLOCK);
+                    connections.setConnectionStatus(side, ConnectionStatus.CONNECTED_BLOCK);
 
-                    connections.setConfig(side,
+                    connections.setConnectionConfig(side,
                             conduit.value()
                                     .convertConnection(dynamicState.isInsert(), dynamicState.isExtract(),
                                             dynamicState.insertChannel(), dynamicState.extractChannel(),

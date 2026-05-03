@@ -4,6 +4,7 @@ import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitCapabilityAccessor;
 import com.enderio.enderio.api.conduits.ConduitType;
+import com.enderio.enderio.api.conduits.connection.ConnectionReader;
 import com.enderio.enderio.api.conduits.connection.ConnectionStatus;
 import com.enderio.enderio.api.conduits.connection.path.ConnectionPathProperty;
 import com.enderio.enderio.api.conduits.connection.path.ConnectionPathPropertyConsumer;
@@ -82,8 +83,8 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
 
     @SuppressWarnings("unchecked")
     @Override
-    public <TCap, TContext> @Nullable TCap proxyCapability(Level level, ConduitNode node,
-            BlockCapability<TCap, TContext> capability, @Nullable TContext context) {
+    public @Nullable <TCapability, TContext> TCapability proxyCapability(Level level, ConnectionReader connectionReader, @Nullable ConduitNode node,
+        BlockCapability<TCapability, TContext> capability, @Nullable TContext context) {
 
         if (Capabilities.EnergyStorage.BLOCK == capability && context instanceof Direction side) {
             // Disabled, do not offer the capability (so if we're disconnected we allow auto connect).
@@ -92,18 +93,20 @@ public record EnergyConduit(ResourceLocation texture, Component description, int
             // This is necessary however, because many cables will retain a 'connected' appearance if the capability is still exposed.
             // See GH-1184 for the original bug report.
             // TODO: Review whether not hiding a disconnected cap could have other unforseen issues, such as cables attaching to conduits weirdly.
-            if (node.getConnectionStatus(side) == ConnectionStatus.DISABLED) {
+            if (connectionReader.getConnectionStatus(side) == ConnectionStatus.DISABLED) {
                 return null;
             }
 
-            // If this conduit can be 'extracted' from (in this case, we'll push energy lol) we return a cap.
-            var config = node.getConnectionConfig(side, EnergyConduitConnectionConfig.TYPE);
-            if (config.isExtract()) {
-                return (TCap) new EnergyConduitStorage(side, node);
+            if (node != null) {
+                // If this conduit can be pushed into, provide the full cap
+                var config = connectionReader.getConnectionConfig(side, EnergyConduitConnectionConfig.TYPE);
+                if (config.isExtract()) {
+                    return (TCapability) new EnergyConduitStorage(side, node);
+                }
             }
 
-            // Return an empty cap if we're not pushing energy, so that blocks know they can connect to receive energy
-            return (TCap) EnergyConduitStorageStub.INSTANCE;
+            // Return an empty cap if we're not pushing energy, so that blocks know they can connect
+            return (TCapability) EnergyConduitStorageStub.INSTANCE;
         }
 
         return null;
