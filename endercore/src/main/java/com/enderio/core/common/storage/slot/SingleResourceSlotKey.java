@@ -27,7 +27,7 @@ public final class SingleResourceSlotKey<T extends Resource> implements Resource
     }
 
     @Override
-    public ResourceHandler<T> scopedHandler(ResourceStorage<T> storage) {
+    public ResourceHandler<T> rangedHandler(ResourceStorage<T> storage) {
         return RangedResourceHandler.ofSingleIndex(storage, index(storage));
     }
 }

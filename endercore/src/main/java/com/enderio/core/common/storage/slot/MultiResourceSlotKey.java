@@ -65,7 +65,7 @@ public final class MultiResourceSlotKey<T extends Resource> implements ResourceS
     }
 
     @Override
-    public ResourceHandler<T> scopedHandler(ResourceStorage<T> storage) {
+    public ResourceHandler<T> rangedHandler(ResourceStorage<T> storage) {
         int startIndex = slot(0).index(storage.layout());
         int endIndex = slot(count - 1).index(storage.layout());
         return RangedResourceHandler.of(storage, startIndex, endIndex + 1);

@@ -1,6 +1,5 @@
 package com.enderio.enderio.content.machines.sag_mill;
 
-import com.enderio.core.common.storage.ItemStorage;
 import com.enderio.core.common.storage.layout.ItemStorageLayout;
 import com.enderio.core.common.storage.layout.SlotTemplates;
 import com.enderio.core.common.storage.slot.MultiResourceSlotKey;
@@ -21,7 +20,6 @@ import com.enderio.enderio.foundation.crafting.MachineCraftingManager;
 import com.enderio.enderio.foundation.crafting.MachineCraftingStatus;
 import com.enderio.enderio.foundation.inventory.MachineSlotTemplates;
 import com.enderio.enderio.foundation.recipe.MachineRecipeCaches;
-import com.enderio.enderio.foundation.task.PoweredCraftingMachineTask;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIORecipeTypes;
@@ -81,8 +79,8 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
         super(EIOBlockEntities.SAG_MILL.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, CAPACITOR,
                 EnergyIOMode.Input, CAPACITY, USAGE);
 
-        inputHandler = INPUT.scopedHandler(getInventory());
-        outputHandler = OUTPUT.scopedHandler(getInventory());
+        inputHandler = INPUT.rangedHandler(getInventory());
+        outputHandler = OUTPUT.rangedHandler(getInventory());
         craftingManager = new MachineCraftingManager<>(EIORecipeTypes.SAG_MILLING.get(), new CraftingContext());
     }
 

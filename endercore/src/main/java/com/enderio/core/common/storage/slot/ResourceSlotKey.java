@@ -13,5 +13,5 @@ public sealed interface ResourceSlotKey<T extends Resource>
 
     Collection<ResourceSlotId<T>> slots();
 
-    ResourceHandler<T> scopedHandler(ResourceStorage<T> storage);
+    ResourceHandler<T> rangedHandler(ResourceStorage<T> storage);
 }

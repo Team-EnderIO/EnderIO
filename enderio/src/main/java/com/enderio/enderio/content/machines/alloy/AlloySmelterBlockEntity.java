@@ -1,11 +1,8 @@
 package com.enderio.enderio.content.machines.alloy;
-import com.enderio.core.common.storage.ItemStorage;
 import com.enderio.core.common.storage.layout.ItemStorageLayout;
 import com.enderio.core.common.storage.layout.SlotTemplates;
 import com.enderio.core.common.storage.slot.MultiResourceSlotKey;
-import com.enderio.core.common.storage.slot.ResourceSlotId;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
-import com.enderio.core.common.util.EnderResourceUtil;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.scaling.QuadraticIntScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
@@ -35,7 +32,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -45,7 +41,6 @@ import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import net.neoforged.neoforge.transfer.item.ItemResource;
-import net.neoforged.neoforge.transfer.resource.ResourceStack;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jspecify.annotations.Nullable;
@@ -81,7 +76,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         super(EIOBlockEntities.ALLOY_SMELTER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, CAPACITOR, EnergyIOMode.Input,
             CAPACITY, USAGE);
 
-        inputHandler = INPUTS.scopedHandler(getInventory());
+        inputHandler = INPUTS.rangedHandler(getInventory());
 
         craftingManager = new MachineCraftingManager<>(EIORecipeTypes.ALLOY_SMELTING.get(), new CraftingContext());
     }
