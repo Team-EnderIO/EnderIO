@@ -237,15 +237,9 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             int textBg = (int) (textOpacitySetting * 255) << 24;
             float halfWidth = (float) (-minecraft.font.width(textComponent) / 2);
 
-            var mode1 = Font.DisplayMode.SEE_THROUGH;
-            var mode2 = Font.DisplayMode.NORMAL;
-            int textBg1 = textBg;
-            int textBg2 = 0;
-
             Matrix4f matrix4f = poseStack.last().pose();
 
-            minecraft.font.drawInBatch(textComponent, halfWidth, 0, textColor, false, matrix4f, TEXT_BUFFER, mode1, textBg1, packedLight);
-            minecraft.font.drawInBatch(textComponent, halfWidth, 0, textColor, false, matrix4f, TEXT_BUFFER, mode2, textBg2, packedLight);
+            minecraft.font.drawInBatch(textComponent, halfWidth, 0, textColor, false, matrix4f, TEXT_BUFFER, Font.DisplayMode.SEE_THROUGH, textBg, packedLight);
             TEXT_BUFFER.endBatch();
 
             poseStack.popPose();
