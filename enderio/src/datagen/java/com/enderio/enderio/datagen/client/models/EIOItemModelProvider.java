@@ -144,6 +144,7 @@ public class EIOItemModelProvider extends ItemModelProvider {
             .end();
 
         basicItem(EIOItems.VOID_VIAL.get());
+        basicItem(EIOItems.EXPERIENCE_ROD.get());
         basicItem(EIOItems.YETA_WRENCH.get());
         basicItem(EIOItems.COORDINATE_SELECTOR.get());
         basicItem(EIOItems.LOCATION_PRINTOUT.get());

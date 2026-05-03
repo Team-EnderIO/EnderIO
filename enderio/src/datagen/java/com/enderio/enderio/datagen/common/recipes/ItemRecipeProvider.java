@@ -92,16 +92,27 @@ public class ItemRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, EIOItems.VOID_VIAL.get())
-                .pattern(" S ")
-                .pattern("QVQ")
-                .pattern("GQG")
-                .define('S', EIOTags.Items.INGOTS_SOULARIUM)
-                .define('Q', EIOTags.Items.FUSED_QUARTZ)
+                .pattern(" I ")
+                .pattern("GVG")
+                .pattern("XGX")
+                .define('I', Tags.Items.INGOTS_IRON)
+                .define('G', Tags.Items.GLASS_BLOCKS)
                 .define('V', EIOItems.SUSPICIOUS_SEED)
-                .define('G', EIOItems.GRAINS_OF_INFINITY)
+                .define('X', EIOItems.GRAINS_OF_INFINITY)
                 .unlockedBy("has_ingredient",
-                        InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.SOULARIUM_INGOT.get()))
+                        InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.SUSPICIOUS_SEED.get()))
                 .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, EIOItems.EXPERIENCE_ROD.get())
+            .pattern("  S")
+            .pattern("VE ")
+            .pattern("SV ")
+            .define('S', EIOTags.Items.INGOTS_SOULARIUM)
+            .define('E', EIOTags.Items.INGOTS_ENERGETIC_ALLOY)
+            .define('V', EIOItems.SUSPICIOUS_SEED)
+            .unlockedBy("has_ingredient",
+                InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.SOULARIUM_INGOT.get()))
+            .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, EIOItems.LEVITATION_STAFF.get())
                 .define('C', EIOTags.Items.GEMS_PRESCIENT_CRYSTAL)

@@ -24,6 +24,7 @@ import com.enderio.enderio.content.tools.YetaWrenchItem;
 import com.enderio.enderio.content.tools.coordinate_selector.CoordinateSelectorItem;
 import com.enderio.enderio.content.tools.coordinate_selector.LocationPrintoutItem;
 import com.enderio.enderio.content.tools.hang_glider.HangGliderItem;
+import com.enderio.enderio.content.tools.ExperienceRodItem;
 import com.enderio.enderio.content.tools.vials.SoulVialItem;
 import com.enderio.enderio.content.tools.vials.VoidVialItem;
 import com.enderio.enderio.content.travel.TravelStaffItem;
@@ -210,6 +211,7 @@ public class EIOItems {
 
     public static final DeferredItem<SoulVialItem> SOUL_VIAL = ITEMS.registerItem("soul_vial", SoulVialItem::new);
     public static final DeferredItem<VoidVialItem> VOID_VIAL = ITEMS.registerItem("void_vial", VoidVialItem::new);
+    public static final DeferredItem<ExperienceRodItem> EXPERIENCE_ROD = ITEMS.registerItem("experience_rod", ExperienceRodItem::new);
     public static final DeferredItem<YetaWrenchItem> YETA_WRENCH = ITEMS.registerItem("yeta_wrench", YetaWrenchItem::new);
     public static final DeferredItem<CoordinateSelectorItem> COORDINATE_SELECTOR = ITEMS.registerItem("coordinate_selector", CoordinateSelectorItem::new);
     public static final DeferredItem<LocationPrintoutItem> LOCATION_PRINTOUT = ITEMS.registerItem("location_printout", LocationPrintoutItem::new);
@@ -298,9 +300,6 @@ public class EIOItems {
     }
 
     public static void register(IEventBus bus) {
-        // XP rod rename
-        ITEMS.addAlias(EnderIO.rl("experience_rod"), VOID_VIAL.getId());
-
         // Unified soul vials
         ITEMS.addAlias(EnderIO.rl("empty_soul_vial"), SOUL_VIAL.getId());
         ITEMS.addAlias(EnderIO.rl("filled_soul_vial"), SOUL_VIAL.getId());

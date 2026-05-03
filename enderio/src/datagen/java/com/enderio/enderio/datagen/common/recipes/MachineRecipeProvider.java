@@ -289,7 +289,7 @@ public class MachineRecipeProvider extends SubRecipeProvider {
                 .pattern("IRI")
                 .pattern("IPI")
                 .define('I', Tags.Items.INGOTS_IRON)
-                .define('R', EIOItems.VOID_VIAL)
+                .define('R', EIOItems.EXPERIENCE_ROD)
                 .define('P', EIOTags.Items.GEMS_PULSATING_CRYSTAL)
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.PULSATING_CRYSTAL.get()))
@@ -384,7 +384,7 @@ public class MachineRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOBlocks.XP_OBELISK.get())
-                .define('R', EIOItems.VOID_VIAL)
+                .define('R', EIOItems.EXPERIENCE_ROD)
                 .define('I', EIOTags.Items.INGOTS_SOULARIUM)
                 .define('C', EIOBlocks.ENSOULED_CHASSIS)
                 .pattern(" R ")
@@ -392,7 +392,7 @@ public class MachineRecipeProvider extends SubRecipeProvider {
                 .pattern("ICI")
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance
-                                .hasItems(ItemPredicate.Builder.item().of(EIOItems.VOID_VIAL).build()))
+                                .hasItems(ItemPredicate.Builder.item().of(EIOItems.EXPERIENCE_ROD).build()))
                 .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOBlocks.AVERSION_OBELISK.get())

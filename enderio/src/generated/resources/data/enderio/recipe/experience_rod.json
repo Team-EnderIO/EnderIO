@@ -2,26 +2,23 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "G": {
-      "tag": "c:glass_blocks"
+    "E": {
+      "tag": "c:ingots/energetic_alloy"
     },
-    "I": {
-      "tag": "c:ingots/iron"
+    "S": {
+      "tag": "c:ingots/soularium"
     },
     "V": {
       "item": "enderio:suspicious_seed"
-    },
-    "X": {
-      "item": "enderio:grains_of_infinity"
     }
   },
   "pattern": [
-    " I ",
-    "GVG",
-    "XGX"
+    "  S",
+    "VE ",
+    "SV "
   ],
   "result": {
     "count": 1,
-    "id": "enderio:void_vial"
+    "id": "enderio:experience_rod"
   }
 }
