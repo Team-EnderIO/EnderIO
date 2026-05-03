@@ -54,6 +54,7 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.Clearable;
 import net.minecraft.world.Container;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -90,7 +91,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public final class ConduitBundleBlockEntity extends EnderBlockEntity
-        implements ConduitBundle, Wrenchable, ConduitMenu.ConnectionAccessor, IConduitNodeAttachment {
+        implements ConduitBundle, Wrenchable, ConduitMenu.ConnectionAccessor, IConduitNodeAttachment, Clearable {
 
     public static final int MAX_CONDUITS = 9;
 
@@ -143,6 +144,17 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
     public ConduitBundleBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.CONDUIT.get(), worldPosition, blockState);
+    }
+
+    @Override
+    public void clearContent() {
+        // If we're being removed, empty the block entity.
+        var allConduits = List.copyOf(getConduits());
+        for (var conduit : allConduits) {
+            removeConduit(conduit, stack -> {});
+        }
+
+        setFacadeProvider(ItemStack.EMPTY);
     }
 
     // region Static Facade Access
@@ -1262,12 +1274,9 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
     }
 
-    private boolean isChunkUnload = false;
-
     @Override
     public void onChunkUnloaded() {
         super.onChunkUnloaded();
-        isChunkUnload = true;
 
         if (level == null) {
             return;
@@ -1292,16 +1301,6 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     @Override
     public void setRemoved() {
         super.setRemoved();
-
-        // Remove all conduits and the facade if this block is being destroyed (not unloaded).
-        if (!isChunkUnload) {
-            var allConduits = List.copyOf(getConduits());
-            for (var conduit : allConduits) {
-                removeConduit(conduit, this::dropItem);
-            }
-
-            setFacadeProvider(ItemStack.EMPTY);
-        }
 
         if (level != null && level.isClientSide()) {
             ResourceKey<Level> dimension = level.dimension();

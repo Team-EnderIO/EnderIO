@@ -13,13 +13,12 @@ import com.enderio.enderio.content.conduits.menu.ConduitMenu;
 import com.enderio.enderio.content.conduits.type.redstone.RedstoneConduit;
 import com.enderio.enderio.content.conduits.type.redstone.RedstoneConduitConnectionConfig;
 import com.enderio.enderio.content.conduits.type.redstone.RedstoneConduitNetworkContext;
-import com.enderio.enderio.foundation.network.packets.ServerboundBreakConduitPacket;
-import com.enderio.enderio.foundation.network.packets.ServerboundDestroyEntireConduitBundlePacket;
-import com.enderio.enderio.foundation.network.packets.ServerboundRemoveConduitFacadePacket;
+import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOConduitTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
+import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -59,12 +58,17 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.loading.FMLLoader;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.event.level.BlockEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
+@EventBusSubscriber
 public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWaterloggedBlock {
 
     private static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
@@ -260,6 +264,14 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
         }
     }
 
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void handleCancelledBlockBreak(BlockEvent.BreakEvent event) {
+        // If a conduit bundle block break was cancelled, we'll need to send the block entity data back to the clients to correct the visuals.
+        if (event.getState().is(EIOBlocks.CONDUIT_BUNDLE) && event.isCanceled()) {
+            event.getPlayer().level().sendBlockUpdated(event.getPos(), event.getState(), event.getState(), Block.UPDATE_CLIENTS);
+        }
+    }
+
     @Override
     public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
         if (!(level.getBlockEntity(pos) instanceof ConduitBundleBlockEntity conduitBundle)) {
@@ -267,32 +279,44 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
             return false;
         }
 
-        // Handle all other break types over the network.
-        // If any of these are cancelled, updated block entity data can be sent without issue.
-        if (!level.isClientSide()) {
-            return false;
-        }
-
-        // If this is a simple block break, handle it now.
-        // We do this so that if the server vetoes the block break, the block entity data is in tact.
+        // If this action is going to completely destroy the conduit bundle, we don't want to modify the block entity state at all.
+        // If the block break is cancelled by the server, the block will pop back into existence, but the block entity data will be missing (and our event
+        //  above will not be able to help).
+        // So, we'll just specially case this scenario to ensure rollback can work correctly.
         if (conduitBundle.isEmpty() ||
             (conduitBundle.getConduits().size() == 1 && !conduitBundle.hasFacade()) ||
             (conduitBundle.getConduits().isEmpty() && conduitBundle.hasFacade())) {
 
-            if (!conduitBundle.getConduits().isEmpty()) {
-                var conduit = conduitBundle.getConduits().getFirst();
-                ConduitBreakParticle.addDestroyEffects(pos, state, conduit.value());
+            if (level.isClientSide()) {
+                if (!conduitBundle.getConduits().isEmpty()) {
+                    var conduit = conduitBundle.getConduits().getFirst();
+                    ConduitBreakParticle.addDestroyEffects(pos, state, conduit.value());
+                } else {
+                    // TODO: Facade particles?
+                }
             } else {
-                // TODO: Facade particles?
+                if (!player.getAbilities().instabuild) {
+                    if (conduitBundle.hasFacade()) {
+                        popResource(level, pos, conduitBundle.getFacadeProvider());
+                    } else {
+                        var lastConduit = conduitBundle.getConduits().getFirst();
+                        popResource(level, pos, ConduitBlockItem.getStackFor(lastConduit, 1));
+                    }
+                }
             }
 
-            // Ask the server to remove the bundle
-            PacketDistributor.sendToServer(new ServerboundDestroyEntireConduitBundlePacket(pos));
+            // When the block entity is removed, it will drop all necessary resources.
             return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
         }
 
         // Remove facade, if visible
         if (conduitBundle.hasFacade() && FacadeUtil.areFacadesVisible(player)) {
+            if (!level.isClientSide()) {
+                if (!player.getAbilities().instabuild) {
+                    conduitBundle.dropFacadeItem();
+                }
+            }
+
             int lightLevelBefore = level.getLightEmission(pos);
             conduitBundle.setFacadeProvider(ItemStack.EMPTY);
 
@@ -300,9 +324,6 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
             if (lightLevelBefore != level.getLightEmission(pos)) {
                 level.getLightEngine().checkBlock(pos);
             }
-
-            // Ask the server to remove the facade
-            PacketDistributor.sendToServer(new ServerboundRemoveConduitFacadePacket(pos));
         } else {
             Holder<Conduit<?, ?>> conduit = null;
 
@@ -317,15 +338,34 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
                 return false;
             }
 
-            ConduitBreakParticle.addDestroyEffects(pos, state, conduit.value());
+            if (level.isClientSide()) {
+                ConduitBreakParticle.addDestroyEffects(pos, state, conduit.value());
+            }
 
-            conduitBundle.removeConduit(conduit, droppedItem -> {});
+            conduitBundle.removeConduit(conduit, droppedItem -> {
+                if (!level.isClientSide() && !player.getAbilities().instabuild) {
+                    popResource(level, pos, droppedItem);
+                }
+            });
+        }
 
-            // Ask the server to remove the conduit
-            PacketDistributor.sendToServer(new ServerboundBreakConduitPacket(pos, conduit));
+        // Ensure we've not left the conduit 'empty' - the short-circuit clause above this should have caught this case
+        if (!FMLEnvironment.production && conduitBundle.isEmpty()) {
+            throw new IllegalStateException("Bundle became empty - should not have reached non-empty break logic.");
         }
 
         return false;
+    }
+
+    @Override
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        // Wipe out all conduits and facades before the block is removed - this sends the relevant notifications to neighboring conduits
+        // TODO: I think conduits would do well to interact over capabilities instead of relying on manual block entity manipulation. A topic for 26.1.
+        if (!level.isClientSide() && level.getBlockEntity(pos) instanceof ConduitBundleBlockEntity conduitBundle) {
+            conduitBundle.clearContent();
+        }
+
+        super.onRemove(state, level, pos, newState, movedByPiston);
     }
 
     // endregion
