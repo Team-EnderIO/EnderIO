@@ -93,26 +93,28 @@ public final class MachineCraftingManager<T extends Recipe<U>, U extends RecipeI
             return false;
         }
 
-        var recipeInput = context.recipeInput();
+        // If this is the first time we've accessed the recipe manager, ensure it is tracked.
         var recipeManager = level.recipeAccess();
-        if (recipeManager != cachedRecipeManager.get()) {
-            // Track the new recipe manager *and* force us to refresh the current recipe holder if present
+        if (cachedRecipeManager.get() == null) {
             cachedRecipeManager = new WeakReference<>(recipeManager);
-            currentRecipeHolder = null;
-            return true;
-        }
-
-        if (currentRecipeId != null) {
-            return true;
         }
 
         // The recipe input has changed.
+        var recipeInput = context.recipeInput();
         if (lastRecipeInput == null || !lastRecipeInput.equals(recipeInput)) {
             lastRecipeInput = recipeInput;
             return true;
         }
 
-        return false;
+        if (recipeManager != cachedRecipeManager.get()) {
+            // Track the new recipe manager *and* force us to refresh the current recipe holder
+            cachedRecipeManager = new WeakReference<>(recipeManager);
+            currentRecipeHolder = null;
+            return true;
+        }
+
+        // Only tick if we have a recipe to craft
+        return currentRecipeId != null;
     }
 
     public void tick() {
