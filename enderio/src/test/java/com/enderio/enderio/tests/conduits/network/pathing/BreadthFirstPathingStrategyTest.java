@@ -1,4 +1,4 @@
-package com.enderio.enderio.conduits.tests.network.pathing;
+package com.enderio.enderio.tests.conduits.network.pathing;
 
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;

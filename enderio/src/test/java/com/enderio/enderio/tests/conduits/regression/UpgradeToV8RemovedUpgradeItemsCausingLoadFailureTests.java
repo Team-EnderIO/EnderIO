@@ -1,4 +1,4 @@
-package com.enderio.enderio.conduits.tests.regression;
+package com.enderio.enderio.tests.conduits.regression;
 
 import com.enderio.enderio.content.conduits.legacy.DynamicConnectionState;
 import com.google.gson.JsonParser;
