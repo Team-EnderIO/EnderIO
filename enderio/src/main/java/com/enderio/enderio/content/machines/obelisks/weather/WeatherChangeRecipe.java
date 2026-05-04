@@ -31,6 +31,7 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidStackTemplate;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.IntFunction;
 
 public record WeatherChangeRecipe(FluidStackTemplate fluid, WeatherMode mode, PlacementInfo placementInfo)
@@ -91,21 +92,22 @@ public record WeatherChangeRecipe(FluidStackTemplate fluid, WeatherMode mode, Pl
         return EIORecipeBookCategories.WEATHER.get();
     }
 
-    public record Input(FluidStack fluid) implements RecipeInput {
+    public record Input(FluidStack fluid, ItemStack fireworks) implements RecipeInput {
 
         @Override
         public ItemStack getItem(int index) {
-            return ItemStack.EMPTY;
+            Objects.checkIndex(index, 1);
+            return fireworks;
         }
 
         @Override
         public int size() {
-            return 0;
+            return 1;
         }
 
         @Override
         public boolean isEmpty() {
-            return false;
+            return fluid.isEmpty() && fireworks.isEmpty();
         }
     }
 

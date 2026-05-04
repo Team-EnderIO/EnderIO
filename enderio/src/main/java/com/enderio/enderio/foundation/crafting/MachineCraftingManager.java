@@ -142,10 +142,12 @@ public final class MachineCraftingManager<T extends Recipe<U>, U extends RecipeI
             return;
         }
 
-        boolean isFinished = tryFinaliseCraft();
-        if (isFinished) {
+        // Attempt to finish the recipe
+        if (context.tryCompleteCraft(currentRecipeHolder.value(), randomSource)) {
+            clearRecipe();
+
             // Make sure we're ready to go again next tick.
-            // This is intended to prevent 'state stutter'
+            // This is intended to prevent 'state stutter' or getting stuck without a recipe when we should have one.
             ensureRecipeReady();
         }
     }
@@ -176,19 +178,9 @@ public final class MachineCraftingManager<T extends Recipe<U>, U extends RecipeI
         });
     }
 
-    private boolean tryFinaliseCraft() {
-        Objects.requireNonNull(currentRecipeHolder);
-
-        if (context.tryCompleteCraft(currentRecipeHolder.value(), randomSource)) {
-            clearRecipe();
-            return true;
-        }
-
-        return false;
-    }
-
     private void setRecipe(RecipeHolder<T> recipe) {
         currentRecipeHolder = recipe;
+        totalCraftingTicks = context.getCraftingTicks(recipe);
 
         // Special case for when we're just calling setRecipe on load.
         // Will continue to reset the crafting state if the recipe has changed.
@@ -197,7 +189,6 @@ public final class MachineCraftingManager<T extends Recipe<U>, U extends RecipeI
         }
 
         currentRecipeId = recipe.id();
-        totalCraftingTicks = context.getCraftingTicks(recipe);
         craftingTicks = 0;
         randomSeed = RandomSupport.generateUniqueSeed();
     }

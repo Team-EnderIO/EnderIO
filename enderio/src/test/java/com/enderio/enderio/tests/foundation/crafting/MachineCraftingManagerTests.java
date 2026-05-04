@@ -3,14 +3,20 @@ package com.enderio.enderio.tests.foundation.crafting;
 import com.enderio.enderio.foundation.crafting.MachineCraftingContext;
 import com.enderio.enderio.foundation.crafting.MachineCraftingManager;
 import com.enderio.enderio.foundation.crafting.MachineCraftingStatus;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.ValueInput;
 import net.neoforged.testframework.junit.EphemeralTestServerProvider;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -106,6 +112,49 @@ public class MachineCraftingManagerTests {
     }
 
     @Test
+    public void finishRecipe_RecipeInputChanges_ImmediatelyStartsNew(MinecraftServer server) {
+        // Arrange.
+        when(context.recipeInput()).thenReturn(new SingleRecipeInput(new ItemStack(Items.BEEF, 2)));
+
+        when(context.tryProgressCraft(any())).thenReturn(true);
+        when(context.tryCompleteCraft(any(), any())).thenReturn(true);
+        when(context.getCraftingTicks(any())).thenReturn(1);
+
+        var manager = new MachineCraftingManager<>(RecipeType.SMELTING, context);
+
+        // Act.
+        manager.tick();
+
+        // simulate 1 beef left
+        when(context.recipeInput()).thenReturn(new SingleRecipeInput(new ItemStack(Items.BEEF, 1)));
+        manager.tick();
+
+        // Assert.
+        verify(context, times(2)).tryProgressCraft(any());
+        verify(context, times(2)).tryCompleteCraft(any(), any());
+    }
+
+    @Test
+    public void finishRecipe_IdenticalRecipeInput_ImmediatelyStartsNew(MinecraftServer server) {
+        // Arrange.
+        when(context.recipeInput()).thenReturn(new SingleRecipeInput(new ItemStack(Items.BEEF)));
+
+        when(context.tryProgressCraft(any())).thenReturn(true);
+        when(context.tryCompleteCraft(any(), any())).thenReturn(true);
+        when(context.getCraftingTicks(any())).thenReturn(1);
+
+        var manager = new MachineCraftingManager<>(RecipeType.SMELTING, context);
+
+        // Act.
+        manager.tick();
+        manager.tick();
+
+        // Assert.
+        verify(context, times(2)).tryProgressCraft(any());
+        verify(context, times(2)).tryCompleteCraft(any(), any());
+    }
+
+    @Test
     public void inputRemovedMidCraft_CraftCancelsCorrectly(MinecraftServer server) {
         // Arrange.
         when(context.recipeInput()).thenReturn(new SingleRecipeInput(new ItemStack(Items.BEEF)));
@@ -190,5 +239,34 @@ public class MachineCraftingManagerTests {
 
         // Ensure no progress was lost as the recipe is the same.
         Assertions.assertEquals(2 / 5f, manager.craftingProgress());
+    }
+    
+    @Test
+    public void correctlyRecomputeTotalCraftingTicksAfterLoad(MinecraftServer server) {
+        // Arrange.
+        var input = new SingleRecipeInput(new ItemStack(Items.BEEF));
+        var steakRecipe = server.getRecipeManager().getRecipeFor(RecipeType.SMELTING, input, level).get();
+
+        when(context.recipeInput()).thenReturn(input);
+        when(context.tryProgressCraft(any())).thenReturn(true);
+        when(context.getCraftingTicks(any())).thenReturn(3);
+
+        var manager = new MachineCraftingManager<>(RecipeType.SMELTING, context);
+        
+        var tagToLoad = new CompoundTag();
+        tagToLoad.store("CurrentRecipeId", ResourceKey.codec(Registries.RECIPE), steakRecipe.id());
+        tagToLoad.putInt("CraftingTicks", 1);
+        tagToLoad.putLong("RandomSeed", 1234567890L);
+        
+        var valueInput = TagValueInput.create(mock(ProblemReporter.class), server.registryAccess(), tagToLoad);
+
+        // Act.
+        manager.deserialize(valueInput);
+        manager.tick();
+
+        // Assert.
+        Assertions.assertEquals(steakRecipe, manager.currentRecipe());
+        Assertions.assertEquals(2 / 3f, manager.craftingProgress());
+        Assertions.assertEquals(MachineCraftingStatus.ACTIVE, manager.status());
     }
 }
