@@ -240,7 +240,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
     // endregion
 
-    private class CraftingContext implements MachineCraftingContext<AlloySmeltingRecipe, AlloySmeltingRecipe.Input> {
+    private class CraftingContext extends MachineCraftingContext<AlloySmeltingRecipe, AlloySmeltingRecipe.Input> {
         @Override
         public AlloySmeltingRecipe.Input recipeInput() {
             return getRecipeInput();
@@ -275,11 +275,13 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         }
 
         @Override
-        public boolean consumeRecipeInputs(AlloySmeltingRecipe recipe, TransactionContext transaction) {
+        public boolean consumeRecipeInputs(AlloySmeltingRecipe recipe, AlloySmeltingRecipe.Input recipeInput, TransactionContext transaction) {
+            // TODO: Rather than consuming based on the recipe ingredients, consume based on the inputs.
             if (recipe.isSmelting()) {
                 // Smelting recipes only have one ingredient and can consume 1-3 of said ingredient.
                 SizedIngredient input = recipe.inputs().getFirst();
 
+                // TODO: Put consume amount back into input - if count changes we restart and properly acquire the correct operation time...
                 var consumedResource = ResourceHandlerUtil.extractFirst(inputHandler, ir -> input.ingredient().test(ir.toStack()), 3, transaction);
                 if (consumedResource == null) {
                     return false;
@@ -304,9 +306,9 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         }
 
         @Override
-        public boolean insertRecipeOutputs(AlloySmeltingRecipe recipe, RandomSource random, TransactionContext transaction) {
+        public boolean insertRecipeOutputs(AlloySmeltingRecipe recipe, AlloySmeltingRecipe.Input recipeInput, RandomSource random, TransactionContext transaction) {
             // TODO: Once we're fully migrated, just use assemble for single output recipes...
-            var results = recipe.craft(recipeInput(), random, level.registryAccess());
+            var results = recipe.craft(recipeInput, random, level.registryAccess());
 
             for (var result : results) {
                 if (result.isItem()) {

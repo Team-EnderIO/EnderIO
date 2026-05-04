@@ -250,7 +250,7 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
 
     // endregion
 
-    private class CraftingContext implements MachineCraftingContext<SagMillingRecipe, SagMillingRecipe.Input> {
+    private class CraftingContext extends MachineCraftingContext<SagMillingRecipe, SagMillingRecipe.Input> {
 
         @Override
         public SagMillingRecipe.Input recipeInput() {
@@ -297,10 +297,10 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
         }
 
         @Override
-        public boolean consumeRecipeInputs(SagMillingRecipe recipe, TransactionContext transaction) {
+        public boolean consumeRecipeInputs(SagMillingRecipe recipe, SagMillingRecipe.Input recipeInput, TransactionContext transaction) {
             // Attempt to consume input
-            var extractedResource = ResourceHandlerUtil.extractFirst(inputHandler, ir -> recipe.input().test(ir.toStack()), 1, transaction);
-            if (extractedResource == null || extractedResource.amount() != 1) {
+            int consumed = inputHandler.extract(ItemResource.of(recipeInput.inputItemStack()), 1, transaction);
+            if (consumed != 1) {
                 return false;
             }
 
@@ -330,9 +330,9 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
         }
 
         @Override
-        public boolean insertRecipeOutputs(SagMillingRecipe recipe, RandomSource random, TransactionContext transaction) {
+        public boolean insertRecipeOutputs(SagMillingRecipe recipe, SagMillingRecipe.Input recipeInput, RandomSource random, TransactionContext transaction) {
             // TODO: Once we're fully migrated, we just want ItemStacks/Templates.
-            var results = recipe.craft(recipeInput(), random, level.registryAccess());
+            var results = recipe.craft(recipeInput, random, level.registryAccess());
 
             for (var result : results) {
                 if (result.isItem() && !result.isEmpty()) {

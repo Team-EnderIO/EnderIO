@@ -194,7 +194,7 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
 
     // endregion
 
-    private class CraftingContext implements MachineCraftingContext<PaintingRecipe, PaintingRecipe.Input> {
+    private class CraftingContext extends MachineCraftingContext<PaintingRecipe, PaintingRecipe.Input> {
         @Override
         public PaintingRecipe.Input recipeInput() {
             return getRecipeInput();
@@ -228,14 +228,14 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
         }
 
         @Override
-        public boolean consumeRecipeInputs(PaintingRecipe recipe, TransactionContext transaction) {
-            var consumed = ResourceHandlerUtil.extractFirst(inputHandler, ir -> recipe.input().test(ir.toStack()), 1, transaction);
-            return consumed != null && consumed.amount() == 1;
+        public boolean consumeRecipeInputs(PaintingRecipe recipe, PaintingRecipe.Input input, TransactionContext transaction) {
+            int consumed = inputHandler.extract(ItemResource.of(input.template()), 1, transaction);
+            return consumed == 1;
         }
 
         @Override
-        public boolean insertRecipeOutputs(PaintingRecipe recipe, RandomSource random, TransactionContext transaction) {
-            var results = recipe.craft(recipeInput(), random, getLevel().registryAccess());
+        public boolean insertRecipeOutputs(PaintingRecipe recipe, PaintingRecipe.Input recipeInput, RandomSource random, TransactionContext transaction) {
+            var results = recipe.craft(recipeInput, random, getLevel().registryAccess());
 
             for (var result : results) {
                 if (result.isItem()) {

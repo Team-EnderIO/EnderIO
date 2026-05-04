@@ -73,8 +73,7 @@ public class MachineCraftingManagerTests {
         when(context.tryProgressCraft(argThat(isValidRecipe))).thenReturn(true);
         when(context.getCraftingTicks(any())).thenReturn(1);
 
-        when(context.consumeRecipeInputs(argThat(isValidRecipe), any())).thenReturn(true);
-        when(context.insertRecipeOutputs(argThat(isValidRecipe), any(), any())).thenReturn(true);
+        when(context.tryCompleteCraft(argThat(isValidRecipe), any())).thenReturn(true);
 
         var manager = new MachineCraftingManager<>(RecipeType.SMELTING, context);
 
@@ -83,8 +82,7 @@ public class MachineCraftingManagerTests {
 
         // Assert. - ensure that the manager processed the recipe and called all the methods configured above.
         verify(level, Mockito.atLeastOnce()).recipeAccess();
-        verify(context).consumeRecipeInputs(argThat(isValidRecipe), any());
-        verify(context).insertRecipeOutputs(argThat(isValidRecipe), any(), any());
+        verify(context).tryCompleteCraft(argThat(isValidRecipe), any());
     }
 
     @Test

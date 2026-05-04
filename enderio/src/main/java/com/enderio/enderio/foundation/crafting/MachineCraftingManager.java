@@ -179,24 +179,9 @@ public final class MachineCraftingManager<T extends Recipe<U>, U extends RecipeI
     private boolean tryFinaliseCraft() {
         Objects.requireNonNull(currentRecipeHolder);
 
-        try (Transaction transaction = Transaction.openRoot()) {
-            // Ensure the seed is correct before attempting to insert outputs
-            // This is important to ensure any recipes which have randomness will always output the same things each attempt.
-            randomSource.setSeed(randomSeed);
-
-            // Try and insert result first, and *then* consume inputs. This ensures that the recipeInput is still valid for the context to use.
-            if (!context.insertRecipeOutputs(currentRecipeHolder.value(), randomSource, transaction)) {
-                return false;
-            }
-
-            // Now try to consume inputs - shouldn't fail, but if it does we'll just 'get stuck'
-            if (context.consumeRecipeInputs(currentRecipeHolder.value(), transaction)) {
-                transaction.commit();
-
-                // We're done, releaase the recipe.
-                clearRecipe();
-                return true;
-            }
+        if (context.tryCompleteCraft(currentRecipeHolder.value(), randomSource)) {
+            clearRecipe();
+            return true;
         }
 
         return false;

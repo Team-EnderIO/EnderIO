@@ -50,6 +50,8 @@ import net.neoforged.neoforge.transfer.transaction.Transaction;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jspecify.annotations.Nullable;
 
+import java.util.Optional;
+
 public class SlicerBlockEntity extends PoweredMachineBlockEntity {
 
     public static final QuadraticIntScalable CAPACITY = new QuadraticIntScalable(CapacitorModifier.ENERGY_CAPACITY,
@@ -206,7 +208,10 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
 
     // endregion
 
-    private class CraftingContext implements MachineCraftingContext<SlicingRecipe, SlicingRecipe.Input> {
+    private class CraftingContext extends MachineCraftingContext<SlicingRecipe, SlicingRecipe.Input> {
+
+        private ItemResource damagedAxe = ItemResource.EMPTY;
+        private ItemResource damagedShears = ItemResource.EMPTY;
 
         @Override
         public SlicingRecipe.Input recipeInput() {
@@ -246,49 +251,70 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
         }
 
         @Override
-        public boolean consumeRecipeInputs(SlicingRecipe recipe, TransactionContext transaction) {
-            for (var input : recipe.inputs()) {
-                var consumed = ResourceHandlerUtil.extractFirst(inputHandler, ir -> input.test(ir.toStack()), 1, transaction);
-                if (consumed == null || consumed.amount() != 1) {
+        public boolean tryCompleteCraft(SlicingRecipe recipe, RandomSource random) {
+            // Prepare the damaged axe and shears ahead of time.
+            // It's dangerous to do this from within a transaction as a modded tool may open a new transaction to consume energy or similar.
+            var damagedAxeOpt = prepareDamagedItem(AXE);
+            var damagedShearsOpt = prepareDamagedItem(SHEARS);
+
+            if (damagedAxeOpt.isEmpty() || damagedShearsOpt.isEmpty()) {
+                return false;
+            }
+
+            damagedAxe = damagedAxeOpt.get();
+            damagedShears = damagedShearsOpt.get();
+
+            return super.tryCompleteCraft(recipe, random);
+        }
+
+        private Optional<ItemResource> prepareDamagedItem(ResourceSlotId<ItemResource> slot) {
+            var currentResource = getInventory().getResource(slot);
+            if (currentResource.isEmpty()) {
+                return Optional.empty();
+            }
+
+            var stack = currentResource.toStack();
+            stack.hurtAndBreak(1, level(), null, _ -> {});
+            return Optional.of(ItemResource.of(stack));
+        }
+
+        @Override
+        public boolean consumeRecipeInputs(SlicingRecipe recipe, SlicingRecipe.Input recipeInput, TransactionContext transaction) {
+            for (var input : recipeInput.inputs()) {
+                int extracted = inputHandler.extract(ItemResource.of(input), input.getCount(), transaction);
+                if (extracted != input.getCount()) {
                     return false;
                 }
             }
 
-            var inv = getInventory();
-            if (!damageTool(inv, AXE, transaction) || !damageTool(inv, SHEARS, transaction)) {
+            // Try to swap out for the damaged tools
+            if (!swapForDamagedTool(AXE, damagedAxe, transaction) || !swapForDamagedTool(SHEARS, damagedShears, transaction)) {
                 return false;
             }
 
             return true;
         }
 
-        private boolean damageTool(ResourceStorage<ItemResource> inventory, ResourceSlotId<ItemResource> slot, TransactionContext transaction) {
-            // TODO: need another approach, JDT paxel will open a transaction during hurtAndBreak which throws an exception due to our active transaction.
-//            var toolResource = inventory.getResource(slot);
-//            int amount = inventory.getAmountAsInt(slot);
-//            int extracted = inventory.extract(slot, toolResource, amount, transaction);
-//            if (extracted != amount) {
-//                return false;
-//            }
-//
-//            var stack = toolResource.toStack(amount);
-//            stack.hurtAndBreak(1, level(), null, _ -> {});
-//
-//            // If it didn't get destroyed, put it back
-//            if (!stack.isEmpty()) {
-//                int inserted = inventory.insert(slot, ItemResource.of(stack), stack.getCount(), transaction);
-//                if (inserted != stack.getCount()) {
-//                    return false;
-//                }
-//            }
+        private boolean swapForDamagedTool(ResourceSlotId<ItemResource> slot, ItemResource damagedTool, TransactionContext transaction) {
+            int extracted = getInventory().extract(slot, getInventory().getResource(slot), 1, transaction);
+            if (extracted != 1) {
+                return false;
+            }
+
+            if (!damagedTool.isEmpty()) {
+                int inserted = getInventory().insert(slot, damagedTool, 1, transaction);
+                if (inserted != 1) {
+                    return false;
+                }
+            }
 
             return true;
         }
 
         @Override
-        public boolean insertRecipeOutputs(SlicingRecipe recipe, RandomSource random, TransactionContext transaction) {
+        public boolean insertRecipeOutputs(SlicingRecipe recipe, SlicingRecipe.Input recipeInput, RandomSource random, TransactionContext transaction) {
             // TODO: Once we're fully migrated, just use assemble for single output recipes...
-            var results = recipe.craft(recipeInput(), random, level.registryAccess());
+            var results = recipe.craft(recipeInput, random, level.registryAccess());
 
             for (var result : results) {
                 if (result.isItem()) {
