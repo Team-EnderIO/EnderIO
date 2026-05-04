@@ -1,6 +1,8 @@
 package com.enderio.enderio.content.machines.alloy;
 
+import com.enderio.core.common.crafting.WithCountSlotDisplay;
 import com.enderio.enderio.api.recipes.EnderIORecipe;
+import com.enderio.enderio.api.recipes.alloy.AlloySmeltingRecipeDisplay;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIORecipeBookCategories;
 import com.enderio.enderio.init.EIORecipeTypes;
@@ -173,10 +175,11 @@ public class AlloySmeltingRecipe implements EnderIORecipe<AlloySmeltingRecipe.In
     @Override
     public List<RecipeDisplay> display() {
         return List.of(
-            new AlloySmelterDisplay(
-                this.inputs.stream().map(s -> s.ingredient().display()).toList(),
+            new AlloySmeltingRecipeDisplay(
+                this.inputs.stream().<SlotDisplay>map(WithCountSlotDisplay::new).toList(),
                 new SlotDisplay.ItemStackSlotDisplay(this.output),
-                new SlotDisplay.ItemSlotDisplay(EIOBlocks.ALLOY_SMELTER.asItem())
+                new SlotDisplay.ItemSlotDisplay(EIOBlocks.ALLOY_SMELTER.asItem()),
+                operationTime()
             )
         );
     }
@@ -218,38 +221,6 @@ public class AlloySmeltingRecipe implements EnderIORecipe<AlloySmeltingRecipe.In
         @Override
         public int size() {
             return inputs.size();
-        }
-    }
-
-    public record AlloySmelterDisplay(List<SlotDisplay> ingredients, SlotDisplay result, SlotDisplay craftingStation) implements RecipeDisplay {
-
-        public static final MapCodec<AlloySmelterDisplay> MAP_CODEC = RecordCodecBuilder.mapCodec(
-            p_379634_ -> p_379634_.group(
-                    SlotDisplay.CODEC.listOf().fieldOf("ingredients").forGetter(AlloySmelterDisplay::ingredients),
-                    SlotDisplay.CODEC.fieldOf("result").forGetter(AlloySmelterDisplay::result),
-                    SlotDisplay.CODEC.fieldOf("crafting_station").forGetter(AlloySmelterDisplay::craftingStation)
-                )
-                .apply(p_379634_, AlloySmelterDisplay::new)
-        );
-        public static final StreamCodec<RegistryFriendlyByteBuf, AlloySmelterDisplay> STREAM_CODEC = StreamCodec.composite(
-            SlotDisplay.STREAM_CODEC.apply(ByteBufCodecs.list()),
-            AlloySmelterDisplay::ingredients,
-            SlotDisplay.STREAM_CODEC,
-            AlloySmelterDisplay::result,
-            SlotDisplay.STREAM_CODEC,
-            AlloySmelterDisplay::craftingStation,
-            AlloySmelterDisplay::new
-        );
-        public static final RecipeDisplay.Type<AlloySmelterDisplay> TYPE = new RecipeDisplay.Type<>(MAP_CODEC, STREAM_CODEC);
-
-        @Override
-        public Type<? extends RecipeDisplay> type() {
-            return TYPE;
-        }
-
-        @Override
-        public boolean isEnabled(FeatureFlagSet flagSet) {
-            return this.ingredients.stream().allMatch(i -> i.isEnabled(flagSet)) && RecipeDisplay.super.isEnabled(flagSet);
         }
     }
 }

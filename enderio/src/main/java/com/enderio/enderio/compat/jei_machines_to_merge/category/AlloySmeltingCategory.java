@@ -2,29 +2,28 @@ package com.enderio.enderio.compat.jei_machines_to_merge.category;
 
 import com.enderio.core.common.util.IngredientUtility;
 import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.api.recipes.alloy.AlloySmeltingRecipeDisplay;
 import com.enderio.enderio.client.content.machines.gui.screen.StirlingGeneratorScreen;
 import com.enderio.enderio.compat.jei.JEILang;
 import com.enderio.enderio.compat.jei.JEIUtils;
 import com.enderio.enderio.compat.jei_machines_to_merge.util.MachineRecipeCategory;
-import com.enderio.enderio.compat.jei_machines_to_merge.util.RecipeUtil;
 import com.enderio.enderio.content.machines.alloy.AlloySmeltingRecipe;
-import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.init.EIOBlocks;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
-import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.gui.widgets.IRecipeExtrasBuilder;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.types.IRecipeType;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.display.RecipeDisplay;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
 
 import java.util.List;
@@ -34,7 +33,7 @@ import static mezz.jei.api.recipe.RecipeIngredientRole.*;
 public class AlloySmeltingCategory extends MachineRecipeCategory<RecipeHolder<AlloySmeltingRecipe>> {
 
     public static final Identifier BG_TEXTURE = EnderIO.id("textures/gui/viewer/alloy_smelter.png");
-    private static final int WIDTH = 67 + 40; // + 40 text space
+    private static final int WIDTH = 67;
     private static final int HEIGHT = 73;
 
     public static final IRecipeType<RecipeHolder<AlloySmeltingRecipe>> TYPE = JEIUtils
@@ -81,45 +80,45 @@ public class AlloySmeltingCategory extends MachineRecipeCategory<RecipeHolder<Al
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<AlloySmeltingRecipe> recipe, IFocusGroup focuses) {
-        List<SizedIngredient> inputs = recipe.value().inputs();
+    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<AlloySmeltingRecipe> recipeHolder, IFocusGroup focuses) {
+        AlloySmeltingRecipe recipe = recipeHolder.value();
+        RecipeDisplay display = recipe.display().getFirst();
+        if (display instanceof AlloySmeltingRecipeDisplay alloySmelterDisplay) {
+            var ingredients = alloySmelterDisplay.ingredients();
 
-        if (!inputs.isEmpty()) {
-            builder.addSlot(INPUT, 1, 11).addItemStacks(IngredientUtility.getItemStacks(inputs.get(0)));
-        } else {
-            builder.addSlot(RENDER_ONLY, 1, 11);
+            if (!ingredients.isEmpty()) {
+                builder.addInputSlot(1, 11).add(ingredients.getFirst());
+            } else {
+                builder.addSlot(RENDER_ONLY, 1, 11);
+            }
+
+            if (ingredients.size() > 1) {
+                builder.addInputSlot(26, 1).add(ingredients.get(1));
+            } else {
+                builder.addSlot(RENDER_ONLY, 26, 1);
+            }
+
+            if (ingredients.size() > 2) {
+                builder.addInputSlot(50, 11).add(ingredients.get(2));
+            } else {
+                builder.addSlot(RENDER_ONLY, 50, 11);
+            }
+
+            builder.addOutputSlot(26, 52)
+//                .setOutputSlotBackground()
+                .add(alloySmelterDisplay.result());
         }
+    }
 
-        if (inputs.size() > 1) {
-            builder.addSlot(INPUT, 26, 1).addItemStacks(IngredientUtility.getItemStacks(inputs.get(1)));
-        } else {
-            builder.addSlot(RENDER_ONLY, 26, 1);
-        }
-
-        if (inputs.size() > 2) {
-            builder.addSlot(INPUT, 50, 11).addItemStacks(IngredientUtility.getItemStacks(inputs.get(2)));
-        } else {
-            builder.addSlot(RENDER_ONLY, 50, 11);
-        }
-
-        builder.addSlot(OUTPUT, 26, 52).add(recipe.value().output());
+    @Override
+    public void createRecipeExtras(IRecipeExtrasBuilder builder, RecipeHolder<AlloySmeltingRecipe> recipe, IFocusGroup focuses) {
+        builder.addDrawable(animatedFlame, 3, 29);
+        builder.addDrawable(animatedFlame, 51, 29);
     }
 
     @Override
     public void draw(RecipeHolder<AlloySmeltingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor guiGraphics, double mouseX,
         double mouseY) {
         background.draw(guiGraphics);
-        animatedFlame.draw(guiGraphics, 3, 29);
-        animatedFlame.draw(guiGraphics, 51, 29);
-//        guiGraphics.text(Minecraft.getInstance().font, getBasicEnergyString(recipe), 60, 50, 0xff808080, false);
-    }
-
-    @Override
-    public void getTooltip(ITooltipBuilder tooltip, RecipeHolder<AlloySmeltingRecipe> recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
-        Minecraft mc = Minecraft.getInstance();
-//        if (mouseX > 60 && mouseY > 50 && mouseX < 60 + mc.font.width(getBasicEnergyString(recipe))
-//            && mouseY < 50 + mc.font.lineHeight) {
-//            tooltip.add(EIOCommonLang.TOOLTIP_ENERGY_EQUIVALENCE);
-//        }
     }
 }
