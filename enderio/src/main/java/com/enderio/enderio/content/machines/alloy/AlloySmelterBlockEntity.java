@@ -204,14 +204,14 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     @Override
     public void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
-        output.putChild("CraftingManager", craftingManager);
+        output.putChild(MachineNBTKeys.CRAFTING_TASK, craftingManager);
         output.store(MachineNBTKeys.MACHINE_MODE, AlloySmelterMode.CODEC, mode);
     }
 
     @Override
     public void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
-        input.readChild("CraftingManager", craftingManager);
+        input.readChild(MachineNBTKeys.CRAFTING_TASK, craftingManager);
 
         mode = input.read(MachineNBTKeys.MACHINE_MODE, AlloySmelterMode.CODEC)
             .orElse(AlloySmelterMode.ALL);
@@ -235,7 +235,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     public void removeComponentsFromTag(ValueOutput output) {
         super.removeComponentsFromTag(output);
         output.discard(MachineNBTKeys.MACHINE_MODE);
-        output.discard("CraftingManager");
+        output.discard(MachineNBTKeys.CRAFTING_TASK);
     }
 
     // endregion

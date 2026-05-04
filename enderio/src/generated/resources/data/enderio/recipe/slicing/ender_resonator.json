@@ -8,7 +8,7 @@
     "enderio:vibrant_alloy_ingot",
     "#c:silicon"
   ],
-  "operation_time": 20000,
+  "operation_time": 300,
   "output": {
     "id": "enderio:ender_resonator"
   }

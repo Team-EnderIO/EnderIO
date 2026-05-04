@@ -1,9 +1,10 @@
 package com.enderio.enderio.content.machines.slicer;
 
-import com.enderio.core.common.storage.ItemStorage;
+import com.enderio.core.common.storage.ResourceStorage;
 import com.enderio.core.common.storage.layout.ItemStorageLayout;
 import com.enderio.core.common.storage.layout.SlotTemplates;
 import com.enderio.core.common.storage.slot.MultiResourceSlotKey;
+import com.enderio.core.common.storage.slot.ResourceSlotId;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.scaling.QuadraticIntScalable;
@@ -14,14 +15,18 @@ import com.enderio.enderio.foundation.MachineNBTKeys;
 import com.enderio.enderio.foundation.block.ProgressMachineBlock;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
+import com.enderio.enderio.foundation.capacitor.TempMachineSpeedScalable;
+import com.enderio.enderio.foundation.crafting.MachineCraftingContext;
+import com.enderio.enderio.foundation.crafting.MachineCraftingManager;
+import com.enderio.enderio.foundation.crafting.MachineCraftingStatus;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.foundation.inventory.MachineSlotTemplates;
-import com.enderio.enderio.foundation.task.CraftingMachineTask;
-import com.enderio.enderio.foundation.task.PoweredCraftingMachineTask;
-import com.enderio.enderio.foundation.task.host.CraftingMachineTaskHost;
 import com.enderio.enderio.init.EIOBlockEntities;
+import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIORecipeTypes;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponentGetter;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.ItemTags;
 import com.enderio.enderio.init.EIOSounds;
@@ -38,7 +43,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jspecify.annotations.Nullable;
 
 public class SlicerBlockEntity extends PoweredMachineBlockEntity {
@@ -48,30 +57,25 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
     public static final QuadraticIntScalable USAGE = new QuadraticIntScalable(CapacitorModifier.ENERGY_USE,
             MachinesConfig.COMMON.ENERGY.SLICER_USAGE);
 
+    public static final TempMachineSpeedScalable SPEED = new TempMachineSpeedScalable(USAGE);
+
     public static final SingleResourceSlotKey<ItemResource> OUTPUT = new SingleResourceSlotKey<>();
     public static final MultiResourceSlotKey<ItemResource> INPUTS = new MultiResourceSlotKey<>(6);
     public static final SingleResourceSlotKey<ItemResource> AXE = new SingleResourceSlotKey<>();
     public static final SingleResourceSlotKey<ItemResource> SHEARS = new SingleResourceSlotKey<>();
     public static final SingleResourceSlotKey<ItemResource> CAPACITOR = new SingleResourceSlotKey<>();
 
-    private final CraftingMachineTaskHost<SlicingRecipe, SlicingRecipe.Input> craftingTaskHost;
+    private final ResourceHandler<ItemResource> inputHandler;
+
+    private final MachineCraftingManager<SlicingRecipe, SlicingRecipe.Input> craftingManager;
+    private SlicingRecipe.@Nullable Input recipeInput;
 
     public SlicerBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.SLICE_AND_SPLICE.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, CAPACITOR,
                 EnergyIOMode.Input, CAPACITY, USAGE);
 
-        craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy, EIORecipeTypes.SLICING.get(),
-                this::createTask, this::createRecipeInput) {
-            @Override
-            protected @Nullable CraftingMachineTask<SlicingRecipe, SlicingRecipe.Input> getNewTask() {
-                if (getInventory().getStack(AXE).isEmpty()
-                        || getInventory().getStack(SHEARS).isEmpty()) {
-                    return null;
-                }
-
-                return super.getNewTask();
-            }
-        };
+        inputHandler = INPUTS.rangedHandler(getInventory());
+        craftingManager = new MachineCraftingManager<>(EIORecipeTypes.SLICING.get(), new CraftingContext());
     }
 
     @Nullable
@@ -85,7 +89,7 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
         super.serverTick();
 
         if (canAct()) {
-            craftingTaskHost.tick();
+            craftingManager.tick();
         }
     }
 
@@ -110,12 +114,6 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
         } else {
             SoundHandler.stopSound(pos);
         }
-    }
-
-    @Override
-    public void onLoad() {
-        super.onLoad();
-        craftingTaskHost.onLevelReady();
     }
 
     // region Inventory
@@ -148,11 +146,15 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
     @Override
     protected void onInventoryContentsChanged(int slot) {
         super.onInventoryContentsChanged(slot);
-        craftingTaskHost.newTaskAvailable();
+        recipeInput = null;
     }
 
-    private SlicingRecipe.Input createRecipeInput() {
-        return new SlicingRecipe.Input(getInventory().getStacks(INPUTS));
+    public SlicingRecipe.Input getRecipeInput() {
+        if (recipeInput == null) {
+            recipeInput = new SlicingRecipe.Input(getInventory().getStacks(INPUTS));
+        }
+
+        return recipeInput;
     }
 
     // endregion
@@ -160,32 +162,12 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
     // region Crafting Task
 
     public float getCraftingProgress() {
-        return craftingTaskHost.getProgress();
+        return craftingManager.craftingProgress();
     }
 
     @Override
     public boolean isActive() {
-        return canAct() && hasEnergy() && craftingTaskHost.hasTask();
-    }
-
-    protected PoweredCraftingMachineTask<SlicingRecipe, SlicingRecipe.Input> createTask(Level level,
-            SlicingRecipe.Input recipeInput, @Nullable RecipeHolder<SlicingRecipe> recipe) {
-        return new PoweredCraftingMachineTask<>(level, this, getInventory(), getEnergyStorage(), recipeInput, OUTPUT,
-                recipe) {
-            @Override
-            protected void consumeInputs(SlicingRecipe recipe) {
-                // Deduct ingredients
-                ItemStorage inv = getInventory();
-                for (var inputSlot : INPUTS) {
-                    inv.mutateStack(inputSlot, stack -> stack.shrink(1));
-                }
-
-                if (level instanceof ServerLevel serverLevel) {
-                    inv.mutateStack(AXE, stack -> stack.hurtAndBreak(1, serverLevel, null, _ -> {}));
-                    inv.mutateStack(SHEARS, stack -> stack.hurtAndBreak(1, serverLevel, null, _ -> {}));
-                }
-            }
-        };
+        return canAct() && hasEnergy() && craftingManager.status() != MachineCraftingStatus.IDLE;
     }
 
     // endregion
@@ -195,15 +177,129 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
     @Override
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
-        output.putChild(MachineNBTKeys.CRAFTING_TASK, craftingTaskHost);
+        output.putChild(MachineNBTKeys.CRAFTING_TASK, craftingManager);
     }
 
     @Override
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
-        var task = input.child(MachineNBTKeys.CRAFTING_TASK);
-        task.ifPresent(craftingTaskHost::deserialize);
+        input.readChild(MachineNBTKeys.CRAFTING_TASK, craftingManager);
+    }
+
+    @Override
+    protected void applyImplicitComponents(DataComponentGetter components) {
+        super.applyImplicitComponents(components);
+        craftingManager.applyCraftingState(components.get(EIODataComponents.MACHINE_CRAFTING_STATE));
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+        components.set(EIODataComponents.MACHINE_CRAFTING_STATE, craftingManager.getCraftingState());
+    }
+
+    @Override
+    public void removeComponentsFromTag(ValueOutput output) {
+        super.removeComponentsFromTag(output);
+        output.discard(MachineNBTKeys.CRAFTING_TASK);
     }
 
     // endregion
+
+    private class CraftingContext implements MachineCraftingContext<SlicingRecipe, SlicingRecipe.Input> {
+
+        @Override
+        public SlicingRecipe.Input recipeInput() {
+            return getRecipeInput();
+        }
+
+        @Override
+        public @Nullable ServerLevel level() {
+            if (getLevel() instanceof ServerLevel serverLevel) {
+                return serverLevel;
+            }
+
+            return null;
+        }
+
+        @Override
+        public int getCraftingTicks(RecipeHolder<SlicingRecipe> recipe) {
+            return Math.round(recipe.value().getOperationTime(recipeInput()) * SPEED.scale(getCapacitorData()));
+        }
+
+        @Override
+        public boolean tryProgressCraft(SlicingRecipe recipe) {
+            var inv = getInventory();
+            if (inv.getAmountAsInt(AXE) < 1 || inv.getAmountAsInt(SHEARS) < 1) {
+                return false;
+            }
+
+            try (var transaction = Transaction.openRoot()) {
+                int consumed = getEnergyStorage().consume(getMaxEnergyUse(), transaction);
+                if (consumed == getMaxEnergyUse()) {
+                    transaction.commit();
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        @Override
+        public boolean consumeRecipeInputs(SlicingRecipe recipe, TransactionContext transaction) {
+            for (var input : recipe.inputs()) {
+                var consumed = ResourceHandlerUtil.extractFirst(inputHandler, ir -> input.test(ir.toStack()), 1, transaction);
+                if (consumed == null || consumed.amount() != 1) {
+                    return false;
+                }
+            }
+
+            var inv = getInventory();
+            if (!damageTool(inv, AXE, transaction) || !damageTool(inv, SHEARS, transaction)) {
+                return false;
+            }
+
+            return true;
+        }
+
+        private boolean damageTool(ResourceStorage<ItemResource> inventory, ResourceSlotId<ItemResource> slot, TransactionContext transaction) {
+            // TODO: need another approach, JDT paxel will open a transaction during hurtAndBreak which throws an exception due to our active transaction.
+//            var toolResource = inventory.getResource(slot);
+//            int amount = inventory.getAmountAsInt(slot);
+//            int extracted = inventory.extract(slot, toolResource, amount, transaction);
+//            if (extracted != amount) {
+//                return false;
+//            }
+//
+//            var stack = toolResource.toStack(amount);
+//            stack.hurtAndBreak(1, level(), null, _ -> {});
+//
+//            // If it didn't get destroyed, put it back
+//            if (!stack.isEmpty()) {
+//                int inserted = inventory.insert(slot, ItemResource.of(stack), stack.getCount(), transaction);
+//                if (inserted != stack.getCount()) {
+//                    return false;
+//                }
+//            }
+
+            return true;
+        }
+
+        @Override
+        public boolean insertRecipeOutputs(SlicingRecipe recipe, RandomSource random, TransactionContext transaction) {
+            // TODO: Once we're fully migrated, just use assemble for single output recipes...
+            var results = recipe.craft(recipeInput(), random, level.registryAccess());
+
+            for (var result : results) {
+                if (result.isItem()) {
+                    int inserted = getInventory().insert(OUTPUT, ItemResource.of(result.getItem()), result.getItem().count(), transaction);
+                    if (inserted < result.getItem().count()) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+    }
 }
