@@ -102,7 +102,7 @@ public class AlloySmeltingCategory extends MachineRecipeCategory<RecipeHolder<Al
             builder.addSlot(RENDER_ONLY, 50, 11);
         }
 
-        builder.addSlot(OUTPUT, 26, 52).addItemStacks(List.of(RecipeUtil.getResultStacks(recipe).getFirst().getItem()));
+        builder.addSlot(OUTPUT, 26, 52).add(recipe.value().output());
     }
 
     @Override
@@ -111,15 +111,15 @@ public class AlloySmeltingCategory extends MachineRecipeCategory<RecipeHolder<Al
         background.draw(guiGraphics);
         animatedFlame.draw(guiGraphics, 3, 29);
         animatedFlame.draw(guiGraphics, 51, 29);
-        guiGraphics.text(Minecraft.getInstance().font, getBasicEnergyString(recipe), 60, 50, 0xff808080, false);
+//        guiGraphics.text(Minecraft.getInstance().font, getBasicEnergyString(recipe), 60, 50, 0xff808080, false);
     }
 
     @Override
     public void getTooltip(ITooltipBuilder tooltip, RecipeHolder<AlloySmeltingRecipe> recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
         Minecraft mc = Minecraft.getInstance();
-        if (mouseX > 60 && mouseY > 50 && mouseX < 60 + mc.font.width(getBasicEnergyString(recipe))
-            && mouseY < 50 + mc.font.lineHeight) {
-            tooltip.add(EIOCommonLang.TOOLTIP_ENERGY_EQUIVALENCE);
-        }
+//        if (mouseX > 60 && mouseY > 50 && mouseX < 60 + mc.font.width(getBasicEnergyString(recipe))
+//            && mouseY < 50 + mc.font.lineHeight) {
+//            tooltip.add(EIOCommonLang.TOOLTIP_ENERGY_EQUIVALENCE);
+//        }
     }
 }

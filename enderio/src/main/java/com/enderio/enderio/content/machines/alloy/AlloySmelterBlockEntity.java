@@ -258,7 +258,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
         @Override
         public int getCraftingTicks(RecipeHolder<AlloySmeltingRecipe> recipe) {
-            return Math.round(recipe.value().getOperationTime(recipeInput()) * SPEED.scale(getCapacitorData()));
+            return Math.round(recipe.value().operationTime() * SPEED.scale(getCapacitorData()));
         }
 
         @Override
@@ -307,19 +307,9 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
         @Override
         public boolean insertRecipeOutputs(AlloySmeltingRecipe recipe, AlloySmeltingRecipe.Input recipeInput, RandomSource random, TransactionContext transaction) {
-            // TODO: Once we're fully migrated, just use assemble for single output recipes...
-            var results = recipe.craft(recipeInput, random, level.registryAccess());
-
-            for (var result : results) {
-                if (result.isItem()) {
-                    int inserted = getInventory().insert(OUTPUT, ItemResource.of(result.getItem()), result.getItem().count(), transaction);
-                    if (inserted < result.getItem().count()) {
-                        return false;
-                    }
-                }
-            }
-
-            return true;
+            var result = recipe.assemble(recipeInput);
+            int inserted = getInventory().insert(OUTPUT, ItemResource.of(result.getItem()), result.getCount(), transaction);
+            return inserted == result.getCount();
         }
     }
 }

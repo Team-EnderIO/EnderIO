@@ -1,18 +1,15 @@
 package com.enderio.enderio.content.machines.alloy;
 
-import com.enderio.core.common.recipes.OutputStack;
-import com.enderio.enderio.foundation.MachineRecipe;
+import com.enderio.enderio.api.recipes.EnderIORecipe;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIORecipeBookCategories;
 import com.enderio.enderio.init.EIORecipeTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
@@ -30,7 +27,7 @@ import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Input> {
+public class AlloySmeltingRecipe implements EnderIORecipe<AlloySmeltingRecipe.Input> {
     // Uses optional field for isSmelting to avoid polluting recipe generation.
     public static final MapCodec<AlloySmeltingRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(inst -> inst
         .group(SizedIngredient.NESTED_CODEC.listOf().fieldOf("inputs").forGetter(AlloySmeltingRecipe::inputs), //TODO is nested right?
@@ -91,11 +88,6 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
 
     public boolean isSmelting() {
         return isSmelting;
-    }
-
-    @Override
-    public int getOperationTime(Input input) {
-        return operationTime;
     }
 
     @Override
@@ -168,13 +160,14 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
     }
 
     @Override
-    public List<OutputStack> craft(Input container, RandomSource randomSource, RegistryAccess registryAccess) {
+    public ItemStack assemble(Input input) {
         ItemStack outputStack = output.create();
         if (isSmelting) {
-            int inputsConsumed = Math.min(3, container.inputs.stream().mapToInt(ItemStack::getCount).sum());
+            int inputsConsumed = Math.min(3, input.inputs.stream().mapToInt(ItemStack::getCount).sum());
             outputStack.setCount(outputStack.getCount() * inputsConsumed);
         }
-        return List.of(OutputStack.of(outputStack));
+
+        return outputStack;
     }
 
     @Override
@@ -186,11 +179,6 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
                 new SlotDisplay.ItemSlotDisplay(EIOBlocks.ALLOY_SMELTER.asItem())
             )
         );
-    }
-
-    @Override
-    public List<OutputStack> getResultStacks(RegistryAccess registryAccess) {
-        return List.of(OutputStack.of(output.create()));
     }
 
     @Override
