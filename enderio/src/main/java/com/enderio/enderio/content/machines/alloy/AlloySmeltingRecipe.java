@@ -2,6 +2,7 @@ package com.enderio.enderio.content.machines.alloy;
 
 import com.enderio.core.common.crafting.WithCountSlotDisplay;
 import com.enderio.enderio.api.recipes.EnderIORecipe;
+import com.enderio.enderio.api.recipes.alloy.AlloySmeltingInput;
 import com.enderio.enderio.api.recipes.alloy.AlloySmeltingRecipeDisplay;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIORecipeBookCategories;
@@ -12,13 +13,11 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeBookCategory;
-import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.display.RecipeDisplay;
@@ -29,7 +28,7 @@ import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class AlloySmeltingRecipe implements EnderIORecipe<AlloySmeltingRecipe.Input> {
+public class AlloySmeltingRecipe implements EnderIORecipe<AlloySmeltingInput> {
     // Uses optional field for isSmelting to avoid polluting recipe generation.
     public static final MapCodec<AlloySmeltingRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(inst -> inst
         .group(SizedIngredient.NESTED_CODEC.listOf().fieldOf("inputs").forGetter(AlloySmeltingRecipe::inputs), //TODO is nested right?
@@ -93,7 +92,7 @@ public class AlloySmeltingRecipe implements EnderIORecipe<AlloySmeltingRecipe.In
     }
 
     @Override
-    public boolean matches(Input recipeInput, Level level) {
+    public boolean matches(AlloySmeltingInput recipeInput, Level level) {
         if (inputs.isEmpty()) {
             return false;
         }
@@ -162,10 +161,10 @@ public class AlloySmeltingRecipe implements EnderIORecipe<AlloySmeltingRecipe.In
     }
 
     @Override
-    public ItemStack assemble(Input input) {
+    public ItemStack assemble(AlloySmeltingInput input) {
         ItemStack outputStack = output.create();
         if (isSmelting) {
-            int inputsConsumed = Math.min(3, input.inputs.stream().mapToInt(ItemStack::getCount).sum());
+            int inputsConsumed = Math.min(3, input.inputs().stream().mapToInt(ItemStack::getCount).sum());
             outputStack.setCount(outputStack.getCount() * inputsConsumed);
         }
 
@@ -185,12 +184,12 @@ public class AlloySmeltingRecipe implements EnderIORecipe<AlloySmeltingRecipe.In
     }
 
     @Override
-    public RecipeSerializer<? extends Recipe<Input>> getSerializer() {
+    public RecipeSerializer<? extends Recipe<AlloySmeltingInput>> getSerializer() {
         return SERIALIZER;
     }
 
     @Override
-    public RecipeType<? extends Recipe<Input>> getType() {
+    public RecipeType<? extends Recipe<AlloySmeltingInput>> getType() {
         return EIORecipeTypes.ALLOY_SMELTING.get();
     }
 
@@ -205,22 +204,5 @@ public class AlloySmeltingRecipe implements EnderIORecipe<AlloySmeltingRecipe.In
     @Override
     public RecipeBookCategory recipeBookCategory() {
         return EIORecipeBookCategories.ALLOY_SMELTING.get();
-    }
-
-    public record Input(AlloySmelterMode mode, List<ItemStack> inputs) implements RecipeInput {
-
-        @Override
-        public ItemStack getItem(int slotIndex) {
-            if (slotIndex >= inputs.size()) {
-                throw new IllegalArgumentException("No item for index " + slotIndex);
-            }
-
-            return inputs.get(slotIndex);
-        }
-
-        @Override
-        public int size() {
-            return inputs.size();
-        }
     }
 }

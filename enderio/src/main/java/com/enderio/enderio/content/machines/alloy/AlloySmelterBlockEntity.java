@@ -6,6 +6,7 @@ import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.scaling.QuadraticIntScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
+import com.enderio.enderio.api.recipes.alloy.AlloySmeltingInput;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.foundation.MachineNBTKeys;
 import com.enderio.enderio.foundation.block.ProgressMachineBlock;
@@ -70,8 +71,10 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
      */
     private AlloySmelterMode mode = AlloySmelterMode.ALL;
 
-    private final MachineCraftingManager<AlloySmeltingRecipe, AlloySmeltingRecipe.Input> craftingManager;
-    private AlloySmeltingRecipe.@Nullable Input recipeInput;
+    private final MachineCraftingManager<AlloySmeltingRecipe, AlloySmeltingInput> craftingManager;
+
+    @Nullable
+    private AlloySmeltingInput recipeInput;
 
     public AlloySmelterBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.ALLOY_SMELTER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, CAPACITOR, EnergyIOMode.Input,
@@ -176,9 +179,9 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         recipeInput = null;
     }
 
-    public AlloySmeltingRecipe.Input getRecipeInput() {
+    public AlloySmeltingInput getRecipeInput() {
         if (recipeInput == null) {
-            recipeInput = new AlloySmeltingRecipe.Input(mode, getInventory().getStacks(INPUTS));
+            recipeInput = new AlloySmeltingInput(mode, getInventory().getStacks(INPUTS));
         }
 
         return recipeInput;
@@ -240,9 +243,9 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
     // endregion
 
-    private class CraftingContext extends MachineCraftingContext<AlloySmeltingRecipe, AlloySmeltingRecipe.Input> {
+    private class CraftingContext extends MachineCraftingContext<AlloySmeltingRecipe, AlloySmeltingInput> {
         @Override
-        public AlloySmeltingRecipe.Input recipeInput() {
+        public AlloySmeltingInput recipeInput() {
             return getRecipeInput();
         }
 
@@ -275,7 +278,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         }
 
         @Override
-        public boolean consumeRecipeInputs(AlloySmeltingRecipe recipe, AlloySmeltingRecipe.Input recipeInput, TransactionContext transaction) {
+        public boolean consumeRecipeInputs(AlloySmeltingRecipe recipe, AlloySmeltingInput recipeInput, TransactionContext transaction) {
             // TODO: Rather than consuming based on the recipe ingredients, consume based on the inputs.
             if (recipe.isSmelting()) {
                 // Smelting recipes only have one ingredient and can consume 1-3 of said ingredient.
@@ -306,7 +309,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         }
 
         @Override
-        public boolean insertRecipeOutputs(AlloySmeltingRecipe recipe, AlloySmeltingRecipe.Input recipeInput, RandomSource random, TransactionContext transaction) {
+        public boolean insertRecipeOutputs(AlloySmeltingRecipe recipe, AlloySmeltingInput recipeInput, RandomSource random, TransactionContext transaction) {
             var result = recipe.assemble(recipeInput);
             int inserted = getInventory().insert(OUTPUT, ItemResource.of(result.getItem()), result.getCount(), transaction);
             return inserted == result.getCount();
