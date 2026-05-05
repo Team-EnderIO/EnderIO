@@ -261,7 +261,8 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
         @Override
         public int getCraftingTicks(RecipeHolder<AlloySmeltingRecipe> recipe) {
-            return Math.round(recipe.value().operationTime() * SPEED.scale(getCapacitorData()));
+            // TODO: Should this be passed recipeInput?
+            return Math.round(recipe.value().getOperationTime(recipeInput()) * SPEED.scale(getCapacitorData()));
         }
 
         @Override

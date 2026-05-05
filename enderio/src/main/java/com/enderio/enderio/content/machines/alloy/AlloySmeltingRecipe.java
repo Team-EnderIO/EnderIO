@@ -27,13 +27,15 @@ import net.neoforged.neoforge.common.crafting.SizedIngredient;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.stream.IntStream;
 
-public class AlloySmeltingRecipe implements EnderIORecipe<AlloySmeltingInput> {
+public final class AlloySmeltingRecipe implements EnderIORecipe<AlloySmeltingInput> {
     // Uses optional field for isSmelting to avoid polluting recipe generation.
+    // TODO: Validation to ensure inputs has a size of 1 if isSmelting is true.
     public static final MapCodec<AlloySmeltingRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(inst -> inst
-        .group(SizedIngredient.NESTED_CODEC.listOf().fieldOf("inputs").forGetter(AlloySmeltingRecipe::inputs), //TODO is nested right?
+        .group(SizedIngredient.NESTED_CODEC.listOf(1, 3).fieldOf("inputs").forGetter(AlloySmeltingRecipe::inputs), //TODO is nested right?
             ItemStackTemplate.CODEC.fieldOf("output").forGetter(AlloySmeltingRecipe::output),
-            Codec.INT.fieldOf("operation_time").forGetter(AlloySmeltingRecipe::operationTime),
+            Codec.INT.fieldOf("operation_time").forGetter(AlloySmeltingRecipe::baseOperationTime),
             Codec.FLOAT.fieldOf("experience").forGetter(AlloySmeltingRecipe::experience),
             Codec.BOOL.optionalFieldOf("is_smelting", false).forGetter(AlloySmeltingRecipe::isSmelting))
         .apply(inst, AlloySmeltingRecipe::new));
@@ -41,7 +43,7 @@ public class AlloySmeltingRecipe implements EnderIORecipe<AlloySmeltingInput> {
     public static final StreamCodec<RegistryFriendlyByteBuf, AlloySmeltingRecipe> STREAM_CODEC = StreamCodec
         .composite(SizedIngredient.STREAM_CODEC.apply(ByteBufCodecs.list()), AlloySmeltingRecipe::inputs,
             ItemStackTemplate.STREAM_CODEC, AlloySmeltingRecipe::output, ByteBufCodecs.INT,
-            AlloySmeltingRecipe::operationTime, ByteBufCodecs.FLOAT, AlloySmeltingRecipe::experience,
+            AlloySmeltingRecipe::baseOperationTime, ByteBufCodecs.FLOAT, AlloySmeltingRecipe::experience,
             ByteBufCodecs.BOOL, AlloySmeltingRecipe::isSmelting, AlloySmeltingRecipe::new);
 
     public static final RecipeSerializer<AlloySmeltingRecipe> SERIALIZER = new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC);
@@ -79,7 +81,15 @@ public class AlloySmeltingRecipe implements EnderIORecipe<AlloySmeltingInput> {
         return output;
     }
 
-    public int operationTime() {
+    public int baseOperationTime() {
+        return operationTime;
+    }
+
+    public int getOperationTime(AlloySmeltingInput input) {
+        if (isSmelting) {
+            return operationTime * getSmeltingInputCount(input);
+        }
+
         return operationTime;
     }
 
@@ -89,6 +99,20 @@ public class AlloySmeltingRecipe implements EnderIORecipe<AlloySmeltingInput> {
 
     public boolean isSmelting() {
         return isSmelting;
+    }
+
+    public int getSmeltingInputCount(AlloySmeltingInput recipeInput) {
+        if (!isSmelting) {
+            throw new IllegalStateException("Not a smelting recipe");
+        }
+
+        int inputCount = IntStream.range(0, recipeInput.size())
+            .filter(i -> !recipeInput.getItem(i).isEmpty())
+            .filter(i -> inputs.getFirst().test(recipeInput.getItem(i)))
+            .map(i -> recipeInput.getItem(i).getCount())
+            .sum();
+
+        return Math.min(inputCount, 3);
     }
 
     @Override
@@ -105,67 +129,46 @@ public class AlloySmeltingRecipe implements EnderIORecipe<AlloySmeltingInput> {
 
         // Simpler smelting match logic
         if (isSmelting) {
-            int emptyCount = 0;
-
-            for (int i = 0; i < 3; i++) {
-                var slotItem = recipeInput.getItem(i);
-
-                if (slotItem.isEmpty()) {
-                    emptyCount++;
-                    continue;
-                }
-
-                if (!inputs.getFirst().test(slotItem)) {
-                    return false;
-                }
-            }
-
-            return emptyCount < 3;
+            // Ensure that all non-empty inputs match the ingredient.
+            return IntStream.range(0, recipeInput.size())
+                .filter(i -> !recipeInput.getItem(i).isEmpty())
+                .allMatch(i -> inputs.getFirst().test(recipeInput.getItem(i)));
         }
 
         boolean[] matchedInputs = new boolean[3];
 
-        // Iterate over the slots
-        for (int i = 0; i < 3; i++) {
-            // Iterate over the inputs
-            for (int j = 0; j < 3; j++) {
+        for (int slot = 0; slot < 3; slot++) {
+            var slotItem = recipeInput.getItem(slot);
+
+            for (int ingredient = 0; ingredient < 3; ingredient++) {
                 // If this ingredient has been matched already, continue
-                if (matchedInputs[j]) {
+                if (matchedInputs[ingredient]) {
                     continue;
                 }
 
-                var slotItem = recipeInput.getItem(i);
-
-                if (j < inputs.size()) {
+                if (ingredient < inputs.size()) {
                     // If we expect an input, test we have a match for it.
-                    if (inputs.get(j).test(slotItem)) {
-                        matchedInputs[j] = true;
+                    if (inputs.get(ingredient).test(slotItem)) {
+                        matchedInputs[ingredient] = true;
                         break;
                     }
                 } else if (slotItem.isEmpty()) {
                     // If we don't expect an input, make sure we have a blank for it.
-                    matchedInputs[j] = true;
+                    matchedInputs[ingredient] = true;
                     break;
                 }
             }
         }
 
         // If we matched all our ingredients, we win!
-        for (int i = 0; i < 3; i++) {
-            if (!matchedInputs[i]) {
-                return false;
-            }
-        }
-
-        return true;
+        return matchedInputs[0] && matchedInputs[1] && matchedInputs[2];
     }
 
     @Override
     public ItemStack assemble(AlloySmeltingInput input) {
         ItemStack outputStack = output.create();
         if (isSmelting) {
-            int inputsConsumed = Math.min(3, input.inputs().stream().mapToInt(ItemStack::getCount).sum());
-            outputStack.setCount(outputStack.getCount() * inputsConsumed);
+            outputStack.setCount(outputStack.getCount() * getSmeltingInputCount(input));
         }
 
         return outputStack;
@@ -178,7 +181,7 @@ public class AlloySmeltingRecipe implements EnderIORecipe<AlloySmeltingInput> {
                 this.inputs.stream().<SlotDisplay>map(WithCountSlotDisplay::new).toList(),
                 new SlotDisplay.ItemStackSlotDisplay(this.output),
                 new SlotDisplay.ItemSlotDisplay(EIOBlocks.ALLOY_SMELTER.asItem()),
-                operationTime()
+                baseOperationTime()
             )
         );
     }
