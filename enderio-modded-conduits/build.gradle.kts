@@ -83,11 +83,11 @@ dependencies {
     accessTransformers(project(":enderio"))
 
     // AE2
-//    compileOnly(variantOf(libs.ae2) {
-//        classifier("api")
-//    })
-//
-//    runtimeOnly(libs.ae2)
+    compileOnly(variantOf(libs.ae2) {
+        classifier("api")
+    })
+
+    runtimeOnly(libs.ae2)
 
     // Mekanism
 //    compileOnly(variantOf(libs.mekanism) {
