@@ -31,44 +31,6 @@ public final class MEConduitNodeData implements NodeData, IInWorldGridNodeHost {
         this(mainNode.left().orElseThrow(() -> new IllegalArgumentException("mainNode must decode as CompoundTag")));
     }
 
-//    public static final MapCodec<MEConduitNodeData> CODEC = new MapCodec<>() {
-//        @Override
-//        public <T> Stream<T> keys(DynamicOps<T> ops) {
-//            return Stream.of(ops.createString("main_node"));
-//        }
-//
-//        @Override
-//        public <T> DataResult<MEConduitNodeData> decode(DynamicOps<T> ops, MapLike<T> input) {
-//            var mainNodeTagResult = CompoundTag.CODEC.decode(ops, input.get("main_node"));
-//            if (!mainNodeTagResult.hasResultOrPartial()) {
-//                return DataResult.error(() -> "Failed to deserialize main_node tag.");
-//            }
-//
-//            CompoundTag mainNodeTag = mainNodeTagResult.getPartialOrThrow().getFirst();
-//            var result = new MEConduitNodeData(mainNodeTag);
-//
-//            if (mainNodeTagResult.isError()) {
-//                return DataResult.error(() -> "An error occurred loading main_node tag, partial data returned.", result);
-//            }
-//
-//            return DataResult.success(result);
-//        }
-//
-//        @Override
-//        public <T> RecordBuilder<T> encode(MEConduitNodeData input, DynamicOps<T> ops, RecordBuilder<T> prefix) {
-//            TagValueOutput output;
-//            if (ops instanceof RegistryOps<T> registryOps && registryOps.lookupProvider instanceof RegistryOps.HolderLookupAdapter holderLookupAdapter) {
-//                output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, holderLookupAdapter.lookupProvider);
-//            } else {
-//                output = TagValueOutput.createWithoutContext(ProblemReporter.DISCARDING);
-//            }
-//
-//            input.serializeMainNode(output);
-//            prefix.add("main_node", CompoundTag.CODEC.encode(output.buildResult(), ops, ops.empty()));
-//            return prefix;
-//        }
-//    };
-
     public static final NodeDataType<MEConduitNodeData> TYPE = new NodeDataType<>(CODEC, MEConduitNodeData::new);
 
     @Nullable
