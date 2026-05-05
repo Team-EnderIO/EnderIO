@@ -2,14 +2,14 @@
   "neoforge:conditions": [
     {
       "type": "neoforge:mod_loaded",
-      "modid": "refinedstorage"
+      "modid": "ae2"
     }
   ],
   "type": "minecraft:crafting_shaped",
   "category": "building",
   "key": {
     "B": "enderio:conduit_binder",
-    "I": "#refinedstorage:cables"
+    "I": "#ae2:covered_cable"
   },
   "pattern": [
     "BBB",
@@ -18,7 +18,7 @@
   ],
   "result": {
     "components": {
-      "enderio:conduit": "enderio:rs"
+      "enderio:conduit": "enderio:me"
     },
     "count": 3,
     "id": "enderio:conduit"
