@@ -93,7 +93,7 @@ public class TooltipHandler {
             var soul = soulBindable.getBoundSoul();
 
             if (soul.hasEntity()) {
-                components.add(TooltipUtil.style(Component.translatable(soul.entityType().getDescriptionId())));
+                components.add(TooltipUtil.styledWithArgs(EIOCommonLang.BOUND_SOUL, soul.entityType().getDescription()));
             } else {
                 components.add(TooltipUtil.style(EIOCommonLang.TOOLTIP_NO_SOULBOUND));
             }
