@@ -137,43 +137,39 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
 
     // endregion
 
-    // TODO: Review, I'm sure this could be neater
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos,
-            Player player) {
-        if (level instanceof Level realLevel
-                && state.getOptionalValue(BlockStateProperties.WATERLOGGED).orElse(false)) {
-            var hitResult = Item.getPlayerPOVHitResult(realLevel, player, ClipContext.Fluid.NONE);
-            if (hitResult.getType() == HitResult.Type.MISS) {
-                return Items.AIR.getDefaultInstance();
-            }
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
+        if (!(level.getBlockEntity(pos) instanceof ConduitBundleBlockEntity blockEntity)) {
+            return super.getCloneItemStack(state, target, level, pos, player);
+        }
 
-            if (hitResult.getBlockPos().equals(pos)) {
-                target = hitResult;
+        if (blockEntity.hasFacade() && FacadeUtil.areFacadesVisible(player)) {
+            return blockEntity.getFacadeBlock().asItem().getDefaultInstance();
+        }
+
+        if (blockEntity.getConduits().isEmpty()) {
+            return ItemStack.EMPTY;
+        }
+
+        // If we're waterlogged, re-raycast without fluid hits to see which conduit we landed on (or if we are looking through at another block entirely)
+        if (state.getValue(BlockStateProperties.WATERLOGGED) && level instanceof Level realLevel) {
+            var newTarget = Item.getPlayerPOVHitResult(realLevel, player, ClipContext.Fluid.NONE);
+            if (newTarget.getBlockPos().equals(pos)) {
+                target = newTarget;
             } else {
-                return level.getBlockState(hitResult.getBlockPos())
-                        .getCloneItemStack(hitResult, level, hitResult.getBlockPos(), player);
+                // Pass through to the block that the player is actually looking at.
+                return level.getBlockState(newTarget.getBlockPos())
+                    .getCloneItemStack(newTarget, level, newTarget.getBlockPos(), player);
             }
         }
 
-        if (level.getBlockEntity(pos) instanceof ConduitBundleBlockEntity blockEntity) {
-            if (blockEntity.hasFacade() && FacadeUtil.areFacadesVisible(player)) {
-                return blockEntity.getFacadeBlock().asItem().getDefaultInstance();
-            }
-
-            Holder<Conduit<?, ?>> conduit = blockEntity.getShape().getConduit(pos, target);
-            if (conduit == null) {
-                if (blockEntity.getConduits().isEmpty()) {
-                    return ItemStack.EMPTY;
-                }
-
-                conduit = blockEntity.getConduits().getFirst();
-            }
-
-            return ConduitBlockItem.getStackFor(conduit, 1);
+        Holder<Conduit<?, ?>> conduit = blockEntity.getShape().getConduit(pos, target);
+        if (conduit == null) {
+            conduit = blockEntity.getConduits().getFirst();
         }
 
-        return super.getCloneItemStack(state, target, level, pos, player);
+        return ConduitBlockItem.getStackFor(conduit, 1);
+
     }
 
     @Override
