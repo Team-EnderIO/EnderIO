@@ -95,7 +95,7 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) {
         NEW_CODEC = newCodec.validate((soul) -> soul.entityType == null ? DataResult.error(() -> "Entity type cannot be null") : DataResult.success(soul));
 
         OPTIONAL_CODEC = ExtraCodecs
-            .optionalEmptyMap(newCodec)
+            .optionalEmptyMap(Codec.withAlternative(newCodec, OLD_CODEC))
             .xmap(opt -> opt.filter(s -> !s.isEmpty()).orElse(EMPTY), soul -> soul.isEmpty() ? Optional.empty() : Optional.of(soul));
     }
 
