@@ -1,29 +1,23 @@
 package com.enderio.modded_conduits.common.modules.appeng;
 
 import appeng.api.AECapabilities;
-import appeng.api.networking.GridFlags;
 import appeng.api.networking.GridHelper;
 import appeng.api.networking.IManagedGridNode;
 import appeng.api.util.AEColor;
-import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitCapabilityAccessor;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.ConnectionReader;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
-import com.enderio.enderio.content.conduits.ConduitBlockItem;
-import com.enderio.modded_conduits.config.ModdedConduitsConfig;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.BlockCapability;
@@ -79,75 +73,22 @@ public record MEConduit(Identifier texture, Component description, AEColor color
     @Override
     public void onCreated(ConduitNode node, Level level, BlockPos pos, @Nullable Player player) {
         var data = node.getOrCreateNodeData(MEConduitNodeData.TYPE);
-
-        if (data.getMainNode() == null) {
-            initMainNode(level, pos, data);
-        }
-
-        IManagedGridNode mainNode = data.getMainNode();
-        if (mainNode.isReady()) {
-            return;
-        }
-
-        if (player != null) {
-            mainNode.setOwningPlayer(player);
-        }
-
-        GridHelper.onFirstTick(level.getBlockEntity(pos), blockEntity -> {
-            if (!mainNode.isReady()) {
-                mainNode.create(level, pos);
-            }
-        });
+        data.init(this, level, pos, player);
     }
 
     @Override
     public void onRemoved(ConduitNode node, Level level, BlockPos pos) {
-        var data = node.getOrCreateNodeData(MEConduitNodeData.TYPE);
-        IManagedGridNode mainNode = data.getMainNode();
-        if (mainNode != null) {
-            mainNode.destroy();
-            data.clearMainNode();
-        }
-    }
-
-    private void initMainNode(Level level, BlockPos pos, MEConduitNodeData nodeHost) {
-        var mainNode = nodeHost.getMainNode();
-        if (mainNode != null) {
-            throw new UnsupportedOperationException("mainNode is already initialized");
-        }
-
-        Holder<Conduit<?, ?>> asHolder = level.registryAccess()
-                .lookupOrThrow(EnderIORegistries.Keys.CONDUIT)
-                .wrapAsHolder(this);
-
-        mainNode = GridHelper.createManagedNode(nodeHost, GridNodeListener.INSTANCE)
-                .setVisualRepresentation(ConduitBlockItem.getStackFor(asHolder, 1))
-                .setInWorldNode(true)
-                .setTagName("conduit")
-                .setGridColor(color);
-
-        mainNode.setIdlePowerUsage(isDense()
-            ? ModdedConduitsConfig.COMMON.AE2.DENSE_ME_POWER_USAGE_PER_TICK.get()
-            : ModdedConduitsConfig.COMMON.AE2.NORMAL_ME_POWER_USAGE_PER_TICK.get());
-
-        if (isDense()) {
-            mainNode.setFlags(GridFlags.DENSE_CAPACITY);
-        }
-
-        nodeHost.setMainNode(mainNode, isDense());
-
-        // Load any saved data
-        try (ProblemReporter.ScopedCollector reporter = new ProblemReporter.ScopedCollector(() -> "me-conduit@" + pos, LOGGER)) {
-            nodeHost.loadMainNode(reporter, level.registryAccess());
+        var data = node.getNodeData(MEConduitNodeData.TYPE);
+        if (data != null) {
+            data.destroy();
         }
     }
 
     @Override
     public void onConnectionsUpdated(ConduitNode node, Level level, BlockPos pos, Set<Direction> connectedSides) {
         var data = node.getOrCreateNodeData(MEConduitNodeData.TYPE);
-        IManagedGridNode mainNode = data.getMainNode();
-        if (mainNode != null) {
-            mainNode.setExposedOnSides(connectedSides);
+        if (data != null) {
+            data.setExposedSides(connectedSides);
         }
     }
 
