@@ -2,6 +2,7 @@ package com.enderio.enderio.api.soul;
 
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -68,22 +69,37 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) {
         Entity.PASSENGERS_TAG
     );
 
-    public static final Soul EMPTY = new Soul(null, new CompoundTag());
+    public static final Soul EMPTY = new Soul(Optional.empty(), new CompoundTag());
 
-    private static final Codec<Soul> NEW_CODEC = RecordCodecBuilder.create(
-        instance -> instance.group(
-            BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("entity_type").forGetter(Soul::entityType),
-            CompoundTag.CODEC.fieldOf("entity_tag").forGetter(Soul::entityTag)
-        ).apply(instance, Soul::new));
+    private static final Codec<Soul> NEW_CODEC;
 
     private static final Codec<Soul> OLD_CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
             CompoundTag.CODEC.fieldOf("entityTag").forGetter(Soul::entityTag)
         ).apply(instance, Soul::new));
 
-    public static final Codec<Soul> CODEC = Codec.withAlternative(NEW_CODEC, OLD_CODEC);
+    public static final Codec<Soul> OPTIONAL_CODEC;
 
-    public static final Codec<Soul> OPTIONAL_CODEC = ExtraCodecs.optionalEmptyMap(CODEC).xmap(opt -> opt.orElse(EMPTY), soul -> soul.isEmpty() ? Optional.empty() : Optional.of(soul));
+    static {
+        // Moved to optionalFieldOf with an optional wrapper to ensure that we can load a null entity_type, but throw it as invalid.
+        // Otherwise it'll attempt to deserialize null and fail deep inside the codec logic.
+        // TODO: 26.1: Change entityType to be an Optional perhaps? Not doing anything further here to avoid breaking API.
+        Codec<Soul> newCodec = RecordCodecBuilder.create(
+            instance -> instance.group(
+                BuiltInRegistries.ENTITY_TYPE.byNameCodec().optionalFieldOf("entity_type").forGetter(soul -> Optional.ofNullable(soul.entityType())),
+                CompoundTag.CODEC.fieldOf("entity_tag").forGetter(Soul::entityTag)
+            ).apply(instance, Soul::new));
+
+        // Only apply validator to the main codec, we'll skip it on the optional codec for now in case
+        // TODO: 26.1: simplify this back down.
+        NEW_CODEC = newCodec.validate((soul) -> soul.entityType == null ? DataResult.error(() -> "Entity type cannot be null") : DataResult.success(soul));
+
+        OPTIONAL_CODEC = ExtraCodecs
+            .optionalEmptyMap(Codec.withAlternative(newCodec, OLD_CODEC))
+            .xmap(opt -> opt.filter(s -> !s.isEmpty()).orElse(EMPTY), soul -> soul.isEmpty() ? Optional.empty() : Optional.of(soul));
+    }
+
+    public static final Codec<Soul> CODEC = Codec.withAlternative(NEW_CODEC, OLD_CODEC);
 
     public static final StreamCodec<RegistryFriendlyByteBuf, Soul> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.registry(Registries.ENTITY_TYPE),
@@ -96,6 +112,10 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) {
     public Soul {
         // Remove tags we don't want
         IGNORED_KEYS.forEach(entityTag::remove);
+    }
+
+    private Soul(Optional<EntityType<?>> entityTypeOpt, CompoundTag entityTag) {
+        this(entityTypeOpt.orElse(null), entityTag);
     }
 
     // Legacy data support.
