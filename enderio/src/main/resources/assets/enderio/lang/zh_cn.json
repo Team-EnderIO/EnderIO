@@ -599,6 +599,7 @@
   "tooltip.enderio.machine.status.output_full": "输出槽空间不足",
   "tooltip.enderio.no_soul_bound": "本物品可与灵魂绑定。",
   "tooltip.enderio.show_advanced_tooltip": "<按住Shift>",
+  "tooltip.enderio.soul_bound": "Bound Soul: %s",
   "tooltip.enderio.tool.soul_vial.health": "生命值：%s/%s",
   "tooltip.enderio.tool.void_vial.hint": "Collects experience orbs on behalf of the player, can insert XP into tanks or be drunk by the player.",
   "tooltip.enderio.tool.void_vial.stored_experience": "Stored: %s levels + %s experience"
