@@ -5,8 +5,10 @@ import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.client.content.conduits.model.facades.FacadeUtil;
 import com.enderio.enderio.init.EIOBlocks;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IWailaClientRegistration;
+import snownee.jade.api.IWailaCommonRegistration;
 import snownee.jade.api.IWailaPlugin;
 import snownee.jade.api.WailaPlugin;
 
@@ -14,8 +16,6 @@ import snownee.jade.api.WailaPlugin;
 public class EIOJadePlugin implements IWailaPlugin {
 
     public static final ResourceLocation SOUL_BOUND_COMPONENT = EnderIO.rl("soul_bound");
-
-    // TODO: Could implement stuff like a waila tooltip for bound souls.
 
     @Override
     public void registerClient(IWailaClientRegistration registration) {
@@ -36,5 +36,12 @@ public class EIOJadePlugin implements IWailaPlugin {
             }
             return accessor;
         });
+
+        registration.registerBlockComponent(SoulBoundComponentProvider.INSTANCE, Block.class);
+    }
+
+    @Override
+    public void register(IWailaCommonRegistration registration) {
+        registration.registerBlockDataProvider(SoulBoundComponentProvider.INSTANCE, Block.class);
     }
 }

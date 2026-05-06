@@ -38,6 +38,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.fml.LogicalSide;
@@ -69,7 +70,7 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
     public static final ICapabilityProvider<MachineBlockEntity, Direction, IItemHandler> ITEM_HANDLER_PROVIDER = (be,
             side) -> be.inventory != null ? be.inventory.getForSide(side) : null;
 
-    public static final ICapabilityProvider<MachineBlockEntity, Void, SoulBindable> SOUL_BINDABLE = (be, ctx)
+    public static final ICapabilityProvider<BlockEntity, Void, SoulBindable> SOUL_BINDABLE = (be, ctx)
         -> be instanceof SoulBindable bindable ? bindable : null;
 
     private static final ModelProperty<IOConfigurable> IO_CONFIG_PROPERTY = LegacyMachineBlockEntity.IO_CONFIG_PROPERTY;
