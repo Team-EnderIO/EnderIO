@@ -10,6 +10,7 @@ import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.common.util.ValueIOSerializable;
 import org.jspecify.annotations.Nullable;
@@ -44,7 +45,7 @@ public class ValueIOSerializableHolder<T extends ValueIOSerializable> implements
      * @param instance the instance to hold.
      */
     public ValueIOSerializableHolder(T instance) {
-        this.unpacked = instance;
+        this.unpacked = Objects.requireNonNull(instance);
     }
 
     @Override
@@ -65,6 +66,19 @@ public class ValueIOSerializableHolder<T extends ValueIOSerializable> implements
         ValueInput input = TagValueInput.create(problemReporter, registries, serialized);
         newInstance.deserialize(input);
         this.unpacked = newInstance;
+    }
+
+    /**
+     * Persists the value of the holder and then nulls it.
+     * Useful for releasing the object for potential recreation (via inflate).
+     * @param registries
+     * @param problemReporter
+     */
+    public void deflate(HolderLookup.Provider registries, ProblemReporter problemReporter) {
+        TagValueOutput output = TagValueOutput.createWithContext(problemReporter, registries);
+        Objects.requireNonNull(unpacked).serialize(output);
+        serialized = output.buildResult();
+        unpacked = null;
     }
 
     <T> DataResult<CompoundTag> toCompound(DynamicOps<T> ops) {

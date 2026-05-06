@@ -38,7 +38,6 @@ public final class MEConduitNodeData implements NodeData, IInWorldGridNodeHost {
     private static final Logger LOGGER = LogUtils.getLogger();
 
     private @Nullable ValueIOSerializableHolder<IManagedGridNode> mainNodeHolder;
-    private boolean isNodeDestroyed;
 
     private AECableType cableType = AECableType.SMART;
 
@@ -50,7 +49,7 @@ public final class MEConduitNodeData implements NodeData, IInWorldGridNodeHost {
     }
 
     public boolean isMainNodeInitialized() {
-        return !isNodeDestroyed && mainNodeHolder != null && mainNodeHolder.isPresent();
+        return mainNodeHolder != null && mainNodeHolder.isPresent();
     }
 
     public void init(MEConduit conduit, Level level, BlockPos pos, @Nullable Player player) {
@@ -101,13 +100,18 @@ public final class MEConduitNodeData implements NodeData, IInWorldGridNodeHost {
         });
     }
 
-    public void destroy() {
-        if (!isMainNodeInitialized() || isNodeDestroyed) {
+    public void destroy(Level level, BlockPos pos) {
+        if (!isMainNodeInitialized()) {
             return;
         }
 
         mainNodeHolder.get().destroy();
-        isNodeDestroyed = true;
+
+        // Save any data and null the IManagedGridNode as it is unusable now.
+        // This will ensure that isMainNodeInitialized is false again, but if we're saving the data is present.
+        try (ProblemReporter.ScopedCollector reporter = new ProblemReporter.ScopedCollector(() -> "me-conduit@" + pos, LOGGER)) {
+            mainNodeHolder.deflate(level.registryAccess(), reporter);
+        }
     }
 
     public void setExposedSides(Set<Direction> connectedSides) {
