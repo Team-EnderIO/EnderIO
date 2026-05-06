@@ -599,6 +599,7 @@
   "tooltip.enderio.machine.status.output_full": "Es ist nicht genügend Platz für die Ausgabe des Produkts vorhanden",
   "tooltip.enderio.no_soul_bound": "An diesen Gegenstand kann eine Seele gebunden werden.",
   "tooltip.enderio.show_advanced_tooltip": "<Shift gedrückt halten>",
+  "tooltip.enderio.soul_bound": "Bound Soul: %s",
   "tooltip.enderio.tool.soul_vial.health": "Leben: %s/%s",
   "tooltip.enderio.tool.void_vial.hint": "Collects experience orbs on behalf of the player, can insert XP into tanks or be drunk by the player.",
   "tooltip.enderio.tool.void_vial.stored_experience": "Stored: %s levels + %s experience"
