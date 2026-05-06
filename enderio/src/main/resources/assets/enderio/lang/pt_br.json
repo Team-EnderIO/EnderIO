@@ -402,6 +402,7 @@
   "item.enderio.energetic_alloy_nugget": "Pepita de Liga Energética",
   "item.enderio.energized_gear": "Engrenagem de Bimetal Energizado",
   "item.enderio.enticing_crystal": "Cristal Sedutor",
+  "item.enderio.experience_rod": "Experience Rod",
   "item.enderio.fire_water_bucket": "Balde de Água de Fogo",
   "item.enderio.frank_n_zombie": "Frank'N'Zumbi",
   "item.enderio.glider": "Planador",
@@ -598,5 +599,7 @@
   "tooltip.enderio.machine.status.output_full": "Não há espaço suficiente para a saída",
   "tooltip.enderio.no_soul_bound": "Este item pode ter uma alma vinculada a ele.",
   "tooltip.enderio.show_advanced_tooltip": "<Segure Shift>",
-  "tooltip.enderio.tool.soul_vial.health": "Vida: %s/%s"
+  "tooltip.enderio.tool.soul_vial.health": "Vida: %s/%s",
+  "tooltip.enderio.tool.void_vial.hint": "Collects experience orbs on behalf of the player, can insert XP into tanks or be drunk by the player.",
+  "tooltip.enderio.tool.void_vial.stored_experience": "Stored: %s levels + %s experience"
 }
