@@ -78,18 +78,17 @@ public record MEConduit(Identifier texture, Component description, AEColor color
 
     @Override
     public void onRemoved(ConduitNode node, Level level, BlockPos pos) {
+        // Do not create new data if we're removing.
         var data = node.getNodeData(MEConduitNodeData.TYPE);
         if (data != null) {
-            data.destroy();
+            data.destroy(level, pos);
         }
     }
 
     @Override
     public void onConnectionsUpdated(ConduitNode node, Level level, BlockPos pos, Set<Direction> connectedSides) {
         var data = node.getOrCreateNodeData(MEConduitNodeData.TYPE);
-        if (data != null) {
-            data.setExposedSides(connectedSides);
-        }
+        data.setExposedSides(connectedSides);
     }
 
     @SuppressWarnings("unchecked")
