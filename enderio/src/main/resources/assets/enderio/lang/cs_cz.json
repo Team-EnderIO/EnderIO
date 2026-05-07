@@ -319,7 +319,9 @@
   "gui.enderio.filter.deny_list": "Deny List",
   "gui.enderio.filter.filter": "Filter",
   "gui.enderio.filter.ignore_components": "Ignore Components",
+  "gui.enderio.filter.ignore_tags": "Ignore NBT",
   "gui.enderio.filter.match_components": "Match Components",
+  "gui.enderio.filter.match_tags": "Match NBT",
   "gui.enderio.ioconfig": "IO Configuration",
   "gui.enderio.ioconfig.both": "Push / Pull",
   "gui.enderio.ioconfig.disabled": "Disabled",
@@ -400,6 +402,7 @@
   "item.enderio.energetic_alloy_nugget": "Energetický slitinový nuget",
   "item.enderio.energized_gear": "Energized Bimetal Gear",
   "item.enderio.enticing_crystal": "Enticing Crystal",
+  "item.enderio.experience_rod": "Experience Rod",
   "item.enderio.fire_water_bucket": "Fire Water Bucket",
   "item.enderio.frank_n_zombie": "Frank'N'Zombie",
   "item.enderio.glider": "Glider",
@@ -596,5 +599,8 @@
   "tooltip.enderio.machine.status.output_full": "There is not enough room for the output",
   "tooltip.enderio.no_soul_bound": "This item can have a soul bound to it.",
   "tooltip.enderio.show_advanced_tooltip": "<Hold Shift>",
-  "tooltip.enderio.tool.soul_vial.health": "Health: %s/%s"
+  "tooltip.enderio.soul_bound": "Bound Soul: %s",
+  "tooltip.enderio.tool.soul_vial.health": "Health: %s/%s",
+  "tooltip.enderio.tool.void_vial.hint": "Collects experience orbs on behalf of the player, can insert XP into tanks or be drunk by the player.",
+  "tooltip.enderio.tool.void_vial.stored_experience": "Stored: %s levels + %s experience"
 }
