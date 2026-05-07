@@ -32,6 +32,9 @@ public class ToolsLang {
     // Has two string params
     public static final MutableComponent SOUL_VIAL_TOOLTIP_HEALTH = tooltip("soul_vial/health");
 
+    public static final MutableComponent VOID_VIAL_HINT = tooltip("void_vial/hint");
+    public static final MutableComponent VOID_VIAL_STORED_EXPERIENCE = tooltip("void_vial/stored_experience");
+
     // endregion
 
     private static MutableComponent tooltip(String path) {

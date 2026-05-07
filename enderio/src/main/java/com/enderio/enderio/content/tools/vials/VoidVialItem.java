@@ -1,120 +1,208 @@
 package com.enderio.enderio.content.tools.vials;
 
-import com.enderio.core.common.network.EmitParticlePacket;
+import com.enderio.core.common.capability.StrictItemAccessFluidHandler;
+import com.enderio.core.common.item.ICustomCreativeTabEntries;
+import com.enderio.core.common.util.TooltipUtil;
+import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.content.tools.ToolsLang;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.foundation.util.ExperienceUtil;
+import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOFluids;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ColorParticleOption;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
+import com.google.common.primitives.Ints;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.item.ItemUseAnimation;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.event.entity.player.PlayerXpEvent;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 
-// TODO: Change behaviour to add xp tank.
-public class VoidVialItem extends Item {
+import java.util.function.Consumer;
+
+@EventBusSubscriber
+public class VoidVialItem extends Item implements ICustomCreativeTabEntries {
+    public static final ICapabilityProvider<ItemStack, ItemAccess, ResourceHandler<FluidResource>> FLUID_HANDLER_PROVIDER =
+        (stack, itemAccess) -> new StrictItemAccessFluidHandler(itemAccess, EIODataComponents.ITEM_FLUID_CONTENT,
+            Ints.saturatedCast(ExperienceUtil.getFluidFromLevel(10)),
+            Tags.Fluids.EXPERIENCE);
+
     public VoidVialItem(Properties properties) {
         super(properties.stacksTo(1));
     }
 
     @Override
-    public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
-        Level level = context.getLevel();
-        if (!(level instanceof ServerLevel serverLevel)) {
-            return InteractionResult.SUCCESS;
+    public void addAdditionalCreativeTabEntries(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
+        var filledStack = new ItemStack(this);
+        var fluidHandler = ItemAccess.forStack(filledStack).getCapability(Capabilities.Fluid.ITEM);
+
+        if (fluidHandler != null) {
+            try (Transaction transaction = Transaction.openRoot()) {
+                fluidHandler.insert(FluidResource.of(EIOFluids.XP_JUICE.source()), Integer.MAX_VALUE, transaction);
+                transaction.commit();
+            }
         }
 
-        Player player = context.getPlayer();
-        BlockPos pos = context.getClickedPos();
-
-        boolean wasSuccess;
-        if (player.isShiftKeyDown()) {
-            wasSuccess = transferFromPlayerToBlock(player, level, pos);
-        } else {
-            wasSuccess = transferFromBlockToPlayer(player, level, pos);
-        }
-
-        if (wasSuccess) {
-            var particle = ColorParticleOption.create(ParticleTypes.ENTITY_EFFECT, 0.27450980f, 0.88627451f,
-                    0.29411765f);
-
-            PacketDistributor.sendToPlayersTrackingChunk(serverLevel, ChunkPos.containing(pos),
-                    new EmitParticlePacket(particle, pos, 0.2, 0.8, 0.2));
-
-            level.playSound(null, pos, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 0.1f,
-                    0.5F * ((level.getRandom().nextFloat() - level.getRandom().nextFloat()) * 0.7F + 1.8F));
-            return InteractionResult.SUCCESS;
-        }
-
-        return InteractionResult.PASS;
+        output.accept(filledStack);
     }
 
-    private static boolean transferFromBlockToPlayer(Player player, Level level, BlockPos pos) {
-        try {
-            var fluidHandler = level.getCapability(Capabilities.Fluid.BLOCK, pos, null);
-            if (fluidHandler != null) {
-                FluidResource availableFluid = fluidHandler.getResource(0);
-                if (availableFluid.is(Tags.Fluids.EXPERIENCE) && fluidHandler.getAmountAsInt(0) > 0) {
-                    try (Transaction transaction = Transaction.openRoot()) {
-                        int requiredXp = player.getXpNeededForNextLevel();
-                        int fluidVolume = requiredXp * ExperienceUtil.EXP_TO_FLUID;
-
-                        int drained = fluidHandler.extract(availableFluid, fluidVolume, transaction);
-
-                        if (drained > 0) {
-                            player.giveExperiencePoints(drained / ExperienceUtil.EXP_TO_FLUID);
-                            transaction.commit();
-                            return true;
-                        }
-                    }
-                }
-
-                return false;
-            }
-        } catch (ArithmeticException ex) {
-            player.sendOverlayMessage(EIOCommonLang.TOO_MANY_LEVELS);
-        }
-
-        return false;
+    public static boolean isFilled(ItemStack stack) {
+        var fluidHandler = ItemAccess.forStack(stack).getCapability(Capabilities.Fluid.ITEM);
+        return fluidHandler != null && fluidHandler.getAmountAsInt(0) > 0;
     }
 
-    private static boolean transferFromPlayerToBlock(Player player, Level level, BlockPos pos) {
-        try {
-            if (player.experienceLevel <= 0 && player.experienceProgress <= 0.0f) {
-                return false;
-            }
-
-            var fluidHandler = level.getCapability(Capabilities.Fluid.BLOCK, pos, null);
-            if (fluidHandler != null) {
-                try (Transaction transaction = Transaction.openRoot()) {
-                    long fluidVolume = ExperienceUtil.getPlayerTotalXp(player) * ExperienceUtil.EXP_TO_FLUID;
-                    int cappedVolume = (int) Math.min(Integer.MAX_VALUE, fluidVolume);
-                    int takenVolume = fluidHandler.insert(FluidResource.of(EIOFluids.XP_JUICE.source()), cappedVolume, transaction);
-                    if (takenVolume > 0) {
-                        transaction.commit();
-                        player.giveExperiencePoints(-takenVolume / ExperienceUtil.EXP_TO_FLUID);
-                        return true;
-                    }
-
-                    return false;
-                }
-            }
-        } catch (ArithmeticException ex) {
-            player.sendOverlayMessage(EIOCommonLang.TOO_MANY_LEVELS);
+    @Override
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+        var capability = ItemAccess.forPlayerInteraction(player, hand).getCapability(Capabilities.Fluid.ITEM);
+        if (capability == null || capability.getAmountAsInt(0) < ExperienceUtil.EXP_TO_FLUID) {
+            return InteractionResult.FAIL;
         }
 
-        return false;
+        player.startUsingItem(hand);
+        return InteractionResult.CONSUME;
+    }
+
+    @Override
+    public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity livingEntity) {
+        ItemStack result = stack.copy();
+        var capability = ItemAccess.forStack(result).getCapability(Capabilities.Fluid.ITEM);
+        if (!(livingEntity instanceof Player player) || capability == null) {
+            return stack;
+        }
+
+        int amount = capability.getAmountAsInt(0);
+        if (amount < ExperienceUtil.EXP_TO_FLUID) {
+            return stack;
+        }
+
+        try (Transaction transaction = Transaction.openRoot()) {
+            int extracted = capability.extract(capability.getResource(0), (amount / ExperienceUtil.EXP_TO_FLUID) * ExperienceUtil.EXP_TO_FLUID, transaction);
+            player.giveExperiencePoints(extracted / ExperienceUtil.EXP_TO_FLUID);
+            transaction.commit();
+        }
+
+        return result;
+    }
+
+    @Override
+    public ItemUseAnimation getUseAnimation(ItemStack itemStack) {
+        return ItemUseAnimation.DRINK;
+    }
+
+    @Override
+    public boolean isBarVisible(ItemStack stack) {
+        return isFilled(stack);
+    }
+
+    @Override
+    public int getBarColor(ItemStack stack) {
+        // Color from XP Juice texture
+        return 0xFF66FF03;
+    }
+
+    @Override
+    public int getBarWidth(ItemStack stack) {
+        var fluidHandler = ItemAccess.forStack(stack).getCapability(Capabilities.Fluid.ITEM);
+        if (fluidHandler != null && isFilled(stack)) {
+            return Math.round(fluidHandler.getAmountAsInt(0) * 13f / fluidHandler.getCapacityAsInt(0, fluidHandler.getResource(0)));
+        }
+
+        return 0;
+    }
+
+    @Override
+    public boolean isFoil(ItemStack stack) {
+        return isFilled(stack);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack itemStack, TooltipContext context, TooltipDisplay display, Consumer<Component> builder, TooltipFlag tooltipFlag) {
+        super.appendHoverText(itemStack, context, display, builder, tooltipFlag);
+
+        builder.accept(ToolsLang.VOID_VIAL_HINT);
+
+        var tankCap = ItemAccess.forStack(itemStack).getCapability(Capabilities.Fluid.ITEM);
+        if (tankCap != null) {
+            FluidResource storedFluid = tankCap.getResource(0);
+            if (storedFluid.isEmpty()) {
+                return;
+            }
+
+            int amount = tankCap.getAmountAsInt(0);
+            int capacity = tankCap.getCapacityAsInt(0, storedFluid);
+
+            if (amount > 0) {
+                builder.accept(TooltipUtil.styledWithArgs(EIOCommonLang.FLUID_TANK_TOOLTIP, amount, capacity, storedFluid.getHoverName()));
+
+                var xp = ExperienceUtil.getLevelFromFluidWithLeftover(amount);
+                builder.accept(TooltipUtil.styledWithArgs(ToolsLang.VOID_VIAL_STORED_EXPERIENCE, xp.level(), xp.experience()));
+            }
+        }
+    }
+
+    @Override
+    public int getUseDuration(ItemStack stack, LivingEntity entity) {
+        return (int) (1.6F * 20.0F); // default food time
+    }
+
+    @SubscribeEvent
+    public static void collectEXP(PlayerXpEvent.PickupXp event) {
+        Player player = event.getEntity();
+
+        // Using forPlayerSlot directly to avoid spamming creative players with new items.
+        ItemAccess itemAccess = ItemAccess.forPlayerSlot(player, player.getInventory().getSelectedSlot());
+        if (!(itemAccess.getResource().getItem() instanceof VoidVialItem)) {
+            itemAccess = ItemAccess.forPlayerSlot(player, Inventory.SLOT_OFFHAND);
+        }
+
+        if (!(itemAccess.getResource().getItem() instanceof VoidVialItem)) {
+            return;
+        }
+
+        var cap = itemAccess.getCapability(Capabilities.Fluid.ITEM);
+        if (cap == null) {
+            return;
+        }
+
+        try (Transaction transaction = Transaction.openRoot()) {
+            int orbFluidVolume = event.getOrb().getValue() * ExperienceUtil.EXP_TO_FLUID;
+
+            int maxFill;
+            try (Transaction simulateTransaction = Transaction.open(transaction)) {
+                maxFill = cap.insert(FluidResource.of(EIOFluids.XP_JUICE.source()), orbFluidVolume, simulateTransaction);
+            }
+
+            // Ensure we're aligning to the EXP_TO_FLUID boundary
+            int amountToFill = maxFill - (maxFill % ExperienceUtil.EXP_TO_FLUID);
+            if (amountToFill <= 0) {
+                return;
+            }
+
+            int filled = cap.insert(FluidResource.of(EIOFluids.XP_JUICE.source()), amountToFill, transaction);
+            if (filled != amountToFill) {
+                return;
+            }
+
+            int newOrbVolume = (orbFluidVolume - amountToFill);
+            event.getOrb().setValue(newOrbVolume / ExperienceUtil.EXP_TO_FLUID);
+            transaction.commit();
+        }
     }
 }

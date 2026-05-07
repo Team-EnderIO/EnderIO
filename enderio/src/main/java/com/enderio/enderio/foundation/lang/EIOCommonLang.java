@@ -72,6 +72,8 @@ public class EIOCommonLang {
 
     // endregion
 
+    public static final MutableComponent BOUND_SOUL = tooltip("soul_bound");
+
     private static MutableComponent gui(String path) {
         return create("gui", path);
     }

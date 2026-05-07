@@ -43,6 +43,7 @@ import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.util.Util;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -225,6 +226,7 @@ public class EIOBlockEntities {
                     (worldPosition, blockState) -> new SolarPanelBlockEntity(EIOBlockEntities.SOLAR_PANELS.get(tier).get(),worldPosition, blockState, tier),
                     () -> EIOBlocks.SOLAR_PANELS.get(tier).get())
                 .capability(Capabilities.Energy.BLOCK, SolarPanelBlockEntity.ENERGY_STORAGE_PROVIDER)
+                .apply(EIOBlockEntities::soulBoundCapability)
                 .build())
             ;
         }
@@ -245,7 +247,7 @@ public class EIOBlockEntities {
         builder.capability(Capabilities.Energy.BLOCK, PoweredMachineBlockEntity.ENERGY_STORAGE_PROVIDER);
     }
 
-    private static void soulBoundCapability(BlockEntityTypeDeferredRegister.Builder<? extends MachineBlockEntity> blockEntity) {
+    private static void soulBoundCapability(BlockEntityTypeDeferredRegister.Builder<? extends BlockEntity> blockEntity) {
         blockEntity.capability(EnderIOCapabilities.SOUL_BINDABLE_BLOCK, MachineBlockEntity.SOUL_BINDABLE);
     }
 

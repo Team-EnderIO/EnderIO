@@ -1,11 +1,13 @@
 package com.enderio.enderio.content.machines.solar_panel;
 
 import com.enderio.enderio.api.soul.Soul;
+import com.enderio.enderio.api.soul.binding.SoulBindable;
 import com.enderio.enderio.foundation.MachineNBTKeys;
 import com.enderio.enderio.foundation.block.EIOBlockEntity;
 import com.enderio.enderio.foundation.souldata.SolarSoul;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIODataComponents;
+import com.google.common.base.Preconditions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -14,6 +16,7 @@ import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -31,7 +34,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-public class SolarPanelBlockEntity extends EIOBlockEntity {
+public class SolarPanelBlockEntity extends EIOBlockEntity implements SoulBindable {
 
     public static final ICapabilityProvider<SolarPanelBlockEntity, Direction, EnergyHandler> ENERGY_STORAGE_PROVIDER = (
         be, side) -> side != Direction.UP ? be.energyHandler : null;
@@ -129,6 +132,33 @@ public class SolarPanelBlockEntity extends EIOBlockEntity {
         }
 
         return validPushTargetCache;
+    }
+
+    // endregion
+
+    // region Soul Bindable
+
+    @Override
+    public Soul getBoundSoul() {
+        return boundSoul;
+    }
+
+    @Override
+    public boolean canBind() {
+        return true;
+    }
+
+    @Override
+    public boolean isSoulValid(Soul soul) {
+        return soul.entityType() == EntityType.PHANTOM;
+    }
+
+    @Override
+    public void bindSoul(Soul newSoul) {
+        Preconditions.checkArgument(isSoulValid(newSoul), "Soul is not valid for this block");
+        this.boundSoul = newSoul;
+        soulData = SolarSoul.RELOAD_LISTENER.matches(newSoul.entityTypeId()).get();
+        setChanged();
     }
 
     // endregion

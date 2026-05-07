@@ -42,7 +42,8 @@ import java.util.function.Consumer;
 public class ColdFireIgniter extends Item implements ICustomCreativeTabEntries {
 
     public static final ICapabilityProvider<ItemStack, ItemAccess, ResourceHandler<FluidResource>> FLUID_HANDLER_PROVIDER =
-        (stack, itemAccess) -> new StrictItemAccessFluidHandler(itemAccess, EIODataComponents.ITEM_FLUID_CONTENT, 1000, EIOTags.Fluids.COLD_FIRE_IGNITER_FUEL);
+        (stack, itemAccess) -> new StrictItemAccessFluidHandler(itemAccess, EIODataComponents.ITEM_FLUID_CONTENT, 1000,
+            EIOTags.Fluids.COLD_FIRE_IGNITER_FUEL);
 
     public ColdFireIgniter(Properties properties) {
         super(properties);

@@ -1,6 +1,14 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "enderio:item/void_vial"
+    "type": "minecraft:condition",
+    "on_false": {
+      "type": "minecraft:model",
+      "model": "enderio:item/void_vial"
+    },
+    "on_true": {
+      "type": "minecraft:model",
+      "model": "enderio:item/void_vial_filled"
+    },
+    "property": "enderio:has_fluid"
   }
 }

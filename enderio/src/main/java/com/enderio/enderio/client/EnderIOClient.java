@@ -65,6 +65,7 @@ import com.enderio.enderio.client.content.travel.TravelAnchorHud;
 import com.enderio.enderio.client.content.travel.TravelAnchorRenderer;
 import com.enderio.enderio.client.content.travel.TravelTargetRendering;
 import com.enderio.enderio.client.foundation.model.IOConfigRealLevelWorkaroundBlockModel;
+import com.enderio.enderio.client.foundation.model.item.HasFluidItemProperty;
 import com.enderio.enderio.client.foundation.model.item.IsSoulBoundItemProperty;
 import com.enderio.enderio.client.foundation.particle.RangeParticle;
 import com.enderio.enderio.client.foundation.widgets.ioconfig.IOConfigSceneRenderState;
@@ -77,6 +78,8 @@ import com.enderio.enderio.content.filters.item.limited.LimitedItemFilter;
 import com.enderio.enderio.content.filters.soul.EnderSoulFilter;
 import com.enderio.enderio.content.fun.EnderiosItem;
 import com.enderio.enderio.content.misc_blocks.skull.EnderSkullBlock;
+import com.enderio.enderio.content.tools.vials.SoulVialItem;
+import com.enderio.enderio.content.tools.vials.VoidVialItem;
 import com.enderio.enderio.content.paint.block.PaintExtension;
 import com.enderio.enderio.content.paint.block.PaintedBlock;
 import com.enderio.enderio.foundation.block.MachineBlock;
@@ -170,6 +173,7 @@ public class EnderIOClient {
     @SubscribeEvent
     public static void registerConditionalProperties(RegisterConditionalItemModelPropertyEvent event) {
         event.register(EnderIO.id("is_soul_bound"), IsSoulBoundItemProperty.MAP_CODEC);
+        event.register(EnderIO.id("has_fluid"), HasFluidItemProperty.MAP_CODEC);
         event.register(EnderIO.id("conduit_probe_mode"), ConduitProbeItem.ProbeModeItemProperty.MAP_CODEC);
         event.register(EnderIO.id("enderios_inverted"), EnderiosItem.SoiredneItemProperty.MAP_CODEC);
     }
@@ -247,7 +251,7 @@ public class EnderIOClient {
 //        }
 
         event.registerBlockEntityRenderer(EIOBlockEntities.NIARD.get(), NiardBER::new);
-        event.registerBlockEntityRenderer(EIOBlockEntities.XP_OBELISK.get(), c -> new ObeliskBER(EIOItems.VOID_VIAL::get));
+        event.registerBlockEntityRenderer(EIOBlockEntities.XP_OBELISK.get(), c -> new ObeliskBER(EIOItems.EXPERIENCE_ROD::get));
         event.registerBlockEntityRenderer(EIOBlockEntities.INHIBITOR_OBELISK.get(), c -> new ObeliskBER(() -> Items.ENDER_PEARL));
         event.registerBlockEntityRenderer(EIOBlockEntities.AVERSION_OBELISK.get(), c -> new ObeliskBER(EIOBlocks.ENDERMAN_HEAD::asItem));
         event.registerBlockEntityRenderer(EIOBlockEntities.RELOCATOR_OBELISK.get(), c -> new ObeliskBER(() -> Items.PRISMARINE));

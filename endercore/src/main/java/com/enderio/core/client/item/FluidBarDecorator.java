@@ -13,6 +13,8 @@ import net.neoforged.neoforge.transfer.access.ItemAccess;
 public class FluidBarDecorator implements IItemDecorator {
     public static final FluidBarDecorator INSTANCE = new FluidBarDecorator();
 
+    public static final int BAR_COLOR = 0xB168E4;
+
     @Override
     public boolean render(GuiGraphicsExtractor graphics, Font font, ItemStack stack, int xOffset, int yOffset) {
         var fluidHandler = ItemAccess.forStack(stack).getCapability(Capabilities.Fluid.ITEM);

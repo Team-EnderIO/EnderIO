@@ -38,6 +38,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -74,7 +75,7 @@ public abstract class MachineBlockEntity extends EIOBlockEntity implements MenuP
     public static final ICapabilityProvider<MachineBlockEntity, Direction, ResourceHandler<ItemResource>> ITEM_HANDLER_PROVIDER =
         (be, side) -> be.inventory != null ? SidedResourceHandler.of(new ExternalResourceStorageView<>(be.inventory), side, be) : null;
 
-    public static final ICapabilityProvider<MachineBlockEntity, Void, SoulBindable> SOUL_BINDABLE = (be, ctx)
+    public static final ICapabilityProvider<BlockEntity, Void, SoulBindable> SOUL_BINDABLE = (be, ctx)
         -> be instanceof SoulBindable bindable ? bindable : null;
 
     public static final ModelProperty<IOConfigurable> IO_CONFIG_PROPERTY = new ModelProperty<>();

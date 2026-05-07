@@ -1,6 +1,7 @@
 package com.enderio.enderio.api.soul;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -58,16 +59,18 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) im
         Entity.TAG_UUID
     );
 
-    public static final Soul EMPTY = new Soul(null, new CompoundTag());
+    public static final Soul EMPTY = new Soul(Optional.empty(), new CompoundTag());
 
-    public static final Codec<Soul> CODEC = RecordCodecBuilder.create(
+    public static final Codec<Soul> CODEC = RecordCodecBuilder.<Soul>create(
         instance -> instance.group(
-            BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("EntityType").forGetter(Soul::entityType),
+            BuiltInRegistries.ENTITY_TYPE.byNameCodec().optionalFieldOf("EntityType").forGetter(soul -> Optional.ofNullable(soul.entityType())),
             CompoundTag.CODEC.fieldOf("EntityTag").forGetter(Soul::entityTag)
-        ).apply(instance, Soul::new));
+        ).apply(instance, Soul::new))
+        .validate((soul) -> soul.entityType == null ? DataResult.error(() -> "Entity type cannot be null") : DataResult.success(soul));
 
     public static final Codec<Soul> OPTIONAL_CODEC = ExtraCodecs
-        .optionalEmptyMap(CODEC).xmap((optionalSoul) -> optionalSoul.orElse(EMPTY), (soul) -> soul.isEmpty() ? Optional.empty() : Optional.of(soul));
+        .optionalEmptyMap(CODEC)
+        .xmap(opt -> opt.filter(s -> !s.isEmpty()).orElse(EMPTY), soul -> soul.isEmpty() ? Optional.empty() : Optional.of(soul));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, Soul> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.registry(Registries.ENTITY_TYPE),
@@ -91,6 +94,10 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) im
     public Soul {
         // Remove tags we don't want
         IGNORED_KEYS.forEach(entityTag::remove);
+    }
+
+    private Soul(Optional<EntityType<?>> entityTypeOpt, CompoundTag entityTag) {
+        this(entityTypeOpt.orElse(null), entityTag);
     }
 
     // TODO: Can this be trusted? I feel like it needs better validation...

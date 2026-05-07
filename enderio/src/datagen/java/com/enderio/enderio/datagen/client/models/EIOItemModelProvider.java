@@ -5,6 +5,7 @@ import com.enderio.enderio.client.content.conduits.model.bundle.port.ConduitItem
 import com.enderio.enderio.client.content.conduits.model.facades.port.FacadeItemModel;
 import com.enderio.enderio.client.content.fluid_tank.FluidTankItemRenderer;
 import com.enderio.enderio.client.content.paint.model.port.PaintedItemModel;
+import com.enderio.enderio.client.foundation.model.item.HasFluidItemProperty;
 import com.enderio.enderio.client.foundation.model.item.IsSoulBoundItemProperty;
 import com.enderio.enderio.content.conduits.facades.ConduitFacadeItem;
 import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
@@ -12,6 +13,7 @@ import com.enderio.enderio.content.fun.EnderiosItem;
 import com.enderio.enderio.content.paint.block.PaintedFenceBlock;
 import com.enderio.enderio.content.paint.block.PaintedStairBlock;
 import com.enderio.enderio.content.paint.block.PaintedWallBlock;
+import com.enderio.enderio.content.tools.vials.VoidVialItem;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOFluids;
 import com.enderio.enderio.init.EIOItems;
@@ -164,10 +166,10 @@ public class EIOItemModelProvider extends ModelProvider {
         itemModels.generateFlatItem(EIOItems.GLIDER.get(), ModelTemplates.FLAT_ITEM);
 
         generateEnderios(itemModels, EIOItems.ENDERIOS.get());
-
         generateSoulVial(itemModels, EIOItems.SOUL_VIAL.get());
+        generateVoidVial(itemModels, EIOItems.VOID_VIAL.get());
 
-        itemModels.generateFlatItem(EIOItems.VOID_VIAL.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(EIOItems.EXPERIENCE_ROD.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(EIOItems.YETA_WRENCH.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(EIOItems.COORDINATE_SELECTOR.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(EIOItems.LOCATION_PRINTOUT.get(), ModelTemplates.FLAT_ITEM);
@@ -319,6 +321,12 @@ public class EIOItemModelProvider extends ModelProvider {
         ItemModel.Unbaked plain = ItemModelUtils.plainModel(itemModelGenerators.createFlatItemModel(item, ModelTemplates.FLAT_ITEM));
         ItemModel.Unbaked filled = ItemModelUtils.plainModel(itemModelGenerators.createFlatItemModel(item, "_filled", ModelTemplates.FLAT_ITEM));
         itemModelGenerators.itemModelOutput.accept(item, ItemModelUtils.conditional(new IsSoulBoundItemProperty(), filled, plain));
+    }
+
+    public void generateVoidVial(ItemModelGenerators itemModelGenerators, Item item) {
+        ItemModel.Unbaked plain = ItemModelUtils.plainModel(itemModelGenerators.createFlatItemModel(item, ModelTemplates.FLAT_ITEM));
+        ItemModel.Unbaked filled = ItemModelUtils.plainModel(itemModelGenerators.createFlatItemModel(item, "_filled", ModelTemplates.FLAT_ITEM));
+        itemModelGenerators.itemModelOutput.accept(item, ItemModelUtils.conditional(new HasFluidItemProperty(), filled, plain));
     }
 
     public void generateProbe(ItemModelGenerators itemModelGenerators, Item item) {
