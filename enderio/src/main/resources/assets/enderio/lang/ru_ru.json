@@ -319,7 +319,9 @@
   "gui.enderio.filter.deny_list": "Чёрный список",
   "gui.enderio.filter.filter": "Фильтр",
   "gui.enderio.filter.ignore_components": "Игнорировать компоненты",
+  "gui.enderio.filter.ignore_tags": "Ignore NBT",
   "gui.enderio.filter.match_components": "Учитывать компоненты",
+  "gui.enderio.filter.match_tags": "Match NBT",
   "gui.enderio.ioconfig": "Настройка входа/выхода",
   "gui.enderio.ioconfig.both": "Толкать / Тянуть",
   "gui.enderio.ioconfig.disabled": "Отключено",
@@ -400,6 +402,7 @@
   "item.enderio.energetic_alloy_nugget": "Кусочек энергетического сплава",
   "item.enderio.energized_gear": "Энергетическая биметаллическая шестерня",
   "item.enderio.enticing_crystal": "Заманчивый кристалл",
+  "item.enderio.experience_rod": "Experience Rod",
   "item.enderio.fire_water_bucket": "Ведро огненной воды",
   "item.enderio.frank_n_zombie": "Франкензомби",
   "item.enderio.glider": "Планер",
@@ -596,5 +599,8 @@
   "tooltip.enderio.machine.status.output_full": "Недостаточно места для выхода",
   "tooltip.enderio.no_soul_bound": "К этому предмету можно привязать душу.",
   "tooltip.enderio.show_advanced_tooltip": "<Зажмите Shift>",
-  "tooltip.enderio.tool.soul_vial.health": "Здоровье: %s/%s"
+  "tooltip.enderio.soul_bound": "Bound Soul: %s",
+  "tooltip.enderio.tool.soul_vial.health": "Здоровье: %s/%s",
+  "tooltip.enderio.tool.void_vial.hint": "Collects experience orbs on behalf of the player, can insert XP into tanks or be drunk by the player.",
+  "tooltip.enderio.tool.void_vial.stored_experience": "Stored: %s levels + %s experience"
 }
