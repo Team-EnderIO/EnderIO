@@ -100,8 +100,19 @@ public class ItemRecipeProvider extends SubRecipeProvider {
                 .define('V', EIOItems.SUSPICIOUS_SEED)
                 .define('G', EIOItems.GRAINS_OF_INFINITY)
                 .unlockedBy("has_ingredient",
-                        InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.SOULARIUM_INGOT.get()))
+                    InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.SOULARIUM_INGOT.get()))
                 .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, EIOItems.EXPERIENCE_ROD.get())
+            .pattern("  S")
+            .pattern("VE ")
+            .pattern("SV ")
+            .define('S', EIOTags.Items.INGOTS_SOULARIUM)
+            .define('E', EIOTags.Items.INGOTS_VIBRANT_ALLOY)
+            .define('V', EIOItems.SUSPICIOUS_SEED)
+            .unlockedBy("has_ingredient",
+                InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.SOULARIUM_INGOT.get()))
+            .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, EIOItems.LEVITATION_STAFF.get())
                 .define('C', EIOTags.Items.GEMS_PRESCIENT_CRYSTAL)

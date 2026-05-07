@@ -9,9 +9,7 @@ import net.neoforged.neoforge.client.IItemDecorator;
 public class EnergyBarDecorator implements IItemDecorator {
     public static final EnergyBarDecorator INSTANCE = new EnergyBarDecorator();
 
-    // TODO: This color is difficult to see
-    public static final int BAR_COLOR = 0xB168E4;
-    public static final int BAR_COLOR_ARGB = 0xFFB168E4;
+    public static final int BAR_COLOR = 0xFF5CDBD5;
 
     @Override
     public boolean render(GuiGraphics guiGraphics, Font font, ItemStack stack, int xOffset, int yOffset) {

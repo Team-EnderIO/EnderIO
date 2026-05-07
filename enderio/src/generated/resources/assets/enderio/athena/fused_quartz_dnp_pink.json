@@ -1,0 +1,12 @@
+{
+  "athena:loader": "athena:ctm",
+  "ctm_textures": {
+    "center": "enderio:block/ctm/fused_quartz/center",
+    "empty": "enderio:block/ctm/fused_quartz/empty",
+    "horizontal": "enderio:block/ctm/fused_quartz/horizontal",
+    "particle": "enderio:block/ctm/fused_quartz/particle",
+    "vertical": "enderio:block/ctm/fused_quartz/vertical"
+  },
+  "render_type": "cutout",
+  "tint": 0
+}

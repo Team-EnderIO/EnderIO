@@ -261,6 +261,9 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(ToolsLang.SOUL_VIAL_ERROR_DEAD, "Cannot capture a dead mob!");
 
         add(ToolsLang.SOUL_VIAL_TOOLTIP_HEALTH, "Health: %s/%s");
+
+        add(ToolsLang.VOID_VIAL_HINT, "Collects experience orbs on behalf of the player, can insert XP into tanks or be drunk by the player.");
+        add(ToolsLang.VOID_VIAL_STORED_EXPERIENCE, "Stored: %s levels + %s experience");
     }
 
     private void addFiltersLang() {
@@ -508,6 +511,7 @@ public class EIOLanguageProvider extends LanguageProvider {
         // Tools
         add(EIOItems.SOUL_VIAL.get(), "Soul Vial");
         add(EIOItems.VOID_VIAL.get(), "Vial of the Void");
+        add(EIOItems.EXPERIENCE_ROD.get(), "Experience Rod");
         add(EIOItems.YETA_WRENCH.get(), "Yeta Wrench");
         add(EIOItems.COORDINATE_SELECTOR.get(), "Coordinate Selector");
         add(EIOItems.LOCATION_PRINTOUT.get(), "Location Printout");
@@ -736,6 +740,8 @@ public class EIOLanguageProvider extends LanguageProvider {
 
         add(EIOCommonLang.DARK_STEEL_LADDER_FASTER, "Faster than regular ladders");
         add(EIOCommonLang.TOO_MANY_LEVELS, "You have more than 21862 levels, that's too much XP.");
+
+        add(EIOCommonLang.BOUND_SOUL, "Bound Soul: %s");
     }
 
     private void addKeybindsLang(){

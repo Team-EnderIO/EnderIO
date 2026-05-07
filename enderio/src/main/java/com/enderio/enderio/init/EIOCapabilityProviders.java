@@ -3,6 +3,7 @@ package com.enderio.enderio.init;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.content.cold_fire.ColdFireIgniter;
+import com.enderio.enderio.content.tools.vials.VoidVialItem;
 import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
 import com.enderio.enderio.content.conduits.facades.ComponentBackedConduitFacadeProvider;
 import com.enderio.enderio.content.filters.AbstractFilterItem;
@@ -60,6 +61,7 @@ public class EIOCapabilityProviders {
         // Register item fluid handlers
         event.registerItem(Capabilities.FluidHandler.ITEM, LevitationStaffItem.FLUID_HANDLER_PROVIDER, EIOItems.LEVITATION_STAFF);
         event.registerItem(Capabilities.FluidHandler.ITEM, ColdFireIgniter.FLUID_HANDLER_PROVIDER, EIOItems.COLD_FIRE_IGNITER);
+        event.registerItem(Capabilities.FluidHandler.ITEM, VoidVialItem.FLUID_HANDLER_PROVIDER, EIOItems.VOID_VIAL);
         event.registerItem(Capabilities.FluidHandler.ITEM, FluidTankBlockItem.FLUID_HANDLER_PROVIDER,
             EIOBlocks.FLUID_TANK_ITEM, EIOBlocks.PRESSURIZED_FLUID_TANK_ITEM);
 

@@ -26,14 +26,22 @@ import java.util.Optional;
 public final class ConduitNodeImpl implements INetworkNode<ConduitNetworkImpl, ConduitNodeImpl>, ConduitNode {
 
     // TODO: 1.22 - Remove legacy codec.
-    private static final Codec<ConduitNodeImpl> LEGACY_V7_CODEC = RecordCodecBuilder.create(instance -> instance
+    public static final Codec<ConduitNodeImpl> LEGACY_V7_CODEC = RecordCodecBuilder.create(instance -> instance
             .group(BlockPos.CODEC.fieldOf("pos").forGetter(ConduitNodeImpl::pos),
                     ConduitDataContainer.CODEC.fieldOf("data").forGetter(i -> i.legacyDataContainer))
             .apply(instance, ConduitNodeImpl::new));
 
-    private static final Codec<ConduitNodeImpl> NEW_CODEC = RecordCodecBuilder
+    // Just for tests.
+    public static final Codec<ConduitNodeImpl> LEGACY_V8_0_CODEC = RecordCodecBuilder
+        .create(instance -> instance.group(BlockPos.CODEC.fieldOf("pos").forGetter(ConduitNodeImpl::pos),
+                NodeData.GENERIC_CODEC.optionalFieldOf("data")
+                    .forGetter(i -> i.nodeData == null || !i.nodeData.type().isPersistent() ? Optional.empty()
+                        : Optional.of(i.nodeData)))
+            .apply(instance, ConduitNodeImpl::new));
+
+    public static final Codec<ConduitNodeImpl> NEW_CODEC = RecordCodecBuilder
             .create(instance -> instance.group(
-                Conduit.CODEC.optionalFieldOf("conduit", null).forGetter(ConduitNodeImpl::conduit),
+                Conduit.CODEC.optionalFieldOf("conduit").forGetter(node -> Optional.ofNullable(node.conduit)),
                 BlockPos.CODEC.fieldOf("pos").forGetter(ConduitNodeImpl::pos),
                     NodeData.GENERIC_CODEC.optionalFieldOf("data")
                             .forGetter(i -> i.nodeData == null || !i.nodeData.type().isPersistent() ? Optional.empty()
@@ -43,6 +51,7 @@ public final class ConduitNodeImpl implements INetworkNode<ConduitNetworkImpl, C
     public static final Codec<ConduitNodeImpl> CODEC = Codec.withAlternative(NEW_CODEC, LEGACY_V7_CODEC);
 
     // TODO: final in 21.11
+    @Nullable
     private Holder<Conduit<?, ?>> conduit;
     private final BlockPos pos;
 
@@ -82,8 +91,8 @@ public final class ConduitNodeImpl implements INetworkNode<ConduitNetworkImpl, C
         }
     }
 
-    private ConduitNodeImpl(Holder<Conduit<?, ?>> conduit, BlockPos pos, Optional<NodeData> nodeData) {
-        this.conduit = conduit;
+    private ConduitNodeImpl(Optional<Holder<Conduit<?, ?>>> conduit, BlockPos pos, Optional<NodeData> nodeData) {
+        this.conduit = conduit.orElse(null);
         this.pos = pos;
         this.nodeData = nodeData.orElse(null);
     }
@@ -250,31 +259,10 @@ public final class ConduitNodeImpl implements INetworkNode<ConduitNetworkImpl, C
     }
 
     @Override
-    public boolean isConnectedToBlock(Direction side) {
-        ensureValid();
-        // noinspection DataFlowIssue
-        return conduitBundle.getConnectionStatus(conduit, side).isEndpoint();
-    }
-
-    @Override
-    public boolean isConnectedTo(Direction side) {
-        ensureValid();
-        // noinspection DataFlowIssue
-        return conduitBundle.getConnectionStatus(conduit, side).isConnected();
-    }
-
-    @Override
     public ConnectionConfig getConnectionConfig(Direction side) {
         ensureValid();
         // noinspection DataFlowIssue
         return conduitBundle.getConnectionConfig(conduit, side);
-    }
-
-    @Override
-    public <T extends ConnectionConfig> T getConnectionConfig(Direction side, ConnectionConfigType<T> type) {
-        ensureValid();
-        // noinspection DataFlowIssue
-        return conduitBundle.getConnectionConfig(conduit, side, type);
     }
 
     // endregion
