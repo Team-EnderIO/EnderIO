@@ -319,7 +319,9 @@
   "gui.enderio.filter.deny_list": "Verbotsliste",
   "gui.enderio.filter.filter": "Filter",
   "gui.enderio.filter.ignore_components": "Komponenten ignorieren",
+  "gui.enderio.filter.ignore_tags": "Ignoriere NBT",
   "gui.enderio.filter.match_components": "Komponenten abgleichen",
+  "gui.enderio.filter.match_tags": "NBT abgleichen",
   "gui.enderio.ioconfig": "E/A Konfiguration",
   "gui.enderio.ioconfig.both": "Drücken / Ziehen",
   "gui.enderio.ioconfig.disabled": "Deaktiviert",
@@ -361,7 +363,7 @@
   "item.enderio.animal_token": "Tiermarke",
   "item.enderio.basic_capacitor": "Einfache Kondensatorbank",
   "item.enderio.basic_fluid_filter": "Einfacher Flüssigkeitsfilter",
-  "item.enderio.basic_item_filter": "Einfacher Gegenstandsfilter",
+  "item.enderio.basic_item_filter": "Einfacher Itemfilter",
   "item.enderio.basic_soul_filter": "Einfacher Seelen-Filter",
   "item.enderio.big_advanced_item_filter": "Großer Erweiterter Gegenstandsfilter",
   "item.enderio.big_item_filter": "Großer Gegenstandsfilter",
@@ -400,6 +402,7 @@
   "item.enderio.energetic_alloy_nugget": "Energetischer Legierungsklumpen",
   "item.enderio.energized_gear": "Energetisiertes Bimetallzahnrad",
   "item.enderio.enticing_crystal": "Verlockender Kristall",
+  "item.enderio.experience_rod": "Erfahrungsstab",
   "item.enderio.fire_water_bucket": "Eimer mit Feuerwasser",
   "item.enderio.frank_n_zombie": "Frank'N'Zombie",
   "item.enderio.glider": "Gleiter",
@@ -596,5 +599,8 @@
   "tooltip.enderio.machine.status.output_full": "Es ist nicht genügend Platz für die Ausgabe des Produkts vorhanden",
   "tooltip.enderio.no_soul_bound": "An diesen Gegenstand kann eine Seele gebunden werden.",
   "tooltip.enderio.show_advanced_tooltip": "<Shift gedrückt halten>",
-  "tooltip.enderio.tool.soul_vial.health": "Leben: %s/%s"
+  "tooltip.enderio.soul_bound": "Gebundene Seele: %s",
+  "tooltip.enderio.tool.soul_vial.health": "Leben: %s/%s",
+  "tooltip.enderio.tool.void_vial.hint": "Sammelt Erfahrungskugeln im Namen des Spielers, kann EP in Tanks füllen oder vom Spieler getrunken werden.",
+  "tooltip.enderio.tool.void_vial.stored_experience": "Stored: %s levels + %s experience"
 }
