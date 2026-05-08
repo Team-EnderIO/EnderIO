@@ -229,7 +229,7 @@
   "conduit.enderio.item": "Gegenstandsleitung",
   "conduit.enderio.pressurized_fluid": "Energetische Flüssigkeitsleitung",
   "conduit.enderio.redstone": "Redstone-Leitung",
-  "config.jade.plugin_enderio.soul_bound": "Soul Bound",
+  "config.jade.plugin_enderio.soul_bound": "Seelengebunden",
   "enderio.alloy_smelter_mode.all": "Legieren und Schmelzen",
   "enderio.alloy_smelter_mode.alloys": "Nur Legieren",
   "enderio.alloy_smelter_mode.furnace": "Nur Schmelzen",
@@ -603,5 +603,5 @@
   "tooltip.enderio.soul_bound": "Gebundene Seele: %s",
   "tooltip.enderio.tool.soul_vial.health": "Leben: %s/%s",
   "tooltip.enderio.tool.void_vial.hint": "Sammelt Erfahrungskugeln im Namen des Spielers, kann EP in Tanks füllen oder vom Spieler getrunken werden.",
-  "tooltip.enderio.tool.void_vial.stored_experience": "Stored: %s levels + %s experience"
+  "tooltip.enderio.tool.void_vial.stored_experience": "Gespeichert: %s Level + %s Erfahrung"
 }
