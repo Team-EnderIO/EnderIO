@@ -229,6 +229,7 @@
   "conduit.enderio.item": "Item Conduit",
   "conduit.enderio.pressurized_fluid": "Energetic Fluid Conduit",
   "conduit.enderio.redstone": "Redstone Conduit",
+  "config.jade.plugin_enderio.soul_bound": "Soul Bound",
   "enderio.alloy_smelter_mode.all": "Λιώσιμο και ψήσιμο",
   "enderio.alloy_smelter_mode.alloys": "Alloying Only",
   "enderio.alloy_smelter_mode.furnace": "Smelting Only",
