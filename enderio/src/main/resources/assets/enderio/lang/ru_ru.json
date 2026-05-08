@@ -229,6 +229,7 @@
   "conduit.enderio.item": "Предметная труба",
   "conduit.enderio.pressurized_fluid": "Энергетическая жидкостная труба",
   "conduit.enderio.redstone": "Редстоуновая труба",
+  "config.jade.plugin_enderio.soul_bound": "Soul Bound",
   "enderio.alloy_smelter_mode.all": "Сплавление и плавка",
   "enderio.alloy_smelter_mode.alloys": "Только сплавление",
   "enderio.alloy_smelter_mode.furnace": "Только плавка",
