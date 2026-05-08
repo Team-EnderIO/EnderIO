@@ -229,6 +229,7 @@
   "conduit.enderio.item": "Condutor de Itens",
   "conduit.enderio.pressurized_fluid": "Condutor de Fluido Energético",
   "conduit.enderio.redstone": "Condutor de Redstone",
+  "config.jade.plugin_enderio.soul_bound": "Soul Bound",
   "enderio.alloy_smelter_mode.all": "Ligar e Fundir",
   "enderio.alloy_smelter_mode.alloys": "Apenas Ligas",
   "enderio.alloy_smelter_mode.furnace": "Apenas Fundição",
