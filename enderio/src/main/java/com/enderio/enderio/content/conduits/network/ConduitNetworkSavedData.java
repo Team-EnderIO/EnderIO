@@ -207,6 +207,13 @@ public class ConduitNetworkSavedData extends SavedData {
         }
 
         for (var conduitType : networks.keySet()) {
+            // Ensure caches are ready for any networks that require them
+            if (conduitType.doesRequireNetworkCaches()) {
+                for (var network : networks.get(conduitType)) {
+                    network.ensureCachesReady();
+                }
+            }
+
             // Skip non-ticking graphs.
             var ticker = conduitType.ticker();
             if (ticker == null) {
