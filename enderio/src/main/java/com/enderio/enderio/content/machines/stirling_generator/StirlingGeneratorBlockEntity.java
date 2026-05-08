@@ -36,8 +36,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import net.neoforged.neoforge.transfer.energy.EnergyHandlerUtil;
 import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jspecify.annotations.Nullable;
 
 public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
@@ -103,26 +106,35 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
         // Taking more fuel is locked behind redstone control.
         if (canAct()) {
             if (!isGenerating() && !EnergyHandlerUtil.isFull(getEnergyStorage())) {
-                // Get the fuel
-                ItemStack fuel = getInventory().getStack(FUEL);
-                if (!fuel.isEmpty()) {
-                    // Get the burn time.
-                    int burningTime = fuel.getBurnTime(RecipeType.SMELTING, level.fuelValues());
+                try (Transaction transaction = Transaction.openRoot()) {
+                    var extracted = ResourceHandlerUtil.extractFirst(getInventory(),
+                        ir -> ir.getItem().getBurnTime(ir.toStack(), RecipeType.SMELTING, level.fuelValues()) > 0, 1, transaction);
 
-                    if (burningTime > 0) {
-                        float burnSpeed = MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_BURN_SPEED.get().floatValue();
-                        float efficiency = getFuelEfficiency() / 100.0f;
+                    if (extracted == null || extracted.amount() != 1) {
+                        return;
+                    }
 
-                        burnTime = (int) Math.floor(burningTime * burnSpeed * efficiency);
-                        burnDuration = burnTime;
-
-                        // Remove the fuel
-                        ItemStackTemplate remainder = fuel.getCraftingRemainder();
-                        fuel.shrink(1);
-                        if (fuel.isEmpty()) {
-                            getInventory().setStack(FUEL, remainder != null ? remainder.create() : ItemStack.EMPTY);
+                    ItemStackTemplate remainder = extracted.resource().getItem().getCraftingRemainder(extracted.resource().toStack());
+                    if (remainder != null) {
+                        var remainderStack = remainder.create();
+                        int inserted = getInventory().insert(ItemResource.of(remainderStack), remainderStack.count(), transaction);
+                        if (inserted != remainderStack.count()) {
+                            return;
                         }
                     }
+
+                    int burningTime = extracted.resource().toStack().getBurnTime(RecipeType.SMELTING, level.fuelValues());
+                    if (burningTime <= 0) {
+                        return;
+                    }
+
+                    float burnSpeed = MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_BURN_SPEED.get().floatValue();
+                    float efficiency = getFuelEfficiency() / 100.0f;
+
+                    burnTime = (int) Math.floor(burningTime * burnSpeed * efficiency);
+                    burnDuration = burnTime;
+
+                    transaction.commit();
                 }
             }
         }
