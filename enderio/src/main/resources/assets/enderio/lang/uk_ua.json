@@ -324,7 +324,7 @@
   "gui.enderio.filter.match_components": "Враховувати компоненти",
   "gui.enderio.filter.match_tags": "Враховувати NBT",
   "gui.enderio.ioconfig": "Налаштування I/O",
-  "gui.enderio.ioconfig.both": "Виштовхувати / Витягувати",
+  "gui.enderio.ioconfig.both": "Вводити / Виводити",
   "gui.enderio.ioconfig.disabled": "Вимкнено",
   "gui.enderio.ioconfig.none": "Нічого",
   "gui.enderio.ioconfig.pull": "Вводити",
