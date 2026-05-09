@@ -12,6 +12,8 @@ import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContext;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContextType;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
+import com.enderio.enderio.content.conduits.network.cache.ConnectionNodeCache;
+import com.enderio.enderio.content.conduits.network.cache.NetworkUpdateType;
 import com.enderio.enderio.content.conduits.network.pathing.ConduitPathingStrategy;
 import com.enderio.enderio.content.conduits.network.pathing.PathfindingContext;
 import com.enderio.enderio.content.conduits.network.pathing.BreadthFirstPathingStrategy;
@@ -110,6 +112,8 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
     private final ListMultimap<Integer, Holder<Conduit<?, ?>>> tickableConduits = ArrayListMultimap.create();
     private boolean areTickableConduitsValid = false;
 
+    private final ConnectionNodeCache connectionCache;
+
     @Nullable
     private Consumer<ConduitNetworkImpl> onChunkCoverageChanged = null;
 
@@ -118,6 +122,8 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
         this.conduitType = conduitType;
         this.supportsCaching = conduitType.doesRequireNetworkCaches();
         recomputeNodeCounts();
+
+        this.connectionCache = new ConnectionNodeCache(this);
     }
 
     // TODO: Public for legacy deserialization
@@ -128,6 +134,8 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
         this.context = context.orElse(null);
         this.supportsCaching = conduitType.doesRequireNetworkCaches();
         recomputeNodeCounts();
+
+        this.connectionCache = new ConnectionNodeCache(this);
     }
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
@@ -138,11 +146,15 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
         this.context = context.orElse(null);
         this.supportsCaching = conduitType.doesRequireNetworkCaches();
         recomputeNodeCounts();
+
+        this.connectionCache = new ConnectionNodeCache(this);
     }
 
     protected ConduitNetworkImpl(ConduitType<?, ?> conduitType) {
         this.conduitType = conduitType;
         this.supportsCaching = conduitType.doesRequireNetworkCaches();
+
+        this.connectionCache = new ConnectionNodeCache(this);
     }
 
     @Override
@@ -283,14 +295,29 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
     public List<ConduitBlockConnection> extractConnections(DyeColor color) {
         ensureNotDiscarded();
         Preconditions.checkState(supportsCaching, "This conduit does not support caching");
-        return extractConnectionsByChannel.get(color);
+
+        return connectionCache.allConnections()
+            .stream()
+            .filter(c -> (c.connectionConfig() instanceof IOConnectionConfig ioConnectionConfig) &&
+                ioConnectionConfig.extractChannel() == color)
+            .toList();
+
+//        return extractConnectionsByChannel.get(color);
     }
 
     // This is sorted
     public List<ConduitConnectionPath> insertConnectionsFrom(ConduitBlockConnection extractConnection) {
         ensureNotDiscarded();
         Preconditions.checkState(supportsCaching, "This conduit does not support caching");
-        return insertConnectionsByExtract.getOrDefault(extractConnection, List.of());
+
+        return connectionCache
+            .allPathsFrom(extractConnection)
+            .stream()
+            .filter(c -> (c.end().connectionConfig() instanceof IOConnectionConfig ioConnectionConfig) && ioConnectionConfig.canInsert(
+                c.end().node()::hasRedstoneSignal))
+            .toList();
+
+//        return insertConnectionsByExtract.getOrDefault(extractConnection, List.of());
     }
 
     // endregion
@@ -365,12 +392,21 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
     }
 
     public void onNodeUpdated(ConduitNodeImpl node) {
+        if (connectionCache != null) {
+            connectionCache.update(node, NetworkUpdateType.NODE_CHANGED);
+        }
+
         if (supportsCaching && !shouldRebuildCache) {
             dirtyNodes.add(node);
         }
     }
 
     public void onChunkTickStatusChanged(long chunk) {
+        if (connectionCache != null) {
+            // TODO: Need to be able to send a full list.
+            connectionCache.rebuild();
+        }
+
         if (!supportsCaching || shouldRebuildCache) {
             return;
         }
@@ -646,6 +682,10 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
             nodeCountByConduit.compute(node.conduit(), (k, count) -> count == null ? 1 : count + 1);
         }
 
+        if (connectionCache != null) {
+            connectionCache.update(node, NetworkUpdateType.NODE_ADDED);
+        }
+
         // If called during super constructor
         // TODO: Review this behaviour...
         if (nodesByChunkPos == null) {
@@ -667,6 +707,10 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
 
         // Remove from node count
         nodeCountByConduit.compute(node.conduit(), (k, count) -> count == null || count == 1 ? null : count - 1);
+
+        if (connectionCache != null) {
+            connectionCache.update(node, NetworkUpdateType.NODE_REMOVED);
+        }
 
         if (shouldRebuildCache) {
             return;
@@ -691,6 +735,10 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
 
         // The cache will need to be rebuilt
         shouldRebuildCache = true;
+
+        if (connectionCache != null) {
+            connectionCache.rebuild();
+        }
     }
 
     private <Z extends ConduitNetworkContext<Z>> Z castContext() {
