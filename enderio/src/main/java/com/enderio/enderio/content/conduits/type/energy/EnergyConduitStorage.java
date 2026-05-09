@@ -21,12 +21,16 @@ public record EnergyConduitStorage(Direction side, ConduitNode node) implements 
         }
 
         var network = node.getNetwork();
-        network.ensureCachesReady();
         var inserts = network.insertConnectionsFrom(new ConduitBlockConnection(node, side));
 
         int energyToSend = Math.min(amount, getTransferRate());
         int energyAccepted = 0;
         for (var insert : inserts) {
+            // TODO: Temp to try and avoid issues with unloaded nodes sneaking through.
+            if (!insert.end().node().isLoaded()) {
+                continue;
+            }
+
             var energyStorage = insert.end().getSidedCapability(Capabilities.EnergyStorage.BLOCK);
             if (energyStorage == null || !energyStorage.canReceive()) {
                 continue;
