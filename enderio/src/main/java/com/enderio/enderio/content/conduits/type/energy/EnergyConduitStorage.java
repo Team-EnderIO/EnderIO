@@ -33,12 +33,16 @@ public record EnergyConduitStorage(Direction side, @Nullable ConduitNode node) i
         }
 
         var network = node.getNetwork();
-        network.ensureCachesReady();
         var inserts = network.insertConnectionsFrom(new ConduitBlockConnection(node, side));
 
         int energyToSend = Math.min(amount, getTransferRate());
         int energyAccepted = 0;
         for (var insert : inserts) {
+            // TODO: Temp to try and avoid issues with unloaded nodes sneaking through.
+            if (!insert.end().node().isLoaded()) {
+                continue;
+            }
+
             var energyHandler = insert.end().getSidedCapability(Capabilities.Energy.BLOCK);
             if (energyHandler == null) {
                 continue;

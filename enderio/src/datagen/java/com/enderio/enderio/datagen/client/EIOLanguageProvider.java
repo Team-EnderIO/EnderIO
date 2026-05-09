@@ -6,6 +6,7 @@ import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitApi;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.client.content.keymaps.KeymapHandler;
+import com.enderio.enderio.compat.jade.EIOJadePlugin;
 import com.enderio.enderio.compat.jei.JEILang;
 import com.enderio.enderio.content.advancements.AdvancementsLang;
 import com.enderio.enderio.content.armory.ArmoryLang;
@@ -63,6 +64,7 @@ public class EIOLanguageProvider extends LanguageProvider {
         addAdvancementsLang();
         addCommonLang();
         addKeybindsLang();
+        addJadeLang();
     }
 
     private void addTags() {
@@ -763,6 +765,11 @@ public class EIOLanguageProvider extends LanguageProvider {
 
         add(AdvancementsLang.RICHER_ADVANCEMENT_TITLE, "Is this real?");
         add(AdvancementsLang.RICHER_ADVANCEMENT_DESCRIPTION, "Make others think you are richer");
+    }
+
+    private void addJadeLang() {
+        final String configPrefix = "config.jade.plugin_";
+        add(configPrefix + EIOJadePlugin.SOUL_BOUND_COMPONENT.toLanguageKey(), "Soul Bound");
     }
 
     private void add(ResourceKey<Conduit<?, ?>> key, String translation) {
