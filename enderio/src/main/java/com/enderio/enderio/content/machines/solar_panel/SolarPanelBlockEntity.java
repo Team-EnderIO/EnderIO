@@ -10,10 +10,8 @@ import com.enderio.enderio.init.EIODataComponents;
 import com.google.common.base.Preconditions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
@@ -23,9 +21,11 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 
 import java.util.EnumMap;
@@ -78,6 +78,7 @@ public class SolarPanelBlockEntity extends EIOBlockEntity implements SoulBindabl
     @Override
     public void onLoad() {
         super.onLoad();
+        reloadCache = !reload;
 
         // Create all energy caches
         if (level instanceof ServerLevel serverLevel) {
@@ -370,4 +371,8 @@ public class SolarPanelBlockEntity extends EIOBlockEntity implements SoulBindabl
     }
 
     // endregion
+    @SubscribeEvent
+    static void onReload(OnDatapackSyncEvent event) {
+        reload = !reload;
+    }
 }

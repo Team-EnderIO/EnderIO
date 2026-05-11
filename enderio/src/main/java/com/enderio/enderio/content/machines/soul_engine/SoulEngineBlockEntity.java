@@ -327,6 +327,12 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
         updateMachineState(MachineState.FULL_POWER,EnergyHandlerUtil.isFull(getEnergyStorage()) && isCapacitorInstalled());
     }
 
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        reloadCache = !reload;
+    }
+
     @SubscribeEvent
     static void onReload(OnDatapackSyncEvent event) {
         reload = !reload;

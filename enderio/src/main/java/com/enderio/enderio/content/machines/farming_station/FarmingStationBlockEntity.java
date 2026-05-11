@@ -395,6 +395,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     @Override
     public void onLoad() {
         super.onLoad();
+        reloadCache = !reload;
         updateLocations();
     }
 
