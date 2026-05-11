@@ -229,7 +229,7 @@
   "conduit.enderio.item": "物品导管",
   "conduit.enderio.pressurized_fluid": "充能流体导管",
   "conduit.enderio.redstone": "红石导管",
-  "config.jade.plugin_enderio.soul_bound": "Soul Bound",
+  "config.jade.plugin_enderio.soul_bound": "灵魂绑定",
   "enderio.alloy_smelter_mode.all": "合金和烧炼配方",
   "enderio.alloy_smelter_mode.alloys": "仅合金配方",
   "enderio.alloy_smelter_mode.furnace": "仅烧炼",
@@ -403,7 +403,7 @@
   "item.enderio.energetic_alloy_nugget": "充能合金粒",
   "item.enderio.energized_gear": "充能合金双金属齿轮",
   "item.enderio.enticing_crystal": "诱引水晶",
-  "item.enderio.experience_rod": "Experience Rod",
+  "item.enderio.experience_rod": "经验棒",
   "item.enderio.fire_water_bucket": "火焰水桶",
   "item.enderio.frank_n_zombie": "人造僵尸",
   "item.enderio.glider": "滑翔机",
@@ -414,7 +414,7 @@
   "item.enderio.hootch_bucket": "烈酒桶",
   "item.enderio.infinity_rod": "无限杆",
   "item.enderio.iron_gear": "无限双金属齿轮",
-  "item.enderio.limited_item_filter": "Limited Item Filter",
+  "item.enderio.limited_item_filter": "限制物品过滤器",
   "item.enderio.liquid_darkness_bucket": "液态黑暗桶",
   "item.enderio.liquid_sunshine_bucket": "液态阳光桶",
   "item.enderio.location_printout": "位置记录",
@@ -600,8 +600,8 @@
   "tooltip.enderio.machine.status.output_full": "输出槽空间不足",
   "tooltip.enderio.no_soul_bound": "本物品可与灵魂绑定。",
   "tooltip.enderio.show_advanced_tooltip": "<按住Shift>",
-  "tooltip.enderio.soul_bound": "Bound Soul: %s",
+  "tooltip.enderio.soul_bound": "绑定灵魂：%s",
   "tooltip.enderio.tool.soul_vial.health": "生命值：%s/%s",
-  "tooltip.enderio.tool.void_vial.hint": "Collects experience orbs on behalf of the player, can insert XP into tanks or be drunk by the player.",
-  "tooltip.enderio.tool.void_vial.stored_experience": "Stored: %s levels + %s experience"
+  "tooltip.enderio.tool.void_vial.hint": "代替玩家收集经验球，收集的经验可以存入储罐或被玩家饮用。",
+  "tooltip.enderio.tool.void_vial.stored_experience": "已存储：%s经验等级级+%s经验点数"
 }
