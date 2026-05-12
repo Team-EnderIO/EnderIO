@@ -511,7 +511,7 @@
   "message.enderio.too_many_levels": "你的等级已超21862级，经验值太多了。",
   "message.enderio.tool.coordinate_selector.no_block": "交互范围内没有方块",
   "message.enderio.tool.coordinate_selector.no_paper": "物品栏没有纸",
-  "message.enderio.tool.glider.disable": "滑翔已被禁用: ",
+  "message.enderio.tool.glider.disable": "滑翔已被禁用：",
   "message.enderio.tool.glider.disable.fall_flying": "鞘翅飞行",
   "message.enderio.tool.soul_vial.error.blacklisted": "该实体已被列入黑名单。",
   "message.enderio.tool.soul_vial.error.boss": "想得美。Boss可不喜欢瓶子。",
