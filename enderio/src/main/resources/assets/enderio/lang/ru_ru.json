@@ -309,8 +309,8 @@
   "gui.enderio.conduit.round_robin.enabled": "Round Robin включён",
   "gui.enderio.conduit.self_feed.disabled": "Самоподача отключена",
   "gui.enderio.conduit.self_feed.enabled": "Самоподача включена",
-  "gui.enderio.electromagnet_off": "Electromagnet Off",
-  "gui.enderio.electromagnet_on": "Electromagnet On",
+  "gui.enderio.electromagnet_off": "Электромагнит выкл",
+  "gui.enderio.electromagnet_on": "Электромагнит вкл",
   "gui.enderio.error_cannot_teleport": "ERROR: Cannot teleport",
   "gui.enderio.error_invalid_destination": "ERROR: Destination not a valid target",
   "gui.enderio.error_too_far": "ERROR: Too far",
@@ -403,7 +403,7 @@
   "item.enderio.energetic_alloy_nugget": "Кусочек энергетического сплава",
   "item.enderio.energized_gear": "Энергетическая биметаллическая шестерня",
   "item.enderio.enticing_crystal": "Заманчивый кристалл",
-  "item.enderio.experience_rod": "Experience Rod",
+  "item.enderio.experience_rod": "Стержень опыта",
   "item.enderio.fire_water_bucket": "Ведро огненной воды",
   "item.enderio.frank_n_zombie": "Франкензомби",
   "item.enderio.glider": "Планер",
@@ -600,8 +600,8 @@
   "tooltip.enderio.machine.status.output_full": "Недостаточно места для выхода",
   "tooltip.enderio.no_soul_bound": "К этому предмету можно привязать душу.",
   "tooltip.enderio.show_advanced_tooltip": "<Зажмите Shift>",
-  "tooltip.enderio.soul_bound": "Bound Soul: %s",
+  "tooltip.enderio.soul_bound": "Привязанная душа: %s",
   "tooltip.enderio.tool.soul_vial.health": "Здоровье: %s/%s",
-  "tooltip.enderio.tool.void_vial.hint": "Collects experience orbs on behalf of the player, can insert XP into tanks or be drunk by the player.",
-  "tooltip.enderio.tool.void_vial.stored_experience": "Stored: %s levels + %s experience"
+  "tooltip.enderio.tool.void_vial.hint": "Собирает сферы опыта от имени игрока, может вставлять XP в цистерны или выпивать игрок.",
+  "tooltip.enderio.tool.void_vial.stored_experience": "Сохранено: %s уровней + %s опыт"
 }
