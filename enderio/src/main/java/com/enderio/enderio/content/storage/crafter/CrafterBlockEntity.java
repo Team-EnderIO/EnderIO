@@ -6,7 +6,7 @@ import com.enderio.core.common.storage.layout.SlotTemplates;
 import com.enderio.core.common.storage.slot.MultiResourceSlotKey;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
-import com.enderio.enderio.api.capacitor.QuadraticScalable;
+import com.enderio.enderio.api.capacitor.scaling.QuadraticIntScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
@@ -38,9 +38,9 @@ import java.util.function.UnaryOperator;
 // TODO: Might want to see if we can adapt this into a crafting task.
 public class CrafterBlockEntity extends PoweredMachineBlockEntity {
 
-    public static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
+    public static final QuadraticIntScalable ENERGY_CAPACITY = new QuadraticIntScalable(CapacitorModifier.ENERGY_CAPACITY,
             MachinesConfig.COMMON.ENERGY.CRAFTER_CAPACITY);
-    public static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE,
+    public static final QuadraticIntScalable ENERGY_USAGE = new QuadraticIntScalable(CapacitorModifier.ENERGY_USE,
             MachinesConfig.COMMON.ENERGY.CRAFTER_USAGE);
 
     public static final MultiResourceSlotKey<ItemResource> INPUT = new MultiResourceSlotKey<>(9);

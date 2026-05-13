@@ -53,8 +53,9 @@ public abstract class RecipeManagerMixin {
             Identifier originalId, SmeltingRecipe smeltingRecipe) {
 
         SizedIngredient input = new SizedIngredient(smeltingRecipe.input(), 1);
-        int energy = MachinesConfig.COMMON.ENERGY.ALLOY_SMELTER_VANILLA_ITEM_ENERGY.get();
-        AlloySmeltingRecipe recipe = new AlloySmeltingRecipe(List.of(input), smeltingRecipe.result(), energy,
+//        int energy = MachinesConfig.COMMON.ENERGY.ALLOY_SMELTER_VANILLA_ITEM_ENERGY.get();
+        // TODO: See if/how we should adjust the cooking time to match with the raw energy consumption of a coal.
+        AlloySmeltingRecipe recipe = new AlloySmeltingRecipe(List.of(input), smeltingRecipe.result(), smeltingRecipe.cookingTime(),
                 smeltingRecipe.experience(), true);
 
         String path = "smelting/" + originalId.getNamespace() + "/" + originalId.getPath();

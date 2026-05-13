@@ -1,7 +1,7 @@
 {
   "type": "enderio:sag_milling",
-  "energy": 2400,
   "input": "#minecraft:coals",
+  "operation_time": 200,
   "outputs": [
     {
       "item": {

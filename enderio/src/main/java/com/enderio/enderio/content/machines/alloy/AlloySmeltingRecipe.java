@@ -1,24 +1,23 @@
 package com.enderio.enderio.content.machines.alloy;
 
-import com.enderio.core.common.recipes.OutputStack;
-import com.enderio.enderio.foundation.MachineRecipe;
+import com.enderio.core.common.crafting.WithCountSlotDisplay;
+import com.enderio.enderio.api.recipes.EnderIORecipe;
+import com.enderio.enderio.api.recipes.alloy.AlloySmeltingInput;
+import com.enderio.enderio.api.recipes.alloy.AlloySmeltingRecipeDisplay;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIORecipeBookCategories;
 import com.enderio.enderio.init.EIORecipeTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeBookCategory;
-import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.display.RecipeDisplay;
@@ -28,13 +27,15 @@ import net.neoforged.neoforge.common.crafting.SizedIngredient;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.stream.IntStream;
 
-public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Input> {
+public final class AlloySmeltingRecipe implements EnderIORecipe<AlloySmeltingInput> {
     // Uses optional field for isSmelting to avoid polluting recipe generation.
+    // TODO: Validation to ensure inputs has a size of 1 if isSmelting is true.
     public static final MapCodec<AlloySmeltingRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(inst -> inst
-        .group(SizedIngredient.NESTED_CODEC.listOf().fieldOf("inputs").forGetter(AlloySmeltingRecipe::inputs), //TODO is nested right?
+        .group(SizedIngredient.NESTED_CODEC.listOf(1, 3).fieldOf("inputs").forGetter(AlloySmeltingRecipe::inputs), //TODO is nested right?
             ItemStackTemplate.CODEC.fieldOf("output").forGetter(AlloySmeltingRecipe::output),
-            Codec.INT.fieldOf("energy").forGetter(AlloySmeltingRecipe::energy),
+            Codec.INT.fieldOf("operation_time").forGetter(AlloySmeltingRecipe::baseOperationTime),
             Codec.FLOAT.fieldOf("experience").forGetter(AlloySmeltingRecipe::experience),
             Codec.BOOL.optionalFieldOf("is_smelting", false).forGetter(AlloySmeltingRecipe::isSmelting))
         .apply(inst, AlloySmeltingRecipe::new));
@@ -42,20 +43,20 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
     public static final StreamCodec<RegistryFriendlyByteBuf, AlloySmeltingRecipe> STREAM_CODEC = StreamCodec
         .composite(SizedIngredient.STREAM_CODEC.apply(ByteBufCodecs.list()), AlloySmeltingRecipe::inputs,
             ItemStackTemplate.STREAM_CODEC, AlloySmeltingRecipe::output, ByteBufCodecs.INT,
-            AlloySmeltingRecipe::energy, ByteBufCodecs.FLOAT, AlloySmeltingRecipe::experience,
+            AlloySmeltingRecipe::baseOperationTime, ByteBufCodecs.FLOAT, AlloySmeltingRecipe::experience,
             ByteBufCodecs.BOOL, AlloySmeltingRecipe::isSmelting, AlloySmeltingRecipe::new);
 
     public static final RecipeSerializer<AlloySmeltingRecipe> SERIALIZER = new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC);
 
     private final List<SizedIngredient> inputs;
     private final ItemStackTemplate output;
-    private final int energy;
+    private final int operationTime;
     private final float experience;
     private final boolean isSmelting;
     @Nullable
     private PlacementInfo placementInfo;
 
-    public AlloySmeltingRecipe(List<SizedIngredient> inputs, ItemStackTemplate output, int energy, float experience,
+    public AlloySmeltingRecipe(List<SizedIngredient> inputs, ItemStackTemplate output, int operationTime, float experience,
             boolean isSmelting) {
         if (isSmelting && inputs.size() > 1) {
             throw new IllegalArgumentException("More than one smelting ingredient given");
@@ -63,13 +64,13 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
 
         this.inputs = inputs;
         this.output = output;
-        this.energy = energy;
+        this.operationTime = operationTime;
         this.experience = experience;
         this.isSmelting = isSmelting;
     }
 
-    public AlloySmeltingRecipe(List<SizedIngredient> inputs, ItemStackTemplate output, int energy, float experience) {
-        this(inputs, output, energy, experience, false);
+    public AlloySmeltingRecipe(List<SizedIngredient> inputs, ItemStackTemplate output, int operationTime, float experience) {
+        this(inputs, output, operationTime, experience, false);
     }
 
     public List<SizedIngredient> inputs() {
@@ -80,8 +81,16 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
         return output;
     }
 
-    public int energy() {
-        return energy;
+    public int baseOperationTime() {
+        return operationTime;
+    }
+
+    public int getOperationTime(AlloySmeltingInput input) {
+        if (isSmelting) {
+            return operationTime * getSmeltingInputCount(input);
+        }
+
+        return operationTime;
     }
 
     public float experience() {
@@ -92,13 +101,22 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
         return isSmelting;
     }
 
-    @Override
-    public int getBaseEnergyCost() {
-        return energy;
+    public int getSmeltingInputCount(AlloySmeltingInput recipeInput) {
+        if (!isSmelting) {
+            throw new IllegalStateException("Not a smelting recipe");
+        }
+
+        int inputCount = IntStream.range(0, recipeInput.size())
+            .filter(i -> !recipeInput.getItem(i).isEmpty())
+            .filter(i -> inputs.getFirst().test(recipeInput.getItem(i)))
+            .map(i -> recipeInput.getItem(i).getCount())
+            .sum();
+
+        return Math.min(inputCount, 3);
     }
 
     @Override
-    public boolean matches(Input recipeInput, Level level) {
+    public boolean matches(AlloySmeltingInput recipeInput, Level level) {
         if (inputs.isEmpty()) {
             return false;
         }
@@ -111,93 +129,70 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
 
         // Simpler smelting match logic
         if (isSmelting) {
-            int emptyCount = 0;
-
-            for (int i = 0; i < 3; i++) {
-                var slotItem = recipeInput.getItem(i);
-
-                if (slotItem.isEmpty()) {
-                    emptyCount++;
-                    continue;
-                }
-
-                if (!inputs.getFirst().test(slotItem)) {
-                    return false;
-                }
-            }
-
-            return emptyCount < 3;
+            // Ensure that all non-empty inputs match the ingredient.
+            return IntStream.range(0, recipeInput.size())
+                .filter(i -> !recipeInput.getItem(i).isEmpty())
+                .allMatch(i -> inputs.getFirst().test(recipeInput.getItem(i)));
         }
 
         boolean[] matchedInputs = new boolean[3];
 
-        // Iterate over the slots
-        for (int i = 0; i < 3; i++) {
-            // Iterate over the inputs
-            for (int j = 0; j < 3; j++) {
+        for (int slot = 0; slot < 3; slot++) {
+            var slotItem = recipeInput.getItem(slot);
+
+            for (int ingredient = 0; ingredient < 3; ingredient++) {
                 // If this ingredient has been matched already, continue
-                if (matchedInputs[j]) {
+                if (matchedInputs[ingredient]) {
                     continue;
                 }
 
-                var slotItem = recipeInput.getItem(i);
-
-                if (j < inputs.size()) {
+                if (ingredient < inputs.size()) {
                     // If we expect an input, test we have a match for it.
-                    if (inputs.get(j).test(slotItem)) {
-                        matchedInputs[j] = true;
+                    if (inputs.get(ingredient).test(slotItem)) {
+                        matchedInputs[ingredient] = true;
                         break;
                     }
                 } else if (slotItem.isEmpty()) {
                     // If we don't expect an input, make sure we have a blank for it.
-                    matchedInputs[j] = true;
+                    matchedInputs[ingredient] = true;
                     break;
                 }
             }
         }
 
         // If we matched all our ingredients, we win!
-        for (int i = 0; i < 3; i++) {
-            if (!matchedInputs[i]) {
-                return false;
-            }
-        }
-
-        return true;
+        return matchedInputs[0] && matchedInputs[1] && matchedInputs[2];
     }
 
     @Override
-    public List<OutputStack> craft(Input container, RegistryAccess registryAccess) {
+    public ItemStack assemble(AlloySmeltingInput input) {
         ItemStack outputStack = output.create();
         if (isSmelting) {
-            outputStack.setCount(outputStack.getCount() * container.inputsConsumed);
+            outputStack.setCount(outputStack.getCount() * getSmeltingInputCount(input));
         }
-        return List.of(OutputStack.of(outputStack));
+
+        return outputStack;
     }
 
     @Override
     public List<RecipeDisplay> display() {
         return List.of(
-            new AlloySmelterDisplay(
-                this.inputs.stream().map(s -> s.ingredient().display()).toList(),
+            new AlloySmeltingRecipeDisplay(
+                this.inputs.stream().<SlotDisplay>map(WithCountSlotDisplay::new).toList(),
                 new SlotDisplay.ItemStackSlotDisplay(this.output),
-                new SlotDisplay.ItemSlotDisplay(EIOBlocks.ALLOY_SMELTER.asItem())
+                new SlotDisplay.ItemSlotDisplay(EIOBlocks.ALLOY_SMELTER.asItem()),
+                baseOperationTime()
             )
         );
     }
 
     @Override
-    public List<OutputStack> getResultStacks(RegistryAccess registryAccess) {
-        return List.of(OutputStack.of(output.create()));
-    }
-
-    @Override
-    public RecipeSerializer<? extends Recipe<Input>> getSerializer() {
+    public RecipeSerializer<? extends Recipe<AlloySmeltingInput>> getSerializer() {
         return SERIALIZER;
     }
 
     @Override
-    public RecipeType<? extends Recipe<Input>> getType() {
+    public RecipeType<? extends Recipe<AlloySmeltingInput>> getType() {
         return EIORecipeTypes.ALLOY_SMELTING.get();
     }
 
@@ -212,58 +207,5 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
     @Override
     public RecipeBookCategory recipeBookCategory() {
         return EIORecipeBookCategories.ALLOY_SMELTING.get();
-    }
-
-    public record Input(AlloySmelterMode mode, List<ItemStack> inputs, int inputsConsumed) implements RecipeInput {
-
-        @Override
-        public ItemStack getItem(int slotIndex) {
-            if (slotIndex >= inputs.size()) {
-                throw new IllegalArgumentException("No item for index " + slotIndex);
-            }
-
-            return inputs.get(slotIndex);
-        }
-
-        @Override
-        public int size() {
-            return inputs.size();
-        }
-
-        public Input withInputsConsumed(int inputsConsumed) {
-            return new Input(mode, inputs, inputsConsumed);
-        }
-    }
-
-    public record AlloySmelterDisplay(List<SlotDisplay> ingredients, SlotDisplay result, SlotDisplay craftingStation) implements RecipeDisplay {
-
-        public static final MapCodec<AlloySmelterDisplay> MAP_CODEC = RecordCodecBuilder.mapCodec(
-            p_379634_ -> p_379634_.group(
-                    SlotDisplay.CODEC.listOf().fieldOf("ingredients").forGetter(AlloySmelterDisplay::ingredients),
-                    SlotDisplay.CODEC.fieldOf("result").forGetter(AlloySmelterDisplay::result),
-                    SlotDisplay.CODEC.fieldOf("crafting_station").forGetter(AlloySmelterDisplay::craftingStation)
-                )
-                .apply(p_379634_, AlloySmelterDisplay::new)
-        );
-        public static final StreamCodec<RegistryFriendlyByteBuf, AlloySmelterDisplay> STREAM_CODEC = StreamCodec.composite(
-            SlotDisplay.STREAM_CODEC.apply(ByteBufCodecs.list()),
-            AlloySmelterDisplay::ingredients,
-            SlotDisplay.STREAM_CODEC,
-            AlloySmelterDisplay::result,
-            SlotDisplay.STREAM_CODEC,
-            AlloySmelterDisplay::craftingStation,
-            AlloySmelterDisplay::new
-        );
-        public static final RecipeDisplay.Type<AlloySmelterDisplay> TYPE = new RecipeDisplay.Type<>(MAP_CODEC, STREAM_CODEC);
-
-        @Override
-        public Type<? extends RecipeDisplay> type() {
-            return TYPE;
-        }
-
-        @Override
-        public boolean isEnabled(FeatureFlagSet flagSet) {
-            return this.ingredients.stream().allMatch(i -> i.isEnabled(flagSet)) && RecipeDisplay.super.isEnabled(flagSet);
-        }
     }
 }

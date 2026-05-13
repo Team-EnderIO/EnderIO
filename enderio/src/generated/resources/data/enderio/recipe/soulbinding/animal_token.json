@@ -1,9 +1,9 @@
 {
   "type": "enderio:soul_binding",
-  "energy": 12800,
   "experience": 1,
   "input": "enderio:soularium_grinding_ball",
   "mob_category": "creature",
+  "operation_time": 12800,
   "output": {
     "id": "enderio:animal_token"
   }

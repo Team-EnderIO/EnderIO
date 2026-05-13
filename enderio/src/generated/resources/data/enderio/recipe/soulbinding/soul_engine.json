@@ -1,8 +1,8 @@
 {
   "type": "enderio:soul_binding",
-  "energy": 188000,
   "experience": 5,
   "input": "enderio:soul_engine",
+  "operation_time": 188000,
   "output": {
     "id": "enderio:soul_engine"
   },

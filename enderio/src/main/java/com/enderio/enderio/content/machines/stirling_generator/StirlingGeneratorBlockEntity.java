@@ -4,10 +4,10 @@ import com.enderio.core.common.storage.layout.ItemStorageLayout;
 import com.enderio.core.common.storage.layout.SlotTemplates;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
-import com.enderio.enderio.api.capacitor.FixedScalable;
-import com.enderio.enderio.api.capacitor.LinearScalable;
-import com.enderio.enderio.api.capacitor.QuadraticScalable;
-import com.enderio.enderio.api.capacitor.SteppedScalable;
+import com.enderio.enderio.api.capacitor.scaling.FixedIntScalable;
+import com.enderio.enderio.api.capacitor.scaling.LinearIntScalable;
+import com.enderio.enderio.api.capacitor.scaling.QuadraticIntScalable;
+import com.enderio.enderio.api.capacitor.scaling.SteppedIntScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.enderio.client.SoundHandler;
 import com.enderio.enderio.config.machines.MachinesConfig;
@@ -45,14 +45,14 @@ import org.jspecify.annotations.Nullable;
 
 public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
 
-    public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
+    public static final QuadraticIntScalable CAPACITY = new QuadraticIntScalable(CapacitorModifier.ENERGY_CAPACITY,
             MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_CAPACITY);
 
-    public static final SteppedScalable FUEL_EFFICIENCY = new SteppedScalable(CapacitorModifier.FUEL_EFFICIENCY,
+    public static final SteppedIntScalable FUEL_EFFICIENCY = new SteppedIntScalable(CapacitorModifier.FUEL_EFFICIENCY,
             MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_FUEL_EFFICIENCY_BASE,
             MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_FUEL_EFFICIENCY_STEP);
 
-    public static final LinearScalable GENERATION_SPEED = new LinearScalable(
+    public static final LinearIntScalable GENERATION_SPEED = new LinearIntScalable(
             CapacitorModifier.BURNING_ENERGY_GENERATION, MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_PRODUCTION);
 
     public static final SingleResourceSlotKey<ItemResource> FUEL = new SingleResourceSlotKey<>();
@@ -63,15 +63,15 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
 
     public StirlingGeneratorBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.STIRLING_GENERATOR.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, CAPACITOR,
-                EnergyIOMode.Output, CAPACITY, FixedScalable.ZERO);
+                EnergyIOMode.Output, CAPACITY, FixedIntScalable.ZERO);
     }
 
     public int getGenerationRate() {
-        return GENERATION_SPEED.scaleI(this::getCapacitorData).get();
+        return GENERATION_SPEED.scaled(this::getCapacitorData).get();
     }
 
     public int getFuelEfficiency() {
-        return FUEL_EFFICIENCY.scaleI(this::getCapacitorData).get();
+        return FUEL_EFFICIENCY.scaled(this::getCapacitorData).get();
     }
 
     @Override

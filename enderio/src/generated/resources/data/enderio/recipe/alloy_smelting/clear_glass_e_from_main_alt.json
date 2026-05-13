@@ -1,6 +1,5 @@
 {
   "type": "enderio:alloy_smelting",
-  "energy": 3200,
   "experience": 0.3,
   "inputs": [
     {
@@ -12,6 +11,7 @@
       "ingredient": "minecraft:glowstone"
     }
   ],
+  "operation_time": 140,
   "output": {
     "id": "enderio:clear_glass_e"
   }

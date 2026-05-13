@@ -1,6 +1,5 @@
 {
   "type": "enderio:alloy_smelting",
-  "energy": 5600,
   "experience": 0.3,
   "inputs": [
     {
@@ -15,6 +14,7 @@
       "ingredient": "#c:ingots/gold"
     }
   ],
+  "operation_time": 160,
   "output": {
     "id": "enderio:soularium_ingot"
   }

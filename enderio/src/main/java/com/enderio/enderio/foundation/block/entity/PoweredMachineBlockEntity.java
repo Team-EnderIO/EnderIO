@@ -5,7 +5,7 @@ import com.enderio.core.common.storage.slot.ResourceSlotId;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.core.annotations.UseOnly;
 import com.enderio.enderio.api.capacitor.CapacitorData;
-import com.enderio.enderio.api.capacitor.CapacitorScalable;
+import com.enderio.enderio.api.capacitor.scaling.CapacitorScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.enderio.content.capacitors.CapacitorItem;
 import com.enderio.enderio.foundation.MachineNBTKeys;
@@ -49,14 +49,14 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
     private boolean isCapacitorDataDirty;
 
     private final EnergyIOMode energyIOMode;
-    private final CapacitorScalable scalableEnergyCapacity;
-    private final CapacitorScalable scalableMaxEnergyUse;
+    private final CapacitorScalable<Integer> scalableEnergyCapacity;
+    private final CapacitorScalable<Integer> scalableMaxEnergyUse;
 
     private final PoweredMachineEnergyStorage energyStorage;
 
     public PoweredMachineBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState, boolean isIoConfigMutable,
         CapacitorSupport capacitorSupport, @Nullable ResourceSlotId<ItemResource> capacitorSlotId, EnergyIOMode energyIOMode,
-        CapacitorScalable scalableEnergyCapacity, CapacitorScalable scalableMaxEnergyUse) {
+        CapacitorScalable<Integer> scalableEnergyCapacity, CapacitorScalable<Integer> scalableMaxEnergyUse) {
         super(type, worldPosition, blockState, isIoConfigMutable);
 
         this.capacitorSupport = capacitorSupport;
@@ -130,11 +130,11 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
 
     public final int getMaxEnergyStored() {
         // TODO: Scalable might need redesigned to just scale directly...
-        return scalableEnergyCapacity.scaleI(this::getCapacitorData).get();
+        return scalableEnergyCapacity.scaled(this::getCapacitorData).get();
     }
 
     public final int getMaxEnergyUse() {
-        return scalableMaxEnergyUse.scaleI(this::getCapacitorData).get();
+        return scalableMaxEnergyUse.scaled(this::getCapacitorData).get();
     }
 
     public final EnergyIOMode energyIOMode() {

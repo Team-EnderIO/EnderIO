@@ -7,7 +7,7 @@ import com.enderio.core.common.storage.slot.MultiResourceSlotKey;
 import com.enderio.core.common.storage.slot.ResourceSlotId;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
-import com.enderio.enderio.api.capacitor.QuadraticScalable;
+import com.enderio.enderio.api.capacitor.scaling.QuadraticIntScalable;
 import com.enderio.enderio.api.farm.FarmInteraction;
 import com.enderio.enderio.api.farm.FarmTask;
 import com.enderio.enderio.api.farm.FarmTaskManager;
@@ -60,9 +60,9 @@ import java.util.List;
 import java.util.Optional;
 
 public class FarmingStationBlockEntity extends PoweredMachineBlockEntity implements RangedActor, FarmingMachine, SoulBindable {
-    private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
+    private static final QuadraticIntScalable ENERGY_CAPACITY = new QuadraticIntScalable(CapacitorModifier.ENERGY_CAPACITY,
             MachinesConfig.COMMON.ENERGY.FARM_CAPACITY);
-    private static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE,
+    private static final QuadraticIntScalable ENERGY_USAGE = new QuadraticIntScalable(CapacitorModifier.ENERGY_USE,
             MachinesConfig.COMMON.ENERGY.FARM_USAGE);
 
     private static final ActionRange DEFAULT_RANGE = new ActionRange(5, false);

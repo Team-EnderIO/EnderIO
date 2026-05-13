@@ -1,5 +1,6 @@
 package com.enderio.enderio.foundation.recipe;
 
+import com.enderio.enderio.api.recipes.alloy.AlloySmeltingInput;
 import com.enderio.enderio.content.machines.alloy.AlloySmeltingRecipe;
 import com.enderio.enderio.content.machines.painting.PaintingRecipe;
 import com.enderio.enderio.content.machines.sag_mill.SagMillingRecipe;
@@ -13,10 +14,10 @@ import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 
 @EventBusSubscriber
 public class MachineRecipeCaches {
-    public static final RecipeInputCache<AlloySmeltingRecipe.Input, AlloySmeltingRecipe> ALLOY_SMELTING_ONLY_ALLOY = new RecipeInputCache<>(
+    public static final RecipeInputCache<AlloySmeltingInput, AlloySmeltingRecipe> ALLOY_SMELTING_ONLY_ALLOY = new RecipeInputCache<>(
             EIORecipeTypes.ALLOY_SMELTING, recipe -> !recipe.isSmelting());
 
-    public static final RecipeInputCache<AlloySmeltingRecipe.Input, AlloySmeltingRecipe> ALLOY_SMELTING_ONLY_SMELTING = new RecipeInputCache<>(
+    public static final RecipeInputCache<AlloySmeltingInput, AlloySmeltingRecipe> ALLOY_SMELTING_ONLY_SMELTING = new RecipeInputCache<>(
             EIORecipeTypes.ALLOY_SMELTING, AlloySmeltingRecipe::isSmelting);
 
     public static final RecipeInputCache<PaintingRecipe.Input, PaintingRecipe> PAINTING = new RecipeInputCache<>(

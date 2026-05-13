@@ -1,8 +1,8 @@
 {
   "type": "enderio:sag_milling",
   "bonus": "none",
-  "energy": 2400,
   "input": "minecraft:prismarine_shard",
+  "operation_time": 200,
   "outputs": [
     {
       "item": {
