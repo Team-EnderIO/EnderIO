@@ -21,6 +21,7 @@ import com.enderio.enderio.foundation.attachment.ActionRange;
 import com.enderio.enderio.foundation.attachment.RangedActor;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
+import com.enderio.enderio.foundation.inventory.MachineSlotTemplates;
 import com.enderio.enderio.foundation.souldata.FarmSoul;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.init.EIOBlockEntities;
@@ -124,6 +125,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
             .add(BONEMEAL, SlotTemplates.input(), b -> b
                 .filter((_, itemResource) -> itemResource.is(Tags.Items.FERTILIZERS)))
             .add(OUTPUT, SlotTemplates.output())
+            .add(CAPACITOR, MachineSlotTemplates.capacitor())
             .build();
     }
 
