@@ -1,7 +1,8 @@
 package com.enderio.enderio.content.machines.stirling_generator;
 
 import com.enderio.core.common.storage.layout.ItemStorageLayout;
-import com.enderio.core.common.storage.layout.SlotTemplates;
+import com.enderio.core.common.storage.layout.ResourceStorageLayout;
+import com.enderio.core.common.storage.layout.SlotAccessRules;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.FixedScalable;
@@ -21,27 +22,25 @@ import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import net.neoforged.neoforge.transfer.energy.EnergyHandlerUtil;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jspecify.annotations.Nullable;
+
+import java.util.function.UnaryOperator;
 
 public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
 
@@ -77,10 +76,35 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
     @Override
     public ItemStorageLayout createInventoryLayout() {
         return ItemStorageLayout.builder()
-            .add(FUEL, SlotTemplates.input(), b -> b
-                .filter((_, resource) -> resource.toStack().getBurnTime(RecipeType.SMELTING, level.fuelValues()) > 0))
+            .add(FUEL, fuel())
             .add(CAPACITOR, MachineSlotTemplates.capacitor())
             .build();
+    }
+
+    public UnaryOperator<ResourceStorageLayout.Builder.SlotBuilder<ItemResource>> fuel() {
+        return builder -> builder
+            .externalRules(new SlotAccessRules<>() {
+                @Override
+                public boolean canInsert(ItemResource resource) {
+                    return resource.toStack().getBurnTime(RecipeType.SMELTING, level.fuelValues()) > 0;
+                }
+
+                @Override
+                public boolean canExtract(ItemResource resource) {
+                    return resource.toStack().getBurnTime(RecipeType.SMELTING, level.fuelValues()) <= 0;
+                }
+            })
+            .guiRules(new SlotAccessRules<>() {
+                @Override
+                public boolean canInsert(ItemResource resource) {
+                    return resource.toStack().getBurnTime(RecipeType.SMELTING, level.fuelValues()) > 0;
+                }
+
+                @Override
+                public boolean canExtract(ItemResource resource) {
+                    return resource.toStack().getBurnTime(RecipeType.SMELTING, level.fuelValues()) <= 0;
+                }
+            });
     }
 
     @Override
