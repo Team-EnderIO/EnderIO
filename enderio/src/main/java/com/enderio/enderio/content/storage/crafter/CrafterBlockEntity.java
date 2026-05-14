@@ -80,7 +80,7 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
         getInventory().setStack(PREVIEW, ItemStack.EMPTY);
 
         if (recipe != null) {
-            getInventory().setStack(PREVIEW, recipe.value().display().getFirst().result().resolveForFirstStack(SlotDisplayContext.fromLevel(getLevel())));
+            getInventory().setStack(PREVIEW, recipe.value().assemble(input));
         }
     }
 
