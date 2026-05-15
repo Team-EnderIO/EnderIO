@@ -118,6 +118,8 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
 
     @Override
     public void serverTick() {
+        super.serverTick(); //Make sure to call super to push resources
+
         // We ignore redstone control here.
         if (isGenerating()) {
             burnTime--;
@@ -162,8 +164,6 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
                 }
             }
         }
-
-        super.serverTick();
     }
 
     @Override
