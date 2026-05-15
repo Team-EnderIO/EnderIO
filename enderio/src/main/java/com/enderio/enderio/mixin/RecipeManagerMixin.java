@@ -3,6 +3,7 @@ package com.enderio.enderio.mixin;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.content.machines.alloy.AlloySmeltingRecipe;
+import com.enderio.enderio.content.machines.alloy.WrappedAlloySmeltingRecipe;
 import com.google.gson.JsonElement;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
@@ -15,7 +16,6 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeMap;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.neoforged.neoforge.common.conditions.ConditionalOps;
-import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -52,10 +52,8 @@ public abstract class RecipeManagerMixin {
     private static Optional<RecipeHolder<AlloySmeltingRecipe>> enderio$convertSmeltingRecipe(
             Identifier originalId, SmeltingRecipe smeltingRecipe) {
 
-        SizedIngredient input = new SizedIngredient(smeltingRecipe.input(), 1);
         int energy = MachinesConfig.COMMON.ENERGY.ALLOY_SMELTER_VANILLA_ITEM_ENERGY.get();
-        AlloySmeltingRecipe recipe = new AlloySmeltingRecipe(List.of(input), smeltingRecipe.result(), energy,
-                smeltingRecipe.experience(), true);
+        AlloySmeltingRecipe recipe = new WrappedAlloySmeltingRecipe(smeltingRecipe, energy);
 
         String path = "smelting/" + originalId.getNamespace() + "/" + originalId.getPath();
         ResourceKey<Recipe<?>> id = ResourceKey.create(Registries.RECIPE, EnderIO.id(path));

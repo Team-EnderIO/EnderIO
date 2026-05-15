@@ -99,7 +99,7 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
 
     @Override
     public boolean matches(Input recipeInput, Level level) {
-        if (inputs.isEmpty()) {
+        if (inputs().isEmpty()) {
             return false;
         }
 
@@ -121,7 +121,7 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
                     continue;
                 }
 
-                if (!inputs.getFirst().test(slotItem)) {
+                if (!inputs().getFirst().test(slotItem)) {
                     return false;
                 }
             }
@@ -142,9 +142,9 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
 
                 var slotItem = recipeInput.getItem(i);
 
-                if (j < inputs.size()) {
+                if (j < inputs().size()) {
                     // If we expect an input, test we have a match for it.
-                    if (inputs.get(j).test(slotItem)) {
+                    if (inputs().get(j).test(slotItem)) {
                         matchedInputs[j] = true;
                         break;
                     }
@@ -168,7 +168,7 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
 
     @Override
     public List<OutputStack> craft(Input container, RegistryAccess registryAccess) {
-        ItemStack outputStack = output.create();
+        ItemStack outputStack = output().create();
         if (isSmelting) {
             outputStack.setCount(outputStack.getCount() * container.inputsConsumed);
         }
@@ -179,8 +179,8 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
     public List<RecipeDisplay> display() {
         return List.of(
             new AlloySmelterDisplay(
-                this.inputs.stream().map(s -> s.ingredient().display()).toList(),
-                new SlotDisplay.ItemStackSlotDisplay(this.output),
+                this.inputs().stream().map(s -> s.ingredient().display()).toList(),
+                new SlotDisplay.ItemStackSlotDisplay(this.output()),
                 new SlotDisplay.ItemSlotDisplay(EIOBlocks.ALLOY_SMELTER.asItem())
             )
         );
@@ -188,7 +188,7 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
 
     @Override
     public List<OutputStack> getResultStacks(RegistryAccess registryAccess) {
-        return List.of(OutputStack.of(output.create()));
+        return List.of(OutputStack.of(output().create()));
     }
 
     @Override
@@ -204,7 +204,7 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
     @Override
     public PlacementInfo placementInfo() {
         if (placementInfo == null) {
-            placementInfo = PlacementInfo.create(inputs.stream().map(SizedIngredient::ingredient).toList());
+            placementInfo = PlacementInfo.create(inputs().stream().map(SizedIngredient::ingredient).toList());
         }
         return placementInfo;
     }
