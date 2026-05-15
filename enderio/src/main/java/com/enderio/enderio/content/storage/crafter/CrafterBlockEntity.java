@@ -23,7 +23,6 @@ import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.display.SlotDisplayContext;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.neoforged.neoforge.transfer.item.ItemResource;
@@ -95,12 +94,16 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
             .add(CAPACITOR, MachineSlotTemplates.capacitor())
             .add(INPUT, singleItemInput(), b -> b.filter(this::acceptSlotInput))
             .add(OUTPUT, SlotTemplates.output())
-            .add(GHOST, singleItemInput())
+            .add(GHOST, singleItemGhost())
             .add(PREVIEW, SlotTemplates.inaccessible())
             .build();
     }
 
     private static UnaryOperator<ResourceStorageLayout.Builder.SlotBuilder<ItemResource>> singleItemInput() {
+        return builder -> SlotTemplates.<ItemResource>input().apply(builder).capacity(1);
+    }
+
+    private static UnaryOperator<ResourceStorageLayout.Builder.SlotBuilder<ItemResource>> singleItemGhost() {
         return builder -> SlotTemplates.<ItemResource>ghost().apply(builder).capacity(1);
     }
 

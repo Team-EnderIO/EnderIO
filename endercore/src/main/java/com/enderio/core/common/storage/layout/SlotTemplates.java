@@ -25,10 +25,13 @@ public class SlotTemplates {
 
     public static <T extends Resource> UnaryOperator<ResourceStorageLayout.Builder.SlotBuilder<T>> ghost() {
         return builder -> builder
-            .guiRules(new SimpleSlotAccessRules<>(true, false));
+            .guiRules(new SimpleSlotAccessRules<>(true, false))
+            .externalRules(new SimpleSlotAccessRules<>(false, false));
     }
 
     public static <T extends Resource> UnaryOperator<ResourceStorageLayout.Builder.SlotBuilder<T>> inaccessible() {
-        return builder -> builder;
+        return builder -> builder
+            .guiRules(new SimpleSlotAccessRules<>(false, false))
+            .externalRules(new SimpleSlotAccessRules<>(false, false));
     }
 }
