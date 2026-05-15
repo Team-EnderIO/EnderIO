@@ -29,23 +29,29 @@ import com.enderio.enderio.init.EIODataComponents;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.common.SpecialPlantable;
@@ -119,13 +125,13 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     @Override
     protected @Nullable ItemStorageLayout createInventoryLayout() {
         return ItemStorageLayout.builder()
+            .add(CAPACITOR, MachineSlotTemplates.capacitor())
             .add(TOOLS, SlotTemplates.input(), b -> b
                 .filter(this::validToolForSlot))
             .add(AREAS, SlotTemplates.input())
             .add(BONEMEAL, SlotTemplates.input(), b -> b
                 .filter((_, itemResource) -> itemResource.is(Tags.Items.FERTILIZERS)))
             .add(OUTPUT, SlotTemplates.output())
-            .add(CAPACITOR, MachineSlotTemplates.capacitor())
             .build();
     }
 
@@ -231,9 +237,8 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
         }
     }
 
-    public boolean handleDrops(BlockState plant, BlockPos pos, BlockPos soil, BlockEntity blockEntity,
-            ItemStack stack) {
-        ItemStack dummy = stack.copy();
+    public boolean handleDrops(BlockState plant, BlockPos pos, BlockPos soil, BlockEntity blockEntity, ItemResource resource) {
+        ItemStack dummy = resource.toStack();
         if (soulData != null) {
             var enchantmentsRecipe = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
             var fortuneEnchantment = enchantmentsRecipe.getOrThrow(Enchantments.FORTUNE);
@@ -310,26 +315,80 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     }
 
     @Override
-    public ItemStack getSeedsForPos(BlockPos pos) {
-        var stack = getInventory().getStack(getSeedForPos(pos));
-        if (stack.getCount() > 1) // leave one item in the slot
-            return stack;
-        return ItemStack.EMPTY;
+    public ResourceSlotId<ItemResource> seeds(BlockPos pos) {
+        return getSeedForPos(pos);
     }
 
     @Override
-    public ItemStack getAxe() {
-        return getInventory().getStack(TOOLS.slot(0));
+    public ResourceSlotId<ItemResource> axe() {
+        return TOOLS.slot(0);
     }
 
     @Override
-    public ItemStack getHoe() {
-        return getInventory().getStack(TOOLS.slot(1));
+    public ResourceSlotId<ItemResource> hoe() {
+        return TOOLS.slot(1);
     }
 
     @Override
-    public ItemStack getShears() {
-        return getInventory().getStack(TOOLS.slot(2));
+    public ResourceSlotId<ItemResource> shears() {
+        return TOOLS.slot(2);
+    }
+
+    @Override
+    public ItemResource getResource(ResourceSlotId<ItemResource> slot) {
+        return getInventory().getResource(slot);
+    }
+
+    @Override
+    public InteractionResult useStack(BlockPos soil, ItemResource resource, ResourceSlotId<ItemResource> slot) {
+        ItemStack stack = resource.toStack();
+        getPlayer().setItemInHand(InteractionHand.MAIN_HAND, stack);
+        UseOnContext context = new UseOnContext(getPlayer(), InteractionHand.MAIN_HAND,
+            new BlockHitResult(Vec3.atBottomCenterOf(soil), Direction.UP, soil, false));
+        InteractionResult result = stack.useOn(context);
+        getPlayer().setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+
+        ItemResource damagedTool = ItemResource.of(stack);
+        try (Transaction transaction = Transaction.openRoot()) {
+            int extracted = getInventory().extract(slot, getResource(slot), 1, transaction);
+            if (extracted != 1) {
+                return InteractionResult.FAIL;
+            }
+
+            if (!damagedTool.isEmpty()) {
+                int inserted = getInventory().insert(slot, damagedTool, 1, transaction);
+                if (inserted != 1) {
+                    return InteractionResult.FAIL;
+                }
+            }
+            transaction.commit();
+        }
+        return result;
+    }
+
+    @Override
+    public void mineBlock(ResourceSlotId<ItemResource> slot, BlockState state, BlockPos pos) {
+        ItemStack tool = getResource(slot).toStack();
+        if (tool.isEmpty()) {
+            return;
+        }
+
+        tool.mineBlock(level, state, pos, getPlayer());
+        ItemResource damagedTool = ItemResource.of(tool);
+        try (Transaction transaction = Transaction.openRoot()) {
+            int extracted = getInventory().extract(slot, getResource(slot), 1, transaction);
+            if (extracted != 1) {
+                return;
+            }
+
+            if (!damagedTool.isEmpty()) {
+                int inserted = getInventory().insert(slot, damagedTool, 1, transaction);
+                if (inserted != 1) {
+                    return;
+                }
+            }
+            transaction.commit();
+        }
     }
 
     @UseOnly(LogicalSide.SERVER)
@@ -416,11 +475,11 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
 
-        var range = input.read(MachineNBTKeys.ACTION_RANGE, ActionRange.CODEC);
-        range.ifPresent(r -> this.actionRange = r);
+        actionRange = input.read(MachineNBTKeys.ACTION_RANGE, ActionRange.CODEC)
+            .orElse(DEFAULT_RANGE);
 
-        var bound = input.read(MachineNBTKeys.ENTITY_STORAGE, Soul.OPTIONAL_CODEC);
-        bound.ifPresent(b -> this.boundSoul = b);
+        boundSoul = input.read(MachineNBTKeys.ENTITY_STORAGE, Soul.OPTIONAL_CODEC)
+            .orElse(Soul.EMPTY);
     }
 
     @Override

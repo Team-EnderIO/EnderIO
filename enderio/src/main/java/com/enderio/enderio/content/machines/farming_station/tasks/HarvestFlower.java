@@ -4,11 +4,11 @@ import com.enderio.enderio.api.farm.FarmInteraction;
 import com.enderio.enderio.api.farm.FarmTask;
 import com.enderio.enderio.api.farm.FarmingMachine;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 public class HarvestFlower implements FarmTask {
 
@@ -23,14 +23,14 @@ public class HarvestFlower implements FarmTask {
         BlockState plant = blockEntity.getLevel().getBlockState(pos);
         if (plant.getBlock() instanceof FlowerBlock) {
             if (plant.requiresCorrectToolForDrops()) {
-                if (blockEntity.getAxe().isEmpty()) {
+                if (blockEntity.getResource(blockEntity.axe()).isEmpty()) {
                     return FarmInteraction.BLOCKED;
                 }
             }
-            if (blockEntity.handleDrops(plant, pos, targetBlock, blockEntity, plant.requiresCorrectToolForDrops() ? blockEntity.getAxe() : ItemStack.EMPTY)) {
+            if (blockEntity.handleDrops(plant, pos, targetBlock, blockEntity, plant.requiresCorrectToolForDrops() ? blockEntity.getResource(blockEntity.axe()) : ItemResource.EMPTY)) {
                 blockEntity.getLevel().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
                 if (plant.requiresCorrectToolForDrops()) {
-                    blockEntity.getAxe().mineBlock(blockEntity.getLevel(), plant, pos, blockEntity.getPlayer());
+                    blockEntity.mineBlock(blockEntity.axe(), plant, pos);
                 }
                 return FarmInteraction.FINISHED;
             }

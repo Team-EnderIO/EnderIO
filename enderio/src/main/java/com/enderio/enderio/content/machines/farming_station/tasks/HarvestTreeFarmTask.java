@@ -32,21 +32,21 @@ public class HarvestTreeFarmTask implements FarmTask {
             for (BlockPos pos : tree) {
                 BlockState state = blockEntity.getLevel().getBlockState(pos);
                 if (state.is(BlockTags.LOGS)) {
-                    if (blockEntity.getAxe().isEmpty()) {
+                    if (blockEntity.getResource(blockEntity.axe()).isEmpty()) {
                         return FarmInteraction.BLOCKED;
                     }
 
-                    if (!blockEntity.handleDrops(state, pos, targetBlock, blockEntity, blockEntity.getAxe())) {
+                    if (!blockEntity.handleDrops(state, pos, targetBlock, blockEntity, blockEntity.getResource(blockEntity.axe()))) {
                         return FarmInteraction.BLOCKED;
                     }
                     blockEntity.getLevel().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
-                    blockEntity.getAxe().mineBlock(blockEntity.getLevel(), state, pos, blockEntity.getPlayer());
+                    blockEntity.mineBlock(blockEntity.axe(), state, pos);
                 } else if (state.is(BlockTags.LEAVES)) {
-                    if (!blockEntity.handleDrops(state, pos, targetBlock, blockEntity, blockEntity.getShears())) {
+                    if (!blockEntity.handleDrops(state, pos, targetBlock, blockEntity, blockEntity.getResource(blockEntity.shears()))) {
                         return FarmInteraction.BLOCKED;
                     }
                     blockEntity.getLevel().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
-                    blockEntity.getShears().mineBlock(blockEntity.getLevel(), state, pos, blockEntity.getPlayer());
+                    blockEntity.mineBlock(blockEntity.shears(), state, pos);
                 }
             }
             return FarmInteraction.FINISHED;

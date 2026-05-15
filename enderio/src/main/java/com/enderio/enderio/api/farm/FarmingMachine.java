@@ -1,33 +1,31 @@
 package com.enderio.enderio.api.farm;
 
 import com.enderio.core.annotations.UseOnly;
+import com.enderio.core.common.storage.slot.ResourceSlotId;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jetbrains.annotations.ApiStatus;
 import org.jspecify.annotations.Nullable;
 
 @ApiStatus.Experimental
 public interface FarmingMachine {
 
-    ItemStack getSeedsForPos(BlockPos pos);
+    ResourceSlotId<ItemResource> seeds(BlockPos pos);
 
-    ItemStack getHoe();
+    ResourceSlotId<ItemResource> axe();
 
-    ItemStack getAxe();
+    ResourceSlotId<ItemResource> hoe();
 
-    ItemStack getShears();
+    ResourceSlotId<ItemResource> shears();
+
+    ItemResource getResource(ResourceSlotId<ItemResource> slot);
 
     @UseOnly(LogicalSide.SERVER)
     FakePlayer getPlayer();
@@ -41,18 +39,12 @@ public interface FarmingMachine {
     @Nullable
     Level getLevel();
 
-    boolean handleDrops(BlockState plant, BlockPos pos, BlockPos soil, BlockEntity blockEntity, ItemStack stack);
+    boolean handleDrops(BlockState plant, BlockPos pos, BlockPos soil, BlockEntity blockEntity, ItemResource stack);
 
     @Nullable
     EntityType<?> getEntityType();
 
-    default InteractionResult useStack(BlockPos soil, ItemStack stack) {
-        getPlayer().setItemInHand(InteractionHand.MAIN_HAND, stack);
-        UseOnContext context = new UseOnContext(getPlayer(), InteractionHand.MAIN_HAND,
-                new BlockHitResult(Vec3.atBottomCenterOf(soil), Direction.UP, soil, false));
-        InteractionResult result = stack.useOn(context);
-        getPlayer().setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
-        return result;
-    }
+    InteractionResult useStack(BlockPos soil, ItemResource resource, ResourceSlotId<ItemResource> slot);
 
+    void mineBlock(ResourceSlotId<ItemResource> slot, BlockState state, BlockPos pos);
 }

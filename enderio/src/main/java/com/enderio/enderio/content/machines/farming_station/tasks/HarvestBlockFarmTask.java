@@ -6,13 +6,13 @@ import com.enderio.enderio.api.farm.FarmingMachine;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.BlockUtil;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.BambooStalkBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CactusBlock;
 import net.minecraft.world.level.block.SugarCaneBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 import java.util.Optional;
 
@@ -33,17 +33,17 @@ public class HarvestBlockFarmTask implements FarmTask {
                 for (int i = top.get().below().getY(); i > pos.getY(); i--) {
                     BlockPos blockPos = new BlockPos(pos.getX(), i, pos.getZ());
                     if (plant.requiresCorrectToolForDrops()) {
-                        if (blockEntity.getAxe().isEmpty()) {
+                        if (blockEntity.getResource(blockEntity.axe()).isEmpty()) {
                             return FarmInteraction.BLOCKED;
                         }
                     }
                     if (!blockEntity.handleDrops(plant, blockPos, targetBlock, blockEntity,
-                        plant.requiresCorrectToolForDrops() ? blockEntity.getAxe() : ItemStack.EMPTY)) {
+                        plant.requiresCorrectToolForDrops() ? blockEntity.getResource(blockEntity.axe()) : ItemResource.EMPTY)) {
                         return FarmInteraction.BLOCKED;
                     }
                     blockEntity.getLevel().setBlockAndUpdate(blockPos, Blocks.AIR.defaultBlockState());
                     if (plant.requiresCorrectToolForDrops()) {
-                        blockEntity.getAxe().mineBlock(blockEntity.getLevel(), plant, blockPos, blockEntity.getPlayer());
+                        blockEntity.mineBlock(blockEntity.axe(), plant, blockPos);
                     }
                 }
                 return FarmInteraction.FINISHED;

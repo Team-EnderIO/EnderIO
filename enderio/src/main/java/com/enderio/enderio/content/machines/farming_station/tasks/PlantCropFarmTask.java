@@ -6,10 +6,10 @@ import com.enderio.enderio.api.farm.FarmingMachine;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.StemBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 public class PlantCropFarmTask implements FarmTask {
 
@@ -20,7 +20,7 @@ public class PlantCropFarmTask implements FarmTask {
 
     @Override
     public <T extends BlockEntity & FarmingMachine> FarmInteraction process(BlockPos targetBlock, T blockEntity) {
-        ItemStack seeds = blockEntity.getSeedsForPos(targetBlock);
+        ItemResource seeds = blockEntity.getResource(blockEntity.seeds(targetBlock));
         if (seeds.isEmpty() || blockEntity.getLevel().getBlockState(targetBlock).isAir()) {
             return FarmInteraction.BLOCKED;
         }
@@ -30,21 +30,21 @@ public class PlantCropFarmTask implements FarmTask {
             if (block instanceof CropBlock || block instanceof StemBlock) {
 
                 // Try plant
-                InteractionResult result = blockEntity.useStack(targetBlock, seeds);
+                InteractionResult result = blockEntity.useStack(targetBlock, seeds, blockEntity.seeds(targetBlock));
                 if (result == InteractionResult.SUCCESS || result == InteractionResult.CONSUME) {
                     return FarmInteraction.FINISHED;
                 }
 
                 // Try hoe
-                ItemStack itemStack = blockEntity.getHoe();
-                if (itemStack.isEmpty()) return FarmInteraction.BLOCKED;
-                result = blockEntity.useStack(targetBlock, itemStack);
+                ItemResource hoe = blockEntity.getResource(blockEntity.hoe());
+                if (hoe.isEmpty()) return FarmInteraction.BLOCKED;
+                result = blockEntity.useStack(targetBlock, hoe, blockEntity.hoe());
                 if (result == InteractionResult.SUCCESS || result == InteractionResult.CONSUME) {
                     return FarmInteraction.FINISHED;
                 }
 
                 // Try plant again
-                result = blockEntity.useStack(targetBlock, seeds);
+                result = blockEntity.useStack(targetBlock, seeds, blockEntity.seeds(targetBlock));
                 if (result == InteractionResult.FAIL || result == InteractionResult.PASS) {
                     return FarmInteraction.IGNORED;
                 }
