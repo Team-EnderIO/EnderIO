@@ -48,7 +48,8 @@ import java.util.stream.Stream;
 
 public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeImpl> implements ConduitNetwork, PathfindingContext {
 
-    private static final Codec<ConduitNetworkImpl> LEGACY_CODEC = RecordCodecBuilder.create(instance -> instance
+    //Public for testing
+    public static final Codec<ConduitNetworkImpl> LEGACY_CODEC = RecordCodecBuilder.create(instance -> instance
             .group(Conduit.CODEC.fieldOf("conduit").forGetter(i -> null),
                     ConduitNetworkContext.GENERIC_CODEC.optionalFieldOf("context")
                             .forGetter(i -> i.context == null || !i.context.type().isPersistent() ? Optional.empty()
@@ -56,7 +57,8 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
             .and(graphCodec(instance, ConduitNodeImpl.CODEC))
             .apply(instance, ConduitNetworkImpl::new));
 
-    private static final Codec<ConduitNetworkImpl> NEW_CODEC = RecordCodecBuilder.create(instance -> instance
+    //Public for testing
+    public static final Codec<ConduitNetworkImpl> NEW_CODEC = RecordCodecBuilder.create(instance -> instance
             .group(ConduitType.CODEC.fieldOf("conduit_type").forGetter(i -> i.conduitType),
                     ConduitNetworkContext.GENERIC_CODEC.optionalFieldOf("context")
                             .forGetter(i -> i.context == null || !i.context.type().isPersistent() ? Optional.empty()
@@ -137,6 +139,7 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
         this.conduitType = conduit.value().type();
         this.context = context.orElse(null);
         this.supportsCaching = conduitType.doesRequireNetworkCaches();
+        this.nodes().forEach(n -> n.setConduitIfNull(conduit));
         recomputeNodeCounts();
     }
 
