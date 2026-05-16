@@ -46,9 +46,9 @@ public class WiredChargerBlockEntity extends PoweredMachineBlockEntity {
     public ItemStorageLayout createInventoryLayout() {
         return ItemStorageLayout.builder()
             .add(CAPACITOR, MachineSlotTemplates.capacitor())
-            .add(ITEM_TO_CHARGE, SlotTemplates.input(), b -> b
+            .add(ITEM_TO_CHARGE, SlotTemplates.input(64), b -> b
                 .filter((_, itemResource) -> acceptItem(itemResource.toStack())))
-            .add(ITEM_CHARGED, SlotTemplates.output())
+            .add(ITEM_CHARGED, SlotTemplates.output(64))
             .build();
     }
 

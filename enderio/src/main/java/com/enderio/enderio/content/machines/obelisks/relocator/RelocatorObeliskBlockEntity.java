@@ -52,7 +52,7 @@ public class RelocatorObeliskBlockEntity extends ObeliskBlockEntity<RelocatorObe
     @Override
     public @Nullable ItemStorageLayout createInventoryLayout() {
         return ItemStorageLayout.builder()
-            .add(FILTER, SlotTemplates.input(), b -> b
+            .add(FILTER, SlotTemplates.input(64), b -> b
                 .filter((_, itemResource) -> itemResource.toStack().getCapability(EnderIOCapabilities.SOUL_FILTER) != null))
             .add(CAPACITOR, MachineSlotTemplates.capacitor())
             .build();

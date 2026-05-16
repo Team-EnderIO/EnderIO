@@ -1,7 +1,6 @@
 package com.enderio.enderio.content.storage.crafter;
 
 import com.enderio.core.common.storage.layout.ItemStorageLayout;
-import com.enderio.core.common.storage.layout.ResourceStorageLayout;
 import com.enderio.core.common.storage.layout.SlotTemplates;
 import com.enderio.core.common.storage.slot.MultiResourceSlotKey;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
@@ -32,7 +31,6 @@ import org.jspecify.annotations.Nullable;
 import java.util.ArrayDeque;
 import java.util.Optional;
 import java.util.Queue;
-import java.util.function.UnaryOperator;
 
 // TODO: Might want to see if we can adapt this into a crafting task.
 public class CrafterBlockEntity extends PoweredMachineBlockEntity {
@@ -92,19 +90,11 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
     public ItemStorageLayout createInventoryLayout() {
         return ItemStorageLayout.builder()
             .add(CAPACITOR, MachineSlotTemplates.capacitor())
-            .add(INPUT, singleItemInput(), b -> b.filter(this::acceptSlotInput))
-            .add(OUTPUT, SlotTemplates.output())
-            .add(GHOST, singleItemGhost())
-            .add(PREVIEW, SlotTemplates.inaccessible())
+            .add(INPUT, SlotTemplates.input(1), b -> b.filter(this::acceptSlotInput))
+            .add(OUTPUT, SlotTemplates.output(64))
+            .add(GHOST, SlotTemplates.ghost(1))
+            .add(PREVIEW, SlotTemplates.inaccessible(1))
             .build();
-    }
-
-    private static UnaryOperator<ResourceStorageLayout.Builder.SlotBuilder<ItemResource>> singleItemInput() {
-        return builder -> SlotTemplates.<ItemResource>input().apply(builder).capacity(1);
-    }
-
-    private static UnaryOperator<ResourceStorageLayout.Builder.SlotBuilder<ItemResource>> singleItemGhost() {
-        return builder -> SlotTemplates.<ItemResource>ghost().apply(builder).capacity(1);
     }
 
     private boolean acceptSlotInput(int slot, ItemResource resource) {

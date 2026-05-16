@@ -94,8 +94,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
                 EnergyIOMode.Output, CAPACITY, FixedScalable.ZERO);
 
         var fluidStorageLayout = FluidStorageLayout.builder()
-            .add(TANK, SlotTemplates.storage(), slot -> slot
-                .capacity(FLUID_CAPACITY)
+            .add(TANK, SlotTemplates.storage(FLUID_CAPACITY), slot -> slot
                 .filter((_, resource) -> isFluidValid(resource.toStack(1))))
             .build();
 

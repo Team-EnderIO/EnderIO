@@ -140,10 +140,10 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
     @Override
     public ItemStorageLayout createInventoryLayout() {
         return ItemStorageLayout.builder()
-            .add(INPUT, SlotTemplates.input(), b -> b
+            .add(INPUT, SlotTemplates.input(64), b -> b
                 .filter(this::isValidInput))
-            .add(OUTPUT, SlotTemplates.output())
-            .add(GRINDING_BALL, SlotTemplates.input(), b -> b
+            .add(OUTPUT, SlotTemplates.output(64))
+            .add(GRINDING_BALL, SlotTemplates.input(64), b -> b
                 .filter((_, itemResource) -> itemResource.typeHolder().getData(GrindingBallData.DATA_MAP_TYPE) != null))
             .add(CAPACITOR, MachineSlotTemplates.capacitor())
             .build();

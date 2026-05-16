@@ -20,7 +20,7 @@ public class GhostMachineSlotTests {
     private static final SingleResourceSlotKey<ItemResource> GHOST_SLOT = new SingleResourceSlotKey<>();
 
     private static final ItemStorageLayout GHOST_LAYOUT = ItemStorageLayout.builder()
-        .add(GHOST_SLOT, SlotTemplates.ghost())
+        .add(GHOST_SLOT, SlotTemplates.ghost(64))
         .build();
 
     // TODO: Might not come back.

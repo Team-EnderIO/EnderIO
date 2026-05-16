@@ -123,16 +123,13 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
     @Override
     public ItemStorageLayout createInventoryLayout() {
         return ItemStorageLayout.builder()
-            .add(INPUTS, SlotTemplates.input(), b -> b
-                .capacity(1)
+            .add(INPUTS, SlotTemplates.input(1), b -> b
                 .filter(this::isValidInput))
-            .add(AXE, SlotTemplates.input(), b -> b
-                .capacity(1)
+            .add(AXE, SlotTemplates.input(1), b -> b
                 .filter(this::validAxe))
-            .add(SHEARS, SlotTemplates.input(), b -> b
-                .capacity(1)
+            .add(SHEARS, SlotTemplates.input(1), b -> b
                 .filter((_, itemResource) -> itemResource.getItem() instanceof ShearsItem))
-            .add(OUTPUT, SlotTemplates.output())
+            .add(OUTPUT, SlotTemplates.output(64))
             .add(CAPACITOR, MachineSlotTemplates.capacitor())
             .build();
     }

@@ -74,12 +74,12 @@ public class EnchanterBlockEntity extends EnderBlockEntity implements MenuProvid
 
     private ItemStorageLayout getInventoryLayout() {
         return ItemStorageLayout.builder()
-            .add(BOOK, SlotTemplates.input(), b -> b
+            .add(BOOK, SlotTemplates.input(64), b -> b
                 .filter((_, itemResource) -> itemResource.is(Items.WRITABLE_BOOK)))
-            .add(CATALYST, SlotTemplates.input())
-            .add(LAPIS, SlotTemplates.input(), b -> b
+            .add(CATALYST, SlotTemplates.input(64))
+            .add(LAPIS, SlotTemplates.input(64), b -> b
                 .filter((_, itemResource) -> itemResource.is(Tags.Items.GEMS_LAPIS)))
-            .add(OUTPUT, SlotTemplates.output())
+            .add(OUTPUT, SlotTemplates.output(64))
             .build();
     }
 

@@ -40,7 +40,7 @@ public class MachineSlot extends ResourceHandlerSlot implements SlotWithOverlay 
 
     @Override
     public int getMaxStackSize(ItemStack stack) {
-        return getResourceHandler().layout().slotConfig(index).getCapacityAsInt(ItemResource.of(stack));
+        return Math.min(getResourceHandler().layout().slotConfig(index).getCapacityAsInt(ItemResource.of(stack)), stack.getMaxStackSize());
     }
 
     @Override

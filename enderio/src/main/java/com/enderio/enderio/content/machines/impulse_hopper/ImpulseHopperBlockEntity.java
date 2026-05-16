@@ -45,11 +45,11 @@ public class ImpulseHopperBlockEntity extends PoweredMachineBlockEntity {
     @Override
     public ItemStorageLayout createInventoryLayout() {
         return ItemStorageLayout.builder()
-            .add(INPUT, SlotTemplates.input(), b -> b
+            .add(INPUT, SlotTemplates.input(64), b -> b
                 // Note this filter is a bit rubbish - checking by ID only works because we're slot 0-5. Review sometime.
                 .filter((index, itemResource) -> itemResource.matches(getInventory().getStack(GHOST.slot(index)))))
-            .add(OUTPUT, SlotTemplates.output())
-            .add(GHOST, SlotTemplates.ghost())
+            .add(OUTPUT, SlotTemplates.output(64))
+            .add(GHOST, SlotTemplates.ghost(64))
             .add(CAPACITOR, MachineSlotTemplates.capacitor())
             .build();
     }

@@ -63,7 +63,7 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity {
 
     public static final FluidStorageLayout FLUID_STORAGE_LAYOUT =
         FluidStorageLayout.builder()
-            .add(TANK_SLOT, SlotTemplates.storage(), slot -> slot.capacity(TANK_CAPACITY))
+            .add(TANK_SLOT, SlotTemplates.storage(TANK_CAPACITY))
             .build();
 
     private final FluidStorage fluidStorage;
@@ -190,7 +190,7 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity {
     @Override
     protected @Nullable ItemStorageLayout createInventoryLayout() {
         return ItemStorageLayout.builder()
-            .add(ROCKET, SlotTemplates.storage(), b -> b
+            .add(ROCKET, SlotTemplates.storage(64), b -> b
                 .filter((_, itemResource) -> itemResource.is(Items.FIREWORK_ROCKET)))
             .build();
     }

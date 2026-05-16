@@ -57,7 +57,7 @@ public class GhostMachineSlot extends Slot {
 
     @Override
     public int getMaxStackSize(ItemStack itemStack) {
-        return itemStorage.getCapacityAsInt(index, ItemResource.of(itemStack));
+        return Math.min(itemStorage.getCapacityAsInt(index, ItemResource.of(itemStack)), itemStack.getMaxStackSize());
     }
 
     @Override

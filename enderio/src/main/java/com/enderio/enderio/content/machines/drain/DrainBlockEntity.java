@@ -86,8 +86,7 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements Range
                 EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE);
 
         var fluidStorageLayout = FluidStorageLayout.builder()
-            .add(TANK_SLOT, SlotTemplates.output(), slot -> slot
-                .capacity(CAPACITY)
+            .add(TANK_SLOT, SlotTemplates.output(CAPACITY), slot -> slot
                 .filter((_, resource) -> type.isSame(resource.getFluid())))
             .build();;
 
