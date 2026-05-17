@@ -3,6 +3,7 @@ package com.enderio.modded_conduits.common;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.modded_conduits.common.modules.ConduitCommonModule;
+import com.enderio.modded_conduits.common.modules.cc_tweaked.CCConduitCommonModule;
 import com.enderio.modded_conduits.common.modules.refinedstorage.RefinedStorageCommonModule;
 import com.enderio.modded_conduits.config.ModdedConduitsConfig;
 import com.enderio.modded_conduits.data.ModConduitRecipeProvider;
@@ -36,6 +37,7 @@ public class ModdedConduits {
     private static final Map<String, Supplier<ConduitCommonModule>> CONDUIT_MODULES = Map.ofEntries(
 //            entry(ModuleModIds.APPLIED_ENERGISTICS, () -> AE2ConduitsModule.INSTANCE),
 //            entry(ModuleModIds.MEKANISM, () -> MekanismModule.INSTANCE),
+            entry(ModuleModIds.CC_TWEAKED, () -> CCConduitCommonModule.INSTANCE),
             entry(ModuleModIds.REFINED_STORAGE, () -> RefinedStorageCommonModule.INSTANCE));
 
     public static IEventBus modEventBus;

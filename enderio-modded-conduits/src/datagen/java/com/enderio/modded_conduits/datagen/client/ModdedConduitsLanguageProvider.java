@@ -3,6 +3,7 @@ package com.enderio.modded_conduits.datagen.client;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitApi;
+import com.enderio.modded_conduits.common.modules.cc_tweaked.CCConduitCommonModule;
 import com.enderio.modded_conduits.common.modules.refinedstorage.RefinedStorageCommonModule;
 import net.minecraft.data.PackOutput;
 import net.minecraft.network.chat.Component;
@@ -20,6 +21,7 @@ public class ModdedConduitsLanguageProvider extends LanguageProvider {
     protected void addTranslations() {
         addMekanismTranslations();
         addAE2Translations();
+        addCCTweakedTranslations();
         addRefinedStorageTranslations();
     }
     
@@ -44,7 +46,12 @@ public class ModdedConduitsLanguageProvider extends LanguageProvider {
 //        add(AE2ConduitsModule.NORMAL, "ME Conduit");
 //        add(AE2ConduitsModule.DENSE, "Dense ME Conduit");
     }
-    
+
+    private void addCCTweakedTranslations() {
+        // Conduits
+        add(CCConduitCommonModule.ConduitKeys.CC, "CC: Tweaked Network Conduit");
+    }
+
     private void addRefinedStorageTranslations() {
         // Conduits
         add(RefinedStorageCommonModule.ConduitKeys.RS, "Refined Storage Conduit");

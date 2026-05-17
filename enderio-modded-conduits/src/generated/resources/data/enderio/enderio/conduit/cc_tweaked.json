@@ -1,0 +1,13 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "computercraft"
+    }
+  ],
+  "type": "enderio:cc_tweaked",
+  "description": {
+    "translate": "conduit.enderio.cc_tweaked"
+  },
+  "texture": "enderio:block/conduit/cc_tweaked"
+}

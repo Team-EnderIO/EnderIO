@@ -96,6 +96,10 @@ dependencies {
 //
 //    runtimeOnly(libs.mekanism)
 
+    // CC: Tweaked
+    compileOnly(libs.bundles.ccTweakedApi)
+    runtimeOnly(libs.ccTweakedForge)
+
     // Refined Storage
     compileOnly(libs.refinedStorage)
     // TODO: Disabled until they fix Neo .21 compat
@@ -181,6 +185,7 @@ var generateModMetadata = tasks.register<ProcessResources>("generateModMetadata"
             "mekanism_version_range" to libs.versions.mekanismMod.get(),
             "ae2_version_range" to libs.versions.ae2.get(),
             "refinedstorage_version_range" to libs.versions.refinedStorage.get(),
+            "cc_tweaked_version_range" to libs.versions.ccTweaked.get(),
     )
 
     inputs.properties(replaceProperties)
