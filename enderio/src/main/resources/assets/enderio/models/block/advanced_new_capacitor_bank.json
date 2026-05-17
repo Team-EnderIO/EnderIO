@@ -1,0 +1,26 @@
+{
+    "parent": "minecraft:block/block",
+    "children": {
+        "overlay": {
+            "parent": "enderio:block/io_overlay"
+        },
+        "block": {
+            "loader": "endercore:modloaded",
+            "mod": "athena",
+            "if": {
+                "parent": "enderio:block/athena/advanced_capacitor_bank_part"
+            },
+            "else": {
+                "parent": "enderio:block/advanced_capacitor_bank_part"
+            }
+        }
+    },
+    "item_render_order": [
+        "overlay",
+        "block"
+    ],
+    "loader": "neoforge:composite",
+    "textures": {
+        "particle": "enderio:block/advanced_capacitor_bank"
+    }
+}

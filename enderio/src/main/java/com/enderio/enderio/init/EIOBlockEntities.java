@@ -10,6 +10,7 @@ import com.enderio.enderio.content.enderface.EnderfaceBlockEntity;
 import com.enderio.enderio.content.machines.alloy.AlloySmelterBlockEntity;
 import com.enderio.enderio.content.machines.capacitor_bank.CapacitorBankBlockEntity;
 import com.enderio.enderio.content.machines.capacitor_bank.CapacitorTier;
+import com.enderio.enderio.content.machines.capacitor_bank.rework.NewCapacitorBankBlockEntity;
 import com.enderio.enderio.content.machines.drain.DrainBlockEntity;
 import com.enderio.enderio.content.machines.farming_station.FarmingStationBlockEntity;
 import com.enderio.enderio.content.machines.impulse_hopper.ImpulseHopperBlockEntity;
@@ -71,6 +72,21 @@ public class EIOBlockEntities {
                         (worldPosition, blockState) -> new CapacitorBankBlockEntity(worldPosition, blockState, tier),
                         () -> EIOBlocks.CAPACITOR_BANKS.get(tier).get())
                     .apply(EIOBlockEntities::legacyPoweredMachineBlockEntityCapabilities)
+                    .build()
+                );
+            }
+            return ImmutableMap.copyOf(map);
+        });
+
+    public static final Map<CapacitorTier, DeferredHolder<BlockEntityType<?>, BlockEntityType<NewCapacitorBankBlockEntity>>> NEW_CAPACITOR_BANKS = Util
+        .make(() -> {
+            Map<CapacitorTier, DeferredHolder<BlockEntityType<?>, BlockEntityType<NewCapacitorBankBlockEntity>>> map = new HashMap<>();
+            for (CapacitorTier tier : CapacitorTier.values()) {
+                map.put(tier, BLOCK_ENTITY_TYPES
+                    .builder(tier.name().toLowerCase(Locale.ROOT) + "_new_capacitor_bank",
+                        (worldPosition, blockState) -> new NewCapacitorBankBlockEntity(EIOBlockEntities.NEW_CAPACITOR_BANKS.get(tier).get(), worldPosition, blockState, tier),
+                        () -> EIOBlocks.NEW_CAPACITOR_BANKS.get(tier).get())
+                    .capability(Capabilities.EnergyStorage.BLOCK, NewCapacitorBankBlockEntity.ENERGY_STORAGE_PROVIDER)
                     .build()
                 );
             }

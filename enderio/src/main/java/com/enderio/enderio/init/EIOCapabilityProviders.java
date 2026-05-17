@@ -3,6 +3,7 @@ package com.enderio.enderio.init;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.content.cold_fire.ColdFireIgniter;
+import com.enderio.enderio.content.machines.capacitor_bank.rework.NewCapacitorBankItem;
 import com.enderio.enderio.content.tools.vials.VoidVialItem;
 import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
 import com.enderio.enderio.content.conduits.facades.ComponentBackedConduitFacadeProvider;
@@ -56,6 +57,10 @@ public class EIOCapabilityProviders {
         // Capacitor Banks
         for (var capacitorBankItem : EIOBlocks.CAPACITOR_BANK_ITEMS.values()) {
             event.registerItem(Capabilities.EnergyStorage.ITEM, CapacitorBankItem.ENERGY_STORAGE_PROVIDER, capacitorBankItem);
+        }
+
+        for (var capacitorBankItem : EIOBlocks.NEW_CAPACITOR_BANK_ITEMS.values()) {
+            event.registerItem(Capabilities.EnergyStorage.ITEM, NewCapacitorBankItem.ENERGY_STORAGE_PROVIDER, capacitorBankItem);
         }
 
         // Register item fluid handlers

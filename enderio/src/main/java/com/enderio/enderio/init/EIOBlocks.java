@@ -15,6 +15,9 @@ import com.enderio.enderio.content.machines.capacitor_bank.CapacitorBankBlock;
 import com.enderio.enderio.content.machines.capacitor_bank.CapacitorBankBlockEntity;
 import com.enderio.enderio.content.machines.capacitor_bank.CapacitorBankItem;
 import com.enderio.enderio.content.machines.capacitor_bank.CapacitorTier;
+import com.enderio.enderio.content.machines.capacitor_bank.rework.NewCapacitorBankBlock;
+import com.enderio.enderio.content.machines.capacitor_bank.rework.NewCapacitorBankBlockEntity;
+import com.enderio.enderio.content.machines.capacitor_bank.rework.NewCapacitorBankItem;
 import com.enderio.enderio.content.machines.farming_station.FarmingStationBlock;
 import com.enderio.enderio.content.machines.niard.NiardBlock;
 import com.enderio.enderio.content.machines.obelisks.attractor.AttractorObeliskBlockEntity;
@@ -458,6 +461,15 @@ public class EIOBlocks {
         return ImmutableMap.copyOf(banks);
     });
 
+    public static final Map<CapacitorTier, DeferredBlock<NewCapacitorBankBlock>> NEW_CAPACITOR_BANKS = Util.make(() -> {
+        Map<CapacitorTier, DeferredBlock<NewCapacitorBankBlock>> banks = new HashMap<>();
+        for (CapacitorTier tier : CapacitorTier.values()) {
+            banks.put(tier, newCapacitorBank(tier.name().toLowerCase(Locale.ROOT) + "_new_capacitor_bank",
+                () -> EIOBlockEntities.NEW_CAPACITOR_BANKS.get(tier)::get, tier));
+        }
+        return ImmutableMap.copyOf(banks);
+    });
+
     // Soul Engine
     public static final DeferredBlock<ProgressMachineBlock<SoulEngineBlockEntity>> SOUL_ENGINE = BLOCKS.registerBlock("soul_engine",
         p -> new ProgressMachineBlock<>(EIOBlockEntities.SOUL_ENGINE::get, p),
@@ -534,6 +546,15 @@ public class EIOBlocks {
         return ImmutableMap.copyOf(items);
     });
 
+    public static final Map<CapacitorTier, DeferredItem<NewCapacitorBankItem>> NEW_CAPACITOR_BANK_ITEMS = Util.make(() -> {
+        Map<CapacitorTier, DeferredItem<NewCapacitorBankItem>> items = new HashMap<>();
+        for (var entry : NEW_CAPACITOR_BANKS.entrySet()) {
+            items.put(entry.getKey(), ITEMS.register(entry.getValue().getId().getPath(),
+                () -> new NewCapacitorBankItem(entry.getValue().get(), new Item.Properties())));
+        }
+        return ImmutableMap.copyOf(items);
+    });
+
     // Helper methods
     private static DeferredBlock<MachineBlock<?>> machine(String name,
         Supplier<Supplier<BlockEntityType<? extends MachineBlockEntity>>> regiliteBlockEntity) {
@@ -570,6 +591,13 @@ public class EIOBlocks {
         Supplier<Supplier<BlockEntityType<? extends CapacitorBankBlockEntity>>> regiliteBlockEntity, CapacitorTier tier) {
         return BLOCKS.registerBlock(name,
             props -> new CapacitorBankBlock(props, regiliteBlockEntity.get()::get, tier),
+            BlockBehaviour.Properties.of().strength(2.5f, 8));
+    }
+
+    private static DeferredBlock<NewCapacitorBankBlock> newCapacitorBank(String name,
+        Supplier<Supplier<BlockEntityType<? extends NewCapacitorBankBlockEntity>>> regiliteBlockEntity, CapacitorTier tier) {
+        return BLOCKS.registerBlock(name,
+            props -> new NewCapacitorBankBlock(regiliteBlockEntity.get(), props, tier),
             BlockBehaviour.Properties.of().strength(2.5f, 8));
     }
 

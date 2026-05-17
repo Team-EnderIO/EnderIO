@@ -210,6 +210,10 @@ public class EIOBlockStateProvider extends BlockStateProvider {
             simpleBlockWithExistingModel(capacitorBank.get());
         }
 
+        for (var capacitorBank : EIOBlocks.NEW_CAPACITOR_BANKS.values()) {
+            simpleBlockWithExistingModel(capacitorBank.get());
+        }
+
         // Niard
         machineBlock(EIOBlocks.NIARD.get());
 
