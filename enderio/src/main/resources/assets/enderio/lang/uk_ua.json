@@ -511,7 +511,7 @@
   "message.enderio.too_many_levels": "Ви маєте понад 21862 рівні, це занадто багато досвіду.",
   "message.enderio.tool.coordinate_selector.no_block": "Немає блока в діапазоні",
   "message.enderio.tool.coordinate_selector.no_paper": "Немає паперу в інвентарі",
-  "message.enderio.tool.glider.disable": "Планування вимкнено: ",
+  "message.enderio.tool.glider.disable": "Планерування вимкнено: ",
   "message.enderio.tool.glider.disable.fall_flying": "Політ на елітрах",
   "message.enderio.tool.soul_vial.error.blacklisted": "Ця сутність в чорному списку.",
   "message.enderio.tool.soul_vial.error.boss": "Гарна спроба. Боси не люблять пляшкуватися.",
