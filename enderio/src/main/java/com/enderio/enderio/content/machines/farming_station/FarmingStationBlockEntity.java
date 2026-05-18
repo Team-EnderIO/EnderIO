@@ -143,7 +143,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
             reloadCache = reload;
         }
         // TODO: this is quite icky. need abstractions between tick time and power consumption
-        if (canAct(10) && getEnergyStorage().getAmountAsInt() >= getMaxEnergyUse() * 10) {
+        if (canAct(10) && hasEnergy() && getEnergyStorage().getAmountAsInt() >= getMaxEnergyUse() * 10) {
             processFarmTask();
             getEnergyStorage().consume(getMaxEnergyUse() * 10, null);
         }
