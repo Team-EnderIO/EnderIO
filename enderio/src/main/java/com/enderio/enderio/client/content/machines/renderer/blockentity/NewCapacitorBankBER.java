@@ -112,6 +112,9 @@ public class NewCapacitorBankBER implements BlockEntityRenderer<NewCapacitorBank
         }
 
         CapacitorBankManager.CapacitorSyncData data = CapacitorBankManager.getData(capacitorBank.getUuid());
+        if (data == null) {
+            return;
+        }
 
         Size size = findSize(capacitorBank, facing);
         renderTexture(poseStack.last(), bufferSource.getBuffer(RenderType.cutout()), facing, size.getTexture(), light);

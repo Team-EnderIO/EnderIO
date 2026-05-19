@@ -66,20 +66,12 @@ public class CapacitorBankEnergyStorage implements IEnergyStorage {
 
     @Override
     public int getEnergyStored() {
-        return (int) node.getNetwork().getTotalEnergyStored();
+        return Math.clamp(node.getNetwork().getTotalEnergyStored(), 0, Integer.MAX_VALUE);
     }
 
     @Override
     public int getMaxEnergyStored() {
-        return (int) node.getNetwork().getTotalMaxEnergyStored();
-    }
-
-    public long getEnergyStoredAsLong() {
-        return node.getNetwork().getTotalEnergyStored();
-    }
-
-    public long getMaxEnergyStoredAsLong() {
-        return node.getNetwork().getTotalMaxEnergyStored();
+        return Math.clamp(node.getNetwork().getTotalMaxEnergyStored(), 0, Integer.MAX_VALUE);
     }
 
     @Override

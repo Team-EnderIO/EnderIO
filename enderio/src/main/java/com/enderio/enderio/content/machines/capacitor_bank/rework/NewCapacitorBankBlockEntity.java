@@ -165,6 +165,7 @@ public class NewCapacitorBankBlockEntity extends EIOBlockEntity implements MenuP
                     validPushTargetCache.add(energyStorage);
                 }
             }
+            isValidPushTargetCacheDirty = false;
         }
 
         return validPushTargetCache;
@@ -378,7 +379,9 @@ public class NewCapacitorBankBlockEntity extends EIOBlockEntity implements MenuP
             this.node.setEnergyStored(tag.getInt(MachineNBTKeys.ENERGY_STORED));
         }
 
-        uuid = tag.getUUID(NODE_ID);
+        if (tag.contains(NODE_ID)) {
+            uuid = tag.getUUID(NODE_ID);
+        }
 
         if (tag.contains(DISPLAY_MODES, Tag.TAG_COMPOUND)) {
             loadDisplayModes(tag.getCompound(DISPLAY_MODES));

@@ -124,6 +124,7 @@ public class SolarPanelBlockEntity extends EIOBlockEntity implements SoulBindabl
                     validPushTargetCache.add(energyStorage);
                 }
             }
+            isValidPushTargetCacheDirty = false;
         }
 
         return validPushTargetCache;

@@ -110,10 +110,11 @@ public class CapacitorBankNode implements INetworkNode<CapacitorBankNetwork, Cap
         return energyInserted;
     }
 
-    private long distributeEvenly(long availableEnergy, Set<CapacitorBankNode> receivers) {
+    //Since the energy added used to be in all nodes, there's no need to have a remaining energy
+    private void reDistributeNodes(long availableEnergy, Set<CapacitorBankNode> receivers) {
         // Abort if we have no valid pairs
         if (receivers.isEmpty()) {
-            return 0;
+            return;
         }
 
         // Distribute evenly
@@ -138,39 +139,6 @@ public class CapacitorBankNode implements INetworkNode<CapacitorBankNetwork, Cap
                 break;
             }
         }
-
-        return availableEnergy - energyRemaining;
-    }
-
-    public void distributeEnergy() {
-        if (!isPrimaryNode) {
-            throw new IllegalStateException("Cannot distribute energy from non-primary node");
-        }
-
-        //Sorted list, so we push to the emptiest first
-        List<IEnergyStorage> validTargets = network.nodes()
-            .stream()
-            .<IEnergyStorage>mapMulti((node, consumer) ->
-                node.blockEntity.getValidPushTargets().forEach(consumer))
-            .sorted(Comparator.comparingInt(c -> c.getMaxEnergyStored() - c.getEnergyStored()))
-            .toList();
-
-        // Extract from the entire network
-        long total = 0L;
-        for (var node : network.nodes()) {
-            total += node.energyStored;
-            node.energyStored = 0;
-        }
-
-        //TODO long support
-        //first push outside
-        long transferred = distributeEnergyEvenlyBetween(total, validTargets);
-        this.send += transferred;
-        long remaining = total - transferred;
-        if (remaining > 0) {
-            // then balance the nodes
-            distributeEvenly(remaining, network.nodes());
-        }
     }
 
     private static long distributeEnergyEvenlyBetween(long availableEnergy, List<IEnergyStorage> receivers) {
@@ -192,7 +160,7 @@ public class CapacitorBankNode implements INetworkNode<CapacitorBankNetwork, Cap
                 shareAmount = energyRemaining / toShareWith;
             }
 
-            int inserted = receiver.receiveEnergy((int) shareAmount, false);
+            int inserted = receiver.receiveEnergy(Math.clamp(shareAmount, 0, Integer.MAX_VALUE), false);
             energyRemaining -= inserted;
 
             toShareWith--;
@@ -202,6 +170,37 @@ public class CapacitorBankNode implements INetworkNode<CapacitorBankNetwork, Cap
         }
 
         return availableEnergy - energyRemaining;
+    }
+
+    public void distributeEnergy() {
+        if (!isPrimaryNode) {
+            throw new IllegalStateException("Cannot distribute energy from non-primary node");
+        }
+
+        //Sorted list, so we push to the emptiest first
+        List<IEnergyStorage> validTargets = network.nodes()
+            .stream()
+            .<IEnergyStorage>mapMulti((node, consumer) ->
+                node.blockEntity.getValidPushTargets().forEach(consumer))
+            .sorted(Comparator.comparingInt(c -> c.getEnergyStored() - c.getMaxEnergyStored()))
+            .toList();
+
+        // Extract from the entire network
+        long total = 0L;
+        for (var node : network.nodes()) {
+            total += node.energyStored;
+            node.energyStored = 0;
+        }
+
+        //TODO long support
+        //first push outside
+        long transferred = distributeEnergyEvenlyBetween(total, validTargets);
+        this.send += transferred;
+        long remaining = total - transferred;
+        if (remaining > 0) {
+            // then balance the nodes
+            reDistributeNodes(remaining, network.nodes());
+        }
     }
 
     public BlockPos getPos() {
