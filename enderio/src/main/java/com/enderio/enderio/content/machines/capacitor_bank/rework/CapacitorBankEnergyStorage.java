@@ -1,13 +1,12 @@
 package com.enderio.enderio.content.machines.capacitor_bank.rework;
 
+import com.enderio.enderio.foundation.energy.PoweredMachineEnergyStorage;
+import net.minecraft.core.Direction;
 import net.neoforged.neoforge.energy.IEnergyStorage;
+import org.jetbrains.annotations.Nullable;
 
 public class CapacitorBankEnergyStorage implements IEnergyStorage {
     private final CapacitorBankNode node;
-
-    private long added;
-    private long send;
-    private long lastReset;
 
     public CapacitorBankEnergyStorage(CapacitorBankNode node) {
         this.node = node;
@@ -36,7 +35,6 @@ public class CapacitorBankEnergyStorage implements IEnergyStorage {
             }
         }
 
-        added += inserted;
         return inserted;
     }
 
@@ -63,7 +61,6 @@ public class CapacitorBankEnergyStorage implements IEnergyStorage {
             }
         }
 
-        send += extracted;
         return extracted;
     }
 
@@ -95,11 +92,64 @@ public class CapacitorBankEnergyStorage implements IEnergyStorage {
         return true;
     }
 
-    public void reset(long time) {
-        if (lastReset != time) {
-            added = 0;
-            send = 0;
-            lastReset = time;
+    @Nullable
+    public IEnergyStorage getSided(Direction side) {
+        if (!node.getBlockEntity().getIOMode(side).canInput() && !node.getBlockEntity().getIOMode(side).canOutput()) {
+            return null;
+        }
+
+        if (!node.getBlockEntity().getIOMode(side).canConnect()) {
+            return null;
+        }
+
+        return new SidedAccess(this, side);
+    }
+
+    public record SidedAccess(CapacitorBankEnergyStorage wrapped, Direction side) implements IEnergyStorage {
+        @Override
+        public int receiveEnergy(int maxReceive, boolean simulate) {
+            if (!canReceive() || maxReceive <= 0) {
+                return 0;
+            }
+
+            return wrapped.receiveEnergy(maxReceive, simulate);
+        }
+
+        @Override
+        public int extractEnergy(int maxExtract, boolean simulate) {
+            if (!canExtract() || maxExtract <= 0) {
+                return 0;
+            }
+
+            return wrapped.extractEnergy(maxExtract, simulate);
+        }
+
+        @Override
+        public int getEnergyStored() {
+            return wrapped.getEnergyStored();
+        }
+
+        @Override
+        public int getMaxEnergyStored() {
+            return wrapped.getMaxEnergyStored();
+        }
+
+        @Override
+        public boolean canExtract() {
+            if (!wrapped.node.getBlockEntity().getIOMode(side).canOutput()) {
+                return false;
+            }
+
+            return wrapped.canExtract();
+        }
+
+        @Override
+        public boolean canReceive() {
+            if (!wrapped.node.getBlockEntity().getIOMode(side).canInput()) {
+                return false;
+            }
+
+            return wrapped.canReceive();
         }
     }
 }

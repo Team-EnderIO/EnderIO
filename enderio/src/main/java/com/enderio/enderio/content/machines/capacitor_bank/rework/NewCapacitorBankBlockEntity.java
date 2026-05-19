@@ -11,6 +11,7 @@ import com.enderio.enderio.foundation.block.entity.Wrenchable;
 import com.enderio.enderio.foundation.block.entity.legacy.LegacyMachineBlockEntity;
 import com.enderio.enderio.foundation.block.legacy.LegacyMachineBlock;
 import com.enderio.enderio.foundation.io.IOConfig;
+import com.enderio.enderio.foundation.network.packets.ClientBoundSyncCapacitorBankPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundCycleIOConfigPacket;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOAttachments;
@@ -21,6 +22,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -34,6 +36,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -57,7 +60,10 @@ import java.util.UUID;
 public class NewCapacitorBankBlockEntity extends EIOBlockEntity implements MenuProvider, Wrenchable, IOConfigurable {
 
     public static final ICapabilityProvider<NewCapacitorBankBlockEntity, Direction, IEnergyStorage> ENERGY_STORAGE_PROVIDER = (
-        be, side) -> be.energyStorage;
+        be, side) -> side == null ? be.energyStorage : be.energyStorage.getSided(side);
+    public static final int MAX_SIZE = 4_096;
+    public static final String NODE_ID = "NODE_ID";
+    public static final int AVERAGE_IO_OVER_X_TICKS = 10;
 
     private IOConfig ioConfig = IOConfig.empty();
 
@@ -93,6 +99,10 @@ public class NewCapacitorBankBlockEntity extends EIOBlockEntity implements MenuP
 
     public CapacitorTier getTier() {
         return tier;
+    }
+
+    public UUID getUuid() {
+        return uuid;
     }
 
     @Override
@@ -150,7 +160,8 @@ public class NewCapacitorBankBlockEntity extends EIOBlockEntity implements MenuP
                 }
 
                 var energyStorage = energyStorageCaches.get(side).getCapability();
-                if (energyStorage != null && energyStorage.canReceive() && getIOMode(side).canOutput()) {
+                if (energyStorage != null && !(energyStorage instanceof CapacitorBankEnergyStorage || energyStorage instanceof CapacitorBankEnergyStorage.SidedAccess) &&
+                    energyStorage.canReceive() && getIOMode(side).canOutput()) {
                     validPushTargetCache.add(energyStorage);
                 }
             }
@@ -161,10 +172,17 @@ public class NewCapacitorBankBlockEntity extends EIOBlockEntity implements MenuP
 
     @Override
     public void serverTick() {
-
-        // Push energy to non-panel neighbors
+        // Push energy to non-bank neighbors
         if (node.isPrimaryNode()) {
             node.distributeEnergy();
+            if (level.getGameTime() % AVERAGE_IO_OVER_X_TICKS == 0) {
+                CapacitorBankNetwork network = node.getNetwork();
+                PacketDistributor.sendToPlayersTrackingChunk((ServerLevel) level, new ChunkPos(getBlockPos()),
+                    new ClientBoundSyncCapacitorBankPacket(network.getUuid(), network.getTotalEnergyStored(),
+                        network.getTotalMaxEnergyStored(), network.getAddedEnergy()  / AVERAGE_IO_OVER_X_TICKS,
+                        network.getSendEnergy() / AVERAGE_IO_OVER_X_TICKS, network.positions()));
+                network.reset(level.getGameTime());
+            }
         }
 
         super.serverTick();
@@ -313,6 +331,8 @@ public class NewCapacitorBankBlockEntity extends EIOBlockEntity implements MenuP
 
         displayModes.put(direction,
             DisplayMode.values()[(displayModes.get(direction).ordinal() + 1) % DisplayMode.values().length]);
+        setChanged();
+        level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_ALL);
         return true;
     }
 
@@ -331,7 +351,6 @@ public class NewCapacitorBankBlockEntity extends EIOBlockEntity implements MenuP
     public @Nullable Packet<ClientGamePacketListener> getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
     }
-
 
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
@@ -359,7 +378,22 @@ public class NewCapacitorBankBlockEntity extends EIOBlockEntity implements MenuP
             this.node.setEnergyStored(tag.getInt(MachineNBTKeys.ENERGY_STORED));
         }
 
+        uuid = tag.getUUID(NODE_ID);
 
+        if (tag.contains(DISPLAY_MODES, Tag.TAG_COMPOUND)) {
+            loadDisplayModes(tag.getCompound(DISPLAY_MODES));
+        }
+    }
+
+    public void loadDisplayModes(CompoundTag nbt) {
+        displayModes.clear();
+        for (String key : nbt.getAllKeys()) {
+            @Nullable
+            Direction dir = Direction.byName(key);
+            if (dir != null) {
+                displayModes.put(dir, DisplayMode.values()[nbt.getInt(key)]);
+            }
+        }
     }
 
     @Override
@@ -369,6 +403,19 @@ public class NewCapacitorBankBlockEntity extends EIOBlockEntity implements MenuP
         if (isIOConfigMutable() && ioConfig != null) {
             tag.put(MachineNBTKeys.IO_CONFIG, ioConfig.save(registries));
         }
+
+        tag.putUUID(NODE_ID, node.getNetwork().getUuid());
+
+        tag.put(DISPLAY_MODES, saveDisplayModes());
+    }
+
+    public CompoundTag saveDisplayModes() {
+        CompoundTag nbt = new CompoundTag();
+        for (var entry : displayModes.entrySet()) {
+            nbt.putInt(entry.getKey().getName(), entry.getValue().ordinal());
+        }
+
+        return nbt;
     }
 
     @Override

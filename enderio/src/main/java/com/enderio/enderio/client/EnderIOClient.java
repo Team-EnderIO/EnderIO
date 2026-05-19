@@ -66,6 +66,7 @@ import com.enderio.enderio.client.content.machines.gui.screen.XPObeliskScreen;
 import com.enderio.enderio.client.content.machines.gui.screen.XPVacuumScreen;
 import com.enderio.enderio.client.content.machines.renderer.blockentity.CapacitorBankBER;
 import com.enderio.enderio.client.content.machines.renderer.blockentity.FluidTankBER;
+import com.enderio.enderio.client.content.machines.renderer.blockentity.NewCapacitorBankBER;
 import com.enderio.enderio.client.content.machines.renderer.blockentity.NiardBER;
 import com.enderio.enderio.client.content.machines.renderer.blockentity.ObeliskBER;
 import com.enderio.enderio.client.content.misc_blocks.EnderSkullRenderer;
@@ -255,6 +256,10 @@ public class EnderIOClient {
     public static void modelRenderer(EntityRenderersEvent.RegisterRenderers event) {
         for (var capBank : EIOBlockEntities.CAPACITOR_BANKS.values()) {
             event.registerBlockEntityRenderer(capBank.get(), CapacitorBankBER::new);
+        }
+
+        for (var capBank : EIOBlockEntities.NEW_CAPACITOR_BANKS.values()) {
+            event.registerBlockEntityRenderer(capBank.get(), NewCapacitorBankBER::new);
         }
 
         event.registerBlockEntityRenderer(EIOBlockEntities.NIARD.get(), NiardBER::new);

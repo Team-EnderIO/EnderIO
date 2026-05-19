@@ -11,6 +11,9 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -19,7 +22,9 @@ import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.Nullable;
@@ -27,6 +32,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
 
+@EventBusSubscriber
 public class NewCapacitorBankBlock extends EIOEntityBlock<NewCapacitorBankBlockEntity> implements AdvancedTooltipProvider {
     private final CapacitorTier tier;
 
@@ -62,6 +68,28 @@ public class NewCapacitorBankBlock extends EIOEntityBlock<NewCapacitorBankBlockE
             }
             capacitorBankBlock.setDisplayMode(placer.getDirection().getOpposite(), DisplayMode.BAR);
         }
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player,
+        BlockHitResult hitResult) {
+
+        if (level.getBlockEntity(pos) instanceof MenuProvider menuProvider) {
+            if (player instanceof ServerPlayer serverPlayer) {
+                serverPlayer.openMenu(menuProvider, pos);
+            }
+
+            return InteractionResult.sidedSuccess(level.isClientSide());
+        }
+
+        return super.useWithoutItem(state, level, pos, player, hitResult);
+    }
+
+    @Override
+    protected @Nullable MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
+        // Do not allow opening in spectator mode.
+        // TODO: We can convert our menus to not use a BE backing fully to enable this.
+        return null;
     }
 
     @Override

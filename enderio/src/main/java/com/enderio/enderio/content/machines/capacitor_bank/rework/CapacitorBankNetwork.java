@@ -38,6 +38,18 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
         return nodes().stream().map(CapacitorBankNode::getPos).toList();
     }
 
+    public long getAddedEnergy() {
+        return nodes().stream().mapToLong(CapacitorBankNode::getAdded).sum();
+    }
+
+    public void reset(long time) {
+        nodes().forEach(n -> n.reset(time));
+    }
+
+    public long getSendEnergy() {
+        return nodes().stream().mapToLong(CapacitorBankNode::getSend).sum();
+    }
+
     public void markDirty() {
         nodes().forEach(CapacitorBankNode::markDirty);
     }
