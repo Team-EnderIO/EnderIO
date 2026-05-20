@@ -7,7 +7,7 @@ athena = "4.7.3"
 ae2 = { strictly = "[26.1.6-alpha,)", prefer = "26.1.6-alpha" }
 mekanism = { strictly = "[1.21.1-10.7.0,)", prefer = "1.21.1-10.7.16.82" }
 mekanismMod = { strictly = "[10.7.0,)", prefer = "10.7.16.82" } # workaround for Mek having MC version in the version specifier.
-refinedStorage = { strictly = "[3.0.0-beta.1,)", prefer = "3.0.0-beta.1" }
+refinedStorage = { strictly = "[3.0.2,)", prefer = "3.0.5" }
 laserio = "5648871"
 graphlib = { strictly = "[3.0.4, 3.1)", prefer = "3.0.5" }
 ftbLibrary = { strictly = "[26.1.1.1-SNAPSHOT, 26.2)", prefer = "26.1.1.1-SNAPSHOT" }
