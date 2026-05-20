@@ -3,6 +3,7 @@ package com.enderio.enderio.content.machines.capacitor_bank.rework;
 import com.enderio.core.annotations.UseOnly;
 import com.enderio.enderio.api.io.IOConfigurable;
 import com.enderio.enderio.api.io.IOMode;
+import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.content.machines.capacitor_bank.CapacitorTier;
 import com.enderio.enderio.content.machines.capacitor_bank.DisplayMode;
 import com.enderio.enderio.foundation.MachineNBTKeys;
@@ -13,6 +14,7 @@ import com.enderio.enderio.foundation.block.legacy.LegacyMachineBlock;
 import com.enderio.enderio.foundation.io.IOConfig;
 import com.enderio.enderio.foundation.network.packets.ClientBoundSyncCapacitorBankPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundCycleIOConfigPacket;
+import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOAttachments;
 import com.enderio.enderio.init.EIODataComponents;
@@ -54,6 +56,7 @@ import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -88,6 +91,9 @@ public class NewCapacitorBankBlockEntity extends EIOBlockEntity implements MenuP
 
         return map;
     });
+
+    private RedstoneControl redstoneControl = RedstoneControl.ALWAYS_ACTIVE;
+    private boolean isRedstoneBlocked;
 
     public NewCapacitorBankBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState, CapacitorTier tier) {
         super(type, worldPosition, blockState);
@@ -252,6 +258,39 @@ public class NewCapacitorBankBlockEntity extends EIOBlockEntity implements MenuP
         };
     }
 
+    public final RedstoneControl getRedstoneControl() {
+        return redstoneControl;
+    }
+
+    public void setRedstoneControl(RedstoneControl control) {
+        redstoneControl = control;
+        setChanged();
+        checkIsRedstoneBlocked();
+    }
+
+    public void setNetworkRedstoneControl(RedstoneControl control) {
+        node.getNetwork().setRedstoneControl(control);
+    }
+
+    @Override
+    protected boolean supportsRedstonePower() {
+        return true;
+    }
+
+    @Override
+    protected void updateRedstonePower() {
+        super.updateRedstonePower();
+        checkIsRedstoneBlocked();
+    }
+
+    private void checkIsRedstoneBlocked() {
+        isRedstoneBlocked = !redstoneControl.isActive(isRedstonePowered());
+    }
+
+    protected boolean isRedstoneBlocked() {
+        return isRedstoneBlocked;
+    }
+
     /**
      * Get the facing direction of the machine.
      */
@@ -386,6 +425,19 @@ public class NewCapacitorBankBlockEntity extends EIOBlockEntity implements MenuP
         if (tag.contains(DISPLAY_MODES, Tag.TAG_COMPOUND)) {
             loadDisplayModes(tag.getCompound(DISPLAY_MODES));
         }
+
+        // TODO: Ender IO 8 - remove.
+        if (hasData(EIOAttachments.REDSTONE_CONTROL)) {
+            redstoneControl = getData(EIOAttachments.REDSTONE_CONTROL);
+            removeData(EIOAttachments.REDSTONE_CONTROL);
+        } else if (tag.contains(MachineNBTKeys.REDSTONE_CONTROL)) {
+            redstoneControl = RedstoneControl.parse(registries,
+                Objects.requireNonNull(tag.get(MachineNBTKeys.REDSTONE_CONTROL)));
+        }
+
+        if (node.isPrimaryNode()) {
+            node.getNetwork().setRedstoneControl(redstoneControl);
+        }
     }
 
     public void loadDisplayModes(CompoundTag nbt) {
@@ -410,6 +462,8 @@ public class NewCapacitorBankBlockEntity extends EIOBlockEntity implements MenuP
         tag.putUUID(NODE_ID, node.getNetwork().getUuid());
 
         tag.put(DISPLAY_MODES, saveDisplayModes());
+
+        tag.put(MachineNBTKeys.REDSTONE_CONTROL, node.getNetwork().getRedstoneControl().save(registries));
     }
 
     public CompoundTag saveDisplayModes() {

@@ -177,6 +177,10 @@ public class CapacitorBankNode implements INetworkNode<CapacitorBankNetwork, Cap
             throw new IllegalStateException("Cannot distribute energy from non-primary node");
         }
 
+        if (network.isRedstoneBlocked()) {
+            return; //Don't do anything if redstone is blocked
+        }
+
         //Sorted list, so we push to the emptiest first
         List<IEnergyStorage> validTargets = network.nodes()
             .stream()

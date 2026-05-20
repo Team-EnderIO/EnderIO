@@ -1,6 +1,7 @@
 package com.enderio.enderio.content.machines.capacitor_bank.rework;
 
 import com.enderio.core.common.graph.Network;
+import com.enderio.enderio.api.io.RedstoneControl;
 import net.minecraft.core.BlockPos;
 
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.UUID;
 public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, CapacitorBankNode> {
 
     private UUID uuid = UUID.randomUUID();
+    private RedstoneControl redstoneControl = RedstoneControl.ALWAYS_ACTIVE;
 
     public CapacitorBankNetwork(CapacitorBankNode initialNode) {
         super(initialNode);
@@ -82,5 +84,23 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
             n.uuid = UUID.randomUUID();
             n.markDirty();
         });
+    }
+
+    public RedstoneControl getRedstoneControl() {
+        return redstoneControl;
+    }
+
+    public void setRedstoneControl(RedstoneControl redstoneControl) {
+        this.redstoneControl = redstoneControl;
+        nodes().forEach(n -> n.getBlockEntity().setRedstoneControl(redstoneControl));
+    }
+
+    public boolean isRedstoneBlocked() {
+        return switch (redstoneControl) {
+            case ALWAYS_ACTIVE -> false;
+            case ACTIVE_WITH_SIGNAL -> nodes().stream().allMatch(n -> n.getBlockEntity().isRedstoneBlocked());
+            case ACTIVE_WITHOUT_SIGNAL -> nodes().stream().anyMatch(n -> n.getBlockEntity().isRedstoneBlocked());
+            case NEVER_ACTIVE -> true;
+        };
     }
 }
