@@ -98,8 +98,7 @@ dependencies {
 
     // Refined Storage
     compileOnly(libs.refinedStorage)
-    // TODO: Disabled until they fix Neo .21 compat
-//    runtimeOnly(libs.refinedStorage)
+    runtimeOnly(libs.refinedStorage)
 
     //Laserio
 //    compileOnly(libs.laserio)
