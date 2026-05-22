@@ -14,13 +14,11 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.util.context.ContextKey;
-import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModLoader;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ExtractLevelRenderStateEvent;
-import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -31,7 +29,7 @@ import java.util.Map;
 @EventBusSubscriber(value = Dist.CLIENT)
 public class TravelTargetRendering {
 
-    private static final ContextKey<List<ExtractTravelTarget>> DATA_KEY = new ContextKey<>(EnderIO.id("traveltargets"));
+    public static final ContextKey<List<ExtractTravelTarget>> DATA_KEY = new ContextKey<>(EnderIO.id("traveltargets"));
     private static Map<TravelTargetType<?>, TravelRenderer<?>> RENDERERS;
 
     public static void init() {
@@ -48,7 +46,7 @@ public class TravelTargetRendering {
         return (TravelRenderer<T>) RENDERERS.get(type);
     }
 
-    private static <T extends TravelTarget> void render(T target, LevelRenderer levelRender, PoseStack poseStack,
+    public static <T extends TravelTarget> void render(T target, LevelRenderer levelRender, PoseStack poseStack,
             double distanceSquared, boolean isActive, float partialTick) {
         // noinspection unchecked
         getRenderer((TravelTargetType<T>) target.type()).render(target, levelRender, poseStack, distanceSquared,
@@ -56,7 +54,7 @@ public class TravelTargetRendering {
     }
 
     //TODO make TravelTarget properly immutable
-    private record ExtractTravelTarget(float partialTick, TravelTarget target, double distanceSquared, boolean active) {}
+    public record ExtractTravelTarget(float partialTick, TravelTarget target, double distanceSquared, boolean active) {}
 
     @SubscribeEvent
     public static void extractLevel(ExtractLevelRenderStateEvent event) {
@@ -87,30 +85,6 @@ public class TravelTargetRendering {
         }
         if (!renderStates.isEmpty()) {
             event.getRenderState().setRenderData(DATA_KEY, renderStates);
-        }
-    }
-
-    // TODO: 26.1: Check this render stage is right.
-    @SubscribeEvent
-    public static void renderLevel(RenderLevelStageEvent.AfterTranslucentBlocks event) {
-        List<ExtractTravelTarget> renderStates = event.getLevelRenderState().getRenderData(DATA_KEY);
-        if (renderStates == null) {
-            return;
-        }
-        for (ExtractTravelTarget state : renderStates) {
-            PoseStack poseStack = event.getPoseStack();
-            poseStack.pushPose();
-            Vec3 projectedView = event.getLevelRenderState().cameraRenderState.pos;
-            poseStack.translate(
-                state.target.pos().getX() - projectedView.x,
-                state.target.pos().getY() - projectedView.y,
-                state.target.pos().getZ() - projectedView.z);
-
-            // needed for smooth rendering
-            // the boolean value controls whether it's still smooth while the game world is
-            // paused (e.g. /tick freeze)
-            render(state.target, event.getLevelRenderer(), poseStack, state.distanceSquared, state.active, state.partialTick);
-            poseStack.popPose();
         }
     }
 }

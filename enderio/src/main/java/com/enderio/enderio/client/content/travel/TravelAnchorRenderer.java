@@ -1,13 +1,10 @@
 package com.enderio.enderio.client.content.travel;
 
+import com.enderio.core.client.TravelRendererUtil;
 import com.enderio.enderio.api.travel.TravelRenderer;
-import com.enderio.enderio.client.EIOPipelineModifiers;
 import com.enderio.enderio.client.EnderIOClient;
-import com.enderio.enderio.client.foundation.renderer.OutlineBuffer;
-import com.enderio.enderio.compat.ModCompatHelper;
 import com.enderio.enderio.content.travel.travel_anchor.AnchorTravelTarget;
 import com.enderio.enderio.content.travel.travel_anchor.PaintedTravelAnchorBlockEntity;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.ChatFormatting;
@@ -15,19 +12,16 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.SubmitNodeStorage;
-import net.minecraft.client.renderer.block.BlockModelRenderState;
-import net.minecraft.client.renderer.block.model.BlockDisplayContext;
 import net.minecraft.client.renderer.block.model.BlockModel;
-import net.minecraft.client.renderer.feature.FeatureRenderDispatcher;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.LightCoordsUtil;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.Lazy;
@@ -48,20 +42,6 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
         return minecraft.getModelManager().getStandaloneModel(EnderIOClient.TRAVEL_ANCHOR_BACKDROP);
     });
 
-    public static FeatureRenderDispatcher FEATURE = new FeatureRenderDispatcher(
-        new SubmitNodeStorage(),
-        Minecraft.getInstance().getModelManager(),
-        Minecraft.getInstance().renderBuffers().bufferSource(),
-        Minecraft.getInstance().getAtlasManager(),
-        Minecraft.getInstance().renderBuffers().outlineBufferSource(),
-        Minecraft.getInstance().renderBuffers().crumblingBufferSource(),
-        Minecraft.getInstance().font,
-        Minecraft.getInstance().gameRenderer.getGameRenderState()
-    );
-
-    public static SubmitNodeStorage NODE = FEATURE.getSubmitNodeStorage();
-
-
     @Override
     public void render(AnchorTravelTarget travelData, LevelRenderer levelRenderer, PoseStack poseStack,
         double distanceSquared, boolean active, float partialTick) {
@@ -78,25 +58,24 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
         Vec3 towardsCamera = offsetToCamera.normalize();
         double distanceToCamera = offsetToCamera.length();
 
-        {
-            double anchorScale = (float) Math.sqrt(distanceToCamera);
-            if (active) {
-                anchorScale = anchorScale * 1.3;
-            }
-            anchorScale = anchorScale * (Math.sin(Math.toRadians(minecraft.options.fov().get() / 4d)));
-            anchorScale = Math.max(anchorScale, 1.0F);
+        double anchorScale = (float) Math.sqrt(distanceToCamera);
+        if (active) {
+            anchorScale = anchorScale * 1.3;
+        }
+        anchorScale = anchorScale * (Math.sin(Math.toRadians(minecraft.options.fov().get() / 4d)));
+        anchorScale = Math.max(anchorScale, 1.0F);
 
+        {
             poseStack.translate(0.5, 0.5, 0.5);
             float s = (float) anchorScale;
             poseStack.scale(s, s, s);
             poseStack.translate(-0.5, -0.5, -0.5);
         }
 
-        OutlineBuffer buffer = OutlineBuffer.INSTANCE;
         int outlineColor = 0xFF0B4D42;
         int textColor = 0xFFFFFFFF;
         if (active) {
-            textColor = ChatFormatting.AQUA.getColor() == null ? 0xFFFFFF : ChatFormatting.AQUA.getColor();
+            textColor = ChatFormatting.AQUA.getColor() == null ? 0xFFFFFFFF : ARGB.opaque(ChatFormatting.AQUA.getColor());
             outlineColor = textColor;
         }
         float outlineR = ((outlineColor & (0xFF << 16)) >> 16) / 255F;
@@ -108,25 +87,13 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
         boolean hasIcon = travelData.icon() != Items.AIR;
 
         if (!hasIcon) {
-            // Render Model
-            {
-                BlockState blockState = minecraft.level.getBlockState(travelData.pos());
-                if (minecraft.level.getBlockEntity(travelData.pos()) instanceof PaintedTravelAnchorBlockEntity paintedTravelAnchorBlock) {
-                    Optional<Block> paint = paintedTravelAnchorBlock.getPrimaryPaint();
+            BlockState blockState = minecraft.level.getBlockState(travelData.pos());
+            if (minecraft.level.getBlockEntity(travelData.pos()) instanceof PaintedTravelAnchorBlockEntity paintedTravelAnchorBlock) {
+                Optional<Block> paint = paintedTravelAnchorBlock.getPrimaryPaint();
 
-                    if (paint.isPresent()) {
-                        blockState = paint.get().defaultBlockState();
-                    }
+                if (paint.isPresent()) {
+                    blockState = paint.get().defaultBlockState();
                 }
-
-                BlockModelRenderState modelRenderState = new BlockModelRenderState();
-
-                BlockDisplayContext context = BlockDisplayContext.create();
-                Minecraft.getInstance().getBlockModelResolver().update(modelRenderState, blockState, context);
-
-                modelRenderState.submit(poseStack, NODE, packedLight, OverlayTexture.NO_OVERLAY, 0);
-                FEATURE.renderAllFeatures();
-                Minecraft.getInstance().renderBuffers().bufferSource().endBatch();
             }
 
             // Render outline block
@@ -140,37 +107,13 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
                 poseStack.translate(offset.x, offset.y, offset.z);
                 poseStack.scale(scale, scale, scale);
 
-                BlockModelRenderState renderState = new BlockModelRenderState();
-                BACKDROP.get().update(renderState, Blocks.AIR.defaultBlockState(), BlockDisplayContext.create(), 42);
-                renderState.submit(poseStack, NODE, packedLight, OverlayTexture.NO_OVERLAY, ARGB.colorFromFloat(1, outlineR, outlineG, outlineB));
-
-                RenderSystem.pushPipelineModifier(EIOPipelineModifiers.FORCE_NO_DEPTH);
-                FEATURE.renderAllFeatures();
-                Minecraft.getInstance().renderBuffers().bufferSource().endBatch();
-                RenderSystem.popPipelineModifier();
+                TravelRendererUtil.renderBackdrop(poseStack, packedLight, ARGB.colorFromFloat(1, outlineR, outlineG, outlineB), BACKDROP);
 
                 poseStack.popPose();
             }
 
-            {
-                BlockState blockState = minecraft.level.getBlockState(travelData.pos());
-                if (minecraft.level.getBlockEntity(travelData.pos()) instanceof PaintedTravelAnchorBlockEntity paintedTravelAnchorBlock) {
-                    Optional<Block> paint = paintedTravelAnchorBlock.getPrimaryPaint();
-
-                    if (paint.isPresent()) {
-                        blockState = paint.get().defaultBlockState();
-                    }
-                }
-
-                BlockModelRenderState modelRenderState = new BlockModelRenderState();
-
-                BlockDisplayContext context = BlockDisplayContext.create();
-                Minecraft.getInstance().getBlockModelResolver().update(modelRenderState, blockState, context);
-
-                modelRenderState.submit(poseStack, NODE, packedLight, OverlayTexture.NO_OVERLAY, 0);
-                FEATURE.renderAllFeatures();
-                Minecraft.getInstance().renderBuffers().bufferSource().endBatch();
-            }
+            // Render Model
+            TravelRendererUtil.renderBlockModel(poseStack, blockState, packedLight);
 
         } else {
             // Render Icon
@@ -193,19 +136,22 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             }
 
             ItemStack stack = new ItemStack(travelData.icon());
-//            BakedModel bakedmodel = minecraft.getItemRenderer().getModel(stack, minecraft.level, null, 0);
-//            minecraft
-//                .getItemRenderer()
-//                .render(stack, ItemDisplayContext.GUI, false, poseStack, OutlineBuffer.INSTANCE, packedLight, OverlayTexture.NO_OVERLAY, bakedmodel);
+            ItemStackRenderState itemRenderState = new ItemStackRenderState();
+            minecraft.getItemModelResolver().updateForTopItem(itemRenderState, stack, ItemDisplayContext.GUI, minecraft.level, null, 0);
 
-            float s = 1.5F;
-            poseStack.scale(s, s, s);
-            poseStack.translate(-0.5, -0.5, -2);
-            poseStack.rotateAround(Axis.ZN.rotationDegrees(45), 0.5F, 0.5F, 0.5F);
+            poseStack.pushPose();
+            {
+                float s = 1.5F;
+                poseStack.scale(s, s, s);
+                poseStack.translate(-0.5, -0.5, -2);
+                poseStack.rotateAround(Axis.ZN.rotationDegrees(45), 0.5F, 0.5F, 0.5F);
 
-            BlockModelRenderState renderState = new BlockModelRenderState();
-            BACKDROP.get().update(renderState, Blocks.AIR.defaultBlockState(), BlockDisplayContext.create(), 42);
-            renderState.submit(poseStack, NODE, packedLight, OverlayTexture.NO_OVERLAY, ARGB.colorFromFloat(1, outlineR, outlineG, outlineB));
+                TravelRendererUtil.renderBackdrop(poseStack, packedLight, ARGB.colorFromFloat(1, outlineR, outlineG, outlineB), BACKDROP);
+            }
+            poseStack.popPose();
+
+            itemRenderState.submit(poseStack, TravelRendererUtil.NODE, packedLight, OverlayTexture.NO_OVERLAY, 0);
+            TravelRendererUtil.renderFeatures();
 
             poseStack.popPose();
         }
@@ -236,32 +182,14 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             int textBg = (int) (textOpacitySetting * 255) << 24;
             float halfWidth = (float) (-minecraft.font.width(textComponent) / 2);
 
-            var mode1 = Font.DisplayMode.SEE_THROUGH;
-            var mode2 = Font.DisplayMode.NORMAL;
-            int textBg1 = textBg;
-            int textBg2 = 0;
-
-            if (ModCompatHelper.hasIris()) {
-                // required for text to render correctly, possibly an Iris bug
-                // is there a better way to draw text?
-                var _m = mode1;
-                mode1 = mode2;
-                mode2 = _m;
-
-                int _t = textBg1;
-                textBg1 = textBg2;
-                textBg2 = _t;
-            }
             Matrix4f matrix4f = poseStack.last().pose();
 
-            minecraft.font.drawInBatch(textComponent, halfWidth, 0, textColor, false, matrix4f, buffer, mode1, textBg1, packedLight);
-            minecraft.font.drawInBatch(textComponent, halfWidth, 0, textColor, false, matrix4f, buffer, mode2, textBg2, packedLight);
+            minecraft.font.drawInBatch(textComponent, halfWidth, 0, textColor, false, matrix4f, TravelRendererUtil.TEXT_BUFFER, Font.DisplayMode.SEE_THROUGH, textBg, packedLight);
+            TravelRendererUtil.TEXT_BUFFER.endBatch();
 
             poseStack.popPose();
         }
 
         poseStack.popPose();
-        // Seems to work fine without this line, but leaving it here in case there are future buffer problems
-        // minecraft.renderBuffers().bufferSource().endBatch();
     }
 }
