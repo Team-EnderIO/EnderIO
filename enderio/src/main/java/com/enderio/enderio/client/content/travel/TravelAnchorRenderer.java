@@ -1,29 +1,19 @@
 package com.enderio.enderio.client.content.travel;
 
+import com.enderio.core.client.TravelRendererUtil;
 import com.enderio.enderio.api.travel.TravelRenderer;
 import com.enderio.enderio.client.EnderIOClient;
 import com.enderio.enderio.content.travel.travel_anchor.AnchorTravelTarget;
 import com.enderio.enderio.content.travel.travel_anchor.PaintedTravelAnchorBlockEntity;
-import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import it.unimi.dsi.fastutil.objects.Object2ObjectSortedMaps;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.OutlineBufferSource;
-import net.minecraft.client.renderer.Sheets;
-import net.minecraft.client.renderer.SubmitNodeStorage;
-import net.minecraft.client.renderer.block.BlockModelRenderState;
-import net.minecraft.client.renderer.block.model.BlockDisplayContext;
 import net.minecraft.client.renderer.block.model.BlockModel;
-import net.minecraft.client.renderer.feature.FeatureRenderDispatcher;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
-import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ARGB;
@@ -32,7 +22,6 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.Lazy;
@@ -52,50 +41,6 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
 
         return minecraft.getModelManager().getStandaloneModel(EnderIOClient.TRAVEL_ANCHOR_BACKDROP);
     });
-
-    private static final BackdropTintingBufferSource FEATURE_BUFFER = new BackdropTintingBufferSource();
-    private static final OutlineBufferSource FEATURE_OUTLINE_BUFFER = new OutlineBufferSource();
-    private static final MultiBufferSource.BufferSource TEXT_BUFFER = MultiBufferSource.immediate(new ByteBufferBuilder(RenderType.SMALL_BUFFER_SIZE));
-
-    public static FeatureRenderDispatcher FEATURE = new FeatureRenderDispatcher(
-        new SubmitNodeStorage(),
-        Minecraft.getInstance().getModelManager(),
-        FEATURE_BUFFER,
-        Minecraft.getInstance().getAtlasManager(),
-        FEATURE_OUTLINE_BUFFER,
-        Minecraft.getInstance().renderBuffers().crumblingBufferSource(),
-        Minecraft.getInstance().font,
-        Minecraft.getInstance().gameRenderer.getGameRenderState()
-    );
-
-    public static SubmitNodeStorage NODE = FEATURE.getSubmitNodeStorage();
-
-    private static void renderFeatures() {
-        FEATURE.renderAllFeatures();
-        FEATURE_BUFFER.endBatch();
-        FEATURE_OUTLINE_BUFFER.endOutlineBatch();
-    }
-
-    private static void renderBackdrop(PoseStack poseStack, int packedLight, int color) {
-        BlockModelRenderState renderState = new BlockModelRenderState();
-        BACKDROP.get().update(renderState, Blocks.AIR.defaultBlockState(), BlockDisplayContext.create(), 42);
-
-        FEATURE_BUFFER.setTintColor(color);
-        try {
-            renderState.submit(poseStack, NODE, packedLight, OverlayTexture.NO_OVERLAY, 0);
-            renderFeatures();
-        } finally {
-            FEATURE_BUFFER.clearTintColor();
-        }
-    }
-
-    private static void renderBlockModel(PoseStack poseStack, BlockState blockState, int packedLight) {
-        BlockModelRenderState modelRenderState = new BlockModelRenderState();
-        Minecraft.getInstance().getBlockModelResolver().update(modelRenderState, blockState, BlockDisplayContext.create());
-
-        modelRenderState.submit(poseStack, NODE, packedLight, OverlayTexture.NO_OVERLAY, 0);
-        renderFeatures();
-    }
 
     @Override
     public void render(AnchorTravelTarget travelData, LevelRenderer levelRenderer, PoseStack poseStack,
@@ -162,13 +107,13 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
                 poseStack.translate(offset.x, offset.y, offset.z);
                 poseStack.scale(scale, scale, scale);
 
-                renderBackdrop(poseStack, packedLight, ARGB.colorFromFloat(1, outlineR, outlineG, outlineB));
+                TravelRendererUtil.renderBackdrop(poseStack, packedLight, ARGB.colorFromFloat(1, outlineR, outlineG, outlineB), BACKDROP);
 
                 poseStack.popPose();
             }
 
             // Render Model
-            renderBlockModel(poseStack, blockState, packedLight);
+            TravelRendererUtil.renderBlockModel(poseStack, blockState, packedLight);
 
         } else {
             // Render Icon
@@ -201,12 +146,12 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
                 poseStack.translate(-0.5, -0.5, -2);
                 poseStack.rotateAround(Axis.ZN.rotationDegrees(45), 0.5F, 0.5F, 0.5F);
 
-                renderBackdrop(poseStack, packedLight, ARGB.colorFromFloat(1, outlineR, outlineG, outlineB));
+                TravelRendererUtil.renderBackdrop(poseStack, packedLight, ARGB.colorFromFloat(1, outlineR, outlineG, outlineB), BACKDROP);
             }
             poseStack.popPose();
 
-            itemRenderState.submit(poseStack, NODE, packedLight, OverlayTexture.NO_OVERLAY, 0);
-            renderFeatures();
+            itemRenderState.submit(poseStack, TravelRendererUtil.NODE, packedLight, OverlayTexture.NO_OVERLAY, 0);
+            TravelRendererUtil.renderFeatures();
 
             poseStack.popPose();
         }
@@ -239,91 +184,12 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
 
             Matrix4f matrix4f = poseStack.last().pose();
 
-            minecraft.font.drawInBatch(textComponent, halfWidth, 0, textColor, false, matrix4f, TEXT_BUFFER, Font.DisplayMode.SEE_THROUGH, textBg, packedLight);
-            TEXT_BUFFER.endBatch();
+            minecraft.font.drawInBatch(textComponent, halfWidth, 0, textColor, false, matrix4f, TravelRendererUtil.TEXT_BUFFER, Font.DisplayMode.SEE_THROUGH, textBg, packedLight);
+            TravelRendererUtil.TEXT_BUFFER.endBatch();
 
             poseStack.popPose();
         }
 
         poseStack.popPose();
-    }
-
-    private static class BackdropTintingBufferSource extends MultiBufferSource.BufferSource {
-
-        private int tintColor = -1;
-
-        private BackdropTintingBufferSource() {
-            super(new ByteBufferBuilder(RenderType.SMALL_BUFFER_SIZE), Object2ObjectSortedMaps.emptyMap());
-        }
-
-        private void setTintColor(int tintColor) {
-            this.tintColor = tintColor;
-        }
-
-        private void clearTintColor() {
-            this.tintColor = -1;
-        }
-
-        @Override
-        public VertexConsumer getBuffer(RenderType renderType) {
-            if (this.tintColor != -1) {
-                // Tinting is only used for the standalone backdrop model, which must stay translucent.
-                renderType = Sheets.translucentBlockItemSheet();
-            }
-
-            VertexConsumer buffer = super.getBuffer(renderType);
-            return this.tintColor == -1 ? buffer : new TintingVertexConsumer(buffer, this.tintColor);
-        }
-    }
-
-    private record TintingVertexConsumer(VertexConsumer delegate, int tintColor) implements VertexConsumer {
-
-        @Override
-        public VertexConsumer addVertex(float x, float y, float z) {
-            this.delegate.addVertex(x, y, z);
-            return this;
-        }
-
-        @Override
-        public VertexConsumer setColor(int r, int g, int b, int a) {
-            this.delegate.setColor(ARGB.multiply(ARGB.color(a, r, g, b), this.tintColor));
-            return this;
-        }
-
-        @Override
-        public VertexConsumer setColor(int color) {
-            this.delegate.setColor(ARGB.multiply(color, this.tintColor));
-            return this;
-        }
-
-        @Override
-        public VertexConsumer setUv(float u, float v) {
-            this.delegate.setUv(u, v);
-            return this;
-        }
-
-        @Override
-        public VertexConsumer setUv1(int u, int v) {
-            this.delegate.setUv1(u, v);
-            return this;
-        }
-
-        @Override
-        public VertexConsumer setUv2(int u, int v) {
-            this.delegate.setUv2(u, v);
-            return this;
-        }
-
-        @Override
-        public VertexConsumer setNormal(float x, float y, float z) {
-            this.delegate.setNormal(x, y, z);
-            return this;
-        }
-
-        @Override
-        public VertexConsumer setLineWidth(float width) {
-            this.delegate.setLineWidth(width);
-            return this;
-        }
     }
 }
