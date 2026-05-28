@@ -602,6 +602,6 @@
   "tooltip.enderio.show_advanced_tooltip": "<Segure Shift>",
   "tooltip.enderio.soul_bound": "Alma Vinculada: %s",
   "tooltip.enderio.tool.soul_vial.health": "Vida: %s/%s",
-  "tooltip.enderio.tool.void_vial.hint": "Coleta orbes de experiência em nome do jogador, pode inserir XP em tanques ou ser bêbado pelo jogador.",
-  "tooltip.enderio.tool.void_vial.stored_experience": "Armazenada: %s Níveis + %s Experiência"
+  "tooltip.enderio.tool.void_vial.hint": "Coleta esferas de experiência para o jogador; pode inserir EXP em tanques ou o jogador pode bebê-la.",
+  "tooltip.enderio.tool.void_vial.stored_experience": "Armazenado: %s níveis + %s de experiência"
 }
