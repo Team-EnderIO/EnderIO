@@ -34,10 +34,14 @@ public class FireCraftingHandler {
     private static final Random RANDOM = new Random();
     private static final ConcurrentMap<FireIndex, Long> FIRE_TRACKER = new ConcurrentHashMap<>();
 
-    private static List<RecipeHolder<FireCraftingRecipe>> cachedRecipes;
+    private static List<RecipeHolder<FireCraftingRecipe>> cachedRecipes = List.of();
     private static boolean recipesCached = false;
 
     private record FireIndex(BlockPos pos, ResourceKey<Level> dimension) {
+    }
+
+    public static List<RecipeHolder<FireCraftingRecipe>> getCachedRecipes() {
+        return cachedRecipes;
     }
 
     @SubscribeEvent
