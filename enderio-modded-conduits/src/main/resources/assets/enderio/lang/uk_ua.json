@@ -1,13 +1,13 @@
 {
-  "conduit.enderio.chemical": "Chemical Conduit",
-  "conduit.enderio.dense_me": "Щільна МЕ-труба",
-  "conduit.enderio.ender_chemical": "Ender Chemical Conduit",
-  "conduit.enderio.heat": "Heat Conduit",
-  "conduit.enderio.me": "ME труба",
-  "conduit.enderio.pressurized_chemical": "Pressurized Chemical Conduit",
-  "conduit.enderio.rs": "Refined Storage Conduit",
-  "item.enderio.basic_chemical_filter": "Basic Chemical Filter",
-  "tooltip.enderio.conduit.chemical.change_fluid1": "Locked Chemical:",
+  "conduit.enderio.chemical": "Хімічний провідник",
+  "conduit.enderio.dense_me": "Щільний МЕ провідник",
+  "conduit.enderio.ender_chemical": "Хімічний провідник Енду",
+  "conduit.enderio.heat": "Тепловий провідник",
+  "conduit.enderio.me": "МЕ провідник",
+  "conduit.enderio.pressurized_chemical": "Напірний хімічний провідник",
+  "conduit.enderio.rs": "Провідник Refined Storage",
+  "item.enderio.basic_chemical_filter": "Базовий хімічний фільтр",
+  "tooltip.enderio.conduit.chemical.change_fluid1": "Установлена речовина:",
   "tooltip.enderio.conduit.chemical.change_fluid2": "Натисніть для скидання!",
-  "tooltip.enderio.conduit.chemical.change_fluid3": "Chemical: %s"
+  "tooltip.enderio.conduit.chemical.change_fluid3": "Речовина: %s"
 }
