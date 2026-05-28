@@ -68,6 +68,17 @@ public class ConduitNetworkSavedData extends SavedData {
 
     private ConduitNetworkSavedData(List<ConduitNetworkImpl> networks) {
         for (ConduitNetworkImpl network : networks) {
+            // If a world has been loaded from 8.0.7 into 8.2.9 and then updated further, the conduit data has become corrupted.
+            // In this instance, we'll have to discard the network and have it get repaired.
+            // ConstantValue issues are because conduit() is supposed to be non null.
+            //noinspection ConstantValue
+            boolean anyNodesMissingConduit = network.nodes().stream().anyMatch(n -> n.conduit() == null);
+            //noinspection ConstantValue
+            if (anyNodesMissingConduit) {
+                LOGGER.warn("Skipping network with damaged conduit data.");
+                continue;
+            }
+
             network.setOnChunkCoverageChanged(this::onNetworkChunksChanged);
             this.networks.put(network.conduitType(), network);
 
