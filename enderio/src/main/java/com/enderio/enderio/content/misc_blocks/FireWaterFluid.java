@@ -1,7 +1,6 @@
 package com.enderio.enderio.content.misc_blocks;
 
-import com.enderio.enderio.content.fire_crafting.FireCraftingHandler;
-import com.enderio.enderio.content.fire_crafting.FireCraftingRecipe;
+import com.enderio.enderio.content.fire_crafting.FireCraftingManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -37,23 +36,8 @@ public abstract class FireWaterFluid extends BaseFlowingFluid {
     }
 
     private void performFireCrafting(ServerLevel level, BlockPos pos) {
-        // Really rubbish way of doing this, but should do fine for now.
-        BlockState blockBelow = level.getBlockState(pos.below());
-
-        FireCraftingRecipe matchingRecipe = null;
-        for (var recipeHolder : FireCraftingHandler.getCachedRecipes()) {
-            var recipe = recipeHolder.value();
-            if (recipe.isBaseValid(blockBelow.getBlock()) && recipe.isDimensionValid(level.dimension())) {
-                matchingRecipe = recipe;
-                break;
-            }
-        }
-
-        if (matchingRecipe == null) {
-            return;
-        }
-
-        FireCraftingHandler.spawnInfinityDrops(level, pos, matchingRecipe);
+        var fireCraftingManager = level.getData(FireCraftingManager.ATTACHMENT_TYPE);
+        fireCraftingManager.tryPerformFireCrafting(level, pos);
     }
 
     // Fire logic copied from LavaFluid.
