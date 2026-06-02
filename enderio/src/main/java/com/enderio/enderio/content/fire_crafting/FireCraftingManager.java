@@ -151,9 +151,18 @@ public class FireCraftingManager {
         // If it's still fire, it should be tracked.
         // If it has been extinguished, it should 'pop'.
         if (isFire) {
-            // TODO: Should probably make this configurable or per-chunk etc.
-            if (fireTracker.size() > 100) {
-                fireTracker.values().removeIf(age -> age < level.getGameTime() || fireTracker.size() > 500);
+            // Prune the oldest fires if we have too many in the tracker.
+            int maxTracked = BaseConfig.COMMON.INFINITY.MAX_TRACKED_FIRES.get();
+            int excess = fireTracker.size() - maxTracked;
+            if (excess > 0) {
+                // Remove the oldest fires (smallest expiration time first) until within the max
+                var toRemove = fireTracker.entrySet().stream()
+                    .sorted(Map.Entry.comparingByValue())
+                    .limit(excess)
+                    .map(Map.Entry::getKey)
+                    .toList();
+
+                toRemove.forEach(fireTracker::remove);
             }
 
             fireTracker.putIfAbsent(pos, gameTime + BaseConfig.COMMON.INFINITY.FIRE_MIN_AGE.get());
