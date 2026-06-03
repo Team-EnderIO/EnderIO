@@ -3,6 +3,7 @@ package com.enderio.enderio.init;
 import com.enderio.core.common.registries.FluidDeferredHolders;
 import com.enderio.core.common.registries.FluidDeferredRegister;
 import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.content.misc_blocks.FireWaterFluid;
 import net.neoforged.bus.api.IEventBus;
 
 // TODO: Fluid behaviours and some cleaning. https://github.com/SleepyTrousers/EnderIO-Rewrite/issues/34
@@ -45,6 +46,7 @@ public class EIOFluids {
 
     public static final FluidDeferredHolders FIRE_WATER = FLUIDS
         .builder("fire_water")
+        .customFluid(FireWaterFluid.Source::new, FireWaterFluid.Flowing::new)
         .fluidProperties(p -> p.lightLevel(5).density(900).viscosity(1000).temperature(2000))
         .blockProperties(p -> p.lightLevel((state) -> 5))
         .defaultBucket()

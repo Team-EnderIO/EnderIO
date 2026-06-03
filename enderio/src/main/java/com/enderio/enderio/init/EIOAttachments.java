@@ -2,6 +2,7 @@ package com.enderio.enderio.init;
 
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.io.RedstoneControl;
+import com.enderio.enderio.content.fire_crafting.FireCraftingManager;
 import com.enderio.enderio.content.machines.obelisks.aversion.AversionObeliskManager;
 import com.enderio.enderio.content.machines.obelisks.inhibitor.InhibitorObeliskManager;
 import com.enderio.enderio.content.machines.obelisks.relocator.RelocatorObeliskManager;
@@ -41,6 +42,8 @@ public class EIOAttachments {
             .register("relocator_obelisk_manager", () -> AttachmentType.builder(RelocatorObeliskManager::new).build());
 
     public static void register(IEventBus bus) {
+        ATTACHMENT_TYPES.register("fire_crafting_manager", () -> FireCraftingManager.ATTACHMENT_TYPE);
+
         ATTACHMENT_TYPES.register(bus);
     }
 }

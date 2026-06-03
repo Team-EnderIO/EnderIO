@@ -72,6 +72,8 @@ public class FluidDeferredRegister {
         private final String name;
 
         private Function<FluidType.Properties, FluidType> fluidTypeFactory;
+        private Function<BaseFlowingFluid.Properties, BaseFlowingFluid> sourceFluidFactory;
+        private Function<BaseFlowingFluid.Properties, BaseFlowingFluid> flowingFluidFactory;
         private FluidType.Properties fluidTypeProperties;
         private BiFunction<FlowingFluid, BlockBehaviour.Properties, ? extends LiquidBlock> blockFactory;
         private BlockBehaviour.Properties blockProperties;
@@ -109,12 +111,23 @@ public class FluidDeferredRegister {
                 }
             };
 
+            sourceFluidFactory = BaseFlowingFluid.Source::new;
+            flowingFluidFactory = BaseFlowingFluid.Flowing::new;
+
             blockFactory = LiquidBlock::new;
             blockProperties = BlockBehaviour.Properties.ofFullCopy(Blocks.WATER);
         }
 
         public Builder fluidTypeFactory(Function<FluidType.Properties, FluidType> fluidTypeFactory) {
             this.fluidTypeFactory = fluidTypeFactory;
+            return this;
+        }
+
+        public Builder customFluid(
+            Function<BaseFlowingFluid.Properties, BaseFlowingFluid> sourceFluidFactory,
+            Function<BaseFlowingFluid.Properties, BaseFlowingFluid> flowingFluidFactory) {
+            this.sourceFluidFactory = sourceFluidFactory;
+            this.flowingFluidFactory = flowingFluidFactory;
             return this;
         }
 
@@ -154,8 +167,8 @@ public class FluidDeferredRegister {
 
             // Register everything.
             fluid.type(fluidTypes.register(name, () -> fluidTypeFactory.apply(fluidTypeProperties)));
-            fluid.source(fluids.register("fluid_" + name + "_still", () -> new BaseFlowingFluid.Source(fluid.createProperties())));
-            fluid.flowing(fluids.register("fluid_" + name + "_flowing", () -> new BaseFlowingFluid.Flowing(fluid.createProperties())));
+            fluid.source(fluids.register("fluid_" + name + "_still", () -> sourceFluidFactory.apply(fluid.createProperties())));
+            fluid.flowing(fluids.register("fluid_" + name + "_flowing", () -> flowingFluidFactory.apply(fluid.createProperties())));
             fluid.block(blocks.register(name, () -> blockFactory.apply(fluid.flowing().get(), blockProperties)));
 
             if (bucketFactory != null) {

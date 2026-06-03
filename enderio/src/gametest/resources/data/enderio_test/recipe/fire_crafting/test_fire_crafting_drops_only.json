@@ -1,0 +1,20 @@
+{
+  "type": "enderio:fire_crafting",
+  "base_blocks": [
+    "minecraft:granite"
+  ],
+  "dimensions": [
+    "minecraft:overworld"
+  ],
+  "results": [
+    {
+      "chance": 1.0,
+      "max_count": 1,
+      "min_count": 1,
+      "result": {
+        "count": 1,
+        "id": "enderio:grains_of_infinity"
+      }
+    }
+  ]
+}
