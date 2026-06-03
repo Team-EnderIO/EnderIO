@@ -33,7 +33,7 @@ import java.util.function.Predicate;
 
 // TODO: I want to review the vacuum stuff too.
 public abstract class VacuumMachineBlockEntity<T extends Entity> extends MachineBlockEntity implements RangedActor {
-    private static final double COLLISION_DISTANCE_SQ = 1 * 1;
+    private static final double COLLISION_DISTANCE_SQ = 1.3 * 1.3;
     protected static final double SPEED = 0.025;
     protected static final double SPEED_4 = SPEED * 4;
     private final List<WeakReference<T>> entities = new ArrayList<>();

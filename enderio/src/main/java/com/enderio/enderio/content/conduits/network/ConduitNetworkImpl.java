@@ -48,23 +48,14 @@ import java.util.stream.Stream;
 
 public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeImpl> implements ConduitNetwork, PathfindingContext {
 
-    private static final Codec<ConduitNetworkImpl> LEGACY_CODEC = RecordCodecBuilder.create(instance -> instance
-            .group(Conduit.CODEC.fieldOf("conduit").forGetter(i -> null),
-                    ConduitNetworkContext.GENERIC_CODEC.optionalFieldOf("context")
-                            .forGetter(i -> i.context == null || !i.context.type().isPersistent() ? Optional.empty()
-                                    : Optional.of(i.context)))
-            .and(graphCodec(instance, ConduitNodeImpl.CODEC))
-            .apply(instance, ConduitNetworkImpl::new));
 
-    private static final Codec<ConduitNetworkImpl> NEW_CODEC = RecordCodecBuilder.create(instance -> instance
+    public static final Codec<ConduitNetworkImpl> CODEC = RecordCodecBuilder.create(instance -> instance
             .group(ConduitType.CODEC.fieldOf("conduit_type").forGetter(i -> i.conduitType),
                     ConduitNetworkContext.GENERIC_CODEC.optionalFieldOf("context")
                             .forGetter(i -> i.context == null || !i.context.type().isPersistent() ? Optional.empty()
                                     : Optional.of(i.context)))
             .and(graphCodec(instance, ConduitNodeImpl.CODEC))
             .apply(instance, ConduitNetworkImpl::new));
-
-    public static final Codec<ConduitNetworkImpl> CODEC = Codec.withAlternative(NEW_CODEC, LEGACY_CODEC);
 
     private final ConduitType<?, ?> conduitType;
     

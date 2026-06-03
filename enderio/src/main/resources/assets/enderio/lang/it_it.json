@@ -229,6 +229,7 @@
   "conduit.enderio.item": "Condotto per oggetti",
   "conduit.enderio.pressurized_fluid": "Energetic Fluid Conduit",
   "conduit.enderio.redstone": "Condotto di redstone",
+  "config.jade.plugin_enderio.soul_bound": "Soul Bound",
   "enderio.alloy_smelter_mode.all": "Legatura e cottura",
   "enderio.alloy_smelter_mode.alloys": "Alloying Only",
   "enderio.alloy_smelter_mode.furnace": "Smelting Only",
