@@ -2,7 +2,6 @@ package com.enderio.enderio.content.tools.coordinate_selector;
 
 import com.enderio.enderio.api.attachment.CoordinateSelection;
 import com.enderio.enderio.content.tools.ToolsLang;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -45,7 +44,7 @@ public class CoordinateSelectorItem extends Item {
         );
 
         if (hitResult.getType() == HitResult.Type.MISS) {
-            if (player instanceof LocalPlayer) {
+            if (player.isLocalPlayer()) {
                 player.displayClientMessage(ToolsLang.COORDINATE_SELECTOR_NO_BLOCK, true);
             }
 
@@ -93,7 +92,7 @@ public class CoordinateSelectorItem extends Item {
             return true;
         }
 
-        if (player instanceof LocalPlayer) {
+        if (player.isLocalPlayer()) {
             player.displayClientMessage(ToolsLang.COORDINATE_SELECTOR_NO_PAPER, true);
         }
 
