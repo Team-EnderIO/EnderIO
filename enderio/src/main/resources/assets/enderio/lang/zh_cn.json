@@ -456,7 +456,7 @@
   "item.enderio.redstone_or_filter": "或门红石过滤器",
   "item.enderio.redstone_sensor_filter": "感应红石过滤器",
   "item.enderio.redstone_timer_filter": "计时红石过滤器",
-  "item.enderio.redstone_toggle_filter": "锁存红石过滤器",
+  "item.enderio.redstone_toggle_filter": "开关红石过滤器",
   "item.enderio.redstone_xnor_filter": "同或门红石过滤器",
   "item.enderio.redstone_xor_filter": "异或门红石过滤器",
   "item.enderio.rocket_fuel_bucket": "火箭燃料桶",
