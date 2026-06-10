@@ -1,22 +1,19 @@
-package com.enderio.enderio.content.machines.capacitor_bank.rework;
+package com.enderio.enderio.content.machines.capacitor_bank;
 
 import com.enderio.core.common.graph.INetworkNode;
-import com.enderio.enderio.foundation.io.TransferUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class CapacitorBankNode implements INetworkNode<CapacitorBankNetwork, CapacitorBankNode> {
 
-    private final NewCapacitorBankBlockEntity blockEntity;
+    private final CapacitorBankBlockEntity blockEntity;
     private CapacitorBankNetwork network;
     private boolean isPrimaryNode;
 
@@ -25,7 +22,7 @@ public class CapacitorBankNode implements INetworkNode<CapacitorBankNetwork, Cap
     private long send;
     private long lastSync;
 
-    public CapacitorBankNode(NewCapacitorBankBlockEntity blockEntity) {
+    public CapacitorBankNode(CapacitorBankBlockEntity blockEntity) {
         this.blockEntity = blockEntity;
         this.network = new CapacitorBankNetwork(this);
     }
@@ -66,7 +63,7 @@ public class CapacitorBankNode implements INetworkNode<CapacitorBankNetwork, Cap
         }
     }
 
-    public NewCapacitorBankBlockEntity getBlockEntity() {
+    public CapacitorBankBlockEntity getBlockEntity() {
         return blockEntity;
     }
 
@@ -213,6 +210,7 @@ public class CapacitorBankNode implements INetworkNode<CapacitorBankNetwork, Cap
 
     public void markDirty() {
         blockEntity.setChanged();
+        blockEntity.getLevel().blockUpdated(blockEntity.getBlockPos(), blockEntity.getBlockState().getBlock());
     }
 
     @Override

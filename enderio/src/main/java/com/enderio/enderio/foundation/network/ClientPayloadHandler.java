@@ -1,7 +1,7 @@
 package com.enderio.enderio.foundation.network;
 
 import com.enderio.enderio.api.travel.TravelTargetApi;
-import com.enderio.enderio.content.machines.capacitor_bank.rework.CapacitorBankManager;
+import com.enderio.enderio.content.machines.capacitor_bank.CapacitorBankManager;
 import com.enderio.enderio.content.travel.TravelTargetSavedData;
 import com.enderio.enderio.foundation.network.packets.ClientBoundSyncCapacitorBankPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundSyncTravelDataPacket;

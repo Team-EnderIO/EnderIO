@@ -1,4 +1,4 @@
-package com.enderio.enderio.content.machines.capacitor_bank.rework;
+package com.enderio.enderio.content.machines.capacitor_bank;
 
 import com.enderio.core.common.graph.Network;
 import com.enderio.enderio.api.io.RedstoneControl;

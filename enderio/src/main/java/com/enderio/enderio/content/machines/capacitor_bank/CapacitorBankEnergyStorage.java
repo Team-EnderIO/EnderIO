@@ -1,6 +1,5 @@
-package com.enderio.enderio.content.machines.capacitor_bank.rework;
+package com.enderio.enderio.content.machines.capacitor_bank;
 
-import com.enderio.enderio.foundation.energy.PoweredMachineEnergyStorage;
 import net.minecraft.core.Direction;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;

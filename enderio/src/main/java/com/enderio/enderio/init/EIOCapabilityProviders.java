@@ -3,7 +3,7 @@ package com.enderio.enderio.init;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.content.cold_fire.ColdFireIgniter;
-import com.enderio.enderio.content.machines.capacitor_bank.rework.NewCapacitorBankItem;
+import com.enderio.enderio.content.machines.capacitor_bank.CapacitorBankItem;
 import com.enderio.enderio.content.tools.vials.VoidVialItem;
 import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
 import com.enderio.enderio.content.conduits.facades.ComponentBackedConduitFacadeProvider;
@@ -23,7 +23,6 @@ import com.enderio.enderio.content.filters.redstone.RedstoneTimerFilter;
 import com.enderio.enderio.content.filters.redstone.RedstoneXNORFilter;
 import com.enderio.enderio.content.filters.redstone.RedstoneXORFilter;
 import com.enderio.enderio.content.filters.soul.EnderSoulFilterItem;
-import com.enderio.enderio.content.machines.capacitor_bank.CapacitorBankItem;
 import com.enderio.enderio.content.storage.fluid_tank.FluidTankBlockItem;
 import com.enderio.enderio.content.tools.LevitationStaffItem;
 import com.enderio.enderio.content.tools.PoweredToggledItem;
@@ -57,10 +56,6 @@ public class EIOCapabilityProviders {
         // Capacitor Banks
         for (var capacitorBankItem : EIOBlocks.CAPACITOR_BANK_ITEMS.values()) {
             event.registerItem(Capabilities.EnergyStorage.ITEM, CapacitorBankItem.ENERGY_STORAGE_PROVIDER, capacitorBankItem);
-        }
-
-        for (var capacitorBankItem : EIOBlocks.NEW_CAPACITOR_BANK_ITEMS.values()) {
-            event.registerItem(Capabilities.EnergyStorage.ITEM, NewCapacitorBankItem.ENERGY_STORAGE_PROVIDER, capacitorBankItem);
         }
 
         // Register item fluid handlers

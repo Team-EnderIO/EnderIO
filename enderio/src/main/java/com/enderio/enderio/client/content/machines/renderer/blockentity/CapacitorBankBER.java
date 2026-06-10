@@ -2,8 +2,9 @@ package com.enderio.enderio.client.content.machines.renderer.blockentity;
 
 import com.enderio.core.client.RenderUtil;
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.content.machines.capacitor_bank.CapacitorBankBlockEntity;
 import com.enderio.enderio.content.machines.capacitor_bank.DisplayMode;
+import com.enderio.enderio.content.machines.capacitor_bank.CapacitorBankManager;
+import com.enderio.enderio.content.machines.capacitor_bank.CapacitorBankBlockEntity;
 import com.enderio.enderio.foundation.block.entity.multienergy.CapacityTier;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -37,6 +38,7 @@ public class CapacitorBankBER implements BlockEntityRenderer<CapacitorBankBlockE
     private static final ResourceLocation IO_FULL = EnderIO.rl("block/capacitor_additionals/full");
 
     private static final Direction[] HORIZONTAL_DIRECTIONS = new Direction[] {Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
+
     public CapacitorBankBER(BlockEntityRendererProvider.Context context) {
 
     }
@@ -83,8 +85,9 @@ public class CapacitorBankBER implements BlockEntityRenderer<CapacitorBankBlockE
             renderBottomHalf(last, buffer, facing, i == length - 1);
             poseStack.popPose();
         }
-        if (blockEntity.getEnergyStorage().getMaxEnergyStored() > 0) {
-            float f = blockEntity.getEnergyStorage().getEnergyStored() / (float) blockEntity.getEnergyStorage().getMaxEnergyStored();
+        CapacitorBankManager.CapacitorSyncData data = CapacitorBankManager.getData(blockEntity.getUuid());
+        if (data != null && data.capacity() > 0) {
+            float f = data.storedEnergy() / (float) data.capacity();
             int filledPixels = Math.round(f * (10 + (length-1)*16));
             for (int i = length - 1; i >= 0; i--) {
                 if (filledPixels <= 0) {
@@ -106,6 +109,11 @@ public class CapacitorBankBER implements BlockEntityRenderer<CapacitorBankBlockE
         int light = LightTexture.FULL_BRIGHT;
         if (capacitorBank.getLevel() != null) {
             light = LevelRenderer.getLightColor(capacitorBank.getLevel(), capacitorBank.getBlockPos().relative(facing));
+        }
+
+        CapacitorBankManager.CapacitorSyncData data = CapacitorBankManager.getData(capacitorBank.getUuid());
+        if (data == null) {
+            return;
         }
 
         Size size = findSize(capacitorBank, facing);
@@ -131,7 +139,7 @@ public class CapacitorBankBER implements BlockEntityRenderer<CapacitorBankBlockE
                 font.drawInBatch("I/0", 0, 0, 0xFF000000, false, poseStack.last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, light, false);
                 poseStack.popPose();
                 poseStack.pushPose();
-                long energySurplus = capacitorBank.getAddedEnergy() - capacitorBank.getRemovedEnergy();
+                long energySurplus = data.added() - data.send();
                 int color = 0;
                 if (energySurplus > 0) {
                     color = 0xFF00FF00;
@@ -150,16 +158,16 @@ public class CapacitorBankBER implements BlockEntityRenderer<CapacitorBankBlockE
                 font.drawInBatch("Input", 0, 0, 0xFF000000, false, poseStack.last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, light, false);
                 poseStack.popPose();
                 poseStack.pushPose();
-                poseStack.translate(-font.width(String.valueOf(capacitorBank.getAddedEnergy())) / 2f, -font.lineHeight * 1.5f, 0);
-                font.drawInBatch(String.valueOf(capacitorBank.getAddedEnergy()), 0, 0, 0xFF00FF00, false, poseStack.last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, light, false);
+                poseStack.translate(-font.width(String.valueOf(data.added())) / 2f, -font.lineHeight * 1.5f, 0);
+                font.drawInBatch(String.valueOf(data.added()), 0, 0, 0xFF00FF00, false, poseStack.last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, light, false);
                 poseStack.popPose();
                 poseStack.pushPose();
                 poseStack.translate(-font.width("Output") / 2f, font.lineHeight * 0.5f, 0);
                 font.drawInBatch("Output", 0, 0, 0xFF000000, false, poseStack.last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, light, false);
                 poseStack.popPose();
                 poseStack.pushPose();
-                poseStack.translate(-font.width(String.valueOf(capacitorBank.getRemovedEnergy())) / 2f, font.lineHeight * 2.5f, 0);
-                font.drawInBatch(String.valueOf(capacitorBank.getRemovedEnergy()), 0, 0, 0xFFFF0000, false, poseStack.last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, light, false);
+                poseStack.translate(-font.width(String.valueOf(data.send())) / 2f, font.lineHeight * 2.5f, 0);
+                font.drawInBatch(String.valueOf(data.send()), 0, 0, 0xFFFF0000, false, poseStack.last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, light, false);
                 poseStack.popPose();
 
             }
@@ -175,13 +183,13 @@ public class CapacitorBankBER implements BlockEntityRenderer<CapacitorBankBlockE
             return DisplayMode.NONE;
         }
 
-        return getDisplayModeRelative(blockEntity.getLevel(), horizontalFacing, blockEntity.getBlockPos(), relative, blockEntity.tier);
+        return getDisplayModeRelative(blockEntity.getLevel(), horizontalFacing, blockEntity.getBlockPos(), relative, blockEntity.getTier());
     }
 
     private static DisplayMode getDisplayModeRelative(Level level, Direction horizontalFacing, BlockPos pos, Vector2i relative, CapacityTier tier) {
         pos = pos.below(relative.y());
         pos = pos.relative(horizontalFacing.getClockWise(), -relative.x);
-        if (level.getBlockEntity(pos) instanceof CapacitorBankBlockEntity capacitorBank && capacitorBank.tier == tier) {
+        if (level.getBlockEntity(pos) instanceof CapacitorBankBlockEntity capacitorBank && capacitorBank.getTier() == tier) {
             return capacitorBank.getDisplayMode(horizontalFacing);
         }
         return DisplayMode.NONE;

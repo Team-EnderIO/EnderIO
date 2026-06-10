@@ -1,4 +1,4 @@
-package com.enderio.enderio.content.machines.capacitor_bank.rework;
+package com.enderio.enderio.content.machines.capacitor_bank;
 
 import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.Nullable;

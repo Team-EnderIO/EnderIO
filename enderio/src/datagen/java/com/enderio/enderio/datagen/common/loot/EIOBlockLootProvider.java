@@ -155,11 +155,6 @@ public class EIOBlockLootProvider extends BlockLootSubProvider {
             copyComponents(capacitorBank.get());
         }
 
-        // Capacitor Banks
-        for (var capacitorBank : EIOBlocks.NEW_CAPACITOR_BANKS.values()) {
-            copyComponents(capacitorBank.get());
-        }
-
         // Niard
         copyComponents(EIOBlocks.NIARD.get());
 

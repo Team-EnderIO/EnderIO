@@ -46,7 +46,6 @@ import com.enderio.enderio.client.content.machines.gui.screen.FarmingStationScre
 import com.enderio.enderio.client.content.machines.gui.screen.FluidTankScreen;
 import com.enderio.enderio.client.content.machines.gui.screen.ImpulseHopperScreen;
 import com.enderio.enderio.client.content.machines.gui.screen.InhibitorObeliskScreen;
-import com.enderio.enderio.client.content.machines.gui.screen.NewCapacitorBankScreen;
 import com.enderio.enderio.client.content.machines.gui.screen.NiardScreen;
 import com.enderio.enderio.client.content.machines.gui.screen.PaintingMachineScreen;
 import com.enderio.enderio.client.content.machines.gui.screen.PoweredSpawnerScreen;
@@ -66,7 +65,6 @@ import com.enderio.enderio.client.content.machines.gui.screen.XPObeliskScreen;
 import com.enderio.enderio.client.content.machines.gui.screen.XPVacuumScreen;
 import com.enderio.enderio.client.content.machines.renderer.blockentity.CapacitorBankBER;
 import com.enderio.enderio.client.content.machines.renderer.blockentity.FluidTankBER;
-import com.enderio.enderio.client.content.machines.renderer.blockentity.NewCapacitorBankBER;
 import com.enderio.enderio.client.content.machines.renderer.blockentity.NiardBER;
 import com.enderio.enderio.client.content.machines.renderer.blockentity.ObeliskBER;
 import com.enderio.enderio.client.content.misc_blocks.EnderSkullRenderer;
@@ -243,7 +241,6 @@ public class EnderIOClient {
 
         // Storage
         event.register(EIOMenus.CAPACITOR_BANK.get(), CapacitorBankScreen::new);
-        event.register(EIOMenus.NEW_CAPACITOR_BANK.get(), NewCapacitorBankScreen::new);
         event.register(EIOMenus.FLUID_TANK.get(), FluidTankScreen::new);
 
         // Misc screens
@@ -256,10 +253,6 @@ public class EnderIOClient {
     public static void modelRenderer(EntityRenderersEvent.RegisterRenderers event) {
         for (var capBank : EIOBlockEntities.CAPACITOR_BANKS.values()) {
             event.registerBlockEntityRenderer(capBank.get(), CapacitorBankBER::new);
-        }
-
-        for (var capBank : EIOBlockEntities.NEW_CAPACITOR_BANKS.values()) {
-            event.registerBlockEntityRenderer(capBank.get(), NewCapacitorBankBER::new);
         }
 
         event.registerBlockEntityRenderer(EIOBlockEntities.NIARD.get(), NiardBER::new);

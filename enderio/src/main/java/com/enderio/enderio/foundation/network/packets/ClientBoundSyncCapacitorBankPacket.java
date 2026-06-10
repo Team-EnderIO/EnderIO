@@ -1,7 +1,7 @@
 package com.enderio.enderio.foundation.network.packets;
 
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.content.machines.capacitor_bank.rework.NewCapacitorBankBlockEntity;
+import com.enderio.enderio.content.machines.capacitor_bank.CapacitorBankBlockEntity;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.UUIDUtil;
@@ -26,7 +26,7 @@ public record ClientBoundSyncCapacitorBankPacket(UUID uuid, long storedEnergy, l
         ClientBoundSyncCapacitorBankPacket::added,
         ByteBufCodecs.VAR_LONG,
         ClientBoundSyncCapacitorBankPacket::send,
-        BlockPos.STREAM_CODEC.apply(ByteBufCodecs.list(NewCapacitorBankBlockEntity.MAX_SIZE)),
+        BlockPos.STREAM_CODEC.apply(ByteBufCodecs.list(CapacitorBankBlockEntity.MAX_SIZE)),
         ClientBoundSyncCapacitorBankPacket::nodes,
         ClientBoundSyncCapacitorBankPacket::new
     );
