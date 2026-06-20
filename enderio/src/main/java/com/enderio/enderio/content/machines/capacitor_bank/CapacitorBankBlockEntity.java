@@ -146,7 +146,7 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
 
         for (Direction side : Direction.values()) {
             if (level.getBlockEntity(getBlockPos().relative(side)) instanceof CapacitorBankBlockEntity bank) {
-                node.getNetwork().connect(node, bank.node);
+                bank.node.getNetwork().connect(bank.node, node);
             }
         }
     }

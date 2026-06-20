@@ -76,7 +76,6 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
 
     @Override
     protected void onMerged(CapacitorBankNetwork other) {
-        super.onMerged(other);
         other.nodes().stream().findFirst().ifPresent( n -> {
             if (n.getBlockEntity().getLevel() instanceof ServerLevel level) {
                 PacketDistributor.sendToPlayersTrackingChunk(level, new ChunkPos(n.getPos()),
@@ -85,6 +84,7 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
         });
         other.uuid = this.uuid;
         other.markDirty();
+        super.onMerged(other);
     }
 
     @Override
@@ -92,6 +92,7 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
         super.onGraphSplit(newGraphs);
         newGraphs.forEach(n -> {
             n.uuid = UUID.randomUUID();
+            n.nodes().stream().findFirst().ifPresent(CapacitorBankNode::makePrimaryNode);
             n.markDirty();
         });
     }

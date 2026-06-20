@@ -1,9 +1,13 @@
 package com.enderio.enderio.content.machines.solar_panel;
 
 import com.enderio.core.common.graph.Network;
+import com.enderio.enderio.content.machines.capacitor_bank.CapacitorBankNetwork;
+import com.enderio.enderio.content.machines.capacitor_bank.CapacitorBankNode;
 import com.mojang.datafixers.util.Pair;
 
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 public final class SolarPanelNetwork extends Network<SolarPanelNetwork, SolarPanelNode> {
 
@@ -46,5 +50,13 @@ public final class SolarPanelNetwork extends Network<SolarPanelNetwork, SolarPan
         if (node.isPrimaryNode()) {
             nodes().stream().findFirst().ifPresent(SolarPanelNode::makePrimaryNode);
         }
+    }
+
+    @Override
+    protected void onGraphSplit(Set<SolarPanelNetwork> newGraphs) {
+        super.onGraphSplit(newGraphs);
+        newGraphs.forEach(n -> {
+            n.nodes().stream().findFirst().ifPresent(SolarPanelNode::makePrimaryNode);
+        });
     }
 }

@@ -228,6 +228,8 @@ public class CapacitorBankNode implements INetworkNode<CapacitorBankNetwork, Cap
     @Override
     public void setNetwork(@Nullable CapacitorBankNetwork network) {
         this.network = network;
-        this.isPrimaryNode = false;
+        if (network != null) {
+            this.isPrimaryNode = false;
+        }
     }
 }
