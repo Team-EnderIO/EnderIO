@@ -183,13 +183,13 @@ public class CapacitorBankBER implements BlockEntityRenderer<CapacitorBankBlockE
             return DisplayMode.NONE;
         }
 
-        return getDisplayModeRelative(blockEntity.getLevel(), horizontalFacing, blockEntity.getBlockPos(), relative, blockEntity.getTier());
+        return getDisplayModeRelative(blockEntity.getLevel(), horizontalFacing, blockEntity.getBlockPos(), relative);
     }
 
-    private static DisplayMode getDisplayModeRelative(Level level, Direction horizontalFacing, BlockPos pos, Vector2i relative, CapacityTier tier) {
+    private static DisplayMode getDisplayModeRelative(Level level, Direction horizontalFacing, BlockPos pos, Vector2i relative) {
         pos = pos.below(relative.y());
         pos = pos.relative(horizontalFacing.getClockWise(), -relative.x);
-        if (level.getBlockEntity(pos) instanceof CapacitorBankBlockEntity capacitorBank && capacitorBank.getTier() == tier) {
+        if (level.getBlockEntity(pos) instanceof CapacitorBankBlockEntity capacitorBank) {
             return capacitorBank.getDisplayMode(horizontalFacing);
         }
         return DisplayMode.NONE;

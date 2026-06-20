@@ -163,7 +163,8 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
                 }
 
                 var energyStorage = energyStorageCaches.get(side).getCapability();
-                if (energyStorage != null && !(energyStorage instanceof CapacitorBankEnergyStorage || energyStorage instanceof CapacitorBankEnergyStorage.SidedAccess) &&
+                if (energyStorage != null && !(energyStorage instanceof CapacitorBankEnergyStorage
+                    || energyStorage instanceof CapacitorBankEnergyStorage.SidedAccess) &&
                     energyStorage.canReceive() && getIOMode(side).canOutput()) {
                     validPushTargetCache.add(energyStorage);
                 }

@@ -3,6 +3,7 @@ package com.enderio.enderio.content.machines.capacitor_bank;
 import com.enderio.core.common.graph.INetworkNode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
@@ -210,7 +211,7 @@ public class CapacitorBankNode implements INetworkNode<CapacitorBankNetwork, Cap
 
     public void markDirty() {
         blockEntity.setChanged();
-        blockEntity.getLevel().blockUpdated(blockEntity.getBlockPos(), blockEntity.getBlockState().getBlock());
+        blockEntity.getLevel().sendBlockUpdated(blockEntity.getBlockPos(), blockEntity.getBlockState(), blockEntity.getBlockState(), Block.UPDATE_ALL);
     }
 
     @Override
