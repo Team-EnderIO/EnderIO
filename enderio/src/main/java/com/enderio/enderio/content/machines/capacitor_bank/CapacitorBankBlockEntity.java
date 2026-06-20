@@ -10,6 +10,7 @@ import com.enderio.enderio.foundation.block.entity.Wrenchable;
 import com.enderio.enderio.foundation.block.entity.legacy.LegacyMachineBlockEntity;
 import com.enderio.enderio.foundation.block.legacy.LegacyMachineBlock;
 import com.enderio.enderio.foundation.io.IOConfig;
+import com.enderio.enderio.foundation.network.packets.ClientBoundRemoveCapacitorBankPacket;
 import com.enderio.enderio.foundation.network.packets.ClientBoundSyncCapacitorBankPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundCycleIOConfigPacket;
 import com.enderio.enderio.foundation.tag.EIOTags;
@@ -70,7 +71,7 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
     private final CapacitorTier tier;
     private final CapacitorBankNode node;
     private final CapacitorBankEnergyStorage energyStorage;
-    private UUID uuid;
+    private UUID uuid = UUID.randomUUID();
 
     private final Map<Direction, BlockCapabilityCache<IEnergyStorage, Direction>> energyStorageCaches = new EnumMap<>(Direction.class);
     private final Set<IEnergyStorage> validPushTargetCache = new HashSet<>();
@@ -111,7 +112,12 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
     @Override
     public void setRemoved() {
         if (node.isValid()) {
-            node.getNetwork().remove(node);
+            CapacitorBankNetwork network = node.getNetwork();
+            network.remove(node);
+            if (network.isEmpty() && level instanceof ServerLevel serverLevel) {
+                PacketDistributor.sendToPlayersTrackingChunk(serverLevel, new ChunkPos(getBlockPos()),
+                    new ClientBoundRemoveCapacitorBankPacket(network.getUuid()));
+            }
         }
 
         super.setRemoved();

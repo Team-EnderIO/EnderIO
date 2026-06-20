@@ -2,7 +2,11 @@ package com.enderio.enderio.content.machines.capacitor_bank;
 
 import com.enderio.core.common.graph.Network;
 import com.enderio.enderio.api.io.RedstoneControl;
+import com.enderio.enderio.foundation.network.packets.ClientBoundRemoveCapacitorBankPacket;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.ChunkPos;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.List;
 import java.util.Set;
@@ -73,6 +77,12 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
     @Override
     protected void onMerged(CapacitorBankNetwork other) {
         super.onMerged(other);
+        other.nodes().stream().findFirst().ifPresent( n -> {
+            if (n.getBlockEntity().getLevel() instanceof ServerLevel level) {
+                PacketDistributor.sendToPlayersTrackingChunk(level, new ChunkPos(n.getPos()),
+                    new ClientBoundRemoveCapacitorBankPacket(n.getNetwork().getUuid()));
+            }
+        });
         other.uuid = this.uuid;
         other.markDirty();
     }
@@ -80,7 +90,7 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
     @Override
     protected void onGraphSplit(Set<CapacitorBankNetwork> newGraphs) {
         super.onGraphSplit(newGraphs);
-        newGraphs.stream().findFirst().ifPresent(n -> {
+        newGraphs.forEach(n -> {
             n.uuid = UUID.randomUUID();
             n.markDirty();
         });

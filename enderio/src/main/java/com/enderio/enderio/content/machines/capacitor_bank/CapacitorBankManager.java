@@ -19,6 +19,10 @@ public class CapacitorBankManager {
         DATA.put(uuid, new CapacitorSyncData(storedEnergy, capacity, added, send, nodes));
     }
 
+    public static void removeData(UUID uuid) {
+        DATA.remove(uuid);
+    }
+
     @Nullable
     public static CapacitorSyncData getData(UUID uuid) {
         return DATA.get(uuid);
