@@ -8,6 +8,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.neoforged.neoforge.network.PacketDistributor;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -33,27 +35,59 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
     }
 
     public long getTotalEnergyStored() {
-        return nodes().stream().mapToLong(CapacitorBankNode::getEnergyStored).sum();
+        long total = 0;
+
+        for (CapacitorBankNode node : nodes()) {
+            total += node.getEnergyStored();
+        }
+
+        return total;
     }
 
     public long getTotalMaxEnergyStored() {
-        return nodes().stream().mapToLong(CapacitorBankNode::getMaxEnergyStored).sum();
+        long total = 0;
+
+        for (CapacitorBankNode node : nodes()) {
+            total += node.getMaxEnergyStored();
+        }
+
+        return total;
     }
 
     public List<BlockPos> positions() {
-        return nodes().stream().map(CapacitorBankNode::getPos).toList();
+        List<BlockPos> positions = new ArrayList<>(nodes().size());
+
+        for (CapacitorBankNode node : nodes()) {
+            positions.add(node.getPos());
+        }
+
+        return positions;
     }
 
     public long getAddedEnergy() {
-        return nodes().stream().mapToLong(CapacitorBankNode::getAdded).sum();
+        long sum = 0;
+
+        for (CapacitorBankNode node : nodes()) {
+            sum += node.getAdded();
+        }
+
+        return sum;
     }
 
     public void reset(long time) {
-        nodes().forEach(n -> n.reset(time));
+        for (CapacitorBankNode node : nodes()) {
+            node.reset(time);
+        }
     }
 
     public long getSendEnergy() {
-        return nodes().stream().mapToLong(CapacitorBankNode::getSend).sum();
+        long sum = 0;
+
+        for (CapacitorBankNode node : nodes()) {
+            sum += node.getSend();
+        }
+
+        return sum;
     }
 
     public void markDirty() {
@@ -70,18 +104,27 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
 
         // If we removed the 'primary', find a new one.
         if (node.isPrimaryNode()) {
-            nodes().stream().findFirst().ifPresent(CapacitorBankNode::makePrimaryNode);
+            Iterator<CapacitorBankNode> it = nodes().iterator();
+            if (it.hasNext()) {
+                it.next().makePrimaryNode();
+            }
         }
     }
 
     @Override
     protected void onMerged(CapacitorBankNetwork other) {
-        other.nodes().stream().findFirst().ifPresent( n -> {
+        Iterator<CapacitorBankNode> it = other.nodes().iterator();
+
+        if (it.hasNext()) {
+            CapacitorBankNode n = it.next();
+
             if (n.getBlockEntity().getLevel() instanceof ServerLevel level) {
                 PacketDistributor.sendToPlayersTrackingChunk(level, new ChunkPos(n.getPos()),
-                    new ClientBoundRemoveCapacitorBankPacket(n.getNetwork().getUuid()));
+                    new ClientBoundRemoveCapacitorBankPacket(n.getNetwork().getUuid())
+                );
             }
-        });
+        }
+
         other.uuid = this.uuid;
         other.markDirty();
         super.onMerged(other);
@@ -90,11 +133,16 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
     @Override
     protected void onGraphSplit(Set<CapacitorBankNetwork> newGraphs) {
         super.onGraphSplit(newGraphs);
-        newGraphs.forEach(n -> {
+        for (CapacitorBankNetwork n : newGraphs) {
             n.uuid = UUID.randomUUID();
-            n.nodes().stream().findFirst().ifPresent(CapacitorBankNode::makePrimaryNode);
+
+            Iterator<CapacitorBankNode> it = n.nodes().iterator();
+            if (it.hasNext()) {
+                it.next().makePrimaryNode();
+            }
+
             n.markDirty();
-        });
+        }
     }
 
     public RedstoneControl getRedstoneControl() {
@@ -103,14 +151,30 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
 
     public void setRedstoneControl(RedstoneControl redstoneControl) {
         this.redstoneControl = redstoneControl;
-        nodes().forEach(n -> n.getBlockEntity().setRedstoneControl(redstoneControl));
+        for (CapacitorBankNode n : nodes()) {
+            n.getBlockEntity().setRedstoneControl(redstoneControl);
+        }
     }
 
     public boolean isRedstoneBlocked() {
         return switch (redstoneControl) {
             case ALWAYS_ACTIVE -> false;
-            case ACTIVE_WITH_SIGNAL -> nodes().stream().allMatch(n -> n.getBlockEntity().isRedstoneBlocked());
-            case ACTIVE_WITHOUT_SIGNAL -> nodes().stream().anyMatch(n -> n.getBlockEntity().isRedstoneBlocked());
+            case ACTIVE_WITH_SIGNAL -> {
+                for (CapacitorBankNode n : nodes()) {
+                    if (!n.getBlockEntity().isRedstoneBlocked()) {
+                        yield false;
+                    }
+                }
+                yield true;
+            }
+            case ACTIVE_WITHOUT_SIGNAL -> {
+                for (CapacitorBankNode n : nodes()) {
+                    if (n.getBlockEntity().isRedstoneBlocked()) {
+                        yield true;
+                    }
+                }
+                yield false;
+            }
             case NEVER_ACTIVE -> true;
         };
     }

@@ -7,6 +7,7 @@ import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -180,12 +181,15 @@ public class CapacitorBankNode implements INetworkNode<CapacitorBankNetwork, Cap
         }
 
         //Sorted list, so we push to the emptiest first
-        List<IEnergyStorage> validTargets = network.nodes()
-            .stream()
-            .<IEnergyStorage>mapMulti((node, consumer) ->
-                node.blockEntity.getValidPushTargets().forEach(consumer))
-            .sorted(Comparator.comparingInt(c -> c.getMaxEnergyStored() - c.getEnergyStored()))
-            .toList();
+        List<IEnergyStorage> validTargets = new ArrayList<>();
+
+        for (CapacitorBankNode node : network.nodes()) {
+            validTargets.addAll(node.blockEntity.getValidPushTargets());
+        }
+
+        validTargets.sort(Comparator.comparingInt(
+            c -> c.getMaxEnergyStored() - c.getEnergyStored()
+        ));
 
         // Extract from the entire network
         long total = 0L;
@@ -202,7 +206,9 @@ public class CapacitorBankNode implements INetworkNode<CapacitorBankNetwork, Cap
         if (remaining > 0) {
             // then balance the nodes
             // first sort to fill the smallest ones first
-            reDistributeNodes(remaining, network.nodes().stream().sorted(Comparator.comparingInt(c -> c.getMaxEnergyStored() - c.getEnergyStored())).toList());
+            ArrayList<CapacitorBankNode> nodes = new ArrayList<>(network.nodes());
+            nodes.sort(Comparator.comparingInt(c -> c.getMaxEnergyStored() - c.getEnergyStored()));
+            reDistributeNodes(remaining, nodes);
         }
     }
 
