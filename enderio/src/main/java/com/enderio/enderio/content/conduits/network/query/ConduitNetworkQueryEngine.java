@@ -1,16 +1,16 @@
 package com.enderio.enderio.content.conduits.network.query;
 
 import com.enderio.enderio.api.conduits.network.ConduitNetworkChange;
-import com.enderio.enderio.api.conduits.network.GraphRebuilt;
 import com.enderio.enderio.api.conduits.network.query.ConduitNetworkQueries;
 import com.enderio.enderio.api.conduits.network.query.ConduitNetworkQuery;
 import com.enderio.enderio.api.conduits.network.query.ConduitNetworkQueryType;
 import com.enderio.enderio.content.conduits.network.ConduitNetworkImpl;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Sets;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class ConduitNetworkQueryEngine {
@@ -19,30 +19,31 @@ public class ConduitNetworkQueryEngine {
     private static final int MAX_CHANGES_BEFORE_REBUILD = 50;
 
     private final ConduitNetworkImpl network;
-    private final Set<ConduitNetworkChange> networkChangesSinceLastQuery;
-    private final Set<ConduitNetworkQuery> queries = new HashSet<>();
+    private final List<ConduitNetworkChange> networkChangesSinceLastQuery;
+    private final Set<ConduitNetworkQuery<?>> queries = new HashSet<>();
 
     private boolean isQuerying;
+    private boolean shouldFullyRebuildCaches = true;
 
     public ConduitNetworkQueryEngine(ConduitNetworkImpl network) {
         this.network = network;
-        this.networkChangesSinceLastQuery = new HashSet<>(MAX_CHANGES_BEFORE_REBUILD);
+        this.networkChangesSinceLastQuery = new ArrayList<>(MAX_CHANGES_BEFORE_REBUILD);
 
         for (ConduitNetworkQueryType<?> queryType : network.conduitType().requiredQueryTypes()) {
-            queries.add(queryType.factory().get());
+            queries.add(queryType.create());
         }
     }
 
     private void addUpdate(ConduitNetworkChange change) {
-        // If we have a rebuild event, we don't add anything more.
-        if (networkChangesSinceLastQuery.contains(GraphRebuilt.INSTANCE)) {
+        // If we're fully rebuilding, we don't track events
+        if (shouldFullyRebuildCaches) {
             return;
         }
 
         // If adding another event would surpass our maximum size, we'll just recreate
         if (networkChangesSinceLastQuery.size() + 1 >= MAX_CHANGES_BEFORE_REBUILD) {
+            shouldFullyRebuildCaches = true;
             networkChangesSinceLastQuery.clear();
-            networkChangesSinceLastQuery.add(GraphRebuilt.INSTANCE);
             return;
         }
 
@@ -52,11 +53,18 @@ public class ConduitNetworkQueryEngine {
     public ConduitNetworkQueries beginQuerying() {
         Preconditions.checkState(!isQuerying, "Cannot start querying until previous query session has completed.");
 
-        Set<ConduitNetworkChange> readOnlyChangeSet = Collections.unmodifiableSet(networkChangesSinceLastQuery);
-
         // TODO: need to order such that dependent queries are updated first.
-        for (ConduitNetworkQuery query : queries) {
-            query.processUpdates(network, readOnlyChangeSet);
+
+        if (shouldFullyRebuildCaches) {
+            shouldFullyRebuildCaches = false;
+            for (ConduitNetworkQuery<?> query : queries) {
+                query.fullRebuild(network);
+            }
+        } else {
+            List<ConduitNetworkChange> readOnlyChangeSet = Collections.unmodifiableList(networkChangesSinceLastQuery);
+            for (ConduitNetworkQuery<?> query : queries) {
+                query.processUpdates(network, readOnlyChangeSet);
+            }
         }
 
         networkChangesSinceLastQuery.clear();

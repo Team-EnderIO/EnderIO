@@ -5,4 +5,8 @@ import net.minecraft.resources.ResourceKey;
 import java.util.Set;
 import java.util.function.Supplier;
 
-public record ConduitNetworkQueryType<T extends ConduitNetworkQuery>(Supplier<T> factory, Set<ResourceKey<ConduitNetworkQueryType<?>>> dependentQueries) {}
+public record ConduitNetworkQueryType<T extends ConduitNetworkQuery<?>>(Supplier<T> factory, Set<ResourceKey<ConduitNetworkQueryType<?>>> dependentQueries) {
+    public T create() {
+        return factory.get();
+    }
+}
