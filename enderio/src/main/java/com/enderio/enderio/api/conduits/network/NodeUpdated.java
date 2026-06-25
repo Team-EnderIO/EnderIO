@@ -2,6 +2,4 @@ package com.enderio.enderio.api.conduits.network;
 
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 
-import java.util.Set;
-
-public record NodesLoaded(Set<? extends ConduitNode> nodes) implements ConduitNetworkChange {}
+public record NodeUpdated(ConduitNode node) implements ConduitNetworkChange {}

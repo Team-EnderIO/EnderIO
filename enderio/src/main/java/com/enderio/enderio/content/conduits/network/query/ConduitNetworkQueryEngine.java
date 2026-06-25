@@ -56,7 +56,7 @@ public class ConduitNetworkQueryEngine {
 
         // TODO: need to order such that dependent queries are updated first.
         for (ConduitNetworkQuery query : queries) {
-            query.processUpdates(readOnlyChangeSet);
+            query.processUpdates(network, readOnlyChangeSet);
         }
 
         networkChangesSinceLastQuery.clear();
