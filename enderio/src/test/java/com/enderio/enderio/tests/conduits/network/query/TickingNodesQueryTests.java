@@ -5,6 +5,8 @@ import com.enderio.enderio.api.conduits.network.NodeAdded;
 import com.enderio.enderio.api.conduits.network.NodeRemoved;
 import com.enderio.enderio.api.conduits.network.NodeUpdated;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
+import com.enderio.enderio.api.conduits.network.query.ConduitNetworkQueryUpdateContext;
+import com.enderio.enderio.api.conduits.network.query.ConduitNetworkRebuildContext;
 import com.enderio.enderio.api.conduits.network.query.TickingNodesQuery;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -29,8 +31,11 @@ public class TickingNodesQueryTests {
 
         when(network.nodes()).thenAnswer(ignored -> Set.of(tickingNode, nonTickingNode));
 
+        var context = mock(ConduitNetworkRebuildContext.class);
+        when(context.network()).thenReturn(network);
+
         // Act.
-        query.fullRebuild(network);
+        query.fullRebuild(context);
 
         // Assert.
         verify(network).nodes();
@@ -42,15 +47,18 @@ public class TickingNodesQueryTests {
     public void processUpdates_AddedNode_IsTicking_Added() {
         // Arrange.
         var query = TickingNodesQuery.TYPE.factory().get();
-        var network = mock(ConduitNetwork.class);
 
-        ConduitNode node = mock(ConduitNode.class);
+        var node = mock(ConduitNode.class);
         when(node.isTicking()).thenReturn(true);
 
+        var context = mock(ConduitNetworkQueryUpdateContext.class);
+        when(context.changes()).thenReturn(List.of(new NodeAdded(node)));
+
         // Act.
-        var result = query.processUpdates(network, List.of(new NodeAdded(node)));
+        var result = query.processUpdates(context);
 
         // Assert.
+        verify(context, never()).network();
         Assertions.assertTrue(result.didChange());
         Assertions.assertTrue(result.addedNodes().contains(node));
         Assertions.assertEquals(1, result.addedNodes().size());
@@ -62,15 +70,18 @@ public class TickingNodesQueryTests {
     public void processUpdates_AddedNode_IsNotTicking_NoChange() {
         // Arrange.
         var query = TickingNodesQuery.TYPE.factory().get();
-        var network = mock(ConduitNetwork.class);
 
         ConduitNode node = mock(ConduitNode.class);
         when(node.isTicking()).thenReturn(false);
 
+        var context = mock(ConduitNetworkQueryUpdateContext.class);
+        when(context.changes()).thenReturn(List.of(new NodeAdded(node)));
+
         // Act.
-        var result = query.processUpdates(network, List.of(new NodeAdded(node)));
+        var result = query.processUpdates(context);
 
         // Assert.
+        verify(context, never()).network();
         Assertions.assertFalse(result.didChange());
         Assertions.assertTrue(result.addedNodes().isEmpty());
         Assertions.assertTrue(result.removedNodes().isEmpty());
@@ -87,12 +98,19 @@ public class TickingNodesQueryTests {
         when(node.isTicking()).thenReturn(true);
 
         when(network.nodes()).thenAnswer(ignored -> Set.of(node));
-        query.fullRebuild(network);
+
+        var rebuildContext = mock(ConduitNetworkRebuildContext.class);
+        when(rebuildContext.network()).thenReturn(network);
+        query.fullRebuild(rebuildContext);
+
+        var context = mock(ConduitNetworkQueryUpdateContext.class);
+        when(context.changes()).thenReturn(List.of(new NodeRemoved(node)));
 
         // Act.
-        var result = query.processUpdates(network, List.of(new NodeRemoved(node)));
+        var result = query.processUpdates(context);
 
         // Assert.
+        verify(context, never()).network();
         Assertions.assertTrue(result.didChange());
         Assertions.assertTrue(result.addedNodes().isEmpty());
         Assertions.assertTrue(result.removedNodes().contains(node));
@@ -110,12 +128,19 @@ public class TickingNodesQueryTests {
         when(node.isTicking()).thenReturn(false);
 
         when(network.nodes()).thenAnswer(ignored -> Set.of(node));
-        query.fullRebuild(network);
+
+        var rebuildContext = mock(ConduitNetworkRebuildContext.class);
+        when(rebuildContext.network()).thenReturn(network);
+        query.fullRebuild(rebuildContext);
+
+        var context = mock(ConduitNetworkQueryUpdateContext.class);
+        when(context.changes()).thenReturn(List.of(new NodeRemoved(node)));
 
         // Act.
-        var result = query.processUpdates(network, List.of(new NodeRemoved(node)));
+        var result = query.processUpdates(context);
 
         // Assert.
+        verify(context, never()).network();
         Assertions.assertFalse(result.didChange());
         Assertions.assertTrue(result.addedNodes().isEmpty());
         Assertions.assertTrue(result.removedNodes().isEmpty());
@@ -132,14 +157,21 @@ public class TickingNodesQueryTests {
         when(node.isTicking()).thenReturn(false);
 
         when(network.nodes()).thenAnswer(ignored -> Set.of(node));
-        query.fullRebuild(network);
+
+        var rebuildContext = mock(ConduitNetworkRebuildContext.class);
+        when(rebuildContext.network()).thenReturn(network);
+        query.fullRebuild(rebuildContext);
 
         when(node.isTicking()).thenReturn(true);
 
+        var context = mock(ConduitNetworkQueryUpdateContext.class);
+        when(context.changes()).thenReturn(List.of(new NodeUpdated(node)));
+
         // Act.
-        var result = query.processUpdates(network, List.of(new NodeUpdated(node)));
+        var result = query.processUpdates(context);
 
         // Assert.
+        verify(context, never()).network();
         Assertions.assertTrue(result.didChange());
         Assertions.assertEquals(1, result.addedNodes().size());
         Assertions.assertTrue(result.addedNodes().contains(node));
@@ -157,14 +189,21 @@ public class TickingNodesQueryTests {
         when(node.isTicking()).thenReturn(true);
 
         when(network.nodes()).thenAnswer(ignored -> Set.of(node));
-        query.fullRebuild(network);
+
+        var rebuildContext = mock(ConduitNetworkRebuildContext.class);
+        when(rebuildContext.network()).thenReturn(network);
+        query.fullRebuild(rebuildContext);
 
         when(node.isTicking()).thenReturn(false);
 
+        var context = mock(ConduitNetworkQueryUpdateContext.class);
+        when(context.changes()).thenReturn(List.of(new NodeUpdated(node)));
+
         // Act.
-        var result = query.processUpdates(network, List.of(new NodeUpdated(node)));
+        var result = query.processUpdates(context);
 
         // Assert.
+        verify(context, never()).network();
         Assertions.assertTrue(result.didChange());
         Assertions.assertTrue(result.addedNodes().isEmpty());
         Assertions.assertEquals(1, result.removedNodes().size());
@@ -182,12 +221,19 @@ public class TickingNodesQueryTests {
         when(node.isTicking()).thenReturn(true);
 
         when(network.nodes()).thenAnswer(ignored -> Set.of(node));
-        query.fullRebuild(network);
+
+        var rebuildContext = mock(ConduitNetworkRebuildContext.class);
+        when(rebuildContext.network()).thenReturn(network);
+        query.fullRebuild(rebuildContext);
+
+        var context = mock(ConduitNetworkQueryUpdateContext.class);
+        when(context.changes()).thenReturn(List.of(new NodeUpdated(node)));
 
         // Act.
-        var result = query.processUpdates(network, List.of(new NodeUpdated(node)));
+        var result = query.processUpdates(context);
 
         // Assert.
+        verify(context, never()).network();
         Assertions.assertFalse(result.didChange());
         Assertions.assertTrue(result.addedNodes().isEmpty());
         Assertions.assertTrue(result.removedNodes().isEmpty());
@@ -204,12 +250,19 @@ public class TickingNodesQueryTests {
         when(node.isTicking()).thenReturn(false);
 
         when(network.nodes()).thenAnswer(ignored -> Set.of(node));
-        query.fullRebuild(network);
+
+        var rebuildContext = mock(ConduitNetworkRebuildContext.class);
+        when(rebuildContext.network()).thenReturn(network);
+        query.fullRebuild(rebuildContext);
+
+        var context = mock(ConduitNetworkQueryUpdateContext.class);
+        when(context.changes()).thenReturn(List.of(new NodeUpdated(node)));
 
         // Act.
-        var result = query.processUpdates(network, List.of(new NodeUpdated(node)));
+        var result = query.processUpdates(context);
 
         // Assert.
+        verify(context, never()).network();
         Assertions.assertFalse(result.didChange());
         Assertions.assertTrue(result.addedNodes().isEmpty());
         Assertions.assertTrue(result.removedNodes().isEmpty());

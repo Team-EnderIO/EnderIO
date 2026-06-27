@@ -17,12 +17,12 @@ import java.util.Set;
 
 public class TickingNodesQuery implements ConduitNetworkQuery<TickingNodesQuery.UpdateResult> {
 
-    public static final ConduitNetworkQueryType<TickingNodesQuery> TYPE = new ConduitNetworkQueryType<>(TickingNodesQuery::new, Set.of());
+    public static final Type<TickingNodesQuery> TYPE = new Type<>(TickingNodesQuery::new, Set.of());
 
     private final Set<ConduitNode> tickingNodes = Sets.newHashSet();
 
     @Override
-    public ConduitNetworkQueryType<?> type() {
+    public Type<?> type() {
         return TYPE;
     }
 
@@ -31,9 +31,9 @@ public class TickingNodesQuery implements ConduitNetworkQuery<TickingNodesQuery.
     }
 
     @Override
-    public void fullRebuild(ConduitNetwork network) {
+    public void fullRebuild(ConduitNetworkRebuildContext context) {
         tickingNodes.clear();
-        for (ConduitNode node : network.nodes()) {
+        for (ConduitNode node : context.network().nodes()) {
             if (node.isTicking()) {
                 tickingNodes.add(node);
             }
@@ -41,11 +41,11 @@ public class TickingNodesQuery implements ConduitNetworkQuery<TickingNodesQuery.
     }
 
     @Override
-    public UpdateResult processUpdates(ConduitNetwork network, List<ConduitNetworkChange> networkChanges) {
+    public UpdateResult processUpdates(ConduitNetworkQueryUpdateContext context) {
         Set<ConduitNode> addedNodes = new HashSet<>();
         Set<ConduitNode> removedNodes = new HashSet<>();
 
-        for (ConduitNetworkChange networkChange : networkChanges) {
+        for (ConduitNetworkChange networkChange : context.changes()) {
             switch (networkChange) {
             case NodeAdded nodeAdded -> {
                 if (nodeAdded.node().isTicking()) {
@@ -89,10 +89,14 @@ public class TickingNodesQuery implements ConduitNetworkQuery<TickingNodesQuery.
             }
         }
 
+        // Normalize, if a node was removed and added again ignore its removal
+        removedNodes.removeAll(addedNodes);
         return new UpdateResult(addedNodes, removedNodes);
     }
 
     public record UpdateResult(Set<ConduitNode> addedNodes, Set<ConduitNode> removedNodes) {
+        public static final UpdateResult EMPTY = new UpdateResult(Set.of(), Set.of());
+
         public boolean didChange() {
             return !addedNodes.isEmpty() || !removedNodes.isEmpty();
         }

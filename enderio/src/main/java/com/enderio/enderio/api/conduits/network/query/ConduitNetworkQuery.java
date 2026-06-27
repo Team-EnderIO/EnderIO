@@ -6,9 +6,10 @@ import org.jetbrains.annotations.ApiStatus;
 
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 
 public interface ConduitNetworkQuery<T> {
-    ConduitNetworkQueryType<?> type();
+    Type<?> type();
 
     /**
      * Called when the network has changed so much, the cache should just be rebuilt.
@@ -16,7 +17,7 @@ public interface ConduitNetworkQuery<T> {
      */
     // TODO: Pass in access to the already computed caches
     @ApiStatus.Internal
-    void fullRebuild(ConduitNetwork network);
+    void fullRebuild(ConduitNetworkRebuildContext context);
 
     /**
      * Process changes in the network since the last time this query was accessed.
@@ -26,5 +27,11 @@ public interface ConduitNetworkQuery<T> {
      */
     // TODO: Pass in an object that provides access to already computed caches *and their change states*
     @ApiStatus.Internal
-    T processUpdates(ConduitNetwork network, List<ConduitNetworkChange> networkChanges);
+    T processUpdates(ConduitNetworkQueryUpdateContext context);
+
+    record Type<T extends ConduitNetworkQuery<?>>(Supplier<T> factory, Set<Type<?>> dependentQueries) {
+        public T create() {
+            return factory.get();
+        }
+    }
 }

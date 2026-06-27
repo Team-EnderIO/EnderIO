@@ -6,7 +6,7 @@ import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.connection.ConduitBlockConnection;
 import com.enderio.enderio.api.conduits.connection.path.ConduitConnectionPath;
 import com.enderio.enderio.api.conduits.connection.path.DefaultConnectionPathComparator;
-import com.enderio.enderio.api.conduits.network.query.ConduitNetworkQueryType;
+import com.enderio.enderio.api.conduits.network.query.ConduitNetworkQuery;
 import com.enderio.enderio.api.conduits.ticker.ConduitTickerBase;
 import com.google.common.base.Preconditions;
 import com.mojang.serialization.Codec;
@@ -96,7 +96,7 @@ public record ConduitType<T extends Conduit<T, U>, U extends ConnectionConfig>(
     }
 
     // TODO: ConduitType will declare the queries that are needed for its ticker.
-    public Set<ConduitNetworkQueryType<?>> requiredQueryTypes() {
+    public Set<ConduitNetworkQuery.Type<?>> requiredQueryTypes() {
         return Set.of();
     }
 

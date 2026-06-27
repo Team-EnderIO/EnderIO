@@ -1,9 +1,11 @@
 package com.enderio.enderio.content.conduits.network.query;
 
+import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkChange;
 import com.enderio.enderio.api.conduits.network.query.ConduitNetworkQueries;
 import com.enderio.enderio.api.conduits.network.query.ConduitNetworkQuery;
-import com.enderio.enderio.api.conduits.network.query.ConduitNetworkQueryType;
+import com.enderio.enderio.api.conduits.network.query.ConduitNetworkQueryUpdateContext;
+import com.enderio.enderio.api.conduits.network.query.ConduitNetworkRebuildContext;
 import com.enderio.enderio.content.conduits.network.ConduitNetworkImpl;
 import com.google.common.base.Preconditions;
 
@@ -29,7 +31,7 @@ public class ConduitNetworkQueryEngine {
         this.network = network;
         this.networkChangesSinceLastQuery = new ArrayList<>(MAX_CHANGES_BEFORE_REBUILD);
 
-        for (ConduitNetworkQueryType<?> queryType : network.conduitType().requiredQueryTypes()) {
+        for (ConduitNetworkQuery.Type<?> queryType : network.conduitType().requiredQueryTypes()) {
             queries.add(queryType.create());
         }
     }
@@ -57,13 +59,18 @@ public class ConduitNetworkQueryEngine {
 
         if (shouldFullyRebuildCaches) {
             shouldFullyRebuildCaches = false;
+
+            var context = new ConduitNetworkRebuildContextImpl(network);
+
             for (ConduitNetworkQuery<?> query : queries) {
-                query.fullRebuild(network);
+                query.fullRebuild(context);
             }
         } else {
             List<ConduitNetworkChange> readOnlyChangeSet = Collections.unmodifiableList(networkChangesSinceLastQuery);
+            var context = new ConduitNetworkQueryUpdateContextImpl(network, readOnlyChangeSet);
+
             for (ConduitNetworkQuery<?> query : queries) {
-                query.processUpdates(network, readOnlyChangeSet);
+                query.processUpdates(context);
             }
         }
 
@@ -71,6 +78,55 @@ public class ConduitNetworkQueryEngine {
 
         isQuerying = true;
         return new ConduitNetworkQueriesImpl();
+    }
+
+    private static class ConduitNetworkRebuildContextImpl implements ConduitNetworkRebuildContext {
+        private final ConduitNetwork network;
+
+        public ConduitNetworkRebuildContextImpl(ConduitNetwork network) {
+            this.network = network;
+        }
+
+        @Override
+        public ConduitNetwork network() {
+            return network;
+        }
+
+        @Override
+        public <T extends ConduitNetworkQuery<?>> T getDependency(ConduitNetworkQuery.Type<T> type) {
+            throw new IllegalArgumentException("This dependency is not available for this query.");
+        }
+    }
+
+    private static class ConduitNetworkQueryUpdateContextImpl implements ConduitNetworkQueryUpdateContext {
+
+        private final ConduitNetwork network;
+        private final List<ConduitNetworkChange> changes;
+
+        public ConduitNetworkQueryUpdateContextImpl(ConduitNetwork network, List<ConduitNetworkChange> changes) {
+            this.network = network;
+            this.changes = changes;
+        }
+
+        @Override
+        public ConduitNetwork network() {
+            return network;
+        }
+
+        @Override
+        public List<ConduitNetworkChange> changes() {
+            return changes;
+        }
+
+        @Override
+        public <T extends ConduitNetworkQuery<?>> T getDependency(ConduitNetworkQuery.Type<T> type) {
+            throw new IllegalArgumentException("This dependency is not available for this query.");
+        }
+
+        @Override
+        public <T extends ConduitNetworkQuery<U>, U> U getDependencyChanges(ConduitNetworkQuery.Type<T> type) {
+            throw new IllegalArgumentException("This dependency is not available for this query.");
+        }
     }
 
     private class ConduitNetworkQueriesImpl implements ConduitNetworkQueries {
