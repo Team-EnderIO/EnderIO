@@ -61,7 +61,8 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
         super(EIOBlockEntities.PAINTING_MACHINE.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, CAPACITOR,
                 EnergyIOMode.Input, CAPACITY, USAGE);
 
-        area = AABB.ofSize(worldPosition.getCenter(), 10, 10, 10);
+        // 26.2-port: BlockPos.getCenter() was removed — manually construct a Vec3
+        area = AABB.ofSize(new net.minecraft.world.phys.Vec3(worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5), 10, 10, 10);
 
         craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy, EIORecipeTypes.PAINTING.get(),
                 this::createTask, this::createRecipeInput);

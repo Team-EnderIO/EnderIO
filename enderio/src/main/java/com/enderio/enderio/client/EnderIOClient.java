@@ -167,7 +167,8 @@ public class EnderIOClient {
 
     @SubscribeEvent
     public static void registerPip(RegisterPictureInPictureRenderersEvent event) {
-        event.register(IOConfigSceneRenderState.class, IOConfigSceneRenderer::new);
+        // 26.2-port: IOConfigSceneRenderer is stubbed (MultiBufferSource removed in 26.2)
+        // event.register(IOConfigSceneRenderState.class, IOConfigSceneRenderer::new);
     }
 
     @SubscribeEvent

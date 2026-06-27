@@ -143,7 +143,7 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
             if (shouldAdvanceOnPress) {
                 selectNext(mouseButton != InputConstants.MOUSE_BUTTON_RIGHT);
             }
-            Minecraft.getInstance().pushGuiLayer(selection);
+            Minecraft.getInstance().gui.setScreen(selection);
         }
     }
 
@@ -209,7 +209,7 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
     }
 
     public boolean isExpanded() {
-        return Minecraft.getInstance().screen instanceof SelectionScreen;
+        return Minecraft.getInstance().gui.screen() instanceof SelectionScreen;
     }
 
     private static class SelectionScreen extends Screen implements EnderScreen {
@@ -242,7 +242,7 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
             if (!(parentWidget.expandTopLeft.x() <= event.x() && parentWidget.expandBottomRight.x() >= event.x()
                     && parentWidget.expandTopLeft.y() <= event.y() && parentWidget.expandBottomRight.y() >= event.y()
                     || parentWidget.isMouseOver(event.x(), event.y()))) {
-                Minecraft.getInstance().popGuiLayer();
+                Minecraft.getInstance().gui.setScreen(null);
             }
 
             return super.mouseClicked(event, isDoubleClick);
@@ -257,13 +257,16 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
         public void onClose() {
             super.onClose();
             // Close the underlying GUI as well, player pressing escape likely wants to close the screen, not the popout
-            minecraft.popGuiLayer();
+            minecraft.gui.setScreen(null);
         }
 
         @Override
         public void resize(int width, int height) {
-            minecraft.popGuiLayer();
-            minecraft.screen.resize(width, height);
+            minecraft.gui.setScreen(null);
+            var currentScreen = minecraft.gui.screen();
+            if (currentScreen != null) {
+                currentScreen.resize(width, height);
+            }
         }
     }
 

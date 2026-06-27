@@ -19,6 +19,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -42,15 +43,15 @@ public class SoulBindingRecipeProvider extends SubRecipeProvider {
     public void buildRecipes(HolderLookup.Provider registries, RecipeOutput recipeOutput) {
         this.items = registries.lookupOrThrow(Registries.ITEM);
 
-        build(EIOItems.ENTICING_CRYSTAL, ingredientFromTag(Tags.Items.GEMS_EMERALD), 51200, 4, EntityType.VILLAGER,
+        build(EIOItems.ENTICING_CRYSTAL, ingredientFromTag(Tags.Items.GEMS_EMERALD), 51200, 4, EntityTypes.VILLAGER,
                 recipeOutput);
-        build(EIOItems.ENDER_CRYSTAL, ingredientFromTag(EIOTags.Items.GEMS_VIBRANT_CRYSTAL), 76800, 6, EntityType.ENDERMAN,
+        build(EIOItems.ENDER_CRYSTAL, ingredientFromTag(EIOTags.Items.GEMS_VIBRANT_CRYSTAL), 76800, 6, EntityTypes.ENDERMAN,
                 recipeOutput);
         build(EIOItems.PRESCIENT_CRYSTAL, ingredientFromTag(EIOTags.Items.GEMS_VIBRANT_CRYSTAL), 100000, 8,
-                EntityType.SHULKER, recipeOutput);
-        build(EIOItems.FRANK_N_ZOMBIE, Ingredient.of(EIOItems.Z_LOGIC_CONTROLLER), 51200, 4, EntityType.ZOMBIE,
+                EntityTypes.SHULKER, recipeOutput);
+        build(EIOItems.FRANK_N_ZOMBIE, Ingredient.of(EIOItems.Z_LOGIC_CONTROLLER), 51200, 4, EntityTypes.ZOMBIE,
                 recipeOutput);
-        build(EIOItems.SENTIENT_ENDER, Ingredient.of(EIOItems.ENDER_RESONATOR), 51200, 4, EntityType.WITCH,
+        build(EIOItems.SENTIENT_ENDER, Ingredient.of(EIOItems.ENDER_RESONATOR), 51200, 4, EntityTypes.WITCH,
                 recipeOutput);
         build(EIOItems.BROKEN_SPAWNER, AnySoulBindableIngredient.of(EIOItems.BROKEN_SPAWNER), 288000, 8, recipeOutput);
         build(EIOBlocks.POWERED_SPAWNER, AnySoulBindableIngredient.of(EIOBlocks.POWERED_SPAWNER), 288000, 8, true,
@@ -59,27 +60,27 @@ public class SoulBindingRecipeProvider extends SubRecipeProvider {
                 recipeOutput);
         build(EIOBlocks.FARMING_STATION, Ingredient.of(EIOBlocks.FARMING_STATION), 188000, 5, FarmSoul.NAME,
                 recipeOutput);
-        build(EIOItems.PLAYER_TOKEN, Ingredient.of(EIOItems.DARK_STEEL_BALL), 12800, 1, EntityType.VILLAGER,
+        build(EIOItems.PLAYER_TOKEN, Ingredient.of(EIOItems.DARK_STEEL_BALL), 12800, 1, EntityTypes.VILLAGER,
                 recipeOutput);
         build(EIOItems.MONSTER_TOKEN, Ingredient.of(EIOItems.SOULARIUM_BALL), 12800, 1, MobCategory.MONSTER,
                 recipeOutput);
         build(EIOItems.ANIMAL_TOKEN, Ingredient.of(EIOItems.SOULARIUM_BALL), 12800, 1, MobCategory.CREATURE,
                 recipeOutput);
         build(EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.ENERGETIC),
-                Ingredient.of(EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.ENERGETIC)), 12800, 8, EntityType.PHANTOM,
+                Ingredient.of(EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.ENERGETIC)), 12800, 8, EntityTypes.PHANTOM,
                 recipeOutput);
         build(EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.PULSATING),
-                Ingredient.of(EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.PULSATING)), 51200, 12, EntityType.PHANTOM,
+                Ingredient.of(EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.PULSATING)), 51200, 12, EntityTypes.PHANTOM,
                 recipeOutput);
         build(EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.VIBRANT),
-                Ingredient.of(EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.VIBRANT)), 288000, 14, EntityType.PHANTOM,
+                Ingredient.of(EIOBlocks.SOLAR_PANELS.get(SolarPanelTier.VIBRANT)), 288000, 14, EntityTypes.PHANTOM,
                 recipeOutput);
 
         InfestedBlock.BLOCK_BY_HOST_BLOCK.forEach((original, infested) -> buildInfested(infested, original, recipeOutput));
     }
 
     protected void buildInfested(ItemLike infestedItem, ItemLike original, RecipeOutput recipeOutput) {
-        build(infestedItem, Ingredient.of(original), 10000, 0, EntityType.SILVERFISH, recipeOutput);
+        build(infestedItem, Ingredient.of(original), 10000, 0, EntityTypes.SILVERFISH, recipeOutput);
     }
 
     protected void build(ItemLike output, Ingredient input, int energy, int exp,

@@ -146,4 +146,5 @@ dependencyResolutionManagement {
 
 include("endercore")
 include("enderio")
-include("enderio-modded-conduits")
+// enderio-modded-conduits removed in 26.2 port — third-party mod interactions deferred
+// include("enderio-modded-conduits")

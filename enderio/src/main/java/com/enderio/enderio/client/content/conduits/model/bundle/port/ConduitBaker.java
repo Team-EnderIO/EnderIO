@@ -44,19 +44,30 @@ public class ConduitBaker implements ModelBaker {
         return baker.compute(key);
     }
 
-    static class ConduitMaterialBaker implements MaterialBaker {
+    static class ConduitMaterialBaker extends MaterialBaker {
 
-        private final MaterialBaker materialBaker;
-        private final Material sprite;
-
-        public ConduitMaterialBaker(MaterialBaker materialBaker, Material sprite) {
+        // 26.2-port: MaterialBaker is now an abstract class; the parent needs the
+        //   missing-sprite TextureAtlasSprite passed in. We pass null here (matches the
+        //   default behaviour used by the parent MaterialBaker class), but a proper
+        //   port should plumb in the real missing-sprite.
+        ConduitMaterialBaker(MaterialBaker materialBaker, Material sprite) {
+            super(/* missingSprite= */ null);
             this.materialBaker = materialBaker;
             this.sprite = sprite;
         }
 
+        private final MaterialBaker materialBaker;
+        private final Material sprite;
+
         @Override
         public Material.Baked get(Material material, ModelDebugName modelDebugName) {
             return materialBaker.get(material, modelDebugName);
+        }
+
+        // 26.2-port: MaterialBaker added a new abstract bake(Material) method
+        @Override
+        protected Material.Baked bake(Material material) {
+            return materialBaker.get(material, () -> "conduit_baker");
         }
 
         @Override

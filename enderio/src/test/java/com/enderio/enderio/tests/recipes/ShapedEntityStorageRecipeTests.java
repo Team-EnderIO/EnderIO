@@ -7,6 +7,7 @@ import com.enderio.enderio.foundation.soul.ShapedEntityStorageRecipe;
 import com.enderio.enderio.init.EIOItems;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
@@ -38,7 +39,7 @@ public class ShapedEntityStorageRecipeTests {
             new ItemStackTemplate(EIOItems.BROKEN_SPAWNER));
 
         var input = CraftingInput.of(3, 3, List.of(
-            SoulVialItem.forSoul(Soul.of(EntityType.ALLAY)), Items.SAND.getDefaultInstance(), ItemStack.EMPTY,
+            SoulVialItem.forSoul(Soul.of(EntityTypes.ALLAY)), Items.SAND.getDefaultInstance(), ItemStack.EMPTY,
             ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY,
             ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY));
 
@@ -46,7 +47,7 @@ public class ShapedEntityStorageRecipeTests {
         var result = wrappedRecipe.assemble(input);
 
         Assertions.assertEquals(EIOItems.BROKEN_SPAWNER.get(), result.getItem());
-        Assertions.assertEquals(Soul.of(EntityType.ALLAY), SoulBoundUtils.getBoundSoul(result));
+        Assertions.assertEquals(Soul.of(EntityTypes.ALLAY), SoulBoundUtils.getBoundSoul(result));
     }
 
     @Test
@@ -60,7 +61,7 @@ public class ShapedEntityStorageRecipeTests {
             new ItemStackTemplate(EIOItems.SOUL_VIAL));
 
         var input = CraftingInput.of(3, 3, List.of(
-            SoulVialItem.forSoul(Soul.of(EntityType.ALLAY)), Items.SAND.getDefaultInstance(), ItemStack.EMPTY,
+            SoulVialItem.forSoul(Soul.of(EntityTypes.ALLAY)), Items.SAND.getDefaultInstance(), ItemStack.EMPTY,
             ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY,
             ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY));
 
@@ -82,7 +83,7 @@ public class ShapedEntityStorageRecipeTests {
             new ItemStackTemplate(Items.OAK_BUTTON));
 
         var input = CraftingInput.of(3, 3, List.of(
-            SoulVialItem.forSoul(Soul.of(EntityType.ALLAY)), Items.SAND.getDefaultInstance(), ItemStack.EMPTY,
+            SoulVialItem.forSoul(Soul.of(EntityTypes.ALLAY)), Items.SAND.getDefaultInstance(), ItemStack.EMPTY,
             ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY,
             ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY));
 

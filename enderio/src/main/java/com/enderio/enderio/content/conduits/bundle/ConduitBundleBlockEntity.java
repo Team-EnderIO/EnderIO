@@ -754,7 +754,9 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
     private void dropItem(ItemStack stack) {
         if (level != null) {
-            var center = getBlockPos().getCenter();
+            // 26.2-port: BlockPos.getCenter() was removed — manually construct a Vec3
+            var pos = getBlockPos();
+            var center = new net.minecraft.world.phys.Vec3(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
             level.addFreshEntity(new ItemEntity(level, center.x, center.y, center.z, stack.copy()));
         }
     }
