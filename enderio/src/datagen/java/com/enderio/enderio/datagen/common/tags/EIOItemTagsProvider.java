@@ -1,14 +1,19 @@
 package com.enderio.enderio.datagen.common.tags;
 
+import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.content.glass.GlassLighting;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
+import net.minecraft.references.BlockItemId;
+import net.minecraft.references.BlockItemIds;
+import net.minecraft.references.ItemIds;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.WeatheringCopper;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.ItemTagsProvider;
@@ -21,12 +26,8 @@ import java.util.concurrent.CompletableFuture;
 
 public class EIOItemTagsProvider extends ItemTagsProvider {
 
-    // 26.2-port: IntrinsicHolderTagsProvider was removed in 26.2. Items are now
-    //   added to tags via the ResourceKey overload of TagAppender.add (see the
-    //   .getKey() / .builtInRegistryHolder() calls below).
-
     public EIOItemTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
-        super(output, lookupProvider, com.enderio.enderio.api.EnderIOAPI.MOD_ID);
+        super(output, lookupProvider, EnderIOAPI.MOD_ID);
     }
 
     @Override
@@ -52,6 +53,8 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
             .addTag(EIOTags.Items.BLOCKS_VIBRANT_ALLOY);
 
         tag(ItemTags.SWORDS).add(EIOItems.DARK_STEEL_SWORD.getKey());
+
+        // TODO: 26.2: Need a better way to get item Keys from blocks...
         tag(Tags.Items.CHAINS).add(EIOBlocks.SOUL_CHAIN.asItem().builtInRegistryHolder().unwrapKey().orElseThrow());
 
         addCrystalTags();
@@ -67,7 +70,7 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
         addReagentTags();
 
         tag(EIOTags.Items.SLICER_INCOMPATIBLE_AXE)
-            .add(Items.WOODEN_AXE.builtInRegistryHolder().unwrapKey().orElseThrow());
+            .add(ItemIds.WOODEN_AXE);
 
         addBlockItemTags();
     }
@@ -180,17 +183,18 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
 
     private void addCommonItems() {
         // Ensure common tags are populated
-        tag(EIOTags.Items.DUSTS_PRISMARINE).add(Items.PRISMARINE_SHARD.builtInRegistryHolder().unwrapKey().orElseThrow());
+        tag(EIOTags.Items.DUSTS_PRISMARINE).add(ItemIds.PRISMARINE_SHARD);
 
         // TODO: I disagree with this, they're not really storage blocks..
-        tag(EIOTags.Items.STORAGE_BLOCKS_QUARTZ).add(Items.QUARTZ_BLOCK.builtInRegistryHolder().unwrapKey().orElseThrow());
-        tag(EIOTags.Items.STORAGE_BLOCKS_AMETHYST).add(Items.AMETHYST_BLOCK.builtInRegistryHolder().unwrapKey().orElseThrow());
+        tag(EIOTags.Items.STORAGE_BLOCKS_QUARTZ).add(BlockItemIds.QUARTZ_BLOCK.item());
+        tag(EIOTags.Items.STORAGE_BLOCKS_AMETHYST).add(BlockItemIds.AMETHYST_BLOCK.item());
 
         tag(EIOTags.Items.SILICON).add(EIOItems.SILICON.getKey());
         tag(EIOTags.Items.WRENCH).add(EIOItems.YETA_WRENCH.getKey());
     }
 
     private void addHideFacadesTags() {
+        // TODO: 26.2: better way to get block item IDs
         tag(EIOTags.Items.HIDE_FACADES)
             .add(EIOItems.YETA_WRENCH.getKey())
             .add(EIOBlocks.CONDUIT_BUNDLE.asItem().builtInRegistryHolder().unwrapKey().orElseThrow());
@@ -205,39 +209,45 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
         tag(EIOTags.Items.SEEDS).addTag(Tags.Items.SEEDS);
         tag(EIOTags.Items.MEAT).addTag(ItemTags.MEAT);
         // 26.2-port: TagAppender.add() takes ResourceKey<T>[]; convert via builtInRegistryHolder().unwrapKey()
-        tag(EIOTags.Items.EXPLOSIVES).add(
-            Items.TNT.builtInRegistryHolder().unwrapKey().orElseThrow(),
-            Items.FIREWORK_STAR.builtInRegistryHolder().unwrapKey().orElseThrow(),
-            Items.FIREWORK_ROCKET.builtInRegistryHolder().unwrapKey().orElseThrow(),
-            Items.FIRE_CHARGE.builtInRegistryHolder().unwrapKey().orElseThrow(),
-            Items.GUNPOWDER.builtInRegistryHolder().unwrapKey().orElseThrow());
-        tag(EIOTags.Items.NATURAL_LIGHTS).add(
-            Items.GLOWSTONE_DUST.builtInRegistryHolder().unwrapKey().orElseThrow(),
-            Items.GLOWSTONE.builtInRegistryHolder().unwrapKey().orElseThrow(),
-            Items.SEA_LANTERN.builtInRegistryHolder().unwrapKey().orElseThrow(),
-            Items.SEA_PICKLE.builtInRegistryHolder().unwrapKey().orElseThrow(),
-            Items.GLOW_LICHEN.builtInRegistryHolder().unwrapKey().orElseThrow(),
-            Items.GLOW_BERRIES.builtInRegistryHolder().unwrapKey().orElseThrow(),
-            Items.GLOW_INK_SAC.builtInRegistryHolder().unwrapKey().orElseThrow());
-        tag(EIOTags.Items.SUNFLOWER).add(
-            Items.SUNFLOWER.builtInRegistryHolder().unwrapKey().orElseThrow(),
-            Items.TORCHFLOWER.builtInRegistryHolder().unwrapKey().orElseThrow());
-        tag(EIOTags.Items.BLAZE_POWDER).add(Items.BLAZE_POWDER.builtInRegistryHolder().unwrapKey().orElseThrow());
-        tag(EIOTags.Items.AMETHYST).add(Items.AMETHYST_SHARD.builtInRegistryHolder().unwrapKey().orElseThrow());
-        tag(EIOTags.Items.PRISMARINE).add(Items.PRISMARINE_SHARD.builtInRegistryHolder().unwrapKey().orElseThrow());
-        tag(EIOTags.Items.CLOUD_COLD).add(
-            Items.SNOW.builtInRegistryHolder().unwrapKey().orElseThrow(),
-            Items.SNOW_BLOCK.builtInRegistryHolder().unwrapKey().orElseThrow(),
-            Items.SNOWBALL.builtInRegistryHolder().unwrapKey().orElseThrow(),
-            Items.ICE.builtInRegistryHolder().unwrapKey().orElseThrow(),
-            Items.PACKED_ICE.builtInRegistryHolder().unwrapKey().orElseThrow(),
-            Items.BLUE_ICE.builtInRegistryHolder().unwrapKey().orElseThrow());
+        tag(EIOTags.Items.EXPLOSIVES)
+            .add(BlockItemIds.TNT.item())
+            .add(ItemIds.FIREWORK_STAR)
+            .add(ItemIds.FIREWORK_ROCKET)
+            .add(ItemIds.FIRE_CHARGE)
+            .add(ItemIds.GUNPOWDER);
+
+        tag(EIOTags.Items.NATURAL_LIGHTS)
+            .add(ItemIds.GLOWSTONE_DUST)
+            .add(BlockItemIds.GLOWSTONE.item())
+            .add(BlockItemIds.SEA_LANTERN.item())
+            .add(BlockItemIds.SEA_PICKLE.item())
+            .add(BlockItemIds.GLOW_LICHEN.item())
+            .add(BlockItemIds.GLOW_BERRY_CROP.item())
+            .add(ItemIds.GLOW_INK_SAC);
+
+        tag(EIOTags.Items.SUNFLOWER)
+            .add(BlockItemIds.SUNFLOWER.item())
+            .add(BlockItemIds.TORCHFLOWER.item());
+
+        tag(EIOTags.Items.BLAZE_POWDER).add(ItemIds.BLAZE_POWDER);
+        tag(EIOTags.Items.AMETHYST).add(ItemIds.AMETHYST_SHARD);
+        tag(EIOTags.Items.PRISMARINE).add(ItemIds.PRISMARINE_SHARD);
+
+        tag(EIOTags.Items.CLOUD_COLD)
+            .add(BlockItemIds.SNOW.item())
+            .add(BlockItemIds.SNOW_BLOCK.item())
+            .add(ItemIds.SNOWBALL)
+            .add(BlockItemIds.ICE.item())
+            .add(BlockItemIds.PACKED_ICE.item())
+            .add(BlockItemIds.BLUE_ICE.item());
+
         // 26.2-port: Items.LIGHTNING_ROD is now a WeatheringCopperCollection<Item>
-        tag(EIOTags.Items.LIGHTNING_ROD).add(Items.LIGHTNING_ROD.weathering().pick(WeatheringCopper.WeatherState.UNAFFECTED).builtInRegistryHolder().unwrapKey().orElseThrow());
-        tag(EIOTags.Items.WIND_CHARGES).add(Items.WIND_CHARGE.builtInRegistryHolder().unwrapKey().orElseThrow());
+        tag(EIOTags.Items.LIGHTNING_ROD).add(BlockItemIds.LIGHTNING_ROD.weathering().pick(WeatheringCopper.WeatherState.UNAFFECTED).item());
+        tag(EIOTags.Items.WIND_CHARGES).add(ItemIds.WIND_CHARGE);
     }
 
     private void addBlockItemTags() {
+        // TODO: 26.2: better way to get block item IDs
         this.tag(EIOTags.Items.BLOCKS_CONDUCTIVE_ALLOY).add(EIOBlocks.CONDUCTIVE_ALLOY_BLOCK.asItem().builtInRegistryHolder().unwrapKey().orElseThrow());
         this.tag(EIOTags.Items.BLOCKS_ENERGETIC_ALLOY).add(EIOBlocks.ENERGETIC_ALLOY_BLOCK.asItem().builtInRegistryHolder().unwrapKey().orElseThrow());
         this.tag(EIOTags.Items.BLOCKS_VIBRANT_ALLOY).add(EIOBlocks.VIBRANT_ALLOY_BLOCK.asItem().builtInRegistryHolder().unwrapKey().orElseThrow());
@@ -264,6 +274,7 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
                 .map(DeferredHolder::get)
                 .toList());
 
+            // TODO: 26.2: better way to get block item IDs
             for (var block : glassItems) {
                 if (block.glassIdentifier().explosionResistance()) {
                     fusedQuartzTag.add(block.asItem().builtInRegistryHolder().unwrapKey().orElseThrow());

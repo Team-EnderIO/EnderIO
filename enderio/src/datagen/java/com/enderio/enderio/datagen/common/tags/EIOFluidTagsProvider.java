@@ -18,11 +18,10 @@ public class EIOFluidTagsProvider extends FluidTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
-        // 26.2-port: TagAppender.add() takes ResourceKey<Fluid>; convert via builtInRegistryHolder().unwrapKey()
-        tag(Tags.Fluids.EXPERIENCE).add(EIOFluids.XP_JUICE.source().get().builtInRegistryHolder().unwrapKey().orElseThrow());
-        tag(EIOTags.Fluids.SOLAR_PANEL_LIGHT).add(EIOFluids.LIQUID_SUNSHINE.source().get().builtInRegistryHolder().unwrapKey().orElseThrow());
-        tag(EIOTags.Fluids.SOLAR_PANEL_DARK).add(EIOFluids.LIQUID_DARKNESS.source().get().builtInRegistryHolder().unwrapKey().orElseThrow());
-        tag(EIOTags.Fluids.COLD_FIRE_IGNITER_FUEL).add(EIOFluids.VAPOR_OF_LEVITY.source().get().builtInRegistryHolder().unwrapKey().orElseThrow());
-        tag(EIOTags.Fluids.STAFF_OF_LEVITY_FUEL).add(EIOFluids.VAPOR_OF_LEVITY.source().get().builtInRegistryHolder().unwrapKey().orElseThrow());
+        tag(Tags.Fluids.EXPERIENCE).add(EIOFluids.XP_JUICE.source().getKey());
+        tag(EIOTags.Fluids.SOLAR_PANEL_LIGHT).add(EIOFluids.LIQUID_SUNSHINE.source().getKey());
+        tag(EIOTags.Fluids.SOLAR_PANEL_DARK).add(EIOFluids.LIQUID_DARKNESS.source().getKey());
+        tag(EIOTags.Fluids.COLD_FIRE_IGNITER_FUEL).add(EIOFluids.VAPOR_OF_LEVITY.source().getKey());
+        tag(EIOTags.Fluids.STAFF_OF_LEVITY_FUEL).add(EIOFluids.VAPOR_OF_LEVITY.source().getKey());
     }
 }

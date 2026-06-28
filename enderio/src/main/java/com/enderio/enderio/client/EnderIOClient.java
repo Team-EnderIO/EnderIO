@@ -13,6 +13,7 @@ import com.enderio.enderio.client.content.conduits.gui.screen_type.EnergyConduit
 import com.enderio.enderio.client.content.conduits.gui.screen_type.FluidConduitScreenType;
 import com.enderio.enderio.client.content.conduits.gui.screen_type.ItemConduitScreenType;
 import com.enderio.enderio.client.content.conduits.gui.screen_type.RedstoneConduitScreenType;
+import com.enderio.enderio.client.content.conduits.model.bundle.port.ConduitBaker;
 import com.enderio.enderio.client.content.conduits.model.bundle.port.ConduitBlockStateModel;
 import com.enderio.enderio.client.content.conduits.model.bundle.port.ConduitItemModel;
 import com.enderio.enderio.client.content.conduits.model.facades.port.FacadeItemModel;
@@ -113,6 +114,7 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterBlockModelsEvent;
@@ -163,6 +165,12 @@ public class EnderIOClient {
     public EnderIOClient(ModContainer modContainer) {
         // TODO: Re-enable after config rework.
 //        modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
+    }
+
+    @SubscribeEvent
+    public static void registerClientReloadListeners(AddClientReloadListenersEvent event) {
+        // Provides proper access to the block atlas for ConduitBaker.ConduitMaterialBaker.
+        event.addListener(EnderIO.id("conduit_baker"), ConduitBaker::reload);
     }
 
     @SubscribeEvent

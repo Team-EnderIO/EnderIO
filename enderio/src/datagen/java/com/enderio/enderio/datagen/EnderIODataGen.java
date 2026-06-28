@@ -48,8 +48,6 @@ public class EnderIODataGen {
         // Create datapack registry objects
         event.createDatapackRegistryObjects(createDatapackEntriesBuilder(), Set.of(EnderIO.MOD_ID));
 
-        // 26.2-port: DataGenerator.addProvider now takes a DataProvider.Factory<T>, not a T directly.
-        //   We use the GatherDataEvent.addProvider overload which accepts the provider itself.
         PackOutput packOutput = event.getGenerator().getPackOutput();
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 

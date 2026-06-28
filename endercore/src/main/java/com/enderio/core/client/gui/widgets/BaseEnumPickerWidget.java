@@ -143,7 +143,8 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
             if (shouldAdvanceOnPress) {
                 selectNext(mouseButton != InputConstants.MOUSE_BUTTON_RIGHT);
             }
-            Minecraft.getInstance().gui.setScreen(selection);
+
+            Minecraft.getInstance().gui.pushScreenLayer(selection);
         }
     }
 
@@ -242,7 +243,7 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
             if (!(parentWidget.expandTopLeft.x() <= event.x() && parentWidget.expandBottomRight.x() >= event.x()
                     && parentWidget.expandTopLeft.y() <= event.y() && parentWidget.expandBottomRight.y() >= event.y()
                     || parentWidget.isMouseOver(event.x(), event.y()))) {
-                Minecraft.getInstance().gui.setScreen(null);
+                Minecraft.getInstance().gui.popScreenLayer();
             }
 
             return super.mouseClicked(event, isDoubleClick);
@@ -257,12 +258,12 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
         public void onClose() {
             super.onClose();
             // Close the underlying GUI as well, player pressing escape likely wants to close the screen, not the popout
-            minecraft.gui.setScreen(null);
+            minecraft.gui.popScreenLayer();
         }
 
         @Override
         public void resize(int width, int height) {
-            minecraft.gui.setScreen(null);
+            minecraft.gui.popScreenLayer();
             var currentScreen = minecraft.gui.screen();
             if (currentScreen != null) {
                 currentScreen.resize(width, height);

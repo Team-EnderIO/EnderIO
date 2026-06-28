@@ -6,6 +6,9 @@ import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOBlocks;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
+import net.minecraft.references.BlockIds;
+import net.minecraft.references.BlockItemId;
+import net.minecraft.references.BlockItemIds;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.BlockItemTags;
 import net.minecraft.world.level.block.Blocks;
@@ -184,29 +187,31 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
             .add(EIOBlocks.PAINTED_TRAVEL_ANCHOR.getKey());
 
         tag(EIOTags.Blocks.REDSTONE_CONNECTABLE)
-            // 26.2-port: add() takes ResourceKey<Block>[]; convert each block via builtInRegistryHolder().unwrapKey()
-            .add(
-                Blocks.PISTON.builtInRegistryHolder().unwrapKey().orElseThrow(),
-                Blocks.STICKY_PISTON.builtInRegistryHolder().unwrapKey().orElseThrow(),
-                Blocks.REDSTONE_LAMP.builtInRegistryHolder().unwrapKey().orElseThrow(),
-                Blocks.NOTE_BLOCK.builtInRegistryHolder().unwrapKey().orElseThrow(),
-                Blocks.DISPENSER.builtInRegistryHolder().unwrapKey().orElseThrow(),
-                Blocks.DROPPER.builtInRegistryHolder().unwrapKey().orElseThrow(),
-                Blocks.POWERED_RAIL.builtInRegistryHolder().unwrapKey().orElseThrow(),
-                Blocks.ACTIVATOR_RAIL.builtInRegistryHolder().unwrapKey().orElseThrow(),
-                Blocks.MOVING_PISTON.builtInRegistryHolder().unwrapKey().orElseThrow(),
-                // 26.2-port: Blocks.COPPER_BULB is now a WeatheringCopperCollection<Block>;
-                //   access each variant via .weathering().pick(...) / .waxed().pick(...)
-                Blocks.COPPER_BULB.weathering().pick(WeatheringCopper.WeatherState.UNAFFECTED).builtInRegistryHolder().unwrapKey().orElseThrow(),
-                Blocks.COPPER_BULB.weathering().pick(WeatheringCopper.WeatherState.EXPOSED).builtInRegistryHolder().unwrapKey().orElseThrow(),
-                Blocks.COPPER_BULB.weathering().pick(WeatheringCopper.WeatherState.WEATHERED).builtInRegistryHolder().unwrapKey().orElseThrow(),
-                Blocks.COPPER_BULB.weathering().pick(WeatheringCopper.WeatherState.OXIDIZED).builtInRegistryHolder().unwrapKey().orElseThrow(),
-                Blocks.COPPER_BULB.waxed().pick(WeatheringCopper.WeatherState.UNAFFECTED).builtInRegistryHolder().unwrapKey().orElseThrow(),
-                Blocks.COPPER_BULB.waxed().pick(WeatheringCopper.WeatherState.EXPOSED).builtInRegistryHolder().unwrapKey().orElseThrow(),
-                Blocks.COPPER_BULB.waxed().pick(WeatheringCopper.WeatherState.WEATHERED).builtInRegistryHolder().unwrapKey().orElseThrow(),
-                Blocks.COPPER_BULB.waxed().pick(WeatheringCopper.WeatherState.OXIDIZED).builtInRegistryHolder().unwrapKey().orElseThrow(),
-                Blocks.CRAFTER.builtInRegistryHolder().unwrapKey().orElseThrow())
-            .addTags(BlockTags.DOORS, BlockTags.TRAPDOORS, BlockItemTags.REDSTONE_ORES.block());
+            .add(BlockItemIds.PISTON.block())
+            .add(BlockItemIds.STICKY_PISTON.block())
+            .add(BlockItemIds.REDSTONE_LAMP.block())
+            .add(BlockItemIds.NOTE_BLOCK.block())
+            .add(BlockItemIds.DISPENSER.block())
+            .add(BlockItemIds.DROPPER.block())
+            .add(BlockItemIds.POWERED_RAIL.block())
+            .add(BlockItemIds.ACTIVATOR_RAIL.block())
+            .add(BlockIds.MOVING_PISTON)
+            .add(BlockItemIds.COPPER_BULB.weathering().pick(WeatheringCopper.WeatherState.UNAFFECTED).block())
+            .add(BlockItemIds.COPPER_BULB.weathering().pick(WeatheringCopper.WeatherState.EXPOSED).block())
+            .add(BlockItemIds.COPPER_BULB.weathering().pick(WeatheringCopper.WeatherState.WEATHERED).block())
+            .add(BlockItemIds.COPPER_BULB.weathering().pick(WeatheringCopper.WeatherState.OXIDIZED).block())
+            .add(BlockItemIds.COPPER_BULB.waxed().pick(WeatheringCopper.WeatherState.UNAFFECTED).block())
+            .add(BlockItemIds.COPPER_BULB.weathering().pick(WeatheringCopper.WeatherState.EXPOSED).block())
+            .add(BlockItemIds.COPPER_BULB.weathering().pick(WeatheringCopper.WeatherState.WEATHERED).block())
+            .add(BlockItemIds.COPPER_BULB.weathering().pick(WeatheringCopper.WeatherState.OXIDIZED).block())
+            .add(BlockItemIds.COPPER_BULB.waxed().pick(WeatheringCopper.WeatherState.UNAFFECTED).block())
+            .add(BlockItemIds.COPPER_BULB.waxed().pick(WeatheringCopper.WeatherState.EXPOSED).block())
+            .add(BlockItemIds.COPPER_BULB.waxed().pick(WeatheringCopper.WeatherState.WEATHERED).block())
+            .add(BlockItemIds.COPPER_BULB.waxed().pick(WeatheringCopper.WeatherState.OXIDIZED).block())
+            .add(BlockItemIds.CRAFTER.block())
+            .addTag(BlockTags.DOORS)
+            .addTag(BlockTags.TRAPDOORS)
+            .addTag(BlockItemTags.REDSTONE_ORES.block());
 
         tag(Tags.Blocks.RELOCATION_NOT_SUPPORTED).add(EIOBlocks.CONDUIT_BUNDLE.getKey());
 
@@ -269,8 +274,8 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
             .add(EIOBlocks.SILENT_SOULARIUM_PRESSURE_PLATE.getKey());
 
         tag(EIOTags.Blocks.CROPS_WITH_STEM)
-            .add(Blocks.MELON.builtInRegistryHolder().unwrapKey().orElseThrow())
-            .add(Blocks.PUMPKIN.builtInRegistryHolder().unwrapKey().orElseThrow());
+            .add(BlockItemIds.MELON.block())
+            .add(BlockItemIds.PUMPKIN.block());
     }
 
     private void addMachineBlockTags() {
@@ -327,22 +332,21 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
         for (var glassBlocks : glassBlockCollections) {
             var glassItems = new ArrayList<>(glassBlocks.getAllBlocks()
                 .sorted(Comparator.comparing(DeferredHolder::getKey))
-                .map(DeferredHolder::get)
                 .toList());
 
-            for (var block : glassItems) {
-                if (block.glassIdentifier().explosionResistance()) {
-                    fusedQuartzTag.add(block.builtInRegistryHolder().unwrapKey().orElseThrow());
+            for (var blockHolder : glassItems) {
+                if (blockHolder.get().glassIdentifier().explosionResistance()) {
+                    fusedQuartzTag.add(blockHolder.getKey());
 
-                    if (block.glassIdentifier().lighting() == GlassLighting.EMITTING) {
-                        enlightenedFusedQuartzTag.add(block.builtInRegistryHolder().unwrapKey().orElseThrow());
+                    if (blockHolder.get().glassIdentifier().lighting() == GlassLighting.EMITTING) {
+                        enlightenedFusedQuartzTag.add(blockHolder.getKey());
                     }
 
-                    if (block.glassIdentifier().lighting() == GlassLighting.BLOCKING) {
-                        darkFusedQuartzTag.add(block.builtInRegistryHolder().unwrapKey().orElseThrow());
+                    if (blockHolder.get().glassIdentifier().lighting() == GlassLighting.BLOCKING) {
+                        darkFusedQuartzTag.add(blockHolder.getKey());
                     }
                 } else {
-                    clearGlassTag.add(block.builtInRegistryHolder().unwrapKey().orElseThrow());
+                    clearGlassTag.add(blockHolder.getKey());
                 }
             }
         }
