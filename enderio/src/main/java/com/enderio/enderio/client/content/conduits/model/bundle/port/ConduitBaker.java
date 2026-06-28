@@ -89,7 +89,6 @@ public class ConduitBaker implements ModelBaker {
             return materialBaker.get(material, modelDebugName);
         }
 
-        // 26.2-port: MaterialBaker added a new abstract bake(Material) method
         @Override
         protected Material.Baked bake(Material material) {
             return materialBaker.get(material, () -> "conduit_baker");

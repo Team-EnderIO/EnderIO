@@ -1,30 +1,43 @@
 package com.enderio.enderio.compat.jade;
 
-// 26.2-port: third-party mod interaction commented out — Jade integration deferred
-// import snownee.jade.api.BlockAccessor;
-// import snownee.jade.api.IWailaClientRegistration;
-// import snownee.jade.api.IWailaCommonRegistration;
-// import snownee.jade.api.IWailaPlugin;
-// import snownee.jade.api.WailaPlugin;
-
 import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
+import com.enderio.enderio.client.content.conduits.model.facades.FacadeUtil;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.level.block.Block;
+import snownee.jade.api.BlockAccessor;
+import snownee.jade.api.IWailaClientRegistration;
+import snownee.jade.api.IWailaCommonRegistration;
+import snownee.jade.api.IWailaPlugin;
+import snownee.jade.api.WailaPlugin;
 
-// 26.2-port: @WailaPlugin annotation removed — Jade plugin is disabled
-// @WailaPlugin
-public class EIOJadePlugin /* 26.2-port: implements IWailaPlugin */ {
+@WailaPlugin
+public class EIOJadePlugin implements IWailaPlugin {
 
     public static final Identifier SOUL_BOUND_COMPONENT = EnderIO.id("soul_bound");
 
-    // 26.2-port: Jade integration disabled — methods are no-ops
-    // @Override
-    // public void registerClient(IWailaClientRegistration registration) {
-    //     registration.addRayTraceCallback((_, accessor, _) -> { ... });
-    //     registration.registerBlockComponent(SoulBoundComponentProvider.INSTANCE, Block.class);
-    // }
+    @Override
+    public void registerClient(IWailaClientRegistration registration) {
+        // Completely replace the block accessor with the facade block if it exists.
+        // This prevents any special widgets (such as exposed capabilities like energy) from appearing when covered by a facade.
+        registration.addRayTraceCallback((_, accessor, _) -> {
+            if (accessor instanceof BlockAccessor blockAccessor) {
+                if (blockAccessor.getBlockEntity() instanceof ConduitBundle conduitBundle && conduitBundle.hasFacade()
+                    && FacadeUtil.areFacadesVisible(blockAccessor.getPlayer())) {
+                    return registration.blockAccessor()
+                        .from(blockAccessor)
+                        .blockState(conduitBundle.getFacadeBlock().defaultBlockState())
+                        .build();
+                }
+            }
+            return accessor;
+        });
 
-    // @Override
-    // public void register(IWailaCommonRegistration registration) {
-    //     registration.registerBlockDataProvider(SoulBoundServerDataProvider.INSTANCE, Block.class);
-    // }
+        registration.registerBlockComponent(SoulBoundComponentProvider.INSTANCE, Block.class);
+    }
+
+    @Override
+    public void register(IWailaCommonRegistration registration) {
+        registration.registerBlockDataProvider(SoulBoundServerDataProvider.INSTANCE, Block.class);
+    }
 }

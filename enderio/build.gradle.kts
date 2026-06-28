@@ -103,17 +103,15 @@ dependencies {
 
     // JEI
     compileOnly(libs.bundles.jeiApi)
-    // 26.2-port: JEI runtime disabled — no 26.2 JEI build published yet
-    // localRuntime(libs.bundles.jei)
+     localRuntime(libs.bundles.jei)
 
     // CC: Tweaked
 //    compileOnly(libs.bundles.ccTweakedApi)
 //    localRuntime(libs.ccTweakedForge)
 
     // Jade for conduit addon
-    // 26.2-port: third-party mod interaction commented out
-//    compileOnly(libs.jade)
-//    localRuntime(libs.jade)
+    compileOnly(libs.jade)
+    localRuntime(libs.jade)
 
     //Athena ctm
     // 26.2-port: third-party mod interaction commented out
@@ -161,7 +159,7 @@ dependencies {
     // Sodium + Iris to test shader compatibility
     // 26.2-port: third-party mod interaction commented out
 //    compileOnly(libs.iris)
-//    localRuntime(libs.sodium)
+    localRuntime(libs.sodium)
 //    localRuntime(libs.iris)
 
     // Unit tests

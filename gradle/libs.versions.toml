@@ -1,8 +1,8 @@
 [versions]
 almostUnified = "1.21.1-1.0.0"
-jeiVersion = "29.5.0.24"
+jeiVersion = "30.2.0.18"
 ccTweaked = "1.113.1"
-jade = "26.0.6+neoforge"
+jade = "26.2.8+neoforge"
 athena = "4.7.3"
 ae2 = { strictly = "[26.1.5-alpha,)", prefer = "26.1.5-alpha" }
 mekanism = { strictly = "[1.21.1-10.7.0,)", prefer = "1.21.1-10.7.16.82" }
@@ -13,8 +13,8 @@ graphlib = { strictly = "[3.0.4, 3.1)", prefer = "3.0.5" }
 ftbLibrary = { strictly = "[26.1.1.1-SNAPSHOT, 26.2)", prefer = "26.1.1.1-SNAPSHOT" }
 ftbUltimine = { strictly = "[26.1, 26.2)", prefer = "26.1.0.1-SNAPSHOT" }
 curios = "15.0.0-beta.1+26.1"
-sodium = "mc1.21.1-0.6.13-neoforge"
-iris = "1.8.12+1.21.1-neoforge"
+sodium = "mc26.2-0.9.1-beta.2-neoforge"
+iris = "1.11.1+26.2-neoforge"
 mockito = "5.23.0"
 
 [libraries]
@@ -22,10 +22,10 @@ jspecify = { group = "org.jspecify", name = "jspecify", version = "1.0.0"}
 jetbrainsAnnotations = { group = "org.jetbrains", name = "annotations", version = "23.0.0"}
 
 #almostUnified = { group = "com.almostreliable.mods", name = "almostunified-neoforge", version.ref = "almostUnified" }
-jeiCommonApi = { group = "mezz.jei", name = "jei-26.1.2-common-api", version.ref = "jeiVersion" }
-jeiNeoforgeApi = { group = "mezz.jei", name = "jei-26.1.2-neoforge-api", version.ref = "jeiVersion" }
-jeiCommon = { group = "mezz.jei", name = "jei-26.1.2-common", version.ref = "jeiVersion" }
-jeiNeoforge = { group = "mezz.jei", name = "jei-26.1.2-neoforge", version.ref = "jeiVersion" }
+jeiCommonApi = { group = "mezz.jei", name = "jei-26.2-common-api", version.ref = "jeiVersion" }
+jeiNeoforgeApi = { group = "mezz.jei", name = "jei-26.2-neoforge-api", version.ref = "jeiVersion" }
+jeiCommon = { group = "mezz.jei", name = "jei-26.2-common", version.ref = "jeiVersion" }
+jeiNeoforge = { group = "mezz.jei", name = "jei-26.2-neoforge", version.ref = "jeiVersion" }
 #ccTweakedCoreApi = { group = "cc.tweaked", name = "cc-tweaked-1.21.1-core-api", version.ref = "ccTweaked" }
 #ccTweakedForgeApi = { group = "cc.tweaked", name = "cc-tweaked-1.21.1-forge-api", version.ref = "ccTweaked" }
 #ccTweakedForge = { group = "cc.tweaked", name = "cc-tweaked-1.21.1-forge", version.ref = "ccTweaked" }
