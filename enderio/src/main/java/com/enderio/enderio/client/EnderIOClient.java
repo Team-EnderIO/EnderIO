@@ -69,6 +69,7 @@ import com.enderio.enderio.client.foundation.model.IOConfigRealLevelWorkaroundBl
 import com.enderio.enderio.client.foundation.model.item.HasFluidItemProperty;
 import com.enderio.enderio.client.foundation.model.item.IsSoulBoundItemProperty;
 import com.enderio.enderio.client.foundation.particle.RangeParticle;
+import com.enderio.enderio.client.foundation.renderer.feature.GhostBlockModelFeatureRenderer;
 import com.enderio.enderio.client.foundation.widgets.ioconfig.IOConfigSceneRenderState;
 import com.enderio.enderio.client.foundation.widgets.ioconfig.IOConfigSceneRenderer;
 import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
@@ -79,8 +80,6 @@ import com.enderio.enderio.content.filters.item.limited.LimitedItemFilter;
 import com.enderio.enderio.content.filters.soul.EnderSoulFilter;
 import com.enderio.enderio.content.fun.EnderiosItem;
 import com.enderio.enderio.content.misc_blocks.skull.EnderSkullBlock;
-import com.enderio.enderio.content.tools.vials.SoulVialItem;
-import com.enderio.enderio.content.tools.vials.VoidVialItem;
 import com.enderio.enderio.content.paint.block.PaintExtension;
 import com.enderio.enderio.content.paint.block.PaintedBlock;
 import com.enderio.enderio.foundation.block.MachineBlock;
@@ -131,6 +130,7 @@ import com.enderio.enderio.client.content.filters.soul.ClientEnderSoulFilterTool
 import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterConditionalItemModelPropertyEvent;
+import net.neoforged.neoforge.client.event.RegisterFeatureRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterFluidModelsEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
@@ -175,8 +175,12 @@ public class EnderIOClient {
 
     @SubscribeEvent
     public static void registerPip(RegisterPictureInPictureRenderersEvent event) {
-        // 26.2-port: IOConfigSceneRenderer is stubbed (MultiBufferSource removed in 26.2)
-        // event.register(IOConfigSceneRenderState.class, IOConfigSceneRenderer::new);
+         event.register(IOConfigSceneRenderState.class, IOConfigSceneRenderer::new);
+    }
+
+    @SubscribeEvent
+    public static void registerFeatureRenderers(RegisterFeatureRenderersEvent event) {
+        event.register(GhostBlockModelFeatureRenderer.TYPE, new GhostBlockModelFeatureRenderer());
     }
 
     @SubscribeEvent
