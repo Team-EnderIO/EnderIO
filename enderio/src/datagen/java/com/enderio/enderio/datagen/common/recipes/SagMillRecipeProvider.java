@@ -14,6 +14,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -132,16 +133,16 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
         build("cobweb", Ingredient.of(COBWEB), List.of(output(STRING, 2), output(STRING, 0.6f), output(STRING, 0.3f)),
                 BASE_ENERGY_PER_OPERATION, recipeOutput);
 
-        buildFlower("dandelion", DANDELION, YELLOW_DYE, recipeOutput);
-        buildFlower("poppy", POPPY, RED_DYE, recipeOutput);
-        buildFlower("blue_orchid", BLUE_ORCHID, LIGHT_BLUE_DYE, recipeOutput);
-        buildFlower("allium", ALLIUM, MAGENTA_DYE, recipeOutput);
-        buildFlower("azure_bluet", AZURE_BLUET, LIGHT_GRAY_DYE, recipeOutput);
-        buildFlower("red_tulip", RED_TULIP, RED_DYE, recipeOutput);
-        buildFlower("orange_tulip", ORANGE_TULIP, ORANGE_DYE, recipeOutput);
-        buildFlower("white_tulip", WHITE_TULIP, WHITE_DYE, recipeOutput);
-        buildFlower("pink_tulip", PINK_TULIP, PINK_DYE, recipeOutput);
-        buildFlower("oxeye_daisy", OXEYE_DAISY, WHITE_DYE, recipeOutput);
+        buildFlower("dandelion", DANDELION, Items.DYE.pick(DyeColor.YELLOW), recipeOutput);
+        buildFlower("poppy", POPPY, Items.DYE.pick(DyeColor.RED), recipeOutput);
+        buildFlower("blue_orchid", BLUE_ORCHID, Items.DYE.pick(DyeColor.LIGHT_BLUE), recipeOutput);
+        buildFlower("allium", ALLIUM, Items.DYE.pick(DyeColor.MAGENTA), recipeOutput);
+        buildFlower("azure_bluet", AZURE_BLUET, Items.DYE.pick(DyeColor.LIGHT_GRAY), recipeOutput);
+        buildFlower("red_tulip", RED_TULIP, Items.DYE.pick(DyeColor.RED), recipeOutput);
+        buildFlower("orange_tulip", ORANGE_TULIP, Items.DYE.pick(DyeColor.ORANGE), recipeOutput);
+        buildFlower("white_tulip", WHITE_TULIP, Items.DYE.pick(DyeColor.WHITE), recipeOutput);
+        buildFlower("pink_tulip", PINK_TULIP, Items.DYE.pick(DyeColor.PINK), recipeOutput);
+        buildFlower("oxeye_daisy", OXEYE_DAISY, Items.DYE.pick(DyeColor.WHITE), recipeOutput);
 
         build("shrub", Ingredient.of(DEAD_BUSH), List.of(output(PLANT_MATTER_BROWN.get(), 0.8f),
                 output(PLANT_MATTER_BROWN.get(), 0.6f), output(PLANT_MATTER_BROWN.get(), 0.3f)),
@@ -174,8 +175,8 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
                 List.of(output(PLANT_MATTER_GREEN.get(), 3, 0.15f), output(PLANT_MATTER_GREEN.get(), 3, 0.1f)),
                 BASE_ENERGY_PER_OPERATION, recipeOutput);
 
-        build("sun_flower", Ingredient.of(Items.SUNFLOWER), List.of(output(YELLOW_DYE, 2, 0.8f),
-                output(YELLOW_DYE, 0.6f), output(YELLOW_DYE, 2, 0.3f), output(PLANT_MATTER_GREEN.get(), 0.2f)),
+        build("sun_flower", Ingredient.of(Items.SUNFLOWER), List.of(output(Items.DYE.pick(DyeColor.YELLOW), 2, 0.8f),
+                output(Items.DYE.pick(DyeColor.YELLOW), 0.6f), output(Items.DYE.pick(DyeColor.YELLOW), 2, 0.3f), output(PLANT_MATTER_GREEN.get(), 0.2f)),
                 BASE_ENERGY_PER_OPERATION, recipeOutput);
 
         build("tall_grass", Ingredient.of(TALL_GRASS),
@@ -188,12 +189,12 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
                         output(PLANT_MATTER_GREEN.get(), 2, 0.1f), output(PLANT_MATTER_BROWN.get(), 0.15f)),
                 BASE_ENERGY_PER_OPERATION, recipeOutput);
 
-        build("rose_bush", Ingredient.of(ROSE_BUSH), List.of(output(RED_DYE, 2, 0.8f), output(RED_DYE, 0.6f),
-                output(RED_DYE, 2, 0.3f), output(PLANT_MATTER_GREEN.get(), 0.2f)), BASE_ENERGY_PER_OPERATION,
+        build("rose_bush", Ingredient.of(ROSE_BUSH), List.of(output(Items.DYE.pick(DyeColor.RED), 2, 0.8f), output(Items.DYE.pick(DyeColor.RED), 0.6f),
+                output(Items.DYE.pick(DyeColor.RED), 2, 0.3f), output(PLANT_MATTER_GREEN.get(), 0.2f)), BASE_ENERGY_PER_OPERATION,
                 recipeOutput);
 
-        build("poeny", Ingredient.of(PEONY), List.of(output(PINK_DYE, 2, 0.8f), output(PINK_DYE, 0.6f),
-                output(PINK_DYE, 2, 0.3f), output(PLANT_MATTER_GREEN.get(), 0.2f)), BASE_ENERGY_PER_OPERATION,
+        build("poeny", Ingredient.of(PEONY), List.of(output(Items.DYE.pick(DyeColor.PINK), 2, 0.8f), output(Items.DYE.pick(DyeColor.PINK), 0.6f),
+                output(Items.DYE.pick(DyeColor.PINK), 2, 0.3f), output(PLANT_MATTER_GREEN.get(), 0.2f)), BASE_ENERGY_PER_OPERATION,
                 recipeOutput);
 
         build("sugar_canes", Ingredient.of(SUGAR_CANE), List.of(output(SUGAR), output(SUGAR, 0.5f),

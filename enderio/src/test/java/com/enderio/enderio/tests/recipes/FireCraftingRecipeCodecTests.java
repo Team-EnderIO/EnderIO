@@ -74,7 +74,7 @@ public class FireCraftingRecipeCodecTests {
                     "minecraft:stone"
                 ],
                 "base_tags": [
-                    "minecraft:acacia_logs"
+                    "minecraft:logs"
                 ],
                 "block_after_burning": "minecraft:coal_block"
             }
@@ -92,7 +92,8 @@ public class FireCraftingRecipeCodecTests {
             () -> Assertions.assertEquals(1, recipe.bases().size()),
             () -> Assertions.assertEquals(Blocks.STONE, recipe.bases().getFirst()),
             () -> Assertions.assertEquals(1, recipe.baseTags().size()),
-            () -> Assertions.assertEquals(BlockTags.ACACIA_LOGS, recipe.baseTags().getFirst()),
+            // 26.2-port: baseTags() returns TagKey<Block> (the block variant of "minecraft:logs")
+            () -> Assertions.assertEquals(BlockTags.LOGS, recipe.baseTags().getFirst()),
             () -> Assertions.assertEquals(Optional.of(Blocks.COAL_BLOCK), recipe.blockAfterBurning())
         );
     }

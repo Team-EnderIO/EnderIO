@@ -43,12 +43,10 @@ public class ClientFacadeVisibility {
                 if (level != null) {
                     var chunkFacadesForDim = ConduitBundleBlockEntity.CHUNK_FACADES.get(level.dimension());
                     if (chunkFacadesForDim != null) {
-                        chunkFacadesForDim.keySet().forEach((section) -> {
-                            Minecraft.getInstance().levelRenderer.setSectionDirty(
-                                SectionPos.x(section),
-                                SectionPos.y(section),
-                                SectionPos.z(section));
-                        });
+                        chunkFacadesForDim
+                            .keySet()
+                            .forEach((section) -> Minecraft.getInstance().levelExtractor
+                                .setSectionDirty(SectionPos.x(section), SectionPos.y(section), SectionPos.z(section)));
                     }
                 }
             });

@@ -13,6 +13,7 @@ import com.enderio.enderio.client.content.conduits.gui.screen_type.EnergyConduit
 import com.enderio.enderio.client.content.conduits.gui.screen_type.FluidConduitScreenType;
 import com.enderio.enderio.client.content.conduits.gui.screen_type.ItemConduitScreenType;
 import com.enderio.enderio.client.content.conduits.gui.screen_type.RedstoneConduitScreenType;
+import com.enderio.enderio.client.content.conduits.model.bundle.port.ConduitBaker;
 import com.enderio.enderio.client.content.conduits.model.bundle.port.ConduitBlockStateModel;
 import com.enderio.enderio.client.content.conduits.model.bundle.port.ConduitItemModel;
 import com.enderio.enderio.client.content.conduits.model.facades.port.FacadeItemModel;
@@ -68,6 +69,7 @@ import com.enderio.enderio.client.foundation.model.IOConfigRealLevelWorkaroundBl
 import com.enderio.enderio.client.foundation.model.item.HasFluidItemProperty;
 import com.enderio.enderio.client.foundation.model.item.IsSoulBoundItemProperty;
 import com.enderio.enderio.client.foundation.particle.RangeParticle;
+import com.enderio.enderio.client.foundation.renderer.feature.GhostBlockModelFeatureRenderer;
 import com.enderio.enderio.client.foundation.widgets.ioconfig.IOConfigSceneRenderState;
 import com.enderio.enderio.client.foundation.widgets.ioconfig.IOConfigSceneRenderer;
 import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
@@ -78,8 +80,6 @@ import com.enderio.enderio.content.filters.item.limited.LimitedItemFilter;
 import com.enderio.enderio.content.filters.soul.EnderSoulFilter;
 import com.enderio.enderio.content.fun.EnderiosItem;
 import com.enderio.enderio.content.misc_blocks.skull.EnderSkullBlock;
-import com.enderio.enderio.content.tools.vials.SoulVialItem;
-import com.enderio.enderio.content.tools.vials.VoidVialItem;
 import com.enderio.enderio.content.paint.block.PaintExtension;
 import com.enderio.enderio.content.paint.block.PaintedBlock;
 import com.enderio.enderio.foundation.block.MachineBlock;
@@ -113,6 +113,7 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterBlockModelsEvent;
@@ -129,6 +130,7 @@ import com.enderio.enderio.client.content.filters.soul.ClientEnderSoulFilterTool
 import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterConditionalItemModelPropertyEvent;
+import net.neoforged.neoforge.client.event.RegisterFeatureRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterFluidModelsEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
@@ -166,8 +168,19 @@ public class EnderIOClient {
     }
 
     @SubscribeEvent
+    public static void registerClientReloadListeners(AddClientReloadListenersEvent event) {
+        // Provides proper access to the block atlas for ConduitBaker.ConduitMaterialBaker.
+        event.addListener(EnderIO.id("conduit_baker"), ConduitBaker::reload);
+    }
+
+    @SubscribeEvent
     public static void registerPip(RegisterPictureInPictureRenderersEvent event) {
-        event.register(IOConfigSceneRenderState.class, IOConfigSceneRenderer::new);
+         event.register(IOConfigSceneRenderState.class, IOConfigSceneRenderer::new);
+    }
+
+    @SubscribeEvent
+    public static void registerFeatureRenderers(RegisterFeatureRenderersEvent event) {
+        event.register(GhostBlockModelFeatureRenderer.TYPE, new GhostBlockModelFeatureRenderer());
     }
 
     @SubscribeEvent

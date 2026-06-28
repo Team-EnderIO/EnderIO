@@ -24,6 +24,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -92,30 +93,30 @@ public class AlloyRecipeProvider extends SubRecipeProvider {
 
         // region Dyes
 
-        build(new ItemStackTemplate(Items.GREEN_DYE), "clippings",
+        build(new ItemStackTemplate(Items.DYE.pick(DyeColor.GREEN)), "clippings",
                 List.of(SizedIngredient.of(EIOItems.PLANT_MATTER_GREEN.get(), 6), sizedFromTag(ItemTags.EGGS, 1)),
                 1000, 0.3f, recipeOutput);
-        build(new ItemStackTemplate(Items.GREEN_DYE, 2), "double_clippings",
+        build(new ItemStackTemplate(Items.DYE.pick(DyeColor.GREEN), 2), "double_clippings",
                 List.of(SizedIngredient.of(EIOItems.PLANT_MATTER_GREEN.get(), 12),
                     sizedFromTag(Tags.Items.SLIME_BALLS, 1)),
                 1600, 0.3f, recipeOutput);
 
-        build(new ItemStackTemplate(Items.BROWN_DYE), "twigs",
+        build(new ItemStackTemplate(Items.DYE.pick(DyeColor.BROWN)), "twigs",
                 List.of(SizedIngredient.of(EIOItems.PLANT_MATTER_BROWN.get(), 6), sizedFromTag(ItemTags.EGGS, 1)),
                 1000, 0.3f, recipeOutput);
-        build(new ItemStackTemplate(Items.BROWN_DYE, 2), "twigs_double",
+        build(new ItemStackTemplate(Items.DYE.pick(DyeColor.BROWN), 2), "twigs_double",
                 List.of(SizedIngredient.of(EIOItems.PLANT_MATTER_BROWN.get(), 12),
                         sizedFromTag(Tags.Items.SLIME_BALLS, 1)),
                 1600, 0.3f, recipeOutput);
 
-        build(new ItemStackTemplate(Items.BLACK_DYE),
+        build(new ItemStackTemplate(Items.DYE.pick(DyeColor.BLACK)),
                 List.of(sizedFromTag(EIOTags.Items.DUSTS_COAL, 1), sizedFromTag(ItemTags.EGGS, 1)), 1000, 0.3f,
                 recipeOutput);
-        build(new ItemStackTemplate(Items.BLACK_DYE, 2), "double",
+        build(new ItemStackTemplate(Items.DYE.pick(DyeColor.BLACK), 2), "double",
                 List.of(sizedFromTag(EIOTags.Items.DUSTS_COAL, 2), sizedFromTag(Tags.Items.SLIME_BALLS, 1)),
                 1600, 0.3f, recipeOutput);
 
-        build(new ItemStackTemplate(Items.RED_DYE, 12), List.of(SizedIngredient.of(Items.BEETROOT, 1),
+        build(new ItemStackTemplate(Items.DYE.pick(DyeColor.RED), 12), List.of(SizedIngredient.of(Items.BEETROOT, 1),
                 SizedIngredient.of(Items.CLAY_BALL, 3), sizedFromTag(ItemTags.EGGS, 6)), 1600, 0.3f, recipeOutput);
 
         // endregion

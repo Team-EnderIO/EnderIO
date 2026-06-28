@@ -7,6 +7,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -45,27 +46,27 @@ public class DarkSteelSwordItem extends Item implements AdvancedTooltipProvider,
     }
 
     private static Optional<ItemStack> getSkull(LivingEntity target) {
-        if (target.getType() == EntityType.SKELETON || target.getType() == EntityType.STRAY) {
+        if (target.getType() == EntityTypes.SKELETON || target.getType() == EntityTypes.STRAY) {
             return Optional.of(new ItemStack(Items.SKELETON_SKULL));
         }
-        if (target.getType() == EntityType.ZOMBIE || target.getType() == EntityType.DROWNED
-                || target.getType() == EntityType.HUSK || target.getType() == EntityType.ZOMBIE_VILLAGER) {
+        if (target.getType() == EntityTypes.ZOMBIE || target.getType() == EntityTypes.DROWNED
+                || target.getType() == EntityTypes.HUSK || target.getType() == EntityTypes.ZOMBIE_VILLAGER) {
             return Optional.of(new ItemStack(Items.ZOMBIE_HEAD));
         }
-        if (target.getType() == EntityType.WITHER_SKELETON) {
+        if (target.getType() == EntityTypes.WITHER_SKELETON) {
             return Optional.of(new ItemStack(Items.WITHER_SKELETON_SKULL));
         }
-        if (target.getType() == EntityType.CREEPER) {
+        if (target.getType() == EntityTypes.CREEPER) {
             return Optional.of(new ItemStack(Items.CREEPER_HEAD));
         }
-        if (target.getType() == EntityType.ENDER_DRAGON) {
+        if (target.getType() == EntityTypes.ENDER_DRAGON) {
             return Optional.of(new ItemStack(Items.DRAGON_HEAD));
         }
-        if (target.getType() == EntityType.ENDERMAN) {
+        if (target.getType() == EntityTypes.ENDERMAN) {
             return Optional.of(new ItemStack(EIOBlocks.ENDERMAN_HEAD));
         }
-        if (target.getType() == EntityType.PIGLIN || target.getType() == EntityType.PIGLIN_BRUTE
-                || target.getType() == EntityType.ZOMBIFIED_PIGLIN) {
+        if (target.getType() == EntityTypes.PIGLIN || target.getType() == EntityTypes.PIGLIN_BRUTE
+                || target.getType() == EntityTypes.ZOMBIFIED_PIGLIN) {
             return Optional.of(new ItemStack(Items.PIGLIN_HEAD));
         }
         if (target instanceof Player player) {

@@ -9,7 +9,7 @@ import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.monster.Slime;
+import net.minecraft.world.entity.monster.cubemob.Slime;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -95,7 +95,9 @@ public class MobSpawnTask extends PoweredSpawnerTask {
                 switch (spawnMode()) {
                 case COPY -> {
                     // TODO: Stop using BE to get entity tag data...
-                    entity = EntityType.loadEntityRecursive(blockEntity.getBoundSoul().getEntityTagWithId(), level, EntitySpawnReason.SPAWNER,
+                    // 26.2-port: loadEntityRecursive now takes an EntitySpawnRequest wrapper
+                    entity = EntityType.loadEntityRecursive(blockEntity.getBoundSoul().getEntityTagWithId(), level,
+                            new net.minecraft.world.entity.EntitySpawnRequest(EntitySpawnReason.SPAWNER, false),
                             entity1 -> {
                                 entity1.snapTo(new Vec3(x, y, z), entity1.getYRot(), entity1.getXRot());
                                 entity1.setUUID(UUID.randomUUID());

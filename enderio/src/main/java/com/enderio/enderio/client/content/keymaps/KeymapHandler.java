@@ -37,7 +37,8 @@ public class KeymapHandler {
         var minecraft = Minecraft.getInstance();
 
 
-        if(minecraft.player == null || minecraft.level == null || minecraft.screen != null) {
+        // 26.2-port: minecraft.screen -> minecraft.gui.screen()
+        if(minecraft.player == null || minecraft.level == null || minecraft.gui.screen() != null) {
             return;
         }
 

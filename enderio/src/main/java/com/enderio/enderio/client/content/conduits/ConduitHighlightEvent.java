@@ -2,13 +2,9 @@ package com.enderio.enderio.client.content.conduits;
 
 import com.enderio.enderio.client.content.conduits.model.facades.ClientFacadeVisibility;
 import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ShapeRenderer;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.ARGB;
-import net.minecraft.util.CommonColors;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -31,7 +27,7 @@ public class ConduitHighlightEvent {
         }
 
         if (minecraft.level
-                .getBlockEntity(event.getHitResult().getBlockPos()) instanceof ConduitBundleBlockEntity conduit) {
+                .getBlockEntity(event.getBlockPos()) instanceof ConduitBundleBlockEntity conduit) {
             // Use standard block highlights for facades.
             if (conduit.hasFacade() && ClientFacadeVisibility.areFacadesVisible()) {
                 return;
@@ -41,30 +37,25 @@ public class ConduitHighlightEvent {
             if (conduit.isEmpty()) {
                 return;
             }
-            
+
+            // 26.2-port: CustomBlockOutlineRenderer lambda signature changed:
+            //   26.1: (BlockOutlineRenderState, MultiBufferSource.BufferSource, PoseStack, boolean, LevelRenderState)
+            //   26.2: (BlockOutlineRenderState, SubmitNodeCollector, PoseStack, LevelRenderState)
+            //   Additionally, ShapeRenderer and MultiBufferSource.BufferSource were removed in 26.2.
+            //   The custom outline renderer is disabled until the new render pipeline is implemented.
             BlockHitResult result = event.getHitResult();
             BlockPos pos = result.getBlockPos();
-            Vec3 camPos = event.getCamera().position();
-
             VoxelShape shape = conduit.getShape().getShapeFromHit(pos, result);
-
             Vec3 offset = Vec3.atLowerCornerOf(result.getBlockPos()).subtract(event.getCamera().position());
 
-            event.addCustomRenderer((renderState, buffer, poseStack, translucentPass, levelRenderState) -> {
-                if (translucentPass == renderState.isTranslucent()) {
-                    boolean highContrast = renderState.highContrast();
-                    if (highContrast)
-                    {
-                        VertexConsumer builder = buffer.getBuffer(RenderTypes.secondaryBlockOutline());
-                        ShapeRenderer.renderShape(poseStack, builder, shape, offset.x, offset.y, offset.z, 0xFF000000, 7F);
-                    }
-
-                    VertexConsumer builder = buffer.getBuffer(RenderTypes.lines());
-                    int lineColor = highContrast ? CommonColors.HIGH_CONTRAST_DIAMOND : DEFAULT_LINE_COLOR;
-                    ShapeRenderer.renderShape(poseStack, builder, shape, offset.x, offset.y, offset.z, lineColor, Minecraft.getInstance().getWindow().getAppropriateLineWidth());
-                }
-                return true;
-            });
+            // event.addCustomRenderer((renderState, submitNodeCollector, poseStack, levelRenderState) -> {
+            //     if (event.isInTranslucentPass() == renderState.isTranslucent()) {
+            //         boolean highContrast = renderState.highContrast();
+            //         // ShapeRenderer.renderShape and the buffer-based approach are gone in 26.2;
+            //         // outline rendering now uses SubmitNodeCollector + new FeatureRenderDispatcher.
+            //     }
+            //     return true;
+            // });
         }
     }
 }

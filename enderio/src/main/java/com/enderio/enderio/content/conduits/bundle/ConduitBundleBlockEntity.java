@@ -62,6 +62,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.capabilities.BlockCapability;
@@ -754,7 +755,8 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
     private void dropItem(ItemStack stack) {
         if (level != null) {
-            var center = getBlockPos().getCenter();
+            var pos = getBlockPos();
+            var center = Vec3.atCenterOf(pos);
             level.addFreshEntity(new ItemEntity(level, center.x, center.y, center.z, stack.copy()));
         }
     }

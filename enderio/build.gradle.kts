@@ -91,17 +91,19 @@ dependencies {
     jarJar(project(":endercore"))
 
     // Include built-in "addons"
-    jarJar(project(":enderio-modded-conduits"))
-    localRuntime(project(":enderio-modded-conduits"))
+    // 26.2-port: enderio-modded-conduits subproject removed — third-party mod interactions deferred
+    // jarJar(project(":enderio-modded-conduits"))
+    // localRuntime(project(":enderio-modded-conduits"))
 
     // Almost Unified
+    // 26.2-port: third-party mod interaction commented out
 //    compileOnly(variantOf(libs.almostUnified) {
 //        classifier("api")
 //    })
 
     // JEI
     compileOnly(libs.bundles.jeiApi)
-    localRuntime(libs.bundles.jei)
+     localRuntime(libs.bundles.jei)
 
     // CC: Tweaked
 //    compileOnly(libs.bundles.ccTweakedApi)
@@ -112,7 +114,8 @@ dependencies {
     localRuntime(libs.jade)
 
     //Athena ctm
-    localRuntime(libs.athena)
+    // 26.2-port: third-party mod interaction commented out
+//    localRuntime(libs.athena)
 
     // AE2
 //    compileOnly(variantOf(libs.ae2) {
@@ -140,20 +143,23 @@ dependencies {
 
     // FTB Ultimine Addon
     // TODO: Stop including FTB Library when it is transitively available via Ultimine
-    compileOnly(libs.ftbUltimine)
-    compileOnly(libs.ftbLibrary)
+    // 26.2-port: third-party mod interaction commented out
+//    compileOnly(libs.ftbUltimine)
+//    compileOnly(libs.ftbLibrary)
 
     // TODO: Disabled until they fix Neo .21 compat
 //    localRuntime(libs.ftbUltimine)
 //    localRuntime(libs.ftbLibrary)
 
 	// Curio compat
-    compileOnly(libs.curios)
-    localRuntime(libs.curios)
+    // 26.2-port: third-party mod interaction commented out
+//    compileOnly(libs.curios)
+//    localRuntime(libs.curios)
 
     // Sodium + Iris to test shader compatibility
-    compileOnly(libs.iris)
-//    localRuntime(libs.sodium)
+    // 26.2-port: third-party mod interaction commented out
+//    compileOnly(libs.iris)
+    localRuntime(libs.sodium)
 //    localRuntime(libs.iris)
 
     // Unit tests

@@ -1,18 +1,13 @@
 package com.enderio.enderio.api.integration;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.world.entity.player.Player;
-
 @Deprecated(forRemoval = true, since = "8.0.5")
 public interface ClientIntegration {
 
     ClientIntegration NOOP = new ClientIntegration() {};
 
-    /**
-     * render your hangglider. Only called if {@linkplain Integration#getGliderMovementInfo(Player)} returns a non empty optional
-     */
-    default void renderHangGlider(PoseStack posestack, MultiBufferSource buffer, int light, int overlay, AbstractClientPlayer player, float partialTick) {
-    }
+//    /**
+//     * render your hangglider. Only called if {@linkplain Integration#getGliderMovementInfo(Player)} returns a non empty optional
+//     */
+//    default void renderHangGlider(PoseStack posestack, MultiBufferSource buffer, int light, int overlay, AbstractClientPlayer player, float partialTick) {
+//    }
 }

@@ -24,7 +24,6 @@ import com.enderio.enderio.datagen.common.tags.EIOFluidTagsProvider;
 import com.enderio.enderio.datagen.common.tags.EIOItemTagsProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistrySetBuilder;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.advancements.AdvancementProvider;
 import net.minecraft.data.loot.LootTableProvider;
@@ -49,42 +48,36 @@ public class EnderIODataGen {
         // Create datapack registry objects
         event.createDatapackRegistryObjects(createDatapackEntriesBuilder(), Set.of(EnderIO.MOD_ID));
 
-        DataGenerator generator = event.getGenerator();
         PackOutput packOutput = event.getGenerator().getPackOutput();
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 
-        var b = new EIOBlockTagsProvider(packOutput, lookupProvider);
-        generator.addProvider(true, b);
-        generator.addProvider(true,
-            new EIOItemTagsProvider(packOutput, lookupProvider));
-        generator.addProvider(true,
-            new EIOFluidTagsProvider(packOutput, lookupProvider));
-        generator.addProvider(true,
-            new EIOEntityTagsProvider(packOutput, lookupProvider));
+        event.addProvider(new EIOBlockTagsProvider(packOutput, lookupProvider));
+        event.addProvider(new EIOItemTagsProvider(packOutput, lookupProvider));
+        event.addProvider(new EIOFluidTagsProvider(packOutput, lookupProvider));
+        event.addProvider(new EIOEntityTagsProvider(packOutput, lookupProvider));
 
-        generator.addProvider(true, new AdvancementProvider(packOutput, lookupProvider,
+        event.addProvider(new AdvancementProvider(packOutput, lookupProvider,
             List.of(new EIOAdvancementGenerator(), new MachinesAdvancementGenerator())));
 
         event.createProvider(EnderIORecipeProvider.Runner::new);
 
-        generator.addProvider(true, new GrindingBallDataMapProvider(packOutput, lookupProvider));
-        generator.addProvider(true, new ReagentDataMapProvider(packOutput, lookupProvider));
-        generator.addProvider(true, new RangeExtenderDataMapProvider(packOutput, lookupProvider));
+        event.addProvider(new GrindingBallDataMapProvider(packOutput, lookupProvider));
+        event.addProvider(new ReagentDataMapProvider(packOutput, lookupProvider));
+        event.addProvider(new RangeExtenderDataMapProvider(packOutput, lookupProvider));
 
-        generator.addProvider(true, new SoulDataProvider(packOutput));
+        event.addProvider(new SoulDataProvider(packOutput));
 
-        generator.addProvider(true, new EIOLootModifiersProvider(packOutput, lookupProvider));
+        event.addProvider(new EIOLootModifiersProvider(packOutput, lookupProvider));
 
-        generator.addProvider(true,
-            new LootTableProvider(packOutput, Collections.emptySet(), List.of(
+        event.addProvider(new LootTableProvider(packOutput, Collections.emptySet(), List.of(
                 new LootTableProvider.SubProviderEntry(EIOBlockLootProvider::new, LootContextParamSets.BLOCK),
                 new LootTableProvider.SubProviderEntry(ChestLootProvider::new, LootContextParamSets.CHEST)
             ), lookupProvider));
 
-        generator.addProvider(true, new EIOModelProvider(packOutput));
-        generator.addProvider(true, new EIOLanguageProvider(packOutput));
-        generator.addProvider(true, new EIOSoundDefinitionProvider(packOutput));
-        generator.addProvider(true, new AthenaProvider(packOutput));
+        event.addProvider(new EIOModelProvider(packOutput));
+        event.addProvider(new EIOLanguageProvider(packOutput));
+        event.addProvider(new EIOSoundDefinitionProvider(packOutput));
+        event.addProvider(new AthenaProvider(packOutput));
     }
 
     private static RegistrySetBuilder createDatapackEntriesBuilder() {
