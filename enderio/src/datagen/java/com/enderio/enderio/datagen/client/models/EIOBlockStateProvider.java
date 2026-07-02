@@ -19,7 +19,6 @@ import net.minecraft.client.data.models.blockstates.ConditionBuilder;
 import net.minecraft.client.data.models.blockstates.MultiPartGenerator;
 import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.blockstates.PropertyDispatch;
-import net.minecraft.client.data.models.model.ItemModelUtils;
 import net.minecraft.client.data.models.model.ModelLocationUtils;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureMapping;
@@ -342,9 +341,9 @@ public class EIOBlockStateProvider extends ModelProvider {
             .term(BlockStateProperties.SOUTH, false)
             .term(BlockStateProperties.WEST, false)
             .term(BlockStateProperties.UP, false);
-        MultiVariant multivariant = blockModels.createFloorFireModels(block);
-        MultiVariant multivariant1 = blockModels.createSideFireModels(block);
-        MultiVariant multivariant2 = blockModels.createTopFireModels(block);
+        MultiVariant multivariant = blockModels.createFloorFireModels(Blocks.FIRE);
+        MultiVariant multivariant1 = blockModels.createSideFireModels(Blocks.FIRE);
+        MultiVariant multivariant2 = blockModels.createTopFireModels(Blocks.FIRE);
         blockModels.blockStateOutput
             .accept(
                 MultiPartGenerator.multiPart(block)

@@ -70,7 +70,7 @@ public class ColdFireBlock extends FireBlock {
     }
 
     private BlockState getStateWithAge(LevelReader level, BlockPos pos, int age) {
-        BlockState stateForPlacement = getState(level, pos);
+        BlockState stateForPlacement = coldFireStateFromFireState(getState(level, pos));
         return stateForPlacement.is(EIOBlocks.COLD_FIRE) ? stateForPlacement.setValue(AGE, age) : stateForPlacement;
     }
 
