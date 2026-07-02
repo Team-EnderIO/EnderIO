@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -133,7 +134,7 @@ public class FireCraftingManager {
         BlockState tickedBlockState = level.getBlockState(pos);
 
         // Ensure that we should process this block
-        boolean isFire = tickedBlockState.is(Blocks.FIRE);
+        boolean isFire = tickedBlockState.is(BlockTags.FIRE);
         if (!isFire && !fireTracker.containsKey(pos)) {
             return;
         }
