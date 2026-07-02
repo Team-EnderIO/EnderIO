@@ -8,6 +8,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
@@ -24,14 +25,44 @@ public class ColdFireBlock extends FireBlock {
     }
 
     @Override
-    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource randomSource) {
-        //don't spread
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        level.scheduleTick(pos, this, getFireTickDelay(level.getRandom()));
+        if (!state.canSurvive(level, pos)) {
+            level.removeBlock(pos, false);
+        }
+
+        int age = state.getValue(AGE);
+        int newAge = Math.min(15, age + random.nextInt(3) / 2);
+        if (age != newAge) {
+            state = state.setValue(AGE, newAge);
+            level.setBlock(pos, state, 260);
+        }
+
+        if (!this.isValidFireLocation(level, pos)) {
+            BlockPos below = pos.below();
+            if (!level.getBlockState(below).isFaceSturdy(level, below, Direction.UP) || age > 3) {
+                level.removeBlock(pos, false);
+            }
+            return;
+        }
+
+        if (age == 15 && random.nextInt(4) == 0 && !this.canCatchFire(level, pos.below(), Direction.UP)) {
+            level.removeBlock(pos, false);
+        }
     }
 
-    @SuppressWarnings("deprecation")
-    @Override
-    protected boolean canBurn(BlockState state) {
-        return true;
+    private static int getFireTickDelay(RandomSource random) {
+        return 30 + random.nextInt(10);
+    }
+
+    private boolean isValidFireLocation(BlockGetter level, BlockPos pos) {
+        for(Direction direction : Direction.values()) {
+            if (this.canCatchFire(level, pos.relative(direction), direction.getOpposite())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos, Direction directionToNeighbour, BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
@@ -66,5 +97,6 @@ public class ColdFireBlock extends FireBlock {
         if (!newState.canSurvive(level, pos)) {
             level.removeBlock(pos, false);
         }
+        level.scheduleTick(pos, this, getFireTickDelay(level.getRandom()));
     }
 }
