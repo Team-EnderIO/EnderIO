@@ -1,13 +1,13 @@
 {
-  "conduit.enderio.chemical": "Chemical Conduit",
-  "conduit.enderio.dense_me": "Dense ME Conduit",
-  "conduit.enderio.ender_chemical": "Ender Chemical Conduit",
-  "conduit.enderio.heat": "Heat Conduit",
-  "conduit.enderio.me": "ME Conduit",
-  "conduit.enderio.pressurized_chemical": "Pressurized Chemical Conduit",
-  "conduit.enderio.rs": "Refined Storage Conduit",
-  "item.enderio.basic_chemical_filter": "Basic Chemical Filter",
-  "tooltip.enderio.conduit.chemical.change_fluid1": "Locked Chemical:",
-  "tooltip.enderio.conduit.chemical.change_fluid2": "Click to reset!",
+  "conduit.enderio.chemical": "Przewód Chemiczny",
+  "conduit.enderio.dense_me": "Gęsty Przewód ME",
+  "conduit.enderio.ender_chemical": "Przewód Chemiczny Endu",
+  "conduit.enderio.heat": "Przewód Ciepła",
+  "conduit.enderio.me": "Przewód ME",
+  "conduit.enderio.pressurized_chemical": "Ciśnieniowy przewód chemiczny",
+  "conduit.enderio.rs": "Przewód Refined Storage",
+  "item.enderio.basic_chemical_filter": "Podstawowy Filtr Chemiczny",
+  "tooltip.enderio.conduit.chemical.change_fluid1": "Zablokowana substancja chemiczna:",
+  "tooltip.enderio.conduit.chemical.change_fluid2": "Kliknij, aby zresetować!",
   "tooltip.enderio.conduit.chemical.change_fluid3": "Chemical: %s"
 }
