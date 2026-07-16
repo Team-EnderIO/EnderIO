@@ -1,5 +1,7 @@
 package com.enderio.enderio.content.storage.fluid_tank;
 
+import com.enderio.enderio.config.base.BaseConfig;
+import com.enderio.enderio.config.base.common.BlocksConfig;
 import com.enderio.enderio.foundation.attachment.FluidTankUser;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
@@ -46,7 +48,7 @@ import java.util.Optional;
 public abstract class FluidTankBlockEntity extends MachineBlockEntity implements FluidItemInteractive, FluidTankUser {
 
     public static class Standard extends FluidTankBlockEntity {
-        public static final int CAPACITY = 16 * FluidType.BUCKET_VOLUME;
+        public static final int CAPACITY = BaseConfig.COMMON.BLOCKS.STANDARD_TANK_CAPACITY.get();
 
         public Standard(BlockPos worldPosition, BlockState blockState) {
             super(EIOBlockEntities.FLUID_TANK.get(), worldPosition, blockState);
@@ -59,7 +61,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
     }
 
     public static class Enhanced extends FluidTankBlockEntity {
-        public static final int CAPACITY = 32 * FluidType.BUCKET_VOLUME;
+        public static final int CAPACITY = BaseConfig.COMMON.BLOCKS.PRESSURIZED_TANK_CAPACITY.get();
 
         public Enhanced(BlockPos worldPosition, BlockState blockState) {
             super(EIOBlockEntities.PRESSURIZED_FLUID_TANK.get(), worldPosition, blockState);
