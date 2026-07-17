@@ -145,7 +145,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
 
     @Override
     public boolean isSoulValid(Soul soul) {
-        return EngineSoul.ENGINE.matches(soul.entityTypeId()).isPresent();
+        return soul.isEmpty() || EngineSoul.ENGINE.matches(soul.entityTypeId()).isPresent();
     }
 
     @Override

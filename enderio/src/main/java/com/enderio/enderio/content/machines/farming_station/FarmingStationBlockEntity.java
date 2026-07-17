@@ -374,7 +374,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
 
     @Override
     public boolean isSoulValid(Soul soul) {
-        return FarmSoul.FARM.matches(soul.entityTypeId()).isPresent();
+        return soul.isEmpty() || FarmSoul.FARM.matches(soul.entityTypeId()).isPresent();
     }
 
     @Override

@@ -145,7 +145,7 @@ public class SolarPanelBlockEntity extends EIOBlockEntity implements SoulBindabl
 
     @Override
     public boolean isSoulValid(Soul soul) {
-        return soul.entityType() == EntityType.PHANTOM;
+        return soul.isEmpty() || soul.entityType() == EntityType.PHANTOM;
     }
 
     @Override
