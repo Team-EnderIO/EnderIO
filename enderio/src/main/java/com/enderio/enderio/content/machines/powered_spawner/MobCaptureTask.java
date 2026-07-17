@@ -66,7 +66,8 @@ public class MobCaptureTask extends PoweredSpawnerTask {
 
         // Otherwise, try and put it into the output.
         var currentOutputStack = PoweredSpawnerBlockEntity.OUTPUT.getItemStack(blockEntity);
-        if (!currentOutputStack.isEmpty() && !ItemStack.isSameItemSameComponents(currentOutputStack, resultStack)) {
+        if ((!currentOutputStack.isEmpty() && !ItemStack.isSameItemSameComponents(currentOutputStack, resultStack)) ||
+            currentOutputStack.getCount() + 1 > currentOutputStack.getMaxStackSize()) {
             setBlockedReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.OUTPUT_FULL);
             return;
         }
