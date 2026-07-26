@@ -26,9 +26,6 @@ public class SodiumConduitFacadeMixin {
 
     @Nullable
     private static BlockState enderio$opaqueFacadeAt(BlockPos pos) {
-        // Reaching this method means the injection applied; let the overlay path defer to us.
-        ModCompatHelper.markSodiumFacadeMixinActive();
-
         if (!ClientFacadeVisibility.areFacadesVisible()) {
             return null;
         }
@@ -53,12 +50,16 @@ public class SodiumConduitFacadeMixin {
 
     @ModifyVariable(method = "renderModel", at = @At("HEAD"), argsOnly = true, ordinal = 0, remap = false)
     private BlockState enderio$mirrorState(BlockState state, BakedModel model, BlockState stateArg, BlockPos pos) {
+        // Reaching here proves the state interceptor resolved; the overlay only defers once both do.
+        ModCompatHelper.markSodiumFacadeStateMixinActive();
         BlockState facade = enderio$opaqueFacadeAt(pos);
         return facade != null ? facade : state;
     }
 
     @ModifyVariable(method = "renderModel", at = @At("HEAD"), argsOnly = true, ordinal = 0, remap = false)
     private BakedModel enderio$mirrorModel(BakedModel model, BakedModel modelArg, BlockState state, BlockPos pos) {
+        // Reaching here proves the model interceptor resolved; the overlay only defers once both do.
+        ModCompatHelper.markSodiumFacadeModelMixinActive();
         BlockState facade = enderio$opaqueFacadeAt(pos);
         if (facade != null) {
             return Minecraft.getInstance().getBlockRenderer().getBlockModel(facade);
