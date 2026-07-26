@@ -1,6 +1,7 @@
 package com.enderio.enderio.mixin.sodium;
 
 import com.enderio.enderio.client.content.conduits.model.facades.ClientFacadeVisibility;
+import com.enderio.enderio.compat.ModCompatHelper;
 import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.minecraft.client.Minecraft;
@@ -25,6 +26,9 @@ public class SodiumConduitFacadeMixin {
 
     @Nullable
     private static BlockState enderio$opaqueFacadeAt(BlockPos pos) {
+        // Reaching this method means the injection applied; let the overlay path defer to us.
+        ModCompatHelper.markSodiumFacadeMixinActive();
+
         if (!ClientFacadeVisibility.areFacadesVisible()) {
             return null;
         }

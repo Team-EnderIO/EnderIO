@@ -7,7 +7,11 @@ public class ModCompatHelper {
     private static boolean initialized = false;
     private static boolean hasJEI;
     private static boolean hasIris;
-    private static boolean hasSodium;
+
+    // Set by SodiumConduitFacadeMixin the first time it runs, proving the injection actually applied.
+    // The conduit facade overlay only skips opaque facades once this is confirmed, so a failed mixin
+    // target never leaves opaque facades unrendered by both paths.
+    private static volatile boolean sodiumFacadeMixinActive = false;
 
     public static boolean hasRecipeViewer() {
         init();
@@ -20,16 +24,18 @@ public class ModCompatHelper {
         return hasIris;
     }
 
-    public static boolean hasSodium() {
-        init();
-        return hasSodium;
+    public static void markSodiumFacadeMixinActive() {
+        sodiumFacadeMixinActive = true;
+    }
+
+    public static boolean isSodiumFacadeMixinActive() {
+        return sodiumFacadeMixinActive;
     }
 
     private static void init() {
         if (!initialized) {
             hasJEI = ModList.get().isLoaded("jei");
             hasIris = ModList.get().isLoaded("iris");
-            hasSodium = ModList.get().isLoaded("sodium");
             initialized = true;
         }
     }
