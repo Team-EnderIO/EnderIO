@@ -6,9 +6,9 @@ import com.enderio.enderio.api.conduits.ConduitCapabilityAccessor;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.api.conduits.bundle.SlotType;
-import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.io.RedstoneControl;
+import com.enderio.enderio.content.conduits.ConduitLang;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOConduitTypes;
 import com.mojang.serialization.MapCodec;
@@ -21,7 +21,6 @@ import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -113,6 +112,16 @@ public record RedstoneConduit(ResourceLocation texture, ResourceLocation activeT
         case FILTER_EXTRACT -> EXTRACT_FILTER_SLOT;
         case FILTER_INSERT -> INSERT_FILTER_SLOT;
         default -> -1;
+        };
+    }
+
+
+    @Override
+    public Component getSlotTooltip(int slot) {
+        return switch (slot) {
+            case EXTRACT_FILTER_SLOT -> ConduitLang.REDSTONE_FILTER_SLOT_TOOLTIP;
+            case INSERT_FILTER_SLOT -> ConduitLang.REDSTONE_FILTER_SLOT_TOOLTIP;
+            default -> Component.empty();
         };
     }
 

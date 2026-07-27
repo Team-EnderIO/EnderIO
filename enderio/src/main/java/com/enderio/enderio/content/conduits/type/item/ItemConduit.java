@@ -30,7 +30,6 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
@@ -171,6 +170,15 @@ public record ItemConduit(ResourceLocation texture, Component description, int t
         case FILTER_EXTRACT -> EXTRACT_FILTER_SLOT;
         case FILTER_INSERT -> INSERT_FILTER_SLOT;
         default -> -1;
+        };
+    }
+
+    @Override
+    public Component getSlotTooltip(int slot) {
+        return switch (slot) {
+            case EXTRACT_FILTER_SLOT -> ConduitLang.ITEM_FILTER_SLOT_TOOLTIP;
+            case INSERT_FILTER_SLOT -> ConduitLang.ITEM_FILTER_SLOT_TOOLTIP;
+            default -> Component.empty();
         };
     }
 
