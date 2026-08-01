@@ -89,7 +89,6 @@ public class EIOBlockStateProvider extends ModelProvider {
                 simpleBlockWithModel(blockModels, block.get(), block.get().glassIdentifier().explosionResistance() ? fusedQuartzModel : clearGlassModel);
             }
         }
-
         // Miscellaneous
         blockModels.createAxisAlignedPillarBlockCustomModel(EIOBlocks.SOUL_CHAIN.get(),  plainVariant(ModelLocationUtils.getModelLocation(EIOBlocks.SOUL_CHAIN.get())));
         blockModels.registerSimpleFlatItemModel(EIOBlocks.SOUL_CHAIN.asItem());
@@ -141,13 +140,22 @@ public class EIOBlockStateProvider extends ModelProvider {
     }
 
     public void createBars(BlockModelGenerators blockModels, Block block) {
-        //TODO rendertype
-        MultiVariant multivariant = plainVariant(ModelLocationUtils.getModelLocation(block, "_post_ends"));
-        MultiVariant multivariant1 = plainVariant(ModelLocationUtils.getModelLocation(block, "_post"));
-        MultiVariant multivariant2 = plainVariant(ModelLocationUtils.getModelLocation(block, "_cap"));
-        MultiVariant multivariant3 = plainVariant(ModelLocationUtils.getModelLocation(block, "_cap_alt"));
-        MultiVariant multivariant4 = plainVariant(ModelLocationUtils.getModelLocation(block, "_side"));
-        MultiVariant multivariant5 = plainVariant(ModelLocationUtils.getModelLocation(block, "_side_alt"));
+        TextureMapping textures = TextureMapping.bars(block);
+
+        Identifier postEnds = ModelTemplates.BARS_POST_ENDS.create(block, textures, blockModels.modelOutput);
+        Identifier post     = ModelTemplates.BARS_POST.create(block, textures, blockModels.modelOutput);
+        Identifier cap      = ModelTemplates.BARS_CAP.create(block, textures, blockModels.modelOutput);
+        Identifier capAlt   = ModelTemplates.BARS_CAP_ALT.create(block, textures, blockModels.modelOutput);
+        Identifier side     = ModelTemplates.BARS_POST_SIDE.create(block, textures, blockModels.modelOutput);
+        Identifier sideAlt  = ModelTemplates.BARS_POST_SIDE_ALT.create(block, textures, blockModels.modelOutput);
+
+        MultiVariant multivariant  = plainVariant(postEnds);
+        MultiVariant multivariant1 = plainVariant(post);
+        MultiVariant multivariant2 = plainVariant(cap);
+        MultiVariant multivariant3 = plainVariant(capAlt);
+        MultiVariant multivariant4 = plainVariant(side);
+        MultiVariant multivariant5 = plainVariant(sideAlt);
+
         blockModels.blockStateOutput
             .accept(
                 MultiPartGenerator.multiPart(block)
