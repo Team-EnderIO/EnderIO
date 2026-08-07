@@ -239,6 +239,10 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(ConduitLang.CONDUIT_PROBE_MESSAGE_SWITCHED_MODE, "Switched conduit probe mode to %s");
         add(ConduitLang.CONDUIT_PROBE_MESSAGE_COPIED, "Copied data: %s");
         add(ConduitLang.CONDUIT_PROBE_MESSAGE_PASTED, "Pasted data: %s");
+
+        add(ConduitLang.ITEM_FILTER_SLOT_TOOLTIP, "Item Filter Slot");
+        add(ConduitLang.REDSTONE_FILTER_SLOT_TOOLTIP, "Redstone Filter Slot");
+        add(ConduitLang.FLUID_FILTER_SLOT_TOOLTIP, "Fluid Filter Slot");
     }
 
     private void addContainerTitles() {

@@ -73,6 +73,12 @@
 //
 //    @Override
 //    public boolean canConnectToBlock(Level level, ConduitCapabilityAccessor capabilityAccessor, BlockPos conduitPos, Direction direction) {
+//        // Check for a host capability ourselves so we listen for capability invalidation.
+//        var host = capabilityAccessor.getCapability(AECapabilities.IN_WORLD_GRID_NODE_HOST, direction, null);
+//        if (host == null) {
+//            return false;
+//        }
+//
 //        return GridHelper.getExposedNode(level, conduitPos.relative(direction), direction.getOpposite()) != null;
 //    }
 //

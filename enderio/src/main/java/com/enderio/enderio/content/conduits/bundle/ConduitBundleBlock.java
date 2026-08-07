@@ -301,6 +301,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
                         popResource(level, pos, conduitBundle.getFacadeProvider());
                     } else {
                         var lastConduit = conduitBundle.getConduits().getFirst();
+                        conduitBundle.dropConnectionInventories(lastConduit, stack -> popResource(level, pos, stack));
                         popResource(level, pos, ConduitBlockItem.getStackFor(lastConduit, 1));
                     }
                 }

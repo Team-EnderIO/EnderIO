@@ -5,8 +5,8 @@ import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitCapabilityAccessor;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
-import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
+import com.enderio.enderio.content.conduits.ConduitLang;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOConduitTypes;
 import com.mojang.serialization.MapCodec;
@@ -18,7 +18,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.NonNull;
@@ -95,6 +94,16 @@ public record RedstoneConduit(Identifier texture, Identifier activeTexture, Comp
         case EXTRACT_FILTER_SLOT -> new Vector2i(23, 71);
         case INSERT_FILTER_SLOT -> new Vector2i(113, 71);
         default -> throw new IndexOutOfBoundsException();
+        };
+    }
+
+
+    @Override
+    public Component getSlotTooltip(int slot) {
+        return switch (slot) {
+            case EXTRACT_FILTER_SLOT -> ConduitLang.REDSTONE_FILTER_SLOT_TOOLTIP;
+            case INSERT_FILTER_SLOT -> ConduitLang.REDSTONE_FILTER_SLOT_TOOLTIP;
+            default -> Component.empty();
         };
     }
 

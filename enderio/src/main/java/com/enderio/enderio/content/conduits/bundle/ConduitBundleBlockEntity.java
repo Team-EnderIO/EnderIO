@@ -678,20 +678,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             droppedItemConsumer.accept(ConduitBlockItem.getStackFor(conduit, 1));
 
             // Empty connection inventories.
-            for (Direction side : Direction.values()) {
-                var inventory = getConnectionInventory(conduit, side);
-                if (inventory == null) {
-                    continue;
-                }
-
-                for (int i = 0; i < inventory.getSlots(); i++) {
-                    ItemStack stack = inventory.getStackInSlot(i);
-                    if (!stack.isEmpty()) {
-                        droppedItemConsumer.accept(stack);
-                        inventory.setStackInSlot(i, ItemStack.EMPTY);
-                    }
-                }
-            }
+            dropConnectionInventories(conduit, droppedItemConsumer);
         }
 
         // Node remove event
@@ -723,6 +710,23 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
 
         bundleChanged();
+    }
+
+    public void dropConnectionInventories(Holder<Conduit<?, ?>> conduit, Consumer<ItemStack> droppedItemConsumer) {
+        for (Direction side : Direction.values()) {
+            var inventory = getConnectionInventory(conduit, side);
+            if (inventory == null) {
+                continue;
+            }
+
+            for (int i = 0; i < inventory.getSlots(); i++) {
+                ItemStack stack = inventory.getStackInSlot(i);
+                if (!stack.isEmpty()) {
+                    droppedItemConsumer.accept(stack);
+                    inventory.setStackInSlot(i, ItemStack.EMPTY);
+                }
+            }
+        }
     }
 
     /**
