@@ -125,6 +125,12 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
     // Deferred connection check
     private UpdateState checkConnection = UpdateState.NONE;
 
+    // Late connection re-check, armed by capability invalidation. Some neighbors (e.g.
+    // Mekanism transmitters) only finish exposing their capabilities on their first tick,
+    // after the quick check has already run, and never fire another invalidation (GH-1433).
+    private int lateConnectionCheck = 0;
+    private static final int LATE_CONNECTION_CHECK_DELAY = 10;
+
     // NBT Keys
     private static final String FACADE_PROVIDER_KEY = "FacadeProvider";
     private static final String CONDUITS_KEY = "Conduits";
@@ -178,6 +184,10 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         if (level != null) {
             checkConnection = checkConnection.next();
             if (checkConnection.isInitialized()) {
+                updateConnections(level, getBlockPos(), null, false);
+            }
+
+            if (lateConnectionCheck > 0 && --lateConnectionCheck == 0) {
                 updateConnections(level, getBlockPos(), null, false);
             }
 
@@ -1017,6 +1027,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
     private void onCapabilityInvalidated() {
         checkConnection = checkConnection.activate();
+        lateConnectionCheck = LATE_CONNECTION_CHECK_DELAY;
     }
 
     private NeighboringCapabilityCaches getCacheFor(Holder<Conduit<?, ?>> conduit) {
