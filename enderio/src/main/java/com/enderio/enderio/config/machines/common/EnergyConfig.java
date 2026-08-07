@@ -26,7 +26,7 @@ public class EnergyConfig {
     public final ModConfigSpec.IntValue STIRLING_GENERATOR_PRODUCTION;
     public final ModConfigSpec.IntValue PAINTING_MACHINE_CAPACITY;
     public final ModConfigSpec.IntValue PAINTING_MACHINE_USAGE;
-    public final ModConfigSpec.IntValue PAINTING_MACHINE_ENERGY_COST;
+    public final ModConfigSpec.IntValue PAINTING_MACHINE_OPERATION_TIME;
     public final ModConfigSpec.IntValue ENERGETIC_SOLAR_PANEL_MAX_PRODUCTION;
     public final ModConfigSpec.IntValue PULSATING_SOLAR_PANEL_MAX_PRODUCTION;
     public final ModConfigSpec.IntValue VIBRANT_SOLAR_PANEL_MAX_PRODUCTION;
@@ -138,8 +138,8 @@ public class EnergyConfig {
                 .defineInRange("capacity", 64_000, 1, Integer.MAX_VALUE);
         PAINTING_MACHINE_USAGE = builder.comment("The base energy consumption in uI/t.")
                 .defineInRange("usage", 30, 1, Integer.MAX_VALUE);
-        PAINTING_MACHINE_ENERGY_COST = builder.comment("The energy required for each painting operation")
-                .defineInRange("energyCost", 2_400, 1, Integer.MAX_VALUE);
+        PAINTING_MACHINE_OPERATION_TIME = builder.comment("The time required for each painting operation")
+                .defineInRange("operationTime", 80, 1, Integer.MAX_VALUE);
         builder.pop();
 
         builder.push("photovoltaicCellRates");

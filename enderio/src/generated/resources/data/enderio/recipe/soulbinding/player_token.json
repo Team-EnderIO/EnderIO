@@ -1,9 +1,9 @@
 {
   "type": "enderio:soul_binding",
-  "energy": 12800,
   "experience": 1,
   "input": "enderio:dark_steel_grinding_ball",
   "inputSoul": "minecraft:villager",
+  "operation_time": 214,
   "output": {
     "id": "enderio:player_token"
   }

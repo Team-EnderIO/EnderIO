@@ -1,12 +1,12 @@
 {
   "type": "enderio:soul_binding",
-  "energy": 12800,
   "experience": 1,
   "input": "enderio:soularium_grinding_ball",
   "inputSoul": {
     "type": "enderio:mob_category",
     "category": "monster"
   },
+  "operation_time": 214,
   "output": {
     "id": "enderio:monster_token"
   }

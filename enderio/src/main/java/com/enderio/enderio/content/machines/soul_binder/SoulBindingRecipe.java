@@ -17,6 +17,7 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
@@ -42,7 +43,7 @@ public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.
             ItemStackTemplate.CODEC.fieldOf("output").forGetter(SoulBindingRecipe::output),
             Ingredient.CODEC.fieldOf("input").forGetter(SoulBindingRecipe::input),
             SoulIngredient.CODEC.fieldOf("inputSoul").forGetter(SoulBindingRecipe::inputSoul),
-            Codec.INT.fieldOf("energy").forGetter(SoulBindingRecipe::energy),
+            Codec.INT.fieldOf("operation_time").forGetter(SoulBindingRecipe::operationTime),
             Codec.INT.fieldOf("experience").forGetter(SoulBindingRecipe::experience),
             Codec.BOOL.optionalFieldOf("copyInputComponents", false).forGetter(SoulBindingRecipe::copyInputComponents))
         .apply(instance, SoulBindingRecipe::new));
@@ -51,7 +52,7 @@ public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.
         ItemStackTemplate.STREAM_CODEC, SoulBindingRecipe::output,
         Ingredient.CONTENTS_STREAM_CODEC, SoulBindingRecipe::input,
         SoulIngredient.STREAM_CODEC, SoulBindingRecipe::inputSoul,
-        ByteBufCodecs.INT, SoulBindingRecipe::energy,
+        ByteBufCodecs.INT, SoulBindingRecipe::operationTime,
         ByteBufCodecs.INT, SoulBindingRecipe::experience,
         ByteBufCodecs.BOOL, SoulBindingRecipe::copyInputComponents,
         SoulBindingRecipe::new);
@@ -61,18 +62,18 @@ public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.
     private final ItemStackTemplate output;
     private final Ingredient input;
     private final SoulIngredient inputSoul;
-    private final int energy;
+    private final int operationTime;
     private final int experience;
     private final boolean copyInputComponents;
 
     @Nullable
     private PlacementInfo placementInfo;
 
-    public SoulBindingRecipe(ItemStackTemplate output, Ingredient input, SoulIngredient inputSoul, int energy, int experience, boolean copyInputComponents) {
+    public SoulBindingRecipe(ItemStackTemplate output, Ingredient input, SoulIngredient inputSoul, int operationTime, int experience, boolean copyInputComponents) {
         this.output = output;
         this.input = input;
         this.inputSoul = inputSoul;
-        this.energy = energy;
+        this.operationTime = operationTime;
         this.experience = experience;
         this.copyInputComponents = copyInputComponents;
     }
@@ -89,8 +90,8 @@ public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.
         return inputSoul;
     }
 
-    public int energy() {
-        return energy;
+    public int operationTime() {
+        return operationTime;
     }
 
     public int experience() {
@@ -98,12 +99,12 @@ public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.
     }
 
     @Override
-    public int getBaseEnergyCost() {
-        return energy;
+    public int getOperationTime(Input input) {
+        return operationTime;
     }
 
     @Override
-    public List<OutputStack> craft(Input input, RegistryAccess registryAccess) {
+    public List<OutputStack> craft(Input input, RandomSource randomSource, RegistryAccess registryAccess) {
         ItemStack vial = input.getItem(0);
 
         List<OutputStack> results = getResultStacks(registryAccess);

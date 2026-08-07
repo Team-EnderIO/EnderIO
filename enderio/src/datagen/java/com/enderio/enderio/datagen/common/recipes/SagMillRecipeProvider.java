@@ -30,7 +30,7 @@ import static net.minecraft.world.item.Items.*;
 
 public class SagMillRecipeProvider extends SubRecipeProvider {
 
-    private static final int BASE_ENERGY_PER_OPERATION = 2400;
+    private static final int BASE_OPERATION_TIME = 120;
 
     private HolderGetter<Item> items;
 
@@ -72,66 +72,66 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
 
         build("cobbled_deepslate",ingredientFromTag(Tags.BlockItems.COBBLESTONES_DEEPSLATE.item()),
                 List.of(output(COBBLESTONE), output(EIOItems.GRAINS_OF_INFINITY.get(), 0.12f)),
-                BASE_ENERGY_PER_OPERATION, BonusType.CHANCE_ONLY, recipeOutput);
+                BASE_OPERATION_TIME, BonusType.CHANCE_ONLY, recipeOutput);
 
         build("coal", ingredientFromTag(ItemTags.COALS), List.of(output(POWDERED_COAL.get()),
                 output(POWDERED_COAL.get(), 0.1f), output(EIOTags.Items.DUSTS_SULFUR, 1, 0.1f, true)),
-                BASE_ENERGY_PER_OPERATION, recipeOutput);
+                BASE_OPERATION_TIME, recipeOutput);
 
         build("lapis_ore", ingredientFromTag(Tags.BlockItems.ORES_LAPIS.item()),
                 List.of(output(LAPIS_LAZULI, 8), output(LAPIS_LAZULI, 0.2f), output(COBBLESTONE, 0.15f)),
-                BASE_ENERGY_PER_OPERATION, recipeOutput);
+                BASE_OPERATION_TIME, recipeOutput);
 
         build("lapis", ingredientFromTag(Tags.Items.GEMS_LAPIS), List.of(output(POWDERED_LAPIS_LAZULI.get(), 1)),
-                BASE_ENERGY_PER_OPERATION, BonusType.NONE, recipeOutput);
+                BASE_OPERATION_TIME, BonusType.NONE, recipeOutput);
 
         build("quartz", ingredientFromTag(Tags.Items.GEMS_QUARTZ),
                 List.of(output(POWDERED_QUARTZ.get(), 1), output(POWDERED_QUARTZ.get(), 0.1f)),
-                BASE_ENERGY_PER_OPERATION, BonusType.CHANCE_ONLY, recipeOutput);
+                BASE_OPERATION_TIME, BonusType.CHANCE_ONLY, recipeOutput);
 
         build("cobblestone", ingredientFromTag(Tags.BlockItems.COBBLESTONES_NORMAL.item()),
                 List.of(output(GRAVEL, 0.7f), output(GRAVEL, 0.3f), output(SAND, 0.1f), output(FLINT, 0.05f)),
-                BASE_ENERGY_PER_OPERATION, recipeOutput);
+                BASE_OPERATION_TIME, recipeOutput);
 
         build("mossy_cobblestone", ingredientFromTag(Tags.BlockItems.COBBLESTONES_MOSSY.item()),
-                List.of(output(COBBLESTONE), output(VINE, 0.7f)), BASE_ENERGY_PER_OPERATION, BonusType.NONE, recipeOutput);
+                List.of(output(COBBLESTONE), output(VINE, 0.7f)), BASE_OPERATION_TIME, BonusType.NONE, recipeOutput);
 
         build("gravel", ingredientFromTag(Tags.BlockItems.GRAVELS.item()),
-                List.of(output(SAND, 0.7f), output(SAND, 0.3f), output(FLINT, 0.1f)), BASE_ENERGY_PER_OPERATION,
+                List.of(output(SAND, 0.7f), output(SAND, 0.3f), output(FLINT, 0.1f)), BASE_OPERATION_TIME,
                 recipeOutput);
 
         build("sandstone", ingredientFromTag(Tags.BlockItems.SANDSTONE_BLOCKS.item()), List.of(output(SAND, 2), output(SAND, 2, 0.4f)),
-                BASE_ENERGY_PER_OPERATION, BonusType.CHANCE_ONLY, recipeOutput);
+                BASE_OPERATION_TIME, BonusType.CHANCE_ONLY, recipeOutput);
 
         build("sand", ingredientFromTag(Tags.BlockItems.SANDS.item()), List.of(output(EIOTags.Items.SILICON, 0.5f)),
-                BASE_ENERGY_PER_OPERATION, recipeOutput);
+                BASE_OPERATION_TIME, recipeOutput);
 
         build("glowstone", Ingredient.of(GLOWSTONE), List.of(// swap with any:glowstone
-                output(GLOWSTONE_DUST, 3), output(GLOWSTONE_DUST, 0.8f)), BASE_ENERGY_PER_OPERATION,
+                output(GLOWSTONE_DUST, 3), output(GLOWSTONE_DUST, 0.8f)), BASE_OPERATION_TIME,
                 BonusType.CHANCE_ONLY, recipeOutput);
 
         build("bone", ingredientFromTag(Tags.Items.BONES), List.of(output(BONE_MEAL, 6), output(BONE_MEAL, 2, 0.1f)),
-                BASE_ENERGY_PER_OPERATION, recipeOutput);
+                BASE_OPERATION_TIME, recipeOutput);
 
         build("clay", Ingredient.of(CLAY),
                 List.of(output(CLAY_BALL, 2), output(CLAY_BALL, 0.1f), output(EIOTags.Items.SILICON, 2, 0.8f)),
-                BASE_ENERGY_PER_OPERATION, recipeOutput);
+                BASE_OPERATION_TIME, recipeOutput);
 
         build("wool", ingredientFromTag(ItemTags.WOOL), List.of(output(STRING, 2), output(STRING, 0.1f)),
-                BASE_ENERGY_PER_OPERATION, BonusType.CHANCE_ONLY, recipeOutput);
+                BASE_OPERATION_TIME, BonusType.CHANCE_ONLY, recipeOutput);
 
         build("quartz_block", ingredientFromTag(EIOTags.BlockItems.STORAGE_BLOCKS_QUARTZ.item()),
-                List.of(output(QUARTZ, 2), output(QUARTZ, 2, 0.25f)), BASE_ENERGY_PER_OPERATION, BonusType.CHANCE_ONLY,
+                List.of(output(QUARTZ, 2), output(QUARTZ, 2, 0.25f)), BASE_OPERATION_TIME, BonusType.CHANCE_ONLY,
                 recipeOutput);
 
         build("quartz_stairs", Ingredient.of(QUARTZ_STAIRS), List.of(output(QUARTZ, 2), output(QUARTZ, 2, 0.25f)),
-                BASE_ENERGY_PER_OPERATION, BonusType.CHANCE_ONLY, recipeOutput);
+                BASE_OPERATION_TIME, BonusType.CHANCE_ONLY, recipeOutput);
 
         build("quartz_slabs", Ingredient.of(QUARTZ_SLAB), List.of(output(QUARTZ, 1), output(QUARTZ, 0.25f)),
-                BASE_ENERGY_PER_OPERATION, BonusType.CHANCE_ONLY, recipeOutput);
+                BASE_OPERATION_TIME, BonusType.CHANCE_ONLY, recipeOutput);
 
         build("cobweb", Ingredient.of(COBWEB), List.of(output(STRING, 2), output(STRING, 0.6f), output(STRING, 0.3f)),
-                BASE_ENERGY_PER_OPERATION, recipeOutput);
+                BASE_OPERATION_TIME, recipeOutput);
 
         buildFlower("dandelion", DANDELION, Items.DYE.pick(DyeColor.YELLOW), recipeOutput);
         buildFlower("poppy", POPPY, Items.DYE.pick(DyeColor.RED), recipeOutput);
@@ -146,74 +146,74 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
 
         build("shrub", Ingredient.of(DEAD_BUSH), List.of(output(PLANT_MATTER_BROWN.get(), 0.8f),
                 output(PLANT_MATTER_BROWN.get(), 0.6f), output(PLANT_MATTER_BROWN.get(), 0.3f)),
-                BASE_ENERGY_PER_OPERATION, recipeOutput);
+                BASE_OPERATION_TIME, recipeOutput);
 
         build("grass", Ingredient.of(TALL_GRASS),
                 List.of(output(PLANT_MATTER_GREEN.get(), 0.6f), output(PLANT_MATTER_GREEN.get(), 0.3f),
                         output(PLANT_MATTER_GREEN.get(), 0.1f), output(PLANT_MATTER_BROWN.get(), 0.05f)),
-                BASE_ENERGY_PER_OPERATION, recipeOutput);
+                BASE_OPERATION_TIME, recipeOutput);
 
         build("fern", Ingredient.of(FERN),
                 List.of(output(PLANT_MATTER_GREEN.get(), 0.6f), output(PLANT_MATTER_GREEN.get(), 0.3f),
                         output(PLANT_MATTER_GREEN.get(), 0.1f), output(PLANT_MATTER_BROWN.get(), 0.05f)),
-                BASE_ENERGY_PER_OPERATION, recipeOutput);
+                BASE_OPERATION_TIME, recipeOutput);
 
         build("leaves", ingredientFromTag(ItemTags.LEAVES), List.of(output(PLANT_MATTER_GREEN.get(), 0.3f),
                 output(PLANT_MATTER_GREEN.get(), 0.1f), output(PLANT_MATTER_GREEN.get(), 0.02f)),
-                BASE_ENERGY_PER_OPERATION, recipeOutput);
+                BASE_OPERATION_TIME, recipeOutput);
 
         build("vines", Ingredient.of(VINE),
                 List.of(output(PLANT_MATTER_GREEN.get(), 0.15f), output(PLANT_MATTER_GREEN.get(), 0.1f)),
-                BASE_ENERGY_PER_OPERATION, recipeOutput);
+                BASE_OPERATION_TIME, recipeOutput);
 
         build("cactus", Ingredient.of(CACTUS),
                 List.of(output(PLANT_MATTER_GREEN.get(), 3), output(PLANT_MATTER_GREEN.get(), 3, 0.75f),
                         output(PLANT_MATTER_GREEN.get(), 3, 0.5f), output(PLANT_MATTER_BROWN.get(), 3, 0.25f)),
-                BASE_ENERGY_PER_OPERATION, recipeOutput);
+                BASE_OPERATION_TIME, recipeOutput);
 
         build("lily_pad", Ingredient.of(LILY_PAD),
                 List.of(output(PLANT_MATTER_GREEN.get(), 3, 0.15f), output(PLANT_MATTER_GREEN.get(), 3, 0.1f)),
-                BASE_ENERGY_PER_OPERATION, recipeOutput);
+                BASE_OPERATION_TIME, recipeOutput);
 
         build("sun_flower", Ingredient.of(Items.SUNFLOWER), List.of(output(Items.DYE.pick(DyeColor.YELLOW), 2, 0.8f),
                 output(Items.DYE.pick(DyeColor.YELLOW), 0.6f), output(Items.DYE.pick(DyeColor.YELLOW), 2, 0.3f), output(PLANT_MATTER_GREEN.get(), 0.2f)),
-                BASE_ENERGY_PER_OPERATION, recipeOutput);
+                BASE_OPERATION_TIME, recipeOutput);
 
         build("tall_grass", Ingredient.of(TALL_GRASS),
                 List.of(output(PLANT_MATTER_GREEN.get(), 2, 0.6f), output(PLANT_MATTER_GREEN.get(), 0.3f),
                         output(PLANT_MATTER_GREEN.get(), 2, 0.1f), output(PLANT_MATTER_BROWN.get(), 0.15f)),
-                BASE_ENERGY_PER_OPERATION, recipeOutput);
+                BASE_OPERATION_TIME, recipeOutput);
 
         build("large_fern", Ingredient.of(LARGE_FERN),
                 List.of(output(PLANT_MATTER_GREEN.get(), 2, 0.6f), output(PLANT_MATTER_GREEN.get(), 0.3f),
                         output(PLANT_MATTER_GREEN.get(), 2, 0.1f), output(PLANT_MATTER_BROWN.get(), 0.15f)),
-                BASE_ENERGY_PER_OPERATION, recipeOutput);
+                BASE_OPERATION_TIME, recipeOutput);
 
         build("rose_bush", Ingredient.of(ROSE_BUSH), List.of(output(Items.DYE.pick(DyeColor.RED), 2, 0.8f), output(Items.DYE.pick(DyeColor.RED), 0.6f),
-                output(Items.DYE.pick(DyeColor.RED), 2, 0.3f), output(PLANT_MATTER_GREEN.get(), 0.2f)), BASE_ENERGY_PER_OPERATION,
+                output(Items.DYE.pick(DyeColor.RED), 2, 0.3f), output(PLANT_MATTER_GREEN.get(), 0.2f)), BASE_OPERATION_TIME,
                 recipeOutput);
 
         build("poeny", Ingredient.of(PEONY), List.of(output(Items.DYE.pick(DyeColor.PINK), 2, 0.8f), output(Items.DYE.pick(DyeColor.PINK), 0.6f),
-                output(Items.DYE.pick(DyeColor.PINK), 2, 0.3f), output(PLANT_MATTER_GREEN.get(), 0.2f)), BASE_ENERGY_PER_OPERATION,
+                output(Items.DYE.pick(DyeColor.PINK), 2, 0.3f), output(PLANT_MATTER_GREEN.get(), 0.2f)), BASE_OPERATION_TIME,
                 recipeOutput);
 
         build("sugar_canes", Ingredient.of(SUGAR_CANE), List.of(output(SUGAR), output(SUGAR, 0.5f),
-                output(SUGAR, 2, 0.5f), output(PLANT_MATTER_GREEN.get(), 0.2f)), BASE_ENERGY_PER_OPERATION,
+                output(SUGAR, 2, 0.5f), output(PLANT_MATTER_GREEN.get(), 0.2f)), BASE_OPERATION_TIME,
                 recipeOutput);
 
         build("flower_pot", Ingredient.of(FLOWER_POT), List.of(output(BRICK, 0.9f), output(BRICK, 0.3f),
-                output(BRICK, 0.1f), output(POWDERED_COAL.get(), 0.05f)), BASE_ENERGY_PER_OPERATION, recipeOutput);
+                output(BRICK, 0.1f), output(POWDERED_COAL.get(), 0.05f)), BASE_OPERATION_TIME, recipeOutput);
 
         build("prismarine_shard", Ingredient.of(PRISMARINE_SHARD),
-                List.of(output(PRISMARINE_CRYSTALS), output(PRISMARINE_CRYSTALS, 0.1f)), BASE_ENERGY_PER_OPERATION,
+                List.of(output(PRISMARINE_CRYSTALS), output(PRISMARINE_CRYSTALS, 0.1f)), BASE_OPERATION_TIME,
                 BonusType.NONE, recipeOutput);
 
         build("wither_rose", Ingredient.of(WITHER_ROSE), List.of(output(WITHERING_POWDER.get(), 1, 0.4f)),
-                BASE_ENERGY_PER_OPERATION, recipeOutput);
+                BASE_OPERATION_TIME, recipeOutput);
 
         build("wither_skull", Ingredient.of(WITHER_SKELETON_SKULL),
                 List.of(output(WITHERING_POWDER.get(), 2), output(WITHERING_POWDER.get(), 1, 0.2f)),
-                BASE_ENERGY_PER_OPERATION, recipeOutput);
+                BASE_OPERATION_TIME, recipeOutput);
     }
 
     private void buildOreBlockRecipes(HolderGetter<Item> items, RecipeOutput recipeOutput) {
@@ -223,74 +223,74 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
 
         build("coal_ore", ingredientFromTag(Tags.BlockItems.ORES_COAL.item()), List.of(output(COAL, 3),
                 output(POWDERED_COAL.get(), 0.6f), output(DIAMOND, 0.005f), output(COBBLESTONE, 0.15f)),
-                BASE_ENERGY_PER_OPERATION, recipeOutput);
+                BASE_OPERATION_TIME, recipeOutput);
 
         build("redstone_ore", ingredientFromTag(Tags.BlockItems.ORES_REDSTONE.item()), List.of(output(REDSTONE, 8),
                 output(REDSTONE, 0.2f), output(EIOTags.Items.SILICON, 0.8f), output(COBBLESTONE, 0.15f)),
-                BASE_ENERGY_PER_OPERATION, recipeOutput);
+                BASE_OPERATION_TIME, recipeOutput);
 
         build("diamond_ore", ingredientFromTag(Tags.BlockItems.ORES_DIAMOND.item()), List.of(output(DIAMOND, 2), output(DIAMOND, 0.25f),
-                output(POWDERED_COAL.get(), 0.1f), output(COBBLESTONE, 0.15f)), BASE_ENERGY_PER_OPERATION,
+                output(POWDERED_COAL.get(), 0.1f), output(COBBLESTONE, 0.15f)), BASE_OPERATION_TIME,
                 recipeOutput);
 
         build("emerald_ore", ingredientFromTag(Tags.BlockItems.ORES_EMERALD.item()),
                 List.of(output(EMERALD, 2), output(EMERALD, 0.25f), output(COBBLESTONE, 0.15f)),
-                BASE_ENERGY_PER_OPERATION, recipeOutput);
+                BASE_OPERATION_TIME, recipeOutput);
 
         build("quartz_ore", ingredientFromTag(Tags.BlockItems.ORES_QUARTZ.item()),
                 List.of(output(QUARTZ, 2), output(POWDERED_QUARTZ.get(), 0.1f), output(NETHERRACK, 0.15f)),
-                BASE_ENERGY_PER_OPERATION, recipeOutput);
+                BASE_OPERATION_TIME, recipeOutput);
     }
 
     private void buildRawOreRecipes(HolderGetter<Item> items, RecipeOutput recipeOutput) {
         build("raw_iron", ingredientFromTag(Tags.Items.RAW_MATERIALS_IRON),
                 List.of(output(POWDERED_IRON), output(POWDERED_IRON, 0.8f), output(EIOTags.Items.DUSTS_TIN, 0.05f)),
-                BASE_ENERGY_PER_OPERATION, recipeOutput);
+                BASE_OPERATION_TIME, recipeOutput);
 
         build("raw_copper", ingredientFromTag(Tags.Items.RAW_MATERIALS_COPPER), List.of(output(POWDERED_COPPER),
-                output(POWDERED_COPPER, 0.8f), output(EIOTags.Items.DUSTS_GOLD, 0.12f)), BASE_ENERGY_PER_OPERATION,
+                output(POWDERED_COPPER, 0.8f), output(EIOTags.Items.DUSTS_GOLD, 0.12f)), BASE_OPERATION_TIME,
                 recipeOutput);
 
         build("raw_gold", ingredientFromTag(Tags.Items.RAW_MATERIALS_GOLD),
                 List.of(output(POWDERED_GOLD), output(POWDERED_GOLD, 0.8f), output(EIOTags.Items.DUSTS_COPPER, 0.20f)),
-                BASE_ENERGY_PER_OPERATION, recipeOutput);
+                BASE_OPERATION_TIME, recipeOutput);
     }
 
 
     private void buildModCompat(HolderGetter<Item> items, RecipeOutput recipeOutput) {
         build("raw_aluminum", ingredientFromTag(EIOTags.Items.RAW_MATERIALS_ALUMINUM), List.of(output(EIOTags.Items.DUSTS_ALUMINUM), output(EIOTags.Items.DUSTS_ALUMINUM, 0.80f),
-                output(EIOTags.Items.DUSTS_IRON, 0.20f)), BASE_ENERGY_PER_OPERATION, recipeOutput, EIOTags.Items.RAW_MATERIALS_ALUMINUM, EIOTags.Items.DUSTS_ALUMINUM);
+                output(EIOTags.Items.DUSTS_IRON, 0.20f)), BASE_OPERATION_TIME, recipeOutput, EIOTags.Items.RAW_MATERIALS_ALUMINUM, EIOTags.Items.DUSTS_ALUMINUM);
         build("aluminum_ore", ingredientFromTag(EIOTags.BlockItems.ORES_ALUMINUM.item()), List.of(output(EIOTags.Items.RAW_MATERIALS_ALUMINUM), output(EIOTags.Items.RAW_MATERIALS_ALUMINUM, 0.33f), output(COBBLESTONE, 0.15f)),
-            BASE_ENERGY_PER_OPERATION, recipeOutput, EIOTags.BlockItems.ORES_ALUMINUM.item(), EIOTags.Items.RAW_MATERIALS_ALUMINUM);
-        build("aluminum", ingredientFromTag(EIOTags.Items.INGOTS_ALUMINUM), List.of(output(EIOTags.Items.DUSTS_ALUMINUM, 1)), BASE_ENERGY_PER_OPERATION, BonusType.NONE,
+            BASE_OPERATION_TIME, recipeOutput, EIOTags.BlockItems.ORES_ALUMINUM.item(), EIOTags.Items.RAW_MATERIALS_ALUMINUM);
+        build("aluminum", ingredientFromTag(EIOTags.Items.INGOTS_ALUMINUM), List.of(output(EIOTags.Items.DUSTS_ALUMINUM, 1)), BASE_OPERATION_TIME, BonusType.NONE,
             recipeOutput, EIOTags.Items.INGOTS_ALUMINUM, EIOTags.Items.DUSTS_ALUMINUM);
 
         build("raw_osmium", ingredientFromTag(EIOTags.Items.RAW_MATERIALS_OSMIUM), List.of(output(EIOTags.Items.DUSTS_OSMIUM), output(EIOTags.Items.DUSTS_OSMIUM, 0.80f),
-            output(EIOTags.Items.DUSTS_IRON, 0.20f)), BASE_ENERGY_PER_OPERATION, recipeOutput, EIOTags.Items.RAW_MATERIALS_OSMIUM, EIOTags.Items.DUSTS_OSMIUM);
+            output(EIOTags.Items.DUSTS_IRON, 0.20f)), BASE_OPERATION_TIME, recipeOutput, EIOTags.Items.RAW_MATERIALS_OSMIUM, EIOTags.Items.DUSTS_OSMIUM);
         build("osmium_ore", ingredientFromTag(EIOTags.BlockItems.ORES_OSMIUM.item()), List.of(output(EIOTags.Items.RAW_MATERIALS_OSMIUM), output(EIOTags.Items.RAW_MATERIALS_OSMIUM, 0.33f), output(COBBLESTONE, 0.15f)),
-            BASE_ENERGY_PER_OPERATION, recipeOutput, EIOTags.BlockItems.ORES_OSMIUM.item(), EIOTags.Items.RAW_MATERIALS_OSMIUM);
-        build("osmium", ingredientFromTag(EIOTags.Items.INGOTS_OSMIUM), List.of(output(EIOTags.Items.DUSTS_OSMIUM, 1)), BASE_ENERGY_PER_OPERATION, BonusType.NONE,
+            BASE_OPERATION_TIME, recipeOutput, EIOTags.BlockItems.ORES_OSMIUM.item(), EIOTags.Items.RAW_MATERIALS_OSMIUM);
+        build("osmium", ingredientFromTag(EIOTags.Items.INGOTS_OSMIUM), List.of(output(EIOTags.Items.DUSTS_OSMIUM, 1)), BASE_OPERATION_TIME, BonusType.NONE,
             recipeOutput, EIOTags.Items.INGOTS_OSMIUM, EIOTags.Items.DUSTS_OSMIUM);
 
         build("raw_tin", ingredientFromTag(EIOTags.Items.RAW_MATERIALS_TIN), List.of(output(EIOTags.Items.DUSTS_TIN), output(EIOTags.Items.DUSTS_TIN, 0.80f),
-            output(EIOTags.Items.DUSTS_COPPER, 0.20f)), BASE_ENERGY_PER_OPERATION, recipeOutput, EIOTags.Items.RAW_MATERIALS_TIN, EIOTags.Items.DUSTS_TIN);
+            output(EIOTags.Items.DUSTS_COPPER, 0.20f)), BASE_OPERATION_TIME, recipeOutput, EIOTags.Items.RAW_MATERIALS_TIN, EIOTags.Items.DUSTS_TIN);
         build("tin_ore", ingredientFromTag(EIOTags.BlockItems.ORES_TIN.item()), List.of(output(EIOTags.Items.RAW_MATERIALS_TIN), output(EIOTags.Items.RAW_MATERIALS_TIN, 0.33f), output(COBBLESTONE, 0.15f)),
-            BASE_ENERGY_PER_OPERATION, recipeOutput, EIOTags.BlockItems.ORES_TIN.item(), EIOTags.Items.RAW_MATERIALS_TIN);
-        build("tin", ingredientFromTag(EIOTags.Items.INGOTS_TIN), List.of(output(EIOTags.Items.DUSTS_TIN, 1)), BASE_ENERGY_PER_OPERATION, BonusType.NONE,
+            BASE_OPERATION_TIME, recipeOutput, EIOTags.BlockItems.ORES_TIN.item(), EIOTags.Items.RAW_MATERIALS_TIN);
+        build("tin", ingredientFromTag(EIOTags.Items.INGOTS_TIN), List.of(output(EIOTags.Items.DUSTS_TIN, 1)), BASE_OPERATION_TIME, BonusType.NONE,
             recipeOutput, EIOTags.Items.INGOTS_TIN, EIOTags.Items.DUSTS_TIN);
 
         build("raw_uranium", ingredientFromTag(EIOTags.Items.RAW_MATERIALS_URANIUM), List.of(output(EIOTags.Items.DUSTS_URANIUM), output(EIOTags.Items.DUSTS_URANIUM, 0.80f),
-            output(EIOTags.Items.DUSTS_LEAD, 0.20f)), BASE_ENERGY_PER_OPERATION, recipeOutput, EIOTags.Items.RAW_MATERIALS_URANIUM, EIOTags.Items.DUSTS_URANIUM);
+            output(EIOTags.Items.DUSTS_LEAD, 0.20f)), BASE_OPERATION_TIME, recipeOutput, EIOTags.Items.RAW_MATERIALS_URANIUM, EIOTags.Items.DUSTS_URANIUM);
         build("uranium_ore", ingredientFromTag(EIOTags.BlockItems.ORES_URANIUM.item()), List.of(output(EIOTags.Items.RAW_MATERIALS_URANIUM), output(EIOTags.Items.RAW_MATERIALS_URANIUM, 0.33f), output(COBBLESTONE, 0.15f)),
-            BASE_ENERGY_PER_OPERATION, recipeOutput, EIOTags.BlockItems.ORES_URANIUM.item(), EIOTags.Items.RAW_MATERIALS_URANIUM);
-        build("uranium", ingredientFromTag(EIOTags.Items.INGOTS_URANIUM), List.of(output(EIOTags.Items.DUSTS_URANIUM, 1)), BASE_ENERGY_PER_OPERATION, BonusType.NONE,
+            BASE_OPERATION_TIME, recipeOutput, EIOTags.BlockItems.ORES_URANIUM.item(), EIOTags.Items.RAW_MATERIALS_URANIUM);
+        build("uranium", ingredientFromTag(EIOTags.Items.INGOTS_URANIUM), List.of(output(EIOTags.Items.DUSTS_URANIUM, 1)), BASE_OPERATION_TIME, BonusType.NONE,
             recipeOutput, EIOTags.Items.INGOTS_URANIUM, EIOTags.Items.DUSTS_URANIUM);
 
         build("raw_lead", ingredientFromTag(EIOTags.Items.RAW_MATERIALS_LEAD), List.of(output(EIOTags.Items.DUSTS_LEAD), output(EIOTags.Items.DUSTS_LEAD, 0.80f),
-            output(EIOTags.Items.DUSTS_GOLD, 0.20f)), BASE_ENERGY_PER_OPERATION, recipeOutput, EIOTags.Items.RAW_MATERIALS_LEAD, EIOTags.Items.DUSTS_LEAD);
+            output(EIOTags.Items.DUSTS_GOLD, 0.20f)), BASE_OPERATION_TIME, recipeOutput, EIOTags.Items.RAW_MATERIALS_LEAD, EIOTags.Items.DUSTS_LEAD);
         build("lead_ore", ingredientFromTag(EIOTags.BlockItems.ORES_LEAD.item()), List.of(output(EIOTags.Items.RAW_MATERIALS_LEAD), output(EIOTags.Items.RAW_MATERIALS_LEAD, 0.33f), output(COBBLESTONE, 0.15f)),
-            BASE_ENERGY_PER_OPERATION, recipeOutput, EIOTags.BlockItems.ORES_LEAD.item(), EIOTags.Items.RAW_MATERIALS_LEAD);
-        build("lead", ingredientFromTag(EIOTags.Items.INGOTS_LEAD), List.of(output(EIOTags.Items.DUSTS_LEAD, 1)), BASE_ENERGY_PER_OPERATION, BonusType.NONE,
+            BASE_OPERATION_TIME, recipeOutput, EIOTags.BlockItems.ORES_LEAD.item(), EIOTags.Items.RAW_MATERIALS_LEAD);
+        build("lead", ingredientFromTag(EIOTags.Items.INGOTS_LEAD), List.of(output(EIOTags.Items.DUSTS_LEAD, 1)), BASE_OPERATION_TIME, BonusType.NONE,
             recipeOutput, EIOTags.Items.INGOTS_LEAD, EIOTags.Items.DUSTS_LEAD);
     }
 
@@ -298,27 +298,27 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
 
     private void buildOre(String name, Ingredient input, Item output, RecipeOutput recipeOutput) {
         build(name, input, List.of(output(output), output(output, 0.33f), output(COBBLESTONE, 0.15f)),
-                BASE_ENERGY_PER_OPERATION, recipeOutput);
+                BASE_OPERATION_TIME, recipeOutput);
     }
 
     private void buildFlower(String name, ItemLike input, Item output, RecipeOutput recipeOutput) {
         build(name, Ingredient.of(input), List.of(output(output, 0.8f), output(output, 0.6f), output(output, 0.3f),
-                output(PLANT_MATTER_GREEN.get(), 0.1f)), BASE_ENERGY_PER_OPERATION, recipeOutput);
+                output(PLANT_MATTER_GREEN.get(), 0.1f)), BASE_OPERATION_TIME, recipeOutput);
     }
 
     private void build1toN(String name, ItemLike input, Item output, int number, BonusType bonusType,
             RecipeOutput recipeOutput) {
-        build(name, Ingredient.of(input), List.of(output(output, number)), BASE_ENERGY_PER_OPERATION, bonusType,
+        build(name, Ingredient.of(input), List.of(output(output, number)), BASE_OPERATION_TIME, bonusType,
                 recipeOutput);
     }
 
     private void build1toN(String name, TagKey<Item> input, Item output, int number, RecipeOutput recipeOutput) {
-        build(name, ingredientFromTag(input), List.of(output(output, number)), BASE_ENERGY_PER_OPERATION, recipeOutput);
+        build(name, ingredientFromTag(input), List.of(output(output, number)), BASE_OPERATION_TIME, recipeOutput);
     }
 
     private void build1toN(String name, TagKey<Item> input, Item output, int number, BonusType bonusType,
             RecipeOutput recipeOutput) {
-        build(name, ingredientFromTag(input), List.of(output(output, number)), BASE_ENERGY_PER_OPERATION, bonusType,
+        build(name, ingredientFromTag(input), List.of(output(output, number)), BASE_OPERATION_TIME, bonusType,
                 recipeOutput);
     }
 
