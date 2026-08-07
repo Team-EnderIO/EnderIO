@@ -68,7 +68,21 @@ public record MEConduit(ResourceLocation texture, Component description, AEColor
 
     @Override
     public boolean shouldCheckConnectionsOnNeighborChange() {
-        return false;
+        // canConnectToBlock does not use the ConduitCapabilityAccessor (it queries the AE2 grid
+        // directly), so there is no capability invalidation listener to trigger connection checks.
+        // Without checking on neighbor changes, an AE2 cable placed next to an existing ME conduit
+        // never forms a conduit-side connection, leaving the grid node unexposed on that side and
+        // the cable visually disconnected.
+        return true;
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public boolean hasConnectionDelay() {
+        // AE2 creates in-world grid nodes on the block entity's first tick, so a neighbor-change
+        // check that runs during placement sees no exposed node yet. Deferring the check by a
+        // couple of ticks lets the neighbor's grid node come up first.
+        return true;
     }
 
     @Override
