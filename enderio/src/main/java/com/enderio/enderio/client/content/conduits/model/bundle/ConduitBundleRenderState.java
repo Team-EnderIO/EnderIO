@@ -69,7 +69,10 @@ public class ConduitBundleRenderState {
         renderState.hasFacade = bundle.hasFacade();
         if (renderState.hasFacade) {
             renderState.facadeBlockstate = bundle.getFacadeBlock().defaultBlockState();
-            renderState.doesFacadeHideConduits = bundle.getFacadeType().doesHideConduits();
+            // Occluding facades fully cover the conduits, so skip rendering them to avoid
+            // z-fighting between the facade faces and conduit connector plates (GH-1119).
+            renderState.doesFacadeHideConduits = bundle.getFacadeType().doesHideConduits()
+                    || renderState.facadeBlockstate.canOcclude();
         } else {
             renderState.facadeBlockstate = Blocks.AIR.defaultBlockState();
             renderState.doesFacadeHideConduits = false;
