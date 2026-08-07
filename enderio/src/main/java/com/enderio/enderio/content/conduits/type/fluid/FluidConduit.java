@@ -129,6 +129,15 @@ public record FluidConduit(ResourceLocation texture, Component description, int 
     }
 
     @Override
+    public Component getSlotTooltip(int slot) {
+        return switch (slot) {
+            case EXTRACT_FILTER_SLOT -> ConduitLang.FLUID_FILTER_SLOT_TOOLTIP;
+            case INSERT_FILTER_SLOT -> ConduitLang.FLUID_FILTER_SLOT_TOOLTIP;
+            default -> Component.empty();
+        };
+    }
+
+    @Override
     public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder,
             TooltipFlag tooltipFlag) {
         String transferLimitFormatted = String.format("%,d", transferRatePerTick());
