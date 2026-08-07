@@ -1,8 +1,8 @@
 {
   "type": "enderio:soul_binding",
-  "energy": 188000,
   "experience": 5,
   "input": "enderio:farming_station",
+  "operation_time": 3134,
   "output": {
     "id": "enderio:farming_station"
   },

@@ -1,9 +1,9 @@
 {
   "type": "enderio:soul_binding",
-  "energy": 51200,
   "entity_type": "minecraft:witch",
   "experience": 4,
   "input": "enderio:ender_resonator",
+  "operation_time": 854,
   "output": {
     "id": "enderio:sentient_ender"
   }

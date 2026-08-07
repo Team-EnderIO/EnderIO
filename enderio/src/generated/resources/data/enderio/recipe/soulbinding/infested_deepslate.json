@@ -1,9 +1,9 @@
 {
   "type": "enderio:soul_binding",
-  "energy": 10000,
   "entity_type": "minecraft:silverfish",
   "experience": 0,
   "input": "minecraft:deepslate",
+  "operation_time": 167,
   "output": {
     "id": "minecraft:infested_deepslate"
   }

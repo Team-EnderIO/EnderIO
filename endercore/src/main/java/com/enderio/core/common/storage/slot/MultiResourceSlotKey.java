@@ -2,6 +2,8 @@ package com.enderio.core.common.storage.slot;
 
 import com.enderio.core.common.storage.ResourceStorage;
 import com.enderio.core.common.storage.layout.ResourceStorageLayout;
+import net.neoforged.neoforge.transfer.RangedResourceHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.resource.Resource;
 
 import java.util.Collection;
@@ -60,5 +62,12 @@ public final class MultiResourceSlotKey<T extends Resource> implements ResourceS
     @Override
     public Iterator<ResourceSlotId<T>> iterator() {
         return slotIdCache.values().iterator();
+    }
+
+    @Override
+    public ResourceHandler<T> rangedHandler(ResourceStorage<T> storage) {
+        int startIndex = slot(0).index(storage.layout());
+        int endIndex = slot(count - 1).index(storage.layout());
+        return RangedResourceHandler.of(storage, startIndex, endIndex + 1);
     }
 }

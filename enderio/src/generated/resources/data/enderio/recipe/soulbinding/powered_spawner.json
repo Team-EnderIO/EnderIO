@@ -1,12 +1,12 @@
 {
   "type": "enderio:soul_binding",
   "copyInputComponents": true,
-  "energy": 288000,
   "experience": 8,
   "input": {
     "neoforge:ingredient_type": "enderio:any_soul_storage",
     "item": "enderio:powered_spawner"
   },
+  "operation_time": 4800,
   "output": {
     "id": "enderio:powered_spawner"
   }

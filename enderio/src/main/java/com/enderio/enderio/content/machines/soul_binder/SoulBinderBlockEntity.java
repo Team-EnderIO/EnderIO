@@ -16,16 +16,17 @@ import com.enderio.enderio.foundation.MachineNBTKeys;
 import com.enderio.enderio.foundation.block.ProgressMachineBlock;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
+import com.enderio.enderio.foundation.capacitor.TempMachineSpeedScalable;
+import com.enderio.enderio.foundation.crafting.MachineCraftingContext;
+import com.enderio.enderio.foundation.crafting.MachineCraftingManager;
+import com.enderio.enderio.foundation.crafting.MachineCraftingStatus;
 import com.enderio.enderio.foundation.inventory.MachineSlotTemplates;
 import com.enderio.enderio.foundation.recipe.MachineRecipeCaches;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.foundation.storage.SidedResourceHandler;
-import com.enderio.enderio.foundation.task.PoweredCraftingMachineTask;
-import com.enderio.enderio.foundation.task.host.CraftingMachineTaskHost;
 import com.enderio.enderio.foundation.util.ExperienceUtil;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
-import com.enderio.enderio.init.EIOFluids;
 import com.enderio.enderio.init.EIOItems;
 import com.enderio.enderio.init.EIORecipeTypes;
 import com.enderio.core.annotations.UseOnly;
@@ -35,6 +36,7 @@ import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import com.enderio.enderio.init.EIOSounds;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Inventory;
@@ -55,11 +57,10 @@ import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
-
-import static com.enderio.enderio.foundation.util.ExperienceUtil.EXP_TO_FLUID;
 
 public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
 
@@ -70,6 +71,8 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
 
     public static final ICapabilityProvider<SoulBinderBlockEntity, Direction, ResourceHandler<FluidResource>> FLUID_HANDLER_PROVIDER = (be,
         side) -> be.fluidStorage != null ? SidedResourceHandler.of(be.fluidStorage, side, be) : null;
+
+    public static final TempMachineSpeedScalable SPEED = new TempMachineSpeedScalable(USAGE);
 
     public static final int TANK_CAPACITY = 10000;
 
@@ -85,14 +88,17 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
 
     public static final SingleResourceSlotKey<ItemResource> INPUT_SOUL = new SingleResourceSlotKey<>();
     public static final SingleResourceSlotKey<ItemResource> INPUT_OTHER = new SingleResourceSlotKey<>();
-    public static final MultiResourceSlotKey<ItemResource> OUTPUT = new MultiResourceSlotKey<>(2);
+    public static final MultiResourceSlotKey<ItemResource> OUTPUTS = new MultiResourceSlotKey<>(2);
     public static final SingleResourceSlotKey<ItemResource> CAPACITOR = new SingleResourceSlotKey<>();
 
     @UseOnly(LogicalSide.CLIENT)
     @Nullable
     private RecipeHolder<SoulBindingRecipe> clientRecipe;
 
-    private final CraftingMachineTaskHost<SoulBindingRecipe, SoulBindingRecipe.Input> craftingTaskHost;
+    private final ResourceHandler<ItemResource> outputItemHandler;
+
+    private final MachineCraftingManager<SoulBindingRecipe, SoulBindingRecipe.Input> craftingManager;
+    private SoulBindingRecipe.@Nullable Input recipeInput;
 
     public SoulBinderBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.SOUL_BINDER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, CAPACITOR,
@@ -102,7 +108,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
             @Override
             protected void onContentsChanged(int index, FluidStack previousContents) {
                 super.onContentsChanged(index, previousContents);
-                craftingTaskHost.newTaskAvailable();
+                recipeInput = null;
                 updateMachineState(MachineState.EMPTY_TANK, fluidStorage.getAmountAsInt(TANK_SLOT) <= 0);
                 setChanged();
             }
@@ -125,9 +131,10 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
             }
         };
 
+        outputItemHandler = OUTPUTS.rangedHandler(getInventory());
+
         // Create the crafting task host
-        craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy,
-                EIORecipeTypes.SOUL_BINDING.get(), this::createTask, this::createRecipeInput);
+        craftingManager = new MachineCraftingManager<>(EIORecipeTypes.SOUL_BINDING.get(), new CraftingContext());
     }
 
     @Override
@@ -140,7 +147,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
         super.serverTick();
 
         if (canAct()) {
-            craftingTaskHost.tick();
+            craftingManager.tick();
         }
     }
 
@@ -166,12 +173,6 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
         }
     }
 
-    @Override
-    public void onLoad() {
-        super.onLoad();
-        craftingTaskHost.onLevelReady();
-    }
-
     // region Inventory
 
     @Override
@@ -183,7 +184,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
                 b -> b.filter((_, itemResource) -> itemResource.is(EIOItems.SOUL_VIAL.get()) && SoulBoundUtils.isBound(itemResource.toStack())))
             .add(INPUT_OTHER, SlotTemplates.input(1), b -> b
                 .filter(this::isValidInput))
-            .add(OUTPUT, SlotTemplates.output(64))
+            .add(OUTPUTS, SlotTemplates.output(64))
             .add(CAPACITOR, MachineSlotTemplates.capacitor())
             .build();
     }
@@ -195,46 +196,24 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
     @Override
     protected void onInventoryContentsChanged(int slot) {
         super.onInventoryContentsChanged(slot);
-        craftingTaskHost.newTaskAvailable();
-
-        //TODO this doesn't work, client has no recipes unless we sync
-//        if (level != null && level.isClientSide) {
-//            clientRecipe = level.getRecipeManager()
-//                    .getRecipeFor(EIORecipes.SOUL_BINDING.type().get(), createFakeRecipeInput(), level)
-//                    .orElse(null);
-//        }
+        recipeInput = null;
     }
 
-    private SoulBindingRecipe.Input createRecipeInput() {
-        return new SoulBindingRecipe.Input(getInventory().getStack(INPUT_SOUL),
+    private SoulBindingRecipe.Input getRecipeInput() {
+        if (recipeInput == null) {
+            recipeInput = new SoulBindingRecipe.Input(getInventory().getStack(INPUT_SOUL),
                 getInventory().getStack(INPUT_OTHER), fluidStorage.getStack(TANK_SLOT));
-    }
+        }
 
-    @UseOnly(LogicalSide.CLIENT)
-    private SoulBindingRecipe.Input createFakeRecipeInput() {
-        return new SoulBindingRecipe.Input(getInventory().getStack(INPUT_SOUL),
-                getInventory().getStack(INPUT_OTHER),
-                new FluidStack(EIOFluids.XP_JUICE.source(), Integer.MAX_VALUE));
+        return recipeInput;
     }
 
     // endregion
 
+    // TODO: Won't be necessary soon, so just stubbing it out
     @UseOnly(LogicalSide.CLIENT)
     public int getClientExp() {
-        // This should always set a valid recipe.
-        if (level != null && clientRecipe == null && hasValidRecipe()) {
-            //TODO this doesn't work, client has no recipes unless we sync
-//            clientRecipe = level.getRecipeManager()
-//                    .getRecipeFor(EIORecipes.SOUL_BINDING.type().get(), createFakeRecipeInput(), level)
-//                    .orElse(null);
-        }
-
-        return clientRecipe != null ? clientRecipe.value().experience() : 0;
-    }
-
-    private boolean hasValidRecipe() {
-        return MachineRecipeCaches.SOUL_BINDING
-                .hasRecipe(List.of(getInventory().getStack(INPUT_SOUL), getInventory().getStack(INPUT_OTHER)));
+        return 0;
     }
 
     // region Fluid Storage
@@ -248,44 +227,33 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
     // region Crafting Task
 
     public float getCraftingProgress() {
-        return craftingTaskHost.getProgress();
+        return craftingManager.craftingProgress();
     }
 
     @Override
     public boolean isActive() {
-        return canAct() && hasEnergy() && craftingTaskHost.hasTask();
-    }
-
-    protected PoweredCraftingMachineTask<SoulBindingRecipe, SoulBindingRecipe.Input> createTask(Level level,
-            SoulBindingRecipe.Input container, @Nullable RecipeHolder<SoulBindingRecipe> recipe) {
-        return new PoweredCraftingMachineTask<>(level, this, getInventory(), fluidStorage, getEnergyStorage(), container, OUTPUT, recipe) {
-
-            @Override
-            protected void consumeInputs(SoulBindingRecipe recipe) {
-                getInventory().mutateStack(INPUT_SOUL, stack -> stack.shrink(1));
-                getInventory().mutateStack(INPUT_OTHER, stack -> stack.shrink(1));
-
-                int currentFluidAmount = fluidStorage.getAmountAsInt(TANK_SLOT);
-                int leftover = ExperienceUtil
-                        .getLevelFromFluidWithLeftover(currentFluidAmount, 0, recipe.experience())
-                        .experience();
-                int toExtract = currentFluidAmount - leftover * EXP_TO_FLUID;
-
-                FluidStack currentFluid = getStoredFluid();
-                if (!currentFluid.isEmpty() && toExtract > 0) {
-                    try (Transaction transaction = Transaction.openRoot()) {
-                        fluidStorage.extract(TANK_SLOT, FluidResource.of(currentFluid.getFluid()), toExtract, transaction);
-                        transaction.commit();
-                    }
-                }
-            }
-
-        };
+        return canAct() && hasEnergy() && craftingManager.status() == MachineCraftingStatus.ACTIVE;
     }
 
     // endregion
 
     // region Serialization
+
+    @Override
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.putChild("Fluid", fluidStorage);
+        output.putChild(MachineNBTKeys.CRAFTING_TASK, craftingManager);
+    }
+
+    @Override
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        input.child("Fluid")
+            .ifPresent(fluidStorage::deserialize);
+        var task = input.child(MachineNBTKeys.CRAFTING_TASK);
+        task.ifPresent(craftingManager::deserialize);
+    }
 
     @Override
     protected void applyImplicitComponents(DataComponentGetter components) {
@@ -295,6 +263,8 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
         if (storedFluid != null) {
             fluidStorage.setStack(TANK_SLOT, storedFluid.copy());
         }
+
+        craftingManager.applyCraftingState(components.get(EIODataComponents.MACHINE_CRAFTING_STATE));
     }
 
     @Override
@@ -305,23 +275,95 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
         if (!fluidStored.isEmpty()) {
             components.set(EIODataComponents.ITEM_FLUID_CONTENT, SimpleFluidContent.copyOf(fluidStored));
         }
+
+        components.set(EIODataComponents.MACHINE_CRAFTING_STATE, craftingManager.getCraftingState());
     }
 
     @Override
-    protected void saveAdditional(ValueOutput output) {
-        super.saveAdditional(output);
-        output.putChild("Fluid", fluidStorage);
-        output.putChild(MachineNBTKeys.CRAFTING_TASK, craftingTaskHost);
-    }
-
-    @Override
-    protected void loadAdditional(ValueInput input) {
-        super.loadAdditional(input);
-        input.child("Fluid")
-            .ifPresent(fluidStorage::deserialize);
-        var task = input.child(MachineNBTKeys.CRAFTING_TASK);
-        task.ifPresent(craftingTaskHost::deserialize);
+    public void removeComponentsFromTag(ValueOutput output) {
+        super.removeComponentsFromTag(output);
+        output.discard("Fluid");
+        output.discard(MachineNBTKeys.CRAFTING_TASK);
     }
 
     // endregion
+
+    private class CraftingContext extends MachineCraftingContext<SoulBindingRecipe, SoulBindingRecipe.Input> {
+
+        @Override
+        public SoulBindingRecipe.Input recipeInput() {
+            return getRecipeInput();
+        }
+
+        @Override
+        public @Nullable ServerLevel level() {
+            if (getLevel() instanceof ServerLevel serverLevel) {
+                return serverLevel;
+            }
+
+            return null;
+        }
+
+        @Override
+        public int getCraftingTicks(RecipeHolder<SoulBindingRecipe> recipe) {
+            return Math.round(recipe.value().getOperationTime(recipeInput()) * SPEED.scale(getCapacitorData()));
+        }
+
+        @Override
+        public boolean tryProgressCraft(SoulBindingRecipe recipe) {
+            try (var transaction = Transaction.openRoot()) {
+                int consumed = getEnergyStorage().consume(getMaxEnergyUse(), transaction);
+                if (consumed == getMaxEnergyUse()) {
+                    transaction.commit();
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        @Override
+        protected boolean consumeRecipeInputs(SoulBindingRecipe recipe, SoulBindingRecipe.Input recipeInput, TransactionContext transaction) {
+            int soulConsumed = getInventory().extract(INPUT_SOUL, ItemResource.of(recipeInput.boundSoulItem()), 1, transaction);
+            if (soulConsumed != 1) {
+                return false;
+            }
+
+            int otherConsumed = getInventory().extract(INPUT_OTHER, ItemResource.of(recipeInput.itemToBind()), 1, transaction);
+            if (otherConsumed != 1) {
+                return false;
+            }
+
+            var currentFluid = fluidStorage.getResource(TANK_SLOT);
+            if (currentFluid.isEmpty()) {
+                return false;
+            }
+
+            int fluidToExtract = recipe.experience() * ExperienceUtil.EXP_TO_FLUID;
+            int fluidConsumed = fluidStorage.extract(TANK_SLOT, currentFluid, fluidToExtract, transaction);
+            if (fluidConsumed != fluidToExtract) {
+                return false;
+            }
+
+            return true;
+        }
+
+        @Override
+        protected boolean insertRecipeOutputs(SoulBindingRecipe recipe, SoulBindingRecipe.Input recipeInput, RandomSource random,
+            TransactionContext transaction) {
+            // TODO: Once we're fully migrated, just use assemble for single output recipes...
+            var results = recipe.craft(recipeInput, random, level.registryAccess());
+
+            for (var result : results) {
+                if (result.isItem()) {
+                    int inserted = outputItemHandler.insert(ItemResource.of(result.getItem()), result.getItem().count(), transaction);
+                    if (inserted < result.getItem().count()) {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+    }
 }
