@@ -2,7 +2,7 @@
   "type": "enderio:sag_milling",
   "bonus": "none",
   "input": "#c:ingots/copper",
-  "operation_time": 120,
+  "operation_time": 200,
   "outputs": [
     {
       "item": {

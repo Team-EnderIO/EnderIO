@@ -15,7 +15,7 @@
       "ingredient": "#c:ingots/gold"
     }
   ],
-  "operation_time": 240,
+  "operation_time": 160,
   "output": {
     "count": 2,
     "id": "enderio:energetic_alloy_ingot"
