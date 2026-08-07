@@ -90,7 +90,7 @@ public class EIOBlockStateProvider extends ModelProvider {
             }
         }
         // Miscellaneous
-        blockModels.createAxisAlignedPillarBlockCustomModel(EIOBlocks.SOUL_CHAIN.get(),  plainVariant(ModelLocationUtils.getModelLocation(EIOBlocks.SOUL_CHAIN.get())));
+        blockModels.createAxisAlignedPillarBlockCustomModel(EIOBlocks.SOUL_CHAIN.get(),  plainVariant(TexturedModel.CHAIN.create(EIOBlocks.SOUL_CHAIN.get(), blockModels.modelOutput)));
         blockModels.registerSimpleFlatItemModel(EIOBlocks.SOUL_CHAIN.asItem());
 
         Identifier Identifier = ModelLocationUtils.decorateItemModelLocation("template_skull");

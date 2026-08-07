@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:block/template_chain",
-  "textures": {
-    "all": "enderio:block/soul_chain",
-    "particle": "enderio:block/soul_chain"
-  }
-}
