@@ -73,6 +73,12 @@ public record MEConduit(ResourceLocation texture, Component description, AEColor
 
     @Override
     public boolean canConnectToBlock(Level level, ConduitCapabilityAccessor capabilityAccessor, BlockPos conduitPos, Direction direction) {
+        // Check for a host cap ourselves. This makes sure we start listening for capability invalidation.
+        var host = capabilityAccessor.getCapability(AECapabilities.IN_WORLD_GRID_NODE_HOST, direction, null);
+        if (host == null) {
+            return false;
+        }
+
         return GridHelper.getExposedNode(level, conduitPos.relative(direction), direction.getOpposite()) != null;
     }
 
