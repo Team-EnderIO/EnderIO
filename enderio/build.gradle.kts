@@ -277,6 +277,7 @@ var generateModMetadata = tasks.register<ProcessResources>("generateModMetadata"
 
     from("${rootDir}/docs/img/") {
         include("logo.png")
+        include("enderface.png")
     }
 }
 

@@ -178,7 +178,7 @@ public final class FermentingRecipe implements MachineRecipe<FermentingRecipe.In
             input.ingredient().display(),
             new SlotDisplay.TagSlotDisplay(firstReagent),
             new SlotDisplay.TagSlotDisplay(secondReagent),
-            new FluidStackSlotDisplay(output.create()),
+            new FluidStackSlotDisplay(output),
             new SlotDisplay.ItemSlotDisplay(EIOBlocks.VAT.asItem())
             ));
     }

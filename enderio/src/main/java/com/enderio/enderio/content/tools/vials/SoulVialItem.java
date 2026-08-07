@@ -279,7 +279,7 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
      * - Wolves
      */
     @SubscribeEvent
-    public static void onLivingInteract(PlayerInteractEvent.EntityInteractSpecific event) {
+    public static void onLivingInteract(PlayerInteractEvent.EntityInteract event) {
         ItemStack stack = event.getItemStack();
 
         // Use a copy of the stack if we're in creative.
