@@ -37,6 +37,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -64,17 +65,17 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
         be, side) -> side == null ? be.energyStorage : be.energyStorage.getSided(side);
     public static final int MAX_SIZE = 4_096;
     public static final String NODE_ID = "NODE_ID";
-    public static final int AVERAGE_IO_OVER_X_TICKS = 10;
 
     private IOConfig ioConfig = IOConfig.empty();
 
     private final CapacitorTier tier;
-    private final CapacitorBankNode node;
+    private CapacitorBankNode node;
+    private CapacitorBankNetwork oldNetwork;
     private final CapacitorBankEnergyStorage energyStorage;
     private UUID uuid = UUID.randomUUID();
 
     private final Map<Direction, BlockCapabilityCache<IEnergyStorage, Direction>> energyStorageCaches = new EnumMap<>(Direction.class);
-    private final Set<IEnergyStorage> validPushTargetCache = new HashSet<>();
+    private final Set<SidedEnergy> validPushTargetCache = new HashSet<>();
     private boolean isValidPushTargetCacheDirty = true;
 
     private static final ModelProperty<IOConfigurable> IO_CONFIG_PROPERTY = LegacyMachineBlockEntity.IO_CONFIG_PROPERTY;
@@ -110,17 +111,25 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
     }
 
     @Override
-    public void setRemoved() {
-        if (node.isValid()) {
-            CapacitorBankNetwork network = node.getNetwork();
-            network.remove(node);
-            if (network.isEmpty() && level instanceof ServerLevel serverLevel) {
-                PacketDistributor.sendToPlayersTrackingChunk(serverLevel, new ChunkPos(getBlockPos()),
-                    new ClientBoundRemoveCapacitorBankPacket(network.getUuid()));
+    public void setLevel(Level level) {
+        super.setLevel(level);
+
+        if (level instanceof ServerLevel serverLevel) {
+            CapacitorBankNode savedNote = CapacitorBankSavedData.get(serverLevel).claimNode(this.getBlockPos());
+            if (savedNote != null) {
+                this.node = savedNote;
+                this.node.attach(this);
+            } else {
+                CapacitorBankSavedData.onNetworkCreated(serverLevel, this.node.getNetwork());
             }
         }
+    }
 
-        super.setRemoved();
+    public void removeNode() {
+        if (this.node.isValid()) {
+            this.oldNetwork = node.getNetwork();
+            this.node.getNetwork().remove(this.node);
+        }
     }
 
     @Override
@@ -160,7 +169,7 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
         }
     }
 
-    Set<IEnergyStorage> getValidPushTargets() {
+    Set<SidedEnergy> getValidPushTargets() {
         if (isValidPushTargetCacheDirty) {
             validPushTargetCache.clear();
             for (Direction side : Direction.values()) {
@@ -168,35 +177,21 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
                     continue;
                 }
 
-                var energyStorage = energyStorageCaches.get(side).getCapability();
+                BlockCapabilityCache<IEnergyStorage, Direction> cache = energyStorageCaches.get(side); //TODO how?
+                if (cache == null) {
+                    return validPushTargetCache;
+                }
+                var energyStorage = cache.getCapability();
                 if (energyStorage != null && !(energyStorage instanceof CapacitorBankEnergyStorage
                     || energyStorage instanceof CapacitorBankEnergyStorage.SidedAccess) &&
                     energyStorage.canReceive() && getIOMode(side).canOutput()) {
-                    validPushTargetCache.add(energyStorage);
+                    validPushTargetCache.add(new SidedEnergy(energyStorage, new CapacitorBankNetwork.SidedPos(getBlockPos(), side)));
                 }
             }
             isValidPushTargetCacheDirty = false;
         }
 
         return validPushTargetCache;
-    }
-
-    @Override
-    public void serverTick() {
-        // Push energy to non-bank neighbors
-        if (node.isPrimaryNode()) {
-            node.distributeEnergy();
-            if (level.getGameTime() % AVERAGE_IO_OVER_X_TICKS == 0) {
-                CapacitorBankNetwork network = node.getNetwork();
-                PacketDistributor.sendToPlayersTrackingChunk((ServerLevel) level, new ChunkPos(getBlockPos()),
-                    new ClientBoundSyncCapacitorBankPacket(network.getUuid(), network.getTotalEnergyStored(),
-                        network.getTotalMaxEnergyStored(), network.getAddedEnergy()  / AVERAGE_IO_OVER_X_TICKS,
-                        network.getSendEnergy() / AVERAGE_IO_OVER_X_TICKS, network.positions()));
-                network.reset(level.getGameTime());
-            }
-        }
-
-        super.serverTick();
     }
 
     private void setIOConfig(IOConfig ioConfig) {
@@ -416,10 +411,10 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
         if (tag.contains(MachineNBTKeys.ENERGY)) {
             var energyStorage = tag.getCompound(MachineNBTKeys.ENERGY);
             if (energyStorage.contains(MachineNBTKeys.ENERGY_STORED)) {
-                this.node.setEnergyStored(energyStorage.getInt(MachineNBTKeys.ENERGY_STORED));
+                this.node.getNetwork().receiveEnergy(this.getBlockPos(), null, energyStorage.getInt(MachineNBTKeys.ENERGY_STORED), false);
             }
         } else if (tag.contains(MachineNBTKeys.ENERGY_STORED)) {
-            this.node.setEnergyStored(tag.getInt(MachineNBTKeys.ENERGY_STORED));
+            this.node.getNetwork().receiveEnergy(this.getBlockPos(), null, tag.getInt(MachineNBTKeys.ENERGY_STORED), false);
         }
 
         if (tag.contains(NODE_ID)) {
@@ -437,10 +432,6 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
         } else if (tag.contains(MachineNBTKeys.REDSTONE_CONTROL)) {
             redstoneControl = RedstoneControl.parse(registries,
                 Objects.requireNonNull(tag.get(MachineNBTKeys.REDSTONE_CONTROL)));
-        }
-
-        if (node.isPrimaryNode()) {
-            node.getNetwork().setRedstoneControl(redstoneControl);
         }
     }
 
@@ -463,11 +454,13 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
             tag.put(MachineNBTKeys.IO_CONFIG, ioConfig.save(registries));
         }
 
-        tag.putUUID(NODE_ID, node.getNetwork().getUuid());
 
         tag.put(DISPLAY_MODES, saveDisplayModes());
 
-        tag.put(MachineNBTKeys.REDSTONE_CONTROL, node.getNetwork().getRedstoneControl().save(registries));
+        if (node.isValid()) { //TODO somehow breaking a block also calls save?
+            tag.putUUID(NODE_ID, node.getNetwork().getUuid());
+            tag.put(MachineNBTKeys.REDSTONE_CONTROL, node.getNetwork().getRedstoneControl().save(registries));
+        }
     }
 
     public CompoundTag saveDisplayModes() {
@@ -480,14 +473,6 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        // TODO: 26.1 - serialize the node instead?
-        tag.putInt(MachineNBTKeys.ENERGY_STORED, node.getEnergyStored());
-
-        super.saveAdditional(tag, lookupProvider);
-    }
-
-    @Override
     protected void applyImplicitComponents(DataComponentInput components) {
         super.applyImplicitComponents(components);
 
@@ -495,7 +480,7 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
             ioConfig = components.getOrDefault(EIODataComponents.IO_CONFIG, IOConfig.empty());
         }
 
-        node.setEnergyStored(components.getOrDefault(EIODataComponents.ENERGY, 0));
+        node.getNetwork().receiveEnergy(this.getBlockPos(), null, components.getOrDefault(EIODataComponents.ENERGY, 0), false);
     }
 
     @Override
@@ -506,8 +491,11 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
             components.set(EIODataComponents.IO_CONFIG, ioConfig);
         }
 
-        if (node.getEnergyStored() != 0) {
-            components.set(EIODataComponents.ENERGY, node.getEnergyStored());
+        if (oldNetwork != null) {
+            int energy = oldNetwork.getEnergyForNode(this.getTier());
+            if (energy != 0) {
+                components.set(EIODataComponents.ENERGY, energy);
+            }
         }
     }
 
@@ -516,4 +504,6 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
         super.removeComponentsFromTag(tag);
         tag.remove(MachineNBTKeys.IO_CONFIG);
     }
+
+    public record SidedEnergy(IEnergyStorage storage, CapacitorBankNetwork.SidedPos sidedPos) {}
 }

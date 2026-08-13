@@ -17,24 +17,7 @@ public class CapacitorBankEnergyStorage implements IEnergyStorage {
             return 0;
         }
 
-        // Initially try to insert to the current node
-        int inserted = node.insertEnergy(amount, simulate);
-
-        // If we haven't inserted enough, try to push to the network
-        if (inserted < amount) {
-            for (var otherNode : node.getNetwork().nodes()) {
-                if (otherNode == node) {
-                    continue;
-                }
-
-                inserted += otherNode.insertEnergy(amount - inserted, simulate);
-                if (inserted >= amount) {
-                    break;
-                }
-            }
-        }
-
-        return inserted;
+        return node.getNetwork().receiveEnergy(node.getPos(), null, amount, simulate);
     }
 
     @Override
@@ -43,24 +26,7 @@ public class CapacitorBankEnergyStorage implements IEnergyStorage {
             return 0;
         }
 
-        // Initially try to take from the current node
-        int extracted = node.extractEnergy(amount, simulate);
-
-        // If we haven't extracted enough, try to take from the network
-        if (extracted < amount) {
-            for (var otherNode : node.getNetwork().nodes()) {
-                if (otherNode == node) {
-                    continue;
-                }
-
-                extracted += otherNode.extractEnergy(amount - extracted, simulate);
-                if (extracted >= amount) {
-                    break;
-                }
-            }
-        }
-
-        return extracted;
+        return node.getNetwork().extractEnergy(node.getPos(), null, amount, simulate);
     }
 
     @Override
@@ -103,7 +69,7 @@ public class CapacitorBankEnergyStorage implements IEnergyStorage {
                 return 0;
             }
 
-            return wrapped.receiveEnergy(maxReceive, simulate);
+            return wrapped.node.getNetwork().receiveEnergy(wrapped.node.getPos(), side, maxReceive, simulate);
         }
 
         @Override
@@ -112,7 +78,7 @@ public class CapacitorBankEnergyStorage implements IEnergyStorage {
                 return 0;
             }
 
-            return wrapped.extractEnergy(maxExtract, simulate);
+            return wrapped.node.getNetwork().extractEnergy(wrapped.node.getPos(), side, maxExtract, simulate);
         }
 
         @Override

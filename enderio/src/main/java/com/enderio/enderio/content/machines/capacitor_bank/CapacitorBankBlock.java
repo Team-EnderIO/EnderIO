@@ -22,6 +22,7 @@ import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -110,5 +111,13 @@ public class CapacitorBankBlock extends EIOEntityBlock<CapacitorBankBlockEntity>
                 event.setCanceled(true);
             }
         }
+    }
+
+    @Override
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        if (level.getBlockEntity(pos) instanceof CapacitorBankBlockEntity capBank) {
+            capBank.removeNode();
+        }
+        super.onRemove(state, level, pos, newState, movedByPiston);
     }
 }
