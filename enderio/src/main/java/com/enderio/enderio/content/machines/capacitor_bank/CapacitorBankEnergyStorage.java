@@ -4,109 +4,66 @@ import net.minecraft.core.Direction;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
-public class CapacitorBankEnergyStorage implements IEnergyStorage {
-    private final CapacitorBankNode node;
-
-    public CapacitorBankEnergyStorage(CapacitorBankNode node) {
-        this.node = node;
-    }
+public record CapacitorBankEnergyStorage(CapacitorBankBlockEntity capacitorBank, @Nullable Direction side) implements IEnergyStorage {
 
     @Override
-    public int receiveEnergy(int amount, boolean simulate) {
-        if (amount <= 0) {
+    public int receiveEnergy(int maxReceive, boolean simulate) {
+        if (!canReceive() || maxReceive <= 0) {
             return 0;
         }
 
-        return node.getNetwork().receiveEnergy(node.getPos(), null, amount, simulate);
+        return capacitorBank.getNetwork().receiveEnergy(capacitorBank.getBlockPos(), side, maxReceive, simulate);
     }
 
     @Override
-    public int extractEnergy(int amount, boolean simulate) {
-        if (amount <= 0) {
+    public int extractEnergy(int maxExtract, boolean simulate) {
+        if (!canExtract() || maxExtract <= 0) {
             return 0;
         }
 
-        return node.getNetwork().extractEnergy(node.getPos(), null, amount, simulate);
+        return capacitorBank.getNetwork().extractEnergy(capacitorBank.getBlockPos(), side, maxExtract, simulate);
     }
 
     @Override
     public int getEnergyStored() {
-        return Math.clamp(node.getNetwork().getTotalEnergyStored(), 0, Integer.MAX_VALUE);
+        return Math.clamp(capacitorBank.getNetwork().getTotalEnergyStored(), 0, Integer.MAX_VALUE);
     }
 
     @Override
     public int getMaxEnergyStored() {
-        return Math.clamp(node.getNetwork().getTotalMaxEnergyStored(), 0, Integer.MAX_VALUE);
+        return Math.clamp(capacitorBank.getNetwork().getTotalMaxEnergyStored(), 0, Integer.MAX_VALUE);
     }
 
     @Override
     public boolean canExtract() {
-        return true;
+        if (side == null) {
+            return true;
+        }
+
+        return capacitorBank.getIOMode(side).canOutput();
     }
 
     @Override
     public boolean canReceive() {
-        return true;
+        if (side == null) {
+            return true;
+        }
+
+        return capacitorBank.getIOMode(side).canInput();
     }
 
     @Nullable
-    public IEnergyStorage getSided(Direction side) {
-        if (!node.getBlockEntity().getIOMode(side).canInput() && !node.getBlockEntity().getIOMode(side).canOutput()) {
-            return null;
-        }
-
-        if (!node.getBlockEntity().getIOMode(side).canConnect()) {
-            return null;
-        }
-
-        return new SidedAccess(this, side);
-    }
-
-    public record SidedAccess(CapacitorBankEnergyStorage wrapped, Direction side) implements IEnergyStorage {
-        @Override
-        public int receiveEnergy(int maxReceive, boolean simulate) {
-            if (!canReceive() || maxReceive <= 0) {
-                return 0;
+    public static IEnergyStorage getSided(CapacitorBankBlockEntity capacitorBank, @Nullable Direction side) {
+        if (!capacitorBank.getLevel().isClientSide() && side != null) {
+            if (!capacitorBank.getIOMode(side).canInput() && !capacitorBank.getIOMode(side).canOutput()) {
+                return null;
             }
 
-            return wrapped.node.getNetwork().receiveEnergy(wrapped.node.getPos(), side, maxReceive, simulate);
-        }
-
-        @Override
-        public int extractEnergy(int maxExtract, boolean simulate) {
-            if (!canExtract() || maxExtract <= 0) {
-                return 0;
+            if (!capacitorBank.getIOMode(side).canConnect()) {
+                return null;
             }
-
-            return wrapped.node.getNetwork().extractEnergy(wrapped.node.getPos(), side, maxExtract, simulate);
         }
 
-        @Override
-        public int getEnergyStored() {
-            return wrapped.getEnergyStored();
-        }
-
-        @Override
-        public int getMaxEnergyStored() {
-            return wrapped.getMaxEnergyStored();
-        }
-
-        @Override
-        public boolean canExtract() {
-            if (!wrapped.node.getBlockEntity().getIOMode(side).canOutput()) {
-                return false;
-            }
-
-            return wrapped.canExtract();
-        }
-
-        @Override
-        public boolean canReceive() {
-            if (!wrapped.node.getBlockEntity().getIOMode(side).canInput()) {
-                return false;
-            }
-
-            return wrapped.canReceive();
-        }
+        return new CapacitorBankEnergyStorage(capacitorBank, side);
     }
 }

@@ -34,7 +34,8 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
     public static final int AVERAGE_IO_OVER_X_TICKS = 10;
 
     public static final Codec<CapacitorBankNetwork> CODEC = RecordCodecBuilder.create(i ->
-        i.group(Codec.LONG.fieldOf("energy").forGetter(c -> c.totalEnergyStored))
+        i.group(Codec.LONG.fieldOf("energy").forGetter(c -> c.totalEnergyStored),
+                RedstoneControl.CODEC.fieldOf("redstone").forGetter(c -> c.redstoneControl))
             .and(graphCodec(i, CapacitorBankNode.CODEC))
             .apply(i, CapacitorBankNetwork::new));
 
@@ -54,9 +55,10 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
         this.positions.add(initialNode.getPos());
     }
 
-    public CapacitorBankNetwork(long totalEnergyStored, List<CapacitorBankNode> nodes, IndexedEdgeList edges) {
+    public CapacitorBankNetwork(long totalEnergyStored, RedstoneControl redstone, List<CapacitorBankNode> nodes, IndexedEdgeList edges) {
         super(nodes, edges);
         this.totalEnergyStored = totalEnergyStored;
+        this.redstoneControl = redstone;
         this.positions.addAll(nodes.stream().map(CapacitorBankNode::getPos).toList());
     }
 
@@ -124,7 +126,7 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
             case ALWAYS_ACTIVE -> false;
             case ACTIVE_WITH_SIGNAL -> {
                 for (CapacitorBankNode n : nodes()) {
-                    if (!n.getBlockEntity().isRedstoneBlocked()) {
+                    if (n.getBlockEntity() != null && !n.getBlockEntity().isRedstoneBlocked()) {
                         yield false;
                     }
                 }
@@ -132,7 +134,7 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
             }
             case ACTIVE_WITHOUT_SIGNAL -> {
                 for (CapacitorBankNode n : nodes()) {
-                    if (n.getBlockEntity().isRedstoneBlocked()) {
+                    if (n.getBlockEntity() != null && n.getBlockEntity().isRedstoneBlocked()) {
                         yield true;
                     }
                 }
@@ -235,19 +237,19 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
         List<CapacitorBankBlockEntity.SidedEnergy> validTargets = new ArrayList<>();
 
         for (CapacitorBankNode node : nodes()) {
-            validTargets.addAll(node.getBlockEntity().getValidPushTargets());
+            if (node.getBlockEntity() != null) {
+                validTargets.addAll(node.getBlockEntity().getValidPushTargets());
+
+            }
         }
 
         validTargets.sort(Comparator.comparingInt(
             c -> c.storage().getMaxEnergyStored() - c.storage().getEnergyStored()
         ));
 
-        long total = getTotalEnergyStored();
-
         //TODO long support
-        //first push outside
         long transferred = distributeEnergyEvenlyBetween(getTotalEnergyStored(), validTargets);
-        this.totalEnergyStored = total - transferred;
+        this.totalEnergyStored = getTotalEnergyStored() - transferred;
     }
 
     public void markDirty() {
@@ -271,9 +273,10 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
         }
         totalMaxEnergyStored = Mth.clamp(0, Long.MAX_VALUE, totalMaxEnergyStored + node.getMaxEnergyStored());
         if (positions == null) { //This is called in init when it's not ready yet
-            positions = new ArrayList<>();
+            return;
         }
         positions.add(node.getPos());
+        node.getBlockEntity().setRedstoneControl(redstoneControl);
     }
 
     @Override

@@ -61,8 +61,7 @@ import java.util.UUID;
 
 public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProvider, Wrenchable, IOConfigurable {
 
-    public static final ICapabilityProvider<CapacitorBankBlockEntity, Direction, IEnergyStorage> ENERGY_STORAGE_PROVIDER = (
-        be, side) -> side == null ? be.energyStorage : be.energyStorage.getSided(side);
+    public static final ICapabilityProvider<CapacitorBankBlockEntity, Direction, IEnergyStorage> ENERGY_STORAGE_PROVIDER = CapacitorBankEnergyStorage::getSided;
     public static final int MAX_SIZE = 4_096;
     public static final String NODE_ID = "NODE_ID";
 
@@ -71,7 +70,6 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
     private final CapacitorTier tier;
     private CapacitorBankNode node;
     private CapacitorBankNetwork oldNetwork;
-    private final CapacitorBankEnergyStorage energyStorage;
     private UUID uuid = UUID.randomUUID();
 
     private final Map<Direction, BlockCapabilityCache<IEnergyStorage, Direction>> energyStorageCaches = new EnumMap<>(Direction.class);
@@ -97,9 +95,6 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
     public CapacitorBankBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState, CapacitorTier tier) {
         super(type, worldPosition, blockState);
         this.tier = tier;
-
-        this.node = new CapacitorBankNode(this);
-        this.energyStorage = new CapacitorBankEnergyStorage(node);
     }
 
     public CapacitorTier getTier() {
@@ -108,6 +103,10 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
 
     public UUID getUuid() {
         return uuid;
+    }
+
+    public CapacitorBankNetwork getNetwork() {
+        return node.getNetwork();
     }
 
     @Override
@@ -119,7 +118,11 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
             if (savedNote != null) {
                 this.node = savedNote;
                 this.node.attach(this);
+                //node.markDirty();
             } else {
+                if (this.node == null) {
+                    this.node = new CapacitorBankNode(this);
+                }
                 CapacitorBankSavedData.onNetworkCreated(serverLevel, this.node.getNetwork());
             }
         }
@@ -151,11 +154,11 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
                     () -> !isRemoved(),
                     () -> isValidPushTargetCacheDirty = true));
             }
-        }
 
-        for (Direction side : Direction.values()) {
-            if (level.getBlockEntity(getBlockPos().relative(side)) instanceof CapacitorBankBlockEntity bank) {
-                bank.node.getNetwork().connect(bank.node, node);
+            for (Direction side : Direction.values()) {
+                if (level.getBlockEntity(getBlockPos().relative(side)) instanceof CapacitorBankBlockEntity bank) {
+                    bank.node.getNetwork().connect(bank.node, node);
+                }
             }
         }
     }
@@ -182,8 +185,7 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
                     return validPushTargetCache;
                 }
                 var energyStorage = cache.getCapability();
-                if (energyStorage != null && !(energyStorage instanceof CapacitorBankEnergyStorage
-                    || energyStorage instanceof CapacitorBankEnergyStorage.SidedAccess) &&
+                if (energyStorage != null && !(energyStorage instanceof CapacitorBankEnergyStorage) &&
                     energyStorage.canReceive() && getIOMode(side).canOutput()) {
                     validPushTargetCache.add(new SidedEnergy(energyStorage, new CapacitorBankNetwork.SidedPos(getBlockPos(), side)));
                 }
@@ -457,7 +459,7 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
 
         tag.put(DISPLAY_MODES, saveDisplayModes());
 
-        if (node.isValid()) { //TODO somehow breaking a block also calls save?
+        if (node != null && node.isValid()) { //TODO somehow breaking a block also calls save?
             tag.putUUID(NODE_ID, node.getNetwork().getUuid());
             tag.put(MachineNBTKeys.REDSTONE_CONTROL, node.getNetwork().getRedstoneControl().save(registries));
         }
@@ -478,6 +480,10 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
 
         if (isIOConfigMutable()) {
             ioConfig = components.getOrDefault(EIODataComponents.IO_CONFIG, IOConfig.empty());
+        }
+
+        if (this.node == null) {
+            this.node = new CapacitorBankNode(this);
         }
 
         node.getNetwork().receiveEnergy(this.getBlockPos(), null, components.getOrDefault(EIODataComponents.ENERGY, 0), false);

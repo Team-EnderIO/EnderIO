@@ -23,12 +23,10 @@ public class CapacitorBankNode implements INetworkNode<CapacitorBankNetwork, Cap
             .apply(i, CapacitorBankNode::new)
     );
 
+    @Nullable
     private CapacitorBankBlockEntity blockEntity;
     private CapacitorBankNetwork network;
     private BlockPos pos;
-
-
-
 
     public CapacitorBankNode(CapacitorBankBlockEntity blockEntity) {
         this.blockEntity = blockEntity;
@@ -43,18 +41,20 @@ public class CapacitorBankNode implements INetworkNode<CapacitorBankNetwork, Cap
     public void attach(CapacitorBankBlockEntity blockEntity) {
         this.blockEntity = blockEntity;
         this.pos = blockEntity.getBlockPos();
+        this.getNetwork().onNodeAdded(this);
     }
 
     public int getMaxEnergyStored() {
         return blockEntity.getTier().getStorageCapacity();
     }
 
+    @Nullable
     public CapacitorBankBlockEntity getBlockEntity() {
         return blockEntity;
     }
 
     public BlockPos getPos() {
-        return blockEntity.getBlockPos();
+        return this.pos;
     }
 
     public void markDirty() {
