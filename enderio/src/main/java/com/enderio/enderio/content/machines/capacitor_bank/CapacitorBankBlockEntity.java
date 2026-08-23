@@ -117,8 +117,6 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
                 this.node = savedNote;
                 this.node.attach(this);
                 this.redstoneControl = this.getNetwork().getRedstoneControl();
-                this.checkIsRedstoneBlocked();
-                this.node.markDirty();
             } else {
                 if (this.node == null) {
                     this.node = new CapacitorBankNode(this);

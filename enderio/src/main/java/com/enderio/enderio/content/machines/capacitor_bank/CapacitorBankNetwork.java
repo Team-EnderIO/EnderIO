@@ -283,7 +283,6 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
             return;
         }
         positions.add(node.getPos());
-        node.getBlockEntity().setRedstoneControl(redstoneControl);
     }
 
     public void init(CapacitorBankNode node) {
