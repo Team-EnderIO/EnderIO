@@ -10,8 +10,6 @@ import com.enderio.enderio.foundation.block.entity.Wrenchable;
 import com.enderio.enderio.foundation.block.entity.legacy.LegacyMachineBlockEntity;
 import com.enderio.enderio.foundation.block.legacy.LegacyMachineBlock;
 import com.enderio.enderio.foundation.io.IOConfig;
-import com.enderio.enderio.foundation.network.packets.ClientBoundRemoveCapacitorBankPacket;
-import com.enderio.enderio.foundation.network.packets.ClientBoundSyncCapacitorBankPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundCycleIOConfigPacket;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOAttachments;
@@ -36,7 +34,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -70,6 +67,7 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
     private final CapacitorTier tier;
     private CapacitorBankNode node;
     private CapacitorBankNetwork oldNetwork;
+    private int legacyEnergy = 0;
     private UUID uuid = UUID.randomUUID();
 
     private final Map<Direction, BlockCapabilityCache<IEnergyStorage, Direction>> energyStorageCaches = new EnumMap<>(Direction.class);
@@ -118,12 +116,19 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
             if (savedNote != null) {
                 this.node = savedNote;
                 this.node.attach(this);
-                //node.markDirty();
+                this.redstoneControl = this.getNetwork().getRedstoneControl();
+                this.checkIsRedstoneBlocked();
+                this.node.markDirty();
             } else {
                 if (this.node == null) {
                     this.node = new CapacitorBankNode(this);
                 }
                 CapacitorBankSavedData.onNetworkCreated(serverLevel, this.node.getNetwork());
+            }
+
+            if (this.legacyEnergy > 0) {
+                this.node.getNetwork().receiveEnergy(this.getBlockPos(), null, this.legacyEnergy, false);
+                this.legacyEnergy = 0;
             }
         }
     }
@@ -413,10 +418,10 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
         if (tag.contains(MachineNBTKeys.ENERGY)) {
             var energyStorage = tag.getCompound(MachineNBTKeys.ENERGY);
             if (energyStorage.contains(MachineNBTKeys.ENERGY_STORED)) {
-                this.node.getNetwork().receiveEnergy(this.getBlockPos(), null, energyStorage.getInt(MachineNBTKeys.ENERGY_STORED), false);
+                this.legacyEnergy = energyStorage.getInt(MachineNBTKeys.ENERGY_STORED);
             }
         } else if (tag.contains(MachineNBTKeys.ENERGY_STORED)) {
-            this.node.getNetwork().receiveEnergy(this.getBlockPos(), null, tag.getInt(MachineNBTKeys.ENERGY_STORED), false);
+            this.legacyEnergy = tag.getInt(MachineNBTKeys.ENERGY_STORED);
         }
 
         if (tag.contains(NODE_ID)) {

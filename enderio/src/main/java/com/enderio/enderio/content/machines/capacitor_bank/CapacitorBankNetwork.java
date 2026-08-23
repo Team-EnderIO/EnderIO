@@ -117,7 +117,9 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
     public void setRedstoneControl(RedstoneControl redstoneControl) {
         this.redstoneControl = redstoneControl;
         for (CapacitorBankNode n : nodes()) {
-            n.getBlockEntity().setRedstoneControl(redstoneControl);
+            if (n.getBlockEntity() != null) {
+                n.getBlockEntity().setRedstoneControl(redstoneControl);
+            }
         }
     }
 
@@ -145,6 +147,10 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
     }
 
     public int receiveEnergy(BlockPos pos, @Nullable Direction side, int amount, boolean simulate) {
+        if (this.getTotalMaxEnergyStored() == 0) { //TODO the network isn't loaded yet and ready for transfer
+            return 0;
+        }
+
         long energyBefore = getTotalEnergyStored();
         long energyAfter = Math.min(energyBefore + amount, getTotalMaxEnergyStored());
         int result = Math.toIntExact(energyAfter - energyBefore);
@@ -262,7 +268,8 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
 
     @Override
     protected void onNodeRemoved(CapacitorBankNode node) {
-        totalMaxEnergyStored = Mth.clamp(0, Long.MAX_VALUE, totalMaxEnergyStored - node.getMaxEnergyStored());
+        totalMaxEnergyStored = Mth.clamp(totalMaxEnergyStored - node.getMaxEnergyStored(), 0, Long.MAX_VALUE);
+        totalEnergyStored = Mth.clamp(totalEnergyStored,0, getTotalMaxEnergyStored());
         positions.remove(node.getPos());
     }
 
@@ -271,12 +278,17 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
         if (node.getBlockEntity() == null) {
             return;
         }
-        totalMaxEnergyStored = Mth.clamp(0, Long.MAX_VALUE, totalMaxEnergyStored + node.getMaxEnergyStored());
+        totalMaxEnergyStored = Mth.clamp(totalMaxEnergyStored + node.getMaxEnergyStored(),0, Long.MAX_VALUE);
         if (positions == null) { //This is called in init when it's not ready yet
             return;
         }
         positions.add(node.getPos());
         node.getBlockEntity().setRedstoneControl(redstoneControl);
+    }
+
+    public void init(CapacitorBankNode node) {
+        totalMaxEnergyStored = Mth.clamp(totalMaxEnergyStored + node.getMaxEnergyStored(),0, Long.MAX_VALUE);
+        positions.add(node.getPos());
     }
 
     @Override
@@ -297,8 +309,10 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
         this.totalMaxEnergyStored += other.getTotalMaxEnergyStored();
         this.totalEnergyStored += other.totalEnergyStored;
         other.totalEnergyStored = 0;
+        totalEnergyStored = Mth.clamp(totalEnergyStored,0, getTotalMaxEnergyStored());
         this.positions.clear();
         this.positions.addAll(nodes().stream().map(CapacitorBankNode::getPos).toList());
+        other.setRedstoneControl(this.redstoneControl);
         other.markDirty();
     }
 
@@ -310,6 +324,7 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
             n.uuid = UUID.randomUUID();
             n.positions = new ArrayList<>();
             n.positions.addAll(n.nodes().stream().map(CapacitorBankNode::getPos).toList());
+            n.setRedstoneControl(this.redstoneControl);
             n.markDirty();
 
             Iterator<CapacitorBankNode> it = n.nodes().iterator();

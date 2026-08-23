@@ -41,7 +41,7 @@ public class CapacitorBankNode implements INetworkNode<CapacitorBankNetwork, Cap
     public void attach(CapacitorBankBlockEntity blockEntity) {
         this.blockEntity = blockEntity;
         this.pos = blockEntity.getBlockPos();
-        this.getNetwork().onNodeAdded(this);
+        this.getNetwork().init(this);
     }
 
     public int getMaxEnergyStored() {
@@ -58,6 +58,9 @@ public class CapacitorBankNode implements INetworkNode<CapacitorBankNetwork, Cap
     }
 
     public void markDirty() {
+        if (this.getBlockEntity() == null) {
+            return;
+        }
         blockEntity.setChanged();
         blockEntity.getLevel().sendBlockUpdated(blockEntity.getBlockPos(), blockEntity.getBlockState(), blockEntity.getBlockState(), Block.UPDATE_ALL);
     }
