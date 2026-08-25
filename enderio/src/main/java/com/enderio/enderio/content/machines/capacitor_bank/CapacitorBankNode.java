@@ -1,20 +1,13 @@
 package com.enderio.enderio.content.machines.capacitor_bank;
 
 import com.enderio.core.common.graph.INetworkNode;
-import com.enderio.enderio.content.conduits.network.ConduitNodeImpl;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 public class CapacitorBankNode implements INetworkNode<CapacitorBankNetwork, CapacitorBankNode> {
 
@@ -53,14 +46,15 @@ public class CapacitorBankNode implements INetworkNode<CapacitorBankNetwork, Cap
         return blockEntity;
     }
 
+    public boolean hasBlockEntity() {
+        return blockEntity != null;
+    }
+
     public BlockPos getPos() {
         return this.pos;
     }
 
     public void markDirty() {
-        if (this.getBlockEntity() == null) {
-            return;
-        }
         blockEntity.setChanged();
         blockEntity.getLevel().sendBlockUpdated(blockEntity.getBlockPos(), blockEntity.getBlockState(), blockEntity.getBlockState(), Block.UPDATE_ALL);
     }

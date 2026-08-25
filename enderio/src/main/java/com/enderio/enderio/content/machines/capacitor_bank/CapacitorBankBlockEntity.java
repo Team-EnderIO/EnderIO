@@ -113,18 +113,18 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
 
         if (level instanceof ServerLevel serverLevel) {
             CapacitorBankNode savedNote = CapacitorBankSavedData.get(serverLevel).claimNode(this.getBlockPos());
-            if (savedNote != null) {
+            if (savedNote != null) { //Load saved node
                 this.node = savedNote;
                 this.node.attach(this);
                 this.redstoneControl = this.getNetwork().getRedstoneControl();
             } else {
-                if (this.node == null) {
+                if (this.node == null) { //Create a new node if not created by placing a block
                     this.node = new CapacitorBankNode(this);
                 }
-                CapacitorBankSavedData.onNetworkCreated(serverLevel, this.node.getNetwork());
+                CapacitorBankSavedData.onNetworkCreated(serverLevel, this.node.getNetwork()); //Broadcast the network creation
             }
 
-            if (this.legacyEnergy > 0) {
+            if (this.legacyEnergy > 0) { //Restore legacy energy
                 this.node.getNetwork().receiveEnergy(this.getBlockPos(), null, this.legacyEnergy, false);
                 this.legacyEnergy = 0;
             }
@@ -133,7 +133,7 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
 
     public void removeNode() {
         if (this.node.isValid()) {
-            this.oldNetwork = node.getNetwork();
+            this.oldNetwork = node.getNetwork(); //Network is still needed for the picked up block
             this.node.getNetwork().remove(this.node);
         }
     }
@@ -160,7 +160,7 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
 
             for (Direction side : Direction.values()) {
                 if (level.getBlockEntity(getBlockPos().relative(side)) instanceof CapacitorBankBlockEntity bank) {
-                    bank.node.getNetwork().connect(bank.node, node);
+                    bank.node.getNetwork().connect(bank.node, node); //Connect to neighbours
                 }
             }
         }
@@ -183,13 +183,13 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
                     continue;
                 }
 
-                BlockCapabilityCache<IEnergyStorage, Direction> cache = energyStorageCaches.get(side); //TODO how?
+                BlockCapabilityCache<IEnergyStorage, Direction> cache = energyStorageCaches.get(side); //TODO Why is this null?
                 if (cache == null) {
                     return validPushTargetCache;
                 }
                 var energyStorage = cache.getCapability();
-                if (energyStorage != null && !(energyStorage instanceof CapacitorBankEnergyStorage) &&
-                    energyStorage.canReceive() && getIOMode(side).canOutput()) {
+                if (energyStorage != null && !(energyStorage instanceof CapacitorBankEnergyStorage) && energyStorage.canReceive() &&
+                    getIOMode(side).canOutput()) {
                     validPushTargetCache.add(new SidedEnergy(energyStorage, new CapacitorBankNetwork.SidedPos(getBlockPos(), side)));
                 }
             }
@@ -462,9 +462,9 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
 
         tag.put(DISPLAY_MODES, saveDisplayModes());
 
-        if (node != null && node.isValid()) { //TODO somehow breaking a block also calls save?
-            tag.putUUID(NODE_ID, node.getNetwork().getUuid());
-            tag.put(MachineNBTKeys.REDSTONE_CONTROL, node.getNetwork().getRedstoneControl().save(registries));
+        if (node != null && node.isValid()) { //Save data if present
+            tag.putUUID(NODE_ID, getNetwork().getUuid());
+            tag.put(MachineNBTKeys.REDSTONE_CONTROL, getNetwork().getRedstoneControl().save(registries));
         }
     }
 
@@ -485,11 +485,11 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
             ioConfig = components.getOrDefault(EIODataComponents.IO_CONFIG, IOConfig.empty());
         }
 
-        if (this.node == null) {
+        if (this.node == null) { //Called before being placed, so a node needs to be made
             this.node = new CapacitorBankNode(this);
         }
 
-        node.getNetwork().receiveEnergy(this.getBlockPos(), null, components.getOrDefault(EIODataComponents.ENERGY, 0), false);
+        getNetwork().receiveEnergy(this.getBlockPos(), null, components.getOrDefault(EIODataComponents.ENERGY, 0), false);
     }
 
     @Override
@@ -500,7 +500,7 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
             components.set(EIODataComponents.IO_CONFIG, ioConfig);
         }
 
-        if (oldNetwork != null) {
+        if (oldNetwork != null) { //Network already kicked out the node, so we keep an old ref
             int energy = oldNetwork.getEnergyForNode(this.getTier());
             if (energy != 0) {
                 components.set(EIODataComponents.ENERGY, energy);
