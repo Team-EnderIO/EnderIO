@@ -452,7 +452,7 @@ public class EIOBlocks {
     public static final Map<CapacitorTier, DeferredBlock<CapacitorBankBlock>> CAPACITOR_BANKS = Util.make(() -> {
         Map<CapacitorTier, DeferredBlock<CapacitorBankBlock>> banks = new HashMap<>();
         for (CapacitorTier tier : CapacitorTier.values()) {
-            banks.put(tier, CapacitorBank(tier.name().toLowerCase(Locale.ROOT) + "_capacitor_bank",
+            banks.put(tier, capacitorBank(tier.name().toLowerCase(Locale.ROOT) + "_capacitor_bank",
                 () -> EIOBlockEntities.CAPACITOR_BANKS.get(tier)::get, tier));
         }
         return ImmutableMap.copyOf(banks);
@@ -566,7 +566,7 @@ public class EIOBlocks {
             BlockBehaviour.Properties.of().strength(2.5f, 8));
     }
 
-    private static DeferredBlock<CapacitorBankBlock> CapacitorBank(String name,
+    private static DeferredBlock<CapacitorBankBlock> capacitorBank(String name,
         Supplier<Supplier<BlockEntityType<? extends CapacitorBankBlockEntity>>> regiliteBlockEntity, CapacitorTier tier) {
         return BLOCKS.registerBlock(name,
             props -> new CapacitorBankBlock(regiliteBlockEntity.get(), props, tier),
