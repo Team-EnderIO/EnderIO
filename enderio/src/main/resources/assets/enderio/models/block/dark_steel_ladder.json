@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/ladder",
+  "render_type": "minecraft:cutout_mipped",
+  "textures": {
+    "particle": "enderio:block/dark_steel_ladder",
+    "texture": "enderio:block/dark_steel_ladder"
+  }
+}
