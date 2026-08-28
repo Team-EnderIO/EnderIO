@@ -1,7 +1,7 @@
 {
   "type": "enderio:sag_milling",
   "input": "#c:sands",
-  "operation_time": 120,
+  "operation_time": 200,
   "outputs": [
     {
       "chance": 0.5,

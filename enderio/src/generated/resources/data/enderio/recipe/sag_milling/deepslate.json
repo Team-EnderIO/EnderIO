@@ -2,7 +2,7 @@
   "type": "enderio:sag_milling",
   "bonus": "none",
   "input": "minecraft:deepslate",
-  "operation_time": 120,
+  "operation_time": 200,
   "outputs": [
     {
       "item": {

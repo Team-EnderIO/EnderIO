@@ -1,7 +1,7 @@
 {
   "type": "enderio:sag_milling",
   "input": "#c:raw_materials/iron",
-  "operation_time": 120,
+  "operation_time": 200,
   "outputs": [
     {
       "item": {

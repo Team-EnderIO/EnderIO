@@ -2,7 +2,7 @@
   "type": "enderio:sag_milling",
   "bonus": "chance_only",
   "input": "#c:cobblestones/deepslate",
-  "operation_time": 120,
+  "operation_time": 200,
   "outputs": [
     {
       "item": {
