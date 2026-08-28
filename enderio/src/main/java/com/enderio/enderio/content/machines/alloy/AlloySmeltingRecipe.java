@@ -12,6 +12,7 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
@@ -34,7 +35,7 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
     public static final MapCodec<AlloySmeltingRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(inst -> inst
         .group(SizedIngredient.NESTED_CODEC.listOf().fieldOf("inputs").forGetter(AlloySmeltingRecipe::inputs), //TODO is nested right?
             ItemStackTemplate.CODEC.fieldOf("output").forGetter(AlloySmeltingRecipe::output),
-            Codec.INT.fieldOf("energy").forGetter(AlloySmeltingRecipe::energy),
+            Codec.INT.fieldOf("operation_time").forGetter(AlloySmeltingRecipe::operationTime),
             Codec.FLOAT.fieldOf("experience").forGetter(AlloySmeltingRecipe::experience),
             Codec.BOOL.optionalFieldOf("is_smelting", false).forGetter(AlloySmeltingRecipe::isSmelting))
         .apply(inst, AlloySmeltingRecipe::new));
@@ -42,20 +43,20 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
     public static final StreamCodec<RegistryFriendlyByteBuf, AlloySmeltingRecipe> STREAM_CODEC = StreamCodec
         .composite(SizedIngredient.STREAM_CODEC.apply(ByteBufCodecs.list()), AlloySmeltingRecipe::inputs,
             ItemStackTemplate.STREAM_CODEC, AlloySmeltingRecipe::output, ByteBufCodecs.INT,
-            AlloySmeltingRecipe::energy, ByteBufCodecs.FLOAT, AlloySmeltingRecipe::experience,
+            AlloySmeltingRecipe::operationTime, ByteBufCodecs.FLOAT, AlloySmeltingRecipe::experience,
             ByteBufCodecs.BOOL, AlloySmeltingRecipe::isSmelting, AlloySmeltingRecipe::new);
 
     public static final RecipeSerializer<AlloySmeltingRecipe> SERIALIZER = new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC);
 
     private final List<SizedIngredient> inputs;
     private final ItemStackTemplate output;
-    private final int energy;
+    private final int operationTime;
     private final float experience;
     private final boolean isSmelting;
     @Nullable
     private PlacementInfo placementInfo;
 
-    public AlloySmeltingRecipe(List<SizedIngredient> inputs, ItemStackTemplate output, int energy, float experience,
+    public AlloySmeltingRecipe(List<SizedIngredient> inputs, ItemStackTemplate output, int operationTime, float experience,
             boolean isSmelting) {
         if (isSmelting && inputs.size() > 1) {
             throw new IllegalArgumentException("More than one smelting ingredient given");
@@ -63,13 +64,13 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
 
         this.inputs = inputs;
         this.output = output;
-        this.energy = energy;
+        this.operationTime = operationTime;
         this.experience = experience;
         this.isSmelting = isSmelting;
     }
 
-    public AlloySmeltingRecipe(List<SizedIngredient> inputs, ItemStackTemplate output, int energy, float experience) {
-        this(inputs, output, energy, experience, false);
+    public AlloySmeltingRecipe(List<SizedIngredient> inputs, ItemStackTemplate output, int operationTime, float experience) {
+        this(inputs, output, operationTime, experience, false);
     }
 
     public List<SizedIngredient> inputs() {
@@ -80,8 +81,8 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
         return output;
     }
 
-    public int energy() {
-        return energy;
+    public int operationTime() {
+        return operationTime;
     }
 
     public float experience() {
@@ -93,8 +94,8 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
     }
 
     @Override
-    public int getBaseEnergyCost() {
-        return energy;
+    public int getOperationTime(Input input) {
+        return operationTime;
     }
 
     @Override
@@ -167,10 +168,11 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
     }
 
     @Override
-    public List<OutputStack> craft(Input container, RegistryAccess registryAccess) {
+    public List<OutputStack> craft(Input container, RandomSource randomSource, RegistryAccess registryAccess) {
         ItemStack outputStack = output().create();
         if (isSmelting) {
-            outputStack.setCount(outputStack.getCount() * container.inputsConsumed);
+            int inputsConsumed = Math.min(3, container.inputs.stream().mapToInt(ItemStack::getCount).sum());
+            outputStack.setCount(outputStack.getCount() * inputsConsumed);
         }
         return List.of(OutputStack.of(outputStack));
     }
@@ -214,7 +216,7 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
         return EIORecipeBookCategories.ALLOY_SMELTING.get();
     }
 
-    public record Input(AlloySmelterMode mode, List<ItemStack> inputs, int inputsConsumed) implements RecipeInput {
+    public record Input(AlloySmelterMode mode, List<ItemStack> inputs) implements RecipeInput {
 
         @Override
         public ItemStack getItem(int slotIndex) {
@@ -228,10 +230,6 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
         @Override
         public int size() {
             return inputs.size();
-        }
-
-        public Input withInputsConsumed(int inputsConsumed) {
-            return new Input(mode, inputs, inputsConsumed);
         }
     }
 

@@ -20,6 +20,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.ByIdMap;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.Item;
@@ -48,28 +49,28 @@ public final class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.In
 
     public static final MapCodec<SagMillingRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance
         .group(Ingredient.CODEC.fieldOf("input").forGetter(SagMillingRecipe::input),
-            OutputItem.CODEC.listOf().fieldOf("outputs").forGetter(SagMillingRecipe::outputs), Codec.INT.fieldOf("energy").forGetter(SagMillingRecipe::energy),
+            OutputItem.CODEC.listOf().fieldOf("outputs").forGetter(SagMillingRecipe::outputs),
+            Codec.INT.fieldOf("operation_time").forGetter(SagMillingRecipe::operationTime),
             BonusType.CODEC.optionalFieldOf("bonus", BonusType.MULTIPLY_OUTPUT).forGetter(SagMillingRecipe::bonusType))
         .apply(instance, SagMillingRecipe::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, SagMillingRecipe> STREAM_CODEC = StreamCodec.composite(Ingredient.CONTENTS_STREAM_CODEC,
-        SagMillingRecipe::input, OutputItem.STREAM_CODEC.apply(ByteBufCodecs.list()), SagMillingRecipe::outputs, ByteBufCodecs.INT, SagMillingRecipe::energy, BonusType.STREAM_CODEC, SagMillingRecipe::bonusType, SagMillingRecipe::new);
+        SagMillingRecipe::input, OutputItem.STREAM_CODEC.apply(ByteBufCodecs.list()), SagMillingRecipe::outputs, ByteBufCodecs.INT, SagMillingRecipe::operationTime, BonusType.STREAM_CODEC, SagMillingRecipe::bonusType, SagMillingRecipe::new);
 
     public static final RecipeSerializer<SagMillingRecipe> SERIALIZER = new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC);
 
-    private static final Random RANDOM = new Random();
     private final Ingredient input;
     private final List<OutputItem> outputs;
-    private final int energy;
+    private final int operationTime;
     private final BonusType bonusType;
 
     @Nullable
     private PlacementInfo placementInfo;
 
-    public SagMillingRecipe(Ingredient input, List<OutputItem> outputs, int energy, BonusType bonusType) {
+    public SagMillingRecipe(Ingredient input, List<OutputItem> outputs, int operationTime, BonusType bonusType) {
         this.input = input;
         this.outputs = outputs;
-        this.energy = energy;
+        this.operationTime = operationTime;
         this.bonusType = bonusType;
     }
 
@@ -81,33 +82,25 @@ public final class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.In
         return outputs;
     }
 
-    public int energy() {
-        return energy;
+    public int operationTime() {
+        return operationTime;
     }
 
     public BonusType bonusType() {
         return bonusType;
     }
 
-    /**
-     * JEI for sag mill will not use this, it'll use a capacitor data.
-     */
     @Override
-    public int getBaseEnergyCost() {
-        return energy;
+    public int getOperationTime(Input input) {
+        return getOperationTime(input.grindingBallData());
+    }
+
+    public int getOperationTime(GrindingBallData grindingBallData) {
+        return (int) (operationTime * grindingBallData.powerUse());
     }
 
     @Override
-    public int getEnergyCost(Input recipeInput) {
-        return getEnergyCost(recipeInput.grindingBallData());
-    }
-
-    public int getEnergyCost(GrindingBallData grindingBallData) {
-        return (int) (energy * grindingBallData.powerUse());
-    }
-
-    @Override
-    public List<OutputStack> craft(Input recipeInput, RegistryAccess registryAccess) {
+    public List<OutputStack> craft(Input recipeInput, RandomSource randomSource, RegistryAccess registryAccess) {
         List<OutputStack> outputs = new ArrayList<>();
 
         // Iterate over the number of outputs
@@ -117,9 +110,9 @@ public final class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.In
         // Iterate over the number of outputs.
         // Without a grinding ball this only runs once.
         while (outputCount > 0) {
-            if (RANDOM.nextFloat() < outputCount) {
+            if (randomSource.nextFloat() < outputCount) {
                 for (OutputItem output : this.outputs) {
-                    if (output.isPresent() && RANDOM.nextFloat() < output.chance() * chanceMult) {
+                    if (output.isPresent() && randomSource.nextFloat() < output.chance() * chanceMult) {
                         // Collect the output
                         Optional<ItemStackTemplate> outputStackOptional = output.getItemStackTemplate();
                         if (outputStackOptional.isEmpty()) {

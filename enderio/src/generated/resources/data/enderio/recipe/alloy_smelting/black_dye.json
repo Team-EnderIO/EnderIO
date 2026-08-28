@@ -1,6 +1,5 @@
 {
   "type": "enderio:alloy_smelting",
-  "energy": 1000,
   "experience": 0.3,
   "inputs": [
     {
@@ -12,6 +11,7 @@
       "ingredient": "#minecraft:eggs"
     }
   ],
+  "operation_time": 50,
   "output": {
     "id": "minecraft:black_dye"
   }
