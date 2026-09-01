@@ -123,9 +123,9 @@ public class EIOMenus {
 
     public static final DeferredHolder<MenuType<?>, MenuType<TravelAnchorMenu>> TRAVEL_ANCHOR = MENUS.register("travel_anchor", TravelAnchorMenu::new);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<XPObeliskMenu>> XP_OBELISK = MENUS.register("xp_obelisk", XPObeliskMenu::new);
-
     public static final DeferredHolder<MenuType<?>, MenuType<FarmingStationMenu>> FARMING_STATION = MENUS.register("farming_station", FarmingStationMenu::new);
+
+    public static final DeferredHolder<MenuType<?>, MenuType<XPObeliskMenu>> XP_OBELISK = MENUS.register("xp_obelisk", XPObeliskMenu::new);
 
     public static final DeferredHolder<MenuType<?>, MenuType<InhibitorObeliskMenu>> INHIBITOR_OBELISK = MENUS.register("inhibitor_obelisk",
         InhibitorObeliskMenu::new);
