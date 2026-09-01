@@ -18,7 +18,7 @@ public class FarmingStationScreen extends MachineScreen<FarmingStationMenu> {
     public static final ResourceLocation BG_TEXTURE = EnderIO.rl("textures/gui/screen/farm_station.png");
     private static final ResourceLocation RANGE_BUTTON_TEXTURE = EnderIO.rl("textures/gui/icons/range_buttons.png");
 
-    private static final int WIDTH = 176;
+    private static final int WIDTH = 184;
     private static final int HEIGHT = 169;
 
     public FarmingStationScreen(FarmingStationMenu menu, Inventory inventory, Component title) {
@@ -34,17 +34,17 @@ public class FarmingStationScreen extends MachineScreen<FarmingStationMenu> {
         addRenderableOnly(new CapacitorEnergyWidget(leftPos + 16, topPos + 14, 9, 45, menu::getEnergyStorage,
                 menu::isCapacitorInstalled));
 
-        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 16, topPos + 6,
+        addRenderableWidget(new RedstoneControlPickerWidget(leftPos + imageWidth - 6 - 16, topPos + 6,
                 menu::getRedstoneControl, menu::setRedstoneControl, EIOCommonLang.REDSTONE_MODE));
 
         var overlay = addIOConfigOverlay(1, leftPos + 7, topPos + 86, 162, 76);
-        addIOConfigButton(leftPos + imageWidth - 16, topPos + 6 + 16 + 2, overlay);
+        addIOConfigButton(leftPos + imageWidth - 6 - 16, topPos + 6 + 16 + 2, overlay);
 
-        addRenderableWidget(EIOCommonWidgets.createRange(leftPos + imageWidth - 16, topPos + 6 + (16 + 2) * 2,
+        addRenderableWidget(EIOCommonWidgets.createRange(leftPos + imageWidth - 6 - 16, topPos + 6 + (16 + 2) * 2,
             MachinesLang.HIDE_RANGE, MachinesLang.SHOW_RANGE, menu::isRangeVisible,
             (ignore) -> handleButtonPress(FarmingStationMenu.VISIBILITY_BUTTON_ID)));
 
-        addRenderableOnly(new ActivityWidget(leftPos + imageWidth - 16, topPos + 62, menu::getMachineStates, false));
+        addRenderableOnly(new ActivityWidget(leftPos + imageWidth - 6 - 16, topPos + 62, menu::getMachineStates, false));
 
     }
 
