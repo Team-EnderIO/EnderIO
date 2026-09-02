@@ -21,7 +21,7 @@ public class PlantSaplingFarmTask implements FarmTask {
     public <T extends BlockEntity & FarmingMachine> FarmInteraction process(BlockPos targetBlock, T blockEntity) {
         ItemStack seeds = blockEntity.getSeedsForPos(targetBlock);
         if (seeds.isEmpty() || blockEntity.getLevel().getBlockState(targetBlock).isAir()) {
-            return FarmInteraction.BLOCKED;
+            return FarmInteraction.IGNORED;
         }
         if (seeds.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof SaplingBlock) {
             InteractionResult result = blockEntity.useStack(targetBlock, seeds);
