@@ -481,13 +481,14 @@ public class EIOBlocks {
         BlockDetectorBlock::new,
         BlockBehaviour.Properties.ofFullCopy(Blocks.OBSERVER));
 
-    // Obelisks
-    public static final DeferredBlock<MachineBlock<XPObeliskBlockEntity>> XP_OBELISK =
-        obelisk("xp_obelisk", () -> EIOBlockEntities.XP_OBELISK::get);
-
+    // Farming Station
     public static final DeferredBlock<FarmingStationBlock> FARMING_STATION = registerWithItem("farming_station",
         FarmingStationBlock::new,
         BlockBehaviour.Properties.of().strength(2.5f, 8));
+
+    // Obelisks
+    public static final DeferredBlock<MachineBlock<XPObeliskBlockEntity>> XP_OBELISK =
+        obelisk("xp_obelisk", () -> EIOBlockEntities.XP_OBELISK::get);
 
     public static final DeferredBlock<MachineBlock<InhibitorObeliskBlockEntity>> INHIBITOR_OBELISK =
         obelisk("inhibitor_obelisk", () -> EIOBlockEntities.INHIBITOR_OBELISK::get);
