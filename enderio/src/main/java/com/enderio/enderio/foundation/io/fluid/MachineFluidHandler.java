@@ -132,7 +132,7 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
         }
 
         if (fluid.isEmpty()) {
-            fluid = new FluidStack(resource.getFluid(), Math.min(capacity, resource.getAmount()));
+            fluid = resource.copyWithAmount(Math.min(capacity, resource.getAmount()));
             setFluidInTank(tank, fluid);
             onContentsChanged(tank);
             return fluid.getAmount();
@@ -198,7 +198,7 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
         if (fluid.getAmount() < drained) {
             drained = fluid.getAmount();
         }
-        FluidStack stack = new FluidStack(fluid.getFluid(), drained);
+        FluidStack stack = fluid.copyWithAmount(drained);
         if (action.execute() && drained > 0) {
             fluid.shrink(drained);
             onContentsChanged(tank);

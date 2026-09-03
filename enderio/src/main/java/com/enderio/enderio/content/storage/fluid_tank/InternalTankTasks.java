@@ -1,5 +1,6 @@
 package com.enderio.enderio.content.storage.fluid_tank;
 
+import com.enderio.core.common.capability.EnderFluidUtil;
 import com.enderio.enderio.foundation.attachment.FluidTankUser;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
@@ -20,51 +21,50 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 
 public class InternalTankTasks {
 
-    // TODO: enable fluid tanks to receive stackable fluid containers
     public static <T extends MachineBlockEntity & FluidTankUser> void fillInternal(
         T blockEntity,
         TankAccess tank,
         SingleSlotAccess fluidFillInput,
-        SingleSlotAccess fluidFillOutput
-    ) {
+        SingleSlotAccess fluidFillOutput) {
+
         ItemStack inputItem = fluidFillInput.getItemStack(blockEntity);
-        ItemStack outputItem = fluidFillOutput.getItemStack(blockEntity);
+        if (inputItem.isEmpty()) {
+            return;
+        }
 
-        if (!inputItem.isEmpty()) {
-            if (inputItem.getItem() instanceof BucketItem filledBucket) {
-                if (outputItem.isEmpty() || (outputItem.getItem() == Items.BUCKET
-                    && outputItem.getCount() < outputItem.getMaxStackSize())) {
+        // Only ever handle a single item at a time.
+        ItemStack singleInputItem = inputItem.copyWithCount(1);
+        IFluidHandlerItem fluidHandlerItem = singleInputItem.getCapability(Capabilities.FluidHandler.ITEM);
+        if (fluidHandlerItem == null) {
+            return;
+        }
 
-                    int filled = tank.fill(blockEntity, new FluidStack(filledBucket.content, FluidType.BUCKET_VOLUME),
-                        IFluidHandler.FluidAction.SIMULATE);
+        // See what fluid is available to drain from the item.
+        // We act here because we're acting on a copy of the input.
+        FluidStack availableFluid = fluidHandlerItem.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.EXECUTE);
 
-                    if (filled == FluidType.BUCKET_VOLUME) {
-                        tank.fill(blockEntity, new FluidStack(filledBucket.content, FluidType.BUCKET_VOLUME),
-                            IFluidHandler.FluidAction.EXECUTE);
+        // See if we can insert this fluid into the block's tank.
+        int filled = tank.fill(blockEntity, availableFluid, IFluidHandler.FluidAction.SIMULATE);
+        if (filled <= 0) {
+            return;
+        }
 
-                        inputItem.shrink(1);
-                        fluidFillOutput.insertItem(blockEntity, Items.BUCKET.getDefaultInstance(), false);
-                    }
-                }
-            } else {
-                IFluidHandlerItem fluidHandlerItem = inputItem.getCapability(Capabilities.FluidHandler.ITEM);
-                if (fluidHandlerItem != null && outputItem.isEmpty()) {
-                    int filled = FluidUtil.tryFluidTransfer(
-                        blockEntity.getFluidHandler(),
-                        fluidHandlerItem,
-                        tank.getFluidAmount(blockEntity),
-                        true
-                    ).getAmount();
+        // Get the resulting emptied container
+        ItemStack resultStack = fluidHandlerItem.getContainer();
 
-                    if (filled > 0) {
-                        fluidFillOutput.setStackInSlot(blockEntity, fluidHandlerItem.getContainer());
-                        fluidFillInput.setStackInSlot(blockEntity, ItemStack.EMPTY);
-                    }
-                }
-            }
+        // If this is the only input, and it's not fully empty we will retain it in the input slot, so long as the
+        //  destination tank is not full
+        if (inputItem.getCount() == 1 && !EnderFluidUtil.isEmpty(fluidHandlerItem) && !tank.isFull(blockEntity)) {
+            tank.fill(blockEntity, availableFluid.copyWithAmount(filled), IFluidHandler.FluidAction.EXECUTE);
+            fluidFillInput.setStackInSlot(blockEntity, resultStack);
+        } else if (!fluidFillInput.extractItem(blockEntity, 1, true).isEmpty() &&
+            fluidFillOutput.insertItem(blockEntity, resultStack, true).isEmpty()) {
+
+            tank.fill(blockEntity, availableFluid.copyWithAmount(filled), IFluidHandler.FluidAction.EXECUTE);
+            fluidFillInput.extractItem(blockEntity, 1, false);
+            fluidFillOutput.insertItem(blockEntity, resultStack, false);
         }
     }
-
 
     // TODO: enable fluid tanks to receive stackable fluid containers
     public static <T extends MachineBlockEntity & FluidTankUser> void drainInternal(
@@ -74,47 +74,38 @@ public class InternalTankTasks {
         SingleSlotAccess fluidDrainOutput
     ) {
         ItemStack inputItem = fluidDrainInput.getItemStack(blockEntity);
-        ItemStack outputItem = fluidDrainOutput.getItemStack(blockEntity);
+        if (inputItem.isEmpty()) {
+            return;
+        }
 
-        if (!inputItem.isEmpty()) {
-            if (inputItem.getItem() == Items.BUCKET) {
-                if (!tank.getFluid(blockEntity).isEmpty()) {
-                    FluidStack stack = tank.drain(blockEntity, FluidType.BUCKET_VOLUME, IFluidHandler.FluidAction.SIMULATE);
+        // Only ever handle a single item at a time.
+        ItemStack singleInputItem = inputItem.copyWithCount(1);
+        IFluidHandlerItem fluidHandlerItem = singleInputItem.getCapability(Capabilities.FluidHandler.ITEM);
+        if (fluidHandlerItem == null) {
+            return;
+        }
 
-                    // Ensure there's a bucket to be given to the player.
-                    if (stack.getFluid().getBucket() == Items.AIR) {
-                        return;
-                    }
+        // See what fluid the tank can drain into the item
+        FluidStack availableFluid = tank.drain(blockEntity, Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE);
 
-                    if (stack.getAmount() == FluidType.BUCKET_VOLUME &&
-                        (outputItem.isEmpty() || (outputItem.getItem() == stack.getFluid().getBucket()
-                            && outputItem.getCount() < outputItem.getMaxStackSize()))) {
+        // See if we can insert this fluid into the container
+        int filled = fluidHandlerItem.fill(availableFluid, IFluidHandler.FluidAction.EXECUTE);
+        if (filled <= 0) {
+            return;
+        }
 
-                        tank.drain(blockEntity, FluidType.BUCKET_VOLUME, IFluidHandler.FluidAction.EXECUTE);
-                        inputItem.shrink(1);
-                        if (outputItem.isEmpty()) {
-                            fluidDrainOutput.setStackInSlot(blockEntity, stack.getFluid().getBucket().getDefaultInstance());
-                        } else {
-                            outputItem.grow(1);
-                        }
-                    }
-                }
-            } else {
-                IFluidHandlerItem fluidHandlerItem = inputItem.getCapability(Capabilities.FluidHandler.ITEM);
-                if (fluidHandlerItem != null && outputItem.isEmpty()) {
-                    int filled = FluidUtil.tryFluidTransfer(
-                        fluidHandlerItem,
-                        blockEntity.getFluidHandler(), // méthode à définir dans ton interface
-                        tank.getFluidAmount(blockEntity),
-                        true
-                    ).getAmount();
+        // Get the resulting filled item
+        ItemStack resultStack = fluidHandlerItem.getContainer();
 
-                    if (filled > 0) {
-                        fluidDrainOutput.setStackInSlot(blockEntity, fluidHandlerItem.getContainer());
-                        fluidDrainInput.setStackInSlot(blockEntity, ItemStack.EMPTY);
-                    }
-                }
-            }
+        // If this is the only input, and it isn't completely full, and the destination still has fluid, we will retain it
+        if (inputItem.getCount() == 1 && !EnderFluidUtil.isFull(fluidHandlerItem) && !tank.isEmpty(blockEntity)) {
+            tank.drain(blockEntity, availableFluid.copyWithAmount(filled), IFluidHandler.FluidAction.EXECUTE);
+        } else if (!fluidDrainInput.extractItem(blockEntity, 1, true).isEmpty() &&
+            fluidDrainOutput.insertItem(blockEntity, resultStack, true).isEmpty()) {
+
+            tank.drain(blockEntity, availableFluid.copyWithAmount(filled), IFluidHandler.FluidAction.EXECUTE);
+            fluidDrainInput.extractItem(blockEntity, 1, false);
+            fluidDrainOutput.insertItem(blockEntity, resultStack, false);
         }
     }
 
@@ -151,5 +142,4 @@ public class InternalTankTasks {
             }
         }
     }
-
 }
