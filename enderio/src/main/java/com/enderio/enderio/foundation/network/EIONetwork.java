@@ -1,5 +1,7 @@
 package com.enderio.enderio.foundation.network;
 
+import com.enderio.enderio.foundation.network.packets.ClientBoundRemoveCapacitorBankPacket;
+import com.enderio.enderio.foundation.network.packets.ClientBoundSyncCapacitorBankPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundConduitExtraGuiDataPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundConduitListPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundFarmStationSoulPacket;
@@ -57,6 +59,12 @@ public class EIONetwork {
 
         registrar.playToClient(ClientboundTravelTargetRemovedPacket.TYPE, ClientboundTravelTargetRemovedPacket.STREAM_CODEC,
             ClientPayloadHandler.getInstance()::handleRemoveTravelTarget);
+
+        registrar.playToClient(ClientBoundSyncCapacitorBankPacket.TYPE, ClientBoundSyncCapacitorBankPacket.STREAM_CODEC,
+            ClientPayloadHandler.getInstance()::handleSyncCapacitorBankPacket);
+
+        registrar.playToClient(ClientBoundRemoveCapacitorBankPacket.TYPE, ClientBoundRemoveCapacitorBankPacket.STREAM_CODEC,
+            ClientPayloadHandler.getInstance()::handleRemoveCapacitorBankPacket);
 
         registrar.playToServer(ServerboundUpdateCoordinateSelectionNameMenuPacket.TYPE, ServerboundUpdateCoordinateSelectionNameMenuPacket.STREAM_CODEC,
             ServerPayloadHandler.getInstance()::handleCoordinateSelectionName);
