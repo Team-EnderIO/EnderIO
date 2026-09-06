@@ -26,13 +26,19 @@ public class Issue1436 {
 
         test.onGameTest(EnderGameTestHelper.class, helper ->
             helper.startSequence()
-                .thenExecute(() -> helper.insertIntoContainer(0, 1, 0, Items.RAW_GOLD, 64 * 3))
-                .thenExecute(() -> helper.insertIntoContainer(0, 1, 0, EIOItems.OCTADIC_CAPACITOR.get(), 1))
+                // Configure the machine to push all items to the chest
                 .thenExecute(() -> {
                     var alloySmelter = helper.getBlockEntity(0, 1, 0, AlloySmelterBlockEntity.class);
                     alloySmelter.setIOMode(Direction.SOUTH, IOMode.PUSH);
                 })
-                .thenExecuteAfter(600, () -> helper.assertContainerHasExactly(0, 1, 1, Items.GOLD_INGOT, 64 * 3))
+                // Insert raw gold and an octadic capacitor
+                .thenExecute(() -> helper.insertIntoContainer(0, 1, 0, Items.RAW_GOLD, 64 * 3))
+                .thenExecute(() -> helper.insertIntoContainer(0, 1, 0, EIOItems.OCTADIC_CAPACITOR.get(), 1))
+                // Ensure the right amount of Gold was produced, and all raw gold consumed.
+                .thenExecuteAfter(600, () -> {
+                    helper.assertContainerHasExactly(0, 1, 1, Items.GOLD_INGOT, 64 * 3);
+                    helper.assertContainerEmpty(0, 1, 0);
+                })
                 .thenSucceed()
         );
     }
