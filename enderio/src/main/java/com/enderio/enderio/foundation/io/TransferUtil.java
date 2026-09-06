@@ -37,9 +37,9 @@ public class TransferUtil {
 
     private static void moveItems(IItemHandler from, IItemHandler to) {
         for (int i = 0; i < from.getSlots(); i++) {
-            ItemStack extracted = from.extractItem(i, from.getSlotLimit(i), true);
-            if (!extracted.isEmpty()) {
-                for (int j = 0; j < to.getSlots(); j++) {
+            for (int j = 0; j < to.getSlots(); j++) {
+                ItemStack extracted = from.extractItem(i, from.getSlotLimit(i), true);
+                if (!extracted.isEmpty()) {
                     ItemStack remainder = to.insertItem(j, extracted, false);
 
                     int successfullyMoved = extracted.getCount() - remainder.getCount();
