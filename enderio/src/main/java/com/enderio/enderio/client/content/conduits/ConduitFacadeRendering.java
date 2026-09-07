@@ -95,6 +95,15 @@ public class ConduitFacadeRendering {
                 context.getPoseStack()
                         .translate(entry.getKey().getX() & 15, entry.getKey().getY() & 15, entry.getKey().getZ() & 15);
 
+                if (!opaque) {
+                    // The translucent "ghost" facade is rendered together with the conduits inside it.
+                    // Inflate it slightly so its faces are not coplanar with conduit connector plates,
+                    // which would otherwise z-fight (GH-1119).
+                    context.getPoseStack().translate(0.5, 0.5, 0.5);
+                    context.getPoseStack().scale(1.005f, 1.005f, 1.005f);
+                    context.getPoseStack().translate(-0.5, -0.5, -0.5);
+                }
+
                 var state = entry.getValue();
                 var pos = entry.getKey();
 
