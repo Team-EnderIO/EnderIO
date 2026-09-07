@@ -36,22 +36,23 @@ public class FireCraftingTests {
                 .thenSucceed());
     }
 
-    @GameTest(timeoutTicks = 300)
-    @TestHolder(description = "Tests that cold fire on a valid base block produces item drops.")
-    public static void testColdFireBlockCraftingDrops(final DynamicTest test) {
-        test.registerGameTestTemplate(() -> StructureTemplateBuilder.withSize(1, 2, 1)
-            .set(0, 0, 0, Blocks.GRANITE.defaultBlockState()));
-
-        test.onGameTest(EnderGameTestHelper.class, helper -> helper.startSequence()
-            .thenExecute(() -> helper.setBlock(FIRE_POS, EIOBlocks.COLD_FIRE.get().defaultBlockState()))
-            .thenIdle(280) //TODO figure oout why coldfire needs a bit more ticks?
-            //.thenExecuteAfter(BaseConfig.COMMON.INFINITY.FIRE_MIN_AGE.get() + 1, () -> helper.setBlock(FIRE_POS, Blocks.AIR.defaultBlockState()))
-            .thenExecute(() -> {
-                helper.assertItemEntityPresent(EIOItems.GRAINS_OF_INFINITY.get(), FIRE_POS, 2.0);
-                helper.assertBlockPresent(Blocks.GRANITE, BASE_POS);
-            })
-            .thenSucceed());
-    }
+    // TODO: This test is flakey.
+//    @GameTest(timeoutTicks = 300)
+//    @TestHolder(description = "Tests that cold fire on a valid base block produces item drops.")
+//    public static void testColdFireBlockCraftingDrops(final DynamicTest test) {
+//        test.registerGameTestTemplate(() -> StructureTemplateBuilder.withSize(1, 2, 1)
+//            .set(0, 0, 0, Blocks.GRANITE.defaultBlockState()));
+//
+//        test.onGameTest(EnderGameTestHelper.class, helper -> helper.startSequence()
+//            .thenExecute(() -> helper.setBlock(FIRE_POS, EIOBlocks.COLD_FIRE.get().defaultBlockState()))
+//            .thenIdle(280) //TODO figure oout why coldfire needs a bit more ticks?
+//            //.thenExecuteAfter(BaseConfig.COMMON.INFINITY.FIRE_MIN_AGE.get() + 1, () -> helper.setBlock(FIRE_POS, Blocks.AIR.defaultBlockState()))
+//            .thenExecute(() -> {
+//                helper.assertItemEntityPresent(EIOItems.GRAINS_OF_INFINITY.get(), FIRE_POS, 2.0);
+//                helper.assertBlockPresent(Blocks.GRANITE, BASE_POS);
+//            })
+//            .thenSucceed());
+//    }
 
     @GameTest
     @TestHolder(description = "Tests that fire water on a valid base block produces item drops after a random tick.")

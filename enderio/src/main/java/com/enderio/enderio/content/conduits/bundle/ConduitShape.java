@@ -76,6 +76,10 @@ public class ConduitShape {
         return Shapes.empty();
     }
 
+    public VoxelShape getShapeFor(Holder<Conduit<?, ?>> conduit) {
+        return conduitShapes.getOrDefault(conduit, Shapes.empty());
+    }
+
     @Nullable
     public Holder<Conduit<?, ?>> getConduit(BlockPos pos, HitResult result) {
         return getLookUpValue(conduitShapes, pos, result);

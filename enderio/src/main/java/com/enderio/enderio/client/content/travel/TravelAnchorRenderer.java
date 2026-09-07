@@ -3,6 +3,7 @@ package com.enderio.enderio.client.content.travel;
 import com.enderio.core.client.TravelRendererUtil;
 import com.enderio.enderio.api.travel.TravelRenderer;
 import com.enderio.enderio.client.EnderIOClient;
+import com.enderio.enderio.config.base.BaseConfig;
 import com.enderio.enderio.content.travel.travel_anchor.AnchorTravelTarget;
 import com.enderio.enderio.content.travel.travel_anchor.PaintedTravelAnchorBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -12,6 +13,7 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.block.BlockModelRenderState;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -22,6 +24,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.Lazy;
@@ -34,6 +37,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> {
+
+    private final ItemStackRenderState itemStackRenderState = new ItemStackRenderState();
+    private final BlockModelRenderState blockModelRenderState = new BlockModelRenderState();
 
     //TODO, this doesn't survive a resource reload change, look to update the cache
     private static final Lazy<BlockModel> BACKDROP = Lazy.of(() -> {
@@ -84,10 +90,16 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
 
         int packedLight = LightCoordsUtil.pack(15, 15);
 
-        boolean hasIcon = travelData.icon() != Items.AIR;
+        Block iconBlock = Block.byItem(travelData.icon());
+        BlockState blockState;
+        boolean iconIsFullBlock = false;
 
-        if (!hasIcon) {
-            BlockState blockState = minecraft.level.getBlockState(travelData.pos());
+        if (iconBlock != Blocks.AIR && BaseConfig.CLIENT.ANCHORS_USE_ICON_AS_BLOCK.get()) {
+            blockState = iconBlock.defaultBlockState();
+            iconIsFullBlock = Block.isShapeFullBlock(blockState.getOcclusionShape());
+        } else {
+            blockState = minecraft.level.getBlockState(travelData.pos());
+
             if (minecraft.level.getBlockEntity(travelData.pos()) instanceof PaintedTravelAnchorBlockEntity paintedTravelAnchorBlock) {
                 Optional<Block> paint = paintedTravelAnchorBlock.getPrimaryPaint();
 
@@ -95,7 +107,11 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
                     blockState = paint.get().defaultBlockState();
                 }
             }
+        }
 
+        boolean hasIcon = !(travelData.icon() == Items.AIR || iconIsFullBlock);
+
+        if (!hasIcon) {
             // Render outline block
             {
                 poseStack.pushPose();
@@ -136,8 +152,7 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             }
 
             ItemStack stack = new ItemStack(travelData.icon());
-            ItemStackRenderState itemRenderState = new ItemStackRenderState();
-            minecraft.getItemModelResolver().updateForTopItem(itemRenderState, stack, ItemDisplayContext.GUI, minecraft.level, null, 0);
+            minecraft.getItemModelResolver().updateForTopItem(itemStackRenderState, stack, ItemDisplayContext.GUI, minecraft.level, null, 0);
 
             poseStack.pushPose();
             {
@@ -150,7 +165,7 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             }
             poseStack.popPose();
 
-            itemRenderState.submit(poseStack, TravelRendererUtil.NODE, packedLight, OverlayTexture.NO_OVERLAY, 0);
+            itemStackRenderState.submit(poseStack, TravelRendererUtil.NODE, packedLight, OverlayTexture.NO_OVERLAY, 0);
             TravelRendererUtil.renderFeatures();
 
             poseStack.popPose();

@@ -43,6 +43,11 @@ public record EnergyConduitStorage(Direction side, @Nullable ConduitNode node) i
                 continue;
             }
 
+            // GH-1384: Prevent self-feed. Could add a feature for enabling this later.
+            if (insert.end().node() == node && insert.end().connectionSide() == side) {
+                continue;
+            }
+
             var energyHandler = insert.end().getSidedCapability(Capabilities.Energy.BLOCK);
             if (energyHandler == null) {
                 continue;
