@@ -77,7 +77,7 @@ jobs:
           path: build/libs
 
       - name: Publish to CurseForge
-        uses: Kira-NT/mc-publish@v3.3.0
+        uses: Kira-NT/mc-publish@v3.3.1
         with:
           name: Ender IO - ${{ github.event.release.tag_name }}
           version: ${{ github.event.release.tag_name }}
@@ -86,6 +86,7 @@ jobs:
             build/libs/*-@(api|sources).jar
           changelog: ${{ github.event.release.body }}
           loaders: neoforge
+          environment: client | server
           game-versions: 26.1.2
           java: 25
           dependencies: |
@@ -111,7 +112,7 @@ jobs:
           path: build/libs
 
       - name: Publish to Modrinth
-        uses: Kira-NT/mc-publish@v3.3.0
+        uses: Kira-NT/mc-publish@v3.3.1
         with:
           name: Ender IO - ${{ github.event.release.tag_name }}
           version: ${{ github.event.release.tag_name }}
@@ -120,6 +121,7 @@ jobs:
             build/libs/*-@(api|sources).jar
           changelog: ${{ github.event.release.body }}
           loaders: neoforge
+          environment: client | server
           game-versions: 26.1.2
           java: 25
           dependencies: |
