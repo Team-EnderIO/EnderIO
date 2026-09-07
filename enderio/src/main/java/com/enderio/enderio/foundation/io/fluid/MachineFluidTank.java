@@ -42,6 +42,10 @@ public class MachineFluidTank implements IFluidTank {
         return getFluid().isEmpty();
     }
 
+    public boolean isFull() {
+        return getFluid().getAmount() >= getCapacity();
+    }
+
     public int fill(FluidStack resource, IFluidHandler.FluidAction action) {
         return handler.fill(index, resource, action);
     }

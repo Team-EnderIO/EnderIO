@@ -75,11 +75,11 @@ public class XPObeliskBlockEntity extends MachineBlockEntity implements FluidTan
 
                 // Convert into XP Juice
                 if (TANK.isFluidValid(this, resource)) {
-                    var currentFluid = TANK.getFluid(this).getFluid();
-                    if (currentFluid == Fluids.EMPTY || resource.getFluid().isSame(currentFluid)) {
+                    FluidStack currentFluid = TANK.getFluid(this);
+                    if (currentFluid.isEmpty() || FluidStack.isSameFluidSameComponents(resource, currentFluid)) {
                         return super.fill(resource, action);
                     } else {
-                        return super.fill(new FluidStack(currentFluid, resource.getAmount()), action);
+                        return super.fill(currentFluid.copyWithAmount(resource.getAmount()), action);
                     }
                 }
 

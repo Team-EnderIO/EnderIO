@@ -31,7 +31,7 @@ public interface FluidItemInteractive {
                 //Otherwise, try draining the same type of fluid we have stored
                 // We do this to better support multiple tanks in case the fluid we have stored we could pull out of a block's
                 // second tank but just asking to drain a specific amount
-                fluidInItem = handler.drain(new FluidStack(tankAccess.getFluid(machine).getFluid(), Integer.MAX_VALUE), IFluidHandler.FluidAction.SIMULATE);
+                fluidInItem = handler.drain(tankAccess.getFluid(machine).copyWithAmount(Integer.MAX_VALUE), IFluidHandler.FluidAction.SIMULATE);
             }
             if (fluidInItem.isEmpty()) {
                 if (!tankAccess.isEmpty(machine) && tankAccess.canExtract(machine)) {
@@ -64,7 +64,7 @@ public interface FluidItemInteractive {
                 int filledAmount = tankAccess.fill(machine, fluidInItem, IFluidHandler.FluidAction.SIMULATE);
                 if (filledAmount > 0) {
                     boolean filled = false;
-                    FluidStack fluidToFill = handler.drain(new FluidStack(fluidInItem.getFluid(), filledAmount),
+                    FluidStack fluidToFill = handler.drain(fluidInItem.copyWithAmount(filledAmount),
                         player.isCreative() ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE);
                     if (!fluidToFill.isEmpty()) {
                         ItemStack container = handler.getContainer();
