@@ -41,7 +41,7 @@ public class InternalTankTasks {
 
         // See what fluid is available to drain from the item.
         // We act here because we're acting on a copy of the input.
-        FluidStack availableFluid = fluidHandlerItem.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.EXECUTE);
+        FluidStack availableFluid = fluidHandlerItem.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE);
 
         // See if we can insert this fluid into the block's tank.
         int filled = tank.fill(blockEntity, availableFluid, IFluidHandler.FluidAction.SIMULATE);
@@ -100,6 +100,7 @@ public class InternalTankTasks {
         // If this is the only input, and it isn't completely full, and the destination still has fluid, we will retain it
         if (inputItem.getCount() == 1 && !EnderFluidUtil.isFull(fluidHandlerItem) && !tank.isEmpty(blockEntity)) {
             tank.drain(blockEntity, availableFluid.copyWithAmount(filled), IFluidHandler.FluidAction.EXECUTE);
+            fluidDrainInput.setStackInSlot(blockEntity, resultStack);
         } else if (!fluidDrainInput.extractItem(blockEntity, 1, true).isEmpty() &&
             fluidDrainOutput.insertItem(blockEntity, resultStack, true).isEmpty()) {
 
