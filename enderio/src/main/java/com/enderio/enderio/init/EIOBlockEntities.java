@@ -68,9 +68,9 @@ public class EIOBlockEntities {
             for (CapacitorTier tier : CapacitorTier.values()) {
                 map.put(tier, BLOCK_ENTITY_TYPES
                     .builder(tier.name().toLowerCase(Locale.ROOT) + "_capacitor_bank",
-                        (worldPosition, blockState) -> new CapacitorBankBlockEntity(worldPosition, blockState, tier),
+                        (worldPosition, blockState) -> new CapacitorBankBlockEntity(EIOBlockEntities.CAPACITOR_BANKS.get(tier).get(), worldPosition, blockState, tier),
                         () -> EIOBlocks.CAPACITOR_BANKS.get(tier).get())
-                    .apply(EIOBlockEntities::legacyPoweredMachineBlockEntityCapabilities)
+                    .capability(Capabilities.EnergyStorage.BLOCK, CapacitorBankBlockEntity.ENERGY_STORAGE_PROVIDER)
                     .build()
                 );
             }
