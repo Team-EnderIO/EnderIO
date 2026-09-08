@@ -107,6 +107,7 @@ public class WiredChargerBlockEntity extends PoweredMachineBlockEntity {
                         int inserted = itemEnergyHandler.insert(maxConsumed, transaction);
                         if (inserted == getEnergyStorage().consume(inserted, transaction)) {
                             transaction.commit();
+                            getInventory().setStack(ITEM_TO_CHARGE, chargeable);
                         }
                     }
 
