@@ -8,6 +8,7 @@ import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitCapabilityAccessor;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.ConnectionReader;
+import com.enderio.enderio.api.conduits.connection.ConnectionStatus;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
@@ -25,6 +26,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public record MEConduit(Identifier texture, Component description, AEColor color, boolean isDense)
@@ -61,11 +64,6 @@ public record MEConduit(Identifier texture, Component description, AEColor color
     }
 
     @Override
-    public boolean shouldCheckConnectionsOnNeighborChange() {
-        return false;
-    }
-
-    @Override
     public boolean canConnectToBlock(Level level, ConduitCapabilityAccessor capabilityAccessor, BlockPos conduitPos, Direction direction) {
         // Check for a host cap ourselves. This makes sure we start listening for capability invalidation.
         var host = capabilityAccessor.getCapability(AECapabilities.IN_WORLD_GRID_NODE_HOST, direction, null);
@@ -94,7 +92,12 @@ public record MEConduit(Identifier texture, Component description, AEColor color
     @Override
     public void onConnectionsUpdated(ConduitNode node, Level level, BlockPos pos, Set<Direction> connectedSides) {
         var data = node.getOrCreateNodeData(MEConduitNodeData.TYPE);
-        data.setExposedSides(connectedSides);
+
+        // Offer connection to all sides, the GridNodeListener will detect when other blocks are ready to connect.
+        Set<Direction> sides = new HashSet<>(List.of(Direction.values()));
+        sides.removeIf(side -> node.getConnectionStatus(side) == ConnectionStatus.DISABLED);
+
+        data.setExposedSides(sides);
     }
 
     @SuppressWarnings("unchecked")

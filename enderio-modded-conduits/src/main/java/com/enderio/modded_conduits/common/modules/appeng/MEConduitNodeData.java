@@ -41,6 +41,9 @@ public final class MEConduitNodeData implements NodeData, IInWorldGridNodeHost {
 
     private AECableType cableType = AECableType.SMART;
 
+    @Nullable
+    private BlockPos pos = null;
+
     public MEConduitNodeData() {
     }
 
@@ -52,10 +55,17 @@ public final class MEConduitNodeData implements NodeData, IInWorldGridNodeHost {
         return mainNodeHolder != null && mainNodeHolder.isPresent();
     }
 
+    @Nullable
+    public BlockPos pos() {
+        return pos;
+    }
+
     public void init(MEConduit conduit, Level level, BlockPos pos, @Nullable Player player) {
         if (isMainNodeInitialized() && mainNodeHolder.get().isReady()) {
             return;
         }
+
+        this.pos = pos;
 
         // Init node if it isn't already.
         if (!isMainNodeInitialized()) {
@@ -106,6 +116,7 @@ public final class MEConduitNodeData implements NodeData, IInWorldGridNodeHost {
         }
 
         mainNodeHolder.get().destroy();
+        this.pos = null;
 
         // Save any data and null the IManagedGridNode as it is unusable now.
         // This will ensure that isMainNodeInitialized is false again, but if we're saving the data is present.
@@ -127,7 +138,7 @@ public final class MEConduitNodeData implements NodeData, IInWorldGridNodeHost {
 
     @Override
     public @Nullable IGridNode getGridNode(Direction dir) {
-        return mainNodeHolder != null ? mainNodeHolder.get().getNode() : null;
+        return mainNodeHolder != null && mainNodeHolder.isPresent() ? mainNodeHolder.get().getNode() : null;
     }
 
     @Override
