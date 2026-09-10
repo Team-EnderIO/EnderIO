@@ -133,6 +133,12 @@ dependencyResolutionManagement {
                 includeGroup("net.neoforged")
             }
         }
+
+        mavenCentral() {
+            content {
+                includeGroup("org.appliedenergistics")
+            }
+        }
     }
 }
 

@@ -133,6 +133,12 @@ public class ItemRecipeProvider extends SubRecipeProvider {
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.ENDER_CRYSTAL.get()))
                 .save(recipeOutput);
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.TOOLS, EIOItems.GUIDE.get())
+            .requires(EIOItems.BASIC_CAPACITOR)
+            .requires(Items.BOOK)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.BASIC_CAPACITOR))
+            .save(recipeOutput);
     }
 
     private void eraseFilterRecipes(RecipeOutput recipeOutput) {

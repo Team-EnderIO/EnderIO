@@ -33,6 +33,7 @@ public class EIOCommonLang {
     // TODO: Separate lore lang?
     public static final Component SUSPICIOUS_SEED_LORE = tooltip("lore/suspicious_seed").withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC);
     public static final Component SHOW_DETAIL_TOOLTIP = tooltip("show_advanced_tooltip").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC);
+    public static final Component GUIDE_LORE = tooltip("lore/guide").withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC);
 
     // IO Config
     public static final Component IOCONFIG = gui("ioconfig");

@@ -527,6 +527,8 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOItems.COLD_FIRE_IGNITER.get(), "Cold Fire Igniter");
         add(EIOItems.CONDUIT_PROBE.get(), "Conduit Probe");
 
+        add(EIOItems.GUIDE.get(), "Guide"); //TODO
+
         add(EIOItems.DARK_STEEL_SWORD.get(), "The Ender");
 
         // Filters
@@ -722,6 +724,8 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOCommonLang.TOOLTIP_NO_SOULBOUND, "This item can have a soul bound to it.");
 
         add(EIOCommonLang.SUSPICIOUS_SEED_LORE, "The seed appears to interact with nearby experience orbs...");
+
+        add(EIOCommonLang.GUIDE_LORE, "The complete encyclopedia"); //TODO
 
         add(EIOCommonLang.SHOW_DETAIL_TOOLTIP, "<Hold Shift>");
 

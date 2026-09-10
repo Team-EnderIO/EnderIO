@@ -294,6 +294,8 @@ public class EIOItemModelProvider extends ItemModelProvider {
         addMachineItemModels();
 
         // endregion
+
+        basicItem(EIOItems.GUIDE.get());
     }
 
     private void addMachineItemModels() {

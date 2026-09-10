@@ -18,6 +18,7 @@ import com.enderio.enderio.content.filters.item.limited.LimitedItemFilterItem;
 import com.enderio.enderio.content.filters.redstone.RedstoneFilterItem;
 import com.enderio.enderio.content.filters.soul.EnderSoulFilterItem;
 import com.enderio.enderio.content.fun.EnderiosItem;
+import com.enderio.enderio.content.guideme.GuideItem;
 import com.enderio.enderio.content.tools.ElectromagnetItem;
 import com.enderio.enderio.content.tools.LevitationStaffItem;
 import com.enderio.enderio.content.tools.YetaWrenchItem;
@@ -220,6 +221,14 @@ public class EIOItems {
     public static final DeferredItem<ElectromagnetItem> ELECTROMAGNET = ITEMS.registerItem("electromagnet", ElectromagnetItem::new);
     public static final DeferredItem<ColdFireIgniter> COLD_FIRE_IGNITER = ITEMS.registerItem("cold_fire_igniter", ColdFireIgniter::new);
     public static final DeferredItem<ConduitProbeItem> CONDUIT_PROBE = ITEMS.registerItem("conduit_probe", ConduitProbeItem::new);
+
+    public static final DeferredItem<GuideItem> GUIDE = ITEMS.registerItem("guide", GuideItem::new, new Item.Properties()
+        .stacksTo(1)
+        .rarity(Rarity.RARE)
+        .component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true)
+        .component(DataComponents.LORE, new ItemLore(List.of(EIOCommonLang.GUIDE_LORE)))
+
+    );
 
     public static final DeferredItem<DarkSteelSwordItem> DARK_STEEL_SWORD = ITEMS.registerItem("dark_steel_sword", DarkSteelSwordItem::new,
         new Item.Properties().durability(2000));

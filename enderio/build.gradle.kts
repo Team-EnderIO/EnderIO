@@ -117,6 +117,13 @@ dependencies {
 
     localRuntime(libs.ae2)
 
+    //Guide me
+    compileOnly(variantOf(libs.guideme) {
+        classifier("api")
+    })
+
+    localRuntime(libs.guideme)
+
     // TODO: Re-add Enchantment descriptions if we add enchantments again
 
     // Mekanism
@@ -238,6 +245,14 @@ neoForge {
         val gameTestClient by creating {
             client()
             loadedMods = listOf(modEnderio, modEnderioGametests)
+        }
+
+        //Guide me run for live edits
+        val guide by creating {
+            client()
+
+            systemProperty("guideme.enderio.guide.sources", file("src/main/resources/assets/enderio/eio_guide").absolutePath)
+            systemProperty("guideme.showOnStartup", "enderio:guide")
         }
     }
 

@@ -7,6 +7,7 @@ ccTweaked = "1.113.1"
 jade = "15.10.3+neoforge"
 athena = "4.0.4"
 ae2 = { strictly = "[19.0.23-beta,)", prefer = "19.0.23-beta" }
+guideme = "21.1.17"
 mekanism = { strictly = "[1.21.1-10.7.0,)", prefer = "1.21.1-10.7.16.82" }
 mekanismMod = { strictly = "[10.7.0,)", prefer = "10.7.16.82" } # workaround for Mek having MC version in the version specifier.
 refinedStorage = { strictly = "[2.0.0-beta.1,)", prefer = "2.0.0" }
@@ -33,6 +34,7 @@ ccTweakedForge = { group = "cc.tweaked", name = "cc-tweaked-1.21.1-forge", versi
 jade = { group = "maven.modrinth", name = "jade", version.ref = "jade" }
 athena = { group = "maven.modrinth", name = "athena-ctm", version.ref = "athena" }
 ae2 = { group = "appeng", name = "appliedenergistics2", version.ref = "ae2" }
+guideme = { group = "org.appliedenergistics", name = "guideme", version.ref = "guideme"}
 mekanism = { group = "mekanism", name = "Mekanism", version.ref = "mekanism" }
 refinedStorage = { group = "com.refinedmods.refinedstorage", name = "refinedstorage-neoforge", version.ref = "refinedStorage" }
 laserio = { group = "curse.maven", name = "laserio-626839", version.ref = "laserio" }

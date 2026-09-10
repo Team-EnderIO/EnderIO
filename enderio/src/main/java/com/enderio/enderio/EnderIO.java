@@ -30,6 +30,8 @@ import com.enderio.enderio.init.EIORecipes;
 import com.enderio.enderio.init.EIOSounds;
 import com.enderio.enderio.init.EIOTravelTargets;
 import com.mojang.logging.LogUtils;
+import guideme.Guide;
+import guideme.GuideItemSettings;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
@@ -122,6 +124,11 @@ public class EnderIO {
         modEventBus.addListener(this::addBuiltInPacks);
 
         Integrations.register();
+
+        //Guide Me
+        var guide = Guide.builder(EnderIO.rl("guide"))
+            .folder("eio_guide")
+            .build();
     }
 
     private void registerRegistries(NewRegistryEvent event) {
