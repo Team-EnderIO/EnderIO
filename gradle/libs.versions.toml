@@ -19,7 +19,7 @@ iris = "1.8.12+1.21.1-neoforge"
 mockito = "5.23.0"
 
 [libraries]
-jetbrainsAnnotations = { group = "org.jetbrains", name = "annotations", version = "23.0.0"}
+jetbrainsAnnotations = { group = "org.jetbrains", name = "annotations", version = "26.1.0"}
 neoforgeTestFramework = { group = "net.neoforged", name = "testframework", version.ref = "neoforge"}
 
 almostUnified = { group = "com.almostreliable.mods", name = "almostunified-neoforge", version.ref = "almostUnified" }
@@ -42,7 +42,7 @@ curios = { group = "top.theillusivec4.curios", name = "curios-neoforge", version
 sodium = { group = "maven.modrinth", name = "sodium", version.ref = "sodium" }
 iris = { group = "maven.modrinth", name = "iris", version.ref = "iris" }
 
-junitJupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version = "5.7.1"}
+junitJupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version = "5.14.4"}
 junitPlatformLauncher = { group = "org.junit.platform", name = "junit-platform-launcher" }
 mockito = { group = "org.mockito", name = "mockito-core", version.ref = "mockito"}
 mockitoJunit = { group = "org.mockito", name = "mockito-junit-jupiter", version.ref = "mockito"}
