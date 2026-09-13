@@ -8,3 +8,14 @@ item_ids:
 ---
 
 # Weather Obelisk
+
+<Column alignItems="center" fullWidth={true}>
+  <Row >
+    <GameScene zoom="4">
+      <Block id="weather_obelisk" />
+    </GameScene>
+    <Recipe id="weather_obelisk" />
+  </Row>
+</Column>
+
+The weather obelisk allows for changing the weather using liquids and firework rockets.

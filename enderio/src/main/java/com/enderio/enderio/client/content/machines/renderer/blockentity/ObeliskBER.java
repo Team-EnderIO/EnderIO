@@ -38,7 +38,11 @@ public class ObeliskBER implements BlockEntityRenderer<BlockEntity> {
         poseStack.translate(0.5, 0.75, 0.5);
         poseStack.scale(0.5f, 0.5f, 0.5f);
         Minecraft minecraft = Minecraft.getInstance();
-        Vec3 position = minecraft.player.position();
+        Vec3 position = new Vec3(1,0,0);
+        if (minecraft.player != null) {
+            position = minecraft.player.position();
+
+        }
         float f1 = (float) (Mth.atan2(position.z - blockEntity.getBlockPos().getZ() - 0.5D,
                 position.x - blockEntity.getBlockPos().getX() - 0.5D) * 180.0f / Math.PI + 90);
         poseStack.mulPose(Axis.YP.rotationDegrees(-f1 + 180));

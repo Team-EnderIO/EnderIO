@@ -8,3 +8,14 @@ item_ids:
 ---
 
 # Vacuum Chest
+
+<Column alignItems="center" fullWidth={true}>
+  <Row >
+    <GameScene zoom="4">
+      <Block id="vacuum_chest" />
+    </GameScene>
+    <Recipe id="vacuum_chest" />
+  </Row>
+</Column>
+
+The vacuum chest pulls any item within its range into itself.

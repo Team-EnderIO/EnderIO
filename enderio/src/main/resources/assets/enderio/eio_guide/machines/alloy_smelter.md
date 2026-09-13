@@ -12,12 +12,15 @@ item_ids:
 <Column alignItems="center" fullWidth={true}>
   <Row >
     <GameScene zoom="4">
-      <Block id="enderio:alloy_smelter" p:powered="true" />
+      <Block id="alloy_smelter" p:powered="true" />
     </GameScene>
     <Recipe id="alloy_smelter" />
   </Row>
 </Column>
 
 The alloy smelter is a basic machine that is able to take upto three inputs and combine them into a single output. 
-It provides a way to create the many alloys needed to progress the mod. Alternatively, It can act as a normal furnace, smelting three items at the same time.
+It provides a way to create the many alloys needed to progress the mod. Alternatively, It can act as a normal furnace, smelting three items at the same time. 
+
+The alloy smelter use energy to alloy or smelt items. The amount of energy needed will depend on the recipe, 
+while the speed and total energy the machine can store is determined by the <ItemImage id="basic_capacitor" /> [capacitor](../misc/capacitors.md).
 

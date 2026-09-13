@@ -8,3 +8,15 @@ item_ids:
 ---
 
 # Painting Machine
+
+<Column alignItems="center" fullWidth={true}>
+  <Row >
+    <GameScene zoom="4">
+      <Block id="painting_machine" p:powered="true"/>
+    </GameScene>
+    <Recipe id="painting_machine" />
+  </Row>
+</Column>
+
+The painting machine is used to paint certain blocks to give them the look of a different block. Most notably, 
+it can also paint <ItemImage id="conduit_facade" /> conduit facade's and <ItemLink id="travel_anchor" />'s
