@@ -3,6 +3,7 @@ package com.enderio.enderio.content.machines.capacitor_bank;
 import com.enderio.enderio.foundation.block.entity.multienergy.CapacityTier;
 import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.energy.ComponentEnergyStorage;
@@ -27,8 +28,8 @@ public class CapacitorBankItem extends BlockItem {
 
     private final CapacityTier tier;
 
-    public CapacitorBankItem(CapacitorBankBlock block, Properties properties) {
+    public CapacitorBankItem(CapacitorBankBlock block, Item.Properties properties) {
         super(block, properties);
-        this.tier = block.tier;
+        this.tier = block.getTier();
     }
 }
