@@ -1,5 +1,7 @@
 package com.enderio.core.common.storage.slot;
 
+import com.enderio.core.common.storage.ResourceStorage;
+import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.resource.Resource;
 
 import java.util.Collection;
@@ -10,4 +12,6 @@ public sealed interface ResourceSlotKey<T extends Resource>
     permits SingleResourceSlotKey, MultiResourceSlotKey {
 
     Collection<ResourceSlotId<T>> slots();
+
+    ResourceHandler<T> rangedHandler(ResourceStorage<T> storage);
 }

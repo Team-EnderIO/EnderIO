@@ -1,9 +1,9 @@
 {
   "type": "enderio:soul_binding",
-  "energy": 10000,
   "entity_type": "minecraft:silverfish",
   "experience": 0,
   "input": "minecraft:chiseled_stone_bricks",
+  "operation_time": 167,
   "output": {
     "id": "minecraft:infested_chiseled_stone_bricks"
   }

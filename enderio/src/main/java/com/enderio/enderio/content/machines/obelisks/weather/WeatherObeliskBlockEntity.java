@@ -1,6 +1,5 @@
 package com.enderio.enderio.content.machines.obelisks.weather;
 
-import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.core.common.storage.FluidStorage;
 import com.enderio.core.common.storage.layout.FluidStorageLayout;
 import com.enderio.core.common.storage.layout.ItemStorageLayout;
@@ -9,11 +8,12 @@ import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.io.IOMode;
 import com.enderio.enderio.foundation.MachineNBTKeys;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
+import com.enderio.enderio.foundation.crafting.MachineCraftingContext;
+import com.enderio.enderio.foundation.crafting.MachineCraftingManager;
+import com.enderio.enderio.foundation.crafting.MachineCraftingStatus;
 import com.enderio.enderio.foundation.io.IOConfig;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.foundation.storage.SidedResourceHandler;
-import com.enderio.enderio.foundation.task.CraftingMachineTask;
-import com.enderio.enderio.foundation.task.host.CraftingMachineTaskHost;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIORecipeTypes;
@@ -22,8 +22,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.FireworkRocketEntity;
@@ -32,7 +32,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
@@ -43,11 +42,11 @@ import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.item.ItemResource;
-import net.neoforged.neoforge.transfer.transaction.Transaction;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Calendar;
-import java.util.List;
+import java.util.function.Consumer;
 
 public class WeatherObeliskBlockEntity extends MachineBlockEntity {
 
@@ -67,7 +66,8 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity {
             .build();
 
     private final FluidStorage fluidStorage;
-    private final CraftingMachineTaskHost<WeatherChangeRecipe, WeatherChangeRecipe.Input> craftingTaskHost;
+    private final MachineCraftingManager<WeatherChangeRecipe, WeatherChangeRecipe.Input> craftingManager;
+    private WeatherChangeRecipe.@Nullable Input recipeInput;
 
     public WeatherObeliskBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.WEATHER_OBELISK.get(), worldPosition, blockState, false);
@@ -78,94 +78,23 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity {
                 super.onContentsChanged(index, previousContents);
                 setChanged();
                 updateMachineState(MachineState.EMPTY_TANK, fluidStorage.getAmountAsInt(TANK_SLOT) <= 0);
-                craftingTaskHost.newTaskAvailable();
+                recipeInput = null;
+
                 if (level != null) {
                     level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
                 }
             }
         };
 
-        craftingTaskHost = new CraftingMachineTaskHost<>(this, this::canAcceptTask,
-                EIORecipeTypes.WEATHER_CHANGE.get(), this::createTask, this::createRecipeInput) {
-
-            @Override
-            protected boolean shouldStartNewTask() {
-                if (getInventory().getStack(ROCKET).isEmpty()) {
-                    return true;
-                }
-                return super.shouldStartNewTask();
-            }
-        };
+        craftingManager = new MachineCraftingManager<>(EIORecipeTypes.WEATHER_CHANGE.get(), new CraftingContext());
     }
 
-    private WeatherChangeRecipe.Input createRecipeInput() {
-        return new WeatherChangeRecipe.Input(fluidStorage.getStack(TANK_SLOT));
-    }
+    private WeatherChangeRecipe.Input getRecipeInput() {
+        if (recipeInput == null) {
+            recipeInput = new WeatherChangeRecipe.Input(fluidStorage.getStack(TANK_SLOT), getInventory().getStack(ROCKET));
+        }
 
-    private CraftingMachineTask<WeatherChangeRecipe, WeatherChangeRecipe.Input> createTask(Level level,
-            WeatherChangeRecipe.Input input,
-            @Nullable RecipeHolder<WeatherChangeRecipe> weatherChangeRecipeRecipeHolder) {
-        return new CraftingMachineTask<>(level, this, getInventory(), fluidStorage, input, weatherChangeRecipeRecipeHolder) {
-
-            @Override
-            protected void consumeInputs(WeatherChangeRecipe recipe) {
-                try (Transaction transaction = Transaction.openRoot()) {
-                    fluidStorage.extract(TANK_SLOT, FluidResource.of(recipe.fluid()), recipe.fluid().amount(), transaction);
-                    transaction.commit();
-                }
-                getInventory().getStack(ROCKET).shrink(1);
-            }
-
-            @Override
-            protected int makeProgress(int remainingProgress) {
-                boolean hasRocket = !getInventory().getStack(ROCKET).isEmpty();
-                boolean weatherDifferent = switch (getRecipe().mode()) {
-                case RAIN -> !level.isRaining();
-                case CLEAR -> level.isRaining() || level.isThundering();
-                case LIGHTNING -> !level.isThundering();
-                };
-                boolean sky = level.canSeeSky(getBlockPos().above());
-                return hasRocket && weatherDifferent && sky ? 1 : 0;
-            }
-
-            @Override
-            protected int getProgressRequired(WeatherChangeRecipe recipe) {
-                return 600;
-            }
-
-            @Override
-            protected boolean placeOutputs(List<OutputStack> outputs, boolean simulate) {
-                if (!simulate && level instanceof ServerLevel serverLevel) {
-                    MinecraftServer server = serverLevel.getServer();
-                    switch (getRecipe().mode()) {
-                    case RAIN -> server.setWeatherParameters(0, ServerLevel.RAIN_DURATION.sample(serverLevel.getRandom()),
-                            true, false);
-                    case CLEAR ->
-                        server.setWeatherParameters(ServerLevel.RAIN_DELAY.sample(serverLevel.getRandom()), 0, false, false);
-                    case LIGHTNING -> server.setWeatherParameters(0,
-                            ServerLevel.THUNDER_DURATION.sample(serverLevel.getRandom()), true, true);
-                    }
-                    Calendar calendar = Calendar.getInstance();
-                    int month = calendar.get(Calendar.MONTH);
-
-                    ItemStack firework = FIREWORK.create();
-                    if (month == Calendar.JUNE) {
-                        firework.set(DataComponents.FIREWORKS, WeatherChangeRecipe.WeatherMode.SURPRISE);
-                    } else if (month == Calendar.MARCH && calendar.get(Calendar.DAY_OF_MONTH) == 31) {
-                        firework.set(DataComponents.FIREWORKS, WeatherChangeRecipe.WeatherMode.SURPRISE_2);
-                    } else {
-                        firework.set(DataComponents.FIREWORKS, getRecipe().mode().getFireworks());
-                    }
-                    serverLevel.addFreshEntity(new FireworkRocketEntity(serverLevel, null, getBlockPos().getX() + 0.5,
-                            getBlockPos().getY() + 1.1, getBlockPos().getZ() + 0.5, firework));
-                }
-                return true;
-            }
-        };
-    }
-
-    private Boolean canAcceptTask() {
-        return !isRedstoneBlocked();
+        return recipeInput;
     }
 
     @Override
@@ -173,14 +102,15 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity {
         super.serverTick();
 
         if (canAct()) {
-            craftingTaskHost.tick();
+            craftingManager.tick();
         }
+
         updateMachineState(MachineState.ACTIVE, isActive());
     }
 
     @Override
     public boolean isActive() {
-        return canAct() && craftingTaskHost.hasTask();
+        return canAct() && craftingManager.status() == MachineCraftingStatus.ACTIVE;
     }
 
     public FluidStack getStoredFluid() {
@@ -198,13 +128,7 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity {
     @Override
     protected void onInventoryContentsChanged(int slot) {
         super.onInventoryContentsChanged(slot);
-        craftingTaskHost.newTaskAvailable();
-    }
-
-    @Override
-    public void onLoad() {
-        super.onLoad();
-        craftingTaskHost.onLevelReady();
+        recipeInput = null;
     }
 
     @Override
@@ -218,23 +142,21 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity {
     }
 
     public float getCraftingProgress() {
-        return craftingTaskHost.getProgress();
+        return craftingManager.craftingProgress();
     }
 
     @Override
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
         output.putChild("Fluid", fluidStorage);
-        output.putChild(MachineNBTKeys.CRAFTING_TASK, craftingTaskHost);
+        output.putChild(MachineNBTKeys.CRAFTING_TASK, craftingManager);
     }
 
     @Override
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
-        input.child("Fluid")
-            .ifPresent(fluidStorage::deserialize);
-        var task = input.child(MachineNBTKeys.CRAFTING_TASK);
-        task.ifPresent(craftingTaskHost::deserialize);
+        input.readChild("Fluid", fluidStorage);
+        input.readChild(MachineNBTKeys.CRAFTING_TASK, craftingManager);
     }
 
     @Override
@@ -245,6 +167,8 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity {
         if (storedFluid != null) {
             fluidStorage.setStack(TANK_SLOT, storedFluid.copy());
         }
+
+        craftingManager.applyCraftingState(components.get(EIODataComponents.MACHINE_CRAFTING_STATE));
     }
 
     @Override
@@ -254,6 +178,119 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity {
         var fluidStored = getStoredFluid();
         if (!fluidStored.isEmpty()) {
             components.set(EIODataComponents.ITEM_FLUID_CONTENT, SimpleFluidContent.copyOf(fluidStored));
+        }
+
+        components.set(EIODataComponents.MACHINE_CRAFTING_STATE, craftingManager.getCraftingState());
+    }
+
+    @Override
+    public void removeComponentsFromTag(ValueOutput output) {
+        super.removeComponentsFromTag(output);
+        output.discard("Fluid");
+        output.discard(MachineNBTKeys.CRAFTING_TASK);
+    }
+
+    private class CraftingContext extends MachineCraftingContext<WeatherChangeRecipe, WeatherChangeRecipe.Input> {
+
+        private ItemStack firework;
+        private Consumer<ServerLevel> weatherFunction;
+        private int cooldownTicks;
+
+        @Override
+        public WeatherChangeRecipe.Input recipeInput() {
+            return getRecipeInput();
+        }
+
+        @Override
+        public @Nullable ServerLevel level() {
+            if (getLevel() instanceof ServerLevel serverLevel) {
+                return serverLevel;
+            }
+
+            return null;
+        }
+
+        @Override
+        public int getCraftingTicks(RecipeHolder<WeatherChangeRecipe> recipe) {
+            // TODO: Config and lower it.
+            return 600;
+        }
+
+        @Override
+        public boolean tryProgressCraft(WeatherChangeRecipe recipe) {
+            if (cooldownTicks > 0) {
+                cooldownTicks--;
+                return false;
+            }
+
+            boolean hasRocket = !getInventory().getStack(ROCKET).isEmpty();
+            boolean weatherDifferent = switch (recipe.mode()) {
+                case RAIN -> !level.isRaining();
+                case CLEAR -> level.isRaining() || level.isThundering();
+                case LIGHTNING -> !level.isThundering();
+            };
+            boolean sky = level.canSeeSky(getBlockPos().above());
+            return hasRocket && weatherDifferent && sky ? true : false;
+        }
+
+        @Override
+        public boolean tryCompleteCraft(WeatherChangeRecipe recipe, RandomSource random) {
+            boolean didComplete = super.tryCompleteCraft(recipe, random);
+
+            // Do this outside the transaction in the base implementationt to avoid any accidental changes (insert outputs occurs before consume inputs).
+            if (didComplete) {
+                // Apply weather change
+                weatherFunction.accept(level());
+
+                // Fire the firework
+                level().addFreshEntity(new FireworkRocketEntity(level(), null, getBlockPos().getX() + 0.5,
+                    getBlockPos().getY() + 1.1, getBlockPos().getZ() + 0.5, firework));
+
+                // 2 seconds cooldown to wait for weather to change.
+                cooldownTicks = 40;
+            }
+
+            return didComplete;
+        }
+
+        @Override
+        protected boolean consumeRecipeInputs(WeatherChangeRecipe recipe, WeatherChangeRecipe.Input recipeInput, TransactionContext transaction) {
+            int fluidConsumed = fluidStorage.extract(TANK_SLOT, FluidResource.of(recipeInput.fluid()), recipe.fluid().amount(), transaction);
+            if (fluidConsumed != recipe.fluid().amount()) {
+                return false;
+            }
+
+            int rocketsConsumed = getInventory().extract(ROCKET, ItemResource.of(recipeInput.fireworks()), 1, transaction);
+            if (rocketsConsumed != 1) {
+                return false;
+            }
+
+            return true;
+        }
+
+        @Override
+        protected boolean insertRecipeOutputs(WeatherChangeRecipe recipe, WeatherChangeRecipe.Input recipeInput, RandomSource random,
+            TransactionContext transaction) {
+
+            weatherFunction = switch (recipe.mode()) {
+                case CLEAR -> level -> level.getServer().setWeatherParameters(ServerLevel.RAIN_DELAY.sample(level.getRandom()), 0, false, false);
+                case RAIN -> level -> level.getServer().setWeatherParameters(0, ServerLevel.RAIN_DURATION.sample(level.getRandom()), true, false);
+                case LIGHTNING -> level -> level.getServer().setWeatherParameters(0, ServerLevel.THUNDER_DURATION.sample(level.getRandom()), true, true);
+            };
+
+            Calendar calendar = Calendar.getInstance();
+            int month = calendar.get(Calendar.MONTH);
+
+            firework = FIREWORK.create();
+            if (month == Calendar.JUNE) {
+                firework.set(DataComponents.FIREWORKS, WeatherChangeRecipe.WeatherMode.SURPRISE);
+            } else if (month == Calendar.MARCH && calendar.get(Calendar.DAY_OF_MONTH) == 31) {
+                firework.set(DataComponents.FIREWORKS, WeatherChangeRecipe.WeatherMode.SURPRISE_2);
+            } else {
+                firework.set(DataComponents.FIREWORKS, recipe.mode().getFireworks());
+            }
+
+            return true;
         }
     }
 }

@@ -1,7 +1,7 @@
 {
   "type": "enderio:sag_milling",
-  "energy": 2400,
   "input": "minecraft:wither_skeleton_skull",
+  "operation_time": 120,
   "outputs": [
     {
       "item": {

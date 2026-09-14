@@ -54,37 +54,37 @@ public class AlloyRecipeProvider extends SubRecipeProvider {
         build(new ItemStackTemplate(EIOItems.CONDUCTIVE_ALLOY_INGOT.get(), 2),
                 List.of(sizedFromTag(Tags.Items.INGOTS_IRON, 1),
                     sizedFromTag(Tags.Items.INGOTS_COPPER, 1)),
-                3200, 0.3f, recipeOutput);
+                160, 0.3f, recipeOutput);
         build(new ItemStackTemplate(EIOItems.ENERGETIC_ALLOY_INGOT.get(), 2),
                 List.of(sizedFromTag(Tags.Items.DUSTS_REDSTONE, 1),
                         sizedFromTag(EIOTags.Items.INGOTS_CONDUCTIVE_ALLOY, 1),
                         sizedFromTag(Tags.Items.INGOTS_GOLD, 1)),
-                4800, 0.3f, recipeOutput);
+                240, 0.3f, recipeOutput);
         build(new ItemStackTemplate(EIOItems.VIBRANT_ALLOY_INGOT.get(), 2),
                 List.of(sizedFromTag(EIOTags.Items.INGOTS_ENERGETIC_ALLOY, 1),
                         sizedFromTag(Tags.Items.ENDER_PEARLS, 1),
                         sizedFromTag(Tags.Items.DUSTS_GLOWSTONE, 1)),
-                5600, 0.3f, recipeOutput);
+                280, 0.3f, recipeOutput);
         build(new ItemStackTemplate(EIOItems.REDSTONE_ALLOY_INGOT.get()),
                 List.of(sizedFromTag(Tags.Items.DUSTS_REDSTONE, 1), sizedFromTag(Tags.Items.INGOTS_COPPER, 1)),
-                3200, 0.3f, recipeOutput);
+                160, 0.3f, recipeOutput);
         build(new ItemStackTemplate(EIOItems.PULSATING_ALLOY_INGOT.get(), 2),
                 List.of(sizedFromTag(Tags.Items.INGOTS_IRON, 1), sizedFromTag(Tags.Items.ENDER_PEARLS, 1)),
-                4800, 0.3f, recipeOutput);
+                240, 0.3f, recipeOutput);
         build(EnderIO.id("dark_steel_ingot_with_coal"),
                 List.of(sizedFromTag(Tags.Items.INGOTS_IRON, 1), SizedIngredient.of(Items.COAL, 2),
                     sizedFromTag(Tags.Items.OBSIDIANS, 1)),
-                new ItemStackTemplate(EIOItems.DARK_STEEL_INGOT.get(), 2), 3200, 0.3f, recipeOutput);
+                new ItemStackTemplate(EIOItems.DARK_STEEL_INGOT.get(), 2), 160, 0.3f, recipeOutput);
         build(new ItemStackTemplate(EIOItems.DARK_STEEL_INGOT.get(), 2), List.of(sizedFromTag(Tags.Items.INGOTS_IRON, 1),
-                sizedFromTag(EIOTags.Items.DUSTS_COAL, 1), sizedFromTag(Tags.Items.OBSIDIANS, 1)), 3200,
+                sizedFromTag(EIOTags.Items.DUSTS_COAL, 1), sizedFromTag(Tags.Items.OBSIDIANS, 1)), 160,
                 0.3f, recipeOutput);
         build(new ItemStackTemplate(EIOItems.SOULARIUM_INGOT.get()),
                 List.of(new SizedIngredient(Ingredient.of(Items.SOUL_SAND, Items.SOUL_SOIL), 1),
                     sizedFromTag(Tags.Items.INGOTS_GOLD, 1)),
-                5600, 0.3f, recipeOutput);
+                280, 0.3f, recipeOutput);
         build(new ItemStackTemplate(EIOItems.END_STEEL_INGOT.get(), 2), List.of(sizedFromTag(Tags.Items.END_STONES, 1),
                 sizedFromTag(EIOTags.Items.INGOTS_DARK_STEEL, 1), sizedFromTag(Tags.Items.OBSIDIANS, 1)),
-                6400, 0.3f, recipeOutput);
+                320, 0.3f, recipeOutput);
 
         // endregion
 
@@ -94,29 +94,29 @@ public class AlloyRecipeProvider extends SubRecipeProvider {
 
         build(new ItemStackTemplate(Items.GREEN_DYE), "clippings",
                 List.of(SizedIngredient.of(EIOItems.PLANT_MATTER_GREEN.get(), 6), sizedFromTag(ItemTags.EGGS, 1)),
-                1000, 0.3f, recipeOutput);
+                50, 0.3f, recipeOutput);
         build(new ItemStackTemplate(Items.GREEN_DYE, 2), "double_clippings",
                 List.of(SizedIngredient.of(EIOItems.PLANT_MATTER_GREEN.get(), 12),
                     sizedFromTag(Tags.Items.SLIME_BALLS, 1)),
-                1600, 0.3f, recipeOutput);
+                80, 0.3f, recipeOutput);
 
         build(new ItemStackTemplate(Items.BROWN_DYE), "twigs",
                 List.of(SizedIngredient.of(EIOItems.PLANT_MATTER_BROWN.get(), 6), sizedFromTag(ItemTags.EGGS, 1)),
-                1000, 0.3f, recipeOutput);
+                50, 0.3f, recipeOutput);
         build(new ItemStackTemplate(Items.BROWN_DYE, 2), "twigs_double",
                 List.of(SizedIngredient.of(EIOItems.PLANT_MATTER_BROWN.get(), 12),
                         sizedFromTag(Tags.Items.SLIME_BALLS, 1)),
-                1600, 0.3f, recipeOutput);
+                80, 0.3f, recipeOutput);
 
         build(new ItemStackTemplate(Items.BLACK_DYE),
-                List.of(sizedFromTag(EIOTags.Items.DUSTS_COAL, 1), sizedFromTag(ItemTags.EGGS, 1)), 1000, 0.3f,
+                List.of(sizedFromTag(EIOTags.Items.DUSTS_COAL, 1), sizedFromTag(ItemTags.EGGS, 1)), 50, 0.3f,
                 recipeOutput);
         build(new ItemStackTemplate(Items.BLACK_DYE, 2), "double",
                 List.of(sizedFromTag(EIOTags.Items.DUSTS_COAL, 2), sizedFromTag(Tags.Items.SLIME_BALLS, 1)),
-                1600, 0.3f, recipeOutput);
+                80, 0.3f, recipeOutput);
 
         build(new ItemStackTemplate(Items.RED_DYE, 12), List.of(SizedIngredient.of(Items.BEETROOT, 1),
-                SizedIngredient.of(Items.CLAY_BALL, 3), sizedFromTag(ItemTags.EGGS, 6)), 1600, 0.3f, recipeOutput);
+                SizedIngredient.of(Items.CLAY_BALL, 3), sizedFromTag(ItemTags.EGGS, 6)), 80, 0.3f, recipeOutput);
 
         // endregion
 
@@ -131,7 +131,7 @@ public class AlloyRecipeProvider extends SubRecipeProvider {
                 var altIngredient = identifier.explosionResistance()
                         ? sizedFromTag(EIOTags.Items.STORAGE_BLOCKS_QUARTZ, 1)
                         : null;
-                var energy = identifier.explosionResistance() ? 6400 : 3200;
+                var energy = identifier.explosionResistance() ? 320 : 160;
                 if (identifier.lighting() == GlassLighting.NONE) {
                     glass(clear, mainIngredient, altIngredient, energy, 0.3f, recipeOutput);
                 } else {
@@ -160,14 +160,14 @@ public class AlloyRecipeProvider extends SubRecipeProvider {
         // region Misc
 
         build(new ItemStackTemplate(EIOItems.PHOTOVOLTAIC_PLATE.get()),
-                List.of(SizedIngredient.of(EIOItems.PHOTOVOLTAIC_COMPOSITE.get(), 2)), 5600, 0.3f, recipeOutput);
+                List.of(SizedIngredient.of(EIOItems.PHOTOVOLTAIC_COMPOSITE.get(), 2)), 280, 0.3f, recipeOutput);
 
-        build(new ItemStackTemplate(Items.ENDER_PEARL), List.of(sizedFromTag(EIOTags.Items.DUSTS_ENDER, 9)), 2000, 0.3f,
+        build(new ItemStackTemplate(Items.ENDER_PEARL), List.of(sizedFromTag(EIOTags.Items.DUSTS_ENDER, 9)), 100, 0.3f,
                 recipeOutput);
 
 //        build(new ItemStackTemplate(), List.of(EnderIngredient.of(EIOItems.GRAINS_OF_INFINITY.get()), EnderIngredient.of(EIOTags.Items.DUSTS_COAL)), 5000, 0.3f, recipeOutput);
 
-        build(new ItemStackTemplate(Items.DEAD_BUSH), List.of(sizedFromTag(ItemTags.SAPLINGS, 1)), 500, 0.3f,
+        build(new ItemStackTemplate(Items.DEAD_BUSH), List.of(sizedFromTag(ItemTags.SAPLINGS, 1)), 25, 0.3f,
                 recipeOutput);
 
 //        build(new ItemStackTemplate(EIOItems.DARK_STEEL_UPGRADE_BLANK.get()), List.of(SizedIngredient.of(EIOBlocks.DARK_STEEL_BARS.get()), SizedIngredient.of(Items.CLAY_BALL), SizedIngredient.of(4, Tags.Items.STRING)), 30000, 0.3f, recipeOutput);
@@ -175,7 +175,7 @@ public class AlloyRecipeProvider extends SubRecipeProvider {
         build(new ItemStackTemplate(EIOBlocks.INDUSTRIAL_INSULATION.asItem()),
                 List.of(sizedFromTag(EIOTags.Items.DUSTS_LAPIS, 1), sizedFromTag(ItemTags.WOOL, 1),
                     sizedFromTag(EIOTags.Items.INSULATION_METAL, 1)),
-                3200, 0.5f, recipeOutput);
+                160, 0.5f, recipeOutput);
 
         // endregion
     }

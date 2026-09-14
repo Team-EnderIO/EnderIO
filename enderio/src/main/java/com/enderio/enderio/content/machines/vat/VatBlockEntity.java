@@ -1,14 +1,11 @@
 package com.enderio.enderio.content.machines.vat;
 
-import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.core.common.storage.FluidStorage;
-import com.enderio.core.common.storage.ItemStorage;
 import com.enderio.core.common.storage.layout.FluidStorageLayout;
 import com.enderio.core.common.storage.layout.ItemStorageLayout;
 import com.enderio.core.common.storage.layout.SlotTemplates;
 import com.enderio.core.common.storage.slot.MultiResourceSlotKey;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
-import com.enderio.core.common.util.EnderResourceUtil;
 import com.enderio.core.common.util.NamedFluidContents;
 import com.enderio.enderio.foundation.MachineNBTKeys;
 import com.enderio.core.annotations.UseOnly;
@@ -16,13 +13,13 @@ import com.enderio.enderio.client.SoundHandler;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.foundation.block.ProgressMachineBlock;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
+import com.enderio.enderio.foundation.crafting.MachineCraftingContext;
+import com.enderio.enderio.foundation.crafting.MachineCraftingManager;
+import com.enderio.enderio.foundation.crafting.MachineCraftingStatus;
 import com.enderio.enderio.foundation.recipe.MachineRecipeCaches;
 import com.enderio.enderio.foundation.io.fluid.FluidItemInteractive;
 import com.enderio.enderio.foundation.state.MachineState;
-import com.enderio.enderio.foundation.state.MachineStateUpdater;
 import com.enderio.enderio.foundation.storage.SidedResourceHandler;
-import com.enderio.enderio.foundation.task.CraftingMachineTask;
-import com.enderio.enderio.foundation.task.host.CraftingMachineTaskHost;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIORecipeTypes;
@@ -31,6 +28,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import com.enderio.enderio.init.EIOSounds;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Inventory;
@@ -50,8 +48,7 @@ import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.item.ItemResource;
-import net.neoforged.neoforge.transfer.transaction.Transaction;
-import org.jspecify.annotations.NonNull;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
@@ -76,7 +73,11 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
             .build();
 
     private final FluidStorage fluidStorage;
-    private final CraftingMachineTaskHost<FermentingRecipe, FermentingRecipe.Input> craftingTaskHost;
+
+    private final ResourceHandler<ItemResource> reagentsHandler;
+
+    private final MachineCraftingManager<FermentingRecipe, FermentingRecipe.Input> craftingManager;
+    private FermentingRecipe.@Nullable Input recipeInput;
 
     public VatBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.VAT.get(), worldPosition, blockState, true);
@@ -85,7 +86,7 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
             @Override
             protected void onContentsChanged(int index, FluidStack previousContents) {
                 super.onContentsChanged(index, previousContents);
-                craftingTaskHost.newTaskAvailable();
+                recipeInput = null;
                 setChanged();
                 if (level != null) {
                     level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
@@ -93,8 +94,9 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
             }
         };
 
-        craftingTaskHost = new CraftingMachineTaskHost<>(this, () -> true, EIORecipeTypes.VAT_FERMENTING.get(),
-                this::createTask, this::createRecipeInput);
+        reagentsHandler = REAGENTS.rangedHandler(getInventory());
+
+        craftingManager = new MachineCraftingManager<>(EIORecipeTypes.VAT_FERMENTING.get(), new CraftingContext());
     }
 
     public FluidStorage getFluidStorage() {
@@ -112,7 +114,7 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
         super.serverTick();
 
         if (canAct()) {
-            craftingTaskHost.tick();
+            craftingManager.tick();
         }
         updateMachineState(MachineState.ACTIVE, isActive());
     }
@@ -131,18 +133,7 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
     }
 
     public boolean isActive() {
-        return canAct() && craftingTaskHost.hasTask();
-    }
-
-    @Override
-    public void onLoad() {
-        super.onLoad();
-        craftingTaskHost.onLevelReady();
-    }
-
-    protected VatCraftingMachineTask createTask(Level level, FermentingRecipe.Input input,
-            @Nullable RecipeHolder<FermentingRecipe> recipe) {
-        return new VatCraftingMachineTask(level, this, getInventory(), fluidStorage, input, recipe);
+        return canAct() && craftingManager.status() == MachineCraftingStatus.ACTIVE;
     }
 
     @Override
@@ -160,12 +151,16 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
     @Override
     protected void onInventoryContentsChanged(int slot) {
         super.onInventoryContentsChanged(slot);
-        craftingTaskHost.newTaskAvailable();
+        recipeInput = null;
     }
 
-    private FermentingRecipe.Input createRecipeInput() {
-        List<ItemStack> reagents = getInventory().getStacks(REAGENTS);
-        return new FermentingRecipe.Input(reagents.get(0), reagents.get(1), fluidStorage.getStack(INPUT_TANK));
+    private FermentingRecipe.Input getRecipeInput() {
+        if (recipeInput == null) {
+            List<ItemStack> reagents = getInventory().getStacks(REAGENTS);
+            recipeInput = new FermentingRecipe.Input(reagents.get(0), reagents.get(1), fluidStorage.getStack(INPUT_TANK));
+        }
+
+        return recipeInput;
     }
 
     public FluidStack getInputFluid() {
@@ -177,16 +172,12 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
     }
 
     public float getCraftingProgress() {
-        return craftingTaskHost.getProgress();
+        return craftingManager.craftingProgress();
     }
 
     @Nullable
     public RecipeHolder<FermentingRecipe> getRecipe() {
-        if (craftingTaskHost.hasTask()) {
-            return craftingTaskHost.getCurrentTask().getRecipeHolder();
-        }
-
-        return null;
+        return craftingManager.currentRecipe();
     }
 
     @UseOnly(LogicalSide.SERVER)
@@ -205,55 +196,18 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
         fluidStorage.setStack(OUTPUT_TANK, FluidStack.EMPTY);
     }
 
-    protected static class VatCraftingMachineTask
-            extends CraftingMachineTask<FermentingRecipe, FermentingRecipe.Input> {
+    @Override
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.putChild("fluids", fluidStorage);
+        output.putChild(MachineNBTKeys.CRAFTING_TASK, craftingManager);
+    }
 
-        public VatCraftingMachineTask(@NonNull Level level, MachineStateUpdater machineStateUpdater, ItemStorage inventory,
-                FluidStorage fluidStorage, FermentingRecipe.Input input,
-                @Nullable RecipeHolder<FermentingRecipe> recipe) {
-            super(level, machineStateUpdater, inventory, fluidStorage, input, recipe);
-        }
-
-        @Override
-        protected void consumeInputs(FermentingRecipe recipe) {
-            inventory.mutateStack(REAGENTS.slot(0), stack -> stack.shrink(1));
-            inventory.mutateStack(REAGENTS.slot(1), stack -> stack.shrink(1));
-
-            FluidStack inputFluid = EnderResourceUtil.getFluidStack(fluidStorage, INPUT_TANK);
-            try (Transaction transaction = Transaction.openRoot()) {
-                int inputIndex = fluidStorage.layout().indexOf(INPUT_TANK);
-                fluidStorage.extract(inputIndex, FluidResource.of(inputFluid), recipe.input().amount(), transaction);
-                transaction.commit();
-            }
-        }
-
-        @Override
-        protected boolean placeOutputs(List<OutputStack> outputs, boolean simulate) {
-            FluidStack output = outputs.getFirst().getFluid();
-
-            try (Transaction transaction = Transaction.openRoot()) {
-                int outputIndex = fluidStorage.layout().indexOf(OUTPUT_TANK);
-                int inserted = fluidStorage.insert(outputIndex, FluidResource.of(output), output.getAmount(), transaction);
-                if (inserted == output.getAmount()) {
-                    if (!simulate) {
-                        transaction.commit();
-                    }
-                    return true;
-                }
-                return false;
-            }
-        }
-
-        @Override
-        protected int makeProgress(int remainingProgress) {
-            return 1; // VAT doesn't consume power
-        }
-
-        @Override
-        protected int getProgressRequired(FermentingRecipe recipe) {
-            return recipe.ticks();
-        }
-
+    @Override
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        input.readChild("fluids", fluidStorage);
+        input.readChild(MachineNBTKeys.CRAFTING_TASK, craftingManager);
     }
 
     @Override
@@ -272,6 +226,8 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
                 fluidStorage.setStack(OUTPUT_TANK, outputFluid);
             }
         }
+
+        craftingManager.applyCraftingState(components.get(EIODataComponents.MACHINE_CRAFTING_STATE));
     }
 
     @Override
@@ -282,23 +238,80 @@ public class VatBlockEntity extends MachineBlockEntity implements FluidItemInter
         FluidStack outputFluid = fluidStorage.getStack(OUTPUT_TANK);
         if (!inputFluid.isEmpty() || !outputFluid.isEmpty()) {
             components.set(EIODataComponents.NAMED_FLUID_CONTENTS, NamedFluidContents
-                    .copyOf(Map.of("input_tank", inputFluid, "output_tank", outputFluid)));
+                .copyOf(Map.of("input_tank", inputFluid, "output_tank", outputFluid)));
         }
+
+        components.set(EIODataComponents.MACHINE_CRAFTING_STATE, craftingManager.getCraftingState());
     }
 
     @Override
-    protected void saveAdditional(ValueOutput output) {
-        super.saveAdditional(output);
-        output.putChild("fluids", fluidStorage);
-        output.putChild(MachineNBTKeys.CRAFTING_TASK, craftingTaskHost);
+    public void removeComponentsFromTag(ValueOutput output) {
+        super.removeComponentsFromTag(output);
+        output.discard("fluids");
+        output.discard(MachineNBTKeys.CRAFTING_TASK);
     }
 
-    @Override
-    protected void loadAdditional(ValueInput input) {
-        super.loadAdditional(input);
-        var fluids = input.child("fluids");
-        fluids.ifPresent(fluidStorage::deserialize);
-        var task = input.child(MachineNBTKeys.CRAFTING_TASK);
-        task.ifPresent(craftingTaskHost::deserialize);
+    private class CraftingContext extends MachineCraftingContext<FermentingRecipe, FermentingRecipe.Input> {
+
+        @Override
+        public FermentingRecipe.Input recipeInput() {
+            return getRecipeInput();
+        }
+
+        @Override
+        public @Nullable ServerLevel level() {
+            if (getLevel() instanceof ServerLevel serverLevel) {
+                return serverLevel;
+            }
+
+            return null;
+        }
+
+        @Override
+        public int getCraftingTicks(RecipeHolder<FermentingRecipe> recipe) {
+            return recipe.value().ticks();
+        }
+
+        @Override
+        public boolean tryProgressCraft(FermentingRecipe recipe) {
+            // Vat recipes consume nothing to progress
+            return true;
+        }
+
+        @Override
+        protected boolean consumeRecipeInputs(FermentingRecipe recipe, FermentingRecipe.Input recipeInput, TransactionContext transaction) {
+            int firstConsumed = reagentsHandler.extract(ItemResource.of(recipeInput.firstReagent()), 1, transaction);
+            if (firstConsumed != 1) {
+                return false;
+            }
+
+            int secondConsumed = reagentsHandler.extract(ItemResource.of(recipeInput.secondStack()), 1, transaction);
+            if (secondConsumed != 1) {
+                return false;
+            }
+
+            int fluidConsumed = fluidStorage.extract(INPUT_TANK, FluidResource.of(recipeInput.inputFluid()), recipe.input().amount(), transaction);
+            if (fluidConsumed != recipe.input().amount()) {
+                return false;
+            }
+
+            return true;
+        }
+
+        @Override
+        protected boolean insertRecipeOutputs(FermentingRecipe recipe, FermentingRecipe.Input recipeInput, RandomSource random,
+            TransactionContext transaction) {
+            // TODO: Once we're fully migrated, just use assemble for single output recipes...
+            var results = recipe.craft(recipeInput, random, level.registryAccess());
+
+            FluidStack output = results.getFirst().getFluid();
+
+            int inserted = fluidStorage.insert(OUTPUT_TANK, FluidResource.of(output), output.getAmount(), transaction);
+            if (inserted == output.getAmount()) {
+                return true;
+            }
+
+            return false;
+        }
     }
 }

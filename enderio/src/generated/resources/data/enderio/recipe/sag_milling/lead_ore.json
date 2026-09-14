@@ -16,8 +16,8 @@
     }
   ],
   "type": "enderio:sag_milling",
-  "energy": 2400,
   "input": "#c:ores/lead",
+  "operation_time": 120,
   "outputs": [
     {
       "item": {

@@ -10,6 +10,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.datamaps.DataMapType;
 
+// TODO: Power use is now more complex, should it be a speed that increases both speed and energy use linearly?
 public record GrindingBallData(float outputMultiplier, float bonusMultiplier, float powerUse, int durability) {
 
     public static final Codec<GrindingBallData> CODEC = RecordCodecBuilder.create(instance -> instance

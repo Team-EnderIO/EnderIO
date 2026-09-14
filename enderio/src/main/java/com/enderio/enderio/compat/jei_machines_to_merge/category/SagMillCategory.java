@@ -169,7 +169,8 @@ public class SagMillCategory extends MachineRecipeCategory<RecipeHolder<SagMilli
             data = GrindingBallData.IDENTITY;
         }
 
-        return TooltipUtil.withArgs(EIOCommonLang.ENERGY_AMOUNT, NumberFormat.getIntegerInstance(Locale.ENGLISH)
-                .format(recipe.value().getEnergyCost(data)));
+//        return TooltipUtil.withArgs(EIOCommonLang.ENERGY_AMOUNT, NumberFormat.getIntegerInstance(Locale.ENGLISH)
+//                .format(recipe.value().getEnergyCost(data)));
+        return Component.literal("TODO");
     }
 }
