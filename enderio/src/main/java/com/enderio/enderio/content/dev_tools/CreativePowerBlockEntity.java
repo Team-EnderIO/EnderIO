@@ -1,6 +1,6 @@
 //package com.enderio.enderio.content.dev_tools;
 //
-//import com.enderio.enderio.api.capacitor.FixedScalable;
+//import com.enderio.enderio.api.capacitor.scaling.FixedScalable;
 //import com.enderio.enderio.api.io.energy.EnergyIOMode;
 //import com.enderio.enderio.foundation.block.entity.legacy.LegacyPoweredMachineBlockEntity;
 //import com.enderio.enderio.foundation.io.energy.MachineEnergyStorage;

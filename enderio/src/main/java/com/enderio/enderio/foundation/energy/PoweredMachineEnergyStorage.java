@@ -29,7 +29,7 @@ public class PoweredMachineEnergyStorage implements EnergyHandler, ValueIOSerial
 
     @Override
     public long getAmountAsLong() {
-        return Math.min(energyStored, getCapacityAsLong());
+        return Math.min(getCapacityAsLong(), energyStored);
     }
 
     @Override
@@ -53,6 +53,7 @@ public class PoweredMachineEnergyStorage implements EnergyHandler, ValueIOSerial
     }
 
     protected void onEnergyChanged(int previousAmount) {
+        energyStored = Math.min(getCapacityAsInt(), energyStored);
     }
 
     @Override
@@ -168,7 +169,7 @@ public class PoweredMachineEnergyStorage implements EnergyHandler, ValueIOSerial
 
     @Override
     public void deserialize(ValueInput input) {
-        energyStored = input.getIntOr(CoreNBTKeys.ENERGY_STORED, 0);
+        energyStored = Math.min(getCapacityAsInt(), input.getIntOr(CoreNBTKeys.ENERGY_STORED, 0));
     }
 
     // endregion

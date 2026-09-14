@@ -3,8 +3,8 @@ package com.enderio.enderio.content.machines.obelisks.inhibitor;
 import com.enderio.core.common.storage.layout.ItemStorageLayout;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
-import com.enderio.enderio.api.capacitor.LinearScalable;
-import com.enderio.enderio.api.capacitor.QuadraticScalable;
+import com.enderio.enderio.api.capacitor.scaling.LinearIntScalable;
+import com.enderio.enderio.api.capacitor.scaling.QuadraticIntScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.content.machines.obelisks.ObeliskAreaManager;
@@ -25,11 +25,11 @@ import org.jspecify.annotations.Nullable;
 
 public class InhibitorObeliskBlockEntity extends ObeliskBlockEntity<InhibitorObeliskBlockEntity> {
 
-    private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
+    private static final QuadraticIntScalable ENERGY_CAPACITY = new QuadraticIntScalable(CapacitorModifier.ENERGY_CAPACITY,
             MachinesConfig.COMMON.ENERGY.INHIBITOR_CAPACITY);
-    private static final LinearScalable ENERGY_USAGE = new LinearScalable(CapacitorModifier.ENERGY_USE,
+    private static final LinearIntScalable ENERGY_USAGE = new LinearIntScalable(CapacitorModifier.ENERGY_USE,
             MachinesConfig.COMMON.ENERGY.INHIBITOR_USAGE);
-    private static final LinearScalable RANGE = new LinearScalable(CapacitorModifier.ENERGY_USE,
+    private static final LinearIntScalable RANGE = new LinearIntScalable(CapacitorModifier.ENERGY_USE,
             MachinesConfig.COMMON.INHIBITOR_RANGE);
 
     public static final SingleResourceSlotKey<ItemResource> CAPACITOR = new SingleResourceSlotKey<>();
@@ -64,7 +64,7 @@ public class InhibitorObeliskBlockEntity extends ObeliskBlockEntity<InhibitorObe
 
     @Override
     public int getMaxRange() {
-        return RANGE.scaleI(this::getCapacitorData).get();
+        return RANGE.scaled(this::getCapacitorData).get();
     }
 
     @Override

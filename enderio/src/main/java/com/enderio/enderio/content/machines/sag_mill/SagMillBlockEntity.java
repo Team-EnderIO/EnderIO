@@ -6,7 +6,7 @@ import com.enderio.core.common.storage.layout.SlotTemplates;
 import com.enderio.core.common.storage.slot.MultiResourceSlotKey;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
-import com.enderio.enderio.api.capacitor.QuadraticScalable;
+import com.enderio.enderio.api.capacitor.scaling.QuadraticIntScalable;
 import com.enderio.enderio.api.components.GrindingBallData;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.enderio.client.SoundHandler;
@@ -48,9 +48,9 @@ import org.jspecify.annotations.Nullable;
 import java.util.List;
 
 public class SagMillBlockEntity extends PoweredMachineBlockEntity {
-    public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
+    public static final QuadraticIntScalable CAPACITY = new QuadraticIntScalable(CapacitorModifier.ENERGY_CAPACITY,
             MachinesConfig.COMMON.ENERGY.SAG_MILL_CAPACITY);
-    public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE,
+    public static final QuadraticIntScalable USAGE = new QuadraticIntScalable(CapacitorModifier.ENERGY_USE,
             MachinesConfig.COMMON.ENERGY.SAG_MILL_USAGE);
 
     public static final SingleResourceSlotKey<ItemResource> INPUT = new SingleResourceSlotKey<>();

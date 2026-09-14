@@ -1,7 +1,7 @@
 //package com.enderio.enderio.content.machines.capacitor_bank;
 //
 //import com.enderio.core.common.network.NetworkDataSlot;
-//import com.enderio.enderio.api.capacitor.FixedScalable;
+//import com.enderio.enderio.api.capacitor.scaling.FixedScalable;
 //import com.enderio.enderio.api.io.energy.EnergyIOMode;
 //import com.enderio.enderio.foundation.block.entity.MultiConfigurable;
 //import com.enderio.enderio.foundation.block.entity.legacy.LegacyPoweredMachineBlockEntity;
