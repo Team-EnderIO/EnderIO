@@ -16,6 +16,9 @@ featureFlags="META-INF/feature_flags.json"
 [[mixins]]
 config="enderio.mixins.json"
 
+[[mixins]]
+config="enderio.sodium.mixins.json"
+
 [[dependencies.enderio]]
 modId="minecraft"
 type="required"
