@@ -61,9 +61,9 @@ public class EnergyConfig {
 
         builder.push("alloySmelter");
         ALLOY_SMELTER_CAPACITY = builder.comment("The base energy capacity in uI.")
-                .defineInRange("capacity", 64_000, 1, Integer.MAX_VALUE);
-        ALLOY_SMELTER_USAGE = builder.comment("The base energy consumption in uI/t.")
-                .defineInRange("usage", 20, 1, Integer.MAX_VALUE);
+                .defineInRange("capacity", 3000, 1, Integer.MAX_VALUE);
+        ALLOY_SMELTER_USAGE = builder.comment("The base energy usage in uI/t.")
+                .defineInRange("usage", 5, 1, Integer.MAX_VALUE);
 
         // coal burn time = 1600
         // expected burn rate = 0.375

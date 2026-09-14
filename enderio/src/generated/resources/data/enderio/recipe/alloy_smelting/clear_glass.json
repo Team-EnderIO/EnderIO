@@ -7,7 +7,7 @@
       "ingredient": "#c:glass_blocks/colorless"
     }
   ],
-  "operation_time": 160,
+  "operation_time": 140,
   "output": {
     "id": "enderio:clear_glass"
   }

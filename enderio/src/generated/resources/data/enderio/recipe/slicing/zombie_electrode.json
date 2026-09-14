@@ -8,7 +8,7 @@
     "enderio:basic_capacitor",
     "#c:silicon"
   ],
-  "operation_time": 667,
+  "operation_time": 300,
   "output": {
     "id": "enderio:zombie_electrode"
   }

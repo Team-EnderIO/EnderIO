@@ -11,7 +11,7 @@
       "ingredient": "#c:slime_balls"
     }
   ],
-  "operation_time": 80,
+  "operation_time": 140,
   "output": {
     "count": 2,
     "id": "minecraft:black_dye"

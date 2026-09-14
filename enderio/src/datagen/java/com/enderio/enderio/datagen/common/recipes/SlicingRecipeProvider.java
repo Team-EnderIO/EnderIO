@@ -23,7 +23,7 @@ import java.util.List;
 
 public class SlicingRecipeProvider extends SubRecipeProvider {
 
-    private static final int BASE_OPERATION_TIME = 667;
+    private static final int BASE_OPERATION_TIME = 15 * 20;
 
     private HolderLookup.RegistryLookup<Item> items;
 

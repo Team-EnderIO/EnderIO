@@ -7,7 +7,7 @@
       "ingredient": "#minecraft:saplings"
     }
   ],
-  "operation_time": 25,
+  "operation_time": 20,
   "output": {
     "id": "minecraft:dead_bush"
   }
