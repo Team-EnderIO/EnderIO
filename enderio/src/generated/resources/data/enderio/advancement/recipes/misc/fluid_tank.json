@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:fluid_tank"
+        "recipes": "enderio:fluid_tank"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:reinforced_obsidian_block"
+        "recipes": "enderio:reinforced_obsidian_block"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

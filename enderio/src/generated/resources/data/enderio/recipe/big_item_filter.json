@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
     "D": "#c:dusts/obsidian",
     "P": "minecraft:paper",

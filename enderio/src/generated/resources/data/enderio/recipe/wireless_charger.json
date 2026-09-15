@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
     "C": "#c:ingots/conductive_alloy",
     "E": "enderio:ender_resonator",

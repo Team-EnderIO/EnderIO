@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:energetic_alloy_nugget"
+        "recipes": "enderio:energetic_alloy_nugget"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

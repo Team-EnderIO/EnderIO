@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:wireless_charger_antenna"
+        "recipes": "enderio:wireless_charger_antenna"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

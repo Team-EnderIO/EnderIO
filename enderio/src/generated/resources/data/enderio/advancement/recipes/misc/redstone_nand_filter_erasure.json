@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:redstone_nand_filter_erasure"
+        "recipes": "enderio:redstone_nand_filter_erasure"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

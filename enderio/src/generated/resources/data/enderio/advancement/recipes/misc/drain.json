@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:drain"
+        "recipes": "enderio:drain"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

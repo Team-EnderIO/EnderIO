@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:redstone_counting_filter"
+        "recipes": "enderio:redstone_counting_filter"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

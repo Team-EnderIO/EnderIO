@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:basic_fluid_filter"
+        "recipes": "enderio:basic_fluid_filter"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

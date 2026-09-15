@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:end_steel_nugget"
+        "recipes": "enderio:end_steel_nugget"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:collision_token_clear_glass_dp"
+        "recipes": "enderio:collision_token_clear_glass_dp"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

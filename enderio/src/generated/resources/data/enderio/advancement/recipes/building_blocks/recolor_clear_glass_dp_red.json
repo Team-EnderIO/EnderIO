@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:recolor_clear_glass_dp_red"
+        "recipes": "enderio:recolor_clear_glass_dp_red"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

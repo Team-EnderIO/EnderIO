@@ -2,27 +2,24 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
-          "functions": [
-            {
-              "function": "minecraft:copy_components",
-              "include": [
-                "enderio:soul",
-                "enderio:energy",
-                "enderio:io_config",
-                "enderio:redstone_control",
-                "minecraft:container"
-              ],
-              "source": "block_entity"
-            }
-          ],
+          "modifier": {
+            "type": "minecraft:copy_components",
+            "include": [
+              "enderio:soul",
+              "enderio:energy",
+              "enderio:io_config",
+              "enderio:redstone_control",
+              "minecraft:container"
+            ],
+            "source": "block_entity"
+          },
           "name": "enderio:powered_spawner"
         }
       ],
-      "rolls": 1.0
+      "rolls": 1
     }
   ],
   "random_sequence": "enderio:blocks/powered_spawner"

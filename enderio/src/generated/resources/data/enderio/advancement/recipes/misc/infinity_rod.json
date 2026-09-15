@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:infinity_rod"
+        "recipes": "enderio:infinity_rod"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

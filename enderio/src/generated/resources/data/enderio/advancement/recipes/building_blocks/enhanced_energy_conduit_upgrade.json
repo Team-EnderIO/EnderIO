@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:enhanced_energy_conduit_upgrade"
+        "recipes": "enderio:enhanced_energy_conduit_upgrade"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:painting_machine"
+        "recipes": "enderio:painting_machine"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

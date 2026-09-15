@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:yeta_wrench"
+        "recipes": "enderio:yeta_wrench"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

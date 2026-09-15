@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
     "E": "#c:gems/ender_crystal",
     "P": "#c:gems/pulsating_crystal",

@@ -2,72 +2,57 @@
   "type": "minecraft:chest",
   "pools": [
     {
-      "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
-          "conditions": [
-            {
-              "chance": 0.25,
-              "condition": "minecraft:random_chance"
+          "condition": {
+            "type": "minecraft:random_chance",
+            "chance": 0.25
+          },
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "max": 3,
+              "min": 1
             }
-          ],
-          "functions": [
-            {
-              "add": false,
-              "count": {
-                "type": "minecraft:uniform",
-                "max": 3.0,
-                "min": 1.0
-              },
-              "function": "minecraft:set_count"
-            }
-          ],
+          },
           "name": "enderio:dark_steel_ingot"
         },
         {
           "type": "minecraft:item",
-          "conditions": [
-            {
-              "chance": 0.3,
-              "condition": "minecraft:random_chance"
-            }
-          ],
-          "functions": [
-            {
-              "add": false,
-              "count": 1.0,
-              "function": "minecraft:set_count"
-            }
-          ],
+          "condition": {
+            "type": "minecraft:random_chance",
+            "chance": 0.3
+          },
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": 1
+          },
           "name": "minecraft:ender_pearl"
         },
         {
           "type": "minecraft:item",
-          "conditions": [
-            {
-              "chance": 0.15,
-              "condition": "minecraft:random_chance"
+          "condition": {
+            "type": "minecraft:random_chance",
+            "chance": 0.15
+          },
+          "modifier": {
+            "type": "enderio:set_loot_capacitor",
+            "range": {
+              "type": "minecraft:uniform",
+              "max": 4.0,
+              "min": 1.0
             }
-          ],
-          "functions": [
-            {
-              "function": "enderio:set_loot_capacitor",
-              "range": {
-                "type": "minecraft:uniform",
-                "max": 4.0,
-                "min": 1.0
-              }
-            }
-          ],
+          },
           "name": "enderio:loot_capacitor"
         }
       ],
       "name": "Ender IO",
       "rolls": {
         "type": "minecraft:uniform",
-        "max": 3.0,
-        "min": 1.0
+        "max": 3,
+        "min": 1
       }
     }
   ],

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:niard"
+        "recipes": "enderio:niard"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

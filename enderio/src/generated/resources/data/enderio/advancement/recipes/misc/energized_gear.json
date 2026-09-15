@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:energized_gear"
+        "recipes": "enderio:energized_gear"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

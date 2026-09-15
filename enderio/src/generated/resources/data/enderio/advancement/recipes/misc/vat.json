@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:vat"
+        "recipes": "enderio:vat"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

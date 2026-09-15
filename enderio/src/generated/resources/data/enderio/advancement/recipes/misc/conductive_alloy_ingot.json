@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:conductive_alloy_ingot"
+        "recipes": "enderio:conductive_alloy_ingot"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

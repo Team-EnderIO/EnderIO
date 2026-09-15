@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:recolor_fused_quartz_m_light_blue"
+        "recipes": "enderio:recolor_fused_quartz_m_light_blue"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

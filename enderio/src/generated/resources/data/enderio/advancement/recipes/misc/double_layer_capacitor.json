@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:double_layer_capacitor"
+        "recipes": "enderio:double_layer_capacitor"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

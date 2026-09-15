@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:photovoltaic_composite"
+        "recipes": "enderio:photovoltaic_composite"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

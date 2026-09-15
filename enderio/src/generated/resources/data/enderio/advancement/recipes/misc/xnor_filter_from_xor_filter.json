@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:xnor_filter_from_xor_filter"
+        "recipes": "enderio:xnor_filter_from_xor_filter"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

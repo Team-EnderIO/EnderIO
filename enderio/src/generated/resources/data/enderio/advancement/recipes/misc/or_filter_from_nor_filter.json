@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:or_filter_from_nor_filter"
+        "recipes": "enderio:or_filter_from_nor_filter"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

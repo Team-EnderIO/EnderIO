@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:xp_vacuum"
+        "recipes": "enderio:xp_vacuum"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

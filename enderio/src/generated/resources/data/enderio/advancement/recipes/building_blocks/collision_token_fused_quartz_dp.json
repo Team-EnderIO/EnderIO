@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:collision_token_fused_quartz_dp"
+        "recipes": "enderio:collision_token_fused_quartz_dp"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -2,66 +2,66 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "bonus_rolls": 0.0,
-      "conditions": [
-        {
-          "condition": "minecraft:inverted",
-          "term": {
-            "block": "enderio:painted_slab",
-            "condition": "minecraft:block_state_property",
-            "properties": {
-              "type": "top"
+      "condition": {
+        "type": "minecraft:all_of",
+        "terms": [
+          {
+            "type": "minecraft:inverted",
+            "term": {
+              "type": "minecraft:match_block",
+              "blocks": "enderio:painted_slab",
+              "state": {
+                "type": "top"
+              }
             }
+          },
+          {
+            "type": "minecraft:survives_explosion"
           }
-        },
-        {
-          "condition": "minecraft:survives_explosion"
-        }
-      ],
+        ]
+      },
       "entries": [
         {
           "type": "minecraft:item",
-          "functions": [
-            {
-              "function": "enderio:copy_paint",
-              "should_copy_primary": true
-            }
-          ],
+          "modifier": {
+            "type": "enderio:copy_paint",
+            "should_copy_primary": true
+          },
           "name": "enderio:painted_slab"
         }
       ],
-      "rolls": 1.0
+      "rolls": 1
     },
     {
-      "bonus_rolls": 0.0,
-      "conditions": [
-        {
-          "condition": "minecraft:inverted",
-          "term": {
-            "block": "enderio:painted_slab",
-            "condition": "minecraft:block_state_property",
-            "properties": {
-              "type": "bottom"
+      "condition": {
+        "type": "minecraft:all_of",
+        "terms": [
+          {
+            "type": "minecraft:inverted",
+            "term": {
+              "type": "minecraft:match_block",
+              "blocks": "enderio:painted_slab",
+              "state": {
+                "type": "bottom"
+              }
             }
+          },
+          {
+            "type": "minecraft:survives_explosion"
           }
-        },
-        {
-          "condition": "minecraft:survives_explosion"
-        }
-      ],
+        ]
+      },
       "entries": [
         {
           "type": "minecraft:item",
-          "functions": [
-            {
-              "function": "enderio:copy_paint",
-              "should_copy_primary": false
-            }
-          ],
+          "modifier": {
+            "type": "enderio:copy_paint",
+            "should_copy_primary": false
+          },
           "name": "enderio:painted_slab"
         }
       ],
-      "rolls": 1.0
+      "rolls": 1
     }
   ],
   "random_sequence": "enderio:blocks/painted_slab"

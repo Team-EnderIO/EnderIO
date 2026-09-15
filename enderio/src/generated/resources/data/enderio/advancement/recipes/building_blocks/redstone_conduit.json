@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:redstone_conduit"
+        "recipes": "enderio:redstone_conduit"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
