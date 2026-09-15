@@ -299,7 +299,7 @@ public class IOConfigOverlay extends BaseOverlay {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, NEIGHBOURS_BTN, neighBtnRect.getX(), neighBtnRect.getY(), 16, 16);
         if (neighBtnRect.contains(mouseX, mouseY)) {
             graphics.tooltip(MINECRAFT.font, List.of(ClientTooltipComponent.create(EIOCommonLang.TOGGLE_NEIGHBOUR.copy().withStyle(ChatFormatting.WHITE).getVisualOrderText())),
-                    mouseX, mouseY, DefaultTooltipPositioner.INSTANCE, null);
+                    mouseX, mouseY, DefaultTooltipPositioner.INSTANCE, null, false);
         }
     }
 

@@ -6,6 +6,7 @@ import com.enderio.enderio.init.EIOLootModifiers;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.Holder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -27,7 +28,7 @@ public class CopyPaintFunction extends LootItemConditionalFunction {
 
     private final boolean shouldCopyPrimary;
 
-    CopyPaintFunction(List<LootItemCondition> conditions, boolean shouldCopyPrimary) {
+    CopyPaintFunction(Optional<Holder<LootItemCondition>> conditions, boolean shouldCopyPrimary) {
         super(conditions);
         this.shouldCopyPrimary = shouldCopyPrimary;
     }
@@ -39,7 +40,7 @@ public class CopyPaintFunction extends LootItemConditionalFunction {
 
     @Override
     protected ItemStack run(ItemStack stack, LootContext context) {
-        BlockEntity blockEntity = context.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
+        BlockEntity blockEntity = context.getOptional(LootContextParams.BLOCK_ENTITY);
 
         if (blockEntity instanceof PaintedBlockEntity paintedBlockEntity) {
             Optional<Block> currentPaint = shouldCopyPrimary

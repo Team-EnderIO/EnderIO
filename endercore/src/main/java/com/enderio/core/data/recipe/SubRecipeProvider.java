@@ -8,6 +8,7 @@ import net.minecraft.advancements.predicates.ItemPredicate;
 import net.minecraft.advancements.predicates.MinMaxBounds;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderSet;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -20,11 +21,11 @@ import java.util.Optional;
 
 public abstract class SubRecipeProvider {
 
-    public abstract void buildRecipes(HolderLookup.Provider registries, RecipeOutput output);
+    public abstract void buildRecipes(RecipeOutput output);
 
     // Helpers copied from RecipeProvider.
     protected static Criterion<EnterBlockTrigger.TriggerInstance> insideOf(Block block) {
-        return CriteriaTriggers.ENTER_BLOCK.createCriterion(new EnterBlockTrigger.TriggerInstance(Optional.empty(), Optional.of(block.builtInRegistryHolder()), Optional.empty()));
+        return CriteriaTriggers.ENTER_BLOCK.createCriterion(new EnterBlockTrigger.TriggerInstance(Optional.empty(), Optional.of(HolderSet.direct(block.builtInRegistryHolder())), Optional.empty()));
     }
 
     protected static Criterion<InventoryChangeTrigger.TriggerInstance> has(HolderGetter<Item> itemsRegistry, MinMaxBounds.Ints count, ItemLike item) {

@@ -309,7 +309,7 @@ public class EIOBlocks {
         .registerBlock("cold_fire", ColdFireBlock::new, () -> BlockBehaviour.Properties.ofFullCopy(Blocks.FIRE).noLootTable());
 
     public static final DeferredBlock<EnderSkullBlock> ENDERMAN_HEAD = registerWithItem("enderman_head", EnderSkullBlock::new,
-            BlockBehaviour.Properties.ofFullCopy(Blocks.SKELETON_SKULL).instrument(NoteBlockInstrument.SKELETON).strength(1.0F).pushReaction(PushReaction.DESTROY));
+            BlockBehaviour.Properties.ofFullCopy(Blocks.SKELETON_SKULL).instrument(NoteBlockInstrument.SKELETON).strength(1.0F).pushReaction(PushReaction.POPPED));
 
     public static final DeferredBlock<WallEnderSkullBlock> WALL_ENDERMAN_HEAD = BLOCKS.registerBlock(
         "wall_enderman_head",
@@ -318,7 +318,7 @@ public class EIOBlocks {
             .ofFullCopy(Blocks.SKELETON_SKULL)
             .strength(1.0F)
             .overrideLootTable(ENDERMAN_HEAD.get().getLootTable())
-            .pushReaction(PushReaction.DESTROY));
+            .pushReaction(PushReaction.POPPED));
 
     public static final DeferredBlock<IndustrialInsulationBlock> INDUSTRIAL_INSULATION = registerWithItem("industrial_insulation",
         IndustrialInsulationBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.SPONGE));
@@ -332,14 +332,14 @@ public class EIOBlocks {
         props -> new FluidTankBlock(EIOBlockEntities.FLUID_TANK::get, props),
         b -> b
             .strength(2.5f, 8)
-            .isViewBlocking((state, level, pos) -> false)
+            .isViewBlocking((_, _, _, _) -> false)
             .noOcclusion());
 
     public static final DeferredBlock<FluidTankBlock> PRESSURIZED_FLUID_TANK = BLOCKS.registerBlock("pressurized_fluid_tank",
         props -> new FluidTankBlock(EIOBlockEntities.PRESSURIZED_FLUID_TANK::get, props),
         b -> b
             .strength(2.5f, 8)
-            .isViewBlocking((state, level, pos) -> false)
+            .isViewBlocking((_, _, _, _) -> false)
             .noOcclusion());
 
     // Enchanter
@@ -347,14 +347,14 @@ public class EIOBlocks {
         BlockBehaviour.Properties.of()
             .strength(2.5f, 8)
             .noOcclusion()
-            .isViewBlocking((state, level, pos) -> false));
+            .isViewBlocking((_, _, _, _) -> false));
 
     // Enderface
     public static final DeferredBlock<EnderfaceBlock> ENDERFACE = registerWithItem("enderface", EnderfaceBlock::new,
         BlockBehaviour.Properties.of()
             .strength(2.5f, 8)
             .noOcclusion()
-            .isViewBlocking((state, level, pos) -> false)
+            .isViewBlocking((_, _, _, _) -> false)
             .requiredFeatures(EIOFeatureFlags.ENDERFACE));
 
     // Progress Machines
@@ -397,14 +397,14 @@ public class EIOBlocks {
         WirelessAntennaBlock::new,
         BlockBehaviour.Properties.of()
             .strength(2.5f, 8)
-            .isViewBlocking((state, level, pos) -> false)
+            .isViewBlocking((_, _, _, _) -> false)
             .noOcclusion());
 
     public static final DeferredBlock<WirelessAntennaBlock> WIRELESS_CHARGER_ANTENNA_ADVANCED = registerWithItem("wireless_charger_antenna_advanced",
         WirelessAntennaBlock::new,
         BlockBehaviour.Properties.of()
             .strength(2.5f, 8)
-            .isViewBlocking((state, level, pos) -> false)
+            .isViewBlocking((_, _, _, _) -> false)
             .noOcclusion());
 
     // Creative Power
@@ -421,7 +421,7 @@ public class EIOBlocks {
     public static final DeferredBlock<MindKillerBlock> MIND_KILLER = registerWithItem("mind_killer", MindKillerBlock::new,
         BlockBehaviour.Properties.of()
             .strength(2.5f, 8)
-            .isViewBlocking((state, level, pos) -> false)
+            .isViewBlocking((_, _, _, _) -> false)
             .noOcclusion());
 
     // Vacuum Machines
@@ -472,7 +472,7 @@ public class EIOBlocks {
     public static final DeferredBlock<NiardBlock> NIARD = registerWithItem("niard", NiardBlock::new,
         BlockBehaviour.Properties.of()
             .strength(2.5f, 8)
-            .isViewBlocking((state, level, pos) -> false)
+            .isViewBlocking((_, _, _, _) -> false)
             .noOcclusion()
             .requiredFeatures(EIOFeatureFlags.NIARD));
 
@@ -562,7 +562,7 @@ public class EIOBlocks {
             props -> new MachineBlock<T>(blockEntityType.get()::get, props),
             BlockBehaviour.Properties.of()
                 .strength(2.5f, 8)
-                .isViewBlocking((state, level, pos) -> false)
+                .isViewBlocking((_, _, _, _) -> false)
                 .noOcclusion());
     }
 

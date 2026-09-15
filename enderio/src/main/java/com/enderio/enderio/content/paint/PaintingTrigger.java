@@ -6,12 +6,13 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.triggers.Criterion;
 import net.minecraft.advancements.triggers.SimpleCriterionTrigger;
-import net.minecraft.advancements.predicates.ContextAwarePredicate;
 import net.minecraft.advancements.predicates.entity.EntityPredicate;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 import java.util.Optional;
 
@@ -31,12 +32,12 @@ public class PaintingTrigger extends SimpleCriterionTrigger<PaintingTrigger.Trig
         return TriggerInstance.CODEC;
     }
 
-    public record TriggerInstance(Optional<ContextAwarePredicate> player, Block paint)
+    public record TriggerInstance(Optional<Holder<LootItemCondition>> player, Block paint)
         implements SimpleInstance {
 
         private static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
+                LootItemCondition.CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
                 BuiltInRegistries.BLOCK.byNameCodec().fieldOf("paint").forGetter(TriggerInstance::paint)
             ).apply(instance, TriggerInstance::new));
 

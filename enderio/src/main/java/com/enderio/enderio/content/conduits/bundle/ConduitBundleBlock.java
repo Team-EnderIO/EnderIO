@@ -22,6 +22,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Prediction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -176,7 +177,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
 
     @Override
     public @Nullable PushReaction getPistonPushReaction(BlockState state) {
-        return PushReaction.BLOCK;
+        return PushReaction.IMMOVEABLE;
     }
 
     @Override
@@ -405,7 +406,8 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
         if (addResult instanceof AddConduitResult.Upgrade(Holder<Conduit<?, ?>> replacedConduit)) {
             if (!player.getAbilities().instabuild) {
                 stack.shrink(1);
-                player.getInventory().placeItemBackInInventory(ConduitBlockItem.getStackFor(replacedConduit, 1));
+                // TODO: 26.1, check...
+                player.getInventory().placeItemBackInInventory(ConduitBlockItem.getStackFor(replacedConduit, 1), Prediction.PREDICTED);
             }
         } else if (addResult instanceof AddConduitResult.Insert) {
             if (!player.getAbilities().instabuild) {
@@ -488,8 +490,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
     // region Hardcoded Redstone Logic
 
     @Override
-    public boolean canConnectRedstone(BlockState state, BlockGetter level, BlockPos pos,
-            @Nullable Direction direction) {
+    protected boolean shouldRedstoneWireConnectTo(BlockState state, BlockGetter level, BlockPos pos, @Nullable Direction direction) {
         if (direction == null) {
             return false;
         }

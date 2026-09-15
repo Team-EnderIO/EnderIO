@@ -4,10 +4,10 @@ import com.enderio.enderio.EnderIO;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.triggers.SimpleCriterionTrigger;
-import net.minecraft.advancements.predicates.ContextAwarePredicate;
-import net.minecraft.advancements.predicates.entity.EntityPredicate;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 import java.util.Optional;
 
@@ -26,10 +26,10 @@ public class UseGliderTrigger extends SimpleCriterionTrigger<UseGliderTrigger.Tr
         return TriggerInstance.CODEC;
     }
 
-    public record TriggerInstance(Optional<ContextAwarePredicate> player)
+    public record TriggerInstance(Optional<Holder<LootItemCondition>> player)
         implements SimpleInstance {
         private static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player)
+            LootItemCondition.CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player)
         ).apply(instance, TriggerInstance::new));
     }
 }

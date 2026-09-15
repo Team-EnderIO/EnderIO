@@ -25,6 +25,7 @@ public class ConduitBaker implements ModelBaker {
     private final ConduitMaterialBaker materials;
 
     private static SpriteLoader.@Nullable Preparations blockAtlas;
+    private static SpriteLoader.@Nullable Preparations itemAtlas;
     private static Map<Material, ConduitMaterialBaker> materialBakers = new HashMap<>();
 
     public ConduitBaker(ModelBaker baker, Material material) {
@@ -63,20 +64,34 @@ public class ConduitBaker implements ModelBaker {
         @SuppressWarnings("unused") Executor taskExecutor,
         PreparableReloadListener.PreparationBarrier preparationBarrier,
         Executor reloadExecutor) {
-        return currentReload.get(AtlasManager.PENDING_STITCH)
+
+        var blocks = currentReload.get(AtlasManager.PENDING_STITCH)
             .get(AtlasIds.BLOCKS)
             .thenCompose(preparationBarrier::wait)
-            .thenAcceptAsync(ConduitBaker::reload, reloadExecutor);
+            .thenAcceptAsync(ConduitBaker::reloadBlockAtlas, reloadExecutor);
+
+        var items = currentReload.get(AtlasManager.PENDING_STITCH)
+            .get(AtlasIds.ITEMS)
+            .thenCompose(preparationBarrier::wait)
+            .thenAcceptAsync(ConduitBaker::reloadItemAtlas, reloadExecutor);
+
+        return CompletableFuture.allOf(blocks, items);
     }
 
-    private static void reload(SpriteLoader.Preparations blockAtlas) {
+    private static void reloadBlockAtlas(SpriteLoader.Preparations blockAtlas) {
         ConduitBaker.blockAtlas = blockAtlas;
+        materialBakers.clear();
+    }
+
+    private static void reloadItemAtlas(SpriteLoader.Preparations itemAtlas) {
+        ConduitBaker.itemAtlas = itemAtlas;
         materialBakers.clear();
     }
 
     static class ConduitMaterialBaker extends MaterialBaker {
         ConduitMaterialBaker(MaterialBaker materialBaker, Material sprite) {
-            super(Objects.requireNonNull(blockAtlas, "Not ready to bake materials").missing());
+            super(Objects.requireNonNull(blockAtlas, "Not ready to bake materials"),
+                Objects.requireNonNull(itemAtlas, "Not ready to bake materials"));
             this.materialBaker = materialBaker;
             this.sprite = sprite;
         }
@@ -87,11 +102,6 @@ public class ConduitBaker implements ModelBaker {
         @Override
         public Material.Baked get(Material material, ModelDebugName modelDebugName) {
             return materialBaker.get(material, modelDebugName);
-        }
-
-        @Override
-        protected Material.Baked bake(Material material) {
-            return materialBaker.get(material, () -> "conduit_baker");
         }
 
         @Override

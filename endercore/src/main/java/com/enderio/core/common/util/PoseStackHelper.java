@@ -22,7 +22,7 @@ public class PoseStackHelper {
             angle = (float) Math.toRadians(angle);
         }
 
-        poseStack.mulPose(axis.rotation(angle));
+        poseStack.rotate(axis, angle);
         poseStack.translate(-pivot.x(), -pivot.y(), -pivot.z());
     }
 }

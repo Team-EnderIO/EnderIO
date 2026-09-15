@@ -22,8 +22,10 @@ import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.state.level.QuadParticleRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.UvMapping;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.resources.model.geometry.ItemQuads;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -65,6 +67,11 @@ public class IOConfigGhostSubmitNodeCollector implements SubmitNodeCollector {
     }
 
     @Override
+    public void submitTextBackground(PoseStack poseStack, float x0, float y0, float x1, float y1, int color, Font.DisplayMode displayMode, int lightCoords) {
+        passthrough.submitTextBackground(poseStack, x0, y0, x1, y1, color, displayMode, lightCoords);
+    }
+
+    @Override
     public void submitFlame(PoseStack poseStack, EntityRenderState renderState, Quaternionf rotation) {
         passthrough.submitFlame(poseStack, renderState, rotation);
     }
@@ -76,9 +83,24 @@ public class IOConfigGhostSubmitNodeCollector implements SubmitNodeCollector {
 
     // Redirects to the ghost model renderer
     @Override
-    public <S> void submitModel(Model<? super S> model, S state, PoseStack poseStack, RenderType renderType, int lightCoords, int overlayCoords,
-        int tintedColor, @Nullable TextureAtlasSprite sprite, int outlineColor, ModelFeatureRenderer.@Nullable CrumblingOverlay crumblingOverlay) {
-        passthrough.submitModel(model, state, poseStack, renderType, lightCoords, overlayCoords, tintedColor, sprite, outlineColor, crumblingOverlay);
+    public <S> void submitModel(
+        Model<? super S> model,
+        S state,
+        PoseStack poseStack,
+        RenderType renderType,
+        int lightCoords,
+        int overlayCoords,
+        int tintedColor,
+        @Nullable UvMapping uvMapping,
+        int outlineColor
+    ) {
+        passthrough.submitModel(model, state, poseStack, renderType, lightCoords, overlayCoords, tintedColor, uvMapping, outlineColor);
+    }
+
+    @Override
+    public <S> void submitCrumblingOverlay(Model<? super S> model, S state, PoseStack poseStack, RenderType renderType, int lightCoords, int overlayCoords,
+        int tintedColor, ModelFeatureRenderer.CrumblingOverlay crumblingOverlay) {
+        passthrough.submitCrumblingOverlay(model, state, poseStack, renderType, lightCoords, overlayCoords, tintedColor, crumblingOverlay);
     }
 
     @Override
@@ -124,8 +146,8 @@ public class IOConfigGhostSubmitNodeCollector implements SubmitNodeCollector {
     }
 
     @Override
-    public void submitBreakingBlockModel(PoseStack poseStack, List<BlockStateModelPart> parts, int progress) {
-        passthrough.submitBreakingBlockModel(poseStack, parts, progress);
+    public void submitBreakingBlockModel(PoseStack poseStack, List<BlockStateModelPart> parts, int progress, final boolean isBlockTranslucent) {
+        passthrough.submitBreakingBlockModel(poseStack, parts, progress, isBlockTranslucent);
     }
 
     @Override
@@ -134,8 +156,16 @@ public class IOConfigGhostSubmitNodeCollector implements SubmitNodeCollector {
     }
 
     @Override
-    public void submitItem(PoseStack poseStack, ItemDisplayContext displayContext, int lightCoords, int overlayCoords, int outlineColor, int[] tintLayers,
-        List<BakedQuad> quads, ItemStackRenderState.FoilType foilType) {
+    public void submitItem(
+        PoseStack poseStack,
+        ItemDisplayContext displayContext,
+        int lightCoords,
+        int overlayCoords,
+        int outlineColor,
+        int[] tintLayers,
+        ItemQuads quads,
+        ItemStackRenderState.FoilType foilType
+    ) {
         passthrough.submitItem(poseStack, displayContext, lightCoords, overlayCoords, outlineColor, tintLayers, quads, foilType);
     }
 

@@ -64,7 +64,7 @@ public class IOOverlayBlockStateModel implements DynamicBlockStateModel {
         };
 
         TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.BLOCKS).getSprite(tex);
-        return BakedQuad.MaterialInfo.of(new Material.Baked(sprite, false), Transparency.TRANSLUCENT, -1, true, 0, true);
+        return BakedQuad.MaterialInfo.of(new Material.Baked(sprite, false), Transparency.TRANSLUCENT, -1, null, 0, true);
     }
 
 

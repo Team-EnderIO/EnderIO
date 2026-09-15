@@ -22,7 +22,7 @@ public record ClientboundFarmStationSoulPacket(Map<Identifier, FarmSoul.SoulData
 
     public ClientboundFarmStationSoulPacket(FriendlyByteBuf buf) {
         this(buf.readMap(FriendlyByteBuf::readIdentifier,
-                buff -> new FarmSoul.SoulData(buff.readIdentifier(), buff.readFloat(), buff.readInt(),
+                (buff, id) -> new FarmSoul.SoulData(id, buff.readFloat(), buff.readInt(),
                         buff.readFloat())));
     }
 

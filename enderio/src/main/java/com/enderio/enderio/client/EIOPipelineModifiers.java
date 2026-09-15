@@ -1,8 +1,8 @@
 package com.enderio.enderio.client;
 
 import com.enderio.enderio.EnderIO;
-import com.mojang.blaze3d.pipeline.BlendFunction;
-import com.mojang.blaze3d.pipeline.ColorTargetState;
+import com.mojang.renderpearl.api.pipeline.BlendFunction;
+import com.mojang.renderpearl.api.pipeline.ColorTargetState;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.ResourceKey;
 import net.neoforged.api.distmarker.Dist;

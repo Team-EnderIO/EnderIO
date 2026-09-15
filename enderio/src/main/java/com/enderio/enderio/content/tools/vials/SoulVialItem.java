@@ -16,6 +16,7 @@ import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.util.Prediction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -124,7 +125,7 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
                 player.setItemInHand(usedHand, filledVial);
             } else {
                 if (!player.addItem(filledVial)) {
-                    player.drop(filledVial, false);
+                    player.drop(filledVial, false, Prediction.SERVER_ONLY);
                 }
             }
             return InteractionResult.SUCCESS;
@@ -149,7 +150,7 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
             context.getItemInHand().shrink(1);
             var emptyVial = EIOItems.SOUL_VIAL.get().getDefaultInstance();
             if (!player.addItem(emptyVial)) {
-                player.drop(emptyVial, false);
+                player.drop(emptyVial, false, Prediction.SERVER_ONLY);
             }
         };
 

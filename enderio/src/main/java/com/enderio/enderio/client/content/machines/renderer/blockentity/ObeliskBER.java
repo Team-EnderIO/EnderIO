@@ -51,13 +51,13 @@ public class ObeliskBER implements BlockEntityRenderer<BlockEntity, BlockEntityR
         Vec3 position = minecraft.player.position();
         float f1 = (float) (Mth.atan2(position.z - blockEntityRenderState.blockPos.getZ() - 0.5D,
             position.x - blockEntityRenderState.blockPos.getX() - 0.5D) * 180.0f / Math.PI + 90);
-        poseStack.mulPose(Axis.YP.rotationDegrees(-f1 + 180));
+        poseStack.rotate(Axis.YP.rotationDegrees(-f1 + 180));
         ItemStack stack = new ItemStack(supplier.get());
         ItemStackRenderState renderState = new ItemStackRenderState();
         minecraft.getItemModelResolver().updateForTopItem(renderState, stack, ItemDisplayContext.GUI, null, null, 0);
         if (stack.getItem() instanceof BlockItem) { //Blocks are in iso, let's correct that
-            poseStack.mulPose(Axis.YP.rotationDegrees(-45));
-            poseStack.mulPose(Axis.XP.rotationDegrees(-30));
+            poseStack.rotate(Axis.YP.rotationDegrees(-45));
+            poseStack.rotate(Axis.XP.rotationDegrees(-30));
             poseStack.scale(1.2f, 1.2f, 1.2f);
         }
 

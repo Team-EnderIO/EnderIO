@@ -23,17 +23,11 @@ import net.minecraft.world.level.Level;
 
 public class BlockDetectorBlock extends DirectionalBlock {
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
-    public static final MapCodec<BlockDetectorBlock> CODEC = simpleCodec(BlockDetectorBlock::new);
 
     public BlockDetectorBlock(Properties p_55926_) {
         super(p_55926_);
         this.registerDefaultState(
                 this.stateDefinition.any().setValue(FACING, Direction.SOUTH).setValue(POWERED, Boolean.valueOf(false)));
-    }
-
-    @Override
-    protected MapCodec<? extends DirectionalBlock> codec() {
-        return CODEC;
     }
 
     @Override
@@ -58,8 +52,7 @@ public class BlockDetectorBlock extends DirectionalBlock {
     }
 
     @Override
-    public boolean canConnectRedstone(BlockState state, BlockGetter level, BlockPos pos,
-            @Nullable Direction direction) {
+    protected boolean shouldRedstoneWireConnectTo(BlockState state, BlockGetter level, BlockPos pos, @Nullable Direction direction) {
         return state.getValue(FACING) == direction;
     }
 
@@ -70,7 +63,7 @@ public class BlockDetectorBlock extends DirectionalBlock {
 
     @Override
     protected int getSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
-        if (!canConnectRedstone(state, level, pos, direction)) {
+        if (!shouldRedstoneWireConnectTo(state, level, pos, direction)) {
             state.setValue(POWERED, false);
             return 0;
         }

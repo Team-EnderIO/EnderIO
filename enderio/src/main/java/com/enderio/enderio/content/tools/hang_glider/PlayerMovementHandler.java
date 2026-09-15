@@ -84,7 +84,7 @@ public class PlayerMovementHandler {
         player.fallDistance = 0f;
         if (player instanceof ServerPlayer serverPlayer) {
             EIOCriterions.USE_GLIDER.get().trigger(serverPlayer);
-            player.hurtMarked = true;
+            player.syncVelocity = true;
         } else if (player.level().isClientSide()) {
             ClientClassLoadingProtection.playSound(player);
         }

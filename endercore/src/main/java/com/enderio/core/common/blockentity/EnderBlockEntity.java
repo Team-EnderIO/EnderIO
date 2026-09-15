@@ -8,22 +8,30 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.LogicalSide;
 import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueOutput;
 import com.enderio.core.annotations.UseOnly;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
+import net.neoforged.neoforge.common.loot.NeoForgeLootContextParams;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Base block entity class for EnderIO.
@@ -41,6 +49,19 @@ public class EnderBlockEntity extends BlockEntity {
 
     public EnderBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
+    }
+
+    protected LootContext getLootContext(ServerLevel level) {
+        return this.getLootContext(level, ItemStack.EMPTY);
+    }
+
+    protected LootContext getLootContext(ServerLevel level, ItemStack queriedStack) {
+        return (new LootContext.Builder((new LootParams.Builder(level))
+            .withParameter(LootContextParams.BLOCK_STATE, this.getBlockState())
+            .withParameter(LootContextParams.BLOCK_ENTITY, this)
+            .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(this.getBlockPos()))
+            .withOptionalParameter(NeoForgeLootContextParams.QUERIED_STACK, queriedStack.isEmpty() ? null : queriedStack)
+            .create(LootContextParamSets.CONTAINER_PROCESS))).create(Optional.empty());
     }
 
     // region Ticking

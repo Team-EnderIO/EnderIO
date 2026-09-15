@@ -21,8 +21,6 @@ import org.jspecify.annotations.Nullable;
 
 public class EnchanterBlock extends Block implements EntityBlock {
 
-    private static final MapCodec<EnchanterBlock> CODEC = simpleCodec(EnchanterBlock::new);
-
     private static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     public EnchanterBlock(Properties properties) {
@@ -40,11 +38,6 @@ public class EnchanterBlock extends Block implements EntityBlock {
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
-    }
-
-    @Override
-    protected MapCodec<EnchanterBlock> codec() {
-        return CODEC;
     }
 
     @Override

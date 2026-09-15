@@ -103,15 +103,15 @@ dependencies {
 
     // JEI
     compileOnly(libs.bundles.jeiApi)
-     localRuntime(libs.bundles.jei)
+//     localRuntime(libs.bundles.jei)
 
     // CC: Tweaked
     compileOnly(libs.bundles.ccTweakedApi)
-    localRuntime(libs.ccTweakedForge)
+//    localRuntime(libs.ccTweakedForge)
 
     // Jade for conduit addon
     compileOnly(libs.jade)
-    localRuntime(libs.jade)
+//    localRuntime(libs.jade)
 
     //Athena ctm
     // 26.2-port: third-party mod interaction commented out
@@ -153,11 +153,11 @@ dependencies {
 
 	// Curio compat
     compileOnly(libs.curios)
-    localRuntime(libs.curios)
+//    localRuntime(libs.curios)
 
     // Sodium + Iris to test shader compatibility
     compileOnly(libs.iris)
-    localRuntime(libs.sodium)
+//    localRuntime(libs.sodium)
 //    localRuntime(libs.iris)
 
     // Unit tests

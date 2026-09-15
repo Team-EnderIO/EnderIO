@@ -76,11 +76,11 @@ public class MachinePayloadHandler {
 
         public void handleEnderfaceInteract(ServerboundEnderfaceInteractPacket packet, IPayloadContext context) {
             context.enqueueWork(() -> {
-                var pos = packet.getHitResult().getBlockPos();
+                var pos = packet.hitResult().getBlockPos();
                 var level = context.player().level();
                 if (EnderfaceBlockEntity.canPlayerInteractWithBlock(context.player(), level, pos)) {
                     var state = level.getBlockState(pos);
-                    state.useWithoutItem(level, context.player(), packet.getHitResult());
+                    state.useWithoutItem(level, context.player(), packet.hitResult());
                 }
             });
         }

@@ -63,7 +63,7 @@ public record RedstoneConduit(Identifier texture, Identifier activeTexture, Comp
         BlockPos neighbor = conduitPos.relative(direction);
         BlockState blockState = level.getBlockState(neighbor);
         return blockState.is(EIOTags.Blocks.REDSTONE_CONNECTABLE)
-                || blockState.canRedstoneConnectTo(level, neighbor, direction.getOpposite());
+                || blockState.shouldRedstoneWireConnectTo(level, neighbor, direction.getOpposite());
     }
 
     @Override

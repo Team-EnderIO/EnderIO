@@ -6,6 +6,7 @@ import com.enderio.enderio.foundation.tag.EIOTags;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
@@ -19,27 +20,30 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
 import net.neoforged.neoforge.common.loot.LootModifier;
 
+import java.util.Optional;
+
 public class BrokenSpawnerLootModifier extends LootModifier {
     public static final MapCodec<BrokenSpawnerLootModifier> CODEC = RecordCodecBuilder.mapCodec(inst -> codecStart(inst).apply(inst, BrokenSpawnerLootModifier::new));
 
     /**
      * Constructs a LootModifier.
      *
-     * @param conditionsIn the ILootConditions that need to be matched before the loot is modified.
+     * @param condition the ILootConditions that need to be matched before the loot is modified.
      */
-    public BrokenSpawnerLootModifier(LootItemCondition[] conditionsIn, int priority) {
-        super(conditionsIn, priority);
+    public BrokenSpawnerLootModifier(Optional<Holder<LootItemCondition>> condition, int priority) {
+        super(condition, priority);
     }
 
     @Override
     protected ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
-        BlockEntity entity = context.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
+        BlockEntity entity = context.getOptional(LootContextParams.BLOCK_ENTITY);
         if (entity == null) {
             return generatedLoot;
         }
 
         if (entity instanceof SpawnerBlockEntity spawnerBlockEntity) {
-            if (!context.getParameter(LootContextParams.TOOL).is(EIOTags.Items.BROKEN_SPAWNER_DENY_LIST)) {
+            var tool = context.getOptional(LootContextParams.TOOL);
+            if (tool == null || !tool.is(EIOTags.Items.BROKEN_SPAWNER_DENY_LIST)) {
                 if (context.getRandom().nextFloat() < BaseConfig.COMMON.BLOCKS.BROKEN_SPAWNER_DROP_CHANCE.get()) {
                     BaseSpawner spawner = spawnerBlockEntity.getSpawner();
                     CompoundTag entityTag = spawner.nextSpawnData.getEntityToSpawn();

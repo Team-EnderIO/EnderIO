@@ -1,9 +1,12 @@
 package com.enderio.enderio.content.paint.block;
 
 import com.enderio.enderio.content.paint.block.entity.SinglePaintedBlockEntity;
+import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.FenceBlock;
@@ -29,4 +32,12 @@ public class PaintedFenceBlock extends FenceBlock implements EntityBlock, Painte
         return getPaintedStack(level, pos, this);
     }
 
+    @Override
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity by, ItemStack itemStack) {
+        var paintData = itemStack.get(EIODataComponents.BLOCK_PAINT);
+        if (!level.isClientSide() && paintData != null &&
+            level.getBlockEntity(pos) instanceof SinglePaintedBlockEntity painted) {
+            painted.setPrimaryPaint(paintData.paint());
+        }
+    }
 }
