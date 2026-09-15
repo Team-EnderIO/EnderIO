@@ -156,19 +156,23 @@ public class EnderGameTestHelper extends ExtendedGameTestHelper {
 
     // endregion
 
-    public void fillContainer(int x, int y, int z, Fluid fluid, int amount) {
+    public void fillContainer(int x, int y, int z, FluidStack stack) {
         var fluidHandler = getLevel().getCapability(Capabilities.FluidHandler.BLOCK, absolutePos(new BlockPos(x, y, z)),
             null);
         if (fluidHandler == null) {
             throw new GameTestAssertException("No fluid handler at " + x + "," + y + "," + z);
         }
 
-        int filled = fluidHandler.fill(new FluidStack(fluid, amount), IFluidHandler.FluidAction.EXECUTE);
+        int filled = fluidHandler.fill(stack, IFluidHandler.FluidAction.EXECUTE);
 
-        if (filled < amount) {
+        if (filled < stack.getAmount()) {
             throw new GameTestAssertException(
-                "Could not fill tank with all " + amount + " of the fluid into container at " + x + "," + y + "," + z);
+                "Could not fill tank with all " + stack.getAmount() + " of the fluid into container at " + x + "," + y + "," + z);
         }
+    }
+
+    public void fillContainer(int x, int y, int z, Fluid fluid, int amount) {
+        fillContainer(x, y, z, new FluidStack(fluid, amount));
     }
 
     public long getAmountInHandler(int x, int y, int z, Fluid fluid) {
@@ -186,6 +190,21 @@ public class EnderGameTestHelper extends ExtendedGameTestHelper {
         }
 
         return totalAmount;
+    }
+
+    public void assertContainerHasExactly(int x, int y, int z, FluidStack stack) {
+        var fluidHandler = getLevel().getCapability(Capabilities.FluidHandler.BLOCK, absolutePos(new BlockPos(x, y, z)),
+            null);
+        if (fluidHandler == null) {
+            throw new GameTestAssertException("No fluid handler at " + x + "," + y + "," + z);
+        }
+
+        int foundAmount = fluidHandler.drain(stack.copyWithAmount(Integer.MAX_VALUE), IFluidHandler.FluidAction.SIMULATE).getAmount();
+
+        if (foundAmount != stack.getAmount()) {
+            throw new GameTestAssertException("Expected " + stack.getAmount() + " of " + stack + " in tank at " + x + "," + y
+                + "," + z + " but found " + foundAmount);
+        }
     }
 
     public void assertContainerHasExactly(int x, int y, int z, Fluid fluid, int amount) {
