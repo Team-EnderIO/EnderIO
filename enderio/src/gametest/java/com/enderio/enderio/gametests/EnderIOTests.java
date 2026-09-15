@@ -1,5 +1,6 @@
 package com.enderio.enderio.gametests;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -13,7 +14,6 @@ import net.neoforged.testframework.conf.ClientConfiguration;
 import net.neoforged.testframework.conf.Feature;
 import net.neoforged.testframework.conf.FrameworkConfiguration;
 import net.neoforged.testframework.impl.MutableTestFramework;
-import org.lwjgl.glfw.GLFW;
 
 @Mod(EnderIOTests.MOD_ID)
 public class EnderIOTests {
@@ -24,8 +24,8 @@ public class EnderIOTests {
         final MutableTestFramework framework = FrameworkConfiguration
                 .builder(Identifier.fromNamespaceAndPath(MOD_ID, "tests"))
                 .clientConfiguration(() -> ClientConfiguration.builder()
-                        .toggleOverlayKey(GLFW.GLFW_KEY_O)
-                        .openManagerKey(GLFW.GLFW_KEY_M)
+                        .toggleOverlayKey(InputConstants.KEY_O)
+                        .openManagerKey(InputConstants.KEY_M)
                         .build())
                 .enable(Feature.CLIENT_SYNC, Feature.TEST_STORE)
                 .build()

@@ -6,6 +6,7 @@ import com.enderio.enderio.content.machines.slicer.SlicingRecipe;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOItems;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -23,15 +24,15 @@ import java.util.List;
 
 public class SlicingRecipeProvider extends SubRecipeProvider {
 
-    private HolderLookup.RegistryLookup<Item> items;
+    private HolderGetter<Item> items;
 
     protected Ingredient ingredientFromTag(TagKey<Item> tag) {
         return Ingredient.of(this.items.getOrThrow(tag));
     }
 
     @Override
-    public void buildRecipes(HolderLookup.Provider registries, RecipeOutput recipeOutput) {
-        this.items = registries.lookupOrThrow(Registries.ITEM);
+    public void buildRecipes(RecipeOutput recipeOutput) {
+        this.items = recipeOutput.lookup(Registries.ITEM);
         // TODO: Tormented enderman head
 
         build(EIOItems.ZOMBIE_ELECTRODE.get(),

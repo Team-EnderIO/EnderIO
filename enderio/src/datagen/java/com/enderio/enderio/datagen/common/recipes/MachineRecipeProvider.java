@@ -10,6 +10,7 @@ import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOItems;
 import net.minecraft.advancements.triggers.InventoryChangeTrigger;
 import net.minecraft.advancements.predicates.ItemPredicate;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -30,8 +31,8 @@ import java.util.List;
 public class MachineRecipeProvider extends SubRecipeProvider {
 
     @Override
-    public void buildRecipes(HolderLookup.Provider registries, RecipeOutput recipeOutput) {
-        var items = registries.lookupOrThrow(Registries.ITEM);
+    public void buildRecipes(RecipeOutput recipeOutput) {
+        var items = recipeOutput.lookup(Registries.ITEM);
 
 //        ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, EIOBlocks.CAPACITOR_BANKS.get(CapacitorTier.ADVANCED).get())
 //                .define('A', EIOTags.Items.INGOTS_CONDUCTIVE_ALLOY)
@@ -559,7 +560,7 @@ public class MachineRecipeProvider extends SubRecipeProvider {
         return list;
     });
 
-    public void eraseRecipes(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput) {
+    public void eraseRecipes(HolderGetter<Item> items, RecipeOutput recipeOutput) {
         for (var block : MACHINES) {
             ShapelessRecipeBuilder.shapeless(items, RecipeCategory.MISC, block)
                     .requires(block)

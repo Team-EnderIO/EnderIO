@@ -6,9 +6,9 @@ import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOFeatureFlags;
 import net.minecraft.advancements.predicates.StatePropertiesPredicate;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.data.loot.BlockLootSubProvider;
+import net.minecraft.data.loot.LootTableSubProvider;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.block.Block;
@@ -22,14 +22,14 @@ import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.InvertedLootItemCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
-import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.predicates.MatchBlock;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
 
 import java.util.Set;
 
 public class EIOBlockLootProvider extends BlockLootSubProvider {
-    public EIOBlockLootProvider(HolderLookup.Provider registries) {
-        super(Set.of(), FeatureFlagSet.of(FeatureFlags.VANILLA, EIOFeatureFlags.ENDERFACE, EIOFeatureFlags.NIARD), registries);
+    public EIOBlockLootProvider(LootTableSubProvider.Context context) {
+        super(Set.of(), FeatureFlagSet.of(FeatureFlags.VANILLA, EIOFeatureFlags.ENDERFACE, EIOFeatureFlags.NIARD), context);
     }
 
     @Override
@@ -215,7 +215,7 @@ public class EIOBlockLootProvider extends BlockLootSubProvider {
         return LootTable
             .lootTable()
             .withPool(this.applyExplosionCondition(item, LootPool.lootPool()
-                .setRolls(ConstantValue.exactly(1.0F))
+                .setRolls(ContextIntProviders.exactly(1))
                 .add(LootItem.lootTableItem(item).apply(CopyPaintFunction.copyPrimary()))));
     }
 
@@ -223,14 +223,14 @@ public class EIOBlockLootProvider extends BlockLootSubProvider {
         return LootTable
             .lootTable()
             .withPool(this.applyExplosionCondition(item, LootPool.lootPool()
-                .setRolls(ConstantValue.exactly(1.0F))
+                .setRolls(ContextIntProviders.exactly(1))
                 .add(LootItem.lootTableItem(item).apply(CopyPaintFunction.copyPrimary()))
-                .when(InvertedLootItemCondition.invert(new LootItemBlockStatePropertyCondition.Builder(item).setProperties(
+                .when(InvertedLootItemCondition.invert(MatchBlock.blockMatches(blocks, item,
                     StatePropertiesPredicate.Builder.properties().hasProperty(SlabBlock.TYPE, SlabType.TOP))))))
             .withPool(this.applyExplosionCondition(item, LootPool.lootPool()
-                .setRolls(ConstantValue.exactly(1.0F))
+                .setRolls(ContextIntProviders.exactly(1))
                 .add(LootItem.lootTableItem(item).apply(CopyPaintFunction.copySecondary()))
-                .when(InvertedLootItemCondition.invert(new LootItemBlockStatePropertyCondition.Builder(item).setProperties(
+                .when(InvertedLootItemCondition.invert(MatchBlock.blockMatches(blocks, item,
                     StatePropertiesPredicate.Builder.properties().hasProperty(SlabBlock.TYPE, SlabType.BOTTOM))))));
     }
 
@@ -238,9 +238,9 @@ public class EIOBlockLootProvider extends BlockLootSubProvider {
         return LootTable
             .lootTable()
             .withPool(this.applyExplosionCondition(item, LootPool.lootPool()
-                .setRolls(ConstantValue.exactly(1.0F))
+                .setRolls(ContextIntProviders.exactly(1))
                 .add(LootItem.lootTableItem(item).apply(CopyPaintFunction.copyPrimary()))
-                .when(InvertedLootItemCondition.invert(new LootItemBlockStatePropertyCondition.Builder(item).setProperties(
+                .when(InvertedLootItemCondition.invert(MatchBlock.blockMatches(blocks, item,
                     StatePropertiesPredicate.Builder.properties().hasProperty(DoorBlock.HALF, DoubleBlockHalf.LOWER))))));
     }
 }

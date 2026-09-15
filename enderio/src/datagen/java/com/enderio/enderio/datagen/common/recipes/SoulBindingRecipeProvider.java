@@ -10,6 +10,7 @@ import com.enderio.enderio.foundation.souldata.FarmSoul;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOItems;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -33,15 +34,15 @@ import java.util.Optional;
 
 public class SoulBindingRecipeProvider extends SubRecipeProvider {
 
-    private HolderLookup.RegistryLookup<Item> items;
+    private HolderGetter<Item> items;
 
     protected Ingredient ingredientFromTag(TagKey<Item> tag) {
         return Ingredient.of(this.items.getOrThrow(tag));
     }
 
     @Override
-    public void buildRecipes(HolderLookup.Provider registries, RecipeOutput recipeOutput) {
-        this.items = registries.lookupOrThrow(Registries.ITEM);
+    public void buildRecipes(RecipeOutput recipeOutput) {
+        this.items = recipeOutput.lookup(Registries.ITEM);
 
         build(EIOItems.ENTICING_CRYSTAL, ingredientFromTag(Tags.Items.GEMS_EMERALD), 51200, 4, EntityTypes.VILLAGER,
                 recipeOutput);

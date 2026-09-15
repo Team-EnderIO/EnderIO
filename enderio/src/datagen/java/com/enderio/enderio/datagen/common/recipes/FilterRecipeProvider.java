@@ -16,8 +16,8 @@ import net.neoforged.neoforge.common.Tags;
 public class FilterRecipeProvider extends SubRecipeProvider {
 
     @Override
-    public void buildRecipes(HolderLookup.Provider registries, RecipeOutput recipeOutput) {
-        var items = registries.lookupOrThrow(Registries.ITEM);
+    public void buildRecipes(RecipeOutput recipeOutput) {
+        var items = recipeOutput.lookup(Registries.ITEM);
 
         ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, EIOItems.BASIC_ITEM_FILTER.get())
                 .define('P', Items.PAPER)

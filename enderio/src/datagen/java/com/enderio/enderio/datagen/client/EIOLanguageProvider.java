@@ -769,7 +769,7 @@ public class EIOLanguageProvider extends LanguageProvider {
 
     private void addJadeLang() {
         final String configPrefix = "config.jade.plugin_";
-        add(configPrefix + EIOJadePlugin.SOUL_BOUND_COMPONENT.toLanguageKey(), "Soul Bound");
+//        add(configPrefix + EIOJadePlugin.SOUL_BOUND_COMPONENT.toLanguageKey(), "Soul Bound");
     }
 
     private void add(ResourceKey<Conduit<?, ?>> key, String translation) {

@@ -6,6 +6,7 @@ import com.enderio.enderio.content.machines.sag_mill.SagMillingRecipe;
 import com.enderio.enderio.content.machines.sag_mill.SagMillingRecipe.BonusType;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOItems;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -32,15 +33,15 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
 
     private static final int BASE_ENERGY_PER_OPERATION = 2400;
 
-    private HolderLookup.RegistryLookup<Item> items;
+    private HolderGetter<Item> items;
 
     protected Ingredient ingredientFromTag(TagKey<Item> tag) {
         return Ingredient.of(this.items.getOrThrow(tag));
     }
 
     @Override
-    public void buildRecipes(HolderLookup.Provider registries, RecipeOutput recipeOutput) {
-        this.items = registries.lookupOrThrow(Registries.ITEM);
+    public void buildRecipes(RecipeOutput recipeOutput) {
+        this.items = recipeOutput.lookup(Registries.ITEM);
 
         buildOreBlockRecipes(items, recipeOutput);
         buildRawOreRecipes(items, recipeOutput);
@@ -216,7 +217,7 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
                 BASE_ENERGY_PER_OPERATION, recipeOutput);
     }
 
-    private void buildOreBlockRecipes(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput) {
+    private void buildOreBlockRecipes(HolderGetter<Item> items, RecipeOutput recipeOutput) {
         buildOre("iron_ore", ingredientFromTag(Tags.Items.ORES_IRON), RAW_IRON, recipeOutput);
         buildOre("gold_ore", ingredientFromTag(Tags.Items.ORES_GOLD), RAW_GOLD, recipeOutput);
         buildOre("copper_ore", ingredientFromTag(Tags.Items.ORES_COPPER), RAW_COPPER, recipeOutput);
@@ -242,7 +243,7 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
                 BASE_ENERGY_PER_OPERATION, recipeOutput);
     }
 
-    private void buildRawOreRecipes(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput) {
+    private void buildRawOreRecipes(HolderGetter<Item> items, RecipeOutput recipeOutput) {
         build("raw_iron", ingredientFromTag(Tags.Items.RAW_MATERIALS_IRON),
                 List.of(output(POWDERED_IRON), output(POWDERED_IRON, 0.8f), output(EIOTags.Items.DUSTS_TIN, 0.05f)),
                 BASE_ENERGY_PER_OPERATION, recipeOutput);
@@ -257,7 +258,7 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
     }
 
 
-    private void buildModCompat(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput) {
+    private void buildModCompat(HolderGetter<Item> items, RecipeOutput recipeOutput) {
         build("raw_aluminum", ingredientFromTag(EIOTags.Items.RAW_MATERIALS_ALUMINUM), List.of(output(EIOTags.Items.DUSTS_ALUMINUM), output(EIOTags.Items.DUSTS_ALUMINUM, 0.80f),
                 output(EIOTags.Items.DUSTS_IRON, 0.20f)), BASE_ENERGY_PER_OPERATION, recipeOutput, EIOTags.Items.RAW_MATERIALS_ALUMINUM, EIOTags.Items.DUSTS_ALUMINUM);
         build("aluminum_ore", ingredientFromTag(EIOTags.Items.ORES_ALUMINUM), List.of(output(EIOTags.Items.RAW_MATERIALS_ALUMINUM), output(EIOTags.Items.RAW_MATERIALS_ALUMINUM, 0.33f), output(COBBLESTONE, 0.15f)),

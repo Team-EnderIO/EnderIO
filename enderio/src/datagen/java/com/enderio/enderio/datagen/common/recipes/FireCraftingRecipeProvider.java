@@ -17,7 +17,7 @@ import java.util.Optional;
 
 public class FireCraftingRecipeProvider extends SubRecipeProvider {
     @Override
-    public void buildRecipes(HolderLookup.Provider registries, RecipeOutput recipeOutput) {
+    public void buildRecipes(RecipeOutput recipeOutput) {
         recipeOutput.accept(ResourceKey.create(Registries.RECIPE, EnderIO.id("fire_crafting/bedrock_infinity")),
                 new FireCraftingRecipe(List.of(
                         new FireCraftingRecipe.Result(new ItemStackTemplate(EIOItems.GRAINS_OF_INFINITY), 1, 3,

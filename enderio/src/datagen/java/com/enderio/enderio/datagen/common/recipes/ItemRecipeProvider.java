@@ -5,6 +5,7 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOItems;
 import net.minecraft.advancements.triggers.InventoryChangeTrigger;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -18,14 +19,14 @@ import net.neoforged.neoforge.common.Tags;
 public class ItemRecipeProvider extends SubRecipeProvider {
 
     @Override
-    public void buildRecipes(HolderLookup.Provider registries, RecipeOutput recipeOutput) {
-        var items = registries.lookupOrThrow(Registries.ITEM);
+    public void buildRecipes(RecipeOutput recipeOutput) {
+        var items = recipeOutput.lookup(Registries.ITEM);
         addTools(items, recipeOutput);
         addGliders(items, recipeOutput);
         eraseFilterRecipes(items, recipeOutput);
     }
 
-    private void addGliders(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput) {
+    private void addGliders(HolderGetter<Item> items, RecipeOutput recipeOutput) {
         ShapedRecipeBuilder.shaped(items, RecipeCategory.TOOLS, EIOItems.GLIDER_WING.get())
                 .pattern("  D")
                 .pattern(" DL")
@@ -54,7 +55,7 @@ public class ItemRecipeProvider extends SubRecipeProvider {
 //        }
     }
 
-    private void addTools(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput) {
+    private void addTools(HolderGetter<Item> items, RecipeOutput recipeOutput) {
         ShapedRecipeBuilder.shaped(items, RecipeCategory.TOOLS, EIOItems.YETA_WRENCH.get())
                 .define('I', Tags.Items.INGOTS_COPPER)
                 .define('G', EIOTags.Items.DUSTS_GRAINS_OF_INFINITY)
@@ -138,7 +139,7 @@ public class ItemRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput);
     }
 
-    private void eraseFilterRecipes(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput) {
+    private void eraseFilterRecipes(HolderGetter<Item> items, RecipeOutput recipeOutput) {
         ShapelessRecipeBuilder.shapeless(items, RecipeCategory.MISC, EIOItems.BASIC_ITEM_FILTER)
                 .requires(EIOItems.BASIC_ITEM_FILTER)
                 .unlockedBy("has_ingredient", has(items, EIOItems.BASIC_ITEM_FILTER))

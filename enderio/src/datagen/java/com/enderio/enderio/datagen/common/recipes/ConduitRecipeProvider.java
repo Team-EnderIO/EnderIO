@@ -31,12 +31,12 @@ import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 public class ConduitRecipeProvider extends SubRecipeProvider {
 
     @Override
-    public void buildRecipes(HolderLookup.Provider registries, RecipeOutput recipeOutput) {
-        var item = registries.lookupOrThrow(Registries.ITEM);
+    public void buildRecipes(RecipeOutput recipeOutput) {
+        var item = recipeOutput.lookup(Registries.ITEM);
         
         // We know that the registries are now available.
-        HolderGetter<Conduit<?, ?>> conduitRegistry = registries
-                .lookupOrThrow(EnderIORegistries.Keys.CONDUIT);
+        HolderGetter<Conduit<?, ?>> conduitRegistry = recipeOutput
+            .lookup(EnderIORegistries.Keys.CONDUIT);
 
         var itemConduit = conduitRegistry.getOrThrow(EIOConduits.ITEM);
         var energeticItemConduit = conduitRegistry.getOrThrow(EIOConduits.ENERGETIC_ITEM);
@@ -234,7 +234,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput);
     }
 
-    private void buildFilterErasureRecipes(HolderLookup.RegistryLookup<Item> item, RecipeOutput recipeOutput) {
+    private void buildFilterErasureRecipes(HolderGetter<Item> item, RecipeOutput recipeOutput) {
         // List of all filter items to create erasure recipes for
         ItemLike[] filterItems = { EIOItems.OR_FILTER, EIOItems.NOR_FILTER, EIOItems.AND_FILTER,
             EIOItems.NAND_FILTER, EIOItems.XOR_FILTER, EIOItems.XNOR_FILTER, EIOItems.COUNT_FILTER,
@@ -250,7 +250,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
         }
     }
 
-    private void buildFilterRecipes(HolderLookup.RegistryLookup<Item> item, RecipeOutput recipeOutput) {
+    private void buildFilterRecipes(HolderGetter<Item> item, RecipeOutput recipeOutput) {
         ShapedRecipeBuilder.shaped(item, RecipeCategory.MISC, EIOItems.NOT_FILTER)
                 .define('T', Items.REDSTONE_TORCH)
                 .define('B', EIOItems.REDSTONE_FILTER_BASE)
@@ -321,7 +321,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput);
     }
 
-    private void buildFilterConversionRecipes(HolderLookup.RegistryLookup<Item> item, RecipeOutput recipeOutput) {
+    private void buildFilterConversionRecipes(HolderGetter<Item> item, RecipeOutput recipeOutput) {
         ShapelessRecipeBuilder.shapeless(item, RecipeCategory.MISC, EIOItems.OR_FILTER)
                 .requires(Items.REDSTONE_TORCH)
                 .requires(EIOItems.NOR_FILTER)
@@ -359,7 +359,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput, EnderIO.id("xnor_filter_from_xor_filter").toString());
     }
 
-    private void buildFacadeCraftingRecipes(HolderLookup.RegistryLookup<Item> item, RecipeOutput recipeOutput) {
+    private void buildFacadeCraftingRecipes(HolderGetter<Item> item, RecipeOutput recipeOutput) {
         ShapedRecipeBuilder.shaped(item, RecipeCategory.MISC, EIOItems.CONDUIT_FACADE)
                 .pattern("BBB")
                 .pattern("B B")
@@ -408,7 +408,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput, EnderIO.id("transparent_hardened_conduit_facade_from_hardened_conduit_facade").toString());
     }
 
-    private void buildFacadePaintingRecipes(HolderLookup.RegistryLookup<Item> item, RecipeOutput recipeOutput) {
+    private void buildFacadePaintingRecipes(HolderGetter<Item> item, RecipeOutput recipeOutput) {
         paintingRecipe(EIOItems.CONDUIT_FACADE, Ingredient.of(EIOItems.CONDUIT_FACADE), recipeOutput);
         paintingRecipe(EIOItems.HARDENED_CONDUIT_FACADE, Ingredient.of(EIOItems.HARDENED_CONDUIT_FACADE),
                 recipeOutput);

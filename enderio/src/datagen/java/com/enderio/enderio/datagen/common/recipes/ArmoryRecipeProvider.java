@@ -13,8 +13,8 @@ import net.neoforged.neoforge.common.Tags;
 
 public class ArmoryRecipeProvider extends SubRecipeProvider {
     @Override
-    public void buildRecipes(HolderLookup.Provider registries, RecipeOutput recipeOutput) {
-        var item = registries.lookupOrThrow(Registries.ITEM);
+    public void buildRecipes(RecipeOutput recipeOutput) {
+        var item = recipeOutput.lookup(Registries.ITEM);
         ShapedRecipeBuilder.shaped(item, RecipeCategory.COMBAT, EIOItems.DARK_STEEL_SWORD.get())
             .define('I', EIOTags.Items.INGOTS_DARK_STEEL)
             .define('S', Tags.Items.RODS_WOODEN)

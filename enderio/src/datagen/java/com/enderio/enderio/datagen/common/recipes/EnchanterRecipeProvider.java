@@ -24,17 +24,17 @@ import net.neoforged.neoforge.common.crafting.SizedIngredient;
 
 public class EnchanterRecipeProvider extends SubRecipeProvider {
 
-    private HolderLookup.RegistryLookup<Item> items;
+    private HolderGetter<Item> items;
 
     protected SizedIngredient sizedFromTag(TagKey<Item> tag, int count) {
         return new SizedIngredient(Ingredient.of(this.items.getOrThrow(tag)), count);
     }
 
     @Override
-    public void buildRecipes(HolderLookup.Provider registries, RecipeOutput recipeOutput) {
+    public void buildRecipes(RecipeOutput recipeOutput) {
         // We know that the registries are now available.
-        HolderGetter<Enchantment> enchantmentRegistry = registries.lookupOrThrow(Registries.ENCHANTMENT);
-        this.items = registries.lookupOrThrow(Registries.ITEM);
+        HolderGetter<Enchantment> enchantmentRegistry = recipeOutput.lookup(Registries.ENCHANTMENT);
+        this.items = recipeOutput.lookup(Registries.ITEM);
 
         // vanilla
         build(enchantmentRegistry, Enchantments.PROTECTION, sizedFromTag(EIOTags.Items.INGOTS_DARK_STEEL, 16), 1,

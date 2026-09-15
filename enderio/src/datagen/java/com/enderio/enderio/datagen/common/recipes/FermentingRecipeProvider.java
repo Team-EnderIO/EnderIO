@@ -5,6 +5,7 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.content.machines.vat.FermentingRecipe;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOFluids;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -22,15 +23,15 @@ import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
 public class FermentingRecipeProvider extends SubRecipeProvider {
 
-    private HolderLookup.RegistryLookup<Fluid> fluids;
+    private HolderGetter<Fluid> fluids;
 
     protected SizedFluidIngredient sizedFromTag(TagKey<Fluid> tag, int count) {
         return new SizedFluidIngredient(FluidIngredient.of(this.fluids.getOrThrow(tag)), count);
     }
 
     @Override
-    public void buildRecipes(HolderLookup.Provider registries, RecipeOutput recipeOutput) {
-        this.fluids = registries.lookupOrThrow(Registries.FLUID);
+    public void buildRecipes(RecipeOutput recipeOutput) {
+        this.fluids = recipeOutput.lookup(Registries.FLUID);
 
         build(new FluidStackTemplate(EIOFluids.HOOTCH.source().get(), 250), sizedFromTag(FluidTags.WATER, 1000),
             EIOTags.Items.SEEDS, EIOTags.Items.CROPS, 200, recipeOutput);

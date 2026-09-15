@@ -7,6 +7,7 @@ import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOItems;
 import net.minecraft.advancements.triggers.InventoryChangeTrigger;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -29,8 +30,8 @@ import java.util.function.Supplier;
 public class MiscBlockRecipeProvider extends SubRecipeProvider {
 
     @Override
-    public void buildRecipes(HolderLookup.Provider registries, RecipeOutput recipeOutput) {
-        var items = registries.lookupOrThrow(Registries.ITEM);
+    public void buildRecipes(RecipeOutput recipeOutput) {
+        var items = recipeOutput.lookup(Registries.ITEM);
 
         addPressurePlateRecipes(items, recipeOutput);
         addLeverRecipes(items, recipeOutput);
@@ -39,7 +40,7 @@ public class MiscBlockRecipeProvider extends SubRecipeProvider {
         buildBuildingRecipes(items, recipeOutput);
     }
 
-    private void buildChassisRecipes(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput) {
+    private void buildChassisRecipes(HolderGetter<Item> items, RecipeOutput recipeOutput) {
         ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, EIOBlocks.VOID_CHASSIS.get())
                 .define('G', EIOTags.Items.DUSTS_GRAINS_OF_INFINITY)
                 .define('I', Tags.Items.INGOTS_IRON)
@@ -62,7 +63,7 @@ public class MiscBlockRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput);
     }
 
-    private void buildBuildingRecipes(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput) {
+    private void buildBuildingRecipes(HolderGetter<Item> items, RecipeOutput recipeOutput) {
         ShapedRecipeBuilder.shaped(items, RecipeCategory.BUILDING_BLOCKS, EIOBlocks.SOUL_CHAIN.get(), 2)
                 .define('Q', EIOTags.Items.DUSTS_QUARTZ)
                 .define('N', EIOTags.Items.NUGGETS_SOULARIUM)
@@ -75,7 +76,7 @@ public class MiscBlockRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput);
     }
 
-    private void addConstructionBlockRecipes(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput) {
+    private void addConstructionBlockRecipes(HolderGetter<Item> items, RecipeOutput recipeOutput) {
 
         ShapedRecipeBuilder.shaped(items, RecipeCategory.BUILDING_BLOCKS, EIOBlocks.DARK_STEEL_LADDER.get(), 12)
                 .define('I', EIOTags.Items.INGOTS_DARK_STEEL)
@@ -131,7 +132,7 @@ public class MiscBlockRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput);
     }
 
-    private void addPressurePlateRecipes(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput) {
+    private void addPressurePlateRecipes(HolderGetter<Item> items, RecipeOutput recipeOutput) {
         // eio plates
         addPressurePlateRecipe(items, recipeOutput, EIOBlocks.DARK_STEEL_PRESSURE_PLATE, EIOTags.Items.INGOTS_DARK_STEEL,
                 EIOItems.DARK_STEEL_INGOT);
@@ -167,7 +168,7 @@ public class MiscBlockRecipeProvider extends SubRecipeProvider {
                 Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE);
     }
 
-    private void addPressurePlateRecipe(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput, Supplier<? extends Block> result,
+    private void addPressurePlateRecipe(HolderGetter<Item> items, RecipeOutput recipeOutput, Supplier<? extends Block> result,
             TagKey<Item> ingredient, ItemLike trigger) {
         ShapedRecipeBuilder.shaped(items, RecipeCategory.BUILDING_BLOCKS, result.get().asItem())
                 .define('#', ingredient)
@@ -176,7 +177,7 @@ public class MiscBlockRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput);
     }
 
-    private void addPressurePlateRecipe(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput, Supplier<? extends Block> result,
+    private void addPressurePlateRecipe(HolderGetter<Item> items, RecipeOutput recipeOutput, Supplier<? extends Block> result,
             ItemLike ingredient) {
         ShapedRecipeBuilder.shaped(items, RecipeCategory.BUILDING_BLOCKS, result.get().asItem())
                 .define('#', ingredient)
@@ -185,7 +186,7 @@ public class MiscBlockRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput);
     }
 
-    private void addSilentPressurePlateRecipe(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput, Supplier<? extends Block> result,
+    private void addSilentPressurePlateRecipe(HolderGetter<Item> items, RecipeOutput recipeOutput, Supplier<? extends Block> result,
             ItemLike ingredient) {
         ShapedRecipeBuilder.shaped(items, RecipeCategory.BUILDING_BLOCKS, result.get().asItem())
                 .define('W', ItemTags.WOOL)
@@ -196,7 +197,7 @@ public class MiscBlockRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput);
     }
 
-    private void addLeverRecipes(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput) {
+    private void addLeverRecipes(HolderGetter<Item> items, RecipeOutput recipeOutput) {
         addLeverRecipe(items, recipeOutput, EIOBlocks.RESETTING_LEVER_FIVE, EIOBlocks.RESETTING_LEVER_FIVE_INV, null, null, 1);
         addLeverRecipe(items, recipeOutput, EIOBlocks.RESETTING_LEVER_TEN, EIOBlocks.RESETTING_LEVER_TEN_INV,
                 EIOBlocks.RESETTING_LEVER_FIVE, EIOBlocks.RESETTING_LEVER_FIVE_INV, 2);
@@ -209,7 +210,7 @@ public class MiscBlockRecipeProvider extends SubRecipeProvider {
                 EIOBlocks.RESETTING_LEVER_SIXTY_INV, 5);
     }
 
-    private void addLeverRecipe(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput, Supplier<? extends ResettingLeverBlock> base,
+    private void addLeverRecipe(HolderGetter<Item> items, RecipeOutput recipeOutput, Supplier<? extends ResettingLeverBlock> base,
             Supplier<? extends ResettingLeverBlock> inverted,
             @Nullable Supplier<? extends ResettingLeverBlock> previous,
             @Nullable Supplier<? extends ResettingLeverBlock> previousInverted, int numRedstone) {

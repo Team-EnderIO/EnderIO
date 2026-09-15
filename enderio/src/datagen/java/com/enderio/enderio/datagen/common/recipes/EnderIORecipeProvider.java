@@ -1,16 +1,21 @@
 package com.enderio.enderio.datagen.common.recipes;
 
 import com.enderio.core.data.recipe.EnderRecipeProvider;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.data.recipes.RecipeProvider;
+import com.enderio.enderio.api.EnderIORegistries;
+import net.minecraft.advancements.Advancement;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.MultiRegistryBootstrap;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.crafting.Recipe;
 
-import java.util.concurrent.CompletableFuture;
+import java.util.Set;
 
 public class EnderIORecipeProvider extends EnderRecipeProvider {
-    public EnderIORecipeProvider(HolderLookup.Provider registries, RecipeOutput output) {
-        super(registries, output);
+
+    protected EnderIORecipeProvider(BootstrapContext<Recipe<?>> recipeOutput, BootstrapContext<Advancement> advancementOutput) {
+        super(recipeOutput, advancementOutput);
 
         addProvider(new AlloyRecipeProvider());
         addProvider(new ArmoryRecipeProvider());
@@ -32,23 +37,19 @@ public class EnderIORecipeProvider extends EnderRecipeProvider {
         addProvider(new WeatherChangeRecipeProvider());
     }
 
-    public static final class Runner extends RecipeProvider.Runner
-    {
-        public Runner(PackOutput output, CompletableFuture<HolderLookup.Provider> registries)
-        {
-            super(output, registries);
-        }
+    public static MultiRegistryBootstrap create() {
+        return new MultiRegistryBootstrap() {
+            @Override
+            public Set<ResourceKey<? extends Registry<?>>> requestedRegistries() {
+                // Return the registries we are adding entries to.
+                return Set.of(Registries.RECIPE, Registries.ADVANCEMENT);
+            }
 
-        @Override
-        protected RecipeProvider createRecipeProvider(HolderLookup.Provider registries, RecipeOutput output)
-        {
-            return new EnderIORecipeProvider(registries, output);
-        }
-
-        @Override
-        public String getName()
-        {
-            return "Ender IO Recipe Generator";
-        }
+            @Override
+            public void run(MultiRegistryBootstrap.BootstrapGetter registries) {
+                // Run the recipe provider.
+                new EnderIORecipeProvider(registries.get(Registries.RECIPE), registries.get(Registries.ADVANCEMENT)).buildRecipes();
+            }
+        };
     }
 }

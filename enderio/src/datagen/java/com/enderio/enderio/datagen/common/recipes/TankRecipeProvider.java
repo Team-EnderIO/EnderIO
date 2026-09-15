@@ -5,6 +5,7 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.content.storage.fluid_tank.TankRecipe;
 import com.enderio.enderio.init.EIOFluids;
 import com.enderio.enderio.init.EIOItems;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -26,13 +27,13 @@ import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
 public class TankRecipeProvider extends SubRecipeProvider {
 
-    protected SizedFluidIngredient sizedFromTag(HolderLookup.RegistryLookup<Fluid> fluids, TagKey<Fluid> tag, int count) {
+    protected SizedFluidIngredient sizedFromTag(HolderGetter<Fluid> fluids, TagKey<Fluid> tag, int count) {
         return new SizedFluidIngredient(FluidIngredient.of(fluids.getOrThrow(tag)), count);
     }
 
     @Override
-    public void buildRecipes(HolderLookup.Provider registries, RecipeOutput recipeOutput) {
-        var fluids = registries.lookupOrThrow(Registries.FLUID);
+    public void buildRecipes(RecipeOutput recipeOutput) {
+        var fluids = recipeOutput.lookup(Registries.FLUID);
 
         buildEmptying(Ingredient.of(Items.EXPERIENCE_BOTTLE), Items.GLASS_BOTTLE,
                 sizedFromTag(fluids, Tags.Fluids.EXPERIENCE, 250), recipeOutput);

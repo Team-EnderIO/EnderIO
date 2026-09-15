@@ -7,6 +7,7 @@ import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOItems;
 import net.minecraft.advancements.triggers.InventoryChangeTrigger;
 import net.minecraft.advancements.predicates.ItemPredicate;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -27,8 +28,8 @@ import net.neoforged.neoforge.common.Tags;
 
 public class MaterialRecipeProvider extends SubRecipeProvider {
     @Override
-    public void buildRecipes(HolderLookup.Provider registries, RecipeOutput recipeOutput) {
-        var items = registries.lookupOrThrow(Registries.ITEM);
+    public void buildRecipes(RecipeOutput recipeOutput) {
+        var items = recipeOutput.lookup(Registries.ITEM);
 
         addAlloys(items, recipeOutput);
         addIngots(items, recipeOutput);
@@ -90,7 +91,7 @@ public class MaterialRecipeProvider extends SubRecipeProvider {
         // endregion
     }
 
-    private void addAlloys(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput) {
+    private void addAlloys(HolderGetter<Item> items, RecipeOutput recipeOutput) {
         makeMaterialRecipes(items, recipeOutput, EIOItems.ENERGETIC_ALLOY_INGOT.get(), EIOItems.ENERGETIC_ALLOY_NUGGET.get(),
                 EIOBlocks.ENERGETIC_ALLOY_BLOCK.get());
         makeMaterialRecipes(items, recipeOutput, EIOItems.VIBRANT_ALLOY_INGOT.get(), EIOItems.VIBRANT_ALLOY_NUGGET.get(),
@@ -109,7 +110,7 @@ public class MaterialRecipeProvider extends SubRecipeProvider {
                 EIOBlocks.END_STEEL_BLOCK.get());
     }
 
-    private void addIngots(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput) {
+    private void addIngots(HolderGetter<Item> items, RecipeOutput recipeOutput) {
         SimpleCookingRecipeBuilder
                 .smelting(Ingredient.of(EIOItems.POWDERED_IRON.get()), RecipeCategory.MISC, CookingBookCategory.MISC, Items.IRON_INGOT, 0, 200)
                 .unlockedBy("has_ingredient",
@@ -149,7 +150,7 @@ public class MaterialRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput, EnderIO.id(Items.COPPER_INGOT.getDescriptionId() + "_from_blasting").toString());
     }
 
-    private void addCraftingComponents(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput) {
+    private void addCraftingComponents(HolderGetter<Item> items, RecipeOutput recipeOutput) {
         ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, EIOItems.CONDUIT_BINDER_COMPOSITE.get(), 8)
                 .pattern("GCG")
                 .pattern("SGS")
@@ -177,7 +178,7 @@ public class MaterialRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput, EnderIO.id(EIOItems.CONDUIT_BINDER.getId().getPath() + "_from_blasting").toString());
     }
 
-    private void addCapacitors(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput) {
+    private void addCapacitors(HolderGetter<Item> items, RecipeOutput recipeOutput) {
         ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, EIOItems.BASIC_CAPACITOR.get())
                 .pattern(" NG")
                 .pattern("NIN")
@@ -212,7 +213,7 @@ public class MaterialRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput);
     }
 
-    private void addCrystals(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput) {
+    private void addCrystals(HolderGetter<Item> items, RecipeOutput recipeOutput) {
         ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, EIOItems.PULSATING_CRYSTAL.get())
                 .pattern("PPP")
                 .pattern("PDP")
@@ -245,7 +246,7 @@ public class MaterialRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput);
     }
 
-    private void addGears(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput) {
+    private void addGears(HolderGetter<Item> items, RecipeOutput recipeOutput) {
         upgradeGear(items, recipeOutput, EIOItems.GEAR_IRON.get(), EIOItems.GRAINS_OF_INFINITY.get(), Tags.Items.INGOTS_IRON,
                 Tags.Items.NUGGETS_IRON);
         upgradeGear(items, recipeOutput, EIOItems.GEAR_ENERGIZED.get(), EIOTags.Items.GEARS_IRON,
@@ -256,7 +257,7 @@ public class MaterialRecipeProvider extends SubRecipeProvider {
                 EIOItems.DARK_STEEL_INGOT.get(), EIOItems.DARK_STEEL_NUGGET.get());
     }
 
-    private void addGrindingBalls(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput) {
+    private void addGrindingBalls(HolderGetter<Item> items, RecipeOutput recipeOutput) {
         grindingBall(items, recipeOutput, EIOItems.DARK_STEEL_BALL.get(), EIOTags.Items.INGOTS_DARK_STEEL,
                 EIOItems.DARK_STEEL_INGOT.get());
         grindingBall(items, recipeOutput, EIOItems.SOULARIUM_BALL.get(), EIOTags.Items.INGOTS_SOULARIUM,
@@ -277,7 +278,7 @@ public class MaterialRecipeProvider extends SubRecipeProvider {
 
     // region Helpers
 
-    private void makeMaterialRecipes(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput, Item ingot, Item nugget, Block block) {
+    private void makeMaterialRecipes(HolderGetter<Item> items, RecipeOutput recipeOutput, Item ingot, Item nugget, Block block) {
         ShapelessRecipeBuilder.shapeless(items, RecipeCategory.MISC, ingot, 9)
                 .requires(block.asItem())
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(block.asItem()))
@@ -302,7 +303,7 @@ public class MaterialRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput, EnderIO.id(nugget.getDescriptionId() + "_to_ingot").toString());
     }
 
-    private void upgradeGear(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput, Item resultGear, ItemLike inputGear, ItemLike cross,
+    private void upgradeGear(HolderGetter<Item> items, RecipeOutput recipeOutput, Item resultGear, ItemLike inputGear, ItemLike cross,
             ItemLike corner) {
         ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, resultGear)
                 .pattern("NIN")
@@ -315,7 +316,7 @@ public class MaterialRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput);
     }
 
-    private void upgradeGear(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput, Item resultGear, TagKey<Item> inputGear, ItemLike cross,
+    private void upgradeGear(HolderGetter<Item> items, RecipeOutput recipeOutput, Item resultGear, TagKey<Item> inputGear, ItemLike cross,
             ItemLike corner) {
         ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, resultGear)
                 .pattern("NIN")
@@ -328,7 +329,7 @@ public class MaterialRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput);
     }
 
-    private void upgradeGear(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput, Item resultGear, ItemLike inputGear, TagKey<Item> cross,
+    private void upgradeGear(HolderGetter<Item> items, RecipeOutput recipeOutput, Item resultGear, ItemLike inputGear, TagKey<Item> cross,
             TagKey<Item> corner) {
         ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, resultGear)
                 .pattern("NIN")
@@ -341,7 +342,7 @@ public class MaterialRecipeProvider extends SubRecipeProvider {
                 .save(recipeOutput);
     }
 
-    private void grindingBall(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput, Item result, TagKey<Item> input, ItemLike trigger) {
+    private void grindingBall(HolderGetter<Item> items, RecipeOutput recipeOutput, Item result, TagKey<Item> input, ItemLike trigger) {
         ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, result, 24)
                 .pattern(" I ")
                 .pattern("III")

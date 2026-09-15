@@ -3,7 +3,6 @@ package com.enderio.enderio.datagen.common.loot;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.content.capacitors.SetLootCapacitorFunction;
 import com.enderio.enderio.init.EIOItems;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.loot.LootTableSubProvider;
 import net.minecraft.resources.ResourceKey;
@@ -14,44 +13,42 @@ import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
-import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
-import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
-
-import java.util.function.BiConsumer;
+import net.minecraft.world.level.storage.loot.providers.number.floats.ContextFloatProviders;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
 
 public class ChestLootProvider implements LootTableSubProvider {
 
     public static final String COMMON_LOOT_TABLE_NAME = "chests/common_loot";
     public static final String ALLOY_LOOT_TABLE_NAME = "chests/alloy_loot";
 
-    private final HolderLookup.Provider registries;
+    private final LootTableSubProvider.Context output;
 
-    public ChestLootProvider(HolderLookup.Provider registries) {
-        this.registries = registries;
+    public ChestLootProvider(LootTableSubProvider.Context output) {
+        this.output = output;
     }
 
     @Override
-    public void generate(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> writer) {
-        generateCommonLoot(writer);
-        generateAlloyLoot(writer);
+    public void run() {
+        generateCommonLoot();
+        generateAlloyLoot();
     }
 
-    private void generateCommonLoot(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> writer) {
+    private void generateCommonLoot() {
         var lootPool = LootPool
             .lootPool()
             .name("Ender IO")
-            .setRolls(UniformGenerator.between(1.0f, 3.0f))
+            .setRolls(ContextIntProviders.between(1, 3))
             .add(LootItem.lootTableItem(EIOItems.DARK_STEEL_INGOT.get())
                 .when(LootItemRandomChanceCondition.randomChance(0.25f))
-                .apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0f, 3.0f)))
+                .apply(SetItemCountFunction.setCount(ContextIntProviders.between(1, 3)))
             )
             .add(LootItem.lootTableItem(Items.ENDER_PEARL)
                 .when(LootItemRandomChanceCondition.randomChance(0.3f))
-                .apply(SetItemCountFunction.setCount(ConstantValue.exactly(1.0f)))
+                .apply(SetItemCountFunction.setCount(ContextIntProviders.exactly(1)))
             )
             .add(LootItem.lootTableItem(EIOItems.LOOT_CAPACITOR.get())
                 .when(LootItemRandomChanceCondition.randomChance(0.15f))
-                .apply(SetLootCapacitorFunction.setLootCapacitor(UniformGenerator.between(1.0f, 4.0f)))
+                .apply(SetLootCapacitorFunction.setLootCapacitor(ContextFloatProviders.between(1.0f, 4.0f)))
             )
 // TODO: Add these additionals to rarer pools
 //          .add(LootItem.lootTableItem(EIOItems.LOOT_CAPACITOR.get())
@@ -65,41 +62,41 @@ public class ChestLootProvider implements LootTableSubProvider {
             .withPool(lootPool)
             .setParamSet(LootContextParamSets.EMPTY);
 
-        writer.accept(ResourceKey.create(Registries.LOOT_TABLE, EnderIO.id(COMMON_LOOT_TABLE_NAME)), lootTable);
+        output.accept(ResourceKey.create(Registries.LOOT_TABLE, EnderIO.id(COMMON_LOOT_TABLE_NAME)), lootTable);
     }
 
-    private void generateAlloyLoot(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> writer) {
+    private void generateAlloyLoot() {
         var lootPool = LootPool
             .lootPool()
             .name("Ender IO")
-            .setRolls(UniformGenerator.between(0.0f, 2.0f))
+            .setRolls(ContextIntProviders.between(0, 2))
             .add(LootItem.lootTableItem(EIOItems.CONDUCTIVE_ALLOY_INGOT.get())
                 .when(LootItemRandomChanceCondition.randomChance(0.2f))
-                .apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0f, 2.0f)))
+                .apply(SetItemCountFunction.setCount(ContextIntProviders.between(1, 2)))
             )
             .add(LootItem.lootTableItem(EIOItems.REDSTONE_ALLOY_INGOT.get())
                 .when(LootItemRandomChanceCondition.randomChance(0.35f))
-                .apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0f, 3.0f)))
+                .apply(SetItemCountFunction.setCount(ContextIntProviders.between(1, 3)))
             )
             .add(LootItem.lootTableItem(EIOItems.PULSATING_ALLOY_INGOT.get())
                 .when(LootItemRandomChanceCondition.randomChance(0.3f))
-                .apply(SetItemCountFunction.setCount(ConstantValue.exactly(1.0f)))
+                .apply(SetItemCountFunction.setCount(ContextIntProviders.exactly(1)))
             )
             .add(LootItem.lootTableItem(EIOItems.VIBRANT_ALLOY_INGOT.get())
                 .when(LootItemRandomChanceCondition.randomChance(0.2f))
-                .apply(SetItemCountFunction.setCount(ConstantValue.exactly(1.0f)))
+                .apply(SetItemCountFunction.setCount(ContextIntProviders.exactly(1)))
             )
             .add(LootItem.lootTableItem(EIOItems.GEAR_IRON.get())
                 .when(LootItemRandomChanceCondition.randomChance(0.25f))
-                .apply(SetItemCountFunction.setCount(ConstantValue.exactly(1.0f)))
+                .apply(SetItemCountFunction.setCount(ContextIntProviders.exactly(1)))
             )
             .add(LootItem.lootTableItem(EIOItems.GEAR_ENERGIZED.get())
                 .when(LootItemRandomChanceCondition.randomChance(0.125f))
-                .apply(SetItemCountFunction.setCount(ConstantValue.exactly(1.0f)))
+                .apply(SetItemCountFunction.setCount(ContextIntProviders.exactly(1)))
             )
             .add(LootItem.lootTableItem(EIOItems.GEAR_VIBRANT.get())
                 .when(LootItemRandomChanceCondition.randomChance(0.0625f))
-                .apply(SetItemCountFunction.setCount(ConstantValue.exactly(1.0f)))
+                .apply(SetItemCountFunction.setCount(ContextIntProviders.exactly(1)))
             );
 
         var lootTable = LootTable
@@ -107,6 +104,6 @@ public class ChestLootProvider implements LootTableSubProvider {
             .withPool(lootPool)
             .setParamSet(LootContextParamSets.EMPTY);
 
-        writer.accept(ResourceKey.create(Registries.LOOT_TABLE, EnderIO.id(ALLOY_LOOT_TABLE_NAME)), lootTable);
+        output.accept(ResourceKey.create(Registries.LOOT_TABLE, EnderIO.id(ALLOY_LOOT_TABLE_NAME)), lootTable);
     }
 }

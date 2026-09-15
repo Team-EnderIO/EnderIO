@@ -2,6 +2,7 @@ package com.enderio.enderio.datagen.common.loot;
 
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.content.broken_spawner.BrokenSpawnerLootModifier;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
@@ -9,13 +10,13 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.storage.loot.predicates.AnyOfCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.level.storage.loot.predicates.MatchBlock;
 import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
 import net.neoforged.neoforge.common.loot.AddTableLootModifier;
 import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
 import net.neoforged.neoforge.common.loot.LootTableIdCondition;
 
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
@@ -30,8 +31,9 @@ public class EIOLootModifiersProvider extends GlobalLootModifierProvider {
         // TODO: NEO-PORT: neoforge:global_loot_modifiers file gets overwritten when
         // armory is enabled.
 
-        add("broken_spawner", new BrokenSpawnerLootModifier(new LootItemCondition[] {
-                LootItemBlockStatePropertyCondition.hasBlockStateProperties(Blocks.SPAWNER).build() }, IGlobalLootModifier.DEFAULT_PRIORITY));
+        add("broken_spawner", new BrokenSpawnerLootModifier(
+            Optional.of(Holder.direct(MatchBlock.blockMatches(registries.lookupOrThrow(Registries.BLOCK), Blocks.SPAWNER).build())),
+            IGlobalLootModifier.DEFAULT_PRIORITY));
 
         // TODO: Rarer loot, like nether and ancient city.
         // Can wait until a further balance pass, maybe once we have tools and armor in.
@@ -59,7 +61,7 @@ public class EIOLootModifiersProvider extends GlobalLootModifierProvider {
                 .toArray(LootTableIdCondition.Builder[]::new);
         add(modifierName,
                 new AddTableLootModifier(
-                    new LootItemCondition[] { AnyOfCondition.anyOf(mappedTargetConditions).build() },
+                    Optional.of(Holder.direct(AnyOfCondition.anyOf(mappedTargetConditions).build())),
                     IGlobalLootModifier.DEFAULT_PRIORITY,
                     ResourceKey.create(Registries.LOOT_TABLE, EnderIO.id("chests/" + modifierName))));
     }

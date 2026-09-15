@@ -12,6 +12,7 @@ import com.enderio.enderio.content.machines.alloy.AlloySmeltingRecipe;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOItems;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -37,15 +38,15 @@ import java.util.Map;
 
 public class AlloyRecipeProvider extends SubRecipeProvider {
 
-    private HolderLookup.RegistryLookup<Item> items;
+    private HolderGetter<Item> items;
 
     protected SizedIngredient sizedFromTag(TagKey<Item> tag, int count) {
         return new SizedIngredient(Ingredient.of(this.items.getOrThrow(tag)), count);
     }
 
     @Override
-    public void buildRecipes(HolderLookup.Provider registries, RecipeOutput recipeOutput) {
-        this.items = registries.lookupOrThrow(Registries.ITEM);
+    public void buildRecipes(RecipeOutput recipeOutput) {
+        this.items = recipeOutput.lookup(Registries.ITEM);
         // TODO: Review all recipes and alloy compositions
         // TODO: Experience values need set properly, i just used a filler value off the
         // top of my head
