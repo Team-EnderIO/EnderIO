@@ -5,6 +5,7 @@ import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.enderio.api.io.IOMode;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
+import com.enderio.enderio.compat.curios.CuriosCompat;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.foundation.MachineNBTKeys;
 import com.enderio.enderio.foundation.attachment.ActionRange;
@@ -91,6 +92,25 @@ public class WirelessChargerBlockEntity extends PoweredMachineBlockEntity implem
                     toDistribute -= received;
                     if (toDistribute <= 0) {
                         return;
+                    }
+                }
+            }
+
+            var items = CuriosCompat.getActiveCurios(player, s -> true);
+            if (items.isPresent()) {
+                for (ItemStack stack : items.get()) {
+                    if (stack.isEmpty()) {
+                        continue;
+                    }
+                    @Nullable
+                    IEnergyStorage cap = stack.getCapability(Capabilities.EnergyStorage.ITEM);
+                    if (cap != null && cap.canReceive()) {
+                        int received = cap.receiveEnergy(toDistribute, false);
+                        energyStorage.consumeEnergy(received);
+                        toDistribute -= received;
+                        if (toDistribute <= 0) {
+                            return;
+                        }
                     }
                 }
             }
