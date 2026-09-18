@@ -5,6 +5,8 @@ navigation:
   parent: machines.md
 item_ids:
   - wireless_charger
+  - wireless_charger_antenna
+  - wireless_charger_antenna_advanced
 ---
 
 # Wireless Charger

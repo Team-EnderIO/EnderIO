@@ -19,4 +19,4 @@ item_ids:
 </Column>
 
 The painting machine is used to paint certain blocks to give them the look of a different block. Most notably, 
-it can also paint <ItemImage id="conduit_facade" /> conduit facade's and <ItemLink id="travel_anchor" />'s
+it can also paint <ItemLink id="conduit_facade" />'s conduit facade's and <ItemLink id="travel_anchor" />'s

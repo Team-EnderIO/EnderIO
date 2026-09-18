@@ -10,3 +10,5 @@ navigation:
 A complete guide to Ender IO
 
 * [Machines](machines.md)
+* [Tools](tools.md)
+* [Conduits](conduits.md)

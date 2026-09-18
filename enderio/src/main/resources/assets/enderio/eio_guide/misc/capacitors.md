@@ -16,3 +16,5 @@ item_ids:
   <RecipesFor id="double_layer_capacitor" />
   <RecipesFor id="octadic_capacitor" />
 </Column>
+
+## Loot Capacitors

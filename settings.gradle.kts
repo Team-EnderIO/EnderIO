@@ -127,6 +127,15 @@ dependencyResolutionManagement {
             }
         }
 
+        maven {
+            name = "GuideME Snapshots"
+            url = uri("https://central.sonatype.com/repository/maven-snapshots/")
+            content {
+                includeModule("org.appliedenergistics", "guideme")
+                includeGroup("org.appliedenergistics")
+            }
+        }
+
         mavenLocal() {
             content {
                 includeGroup("com.enderio")
