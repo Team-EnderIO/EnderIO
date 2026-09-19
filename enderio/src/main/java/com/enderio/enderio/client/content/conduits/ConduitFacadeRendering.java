@@ -91,6 +91,14 @@ public class ConduitFacadeRendering {
             RandomSource random = RANDOM.get();
 
             for (Map.Entry<BlockPos, BlockState> entry : facades.entrySet()) {
+                // Opaque facades are rendered natively through Sodium's BlockRenderer (see
+                // SodiumConduitFacadeMixin) so they get shader lighting and occlude the conduits.
+                // Only skip them here once that mixin is confirmed active, otherwise a failed
+                // injection would leave opaque facades unrendered by both paths.
+                if (this.opaque && ModCompatHelper.isSodiumFacadeMixinActive() && entry.getValue().canOcclude()) {
+                    continue;
+                }
+
                 context.getPoseStack().pushPose();
                 context.getPoseStack()
                         .translate(entry.getKey().getX() & 15, entry.getKey().getY() & 15, entry.getKey().getZ() & 15);
