@@ -616,7 +616,10 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
             return true;
         }
 
-        ConduitBreakParticle.addDestroyEffects(pos, state2, conduitBundle.getConduits().getFirst().value());
+        if (!conduitBundle.getConduits().isEmpty() && conduitBundle.getConduits().getFirst().isBound()) {
+            ConduitBreakParticle.addDestroyEffects(pos, state2, conduitBundle.getConduits().getFirst().value());
+        }
+
         return true;
     }
 
@@ -644,7 +647,9 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
             return true;
         }
 
-        ConduitBreakParticle.addDestroyEffects(blockpos, state, conduitBundle.getConduits().getFirst().value());
+        if (!conduitBundle.getConduits().isEmpty() && conduitBundle.getConduits().getFirst().isBound()) {
+            ConduitBreakParticle.addDestroyEffects(blockpos, state, conduitBundle.getConduits().getFirst().value());
+        }
         return true;
     }
 
