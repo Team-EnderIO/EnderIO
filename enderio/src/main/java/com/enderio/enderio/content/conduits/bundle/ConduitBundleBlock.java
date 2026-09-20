@@ -18,7 +18,10 @@ import com.enderio.enderio.init.EIOConduitTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -585,6 +588,26 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
     }
 
     // endregion
+
+    @Override
+    public boolean addLandingEffects(BlockState state1, ServerLevel level, BlockPos pos, BlockState state2, LivingEntity entity, int numberOfParticles) {
+        if (!(level.getBlockEntity(pos) instanceof ConduitBundleBlockEntity conduitBundle)) {
+            return true;
+        }
+
+        ConduitBreakParticle.addDestroyEffects(pos, state2, conduitBundle.getConduits().getFirst().value());
+        return true;
+    }
+
+    @Override
+    public boolean addRunningEffects(BlockState state, Level level, BlockPos pos, Entity entity) {
+        if (!(level.getBlockEntity(pos) instanceof ConduitBundleBlockEntity conduitBundle)) {
+            return true;
+        }
+
+        ConduitBreakParticle.addDestroyEffects(pos, state, conduitBundle.getConduits().getFirst().value());
+        return true;
+    }
 
     // region Facade Behaviours
 
