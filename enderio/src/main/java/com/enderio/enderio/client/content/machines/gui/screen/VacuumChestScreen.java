@@ -57,7 +57,7 @@ public class VacuumChestScreen extends MachineScreen<VacuumChestMenu> {
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         guiGraphics.drawString(font, FiltersLang.GUI_FILTER, 8, 74, 4210752, false);
         guiGraphics.drawString(font, MachinesLang.RANGE, imageWidth - 8 - font.width(MachinesLang.RANGE), 74, 4210752, false);
-        guiGraphics.drawString(font, menu.getRange() + "", leftPos + imageWidth - 8 - 8 - 10, topPos + 90, 0, false);
+        guiGraphics.drawString(font, menu.getRange() + "", imageWidth - 8 - 8 - 10, 90, 0, false);
         super.renderLabels(guiGraphics, mouseX, mouseY);
     }
 }

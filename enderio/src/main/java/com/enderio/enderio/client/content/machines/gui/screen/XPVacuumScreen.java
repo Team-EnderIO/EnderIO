@@ -53,10 +53,8 @@ public class XPVacuumScreen extends MachineScreen<XPVacuumMenu> {
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        guiGraphics.drawString(font, MachinesLang.RANGE, this.imageWidth - 6 - this.font.width(MachinesLang.RANGE), 24, 4210752,
-                false);
-        guiGraphics.drawString(font, menu.getRange() + "", leftPos + imageWidth - 6 - 16 - 2 - 8 - 10, topPos + 38, 0,
-                false);
+        guiGraphics.drawString(font, MachinesLang.RANGE, this.imageWidth - 6 - this.font.width(MachinesLang.RANGE), 24, 4210752, false);
+        guiGraphics.drawString(font, menu.getRange() + "", imageWidth - 6 - 16 - 2 - 8 - 10, 38, 0, false);
         super.renderLabels(guiGraphics, mouseX, mouseY);
     }
 
