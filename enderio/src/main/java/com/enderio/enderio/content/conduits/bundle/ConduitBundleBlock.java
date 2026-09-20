@@ -24,6 +24,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
@@ -57,6 +58,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -589,9 +591,28 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
 
     // endregion
 
+    // region Particles
+
     @Override
     public boolean addLandingEffects(BlockState state1, ServerLevel level, BlockPos pos, BlockState state2, LivingEntity entity, int numberOfParticles) {
         if (!(level.getBlockEntity(pos) instanceof ConduitBundleBlockEntity conduitBundle)) {
+            return true;
+        }
+
+        if (conduitBundle.hasFacade()) {
+            double d0 = entity.getX();
+            double d1 = entity.getY();
+            double d2 = entity.getZ();
+            BlockPos blockpos = entity.blockPosition();
+            if (pos.getX() != blockpos.getX() || pos.getZ() != blockpos.getZ()) {
+                double d3 = d0 - (double)pos.getX() - (double)0.5F;
+                double d5 = d2 - (double)pos.getZ() - (double)0.5F;
+                double d6 = Math.max(Math.abs(d3), Math.abs(d5));
+                d0 = (double)pos.getX() + (double)0.5F + d3 / d6 * (double)0.5F;
+                d2 = (double)pos.getZ() + (double)0.5F + d5 / d6 * (double)0.5F;
+            }
+            level.sendParticles((new BlockParticleOption(ParticleTypes.BLOCK, conduitBundle.getFacadeBlock().defaultBlockState())).setPos(pos), d0, d1, d2,
+                numberOfParticles, 0.0F, 0.0F, 0.0F, 0.15F);
             return true;
         }
 
@@ -600,14 +621,34 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
     }
 
     @Override
-    public boolean addRunningEffects(BlockState state, Level level, BlockPos pos, Entity entity) {
-        if (!(level.getBlockEntity(pos) instanceof ConduitBundleBlockEntity conduitBundle)) {
+    public boolean addRunningEffects(BlockState state, Level level, BlockPos blockpos, Entity entity) {
+        if (!(level.getBlockEntity(blockpos) instanceof ConduitBundleBlockEntity conduitBundle)) {
             return true;
         }
 
-        ConduitBreakParticle.addDestroyEffects(pos, state, conduitBundle.getConduits().getFirst().value());
+        if (conduitBundle.hasFacade()) {
+            Vec3 vec3 = entity.getDeltaMovement();
+            BlockPos blockpos1 = entity.blockPosition();
+            double d0 = entity.getX() + (entity.getRandom().nextDouble() - (double)0.5F) * (double)entity.getDimensions(entity.getPose()).width();
+            double d1 = entity.getZ() + (entity.getRandom().nextDouble() - (double)0.5F) * (double)entity.getDimensions(entity.getPose()).width();
+            if (blockpos1.getX() != blockpos.getX()) {
+                d0 = Mth.clamp(d0, blockpos.getX(), (double)blockpos.getX() + (double)1.0F);
+            }
+
+            if (blockpos1.getZ() != blockpos.getZ()) {
+                d1 = Mth.clamp(d1, blockpos.getZ(), (double)blockpos.getZ() + (double)1.0F);
+            }
+
+            level.addParticle((new BlockParticleOption(ParticleTypes.BLOCK, conduitBundle.getFacadeBlock().defaultBlockState())).setPos(blockpos), d0,
+                entity.getY() + 0.1, d1, vec3.x * (double)-4.0F, 1.5F, vec3.z * (double)-4.0F);
+            return true;
+        }
+
+        ConduitBreakParticle.addDestroyEffects(blockpos, state, conduitBundle.getConduits().getFirst().value());
         return true;
     }
+
+    // endregion
 
     // region Facade Behaviours
 
