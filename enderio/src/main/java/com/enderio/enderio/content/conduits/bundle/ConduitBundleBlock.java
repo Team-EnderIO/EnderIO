@@ -15,6 +15,8 @@ import com.enderio.enderio.content.conduits.type.redstone.RedstoneConduitConnect
 import com.enderio.enderio.content.conduits.type.redstone.RedstoneConduitNetworkContext;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOConduitTypes;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -629,27 +631,26 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
             return true;
         }
 
+        Vec3 vec3 = entity.getDeltaMovement();
+        BlockPos blockpos1 = entity.blockPosition();
+        double d0 = entity.getX() + (entity.getRandom().nextDouble() - (double)0.5F) * (double)entity.getDimensions(entity.getPose()).width();
+        double d1 = entity.getZ() + (entity.getRandom().nextDouble() - (double)0.5F) * (double)entity.getDimensions(entity.getPose()).width();
+        if (blockpos1.getX() != blockpos.getX()) {
+            d0 = Mth.clamp(d0, blockpos.getX(), (double)blockpos.getX() + (double)1.0F);
+        }
+
+        if (blockpos1.getZ() != blockpos.getZ()) {
+            d1 = Mth.clamp(d1, blockpos.getZ(), (double)blockpos.getZ() + (double)1.0F);
+        }
+
         if (conduitBundle.hasFacade()) {
-            Vec3 vec3 = entity.getDeltaMovement();
-            BlockPos blockpos1 = entity.blockPosition();
-            double d0 = entity.getX() + (entity.getRandom().nextDouble() - (double)0.5F) * (double)entity.getDimensions(entity.getPose()).width();
-            double d1 = entity.getZ() + (entity.getRandom().nextDouble() - (double)0.5F) * (double)entity.getDimensions(entity.getPose()).width();
-            if (blockpos1.getX() != blockpos.getX()) {
-                d0 = Mth.clamp(d0, blockpos.getX(), (double)blockpos.getX() + (double)1.0F);
-            }
-
-            if (blockpos1.getZ() != blockpos.getZ()) {
-                d1 = Mth.clamp(d1, blockpos.getZ(), (double)blockpos.getZ() + (double)1.0F);
-            }
-
             level.addParticle((new BlockParticleOption(ParticleTypes.BLOCK, conduitBundle.getFacadeBlock().defaultBlockState())).setPos(blockpos), d0,
                 entity.getY() + 0.1, d1, vec3.x * (double)-4.0F, 1.5F, vec3.z * (double)-4.0F);
-            return true;
+        } else {
+            ConduitBreakParticle.spawnParticle(blockpos, conduitBundle.getConduits().getFirst().value(), d0, entity.getY() + 0.1, d1,
+                vec3.x * (double)-4.0F, 1.5F, vec3.z * (double)-4.0F);
         }
 
-        if (!conduitBundle.getConduits().isEmpty() && conduitBundle.getConduits().getFirst().isBound()) {
-            ConduitBreakParticle.addDestroyEffects(blockpos, state, conduitBundle.getConduits().getFirst().value());
-        }
         return true;
     }
 

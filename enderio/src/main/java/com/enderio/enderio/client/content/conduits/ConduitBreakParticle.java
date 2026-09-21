@@ -145,4 +145,15 @@ public class ConduitBreakParticle extends TextureSheetParticle {
         engine.add(new ConduitBreakParticle(level, x, y, z, 0.0D, 0.0D, 0.0D, pos, conduit.texture()).setPower(0.2F)
                 .scale(0.6F));
     }
+
+    public static void spawnParticle(BlockPos blockpos, Conduit<?,?> conduit, double x, double y, double z, double xSpeed, float ySpeed, double zSpeed) {
+        ClientLevel level = Minecraft.getInstance().level;
+        if (level == null) {
+            return;
+        }
+
+        ParticleEngine engine = Minecraft.getInstance().particleEngine;
+        engine.add(new ConduitBreakParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, blockpos, conduit.texture()).setPower(0.2F)
+            .scale(0.6F));
+    }
 }
