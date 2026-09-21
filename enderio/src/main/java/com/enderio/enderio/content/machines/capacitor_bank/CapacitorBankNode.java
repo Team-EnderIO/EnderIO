@@ -12,7 +12,8 @@ import java.util.Objects;
 public class CapacitorBankNode implements INetworkNode<CapacitorBankNetwork, CapacitorBankNode> {
 
     public static final Codec<CapacitorBankNode> CODEC = RecordCodecBuilder.create(i ->
-        i.group(BlockPos.CODEC.fieldOf("pos").forGetter(CapacitorBankNode::getPos))
+        i.group(BlockPos.CODEC.fieldOf("pos").forGetter(CapacitorBankNode::getPos),
+                Codec.LONG.fieldOf("capacity").forGetter(CapacitorBankNode::getCapacity))
             .apply(i, CapacitorBankNode::new)
     );
 
@@ -21,20 +22,26 @@ public class CapacitorBankNode implements INetworkNode<CapacitorBankNetwork, Cap
     private CapacitorBankNetwork network;
     private BlockPos pos;
 
+    //Used to for unloaded nodes
+    private long savedCapacity;
+
     public CapacitorBankNode(CapacitorBankBlockEntity blockEntity) {
         this.blockEntity = blockEntity;
+        this.savedCapacity = blockEntity.getTier().getStorageCapacity();
         this.pos = blockEntity.getBlockPos();
         this.network = new CapacitorBankNetwork(this);
     }
 
-    public CapacitorBankNode(BlockPos pos) {
+    public CapacitorBankNode(BlockPos pos, long savedCapacity) {
         this.pos = pos;
+        this.savedCapacity = savedCapacity;
     }
 
     public void attach(CapacitorBankBlockEntity blockEntity) {
         this.blockEntity = blockEntity;
         this.pos = blockEntity.getBlockPos();
         this.getNetwork().init(this);
+        this.savedCapacity = blockEntity.getTier().getStorageCapacity();
     }
 
     public int getMaxEnergyStored() {
@@ -54,9 +61,15 @@ public class CapacitorBankNode implements INetworkNode<CapacitorBankNetwork, Cap
         return this.pos;
     }
 
+    protected long getCapacity() {
+        return savedCapacity;
+    }
+
     public void markDirty() {
-        blockEntity.setChanged();
-        blockEntity.getLevel().sendBlockUpdated(blockEntity.getBlockPos(), blockEntity.getBlockState(), blockEntity.getBlockState(), Block.UPDATE_ALL);
+        if (hasBlockEntity()) {
+            blockEntity.setChanged();
+            blockEntity.getLevel().sendBlockUpdated(blockEntity.getBlockPos(), blockEntity.getBlockState(), blockEntity.getBlockState(), Block.UPDATE_ALL);
+        }
     }
 
     @Override

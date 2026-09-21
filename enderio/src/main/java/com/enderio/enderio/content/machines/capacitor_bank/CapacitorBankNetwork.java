@@ -54,6 +54,7 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
     public CapacitorBankNetwork(long totalEnergyStored, RedstoneControl redstone, List<CapacitorBankNode> nodes, IndexedEdgeList edges) {
         super(nodes, edges);
         this.totalEnergyStored = totalEnergyStored;
+        this.totalMaxEnergyStored = nodes.stream().mapToLong(CapacitorBankNode::getCapacity).sum(); //Load all nodes with the last know capacity
         this.redstoneControl = redstone;
         this.positions.addAll(nodes.stream().map(CapacitorBankNode::getPos).toList());
     }
@@ -289,7 +290,8 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
 
     //Node has a BE now, update the network
     public void init(CapacitorBankNode node) {
-        totalMaxEnergyStored = Mth.clamp(totalMaxEnergyStored + node.getMaxEnergyStored(),0, Long.MAX_VALUE);
+        //Change the total capacity to the difference of the stored and the current one.
+        totalMaxEnergyStored = Mth.clamp(totalMaxEnergyStored - node.getCapacity() + node.getMaxEnergyStored(),0, Long.MAX_VALUE);
         positions.add(node.getPos());
     }
 
@@ -338,6 +340,7 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
                     CapacitorBankSavedData.onNetworkCreated(level, n);
                 }
             }
+
             capacity += n.getTotalMaxEnergyStored();
             this.totalMaxEnergyStored -= n.getTotalMaxEnergyStored();
         }
