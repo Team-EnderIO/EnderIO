@@ -245,22 +245,19 @@ public abstract class MachineMenu<T extends MachineBlockEntity> extends BaseBloc
     // Overrides the swapping behaviour. Required for ghost slots to prevent duping
     @Override
     public void doClick(int slotId, int button, ClickType clickType, Player player) {
-        if (slotId >= 0 && this.slots.get(slotId) instanceof GhostMachineSlot ghostSlot) {
-            if (clickType == ClickType.PICKUP) {
-                ItemStack slotItem = ghostSlot.getItem();
-                ItemStack carriedItem = this.getCarried();
-                if (!slotItem.isEmpty() && !carriedItem.isEmpty() && ghostSlot.mayPlace(carriedItem)) {
-                    if (!ItemStack.isSameItemSameComponents(slotItem, carriedItem)) {
-                        int count = Math.min(carriedItem.getCount(), ghostSlot.getMaxStackSize(carriedItem));
-                        ghostSlot.setByPlayer(carriedItem.copyWithCount(count));
-                        ghostSlot.setChanged();
-                        return;
-                    }
-                }
-            } else if (clickType == ClickType.SWAP) {
+        if (slotId >= 0 && slotId < slots.size() && getSlot(slotId) instanceof GhostMachineSlot ghostSlot) {
+            // Only allow PICKUP (click) or QUICK_MOVE (shift + click) events.
+            if (clickType != ClickType.PICKUP && clickType != ClickType.QUICK_MOVE) {
+                return;
+            }
+
+            ItemStack carriedItem = this.getCarried();
+            if (carriedItem.isEmpty() && !ghostSlot.getItem().isEmpty()) {
+                ghostSlot.set(ItemStack.EMPTY);
                 return;
             }
         }
+
         super.doClick(slotId, button, clickType, player);
     }
 }
