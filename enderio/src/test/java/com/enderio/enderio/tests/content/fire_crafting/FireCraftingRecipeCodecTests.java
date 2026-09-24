@@ -1,4 +1,4 @@
-package com.enderio.enderio.tests.recipes;
+package com.enderio.enderio.tests.content.fire_crafting;
 
 import com.enderio.enderio.content.fire_crafting.FireCraftingRecipe;
 import com.google.gson.JsonParser;

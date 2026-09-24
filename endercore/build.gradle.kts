@@ -10,6 +10,7 @@ plugins {
 dependencies {
     testImplementation(libs.junitJupiter)
     testRuntimeOnly(libs.junitPlatformLauncher)
+    testImplementation(libs.neoforgeTestFramework)
 }
 
 tasks.test {
