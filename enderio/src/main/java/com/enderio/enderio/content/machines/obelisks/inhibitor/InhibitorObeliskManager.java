@@ -40,10 +40,10 @@ public class InhibitorObeliskManager extends ObeliskAreaManager<InhibitorObelisk
         var obeliskManager = getManager(serverLevel);
 
         Set<InhibitorObeliskBlockEntity> obelisks = obeliskManager.getObelisksFor(target);
-        if (obelisks == null || obelisks.isEmpty()) {
+        if (obelisks.isEmpty()) {
             var prev = new BlockPos((int) event.getPrevX(), (int) event.getPrevY(), (int) event.getPrevZ());
             obelisks = obeliskManager.getObelisksFor(prev);
-            if (obelisks == null || obelisks.isEmpty()) {
+            if (obelisks.isEmpty()) {
                 return;
             }
         }

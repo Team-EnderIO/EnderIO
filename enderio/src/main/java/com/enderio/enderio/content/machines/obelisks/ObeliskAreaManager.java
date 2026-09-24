@@ -22,7 +22,6 @@ public abstract class ObeliskAreaManager<T extends ObeliskBlockEntity> {
         lookup.updateForBlockRadius(obelisk.getBlockPos(), obelisk.getRange(), obelisk);
     }
 
-    @Nullable
     public Set<T> getObelisksFor(BlockPos pos) {
         return lookup.getForChunk(new ChunkPos(pos));
     }

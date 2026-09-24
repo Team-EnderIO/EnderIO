@@ -18,12 +18,16 @@ import java.util.stream.Stream;
  * Implements the concept of a spatial hashmap, bucketed by chunk.
  */
 public class ChunkBoundLookup<T> {
+    private final Set<T> emptySet = Set.of();
     private final Long2ObjectMap<Set<T>> chunkData = new Long2ObjectOpenHashMap<>();
     private final Reference2ObjectMap<T, Set<ChunkPos>> valueKeys = new Reference2ObjectOpenHashMap<>();
 
-    @Nullable
     public Set<T> getForChunk(ChunkPos pos) {
-        return chunkData.get(pos.toLong());
+        return chunkData.getOrDefault(pos.toLong(), emptySet);
+    }
+
+    public Set<T> values() {
+        return valueKeys.keySet();
     }
 
     // region Direct Chunk Manipulation
@@ -51,7 +55,11 @@ public class ChunkBoundLookup<T> {
         }
 
         if (valueKeys.containsKey(value)) {
-            valueKeys.get(value).remove(pos);
+            var allChunks = valueKeys.get(value);
+            allChunks.remove(pos);
+            if (allChunks.isEmpty()) {
+                valueKeys.remove(value);
+            }
         }
     }
 
@@ -85,9 +93,7 @@ public class ChunkBoundLookup<T> {
             addForBlockRadius(centerPos, blockRadius, value);
             return;
         }
-        // Copy or else can get a concurrent modification exception if the current
-        // chunks are modified in the update
-        currentChunks = new HashSet<>(currentChunks);
+
         Set<ChunkPos> newChunks = getBlockRadius(centerPos, blockRadius).collect(Collectors.toSet());
         bulkUpdate(value, currentChunks, newChunks);
     }
@@ -134,8 +140,9 @@ public class ChunkBoundLookup<T> {
     }
 
     private void bulkUpdate(T value, Set<ChunkPos> chunksBefore, Set<ChunkPos> chunksAfter) {
-        Sets.SetView<ChunkPos> removedChunks = Sets.difference(chunksBefore, chunksAfter);
-        Sets.SetView<ChunkPos> addedChunks = Sets.difference(chunksAfter, chunksBefore);
+        // Copy the view to avoid concurrent modification exceptions
+        Set<ChunkPos> removedChunks = Set.copyOf(Sets.difference(chunksBefore, chunksAfter));
+        Set<ChunkPos> addedChunks = Set.copyOf(Sets.difference(chunksAfter, chunksBefore));
 
         removedChunks.forEach(chunkPos -> removeFromChunk(chunkPos, value));
         addedChunks.forEach(chunkPos -> addToChunk(chunkPos, value));
