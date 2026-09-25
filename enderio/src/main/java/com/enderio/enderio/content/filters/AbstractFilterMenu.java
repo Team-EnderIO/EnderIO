@@ -128,7 +128,8 @@ public abstract class AbstractFilterMenu<T> extends BaseEnderMenu {
                 return;
             }
 
-            if (!filterSlot.isEmpty()) {
+            ItemStack carriedItem = this.getCarried();
+            if (carriedItem.isEmpty() && !filterSlot.isEmpty()) {
                 filterSlot.clearResource();
                 return;
             }
