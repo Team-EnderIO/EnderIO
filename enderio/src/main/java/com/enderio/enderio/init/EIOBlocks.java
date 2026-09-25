@@ -570,7 +570,7 @@ public class EIOBlocks {
     private static DeferredBlock<CapacitorBankBlock> capacitorBank(String name,
         Supplier<Supplier<BlockEntityType<? extends CapacitorBankBlockEntity>>> regiliteBlockEntity, CapacitorTier tier) {
         return BLOCKS.registerBlock(name,
-            props -> new CapacitorBankBlock(props, regiliteBlockEntity.get()::get, tier),
+            props -> new CapacitorBankBlock(regiliteBlockEntity.get(), props, tier),
             BlockBehaviour.Properties.of().strength(2.5f, 8));
     }
 

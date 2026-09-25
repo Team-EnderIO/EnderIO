@@ -1,198 +1,442 @@
 package com.enderio.enderio.content.machines.capacitor_bank;
 
-import com.enderio.core.common.network.NetworkDataSlot;
-import com.enderio.enderio.api.capacitor.FixedScalable;
-import com.enderio.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.enderio.foundation.block.entity.MultiConfigurable;
-import com.enderio.enderio.foundation.block.entity.legacy.LegacyPoweredMachineBlockEntity;
-import com.enderio.enderio.foundation.block.entity.legacy.sync.LargeEnergyData;
-import com.enderio.enderio.foundation.block.entity.multienergy.CapacityTier;
-import com.enderio.enderio.foundation.block.entity.multienergy.MultiEnergyNode;
-import com.enderio.enderio.foundation.block.entity.multienergy.MultiEnergyStorageWrapper;
-import com.enderio.enderio.foundation.io.energy.ILargeMachineEnergyStorage;
-import com.enderio.enderio.foundation.io.energy.MachineEnergyStorage;
+import com.enderio.core.annotations.UseOnly;
+import com.enderio.enderio.api.io.IOConfigurable;
+import com.enderio.enderio.api.io.IOMode;
+import com.enderio.enderio.api.io.RedstoneControl;
+import com.enderio.enderio.foundation.MachineNBTKeys;
+import com.enderio.enderio.foundation.block.EIOBlockEntity;
+import com.enderio.enderio.foundation.block.entity.Wrenchable;
+import com.enderio.enderio.foundation.block.entity.legacy.LegacyMachineBlockEntity;
+import com.enderio.enderio.foundation.block.legacy.LegacyMachineBlock;
+import com.enderio.enderio.foundation.io.IOConfig;
+import com.enderio.enderio.foundation.network.packets.ServerboundCycleIOConfigPacket;
 import com.enderio.enderio.foundation.tag.EIOTags;
-import com.enderio.enderio.foundation.util.ReflectionUtil;
-import com.enderio.enderio.init.EIOBlockEntities;
-import dev.gigaherz.graph3.Graph;
-import dev.gigaherz.graph3.GraphObject;
-import dev.gigaherz.graph3.Mergeable;
+import com.enderio.enderio.init.EIOAttachments;
+import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.fml.LogicalSide;
+import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.client.model.data.ModelProperty;
+import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.EnumMap;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
-public class CapacitorBankBlockEntity extends LegacyPoweredMachineBlockEntity implements MultiConfigurable {
+public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProvider, Wrenchable, IOConfigurable {
 
-    public final CapacityTier tier;
+    public static final ICapabilityProvider<CapacitorBankBlockEntity, Direction, IEnergyStorage> ENERGY_STORAGE_PROVIDER = CapacitorBankEnergyStorage::getSided;
+    public static final int MAX_SIZE = 4_096;
+    public static final String NODE_ID = "NODE_ID";
 
-    private final MultiEnergyNode node;
+    private IOConfig ioConfig = IOConfig.empty();
 
-    private long addedEnergy = 0;
-    private long removedEnergy = 0;
-    public static final int AVERAGE_IO_OVER_X_TICKS = 10;
-    private final List<BlockPos> clientConfigurables = new ArrayList<>();
+    private final CapacitorTier tier;
+    private CapacitorBankNode node;
+    private CapacitorBankNetwork oldNetwork;
+    private int legacyEnergy = 0;
+    private UUID uuid = UUID.randomUUID();
 
+    private final Map<Direction, BlockCapabilityCache<IEnergyStorage, Direction>> energyStorageCaches = new EnumMap<>(Direction.class);
+    private final Set<SidedEnergy> validPushTargetCache = new HashSet<>();
+    private boolean isValidPushTargetCacheDirty = true;
+
+    private static final ModelProperty<IOConfigurable> IO_CONFIG_PROPERTY = LegacyMachineBlockEntity.IO_CONFIG_PROPERTY;
     private static final String DISPLAY_MODES = "displaymodes";
 
     private final Map<Direction, DisplayMode> displayModes = Util.make(() -> {
         Map<Direction, DisplayMode> map = new EnumMap<>(Direction.class);
         for (Direction direction : new Direction[] { Direction.NORTH, Direction.EAST, Direction.SOUTH,
-                Direction.WEST }) {
+            Direction.WEST }) {
             map.put(direction, DisplayMode.NONE);
         }
 
         return map;
     });
 
-    public static final NetworkDataSlot.CodecType<Map<Direction, DisplayMode>> DISPLAY_MODE_MAP_DATA_SLOT_TYPE = NetworkDataSlot.CodecType
-            .createMap(Direction.CODEC, DisplayMode.CODEC, Direction.STREAM_CODEC.cast(),
-                    DisplayMode.STREAM_CODEC.cast());
+    private RedstoneControl redstoneControl = RedstoneControl.ALWAYS_ACTIVE;
+    private boolean isRedstoneBlocked;
 
-    public static final NetworkDataSlot.CodecType<List<BlockPos>> POSITION_LIST_DATA_SLOT_TYPE = NetworkDataSlot.CodecType
-            .createList(BlockPos.CODEC, BlockPos.STREAM_CODEC.cast());
-
-    public CapacitorBankBlockEntity(BlockPos worldPosition, BlockState blockState, CapacitorTier tier) {
-        super(EnergyIOMode.Both, new FixedScalable(tier::getStorageCapacity),
-                new FixedScalable(tier::getStorageCapacity), EIOBlockEntities.CAPACITOR_BANKS.get(tier).get(),
-                worldPosition, blockState);
+    public CapacitorBankBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState, CapacitorTier tier) {
+        super(type, worldPosition, blockState);
         this.tier = tier;
-        this.node = new MultiEnergyNode(() -> energyStorage,
-                () -> (MultiEnergyStorageWrapper) getExposedEnergyStorage(), worldPosition);
-
-        addDataSlot(NetworkDataSlot.LONG.create(() -> addedEnergy, data -> addedEnergy = data));
-        addDataSlot(NetworkDataSlot.LONG.create(() -> removedEnergy, data -> removedEnergy = data));
-        addDataSlot(POSITION_LIST_DATA_SLOT_TYPE.create(this::getPositions, this::setPositions));
-        addDataSlot(DISPLAY_MODE_MAP_DATA_SLOT_TYPE.create(() -> displayModes, displayModes::putAll));
     }
 
-
-    @Override
-    public NetworkDataSlot<?> createEnergyDataSlot() {
-        return LargeEnergyData.DATA_SLOT_TYPE.create(
-                () -> LargeEnergyData.from((ILargeMachineEnergyStorage) getExposedEnergyStorage()),
-                energyData -> clientEnergyStorage = energyData.toImmutableStorage());
+    public CapacitorTier getTier() {
+        return tier;
     }
 
-    @Nullable
-    @Override
-    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
-        return new CapacitorBankMenu(containerId, this, playerInventory);
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public CapacitorBankNetwork getNetwork() {
+        return node.getNetwork();
     }
 
     @Override
-    public @Nullable MachineEnergyStorage createExposedEnergyStorage() {
-        return new MultiEnergyStorageWrapper(this, EnergyIOMode.Both, () -> tier);
-    }
+    public void setLevel(Level level) {
+        super.setLevel(level);
 
-    @Override
-    public void serverTick() {
-        super.serverTick();
-        if (level.getGameTime() % AVERAGE_IO_OVER_X_TICKS == 0
-                && node.getWrapper().get().getLastResetTime() != level.getGameTime()) {
-            if (node.getGraph() != null) {
-                addedEnergy = 0;
-                removedEnergy = 0;
-                List<GraphObject<Mergeable.Dummy>> nodes = new ArrayList<>(node.getGraph().getObjects());
-                for (GraphObject<Mergeable.Dummy> object : nodes) {
-                    if (object instanceof MultiEnergyNode graphNode) {
-                        addedEnergy += graphNode.getWrapper().get().getAddedEnergy();
-                        removedEnergy += graphNode.getWrapper().get().getRemovedEnergy();
-                        graphNode.getWrapper().get().resetEnergyStats(level.getGameTime());
-                    }
+        if (level instanceof ServerLevel serverLevel) {
+            CapacitorBankNode savedNote = CapacitorBankSavedData.get(serverLevel).claimNode(this.getBlockPos());
+            if (savedNote != null) { //Load saved node
+                this.node = savedNote;
+                this.node.attach(this);
+                this.redstoneControl = this.getNetwork().getRedstoneControl();
+            } else {
+                if (this.node == null) { //Create a new node if not created by placing a block
+                    this.node = new CapacitorBankNode(this);
                 }
+                CapacitorBankSavedData.onNetworkCreated(serverLevel, this.node.getNetwork()); //Broadcast the network creation
+            }
 
-                // Sync it back to other capacitor bank in this graph, only one can do this
-                // calculation, because each node is reset at once
-                for (GraphObject<Mergeable.Dummy> object : nodes) {
-                    if (object instanceof MultiEnergyNode graphNode
-                            && level.getBlockEntity(graphNode.pos) instanceof CapacitorBankBlockEntity capacitorBank) {
-                        capacitorBank.addedEnergy = addedEnergy;
-                        capacitorBank.removedEnergy = removedEnergy;
-                    }
-                }
+            if (this.legacyEnergy > 0) { //Restore legacy energy
+                this.node.getNetwork().receiveEnergy(this.getBlockPos(), null, this.legacyEnergy, false);
+                this.legacyEnergy = 0;
             }
         }
+    }
 
-        if (level.getGameTime() % 200 == hashCode() % 200 && node.getGraph() != null
-                && List.copyOf(node.getGraph().getObjects()).indexOf(node) == 0) {
-            long cumulativeEnergy = 0;
-            for (GraphObject<Mergeable.Dummy> object : node.getGraph().getObjects()) {
-                if (object instanceof MultiEnergyNode otherNode) {
-                    cumulativeEnergy += otherNode.getInternal().get().getEnergyStored();
+    public void removeNode() {
+        if (this.node.isValid()) {
+            this.oldNetwork = node.getNetwork(); //Network is still needed for the picked up block
+            this.node.getNetwork().remove(this.node);
+        }
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+
+        // Create all energy caches
+        if (level instanceof ServerLevel serverLevel) {
+            for (Direction side : Direction.values()) {
+                if (side == Direction.UP) {
+                    continue;
                 }
+
+                energyStorageCaches.put(side, BlockCapabilityCache.create(
+                    Capabilities.EnergyStorage.BLOCK,
+                    serverLevel,
+                    getBlockPos().relative(side),
+                    side.getOpposite(),
+                    () -> !isRemoved(),
+                    () -> isValidPushTargetCacheDirty = true));
             }
 
-            int energyPerNode = (int) (cumulativeEnergy / node.getGraph().getObjects().size());
-
-            for (GraphObject<Mergeable.Dummy> object : node.getGraph().getObjects()) {
-                if (object instanceof MultiEnergyNode otherNode) {
-                    ((MachineEnergyStorage) (otherNode.getInternal().get())).setEnergyStored(
-                            Math.min(energyPerNode, (int) Math.min(cumulativeEnergy, Integer.MAX_VALUE)));
-                    cumulativeEnergy -= energyPerNode;
-                }
-            }
-
-            int remainingEnergy = (int) cumulativeEnergy;
-            if (remainingEnergy <= 0) {
-                return;
-            }
-
-            for (GraphObject<Mergeable.Dummy> object : node.getGraph().getObjects()) {
-                if (object instanceof MultiEnergyNode otherNode) {
-                    int received = otherNode.getInternal().get().receiveEnergy(remainingEnergy, false);
-                    remainingEnergy -= received;
-                    if (remainingEnergy <= 0) {
-                        return;
-                    }
+            for (Direction side : Direction.values()) {
+                if (level.getBlockEntity(getBlockPos().relative(side)) instanceof CapacitorBankBlockEntity bank) {
+                    bank.node.getNetwork().connect(bank.node, node); //Connect to neighbours
                 }
             }
         }
     }
 
     @Override
-    protected boolean isActive() {
+    public void neighborChanged(Block neighborBlock, BlockPos neighborPos) {
+        super.neighborChanged(neighborBlock, neighborPos);
+
+        if (!level.isClientSide()) {
+            isValidPushTargetCacheDirty = true;
+        }
+    }
+
+    Set<SidedEnergy> getValidPushTargets() {
+        if (isValidPushTargetCacheDirty) {
+            validPushTargetCache.clear();
+            for (Direction side : Direction.values()) {
+                if (side == Direction.UP) {
+                    continue;
+                }
+
+                BlockCapabilityCache<IEnergyStorage, Direction> cache = energyStorageCaches.get(side); //TODO Why is this null?
+                if (cache == null) {
+                    return validPushTargetCache;
+                }
+                var energyStorage = cache.getCapability();
+                if (energyStorage != null && !(energyStorage instanceof CapacitorBankEnergyStorage) && energyStorage.canReceive() &&
+                    getIOMode(side).canOutput()) {
+                    validPushTargetCache.add(new SidedEnergy(energyStorage, new CapacitorBankNetwork.SidedPos(getBlockPos(), side)));
+                }
+            }
+            isValidPushTargetCacheDirty = false;
+        }
+
+        return validPushTargetCache;
+    }
+
+    private void setIOConfig(IOConfig ioConfig) {
+        this.ioConfig = ioConfig;
+
+        if (level != null) {
+            setChanged();
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+        }
+    }
+
+    @Override
+    public IOMode getIOMode(Direction side) {
+        return ioConfig.getMode(translateIOSide(side));
+    }
+
+    @Override
+    public boolean isIOConfigMutable() {
         return true;
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        super.saveAdditional(tag, lookupProvider);
-        tag.put(DISPLAY_MODES, saveDisplayModes());
-    }
-
-    public CompoundTag saveDisplayModes() {
-        CompoundTag nbt = new CompoundTag();
-        for (var entry : displayModes.entrySet()) {
-            nbt.putInt(entry.getKey().getName(), entry.getValue().ordinal());
-        }
-
-        return nbt;
+    public boolean shouldRenderIOConfigOverlay() {
+        return true;
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-        super.loadAdditional(tag, lookupProvider);
+    public void setIOMode(Direction side, IOMode mode) {
+        Direction localSide = translateIOSide(side);
+        setIOConfig(ioConfig.withMode(localSide, mode));
+
+        // Invalidate caps
+        level.invalidateCapabilities(worldPosition);
+        level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+        isValidPushTargetCacheDirty = true;
+    }
+
+    @Override
+    public boolean supportsIOMode(Direction side, IOMode state) {
+        return true;
+    }
+
+    @Override
+    public ModelData getModelData() {
+        return ModelData.builder().with(IO_CONFIG_PROPERTY, this).build();
+    }
+
+    @UseOnly(LogicalSide.CLIENT)
+    private void clientIOConfigChanged() {
+        requestModelDataUpdate();
+        level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+    }
+
+    private Direction translateIOSide(Direction side) {
+        // The block faces with its southern face. So the back of the machine.
+        Direction south = getBlockFacing();
+        return switch (side) {
+            case NORTH -> south.getOpposite();
+            case SOUTH -> south;
+            case WEST -> south.getCounterClockWise();
+            case EAST -> south.getClockWise();
+            default -> side;
+        };
+    }
+
+    public final RedstoneControl getRedstoneControl() {
+        return redstoneControl;
+    }
+
+    public void setRedstoneControl(RedstoneControl control) {
+        redstoneControl = control;
+        setChanged();
+        checkIsRedstoneBlocked();
+    }
+
+    public void setNetworkRedstoneControl(RedstoneControl control) {
+        node.getNetwork().setRedstoneControl(control);
+    }
+
+    @Override
+    protected boolean supportsRedstonePower() {
+        return true;
+    }
+
+    @Override
+    protected void updateRedstonePower() {
+        super.updateRedstonePower();
+        checkIsRedstoneBlocked();
+    }
+
+    private void checkIsRedstoneBlocked() {
+        isRedstoneBlocked = !redstoneControl.isActive(isRedstonePowered());
+    }
+
+    protected boolean isRedstoneBlocked() {
+        return isRedstoneBlocked;
+    }
+
+    /**
+     * Get the facing direction of the machine.
+     */
+    protected final Direction getBlockFacing() {
+        BlockState state = getBlockState();
+        if (state.hasProperty(LegacyMachineBlock.FACING)) {
+            return getBlockState().getValue(LegacyMachineBlock.FACING);
+        }
+
+        return Direction.SOUTH;
+    }
+
+    @Override
+    public ItemInteractionResult onWrenched(UseOnContext context) {
+        var player = context.getPlayer();
+        if (player == null || level == null) {
+            return ItemInteractionResult.SUCCESS;
+        }
+
+        // Holding shift
+        if (player.isSecondaryUseActive()) {
+            BlockPos pos = getBlockPos();
+            BlockState state = getBlockState();
+            Block block = state.getBlock();
+
+            if (level instanceof ServerLevel serverLevel) {
+                List<ItemStack> drops = Block.getDrops(state, serverLevel, pos, serverLevel.getBlockEntity(pos));
+                Inventory inventory = player.getInventory();
+                for (ItemStack item : drops) {
+                    inventory.placeItemBackInInventory(item);
+                }
+            }
+
+            block.playerWillDestroy(level, pos, state, player);
+            level.removeBlock(pos, false);
+            block.destroy(level, pos, state);
+
+            // TODO: custom sound when sound manager is up and running??
+
+            return ItemInteractionResult.sidedSuccess(level.isClientSide());
+        } else {
+            if (level.isClientSide()) {
+                if (isIOConfigMutable()) {
+                    PacketDistributor.sendToServer(new ServerboundCycleIOConfigPacket(worldPosition, context.getClickedFace()));
+                }
+            }
+
+            return ItemInteractionResult.sidedSuccess(level.isClientSide());
+        }
+    }
+
+    public DisplayMode getDisplayMode(Direction direction) {
+        if (getLevel() == null || !Block.shouldRenderFace(getBlockState(), getLevel(), worldPosition, direction,
+            worldPosition.relative(direction))) {
+            return DisplayMode.NONE;
+        }
+
+        return displayModes.get(direction);
+    }
+
+    public void setDisplayMode(Direction direction, DisplayMode mode) {
+        displayModes.put(direction, mode);
+    }
+
+    public boolean onShiftRightClick(Direction direction, Player player) {
+        if (direction.getAxis().getPlane() == Direction.Plane.VERTICAL) {
+            return false;
+        }
+
+        if (player.getMainHandItem().getItem() instanceof BlockItem
+            || player.getOffhandItem().getItem() instanceof BlockItem) {
+            return false;
+        }
+
+        if (player.getMainHandItem().is(EIOTags.Items.WRENCH)) {
+            return false;
+        }
+
+        displayModes.put(direction,
+            DisplayMode.values()[(displayModes.get(direction).ordinal() + 1) % DisplayMode.values().length]);
+        setChanged();
+        level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_ALL);
+        return true;
+    }
+
+    @Override
+    public Component getDisplayName() {
+        return getBlockState().getBlock().getName();
+    }
+
+    @Override
+    public @Nullable AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
+        return new CapacitorBankMenu(i, inventory, this);
+    }
+
+    // Opt into network syncing
+    @Override
+    public @Nullable Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+
+        // TODO: Ender IO 8 - remove.
+        if (hasData(EIOAttachments.IO_CONFIG)) {
+            ioConfig = getData(EIOAttachments.IO_CONFIG);
+            removeData(EIOAttachments.IO_CONFIG);
+        } else if (tag.contains(MachineNBTKeys.IO_CONFIG)) {
+            ioConfig = IOConfig.parseOptional(registries, tag.getCompound(MachineNBTKeys.IO_CONFIG));
+
+            if (level != null && level.isClientSide) {
+                clientIOConfigChanged();
+            }
+        }
+
+        // Old serialization format
+        if (tag.contains(MachineNBTKeys.ENERGY)) {
+            var energyStorage = tag.getCompound(MachineNBTKeys.ENERGY);
+            if (energyStorage.contains(MachineNBTKeys.ENERGY_STORED)) {
+                this.legacyEnergy = energyStorage.getInt(MachineNBTKeys.ENERGY_STORED);
+            }
+        } else if (tag.contains(MachineNBTKeys.ENERGY_STORED)) {
+            this.legacyEnergy = tag.getInt(MachineNBTKeys.ENERGY_STORED);
+        }
+
+        if (tag.contains(NODE_ID)) {
+            uuid = tag.getUUID(NODE_ID);
+        }
+
         if (tag.contains(DISPLAY_MODES, Tag.TAG_COMPOUND)) {
             loadDisplayModes(tag.getCompound(DISPLAY_MODES));
+        }
+
+        // TODO: Ender IO 8 - remove.
+        if (hasData(EIOAttachments.REDSTONE_CONTROL)) {
+            redstoneControl = getData(EIOAttachments.REDSTONE_CONTROL);
+            removeData(EIOAttachments.REDSTONE_CONTROL);
+        } else if (tag.contains(MachineNBTKeys.REDSTONE_CONTROL)) {
+            redstoneControl = RedstoneControl.parse(registries,
+                Objects.requireNonNull(tag.get(MachineNBTKeys.REDSTONE_CONTROL)));
         }
     }
 
@@ -208,121 +452,67 @@ public class CapacitorBankBlockEntity extends LegacyPoweredMachineBlockEntity im
     }
 
     @Override
-    protected boolean shouldPushEnergyTo(Direction direction) {
-        if (node.getGraph() == null) {
-            return true;
+    protected void saveAdditionalSynced(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditionalSynced(tag, registries);
+
+        if (isIOConfigMutable() && ioConfig != null) {
+            tag.put(MachineNBTKeys.IO_CONFIG, ioConfig.save(registries));
         }
 
-        if (level.getBlockEntity(worldPosition.relative(direction)) instanceof CapacitorBankBlockEntity capacitorBank) {
-            return capacitorBank.node.getGraph() != node.getGraph();
+
+        tag.put(DISPLAY_MODES, saveDisplayModes());
+
+        if (node != null && node.isValid()) { //Save data if present
+            tag.putUUID(NODE_ID, getNetwork().getUuid());
+            tag.put(MachineNBTKeys.REDSTONE_CONTROL, getNetwork().getRedstoneControl().save(registries));
+        }
+    }
+
+    public CompoundTag saveDisplayModes() {
+        CompoundTag nbt = new CompoundTag();
+        for (var entry : displayModes.entrySet()) {
+            nbt.putInt(entry.getKey().getName(), entry.getValue().ordinal());
         }
 
-        return true;
+        return nbt;
     }
 
     @Override
-    public void setRemoved() {
-        if (node.getGraph() != null) {
-            node.getGraph().remove(node);
+    protected void applyImplicitComponents(DataComponentInput components) {
+        super.applyImplicitComponents(components);
+
+        if (isIOConfigMutable()) {
+            ioConfig = components.getOrDefault(EIODataComponents.IO_CONFIG, IOConfig.empty());
         }
 
-        super.setRemoved();
+        if (this.node == null) { //Called before being placed, so a node needs to be made
+            this.node = new CapacitorBankNode(this);
+        }
+
+        getNetwork().receiveEnergy(this.getBlockPos(), null, components.getOrDefault(EIODataComponents.ENERGY, 0), false);
     }
 
     @Override
-    public void onLoad() {
-        super.onLoad();
-        if (node.getGraph() == null) {
-            Graph.integrate(node, List.of());
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+
+        if (isIOConfigMutable()) {
+            components.set(EIODataComponents.IO_CONFIG, ioConfig);
         }
 
-        for (Direction direction : Direction.values()) {
-            if (level.getBlockEntity(worldPosition.relative(direction)) instanceof CapacitorBankBlockEntity capacitor
-                    && capacitor.tier == tier) {
-                Graph.connect(node, capacitor.node);
+        if (oldNetwork != null) { //Network already kicked out the node, so we keep an old ref
+            int energy = oldNetwork.getEnergyForNode(this.getTier());
+            if (energy != 0) {
+                components.set(EIODataComponents.ENERGY, energy);
             }
         }
     }
 
     @Override
-    public List<BlockPos> getConfigurables() {
-        return clientConfigurables;
+    public void removeComponentsFromTag(CompoundTag tag) {
+        super.removeComponentsFromTag(tag);
+        tag.remove(MachineNBTKeys.IO_CONFIG);
     }
 
-    private void setPositions(List<BlockPos> list) {
-        clientConfigurables.clear();
-        clientConfigurables.addAll(list);
-    }
-
-    private volatile Map<GraphObject<Mergeable.Dummy>, ?> cachedMap;
-    private volatile Graph<Mergeable.Dummy> cachedMapGraph;
-
-    private Map<GraphObject<Mergeable.Dummy>, ?> getMap() {
-        Graph<Mergeable.Dummy> graph = node.getGraph();
-        if(graph == null) return Collections.emptyMap();
-        if (cachedMap == null || cachedMapGraph != graph) {
-            cachedMap = ReflectionUtil.getRawMap(graph);
-            cachedMapGraph = graph;
-        }
-        if (cachedMap == null) cachedMap = Collections.emptyMap();
-        return cachedMap;
-    }
-
-    private List<BlockPos> getPositions() {
-        if (node.getGraph() == null) {
-            return List.of();
-        }
-
-        // Get raw objects once - this is the expensive reflection call
-        Map<GraphObject<Mergeable.Dummy>, ?> map = getMap();
-        Collection<GraphObject<Mergeable.Dummy>> objects = !map.isEmpty() ? map.keySet() : node.getGraph().getObjects();
-        List<BlockPos> positions = new ArrayList<>(objects.size());
-
-        for (GraphObject<Mergeable.Dummy> obj : objects) {
-            if (obj instanceof MultiEnergyNode otherNode) {
-                positions.add(otherNode.pos);
-            }
-        }
-        return positions;
-    }
-
-    public boolean onShiftRightClick(Direction direction, Player player) {
-        if (direction.getAxis().getPlane() == Direction.Plane.VERTICAL) {
-            return false;
-        }
-
-        if (player.getMainHandItem().getItem() instanceof BlockItem
-                || player.getOffhandItem().getItem() instanceof BlockItem) {
-            return false;
-        }
-
-        if (player.getMainHandItem().is(EIOTags.Items.WRENCH)) {
-            return false;
-        }
-
-        displayModes.put(direction,
-                DisplayMode.values()[(displayModes.get(direction).ordinal() + 1) % DisplayMode.values().length]);
-        return true;
-    }
-
-    public long getAddedEnergy() {
-        return addedEnergy / AVERAGE_IO_OVER_X_TICKS;
-    }
-
-    public long getRemovedEnergy() {
-        return removedEnergy / AVERAGE_IO_OVER_X_TICKS;
-    }
-
-    public DisplayMode getDisplayMode(Direction direction) {
-        if (getLevel() == null || !Block.shouldRenderFace(getBlockState(), getLevel(), worldPosition, direction,
-                worldPosition.relative(direction))) {
-            return DisplayMode.NONE;
-        }
-
-        return displayModes.get(direction);
-    }
-
-    public void setDisplayMode(Direction direction, DisplayMode mode) {
-        displayModes.put(direction, mode);
-    }
+    public record SidedEnergy(IEnergyStorage storage, CapacitorBankNetwork.SidedPos sidedPos) {}
 }
