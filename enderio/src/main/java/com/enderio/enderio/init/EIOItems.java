@@ -232,7 +232,6 @@ public class EIOItems {
 
     public static final DeferredItem<ConduitBlockItem> CONDUIT = ITEMS.registerItem("conduit", ConduitBlockItem::new);
 
-    // TODO: Why is facade type being stored as a component... it could just be part of the block item
     public static final DeferredItem<ConduitFacadeItem> CONDUIT_FACADE = ITEMS.registerItem("conduit_facade", ConduitFacadeItem::new,
         new Item.Properties().component(EIODataComponents.FACADE_TYPE, FacadeType.BASIC));
 

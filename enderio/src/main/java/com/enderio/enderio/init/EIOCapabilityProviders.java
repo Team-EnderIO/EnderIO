@@ -39,7 +39,6 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 public class EIOCapabilityProviders {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void markProxyableCapabilities(RegisterCapabilitiesEvent event) {
-        // TODO: Review these
         event.setProxyable(EnderIOCapabilities.SIDE_CONFIG);
         event.setProxyable(EnderIOCapabilities.SOUL_BINDABLE_BLOCK);
         event.setProxyable(EnderIOCapabilities.SOUL_HANDLER_BLOCK);
@@ -99,7 +98,6 @@ public class EIOCapabilityProviders {
 
         // endregion
 
-        // TODO: Testing the waters on doing capabilities by hand.
         // Register soul bindable items
         event.registerItem(EnderIOCapabilities.SOUL_BINDABLE_ITEM,
             SoulCapabilityProviders.COMPONENT_SOUL_BINDABLE_PROVIDER,

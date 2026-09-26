@@ -20,7 +20,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class FusedQuartzBlock extends TransparentBlock {
-    // TODO: Connected textures
     private final GlassIdentifier glassIdentifier;
     private final String descriptionId;
 

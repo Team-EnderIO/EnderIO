@@ -147,9 +147,7 @@ neoForge {
 
             programArguments.addAll(
                     "--mod", "enderio_modded_conduits",
-                    // TODO: Fix missing models...
-                    //"--all",
-                    "--server", "--client",
+                    "--all",
                     "--output", file("src/generated/resources").absolutePath,
                     "--existing", file("src/main/resources").absolutePath,
             )
@@ -178,7 +176,7 @@ var generateModMetadata = tasks.register<ProcessResources>("generateModMetadata"
             "mod_version" to project.version,
             "minecraft_version_range" to libs.versions.minecraft.get(),
             "neoforge_version" to libs.versions.neoforge.get(),
-            "loader_version_range" to "[4,)", // TODO
+            "loader_version_range" to "[1,)",
             "mekanism_version_range" to libs.versions.mekanismMod.get(),
             "ae2_version_range" to libs.versions.ae2.get(),
             "refinedstorage_version_range" to libs.versions.refinedStorage.get(),

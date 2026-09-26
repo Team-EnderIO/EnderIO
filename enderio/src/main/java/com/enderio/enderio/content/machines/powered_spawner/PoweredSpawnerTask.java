@@ -70,7 +70,6 @@ public abstract class PoweredSpawnerTask implements PoweredMachineTask {
     @Override
     public void tick() {
         if (!isLoaded) {
-            // TODO: maybe just mark as complete?
             return;
         }
 

@@ -224,14 +224,6 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
         }
 
         @Override
-        public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-            // TODO: is the depth test disable required?
-            RenderSystem.disableDepthTest();
-            super.render(guiGraphics, mouseX, mouseY, partialTicks);
-            RenderSystem.enableDepthTest();
-        }
-
-        @Override
         public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
             renderSimpleArea(guiGraphics, parentWidget.expandTopLeft, parentWidget.expandBottomRight);
         }
