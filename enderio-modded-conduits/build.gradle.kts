@@ -83,11 +83,11 @@ dependencies {
     accessTransformers(project(":enderio"))
 
     // AE2
-//    compileOnly(variantOf(libs.ae2) {
-//        classifier("api")
-//    })
-//
-//    runtimeOnly(libs.ae2)
+    compileOnly(variantOf(libs.ae2) {
+        classifier("api")
+    })
+
+    runtimeOnly(libs.ae2)
 
     // Mekanism
 //    compileOnly(variantOf(libs.mekanism) {
@@ -98,8 +98,7 @@ dependencies {
 
     // Refined Storage
     compileOnly(libs.refinedStorage)
-    // TODO: Disabled until they fix Neo .21 compat
-//    runtimeOnly(libs.refinedStorage)
+    runtimeOnly(libs.refinedStorage)
 
     //Laserio
 //    compileOnly(libs.laserio)

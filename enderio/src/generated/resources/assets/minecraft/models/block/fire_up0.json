@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/template_fire_up",
   "textures": {
-    "fire": "enderio:block/cold_fire_1"
+    "fire": "minecraft:block/fire_0"
   }
 }

@@ -276,6 +276,8 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
         tag(EIOTags.Blocks.CROPS_WITH_STEM)
             .add(BlockItemIds.MELON.block())
             .add(BlockItemIds.PUMPKIN.block());
+
+        tag(BlockTags.FIRE).add(EIOBlocks.COLD_FIRE.getKey());
     }
 
     private void addMachineBlockTags() {

@@ -212,6 +212,10 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
         return 0;
     }
 
+    default Component getSlotTooltip(int slot) {
+        return Component.empty();
+    }
+
     default boolean isItemValid(int slot, ItemStack stack) {
         return true;
     }

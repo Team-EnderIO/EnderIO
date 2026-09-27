@@ -60,7 +60,7 @@ public class ColdFireIgniter extends Item implements ICustomCreativeTabEntries {
                 ResourceStack<FluidResource> extracted = ResourceHandlerUtil.extractFirst(fluidHandler,
                     fr -> fr.is(EIOTags.Fluids.COLD_FIRE_IGNITER_FUEL), 10, transaction);
 
-                if (extracted.amount() == 10) {
+                if (extracted != null && extracted.amount() == 10) {
                     Player player = context.getPlayer();
                     Level level = context.getLevel();
                     BlockPos blockpos = context.getClickedPos().relative(context.getClickedFace());

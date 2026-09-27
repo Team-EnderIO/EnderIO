@@ -3,10 +3,10 @@
     {
       "apply": [
         {
-          "model": "enderio:block/cold_fire_floor0"
+          "model": "minecraft:block/fire_floor0"
         },
         {
-          "model": "enderio:block/cold_fire_floor1"
+          "model": "minecraft:block/fire_floor1"
         }
       ],
       "when": {
@@ -20,16 +20,16 @@
     {
       "apply": [
         {
-          "model": "enderio:block/cold_fire_side0"
+          "model": "minecraft:block/fire_side0"
         },
         {
-          "model": "enderio:block/cold_fire_side1"
+          "model": "minecraft:block/fire_side1"
         },
         {
-          "model": "enderio:block/cold_fire_side_alt0"
+          "model": "minecraft:block/fire_side_alt0"
         },
         {
-          "model": "enderio:block/cold_fire_side_alt1"
+          "model": "minecraft:block/fire_side_alt1"
         }
       ],
       "when": {
@@ -50,19 +50,19 @@
     {
       "apply": [
         {
-          "model": "enderio:block/cold_fire_side0",
+          "model": "minecraft:block/fire_side0",
           "y": 90
         },
         {
-          "model": "enderio:block/cold_fire_side1",
+          "model": "minecraft:block/fire_side1",
           "y": 90
         },
         {
-          "model": "enderio:block/cold_fire_side_alt0",
+          "model": "minecraft:block/fire_side_alt0",
           "y": 90
         },
         {
-          "model": "enderio:block/cold_fire_side_alt1",
+          "model": "minecraft:block/fire_side_alt1",
           "y": 90
         }
       ],
@@ -84,19 +84,19 @@
     {
       "apply": [
         {
-          "model": "enderio:block/cold_fire_side0",
+          "model": "minecraft:block/fire_side0",
           "y": 180
         },
         {
-          "model": "enderio:block/cold_fire_side1",
+          "model": "minecraft:block/fire_side1",
           "y": 180
         },
         {
-          "model": "enderio:block/cold_fire_side_alt0",
+          "model": "minecraft:block/fire_side_alt0",
           "y": 180
         },
         {
-          "model": "enderio:block/cold_fire_side_alt1",
+          "model": "minecraft:block/fire_side_alt1",
           "y": 180
         }
       ],
@@ -118,19 +118,19 @@
     {
       "apply": [
         {
-          "model": "enderio:block/cold_fire_side0",
+          "model": "minecraft:block/fire_side0",
           "y": 270
         },
         {
-          "model": "enderio:block/cold_fire_side1",
+          "model": "minecraft:block/fire_side1",
           "y": 270
         },
         {
-          "model": "enderio:block/cold_fire_side_alt0",
+          "model": "minecraft:block/fire_side_alt0",
           "y": 270
         },
         {
-          "model": "enderio:block/cold_fire_side_alt1",
+          "model": "minecraft:block/fire_side_alt1",
           "y": 270
         }
       ],
@@ -152,16 +152,16 @@
     {
       "apply": [
         {
-          "model": "enderio:block/cold_fire_up0"
+          "model": "minecraft:block/fire_up0"
         },
         {
-          "model": "enderio:block/cold_fire_up1"
+          "model": "minecraft:block/fire_up1"
         },
         {
-          "model": "enderio:block/cold_fire_up_alt0"
+          "model": "minecraft:block/fire_up_alt0"
         },
         {
-          "model": "enderio:block/cold_fire_up_alt1"
+          "model": "minecraft:block/fire_up_alt1"
         }
       ],
       "when": {

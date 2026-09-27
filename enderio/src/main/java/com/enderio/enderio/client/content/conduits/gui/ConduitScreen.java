@@ -31,6 +31,7 @@ import net.minecraft.util.CommonColors;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.DyeColor;
 import org.jspecify.annotations.Nullable;
+import net.neoforged.neoforge.items.SlotItemHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,6 +102,23 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
         } else {
             graphics.text(this.font, ConduitLang.ERROR_NO_SCREEN_TYPE, 22, 7 + 4, CommonColors.DARK_GRAY, false);
         }
+    }
+    @Override
+    protected boolean renderCustomTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+        if (this.hoveredSlot != null && !this.hoveredSlot.hasItem()) {
+            if (this.hoveredSlot instanceof SlotItemHandler handlerSlot) {
+                if (handlerSlot.getItemHandler() == this.menu.getConduitInventory()) {
+                    int slotIndex = handlerSlot.getSlotIndex();
+                    Component tooltipText = this.menu.getConduit().value().getSlotTooltip(slotIndex);
+                    if (!tooltipText.getString().isEmpty()) {
+                        graphics.setTooltipForNextFrame(this.font, tooltipText, mouseX, mouseY);
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return super.renderCustomTooltip(graphics, mouseX, mouseY);
     }
 
     // Due to the generics, the menu data access and screen type need to be

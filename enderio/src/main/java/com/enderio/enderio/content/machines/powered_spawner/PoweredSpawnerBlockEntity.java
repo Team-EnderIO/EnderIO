@@ -324,7 +324,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
 
     @Override
     public boolean isSoulValid(Soul soul) {
-        return SpawnerSoul.RELOAD_LISTENER.matches(soul.entityTypeId()).isPresent();
+        return soul.isEmpty() || SpawnerSoul.RELOAD_LISTENER.matches(soul.entityTypeId()).isPresent();
     }
 
     @Override

@@ -22,7 +22,7 @@ public class PlantCropFarmTask implements FarmTask {
     public <T extends BlockEntity & FarmingMachine> FarmInteraction process(BlockPos targetBlock, T blockEntity) {
         ItemResource seeds = blockEntity.getResource(blockEntity.seeds(targetBlock));
         if (seeds.isEmpty() || blockEntity.getLevel().getBlockState(targetBlock).isAir()) {
-            return FarmInteraction.BLOCKED;
+            return FarmInteraction.IGNORED;
         }
 
         if (seeds.getItem() instanceof BlockItem blockItem) {

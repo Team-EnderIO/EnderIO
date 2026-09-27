@@ -26,7 +26,6 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import org.jspecify.annotations.Nullable;
@@ -121,6 +120,15 @@ public record ItemConduit(Identifier texture, Component description, int transfe
         case EXTRACT_FILTER_SLOT -> new Vector2i(113, 71);
         case INSERT_FILTER_SLOT -> new Vector2i(23, 71);
         default -> throw new IndexOutOfBoundsException();
+        };
+    }
+
+    @Override
+    public Component getSlotTooltip(int slot) {
+        return switch (slot) {
+            case EXTRACT_FILTER_SLOT -> ConduitLang.ITEM_FILTER_SLOT_TOOLTIP;
+            case INSERT_FILTER_SLOT -> ConduitLang.ITEM_FILTER_SLOT_TOOLTIP;
+            default -> Component.empty();
         };
     }
 
