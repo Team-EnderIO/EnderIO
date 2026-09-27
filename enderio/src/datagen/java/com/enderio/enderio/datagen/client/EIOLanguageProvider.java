@@ -162,8 +162,8 @@ public class EIOLanguageProvider extends LanguageProvider {
 
         add(GlassCollisionPredicate.PLAYERS_PASS.getComponent(), "Not solid to players");
         add(GlassCollisionPredicate.PLAYERS_BLOCK.getComponent(), "Only solid to players");
-        add(GlassCollisionPredicate.MOBS_PASS.getComponent(), "Not solid to monsters");
-        add(GlassCollisionPredicate.MOBS_BLOCK.getComponent(), "Only solid to monsters");
+        add(GlassCollisionPredicate.MONSTER_PASS.getComponent(), "Not solid to monsters");
+        add(GlassCollisionPredicate.MONSTER_BLOCK.getComponent(), "Only solid to monsters");
         add(GlassCollisionPredicate.ANIMALS_PASS.getComponent(), "Not solid to animals");
         add(GlassCollisionPredicate.ANIMALS_BLOCK.getComponent(), "Only solid to animals");
 

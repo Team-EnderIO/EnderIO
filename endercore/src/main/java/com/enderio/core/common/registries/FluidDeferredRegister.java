@@ -3,6 +3,7 @@ package com.enderio.core.common.registries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -110,7 +111,8 @@ public class FluidDeferredRegister {
 
         // TODO: 1.21.4: bucket properties should maybe be separate and default with the stacksTo(1).
         public Builder defaultBucket() {
-            this.bucketFactory = (fluid, p) -> new BucketItem(fluid, p.stacksTo(1));
+            this.bucketFactory = (fluid, p) -> new BucketItem(fluid, p
+                .craftRemainder(Items.BUCKET).stacksTo(1));
             return this;
         }
 

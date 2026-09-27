@@ -38,7 +38,7 @@ public class AversionObeliskManager extends ObeliskAreaManager<AversionObeliskBl
         var obeliskManager = getManager(level);
 
         Set<AversionObeliskBlockEntity> obelisks = obeliskManager.getObelisksFor(pos);
-        if (obelisks == null || obelisks.isEmpty()) {
+        if (obelisks.isEmpty()) {
             return;
         }
 
