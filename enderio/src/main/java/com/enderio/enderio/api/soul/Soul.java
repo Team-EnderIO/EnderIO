@@ -60,8 +60,6 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) {
 
     // Do not compare obviously unreasonable NBT Keys
     private static final List<String> IGNORED_KEYS_DURING_COMPARISON = List.of(
-        // TODO: need to check for any other tags that should be ignored.
-        // Perhaps make this configurable?
         Bee.TAG_CANNOT_ENTER_HIVE_TICKS,
         Bee.TAG_TICKS_SINCE_POLLINATION,
         Bee.TAG_CROPS_GROWN_SINCE_POLLINATION,

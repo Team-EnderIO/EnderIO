@@ -65,8 +65,6 @@ public class TransferUtil {
     }
 
     public static void distributeFluids(boolean canPush, boolean canPull, IFluidHandler selfItemHandler, IFluidHandler otherItemHandler) {
-        // TODO: Do we want to imitate old behaviour where if we have no fluid, we pull by default?
-
         if (canPush) {
             int filled = 0;
             for (int i = 0; i < selfItemHandler.getTanks(); i++) {

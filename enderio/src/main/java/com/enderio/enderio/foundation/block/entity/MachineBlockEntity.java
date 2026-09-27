@@ -343,8 +343,6 @@ public abstract class MachineBlockEntity extends EIOBlockEntity
 
     @UseOnly(LogicalSide.SERVER)
     protected void distributeResources() {
-        // TODO: Quick way to see if any sides are set to force.
-
         for (Direction side : Direction.values()) {
             IOMode mode = getIOMode(side);
             if (mode.canForce()) {

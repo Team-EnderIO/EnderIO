@@ -26,8 +26,6 @@ public class MachineInventory extends ItemStackHandler {
 
     private final IOConfigurable ioConfigurable;
     private final MachineInventoryLayout layout;
-    private IntConsumer changeListener = i -> {
-    };
 
     /**
      * Create a new machine inventory.
@@ -36,11 +34,6 @@ public class MachineInventory extends ItemStackHandler {
         super(layout.getSlotCount());
         this.ioConfigurable = ioConfigurable;
         this.layout = layout;
-    }
-
-    // TODO: Why are we not calling changeListener in onContentsChanged?
-    public void addSlotChangedCallback(IntConsumer callback) {
-        changeListener = changeListener.andThen(callback);
     }
 
     /**
@@ -79,39 +72,18 @@ public class MachineInventory extends ItemStackHandler {
 
     @Override
     public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-        boolean wasEmpty = !simulate && getStackInSlot(slot).isEmpty();
-        ItemStack itemStack = super.insertItem(slot, stack, simulate);
-        if (wasEmpty && itemStack.getCount() != stack.getCount()) {
-            changeListener.accept(slot);
-        }
-
-        return itemStack;
+        return super.insertItem(slot, stack, simulate);
     }
 
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
-        ItemStack itemStack = super.extractItem(slot, amount, simulate);
-        if (!itemStack.isEmpty() && !simulate && getStackInSlot(slot).isEmpty()) {
-            changeListener.accept(slot);
-        }
-
-        return itemStack;
-    }
-
-    @Override
-    public void setStackInSlot(int slot, ItemStack stack) {
-        boolean changed = stack.getItem() != getStackInSlot(slot).getItem();
-        super.setStackInSlot(slot, stack);
-        if (changed) {
-            this.changeListener.accept(slot);
-        }
+        return super.extractItem(slot, amount, simulate);
     }
 
     public void copyFromItem(ItemContainerContents contents) {
         contents.copyInto(this.stacks);
         for (int i = 0; i < getSlots(); i++) {
             onContentsChanged(i);
-            this.changeListener.accept(i);
         }
     }
 

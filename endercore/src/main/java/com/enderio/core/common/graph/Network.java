@@ -345,7 +345,6 @@ public abstract class Network<TNet extends Network<TNet, TNode>, TNode extends I
         // If any nodes remain, they are now disconnected - form graphs to replace them.
         Set<TNet> newGraphs = Sets.newHashSet();
         while (!remaining.isEmpty()) {
-            // TODO: Potentially rework this to use the new constructor?
             var newGraph = createEmpty();
 
             firstNode = remaining.iterator().next();
