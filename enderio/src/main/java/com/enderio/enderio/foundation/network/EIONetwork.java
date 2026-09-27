@@ -17,6 +17,7 @@ import com.enderio.enderio.foundation.network.packets.ServerboundOpenConduitFilt
 import com.enderio.enderio.foundation.network.packets.ServerboundRequestShortTravelPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundRequestTravelPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundSetFluidFilterSlotPacket;
+import com.enderio.enderio.foundation.network.packets.ServerboundSetGhostSlotPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundSetItemFilterSlotPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundSyncProbeStatePacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundTimerFilterPacket;
@@ -69,6 +70,9 @@ public class EIONetwork {
 
         registrar.playToServer(ServerboundSetFluidFilterSlotPacket.TYPE, ServerboundSetFluidFilterSlotPacket.STREAM_CODEC,
             ServerPayloadHandler.getInstance()::handleSetFluidFilterSlot);
+
+        registrar.playToServer(ServerboundSetGhostSlotPacket.TYPE, ServerboundSetGhostSlotPacket.STREAM_CODEC,
+            ServerPayloadHandler.getInstance()::handleSetGhostSlot);
 
         registrar.playToServer(ServerboundSetItemFilterSlotPacket.TYPE, ServerboundSetItemFilterSlotPacket.STREAM_CODEC,
             ServerPayloadHandler.getInstance()::handleSetItemFilterSlot);

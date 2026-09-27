@@ -1,6 +1,5 @@
 package com.enderio.core.common.util;
 
-import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;

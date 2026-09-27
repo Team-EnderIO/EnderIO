@@ -20,6 +20,6 @@ public class LimitedItemFilterSlot extends ItemFilterSlot {
 
     @Override
     public ItemStack processResource(ItemStack resource) {
-        return resource.copy();
+        return resource.copyWithCount(Math.min(resource.getCount(), resource.getMaxStackSize()));
     }
 }
