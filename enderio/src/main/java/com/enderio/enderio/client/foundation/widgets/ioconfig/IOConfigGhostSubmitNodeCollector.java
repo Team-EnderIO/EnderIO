@@ -28,6 +28,7 @@ import net.minecraft.client.resources.model.geometry.BakedQuad;
 import net.minecraft.client.resources.model.geometry.ItemQuads;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -130,7 +131,7 @@ public class IOConfigGhostSubmitNodeCollector implements SubmitNodeCollector {
                 passthrough.outline
                     .submit(
                         new BlockModelFeatureRenderer.Submit(
-                            pose, outlineRenderType, parts, BlockModelRenderState.EMPTY_TINTS, 15728880, OverlayTexture.NO_OVERLAY, outlineColor, null
+                            pose, outlineRenderType, parts, BlockModelRenderState.EMPTY_TINTS, LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, outlineColor, null
                         )
                     );
             }

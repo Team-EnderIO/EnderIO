@@ -109,7 +109,6 @@ public class FluidDeferredRegister {
             return this;
         }
 
-        // TODO: 1.21.4: bucket properties should maybe be separate and default with the stacksTo(1).
         public Builder defaultBucket() {
             this.bucketFactory = (fluid, p) -> new BucketItem(fluid, p
                 .craftRemainder(Items.BUCKET).stacksTo(1));

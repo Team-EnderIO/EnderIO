@@ -184,7 +184,7 @@ public class EIOBlockLootProvider extends BlockLootSubProvider {
             .lootTable()
             .withPool(new LootPool.Builder().add(
                 LootItem.lootTableItem(block).apply(
-                    CopyComponentsFunction.copyComponentsFromBlockEntity(LootContextParams.BLOCK_ENTITY))))); //TODO 1.21.11 does it copy all?
+                    CopyComponentsFunction.copyComponentsFromBlockEntity(LootContextParams.BLOCK_ENTITY)))));
     }
 
     private void copyStandardComponentsWith(Block block, net.minecraft.core.component.DataComponentType<?> componentType) {

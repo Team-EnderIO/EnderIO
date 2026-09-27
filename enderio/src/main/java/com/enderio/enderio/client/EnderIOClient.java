@@ -497,7 +497,6 @@ public class EnderIOClient {
 
     @SubscribeEvent
     public static void registerTravelRenderers(RegisterTravelRenderersEvent event) {
-        // TODO: 26.1
         event.register(EIOTravelTargets.TRAVEL_ANCHOR_TYPE.get(), TravelAnchorRenderer::new);
         event.register(EIOTravelTargets.ENDERFACE_TYPE.get(), EnderfaceRenderer::new);
     }

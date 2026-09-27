@@ -55,6 +55,7 @@ dependencyResolutionManagement {
             url = uri("https://modmaven.dev")
             content {
                 includeGroup("mezz.jei")
+                includeGroup("net.mezzdev.config")
                 includeGroup("mcjty.theoneprobe")
                 includeGroup("appeng")
                 includeGroup("mekanism")
