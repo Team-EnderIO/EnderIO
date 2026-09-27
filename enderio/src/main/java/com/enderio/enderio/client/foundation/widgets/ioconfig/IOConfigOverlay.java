@@ -15,7 +15,8 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.client.renderer.MultiBufferSource;
+// 26.2-port: MultiBufferSource removed in 26.2
+// import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.rendertype.RenderType;
@@ -298,7 +299,7 @@ public class IOConfigOverlay extends BaseOverlay {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, NEIGHBOURS_BTN, neighBtnRect.getX(), neighBtnRect.getY(), 16, 16);
         if (neighBtnRect.contains(mouseX, mouseY)) {
             graphics.tooltip(MINECRAFT.font, List.of(ClientTooltipComponent.create(EIOCommonLang.TOGGLE_NEIGHBOUR.copy().withStyle(ChatFormatting.WHITE).getVisualOrderText())),
-                    mouseX, mouseY, DefaultTooltipPositioner.INSTANCE, null);
+                    mouseX, mouseY, DefaultTooltipPositioner.INSTANCE, null, false);
         }
     }
 

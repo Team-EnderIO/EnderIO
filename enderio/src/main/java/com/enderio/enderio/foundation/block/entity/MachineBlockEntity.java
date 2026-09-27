@@ -31,6 +31,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Prediction;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -502,7 +503,7 @@ public abstract class MachineBlockEntity extends EIOBlockEntity implements MenuP
                 List<ItemStack> drops = Block.getDrops(state, serverLevel, pos, serverLevel.getBlockEntity(pos));
                 Inventory inventory = player.getInventory();
                 for (ItemStack item : drops) {
-                    inventory.placeItemBackInInventory(item);
+                    inventory.placeItemBackInInventory(item, Prediction.SERVER_ONLY);
                 }
             }
 

@@ -57,11 +57,6 @@ public class MachineBlock<T extends MachineBlockEntity> extends EIOEntityBlock<T
         return RenderShape.MODEL;
     }
 
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        throw new NotImplementedException("Block codecs are a later problem...");
-    }
-
     /**
      * Override this if you have a machine with no menu.
      */

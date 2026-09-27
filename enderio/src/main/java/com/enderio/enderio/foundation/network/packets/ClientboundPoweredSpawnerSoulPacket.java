@@ -23,7 +23,7 @@ public record ClientboundPoweredSpawnerSoulPacket(Map<Identifier, SpawnerSoul.So
 
     public ClientboundPoweredSpawnerSoulPacket(FriendlyByteBuf buf) {
         this(buf.readMap(FriendlyByteBuf::readIdentifier,
-                buff -> new SpawnerSoul.SoulData(buff.readIdentifier(), buff.readInt(),
+                (buff, id) -> new SpawnerSoul.SoulData(id, buff.readInt(),
                         buff.readEnum(MobSpawnMode.class))));
     }
 

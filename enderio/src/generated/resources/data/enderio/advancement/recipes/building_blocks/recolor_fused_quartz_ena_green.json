@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:recolor_fused_quartz_ena_green"
+        "recipes": "enderio:recolor_fused_quartz_ena_green"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

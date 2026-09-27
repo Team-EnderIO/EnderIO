@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:cold_fire_igniter"
+        "recipes": "enderio:cold_fire_igniter"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

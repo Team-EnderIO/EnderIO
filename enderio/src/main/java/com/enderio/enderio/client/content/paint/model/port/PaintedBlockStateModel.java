@@ -7,6 +7,7 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
@@ -228,11 +229,11 @@ public class PaintedBlockStateModel implements DynamicBlockStateModel {
             copied.setFrom(toCopy);
             BakedQuad.MaterialInfo info = sprite.getSecond();
             if (sprite.getSecond() == null) {
-                copied.setSprite(ModelHelper.getMissingTexture(), ChunkSectionLayer.SOLID, null);
+                copied.setSprite(ModelHelper.getMissingTexture(), ChunkSectionLayer.SOLID, Sheets.cutoutItemSheet(), Sheets.cutoutItemGlintSheet(),
+                    Sheets.cutoutItemGlintSpecialSheet());
             } else {
-                copied.setSpriteAndMoveUv(info.sprite(), info.layer(), info.itemRenderType());
+                copied.setSpriteAndMoveUv(info.sprite(), info.layer(), info.itemRenderType(), info.itemGlintRenderType(), info.itemGlintSpecialRenderType());
                 copied.setColor(sprite.getFirst());
-                copied.setShade(info.shade());
                 copied.setLightEmission(info.lightEmission());
                 copied.setAmbientOcclusion(info.ambientOcclusion());
                 copied.setTintIndex(info.tintIndex());

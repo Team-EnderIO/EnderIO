@@ -2,9 +2,7 @@ package com.enderio.enderio.client.content.conduits;
 
 import com.enderio.enderio.client.content.conduits.model.facades.ClientFacadeVisibility;
 import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ShapeRenderer;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.ARGB;
@@ -31,7 +29,7 @@ public class ConduitHighlightEvent {
         }
 
         if (minecraft.level
-                .getBlockEntity(event.getHitResult().getBlockPos()) instanceof ConduitBundleBlockEntity conduit) {
+                .getBlockEntity(event.getBlockPos()) instanceof ConduitBundleBlockEntity conduit) {
             // Use standard block highlights for facades.
             if (conduit.hasFacade() && ClientFacadeVisibility.areFacadesVisible()) {
                 return;
@@ -41,27 +39,28 @@ public class ConduitHighlightEvent {
             if (conduit.isEmpty()) {
                 return;
             }
-            
+
             BlockHitResult result = event.getHitResult();
             BlockPos pos = result.getBlockPos();
-            Vec3 camPos = event.getCamera().position();
-
             VoxelShape shape = conduit.getShape().getShapeFromHit(pos, result);
-
             Vec3 offset = Vec3.atLowerCornerOf(result.getBlockPos()).subtract(event.getCamera().position());
 
-            event.addCustomRenderer((renderState, buffer, poseStack, translucentPass, levelRenderState) -> {
-                if (translucentPass == renderState.isTranslucent()) {
+            boolean translucent = event.isInTranslucentPass();
+            float lineWidth = minecraft.getWindow().getAppropriateLineWidth();
+            event.addCustomRenderer((renderState, collector, poseStack, levelRenderState) -> {
+                if (translucent == renderState.isTranslucent()) {
                     boolean highContrast = renderState.highContrast();
-                    if (highContrast)
-                    {
-                        VertexConsumer builder = buffer.getBuffer(RenderTypes.secondaryBlockOutline());
-                        ShapeRenderer.renderShape(poseStack, builder, shape, offset.x, offset.y, offset.z, 0xFF000000, 7F);
+
+                    poseStack.pushPose();
+                    poseStack.translate(offset.x, offset.y, offset.z);
+
+                    if (highContrast) {
+                        collector.submitShapeOutline(poseStack, shape, RenderTypes.secondaryBlockOutline(), 0xFF000000, 7F, translucent);
                     }
 
-                    VertexConsumer builder = buffer.getBuffer(RenderTypes.lines());
                     int lineColor = highContrast ? CommonColors.HIGH_CONTRAST_DIAMOND : DEFAULT_LINE_COLOR;
-                    ShapeRenderer.renderShape(poseStack, builder, shape, offset.x, offset.y, offset.z, lineColor, Minecraft.getInstance().getWindow().getAppropriateLineWidth());
+                    collector.submitShapeOutline(poseStack, shape, RenderTypes.lines(), lineColor, lineWidth, translucent);
+                    poseStack.popPose();
                 }
                 return true;
             });

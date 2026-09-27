@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:weather_obelisk"
+        "recipes": "enderio:weather_obelisk"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

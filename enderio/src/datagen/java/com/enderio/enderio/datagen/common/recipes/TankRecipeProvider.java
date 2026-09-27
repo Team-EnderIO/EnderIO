@@ -5,6 +5,7 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.content.storage.fluid_tank.TankRecipe;
 import com.enderio.enderio.init.EIOFluids;
 import com.enderio.enderio.init.EIOItems;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -15,6 +16,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluid;
@@ -25,13 +27,13 @@ import net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient;
 
 public class TankRecipeProvider extends SubRecipeProvider {
 
-    protected SizedFluidIngredient sizedFromTag(HolderLookup.RegistryLookup<Fluid> fluids, TagKey<Fluid> tag, int count) {
+    protected SizedFluidIngredient sizedFromTag(HolderGetter<Fluid> fluids, TagKey<Fluid> tag, int count) {
         return new SizedFluidIngredient(FluidIngredient.of(fluids.getOrThrow(tag)), count);
     }
 
     @Override
-    public void buildRecipes(HolderLookup.Provider registries, RecipeOutput recipeOutput) {
-        var fluids = registries.lookupOrThrow(Registries.FLUID);
+    public void buildRecipes(RecipeOutput recipeOutput) {
+        var fluids = recipeOutput.lookup(Registries.FLUID);
 
         buildEmptying(Ingredient.of(Items.EXPERIENCE_BOTTLE), Items.GLASS_BOTTLE,
                 sizedFromTag(fluids, Tags.Fluids.EXPERIENCE, 250), recipeOutput);
@@ -44,37 +46,37 @@ public class TankRecipeProvider extends SubRecipeProvider {
         buildFilling(Ingredient.of(Items.STICK), EIOItems.NUTRITIOUS_STICK,
                 SizedFluidIngredient.of(EIOFluids.NUTRIENT_DISTILLATION.source().get(), 1000), recipeOutput);
 
-        buildFilling(Ingredient.of(Items.WHITE_CONCRETE_POWDER), Items.WHITE_CONCRETE,
+        buildFilling(Ingredient.of(Items.CONCRETE_POWDER.pick(DyeColor.WHITE)), Items.CONCRETE.pick(DyeColor.WHITE),
                 SizedFluidIngredient.of(Fluids.WATER, 1000), recipeOutput);
-        buildFilling(Ingredient.of(Items.ORANGE_CONCRETE_POWDER), Items.ORANGE_CONCRETE,
+        buildFilling(Ingredient.of(Items.CONCRETE_POWDER.pick(DyeColor.ORANGE)), Items.CONCRETE.pick(DyeColor.ORANGE),
                 SizedFluidIngredient.of(Fluids.WATER, 1000), recipeOutput);
-        buildFilling(Ingredient.of(Items.MAGENTA_CONCRETE_POWDER), Items.MAGENTA_CONCRETE,
+        buildFilling(Ingredient.of(Items.CONCRETE_POWDER.pick(DyeColor.MAGENTA)), Items.CONCRETE.pick(DyeColor.MAGENTA),
                 SizedFluidIngredient.of(Fluids.WATER, 1000), recipeOutput);
-        buildFilling(Ingredient.of(Items.LIGHT_BLUE_CONCRETE_POWDER), Items.LIGHT_BLUE_CONCRETE,
+        buildFilling(Ingredient.of(Items.CONCRETE_POWDER.pick(DyeColor.LIGHT_BLUE)), Items.CONCRETE.pick(DyeColor.LIGHT_BLUE),
                 SizedFluidIngredient.of(Fluids.WATER, 1000), recipeOutput);
-        buildFilling(Ingredient.of(Items.YELLOW_CONCRETE_POWDER), Items.YELLOW_CONCRETE,
+        buildFilling(Ingredient.of(Items.CONCRETE_POWDER.pick(DyeColor.YELLOW)), Items.CONCRETE.pick(DyeColor.YELLOW),
                 SizedFluidIngredient.of(Fluids.WATER, 1000), recipeOutput);
-        buildFilling(Ingredient.of(Items.LIME_CONCRETE_POWDER), Items.LIME_CONCRETE, SizedFluidIngredient.of(Fluids.WATER, 1000),
+        buildFilling(Ingredient.of(Items.CONCRETE_POWDER.pick(DyeColor.LIME)), Items.CONCRETE.pick(DyeColor.LIME), SizedFluidIngredient.of(Fluids.WATER, 1000),
                 recipeOutput);
-        buildFilling(Ingredient.of(Items.PINK_CONCRETE_POWDER), Items.PINK_CONCRETE, SizedFluidIngredient.of(Fluids.WATER, 1000),
+        buildFilling(Ingredient.of(Items.CONCRETE_POWDER.pick(DyeColor.PINK)), Items.CONCRETE.pick(DyeColor.PINK), SizedFluidIngredient.of(Fluids.WATER, 1000),
                 recipeOutput);
-        buildFilling(Ingredient.of(Items.GRAY_CONCRETE_POWDER), Items.GRAY_CONCRETE, SizedFluidIngredient.of(Fluids.WATER, 1000),
+        buildFilling(Ingredient.of(Items.CONCRETE_POWDER.pick(DyeColor.GRAY)), Items.CONCRETE.pick(DyeColor.GRAY), SizedFluidIngredient.of(Fluids.WATER, 1000),
                 recipeOutput);
-        buildFilling(Ingredient.of(Items.LIGHT_GRAY_CONCRETE_POWDER), Items.LIGHT_GRAY_CONCRETE,
+        buildFilling(Ingredient.of(Items.CONCRETE_POWDER.pick(DyeColor.LIGHT_GRAY)), Items.CONCRETE.pick(DyeColor.LIGHT_GRAY),
                 SizedFluidIngredient.of(Fluids.WATER, 1000), recipeOutput);
-        buildFilling(Ingredient.of(Items.CYAN_CONCRETE_POWDER), Items.CYAN_CONCRETE, SizedFluidIngredient.of(Fluids.WATER, 1000),
+        buildFilling(Ingredient.of(Items.CONCRETE_POWDER.pick(DyeColor.CYAN)), Items.CONCRETE.pick(DyeColor.CYAN), SizedFluidIngredient.of(Fluids.WATER, 1000),
                 recipeOutput);
-        buildFilling(Ingredient.of(Items.PURPLE_CONCRETE_POWDER), Items.PURPLE_CONCRETE,
+        buildFilling(Ingredient.of(Items.CONCRETE_POWDER.pick(DyeColor.PURPLE)), Items.CONCRETE.pick(DyeColor.PURPLE),
                 SizedFluidIngredient.of(Fluids.WATER, 1000), recipeOutput);
-        buildFilling(Ingredient.of(Items.BLUE_CONCRETE_POWDER), Items.BLUE_CONCRETE, SizedFluidIngredient.of(Fluids.WATER, 1000),
+        buildFilling(Ingredient.of(Items.CONCRETE_POWDER.pick(DyeColor.BLUE)), Items.CONCRETE.pick(DyeColor.BLUE), SizedFluidIngredient.of(Fluids.WATER, 1000),
                 recipeOutput);
-        buildFilling(Ingredient.of(Items.BROWN_CONCRETE_POWDER), Items.BROWN_CONCRETE,
+        buildFilling(Ingredient.of(Items.CONCRETE_POWDER.pick(DyeColor.BROWN)), Items.CONCRETE.pick(DyeColor.BROWN),
                 SizedFluidIngredient.of(Fluids.WATER, 1000), recipeOutput);
-        buildFilling(Ingredient.of(Items.GREEN_CONCRETE_POWDER), Items.GREEN_CONCRETE,
+        buildFilling(Ingredient.of(Items.CONCRETE_POWDER.pick(DyeColor.GREEN)), Items.CONCRETE.pick(DyeColor.GREEN),
                 SizedFluidIngredient.of(Fluids.WATER, 1000), recipeOutput);
-        buildFilling(Ingredient.of(Items.RED_CONCRETE_POWDER), Items.RED_CONCRETE, SizedFluidIngredient.of(Fluids.WATER, 1000),
+        buildFilling(Ingredient.of(Items.CONCRETE_POWDER.pick(DyeColor.RED)), Items.CONCRETE.pick(DyeColor.RED), SizedFluidIngredient.of(Fluids.WATER, 1000),
                 recipeOutput);
-        buildFilling(Ingredient.of(Items.BLACK_CONCRETE_POWDER), Items.BLACK_CONCRETE,
+        buildFilling(Ingredient.of(Items.CONCRETE_POWDER.pick(DyeColor.BLACK)), Items.CONCRETE.pick(DyeColor.BLACK),
                 SizedFluidIngredient.of(Fluids.WATER, 1000), recipeOutput);
     }
 

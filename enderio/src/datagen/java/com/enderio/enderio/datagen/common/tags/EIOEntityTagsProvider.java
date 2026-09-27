@@ -5,7 +5,7 @@ import com.enderio.enderio.foundation.tag.EIOTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypeIds;
 import net.neoforged.neoforge.common.Tags;
 
 import java.util.concurrent.CompletableFuture;
@@ -18,8 +18,8 @@ public class EIOEntityTagsProvider extends EntityTypeTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider provider) {
         this.tag(EIOTags.EntityTypes.SOUL_VIAL_DENY_LIST)
-            .add(EntityType.WARDEN)
-            .add(EntityType.CREAKING)
+            .add(EntityTypeIds.WARDEN)
+            .add(EntityTypeIds.CREAKING)
             .addTag(Tags.EntityTypes.CAPTURING_NOT_SUPPORTED)
             .addTag(Tags.EntityTypes.BOSSES);
 
@@ -27,8 +27,8 @@ public class EIOEntityTagsProvider extends EntityTypeTagsProvider {
 
         this.tag(EIOTags.EntityTypes.SPAWNER_DENY_LIST)
             .addTag(Tags.EntityTypes.BOSSES)
-            .add(EntityType.WARDEN)
-            .add(EntityType.CREAKING);
+            .add(EntityTypeIds.WARDEN)
+            .add(EntityTypeIds.CREAKING);
 
         this.tag(EIOTags.EntityTypes.SPAWNER_ALLOW_LIST);
 

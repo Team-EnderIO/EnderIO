@@ -1,9 +1,7 @@
 package com.enderio.enderio.content.misc_blocks;
 
-import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -13,7 +11,9 @@ import net.minecraft.world.level.block.SpongeBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.Queue;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.Map;
 
 public class IndustrialInsulationBlock extends SpongeBlock {
     private static final int MAX_REPLACES = 64;
@@ -29,14 +29,16 @@ public class IndustrialInsulationBlock extends SpongeBlock {
 
     @Override
     protected void tryAbsorbWater(Level level, BlockPos pos) {
-        Queue<Tuple<BlockPos, Integer>> queue = Lists.newLinkedList();
-        queue.add(new Tuple<>(pos, 0));
+        // 26.2-port: net.minecraft.util.Tuple was removed — using a local record instead.
+        record PosRange(BlockPos pos, int range) {}
+        Deque<PosRange> queue = new ArrayDeque<>();
+        queue.add(new PosRange(pos, 0));
         int checkedBlocksCount = 0;
 
         while (!queue.isEmpty()) {
-            Tuple<BlockPos, Integer> tuple = queue.poll();
-            BlockPos blockpos = tuple.getA();
-            int currentRange = tuple.getB();
+            PosRange entry = queue.poll();
+            BlockPos blockpos = entry.pos();
+            int currentRange = entry.range();
 
             for (Direction direction : Direction.values()) {
                 BlockPos blockToCheckPos = blockpos.relative(direction);
@@ -47,7 +49,7 @@ public class IndustrialInsulationBlock extends SpongeBlock {
                     ++checkedBlocksCount;
 
                     if (currentRange < MAX_RANGE) {
-                        queue.add(new Tuple<>(blockToCheckPos, currentRange + 1));
+                        queue.add(new PosRange(blockToCheckPos, currentRange + 1));
                     }
 
                 } else if (blockToCheckState.getBlock() instanceof LiquidBlock) {
@@ -59,7 +61,7 @@ public class IndustrialInsulationBlock extends SpongeBlock {
                     ++checkedBlocksCount;
 
                     if (currentRange < MAX_RANGE) {
-                        queue.add(new Tuple<>(blockToCheckPos, currentRange + 1));
+                        queue.add(new PosRange(blockToCheckPos, currentRange + 1));
                     }
                 }
             }

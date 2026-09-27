@@ -1,13 +1,13 @@
 package com.enderio.enderio.client.content.conduits;
 
 import com.enderio.enderio.client.content.conduits.model.facades.ClientFacadeVisibility;
-import com.enderio.enderio.compat.ModCompatHelper;
 import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.irisshaders.iris.api.v0.IrisApi;
+// 26.2-port: third-party mod interaction commented out — Iris compat deferred
+// import net.irisshaders.iris.api.v0.IrisApi;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockQuadOutput;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
@@ -103,13 +103,12 @@ public class ConduitFacadeRendering {
 
         @Override
         public void render(AddSectionGeometryEvent.SectionRenderingContext context) {
-            // Render nothing if a shader pack is in use - transparent facades do not render well with shaders.
-            // See GH-1062 for more details.
-            if (!this.opaque && ModCompatHelper.hasIris()) {
-                if (IrisApi.getInstance().isShaderPackInUse()) {
-                    return;
-                }
-            }
+            // 26.2-port: Iris shader check disabled — Iris compat deferred
+            //   if (!this.opaque && ModCompatHelper.hasIris()) {
+            //       if (IrisApi.getInstance().isShaderPackInUse()) {
+            //           return;
+            //       }
+            //   }
 
             VertexConsumerWrapper wrapper = opaque ? null : new AlphaWrapper(context);
 

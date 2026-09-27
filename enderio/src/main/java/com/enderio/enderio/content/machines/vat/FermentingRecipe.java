@@ -10,6 +10,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -176,9 +177,10 @@ public final class FermentingRecipe implements MachineRecipe<FermentingRecipe.In
     public List<RecipeDisplay> display() {
         return List.of(new FermentingDisplay(
             input.ingredient().display(),
-            new SlotDisplay.TagSlotDisplay(firstReagent),
-            new SlotDisplay.TagSlotDisplay(secondReagent),
-            new FluidStackSlotDisplay(output.create()),
+            // TODO: 26.3
+            new SlotDisplay.TagSlotDisplay(HolderSet.empty()), // (firstReagent),
+            new SlotDisplay.TagSlotDisplay(HolderSet.empty()), // (secondReagent),
+            new FluidStackSlotDisplay(output),
             new SlotDisplay.ItemSlotDisplay(EIOBlocks.VAT.asItem())
             ));
     }

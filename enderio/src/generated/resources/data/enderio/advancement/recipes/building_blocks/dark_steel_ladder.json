@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:dark_steel_ladder"
+        "recipes": "enderio:dark_steel_ladder"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

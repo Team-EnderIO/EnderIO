@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
     "H": "minecraft:hopper",
     "P": "minecraft:paper"

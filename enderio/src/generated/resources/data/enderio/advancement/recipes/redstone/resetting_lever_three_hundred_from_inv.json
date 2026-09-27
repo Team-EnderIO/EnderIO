@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:resetting_lever_three_hundred_from_inv"
+        "recipes": "enderio:resetting_lever_three_hundred_from_inv"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

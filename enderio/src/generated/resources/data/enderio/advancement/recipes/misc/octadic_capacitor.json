@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:octadic_capacitor"
+        "recipes": "enderio:octadic_capacitor"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

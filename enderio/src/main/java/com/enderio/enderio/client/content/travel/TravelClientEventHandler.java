@@ -7,6 +7,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Input;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.component.SwingAnimation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -73,7 +74,7 @@ public class TravelClientEventHandler {
             .getItemInHand(InteractionHand.OFF_HAND)
             .isEmpty() && event.getItemStack().isEmpty()) {
             if (TravelHandler.blockTeleport(event.getLevel(), event.getEntity(), true)) {
-                player.swing(event.getHand(), true);
+                player.swing(event.getHand(), SwingAnimation.DEFAULT, true);
                 // TODO: 20.6: Is this important?
                 //event.setCancellationResult(InteractionResult.SUCCESS);
             }

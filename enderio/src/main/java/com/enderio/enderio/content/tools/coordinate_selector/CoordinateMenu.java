@@ -8,6 +8,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Prediction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -85,9 +86,9 @@ public class CoordinateMenu extends AbstractContainerMenu {
             }
 
             if (severPlayer.isAlive() && !severPlayer.hasDisconnected()) {
-                severPlayer.getInventory().placeItemBackInInventory(itemstack);
+                severPlayer.getInventory().placeItemBackInInventory(itemstack, Prediction.SERVER_ONLY);
             } else {
-                severPlayer.drop(itemstack, false);
+                severPlayer.drop(itemstack, false, Prediction.SERVER_ONLY);
             }
         }
     }

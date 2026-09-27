@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:pulsating_crystal"
+        "recipes": "enderio:pulsating_crystal"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

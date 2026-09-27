@@ -25,8 +25,8 @@ public record ClientboundSoulEngineSoulPacket(Map<Identifier, EngineSoul.SoulDat
 
     public ClientboundSoulEngineSoulPacket(FriendlyByteBuf buf) {
         this(
-            buf.readMap(FriendlyByteBuf::readIdentifier, buff ->
-                new EngineSoul.SoulData(buff.readIdentifier(), buff.readUtf(), buff.readInt(), buff.readInt())
+            buf.readMap(FriendlyByteBuf::readIdentifier, (buff, id) ->
+                new EngineSoul.SoulData(id, buff.readUtf(), buff.readInt(), buff.readInt())
             )
         );
     }

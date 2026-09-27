@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:dark_steel_sword"
+        "recipes": "enderio:dark_steel_sword"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

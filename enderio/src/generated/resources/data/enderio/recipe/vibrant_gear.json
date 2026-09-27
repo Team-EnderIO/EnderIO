@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
     "G": "#c:gears/energized",
     "I": "enderio:vibrant_alloy_ingot",

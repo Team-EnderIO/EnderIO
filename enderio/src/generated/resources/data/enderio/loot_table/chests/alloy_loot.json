@@ -2,141 +2,105 @@
   "type": "minecraft:chest",
   "pools": [
     {
-      "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
-          "conditions": [
-            {
-              "chance": 0.2,
-              "condition": "minecraft:random_chance"
+          "condition": {
+            "type": "minecraft:random_chance",
+            "chance": 0.2
+          },
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "max": 2,
+              "min": 1
             }
-          ],
-          "functions": [
-            {
-              "add": false,
-              "count": {
-                "type": "minecraft:uniform",
-                "max": 2.0,
-                "min": 1.0
-              },
-              "function": "minecraft:set_count"
-            }
-          ],
+          },
           "name": "enderio:conductive_alloy_ingot"
         },
         {
           "type": "minecraft:item",
-          "conditions": [
-            {
-              "chance": 0.35,
-              "condition": "minecraft:random_chance"
+          "condition": {
+            "type": "minecraft:random_chance",
+            "chance": 0.35
+          },
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": {
+              "type": "minecraft:uniform",
+              "max": 3,
+              "min": 1
             }
-          ],
-          "functions": [
-            {
-              "add": false,
-              "count": {
-                "type": "minecraft:uniform",
-                "max": 3.0,
-                "min": 1.0
-              },
-              "function": "minecraft:set_count"
-            }
-          ],
+          },
           "name": "enderio:redstone_alloy_ingot"
         },
         {
           "type": "minecraft:item",
-          "conditions": [
-            {
-              "chance": 0.3,
-              "condition": "minecraft:random_chance"
-            }
-          ],
-          "functions": [
-            {
-              "add": false,
-              "count": 1.0,
-              "function": "minecraft:set_count"
-            }
-          ],
+          "condition": {
+            "type": "minecraft:random_chance",
+            "chance": 0.3
+          },
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": 1
+          },
           "name": "enderio:pulsating_alloy_ingot"
         },
         {
           "type": "minecraft:item",
-          "conditions": [
-            {
-              "chance": 0.2,
-              "condition": "minecraft:random_chance"
-            }
-          ],
-          "functions": [
-            {
-              "add": false,
-              "count": 1.0,
-              "function": "minecraft:set_count"
-            }
-          ],
+          "condition": {
+            "type": "minecraft:random_chance",
+            "chance": 0.2
+          },
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": 1
+          },
           "name": "enderio:vibrant_alloy_ingot"
         },
         {
           "type": "minecraft:item",
-          "conditions": [
-            {
-              "chance": 0.25,
-              "condition": "minecraft:random_chance"
-            }
-          ],
-          "functions": [
-            {
-              "add": false,
-              "count": 1.0,
-              "function": "minecraft:set_count"
-            }
-          ],
+          "condition": {
+            "type": "minecraft:random_chance",
+            "chance": 0.25
+          },
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": 1
+          },
           "name": "enderio:iron_gear"
         },
         {
           "type": "minecraft:item",
-          "conditions": [
-            {
-              "chance": 0.125,
-              "condition": "minecraft:random_chance"
-            }
-          ],
-          "functions": [
-            {
-              "add": false,
-              "count": 1.0,
-              "function": "minecraft:set_count"
-            }
-          ],
+          "condition": {
+            "type": "minecraft:random_chance",
+            "chance": 0.125
+          },
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": 1
+          },
           "name": "enderio:energized_gear"
         },
         {
           "type": "minecraft:item",
-          "conditions": [
-            {
-              "chance": 0.0625,
-              "condition": "minecraft:random_chance"
-            }
-          ],
-          "functions": [
-            {
-              "add": false,
-              "count": 1.0,
-              "function": "minecraft:set_count"
-            }
-          ],
+          "condition": {
+            "type": "minecraft:random_chance",
+            "chance": 0.0625
+          },
+          "modifier": {
+            "type": "minecraft:set_count",
+            "count": 1
+          },
           "name": "enderio:vibrant_gear"
         }
       ],
       "name": "Ender IO",
       "rolls": {
         "type": "minecraft:uniform",
-        "max": 2.0,
-        "min": 0.0
+        "max": 2,
+        "min": 0
       }
     }
   ],

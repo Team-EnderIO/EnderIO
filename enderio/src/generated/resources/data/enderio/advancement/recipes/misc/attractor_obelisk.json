@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:attractor_obelisk"
+        "recipes": "enderio:attractor_obelisk"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

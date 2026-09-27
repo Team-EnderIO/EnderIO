@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
     "C": "enderio:double_layer_capacitor",
     "G": "minecraft:glowstone",

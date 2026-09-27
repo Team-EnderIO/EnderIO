@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:staff_of_levity"
+        "recipes": "enderio:staff_of_levity"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

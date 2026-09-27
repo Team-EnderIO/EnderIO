@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:hardened_conduit_facade"
+        "recipes": "enderio:hardened_conduit_facade"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

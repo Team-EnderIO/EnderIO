@@ -70,11 +70,6 @@ public class SolarPanelBlock extends EIOEntityBlock<SolarPanelBlockEntity> imple
     }
 
     @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        throw new NotImplementedException("Block codecs are a later problem...");
-    }
-
-    @Override
     protected RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }

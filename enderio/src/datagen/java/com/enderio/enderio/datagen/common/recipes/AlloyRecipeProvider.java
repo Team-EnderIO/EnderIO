@@ -12,6 +12,7 @@ import com.enderio.enderio.content.machines.alloy.AlloySmeltingRecipe;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOItems;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -24,6 +25,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -36,15 +38,15 @@ import java.util.Map;
 
 public class AlloyRecipeProvider extends SubRecipeProvider {
 
-    private HolderLookup.RegistryLookup<Item> items;
+    private HolderGetter<Item> items;
 
     protected SizedIngredient sizedFromTag(TagKey<Item> tag, int count) {
         return new SizedIngredient(Ingredient.of(this.items.getOrThrow(tag)), count);
     }
 
     @Override
-    public void buildRecipes(HolderLookup.Provider registries, RecipeOutput recipeOutput) {
-        this.items = registries.lookupOrThrow(Registries.ITEM);
+    public void buildRecipes(RecipeOutput recipeOutput) {
+        this.items = recipeOutput.lookup(Registries.ITEM);
         // TODO: Review all recipes and alloy compositions
         // TODO: Experience values need set properly, i just used a filler value off the
         // top of my head
@@ -92,30 +94,30 @@ public class AlloyRecipeProvider extends SubRecipeProvider {
 
         // region Dyes
 
-        build(new ItemStackTemplate(Items.GREEN_DYE), "clippings",
+        build(new ItemStackTemplate(Items.DYE.pick(DyeColor.GREEN)), "clippings",
                 List.of(SizedIngredient.of(EIOItems.PLANT_MATTER_GREEN.get(), 6), sizedFromTag(ItemTags.EGGS, 1)),
                 1000, 0.3f, recipeOutput);
-        build(new ItemStackTemplate(Items.GREEN_DYE, 2), "double_clippings",
+        build(new ItemStackTemplate(Items.DYE.pick(DyeColor.GREEN), 2), "double_clippings",
                 List.of(SizedIngredient.of(EIOItems.PLANT_MATTER_GREEN.get(), 12),
                     sizedFromTag(Tags.Items.SLIME_BALLS, 1)),
                 1600, 0.3f, recipeOutput);
 
-        build(new ItemStackTemplate(Items.BROWN_DYE), "twigs",
+        build(new ItemStackTemplate(Items.DYE.pick(DyeColor.BROWN)), "twigs",
                 List.of(SizedIngredient.of(EIOItems.PLANT_MATTER_BROWN.get(), 6), sizedFromTag(ItemTags.EGGS, 1)),
                 1000, 0.3f, recipeOutput);
-        build(new ItemStackTemplate(Items.BROWN_DYE, 2), "twigs_double",
+        build(new ItemStackTemplate(Items.DYE.pick(DyeColor.BROWN), 2), "twigs_double",
                 List.of(SizedIngredient.of(EIOItems.PLANT_MATTER_BROWN.get(), 12),
                         sizedFromTag(Tags.Items.SLIME_BALLS, 1)),
                 1600, 0.3f, recipeOutput);
 
-        build(new ItemStackTemplate(Items.BLACK_DYE),
+        build(new ItemStackTemplate(Items.DYE.pick(DyeColor.BLACK)),
                 List.of(sizedFromTag(EIOTags.Items.DUSTS_COAL, 1), sizedFromTag(ItemTags.EGGS, 1)), 1000, 0.3f,
                 recipeOutput);
-        build(new ItemStackTemplate(Items.BLACK_DYE, 2), "double",
+        build(new ItemStackTemplate(Items.DYE.pick(DyeColor.BLACK), 2), "double",
                 List.of(sizedFromTag(EIOTags.Items.DUSTS_COAL, 2), sizedFromTag(Tags.Items.SLIME_BALLS, 1)),
                 1600, 0.3f, recipeOutput);
 
-        build(new ItemStackTemplate(Items.RED_DYE, 12), List.of(SizedIngredient.of(Items.BEETROOT, 1),
+        build(new ItemStackTemplate(Items.DYE.pick(DyeColor.RED), 12), List.of(SizedIngredient.of(Items.BEETROOT, 1),
                 SizedIngredient.of(Items.CLAY_BALL, 3), sizedFromTag(ItemTags.EGGS, 6)), 1600, 0.3f, recipeOutput);
 
         // endregion

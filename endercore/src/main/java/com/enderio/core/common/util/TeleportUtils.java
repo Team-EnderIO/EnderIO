@@ -25,7 +25,7 @@ public class TeleportUtils {
                     entity.stopRiding();
                 }
 
-                if (entity.randomTeleport(d3, d4, d5, true)) {
+                if (entity.randomTeleport(d3, d4, d5, true, _ -> true)) {
                     break;
                 }
             }

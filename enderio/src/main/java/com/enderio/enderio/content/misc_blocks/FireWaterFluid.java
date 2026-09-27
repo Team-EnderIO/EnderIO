@@ -4,6 +4,7 @@ import com.enderio.enderio.content.fire_crafting.FireCraftingManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -59,7 +60,7 @@ public abstract class FireWaterFluid extends BaseFlowingFluid {
                         level.setBlockAndUpdate(blockpos, EventHooks.fireFluidPlaceBlockEvent(level, blockpos, pos, BaseFireBlock.getState(level, blockpos)));
                         return;
                     }
-                } else if (blockstate.blocksMotion()) {
+                } else if (blockstate.is(BlockTags.BLOCKS_LAVA_FIRE_SPREAD)) {
                     return;
                 }
             }

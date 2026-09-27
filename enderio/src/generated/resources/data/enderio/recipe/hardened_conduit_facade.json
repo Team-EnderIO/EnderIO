@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
     "F": "enderio:conduit_facade",
     "O": "#c:dusts/obsidian"

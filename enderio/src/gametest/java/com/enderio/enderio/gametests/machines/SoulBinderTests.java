@@ -9,6 +9,7 @@ import com.enderio.enderio.init.EIOFluids;
 import com.enderio.enderio.init.EIOItems;
 import com.enderio.enderio.init.EIORecipeTypes;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -36,7 +37,7 @@ public class SoulBinderTests {
             })
             // Insert recipe ingredients - filled soul vial and cobblestone (test recipe uses cobblestone instead of emerald)
             .thenExecute(() -> {
-                var soulVial = SoulVialItem.forSoul(Soul.of(EntityType.VILLAGER));
+                var soulVial = SoulVialItem.forSoul(Soul.of(EntityTypes.VILLAGER));
                 helper.insertIntoContainer(0, 0, 0, soulVial);
                 helper.insertIntoContainer(0, 0, 0, Items.COBBLESTONE, 1);
                 helper.fillContainer(0, 0, 0, EIOFluids.XP_JUICE.source().get(), 10000);
@@ -53,7 +54,7 @@ public class SoulBinderTests {
                 helper.assertContainerHasExactly(0, 0, 0, EIOItems.SOUL_VIAL.get(), 1);
 
                 var input = new SoulBindingRecipe.Input(
-                    SoulVialItem.forSoul(Soul.of(EntityType.VILLAGER)),
+                    SoulVialItem.forSoul(Soul.of(EntityTypes.VILLAGER)),
                     new ItemStack(Items.COBBLESTONE, 1),
                     new FluidStack(EIOFluids.XP_JUICE.source(), 10000)
                 );

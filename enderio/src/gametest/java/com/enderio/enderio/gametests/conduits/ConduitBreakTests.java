@@ -324,7 +324,7 @@ public class ConduitBreakTests {
     private static boolean breakAsPlayer(ConduitGameTestHelper helper) {
         BlockPos pos = helper.absolutePos(BUNDLE_POS);
         var state = helper.getLevel().getBlockState(pos);
-        var hit = new BlockHitResult(pos.getCenter(), Direction.NORTH, pos, false);
+        var hit = new BlockHitResult(Vec3.atCenterOf(pos), Direction.NORTH, pos, false);
         var player = new TargetingFakePlayer(helper.getLevel(), hit);
         return state.onDestroyedByPlayer(helper.getLevel(), pos, player, ItemStack.EMPTY, true, helper.getLevel().getFluidState(pos));
     }

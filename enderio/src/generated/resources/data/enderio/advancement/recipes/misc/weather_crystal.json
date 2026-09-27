@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:weather_crystal"
+        "recipes": "enderio:weather_crystal"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

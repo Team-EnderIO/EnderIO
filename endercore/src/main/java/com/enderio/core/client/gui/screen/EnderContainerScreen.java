@@ -4,6 +4,7 @@ import com.enderio.core.common.menu.LegacyBaseBlockEntityMenu;
 import com.enderio.core.common.menu.SlotWithOverlay;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -23,7 +24,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jspecify.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -250,7 +250,7 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
     // Final to preserve order, use onKeyPressed for screen-level event handling.
     @Override
     public final boolean keyPressed(KeyEvent event) {
-        if (event.key() == GLFW.GLFW_KEY_ESCAPE) {
+        if (InputConstants.getKey(event).getValue() == InputConstants.KEY_ESCAPE) {
             this.minecraft.player.closeContainer();
             return true;
         }

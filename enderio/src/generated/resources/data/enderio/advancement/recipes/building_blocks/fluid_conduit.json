@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:fluid_conduit"
+        "recipes": "enderio:fluid_conduit"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
