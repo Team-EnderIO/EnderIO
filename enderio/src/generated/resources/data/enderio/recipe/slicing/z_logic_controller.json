@@ -1,6 +1,5 @@
 {
   "type": "enderio:slicing",
-  "energy": 20000,
   "inputs": [
     "#c:ingots/soularium",
     "minecraft:zombie_head",
@@ -9,6 +8,7 @@
     "minecraft:redstone",
     "#c:silicon"
   ],
+  "operation_time": 667,
   "output": {
     "id": "enderio:z_logic_controller"
   }

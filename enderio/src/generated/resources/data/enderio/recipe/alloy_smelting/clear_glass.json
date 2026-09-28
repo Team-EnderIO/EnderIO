@@ -1,6 +1,5 @@
 {
   "type": "enderio:alloy_smelting",
-  "energy": 3200,
   "experience": 0.3,
   "inputs": [
     {
@@ -8,6 +7,7 @@
       "ingredient": "#c:glass_blocks/colorless"
     }
   ],
+  "operation_time": 160,
   "output": {
     "id": "enderio:clear_glass"
   }

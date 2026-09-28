@@ -1,6 +1,5 @@
 {
   "type": "enderio:slicing",
-  "energy": 20000,
   "inputs": [
     "#c:ingots/energetic_alloy",
     "#c:dusts/prismarine",
@@ -9,6 +8,7 @@
     "enderio:basic_capacitor",
     "#c:gems/prismarine"
   ],
+  "operation_time": 667,
   "output": {
     "id": "enderio:guardian_diode"
   }

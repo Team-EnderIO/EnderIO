@@ -52,8 +52,10 @@ public abstract class RecipeManagerMixin {
     private static Optional<RecipeHolder<AlloySmeltingRecipe>> enderio$convertSmeltingRecipe(
             Identifier originalId, SmeltingRecipe smeltingRecipe) {
 
-        int energy = MachinesConfig.COMMON.ENERGY.ALLOY_SMELTER_VANILLA_ITEM_ENERGY.get();
-        AlloySmeltingRecipe recipe = new WrappedAlloySmeltingRecipe(smeltingRecipe, energy);
+        int operationTime = Math.ceilDiv(
+            MachinesConfig.COMMON.ENERGY.ALLOY_SMELTER_VANILLA_ITEM_ENERGY.get(),
+            MachinesConfig.COMMON.ENERGY.ALLOY_SMELTER_USAGE.get());
+        AlloySmeltingRecipe recipe = new WrappedAlloySmeltingRecipe(smeltingRecipe, operationTime);
 
         String path = "smelting/" + originalId.getNamespace() + "/" + originalId.getPath();
         ResourceKey<Recipe<?>> id = ResourceKey.create(Registries.RECIPE, EnderIO.id(path));

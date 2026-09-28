@@ -20,6 +20,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.flag.FeatureFlagSet;
@@ -43,8 +44,10 @@ import java.util.Optional;
 
 public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Input> {
     private static final MapCodec<SoulBindingRecipe> MAP_CODEC = RecordCodecBuilder.<SoulBindingRecipe>mapCodec(instance -> instance
-        .group(ItemStackTemplate.CODEC.fieldOf("output").forGetter(SoulBindingRecipe::output), Ingredient.CODEC.fieldOf("input").forGetter(SoulBindingRecipe::input),
-            Codec.INT.fieldOf("energy").forGetter(SoulBindingRecipe::energy), Codec.INT.fieldOf("experience").forGetter(SoulBindingRecipe::experience),
+        .group(ItemStackTemplate.CODEC.fieldOf("output").forGetter(SoulBindingRecipe::output),
+            Ingredient.CODEC.fieldOf("input").forGetter(SoulBindingRecipe::input),
+            Codec.INT.fieldOf("operation_time").forGetter(SoulBindingRecipe::operationTime),
+            Codec.INT.fieldOf("experience").forGetter(SoulBindingRecipe::experience),
             Identifier.CODEC.optionalFieldOf("entity_type").forGetter(SoulBindingRecipe::entityType),
             MobCategory.CODEC.optionalFieldOf("mob_category").forGetter(SoulBindingRecipe::mobCategory),
             Codec.STRING.optionalFieldOf("soul_data").forGetter(SoulBindingRecipe::soulData),
@@ -60,7 +63,7 @@ public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.
     });
 
     public static final StreamCodec<RegistryFriendlyByteBuf, SoulBindingRecipe> STREAM_CODEC = MassiveStreamCodec.composite(ItemStackTemplate.STREAM_CODEC,
-        SoulBindingRecipe::output, Ingredient.CONTENTS_STREAM_CODEC, SoulBindingRecipe::input, ByteBufCodecs.INT, SoulBindingRecipe::energy, ByteBufCodecs.INT,
+        SoulBindingRecipe::output, Ingredient.CONTENTS_STREAM_CODEC, SoulBindingRecipe::input, ByteBufCodecs.INT, SoulBindingRecipe::operationTime, ByteBufCodecs.INT,
         SoulBindingRecipe::experience, Identifier.STREAM_CODEC.apply(ByteBufCodecs::optional), SoulBindingRecipe::entityType,
         // TODO: 1.21: This is a very gross, could do better.
         ByteBufCodecs.STRING_UTF8.map(name -> ((StringRepresentable.EnumCodec<MobCategory>) MobCategory.CODEC).byName(name), MobCategory::getName).apply(ByteBufCodecs::optional),
@@ -71,7 +74,7 @@ public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.
 
     private final ItemStackTemplate output;
     private final Ingredient input;
-    private final int energy;
+    private final int operationTime;
     private final int experience;
     private final Optional<Identifier> entityType;
     private final Optional<MobCategory> mobCategory;
@@ -81,11 +84,11 @@ public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.
     @Nullable
     private PlacementInfo placementInfo;
 
-    public SoulBindingRecipe(ItemStackTemplate output, Ingredient input, int energy, int experience, Optional<Identifier> entityType, Optional<MobCategory> mobCategory, Optional<String> soulData,
+    public SoulBindingRecipe(ItemStackTemplate output, Ingredient input, int operationTime, int experience, Optional<Identifier> entityType, Optional<MobCategory> mobCategory, Optional<String> soulData,
         boolean copyInputComponents) {
         this.output = output;
         this.input = input;
-        this.energy = energy;
+        this.operationTime = operationTime;
         this.experience = experience;
         this.entityType = entityType;
         this.mobCategory = mobCategory;
@@ -101,8 +104,8 @@ public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.
         return input;
     }
 
-    public int energy() {
-        return energy;
+    public int operationTime() {
+        return operationTime;
     }
 
     public int experience() {
@@ -122,12 +125,12 @@ public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.
     }
 
     @Override
-    public int getBaseEnergyCost() {
-        return energy;
+    public int getOperationTime(Input input) {
+        return operationTime;
     }
 
     @Override
-    public List<OutputStack> craft(Input input, RegistryAccess registryAccess) {
+    public List<OutputStack> craft(Input input, RandomSource randomSource, RegistryAccess registryAccess) {
         ItemStack vial = input.getItem(0);
 
         List<OutputStack> results = getResultStacks(registryAccess);

@@ -21,6 +21,7 @@ import com.enderio.enderio.content.filters.soul.EnderSoulFilter;
 import com.enderio.enderio.content.machines.alloy.AlloySmelterMode;
 import com.enderio.enderio.content.paint.BlockPaintData;
 import com.enderio.enderio.foundation.attachment.ActionRange;
+import com.enderio.enderio.foundation.crafting.MachineCraftingState;
 import com.enderio.enderio.foundation.io.IOConfig;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.component.DataComponentType;
@@ -48,6 +49,8 @@ public class EIODataComponents {
     public static final DataComponentType<Integer> ENERGY = register("energy", builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT));
 
     public static final DataComponentType<Soul> SOUL = register("soul", builder -> builder.persistent(Soul.CODEC).networkSynchronized(Soul.STREAM_CODEC));
+
+    public static final DataComponentType<MachineCraftingState> MACHINE_CRAFTING_STATE = register("machine_crafting_state", builder -> builder.persistent(MachineCraftingState.CODEC));
 
     // endregion
 

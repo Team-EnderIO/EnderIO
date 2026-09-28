@@ -29,12 +29,14 @@ public abstract class MachineRecipeCategory<T> implements IRecipeCategory<T> {
     }
 
     protected static <T extends MachineRecipe<?>> Component getBasicEnergyString(RecipeHolder<T> recipe) {
-        return TooltipUtil.withArgs(EIOCommonLang.ENERGY_AMOUNT,
-                NumberFormat.getIntegerInstance(Locale.ENGLISH).format(recipe.value().getBaseEnergyCost()));
+//        return TooltipUtil.withArgs(EIOCommonLang.ENERGY_AMOUNT,
+//                NumberFormat.getIntegerInstance(Locale.ENGLISH).format(recipe.value().getBaseEnergyCost()));
+        return Component.literal("TODO");
     }
 
     protected static <T extends MachineRecipe<?>> Component getBasicEnergyString(T recipe) {
-        return TooltipUtil.withArgs(EIOCommonLang.ENERGY_AMOUNT,
-                NumberFormat.getIntegerInstance(Locale.ENGLISH).format(recipe.getBaseEnergyCost()));
+//        return TooltipUtil.withArgs(EIOCommonLang.ENERGY_AMOUNT,
+//                NumberFormat.getIntegerInstance(ocale.ENGLISH).format(recipe.getBaseEnergyCost()));
+        return Component.literal("TODO");
     }
 }

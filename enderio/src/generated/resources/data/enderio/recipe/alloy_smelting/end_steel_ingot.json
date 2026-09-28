@@ -1,6 +1,5 @@
 {
   "type": "enderio:alloy_smelting",
-  "energy": 6400,
   "experience": 0.3,
   "inputs": [
     {
@@ -16,6 +15,7 @@
       "ingredient": "#c:obsidians"
     }
   ],
+  "operation_time": 320,
   "output": {
     "count": 2,
     "id": "enderio:end_steel_ingot"

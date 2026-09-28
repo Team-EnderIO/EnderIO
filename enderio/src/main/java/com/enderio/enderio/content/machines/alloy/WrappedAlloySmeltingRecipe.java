@@ -9,8 +9,8 @@ import java.util.List;
 public class WrappedAlloySmeltingRecipe extends AlloySmeltingRecipe{
     private final SmeltingRecipe parent;
 
-    public WrappedAlloySmeltingRecipe(SmeltingRecipe parent, int energy) {
-        super(List.of(), null, energy, 0, true);
+    public WrappedAlloySmeltingRecipe(SmeltingRecipe parent, int operationTime) {
+        super(List.of(), null, operationTime, 0, true);
         this.parent = parent;
     }
 
