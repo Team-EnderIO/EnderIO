@@ -72,7 +72,7 @@ public class EnergyConduitTests {
             .thenExecute(() -> helper.changeIoConfig(0, 1, 0, ioConfigurable -> {
                 ioConfigurable.setIOMode(Direction.EAST, IOMode.PUSH);
             }))
-            .thenExecute(() -> helper.provideEnergy(0, 1, 0, transferRate * 2))
+            .thenExecute(() -> helper.provideEnergyExact(0, 1, 0, transferRate * 2))
             .thenExecuteAfter(10, () -> {
                 int sourceEnergy = helper.getEnergyStored(0, 1, 0);
                 int sinkEnergy = helper.getEnergyStored(2, 1, 0);
@@ -111,7 +111,7 @@ public class EnergyConduitTests {
             .thenExecute(() -> helper.changeIoConfig(0, 1, 0, ioConfigurable -> {
                 ioConfigurable.setIOMode(Direction.EAST, IOMode.PUSH);
             }))
-            .thenExecute(() -> helper.provideEnergy(0, 1, 0, transferRate * 2))
+            .thenExecute(() -> helper.provideEnergyExact(0, 1, 0, transferRate * 2))
             .thenExecuteAfter(5, () -> {
                 helper.assertEnergyStored(2, 1, 0, 0);
                 int sourceEnergy = helper.getEnergyStored(0, 1, 0);
@@ -161,7 +161,7 @@ public class EnergyConduitTests {
             .thenExecute(() -> helper.changeIoConfig(0, 1, 0, ioConfigurable -> {
                 ioConfigurable.setIOMode(Direction.EAST, IOMode.PUSH);
             }))
-            .thenExecute(() -> helper.provideEnergy(0, 1, 0, transferRate * 2))
+            .thenExecute(() -> helper.provideEnergyExact(0, 1, 0, transferRate * 2))
             .thenExecuteAfter(5, () -> {
                 helper.assertEnergyStored(2, 1, 0, 0);
             })
@@ -227,7 +227,7 @@ public class EnergyConduitTests {
                 ioConfigurable.setIOMode(Direction.EAST, IOMode.PUSH);
             }))
             // Add energy to source bank - enough for multiple transfers
-            .thenExecute(() -> helper.provideEnergy(0, 1, 0, transferRate * 4))
+            .thenExecute(() -> helper.provideEnergyExact(0, 1, 0, transferRate * 4))
             // Wait for transfer - closer bank should receive energy first
             .thenExecuteAfter(2, () -> {
                 helper.assertEnergyStoredAtLeast(2, 1, 0, 1);
@@ -284,7 +284,7 @@ public class EnergyConduitTests {
                 ioConfigurable.setIOMode(Direction.EAST, IOMode.PUSH);
             }))
             // Add energy to source bank
-            .thenExecute(() -> helper.provideEnergy(0, 1, 0, transferRate * 4))
+            .thenExecute(() -> helper.provideEnergyExact(0, 1, 0, transferRate * 4))
             // Wait for transfer - higher priority (further) sink should receive first
             .thenExecuteAfter(2, () -> {
                 helper.assertEnergyStoredAtLeast(4, 1, 0, 1);
@@ -338,7 +338,7 @@ public class EnergyConduitTests {
                     ioConfigurable.setIOMode(Direction.EAST, IOMode.PUSH);
                 }))
                 // Add large amount of energy to source
-                .thenExecute(() -> helper.provideEnergy(0, 1, 0, energeticRate * 10))
+                .thenExecute(() -> helper.provideEnergyExact(0, 1, 0, energeticRate * 10))
                 // Wait for transfer
                 .thenExecuteAfter(2, () -> {
                     int transferred = (energeticRate * 10) - helper.getEnergyStored(0, 1, 0);
@@ -411,7 +411,7 @@ public class EnergyConduitTests {
                 ioConfigurable.setIOMode(Direction.EAST, IOMode.PUSH);
             }))
             // Add energy to source bank - enough for both sinks
-            .thenExecute(() -> helper.provideEnergy(0, 1, 0, transferRate * 4))
+            .thenExecute(() -> helper.provideEnergyExact(0, 1, 0, transferRate * 4))
             // Wait for multiple transfers
             .thenExecuteAfter(5, () -> {
                 int closerSinkEnergy = helper.getEnergyStored(2, 1, 0);
