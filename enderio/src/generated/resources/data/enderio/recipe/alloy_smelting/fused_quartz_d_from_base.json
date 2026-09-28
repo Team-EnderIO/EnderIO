@@ -11,7 +11,7 @@
       "ingredient": "#c:gems/amethyst"
     }
   ],
-  "operation_time": 160,
+  "operation_time": 100,
   "output": {
     "id": "enderio:fused_quartz_d"
   }

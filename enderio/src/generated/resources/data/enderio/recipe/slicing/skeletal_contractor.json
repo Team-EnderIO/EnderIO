@@ -8,7 +8,7 @@
     "enderio:basic_capacitor",
     "minecraft:rotten_flesh"
   ],
-  "operation_time": 667,
+  "operation_time": 300,
   "output": {
     "id": "enderio:skeletal_contractor"
   }

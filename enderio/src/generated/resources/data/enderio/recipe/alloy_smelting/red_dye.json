@@ -15,7 +15,7 @@
       "ingredient": "#minecraft:eggs"
     }
   ],
-  "operation_time": 80,
+  "operation_time": 140,
   "output": {
     "count": 12,
     "id": "minecraft:red_dye"

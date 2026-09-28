@@ -29,7 +29,7 @@ import static net.minecraft.world.item.Items.*;
 
 public class SagMillRecipeProvider extends SubRecipeProvider {
 
-    private static final int BASE_OPERATION_TIME = 120;
+    private static final int BASE_OPERATION_TIME = 10 * 20;
 
     private HolderLookup.RegistryLookup<Item> items;
 
@@ -44,7 +44,6 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
         buildOreBlockRecipes(items, recipeOutput);
         buildRawOreRecipes(items, recipeOutput);
         buildModCompat(items, recipeOutput);
-
 
         build1toN("copper", Tags.Items.INGOTS_COPPER, POWDERED_COPPER.get(), 1, BonusType.NONE, recipeOutput);
         build1toN("iron", Tags.Items.INGOTS_IRON, POWDERED_IRON.get(), 1, BonusType.NONE, recipeOutput);
@@ -70,27 +69,21 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
         build1toN("deepslate", Items.DEEPSLATE, Items.COBBLED_DEEPSLATE, 1, BonusType.NONE, recipeOutput);
 
         build("cobbled_deepslate",ingredientFromTag(Tags.Items.COBBLESTONES_DEEPSLATE),
-                List.of(output(COBBLESTONE), output(EIOItems.GRAINS_OF_INFINITY.get(), 0.12f)),
-                BASE_OPERATION_TIME, BonusType.CHANCE_ONLY, recipeOutput);
+                List.of(output(COBBLESTONE), output(EIOItems.GRAINS_OF_INFINITY.get(), 0.12f)), BASE_OPERATION_TIME, BonusType.CHANCE_ONLY, recipeOutput);
 
         build("coal", ingredientFromTag(ItemTags.COALS), List.of(output(POWDERED_COAL.get()),
-                output(POWDERED_COAL.get(), 0.1f), output(EIOTags.Items.DUSTS_SULFUR, 1, 0.1f, true)),
-                BASE_OPERATION_TIME, recipeOutput);
+                output(POWDERED_COAL.get(), 0.1f), output(EIOTags.Items.DUSTS_SULFUR, 1, 0.1f, true)), BASE_OPERATION_TIME, recipeOutput);
 
         build("lapis_ore", ingredientFromTag(Tags.Items.ORES_LAPIS),
-                List.of(output(LAPIS_LAZULI, 8), output(LAPIS_LAZULI, 0.2f), output(COBBLESTONE, 0.15f)),
-                BASE_OPERATION_TIME, recipeOutput);
+                List.of(output(LAPIS_LAZULI, 8), output(LAPIS_LAZULI, 0.2f), output(COBBLESTONE, 0.15f)), BASE_OPERATION_TIME, recipeOutput);
 
-        build("lapis", ingredientFromTag(Tags.Items.GEMS_LAPIS), List.of(output(POWDERED_LAPIS_LAZULI.get(), 1)),
-                BASE_OPERATION_TIME, BonusType.NONE, recipeOutput);
+        build("lapis", ingredientFromTag(Tags.Items.GEMS_LAPIS), List.of(output(POWDERED_LAPIS_LAZULI.get(), 1)), BASE_OPERATION_TIME, BonusType.NONE, recipeOutput);
 
         build("quartz", ingredientFromTag(Tags.Items.GEMS_QUARTZ),
-                List.of(output(POWDERED_QUARTZ.get(), 1), output(POWDERED_QUARTZ.get(), 0.1f)),
-                BASE_OPERATION_TIME, BonusType.CHANCE_ONLY, recipeOutput);
+                List.of(output(POWDERED_QUARTZ.get(), 1), output(POWDERED_QUARTZ.get(), 0.1f)), BASE_OPERATION_TIME, BonusType.CHANCE_ONLY, recipeOutput);
 
         build("cobblestone", ingredientFromTag(Tags.Items.COBBLESTONES_NORMAL),
-                List.of(output(GRAVEL, 0.7f), output(GRAVEL, 0.3f), output(SAND, 0.1f), output(FLINT, 0.05f)),
-                BASE_OPERATION_TIME, recipeOutput);
+                List.of(output(GRAVEL, 0.7f), output(GRAVEL, 0.3f), output(SAND, 0.1f), output(FLINT, 0.05f)), BASE_OPERATION_TIME, recipeOutput);
 
         build("mossy_cobblestone", ingredientFromTag(Tags.Items.COBBLESTONES_MOSSY),
                 List.of(output(COBBLESTONE), output(VINE, 0.7f)), BASE_OPERATION_TIME, BonusType.NONE, recipeOutput);
@@ -99,38 +92,30 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
                 List.of(output(SAND, 0.7f), output(SAND, 0.3f), output(FLINT, 0.1f)), BASE_OPERATION_TIME,
                 recipeOutput);
 
-        build("sandstone", ingredientFromTag(Tags.Items.SANDSTONE_BLOCKS), List.of(output(SAND, 2), output(SAND, 2, 0.4f)),
-                BASE_OPERATION_TIME, BonusType.CHANCE_ONLY, recipeOutput);
+        build("sandstone", ingredientFromTag(Tags.Items.SANDSTONE_BLOCKS), List.of(output(SAND, 2), output(SAND, 2, 0.4f)), BASE_OPERATION_TIME, BonusType.CHANCE_ONLY, recipeOutput);
 
-        build("sand", ingredientFromTag(Tags.Items.SANDS), List.of(output(EIOTags.Items.SILICON, 0.5f)),
-                BASE_OPERATION_TIME, recipeOutput);
+        build("sand", ingredientFromTag(Tags.Items.SANDS), List.of(output(EIOTags.Items.SILICON, 0.5f)), BASE_OPERATION_TIME, recipeOutput);
 
         build("glowstone", Ingredient.of(GLOWSTONE), List.of(// swap with any:glowstone
                 output(GLOWSTONE_DUST, 3), output(GLOWSTONE_DUST, 0.8f)), BASE_OPERATION_TIME,
                 BonusType.CHANCE_ONLY, recipeOutput);
 
-        build("bone", ingredientFromTag(Tags.Items.BONES), List.of(output(BONE_MEAL, 6), output(BONE_MEAL, 2, 0.1f)),
-                BASE_OPERATION_TIME, recipeOutput);
+        build("bone", ingredientFromTag(Tags.Items.BONES), List.of(output(BONE_MEAL, 6), output(BONE_MEAL, 2, 0.1f)), BASE_OPERATION_TIME, recipeOutput);
 
         build("clay", Ingredient.of(CLAY),
-                List.of(output(CLAY_BALL, 2), output(CLAY_BALL, 0.1f), output(EIOTags.Items.SILICON, 2, 0.8f)),
-                BASE_OPERATION_TIME, recipeOutput);
+                List.of(output(CLAY_BALL, 2), output(CLAY_BALL, 0.1f), output(EIOTags.Items.SILICON, 2, 0.8f)), BASE_OPERATION_TIME, recipeOutput);
 
-        build("wool", ingredientFromTag(ItemTags.WOOL), List.of(output(STRING, 2), output(STRING, 0.1f)),
-                BASE_OPERATION_TIME, BonusType.CHANCE_ONLY, recipeOutput);
+        build("wool", ingredientFromTag(ItemTags.WOOL), List.of(output(STRING, 2), output(STRING, 0.1f)), BASE_OPERATION_TIME, BonusType.CHANCE_ONLY, recipeOutput);
 
         build("quartz_block", ingredientFromTag(EIOTags.Items.STORAGE_BLOCKS_QUARTZ),
                 List.of(output(QUARTZ, 2), output(QUARTZ, 2, 0.25f)), BASE_OPERATION_TIME, BonusType.CHANCE_ONLY,
                 recipeOutput);
 
-        build("quartz_stairs", Ingredient.of(QUARTZ_STAIRS), List.of(output(QUARTZ, 2), output(QUARTZ, 2, 0.25f)),
-                BASE_OPERATION_TIME, BonusType.CHANCE_ONLY, recipeOutput);
+        build("quartz_stairs", Ingredient.of(QUARTZ_STAIRS), List.of(output(QUARTZ, 2), output(QUARTZ, 2, 0.25f)), BASE_OPERATION_TIME, BonusType.CHANCE_ONLY, recipeOutput);
 
-        build("quartz_slabs", Ingredient.of(QUARTZ_SLAB), List.of(output(QUARTZ, 1), output(QUARTZ, 0.25f)),
-                BASE_OPERATION_TIME, BonusType.CHANCE_ONLY, recipeOutput);
+        build("quartz_slabs", Ingredient.of(QUARTZ_SLAB), List.of(output(QUARTZ, 1), output(QUARTZ, 0.25f)), BASE_OPERATION_TIME, BonusType.CHANCE_ONLY, recipeOutput);
 
-        build("cobweb", Ingredient.of(COBWEB), List.of(output(STRING, 2), output(STRING, 0.6f), output(STRING, 0.3f)),
-                BASE_OPERATION_TIME, recipeOutput);
+        build("cobweb", Ingredient.of(COBWEB), List.of(output(STRING, 2), output(STRING, 0.6f), output(STRING, 0.3f)), BASE_OPERATION_TIME, recipeOutput);
 
         buildFlower("dandelion", DANDELION, YELLOW_DYE, recipeOutput);
         buildFlower("poppy", POPPY, RED_DYE, recipeOutput);
@@ -144,49 +129,39 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
         buildFlower("oxeye_daisy", OXEYE_DAISY, WHITE_DYE, recipeOutput);
 
         build("shrub", Ingredient.of(DEAD_BUSH), List.of(output(PLANT_MATTER_BROWN.get(), 0.8f),
-                output(PLANT_MATTER_BROWN.get(), 0.6f), output(PLANT_MATTER_BROWN.get(), 0.3f)),
-                BASE_OPERATION_TIME, recipeOutput);
+                output(PLANT_MATTER_BROWN.get(), 0.6f), output(PLANT_MATTER_BROWN.get(), 0.3f)), BASE_OPERATION_TIME, recipeOutput);
 
         build("grass", Ingredient.of(TALL_GRASS),
                 List.of(output(PLANT_MATTER_GREEN.get(), 0.6f), output(PLANT_MATTER_GREEN.get(), 0.3f),
-                        output(PLANT_MATTER_GREEN.get(), 0.1f), output(PLANT_MATTER_BROWN.get(), 0.05f)),
-                BASE_OPERATION_TIME, recipeOutput);
+                        output(PLANT_MATTER_GREEN.get(), 0.1f), output(PLANT_MATTER_BROWN.get(), 0.05f)), BASE_OPERATION_TIME, recipeOutput);
 
         build("fern", Ingredient.of(FERN),
                 List.of(output(PLANT_MATTER_GREEN.get(), 0.6f), output(PLANT_MATTER_GREEN.get(), 0.3f),
-                        output(PLANT_MATTER_GREEN.get(), 0.1f), output(PLANT_MATTER_BROWN.get(), 0.05f)),
-                BASE_OPERATION_TIME, recipeOutput);
+                        output(PLANT_MATTER_GREEN.get(), 0.1f), output(PLANT_MATTER_BROWN.get(), 0.05f)), BASE_OPERATION_TIME, recipeOutput);
 
         build("leaves", ingredientFromTag(ItemTags.LEAVES), List.of(output(PLANT_MATTER_GREEN.get(), 0.3f),
-                output(PLANT_MATTER_GREEN.get(), 0.1f), output(PLANT_MATTER_GREEN.get(), 0.02f)),
-                BASE_OPERATION_TIME, recipeOutput);
+                output(PLANT_MATTER_GREEN.get(), 0.1f), output(PLANT_MATTER_GREEN.get(), 0.02f)), BASE_OPERATION_TIME, recipeOutput);
 
         build("vines", Ingredient.of(VINE),
-                List.of(output(PLANT_MATTER_GREEN.get(), 0.15f), output(PLANT_MATTER_GREEN.get(), 0.1f)),
-                BASE_OPERATION_TIME, recipeOutput);
+                List.of(output(PLANT_MATTER_GREEN.get(), 0.15f), output(PLANT_MATTER_GREEN.get(), 0.1f)), BASE_OPERATION_TIME, recipeOutput);
 
         build("cactus", Ingredient.of(CACTUS),
                 List.of(output(PLANT_MATTER_GREEN.get(), 3), output(PLANT_MATTER_GREEN.get(), 3, 0.75f),
-                        output(PLANT_MATTER_GREEN.get(), 3, 0.5f), output(PLANT_MATTER_BROWN.get(), 3, 0.25f)),
-                BASE_OPERATION_TIME, recipeOutput);
+                        output(PLANT_MATTER_GREEN.get(), 3, 0.5f), output(PLANT_MATTER_BROWN.get(), 3, 0.25f)), BASE_OPERATION_TIME, recipeOutput);
 
         build("lily_pad", Ingredient.of(LILY_PAD),
-                List.of(output(PLANT_MATTER_GREEN.get(), 3, 0.15f), output(PLANT_MATTER_GREEN.get(), 3, 0.1f)),
-                BASE_OPERATION_TIME, recipeOutput);
+                List.of(output(PLANT_MATTER_GREEN.get(), 3, 0.15f), output(PLANT_MATTER_GREEN.get(), 3, 0.1f)), BASE_OPERATION_TIME, recipeOutput);
 
         build("sun_flower", Ingredient.of(Items.SUNFLOWER), List.of(output(YELLOW_DYE, 2, 0.8f),
-                output(YELLOW_DYE, 0.6f), output(YELLOW_DYE, 2, 0.3f), output(PLANT_MATTER_GREEN.get(), 0.2f)),
-                BASE_OPERATION_TIME, recipeOutput);
+                output(YELLOW_DYE, 0.6f), output(YELLOW_DYE, 2, 0.3f), output(PLANT_MATTER_GREEN.get(), 0.2f)), BASE_OPERATION_TIME, recipeOutput);
 
         build("tall_grass", Ingredient.of(TALL_GRASS),
                 List.of(output(PLANT_MATTER_GREEN.get(), 2, 0.6f), output(PLANT_MATTER_GREEN.get(), 0.3f),
-                        output(PLANT_MATTER_GREEN.get(), 2, 0.1f), output(PLANT_MATTER_BROWN.get(), 0.15f)),
-                BASE_OPERATION_TIME, recipeOutput);
+                        output(PLANT_MATTER_GREEN.get(), 2, 0.1f), output(PLANT_MATTER_BROWN.get(), 0.15f)), BASE_OPERATION_TIME, recipeOutput);
 
         build("large_fern", Ingredient.of(LARGE_FERN),
                 List.of(output(PLANT_MATTER_GREEN.get(), 2, 0.6f), output(PLANT_MATTER_GREEN.get(), 0.3f),
-                        output(PLANT_MATTER_GREEN.get(), 2, 0.1f), output(PLANT_MATTER_BROWN.get(), 0.15f)),
-                BASE_OPERATION_TIME, recipeOutput);
+                        output(PLANT_MATTER_GREEN.get(), 2, 0.1f), output(PLANT_MATTER_BROWN.get(), 0.15f)), BASE_OPERATION_TIME, recipeOutput);
 
         build("rose_bush", Ingredient.of(ROSE_BUSH), List.of(output(RED_DYE, 2, 0.8f), output(RED_DYE, 0.6f),
                 output(RED_DYE, 2, 0.3f), output(PLANT_MATTER_GREEN.get(), 0.2f)), BASE_OPERATION_TIME,
@@ -207,12 +182,10 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
                 List.of(output(PRISMARINE_CRYSTALS), output(PRISMARINE_CRYSTALS, 0.1f)), BASE_OPERATION_TIME,
                 BonusType.NONE, recipeOutput);
 
-        build("wither_rose", Ingredient.of(WITHER_ROSE), List.of(output(WITHERING_POWDER.get(), 1, 0.4f)),
-                BASE_OPERATION_TIME, recipeOutput);
+        build("wither_rose", Ingredient.of(WITHER_ROSE), List.of(output(WITHERING_POWDER.get(), 1, 0.4f)), BASE_OPERATION_TIME, recipeOutput);
 
         build("wither_skull", Ingredient.of(WITHER_SKELETON_SKULL),
-                List.of(output(WITHERING_POWDER.get(), 2), output(WITHERING_POWDER.get(), 1, 0.2f)),
-                BASE_OPERATION_TIME, recipeOutput);
+                List.of(output(WITHERING_POWDER.get(), 2), output(WITHERING_POWDER.get(), 1, 0.2f)), BASE_OPERATION_TIME, recipeOutput);
     }
 
     private void buildOreBlockRecipes(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput) {
@@ -221,38 +194,32 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
         buildOre("copper_ore", ingredientFromTag(Tags.Items.ORES_COPPER), RAW_COPPER, recipeOutput);
 
         build("coal_ore", ingredientFromTag(Tags.Items.ORES_COAL), List.of(output(COAL, 3),
-                output(POWDERED_COAL.get(), 0.6f), output(DIAMOND, 0.005f), output(COBBLESTONE, 0.15f)),
-                BASE_OPERATION_TIME, recipeOutput);
+                output(POWDERED_COAL.get(), 0.6f), output(DIAMOND, 0.005f), output(COBBLESTONE, 0.15f)), BASE_OPERATION_TIME, recipeOutput);
 
         build("redstone_ore", ingredientFromTag(Tags.Items.ORES_REDSTONE), List.of(output(REDSTONE, 8),
-                output(REDSTONE, 0.2f), output(EIOTags.Items.SILICON, 0.8f), output(COBBLESTONE, 0.15f)),
-                BASE_OPERATION_TIME, recipeOutput);
+                output(REDSTONE, 0.2f), output(EIOTags.Items.SILICON, 0.8f), output(COBBLESTONE, 0.15f)), BASE_OPERATION_TIME, recipeOutput);
 
         build("diamond_ore", ingredientFromTag(Tags.Items.ORES_DIAMOND), List.of(output(DIAMOND, 2), output(DIAMOND, 0.25f),
                 output(POWDERED_COAL.get(), 0.1f), output(COBBLESTONE, 0.15f)), BASE_OPERATION_TIME,
                 recipeOutput);
 
         build("emerald_ore", ingredientFromTag(Tags.Items.ORES_EMERALD),
-                List.of(output(EMERALD, 2), output(EMERALD, 0.25f), output(COBBLESTONE, 0.15f)),
-                BASE_OPERATION_TIME, recipeOutput);
+                List.of(output(EMERALD, 2), output(EMERALD, 0.25f), output(COBBLESTONE, 0.15f)), BASE_OPERATION_TIME, recipeOutput);
 
         build("quartz_ore", ingredientFromTag(Tags.Items.ORES_QUARTZ),
-                List.of(output(QUARTZ, 2), output(POWDERED_QUARTZ.get(), 0.1f), output(NETHERRACK, 0.15f)),
-                BASE_OPERATION_TIME, recipeOutput);
+                List.of(output(QUARTZ, 2), output(POWDERED_QUARTZ.get(), 0.1f), output(NETHERRACK, 0.15f)), BASE_OPERATION_TIME, recipeOutput);
     }
 
     private void buildRawOreRecipes(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput) {
         build("raw_iron", ingredientFromTag(Tags.Items.RAW_MATERIALS_IRON),
-                List.of(output(POWDERED_IRON), output(POWDERED_IRON, 0.8f), output(EIOTags.Items.DUSTS_TIN, 0.05f)),
-                BASE_OPERATION_TIME, recipeOutput);
+                List.of(output(POWDERED_IRON), output(POWDERED_IRON, 0.8f), output(EIOTags.Items.DUSTS_TIN, 0.05f)), BASE_OPERATION_TIME, recipeOutput);
 
         build("raw_copper", ingredientFromTag(Tags.Items.RAW_MATERIALS_COPPER), List.of(output(POWDERED_COPPER),
                 output(POWDERED_COPPER, 0.8f), output(EIOTags.Items.DUSTS_GOLD, 0.12f)), BASE_OPERATION_TIME,
                 recipeOutput);
 
         build("raw_gold", ingredientFromTag(Tags.Items.RAW_MATERIALS_GOLD),
-                List.of(output(POWDERED_GOLD), output(POWDERED_GOLD, 0.8f), output(EIOTags.Items.DUSTS_COPPER, 0.20f)),
-                BASE_OPERATION_TIME, recipeOutput);
+                List.of(output(POWDERED_GOLD), output(POWDERED_GOLD, 0.8f), output(EIOTags.Items.DUSTS_COPPER, 0.20f)), BASE_OPERATION_TIME, recipeOutput);
     }
 
 
@@ -296,8 +263,7 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
     // region Helpers
 
     private void buildOre(String name, Ingredient input, Item output, RecipeOutput recipeOutput) {
-        build(name, input, List.of(output(output), output(output, 0.33f), output(COBBLESTONE, 0.15f)),
-                BASE_OPERATION_TIME, recipeOutput);
+        build(name, input, List.of(output(output), output(output, 0.33f), output(COBBLESTONE, 0.15f)), BASE_OPERATION_TIME, recipeOutput);
     }
 
     private void buildFlower(String name, ItemLike input, Item output, RecipeOutput recipeOutput) {
@@ -321,41 +287,41 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
                 recipeOutput);
     }
 
-    protected void build(String name, Ingredient input, List<SagMillingRecipe.OutputItem> outputs, int energy,
+    protected void build(String name, Ingredient input, List<SagMillingRecipe.OutputItem> outputs, int operationTime,
             RecipeOutput recipeOutput) {
-        build(EnderIO.id("sag_milling/" + name), input, outputs, energy, BonusType.MULTIPLY_OUTPUT, recipeOutput);
+        build(EnderIO.id("sag_milling/" + name), input, outputs, operationTime, BonusType.MULTIPLY_OUTPUT, recipeOutput);
     }
 
     @SafeVarargs
-    protected final void build(String name, Ingredient input, List<SagMillingRecipe.OutputItem> outputs, int energy, RecipeOutput recipeOutput,
+    protected final void build(String name, Ingredient input, List<SagMillingRecipe.OutputItem> outputs, int operationTime, RecipeOutput recipeOutput,
         TagKey<Item>... neededTags) {
-        build(EnderIO.id("sag_milling/" + name), input, outputs, energy, BonusType.MULTIPLY_OUTPUT, recipeOutput, neededTags);
+        build(EnderIO.id("sag_milling/" + name), input, outputs, operationTime, BonusType.MULTIPLY_OUTPUT, recipeOutput, neededTags);
     }
 
-    protected void build(String name, Ingredient input, List<SagMillingRecipe.OutputItem> outputs, int energy,
+    protected void build(String name, Ingredient input, List<SagMillingRecipe.OutputItem> outputs, int operationTime,
             BonusType bonusType, RecipeOutput recipeOutput) {
-        build(EnderIO.id("sag_milling/" + name), input, outputs, energy, bonusType, recipeOutput);
+        build(EnderIO.id("sag_milling/" + name), input, outputs, operationTime, bonusType, recipeOutput);
     }
 
-    protected void build(Identifier id, Ingredient input, List<SagMillingRecipe.OutputItem> outputs, int energy,
+    protected void build(Identifier id, Ingredient input, List<SagMillingRecipe.OutputItem> outputs, int operationTime,
         BonusType bonusType, RecipeOutput recipeOutput) {
-        recipeOutput.accept(ResourceKey.create(Registries.RECIPE, id), new SagMillingRecipe(input, outputs, energy, bonusType), null);
+        recipeOutput.accept(ResourceKey.create(Registries.RECIPE, id), new SagMillingRecipe(input, outputs, operationTime, bonusType), null);
     }
 
     @SafeVarargs
-    protected final void build(String name, Ingredient input, List<SagMillingRecipe.OutputItem> outputs, int energy, BonusType bonusType,
+    protected final void build(String name, Ingredient input, List<SagMillingRecipe.OutputItem> outputs, int operationTime, BonusType bonusType,
         RecipeOutput recipeOutput, TagKey<Item>... neededTags) {
-        build(EnderIO.id("sag_milling/" + name), input, outputs, energy, bonusType, recipeOutput, neededTags);
+        build(EnderIO.id("sag_milling/" + name), input, outputs, operationTime, bonusType, recipeOutput, neededTags);
     }
 
     @SafeVarargs
-    protected final void build(Identifier id, Ingredient input, List<SagMillingRecipe.OutputItem> outputs, int energy, BonusType bonusType,
+    protected final void build(Identifier id, Ingredient input, List<SagMillingRecipe.OutputItem> outputs, int operationTime, BonusType bonusType,
         RecipeOutput recipeOutput, TagKey<Item>... neededTags) {
         ICondition[] conditions = new ICondition[neededTags.length];
         for (int i = 0; i < neededTags.length; i++) {
             conditions[i] = new NotCondition(new TagEmptyCondition(neededTags[i]));
         }
-        recipeOutput.accept(ResourceKey.create(Registries.RECIPE, id), new SagMillingRecipe(input, outputs, energy, bonusType), null, conditions);
+        recipeOutput.accept(ResourceKey.create(Registries.RECIPE, id), new SagMillingRecipe(input, outputs, operationTime, bonusType), null, conditions);
     }
 
     protected SagMillingRecipe.OutputItem output(ItemLike item) {
