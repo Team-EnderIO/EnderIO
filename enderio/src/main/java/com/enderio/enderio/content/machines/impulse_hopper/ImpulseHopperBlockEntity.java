@@ -5,7 +5,7 @@ import com.enderio.core.common.storage.layout.SlotTemplates;
 import com.enderio.core.common.storage.slot.MultiResourceSlotKey;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
-import com.enderio.enderio.api.capacitor.QuadraticScalable;
+import com.enderio.enderio.api.capacitor.scaling.QuadraticIntScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
@@ -21,9 +21,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 
 public class ImpulseHopperBlockEntity extends PoweredMachineBlockEntity {
-    public static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
+    public static final QuadraticIntScalable ENERGY_CAPACITY = new QuadraticIntScalable(CapacitorModifier.ENERGY_CAPACITY,
             MachinesConfig.COMMON.ENERGY.IMPULSE_HOPPER_CAPACITY);
-    public static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE,
+    public static final QuadraticIntScalable ENERGY_USAGE = new QuadraticIntScalable(CapacitorModifier.ENERGY_USE,
             MachinesConfig.COMMON.ENERGY.IMPULSE_HOPPER_USAGE);
     private static final int ENERGY_USAGE_PER_ITEM = 10; // TODO: What is? surely should use the ENERGY_USAGE key
 

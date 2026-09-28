@@ -7,7 +7,7 @@ import com.enderio.core.common.storage.layout.SlotTemplates;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.core.common.util.EnderResourceUtil;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
-import com.enderio.enderio.api.capacitor.QuadraticScalable;
+import com.enderio.enderio.api.capacitor.scaling.QuadraticIntScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.content.storage.fluid_tank.InternalTankTasks;
@@ -57,9 +57,9 @@ public class NiardBlockEntity extends PoweredMachineBlockEntity implements Range
     public static final ICapabilityProvider<NiardBlockEntity, Direction, ResourceHandler<FluidResource>> FLUID_HANDLER_PROVIDER = (be,
         side) -> be.fluidStorage != null ? SidedResourceHandler.of(be.fluidStorage, side, be) : null;
 
-    private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
+    private static final QuadraticIntScalable ENERGY_CAPACITY = new QuadraticIntScalable(CapacitorModifier.ENERGY_CAPACITY,
         MachinesConfig.COMMON.ENERGY.NIARD_CAPACITY);
-    private static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE,
+    private static final QuadraticIntScalable ENERGY_USAGE = new QuadraticIntScalable(CapacitorModifier.ENERGY_USE,
         MachinesConfig.COMMON.ENERGY.NIARD_USAGE);
 
     private static final ActionRange DEFAULT_RANGE = new ActionRange(5, false);

@@ -4,7 +4,7 @@ import com.enderio.core.common.storage.slot.ResourceSlotId;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.core.annotations.UseOnly;
-import com.enderio.enderio.api.capacitor.CapacitorScalable;
+import com.enderio.enderio.api.capacitor.scaling.CapacitorScalable;
 import com.enderio.enderio.api.filter.SoulFilter;
 import com.enderio.enderio.api.io.IOMode;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
