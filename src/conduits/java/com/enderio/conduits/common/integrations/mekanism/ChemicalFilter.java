@@ -45,7 +45,7 @@ public class ChemicalFilter extends Item {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
-        if (pPlayer instanceof ServerPlayer serverPlayer) {
+        if (pUsedHand == InteractionHand.MAIN_HAND && pPlayer instanceof ServerPlayer serverPlayer) {
             openMenu(serverPlayer);
         }
         return super.use(pLevel, pPlayer, pUsedHand);
