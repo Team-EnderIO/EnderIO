@@ -3,6 +3,7 @@ package com.enderio.conduits.common.integrations.mekanism;
 import com.enderio.api.conduit.ColoredRedstoneProvider;
 import com.enderio.api.conduit.ConduitGraph;
 import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.filter.ResourceFilter;
 import mekanism.api.Action;
 import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalStack;
@@ -10,6 +11,7 @@ import mekanism.api.chemical.ChemicalType;
 import mekanism.api.chemical.IChemicalHandler;
 import mekanism.api.chemical.gas.IGasHandler;
 import mekanism.api.chemical.infuse.IInfusionHandler;
+import mekanism.api.chemical.merged.BoxedChemicalStack;
 import mekanism.api.chemical.pigment.IPigmentHandler;
 import mekanism.api.chemical.slurry.ISlurryHandler;
 import net.minecraft.server.level.ServerLevel;
@@ -39,12 +41,12 @@ public class ChemicalTicker extends MultiCapabilityAwareConduitTicker<ChemicalCo
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
         for (var extract : extractCaps) {
-            tickExtractCapability(extract.capability(), extract.data(), insertCaps);
+            tickExtractCapability(extract.capability(), extract.data(), extract.extractFilter(), insertCaps);
         }
     }
 
     private <C extends Chemical<C>, S extends ChemicalStack<C>> void tickExtractCapability(IChemicalHandler<C, S> extractHandler,
-        ChemicalConduitData chemicalExtendedData, List<CapabilityConnection<ChemicalConduitData, IChemicalHandler<?, ?>>> insertCaps) {
+        ChemicalConduitData chemicalExtendedData, ResourceFilter extractFilter, List<CapabilityConnection<ChemicalConduitData, IChemicalHandler<?, ?>>> insertCaps) {
 
         final int transferRate = getScaledTransferRate();
 
@@ -62,11 +64,22 @@ public class ChemicalTicker extends MultiCapabilityAwareConduitTicker<ChemicalCo
             return;
         }
 
+        if (extractFilter instanceof ChemicalStackFilter chemicalFilter) {
+            if (!chemicalFilter.test(BoxedChemicalStack.box(result))) {
+                return;
+            }
+        }
+
         long transferred = 0;
         for (var insert : insertCaps) {
             ChemicalType insertType = getTypeFor(insert.capability());
             if (extractType != insertType) {
                 continue;
+            }
+            if (insert.insertFilter() instanceof ChemicalStackFilter chemicalFilter) {
+                if (!chemicalFilter.test(BoxedChemicalStack.box(result))) {
+                    continue;
+                }
             }
             IChemicalHandler<C, S> destinationHandler = (IChemicalHandler<C, S>) insert.capability();
             S transferredChemical;

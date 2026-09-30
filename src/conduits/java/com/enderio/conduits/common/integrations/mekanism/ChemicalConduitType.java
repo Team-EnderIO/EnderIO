@@ -1,8 +1,10 @@
 package com.enderio.conduits.common.integrations.mekanism;
 
 import com.enderio.api.conduit.ConduitMenuData;
+import com.enderio.api.conduit.SlotType;
 import com.enderio.api.conduit.TieredConduit;
 import com.enderio.api.conduit.ticker.ConduitTicker;
+import com.enderio.api.filter.ResourceFilter;
 import com.enderio.conduits.common.init.ConduitLang;
 import com.enderio.conduits.common.integrations.Integrations;
 import com.enderio.core.common.util.TooltipUtil;
@@ -18,8 +20,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
 
 public class ChemicalConduitType extends TieredConduit<ChemicalConduitData> {
-    public static final ConduitMenuData MENU_DATA = new ConduitMenuData.Simple(false, false, false, false, false, true);
-    public static final ConduitMenuData MULTI_MENU_DATA = new ConduitMenuData.Simple(false, false, false, true, true, true);
+    public static final ConduitMenuData MENU_DATA = new ConduitMenuData.Simple(true, true, false, false, false, true);
+    public static final ConduitMenuData MULTI_MENU_DATA = new ConduitMenuData.Simple(true, true, false, true, true, true);
     private final boolean multiFluid;
 
     private final Lazy<ConduitTicker<ChemicalConduitData>> ticker = Lazy.of(() -> new ChemicalTicker(getTier(),
@@ -41,6 +43,11 @@ public class ChemicalConduitType extends TieredConduit<ChemicalConduitData> {
     @Override
     public ConduitMenuData getMenuData() {
         return multiFluid? MULTI_MENU_DATA : MENU_DATA;
+    }
+
+    @Override
+    public boolean canApplyFilter(SlotType slotType, ResourceFilter resourceFilter) {
+        return resourceFilter instanceof ChemicalStackFilter;
     }
 
     @Override

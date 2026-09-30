@@ -221,6 +221,18 @@ public class ConduitRecipes extends RecipeProvider {
                     .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                     ::save)
                 .build(pWriter, EnderIO.loc("mek_advanced_thermodynamic_conductor"));
+
+            ConditionalRecipe.builder()
+                .addCondition(new ModLoadedCondition(MekanismAPI.MEKANISM_MODID))
+                .addRecipe(ShapedRecipeBuilder.shaped(RecipeCategory.MISC, MekanismIntegration.BASIC_CHEMICAL_FILTER.get())
+                    .pattern(" P ")
+                    .pattern("POP")
+                    .pattern(" P ")
+                    .define('P', Items.PAPER)
+                    .define('O', BuiltInRegistries.ITEM.get(new ResourceLocation(MekanismAPI.MEKANISM_MODID, "ingot_osmium")))
+                    .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
+                    ::save)
+                .build(pWriter, EnderIO.loc("mek_chemical_filter"));
         }
 
         if (Integrations.RS_INTEGRATION.isPresent()) {

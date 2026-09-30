@@ -1,0 +1,34 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "type": "forge:mod_loaded",
+          "modid": "mekanism"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "category": "misc",
+        "key": {
+          "O": {
+            "item": "mekanism:ingot_osmium"
+          },
+          "P": {
+            "item": "minecraft:paper"
+          }
+        },
+        "pattern": [
+          " P ",
+          "POP",
+          " P "
+        ],
+        "result": {
+          "item": "enderio:basic_chemical_filter"
+        },
+        "show_notification": true
+      }
+    }
+  ]
+}
