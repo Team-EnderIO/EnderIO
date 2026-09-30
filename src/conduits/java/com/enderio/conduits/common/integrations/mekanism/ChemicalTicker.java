@@ -3,6 +3,7 @@ package com.enderio.conduits.common.integrations.mekanism;
 import com.enderio.api.conduit.ColoredRedstoneProvider;
 import com.enderio.api.conduit.ConduitGraph;
 import com.enderio.api.conduit.ConduitType;
+import com.enderio.api.filter.ResourceFilter;
 import mekanism.api.Action;
 import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalStack;
@@ -10,12 +11,15 @@ import mekanism.api.chemical.ChemicalType;
 import mekanism.api.chemical.IChemicalHandler;
 import mekanism.api.chemical.gas.IGasHandler;
 import mekanism.api.chemical.infuse.IInfusionHandler;
+import mekanism.api.chemical.merged.BoxedChemicalStack;
 import mekanism.api.chemical.pigment.IPigmentHandler;
 import mekanism.api.chemical.slurry.ISlurryHandler;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.capabilities.Capability;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ChemicalTicker extends MultiCapabilityAwareConduitTicker<ChemicalConduitData, IChemicalHandler<?, ?>> {
 
@@ -39,48 +43,87 @@ public class ChemicalTicker extends MultiCapabilityAwareConduitTicker<ChemicalCo
         ColoredRedstoneProvider coloredRedstoneProvider) {
 
         for (var extract : extractCaps) {
-            tickExtractCapability(extract.capability(), extract.data(), insertCaps);
+            tickExtractCapability(extract.capability(), extract.data(), extract.extractFilter(), insertCaps);
         }
     }
 
     private <C extends Chemical<C>, S extends ChemicalStack<C>> void tickExtractCapability(IChemicalHandler<C, S> extractHandler,
-        ChemicalConduitData chemicalExtendedData, List<CapabilityConnection<ChemicalConduitData, IChemicalHandler<?, ?>>> insertCaps) {
+        ChemicalConduitData chemicalExtendedData, ResourceFilter extractFilter, List<CapabilityConnection<ChemicalConduitData, IChemicalHandler<?, ?>>> insertCaps) {
 
         final int transferRate = getScaledTransferRate();
 
         ChemicalType extractType = getTypeFor(extractHandler);
-        S result;
+
         if (!chemicalExtendedData.lockedChemical.isEmpty()) {
             if (chemicalExtendedData.lockedChemical.getChemicalType() != extractType) {
                 return;
             }
-            result = extractHandler.extractChemical((S) chemicalExtendedData.lockedChemical.getChemical().getStack(transferRate), Action.SIMULATE);
-        } else {
-            result = extractHandler.extractChemical(transferRate, Action.SIMULATE);
-        }
-        if (result.isEmpty()) {
+            S result = extractHandler.extractChemical((S) chemicalExtendedData.lockedChemical.getChemical().getStack(transferRate), Action.SIMULATE);
+            if (result.isEmpty()) {
+                return;
+            }
+            if (extractFilter instanceof ChemicalStackFilter chemicalFilter) {
+                if (!chemicalFilter.test(BoxedChemicalStack.box(result))) {
+                    return;
+                }
+            }
+            transferResult(extractHandler, extractType, insertCaps, result, transferRate);
             return;
         }
 
+        Set<C> checkedTypes = new HashSet<>();
+        long transferred = 0;
+        for (int i = 0; i < extractHandler.getTanks() && transferred < transferRate; i++) {
+            S inTank = extractHandler.getChemicalInTank(i);
+            if (inTank.isEmpty()) {
+                continue;
+            }
+            C inTankType = inTank.getType();
+            if (!checkedTypes.add(inTankType)) {
+                continue;
+            }
+
+            S result = extractHandler.extractChemical((S) inTankType.getStack(transferRate - transferred), Action.SIMULATE);
+            if (result.isEmpty()) {
+                continue;
+            }
+
+            if (extractFilter instanceof ChemicalStackFilter chemicalFilter) {
+                if (!chemicalFilter.test(BoxedChemicalStack.box(result))) {
+                    continue;
+                }
+            }
+
+            transferred += transferResult(extractHandler, extractType, insertCaps, result, transferRate - transferred);
+        }
+    }
+
+    private <C extends Chemical<C>, S extends ChemicalStack<C>> long transferResult(IChemicalHandler<C, S> extractHandler, ChemicalType extractType,
+        List<CapabilityConnection<ChemicalConduitData, IChemicalHandler<?, ?>>> insertCaps, S result, long maxTransfer) {
+
         long transferred = 0;
         for (var insert : insertCaps) {
+            if (transferred >= maxTransfer) {
+                break;
+            }
             ChemicalType insertType = getTypeFor(insert.capability());
             if (extractType != insertType) {
                 continue;
             }
-            IChemicalHandler<C, S> destinationHandler = (IChemicalHandler<C, S>) insert.capability();
-            S transferredChemical;
-            if (!chemicalExtendedData.lockedChemical.isEmpty()) {
-                transferredChemical = tryChemicalTransfer(destinationHandler, extractHandler, (S) chemicalExtendedData.lockedChemical.getChemical().getStack(transferRate - transferred), true);
-            } else {
-                transferredChemical = tryChemicalTransfer(destinationHandler, extractHandler, transferRate - transferred, true);
+            if (insert.insertFilter() instanceof ChemicalStackFilter chemicalFilter) {
+                if (!chemicalFilter.test(BoxedChemicalStack.box(result))) {
+                    continue;
+                }
             }
-
-            transferred += transferredChemical.getAmount();
-            if (transferred >= transferRate) {
+            IChemicalHandler<C, S> destinationHandler = (IChemicalHandler<C, S>) insert.capability();
+            S toTransfer = extractHandler.extractChemical((S) result.getType().getStack(maxTransfer - transferred), Action.SIMULATE);
+            if (toTransfer.isEmpty()) {
                 break;
             }
+            S transferredChemical = tryChemicalTransfer(destinationHandler, extractHandler, toTransfer, true);
+            transferred += transferredChemical.getAmount();
         }
+        return transferred;
     }
 
     private ChemicalType getTypeFor(IChemicalHandler<?, ?> handler) {
@@ -119,7 +162,8 @@ public class ChemicalTicker extends MultiCapabilityAwareConduitTicker<ChemicalCo
             if (doTransfer) {
                 var drained = chemicalSource.extractChemical(drainable, Action.EXECUTE);
                 if (!drained.isEmpty()) {
-                    drained.setAmount(chemicalDestination.insertChemical(drained, Action.EXECUTE).getAmount());
+                    long remainder = chemicalDestination.insertChemical(drained, Action.EXECUTE).getAmount();
+                    drained.setAmount(drained.getAmount() - remainder);
                     return drained;
                 }
             } else {

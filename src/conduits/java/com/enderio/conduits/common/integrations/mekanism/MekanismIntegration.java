@@ -6,7 +6,10 @@ import com.enderio.api.conduit.ConduitType;
 import com.enderio.api.integration.Integration;
 import com.enderio.api.registry.EnderIORegistries;
 import com.enderio.base.common.init.EIOCreativeTabs;
+import com.enderio.conduits.client.gui.ChemicalFilterScreen;
+import com.enderio.conduits.common.menu.ChemicalFilterMenu;
 import com.tterrag.registrate.util.entry.ItemEntry;
+import com.tterrag.registrate.util.entry.MenuEntry;
 import mekanism.api.chemical.gas.IGasHandler;
 import mekanism.api.chemical.infuse.IInfusionHandler;
 import mekanism.api.chemical.pigment.IPigmentHandler;
@@ -44,6 +47,16 @@ public class MekanismIntegration implements Integration {
     public static final ItemEntry<Item> ENDER_CHEMICAL_ITEM = createConduitItem(CHEMICAL3, "ender_chemical", "Ender Chemical Conduit");
 
     public static final ItemEntry<Item> HEAT_ITEM = createConduitItem(HEAT_TYPE, "heat", "Heat Conduit");
+
+    public static final ItemEntry<ChemicalFilter> BASIC_CHEMICAL_FILTER = EnderIO.registrate()
+        .item("basic_chemical_filter", props -> new ChemicalFilter(props, 5))
+        .lang("Basic Chemical Filter")
+        .tab(EIOCreativeTabs.GEAR)
+        .register();
+
+    public static final MenuEntry<ChemicalFilterMenu> CHEMICAL_FILTER_MENU = EnderIO.registrate()
+        .menu("chemical_filter", ChemicalFilterMenu::factory, () -> ChemicalFilterScreen::new)
+        .register();
 
     public static final Component LANG_MULTI_CHEMICAL_TOOLTIP = EnderIO.registrate().addLang("item", EnderIO.loc("conduit.chemical.multi"),
         "Allows multiple chemical types to be transported on the same line");
