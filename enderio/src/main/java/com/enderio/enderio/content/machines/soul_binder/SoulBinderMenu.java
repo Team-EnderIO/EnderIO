@@ -1,6 +1,7 @@
 package com.enderio.enderio.content.machines.soul_binder;
 
 import com.enderio.core.common.network.menu.FloatSyncSlot;
+import com.enderio.core.common.network.menu.IntSyncSlot;
 import com.enderio.enderio.foundation.fluid.FluidStorageInfo;
 import com.enderio.enderio.foundation.fluid.FluidStorageSyncSlot;
 import com.enderio.enderio.foundation.menu.MachineSlot;
@@ -15,6 +16,7 @@ public class SoulBinderMenu extends PoweredMachineMenu<SoulBinderBlockEntity> {
     public static final int INPUT_COUNT = 2;
     public static final int LAST_INDEX = 4;
 
+    private final IntSyncSlot requiredExperience;
     private final FloatSyncSlot craftingProgressSlot;
     private final FluidStorageSyncSlot tankSyncSlot;
 
@@ -22,6 +24,7 @@ public class SoulBinderMenu extends PoweredMachineMenu<SoulBinderBlockEntity> {
         super(EIOMenus.SOUL_BINDER.get(), containerId, inventory, blockEntity);
         addSlots();
 
+        requiredExperience = addSyncSlot(IntSyncSlot.readOnly(blockEntity::getRequiredExperience));
         craftingProgressSlot = addSyncSlot(FloatSyncSlot.readOnly(blockEntity::getCraftingProgress));
         tankSyncSlot = addSyncSlot(
                 FluidStorageSyncSlot.readOnly(() -> FluidStorageInfo.of(blockEntity.getFluidTank())));
@@ -32,6 +35,7 @@ public class SoulBinderMenu extends PoweredMachineMenu<SoulBinderBlockEntity> {
             EIOBlockEntities.SOUL_BINDER.get());
         addSlots();
 
+        requiredExperience = addSyncSlot(IntSyncSlot.standalone());
         craftingProgressSlot = addSyncSlot(FloatSyncSlot.standalone());
         tankSyncSlot = addSyncSlot(FluidStorageSyncSlot.standalone());
     }
@@ -56,8 +60,6 @@ public class SoulBinderMenu extends PoweredMachineMenu<SoulBinderBlockEntity> {
     }
 
     public int getExperience() {
-        // TODO: This should be done in the menu probably?
-        // We can sync the recipe info over a sync slot if we must.
-        return getBlockEntity().getClientExp();
+        return requiredExperience.get();
     }
 }

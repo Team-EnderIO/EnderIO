@@ -63,10 +63,6 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
     private final MachineFluidHandler fluidHandler;
     private static final TankAccess TANK = new TankAccess();
 
-    @UseOnly(LogicalSide.CLIENT)
-    @Nullable
-    private RecipeHolder<SoulBindingRecipe> clientRecipe;
-
     private final CraftingMachineTaskHost<SoulBindingRecipe, SoulBindingRecipe.Input> craftingTaskHost;
 
     public SoulBinderBlockEntity(BlockPos worldPosition, BlockState blockState) {
@@ -125,12 +121,6 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
     protected void onInventoryContentsChanged(int slot) {
         super.onInventoryContentsChanged(slot);
         craftingTaskHost.newTaskAvailable();
-
-        if (level != null && level.isClientSide) {
-            clientRecipe = level.getRecipeManager()
-                    .getRecipeFor(EIORecipes.SOUL_BINDING.type().get(), createFakeRecipeInput(), level)
-                    .orElse(null);
-        }
     }
 
     private SoulBindingRecipe.Input createRecipeInput() {
@@ -138,7 +128,6 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
                 INPUT_OTHER.getItemStack(getInventory()), TANK.getFluid(getFluidHandler()));
     }
 
-    @EnsureSide(EnsureSide.Side.CLIENT)
     private SoulBindingRecipe.Input createFakeRecipeInput() {
         return new SoulBindingRecipe.Input(INPUT_SOUL.getItemStack(getInventory()),
                 INPUT_OTHER.getItemStack(getInventory()),
@@ -147,16 +136,35 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
 
     // endregion
 
-    @EnsureSide(EnsureSide.Side.CLIENT)
-    public int getClientExp() {
-        // This should always set a valid recipe.
-        if (level != null && clientRecipe == null && hasValidRecipe()) {
-            clientRecipe = level.getRecipeManager()
-                    .getRecipeFor(EIORecipes.SOUL_BINDING.type().get(), createFakeRecipeInput(), level)
-                    .orElse(null);
+    private RecipeHolder<SoulBindingRecipe> currentFakeRecipe;
+
+    @EnsureSide(EnsureSide.Side.SERVER)
+    public int getRequiredExperience() {
+        if (level == null) {
+            return 0;
         }
 
-        return clientRecipe != null ? clientRecipe.value().experience() : 0;
+        // Uses a fake input which has maximum amount of XP fluid
+        // We cache the value to avoid too many lookups.
+        var fakeInput = createFakeRecipeInput();
+        if (currentFakeRecipe != null && currentFakeRecipe.value().matches(fakeInput, level)) {
+            return currentFakeRecipe.value().experience();
+        }
+
+        if (hasValidRecipe()) {
+            currentFakeRecipe = level.getRecipeManager()
+                .getRecipeFor(EIORecipes.SOUL_BINDING.type().get(), createFakeRecipeInput(), level)
+                .orElse(null);
+        } else {
+            currentFakeRecipe = null;
+        }
+
+        if (currentFakeRecipe == null) {
+            return 0;
+        }
+
+        // Attempt to lookup the current recipe
+        return currentFakeRecipe.value().experience();
     }
 
     private boolean hasValidRecipe() {
