@@ -74,6 +74,7 @@ public record SoulBindingRecipe(ItemStack output, Ingredient input, int energy, 
 
     @Override
     public NonNullList<Ingredient> getIngredients() {
+        // TODO: FilledSoulStorageIngredient is *technically* fine... but really should be more specific.
         return NonNullList.of(Ingredient.EMPTY, FilledSoulStorageIngredient.of(EIOItems.SOUL_VIAL), input);
     }
 

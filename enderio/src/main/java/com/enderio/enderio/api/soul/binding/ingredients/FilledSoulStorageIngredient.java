@@ -1,7 +1,7 @@
 package com.enderio.enderio.api.soul.binding.ingredients;
 
 import com.enderio.enderio.api.soul.Soul;
-import com.enderio.enderio.api.soul.SoulBoundUtils;
+import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.foundation.util.EntityCaptureUtils;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -19,6 +19,7 @@ import net.neoforged.neoforge.common.crafting.IngredientType;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+// TODO: 26.1 - move to the right package.
 public class FilledSoulStorageIngredient implements ICustomIngredient {
 
     public static final MapCodec<FilledSoulStorageIngredient> CODEC = RecordCodecBuilder.mapCodec(
@@ -36,16 +37,17 @@ public class FilledSoulStorageIngredient implements ICustomIngredient {
     public FilledSoulStorageIngredient(Item item) {
         this.item = item;
 
-        // Pre-compute
+        // Pre-compute all valid stacks
         var defaultStack = item.getDefaultInstance();
-        if (!SoulBoundUtils.canBindSoul(defaultStack)) {
+        if (defaultStack.getCapability(EnderIOCapabilities.SOUL_HANDLER_ITEM) == null) {
             var errorStack = new ItemStack(Blocks.BARRIER);
-            errorStack.set(DataComponents.CUSTOM_NAME, Component.literal("Item cannot be bound: " + defaultStack.getHoverName()));
+            errorStack.set(DataComponents.CUSTOM_NAME, Component.literal("Item cannot store souls: " + defaultStack.getHoverName()));
             itemStacks = new ItemStack[] {errorStack};
         } else {
             itemStacks = EntityCaptureUtils.getCapturableEntityTypes().stream().map(entityType -> {
                 var stack = item.getDefaultInstance();
-                if (SoulBoundUtils.tryBindSoul(stack, Soul.of(entityType))) {
+                var soulHandler = stack.getCapability(EnderIOCapabilities.SOUL_HANDLER_ITEM);
+                if (soulHandler != null && soulHandler.tryInsertSoul(Soul.of(entityType), false)) {
                     return Optional.of(stack);
                 }
 
@@ -56,7 +58,22 @@ public class FilledSoulStorageIngredient implements ICustomIngredient {
 
     @Override
     public boolean test(ItemStack itemStack) {
-        return itemStack.is(item) && SoulBoundUtils.isBound(itemStack);
+        if (!itemStack.is(item)) {
+            return false;
+        }
+
+        var soulHandler = itemStack.getCapability(EnderIOCapabilities.SOUL_HANDLER_ITEM);
+        if (soulHandler == null) {
+            return false;
+        }
+
+        for (int slot = 0; slot < soulHandler.getSlots(); slot++) {
+            if (!soulHandler.getSoulInSlot(slot).isEmpty()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override
