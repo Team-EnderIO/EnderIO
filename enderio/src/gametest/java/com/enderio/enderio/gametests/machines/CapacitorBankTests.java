@@ -51,8 +51,6 @@ public class CapacitorBankTests {
                 .thenExecuteAfter(20, () -> helper.assertEnergyStored(0,1,0, CapacitorTier.BASIC.getStorageCapacity())) //Test the energy is stored
                 .thenSucceed();
         });
-
-        test.pass();
     }
 
     @GameTest(template = TWO_CAPACITOR_BANKS)

@@ -95,7 +95,7 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
         this.tier = tier;
     }
 
-    public CapacitorTier getTier() {
+    public CapacitorTier tier() {
         return tier;
     }
 
@@ -183,10 +183,7 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
                     continue;
                 }
 
-                BlockCapabilityCache<IEnergyStorage, Direction> cache = energyStorageCaches.get(side); //TODO Why is this null?
-                if (cache == null) {
-                    return validPushTargetCache;
-                }
+                BlockCapabilityCache<IEnergyStorage, Direction> cache = energyStorageCaches.get(side);
                 var energyStorage = cache.getCapability();
                 if (energyStorage != null && !(energyStorage instanceof CapacitorBankEnergyStorage) && energyStorage.canReceive() &&
                     getIOMode(side).canOutput()) {
@@ -501,7 +498,7 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
         }
 
         if (oldNetwork != null) { //Network already kicked out the node, so we keep an old ref
-            int energy = oldNetwork.getEnergyForNode(this.getTier());
+            int energy = oldNetwork.getEnergyForNode(this.tier());
             if (energy != 0) {
                 components.set(EIODataComponents.ENERGY, energy);
             }

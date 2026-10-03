@@ -12,7 +12,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.Objects;
@@ -50,12 +49,12 @@ public class CapacitorBankMenu extends BaseBlockEntityMenu<CapacitorBankBlockEnt
         return ItemStack.EMPTY;
     }
 
-    public EnergyStorage getEnergyStorage() {
+    public LargeEnergyStorageInfo getEnergyStorage() {
         CapacitorBankManager.CapacitorSyncData data = CapacitorBankManager.getData(getBlockEntity().getUuid());
         if (data == null) {
-            return EnergyStorage.EMPTY;
+            return LargeEnergyStorageInfo.EMPTY;
         }
-        return new EnergyStorage(data.storedEnergy(), data.capacity());
+        return new LargeEnergyStorageInfo(data.storedEnergy(), data.capacity());
     }
 
     public RedstoneControl getRedstoneControl() {
@@ -67,18 +66,18 @@ public class CapacitorBankMenu extends BaseBlockEntityMenu<CapacitorBankBlockEnt
         updateSlot(redstoneControlSlot);
     }
 
-    public record EnergyStorage(Long energyStored, Long maxEnergyStored) implements IEnergyStorage, ILargeMachineEnergyStorage {
+    public record LargeEnergyStorageInfo(Long energyStored, Long maxEnergyStored) implements ILargeMachineEnergyStorage {
 
-        public static final EnergyStorage EMPTY = new EnergyStorage(0L,0L);
+        public static final LargeEnergyStorageInfo EMPTY = new LargeEnergyStorageInfo(0L,0L);
 
         @Override
         public int receiveEnergy(int i, boolean b) {
-            return 0;
+            throw new UnsupportedOperationException();
         }
 
         @Override
         public int extractEnergy(int i, boolean b) {
-            return 0;
+            throw new UnsupportedOperationException();
         }
 
         @Override

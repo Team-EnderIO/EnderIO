@@ -144,10 +144,6 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
     }
 
     public int receiveEnergy(BlockPos pos, @Nullable Direction side, int amount, boolean simulate) {
-        if (this.getTotalMaxEnergyStored() == 0) { //TODO the network isn't loaded yet and ready for transfer
-            return 0;
-        }
-
         long energyBefore = getTotalEnergyStored();
         long energyAfter = Math.min(energyBefore + amount, getTotalMaxEnergyStored());
         int result = Math.toIntExact(Mth.clamp(energyAfter - energyBefore, 0, Integer.MAX_VALUE));
@@ -222,7 +218,6 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
                 shareAmount = energyRemaining / toShareWith;
             }
 
-            //TODO long support
             int inserted = receiver.receiveEnergy(Math.clamp(shareAmount, 0, Integer.MAX_VALUE), false);
             long io = this.energyIO.getOrDefault(sided.sidedPos(), 0L);
             this.energyIO.put(sided.sidedPos(), io - inserted);
