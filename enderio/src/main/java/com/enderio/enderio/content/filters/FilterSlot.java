@@ -2,6 +2,7 @@ package com.enderio.enderio.content.filters;
 
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
@@ -37,6 +38,11 @@ public abstract class FilterSlot<T> extends Slot {
         // TODO: Check this behaviour.
         getResourceFrom(stack).ifPresent(this::setResource);
         setChanged();
+    }
+
+    @Override
+    public boolean mayPickup(Player player) {
+        return false;
     }
 
     @Override

@@ -85,7 +85,7 @@ public class GhostMachineSlotTests {
     }
 
     @Test
-    void testTryRemove_ClearsSlot_ReturnsEmpty(MinecraftServer server) {
+    void testTryRemove_DoesNothing(MinecraftServer server) {
         MachineInventoryLayout layout = MachineInventoryLayout.builder()
             .ghostSlot()
             .build();
@@ -98,6 +98,6 @@ public class GhostMachineSlotTests {
         // tryRemove should return empty Optional and clear the slot
         var result = ghostSlot.tryRemove(1, 1, null);
         Assertions.assertTrue(result.isEmpty(), "tryRemove should return an empty Optional for ghost slots");
-        Assertions.assertTrue(ghostSlot.getItem().isEmpty(), "Ghost slot should be empty after tryRemove");
+        Assertions.assertFalse(ghostSlot.getItem().isEmpty(), "Ghost slot should not have been modified");
     }
 }
