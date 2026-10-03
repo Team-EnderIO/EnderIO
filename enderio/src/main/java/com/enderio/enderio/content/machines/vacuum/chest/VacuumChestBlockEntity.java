@@ -1,6 +1,8 @@
 package com.enderio.enderio.content.machines.vacuum.chest;
 
 import com.enderio.enderio.api.EnderIOCapabilities;
+import com.enderio.enderio.api.filter.ItemFilterContext;
+import com.enderio.enderio.api.filter.ItemFilterDirection;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.content.machines.vacuum.VacuumMachineBlockEntity;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
@@ -45,7 +47,7 @@ public class VacuumChestBlockEntity extends VacuumMachineBlockEntity<ItemEntity>
             // Enable the filter to adjust the amount to accept (limited item filter)
             var filter = FILTER.getItemStack(this).getCapability(EnderIOCapabilities.ITEM_FILTER);
             if (filter != null) {
-                itemToReceive = filter.test(getInventory(), itemToReceive);
+                itemToReceive = filter.test(itemToReceive, new ItemFilterContext(getInventory(), ItemFilterDirection.INSERT));
             }
 
             // Abort if we can't accept the item.
@@ -72,7 +74,7 @@ public class VacuumChestBlockEntity extends VacuumMachineBlockEntity<ItemEntity>
     public Predicate<ItemEntity> getFilter() {
         var filter = FILTER.getItemStack(this).getCapability(EnderIOCapabilities.ITEM_FILTER);
         if (filter != null) {
-            return itemEntity -> !filter.test(getInventory(), itemEntity.getItem()).isEmpty();
+            return itemEntity -> !filter.test(itemEntity.getItem(), new ItemFilterContext(getInventory(), ItemFilterDirection.INSERT)).isEmpty();
         }
 
         return super.getFilter();

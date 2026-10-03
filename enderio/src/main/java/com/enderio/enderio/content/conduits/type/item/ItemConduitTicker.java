@@ -6,6 +6,8 @@ import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.path.ConduitConnectionPath;
 import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.enderio.enderio.api.conduits.ticker.ConduitTickerBase;
+import com.enderio.enderio.api.filter.ItemFilterContext;
+import com.enderio.enderio.api.filter.ItemFilterDirection;
 import com.enderio.enderio.init.EIOConduitTypes;
 import com.google.common.collect.Maps;
 import com.mojang.logging.LogUtils;
@@ -83,7 +85,7 @@ public class ItemConduitTicker extends ConduitTickerBase<ItemConduit> {
                 }
 
                 if (extractFilter != null) {
-                    extractedItem = extractFilter.test(extractHandler, extractedItem);
+                    extractedItem = extractFilter.test(extractedItem, new ItemFilterContext(extractHandler, ItemFilterDirection.EXTRACT));
                     if (extractedItem.isEmpty()) {
                         continue;
                     }
@@ -138,8 +140,8 @@ public class ItemConduitTicker extends ConduitTickerBase<ItemConduit> {
                         .getCapability(EnderIOCapabilities.ITEM_FILTER);
 
                     if (insertFilter != null) {
-                        itemToInsert = insertFilter.test(
-                            insertConnection.getSidedCapability(Capabilities.ItemHandler.BLOCK), itemToInsert);
+                        itemToInsert = insertFilter.test(itemToInsert, new ItemFilterContext(insertConnection.getSidedCapability(Capabilities.ItemHandler.BLOCK),
+                            ItemFilterDirection.INSERT));
                         if (itemToInsert.isEmpty()) {
                             continue;
                         }
