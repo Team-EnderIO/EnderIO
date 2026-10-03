@@ -56,7 +56,7 @@ public class StrictFluidHandlerItemStack extends FluidHandlerItemStack {
     @Override
     public int fill(FluidStack resource, FluidAction doFill) {
         if (!getFluid().isEmpty() && fluidPredicate.test(resource.getFluid())) {
-            resource = new FluidStack(getFluid().getFluid(), resource.getAmount());
+            resource = getFluid().copyWithAmount(resource.getAmount());
         }
         return super.fill(resource, doFill);
     }

@@ -2,6 +2,7 @@ package com.enderio.enderio.gametests.conduits.fluid;
 
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.io.RedstoneControl;
+import com.enderio.enderio.gametests.EnderIOTests;
 import com.enderio.enderio.gametests.conduits.ConduitGameTestHelper;
 import com.enderio.enderio.content.conduits.type.fluid.FluidConduit;
 import com.enderio.enderio.content.conduits.type.fluid.FluidConduitConnectionConfig;
@@ -12,6 +13,7 @@ import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.material.Fluids;
+import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.testframework.DynamicTest;
 import net.neoforged.testframework.annotation.ForEachTest;
 import net.neoforged.testframework.annotation.RegisterStructureTemplate;
@@ -24,6 +26,7 @@ import java.util.function.Supplier;
 public class FluidConduitTests {
 
     private static final String THREE_TANKS = EnderIO.MOD_ID + ":fluid_conduit_three_tanks";
+    private static final String TWO_TANKS = EnderIO.MOD_ID + ":fluid_conduit_two_tanks";
 
     // @formatter:off
     @RegisterStructureTemplate(THREE_TANKS)
@@ -35,6 +38,15 @@ public class FluidConduitTests {
             // Receivers
             .set(0, 0, 2, EIOBlocks.FLUID_TANK.get().defaultBlockState())
             .set(2, 0, 2, EIOBlocks.FLUID_TANK.get().defaultBlockState())
+    );
+    // @formatter:on
+
+    // @formatter:off
+    @RegisterStructureTemplate(TWO_TANKS)
+    public static final Supplier<StructureTemplate> TWO_TANKS_TEMPLATE = StructureTemplateBuilder.lazy(3, 1, 1,
+        builder -> builder
+            .set(0, 0, 0, EIOBlocks.FLUID_TANK.get().defaultBlockState())
+            .set(2, 0, 0, EIOBlocks.FLUID_TANK.get().defaultBlockState())
     );
     // @formatter:on
 
@@ -140,6 +152,37 @@ public class FluidConduitTests {
             // Ensure the fluid moves to the closer tank
             .thenExecuteAfter(tickRate, () -> helper.assertContainerHasExactly(0, 1, 2, Fluids.WATER, 1))
             .thenExecute(() -> helper.assertContainerHasExactly(2, 1, 2, Fluids.WATER, 0))
+            .thenSucceed();
+    }
+
+    @GameTest(template = TWO_TANKS)
+    @TestHolder(description = "Ensures fluid conduits keep fluid components intact.")
+    public static void fluidConduitsKeepComponents(final ConduitGameTestHelper helper) {
+        var fluidConduit = helper.getConduit(EIOConduits.ENERGETIC_FLUID);
+        final int tickRate = fluidConduit.value().type().getTickRate(fluidConduit);
+
+        var fluidWithComponent = new FluidStack(Fluids.WATER, 1);
+        fluidWithComponent.set(EnderIOTests.TEST_NUMBER, 2);
+
+        helper.startSequence()
+            // Destroy the previous conduit
+            .thenExecute(() -> helper.fillAir(1, 1, 0, 1, 1, 0))
+            // Place a conduit between the tanks
+            .thenExecute(() -> helper.fillConduits(fluidConduit, 1, 1, 0, 1, 1, 0))
+            // Configure the insert ends
+            .thenExecute(() -> helper
+                .getConduitBundle(1, 1, 0, false)
+                .setConnectionConfig(fluidConduit, Direction.EAST, FluidConduitConnectionConfig.DEFAULT.withIsExtract(false).withIsInsert(true)))
+            // Configure the extract end
+            .thenExecute(() -> helper
+                .getConduitBundle(1, 1, 0, false)
+                .setConnectionConfig(fluidConduit, Direction.WEST,
+                    FluidConduitConnectionConfig.DEFAULT.withIsExtract(true).withIsInsert(false).withExtractRedstoneControl(RedstoneControl.ALWAYS_ACTIVE)))
+            // Put some fluid in the tank we'll extract from
+            .thenExecute(() -> helper.fillContainer(0, 1, 0, fluidWithComponent))
+            // Ensure the fluid moves to the next tank with its components intact.
+            .thenExecuteAfter(tickRate, () -> helper.assertContainerHasExactly(2, 1, 0, fluidWithComponent))
+            .thenExecute(() -> helper.assertContainerHasExactly(0, 1, 0, Fluids.WATER, 0))
             .thenSucceed();
     }
 

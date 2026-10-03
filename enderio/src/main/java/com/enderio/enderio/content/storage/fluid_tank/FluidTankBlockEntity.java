@@ -1,5 +1,6 @@
 package com.enderio.enderio.content.storage.fluid_tank;
 
+import com.enderio.core.common.capability.EnderFluidUtil;
 import com.enderio.enderio.foundation.attachment.FluidTankUser;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;
@@ -115,8 +116,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
     public boolean acceptItemFill(ItemStack item) {
         // bucket types
-        IFluidHandlerItem fluidHandlerCap = item.getCapability(Capabilities.FluidHandler.ITEM);
-        if (fluidHandlerCap != null) {
+        IFluidHandlerItem fluidHandlerCap = item.copyWithCount(1).getCapability(Capabilities.FluidHandler.ITEM);
+        if (fluidHandlerCap != null && !fluidHandlerCap.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE).isEmpty()) {
             return true;
         }
 
@@ -133,14 +134,15 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
     }
 
     public boolean acceptItemDrain(ItemStack item) {
-        // bucket types
-        IFluidHandlerItem fluidHandlerCap = item.getCapability(Capabilities.FluidHandler.ITEM);
-        if (fluidHandlerCap != null) {
+        FluidStack fluid = TANK.getFluid(this);
+
+        // Receive items that can accept our current fluid as input -or- if our current contents are empty.
+        IFluidHandlerItem fluidHandlerCap = item.copyWithCount(1).getCapability(Capabilities.FluidHandler.ITEM);
+        if (fluidHandlerCap != null && (fluid.isEmpty() || fluidHandlerCap.fill(fluid.copyWithAmount(Integer.MAX_VALUE), IFluidHandler.FluidAction.SIMULATE) > 0)) {
             return true;
         }
 
         // Mending
-        FluidStack fluid = TANK.getFluid(this);
 
         if (item.isDamageableItem() && !fluid.isEmpty() && fluid.is(Tags.Fluids.EXPERIENCE)) {
             var enchantmentsRecipe = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
