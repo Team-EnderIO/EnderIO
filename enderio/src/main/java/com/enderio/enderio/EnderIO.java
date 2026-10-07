@@ -21,6 +21,7 @@ import com.enderio.enderio.init.EIOAttachments;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOConduitTypes;
+import com.enderio.enderio.init.EIOConsumableTypes;
 import com.enderio.enderio.init.EIOCreativeTabs;
 import com.enderio.enderio.init.EIOCriterions;
 import com.enderio.enderio.init.EIODataComponents;
@@ -119,6 +120,7 @@ public class EnderIO {
         EIOTravelTargets.register(modEventBus);
         EIORecipeBookCategories.register(modEventBus);
         EIOSounds.register(modEventBus);
+        EIOConsumableTypes.register(modEventBus);
 
         // Handle mod compat
         for (Map.Entry<String, Consumer<IEventBus>> entry : MOD_INTEGRATIONS.entrySet()) {
