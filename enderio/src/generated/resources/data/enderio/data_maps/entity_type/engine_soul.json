@@ -1,0 +1,24 @@
+{
+  "values": {
+    "#enderio:creepers": {
+      "fluid": "enderio:fluid_rocket_fuel_still",
+      "powerPerMb": 800,
+      "tickPerMb": 12
+    },
+    "#enderio:endermen": {
+      "fluid": "enderio:fluid_dew_of_the_void_still",
+      "powerPerMb": 1200,
+      "tickPerMb": 12
+    },
+    "#enderio:zombies": {
+      "fluid": "enderio:fluid_nutrient_distillation_still",
+      "powerPerMb": 1000,
+      "tickPerMb": 18
+    },
+    "minecraft:blaze": {
+      "fluid": "#minecraft:lava",
+      "powerPerMb": 800,
+      "tickPerMb": 18
+    }
+  }
+}

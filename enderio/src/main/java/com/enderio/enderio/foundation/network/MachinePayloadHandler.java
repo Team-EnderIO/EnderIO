@@ -6,12 +6,10 @@ import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.network.packets.ClientboundFarmStationSoulPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundPoweredSpawnerSoulPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundSolarSoulPacket;
-import com.enderio.enderio.foundation.network.packets.ClientboundSoulEngineSoulPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundCycleIOConfigPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundEnderfaceInteractPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundTransferItemsPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundUpdateCrafterTemplatePacket;
-import com.enderio.enderio.foundation.souldata.EngineSoul;
 import com.enderio.enderio.foundation.souldata.FarmSoul;
 import com.enderio.enderio.foundation.souldata.SolarSoul;
 import com.enderio.enderio.foundation.souldata.SpawnerSoul;
@@ -31,10 +29,6 @@ public class MachinePayloadHandler {
 
         public void handlePoweredSpawnerSoul(ClientboundPoweredSpawnerSoulPacket packet, IPayloadContext context) {
             context.enqueueWork(() -> SpawnerSoul.RELOAD_LISTENER.map = packet.map());
-        }
-
-        public void handleSoulEngineSoul(ClientboundSoulEngineSoulPacket packet, IPayloadContext context) {
-            context.enqueueWork(() -> EngineSoul.RELOAD_LISTENER.map = packet.map());
         }
 
         public void handleFarmingStationSoul(ClientboundFarmStationSoulPacket packet, IPayloadContext context) {

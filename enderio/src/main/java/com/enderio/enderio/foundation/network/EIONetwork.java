@@ -5,7 +5,6 @@ import com.enderio.enderio.foundation.network.packets.ClientboundConduitListPack
 import com.enderio.enderio.foundation.network.packets.ClientboundFarmStationSoulPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundPoweredSpawnerSoulPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundSolarSoulPacket;
-import com.enderio.enderio.foundation.network.packets.ClientboundSoulEngineSoulPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundSyncTravelDataPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundTravelTargetRemovedPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundTravelTargetUpdatedPacket;
@@ -26,7 +25,6 @@ import com.enderio.enderio.foundation.network.packets.ServerboundTransferItemsPa
 import com.enderio.enderio.foundation.network.packets.ServerboundUpdateCoordinateSelectionNameMenuPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundUpdateCrafterTemplatePacket;
 import com.enderio.enderio.foundation.network.packets.SetConduitConnectionConfigPacket;
-import com.enderio.enderio.foundation.souldata.EngineSoul;
 import com.enderio.enderio.foundation.souldata.FarmSoul;
 import com.enderio.enderio.foundation.souldata.SolarSoul;
 import com.enderio.enderio.foundation.souldata.SpawnerSoul;
@@ -43,7 +41,6 @@ public class EIONetwork {
     public static void register(final RegisterPayloadHandlersEvent event) {
         // Sync soul data (optional)
         SpawnerSoul.RELOAD_LISTENER.subscribeAsSyncable(ClientboundPoweredSpawnerSoulPacket::new);
-        EngineSoul.RELOAD_LISTENER.subscribeAsSyncable(ClientboundSoulEngineSoulPacket::new);
         FarmSoul.RELOAD_LISTENER.subscribeAsSyncable(ClientboundFarmStationSoulPacket::new);
         SolarSoul.RELOAD_LISTENER.subscribeAsSyncable(ClientboundSolarSoulPacket::new);
 
@@ -105,9 +102,6 @@ public class EIONetwork {
 
         registrar.playToClient(ClientboundPoweredSpawnerSoulPacket.TYPE, ClientboundPoweredSpawnerSoulPacket.STREAM_CODEC,
             MachinePayloadHandler.Client.getInstance()::handlePoweredSpawnerSoul);
-
-        registrar.playToClient(ClientboundSoulEngineSoulPacket.TYPE, ClientboundSoulEngineSoulPacket.STREAM_CODEC,
-            MachinePayloadHandler.Client.getInstance()::handleSoulEngineSoul);
 
         registrar.playToClient(ClientboundFarmStationSoulPacket.TYPE, ClientboundFarmStationSoulPacket.STREAM_CODEC,
             MachinePayloadHandler.Client.getInstance()::handleFarmingStationSoul);

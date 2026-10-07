@@ -5,13 +5,11 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.soul.binding.ingredients.AnySoulBindableIngredient;
 import com.enderio.enderio.content.machines.solar_panel.SolarPanelTier;
 import com.enderio.enderio.content.machines.soul_binder.SoulBindingRecipe;
-import com.enderio.enderio.foundation.souldata.EngineSoul;
 import com.enderio.enderio.foundation.souldata.FarmSoul;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOItems;
 import net.minecraft.core.HolderGetter;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -23,7 +21,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -57,8 +54,9 @@ public class SoulBindingRecipeProvider extends SubRecipeProvider {
         build(EIOItems.BROKEN_SPAWNER, AnySoulBindableIngredient.of(EIOItems.BROKEN_SPAWNER), 288000, 8, recipeOutput);
         build(EIOBlocks.POWERED_SPAWNER, AnySoulBindableIngredient.of(EIOBlocks.POWERED_SPAWNER), 288000, 8, true,
                 recipeOutput);
-        build(EIOBlocks.SOUL_ENGINE, Ingredient.of(EIOBlocks.SOUL_ENGINE), 188000, 5, EngineSoul.NAME,
-                recipeOutput);
+        // TODO: Swapped to data maps, should resolve this somehow...
+//        build(EIOBlocks.SOUL_ENGINE, Ingredient.of(EIOBlocks.SOUL_ENGINE), 188000, 5, EngineSoul.NAME,
+//                recipeOutput);
         build(EIOBlocks.FARMING_STATION, Ingredient.of(EIOBlocks.FARMING_STATION), 188000, 5, FarmSoul.NAME,
                 recipeOutput);
         build(EIOItems.PLAYER_TOKEN, Ingredient.of(EIOItems.DARK_STEEL_BALL), 12800, 1, EntityTypes.VILLAGER,

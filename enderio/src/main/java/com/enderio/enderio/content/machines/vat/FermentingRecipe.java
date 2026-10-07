@@ -4,6 +4,7 @@ import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.enderio.foundation.MachineRecipe;
 import com.enderio.enderio.foundation.datamap.VatReagent;
 import com.enderio.enderio.init.EIOBlocks;
+import com.enderio.enderio.init.EIODataMaps;
 import com.enderio.enderio.init.EIORecipeBookCategories;
 import com.enderio.enderio.init.EIORecipeTypes;
 import com.mojang.serialization.Codec;
@@ -121,7 +122,7 @@ public final class FermentingRecipe implements MachineRecipe<FermentingRecipe.In
     }
 
     public static double getModifier(ItemStack stack, TagKey<Item> reagent) {
-        var map = stack.typeHolder().getData(VatReagent.DATA_MAP);
+        var map = stack.typeHolder().getData(EIODataMaps.VAT_REAGENT);
         if (map != null) {
             return map.getOrDefault(reagent, 1D);
         }

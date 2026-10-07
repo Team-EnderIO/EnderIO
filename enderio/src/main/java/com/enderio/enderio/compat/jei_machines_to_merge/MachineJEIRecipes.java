@@ -1,5 +1,6 @@
 package com.enderio.enderio.compat.jei_machines_to_merge;
 
+import com.enderio.enderio.compat.jei_machines_to_merge.util.SoulEngineRecipe;
 import com.enderio.enderio.compat.jei_machines_to_merge.util.WrappedEnchanterRecipe;
 import com.enderio.enderio.content.machines.alloy.AlloySmeltingRecipe;
 import com.enderio.enderio.content.machines.obelisks.weather.WeatherChangeRecipe;
@@ -8,8 +9,9 @@ import com.enderio.enderio.content.machines.slicer.SlicingRecipe;
 import com.enderio.enderio.content.machines.soul_binder.SoulBindingRecipe;
 import com.enderio.enderio.content.machines.vat.FermentingRecipe;
 import com.enderio.enderio.content.storage.fluid_tank.TankRecipe;
-import com.enderio.enderio.foundation.souldata.EngineSoul;
+import com.enderio.enderio.init.EIODataMaps;
 import com.enderio.enderio.init.EIORecipeTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeMap;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -63,8 +65,11 @@ public class MachineJEIRecipes {
         return new ArrayList<>(RECIPE_MAP.byType(EIORecipeTypes.SAG_MILLING.get()));
     }
 
-    public List<EngineSoul.SoulData> getMobGeneratorRecipes() {
-        return EngineSoul.RELOAD_LISTENER.map.values().stream().toList();
+    public List<SoulEngineRecipe> getMobGeneratorRecipes() {
+        return BuiltInRegistries.ENTITY_TYPE.getDataMap(EIODataMaps.ENGINE_SOULS).entrySet()
+            .stream()
+            .map(entry -> new SoulEngineRecipe(entry.getKey(), entry.getValue()))
+            .toList();
     }
 
     public List<RecipeHolder<FermentingRecipe>> getVATRecipes() {

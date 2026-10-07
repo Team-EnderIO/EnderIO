@@ -11,6 +11,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.Entity;
@@ -133,6 +134,10 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) im
 
     public static Soul of(Identifier entityType) {
         return of(BuiltInRegistries.ENTITY_TYPE.getValue(entityType));
+    }
+
+    public static Soul of(ResourceKey<EntityType<?>> entityType) {
+        return of(entityType.identifier());
     }
 
     public static Soul of(EntityType<?> entityType) {

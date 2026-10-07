@@ -5,6 +5,7 @@ import com.enderio.enderio.foundation.tag.EIOTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.entity.EntityTypeIds;
 import net.neoforged.neoforge.common.Tags;
 
@@ -32,5 +33,14 @@ public class EIOEntityTagsProvider extends EntityTypeTagsProvider {
 
         this.tag(EIOTags.EntityTypes.SPAWNER_ALLOW_LIST);
 
+        // TODO: Add Mekanism baby variants.
+        this.tag(EIOTags.EntityTypes.ZOMBIES)
+            .addTag(EntityTypeTags.ZOMBIES);
+
+        this.tag(EIOTags.EntityTypes.CREEPERS)
+            .add(EntityTypeIds.CREEPER);
+
+        this.tag(EIOTags.EntityTypes.ENDERMEN)
+            .add(EntityTypeIds.ENDERMAN);
     }
 }

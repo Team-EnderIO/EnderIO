@@ -2,12 +2,10 @@ package com.enderio.enderio.datagen.common.souldata;
 
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.content.machines.powered_spawner.MobSpawnMode;
-import com.enderio.enderio.foundation.souldata.EngineSoul;
 import com.enderio.enderio.foundation.souldata.FarmSoul;
 import com.enderio.enderio.foundation.souldata.SolarSoul;
 import com.enderio.enderio.foundation.souldata.SoulData;
 import com.enderio.enderio.foundation.souldata.SpawnerSoul;
-import com.enderio.enderio.init.EIOFluids;
 import com.google.common.collect.Sets;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -20,12 +18,9 @@ import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.tags.FluidTags;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.material.Fluid;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -129,14 +124,6 @@ public class SoulDataProvider implements DataProvider {
         addSpawnerData(EntityTypes.ZOMBIE_VILLAGER, 32_000, MobSpawnMode.NEW, finshedSoulDataConsumer);
         addSpawnerData(EntityTypes.ZOMBIFIED_PIGLIN, 32_000, MobSpawnMode.NEW, finshedSoulDataConsumer);
 
-        addEngineData(EntityTypes.BLAZE, FluidTags.LAVA, 800, 18, finshedSoulDataConsumer);
-        addEngineData(EntityTypes.ZOMBIE, EIOFluids.NUTRIENT_DISTILLATION.source().get(), 1000, 18, finshedSoulDataConsumer);
-        addEngineData(EntityTypes.ZOMBIE_VILLAGER, EIOFluids.NUTRIENT_DISTILLATION.source().get(), 1000, 18,
-                finshedSoulDataConsumer);
-        addEngineData(EntityTypes.HUSK, EIOFluids.NUTRIENT_DISTILLATION.source().get(), 1000, 18, finshedSoulDataConsumer);
-        addEngineData(EntityTypes.ENDERMAN, EIOFluids.DEW_OF_THE_VOID.source().get(), 1200, 12, finshedSoulDataConsumer);
-        addEngineData(EntityTypes.CREEPER, EIOFluids.ROCKET_FUEL.source().get(), 800, 12, finshedSoulDataConsumer);
-
         addFarmData(EntityTypes.BEE, 0.8f, 0, 1, finshedSoulDataConsumer);
         addFarmData(EntityTypes.VILLAGER, 1, 0, 1.2f, finshedSoulDataConsumer);
         addFarmData(EntityTypes.SNIFFER, 1, 1, 1, finshedSoulDataConsumer);
@@ -171,24 +158,6 @@ public class SoulDataProvider implements DataProvider {
         SpawnerSoul.SoulData data = new SpawnerSoul.SoulData(key, power, type);
         finshedSoulDataConsumer.accept(new FinshedSoulData<>(SpawnerSoul.CODEC, data,
                 SpawnerSoul.NAME + "/" + key.getNamespace() + "_" + key.getPath()));
-    }
-
-    private void addEngineData(EntityType<?> entityType, Fluid fluid, int powerpermb, int tickpermb,
-            Consumer<FinshedSoulData<?>> finshedSoulDataConsumer) {
-        Identifier entityRL = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
-        Identifier fluidRL = BuiltInRegistries.FLUID.getKey(fluid);
-        EngineSoul.SoulData data = new EngineSoul.SoulData(entityRL, fluidRL.toString(), powerpermb, tickpermb);
-        finshedSoulDataConsumer.accept(new FinshedSoulData<>(EngineSoul.CODEC, data,
-                EngineSoul.NAME + "/" + entityRL.getNamespace() + "_" + entityRL.getPath()));
-    }
-
-    private void addEngineData(EntityType<?> entityType, TagKey<Fluid> fluid, int powerpermb, int tickpermb,
-            Consumer<FinshedSoulData<?>> finshedSoulDataConsumer) {
-        Identifier entityRL = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
-        String fluidRL = "#" + fluid.location();
-        EngineSoul.SoulData data = new EngineSoul.SoulData(entityRL, fluidRL, powerpermb, tickpermb);
-        finshedSoulDataConsumer.accept(new FinshedSoulData<>(EngineSoul.CODEC, data,
-                EngineSoul.NAME + "/" + entityRL.getNamespace() + "_" + entityRL.getPath()));
     }
 
     private void addFarmData(EntityType<?> entityType, float bonemeal, int seeds, float power,
