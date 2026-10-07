@@ -2,7 +2,6 @@ package com.enderio.enderio.datagen.common.souldata;
 
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.foundation.souldata.FarmSoul;
-import com.enderio.enderio.foundation.souldata.SolarSoul;
 import com.enderio.enderio.foundation.souldata.SoulData;
 import com.google.common.collect.Sets;
 import com.google.gson.JsonElement;
@@ -15,16 +14,12 @@ import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.Identifier;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.level.Level;
 import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -41,8 +36,6 @@ public class SoulDataProvider implements DataProvider {
         addFarmData(EntityTypes.BEE, 0.8f, 0, 1, finshedSoulDataConsumer);
         addFarmData(EntityTypes.VILLAGER, 1, 0, 1.2f, finshedSoulDataConsumer);
         addFarmData(EntityTypes.SNIFFER, 1, 1, 1, finshedSoulDataConsumer);
-
-        addSolarData(EntityTypes.PHANTOM, false, true, null, finshedSoulDataConsumer);
     }
 
     @Override
@@ -72,14 +65,6 @@ public class SoulDataProvider implements DataProvider {
         FarmSoul.SoulData data = new FarmSoul.SoulData(entityRL, bonemeal, seeds, power);
         finshedSoulDataConsumer.accept(new FinshedSoulData<>(FarmSoul.CODEC, data,
                 FarmSoul.NAME + "/" + entityRL.getNamespace() + "_" + entityRL.getPath()));
-    }
-
-    private void addSolarData(EntityType<?> entityType, boolean daytime, boolean nighttime,
-            @Nullable ResourceKey<Level> level, Consumer<FinshedSoulData<?>> finshedSoulDataConsumer) {
-        Identifier entityRL = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
-        SolarSoul.SoulData data = new SolarSoul.SoulData(entityRL, daytime, nighttime, Optional.ofNullable(level));
-        finshedSoulDataConsumer.accept(new FinshedSoulData<>(SolarSoul.CODEC, data,
-                SolarSoul.NAME + "/" + entityRL.getNamespace() + "_" + entityRL.getPath()));
     }
 
     public static class FinshedSoulData<T extends SoulData> {

@@ -2,6 +2,7 @@ package com.enderio.enderio.init;
 
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.components.GrindingBallData;
+import com.enderio.enderio.foundation.datamap.SolarSoul;
 import com.enderio.enderio.foundation.datamap.SpawnerSoul;
 import com.enderio.enderio.foundation.datamap.RangeExtender;
 import com.enderio.enderio.foundation.datamap.VatReagent;
@@ -24,12 +25,16 @@ public class EIODataMaps {
 
     public static final DataMapType<EntityType<?>, EngineSoul> ENGINE_SOUL = DataMapType
         .builder(EnderIO.id("engine_soul"), Registries.ENTITY_TYPE, EngineSoul.CODEC)
+        // Used in the GUI, so we sync it
         .synced(EngineSoul.CODEC, true)
+        .build();
+
+    public static final DataMapType<EntityType<?>, SolarSoul> SOLAR_SOUL = DataMapType
+        .builder(EnderIO.id("solar_soul"), Registries.ENTITY_TYPE, SolarSoul.CODEC)
         .build();
 
     public static final DataMapType<EntityType<?>, SpawnerSoul> SPAWNER_SOUL = DataMapType
         .builder(EnderIO.id("spawner_soul"), Registries.ENTITY_TYPE, SpawnerSoul.CODEC)
-        .synced(SpawnerSoul.CODEC, true)
         .build();
 
     public static final AdvancedDataMapType<Item, Map<TagKey<Item>, Double>, DataMapValueRemover.Default<Map<TagKey<Item>, Double>, Item>> VAT_REAGENT =

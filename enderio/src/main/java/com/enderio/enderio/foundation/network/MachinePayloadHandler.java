@@ -4,13 +4,11 @@ import com.enderio.enderio.content.enderface.EnderfaceBlockEntity;
 import com.enderio.enderio.content.storage.crafter.CrafterMenu;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.network.packets.ClientboundFarmStationSoulPacket;
-import com.enderio.enderio.foundation.network.packets.ClientboundSolarSoulPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundCycleIOConfigPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundEnderfaceInteractPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundTransferItemsPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundUpdateCrafterTemplatePacket;
 import com.enderio.enderio.foundation.souldata.FarmSoul;
-import com.enderio.enderio.foundation.souldata.SolarSoul;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -27,10 +25,6 @@ public class MachinePayloadHandler {
 
         public void handleFarmingStationSoul(ClientboundFarmStationSoulPacket packet, IPayloadContext context) {
             context.enqueueWork(() -> FarmSoul.RELOAD_LISTENER.map = packet.map());
-        }
-
-        public void handleSolarSoul(ClientboundSolarSoulPacket packet, IPayloadContext context) {
-            context.enqueueWork(() -> SolarSoul.RELOAD_LISTENER.map = packet.map());
         }
     }
 

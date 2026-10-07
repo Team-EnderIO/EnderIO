@@ -3,7 +3,6 @@ package com.enderio.enderio.foundation.network;
 import com.enderio.enderio.foundation.network.packets.ClientboundConduitExtraGuiDataPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundConduitListPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundFarmStationSoulPacket;
-import com.enderio.enderio.foundation.network.packets.ClientboundSolarSoulPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundSyncTravelDataPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundTravelTargetRemovedPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundTravelTargetUpdatedPacket;
@@ -25,7 +24,6 @@ import com.enderio.enderio.foundation.network.packets.ServerboundUpdateCoordinat
 import com.enderio.enderio.foundation.network.packets.ServerboundUpdateCrafterTemplatePacket;
 import com.enderio.enderio.foundation.network.packets.SetConduitConnectionConfigPacket;
 import com.enderio.enderio.foundation.souldata.FarmSoul;
-import com.enderio.enderio.foundation.souldata.SolarSoul;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -39,7 +37,6 @@ public class EIONetwork {
     public static void register(final RegisterPayloadHandlersEvent event) {
         // Sync soul data (optional)
         FarmSoul.RELOAD_LISTENER.subscribeAsSyncable(ClientboundFarmStationSoulPacket::new);
-        SolarSoul.RELOAD_LISTENER.subscribeAsSyncable(ClientboundSolarSoulPacket::new);
 
         // TODO: Tidy up this class.
         final PayloadRegistrar registrar = event.registrar(PROTOCOL_VERSION);
@@ -99,9 +96,6 @@ public class EIONetwork {
 
         registrar.playToClient(ClientboundFarmStationSoulPacket.TYPE, ClientboundFarmStationSoulPacket.STREAM_CODEC,
             MachinePayloadHandler.Client.getInstance()::handleFarmingStationSoul);
-
-        registrar.playToClient(ClientboundSolarSoulPacket.TYPE, ClientboundSolarSoulPacket.STREAM_CODEC,
-            MachinePayloadHandler.Client.getInstance()::handleSolarSoul);
 
         registrar.playToServer(ServerboundUpdateCrafterTemplatePacket.TYPE, ServerboundUpdateCrafterTemplatePacket.STREAM_CODEC,
             MachinePayloadHandler.Server.getInstance()::updateCrafterTemplate);

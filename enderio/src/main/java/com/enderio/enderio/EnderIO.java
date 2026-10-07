@@ -12,7 +12,6 @@ import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.misc_blocks.skull.EnderSkullBlock;
 import com.enderio.enderio.foundation.integrations.Integrations;
 import com.enderio.enderio.foundation.souldata.FarmSoul;
-import com.enderio.enderio.foundation.souldata.SolarSoul;
 import com.enderio.enderio.init.EIOAttachments;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOBlocks;
@@ -164,7 +163,6 @@ public class EnderIO {
     @SubscribeEvent
     public static void addReloadListeners(AddServerReloadListenersEvent event) {
         event.addListener(EnderIO.id("farm_soul_data"), FarmSoul.RELOAD_LISTENER);
-        event.addListener(EnderIO.id("solar_soul_data"), SolarSoul.RELOAD_LISTENER);
     }
 
     @SubscribeEvent
