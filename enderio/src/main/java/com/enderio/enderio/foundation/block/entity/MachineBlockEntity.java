@@ -4,6 +4,7 @@ import com.enderio.core.common.storage.ExternalResourceStorageView;
 import com.enderio.core.common.storage.ItemStorage;
 import com.enderio.core.common.storage.layout.ItemStorageLayout;
 import com.enderio.core.annotations.UseOnly;
+import com.enderio.enderio.api.block.WrenchableBlockEntity;
 import com.enderio.enderio.api.io.IOConfigurable;
 import com.enderio.enderio.api.io.IOMode;
 import com.enderio.enderio.api.io.RedstoneControl;
@@ -67,7 +68,7 @@ import java.util.UUID;
  * Base block entity implementation for machines.
  * Implements Redstone Control and the Machine State system.
  */
-public abstract class MachineBlockEntity extends EIOBlockEntity implements MenuProvider, Wrenchable, IOConfigurable, MachineInventoryHolder,
+public abstract class MachineBlockEntity extends EIOBlockEntity implements MenuProvider, WrenchableBlockEntity, IOConfigurable, MachineInventoryHolder,
     MachineStateUpdater {
 
     public static final ICapabilityProvider<MachineBlockEntity, Direction, SideConfig> SIDE_CONFIG_PROVIDER =

@@ -12,7 +12,6 @@ import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.api.conduits.connection.ConnectionReader;
 import com.enderio.enderio.api.conduits.connection.ConnectionStatus;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
-import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.facade.FacadeType;
 import com.enderio.enderio.api.conduits.network.node.NodeData;
 import com.enderio.enderio.client.content.conduits.model.bundle.ConduitBundleRenderState;
@@ -22,7 +21,7 @@ import com.enderio.enderio.content.conduits.menu.ConduitMenu;
 import com.enderio.enderio.content.conduits.network.ConduitNetworkSavedData;
 import com.enderio.enderio.content.conduits.network.ConduitNodeImpl;
 import com.enderio.enderio.content.conduits.network.IConduitNodeAttachment;
-import com.enderio.enderio.foundation.block.entity.Wrenchable;
+import com.enderio.enderio.api.block.WrenchableBlockEntity;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOConduitTypes;
 import com.mojang.datafixers.util.Pair;
@@ -89,7 +88,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public final class ConduitBundleBlockEntity extends EnderBlockEntity
-        implements ConduitBundle, Wrenchable, ConduitMenu.ConnectionAccessor, IConduitNodeAttachment, Clearable {
+        implements ConduitBundle, WrenchableBlockEntity, ConduitMenu.ConnectionAccessor, IConduitNodeAttachment, Clearable {
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
