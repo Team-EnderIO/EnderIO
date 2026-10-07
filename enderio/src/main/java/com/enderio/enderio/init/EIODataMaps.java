@@ -2,9 +2,10 @@ package com.enderio.enderio.init;
 
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.components.GrindingBallData;
+import com.enderio.enderio.foundation.datamap.SpawnerSoul;
 import com.enderio.enderio.foundation.datamap.RangeExtender;
 import com.enderio.enderio.foundation.datamap.VatReagent;
-import com.enderio.enderio.foundation.souldata.EngineSoul;
+import com.enderio.enderio.foundation.datamap.EngineSoul;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
@@ -21,9 +22,14 @@ import java.util.Map;
 @EventBusSubscriber
 public class EIODataMaps {
 
-    public static final DataMapType<EntityType<?>, EngineSoul> ENGINE_SOULS = DataMapType
+    public static final DataMapType<EntityType<?>, EngineSoul> ENGINE_SOUL = DataMapType
         .builder(EnderIO.id("engine_soul"), Registries.ENTITY_TYPE, EngineSoul.CODEC)
         .synced(EngineSoul.CODEC, true)
+        .build();
+
+    public static final DataMapType<EntityType<?>, SpawnerSoul> SPAWNER_SOUL = DataMapType
+        .builder(EnderIO.id("spawner_soul"), Registries.ENTITY_TYPE, SpawnerSoul.CODEC)
+        .synced(SpawnerSoul.CODEC, true)
         .build();
 
     public static final AdvancedDataMapType<Item, Map<TagKey<Item>, Double>, DataMapValueRemover.Default<Map<TagKey<Item>, Double>, Item>> VAT_REAGENT =

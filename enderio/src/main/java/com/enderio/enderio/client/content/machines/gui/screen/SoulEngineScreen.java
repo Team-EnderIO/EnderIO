@@ -61,7 +61,7 @@ public class SoulEngineScreen extends MachineScreen<SoulEngineMenu> {
             graphics.text(font, name, (int) (imageWidth / 2f - font.width(name) / 2f), 10, CommonColors.DARK_GRAY, false);
 
             // TODO: Consider just syncing the soul data in a slot?
-            var soulData = entityType.builtInRegistryHolder().getData(EIODataMaps.ENGINE_SOULS);
+            var soulData = entityType.builtInRegistryHolder().getData(EIODataMaps.ENGINE_SOUL);
             if (soulData != null) {
                 double burnRate = menu.getBlockEntity().getBurnRate();
                 float genRate = menu.getBlockEntity().getGenerationRate();

@@ -3,7 +3,6 @@ package com.enderio.enderio.foundation.network;
 import com.enderio.enderio.foundation.network.packets.ClientboundConduitExtraGuiDataPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundConduitListPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundFarmStationSoulPacket;
-import com.enderio.enderio.foundation.network.packets.ClientboundPoweredSpawnerSoulPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundSolarSoulPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundSyncTravelDataPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundTravelTargetRemovedPacket;
@@ -27,7 +26,6 @@ import com.enderio.enderio.foundation.network.packets.ServerboundUpdateCrafterTe
 import com.enderio.enderio.foundation.network.packets.SetConduitConnectionConfigPacket;
 import com.enderio.enderio.foundation.souldata.FarmSoul;
 import com.enderio.enderio.foundation.souldata.SolarSoul;
-import com.enderio.enderio.foundation.souldata.SpawnerSoul;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -40,7 +38,6 @@ public class EIONetwork {
     @SubscribeEvent
     public static void register(final RegisterPayloadHandlersEvent event) {
         // Sync soul data (optional)
-        SpawnerSoul.RELOAD_LISTENER.subscribeAsSyncable(ClientboundPoweredSpawnerSoulPacket::new);
         FarmSoul.RELOAD_LISTENER.subscribeAsSyncable(ClientboundFarmStationSoulPacket::new);
         SolarSoul.RELOAD_LISTENER.subscribeAsSyncable(ClientboundSolarSoulPacket::new);
 
@@ -99,9 +96,6 @@ public class EIONetwork {
 
         registrar.playToServer(ServerboundSyncProbeStatePacket.TYPE, ServerboundSyncProbeStatePacket.STREAM_CODEC,
             ConduitServerPayloadHandler.getInstance()::handle);
-
-        registrar.playToClient(ClientboundPoweredSpawnerSoulPacket.TYPE, ClientboundPoweredSpawnerSoulPacket.STREAM_CODEC,
-            MachinePayloadHandler.Client.getInstance()::handlePoweredSpawnerSoul);
 
         registrar.playToClient(ClientboundFarmStationSoulPacket.TYPE, ClientboundFarmStationSoulPacket.STREAM_CODEC,
             MachinePayloadHandler.Client.getInstance()::handleFarmingStationSoul);

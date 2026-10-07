@@ -3,8 +3,6 @@ package com.enderio.enderio;
 import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
-// 26.2-port: third-party mod interaction commented out
-// import com.enderio.enderio.compat.ftb_ultimine.FTBUltimineCompat;
 import com.enderio.enderio.compat.cctweaked.ComputerCraftCompat;
 import com.enderio.enderio.compat.inventorysorter.InventorySorterCompat;
 import com.enderio.enderio.config.base.BaseConfig;
@@ -15,7 +13,6 @@ import com.enderio.enderio.content.misc_blocks.skull.EnderSkullBlock;
 import com.enderio.enderio.foundation.integrations.Integrations;
 import com.enderio.enderio.foundation.souldata.FarmSoul;
 import com.enderio.enderio.foundation.souldata.SolarSoul;
-import com.enderio.enderio.foundation.souldata.SpawnerSoul;
 import com.enderio.enderio.init.EIOAttachments;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOBlocks;
@@ -168,7 +165,6 @@ public class EnderIO {
     public static void addReloadListeners(AddServerReloadListenersEvent event) {
         event.addListener(EnderIO.id("farm_soul_data"), FarmSoul.RELOAD_LISTENER);
         event.addListener(EnderIO.id("solar_soul_data"), SolarSoul.RELOAD_LISTENER);
-        event.addListener(EnderIO.id("spawner_soul_data"), SpawnerSoul.RELOAD_LISTENER);
     }
 
     @SubscribeEvent

@@ -18,7 +18,7 @@ import com.enderio.enderio.foundation.block.ProgressMachineBlock;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
 import com.enderio.enderio.foundation.inventory.MachineSlotTemplates;
-import com.enderio.enderio.foundation.souldata.EngineSoul;
+import com.enderio.enderio.foundation.datamap.EngineSoul;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.foundation.storage.SidedResourceHandler;
 import com.enderio.enderio.init.EIOBlockEntities;
@@ -129,7 +129,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     @Override
     public void serverTick() {
         if (reloadCache != reload && boundSoul.hasEntity()) {
-            soulData = boundSoul.entityType().builtInRegistryHolder().getData(EIODataMaps.ENGINE_SOULS);
+            soulData = boundSoul.entityType().builtInRegistryHolder().getData(EIODataMaps.ENGINE_SOUL);
             reloadCache = reload;
         }
 
@@ -181,13 +181,13 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
 
     @Override
     public boolean isSoulValid(Soul soul) {
-        return soul.isEmpty() || soul.entityType().builtInRegistryHolder().getData(EIODataMaps.ENGINE_SOULS) != null;
+        return soul.isEmpty() || soul.entityType().builtInRegistryHolder().getData(EIODataMaps.ENGINE_SOUL) != null;
     }
 
     @Override
     public void bindSoul(Soul newSoul) {
         this.boundSoul = newSoul;
-        soulData = boundSoul.entityType().builtInRegistryHolder().getData(EIODataMaps.ENGINE_SOULS);
+        soulData = boundSoul.entityType().builtInRegistryHolder().getData(EIODataMaps.ENGINE_SOUL);
     }
 
     @Override

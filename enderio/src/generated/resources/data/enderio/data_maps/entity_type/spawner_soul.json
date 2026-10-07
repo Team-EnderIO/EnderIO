@@ -1,0 +1,300 @@
+{
+  "values": {
+    "#enderio:zombies": {
+      "mode": "new",
+      "power": 32000
+    },
+    "#minecraft:skeletons": {
+      "mode": "new",
+      "power": 32000
+    },
+    "minecraft:allay": {
+      "mode": "new",
+      "power": 12000
+    },
+    "minecraft:armadillo": {
+      "mode": "new",
+      "power": 12000
+    },
+    "minecraft:axolotl": {
+      "mode": "new",
+      "power": 10000
+    },
+    "minecraft:bat": {
+      "mode": "new",
+      "power": 10000
+    },
+    "minecraft:bee": {
+      "mode": "new",
+      "power": 10000
+    },
+    "minecraft:blaze": {
+      "mode": "new",
+      "power": 40000
+    },
+    "minecraft:breeze": {
+      "mode": "new",
+      "power": 40000
+    },
+    "minecraft:camel": {
+      "mode": "new",
+      "power": 15000
+    },
+    "minecraft:cat": {
+      "mode": "new",
+      "power": 10000
+    },
+    "minecraft:cave_spider": {
+      "mode": "new",
+      "power": 32000
+    },
+    "minecraft:chicken": {
+      "mode": "new",
+      "power": 10000
+    },
+    "minecraft:cod": {
+      "mode": "new",
+      "power": 10000
+    },
+    "minecraft:copper_golem": {
+      "mode": "new",
+      "power": 50000
+    },
+    "minecraft:cow": {
+      "mode": "new",
+      "power": 10000
+    },
+    "minecraft:creeper": {
+      "mode": "new",
+      "power": 32000
+    },
+    "minecraft:dolphin": {
+      "mode": "new",
+      "power": 12000
+    },
+    "minecraft:donkey": {
+      "mode": "new",
+      "power": 12000
+    },
+    "minecraft:elder_guardian": {
+      "mode": "new",
+      "power": 32000
+    },
+    "minecraft:ender_dragon": {
+      "mode": "new",
+      "power": 1000000
+    },
+    "minecraft:enderman": {
+      "mode": "new",
+      "power": 60000
+    },
+    "minecraft:endermite": {
+      "mode": "new",
+      "power": 32000
+    },
+    "minecraft:evoker": {
+      "mode": "new",
+      "power": 100000
+    },
+    "minecraft:fox": {
+      "mode": "new",
+      "power": 10000
+    },
+    "minecraft:frog": {
+      "mode": "new",
+      "power": 10000
+    },
+    "minecraft:ghast": {
+      "mode": "new",
+      "power": 32000
+    },
+    "minecraft:giant": {
+      "mode": "new",
+      "power": 60000
+    },
+    "minecraft:glow_squid": {
+      "mode": "new",
+      "power": 10000
+    },
+    "minecraft:goat": {
+      "mode": "new",
+      "power": 10000
+    },
+    "minecraft:guardian": {
+      "mode": "new",
+      "power": 32000
+    },
+    "minecraft:hoglin": {
+      "mode": "new",
+      "power": 32000
+    },
+    "minecraft:horse": {
+      "mode": "new",
+      "power": 15000
+    },
+    "minecraft:illusioner": {
+      "mode": "new",
+      "power": 32000
+    },
+    "minecraft:iron_golem": {
+      "mode": "new",
+      "power": 80000
+    },
+    "minecraft:llama": {
+      "mode": "new",
+      "power": 12000
+    },
+    "minecraft:magma_cube": {
+      "mode": "new",
+      "power": 32000
+    },
+    "minecraft:mooshroom": {
+      "mode": "new",
+      "power": 12000
+    },
+    "minecraft:mule": {
+      "mode": "new",
+      "power": 12000
+    },
+    "minecraft:nautilus": {
+      "mode": "new",
+      "power": 12000
+    },
+    "minecraft:ocelot": {
+      "mode": "new",
+      "power": 12000
+    },
+    "minecraft:panda": {
+      "mode": "new",
+      "power": 12000
+    },
+    "minecraft:parrot": {
+      "mode": "new",
+      "power": 12000
+    },
+    "minecraft:phantom": {
+      "mode": "new",
+      "power": 32000
+    },
+    "minecraft:pig": {
+      "mode": "new",
+      "power": 12000
+    },
+    "minecraft:piglin": {
+      "mode": "new",
+      "power": 32000
+    },
+    "minecraft:piglin_brute": {
+      "mode": "new",
+      "power": 32000
+    },
+    "minecraft:pillager": {
+      "mode": "new",
+      "power": 32000
+    },
+    "minecraft:polar_bear": {
+      "mode": "new",
+      "power": 15000
+    },
+    "minecraft:pufferfish": {
+      "mode": "new",
+      "power": 10000
+    },
+    "minecraft:rabbit": {
+      "mode": "new",
+      "power": 10000
+    },
+    "minecraft:ravager": {
+      "mode": "new",
+      "power": 60000
+    },
+    "minecraft:salmon": {
+      "mode": "new",
+      "power": 10000
+    },
+    "minecraft:sheep": {
+      "mode": "new",
+      "power": 10000
+    },
+    "minecraft:shulker": {
+      "mode": "new",
+      "power": 200000
+    },
+    "minecraft:silverfish": {
+      "mode": "new",
+      "power": 10000
+    },
+    "minecraft:slime": {
+      "mode": "new",
+      "power": 32000
+    },
+    "minecraft:sniffer": {
+      "mode": "new",
+      "power": 60000
+    },
+    "minecraft:snow_golem": {
+      "mode": "new",
+      "power": 15000
+    },
+    "minecraft:spider": {
+      "mode": "new",
+      "power": 32000
+    },
+    "minecraft:squid": {
+      "mode": "new",
+      "power": 10000
+    },
+    "minecraft:strider": {
+      "mode": "new",
+      "power": 12000
+    },
+    "minecraft:tadpole": {
+      "mode": "new",
+      "power": 10000
+    },
+    "minecraft:trader_llama": {
+      "mode": "new",
+      "power": 12000
+    },
+    "minecraft:tropical_fish": {
+      "mode": "new",
+      "power": 10000
+    },
+    "minecraft:turtle": {
+      "mode": "new",
+      "power": 10000
+    },
+    "minecraft:vex": {
+      "mode": "new",
+      "power": 20000
+    },
+    "minecraft:villager": {
+      "mode": "new",
+      "power": 32000
+    },
+    "minecraft:vindicator": {
+      "mode": "new",
+      "power": 32000
+    },
+    "minecraft:wandering_trader": {
+      "mode": "new",
+      "power": 40000
+    },
+    "minecraft:warden": {
+      "mode": "new",
+      "power": 1000000
+    },
+    "minecraft:witch": {
+      "mode": "new",
+      "power": 32000
+    },
+    "minecraft:wither": {
+      "mode": "new",
+      "power": 1000000
+    },
+    "minecraft:wolf": {
+      "mode": "new",
+      "power": 15000
+    }
+  }
+}

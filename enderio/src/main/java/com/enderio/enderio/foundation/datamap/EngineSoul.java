@@ -1,4 +1,4 @@
-package com.enderio.enderio.foundation.souldata;
+package com.enderio.enderio.foundation.datamap;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

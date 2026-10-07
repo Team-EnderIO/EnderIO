@@ -66,7 +66,7 @@ public class MachineJEIRecipes {
     }
 
     public List<SoulEngineRecipe> getMobGeneratorRecipes() {
-        return BuiltInRegistries.ENTITY_TYPE.getDataMap(EIODataMaps.ENGINE_SOULS).entrySet()
+        return BuiltInRegistries.ENTITY_TYPE.getDataMap(EIODataMaps.ENGINE_SOUL).entrySet()
             .stream()
             .map(entry -> new SoulEngineRecipe(entry.getKey(), entry.getValue()))
             .toList();
