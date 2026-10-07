@@ -2,6 +2,7 @@ package com.enderio.enderio.datagen.common.data_maps;
 
 import com.enderio.enderio.content.machines.powered_spawner.MobSpawnMode;
 import com.enderio.enderio.foundation.datamap.EngineSoul;
+import com.enderio.enderio.foundation.datamap.FarmSoul;
 import com.enderio.enderio.foundation.datamap.SolarSoul;
 import com.enderio.enderio.foundation.datamap.SpawnerSoul;
 import com.enderio.enderio.foundation.tag.EIOTags;
@@ -35,6 +36,12 @@ public class SoulDataMapProvider extends DataMapProvider {
             .add(EIOTags.EntityTypes.ZOMBIES, new EngineSoul(FluidIngredient.of(EIOFluids.NUTRIENT_DISTILLATION.source().get()), 1000, 18), false)
             .add(EIOTags.EntityTypes.ENDERMEN, new EngineSoul(FluidIngredient.of(EIOFluids.DEW_OF_THE_VOID.source().get()), 1200, 12), false)
             .add(EIOTags.EntityTypes.CREEPERS, new EngineSoul(FluidIngredient.of(EIOFluids.ROCKET_FUEL.source().get()), 800, 12), false)
+            .build();
+
+        builder(EIODataMaps.FARM_SOUL)
+            .add(EntityTypeIds.BEE, new FarmSoul(0.8f, 0, 1f), false)
+            .add(EntityTypeIds.VILLAGER, new FarmSoul(1f, 0, 1.2f), false)
+            .add(EntityTypeIds.SNIFFER, new FarmSoul(1f, 1, 1f), false)
             .build();
 
         builder(EIODataMaps.SOLAR_SOUL)

@@ -11,8 +11,6 @@ import com.enderio.enderio.compat.jei_machines_to_merge.util.RecipeUtil;
 import com.enderio.enderio.content.machines.soul_binder.SoulBindingRecipe;
 import com.enderio.enderio.content.tools.vials.SoulVialItem;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
-import com.enderio.enderio.foundation.souldata.SoulData;
-import com.enderio.enderio.foundation.souldata.SoulDataReloadListener;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOItems;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -109,17 +107,18 @@ public class SoulBindingCategory extends MachineRecipeCategory<RecipeHolder<Soul
                     vials.add(SoulVialItem.forSoul(Soul.of(soul.entityType())));
                 }
             } else {
-                SoulDataReloadListener<? extends SoulData> soulDataReloadListener = SoulDataReloadListener
-                        .fromString(recipe.value().soulData().get());
-
-                var allEntitiesOfSoulData = BuiltInRegistries.ENTITY_TYPE.keySet()
-                        .stream()
-                        .filter(r -> soulDataReloadListener.map.containsKey(r))
-                        .toList();
-
-                for (Identifier entity : allEntitiesOfSoulData) {
-                    vials.add(SoulVialItem.forSoul(Soul.of(entity)));
-                }
+                // TODO: Figure out soul data in recipes.
+//                SoulDataReloadListener<? extends SoulData> soulDataReloadListener = SoulDataReloadListener
+//                        .fromString(recipe.value().soulData().get());
+//
+//                var allEntitiesOfSoulData = BuiltInRegistries.ENTITY_TYPE.keySet()
+//                        .stream()
+//                        .filter(r -> soulDataReloadListener.map.containsKey(r))
+//                        .toList();
+//
+//                for (Identifier entity : allEntitiesOfSoulData) {
+//                    vials.add(SoulVialItem.forSoul(Soul.of(entity)));
+//                }
             }
         } else {
             if (output.isPresent()) {

@@ -5,7 +5,6 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.soul.binding.ingredients.AnySoulBindableIngredient;
 import com.enderio.enderio.content.machines.solar_panel.SolarPanelTier;
 import com.enderio.enderio.content.machines.soul_binder.SoulBindingRecipe;
-import com.enderio.enderio.foundation.souldata.FarmSoul;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOItems;
@@ -57,8 +56,8 @@ public class SoulBindingRecipeProvider extends SubRecipeProvider {
         // TODO: Swapped to data maps, should resolve this somehow...
 //        build(EIOBlocks.SOUL_ENGINE, Ingredient.of(EIOBlocks.SOUL_ENGINE), 188000, 5, EngineSoul.NAME,
 //                recipeOutput);
-        build(EIOBlocks.FARMING_STATION, Ingredient.of(EIOBlocks.FARMING_STATION), 188000, 5, FarmSoul.NAME,
-                recipeOutput);
+//        build(EIOBlocks.FARMING_STATION, Ingredient.of(EIOBlocks.FARMING_STATION), 188000, 5, FarmSoul.NAME,
+//                recipeOutput);
         build(EIOItems.PLAYER_TOKEN, Ingredient.of(EIOItems.DARK_STEEL_BALL), 12800, 1, EntityTypes.VILLAGER,
                 recipeOutput);
         build(EIOItems.MONSTER_TOKEN, Ingredient.of(EIOItems.SOULARIUM_BALL), 12800, 1, MobCategory.MONSTER,

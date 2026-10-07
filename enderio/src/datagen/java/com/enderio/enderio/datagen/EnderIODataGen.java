@@ -17,7 +17,6 @@ import com.enderio.enderio.datagen.common.loot.ChestLootProvider;
 import com.enderio.enderio.datagen.common.loot.EIOBlockLootProvider;
 import com.enderio.enderio.datagen.common.loot.EIOLootModifiersProvider;
 import com.enderio.enderio.datagen.common.recipes.EnderIORecipeProvider;
-import com.enderio.enderio.datagen.common.souldata.SoulDataProvider;
 import com.enderio.enderio.datagen.client.sounds.EIOSoundDefinitionProvider;
 import com.enderio.enderio.datagen.common.tags.EIOBlockTagsProvider;
 import com.enderio.enderio.datagen.common.tags.EIOEntityTagsProvider;
@@ -74,8 +73,6 @@ public class EnderIODataGen {
         event.addProvider(new ReagentDataMapProvider(packOutput, lookupProvider));
         event.addProvider(new RangeExtenderDataMapProvider(packOutput, lookupProvider));
         event.addProvider(new SoulDataMapProvider(packOutput, lookupProvider));
-
-        event.addProvider(new SoulDataProvider(packOutput));
 
         event.addProvider(new EIOLootModifiersProvider(packOutput, lookupProvider));
 

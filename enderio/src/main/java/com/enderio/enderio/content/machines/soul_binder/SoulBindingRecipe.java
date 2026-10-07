@@ -5,7 +5,6 @@ import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.network.MassiveStreamCodec;
 import com.enderio.enderio.foundation.MachineRecipe;
 import com.enderio.enderio.foundation.recipe.FluidRecipeInput;
-import com.enderio.enderio.foundation.souldata.SoulDataReloadListener;
 import com.enderio.enderio.foundation.util.ExperienceUtil;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOItems;
@@ -186,11 +185,12 @@ public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.
         var entityType = Objects.requireNonNull(soul.entityType());
 
         if (soulData.isPresent()) { // is in the selected souldata
-            if (SoulDataReloadListener.fromString(soulData.get()).matches(soul.entityType()).isEmpty()) {
+            // TODO: Need to add a new way to check for soul data.
+//            if (SoulDataReloadListener.fromString(soulData.get()).matches(soul.entityType()).isEmpty()) {
                 return false;
-            }
-
-            return ExperienceUtil.getLevelFromFluid(recipeInput.getFluid(2).getAmount()) >= experience;
+//            }
+//
+//            return ExperienceUtil.getLevelFromFluid(recipeInput.getFluid(2).getAmount()) >= experience;
         }
 
         if (mobCategory.isPresent()) {

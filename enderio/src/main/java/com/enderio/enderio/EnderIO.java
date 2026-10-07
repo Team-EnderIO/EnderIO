@@ -11,7 +11,6 @@ import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.misc_blocks.skull.EnderSkullBlock;
 import com.enderio.enderio.foundation.integrations.Integrations;
-import com.enderio.enderio.foundation.souldata.FarmSoul;
 import com.enderio.enderio.init.EIOAttachments;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOBlocks;
@@ -158,11 +157,6 @@ public class EnderIO {
         event.addPackFinders(
             Identifier.fromNamespaceAndPath(EnderIO.MOD_ID, "data/enderio/datapacks/niard"),
             PackType.SERVER_DATA, MachinesLang.NIARD_EXPERIMENT, PackSource.FEATURE, false, Pack.Position.TOP);
-    }
-
-    @SubscribeEvent
-    public static void addReloadListeners(AddServerReloadListenersEvent event) {
-        event.addListener(EnderIO.id("farm_soul_data"), FarmSoul.RELOAD_LISTENER);
     }
 
     @SubscribeEvent

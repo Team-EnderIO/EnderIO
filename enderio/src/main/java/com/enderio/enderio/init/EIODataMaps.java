@@ -2,6 +2,7 @@ package com.enderio.enderio.init;
 
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.components.GrindingBallData;
+import com.enderio.enderio.foundation.datamap.FarmSoul;
 import com.enderio.enderio.foundation.datamap.SolarSoul;
 import com.enderio.enderio.foundation.datamap.SpawnerSoul;
 import com.enderio.enderio.foundation.datamap.RangeExtender;
@@ -27,6 +28,10 @@ public class EIODataMaps {
         .builder(EnderIO.id("engine_soul"), Registries.ENTITY_TYPE, EngineSoul.CODEC)
         // Used in the GUI, so we sync it
         .synced(EngineSoul.CODEC, true)
+        .build();
+
+    public static final DataMapType<EntityType<?>, FarmSoul> FARM_SOUL = DataMapType
+        .builder(EnderIO.id("farm_soul"), Registries.ENTITY_TYPE, FarmSoul.CODEC)
         .build();
 
     public static final DataMapType<EntityType<?>, SolarSoul> SOLAR_SOUL = DataMapType
