@@ -5,10 +5,12 @@ import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.client.content.conduits.model.modifier.ConduitModelModifiers;
 import com.enderio.enderio.content.conduits.OffsetHelper;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.EmptyBlockGetter;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.fml.LogicalSide;
@@ -69,7 +71,12 @@ public class ConduitBundleRenderState {
         renderState.hasFacade = bundle.hasFacade();
         if (renderState.hasFacade) {
             renderState.facadeBlockstate = bundle.getFacadeBlock().defaultBlockState();
-            renderState.doesFacadeHideConduits = bundle.getFacadeType().doesHideConduits();
+            // Facades that render as a full solid cube fully cover the conduits, so skip
+            // rendering them to avoid z-fighting between the facade faces and conduit
+            // connector plates (GH-1119). isSolidRender is used rather than canOcclude so
+            // that partial blocks (slabs etc.) keep the conduits visible.
+            renderState.doesFacadeHideConduits = bundle.getFacadeType().doesHideConduits()
+                    || renderState.facadeBlockstate.isSolidRender(EmptyBlockGetter.INSTANCE, BlockPos.ZERO);
         } else {
             renderState.facadeBlockstate = Blocks.AIR.defaultBlockState();
             renderState.doesFacadeHideConduits = false;
