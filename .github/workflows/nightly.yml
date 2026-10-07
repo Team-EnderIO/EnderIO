@@ -32,10 +32,12 @@ jobs:
           java-version: 21
           distribution: 'temurin'
 
-      - uses: gradle/actions/setup-gradle@v3
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          cache: true
 
       - name: Build
-        run: ./gradlew build
+        run: ./gradlew build --build-cache
 
       - uses: actions/upload-artifact@v4
         with:
