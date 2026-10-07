@@ -29,7 +29,7 @@ public class SagMillTests {
                 .thenExecute(() -> {
                     // Insert the capacitor and fill with energy.
                     helper.insertIntoContainer(0, 1, 0, EIOItems.OCTADIC_CAPACITOR.get(), 1);
-                    helper.provideEnergy(0, 1, 0, energyToAdd);
+                    helper.provideEnergyExact(0, 1, 0, energyToAdd);
                 })
                 // Insert cobblestone for grinding
                 .thenExecute(() -> helper.insertIntoContainer(0, 1, 0, Items.STONE, 2))
@@ -64,7 +64,7 @@ public class SagMillTests {
                 .thenExecute(() -> {
                     // Insert the capacitor and fill with energy.
                     helper.insertIntoContainer(0, 1, 0, EIOItems.OCTADIC_CAPACITOR.get(), 1);
-                    helper.provideEnergy(0, 1, 0, energyToAdd);
+                    helper.provideEnergyExact(0, 1, 0, energyToAdd);
                 })
                 // Insert copper ore for grinding
                 .thenExecute(() -> helper.insertIntoContainer(0, 1, 0, Items.COPPER_ORE, 2))
@@ -98,7 +98,7 @@ public class SagMillTests {
                 .thenExecute(() -> {
                     // Insert the capacitor and fill with energy.
                     helper.insertIntoContainer(0, 1, 0, EIOItems.OCTADIC_CAPACITOR.get(), 1);
-                    helper.provideEnergy(0, 1, 0, energyToAdd);
+                    helper.provideEnergyExact(0, 1, 0, energyToAdd);
                 })
                 // Insert raw copper for grinding
                 .thenExecute(() -> helper.insertIntoContainer(0, 1, 0, Items.RAW_COPPER, 2))

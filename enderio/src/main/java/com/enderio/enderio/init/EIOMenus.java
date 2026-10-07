@@ -147,7 +147,7 @@ public class EIOMenus {
 
     // region Storage
 
-    public static final DeferredHolder<MenuType<?>, MenuType<CapacitorBankMenu>> CAPACITOR_BANK = MENUS.register("capacitor_bank", CapacitorBankMenu::factory);
+    public static final DeferredHolder<MenuType<?>, MenuType<CapacitorBankMenu>> CAPACITOR_BANK = MENUS.register("capacitor_bank", CapacitorBankMenu::new);
 
     public static final DeferredHolder<MenuType<?>, MenuType<FluidTankMenu>> FLUID_TANK = MENUS.register("fluid_tank", FluidTankMenu::new);
 
