@@ -1,11 +1,9 @@
 package com.enderio.core.client.gui.screen;
 
-import com.enderio.core.common.menu.LegacyBaseBlockEntityMenu;
 import com.enderio.core.common.menu.SlotWithOverlay;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.mojang.blaze3d.platform.InputConstants;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -53,16 +51,6 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
 
     protected void centerAlignTitleLabelX() {
         this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
-    }
-
-    @Override
-    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
-        if (menu instanceof LegacyBaseBlockEntityMenu<?> baseBlockEntityMenu
-            && baseBlockEntityMenu.getBlockEntity() == null) {
-            return;
-        }
-
-        super.extractRenderState(graphics, mouseX, mouseY, a);
     }
 
     @Override
@@ -250,7 +238,8 @@ public abstract class EnderContainerScreen<T extends AbstractContainerMenu> exte
     // Final to preserve order, use onKeyPressed for screen-level event handling.
     @Override
     public final boolean keyPressed(KeyEvent event) {
-        if (InputConstants.getKey(event).getValue() == InputConstants.KEY_ESCAPE) {
+        if (InputConstants.getKey(event).getValue() == InputConstants.KEY_ESCAPE &&
+            this.minecraft.player != null) {
             this.minecraft.player.closeContainer();
             return true;
         }

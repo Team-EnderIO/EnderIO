@@ -167,7 +167,6 @@ public class EnderBlockEntity extends BlockEntity {
         }
     }
 
-    // TODO: Ensure SERVER usage sometime.
     @Nullable
     protected <T> T getNeighbouringCapability(BlockCapability<T, Direction> capability, Direction side) {
         if (level == null || !(level instanceof ServerLevel serverLevel)) {
