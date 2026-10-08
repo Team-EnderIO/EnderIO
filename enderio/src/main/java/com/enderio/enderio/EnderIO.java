@@ -28,6 +28,7 @@ import com.enderio.enderio.init.EIOMenus;
 import com.enderio.enderio.init.EIOParticles;
 import com.enderio.enderio.init.EIORecipeBookCategories;
 import com.enderio.enderio.init.EIORecipeTypes;
+import com.enderio.enderio.init.EIOSoulIngredientTypes;
 import com.enderio.enderio.init.EIOSounds;
 import com.enderio.enderio.init.EIOTravelTargets;
 import com.mojang.logging.LogUtils;
@@ -46,7 +47,6 @@ import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
-import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
@@ -115,6 +115,7 @@ public class EnderIO {
         EIORecipeBookCategories.register(modEventBus);
         EIOSounds.register(modEventBus);
         EIOConsumableTypes.register(modEventBus);
+        EIOSoulIngredientTypes.register(modEventBus);
 
         // Handle mod compat
         for (Map.Entry<String, Consumer<IEventBus>> entry : MOD_INTEGRATIONS.entrySet()) {
@@ -132,6 +133,7 @@ public class EnderIO {
     }
 
     private void registerRegistries(NewRegistryEvent event) {
+        event.register(EnderIORegistries.SOUL_INGREDIENT_TYPES);
         event.register(EnderIORegistries.TRAVEL_TARGET_TYPES);
         event.register(EnderIORegistries.TRAVEL_TARGET_SERIALIZERS);
         event.register(EnderIORegistries.CONDUIT_TYPE);

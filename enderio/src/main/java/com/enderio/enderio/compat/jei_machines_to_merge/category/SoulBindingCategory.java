@@ -83,55 +83,55 @@ public class SoulBindingCategory extends MachineRecipeCategory<RecipeHolder<Soul
                 .filter(f -> f.getTypedValue().getItemStack().get().is(EIOItems.SOUL_VIAL.asItem()))
                 .findFirst();
 
-        if (input.isPresent()) {
-            vials.add(input.get().getTypedValue().getIngredient());
-        } else if (recipe.value().entityType().isPresent()) {
-            vials.add(SoulVialItem.forSoul(Soul.of(recipe.value().entityType().get())));
-        } else if (recipe.value().mobCategory().isPresent()) {
-
-            var allEntitiesOfCategory = BuiltInRegistries.ENTITY_TYPE.stream()
-                    .filter(e -> e.getCategory().equals(recipe.value().mobCategory().get()))
-                    .map(BuiltInRegistries.ENTITY_TYPE::getKey)
-                    .toList();
-
-            for (Identifier entity : allEntitiesOfCategory) {
-                vials.add(SoulVialItem.forSoul(Soul.of(entity)));
-            }
-
-        } else if (recipe.value().soulData().isPresent()) {
-            if (output.isPresent()) {
-                var outputStack = output.get().getTypedValue().getIngredient();
-                var soul = SoulBoundUtils.getBoundSoul(outputStack);
-
-                if (soul.hasEntity()) {
-                    vials.add(SoulVialItem.forSoul(Soul.of(soul.entityType())));
-                }
-            } else {
-                // TODO: Figure out soul data in recipes.
-//                SoulDataReloadListener<? extends SoulData> soulDataReloadListener = SoulDataReloadListener
-//                        .fromString(recipe.value().soulData().get());
+//        if (input.isPresent()) {
+//            vials.add(input.get().getTypedValue().getIngredient());
+//        } else if (recipe.value().entityType().isPresent()) {
+//            vials.add(SoulVialItem.forSoul(Soul.of(recipe.value().entityType().get())));
+//        } else if (recipe.value().mobCategory().isPresent()) {
 //
-//                var allEntitiesOfSoulData = BuiltInRegistries.ENTITY_TYPE.keySet()
-//                        .stream()
-//                        .filter(r -> soulDataReloadListener.map.containsKey(r))
-//                        .toList();
+//            var allEntitiesOfCategory = BuiltInRegistries.ENTITY_TYPE.stream()
+//                    .filter(e -> e.getCategory().equals(recipe.value().mobCategory().get()))
+//                    .map(BuiltInRegistries.ENTITY_TYPE::getKey)
+//                    .toList();
 //
-//                for (Identifier entity : allEntitiesOfSoulData) {
-//                    vials.add(SoulVialItem.forSoul(Soul.of(entity)));
+//            for (Identifier entity : allEntitiesOfCategory) {
+//                vials.add(SoulVialItem.forSoul(Soul.of(entity)));
+//            }
+//
+//        } else if (recipe.value().soulData().isPresent()) {
+//            if (output.isPresent()) {
+//                var outputStack = output.get().getTypedValue().getIngredient();
+//                var soul = SoulBoundUtils.getBoundSoul(outputStack);
+//
+//                if (soul.hasEntity()) {
+//                    vials.add(SoulVialItem.forSoul(Soul.of(soul.entityType())));
 //                }
-            }
-        } else {
-            if (output.isPresent()) {
-                var outputStack = output.get().getTypedValue().getIngredient();
-                var soul = SoulBoundUtils.getBoundSoul(outputStack);
-
-                if (soul.hasEntity()) {
-                    vials.add(SoulVialItem.forSoul(Soul.of(soul.entityType())));
-                }
-            } else {
-                vials.addAll(SoulVialItem.getAllFilled());
-            }
-        }
+//            } else {
+//                // TODO: Figure out soul data in recipes.
+////                SoulDataReloadListener<? extends SoulData> soulDataReloadListener = SoulDataReloadListener
+////                        .fromString(recipe.value().soulData().get());
+////
+////                var allEntitiesOfSoulData = BuiltInRegistries.ENTITY_TYPE.keySet()
+////                        .stream()
+////                        .filter(r -> soulDataReloadListener.map.containsKey(r))
+////                        .toList();
+////
+////                for (Identifier entity : allEntitiesOfSoulData) {
+////                    vials.add(SoulVialItem.forSoul(Soul.of(entity)));
+////                }
+//            }
+//        } else {
+//            if (output.isPresent()) {
+//                var outputStack = output.get().getTypedValue().getIngredient();
+//                var soul = SoulBoundUtils.getBoundSoul(outputStack);
+//
+//                if (soul.hasEntity()) {
+//                    vials.add(SoulVialItem.forSoul(Soul.of(soul.entityType())));
+//                }
+//            } else {
+//                vials.addAll(SoulVialItem.getAllFilled());
+//            }
+//        }
 
         builder.addSlot(INPUT, 3, 4).addItemStacks(vials);
 

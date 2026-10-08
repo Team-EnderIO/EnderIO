@@ -1,0 +1,12 @@
+{
+  "type": "enderio:soul_binding",
+  "energy": 188000,
+  "experience": 5,
+  "input": "enderio:soul_engine",
+  "inputSoul": {
+    "type": "enderio:has_engine_soul_data"
+  },
+  "output": {
+    "id": "enderio:soul_engine"
+  }
+}
