@@ -27,7 +27,7 @@ import java.util.Set;
 
 @EventBusSubscriber(Dist.CLIENT)
 public class MachineJEIRecipes {
-    private static RecipeMap RECIPE_MAP;
+    private static RecipeMap RECIPE_MAP = RecipeMap.EMPTY;
     private static final Set<RecipeType<?>> KNOWN_TYPES = new HashSet<>();
 
     public MachineJEIRecipes() {
