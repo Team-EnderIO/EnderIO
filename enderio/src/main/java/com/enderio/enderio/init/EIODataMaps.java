@@ -26,20 +26,22 @@ public class EIODataMaps {
 
     public static final DataMapType<EntityType<?>, EngineSoul> ENGINE_SOUL = DataMapType
         .builder(EnderIO.id("engine_soul"), Registries.ENTITY_TYPE, EngineSoul.CODEC)
-        // Used in the GUI, so we sync it
         .synced(EngineSoul.CODEC, true)
         .build();
 
     public static final DataMapType<EntityType<?>, FarmSoul> FARM_SOUL = DataMapType
         .builder(EnderIO.id("farm_soul"), Registries.ENTITY_TYPE, FarmSoul.CODEC)
+        .synced(FarmSoul.CODEC, true)
         .build();
 
     public static final DataMapType<EntityType<?>, SolarSoul> SOLAR_SOUL = DataMapType
         .builder(EnderIO.id("solar_soul"), Registries.ENTITY_TYPE, SolarSoul.CODEC)
+        .synced(SolarSoul.CODEC, true)
         .build();
 
     public static final DataMapType<EntityType<?>, SpawnerSoul> SPAWNER_SOUL = DataMapType
         .builder(EnderIO.id("spawner_soul"), Registries.ENTITY_TYPE, SpawnerSoul.CODEC)
+        .synced(SpawnerSoul.CODEC, true)
         .build();
 
     public static final AdvancedDataMapType<Item, Map<TagKey<Item>, Double>, DataMapValueRemover.Default<Map<TagKey<Item>, Double>, Item>> VAT_REAGENT =
@@ -50,6 +52,10 @@ public class EIODataMaps {
 
     @SubscribeEvent
     public static void registerDataMap(RegisterDataMapTypesEvent event) {
+        event.register(ENGINE_SOUL);
+        event.register(FARM_SOUL);
+        event.register(SOLAR_SOUL);
+        event.register(SPAWNER_SOUL);
         event.register(VAT_REAGENT);
         event.register(RangeExtender.DATA_MAP);
         event.register(GrindingBallData.DATA_MAP_TYPE);
