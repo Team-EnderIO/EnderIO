@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:aversion_obelisk"
+        "recipes": "enderio:aversion_obelisk"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

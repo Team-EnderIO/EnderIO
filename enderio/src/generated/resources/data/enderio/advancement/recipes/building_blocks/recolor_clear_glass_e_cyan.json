@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:recolor_clear_glass_e_cyan"
+        "recipes": "enderio:recolor_clear_glass_e_cyan"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

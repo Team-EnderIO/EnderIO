@@ -1,0 +1,13 @@
+{
+  "values": {
+    "minecraft:bee": {
+      "bonemeal": 0.8
+    },
+    "minecraft:sniffer": {
+      "seeds": 1
+    },
+    "minecraft:villager": {
+      "power": 1.2
+    }
+  }
+}

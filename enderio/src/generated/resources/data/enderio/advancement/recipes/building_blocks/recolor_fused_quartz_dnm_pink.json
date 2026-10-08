@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:recolor_fused_quartz_dnm_pink"
+        "recipes": "enderio:recolor_fused_quartz_dnm_pink"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

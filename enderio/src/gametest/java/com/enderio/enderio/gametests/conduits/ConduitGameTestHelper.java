@@ -20,6 +20,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.FakePlayerFactory;
 import org.jspecify.annotations.Nullable;
 
@@ -50,7 +51,7 @@ public class ConduitGameTestHelper extends EnderGameTestHelper {
         var conduitItem = ConduitBlockItem.getStackFor(conduit, 1);
         if (conduitItem.getItem() instanceof BlockItem blockItem) {
             blockItem.place(new BlockPlaceContext(getLevel(), fakePlayer, InteractionHand.MAIN_HAND, conduitItem,
-                    new BlockHitResult(absolutePos.getCenter(), Direction.DOWN, absolutePos, false)));
+                    new BlockHitResult(Vec3.atCenterOf(absolutePos), Direction.DOWN, absolutePos, false)));
         }
     }
 

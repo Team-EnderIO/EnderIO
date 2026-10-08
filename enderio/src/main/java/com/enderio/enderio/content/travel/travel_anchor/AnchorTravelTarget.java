@@ -30,11 +30,6 @@ public record AnchorTravelTarget(BlockPos pos, String name, Item icon, boolean i
     }
 
     @Override
-    public boolean canTravelTo() {
-        return isVisible;
-    }
-
-    @Override
     public boolean canTeleportTo() {
         return isVisible();
     }

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:invert_clear_glass_dm"
+        "recipes": "enderio:invert_clear_glass_dm"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

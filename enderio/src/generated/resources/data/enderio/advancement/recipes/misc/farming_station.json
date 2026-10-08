@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:farming_station"
+        "recipes": "enderio:farming_station"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

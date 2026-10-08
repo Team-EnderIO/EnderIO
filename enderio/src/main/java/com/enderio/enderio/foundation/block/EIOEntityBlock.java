@@ -44,15 +44,13 @@ public abstract class EIOEntityBlock<T extends EIOBlockEntity> extends BaseEntit
         }
     }
 
-
     @Override
-    public boolean canConnectRedstone(BlockState state, BlockGetter level, BlockPos pos,
-            @Nullable Direction direction) {
+    protected boolean shouldRedstoneWireConnectTo(BlockState state, BlockGetter level, BlockPos pos, @Nullable Direction direction) {
         if (level.getBlockEntity(pos) instanceof EIOBlockEntity blockEntity) {
             return blockEntity.supportsRedstonePower();
         }
 
-        return super.canConnectRedstone(state, level, pos, direction);
+        return super.shouldRedstoneWireConnectTo(state, level, pos, direction);
     }
 
     @Override

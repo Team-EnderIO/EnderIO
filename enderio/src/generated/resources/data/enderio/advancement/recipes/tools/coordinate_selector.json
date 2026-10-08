@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:coordinate_selector"
+        "recipes": "enderio:coordinate_selector"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

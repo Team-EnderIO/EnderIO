@@ -39,11 +39,6 @@ public record EnderfaceTravelTarget(BlockPos pos) implements TravelTarget {
     }
 
     @Override
-    public boolean canTravelTo() {
-        return false;
-    }
-
-    @Override
     public boolean canJumpTo() {
         return false;
     }

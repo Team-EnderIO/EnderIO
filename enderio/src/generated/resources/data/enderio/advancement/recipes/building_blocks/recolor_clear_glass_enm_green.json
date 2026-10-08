@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:recolor_clear_glass_enm_green"
+        "recipes": "enderio:recolor_clear_glass_enm_green"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
     "G": "enderio:grains_of_infinity",
     "I": "#c:ingots/iron",

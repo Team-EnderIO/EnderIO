@@ -2,25 +2,20 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "bonus_rolls": 0.0,
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
-        }
-      ],
+      "condition": {
+        "type": "minecraft:survives_explosion"
+      },
       "entries": [
         {
           "type": "minecraft:item",
-          "functions": [
-            {
-              "function": "enderio:copy_paint",
-              "should_copy_primary": true
-            }
-          ],
+          "modifier": {
+            "type": "enderio:copy_paint",
+            "should_copy_primary": true
+          },
           "name": "enderio:painted_wall"
         }
       ],
-      "rolls": 1.0
+      "rolls": 1
     }
   ],
   "random_sequence": "enderio:blocks/painted_wall"

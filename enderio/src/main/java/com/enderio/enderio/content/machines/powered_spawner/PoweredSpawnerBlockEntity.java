@@ -19,7 +19,6 @@ import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
 import com.enderio.enderio.foundation.inventory.MachineSlotTemplates;
 import com.enderio.enderio.foundation.particle.RangeParticleData;
-import com.enderio.enderio.foundation.souldata.SpawnerSoul;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.foundation.state.MachineStateType;
 import com.enderio.enderio.foundation.tag.EIOTags;
@@ -27,6 +26,7 @@ import com.enderio.enderio.foundation.task.MachineTask;
 import com.enderio.enderio.foundation.task.host.MachineTaskHost;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
+import com.enderio.enderio.init.EIODataMaps;
 import com.enderio.enderio.init.EIOItems;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.core.BlockPos;
@@ -156,11 +156,11 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
         int energyCost = MachinesConfig.COMMON.DEFAULT_SPAWN_ENERGY_COST.get();
         MobSpawnMode spawnType = MachinesConfig.COMMON.SPAWN_TYPE.get();
 
-        var spawnDataOpt = SpawnerSoul.RELOAD_LISTENER.matches(entityType);
-        if (spawnDataOpt.isPresent()) {
-            var data = spawnDataOpt.get();
-            energyCost = data.power();
-            spawnType = data.spawnType();
+        // Read from soul data, if available.
+        var soulData = entityType.builtInRegistryHolder().getData(EIODataMaps.SPAWNER_SOUL);
+        if (soulData != null) {
+            energyCost = soulData.energyCost();
+            spawnType = soulData.spawnMode();
         }
 
         return switch (mode) {
@@ -274,10 +274,9 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
         }
 
         MobSpawnMode spawnType = MachinesConfig.COMMON.SPAWN_TYPE.get();
-
-        var spawnDataOpt = SpawnerSoul.RELOAD_LISTENER.matches(entityType);
-        if (spawnDataOpt.isPresent()) {
-            spawnType = spawnDataOpt.get().spawnType();
+        var soulData = entityType.builtInRegistryHolder().getData(EIODataMaps.SPAWNER_SOUL);
+        if (soulData != null) {
+            spawnType = soulData.spawnMode();
         }
 
         return switch (spawnType) {
@@ -324,7 +323,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
 
     @Override
     public boolean isSoulValid(Soul soul) {
-        return soul.isEmpty() || SpawnerSoul.RELOAD_LISTENER.matches(soul.entityTypeId()).isPresent();
+        return soul.isEmpty() || soul.entityType().builtInRegistryHolder().getData(EIODataMaps.SPAWNER_SOUL) != null;
     }
 
     @Override

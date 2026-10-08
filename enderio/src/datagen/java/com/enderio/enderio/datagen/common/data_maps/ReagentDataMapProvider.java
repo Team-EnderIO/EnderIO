@@ -2,10 +2,12 @@ package com.enderio.enderio.datagen.common.data_maps;
 
 import com.enderio.enderio.foundation.datamap.VatReagent;
 import com.enderio.enderio.foundation.tag.EIOTags;
+import com.enderio.enderio.init.EIODataMaps;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.data.DataMapProvider;
 
 import java.util.HashMap;
@@ -41,7 +43,7 @@ public class ReagentDataMapProvider extends DataMapProvider {
         reagent(net.minecraft.world.item.Items.PACKED_ICE, EIOTags.Items.CLOUD_COLD, 9D);
         reagent(net.minecraft.world.item.Items.BLUE_ICE, EIOTags.Items.CLOUD_COLD, 81D);
 
-        var builder = builder(VatReagent.DATA_MAP);
+        var builder = builder(EIODataMaps.VAT_REAGENT);
         dataMap.forEach((item, map) -> {
             builder.add(item.builtInRegistryHolder(), map, false);
         });

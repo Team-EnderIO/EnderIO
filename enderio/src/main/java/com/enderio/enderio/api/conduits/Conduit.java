@@ -12,13 +12,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentGetter;
+import net.minecraft.core.registries.codec.RegistryFixedCodec;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
-import net.minecraft.resources.RegistryFixedCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -70,22 +70,6 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
 
     /**
      * Proxy a capability to the conduit bundle block.
-     * @deprecated Use {@link #proxyCapability(Level, ConnectionReader, ConduitNode, BlockCapability, Object)} instead.
-     * @param level the level.
-     * @param node the node that is being queried for proxying.
-     * @param capability the capability being requested.
-     * @param context the context for the capability.
-     * @return the capability or null if it is not exposed.
-     */
-    @Deprecated(since = "8.2.8")
-    @Nullable
-    default <TCapability, TContext> TCapability proxyCapability(Level level, ConduitNode node,
-            BlockCapability<TCapability, TContext> capability, @Nullable TContext context) {
-        return null;
-    }
-
-    /**
-     * Proxy a capability to the conduit bundle block.
      * @param level the level.
      * @param connectionReader the connection accessor for the node.
      * @param node the node that is being queried for proxying. Will always be null on the client, may be null on server.
@@ -96,11 +80,6 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
     @Nullable
     default <TCapability, TContext> TCapability proxyCapability(Level level, ConnectionReader connectionReader, @Nullable ConduitNode node,
         BlockCapability<TCapability, TContext> capability, @Nullable TContext context) {
-        // Old contract was non-null node - uphold this.
-        if (node != null) {
-            return proxyCapability(level, node, capability, context);
-        }
-
         return null;
     }
 
@@ -162,27 +141,11 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
     }
 
     default boolean canConnectToBlock(Level level, ConduitCapabilityAccessor capabilityAccessor, BlockPos conduitPos, Direction direction) {
-        return canConnectToBlock(level, conduitPos, direction);
-    }
-
-    /**
-     * @deprecated Use {@link #canConnectToBlock(Level, ConduitCapabilityAccessor, BlockPos, Direction)} instead as it provides capability caching and invalidation handling.
-     */
-    @Deprecated(since = "8.2.6")
-    default boolean canConnectToBlock(Level level, BlockPos conduitPos, Direction direction) {
         return false;
     }
 
     default boolean canForceConnectToBlock(Level level, ConduitCapabilityAccessor capabilityAccessor, BlockPos conduitPos, Direction direction) {
         return canConnectToBlock(level, capabilityAccessor, conduitPos, direction);
-    }
-
-    /**
-     * @deprecated Use {@link #canConnectToBlock(Level, ConduitCapabilityAccessor, BlockPos, Direction)} instead as it provides capability caching and invalidation handling.
-     */
-    @Deprecated(since = "8.2.6")
-    default boolean canForceConnectToBlock(Level level, BlockPos conduitPos, Direction direction) {
-        return canConnectToBlock(level, conduitPos, direction);
     }
 
     // endregion

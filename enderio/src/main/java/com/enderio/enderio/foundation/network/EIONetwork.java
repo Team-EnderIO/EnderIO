@@ -2,10 +2,6 @@ package com.enderio.enderio.foundation.network;
 
 import com.enderio.enderio.foundation.network.packets.ClientboundConduitExtraGuiDataPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundConduitListPacket;
-import com.enderio.enderio.foundation.network.packets.ClientboundFarmStationSoulPacket;
-import com.enderio.enderio.foundation.network.packets.ClientboundPoweredSpawnerSoulPacket;
-import com.enderio.enderio.foundation.network.packets.ClientboundSolarSoulPacket;
-import com.enderio.enderio.foundation.network.packets.ClientboundSoulEngineSoulPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundSyncTravelDataPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundTravelTargetRemovedPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundTravelTargetUpdatedPacket;
@@ -17,6 +13,7 @@ import com.enderio.enderio.foundation.network.packets.ServerboundOpenConduitFilt
 import com.enderio.enderio.foundation.network.packets.ServerboundRequestShortTravelPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundRequestTravelPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundSetFluidFilterSlotPacket;
+import com.enderio.enderio.foundation.network.packets.ServerboundSetGhostSlotPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundSetItemFilterSlotPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundSyncProbeStatePacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundTimerFilterPacket;
@@ -25,10 +22,6 @@ import com.enderio.enderio.foundation.network.packets.ServerboundTransferItemsPa
 import com.enderio.enderio.foundation.network.packets.ServerboundUpdateCoordinateSelectionNameMenuPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundUpdateCrafterTemplatePacket;
 import com.enderio.enderio.foundation.network.packets.SetConduitConnectionConfigPacket;
-import com.enderio.enderio.foundation.souldata.EngineSoul;
-import com.enderio.enderio.foundation.souldata.FarmSoul;
-import com.enderio.enderio.foundation.souldata.SolarSoul;
-import com.enderio.enderio.foundation.souldata.SpawnerSoul;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -40,12 +33,6 @@ public class EIONetwork {
 
     @SubscribeEvent
     public static void register(final RegisterPayloadHandlersEvent event) {
-        // Sync soul data (optional)
-        SpawnerSoul.RELOAD_LISTENER.subscribeAsSyncable(ClientboundPoweredSpawnerSoulPacket::new);
-        EngineSoul.RELOAD_LISTENER.subscribeAsSyncable(ClientboundSoulEngineSoulPacket::new);
-        FarmSoul.RELOAD_LISTENER.subscribeAsSyncable(ClientboundFarmStationSoulPacket::new);
-        SolarSoul.RELOAD_LISTENER.subscribeAsSyncable(ClientboundSolarSoulPacket::new);
-
         // TODO: Tidy up this class.
         final PayloadRegistrar registrar = event.registrar(PROTOCOL_VERSION);
 
@@ -69,6 +56,9 @@ public class EIONetwork {
 
         registrar.playToServer(ServerboundSetFluidFilterSlotPacket.TYPE, ServerboundSetFluidFilterSlotPacket.STREAM_CODEC,
             ServerPayloadHandler.getInstance()::handleSetFluidFilterSlot);
+
+        registrar.playToServer(ServerboundSetGhostSlotPacket.TYPE, ServerboundSetGhostSlotPacket.STREAM_CODEC,
+            ServerPayloadHandler.getInstance()::handleSetGhostSlot);
 
         registrar.playToServer(ServerboundSetItemFilterSlotPacket.TYPE, ServerboundSetItemFilterSlotPacket.STREAM_CODEC,
             ServerPayloadHandler.getInstance()::handleSetItemFilterSlot);
@@ -98,18 +88,6 @@ public class EIONetwork {
 
         registrar.playToServer(ServerboundSyncProbeStatePacket.TYPE, ServerboundSyncProbeStatePacket.STREAM_CODEC,
             ConduitServerPayloadHandler.getInstance()::handle);
-
-        registrar.playToClient(ClientboundPoweredSpawnerSoulPacket.TYPE, ClientboundPoweredSpawnerSoulPacket.STREAM_CODEC,
-            MachinePayloadHandler.Client.getInstance()::handlePoweredSpawnerSoul);
-
-        registrar.playToClient(ClientboundSoulEngineSoulPacket.TYPE, ClientboundSoulEngineSoulPacket.STREAM_CODEC,
-            MachinePayloadHandler.Client.getInstance()::handleSoulEngineSoul);
-
-        registrar.playToClient(ClientboundFarmStationSoulPacket.TYPE, ClientboundFarmStationSoulPacket.STREAM_CODEC,
-            MachinePayloadHandler.Client.getInstance()::handleFarmingStationSoul);
-
-        registrar.playToClient(ClientboundSolarSoulPacket.TYPE, ClientboundSolarSoulPacket.STREAM_CODEC,
-            MachinePayloadHandler.Client.getInstance()::handleSolarSoul);
 
         registrar.playToServer(ServerboundUpdateCrafterTemplatePacket.TYPE, ServerboundUpdateCrafterTemplatePacket.STREAM_CODEC,
             MachinePayloadHandler.Server.getInstance()::updateCrafterTemplate);

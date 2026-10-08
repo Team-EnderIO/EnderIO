@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:vibrant_alloy_grinding_ball"
+        "recipes": "enderio:vibrant_alloy_grinding_ball"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

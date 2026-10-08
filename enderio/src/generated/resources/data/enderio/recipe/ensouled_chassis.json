@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
     "C": "enderio:soul_chain",
     "I": "#c:ingots/soularium",

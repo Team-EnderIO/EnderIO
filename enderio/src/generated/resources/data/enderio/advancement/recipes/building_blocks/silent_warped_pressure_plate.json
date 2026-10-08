@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:silent_warped_pressure_plate"
+        "recipes": "enderio:silent_warped_pressure_plate"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

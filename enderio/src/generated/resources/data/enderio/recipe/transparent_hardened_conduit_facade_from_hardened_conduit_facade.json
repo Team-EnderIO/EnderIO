@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "category": "misc",
   "ingredients": [
     "enderio:hardened_conduit_facade",
     "#c:glass_blocks/clear"

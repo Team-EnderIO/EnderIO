@@ -3,18 +3,10 @@ package com.enderio.enderio.foundation.network;
 import com.enderio.enderio.content.enderface.EnderfaceBlockEntity;
 import com.enderio.enderio.content.storage.crafter.CrafterMenu;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
-import com.enderio.enderio.foundation.network.packets.ClientboundFarmStationSoulPacket;
-import com.enderio.enderio.foundation.network.packets.ClientboundPoweredSpawnerSoulPacket;
-import com.enderio.enderio.foundation.network.packets.ClientboundSolarSoulPacket;
-import com.enderio.enderio.foundation.network.packets.ClientboundSoulEngineSoulPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundCycleIOConfigPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundEnderfaceInteractPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundTransferItemsPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundUpdateCrafterTemplatePacket;
-import com.enderio.enderio.foundation.souldata.EngineSoul;
-import com.enderio.enderio.foundation.souldata.FarmSoul;
-import com.enderio.enderio.foundation.souldata.SolarSoul;
-import com.enderio.enderio.foundation.souldata.SpawnerSoul;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -22,30 +14,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class MachinePayloadHandler {
-    public static class Client {
-        private static final Client INSTANCE = new Client();
-
-        public static Client getInstance() {
-            return INSTANCE;
-        }
-
-        public void handlePoweredSpawnerSoul(ClientboundPoweredSpawnerSoulPacket packet, IPayloadContext context) {
-            context.enqueueWork(() -> SpawnerSoul.RELOAD_LISTENER.map = packet.map());
-        }
-
-        public void handleSoulEngineSoul(ClientboundSoulEngineSoulPacket packet, IPayloadContext context) {
-            context.enqueueWork(() -> EngineSoul.RELOAD_LISTENER.map = packet.map());
-        }
-
-        public void handleFarmingStationSoul(ClientboundFarmStationSoulPacket packet, IPayloadContext context) {
-            context.enqueueWork(() -> FarmSoul.RELOAD_LISTENER.map = packet.map());
-        }
-
-        public void handleSolarSoul(ClientboundSolarSoulPacket packet, IPayloadContext context) {
-            context.enqueueWork(() -> SolarSoul.RELOAD_LISTENER.map = packet.map());
-        }
-    }
-
     public static class Server {
         private static final Server INSTANCE = new Server();
 
@@ -76,11 +44,11 @@ public class MachinePayloadHandler {
 
         public void handleEnderfaceInteract(ServerboundEnderfaceInteractPacket packet, IPayloadContext context) {
             context.enqueueWork(() -> {
-                var pos = packet.getHitResult().getBlockPos();
+                var pos = packet.hitResult().getBlockPos();
                 var level = context.player().level();
                 if (EnderfaceBlockEntity.canPlayerInteractWithBlock(context.player(), level, pos)) {
                     var state = level.getBlockState(pos);
-                    state.useWithoutItem(level, context.player(), packet.getHitResult());
+                    state.useWithoutItem(level, context.player(), packet.hitResult());
                 }
             });
         }

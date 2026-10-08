@@ -3,7 +3,7 @@ package com.enderio.enderio.datagen.common.recipes;
 import com.enderio.core.data.recipe.SubRecipeProvider;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOItems;
-import net.minecraft.advancements.criterion.InventoryChangeTrigger;
+import net.minecraft.advancements.triggers.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -16,8 +16,8 @@ import net.neoforged.neoforge.common.Tags;
 public class FilterRecipeProvider extends SubRecipeProvider {
 
     @Override
-    public void buildRecipes(HolderLookup.Provider registries, RecipeOutput recipeOutput) {
-        var items = registries.lookupOrThrow(Registries.ITEM);
+    public void buildRecipes(RecipeOutput recipeOutput) {
+        var items = recipeOutput.lookup(Registries.ITEM);
 
         ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, EIOItems.BASIC_ITEM_FILTER.get())
                 .define('P', Items.PAPER)

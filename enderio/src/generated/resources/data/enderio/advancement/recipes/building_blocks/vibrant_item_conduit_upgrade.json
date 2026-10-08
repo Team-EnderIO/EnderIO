@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:vibrant_item_conduit_upgrade"
+        "recipes": "enderio:vibrant_item_conduit_upgrade"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

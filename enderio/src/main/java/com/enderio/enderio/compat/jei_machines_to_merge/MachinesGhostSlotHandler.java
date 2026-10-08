@@ -2,11 +2,13 @@ package com.enderio.enderio.compat.jei_machines_to_merge;
 
 import com.enderio.enderio.client.content.machines.gui.screen.base.MachineScreen;
 import com.enderio.enderio.foundation.menu.GhostMachineSlot;
+import com.enderio.enderio.foundation.network.packets.ServerboundSetGhostSlotPacket;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.handlers.IGhostIngredientHandler;
 import mezz.jei.api.ingredients.ITypedIngredient;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +39,7 @@ public class MachinesGhostSlotHandler implements IGhostIngredientHandler<Machine
                         @Override
                         public void accept(I ingredient) {
                             ghostSlot.set((ItemStack) ingredient);
+                            ClientPacketDistributor.sendToServer(new ServerboundSetGhostSlotPacket(gui.getMenu().containerId, slot.index, (ItemStack) ingredient));
                         }
                     });
                 }

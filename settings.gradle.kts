@@ -1,7 +1,7 @@
 pluginManagement {
     plugins {
-        id("net.neoforged.moddev") version "2.0.141"
-        id("net.neoforged.moddev.repositories") version "2.0.141"
+        id("net.neoforged.moddev") version "2.0.147"
+        id("net.neoforged.moddev.repositories") version "2.0.147"
     }
 
     repositories {
@@ -55,6 +55,7 @@ dependencyResolutionManagement {
             url = uri("https://modmaven.dev")
             content {
                 includeGroup("mezz.jei")
+                includeGroup("net.mezzdev.config")
                 includeGroup("mcjty.theoneprobe")
                 includeGroup("appeng")
                 includeGroup("mekanism")
@@ -146,4 +147,5 @@ dependencyResolutionManagement {
 
 include("endercore")
 include("enderio")
-include("enderio-modded-conduits")
+// enderio-modded-conduits removed in 26.2 port — third-party mod interactions deferred
+// include("enderio-modded-conduits")

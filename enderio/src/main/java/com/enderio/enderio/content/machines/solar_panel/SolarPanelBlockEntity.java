@@ -4,9 +4,9 @@ import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.api.soul.binding.SoulBindable;
 import com.enderio.enderio.foundation.MachineNBTKeys;
 import com.enderio.enderio.foundation.block.EIOBlockEntity;
-import com.enderio.enderio.foundation.souldata.SolarSoul;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIODataComponents;
+import com.enderio.enderio.init.EIODataMaps;
 import com.google.common.base.Preconditions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -14,7 +14,7 @@ import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -48,9 +48,6 @@ public class SolarPanelBlockEntity extends EIOBlockEntity implements SoulBindabl
     private boolean isValidPushTargetCacheDirty = true;
 
     private Soul boundSoul = Soul.EMPTY;
-    private SolarSoul.SoulData soulData;
-    private static boolean reload = false;
-    private boolean reloadCache = !reload;
 
     public SolarPanelBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState, ISolarPanelTier tier) {
         super(type, worldPosition, blockState);
@@ -78,7 +75,6 @@ public class SolarPanelBlockEntity extends EIOBlockEntity implements SoulBindabl
     @Override
     public void onLoad() {
         super.onLoad();
-        reloadCache = !reload;
 
         // Create all energy caches
         if (level instanceof ServerLevel serverLevel) {
@@ -151,14 +147,13 @@ public class SolarPanelBlockEntity extends EIOBlockEntity implements SoulBindabl
 
     @Override
     public boolean isSoulValid(Soul soul) {
-        return soul.isEmpty() || soul.entityType() == EntityType.PHANTOM;
+        return soul.isEmpty() || soul.entityType() == EntityTypes.PHANTOM;
     }
 
     @Override
     public void bindSoul(Soul newSoul) {
         Preconditions.checkArgument(isSoulValid(newSoul), "Soul is not valid for this block");
         this.boundSoul = newSoul;
-        soulData = SolarSoul.RELOAD_LISTENER.matches(newSoul.entityTypeId()).get();
         setChanged();
     }
 
@@ -170,12 +165,6 @@ public class SolarPanelBlockEntity extends EIOBlockEntity implements SoulBindabl
     public void serverTick() {
         if (getGenerationRate() > 0) {
             node.addEnergyToNetwork(getGenerationRate());
-        }
-
-        if (reloadCache != reload && boundSoul.hasEntity()) {
-            Optional<SolarSoul.SoulData> op = SolarSoul.RELOAD_LISTENER.matches(boundSoul.entityType());
-            op.ifPresent(data -> soulData = data);
-            reloadCache = reload;
         }
 
         // Push energy to non-panel neighbors
@@ -202,12 +191,14 @@ public class SolarPanelBlockEntity extends EIOBlockEntity implements SoulBindabl
             return 0;
         }
 
+        var soulData = boundSoul.entityType().builtInRegistryHolder().getData(EIODataMaps.SOLAR_SOUL);
+
         //When should the panel make power
         boolean day = true;
         boolean night = false;
         if (soulData != null) {
-            day = soulData.daytime();
-            night = soulData.nighttime();
+            day = soulData.operatesInDaytime();
+            night = soulData.operatesInNighttime();
         }
 
         if ((day && night) || (day && hasLiquidSunshine()) || (night && hasLiquidDarkness())) {
@@ -215,7 +206,7 @@ public class SolarPanelBlockEntity extends EIOBlockEntity implements SoulBindabl
         }
 
         if (!this.level.dimensionType().hasSkyLight()) {
-            if (soulData == null || soulData.level().isEmpty() || !soulData.level().get().equals(this.level.dimension())) {
+            if (soulData == null || soulData.dimensionOverride().isEmpty() || !soulData.dimensionOverride().get().equals(this.level.dimension())) {
                 return 0; //No light in dimension and no soul to override it
             }
         }
@@ -371,8 +362,4 @@ public class SolarPanelBlockEntity extends EIOBlockEntity implements SoulBindabl
     }
 
     // endregion
-    @SubscribeEvent
-    static void onReload(OnDatapackSyncEvent event) {
-        reload = !reload;
-    }
 }

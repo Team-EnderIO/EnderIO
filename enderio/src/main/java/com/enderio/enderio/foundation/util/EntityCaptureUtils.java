@@ -7,6 +7,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
 import org.jspecify.annotations.Nullable;
@@ -62,7 +63,7 @@ public class EntityCaptureUtils {
         }
 
         // Don't allow capturing of the ender dragon
-        if (type.equals(EntityType.ENDER_DRAGON)) {
+        if (type.equals(EntityTypes.ENDER_DRAGON)) {
             return CapturableStatus.DENIED;
         }
 

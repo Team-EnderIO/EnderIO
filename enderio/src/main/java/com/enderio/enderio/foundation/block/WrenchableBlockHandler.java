@@ -1,6 +1,6 @@
 package com.enderio.enderio.foundation.block;
 
-import com.enderio.enderio.foundation.block.entity.Wrenchable;
+import com.enderio.enderio.api.block.WrenchableBlockEntity;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import net.minecraft.world.InteractionResult;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -17,7 +17,7 @@ public class WrenchableBlockHandler {
             return;
         }
 
-        if (level.getBlockEntity(event.getPos()) instanceof Wrenchable blockEntity) {
+        if (level.getBlockEntity(event.getPos()) instanceof WrenchableBlockEntity blockEntity) {
             var result = blockEntity.onWrenched(event.getUseOnContext());
             if (result != InteractionResult.TRY_WITH_EMPTY_HAND) {
                 event.cancelWithResult(result);

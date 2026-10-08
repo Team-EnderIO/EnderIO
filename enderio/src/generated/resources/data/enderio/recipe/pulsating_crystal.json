@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
     "D": "#c:gems/diamond",
     "P": "#c:nuggets/pulsating_alloy"

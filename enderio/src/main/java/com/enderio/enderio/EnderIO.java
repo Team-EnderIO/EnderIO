@@ -3,7 +3,7 @@ package com.enderio.enderio;
 import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.Conduit;
-import com.enderio.enderio.compat.ftb_ultimine.FTBUltimineCompat;
+import com.enderio.enderio.compat.cctweaked.ComputerCraftCompat;
 import com.enderio.enderio.compat.inventorysorter.InventorySorterCompat;
 import com.enderio.enderio.config.base.BaseConfig;
 import com.enderio.enderio.config.conduits.ConduitsConfig;
@@ -11,14 +11,11 @@ import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.misc_blocks.skull.EnderSkullBlock;
 import com.enderio.enderio.foundation.integrations.Integrations;
-import com.enderio.enderio.foundation.souldata.EngineSoul;
-import com.enderio.enderio.foundation.souldata.FarmSoul;
-import com.enderio.enderio.foundation.souldata.SolarSoul;
-import com.enderio.enderio.foundation.souldata.SpawnerSoul;
 import com.enderio.enderio.init.EIOAttachments;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOConduitTypes;
+import com.enderio.enderio.init.EIOConsumableTypes;
 import com.enderio.enderio.init.EIOCreativeTabs;
 import com.enderio.enderio.init.EIOCriterions;
 import com.enderio.enderio.init.EIODataComponents;
@@ -31,6 +28,7 @@ import com.enderio.enderio.init.EIOMenus;
 import com.enderio.enderio.init.EIOParticles;
 import com.enderio.enderio.init.EIORecipeBookCategories;
 import com.enderio.enderio.init.EIORecipeTypes;
+import com.enderio.enderio.init.EIOSoulIngredientTypes;
 import com.enderio.enderio.init.EIOSounds;
 import com.enderio.enderio.init.EIOTravelTargets;
 import com.mojang.logging.LogUtils;
@@ -49,7 +47,6 @@ import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
-import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
@@ -73,8 +70,9 @@ public class EnderIO {
     }
 
     private static final Map<String, Consumer<IEventBus>> MOD_INTEGRATIONS = Map.ofEntries(
-//        Map.entry("computercraft", eventBus -> ComputerCraftCompat.init()),
-        Map.entry("ftbultimine", FTBUltimineCompat::init),
+        Map.entry("computercraft", _ -> ComputerCraftCompat.init()),
+        // 26.2-port: third-party mod interaction commented out
+        // Map.entry("ftbultimine", FTBUltimineCompat::init),
 //        Map.entry("laserio", LaserIOCompat::init),
         Map.entry("inventorysorter", InventorySorterCompat::init)
     );
@@ -116,6 +114,8 @@ public class EnderIO {
         EIOTravelTargets.register(modEventBus);
         EIORecipeBookCategories.register(modEventBus);
         EIOSounds.register(modEventBus);
+        EIOConsumableTypes.register(modEventBus);
+        EIOSoulIngredientTypes.register(modEventBus);
 
         // Handle mod compat
         for (Map.Entry<String, Consumer<IEventBus>> entry : MOD_INTEGRATIONS.entrySet()) {
@@ -133,6 +133,7 @@ public class EnderIO {
     }
 
     private void registerRegistries(NewRegistryEvent event) {
+        event.register(EnderIORegistries.SOUL_INGREDIENT_TYPES);
         event.register(EnderIORegistries.TRAVEL_TARGET_TYPES);
         event.register(EnderIORegistries.TRAVEL_TARGET_SERIALIZERS);
         event.register(EnderIORegistries.CONDUIT_TYPE);
@@ -158,14 +159,6 @@ public class EnderIO {
         event.addPackFinders(
             Identifier.fromNamespaceAndPath(EnderIO.MOD_ID, "data/enderio/datapacks/niard"),
             PackType.SERVER_DATA, MachinesLang.NIARD_EXPERIMENT, PackSource.FEATURE, false, Pack.Position.TOP);
-    }
-
-    @SubscribeEvent
-    public static void addReloadListeners(AddServerReloadListenersEvent event) {
-        event.addListener(EnderIO.id("engine_soul_data"), EngineSoul.RELOAD_LISTENER);
-        event.addListener(EnderIO.id("farm_soul_data"), FarmSoul.RELOAD_LISTENER);
-        event.addListener(EnderIO.id("solar_soul_data"), SolarSoul.RELOAD_LISTENER);
-        event.addListener(EnderIO.id("spawner_soul_data"), SpawnerSoul.RELOAD_LISTENER);
     }
 
     @SubscribeEvent

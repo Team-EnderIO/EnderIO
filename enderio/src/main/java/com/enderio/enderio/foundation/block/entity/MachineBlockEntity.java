@@ -4,6 +4,7 @@ import com.enderio.core.common.storage.ExternalResourceStorageView;
 import com.enderio.core.common.storage.ItemStorage;
 import com.enderio.core.common.storage.layout.ItemStorageLayout;
 import com.enderio.core.annotations.UseOnly;
+import com.enderio.enderio.api.block.WrenchableBlockEntity;
 import com.enderio.enderio.api.io.IOConfigurable;
 import com.enderio.enderio.api.io.IOMode;
 import com.enderio.enderio.api.io.RedstoneControl;
@@ -31,6 +32,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Prediction;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -66,7 +68,7 @@ import java.util.UUID;
  * Base block entity implementation for machines.
  * Implements Redstone Control and the Machine State system.
  */
-public abstract class MachineBlockEntity extends EIOBlockEntity implements MenuProvider, Wrenchable, IOConfigurable, MachineInventoryHolder,
+public abstract class MachineBlockEntity extends EIOBlockEntity implements MenuProvider, WrenchableBlockEntity, IOConfigurable, MachineInventoryHolder,
     MachineStateUpdater {
 
     public static final ICapabilityProvider<MachineBlockEntity, Direction, SideConfig> SIDE_CONFIG_PROVIDER =
@@ -502,7 +504,7 @@ public abstract class MachineBlockEntity extends EIOBlockEntity implements MenuP
                 List<ItemStack> drops = Block.getDrops(state, serverLevel, pos, serverLevel.getBlockEntity(pos));
                 Inventory inventory = player.getInventory();
                 for (ItemStack item : drops) {
-                    inventory.placeItemBackInInventory(item);
+                    inventory.placeItemBackInInventory(item, Prediction.SERVER_ONLY);
                 }
             }
 

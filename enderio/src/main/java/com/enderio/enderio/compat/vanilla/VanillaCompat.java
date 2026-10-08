@@ -25,14 +25,7 @@ public class VanillaCompat {
 
     @SubscribeEvent
     public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-        // TODO: 26.1 - components are not bound at this stage.
         // https://github.com/neoforged/NeoForge/issues/2981
-//        for (var spawnEgg : BuiltInRegistries.ITEM.componentLookup().findAll(DataComponents.ENTITY_DATA)) {
-//            event.registerItem(EnderIOCapabilities.SOUL_BINDABLE_ITEM, SPAWN_EGG_BINDABLE_PROVIDER, spawnEgg.value());
-//            event.registerItem(EnderIOCapabilities.SOUL_HANDLER_ITEM, SPAWN_EGG_HANDLER_PROVIDER, spawnEgg.value());
-//        }
-
-        // For now, we'll register to all items
         Item[] allItems = BuiltInRegistries.ITEM.stream().toArray(Item[]::new);
         event.registerItem(EnderIOCapabilities.SOUL_BINDABLE_ITEM, SPAWN_EGG_BINDABLE_PROVIDER, allItems);
         event.registerItem(EnderIOCapabilities.SOUL_HANDLER_ITEM, SPAWN_EGG_HANDLER_PROVIDER, allItems);

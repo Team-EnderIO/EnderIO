@@ -1,6 +1,0 @@
-{
-  "entity": "minecraft:enderman",
-  "fluid": "enderio:fluid_dew_of_the_void_still",
-  "power/mb": 1200,
-  "tick/mb": 12
-}

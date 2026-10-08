@@ -61,7 +61,8 @@ public class ShapedEntityStorageRecipe extends WrappedShapedRecipe {
 
     @Override
     public RecipeSerializer<ShapedRecipe> getSerializer() {
-        // TODO: 26.1 - this will probably explode...
+        // Expect this to break, its quite gross...
+        //noinspection rawtypes,unchecked
         return (RecipeSerializer<ShapedRecipe>) (RecipeSerializer) SERIALIZER;
     }
 }

@@ -35,6 +35,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jspecify.annotations.Nullable;
 
@@ -61,7 +62,7 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
         super(EIOBlockEntities.PAINTING_MACHINE.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, CAPACITOR,
                 EnergyIOMode.Input, CAPACITY, USAGE);
 
-        area = AABB.ofSize(worldPosition.getCenter(), 10, 10, 10);
+        area = AABB.ofSize(Vec3.atCenterOf(worldPosition), 10, 10, 10);
 
         craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy, EIORecipeTypes.PAINTING.get(),
                 this::createTask, this::createRecipeInput);

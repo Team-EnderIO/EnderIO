@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:stirling_generator"
+        "recipes": "enderio:stirling_generator"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:erase_sag_mill"
+        "recipes": "enderio:erase_sag_mill"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

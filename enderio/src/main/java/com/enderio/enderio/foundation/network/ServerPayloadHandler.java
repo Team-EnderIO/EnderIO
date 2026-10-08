@@ -9,9 +9,11 @@ import com.enderio.enderio.content.filters.fluid.FluidFilterSlot;
 import com.enderio.enderio.content.tools.ElectromagnetItem;
 import com.enderio.enderio.content.travel.TravelHandler;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
+import com.enderio.enderio.foundation.menu.GhostMachineSlot;
 import com.enderio.enderio.foundation.network.packets.ServerboundRequestShortTravelPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundRequestTravelPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundSetFluidFilterSlotPacket;
+import com.enderio.enderio.foundation.network.packets.ServerboundSetGhostSlotPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundSetItemFilterSlotPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundToggleMagnetPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundUpdateCoordinateSelectionNameMenuPacket;
@@ -144,6 +146,22 @@ public class ServerPayloadHandler {
 
             if (currentMenu.getSlot(packet.slotIndex()) instanceof FilterSlot<?> filterSlot) {
                 filterSlot.safeInsert(packet.itemStack());
+            }
+        });
+    }
+
+    //TODO should/can we have one general transfer packet?
+    public void handleSetGhostSlot(ServerboundSetGhostSlotPacket packet, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            var currentMenu = context.player().containerMenu;
+
+            if (currentMenu == null || currentMenu.containerId != packet.containerId()
+                || currentMenu.slots.size() <= packet.slotIndex()) {
+                return;
+            }
+
+            if (currentMenu.getSlot(packet.slotIndex()) instanceof GhostMachineSlot slot) {
+                slot.set(packet.itemStack());
             }
         });
     }

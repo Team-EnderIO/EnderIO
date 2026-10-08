@@ -18,22 +18,23 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.block.WeatheringCopper;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
 
 public class EnchanterRecipeProvider extends SubRecipeProvider {
 
-    private HolderLookup.RegistryLookup<Item> items;
+    private HolderGetter<Item> items;
 
     protected SizedIngredient sizedFromTag(TagKey<Item> tag, int count) {
         return new SizedIngredient(Ingredient.of(this.items.getOrThrow(tag)), count);
     }
 
     @Override
-    public void buildRecipes(HolderLookup.Provider registries, RecipeOutput recipeOutput) {
+    public void buildRecipes(RecipeOutput recipeOutput) {
         // We know that the registries are now available.
-        HolderGetter<Enchantment> enchantmentRegistry = registries.lookupOrThrow(Registries.ENCHANTMENT);
-        this.items = registries.lookupOrThrow(Registries.ITEM);
+        HolderGetter<Enchantment> enchantmentRegistry = recipeOutput.lookup(Registries.ENCHANTMENT);
+        this.items = recipeOutput.lookup(Registries.ITEM);
 
         // vanilla
         build(enchantmentRegistry, Enchantments.PROTECTION, sizedFromTag(EIOTags.Items.INGOTS_DARK_STEEL, 16), 1,
@@ -82,7 +83,7 @@ public class EnchanterRecipeProvider extends SubRecipeProvider {
         build(enchantmentRegistry, Enchantments.SWEEPING_EDGE, sizedFromTag(Tags.Items.INGOTS_IRON, 8), 1,
                 recipeOutput);
         // new
-        build(enchantmentRegistry, Enchantments.CHANNELING, SizedIngredient.of(Items.LIGHTNING_ROD, 1), 1,
+        build(enchantmentRegistry, Enchantments.CHANNELING, SizedIngredient.of(Items.LIGHTNING_ROD.weathering().pick(WeatheringCopper.WeatherState.UNAFFECTED), 1), 1,
                 recipeOutput);
         build(enchantmentRegistry, Enchantments.IMPALING, sizedFromTag(Tags.Items.STORAGE_BLOCKS_IRON, 1), 1,
                 recipeOutput);

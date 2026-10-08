@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.resources.model.geometry.ItemQuads;
 import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.client.resources.model.sprite.TextureSlots;
 import net.minecraft.world.entity.ItemOwner;
@@ -54,7 +55,7 @@ public class ConduitItemModel implements ItemModel {
         var state = renderState.newLayer();
         state.setExtents(extents);
         modelrenderproperties.applyToLayer(state, displayContext);
-        state.prepareQuadList().addAll(list);
+        state.setQuads(ItemQuads.split(list));
     }
 
     public record Unbaked() implements ItemModel.Unbaked {

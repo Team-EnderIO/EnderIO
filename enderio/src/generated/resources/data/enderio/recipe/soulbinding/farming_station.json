@@ -3,8 +3,10 @@
   "energy": 188000,
   "experience": 5,
   "input": "enderio:farming_station",
+  "inputSoul": {
+    "type": "enderio:has_farm_soul_data"
+  },
   "output": {
     "id": "enderio:farming_station"
-  },
-  "soul_data": "farm"
+  }
 }

@@ -96,7 +96,8 @@ public class EIOCapabilityProviders {
             SoulCapabilityProviders.COMPONENT_SOUL_BINDABLE_PROVIDER,
             EIOItems.BROKEN_SPAWNER,
             EIOBlocks.POWERED_SPAWNER_ITEM,
-            EIOBlocks.SOUL_ENGINE_ITEM);
+            EIOBlocks.SOUL_ENGINE_ITEM,
+            EIOBlocks.FARMING_STATION.asItem());
         
         // Solar Panels (soul bindable)
         for (var solarPanelItem : EIOBlocks.SOLAR_PANEL_ITEMS.values()) {

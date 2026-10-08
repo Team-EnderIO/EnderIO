@@ -6,7 +6,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.particle.SingleQuadParticle;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.data.AtlasIds;
@@ -34,7 +33,6 @@ public class ConduitBreakParticle extends SingleQuadParticle {
 
     @Override
     protected Layer getLayer() {
-        // TODO: 26.1 - should this be TRANSLUCENT_TERRAIN
         return Layer.OPAQUE_TERRAIN;
     }
 
@@ -61,7 +59,8 @@ public class ConduitBreakParticle extends SingleQuadParticle {
     @Override
     public int getLightCoords(float partialTick) {
         int i = super.getLightCoords(partialTick);
-        return i == 0 && this.level.hasChunkAt(this.pos) ? LevelRenderer.getLightCoords(this.level, this.pos) : i;
+        // 26.2-port: LevelRenderer.getLightCoords was moved to LightCoordsUtil.getLightCoords
+        return i == 0 && this.level.hasChunkAt(this.pos) ? net.minecraft.util.LightCoordsUtil.getLightCoords(this.level, this.pos) : i;
     }
 
     public static void addDestroyEffects(BlockPos pos, BlockState state, Conduit<?, ?> conduit) {
@@ -142,5 +141,16 @@ public class ConduitBreakParticle extends SingleQuadParticle {
 
         engine.add(new ConduitBreakParticle(level, x, y, z, 0.0D, 0.0D, 0.0D, pos, conduit.texture()).setPower(0.2F)
                 .scale(0.6F));
+    }
+
+    public static void spawnParticle(BlockPos blockpos, Conduit<?,?> conduit, double x, double y, double z, double xSpeed, float ySpeed, double zSpeed) {
+        ClientLevel level = Minecraft.getInstance().level;
+        if (level == null) {
+            return;
+        }
+
+        ParticleEngine engine = Minecraft.getInstance().particleEngine;
+        engine.add(new ConduitBreakParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, blockpos, conduit.texture()).setPower(0.2F)
+            .scale(0.6F));
     }
 }

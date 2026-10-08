@@ -16,7 +16,7 @@ import net.neoforged.neoforge.fluids.FluidStackTemplate;
 public class WeatherChangeRecipeProvider extends SubRecipeProvider {
 
     @Override
-    public void buildRecipes(HolderLookup.Provider registries, RecipeOutput recipeOutput) {
+    public void buildRecipes(RecipeOutput recipeOutput) {
         build(EnderIO.id("clear"), EIOFluids.LIQUID_SUNSHINE.source().get(), 1000, WeatherChangeRecipe.WeatherMode.CLEAR,
                 recipeOutput);
         build(EnderIO.id("rain"), EIOFluids.CLOUD_SEED.source().get(), 1000, WeatherChangeRecipe.WeatherMode.RAIN,

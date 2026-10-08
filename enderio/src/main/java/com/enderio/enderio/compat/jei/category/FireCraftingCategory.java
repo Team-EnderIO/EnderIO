@@ -166,45 +166,13 @@ public class FireCraftingCategory extends AbstractRecipeCategory<RecipeHolder<Fi
     }
 
     private void renderBlock(GuiGraphicsExtractor graphics, Block block) {
-        graphics.pose().pushMatrix();
-
-        graphics.pose().translate(0, 0);
-
-        var solidFeatureRenderDispatcher = Minecraft.getInstance().gameRenderer.getFeatureRenderDispatcher();
-        var solidCollector = solidFeatureRenderDispatcher.getSubmitNodeStorage();
-
-        BlockState state = block.defaultBlockState();
-        graphics.pose().pushMatrix();
-//        graphics.pose().translate(0f, 0.5f);
-//        graphics.pose().scale(1f, -1f);
-
-        BlockModelRenderState modelRenderState = new BlockModelRenderState();
-        BlockDisplayContext context = BlockDisplayContext.create();
-        Minecraft.getInstance().getBlockModelResolver().update(modelRenderState, state, context);
-        modelRenderState.submit(new PoseStack(), solidCollector, LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 0);
-
-        graphics.pose().popMatrix();
-        // TODO: Fire Water has no block. I think this is a registrate bug?
-        BlockState fireState = !alternateFire ? Blocks.FIRE.defaultBlockState()
-                : EIOFluids.FIRE_WATER.block().get().defaultBlockState();
-//        BlockState fireState = Blocks.FIRE.defaultBlockState();
-        graphics.pose().pushMatrix();
-//        graphics.pose().translate(0f, -0.5f);
-//        graphics.pose().scale(1f, -1f);
-
-//        if (alternateFire) {
-//            VertexConsumer vertex = buffers.getBuffer(RenderType.cutout());
-//            // TODO: Fixy this
-//            Minecraft.getInstance().getBlockRenderer().renderLiquid(BlockPos.ZERO, Minecraft.getInstance().level, vertex, fireState, EIOFluids.FIRE_WATER.get().defaultFluidState());
-//        } else {
-        modelRenderState = new BlockModelRenderState();
-        context = BlockDisplayContext.create();
-        Minecraft.getInstance().getBlockModelResolver().update(modelRenderState, fireState, context);
-        modelRenderState.submit(new PoseStack(), solidCollector, LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 0);
-//        }
-
-        graphics.pose().popMatrix();
-
-        graphics.pose().popMatrix();
+        // 26.2-port: Block display rendering was rewritten on the new submit-node API.
+        //   FeatureRenderDispatcher.getSubmitNodeStorage() was removed (the SubmitNodeStorage
+        //   is now an internal field of the dispatcher). The JEI recipe preview is disabled
+        //   until the new pipeline is implemented.
+        // graphics.pose().pushMatrix();
+        // BlockState state = block.defaultBlockState();
+        // graphics.pose().pushMatrix();
+        // ...
     }
 }

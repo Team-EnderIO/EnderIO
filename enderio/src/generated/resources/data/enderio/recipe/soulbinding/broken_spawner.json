@@ -6,6 +6,9 @@
     "neoforge:ingredient_type": "enderio:any_soul_storage",
     "item": "enderio:broken_spawner"
   },
+  "inputSoul": {
+    "type": "enderio:any_entity"
+  },
   "output": {
     "id": "enderio:broken_spawner"
   }
