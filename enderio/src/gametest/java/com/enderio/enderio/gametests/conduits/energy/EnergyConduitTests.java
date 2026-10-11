@@ -226,6 +226,18 @@ public class EnergyConduitTests {
             .thenExecute(() -> helper.changeIoConfig(0, 1, 0, ioConfigurable -> {
                 ioConfigurable.setIOMode(Direction.EAST, IOMode.PUSH);
             }))
+            // Configure middle bank to PULL energy to the conduit
+            .thenExecute(() -> helper.changeIoConfig(2, 1, 0, ioConfigurable -> {
+                ioConfigurable.setIOMode(Direction.WEST, IOMode.PULL);
+            }))
+            // Configure middle bank to PUSH energy to the conduit
+            .thenExecute(() -> helper.changeIoConfig(2, 1, 0, ioConfigurable -> {
+                ioConfigurable.setIOMode(Direction.EAST, IOMode.PUSH);
+            }))
+            // Configure final bank to PULL energy to the conduit
+            .thenExecute(() -> helper.changeIoConfig(4, 1, 0, ioConfigurable -> {
+                ioConfigurable.setIOMode(Direction.WEST, IOMode.PULL);
+            }))
             // Add energy to source bank - enough for multiple transfers
             .thenExecute(() -> helper.provideEnergyExact(0, 1, 0, transferRate * 4))
             // Wait for transfer - closer bank should receive energy first

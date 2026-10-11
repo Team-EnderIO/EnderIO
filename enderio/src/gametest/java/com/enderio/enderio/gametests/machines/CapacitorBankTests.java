@@ -18,12 +18,12 @@ import java.util.function.Supplier;
 @ForEachTest(groups = "machines.capacitor_bank")
 public class CapacitorBankTests {
 
-    private static final String TWO_CAPACITOR_BANKS = EnderIO.MOD_ID + ":two_capacitor_banks";
+    private static final String DOUBLE_CAPACITOR_BANKS = EnderIO.MOD_ID + ":double_capacitor_banks";
     private static final String SPLIT_CAPACITOR_BANKS = EnderIO.MOD_ID + ":split_capacitor_banks";
 
     // @formatter:off
-    @RegisterStructureTemplate(TWO_CAPACITOR_BANKS)
-    public static final Supplier<StructureTemplate> TWO_CAPACITOR_BANKS_TEMPLATE = StructureTemplateBuilder.lazy(1, 2, 1,
+    @RegisterStructureTemplate(DOUBLE_CAPACITOR_BANKS)
+    public static final Supplier<StructureTemplate> DOUBLE_CAPACITOR_BANKS_TEMPLATE = StructureTemplateBuilder.lazy(1, 2, 1,
         builder -> builder
             .set(0, 0, 0, EIOBlocks.CAPACITOR_BANKS.get(CapacitorTier.BASIC).get().defaultBlockState())
             .set(0, 1, 0, EIOBlocks.CAPACITOR_BANKS.get(CapacitorTier.BASIC).get().defaultBlockState())
@@ -53,7 +53,7 @@ public class CapacitorBankTests {
         });
     }
 
-    @GameTest(template = TWO_CAPACITOR_BANKS)
+    @GameTest(template = DOUBLE_CAPACITOR_BANKS)
     @TestHolder(description = "Tests that the double capacitor bank can have power.")
     public static void testDoubleCapBank(final EnderGameTestHelper helper) {
         helper.startSequence()
@@ -66,7 +66,7 @@ public class CapacitorBankTests {
             .thenSucceed();
     }
 
-    @GameTest(template = TWO_CAPACITOR_BANKS)
+    @GameTest(template = DOUBLE_CAPACITOR_BANKS)
     @TestHolder(description = "Tests that that removing a cap bank does not delete the power.")
     public static void testRemoveCapBank(final EnderGameTestHelper helper) {
         helper.startSequence()
