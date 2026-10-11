@@ -18,22 +18,18 @@ import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.recipe.IFocus;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
 import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
@@ -78,67 +74,35 @@ public class SoulBindingCategory extends MachineRecipeCategory<RecipeHolder<Soul
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<SoulBindingRecipe> recipe, IFocusGroup focuses) {
         List<ItemStack> vials = new ArrayList<>();
-        Optional<IFocus<ItemStack>> output = focuses.getItemStackFocuses(OUTPUT).findFirst();
-        Optional<IFocus<ItemStack>> input = focuses.getItemStackFocuses(INPUT)
-                .filter(f -> f.getTypedValue().getItemStack().get().is(EIOItems.SOUL_VIAL.asItem()))
-                .findFirst();
+        var soulIngredient = recipe.value().inputSoul();
+        var input = focuses.getItemStackFocuses(INPUT)
+            .map(f -> f.getTypedValue().getIngredient())
+            .filter(stack -> stack.is(EIOItems.SOUL_VIAL.asItem()))
+            .filter(stack -> {
+                var soul = SoulBoundUtils.getBoundSoul(stack);
+                return !soul.isEmpty() && soulIngredient.test(soul);
+            })
+            .findFirst();
+        var outputSoul = focuses.getItemStackFocuses(OUTPUT)
+            .map(f -> SoulBoundUtils.getBoundSoul(f.getTypedValue().getIngredient()))
+            .filter(soul -> !soul.isEmpty() && soulIngredient.test(soul))
+            .findFirst();
 
-//        if (input.isPresent()) {
-//            vials.add(input.get().getTypedValue().getIngredient());
-//        } else if (recipe.value().entityType().isPresent()) {
-//            vials.add(SoulVialItem.forSoul(Soul.of(recipe.value().entityType().get())));
-//        } else if (recipe.value().mobCategory().isPresent()) {
-//
-//            var allEntitiesOfCategory = BuiltInRegistries.ENTITY_TYPE.stream()
-//                    .filter(e -> e.getCategory().equals(recipe.value().mobCategory().get()))
-//                    .map(BuiltInRegistries.ENTITY_TYPE::getKey)
-//                    .toList();
-//
-//            for (Identifier entity : allEntitiesOfCategory) {
-//                vials.add(SoulVialItem.forSoul(Soul.of(entity)));
-//            }
-//
-//        } else if (recipe.value().soulData().isPresent()) {
-//            if (output.isPresent()) {
-//                var outputStack = output.get().getTypedValue().getIngredient();
-//                var soul = SoulBoundUtils.getBoundSoul(outputStack);
-//
-//                if (soul.hasEntity()) {
-//                    vials.add(SoulVialItem.forSoul(Soul.of(soul.entityType())));
-//                }
-//            } else {
-//                // TODO: Figure out soul data in recipes.
-////                SoulDataReloadListener<? extends SoulData> soulDataReloadListener = SoulDataReloadListener
-////                        .fromString(recipe.value().soulData().get());
-////
-////                var allEntitiesOfSoulData = BuiltInRegistries.ENTITY_TYPE.keySet()
-////                        .stream()
-////                        .filter(r -> soulDataReloadListener.map.containsKey(r))
-////                        .toList();
-////
-////                for (Identifier entity : allEntitiesOfSoulData) {
-////                    vials.add(SoulVialItem.forSoul(Soul.of(entity)));
-////                }
-//            }
-//        } else {
-//            if (output.isPresent()) {
-//                var outputStack = output.get().getTypedValue().getIngredient();
-//                var soul = SoulBoundUtils.getBoundSoul(outputStack);
-//
-//                if (soul.hasEntity()) {
-//                    vials.add(SoulVialItem.forSoul(Soul.of(soul.entityType())));
-//                }
-//            } else {
-//                vials.addAll(SoulVialItem.getAllFilled());
-//            }
-//        }
-
-        builder.addSlot(INPUT, 3, 4).addItemStacks(vials);
+        if (input.isPresent()) {
+            vials.add(input.get());
+        } else if (outputSoul.isPresent()) {
+            vials.add(SoulVialItem.forSoul(outputSoul.get().copyOnlyType()));
+        } else {
+            for (var entityType : soulIngredient.getEntityTypes()) {
+                vials.add(SoulVialItem.forSoul(Soul.of(entityType.value())));
+            }
+        }
 
         builder.addSlot(INPUT, 24, 4).add(recipe.value().placementInfo().ingredients().getFirst());
 
         var resultStack = RecipeUtil.getResultStacks(recipe).getFirst().getItem();
         var results = new ArrayList<ItemStack>();
+        var boundVials = new ArrayList<ItemStack>();
 
         // If the output can take an entity type, then we add it
         if (SoulBoundUtils.canBindSoul(resultStack)) {
@@ -147,20 +111,30 @@ public class SoulBindingCategory extends MachineRecipeCategory<RecipeHolder<Soul
                 if (!soul.isEmpty()) {
                     var result = resultStack.copy();
                     if (SoulBoundUtils.tryBindSoul(result, Soul.of(soul.entityType()))) {
+                        boundVials.add(vial);
                         results.add(result);
                     }
                 }
             }
         }
 
-        // Fallback :(
+        // Keep each bound output at the same index as its input soul.
+        boolean linkSouls = !results.isEmpty();
+        if (linkSouls) {
+            vials = boundVials;
+        }
+
         if (results.isEmpty()) {
             results.add(resultStack);
         }
 
         builder.addSlot(OUTPUT, 77, 4).add(new ItemStack(EIOItems.SOUL_VIAL.get()));
 
-        builder.addSlot(OUTPUT, 99, 4).addItemStacks(results);
+        var vialSlot = builder.addSlot(INPUT, 3, 4).addItemStacks(vials);
+        var resultSlot = builder.addSlot(OUTPUT, 99, 4).addItemStacks(results);
+        if (linkSouls) {
+            builder.createFocusLink(vialSlot, resultSlot);
+        }
     }
 
     @Override
