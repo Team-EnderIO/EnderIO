@@ -2,8 +2,8 @@
   "model": {
     "type": "enderio:painted",
     "model": {
-      "Name": "enderio:painted_fence",
-      "Properties": {
+      "id": "enderio:painted_fence",
+      "properties": {
         "east": "false",
         "north": "true",
         "south": "true",

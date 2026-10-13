@@ -2,8 +2,8 @@
   "model": {
     "type": "enderio:painted",
     "model": {
-      "Name": "enderio:painted_stairs",
-      "Properties": {
+      "id": "enderio:painted_stairs",
+      "properties": {
         "facing": "west",
         "half": "bottom",
         "shape": "straight",

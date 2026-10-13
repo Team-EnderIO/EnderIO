@@ -23,7 +23,6 @@ import com.enderio.enderio.datagen.common.tags.EIOEntityTagsProvider;
 import com.enderio.enderio.datagen.common.tags.EIOFluidTagsProvider;
 import com.enderio.enderio.datagen.common.tags.EIOItemTagsProvider;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.advancements.AdvancementProvider;
@@ -32,6 +31,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
+import net.neoforged.neoforge.data.event.GatherDataRegistryEntriesEvent;
 
 import java.util.List;
 import java.util.Set;
@@ -41,26 +41,25 @@ import java.util.concurrent.CompletableFuture;
 public class EnderIODataGen {
 
     public EnderIODataGen(IEventBus eventBus) {
+        eventBus.addListener(this::gatherDatapacks);
         eventBus.addListener(this::onGatherData);
     }
 
+    @SuppressWarnings("NullableProblems")
+    public void gatherDatapacks(GatherDataRegistryEntriesEvent event) {
+        // World
+        event.add(EnderIORegistries.Keys.CONDUIT, ConduitsBootstrap::bootstrap);
+
+        // Reloadable
+        event.add(Registries.ADVANCEMENT, new AdvancementProvider(List.of(EIOAdvancementGenerator::new, MachinesAdvancementGenerator::new)));
+        event.add(Registries.LOOT_TABLE, new LootTableProvider(Set.of(), List.of(
+            new LootTableProvider.SubProviderEntry(EIOBlockLootProvider::new, LootContextParamSets.BLOCK),
+            new LootTableProvider.SubProviderEntry(ChestLootProvider::new, LootContextParamSets.CHEST)
+        )));
+        event.add(EnderIORecipeProvider.create());
+    }
+
     public void onGatherData(GatherDataEvent.Client event) {
-        // Create datapack registry objects
-        event.createWorldRegistryObjects(
-            new RegistrySetBuilder()
-                .add(EnderIORegistries.Keys.CONDUIT, ConduitsBootstrap::bootstrap),
-            Set.of(EnderIO.MOD_ID));
-
-        event.createReloadableRegistryObjects(
-            new RegistrySetBuilder()
-                .add(Registries.ADVANCEMENT, new AdvancementProvider(List.of(EIOAdvancementGenerator::new, MachinesAdvancementGenerator::new)))
-                .add(Registries.LOOT_TABLE, new LootTableProvider(Set.of(), List.of(
-                    new LootTableProvider.SubProviderEntry(EIOBlockLootProvider::new, LootContextParamSets.BLOCK),
-                    new LootTableProvider.SubProviderEntry(ChestLootProvider::new, LootContextParamSets.CHEST)
-                )))
-                .add(EnderIORecipeProvider.create()),
-            Set.of(EnderIO.MOD_ID));
-
         PackOutput packOutput = event.getGenerator().getPackOutput();
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getWorldLookupProvider();
 

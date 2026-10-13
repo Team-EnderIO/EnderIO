@@ -48,7 +48,7 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
-import net.neoforged.neoforge.registries.DataPackRegistryEvent;
+import net.neoforged.neoforge.registries.NewDatapackRegistryEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import org.slf4j.Logger;
 
@@ -90,11 +90,11 @@ public class EnderIO {
         }
 
         // Register config files
-        modContainer.registerConfig(ModConfig.Type.COMMON, BaseConfig.COMMON_SPEC, "enderio/base-common.toml");
+        modContainer.registerConfig(ModConfig.Type.LOCAL, BaseConfig.COMMON_SPEC, "enderio/base-local.toml");
         modContainer.registerConfig(ModConfig.Type.CLIENT, BaseConfig.CLIENT_SPEC, "enderio/base-client.toml");
-        modContainer.registerConfig(ModConfig.Type.COMMON, MachinesConfig.COMMON_SPEC, "enderio/machines-common.toml");
+        modContainer.registerConfig(ModConfig.Type.LOCAL, MachinesConfig.COMMON_SPEC, "enderio/machines-local.toml");
         modContainer.registerConfig(ModConfig.Type.CLIENT, MachinesConfig.CLIENT_SPEC, "enderio/machines-client.toml");
-        modContainer.registerConfig(ModConfig.Type.COMMON, ConduitsConfig.COMMON_SPEC, "enderio/conduits-common.toml");
+        modContainer.registerConfig(ModConfig.Type.LOCAL, ConduitsConfig.COMMON_SPEC, "enderio/conduits-local.toml");
 
         EIODataComponents.register(modEventBus);
         EIOCreativeTabs.register(modEventBus);
@@ -142,8 +142,8 @@ public class EnderIO {
         event.register(EnderIORegistries.CONDUIT_NETWORK_CONTEXT_TYPE);
     }
 
-    private void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {
-        event.dataPackRegistry(EnderIORegistries.Keys.CONDUIT, Conduit.DIRECT_CODEC, Conduit.DIRECT_CODEC);
+    private void registerDatapackRegistries(NewDatapackRegistryEvent event) {
+        event.worldRegistry(EnderIORegistries.Keys.CONDUIT, Conduit.DIRECT_CODEC, Conduit.DIRECT_CODEC);
     }
 
     private void addBuiltInPacks(final AddPackFindersEvent event) {

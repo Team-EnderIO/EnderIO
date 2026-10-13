@@ -2,8 +2,8 @@
   "model": {
     "type": "enderio:painted",
     "model": {
-      "Name": "enderio:painted_wall",
-      "Properties": {
+      "id": "enderio:painted_wall",
+      "properties": {
         "east": "none",
         "north": "low",
         "south": "low",
