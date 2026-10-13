@@ -1,12 +1,10 @@
 package com.enderio.enderio.api.conduits.network.node;
 
+import com.enderio.core.common.storage.ResourceStorage;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitCapabilityAccessor;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.ConnectionReader;
-import com.enderio.enderio.api.conduits.connection.ConnectionStatus;
-import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
-import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.google.common.base.Preconditions;
 import net.minecraft.core.BlockPos;
@@ -14,7 +12,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.DyeColor;
 import net.neoforged.neoforge.capabilities.BlockCapability;
-import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jetbrains.annotations.ApiStatus;
 import org.jspecify.annotations.Nullable;
 
@@ -133,5 +131,5 @@ public interface ConduitNode extends ConduitCapabilityAccessor, ConnectionReader
      * @throws IllegalStateException if this node is not loaded
      * @throws IllegalStateException if this node has no inventory.
      */
-    IItemHandlerModifiable getInventory(Direction side);
+    ResourceStorage<ItemResource> getInventory(Direction side);
 }

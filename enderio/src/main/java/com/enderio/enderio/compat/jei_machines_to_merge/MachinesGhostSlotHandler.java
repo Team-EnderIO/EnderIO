@@ -27,7 +27,7 @@ public class MachinesGhostSlotHandler implements IGhostIngredientHandler<Machine
                     continue;
                 }
 
-                Rect2i bounds = new Rect2i(gui.getGuiLeft() + slot.x, gui.getGuiTop() + slot.y, 17, 17);
+                Rect2i bounds = new Rect2i(gui.getLeftPos() + slot.x, gui.getTopPos() + slot.y, 17, 17);
 
                 if (slot instanceof GhostMachineSlot ghostSlot) {
                     targets.add(new Target<>() {

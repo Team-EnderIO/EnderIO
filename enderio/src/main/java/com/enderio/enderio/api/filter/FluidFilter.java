@@ -1,7 +1,8 @@
 package com.enderio.enderio.api.filter;
 
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import org.jetbrains.annotations.ApiStatus;
 import org.jspecify.annotations.Nullable;
 
@@ -13,5 +14,5 @@ public interface FluidFilter {
      * @param stack The stack being tested.
      * @return The stack that is permitted (can differ in amount), use {@link FluidStack#EMPTY} to transfer nothing.
      */
-    FluidStack test(@Nullable IFluidHandler target, FluidStack stack);
+    FluidStack test(@Nullable ResourceHandler<FluidResource> target, FluidStack stack);
 }

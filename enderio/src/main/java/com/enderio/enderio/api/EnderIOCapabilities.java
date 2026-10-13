@@ -14,6 +14,7 @@ import com.enderio.enderio.api.soul.storage.SoulHandler;
 import net.minecraft.core.Direction;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.ItemCapability;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 import org.jspecify.annotations.Nullable;
 
 public class EnderIOCapabilities {
@@ -23,8 +24,8 @@ public class EnderIOCapabilities {
     public static final ItemCapability<ICapacitorExtension, Void> CAPACITOR_EXTENSION = ItemCapability
         .createVoid(EnderIOAPI.rl("capacitor_extension"), ICapacitorExtension.class);
 
-    public static final ItemCapability<FilterMenuProvider, Void> FILTER_MENU_PROVIDER = ItemCapability
-        .createVoid(EnderIOAPI.rl("filter_menu_provider"), FilterMenuProvider.class);
+    public static final ItemCapability<FilterMenuProvider, ItemAccess> FILTER_MENU_PROVIDER = ItemCapability
+        .create(EnderIOAPI.rl("filter_menu_provider"), FilterMenuProvider.class, ItemAccess.class);
 
     public static final ItemCapability<ItemFilter, Void> ITEM_FILTER = ItemCapability
         .createVoid(EnderIOAPI.rl("item_filter"), ItemFilter.class);

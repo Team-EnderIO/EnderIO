@@ -1,5 +1,7 @@
 package com.enderio.enderio.api.conduits.screen;
 
+import com.enderio.core.common.storage.slot.ResourceSlotId;
+import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.io.RedstoneControl;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Renderable;
@@ -9,6 +11,7 @@ import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.DyeColor;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.function.Consumer;
@@ -32,7 +35,7 @@ public interface ConduitScreenHelper {
             Identifier enabledSprite, Identifier disabledSprite, Supplier<Boolean> getter,
             Consumer<Boolean> setter);
 
-    AbstractWidget addFilterConfigureButton(int x, int y, int slot);
+    AbstractWidget addFilterConfigureButton(int x, int y, ResourceSlotId<ItemResource> slotId);
 
     // TODO: Create icon button
 

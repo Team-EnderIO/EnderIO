@@ -11,7 +11,8 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
@@ -54,7 +55,7 @@ public record EnderFluidFilter(NonNullList<FluidStack> matches, boolean isDenyLi
     }
 
     @Override
-    public FluidStack test(@Nullable IFluidHandler target, FluidStack stack) {
+    public FluidStack test(@Nullable ResourceHandler<FluidResource> target, FluidStack stack) {
         for (var match : matches) {
             if (match.isEmpty()) {
                 continue;

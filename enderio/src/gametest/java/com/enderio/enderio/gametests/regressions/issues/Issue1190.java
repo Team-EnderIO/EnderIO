@@ -11,6 +11,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RedstoneLampBlock;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.testframework.DynamicTest;
 import net.neoforged.testframework.annotation.ForEachTest;
 import net.neoforged.testframework.annotation.TestHolder;
@@ -91,7 +92,7 @@ public class Issue1190 {
                     var inventory = bundle.getConnectionInventory(redstoneConduit, Direction.EAST);
                     var andFilter = new ItemStack(EIOItems.AND_FILTER.get());
                     // The filter should have default channels (GREEN and BROWN) already set
-                    inventory.setStackInSlot(RedstoneConduit.INSERT_FILTER_SLOT, andFilter);
+                    inventory.set(RedstoneConduit.INSERT_FILTER_SLOT, ItemResource.of(andFilter), andFilter.count());
                 })
                 
                 // Wait for a few ticks to allow the network to process signals
@@ -166,7 +167,7 @@ public class Issue1190 {
                     var bundle = helper.getConduitBundle(3, 0, 1, false);
                     var inventory = bundle.getConnectionInventory(redstoneConduit, Direction.EAST);
                     var nandFilter = new ItemStack(EIOItems.NAND_FILTER.get());
-                    inventory.setStackInSlot(RedstoneConduit.INSERT_FILTER_SLOT, nandFilter);
+                    inventory.set(RedstoneConduit.INSERT_FILTER_SLOT, ItemResource.of(nandFilter), nandFilter.count());
                 })
                 
                 // Wait for network to process

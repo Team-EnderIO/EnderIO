@@ -119,15 +119,15 @@ public class VatScreen extends MachineScreen<VatMenu> {
         ItemStack item = getMenu().getSlot(0).getItem();
         double modifier = getMenu().getFirstReagent();
         String text = "x" + modifier;
-        int x = getGuiLeft() + 63 - minecraft.font.width(text) / 2;
-        graphics.text(minecraft.font, text, x, getGuiTop() + 32, CommonColors.DARK_GRAY, false);
+        int x = getLeftPos() + 63 - minecraft.font.width(text) / 2;
+        graphics.text(minecraft.font, text, x, getTopPos() + 32, CommonColors.DARK_GRAY, false);
 
         // right modifier
         item = getMenu().getSlot(1).getItem();
         modifier = getMenu().getSecondReagent();
         text = "x" + modifier;
-        x = getGuiLeft() + 113 - minecraft.font.width(text) / 2;
-        graphics.text(minecraft.font, text, x, getGuiTop() + 32, CommonColors.DARK_GRAY, false);
+        x = getLeftPos() + 113 - minecraft.font.width(text) / 2;
+        graphics.text(minecraft.font, text, x, getTopPos() + 32, CommonColors.DARK_GRAY, false);
 
     }
 }

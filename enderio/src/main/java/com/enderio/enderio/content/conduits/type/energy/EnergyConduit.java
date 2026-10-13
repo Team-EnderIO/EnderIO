@@ -22,7 +22,6 @@ import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;

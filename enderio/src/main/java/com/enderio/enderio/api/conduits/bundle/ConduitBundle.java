@@ -1,5 +1,6 @@
 package com.enderio.enderio.api.conduits.bundle;
 
+import com.enderio.core.common.storage.ResourceStorage;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitApi;
 import com.enderio.enderio.api.conduits.ConduitType;
@@ -9,14 +10,13 @@ import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.facade.ConduitFacadeProvider;
 import com.enderio.enderio.api.conduits.facade.FacadeType;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
-import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jetbrains.annotations.ApiStatus;
 import org.jspecify.annotations.Nullable;
 
@@ -177,7 +177,7 @@ public interface ConduitBundle {
 
     // TODO
     @Nullable
-    IItemHandlerModifiable getConnectionInventory(Holder<Conduit<?, ?>> conduit, Direction side);
+    ResourceStorage<ItemResource> getConnectionInventory(Holder<Conduit<?, ?>> conduit, Direction side);
 
     // endregion
 

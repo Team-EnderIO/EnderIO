@@ -40,8 +40,8 @@ public class EnchanterScreen extends EnderContainerScreen<EnchanterMenu> {
             colour = 16736352; // red
         }
 
-        graphics.centeredText(this.font, component, (width - getXSize()) / 2 + getXSize() / 2,
-                (height - getYSize()) / 2 + 57, colour);
+        graphics.centeredText(this.font, component, (width - getImageWidth()) / 2 + getImageWidth() / 2,
+                (height - getImageHeight()) / 2 + 57, colour);
     }
 
     @Override

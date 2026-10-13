@@ -70,10 +70,10 @@ public class EnderFluidFilterScreen extends EnderContainerScreen<EnderFluidFilte
         super.init();
 
         addRenderableWidget(
-            new IconButton(getGuiLeft() + 3, getGuiTop() + 3, 16, 16, BACK_SPRITE, null, input -> handleButtonPress(AbstractFilterMenu.BACK_BUTTON_ID)));
+            new IconButton(getLeftPos() + 3, getTopPos() + 3, 16, 16, BACK_SPRITE, null, input -> handleButtonPress(AbstractFilterMenu.BACK_BUTTON_ID)));
 
-        int xPos = getGuiLeft() + WIDTH - 25;
-        int yPos = getGuiTop() + 27 + menu.type.rowCount() * 18;
+        int xPos = getLeftPos() + WIDTH - 25;
+        int yPos = getTopPos() + 27 + menu.type.rowCount() * 18;
 
         if (getMenu().type.canMatchComponents()) {
             addRenderableWidget(new ToggleIconButton(xPos, yPos, 16, 16, (b) -> b ? ICON_MATCH_COMPONENTS : ICON_IGNORE_COMPONENTS,
@@ -93,7 +93,7 @@ public class EnderFluidFilterScreen extends EnderContainerScreen<EnderFluidFilte
     @Override
     public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         super.extractBackground(graphics, mouseX, mouseY, a);
-        graphics.blit(RenderPipelines.GUI_TEXTURED, backgroundTexture, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight, 256, 256);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, backgroundTexture, getLeftPos(), getTopPos(), 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
     @Override

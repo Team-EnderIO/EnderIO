@@ -1,5 +1,8 @@
 package com.enderio.enderio.content.conduits.type.redstone;
 
+import com.enderio.core.common.storage.layout.ItemStorageLayout;
+import com.enderio.core.common.storage.layout.ResourceStorageLayout;
+import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitCapabilityAccessor;
@@ -17,19 +20,26 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jspecify.annotations.NonNull;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.joml.Vector2i;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Set;
 
 public record RedstoneConduit(Identifier texture, Identifier activeTexture, Component description)
         implements Conduit<RedstoneConduit, RedstoneConduitConnectionConfig> {
 
-    public static final int EXTRACT_FILTER_SLOT = 0;
-    public static final int INSERT_FILTER_SLOT = 1;
+    public static final SingleResourceSlotKey<ItemResource> EXTRACT_FILTER_SLOT = new SingleResourceSlotKey<>();
+    public static final SingleResourceSlotKey<ItemResource> INSERT_FILTER_SLOT = new SingleResourceSlotKey<>();
+
+    public static final ItemStorageLayout INVENTORY_LAYOUT = ItemStorageLayout.builder()
+        .add(EXTRACT_FILTER_SLOT, builder -> builder
+            .filter((_, resource) -> resource.toStack().getCapability(EnderIOCapabilities.REDSTONE_EXTRACT_FILTER) != null))
+        .add(INSERT_FILTER_SLOT, builder -> builder
+            .filter((_, resource) -> resource.toStack().getCapability(EnderIOCapabilities.REDSTONE_INSERT_FILTER) != null))
+        .build();
 
     public static final MapCodec<RedstoneConduit> CODEC = RecordCodecBuilder.mapCodec(builder -> builder
         .group(Identifier.CODEC.fieldOf("texture").forGetter(RedstoneConduit::texture),
@@ -73,38 +83,35 @@ public record RedstoneConduit(Identifier texture, Identifier activeTexture, Comp
     }
 
     @Override
-    public int getInventorySize() {
-        return 2;
-    }
-
-    @Override
-    public boolean isItemValid(int slot, ItemStack stack) {
-        if (slot == EXTRACT_FILTER_SLOT) {
-            return stack.getCapability(EnderIOCapabilities.REDSTONE_EXTRACT_FILTER) != null;
-        } else if (slot == INSERT_FILTER_SLOT) {
-            return stack.getCapability(EnderIOCapabilities.REDSTONE_INSERT_FILTER) != null;
-        }
-
-        return false;
+    public ResourceStorageLayout<ItemResource> inventoryLayout() {
+        return INVENTORY_LAYOUT;
     }
 
     @Override
     public Vector2i getInventorySlotPosition(int slot) {
-        return switch (slot) {
-        case EXTRACT_FILTER_SLOT -> new Vector2i(23, 71);
-        case INSERT_FILTER_SLOT -> new Vector2i(113, 71);
-        default -> throw new IndexOutOfBoundsException();
-        };
+        if (slot == INVENTORY_LAYOUT.indexOf(EXTRACT_FILTER_SLOT)) {
+            return new Vector2i(113, 71);
+        }
+
+        if (slot == INVENTORY_LAYOUT.indexOf(INSERT_FILTER_SLOT)) {
+            return new Vector2i(23, 71);
+        }
+
+        throw new IndexOutOfBoundsException();
     }
 
 
     @Override
     public Component getSlotTooltip(int slot) {
-        return switch (slot) {
-            case EXTRACT_FILTER_SLOT -> ConduitLang.REDSTONE_FILTER_SLOT_TOOLTIP;
-            case INSERT_FILTER_SLOT -> ConduitLang.REDSTONE_FILTER_SLOT_TOOLTIP;
-            default -> Component.empty();
-        };
+        if (slot == INVENTORY_LAYOUT.indexOf(EXTRACT_FILTER_SLOT)) {
+            return ConduitLang.REDSTONE_FILTER_SLOT_TOOLTIP;
+        }
+
+        if (slot == INVENTORY_LAYOUT.indexOf(INSERT_FILTER_SLOT)) {
+            return ConduitLang.REDSTONE_FILTER_SLOT_TOOLTIP;
+        }
+
+        throw new IndexOutOfBoundsException();
     }
 
     @Override

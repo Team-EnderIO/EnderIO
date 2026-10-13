@@ -24,6 +24,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.testframework.DynamicTest;
 import net.neoforged.testframework.annotation.ForEachTest;
 import net.neoforged.testframework.annotation.TestHolder;
@@ -296,7 +297,7 @@ public class ConduitBreakTests {
     }
 
     private static void installItemFilter(ConduitGameTestHelper helper, Holder<Conduit<?, ?>> itemConduit) {
-        bundle(helper).getConnectionInventory(itemConduit, Direction.NORTH).setStackInSlot(0, basicItemFilter());
+        bundle(helper).getConnectionInventory(itemConduit, Direction.NORTH).set(0, ItemResource.of(basicItemFilter()), basicItemFilter().count());
     }
 
     private static void addConduit(ConduitGameTestHelper helper, Holder<Conduit<?, ?>> conduit) {
@@ -392,7 +393,8 @@ public class ConduitBreakTests {
     }
 
     private static void assertItemFilterRemains(ConduitGameTestHelper helper, Holder<Conduit<?, ?>> itemConduit) {
-        var filter = bundle(helper).getConnectionInventory(itemConduit, Direction.NORTH).getStackInSlot(0);
+        var inv = bundle(helper).getConnectionInventory(itemConduit, Direction.NORTH);
+        var filter = inv.getResource(0).toStack(inv.getAmountAsInt(0));
         if (!ItemStack.isSameItemSameComponents(filter, basicItemFilter())) {
             throw helper.assertionException("The filter on the remaining item conduit was removed.");
         }

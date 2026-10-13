@@ -1,5 +1,6 @@
 package com.enderio.enderio.api.conduits;
 
+import com.enderio.core.common.storage.layout.ResourceStorageLayout;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.api.conduits.connection.ConnectionReader;
@@ -21,17 +22,17 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipProvider;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.ApiStatus;
-import org.jspecify.annotations.Nullable;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.item.CreativeModeTab;
 import org.joml.Vector2i;
+import org.jspecify.annotations.Nullable;
+
+import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -171,22 +172,20 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
     // TODO: Document that item loss will occur if a conduit is upgraded to another
     // type with smaller inventory...
 
-    default int getInventorySize() {
-        return 0;
+    // TODO: The ResourceStorage system has a lot of redundancies that aren't required for conduits.
+    //       I might look at making a system which accepts a mixed bag of properties, and then have a type object that asserts all such properties are present.
+    @Nullable
+    default ResourceStorageLayout<ItemResource> inventoryLayout() {
+        return null;
     }
 
     default Component getSlotTooltip(int slot) {
         return Component.empty();
     }
 
-    default boolean isItemValid(int slot, ItemStack stack) {
-        return true;
-    }
-
     default Vector2i getInventorySlotPosition(int slot) {
-        if (getInventorySize() > 0) {
-            throw new NotImplementedException(
-                    "This conduit has an inventory, but getSlotPosition has not been implemented!");
+        if (inventoryLayout() != null) {
+            throw new NotImplementedException("This conduit has an inventory, but getSlotPosition has not been implemented!");
         }
 
         throw new UnsupportedOperationException("This conduit does not have an inventory.");

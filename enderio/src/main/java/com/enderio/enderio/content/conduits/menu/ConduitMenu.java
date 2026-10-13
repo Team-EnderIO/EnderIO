@@ -1,6 +1,8 @@
 package com.enderio.enderio.content.conduits.menu;
 
 import com.enderio.core.common.menu.BaseEnderMenu;
+import com.enderio.core.common.storage.ItemStorage;
+import com.enderio.core.common.storage.ResourceStorage;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.core.annotations.UseOnly;
 import com.enderio.enderio.api.conduits.Conduit;
@@ -16,6 +18,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -27,11 +30,10 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.IItemHandlerModifiable;
-import net.neoforged.neoforge.items.ItemStackHandler;
-import net.neoforged.neoforge.items.SlotItemHandler;
 import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
@@ -59,7 +61,7 @@ public class ConduitMenu extends BaseEnderMenu {
     private final ConnectionAccessor connectionAccessor;
 
     @Nullable
-    private final IItemHandlerModifiable conduitInventory;
+    private final ResourceStorage<ItemResource> conduitInventory;
 
     @UseOnly(LogicalSide.SERVER)
     private ConnectionConfig remoteConnectionConfig;
@@ -97,8 +99,9 @@ public class ConduitMenu extends BaseEnderMenu {
         this.connectionAccessor = new ClientConnectionAccessor(buf);
 
         // If this conduit has an inventory, create its client representation.
-        if (conduit.value().getInventorySize() > 0) {
-            this.conduitInventory = new ClientConduitInventory();
+        var layout = conduit.value().inventoryLayout();
+        if (layout != null) {
+            this.conduitInventory = new ItemStorage(layout);
         } else {
             this.conduitInventory = null;
         }
@@ -108,9 +111,9 @@ public class ConduitMenu extends BaseEnderMenu {
 
     private void addSlots() {
         if (conduitInventory != null) {
-            for (int i = 0; i < conduit.value().getInventorySize(); i++) {
+            for (int i = 0; i < conduitInventory.size(); i++) {
                 var pos = conduit.value().getInventorySlotPosition(i);
-                addSlot(new SlotItemHandler(conduitInventory, i, pos.x, pos.y));
+                addSlot(new ResourceHandlerSlot(conduitInventory, conduitInventory::set, i, pos.x(), pos.y()));
             }
         }
 
@@ -134,7 +137,7 @@ public class ConduitMenu extends BaseEnderMenu {
     }
 
     @Nullable
-    public IItemHandler getConduitInventory() {
+    public ResourceStorage<ItemResource> getConduitInventory() {
         return conduitInventory;
     }
 
@@ -220,12 +223,15 @@ public class ConduitMenu extends BaseEnderMenu {
     }
 
     public void tryOpenFilterMenu(int slot) {
+        if (conduitInventory == null) {
+            return;
+        }
+
         if (getPlayerInventory().player instanceof ServerPlayer serverPlayer) {
-            var stack = conduitInventory.getStackInSlot(slot);
-            var menuProvider = stack.getCapability(EnderIOCapabilities.FILTER_MENU_PROVIDER);
+            var itemAccess = ItemAccess.forHandlerIndexStrict(conduitInventory, slot);
+            var menuProvider = itemAccess.getCapability(EnderIOCapabilities.FILTER_MENU_PROVIDER);
             if (menuProvider != null) {
-                menuProvider.openMenu(serverPlayer, conduitInventory, slot, () -> openConduitMenu(serverPlayer,
-                        (ConduitBundleBlockEntity) connectionAccessor, side, conduit));
+                menuProvider.openMenu(serverPlayer, () -> openConduitMenu(serverPlayer, (ConduitBundleBlockEntity) connectionAccessor, side, conduit));
             }
         } else {
             ClientPacketDistributor.sendToServer(new ServerboundOpenConduitFilterMenu(containerId, slot));
@@ -336,17 +342,6 @@ public class ConduitMenu extends BaseEnderMenu {
         @Override
         public boolean stillValid(Player player) {
             return true;
-        }
-    }
-
-    private class ClientConduitInventory extends ItemStackHandler {
-        private ClientConduitInventory() {
-            super(conduit.value().getInventorySize());
-        }
-
-        @Override
-        public boolean isItemValid(int slot, ItemStack stack) {
-            return conduit.value().isItemValid(slot, stack);
         }
     }
 

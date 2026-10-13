@@ -572,8 +572,9 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
             }
 
             var redstoneInsertFilter = node.getInventory(direction.getOpposite())
-                    .getStackInSlot(RedstoneConduit.INSERT_FILTER_SLOT)
-                    .getCapability(EnderIOCapabilities.REDSTONE_INSERT_FILTER);
+                .getResource(RedstoneConduit.INSERT_FILTER_SLOT)
+                .toStack()
+                .getCapability(EnderIOCapabilities.REDSTONE_INSERT_FILTER);
 
             if (redstoneInsertFilter != null) {
                 return redstoneInsertFilter.getOutputSignal(context, config.insertChannel());

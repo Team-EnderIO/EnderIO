@@ -12,9 +12,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
@@ -85,11 +82,12 @@ public class FluidConduitTicker extends ConduitTickerBase<FluidConduit> {
 
             // Test the extracted fluid against the target
             var extractFilter = extractConnection.inventory()
-                .getStackInSlot(FluidConduit.EXTRACT_FILTER_SLOT)
+                .getResource(FluidConduit.EXTRACT_FILTER_SLOT)
+                .toStack()
                 .getCapability(EnderIOCapabilities.FLUID_FILTER);
 
             if (extractFilter != null) {
-                var filteredStack = extractFilter.test(IFluidHandler.of(extractHandler), fluidResource.toStack(maxExtract));
+                var filteredStack = extractFilter.test(extractHandler, fluidResource.toStack(maxExtract));
                 if (filteredStack.isEmpty()) {
                     return maxTransfer;
                 }
@@ -120,11 +118,12 @@ public class FluidConduitTicker extends ConduitTickerBase<FluidConduit> {
 
                 // Test fluid against insert filter.
                 var insertFilter = insertConnection.inventory()
-                    .getStackInSlot(FluidConduit.INSERT_FILTER_SLOT)
+                    .getResource(FluidConduit.INSERT_FILTER_SLOT)
+                    .toStack()
                     .getCapability(EnderIOCapabilities.FLUID_FILTER);
 
                 if (insertFilter != null) {
-                    var filteredStack = insertFilter.test(IFluidHandler.of(insertHandler), fluidResource.toStack(amountToInsert));
+                    var filteredStack = insertFilter.test(insertHandler, fluidResource.toStack(amountToInsert));
                     if (filteredStack.isEmpty()) {
                         continue;
                     }

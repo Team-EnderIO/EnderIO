@@ -1,9 +1,10 @@
 package com.enderio.enderio.tests.conduits.network;
 
+import com.enderio.core.common.storage.ItemStorage;
+import com.enderio.core.common.storage.ResourceStorage;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.connection.ConnectionStatus;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
-import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.content.conduits.network.IConduitNodeAttachment;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -11,8 +12,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.BlockCapability;
-import net.neoforged.neoforge.items.IItemHandlerModifiable;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jspecify.annotations.Nullable;
 
 import java.util.HashMap;
@@ -24,7 +24,7 @@ public class FakeConduitNodeAttachment implements IConduitNodeAttachment {
 
     private final Holder<Conduit<?, ?>> conduit;
 
-    private final Map<Direction, IItemHandlerModifiable> conduitInventories = new HashMap<>();
+    private final Map<Direction, ResourceStorage<ItemResource>> conduitInventories = new HashMap<>();
 
     private final Map<Direction, ConnectionStatus> connectionStatuses = new HashMap<>();
     private final Map<Direction, ConnectionConfig> connectionConfigs = new HashMap<>();
@@ -97,26 +97,16 @@ public class FakeConduitNodeAttachment implements IConduitNodeAttachment {
 
     @Override
     @Nullable
-    public IItemHandlerModifiable getConnectionInventory(Holder<Conduit<?, ?>> conduit, Direction side) {
+    public ResourceStorage<ItemResource> getConnectionInventory(Holder<Conduit<?, ?>> conduit, Direction side) {
         if (this.conduit != conduit) {
             throw new IllegalArgumentException("Conduit type not supported by this fake attachment");
         }
 
-        if (conduit.value().getInventorySize() > 0) {
-            return conduitInventories.computeIfAbsent(side, s -> new ConnectionInventory());
+        var layout = conduit.value().inventoryLayout();
+        if (layout != null) {
+            return conduitInventories.computeIfAbsent(side, _ -> new ItemStorage(layout));
         }
 
         return null;
-    }
-
-    private class ConnectionInventory extends ItemStackHandler {
-        public ConnectionInventory() {
-            super(conduit.value().getInventorySize());
-        }
-
-        @Override
-        public boolean isItemValid(int slot, ItemStack stack) {
-            return conduit.value().isItemValid(slot, stack);
-        }
     }
 }

@@ -1,5 +1,8 @@
 package com.enderio.enderio.content.conduits.type.item;
 
+import com.enderio.core.common.storage.layout.ItemStorageLayout;
+import com.enderio.core.common.storage.layout.ResourceStorageLayout;
+import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.conduits.Conduit;
@@ -24,10 +27,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jspecify.annotations.Nullable;
 import org.joml.Vector2i;
 
@@ -36,8 +39,15 @@ import java.util.function.Consumer;
 public record ItemConduit(Identifier texture, Component description, int transferRatePerCycle, int networkTickRate)
     implements Conduit<ItemConduit, ItemConduitConnectionConfig> {
 
-    public static final int EXTRACT_FILTER_SLOT = 0;
-    public static final int INSERT_FILTER_SLOT = 1;
+    public static final SingleResourceSlotKey<ItemResource> EXTRACT_FILTER_SLOT = new SingleResourceSlotKey<>();
+    public static final SingleResourceSlotKey<ItemResource> INSERT_FILTER_SLOT = new SingleResourceSlotKey<>();
+
+    public static final ItemStorageLayout INVENTORY_LAYOUT = ItemStorageLayout.builder()
+        .add(EXTRACT_FILTER_SLOT, builder -> builder
+            .filter((_, resource) -> resource.toStack().getCapability(EnderIOCapabilities.ITEM_FILTER) != null))
+        .add(INSERT_FILTER_SLOT, builder -> builder
+            .filter((_, resource) -> resource.toStack().getCapability(EnderIOCapabilities.ITEM_FILTER) != null))
+        .build();
 
     public static final MapCodec<ItemConduit> CODEC = RecordCodecBuilder.mapCodec(builder -> builder
         .group(Identifier.CODEC.fieldOf("texture").forGetter(Conduit::texture),
@@ -105,31 +115,35 @@ public record ItemConduit(Identifier texture, Component description, int transfe
     }
 
     @Override
-    public int getInventorySize() {
-        return 2;
-    }
-
-    @Override
-    public boolean isItemValid(int slot, ItemStack stack) {
-        return stack.getCapability(EnderIOCapabilities.ITEM_FILTER) != null;
+    public ResourceStorageLayout<ItemResource> inventoryLayout() {
+        return INVENTORY_LAYOUT;
     }
 
     @Override
     public Vector2i getInventorySlotPosition(int slot) {
-        return switch (slot) {
-        case EXTRACT_FILTER_SLOT -> new Vector2i(113, 71);
-        case INSERT_FILTER_SLOT -> new Vector2i(23, 71);
-        default -> throw new IndexOutOfBoundsException();
-        };
+        if (slot == INVENTORY_LAYOUT.indexOf(EXTRACT_FILTER_SLOT)) {
+            return new Vector2i(113, 71);
+        }
+
+        if (slot == INVENTORY_LAYOUT.indexOf(INSERT_FILTER_SLOT)) {
+            return new Vector2i(23, 71);
+        }
+
+        throw new IndexOutOfBoundsException();
     }
+
 
     @Override
     public Component getSlotTooltip(int slot) {
-        return switch (slot) {
-            case EXTRACT_FILTER_SLOT -> ConduitLang.ITEM_FILTER_SLOT_TOOLTIP;
-            case INSERT_FILTER_SLOT -> ConduitLang.ITEM_FILTER_SLOT_TOOLTIP;
-            default -> Component.empty();
-        };
+        if (slot == INVENTORY_LAYOUT.indexOf(EXTRACT_FILTER_SLOT)) {
+            return ConduitLang.ITEM_FILTER_SLOT_TOOLTIP;
+        }
+
+        if (slot == INVENTORY_LAYOUT.indexOf(INSERT_FILTER_SLOT)) {
+            return ConduitLang.ITEM_FILTER_SLOT_TOOLTIP;
+        }
+
+        throw new IndexOutOfBoundsException();
     }
 
     @Override
