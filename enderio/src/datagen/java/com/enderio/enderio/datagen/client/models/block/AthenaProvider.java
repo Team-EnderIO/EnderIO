@@ -6,7 +6,6 @@ import com.google.gson.JsonElement;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
@@ -63,6 +62,13 @@ public class AthenaProvider implements DataProvider {
 
 
     public void registerDefinitions() {
+        for (var capacitorBank : EIOBlocks.CAPACITOR_BANKS.values()) {
+            String name = capacitorBank.getId().getPath();
+            registerSimple(capacitorBank.get(), EnderIO.rl("block/ctm/" + name + "_center"), EnderIO.rl("block/ctm/" + name + "_empty"),
+                EnderIO.rl("block/ctm/" + name + "_horizontal"), EnderIO.rl("block/ctm/" + name + "_vertical"),
+                EnderIO.rl("block/" + name), -1, "solid");
+        }
+
         for (var glassBlocks : EIOBlocks.GLASS_BLOCKS.values()) {
             for (var block : glassBlocks.getAllBlocks().toList()) {
                 if (block.get().glassIdentifier().explosionResistance()) {
