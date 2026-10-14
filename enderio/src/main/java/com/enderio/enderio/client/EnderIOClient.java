@@ -100,13 +100,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.BlockModelRotation;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -132,7 +130,6 @@ import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
-import net.neoforged.neoforge.client.model.CompositeModel;
 import net.neoforged.neoforge.common.util.Lazy;
 
 import java.util.HashMap;
@@ -368,23 +365,6 @@ public class EnderIOClient {
         for (var skin : event.getSkins()) {
             if (event.getSkin(skin) instanceof PlayerRenderer playerRenderer) {
                 playerRenderer.addLayer(new ActiveGliderRenderLayer(playerRenderer));
-            }
-        }
-    }
-
-    @SuppressWarnings("deprecation")
-    @SubscribeEvent
-    public static void modifyBakingResult(ModelEvent.ModifyBakingResult event) {
-        // Athena definitions replace the whole block model, so attach IO overlays after baking.
-        for (var capacitorBank : EIOBlocks.CAPACITOR_BANKS.values()) {
-            for (var state : capacitorBank.get().getStateDefinition().getPossibleStates()) {
-                event.getModels().computeIfPresent(BlockModelShaper.stateToModelLocation(state), (location, model) -> {
-                    var builder = CompositeModel.Baked.builder(model.useAmbientOcclusion(), model.isGui3d(), model.usesBlockLight(),
-                        model.getParticleIcon(), model.getOverrides(), model.getTransforms());
-                    builder.addLayer(new IOOverlayBakedModel(BlockModelRotation.X0_Y0));
-                    builder.addLayer(model);
-                    return builder.build();
-                });
             }
         }
     }

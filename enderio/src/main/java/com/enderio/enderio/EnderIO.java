@@ -12,6 +12,7 @@ import com.enderio.enderio.config.conduits.ConduitsConfig;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.foundation.integrations.Integrations;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.init.EIOAttachments;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOBlocks;
@@ -30,6 +31,7 @@ import com.enderio.enderio.init.EIORecipes;
 import com.enderio.enderio.init.EIOSounds;
 import com.enderio.enderio.init.EIOTravelTargets;
 import com.mojang.logging.LogUtils;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
@@ -53,6 +55,7 @@ import java.util.function.Consumer;
 @Mod(EnderIO.MOD_ID)
 public class EnderIO {
     public static final String MOD_ID = EnderIOAPI.MOD_ID;
+    public static final String ATHENA_RESOURCE_PACK_PATH = "resourcepacks/athena";
 
     public static IEventBus modEventBus;
     public static ModContainer modContainer;
@@ -139,6 +142,11 @@ public class EnderIO {
     }
 
     public void addBuiltInPacks(final AddPackFindersEvent event) {
+        if (event.getPackType() == PackType.CLIENT_RESOURCES && ModList.get().isLoaded("athena")) {
+            event.addPackFinders(rl(ATHENA_RESOURCE_PACK_PATH), PackType.CLIENT_RESOURCES,
+                EIOCommonLang.RESOURCE_PACK_ATHENA, PackSource.BUILT_IN, true, Pack.Position.TOP);
+        }
+
         event.addPackFinders(
             ResourceLocation.fromNamespaceAndPath(EnderIO.MOD_ID, "data/enderio/datapacks/farming_station"),
             PackType.SERVER_DATA, MachinesLang.FARMING_STATION_EXPERIMENT, PackSource.FEATURE, false,

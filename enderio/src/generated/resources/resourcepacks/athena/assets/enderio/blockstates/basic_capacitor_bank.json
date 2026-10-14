@@ -8,5 +8,9 @@
     "vertical": "enderio:block/ctm/basic_capacitor_bank_vertical"
   },
   "render_type": "solid",
-  "tint": -1
+  "variants": {
+    "": {
+      "model": "enderio:block/basic_capacitor_bank"
+    }
+  }
 }

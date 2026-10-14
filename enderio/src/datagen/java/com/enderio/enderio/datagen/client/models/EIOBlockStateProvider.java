@@ -207,7 +207,16 @@ public class EIOBlockStateProvider extends BlockStateProvider {
 
         // Capacitor Banks
         for (var capacitorBank : EIOBlocks.CAPACITOR_BANKS.values()) {
-            simpleBlock(capacitorBank.get(), models().cubeAll(name(capacitorBank.get()), blockTexture(capacitorBank.get())).renderType("solid"));
+            var block = capacitorBank.get();
+            var model = models().withExistingParent(name(block), mcLoc("block/block"))
+                .texture("particle", blockTexture(block))
+                .customLoader(CompositeModelBuilder::begin)
+                .child("overlay", ModelHelper.getExistingAsBuilder(models(), modLoc("block/io_overlay")))
+                .child("block", ModelHelper.getExistingAsBuilder(models(), mcLoc("block/cube_all"))
+                    .texture("all", blockTexture(block)).renderType("solid"))
+                .end();
+
+            simpleBlock(block, model);
         }
 
         // Niard
