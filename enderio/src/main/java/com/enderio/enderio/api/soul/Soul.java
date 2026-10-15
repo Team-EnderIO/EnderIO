@@ -190,6 +190,16 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) im
         return true;
     }
 
+    public static int hashEntityAndTag(@Nullable Soul soul) {
+        if (soul == null) {
+            return 0;
+        }
+
+        int result = 31 + Objects.hashCode(soul.entityType());
+        result = 31 * result + soul.entityTag().hashCode();
+        return result;
+    }
+
     public boolean hasEntity() {
         return entityType != null;
     }
