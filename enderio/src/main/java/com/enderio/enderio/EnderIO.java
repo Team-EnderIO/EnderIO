@@ -144,7 +144,7 @@ public class EnderIO {
     public void addBuiltInPacks(final AddPackFindersEvent event) {
         if (event.getPackType() == PackType.CLIENT_RESOURCES && ModList.get().isLoaded("athena")) {
             event.addPackFinders(rl(ATHENA_RESOURCE_PACK_PATH), PackType.CLIENT_RESOURCES,
-                EIOCommonLang.RESOURCE_PACK_ATHENA, PackSource.BUILT_IN, true, Pack.Position.TOP);
+                EIOCommonLang.RESOURCE_PACK_ATHENA, PackSource.BUILT_IN, false, Pack.Position.TOP);
         }
 
         event.addPackFinders(
