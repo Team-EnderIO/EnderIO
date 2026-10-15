@@ -13,7 +13,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jspecify.annotations.Nullable;
 
 public class FusedQuartzBlock extends TransparentBlock {
-    // TODO: Connected textures
     private final GlassIdentifier glassIdentifier;
 
     public FusedQuartzBlock(Properties props, GlassIdentifier glassIdentifier, @Nullable DyeColor color) {

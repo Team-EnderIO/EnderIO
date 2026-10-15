@@ -95,7 +95,6 @@ public class MobSpawnTask extends PoweredSpawnerTask {
                 switch (spawnMode()) {
                 case COPY -> {
                     // TODO: Stop using BE to get entity tag data...
-                    // 26.2-port: loadEntityRecursive now takes an EntitySpawnRequest wrapper
                     entity = EntityType.loadEntityRecursive(blockEntity.getBoundSoul().getEntityTagWithId(), level,
                             new net.minecraft.world.entity.EntitySpawnRequest(EntitySpawnReason.SPAWNER, false),
                             entity1 -> {
