@@ -9,8 +9,6 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 
-import java.util.Optional;
-
 /**
  * A ghost slot is a slot that can be populated with an item, but that item isn't really real.
  * This item will also only have a originalStack size of one. It can never be more than 1.
@@ -72,17 +70,7 @@ public class GhostMachineSlot extends Slot {
     }
 
     @Override
-    public Optional<ItemStack> tryRemove(int count, int decrement, Player player) {
-        if (!this.allowModification(player) && decrement < this.getItem().getCount()) {
-            return Optional.empty();
-        } else {
-            set(ItemStack.EMPTY);
-            return Optional.empty();
-        }
-    }
-
-    @Override
     public boolean mayPickup(Player playerIn) {
-        return true;
+        return false;
     }
 }
