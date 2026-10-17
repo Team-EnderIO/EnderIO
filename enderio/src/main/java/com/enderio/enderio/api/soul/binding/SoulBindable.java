@@ -46,4 +46,9 @@ public interface SoulBindable {
      * @return whether the new soul was bound. If {@link #canBeBound()} or {@link #isSoulValid(Soul)} return false, this will always false.
      */
     boolean bindSoul(Soul newSoul, TransactionContext transaction);
+
+    @ApiStatus.Experimental
+    default boolean shouldDisplayTooltip() {
+        return true;
+    }
 }
