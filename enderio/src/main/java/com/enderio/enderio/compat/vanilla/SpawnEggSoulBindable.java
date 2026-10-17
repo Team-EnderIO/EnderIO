@@ -8,6 +8,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.component.TypedEntityData;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 public class SpawnEggSoulBindable implements SoulBindable {
@@ -34,16 +35,27 @@ public class SpawnEggSoulBindable implements SoulBindable {
 
     @Override
     public boolean canBeBound() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isSoulValid(Soul soul) {
-        return Soul.isSameEntity(boundSoul(), soul);
+        // Can only ever have a soul bound to it,
+        if (soul.isEmpty() || soul.entityType() == null) {
+            return false;
+        }
+
+        // Must have a spawn egg representation.
+        return SpawnEggItem.byId(soul.entityType()).isPresent();
     }
 
     @Override
     public boolean bindSoul(Soul newSoul, TransactionContext transaction) {
-        return false;
+        if (!canBeBound() || !isSoulValid(newSoul) || newSoul.entityType() == null) {
+            return false;
+        }
+
+        ItemResource newEggResource = ItemResource.of(SpawnEggItem.byId(newSoul.entityType()).orElseThrow());
+        return itemAccess.exchange(newEggResource, 1, transaction) == 1;
     }
 }
