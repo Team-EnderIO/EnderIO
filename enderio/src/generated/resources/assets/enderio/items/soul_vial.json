@@ -9,6 +9,6 @@
       "type": "minecraft:model",
       "model": "enderio:item/soul_vial_filled"
     },
-    "property": "enderio:is_soul_bound"
+    "property": "enderio:has_bindable_soul"
   }
 }

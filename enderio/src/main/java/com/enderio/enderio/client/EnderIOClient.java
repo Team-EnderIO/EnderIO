@@ -79,6 +79,7 @@ import com.enderio.enderio.client.content.travel.TravelTargetRendering;
 import com.enderio.enderio.client.foundation.model.IOConfigRealLevelWorkaroundBlockModel;
 import com.enderio.enderio.client.foundation.model.item.HasFluidItemProperty;
 import com.enderio.enderio.client.foundation.model.item.IsSoulBoundItemProperty;
+import com.enderio.enderio.client.foundation.model.item.HasBindableSoulItemProperty;
 import com.enderio.enderio.client.foundation.particle.RangeParticle;
 import com.enderio.enderio.client.foundation.renderer.feature.GhostBlockModelFeatureRenderer;
 import com.enderio.enderio.client.foundation.widgets.ioconfig.IOConfigSceneRenderState;
@@ -189,6 +190,7 @@ public class EnderIOClient {
     @SubscribeEvent
     public static void registerConditionalProperties(RegisterConditionalItemModelPropertyEvent event) {
         event.register(EnderIO.id("is_soul_bound"), IsSoulBoundItemProperty.MAP_CODEC);
+        event.register(EnderIO.id("has_bindable_soul"), HasBindableSoulItemProperty.MAP_CODEC);
         event.register(EnderIO.id("has_fluid"), HasFluidItemProperty.MAP_CODEC);
         event.register(EnderIO.id("conduit_probe_mode"), ConduitProbeItem.ProbeModeItemProperty.MAP_CODEC);
         event.register(EnderIO.id("enderios_inverted"), EnderiosItem.SoiredneItemProperty.MAP_CODEC);
