@@ -39,6 +39,7 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
 
     private long totalEnergyStored;
     private long totalMaxEnergyStored;
+    private long energyToDistribute;
     private List<BlockPos> positions = new ArrayList<>();
     private long lastSync;
 
@@ -74,6 +75,14 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
 
     public long getTotalMaxEnergyStored() {
         return totalMaxEnergyStored;
+    }
+
+    public void prepareEnergyToDistribute() {
+        this.energyToDistribute = getTotalEnergyStored();
+    }
+
+    private long getEnergyToDistribute() {
+        return energyToDistribute;
     }
 
     public List<BlockPos> positions() {
@@ -250,7 +259,7 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
             c -> c.storage().getMaxEnergyStored() - c.storage().getEnergyStored()
         ));
 
-        long transferred = distributeEnergyEvenlyBetween(getTotalEnergyStored(), validTargets);
+        long transferred = distributeEnergyEvenlyBetween(Math.min(getEnergyToDistribute(), getTotalEnergyStored()), validTargets);
         this.totalEnergyStored = getTotalEnergyStored() - transferred;
     }
 

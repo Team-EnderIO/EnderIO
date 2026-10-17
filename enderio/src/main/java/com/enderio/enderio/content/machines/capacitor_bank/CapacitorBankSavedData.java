@@ -100,10 +100,14 @@ public class CapacitorBankSavedData extends SavedData {
     }
 
     private void tick(ServerLevel serverLevel) {
-        networks.stream()
-            .filter(n -> !n.isValid() || n.isEmpty())
-            .toList() // avoid CME
-            .forEach(n -> onNetworkDiscarded(serverLevel, n));
+        // avoid CME
+        for (CapacitorBankNetwork network : networks.stream().toList()) {
+            if (!network.isValid() || network.isEmpty()) {
+                onNetworkDiscarded(serverLevel, network);
+            } else {
+                network.prepareEnergyToDistribute();
+            }
+        }
 
         for (var network : networks) {
             network.tick(serverLevel);
