@@ -221,6 +221,14 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) im
         return BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
     }
 
+    public ResourceKey<EntityType<?>> entityTypeKey() {
+        if (isEmpty()) {
+            throw new IllegalStateException("Cannot get Entity Type Key from empty StoredEntityData");
+        }
+
+        return BuiltInRegistries.ENTITY_TYPE.getResourceKey(entityType).orElseThrow();
+    }
+
     public CompoundTag getEntityTagWithId() {
         var tag = entityTag.copy();
         tag.putString(Entity.TAG_ID, entityTypeId().toString());

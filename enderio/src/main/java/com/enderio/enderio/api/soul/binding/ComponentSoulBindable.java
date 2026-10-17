@@ -36,8 +36,9 @@ public class ComponentSoulBindable implements SoulBindable {
             return false;
         }
 
-        ItemResource newlyBoundResource = itemAccess.getResource().with(componentType, newSoul);;
-        itemAccess.exchange(newlyBoundResource, 1, transaction);
-        return true;
+        ItemResource newlyBoundResource = itemAccess.getResource().with(componentType, newSoul);
+
+        // Ensure we were able to exchange the current item for the new one.
+        return itemAccess.exchange(newlyBoundResource, 1, transaction) == 1;
     }
 }
