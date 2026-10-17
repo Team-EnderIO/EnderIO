@@ -6,7 +6,7 @@ import com.enderio.enderio.client.content.conduits.model.facades.port.FacadeItem
 import com.enderio.enderio.client.content.fluid_tank.FluidTankItemRenderer;
 import com.enderio.enderio.client.content.paint.model.port.PaintedItemModel;
 import com.enderio.enderio.client.foundation.model.item.HasFluidItemProperty;
-import com.enderio.enderio.client.foundation.model.item.IsSoulBoundItemProperty;
+import com.enderio.enderio.client.foundation.model.item.HasBindableSoulItemProperty;
 import com.enderio.enderio.content.conduits.facades.ConduitFacadeItem;
 import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
 import com.enderio.enderio.content.fun.EnderiosItem;
@@ -320,7 +320,7 @@ public class EIOItemModelProvider extends ModelProvider {
     public void generateSoulVial(ItemModelGenerators itemModelGenerators, Item item) {
         ItemModel.Unbaked plain = ItemModelUtils.plainModel(itemModelGenerators.createFlatItemModel(item, ModelTemplates.FLAT_ITEM));
         ItemModel.Unbaked filled = ItemModelUtils.plainModel(itemModelGenerators.createFlatItemModel(item, "_filled", ModelTemplates.FLAT_ITEM));
-        itemModelGenerators.itemModelOutput.accept(item, ItemModelUtils.conditional(new IsSoulBoundItemProperty(), filled, plain));
+        itemModelGenerators.itemModelOutput.accept(item, ItemModelUtils.conditional(new HasBindableSoulItemProperty(), filled, plain));
     }
 
     public void generateVoidVial(ItemModelGenerators itemModelGenerators, Item item) {
