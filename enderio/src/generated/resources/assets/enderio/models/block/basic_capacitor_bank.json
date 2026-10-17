@@ -1,0 +1,23 @@
+{
+  "parent": "minecraft:block/block",
+  "children": {
+    "block": {
+      "parent": "minecraft:block/cube_all",
+      "render_type": "minecraft:solid",
+      "textures": {
+        "all": "enderio:block/basic_capacitor_bank"
+      }
+    },
+    "overlay": {
+      "parent": "enderio:block/io_overlay"
+    }
+  },
+  "item_render_order": [
+    "overlay",
+    "block"
+  ],
+  "loader": "neoforge:composite",
+  "textures": {
+    "particle": "enderio:block/basic_capacitor_bank"
+  }
+}

@@ -4,6 +4,7 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.datagen.client.EIOLanguageProvider;
+import com.enderio.enderio.datagen.client.models.AthenaCapacitorBankBlockStateProvider;
 import com.enderio.enderio.datagen.client.models.EIOBlockStateProvider;
 import com.enderio.enderio.datagen.client.models.EIOItemModelProvider;
 import com.enderio.enderio.datagen.client.models.block.AthenaProvider;
@@ -23,11 +24,17 @@ import com.enderio.enderio.datagen.common.tags.EIOBlockTagsProvider;
 import com.enderio.enderio.datagen.common.tags.EIOEntityTagsProvider;
 import com.enderio.enderio.datagen.common.tags.EIOFluidTagsProvider;
 import com.enderio.enderio.datagen.common.tags.EIOItemTagsProvider;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
+import net.minecraft.DetectedVersion;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
+import net.minecraft.data.metadata.PackMetadataGenerator;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
@@ -38,6 +45,7 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
@@ -90,7 +98,13 @@ public class EnderIODataGen {
         generator.addProvider(event.includeClient(), new EIOBlockStateProvider(packOutput, existingFileHelper));
         generator.addProvider(event.includeClient(), new EIOLanguageProvider(packOutput));
         generator.addProvider(event.includeClient(), new EIOSoundDefinitionProvider(packOutput, existingFileHelper));
-        generator.addProvider(event.includeClient(), new AthenaProvider(packOutput));
+
+        var athenaPack = generator.getPackGenerator(event.includeClient(), "enderio_athena", EnderIO.ATHENA_RESOURCE_PACK_PATH);
+        athenaPack.addProvider(output -> new AthenaCapacitorBankBlockStateProvider(output, existingFileHelper));
+        athenaPack.addProvider(AthenaProvider::new);
+        athenaPack.addProvider(output -> new PackMetadataGenerator(output).add(PackMetadataSection.TYPE,
+            new PackMetadataSection(EIOCommonLang.RESOURCE_PACK_ATHENA,
+                DetectedVersion.BUILT_IN.getPackVersion(PackType.CLIENT_RESOURCES), Optional.empty())));
     }
 
     private static RegistrySetBuilder createDatapackEntriesBuilder() {
