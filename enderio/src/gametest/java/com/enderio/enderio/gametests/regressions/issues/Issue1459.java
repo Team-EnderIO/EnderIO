@@ -9,13 +9,13 @@ import com.enderio.enderio.init.EIOConduits;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOItems;
 import net.minecraft.core.Direction;
-import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.testframework.DynamicTest;
 import net.neoforged.testframework.annotation.ForEachTest;
 import net.neoforged.testframework.annotation.TestHolder;
+import net.neoforged.testframework.gametest.GameTest;
 import net.neoforged.testframework.gametest.StructureTemplateBuilder;
 
 @ForEachTest(groups = "regression.issue1459")
@@ -53,11 +53,11 @@ public class Issue1459 {
 
             helper.startSequence()
                 // Clear and place the conduit between the source and destination chests.
-                .thenExecute(() -> helper.setBlock(0, 1, 1, Blocks.AIR))
-                .thenExecute(() -> helper.placeConduit(itemConduit, 0, 1, 1))
+                .thenExecute(() -> helper.setBlock(0, 0, 1, Blocks.AIR))
+                .thenExecute(() -> helper.placeConduit(itemConduit, 0, 0, 1))
                 // Extract from the source chest and insert into the destination chest.
                 .thenExecute(() -> {
-                    var bundle = helper.getConduitBundle(0, 1, 1, false);
+                    var bundle = helper.getConduitBundle(0, 0, 1, false);
                     bundle.setConnectionConfig(itemConduit, Direction.NORTH,
                         ItemConduitConnectionConfig.DEFAULT.withIsExtract(true).withIsInsert(false)
                             .withExtractRedstoneControl(RedstoneControl.ALWAYS_ACTIVE));
@@ -67,13 +67,13 @@ public class Issue1459 {
                     int filterSlot = insertFilter ? ItemConduit.INSERT_FILTER_SLOT : ItemConduit.EXTRACT_FILTER_SLOT;
                     bundle.getConnectionInventory(itemConduit, filterSide).setStackInSlot(filterSlot, filterStack);
                 })
-                .thenExecute(() -> helper.insertIntoContainer(0, 1, 0, Items.COBBLESTONE, 64))
+                .thenExecute(() -> helper.insertIntoContainer(0, 0, 0, Items.COBBLESTONE, 64))
                 // Allow enough network cycles for the permitted stock to transfer.
                 .thenExecuteAfter(tickRate * 2, () -> {
                     int expectedSourceCount = insertFilter ? 64 - stockLimit : stockLimit;
                     int expectedDestinationCount = insertFilter ? stockLimit : 64 - stockLimit;
-                    helper.assertContainerHasExactly(0, 1, 0, Items.COBBLESTONE, expectedSourceCount);
-                    helper.assertContainerHasExactly(0, 1, 2, Items.COBBLESTONE, expectedDestinationCount);
+                    helper.assertContainerHasExactly(0, 0, 0, Items.COBBLESTONE, expectedSourceCount);
+                    helper.assertContainerHasExactly(0, 0, 2, Items.COBBLESTONE, expectedDestinationCount);
                 })
                 .thenSucceed();
         });

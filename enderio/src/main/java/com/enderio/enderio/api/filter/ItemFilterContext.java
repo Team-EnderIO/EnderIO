@@ -1,5 +1,6 @@
 package com.enderio.enderio.api.filter;
 
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
-public record ItemFilterContext(IItemHandler target, ItemFilterDirection direction) {}
+public record ItemFilterContext(ResourceHandler<ItemResource> target, ItemFilterDirection direction) {}
