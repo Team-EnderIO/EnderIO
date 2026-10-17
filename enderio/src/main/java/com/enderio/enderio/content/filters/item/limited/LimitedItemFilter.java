@@ -3,6 +3,8 @@ package com.enderio.enderio.content.filters.item.limited;
 import com.enderio.core.common.serialization.OrderedListCodec;
 import com.enderio.core.common.util.EqualityUtil;
 import com.enderio.enderio.api.filter.ItemFilter;
+import com.enderio.enderio.api.filter.ItemFilterContext;
+import com.enderio.enderio.api.filter.ItemFilterDirection;
 import com.enderio.enderio.content.filters.item.ItemFilterUtils;
 import com.enderio.enderio.content.filters.item.general.DamageFilterMode;
 import com.mojang.serialization.Codec;
@@ -67,6 +69,11 @@ public record LimitedItemFilter(NonNullList<ItemStack> matches, boolean shouldCo
 
     @Override
     public ItemStack test(@Nullable ResourceHandler<ItemResource> target, ItemStack stack) {
+        return test(stack, target == null ? null : new ItemFilterContext(target, ItemFilterDirection.INSERT));
+    }
+
+    @Override
+    public ItemStack test(ItemStack stack, @Nullable ItemFilterContext targetContext) {
         if (!damageFilterMode.test(stack)) {
             return ItemStack.EMPTY;
         }
@@ -84,7 +91,7 @@ public record LimitedItemFilter(NonNullList<ItemStack> matches, boolean shouldCo
                 continue;
             }
 
-            if (target == null) {
+            if (targetContext == null) {
                 return stack;
             }
 
@@ -93,8 +100,8 @@ public record LimitedItemFilter(NonNullList<ItemStack> matches, boolean shouldCo
 
             // Count how many matching items are currently in the target
             int currentCount = 0;
-            for (int i = 0; i < target.size(); i++) {
-                ItemStack inSlot = target.getResource(i).toStack(target.getAmountAsInt(i));
+            for (int i = 0; i < targetContext.target().size(); i++) {
+                ItemStack inSlot = targetContext.target().getResource(i).toStack(targetContext.target().getAmountAsInt(i));
                 if (!inSlot.isEmpty() && ItemStack.isSameItem(match, inSlot)) {
                     if (!shouldCompareComponents || ItemFilterUtils.doComponentsMatch(match, inSlot)) {
                         currentCount += inSlot.getCount();
@@ -102,7 +109,10 @@ public record LimitedItemFilter(NonNullList<ItemStack> matches, boolean shouldCo
                 }
             }
 
-            int available = limit - currentCount;
+            int available = targetContext.direction() == ItemFilterDirection.INSERT
+                ? limit - currentCount
+                : currentCount - limit;
+
             if (available <= 0) {
                 return ItemStack.EMPTY;
             }

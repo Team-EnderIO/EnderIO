@@ -83,6 +83,6 @@ public class GhostMachineSlot extends Slot {
 
     @Override
     public boolean mayPickup(Player playerIn) {
-        return true;
+        return false;
     }
 }
