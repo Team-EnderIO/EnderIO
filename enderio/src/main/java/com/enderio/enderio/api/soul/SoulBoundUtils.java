@@ -3,6 +3,7 @@ package com.enderio.enderio.api.soul;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.soul.binding.SoulBindable;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Optional;
@@ -15,7 +16,7 @@ import java.util.Optional;
 public class SoulBoundUtils {
     /**
      * Test whether the {@code itemStack} supports soul binding.
-     * @implNote This tests both whether the {@code itemStack} supports the capability and that {@link SoulBindable#canBind()} is true.
+     * @implNote This tests both whether the {@code itemStack} supports the capability and that {@link SoulBindable#canBeBound()} is true.
      * @param itemStack the item to test.
      * @return whether the item can be bound.
      */
@@ -25,7 +26,7 @@ public class SoulBoundUtils {
             return false;
         }
 
-        return soulBindable.canBind();
+        return soulBindable.canBeBound();
     }
 
     /**
@@ -40,7 +41,7 @@ public class SoulBoundUtils {
             return false;
         }
 
-        return soulBindable.canBind() && soulBindable.isSoulValid(soul);
+        return soulBindable.canBeBound() && soulBindable.isSoulValid(soul);
     }
 
     /**
@@ -54,7 +55,7 @@ public class SoulBoundUtils {
             return Soul.EMPTY;
         }
 
-        return soulBindable.getBoundSoul();
+        return soulBindable.boundSoul();
     }
 
     /**
@@ -68,7 +69,7 @@ public class SoulBoundUtils {
             return false;
         }
 
-        return soulBindable.hasSoul();
+        return soulBindable.isBound();
     }
 
     /**
@@ -84,7 +85,7 @@ public class SoulBoundUtils {
         }
 
         // Short-circuit if we're already bound.
-        if (Soul.isSameEntitySameTag(soulBindable.getBoundSoul(), soul)) {
+        if (Soul.isSameEntitySameTag(soulBindable.boundSoul(), soul)) {
             return true;
         }
 
@@ -98,12 +99,18 @@ public class SoulBoundUtils {
      * @return whether the binding was successful
      */
     public static boolean tryBindSoul(SoulBindable soulBindable, Soul soul) {
-        if (!soulBindable.canBind() || !soulBindable.isSoulValid(soul)) {
+        if (!soulBindable.canBeBound() || !soulBindable.isSoulValid(soul)) {
             return false;
         }
 
-        soulBindable.bindSoul(soul);
-        return true;
+        try (Transaction transaction = Transaction.openRoot()) {
+            if (soulBindable.bindSoul(soul, transaction)) {
+                transaction.commit();
+                return true;
+            }
+
+            return false;
+        }
     }
 
     /**

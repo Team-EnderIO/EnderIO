@@ -15,8 +15,8 @@ public class SoulBoundServerDataProvider implements StreamServerDataProvider<Blo
     @Override
     public @Nullable EntityType<?> streamData(BlockAccessor blockAccessor) {
         var soulBindable = blockAccessor.getLevel().getCapability(EnderIOCapabilities.SOUL_BINDABLE_BLOCK, blockAccessor.getPosition());
-        if (soulBindable != null && soulBindable.hasSoul()) {
-            return soulBindable.getBoundSoul().entityType();
+        if (soulBindable != null && soulBindable.isBound()) {
+            return soulBindable.boundSoul().entityType();
         }
 
         return null;

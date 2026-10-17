@@ -11,7 +11,7 @@ public class SoulBindableSubtypeInterpreter implements ISubtypeInterpreter<ItemS
     public @Nullable Object getSubtypeData(ItemStack ingredient, UidContext context) {
         var soulBindable = ingredient.getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
         if (soulBindable != null) {
-            return soulBindable.getBoundSoul();
+            return soulBindable.boundSoul();
         }
 
         return null;

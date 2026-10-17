@@ -51,6 +51,8 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.common.extensions.IOwnedSpawner;
 import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
@@ -73,6 +75,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     public static final int ACTION_RANGE = 4;
 
     private Soul boundSoul = Soul.EMPTY;
+    private final SoulJournal soulJournal = new SoulJournal();
     private SpawnerBlockedReason reason = SpawnerBlockedReason.NONE;
     private final MachineTaskHost taskHost;
 
@@ -281,7 +284,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
 
         return switch (spawnType) {
             case NEW -> Soul.of(entityType);
-            case COPY -> getBoundSoul().copy();
+            case COPY -> boundSoul().copy();
         };
     }
 
@@ -312,12 +315,12 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     }
 
     @Override
-    public Soul getBoundSoul() {
+    public Soul boundSoul() {
         return boundSoul;
     }
 
     @Override
-    public boolean canBind() {
+    public boolean canBeBound() {
         return true;
     }
 
@@ -327,9 +330,14 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     }
 
     @Override
-    public void bindSoul(Soul newSoul) {
-        this.boundSoul = newSoul;
-        taskHost.newTaskAvailable();
+    public boolean bindSoul(Soul newSoul, TransactionContext transaction) {
+        if (!canBeBound() || !isSoulValid(newSoul)) {
+            return false;
+        }
+
+        soulJournal.updateSnapshots(transaction);
+        boundSoul = newSoul;
+        return true;
     }
 
     // TODO: I want a better way to handle this, but unsure what that could be.
@@ -452,6 +460,25 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
 
         public MutableComponent getComponent() {
             return component;
+        }
+    }
+
+    private class SoulJournal extends SnapshotJournal<Soul> {
+        @Override
+        protected Soul createSnapshot() {
+            return boundSoul;
+        }
+
+        @Override
+        protected void revertToSnapshot(Soul snapshot) {
+            boundSoul = snapshot;
+        }
+
+        @Override
+        protected void onRootCommit(Soul originalState) {
+            super.onRootCommit(originalState);
+            taskHost.newTaskAvailable();
+            setChanged();
         }
     }
 }

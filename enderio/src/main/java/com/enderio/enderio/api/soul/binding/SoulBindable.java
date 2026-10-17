@@ -2,10 +2,12 @@ package com.enderio.enderio.api.soul.binding;
 
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.api.soul.storage.SoulHandler;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jetbrains.annotations.ApiStatus;
 
 /**
- * Intended for items that can be soul-bound, like machines or single-soul things like vials.
+ * Intended for things that can be bound to a soul.
+ * This means the soul becomes irretrievable - the soul can only be overwritten.
  * @see SoulHandler for soul storage handling.
  */
 @ApiStatus.Experimental
@@ -15,20 +17,21 @@ public interface SoulBindable {
     /**
      * @return the currently bound soul, or {@link Soul#EMPTY}.
      */
-    Soul getBoundSoul();
+    Soul boundSoul();
 
     /**
      * @return whether this item has a bound soul.
      */
-    default boolean hasSoul() {
-        return getBoundSoul().hasEntity();
+    @ApiStatus.NonExtendable
+    default boolean isBound() {
+        return boundSoul().hasEntity();
     }
 
     /**
      * @implNote This also controls whether Ender IO adds a tooltip to show the soul binding status.
      * @return whether this item can be rebound.
      */
-    boolean canBind();
+    boolean canBeBound();
 
     /**
      * Whether this soul is valid for this item.
@@ -38,10 +41,10 @@ public interface SoulBindable {
     boolean isSoulValid(Soul soul);
 
     /**
-     * Bind (or rebind) the soul on this item.
+     * Bind (or rebind) the soul.
      * @param newSoul the soul to bind.
-     * @throws IllegalArgumentException if the soul is not valid for this item.
-     * @throws UnsupportedOperationException if the item cannot be rebound.
+     * @param transaction transaction context.
+     * @return whether the new soul was bound. If {@link #canBeBound()} or {@link #isSoulValid(Soul)} return false, this will always false.
      */
-    void bindSoul(Soul newSoul);
+    boolean bindSoul(Soul newSoul, TransactionContext transaction);
 }

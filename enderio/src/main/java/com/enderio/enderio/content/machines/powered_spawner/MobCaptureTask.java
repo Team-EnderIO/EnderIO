@@ -4,7 +4,6 @@ import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.soul.Soul;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 
@@ -91,8 +90,8 @@ public class MobCaptureTask extends PoweredSpawnerTask {
 
     private Soul getSoulForCapture() {
         return switch (spawnMode()) {
-        case NEW -> blockEntity.getBoundSoul().copyOnlyType();
-        case COPY -> blockEntity.getBoundSoul().copy();
+        case NEW -> blockEntity.boundSoul().copyOnlyType();
+        case COPY -> blockEntity.boundSoul().copy();
         };
     }
 }

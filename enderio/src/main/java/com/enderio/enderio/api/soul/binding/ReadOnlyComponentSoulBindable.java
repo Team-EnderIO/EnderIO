@@ -3,6 +3,7 @@ package com.enderio.enderio.api.soul.binding;
 import com.enderio.enderio.api.soul.Soul;
 import net.minecraft.core.component.DataComponentType;
 import net.neoforged.neoforge.common.MutableDataComponentHolder;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 public class ReadOnlyComponentSoulBindable implements SoulBindable {
 
@@ -15,12 +16,12 @@ public class ReadOnlyComponentSoulBindable implements SoulBindable {
     }
 
     @Override
-    public Soul getBoundSoul() {
+    public Soul boundSoul() {
         return parent.getOrDefault(componentType, Soul.EMPTY);
     }
 
     @Override
-    public boolean canBind() {
+    public boolean canBeBound() {
         return false;
     }
 
@@ -30,7 +31,7 @@ public class ReadOnlyComponentSoulBindable implements SoulBindable {
     }
 
     @Override
-    public void bindSoul(Soul newSoul) {
-        throw new UnsupportedOperationException("Cannot rebind this item.");
+    public boolean bindSoul(Soul newSoul, TransactionContext transaction) {
+        return false;
     }
 }

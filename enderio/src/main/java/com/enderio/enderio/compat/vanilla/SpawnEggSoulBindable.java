@@ -7,6 +7,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.component.TypedEntityData;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 public class SpawnEggSoulBindable implements SoulBindable {
     private final ItemStack spawnEgg;
@@ -16,7 +17,7 @@ public class SpawnEggSoulBindable implements SoulBindable {
     }
 
     @Override
-    public Soul getBoundSoul() {
+    public Soul boundSoul() {
         if (!(spawnEgg.getItem() instanceof SpawnEggItem)) {
             return Soul.EMPTY;
         }
@@ -31,17 +32,17 @@ public class SpawnEggSoulBindable implements SoulBindable {
     }
 
     @Override
-    public boolean canBind() {
+    public boolean canBeBound() {
         return false;
     }
 
     @Override
     public boolean isSoulValid(Soul soul) {
-        return Soul.isSameEntity(getBoundSoul(), soul);
+        return Soul.isSameEntity(boundSoul(), soul);
     }
 
     @Override
-    public void bindSoul(Soul newSoul) {
-        throw new UnsupportedOperationException("Cannot bind a spawn egg to a soul");
+    public boolean bindSoul(Soul newSoul, TransactionContext transaction) {
+        return false;
     }
 }

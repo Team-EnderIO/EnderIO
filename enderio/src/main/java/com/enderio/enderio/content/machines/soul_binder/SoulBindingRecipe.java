@@ -2,7 +2,6 @@ package com.enderio.enderio.content.machines.soul_binder;
 
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.enderio.api.EnderIOCapabilities;
-import com.enderio.enderio.api.network.MassiveStreamCodec;
 import com.enderio.enderio.api.soul.ingredient.SoulIngredient;
 import com.enderio.enderio.foundation.MachineRecipe;
 import com.enderio.enderio.foundation.recipe.FluidRecipeInput;
@@ -12,16 +11,12 @@ import com.enderio.enderio.init.EIOItems;
 import com.enderio.enderio.init.EIORecipeBookCategories;
 import com.enderio.enderio.init.EIORecipeTypes;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.Identifier;
-import net.minecraft.util.StringRepresentable;
-import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
@@ -35,11 +30,10 @@ import net.minecraft.world.item.crafting.display.RecipeDisplay;
 import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Input> {
     private static final MapCodec<SoulBindingRecipe> MAP_CODEC = RecordCodecBuilder.<SoulBindingRecipe>mapCodec(instance -> instance
@@ -122,7 +116,11 @@ public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.
         var resultSoulBinding = result.getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
 
         if (vialSoulBindable != null && resultSoulBinding != null) {
-            resultSoulBinding.bindSoul(vialSoulBindable.getBoundSoul());
+            // TODO: Maybe determine the result in the ctor?
+            try (Transaction transaction = Transaction.openRoot()) {
+                resultSoulBinding.bindSoul(vialSoulBindable.boundSoul(), transaction);
+                transaction.commit();
+            }
         }
 
         return results;
@@ -155,11 +153,11 @@ public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.
         }
 
         var soulBindable = recipeInput.getItem(0).getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
-        if (soulBindable == null || !soulBindable.hasSoul()) {
+        if (soulBindable == null || !soulBindable.isBound()) {
             return false;
         }
 
-        var soul = soulBindable.getBoundSoul();
+        var soul = soulBindable.boundSoul();
         if (!inputSoul.test(soul)) {
             return false;
         }

@@ -70,7 +70,7 @@ public class ShapedEntityStorageCategoryExtension implements ICraftingCategoryEx
 
             if (outputSoulBindable != null) {
                 results = List.of(itemStack);
-                Soul soul = outputSoulBindable.getBoundSoul();
+                Soul soul = outputSoulBindable.boundSoul();
 
                 if (soul != Soul.EMPTY) {
                     noData = false;

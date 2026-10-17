@@ -36,6 +36,7 @@ public class EnderIOCapabilities {
     public static final ItemCapability<SoulFilter, Void> SOUL_FILTER = ItemCapability
         .createVoid(EnderIOAPI.rl("soul_filter"), SoulFilter.class);
 
+    // TODO: Needs to swap to have ItemAccess context.
     public static final ItemCapability<SoulBindable, Void> SOUL_BINDABLE_ITEM = ItemCapability
         .createVoid(EnderIOAPI.rl("soul_bindable"), SoulBindable.class);
 
@@ -43,8 +44,8 @@ public class EnderIOCapabilities {
         .createVoid(EnderIOAPI.rl("soul_bindable"), SoulBindable.class);
 
     // TODO: Convert to ResourceHandler
-    public static final ItemCapability<com.enderio.enderio.api.soul.storage.SoulHandler, Void> SOUL_HANDLER_ITEM = ItemCapability
-        .createVoid(EnderIOAPI.rl("soul_handler"), com.enderio.enderio.api.soul.storage.SoulHandler.class);
+    public static final ItemCapability<SoulHandler, Void> SOUL_HANDLER_ITEM = ItemCapability
+        .createVoid(EnderIOAPI.rl("soul_handler"), SoulHandler.class);
 
     public static final BlockCapability<SoulHandler, @Nullable Direction> SOUL_HANDLER_BLOCK = BlockCapability
         .createSided(EnderIOAPI.rl("soul_handler"), SoulHandler.class);

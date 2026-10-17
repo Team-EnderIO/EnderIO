@@ -50,7 +50,9 @@ import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.energy.EnergyHandlerUtil;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jspecify.annotations.Nullable;
 
 @EventBusSubscriber
@@ -71,6 +73,8 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     public static final SingleResourceSlotKey<ItemResource> CAPACITOR = new SingleResourceSlotKey<>();
 
     private Soul boundSoul = Soul.EMPTY;
+
+    private final SoulJournal soulJournal = new SoulJournal();
     public static final int FLUID_CAPACITY = 2 * FluidType.BUCKET_VOLUME;
 
     public static final SingleResourceSlotKey<FluidResource> TANK = new SingleResourceSlotKey<>();
@@ -170,12 +174,12 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     }
 
     @Override
-    public Soul getBoundSoul() {
+    public Soul boundSoul() {
         return boundSoul;
     }
 
     @Override
-    public boolean canBind() {
+    public boolean canBeBound() {
         return true;
     }
 
@@ -185,9 +189,14 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     }
 
     @Override
-    public void bindSoul(Soul newSoul) {
-        this.boundSoul = newSoul;
-        soulData = boundSoul.entityType().builtInRegistryHolder().getData(EIODataMaps.ENGINE_SOUL);
+    public boolean bindSoul(Soul newSoul, TransactionContext transaction) {
+        if (!canBeBound() || !isSoulValid(newSoul)) {
+            return false;
+        }
+
+        soulJournal.updateSnapshots(transaction);
+        boundSoul = newSoul;
+        return true;
     }
 
     @Override
@@ -317,4 +326,23 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     static void onReload(OnDatapackSyncEvent event) {
         reload = !reload;
     } //TODO verify this loads properly
+
+    private class SoulJournal extends SnapshotJournal<Soul> {
+        @Override
+        protected Soul createSnapshot() {
+            return boundSoul;
+        }
+
+        @Override
+        protected void revertToSnapshot(Soul snapshot) {
+            boundSoul = snapshot;
+        }
+
+        @Override
+        protected void onRootCommit(Soul originalState) {
+            super.onRootCommit(originalState);
+            soulData = boundSoul.entityType().builtInRegistryHolder().getData(EIODataMaps.ENGINE_SOUL);
+            setChanged();
+        }
+    }
 }

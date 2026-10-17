@@ -27,6 +27,8 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 import java.util.EnumMap;
 import java.util.HashSet;
@@ -48,6 +50,7 @@ public class SolarPanelBlockEntity extends EIOBlockEntity implements SoulBindabl
     private boolean isValidPushTargetCacheDirty = true;
 
     private Soul boundSoul = Soul.EMPTY;
+    private final SoulJournal soulJournal = new SoulJournal();
 
     public SolarPanelBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState, ISolarPanelTier tier) {
         super(type, worldPosition, blockState);
@@ -136,12 +139,12 @@ public class SolarPanelBlockEntity extends EIOBlockEntity implements SoulBindabl
     // region Soul Bindable
 
     @Override
-    public Soul getBoundSoul() {
+    public Soul boundSoul() {
         return boundSoul;
     }
 
     @Override
-    public boolean canBind() {
+    public boolean canBeBound() {
         return true;
     }
 
@@ -151,10 +154,14 @@ public class SolarPanelBlockEntity extends EIOBlockEntity implements SoulBindabl
     }
 
     @Override
-    public void bindSoul(Soul newSoul) {
-        Preconditions.checkArgument(isSoulValid(newSoul), "Soul is not valid for this block");
-        this.boundSoul = newSoul;
-        setChanged();
+    public boolean bindSoul(Soul newSoul, TransactionContext transaction) {
+        if (!canBeBound() || !isSoulValid(newSoul)) {
+            return false;
+        }
+
+        soulJournal.updateSnapshots(transaction);
+        boundSoul = newSoul;
+        return true;
     }
 
     // endregion
@@ -362,4 +369,22 @@ public class SolarPanelBlockEntity extends EIOBlockEntity implements SoulBindabl
     }
 
     // endregion
+
+    private class SoulJournal extends SnapshotJournal<Soul> {
+        @Override
+        protected Soul createSnapshot() {
+            return boundSoul;
+        }
+
+        @Override
+        protected void revertToSnapshot(Soul snapshot) {
+            boundSoul = snapshot;
+        }
+
+        @Override
+        protected void onRootCommit(Soul originalState) {
+            super.onRootCommit(originalState);
+            setChanged();
+        }
+    }
 }

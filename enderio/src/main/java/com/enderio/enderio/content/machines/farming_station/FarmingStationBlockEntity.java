@@ -57,7 +57,9 @@ import net.neoforged.neoforge.common.SpecialPlantable;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -83,7 +85,9 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     @Nullable
     private FarmTask currentTask = null;
 
+    // TODO: Should have a soul bindable thing we put on BEs to reduce duplication here.
     private Soul boundSoul = Soul.EMPTY;
+    private final SoulJournal soulJournal = new SoulJournal();
 
     private ActionRange actionRange = DEFAULT_RANGE;
 
@@ -415,12 +419,12 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     }
 
     @Override
-    public Soul getBoundSoul() {
+    public Soul boundSoul() {
         return boundSoul;
     }
 
     @Override
-    public boolean canBind() {
+    public boolean canBeBound() {
         return true;
     }
 
@@ -430,8 +434,14 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     }
 
     @Override
-    public void bindSoul(Soul newSoul) {
-        this.boundSoul = newSoul;
+    public boolean bindSoul(Soul newSoul, TransactionContext transaction) {
+        if (!canBeBound() || !isSoulValid(newSoul)) {
+            return false;
+        }
+
+        soulJournal.updateSnapshots(transaction);
+        boundSoul = newSoul;
+        return true;
     }
 
     @Nullable
@@ -491,6 +501,24 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
 
         if (boundSoul.hasEntity()) {
             components.set(EIODataComponents.SOUL, boundSoul);
+        }
+    }
+
+    private class SoulJournal extends SnapshotJournal<Soul> {
+        @Override
+        protected Soul createSnapshot() {
+            return boundSoul;
+        }
+
+        @Override
+        protected void revertToSnapshot(Soul snapshot) {
+            boundSoul = snapshot;
+        }
+
+        @Override
+        protected void onRootCommit(Soul originalState) {
+            super.onRootCommit(originalState);
+            setChanged();
         }
     }
 }

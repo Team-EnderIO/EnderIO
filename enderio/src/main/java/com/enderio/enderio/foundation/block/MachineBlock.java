@@ -5,7 +5,6 @@ import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.api.soul.binding.SoulBindable;
 import com.enderio.enderio.api.soul.storage.SoulHandler;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
@@ -17,7 +16,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -26,7 +24,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import org.apache.commons.lang3.NotImplementedException;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
@@ -97,28 +95,5 @@ public class MachineBlock<T extends MachineBlockEntity> extends EIOEntityBlock<T
         if (placer instanceof Player player && level.getBlockEntity(pos) instanceof MachineBlockEntity machine) {
             machine.setMachineOwner(player.getUUID());
         }
-    }
-
-    @Override
-    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
-        BlockHitResult hitResult) {
-        if (!player.getAbilities().instabuild) {
-            return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
-        }
-
-        SoulBindable soulBindable = level.getCapability(EnderIOCapabilities.SOUL_BINDABLE_BLOCK, pos);
-        if (soulBindable != null && soulBindable.canBind()) {
-            SoulHandler soulHandler = stack.getCapability(EnderIOCapabilities.SOUL_HANDLER_ITEM);
-            if (soulHandler != null) {
-                for (int i = 0; i < soulHandler.getSlots(); i++) {
-                    Soul soul = soulHandler.getSoulInSlot(i);
-                    if (!soul.isEmpty() && soulBindable.isSoulValid(soul)) {
-                        soulBindable.bindSoul(soul.copy());
-                        return InteractionResult.SUCCESS;
-                    }
-                }
-            }
-        }
-        return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
     }
 }
