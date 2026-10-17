@@ -10,7 +10,6 @@ import org.jetbrains.annotations.ApiStatus;
  * This means the soul becomes irretrievable - the soul can only be overwritten.
  * @see SoulHandler for soul storage handling.
  */
-@ApiStatus.Experimental
 @ApiStatus.AvailableSince("8.0")
 public interface SoulBindable {
 
