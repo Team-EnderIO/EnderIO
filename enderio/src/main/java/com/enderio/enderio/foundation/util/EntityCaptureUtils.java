@@ -57,7 +57,7 @@ public class EntityCaptureUtils {
      * @param type EntityType to be checked
      * @return the status on how this entity should be handled for capture
      */
-    public static CapturableStatus getCapturableStatus(EntityType<? extends LivingEntity> type) {
+    public static CapturableStatus getCapturableStatus(EntityType<?> type) {
         if (!type.canSerialize()) {
             return CapturableStatus.INCOMPATIBLE;
         }

@@ -15,18 +15,6 @@ public final class SingleSlotSoulHandlerBindableSoulSource implements BindableSo
     }
 
     @Override
-    public boolean isSoulAvailable() {
-        var soulHandler = itemAccess.getCapability(EnderIOCapabilities.Soul.ITEM);
-
-        // Ensure we have a soul handler and it has a single slot.
-        if (soulHandler == null || soulHandler.size() != 1) {
-            return false;
-        }
-
-        return !soulHandler.getResource(0).isEmpty();
-    }
-
-    @Override
     public Soul availableSoul() {
         var soulHandler = itemAccess.getCapability(EnderIOCapabilities.Soul.ITEM);
 
@@ -35,8 +23,8 @@ public final class SingleSlotSoulHandlerBindableSoulSource implements BindableSo
             return Soul.EMPTY;
         }
 
-        SoulResource soulToExtract = soulHandler.getResource(0);
-        return soulToExtract.toSoul();
+        SoulResource soul = soulHandler.getResource(0);
+        return soul.toSoul();
     }
 
     @Override
