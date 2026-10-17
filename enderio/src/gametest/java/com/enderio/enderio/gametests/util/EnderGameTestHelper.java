@@ -206,7 +206,7 @@ public class EnderGameTestHelper extends ExtendedGameTestHelper {
     /**
      * Provide energy to a block entity by directly accessing its energy capability.
      */
-    public void provideEnergy(int x, int y, int z, int amount) {
+    public void provideEnergyExact(int x, int y, int z, int amount) {
         var energyHandler = getLevel().getCapability(Capabilities.EnergyStorage.BLOCK, absolutePos(new BlockPos(x, y, z)), null);
         if (energyHandler == null) {
             throw new GameTestAssertException("No energy handler at " + x + "," + y + "," + z);
@@ -226,6 +226,24 @@ public class EnderGameTestHelper extends ExtendedGameTestHelper {
         if (inserted != amount) {
             throw new GameTestAssertException("Could not insert all " + amount + " energy into block at " + x + "," + y + "," + z + ", only inserted " + inserted);
         }
+    }
+
+    /**
+     * Provide energy to a block entity by directly accessing its energy capability.
+     */
+    public void provideEnergy(int x, int y, int z, int amount) {
+        var energyHandler = getLevel().getCapability(Capabilities.EnergyStorage.BLOCK, absolutePos(new BlockPos(x, y, z)), null);
+        if (energyHandler == null) {
+            throw new GameTestAssertException("No energy handler at " + x + "," + y + "," + z);
+        }
+
+        // Short path for MachineEnergyHandler to avoid insertion limits.
+        if (energyHandler instanceof IMachineEnergyStorage machineEnergyStorage) {
+            machineEnergyStorage.addEnergy(amount);
+            return;
+        }
+
+        energyHandler.receiveEnergy(amount, false);
     }
 
     /**

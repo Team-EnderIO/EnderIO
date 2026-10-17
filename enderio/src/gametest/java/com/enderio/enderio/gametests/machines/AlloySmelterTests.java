@@ -30,7 +30,7 @@ public class AlloySmelterTests {
                 .thenExecute(() -> {
                     // Insert the capacitor and fill with energy.
                     helper.insertIntoContainer(0, 1, 0, EIOItems.OCTADIC_CAPACITOR.get(), 1);
-                    helper.provideEnergy(0, 1, 0, energyToAdd);
+                    helper.provideEnergyExact(0, 1, 0, energyToAdd);
                 })
                 // Insert recipe ingredients for Dark Steel
                 .thenExecute(() -> {
@@ -76,7 +76,7 @@ public class AlloySmelterTests {
                 .thenExecute(() -> {
                     // Insert the capacitor and fill with energy.
                     helper.insertIntoContainer(0, 1, 0, EIOItems.OCTADIC_CAPACITOR.get(), 1);
-                    helper.provideEnergy(0, 1, 0, energyToAdd);
+                    helper.provideEnergyExact(0, 1, 0, energyToAdd);
                 })
                 // Insert raw iron (3 pieces to test batch smelting)
                 .thenExecute(() -> helper.insertIntoContainer(0, 1, 0, Items.RAW_IRON, 3))

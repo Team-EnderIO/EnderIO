@@ -29,7 +29,7 @@ public class SlicerTests {
             .thenExecute(() -> {
                 // Insert the capacitor and fill with energy.
                 helper.insertIntoContainer(0, 1, 0, EIOItems.OCTADIC_CAPACITOR.get(), 1);
-                helper.provideEnergy(0, 1, 0, energyToAdd);
+                helper.provideEnergyExact(0, 1, 0, energyToAdd);
             })
             // Insert recipe ingredients for Zombie Electrode and axe + shears
             .thenExecute(() -> {

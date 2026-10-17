@@ -4,13 +4,13 @@ import com.enderio.core.client.gui.widgets.EIOWidget;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.foundation.io.energy.ILargeMachineEnergyStorage;
-import com.enderio.enderio.foundation.io.energy.IMachineEnergyStorage;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -20,9 +20,9 @@ public class EnergyWidget extends EIOWidget {
 
     protected static final ResourceLocation WIDGETS = EnderIO.rl("textures/gui/widgets.png");
 
-    private final Supplier<IMachineEnergyStorage> storageSupplier;
+    private final Supplier<IEnergyStorage> storageSupplier;
 
-    public EnergyWidget(int x, int y, int width, int height, Supplier<IMachineEnergyStorage> storageSupplier) {
+    public EnergyWidget(int x, int y, int width, int height, Supplier<IEnergyStorage> storageSupplier) {
         super(x, y, width, height);
         this.storageSupplier = storageSupplier;
     }
@@ -30,7 +30,7 @@ public class EnergyWidget extends EIOWidget {
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         // Don't bother if we have no energy capacity, protects from divide by zero's when there's no capacitor.
-        IMachineEnergyStorage storage = storageSupplier.get();
+        IEnergyStorage storage = storageSupplier.get();
         if (storage.getMaxEnergyStored() <= 0) {
             return;
         }
@@ -65,7 +65,7 @@ public class EnergyWidget extends EIOWidget {
         if (isHovered(mouseX, mouseY)) {
             Minecraft minecraft = Minecraft.getInstance();
 
-            IMachineEnergyStorage storage = storageSupplier.get();
+            IEnergyStorage storage = storageSupplier.get();
 
             NumberFormat fmt = NumberFormat.getInstance(Locale.ENGLISH);
             guiGraphics.renderTooltip(minecraft.font,
@@ -74,7 +74,7 @@ public class EnergyWidget extends EIOWidget {
         }
     }
 
-    private static long getEnergyStored(IMachineEnergyStorage storage) {
+    private static long getEnergyStored(IEnergyStorage storage) {
         if (storage instanceof ILargeMachineEnergyStorage largeStorage) {
             return largeStorage.getLargeEnergyStored();
         }
@@ -82,7 +82,7 @@ public class EnergyWidget extends EIOWidget {
         return storage.getEnergyStored();
     }
 
-    private static long getMaxEnergyStored(IMachineEnergyStorage storage) {
+    private static long getMaxEnergyStored(IEnergyStorage storage) {
         if (storage instanceof ILargeMachineEnergyStorage largeStorage) {
             return largeStorage.getLargeMaxEnergyStored();
         }

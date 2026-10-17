@@ -115,6 +115,8 @@ public final class SolarPanelNode implements INetworkNode<SolarPanelNetwork, Sol
     @Override
     public void setNetwork(@Nullable SolarPanelNetwork network) {
         this.network = network;
-        this.isPrimaryNode = false;
+        if (network != null) {
+            this.isPrimaryNode = false;
+        }
     }
 }

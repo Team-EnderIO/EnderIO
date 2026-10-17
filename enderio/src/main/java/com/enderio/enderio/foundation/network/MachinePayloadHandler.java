@@ -1,5 +1,6 @@
 package com.enderio.enderio.foundation.network;
 
+import com.enderio.enderio.api.io.IOConfigurable;
 import com.enderio.enderio.content.enderface.EnderfaceBlockEntity;
 import com.enderio.enderio.content.storage.crafter.CrafterMenu;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
@@ -68,8 +69,8 @@ public class MachinePayloadHandler {
                 var level = context.player().level();
                 BlockEntity be = level.getBlockEntity(packet.pos());
 
-                if (be instanceof MachineBlockEntity machineBlockEntity) {
-                    machineBlockEntity.cycleIOMode(packet.side());
+                if (be instanceof IOConfigurable ioConfigurable) {
+                    ioConfigurable.cycleIOMode(packet.side());
                 }
             });
         }

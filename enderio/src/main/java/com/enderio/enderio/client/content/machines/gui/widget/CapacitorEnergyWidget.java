@@ -10,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,7 @@ public class CapacitorEnergyWidget extends EnergyWidget {
     public static final ItemStack CAPACITOR = new ItemStack(EIOItems.BASIC_CAPACITOR.get());
     private final Supplier<Boolean> cap;
 
-    public CapacitorEnergyWidget(int x, int y, int width, int height, Supplier<IMachineEnergyStorage> storageSupplier, Supplier<Boolean> cap) {
+    public CapacitorEnergyWidget(int x, int y, int width, int height, Supplier<IEnergyStorage> storageSupplier, Supplier<Boolean> cap) {
         super(x, y, width, height, storageSupplier);
         this.cap = cap;
     }
