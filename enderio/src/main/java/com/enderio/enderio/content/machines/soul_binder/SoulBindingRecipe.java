@@ -30,6 +30,7 @@ import net.minecraft.world.item.crafting.display.RecipeDisplay;
 import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jspecify.annotations.Nullable;
 
@@ -112,8 +113,8 @@ public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.
             result.applyComponents(input.itemToBind.getComponents());
         }
 
-        var vialSoulBindable = vial.getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
-        var resultSoulBinding = result.getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
+        var vialSoulBindable = ItemAccess.forStack(vial).getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
+        var resultSoulBinding = ItemAccess.forStack(result).getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
 
         if (vialSoulBindable != null && resultSoulBinding != null) {
             // TODO: Maybe determine the result in the ctor?
@@ -152,7 +153,7 @@ public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.
             return false;
         }
 
-        var soulBindable = recipeInput.getItem(0).getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
+        var soulBindable = ItemAccess.forStack(recipeInput.getItem(0)).getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
         if (soulBindable == null || !soulBindable.isBound()) {
             return false;
         }

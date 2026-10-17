@@ -7,23 +7,24 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.component.TypedEntityData;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 public class SpawnEggSoulBindable implements SoulBindable {
-    private final ItemStack spawnEgg;
+    private final ItemAccess itemAccess;
 
-    public SpawnEggSoulBindable(ItemStack spawnEgg) {
-        this.spawnEgg = spawnEgg;
+    public SpawnEggSoulBindable(ItemAccess itemAccess) {
+        this.itemAccess = itemAccess;
     }
 
     @Override
     public Soul boundSoul() {
-        if (!(spawnEgg.getItem() instanceof SpawnEggItem)) {
+        if (!(itemAccess.getResource().getItem() instanceof SpawnEggItem)) {
             return Soul.EMPTY;
         }
 
         // Get custom entity data
-        TypedEntityData<EntityType<?>> customEntityData = spawnEgg.get(DataComponents.ENTITY_DATA);
+        TypedEntityData<EntityType<?>> customEntityData = itemAccess.getResource().get(DataComponents.ENTITY_DATA);
         if (customEntityData != null) {
             return new Soul(customEntityData.type(), customEntityData.copyTagWithoutId());
         }

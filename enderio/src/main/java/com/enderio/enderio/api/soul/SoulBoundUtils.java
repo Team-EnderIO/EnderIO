@@ -3,6 +3,7 @@ package com.enderio.enderio.api.soul;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.soul.binding.SoulBindable;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -20,8 +21,9 @@ public class SoulBoundUtils {
      * @param itemStack the item to test.
      * @return whether the item can be bound.
      */
+    @Deprecated
     public static boolean canBindSoul(ItemStack itemStack) {
-        var soulBindable = itemStack.getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
+        var soulBindable = ItemAccess.forStack(itemStack).getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
         if (soulBindable == null) {
             return false;
         }
@@ -35,8 +37,9 @@ public class SoulBoundUtils {
      * @param soul the soul to test.
      * @return whether it can be bound.
      */
+    @Deprecated
     public static boolean canBindSoul(ItemStack itemStack, Soul soul) {
-        var soulBindable = itemStack.getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
+        var soulBindable = ItemAccess.forStack(itemStack).getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
         if (soulBindable == null) {
             return false;
         }
@@ -49,8 +52,9 @@ public class SoulBoundUtils {
      * @param itemStack the stack to get a soul for.
      * @return the bound soul, or {@link Soul#EMPTY} if there is no soul bound.
      */
+    @Deprecated
     public static Soul getBoundSoul(ItemStack itemStack) {
-        var soulBindable = itemStack.getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
+        var soulBindable = ItemAccess.forStack(itemStack).getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
         if (soulBindable == null) {
             return Soul.EMPTY;
         }
@@ -63,8 +67,9 @@ public class SoulBoundUtils {
      * @param itemStack the stack to check.
      * @return whether there is a bound soul.
      */
+    @Deprecated
     public static boolean isBound(ItemStack itemStack) {
-        var soulBindable = itemStack.getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
+        var soulBindable = ItemAccess.forStack(itemStack).getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
         if (soulBindable == null) {
             return false;
         }
@@ -78,8 +83,9 @@ public class SoulBoundUtils {
      * @param soul the soul to be bound.
      * @return whether the binding was successful
      */
+    @Deprecated
     public static boolean tryBindSoul(ItemStack itemStack, Soul soul) {
-        var soulBindable = itemStack.getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
+        var soulBindable = ItemAccess.forStack(itemStack).getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
         if (soulBindable == null) {
             return false;
         }
@@ -124,12 +130,13 @@ public class SoulBoundUtils {
      * @return An {@link Optional} containing the original {@code itemStack} if binding was successful or is not possible,
      *         or an empty {@link Optional} if binding failed.
      */
+    @Deprecated
     public static Optional<ItemStack> getBoundIfCapable(ItemStack itemStack, Soul soul) {
         // Copy so we don't bind the original input.
         ItemStack result = itemStack.copy();
 
         // If there's no binding possible, allow it through
-        var soulBindable = result.getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
+        var soulBindable = ItemAccess.forStack(result).getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
         if (soulBindable == null) {
             return Optional.of(result);
         }

@@ -2,24 +2,22 @@ package com.enderio.enderio.api.soul.binding;
 
 import com.enderio.enderio.api.soul.Soul;
 import net.minecraft.core.component.DataComponentType;
-import net.neoforged.neoforge.common.MutableDataComponentHolder;
-import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 public class ComponentSoulBindable implements SoulBindable {
-    protected final MutableDataComponentHolder parent;
+    protected final ItemAccess itemAccess;
     protected final DataComponentType<Soul> componentType;
 
-    private final SoulJournal journal = new SoulJournal();
-
-    public ComponentSoulBindable(MutableDataComponentHolder parent, DataComponentType<Soul> componentType) {
-        this.parent = parent;
+    public ComponentSoulBindable(ItemAccess itemAccess, DataComponentType<Soul> componentType) {
+        this.itemAccess = itemAccess;
         this.componentType = componentType;
     }
 
     @Override
     public Soul boundSoul() {
-        return parent.getOrDefault(componentType, Soul.EMPTY);
+        return itemAccess.getResource().getOrDefault(componentType, Soul.EMPTY);
     }
 
     @Override
@@ -38,20 +36,8 @@ public class ComponentSoulBindable implements SoulBindable {
             return false;
         }
 
-        journal.updateSnapshots(transaction);
-        parent.set(componentType, newSoul);
+        ItemResource newlyBoundResource = itemAccess.getResource().with(componentType, newSoul);;
+        itemAccess.exchange(newlyBoundResource, 1, transaction);
         return true;
-    }
-
-    private class SoulJournal extends SnapshotJournal<Soul> {
-        @Override
-        protected Soul createSnapshot() {
-            return parent.getOrDefault(componentType, Soul.EMPTY);
-        }
-
-        @Override
-        protected void revertToSnapshot(Soul snapshot) {
-            parent.set(componentType, snapshot);
-        }
     }
 }

@@ -15,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.display.SlotDisplay;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +67,7 @@ public class ShapedEntityStorageCategoryExtension implements ICraftingCategoryEx
             }
         } else if (output.isPresent()) {
             ItemStack itemStack = output.get().getTypedValue().getIngredient();
-            var outputSoulBindable = itemStack.getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
+            var outputSoulBindable = ItemAccess.forStack(itemStack).getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
 
             if (outputSoulBindable != null) {
                 results = List.of(itemStack);

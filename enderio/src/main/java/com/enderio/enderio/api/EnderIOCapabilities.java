@@ -36,9 +36,8 @@ public class EnderIOCapabilities {
     public static final ItemCapability<SoulFilter, Void> SOUL_FILTER = ItemCapability
         .createVoid(EnderIOAPI.rl("soul_filter"), SoulFilter.class);
 
-    // TODO: Needs to swap to have ItemAccess context.
-    public static final ItemCapability<SoulBindable, Void> SOUL_BINDABLE_ITEM = ItemCapability
-        .createVoid(EnderIOAPI.rl("soul_bindable"), SoulBindable.class);
+    public static final ItemCapability<SoulBindable, ItemAccess> SOUL_BINDABLE_ITEM = ItemCapability
+        .create(EnderIOAPI.rl("soul_bindable"), SoulBindable.class, ItemAccess.class);
 
     public static final BlockCapability<SoulBindable, Void> SOUL_BINDABLE_BLOCK = BlockCapability
         .createVoid(EnderIOAPI.rl("soul_bindable"), SoulBindable.class);

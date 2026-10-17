@@ -19,6 +19,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 import org.jspecify.annotations.Nullable;
 
 import java.text.NumberFormat;
@@ -84,7 +85,7 @@ public class TooltipHandler {
     // region Soul Storage
 
     private static void addSoulBindableTooltips(ItemStack itemStack, List<Component> components, boolean showAdvanced) {
-        var soulBindable = itemStack.getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
+        var soulBindable = ItemAccess.forStack(itemStack).getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
         if (soulBindable != null && soulBindable.canBeBound()) {
             var soul = soulBindable.boundSoul();
 
