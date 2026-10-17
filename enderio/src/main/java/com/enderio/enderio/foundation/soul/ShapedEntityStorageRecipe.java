@@ -19,6 +19,7 @@ import java.util.Optional;
 /**
  * Based upon BackpackUpgradeRecipe from Sophisticated Backpacks. Thanks!
  */
+// TODO: This probably wants to be reworked/renamed, but for now it'll borrow from the bindable soul source.
 public class ShapedEntityStorageRecipe extends WrappedShapedRecipe {
 
     public static final MapCodec<ShapedEntityStorageRecipe> MAP_CODEC = createMapCodec(ShapedEntityStorageRecipe::new);
@@ -35,8 +36,8 @@ public class ShapedEntityStorageRecipe extends WrappedShapedRecipe {
         ItemStack result = getWrapped().assemble(container);
 
         getItemStoringEntity(container).ifPresent(itemStack -> {
-            var inputSoulStorage = Objects.requireNonNull(ItemAccess.forStack(itemStack).getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM));
-            SoulBoundUtils.tryBindSoul(result, inputSoulStorage.boundSoul());
+            var inputSoulStorage = Objects.requireNonNull(ItemAccess.forStack(itemStack).getCapability(EnderIOCapabilities.BINDABLE_SOUL_SOURCE));
+            SoulBoundUtils.tryBindSoul(result, inputSoulStorage.availableSoul());
         });
         
         return result;
@@ -51,8 +52,8 @@ public class ShapedEntityStorageRecipe extends WrappedShapedRecipe {
     private Optional<ItemStack> getItemStoringEntity(CraftingInput container) {
         for (int slot = 0; slot < container.size(); slot++) {
             ItemStack stack = container.getItem(slot);
-            var soulStorage = ItemAccess.forStack(stack).getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
-            if (soulStorage != null && soulStorage.isBound()) {
+            var soulStorage = ItemAccess.forStack(stack).getCapability(EnderIOCapabilities.BINDABLE_SOUL_SOURCE);
+            if (soulStorage != null && soulStorage.isSoulAvailable()) {
                 return Optional.of(stack);
             }
         }

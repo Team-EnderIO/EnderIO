@@ -1,9 +1,8 @@
-package com.enderio.enderio.api.soul.binding.ingredients;
+package com.enderio.enderio.api.soul.storage.ingredients;
 
 import com.enderio.enderio.api.EnderIOCapabilities;
-import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.api.soul.SoulBoundUtils;
-import com.enderio.enderio.api.soul.storage.SoulHandler;
+import com.enderio.enderio.api.soul.SoulResource;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
@@ -17,17 +16,19 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.crafting.ICustomIngredient;
 import net.neoforged.neoforge.common.crafting.IngredientType;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 import org.jspecify.annotations.Nullable;
 
 import java.util.stream.Stream;
 
-public class EmptySoulBindableIngredient implements ICustomIngredient {
+public class EmptySoulHandlerIngredient implements ICustomIngredient {
 
-    public static final MapCodec<EmptySoulBindableIngredient> CODEC = RecordCodecBuilder
+    public static final MapCodec<EmptySoulHandlerIngredient> CODEC = RecordCodecBuilder
             .mapCodec(inst -> inst.group(BuiltInRegistries.ITEM.byNameCodec().fieldOf("item").forGetter(i -> i.item))
-                    .apply(inst, EmptySoulBindableIngredient::new));
+                    .apply(inst, EmptySoulHandlerIngredient::new));
 
-    public static final IngredientType<EmptySoulBindableIngredient> TYPE = new IngredientType<>(CODEC);
+    public static final IngredientType<EmptySoulHandlerIngredient> TYPE = new IngredientType<>(CODEC);
 
     private final Item item;
 
@@ -35,10 +36,10 @@ public class EmptySoulBindableIngredient implements ICustomIngredient {
     private ItemStack itemStack;
 
     public static Ingredient of(ItemLike item) {
-        return new EmptySoulBindableIngredient(item.asItem()).toVanilla();
+        return new EmptySoulHandlerIngredient(item.asItem()).toVanilla();
     }
 
-    public EmptySoulBindableIngredient(Item item) {
+    public EmptySoulHandlerIngredient(Item item) {
         this.item = item;
     }
 
@@ -71,19 +72,12 @@ public class EmptySoulBindableIngredient implements ICustomIngredient {
 
         // Attempt to get the unbound item.
         var stack = item.getDefaultInstance();
-        if (!SoulBoundUtils.canBindSoul(stack)) {
-            SoulHandler soulHandler = stack.getCapability(EnderIOCapabilities.SOUL_HANDLER_ITEM);
-            if (soulHandler != null && soulHandler.tryInsertSoul(Soul.EMPTY, true)) { //Can't bind a soul, but can store one
-                itemStack = stack;
-                return;
-            }
-            itemStack = new ItemStack(Blocks.BARRIER);
-            itemStack.set(DataComponents.CUSTOM_NAME, Component.literal("Item cannot be bound: " + stack.getHoverName()));
-        } else if (SoulBoundUtils.tryBindSoul(stack, Soul.EMPTY)) {
+        ResourceHandler<SoulResource> soulHandler = ItemAccess.forStack(stack).getCapability(EnderIOCapabilities.Soul.ITEM);
+        if (soulHandler != null) {
             itemStack = stack;
         } else {
             ItemStack errorStack = new ItemStack(Blocks.BARRIER);
-            errorStack.set(DataComponents.CUSTOM_NAME, Component.literal("Unable to empty binding of " + stack.getHoverName()));
+            errorStack.set(DataComponents.CUSTOM_NAME, Component.literal("Unable to store souls in " + stack.getHoverName()));
             itemStack = errorStack;
         }
     }
