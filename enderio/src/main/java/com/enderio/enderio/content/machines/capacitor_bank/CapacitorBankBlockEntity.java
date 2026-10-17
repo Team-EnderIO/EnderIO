@@ -186,7 +186,7 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
                 BlockCapabilityCache<IEnergyStorage, Direction> cache = energyStorageCaches.get(side);
                 var energyStorage = cache.getCapability();
                 if (energyStorage != null && !(energyStorage instanceof CapacitorBankEnergyStorage) && energyStorage.canReceive() &&
-                    getIOMode(side).canOutput()) {
+                    getIOMode(side).canPush()) {
                     validPushTargetCache.add(new SidedEnergy(energyStorage, new CapacitorBankNetwork.SidedPos(getBlockPos(), side)));
                 }
             }
