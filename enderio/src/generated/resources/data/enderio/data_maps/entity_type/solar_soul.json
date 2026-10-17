@@ -1,0 +1,8 @@
+{
+  "values": {
+    "minecraft:phantom": {
+      "operatesInDaytime": false,
+      "operatesInNighttime": true
+    }
+  }
+}

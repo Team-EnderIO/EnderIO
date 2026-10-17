@@ -14,10 +14,4 @@ import java.util.Map;
 public class VatReagent {
     public static final ExtraCodecs.StrictUnboundedMapCodec<TagKey<Item>, Double> CODEC = ExtraCodecs.strictUnboundedMap(TagKey.hashedCodec(Registries.ITEM),
         Codec.DOUBLE);
-
-    public static final AdvancedDataMapType<Item, Map<TagKey<Item>, Double>, DataMapValueRemover.Default<Map<TagKey<Item>, Double>, Item>> DATA_MAP = AdvancedDataMapType
-        .builder(EnderIO.id("vat_reagent"), Registries.ITEM, CODEC)
-        .synced(CODEC, true)
-        .build();
-
 }

@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
     "F": "enderio:advanced_item_filter",
     "S": "minecraft:shulker_shell"

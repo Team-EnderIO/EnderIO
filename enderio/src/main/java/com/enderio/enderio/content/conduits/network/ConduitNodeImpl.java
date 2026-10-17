@@ -1,10 +1,10 @@
 package com.enderio.enderio.content.conduits.network;
 
 import com.enderio.core.common.graph.INetworkNode;
+import com.enderio.core.common.storage.ResourceStorage;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.connection.ConnectionStatus;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
-import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import com.enderio.enderio.api.conduits.network.node.NodeData;
 import com.enderio.enderio.api.conduits.network.node.NodeDataType;
@@ -16,7 +16,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.DyeColor;
 import net.neoforged.neoforge.capabilities.BlockCapability;
-import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
@@ -206,7 +206,7 @@ public final class ConduitNodeImpl implements INetworkNode<ConduitNetworkImpl, C
     // region Inventory
 
     @Override
-    public IItemHandlerModifiable getInventory(Direction side) {
+    public ResourceStorage<ItemResource> getInventory(Direction side) {
         ensureValid();
 
         // We don't have to do this, but it saves null checks in the tickers.

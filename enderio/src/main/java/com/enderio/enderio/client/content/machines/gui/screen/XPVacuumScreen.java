@@ -54,8 +54,7 @@ public class XPVacuumScreen extends MachineScreen<XPVacuumMenu> {
 
     @Override
     protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-        graphics.text(font, MachinesLang.RANGE, this.imageWidth - 6 - this.font.width(MachinesLang.RANGE), 24, CommonColors.DARK_GRAY,
-                false);
+        graphics.text(font, MachinesLang.RANGE, this.imageWidth - 6 - this.font.width(MachinesLang.RANGE), 24, CommonColors.DARK_GRAY, false);
         graphics.text(font, menu.getRange() + "", imageWidth - 6 - 16 - 2 - 8 - 10, 38, CommonColors.DARK_GRAY,
                 false);
         super.extractLabels(graphics, mouseX, mouseY);

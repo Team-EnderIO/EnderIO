@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
     "G": "#c:dusts/grains_of_infinity",
     "N": "#c:nuggets/dark_steel",

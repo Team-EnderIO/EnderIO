@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:inhibitor_obelisk"
+        "recipes": "enderio:inhibitor_obelisk"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -1,16 +1,15 @@
 package com.enderio.enderio.client.foundation.renderer;
 
 import com.enderio.enderio.EnderIO;
-import com.mojang.blaze3d.pipeline.DepthStencilState;
-import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.platform.CompareOp;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.textures.AddressMode;
-import com.mojang.blaze3d.textures.FilterMode;
-import com.mojang.blaze3d.textures.GpuSampler;
+import com.mojang.renderpearl.api.pipeline.CompareOp;
+import com.mojang.renderpearl.api.pipeline.DepthStencilState;
+import com.mojang.renderpearl.api.pipeline.RenderPipeline;
+import com.mojang.renderpearl.api.textures.AddressMode;
+import com.mojang.renderpearl.api.textures.FilterMode;
+import com.mojang.renderpearl.api.textures.GpuSampler;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.rendertype.LayeringTransform;
-import net.minecraft.client.renderer.rendertype.OutputTarget;
 import net.minecraft.client.renderer.rendertype.RenderSetup;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -48,7 +47,7 @@ public class OutlineRenderType {
 
     public static final RenderType LINES_NO_DEPTH = RenderType.create("lines_no_depth", RenderSetup.builder(LINES_NO_DEPTH_SNIPPET)
         .setLayeringTransform(LayeringTransform.VIEW_OFFSET_Z_LAYERING)
-        .setOutputTarget(OutputTarget.ITEM_ENTITY_TARGET)
+        .setOitPipelines(RenderPipelines.OIT_ENTITY_CULL)
         .createRenderSetup());
 
     public static final RenderPipeline CUTOUT_NO_DEPTH_SNIPPET = RenderPipeline.builder(RenderPipelines.BLOCK_SNIPPET)

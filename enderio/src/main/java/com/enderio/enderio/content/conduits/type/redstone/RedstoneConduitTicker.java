@@ -33,7 +33,8 @@ public class RedstoneConduitTicker extends ConduitTickerBase<RedstoneConduit> {
                 int signal;
 
                 var redstoneExtractFilter = extractConnection.inventory()
-                    .getStackInSlot(RedstoneConduit.EXTRACT_FILTER_SLOT)
+                    .getResource(RedstoneConduit.EXTRACT_FILTER_SLOT)
+                    .toStack()
                     .getCapability(EnderIOCapabilities.REDSTONE_EXTRACT_FILTER);
 
                 if (redstoneExtractFilter != null) {

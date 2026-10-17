@@ -1,22 +1,36 @@
 package com.enderio.enderio.client.content.conduits.model.bundle.port;
 
 import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
+import net.minecraft.client.renderer.texture.SpriteLoader;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ModelDebugName;
 import net.minecraft.client.resources.model.ResolvedModel;
+import net.minecraft.client.resources.model.sprite.AtlasManager;
 import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.client.resources.model.sprite.MaterialBaker;
 import net.minecraft.client.resources.model.sprite.TextureSlots;
+import net.minecraft.data.AtlasIds;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
+import org.jspecify.annotations.Nullable;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 public class ConduitBaker implements ModelBaker {
-
     private final ModelBaker baker;
     private final ConduitMaterialBaker materials;
 
+    private static SpriteLoader.@Nullable Preparations blockAtlas;
+    private static SpriteLoader.@Nullable Preparations itemAtlas;
+    private static Map<Material, ConduitMaterialBaker> materialBakers = new HashMap<>();
+
     public ConduitBaker(ModelBaker baker, Material material) {
         this.baker = baker;
-        this.materials = new ConduitMaterialBaker(this.baker.materials(), material);
+        this.materials = materialBakers.computeIfAbsent(material, ignored -> new ConduitMaterialBaker(this.baker.materials(), material));
     }
 
     @Override
@@ -44,15 +58,46 @@ public class ConduitBaker implements ModelBaker {
         return baker.compute(key);
     }
 
-    static class ConduitMaterialBaker implements MaterialBaker {
+    // Approach based on XFact's FramedBlocks RuntimeMaterialBaker.
+    public static CompletableFuture<Void> reload(
+        PreparableReloadListener.SharedState currentReload,
+        @SuppressWarnings("unused") Executor taskExecutor,
+        PreparableReloadListener.PreparationBarrier preparationBarrier,
+        Executor reloadExecutor) {
 
-        private final MaterialBaker materialBaker;
-        private final Material sprite;
+        var blocks = currentReload.get(AtlasManager.PENDING_STITCH)
+            .get(AtlasIds.BLOCKS)
+            .thenCompose(preparationBarrier::wait)
+            .thenAcceptAsync(ConduitBaker::reloadBlockAtlas, reloadExecutor);
 
-        public ConduitMaterialBaker(MaterialBaker materialBaker, Material sprite) {
+        var items = currentReload.get(AtlasManager.PENDING_STITCH)
+            .get(AtlasIds.ITEMS)
+            .thenCompose(preparationBarrier::wait)
+            .thenAcceptAsync(ConduitBaker::reloadItemAtlas, reloadExecutor);
+
+        return CompletableFuture.allOf(blocks, items);
+    }
+
+    private static void reloadBlockAtlas(SpriteLoader.Preparations blockAtlas) {
+        ConduitBaker.blockAtlas = blockAtlas;
+        materialBakers.clear();
+    }
+
+    private static void reloadItemAtlas(SpriteLoader.Preparations itemAtlas) {
+        ConduitBaker.itemAtlas = itemAtlas;
+        materialBakers.clear();
+    }
+
+    static class ConduitMaterialBaker extends MaterialBaker {
+        ConduitMaterialBaker(MaterialBaker materialBaker, Material sprite) {
+            super(Objects.requireNonNull(blockAtlas, "Not ready to bake materials"),
+                Objects.requireNonNull(itemAtlas, "Not ready to bake materials"));
             this.materialBaker = materialBaker;
             this.sprite = sprite;
         }
+
+        private final MaterialBaker materialBaker;
+        private final Material sprite;
 
         @Override
         public Material.Baked get(Material material, ModelDebugName modelDebugName) {

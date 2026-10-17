@@ -1,8 +1,6 @@
 {
   "model": {
     "type": "enderio:painted",
-    "model": {
-      "Name": "enderio:painted_glowstone"
-    }
+    "model": "enderio:painted_glowstone"
   }
 }

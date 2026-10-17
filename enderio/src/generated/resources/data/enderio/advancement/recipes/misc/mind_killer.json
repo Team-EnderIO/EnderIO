@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:mind_killer"
+        "recipes": "enderio:mind_killer"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

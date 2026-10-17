@@ -48,7 +48,7 @@ public class CoordinateMenuScreen extends EnderContainerScreen<CoordinateMenu> {
         nameInput.setEditable(true);
 
         this.addRenderableWidget(new Button.Builder(CommonComponents.GUI_OK, mouseButton -> Minecraft.getInstance().player.closeContainer())
-            .bounds(getGuiLeft() + imageWidth - 30, getGuiTop() + imageHeight - 30, 20, 20)
+            .bounds(getLeftPos() + imageWidth - 30, getTopPos() + imageHeight - 30, 20, 20)
             .build());
     }
 
@@ -56,7 +56,7 @@ public class CoordinateMenuScreen extends EnderContainerScreen<CoordinateMenu> {
     public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         super.extractBackground(graphics, mouseX, mouseY, a);
 
-        graphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight, 256, 256);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE, getLeftPos(), getTopPos(), 0, 0, imageWidth, imageHeight, 256, 256);
 
         int midX = this.width / 2;
         int y = topPos + 48;

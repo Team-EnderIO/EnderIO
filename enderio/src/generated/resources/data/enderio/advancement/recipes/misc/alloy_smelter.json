@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:alloy_smelter"
+        "recipes": "enderio:alloy_smelter"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

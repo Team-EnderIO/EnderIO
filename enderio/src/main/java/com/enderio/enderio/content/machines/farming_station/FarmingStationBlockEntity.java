@@ -22,10 +22,10 @@ import com.enderio.enderio.foundation.attachment.RangedActor;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
 import com.enderio.enderio.foundation.inventory.MachineSlotTemplates;
-import com.enderio.enderio.foundation.souldata.FarmSoul;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
+import com.enderio.enderio.init.EIODataMaps;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -52,19 +52,18 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.common.SpecialPlantable;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.util.FakePlayer;
-import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class FarmingStationBlockEntity extends PoweredMachineBlockEntity implements RangedActor, FarmingMachine, SoulBindable {
     private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
@@ -86,10 +85,9 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     @Nullable
     private FarmTask currentTask = null;
 
+    // TODO: Should have a soul bindable thing we put on BEs to reduce duplication here.
     private Soul boundSoul = Soul.EMPTY;
-    private FarmSoul.SoulData soulData;
-    private static boolean reload = false;
-    private boolean reloadCache = !reload;
+    private final SoulJournal soulJournal = new SoulJournal();
 
     private ActionRange actionRange = DEFAULT_RANGE;
 
@@ -137,11 +135,6 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
 
     @Override
     public void serverTick() {
-        if (reloadCache != reload && boundSoul.hasEntity()) {
-            Optional<FarmSoul.SoulData> op = FarmSoul.RELOAD_LISTENER.matches(boundSoul.entityType());
-            op.ifPresent(data -> soulData = data);
-            reloadCache = reload;
-        }
         // TODO: this is quite icky. need abstractions between tick time and power consumption
         if (canAct(10) && hasEnergy() && getEnergyStorage().getAmountAsInt() >= getMaxEnergyUse() * 10) {
             processFarmTask();
@@ -239,11 +232,14 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
 
     public boolean handleDrops(BlockState plant, BlockPos pos, BlockPos soil, BlockEntity blockEntity, ItemResource resource) {
         ItemStack dummy = resource.toStack();
+
+        var soulData = boundSoul.entityType().builtInRegistryHolder().getData(EIODataMaps.FARM_SOUL);
         if (soulData != null) {
             var enchantmentsRecipe = level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
             var fortuneEnchantment = enchantmentsRecipe.getOrThrow(Enchantments.FORTUNE);
             dummy.enchant(fortuneEnchantment, dummy.getEnchantmentLevel(fortuneEnchantment) + soulData.seeds());
         }
+
         List<ItemStack> drops = Block.getDrops(plant, (ServerLevel) this.level, pos, blockEntity, getPlayer(), dummy);
         return collectDrops(drops, soil);
     }
@@ -303,7 +299,8 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
                 }
 
                 // Only commit to consumption if we were supposed to consume it
-                if (soulData == null || level.getRandom().nextFloat() < soulData.bonemeal()) {
+                var soulData = boundSoul.entityType().builtInRegistryHolder().getData(EIODataMaps.FARM_SOUL);
+                if (soulData == null || level.getRandom().nextFloat() < soulData.boneMeal()) {
                     transaction.commit();
                 }
 
@@ -422,29 +419,29 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     }
 
     @Override
-    public Soul getBoundSoul() {
+    public Soul boundSoul() {
         return boundSoul;
     }
 
     @Override
-    public boolean canBind() {
+    public boolean canBeBound() {
         return true;
     }
 
     @Override
     public boolean isSoulValid(Soul soul) {
-        return soul.isEmpty() || FarmSoul.RELOAD_LISTENER.matches(soul.entityTypeId()).isPresent();
+        return soul.isEmpty() || soul.entityType().builtInRegistryHolder().getData(EIODataMaps.FARM_SOUL) != null;
     }
 
     @Override
-    public void bindSoul(Soul newSoul) {
-        this.boundSoul = newSoul;
-        this.soulData = FarmSoul.RELOAD_LISTENER.matches(newSoul.entityTypeId()).get();
-    }
+    public boolean bindSoul(Soul newSoul, TransactionContext transaction) {
+        if (!canBeBound() || !isSoulValid(newSoul)) {
+            return false;
+        }
 
-    @SubscribeEvent
-    static void onReload(OnDatapackSyncEvent event) {
-        reload = !reload;
+        soulJournal.updateSnapshots(transaction);
+        boundSoul = newSoul;
+        return true;
     }
 
     @Nullable
@@ -456,7 +453,6 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     @Override
     public void onLoad() {
         super.onLoad();
-        reloadCache = !reload;
         updateLocations();
     }
 
@@ -505,6 +501,24 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
 
         if (boundSoul.hasEntity()) {
             components.set(EIODataComponents.SOUL, boundSoul);
+        }
+    }
+
+    private class SoulJournal extends SnapshotJournal<Soul> {
+        @Override
+        protected Soul createSnapshot() {
+            return boundSoul;
+        }
+
+        @Override
+        protected void revertToSnapshot(Soul snapshot) {
+            boundSoul = snapshot;
+        }
+
+        @Override
+        protected void onRootCommit(Soul originalState) {
+            super.onRootCommit(originalState);
+            setChanged();
         }
     }
 }

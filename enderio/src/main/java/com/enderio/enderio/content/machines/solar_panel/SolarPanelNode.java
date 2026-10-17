@@ -2,7 +2,6 @@ package com.enderio.enderio.content.machines.solar_panel;
 
 import com.enderio.core.common.graph.INetworkNode;
 import com.enderio.enderio.foundation.io.TransferUtil;
-import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
 import net.neoforged.neoforge.transfer.transaction.Transaction;

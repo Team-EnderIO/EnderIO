@@ -4,6 +4,7 @@ import com.enderio.core.data.recipe.SubRecipeProvider;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.content.machines.painting.PaintingRecipe;
 import com.enderio.enderio.init.EIOBlocks;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -20,15 +21,15 @@ import net.minecraft.world.level.ItemLike;
 
 public class PaintingRecipeProvider extends SubRecipeProvider {
 
-    private HolderLookup.RegistryLookup<Item> items;
+    private HolderGetter<Item> items;
 
     protected Ingredient ingredientFromTag(TagKey<Item> tag) {
         return Ingredient.of(this.items.getOrThrow(tag));
     }
 
     @Override
-    public void buildRecipes(HolderLookup.Provider registries, RecipeOutput recipeOutput) {
-        this.items = registries.lookupOrThrow(Registries.ITEM);
+    public void buildRecipes(RecipeOutput recipeOutput) {
+        this.items = recipeOutput.lookup(Registries.ITEM);
 
         build(EIOBlocks.PAINTED_FENCE, ingredientFromTag(ItemTags.WOODEN_FENCES), recipeOutput);
         build(EIOBlocks.PAINTED_FENCE_GATE, ingredientFromTag(ItemTags.FENCE_GATES), recipeOutput);

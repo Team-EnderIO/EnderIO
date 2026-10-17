@@ -1,9 +1,11 @@
 {
   "type": "enderio:soul_binding",
   "energy": 288000,
-  "entity_type": "minecraft:phantom",
   "experience": 14,
   "input": "enderio:vibrant_photovoltaic_module",
+  "inputSoul": {
+    "type": "enderio:has_solar_soul_data"
+  },
   "output": {
     "id": "enderio:vibrant_photovoltaic_module"
   }

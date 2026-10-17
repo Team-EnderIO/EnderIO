@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:void_vial"
+        "recipes": "enderio:void_vial"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

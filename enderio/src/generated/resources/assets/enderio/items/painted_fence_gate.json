@@ -1,14 +1,6 @@
 {
   "model": {
     "type": "enderio:painted",
-    "model": {
-      "Name": "enderio:painted_fence_gate",
-      "Properties": {
-        "facing": "north",
-        "in_wall": "false",
-        "open": "false",
-        "powered": "false"
-      }
-    }
+    "model": "enderio:painted_fence_gate"
   }
 }

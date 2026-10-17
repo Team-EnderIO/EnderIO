@@ -33,7 +33,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:conduit_binder_composite"
+        "recipes": "enderio:conduit_binder_composite"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

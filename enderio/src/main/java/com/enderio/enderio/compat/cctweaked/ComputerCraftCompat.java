@@ -1,10 +1,10 @@
-//package com.enderio.enderio.compat.cctweaked;
-//
-//import dan200.computercraft.api.ComputerCraftAPI;
-//
-//public class ComputerCraftCompat {
-//
-//    public static void init() {
-//        ComputerCraftAPI.registerBundledRedstoneProvider(new EIOBundledRedstoneProvider());
-//    }
-//}
+package com.enderio.enderio.compat.cctweaked;
+
+import dan200.computercraft.api.ComputerCraftAPI;
+
+public class ComputerCraftCompat {
+
+    public static void init() {
+        ComputerCraftAPI.registerBundledRedstoneProvider(new EIOBundledRedstoneProvider());
+    }
+}

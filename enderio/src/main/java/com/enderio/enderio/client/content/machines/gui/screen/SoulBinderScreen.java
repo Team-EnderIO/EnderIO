@@ -29,8 +29,8 @@ public class SoulBinderScreen extends MachineScreen<SoulBinderMenu> {
     protected void init() {
         super.init();
 
-        addRenderableOnly(new ProgressWidget.LeftRight(BG_TEXTURE, menu::getCraftingProgress, getGuiLeft() + 80,
-                getGuiTop() + 34, 24, 17, 176, 14));
+        addRenderableOnly(new ProgressWidget.LeftRight(BG_TEXTURE, menu::getCraftingProgress, getLeftPos() + 80,
+                getTopPos() + 34, 24, 17, 176, 14));
 
         addRenderableOnly(new CapacitorEnergyWidget(16 + leftPos, 14 + topPos, 9, 42, menu::getEnergyStorage,
                 menu::isCapacitorInstalled));

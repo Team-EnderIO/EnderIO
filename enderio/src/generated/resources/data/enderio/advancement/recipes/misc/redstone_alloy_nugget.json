@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:redstone_alloy_nugget"
+        "recipes": "enderio:redstone_alloy_nugget"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

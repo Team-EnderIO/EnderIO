@@ -40,11 +40,11 @@ public class LimitedItemFilterScreen extends EnderContainerScreen<LimitedItemFil
     protected void init() {
         super.init();
 
-        addRenderableWidget(new IconButton(getGuiLeft() + 3, getGuiTop() + 3, 16, 16, BACK_SPRITE, null,
+        addRenderableWidget(new IconButton(getLeftPos() + 3, getTopPos() + 3, 16, 16, BACK_SPRITE, null,
                 _ -> handleButtonPress(AbstractFilterMenu.BACK_BUTTON_ID)));
 
-        int xPos = getGuiLeft() + WIDTH - 25;
-        int yPos = getGuiTop() + 27 + 2 * 18;
+        int xPos = getLeftPos() + WIDTH - 25;
+        int yPos = getTopPos() + 27 + 2 * 18;
 
         addRenderableWidget(new DamageFilterModePickerWidget(xPos, yPos, getMenu()::damageFilterMode,
                 getMenu()::setDamageFilterMode, FiltersLang.DAMAGE_FILTER_MODE));
@@ -61,6 +61,6 @@ public class LimitedItemFilterScreen extends EnderContainerScreen<LimitedItemFil
     @Override
     public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         super.extractBackground(graphics, mouseX, mouseY, a);
-        graphics.blit(BG, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight, 256, 256);
+        graphics.blit(BG, getLeftPos(), getTopPos(), 0, 0, imageWidth, imageHeight, 256, 256);
     }
 }

@@ -3,7 +3,7 @@ package com.enderio.enderio.init;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.content.paint.PaintingTrigger;
 import com.enderio.enderio.content.tools.hang_glider.UseGliderTrigger;
-import net.minecraft.advancements.CriterionTrigger;
+import net.minecraft.advancements.triggers.CriterionTrigger;
 import net.minecraft.core.registries.Registries;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;

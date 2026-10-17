@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:ensouled_chassis"
+        "recipes": "enderio:ensouled_chassis"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:void_chassis"
+        "recipes": "enderio:void_chassis"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

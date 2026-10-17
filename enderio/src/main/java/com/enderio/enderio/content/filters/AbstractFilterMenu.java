@@ -12,7 +12,9 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.fml.LogicalSide;
-import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
@@ -180,15 +182,12 @@ public abstract class AbstractFilterMenu<T> extends BaseEnderMenu {
 
     public static final class InventoryFilterAccess implements FilterAccess {
         private ItemStack stack;
-        private final IItemHandlerModifiable itemHandler;
-        private final int slot;
+        private final ItemAccess itemAccess;
         private final @Nullable Runnable goBackRunnable;
 
-        public InventoryFilterAccess(ItemStack stack, IItemHandlerModifiable itemHandler, int slot,
-                @Nullable Runnable goBackRunnable) {
+        public InventoryFilterAccess(ItemStack stack, ItemAccess itemAccess, @Nullable Runnable goBackRunnable) {
             this.stack = stack;
-            this.itemHandler = itemHandler;
-            this.slot = slot;
+            this.itemAccess = itemAccess;
             this.goBackRunnable = goBackRunnable;
         }
 
@@ -201,13 +200,18 @@ public abstract class AbstractFilterMenu<T> extends BaseEnderMenu {
         public void setFilterItem(ItemStack stack) {
             // Mainly just to deal with handlers that either return a copy or need to
             // setChanged.
-            itemHandler.setStackInSlot(slot, stack);
+            // TODO: Need to expose transaction awareness.
+            try (Transaction transaction = Transaction.openRoot()) {
+                itemAccess.exchange(ItemResource.of(stack), stack.count(), transaction);
+                transaction.commit();
+            }
+
             this.stack = stack;
         }
 
         @Override
         public boolean stillValid(Player player) {
-            return itemHandler.getStackInSlot(slot).equals(stack);
+            return itemAccess.getResource().equals(ItemResource.of(stack));
         }
 
         @Override

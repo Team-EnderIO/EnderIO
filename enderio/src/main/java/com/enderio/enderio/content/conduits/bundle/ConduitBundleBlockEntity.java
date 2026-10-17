@@ -1,6 +1,9 @@
 package com.enderio.enderio.content.conduits.bundle;
 
 import com.enderio.core.common.blockentity.EnderBlockEntity;
+import com.enderio.core.common.storage.ItemStorage;
+import com.enderio.core.common.storage.ResourceStorage;
+import com.enderio.core.common.storage.layout.ResourceStorageLayout;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.core.annotations.UseOnly;
 import com.enderio.enderio.api.conduits.Conduit;
@@ -12,7 +15,6 @@ import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.api.conduits.connection.ConnectionReader;
 import com.enderio.enderio.api.conduits.connection.ConnectionStatus;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
-import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.facade.FacadeType;
 import com.enderio.enderio.api.conduits.network.node.NodeData;
 import com.enderio.enderio.client.content.conduits.model.bundle.ConduitBundleRenderState;
@@ -22,7 +24,7 @@ import com.enderio.enderio.content.conduits.menu.ConduitMenu;
 import com.enderio.enderio.content.conduits.network.ConduitNetworkSavedData;
 import com.enderio.enderio.content.conduits.network.ConduitNodeImpl;
 import com.enderio.enderio.content.conduits.network.IConduitNodeAttachment;
-import com.enderio.enderio.foundation.block.entity.Wrenchable;
+import com.enderio.enderio.api.block.WrenchableBlockEntity;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOConduitTypes;
 import com.mojang.datafixers.util.Pair;
@@ -37,6 +39,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
@@ -62,14 +65,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
-import net.neoforged.neoforge.items.IItemHandlerModifiable;
-import net.neoforged.neoforge.items.ItemStackHandler;
 import net.neoforged.neoforge.model.data.ModelData;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -88,7 +91,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public final class ConduitBundleBlockEntity extends EnderBlockEntity
-        implements ConduitBundle, Wrenchable, ConduitMenu.ConnectionAccessor, IConduitNodeAttachment, Clearable {
+        implements ConduitBundle, WrenchableBlockEntity, ConduitMenu.ConnectionAccessor, IConduitNodeAttachment, Clearable {
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
@@ -719,11 +722,11 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
                 continue;
             }
 
-            for (int i = 0; i < inventory.getSlots(); i++) {
-                ItemStack stack = inventory.getStackInSlot(i);
+            for (int slot = 0; slot < inventory.size(); slot++) {
+                ItemStack stack = inventory.getResource(slot).toStack(inventory.getAmountAsInt(slot));
                 if (!stack.isEmpty()) {
                     droppedItemConsumer.accept(stack);
-                    inventory.setStackInSlot(i, ItemStack.EMPTY);
+                    inventory.set(slot, ItemResource.EMPTY, 0);
                 }
             }
         }
@@ -758,7 +761,8 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
     private void dropItem(ItemStack stack) {
         if (level != null) {
-            var center = getBlockPos().getCenter();
+            var pos = getBlockPos();
+            var center = Vec3.atCenterOf(pos);
             level.addFreshEntity(new ItemEntity(level, center.x, center.y, center.z, stack.copy()));
         }
     }
@@ -814,7 +818,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
 
     @Override
     @Nullable
-    public IItemHandlerModifiable getConnectionInventory(Holder<Conduit<?, ?>> conduit, Direction side) {
+    public ResourceStorage<ItemResource> getConnectionInventory(Holder<Conduit<?, ?>> conduit, Direction side) {
         if (!hasConduitStrict(conduit)) {
             throw new IllegalStateException("Conduit not found in bundle.");
         }
@@ -1350,8 +1354,8 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
                     if (inventory != null) {
                         var inventoryContents = connection.list("Inventory", ItemStackWithSlot.CODEC);
 
-                        for (int i = 0; i < inventory.getSlots(); i++) {
-                            ItemStack stack = inventory.getStackInSlot(i);
+                        for (int i = 0; i < inventory.size(); i++) {
+                            ItemStack stack = inventory.getStack(i);
                             if (!stack.isEmpty()) {
                                 inventoryContents.add(new ItemStackWithSlot(i, stack));
                             }
@@ -1404,8 +1408,8 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
                 var inventory = connections.getInventory(side);
 
                 for (ItemStackWithSlot itemWithSlot : inventoryContents) {
-                    if (itemWithSlot.isValidInContainer(inventory.getSlots())) {
-                        inventory.setStackInSlot(itemWithSlot.slot(), itemWithSlot.stack());
+                    if (itemWithSlot.isValidInContainer(inventory.size())) {
+                        inventory.set(itemWithSlot.slot(), ItemResource.of(itemWithSlot.stack()), itemWithSlot.stack().count());
                     }
                 }
             }
@@ -1478,7 +1482,7 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         private final Holder<Conduit<?, ?>> conduit;
         private final Map<Direction, ConnectionStatus> statuses = new EnumMap<>(Direction.class);
         private final Map<Direction, ConnectionConfig> configs = new EnumMap<>(Direction.class);
-        private final Map<Direction, ConnectionInventory> inventories = new EnumMap<>(Direction.class);
+        private final Map<Direction, ItemStorage> inventories = new EnumMap<>(Direction.class);
 
         public ConnectionContainer(Holder<Conduit<?, ?>> conduit) {
             this.conduit = conduit;
@@ -1499,13 +1503,15 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
                 copy.configs.putAll(configs);
             }
 
-            if (this.conduit.value().getInventorySize() > 0 && conduit.value().getInventorySize() > 0) {
+            var currentLayout = this.conduit.value().inventoryLayout();
+            var copyLayout = conduit.value().inventoryLayout();
+            if (currentLayout != null && copyLayout != null) {
                 for (Direction side : Direction.values()) {
                     if (inventories.containsKey(side)) {
                         var inventory = inventories.get(side);
                         var inventoryCopy = Objects.requireNonNull(copy.getInventory(side));
-                        for (int i = 0; i < Math.max(inventory.getSlots(), inventoryCopy.getSlots()); i++) {
-                            inventoryCopy.setStackInSlot(i, inventory.getStackInSlot(i));
+                        for (int i = 0; i < Math.max(inventory.size(), inventoryCopy.size()); i++) {
+                            inventoryCopy.set(i, inventory.getResource(i), inventory.getAmountAsInt(i));
                         }
                     }
                 }
@@ -1515,12 +1521,13 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
         }
 
         @Nullable
-        public IItemHandlerModifiable getInventory(Direction side) {
-            if (conduit.value().getInventorySize() <= 0) {
+        public ResourceStorage<ItemResource> getInventory(Direction side) {
+            var layout = conduit.value().inventoryLayout();
+            if (layout == null) {
                 return null;
             }
 
-            return inventories.computeIfAbsent(side, s -> new ConnectionInventory());
+            return inventories.computeIfAbsent(side, _ -> new ConnectionInventory(layout));
         }
 
         @Override
@@ -1575,18 +1582,15 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             }
         }
 
-        private class ConnectionInventory extends ItemStackHandler {
-            public ConnectionInventory() {
-                super(conduit.value().getInventorySize());
+        private class ConnectionInventory extends ItemStorage {
+            public ConnectionInventory(ResourceStorageLayout<ItemResource> layout) {
+                super(layout);
             }
 
             @Override
-            public boolean isItemValid(int slot, ItemStack stack) {
-                return conduit.value().isItemValid(slot, stack);
-            }
+            protected void onContentsChanged(int index, ItemStack previousContents) {
+                super.onContentsChanged(index, previousContents);
 
-            @Override
-            protected void onContentsChanged(int slot) {
                 if (level != null) {
                     bundleChanged();
                 }

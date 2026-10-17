@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:iron_gear"
+        "recipes": "enderio:iron_gear"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

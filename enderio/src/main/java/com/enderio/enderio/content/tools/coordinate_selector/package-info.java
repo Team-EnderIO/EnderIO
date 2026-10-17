@@ -1,4 +1,4 @@
 @javax.annotation.ParametersAreNonnullByDefault
-@com.mojang.logging.annotations.MethodsReturnNonnullByDefault
+@org.jspecify.annotations.NullMarked
 
 package com.enderio.enderio.content.tools.coordinate_selector;

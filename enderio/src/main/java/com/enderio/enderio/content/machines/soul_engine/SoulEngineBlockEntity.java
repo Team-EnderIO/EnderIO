@@ -18,21 +18,17 @@ import com.enderio.enderio.foundation.block.ProgressMachineBlock;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
 import com.enderio.enderio.foundation.inventory.MachineSlotTemplates;
-import com.enderio.enderio.foundation.souldata.EngineSoul;
+import com.enderio.enderio.foundation.datamap.EngineSoul;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.foundation.storage.SidedResourceHandler;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
+import com.enderio.enderio.init.EIODataMaps;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
@@ -40,7 +36,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -55,10 +50,10 @@ import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.energy.EnergyHandlerUtil;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jspecify.annotations.Nullable;
-
-import java.util.Optional;
 
 @EventBusSubscriber
 public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements SoulBindable {
@@ -78,13 +73,16 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     public static final SingleResourceSlotKey<ItemResource> CAPACITOR = new SingleResourceSlotKey<>();
 
     private Soul boundSoul = Soul.EMPTY;
+
+    private final SoulJournal soulJournal = new SoulJournal();
     public static final int FLUID_CAPACITY = 2 * FluidType.BUCKET_VOLUME;
 
     public static final SingleResourceSlotKey<FluidResource> TANK = new SingleResourceSlotKey<>();
 
     private final FluidStorage fluidStorage;
 
-    private EngineSoul.SoulData soulData;
+    @Nullable
+    private EngineSoul soulData;
     private int burnedTicks = 0;
     private static boolean reload = false;
     private boolean reloadCache = !reload;
@@ -135,8 +133,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     @Override
     public void serverTick() {
         if (reloadCache != reload && boundSoul.hasEntity()) {
-            Optional<EngineSoul.SoulData> op = EngineSoul.RELOAD_LISTENER.matches(boundSoul.entityType());
-            op.ifPresent(data -> soulData = data);
+            soulData = boundSoul.entityType().builtInRegistryHolder().getData(EIODataMaps.ENGINE_SOUL);
             reloadCache = reload;
         }
 
@@ -177,24 +174,29 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     }
 
     @Override
-    public Soul getBoundSoul() {
+    public Soul boundSoul() {
         return boundSoul;
     }
 
     @Override
-    public boolean canBind() {
+    public boolean canBeBound() {
         return true;
     }
 
     @Override
     public boolean isSoulValid(Soul soul) {
-        return soul.isEmpty() || EngineSoul.RELOAD_LISTENER.matches(soul.entityTypeId()).isPresent();
+        return soul.isEmpty() || soul.entityType().builtInRegistryHolder().getData(EIODataMaps.ENGINE_SOUL) != null;
     }
 
     @Override
-    public void bindSoul(Soul newSoul) {
-        this.boundSoul = newSoul;
-        this.soulData = EngineSoul.RELOAD_LISTENER.matches(newSoul.entityTypeId()).get();
+    public boolean bindSoul(Soul newSoul, TransactionContext transaction) {
+        if (!canBeBound() || !isSoulValid(newSoul)) {
+            return false;
+        }
+
+        soulJournal.updateSnapshots(transaction);
+        boundSoul = newSoul;
+        return true;
     }
 
     @Override
@@ -203,8 +205,8 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     }
 
     public void producePower() {
-        if (burnedTicks >= soulData.tickpermb()) {
-            int energy = (int) (soulData.powerpermb() * getGenerationRate());
+        if (burnedTicks >= soulData.tickPerMb()) {
+            int energy = (int) (soulData.powerPerMb() * getGenerationRate());
 
             try (Transaction transaction = Transaction.openRoot()) {
                 if (fluidStorage.getStack(TANK).isEmpty()) {
@@ -221,7 +223,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
                 fluidStorage.extract(tankIndex, FluidResource.of(currentFluid), 1, transaction);
 
                 transaction.commit();
-                burnedTicks -= soulData.tickpermb();
+                burnedTicks -= soulData.tickPerMb();
             }
         } else {
             burnedTicks += getBurnRate();
@@ -246,19 +248,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
             return false;
         }
 
-        // TODO: Soul Data should be able to store holders.
-        String fluid = soulData.fluid();
-        if (fluid.startsWith("#")) { // We have a fluid tag instead
-            TagKey<Fluid> tag = TagKey.create(Registries.FLUID, Identifier.parse(fluid.substring(1)));
-            return fluidStack.is(tag);
-        } else {
-            Optional<Holder.Reference<Fluid>> delegate = level.registryAccess().lookupOrThrow(Registries.FLUID)
-                    .get(ResourceKey.create(Registries.FLUID, Identifier.parse(fluid)));
-            if (delegate.isPresent()) {
-                return fluidStack.getFluid().isSame(delegate.get().value());
-            }
-        }
-        return false;
+        return soulData.fluidIngredient().test(fluidStack);
     }
 
     @Nullable
@@ -336,4 +326,23 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     static void onReload(OnDatapackSyncEvent event) {
         reload = !reload;
     } //TODO verify this loads properly
+
+    private class SoulJournal extends SnapshotJournal<Soul> {
+        @Override
+        protected Soul createSnapshot() {
+            return boundSoul;
+        }
+
+        @Override
+        protected void revertToSnapshot(Soul snapshot) {
+            boundSoul = snapshot;
+        }
+
+        @Override
+        protected void onRootCommit(Soul originalState) {
+            super.onRootCommit(originalState);
+            soulData = boundSoul.entityType().builtInRegistryHolder().getData(EIODataMaps.ENGINE_SOUL);
+            setChanged();
+        }
+    }
 }

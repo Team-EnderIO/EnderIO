@@ -4,6 +4,7 @@ import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.content.filters.FilterSlot;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -22,9 +23,9 @@ public class SoulFilterSlot extends FilterSlot<Soul> {
 
     @Override
     public Optional<Soul> getResourceFrom(ItemStack itemStack) {
-        var soulBindable = itemStack.getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
+        var soulBindable = ItemAccess.forStack(itemStack).getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
         if (soulBindable != null) {
-            return Optional.of(soulBindable.getBoundSoul());
+            return Optional.of(soulBindable.boundSoul());
         }
 
         return Optional.empty();

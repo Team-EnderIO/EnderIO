@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:dark_bimetal_gear"
+        "recipes": "enderio:dark_bimetal_gear"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

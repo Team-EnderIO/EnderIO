@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:soularium_ingot"
+        "recipes": "enderio:soularium_ingot"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

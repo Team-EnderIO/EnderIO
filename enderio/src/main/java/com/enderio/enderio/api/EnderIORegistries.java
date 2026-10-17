@@ -5,6 +5,7 @@ import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.ConduitNetworkContextType;
 import com.enderio.enderio.api.conduits.network.node.NodeDataType;
+import com.enderio.enderio.api.soul.ingredient.SoulIngredientType;
 import com.enderio.enderio.api.travel.TravelTargetSerializer;
 import com.enderio.enderio.api.travel.TravelTargetType;
 import net.minecraft.core.Registry;
@@ -13,6 +14,10 @@ import net.minecraft.resources.ResourceKey;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 
 public class EnderIORegistries {
+
+    public static final Registry<SoulIngredientType<?>> SOUL_INGREDIENT_TYPES = new RegistryBuilder<>(Keys.SOUL_INGREDIENT_TYPES)
+        .sync(true)
+        .create();
 
     public static final Registry<TravelTargetType<?>> TRAVEL_TARGET_TYPES = new RegistryBuilder<>(Keys.TRAVEL_TARGET_TYPES)
         .sync(true)
@@ -35,6 +40,8 @@ public class EnderIORegistries {
             Keys.CONDUIT_NETWORK_CONTEXT_TYPE).sync(true).create();
 
     public static class Keys {
+        public static final ResourceKey<Registry<SoulIngredientType<?>>> SOUL_INGREDIENT_TYPES = createKey("soul_ingredient_type");
+
         public static final ResourceKey<Registry<TravelTargetType<?>>> TRAVEL_TARGET_TYPES = createKey("travel_target_types");
         public static final ResourceKey<Registry<TravelTargetSerializer<?>>> TRAVEL_TARGET_SERIALIZERS = createKey("travel_target_serializers");
 

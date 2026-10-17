@@ -1,7 +1,6 @@
 package com.enderio.enderio.content.filters;
 
 import com.enderio.enderio.api.filter.FilterMenuProvider;
-import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -12,7 +11,6 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.tooltip.BundleTooltip;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -20,15 +18,15 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
-import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public abstract class AbstractFilterItem<T> extends Item implements FilterMenuProvider {
+public abstract class AbstractFilterItem<T> extends Item {
 
-    public static final ICapabilityProvider<ItemStack, Void, FilterMenuProvider> FILTER_MENU_PROVIDER = (stack, v) -> (AbstractFilterItem<?>) stack.getItem();
+    public static final ICapabilityProvider<ItemStack, ItemAccess, FilterMenuProvider> FILTER_MENU_PROVIDER = (_, itemAccess) -> new FilterItemMenuProvider(itemAccess);
 
     public AbstractFilterItem(Properties properties) {
         super(properties);
@@ -66,29 +64,6 @@ public abstract class AbstractFilterItem<T> extends Item implements FilterMenuPr
     }
 
     @Override
-    public void openMenu(ServerPlayer player, IItemHandlerModifiable itemHandler, int slot, @Nullable Runnable goBackRunnable) {
-        var filterStack = itemHandler.getStackInSlot(slot);
-
-        player.openMenu(new MenuProvider() {
-            @Override
-            public Component getDisplayName() {
-                return getName(filterStack);
-            }
-
-            @Override
-            public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-                return AbstractFilterItem.this.createMenu(containerId, inventory,
-                    new AbstractFilterMenu.InventoryFilterAccess(filterStack, itemHandler, slot, goBackRunnable));
-            }
-
-            public boolean shouldTriggerClientSideContainerClosingOnOpen() {
-                // Prevents the mouse from jumping when moving between menus
-                return false;
-            }
-        });
-    }
-
-    @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag flag) {
         super.appendHoverText(stack, context, tooltipDisplay, tooltipAdder, flag);
 
@@ -112,5 +87,41 @@ public abstract class AbstractFilterItem<T> extends Item implements FilterMenuPr
         }
 
         return Optional.of(filterTooltipComponent);
+    }
+
+    private static class FilterItemMenuProvider implements FilterMenuProvider {
+        private final ItemAccess itemAccess;
+
+        private FilterItemMenuProvider(ItemAccess itemAccess) {
+            this.itemAccess = itemAccess;
+        }
+
+        @Override
+        public void openMenu(ServerPlayer player, @Nullable Runnable goBackRunnable) {
+            var filterStack = itemAccess.getResource().toStack(itemAccess.getAmount());
+
+            player.openMenu(new MenuProvider() {
+                @Override
+                public Component getDisplayName() {
+                    return filterStack.getHoverName();
+                }
+
+                @Override
+                public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
+                    if (!(filterStack.getItem() instanceof AbstractFilterItem<?> abstractFilterItem)) {
+                        throw new IllegalStateException("Filter item is not an instance of AbstractFilterItem");
+                    }
+
+                    return abstractFilterItem.createMenu(containerId, inventory,
+                        new AbstractFilterMenu.InventoryFilterAccess(filterStack, itemAccess, goBackRunnable));
+
+                }
+
+                public boolean shouldTriggerClientSideContainerClosingOnOpen() {
+                    // Prevents the mouse from jumping when moving between menus
+                    return false;
+                }
+            });
+        }
     }
 }

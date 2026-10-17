@@ -11,6 +11,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.Entity;
@@ -135,6 +136,10 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) im
         return of(BuiltInRegistries.ENTITY_TYPE.getValue(entityType));
     }
 
+    public static Soul of(ResourceKey<EntityType<?>> entityType) {
+        return of(entityType.identifier());
+    }
+
     public static Soul of(EntityType<?> entityType) {
         return new Soul(entityType, new CompoundTag());
     }
@@ -185,6 +190,16 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) im
         return true;
     }
 
+    public static int hashEntityAndTag(@Nullable Soul soul) {
+        if (soul == null) {
+            return 0;
+        }
+
+        int result = 31 + Objects.hashCode(soul.entityType());
+        result = 31 * result + soul.entityTag().hashCode();
+        return result;
+    }
+
     public boolean hasEntity() {
         return entityType != null;
     }
@@ -204,6 +219,14 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) im
         }
 
         return BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
+    }
+
+    public ResourceKey<EntityType<?>> entityTypeKey() {
+        if (isEmpty()) {
+            throw new IllegalStateException("Cannot get Entity Type Key from empty StoredEntityData");
+        }
+
+        return BuiltInRegistries.ENTITY_TYPE.getResourceKey(entityType).orElseThrow();
     }
 
     public CompoundTag getEntityTagWithId() {

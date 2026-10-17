@@ -4,6 +4,7 @@ import com.enderio.core.common.storage.ItemStorage;
 import com.enderio.core.common.storage.slot.ResourceSlotId;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.core.annotations.UseOnly;
+import com.enderio.enderio.api.block.ItemInstallableBlockEntity;
 import com.enderio.enderio.api.capacitor.CapacitorData;
 import com.enderio.enderio.api.capacitor.CapacitorScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
@@ -35,7 +36,7 @@ import net.neoforged.neoforge.transfer.energy.EnergyHandlerUtil;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class PoweredMachineBlockEntity extends MachineBlockEntity implements MachineInstallable {
+public abstract class PoweredMachineBlockEntity extends MachineBlockEntity implements ItemInstallableBlockEntity {
 
     public static final ICapabilityProvider<PoweredMachineBlockEntity, Direction, EnergyHandler> ENERGY_STORAGE_PROVIDER = (
             be, side) -> side == null ? be.energyStorage : be.energyStorage.getSided(side);

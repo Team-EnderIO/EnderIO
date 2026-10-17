@@ -10,10 +10,7 @@ import com.google.common.collect.Maps;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import net.neoforged.neoforge.transfer.item.ItemResource;
@@ -65,7 +62,8 @@ public class ItemConduitTicker extends ConduitTickerBase<ItemConduit> {
 
             // Get extraction filter
             var extractFilter = extractConnection.inventory()
-                .getStackInSlot(ItemConduit.EXTRACT_FILTER_SLOT)
+                .getResource(ItemConduit.EXTRACT_FILTER_SLOT)
+                .toStack()
                 .getCapability(EnderIOCapabilities.ITEM_FILTER);
 
             int totalExtracted = 0;
@@ -142,9 +140,9 @@ public class ItemConduitTicker extends ConduitTickerBase<ItemConduit> {
                             amountToInsert = remaining;
                         }
 
-                        var insertFilter = insertConnection
-                            .inventory()
-                            .getStackInSlot(ItemConduit.INSERT_FILTER_SLOT)
+                        var insertFilter = insertConnection.inventory()
+                            .getResource(ItemConduit.INSERT_FILTER_SLOT)
+                            .toStack()
                             .getCapability(EnderIOCapabilities.ITEM_FILTER);
 
                         if (insertFilter != null) {

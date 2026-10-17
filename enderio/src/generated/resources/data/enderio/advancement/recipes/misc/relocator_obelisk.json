@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:relocator_obelisk"
+        "recipes": "enderio:relocator_obelisk"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:item.minecraft.gold_ingot_from_blasting"
+        "recipes": "enderio:item.minecraft.gold_ingot_from_blasting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

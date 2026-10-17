@@ -223,6 +223,10 @@ public class EIOTags {
         public static final TagKey<EntityType<?>> SOUL_VIAL_ALLOY_LIST = tag("soul_vial_allow_list");
         public static final TagKey<EntityType<?>> SOUL_VIAL_DENY_LIST = tag("soul_vial_deny_list");
 
+        public static final TagKey<EntityType<?>> ZOMBIES = tag("zombies");
+        public static final TagKey<EntityType<?>> CREEPERS = tag("creepers");
+        public static final TagKey<EntityType<?>> ENDERMEN = tag("endermen");
+
         private static TagKey<EntityType<?>> tag(String name) {
             return TagKey.create(Registries.ENTITY_TYPE, EnderIO.id(name));
         }

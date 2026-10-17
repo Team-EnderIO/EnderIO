@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:experience_rod"
+        "recipes": "enderio:experience_rod"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

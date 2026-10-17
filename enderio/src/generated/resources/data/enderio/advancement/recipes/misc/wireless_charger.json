@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:wireless_charger"
+        "recipes": "enderio:wireless_charger"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

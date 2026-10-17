@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:item.minecraft.iron_ingot_from_smelting"
+        "recipes": "enderio:item.minecraft.iron_ingot_from_smelting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

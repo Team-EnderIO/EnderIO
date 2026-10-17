@@ -1,6 +1,5 @@
 {
   "type": "enderio:shaped_entity_storage",
-  "category": "misc",
   "key": {
     "B": "enderio:broken_spawner",
     "C": "enderio:ensouled_chassis",

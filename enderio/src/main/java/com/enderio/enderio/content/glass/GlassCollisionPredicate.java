@@ -4,7 +4,7 @@ import com.enderio.core.common.lang.EnumLangMap;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.init.EIOItems;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -22,8 +22,8 @@ public enum GlassCollisionPredicate {
     NONE(ctx -> false),
     PLAYERS_PASS(ctx -> ctx.getEntity() instanceof Player),
     PLAYERS_BLOCK(ctx -> !(ctx.getEntity() instanceof Player)),
-    MOBS_PASS(ctx -> ctx.getEntity() instanceof Mob),
-    MOBS_BLOCK(ctx -> !(ctx.getEntity() instanceof Mob)),
+    MONSTER_PASS(ctx -> ctx.getEntity().getType().getCategory().equals(MobCategory.MONSTER)),
+    MONSTER_BLOCK(ctx -> !ctx.getEntity().getType().getCategory().equals(MobCategory.MONSTER)),
     ANIMALS_PASS(ctx -> ctx.getEntity() instanceof Animal),
     ANIMALS_BLOCK(ctx -> !(ctx.getEntity() instanceof Animal));
 
@@ -45,8 +45,8 @@ public enum GlassCollisionPredicate {
             case NONE -> "";
             case PLAYERS_PASS -> "p";
             case PLAYERS_BLOCK -> "np";
-            case MOBS_PASS -> "m";
-            case MOBS_BLOCK -> "nm";
+            case MONSTER_PASS -> "m";
+            case MONSTER_BLOCK -> "nm";
             case ANIMALS_PASS -> "a";
             case ANIMALS_BLOCK -> "na";
         };
@@ -66,7 +66,7 @@ public enum GlassCollisionPredicate {
         }
 
         if (token == EIOItems.MONSTER_TOKEN.get()) {
-            return MOBS_PASS;
+            return MONSTER_PASS;
         }
 
         return null;
@@ -79,8 +79,8 @@ public enum GlassCollisionPredicate {
     public static GlassCollisionPredicate invert(GlassCollisionPredicate predicate) {
         return switch (predicate) {
             case NONE -> NONE;
-            case MOBS_PASS -> MOBS_BLOCK;
-            case MOBS_BLOCK -> MOBS_PASS;
+            case MONSTER_PASS -> MONSTER_BLOCK;
+            case MONSTER_BLOCK -> MONSTER_PASS;
             case ANIMALS_BLOCK -> ANIMALS_PASS;
             case ANIMALS_PASS -> ANIMALS_BLOCK;
             case PLAYERS_BLOCK -> PLAYERS_PASS;

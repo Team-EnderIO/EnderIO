@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:soul_chain"
+        "recipes": "enderio:soul_chain"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

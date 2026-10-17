@@ -19,7 +19,6 @@ import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
 import com.enderio.enderio.foundation.inventory.MachineSlotTemplates;
 import com.enderio.enderio.foundation.particle.RangeParticleData;
-import com.enderio.enderio.foundation.souldata.SpawnerSoul;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.foundation.state.MachineStateType;
 import com.enderio.enderio.foundation.tag.EIOTags;
@@ -27,6 +26,7 @@ import com.enderio.enderio.foundation.task.MachineTask;
 import com.enderio.enderio.foundation.task.host.MachineTaskHost;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
+import com.enderio.enderio.init.EIODataMaps;
 import com.enderio.enderio.init.EIOItems;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.core.BlockPos;
@@ -51,6 +51,8 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.common.extensions.IOwnedSpawner;
 import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
@@ -73,6 +75,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     public static final int ACTION_RANGE = 4;
 
     private Soul boundSoul = Soul.EMPTY;
+    private final SoulJournal soulJournal = new SoulJournal();
     private SpawnerBlockedReason reason = SpawnerBlockedReason.NONE;
     private final MachineTaskHost taskHost;
 
@@ -156,11 +159,11 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
         int energyCost = MachinesConfig.COMMON.DEFAULT_SPAWN_ENERGY_COST.get();
         MobSpawnMode spawnType = MachinesConfig.COMMON.SPAWN_TYPE.get();
 
-        var spawnDataOpt = SpawnerSoul.RELOAD_LISTENER.matches(entityType);
-        if (spawnDataOpt.isPresent()) {
-            var data = spawnDataOpt.get();
-            energyCost = data.power();
-            spawnType = data.spawnType();
+        // Read from soul data, if available.
+        var soulData = entityType.builtInRegistryHolder().getData(EIODataMaps.SPAWNER_SOUL);
+        if (soulData != null) {
+            energyCost = soulData.energyCost();
+            spawnType = soulData.spawnMode();
         }
 
         return switch (mode) {
@@ -274,15 +277,14 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
         }
 
         MobSpawnMode spawnType = MachinesConfig.COMMON.SPAWN_TYPE.get();
-
-        var spawnDataOpt = SpawnerSoul.RELOAD_LISTENER.matches(entityType);
-        if (spawnDataOpt.isPresent()) {
-            spawnType = spawnDataOpt.get().spawnType();
+        var soulData = entityType.builtInRegistryHolder().getData(EIODataMaps.SPAWNER_SOUL);
+        if (soulData != null) {
+            spawnType = soulData.spawnMode();
         }
 
         return switch (spawnType) {
             case NEW -> Soul.of(entityType);
-            case COPY -> getBoundSoul().copy();
+            case COPY -> boundSoul().copy();
         };
     }
 
@@ -313,24 +315,29 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
     }
 
     @Override
-    public Soul getBoundSoul() {
+    public Soul boundSoul() {
         return boundSoul;
     }
 
     @Override
-    public boolean canBind() {
+    public boolean canBeBound() {
         return true;
     }
 
     @Override
     public boolean isSoulValid(Soul soul) {
-        return soul.isEmpty() || SpawnerSoul.RELOAD_LISTENER.matches(soul.entityTypeId()).isPresent();
+        return soul.isEmpty() || soul.entityType().builtInRegistryHolder().getData(EIODataMaps.SPAWNER_SOUL) != null;
     }
 
     @Override
-    public void bindSoul(Soul newSoul) {
-        this.boundSoul = newSoul;
-        taskHost.newTaskAvailable();
+    public boolean bindSoul(Soul newSoul, TransactionContext transaction) {
+        if (!canBeBound() || !isSoulValid(newSoul)) {
+            return false;
+        }
+
+        soulJournal.updateSnapshots(transaction);
+        boundSoul = newSoul;
+        return true;
     }
 
     // TODO: I want a better way to handle this, but unsure what that could be.
@@ -453,6 +460,25 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
 
         public MutableComponent getComponent() {
             return component;
+        }
+    }
+
+    private class SoulJournal extends SnapshotJournal<Soul> {
+        @Override
+        protected Soul createSnapshot() {
+            return boundSoul;
+        }
+
+        @Override
+        protected void revertToSnapshot(Soul snapshot) {
+            boundSoul = snapshot;
+        }
+
+        @Override
+        protected void onRootCommit(Soul originalState) {
+            super.onRootCommit(originalState);
+            taskHost.newTaskAvailable();
+            setChanged();
         }
     }
 }

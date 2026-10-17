@@ -1,15 +1,6 @@
 {
   "model": {
     "type": "enderio:painted",
-    "model": {
-      "Name": "enderio:painted_trapdoor",
-      "Properties": {
-        "facing": "north",
-        "half": "bottom",
-        "open": "false",
-        "powered": "false",
-        "waterlogged": "false"
-      }
-    }
+    "model": "enderio:painted_trapdoor"
   }
 }

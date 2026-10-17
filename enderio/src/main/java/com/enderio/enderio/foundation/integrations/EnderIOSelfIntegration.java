@@ -29,10 +29,6 @@ public class EnderIOSelfIntegration implements Integration {
         }
         return Optional.empty();
     }
-    @Override
-    public ClientIntegration getClientIntegration() {
-        return EnderIOSelfClientIntegration.INSTANCE;
-    }
 
     public Optional<Item> getActiveGliderItem(Player player) {
         return Optional.of(player.getItemBySlot(EquipmentSlot.CHEST).getItem());

@@ -13,26 +13,20 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 
 @EventBusSubscriber
 public class VanillaCompat {
 
-    public static final ICapabilityProvider<ItemStack, Void, SoulBindable> SPAWN_EGG_BINDABLE_PROVIDER =
-        (stack, v) -> stack.getItem() instanceof SpawnEggItem ? new SpawnEggSoulBindable(stack) : null;
+    public static final ICapabilityProvider<ItemStack, ItemAccess, SoulBindable> SPAWN_EGG_BINDABLE_PROVIDER =
+        (_, itemAccess) -> itemAccess.getResource().getItem() instanceof SpawnEggItem ? new SpawnEggSoulBindable(itemAccess) : null;
 
     public static final ICapabilityProvider<ItemStack, Void, SoulHandler> SPAWN_EGG_HANDLER_PROVIDER =
         (stack, v) -> stack.getItem() instanceof SpawnEggItem ? new SpawnEggSoulHandler(stack) : null;
 
     @SubscribeEvent
     public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-        // TODO: 26.1 - components are not bound at this stage.
         // https://github.com/neoforged/NeoForge/issues/2981
-//        for (var spawnEgg : BuiltInRegistries.ITEM.componentLookup().findAll(DataComponents.ENTITY_DATA)) {
-//            event.registerItem(EnderIOCapabilities.SOUL_BINDABLE_ITEM, SPAWN_EGG_BINDABLE_PROVIDER, spawnEgg.value());
-//            event.registerItem(EnderIOCapabilities.SOUL_HANDLER_ITEM, SPAWN_EGG_HANDLER_PROVIDER, spawnEgg.value());
-//        }
-
-        // For now, we'll register to all items
         Item[] allItems = BuiltInRegistries.ITEM.stream().toArray(Item[]::new);
         event.registerItem(EnderIOCapabilities.SOUL_BINDABLE_ITEM, SPAWN_EGG_BINDABLE_PROVIDER, allItems);
         event.registerItem(EnderIOCapabilities.SOUL_HANDLER_ITEM, SPAWN_EGG_HANDLER_PROVIDER, allItems);

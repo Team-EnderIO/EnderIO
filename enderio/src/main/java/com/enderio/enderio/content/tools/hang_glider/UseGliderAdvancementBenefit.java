@@ -2,6 +2,7 @@ package com.enderio.enderio.content.tools.hang_glider;
 
 import com.enderio.enderio.EnderIO;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.Prediction;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -22,7 +23,7 @@ public class UseGliderAdvancementBenefit {
         if (earnAdvancement.getAdvancement().id().equals(USE_GLIDER_ADVANCEMENT)) {
             Item item = PLAYER_BOUND_GLIDERS.get(earnAdvancement.getEntity().getUUID().hashCode());
             if (item != null && !earnAdvancement.getEntity().addItem(item.getDefaultInstance())) {
-                earnAdvancement.getEntity().drop(item.getDefaultInstance(), false);
+                earnAdvancement.getEntity().drop(item.getDefaultInstance(), false, Prediction.SERVER_ONLY);
             }
         }
     }

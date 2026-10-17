@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:staff_of_travelling"
+        "recipes": "enderio:staff_of_travelling"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -5,6 +5,7 @@ import com.enderio.enderio.api.farm.FarmTask;
 import com.enderio.enderio.api.farm.FarmingMachine;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.BonemealSource;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -21,12 +22,12 @@ public class BonemealFarmTask implements FarmTask {
         BlockPos pos = targetBlock.above();
         BlockState plant = blockEntity.getLevel().getBlockState(pos);
         if (plant.getBlock() instanceof BonemealableBlock bonemealableBlock) {
-            if (bonemealableBlock.isValidBonemealTarget(blockEntity.getLevel(), pos, plant)
+            if (bonemealableBlock.isValidBonemealTarget(blockEntity.getLevel(), pos, plant, BonemealSource.INTERACTION)
                 && blockEntity.consumeBonemeal()) {
                 if (bonemealableBlock.isBonemealSuccess(blockEntity.getLevel(),
-                    blockEntity.getLevel().getRandom(), pos, plant)) {
+                    blockEntity.getLevel().getRandom(), pos, plant, BonemealSource.INTERACTION)) {
                     bonemealableBlock.performBonemeal((ServerLevel) blockEntity.getLevel(),
-                        blockEntity.getLevel().getRandom(), pos, plant);
+                        blockEntity.getLevel().getRandom(), pos, plant, BonemealSource.INTERACTION);
                     return FarmInteraction.FINISHED;
                 }
             }

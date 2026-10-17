@@ -9,6 +9,7 @@ import com.enderio.enderio.content.machines.vat.FermentingRecipe;
 import com.enderio.enderio.content.machines.vat.VatBlockEntity;
 import com.enderio.enderio.foundation.datamap.VatReagent;
 import com.enderio.enderio.init.EIOBlocks;
+import com.enderio.enderio.init.EIODataMaps;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -90,7 +91,7 @@ public class VATCategory extends MachineRecipeCategory<RecipeHolder<FermentingRe
     }
 
     public static double getModifier(ItemStack stack, TagKey<Item> reagent) {
-        var map = stack.typeHolder().getData(VatReagent.DATA_MAP);
+        var map = stack.typeHolder().getData(EIODataMaps.VAT_REAGENT);
         if (map != null) {
             return map.getOrDefault(reagent, 1D);
         }

@@ -1,12 +1,13 @@
 package com.enderio.enderio.api.conduits.connection;
 
+import com.enderio.core.common.storage.ResourceStorage;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.neoforged.neoforge.capabilities.BlockCapability;
-import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jetbrains.annotations.ApiStatus;
 import org.jspecify.annotations.Nullable;
 
@@ -68,7 +69,7 @@ public record ConduitBlockConnection(ConduitNode node, Direction connectionSide)
     /**
      * @return the inventory for this conduit connection.
      */
-    public IItemHandlerModifiable inventory() {
+    public ResourceStorage<ItemResource> inventory() {
         return node.getInventory(connectionSide);
     }
 }

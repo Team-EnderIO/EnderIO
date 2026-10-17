@@ -11,16 +11,15 @@ import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 import org.jspecify.annotations.Nullable;
 
 import java.text.NumberFormat;
@@ -28,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 @EventBusSubscriber(value = Dist.CLIENT)
@@ -87,9 +85,9 @@ public class TooltipHandler {
     // region Soul Storage
 
     private static void addSoulBindableTooltips(ItemStack itemStack, List<Component> components, boolean showAdvanced) {
-        var soulBindable = itemStack.getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
-        if (soulBindable != null && soulBindable.canBind()) {
-            var soul = soulBindable.getBoundSoul();
+        var soulBindable = ItemAccess.forStack(itemStack).getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
+        if (soulBindable != null && soulBindable.canBeBound()) {
+            var soul = soulBindable.boundSoul();
 
             if (soul.hasEntity()) {
                 components.add(TooltipUtil.styledWithArgs(EIOCommonLang.BOUND_SOUL, soul.entityType().getDescription()));

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:pulsating_alloy_block"
+        "recipes": "enderio:pulsating_alloy_block"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

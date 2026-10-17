@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "key": {
     "B": "enderio:dark_steel_bars",
     "G": "#c:glass_blocks/fused_quartz",

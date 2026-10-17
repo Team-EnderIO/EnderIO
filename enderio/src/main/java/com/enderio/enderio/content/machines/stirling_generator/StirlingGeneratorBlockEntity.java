@@ -22,18 +22,25 @@ import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.component.CookingFuel;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ResolvableInt;
+import net.neoforged.neoforge.event.server.ServerLifecycleEvent;
 import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import net.neoforged.neoforge.transfer.energy.EnergyHandlerUtil;
 import net.neoforged.neoforge.transfer.item.ItemResource;
@@ -86,23 +93,23 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
             .externalRules(new SlotAccessRules<>() {
                 @Override
                 public boolean canInsert(ItemResource resource) {
-                    return resource.toStack().getBurnTime(RecipeType.SMELTING, level.fuelValues()) > 0;
+                    return resource.has(DataComponents.COOKING_FUEL);
                 }
 
                 @Override
                 public boolean canExtract(ItemResource resource) {
-                    return resource.toStack().getBurnTime(RecipeType.SMELTING, level.fuelValues()) <= 0;
+                    return !resource.has(DataComponents.COOKING_FUEL);
                 }
             })
             .guiRules(new SlotAccessRules<>() {
                 @Override
                 public boolean canInsert(ItemResource resource) {
-                    return resource.toStack().getBurnTime(RecipeType.SMELTING, level.fuelValues()) > 0;
+                    return resource.has(DataComponents.COOKING_FUEL);
                 }
 
                 @Override
                 public boolean canExtract(ItemResource resource) {
-                    return resource.toStack().getBurnTime(RecipeType.SMELTING, level.fuelValues()) <= 0;
+                    return !resource.has(DataComponents.COOKING_FUEL);
                 }
             });
     }
@@ -132,9 +139,13 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
         // Taking more fuel is locked behind redstone control.
         if (canAct()) {
             if (!isGenerating() && !EnergyHandlerUtil.isFull(getEnergyStorage())) {
+                if (!(level instanceof ServerLevel serverLevel)) {
+                    return;
+                }
+
                 try (Transaction transaction = Transaction.openRoot()) {
                     var extracted = ResourceHandlerUtil.extractFirst(getInventory(),
-                        ir -> ir.getItem().getBurnTime(ir.toStack(), RecipeType.SMELTING, level.fuelValues()) > 0, 1, transaction);
+                        ir -> ir.has(DataComponents.COOKING_FUEL), 1, transaction);
 
                     if (extracted == null || extracted.amount() != 1) {
                         return;
@@ -149,7 +160,7 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
                         }
                     }
 
-                    int burningTime = extracted.resource().toStack().getBurnTime(RecipeType.SMELTING, level.fuelValues());
+                    int burningTime = getBurnDuration(serverLevel, extracted.resource().toStack());
                     if (burningTime <= 0) {
                         return;
                     }
@@ -164,6 +175,10 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
                 }
             }
         }
+    }
+
+    protected int getBurnDuration(ServerLevel level, ItemStack fuelItem) {
+        return ResolvableInt.getFromItem(fuelItem, DataComponents.COOKING_FUEL, CookingFuel::burnTime, this.getLootContext(level, fuelItem), 0);
     }
 
     @Override

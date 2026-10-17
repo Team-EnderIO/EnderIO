@@ -30,7 +30,7 @@ public class PoweredSpawnerBER implements BlockEntityRenderer<PoweredSpawnerBloc
         BlockEntityRenderer.super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
 
         Entity displayEntity = null;
-        if (blockEntity.hasSoul()) {
+        if (blockEntity.isBound()) {
             displayEntity = blockEntity.getEntityType().create(blockEntity.getLevel(), EntitySpawnReason.SPAWNER);
         }
         extractSpawnerData(state, partialTicks, displayEntity, this.entityRenderer, blockEntity.getOSpin(), blockEntity.getSpin());

@@ -7,6 +7,9 @@
     "neoforge:ingredient_type": "enderio:any_soul_storage",
     "item": "enderio:powered_spawner"
   },
+  "inputSoul": {
+    "type": "enderio:any_entity"
+  },
   "output": {
     "id": "enderio:powered_spawner"
   }

@@ -1,5 +1,4 @@
 {
-    "loader": "enderio:conduit_item",
     "credit": "Made with Blockbench",
     "parent": "minecraft:block/block",
     "textures": {

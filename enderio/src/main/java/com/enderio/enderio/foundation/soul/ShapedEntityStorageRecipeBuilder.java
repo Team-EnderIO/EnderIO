@@ -2,7 +2,9 @@ package com.enderio.enderio.foundation.soul;
 
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
+import net.minecraft.core.Registry;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
@@ -13,6 +15,8 @@ import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import org.jspecify.annotations.Nullable;
+
+import java.util.stream.Stream;
 
 public class ShapedEntityStorageRecipeBuilder extends ShapedRecipeBuilder {
 
@@ -32,13 +36,18 @@ public class ShapedEntityStorageRecipeBuilder extends ShapedRecipeBuilder {
     public void save(RecipeOutput output, ResourceKey<Recipe<?>> resourceKey) {
         super.save(new RecipeOutput() {
             @Override
-            public Advancement.Builder advancement() {
-                return output.advancement();
+            public <S> HolderGetter<S> lookup(ResourceKey<? extends Registry<? extends S>> resourceKey) {
+                return output.lookup(resourceKey);
             }
 
             @Override
-            public void includeRootAdvancement() {
-                output.includeRootAdvancement();
+            public <S> Stream<Holder.Reference<S>> listContextElements(ResourceKey<? extends Registry<? extends S>> resourceKey) {
+                return output.listContextElements(resourceKey);
+            }
+
+            @Override
+            public Advancement.Builder advancement() {
+                return output.advancement();
             }
 
             @Override

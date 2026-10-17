@@ -1,6 +1,6 @@
 package com.enderio.enderio.content.capacitors;
 
-import com.enderio.enderio.foundation.block.entity.MachineInstallable;
+import com.enderio.enderio.api.block.ItemInstallableBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
@@ -20,7 +20,7 @@ public class CapacitorItem extends Item {
     public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
         Level level = context.getLevel();
         BlockPos pos = context.getClickedPos();
-        if (level.getBlockEntity(pos) instanceof MachineInstallable equippable) {
+        if (level.getBlockEntity(pos) instanceof ItemInstallableBlockEntity equippable) {
             return equippable.tryItemInstall(stack, context);
         }
 

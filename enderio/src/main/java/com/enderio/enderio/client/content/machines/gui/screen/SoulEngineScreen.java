@@ -8,7 +8,7 @@ import com.enderio.enderio.client.foundation.widgets.FluidStackWidget;
 import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget;
 import com.enderio.enderio.content.machines.soul_engine.SoulEngineMenu;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
-import com.enderio.enderio.foundation.souldata.EngineSoul;
+import com.enderio.enderio.init.EIODataMaps;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
@@ -60,16 +60,18 @@ public class SoulEngineScreen extends MachineScreen<SoulEngineMenu> {
             String name = entityType.getDescription().getString();
             graphics.text(font, name, (int) (imageWidth / 2f - font.width(name) / 2f), 10, CommonColors.DARK_GRAY, false);
 
-            EngineSoul.RELOAD_LISTENER.matches(entityType).ifPresent(data -> {
+            // TODO: Consider just syncing the soul data in a slot?
+            var soulData = entityType.builtInRegistryHolder().getData(EIODataMaps.ENGINE_SOUL);
+            if (soulData != null) {
                 double burnRate = menu.getBlockEntity().getBurnRate();
                 float genRate = menu.getBlockEntity().getGenerationRate();
-                graphics.text(font, FORMAT.format((int) (data.powerpermb() * genRate) * burnRate / data.tickpermb()) + " µI/t", (int) (imageWidth / 2f + 12), 40, 4210752,
+                graphics.text(font, FORMAT.format((int) (soulData.powerPerMb() * genRate) * burnRate / soulData.tickPerMb()) + " µI/t", (int) (imageWidth / 2f + 12), 40, 4210752,
                     false);
-                graphics.text(font, FORMAT.format(data.tickpermb() / burnRate) + " t/mb", (int) (imageWidth / 2f + 12), 50, CommonColors.DARK_GRAY,
-                        false);
-                graphics.text(font, (int) (data.powerpermb() * genRate) + " µI/mb", (int) (imageWidth / 2f + 12), 60,
+                graphics.text(font, FORMAT.format(soulData.tickPerMb() / burnRate) + " t/mb", (int) (imageWidth / 2f + 12), 50, CommonColors.DARK_GRAY,
+                    false);
+                graphics.text(font, (int) (soulData.powerPerMb() * genRate) + " µI/mb", (int) (imageWidth / 2f + 12), 60,
                     CommonColors.DARK_GRAY, false);
-            });
+            }
         }
 
         super.extractLabels(graphics, mouseX, mouseY);

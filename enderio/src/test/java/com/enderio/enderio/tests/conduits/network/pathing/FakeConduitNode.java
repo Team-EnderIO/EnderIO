@@ -1,9 +1,9 @@
 package com.enderio.enderio.tests.conduits.network.pathing;
 
+import com.enderio.core.common.storage.ResourceStorage;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.connection.ConnectionStatus;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
-import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.connection.path.ConnectionPathProperty;
 import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.enderio.enderio.api.conduits.network.node.ConduitNode;
@@ -14,7 +14,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.DyeColor;
 import net.neoforged.neoforge.capabilities.BlockCapability;
-import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -152,7 +152,7 @@ public class FakeConduitNode implements ConduitNode {
     }
 
     @Override
-    public IItemHandlerModifiable getInventory(Direction side) {
+    public ResourceStorage<ItemResource> getInventory(Direction side) {
         throw new UnsupportedOperationException("Not needed for pathfinding tests");
     }
     

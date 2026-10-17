@@ -25,26 +25,17 @@ public interface TravelTarget {
     int block2BlockRange();
 
     /**
-     * @deprecated No longer used directly, use canTeleportTo and canJumpTo instead. These are more specific to the possible travel types.
-     * @return Whether the target can be travelled to.
-     */
-    @Deprecated(since = "7.0.12-alpha")
-    default boolean canTravelTo() {
-        return true;
-    }
-
-    /**
      * @return Whether the target can be teleported to.
      */
     default boolean canTeleportTo() {
-        return canTravelTo();
+        return true;
     }
 
     /**
      * @return Whether the target can be jumped to like an elevator.
      */
     default boolean canJumpTo() {
-        return canTravelTo();
+        return true;
     }
 
     /**

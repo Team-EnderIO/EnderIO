@@ -314,8 +314,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         @Override
         public void deserialize(ValueInput input) {
             super.deserialize(input);
-            // TODO: 1.21.8: is 1 a better default.
-            inputsConsumed = input.getIntOr(MachineNBTKeys.PROCESSED_INPUTS, 0);
+            inputsConsumed = input.getIntOr(MachineNBTKeys.PROCESSED_INPUTS, 1);
         }
     }
 

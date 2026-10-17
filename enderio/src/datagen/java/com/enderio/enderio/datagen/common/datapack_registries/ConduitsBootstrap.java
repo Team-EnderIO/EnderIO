@@ -21,7 +21,6 @@ public class ConduitsBootstrap {
     public static void bootstrap(BootstrapContext<Conduit<?, ?>> context) {
         // TODO: These rates are still up for change, but will refine through testing.
 
-        // TODO(1.21.1+): change resource keys to match the names
         register(context, EIOConduits.ENERGY, (desc) -> new EnergyConduit(EnderIO.id("block/conduit/energy"), desc, 8000));
         register(context, EIOConduits.ENERGETIC_ENERGY, (desc) -> new EnergyConduit(EnderIO.id("block/conduit/enhanced_energy"), desc, 48_000));
         register(context, EIOConduits.VIBRANT_ENERGY, (desc) -> new EnergyConduit(EnderIO.id("block/conduit/ender_energy"), desc, 192_000));

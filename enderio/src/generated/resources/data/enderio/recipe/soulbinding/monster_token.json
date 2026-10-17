@@ -3,7 +3,10 @@
   "energy": 12800,
   "experience": 1,
   "input": "enderio:soularium_grinding_ball",
-  "mob_category": "monster",
+  "inputSoul": {
+    "type": "enderio:mob_category",
+    "category": "monster"
+  },
   "output": {
     "id": "enderio:monster_token"
   }

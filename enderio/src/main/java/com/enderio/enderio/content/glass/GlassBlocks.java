@@ -70,8 +70,7 @@ public class GlassBlocks {
                     .noOcclusion()
                     .isValidSpawn(GlassBlocks::never)
                     .isRedstoneConductor(GlassBlocks::never)
-                    .isSuffocating(GlassBlocks::never)
-                    .isViewBlocking(GlassBlocks::never));
+                    .isSuffocating(GlassBlocks::never));
 
         itemRegistry.registerItem(name, p -> new FusedQuartzBlockItem(block.get(), p), p -> p.overrideDescription(getDescriptionId(glassIdentifier, null)));
         return block;
@@ -93,7 +92,6 @@ public class GlassBlocks {
                     .isValidSpawn(GlassBlocks::never)
                     .isRedstoneConductor(GlassBlocks::never)
                     .isSuffocating(GlassBlocks::never)
-                    .isViewBlocking(GlassBlocks::never)
                     .mapColor(color));
 
         itemRegistry.registerItem(name, p -> new FusedQuartzBlockItem(block.get(), p), p -> p.overrideDescription(getDescriptionId(glassIdentifier, color)));

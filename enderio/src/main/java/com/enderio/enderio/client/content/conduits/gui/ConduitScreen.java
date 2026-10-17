@@ -3,6 +3,7 @@ package com.enderio.enderio.client.content.conduits.gui;
 import com.enderio.core.client.gui.screen.EnderContainerScreen;
 import com.enderio.core.client.gui.widgets.IconButton;
 import com.enderio.core.client.gui.widgets.ToggleIconButton;
+import com.enderio.core.common.storage.slot.ResourceSlotId;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.conduits.Conduit;
@@ -30,8 +31,10 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.CommonColors;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.DyeColor;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
 import org.jspecify.annotations.Nullable;
-import net.neoforged.neoforge.items.SlotItemHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +71,7 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
         }
 
         for (int i = 0; i < 9; i++) {
-            addRenderableWidget(new ConduitSelectionButton(getGuiLeft() + 206, getGuiTop() + 4 + 24 * i, i,
+            addRenderableWidget(new ConduitSelectionButton(getLeftPos() + 206, getTopPos() + 4 + 24 * i, i,
                     menu::getConduit, menu::getConnectedConduits,
                     idx -> handleButtonPress(ConduitMenu.BUTTON_CHANGE_CONDUIT_START_ID + idx)));
         }
@@ -84,12 +87,18 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
     public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         super.extractBackground(graphics, mouseX, mouseY, a);
 
-        graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight, 256, 256);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, getLeftPos(), getTopPos(), 0, 0, imageWidth, imageHeight, 256, 256);
 
         var conduit = menu.getConduit();
-        for (int slot = 0; slot < conduit.value().getInventorySize(); slot++) {
-            var pos = conduit.value().getInventorySlotPosition(slot);
-            graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, getGuiLeft() + pos.x() - 1, getGuiTop() + pos.y() - 1, 206, 0, 18, 18, 256, 256);
+        var layout = conduit.value().inventoryLayout();
+        if (layout == null) {
+            return;
+        }
+
+        for (int i = 0; i < layout.size(); i++) {
+            var pos = conduit.value().getInventorySlotPosition(i);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, getLeftPos() + pos.x() - 1, getTopPos() + pos.y() - 1, 206, 0, 18, 18,
+                256, 256);
         }
     }
 
@@ -106,10 +115,9 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
     @Override
     protected boolean renderCustomTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         if (this.hoveredSlot != null && !this.hoveredSlot.hasItem()) {
-            if (this.hoveredSlot instanceof SlotItemHandler handlerSlot) {
-                if (handlerSlot.getItemHandler() == this.menu.getConduitInventory()) {
-                    int slotIndex = handlerSlot.getSlotIndex();
-                    Component tooltipText = this.menu.getConduit().value().getSlotTooltip(slotIndex);
+            if (this.hoveredSlot instanceof ResourceHandlerSlot handlerSlot) {
+                if (handlerSlot.getResourceHandler() == this.menu.getConduitInventory()) {
+                    Component tooltipText = this.menu.getConduit().value().getSlotTooltip(handlerSlot.index);
                     if (!tooltipText.getString().isEmpty()) {
                         graphics.setTooltipForNextFrame(this.font, tooltipText, mouseX, mouseY);
                         return true;
@@ -140,7 +148,7 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
 
         public void addWidgets(ScreenHelper screenHelper) {
             if (screenType != null) {
-                screenType.createScreenWidgets(screenHelper, getGuiLeft(), getGuiTop(), dataAccess);
+                screenType.createScreenWidgets(screenHelper, getLeftPos(), getTopPos(), dataAccess);
             }
         }
 
@@ -231,13 +239,19 @@ public class ConduitScreen extends EnderContainerScreen<ConduitMenu> {
         }
 
         @Override
-        public AbstractWidget addFilterConfigureButton(int x, int y, int slot) {
+        public AbstractWidget addFilterConfigureButton(int x, int y, ResourceSlotId<ItemResource> slotId) {
+            var layout = menu.getConduit().value().inventoryLayout();
+            if (layout == null) {
+                throw new IllegalStateException("Conduit has no inventory!");
+            }
+
             var widget = addIconButton(x, y, 16, 16, Component.empty(), ICON_CONFIGURE,
-                    input -> menu.tryOpenFilterMenu(slot));
+                    input -> menu.tryOpenFilterMenu(slotId.index(layout)));
             addPreRenderAction(() -> {
                 var inventory = menu.getConduitInventory();
-                widget.visible = inventory != null
-                        && inventory.getStackInSlot(slot).getCapability(EnderIOCapabilities.FILTER_MENU_PROVIDER) != null;
+                widget.visible = inventory != null &&
+                    ItemAccess.forHandlerIndexStrict(inventory, slotId.index(layout))
+                        .getCapability(EnderIOCapabilities.FILTER_MENU_PROVIDER) != null;
             });
             return widget;
         }

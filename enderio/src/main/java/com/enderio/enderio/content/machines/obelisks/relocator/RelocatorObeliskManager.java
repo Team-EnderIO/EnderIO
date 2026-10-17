@@ -39,7 +39,7 @@ public class RelocatorObeliskManager extends ObeliskAreaManager<RelocatorObelisk
         var obeliskManager = getManager(level);
 
         Set<RelocatorObeliskBlockEntity> obelisks = obeliskManager.getObelisksFor(pos);
-        if (obelisks == null || obelisks.isEmpty()) {
+        if (obelisks.isEmpty()) {
             return;
         }
 

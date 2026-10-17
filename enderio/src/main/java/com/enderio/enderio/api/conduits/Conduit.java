@@ -1,5 +1,6 @@
 package com.enderio.enderio.api.conduits;
 
+import com.enderio.core.common.storage.layout.ResourceStorageLayout;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.conduits.bundle.ConduitBundle;
 import com.enderio.enderio.api.conduits.connection.ConnectionReader;
@@ -12,26 +13,26 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentGetter;
+import net.minecraft.core.registries.codec.RegistryFixedCodec;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
-import net.minecraft.resources.RegistryFixedCodec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipProvider;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.ApiStatus;
-import org.jspecify.annotations.Nullable;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.item.CreativeModeTab;
 import org.joml.Vector2i;
+import org.jspecify.annotations.Nullable;
+
+import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -70,22 +71,6 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
 
     /**
      * Proxy a capability to the conduit bundle block.
-     * @deprecated Use {@link #proxyCapability(Level, ConnectionReader, ConduitNode, BlockCapability, Object)} instead.
-     * @param level the level.
-     * @param node the node that is being queried for proxying.
-     * @param capability the capability being requested.
-     * @param context the context for the capability.
-     * @return the capability or null if it is not exposed.
-     */
-    @Deprecated(since = "8.2.8")
-    @Nullable
-    default <TCapability, TContext> TCapability proxyCapability(Level level, ConduitNode node,
-            BlockCapability<TCapability, TContext> capability, @Nullable TContext context) {
-        return null;
-    }
-
-    /**
-     * Proxy a capability to the conduit bundle block.
      * @param level the level.
      * @param connectionReader the connection accessor for the node.
      * @param node the node that is being queried for proxying. Will always be null on the client, may be null on server.
@@ -96,11 +81,6 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
     @Nullable
     default <TCapability, TContext> TCapability proxyCapability(Level level, ConnectionReader connectionReader, @Nullable ConduitNode node,
         BlockCapability<TCapability, TContext> capability, @Nullable TContext context) {
-        // Old contract was non-null node - uphold this.
-        if (node != null) {
-            return proxyCapability(level, node, capability, context);
-        }
-
         return null;
     }
 
@@ -162,27 +142,11 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
     }
 
     default boolean canConnectToBlock(Level level, ConduitCapabilityAccessor capabilityAccessor, BlockPos conduitPos, Direction direction) {
-        return canConnectToBlock(level, conduitPos, direction);
-    }
-
-    /**
-     * @deprecated Use {@link #canConnectToBlock(Level, ConduitCapabilityAccessor, BlockPos, Direction)} instead as it provides capability caching and invalidation handling.
-     */
-    @Deprecated(since = "8.2.6")
-    default boolean canConnectToBlock(Level level, BlockPos conduitPos, Direction direction) {
         return false;
     }
 
     default boolean canForceConnectToBlock(Level level, ConduitCapabilityAccessor capabilityAccessor, BlockPos conduitPos, Direction direction) {
         return canConnectToBlock(level, capabilityAccessor, conduitPos, direction);
-    }
-
-    /**
-     * @deprecated Use {@link #canConnectToBlock(Level, ConduitCapabilityAccessor, BlockPos, Direction)} instead as it provides capability caching and invalidation handling.
-     */
-    @Deprecated(since = "8.2.6")
-    default boolean canForceConnectToBlock(Level level, BlockPos conduitPos, Direction direction) {
-        return canConnectToBlock(level, conduitPos, direction);
     }
 
     // endregion
@@ -208,22 +172,20 @@ public interface Conduit<TConduit extends Conduit<TConduit, TConnectionConfig>, 
     // TODO: Document that item loss will occur if a conduit is upgraded to another
     // type with smaller inventory...
 
-    default int getInventorySize() {
-        return 0;
+    // TODO: The ResourceStorage system has a lot of redundancies that aren't required for conduits.
+    //       I might look at making a system which accepts a mixed bag of properties, and then have a type object that asserts all such properties are present.
+    @Nullable
+    default ResourceStorageLayout<ItemResource> inventoryLayout() {
+        return null;
     }
 
     default Component getSlotTooltip(int slot) {
         return Component.empty();
     }
 
-    default boolean isItemValid(int slot, ItemStack stack) {
-        return true;
-    }
-
     default Vector2i getInventorySlotPosition(int slot) {
-        if (getInventorySize() > 0) {
-            throw new NotImplementedException(
-                    "This conduit has an inventory, but getSlotPosition has not been implemented!");
+        if (inventoryLayout() != null) {
+            throw new NotImplementedException("This conduit has an inventory, but getSlotPosition has not been implemented!");
         }
 
         throw new UnsupportedOperationException("This conduit does not have an inventory.");

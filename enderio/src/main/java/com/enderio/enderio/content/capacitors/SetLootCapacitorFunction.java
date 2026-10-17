@@ -6,12 +6,13 @@ import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOLootModifiers;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.Holder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
-import net.minecraft.world.level.storage.loot.providers.number.NumberProviders;
+import net.minecraft.world.level.storage.loot.providers.number.floats.ContextFloatProvider;
+import net.minecraft.world.level.storage.loot.providers.number.floats.ContextFloatProviders;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -22,12 +23,12 @@ public class SetLootCapacitorFunction extends LootItemConditionalFunction {
 
     public static final MapCodec<SetLootCapacitorFunction> CODEC =
         RecordCodecBuilder.mapCodec(inst -> commonFields(inst)
-            .and(NumberProviders.CODEC.fieldOf("range").forGetter(m -> m.range))
+            .and(ContextFloatProviders.CODEC.fieldOf("range").forGetter(m -> m.range))
             .apply(inst, SetLootCapacitorFunction::new));
 
-    private final NumberProvider range;
+    private final Holder<ContextFloatProvider> range;
 
-    SetLootCapacitorFunction(List<LootItemCondition> conditions, NumberProvider range) {
+    SetLootCapacitorFunction(Optional<Holder<LootItemCondition>> conditions, Holder<ContextFloatProvider> range) {
         super(conditions);
         this.range = range;
     }
@@ -39,29 +40,29 @@ public class SetLootCapacitorFunction extends LootItemConditionalFunction {
 
     @Override
     protected ItemStack run(ItemStack stack, LootContext context) {
-        float base = range.getFloat(context);
+        float base = range.value().getFloat(context);
         Map<CapacitorModifier, Float> modifiers = new EnumMap<>(CapacitorModifier.class);
 
         var modifier = CapacitorModifier.getRandomModifier(context.getRandom());
-        modifier.ifPresent(m -> modifiers.put(m, range.getFloat(context)));
+        modifier.ifPresent(m -> modifiers.put(m, range.value().getFloat(context)));
 
         // 15% chance of a secondary modifier
         if (context.getRandom().nextFloat() < 0.15f) {
             modifier = CapacitorModifier.getRandomModifier(context.getRandom(), modifiers.keySet());
-            modifier.ifPresent(m -> modifiers.put(m, range.getFloat(context)));
+            modifier.ifPresent(m -> modifiers.put(m, range.value().getFloat(context)));
         }
 
         // 2% change of a third
         if (context.getRandom().nextFloat() < 0.02f) {
             modifier = CapacitorModifier.getRandomModifier(context.getRandom(), modifiers.keySet());
-            modifier.ifPresent(m -> modifiers.put(m, range.getFloat(context)));
+            modifier.ifPresent(m -> modifiers.put(m, range.value().getFloat(context)));
         }
 
         stack.set(EIODataComponents.CAPACITOR_DATA, new CapacitorData(base, modifiers));
         return stack;
     }
 
-    public static Builder<?> setLootCapacitor(NumberProvider range) {
+    public static Builder<?> setLootCapacitor(Holder<ContextFloatProvider> range) {
         return simpleBuilder((conditions) -> new SetLootCapacitorFunction(conditions, range));
     }
 }

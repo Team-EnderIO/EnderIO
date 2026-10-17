@@ -2,26 +2,21 @@ package com.enderio.enderio.content.machines.soul_binder;
 
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.enderio.api.EnderIOCapabilities;
-import com.enderio.enderio.api.network.MassiveStreamCodec;
+import com.enderio.enderio.api.soul.ingredient.SoulIngredient;
 import com.enderio.enderio.foundation.MachineRecipe;
 import com.enderio.enderio.foundation.recipe.FluidRecipeInput;
-import com.enderio.enderio.foundation.souldata.SoulDataReloadListener;
 import com.enderio.enderio.foundation.util.ExperienceUtil;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOItems;
 import com.enderio.enderio.init.EIORecipeBookCategories;
 import com.enderio.enderio.init.EIORecipeTypes;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.Identifier;
-import net.minecraft.util.StringRepresentable;
-import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
@@ -35,61 +30,50 @@ import net.minecraft.world.item.crafting.display.RecipeDisplay;
 import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Input> {
     private static final MapCodec<SoulBindingRecipe> MAP_CODEC = RecordCodecBuilder.<SoulBindingRecipe>mapCodec(instance -> instance
-        .group(ItemStackTemplate.CODEC.fieldOf("output").forGetter(SoulBindingRecipe::output), Ingredient.CODEC.fieldOf("input").forGetter(SoulBindingRecipe::input),
-            Codec.INT.fieldOf("energy").forGetter(SoulBindingRecipe::energy), Codec.INT.fieldOf("experience").forGetter(SoulBindingRecipe::experience),
-            Identifier.CODEC.optionalFieldOf("entity_type").forGetter(SoulBindingRecipe::entityType),
-            MobCategory.CODEC.optionalFieldOf("mob_category").forGetter(SoulBindingRecipe::mobCategory),
-            Codec.STRING.optionalFieldOf("soul_data").forGetter(SoulBindingRecipe::soulData),
+        .group(
+            ItemStackTemplate.CODEC.fieldOf("output").forGetter(SoulBindingRecipe::output),
+            Ingredient.CODEC.fieldOf("input").forGetter(SoulBindingRecipe::input),
+            SoulIngredient.CODEC.fieldOf("inputSoul").forGetter(SoulBindingRecipe::inputSoul),
+            Codec.INT.fieldOf("energy").forGetter(SoulBindingRecipe::energy),
+            Codec.INT.fieldOf("experience").forGetter(SoulBindingRecipe::experience),
             Codec.BOOL.optionalFieldOf("copyInputComponents", false).forGetter(SoulBindingRecipe::copyInputComponents))
-        .apply(instance, SoulBindingRecipe::new)).validate(recipe -> {
-        int entityType = recipe.entityType().isPresent() ? 1 : 0;
-        int mobCategory = recipe.mobCategory().isPresent() ? 1 : 0;
-        int soulData = recipe.soulData().isPresent() ? 1 : 0;
-        if (entityType + mobCategory + soulData > 1) {
-            return DataResult.error(() -> "Soul Binding recipe properties entity_type, mob_category and soul_data are mutually exclusive.");
-        }
-        return DataResult.success(recipe);
-    });
+        .apply(instance, SoulBindingRecipe::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, SoulBindingRecipe> STREAM_CODEC = MassiveStreamCodec.composite(ItemStackTemplate.STREAM_CODEC,
-        SoulBindingRecipe::output, Ingredient.CONTENTS_STREAM_CODEC, SoulBindingRecipe::input, ByteBufCodecs.INT, SoulBindingRecipe::energy, ByteBufCodecs.INT,
-        SoulBindingRecipe::experience, Identifier.STREAM_CODEC.apply(ByteBufCodecs::optional), SoulBindingRecipe::entityType,
-        // TODO: 1.21: This is a very gross, could do better.
-        ByteBufCodecs.STRING_UTF8.map(name -> ((StringRepresentable.EnumCodec<MobCategory>) MobCategory.CODEC).byName(name), MobCategory::getName).apply(ByteBufCodecs::optional),
-        SoulBindingRecipe::mobCategory, ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs::optional), SoulBindingRecipe::soulData, ByteBufCodecs.BOOL, SoulBindingRecipe::copyInputComponents,
+    public static final StreamCodec<RegistryFriendlyByteBuf, SoulBindingRecipe> STREAM_CODEC = StreamCodec.composite(
+        ItemStackTemplate.STREAM_CODEC, SoulBindingRecipe::output,
+        Ingredient.CONTENTS_STREAM_CODEC, SoulBindingRecipe::input,
+        SoulIngredient.STREAM_CODEC, SoulBindingRecipe::inputSoul,
+        ByteBufCodecs.INT, SoulBindingRecipe::energy,
+        ByteBufCodecs.INT, SoulBindingRecipe::experience,
+        ByteBufCodecs.BOOL, SoulBindingRecipe::copyInputComponents,
         SoulBindingRecipe::new);
 
     public static final RecipeSerializer<SoulBindingRecipe> SERIALIZER = new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC);
 
     private final ItemStackTemplate output;
     private final Ingredient input;
+    private final SoulIngredient inputSoul;
     private final int energy;
     private final int experience;
-    private final Optional<Identifier> entityType;
-    private final Optional<MobCategory> mobCategory;
-    private final Optional<String> soulData;
     private final boolean copyInputComponents;
 
     @Nullable
     private PlacementInfo placementInfo;
 
-    public SoulBindingRecipe(ItemStackTemplate output, Ingredient input, int energy, int experience, Optional<Identifier> entityType, Optional<MobCategory> mobCategory, Optional<String> soulData,
-        boolean copyInputComponents) {
+    public SoulBindingRecipe(ItemStackTemplate output, Ingredient input, SoulIngredient inputSoul, int energy, int experience, boolean copyInputComponents) {
         this.output = output;
         this.input = input;
+        this.inputSoul = inputSoul;
         this.energy = energy;
         this.experience = experience;
-        this.entityType = entityType;
-        this.mobCategory = mobCategory;
-        this.soulData = soulData;
         this.copyInputComponents = copyInputComponents;
     }
 
@@ -101,24 +85,16 @@ public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.
         return input;
     }
 
+    public SoulIngredient inputSoul() {
+        return inputSoul;
+    }
+
     public int energy() {
         return energy;
     }
 
     public int experience() {
         return experience;
-    }
-
-    public Optional<Identifier> entityType() {
-        return entityType;
-    }
-
-    public Optional<MobCategory> mobCategory() {
-        return mobCategory;
-    }
-
-    public Optional<String> soulData() {
-        return soulData;
     }
 
     @Override
@@ -137,11 +113,15 @@ public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.
             result.applyComponents(input.itemToBind.getComponents());
         }
 
-        var vialSoulBindable = vial.getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
-        var resultSoulBinding = result.getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
+        var vialSoulBindable = ItemAccess.forStack(vial).getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
+        var resultSoulBinding = ItemAccess.forStack(result).getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
 
         if (vialSoulBindable != null && resultSoulBinding != null) {
-            resultSoulBinding.bindSoul(vialSoulBindable.getBoundSoul());
+            // TODO: Maybe determine the result in the ctor?
+            try (Transaction transaction = Transaction.openRoot()) {
+                resultSoulBinding.bindSoul(vialSoulBindable.boundSoul(), transaction);
+                transaction.commit();
+            }
         }
 
         return results;
@@ -173,37 +153,14 @@ public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.
             return false;
         }
 
-        var soulBindable = recipeInput.getItem(0).getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
-        if (soulBindable == null || !soulBindable.hasSoul()) {
+        var soulBindable = ItemAccess.forStack(recipeInput.getItem(0)).getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
+        if (soulBindable == null || !soulBindable.isBound()) {
             return false;
         }
 
-        var soul = soulBindable.getBoundSoul();
-        if (soul.isEmpty()) {
+        var soul = soulBindable.boundSoul();
+        if (!inputSoul.test(soul)) {
             return false;
-        }
-
-        var entityType = Objects.requireNonNull(soul.entityType());
-
-        if (soulData.isPresent()) { // is in the selected souldata
-            if (SoulDataReloadListener.fromString(soulData.get()).matches(soul.entityType()).isEmpty()) {
-                return false;
-            }
-
-            return ExperienceUtil.getLevelFromFluid(recipeInput.getFluid(2).getAmount()) >= experience;
-        }
-
-        if (mobCategory.isPresent()) {
-            if (!entityType.getCategory().equals(mobCategory.get())) {
-                return false;
-            }
-        }
-
-        if (this.entityType.isPresent()) {
-            var entityTypeId = soul.entityTypeId();
-            if (!Objects.requireNonNull(entityTypeId).equals(this.entityType.get())) {
-                return false;
-            }
         }
 
         return ExperienceUtil.getLevelFromFluid(recipeInput.getFluid(2).getAmount()) >= experience;

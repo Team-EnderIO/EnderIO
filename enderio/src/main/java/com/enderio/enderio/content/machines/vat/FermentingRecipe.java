@@ -4,12 +4,14 @@ import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.enderio.foundation.MachineRecipe;
 import com.enderio.enderio.foundation.datamap.VatReagent;
 import com.enderio.enderio.init.EIOBlocks;
+import com.enderio.enderio.init.EIODataMaps;
 import com.enderio.enderio.init.EIORecipeBookCategories;
 import com.enderio.enderio.init.EIORecipeTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -120,7 +122,7 @@ public final class FermentingRecipe implements MachineRecipe<FermentingRecipe.In
     }
 
     public static double getModifier(ItemStack stack, TagKey<Item> reagent) {
-        var map = stack.typeHolder().getData(VatReagent.DATA_MAP);
+        var map = stack.typeHolder().getData(EIODataMaps.VAT_REAGENT);
         if (map != null) {
             return map.getOrDefault(reagent, 1D);
         }
@@ -176,9 +178,10 @@ public final class FermentingRecipe implements MachineRecipe<FermentingRecipe.In
     public List<RecipeDisplay> display() {
         return List.of(new FermentingDisplay(
             input.ingredient().display(),
-            new SlotDisplay.TagSlotDisplay(firstReagent),
-            new SlotDisplay.TagSlotDisplay(secondReagent),
-            new FluidStackSlotDisplay(output.create()),
+            // TODO: 26.3
+            new SlotDisplay.TagSlotDisplay(HolderSet.empty()), // (firstReagent),
+            new SlotDisplay.TagSlotDisplay(HolderSet.empty()), // (secondReagent),
+            new FluidStackSlotDisplay(output),
             new SlotDisplay.ItemSlotDisplay(EIOBlocks.VAT.asItem())
             ));
     }

@@ -16,6 +16,7 @@ import com.enderio.enderio.content.filters.item.general.EnderItemFilterItem;
 import com.enderio.enderio.content.filters.item.limited.LimitedItemFilterItem;
 import com.enderio.enderio.content.filters.redstone.RedstoneFilterItem;
 import com.enderio.enderio.content.filters.soul.EnderSoulFilterItem;
+import com.enderio.enderio.content.fun.EnderiosConsumeEffect;
 import com.enderio.enderio.content.fun.EnderiosItem;
 import com.enderio.enderio.content.tools.ElectromagnetItem;
 import com.enderio.enderio.content.tools.LevitationStaffItem;
@@ -31,9 +32,14 @@ import com.enderio.enderio.foundation.item.CreativeTabIconItem;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.component.Consumable;
+import net.minecraft.world.item.component.Consumables;
 import net.minecraft.world.item.component.ItemLore;
+import net.minecraft.world.item.consume_effects.TeleportRandomlyConsumeEffect;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -202,8 +208,7 @@ public class EIOItems {
 
     // region Fun
 
-    public static final DeferredItem<EnderiosItem> ENDERIOS = ITEMS.registerItem("enderios", EnderiosItem::new,
-        p -> p.stacksTo(1));
+    public static final DeferredItem<EnderiosItem> ENDERIOS = ITEMS.registerItem("enderios", EnderiosItem::new);
 
     // endregion
 

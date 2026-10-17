@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:erase_soul_engine"
+        "recipes": "enderio:erase_soul_engine"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

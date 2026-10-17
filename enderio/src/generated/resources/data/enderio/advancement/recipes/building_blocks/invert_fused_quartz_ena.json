@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:invert_fused_quartz_ena"
+        "recipes": "enderio:invert_fused_quartz_ena"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

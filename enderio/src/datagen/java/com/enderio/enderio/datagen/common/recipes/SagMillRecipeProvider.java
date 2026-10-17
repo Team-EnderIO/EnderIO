@@ -6,6 +6,7 @@ import com.enderio.enderio.content.machines.sag_mill.SagMillingRecipe;
 import com.enderio.enderio.content.machines.sag_mill.SagMillingRecipe.BonusType;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOItems;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -14,6 +15,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -31,15 +33,15 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
 
     private static final int BASE_ENERGY_PER_OPERATION = 2400;
 
-    private HolderLookup.RegistryLookup<Item> items;
+    private HolderGetter<Item> items;
 
     protected Ingredient ingredientFromTag(TagKey<Item> tag) {
         return Ingredient.of(this.items.getOrThrow(tag));
     }
 
     @Override
-    public void buildRecipes(HolderLookup.Provider registries, RecipeOutput recipeOutput) {
-        this.items = registries.lookupOrThrow(Registries.ITEM);
+    public void buildRecipes(RecipeOutput recipeOutput) {
+        this.items = recipeOutput.lookup(Registries.ITEM);
 
         buildOreBlockRecipes(items, recipeOutput);
         buildRawOreRecipes(items, recipeOutput);
@@ -132,16 +134,16 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
         build("cobweb", Ingredient.of(COBWEB), List.of(output(STRING, 2), output(STRING, 0.6f), output(STRING, 0.3f)),
                 BASE_ENERGY_PER_OPERATION, recipeOutput);
 
-        buildFlower("dandelion", DANDELION, YELLOW_DYE, recipeOutput);
-        buildFlower("poppy", POPPY, RED_DYE, recipeOutput);
-        buildFlower("blue_orchid", BLUE_ORCHID, LIGHT_BLUE_DYE, recipeOutput);
-        buildFlower("allium", ALLIUM, MAGENTA_DYE, recipeOutput);
-        buildFlower("azure_bluet", AZURE_BLUET, LIGHT_GRAY_DYE, recipeOutput);
-        buildFlower("red_tulip", RED_TULIP, RED_DYE, recipeOutput);
-        buildFlower("orange_tulip", ORANGE_TULIP, ORANGE_DYE, recipeOutput);
-        buildFlower("white_tulip", WHITE_TULIP, WHITE_DYE, recipeOutput);
-        buildFlower("pink_tulip", PINK_TULIP, PINK_DYE, recipeOutput);
-        buildFlower("oxeye_daisy", OXEYE_DAISY, WHITE_DYE, recipeOutput);
+        buildFlower("dandelion", DANDELION, Items.DYE.pick(DyeColor.YELLOW), recipeOutput);
+        buildFlower("poppy", POPPY, Items.DYE.pick(DyeColor.RED), recipeOutput);
+        buildFlower("blue_orchid", BLUE_ORCHID, Items.DYE.pick(DyeColor.LIGHT_BLUE), recipeOutput);
+        buildFlower("allium", ALLIUM, Items.DYE.pick(DyeColor.MAGENTA), recipeOutput);
+        buildFlower("azure_bluet", AZURE_BLUET, Items.DYE.pick(DyeColor.LIGHT_GRAY), recipeOutput);
+        buildFlower("red_tulip", RED_TULIP, Items.DYE.pick(DyeColor.RED), recipeOutput);
+        buildFlower("orange_tulip", ORANGE_TULIP, Items.DYE.pick(DyeColor.ORANGE), recipeOutput);
+        buildFlower("white_tulip", WHITE_TULIP, Items.DYE.pick(DyeColor.WHITE), recipeOutput);
+        buildFlower("pink_tulip", PINK_TULIP, Items.DYE.pick(DyeColor.PINK), recipeOutput);
+        buildFlower("oxeye_daisy", OXEYE_DAISY, Items.DYE.pick(DyeColor.WHITE), recipeOutput);
 
         build("shrub", Ingredient.of(DEAD_BUSH), List.of(output(PLANT_MATTER_BROWN.get(), 0.8f),
                 output(PLANT_MATTER_BROWN.get(), 0.6f), output(PLANT_MATTER_BROWN.get(), 0.3f)),
@@ -174,8 +176,8 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
                 List.of(output(PLANT_MATTER_GREEN.get(), 3, 0.15f), output(PLANT_MATTER_GREEN.get(), 3, 0.1f)),
                 BASE_ENERGY_PER_OPERATION, recipeOutput);
 
-        build("sun_flower", Ingredient.of(Items.SUNFLOWER), List.of(output(YELLOW_DYE, 2, 0.8f),
-                output(YELLOW_DYE, 0.6f), output(YELLOW_DYE, 2, 0.3f), output(PLANT_MATTER_GREEN.get(), 0.2f)),
+        build("sun_flower", Ingredient.of(Items.SUNFLOWER), List.of(output(Items.DYE.pick(DyeColor.YELLOW), 2, 0.8f),
+                output(Items.DYE.pick(DyeColor.YELLOW), 0.6f), output(Items.DYE.pick(DyeColor.YELLOW), 2, 0.3f), output(PLANT_MATTER_GREEN.get(), 0.2f)),
                 BASE_ENERGY_PER_OPERATION, recipeOutput);
 
         build("tall_grass", Ingredient.of(TALL_GRASS),
@@ -188,12 +190,12 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
                         output(PLANT_MATTER_GREEN.get(), 2, 0.1f), output(PLANT_MATTER_BROWN.get(), 0.15f)),
                 BASE_ENERGY_PER_OPERATION, recipeOutput);
 
-        build("rose_bush", Ingredient.of(ROSE_BUSH), List.of(output(RED_DYE, 2, 0.8f), output(RED_DYE, 0.6f),
-                output(RED_DYE, 2, 0.3f), output(PLANT_MATTER_GREEN.get(), 0.2f)), BASE_ENERGY_PER_OPERATION,
+        build("rose_bush", Ingredient.of(ROSE_BUSH), List.of(output(Items.DYE.pick(DyeColor.RED), 2, 0.8f), output(Items.DYE.pick(DyeColor.RED), 0.6f),
+                output(Items.DYE.pick(DyeColor.RED), 2, 0.3f), output(PLANT_MATTER_GREEN.get(), 0.2f)), BASE_ENERGY_PER_OPERATION,
                 recipeOutput);
 
-        build("poeny", Ingredient.of(PEONY), List.of(output(PINK_DYE, 2, 0.8f), output(PINK_DYE, 0.6f),
-                output(PINK_DYE, 2, 0.3f), output(PLANT_MATTER_GREEN.get(), 0.2f)), BASE_ENERGY_PER_OPERATION,
+        build("poeny", Ingredient.of(PEONY), List.of(output(Items.DYE.pick(DyeColor.PINK), 2, 0.8f), output(Items.DYE.pick(DyeColor.PINK), 0.6f),
+                output(Items.DYE.pick(DyeColor.PINK), 2, 0.3f), output(PLANT_MATTER_GREEN.get(), 0.2f)), BASE_ENERGY_PER_OPERATION,
                 recipeOutput);
 
         build("sugar_canes", Ingredient.of(SUGAR_CANE), List.of(output(SUGAR), output(SUGAR, 0.5f),
@@ -215,7 +217,7 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
                 BASE_ENERGY_PER_OPERATION, recipeOutput);
     }
 
-    private void buildOreBlockRecipes(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput) {
+    private void buildOreBlockRecipes(HolderGetter<Item> items, RecipeOutput recipeOutput) {
         buildOre("iron_ore", ingredientFromTag(Tags.Items.ORES_IRON), RAW_IRON, recipeOutput);
         buildOre("gold_ore", ingredientFromTag(Tags.Items.ORES_GOLD), RAW_GOLD, recipeOutput);
         buildOre("copper_ore", ingredientFromTag(Tags.Items.ORES_COPPER), RAW_COPPER, recipeOutput);
@@ -241,7 +243,7 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
                 BASE_ENERGY_PER_OPERATION, recipeOutput);
     }
 
-    private void buildRawOreRecipes(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput) {
+    private void buildRawOreRecipes(HolderGetter<Item> items, RecipeOutput recipeOutput) {
         build("raw_iron", ingredientFromTag(Tags.Items.RAW_MATERIALS_IRON),
                 List.of(output(POWDERED_IRON), output(POWDERED_IRON, 0.8f), output(EIOTags.Items.DUSTS_TIN, 0.05f)),
                 BASE_ENERGY_PER_OPERATION, recipeOutput);
@@ -256,7 +258,7 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
     }
 
 
-    private void buildModCompat(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput) {
+    private void buildModCompat(HolderGetter<Item> items, RecipeOutput recipeOutput) {
         build("raw_aluminum", ingredientFromTag(EIOTags.Items.RAW_MATERIALS_ALUMINUM), List.of(output(EIOTags.Items.DUSTS_ALUMINUM), output(EIOTags.Items.DUSTS_ALUMINUM, 0.80f),
                 output(EIOTags.Items.DUSTS_IRON, 0.20f)), BASE_ENERGY_PER_OPERATION, recipeOutput, EIOTags.Items.RAW_MATERIALS_ALUMINUM, EIOTags.Items.DUSTS_ALUMINUM);
         build("aluminum_ore", ingredientFromTag(EIOTags.Items.ORES_ALUMINUM), List.of(output(EIOTags.Items.RAW_MATERIALS_ALUMINUM), output(EIOTags.Items.RAW_MATERIALS_ALUMINUM, 0.33f), output(COBBLESTONE, 0.15f)),

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:soularium_nugget"
+        "recipes": "enderio:soularium_nugget"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

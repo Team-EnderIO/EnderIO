@@ -18,6 +18,7 @@ import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.item.ModelRenderProperties;
 import net.minecraft.client.resources.model.cuboid.ItemTransforms;
 import net.minecraft.client.resources.model.geometry.BakedQuad;
+import net.minecraft.client.resources.model.geometry.ItemQuads;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
@@ -70,7 +71,7 @@ public class PaintedItemModel implements ItemModel {
         var model = getItemModel(data.paint());
 
         ItemStackRenderState.LayerRenderState layer = itemStackRenderState.newLayer();
-        layer.prepareQuadList().addAll(model.quads);
+        layer.setQuads(ItemQuads.split(model.quads));
         model.properties.applyToLayer(layer, itemDisplayContext);
 
         if (model.animated) {

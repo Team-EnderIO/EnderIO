@@ -6,6 +6,7 @@ import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SoundType;
@@ -22,27 +23,33 @@ public class ConduitBundleExtension implements IClientBlockExtensions {
     }
 
     @Override
-    public boolean addHitEffects(BlockState state, Level level, HitResult target, ParticleEngine manager) {
-        if (!(target instanceof BlockHitResult blockHitResult)) {
-            return false;
-        }
-
-        if (level.getBlockEntity(blockHitResult.getBlockPos()) instanceof ConduitBundleBlockEntity conduitBundle) {
-            if (conduitBundle.hasFacade() && ClientFacadeVisibility.areFacadesVisible()) {
-                return false;
-            }
-
-            var conduit = conduitBundle.getShape().getConduit(blockHitResult.getBlockPos(), target);
-            if (conduit != null) {
-                ConduitBreakParticle.addCrackEffects(blockHitResult.getBlockPos(), state, conduit.value(),
-                        blockHitResult.getDirection());
-            }
-
-            return true;
-        }
-
-        return false;
+    public boolean addHitEffects(BlockState state, Level level, BlockPos pos, Direction face, ParticleEngine manager) {
+        return IClientBlockExtensions.super.addHitEffects(state, level, pos, face, manager);
     }
+
+    // TODO: 26.3
+//    @Override
+//    public boolean addHitEffects(BlockState state, Level level, HitResult target, ParticleEngine manager) {
+//        if (!(target instanceof BlockHitResult blockHitResult)) {
+//            return false;
+//        }
+//
+//        if (level.getBlockEntity(blockHitResult.getBlockPos()) instanceof ConduitBundleBlockEntity conduitBundle) {
+//            if (conduitBundle.hasFacade() && ClientFacadeVisibility.areFacadesVisible()) {
+//                return false;
+//            }
+//
+//            var conduit = conduitBundle.getShape().getConduit(blockHitResult.getBlockPos(), target);
+//            if (conduit != null) {
+//                ConduitBreakParticle.addCrackEffects(blockHitResult.getBlockPos(), state, conduit.value(),
+//                        blockHitResult.getDirection());
+//            }
+//
+//            return true;
+//        }
+//
+//        return false;
+//    }
 
     @Override
     public boolean addDestroyEffects(BlockState state, Level level, BlockPos pos, ParticleEngine manager) {

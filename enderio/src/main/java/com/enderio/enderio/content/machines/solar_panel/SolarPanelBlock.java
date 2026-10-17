@@ -9,7 +9,6 @@ import com.enderio.enderio.api.soul.storage.SoulHandler;
 import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.foundation.block.EIOEntityBlock;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -20,10 +19,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -33,7 +30,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.apache.commons.lang3.NotImplementedException;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -67,11 +64,6 @@ public class SolarPanelBlock extends EIOEntityBlock<SolarPanelBlockEntity> imple
                 .setValue(SOUTH, true)
                 .setValue(SOUTH_EAST, true));
         this.tier = tier;
-    }
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        throw new NotImplementedException("Block codecs are a later problem...");
     }
 
     @Override
@@ -144,28 +136,5 @@ public class SolarPanelBlock extends EIOEntityBlock<SolarPanelBlockEntity> imple
         tooltips.add(MachinesLang.PHOTOVOLTAIC_CELL_ADVANCED2);
         tooltips.add(MachinesLang.PHOTOVOLTAIC_CELL_ADVANCED3.copy()
                 .append(TooltipUtil.withArgs(EIOCommonLang.ENERGY_AMOUNT, tier.getProductionRate())));
-    }
-
-    @Override
-    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand,
-        BlockHitResult hitResult) {
-        if (!player.getAbilities().instabuild) {
-            return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
-        }
-
-        SoulBindable soulBindable = level.getCapability(EnderIOCapabilities.SOUL_BINDABLE_BLOCK, pos);
-        if (soulBindable != null && soulBindable.canBind()) {
-            SoulHandler soulHandler = stack.getCapability(EnderIOCapabilities.SOUL_HANDLER_ITEM);
-            if (soulHandler != null) {
-                for (int i = 0; i < soulHandler.getSlots(); i++) {
-                    Soul soul = soulHandler.getSoulInSlot(i);
-                    if (!soul.isEmpty() && soulBindable.isSoulValid(soul)) {
-                        soulBindable.bindSoul(soul.copy());
-                        return InteractionResult.SUCCESS;
-                    }
-                }
-            }
-        }
-        return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
     }
 }

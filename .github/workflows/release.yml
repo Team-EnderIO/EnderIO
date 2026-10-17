@@ -87,7 +87,7 @@ jobs:
           changelog: ${{ github.event.release.body }}
           loaders: neoforge
           environment: client | server
-          game-versions: 26.1.2
+          game-versions: 26.3
           java: 25
           dependencies: |
             jei(optional){curseforge:238222}
@@ -122,7 +122,7 @@ jobs:
           changelog: ${{ github.event.release.body }}
           loaders: neoforge
           environment: client | server
-          game-versions: 26.1.2
+          game-versions: 26.3
           java: 25
           dependencies: |
             jei(optional){modrinth:u6dRKJwZ}

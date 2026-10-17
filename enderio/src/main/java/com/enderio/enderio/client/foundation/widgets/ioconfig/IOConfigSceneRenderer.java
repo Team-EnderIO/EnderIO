@@ -1,66 +1,26 @@
 package com.enderio.enderio.client.foundation.widgets.ioconfig;
 
+// 26.2-port: MultiBufferSource was removed in 26.2; IOConfigSceneRenderer is stubbed until the
+// 26.2 submit-node-based render pipeline is reimplemented.
+
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.client.EIOPipelineModifiers;
-import com.enderio.enderio.client.foundation.model.ModelRenderUtil;
-import com.enderio.enderio.config.machines.MachinesConfig;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.render.pip.PictureInPictureRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollection;
 import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.SubmitNodeStorage;
-import net.minecraft.client.renderer.feature.FeatureRenderDispatcher;
-import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.data.AtlasIds;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.ARGB;
 import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.client.model.pipeline.VertexConsumerWrapper;
-import org.joml.Vector3f;
 
 public class IOConfigSceneRenderer extends PictureInPictureRenderer<IOConfigSceneRenderState> {
     private static final Identifier SELECTED_ICON = EnderIO.id("block/overlay/selected_face");
-
-    private final FeatureRenderDispatcher solidFeatureRenderDispatcher;
-    private final SubmitNodeCollector solidCollector;
-
-    private final GhostBufferSource ghostBufferSource;
-    private final FeatureRenderDispatcher ghostFeatureRenderDispatcher;
-    private final SubmitNodeCollector ghostCollector;
-
-    public IOConfigSceneRenderer(MultiBufferSource.BufferSource bufferSource) {
-        super(bufferSource);
-
-        var minecraft = Minecraft.getInstance();
-
-        this.solidFeatureRenderDispatcher = Minecraft.getInstance().gameRenderer.getFeatureRenderDispatcher();
-        this.solidCollector = solidFeatureRenderDispatcher.getSubmitNodeStorage();
-
-        ghostBufferSource = new GhostBufferSource(bufferSource);
-
-        ghostFeatureRenderDispatcher = new FeatureRenderDispatcher(
-            new SubmitNodeStorage(),
-            minecraft.getModelManager(),
-            ghostBufferSource,
-            minecraft.getAtlasManager(),
-            minecraft.renderBuffers().outlineBufferSource(),
-            minecraft.renderBuffers().crumblingBufferSource(),
-            minecraft.font,
-            minecraft.gameRenderer.getGameRenderState()
-        );
-
-        ghostCollector = ghostFeatureRenderDispatcher.getSubmitNodeStorage();
-    }
 
     @Override
     protected float getTranslateY(int height, int guiScale) {
@@ -73,42 +33,34 @@ public class IOConfigSceneRenderer extends PictureInPictureRenderer<IOConfigScen
     }
 
     @Override
-    protected void renderToTexture(IOConfigSceneRenderState state, PoseStack poseStack) {
+    protected void renderToTexture(IOConfigSceneRenderState renderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector) {
         poseStack.pushPose();
 
-        poseStack.mulPose(state.viewMatrix());
+        poseStack.mulPose(renderState.viewMatrix());
 
-        Minecraft.getInstance().gameRenderer.getLighting().setupFor(Lighting.Entry.ITEMS_3D);
+        Minecraft.getInstance().gameRenderer.lighting().setupFor(Lighting.Entry.ITEMS_3D);
 
         // Render neighbors transparently, if any to show
-        if (!state.neighborBlocks().isEmpty()) {
+        if (!renderState.neighborBlocks().isEmpty()) {
             RenderSystem.pushPipelineModifier(EIOPipelineModifiers.FORCE_TRANSLUCENT);
 
-            for (var block : state.neighborBlocks()) {
-                renderBlock(poseStack, ghostCollector, block);
+            // TODO: Ew... maybe doing this fully manually would be a better idea
+            var transparentSubmitNodeCollector = new IOConfigGhostSubmitNodeCollector((SubmitNodeCollection)submitNodeCollector.order(0));
+
+            for (var block : renderState.neighborBlocks()) {
+                renderBlock(poseStack, transparentSubmitNodeCollector, block);
             }
 
-            ghostFeatureRenderDispatcher.renderAllFeatures();
-            ghostBufferSource.endBatch();
-
             RenderSystem.popPipelineModifier();
-
-            // Flush the depth texture now, all primary blocks should render over the top if required.
-            // Note; we could consider seeing if we can sort in distance from the camera to do 'true' transparency?
-            var device = RenderSystem.getDevice();
-            device.createCommandEncoder().clearDepthTexture(this.depthTexture, 1f);
         }
 
         // Now render the primary blocks
-        for (var block : state.primaryBlocks()) {
-            renderBlock(poseStack, solidCollector, block);
+        for (var block : renderState.primaryBlocks()) {
+            renderBlock(poseStack, submitNodeCollector, block);
         }
 
-        solidFeatureRenderDispatcher.renderAllFeatures();
-        bufferSource.endBatch();
-
-        if (state.selection() != null) {
-            renderSelection(poseStack, state.selection().getFirst(), state.selection().getSecond());
+        if (renderState.selection() != null) {
+            renderSelection(poseStack, renderState.selection().getFirst(), renderState.selection().getSecond());
         }
 
         poseStack.popPose();
@@ -124,68 +76,36 @@ public class IOConfigSceneRenderer extends PictureInPictureRenderer<IOConfigScen
     }
 
     private void renderSelection(PoseStack poseStack, BlockPos pos, Direction side) {
-        TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.BLOCKS).getSprite(SELECTED_ICON);
-
-        VertexConsumer builder = bufferSource.getBuffer(RenderTypes.blockScreenEffect(sprite.atlasLocation()));
-
-        poseStack.pushPose();
-
-        poseStack.translate(pos.getX(), pos.getY(), pos.getZ());
-
-        Vector3f[] vec = ModelRenderUtil.createQuadVerts(side, 0, 1, 1);
-
-        builder.addVertex(poseStack.last(), vec[0].x(), vec[0].y(), vec[0].z())
-            .setColor(1F, 1F, 1F, 1F)
-            .setUv(sprite.getU0(), sprite.getV0());
-        builder.addVertex(poseStack.last(), vec[1].x(), vec[1].y(), vec[1].z())
-            .setColor(1F, 1F, 1F, 1F)
-            .setUv(sprite.getU0(), sprite.getV1());
-        builder.addVertex(poseStack.last(), vec[2].x(), vec[2].y(), vec[2].z())
-            .setColor(1F, 1F, 1F, 1F)
-            .setUv(sprite.getU1(), sprite.getV1());
-        builder.addVertex(poseStack.last(), vec[3].x(), vec[3].y(), vec[3].z())
-            .setColor(1F, 1F, 1F, 1F)
-            .setUv(sprite.getU1(), sprite.getV0());
-
-        bufferSource.endBatch();
-
-        poseStack.popPose();
+//        TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.BLOCKS).getSprite(SELECTED_ICON);
+//
+//        VertexConsumer builder = bufferSource.getBuffer(RenderTypes.blockScreenEffect(sprite.atlasLocation()));
+//
+//        poseStack.pushPose();
+//
+//        poseStack.translate(pos.getX(), pos.getY(), pos.getZ());
+//
+//        Vector3f[] vec = ModelRenderUtil.createQuadVerts(side, 0, 1, 1);
+//
+//        builder.addVertex(poseStack.last(), vec[0].x(), vec[0].y(), vec[0].z())
+//            .setColor(1F, 1F, 1F, 1F)
+//            .setUv(sprite.getU0(), sprite.getV0());
+//        builder.addVertex(poseStack.last(), vec[1].x(), vec[1].y(), vec[1].z())
+//            .setColor(1F, 1F, 1F, 1F)
+//            .setUv(sprite.getU0(), sprite.getV1());
+//        builder.addVertex(poseStack.last(), vec[2].x(), vec[2].y(), vec[2].z())
+//            .setColor(1F, 1F, 1F, 1F)
+//            .setUv(sprite.getU1(), sprite.getV1());
+//        builder.addVertex(poseStack.last(), vec[3].x(), vec[3].y(), vec[3].z())
+//            .setColor(1F, 1F, 1F, 1F)
+//            .setUv(sprite.getU1(), sprite.getV0());
+//
+//        bufferSource.endBatch();
+//
+//        poseStack.popPose();
     }
 
     @Override
     protected String getTextureLabel() {
         return "EnderIO IO Config Overlay";
-    }
-
-    // Transparency hack
-    private static class GhostBufferSource extends MultiBufferSource.BufferSource {
-
-        public GhostBufferSource(MultiBufferSource.BufferSource bufferSource) {
-            super(bufferSource.sharedBuffer, bufferSource.fixedBuffers);
-        }
-
-        @Override
-        public VertexConsumer getBuffer(RenderType renderType) {
-            VertexConsumer consumer = super.getBuffer(renderType);
-            return new AlphaWrapper(consumer);
-        }
-
-        private static class AlphaWrapper extends VertexConsumerWrapper {
-            public AlphaWrapper(VertexConsumer vertexConsumer) {
-                super(vertexConsumer);
-            }
-
-            @Override
-            public VertexConsumer setColor(int r, int g, int b, int a) {
-                super.setColor(r, g, b, (int)(MachinesConfig.CLIENT.IO_CONFIG_NEIGHBOUR_TRANSPARENCY.get().floatValue() * 255));
-                return this;
-            }
-
-            @Override
-            public VertexConsumer setColor(int packedColor) {
-                super.setColor(ARGB.color(MachinesConfig.CLIENT.IO_CONFIG_NEIGHBOUR_TRANSPARENCY.get().floatValue(), packedColor));
-                return this;
-            }
-        }
     }
 }

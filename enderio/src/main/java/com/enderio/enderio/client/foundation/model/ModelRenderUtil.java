@@ -85,7 +85,8 @@ public class ModelRenderUtil {
         float b = ARGB.blue(color) / 255.0f;
 
         QuadBakingVertexConsumer baker = new QuadBakingVertexConsumer();
-        baker.setSprite(materialInfo.sprite(), materialInfo.layer(), materialInfo.itemRenderType());
+        baker.setSprite(materialInfo.sprite(), materialInfo.layer(), materialInfo.itemRenderType(), materialInfo.itemGlintRenderType(),
+            materialInfo.itemGlintSpecialRenderType());
         baker.setDirection(Direction.getApproximateNearest(normal.x, normal.y, normal.z));
         baker.addVertex(v1.x, v1.y, v1.z).setNormal(nx, ny, nz).setUv(sprite.getU(0), sprite.getV(0)).setColor(r, g, b, alpha);
         baker.addVertex(v2.x, v2.y, v2.z).setNormal(nx, ny, nz).setUv(sprite.getU(0), sprite.getV(th)).setColor(r, g, b, alpha);

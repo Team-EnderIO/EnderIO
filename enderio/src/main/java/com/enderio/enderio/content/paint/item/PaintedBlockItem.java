@@ -25,23 +25,4 @@ public class PaintedBlockItem extends BlockItem {
         return PaintUtils.getPlaceSound(state, level, pos, player, PaintedBlockItem.class)
             .orElseGet(() -> super.getPlaceSound(state, level, pos, player));
     }
-
-    @Override
-    protected boolean updateCustomBlockEntityTag(BlockPos pos, Level level, @Nullable Player player, ItemStack stack, BlockState state) {
-        boolean result = super.updateCustomBlockEntityTag(pos, level, player, stack, state);
-
-        var paintData = stack.get(EIODataComponents.BLOCK_PAINT);
-
-        if (paintData == null) {
-            // TODO: Log error?
-            return true;
-        }
-
-        BlockEntity blockentity = level.getBlockEntity(pos);
-        if (blockentity instanceof PaintedBlockEntity singlePaintedBlockEntity) {
-            singlePaintedBlockEntity.setPrimaryPaint(paintData.paint());
-        }
-
-        return result;
-    }
 }

@@ -5,6 +5,7 @@ import com.google.gson.JsonParser;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.neoforged.testframework.junit.EphemeralTestServerProvider;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -88,7 +89,7 @@ public class SoulCodecTests {
         Assertions.assertNotNull(soul);
 
         // Ensure data matches
-        Assertions.assertEquals(EntityType.ALLAY, soul.entityType());
+        Assertions.assertEquals(EntityTypes.ALLAY, soul.entityType());
         Assertions.assertEquals(10d, soul.entityTag().getDoubleOr("Health", -1));
 
         // Ensure unwanted key is removed.
