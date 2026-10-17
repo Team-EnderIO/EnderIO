@@ -110,6 +110,9 @@ dependencies {
     //Athena ctm
     localRuntime(libs.athena)
 
+    // Energy Meter
+    localRuntime(libs.energyMeter)
+
     // AE2
     compileOnly(variantOf(libs.ae2) {
         classifier("api")
