@@ -29,6 +29,7 @@ public class VanillaCompat {
         // https://github.com/neoforged/NeoForge/issues/2981
         Item[] allItems = BuiltInRegistries.ITEM.stream().toArray(Item[]::new);
         event.registerItem(EnderIOCapabilities.SOUL_BINDABLE_ITEM, SPAWN_EGG_BINDABLE_PROVIDER, allItems);
-        event.registerItem(EnderIOCapabilities.SOUL_HANDLER_ITEM, SPAWN_EGG_HANDLER_PROVIDER, allItems);
+        // TODO: Need ResourceHandler<>?
+//        event.registerItem(EnderIOCapabilities.SOUL_HANDLER_ITEM, SPAWN_EGG_HANDLER_PROVIDER, allItems);
     }
 }

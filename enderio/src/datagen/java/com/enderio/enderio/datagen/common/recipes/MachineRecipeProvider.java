@@ -2,7 +2,7 @@ package com.enderio.enderio.datagen.common.recipes;
 
 import com.enderio.core.data.recipe.SubRecipeProvider;
 import com.enderio.enderio.EnderIO;
-import com.enderio.enderio.api.soul.binding.ingredients.EmptySoulBindableIngredient;
+import com.enderio.enderio.api.soul.storage.ingredients.EmptySoulHandlerIngredient;
 import com.enderio.enderio.content.machines.solar_panel.SolarPanelTier;
 import com.enderio.enderio.foundation.soul.ShapedEntityStorageRecipeBuilder;
 import com.enderio.enderio.foundation.tag.EIOTags;
@@ -11,7 +11,6 @@ import com.enderio.enderio.init.EIOItems;
 import net.minecraft.advancements.triggers.InventoryChangeTrigger;
 import net.minecraft.advancements.predicates.ItemPredicate;
 import net.minecraft.core.HolderGetter;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -191,7 +190,7 @@ public class MachineRecipeProvider extends SubRecipeProvider {
                 .define('C', EIOBlocks.ENSOULED_CHASSIS.get())
                 .define('G', EIOTags.Items.GEARS_ENERGIZED)
                 .define('Z', EIOItems.Z_LOGIC_CONTROLLER)
-                .define('V', EmptySoulBindableIngredient.of(EIOItems.SOUL_VIAL))
+                .define('V', EmptySoulHandlerIngredient.of(EIOItems.SOUL_VIAL))
                 .pattern("IVI")
                 .pattern("GCG")
                 .pattern("IZI")

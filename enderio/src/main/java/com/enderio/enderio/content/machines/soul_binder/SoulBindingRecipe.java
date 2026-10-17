@@ -2,6 +2,7 @@ package com.enderio.enderio.content.machines.soul_binder;
 
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.enderio.api.EnderIOCapabilities;
+import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.api.soul.ingredient.SoulIngredient;
 import com.enderio.enderio.foundation.MachineRecipe;
 import com.enderio.enderio.foundation.recipe.FluidRecipeInput;
@@ -113,14 +114,23 @@ public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.
             result.applyComponents(input.itemToBind.getComponents());
         }
 
-        var vialSoulBindable = ItemAccess.forStack(vial).getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
+        var bindableSoulSource = ItemAccess.forStack(vial).getCapability(EnderIOCapabilities.BINDABLE_SOUL_SOURCE);
         var resultSoulBinding = ItemAccess.forStack(result).getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
 
-        if (vialSoulBindable != null && resultSoulBinding != null) {
-            // TODO: Maybe determine the result in the ctor?
+        if (bindableSoulSource != null && resultSoulBinding != null) {
             try (Transaction transaction = Transaction.openRoot()) {
-                resultSoulBinding.bindSoul(vialSoulBindable.boundSoul(), transaction);
-                transaction.commit();
+                Soul bindableSoul;
+
+                // Simulate here, do not modify the recipe input
+                try (Transaction subTransaction = Transaction.open(transaction)) {
+                     bindableSoul = bindableSoulSource.extractSoul(subTransaction);
+                }
+
+                if (!bindableSoul.isEmpty()) {
+                    if (resultSoulBinding.bindSoul(bindableSoul, transaction)) {
+                        transaction.commit();
+                    }
+                }
             }
         }
 
@@ -145,22 +155,20 @@ public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.
 
     @Override
     public boolean matches(Input recipeInput, Level level) {
-        if (!recipeInput.getItem(0).is(EIOItems.SOUL_VIAL.get())) {
-            return false;
-        }
-
         if (!input.test(recipeInput.getItem(1))) {
             return false;
         }
 
-        var soulBindable = ItemAccess.forStack(recipeInput.getItem(0)).getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
-        if (soulBindable == null || !soulBindable.isBound()) {
+        var soulBindable = ItemAccess.forStack(recipeInput.getItem(0)).getCapability(EnderIOCapabilities.BINDABLE_SOUL_SOURCE);
+        if (soulBindable == null || !soulBindable.isSoulAvailable()) {
             return false;
         }
 
-        var soul = soulBindable.boundSoul();
-        if (!inputSoul.test(soul)) {
-            return false;
+        try (Transaction transaction = Transaction.openRoot()) {
+            var bindableSoul = soulBindable.extractSoul(transaction);
+            if (bindableSoul.isEmpty() || !inputSoul.test(bindableSoul)) {
+                return false;
+            }
         }
 
         return ExperienceUtil.getLevelFromFluid(recipeInput.getFluid(2).getAmount()) >= experience;

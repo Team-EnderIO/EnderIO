@@ -2,8 +2,8 @@ package com.enderio.enderio.foundation.block;
 
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.soul.Soul;
+import com.enderio.enderio.api.soul.binding.BindableSoulSource;
 import com.enderio.enderio.api.soul.binding.SoulBindable;
-import com.enderio.enderio.api.soul.storage.SoulHandler;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -24,9 +24,9 @@ public class CreativeSoulBindableHandler {
         }
 
         // See if the clicked item is a soul storage
-//        ItemAccess usedItemAccess = ItemAccess.forPlayerInteraction(player, event.getHand());
-        SoulHandler soulHandler = event.getItemStack().getCapability(EnderIOCapabilities.SOUL_HANDLER_ITEM);
-        if (soulHandler == null) {
+        ItemAccess usedItemAccess = ItemAccess.forPlayerInteraction(player, event.getHand());
+        BindableSoulSource soulSource = usedItemAccess.getCapability(EnderIOCapabilities.BINDABLE_SOUL_SOURCE);
+        if (soulSource == null) {
             return;
         }
 
@@ -37,18 +37,21 @@ public class CreativeSoulBindableHandler {
             return;
         }
 
+        // Find a bindable soul (simulate)
+        Soul bindableSoul;
+        try (Transaction transaction = Transaction.openRoot()) {
+            bindableSoul = soulSource.extractSoul(transaction);
+        }
+
+        if (bindableSoul.isEmpty()) {
+            return;
+        }
+
         // Attempt to bind the block using a soul in the storage.
         try (Transaction transaction = Transaction.openRoot()) {
-            for (int i = 0; i < soulHandler.getSlots(); i++) {
-                Soul soul = soulHandler.getSoulInSlot(i);
-                if (soul.isEmpty()) {
-                    continue;
-                }
-
-                if (soulBindable.bindSoul(soul.copy(), transaction)) {
-                    transaction.commit();
-                    event.cancelWithResult(InteractionResult.SUCCESS);
-                }
+            if (soulBindable.bindSoul(bindableSoul, transaction)) {
+                transaction.commit();
+                event.cancelWithResult(InteractionResult.SUCCESS);
             }
         }
     }

@@ -5,7 +5,7 @@
     "G": "#c:gears/energized",
     "I": "#c:ingots/soularium",
     "V": {
-      "neoforge:ingredient_type": "enderio:empty_soul_storage",
+      "neoforge:ingredient_type": "enderio:empty_soul_handler",
       "item": "enderio:soul_vial"
     },
     "Z": "enderio:z_logic_controller"
