@@ -119,13 +119,7 @@ public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.
 
         if (bindableSoulSource != null && resultSoulBinding != null) {
             try (Transaction transaction = Transaction.openRoot()) {
-                Soul bindableSoul;
-
-                // Simulate here, do not modify the recipe input
-                try (Transaction subTransaction = Transaction.open(transaction)) {
-                     bindableSoul = bindableSoulSource.extractSoul(subTransaction);
-                }
-
+                Soul bindableSoul = bindableSoulSource.availableSoul();
                 if (!bindableSoul.isEmpty()) {
                     if (resultSoulBinding.bindSoul(bindableSoul, transaction)) {
                         transaction.commit();
@@ -155,6 +149,10 @@ public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.
 
     @Override
     public boolean matches(Input recipeInput, Level level) {
+        if (recipeInput.getItem(0).isEmpty()) {
+            return false;
+        }
+
         if (!input.test(recipeInput.getItem(1))) {
             return false;
         }
@@ -164,11 +162,9 @@ public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.
             return false;
         }
 
-        try (Transaction transaction = Transaction.openRoot()) {
-            var bindableSoul = soulBindable.extractSoul(transaction);
-            if (bindableSoul.isEmpty() || !inputSoul.test(bindableSoul)) {
-                return false;
-            }
+        var bindableSoul = soulBindable.availableSoul();
+        if (bindableSoul.isEmpty() || !inputSoul.test(bindableSoul)) {
+            return false;
         }
 
         return ExperienceUtil.getLevelFromFluid(recipeInput.getFluid(2).getAmount()) >= experience;
