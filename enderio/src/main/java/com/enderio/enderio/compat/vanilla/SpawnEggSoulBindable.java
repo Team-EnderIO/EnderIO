@@ -39,6 +39,11 @@ public class SpawnEggSoulBindable implements SoulBindable {
     }
 
     @Override
+    public boolean shouldDisplayTooltip() {
+        return false;
+    }
+
+    @Override
     public boolean isSoulValid(Soul soul) {
         // Can only ever have a soul bound to it,
         if (soul.isEmpty() || soul.entityType() == null) {

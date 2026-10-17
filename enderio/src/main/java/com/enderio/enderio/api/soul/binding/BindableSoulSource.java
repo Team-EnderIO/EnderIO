@@ -13,13 +13,17 @@ import org.jetbrains.annotations.ApiStatus;
 @ApiStatus.Experimental
 @ApiStatus.AvailableSince("10.0.0")
 public interface BindableSoulSource {
-    boolean isSoulAvailable();
+    // TODO: Consider removal
+    @ApiStatus.NonExtendable
+    default boolean isSoulAvailable() {
+        return !availableSoul().isEmpty();
+    }
 
     Soul availableSoul();
 
     /**
      * Extract the soul from this source.
-     * @param transaction
+     * @param transaction The transaction context.
      * @return The soul, or {@link Soul#EMPTY} if none is available.
      * @implNote This should always return a copy of the Soul, so that it can be mutated or stored.
      */

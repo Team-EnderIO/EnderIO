@@ -2,6 +2,8 @@ package com.enderio.enderio.compat.vanilla;
 
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.api.soul.binding.BindableSoulSource;
+import com.enderio.enderio.foundation.tag.EIOTags;
+import com.enderio.enderio.foundation.util.EntityCaptureUtils;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
@@ -22,11 +24,6 @@ public class SpawnEggBindableSoulSource implements BindableSoulSource {
     }
 
     @Override
-    public boolean isSoulAvailable() {
-        return itemAccess.getResource().is(validItem);
-    }
-
-    @Override
     public Soul availableSoul() {
         ItemResource resource = itemAccess.getResource();
         if (!resource.is(validItem)) {
@@ -40,6 +37,11 @@ public class SpawnEggBindableSoulSource implements BindableSoulSource {
         // Get custom entity data
         TypedEntityData<EntityType<?>> customEntityData = resource.get(DataComponents.ENTITY_DATA);
         if (customEntityData != null) {
+            // Ensure the entity is capturable.
+            if (EntityCaptureUtils.getCapturableStatus(customEntityData.type()) != EntityCaptureUtils.CapturableStatus.CAPTURABLE) {
+                return Soul.EMPTY;
+            }
+
             return new Soul(customEntityData.type(), customEntityData.copyTagWithoutId());
         }
 
