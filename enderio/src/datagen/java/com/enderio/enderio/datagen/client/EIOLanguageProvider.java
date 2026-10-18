@@ -744,6 +744,8 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOCommonLang.ERROR_CANNOT_TELEPORT, "ERROR: Cannot teleport");
         add(EIOCommonLang.ERROR_INVALID_DESTINATION, "ERROR: Destination not a valid target");
 
+        add(EIOCommonLang.RESOURCE_PACK_ATHENA, "Ender IO Athena Connected Textures");
+
         add(EIOCommonLang.DARK_STEEL_LADDER_FASTER, "Faster than regular ladders");
         add(EIOCommonLang.TOO_MANY_LEVELS, "You have more than 21862 levels, that's too much XP.");
 

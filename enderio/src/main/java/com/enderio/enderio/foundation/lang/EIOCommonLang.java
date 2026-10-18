@@ -62,6 +62,12 @@ public class EIOCommonLang {
 
     // endregion
 
+    // region Resource Packs
+
+    public static final Component RESOURCE_PACK_ATHENA = resourcePack("athena");
+
+    // endregion
+
     // region Temp
 
     // TODO: Need to move these around - just want to get rid of Regilite first.
@@ -84,6 +90,10 @@ public class EIOCommonLang {
 
     private static MutableComponent message(String path) {
         return create("message", path);
+    }
+
+    private static MutableComponent resourcePack(String path) {
+        return create("resourcePack", path);
     }
 
     private static MutableComponent create(String type, String path) {

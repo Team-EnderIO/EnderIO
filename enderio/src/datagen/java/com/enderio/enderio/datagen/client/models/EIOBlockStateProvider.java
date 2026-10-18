@@ -381,7 +381,7 @@ public class EIOBlockStateProvider extends ModelProvider {
     }
 
     private void CapacitorBank(BlockModelGenerators blockModelGenerators, Block block) {
-        var model = wrapMachineModel(ModelLocationUtils.getModelLocation(block, "_part"));
+        var model = wrapMachineModel(ModelLocationUtils.getModelLocation(block));
         blockModelGenerators.blockStateOutput.accept(MultiVariantGenerator.dispatch(block, model));
     }
 

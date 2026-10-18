@@ -22,12 +22,18 @@ import com.enderio.enderio.datagen.common.tags.EIOBlockTagsProvider;
 import com.enderio.enderio.datagen.common.tags.EIOEntityTagsProvider;
 import com.enderio.enderio.datagen.common.tags.EIOFluidTagsProvider;
 import com.enderio.enderio.datagen.common.tags.EIOItemTagsProvider;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
+import net.minecraft.DetectedVersion;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.advancements.AdvancementProvider;
 import net.minecraft.data.loot.LootTableProvider;
+import net.minecraft.data.metadata.PackMetadataGenerator;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
@@ -35,6 +41,7 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
@@ -84,7 +91,12 @@ public class EnderIODataGen {
         generator.addProvider(true, new EIOModelProvider(packOutput));
         generator.addProvider(true, new EIOLanguageProvider(packOutput));
         generator.addProvider(true, new EIOSoundDefinitionProvider(packOutput));
-        generator.addProvider(true, new AthenaProvider(packOutput));
+
+        var athenaPack = generator.getPackGenerator(true, "enderio_athena", EnderIO.ATHENA_RESOURCE_PACK_PATH);
+        athenaPack.addProvider(AthenaProvider::new);
+        athenaPack.addProvider(output -> new PackMetadataGenerator(output).add(PackMetadataSection.CLIENT_TYPE,
+            new PackMetadataSection(EIOCommonLang.RESOURCE_PACK_ATHENA,
+                DetectedVersion.BUILT_IN.packVersion(PackType.CLIENT_RESOURCES).minorRange())));
     }
 
     private static RegistrySetBuilder createDatapackEntriesBuilder() {
