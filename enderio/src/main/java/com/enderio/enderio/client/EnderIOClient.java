@@ -88,6 +88,7 @@ import com.enderio.enderio.content.filters.item.general.EnderItemFilter;
 import com.enderio.enderio.content.filters.item.limited.LimitedItemFilter;
 import com.enderio.enderio.content.filters.soul.EnderSoulFilter;
 import com.enderio.enderio.content.fun.EnderiosItem;
+import com.enderio.enderio.content.machines.capacitor_bank.CapacitorBankBlock;
 import com.enderio.enderio.content.misc_blocks.skull.EnderSkullBlock;
 import com.enderio.enderio.content.paint.block.PaintExtension;
 import com.enderio.enderio.content.paint.block.PaintedBlock;
@@ -416,6 +417,10 @@ public class EnderIOClient {
 
         for (var block : EIOBlocks.BLOCKS.getEntries()) {
             if (block.get() instanceof MachineBlock<?>) {
+                event.register(factory, block.get());
+            }
+
+            if (block.get() instanceof CapacitorBankBlock) {
                 event.register(factory, block.get());
             }
 

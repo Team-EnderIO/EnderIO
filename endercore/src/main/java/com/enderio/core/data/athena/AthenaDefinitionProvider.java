@@ -7,7 +7,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 
 import java.nio.file.Path;
@@ -37,7 +37,7 @@ public abstract class AthenaDefinitionProvider implements DataProvider {
         registerDefinitions();
         List<CompletableFuture<?>> list = new ArrayList<>();
         for (var entry : definitions.entrySet()) {
-            Path path = athenaPathProvider.json(entry.getKey().builtInRegistryHolder().key().location());
+            Path path = athenaPathProvider.json(entry.getKey().builtInRegistryHolder().key().identifier());
             JsonElement element = Athena.CODEC.encodeStart(JsonOps.INSTANCE, entry.getValue()).getOrThrow();
             list.add(DataProvider.saveStable(cache, element, path));
         }
@@ -50,10 +50,10 @@ public abstract class AthenaDefinitionProvider implements DataProvider {
         return "Athena Definitions - " + modId;
     }
 
-    public record Athena(ResourceLocation loader, Map<String, ResourceLocation> textures, int tint, String renderType) {
+    public record Athena(Identifier loader, Map<String, Identifier> textures, int tint, String renderType) {
         public static Codec<Athena> CODEC = RecordCodecBuilder.create(instance -> instance
-            .group(ResourceLocation.CODEC.fieldOf("athena:loader").forGetter(Athena::loader),
-                Codec.unboundedMap(Codec.STRING, ResourceLocation.CODEC).fieldOf("ctm_textures").forGetter(Athena::textures),
+            .group(Identifier.CODEC.fieldOf("athena:loader").forGetter(Athena::loader),
+                Codec.unboundedMap(Codec.STRING, Identifier.CODEC).fieldOf("ctm_textures").forGetter(Athena::textures),
                 Codec.INT.fieldOf("tint").forGetter(Athena::tint), Codec.STRING.fieldOf("render_type").forGetter(Athena::renderType))
             .apply(instance, Athena::new));
     }
@@ -64,15 +64,15 @@ public abstract class AthenaDefinitionProvider implements DataProvider {
         definitions.put(block, definition);
     }
 
-    public void registerSimple(Block block, ResourceLocation center, ResourceLocation empty, ResourceLocation horizontal, ResourceLocation vertical,
-        ResourceLocation particle, int tint, String renderType) {
-        Map<String, ResourceLocation> map = new HashMap<>();
+    public void registerSimple(Block block, Identifier center, Identifier empty, Identifier horizontal, Identifier vertical,
+        Identifier particle, int tint, String renderType) {
+        Map<String, Identifier> map = new HashMap<>();
         map.put("center", center);
         map.put("empty", empty);
         map.put("horizontal", horizontal);
         map.put("vertical", vertical);
         map.put("particle", particle);
-        Athena definition = new Athena(ResourceLocation.parse("athena:ctm"), map, tint, renderType);
+        Athena definition = new Athena(Identifier.parse("athena:ctm"), map, tint, renderType);
         register(block, definition);
     }
 }
