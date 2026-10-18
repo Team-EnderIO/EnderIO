@@ -35,6 +35,18 @@ public class SingleSlotAccess {
         return insertItem(machine.getInventory(), itemStack, simulate);
     }
 
+    public ItemStack extractItem(MachineInventory inventory, int amount, boolean simulate) {
+        return inventory.extractItem(index, amount, simulate);
+    }
+
+    public ItemStack extractItem(MachineInventoryHolder machine, int amount, boolean simulate) {
+        if (!machine.hasInventory()) {
+            throw new IllegalArgumentException("BlockEntity does not have an inventory");
+        }
+
+        return extractItem(machine.getInventory(), amount, simulate);
+    }
+
     public void setStackInSlot(MachineInventory inventory, ItemStack itemStack) {
         inventory.setStackInSlot(index, itemStack);
     }

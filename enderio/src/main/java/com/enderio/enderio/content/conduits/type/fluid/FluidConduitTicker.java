@@ -54,20 +54,20 @@ public class FluidConduitTicker extends ConduitTickerBase<FluidConduit> {
                         continue;
                     }
 
-                    Fluid fluid = extractHandler.getFluidInTank(i).getFluid();
+                    FluidStack fluid = extractHandler.getFluidInTank(i);
                     remaining = doFluidTransfer(fluid, remaining, extractConnection, insertPaths, insertedPerPath);
                 }
             }
         }
     }
 
-    private int doFluidTransfer(Fluid fluid, int maxTransfer, ConduitBlockConnection extractConnection,
+    private int doFluidTransfer(FluidStack fluid, int maxTransfer, ConduitBlockConnection extractConnection,
         List<ConduitConnectionPath> insertPaths, Map<ConduitConnectionPath, Integer> insertedPerPath) {
         var extractHandler = Objects
             .requireNonNull(extractConnection.getSidedCapability(Capabilities.FluidHandler.BLOCK));
 
         // Attempt to drain fluid from the target.
-        FluidStack extractedFluid = extractHandler.drain(new FluidStack(fluid, maxTransfer),
+        FluidStack extractedFluid = extractHandler.drain(fluid.copyWithAmount(maxTransfer),
             IFluidHandler.FluidAction.SIMULATE);
         if (extractedFluid.isEmpty()) {
             return maxTransfer;
