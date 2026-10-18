@@ -18,9 +18,18 @@ import com.enderio.enderio.client.content.conduits.model.bundle.port.ConduitItem
 import com.enderio.enderio.client.content.conduits.model.facades.port.FacadeItemModel;
 import com.enderio.enderio.client.content.conduits.model.modifier.RedstoneConduitModelModifier;
 import com.enderio.enderio.client.content.enderface.EnderfaceRenderer;
+import com.enderio.enderio.client.content.filters.fluid.ClientEnderFluidFilterTooltip;
+import com.enderio.enderio.client.content.filters.fluid.EnderFluidFilterScreen;
+import com.enderio.enderio.client.content.filters.item.ClientEnderItemFilterTooltip;
+import com.enderio.enderio.client.content.filters.item.ClientExistingItemFilterTooltip;
+import com.enderio.enderio.client.content.filters.item.ClientLimitedItemFilterTooltip;
+import com.enderio.enderio.client.content.filters.item.EnderItemFilterScreen;
+import com.enderio.enderio.client.content.filters.item.LimitedItemFilterScreen;
 import com.enderio.enderio.client.content.filters.redstone.RedstoneCountFilterScreen;
 import com.enderio.enderio.client.content.filters.redstone.RedstoneDoubleChannelFilterScreen;
 import com.enderio.enderio.client.content.filters.redstone.RedstoneTimerFilterScreen;
+import com.enderio.enderio.client.content.filters.soul.ClientEnderSoulFilterTooltip;
+import com.enderio.enderio.client.content.filters.soul.EnderSoulFilterScreen;
 import com.enderio.enderio.client.content.fluid_tank.FluidTankItemRenderer;
 import com.enderio.enderio.client.content.glass.GlassIconDecorator;
 import com.enderio.enderio.client.content.glass.GlassItemColor;
@@ -28,6 +37,7 @@ import com.enderio.enderio.client.content.machines.IOOverlayBlockStateModel;
 import com.enderio.enderio.client.content.machines.gui.screen.AlloySmelterScreen;
 import com.enderio.enderio.client.content.machines.gui.screen.AttractorObeliskScreen;
 import com.enderio.enderio.client.content.machines.gui.screen.AversionObeliskScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.CapacitorBankScreen;
 import com.enderio.enderio.client.content.machines.gui.screen.CrafterScreen;
 import com.enderio.enderio.client.content.machines.gui.screen.DrainScreen;
 import com.enderio.enderio.client.content.machines.gui.screen.EnchanterScreen;
@@ -52,6 +62,7 @@ import com.enderio.enderio.client.content.machines.gui.screen.WiredChargerScreen
 import com.enderio.enderio.client.content.machines.gui.screen.WirelessChargerScreen;
 import com.enderio.enderio.client.content.machines.gui.screen.XPObeliskScreen;
 import com.enderio.enderio.client.content.machines.gui.screen.XPVacuumScreen;
+import com.enderio.enderio.client.content.machines.renderer.blockentity.CapacitorBankBER;
 import com.enderio.enderio.client.content.machines.renderer.blockentity.FluidTankBER;
 import com.enderio.enderio.client.content.machines.renderer.blockentity.NiardBER;
 import com.enderio.enderio.client.content.machines.renderer.blockentity.ObeliskBER;
@@ -78,8 +89,6 @@ import com.enderio.enderio.content.filters.item.limited.LimitedItemFilter;
 import com.enderio.enderio.content.filters.soul.EnderSoulFilter;
 import com.enderio.enderio.content.fun.EnderiosItem;
 import com.enderio.enderio.content.misc_blocks.skull.EnderSkullBlock;
-import com.enderio.enderio.content.tools.vials.SoulVialItem;
-import com.enderio.enderio.content.tools.vials.VoidVialItem;
 import com.enderio.enderio.content.paint.block.PaintExtension;
 import com.enderio.enderio.content.paint.block.PaintedBlock;
 import com.enderio.enderio.foundation.block.MachineBlock;
@@ -117,15 +126,6 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterBlockModelsEvent;
 import net.neoforged.neoforge.client.event.RegisterBlockStateModels;
-import com.enderio.enderio.client.content.filters.fluid.ClientEnderFluidFilterTooltip;
-import com.enderio.enderio.client.content.filters.fluid.EnderFluidFilterScreen;
-import com.enderio.enderio.client.content.filters.item.EnderItemFilterScreen;
-import com.enderio.enderio.client.content.filters.item.LimitedItemFilterScreen;
-import com.enderio.enderio.client.content.filters.soul.EnderSoulFilterScreen;
-import com.enderio.enderio.client.content.filters.item.ClientEnderItemFilterTooltip;
-import com.enderio.enderio.client.content.filters.item.ClientExistingItemFilterTooltip;
-import com.enderio.enderio.client.content.filters.item.ClientLimitedItemFilterTooltip;
-import com.enderio.enderio.client.content.filters.soul.ClientEnderSoulFilterTooltip;
 import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.event.RegisterConditionalItemModelPropertyEvent;
@@ -235,7 +235,7 @@ public class EnderIOClient {
         event.register(EIOMenus.VAT.get(), VatScreen::new);
 
         // Storage
-//        event.register(EIOMenus.CAPACITOR_BANK.get(), CapacitorBankScreen::new);
+        event.register(EIOMenus.CAPACITOR_BANK.get(), CapacitorBankScreen::new);
         event.register(EIOMenus.FLUID_TANK.get(), FluidTankScreen::new);
 
         // Misc screens
@@ -246,9 +246,9 @@ public class EnderIOClient {
 
     @SubscribeEvent
     public static void modelRenderer(EntityRenderersEvent.RegisterRenderers event) {
-//        for (var capBank : EIOBlockEntities.CAPACITOR_BANKS.values()) {
-//            event.registerBlockEntityRenderer(capBank.get(), CapacitorBankBER::new);
-//        }
+        for (var capBank : EIOBlockEntities.CAPACITOR_BANKS.values()) {
+            event.registerBlockEntityRenderer(capBank.get(), CapacitorBankBER::new);
+        }
 
         event.registerBlockEntityRenderer(EIOBlockEntities.NIARD.get(), NiardBER::new);
         event.registerBlockEntityRenderer(EIOBlockEntities.XP_OBELISK.get(), c -> new ObeliskBER(EIOItems.EXPERIENCE_ROD::get));

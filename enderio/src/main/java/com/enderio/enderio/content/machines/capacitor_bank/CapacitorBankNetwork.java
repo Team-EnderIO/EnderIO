@@ -11,8 +11,11 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.ChunkPos;
-import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -45,6 +48,8 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
 
     //Map to keep track if IO for each position and side
     private final Map<SidedPos, Long> energyIO = new HashMap<>();
+
+    private final EnergyJournal energyJournal = new EnergyJournal();
 
     public CapacitorBankNetwork(CapacitorBankNode initialNode) {
         super(initialNode);
@@ -152,31 +157,29 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
         };
     }
 
-    public int receiveEnergy(BlockPos pos, @Nullable Direction side, int amount, boolean simulate) {
+    public int receiveEnergy(BlockPos pos, @Nullable Direction side, int amount, TransactionContext transaction) {
         long energyBefore = getTotalEnergyStored();
         long energyAfter = Math.min(energyBefore + amount, getTotalMaxEnergyStored());
         int result = Math.toIntExact(Mth.clamp(energyAfter - energyBefore, 0, Integer.MAX_VALUE));
 
-        if (!simulate) {
-            this.totalEnergyStored = energyAfter;
-            if (side != null) {
-                long io = energyIO.getOrDefault(new SidedPos(pos, side), 0L);
-                energyIO.put(new SidedPos(pos, side), io + result);
-            }
+        this.energyJournal.createSnapshot();
+        this.totalEnergyStored = energyAfter;
+        if (side != null) {
+            long io = energyIO.getOrDefault(new SidedPos(pos, side), 0L);
+            energyIO.put(new SidedPos(pos, side), io + result);
         }
 
         return result;
     }
 
-    public int extractEnergy(BlockPos pos, @Nullable Direction side, int amount, boolean simulate) {
+    public int extractEnergy(BlockPos pos, @Nullable Direction side, int amount, TransactionContext transaction) {
         long extracted = Math.min(getTotalEnergyStored(), amount);
 
-        if (!simulate) {
-            this.totalEnergyStored -= extracted;
-            if (side != null) {
-                long io = energyIO.getOrDefault(new SidedPos(pos, side), 0L);
-                energyIO.put(new SidedPos(pos, side), io - extracted);
-            }
+        this.energyJournal.createSnapshot();
+        this.totalEnergyStored -= extracted;
+        if (side != null) {
+            long io = energyIO.getOrDefault(new SidedPos(pos, side), 0L);
+            energyIO.put(new SidedPos(pos, side), io - extracted);
         }
 
         return Math.toIntExact(extracted);
@@ -218,7 +221,7 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
         int toShareWith = receivers.size();
 
         for (var sided : receivers) {
-            IEnergyStorage receiver = sided.storage();
+            EnergyHandler receiver = sided.storage();
             // If we have too little energy left, just give it to the first handler that will accept it all
             long shareAmount;
             if (energyRemaining <= toShareWith) {
@@ -227,7 +230,12 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
                 shareAmount = energyRemaining / toShareWith;
             }
 
-            int inserted = receiver.receiveEnergy(Math.clamp(shareAmount, 0, Integer.MAX_VALUE), false);
+            int inserted;
+            try(Transaction transaction = Transaction.openRoot()) {
+                inserted = receiver.insert(Math.clamp(shareAmount, 0, Integer.MAX_VALUE), transaction);
+                transaction.commit();
+            }
+
             long io = this.energyIO.getOrDefault(sided.sidedPos(), 0L);
             this.energyIO.put(sided.sidedPos(), io - inserted);
             energyRemaining -= inserted;
@@ -255,8 +263,8 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
             }
         }
 
-        validTargets.sort(Comparator.comparingInt(
-            c -> c.storage().getMaxEnergyStored() - c.storage().getEnergyStored()
+        validTargets.sort(Comparator.comparingLong(
+            c -> c.storage().getCapacityAsLong() - c.storage().getAmountAsLong()
         ));
 
         long transferred = distributeEnergyEvenlyBetween(Math.min(getEnergyToDistribute(), getTotalEnergyStored()), validTargets);
@@ -307,7 +315,7 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
             CapacitorBankNode n = it.next();
 
             if (n.getBlockEntity().getLevel() instanceof ServerLevel level) {
-                PacketDistributor.sendToPlayersTrackingChunk(level, new ChunkPos(n.getPos()),
+                PacketDistributor.sendToPlayersTrackingChunk(level, new ChunkPos(n.getPos().getX(), n.getPos().getZ()),
                     new ClientBoundRemoveCapacitorBankPacket(n.getNetwork().getUuid())
                 );
             }
@@ -360,4 +368,23 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
     }
 
     public record SidedPos(BlockPos pos, @Nullable Direction side) {}
+
+    private class EnergyJournal extends SnapshotJournal<Long> {
+        @Override
+        protected Long createSnapshot() {
+            return totalEnergyStored;
+        }
+
+        @Override
+        protected void revertToSnapshot(Long snapshot) {
+            totalEnergyStored = snapshot;
+        }
+
+        @Override
+        protected void onRootCommit(Long originalState) {
+            if (originalState != totalEnergyStored) {
+                markDirty();
+            }
+        }
+    }
 }

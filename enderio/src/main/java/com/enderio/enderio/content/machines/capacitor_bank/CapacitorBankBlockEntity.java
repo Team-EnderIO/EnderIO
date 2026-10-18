@@ -12,7 +12,6 @@ import com.enderio.enderio.foundation.io.IOConfig;
 import com.enderio.enderio.foundation.network.packets.ServerboundCycleIOConfigPacket;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIODataComponents;
-import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -33,7 +32,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -113,25 +111,8 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
     }
 
     @Override
-    public void setLevel(Level level) {
-        super.setLevel(level);
-
-        if (level instanceof ServerLevel serverLevel) {
-            CapacitorBankNode savedNote = CapacitorBankSavedData.get(serverLevel).claimNode(this.getBlockPos());
-            if (savedNote != null) { //Load saved node
-                this.node = savedNote;
-                this.node.attach(this);
-                this.redstoneControl = this.getNetwork().getRedstoneControl();
-            } else {
-                if (this.node == null) { //Create a new node if not created by placing a block
-                    this.node = new CapacitorBankNode(this);
-                }
-                CapacitorBankSavedData.onNetworkCreated(serverLevel, this.node.getNetwork()); //Broadcast the network creation
-            }
-        }
-    }
-
-    public void removeNode() {
+    public void preRemoveSideEffects(BlockPos pos, BlockState state) {
+        super.preRemoveSideEffects(pos, state);
         if (this.node.isValid()) {
             this.oldNetwork = node.getNetwork(); //Network is still needed for the picked up block
             this.node.getNetwork().remove(this.node);
@@ -158,9 +139,24 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
                     () -> isValidPushTargetCacheDirty = true));
             }
 
+            //Load the cap node
+            CapacitorBankNode savedNote = CapacitorBankSavedData.get(serverLevel).claimNode(this.getBlockPos());
+            if (savedNote != null) { //Load saved node
+                this.node = savedNote;
+                this.node.attach(this);
+                this.redstoneControl = this.getNetwork().getRedstoneControl();
+            } else {
+                if (this.node == null) { //Create a new node if not created by placing a block
+                    this.node = new CapacitorBankNode(this);
+                }
+                CapacitorBankSavedData.onNetworkCreated(serverLevel, this.node.getNetwork()); //Broadcast the network creation
+            }
+
             for (Direction side : Direction.values()) {
                 if (level.getBlockEntity(getBlockPos().relative(side)) instanceof CapacitorBankBlockEntity bank) {
-                    bank.node.getNetwork().connect(bank.node, node); //Connect to neighbours
+                    if (bank.node != null && node != null) { //Happens in game tests
+                        bank.node.getNetwork().connect(bank.node, node); //Connect to neighbours
+                    }
                 }
             }
         }
@@ -437,9 +433,7 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
     protected void applyImplicitComponents(DataComponentGetter components) {
         super.applyImplicitComponents(components);
 
-        if (isIOConfigMutable()) {
-            ioConfig = components.getOrDefault(EIODataComponents.IO_CONFIG, IOConfig.empty());
-        }
+        ioConfig = components.getOrDefault(EIODataComponents.IO_CONFIG, IOConfig.empty());
 
         if (this.node == null) { //Called before being placed, so a node needs to be made
             this.node = new CapacitorBankNode(this);
@@ -455,9 +449,7 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
     protected void collectImplicitComponents(DataComponentMap.Builder components) {
         super.collectImplicitComponents(components);
 
-        if (isIOConfigMutable()) {
-            components.set(EIODataComponents.IO_CONFIG, ioConfig);
-        }
+        components.set(EIODataComponents.IO_CONFIG, ioConfig);
 
         if (oldNetwork != null) { //Network already kicked out the node, so we keep an old ref
             int energy = oldNetwork.getEnergyForNode(this.tier());

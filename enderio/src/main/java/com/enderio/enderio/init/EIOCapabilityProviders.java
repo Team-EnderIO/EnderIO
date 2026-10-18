@@ -46,9 +46,9 @@ public class EIOCapabilityProviders {
         event.registerItem(Capabilities.Energy.ITEM, TravelStaffItem.ENERGY_STORAGE_PROVIDER, EIOItems.TRAVEL_STAFF);
 
         // Capacitor Banks
-//        for (var capacitorBankItem : EIOBlocks.CAPACITOR_BANK_ITEMS.values()) {
-//            event.registerItem(Capabilities.Energy.ITEM, CapacitorBankItem.ENERGY_STORAGE_PROVIDER, capacitorBankItem);
-//        }
+        for (var capacitorBankItem : EIOBlocks.CAPACITOR_BANK_ITEMS.values()) {
+            event.registerItem(Capabilities.Energy.ITEM, CapacitorBankItem.ENERGY_STORAGE_PROVIDER, capacitorBankItem);
+        }
 
         // Register item fluid handlers
         event.registerItem(Capabilities.Fluid.ITEM, LevitationStaffItem.FLUID_HANDLER_PROVIDER, EIOItems.LEVITATION_STAFF);

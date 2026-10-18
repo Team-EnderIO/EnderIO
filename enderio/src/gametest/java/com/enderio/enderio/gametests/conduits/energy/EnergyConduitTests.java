@@ -9,7 +9,6 @@ import com.enderio.enderio.gametests.conduits.ConduitGameTestHelper;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOConduits;
 import net.minecraft.core.Direction;
-import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.neoforged.testframework.DynamicTest;
@@ -54,28 +53,28 @@ public class EnergyConduitTests {
             // Wait for the capacitor banks to initialize
             .thenIdle(1)
             // Clear any existing conduits
-            .thenExecute(() -> helper.setBlock(1, 1, 0, Blocks.AIR))
-            .thenExecute(() -> helper.placeConduit(energyConduit, 1, 1, 0))
+            .thenExecute(() -> helper.setBlock(1, 0, 0, Blocks.AIR))
+            .thenExecute(() -> helper.placeConduit(energyConduit, 1, 0, 0))
             .thenExecute(() -> helper
-                .getConduitBundle(1, 1, 0, false)
+                .getConduitBundle(1, 0, 0, false)
                 .setConnectionConfig(energyConduit, Direction.WEST,
                     EnergyConduitConnectionConfig.DEFAULT
                         .withIsExtract(true)
                         .withIsInsert(false)
                         .withExtractRedstoneControl(RedstoneControl.ALWAYS_ACTIVE)))
             .thenExecute(() -> helper
-                .getConduitBundle(1, 1, 0, false)
+                .getConduitBundle(1, 0, 0, false)
                 .setConnectionConfig(energyConduit, Direction.EAST,
                     EnergyConduitConnectionConfig.DEFAULT
                         .withIsExtract(false)
                         .withIsInsert(true)))
-            .thenExecute(() -> helper.changeIoConfig(0, 1, 0, ioConfigurable -> {
+            .thenExecute(() -> helper.changeIoConfig(0, 0, 0, ioConfigurable -> {
                 ioConfigurable.setIOMode(Direction.EAST, IOMode.PUSH);
             }))
-            .thenExecute(() -> helper.provideEnergyExact(0, 1, 0, transferRate * 2))
+            .thenExecute(() -> helper.provideEnergyExact(0, 0, 0, transferRate * 2))
             .thenExecuteAfter(10, () -> {
-                int sourceEnergy = helper.getEnergyStored(0, 1, 0);
-                int sinkEnergy = helper.getEnergyStored(2, 1, 0);
+                int sourceEnergy = helper.getEnergyStored(0, 0, 0);
+                int sinkEnergy = helper.getEnergyStored(2, 0, 0);
                 helper.assertTrue(sinkEnergy > 0,
                     "Expected energy to transfer to sink, but sink has " + sinkEnergy + " energy (source has " + sourceEnergy + ")");
             })
@@ -91,40 +90,40 @@ public class EnergyConduitTests {
         helper.startSequence()
             // Wait for the capacitor banks to initialize
             .thenIdle(1)
-            .thenExecute(() -> helper.setBlock(1, 1, 0, Blocks.AIR))
+            .thenExecute(() -> helper.setBlock(1, 0, 0, Blocks.AIR))
             .thenExecute(() -> helper.placeConduit(energyConduit, 1, 1, 0))
             .thenExecute(() -> helper
-                .getConduitBundle(1, 1, 0, false)
+                .getConduitBundle(1, 0, 0, false)
                 .setConnectionConfig(energyConduit, Direction.WEST,
                     EnergyConduitConnectionConfig.DEFAULT
                         .withIsExtract(true)
                         .withIsInsert(false)
                         .withExtractRedstoneControl(RedstoneControl.NEVER_ACTIVE)))
             .thenExecute(() -> helper
-                .getConduitBundle(1, 1, 0, false)
+                .getConduitBundle(1, 0, 0, false)
                 .setConnectionConfig(energyConduit, Direction.EAST,
                     EnergyConduitConnectionConfig.DEFAULT
                         .withIsExtract(false)
                         .withIsInsert(true)))
-            .thenExecute(() -> helper.changeIoConfig(0, 1, 0, ioConfigurable -> {
+            .thenExecute(() -> helper.changeIoConfig(0, 0, 0, ioConfigurable -> {
                 ioConfigurable.setIOMode(Direction.EAST, IOMode.PUSH);
             }))
-            .thenExecute(() -> helper.provideEnergyExact(0, 1, 0, transferRate * 2))
+            .thenExecute(() -> helper.provideEnergyExact(0, 0, 0, transferRate * 2))
             .thenExecuteAfter(5, () -> {
-                helper.assertEnergyStored(2, 1, 0, 0);
-                int sourceEnergy = helper.getEnergyStored(0, 1, 0);
+                helper.assertEnergyStored(2, 0, 0, 0);
+                int sourceEnergy = helper.getEnergyStored(0, 0, 0);
                 helper.assertTrue(sourceEnergy >= transferRate, "Expected source to retain energy with NEVER_ACTIVE, but source only has " + sourceEnergy);
             })
             // Now enable extraction with ALWAYS_ACTIVE
             .thenExecute(() -> helper
-                .getConduitBundle(1, 1, 0, false)
+                .getConduitBundle(1, 0, 0, false)
                 .setConnectionConfig(energyConduit, Direction.WEST,
                     EnergyConduitConnectionConfig.DEFAULT
                         .withIsExtract(true)
                         .withIsInsert(false)
                         .withExtractRedstoneControl(RedstoneControl.ALWAYS_ACTIVE)))
             .thenExecuteAfter(2, () -> {
-                helper.assertEnergyStoredAtLeast(2, 1, 0, 1);
+                helper.assertEnergyStoredAtLeast(2, 0, 0, 1);
             })
             .thenSucceed();
     }
@@ -138,37 +137,37 @@ public class EnergyConduitTests {
         helper.startSequence()
             // Wait for the capacitor banks to initialize
             .thenIdle(1)
-            .thenExecute(() -> helper.setBlock(1, 1, 0, Blocks.AIR))
-            .thenExecute(() -> helper.placeConduit(energyConduit, 1, 1, 0))
+            .thenExecute(() -> helper.setBlock(1, 0, 0, Blocks.AIR))
+            .thenExecute(() -> helper.placeConduit(energyConduit, 1, 0, 0))
             .thenExecute(() -> helper
-                .getConduitBundle(1, 1, 0, false)
+                .getConduitBundle(1, 0, 0, false)
                 .setConnectionConfig(energyConduit, Direction.WEST,
                     EnergyConduitConnectionConfig.DEFAULT
                         .withIsExtract(true)
                         .withIsInsert(false)
                         .withExtractRedstoneControl(RedstoneControl.ALWAYS_ACTIVE)))
             .thenExecute(() -> helper
-                .getConduitBundle(1, 1, 0, false)
+                .getConduitBundle(1, 0, 0, false)
                 .setConnectionConfig(energyConduit, Direction.EAST,
                     EnergyConduitConnectionConfig.DEFAULT
                         .withIsExtract(false)
                         .withIsInsert(false)))
-            .thenExecute(() -> helper.changeIoConfig(0, 1, 0, ioConfigurable -> {
+            .thenExecute(() -> helper.changeIoConfig(0, 0, 0, ioConfigurable -> {
                 ioConfigurable.setIOMode(Direction.EAST, IOMode.PUSH);
             }))
-            .thenExecute(() -> helper.provideEnergyExact(0, 1, 0, transferRate * 2))
+            .thenExecute(() -> helper.provideEnergyExact(0, 0, 0, transferRate * 2))
             .thenExecuteAfter(5, () -> {
-                helper.assertEnergyStored(2, 1, 0, 0);
+                helper.assertEnergyStored(2, 0, 0, 0);
             })
             // Enable insert side
             .thenExecute(() -> helper
-                .getConduitBundle(1, 1, 0, false)
+                .getConduitBundle(1, 0, 0, false)
                 .setConnectionConfig(energyConduit, Direction.EAST,
                     EnergyConduitConnectionConfig.DEFAULT
                         .withIsExtract(false)
                         .withIsInsert(true)))
             .thenExecuteAfter(2, () -> {
-                helper.assertEnergyStoredAtLeast(2, 1, 0, 1);
+                helper.assertEnergyStoredAtLeast(2, 0, 0, 1);
             })
             .thenSucceed();
     }
@@ -183,13 +182,13 @@ public class EnergyConduitTests {
             // Wait for the capacitor banks to initialize
             .thenIdle(1)
             // Clear conduits at positions 1 and 3 only (position 2 has the middle bank)
-            .thenExecute(() -> helper.setBlock(1, 1, 0, Blocks.AIR))
-            .thenExecute(() -> helper.setBlock(3, 1, 0, Blocks.AIR))
-            .thenExecute(() -> helper.placeConduit(energyConduit, 1, 1, 0))
-            .thenExecute(() -> helper.placeConduit(energyConduit, 3, 1, 0))
+            .thenExecute(() -> helper.setBlock(1, 0, 0, Blocks.AIR))
+            .thenExecute(() -> helper.setBlock(3, 0, 0, Blocks.AIR))
+            .thenExecute(() -> helper.placeConduit(energyConduit, 1, 0, 0))
+            .thenExecute(() -> helper.placeConduit(energyConduit, 3, 0, 0))
             .thenExecuteAfter(5, () -> {})
             .thenExecute(() -> helper
-                .getConduitBundle(1, 1, 0, false)
+                .getConduitBundle(1, 0, 0, false)
                 .setConnectionConfig(energyConduit, Direction.WEST,
                     EnergyConduitConnectionConfig.DEFAULT
                         .withIsExtract(true)
@@ -197,14 +196,14 @@ public class EnergyConduitTests {
                         .withExtractRedstoneControl(RedstoneControl.ALWAYS_ACTIVE)))
             // Closer sink (at 2,0,0) - east side of conduit at (1,1,0)
             .thenExecute(() -> helper
-                .getConduitBundle(1, 1, 0, false)
+                .getConduitBundle(1, 0, 0, false)
                 .setConnectionConfig(energyConduit, Direction.EAST,
                     EnergyConduitConnectionConfig.DEFAULT
                         .withIsExtract(false)
                         .withIsInsert(true)))
             // Configure conduit at (3,1,0) to extract from west (from conduit at 1,1,0)
             .thenExecute(() -> helper
-                .getConduitBundle(3, 1, 0, false)
+                .getConduitBundle(3, 0, 0, false)
                 .setConnectionConfig(energyConduit, Direction.WEST,
                     EnergyConduitConnectionConfig.DEFAULT
                         .withIsExtract(true)
@@ -212,32 +211,32 @@ public class EnergyConduitTests {
                         .withExtractRedstoneControl(RedstoneControl.ALWAYS_ACTIVE)))
             // Further sink (at 4,0,0) - east side of conduit at (3,1,0)
             .thenExecute(() -> helper
-                .getConduitBundle(3, 1, 0, false)
+                .getConduitBundle(3, 0, 0, false)
                 .setConnectionConfig(energyConduit, Direction.EAST,
                     EnergyConduitConnectionConfig.DEFAULT
                         .withIsExtract(false)
                         .withIsInsert(true)))
             // Configure source bank to PUSH energy to the conduit
-            .thenExecute(() -> helper.changeIoConfig(0, 1, 0, ioConfigurable -> {
+            .thenExecute(() -> helper.changeIoConfig(0, 0, 0, ioConfigurable -> {
                 ioConfigurable.setIOMode(Direction.EAST, IOMode.PUSH);
             }))
             // Configure middle bank to PULL energy to the conduit
-            .thenExecute(() -> helper.changeIoConfig(2, 1, 0, ioConfigurable -> {
+            .thenExecute(() -> helper.changeIoConfig(2, 0, 0, ioConfigurable -> {
                 ioConfigurable.setIOMode(Direction.WEST, IOMode.PULL);
             }))
             // Configure middle bank to PUSH energy to the conduit
-            .thenExecute(() -> helper.changeIoConfig(2, 1, 0, ioConfigurable -> {
+            .thenExecute(() -> helper.changeIoConfig(2, 0, 0, ioConfigurable -> {
                 ioConfigurable.setIOMode(Direction.EAST, IOMode.PUSH);
             }))
             // Configure final bank to PULL energy to the conduit
-            .thenExecute(() -> helper.changeIoConfig(4, 1, 0, ioConfigurable -> {
+            .thenExecute(() -> helper.changeIoConfig(4, 0, 0, ioConfigurable -> {
                 ioConfigurable.setIOMode(Direction.WEST, IOMode.PULL);
             }))
             // Add energy to source bank - enough for multiple transfers
-            .thenExecute(() -> helper.provideEnergyExact(0, 1, 0, transferRate * 4))
+            .thenExecute(() -> helper.provideEnergyExact(0, 0, 0, transferRate * 4))
             // Wait for transfer - closer bank should receive energy first
             .thenExecuteAfter(2, () -> {
-                helper.assertEnergyStoredAtLeast(2, 1, 0, 1);
+                helper.assertEnergyStoredAtLeast(2, 0, 0, 1);
             })
             .thenSucceed();
     }
@@ -252,11 +251,11 @@ public class EnergyConduitTests {
             // Wait for the capacitor banks to initialize
             .thenIdle(1)
             // Clear any existing conduits
-            .thenExecute(() -> helper.fillAir(1, 1, 0, 3, 1, 0))
-            .thenExecute(() -> helper.fillConduits(energyConduit, 1, 1, 0, 3, 1, 0))
+            .thenExecute(() -> helper.fillAir(1, 0, 0, 3, 0, 0))
+            .thenExecute(() -> helper.fillConduits(energyConduit, 1, 0, 0, 3, 0, 0))
             // Configure extract from source
             .thenExecute(() -> helper
-                .getConduitBundle(1, 1, 0, false)
+                .getConduitBundle(1, 0, 0, false)
                 .setConnectionConfig(energyConduit, Direction.WEST,
                     EnergyConduitConnectionConfig.DEFAULT
                         .withIsExtract(true)
@@ -264,7 +263,7 @@ public class EnergyConduitTests {
                         .withExtractRedstoneControl(RedstoneControl.ALWAYS_ACTIVE)))
             // Configure closer sink with lower priority
             .thenExecute(() -> helper
-                .getConduitBundle(1, 1, 0, false)
+                .getConduitBundle(1, 0, 0, false)
                 .setConnectionConfig(energyConduit, Direction.EAST,
                     EnergyConduitConnectionConfig.DEFAULT
                         .withIsExtract(false)
@@ -272,7 +271,7 @@ public class EnergyConduitTests {
                         .withPriority(0)))
             // Configure conduit at (3,1,0) to extract from west (from conduit at 1,1,0)
             .thenExecute(() -> helper
-                .getConduitBundle(3, 1, 0, false)
+                .getConduitBundle(3, 0, 0, false)
                 .setConnectionConfig(energyConduit, Direction.WEST,
                     EnergyConduitConnectionConfig.DEFAULT
                         .withIsExtract(true)
@@ -280,21 +279,21 @@ public class EnergyConduitTests {
                         .withExtractRedstoneControl(RedstoneControl.ALWAYS_ACTIVE)))
             // Configure further sink with higher priority
             .thenExecute(() -> helper
-                .getConduitBundle(3, 1, 0, false)
+                .getConduitBundle(3, 0, 0, false)
                 .setConnectionConfig(energyConduit, Direction.EAST,
                     EnergyConduitConnectionConfig.DEFAULT
                         .withIsExtract(false)
                         .withIsInsert(true)
                         .withPriority(10)))
             // Configure source bank to PUSH energy to the conduit
-            .thenExecute(() -> helper.changeIoConfig(0, 1, 0, ioConfigurable -> {
+            .thenExecute(() -> helper.changeIoConfig(0, 0, 0, ioConfigurable -> {
                 ioConfigurable.setIOMode(Direction.EAST, IOMode.PUSH);
             }))
             // Add energy to source bank
-            .thenExecute(() -> helper.provideEnergyExact(0, 1, 0, transferRate * 4))
+            .thenExecute(() -> helper.provideEnergyExact(0, 0, 0, transferRate * 4))
             // Wait for transfer - higher priority (further) sink should receive first
             .thenExecuteAfter(2, () -> {
-                helper.assertEnergyStoredAtLeast(4, 1, 0, 1);
+                helper.assertEnergyStoredAtLeast(4, 0, 0, 1);
             })
             .thenSucceed();
     }
@@ -320,14 +319,14 @@ public class EnergyConduitTests {
                 // Wait for the capacitor banks to initialize
                 .thenIdle(1)
                 // Clear conduits
-                .thenExecute(() -> helper.fillAir(1, 1, 0, 3, 1, 0))
+                .thenExecute(() -> helper.fillAir(1, 0, 0, 3, 0, 0))
                 // Place mixed tier conduits: basic in middle, energetic on edges
-                .thenExecute(() -> helper.placeConduit(energeticConduit, 1, 1, 0))
-                .thenExecute(() -> helper.placeConduit(basicConduit, 2, 1, 0))
-                .thenExecute(() -> helper.placeConduit(energeticConduit, 3, 1, 0))
+                .thenExecute(() -> helper.placeConduit(energeticConduit, 1, 0, 0))
+                .thenExecute(() -> helper.placeConduit(basicConduit, 2, 0, 0))
+                .thenExecute(() -> helper.placeConduit(energeticConduit, 3, 0, 0))
                 // Configure extract from source
                 .thenExecute(() -> helper
-                    .getConduitBundle(1, 1, 0, false)
+                    .getConduitBundle(1, 0, 0, false)
                     .setConnectionConfig(energeticConduit, Direction.WEST,
                         EnergyConduitConnectionConfig.DEFAULT
                             .withIsExtract(true)
@@ -335,21 +334,21 @@ public class EnergyConduitTests {
                             .withExtractRedstoneControl(RedstoneControl.ALWAYS_ACTIVE)))
                 // Configure insert to sink
                 .thenExecute(() -> helper
-                    .getConduitBundle(3, 1, 0, false)
+                    .getConduitBundle(3, 0, 0, false)
                     .setConnectionConfig(energeticConduit, Direction.EAST,
                         EnergyConduitConnectionConfig.DEFAULT
                             .withIsExtract(false)
                             .withIsInsert(true)))
                 // Configure source bank to PUSH energy
-                .thenExecute(() -> helper.changeIoConfig(0, 1, 0, ioConfigurable -> {
+                .thenExecute(() -> helper.changeIoConfig(0, 0, 0, ioConfigurable -> {
                     ioConfigurable.setIOMode(Direction.EAST, IOMode.PUSH);
                 }))
                 // Add large amount of energy to source
-                .thenExecute(() -> helper.provideEnergyExact(0, 1, 0, energeticRate * 10))
+                .thenExecute(() -> helper.provideEnergyExact(0, 0, 0, energeticRate * 10))
                 // Wait for transfer
                 .thenExecuteAfter(2, () -> {
-                    int transferred = (energeticRate * 10) - helper.getEnergyStored(0, 1, 0);
-                    int sinkEnergy = helper.getEnergyStored(4, 1, 0);
+                    int transferred = (energeticRate * 10) - helper.getEnergyStored(0, 0, 0);
+                    int sinkEnergy = helper.getEnergyStored(4, 0, 0);
                     
                     // First verify that energy actually transferred
                     helper.assertTrue(sinkEnergy > 0, "No energy transferred to sink. Sink has " + sinkEnergy + " energy");
@@ -372,13 +371,13 @@ public class EnergyConduitTests {
             // Wait for the capacitor banks to initialize
             .thenIdle(1)
             // Clear conduits at positions 1 and 3 only (position 2 has the middle bank)
-            .thenExecute(() -> helper.setBlock(1, 1, 0, Blocks.AIR))
-            .thenExecute(() -> helper.setBlock(3, 1, 0, Blocks.AIR))
-            .thenExecute(() -> helper.placeConduit(energyConduit, 1, 1, 0))
-            .thenExecute(() -> helper.placeConduit(energyConduit, 3, 1, 0))
+            .thenExecute(() -> helper.setBlock(1, 0, 0, Blocks.AIR))
+            .thenExecute(() -> helper.setBlock(3, 0, 0, Blocks.AIR))
+            .thenExecute(() -> helper.placeConduit(energyConduit, 1, 0, 0))
+            .thenExecute(() -> helper.placeConduit(energyConduit, 3, 0, 0))
             // Configure extract from source
             .thenExecute(() -> helper
-                .getConduitBundle(1, 1, 0, false)
+                .getConduitBundle(1, 0, 0, false)
                 .setConnectionConfig(energyConduit, Direction.WEST,
                     EnergyConduitConnectionConfig.DEFAULT
                         .withIsExtract(true)
@@ -386,7 +385,7 @@ public class EnergyConduitTests {
                         .withExtractRedstoneControl(RedstoneControl.ALWAYS_ACTIVE)))
             // Configure closer sink (at 2,1,0) - east of conduit at (1,1,0)
             .thenExecute(() -> helper
-                .getConduitBundle(1, 1, 0, false)
+                .getConduitBundle(1, 0, 0, false)
                 .setConnectionConfig(energyConduit, Direction.EAST,
                     EnergyConduitConnectionConfig.DEFAULT
                         .withIsExtract(false)
@@ -394,7 +393,7 @@ public class EnergyConduitTests {
                         .withPriority(0)))
             // Configure conduit at (3,1,0) to extract from west (from conduit at 1,1,0)
             .thenExecute(() -> helper
-                .getConduitBundle(3, 1, 0, false)
+                .getConduitBundle(3, 0, 0, false)
                 .setConnectionConfig(energyConduit, Direction.WEST,
                     EnergyConduitConnectionConfig.DEFAULT
                         .withIsExtract(true)
@@ -402,22 +401,22 @@ public class EnergyConduitTests {
                         .withExtractRedstoneControl(RedstoneControl.ALWAYS_ACTIVE)))
             // Configure further sink (at 4,1,0) - east of conduit at (3,1,0)
             .thenExecute(() -> helper
-                .getConduitBundle(3, 1, 0, false)
+                .getConduitBundle(3, 0, 0, false)
                 .setConnectionConfig(energyConduit, Direction.EAST,
                     EnergyConduitConnectionConfig.DEFAULT
                         .withIsExtract(false)
                         .withIsInsert(true)
                         .withPriority(0)))
             // Configure source bank to PUSH energy to the conduit
-            .thenExecute(() -> helper.changeIoConfig(0, 1, 0, ioConfigurable -> {
+            .thenExecute(() -> helper.changeIoConfig(0, 0, 0, ioConfigurable -> {
                 ioConfigurable.setIOMode(Direction.EAST, IOMode.PUSH);
             }))
             // Add energy to source bank - enough for both sinks
-            .thenExecute(() -> helper.provideEnergyExact(0, 1, 0, transferRate * 4))
+            .thenExecute(() -> helper.provideEnergyExact(0, 0, 0, transferRate * 4))
             // Wait for multiple transfers
             .thenExecuteAfter(5, () -> {
-                int closerSinkEnergy = helper.getEnergyStored(2, 1, 0);
-                int furtherSinkEnergy = helper.getEnergyStored(4, 1, 0);
+                int closerSinkEnergy = helper.getEnergyStored(2, 0, 0);
+                int furtherSinkEnergy = helper.getEnergyStored(4, 0, 0);
 
                 // Both sinks should have received some energy
                 helper.assertTrue(closerSinkEnergy > 0 || furtherSinkEnergy > 0,

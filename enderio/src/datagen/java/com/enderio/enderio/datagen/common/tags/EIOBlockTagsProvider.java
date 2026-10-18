@@ -99,14 +99,14 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
             tag(BlockTags.NEEDS_IRON_TOOL).add(solarPanel.get());
         }
 
-//        var capacitorBanks = EIOBlocks.CAPACITOR_BANKS.values()
-//            .stream()
-//            .sorted(Comparator.comparing(DeferredHolder::getKey))
-//            .toList();
+        var capacitorBanks = EIOBlocks.CAPACITOR_BANKS.values()
+            .stream()
+            .sorted(Comparator.comparing(DeferredHolder::getKey))
+            .toList();
 
-//        for (var capacitorBank : capacitorBanks) {
-//            tag(BlockTags.MINEABLE_WITH_PICKAXE).add(capacitorBank.get());
-//        }
+        for (var capacitorBank : capacitorBanks) {
+            tag(BlockTags.MINEABLE_WITH_PICKAXE).add(capacitorBank.get());
+        }
 
         // Blocks that need stone tools
         tag(BlockTags.NEEDS_STONE_TOOL)

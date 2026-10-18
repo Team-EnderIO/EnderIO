@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 public record ClientBoundSyncCapacitorBankPacket(UUID uuid, long storedEnergy, long capacity, long added, long send, List<BlockPos> nodes) implements CustomPacketPayload {
-    public static final Type<ClientBoundSyncCapacitorBankPacket> TYPE = new Type<>(EnderIO.rl("sync_capacitor_bank"));
+    public static final Type<ClientBoundSyncCapacitorBankPacket> TYPE = new Type<>(EnderIO.id("sync_capacitor_bank"));
 
     public static final StreamCodec<ByteBuf, ClientBoundSyncCapacitorBankPacket> STREAM_CODEC = StreamCodec.composite(
         UUIDUtil.STREAM_CODEC,

@@ -680,14 +680,14 @@ public class EIOLanguageProvider extends LanguageProvider {
         }
 
         // Capacitor Banks
-//        for (var entry : EIOBlocks.CAPACITOR_BANKS.entrySet()) {
-//            String displayName = switch (entry.getKey()) {
-//                case BASIC -> "Basic Capacitor Bank";
-//                case ADVANCED -> "Advanced Capacitor Bank";
-//                case VIBRANT -> "Vibrant Capacitor Bank";
-//            };
-//            add(entry.getValue().get(), displayName);
-//        }
+        for (var entry : EIOBlocks.CAPACITOR_BANKS.entrySet()) {
+            String displayName = switch (entry.getKey()) {
+                case BASIC -> "Basic Capacitor Bank";
+                case ADVANCED -> "Advanced Capacitor Bank";
+                case VIBRANT -> "Vibrant Capacitor Bank";
+            };
+            add(entry.getValue().get(), displayName);
+        }
     }
 
     private void addFluids() {

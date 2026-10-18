@@ -1,7 +1,8 @@
 {
   "variants": {
     "": {
-      "model": "enderio:block/athena/advanced_capacitor_bank"
+      "type": "enderio:io_overlay",
+      "model": "enderio:block/advanced_capacitor_bank_part"
     }
   }
 }
