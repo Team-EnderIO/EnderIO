@@ -24,14 +24,4 @@ public class RecipeUtil {
         RegistryAccess registryAccess = level.registryAccess();
         return recipe.value().getResultStacks(registryAccess);
     }
-
-    public static List<OutputStack> getResultStacks(MachineRecipe<?> recipe) {
-        Minecraft minecraft = Minecraft.getInstance();
-        ClientLevel level = minecraft.level;
-        if (level == null) {
-            throw new NullPointerException("level must not be null.");
-        }
-        RegistryAccess registryAccess = level.registryAccess();
-        return recipe.getResultStacks(registryAccess);
-    }
 }
