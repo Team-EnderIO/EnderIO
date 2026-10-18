@@ -32,7 +32,7 @@ public class SoulBinderTests {
             .thenExecute(() -> {
                 // Insert the capacitor and fill with energy.
                 helper.insertIntoContainer(0, 0, 0, EIOItems.OCTADIC_CAPACITOR.get(), 1);
-                helper.provideEnergy(0, 0, 0, energyToAdd);
+                helper.provideEnergyExact(0, 0, 0, energyToAdd);
             })
             // Insert recipe ingredients - filled soul vial and cobblestone (test recipe uses cobblestone instead of emerald)
             .thenExecute(() -> {

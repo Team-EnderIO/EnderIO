@@ -99,7 +99,7 @@ public class SolarPanelBlockEntity extends EIOBlockEntity implements SoulBindabl
 
         for (Direction side : Direction.Plane.HORIZONTAL) {
             if (level.getBlockEntity(getBlockPos().relative(side)) instanceof SolarPanelBlockEntity panel) {
-                node.getNetwork().connect(node, panel.node);
+                panel.node.getNetwork().connect(panel.node, node);
             }
         }
     }
@@ -130,6 +130,7 @@ public class SolarPanelBlockEntity extends EIOBlockEntity implements SoulBindabl
                     validPushTargetCache.add(energyHandler);
                 }
             }
+            isValidPushTargetCacheDirty = false;
         }
 
         return validPushTargetCache;

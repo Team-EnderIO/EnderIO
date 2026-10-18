@@ -11,6 +11,10 @@ import com.enderio.enderio.content.glass.GlassCollisionPredicate;
 import com.enderio.enderio.content.glass.GlassIdentifier;
 import com.enderio.enderio.content.glass.GlassLighting;
 import com.enderio.enderio.content.machines.block_detector.BlockDetectorBlock;
+import com.enderio.enderio.content.machines.capacitor_bank.CapacitorBankBlock;
+import com.enderio.enderio.content.machines.capacitor_bank.CapacitorBankBlockEntity;
+import com.enderio.enderio.content.machines.capacitor_bank.CapacitorBankItem;
+import com.enderio.enderio.content.machines.capacitor_bank.CapacitorTier;
 import com.enderio.enderio.content.machines.farming_station.FarmingStationBlock;
 import com.enderio.enderio.content.machines.niard.NiardBlock;
 import com.enderio.enderio.content.machines.obelisks.attractor.AttractorObeliskBlockEntity;
@@ -60,9 +64,7 @@ import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.google.common.collect.ImmutableMap;
 import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Util;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -454,14 +456,14 @@ public class EIOBlocks {
     });
 
     // Capacitor Banks
-//    public static final Map<CapacitorTier, DeferredBlock<CapacitorBankBlock>> CAPACITOR_BANKS = Util.make(() -> {
-//        Map<CapacitorTier, DeferredBlock<CapacitorBankBlock>> banks = new HashMap<>();
-//        for (CapacitorTier tier : CapacitorTier.values()) {
-//            banks.put(tier, capacitorBank(tier.name().toLowerCase(Locale.ROOT) + "_capacitor_bank",
-//                () -> EIOBlockEntities.CAPACITOR_BANKS.get(tier)::get, tier));
-//        }
-//        return ImmutableMap.copyOf(banks);
-//    });
+    public static final Map<CapacitorTier, DeferredBlock<CapacitorBankBlock>> CAPACITOR_BANKS = Util.make(() -> {
+        Map<CapacitorTier, DeferredBlock<CapacitorBankBlock>> banks = new HashMap<>();
+        for (CapacitorTier tier : CapacitorTier.values()) {
+            banks.put(tier, capacitorBank(tier.name().toLowerCase(Locale.ROOT) + "_capacitor_bank",
+                () -> EIOBlockEntities.CAPACITOR_BANKS.get(tier)::get, tier));
+        }
+        return ImmutableMap.copyOf(banks);
+    });
 
     // Soul Engine
     public static final DeferredBlock<ProgressMachineBlock<SoulEngineBlockEntity>> SOUL_ENGINE = BLOCKS.registerBlock("soul_engine",
@@ -533,14 +535,14 @@ public class EIOBlocks {
         return ImmutableMap.copyOf(items);
     });
 
-//    public static final Map<CapacitorTier, DeferredItem<CapacitorBankItem>> CAPACITOR_BANK_ITEMS = Util.make(() -> {
-//        Map<CapacitorTier, DeferredItem<CapacitorBankItem>> items = new HashMap<>();
-//        for (var entry : CAPACITOR_BANKS.entrySet()) {
-//            items.put(entry.getKey(), ITEMS.registerItem(entry.getValue().getId().getPath(),
-//                p -> new CapacitorBankItem(entry.getValue().get(), p)));
-//        }
-//        return ImmutableMap.copyOf(items);
-//    });
+    public static final Map<CapacitorTier, DeferredItem<CapacitorBankItem>> CAPACITOR_BANK_ITEMS = Util.make(() -> {
+        Map<CapacitorTier, DeferredItem<CapacitorBankItem>> items = new HashMap<>();
+        for (var entry : CAPACITOR_BANKS.entrySet()) {
+            items.put(entry.getKey(), ITEMS.registerItem(entry.getValue().getId().getPath(),
+                p -> new CapacitorBankItem(entry.getValue().get(), p.useBlockDescriptionPrefix())));
+        }
+        return ImmutableMap.copyOf(items);
+    });
 
     // Helper methods
     private static DeferredBlock<MachineBlock<?>> machine(String name,
@@ -574,12 +576,12 @@ public class EIOBlocks {
             () -> BlockBehaviour.Properties.of().strength(2.5f, 8));
     }
 
-//    private static DeferredBlock<CapacitorBankBlock> capacitorBank(String name,
-//        Supplier<Supplier<BlockEntityType<? extends CapacitorBankBlockEntity>>> regiliteBlockEntity, CapacitorTier tier) {
-//        return BLOCKS.registerBlock(name,
-//            props -> new CapacitorBankBlock(props, regiliteBlockEntity.get()::get, tier),
-//            BlockBehaviour.Properties.of().strength(2.5f, 8));
-//    }
+    private static DeferredBlock<CapacitorBankBlock> capacitorBank(String name,
+        Supplier<Supplier<BlockEntityType<? extends CapacitorBankBlockEntity>>> regiliteBlockEntity, CapacitorTier tier) {
+        return BLOCKS.registerBlock(name,
+            props -> new CapacitorBankBlock(regiliteBlockEntity.get(), props, tier),
+            () -> BlockBehaviour.Properties.of().strength(2.5f, 8));
+    }
 
     // endregion
 

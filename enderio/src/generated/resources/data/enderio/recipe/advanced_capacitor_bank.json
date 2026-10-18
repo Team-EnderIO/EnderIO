@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": "#c:ingots/conductive_alloy",
+    "C": "enderio:double_layer_capacitor",
+    "R": "#c:storage_blocks/redstone"
+  },
+  "pattern": [
+    "ACA",
+    "CRC",
+    "ACA"
+  ],
+  "result": {
+    "id": "enderio:advanced_capacitor_bank"
+  }
+}
