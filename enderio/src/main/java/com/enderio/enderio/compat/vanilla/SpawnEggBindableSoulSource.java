@@ -51,7 +51,7 @@ public class SpawnEggBindableSoulSource implements BindableSoulSource {
     @Override
     public Soul extractSoul(TransactionContext transaction) {
         Soul resultSoul = availableSoul().copy();
-        if (itemAccess.exchange(ItemResource.of(Items.EGG), 1, transaction) == 1) {
+        if (itemAccess.extract(ItemResource.of(validItem), 1, transaction) == 1) {
             return resultSoul;
         }
 
