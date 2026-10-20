@@ -3,10 +3,8 @@
   "energy": 51200,
   "experience": 12,
   "input": "enderio:pulsating_photovoltaic_module",
-  "inputSoul": {
+  "input_soul": {
     "type": "enderio:has_solar_soul_data"
   },
-  "output": {
-    "id": "enderio:pulsating_photovoltaic_module"
-  }
+  "output_mode": "bind"
 }

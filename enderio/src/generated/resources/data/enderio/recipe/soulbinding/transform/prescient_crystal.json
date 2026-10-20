@@ -3,8 +3,9 @@
   "energy": 100000,
   "experience": 8,
   "input": "#c:gems/vibrant_crystal",
-  "inputSoul": "minecraft:shulker",
+  "input_soul": "minecraft:shulker",
   "output": {
     "id": "enderio:prescient_crystal"
-  }
+  },
+  "output_mode": "transform"
 }

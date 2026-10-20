@@ -1,14 +1,12 @@
 package com.enderio.enderio.api.soul.binding;
 
 import com.enderio.enderio.api.soul.Soul;
-import com.enderio.enderio.api.soul.storage.SoulHandler;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jetbrains.annotations.ApiStatus;
 
 /**
  * Intended for things that can be bound to a soul.
  * This means the soul becomes irretrievable - the soul can only be overwritten.
- * @see SoulHandler for soul storage handling.
  */
 @ApiStatus.AvailableSince("8.0")
 public interface SoulBindable {

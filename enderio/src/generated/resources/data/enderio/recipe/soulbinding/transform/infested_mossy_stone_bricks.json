@@ -3,8 +3,9 @@
   "energy": 10000,
   "experience": 0,
   "input": "minecraft:mossy_stone_bricks",
-  "inputSoul": "minecraft:silverfish",
+  "input_soul": "minecraft:silverfish",
   "output": {
     "id": "minecraft:infested_mossy_stone_bricks"
-  }
+  },
+  "output_mode": "transform"
 }

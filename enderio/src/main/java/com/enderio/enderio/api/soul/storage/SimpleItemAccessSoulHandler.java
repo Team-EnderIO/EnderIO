@@ -41,7 +41,7 @@ public class SimpleItemAccessSoulHandler extends ItemAccessResourceHandler<SoulR
 
     @Override
     protected @Nullable ItemResource update(ItemResource accessResource, int index, SoulResource newResource, int newAmount) {
-        return accessResource.with(component, SimpleSoulContent.copyOf(newResource.toSoul()));
+        return accessResource.with(component, newAmount == 0 ? SimpleSoulContent.EMPTY : SimpleSoulContent.copyOf(newResource.toSoul()));
     }
 
     @Override
