@@ -1,9 +1,12 @@
 package com.enderio.enderio.content.machines.powered_spawner;
 
+import com.enderio.core.common.util.EnderResourceUtil;
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.soul.Soul;
+import com.enderio.enderio.api.soul.SoulResource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 
@@ -21,10 +24,16 @@ public class MobCaptureTask extends PoweredSpawnerTask {
     @Override
     public boolean isCompleted() {
         // Ensure we have an item to take from
-        var inputStack = blockEntity.getInventory().getStack(PoweredSpawnerBlockEntity.INPUT);
-        var inputSoulHandler = inputStack.getCapability(EnderIOCapabilities.SOUL_HANDLER_ITEM);
-        if (inputStack.isEmpty() || inputSoulHandler == null || !inputSoulHandler.tryInsertSoul(getSoulForCapture(), true)) {
+        var inputSoulHandler = EnderResourceUtil.getItemAccessStrict(blockEntity.getInventory(), PoweredSpawnerBlockEntity.INPUT)
+            .getCapability(EnderIOCapabilities.Soul.ITEM);
+        if (inputSoulHandler == null) {
             return true;
+        }
+
+        try (Transaction transaction = Transaction.openRoot()) {
+            if (inputSoulHandler.insert(SoulResource.of(getSoulForCapture()), 1, transaction) != 1) {
+                return true;
+            }
         }
 
         return super.isCompleted();
@@ -53,15 +62,25 @@ public class MobCaptureTask extends PoweredSpawnerTask {
             var resultStack = inputResource.toStack(extracted);
 
             // Insert the soul into the stack
-            var resultSoulHandler = resultStack.getCapability(EnderIOCapabilities.SOUL_HANDLER_ITEM);
-            if (resultSoulHandler == null || !resultSoulHandler.tryInsertSoul(capturedSoul, false)) {
-                // Cannot insert soul into the input, so give up
+            var resultSoulHandler = ItemAccess.forStack(resultStack).getCapability(EnderIOCapabilities.Soul.ITEM);
+            if (resultSoulHandler == null) {
+                // Nothing to insert into, abort.
+                isComplete = true;
+                return;
+            }
+
+            if (resultSoulHandler.insert(SoulResource.of(capturedSoul), 1, rootTransaction) != 1) {
+                // Unable to insert more, abort.
                 isComplete = true;
                 return;
             }
 
             // Now we'll see if the stack cannot contain more of this soul
-            boolean canInsertMore = resultSoulHandler.tryInsertSoul(capturedSoul, true);
+            // TODO: we could use input filters to move stuff around now thanks to ItemAccess.
+            boolean canInsertMore;
+            try (Transaction simulateTransaction = Transaction.open(rootTransaction)) {
+                canInsertMore = resultSoulHandler.insert(SoulResource.of(capturedSoul), 1, simulateTransaction) == 1;
+            }
 
             // Now, if we can insert more attempt to place back in the INPUT
             int amountToInsert = resultStack.getCount();

@@ -1,0 +1,11 @@
+{
+  "type": "enderio:soul_binding",
+  "energy": 10000,
+  "experience": 0,
+  "input": "minecraft:cracked_stone_bricks",
+  "input_soul": "minecraft:silverfish",
+  "output": {
+    "id": "minecraft:infested_cracked_stone_bricks"
+  },
+  "output_mode": "transform"
+}

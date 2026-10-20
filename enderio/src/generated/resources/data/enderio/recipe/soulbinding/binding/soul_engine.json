@@ -1,0 +1,11 @@
+{
+  "type": "enderio:soul_binding",
+  "copy_input_components": true,
+  "energy": 188000,
+  "experience": 5,
+  "input": "enderio:soul_engine",
+  "input_soul": {
+    "type": "enderio:has_engine_soul_data"
+  },
+  "output_mode": "bind"
+}

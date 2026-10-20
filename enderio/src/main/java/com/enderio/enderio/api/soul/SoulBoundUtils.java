@@ -2,8 +2,10 @@ package com.enderio.enderio.api.soul;
 
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.soul.binding.SoulBindable;
+import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -146,5 +148,29 @@ public class SoulBoundUtils {
         }
 
         return Optional.empty();
+    }
+
+    public static Optional<ItemStack> tryBind(ItemStack toBind, Soul soul) {
+        // forStack cannot replace the Item; a detached slot supports exchanges to a different item ID.
+        var handler = new ItemStacksResourceHandler(NonNullList.of(ItemStack.EMPTY, toBind.copy()));
+        var access = ItemAccess.forHandlerIndexStrict(handler, 0);
+        var bindable = access.getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
+        if (bindable == null) {
+            return Optional.empty();
+        }
+
+        if (!bindable.canBeBound() || !bindable.isSoulValid(soul)) {
+            return Optional.empty();
+        }
+
+        try (Transaction transaction = Transaction.openRoot()) {
+            if (!bindable.bindSoul(soul, transaction)) {
+                return Optional.empty();
+            }
+
+            transaction.commit();
+        }
+
+        return Optional.of(access.getResource().toStack(access.getAmount()));
     }
 }
