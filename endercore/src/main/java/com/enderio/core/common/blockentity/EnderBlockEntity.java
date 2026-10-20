@@ -8,6 +8,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.SlotAccess;
+import net.minecraft.world.entity.SlotProvider;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -25,6 +27,7 @@ import com.enderio.core.annotations.UseOnly;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
 import net.neoforged.neoforge.common.loot.NeoForgeLootContextParams;
+import net.neoforged.neoforge.transfer.item.WorldlyContainerWrapper;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -44,6 +47,14 @@ public class EnderBlockEntity extends BlockEntity {
     public static final String DATA = "Data";
     public static final String INDEX = "Index";
 
+    // TODO: 26.3 - work out slot providers
+    private static final SlotProvider EMPTY_SLOT_PROVIDER = new SlotProvider() {
+        @Override
+        public @Nullable SlotAccess getSlot(int slot) {
+            return null;
+        }
+    };
+
     private final Map<BlockCapability<?, ?>, EnumMap<Direction, BlockCapabilityCache<?, ?>>> selfCapabilities = new HashMap<>();
     private final Map<BlockCapability<?, ?>, EnumMap<Direction, BlockCapabilityCache<?, ?>>> neighbourCapabilities = new HashMap<>();
 
@@ -60,6 +71,7 @@ public class EnderBlockEntity extends BlockEntity {
             .withParameter(LootContextParams.BLOCK_STATE, this.getBlockState())
             .withParameter(LootContextParams.BLOCK_ENTITY, this)
             .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(this.getBlockPos()))
+            .withParameter(LootContextParams.CONTAINER, EMPTY_SLOT_PROVIDER)
             .withOptionalParameter(NeoForgeLootContextParams.QUERIED_STACK, queriedStack.isEmpty() ? null : queriedStack)
             .create(LootContextParamSets.CONTAINER_PROCESS))).create(Optional.empty());
     }
