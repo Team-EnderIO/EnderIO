@@ -14,6 +14,7 @@ import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -61,6 +62,11 @@ public class EnchanterBlockEntity extends EnderBlockEntity implements MenuProvid
 
     @Override
     public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
+        if (level instanceof ServerLevel serverLevel && player instanceof ServerPlayer serverPlayer) {
+            var recipes = new java.util.ArrayList<net.minecraft.world.item.crafting.RecipeHolder<?>>();
+            recipes.addAll(serverLevel.recipeAccess().recipeMap().byType(EIORecipeTypes.ENCHANTING.get()));
+            serverPlayer.awardRecipes(recipes);
+        }
         return new EnchanterMenu(containerId, playerInventory, this);
     }
 

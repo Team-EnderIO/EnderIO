@@ -7,6 +7,7 @@ import com.enderio.enderio.init.EIORecipeTypes;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -18,6 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.PlacementInfo;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeBookCategory;
 import net.minecraft.world.item.crafting.RecipeInput;
@@ -156,7 +158,12 @@ public record EnchanterRecipe(Holder<Enchantment> enchantment, int costMultiplie
 
     @Override
     public PlacementInfo placementInfo() {
-        return PlacementInfo.create(input.ingredient());
+        Ingredient lapis = Ingredient.of(BuiltInRegistries.ITEM.get(Tags.Items.GEMS_LAPIS).orElseThrow());
+        List<Ingredient> ingredients = new java.util.ArrayList<>();
+        ingredients.add(Ingredient.of(Items.WRITABLE_BOOK));
+        ingredients.addAll(java.util.Collections.nCopies(input.count(), input.ingredient()));
+        ingredients.addAll(java.util.Collections.nCopies(getLapisForLevel(1), lapis));
+        return PlacementInfo.create(ingredients);
     }
 
     @Override
@@ -169,11 +176,6 @@ public record EnchanterRecipe(Holder<Enchantment> enchantment, int costMultiplie
     @Override
     public RecipeBookCategory recipeBookCategory() {
         return EIORecipeBookCategories.ENCHANTING.get();
-    }
-
-    @Override
-    public boolean isSpecial() {
-        return true;
     }
 
     @Override

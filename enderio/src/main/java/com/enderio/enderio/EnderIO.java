@@ -28,6 +28,7 @@ import com.enderio.enderio.init.EIOLootModifiers;
 import com.enderio.enderio.init.EIOMenus;
 import com.enderio.enderio.init.EIOParticles;
 import com.enderio.enderio.init.EIORecipeBookCategories;
+import com.enderio.enderio.init.EIORecipeDisplays;
 import com.enderio.enderio.init.EIORecipeTypes;
 import com.enderio.enderio.init.EIOSoulIngredientTypes;
 import com.enderio.enderio.init.EIOSounds;
@@ -116,6 +117,7 @@ public class EnderIO {
         EIOConduitTypes.register(modEventBus);
         EIOTravelTargets.register(modEventBus);
         EIORecipeBookCategories.register(modEventBus);
+        EIORecipeDisplays.register(modEventBus);
         EIOSounds.register(modEventBus);
         EIOConsumableTypes.register(modEventBus);
         EIOSoulIngredientTypes.register(modEventBus);

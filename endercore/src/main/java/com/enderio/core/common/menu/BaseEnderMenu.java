@@ -11,9 +11,14 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.RecipeBookMenu;
+import net.minecraft.world.inventory.RecipeBookMenu.PostPlaceAction;
+import net.minecraft.world.inventory.RecipeBookType;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.entity.player.StackedItemContents;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -22,7 +27,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class BaseEnderMenu extends AbstractContainerMenu {
+public abstract class BaseEnderMenu extends RecipeBookMenu {
 
     private final Inventory playerInventory;
 
@@ -66,6 +71,21 @@ public abstract class BaseEnderMenu extends AbstractContainerMenu {
         for (int i = 0; i < EQUIPMENT_SLOTS.length; i++) {
             addSlot(createPlayerArmorSlot(getPlayerInventory(), 36 + (3 - i), x, y + i * 18, EQUIPMENT_SLOTS[i]));
         }
+    }
+
+    @Override
+    public PostPlaceAction handlePlacement(boolean useMaxItems, boolean allowDroppingItemsToClear, RecipeHolder<?> recipe,
+            ServerLevel level, Inventory inventory) {
+        return PostPlaceAction.NOTHING;
+    }
+
+    @Override
+    public void fillCraftSlotsStackedContents(StackedItemContents stackedContents) {
+    }
+
+    @Override
+    public RecipeBookType getRecipeBookType() {
+        return RecipeBookType.CRAFTING;
     }
 
     protected Slot createPlayerInventorySlot(Inventory inventory, int slot, int x, int y) {
