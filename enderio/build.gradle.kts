@@ -127,11 +127,11 @@ dependencies {
     // TODO: Re-add Enchantment descriptions if we add enchantments again
 
     // Mekanism
-//    compileOnly(variantOf(libs.mekanism) {
-//        classifier("api")
-//    })
+    compileOnly(variantOf(libs.mekanism) {
+        classifier("api")
+    })
 
-//    localRuntime(libs.mekanism)
+    localRuntime(libs.mekanism)
 
     //Laserio
 //    compileOnly(libs.laserio)

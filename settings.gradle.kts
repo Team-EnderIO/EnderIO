@@ -49,6 +49,13 @@ dependencyResolutionManagement {
                 includeGroup("dev.gigaherz.graph")
             }
         }
+        maven {
+            name = "Rover656 Snapshot Maven"
+            url = uri("https://maven.rover656.dev/snapshots")
+            content {
+                includeGroup("mekanism")
+            }
+        }
 
         maven {
             name = "ModMaven"
