@@ -1,15 +1,17 @@
 package com.enderio.enderio.client.content.filters.redstone;
 
-import com.enderio.core.client.gui.screen.EIOScreen;
+import com.enderio.core.client.gui.screen.EnderContainerScreen;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.client.foundation.widgets.DyeColorPickerWidget;
 import com.enderio.enderio.content.conduits.ConduitLang;
 import com.enderio.enderio.content.filters.redstone.RedstoneDoubleChannelFilterMenu;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
-public class RedstoneDoubleChannelFilterScreen extends EIOScreen<RedstoneDoubleChannelFilterMenu> {
+public class RedstoneDoubleChannelFilterScreen extends EnderContainerScreen<RedstoneDoubleChannelFilterMenu> {
 
     private static final Identifier BG_TEXTURE = EnderIO.id("textures/gui/40/item_filter.png");
 
@@ -28,7 +30,8 @@ public class RedstoneDoubleChannelFilterScreen extends EIOScreen<RedstoneDoubleC
     }
 
     @Override
-    public Identifier getBackgroundImage() {
-        return BG_TEXTURE;
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        super.extractBackground(graphics, mouseX, mouseY, partialTick);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE, getLeftPos(), getTopPos(), 0, 0, imageWidth, imageHeight, 256, 256);
     }
 }
