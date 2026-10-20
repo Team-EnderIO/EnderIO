@@ -3,8 +3,9 @@
   "energy": 76800,
   "experience": 6,
   "input": "#c:gems/vibrant_crystal",
-  "inputSoul": "minecraft:enderman",
+  "input_soul": "minecraft:enderman",
   "output": {
     "id": "enderio:ender_crystal"
-  }
+  },
+  "output_mode": "transform"
 }

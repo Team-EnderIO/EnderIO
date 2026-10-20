@@ -3,8 +3,9 @@
   "energy": 51200,
   "experience": 4,
   "input": "enderio:z_logic_controller",
-  "inputSoul": "minecraft:zombie",
+  "input_soul": "minecraft:zombie",
   "output": {
     "id": "enderio:frank_n_zombie"
-  }
+  },
+  "output_mode": "transform"
 }

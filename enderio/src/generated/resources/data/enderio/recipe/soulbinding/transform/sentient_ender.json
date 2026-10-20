@@ -3,8 +3,9 @@
   "energy": 51200,
   "experience": 4,
   "input": "enderio:ender_resonator",
-  "inputSoul": "minecraft:witch",
+  "input_soul": "minecraft:witch",
   "output": {
     "id": "enderio:sentient_ender"
-  }
+  },
+  "output_mode": "transform"
 }

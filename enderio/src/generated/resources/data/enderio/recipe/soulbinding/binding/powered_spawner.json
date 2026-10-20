@@ -1,15 +1,11 @@
 {
   "type": "enderio:soul_binding",
+  "copy_input_components": true,
   "energy": 288000,
   "experience": 8,
   "input": {
     "neoforge:ingredient_type": "enderio:any_soul_bound",
-    "item": "enderio:broken_spawner"
+    "item": "enderio:powered_spawner"
   },
-  "inputSoul": {
-    "type": "enderio:any_entity"
-  },
-  "output": {
-    "id": "enderio:broken_spawner"
-  }
+  "output_mode": "bind"
 }

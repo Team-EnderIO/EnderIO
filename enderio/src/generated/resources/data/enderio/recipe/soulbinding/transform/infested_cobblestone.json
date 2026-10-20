@@ -3,8 +3,9 @@
   "energy": 10000,
   "experience": 0,
   "input": "minecraft:cobblestone",
-  "inputSoul": "minecraft:silverfish",
+  "input_soul": "minecraft:silverfish",
   "output": {
     "id": "minecraft:infested_cobblestone"
-  }
+  },
+  "output_mode": "transform"
 }

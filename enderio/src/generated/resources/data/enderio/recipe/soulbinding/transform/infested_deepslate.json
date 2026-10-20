@@ -3,8 +3,9 @@
   "energy": 10000,
   "experience": 0,
   "input": "minecraft:deepslate",
-  "inputSoul": "minecraft:silverfish",
+  "input_soul": "minecraft:silverfish",
   "output": {
     "id": "minecraft:infested_deepslate"
-  }
+  },
+  "output_mode": "transform"
 }

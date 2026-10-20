@@ -3,8 +3,9 @@
   "energy": 51200,
   "experience": 4,
   "input": "#c:gems/emerald",
-  "inputSoul": "minecraft:villager",
+  "input_soul": "minecraft:villager",
   "output": {
     "id": "enderio:enticing_crystal"
-  }
+  },
+  "output_mode": "transform"
 }
