@@ -4,6 +4,7 @@ import com.enderio.enderio.api.conduits.screen.ConduitMenuDataAccess;
 import com.enderio.enderio.api.conduits.screen.ConduitScreenHelper;
 import com.enderio.enderio.api.conduits.screen.IOConduitScreenType;
 import com.enderio.enderio.content.conduits.ConduitLang;
+import com.enderio.enderio.content.conduits.type.redstone.RedstoneConduit;
 import com.enderio.enderio.content.conduits.type.redstone.RedstoneConduitConnectionConfig;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -22,6 +23,8 @@ public class RedstoneConduitScreenType extends IOConduitScreenType<RedstoneCondu
             ConduitMenuDataAccess<RedstoneConduitConnectionConfig> dataAccess) {
         super.createLeftWidgets(screen, startX, startY, dataAccess);
 
+        screen.addFilterConfigureButton(startX + 1, startY + 82, RedstoneConduit.INSERT_FILTER_SLOT);
+
         // Send channel
         screen.addColorPicker(startX, startY + 20, ConduitLang.CHANNEL,
                 () -> dataAccess.getConnectionConfig().extractChannel(),
@@ -32,6 +35,8 @@ public class RedstoneConduitScreenType extends IOConduitScreenType<RedstoneCondu
     public void createRightWidgets(ConduitScreenHelper screen, int startX, int startY,
             ConduitMenuDataAccess<RedstoneConduitConnectionConfig> dataAccess) {
         super.createRightWidgets(screen, startX, startY, dataAccess);
+
+        screen.addFilterConfigureButton(startX + 1, startY + 82, RedstoneConduit.EXTRACT_FILTER_SLOT);
 
         // Send channel
         screen.addColorPicker(startX, startY + 20, ConduitLang.CHANNEL,

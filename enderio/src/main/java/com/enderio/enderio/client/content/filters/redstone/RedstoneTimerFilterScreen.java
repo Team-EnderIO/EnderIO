@@ -1,6 +1,8 @@
 package com.enderio.enderio.client.content.filters.redstone;
 
 import com.enderio.core.client.gui.screen.EnderContainerScreen;
+import com.enderio.core.client.gui.widgets.IconButton;
+import com.enderio.enderio.content.filters.AbstractFilterMenu;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.content.filters.FiltersLang;
 import com.enderio.enderio.content.filters.redstone.RedstoneTimerFilterMenu;
@@ -27,14 +29,16 @@ public class RedstoneTimerFilterScreen extends EnderContainerScreen<RedstoneTime
     @Override
     protected void init() {
         super.init();
-        timerInput = new EditBox(this.font, this.leftPos + 60, this.topPos + 20, 60, 20, Component.literal("" + getMenu().getFilter().getMaxTicks())) {
+        addRenderableWidget(new IconButton(getLeftPos() + 3, getTopPos() + 3, 16, 16, EnderIO.id("icon/back"), null,
+            input -> handleButtonPress(AbstractFilterMenu.BACK_BUTTON_ID)));
+        timerInput = new EditBox(this.font, this.leftPos + 60, this.topPos + 20, 60, 20, Component.literal("" + getMenu().getMaxTicks())) {
 
             @Override
             public boolean charTyped(CharacterEvent event) {
                 return Character.isDigit(event.codepoint()) && super.charTyped(event);
             }
         };
-        timerInput.setValue("" + getMenu().getFilter().getMaxTicks());
+        timerInput.setValue("" + getMenu().getMaxTicks());
         addRenderableWidget(timerInput);
         addRestorableState("timer", timerInput);
         addRenderableWidget(Button

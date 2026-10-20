@@ -1,6 +1,8 @@
 package com.enderio.enderio.client.content.filters.redstone;
 
 import com.enderio.core.client.gui.screen.EnderContainerScreen;
+import com.enderio.core.client.gui.widgets.IconButton;
+import com.enderio.enderio.content.filters.AbstractFilterMenu;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.client.foundation.widgets.DyeColorPickerWidget;
 import com.enderio.enderio.content.conduits.ConduitLang;
@@ -28,18 +30,20 @@ public class RedstoneCountFilterScreen extends EnderContainerScreen<RedstoneCoun
     @Override
     protected void init() {
         super.init();
+        addRenderableWidget(new IconButton(getLeftPos() + 3, getTopPos() + 3, 16, 16, EnderIO.id("icon/back"), null,
+            input -> handleButtonPress(AbstractFilterMenu.BACK_BUTTON_ID)));
         addRenderableWidget(new DyeColorPickerWidget(this.leftPos + 15, this.topPos + 30,
-                getMenu().getFilter()::getChannel, getMenu()::setChannel, ConduitLang.REDSTONE_CHANNEL));
+                getMenu()::getChannel, getMenu()::setChannel, ConduitLang.REDSTONE_CHANNEL));
 
         countInput = new EditBox(this.font, this.leftPos + 60, this.topPos + 20, 60, 20,
-                Component.literal("" + getMenu().getFilter().getMaxCount())) {
+                Component.literal("" + getMenu().getMaxCount())) {
 
             @Override
             public boolean charTyped(CharacterEvent event) {
                 return Character.isDigit(event.codepoint()) && super.charTyped(event);
             }
         };
-        countInput.setValue("" + getMenu().getFilter().getMaxCount());
+        countInput.setValue("" + getMenu().getMaxCount());
         addRenderableWidget(countInput);
         addRestorableState("count", countInput);
         addRenderableWidget(Button.builder(FiltersLang.GUI_CONFIRM, button -> getMenu().setCount(countInput.getValue()))
