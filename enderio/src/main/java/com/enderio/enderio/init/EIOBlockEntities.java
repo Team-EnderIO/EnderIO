@@ -7,6 +7,8 @@ import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
 import com.enderio.enderio.content.enchanter.EnchanterBlockEntity;
 import com.enderio.enderio.content.enderface.EnderfaceBlockEntity;
 import com.enderio.enderio.content.machines.alloy.AlloySmelterBlockEntity;
+import com.enderio.enderio.content.machines.capacitor_bank.CapacitorBankBlockEntity;
+import com.enderio.enderio.content.machines.capacitor_bank.CapacitorTier;
 import com.enderio.enderio.content.machines.drain.DrainBlockEntity;
 import com.enderio.enderio.content.machines.farming_station.FarmingStationBlockEntity;
 import com.enderio.enderio.content.machines.impulse_hopper.ImpulseHopperBlockEntity;
@@ -56,20 +58,20 @@ import java.util.Map;
 public class EIOBlockEntities {
     public static final BlockEntityTypeDeferredRegister BLOCK_ENTITY_TYPES = BlockEntityTypeDeferredRegister.create(EnderIO.MOD_ID);
 
-//    public static final Map<CapacitorTier, DeferredHolder<BlockEntityType<?>, BlockEntityType<CapacitorBankBlockEntity>>> CAPACITOR_BANKS = Util
-//        .make(() -> {
-//            Map<CapacitorTier, DeferredHolder<BlockEntityType<?>, BlockEntityType<CapacitorBankBlockEntity>>> map = new HashMap<>();
-//            for (CapacitorTier tier : CapacitorTier.values()) {
-//                map.put(tier, BLOCK_ENTITY_TYPES
-//                    .builder(tier.name().toLowerCase(Locale.ROOT) + "_capacitor_bank",
-//                        (worldPosition, blockState) -> new CapacitorBankBlockEntity(worldPosition, blockState, tier),
-//                        () -> EIOBlocks.CAPACITOR_BANKS.get(tier).get())
-//                    .apply(EIOBlockEntities::legacyPoweredMachineBlockEntityCapabilities)
-//                    .build()
-//                );
-//            }
-//            return ImmutableMap.copyOf(map);
-//        });
+    public static final Map<CapacitorTier, DeferredHolder<BlockEntityType<?>, BlockEntityType<CapacitorBankBlockEntity>>> CAPACITOR_BANKS = Util
+        .make(() -> {
+            Map<CapacitorTier, DeferredHolder<BlockEntityType<?>, BlockEntityType<CapacitorBankBlockEntity>>> map = new HashMap<>();
+            for (CapacitorTier tier : CapacitorTier.values()) {
+                map.put(tier, BLOCK_ENTITY_TYPES
+                    .builder(tier.name().toLowerCase(Locale.ROOT) + "_capacitor_bank",
+                        (worldPosition, blockState) -> new CapacitorBankBlockEntity(EIOBlockEntities.CAPACITOR_BANKS.get(tier).get(), worldPosition, blockState, tier),
+                        () -> EIOBlocks.CAPACITOR_BANKS.get(tier).get())
+                    .capability(Capabilities.Energy.BLOCK, CapacitorBankBlockEntity.ENERGY_STORAGE_PROVIDER)
+                    .build()
+                );
+            }
+            return ImmutableMap.copyOf(map);
+        });
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ConduitBundleBlockEntity>> CONDUIT = BLOCK_ENTITY_TYPES.register("conduit",
         ConduitBundleBlockEntity::new, EIOBlocks.CONDUIT_BUNDLE::get);

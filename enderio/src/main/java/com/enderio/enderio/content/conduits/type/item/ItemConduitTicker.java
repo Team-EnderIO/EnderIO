@@ -5,6 +5,8 @@ import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.connection.path.ConduitConnectionPath;
 import com.enderio.enderio.api.conduits.network.ConduitNetwork;
 import com.enderio.enderio.api.conduits.ticker.ConduitTickerBase;
+import com.enderio.enderio.api.filter.ItemFilterContext;
+import com.enderio.enderio.api.filter.ItemFilterDirection;
 import com.enderio.enderio.init.EIOConduitTypes;
 import com.google.common.collect.Maps;
 import net.minecraft.core.Holder;
@@ -80,6 +82,7 @@ public class ItemConduitTicker extends ConduitTickerBase<ItemConduit> {
                     try (Transaction simulateTransaction = Transaction.open(transaction)) {
                         availableToExtract = extractHandler.extract(i, itemResource, speed - totalExtracted, simulateTransaction);
                     }
+
                     if (availableToExtract <= 0) {
                         continue;
                     }
@@ -91,7 +94,7 @@ public class ItemConduitTicker extends ConduitTickerBase<ItemConduit> {
                     }
 
                     if (extractFilter != null) {
-                        var filteredStack = extractFilter.test(extractHandler, itemResource.toStack(availableToExtract));
+                        var filteredStack = extractFilter.test(itemResource.toStack(availableToExtract), new ItemFilterContext(extractHandler, ItemFilterDirection.EXTRACT));
                         if (filteredStack.isEmpty()) {
                             continue;
                         }
@@ -146,7 +149,7 @@ public class ItemConduitTicker extends ConduitTickerBase<ItemConduit> {
                             .getCapability(EnderIOCapabilities.ITEM_FILTER);
 
                         if (insertFilter != null) {
-                            var filteredStack = insertFilter.test(insertHandler, itemResource.toStack(amountToInsert));
+                            var filteredStack = insertFilter.test(itemResource.toStack(amountToInsert), new ItemFilterContext(insertHandler, ItemFilterDirection.INSERT));
                             if (filteredStack.isEmpty()) {
                                 continue;
                             }

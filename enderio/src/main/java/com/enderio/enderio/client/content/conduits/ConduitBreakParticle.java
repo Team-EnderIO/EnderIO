@@ -10,6 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.data.AtlasIds;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -59,8 +60,7 @@ public class ConduitBreakParticle extends SingleQuadParticle {
     @Override
     public int getLightCoords(float partialTick) {
         int i = super.getLightCoords(partialTick);
-        // 26.2-port: LevelRenderer.getLightCoords was moved to LightCoordsUtil.getLightCoords
-        return i == 0 && this.level.hasChunkAt(this.pos) ? net.minecraft.util.LightCoordsUtil.getLightCoords(this.level, this.pos) : i;
+        return i == 0 && this.level.hasChunkAt(this.pos) ? LightCoordsUtil.getLightCoords(this.level, this.pos) : i;
     }
 
     public static void addDestroyEffects(BlockPos pos, BlockState state, Conduit<?, ?> conduit) {

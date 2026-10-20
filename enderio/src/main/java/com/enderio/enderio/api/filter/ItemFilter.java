@@ -16,4 +16,14 @@ public interface ItemFilter {
      * @return The stack that is permitted (can differ in size), use {@link ItemStack#EMPTY} to transfer nothing.
      */
     ItemStack test(@Nullable ResourceHandler<ItemResource> target, ItemStack stack);
+
+    /**
+     * Test whether the item stack passes this filter.
+     * @param stack The stack being tested.
+     * @param targetContext Optional context about the target inventory, and whether it is being inserted to or extracted from.
+     * @return The stack that is permitted (can differ in size), use {@link ItemStack#EMPTY} to transfer nothing.
+     */
+    default ItemStack test(ItemStack stack, @Nullable ItemFilterContext targetContext) {
+        return test(targetContext == null ? null : targetContext.target(), stack);
+    }
 }

@@ -1,10 +1,10 @@
 {
-  "conduit.enderio.chemical": "Chemikalienleitung",
+  "conduit.enderio.chemical": "Chemikalien Leitung",
   "conduit.enderio.dense_me": "Dichte ME Leitung",
-  "conduit.enderio.ender_chemical": "Ender Chemikalienleitung",
+  "conduit.enderio.ender_chemical": "Ender Chemikalien Leitung",
   "conduit.enderio.heat": "Wärmeleitung",
   "conduit.enderio.me": "ME Leitung",
-  "conduit.enderio.pressurized_chemical": "Druckbeaufschlagte Chemikalienleitung",
+  "conduit.enderio.pressurized_chemical": "Druckbeaufschlagte Chemikalien Leitung",
   "conduit.enderio.rs": "Refined Storage Leitung",
   "item.enderio.basic_chemical_filter": "Einfacher Chemikalienfilter",
   "tooltip.enderio.conduit.chemical.change_fluid1": "Gesperrte Chemikalie:",

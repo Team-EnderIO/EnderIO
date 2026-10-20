@@ -22,11 +22,17 @@ import com.enderio.enderio.datagen.common.tags.EIOBlockTagsProvider;
 import com.enderio.enderio.datagen.common.tags.EIOEntityTagsProvider;
 import com.enderio.enderio.datagen.common.tags.EIOFluidTagsProvider;
 import com.enderio.enderio.datagen.common.tags.EIOItemTagsProvider;
+import com.enderio.enderio.foundation.lang.EIOCommonLang;
+import net.minecraft.DetectedVersion;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.advancements.AdvancementProvider;
 import net.minecraft.data.loot.LootTableProvider;
+import net.minecraft.data.metadata.PackMetadataGenerator;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
@@ -34,6 +40,7 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.data.event.GatherDataRegistryEntriesEvent;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
@@ -78,6 +85,11 @@ public class EnderIODataGen {
         event.addProvider(new EIOModelProvider(packOutput));
         event.addProvider(new EIOLanguageProvider(packOutput));
         event.addProvider(new EIOSoundDefinitionProvider(packOutput));
-        event.addProvider(new AthenaProvider(packOutput));
+
+        var athenaPack = event.getGenerator().getPackGenerator(true, "enderio_athena", EnderIO.ATHENA_RESOURCE_PACK_PATH);
+        athenaPack.addProvider(AthenaProvider::new);
+        athenaPack.addProvider(output -> new PackMetadataGenerator(output).add(PackMetadataSection.CLIENT_TYPE,
+            new PackMetadataSection(EIOCommonLang.RESOURCE_PACK_ATHENA,
+                DetectedVersion.BUILT_IN.packVersion(PackType.CLIENT_RESOURCES).minorRange())));
     }
 }

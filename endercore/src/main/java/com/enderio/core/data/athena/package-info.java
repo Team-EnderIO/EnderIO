@@ -1,4 +1,4 @@
 @javax.annotation.ParametersAreNonnullByDefault
 @org.jspecify.annotations.NullMarked
 
-package com.enderio.core.client.model;
+package com.enderio.core.data.athena;

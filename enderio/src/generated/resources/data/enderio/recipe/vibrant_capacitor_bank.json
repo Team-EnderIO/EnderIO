@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": "enderio:advanced_capacitor_bank",
+    "C": "#c:gems/vibrant_crystal",
+    "O": "enderio:octadic_capacitor",
+    "V": "#c:ingots/vibrant_alloy"
+  },
+  "pattern": [
+    "VOV",
+    "BCB",
+    "VOV"
+  ],
+  "result": {
+    "id": "enderio:vibrant_capacitor_bank"
+  }
+}

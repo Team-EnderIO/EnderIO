@@ -319,9 +319,9 @@ public class EIOBlockStateProvider extends ModelProvider {
         }
 
         // Capacitor Banks
-//        for (var capacitorBank : EIOBlocks.CAPACITOR_BANKS.values()) {
-//            blockModels.createNonTemplateModelBlock(capacitorBank.get());
-//        }
+        for (var capacitorBank : EIOBlocks.CAPACITOR_BANKS.values()) {
+            CapacitorBank(blockModels, capacitorBank.get());
+        }
 
         // Niard
         machineBlock(blockModels, EIOBlocks.NIARD.get());
@@ -378,6 +378,11 @@ public class EIOBlockStateProvider extends ModelProvider {
         blockModelGenerators.blockStateOutput.accept(
             MultiPartGenerator.multiPart(block)
                 .with(body));
+    }
+
+    private void CapacitorBank(BlockModelGenerators blockModelGenerators, Block block) {
+        var model = wrapMachineModel(ModelLocationUtils.getModelLocation(block));
+        blockModelGenerators.blockStateOutput.accept(MultiVariantGenerator.dispatch(block, model));
     }
 
     private void machineBlock(BlockModelGenerators blockModelGenerators, Block block) {

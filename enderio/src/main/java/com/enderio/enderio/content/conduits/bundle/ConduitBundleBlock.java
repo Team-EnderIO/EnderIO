@@ -622,7 +622,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
 
     @Override
     public boolean addRunningEffects(BlockState state, Level level, BlockPos blockpos, Entity entity) {
-        if (!(level.getBlockEntity(blockpos) instanceof ConduitBundleBlockEntity conduitBundle)) {
+        if (!(level.getBlockEntity(blockpos) instanceof ConduitBundleBlockEntity conduitBundle && !conduitBundle.isEmpty())) {
             return true;
         }
 

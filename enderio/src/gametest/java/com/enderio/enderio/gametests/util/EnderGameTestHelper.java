@@ -5,14 +5,13 @@ import com.enderio.core.common.storage.ResourceStorage;
 import com.enderio.core.common.storage.slot.ResourceSlotId;
 import com.enderio.enderio.api.io.IOConfigurable;
 import com.enderio.enderio.foundation.energy.MachineEnergyHandler;
-import com.enderio.enderio.foundation.io.TransferUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestInfo;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
@@ -295,7 +294,7 @@ public class EnderGameTestHelper extends ExtendedGameTestHelper {
     /**
      * Provide energy to a block entity by directly accessing its energy capability.
      */
-    public void provideEnergy(int x, int y, int z, int amount) {
+    public void provideEnergyExact(int x, int y, int z, int amount) {
         var energyHandler = getLevel().getCapability(Capabilities.Energy.BLOCK, absolutePos(new BlockPos(x, y, z)), null);
         if (energyHandler == null) {
             throw assertionException("No energy handler at " + x + "," + y + "," + z);
@@ -317,6 +316,27 @@ public class EnderGameTestHelper extends ExtendedGameTestHelper {
                 throw assertionException("Could not insert all " + amount + " energy into block at " + x + "," + y + "," + z + ", only inserted " + inserted);
             }
 
+            transaction.commit();
+        }
+    }
+
+    /**
+     * Provide energy to a block entity by directly accessing its energy capability.
+     */
+    public void provideEnergy(int x, int y, int z, int amount) {
+        var energyHandler = getLevel().getCapability(Capabilities.Energy.BLOCK, absolutePos(new BlockPos(x, y, z)), null);
+        if (energyHandler == null) {
+            throw assertionException("No energy handler at " + x + "," + y + "," + z);
+        }
+
+        // Short path for MachineEnergyHandler to avoid insertion limits.
+        if (energyHandler instanceof MachineEnergyHandler machineEnergyStorage) {
+            machineEnergyStorage.add(amount, null);
+            return;
+        }
+
+        try (Transaction transaction = Transaction.openRoot()) {
+            energyHandler.insert(amount, transaction);
             transaction.commit();
         }
     }

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": "#c:ingots/conductive_alloy",
+    "C": "#c:gems/vibrant_crystal",
+    "O": "enderio:octadic_capacitor"
+  },
+  "pattern": [
+    "AOA",
+    "OCO",
+    "AOA"
+  ],
+  "result": {
+    "id": "enderio:vibrant_capacitor_bank"
+  }
+}

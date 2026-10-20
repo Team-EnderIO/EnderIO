@@ -1,15 +1,13 @@
 package com.enderio.enderio.foundation.menu;
 
-import net.minecraft.world.Container;
-import net.minecraft.world.SimpleContainer;
 import com.enderio.core.common.storage.ItemStorage;
 import com.enderio.core.common.storage.slot.ResourceSlotId;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.transfer.item.ItemResource;
-
-import java.util.Optional;
 
 /**
  * A ghost slot is a slot that can be populated with an item, but that item isn't really real.
@@ -72,17 +70,7 @@ public class GhostMachineSlot extends Slot {
     }
 
     @Override
-    public Optional<ItemStack> tryRemove(int count, int decrement, Player player) {
-        if (!this.allowModification(player) && decrement < this.getItem().getCount()) {
-            return Optional.empty();
-        } else {
-            set(ItemStack.EMPTY);
-            return Optional.empty();
-        }
-    }
-
-    @Override
     public boolean mayPickup(Player playerIn) {
-        return true;
+        return false;
     }
 }

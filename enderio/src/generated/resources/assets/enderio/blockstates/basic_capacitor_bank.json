@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "": {
+      "type": "enderio:io_overlay",
+      "model": "enderio:block/basic_capacitor_bank"
+    }
+  }
+}
