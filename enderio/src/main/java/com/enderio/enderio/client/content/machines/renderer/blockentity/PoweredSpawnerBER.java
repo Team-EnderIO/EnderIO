@@ -50,15 +50,16 @@ public class PoweredSpawnerBER implements BlockEntityRenderer<PoweredSpawnerBloc
 
     static void extractSpawnerData(SpawnerRenderState state, float partialTicks, @Nullable Entity displayEntity, EntityRenderDispatcher entityRenderer,
         double oSpin, double spin) {
-        if (displayEntity != null) {
-            state.displayEntity = entityRenderer.extractEntity(displayEntity, partialTicks);
-            state.displayEntity.lightCoords = LightCoordsUtil.FULL_BRIGHT;
-            state.spin = (float) Mth.lerp(partialTicks, oSpin, spin) * 10.0F;
-            state.scale = 0.53125F;
-            float maxLength = Math.max(displayEntity.getBbWidth(), displayEntity.getBbHeight());
-            if (maxLength > 1.0) {
-                state.scale /= maxLength;
-            }
-        }
+        // TODO: Crash when soul binding after placement.
+//        if (displayEntity != null) {
+//            state.displayEntity = entityRenderer.extractEntity(displayEntity, partialTicks);
+//            state.displayEntity.lightCoords = LightCoordsUtil.FULL_BRIGHT;
+//            state.spin = (float) Mth.lerp(partialTicks, oSpin, spin) * 10.0F;
+//            state.scale = 0.53125F;
+//            float maxLength = Math.max(displayEntity.getBbWidth(), displayEntity.getBbHeight());
+//            if (maxLength > 1.0) {
+//                state.scale /= maxLength;
+//            }
+//        }
     }
 }
