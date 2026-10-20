@@ -16,16 +16,18 @@ import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class RecipeInputCache<T extends RecipeInput, R extends Recipe<T>> {
-    private final Supplier<RecipeType<R>> recipeType;
+    private final Function<RecipeManager, Collection<RecipeHolder<R>>> recipes;
     private final Predicate<R> filter;
 
     private final HashMap<Item, HashSet<RecipeHolder<R>>> itemToRecipesCache;
@@ -37,7 +39,11 @@ public class RecipeInputCache<T extends RecipeInput, R extends Recipe<T>> {
     }
 
     public RecipeInputCache(Supplier<RecipeType<R>> recipeType, Predicate<R> filter) {
-        this.recipeType = recipeType;
+        this(manager -> manager.recipeMap().byType(recipeType.get()), filter);
+    }
+
+    public RecipeInputCache(Function<RecipeManager, Collection<RecipeHolder<R>>> recipes, Predicate<R> filter) {
+        this.recipes = recipes;
         this.filter = filter;
         this.itemToRecipesCache = new HashMap<>();
         this.recipeToIngredientCache = new HashMap<>();
@@ -134,8 +140,7 @@ public class RecipeInputCache<T extends RecipeInput, R extends Recipe<T>> {
         itemToRecipesCache.clear();
         recipeToIngredientCache.clear();
 
-        recipeManager.recipeMap()
-                .byType(recipeType.get())
+        recipes.apply(recipeManager)
                 .stream()
                 .filter(recipeHolder -> filter.test(recipeHolder.value()))
                 .forEach(recipe -> {

@@ -37,6 +37,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.SkullBlock;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -175,7 +176,7 @@ public class EnderIO {
     // TODO: 26.1 consider if we can stop syncing recipes
     @SubscribeEvent
     public static void syncRecipes(OnDatapackSyncEvent event) {
-        event.sendRecipes(EIORecipeTypes.FIRE_CRAFTING.get(), EIORecipeTypes.ALLOY_SMELTING.get(), EIORecipeTypes.ENCHANTING.get(),
+        event.sendRecipes(RecipeType.SMELTING, EIORecipeTypes.FIRE_CRAFTING.get(), EIORecipeTypes.ALLOY_SMELTING.get(), EIORecipeTypes.ENCHANTING.get(),
             EIORecipeTypes.PAINTING.get(), EIORecipeTypes.SAG_MILLING.get(), EIORecipeTypes.SLICING.get(), EIORecipeTypes.SOUL_BINDING.get(),
             EIORecipeTypes.TANK.get(), EIORecipeTypes.VAT_FERMENTING.get(), EIORecipeTypes.WEATHER_CHANGE.get());
     }

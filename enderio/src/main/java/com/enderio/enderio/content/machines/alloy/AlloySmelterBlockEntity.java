@@ -31,6 +31,8 @@ import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -316,6 +318,15 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
             super.deserialize(input);
             inputsConsumed = input.getIntOr(MachineNBTKeys.PROCESSED_INPUTS, 1);
         }
+
+        @Override
+        protected @Nullable RecipeHolder<AlloySmeltingRecipe> loadRecipe(Identifier id) {
+            if (level instanceof ServerLevel serverLevel) {
+                return AlloySmeltingRecipeManager.byKey(serverLevel.recipeAccess().recipeMap(), id);
+            }
+
+            return null;
+        }
     }
 
     protected class AlloySmeltingMachineTaskHost
@@ -329,21 +340,10 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
         @Override
         protected Optional<RecipeHolder<AlloySmeltingRecipe>> findRecipe() {
-            var level = getLevel();
-            if (level == null) {
+            if (!(getLevel() instanceof ServerLevel serverLevel)) {
                 return Optional.empty();
             }
-
-            var optionalRecipe = super.findRecipe();
-            if (optionalRecipe.isEmpty()) {
-                return Optional.empty();
-            }
-
-            if (optionalRecipe.get().value().isSmelting() ? !getMode().canSmelt() : !getMode().canAlloy()) {
-                return Optional.empty();
-            }
-
-            return optionalRecipe;
+            return AlloySmeltingRecipeManager.findRecipe(serverLevel.recipeAccess().recipeMap(), createRecipeInput(), serverLevel);
         }
     }
 

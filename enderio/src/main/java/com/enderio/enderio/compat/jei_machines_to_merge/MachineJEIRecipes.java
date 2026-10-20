@@ -3,6 +3,7 @@ package com.enderio.enderio.compat.jei_machines_to_merge;
 import com.enderio.enderio.compat.jei_machines_to_merge.util.SoulEngineRecipe;
 import com.enderio.enderio.compat.jei_machines_to_merge.util.WrappedEnchanterRecipe;
 import com.enderio.enderio.content.machines.alloy.AlloySmeltingRecipe;
+import com.enderio.enderio.content.machines.alloy.AlloySmeltingRecipeManager;
 import com.enderio.enderio.content.machines.obelisks.weather.WeatherChangeRecipe;
 import com.enderio.enderio.content.machines.sag_mill.SagMillingRecipe;
 import com.enderio.enderio.content.machines.slicer.SlicingRecipe;
@@ -31,11 +32,14 @@ public class MachineJEIRecipes {
     private static final Set<RecipeType<?>> KNOWN_TYPES = new HashSet<>();
 
     public MachineJEIRecipes() {
-
     }
 
     public List<RecipeHolder<AlloySmeltingRecipe>> getAlloySmeltingRecipes() {
-        return new ArrayList<>(RECIPE_MAP.byType(EIORecipeTypes.ALLOY_SMELTING.get()));
+        var recipes = new ArrayList<>(RECIPE_MAP.byType(EIORecipeTypes.ALLOY_SMELTING.get()));
+        recipes.addAll(RECIPE_MAP.byType(RecipeType.SMELTING).stream()
+            .map(recipe -> new RecipeHolder<>(recipe.id(), AlloySmeltingRecipeManager.createWrapper(recipe.value())))
+            .toList());
+        return recipes;
     }
 
     public List<RecipeHolder<SlicingRecipe>> getSlicingRecipes() {

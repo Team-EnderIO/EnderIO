@@ -1,6 +1,7 @@
 package com.enderio.enderio.foundation.recipe;
 
 import com.enderio.enderio.content.machines.alloy.AlloySmeltingRecipe;
+import com.enderio.enderio.content.machines.alloy.AlloySmeltingRecipeManager;
 import com.enderio.enderio.content.machines.painting.PaintingRecipe;
 import com.enderio.enderio.content.machines.sag_mill.SagMillingRecipe;
 import com.enderio.enderio.content.machines.soul_binder.SoulBindingRecipe;
@@ -17,7 +18,7 @@ public class MachineRecipeCaches {
             EIORecipeTypes.ALLOY_SMELTING, recipe -> !recipe.isSmelting());
 
     public static final RecipeInputCache<AlloySmeltingRecipe.Input, AlloySmeltingRecipe> ALLOY_SMELTING_ONLY_SMELTING = new RecipeInputCache<>(
-            EIORecipeTypes.ALLOY_SMELTING, AlloySmeltingRecipe::isSmelting);
+            manager -> AlloySmeltingRecipeManager.getRecipes(manager.recipeMap()), AlloySmeltingRecipe::isSmelting);
 
     public static final RecipeInputCache<PaintingRecipe.Input, PaintingRecipe> PAINTING = new RecipeInputCache<>(
             EIORecipeTypes.PAINTING);
