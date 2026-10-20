@@ -59,7 +59,7 @@ public class FermentingRecipeProvider extends SubRecipeProvider {
 
     protected void build(FluidStackTemplate output, SizedFluidIngredient input, TagKey<Item> firstReagent,
             TagKey<Item> secondReagent, int ticks, RecipeOutput recipeOutput) {
-        recipeOutput.accept(ResourceKey.create(Registries.RECIPE, EnderIO.id("fermenting/" + output.fluid().getKey().identifier().getPath())),
+        recipeOutput.accept(ResourceKey.create(Registries.RECIPE, EnderIO.id("fermenting/" + output.fluid().key().identifier().getPath())),
                 new FermentingRecipe(input, firstReagent, secondReagent, output, ticks), null);
     }
 }

@@ -75,17 +75,17 @@ public class AlloyRecipeProvider extends SubRecipeProvider {
                 4800, 0.3f, recipeOutput);
         build(EnderIO.id("dark_steel_ingot_with_coal"),
                 List.of(sizedFromTag(Tags.Items.INGOTS_IRON, 1), SizedIngredient.of(Items.COAL, 2),
-                    sizedFromTag(Tags.Items.OBSIDIANS, 1)),
+                    sizedFromTag(Tags.BlockItems.OBSIDIANS.item(), 1)),
                 new ItemStackTemplate(EIOItems.DARK_STEEL_INGOT.get(), 2), 3200, 0.3f, recipeOutput);
         build(new ItemStackTemplate(EIOItems.DARK_STEEL_INGOT.get(), 2), List.of(sizedFromTag(Tags.Items.INGOTS_IRON, 1),
-                sizedFromTag(EIOTags.Items.DUSTS_COAL, 1), sizedFromTag(Tags.Items.OBSIDIANS, 1)), 3200,
+                sizedFromTag(EIOTags.Items.DUSTS_COAL, 1), sizedFromTag(Tags.BlockItems.OBSIDIANS.item(), 1)), 3200,
                 0.3f, recipeOutput);
         build(new ItemStackTemplate(EIOItems.SOULARIUM_INGOT.get()),
                 List.of(new SizedIngredient(Ingredient.of(Items.SOUL_SAND, Items.SOUL_SOIL), 1),
                     sizedFromTag(Tags.Items.INGOTS_GOLD, 1)),
                 5600, 0.3f, recipeOutput);
-        build(new ItemStackTemplate(EIOItems.END_STEEL_INGOT.get(), 2), List.of(sizedFromTag(Tags.Items.END_STONES, 1),
-                sizedFromTag(EIOTags.Items.INGOTS_DARK_STEEL, 1), sizedFromTag(Tags.Items.OBSIDIANS, 1)),
+        build(new ItemStackTemplate(EIOItems.END_STEEL_INGOT.get(), 2), List.of(sizedFromTag(Tags.BlockItems.END_STONES.item(), 1),
+                sizedFromTag(EIOTags.Items.INGOTS_DARK_STEEL, 1), sizedFromTag(Tags.BlockItems.OBSIDIANS.item(), 1)),
                 6400, 0.3f, recipeOutput);
 
         // endregion
@@ -129,7 +129,7 @@ public class AlloyRecipeProvider extends SubRecipeProvider {
             if (identifier.collisionPredicate() == GlassCollisionPredicate.NONE) {
                 FusedQuartzBlock clear = glassGroup.getValue().CLEAR.get();
                 var mainIngredient = identifier.explosionResistance() ? sizedFromTag(Tags.Items.GEMS_QUARTZ, 4)
-                        : sizedFromTag(Tags.Items.GLASS_BLOCKS_COLORLESS, 1);
+                        : sizedFromTag(Tags.BlockItems.GLASS_BLOCKS_COLORLESS.item(), 1);
                 var altIngredient = identifier.explosionResistance()
                         ? sizedFromTag(EIOTags.Items.STORAGE_BLOCKS_QUARTZ, 1)
                         : null;
@@ -203,14 +203,14 @@ public class AlloyRecipeProvider extends SubRecipeProvider {
 
     protected void build(ItemStackTemplate output, List<SizedIngredient> inputs, int energy, float experience,
             RecipeOutput recipeOutput) {
-        build(EnderIO.id("alloy_smelting/" + output.item().getKey().identifier().getPath()), inputs,
+        build(EnderIO.id("alloy_smelting/" + output.item().key().identifier().getPath()), inputs,
                 output, energy, experience, recipeOutput);
     }
 
     protected void build(ItemStackTemplate output, String suffix, List<SizedIngredient> inputs, int energy, float experience,
             RecipeOutput recipeOutput) {
         build(EnderIOAPI
-                .rl("alloy_smelting/" + output.item().getKey().identifier().getPath() + "_" + suffix),
+                .rl("alloy_smelting/" + output.item().key().identifier().getPath() + "_" + suffix),
                 inputs, output, energy, experience, recipeOutput);
     }
 

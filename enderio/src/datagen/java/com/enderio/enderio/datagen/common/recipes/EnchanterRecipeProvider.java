@@ -66,7 +66,7 @@ public class EnchanterRecipeProvider extends SubRecipeProvider {
                 recipeOutput);
         build(enchantmentRegistry, Enchantments.SILK_TOUCH, sizedFromTag(Tags.Items.SLIME_BALLS, 1), 1,
                 recipeOutput);
-        build(enchantmentRegistry, Enchantments.UNBREAKING, sizedFromTag(Tags.Items.OBSIDIANS, 1), 1,
+        build(enchantmentRegistry, Enchantments.UNBREAKING, sizedFromTag(Tags.BlockItems.OBSIDIANS.item(), 1), 1,
                 recipeOutput);
         build(enchantmentRegistry, Enchantments.MENDING, SizedIngredient.of(EIOItems.VOID_VIAL.get(), 1), 1,
                 recipeOutput);
@@ -74,7 +74,7 @@ public class EnchanterRecipeProvider extends SubRecipeProvider {
                 recipeOutput);
         build(enchantmentRegistry, Enchantments.POWER, SizedIngredient.of(Items.FLINT, 12), 1, recipeOutput);
         build(enchantmentRegistry, Enchantments.PUNCH, sizedFromTag(Tags.Items.STRINGS, 1), 1, recipeOutput);
-        build(enchantmentRegistry, Enchantments.FLAME, sizedFromTag(Tags.Items.NETHERRACKS, 1), 1, recipeOutput);
+        build(enchantmentRegistry, Enchantments.FLAME, sizedFromTag(Tags.BlockItems.NETHERRACKS.item(), 1), 1, recipeOutput);
         build(enchantmentRegistry, Enchantments.INFINITY, sizedFromTag(EIOTags.Items.DUSTS_GRAINS_OF_INFINITY, 1),
                 1, recipeOutput);
         build(enchantmentRegistry, Enchantments.LUCK_OF_THE_SEA, sizedFromTag(Tags.Items.GEMS_LAPIS, 1), 1,
@@ -85,7 +85,7 @@ public class EnchanterRecipeProvider extends SubRecipeProvider {
         // new
         build(enchantmentRegistry, Enchantments.CHANNELING, SizedIngredient.of(Items.LIGHTNING_ROD.weathering().pick(WeatheringCopper.WeatherState.UNAFFECTED), 1), 1,
                 recipeOutput);
-        build(enchantmentRegistry, Enchantments.IMPALING, sizedFromTag(Tags.Items.STORAGE_BLOCKS_IRON, 1), 1,
+        build(enchantmentRegistry, Enchantments.IMPALING, sizedFromTag(Tags.BlockItems.STORAGE_BLOCKS_IRON.item(), 1), 1,
                 recipeOutput);
         build(enchantmentRegistry, Enchantments.LOYALTY, SizedIngredient.of(Items.LEAD, 1), 1, recipeOutput);
         build(enchantmentRegistry, Enchantments.MULTISHOT, sizedFromTag(ItemTags.ARROWS, 16), 1, recipeOutput);// TODO
@@ -103,7 +103,7 @@ public class EnchanterRecipeProvider extends SubRecipeProvider {
 
     protected void build(Holder<Enchantment> enchantment, SizedIngredient input, int levelModifier,
             RecipeOutput recipeOutput) {
-        recipeOutput.accept(ResourceKey.create(Registries.RECIPE, EnderIO.id("enchanting/" + enchantment.getKey().identifier().getPath())),
+        recipeOutput.accept(ResourceKey.create(Registries.RECIPE, EnderIO.id("enchanting/" + enchantment.key().identifier().getPath())),
                 new EnchanterRecipe(enchantment, levelModifier, input), null);
     }
 

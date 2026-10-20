@@ -123,7 +123,7 @@ public class MiscBlockRecipeProvider extends SubRecipeProvider {
         ShapedRecipeBuilder.shaped(items, RecipeCategory.BUILDING_BLOCKS, EIOBlocks.REINFORCED_OBSIDIAN.get())
                 .define('B', EIOBlocks.DARK_STEEL_BARS)
                 .define('G', EIOTags.Items.DUSTS_GRAINS_OF_INFINITY)
-                .define('O', Tags.Items.OBSIDIANS)
+                .define('O', Tags.BlockItems.OBSIDIANS.item())
                 .pattern("GBG")
                 .pattern("BOB")
                 .pattern("GBG")

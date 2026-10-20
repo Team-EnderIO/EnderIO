@@ -225,7 +225,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
                 .pattern("ARA")
                 .pattern("PCP")
                 .pattern("RIR")
-                .define('P', Tags.Items.GLASS_BLOCKS)
+                .define('P', Tags.BlockItems.GLASS_BLOCKS.item())
                 .define('I', ConduitIngredient.of(itemConduit))
                 .define('A', EIOTags.Items.INGOTS_CONDUCTIVE_ALLOY)
                 .define('C', Items.COMPARATOR)

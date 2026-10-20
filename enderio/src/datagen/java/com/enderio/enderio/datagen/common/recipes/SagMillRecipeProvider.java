@@ -7,7 +7,6 @@ import com.enderio.enderio.content.machines.sag_mill.SagMillingRecipe.BonusType;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOItems;
 import net.minecraft.core.HolderGetter;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.Identifier;
@@ -51,7 +50,7 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
         build1toN("copper", Tags.Items.INGOTS_COPPER, POWDERED_COPPER.get(), 1, BonusType.NONE, recipeOutput);
         build1toN("iron", Tags.Items.INGOTS_IRON, POWDERED_IRON.get(), 1, BonusType.NONE, recipeOutput);
         build1toN("gold", Tags.Items.INGOTS_GOLD, POWDERED_GOLD.get(), 1, BonusType.NONE, recipeOutput);
-        build1toN("obsidian", Tags.Items.OBSIDIANS, POWDERED_OBSIDIAN.get(), 4, recipeOutput);
+        build1toN("obsidian", Tags.BlockItems.OBSIDIANS.item(), POWDERED_OBSIDIAN.get(), 4, recipeOutput);
 
         build1toN("precient_crystal", EIOTags.Items.GEMS_PRESCIENT_CRYSTAL, PRESCIENT_POWDER.get(), 1, BonusType.NONE,
                 recipeOutput);
@@ -64,14 +63,14 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
 
         build1toN("ender_pearl", Tags.Items.ENDER_PEARLS, POWDERED_ENDER_PEARL.get(), 9, BonusType.NONE, recipeOutput);
         build1toN("blaze_powder", Tags.Items.RODS_BLAZE, BLAZE_POWDER, 4, recipeOutput);
-        build1toN("glass", Tags.Items.GLASS_BLOCKS, SAND, 1, BonusType.NONE, recipeOutput);
+        build1toN("glass", Tags.BlockItems.GLASS_BLOCKS.item(), SAND, 1, BonusType.NONE, recipeOutput);
         build1toN("bone_block", BONE_BLOCK, BONE_MEAL, 9, BonusType.NONE, recipeOutput);
         build1toN("soularium", EIOTags.Items.INGOTS_SOULARIUM, SOUL_POWDER.get(), 1, BonusType.NONE, recipeOutput);
 
-        build1toN("stone", Tags.Items.STONES, COBBLESTONE, 1, BonusType.NONE, recipeOutput);
+        build1toN("stone", Tags.BlockItems.STONES.item(), COBBLESTONE, 1, BonusType.NONE, recipeOutput);
         build1toN("deepslate", Items.DEEPSLATE, Items.COBBLED_DEEPSLATE, 1, BonusType.NONE, recipeOutput);
 
-        build("cobbled_deepslate",ingredientFromTag(Tags.Items.COBBLESTONES_DEEPSLATE),
+        build("cobbled_deepslate",ingredientFromTag(Tags.BlockItems.COBBLESTONES_DEEPSLATE.item()),
                 List.of(output(COBBLESTONE), output(EIOItems.GRAINS_OF_INFINITY.get(), 0.12f)),
                 BASE_ENERGY_PER_OPERATION, BonusType.CHANCE_ONLY, recipeOutput);
 
@@ -79,7 +78,7 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
                 output(POWDERED_COAL.get(), 0.1f), output(EIOTags.Items.DUSTS_SULFUR, 1, 0.1f, true)),
                 BASE_ENERGY_PER_OPERATION, recipeOutput);
 
-        build("lapis_ore", ingredientFromTag(Tags.Items.ORES_LAPIS),
+        build("lapis_ore", ingredientFromTag(Tags.BlockItems.ORES_LAPIS.item()),
                 List.of(output(LAPIS_LAZULI, 8), output(LAPIS_LAZULI, 0.2f), output(COBBLESTONE, 0.15f)),
                 BASE_ENERGY_PER_OPERATION, recipeOutput);
 
@@ -90,21 +89,21 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
                 List.of(output(POWDERED_QUARTZ.get(), 1), output(POWDERED_QUARTZ.get(), 0.1f)),
                 BASE_ENERGY_PER_OPERATION, BonusType.CHANCE_ONLY, recipeOutput);
 
-        build("cobblestone", ingredientFromTag(Tags.Items.COBBLESTONES_NORMAL),
+        build("cobblestone", ingredientFromTag(Tags.BlockItems.COBBLESTONES_NORMAL.item()),
                 List.of(output(GRAVEL, 0.7f), output(GRAVEL, 0.3f), output(SAND, 0.1f), output(FLINT, 0.05f)),
                 BASE_ENERGY_PER_OPERATION, recipeOutput);
 
-        build("mossy_cobblestone", ingredientFromTag(Tags.Items.COBBLESTONES_MOSSY),
+        build("mossy_cobblestone", ingredientFromTag(Tags.BlockItems.COBBLESTONES_MOSSY.item()),
                 List.of(output(COBBLESTONE), output(VINE, 0.7f)), BASE_ENERGY_PER_OPERATION, BonusType.NONE, recipeOutput);
 
-        build("gravel", ingredientFromTag(Tags.Items.GRAVELS),
+        build("gravel", ingredientFromTag(Tags.BlockItems.GRAVELS.item()),
                 List.of(output(SAND, 0.7f), output(SAND, 0.3f), output(FLINT, 0.1f)), BASE_ENERGY_PER_OPERATION,
                 recipeOutput);
 
-        build("sandstone", ingredientFromTag(Tags.Items.SANDSTONE_BLOCKS), List.of(output(SAND, 2), output(SAND, 2, 0.4f)),
+        build("sandstone", ingredientFromTag(Tags.BlockItems.SANDSTONE_BLOCKS.item()), List.of(output(SAND, 2), output(SAND, 2, 0.4f)),
                 BASE_ENERGY_PER_OPERATION, BonusType.CHANCE_ONLY, recipeOutput);
 
-        build("sand", ingredientFromTag(Tags.Items.SANDS), List.of(output(EIOTags.Items.SILICON, 0.5f)),
+        build("sand", ingredientFromTag(Tags.BlockItems.SANDS.item()), List.of(output(EIOTags.Items.SILICON, 0.5f)),
                 BASE_ENERGY_PER_OPERATION, recipeOutput);
 
         build("glowstone", Ingredient.of(GLOWSTONE), List.of(// swap with any:glowstone
@@ -218,27 +217,27 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
     }
 
     private void buildOreBlockRecipes(HolderGetter<Item> items, RecipeOutput recipeOutput) {
-        buildOre("iron_ore", ingredientFromTag(Tags.Items.ORES_IRON), RAW_IRON, recipeOutput);
-        buildOre("gold_ore", ingredientFromTag(Tags.Items.ORES_GOLD), RAW_GOLD, recipeOutput);
-        buildOre("copper_ore", ingredientFromTag(Tags.Items.ORES_COPPER), RAW_COPPER, recipeOutput);
+        buildOre("iron_ore", ingredientFromTag(Tags.BlockItems.ORES_IRON.item()), RAW_IRON, recipeOutput);
+        buildOre("gold_ore", ingredientFromTag(Tags.BlockItems.ORES_GOLD.item()), RAW_GOLD, recipeOutput);
+        buildOre("copper_ore", ingredientFromTag(Tags.BlockItems.ORES_COPPER.item()), RAW_COPPER, recipeOutput);
 
-        build("coal_ore", ingredientFromTag(Tags.Items.ORES_COAL), List.of(output(COAL, 3),
+        build("coal_ore", ingredientFromTag(Tags.BlockItems.ORES_COAL.item()), List.of(output(COAL, 3),
                 output(POWDERED_COAL.get(), 0.6f), output(DIAMOND, 0.005f), output(COBBLESTONE, 0.15f)),
                 BASE_ENERGY_PER_OPERATION, recipeOutput);
 
-        build("redstone_ore", ingredientFromTag(Tags.Items.ORES_REDSTONE), List.of(output(REDSTONE, 8),
+        build("redstone_ore", ingredientFromTag(Tags.BlockItems.ORES_REDSTONE.item()), List.of(output(REDSTONE, 8),
                 output(REDSTONE, 0.2f), output(EIOTags.Items.SILICON, 0.8f), output(COBBLESTONE, 0.15f)),
                 BASE_ENERGY_PER_OPERATION, recipeOutput);
 
-        build("diamond_ore", ingredientFromTag(Tags.Items.ORES_DIAMOND), List.of(output(DIAMOND, 2), output(DIAMOND, 0.25f),
+        build("diamond_ore", ingredientFromTag(Tags.BlockItems.ORES_DIAMOND.item()), List.of(output(DIAMOND, 2), output(DIAMOND, 0.25f),
                 output(POWDERED_COAL.get(), 0.1f), output(COBBLESTONE, 0.15f)), BASE_ENERGY_PER_OPERATION,
                 recipeOutput);
 
-        build("emerald_ore", ingredientFromTag(Tags.Items.ORES_EMERALD),
+        build("emerald_ore", ingredientFromTag(Tags.BlockItems.ORES_EMERALD.item()),
                 List.of(output(EMERALD, 2), output(EMERALD, 0.25f), output(COBBLESTONE, 0.15f)),
                 BASE_ENERGY_PER_OPERATION, recipeOutput);
 
-        build("quartz_ore", ingredientFromTag(Tags.Items.ORES_QUARTZ),
+        build("quartz_ore", ingredientFromTag(Tags.BlockItems.ORES_QUARTZ.item()),
                 List.of(output(QUARTZ, 2), output(POWDERED_QUARTZ.get(), 0.1f), output(NETHERRACK, 0.15f)),
                 BASE_ENERGY_PER_OPERATION, recipeOutput);
     }

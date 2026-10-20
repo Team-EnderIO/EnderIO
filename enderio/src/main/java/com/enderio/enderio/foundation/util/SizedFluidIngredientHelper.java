@@ -29,7 +29,7 @@ public class SizedFluidIngredientHelper {
         List<Holder<Fluid>> others = new ArrayList<>(fluids.size());
         
         for (Holder<Fluid> fluid : fluids) {
-            if (fluid.getKey().identifier().getNamespace().equals(EnderIO.MOD_ID)) {
+            if (fluid.key().identifier().getNamespace().equals(EnderIO.MOD_ID)) {
                 preferred.add(fluid);
             } else {
                 others.add(fluid);

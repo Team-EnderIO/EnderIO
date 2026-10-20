@@ -476,7 +476,7 @@ public class EnderIOClient {
         Map<FluidType, FluidModel.Unbaked> fluidTypeToModel = new HashMap<>();
 
         for (Holder<FluidType> fluidType : EIOFluids.FLUIDS.fluidTypesRegister().getEntries()) {
-            String name = Objects.requireNonNull(fluidType.getKey()).identifier().getPath();
+            String name = Objects.requireNonNull(fluidType.key()).identifier().getPath();
 
             fluidTypeToModel.put(fluidType.value(), new FluidModel.Unbaked(
                 new Material(EnderIO.id("block/" + name + "_still")),

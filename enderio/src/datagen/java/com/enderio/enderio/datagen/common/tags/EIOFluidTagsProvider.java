@@ -18,10 +18,10 @@ public class EIOFluidTagsProvider extends FluidTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
-        tag(Tags.Fluids.EXPERIENCE).add(EIOFluids.XP_JUICE.source().getKey());
-        tag(EIOTags.Fluids.SOLAR_PANEL_LIGHT).add(EIOFluids.LIQUID_SUNSHINE.source().getKey());
-        tag(EIOTags.Fluids.SOLAR_PANEL_DARK).add(EIOFluids.LIQUID_DARKNESS.source().getKey());
-        tag(EIOTags.Fluids.COLD_FIRE_IGNITER_FUEL).add(EIOFluids.VAPOR_OF_LEVITY.source().getKey());
-        tag(EIOTags.Fluids.STAFF_OF_LEVITY_FUEL).add(EIOFluids.VAPOR_OF_LEVITY.source().getKey());
+        tag(Tags.Fluids.EXPERIENCE).add(EIOFluids.XP_JUICE.source().key());
+        tag(EIOTags.Fluids.SOLAR_PANEL_LIGHT).add(EIOFluids.LIQUID_SUNSHINE.source().key());
+        tag(EIOTags.Fluids.SOLAR_PANEL_DARK).add(EIOFluids.LIQUID_DARKNESS.source().key());
+        tag(EIOTags.Fluids.COLD_FIRE_IGNITER_FUEL).add(EIOFluids.VAPOR_OF_LEVITY.source().key());
+        tag(EIOTags.Fluids.STAFF_OF_LEVITY_FUEL).add(EIOFluids.VAPOR_OF_LEVITY.source().key());
     }
 }
