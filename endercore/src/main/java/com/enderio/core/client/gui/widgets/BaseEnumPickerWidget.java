@@ -1,6 +1,5 @@
 package com.enderio.core.client.gui.widgets;
 
-import com.enderio.core.client.gui.screen.EnderScreen;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -213,7 +212,7 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
         return Minecraft.getInstance().gui.screen() instanceof SelectionScreen;
     }
 
-    private static class SelectionScreen extends Screen implements EnderScreen {
+    private static class SelectionScreen extends Screen {
 
         private final BaseEnumPickerWidget<?> parentWidget;
 
@@ -230,7 +229,15 @@ public abstract class BaseEnumPickerWidget<T extends Enum<T>> extends EnderButto
 
         @Override
         public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
-            renderSimpleArea(graphics, parentWidget.expandTopLeft, parentWidget.expandBottomRight);
+            int left = parentWidget.expandTopLeft.x();
+            int top = parentWidget.expandTopLeft.y();
+            int right = parentWidget.expandBottomRight.x();
+            int bottom = parentWidget.expandBottomRight.y();
+
+            graphics.fill(left, top, right, bottom, 0xFF8B8B8B);
+            graphics.fill(left, top, right - 1, bottom - 1, 0xFF373737);
+            graphics.fill(left + 1, top + 1, right, bottom, 0xFFFFFFFF);
+            graphics.fill(left + 1, top + 1, right - 1, bottom - 1, 0xFF8B8B8B);
         }
 
         @Override
