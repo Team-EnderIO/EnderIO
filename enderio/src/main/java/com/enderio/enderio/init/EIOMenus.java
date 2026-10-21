@@ -39,7 +39,7 @@ import com.enderio.enderio.content.machines.vacuum.xp.XPVacuumMenu;
 import com.enderio.enderio.content.machines.vat.VatMenu;
 import com.enderio.enderio.content.machines.wired_charger.WiredChargerMenu;
 import com.enderio.enderio.content.machines.wireless_charger.WirelessChargerMenu;
-import com.enderio.enderio.content.storage.crafter.CrafterMenu;
+import com.enderio.enderio.content.machines.crafter.CrafterMenu;
 import com.enderio.enderio.content.storage.fluid_tank.FluidTankMenu;
 import com.enderio.enderio.content.tools.coordinate_selector.CoordinateMenu;
 import com.enderio.enderio.content.travel.travel_anchor.TravelAnchorMenu;

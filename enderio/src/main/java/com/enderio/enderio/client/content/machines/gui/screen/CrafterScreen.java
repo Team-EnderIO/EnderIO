@@ -5,7 +5,7 @@ import com.enderio.enderio.client.content.machines.gui.screen.base.MachineScreen
 import com.enderio.enderio.client.content.machines.gui.widget.ActivityWidget;
 import com.enderio.enderio.client.content.machines.gui.widget.CapacitorEnergyWidget;
 import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget;
-import com.enderio.enderio.content.storage.crafter.CrafterMenu;
+import com.enderio.enderio.content.machines.crafter.CrafterMenu;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;

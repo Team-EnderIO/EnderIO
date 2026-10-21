@@ -1,4 +1,4 @@
-package com.enderio.enderio.content.storage.crafter;
+package com.enderio.enderio.content.machines.crafter;
 
 import com.enderio.core.common.storage.layout.ItemStorageLayout;
 import com.enderio.core.common.storage.layout.SlotTemplates;

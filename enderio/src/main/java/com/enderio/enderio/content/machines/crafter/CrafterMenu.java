@@ -1,4 +1,4 @@
-package com.enderio.enderio.content.storage.crafter;
+package com.enderio.enderio.content.machines.crafter;
 
 import com.enderio.enderio.foundation.menu.GhostMachineSlot;
 import com.enderio.enderio.foundation.menu.MachineSlot;

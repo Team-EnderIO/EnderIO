@@ -1,4 +1,4 @@
 @javax.annotation.ParametersAreNonnullByDefault
 @org.jspecify.annotations.NullMarked
 
-package com.enderio.enderio.content.storage.crafter;
+package com.enderio.enderio.content.machines.crafter;

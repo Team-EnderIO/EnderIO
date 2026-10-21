@@ -36,7 +36,7 @@ import com.enderio.enderio.content.machines.wired_charger.WiredChargerBlockEntit
 import com.enderio.enderio.content.machines.wireless_charger.WirelessChargerBlockEntity;
 import com.enderio.enderio.content.paint.block.entity.DoublePaintedBlockEntity;
 import com.enderio.enderio.content.paint.block.entity.SinglePaintedBlockEntity;
-import com.enderio.enderio.content.storage.crafter.CrafterBlockEntity;
+import com.enderio.enderio.content.machines.crafter.CrafterBlockEntity;
 import com.enderio.enderio.content.storage.fluid_tank.FluidTankBlockEntity;
 import com.enderio.enderio.content.travel.travel_anchor.PaintedTravelAnchorBlockEntity;
 import com.enderio.enderio.content.travel.travel_anchor.TravelAnchorBlockEntity;
