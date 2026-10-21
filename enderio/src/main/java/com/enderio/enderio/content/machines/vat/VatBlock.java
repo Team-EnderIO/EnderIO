@@ -1,6 +1,7 @@
 package com.enderio.enderio.content.machines.vat;
 
 import com.enderio.enderio.foundation.block.ProgressMachineBlock;
+import com.enderio.enderio.foundation.fluid.FluidInteractionHelper;
 import com.enderio.enderio.init.EIOBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -10,6 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 
 public final class VatBlock extends ProgressMachineBlock<VatBlockEntity> {
     public VatBlock(Properties properties) {
@@ -26,8 +28,9 @@ public final class VatBlock extends ProgressMachineBlock<VatBlockEntity> {
                     return InteractionResult.SUCCESS;
                 }
 
-                if (vat.handleFluidItemInteraction(player, hand, stack, vat.getFluidStorage(), VatBlockEntity.INPUT_TANK)
-                        || vat.handleFluidItemInteraction(player, hand, stack, vat.getFluidStorage(), VatBlockEntity.OUTPUT_TANK)) {
+                var playerItemAccess = ItemAccess.forPlayerInteraction(player, hand);
+                if (FluidInteractionHelper.handleFluidItemInteraction(playerItemAccess, vat.getFluidStorage(), VatBlockEntity.INPUT_TANK)
+                    || FluidInteractionHelper.handleFluidItemInteraction(playerItemAccess, vat.getFluidStorage(), VatBlockEntity.OUTPUT_TANK)) {
                     player.getInventory().setChanged();
                     return InteractionResult.CONSUME;
                 }

@@ -17,7 +17,6 @@ import com.enderio.enderio.foundation.attachment.RangedActor;
 import com.enderio.enderio.foundation.block.entity.PoweredMachineBlockEntity;
 import com.enderio.enderio.foundation.block.entity.flags.CapacitorSupport;
 import com.enderio.enderio.foundation.inventory.MachineSlotTemplates;
-import com.enderio.enderio.foundation.io.fluid.FluidItemInteractive;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.foundation.storage.SidedResourceHandler;
 import com.enderio.enderio.init.EIOBlockEntities;
@@ -52,7 +51,7 @@ import org.jspecify.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 
-public class NiardBlockEntity extends PoweredMachineBlockEntity implements RangedActor, FluidItemInteractive {
+public class NiardBlockEntity extends PoweredMachineBlockEntity implements RangedActor {
 
     public static final ICapabilityProvider<NiardBlockEntity, Direction, ResourceHandler<FluidResource>> FLUID_HANDLER_PROVIDER = (be,
         side) -> be.fluidStorage != null ? SidedResourceHandler.of(be.fluidStorage, side, be) : null;

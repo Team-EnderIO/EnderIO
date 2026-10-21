@@ -17,7 +17,6 @@ import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.foundation.block.ProgressMachineBlock;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.recipe.MachineRecipeCaches;
-import com.enderio.enderio.foundation.io.fluid.FluidItemInteractive;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.foundation.state.MachineStateUpdater;
 import com.enderio.enderio.foundation.storage.SidedResourceHandler;
@@ -57,7 +56,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.List;
 import java.util.Map;
 
-public class VatBlockEntity extends MachineBlockEntity implements FluidItemInteractive {
+public class VatBlockEntity extends MachineBlockEntity {
 
     public static final ICapabilityProvider<VatBlockEntity, Direction, ResourceHandler<FluidResource>> FLUID_HANDLER_PROVIDER = (be,
         side) -> be.fluidStorage != null ? SidedResourceHandler.of(be.fluidStorage, side, be) : null;

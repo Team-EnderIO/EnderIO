@@ -7,7 +7,6 @@ import com.enderio.core.common.storage.layout.SlotTemplates;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.core.common.util.EnderResourceUtil;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
-import com.enderio.enderio.foundation.io.fluid.FluidItemInteractive;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.foundation.storage.SidedResourceHandler;
 import com.enderio.enderio.foundation.util.SizedFluidIngredientHelper;
@@ -53,7 +52,7 @@ import java.util.Optional;
 
 // TODO: Rewrite this with tasks?
 //       Could implement a task for each thing it currently has in the If's
-public abstract class FluidTankBlockEntity extends MachineBlockEntity implements FluidItemInteractive {
+public abstract class FluidTankBlockEntity extends MachineBlockEntity {
 
     public static final ICapabilityProvider<FluidTankBlockEntity, Direction, ResourceHandler<FluidResource>> FLUID_HANDLER_PROVIDER = (be,
         side) -> be.fluidStorage != null ? SidedResourceHandler.of(be.fluidStorage, side, be) : null;

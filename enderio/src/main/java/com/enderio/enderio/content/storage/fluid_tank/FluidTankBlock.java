@@ -1,6 +1,7 @@
 package com.enderio.enderio.content.storage.fluid_tank;
 
 import com.enderio.enderio.foundation.block.MachineBlock;
+import com.enderio.enderio.foundation.fluid.FluidInteractionHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -11,6 +12,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 
 import java.util.function.Supplier;
 
@@ -30,7 +32,7 @@ public class FluidTankBlock extends MachineBlock<FluidTankBlockEntity> {
                     return InteractionResult.SUCCESS;
                 }
 
-                if (tank.handleFluidItemInteraction(player, hand, stack, tank.getFluidStorage(), FluidTankBlockEntity.TANK_SLOT)) {
+                if (FluidInteractionHelper.handleFluidItemInteraction(ItemAccess.forPlayerInteraction(player, hand), tank.getFluidStorage(), FluidTankBlockEntity.TANK_SLOT)) {
                     player.getInventory().setChanged();
                     return InteractionResult.CONSUME;
                 }

@@ -1,6 +1,7 @@
 package com.enderio.enderio.content.machines.niard;
 
 import com.enderio.enderio.foundation.block.ProgressMachineBlock;
+import com.enderio.enderio.foundation.fluid.FluidInteractionHelper;
 import com.enderio.enderio.init.EIOBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -10,6 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 
 public final class NiardBlock extends ProgressMachineBlock<NiardBlockEntity> {
 
@@ -27,7 +29,7 @@ public final class NiardBlock extends ProgressMachineBlock<NiardBlockEntity> {
                     return InteractionResult.SUCCESS;
                 }
 
-                if (tank.handleFluidItemInteraction(player, hand, stack, tank.getFluidStorage(), NiardBlockEntity.TANK)) {
+                if (FluidInteractionHelper.handleFluidItemInteraction(ItemAccess.forPlayerInteraction(player, hand), tank.getFluidStorage(), NiardBlockEntity.TANK)) {
                     player.getInventory().setChanged();
                     return InteractionResult.CONSUME;
                 }

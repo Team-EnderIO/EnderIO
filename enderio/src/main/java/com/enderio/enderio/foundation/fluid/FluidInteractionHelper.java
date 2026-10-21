@@ -1,10 +1,7 @@
-package com.enderio.enderio.foundation.io.fluid;
+package com.enderio.enderio.foundation.fluid;
 
 import com.enderio.core.common.storage.ResourceStorage;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
@@ -12,17 +9,11 @@ import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.resource.ResourceStack;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 
-/**
- * An interface that block entities may implement in order to interact with items support IFluidHandlerItem
- * Adapted from Mekanism's FluidUtils.
- */
-public interface FluidItemInteractive {
-
-    // TODO: 1.21.11: This now works, but I want tests to cover it - and perhaps make this a utility rather than an interface.
-    default boolean handleFluidItemInteraction(Player player, InteractionHand hand, ItemStack itemStack, ResourceStorage<FluidResource> fluidStorage,
+public class FluidInteractionHelper {
+    public static boolean handleFluidItemInteraction(ItemAccess itemAccess, ResourceStorage<FluidResource> fluidStorage,
         SingleResourceSlotKey<FluidResource> tankSlot) {
 
-        var itemFluidHandler = ItemAccess.forPlayerInteraction(player, hand).getCapability(Capabilities.Fluid.ITEM);
+        var itemFluidHandler = itemAccess.oneByOne().getCapability(Capabilities.Fluid.ITEM);
         if (itemFluidHandler == null) {
             return false;
         }
@@ -31,7 +22,11 @@ public interface FluidItemInteractive {
             FluidResource resourceFromItem = fluidStorage.getResource(tankSlot);
             int amountAvailable = 0;
             try (Transaction subTransaction = Transaction.open(transaction)) {
-                if (resourceFromItem.isEmpty()) {
+                if (!resourceFromItem.isEmpty()) {
+                    amountAvailable = itemFluidHandler.extract(resourceFromItem, Integer.MAX_VALUE, subTransaction);
+                }
+
+                if (amountAvailable <= 0) {
                     // If we have no storage, see what's in the item.
                     ResourceStack<FluidResource> resourceInItem = ResourceHandlerUtil.extractFirst(itemFluidHandler, fr -> true, Integer.MAX_VALUE,
                         subTransaction);
@@ -39,8 +34,6 @@ public interface FluidItemInteractive {
                         resourceFromItem = resourceInItem.resource();
                         amountAvailable = resourceInItem.amount();
                     }
-                } else {
-                    amountAvailable = itemFluidHandler.extract(resourceFromItem, Integer.MAX_VALUE, subTransaction);
                 }
             }
 
@@ -61,14 +54,11 @@ public interface FluidItemInteractive {
                 }
 
                 // Insert as much of the fluid as possible.
-                // Simulate this in creative mode as we won't modify the stack in-hand.
-                int inserted;
-                if (player.isCreative()) {
-                    try (Transaction subTransaction = Transaction.open(transaction)) {
-                        inserted = itemFluidHandler.insert(resourceInMachine, maxExtract, subTransaction);
-                    }
-                } else {
-                    inserted = itemFluidHandler.insert(resourceInMachine, maxExtract, transaction);
+                int inserted = itemFluidHandler.insert(resourceInMachine, maxExtract, transaction);
+
+                // Unable to insert any fluid
+                if (inserted <= 0) {
+                    return false;
                 }
 
                 if (inserted != fluidStorage.extract(resourceInMachine, inserted, transaction)) {
