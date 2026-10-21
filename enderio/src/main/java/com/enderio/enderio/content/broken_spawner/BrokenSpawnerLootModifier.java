@@ -10,6 +10,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BaseSpawner;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -46,13 +47,12 @@ public class BrokenSpawnerLootModifier extends LootModifier {
             if (tool == null || !tool.is(EIOTags.Items.BROKEN_SPAWNER_DENY_LIST)) {
                 if (context.getRandom().nextFloat() < BaseConfig.COMMON.BLOCKS.BROKEN_SPAWNER_DROP_CHANCE.get()) {
                     BaseSpawner spawner = spawnerBlockEntity.getSpawner();
-                    CompoundTag entityTag = spawner.nextSpawnData.getEntityToSpawn();
-
-                    // TODO: should we be copying the entire entity tag?
-                    if (entityTag.contains(Entity.TAG_ID)) {
-                        Identifier type = Identifier.parse(entityTag.getStringOr(Entity.TAG_ID, "pig")); //TODO proper default
-                        ItemStack brokenSpawner = BrokenSpawnerItem.forSoul(Soul.of(type));
-                        generatedLoot.add(brokenSpawner);
+                    if (spawner.nextSpawnData != null) {
+                        CompoundTag entityTag = spawner.nextSpawnData.getEntityToSpawn();
+                        entityTag.read(Entity.TAG_ID, EntityType.CODEC).ifPresent(entityType -> {
+                            ItemStack brokenSpawner = BrokenSpawnerItem.forSoul(new Soul(entityType, entityTag));
+                            generatedLoot.add(brokenSpawner);
+                        });
                     }
                 }
             }

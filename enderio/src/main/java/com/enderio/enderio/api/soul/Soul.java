@@ -101,11 +101,6 @@ public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) im
         this(entityTypeOpt.orElse(null), entityTag);
     }
 
-    // TODO: Can this be trusted? I feel like it needs better validation...
-    public Soul(CompoundTag entityTag) {
-        this(BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.parse(entityTag.getStringOr(Entity.TAG_ID, "pig"))), entityTag); //TODO better default
-    }
-
     public static final StreamCodec<RegistryFriendlyByteBuf, Soul> OPTIONAL_STREAM_CODEC = new StreamCodec<>() {
         @Override
         public Soul decode(RegistryFriendlyByteBuf byteBuf) {
