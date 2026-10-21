@@ -14,10 +14,10 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import org.jspecify.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Executor;
 
 public class ConduitBaker implements ModelBaker {
@@ -26,7 +26,7 @@ public class ConduitBaker implements ModelBaker {
 
     private static SpriteLoader.@Nullable Preparations blockAtlas;
     private static SpriteLoader.@Nullable Preparations itemAtlas;
-    private static Map<Material, ConduitMaterialBaker> materialBakers = new HashMap<>();
+    private static ConcurrentMap<Material, ConduitMaterialBaker> materialBakers = new ConcurrentHashMap<>();
 
     public ConduitBaker(ModelBaker baker, Material material) {
         this.baker = baker;
