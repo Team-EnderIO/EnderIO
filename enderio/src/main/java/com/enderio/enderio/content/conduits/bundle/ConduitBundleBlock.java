@@ -149,32 +149,33 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
 
     @Override
     public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player) {
-        var target = player.pick(player.blockInteractionRange(), 0, false);
-        if (!(target instanceof BlockHitResult blockHitResult)) {
-            return ItemStack.EMPTY;
-        }
-
-        if (!blockHitResult.getBlockPos().equals(pos)) {
-            // Pass through to the block that the player is actually looking at.
-            return level.getBlockState(blockHitResult.getBlockPos())
-                .getCloneItemStack(blockHitResult.getBlockPos(), level, includeData, player);
-        }
-
-        if (!(level.getBlockEntity(pos) instanceof ConduitBundleBlockEntity blockEntity)) {
+        if (!(level.getBlockEntity(pos) instanceof ConduitBundleBlockEntity conduitBundle)) {
             return super.getCloneItemStack(level, pos, state, includeData, player);
         }
 
-        if (blockEntity.hasFacade() && FacadeUtil.areFacadesVisible(player)) {
-            return blockEntity.getFacadeBlock().asItem().getDefaultInstance();
+        if (conduitBundle.hasFacade() && FacadeUtil.areFacadesVisible(player)) {
+            return conduitBundle.getFacadeBlock().asItem().getDefaultInstance();
         }
 
-        if (blockEntity.getConduits().isEmpty()) {
+        var target = player.pick(player.blockInteractionRange(), 0, false);
+        if (!(target instanceof BlockHitResult blockHitResult) ||
+            !blockHitResult.getBlockPos().equals(pos)) {
+
+            // We cannot determine the specific conduit being targeted, so default to the first available one (if we have one)
+            if (!conduitBundle.getConduits().isEmpty()) {
+                return ConduitBlockItem.getStackFor(conduitBundle.getConduits().getFirst(), 1);
+            }
+
+            return super.getCloneItemStack(level, pos, state, includeData, player);
+        }
+
+        if (conduitBundle.getConduits().isEmpty()) {
             return ItemStack.EMPTY;
         }
 
-        Holder<Conduit<?, ?>> conduit = blockEntity.getShape().getConduit(pos, target);
+        Holder<Conduit<?, ?>> conduit = conduitBundle.getShape().getConduit(pos, target);
         if (conduit == null) {
-            conduit = blockEntity.getConduits().getFirst();
+            conduit = conduitBundle.getConduits().getFirst();
         }
 
         return ConduitBlockItem.getStackFor(conduit, 1);
