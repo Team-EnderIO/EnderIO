@@ -115,7 +115,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
                 .pattern("CGC")
                 .pattern("BBB")
                 .define('B', EIOItems.CONDUIT_BINDER)
-                .define('G', EIOTags.Items.CLEAR_GLASS)
+                .define('G', EIOTags.BlockItems.CLEAR_GLASS.item())
                 .define('C', EIOTags.Items.INGOTS_CONDUCTIVE_ALLOY)
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 .save(recipeOutput, EnderIO.id("fluid_conduit").toString());
@@ -126,7 +126,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
                 .pattern("IGI")
                 .pattern("BBB")
                 .define('B', EIOItems.CONDUIT_BINDER)
-                .define('G', EIOTags.Items.FUSED_QUARTZ)
+                .define('G', EIOTags.BlockItems.FUSED_QUARTZ.item())
                 .define('I', EIOTags.Items.INGOTS_ENERGETIC_ALLOY)
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 .save(recipeOutput, EnderIO.id("pressurized_fluid_conduit").toString());
@@ -147,7 +147,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
                 .pattern("IGI")
                 .pattern("BBB")
                 .define('B', EIOItems.CONDUIT_BINDER)
-                .define('G', EIOTags.Items.FUSED_QUARTZ)
+                .define('G', EIOTags.BlockItems.FUSED_QUARTZ.item())
                 .define('I', EIOTags.Items.INGOTS_VIBRANT_ALLOY)
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 .save(recipeOutput, EnderIO.id("ender_fluid").toString());
@@ -382,13 +382,13 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
                 .pattern("BGB")
                 .pattern("BBB")
                 .define('B', EIOItems.CONDUIT_BINDER)
-                .define('G', EIOTags.Items.CLEAR_GLASS)
+                .define('G', EIOTags.BlockItems.CLEAR_GLASS.item())
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 .save(recipeOutput);
 
         ShapelessRecipeBuilder.shapeless(item, RecipeCategory.MISC, EIOItems.TRANSPARENT_CONDUIT_FACADE)
                 .requires(EIOItems.CONDUIT_FACADE)
-                .requires(EIOTags.Items.CLEAR_GLASS)
+                .requires(EIOTags.BlockItems.CLEAR_GLASS.item())
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 .save(recipeOutput, EnderIO.id("transparent_conduit_facade_from_conduit_facade").toString());
 
@@ -403,7 +403,7 @@ public class ConduitRecipeProvider extends SubRecipeProvider {
 
         ShapelessRecipeBuilder.shapeless(item, RecipeCategory.MISC, EIOItems.TRANSPARENT_HARDENED_CONDUIT_FACADE)
                 .requires(EIOItems.HARDENED_CONDUIT_FACADE)
-                .requires(EIOTags.Items.CLEAR_GLASS)
+                .requires(EIOTags.BlockItems.CLEAR_GLASS.item())
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 .save(recipeOutput, EnderIO.id("transparent_hardened_conduit_facade_from_hardened_conduit_facade").toString());
     }

@@ -64,7 +64,7 @@ public class MaterialRecipeProvider extends SubRecipeProvider {
                 .pattern("Q Q")
                 .pattern(" Q ")
                 .define('S', EIOTags.Items.INGOTS_SOULARIUM)
-                .define('Q', EIOTags.Items.FUSED_QUARTZ)
+                .define('Q', EIOTags.BlockItems.FUSED_QUARTZ.item())
                 .unlockedBy("has_ingredient",
                         InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.SOULARIUM_INGOT.get()))
                 .save(recipeOutput);

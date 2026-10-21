@@ -100,7 +100,7 @@ public class ItemRecipeProvider extends SubRecipeProvider {
                 .pattern("QVQ")
                 .pattern("GQG")
                 .define('S', EIOTags.Items.INGOTS_SOULARIUM)
-                .define('Q', EIOTags.Items.FUSED_QUARTZ)
+                .define('Q', EIOTags.BlockItems.FUSED_QUARTZ.item())
                 .define('V', EIOItems.SUSPICIOUS_SEED)
                 .define('G', EIOItems.GRAINS_OF_INFINITY)
                 .unlockedBy("has_ingredient",

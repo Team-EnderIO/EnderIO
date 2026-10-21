@@ -41,16 +41,16 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
         addNuggetTags();
 
         tag(Tags.BlockItems.STORAGE_BLOCKS.item())
-            .addTag(EIOTags.Items.STORAGE_BLOCKS_AMETHYST)
-            .addTag(EIOTags.Items.STORAGE_BLOCKS_QUARTZ)
-            .addTag(EIOTags.Items.BLOCKS_CONDUCTIVE_ALLOY)
-            .addTag(EIOTags.Items.BLOCKS_DARK_STEEL)
-            .addTag(EIOTags.Items.BLOCKS_END_STEEL)
-            .addTag(EIOTags.Items.BLOCKS_ENERGETIC_ALLOY)
-            .addTag(EIOTags.Items.BLOCKS_PULSATING_ALLOY)
-            .addTag(EIOTags.Items.BLOCKS_REDSTONE_ALLOY)
-            .addTag(EIOTags.Items.BLOCKS_SOULARIUM)
-            .addTag(EIOTags.Items.BLOCKS_VIBRANT_ALLOY);
+            .addTag(EIOTags.BlockItems.STORAGE_BLOCKS_AMETHYST.item())
+            .addTag(EIOTags.BlockItems.STORAGE_BLOCKS_QUARTZ.item())
+            .addTag(EIOTags.BlockItems.BLOCKS_CONDUCTIVE_ALLOY.item())
+            .addTag(EIOTags.BlockItems.BLOCKS_DARK_STEEL.item())
+            .addTag(EIOTags.BlockItems.BLOCKS_END_STEEL.item())
+            .addTag(EIOTags.BlockItems.BLOCKS_ENERGETIC_ALLOY.item())
+            .addTag(EIOTags.BlockItems.BLOCKS_PULSATING_ALLOY.item())
+            .addTag(EIOTags.BlockItems.BLOCKS_REDSTONE_ALLOY.item())
+            .addTag(EIOTags.BlockItems.BLOCKS_SOULARIUM.item())
+            .addTag(EIOTags.BlockItems.BLOCKS_VIBRANT_ALLOY.item());
 
         tag(ItemTags.SWORDS).add(EIOItems.DARK_STEEL_SWORD.key());
 
@@ -186,8 +186,8 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
         tag(EIOTags.Items.DUSTS_PRISMARINE).add(ItemIds.PRISMARINE_SHARD);
 
         // TODO: I disagree with this, they're not really storage blocks..
-        tag(EIOTags.Items.STORAGE_BLOCKS_QUARTZ).add(BlockItemIds.QUARTZ_BLOCK.item());
-        tag(EIOTags.Items.STORAGE_BLOCKS_AMETHYST).add(BlockItemIds.AMETHYST_BLOCK.item());
+        tag(EIOTags.BlockItems.STORAGE_BLOCKS_QUARTZ.item()).add(BlockItemIds.QUARTZ_BLOCK.item());
+        tag(EIOTags.BlockItems.STORAGE_BLOCKS_AMETHYST.item()).add(BlockItemIds.AMETHYST_BLOCK.item());
 
         tag(EIOTags.Items.SILICON).add(EIOItems.SILICON.key());
         tag(EIOTags.Items.WRENCH).add(EIOItems.YETA_WRENCH.key());
@@ -248,19 +248,19 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
 
     private void addBlockItemTags() {
         // TODO: 26.2: better way to get block item IDs
-        this.tag(EIOTags.Items.BLOCKS_CONDUCTIVE_ALLOY).add(EIOBlocks.CONDUCTIVE_ALLOY_BLOCK.asItem().builtInRegistryHolder().unwrapKey().orElseThrow());
-        this.tag(EIOTags.Items.BLOCKS_ENERGETIC_ALLOY).add(EIOBlocks.ENERGETIC_ALLOY_BLOCK.asItem().builtInRegistryHolder().unwrapKey().orElseThrow());
-        this.tag(EIOTags.Items.BLOCKS_VIBRANT_ALLOY).add(EIOBlocks.VIBRANT_ALLOY_BLOCK.asItem().builtInRegistryHolder().unwrapKey().orElseThrow());
-        this.tag(EIOTags.Items.BLOCKS_REDSTONE_ALLOY).add(EIOBlocks.REDSTONE_ALLOY_BLOCK.asItem().builtInRegistryHolder().unwrapKey().orElseThrow());
-        this.tag(EIOTags.Items.BLOCKS_PULSATING_ALLOY).add(EIOBlocks.PULSATING_ALLOY_BLOCK.asItem().builtInRegistryHolder().unwrapKey().orElseThrow());
-        this.tag(EIOTags.Items.BLOCKS_DARK_STEEL).add(EIOBlocks.DARK_STEEL_BLOCK.asItem().builtInRegistryHolder().unwrapKey().orElseThrow());
-        this.tag(EIOTags.Items.BLOCKS_SOULARIUM).add(EIOBlocks.SOULARIUM_BLOCK.asItem().builtInRegistryHolder().unwrapKey().orElseThrow());
-        this.tag(EIOTags.Items.BLOCKS_END_STEEL).add(EIOBlocks.END_STEEL_BLOCK.asItem().builtInRegistryHolder().unwrapKey().orElseThrow());
+        this.tag(EIOTags.BlockItems.BLOCKS_CONDUCTIVE_ALLOY.item()).add(EIOBlocks.CONDUCTIVE_ALLOY_BLOCK.asItem().builtInRegistryHolder().unwrapKey().orElseThrow());
+        this.tag(EIOTags.BlockItems.BLOCKS_ENERGETIC_ALLOY.item()).add(EIOBlocks.ENERGETIC_ALLOY_BLOCK.asItem().builtInRegistryHolder().unwrapKey().orElseThrow());
+        this.tag(EIOTags.BlockItems.BLOCKS_VIBRANT_ALLOY.item()).add(EIOBlocks.VIBRANT_ALLOY_BLOCK.asItem().builtInRegistryHolder().unwrapKey().orElseThrow());
+        this.tag(EIOTags.BlockItems.BLOCKS_REDSTONE_ALLOY.item()).add(EIOBlocks.REDSTONE_ALLOY_BLOCK.asItem().builtInRegistryHolder().unwrapKey().orElseThrow());
+        this.tag(EIOTags.BlockItems.BLOCKS_PULSATING_ALLOY.item()).add(EIOBlocks.PULSATING_ALLOY_BLOCK.asItem().builtInRegistryHolder().unwrapKey().orElseThrow());
+        this.tag(EIOTags.BlockItems.BLOCKS_DARK_STEEL.item()).add(EIOBlocks.DARK_STEEL_BLOCK.asItem().builtInRegistryHolder().unwrapKey().orElseThrow());
+        this.tag(EIOTags.BlockItems.BLOCKS_SOULARIUM.item()).add(EIOBlocks.SOULARIUM_BLOCK.asItem().builtInRegistryHolder().unwrapKey().orElseThrow());
+        this.tag(EIOTags.BlockItems.BLOCKS_END_STEEL.item()).add(EIOBlocks.END_STEEL_BLOCK.asItem().builtInRegistryHolder().unwrapKey().orElseThrow());
 
-        var fusedQuartzTag = tag(EIOTags.Items.FUSED_QUARTZ);
-        var enlightenedFusedQuartzTag = tag(EIOTags.Items.ENLIGHTENED_FUSED_QUARTZ);
-        var darkFusedQuartzTag = tag(EIOTags.Items.DARK_FUSED_QUARTZ);
-        var clearGlassTag = tag(EIOTags.Items.CLEAR_GLASS);
+        var fusedQuartzTag = tag(EIOTags.BlockItems.FUSED_QUARTZ.item());
+        var enlightenedFusedQuartzTag = tag(EIOTags.BlockItems.ENLIGHTENED_FUSED_QUARTZ.item());
+        var darkFusedQuartzTag = tag(EIOTags.BlockItems.DARK_FUSED_QUARTZ.item());
+        var clearGlassTag = tag(EIOTags.BlockItems.CLEAR_GLASS.item());
 
         var glassBlockCollections = EIOBlocks.GLASS_BLOCKS.entrySet()
             .stream()

@@ -120,7 +120,7 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
         build("wool", ingredientFromTag(ItemTags.WOOL), List.of(output(STRING, 2), output(STRING, 0.1f)),
                 BASE_ENERGY_PER_OPERATION, BonusType.CHANCE_ONLY, recipeOutput);
 
-        build("quartz_block", ingredientFromTag(EIOTags.Items.STORAGE_BLOCKS_QUARTZ),
+        build("quartz_block", ingredientFromTag(EIOTags.BlockItems.STORAGE_BLOCKS_QUARTZ.item()),
                 List.of(output(QUARTZ, 2), output(QUARTZ, 2, 0.25f)), BASE_ENERGY_PER_OPERATION, BonusType.CHANCE_ONLY,
                 recipeOutput);
 
@@ -260,36 +260,36 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
     private void buildModCompat(HolderGetter<Item> items, RecipeOutput recipeOutput) {
         build("raw_aluminum", ingredientFromTag(EIOTags.Items.RAW_MATERIALS_ALUMINUM), List.of(output(EIOTags.Items.DUSTS_ALUMINUM), output(EIOTags.Items.DUSTS_ALUMINUM, 0.80f),
                 output(EIOTags.Items.DUSTS_IRON, 0.20f)), BASE_ENERGY_PER_OPERATION, recipeOutput, EIOTags.Items.RAW_MATERIALS_ALUMINUM, EIOTags.Items.DUSTS_ALUMINUM);
-        build("aluminum_ore", ingredientFromTag(EIOTags.Items.ORES_ALUMINUM), List.of(output(EIOTags.Items.RAW_MATERIALS_ALUMINUM), output(EIOTags.Items.RAW_MATERIALS_ALUMINUM, 0.33f), output(COBBLESTONE, 0.15f)),
-            BASE_ENERGY_PER_OPERATION, recipeOutput, EIOTags.Items.ORES_ALUMINUM, EIOTags.Items.RAW_MATERIALS_ALUMINUM);
+        build("aluminum_ore", ingredientFromTag(EIOTags.BlockItems.ORES_ALUMINUM.item()), List.of(output(EIOTags.Items.RAW_MATERIALS_ALUMINUM), output(EIOTags.Items.RAW_MATERIALS_ALUMINUM, 0.33f), output(COBBLESTONE, 0.15f)),
+            BASE_ENERGY_PER_OPERATION, recipeOutput, EIOTags.BlockItems.ORES_ALUMINUM.item(), EIOTags.Items.RAW_MATERIALS_ALUMINUM);
         build("aluminum", ingredientFromTag(EIOTags.Items.INGOTS_ALUMINUM), List.of(output(EIOTags.Items.DUSTS_ALUMINUM, 1)), BASE_ENERGY_PER_OPERATION, BonusType.NONE,
             recipeOutput, EIOTags.Items.INGOTS_ALUMINUM, EIOTags.Items.DUSTS_ALUMINUM);
 
         build("raw_osmium", ingredientFromTag(EIOTags.Items.RAW_MATERIALS_OSMIUM), List.of(output(EIOTags.Items.DUSTS_OSMIUM), output(EIOTags.Items.DUSTS_OSMIUM, 0.80f),
             output(EIOTags.Items.DUSTS_IRON, 0.20f)), BASE_ENERGY_PER_OPERATION, recipeOutput, EIOTags.Items.RAW_MATERIALS_OSMIUM, EIOTags.Items.DUSTS_OSMIUM);
-        build("osmium_ore", ingredientFromTag(EIOTags.Items.ORES_OSMIUM), List.of(output(EIOTags.Items.RAW_MATERIALS_OSMIUM), output(EIOTags.Items.RAW_MATERIALS_OSMIUM, 0.33f), output(COBBLESTONE, 0.15f)),
-            BASE_ENERGY_PER_OPERATION, recipeOutput, EIOTags.Items.ORES_OSMIUM, EIOTags.Items.RAW_MATERIALS_OSMIUM);
+        build("osmium_ore", ingredientFromTag(EIOTags.BlockItems.ORES_OSMIUM.item()), List.of(output(EIOTags.Items.RAW_MATERIALS_OSMIUM), output(EIOTags.Items.RAW_MATERIALS_OSMIUM, 0.33f), output(COBBLESTONE, 0.15f)),
+            BASE_ENERGY_PER_OPERATION, recipeOutput, EIOTags.BlockItems.ORES_OSMIUM.item(), EIOTags.Items.RAW_MATERIALS_OSMIUM);
         build("osmium", ingredientFromTag(EIOTags.Items.INGOTS_OSMIUM), List.of(output(EIOTags.Items.DUSTS_OSMIUM, 1)), BASE_ENERGY_PER_OPERATION, BonusType.NONE,
             recipeOutput, EIOTags.Items.INGOTS_OSMIUM, EIOTags.Items.DUSTS_OSMIUM);
 
         build("raw_tin", ingredientFromTag(EIOTags.Items.RAW_MATERIALS_TIN), List.of(output(EIOTags.Items.DUSTS_TIN), output(EIOTags.Items.DUSTS_TIN, 0.80f),
             output(EIOTags.Items.DUSTS_COPPER, 0.20f)), BASE_ENERGY_PER_OPERATION, recipeOutput, EIOTags.Items.RAW_MATERIALS_TIN, EIOTags.Items.DUSTS_TIN);
-        build("tin_ore", ingredientFromTag(EIOTags.Items.ORES_TIN), List.of(output(EIOTags.Items.RAW_MATERIALS_TIN), output(EIOTags.Items.RAW_MATERIALS_TIN, 0.33f), output(COBBLESTONE, 0.15f)),
-            BASE_ENERGY_PER_OPERATION, recipeOutput, EIOTags.Items.ORES_TIN, EIOTags.Items.RAW_MATERIALS_TIN);
+        build("tin_ore", ingredientFromTag(EIOTags.BlockItems.ORES_TIN.item()), List.of(output(EIOTags.Items.RAW_MATERIALS_TIN), output(EIOTags.Items.RAW_MATERIALS_TIN, 0.33f), output(COBBLESTONE, 0.15f)),
+            BASE_ENERGY_PER_OPERATION, recipeOutput, EIOTags.BlockItems.ORES_TIN.item(), EIOTags.Items.RAW_MATERIALS_TIN);
         build("tin", ingredientFromTag(EIOTags.Items.INGOTS_TIN), List.of(output(EIOTags.Items.DUSTS_TIN, 1)), BASE_ENERGY_PER_OPERATION, BonusType.NONE,
             recipeOutput, EIOTags.Items.INGOTS_TIN, EIOTags.Items.DUSTS_TIN);
 
         build("raw_uranium", ingredientFromTag(EIOTags.Items.RAW_MATERIALS_URANIUM), List.of(output(EIOTags.Items.DUSTS_URANIUM), output(EIOTags.Items.DUSTS_URANIUM, 0.80f),
             output(EIOTags.Items.DUSTS_LEAD, 0.20f)), BASE_ENERGY_PER_OPERATION, recipeOutput, EIOTags.Items.RAW_MATERIALS_URANIUM, EIOTags.Items.DUSTS_URANIUM);
-        build("uranium_ore", ingredientFromTag(EIOTags.Items.ORES_URANIUM), List.of(output(EIOTags.Items.RAW_MATERIALS_URANIUM), output(EIOTags.Items.RAW_MATERIALS_URANIUM, 0.33f), output(COBBLESTONE, 0.15f)),
-            BASE_ENERGY_PER_OPERATION, recipeOutput, EIOTags.Items.ORES_URANIUM, EIOTags.Items.RAW_MATERIALS_URANIUM);
+        build("uranium_ore", ingredientFromTag(EIOTags.BlockItems.ORES_URANIUM.item()), List.of(output(EIOTags.Items.RAW_MATERIALS_URANIUM), output(EIOTags.Items.RAW_MATERIALS_URANIUM, 0.33f), output(COBBLESTONE, 0.15f)),
+            BASE_ENERGY_PER_OPERATION, recipeOutput, EIOTags.BlockItems.ORES_URANIUM.item(), EIOTags.Items.RAW_MATERIALS_URANIUM);
         build("uranium", ingredientFromTag(EIOTags.Items.INGOTS_URANIUM), List.of(output(EIOTags.Items.DUSTS_URANIUM, 1)), BASE_ENERGY_PER_OPERATION, BonusType.NONE,
             recipeOutput, EIOTags.Items.INGOTS_URANIUM, EIOTags.Items.DUSTS_URANIUM);
 
         build("raw_lead", ingredientFromTag(EIOTags.Items.RAW_MATERIALS_LEAD), List.of(output(EIOTags.Items.DUSTS_LEAD), output(EIOTags.Items.DUSTS_LEAD, 0.80f),
             output(EIOTags.Items.DUSTS_GOLD, 0.20f)), BASE_ENERGY_PER_OPERATION, recipeOutput, EIOTags.Items.RAW_MATERIALS_LEAD, EIOTags.Items.DUSTS_LEAD);
-        build("lead_ore", ingredientFromTag(EIOTags.Items.ORES_LEAD), List.of(output(EIOTags.Items.RAW_MATERIALS_LEAD), output(EIOTags.Items.RAW_MATERIALS_LEAD, 0.33f), output(COBBLESTONE, 0.15f)),
-            BASE_ENERGY_PER_OPERATION, recipeOutput, EIOTags.Items.ORES_LEAD, EIOTags.Items.RAW_MATERIALS_LEAD);
+        build("lead_ore", ingredientFromTag(EIOTags.BlockItems.ORES_LEAD.item()), List.of(output(EIOTags.Items.RAW_MATERIALS_LEAD), output(EIOTags.Items.RAW_MATERIALS_LEAD, 0.33f), output(COBBLESTONE, 0.15f)),
+            BASE_ENERGY_PER_OPERATION, recipeOutput, EIOTags.BlockItems.ORES_LEAD.item(), EIOTags.Items.RAW_MATERIALS_LEAD);
         build("lead", ingredientFromTag(EIOTags.Items.INGOTS_LEAD), List.of(output(EIOTags.Items.DUSTS_LEAD, 1)), BASE_ENERGY_PER_OPERATION, BonusType.NONE,
             recipeOutput, EIOTags.Items.INGOTS_LEAD, EIOTags.Items.DUSTS_LEAD);
     }

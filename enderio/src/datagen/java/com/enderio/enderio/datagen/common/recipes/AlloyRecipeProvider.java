@@ -131,7 +131,7 @@ public class AlloyRecipeProvider extends SubRecipeProvider {
                 var mainIngredient = identifier.explosionResistance() ? sizedFromTag(Tags.Items.GEMS_QUARTZ, 4)
                         : sizedFromTag(Tags.BlockItems.GLASS_BLOCKS_COLORLESS.item(), 1);
                 var altIngredient = identifier.explosionResistance()
-                        ? sizedFromTag(EIOTags.Items.STORAGE_BLOCKS_QUARTZ, 1)
+                        ? sizedFromTag(EIOTags.BlockItems.STORAGE_BLOCKS_QUARTZ.item(), 1)
                         : null;
                 var energy = identifier.explosionResistance() ? 6400 : 3200;
                 if (identifier.lighting() == GlassLighting.NONE) {
@@ -142,7 +142,7 @@ public class AlloyRecipeProvider extends SubRecipeProvider {
                             : sizedFromTag(Tags.Items.GEMS_AMETHYST, 4);
                     var compositeB = identifier.lighting() == GlassLighting.EMITTING
                             ? SizedIngredient.of(Blocks.GLOWSTONE, 1)
-                            : sizedFromTag(EIOTags.Items.STORAGE_BLOCKS_AMETHYST, 1);
+                            : sizedFromTag(EIOTags.BlockItems.STORAGE_BLOCKS_AMETHYST.item(), 1);
                     compositeGlass(clear, "from_main", mainIngredient, composite, compositeB, energy, 0.3f,
                             recipeOutput);
                     if (altIngredient != null) {

@@ -6,6 +6,7 @@ import com.enderio.enderio.content.glass.GlassIdentifier;
 import com.enderio.enderio.content.glass.GlassLighting;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.tags.BlockItemTagId;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
@@ -39,27 +40,22 @@ public class EIOTags {
         public static final TagKey<Item> DUSTS_SULFUR = commonTag("dusts/sulfur");
         public static final TagKey<Item> DUSTS_PRISMARINE = commonTag("dusts/prismarine");
 
-        public static final TagKey<Item> ORES_ALUMINUM = commonTag("ores/aluminum");
         public static final TagKey<Item> INGOTS_ALUMINUM = commonTag("ingots/aluminum");
         public static final TagKey<Item> DUSTS_ALUMINUM = commonTag("dusts/aluminum");
         public static final TagKey<Item> RAW_MATERIALS_ALUMINUM = commonTag("raw_materials/aluminum");
 
-        public static final TagKey<Item> ORES_OSMIUM = commonTag("ores/osmium");
         public static final TagKey<Item> INGOTS_OSMIUM = commonTag("ingots/osmium");
         public static final TagKey<Item> DUSTS_OSMIUM = commonTag("dusts/osmium");
         public static final TagKey<Item> RAW_MATERIALS_OSMIUM = commonTag("raw_materials/osmium");
 
-        public static final TagKey<Item> ORES_TIN = commonTag("ores/tin");
         public static final TagKey<Item> INGOTS_TIN = commonTag("ingots/tin");
         public static final TagKey<Item> DUSTS_TIN = commonTag("dusts/tin");
         public static final TagKey<Item> RAW_MATERIALS_TIN = commonTag("raw_materials/tin");
 
-        public static final TagKey<Item> ORES_URANIUM = commonTag("ores/uranium");
         public static final TagKey<Item> INGOTS_URANIUM = commonTag("ingots/uranium");
         public static final TagKey<Item> DUSTS_URANIUM = commonTag("dusts/uranium");
         public static final TagKey<Item> RAW_MATERIALS_URANIUM = commonTag("raw_materials/uranium");
 
-        public static final TagKey<Item> ORES_LEAD = commonTag("ores/lead");
         public static final TagKey<Item> INGOTS_LEAD = commonTag("ingots/lead");
         public static final TagKey<Item> DUSTS_LEAD = commonTag("dusts/lead");
         public static final TagKey<Item> RAW_MATERIALS_LEAD = commonTag("raw_materials/lead");
@@ -104,25 +100,8 @@ public class EIOTags {
         public static final TagKey<Item> GEARS_VIBRANT = commonTag("gears/vibrant");
         public static final TagKey<Item> GEARS_DARK_STEEL = commonTag("gears/dark_steel");
 
-        public static final TagKey<Item> FUSED_QUARTZ = commonTag("glass_blocks/fused_quartz");
-        public static final TagKey<Item> ENLIGHTENED_FUSED_QUARTZ = commonTag("glass_blocks/enlighted_fused_quartz");
-        public static final TagKey<Item> DARK_FUSED_QUARTZ = commonTag("glass_blocks/dark_fused_quartz");
-        public static final TagKey<Item> CLEAR_GLASS = commonTag("glass_blocks/clear");
-
         public static final TagKey<Item> BROKEN_SPAWNER_DENY_LIST = tag("deny_lists/broken_spawner");
         public static final TagKey<Item> ELECTROMAGNET_DENY_LIST = tag("deny_lists/electromagnet");
-
-        public static final TagKey<Item> BLOCKS_CONDUCTIVE_ALLOY = commonTag("storage_blocks/conductive_alloy");
-        public static final TagKey<Item> BLOCKS_DARK_STEEL = commonTag("storage_blocks/dark_steel");
-        public static final TagKey<Item> BLOCKS_END_STEEL = commonTag("storage_blocks/end_steel");
-        public static final TagKey<Item> BLOCKS_ENERGETIC_ALLOY = commonTag("storage_blocks/energetic_alloy");
-        public static final TagKey<Item> BLOCKS_PULSATING_ALLOY = commonTag("storage_blocks/pulsating_alloy");
-        public static final TagKey<Item> BLOCKS_REDSTONE_ALLOY = commonTag("storage_blocks/redstone_alloy");
-        public static final TagKey<Item> BLOCKS_SOULARIUM = commonTag("storage_blocks/soularium");
-        public static final TagKey<Item> BLOCKS_VIBRANT_ALLOY = commonTag("storage_blocks/vibrant_alloy");
-
-        public static final TagKey<Item> STORAGE_BLOCKS_QUARTZ = commonTag("storage_blocks/quartz");
-        public static final TagKey<Item> STORAGE_BLOCKS_AMETHYST = commonTag("storage_blocks/amethyst");
 
         public static final Map<GlassIdentifier, TagKey<Item>> GLASS_TAGS = createGlassTags();
 
@@ -164,20 +143,6 @@ public class EIOTags {
     }
 
     public static class Blocks {
-        public static final TagKey<Block> FUSED_QUARTZ = commonTag("glass_blocks/fused_quartz");
-        public static final TagKey<Block> ENLIGHTENED_FUSED_QUARTZ = commonTag("glass_blocks/enlighted_fused_quartz");
-        public static final TagKey<Block> DARK_FUSED_QUARTZ = commonTag("glass_blocks/dark_fused_quartz");
-        public static final TagKey<Block> CLEAR_GLASS = commonTag("glass_blocks/clear_glass");
-
-        public static final TagKey<Block> BLOCKS_CONDUCTIVE_ALLOY = commonTag("storage_blocks/conductive_alloy");
-        public static final TagKey<Block> BLOCKS_DARK_STEEL = commonTag("storage_blocks/dark_steel");
-        public static final TagKey<Block> BLOCKS_END_STEEL = commonTag("storage_blocks/end_steel");
-        public static final TagKey<Block> BLOCKS_ENERGETIC_ALLOY = commonTag("storage_blocks/energetic_alloy");
-        public static final TagKey<Block> BLOCKS_PULSATING_ALLOY = commonTag("storage_blocks/pulsating_alloy");
-        public static final TagKey<Block> BLOCKS_REDSTONE_ALLOY = commonTag("storage_blocks/redstone_alloy");
-        public static final TagKey<Block> BLOCKS_SOULARIUM = commonTag("storage_blocks/soularium");
-        public static final TagKey<Block> BLOCKS_VIBRANT_ALLOY = commonTag("storage_blocks/vibrant_alloy");
-
         // TODO: Needs a better name?
         public static final TagKey<Block> BLOCKS_TELEPORTATION = tag("blocks_travel_when_stood_on");
 
@@ -199,6 +164,40 @@ public class EIOTags {
 
         private static TagKey<Block> tag(String name) {
             return BlockTags.create(EnderIO.id(name));
+        }
+    }
+
+    public static class BlockItems {
+        public static final BlockItemTagId FUSED_QUARTZ = commonTag("glass_blocks/fused_quartz");
+        public static final BlockItemTagId ENLIGHTENED_FUSED_QUARTZ = commonTag("glass_blocks/enlighted_fused_quartz");
+        public static final BlockItemTagId DARK_FUSED_QUARTZ = commonTag("glass_blocks/dark_fused_quartz");
+        public static final BlockItemTagId CLEAR_GLASS = commonTag("glass_blocks/clear_glass");
+
+        public static final BlockItemTagId BLOCKS_CONDUCTIVE_ALLOY = commonTag("storage_blocks/conductive_alloy");
+        public static final BlockItemTagId BLOCKS_DARK_STEEL = commonTag("storage_blocks/dark_steel");
+        public static final BlockItemTagId BLOCKS_END_STEEL = commonTag("storage_blocks/end_steel");
+        public static final BlockItemTagId BLOCKS_ENERGETIC_ALLOY = commonTag("storage_blocks/energetic_alloy");
+        public static final BlockItemTagId BLOCKS_PULSATING_ALLOY = commonTag("storage_blocks/pulsating_alloy");
+        public static final BlockItemTagId BLOCKS_REDSTONE_ALLOY = commonTag("storage_blocks/redstone_alloy");
+        public static final BlockItemTagId BLOCKS_SOULARIUM = commonTag("storage_blocks/soularium");
+        public static final BlockItemTagId BLOCKS_VIBRANT_ALLOY = commonTag("storage_blocks/vibrant_alloy");
+
+        public static final BlockItemTagId STORAGE_BLOCKS_QUARTZ = commonTag("storage_blocks/quartz");
+        public static final BlockItemTagId STORAGE_BLOCKS_AMETHYST = commonTag("storage_blocks/amethyst");
+
+        public static final BlockItemTagId ORES_LEAD = commonTag("ores/lead");
+        public static final BlockItemTagId ORES_URANIUM = commonTag("ores/uranium");
+        public static final BlockItemTagId ORES_ALUMINUM = commonTag("ores/aluminum");
+        public static final BlockItemTagId ORES_OSMIUM = commonTag("ores/osmium");
+        public static final BlockItemTagId ORES_TIN = commonTag("ores/tin");
+
+        private static BlockItemTagId tag(String name) {
+            Identifier id = EnderIO.id(name);
+            return new BlockItemTagId(BlockTags.create(id), ItemTags.create(id));
+        }
+        private static BlockItemTagId commonTag(String name) {
+            Identifier id = Identifier.fromNamespaceAndPath(COMMON, name);
+            return new BlockItemTagId(BlockTags.create(id), ItemTags.create(id));
         }
     }
 

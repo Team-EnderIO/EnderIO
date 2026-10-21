@@ -171,14 +171,14 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
             .add(EIOBlocks.REINFORCED_OBSIDIAN.key());
 
         tag(Tags.BlockItems.STORAGE_BLOCKS.block())
-            .addTag(EIOTags.Blocks.BLOCKS_CONDUCTIVE_ALLOY)
-            .addTag(EIOTags.Blocks.BLOCKS_DARK_STEEL)
-            .addTag(EIOTags.Blocks.BLOCKS_END_STEEL)
-            .addTag(EIOTags.Blocks.BLOCKS_ENERGETIC_ALLOY)
-            .addTag(EIOTags.Blocks.BLOCKS_PULSATING_ALLOY)
-            .addTag(EIOTags.Blocks.BLOCKS_REDSTONE_ALLOY)
-            .addTag(EIOTags.Blocks.BLOCKS_SOULARIUM)
-            .addTag(EIOTags.Blocks.BLOCKS_VIBRANT_ALLOY);
+            .addTag(EIOTags.BlockItems.BLOCKS_CONDUCTIVE_ALLOY.block())
+            .addTag(EIOTags.BlockItems.BLOCKS_DARK_STEEL.block())
+            .addTag(EIOTags.BlockItems.BLOCKS_END_STEEL.block())
+            .addTag(EIOTags.BlockItems.BLOCKS_ENERGETIC_ALLOY.block())
+            .addTag(EIOTags.BlockItems.BLOCKS_PULSATING_ALLOY.block())
+            .addTag(EIOTags.BlockItems.BLOCKS_REDSTONE_ALLOY.block())
+            .addTag(EIOTags.BlockItems.BLOCKS_SOULARIUM.block())
+            .addTag(EIOTags.BlockItems.BLOCKS_VIBRANT_ALLOY.block());
 
         tag(EIOTags.Blocks.BLOCKS_TELEPORTATION)
             .add(EIOBlocks.TRAVEL_ANCHOR.key())
@@ -214,14 +214,14 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
         tag(Tags.Blocks.RELOCATION_NOT_SUPPORTED).add(EIOBlocks.CONDUIT_BUNDLE.key());
 
         // Alloys
-        tag(EIOTags.Blocks.BLOCKS_ENERGETIC_ALLOY).add(EIOBlocks.ENERGETIC_ALLOY_BLOCK.key());
-        tag(EIOTags.Blocks.BLOCKS_VIBRANT_ALLOY).add(EIOBlocks.VIBRANT_ALLOY_BLOCK.key());
-        tag(EIOTags.Blocks.BLOCKS_REDSTONE_ALLOY).add(EIOBlocks.REDSTONE_ALLOY_BLOCK.key());
-        tag(EIOTags.Blocks.BLOCKS_CONDUCTIVE_ALLOY).add(EIOBlocks.CONDUCTIVE_ALLOY_BLOCK.key());
-        tag(EIOTags.Blocks.BLOCKS_PULSATING_ALLOY).add(EIOBlocks.PULSATING_ALLOY_BLOCK.key());
-        tag(EIOTags.Blocks.BLOCKS_DARK_STEEL).add(EIOBlocks.DARK_STEEL_BLOCK.key());
-        tag(EIOTags.Blocks.BLOCKS_SOULARIUM).add(EIOBlocks.SOULARIUM_BLOCK.key());
-        tag(EIOTags.Blocks.BLOCKS_END_STEEL).add(EIOBlocks.END_STEEL_BLOCK.key());
+        tag(EIOTags.BlockItems.BLOCKS_ENERGETIC_ALLOY.block()).add(EIOBlocks.ENERGETIC_ALLOY_BLOCK.key());
+        tag(EIOTags.BlockItems.BLOCKS_VIBRANT_ALLOY.block()).add(EIOBlocks.VIBRANT_ALLOY_BLOCK.key());
+        tag(EIOTags.BlockItems.BLOCKS_REDSTONE_ALLOY.block()).add(EIOBlocks.REDSTONE_ALLOY_BLOCK.key());
+        tag(EIOTags.BlockItems.BLOCKS_CONDUCTIVE_ALLOY.block()).add(EIOBlocks.CONDUCTIVE_ALLOY_BLOCK.key());
+        tag(EIOTags.BlockItems.BLOCKS_PULSATING_ALLOY.block()).add(EIOBlocks.PULSATING_ALLOY_BLOCK.key());
+        tag(EIOTags.BlockItems.BLOCKS_DARK_STEEL.block()).add(EIOBlocks.DARK_STEEL_BLOCK.key());
+        tag(EIOTags.BlockItems.BLOCKS_SOULARIUM.block()).add(EIOBlocks.SOULARIUM_BLOCK.key());
+        tag(EIOTags.BlockItems.BLOCKS_END_STEEL.block()).add(EIOBlocks.END_STEEL_BLOCK.key());
 
         addPaintedBlocks();
         addGlassBlocks();
@@ -318,10 +318,10 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
     }
 
     private void addGlassBlocks() {
-        var fusedQuartzTag = tag(EIOTags.Blocks.FUSED_QUARTZ);
-        var enlightenedFusedQuartzTag = tag(EIOTags.Blocks.ENLIGHTENED_FUSED_QUARTZ);
-        var darkFusedQuartzTag = tag(EIOTags.Blocks.DARK_FUSED_QUARTZ);
-        var clearGlassTag = tag(EIOTags.Blocks.CLEAR_GLASS);
+        var fusedQuartzTag = tag(EIOTags.BlockItems.FUSED_QUARTZ.block());
+        var enlightenedFusedQuartzTag = tag(EIOTags.BlockItems.ENLIGHTENED_FUSED_QUARTZ.block());
+        var darkFusedQuartzTag = tag(EIOTags.BlockItems.DARK_FUSED_QUARTZ.block());
+        var clearGlassTag = tag(EIOTags.BlockItems.CLEAR_GLASS.block());
 
         var glassBlockCollections = EIOBlocks.GLASS_BLOCKS.entrySet()
             .stream()
