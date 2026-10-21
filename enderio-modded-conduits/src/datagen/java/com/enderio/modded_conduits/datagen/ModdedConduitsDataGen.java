@@ -2,6 +2,7 @@ package com.enderio.modded_conduits.datagen;
 
 import com.enderio.modded_conduits.common.ModdedConduits;
 import com.enderio.modded_conduits.datagen.client.ModdedConduitsLanguageProvider;
+import com.enderio.modded_conduits.datagen.client.ModdedConduitsItemModelProvider;
 import net.minecraft.data.PackOutput;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -21,6 +22,6 @@ public class ModdedConduitsDataGen {
             new ModdedConduitsLanguageProvider(packOutput)
         );
 
-//        event.getGenerator().addProvider(event.includeClient(), new ModdedConduitsItemModelProvider(packOutput, existingFileHelper));
+        event.addProvider(new ModdedConduitsItemModelProvider(packOutput));
     }
 }

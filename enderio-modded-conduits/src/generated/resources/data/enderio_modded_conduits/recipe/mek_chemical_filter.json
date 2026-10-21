@@ -1,0 +1,21 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "mekanism"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "O": "#c:ingots/osmium",
+    "P": "minecraft:paper"
+  },
+  "pattern": [
+    " P ",
+    "POP",
+    " P "
+  ],
+  "result": {
+    "id": "enderio_modded_conduits:basic_chemical_filter"
+  }
+}

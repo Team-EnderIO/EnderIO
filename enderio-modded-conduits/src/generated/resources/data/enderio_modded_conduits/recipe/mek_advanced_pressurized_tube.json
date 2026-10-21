@@ -1,0 +1,26 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "mekanism"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "B": "enderio:conduit_binder",
+    "I": "mekanism:advanced_pressurized_tube"
+  },
+  "pattern": [
+    "BBB",
+    "III",
+    "BBB"
+  ],
+  "result": {
+    "components": {
+      "enderio:conduit": "enderio_modded_conduits:pressurized_chemical"
+    },
+    "count": 3,
+    "id": "enderio:conduit"
+  }
+}

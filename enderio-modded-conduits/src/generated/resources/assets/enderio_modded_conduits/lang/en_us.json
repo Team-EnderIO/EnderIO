@@ -1,0 +1,8 @@
+{
+  "conduit.enderio_modded_conduits.chemical": "Chemical Conduit",
+  "conduit.enderio_modded_conduits.ender_chemical": "Ender Chemical Conduit",
+  "conduit.enderio_modded_conduits.heat": "Heat Conduit",
+  "conduit.enderio_modded_conduits.pressurized_chemical": "Pressurized Chemical Conduit",
+  "item.enderio_modded_conduits.basic_chemical_filter": "Basic Chemical Filter",
+  "tooltip.enderio_modded_conduits.conduit.chemical_filter_slot": "Chemical Filter"
+}

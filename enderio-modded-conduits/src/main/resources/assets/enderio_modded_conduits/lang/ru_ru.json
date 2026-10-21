@@ -1,0 +1,13 @@
+{
+  "conduit.enderio_modded_conduits.chemical": "Химическая труба",
+  "conduit.enderio_modded_conduits.dense_me": "Плотная ME-труба",
+  "conduit.enderio_modded_conduits.ender_chemical": "Эндер-химическая труба",
+  "conduit.enderio_modded_conduits.heat": "Тепловая труба",
+  "conduit.enderio_modded_conduits.me": "ME-труба",
+  "conduit.enderio_modded_conduits.pressurized_chemical": "Химическая труба под давлением",
+  "conduit.enderio_modded_conduits.rs": "Труба Refined Storage",
+  "item.enderio_modded_conduits.basic_chemical_filter": "Базовый химический фильтр",
+  "tooltip.enderio_modded_conduits.conduit.chemical.change_fluid1": "Заблокированное вещество:",
+  "tooltip.enderio_modded_conduits.conduit.chemical.change_fluid2": "Нажмите для сброса!",
+  "tooltip.enderio_modded_conduits.conduit.chemical.change_fluid3": "Вещество: %s"
+}

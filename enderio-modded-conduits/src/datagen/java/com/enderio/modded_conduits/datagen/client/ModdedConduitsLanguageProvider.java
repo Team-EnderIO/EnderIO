@@ -1,6 +1,9 @@
 package com.enderio.modded_conduits.datagen.client;
 
-import com.enderio.enderio.EnderIO;
+import com.enderio.modded_conduits.common.ModdedConduits;
+import com.enderio.modded_conduits.common.ModuleModIds;
+import com.enderio.modded_conduits.common.modules.mekanism.MekanismModule;
+import net.neoforged.fml.ModList;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitApi;
 import com.enderio.modded_conduits.common.modules.appeng.AE2ConduitsModule;
@@ -13,7 +16,7 @@ import net.neoforged.neoforge.common.data.LanguageProvider;
 public class ModdedConduitsLanguageProvider extends LanguageProvider {
     
     public ModdedConduitsLanguageProvider(PackOutput output) {
-        super(output, EnderIO.MOD_ID, "en_us");
+        super(output, ModdedConduits.MOD_ID, "en_us");
     }
 
     @Override
@@ -24,22 +27,22 @@ public class ModdedConduitsLanguageProvider extends LanguageProvider {
     }
     
     private void addMekanismTranslations() {
-//        // Items
-//        add(MekanismModule.BASIC_CHEMICAL_FILTER.get(), "Basic Chemical Filter");
-//
-//        // Conduits
-//        add(MekanismModule.HEAT, "Heat Conduit");
-//        add(MekanismModule.CHEMICAL, "Chemical Conduit");
-//        add(MekanismModule.PRESSURIZED_CHEMICAL, "Pressurized Chemical Conduit");
-//        add(MekanismModule.ENDER_CHEMICAL, "Ender Chemical Conduit");
-//
-//        // GUI
-//        add(MekanismModule.CHEMICAL_CONDUIT_CHANGE_FLUID1, "Locked Chemical:");
-//        add(MekanismModule.CHEMICAL_CONDUIT_CHANGE_FLUID2, "Click to reset!");
-//        add(MekanismModule.CHEMICAL_CONDUIT_CHANGE_FLUID3, "Chemical: %s");
+        if (!ModList.get().isLoaded(ModuleModIds.MEKANISM)) {
+            return;
+        }
+
+        add(MekanismModule.BASIC_CHEMICAL_FILTER.get(), "Basic Chemical Filter");
+        add(MekanismModule.HEAT, "Heat Conduit");
+        add(MekanismModule.CHEMICAL, "Chemical Conduit");
+        add(MekanismModule.PRESSURIZED_CHEMICAL, "Pressurized Chemical Conduit");
+        add(MekanismModule.ENDER_CHEMICAL, "Ender Chemical Conduit");
+        add(MekanismModule.CHEMICAL_FILTER_SLOT_TOOLTIP, "Chemical Filter");
     }
-    
+
     private void addAE2Translations() {
+        if (!ModList.get().isLoaded(ModuleModIds.APPLIED_ENERGISTICS)) {
+            return;
+        }
 //        // Conduits
         add(AE2ConduitsModule.NORMAL, "ME Conduit");
         add(AE2ConduitsModule.DENSE, "Dense ME Conduit");

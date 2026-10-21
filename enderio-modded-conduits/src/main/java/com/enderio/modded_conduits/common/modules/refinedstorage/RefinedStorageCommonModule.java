@@ -1,6 +1,6 @@
 //package com.enderio.modded_conduits.common.modules.refinedstorage;
 //
-//import com.enderio.enderio.EnderIO;
+//import com.enderio.modded_conduits.common.ModdedConduits;
 //import com.enderio.enderio.api.EnderIORegistries;
 //import com.enderio.enderio.api.conduits.Conduit;
 //import com.enderio.enderio.api.conduits.ConduitApi;
@@ -38,16 +38,16 @@
 //
 //    public static class ConduitKeys {
 //        public static final ResourceKey<Conduit<?, ?>> RS = ResourceKey.create(EnderIORegistries.Keys.CONDUIT,
-//                EnderIO.id("rs"));
+//                ModdedConduits.id("rs"));
 //    }
 //
 //    public static final DeferredRegister<ConduitType<?, ?>> CONDUIT_TYPES = DeferredRegister
-//            .create(EnderIORegistries.CONDUIT_TYPE, EnderIO.MOD_ID);
+//            .create(EnderIORegistries.CONDUIT_TYPE, ModdedConduits.MOD_ID);
 //    public static final DeferredRegister<ConnectionConfigType<?>> CONDUIT_CONNECTION_CONFIG_TYPES = DeferredRegister
-//            .create(EnderIORegistries.CONDUIT_CONNECTION_CONFIG_TYPE, EnderIO.MOD_ID);
+//            .create(EnderIORegistries.CONDUIT_CONNECTION_CONFIG_TYPE, ModdedConduits.MOD_ID);
 //
 //    public static final DeferredRegister<NodeDataType<?>> CONDUIT_NODE_DATA_TYPES = DeferredRegister
-//            .create(EnderIORegistries.CONDUIT_NODE_DATA_TYPE, EnderIO.MOD_ID);
+//            .create(EnderIORegistries.CONDUIT_NODE_DATA_TYPE, ModdedConduits.MOD_ID);
 //
 //    public static final Supplier<ConduitType<RSConduit, RSConduitConnectionConfig>> RS_CONDUIT = CONDUIT_TYPES.register("rs",
 //            () -> ConduitType.builder(RSConduit.CODEC, RSConduitConnectionConfig.TYPE)
@@ -72,7 +72,7 @@
 //
 //    @Override
 //    public void bootstrapConduits(BootstrapContext<Conduit<?, ?>> context) {
-//        context.register(ConduitKeys.RS, new RSConduit(EnderIO.id("block/conduit/rs"), Component.translatable(ConduitApi.INSTANCE.makeDescriptionId(ConduitKeys.RS))));
+//        context.register(ConduitKeys.RS, new RSConduit(ModdedConduits.id("block/conduit/rs"), Component.translatable(ConduitApi.INSTANCE.makeDescriptionId(ConduitKeys.RS))));
 //    }
 //
 //    @Override
@@ -95,6 +95,6 @@
 //            .define('B', EIOItems.CONDUIT_BINDER)
 //            .define('I', Tags.CABLES)
 //            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
-//            .save(rsRecipeOutput, EnderIO.id("rs_conduit").toString());
+//            .save(rsRecipeOutput, ModdedConduits.id("rs_conduit").toString());
 //    }
 //}

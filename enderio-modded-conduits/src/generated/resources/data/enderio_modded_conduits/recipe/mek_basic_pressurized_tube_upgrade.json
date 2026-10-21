@@ -1,0 +1,29 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "mekanism"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "C": {
+      "neoforge:ingredient_type": "enderio:conduit",
+      "conduit_type": "enderio_modded_conduits:chemical"
+    },
+    "U": "mekanism:alloy_infused"
+  },
+  "pattern": [
+    "CCC",
+    "CUC",
+    "CCC"
+  ],
+  "result": {
+    "components": {
+      "enderio:conduit": "enderio_modded_conduits:pressurized_chemical"
+    },
+    "count": 8,
+    "id": "enderio:conduit"
+  }
+}

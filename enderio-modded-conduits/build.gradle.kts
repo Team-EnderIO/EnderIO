@@ -87,18 +87,18 @@ dependencies {
         classifier("api")
     })
 
-    runtimeOnly(libs.ae2)
+//    runtimeOnly(libs.ae2)
 
     // Mekanism
-//    compileOnly(variantOf(libs.mekanism) {
-//        classifier("api")
-//    })
-//
-//    runtimeOnly(libs.mekanism)
+    compileOnly(variantOf(libs.mekanism) {
+        classifier("api")
+    })
+
+    runtimeOnly(libs.mekanism)
 
     // Refined Storage
     compileOnly(libs.refinedStorage)
-    runtimeOnly(libs.refinedStorage)
+//    runtimeOnly(libs.refinedStorage)
 
     //Laserio
 //    compileOnly(libs.laserio)
@@ -142,7 +142,7 @@ neoForge {
             logLevel = org.slf4j.event.Level.INFO
         }
 
-        val clientData by creating {
+        val data by creating {
             clientData()
 
             programArguments.addAll(

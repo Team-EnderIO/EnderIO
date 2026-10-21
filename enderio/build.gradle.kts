@@ -91,12 +91,10 @@ dependencies {
     jarJar(project(":endercore"))
 
     // Include built-in "addons"
-    // 26.2-port: enderio-modded-conduits subproject removed — third-party mod interactions deferred
-    // jarJar(project(":enderio-modded-conduits"))
-    // localRuntime(project(":enderio-modded-conduits"))
+     jarJar(project(":enderio-modded-conduits"))
+     localRuntime(project(":enderio-modded-conduits"))
 
     // Almost Unified
-    // 26.2-port: third-party mod interaction commented out
 //    compileOnly(variantOf(libs.almostUnified) {
 //        classifier("api")
 //    })

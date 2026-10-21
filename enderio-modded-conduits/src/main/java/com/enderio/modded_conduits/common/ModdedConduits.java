@@ -3,9 +3,11 @@ package com.enderio.modded_conduits.common;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.modded_conduits.common.modules.ConduitCommonModule;
+import com.enderio.modded_conduits.common.modules.mekanism.MekanismModule;
 import com.enderio.modded_conduits.common.modules.appeng.AE2ConduitsModule;
 import com.enderio.modded_conduits.config.ModdedConduitsConfig;
 import com.enderio.modded_conduits.data.ModConduitRecipeProvider;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
@@ -27,10 +29,14 @@ public class ModdedConduits {
     public static final String MOD_ID = EnderIO.MOD_ID + "_modded_conduits";
 
     private static final Map<String, Supplier<ConduitCommonModule>> CONDUIT_MODULES = Map.ofEntries(
-            entry(ModuleModIds.APPLIED_ENERGISTICS, () -> AE2ConduitsModule.INSTANCE)
-//            entry(ModuleModIds.MEKANISM, () -> MekanismModule.INSTANCE),
+            entry(ModuleModIds.APPLIED_ENERGISTICS, () -> AE2ConduitsModule.INSTANCE),
+            entry(ModuleModIds.MEKANISM, () -> MekanismModule.INSTANCE)
 //            entry(ModuleModIds.REFINED_STORAGE, () -> RefinedStorageCommonModule.INSTANCE)
     );
+
+    public static Identifier id(String path) {
+        return Identifier.fromNamespaceAndPath(MOD_ID, path);
+    }
 
     public static IEventBus modEventBus;
 
@@ -53,9 +59,8 @@ public class ModdedConduits {
 
     @SubscribeEvent
     public static void onDatapackGather(GatherDataRegistryEntriesEvent event) {
-        event.add(EnderIORegistries.Keys.CONDUIT, bootstrap -> {
-            ModdedConduits.executeOnLoadedModules(module -> module.bootstrapConduits(bootstrap));
-        });
+        event.add(EnderIORegistries.Keys.CONDUIT, bootstrap ->
+            ModdedConduits.executeOnLoadedModules(module -> module.bootstrapConduits(bootstrap)));
         event.add(ModConduitRecipeProvider.create());
     }
 }

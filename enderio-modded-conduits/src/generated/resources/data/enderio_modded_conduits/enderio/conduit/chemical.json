@@ -1,0 +1,14 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "mekanism"
+    }
+  ],
+  "type": "enderio_modded_conduits:chemical",
+  "description": {
+    "translate": "conduit.enderio_modded_conduits.chemical"
+  },
+  "texture": "enderio_modded_conduits:block/conduit/chemical",
+  "transfer_rate": 750
+}

@@ -6,7 +6,7 @@ jade = "26.3.5+neoforge"
 athena = "4.7.3"
 ae2 = { strictly = "[26.1.6-alpha,)", prefer = "26.1.6-alpha" }
 mekanism = { strictly = "[26.3-10.8.0.homebaked,)", prefer = "26.3-10.8.0.homebaked" }
-mekanismMod = { strictly = "[10.8.0.homebaked,)", prefer = "10.8.0.homebaked" } # workaround for Mek having MC version in the version specifier.
+mekanismMod = { strictly = "[10.8.0,)", prefer = "10.8.0" } # workaround for Mek having MC version in the version specifier.
 refinedStorage = { strictly = "[3.0.2,)", prefer = "3.0.5" }
 laserio = "5648871"
 graphlib = { strictly = "[3.0.4, 3.1)", prefer = "3.0.5" }
