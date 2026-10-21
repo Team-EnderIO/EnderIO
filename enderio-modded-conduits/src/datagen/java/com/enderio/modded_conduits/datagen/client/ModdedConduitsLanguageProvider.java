@@ -4,7 +4,6 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitApi;
 import com.enderio.modded_conduits.common.modules.appeng.AE2ConduitsModule;
-import com.enderio.modded_conduits.common.modules.refinedstorage.RefinedStorageCommonModule;
 import net.minecraft.data.PackOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
@@ -48,7 +47,7 @@ public class ModdedConduitsLanguageProvider extends LanguageProvider {
     
     private void addRefinedStorageTranslations() {
         // Conduits
-        add(RefinedStorageCommonModule.ConduitKeys.RS, "Refined Storage Conduit");
+//        add(RefinedStorageCommonModule.ConduitKeys.RS, "Refined Storage Conduit");
     }
 
     private void add(ResourceKey<Conduit<?, ?>> key, String translation) {

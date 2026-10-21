@@ -1,4 +1,4 @@
 @javax.annotation.ParametersAreNonnullByDefault
-@com.mojang.logging.annotations.MethodsReturnNonnullByDefault
+@org.jspecify.annotations.NullMarked
 
 package com.enderio.modded_conduits.common.modules.mekanism.chemical_filter;

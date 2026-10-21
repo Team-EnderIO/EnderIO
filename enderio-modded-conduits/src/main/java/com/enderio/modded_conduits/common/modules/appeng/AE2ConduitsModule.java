@@ -13,8 +13,7 @@ import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
 import com.enderio.enderio.api.conduits.network.node.NodeDataType;
 import com.enderio.enderio.init.EIOItems;
 import com.enderio.modded_conduits.common.modules.ConduitCommonModule;
-import net.minecraft.advancements.criterion.InventoryChangeTrigger;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.advancements.triggers.InventoryChangeTrigger;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -92,28 +91,21 @@ public class AE2ConduitsModule implements ConduitCommonModule {
     @Override
     public void bootstrapConduits(BootstrapContext<Conduit<?, ?>> context) {
         context.register(NORMAL,
-                new MEConduit(EnderIO.id("block/conduit/me"), Component.translatable(ConduitApi.INSTANCE.makeDescriptionId(NORMAL)),
-                    AEColor.TRANSPARENT, false));
+            new MEConduit(EnderIO.id("block/conduit/me"), Component.translatable(ConduitApi.INSTANCE.makeDescriptionId(NORMAL)), AEColor.TRANSPARENT, false),
+            CONDITION);
         context.register(DENSE,
-                new MEConduit(EnderIO.id("block/conduit/dense_me"), Component.translatable(ConduitApi.INSTANCE.makeDescriptionId(DENSE)),
-                    AEColor.TRANSPARENT, true));
-
-        // TODO: Colored ME conduit.
+            new MEConduit(EnderIO.id("block/conduit/dense_me"), Component.translatable(ConduitApi.INSTANCE.makeDescriptionId(DENSE)), AEColor.TRANSPARENT,
+                true), CONDITION);
     }
 
     @Override
-    public void buildConduitConditions(BiConsumer<ResourceKey<?>, ICondition> conditions) {
-        conditions.accept(NORMAL, CONDITION);
-        conditions.accept(DENSE, CONDITION);
-    }
-
-    @Override
-    public void buildRecipes(HolderLookup.Provider lookupProvider, RecipeOutput recipeOutput) {
+    public void buildRecipes(RecipeOutput recipeOutput) {
         var ae2RecipeOutput = recipeOutput.withConditions(CONDITION);
 
-        var items = lookupProvider.lookupOrThrow(Registries.ITEM);
-        var normalConduit = lookupProvider.holderOrThrow(NORMAL);
-        var denseConduit = lookupProvider.holderOrThrow(DENSE);
+        var items = recipeOutput.lookup(Registries.ITEM);
+        var conduits = recipeOutput.lookup(EnderIORegistries.Keys.CONDUIT);
+        var normalConduit = conduits.getOrThrow(NORMAL);
+        var denseConduit = conduits.getOrThrow(DENSE);
 
         ShapedRecipeBuilder.shaped(items, RecipeCategory.BUILDING_BLOCKS, ConduitApi.INSTANCE.getConduitStackTemplate(normalConduit, 3))
                 .pattern("BBB")
