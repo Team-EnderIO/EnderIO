@@ -8,18 +8,24 @@ import com.enderio.enderio.foundation.menu.GhostMachineSlot;
 import com.enderio.enderio.foundation.menu.MachineMenu;
 import com.enderio.enderio.foundation.menu.PreviewMachineSlot;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
 public abstract class MachineScreen<T extends MachineMenu<?>> extends EnderContainerScreen<T> {
     public static final int SLOT_COLOR = -2130706433;
 
+    protected MachineScreen(T menu, @Nullable RecipeBookComponent<?> recipeBookComponent, Inventory playerInventory, Component title, int imageWidth, int imageHeight) {
+        super(menu, recipeBookComponent, playerInventory, title, imageWidth, imageHeight);
+    }
+
     protected MachineScreen(T menu, Inventory playerInventory, Component title, int imageWidth, int imageHeight) {
-        super(menu, playerInventory, title, imageWidth, imageHeight);
+        this(menu, null, playerInventory, title, imageWidth, imageHeight);
     }
 
     protected IOConfigOverlay addIOConfigOverlay(int layer, int x, int y, int width, int height) {

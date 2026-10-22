@@ -1,18 +1,42 @@
 package com.enderio.enderio.content.enchanter;
 
 import com.enderio.core.common.menu.BaseBlockEntityMenu;
+import com.enderio.core.common.recipes.IExtendedPlacementInfo;
 import com.enderio.core.common.storage.ItemStorage;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.enderio.foundation.menu.MachineSlot;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOMenus;
+import com.enderio.enderio.init.EIORecipeBookCategories;
+import it.unimi.dsi.fastutil.ints.IntList;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.recipebook.PlaceRecipeHelper;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Prediction;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.StackedContents;
+import net.minecraft.world.entity.player.StackedItemContents;
+import net.minecraft.world.inventory.RecipeBookType;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.transfer.item.ItemResource;
+import org.checkerframework.checker.units.qual.A;
 import org.jspecify.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.Predicate;
 
 public class EnchanterMenu extends BaseBlockEntityMenu<EnchanterBlockEntity> {
     public static final int INPUTS_INDEX = 0;
@@ -59,8 +83,7 @@ public class EnchanterMenu extends BaseBlockEntityMenu<EnchanterBlockEntity> {
             ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
             if (index < this.slots.size() - PLAYER_INVENTORY_SIZE) {
-                if (!this.moveItemStackTo(itemstack1, this.slots.size() - PLAYER_INVENTORY_SIZE, this.slots.size(),
-                        true)) {
+                if (!this.moveItemStackTo(itemstack1, this.slots.size() - PLAYER_INVENTORY_SIZE, this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
             } else if (!this.moveItemStackTo(itemstack1, 0, this.slots.size() - PLAYER_INVENTORY_SIZE, false)) {
@@ -80,11 +103,10 @@ public class EnchanterMenu extends BaseBlockEntityMenu<EnchanterBlockEntity> {
     }
 
     public static class EnchanterOutputMachineSlot extends MachineSlot {
-        @Nullable
-        private final EnchanterBlockEntity blockEntity;
+        @Nullable private final EnchanterBlockEntity blockEntity;
 
-        public EnchanterOutputMachineSlot(@Nullable EnchanterBlockEntity blockEntity, SingleResourceSlotKey<ItemResource> access,
-                int xPosition, int yPosition) {
+        public EnchanterOutputMachineSlot(@Nullable EnchanterBlockEntity blockEntity, SingleResourceSlotKey<ItemResource> access, int xPosition,
+            int yPosition) {
             super(blockEntity.getInventory(), access, xPosition, yPosition);
             this.blockEntity = blockEntity;
         }
@@ -97,8 +119,7 @@ public class EnchanterMenu extends BaseBlockEntityMenu<EnchanterBlockEntity> {
 
             if (recipe != null && (player.experienceLevel >= recipe.getXPCost(recipeInput) || player.isCreative())) {
                 int amount = recipe.getInputAmountConsumed(recipeInput);
-                int lapizForLevel = recipe.getLapisForLevel(
-                        recipe.getEnchantmentLevel(inventory.getStack(EnchanterBlockEntity.CATALYST).getCount()));
+                int lapizForLevel = recipe.getLapisForLevel(recipe.getEnchantmentLevel(inventory.getStack(EnchanterBlockEntity.CATALYST).getCount()));
                 player.giveExperienceLevels(-recipe.getXPCost(recipeInput));
 
                 inventory.mutateStack(EnchanterBlockEntity.BOOK, s -> s.shrink(1));
@@ -113,12 +134,35 @@ public class EnchanterMenu extends BaseBlockEntityMenu<EnchanterBlockEntity> {
             EnchanterRecipe recipe = blockEntity.getCurrentRecipe();
             EnchanterRecipe.Input recipeInput = blockEntity.createRecipeInput();
 
-            if (recipe != null
-                    && (playerIn.experienceLevel >= recipe.getXPCost(recipeInput) || playerIn.isCreative())) {
+            if (recipe != null && (playerIn.experienceLevel >= recipe.getXPCost(recipeInput) || playerIn.isCreative())) {
                 return super.mayPickup(playerIn);
             }
 
             return false;
         }
     }
+
+    @Override
+    public RecipeBookType getRecipeBookType() {
+        return RecipeBookType.valueOf("ENDERIO_ENCHANTING");
+    }
+
+    @Override
+    public void fillCraftSlotsStackedContents(StackedItemContents stackedContents) {
+        stackedContents.accountSimpleStack(getSlot(0).getItem());
+        stackedContents.accountSimpleStack(getSlot(1).getItem());
+        stackedContents.accountSimpleStack(getSlot(2).getItem());
+    }
+
+    @Override
+    public PostPlaceAction handlePlacement(boolean useMaxItems, boolean allowDroppingItemsToClear, RecipeHolder<?> recipe, ServerLevel level,
+        Inventory inventory) {
+        return handlePlacement(useMaxItems, allowDroppingItemsToClear, recipe, level, inventory, INPUTS_INDEX, LAST_INDEX);
+    }
+
+    @Nullable
+    protected Recipe<?> getRecipe() {
+        return this.getBlockEntity().getCurrentRecipe();
+    }
+
 }

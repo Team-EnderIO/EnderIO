@@ -1,20 +1,29 @@
 package com.enderio.enderio.content.machines.alloy;
 
+import com.enderio.core.common.recipes.IExtendedPlacementInfo;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.enderio.foundation.MachineRecipe;
+import com.enderio.enderio.foundation.recipe.SizedSlotDisplay;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIORecipeBookCategories;
 import com.enderio.enderio.init.EIORecipeTypes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
+import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.flag.FeatureFlagSet;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeBookCategory;
@@ -27,9 +36,11 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Input> {
+public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Input>, IExtendedPlacementInfo {
     // Uses optional field for isSmelting to avoid polluting recipe generation.
     public static final MapCodec<AlloySmeltingRecipe> MAP_CODEC = RecordCodecBuilder.mapCodec(inst -> inst
         .group(SizedIngredient.NESTED_CODEC.listOf().fieldOf("inputs").forGetter(AlloySmeltingRecipe::inputs), //TODO is nested right?
@@ -179,7 +190,7 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
     public List<RecipeDisplay> display() {
         return List.of(
             new AlloySmelterDisplay(
-                this.inputs().stream().map(s -> s.ingredient().display()).toList(),
+                new ArrayList<>(this.inputs().stream().map(SizedSlotDisplay::new).toList()),
                 new SlotDisplay.ItemStackSlotDisplay(this.output()),
                 new SlotDisplay.ItemSlotDisplay(EIOBlocks.ALLOY_SMELTER.asItem())
             )
@@ -204,14 +215,51 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.In
     @Override
     public PlacementInfo placementInfo() {
         if (placementInfo == null) {
-            placementInfo = PlacementInfo.create(inputs().stream().map(SizedIngredient::ingredient).toList());
+            List<Ingredient> ingredients = new ArrayList<>();
+            for (SizedIngredient sizedIngredient : inputs()) {
+                ingredients.addAll(Collections.nCopies(sizedIngredient.count(), sizedIngredient.ingredient()));
+            }
+            placementInfo = PlacementInfo.create(ingredients);
         }
         return placementInfo;
     }
 
     @Override
+    public boolean isSpecial() {
+        return false;
+    }
+
+    @Override
     public RecipeBookCategory recipeBookCategory() {
         return EIORecipeBookCategories.ALLOY_SMELTING.get();
+    }
+
+    @Override
+    public IntList getSlotList() {
+        IntList list = new IntArrayList();
+        for (int i = 0; i < inputs().size(); i++) {
+            list.add(i);
+        }
+        return list;
+    }
+
+    @Override
+    public List<Holder<Item>> getItemList(List<Holder<Item>> itemsUsedPerIngredient) {
+        List<Holder<Item>> list = new ArrayList<>();
+        int index = -1;
+        for (SizedIngredient sizedIngredient : inputs()) {
+            list.add(itemsUsedPerIngredient.get(sizedIngredient.count() + index));
+            index += sizedIngredient.count();
+        }
+        return list;
+    }
+
+    @Override
+    public int getItemAmount(int index, Holder<Item> item, int adjustedAmountToCraft) {
+        if (index >= 0 && index < 3) {
+            return Math.min(adjustedAmountToCraft * inputs().get(index).count(), item.components().getOrDefault(DataComponents.MAX_STACK_SIZE, 1));
+        }
+        return adjustedAmountToCraft;
     }
 
     public record Input(AlloySmelterMode mode, List<ItemStack> inputs, int inputsConsumed) implements RecipeInput {

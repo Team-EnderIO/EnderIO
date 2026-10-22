@@ -5,19 +5,27 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.content.enchanter.EnchanterRecipe;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOItems;
+import net.minecraft.advancements.predicates.ItemPredicate;
+import net.minecraft.advancements.triggers.Criterion;
+import net.minecraft.advancements.triggers.InventoryChangeTrigger;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.RecipeUnlockAdvancementBuilder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.WeatheringCopper;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
@@ -103,8 +111,12 @@ public class EnchanterRecipeProvider extends SubRecipeProvider {
 
     protected void build(Holder<Enchantment> enchantment, SizedIngredient input, int levelModifier,
             RecipeOutput recipeOutput) {
-        recipeOutput.accept(ResourceKey.create(Registries.RECIPE, EnderIO.id("enchanting/" + enchantment.key().identifier().getPath())),
-                new EnchanterRecipe(enchantment, levelModifier, input), null);
+        RecipeUnlockAdvancementBuilder advancementBuilder = new RecipeUnlockAdvancementBuilder();
+        advancementBuilder.unlockedBy("has_ingredient", InventoryChangeTrigger.
+            TriggerInstance.hasItems(ItemPredicate.Builder.item().of(items, Items.WRITABLE_BOOK).build()));
+        ResourceKey<Recipe<?>> key = ResourceKey.create(Registries.RECIPE, EnderIO.id("enchanting/" + enchantment.key().identifier().getPath()));
+        var advancement = advancementBuilder.build(recipeOutput, key, RecipeCategory.MISC);
+        recipeOutput.accept(key, new EnchanterRecipe(enchantment, levelModifier, input), advancement);
     }
 
 }

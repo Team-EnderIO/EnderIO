@@ -1,0 +1,24 @@
+{
+    "entries": [
+        {
+            // The enum class the entry should be added to
+            "enum": "net/minecraft/world/inventory/RecipeBookType",
+            // The field name of the new entry, must be prefixed with the mod ID
+            "name": "ENDERIO_ENCHANTING",
+            // The constructor to be used
+            "constructor": "()V",
+            // Constant parameters provided directly.
+            "parameters": []
+        },
+        {
+            // The enum class the entry should be added to
+            "enum": "net/minecraft/world/inventory/RecipeBookType",
+            // The field name of the new entry, must be prefixed with the mod ID
+            "name": "ENDERIO_ALLOY_SMELTING",
+            // The constructor to be used
+            "constructor": "()V",
+            // Constant parameters provided directly.
+            "parameters": []
+        }
+    ]
+}
