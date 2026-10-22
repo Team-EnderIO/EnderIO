@@ -7,7 +7,6 @@ import com.enderio.enderio.client.content.fluid_tank.FluidTankItemRenderer;
 import com.enderio.enderio.client.content.paint.model.port.PaintedItemModel;
 import com.enderio.enderio.client.foundation.model.item.HasFluidItemProperty;
 import com.enderio.enderio.client.foundation.model.item.IsSoulBoundItemProperty;
-import com.enderio.enderio.client.foundation.model.item.SoulNameItemRenderer;
 import com.enderio.enderio.content.conduits.facades.ConduitFacadeItem;
 import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
 import com.enderio.enderio.content.fun.EnderiosItem;
@@ -161,7 +160,7 @@ public class EIOItemModelProvider extends ModelProvider {
         itemModels.generateFlatItem(EIOItems.ANIMAL_TOKEN.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(EIOItems.MONSTER_TOKEN.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(EIOItems.PLAYER_TOKEN.get(), ModelTemplates.FLAT_ITEM);
-        generateBrokenSpawner(blockModels, itemModels, EIOItems.BROKEN_SPAWNER.get());
+        createFakeBlock(blockModels, EIOItems.BROKEN_SPAWNER.get());
 
         // Gliders
         itemModels.generateFlatItem(EIOItems.GLIDER.get(), ModelTemplates.FLAT_ITEM);
@@ -294,10 +293,9 @@ public class EIOItemModelProvider extends ModelProvider {
         // endregion
     }
 
-    private void generateBrokenSpawner(BlockModelGenerators blockModelGenerators, ItemModelGenerators itemModelGenerators, Item item) {
+    private void createFakeBlock(BlockModelGenerators blockModelGenerators, Item item) {
         Identifier model = ModelTemplates.CUBE_ALL.create(item, TextureMapping.cube(TextureMapping.getItemTexture(item)), blockModelGenerators.modelOutput);
-        itemModelGenerators.itemModelOutput.accept(item,
-            ItemModelUtils.composite(ItemModelUtils.plainModel(model), new SoulNameItemRenderer.Unbaked()));
+        blockModelGenerators.registerSimpleItemModel(item, model);
     }
 
     private void createFakeBlock(BlockModelGenerators blockModelGenerators, Item item, Identifier identifier) {
@@ -322,8 +320,7 @@ public class EIOItemModelProvider extends ModelProvider {
     public void generateSoulVial(ItemModelGenerators itemModelGenerators, Item item) {
         ItemModel.Unbaked plain = ItemModelUtils.plainModel(itemModelGenerators.createFlatItemModel(item, ModelTemplates.FLAT_ITEM));
         ItemModel.Unbaked filled = ItemModelUtils.plainModel(itemModelGenerators.createFlatItemModel(item, "_filled", ModelTemplates.FLAT_ITEM));
-        itemModelGenerators.itemModelOutput.accept(item, ItemModelUtils.composite(
-            ItemModelUtils.conditional(new IsSoulBoundItemProperty(), filled, plain), new SoulNameItemRenderer.Unbaked()));
+        itemModelGenerators.itemModelOutput.accept(item, ItemModelUtils.conditional(new IsSoulBoundItemProperty(), filled, plain));
     }
 
     public void generateVoidVial(ItemModelGenerators itemModelGenerators, Item item) {
