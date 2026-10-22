@@ -79,6 +79,7 @@ import com.enderio.enderio.client.content.travel.TravelTargetRendering;
 import com.enderio.enderio.client.foundation.model.IOConfigRealLevelWorkaroundBlockModel;
 import com.enderio.enderio.client.foundation.model.item.HasFluidItemProperty;
 import com.enderio.enderio.client.foundation.model.item.IsSoulBoundItemProperty;
+import com.enderio.enderio.client.foundation.model.item.SoulNameItemRenderer;
 import com.enderio.enderio.client.foundation.particle.RangeParticle;
 import com.enderio.enderio.client.foundation.renderer.feature.GhostBlockModelFeatureRenderer;
 import com.enderio.enderio.client.foundation.widgets.ioconfig.IOConfigSceneRenderState;
@@ -449,6 +450,7 @@ public class EnderIOClient {
 
     @SubscribeEvent
     public static void registerItemModels(RegisterItemModelsEvent event) {
+        event.register(EnderIO.id("soul_name"), SoulNameItemRenderer.Unbaked.CODEC);
         event.register(EnderIO.id("conduit"), ConduitItemModel.Unbaked.CODEC);
         event.register(EnderIO.id("facade"), FacadeItemModel.Unbaked.CODEC);
         event.register(EnderIO.id("painted"), PaintedItemModel.Unbaked.CODEC);

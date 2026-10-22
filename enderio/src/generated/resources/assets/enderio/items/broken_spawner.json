@@ -1,6 +1,14 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "enderio:item/broken_spawner"
+    "type": "minecraft:composite",
+    "models": [
+      {
+        "type": "minecraft:model",
+        "model": "enderio:item/broken_spawner"
+      },
+      {
+        "type": "enderio:soul_name"
+      }
+    ]
   }
 }

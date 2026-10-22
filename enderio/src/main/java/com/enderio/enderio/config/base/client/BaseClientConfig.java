@@ -6,6 +6,7 @@ public class BaseClientConfig {
     public final ModConfigSpec.BooleanValue MACHINE_PARTICLES;
     public final ModConfigSpec.IntValue TRAVEL_KEY_HOLD_DELAY;
     public final ModConfigSpec.BooleanValue ANCHORS_USE_ICON_AS_BLOCK;
+    public final ModConfigSpec.BooleanValue SOUL_NAME_OVERLAY;
 
     public BaseClientConfig(ModConfigSpec.Builder builder) {
         builder.push("behavior");
@@ -16,6 +17,8 @@ public class BaseClientConfig {
         MACHINE_PARTICLES = builder.comment("Enable machine particles").define("machineParticles", true);
         ANCHORS_USE_ICON_AS_BLOCK = builder.comment("Whether Travel Anchors try to render items as blocks")
             .define("anchorsUseIconAsBlock", true);
+        SOUL_NAME_OVERLAY = builder.comment("Show a scrolling mob name on Soul Vials and Broken Spawners while holding Shift")
+            .define("soulNameOverlay", true);
         builder.pop();
     }
 }
