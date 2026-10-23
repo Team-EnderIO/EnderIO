@@ -39,7 +39,7 @@ public class NewEnergyWidget extends EIOWidget {
         int renderableHeight = (int)(filledVolume * height);
         int hiddenHeight = height - renderableHeight;
 
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ENERGY_BAR_FILL_SPRITE, width, height, 0, hiddenHeight, x, y + hiddenHeight, width, renderableHeight);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ENERGY_BAR_FILL_SPRITE, width, height, 0, hiddenHeight, this.getX(), this.getY() + hiddenHeight, width, renderableHeight);
 
         renderToolTip(graphics, mouseX, mouseY);
     }

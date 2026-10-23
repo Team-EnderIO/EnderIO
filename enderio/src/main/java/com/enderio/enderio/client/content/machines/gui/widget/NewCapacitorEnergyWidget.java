@@ -29,7 +29,7 @@ public class NewCapacitorEnergyWidget extends NewEnergyWidget {
     @Override
     public void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         if (!cap.get()) {
-            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ENERGY_BAR_ERROR_SPRITE, x, y, width, height);
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ENERGY_BAR_ERROR_SPRITE,  this.getX(), this.getY(), width, height);
 
             if (isHoveredOrFocused()) {
                 renderCapacitorTooltip(graphics, mouseX, mouseY);

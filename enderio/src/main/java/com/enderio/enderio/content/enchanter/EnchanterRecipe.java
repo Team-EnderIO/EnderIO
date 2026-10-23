@@ -1,22 +1,28 @@
 package com.enderio.enderio.content.enchanter;
 
+import com.enderio.core.common.recipes.IExtendedPlacementInfo;
 import com.enderio.enderio.config.machines.MachinesConfig;
+import com.enderio.enderio.foundation.recipe.SizedSlotDisplay;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIORecipeBookCategories;
 import com.enderio.enderio.init.EIORecipeTypes;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.flag.FeatureFlagSet;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeBookCategory;
@@ -32,13 +38,15 @@ import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import org.jspecify.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * A recipe for the enchanter.
  */
 public record EnchanterRecipe(Holder<Enchantment> enchantment, int costMultiplier, SizedIngredient input)
-        implements Recipe<EnchanterRecipe.Input> {
+        implements Recipe<EnchanterRecipe.Input>, IExtendedPlacementInfo {
 
     public static final MapCodec<EnchanterRecipe> MAP_CODEC = RecordCodecBuilder
         .mapCodec(inst -> inst
@@ -156,12 +164,18 @@ public record EnchanterRecipe(Holder<Enchantment> enchantment, int costMultiplie
 
     @Override
     public PlacementInfo placementInfo() {
-        return PlacementInfo.create(input.ingredient());
+        Ingredient lapis = Ingredient.of(BuiltInRegistries.ITEM.get(Tags.Items.GEMS_LAPIS).orElseThrow());
+        List<Ingredient> ingredients = new ArrayList<>();
+        ingredients.add(Ingredient.of(Items.WRITABLE_BOOK));
+        ingredients.addAll(Collections.nCopies(input.count(),input.ingredient()));
+        ingredients.addAll(Collections.nCopies(getLapisForLevel(1), lapis));
+        return PlacementInfo.create(ingredients);
     }
 
     @Override
     public List<RecipeDisplay> display() {
-        return List.of(new EnchantingDisplay(input.ingredient().display(),
+        return List.of(new EnchantingDisplay(new SizedSlotDisplay(input),
+            new SizedSlotDisplay(SizedIngredient.of(Items.LAPIS_LAZULI, getLapisForLevel(1))),
             new SlotDisplay.ItemStackSlotDisplay(getBookForLevel(getEnchantmentLevel(input.count()))), //TODO is this the right way?
             new SlotDisplay.ItemSlotDisplay(EIOBlocks.ENCHANTER.asItem())));
     }
@@ -169,11 +183,6 @@ public record EnchanterRecipe(Holder<Enchantment> enchantment, int costMultiplie
     @Override
     public RecipeBookCategory recipeBookCategory() {
         return EIORecipeBookCategories.ENCHANTING.get();
-    }
-
-    @Override
-    public boolean isSpecial() {
-        return true;
     }
 
     @Override
@@ -196,6 +205,30 @@ public record EnchanterRecipe(Holder<Enchantment> enchantment, int costMultiplie
         return EIORecipeTypes.ENCHANTING.get();
     }
 
+    @Override
+    public IntList getSlotList() {
+        return IntList.of(0,1,2);
+    }
+
+    @Override
+    public List<Holder<Item>> getItemList(List<Holder<Item>> itemsUsedPerIngredient) {
+        return List.of(itemsUsedPerIngredient.getFirst(), itemsUsedPerIngredient.get(input.count()), itemsUsedPerIngredient.get(input.count()+1));
+    }
+
+    @Override
+    public int getItemAmount(int index, Holder<Item> item, int adjustedAmountToCraft) {
+        if (index == 0) {
+            return adjustedAmountToCraft;
+        }
+        if (index == 1) {
+            return Math.min(adjustedAmountToCraft * input().count(), item.components().getOrDefault(DataComponents.MAX_STACK_SIZE, 1));
+        }
+        if (index == 2) {
+            return Math.min(adjustedAmountToCraft * getLapisForLevel(1), item.components().getOrDefault(DataComponents.MAX_STACK_SIZE, 1));
+        }
+        return adjustedAmountToCraft;
+    }
+
     public record Input(ItemStack bookItem, ItemStack catalyst, ItemStack lapis) implements RecipeInput {
 
         @Override
@@ -214,11 +247,12 @@ public record EnchanterRecipe(Holder<Enchantment> enchantment, int costMultiplie
         }
     }
 
-    public record EnchantingDisplay(SlotDisplay ingredient, SlotDisplay result, SlotDisplay craftingStation) implements RecipeDisplay {
+    public record EnchantingDisplay(SlotDisplay ingredient, SlotDisplay lapis, SlotDisplay result, SlotDisplay craftingStation) implements RecipeDisplay {
 
         public static final MapCodec<EnchantingDisplay> MAP_CODEC = RecordCodecBuilder.mapCodec(
             p_379634_ -> p_379634_.group(
                     SlotDisplay.CODEC.fieldOf("ingredients").forGetter(EnchantingDisplay::ingredient),
+                    SlotDisplay.CODEC.fieldOf("lapis").forGetter(EnchantingDisplay::lapis),
                     SlotDisplay.CODEC.fieldOf("result").forGetter(EnchantingDisplay::result),
                     SlotDisplay.CODEC.fieldOf("crafting_station").forGetter(EnchantingDisplay::craftingStation)
                 )
@@ -227,6 +261,8 @@ public record EnchanterRecipe(Holder<Enchantment> enchantment, int costMultiplie
         public static final StreamCodec<RegistryFriendlyByteBuf, EnchantingDisplay> STREAM_CODEC = StreamCodec.composite(
             SlotDisplay.STREAM_CODEC,
             EnchantingDisplay::ingredient,
+            SlotDisplay.STREAM_CODEC,
+            EnchantingDisplay::lapis,
             SlotDisplay.STREAM_CODEC,
             EnchantingDisplay::result,
             SlotDisplay.STREAM_CODEC,
@@ -243,6 +279,10 @@ public record EnchanterRecipe(Holder<Enchantment> enchantment, int costMultiplie
         @Override
         public boolean isEnabled(FeatureFlagSet flagSet) {
             return this.ingredient.isEnabled(flagSet) && RecipeDisplay.super.isEnabled(flagSet);
+        }
+
+        public SlotDisplay book() {
+            return new SlotDisplay.ItemSlotDisplay(Items.WRITABLE_BOOK);
         }
     }
 }

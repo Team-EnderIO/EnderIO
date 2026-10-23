@@ -11,6 +11,7 @@ displayURL="https://enderio.com/"
 iconFile="enderface.png"
 bannerFile="logo.png"
 featureFlags="META-INF/feature_flags.json"
+enumExtensions="META-INF/enumextensions.json"
 
 [[mixins]]
 config="enderio.mixins.json"

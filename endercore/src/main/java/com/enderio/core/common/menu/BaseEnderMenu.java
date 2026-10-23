@@ -7,13 +7,26 @@ import com.enderio.core.common.network.menu.ServerboundSetSyncSlotDataPacket;
 import com.enderio.core.common.network.menu.SyncSlot;
 import com.enderio.core.common.network.menu.SyncSlot.ChangeType;
 import com.enderio.core.common.network.menu.payload.SlotPayload;
+import com.enderio.core.common.recipes.IExtendedPlacementInfo;
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Prediction;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.StackedItemContents;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.RecipeBookMenu;
+import net.minecraft.world.inventory.RecipeBookType;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -22,7 +35,7 @@ import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class BaseEnderMenu extends AbstractContainerMenu {
+public abstract class BaseEnderMenu extends RecipeBookMenu {
 
     private final Inventory playerInventory;
 
@@ -207,4 +220,162 @@ public abstract class BaseEnderMenu extends AbstractContainerMenu {
 
     // endregion
 
+    @Override
+    public PostPlaceAction handlePlacement(boolean useMaxItems, boolean allowDroppingItemsToClear, RecipeHolder<?> recipe, ServerLevel level,
+        Inventory inventory) {
+        return PostPlaceAction.NOTHING;
+    }
+
+    public PostPlaceAction handlePlacement(boolean useMaxItems, boolean allowDroppingItemsToClear, RecipeHolder<?> recipe, ServerLevel level,
+        Inventory inventory, int start, int stop) {
+        StackedItemContents availableItems = new StackedItemContents();
+        inventory.fillStackedContents(availableItems);
+        this.fillCraftSlotsStackedContents(availableItems);
+
+        if (availableItems.canCraft(recipe.value(), null)) {
+            this.placeRecipe(recipe, availableItems, inventory, start, stop, useMaxItems);
+            inventory.setChanged();
+            return PostPlaceAction.NOTHING;
+        } else {
+            this.clear(inventory, start, stop);
+            inventory.setChanged();
+            return PostPlaceAction.PLACE_GHOST_RECIPE;
+        }
+    }
+
+    protected void placeRecipe(RecipeHolder<?> recipe, StackedItemContents availableItems, Inventory inventory, int start, int stop, boolean useMaxItems) {
+        boolean recipeMatchesPlaced = getRecipe() == recipe.value();
+        int biggestCraftableStack = availableItems.getBiggestCraftableStack(recipe.value(), null);
+        if (recipeMatchesPlaced) {
+            for(int index = start; index < stop; index++) {
+                ItemStack itemStack = getSlot(index).getItem();
+                if (!itemStack.isEmpty() && Math.min(biggestCraftableStack, itemStack.getMaxStackSize()) < itemStack.getCount() + 1) {
+                    return;
+                }
+            }
+        }
+
+        int amountToCraft = this.calculateAmountToCraft(biggestCraftableStack, recipeMatchesPlaced, start, stop, useMaxItems);
+        List<Holder<Item>> itemsUsedPerIngredient = new ArrayList<>();
+        Recipe<?> value = recipe.value();
+        if (availableItems.canCraft(value, amountToCraft, itemsUsedPerIngredient::add)) {
+            int adjustedAmountToCraft = clampToMaxStackSize(amountToCraft, itemsUsedPerIngredient);
+            if (adjustedAmountToCraft != amountToCraft) {
+                itemsUsedPerIngredient.clear();
+                if (!availableItems.canCraft(value, adjustedAmountToCraft, itemsUsedPerIngredient::add)) {
+                    return;
+                }
+            }
+
+            this.clear(inventory, start, stop);
+            IntList intList = recipe.value().placementInfo().slotsToIngredientIndex();
+            if (recipe.value() instanceof IExtendedPlacementInfo info) {
+                intList = info.getSlotList();
+                itemsUsedPerIngredient = info.getItemList(itemsUsedPerIngredient);
+            }
+            var iterator = intList.iterator();
+            for (int index = start; index < stop; index++) {
+                if (!iterator.hasNext()) {
+                    return;
+                }
+
+                Slot targetGridSlot = getSlot(index);
+                Integer ingredientIndex = iterator.next();
+                Holder<Item> itemUsed = itemsUsedPerIngredient.get(ingredientIndex);
+                int remainingCount = adjustedAmountToCraft;
+                if (recipe.value() instanceof IExtendedPlacementInfo info) {
+                    remainingCount = info.getItemAmount(index - start, itemUsed, adjustedAmountToCraft);
+                }
+
+                while(remainingCount > 0) {
+                    remainingCount = this.moveItemToGrid(targetGridSlot, itemUsed, remainingCount, inventory);
+                    if (remainingCount == -1) {
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    @Nullable
+    protected Recipe<?> getRecipe() {
+        return null;
+    }
+
+    private int moveItemToGrid(Slot targetSlot, Holder<Item> itemInInventory, int count, Inventory inventory) {
+        ItemStack itemInTargetSlot = targetSlot.getItem();
+        int inventorySlotId = inventory.findSlotMatchingCraftingIngredient(itemInInventory, itemInTargetSlot);
+        if (inventorySlotId == -1) {
+            return -1;
+        } else {
+            ItemStack inventoryItem = inventory.getItem(inventorySlotId);
+            ItemStack takenStack;
+            if (count < inventoryItem.getCount()) {
+                takenStack = inventory.removeItem(inventorySlotId, count);
+            } else {
+                takenStack = inventory.removeItemNoUpdate(inventorySlotId);
+            }
+
+            int takenCount = takenStack.getCount();
+            if (itemInTargetSlot.isEmpty()) {
+                targetSlot.set(takenStack);
+            } else {
+                itemInTargetSlot.grow(takenCount);
+            }
+
+            return count - takenCount;
+        }
+    }
+
+    private int clampToMaxStackSize(int amountToCraft, List<Holder<Item>> items) {
+        for(Holder<Item> item : items) {
+            amountToCraft = Math.min(amountToCraft, item.components().getOrDefault(DataComponents.MAX_STACK_SIZE, 1));
+        }
+
+        return amountToCraft;
+    }
+
+    private int calculateAmountToCraft(int biggestCraftableStack, boolean recipeMatchesPlaced, int start, int stop, boolean useMaxItems) {
+        if (useMaxItems) {
+            return biggestCraftableStack;
+        } else if (recipeMatchesPlaced) {
+            int smallestStackSize = Integer.MAX_VALUE;
+
+            for(int slot = start; slot < stop; slot++) {
+                ItemStack itemStack = getSlot(slot).getItem();
+                if (!itemStack.isEmpty() && smallestStackSize > itemStack.getCount()) {
+                    smallestStackSize = itemStack.getCount();
+                }
+            }
+
+            if (smallestStackSize != Integer.MAX_VALUE) {
+                ++smallestStackSize;
+            }
+
+            return smallestStackSize;
+        } else {
+            return 1;
+        }
+    }
+
+    protected void clear(Inventory inventory, int start, int stop) {
+        for (int i = start; i < stop; i++) {
+            Slot slot = getSlot(i);
+            ItemStack remainder = slot.getItem().copy();
+            if (!remainder.isEmpty()) {
+                inventory.placeItemBackInInventory(remainder, false, Prediction.SERVER_ONLY);
+                slot.set(remainder);
+            }
+        }
+    }
+
+    @Override
+    public void fillCraftSlotsStackedContents(StackedItemContents stackedContents) {
+
+    }
+
+    @Override
+    public RecipeBookType getRecipeBookType() {
+        return null;
+    }
 }
