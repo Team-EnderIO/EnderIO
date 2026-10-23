@@ -13,6 +13,7 @@ import com.enderio.enderio.datagen.common.data_maps.GrindingBallDataMapProvider;
 import com.enderio.enderio.datagen.common.data_maps.RangeExtenderDataMapProvider;
 import com.enderio.enderio.datagen.common.data_maps.ReagentDataMapProvider;
 import com.enderio.enderio.datagen.common.datapack_registries.ConduitsBootstrap;
+import com.enderio.enderio.datagen.common.datapack_registries.TrimMaterialsBootstrap;
 import com.enderio.enderio.datagen.common.loot.ChestLootProvider;
 import com.enderio.enderio.datagen.common.loot.EIOBlockLootProvider;
 import com.enderio.enderio.datagen.common.loot.EIOLootModifiersProvider;
@@ -56,6 +57,7 @@ public class EnderIODataGen {
     public void gatherDatapacks(GatherDataRegistryEntriesEvent event) {
         // World
         event.add(EnderIORegistries.Keys.CONDUIT, ConduitsBootstrap::bootstrap);
+        event.add(Registries.TRIM_MATERIAL, TrimMaterialsBootstrap::bootstrap);
 
         // Reloadable
         event.add(Registries.ADVANCEMENT, new AdvancementProvider(List.of(EIOAdvancementGenerator::new, MachinesAdvancementGenerator::new)));

@@ -16,7 +16,6 @@ import com.enderio.enderio.content.filters.item.general.EnderItemFilterItem;
 import com.enderio.enderio.content.filters.item.limited.LimitedItemFilterItem;
 import com.enderio.enderio.content.filters.redstone.RedstoneFilterItem;
 import com.enderio.enderio.content.filters.soul.EnderSoulFilterItem;
-import com.enderio.enderio.content.fun.EnderiosConsumeEffect;
 import com.enderio.enderio.content.fun.EnderiosItem;
 import com.enderio.enderio.content.tools.ElectromagnetItem;
 import com.enderio.enderio.content.tools.LevitationStaffItem;
@@ -32,14 +31,11 @@ import com.enderio.enderio.foundation.item.CreativeTabIconItem;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.food.FoodProperties;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.component.Consumable;
-import net.minecraft.world.item.component.Consumables;
 import net.minecraft.world.item.component.ItemLore;
-import net.minecraft.world.item.consume_effects.TeleportRandomlyConsumeEffect;
+import net.minecraft.world.item.equipment.trim.TrimMaterial;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -52,14 +48,14 @@ public class EIOItems {
 
     // region Alloys
 
-    public static final DeferredItem<Item> CONDUCTIVE_ALLOY_INGOT = basic("conductive_alloy_ingot");
-    public static final DeferredItem<Item> ENERGETIC_ALLOY_INGOT = basic("energetic_alloy_ingot");
-    public static final DeferredItem<Item> VIBRANT_ALLOY_INGOT = basic("vibrant_alloy_ingot");
-    public static final DeferredItem<Item> REDSTONE_ALLOY_INGOT = basic("redstone_alloy_ingot");
-    public static final DeferredItem<Item> PULSATING_ALLOY_INGOT = basic("pulsating_alloy_ingot");
-    public static final DeferredItem<Item> DARK_STEEL_INGOT = basic("dark_steel_ingot");
-    public static final DeferredItem<Item> SOULARIUM_INGOT = basic("soularium_ingot");
-    public static final DeferredItem<Item> END_STEEL_INGOT = basic("end_steel_ingot");
+    public static final DeferredItem<Item> CONDUCTIVE_ALLOY_INGOT = basicWithTrimMaterial("conductive_alloy_ingot", EIOTrimMaterials.CONDUCTIVE_ALLOY);
+    public static final DeferredItem<Item> ENERGETIC_ALLOY_INGOT = basicWithTrimMaterial("energetic_alloy_ingot", EIOTrimMaterials.ENERGETIC_ALLOY);
+    public static final DeferredItem<Item> VIBRANT_ALLOY_INGOT = basicWithTrimMaterial("vibrant_alloy_ingot", EIOTrimMaterials.VIBRANT_ALLOY);
+    public static final DeferredItem<Item> REDSTONE_ALLOY_INGOT = basicWithTrimMaterial("redstone_alloy_ingot", EIOTrimMaterials.REDSTONE_ALLOY);
+    public static final DeferredItem<Item> PULSATING_ALLOY_INGOT = basicWithTrimMaterial("pulsating_alloy_ingot", EIOTrimMaterials.PULSATING_ALLOY);
+    public static final DeferredItem<Item> DARK_STEEL_INGOT = basicWithTrimMaterial("dark_steel_ingot", EIOTrimMaterials.DARK_STEEL);
+    public static final DeferredItem<Item> SOULARIUM_INGOT = basicWithTrimMaterial("soularium_ingot", EIOTrimMaterials.SOULARIUM);
+    public static final DeferredItem<Item> END_STEEL_INGOT = basicWithTrimMaterial("end_steel_ingot", EIOTrimMaterials.END_STEEL);
 
     public static final DeferredItem<Item> CONDUCTIVE_ALLOY_NUGGET = basic("conductive_alloy_nugget");
     public static final DeferredItem<Item> ENERGETIC_ALLOY_NUGGET = basic("energetic_alloy_nugget");
@@ -291,6 +287,10 @@ public class EIOItems {
 
     private static DeferredItem<Item> basic(String name) {
         return ITEMS.registerItem(name, Item::new);
+    }
+
+    private static DeferredItem<Item> basicWithTrimMaterial(String name, ResourceKey<TrimMaterial> material) {
+        return ITEMS.registerItem(name, Item::new, p -> p.trimMaterial(material));
     }
 
     private static DeferredItem<Item> basicGlinted(String name) {
