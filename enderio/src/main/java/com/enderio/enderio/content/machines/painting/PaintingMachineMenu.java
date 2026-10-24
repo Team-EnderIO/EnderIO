@@ -6,7 +6,13 @@ import com.enderio.enderio.foundation.menu.PoweredMachineMenu;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOMenus;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.StackedItemContents;
+import net.minecraft.world.inventory.RecipeBookType;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import org.jspecify.annotations.Nullable;
 
 public class PaintingMachineMenu extends PoweredMachineMenu<PaintingMachineBlockEntity> {
 
@@ -39,5 +45,31 @@ public class PaintingMachineMenu extends PoweredMachineMenu<PaintingMachineBlock
 
     public float getCraftingProgress() {
         return craftingProgressSlot.get();
+    }
+
+    @Override
+    public RecipeBookType getRecipeBookType() {
+        return RecipeBookType.valueOf("ENDERIO_PAINTING");
+    }
+
+    @Override
+    public void fillCraftSlotsStackedContents(StackedItemContents stackedContents) {
+        stackedContents.accountSimpleStack(getSlot(1).getItem());
+        stackedContents.accountSimpleStack(getSlot(2).getItem());
+    }
+
+    @Override
+    public PostPlaceAction handlePlacement(boolean useMaxItems, boolean allowDroppingItemsToClear, RecipeHolder<?> recipe, ServerLevel level,
+        Inventory inventory) {
+        return handlePlacement(false, allowDroppingItemsToClear, recipe, level, inventory, 1, 3);
+    }
+
+    @Nullable
+    protected Recipe<?> getRecipe() {
+        var currentTask = this.getBlockEntity().craftingTaskHost.getCurrentTask();
+        if (currentTask == null) {
+            return null;
+        }
+        return currentTask.getRecipe();
     }
 }

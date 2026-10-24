@@ -44,7 +44,7 @@ public class FluidStackStaticWidget extends EIOWidget {
 
             int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
             int atlasHeight = (int) (sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
-            graphics.blit(RenderPipelines.GUI_TEXTURED, TextureAtlas.LOCATION_BLOCKS, x, y, sprite.getU0() * atlasWidth, sprite.getV0() * atlasHeight, width,
+            graphics.blit(RenderPipelines.GUI_TEXTURED, TextureAtlas.LOCATION_BLOCKS, this.getX(), this.getY(), sprite.getU0() * atlasWidth, sprite.getV0() * atlasHeight, width,
                 height, sprite.contents().width(), sprite.contents().height(), atlasWidth, atlasHeight, color);
 
             renderToolTip(graphics, mouseX, mouseY);

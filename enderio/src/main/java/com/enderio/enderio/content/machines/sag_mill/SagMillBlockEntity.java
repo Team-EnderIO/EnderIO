@@ -61,7 +61,7 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
     private GrindingBallData grindingBallData = GrindingBallData.IDENTITY;
     private int grindingBallDamage;
 
-    private final CraftingMachineTaskHost<SagMillingRecipe, SagMillingRecipe.Input> craftingTaskHost;
+    protected final CraftingMachineTaskHost<SagMillingRecipe, SagMillingRecipe.Input> craftingTaskHost;
 
     public SagMillBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.SAG_MILL.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, CAPACITOR,

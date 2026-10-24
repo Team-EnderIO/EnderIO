@@ -7,8 +7,10 @@ import com.enderio.enderio.client.content.machines.gui.widget.CapacitorEnergyWid
 import com.enderio.enderio.client.foundation.widgets.NewProgressWidget;
 import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget;
 import com.enderio.enderio.content.machines.painting.PaintingMachineMenu;
+import com.enderio.enderio.content.machines.painting.PaintingRecipeBookComponent;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.navigation.ScreenPosition;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -23,7 +25,7 @@ public class PaintingMachineScreen extends MachineScreen<PaintingMachineMenu> {
     private static final Identifier PROGRESS_SPRITE = EnderIO.id("screen/painting_machine/progress");
 
     public PaintingMachineScreen(PaintingMachineMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title, WIDTH, HEIGHT);
+        super(menu, new PaintingRecipeBookComponent(menu), playerInventory, title, WIDTH, HEIGHT);
         this.inventoryLabelY = HEIGHT - 106;
     }
 
@@ -51,4 +53,8 @@ public class PaintingMachineScreen extends MachineScreen<PaintingMachineMenu> {
         graphics.blit(RenderPipelines.GUI_TEXTURED, PAINTING_MACHINE_BG, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
+    @Override
+    protected ScreenPosition getRecipeBookButtonPosition() {
+        return new ScreenPosition(this.leftPos + 24, this.height / 2 - 49);
+    }
 }

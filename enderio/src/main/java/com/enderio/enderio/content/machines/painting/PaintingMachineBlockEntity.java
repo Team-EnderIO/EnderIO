@@ -56,7 +56,7 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
 
     private final AABB area;
 
-    private final CraftingMachineTaskHost<PaintingRecipe, PaintingRecipe.Input> craftingTaskHost;
+    protected final CraftingMachineTaskHost<PaintingRecipe, PaintingRecipe.Input> craftingTaskHost;
 
     public PaintingMachineBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.PAINTING_MACHINE.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, CAPACITOR,

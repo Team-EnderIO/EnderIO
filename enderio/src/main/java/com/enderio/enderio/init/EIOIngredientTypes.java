@@ -5,6 +5,7 @@ import com.enderio.enderio.api.conduits.ConduitIngredient;
 import com.enderio.enderio.api.soul.binding.ingredients.AnySoulBindableIngredient;
 import com.enderio.enderio.api.soul.binding.ingredients.EmptySoulBindableIngredient;
 import com.enderio.enderio.api.soul.binding.ingredients.FilledSoulStorageIngredient;
+import com.enderio.enderio.foundation.recipe.PaintIngredient;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.crafting.IngredientType;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -19,6 +20,7 @@ public class EIOIngredientTypes {
         INGREDIENT_TYPES.register("filled_soul_storage", () -> FilledSoulStorageIngredient.TYPE);
         INGREDIENT_TYPES.register("any_soul_storage", () -> AnySoulBindableIngredient.TYPE);
         INGREDIENT_TYPES.register("conduit", () -> ConduitIngredient.TYPE);
+        INGREDIENT_TYPES.register("paint", () -> PaintIngredient.TYPE);
 
         INGREDIENT_TYPES.register(bus);
     }

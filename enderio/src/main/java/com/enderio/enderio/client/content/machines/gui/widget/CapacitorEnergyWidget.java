@@ -62,9 +62,9 @@ public class CapacitorEnergyWidget extends EnergyWidget {
         long tick = level.getGameTime() % 90;
 
         int heightModifier = (int) Math.round(Math.sin(level.getGameTime() * 0.05) * 12);
-        graphics.fakeItem(CAPACITOR, x - 4, y + height/2 - 8 + heightModifier);
+        graphics.fakeItem(CAPACITOR, this.getX() - 4, this.getY() + height/2 - 8 + heightModifier);
 
         //noinspection IntegerDivisionInFloatingPointContext
-        graphics.blit(RenderPipelines.GUI_TEXTURED, WIDGETS, x, y + height/2 + 6, 160 + tick / 10 * 9, 128, width, height, 256, 256);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, WIDGETS, this.getX(), this.getY() + height/2 + 6, 160 + tick / 10 * 9, 128, width, height, 256, 256);
     }
 }

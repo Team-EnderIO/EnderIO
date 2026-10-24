@@ -88,15 +88,15 @@ public class AlloySmelterMenu extends PoweredMachineMenu<AlloySmelterBlockEntity
 
     @Override
     public void fillCraftSlotsStackedContents(StackedItemContents stackedContents) {
-        stackedContents.accountSimpleStack(getSlot(1).getItem());
-        stackedContents.accountSimpleStack(getSlot(2).getItem());
-        stackedContents.accountSimpleStack(getSlot(3).getItem());
+        for (int i = INPUTS_INDEX; i < INPUTS_INDEX + INPUT_COUNT; i++) {
+            stackedContents.accountSimpleStack(getSlot(i).getItem());
+        }
     }
 
     @Override
     public PostPlaceAction handlePlacement(boolean useMaxItems, boolean allowDroppingItemsToClear, RecipeHolder<?> recipe, ServerLevel level,
         Inventory inventory) {
-        return handlePlacement(useMaxItems, allowDroppingItemsToClear, recipe, level, inventory, INPUTS_INDEX, LAST_INDEX);
+        return handlePlacement(useMaxItems, allowDroppingItemsToClear, recipe, level, inventory, INPUTS_INDEX, INPUTS_INDEX + INPUT_COUNT);
     }
 
     @Nullable

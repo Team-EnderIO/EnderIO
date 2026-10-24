@@ -7,7 +7,13 @@ import com.enderio.enderio.foundation.menu.PoweredMachineMenu;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOMenus;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.StackedItemContents;
+import net.minecraft.world.inventory.RecipeBookType;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import org.jspecify.annotations.Nullable;
 
 public class SagMillMenu extends PoweredMachineMenu<SagMillBlockEntity> {
     public static final int INPUTS_INDEX = 1;
@@ -61,5 +67,32 @@ public class SagMillMenu extends PoweredMachineMenu<SagMillBlockEntity> {
 
     public GrindingBallData getGrindingBallData() {
         return grindingBallDataSlot.get();
+    }
+
+    @Override
+    public RecipeBookType getRecipeBookType() {
+        return RecipeBookType.valueOf("ENDERIO_SAG_MILLING");
+    }
+
+    @Override
+    public void fillCraftSlotsStackedContents(StackedItemContents stackedContents) {
+        for (int i = INPUTS_INDEX; i < INPUTS_INDEX + INPUT_COUNT; i++) {
+            stackedContents.accountSimpleStack(getSlot(i).getItem());
+        }
+    }
+
+    @Override
+    public PostPlaceAction handlePlacement(boolean useMaxItems, boolean allowDroppingItemsToClear, RecipeHolder<?> recipe, ServerLevel level,
+        Inventory inventory) {
+        return handlePlacement(useMaxItems, allowDroppingItemsToClear, recipe, level, inventory, INPUTS_INDEX, INPUTS_INDEX + INPUT_COUNT);
+    }
+
+    @Nullable
+    protected Recipe<?> getRecipe() {
+        var currentTask = this.getBlockEntity().craftingTaskHost.getCurrentTask();
+        if (currentTask == null) {
+            return null;
+        }
+        return currentTask.getRecipe();
     }
 }

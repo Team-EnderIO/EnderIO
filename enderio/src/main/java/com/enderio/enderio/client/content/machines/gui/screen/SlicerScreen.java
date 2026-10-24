@@ -7,8 +7,10 @@ import com.enderio.enderio.client.content.machines.gui.widget.NewCapacitorEnergy
 import com.enderio.enderio.client.foundation.widgets.NewProgressWidget;
 import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget;
 import com.enderio.enderio.content.machines.slicer.SlicerMenu;
+import com.enderio.enderio.content.machines.slicer.SlicerRecipeBookComponent;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.navigation.ScreenPosition;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -22,7 +24,7 @@ public class SlicerScreen extends MachineScreen<SlicerMenu> {
     private static final Identifier PROGRESS_SPRITE = EnderIO.id("screen/slice_and_splice/progress");
 
     public SlicerScreen(SlicerMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title, WIDTH, HEIGHT);
+        super(menu, new SlicerRecipeBookComponent(menu), playerInventory, title, WIDTH, HEIGHT);
         shouldRenderLabels = true;
 
         titleLabelY = 6 + 2;
@@ -55,4 +57,8 @@ public class SlicerScreen extends MachineScreen<SlicerMenu> {
         graphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
     }
 
+    @Override
+    protected ScreenPosition getRecipeBookButtonPosition() {
+        return new ScreenPosition(this.leftPos + 24, this.height / 2 - 49);
+    }
 }

@@ -8,8 +8,10 @@ import com.enderio.enderio.client.foundation.widgets.ExperienceCraftingWidget;
 import com.enderio.enderio.client.foundation.widgets.ProgressWidget;
 import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget;
 import com.enderio.enderio.content.machines.soul_binder.SoulBinderMenu;
+import com.enderio.enderio.content.machines.soul_binder.SoulBindingRecipeBookComponent;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.navigation.ScreenPosition;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -22,7 +24,7 @@ public class SoulBinderScreen extends MachineScreen<SoulBinderMenu> {
     private static final int HEIGHT = 166;
 
     public SoulBinderScreen(SoulBinderMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title, WIDTH, HEIGHT);
+        super(menu, new SoulBindingRecipeBookComponent(menu), playerInventory, title, WIDTH, HEIGHT);
     }
 
     @Override
@@ -51,5 +53,10 @@ public class SoulBinderScreen extends MachineScreen<SoulBinderMenu> {
     public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         super.extractBackground(graphics, mouseX, mouseY, a);
         graphics.blit(RenderPipelines.GUI_TEXTURED, BG_TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
+    }
+
+    @Override
+    protected ScreenPosition getRecipeBookButtonPosition() {
+        return new ScreenPosition(this.leftPos + 24, this.height / 2 - 49);
     }
 }

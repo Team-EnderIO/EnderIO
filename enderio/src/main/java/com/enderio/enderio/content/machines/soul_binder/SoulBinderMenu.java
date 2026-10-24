@@ -8,7 +8,13 @@ import com.enderio.enderio.foundation.menu.PoweredMachineMenu;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOMenus;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.StackedItemContents;
+import net.minecraft.world.inventory.RecipeBookType;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import org.jspecify.annotations.Nullable;
 
 public class SoulBinderMenu extends PoweredMachineMenu<SoulBinderBlockEntity> {
     public static final int INPUTS_INDEX = 1;
@@ -59,5 +65,36 @@ public class SoulBinderMenu extends PoweredMachineMenu<SoulBinderBlockEntity> {
         // TODO: This should be done in the menu probably?
         // We can sync the recipe info over a sync slot if we must.
         return getBlockEntity().getClientExp();
+    }
+
+    @Override
+    public RecipeBookType getRecipeBookType() {
+        return RecipeBookType.valueOf("ENDERIO_SOUL_BINDING");
+    }
+
+    @Override
+    public void fillCraftSlotsStackedContents(StackedItemContents stackedContents) {
+        for (int i = INPUTS_INDEX; i < INPUTS_INDEX + INPUT_COUNT; i++) {
+            stackedContents.accountSimpleStack(getSlot(i).getItem());
+        }
+    }
+
+    @Override
+    public PostPlaceAction handlePlacement(boolean useMaxItems, boolean allowDroppingItemsToClear, RecipeHolder<?> recipe, ServerLevel level,
+        Inventory inventory) {
+        return handlePlacement(false, allowDroppingItemsToClear, recipe, level, inventory, INPUTS_INDEX, INPUTS_INDEX + INPUT_COUNT);
+    }
+
+    protected boolean canCraft(RecipeHolder<?> recipe, StackedItemContents availableItems) {
+        return super.canCraft(recipe, availableItems); //TODO && ((SoulBindingRecipe) recipe.value()).experience() >= getExperience();
+    }
+
+    @Nullable
+    protected Recipe<?> getRecipe() {
+        var currentTask = this.getBlockEntity().craftingTaskHost.getCurrentTask();
+        if (currentTask == null) {
+            return null;
+        }
+        return currentTask.getRecipe();
     }
 }

@@ -232,7 +232,7 @@ public abstract class BaseEnderMenu extends RecipeBookMenu {
         inventory.fillStackedContents(availableItems);
         this.fillCraftSlotsStackedContents(availableItems);
 
-        if (availableItems.canCraft(recipe.value(), null)) {
+        if (canCraft(recipe, availableItems)) {
             this.placeRecipe(recipe, availableItems, inventory, start, stop, useMaxItems);
             inventory.setChanged();
             return PostPlaceAction.NOTHING;
@@ -241,6 +241,10 @@ public abstract class BaseEnderMenu extends RecipeBookMenu {
             inventory.setChanged();
             return PostPlaceAction.PLACE_GHOST_RECIPE;
         }
+    }
+
+    protected boolean canCraft(RecipeHolder<?> recipe, StackedItemContents availableItems) {
+        return availableItems.canCraft(recipe.value(), null);
     }
 
     protected void placeRecipe(RecipeHolder<?> recipe, StackedItemContents availableItems, Inventory inventory, int start, int stop, boolean useMaxItems) {

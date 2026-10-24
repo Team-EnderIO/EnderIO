@@ -32,21 +32,21 @@ public class ExperienceWidget extends EIOWidget {
         int fill = (int) ((((float) expLevel.experience()) / ExperienceUtil.getXpNeededForNextLevel(expLevel.level()))
                 * this.width) - 1;
 
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, EXPERIENCE_BAR_BACKGROUND_SPRITE, this.x, this.y, this.width, this.height);
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, EXPERIENCE_BAR_PROGRESS_SPRITE, 182, 5, 0, 0, this.x, this.y, fill, 5);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, EXPERIENCE_BAR_BACKGROUND_SPRITE, this.getX(), this.getY(), this.width, this.height);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, EXPERIENCE_BAR_PROGRESS_SPRITE, 182, 5, 0, 0, this.getX(), this.getY(), fill, 5);
 
         var font = Minecraft.getInstance().font;
         String text = "" + expLevel.level();
         int xOffset = font.width(text) / 2;
-        graphics.text(font, text, (int) ((this.x + this.width / 2f + 1) - xOffset), this.y - this.height - 3,
+        graphics.text(font, text, (int) ((this.getX() + this.width / 2f + 1) - xOffset), this.getY() - this.height - 3,
             CommonColors.BLACK, false);
-        graphics.text(font, text, (int) ((this.x + this.width / 2f - 1) - xOffset), this.y - this.height - 3,
+        graphics.text(font, text, (int) ((this.getX() + this.width / 2f - 1) - xOffset), this.getY() - this.height - 3,
             CommonColors.BLACK, false);
-        graphics.text(font, text, (int) (this.x + this.width / 2f - xOffset), (this.y - this.height - 3 + 1),
+        graphics.text(font, text, (int) (this.getX() + this.width / 2f - xOffset), (this.getY() - this.height - 3 + 1),
             CommonColors.BLACK, false);
-        graphics.text(font, text, (int) (this.x + this.width / 2f - xOffset), (this.y - this.height - 3 - 1),
+        graphics.text(font, text, (int) (this.getX() + this.width / 2f - xOffset), (this.getY() - this.height - 3 - 1),
             CommonColors.BLACK, false);
-        graphics.text(font, text, (int) (this.x + this.width / 2f - xOffset), this.y - this.height - 3,
+        graphics.text(font, text, (int) (this.getX() + this.width / 2f - xOffset), this.getY() - this.height - 3,
             0xFF80FF20, false);
     }
 

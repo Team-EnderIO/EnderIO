@@ -54,7 +54,7 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
     public static final SingleResourceSlotKey<ItemResource> SHEARS = new SingleResourceSlotKey<>();
     public static final SingleResourceSlotKey<ItemResource> CAPACITOR = new SingleResourceSlotKey<>();
 
-    private final CraftingMachineTaskHost<SlicingRecipe, SlicingRecipe.Input> craftingTaskHost;
+    protected final CraftingMachineTaskHost<SlicingRecipe, SlicingRecipe.Input> craftingTaskHost;
 
     public SlicerBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.SLICE_AND_SPLICE.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, CAPACITOR,

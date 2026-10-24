@@ -92,7 +92,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
     @Nullable
     private RecipeHolder<SoulBindingRecipe> clientRecipe;
 
-    private final CraftingMachineTaskHost<SoulBindingRecipe, SoulBindingRecipe.Input> craftingTaskHost;
+    protected final CraftingMachineTaskHost<SoulBindingRecipe, SoulBindingRecipe.Input> craftingTaskHost;
 
     public SoulBinderBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.SOUL_BINDER.get(), worldPosition, blockState, true, CapacitorSupport.REQUIRED, CAPACITOR,

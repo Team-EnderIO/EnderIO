@@ -1,6 +1,7 @@
 package com.enderio.enderio.content.machines.alloy;
 
 import com.enderio.core.common.recipes.EOIRecipeGhostSlots;
+import com.enderio.enderio.content.machines.sag_mill.SagMillMenu;
 import com.enderio.enderio.init.EIOItems;
 import com.enderio.enderio.init.EIORecipeBookCategories;
 import net.minecraft.client.gui.components.WidgetSprites;
@@ -51,8 +52,8 @@ public class AlloyRecipeBookComponent extends RecipeBookComponent<AlloySmelterMe
 
     @Override
     protected boolean isCraftingSlot(Slot slot) {
-        return slot == this.menu.getSlot(1) || slot == this.menu.getSlot(2) || slot == this.menu.getSlot(3)
-            || slot == this.menu.getSlot(4);
+        int index = slot.index;
+        return index >= AlloySmelterMenu.INPUTS_INDEX && index < (AlloySmelterMenu.INPUTS_INDEX + AlloySmelterMenu.INPUTS_INDEX);
     }
 
     @Override
@@ -70,14 +71,14 @@ public class AlloyRecipeBookComponent extends RecipeBookComponent<AlloySmelterMe
     protected void fillGhostRecipe(GhostSlots ghostSlots, RecipeDisplay recipeDisplay, ContextMap contextMap) {
         if (recipeDisplay instanceof AlloySmeltingRecipe.AlloySmelterDisplay alloying) {
             for (int i = 0; i < alloying.ingredients().size(); i++) {
-                ghostSlots.setInput(this.menu.getSlot(i+1), contextMap, alloying.ingredients().get(i));
+                ghostSlots.setInput(this.menu.getSlot(i + AlloySmelterMenu.INPUTS_INDEX), contextMap, alloying.ingredients().get(i));
             }
-            ghostSlots.setResult(this.menu.getSlot(4), contextMap, alloying.result());
+            ghostSlots.setResult(this.menu.getSlot(AlloySmelterMenu.LAST_INDEX), contextMap, alloying.result());
         }
 
         if (recipeDisplay instanceof FurnaceRecipeDisplay furnace) {
-            ghostSlots.setInput(this.menu.getSlot(1), contextMap, furnace.ingredient());
-            ghostSlots.setResult(this.menu.getSlot(4), contextMap, furnace.result());
+            ghostSlots.setInput(this.menu.getSlot(AlloySmelterMenu.INPUTS_INDEX), contextMap, furnace.ingredient());
+            ghostSlots.setResult(this.menu.getSlot(AlloySmelterMenu.LAST_INDEX), contextMap, furnace.result());
         }
     }
 }

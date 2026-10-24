@@ -211,6 +211,11 @@ public final class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.In
         return placementInfo;
     }
 
+    @Override
+    public boolean isSpecial() {
+        return false;
+    }
+
     public enum BonusType implements StringRepresentable {
         NONE(0, false, false), MULTIPLY_OUTPUT(1, true, true), CHANCE_ONLY(2, false, true);
 

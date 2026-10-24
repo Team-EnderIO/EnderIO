@@ -11,11 +11,13 @@ import com.enderio.enderio.client.foundation.widgets.NewProgressWidget;
 import com.enderio.enderio.client.foundation.widgets.RedstoneControlPickerWidget;
 import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.content.machines.sag_mill.SagMillMenu;
+import com.enderio.enderio.content.machines.sag_mill.SagMillingRecipeBookComponent;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.navigation.ScreenPosition;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
@@ -35,7 +37,7 @@ public class SagMillScreen extends MachineScreen<SagMillMenu> {
     private static final Identifier BALL_DURABILITY_SPRITE = EnderIOAPI.rl("screen/sag_mill/grinding_ball_durability");
 
     public SagMillScreen(SagMillMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title, WIDTH, HEIGHT);
+        super(menu, new SagMillingRecipeBookComponent(menu), playerInventory, title, WIDTH, HEIGHT);
         shouldRenderLabels = true;
 
         titleLabelY = 6 + 2;
@@ -129,5 +131,10 @@ public class SagMillScreen extends MachineScreen<SagMillMenu> {
                 setTooltip(Tooltip.create(tooltip));
             }
         }
+    }
+
+    @Override
+    protected ScreenPosition getRecipeBookButtonPosition() {
+        return new ScreenPosition(this.leftPos + 24, this.height / 2 - 49);
     }
 }

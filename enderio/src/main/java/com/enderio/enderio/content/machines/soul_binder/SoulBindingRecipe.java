@@ -5,6 +5,7 @@ import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.soul.ingredient.SoulIngredient;
 import com.enderio.enderio.foundation.MachineRecipe;
 import com.enderio.enderio.foundation.recipe.FluidRecipeInput;
+import com.enderio.enderio.foundation.recipe.SoulIngredientSlotDisplay;
 import com.enderio.enderio.foundation.util.ExperienceUtil;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOItems;
@@ -134,7 +135,7 @@ public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.
 
     @Override
     public List<RecipeDisplay> display() {
-        return List.of(new SoulBindingDisplay(input.display(), new SlotDisplay.ItemStackSlotDisplay(output),
+        return List.of(new SoulBindingDisplay(new SoulIngredientSlotDisplay(inputSoul), input.display(), new SlotDisplay.ItemStackSlotDisplay(output),
             new SlotDisplay.ItemSlotDisplay(EIOBlocks.SOUL_BINDER.asItem())));
     }
 
@@ -189,6 +190,11 @@ public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.
         return placementInfo;
     }
 
+    @Override
+    public boolean isSpecial() {
+        return false;
+    }
+
     public record Input(ItemStack boundSoulItem, ItemStack itemToBind, FluidStack experience) implements FluidRecipeInput {
         @Override
         public ItemStack getItem(int slotIndex) {
@@ -215,15 +221,24 @@ public final class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.
         }
     }
 
-    public record SoulBindingDisplay(SlotDisplay ingredient, SlotDisplay result, SlotDisplay craftingStation) implements RecipeDisplay {
+    public record SoulBindingDisplay(SlotDisplay soul, SlotDisplay ingredient, SlotDisplay result, SlotDisplay craftingStation) implements RecipeDisplay {
 
         public static final MapCodec<SoulBindingDisplay> MAP_CODEC = RecordCodecBuilder.mapCodec(p_379634_ -> p_379634_
-            .group(SlotDisplay.CODEC.fieldOf("ingredients").forGetter(SoulBindingDisplay::ingredient),
+            .group(SlotDisplay.CODEC.fieldOf("soul").forGetter(SoulBindingDisplay::soul),
+                SlotDisplay.CODEC.fieldOf("ingredients").forGetter(SoulBindingDisplay::ingredient),
                 SlotDisplay.CODEC.fieldOf("result").forGetter(SoulBindingDisplay::result),
                 SlotDisplay.CODEC.fieldOf("crafting_station").forGetter(SoulBindingDisplay::craftingStation))
             .apply(p_379634_, SoulBindingDisplay::new));
-        public static final StreamCodec<RegistryFriendlyByteBuf, SoulBindingDisplay> STREAM_CODEC = StreamCodec.composite(SlotDisplay.STREAM_CODEC,
-            SoulBindingDisplay::ingredient, SlotDisplay.STREAM_CODEC, SoulBindingDisplay::result, SlotDisplay.STREAM_CODEC, SoulBindingDisplay::craftingStation,
+
+        public static final StreamCodec<RegistryFriendlyByteBuf, SoulBindingDisplay> STREAM_CODEC = StreamCodec.composite(
+            SlotDisplay.STREAM_CODEC,
+            SoulBindingDisplay::soul,
+            SlotDisplay.STREAM_CODEC,
+            SoulBindingDisplay::ingredient,
+            SlotDisplay.STREAM_CODEC,
+            SoulBindingDisplay::result,
+            SlotDisplay.STREAM_CODEC,
+            SoulBindingDisplay::craftingStation,
             SoulBindingDisplay::new);
         public static final Type<SoulBindingDisplay> TYPE = new Type<>(MAP_CODEC, STREAM_CODEC);
 

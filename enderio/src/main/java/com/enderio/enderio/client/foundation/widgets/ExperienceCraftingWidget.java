@@ -39,16 +39,16 @@ public class ExperienceCraftingWidget extends EIOWidget {
             }
         }
 
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, EXPERIENCE_BAR_BACKGROUND_SPRITE, this.x, this.y, this.width, this.height);
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, EXPERIENCE_BAR_PROGRESS_SPRITE, 182, 5, 0, 0, this.x, this.y, k, 5);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, EXPERIENCE_BAR_BACKGROUND_SPRITE, this.getX(), this.getY(), this.width, this.height);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, EXPERIENCE_BAR_PROGRESS_SPRITE, 182, 5, 0, 0, this.getX(), this.getY(), k, 5);
 
         var font = Minecraft.getInstance().font;
         String s = "" + maxXP.get();
-        graphics.text(font, s, (int) (this.x + this.width / 2f + 1), this.y - this.height - 3, CommonColors.BLACK, false);
-        graphics.text(font, s, (int) (this.x + this.width / 2f - 1), (int) this.y - this.height - 3, CommonColors.BLACK, false);
-        graphics.text(font, s, (int) (this.x + this.width / 2f), (this.y - this.height - 3 + 1), CommonColors.BLACK, false);
-        graphics.text(font, s, (int) (this.x + this.width / 2f), (this.y - this.height - 3 - 1), CommonColors.BLACK, false);
-        graphics.text(font, s, (int) (this.x + this.width / 2f),  this.y - this.height - 3, 0xFF80FF20, false);
+        graphics.text(font, s, (int) (this.getX() + this.width / 2f + 1), this.getY() - this.height - 3, CommonColors.BLACK, false);
+        graphics.text(font, s, (int) (this.getX() + this.width / 2f - 1), this.getY() - this.height - 3, CommonColors.BLACK, false);
+        graphics.text(font, s, (int) (this.getX() + this.width / 2f), (this.getY() - this.height - 3 + 1), CommonColors.BLACK, false);
+        graphics.text(font, s, (int) (this.getX() + this.width / 2f), (this.getY() - this.height - 3 - 1), CommonColors.BLACK, false);
+        graphics.text(font, s, (int) (this.getX() + this.width / 2f),  this.getY() - this.height - 3, 0xFF80FF20, false);
 
         if (isHovered(mouseX, mouseY)) {
             Minecraft minecraft = Minecraft.getInstance();

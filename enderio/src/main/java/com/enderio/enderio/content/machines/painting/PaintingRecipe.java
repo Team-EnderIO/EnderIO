@@ -3,7 +3,10 @@ package com.enderio.enderio.content.machines.painting;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.content.paint.BlockPaintData;
+import com.enderio.enderio.content.paint.block.PaintedBlock;
+import com.enderio.enderio.content.paint.item.PaintedBlockItem;
 import com.enderio.enderio.foundation.MachineRecipe;
+import com.enderio.enderio.foundation.recipe.PaintIngredient;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIORecipeBookCategories;
@@ -11,6 +14,7 @@ import com.enderio.enderio.init.EIORecipeTypes;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.flag.FeatureFlagSet;
@@ -27,6 +31,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.display.RecipeDisplay;
 import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -100,7 +105,17 @@ public final class PaintingRecipe implements MachineRecipe<PaintingRecipe.Input>
 
     @Override
     public List<RecipeDisplay> display() {
-        return List.of(new PaintingDisplay(input.display(), new SlotDisplay.ItemStackSlotDisplay(output),
+        var blocks = PaintIngredient.of().items().filter(s -> PaintIngredient.of().test(new ItemStack(s))).map(s ->
+            ((BlockItem) s.value()).getBlock()).toList();
+
+        List<SlotDisplay> results = new ArrayList<>();
+        for (Block block : blocks) {
+            results.add(new SlotDisplay.ItemStackSlotDisplay(
+                new ItemStackTemplate(output.item(),
+                    DataComponentPatch.builder().set(EIODataComponents.BLOCK_PAINT, BlockPaintData.of(block)).build())));
+        }
+
+        return List.of(new PaintingDisplay(input.display(), new SlotDisplay.Composite(results),
             new SlotDisplay.ItemSlotDisplay(EIOBlocks.PAINTING_MACHINE.asItem())));
     }
 
@@ -122,10 +137,15 @@ public final class PaintingRecipe implements MachineRecipe<PaintingRecipe.Input>
     @Override
     public PlacementInfo placementInfo() {
         if (placementInfo == null) {
-            placementInfo = PlacementInfo.create(input);
+            placementInfo = PlacementInfo.create(List.of(input, PaintIngredient.of()));
         }
 
         return placementInfo;
+    }
+
+    @Override
+    public boolean isSpecial() {
+        return false;
     }
 
     public record Input(ItemStack template, ItemStack paint) implements RecipeInput {

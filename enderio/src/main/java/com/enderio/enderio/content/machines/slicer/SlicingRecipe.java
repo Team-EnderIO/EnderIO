@@ -122,6 +122,11 @@ public final class SlicingRecipe implements MachineRecipe<SlicingRecipe.Input> {
         return placementInfo;
     }
 
+    @Override
+    public boolean isSpecial() {
+        return false;
+    }
+
     public record Input(List<ItemStack> inputs) implements RecipeInput {
 
         @Override

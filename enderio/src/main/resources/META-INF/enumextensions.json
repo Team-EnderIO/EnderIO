@@ -1,23 +1,39 @@
 {
     "entries": [
         {
-            // The enum class the entry should be added to
             "enum": "net/minecraft/world/inventory/RecipeBookType",
-            // The field name of the new entry, must be prefixed with the mod ID
             "name": "ENDERIO_ENCHANTING",
-            // The constructor to be used
             "constructor": "()V",
-            // Constant parameters provided directly.
             "parameters": []
         },
         {
-            // The enum class the entry should be added to
             "enum": "net/minecraft/world/inventory/RecipeBookType",
-            // The field name of the new entry, must be prefixed with the mod ID
             "name": "ENDERIO_ALLOY_SMELTING",
-            // The constructor to be used
             "constructor": "()V",
-            // Constant parameters provided directly.
+            "parameters": []
+        },
+        {
+            "enum": "net/minecraft/world/inventory/RecipeBookType",
+            "name": "ENDERIO_SLICING",
+            "constructor": "()V",
+            "parameters": []
+        },
+        {
+            "enum": "net/minecraft/world/inventory/RecipeBookType",
+            "name": "ENDERIO_SAG_MILLING",
+            "constructor": "()V",
+            "parameters": []
+        },
+        {
+            "enum": "net/minecraft/world/inventory/RecipeBookType",
+            "name": "ENDERIO_SOUL_BINDING",
+            "constructor": "()V",
+            "parameters": []
+        },
+        {
+            "enum": "net/minecraft/world/inventory/RecipeBookType",
+            "name": "ENDERIO_PAINTING",
+            "constructor": "()V",
             "parameters": []
         }
     ]
