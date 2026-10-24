@@ -4,7 +4,7 @@
   "key": {
     "B": "enderio:conduit_binder",
     "C": "#c:ingots/conductive_alloy",
-    "G": "#c:glass_blocks/clear"
+    "G": "#c:glass_blocks/clear_glass"
   },
   "pattern": [
     "BBB",

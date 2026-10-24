@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "B": "minecraft:bucket",
-    "C": "#c:glass_blocks/clear",
+    "C": "#c:glass_blocks/clear_glass",
     "G": "#c:gears/iron",
     "I": "#c:ingots/conductive_alloy",
     "V": "enderio:void_chassis"

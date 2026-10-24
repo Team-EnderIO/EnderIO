@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     "enderio:conduit_facade",
-    "#c:glass_blocks/clear"
+    "#c:glass_blocks/clear_glass"
   ],
   "result": {
     "id": "enderio:transparent_conduit_facade"
