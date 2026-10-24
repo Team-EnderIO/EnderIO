@@ -40,6 +40,16 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
         addIngotTags();
         addNuggetTags();
 
+        tag(ItemTags.TRIM_MATERIALS)
+            .add(EIOItems.CONDUCTIVE_ALLOY_INGOT.key())
+            .add(EIOItems.ENERGETIC_ALLOY_INGOT.key())
+            .add(EIOItems.VIBRANT_ALLOY_INGOT.key())
+            .add(EIOItems.REDSTONE_ALLOY_INGOT.key())
+            .add(EIOItems.PULSATING_ALLOY_INGOT.key())
+            .add(EIOItems.DARK_STEEL_INGOT.key())
+            .add(EIOItems.SOULARIUM_INGOT.key())
+            .add(EIOItems.END_STEEL_INGOT.key());
+
         tag(Tags.BlockItems.STORAGE_BLOCKS.item())
             .addTag(EIOTags.BlockItems.STORAGE_BLOCKS_AMETHYST.item())
             .addTag(EIOTags.BlockItems.STORAGE_BLOCKS_QUARTZ.item())

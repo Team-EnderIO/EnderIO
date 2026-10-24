@@ -59,6 +59,7 @@ public class EIOLanguageProvider extends LanguageProvider {
         addGlassLang();
         addMachineLang();
         addItems();
+        addTrimMaterials();
         addBlocks();
         addFluids();
         addAdvancementsLang();
@@ -410,6 +411,17 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(MachinesLang.FARMING_STATION_EXPERIMENT, "Ender IO: Farming Station");
         add(MachinesLang.ENDERFACE_EXPERIMENT, "Ender IO: The Ender IO");
         add(MachinesLang.NIARD_EXPERIMENT, "Ender IO: Niard");
+    }
+
+    private void addTrimMaterials() {
+        add(EIOCommonLang.TRIM_MATERIAL_CONDUCTIVE_ALLOY, "Conductive Alloy Material");
+        add(EIOCommonLang.TRIM_MATERIAL_ENERGETIC_ALLOY, "Energetic Alloy Material");
+        add(EIOCommonLang.TRIM_MATERIAL_VIBRANT_ALLOY, "Vibrant Alloy Material");
+        add(EIOCommonLang.TRIM_MATERIAL_REDSTONE_ALLOY, "Redstone Alloy Material");
+        add(EIOCommonLang.TRIM_MATERIAL_PULSATING_ALLOY, "Pulsating Alloy Material");
+        add(EIOCommonLang.TRIM_MATERIAL_DARK_STEEL, "Dark Steel Material");
+        add(EIOCommonLang.TRIM_MATERIAL_SOULARIUM, "Soularium Material");
+        add(EIOCommonLang.TRIM_MATERIAL_END_STEEL, "End Steel Material");
     }
 
     private void addItems() {

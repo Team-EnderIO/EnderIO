@@ -62,6 +62,19 @@ public class EIOCommonLang {
 
     // endregion
 
+    // region Trim Materials
+
+    public static final Component TRIM_MATERIAL_CONDUCTIVE_ALLOY = trimMaterial("conductive_alloy");
+    public static final Component TRIM_MATERIAL_ENERGETIC_ALLOY = trimMaterial("energetic_alloy");
+    public static final Component TRIM_MATERIAL_VIBRANT_ALLOY = trimMaterial("vibrant_alloy");
+    public static final Component TRIM_MATERIAL_REDSTONE_ALLOY = trimMaterial("redstone_alloy");
+    public static final Component TRIM_MATERIAL_PULSATING_ALLOY = trimMaterial("pulsating_alloy");
+    public static final Component TRIM_MATERIAL_DARK_STEEL = trimMaterial("dark_steel");
+    public static final Component TRIM_MATERIAL_SOULARIUM = trimMaterial("soularium");
+    public static final Component TRIM_MATERIAL_END_STEEL = trimMaterial("end_steel");
+
+    // endregion
+
     // region Resource Packs
 
     public static final Component RESOURCE_PACK_ATHENA = resourcePack("athena");
@@ -90,6 +103,10 @@ public class EIOCommonLang {
 
     private static MutableComponent message(String path) {
         return create("message", path);
+    }
+
+    private static MutableComponent trimMaterial(String path) {
+        return create("trim_material", path);
     }
 
     private static MutableComponent resourcePack(String path) {
