@@ -294,8 +294,8 @@ public class EIOItemModelProvider extends ModelProvider {
     }
 
     private void createFakeBlock(BlockModelGenerators blockModelGenerators, Item item) {
-        Identifier Identifier = ModelTemplates.CUBE_ALL.create(item, TextureMapping.cube(TextureMapping.getItemTexture(item)), blockModelGenerators.modelOutput);
-        blockModelGenerators.registerSimpleItemModel(item, Identifier);
+        Identifier model = ModelTemplates.CUBE_ALL.create(item, TextureMapping.cube(TextureMapping.getItemTexture(item)), blockModelGenerators.modelOutput);
+        blockModelGenerators.registerSimpleItemModel(item, model);
     }
 
     private void createFakeBlock(BlockModelGenerators blockModelGenerators, Item item, Identifier identifier) {
