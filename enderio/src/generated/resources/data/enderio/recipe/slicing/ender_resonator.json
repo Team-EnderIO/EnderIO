@@ -1,6 +1,5 @@
 {
   "type": "enderio:slicing",
-  "energy": 20000,
   "inputs": [
     "#c:ingots/soularium",
     "enderio:enderman_head",
@@ -9,6 +8,7 @@
     "enderio:vibrant_alloy_ingot",
     "#c:silicon"
   ],
+  "operation_time": 667,
   "output": {
     "id": "enderio:ender_resonator"
   }

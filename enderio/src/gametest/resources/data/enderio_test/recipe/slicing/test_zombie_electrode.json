@@ -1,6 +1,6 @@
 {
   "type": "enderio:slicing",
-  "energy": 10,
+  "operation_time": 1,
   "inputs": [
     "#c:ingots/energetic_alloy",
     "minecraft:zombie_head",

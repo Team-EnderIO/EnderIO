@@ -1,6 +1,5 @@
 {
   "type": "enderio:soul_binding",
-  "energy": 288000,
   "experience": 8,
   "input": {
     "neoforge:ingredient_type": "enderio:any_soul_storage",
@@ -9,6 +8,7 @@
   "inputSoul": {
     "type": "enderio:any_entity"
   },
+  "operation_time": 4800,
   "output": {
     "id": "enderio:broken_spawner"
   }

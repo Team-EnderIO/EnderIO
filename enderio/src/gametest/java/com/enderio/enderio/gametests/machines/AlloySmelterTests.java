@@ -55,11 +55,11 @@ public class AlloySmelterTests {
                             new ItemStack(Items.IRON_INGOT, 1),
                             new ItemStack(Items.COAL, 2),
                             new ItemStack(Items.OBSIDIAN, 1)
-                        ), 1);
+                        ));
 
                     // Ensure energy was consumed correctly
                     var recipe = AlloySmeltingRecipeManager.findRecipe(helper.getLevel().recipeAccess().recipeMap(), input, helper.getLevel()).orElseThrow();
-                    int expectedEnergy = energyToAdd - recipe.value().energy();
+                    int expectedEnergy = energyToAdd - Math.round(recipe.value().getOperationTime(input) / 16f) * 320;
                     helper.assertEnergyStored(0, 0, 0, expectedEnergy);
                 })
                 .thenSucceed();
@@ -96,10 +96,10 @@ public class AlloySmelterTests {
                             new ItemStack(Items.RAW_IRON, 3),
                             ItemStack.EMPTY,
                             ItemStack.EMPTY
-                        ), 3);
+                        ));
 
                     var recipe = AlloySmeltingRecipeManager.findRecipe(helper.getLevel().recipeAccess().recipeMap(), input, helper.getLevel()).orElseThrow();
-                    int expectedEnergy = energyToAdd - recipe.value().energy();
+                    int expectedEnergy = energyToAdd - Math.round(recipe.value().getOperationTime(input) / 16f) * 320;
                     helper.assertEnergyStored(0, 0, 0, expectedEnergy);
                 })
                 .thenSucceed();

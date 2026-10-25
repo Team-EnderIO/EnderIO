@@ -25,9 +25,6 @@ public abstract class MachineTaskHost implements ValueIOSerializable {
     private ValueInput pendingTask;
     private boolean hasLoaded;
 
-    @UseOnly(LogicalSide.CLIENT)
-    private float clientTaskProgress;
-
     private final Supplier<Level> levelSupplier;
     private final Supplier<Boolean> canAcceptNewTask;
 
@@ -81,9 +78,9 @@ public abstract class MachineTaskHost implements ValueIOSerializable {
             return 0;
         }
 
-        // Client has no knowledge of task, so we use a synced field.
+        // Client should not call this method.
         if (level.isClientSide()) {
-            return clientTaskProgress;
+            return 0;
         }
 
         if (!hasTask()) {

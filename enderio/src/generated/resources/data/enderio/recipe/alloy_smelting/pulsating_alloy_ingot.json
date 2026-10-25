@@ -1,6 +1,5 @@
 {
   "type": "enderio:alloy_smelting",
-  "energy": 4800,
   "experience": 0.3,
   "inputs": [
     {
@@ -12,6 +11,7 @@
       "ingredient": "#c:ender_pearls"
     }
   ],
+  "operation_time": 240,
   "output": {
     "count": 2,
     "id": "enderio:pulsating_alloy_ingot"

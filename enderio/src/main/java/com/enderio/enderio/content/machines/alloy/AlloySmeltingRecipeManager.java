@@ -86,7 +86,8 @@ public final class AlloySmeltingRecipeManager {
     }
 
     public static AlloySmeltingRecipe createWrapper(SmeltingRecipe recipe) {
-        return new WrappedAlloySmeltingRecipe(recipe, MachinesConfig.COMMON.ENERGY.ALLOY_SMELTER_VANILLA_ITEM_ENERGY.get());
+        return new WrappedAlloySmeltingRecipe(recipe, Math.round(
+            MachinesConfig.COMMON.ENERGY.ALLOY_SMELTER_VANILLA_ITEM_ENERGY.get() / 20f));
     }
 
     @SubscribeEvent

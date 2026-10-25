@@ -1,11 +1,11 @@
 {
   "type": "enderio:soul_binding",
-  "energy": 12800,
   "experience": 8,
   "input": "enderio:energetic_photovoltaic_module",
   "inputSoul": {
     "type": "enderio:has_solar_soul_data"
   },
+  "operation_time": 214,
   "output": {
     "id": "enderio:energetic_photovoltaic_module"
   }
