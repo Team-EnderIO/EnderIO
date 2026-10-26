@@ -1,0 +1,6 @@
+{
+    "parent": "enderio:block/block_detector",
+    "textures": {
+        "back": "enderio:block/block_detector_back_on"
+    }
+}
