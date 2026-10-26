@@ -64,7 +64,6 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
         build1toN("blaze_powder", Tags.Items.RODS_BLAZE, BLAZE_POWDER, 4, recipeOutput);
         build1toN("glass", Tags.Items.GLASS_BLOCKS, SAND, 1, BonusType.NONE, recipeOutput);
         build1toN("bone_block", BONE_BLOCK, BONE_MEAL, 9, BonusType.NONE, recipeOutput);
-        build1toN("soularium", EIOTags.Items.INGOTS_SOULARIUM, SOUL_POWDER.get(), 1, BonusType.NONE, recipeOutput);
 
         build1toN("stone", Tags.Items.STONES, COBBLESTONE, 1, BonusType.NONE, recipeOutput);
         build1toN("deepslate", Items.DEEPSLATE, Items.COBBLED_DEEPSLATE, 1, BonusType.NONE, recipeOutput);
@@ -206,13 +205,6 @@ public class SagMillRecipeProvider extends SubRecipeProvider {
         build("prismarine_shard", Ingredient.of(PRISMARINE_SHARD),
                 List.of(output(PRISMARINE_CRYSTALS), output(PRISMARINE_CRYSTALS, 0.1f)), BASE_ENERGY_PER_OPERATION,
                 BonusType.NONE, recipeOutput);
-
-        build("wither_rose", Ingredient.of(WITHER_ROSE), List.of(output(WITHERING_POWDER.get(), 1, 0.4f)),
-                BASE_ENERGY_PER_OPERATION, recipeOutput);
-
-        build("wither_skull", Ingredient.of(WITHER_SKELETON_SKULL),
-                List.of(output(WITHERING_POWDER.get(), 2), output(WITHERING_POWDER.get(), 1, 0.2f)),
-                BASE_ENERGY_PER_OPERATION, recipeOutput);
     }
 
     private void buildOreBlockRecipes(HolderLookup.RegistryLookup<Item> items, RecipeOutput recipeOutput) {
