@@ -34,6 +34,7 @@ public class MiscBlockRecipeProvider extends SubRecipeProvider {
         addConstructionBlockRecipes(recipeOutput);
         buildChassisRecipes(recipeOutput);
         buildBuildingRecipes(recipeOutput);
+        buildMiscRecipes(recipeOutput);
     }
 
     private void buildChassisRecipes(RecipeOutput recipeOutput) {
@@ -261,5 +262,19 @@ public class MiscBlockRecipeProvider extends SubRecipeProvider {
                     .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Blocks.LEVER))
                     .save(recipeOutput, EnderIO.rl(invertedName + "_from_prev"));
         }
+    }
+
+    private void buildMiscRecipes(RecipeOutput recipeOutput){
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOBlocks.BLOCK_DETECTOR.get())
+            .define('G', EIOTags.Items.DUSTS_GRAINS_OF_INFINITY)
+            .define('S', Tags.Items.STONES)
+            .define('R', Tags.Items.DUSTS_REDSTONE)
+            .pattern("SSS")
+            .pattern("RGR")
+            .pattern("SSS")
+            .unlockedBy("has_ingredient",
+                InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GRAINS_OF_INFINITY.get()))
+            .save(recipeOutput);
     }
 }
