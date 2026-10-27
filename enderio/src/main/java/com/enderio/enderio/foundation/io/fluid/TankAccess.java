@@ -64,6 +64,14 @@ public class TankAccess {
         return getFluid(handler).isEmpty();
     }
 
+    public boolean isFull(FluidTankUser machine) {
+        return isFull(machine.getFluidHandler());
+    }
+
+    public boolean isFull(MachineFluidHandler handler) {
+        return getTank(handler).isFull();
+    }
+
     public boolean canInsert(FluidTankUser machine) {
         return canInsert(machine.getFluidHandler());
     }
