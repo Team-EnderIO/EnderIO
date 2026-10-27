@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=down,powered=false": {
+      "model": "enderio:block/block_detector",
+      "x": 90
+    },
+    "facing=down,powered=true": {
+      "model": "enderio:block/block_detector_on",
+      "x": 90
+    },
+    "facing=east,powered=false": {
+      "model": "enderio:block/block_detector",
+      "y": 90
+    },
+    "facing=east,powered=true": {
+      "model": "enderio:block/block_detector_on",
+      "y": 90
+    },
+    "facing=north,powered=false": {
+      "model": "enderio:block/block_detector"
+    },
+    "facing=north,powered=true": {
+      "model": "enderio:block/block_detector_on"
+    },
+    "facing=south,powered=false": {
+      "model": "enderio:block/block_detector",
+      "y": 180
+    },
+    "facing=south,powered=true": {
+      "model": "enderio:block/block_detector_on",
+      "y": 180
+    },
+    "facing=up,powered=false": {
+      "model": "enderio:block/block_detector",
+      "x": 270
+    },
+    "facing=up,powered=true": {
+      "model": "enderio:block/block_detector_on",
+      "x": 270
+    },
+    "facing=west,powered=false": {
+      "model": "enderio:block/block_detector",
+      "y": 270
+    },
+    "facing=west,powered=true": {
+      "model": "enderio:block/block_detector_on",
+      "y": 270
+    }
+  }
+}
