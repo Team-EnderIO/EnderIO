@@ -16,6 +16,7 @@ import com.enderio.enderio.content.machines.capacitor_bank.CapacitorBankBlockEnt
 import com.enderio.enderio.content.machines.capacitor_bank.CapacitorBankItem;
 import com.enderio.enderio.content.machines.capacitor_bank.CapacitorTier;
 import com.enderio.enderio.content.machines.farming_station.FarmingStationBlock;
+import com.enderio.enderio.content.machines.killer_joe.KillerJoeBlock;
 import com.enderio.enderio.content.machines.niard.NiardBlock;
 import com.enderio.enderio.content.machines.obelisks.attractor.AttractorObeliskBlockEntity;
 import com.enderio.enderio.content.machines.obelisks.aversion.AversionObeliskBlockEntity;
@@ -481,6 +482,11 @@ public class EIOBlocks {
     // VAT
     public static final DeferredBlock<VatBlock> VAT = registerWithItem("vat",
         VatBlock::new,
+        BlockBehaviour.Properties.of().strength(2.5f, 8));
+
+    // Killer Joe
+    public static final DeferredBlock<KillerJoeBlock> KILLER_JOE = registerWithItem("killer_joe",
+        KillerJoeBlock::new,
         BlockBehaviour.Properties.of().strength(2.5f, 8));
 
     // Block Detector
