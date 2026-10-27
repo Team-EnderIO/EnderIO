@@ -8,7 +8,6 @@ import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOItems;
 import net.minecraft.advancements.triggers.InventoryChangeTrigger;
 import net.minecraft.core.HolderGetter;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -38,6 +37,7 @@ public class MiscBlockRecipeProvider extends SubRecipeProvider {
         addConstructionBlockRecipes(items, recipeOutput);
         buildChassisRecipes(items, recipeOutput);
         buildBuildingRecipes(items, recipeOutput);
+        buildMiscRecipes(items, recipeOutput);
     }
 
     private void buildChassisRecipes(HolderGetter<Item> items, RecipeOutput recipeOutput) {
@@ -265,5 +265,19 @@ public class MiscBlockRecipeProvider extends SubRecipeProvider {
                     .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Blocks.LEVER))
                     .save(recipeOutput, EnderIO.id(invertedName + "_from_prev").toString());
         }
+    }
+
+    private void buildMiscRecipes(HolderGetter<Item> items, RecipeOutput recipeOutput){
+
+        ShapedRecipeBuilder.shaped(items, RecipeCategory.MISC, EIOBlocks.BLOCK_DETECTOR.get())
+            .define('G', EIOTags.Items.DUSTS_GRAINS_OF_INFINITY)
+            .define('S', Tags.Items.STONES)
+            .define('R', Tags.Items.DUSTS_REDSTONE)
+            .pattern("SSS")
+            .pattern("RGR")
+            .pattern("SSS")
+            .unlockedBy("has_ingredient",
+                InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GRAINS_OF_INFINITY.get()))
+            .save(recipeOutput);
     }
 }

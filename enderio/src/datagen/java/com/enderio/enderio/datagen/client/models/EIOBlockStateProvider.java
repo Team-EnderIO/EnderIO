@@ -330,7 +330,7 @@ public class EIOBlockStateProvider extends ModelProvider {
         machineBlock(blockModels, EIOBlocks.VAT.get());
 
         // Block Detector
-        blockModels.createNonTemplateModelBlock(EIOBlocks.BLOCK_DETECTOR.get());
+        directionalAndPowered(blockModels, EIOBlocks.BLOCK_DETECTOR.get());
 
         // Obelisks
         blockModels.createNonTemplateModelBlock(EIOBlocks.XP_OBELISK.get());
@@ -425,6 +425,17 @@ public class EIOBlockStateProvider extends ModelProvider {
         builder.with(condition().term(SolarPanelBlock.NORTH_WEST, true), cornerVariant.with(Y_ROT_270));
 
         blockModels.blockStateOutput.accept(builder);
+    }
+
+    public void directionalAndPowered(BlockModelGenerators blockModels, Block block) {
+        MultiVariant off = plainVariant(ModelLocationUtils.getModelLocation(block));
+        MultiVariant on = plainVariant(ModelLocationUtils.getModelLocation(block));
+        blockModels.blockStateOutput
+            .accept(
+                MultiVariantGenerator.dispatch(block)
+                    .with(createBooleanModelDispatch(BlockStateProperties.POWERED, on, off))
+                    .with(ROTATION_FACING)
+            );
     }
 
     private MultiVariant wrapMachineModel(Identifier model) {

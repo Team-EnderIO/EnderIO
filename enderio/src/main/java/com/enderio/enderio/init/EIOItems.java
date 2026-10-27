@@ -159,9 +159,6 @@ public class EIOItems {
     public static final DeferredItem<Item> PULSATING_POWDER = basic("pulsating_powder");
     public static final DeferredItem<Item> ENDER_CRYSTAL_POWDER = basic("ender_crystal_powder");
     public static final DeferredItem<Item> PHOTOVOLTAIC_COMPOSITE = basic("photovoltaic_composite");
-    public static final DeferredItem<Item> SOUL_POWDER = basic("soul_powder");
-    public static final DeferredItem<Item> CONFUSION_POWDER = basic("confusing_powder");
-    public static final DeferredItem<Item> WITHERING_POWDER = basic("withering_powder");
 
     // endregion
 

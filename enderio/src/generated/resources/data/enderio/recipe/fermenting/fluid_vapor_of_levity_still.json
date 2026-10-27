@@ -1,0 +1,14 @@
+{
+  "type": "enderio:vat_fermenting",
+  "first_reagent": "c:dusts/grains_of_pizeallity",
+  "input": {
+    "amount": 1000,
+    "ingredient": "enderio:fluid_dew_of_the_void_still"
+  },
+  "output": {
+    "amount": 1000,
+    "id": "enderio:fluid_vapor_of_levity_still"
+  },
+  "second_reagent": "c:dusts/grains_of_prescience",
+  "ticks": 400
+}
