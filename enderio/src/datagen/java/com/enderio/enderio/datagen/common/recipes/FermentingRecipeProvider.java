@@ -41,6 +41,12 @@ public class FermentingRecipeProvider extends SubRecipeProvider {
         build(new FluidStack(EIOFluids.CLOUD_SEED_CONCENTRATED.source().get(), 500),
                 SizedFluidIngredient.of(EIOFluids.CLOUD_SEED.source().get(), 1000),
             EIOTags.Items.LIGHTNING_ROD, EIOTags.Items.WIND_CHARGES, 600, recipeOutput);
+        build(new FluidStack(EIOFluids.DEW_OF_THE_VOID.source().get(), 1000),
+            SizedFluidIngredient.of(EIOFluids.NUTRIENT_DISTILLATION.source().get(), 4000),
+            EIOTags.Items.DUSTS_GRAINS_OF_PIZEALLITY, EIOTags.Items.DUSTS_GRAINS_OF_THE_END, 400, recipeOutput);
+        build(new FluidStack(EIOFluids.VAPOR_OF_LEVITY.source().get(), 1000),
+            SizedFluidIngredient.of(EIOFluids.DEW_OF_THE_VOID.source().get(), 1000),
+            EIOTags.Items.DUSTS_GRAINS_OF_PIZEALLITY, EIOTags.Items.DUSTS_GRAINS_OF_PRESCIENCE, 400, recipeOutput);
     }
 
     protected void build(FluidStack output, SizedFluidIngredient input, TagKey<Item> firstReagent,
