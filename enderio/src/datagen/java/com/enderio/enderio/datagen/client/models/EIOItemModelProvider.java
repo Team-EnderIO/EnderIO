@@ -147,9 +147,6 @@ public class EIOItemModelProvider extends ModelProvider {
         itemModels.generateFlatItem(EIOItems.PULSATING_POWDER.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(EIOItems.ENDER_CRYSTAL_POWDER.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(EIOItems.PHOTOVOLTAIC_COMPOSITE.get(), ModelTemplates.FLAT_ITEM);
-        itemModels.generateFlatItem(EIOItems.SOUL_POWDER.get(), ModelTemplates.FLAT_ITEM);
-        itemModels.generateFlatItem(EIOItems.CONFUSION_POWDER.get(), ModelTemplates.FLAT_ITEM);
-        itemModels.generateFlatItem(EIOItems.WITHERING_POWDER.get(), ModelTemplates.FLAT_ITEM);
 
         // Misc Materials
         itemModels.generateFlatItem(EIOItems.PHOTOVOLTAIC_PLATE.get(), ModelTemplates.FLAT_ITEM);

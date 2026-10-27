@@ -493,9 +493,6 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOItems.PULSATING_POWDER.get(), "Grains of Piezallity");
         add(EIOItems.ENDER_CRYSTAL_POWDER.get(), "Grains of the End");
         add(EIOItems.PHOTOVOLTAIC_COMPOSITE.get(), "Photovoltaic Composite");
-        add(EIOItems.SOUL_POWDER.get(), "Soul Powder");
-        add(EIOItems.CONFUSION_POWDER.get(), "Confusion Powder");
-        add(EIOItems.WITHERING_POWDER.get(), "Withering Powder");
 
         // Misc Materials
         add(EIOItems.PHOTOVOLTAIC_PLATE.get(), "Photovoltaic Plate");
