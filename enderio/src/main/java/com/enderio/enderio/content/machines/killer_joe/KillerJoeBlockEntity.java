@@ -8,6 +8,9 @@ import com.enderio.core.common.storage.layout.SlotTemplates;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
 import com.enderio.core.common.util.EnderFakePlayer;
 import com.enderio.enderio.config.machines.MachinesConfig;
+import com.enderio.enderio.foundation.MachineNBTKeys;
+import com.enderio.enderio.foundation.attachment.ActionRange;
+import com.enderio.enderio.foundation.attachment.RangedActor;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.state.MachineState;
 import com.enderio.enderio.foundation.storage.SidedResourceHandler;
@@ -15,6 +18,7 @@ import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOFluids;
 import com.mojang.authlib.GameProfile;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentGetter;
@@ -28,6 +32,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.entity.EntityTypeTest;
@@ -46,10 +51,17 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
-public class KillerJoeBlockEntity extends MachineBlockEntity {
+public class KillerJoeBlockEntity extends MachineBlockEntity implements RangedActor {
 
     public static final ICapabilityProvider<KillerJoeBlockEntity, Direction, ResourceHandler<FluidResource>> FLUID_HANDLER_PROVIDER = (be,
         side) -> be.fluidStorage != null ? SidedResourceHandler.of(be.fluidStorage, side, be) : null;
+
+    /**
+     * Block event fired whenever Joe attacks, used to animate the sword swing on the client.
+     */
+    public static final int ATTACK_EVENT = 1;
+
+    private static final String WEAPON = "Weapon";
 
     // Fluid tank
     public static final SingleResourceSlotKey<FluidResource> TANK = new SingleResourceSlotKey<>();
@@ -58,6 +70,11 @@ public class KillerJoeBlockEntity extends MachineBlockEntity {
     // Inventory slot
     public static final SingleResourceSlotKey<ItemResource> WEAPON_SLOT = new SingleResourceSlotKey<>();
 
+    // Kill area, a cube in front of the machine
+    private static final ActionRange DEFAULT_RANGE = new ActionRange(2, false);
+    private static final int MAX_RANGE = 4;
+    private ActionRange actionRange = DEFAULT_RANGE;
+
     // Attack cooldown tracking
     private int attackCooldown = 0;
 
@@ -65,6 +82,13 @@ public class KillerJoeBlockEntity extends MachineBlockEntity {
     @UseOnly(LogicalSide.SERVER)
     @Nullable
     private EnderFakePlayer fakePlayer;
+
+    // Synced weapon and last attack time, used for rendering.
+    @UseOnly(LogicalSide.CLIENT)
+    private ItemStack displayWeapon = ItemStack.EMPTY;
+
+    @UseOnly(LogicalSide.CLIENT)
+    private long lastAttackTime = Long.MIN_VALUE;
 
     public KillerJoeBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EIOBlockEntities.KILLER_JOE.get(), worldPosition, blockState, false);
@@ -80,6 +104,7 @@ public class KillerJoeBlockEntity extends MachineBlockEntity {
                 super.onContentsChanged(index, previousContents);
                 updateMachineState(MachineState.EMPTY_TANK, getFluidAmount() < getFluidUsage());
                 setChanged();
+                sendBlockUpdate();
             }
         };
     }
@@ -91,6 +116,20 @@ public class KillerJoeBlockEntity extends MachineBlockEntity {
             .add(WEAPON_SLOT, SlotTemplates.input(1), b -> b
                 .filter((_, resource) -> resource.is(ItemTags.SWORDS))) // Only accept swords
             .build();
+    }
+
+    @Override
+    protected void onInventoryContentsChanged(int slot) {
+        super.onInventoryContentsChanged(slot);
+
+        // Weapon is rendered on the client
+        sendBlockUpdate();
+    }
+
+    private void sendBlockUpdate() {
+        if (level != null && !level.isClientSide()) {
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS);
+        }
     }
 
     public FluidStorage getFluidStorage() {
@@ -122,6 +161,16 @@ public class KillerJoeBlockEntity extends MachineBlockEntity {
         }
     }
 
+    @Override
+    public void clientTick() {
+        if (level instanceof ClientLevel clientLevel) {
+            getActionRange().addClientParticle(clientLevel, getKillAreaCenter(),
+                MachinesConfig.CLIENT.BLOCKS.KILLER_JOE_RANGE_COLOR.get());
+        }
+
+        super.clientTick();
+    }
+
     private boolean hasValidWeapon() {
         ItemStack weapon = getInventory().getStack(WEAPON_SLOT);
         return !weapon.isEmpty() && weapon.is(ItemTags.SWORDS);
@@ -129,6 +178,7 @@ public class KillerJoeBlockEntity extends MachineBlockEntity {
 
     private boolean canAttack() {
         return
+            canAct() &&
             hasValidWeapon() &&
             getFluidAmount() >= getFluidUsage() &&
             level instanceof ServerLevel &&
@@ -172,8 +222,14 @@ public class KillerJoeBlockEntity extends MachineBlockEntity {
         // Ensure attacker has max strength so our cooldown is the only thing that applies
         attacker.setMaxAttackStrength();
 
+        // Face forwards like the block, the sweep effect and knockback are based on the attacker's rotation.
+        attacker.faceDirection(getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING));
+
         // Perform attack
         attacker.attack(target);
+
+        // Let nearby clients know so they can swing the sword.
+        level.blockEvent(worldPosition, getBlockState().getBlock(), ATTACK_EVENT, 0);
 
         // Consume fluid
         try (Transaction transaction = Transaction.openRoot()) {
@@ -184,6 +240,19 @@ public class KillerJoeBlockEntity extends MachineBlockEntity {
         // Damage weapon
         getInventory().mutateStack(WEAPON_SLOT, stack -> stack.hurtAndBreak(1, serverLevel, null, item -> {
         }));
+    }
+
+    @Override
+    public boolean triggerEvent(int id, int type) {
+        if (id == ATTACK_EVENT) {
+            if (level != null && level.isClientSide()) {
+                lastAttackTime = level.getGameTime();
+            }
+
+            return true;
+        }
+
+        return super.triggerEvent(id, type);
     }
 
     @UseOnly(LogicalSide.SERVER)
@@ -218,25 +287,40 @@ public class KillerJoeBlockEntity extends MachineBlockEntity {
         }
     }
 
-    private AABB getKillArea() {
-        BlockPos pos = getBlockPos();
-        Direction facing = getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
+    // region Range
 
-        // Area is 5x5x4 in front of the block
-        // 5 wide (±2 from center), 5 tall (0 to +4), 4 deep (forward)
-        return switch (facing) {
-            case NORTH -> new AABB(pos.getX() - 2, pos.getY(), pos.getZ() - 4,
-                                   pos.getX() + 3, pos.getY() + 5, pos.getZ());
-            case SOUTH -> new AABB(pos.getX() - 2, pos.getY(), pos.getZ() + 1,
-                                   pos.getX() + 3, pos.getY() + 5, pos.getZ() + 5);
-            case WEST -> new AABB(pos.getX() - 4, pos.getY(), pos.getZ() - 2,
-                                  pos.getX(), pos.getY() + 5, pos.getZ() + 3);
-            case EAST -> new AABB(pos.getX() + 1, pos.getY(), pos.getZ() - 2,
-                                  pos.getX() + 5, pos.getY() + 5, pos.getZ() + 3);
-            default -> new AABB(pos.getX() - 2, pos.getY(), pos.getZ() - 2,
-                                pos.getX() + 3, pos.getY() + 5, pos.getZ() + 3);
-        };
+    @Override
+    public ActionRange getActionRange() {
+        return actionRange;
     }
+
+    @Override
+    @UseOnly(LogicalSide.SERVER)
+    public void setActionRange(ActionRange actionRange) {
+        this.actionRange = actionRange.clamp(1, getMaxRange());
+        setChanged();
+        sendBlockUpdate();
+    }
+
+    @Override
+    public int getMaxRange() {
+        return MAX_RANGE;
+    }
+
+    /**
+     * The kill area is a cube sat in front of the machine, level with its base.
+     */
+    private BlockPos getKillAreaCenter() {
+        Direction facing = getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
+        int range = getRange();
+        return worldPosition.relative(facing, range + 1).above(range);
+    }
+
+    private AABB getKillArea() {
+        return new AABB(getKillAreaCenter()).inflate(getRange());
+    }
+
+    // endregion
 
     @Override
     public boolean isActive() {
@@ -252,8 +336,22 @@ public class KillerJoeBlockEntity extends MachineBlockEntity {
     @Override
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
-        output.putChild("Fluid", fluidStorage);
         output.putInt("AttackCooldown", attackCooldown);
+    }
+
+    @Override
+    protected void saveAdditionalSynced(ValueOutput output) {
+        super.saveAdditionalSynced(output);
+        output.putChild("Fluid", fluidStorage);
+
+        if (!actionRange.equals(DEFAULT_RANGE)) {
+            output.store(MachineNBTKeys.ACTION_RANGE, ActionRange.CODEC, actionRange);
+        }
+
+        ItemStack weapon = getInventory().getStack(WEAPON_SLOT);
+        if (!weapon.isEmpty()) {
+            output.store(WEAPON, ItemStack.CODEC, weapon);
+        }
     }
 
     @Override
@@ -261,11 +359,22 @@ public class KillerJoeBlockEntity extends MachineBlockEntity {
         super.loadAdditional(input);
         input.child("Fluid").ifPresent(fluidStorage::deserialize);
         attackCooldown = input.getIntOr("AttackCooldown", 0);
+
+        // Synced, not saved:
+        actionRange = input.read(MachineNBTKeys.ACTION_RANGE, ActionRange.CODEC)
+            .orElse(DEFAULT_RANGE);
+        displayWeapon = input.read(WEAPON, ItemStack.CODEC)
+            .orElse(ItemStack.EMPTY);
     }
 
     @Override
     protected void applyImplicitComponents(DataComponentGetter components) {
         super.applyImplicitComponents(components);
+
+        var actionRange = components.get(EIODataComponents.ACTION_RANGE);
+        if (actionRange != null) {
+            this.actionRange = actionRange;
+        }
 
         SimpleFluidContent storedFluid = components.get(EIODataComponents.ITEM_FLUID_CONTENT);
         if (storedFluid != null) {
@@ -277,10 +386,20 @@ public class KillerJoeBlockEntity extends MachineBlockEntity {
     protected void collectImplicitComponents(DataComponentMap.Builder components) {
         super.collectImplicitComponents(components);
 
+        if (!actionRange.equals(DEFAULT_RANGE)) {
+            components.set(EIODataComponents.ACTION_RANGE, actionRange);
+        }
+
         var fluidStored = getStoredFluid();
         if (!fluidStored.isEmpty()) {
             components.set(EIODataComponents.ITEM_FLUID_CONTENT, SimpleFluidContent.copyOf(fluidStored));
         }
+    }
+
+    @Override
+    public void removeComponentsFromTag(ValueOutput output) {
+        super.removeComponentsFromTag(output);
+        output.discard(MachineNBTKeys.ACTION_RANGE);
     }
 
     public int getAttackCooldown() {
@@ -305,5 +424,15 @@ public class KillerJoeBlockEntity extends MachineBlockEntity {
 
     public int getCurrentCooldown() {
         return attackCooldown;
+    }
+
+    @UseOnly(LogicalSide.CLIENT)
+    public ItemStack getDisplayWeapon() {
+        return displayWeapon;
+    }
+
+    @UseOnly(LogicalSide.CLIENT)
+    public long getLastAttackTime() {
+        return lastAttackTime;
     }
 }

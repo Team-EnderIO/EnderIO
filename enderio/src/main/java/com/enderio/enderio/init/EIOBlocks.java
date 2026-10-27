@@ -487,7 +487,7 @@ public class EIOBlocks {
     // Killer Joe
     public static final DeferredBlock<KillerJoeBlock> KILLER_JOE = registerWithItem("killer_joe",
         KillerJoeBlock::new,
-        BlockBehaviour.Properties.of().strength(2.5f, 8));
+        BlockBehaviour.Properties.of().strength(2.5f, 8).noOcclusion());
 
     // Block Detector
     public static final DeferredBlock<BlockDetectorBlock> BLOCK_DETECTOR = registerWithItem("block_detector",

@@ -66,6 +66,7 @@ import com.enderio.enderio.client.content.machines.gui.screen.XPObeliskScreen;
 import com.enderio.enderio.client.content.machines.gui.screen.XPVacuumScreen;
 import com.enderio.enderio.client.content.machines.renderer.blockentity.CapacitorBankBER;
 import com.enderio.enderio.client.content.machines.renderer.blockentity.FluidTankBER;
+import com.enderio.enderio.client.content.machines.renderer.blockentity.KillerJoeBER;
 import com.enderio.enderio.client.content.machines.renderer.blockentity.NiardBER;
 import com.enderio.enderio.client.content.machines.renderer.blockentity.ObeliskBER;
 import com.enderio.enderio.client.content.machines.renderer.blockentity.PoweredSpawnerBER;
@@ -270,6 +271,7 @@ public class EnderIOClient {
         }
 
         event.registerBlockEntityRenderer(EIOBlockEntities.NIARD.get(), NiardBER::new);
+        event.registerBlockEntityRenderer(EIOBlockEntities.KILLER_JOE.get(), KillerJoeBER::new);
         event.registerBlockEntityRenderer(EIOBlockEntities.XP_OBELISK.get(), c -> new ObeliskBER(EIOItems.EXPERIENCE_ROD::get));
         event.registerBlockEntityRenderer(EIOBlockEntities.INHIBITOR_OBELISK.get(), c -> new ObeliskBER(() -> Items.ENDER_PEARL));
         event.registerBlockEntityRenderer(EIOBlockEntities.AVERSION_OBELISK.get(), c -> new ObeliskBER(EIOBlocks.ENDERMAN_HEAD::asItem));
