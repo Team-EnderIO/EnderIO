@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": "#c:dusts/grains_of_infinity",
+    "R": "#c:dusts/redstone",
+    "S": "#c:stones"
+  },
+  "pattern": [
+    "SSS",
+    "RGR",
+    "SSS"
+  ],
+  "result": {
+    "id": "enderio:block_detector"
+  }
+}

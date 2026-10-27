@@ -329,9 +329,6 @@ public class EIOBlockStateProvider extends ModelProvider {
         // VAT
         machineBlock(blockModels, EIOBlocks.VAT.get());
 
-        // Block Detector
-        blockModels.createNonTemplateModelBlock(EIOBlocks.BLOCK_DETECTOR.get());
-
         // Obelisks
         blockModels.createNonTemplateModelBlock(EIOBlocks.XP_OBELISK.get());
         blockModels.createNonTemplateModelBlock(EIOBlocks.FARMING_STATION.get());
