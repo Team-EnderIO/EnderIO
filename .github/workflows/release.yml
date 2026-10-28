@@ -5,6 +5,10 @@ on:
   release:
     types: [ published ]
 
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     name: Build & Publish Maven
@@ -26,13 +30,15 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - uses: gradle/actions/setup-gradle@v3
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          cache: true
 
       - name: Clean
-        run: ./gradlew clean
+        run: ./gradlew clean --build-cache
 
       - name: Build
-        run: ./gradlew build
+        run: ./gradlew build --build-cache
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -44,7 +50,7 @@ jobs:
         env:
           RVR_MAVEN_USER: ${{ secrets.RVR_MAVEN_USER }}
           RVR_MAVEN_PASSWORD: ${{ secrets.RVR_MAVEN_PASSWORD }}
-        run: ./gradlew publishAllPublicationsToRover656Repository
+        run: ./gradlew publishAllPublicationsToRover656Repository --build-cache
 
   publish-github:
     name: Publish to GitHub
