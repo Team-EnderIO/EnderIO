@@ -1,9 +1,11 @@
 package com.enderio.enderio.content.filters.redstone;
 
 import com.enderio.enderio.api.EnderIOCapabilities;
+import com.enderio.enderio.api.filter.FilterMenuProvider;
 import com.enderio.enderio.api.filter.RedstoneFilter;
 import com.enderio.enderio.api.filter.RedstoneInputFilter;
 import com.enderio.enderio.api.filter.RedstoneOutputFilter;
+import com.enderio.enderio.content.filters.AbstractFilterMenu;
 import com.enderio.enderio.content.filters.FiltersLang;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOMenus;
@@ -22,14 +24,22 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 import org.jspecify.annotations.Nullable;
 
-import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
 public class RedstoneFilterItem extends Item {
+
+    public static final ICapabilityProvider<ItemStack, ItemAccess, FilterMenuProvider> FILTER_MENU_PROVIDER =
+        (stack, itemAccess) -> stack.getItem() instanceof RedstoneFilterItem item && item.type.menu() != null
+            ? (player, goBack) -> {
+                var filterStack = itemAccess.getResource().toStack(itemAccess.getAmount());
+                item.openMenu(player, new AbstractFilterMenu.InventoryFilterAccess(filterStack, itemAccess, goBack));
+            }
+            : null;
 
     // Insert filters
     public static final ICapabilityProvider<ItemStack, Void, RedstoneOutputFilter> AND_FILTER_PROVIDER =
@@ -72,23 +82,34 @@ public class RedstoneFilterItem extends Item {
     public InteractionResult use(Level level, Player player, InteractionHand usedHand) {
         var menu = type.menu();
         if (player instanceof ServerPlayer serverPlayer && menu != null && player.isSteppingCarefully()) {
-            openMenu(serverPlayer);
+            openMenu(serverPlayer, new AbstractFilterMenu.HandFilterAccess(player, player.getItemInHand(usedHand)));
         }
         return super.use(level, player, usedHand);
     }
 
-    private void openMenu(ServerPlayer player) {
+    private void openMenu(ServerPlayer player, AbstractFilterMenu.FilterAccess filterAccess) {
+        var stack = filterAccess.getFilterItem();
         player.openMenu(new MenuProvider() {
             @Override
             public Component getDisplayName() {
-                return Component.literal("");
+                return stack.getHoverName();
             }
 
             @Override
             public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-                return type.menu().create(containerId, inventory);
+                return switch (type) {
+                    case OR, AND, NOR, NAND, XOR, XNOR -> new RedstoneDoubleChannelFilterMenu(type.menu(), containerId, inventory, filterAccess);
+                    case COUNT -> new RedstoneCountFilterMenu(type.menu(), containerId, inventory, filterAccess);
+                    case TIMER -> new RedstoneTimerFilterMenu(type.menu(), containerId, inventory, filterAccess);
+                    default -> throw new IllegalStateException("Filter has no configuration menu: " + type);
+                };
             }
-        });
+
+            @Override
+            public boolean shouldTriggerClientSideContainerClosingOnOpen() {
+                return false;
+            }
+        }, buffer -> ItemStack.STREAM_CODEC.encode(buffer, stack));
     }
 
     @Override
