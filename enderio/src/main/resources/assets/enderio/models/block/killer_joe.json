@@ -1,0 +1,108 @@
+{
+    "parent": "minecraft:block/block",
+    "render_type": "minecraft:cutout",
+    "textures": {
+        "particle": "enderio:block/killer_joe_body",
+        "body": "enderio:block/killer_joe_body",
+        "lid": "enderio:block/killer_joe_lid",
+        "glass": "enderio:block/clear_glass",
+        "face": "enderio:block/killer_joe_head",
+        "head": "enderio:block/killer_joe_head2"
+    },
+    "elements": [
+        {
+            "name": "base",
+            "from": [0, 0, 0],
+            "to": [16, 4, 16],
+            "faces": {
+                "north": {"uv": [0, 12, 16, 16], "texture": "#body"},
+                "east": {"uv": [0, 12, 16, 16], "texture": "#body"},
+                "south": {"uv": [0, 12, 16, 16], "texture": "#body"},
+                "west": {"uv": [0, 12, 16, 16], "texture": "#body"},
+                "up": {"uv": [0, 0, 16, 16], "texture": "#body"},
+                "down": {"uv": [0, 0, 16, 16], "texture": "#body", "cullface": "down"}
+            }
+        },
+        {
+            "name": "lid",
+            "from": [0, 12, 0],
+            "to": [16, 16, 16],
+            "faces": {
+                "north": {"uv": [0, 0, 16, 4], "texture": "#body"},
+                "east": {"uv": [0, 0, 16, 4], "texture": "#body"},
+                "south": {"uv": [0, 0, 16, 4], "texture": "#body"},
+                "west": {"uv": [0, 0, 16, 4], "texture": "#body"},
+                "up": {"uv": [0, 0, 16, 16], "texture": "#lid", "cullface": "up"},
+                "down": {"uv": [0, 0, 16, 16], "texture": "#body"}
+            }
+        },
+        {
+            "name": "post_nw",
+            "from": [0, 4, 0],
+            "to": [1, 12, 1],
+            "faces": {
+                "north": {"uv": [15, 4, 16, 12], "texture": "#body"},
+                "west": {"uv": [0, 4, 1, 12], "texture": "#body"},
+                "east": {"uv": [0, 4, 1, 12], "texture": "#body"},
+                "south": {"uv": [15, 4, 16, 12], "texture": "#body"}
+            }
+        },
+        {
+            "name": "post_ne",
+            "from": [15, 4, 0],
+            "to": [16, 12, 1],
+            "faces": {
+                "north": {"uv": [0, 4, 1, 12], "texture": "#body"},
+                "east": {"uv": [15, 4, 16, 12], "texture": "#body"},
+                "west": {"uv": [15, 4, 16, 12], "texture": "#body"},
+                "south": {"uv": [0, 4, 1, 12], "texture": "#body"}
+            }
+        },
+        {
+            "name": "post_se",
+            "from": [15, 4, 15],
+            "to": [16, 12, 16],
+            "faces": {
+                "south": {"uv": [15, 4, 16, 12], "texture": "#body"},
+                "east": {"uv": [0, 4, 1, 12], "texture": "#body"},
+                "west": {"uv": [0, 4, 1, 12], "texture": "#body"},
+                "north": {"uv": [15, 4, 16, 12], "texture": "#body"}
+            }
+        },
+        {
+            "name": "post_sw",
+            "from": [0, 4, 15],
+            "to": [1, 12, 16],
+            "faces": {
+                "south": {"uv": [0, 4, 1, 12], "texture": "#body"},
+                "west": {"uv": [15, 4, 16, 12], "texture": "#body"},
+                "east": {"uv": [15, 4, 16, 12], "texture": "#body"},
+                "north": {"uv": [0, 4, 1, 12], "texture": "#body"}
+            }
+        },
+        {
+            "name": "glass",
+            "from": [1, 4, 1],
+            "to": [15, 12, 15],
+            "faces": {
+                "north": {"uv": [1, 4, 15, 12], "texture": "#glass"},
+                "east": {"uv": [1, 4, 15, 12], "texture": "#glass"},
+                "south": {"uv": [1, 4, 15, 12], "texture": "#glass"},
+                "west": {"uv": [1, 4, 15, 12], "texture": "#glass"}
+            }
+        },
+        {
+            "name": "head",
+            "from": [4.5, 4, 4.5],
+            "to": [11.5, 11, 11.5],
+            "faces": {
+                "north": {"uv": [0, 0, 8, 8], "texture": "#face"},
+                "east": {"uv": [8, 0, 16, 8], "texture": "#face"},
+                "south": {"uv": [8, 8, 16, 16], "texture": "#face"},
+                "west": {"uv": [8, 0, 16, 8], "texture": "#face"},
+                "up": {"uv": [0, 0, 8, 8], "texture": "#head"},
+                "down": {"uv": [8, 0, 16, 8], "texture": "#head"}
+            }
+        }
+    ]
+}

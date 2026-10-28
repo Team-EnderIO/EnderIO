@@ -12,6 +12,7 @@ import com.enderio.enderio.content.machines.capacitor_bank.CapacitorTier;
 import com.enderio.enderio.content.machines.drain.DrainBlockEntity;
 import com.enderio.enderio.content.machines.farming_station.FarmingStationBlockEntity;
 import com.enderio.enderio.content.machines.impulse_hopper.ImpulseHopperBlockEntity;
+import com.enderio.enderio.content.machines.killer_joe.KillerJoeBlockEntity;
 import com.enderio.enderio.content.machines.niard.NiardBlockEntity;
 import com.enderio.enderio.content.machines.obelisks.attractor.AttractorObeliskBlockEntity;
 import com.enderio.enderio.content.machines.obelisks.aversion.AversionObeliskBlockEntity;
@@ -186,6 +187,12 @@ public class EIOBlockEntities {
         .builder("vat", VatBlockEntity::new, EIOBlocks.VAT::get)
         .apply(EIOBlockEntities::machineBlockEntityCapabilities)
         .capability(Capabilities.Fluid.BLOCK, VatBlockEntity.FLUID_HANDLER_PROVIDER)
+        .build();
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<KillerJoeBlockEntity>> KILLER_JOE = BLOCK_ENTITY_TYPES
+        .builder("killer_joe", KillerJoeBlockEntity::new, EIOBlocks.KILLER_JOE::get)
+        .apply(EIOBlockEntities::machineBlockEntityCapabilities)
+        .capability(Capabilities.Fluid.BLOCK, KillerJoeBlockEntity.FLUID_HANDLER_PROVIDER)
         .build();
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<InhibitorObeliskBlockEntity>> INHIBITOR_OBELISK = BLOCK_ENTITY_TYPES

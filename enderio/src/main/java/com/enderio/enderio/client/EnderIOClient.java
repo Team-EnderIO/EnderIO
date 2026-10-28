@@ -46,6 +46,7 @@ import com.enderio.enderio.client.content.machines.gui.screen.FarmingStationScre
 import com.enderio.enderio.client.content.machines.gui.screen.FluidTankScreen;
 import com.enderio.enderio.client.content.machines.gui.screen.ImpulseHopperScreen;
 import com.enderio.enderio.client.content.machines.gui.screen.InhibitorObeliskScreen;
+import com.enderio.enderio.client.content.machines.gui.screen.KillerJoeScreen;
 import com.enderio.enderio.client.content.machines.gui.screen.NiardScreen;
 import com.enderio.enderio.client.content.machines.gui.screen.PaintingMachineScreen;
 import com.enderio.enderio.client.content.machines.gui.screen.PoweredSpawnerScreen;
@@ -65,6 +66,7 @@ import com.enderio.enderio.client.content.machines.gui.screen.XPObeliskScreen;
 import com.enderio.enderio.client.content.machines.gui.screen.XPVacuumScreen;
 import com.enderio.enderio.client.content.machines.renderer.blockentity.CapacitorBankBER;
 import com.enderio.enderio.client.content.machines.renderer.blockentity.FluidTankBER;
+import com.enderio.enderio.client.content.machines.renderer.blockentity.KillerJoeBER;
 import com.enderio.enderio.client.content.machines.renderer.blockentity.NiardBER;
 import com.enderio.enderio.client.content.machines.renderer.blockentity.ObeliskBER;
 import com.enderio.enderio.client.content.machines.renderer.blockentity.PoweredSpawnerBER;
@@ -250,6 +252,7 @@ public class EnderIOClient {
         event.register(EIOMenus.ATTRACTOR_OBELISK.get(), AttractorObeliskScreen::new);
         event.register(EIOMenus.WEATHER_OBELISK.get(), WeatherObeliskScreen::new);
         event.register(EIOMenus.VAT.get(), VatScreen::new);
+        event.register(EIOMenus.KILLER_JOE.get(), KillerJoeScreen::new);
 
         // Storage
         event.register(EIOMenus.CAPACITOR_BANK.get(), CapacitorBankScreen::new);
@@ -268,6 +271,7 @@ public class EnderIOClient {
         }
 
         event.registerBlockEntityRenderer(EIOBlockEntities.NIARD.get(), NiardBER::new);
+        event.registerBlockEntityRenderer(EIOBlockEntities.KILLER_JOE.get(), KillerJoeBER::new);
         event.registerBlockEntityRenderer(EIOBlockEntities.XP_OBELISK.get(), c -> new ObeliskBER(EIOItems.EXPERIENCE_ROD::get));
         event.registerBlockEntityRenderer(EIOBlockEntities.INHIBITOR_OBELISK.get(), c -> new ObeliskBER(() -> Items.ENDER_PEARL));
         event.registerBlockEntityRenderer(EIOBlockEntities.AVERSION_OBELISK.get(), c -> new ObeliskBER(EIOBlocks.ENDERMAN_HEAD::asItem));

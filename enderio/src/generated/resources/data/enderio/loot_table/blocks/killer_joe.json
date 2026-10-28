@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "modifier": {
+            "type": "minecraft:copy_components",
+            "source": "block_entity"
+          },
+          "name": "enderio:killer_joe"
+        }
+      ],
+      "rolls": 1
+    }
+  ],
+  "random_sequence": "enderio:blocks/killer_joe"
+}
