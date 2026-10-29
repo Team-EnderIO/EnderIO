@@ -2,8 +2,11 @@ package com.enderio.enderio.content.tools.vials;
 
 import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.common.util.TooltipUtil;
+import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.api.soul.SoulBoundUtils;
+import com.enderio.enderio.api.soul.SoulResource;
+import com.enderio.enderio.api.soul.storage.SimpleSoulContent;
 import com.enderio.enderio.config.base.BaseConfig;
 import com.enderio.enderio.content.tools.ToolsLang;
 import com.enderio.enderio.foundation.util.EntityCaptureUtils;
@@ -43,10 +46,13 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
@@ -64,7 +70,7 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
 
     public static ItemStack forSoul(Soul soul) {
         ItemStack soulVial = new ItemStack(EIOItems.SOUL_VIAL.get());
-        soulVial.set(EIODataComponents.SOUL, soul);
+        soulVial.set(EIODataComponents.SOUL_CONTENT, SimpleSoulContent.copyOf(soul));
         return soulVial;
     }
 
@@ -72,13 +78,13 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
 
     @Override
     public boolean isFoil(ItemStack stack) {
-        return stack.getOrDefault(EIODataComponents.SOUL, Soul.EMPTY).hasEntity();
+        return getStoredSoul(stack).hasEntity();
     }
 
     @Override
     public void addCommonTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
         // Add entity name
-        var soul = itemStack.getOrDefault(EIODataComponents.SOUL, Soul.EMPTY);
+        var soul = getStoredSoul(itemStack);
         if (!soul.isEmpty()) {
             tooltips.add(TooltipUtil.style(Component.translatable(soul.entityType().getDescriptionId())));
         }
@@ -86,7 +92,7 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
 
     @Override
     public void addDetailedTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
-        var soul = itemStack.getOrDefault(EIODataComponents.SOUL, Soul.EMPTY);
+        var soul = getStoredSoul(itemStack);
         if (soul.isEmpty()) {
             return;
         }
@@ -156,7 +162,7 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
 
         if (BaseConfig.COMMON.ITEMS.ALLOW_SOUL_VIALS_TO_CHANGE_SPAWNERS.get()) {
             if (context.getLevel().getBlockEntity(context.getClickedPos()) instanceof Spawner spawnerHolder) {
-                var storedSoul = context.getItemInHand().get(EIODataComponents.SOUL);
+                var storedSoul = getStoredSoul(context.getItemInHand());
                 if (storedSoul == null || storedSoul.isEmpty()) {
                     return InteractionResult.FAIL;
                 }
@@ -182,7 +188,7 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
             Consumer<Component> displayCallback) {
 
         // Soul Vial is filled, so it can't capture
-        Soul soul = soulVial.getOrDefault(EIODataComponents.SOUL, Soul.EMPTY);
+        Soul soul = getStoredSoul(soulVial);
         if (soul.hasEntity()) {
             return Optional.empty();
         }
@@ -212,7 +218,8 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
 
         // Create the filled vial
         ItemStack filledVial = soulVial.copyWithCount(1);
-        filledVial.set(EIODataComponents.SOUL, Soul.of(entity));
+        // TODO: Should this use the capability?
+        filledVial.set(EIODataComponents.SOUL_CONTENT, SimpleSoulContent.copyOf(Soul.of(entity)));
         filledVial.set(EIODataComponents.ENTITY_MAX_HEALTH, entity.getMaxHealth());
 
         // Consume the stack
@@ -225,7 +232,7 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
 
     private static InteractionResult releaseEntity(Level level, ItemStack filledVial, Direction face, BlockPos pos,
             Runnable vialConsumed) {
-        var storedSoul = filledVial.get(EIODataComponents.SOUL);
+        var storedSoul = getStoredSoul(filledVial);
 
         if (storedSoul != null && storedSoul.hasEntity()) {
             // Get the spawn location for the mob.
@@ -263,6 +270,13 @@ public class SoulVialItem extends Item implements AdvancedTooltipProvider {
             items.add(forSoul(Soul.of(entityType)));
         }
         return items;
+    }
+
+    private static Soul getStoredSoul(ItemStack stack) {
+        ResourceHandler<SoulResource> soulHandler = ItemAccess.forStack(stack).getCapability(EnderIOCapabilities.Soul.ITEM);
+        Objects.requireNonNull(soulHandler);
+
+        return soulHandler.getResource(0).toSoul();
     }
 
     // endregion

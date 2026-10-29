@@ -6,6 +6,7 @@ import com.enderio.core.common.storage.layout.ItemStorageLayout;
 import com.enderio.core.common.storage.layout.SlotTemplates;
 import com.enderio.core.common.storage.slot.MultiResourceSlotKey;
 import com.enderio.core.common.storage.slot.SingleResourceSlotKey;
+import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
@@ -52,6 +53,7 @@ import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
@@ -180,7 +182,8 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
         return ItemStorageLayout
             .builder()
             .add(INPUT_SOUL, SlotTemplates.input(1),
-                b -> b.filter((_, itemResource) -> itemResource.is(EIOItems.SOUL_VIAL.get()) && SoulBoundUtils.isBound(itemResource.toStack())))
+                b -> b.filter((_, itemResource) -> ItemAccess.forStack(itemResource.toStack())
+                    .getCapability(EnderIOCapabilities.BINDABLE_SOUL_SOURCE) != null))
             .add(INPUT_OTHER, SlotTemplates.input(1), b -> b
                 .filter(this::isValidInput))
             .add(OUTPUT, SlotTemplates.output(64))

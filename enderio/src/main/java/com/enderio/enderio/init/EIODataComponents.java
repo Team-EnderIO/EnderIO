@@ -9,6 +9,7 @@ import com.enderio.enderio.api.components.GrindingBallData;
 import com.enderio.enderio.api.conduits.facade.FacadeType;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.api.soul.Soul;
+import com.enderio.enderio.api.soul.storage.SimpleSoulContent;
 import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
 import com.enderio.enderio.content.filters.fluid.EnderFluidFilter;
 import com.enderio.enderio.content.filters.item.general.EnderItemFilter;
@@ -47,7 +48,11 @@ public class EIODataComponents {
 
     public static final DataComponentType<Integer> ENERGY = register("energy", builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT));
 
+    // TODO: phase this out.
     public static final DataComponentType<Soul> SOUL = register("soul", builder -> builder.persistent(Soul.CODEC).networkSynchronized(Soul.STREAM_CODEC));
+
+    public static final DataComponentType<SimpleSoulContent> SOUL_CONTENT = register("soul_content",
+        builder -> builder.persistent(SimpleSoulContent.CODEC).networkSynchronized(SimpleSoulContent.STREAM_CODEC));
 
     // endregion
 

@@ -9,11 +9,13 @@ import com.enderio.enderio.api.filter.RedstoneInputFilter;
 import com.enderio.enderio.api.filter.RedstoneOutputFilter;
 import com.enderio.enderio.api.filter.SoulFilter;
 import com.enderio.enderio.api.io.SideConfig;
+import com.enderio.enderio.api.soul.binding.BindableSoulSource;
 import com.enderio.enderio.api.soul.binding.SoulBindable;
-import com.enderio.enderio.api.soul.storage.SoulHandler;
+import com.enderio.enderio.api.soul.SoulResource;
 import net.minecraft.core.Direction;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.ItemCapability;
+import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.access.ItemAccess;
 import org.jspecify.annotations.Nullable;
 
@@ -42,12 +44,16 @@ public class EnderIOCapabilities {
     public static final BlockCapability<SoulBindable, Void> SOUL_BINDABLE_BLOCK = BlockCapability
         .createVoid(EnderIOAPI.rl("soul_bindable"), SoulBindable.class);
 
-    // TODO: Convert to ResourceHandler
-    public static final ItemCapability<SoulHandler, Void> SOUL_HANDLER_ITEM = ItemCapability
-        .createVoid(EnderIOAPI.rl("soul_handler"), SoulHandler.class);
+    public static final ItemCapability<BindableSoulSource, ItemAccess> BINDABLE_SOUL_SOURCE = ItemCapability
+        .create(EnderIOAPI.rl("bindable_soul_source"), BindableSoulSource.class, ItemAccess.class);
 
-    public static final BlockCapability<SoulHandler, @Nullable Direction> SOUL_HANDLER_BLOCK = BlockCapability
-        .createSided(EnderIOAPI.rl("soul_handler"), SoulHandler.class);
+    public static class Soul {
+        public static final ItemCapability<ResourceHandler<SoulResource>, ItemAccess> ITEM = ItemCapability
+            .create(EnderIOAPI.rl("soul_resource"), ResourceHandler.asClass(), ItemAccess.class);
+
+        public static final BlockCapability<ResourceHandler<SoulResource>, @Nullable Direction> BLOCK = BlockCapability
+            .createSided(EnderIOAPI.rl("soul_handler"), ResourceHandler.asClass());
+    }
 
     public static final ItemCapability<ConduitFacadeProvider, Void> CONDUIT_FACADE_PROVIDER = ItemCapability
         .createVoid(EnderIOAPI.rl("conduit_facade_provider"), ConduitFacadeProvider.class);
