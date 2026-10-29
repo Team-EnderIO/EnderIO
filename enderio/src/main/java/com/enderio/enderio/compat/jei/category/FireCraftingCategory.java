@@ -160,7 +160,8 @@ public class FireCraftingCategory extends AbstractRecipeCategory<RecipeHolder<Fi
 //        eye.div(eye.w);
 //
 //        // Block Render
-        renderBlock(graphics, block);
+        //renderBlock(graphics, block);
+        graphics.submitPictureInPictureRenderState(FireCraftingRenderer.State.create(0, 60, 0, 60, graphics.peekScissorStack()));
 //
 //        graphics.pose().popMatrix();
     }
