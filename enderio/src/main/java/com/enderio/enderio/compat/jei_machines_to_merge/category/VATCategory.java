@@ -22,6 +22,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.CommonColors;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -107,13 +108,13 @@ public class VATCategory extends MachineRecipeCategory<RecipeHolder<FermentingRe
         String text = "x" + modifier;
         Font font = Minecraft.getInstance().font;
         int x = 28 + 8 - font.width(text) / 2;
-        graphics.text(font, text, x, 22, 4210752, false);
+        graphics.text(font, text, x, 22, CommonColors.DARK_GRAY, false);
 
         // right modifier
         item = recipeSlotsView.getSlotViews().get(1).getDisplayedItemStack().get();
         modifier = FermentingRecipe.getModifier(item, recipe.value().secondReagent());
         text = "x" + modifier;
         x = 77 + 8 - font.width(text) / 2;
-        graphics.text(font, text, x, 22, 4210752, false);
+        graphics.text(font, text, x, 22, CommonColors.DARK_GRAY, false);
     }
 }
