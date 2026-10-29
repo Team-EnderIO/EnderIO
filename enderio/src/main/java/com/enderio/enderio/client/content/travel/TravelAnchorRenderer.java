@@ -23,6 +23,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.FastColor;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -89,12 +90,10 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
         }
 
         OutlineBuffer buffer = OutlineBuffer.INSTANCE;
-        int outlineColor = 0xFF0B4D42;
-        int textColor = 0xFFFFFFFF;
-        if (active) {
-            textColor = ChatFormatting.AQUA.getColor() == null ? 0xFFFFFF : ChatFormatting.AQUA.getColor();
-            outlineColor = textColor;
-        }
+        int outlineColor = FastColor.ARGB32.color(255,
+            Integer.parseInt(active ? BaseConfig.CLIENT.ANCHORS_ACTIVE_COLOR.get() : BaseConfig.CLIENT.ANCHORS_BACKGROUND_COLOR.get(), 16));
+        int textColor = FastColor.ARGB32.color(255,
+            Integer.parseInt(active ? BaseConfig.CLIENT.ANCHORS_ACTIVE_COLOR.get() : "FFFFFF", 16));
         float outlineR = ((outlineColor >> 16) & 0xFF) / 255F;
         float outlineG = ((outlineColor >> 8) & 0xFF) / 255F;
         float outlineB = (outlineColor & 0xFF) / 255F;
