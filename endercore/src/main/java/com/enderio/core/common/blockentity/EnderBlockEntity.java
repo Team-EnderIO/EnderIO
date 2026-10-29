@@ -27,11 +27,14 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -43,6 +46,7 @@ public class EnderBlockEntity extends BlockEntity {
     public static final String DATA = "Data";
     public static final String INDEX = "Index";
     private final List<NetworkDataSlot<?>> dataSlots = new CopyOnWriteArrayList<>();
+    private final Set<NetworkDataSlot<?>> clientWritableDataSlots = Collections.newSetFromMap(new IdentityHashMap<>());
     private final List<Runnable> afterDataSync = new CopyOnWriteArrayList<>();
 
     private final Map<BlockCapability<?, ?>, EnumMap<Direction, BlockCapabilityCache<?, ?>>> selfCapabilities = new HashMap<>();
@@ -184,6 +188,17 @@ public class EnderBlockEntity extends BlockEntity {
         return slot;
     }
 
+    /**
+     * Adds a data slot which the client is permitted to modify (see {@link #clientUpdateSlot}).
+     * Slots added with {@link #addDataSlot} are never writable by the client.
+     */
+    @Deprecated(forRemoval = true, since = "7.1")
+    public <T extends NetworkDataSlot<?>> T addClientWritableDataSlot(T slot) {
+        addDataSlot(slot);
+        clientWritableDataSlots.add(slot);
+        return slot;
+    }
+
     @Deprecated(forRemoval = true, since = "7.1")
     public void addAfterSyncRunnable(Runnable runnable) {
         afterDataSync.add(runnable);
@@ -248,7 +263,16 @@ public class EnderBlockEntity extends BlockEntity {
             throw new IllegalStateException("Invalid buffer was passed over the network to the server.");
         }
 
-        dataSlots.get(index).read(buf);
+        if (index < 0 || index >= dataSlots.size()) {
+            throw new IllegalStateException("Invalid data slot index was passed over the network to the server.");
+        }
+
+        var slot = dataSlots.get(index);
+        if (!clientWritableDataSlots.contains(slot)) {
+            throw new IllegalStateException("Data slot is not writable by the client.");
+        }
+
+        slot.read(buf);
     }
 
     // New Sync

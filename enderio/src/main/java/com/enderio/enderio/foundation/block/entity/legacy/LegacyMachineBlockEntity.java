@@ -114,7 +114,7 @@ public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
         }
 
         if (supportsRedstoneControl()) {
-            redstoneControlDataSlot = addDataSlot(
+            redstoneControlDataSlot = addClientWritableDataSlot(
                     REDSTONE_CONTROL_DATA_SLOT_TYPE.create(this::getRedstoneControl, this::internalSetRedstoneControl));
         } else {
             redstoneControlDataSlot = null;
@@ -122,7 +122,7 @@ public abstract class LegacyMachineBlockEntity extends EnderBlockEntity
 
         // Register sync slot for ioConfig and setup model data.
         if (isIOConfigMutable()) {
-            ioConfigDataSlot = addDataSlot(IOConfig.DATA_SLOT_TYPE.create(this::getIOConfig, v -> {
+            ioConfigDataSlot = addClientWritableDataSlot(IOConfig.DATA_SLOT_TYPE.create(this::getIOConfig, v -> {
                 setIOConfig(v);
 
                 if (level != null && level.isClientSide()) {

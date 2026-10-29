@@ -34,8 +34,10 @@ public class ServerPayloadHandler {
 
     public void handleCoordinateSelectionName(ServerboundUpdateCoordinateSelectionNameMenuPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
-            if (context.player() instanceof ServerPlayer serverPlayer) {
-                packet.getMenu(context).updateName(packet.name(), serverPlayer);
+            if (context.player() instanceof ServerPlayer serverPlayer && packet.isValid(context)) {
+                // Menu reads the name with a limit of 50 characters.
+                String name = packet.name().length() > 50 ? packet.name().substring(0, 50) : packet.name();
+                packet.getMenu(context).updateName(name, serverPlayer);
             }
         });
     }
@@ -55,14 +57,20 @@ public class ServerPayloadHandler {
                 player.displayClientMessage(EIOCommonLang.ERROR_CANNOT_TELEPORT, true);
                 return;
             }
+
             if (target.isEmpty()) {
                 player.displayClientMessage(EIOCommonLang.ERROR_INVALID_DESTINATION, true);
                 return;
             }
-            // Eventually change the packet structure to include what teleport method was
-            // used so this range can be selected correctly
-            int range = Math.max(target.get().block2BlockRange(), target.get().item2BlockRange());
-            if (packet.pos().distSqr(player.getOnPos()) > range * range) {
+
+            if (!target.get().canTeleportTo()) {
+                player.displayClientMessage(EIOCommonLang.ERROR_INVALID_DESTINATION, true);
+                return;
+            }
+
+            // Standing on a teleport block uses the block range, otherwise the held item's range applies.
+            int range = canBlockTeleport ? target.get().block2BlockRange() : target.get().item2BlockRange();
+            if (packet.pos().distSqr(player.getOnPos()) > (double) range * range) {
                 player.displayClientMessage(EIOCommonLang.ERROR_TOO_FAR, true);
                 return;
             }
@@ -140,7 +148,9 @@ public class ServerPayloadHandler {
             var currentMenu = context.player().containerMenu;
 
             if (currentMenu == null || currentMenu.containerId != packet.containerId()
-                    || currentMenu.slots.size() <= packet.slotIndex()) {
+                || !currentMenu.stillValid(context.player())
+                || packet.slotIndex() < 0
+                || currentMenu.slots.size() <= packet.slotIndex()) {
                 return;
             }
 
@@ -156,12 +166,14 @@ public class ServerPayloadHandler {
             var currentMenu = context.player().containerMenu;
 
             if (currentMenu == null || currentMenu.containerId != packet.containerId()
+                || !currentMenu.stillValid(context.player())
+                || packet.slotIndex() < 0
                 || currentMenu.slots.size() <= packet.slotIndex()) {
                 return;
             }
 
             if (currentMenu.getSlot(packet.slotIndex()) instanceof GhostMachineSlot slot) {
-                slot.set(packet.itemStack());
+                slot.setGhost(packet.itemStack());
             }
         });
     }
@@ -171,7 +183,9 @@ public class ServerPayloadHandler {
             var currentMenu = context.player().containerMenu;
 
             if (currentMenu == null || currentMenu.containerId != packet.containerId()
-                    || currentMenu.slots.size() <= packet.slotIndex()) {
+                || !currentMenu.stillValid(context.player())
+                || packet.slotIndex() < 0
+                || currentMenu.slots.size() <= packet.slotIndex()) {
                 return;
             }
 

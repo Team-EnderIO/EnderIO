@@ -46,7 +46,7 @@ public class ConduitServerPayloadHandler {
         context.enqueueWork(() -> {
             ItemStack mainHandItem = context.player().getMainHandItem();
             var channels = mainHandItem.getCapability(EnderIOCapabilities.REDSTONE_EXTRACT_FILTER);
-            if (channels instanceof RedstoneTimerFilter timer) {
+            if (channels instanceof RedstoneTimerFilter timer && packet.ticks() >= 0 && packet.maxTicks() > 0) {
                 timer.setTimer(packet.ticks(), packet.maxTicks());
             }
         });
@@ -56,7 +56,7 @@ public class ConduitServerPayloadHandler {
         context.enqueueWork(() -> {
             ItemStack mainHandItem = context.player().getMainHandItem();
             var channels = mainHandItem.getCapability(EnderIOCapabilities.REDSTONE_INSERT_FILTER);
-            if (channels instanceof RedstoneCountFilter count) {
+            if (channels instanceof RedstoneCountFilter count && packet.maxCount() >= 0 && packet.count() >= 0) {
                 count.setState(packet);
             }
         });
@@ -66,7 +66,8 @@ public class ConduitServerPayloadHandler {
         context.enqueueWork(() -> {
             if (packet.containerId() == context.player().containerMenu.containerId) {
                 // TODO: Spectator viewing filter menus is broken lol
-                if (!context.player().isSpectator() && context.player().containerMenu instanceof ConduitMenu menu) {
+                if (!context.player().isSpectator() && context.player().containerMenu instanceof ConduitMenu menu
+                        && menu.stillValid(context.player())) {
                     menu.tryOpenFilterMenu(packet.slot());
                 }
             }
