@@ -146,7 +146,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     public void clientTick() {
         if (level.isClientSide && level instanceof ClientLevel clientLevel) {
             getActionRange().addClientParticle(clientLevel, getParticleLocation(),
-                    MachinesConfig.CLIENT.BLOCKS.DRAIN_RANGE_COLOR.get());
+                    MachinesConfig.CLIENT.BLOCKS.FARMING_STATION_RANGE_COLOR.get());
         }
 
         super.clientTick();
