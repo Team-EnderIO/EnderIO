@@ -1,0 +1,12 @@
+{
+    "required" : false,
+    "package" : "com.enderio.enderio.mixin.sodium",
+    "compatibilityLevel" : "JAVA_17",
+    "client" : [
+        "SodiumConduitFacadeMixin"
+    ],
+    "injectors" : {
+        "defaultRequire" : 0
+    },
+    "minVersion" : "0.8"
+}
