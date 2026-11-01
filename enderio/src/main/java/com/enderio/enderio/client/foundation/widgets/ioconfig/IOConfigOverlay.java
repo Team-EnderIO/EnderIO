@@ -5,6 +5,7 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.io.IOConfigurable;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.foundation.network.packets.ServerboundCycleIOConfigPacket;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
@@ -141,7 +142,7 @@ public class IOConfigOverlay extends BaseOverlay {
             return false;
         }
 
-        if (event.button() == 0) {
+        if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
             if (neighBtnRect.contains((int) event.x(), (int) event.y())) {
                 toggleNeighbourVisibility();
                 this.playDownSound(MINECRAFT.getSoundManager());
@@ -149,7 +150,7 @@ public class IOConfigOverlay extends BaseOverlay {
             }
         }
 
-        if (event.button() == 1) {
+        if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
             if (selection.isPresent()) {
                 var selectedFace = selection.get();
                 BlockEntity entity = MINECRAFT.level.getBlockEntity(selectedFace.blockPos);
