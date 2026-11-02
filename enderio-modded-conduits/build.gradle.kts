@@ -87,7 +87,7 @@ dependencies {
         classifier("api")
     })
 
-//    runtimeOnly(libs.ae2)
+    runtimeOnly(libs.ae2)
 
     // Mekanism
     compileOnly(variantOf(libs.mekanism) {

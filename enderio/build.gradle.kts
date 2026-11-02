@@ -112,15 +112,10 @@ dependencies {
     localRuntime(libs.jade)
 
     //Athena ctm
-    // 26.2-port: third-party mod interaction commented out
-//    localRuntime(libs.athena)
+    localRuntime(libs.athena)
 
     // AE2
-//    compileOnly(variantOf(libs.ae2) {
-//        classifier("api")
-//    })
-//
-//    localRuntime(libs.ae2)
+    localRuntime(libs.ae2)
 
     // TODO: Re-add Enchantment descriptions if we add enchantments again
 
@@ -135,17 +130,11 @@ dependencies {
 //    compileOnly(libs.laserio)
 //    localRuntime(libs.laserio)
 
-    // Graphlib
-    api(libs.graphlib)
-    jarJar(libs.graphlib)
-
     // FTB Ultimine Addon
     // TODO: Stop including FTB Library when it is transitively available via Ultimine
-    // 26.2-port: third-party mod interaction commented out
-//    compileOnly(libs.ftbUltimine)
-//    compileOnly(libs.ftbLibrary)
+    compileOnly(libs.ftbUltimine)
+    compileOnly(libs.ftbLibrary)
 
-    // TODO: Disabled until they fix Neo .21 compat
 //    localRuntime(libs.ftbUltimine)
 //    localRuntime(libs.ftbLibrary)
 
