@@ -59,7 +59,7 @@ public class ConduitHighlightEvent {
                     }
 
                     int lineColor = highContrast ? CommonColors.HIGH_CONTRAST_DIAMOND : DEFAULT_LINE_COLOR;
-                    collector.submitShapeOutline(poseStack, shape, RenderTypes.lines(), lineColor, lineWidth, translucent);
+                    collector.submitShapeOutline(poseStack, shape, RenderTypes.linesTranslucentNoDepthWrite(), lineColor, lineWidth, translucent);
                     poseStack.popPose();
                 }
                 return true;
